@@ -1,265 +1,117 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DAA2A937
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 14:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6487E28EA;
+	Sun, 25 May 2025 14:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748182686; cv=none; b=q/js7cU5DOdMA5P7OJBUB5PAhXhUS8q2AETXftR1bh10PYF7j7VcL32iE/hSRjP6fjtgOHdcn46jAJ5ptzE2fY+xvXqWLNvXMtR7hi7bpEktvau5eXW1BAweURrOFFvxaD1GhCXXR8Fu6ZdmlFcMwP1cZfmy69PZZwX5AF6Cq5g=
+	t=1748183152; cv=none; b=MmO7i7rrg6J1ZHW/t5cpAv+UiKgQ23FJHBXKGvXIVYT0F+EY/TPc2CyZVULKDGpWxefOUQ/XefRVAm1CZVyzb1qZFwlMnOSFxTdSjL/Dzt0j8PX3vYRp1z0sE+mdQjF+L/qrM+klJWQIVY8M+9cnu14nXJmW+OpqnVr5D0BL2PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748182686; c=relaxed/simple;
-	bh=rT/1zF9t3ApJzwGv9UF2/4CCNSrhDvl14JYAnpUsA+k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EJ2ZnYPM6c7YqSme90kIpixhUaVYHVIaoBzYdb4YDoTdVe8lVnBexjtwEoQZXL5u0Ld1JTWXLWYsRQmLl9ab6WPUMR/70Q4fC86dcF3JVKjc9LS06xZOBThvjBZJuAY69K+Y4erM+TiEKiDt5nGyODzn8EpCNXZHy4UY3KIrtoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ahP5FpmE; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748183152; c=relaxed/simple;
+	bh=NM90G492BjfiEyV5vFQ000BYD+6mBLBrhX0tYBF96BM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e5ZX01gTh4tfTQ0xjv68AScP8l5A3GqQpiRYt8JhQhHh9a3i65syCeAa6QMeKilglUx8zu+1xeJwQyx1sBgjQuHkqy2nFP9BWRc7UKazYekhKY11zda2YAb3ETEwnipW/dZkjoE+L5dgLxc8XeaWT2/qdfdLR8/Ri1dEMBVyWV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eU+p4ALR; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ahP5FpmE"
-Message-ID: <621d1173-abe4-4eb7-9098-79b9a3e1c266@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748182679;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZMkRaioxqYyh6tp5UUGkklO/SWTZWWyfPj36Z74vxHo=;
-	b=ahP5FpmE3UVI+3dZHg1sgqpXK/ZBE0V6gXbBXHfiapRDiVbHCzseWciq5WfoaVW547E4XO
-	04qeo1ATCOWVAxZXdFdrR5RiUJcdx5JarbhOOzyljHZxu2ORmYr78LJ9zgg6ftsr+BuUac
-	3hEBEgpa+JPeXnVv7b8zogaWDaTsUnk=
-Date: Sun, 25 May 2025 16:17:56 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU+p4ALR"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so12328335e9.1;
+        Sun, 25 May 2025 07:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748183148; x=1748787948; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qFdoZ2ya22aHbPyZMrQvrZTKBeG1YIBpjxgwBrdwhTo=;
+        b=eU+p4ALRCbnSBJXEIs2Dc1oA+AK64wGKe5Wq/yDq8xDzaw1Jp9HooD2oMeXZdwNhlq
+         Idb4UIpaWMStCxfHRSi5C6lAauw7uuUPGVLQJeZzxnJWVqCJ9YBFUHObSnIzCsOYDAdf
+         6mfFI6nv8TylcJS6OeoV7oWppfqszUrVtqNwdzIEqXJWrcVB0R5k/tggmhmK7aubuv5l
+         iJ4AhuylO0syJA9HPvTfKVM+cd6Du2zqwTyTsog6M5HgIqIIU6zUibqb3bz2569nqUK5
+         7NtxN3SHRXxqOszBKdL4r4jUHC5XUtm8V5WRm34S2iELJpIhXERNs4fhJi2p0CT3Fghz
+         A/Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748183148; x=1748787948;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qFdoZ2ya22aHbPyZMrQvrZTKBeG1YIBpjxgwBrdwhTo=;
+        b=G0zYUAr1mMNQtrY++1iValKV/G1wBXRweEKlgCIdLNhUSwwOER4JkxxAAh/srBmXUI
+         cHDncy9xVEK0j/HQRd3hyH5RkT8Ra/zMsWNWFNQmGinLenVZzPlMGzvVrK0WJaKs4iou
+         8U40z7nQRYpfAN89MM5ngE33cGU5sjKpD1vZnXCgBTbHQ++e91ewYXKlg0XnvHrg7N3i
+         k7aqSjxq+SpT/D/o163MevUOtXeIYZ4UN8UjCjjj8G+YwDQDLEUG7yg5XYOEIj8vic4X
+         h09Iettxzr3X9vlgmTEy5AuCog8m2vDy52EKkjP8K3KlKQddB8qyp/GNbx/GoBXjNYk4
+         DKnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6ZaLvG5JgC2nmnRJyBIKFi8UbSrSOqO+CLHHwWH4xPCF07eKCGN10E9Bq6XbIp7njH5EfQKScawMlKp9u@vger.kernel.org, AJvYcCV0kAnWiqTNcoyEVJKtZyqb+0m6BCqfwWBSEOjdb6HgNstuMc+N9Su9CH/zxp+USXDNFvkaFvrc2cA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxay3UBnIppEVkUpDYfxkBfXoUC0EbBNKhpV7HktuwUwvv9Et70
+	RMY8wYv/5vbt+x2XcK/Zu9F7Z+X19gLCzEW3i1+u9diikCXdT6eKcmwI
+X-Gm-Gg: ASbGncvnSlPCuE/z5n2absnZnzLogjgVCKE9ULKi1vHEORE2dhbjSEi9yPlZGdB5kSM
+	DPzHaemT3V7jEj+2wddUv+Mmd0r8znGWdJeSDC8V0TuY+EiWzoGpFCH+jCquczw4539NFP74uys
+	qzzDPNoUXoHNwJU1LH0eYWSKWotEH3vjiVGzEfsf/+RCva/GMBstk5SZ2vRifwIq3zh6IHTd1x0
+	4FbQz+XDL8szoMEZ4BSsFf01oC/pRFoYKzHAGIIYSTtjlF27x/8PTECaSoYfsenqc41d9pMVecu
+	6U5WasRMfFY5GD3SBcyVjvUHuz8+dqcbivqujqhPptRJQsaE8EHUCxdSF5LWAEkOvkDXrY8=
+X-Google-Smtp-Source: AGHT+IEkR1nsqU30zj8uMIZHv80ZMDYVqMCujmXxgz5uqOOKRB7EaW5IsmYL09ADmJEZJbc9R0pkzA==
+X-Received: by 2002:a05:600c:8219:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-44c91dcba6amr59869765e9.16.1748183148541;
+        Sun, 25 May 2025 07:25:48 -0700 (PDT)
+Received: from localhost.localdomain ([176.206.99.211])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb8c92d9sm216428135e9.2.2025.05.25.07.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 07:25:48 -0700 (PDT)
+From: Denis Benato <benato.denis96@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>,
+	=?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+	Alex Lanzano <lanzano.alex@gmail.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Danila Tikhonov <danila@jiaxyga.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	"Derek J . Clark" <derekjohn.clark@gmail.com>,
+	=?UTF-8?q?Philip=20M=C3=BCller?= <philm@manjaro.org>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Denis Benato <benato.denis96@gmail.com>
+Subject: [PATCH v2 0/2] iio: fix suspend and resume triggering for bmi160 and bmi270
+Date: Sun, 25 May 2025 16:25:28 +0200
+Message-ID: <20250525142530.71955-1-benato.denis96@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
- virtual DMA devices
-To: Daisuke Matsuda <dskmtsd@gmail.com>, linux-kernel@vger.kernel.org,
- linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
- zyjzyj2000@gmail.com
-Cc: hch@infradead.org
-References: <20250524144328.4361-1-dskmtsd@gmail.com>
- <c8d6bfb6-570c-48b2-be62-188e11353c5a@linux.dev>
- <b10304c8-c951-4ade-ad57-515df6bd4221@gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <b10304c8-c951-4ade-ad57-515df6bd4221@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/5/25 8:03, Daisuke Matsuda 写道:
-> 
-> 
-> On 2025/05/25 14:22, Zhu Yanjun wrote:
->> 在 2025/5/24 16:43, Daisuke Matsuda 写道:
->>> Drivers such as rxe, which use virtual DMA, must not call into the DMA
->>> mapping core since they lack physical DMA capabilities. Otherwise, a 
->>> NULL
->>> pointer dereference is observed as shown below. This patch ensures 
->>> the RDMA
->>> core handles virtual and physical DMA paths appropriately.
->>>
->>> This fixes the following kernel oops:
->>>
->>>   BUG: kernel NULL pointer dereference, address: 00000000000002fc
->>>   #PF: supervisor read access in kernel mode
->>>   #PF: error_code(0x0000) - not-present page
->>>   PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
->>>   Oops: Oops: 0000 [#1] SMP NOPTI
->>>   CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        
->>> W           6.15.0-rc1+ #11 PREEMPT(voluntary)
->>>   Tainted: [W]=WARN
->>>   Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
->>>   RIP: 0010:hmm_dma_map_alloc+0x25/0x100
->>>   Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 
->>> d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc 
->>> <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
->>>   RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
->>>   RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
->>>   RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
->>>   RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
->>>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
->>>   R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
->>>   FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) 
->>> knlGS:0000000000000000
->>>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>   CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
->>>   PKRU: 55555554
->>>   Call Trace:
->>>    <TASK>
->>>    ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
->>>    ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
->>>    rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
->>>    rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
->>>    ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
->>>    ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
->>>    ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
->>>    ? mmap_region+0x63/0xd0
->>>    ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 
->>> [ib_uverbs]
->>>    ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
->>>    __x64_sys_ioctl+0xa4/0xe0
->>>    x64_sys_call+0x1178/0x2660
->>>    do_syscall_64+0x7e/0x170
->>>    ? syscall_exit_to_user_mode+0x4e/0x250
->>>    ? do_syscall_64+0x8a/0x170
->>>    ? do_syscall_64+0x8a/0x170
->>>    ? syscall_exit_to_user_mode+0x4e/0x250
->>>    ? do_syscall_64+0x8a/0x170
->>>    ? syscall_exit_to_user_mode+0x4e/0x250
->>>    ? do_syscall_64+0x8a/0x170
->>>    ? do_user_addr_fault+0x1d2/0x8d0
->>>    ? irqentry_exit_to_user_mode+0x43/0x250
->>>    ? irqentry_exit+0x43/0x50
->>>    ? exc_page_fault+0x93/0x1d0
->>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>>   RIP: 0033:0x7262a6124ded
->>>   Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 
->>> 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 
->>> <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
->>>   RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->>>   RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
->>>   RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
->>>   RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
->>>   R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
->>>   R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
->>>    </TASK>
->>>
->>> Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to 
->>> caching IOVA and page linkage")
->>> Closes: https://lore.kernel.org/ 
->>> all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
->>> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
->>
->> I tried to apply this commit to the following rdma branch.
->> But I failed. The error is as below:
->>
->> "
->> Applying: RDMA/core: Avoid hmm_dma_map_alloc() for virtual DMA devices
->> error: patch failed: drivers/infiniband/core/umem_odp.c:75
->> error: drivers/infiniband/core/umem_odp.c: patch does not apply
->> Patch failed at 0001 RDMA/core: Avoid hmm_dma_map_alloc() for virtual 
->> DMA devices
->> hint: Use 'git am --show-current-patch=diff' to see the failed patch
->> When you have resolved this problem, run "git am --continue".
->> If you prefer to skip this patch, run "git am --skip" instead.
->> To restore the original branch and stop patching, run "git am --abort".
->>
->> "
->>
->> The remote branch is remotes/rdma/rdma-next
->> The head commit is 3b6a1e410c7f RDMA/mlx5: Fix CC counters query for MPV
->>
->> I am not sure if I use the correct repository and branch or not.
-> 
-> Thank you for trying the patch.
-> 
-> The change is meant to be applied to 'for-next' branch,
-> which contains patches from the following series:
-> [PATCH v10 00/24] Provide a new two step DMA mapping API
-> https://lore.kernel.org/linux-rdma/cover.1745831017.git.leon@kernel.org/
-> 
-> cf. https://kernel.googlesource.com/pub/scm/linux/kernel/git/rdma/rdma/
+Two imu devices bmi160 and bmi270 are similar to bmi323, with the same bug and
+a common usecase: fix the aforementioned bug about triggering not resuming
+after sleep in the same way it was solved for the bmi323 device driver.
 
-Exactly. With the above link and for-next branch, this commit can be 
-applied successfully.
+The bmi270 patch has been tested on a device where the device irq pin
+is connected to the CPU ensuring it doesn't cause harm to devices that
+do not use hrtimer or other external triggers.
 
-Thanks,
+Changelog from v1 [1]
+- include linux/pm.h where needed
+- used "Closed" to reference the solved issue for each driver
+- merged two lines into one (on both drivers)
 
-Zhu Yanjun
 
-> 
-> Thanks,
-> Daisuke
-> 
->>
->> Best Regards,
->> Zhu Yanjun
->>
->>> ---
->>>   drivers/infiniband/core/device.c   | 17 +++++++++++++++++
->>>   drivers/infiniband/core/umem_odp.c | 11 ++++++++---
->>>   include/rdma/ib_verbs.h            |  4 ++++
->>>   3 files changed, 29 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/ 
->>> core/device.c
->>> index b4e3e4beb7f4..abb8fed292c0 100644
->>> --- a/drivers/infiniband/core/device.c
->>> +++ b/drivers/infiniband/core/device.c
->>> @@ -2864,6 +2864,23 @@ int ib_dma_virt_map_sg(struct ib_device *dev, 
->>> struct scatterlist *sg, int nents)
->>>       return nents;
->>>   }
->>>   EXPORT_SYMBOL(ib_dma_virt_map_sg);
->>> +int ib_dma_virt_map_alloc(struct hmm_dma_map *map, size_t nr_entries,
->>> +              size_t dma_entry_size)
->>> +{
->>> +    if (!(nr_entries * PAGE_SIZE / dma_entry_size))
->>> +        return -EINVAL;
->>> +
->>> +    map->dma_entry_size = dma_entry_size;
->>> +    map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
->>> +                 GFP_KERNEL | __GFP_NOWARN);
->>> +    if (!map->pfn_list)
->>> +        return -ENOMEM;
->>> +
->>> +    map->dma_list = NULL;
->>> +
->>> +    return 0;
->>> +}
->>> +EXPORT_SYMBOL(ib_dma_virt_map_alloc);
->>>   #endif /* CONFIG_INFINIBAND_VIRT_DMA */
->>>   static const struct rdma_nl_cbs 
->>> ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
->>> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/ 
->>> core/umem_odp.c
->>> index 51d518989914..a5b17be0894a 100644
->>> --- a/drivers/infiniband/core/umem_odp.c
->>> +++ b/drivers/infiniband/core/umem_odp.c
->>> @@ -75,9 +75,14 @@ static int ib_init_umem_odp(struct ib_umem_odp 
->>> *umem_odp,
->>>       if (unlikely(end < page_size))
->>>           return -EOVERFLOW;
->>> -    ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
->>> -                (end - start) >> PAGE_SHIFT,
->>> -                1 << umem_odp->page_shift);
->>> +    if (ib_uses_virt_dma(dev))
->>> +        ret = ib_dma_virt_map_alloc(&umem_odp->map,
->>> +                        (end - start) >> PAGE_SHIFT,
->>> +                        1 << umem_odp->page_shift);
->>> +    else
->>> +        ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
->>> +                    (end - start) >> PAGE_SHIFT,
->>> +                    1 << umem_odp->page_shift);
->>>       if (ret)
->>>           return ret;
->>> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
->>> index b06a0ed81bdd..9ea41f288736 100644
->>> --- a/include/rdma/ib_verbs.h
->>> +++ b/include/rdma/ib_verbs.h
->>> @@ -36,6 +36,7 @@
->>>   #include <linux/irqflags.h>
->>>   #include <linux/preempt.h>
->>>   #include <linux/dim.h>
->>> +#include <linux/hmm-dma.h>
->>>   #include <uapi/rdma/ib_user_verbs.h>
->>>   #include <rdma/rdma_counter.h>
->>>   #include <rdma/restrack.h>
->>> @@ -4221,6 +4222,9 @@ static inline void ib_dma_unmap_sg_attrs(struct 
->>> ib_device *dev,
->>>                      dma_attrs);
->>>   }
->>> +int ib_dma_virt_map_alloc(struct hmm_dma_map *map, size_t nr_entries,
->>> +              size_t dma_entry_size);
->>> +
->>>   /**
->>>    * ib_dma_map_sgtable_attrs - Map a scatter/gather table to DMA 
->>> addresses
->>>    * @dev: The device for which the DMA addresses are to be created
->>
-> 
+[1] https://lore.kernel.org/all/20250509171526.7842-1-benato.denis96@gmail.com
+
+Denis Benato (2):
+  iio: bmi270: suspend and resume triggering on relevant pm operations
+  iio: bmi160: suspend and resume triggering on relevant pm operations
+
+ drivers/iio/imu/bmi160/bmi160.h      |  2 ++
+ drivers/iio/imu/bmi160/bmi160_core.c | 19 +++++++++++++++++++
+ drivers/iio/imu/bmi160/bmi160_i2c.c  |  2 ++
+ drivers/iio/imu/bmi160/bmi160_spi.c  |  2 ++
+ drivers/iio/imu/bmi270/bmi270.h      |  2 ++
+ drivers/iio/imu/bmi270/bmi270_core.c | 20 ++++++++++++++++++++
+ drivers/iio/imu/bmi270/bmi270_i2c.c  |  2 ++
+ drivers/iio/imu/bmi270/bmi270_spi.c  |  2 ++
+ 8 files changed, 51 insertions(+)
+
+-- 
+2.49.0
 
