@@ -1,106 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2139ACF;
-	Sun, 25 May 2025 22:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360CE3FE5;
+	Sun, 25 May 2025 22:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748211255; cv=none; b=UhZkjkHUF75swHTBydSx0S8D2jb9NmTAGbuGtIaIQgg5m0LKq1aaSLT1mMwW7C3hkkr2p0g2KBVBjDH3DvvuhWw7PI/BBirHdiHByFRqWz7XoDHBLvNNRaxTaW+QmuFoBVqSRYl40LAwT4HQk7L3CjmVfg7I9iL72AR/4erGuyo=
+	t=1748211727; cv=none; b=miI3+fcT6pqolQ9BnOUlkxH5cLcKIIpm/IoJq8HYNViG038nKqzrLAi99JrznTHODUMV468eUoguV4tSfX7G6ZnluQHDZXIUa5raS/hYVDsRIyHUEQDIGjanDWlUbAi2BK3++gB3tHbFs50YjnsJScVQYRicAYX/2w+Z3l3/Aak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748211255; c=relaxed/simple;
-	bh=TMFhzal/+jzSrh6o7w/W516gZ7kIY5D+cZBchfp7QeY=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LPklfQPsFHq8O296EoqwGSaQh1FHvyyHQN4fyDHBDd+6z/nIUwFV6+ljIe9vW964kWOOivd2MHxYrpHVk5RTxFzCY4mdCEsJXyhik+M7f9M3FYOQb3hkPeYpUVKyrfuFcdKPTeVHvOiCVTmgUTrH8dCScqUCPm9jpEMuriv3Hmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZqKF7sf6; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748211727; c=relaxed/simple;
+	bh=rZvI+8myGxLlIzGSuSRFEOn3dBsw7nru718zBg8JJUE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jmHxdE5gEnSpbzLQAounGPEr1nHQtBg9XfylkgPoCLEWGc3C+pZOPPNEiIvjqux3Q2Ks0ryVLEERr9SitFqjYf+21XwzOQgG8uTIV74jBiY2imI6FEdzlnzujtlox4HApsrRGe5/SpHaLsM13GXsfjXDX1imcYIn9xZabILT00k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=o9iHWg2N; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZqKF7sf6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748211253; x=1779747253;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TMFhzal/+jzSrh6o7w/W516gZ7kIY5D+cZBchfp7QeY=;
-  b=ZqKF7sf6vU4RzBO4Y7yJXl4wzBRVJKYRYQLnEegx8mZbAnxMmg84k9IB
-   yVMQFLBYZAtNlwvzZ3GcsOLTelk2LFtsNag9Y/BAx/XAuO7pMdHGqMN5/
-   o5V8YkLj83XQJzOV8XVBH2C/VuDb7xqlaUW/Qmn1hlr9l75wa+jf1Ja7b
-   hwjsscAnjHN/HAfFR74Eb8s2Owb3WU6wIiBHTNMaGwaF8CjZW1cRMuCAR
-   TnLzTVF5ShiKXotiiijOeAUe1ArgD1AXcrxoA8QIaTLJygGfwKB5fejLE
-   18ZYD7rwRDHreNFeRauDdnFtjpycZmSblH9Fc2sCWHSynw5esuL5jGYvz
-   w==;
-X-CSE-ConnectionGUID: I1FgtFEgQi+LUU8mg6yeBA==
-X-CSE-MsgGUID: Ow+3m2X8RXqz+7fHpK/3BA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="50293493"
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="50293493"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 15:14:12 -0700
-X-CSE-ConnectionGUID: waCve7QVRsWwxi6olYtr4g==
-X-CSE-MsgGUID: RXLuUwNaTaeOgTyeZpQLww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="142668998"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 15:14:11 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 May 2025 01:14:06 +0300 (EEST)
-To: Stuart Hayes <stuart.w.hayes@gmail.com>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] platform/x86: dell_rbu: Stop overwriting data
- buffer
-In-Reply-To: <20250522200937.9578-4-stuart.w.hayes@gmail.com>
-Message-ID: <b975c429-25e9-3cff-8d43-d2b40f8fb9bd@linux.intel.com>
-References: <20250522200937.9578-1-stuart.w.hayes@gmail.com> <20250522200937.9578-4-stuart.w.hayes@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="o9iHWg2N"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DA5EA4328F;
+	Sun, 25 May 2025 22:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748211716;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aViUPgYuu1A1UVMf69xV1upAAbd4N0efbHGYdCi4XBo=;
+	b=o9iHWg2NCH3Yd6LGgfyRr8dbGQAaUrN6/EvF3GVOBXTMDGLa8qAavY71yqpe3MOzTZlSSs
+	wdtgyhABTbPEDNUomWVaglvEVlzw/+mQ0Il3jLJxsJdD/3Ifw8u73ce8YSvlBhXtLHYRDX
+	EhOKCHgvKFmM/xR2s4QsrG4B67bAxcLSpftgLq0bJJXZYioYjL1KPc99Z3LcV/V1tVc5hO
+	uBdAf9cChjPYbuGHYE2vdrBG9hZPOoromD6EX4LlnEBEOyFJXv6MLc5MGrX9teskwKcMQ3
+	ddnjZM2raYYdWGGH/8wT2bCu6jVwf9L7Bb/ko6Leoy0XxV7kbTm/XwgXoVcriA==
+From: alexandre.belloni@bootlin.com
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rtc: m41t80: reduce verbosity
+Date: Mon, 26 May 2025 00:21:52 +0200
+Message-ID: <20250525222153.1472917-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -85
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduheekudculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoteeftdduqddtudculdduhedmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhenucggtffrrghtthgvrhhnpeegtdffueegfeettdffhfeitdejfeeiueevleffteelvdeuledugeegtdejgfevveenucfkphepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvugemieefjedtmeejkegvtdemtgdtvgekmedvkedtieemkegrtgeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefpdhrtghpthhtoheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghls
+ ehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Thu, 22 May 2025, Stuart Hayes wrote:
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-> The dell_rbu driver will use memset to clear the data held by each packet
+The driver currently uses dev_err for messages that have a very low probability
+of being read by the user as the error will probably never happen and the
+systems with the RTC probably don't have any user able to read the message.
 
-Please add () after function names.
+Moreover, the only user action after getting this message is the restart the
+action so drop the level to dev_dbg.
 
-> when it is no longer needed (when the driver is unloaded, the packet size
-> is changed, etc).
-> 
-> The amount of memory that is cleared is (currently) the normal packet
-> size.  However, the last packet in the list may be smaller.  Fix this to
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/rtc/rtc-m41t80.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-One space is enough after .
-
-> only clear the memory actually used by each packet, to prevent it from
-> writing past the end of data buffer.
-> 
-> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
-
-Fixes tag?
-
-> ---
->  drivers/platform/x86/dell/dell_rbu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-> index c03d4d55fcc1..7d5b26735a20 100644
-> --- a/drivers/platform/x86/dell/dell_rbu.c
-> +++ b/drivers/platform/x86/dell/dell_rbu.c
-> @@ -322,7 +322,7 @@ static void packet_empty_list(void)
->  		 * zero out the RBU packet memory before freeing
->  		 * to make sure there are no stale RBU packets left in memory
->  		 */
-> -		memset(newpacket->data, 0, rbu_data.packetsize);
-> +		memset(newpacket->data, 0, newpacket->length);
->  		set_memory_wb((unsigned long)newpacket->data,
->  			1 << newpacket->ordernum);
->  		free_pages((unsigned long) newpacket->data,
-> 
-
+diff --git a/drivers/rtc/rtc-m41t80.c b/drivers/rtc/rtc-m41t80.c
+index 7074d086f1c8..c568639d2151 100644
+--- a/drivers/rtc/rtc-m41t80.c
++++ b/drivers/rtc/rtc-m41t80.c
+@@ -212,7 +212,7 @@ static int m41t80_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	err = i2c_smbus_read_i2c_block_data(client, M41T80_REG_SSEC,
+ 					    sizeof(buf), buf);
+ 	if (err < 0) {
+-		dev_err(&client->dev, "Unable to read date\n");
++		dev_dbg(&client->dev, "Unable to read date\n");
+ 		return err;
+ 	}
+ 
+@@ -268,7 +268,7 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *in_tm)
+ 	err = i2c_smbus_write_i2c_block_data(client, M41T80_REG_SSEC,
+ 					     sizeof(buf), buf);
+ 	if (err < 0) {
+-		dev_err(&client->dev, "Unable to write to date registers\n");
++		dev_dbg(&client->dev, "Unable to write to date registers\n");
+ 		return err;
+ 	}
+ 	if (flags & M41T80_FLAGS_OF) {
+@@ -276,12 +276,12 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *in_tm)
+ 		dev_warn(&client->dev, "OF bit is still set, kickstarting clock.\n");
+ 		err = i2c_smbus_write_byte_data(client, M41T80_REG_SEC, M41T80_SEC_ST);
+ 		if (err < 0) {
+-			dev_err(&client->dev, "Can't set ST bit\n");
++			dev_dbg(&client->dev, "Can't set ST bit\n");
+ 			return err;
+ 		}
+ 		err = i2c_smbus_write_byte_data(client, M41T80_REG_SEC, flags & ~M41T80_SEC_ST);
+ 		if (err < 0) {
+-			dev_err(&client->dev, "Can't clear ST bit\n");
++			dev_dbg(&client->dev, "Can't clear ST bit\n");
+ 			return err;
+ 		}
+ 		/* oscillator must run for 4sec before we attempt to reset OF bit */
+@@ -289,14 +289,14 @@ static int m41t80_rtc_set_time(struct device *dev, struct rtc_time *in_tm)
+ 		/* Clear the OF bit of Flags Register */
+ 		err = i2c_smbus_write_byte_data(client, M41T80_REG_FLAGS, flags & ~M41T80_FLAGS_OF);
+ 		if (err < 0) {
+-			dev_err(&client->dev, "Unable to write flags register\n");
++			dev_dbg(&client->dev, "Unable to write flags register\n");
+ 			return err;
+ 		}
+ 		flags = i2c_smbus_read_byte_data(client, M41T80_REG_FLAGS);
+ 		if (flags < 0) {
+ 			return flags;
+ 		} else if (flags & M41T80_FLAGS_OF) {
+-			dev_err(&client->dev, "Can't clear the OF bit check battery\n");
++			dev_dbg(&client->dev, "Can't clear the OF bit check battery\n");
+ 			return err;
+ 		}
+ 	}
+@@ -336,7 +336,7 @@ static int m41t80_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ 
+ 	retval = i2c_smbus_write_byte_data(client, M41T80_REG_ALARM_MON, flags);
+ 	if (retval < 0) {
+-		dev_err(dev, "Unable to enable alarm IRQ %d\n", retval);
++		dev_dbg(dev, "Unable to enable alarm IRQ %d\n", retval);
+ 		return retval;
+ 	}
+ 	return 0;
+@@ -361,7 +361,7 @@ static int m41t80_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	err = i2c_smbus_write_byte_data(client, M41T80_REG_ALARM_MON,
+ 					ret & ~(M41T80_ALMON_AFE));
+ 	if (err < 0) {
+-		dev_err(dev, "Unable to clear AFE bit\n");
++		dev_dbg(dev, "Unable to clear AFE bit\n");
+ 		return err;
+ 	}
+ 
+@@ -375,7 +375,7 @@ static int m41t80_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ 	err = i2c_smbus_write_byte_data(client, M41T80_REG_FLAGS,
+ 					ret & ~(M41T80_FLAGS_AF));
+ 	if (err < 0) {
+-		dev_err(dev, "Unable to clear AF bit\n");
++		dev_dbg(dev, "Unable to clear AF bit\n");
+ 		return err;
+ 	}
+ 
 -- 
- i.
+2.49.0
 
