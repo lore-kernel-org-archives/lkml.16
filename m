@@ -1,126 +1,322 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1613D1F09B2;
-	Sun, 25 May 2025 10:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE25F135A53;
+	Sun, 25 May 2025 10:57:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748170317; cv=none; b=g4ZYko5hfz1N0KbwksxldDNTa3u6V/svfanwyrcsCgvm5CaqlpQe+3MatV4c2CWUXRHRfUx5WEVZPzzEkwyHRb5QVjYL7VJt27gAfLZfiKJqC0qGzPa4eiDhwmVdAkqbOr+h1qgJ6Qj67u0IlvCOuU+hKsjWbipq4Ou0EeXU8H0=
+	t=1748170654; cv=none; b=SXAy83cRzFW1CkRB8scHufMaOKDzTG8HR+60W0A8efQyn24+cHYNS0IjE2hR5jNmv5CY0Sbgy3dXJZouEephjblSDhBOfuq0iGMy591Gunwts9O+4Rcc/m5Zxk37FmphSZlK22H26n63VDCeDTZgn37GZXvA+Yf5rIVku8Jr+gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748170317; c=relaxed/simple;
-	bh=YRdfz6rN4mj76VNawYJERvMeJQ2IZtOLyrZVyy6oaew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dS65XwvN1PuiLsNYmTbDLb02KNVyJs4WQ+UMrfhnguD/wLTHu2yryusvRNV32A38rbMe0TSrthK2JnfF6dZr93qYXBF5RBe32xh9yeVC/T/7RNQhRR1qgsXTAknOYTOkE24Q19262E/zEOuxL76aCJ/btk4FYZXPFsOkqj8Zrr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHwywFGI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748170654; c=relaxed/simple;
+	bh=0OYO6u/Jddg+2dKnEuoJSWHziDqIsrHImj0ZLh6ZKdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m6Rm5NvGK1QMrQcIzLvdD0a/NVhnqmgns0GEie89SmydX9pbJY3ln6xtjDkNxjUqWFrpAYrDtyX4Lar3nq6eNMUqobPYkEntnpOx9u+uUFf4xTCQas/rROPIqKrxypm/oHm/gjIUIF+Tk00AWy+oGHZAWKuLliuYiDxvN/VX164=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kDNfP4Ua; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHwywFGI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69624C4CEEA;
-	Sun, 25 May 2025 10:51:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDNfP4Ua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7EEFC4CEEA;
+	Sun, 25 May 2025 10:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748170316;
-	bh=YRdfz6rN4mj76VNawYJERvMeJQ2IZtOLyrZVyy6oaew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qHwywFGIJ8+pU3HV0IDi+sIlPYKDsVLMGoK+ICOQYtQQay1/5sTPlXYmx+lBeXNmw
-	 wOZx/Hrm2mPRENQ9m/SIPnCy2pbAqWdTND7s5eO3tUc0AHMTQesuY79BiHeQ/K8SFN
-	 7gngijEl3vDaNrEpf0KFzvDehEWUA5mIY/1uAkiU6NQyoWpUciHa1hdvdWalYAgcYI
-	 dsvGrlVQuT3zDqbrdjSlZB6CY9fwNXEuQxmmxftf4itsBgygV2NMmIztJzNtyRw84O
-	 /0qrEdG9z937KjtIrjjfZ3AIQToyeUM39DoydPxv8bjGc1+4qy1NjQZltkHX15hcUk
-	 wXtAyVdB5xJxg==
-Message-ID: <e462cdc4-7243-4cef-bd1d-a0ef551b3a87@kernel.org>
-Date: Sun, 25 May 2025 12:51:50 +0200
+	s=k20201202; t=1748170654;
+	bh=0OYO6u/Jddg+2dKnEuoJSWHziDqIsrHImj0ZLh6ZKdA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kDNfP4Ua+DhV12BoH+I/PzMHZFqae9ppum/TZGCyFOTdUlHgvx/P80ko4wVGPJDcC
+	 q+af2Vc4ebH3/E63ZhbCbyGaF2oLhSYLBXNCjdcVV2g9g8lW+iumptiDeTVqHgTS/p
+	 dTN9d+RG8Dug9XO1V1btzqDiNx97UoHpro8b+xMZBSeWDSO+nFfykFQRJCJ4k9poE+
+	 zwfFjsaJI/BI5Rv8FPN6Yb59Bt6sP3FtIXOfmAqIZEbfoGS2gFl19PeJiUEiHs/ZpQ
+	 Hz2MtCiLfOF3NPYE+Q7945e8+/5VmL4JOqcx7iCBHpV/IQ3l1Y/ztRGB5S20XTU7zg
+	 YI4/bpIlQBB3Q==
+Date: Sun, 25 May 2025 11:57:23 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lars@metafoo.de>, <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
+ <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
+ <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linus.walleij@linaro.org>,
+ <brgl@bgdev.pl>, <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v3 10/10] iio: adc: ad4170: Add support for weigh scale
+ and RTD sensors
+Message-ID: <20250525115723.7b05b8ad@jic23-huawei>
+In-Reply-To: <c6d82e15c2b638ab40e7c8ef68b3bef959ce2946.1747083143.git.marcelo.schmitt@analog.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	<c6d82e15c2b638ab40e7c8ef68b3bef959ce2946.1747083143.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: dt-bindings: mediatek: Constrain iommus
-To: Daniel Stone <daniel@fooishbar.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250525051639.68753-2-krzysztof.kozlowski@linaro.org>
- <CAPj87rMjAv-UphvFuQjop60o=wHrkfs4-XOM=JqH7f8Kk5dyVg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAPj87rMjAv-UphvFuQjop60o=wHrkfs4-XOM=JqH7f8Kk5dyVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 25/05/2025 12:48, Daniel Stone wrote:
-> On Sun, 25 May 2025 at 06:16, Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
->> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
->> @@ -45,9 +45,8 @@ properties:
->>        - description: OVL-2L Clock
->>
->>    iommus:
->> -    description:
->> -      This property should point to the respective IOMMU block with master port as argument,
->> -      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
->> +    minItems: 1
->> +    maxItems: 2
-> 
-> The comment removals are not documented in the commit message, and
-> it's not clear why removing information and references would be a good
-> thing.
-It's obvious, isn't? The consumer shall not define which provider has to
-use or how many cells provider has.
+On Tue, 13 May 2025 09:36:47 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Best regards,
-Krzysztof
+> The AD4170 design has features to aid interfacing with weigh scale and RTD
+> sensors that are expected to be setup with external circuitry for proper
+> sensor operation. A key characteristic of those sensors is that the circuit
+> they are in must be excited with a pair of signals. The external circuit
+> can be excited either by voltage supply or by AD4170 excitation signals.
+> The sensor can then be read through a different pair of lines that are
+> connected to AD4170 ADC.
+> 
+> Configure AD4170 to handle external circuit sensors.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+
+A few comments inline.  In general this is in a good shape subject
+to us figuring out the right dt-binding.
+
+Jonathan
+
+
+> +
+> +static int ad4170_setup_bridge(struct ad4170_state *st,
+> +			       struct fwnode_handle *child,
+> +			       struct ad4170_setup *setup, u32 *exc_pins,
+> +			       int num_exc_pins, int exc_cur, bool ac_excited)
+> +{
+> +	unsigned long gpio_mask;
+> +	int ret;
+> +
+> +	/*
+> +	 * If a specific current is provided through
+> +	 * adi,excitation-current-microamp, set excitation pins provided through
+> +	 * adi,excitation-pins to excite the bridge circuit.
+> +	 */
+> +	if (exc_cur > 0)
+> +		return ad4170_setup_current_src(st, child, setup, exc_pins,
+> +						num_exc_pins, exc_cur,
+> +						ac_excited);
+> +
+> +	/*
+> +	 * Else, use predefined ACX1, ACX1 negated, ACX2, ACX2 negated signals
+> +	 * to AC excite the bridge. Those signals are output on GPIO2, GPIO0,
+> +	 * GPIO3, and GPIO1, respectively. If only two pins are specified for AC
+> +	 * excitation, use ACX1 and ACX2 (GPIO2 and GPIO3).
+> +	 *
+> +	 * Also, to avoid any short-circuit condition when more than one channel
+> +	 * is enabled, set GPIO2 and GPIO0 high, and set GPIO1 and GPIO3 low to
+> +	 * DC excite the bridge whenever a channel without AC excitation is
+> +	 * selected. That is needed because GPIO pins are controlled by the next
+> +	 * highest priority GPIO function when a channel doesn't enable AC
+> +	 * excitation. See datasheet Figure 113 Weigh Scale (AC Excitation) for
+> +	 * an example circuit diagram.
+> +	 */
+> +	if (num_exc_pins == 2) {
+> +		setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_ADC_MSK, 0x3);
+> +
+> +		gpio_mask = AD4170_GPIO_MODE_GPIO3_MSK | AD4170_GPIO_MODE_GPIO2_MSK;
+> +		ret = regmap_update_bits(st->regmap, AD4170_GPIO_MODE_REG, gpio_mask,
+> +					 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * 3) |
+> +					 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * 2));
+
+Can we find a way to document relevance of 2 and 3 here?  Ideally
+
+appropriate defines or similar.  Feels like a FIELD_PREP is appropriate.
+
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_set_bits(st->regmap,
+> +				      AD4170_GPIO_OUTPUT_REG,
+> +				      BIT(3) | BIT(2));
+
+These are also cryptic.  Probably some FIELD_PREP() here as well.
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		st->gpio_fn[3] |= AD4170_GPIO_OUTPUT;
+> +		st->gpio_fn[2] |= AD4170_GPIO_OUTPUT;
+> +	} else {
+> +		setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_ADC_MSK, 0x2);
+> +
+> +		gpio_mask = AD4170_GPIO_MODE_GPIO3_MSK | AD4170_GPIO_MODE_GPIO2_MSK |
+> +			    AD4170_GPIO_MODE_GPIO1_MSK | AD4170_GPIO_MODE_GPIO0_MSK;
+> +		ret = regmap_update_bits(st->regmap, AD4170_GPIO_MODE_REG, gpio_mask,
+> +					 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * 3) |
+> +					 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * 2) |
+> +					 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * 1) |
+> +					 AD4170_GPIO_MODE_GPIO_OUTPUT << (2 * 0));
+
+As above. FIELD_PREP()
+
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = regmap_set_bits(st->regmap,
+> +				      AD4170_GPIO_OUTPUT_REG,
+> +				      BIT(3) | BIT(2) | BIT(1) | BIT(0));
+> +		if (ret)
+> +			return ret;
+> +
+> +		st->gpio_fn[3] |= AD4170_GPIO_OUTPUT;
+> +		st->gpio_fn[2] |= AD4170_GPIO_OUTPUT;
+> +		st->gpio_fn[1] |= AD4170_GPIO_OUTPUT;
+> +		st->gpio_fn[0] |= AD4170_GPIO_OUTPUT;
+> +	}
+> +
+> +	return 0;
+> +}
+
+> +
+> +static int ad4170_parse_external_sensor(struct ad4170_state *st,
+> +					struct fwnode_handle *child,
+> +					struct ad4170_setup *setup,
+> +					struct iio_chan_spec *chan, u8 s_type)
+> +{
+> +	unsigned int num_exc_pins, exc_cur, reg_val;
+> +	struct device *dev = &st->spi->dev;
+> +	u32 pins[2], exc_pins[4];
+> +	bool ac_excited, vbias;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = fwnode_property_read_u32_array(child, "diff-channels", pins,
+> +					     ARRAY_SIZE(pins));
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to read sensor diff-channels\n");
+> +
+> +	chan->differential = true;
+> +	chan->channel = pins[0];
+> +	chan->channel2 = pins[1];
+> +
+> +	ac_excited = fwnode_property_read_bool(child, "adi,excitation-ac");
+> +
+> +	num_exc_pins = fwnode_property_count_u32(child, "adi,excitation-pins");
+> +	if (num_exc_pins != 1 && num_exc_pins != 2 && num_exc_pins != 4)
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "Invalid number of excitation pins\n");
+> +
+> +	ret = fwnode_property_read_u32_array(child, "adi,excitation-pins",
+> +					     exc_pins, num_exc_pins);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to read adi,excitation-pins\n");
+> +
+> +	ret = ad4170_validate_excitation_pins(st, exc_pins, num_exc_pins);
+> +	if (ret)
+> +		return ret;
+> +
+> +	exc_cur = 0;
+> +	ret = fwnode_property_read_u32(child, "adi,excitation-current-microamp",
+> +				       &exc_cur);
+> +	if (ret && s_type == AD4170_RTD_SENSOR)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to read adi,excitation-current-microamp\n");
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad4170_iout_current_ua_tbl); i++)
+> +		if (ad4170_iout_current_ua_tbl[i] == exc_cur)
+> +			break;
+> +
+> +	if (i == ARRAY_SIZE(ad4170_iout_current_ua_tbl))
+> +		return dev_err_probe(dev, ret,
+> +				     "Invalid excitation current: %uuA\n",
+> +				     exc_cur);
+> +
+> +	/* Get the excitation current configuration value */
+> +	exc_cur = ret;
+> +
+> +	if (s_type == AD4170_THERMOCOUPLE_SENSOR) {
+> +		vbias = fwnode_property_read_bool(child, "adi,vbias");
+> +		if (vbias) {
+> +			st->pins_fn[chan->channel2] |= AD4170_PIN_VBIAS;
+> +			reg_val = BIT(chan->channel2);
+> +			return regmap_write(st->regmap, AD4170_V_BIAS_REG,
+> +					    reg_val);
+> +		}
+> +	}
+> +	if (s_type == AD4170_WEIGH_SCALE_SENSOR) {
+> +		ret = ad4170_setup_bridge(st, child, setup, exc_pins,
+> +					  num_exc_pins, exc_cur, ac_excited);
+
+No {} needed as both single statements.
+
+
+> +	} else {
+> +		ret = ad4170_setup_rtd(st, child, setup, exc_pins, num_exc_pins,
+> +				       exc_cur, ac_excited);
+> +	}
+> +	return ret;
+> +}
+> +
+>  static int ad4170_parse_reference(struct ad4170_state *st,
+>  				  struct fwnode_handle *child,
+>  				  struct ad4170_setup *setup)
+> @@ -1849,6 +2231,7 @@ static int ad4170_parse_channel_node(struct iio_dev *indio_dev,
+>  	struct ad4170_state *st = iio_priv(indio_dev);
+>  	struct device *dev = &st->spi->dev;
+>  	struct ad4170_chan_info *chan_info;
+> +	u8 s_type = AD4170_ADC_SENSOR;
+>  	struct ad4170_setup *setup;
+>  	struct iio_chan_spec *chan;
+>  	unsigned int ch_reg;
+> @@ -1880,10 +2263,32 @@ static int ad4170_parse_channel_node(struct iio_dev *indio_dev,
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = ad4170_parse_adc_channel_type(dev, child, chan);
+> -	if (ret < 0)
+> -		return ret;
+> +	ret = fwnode_property_read_u8(child, "adi,sensor-type", &s_type);
+use same pattern for handling defaults as I suggested in earlier patches.
+
+	s_type = ADI4170_ADC_SESNOR;
+	fwnode_property_read_u8(child, "adi,sensor-type", &s_type);
+	if (s_type > ...
+
+> +	if (!ret) {
+> +		if (s_type > AD4170_THERMOCOUPLE_SENSOR)
+> +			return dev_err_probe(dev, ret,
+> +					     "Invalid adi,sensor-type: %u\n",
+> +					     s_type);
+> +	}
+> +	switch (s_type) {
+> +	case AD4170_ADC_SENSOR:
+> +		ret = ad4170_parse_adc_channel_type(dev, child, chan);
+> +		if (ret)
+> +			return ret;
+>  
+> +		break;
+> +	case AD4170_WEIGH_SCALE_SENSOR:
+> +	case AD4170_THERMOCOUPLE_SENSOR:
+> +	case AD4170_RTD_SENSOR:
+> +		ret = ad4170_parse_external_sensor(st, child, setup, chan,
+> +						   s_type);
+> +		if (ret)
+> +			return ret;
+> +
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+>  	bipolar = fwnode_property_read_bool(child, "bipolar");
+>  	setup->afe |= FIELD_PREP(AD4170_AFE_BIPOLAR_MSK, bipolar);
+>  	if (bipolar)
+> @@ -2087,6 +2492,12 @@ static int ad4170_parse_firmware(struct iio_dev *indio_dev)
+>  	for (i = 0; i < AD4170_NUM_ANALOG_PINS; i++)
+>  		st->pins_fn[i] = AD4170_PIN_UNASIGNED;M
+
+UNASSIGNED
+(obviously I missed this earlier)
+
+
+>  
+> +	for (i = 0; i < AD4170_NUM_GPIO_PINS; i++)
+> +		st->gpio_fn[i] = AD4170_GPIO_UNASIGNED;
+
+Same here.
+
+> +
+> +	for (i = 0; i < AD4170_NUM_CURRENT_SRC; i++)
+> +		st->cur_src_pins[i] = AD4170_CURRENT_SRC_DISABLED;
+> +
+>  	/* On power on, device defaults to using SDO pin for data ready signal */
+>  	st->int_pin_sel = AD4170_INT_PIN_SDO;
+>  	ret = device_property_match_property_string(dev, "interrupt-names",
+
