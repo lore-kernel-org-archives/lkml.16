@@ -1,144 +1,338 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43BB64A28;
-	Sun, 25 May 2025 10:25:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4E51E5206;
+	Sun, 25 May 2025 10:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748168701; cv=none; b=MAqqpLS3CnQDV22ZjsnJWhrr4mO9G2ivNgYDb8oXBDxpOO8ULMIITJS5eBDTPTK3EEs3GrgBLaKrQk0wjaBe83YSvdvAunR5ORZ1BgCwKf4B7NRQjD8ge39EZEphwMMe8MFLAo4rkzOQafF009pvTTra34P10QRqgoMHkgaGbVE=
+	t=1748169432; cv=none; b=F0ZSaJWiv4mYutuxZS5oY450wPhM6gZIZebioplrqUByeu/psgVZpBZkvOaam95X2uQKnsEVKkFS12DNvFzCYrRqmVrdyxavzDhmVJZ3W14Vll+VAIEy/mcoqOhLDvcTGU62owRtuXGAxGPsD2nN6zeR2RriaX4lxLeeMqWPIkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748168701; c=relaxed/simple;
-	bh=14q94SM2llMUhp/EjDnyIULov7yuZCABk//l6xQ5x0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M9aeI4RhE/pk7L6DcUSQ9CB2v8pL8TzP2M4Ksa/VZTBMYCYn90yZb4wUhtqxN2L+3XJz+cx8PGnI2g0fo6F1EKb4MO2WlEs8phgSeoDaEjMx0R0NnCymbileKF7iGD8saSvHM5oNTVcMLFixqJ/cI/GjK+fDovsKdvKhexiRuw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmZ17vt+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748169432; c=relaxed/simple;
+	bh=FW5xPz9u+XNijdV+UBVWW95CfDN792tY8lVObzhxd/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AWFDswSqW8q8iXIR1qLJB8UQqdQnR3nEPBZnz+ZyhgI1xBCL5rpRpfeWmfPZ3IApx8uHTYWoi+DfscDMZsNOiGxqpLJPPAM52wY/SsuGuI10vlfLpPWTqCV+J6q0bFx8zwh7VzywxzrM9r0lUkGVp3TOZMe7+os0/vr3MBeWSnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fS5PS7mf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmZ17vt+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45485C4CEEA;
-	Sun, 25 May 2025 10:25:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fS5PS7mf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C991C4CEEA;
+	Sun, 25 May 2025 10:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748168700;
-	bh=14q94SM2llMUhp/EjDnyIULov7yuZCABk//l6xQ5x0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DmZ17vt+rulDWuGUTTzT1RoHkvIy1R/NkykoQ4ex+9kW7/d/9odmJMkZmuM51ZyXE
-	 EmMNeVIqa4fpHWKJVyZGXqbr4dY+L0SdDwg3ugncJaXmVbZqMEqVTnx2iq9STBUncn
-	 zIBEBQZvHkF6oa++4gM5ovasdKIRYEGgobkDag1yOk8GoV2iWmuy4saw3W6vhtyahL
-	 VXz4pKAflUxb2C3ETZhvF45oWwBur9KS2nUYJ+FF3d6ypQVfpZR0ID1CO+MCizQXSF
-	 k2tl4hBkjBNv+8/MEqJ8GjbFLAQB/mPEcvOKQBf63wkMP0qycraTIGUepiKgCOq+ln
-	 HfTRzJQV/Le4g==
-Date: Sun, 25 May 2025 13:24:56 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Daisuke Matsuda <dskmtsd@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, jgg@ziepe.ca,
-	zyjzyj2000@gmail.com, hch@infradead.org
-Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
- virtual DMA devices
-Message-ID: <20250525102456.GX7435@unreal>
-References: <20250524144328.4361-1-dskmtsd@gmail.com>
- <20250525070806.GW7435@unreal>
- <77ba8709-9b59-4c83-8898-6f0c699992c3@gmail.com>
+	s=k20201202; t=1748169431;
+	bh=FW5xPz9u+XNijdV+UBVWW95CfDN792tY8lVObzhxd/k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fS5PS7mf0SBAtaX0sWHbzNXOV4u6R1WbXGTFMBDODuwm3uMoudj1S8fEoWBks+oco
+	 dLT2uf8mndzSVUBwVyTgRxqme0hdmaUVsSwj7rRhL6aQEdpioaMqUOf4mBGQBhuZOx
+	 YwPvcrdwNzj6KDF7AwaNT+Aa51EM5Zhst1GX3ebORuD9unyDzpevmjtUpQ5AWSMFJf
+	 mvMVFvvSmbTUHbVeBU6b6VYdXe94ICtxWxLOl4cIlXEqxLFUpCbKdZKSHULAxqF9vc
+	 Nj3gmI9Jn9U1Jtj4B7E/bk4qPBKfESv+Z8irItycOJ2AeIJIWHFgjaNmK50fuKi6Yu
+	 ZaB7HXPqz+N6Q==
+Date: Sun, 25 May 2025 11:36:59 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Ana-Maria
+ Cusco <ana-maria.cusco@analog.com>, <lars@metafoo.de>,
+ <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
+ <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
+ <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linus.walleij@linaro.org>,
+ <brgl@bgdev.pl>, <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v3 02/10] iio: adc: Add basic support for AD4170
+Message-ID: <20250525113659.2661c8d7@jic23-huawei>
+In-Reply-To: <2c308bf8464660079ec6da82a62316e9f2ebd5f7.1747083143.git.marcelo.schmitt@analog.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	<2c308bf8464660079ec6da82a62316e9f2ebd5f7.1747083143.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77ba8709-9b59-4c83-8898-6f0c699992c3@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 25, 2025 at 06:34:56PM +0900, Daisuke Matsuda wrote:
-> Hi Leon,
-> 
-> Thank you for amending the patch.
-> I've run the test and confirmed that the bug has been resolved.
-> 
-> We still have two build errors. Please see my reply below.
-> 
-> On 2025/05/25 16:08, Leon Romanovsky wrote:
-> > On Sat, May 24, 2025 at 02:43:28PM +0000, Daisuke Matsuda wrote:
-> <...>
-> > >   drivers/infiniband/core/device.c   | 17 +++++++++++++++++
-> > >   drivers/infiniband/core/umem_odp.c | 11 ++++++++---
-> > >   include/rdma/ib_verbs.h            |  4 ++++
-> > >   3 files changed, 29 insertions(+), 3 deletions(-)
-> > 
-> > Please include changelogs when you submit vX patches next time.
-> 
-> Oh, sorry. I will be careful from next time.
-> 
-> > 
-> > I ended with the following patch:
-> > 
-> > diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-> > index 51d518989914e..cf16549919e02 100644
-> > --- a/drivers/infiniband/core/umem_odp.c
-> > +++ b/drivers/infiniband/core/umem_odp.c
-> > @@ -60,9 +60,11 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
-> >   {
-> >   	struct ib_device *dev = umem_odp->umem.ibdev;
-> >   	size_t page_size = 1UL << umem_odp->page_shift;
-> > +	struct hmm_dma_map *map;
-> >   	unsigned long start;
-> >   	unsigned long end;
-> > -	int ret;
-> > +	size_t nr_entries;
-> > +	int ret = 0;
-> >   	umem_odp->umem.is_odp = 1;
-> >   	mutex_init(&umem_odp->umem_mutex);
-> > @@ -75,9 +77,20 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
-> >   	if (unlikely(end < page_size))
-> >   		return -EOVERFLOW;
-> > -	ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
-> > -				(end - start) >> PAGE_SHIFT,
-> > -				1 << umem_odp->page_shift);
-> > +	nr_entries = (end - start) >> PAGE_SHIFT;
-> > +	if (!(nr_entries * PAGE_SIZE / page_size))
-> > +		return -EINVAL;
-> > +
-> > +	nap = &umem_odp->map;
-> 
-> BUILD ERROR: 'nap' should be 'map'
+On Tue, 13 May 2025 09:34:00 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-Sorry, I pushed the code too fast.
+> From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+>=20
+> The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> analog to digital converter. The AD4170 design offers a flexible data
+> aquisition solution with crosspoint multiplexed analog inputs, configurab=
+le
+> ADC voltage reference inputs, ultra-low noise integrated PGA, digital
+> filtering, wide range of configurable output data rates, internal
+> oscillator and temperature sensor, four GPIOs, and integrated features for
+> interfacing with load cell weigh scales, RTD, and thermocouple sensors.
+>=20
+> Add basic support for the AD4170 ADC with the following features:
+> - Single-shot read.
+> - Analog front end PGA configuration.
+> - Differential and pseudo-differential input configuration.
+>=20
+> Signed-off-by: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> Co-developed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
-> 
-> > +	if (ib_uses_virt_dma(dev)) {
-> > +		map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
-> > +					 GFP_KERNEL | __GFP_NOWARN);
-> > +		if (!map->pfn_list)
-> > +			ret = -ENOMEM;
-> > +	} else
-> > +		ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
-> 
-> OPTIONAL: Perhaps we can just pass 'map' for the 2nd arg?
+A few minor things inline.
+
+J
+
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> new file mode 100644
+> index 000000000000..bf19b31095ee
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad4170.c
+
+> +
+> +/*
+> + * Verifies whether the channel configuration is valid by checking the p=
+rovided
+> + * input type, polarity, and voltage references result in a sane input r=
+ange.
+> + * Returns negative error code on failure.
+> + */
+> +static int ad4170_get_input_range(struct ad4170_state *st,
+> +				  struct iio_chan_spec const *chan,
+> +				  unsigned int ch_reg, unsigned int ref_sel)
+> +{
+> +	bool bipolar =3D chan->scan_type.sign =3D=3D 's';
+> +	struct device *dev =3D &st->spi->dev;
+> +	int refp, refn, ain_voltage, ret;
+> +
+> +	switch (ref_sel) {
+> +	case AD4170_REF_REFIN1:
+> +		if (st->vrefs_uv[AD4170_REFIN1P_SUP] =3D=3D -ENODEV ||
+> +		    st->vrefs_uv[AD4170_REFIN1N_SUP] =3D=3D -ENODEV)
+> +			return dev_err_probe(dev, -ENODEV,
+> +					     "REFIN=C2=B1 selected but not provided\n");
+> +
+> +		refp =3D st->vrefs_uv[AD4170_REFIN1P_SUP];
+> +		refn =3D st->vrefs_uv[AD4170_REFIN1N_SUP];
+> +		break;
+> +	case AD4170_REF_REFIN2:
+> +		if (st->vrefs_uv[AD4170_REFIN2P_SUP] =3D=3D -ENODEV ||
+> +		    st->vrefs_uv[AD4170_REFIN2N_SUP] =3D=3D -ENODEV)
+> +			return dev_err_probe(dev, -ENODEV,
+> +					     "REFIN2=C2=B1 selected but not provided\n");
+> +
+> +		refp =3D st->vrefs_uv[AD4170_REFIN2P_SUP];
+> +		refn =3D st->vrefs_uv[AD4170_REFIN2N_SUP];
+> +		break;
+> +	case AD4170_REF_AVDD:
+> +		refp =3D st->vrefs_uv[AD4170_AVDD_SUP];
+> +		refn =3D st->vrefs_uv[AD4170_AVSS_SUP];
+> +		break;
+> +	case AD4170_REF_REFOUT:
+> +		/* REFOUT is 2.5 V relative to AVSS */
+> +		refp =3D st->vrefs_uv[AD4170_AVSS_SUP] + AD4170_INT_REF_2_5V;
+> +		refn =3D st->vrefs_uv[AD4170_AVSS_SUP];
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Find out the analog input range from the channel type, polarity, and
+> +	 * voltage reference selection.
+> +	 * AD4170 channels are either differential or pseudo-differential.
+> +	 * Diff input voltage range: =E2=88=92VREF/gain to +VREF/gain (datashee=
+t page 6)
+> +	 * Pseudo-diff input voltage range: 0 to VREF/gain (datasheet page 6)
+> +	 */
+> +	if (chan->differential) {
+> +		if (!bipolar)
+> +			return dev_err_probe(&st->spi->dev, -EINVAL,
+
+dev
+
+> +					     "Channel %u differential unipolar\n",
+> +					     ch_reg);
+> +
+> +		/*
+> +		 * Differential bipolar channel.
+> +		 * avss-supply is never above 0V.
+> +		 * Assuming refin1n-supply not above 0V.
+> +		 * Assuming refin2n-supply not above 0V.
+> +		 */
+> +		return refp + abs(refn);
+> +	}
+> +	/*
+> +	 * Some configurations can lead to invalid setups.
+> +	 * For example, if AVSS =3D -2.5V, REF_SELECT set to REFOUT (REFOUT/AVS=
+S),
+> +	 * and pseudo-diff channel configuration set, then the input range
+> +	 * should go from 0V to +VREF (single-ended - datasheet pg 10), but
+> +	 * REFOUT/AVSS range would be -2.5V to 0V.
+> +	 * Check the positive reference is higher than 0V for pseudo-diff
+> +	 * channels.
+> +	 */
+> +	if (refp <=3D 0)
+> +		return dev_err_probe(&st->spi->dev, -EINVAL,
+
+dev
+
+> +				     "REF+ <=3D GND for pseudo-diff chan %u\n",
+> +				     ch_reg);
+> +
+> +	if (bipolar)
+> +		return refp;
+> +
+> +	/*
+> +	 * Pseudo-differential unipolar channel.
+> +	 * Input expected to swing from IN- to +VREF.
+> +	 */
+> +	ret =3D ad4170_get_ain_voltage_uv(st, chan->channel2, &ain_voltage);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (refp - ain_voltage <=3D 0)
+> +		return dev_err_probe(&st->spi->dev, -EINVAL,
+
+dev
+
+> +				     "Negative input >=3D REF+ for pseudo-diff chan %u\n",
+> +				     ch_reg);
+> +
+> +	return refp - ain_voltage;
+> +}
 
 
-<...>
 
-> > +		hmm_dma_map_free(dev->dma_device, &umem_odp->map);
-> 
-> OPTIONAL: Here too.
+> +static int ad4170_parse_reference(struct ad4170_state *st,
+> +				  struct fwnode_handle *child,
+> +				  struct ad4170_setup *setup)
+> +{
+> +	struct device *dev =3D &st->spi->dev;
+> +	int ret;
+> +	u8 aux;
+> +
+> +	/* Optional positive reference buffering, if omitted we use the default=
+ */
 
-Sure, will change.
+I'd drop the "if omitted" part as the next line makes that clear.
 
-> 
-> >   	return ret;
-> >   }
-> > @@ -259,7 +275,10 @@ static void ib_umem_odp_free(struct ib_umem_odp *umem_odp)
-> >   				    ib_umem_end(umem_odp));
-> >   	mutex_unlock(&umem_odp->umem_mutex);
-> >   	mmu_interval_notifier_remove(&umem_odp->notifier);
-> > -	hmm_dma_map_free(dev->dma_device, &umem_odp->map);
-> > +	if (ib_uses_virt_dma(dev))
-> > +		kfree(umem_odp->map->pfn_list);
-> 
-> BUILD ERROR:     'umem_odp->map.pfn_list' is correct.
+> +	aux =3D AD4170_REF_BUF_FULL; /* Default to full precharge buffer enable=
+d. */
+> +	ret =3D fwnode_property_read_u8(child, "adi,buffered-positive", &aux);
+> +	if (!ret) {
+> +		if (aux < AD4170_REF_BUF_PRE || aux > AD4170_REF_BUF_BYPASS)
 
-Sorry about that too.
+Given default is within these limits (I assume!), can simplified as:
 
-> 
-> Thanks again,
-> Daisuke
-> 
-> 
+	aux =3D AD4170_REF_BUF_FULL;
+	fwnode_property_read_u8(child, "adi,buffered-positive", &aux);
+	if (aux < AD4170_REF_BUF_PRE || aux > AD4170_REF_BUF_BYPASS)
+		return dev_err_probe(dev, -EINVAL,
+				     "Invalid adi,buffered-positive: %u\n", aux);
+
+	setup->afe |=3D FIELD_PREP(AD4170_AFE_REF_BUF_P_MSK, aux);
+
+
+> +					     aux);
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Invalid adi,buffered-positive: %u\n",
+> +					     aux);
+> +	}
+> +	setup->afe |=3D FIELD_PREP(AD4170_AFE_REF_BUF_P_MSK, aux);
+> +
+> +	/* Optional negative reference buffering, if omitted we use the default=
+ */
+> +	aux =3D AD4170_REF_BUF_FULL; /* Default to full precharge buffer enable=
+d. */
+
+Similar refactor to above applies here and dropping the obvious what happens
+if omitted comment.
+
+> +	ret =3D fwnode_property_read_u8(child, "adi,buffered-negative", &aux);
+> +	if (!ret) {
+> +		if (aux < AD4170_REF_BUF_PRE || aux > AD4170_REF_BUF_BYPASS)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Invalid adi,buffered-negative: %u\n",
+> +					     aux);
+> +	}
+> +	setup->afe |=3D FIELD_PREP(AD4170_AFE_REF_BUF_M_MSK, aux);
+> +
+> +	/* Optional voltage reference selection, if omitted we use the default =
+*/
+> +	aux =3D AD4170_REF_REFOUT; /* Default reference selection. */
+
+And here.
+
+> +	ret =3D fwnode_property_read_u8(child, "adi,reference-select", &aux);
+> +	if (!ret) {
+> +		if (aux > AD4170_REF_AVDD)
+> +			return dev_err_probe(dev, -EINVAL,
+> +					     "Invalid reference selected %u\n",
+> +					     aux);
+> +	}
+> +	setup->afe |=3D FIELD_PREP(AD4170_AFE_REF_SELECT_MSK, aux);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad4170_parse_adc_channel_type(struct device *dev,
+> +					 struct fwnode_handle *child,
+> +					 struct iio_chan_spec *chan)
+> +{
+> +	u32 pins[2];
+> +	int ret, ret2;
+> +
+> +	/* Parse pseudo-differential channel configuration */
+> +	ret =3D fwnode_property_read_u32(child, "single-channel", &pins[0]);
+> +	ret2 =3D fwnode_property_read_u32(child, "common-mode-channel", &pins[1=
+]);
+> +	if (!ret && ret2)
+> +		return dev_err_probe(dev, ret,
+> +			"single-ended channels must define common-mode-channel\n");
+
+ret =3D=3D 0 so that will report success.
+
+Move the ret2 logic down into this (!ret) statement that comes next then you
+can just use ret and avoid this sort of issue. (Likely smatch would have
+caught this but better to never have a bug report + fix :)
+
+
+> +	if (!ret) {
+> +		chan->differential =3D false;
+> +		chan->channel =3D pins[0];
+> +		chan->channel2 =3D pins[1];
+> +		return 0;
+> +	}
+> +
+> +	/* Parse differential channel configuration */
+> +	ret =3D fwnode_property_read_u32_array(child, "diff-channels", pins,
+> +					     ARRAY_SIZE(pins));
+> +	if (!ret) {
+> +		chan->differential =3D true;
+> +		chan->channel =3D pins[0];
+> +		chan->channel2 =3D pins[1];
+> +		return 0;
+> +	}
+> +	return dev_err_probe(dev, ret,
+> +		"Channel must define one of diff-channels or single-channel.\n");
+> +}
+
+> +
+> +static int ad4170_probe(struct spi_device *spi)
+> +{
+
+> +
+> +	init_completion(&st->completion);
+> +
+> +	if (spi->irq) {
+> +		ret =3D devm_request_irq(&st->spi->dev, st->spi->irq,
+
+Use dev and spi->irq.
+
+
+
+
+> +				       &ad4170_irq_handler, IRQF_ONESHOT,
+> +				       indio_dev->name, indio_dev);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
