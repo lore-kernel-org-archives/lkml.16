@@ -1,114 +1,144 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB6C2F5E;
-	Sun, 25 May 2025 07:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2AF18DB0D;
+	Sun, 25 May 2025 07:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748157981; cv=none; b=VVB0BY7Yf/7Guyg8JaQChGtW7dx+ntUEj13keOP0WsdMkxySLLjJAw3k4F71E6rdNZwTyuE4OUonksZWIjlXUgC2GMnFwot6ra1ZFTeMl7q+BXvHuA2T26EZXy88cvu53FEfO6OJVdJSnvvnO5vGJa7Mk/oKjxSduHyYDqehBPQ=
+	t=1748158508; cv=none; b=qyYIq85pD/QxcHKDuJXU4FfWrjQtrQaJLKFlVwL7XYEnK+44b9Ho0D76+fzbT54YLTEpNGOXI/vKhJAHP8RuaVnatM8rsOMcc2rbRWZ3X4I3QxnZT4JWZowr590YNfKlGjbbmoy3L3MfV0TGyYt8h/Y4RbwUC3uS/UonU4kc0MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748157981; c=relaxed/simple;
-	bh=A7c3C86HSRycHnJNwy3scJDbgoCIJ5mbBh5V35009Qg=;
+	s=arc-20240116; t=1748158508; c=relaxed/simple;
+	bh=mMu67Ud9w4LRVdNAVeeRi2tiVfqaGBfScHnTBYfhtPU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fn9bR3RApq66RfJN0L1v6vXa9c6sCr3LwUIpVKIeMgN6T0TKLxy+RZzurcHTOYWF9cRu5yYdSr/76bRoybxI7ELusP0xxZr8vpwpge3naXWKTXTGyTImtUup0HNAqMDRNqo0p+hy0bC17gWkPbzroJTEbhpgPbiRLmAFY33Cn/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1BB222009199;
-	Sun, 25 May 2025 09:26:16 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 0557E184F9F; Sun, 25 May 2025 09:26:16 +0200 (CEST)
-Date: Sun, 25 May 2025 09:26:15 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cassel@kernel.org,
-	wilfred.mallawa@wdc.com
-Subject: Re: [PATCH 2/2] PCI: Rename host_bridge::reset_slot() to
- host_bridge::reset_root_port()
-Message-ID: <aDLGF8znWih9308o@wunner.de>
-References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
- <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sC053xy1gtLXpGq0tnDTCYSbES0eKGRnWM3zscS4we/1N8x3eh4/1/rty9MFaVaWymG6ReYoZZ7ghdyIM4JxQwy228fKVpfmrvA7kcCLheh5xSSiGFSeGG1z8sUVbE0/6JoL21mwR2V/yH6hTWr5Kw9ls3l+w6R0bw4DTvG+UUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=uObr2CJ/; arc=none smtp.client-ip=78.46.3.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="uObr2CJ/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=it-klinger.de; s=default2502; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=rjNuVY7Zq4l4Qpw6Ak1J6G7FtcipVqJJf74Nk2EbkhQ=; b=uObr2CJ/aV/OxtLJFDTjtUknMJ
+	QyvtTFnhv/JUpPbdWUNXiRf/ecjff7STnPfpazJmXlUtOpLwBQZoWUX6bgIMSSvXBqpMnegq2ouoR
+	EFvkk4vncorYety/X5AhHQm/Av+KT914E/GmYrtTBQzZrvwZwkRONuwepBvH5zbjzL/v3lzjF75gr
+	WII9AbWGQWiNNJ03SV3XWzXPNw51KlBenqu/VQf9rmpdiI22rOQ0njqt1pP3HXamD+ELpED6GQT3I
+	qctKGNhEscGAB6hxsys7lIR+KoSIamzIJyIaEt3zHE6nxutZX9V/2IC7U4e2/QoDIbRLd+ja5cExA
+	cX10ZipQ==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <ak@it-klinger.de>)
+	id 1uJ5sk-000Gre-1c;
+	Sun, 25 May 2025 09:34:54 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ak@it-klinger.de>)
+	id 1uJ5sk-000AvQ-01;
+	Sun, 25 May 2025 09:34:54 +0200
+Date: Sun, 25 May 2025 09:34:52 +0200
+From: Andreas Klinger <ak@it-klinger.de>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lars@metafoo.de,
+	javier.carrasco.cruz@gmail.com, mazziesaccount@gmail.com,
+	arthur.becker@sentec.com, perdaniel.olsson@axis.com,
+	mgonellabolduc@dimonoff.com, muditsharma.info@gmail.com,
+	clamor95@gmail.com, emil.gedenryd@axis.com,
+	devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] iio: light: add support for veml6046x00 RGBIR
+ color sensor
+Message-ID: <aDLIHEj4lqlgargJ@mail.your-server.de>
+References: <20250519060804.80464-1-ak@it-klinger.de>
+ <20250519060804.80464-3-ak@it-klinger.de>
+ <aCsQKUwGeq4Ed4ai@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="o+cMHJOAAGa7G8wa"
+Content-Disposition: inline
+In-Reply-To: <aCsQKUwGeq4Ed4ai@smile.fi.intel.com>
+X-Authenticated-Sender: ak@it-klinger.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27647/Sat May 24 10:30:52 2025)
+
+
+--o+cMHJOAAGa7G8wa
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250524185304.26698-3-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: quoted-printable
 
-Eight more occurrences where "Root Port" should be capitalized:
+Hi Andy,
 
-On Sun, May 25, 2025 at 12:23:04AM +0530, Manivannan Sadhasivam wrote:
-> @@ -759,7 +759,7 @@ static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
->  
->  	/* Ignore errors, the link may come up later. */
->  	dw_pcie_wait_for_link(pci);
-> -	dev_dbg(dev, "slot reset completed\n");
-> +	dev_dbg(dev, "Root port reset completed\n");
->  	return ret;
->  
->  deinit_clk:
+thanks for the review. I have a question and a comment below.
 
-> @@ -1589,7 +1589,7 @@ static int qcom_pcie_reset_slot(struct pci_host_bridge *bridge,
->  
->  	qcom_pcie_start_link(pci);
->  
-> -	dev_dbg(dev, "Slot reset completed\n");
-> +	dev_dbg(dev, "Root port reset completed\n");
->  
->  	return 0;
->  
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> schrieb am Mo, 19. Mai =
+14:04:
+> > +/*
+> > + * veml6046x00_gain_pd - translation from gain index (used in the driv=
+er) to
+> > + * gain (sensor) and PD
+> > + * @gain_sen:	Gain used in the sensor as described in the datasheet of=
+ the
+> > + *		sensor
+> > + * @pd:		Photodiode size in the sensor
+>=20
+> This is made to look like kernel-doc, but it's not marked as a such, why?
 
-> @@ -99,22 +99,22 @@ void pci_host_common_remove(struct platform_device *pdev)
->  	ret = pci_bus_error_reset(dev);
->  	if (ret) {
-> -		pci_err(dev, "Failed to reset slot: %d\n", ret);
-> +		pci_err(dev, "Failed to reset root port: %d\n", ret);
->  		return PCI_ERS_RESULT_DISCONNECT;
->  	}
->  
-> -	pci_info(dev, "Slot has been reset\n");
-> +	pci_info(dev, "Root port has been reset\n");
->  
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
+I'll remove the '@'
 
-> @@ -140,17 +140,17 @@ static void pci_host_recover_slots(struct pci_host_bridge *host)
->  
->  		ret = pci_bus_error_reset(dev);
->  		if (ret)
-> -			pci_err(dev, "Failed to reset slot: %d\n", ret);
-> +			pci_err(dev, "Failed to reset root port: %d\n", ret);
->  		else
-> -			pci_info(dev, "Slot has been reset\n");
-> +			pci_info(dev, "Root port has been reset\n");
->  	}
->  }
->  #endif
->  
->  void pci_host_handle_link_down(struct pci_host_bridge *bridge)
->  {
-> -	dev_info(&bridge->dev, "Recovering slots due to Link Down\n");
-> -	pci_host_recover_slots(bridge);
-> +	dev_info(&bridge->dev, "Recovering root ports due to Link Down\n");
-> +	pci_host_reset_root_ports(bridge);
->  }
->  EXPORT_SYMBOL_GPL(pci_host_handle_link_down);
->  
-> @@ -4985,16 +4985,16 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
-> +		ret = host->reset_root_port(host, dev);
->  		if (ret)
-> -			pci_err(dev, "failed to reset slot: %d\n", ret);
-> +			pci_err(dev, "failed to reset root port: %d\n", ret);
->  		else
->  			/* Now restore it on success */
->  			pci_restore_state(dev);
+=2E..
+
+> > +	ret =3D regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF0,
+> > +							VEML6046X00_CONF0_ON_0);
+>=20
+> Something wrong with the indentation. Please, fix all places like this...
+>=20
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to set bit for power on %d\n", ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
+> > +							VEML6046X00_CONF1_ON_1);
+>=20
+> ...or like this.
+>=20
+> > +}
+
+I don't get the point what is wrong with the indentation. In the coding-sty=
+le it
+says the decendant line should be placed to the right.
+Did i miss something?
+
+Best regards,
+
+Andreas
+
+
+--o+cMHJOAAGa7G8wa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEE7/NrAFtB/Pj7rTUyyHDM+xwPAVEFAmgyyBsACgkQyHDM+xwP
+AVE9uAv9FAsOdICiVxcMeS2lQBnbog/ke6YBclqe2ny0NeHs5cClnnV/04GVIpoP
+3rHVqxwU7W/9PSV39hlcOUB38Kj+/WhFuqf3RFDFK30SMBuhB/Mc6f6PU6T6m4px
+dyQdfF3LENDNARbhiwV3k3X7+hSLN7+5wW9RaGhwE383vBpFJcr25xzg7gPbSsuH
+sGkHEA3afVPd+0n2uq/ASB0yL2F4dbxsxH74Kp1j0fem8YXqf4EvZJKOzLulu4jF
+SrYt8NRJQ2WGu9eGTBogbYUlH79PZIvGyM1Yd5Q0kskmWo+F9676iQdrrIJXy+8w
+PHM4hIz5brlTDC46xga9sG75W+t14z/n8iZCIbd5UziSTvcisVjLo02oC/3L/SI9
+WqMmQHpE5VZ3xfoKAOaJdXG4oMot57a7J4v8LvJj7Y+YKEfrKoqzTEbh+KQSq5Vu
+V2Rx21m9pQRlpVH9p2MrHcczxibsJns0kRL4ewlW20YW+pq8FJF9aRAUSNhj9p+b
++QKFaCvi
+=goN0
+-----END PGP SIGNATURE-----
+
+--o+cMHJOAAGa7G8wa--
