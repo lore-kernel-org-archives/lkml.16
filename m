@@ -1,133 +1,106 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BA81F4289
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2427B2F5E;
+	Sun, 25 May 2025 17:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748194599; cv=none; b=Aw7BJUCfwgc8/aWiHbKli7Wiz8yK87WPUN3tG+awvaZAwcHGbGk45bcof5Gkfae7e9Cudbu60kWRNKQcQomMJJQG/owA1jld2gpH5ZTxkrhhki8wltlx4R8XVn9aMcc96SC8mjgj732vuaQipdU7BeV/1fLUugKGLW25E5Nm8RQ=
+	t=1748194749; cv=none; b=Be+PJScLgOsY3KqDa3C4UXCyDGZd6gvyD+Y0DL/eaV6WTYhEd8sQ8O8FTL7uZ+aoNwNt0ft7OPJ1d7z0yOliRjLIppEe9L8hajzma01ewsdF2zGioL9hvrUjY1TdOEVnbe6ELGuHTeW5JEkkUgRMgJWCcmH8/a25lpJ9zzgdzKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748194599; c=relaxed/simple;
-	bh=DH55LpZqJeh+O8Ipg9+CFUV+kshSj88VsgnPPzafZvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvYgx30ZxzNTEVMn55IX8xGGs9Bj2ARX1VDEiuMbEOJ+4rRllH3KV3ZUuuqWFL3ZKbctyv/Bo/P4VlvPsbSUlQ0mUl7a4c42LDz1/No+qtAHY5+k9b9+DbBydmzEM2dR+p5zIUr+9ofpt7AIQEa6tTdjTmDtZwpKrt2HPuhQ4ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Cu7rOmhS; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748194749; c=relaxed/simple;
+	bh=ULH+67z18Q0hTfGo9mqfRlFZjKx2S+upOmGnLanF5/s=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=T3yN8P785PQM8eZa0WY6bqAnTgouaDXuFOe/eBCFmopHz/6ge3+AuvbvKhxWxnRhaKhCB7Pxxcl5Eq2BFd4Zhlkx6I2SaiuBth3NgOaZYSSnrrersshgFoaNAY6Cbuzo6vOGCGTQ/4MUhmZHsfMH9B/JlGWK512PVqQNZrWF2FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Py7cu9in; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Cu7rOmhS"
-Date: Sun, 25 May 2025 13:36:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748194585;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hPquWNVcy25QbuJztp/q6NZqS5icVInrtL89/XNAjPk=;
-	b=Cu7rOmhSTjOeVqNCHzk3h40sQCJXPZN6hlE2eFukEAFOl2K7w+emJ7c4/q10/mNsm1G+J+
-	GAsz/+URbtyghiQzfeNP4YiwEHz3wEA7RjdQb3+hNfYwnA0LLeT4ryP8zmDeBH16jSCoJq
-	sdYrWqRHW92FqPUKaj8ncJ2tP7XBO28=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, linux-bcache@vger.kernel.org, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Message-ID: <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
- <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
- <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
- <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
- <7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
- <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
- <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
- <692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
- <20250525181842.2e2c47fd@pumpkin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Py7cu9in"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B45F9C4CEEA;
+	Sun, 25 May 2025 17:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748194748;
+	bh=ULH+67z18Q0hTfGo9mqfRlFZjKx2S+upOmGnLanF5/s=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=Py7cu9inPMlueQ31z8v+xd5wQYgAxpsHk21DAdm+WRcZvGb/KugUZpYkr1aCOhcWc
+	 tHyxqfmXmdcUEMuZAxI3QHqaqSMXzwMQoJT/ylp8rU/GLBqVWhvZpKERBltgO8VIZF
+	 8BgkuDRf8e1WVOgbmjYJHWNuYfdNvlEJlXXoGH4BJKCRwHobWgJEYc3ThkETaSDPws
+	 OcOkgmCgK/5jRiS6vlmtrg0qxlCynTGBZ4o3Oa7JEmExR5wNdpSvh1fCODJ88YmXJM
+	 J8hIcMb1689QMdgpZ2jsEp9ULOPZMlj0lv6LSWTGlN/x1ZhweOGEVobPccVVFBr1GK
+	 ZA82Wy/S9AuKQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250525181842.2e2c47fd@pumpkin>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 25 May 2025 19:39:04 +0200
+Message-Id: <DA5FBED7E1NX.W675V3MKQSMD@kernel.org>
+To: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Fiona Behrens" <me@kloenk.dev>, "Xiangfei Ding"
+ <dingxiangfei2009@gmail.com>
+Cc: <stable@kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rust: list: fix path of `assert_pinned!`
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250525173450.853413-1-lossin@kernel.org>
+In-Reply-To: <20250525173450.853413-1-lossin@kernel.org>
 
-+cc Steve
+On Sun May 25, 2025 at 7:34 PM CEST, Benno Lossin wrote:
+> Commit dbd5058ba60c ("rust: make pin-init its own crate") moved all
+> items from pin-init into the pin-init crate, including the
+> `assert_pinned!` macro.
+>
+> Thus fix the path.
+>
+> This occurrence was missed in that commit, since it has no current
+> users, although binder does.
 
-On Sun, May 25, 2025 at 06:18:42PM +0100, David Laight wrote:
-> On Fri, 23 May 2025 20:01:33 +0200
-> "Arnd Bergmann" <arnd@arndb.de> wrote:
-> 
-> > On Fri, May 23, 2025, at 19:11, Kent Overstreet wrote:
-> > > On Fri, May 23, 2025 at 05:17:15PM +0200, Arnd Bergmann wrote:  
-> > >> 
-> > >> - KASAN_STACK adds extra redzones for each variable
-> > >> - KASAN_STACK further prevents stack slots from getting
-> > >>   reused inside one function, in order to better pinpoint
-> > >>   which instance caused problems like out-of-scope access
-> > >> - passing structures by value causes them to be put on
-> > >>   the stack on some architectures, even when the structure
-> > >>   size is only one or two registers  
-> > >
-> > > We mainly do this with bkey_s_c, which is just two words: on x86_64,
-> > > that gets passed in registers. Is riscv different?  
-> > 
-> > Not sure, I think it's mostly older ABIs that are limited,
-> > either not passing structures in registers at all, or only
-> > possibly one but not two of them.
-> > 
-> > >> - sanitizers turn off optimizations that lead to better
-> > >>   stack usage
-> > >> - in some cases, the missed optimization ends up causing
-> > >>   local variables to get spilled to the stack many times
-> > >>   because of a combination of all the above.  
-> > >
-> > > Yeesh.
-> > >
-> > > I suspect we should be running with a larger stack when the sanitizers
-> > > are running, and perhaps tweak the warnings accordingly. I did a bunch
-> > > of stack usage work after I found a kmsan build was blowing out the
-> > > stack, but then running with max stack usage tracing enabled showed it
-> > > to be a largely non issue on non-sanitizer builds, IIRC.  
-> > 
-> > Enabling KASAN does double the available stack space. However, I don't
-> > think we should use that as an excuse to raise the per-function
-> > warning limit, because
-> > 
-> >  - the majority of all function stacks do not grow that much when
-> >    sanitizers are enabled
-> >  - allmodconfig enables KASAN and should still catch mistakes
-> >    where a driver accidentally puts a large structure on the stack
-> 
-> That is rather annoying when you want to look at the generated code :-(
-> 
-> >  - 2KB on 64-bit targes is a really large limit. At some point
-> >    in the past I had a series that lowered the limit to 1536 byte
-> >    for 64-bit targets, but I never managed to get all the changes
-> >    merged.
-> 
-> I've a cunning plan to do a proper static analysis of stack usage.
-> It is a 'simple' matter of getting objtool to output all calls with
-> the stack offset.
-> Indirect calls need the function hashes from fine-ibt, but also need
-> clang to support 'hash seeds' to disambiguate all the void (*)(void *)
-> functions.
-> That'll first barf at all recursion, and then, I expect, show a massive
-> stack use inside snprintf() in some error path.
+Aw damn, I edited the message, but forgot to regenerate the .patch
+file... here is the edited version:
 
-I suspect recursion will make the results you get with that approach
-useless.
+    Commit dbd5058ba60c ("rust: make pin-init its own crate") moved all
+    items from pin-init into the pin-init crate, including the
+    `assert_pinned!` macro.
+   =20
+    Thus fix the path of the sole user of the `assert_pinned!` macro.
+   =20
+    This occurrence was missed in the commit above, since it is in a macro
+    has no current users (although binder is a future user).
 
-We already have "trace max stack", but that only checks at process exit,
-so it doesn't tell you much.
+---
+Cheers,
+Benno
 
-We could do better with tracing - just inject a trampoline that checks
-the current stack usage against the maximum stack usage we've seen, and
-emits a trace event with a stack trace if it's greater.
+> Cc: stable@kernel.org # I haven't found the commit in stable yet, but jus=
+t to be sure.
+> Fixes: dbd5058ba60c ("rust: make pin-init its own crate")
+> Signed-off-by: Benno Lossin <lossin@kernel.org>
+> ---
+>  rust/kernel/list/arc.rs | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/rust/kernel/list/arc.rs b/rust/kernel/list/arc.rs
+> index 13c50df37b89..a88a2dc65aa7 100644
+> --- a/rust/kernel/list/arc.rs
+> +++ b/rust/kernel/list/arc.rs
+> @@ -96,7 +96,7 @@ unsafe fn on_drop_list_arc(&self) {}
+>      } $($rest:tt)*) =3D> {
+>          impl$(<$($generics)*>)? $crate::list::ListArcSafe<$num> for $t {
+>              unsafe fn on_create_list_arc_from_unique(self: ::core::pin::=
+Pin<&mut Self>) {
+> -                $crate::assert_pinned!($t, $field, $fty, inline);
+> +                ::pin_init::assert_pinned!($t, $field, $fty, inline);
+> =20
+>                  // SAFETY: This field is structurally pinned as per the =
+above assertion.
+>                  let field =3D unsafe {
+>
+> base-commit: f26449565019315650c9fe87743b10103910ca6b
 
-(and now Steve's going to tell us he's already done this :)
