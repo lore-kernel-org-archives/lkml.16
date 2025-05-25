@@ -1,179 +1,222 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E612260C
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 05:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1234208CA
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 05:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748150214; cv=none; b=oFkqEcXkh8KVhSq+7dOIvMH4zIAC+WO3lsVFJbOPKrjq4JdXTY0lrh4f6qIvzfj5S/Jqsjkmb83IKVP2wn6Txvh0i/ZwnV7vZW97rCfrXcaXLgSY0ikq47iV7BbMJh8Hu+9RkCCtQ1Sh6DeDohYKLG6JZJk2bYkXdnajyisf6nY=
+	t=1748150578; cv=none; b=kKQr4DkL8k2l2/aCem6dFaHxqH6N8AWPf4p2XO7yGKJGsi0nFzHKWXqtTZmLiQCCF6NCgUnAGUrnbHiECwNbIqJ3qlG+xD4aY2LcDABeiPBMhQpjUBaoo7m49DU3ivMSQsiEJG5yJFddH+C8Mr4vkO9SEt2LR8r0zh+oqCUvOc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748150214; c=relaxed/simple;
-	bh=+5c0VEkCDydqP+dJvv5yWg3lhMM2EDfhOnBOrhDfWlw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uWjmUGQIJnECEEzQdWDXY1x20y1O1y3NBKJxlKjlWjCTZ0Zco10sk8rS64IzML1tca275A8zHtJkXAMwJ+IOEMbw1RDRfQYrbZJ1rH2LDmN2ZwEvj9YydwNV9dC0ltBx2z/2Gk+b9SA6t2x4ZxPGR/qChzeFdlmuXMvbqZJJDjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XAnc3jSe; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748150578; c=relaxed/simple;
+	bh=Y0cKLo2CRuRqesXQHK7UPNsQP2uYigpqB/5Xc7bhblk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VfaM8sfHerSQrzUhdLsZn8Nu0/p7Cg6V/HbRO3+440zAW5Ds8T6atGAN4saSK1AfVsxI+IYRolXrQOx8oHoX0uqFpRWzXK3syNSkLWwRICHi6qSFyl5Ib/WHBGi8pMjGxEvGeO7YTEUygSo32ng9P5D5I9vGYMtsnDZfRqsYccQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BZm6saAM; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAnc3jSe"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441c0d42233so650975e9.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 22:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748150211; x=1748755011; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=msz6xS+TXEWf8BCe56XVsqhhuQHPDAmqJV6W3BuHJYo=;
-        b=XAnc3jSe2MjqDm4pxwwzZaoEBZxjIT3T/TqwBWEQ+m4KfalEGrf191VqSoRABGCV4M
-         BUocT2zybtzrZSfieZgH9r/pHGoTle2Yym9mdvKf95GLV37Pg4RszeRflrJDTSzPQtIh
-         R1Sh5FXnNvV/LJm/cN+qyVEoUlxqW3ZTxTZ4aVLNfO6BlhGIRX+g0qENpY1gxHG3W73l
-         guvvXNS4ksJTXUjBWaABXQJdQ80X/B7WkeyscVWBNu2ggE3qnQCF1TSdy/lQl11+xvGD
-         lTqvNaO58EQnbNiWv3zA5GpjblaLmX6/5j2wZTThV9CfqPQ5s2E4vmyTZGLrEiGOMNhM
-         kXkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748150211; x=1748755011;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=msz6xS+TXEWf8BCe56XVsqhhuQHPDAmqJV6W3BuHJYo=;
-        b=gQL17POFw+ILEy8tNlzR9hg5EZNwWlbHZDkiPuCzKNPtkav4nXID2qIASS2Wgk88Q0
-         zQx5d+mmYAtXTOVNDz171HFjn4Kt/V+I82WN6NOCk6BO0zkMk09Ih8y8oHnOpRBiQxvo
-         FSqM4q4doz7yL8x2qouOJ2M6U9lX5T/4hP4mu+4yYBQT0HUd2iTkf6xnR208U+F26Z3s
-         Ev/dqSZvYepFwa1Cr7cvptqAcQAG8wPovrj+G1coqxozxmJDjCMz+7m9ZiNf6pDBAP5R
-         ShwQFm+TZkUCVhnMAmucZD+gf7/n1VYAs8BtiTg4WmKvrBa7Hda2/LN5tSraPJbYFSbk
-         y8XA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLDdm5sIWe5upMwYC6NVAtzecJlkr+vdbglvq0zV+b6dO1rjzXRbRx1vMixss5lu2Ga+DrlX5iUHJTkp8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqMQcKxer+ftOWroaMyNNJUwLJ/YsoQD1VOIvbffnzpTRyHsU+
-	CQTk71nUzx/xsy1TlgS0Xp8/NmDJH/L5FAS74TcPX/At5JxD3BUr5Gs9yVI6dMp33u8=
-X-Gm-Gg: ASbGncucBSMsmCgK3nxR4XeDk060p2i6GdFPhSoSBLNrq7Mbr44c8S24gMBo7TFF7/N
-	Xp3xseA9olGJF9p0z4BbMYaGZlnthHAWLXZjrlmD9SxlBLBre4t0zzAa5Ob061S/l/qqFCkQQXm
-	dVzzkbBaAys8GGtrjiT69Jw/lSNEhXa2GrW7C9uB064iLrZ6FOXhxyc9HUuBfaszeNd+rNPfv62
-	xmLaiwknVINnVvrXmOsjp5WFkSrBym2lNZ7IyLQ+wzZIp260Q1WVeS+oJjecQ+AQZPGtTt+I4nM
-	ERzoTLDb2l7vGco+j7cO0pEJvwWHS8wrKyDGVRvPGha85BKRoRDrhF4zGdTjUg==
-X-Google-Smtp-Source: AGHT+IF/jwowPMNweDb/B2JPyAKFGWGQxdc3mLIKIM4NNW5whKHA8bo7N+3jJruEbrSaU/3hrj+bdA==
-X-Received: by 2002:a05:6000:40e0:b0:3a3:62e1:a7dc with SMTP id ffacd0b85a97d-3a4cb434a24mr1333037f8f.1.1748150210738;
-        Sat, 24 May 2025 22:16:50 -0700 (PDT)
-Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d67795eesm372940f8f.86.2025.05.24.22.16.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 May 2025 22:16:49 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] media: dt-bindings: mediatek: Constrain iommus
-Date: Sun, 25 May 2025 07:16:40 +0200
-Message-ID: <20250525051639.68753-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BZm6saAM"
+Message-ID: <c8d6bfb6-570c-48b2-be62-188e11353c5a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748150563;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ePdy++AUzSGQt0jdpQhw2NDW+rHZoCino5XFKMdBg8U=;
+	b=BZm6saAM54E6afEmIAR3+9ovXEHEjRhUAYo3Ru3Np1H78iHhMCVFbMFzLs0trouNyHDt3Z
+	+H5/v46+b94QXVBMuSqKoNIv0xJt3cmxxNGYenUQv7rBVDp7VcANbVdavGcoQbnuHGTvg/
+	r0BtzsW2Jw+Na1FWLOsdd9rDGBkl/tY=
+Date: Sun, 25 May 2025 07:22:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3619; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=+5c0VEkCDydqP+dJvv5yWg3lhMM2EDfhOnBOrhDfWlw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoMqe34zQlzL+mH8sYednrPzCB+DkOTefFX/gsg
- CPcqSp2phOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDKntwAKCRDBN2bmhouD
- 1+d+D/wO4XWtaSL5Qb2EZcmthSwwShwp2UkTqt4aV2OtyA/7xavezOOZEsI64ORhN+e6aSKIJjt
- 8aV5tclmOA+GGI92SpVK3nLJUWcuV1gn87alc+VfrGqU8UfrsDB/lMef5fNZIaqIHJhW3uXoEyK
- jjSdxY2nwJS4tofa8kjxqmuAkmjv/wZasaEbDfw2YiTLu2wWCjmlmO3OsYM9z6KA3j8q1dnW7Dw
- e7tf64cBf5FP0xdNNxBNNWpqggwSqwryvr+6Vxp7GefHghXl/luFwh/31n4jhV5twJXdFX4w6O5
- BIFyepFm4VuMoDeHOXqQsnhUGEob2rU1GSpDzRHtodioeou+G1qQu6RZcRaXILpSMPMY8XTjKfd
- jVQA/q0nNLYctkBfycPA5OiavcADRTUJ5I6a7zUY+7nf689HDwiBzyF9DV6N9djU0jug4Qe37Le
- zzRBlrazoQT2FuQJY9YZiJWwXCG6lv83lYsMSkgHyL98/yTXdy0aHZl08HjdyICYGaHFJ4VnrOy
- 0TsfjR0sbuBvtGme9HmCnlehtrp2kRR/gvMEGGAjNWaFb1ANYblR/W0BGN9CsWyiSQoW0Hzq30n
- kxEL8vcOovz7A3QtUcXlvRmkvPf56Mua848yvHoIncqJFWv3t+Ls/bLbqjXzxoH940UIYc7UC1F +hPx0ET/ieWU3Gw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
+ virtual DMA devices
+To: Daisuke Matsuda <dskmtsd@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, leon@kernel.org, jgg@ziepe.ca,
+ zyjzyj2000@gmail.com
+Cc: hch@infradead.org
+References: <20250524144328.4361-1-dskmtsd@gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250524144328.4361-1-dskmtsd@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Lists should have fixed constraints, because binding must be specific in
-respect to hardware.  Add missing constraints to number of iommus in
-Mediatek media devices.
+在 2025/5/24 16:43, Daisuke Matsuda 写道:
+> Drivers such as rxe, which use virtual DMA, must not call into the DMA
+> mapping core since they lack physical DMA capabilities. Otherwise, a NULL
+> pointer dereference is observed as shown below. This patch ensures the RDMA
+> core handles virtual and physical DMA paths appropriately.
+> 
+> This fixes the following kernel oops:
+> 
+>   BUG: kernel NULL pointer dereference, address: 00000000000002fc
+>   #PF: supervisor read access in kernel mode
+>   #PF: error_code(0x0000) - not-present page
+>   PGD 1028eb067 P4D 1028eb067 PUD 105da0067 PMD 0
+>   Oops: Oops: 0000 [#1] SMP NOPTI
+>   CPU: 3 UID: 1000 PID: 1854 Comm: python3 Tainted: G        W           6.15.0-rc1+ #11 PREEMPT(voluntary)
+>   Tainted: [W]=WARN
+>   Hardware name: Trigkey Key N/Key N, BIOS KEYN101 09/02/2024
+>   RIP: 0010:hmm_dma_map_alloc+0x25/0x100
+>   Code: 90 90 90 90 90 0f 1f 44 00 00 55 48 89 e5 41 57 41 56 49 89 d6 49 c1 e6 0c 41 55 41 54 53 49 39 ce 0f 82 c6 00 00 00 49 89 fc <f6> 87 fc 02 00 00 20 0f 84 af 00 00 00 49 89 f5 48 89 d3 49 89 cf
+>   RSP: 0018:ffffd3d3420eb830 EFLAGS: 00010246
+>   RAX: 0000000000001000 RBX: ffff8b727c7f7400 RCX: 0000000000001000
+>   RDX: 0000000000000001 RSI: ffff8b727c7f74b0 RDI: 0000000000000000
+>   RBP: ffffd3d3420eb858 R08: 0000000000000000 R09: 0000000000000000
+>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>   R13: 00007262a622a000 R14: 0000000000001000 R15: ffff8b727c7f74b0
+>   FS:  00007262a62a1080(0000) GS:ffff8b762ac3e000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 00000000000002fc CR3: 000000010a1f0004 CR4: 0000000000f72ef0
+>   PKRU: 55555554
+>   Call Trace:
+>    <TASK>
+>    ib_init_umem_odp+0xb6/0x110 [ib_uverbs]
+>    ib_umem_odp_get+0xf0/0x150 [ib_uverbs]
+>    rxe_odp_mr_init_user+0x71/0x170 [rdma_rxe]
+>    rxe_reg_user_mr+0x217/0x2e0 [rdma_rxe]
+>    ib_uverbs_reg_mr+0x19e/0x2e0 [ib_uverbs]
+>    ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0xd9/0x150 [ib_uverbs]
+>    ib_uverbs_cmd_verbs+0xd19/0xee0 [ib_uverbs]
+>    ? mmap_region+0x63/0xd0
+>    ? __pfx_ib_uverbs_handler_UVERBS_METHOD_INVOKE_WRITE+0x10/0x10 [ib_uverbs]
+>    ib_uverbs_ioctl+0xba/0x130 [ib_uverbs]
+>    __x64_sys_ioctl+0xa4/0xe0
+>    x64_sys_call+0x1178/0x2660
+>    do_syscall_64+0x7e/0x170
+>    ? syscall_exit_to_user_mode+0x4e/0x250
+>    ? do_syscall_64+0x8a/0x170
+>    ? do_syscall_64+0x8a/0x170
+>    ? syscall_exit_to_user_mode+0x4e/0x250
+>    ? do_syscall_64+0x8a/0x170
+>    ? syscall_exit_to_user_mode+0x4e/0x250
+>    ? do_syscall_64+0x8a/0x170
+>    ? do_user_addr_fault+0x1d2/0x8d0
+>    ? irqentry_exit_to_user_mode+0x43/0x250
+>    ? irqentry_exit+0x43/0x50
+>    ? exc_page_fault+0x93/0x1d0
+>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>   RIP: 0033:0x7262a6124ded
+>   Code: 04 25 28 00 00 00 48 89 45 c8 31 c0 48 8d 45 10 c7 45 b0 10 00 00 00 48 89 45 b8 48 8d 45 d0 48 89 45 c0 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1a 48 8b 45 c8 64 48 2b 04 25 28 00 00 00
+>   RSP: 002b:00007fffd08c3960 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+>   RAX: ffffffffffffffda RBX: 00007fffd08c39f0 RCX: 00007262a6124ded
+>   RDX: 00007fffd08c3a10 RSI: 00000000c0181b01 RDI: 0000000000000007
+>   RBP: 00007fffd08c39b0 R08: 0000000014107820 R09: 00007fffd08c3b44
+>   R10: 000000000000000c R11: 0000000000000246 R12: 00007fffd08c3b44
+>   R13: 000000000000000c R14: 00007fffd08c3b58 R15: 0000000014107960
+>    </TASK>
+> 
+> Fixes: 1efe8c0670d6 ("RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage")
+> Closes: https://lore.kernel.org/all/3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com/
+> Signed-off-by: Daisuke Matsuda <dskmtsd@gmail.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/display/mediatek/mediatek,ovl-2l.yaml           | 5 ++---
- .../devicetree/bindings/display/mediatek/mediatek,ovl.yaml   | 5 ++---
- .../devicetree/bindings/display/mediatek/mediatek,rdma.yaml  | 4 +---
- .../devicetree/bindings/display/mediatek/mediatek,wdma.yaml  | 4 +---
- 4 files changed, 6 insertions(+), 12 deletions(-)
+I tried to apply this commit to the following rdma branch.
+But I failed. The error is as below:
 
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
-index bacdfe7d08a6..ac0d924a451b 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
-@@ -45,9 +45,8 @@ properties:
-       - description: OVL-2L Clock
- 
-   iommus:
--    description:
--      This property should point to the respective IOMMU block with master port as argument,
--      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
-+    minItems: 1
-+    maxItems: 2
- 
-   mediatek,gce-client-reg:
-     description: The register of client driver can be configured by gce with
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
-index 4f110635afb6..c0fd0a91c4d8 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
-@@ -65,9 +65,8 @@ properties:
-       - description: OVL Clock
- 
-   iommus:
--    description:
--      This property should point to the respective IOMMU block with master port as argument,
--      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
-+    minItems: 1
-+    maxItems: 2
- 
-   mediatek,gce-client-reg:
-     description: The register of client driver can be configured by gce with
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
-index 878f676b581f..7e5234def39a 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
-@@ -64,9 +64,7 @@ properties:
-       - description: RDMA Clock
- 
-   iommus:
--    description:
--      This property should point to the respective IOMMU block with master port as argument,
--      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
-+    maxItems: 1
- 
-   mediatek,rdma-fifo-size:
-     description:
-diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml
-index a3a2b71a4523..276868c0fde7 100644
---- a/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml
-+++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml
-@@ -43,9 +43,7 @@ properties:
-       - description: WDMA Clock
- 
-   iommus:
--    description:
--      This property should point to the respective IOMMU block with master port as argument,
--      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
-+    maxItems: 1
- 
-   mediatek,gce-client-reg:
-     description: The register of client driver can be configured by gce with
--- 
-2.45.2
+"
+Applying: RDMA/core: Avoid hmm_dma_map_alloc() for virtual DMA devices
+error: patch failed: drivers/infiniband/core/umem_odp.c:75
+error: drivers/infiniband/core/umem_odp.c: patch does not apply
+Patch failed at 0001 RDMA/core: Avoid hmm_dma_map_alloc() for virtual 
+DMA devices
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+
+"
+
+The remote branch is remotes/rdma/rdma-next
+The head commit is 3b6a1e410c7f RDMA/mlx5: Fix CC counters query for MPV
+
+I am not sure if I use the correct repository and branch or not.
+
+Best Regards,
+Zhu Yanjun
+
+> ---
+>   drivers/infiniband/core/device.c   | 17 +++++++++++++++++
+>   drivers/infiniband/core/umem_odp.c | 11 ++++++++---
+>   include/rdma/ib_verbs.h            |  4 ++++
+>   3 files changed, 29 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+> index b4e3e4beb7f4..abb8fed292c0 100644
+> --- a/drivers/infiniband/core/device.c
+> +++ b/drivers/infiniband/core/device.c
+> @@ -2864,6 +2864,23 @@ int ib_dma_virt_map_sg(struct ib_device *dev, struct scatterlist *sg, int nents)
+>   	return nents;
+>   }
+>   EXPORT_SYMBOL(ib_dma_virt_map_sg);
+> +int ib_dma_virt_map_alloc(struct hmm_dma_map *map, size_t nr_entries,
+> +			  size_t dma_entry_size)
+> +{
+> +	if (!(nr_entries * PAGE_SIZE / dma_entry_size))
+> +		return -EINVAL;
+> +
+> +	map->dma_entry_size = dma_entry_size;
+> +	map->pfn_list = kvcalloc(nr_entries, sizeof(*map->pfn_list),
+> +				 GFP_KERNEL | __GFP_NOWARN);
+> +	if (!map->pfn_list)
+> +		return -ENOMEM;
+> +
+> +	map->dma_list = NULL;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(ib_dma_virt_map_alloc);
+>   #endif /* CONFIG_INFINIBAND_VIRT_DMA */
+>   
+>   static const struct rdma_nl_cbs ibnl_ls_cb_table[RDMA_NL_LS_NUM_OPS] = {
+> diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+> index 51d518989914..a5b17be0894a 100644
+> --- a/drivers/infiniband/core/umem_odp.c
+> +++ b/drivers/infiniband/core/umem_odp.c
+> @@ -75,9 +75,14 @@ static int ib_init_umem_odp(struct ib_umem_odp *umem_odp,
+>   	if (unlikely(end < page_size))
+>   		return -EOVERFLOW;
+>   
+> -	ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
+> -				(end - start) >> PAGE_SHIFT,
+> -				1 << umem_odp->page_shift);
+> +	if (ib_uses_virt_dma(dev))
+> +		ret = ib_dma_virt_map_alloc(&umem_odp->map,
+> +					    (end - start) >> PAGE_SHIFT,
+> +					    1 << umem_odp->page_shift);
+> +	else
+> +		ret = hmm_dma_map_alloc(dev->dma_device, &umem_odp->map,
+> +					(end - start) >> PAGE_SHIFT,
+> +					1 << umem_odp->page_shift);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+> index b06a0ed81bdd..9ea41f288736 100644
+> --- a/include/rdma/ib_verbs.h
+> +++ b/include/rdma/ib_verbs.h
+> @@ -36,6 +36,7 @@
+>   #include <linux/irqflags.h>
+>   #include <linux/preempt.h>
+>   #include <linux/dim.h>
+> +#include <linux/hmm-dma.h>
+>   #include <uapi/rdma/ib_user_verbs.h>
+>   #include <rdma/rdma_counter.h>
+>   #include <rdma/restrack.h>
+> @@ -4221,6 +4222,9 @@ static inline void ib_dma_unmap_sg_attrs(struct ib_device *dev,
+>   				   dma_attrs);
+>   }
+>   
+> +int ib_dma_virt_map_alloc(struct hmm_dma_map *map, size_t nr_entries,
+> +			  size_t dma_entry_size);
+> +
+>   /**
+>    * ib_dma_map_sgtable_attrs - Map a scatter/gather table to DMA addresses
+>    * @dev: The device for which the DMA addresses are to be created
 
