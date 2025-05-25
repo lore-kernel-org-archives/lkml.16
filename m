@@ -1,79 +1,51 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764804CE08
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 02:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1EA13AF2
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 02:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748138585; cv=none; b=hEsKPU2HvXOlrHXoXeYhV0rRsZHfA3aMPDGONTQjS6twR3/Vpkp41ES6dDuZ+0RQdOCdwMfnLVjFD5eYsiTLNA7+IG1hgG96RZSKueozn/3ZSWWnDyJNNxMsRdCM+zPejLzvaop+psh+tcu2D35BrZaFa88x+7eVjNq1yUdbQ2g=
+	t=1748139608; cv=none; b=BHRCDG3zn8/E1SEUsEj3x2t3eWO02FprTn9pbD7R6kevkKLqyzTHhjUg7DTQ/vg8gh4r3R7ScGo49Vz5Xy8huAlDj8CgeIISfDZlx2nf+eNi1BGoO+PRaXMLqCXpSOjUyMk04ISfrBOJu6Py1K2mngTZ08FrI+1K2s2hti6E//A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748138585; c=relaxed/simple;
-	bh=mIwIq9csUCbYIa5JwR59zeSsHmN9250kQ9AODSs2xFU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=P/kiZ0n78OIpX8phRyTENLQ3kOLzbpnhOw8uRRawbeO74yl4AUe4ypazNZcD8/EJ7Bbz28CSwFgt7SopdwYGRl6aC8/IpOFirQnp5k6IsjqS68FgtFvjiyMZNabBtvTaewOKD4YkG47CV1fJP7AWzKq4plKaKYi3iiwAw2DL2i0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85e310ba2f9so114932439f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 19:03:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748138582; x=1748743382;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqwBE7NrD1Kufa5s4oZy50TlLnntMQm9pBp/V84mvy8=;
-        b=jH7LHUrsEyfYDp7RIRmRrytyCal0VDLYg7HbMgh7jcbzjuHgErJhcnLo0IJgKX+7SM
-         s2v3P+DjumZnuPEiqEkMc0lbj+uVO7vaWh0eXrhl28gPDbPaMZRCIL8CgbP92aeSqEL1
-         JUaHr3SiHaVRxuAT4O19tYgQEVQ9NQ0G0qkm0AaAws9H3uL41xiLwPx+mWV7GVpq/urM
-         tfkkSMwK26xw3tFbkoaVHGHU6GRLb5i3OsMSpxZj5hB3TbPDlQsuajiHA7sv0Tph0W9t
-         srEdiMyUqXkbXkkj2p2mYcqMlaRBVtKTykkRCsU1+DkPu+Z0JIXHsTm9x0qkIdh5g4aI
-         ilmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWg47ozeAh9/PDhahZ04x/aTOPfka9ZAh5V+/B9P24xL1MZ0CssRMgfbO0Fac8Uj54UsXeIl4T178vmeCU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiAZTUGX3lydMwlaXAtoRtNGEzrWSENlDKR8+UGvQYVflUC6Ib
-	jA0/mdr5ft5kiNY3x1DwTCPVcxDWXKOJJYduDYx7iuNR5qGl/PWQfi8/T8DYjfTOBX31EfuBGJn
-	9F8+VLeWnvuSSOrbNbDw3qjiMAgvlAWtgXmgS78xod7oInfU1y+ROwUUmhek=
-X-Google-Smtp-Source: AGHT+IGwwU+ncHev+YJC1P/NAvgpkbXzBLDQ67Y3hqwwBYDABZVgs+9V3HnLzuT63uQqOG5/uSEeL1aNAGafwsyOB4bKptXcShHT
+	s=arc-20240116; t=1748139608; c=relaxed/simple;
+	bh=WwiA0RVvpCAR/9OcjdEg2wCEm8r3t9KZqiKU1YxZNoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U1a/jddn8KytSp2XGAxzoEGHG3zjXSsR6OEt9U7IrN/00Wr4biq1MFD6ixRQd47Oqjke0xukEQ7olDnpf9jy9FgpML6mSjwBVDOJ+iUinsCe/Z2CT5PxQetJzRu9WmJgVtiY8B3xSYTfCqRMOcubgTKWsN5GWf+6XTzywAIoKCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HnSqQaZ2; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HnSqQaZ2"
+Date: Sat, 24 May 2025 22:19:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748139593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=unYxqcHTjdMQNtlPEZKhFscFLUMaUxMeQWTbJQV5L6Q=;
+	b=HnSqQaZ2tUoeLy8UbKs8Yo2zwmnUwrK18SNN+CO+rWKauGTYK3QRp7q5dxHWjNTuNz5Qht
+	Fmdzs2+kB8j7Ty6U0+/vbq/km2aXIn49/BJvl8rNeQtTUdsOmZAnPu+GfNnHoPmbFnMDxI
+	apwas6V4zfE0PWmi/Ee9FCjAaZEMJJM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs changes for 6.16
+Message-ID: <dmfrgqor3rfvjfmx7bp4m7h7wis4dt5m3kc2d3ilgkg4fb4vem@wytvcdifbcav>
+References: <oxkibsokaa3jw2flrbbzb5brx5ere724f3b2nyr2t5nsqfjw4u@23q3ardus43h>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4c85:b0:864:627a:3d85 with SMTP id
- ca18e2360f4ac-86cbb889a02mr386102239f.11.1748138582604; Sat, 24 May 2025
- 19:03:02 -0700 (PDT)
-Date: Sat, 24 May 2025 19:03:02 -0700
-In-Reply-To: <6831b67f.a70a0220.253bc2.006f.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68327a56.a70a0220.29d4a0.07fc.GAE@google.com>
-Subject: Re: [syzbot] [kernel?] KASAN: slab-use-after-free Write in binder_remove_device
-From: syzbot <syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com>
-To: aliceryhl@google.com, arve@android.com, brauner@kernel.org, 
-	cmllamas@google.com, dualli@google.com, gregkh@linuxfoundation.org, 
-	joel@joelfernandes.org, joelagnelf@nvidia.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, maco@android.com, stable@vger.kernel.org, 
-	surenb@google.com, syzkaller-bugs@googlegroups.com, tkjos@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <oxkibsokaa3jw2flrbbzb5brx5ere724f3b2nyr2t5nsqfjw4u@23q3ardus43h>
+X-Migadu-Flow: FLOW_OUT
 
-syzbot has bisected this issue to:
+There was a feature request I forgot to mention - 
 
-commit 12d909cac1e1c4147cc3417fee804ee12fc6b984
-Author: Li Li <dualli@google.com>
-Date:   Wed Dec 18 21:29:34 2024 +0000
-
-    binderfs: add new binder devices to binder_devices
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=107228e8580000
-start commit:   176e917e010c Add linux-next specific files for 20250523
-git tree:       linux-next
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=127228e8580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=147228e8580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
-dashboard link: https://syzkaller.appspot.com/bug?extid=4af454407ec393de51d6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=108b55f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1145e5f4580000
-
-Reported-by: syzbot+4af454407ec393de51d6@syzkaller.appspotmail.com
-Fixes: 12d909cac1e1 ("binderfs: add new binder devices to binder_devices")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+New option, 'rebalance_on_ac_only'. Does exactly what the name suggests,
+quite handy with background compression.
