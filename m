@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A052C181;
-	Sun, 25 May 2025 02:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F112C181;
+	Sun, 25 May 2025 02:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748141139; cv=none; b=Z9PsvE7hi2UHEU1p/G6c3IUPnr/rZoh6hmt2Psz3XgnAHcnxNao9xboVZaTgLwcT9rEJ0D4XfcD1hPwfibbmhwtiL+uhRzGyIH0meyPmTOFQVXIwTYP8DtDAznCVjRHgVGHsVjL7mcLu0dU5p0UVqRG8Z5SVvwmjpd5zCzfay1M=
+	t=1748141169; cv=none; b=DKJIJIrCUeTheq2q6uD4zZJKU/gKQK1WV1cmmBZGM0VF7f3KX1FjsQdBmrI+MfCd0+0CJkNpxdyqRdlnoGa8tmK+1UeLb/064oBkx/SswuzGGBF5A4qi8mALBC8/bqrtij09CSpEhDgSadOWammS8O9Ku32RTHW4fP/eoyDgHf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748141139; c=relaxed/simple;
-	bh=S6Fau+ry1gmJ6BpShZI9+5zRHmA6PBzL9b3ZyN/ZoAY=;
+	s=arc-20240116; t=1748141169; c=relaxed/simple;
+	bh=OxlWYued1qwgYdzX737Wr2KjNkSsaqCH+6uEdTlEtzA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X3YFp0H0WeVyb7jug9Ua0ZTKAgDZtryDuk1ji52sbXgfV0M7eM8nPqNIFOaMGd2RhftqZB8ENkFhb5l6lIJH+NNF8HmHZVV2x9Pcg4yEFprpXPoOepXMNM495lBxXy7HFaDx/N1CbanW3tw3ULqWvRj8MnLJi6unrjtm+Sj6MtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVKw7+5i; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=GYgoVIssFUIHDrVccNElQzpwwSHpk0NUUMxGYVq2kjBUEXxGG4poyMuB70sriq3H5C3ECieSyRgKErUQeeBtq4QzcZYYZ+b/p6ZEObse5K95jPwaMONxnCIuay9+wfV48aTuR6VXyEBBaacdrpbwi4AwQPSshl0uv2bDMc5Mcus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/u7UQ0L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVKw7+5i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9EBDC4CEF0;
-	Sun, 25 May 2025 02:45:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/u7UQ0L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6046C4CEE4;
+	Sun, 25 May 2025 02:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748141139;
-	bh=S6Fau+ry1gmJ6BpShZI9+5zRHmA6PBzL9b3ZyN/ZoAY=;
+	s=k20201202; t=1748141168;
+	bh=OxlWYued1qwgYdzX737Wr2KjNkSsaqCH+6uEdTlEtzA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aVKw7+5iupi3Y9ILHEI4pFZ+xnMoGtWMW2sTqOeyKlgRw0uspJ3XyNrTuQhAmG7kA
-	 8okJyEQpPynzufkWu95qyqm5r8gYJvuU/FCLdAhe45pCN/er+YOmwMWOW0ubCfyF91
-	 mQgwQiwQgKVU1EUkj8liRV898khMrh7Iaz2ZVmXtP3TvD9o7AHoLRLJObXzxbowjwl
-	 roNC1Mjfo8meSpNheCS2hTakBW4vnKB3Sed8zmHqbLQCrFR2Nlqf9KA83bhuPBBrXX
-	 U7Vy6ay9hVEX5rnydR9tcKycUeAWqxHAVrFG3fygb0Vw31c8LQQ0fY7NyHUcFBNYZC
-	 BsRR3Ri8XyLSA==
-Message-ID: <902daf9d-c728-420e-b6e7-4f52a0833e02@kernel.org>
-Date: Sat, 24 May 2025 19:45:37 -0700
+	b=D/u7UQ0Lntycg+UCM4HEKiuCxHqOvjlFkLgOowzVYZvTUCTx+vs5zNU/euoLbJJV3
+	 LkhFgCnLWOpoY0bNHl0h4hanFAH8vCiYaA0pN4XZcQsNaaJSlMo5yJQNjrr7D2LIJP
+	 4RvFVFeKIpirfaxK2gOUeNwfphLj+p2ywlqppyFZNyznWQsUyKcD+uyekPmkx3CUp/
+	 mbk/fIqWLUl4cnH6aI4ih48HJ5mc6ItKClVK+HAQ2N77PMo8xjvD6LIFHMusz30YHX
+	 l96g4PnQmDaxhVv5deREyUMPJpTs35WJq+pLqVK9npgOeR26l1+04AtzY/NvkXjmzx
+	 0Q9eK4SxT8gmQ==
+Message-ID: <68eeeb84-5df1-4647-b247-6fdf87658c5a@kernel.org>
+Date: Sat, 24 May 2025 19:46:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,29 +35,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- snps,archs-intc to DT schema
-To: "Rob Herring (Arm)" <robh@kernel.org>, Vineet Gupta <vgupta@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250505144834.1292666-1-robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: serial: Convert snps,arc-uart to DT
+ schema
+To: "Rob Herring (Arm)" <robh@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vineet Gupta <vgupta@kernel.org>
+Cc: Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250507154909.1602497-1-robh@kernel.org>
 From: Vineet Gupta <vgupta@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20250505144834.1292666-1-robh@kernel.org>
+In-Reply-To: <20250507154909.1602497-1-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 5/5/25 07:48, Rob Herring (Arm) wrote:
-> Convert the ARC-HS incore interrupt controller binding to schema format.
-> It's a straight-forward conversion of the typical interrupt controller.
+On 5/7/25 08:49, Rob Herring (Arm) wrote:
+> Convert the Synopsys ARC UART binding to DT schema. Drop the "aliases"
+> portion which is not relevant to this schema.
 >
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
 > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-
-
 
 Acked-by: Vineet Gupta <vgupta@kernel.org>
 
@@ -65,92 +63,101 @@ Thx,
 -Vineet
 
 > ---
->  .../interrupt-controller/snps,archs-intc.txt  | 22 ---------
->  .../interrupt-controller/snps,archs-intc.yaml | 48 +++++++++++++++++++
->  2 files changed, 48 insertions(+), 22 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml
+> v2:
+>  - Fix $id path
+> ---
+>  .../devicetree/bindings/serial/arc-uart.txt   | 25 ---------
+>  .../bindings/serial/snps,arc-uart.yaml        | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 25 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/arc-uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
 >
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
+> diff --git a/Documentation/devicetree/bindings/serial/arc-uart.txt b/Documentation/devicetree/bindings/serial/arc-uart.txt
 > deleted file mode 100644
-> index 69f326d6a5ad..000000000000
-> --- a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.txt
+> index 256cc150ca7e..000000000000
+> --- a/Documentation/devicetree/bindings/serial/arc-uart.txt
 > +++ /dev/null
-> @@ -1,22 +0,0 @@
-> -* ARC-HS incore Interrupt Controller (Provided by cores implementing ARCv2 ISA)
+> @@ -1,25 +0,0 @@
+> -* Synopsys ARC UART : Non standard UART used in some of the ARC FPGA boards
 > -
-> -Properties:
+> -Required properties:
+> -- compatible		: "snps,arc-uart"
+> -- reg			: offset and length of the register set for the device.
+> -- interrupts		: device interrupt
+> -- clock-frequency	: the input clock frequency for the UART
+> -- current-speed		: baud rate for UART
 > -
-> -- compatible: "snps,archs-intc"
-> -- interrupt-controller: This is an interrupt controller.
-> -- #interrupt-cells: Must be <1>.
+> -e.g.
 > -
-> -  Single Cell "interrupts" property of a device specifies the IRQ number
-> -  between 16 to 256
+> -arcuart0: serial@c0fc1000 {
+> -	compatible = "snps,arc-uart";
+> -	reg = <0xc0fc1000 0x100>;
+> -	interrupts = <5>;
+> -	clock-frequency = <80000000>;
+> -	current-speed = <115200>;
+> -};
 > -
-> -  intc accessed via the special ARC AUX register interface, hence "reg" property
-> -  is not specified.
+> -Note: Each port should have an alias correctly numbered in "aliases" node.
 > -
-> -Example:
-> -
-> -	intc: interrupt-controller {
-> -		compatible = "snps,archs-intc";
-> -		interrupt-controller;
-> -		#interrupt-cells = <1>;
-> -		interrupts = <16 17 18 19 20 21 22 23 24 25>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml
+> -e.g.
+> -aliases {
+> -	serial0 = &arcuart0;
+> -};
+> diff --git a/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml b/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
 > new file mode 100644
-> index 000000000000..9d248ef7fe3d
+> index 000000000000..dd3096fbfb6a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/snps,archs-intc.yaml
-> @@ -0,0 +1,48 @@
+> +++ b/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
+> @@ -0,0 +1,51 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/snps,archs-intc.yaml#
+> +$id: http://devicetree.org/schemas/serial/snps,arc-uart.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ARC-HS incore Interrupt Controller
+> +title: Synopsys ARC UART
 > +
 > +maintainers:
 > +  - Vineet Gupta <vgupta@kernel.org>
 > +
 > +description:
-> +  ARC-HS incore Interrupt Controller provided by cores implementing ARCv2 ISA.
-> +  intc accessed via the special ARC AUX register interface, hence "reg" property
-> +  is not specified.
+> +  Synopsys ARC UART is a non-standard UART used in some of the ARC FPGA boards.
+> +
+> +allOf:
+> +  - $ref: /schemas/serial/serial.yaml#
 > +
 > +properties:
 > +  compatible:
-> +    const: snps,archs-intc
+> +    const: snps,arc-uart
 > +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
+> +  reg:
+> +    maxItems: 1
 > +
 > +  interrupts:
-> +    description: List of IRQ numbers between 16 and 256
-> +    items:
-> +      items:
-> +        - minimum: 16
-> +          maximum: 256
+> +    maxItems: 1
+> +
+> +  clock-frequency:
+> +    description: the input clock frequency for the UART
+> +
+> +  current-speed:
+> +    description: baud rate for UART
 > +
 > +required:
 > +  - compatible
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
+> +  - reg
 > +  - interrupts
+> +  - clock-frequency
+> +  - current-speed
 > +
-> +additionalProperties: false
+> +unevaluatedProperties: false
 > +
 > +examples:
 > +  - |
-> +    interrupt-controller {
-> +        compatible = "snps,archs-intc";
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        interrupts = <16>, <17>, <18>, <19>, <20>, <21>, <22>, <23>, <24>, <25>;
+> +    serial@c0fc1000 {
+> +        compatible = "snps,arc-uart";
+> +        reg = <0xc0fc1000 0x100>;
+> +        interrupts = <5>;
+> +        clock-frequency = <80000000>;
+> +        current-speed = <115200>;
 > +    };
 
