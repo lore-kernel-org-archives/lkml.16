@@ -1,132 +1,273 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7008F187346;
-	Sun, 25 May 2025 12:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7FB282F1;
+	Sun, 25 May 2025 12:48:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748177305; cv=none; b=G5uoOob9qrwJiK+6uCP1tniB+fjsqiVi8t999Cta8/bATj2jI9YXsp/yT4u9660qYe6vMk9rhyatqv7yzOfremZrg4naW9G0MTaHZ5EH+F6NWtoOhn0aQvEdXhWfPDJ3mqVptzRBZNa/qXIypr9jP6lnC0YvMspyBeACsZEaulY=
+	t=1748177321; cv=none; b=OpK6ufnNFAsC8Zmlr8FNUpTxIzAWCk7A7toySYv81khYNjj+f/W/joNawNhjpK234Yq7Klmmh2h5ztbXqSmj4v82NzcaPRERRulBPccFZ3oNk/icnBgwTCFq+ZeSztIVLRIheYMtuDbrjQrDVBv3L9JWbzPzWPKTwuX7XZTxK8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748177305; c=relaxed/simple;
-	bh=cAWRLJuqRv7h//RQ2U9EsXb1jckLLD4OdgZVi/W2rAg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eloQMruzbjHgCnUsxlgAHKj7oI+cS7D7yzbsLLEu9Lbp3YkysLXOwgTQQkOGADLzfgUz2UiWz0ryQb275rmqF4/ZH9DsIOIglqjy1F37esXbZhQDCt8GFZKg58AibKasVgp6odl5VTuOQnH1RMFmELOP5FBgXvFo4IC2L8oe4/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUsekchk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748177321; c=relaxed/simple;
+	bh=u9/4XIHZBrCOuCXoikwRXSkA3my/nbnLHX1nE95Jvpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LuJDus/ya0C7XyQy6ZNHgCZJcAhBCEHW+k93tOXtMn6MhSnW/+qB0MAR2kgIZXhDLvT9tGx7Crx14RLdnfP9a3xJgMWBJ4C7tJ11s+NCKh9d2B8Cl5gDNOpYy83+ZwRJeSOlq0xg09BLh2LoN3NQ6Tx9cE9ajbYum4G+0naQtOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OfeTPwpf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUsekchk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59FEDC4CEEA;
-	Sun, 25 May 2025 12:48:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OfeTPwpf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C219C4CEEA;
+	Sun, 25 May 2025 12:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748177304;
-	bh=cAWRLJuqRv7h//RQ2U9EsXb1jckLLD4OdgZVi/W2rAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eUsekchkul/A/BANBz6aMizhZbOghJyH7ohsE6KVJcYhK7i2oWSFPa+elWFZcf9VI
-	 2RLjvlcVnBfaYa6HdOc3fMHRNWU7Q5SEhBbq3tfWAN2JcQm4nX3hFGXjZLwjExA6G8
-	 ulaG/TnJ9s/pUbkBwllE0YR+By4UI7jjp7Om05MiBEigDUsaavjsja4qQN5+HDmh/a
-	 7D/DfwmQaVytPW+T66rlQk3yQRrfemOJxf1rZ8FXVs5lTpBks6aHER7zmZXBd76YhI
-	 VHcS/at9PCNkXySISwFY/ySJJ6CDMYuQh5xGpgQWFNIdOR0/hKLnHqpmBatV58/ykS
-	 cFxbuQKlww6Pg==
-Date: Sun, 25 May 2025 14:48:18 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v6 4/9] rust: device: Enable printing fwnode name and path
-Message-ID: <aDMRkq9oPzFJBBzy@pollux.localdomain>
-References: <20250524192232.705860-1-remo@buenzli.dev>
- <20250524192232.705860-5-remo@buenzli.dev>
+	s=k20201202; t=1748177320;
+	bh=u9/4XIHZBrCOuCXoikwRXSkA3my/nbnLHX1nE95Jvpw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=OfeTPwpfQ87/YWshKJRQudj2SxzWKUiGnkxUxPLdIaYE3VanwD0UaWgCZeVO8KA6g
+	 cHcHfYC+YKWpHMRgom85nHNSM2qM6OEGgf7ylm8m7rmRoeUlG5TNJHwJl7Kq92QiXg
+	 zTgHlanlaOxIwW0laTMV7t+ErVgS+ggJm0QHRNiDR1k0QrAqRlZrgYOgR+xei/3+6B
+	 9Nd9cPnPkdqiN0uAg28iOoo1bMkZibZt1tIuQ8mRiMB6u+ynN7PdqBAPZgg+0IFEHX
+	 t9THGnGfbzOVcwIC7VAcxFYxnTu09QB7dkirsfP/AJZ/vLr4dVh/Vw0URSvfIokQE7
+	 2nAP3Dk2Uh8bw==
+Date: Sun, 25 May 2025 13:48:31 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 07/12] iio: accel: adxl313: add basic interrupt
+ handling
+Message-ID: <20250525134831.68b3c905@jic23-huawei>
+In-Reply-To: <20250523223523.35218-8-l.rubusch@gmail.com>
+References: <20250523223523.35218-1-l.rubusch@gmail.com>
+	<20250523223523.35218-8-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250524192232.705860-5-remo@buenzli.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 24, 2025 at 09:22:27PM +0200, Remo Senekowitsch wrote:
-> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
-> +    /// printing the full path of a node.
-> +    pub fn display_path(&self) -> impl core::fmt::Display + '_ {
+On Fri, 23 May 2025 22:35:18 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-While testing the code I found the following buggy print statement:
+> Prepare the interrupt handler. Add register entries to evaluate the
+> incoming interrupt. Add functions to clear status registers and reset the
+> FIFO.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Hi Lothar,
 
-	"test-device@2/test-device@2/test-device@2/test-device@2: property 'test,u32-required-prop' is missing"
+A few comments inline.
 
-and I think the following changes fix this:
+> ---
+>  drivers/iio/accel/adxl313.h      |  16 ++++
+>  drivers/iio/accel/adxl313_core.c | 134 +++++++++++++++++++++++++++++++
+>  2 files changed, 150 insertions(+)
 
-> +        struct FwNodeDisplayPath<'a>(&'a FwNode);
-> +
-> +        impl core::fmt::Display for FwNodeDisplayPath<'_> {
-> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-> +                // The logic here is the same as the one in lib/vsprintf.c
-> +                // (fwnode_full_name_string).
-> +
-> +                // SAFETY: `self.0.as_raw()` is valid by its type invariant.
-> +                let num_parents = unsafe { bindings::fwnode_count_parents(self.0.as_raw()) };
-> +
-> +                for depth in (0..=num_parents).rev() {
-> +                    let fwnode = if depth == 0 {
-> +                        self.0.as_raw()
 
-	self.0
 
-> +                    } else {
-> +                        // SAFETY: `self.0.as_raw()` is valid.
-> +                        unsafe { bindings::fwnode_get_nth_parent(self.0.as_raw(), depth) }
+>  struct adxl313_chip_info {
+> diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+> index 9db318a03eea..1e085f0c61a0 100644
+> --- a/drivers/iio/accel/adxl313_core.c
+> +++ b/drivers/iio/accel/adxl313_core.c
+> @@ -10,15 +10,24 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/module.h>
+> +#include <linux/overflow.h>
+>  #include <linux/property.h>
+>  #include <linux/regmap.h>
+>  
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/kfifo_buf.h>
+> +#include <linux/iio/sysfs.h>
 
-	let ptr = unsafe { bindings::fwnode_get_nth_parent(self.0.as_raw(), depth) };
-	FwNode::as_ref(ptr)
-
-where FwNode::as_ref() is
-
-	unsafe fn as_ref<'a>(ptr: *mut bindings::fwnode_handle) -> &'a Self
-
-> +                    };
-> +
-> +                    // SAFETY: `fwnode` is valid, it is either `self.0.as_raw()`
-> +                    // or the return value of `bindings::fwnode_get_nth_parent`
-> +                    // which returns a valid pointer to a `fwnode_handle` if the
-> +                    // provided depth is within the valid range, which we know
-> +                    // to be true.
-> +                    let prefix = unsafe { bindings::fwnode_get_name_prefix(fwnode) };
-> +                    if !prefix.is_null() {
-> +                        // SAFETY: `fwnode_get_name_prefix` returns null or a
-> +                        // valid C string.
-> +                        let prefix = unsafe { CStr::from_char_ptr(prefix) };
-> +                        write!(f, "{prefix}")?;
-> +                    }
-> +                    write!(f, "{}", self.0.display_name())?;
-
-	write!(f, "{}", fwnode.0.display_name())?;
-
-Otherwise we always write the name of self, no matter the actual parent depth.
+This is an odd selection of headers to add now. Why do we need them but didn't
+before?  Some of these aren't used yet so drop them (events.h, sysfs.h I think)
 
 > +
-> +                    if depth != 0 {
-> +                        // SAFETY:
-> +                        // - `fwnode` is valid, because `depth` is
-> +                        //   a valid depth of a parent of `self.0.as_raw()`.
-> +                        // - `fwnode_get_nth_parent` increments the refcount and
-> +                        //   we are responsible to decrement it.
-> +                        unsafe { bindings::fwnode_handle_put(fwnode) }
-> +                    }
-> +                }
+
+>  static const struct regmap_range adxl312_readable_reg_range[] = {
+>  	regmap_reg_range(ADXL313_REG_DEVID0, ADXL313_REG_DEVID0),
+>  	regmap_reg_range(ADXL313_REG_OFS_AXIS(0), ADXL313_REG_OFS_AXIS(2)),
+> @@ -62,6 +71,7 @@ bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	case ADXL313_REG_DATA_AXIS(4):
+>  	case ADXL313_REG_DATA_AXIS(5):
+>  	case ADXL313_REG_FIFO_STATUS:
+> +	case ADXL313_REG_INT_SOURCE:
+>  		return true;
+>  	default:
+>  		return false;
+> @@ -363,6 +373,118 @@ static int adxl313_write_raw(struct iio_dev *indio_dev,
+>  	}
+>  }
+>  
+> +static int adxl313_get_samples(struct adxl313_data *data)
+
+I doubt this gets called from multiple places. I'd just put
+the code inline and no have this helper at all.
+
+> +{
+> +	unsigned int regval = 0;
+> +	int ret;
 > +
-> +                Ok(())
-> +            }
-> +        }
+> +	ret = regmap_read(data->regmap, ADXL313_REG_FIFO_STATUS, &regval);
+> +	if (ret)
+> +		return ret;
 > +
-> +        FwNodeDisplayPath(self)
-> +    }
+> +	return FIELD_GET(ADXL313_REG_FIFO_STATUS_ENTRIES_MSK, regval);
+> +}
+> +
+> +static int adxl313_set_fifo(struct adxl313_data *data)
+> +{
+> +	unsigned int int_line;
+> +	int ret;
+> +
+> +	ret = adxl313_set_measure_en(data, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(data->regmap, ADXL313_REG_INT_MAP, &int_line);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(data->regmap, ADXL313_REG_FIFO_CTL,
+> +			   FIELD_PREP(ADXL313_REG_FIFO_CTL_MODE_MSK, data->fifo_mode));
+
+Check ret.
+
+> +
+> +	return adxl313_set_measure_en(data, true);
+> +}
+> +
+> +static int adxl313_fifo_transfer(struct adxl313_data *data, int samples)
+> +{
+> +	size_t count;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	count = array_size(sizeof(data->fifo_buf[0]), ADXL313_NUM_AXIS);
+> +	for (i = 0; i < samples; i++) {
+> +		ret = regmap_bulk_read(data->regmap, ADXL313_REG_XYZ_BASE,
+> +				       data->fifo_buf + (i * count / 2), count);
+
+that 2 is I'd guessed based on size of some data store element?  
+I'd guess sizeof(data->fifo_buf[0]) is appropriate.
+
+
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * adxl313_fifo_reset() - Reset the FIFO and interrupt status registers.
+> + * @data: The device data.
+> + *
+> + * Reset the FIFO status registers. Reading out status registers clears the
+
+I think you already read it before calling this. So how is it ever set?
+
+> + * FIFO and interrupt configuration. Thus do not evaluate regmap return values.
+> + * Ignore particular read register content. Register content is not processed
+> + * any further. Therefore the function returns void.
+> + */
+> +static void adxl313_fifo_reset(struct adxl313_data *data)
+
+As below.  This isn't a reset.  Fifo reset is normally the term used
+for when we have lost tracking of what is in the fifo and drop all data,
+not normal readback.
+
+> +{
+> +	unsigned int regval;
+> +	int samples;
+> +
+> +	adxl313_set_measure_en(data, false);
+Disabling measurement to read a fifo is unusual -  is this really necessary
+as it presumably puts a gap in the data, which is what we are trying
+to avoid by using a fifo.
+
+> +
+> +	samples = adxl313_get_samples(data);
+> +	if (samples > 0)
+> +		adxl313_fifo_transfer(data, samples);
+> +
+> +	regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &regval);
+
+Not processing the convents of INT_SOURCE every time you read it
+introduces race conditions.  This logic needs a rethink so that
+never happens.  I guess this is why you are disabling measurement
+to stop the status changing?  Just whatever each read of INT_SOURCE
+tells us we need to handle and all should be fine without disabling
+measurement.  That read should only clear bits that are set, so no
+race conditions.
+
+> +
+> +	adxl313_set_measure_en(data, true);
+> +}
+> +
+> +static int adxl313_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +
+> +	data->fifo_mode = ADXL313_FIFO_STREAM;
+
+If you always set fifo_mode before calling _set_fifo() probably better
+to pass the value in as a separate parameter and store it as necessary
+inside that function.
+
+> +	return adxl313_set_fifo(data);
+> +}
+> +
+> +static int adxl313_buffer_predisable(struct iio_dev *indio_dev)
+> +{
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	data->fifo_mode = ADXL313_FIFO_BYPASS;
+> +	ret = adxl313_set_fifo(data);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return regmap_write(data->regmap, ADXL313_REG_INT_ENABLE, 0);
+> +}
+> +
+> +static const struct iio_buffer_setup_ops adxl313_buffer_ops = {
+> +	.postenable = adxl313_buffer_postenable,
+> +	.predisable = adxl313_buffer_predisable,
+> +};
+> +
+> +static irqreturn_t adxl313_irq_handler(int irq, void *p)
+> +{
+> +	struct iio_dev *indio_dev = p;
+> +	struct adxl313_data *data = iio_priv(indio_dev);
+> +	int int_stat;
+> +
+> +	if (regmap_read(data->regmap, ADXL313_REG_INT_SOURCE, &int_stat))
+
+Failure to read is one thing we should handle, but also we should handle
+int_stat telling us there were no interrupts set for this device.
+
+> +		return IRQ_NONE;
+> +
+> +	adxl313_fifo_reset(data);
+
+Given we don't know it had anything to do with the fifo at this point
+resetting the fifo doesn't make much sense.  I'd expect a check
+on int_status, probably for overrun, before doing this.
+
+Ah. On closer inspection this isn't resetting the fifo, it's just
+reading it.  Rename that function and make it dependent on what
+was in int_stat.
+
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+
