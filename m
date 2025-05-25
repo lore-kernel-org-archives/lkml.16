@@ -1,262 +1,189 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ABC63A9;
-	Sun, 25 May 2025 10:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748168550; cv=fail; b=OeqO7/GydyBVnXguhqJ+2V3UcGSbiWeCyIbq37PaceHxJusl37jjP6Pk+lq7XXt3w+kOzgfbRSp3A0eqFXjUNDd/5NjVWvJPKXLYZ0ovmFleepE3ITCF/OjmdJZmVvJTVP+KtOh23y0sYWyDSEzlyJ6b401VbLOHL7SoXgXAdLI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748168550; c=relaxed/simple;
-	bh=qoXJt/Yh9qWq5kuZzAHqeLWRJA3aEKBgMPqeucPjNJg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z7bDmfG3N+HzynCW0wArXmYcfgkKikA9Qq0o96eorRn1jo3cw76Z8VQRo2Pl1JC0op9HhksyG9BwhOZ7DWzs2bGNFngo/wsAxMBeBY6U68R8FIC9hJXeVrWvJEdASx/dgNOnd4hnQvDlklgggU4fULH/ef+MUzBaK3fw/ED6HBE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5dDoNA25; arc=fail smtp.client-ip=40.107.243.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AC127468
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 10:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748168678; cv=none; b=M15Y4cRXmIH75aXibtV0haUzdLkOCC3xktKnvbQQVMzJ5BHX1Grwdbjwbj/004Aga384/Cf8vAZETc1ZEsw0Fvb6JejJxAp6nkyE8doGqPh1NSqLB2ju1j5eN8tayAfwKKUW7OnJMt1rhkcYPx60Bn/qNVgByhdzkLfU0bfUQZM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748168678; c=relaxed/simple;
+	bh=uk53fRjOEueOPTdzMV/EYUoTmR8VCJKUpAySzvnB1jU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BvnvXqWFLFiAh6qq6blID6UqQ7OcwEYJPHeFn0qpveEUfvMdvZAAYIbxf2AhR2YKEhMuGe7gTsqyPr2UrpDyGuCkzuzh4GHmXSkHkqz/9hyzilBSITRpr5fcQmuy4PCCG07hZnI0pkeoDQI5f0qomNzXtr3pxrPIWYUJD6S0ync=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gGjJZIZ/; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5dDoNA25"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pmFMD6APkVyJZKysjY1Q2t9Eea44F2MZsBCi9WaE1rNHi5EryIPZ2zqPOZS84ILGedt+uyps5BouKxOcLE0B88FtMTY4/SrzcDAGVxhIj6sfEO9PKRuy6zI8dSyGAaGHhrqSUVwHjngsjn2rdugBf8mBGZ97pbwOt+Hbh8lZ5qWAMK9xjJZv9HXKOSz5NsdMC6xEdupzW1PsOWThLlC/KsJwmyvhad7OMi4ob0n6ZLMcPCIBsKEs8v+uR7rj4y+2UZkWypPd1JP9y4TLvNN884R16FDBFgZ4MkkxOWOWG55Nu6dweQdZHl6vXxDjsiweFqu8QQ2MMkjF0CheynTCsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MHoY9NprZrhMoOj31geuDIZSaDHcm4VQ+TXX3keKbuE=;
- b=OrFqQzam3OlabLm82mptHO0FTt9SOuKkr/1FrOdI5gFUGMWjZoWrOIMv1nbyGYR3zsl85CWGlq9JJV50rwV9JEsPzrnNgb6bGRaAMoi4HhQ6Yci8fuHAr0P3VLeEdNBq4wOhijdcpM7l9Wnsu6+MwHxe0tucHr+YhmECrzFvrjvJI8S6v05dYPLa8Znrbhv+i7a6UauOcOXnCOOYyJ0irVZiY73uZELLE7gT/Eb8SVMLdjKWJccWJglSMekXRC7APWKI4wgQMu9oSZ2OwlBHrK8Q81UqAQG47Fo+tICXoxilFp1OSfs0gHLgVOONgk+wRAN9zh2DlhUmZcTu+awWmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lunn.ch smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MHoY9NprZrhMoOj31geuDIZSaDHcm4VQ+TXX3keKbuE=;
- b=5dDoNA25h2xKlHOkW3rtHjtEAdCXrbCdzIn8G1KuVJtrLL1eAgoFI3ufwDjKQRx7tHzr/Axqu8yHjijhB+DlLgXI+DWCQlRs/D829Rpe+HY1Q1t2cbFEoM1r0hEPzAzAMy8X4DRhsIQklSiG3z8IBbvmZOuIfyczQ0L4ZpfHioA=
-Received: from BN0PR04CA0184.namprd04.prod.outlook.com (2603:10b6:408:e9::9)
- by BL1PR12MB5900.namprd12.prod.outlook.com (2603:10b6:208:398::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.25; Sun, 25 May
- 2025 10:22:23 +0000
-Received: from BN2PEPF000055DD.namprd21.prod.outlook.com
- (2603:10b6:408:e9:cafe::97) by BN0PR04CA0184.outlook.office365.com
- (2603:10b6:408:e9::9) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Sun,
- 25 May 2025 10:22:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF000055DD.mail.protection.outlook.com (10.167.245.7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8813.0 via Frontend Transport; Sun, 25 May 2025 10:22:23 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sun, 25 May
- 2025 05:22:21 -0500
-Received: from xhdsuragupt40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Sun, 25 May 2025 05:22:18 -0500
-From: Suraj Gupta <suraj.gupta2@amd.com>
-To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <vkoul@kernel.org>,
-	<michal.simek@amd.com>, <sean.anderson@linux.dev>,
-	<radhey.shyam.pandey@amd.com>, <horms@kernel.org>
-CC: <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <git@amd.com>, <harini.katakam@amd.com>
-Subject: [PATCH net-next] net: xilinx: axienet: Configure and report coalesce parameters in DMAengine flow
-Date: Sun, 25 May 2025 15:52:17 +0530
-Message-ID: <20250525102217.1181104-1-suraj.gupta2@amd.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGjJZIZ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748168675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CZC2aLVVRC9MSj++zrrkRN5Czmbv+GL6NoJprKEHhc8=;
+	b=gGjJZIZ/7dOa8bkugIobZSHoXRJSif+DSXEDGEzOuzlivB9qjZRL/xJaTtmOCS80ZKuRP+
+	PH3TRoNrB0eGHSpAbO/nD97fIe31UbS27CMH5wta2GbSFSpiISDHzBmVTslQ+4d5OGF1nY
+	/j9YMfZfxgI4eSkyRG8Qcc+vu9tUjSM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-452-ytnyQVuGNVyvU9TsFXc9eA-1; Sun, 25 May 2025 06:24:33 -0400
+X-MC-Unique: ytnyQVuGNVyvU9TsFXc9eA-1
+X-Mimecast-MFC-AGG-ID: ytnyQVuGNVyvU9TsFXc9eA_1748168672
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so7030865e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 03:24:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748168672; x=1748773472;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CZC2aLVVRC9MSj++zrrkRN5Czmbv+GL6NoJprKEHhc8=;
+        b=d0s323zfKBxYw6W6n3ecOXo5lJ0+kboiZNmnTKeTb24fPyboJwOgQwzvrAbJFB5bOr
+         y1VSl0qXQwGuV7o7eYIZGjNIul3Ogn8sDESfquu4pdXHaF2KGCW5wh5Aol20ZlQtFUdb
+         TFJlAR2Iyra9oi2DbCInWjKpaUf4Uchn60FJdKtq22dOJ35mjnw+5Z6cKgTOOMttYMRZ
+         QnSP1UwvqZ2ue92g28qdKPzoHgZdBdDfNudoDfrryrUIfWw/B5PRqiSLd6gEhw2silPQ
+         xzRjNcKBchscuhCz2lb9/hQ4F8v37fTsafQ4RykEY8kGa407i7gFqalqL82cKf9zrf+u
+         FcBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3TTSWlBeE48HV7Nvq8sNnxjmCukj2v6ugX7oSVb14Z6CGFTS0keAKFHQf9mYJ2pVL0wykNorQ63csSTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwL06MTpDmLvdPkTi6FzoqAKCjyq+syLx4w/UZceZ8jYFOtF5vb
+	SPSGtRChM6z/b1n7wCrHKzvXq4IX+BwwYvoMIe2sUGHrpDziQi6ydE0kqhjDEZ3b8XTN0kWl+XR
+	QVKsbIivNSSN8rEBZsFOc+cFz0GrJZ1PLdzSCfm3x5bw1k4HeYwB4Crq7WOCzpCkKiQ==
+X-Gm-Gg: ASbGncsGMmuhSFcoGYEm+z705yXoth44oGbew1lGRwMfxvAbAFhJd870qi9JRr+GXAh
+	5G3m1JKHSEnsWs8t/9mUOY0c8PdWKLsEIzDM47r6cejfa0RvDebnZi+zwATZxOcw0NZP59+yTiR
+	KB1sq5ZQBC8xs8qmGw60ndaojiHdvBbPozNwUH87jxDjHF4nbhtrIyKdrhO1TEj2mZgbB1FAKSN
+	/muacboC/KrZ+Ew8DWxWQj1L1J5Wef2jEZFoVzub2vjhd7YInj6IiW4sfBdSAmjhsSnCyjFpWOj
+	h/4e40AIxSNDXd45ndGvW1SF5Cu10h5boCDAbFe9iA==
+X-Received: by 2002:a5d:5846:0:b0:3a3:5cca:a56a with SMTP id ffacd0b85a97d-3a4cb46c42emr3954973f8f.32.1748168671828;
+        Sun, 25 May 2025 03:24:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF81BtASRSIVPVFuqf47Gc5RFX+uSPO/1kvbsWNsgC3lWdOpQxwUzVB+DI/dMdwMcqIWMaYYg==
+X-Received: by 2002:a5d:5846:0:b0:3a3:5cca:a56a with SMTP id ffacd0b85a97d-3a4cb46c42emr3954951f8f.32.1748168671483;
+        Sun, 25 May 2025 03:24:31 -0700 (PDT)
+Received: from [192.168.3.141] (p4ff1fb19.dip0.t-ipconnect.de. [79.241.251.25])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb8csm201185655e9.28.2025.05.25.03.24.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 May 2025 03:24:31 -0700 (PDT)
+Message-ID: <e6b657c6-98b9-4690-9a26-27db0fa7c794@redhat.com>
+Date: Sun, 25 May 2025 12:24:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB04.amd.com: suraj.gupta2@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000055DD:EE_|BL1PR12MB5900:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0aaf7649-f0b1-474e-8ccb-08dd9b7609f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024|13003099007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+/TOwM90wuftVXJZHiRUbBCqZfZVK4NJHLR7olsWtDlgq8Y+mhHa2AoOU4vU?=
- =?us-ascii?Q?3/243E/diEWGmHo04II+EYaV3QQKJqRlWWjqLn7lKxxw0li3GiZjjVYk0QMH?=
- =?us-ascii?Q?rqIEYmI+o3cANtL6lDtptRvZVSqtPEnQ6D7dV1cTVoWFjclj637EGAmBvZzt?=
- =?us-ascii?Q?i1PDpKhk3YF0Z3xCOtKYdXlnjciyQX+1F+iDEtbJ4tQo6yuhhB94NQKe4SWd?=
- =?us-ascii?Q?iWU1aktbqehKPKMa3R2QbSpa++k82uBUSOueArT5hnr/B0w1W6w4Emu0aKHW?=
- =?us-ascii?Q?FRNoH4mA73yaA/+gNv5zsKsppq5IUNAnUwyHIPBy2YhPPwlFyUK+ovZ0oe2M?=
- =?us-ascii?Q?uQkL3EqciTgS4GPcsGM0udrMpbz5Zc4GIME5KA1EMG4MjelWFR+LQkyFOO0B?=
- =?us-ascii?Q?lcc10qqtprD9ZYOfIMBo56vyic1QtRdJ5LasSU+M/YIdBAG7TigFJnSl/Pvb?=
- =?us-ascii?Q?jMrcz+CiQqqKm+m/sO1QT9KLlOX7vKXdrkUSrADwkAZy1x2FqG6gn7Kqgd89?=
- =?us-ascii?Q?7jeR7xEZCXE+nuGLKPCjQIXXvdLFaqWGRApwT3Vh5qoCHCYJnUnzqqxCqE4e?=
- =?us-ascii?Q?7WlbHBBeyQf/u5dSeJIfCJHoElolxjusGC6nx9Nuo6KbZGEOM8DNxTNtT0rf?=
- =?us-ascii?Q?YtqdEGe1vTrc8ZbnSu/+Xw/o+uV/e5KXgLeXTsel3OxV9JD8fKEhDKGTlOHE?=
- =?us-ascii?Q?k5yfJuFbTHE1JlfnUJIr2nceKsGwKni6XwyM9mO14AzdPEIBElEHMJwj80hL?=
- =?us-ascii?Q?dbGkUNgRiWS1Ma3teKDUQhUSGUAitoYF4AGaSNoGWEFnLmA4wYkMtVhUUWlI?=
- =?us-ascii?Q?YimYypMwRXbql4QYaO0perATZ3FMmsUaV39j+/NZtatEaYSSRSjOLTCO0wMW?=
- =?us-ascii?Q?H8bJFqx2+znn9UbAGgqN5VWqpnrKK7DbT4vKnK84WoOOrUdl6YQtOuar7Z+U?=
- =?us-ascii?Q?TAyQQjB4IrYKiZLb9oYiWHmtvnVbBzf3zHC2CUoE5JjNLxz9jdAVBWaYSx+L?=
- =?us-ascii?Q?AJUsBI5lOv88+mPjF6z9wIJGkWK9pOY5c6c4ZtIhNjh+1jR4mpSGQQoeqvGG?=
- =?us-ascii?Q?zXYhOUiW5pfiWYx2+jimMeIq0PmAyP/WvlRcljfStSTwOEXnaNDB+7t7cDyg?=
- =?us-ascii?Q?X10SbfpM7E0pu7dVGiLserYRQu0FgXY+1yLBHLIwG8AJ9uJcXv/pkkEa7B1R?=
- =?us-ascii?Q?mZs6qN0f1EDiEzRr/iFE1z5onGxyyXRrYTefctnOz1bxlu5AScdWYi2HfPpt?=
- =?us-ascii?Q?YTAVYjQ3ATNR+jc4zGADMjiqEKrVS0ndAz0fVwSPdsJ/bbEK0VdWNC5Pos3D?=
- =?us-ascii?Q?Qmd/vj2pd9FCbHx8z4GFgR0SWK1TmPljj9uK4HjeNgn3/bV6LvDiEggVEwfS?=
- =?us-ascii?Q?ab8Ob6wSV9lF+WZoAcU09XMxiEN0NyVosXTwuYzclgf2Lgj25nCi4/ZZ5u2T?=
- =?us-ascii?Q?4n1xqrYk9vRDSmsBM4Pz5pFyjZEFTV0KpZjOe/Q1KOA43Vi1SNVoCOuOOeX7?=
- =?us-ascii?Q?nXiEyqJD7hq1rK0o/cHtSIH0k598tSxwc6XTBAErHP3N0PMXGA+1wnUhgw?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024)(13003099007)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 10:22:23.1724
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aaf7649-f0b1-474e-8ccb-08dd9b7609f7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000055DD.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5900
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Pu Lehui <pulehui@huaweicloud.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, mhiramat@kernel.org,
+ peterz@infradead.org, akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, pulehui@huawei.com,
+ Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+ <20250524164516.GA11642@redhat.com>
+ <e8a679eb-e40c-481d-b65a-d16f9e66c19a@redhat.com>
+ <20250525095926.GA5391@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250525095926.GA5391@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add support to configure / report interrupt coalesce count and delay via
-ethtool in DMAEngine flow.
-Netperf numbers are not good when using non-dmaengine default values,
-so tuned coalesce count and delay and defined separate default
-values in dmaengine flow.
+On 25.05.25 11:59, Oleg Nesterov wrote:
+> On 05/24, David Hildenbrand wrote:
+>>
+>> On 24.05.25 18:45, Oleg Nesterov wrote:
+>>>
+>>> To be honest, I can't even understand this part due to my ignorance.
+>>> What does "the old uprobe anon page to be orphan" actually mean?
+>>> How can the unnecessary uprobe_mmap() lead to an "unbalanced"
+>>> inc_mm_counter(MM_ANONPAGES) ? Or what else can explain the
+>>> "BUG: Bad rss-counter state" from check_mm() ? Or there are more problems?
+>>
+>> Essentially, we end up mapping an anonymous page (when install the uprobe)
+>> after preparing the new VMA, but before moving over the pages from the old
+>> VMA.
+>>
+>> So when we then move over the pages from the old VMA, we overwrite the PTE
+>> mapping an anonymous page (due to uprobe).
+>>
+>> As we simply overwrite the PTE that is mapping an anonymous page, we run
+>> into inconsistency later: RSS counter mismatch, memory leak, etc.
+> 
+> Ah, I seem to start understand... move_ptes() doesn't even check *new_pte,
+> I guess it assumes pte_none(ptep_get(new_pte), right? So the old anonymous
+> page is simply leaked after set_pte_at(mm, new_addr, new_pte, pte)...
+> 
+> Correct?
 
-Netperf numbers and CPU utilisation change in DMAengine flow after
-introducing coalescing with default parameters:
-coalesce parameters:
-   Transfer type	  Before(w/o coalescing)  After(with coalescing)
-TCP Tx, CPU utilisation%	925, 27			941, 22
-TCP Rx, CPU utilisation%	607, 32			741, 36
-UDP Tx, CPU utilisation%	857, 31			960, 28
-UDP Rx, CPU utilisation%	762, 26			783, 18
+Right. Ordinary page faults cannot happen concurrently, so the 
+assumption is that there really isn't anything mapped yet.
 
-Above numbers are observed with 4x Cortex-a53.
+> 
+>> We should never be installing an anonymous page (due to uprobe) into a VMA
+>> during mremap() before moving over the pages from the old VMA.
+> 
+> OK. But do you see any reason why uprobe_mmap() should be ever called during
+> mremap() ?
 
-Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
----
-This patch depend on following AXI DMA dmengine driver changes sent to
-dmaengine mailing list as pre-requisit series:
-https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.com/ 
----
- drivers/net/ethernet/xilinx/xilinx_axienet.h  |  6 +++
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 53 +++++++++++++++++++
- 2 files changed, 59 insertions(+)
+Only when growing a VMA: we might now cover a part with a uprobe, which 
+we have take care of.
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-index 5ff742103beb..cdf6cbb6f2fd 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-@@ -126,6 +126,12 @@
- #define XAXIDMA_DFT_TX_USEC		50
- #define XAXIDMA_DFT_RX_USEC		16
- 
-+/* Default TX/RX Threshold and delay timer values for SGDMA mode with DMAEngine */
-+#define XAXIDMAENGINE_DFT_TX_THRESHOLD	16
-+#define XAXIDMAENGINE_DFT_TX_USEC	5
-+#define XAXIDMAENGINE_DFT_RX_THRESHOLD	24
-+#define XAXIDMAENGINE_DFT_RX_USEC	16
-+
- #define XAXIDMA_BD_CTRL_TXSOF_MASK	0x08000000 /* First tx packet */
- #define XAXIDMA_BD_CTRL_TXEOF_MASK	0x04000000 /* Last tx packet */
- #define XAXIDMA_BD_CTRL_ALL_MASK	0x0C000000 /* All control bits */
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 1b7a653c1f4e..f9c7d90d4ecb 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1505,6 +1505,7 @@ static int axienet_init_dmaengine(struct net_device *ndev)
- {
- 	struct axienet_local *lp = netdev_priv(ndev);
- 	struct skbuf_dma_descriptor *skbuf_dma;
-+	struct dma_slave_config tx_config, rx_config;
- 	int i, ret;
- 
- 	lp->tx_chan = dma_request_chan(lp->dev, "tx_chan0");
-@@ -1520,6 +1521,22 @@ static int axienet_init_dmaengine(struct net_device *ndev)
- 		goto err_dma_release_tx;
- 	}
- 
-+	tx_config.coalesce_cnt = XAXIDMAENGINE_DFT_TX_THRESHOLD;
-+	tx_config.coalesce_usecs = XAXIDMAENGINE_DFT_TX_USEC;
-+	rx_config.coalesce_cnt = XAXIDMAENGINE_DFT_RX_THRESHOLD;
-+	rx_config.coalesce_usecs =  XAXIDMAENGINE_DFT_RX_USEC;
-+
-+	ret = dmaengine_slave_config(lp->tx_chan, &tx_config);
-+	if (ret) {
-+		dev_err(lp->dev, "Failed to configure Tx coalesce parameters\n");
-+		goto err_dma_release_tx;
-+	}
-+	ret = dmaengine_slave_config(lp->rx_chan, &rx_config);
-+	if (ret) {
-+		dev_err(lp->dev, "Failed to configure Rx coalesce parameters\n");
-+		goto err_dma_release_tx;
-+	}
-+
- 	lp->tx_ring_tail = 0;
- 	lp->tx_ring_head = 0;
- 	lp->rx_ring_tail = 0;
-@@ -2170,6 +2187,19 @@ axienet_ethtools_get_coalesce(struct net_device *ndev,
- 	struct axienet_local *lp = netdev_priv(ndev);
- 	u32 cr;
- 
-+	if (lp->use_dmaengine) {
-+		struct dma_slave_caps tx_caps, rx_caps;
-+
-+		dma_get_slave_caps(lp->tx_chan, &tx_caps);
-+		dma_get_slave_caps(lp->rx_chan, &rx_caps);
-+
-+		ecoalesce->tx_max_coalesced_frames = tx_caps.coalesce_cnt;
-+		ecoalesce->tx_coalesce_usecs = tx_caps.coalesce_usecs;
-+		ecoalesce->rx_max_coalesced_frames = rx_caps.coalesce_cnt;
-+		ecoalesce->rx_coalesce_usecs = rx_caps.coalesce_usecs;
-+		return 0;
-+	}
-+
- 	ecoalesce->use_adaptive_rx_coalesce = lp->rx_dim_enabled;
- 
- 	spin_lock_irq(&lp->rx_cr_lock);
-@@ -2233,6 +2263,29 @@ axienet_ethtools_set_coalesce(struct net_device *ndev,
- 		return -EINVAL;
- 	}
- 
-+	if (lp->use_dmaengine)	{
-+		struct dma_slave_config tx_cfg, rx_cfg;
-+		int ret;
-+
-+		tx_cfg.coalesce_cnt = ecoalesce->tx_max_coalesced_frames;
-+		tx_cfg.coalesce_usecs = ecoalesce->tx_coalesce_usecs;
-+		rx_cfg.coalesce_cnt = ecoalesce->rx_max_coalesced_frames;
-+		rx_cfg.coalesce_usecs = ecoalesce->rx_coalesce_usecs;
-+
-+		ret = dmaengine_slave_config(lp->tx_chan, &tx_cfg);
-+		if (ret) {
-+			NL_SET_ERR_MSG(extack, "failed to set tx coalesce parameters");
-+			return ret;
-+		}
-+
-+		ret = dmaengine_slave_config(lp->rx_chan, &rx_cfg);
-+		if (ret) {
-+			NL_SET_ERR_MSG(extack, "failed to set rx coalesce parameters");
-+			return ret;
-+		}
-+		return 0;
-+	}
-+
- 	if (new_dim && !old_dim) {
- 		cr = axienet_calc_cr(lp, axienet_dim_coalesce_count_rx(lp),
- 				     ecoalesce->rx_coalesce_usecs);
+not to mention munmap() ...
+
+I cannot think of something that would require it during munmap().
+
 -- 
-2.25.1
+Cheers,
+
+David / dhildenb
 
