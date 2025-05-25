@@ -1,78 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12ED21F463C;
-	Sun, 25 May 2025 14:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6A828EA;
+	Sun, 25 May 2025 14:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748182208; cv=none; b=bquXzeHBlsgulSNPdylDctWxn4JZgpnf8rDrQXAviDSQ4TOS79F0zFcGJGbtV3BWFFgVY3O9rEh8bIrInqaTWFqpxrVkAvdSXUvX7nSoKVBeaa6sTGBV/9nuC/zHuwBXAlo46fvvXs3QH9LiC+wkQagxM3BOYANfZe3UGpmE5ag=
+	t=1748182284; cv=none; b=WDdfpoZRbhIpAA5a3kBCcnIWyJp1QNyNlFLOh2sroHNPF3Rykq58QeDMz4tJ8xooP+4svGMDcUILVdgwm9ffBo21zn1tlF4YzGw05WpCUXguqTZbilNctb5ggIlg8TRh4bCJ16I+OUrs8W5hsuKFgX1juhmfTUKjSVpgWXwTH6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748182208; c=relaxed/simple;
-	bh=A6JdPCfNNVlTjf/P13KKpdY6Inlbxpzb7Cr/udIBNo0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=J1/p1tyler8muWALK/fqrgAHKe2aOkUpv/6gQrSuQWqaFACEsdP90HRwgG9DEYTcxoU9KUkKU6GjZC+r5RK2vpwuPqVmA03kLE7TkcjLLPpqmWwh2YRHIQBcBQLLmGkWFHL1hG9MBqRoRDSgEGBSTNBRnZj2kxYJ40+aOAGM15M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vN4uDnFr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748182284; c=relaxed/simple;
+	bh=9zFisc4BvkUnb0sacXYazLwTXa3jFFku3wzY2GozKVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tmVYZ7r7iybiXulQJSYrQPpMae9391wLlOIgD6K+h/GFPT09r8Q1y1ASk2sja3uc3C8h5QM6IEa2muUmoC+ois9NMq5LSFJKC4c775rS9eTriYZYArPIyIaMMBDS06MTqNiF1gvznLGV+Pwqk/8vLUXA/e8xdKvVcgbQWCAEBhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dP0awLqo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vN4uDnFr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4655C4CEEB;
-	Sun, 25 May 2025 14:10:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dP0awLqo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 332C4C4CEEA;
+	Sun, 25 May 2025 14:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748182207;
-	bh=A6JdPCfNNVlTjf/P13KKpdY6Inlbxpzb7Cr/udIBNo0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=vN4uDnFrV7GalNuQPqYVkTyO6K0xXbESzKRs6dWz01h7J8KgqTgkpzmIuVSe4ZerQ
-	 zsrTmq7wiursx9lRuOpUoZ6zeYXyvt4PKSiZYif+VW2b8W6E7S5oofv7lvOnK9FhK4
-	 oKust9/4uYoRwO17VzkEq+uSWsKUeZNUFRhtIbTSmVBxLCTdglTulKbZJWEzfmFfip
-	 HiSiFeR5+CWjNWQ6IT9vW3E+GUPK4R+7Djla7OqfkqCSdSVCiVlAXxRCaFxAGse/Ve
-	 VYnZvQASU40N0HSkVvJL8Hz2ndIEsmGhGTwZ7sOEb9hv3QsqnrqfFGadf6dwCPPYkM
-	 c/L8ufpQzfdKw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEF6380AAFA;
-	Sun, 25 May 2025 14:10:43 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1748182284;
+	bh=9zFisc4BvkUnb0sacXYazLwTXa3jFFku3wzY2GozKVg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dP0awLqoZql0IRsd4pFqgqK1ZePDbBFLGkkWBGwVcj8fYu8uUGZdfJC9mJtDXFcQP
+	 yaLkFffuRzksuqys9a4gwPOt3iYIfn4P27TC/fSORhiCyS7hhGlrllqSmjZvxldXNt
+	 gThG1d55a87ijAllEe6Udvl2v9jOt9bt9ImQt0NEb9eEpZk6SGwQ1BeRSfC0PpVs7D
+	 wPi7phKCX2W4/zJCoYzxaHpTOpfKReDkao1KCtCWvyz0OwFc/1b2mwuRUIUfVhbbku
+	 uaPIetXG16dalRnl+8i0bm3gAAqRtLiuh3/2xeCGTseMjxn0OhSR3lTt36Q8lJjNkd
+	 i4fzmregzh29A==
+Date: Sun, 25 May 2025 15:11:18 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Antoniu Miclaus <antoniu.miclaus@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] iio: adc: ad4080: use lowercase device name
+Message-ID: <20250525151118.1384a139@jic23-huawei>
+In-Reply-To: <5e0eb8b91062a5622b09c5e32f9e662a224d8d80.camel@gmail.com>
+References: <20250520110101.29478-1-antoniu.miclaus@analog.com>
+	<5e0eb8b91062a5622b09c5e32f9e662a224d8d80.camel@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next] octeontx2-af: NPC: Clear Unicast rule on nixlf detach
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174818224274.4147910.3733595468697864340.git-patchwork-notify@kernel.org>
-Date: Sun, 25 May 2025 14:10:42 +0000
-References: <20250520060952.1080092-1-hkelam@marvell.com>
-In-Reply-To: <20250520060952.1080092-1-hkelam@marvell.com>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
- jerinj@marvell.com, sbhatta@marvell.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Tue, 20 May 2025 15:08:52 +0100
+Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+> On Tue, 2025-05-20 at 14:01 +0300, Antoniu Miclaus wrote:
+> > Update the .name field in the ad4080_chip_info struct
+> > from "AD4080" to "ad4080" to follow the common convention
+> > in IIO drivers of using lowercase names for device identifiers.
+> >=20
+> > No functional changes are introduced.
+Isn't this what is read back from /sys/bus/iio/devices/iio\:device0/name?
 
-On Tue, 20 May 2025 11:39:52 +0530 you wrote:
-> The AF driver assigns reserved MCAM entries (for unicast, broadcast,
-> etc.) based on the NIXLF number. When a NIXLF is detached, these entries
-> are disabled.
-> 
-> For example,
-> 
->          PF           NIXLF
-> 
-> [...]
+changing it is a functional change.  I'd argue it's a fix and deserved
+a fixed tag.
 
-Here is the summary with links:
-  - [net-next] octeontx2-af: NPC: Clear Unicast rule on nixlf detach
-    https://git.kernel.org/netdev/net-next/c/bb91f7547f79
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+> >=20
+> > Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
+> > --- =20
+>=20
+> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+>=20
+> > =C2=A0drivers/iio/adc/ad4080.c | 2 +-
+> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/iio/adc/ad4080.c b/drivers/iio/adc/ad4080.c
+> > index e8b2e5e7a68a..c36eb41d738a 100644
+> > --- a/drivers/iio/adc/ad4080.c
+> > +++ b/drivers/iio/adc/ad4080.c
+> > @@ -433,7 +433,7 @@ static const struct iio_chan_spec ad4080_channel =
+=3D {
+> > =C2=A0};
+> > =C2=A0
+> > =C2=A0static const struct ad4080_chip_info ad4080_chip_info =3D {
+> > -	.name =3D "AD4080",
+> > +	.name =3D "ad4080",
+> > =C2=A0	.product_id =3D AD4080_CHIP_ID,
+> > =C2=A0	.scale_table =3D ad4080_scale_table,
+> > =C2=A0	.num_scales =3D ARRAY_SIZE(ad4080_scale_table), =20
+>=20
 
