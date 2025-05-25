@@ -1,116 +1,122 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF09111A8;
-	Sun, 25 May 2025 14:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CB9111A8;
+	Sun, 25 May 2025 14:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748182540; cv=none; b=Xd2Mb1vVilkXVWcAUDQvX09NIJMpPusF49yT08weKfQNsIiMpgQ/6RCI70a1Ynq+8B/CknlxCIkRDzRFhC4fYronmcC+7XVFNm3K0UQgtDmt2fFNYujtr8c8hqUHK8tWP3G5X7cPbWHAE9GLTxm9deVdUY1W/eL6/HbXj/QcWrU=
+	t=1748182603; cv=none; b=LQtSHAeq/v49MKP3B2V7HjK7/dewdI+/TlJX8wNVj510xaXx4kWzfLO2neVk1aDzxxqFFwhNh/v4rUM5i4+XKIqV6vUzXNGOgUZ5lSLs3eJ85Nm+8/H0CEJHwKdkncFLDLAWnIfFex4Ufih3St13l6MCyqMYfLuVWdBw9vG8zvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748182540; c=relaxed/simple;
-	bh=wmGk+TBaNRY5nDS1rKgBaAEKQmTkq/N72QkhaTSVfWQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z6bw3nkzwP0WGQHDNWc51fM44TLZBKl2TxN4WZvMGMS1yy1r3pGmkq63YoV+FFjzLqyAzFwCRrBrOrGNn4Zuq1sMB9afzPt2JTPow92M6q83FfFJ1e5dKMoLlXxXCi1AdYdUq/OGW5V9hqvzUsl4HjAS2HBP1TMr83vlir0ER5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SXFEvqYJ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748182603; c=relaxed/simple;
+	bh=sjlx9s4OvwdaAILZYcPuTEe/EYm/DOo0jp3Iv37PAz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Lyx56sI0rVPM0Fp9gGpfOVlxQgKg7CiauIWZxTHI/9sphmkjBjuNJDc0zmA9pPTuanhgptBEsyc25RQ7vlbx4mGuUj3eG6JjxAoCsa1QkgeyyCbA9Ol0iLNm+y3D/E0LeSlkRf/rkbDrHZ1AV1dQXu/R5ZrXzXkzgaxwXKTskIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9EgQMMn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SXFEvqYJ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf257158fso12188975e9.2;
-        Sun, 25 May 2025 07:15:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748182537; x=1748787337; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IZcVpD8BamrnSmEiURzydGig52hbzqfoQ0eu8lXwHW4=;
-        b=SXFEvqYJpVDl44nMBmZMxxW5UfPMQVn2PeqSZnScTBbEO/VHdUbpTZoaS+L6kqSs2A
-         OfSVoMxKc1oEb0bTpYihWtnDmrlDHEe9mWOPo3/1qDd7ihtLIrQQRlu4l/9qgltSIRrV
-         IJX1TiLD7HpMMpD5+dLEnhlREgWhnauFadpPyXXErI2iNljISD4mm06LqZ1CPw9yZsgm
-         5oFIDUlNyVhS1tde3gdNGgwytywjKd+r4AJNARFApPiJmYvu968u+FNwxb69MRT9LnVG
-         rX69KjAdrPQUm+BA5GsADjwJ5qp8V+6vy3bLHMOw6Le7UH3wdQ8lcZwM5GPLjYjjorvb
-         SAKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748182537; x=1748787337;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IZcVpD8BamrnSmEiURzydGig52hbzqfoQ0eu8lXwHW4=;
-        b=NLc88FHKEOR2/Z8DgaiqeLO5z1oVz9sZcmP39JVVo8zEooXWLyl87ZKvUU4NLIWACE
-         rQD4eNC1Zf20DT0FupuWPbyLwuW10GGCjhWq35JcdylZQ3fj2/XGivbe8VXbpnZR/6iV
-         KlniJsOtk97Nc+pjbJF422XIwTEKnnl4Al+EtiqY6tHDNCxsUnNhVtybIb/v8uaUFCI6
-         KJYpsyQyx/DxQVdR2oP3J79CprwXCaB8z8h01AQ9p5f7AA2H0DyMeTq7M/3m9heoNcNb
-         E24MkmXLCV2q3Z1l3OIRgTMpEwMELAa8Lkr6wWateYkytRoSeYbS/Cyxj5Ad1Epy8Q4h
-         qdUw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4hqgS2g/gZj46pWsVOltehy3OrImht1SJHc1NsQefeJ/hCTO+MyVtSbr6IuYFj0efiDaSCUBgPacTZUU9@vger.kernel.org, AJvYcCVlitl5+IcBrTeK4gxeZX16cvEqmJlW5I5CcrynsXob2K4GQkpceWX0ngTAzh+mrETCPwGR938lZ14jyicv@vger.kernel.org, AJvYcCW2CDkZqAJ4NE6/4shIR0ohoNbxVctmVSqSxlpAZ68YVUrItflyD0QvMQhFDhN48f7y+mXC4PiMKyQX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+pkF+jTuTs+gU6/iskBUJS+CqqEZqZ1/iTw5ovpvkBwzUeY1J
-	sxIHZHLp96MEKCPTlQraEE7kWGnhyKlQ3yTAg7N58CZxlRfXppDvlMtkcDMXXw==
-X-Gm-Gg: ASbGnctR8rLLfY8mCzs1U7nfCkTBrmTGU7fpABqSeSNuH9fL1Uiu54Y0VPvWvJtKhrw
-	SZwLYE2/54GpwZR0f7pTE3JtVO/IpI/OIDMV22VBeXWA0aMVz25qsPABVbUe2EVJ3VoTMFkvnJl
-	lf+p8W2sCI1I0vhKOLjrF3Vb/zP3QACFXuAz2Upe+g9fuQfg3nFln70Iv60AQlJ6795C13at8Qx
-	YXP8YmPaJzbEAIRnqyliDdQKS9xrjhwzfBpKmQHocE2P3HZL15NP7/f3xzLAaIG7hLRVxONTHhE
-	0ooFVM3EwsUnikCtv6mNMDQZ5QHFqIGj0Z88QBYGlB7HTkGOdIpFn8WlYF20+I40EJ3Z9vc0l8a
-	WTATouUgRLolqVZI=
-X-Google-Smtp-Source: AGHT+IF1N9STeA39eRmGKM0ICfxskkUCsw4Lm8yXlQoDq9JXVNyUdGxuzaTax6DPjJd8skO1R3hUTA==
-X-Received: by 2002:a05:600c:8487:b0:442:d9fb:d9f1 with SMTP id 5b1f17b1804b1-44c933ed9bbmr55049605e9.4.1748182536874;
-        Sun, 25 May 2025 07:15:36 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-447f7bae847sm203607445e9.36.2025.05.25.07.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 07:15:36 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Sun, 25 May 2025 16:15:25 +0200
-Subject: [PATCH] spi: spi-qpic-snand: use NANDC_STEP_SIZE consistently
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9EgQMMn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF88AC4CEEA;
+	Sun, 25 May 2025 14:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748182603;
+	bh=sjlx9s4OvwdaAILZYcPuTEe/EYm/DOo0jp3Iv37PAz0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s9EgQMMnLSmBEnoXSl3hU5wMbvMwiqNdZwun9p5IT7DHzI/KWUgKzadCBu9Vj3hha
+	 No9pEzk1YKXEpNfNnFVAwbmPQPpDURn1dEj8soCtW33tTsRXkbyhKhk64oKECt5Vpz
+	 uTjmUugLbVYhvf3s4QOENbZ56YUmx/VPx/SDnZ04GJEzQomapxqrRREg68KQ25IoiI
+	 tWAqlnhmsDDEnZxAEz3Ww1Z9GgnlRvzj7m/5lvZbf+Kg5nm2CYFzmegtmpe0BIHIyM
+	 Yh1L2V6hV5Si86UKP7pIqtYAjzR5s1hgemqNgqqcBmuFUHxor9l0/jm5A/mKavuVxj
+	 wh0R3+t6QIMlw==
+Date: Sun, 25 May 2025 15:16:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, lars@metafoo.de,
+ javier.carrasco.cruz@gmail.com, mazziesaccount@gmail.com,
+ arthur.becker@sentec.com, perdaniel.olsson@axis.com,
+ mgonellabolduc@dimonoff.com, muditsharma.info@gmail.com,
+ clamor95@gmail.com, emil.gedenryd@axis.com, devicetree@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] iio: light: add support for veml6046x00 RGBIR
+ color sensor
+Message-ID: <20250525151633.18b82382@jic23-huawei>
+In-Reply-To: <aDLIHEj4lqlgargJ@mail.your-server.de>
+References: <20250519060804.80464-1-ak@it-klinger.de>
+	<20250519060804.80464-3-ak@it-klinger.de>
+	<aCsQKUwGeq4Ed4ai@smile.fi.intel.com>
+	<aDLIHEj4lqlgargJ@mail.your-server.de>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250525-qpic-snand-nandc_step_size-v1-1-6039e9bfe1c6@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAPwlM2gC/x3MQQqEMAxA0atI1hOoxbqYq4iU0EbNplMbkUHp3
- e3M5sPb/BuUi7DCu7uh8Ckqn9TQvzoIG6WVUWIzWGOdcdbhniWgJkoRfwleD85e5WJ0oxmXgYg
- jGWiDXHiR738+zbU+WbYWRWwAAAA=
-X-Change-ID: 20250525-qpic-snand-nandc_step_size-5606f4aaeda0
-To: Mark Brown <broonie@kernel.org>
-Cc: Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- linux-spi@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
 
-Change the qcom_spi_read_page_ecc() function to use NANDC_STEP_SIZE
-instead of a magic number while calculating the data size to keep it
-consistent with other functions like qcom_spi_program_{raw,ecc,oob}
-and qcom_spi_read_cw_{raw,page_oob}.
+On Sun, 25 May 2025 09:34:52 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
 
-No functional changes.
+> Hi Andy,
+> 
+> thanks for the review. I have a question and a comment below.
+> 
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> schrieb am Mo, 19. Mai 14:04:
+> > > +/*
+> > > + * veml6046x00_gain_pd - translation from gain index (used in the driver) to
+> > > + * gain (sensor) and PD
+> > > + * @gain_sen:	Gain used in the sensor as described in the datasheet of the
+> > > + *		sensor
+> > > + * @pd:		Photodiode size in the sensor  
+> > 
+> > This is made to look like kernel-doc, but it's not marked as a such, why?  
+> 
+> I'll remove the '@'
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
- drivers/spi/spi-qpic-snand.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Better to make it kernel doc!  That is add /** and check for
+errors using scripts/kernel-doc 
 
-diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
-index fd129650434f0129e24d3bdac7e7c4d5542627e6..037178d6576e82c3f19c3cc2c6c78f056dc488af 100644
---- a/drivers/spi/spi-qpic-snand.c
-+++ b/drivers/spi/spi-qpic-snand.c
-@@ -821,7 +821,7 @@ static int qcom_spi_read_page_ecc(struct qcom_nand_controller *snandc,
- 		int data_size, oob_size;
- 
- 		if (i == (num_cw - 1)) {
--			data_size = 512 - ((num_cw - 1) << 2);
-+			data_size = NANDC_STEP_SIZE - ((num_cw - 1) << 2);
- 			oob_size = (num_cw << 2) + ecc_cfg->ecc_bytes_hw +
- 				    ecc_cfg->spare_bytes;
- 		} else {
 
----
-base-commit: b00d6864a4c948529dc6ddd2df76bf175bf27c63
-change-id: 20250525-qpic-snand-nandc_step_size-5606f4aaeda0
+> 
+> ...
+> 
+> > > +	ret = regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF0,
+> > > +							VEML6046X00_CONF0_ON_0);  
+> > 
+> > Something wrong with the indentation. Please, fix all places like this...
+> >   
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to set bit for power on %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
+> > > +							VEML6046X00_CONF1_ON_1);  
+> > 
+> > ...or like this.
+> >   
+> > > +}  
+> 
+> I don't get the point what is wrong with the indentation. In the coding-style it
+> says the decendant line should be placed to the right.
+> Did i miss something?
 
-Best regards,
--- 
-Gabor Juhos <j4g8y7@gmail.com>
+Where there are no other constraints it should be aligned under the first parameter
+on the line above.
+
+	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
+				 VEML6046X00_CONF1_ON_1);  
+
+This is one of those things that has never been added explicitly to the coding style
+doc because there lots of subtle corner cases where it isn't appropriate.
+But all significantly to the right usually means is 1 tab or more.
+Where possible most people prefer the above style.
+
+Jonathan
+
+> 
+> Best regards,
+> 
+> Andreas
+> 
 
