@@ -1,135 +1,180 @@
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D41192D87;
-	Sun, 25 May 2025 12:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A82FC1D;
+	Sun, 25 May 2025 12:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748176374; cv=none; b=cnN9jEeMKAYKoDbTYss7eiFxgPIc9k8Sbkl0T6SJ6GNFAKpVz9WEUuhApyGmWKjcgvQGh+KyygDQRN1H9tlJ09hrhE1pV8V0UHJFXSAHJzQDynISKRhtE0HsuILMysZufUBoI6g41d27SIhf/WKt6zTKSy2Ng13+NrB88GSFFS8=
+	t=1748176413; cv=none; b=Qps0OZHBUvxA6NCjxIbB7pu2WtZOslSbPug4nebSuec7O7WM1ou2DOLQ36X/MnhFsIqyXxsDOfEMgVC+2h1RcOeuhBw/Sx5bvQiuZ263/puU+nxZ14h+rF6ehD2cBfq0hOU3+pDWJCZZZcF8RYb2H9JJvL3C/RLk4uS/cjDT9O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748176374; c=relaxed/simple;
-	bh=Zm6sqqdLsuqM7CAR+q6ZjZWpT2f9BhhyD9qYALFxsnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ovo8nHtVl6QiciYK7Gq93Sezq+/ATHNMYcVuxaobkH7PAy+VyWW4HONNUiV359VUdgGDxmb6bZXa/PJwdAsoiSHpZ+0Bbar+F2IFrIex0ZyaktdmYgFi++JQsEdNhnDxWoxTu1uhOtRbqb0cg8dmYGfOgpBrjyPIJ2wOxF3LvHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ENMmL7kz; arc=none smtp.client-ip=80.12.242.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748176413; c=relaxed/simple;
+	bh=hIuIlhuZNJDW5L2piUkx5iUdAk1UaXHfkrN/76XdtI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oqdVVLzGbvK1tlUzg4tmLV1i+wfNkx70nmkznLgmYu0kcBehTJXh+mz77g6haEtqWrhILH6zZbMlgtZBWJowMQKAvly3VFP++ebFQ569AJEJmfA7HFIqOo6nj23AvdsAuS6KWsN7cJYt+WxJqGJGiDRTarnLodDXh06n3ThLBeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlZ3cYRl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ENMmL7kz"
-Received: from localhost.localdomain
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id JAWtu3FlrpEs6JAWuuNAR5; Sun, 25 May 2025 14:32:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748176362;
-	bh=ezOSH7DNNbrcR1DYR5Ht3MTrtxBGiOkFfZgULPq3ODQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=ENMmL7kzpGv6rNZQN7cEUa9d3mP8A8WR0med0d8Q53PjkvOPGSgTqUkN1a6mAlrTj
-	 oBQoZdtxm36eohIdFoSKZQsmOaU2NEK1cencEUC9tLRVk4MPKk4yeytrRnXwL5thl3
-	 TCoqig+9ziMj6RkrKH687W6L15XqGa2fB3cWmE9tnJ3Lf2UqPbkSKdTKzNdg6X5VWO
-	 a9EJlhdlO15hz4yJa0JBjTwqd2hRYDNeW3pqvRnRmwxlgEaNXB/TKNWfcm+P3rSV0A
-	 zF56VwhPHBWiieoP7E+Jm0cdQK/tcaIJvnl0rMZ8W+mCsyv6Xyg/WEWrkTPIKAyzIg
-	 xZkp/1EsKLvIg==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 25 May 2025 14:32:42 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: zhanghongchen <zhanghongchen@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] thermal/drivers/loongson2: Constify struct thermal_zone_device_ops
-Date: Sun, 25 May 2025 14:32:30 +0200
-Message-ID: <5f5f815f85a9450bca7848c6d47a1fee840f47e5.1748176328.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlZ3cYRl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BEBBC4CEEA;
+	Sun, 25 May 2025 12:33:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748176413;
+	bh=hIuIlhuZNJDW5L2piUkx5iUdAk1UaXHfkrN/76XdtI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=WlZ3cYRlokMLjsYVB09Y6zzriHoKVwVOOT3b6ea6z7SQCtDyN4kKfPokd7ZIPHZj9
+	 NLU+ay5oX74T2vFeDC3je0ubFEhsOH03g4HUWUtVkKXjCZGMSFVYtIt0mUI/2dwOKc
+	 3AzLbI7n3OQG8fLGF1cOUO4pUjm1ggT/WlRNBbLFmtbIpyAJxVbfJWzu4+7bBR6vNu
+	 PL8tfjBAxTNhWEz7zgh77cVBAUBscnUUcdk6YRxR6t/s6iqwRjexLoxJhlu2vcOION
+	 csplkD9uOgG+pggFQSKr+VXgiJHh87V5MY6fUZ5B+qP0LOIKJV4QcvZVSbf1ZJ4DHe
+	 0qfVnXGX1++gw==
+Date: Sun, 25 May 2025 13:33:25 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+ Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/12] iio: accel: adxl313: prepare interrupt
+ handling
+Message-ID: <20250525133325.2a70e888@jic23-huawei>
+In-Reply-To: <20250523223523.35218-7-l.rubusch@gmail.com>
+References: <20250523223523.35218-1-l.rubusch@gmail.com>
+	<20250523223523.35218-7-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-'struct thermal_zone_device_ops' could be left unmodified in this driver.
+On Fri, 23 May 2025 22:35:17 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Constifying this structure moves some data to a read-only section, so
-increases overall security, especially when the structure holds some
-function pointers.
+> Evaluate the devicetree property for an optional interrupt line, and
+> configure the interrupt mapping accordingly. When no interrupt line
+> is defined in the devicetree, keep the FIFO in bypass mode as before.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> ---
+>  drivers/iio/accel/adxl313.h      |  8 ++++++++
+>  drivers/iio/accel/adxl313_core.c | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 39 insertions(+)
+> 
+> diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+> index 9bf2facdbf87..ab109d1c359e 100644
+> --- a/drivers/iio/accel/adxl313.h
+> +++ b/drivers/iio/accel/adxl313.h
+> @@ -21,7 +21,9 @@
+>  #define ADXL313_REG_ACT_INACT_CTL	0x27
+>  #define ADXL313_REG_BW_RATE		0x2C
+>  #define ADXL313_REG_POWER_CTL		0x2D
+> +#define ADXL313_REG_INT_ENABLE		0x2E
+>  #define ADXL313_REG_INT_MAP		0x2F
+> +#define ADXL313_REG_INT_SOURCE		0x30
+>  #define ADXL313_REG_DATA_FORMAT		0x31
+>  #define ADXL313_REG_DATA_AXIS(index)	(0x32 + ((index) * 2))
+>  #define ADXL313_REG_FIFO_CTL		0x38
+> @@ -45,6 +47,11 @@
+>  #define ADXL313_SPI_3WIRE		BIT(6)
+>  #define ADXL313_I2C_DISABLE		BIT(6)
+>  
+> +#define ADXL313_REG_FIFO_CTL_MODE_MSK		GENMASK(7, 6)
+> +
+> +#define ADXL313_FIFO_BYPASS			0
+> +#define ADXL313_FIFO_STREAM			2
+> +
+>  extern const struct regmap_access_table adxl312_readable_regs_table;
+>  extern const struct regmap_access_table adxl313_readable_regs_table;
+>  extern const struct regmap_access_table adxl314_readable_regs_table;
+> @@ -65,6 +72,7 @@ struct adxl313_data {
+>  	struct regmap	*regmap;
+>  	const struct adxl313_chip_info *chip_info;
+>  	struct mutex	lock; /* lock to protect transf_buf */
+> +	int irq;
 
-This partly reverts commit 734b5def91b5 ("thermal/drivers/loongson2: Add
-Loongson-2K2000 support") which removed the const qualifier. Instead,
-define two different structures.
+Curious.  Why do we need to keep this around?  Normally we only need
+the actual interrupt number in the probe() function.
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-   5089	   1160	      0	   6249	   1869	drivers/thermal/loongson2_thermal.o
+>  	__le16		transf_buf __aligned(IIO_DMA_MINALIGN);
+>  };
+>  
+> diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
+> index 6170c9daa30f..9db318a03eea 100644
+> --- a/drivers/iio/accel/adxl313_core.c
+> +++ b/drivers/iio/accel/adxl313_core.c
+> @@ -8,11 +8,17 @@
+>   */
+>  
+>  #include <linux/bitfield.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/module.h>
+> +#include <linux/property.h>
+>  #include <linux/regmap.h>
+>  
+>  #include "adxl313.h"
+>  
+> +#define ADXL313_INT_NONE			U8_MAX
+> +#define ADXL313_INT1				1
+> +#define ADXL313_INT2				2
+> +
+>  static const struct regmap_range adxl312_readable_reg_range[] = {
+>  	regmap_reg_range(ADXL313_REG_DEVID0, ADXL313_REG_DEVID0),
+>  	regmap_reg_range(ADXL313_REG_OFS_AXIS(0), ADXL313_REG_OFS_AXIS(2)),
+> @@ -436,6 +442,7 @@ int adxl313_core_probe(struct device *dev,
+>  {
+>  	struct adxl313_data *data;
+>  	struct iio_dev *indio_dev;
+> +	u8 int_line;
+>  	int ret;
+>  
+>  	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> @@ -461,6 +468,30 @@ int adxl313_core_probe(struct device *dev,
+>  		return ret;
+>  	}
+>  
+> +	int_line = ADXL313_INT1;
+> +	data->irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT1");
+> +	if (data->irq < 0) {
+> +		int_line = ADXL313_INT2;
+> +		data->irq = fwnode_irq_get_byname(dev_fwnode(dev), "INT2");
+> +		if (data->irq < 0)
+> +			int_line = ADXL313_INT_NONE;
+> +	}
+> +
+> +	if (int_line == ADXL313_INT1 || int_line == ADXL313_INT2) {
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-   5464	   1128	      0	   6592	   19c0	drivers/thermal/loongson2_thermal.o
+Why not int_line != ADXL313_INT_NONE ?
+Or flip the logic so that you do that case first.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- drivers/thermal/loongson2_thermal.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+> +		/* FIFO_STREAM mode */
+> +		ret = regmap_assign_bits(data->regmap, ADXL313_REG_INT_MAP,
 
-diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
-index 2d6b75b0539f..ea4dd2fb1f47 100644
---- a/drivers/thermal/loongson2_thermal.c
-+++ b/drivers/thermal/loongson2_thermal.c
-@@ -112,13 +112,19 @@ static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, int low,
- 	return loongson2_thermal_set(data, low/MILLI, high/MILLI, true);
- }
- 
--static struct thermal_zone_device_ops loongson2_of_thermal_ops = {
-+static const struct thermal_zone_device_ops loongson2_2k1000_of_thermal_ops = {
- 	.get_temp = loongson2_2k1000_get_temp,
- 	.set_trips = loongson2_thermal_set_trips,
- };
- 
-+static const struct thermal_zone_device_ops loongson2_2k2000_of_thermal_ops = {
-+	.get_temp = loongson2_2k2000_get_temp,
-+	.set_trips = loongson2_thermal_set_trips,
-+};
-+
- static int loongson2_thermal_probe(struct platform_device *pdev)
- {
-+	const struct thermal_zone_device_ops *thermal_ops;
- 	struct device *dev = &pdev->dev;
- 	struct loongson2_thermal_data *data;
- 	struct thermal_zone_device *tzd;
-@@ -140,7 +146,9 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 		if (IS_ERR(data->temp_reg))
- 			return PTR_ERR(data->temp_reg);
- 
--		loongson2_of_thermal_ops.get_temp = loongson2_2k2000_get_temp;
-+		thermal_ops = &loongson2_2k2000_of_thermal_ops;
-+	} else {
-+		thermal_ops = &loongson2_2k1000_of_thermal_ops;
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
-@@ -152,8 +160,7 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
- 	loongson2_thermal_set(data, 0, 0, false);
- 
- 	for (i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
--		tzd = devm_thermal_of_zone_register(dev, i, data,
--						    &loongson2_of_thermal_ops);
-+		tzd = devm_thermal_of_zone_register(dev, i, data, thermal_ops);
- 
- 		if (!IS_ERR(tzd))
- 			break;
--- 
-2.49.0
+A number of bits in this register are give in datasheet as always 0.
+As a general rule writing bits documented like that is unwise. Sometimes
+they have undocumented side effects.
+
+> +					 0xff, int_line == ADXL313_INT2);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		/* FIFO_BYPASSED mode */
+
+I'd like the comment to say why you bypass the fifo in this case.
+In theory nothing stops us polling for the watermark. I don't mind
+the driver not doing that because all reasonable boards will wire
+the interrupt if they want fifo support, but we should talk a little
+more about why here.
+
+> +		ret = regmap_write(data->regmap, ADXL313_REG_FIFO_CTL,
+> +				   FIELD_PREP(ADXL313_REG_FIFO_CTL_MODE_MSK,
+> +					      ADXL313_FIFO_BYPASS));
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	return devm_iio_device_register(dev, indio_dev);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(adxl313_core_probe, IIO_ADXL313);
 
