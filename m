@@ -1,112 +1,145 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC561459F7;
-	Sat, 24 May 2025 23:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE0D28EA
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 00:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748130716; cv=none; b=D6ZcVP8jGi8Y4QBCXOwcbB9bsM4f5Cr/ppHEkOkPyMPBnueBivnH7q6iLcEJuCpe8YBk4AgL47DL1u/nD3i5m8vt+wIret119OffOqEoilAo2marYvTYZCp0TikhM2A5ysvycYrW3T/opDEeT6IIiYQujQoPWjXB2lNPUZis1tI=
+	t=1748133334; cv=none; b=m/hDAXxJ5Eg77wrBelKfhzAJYR8nHc8DlEQ6x9ULhVNN9LESlfAkhhGJCCtJYR6p7ac4T+LGnNz2d+zRvMvRBGjoYCzpdFWmV60pMDFoi3BjKxgoMWgq6iE0GxOsiecqUIBCkhRbLKO+s88IC0VLFd1tnDM9vM6eD2WRNUKl6FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748130716; c=relaxed/simple;
-	bh=inv8KaaFc84F6JuDmwPOSqpQLRVQndyXV1UdIu5Oix4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QEXSKNE5vDFeHov/mcaPM/jtKm49i+IgL/cFKosBWjCCzc4NauU6//VVPsB5/zgDnpl9/+4ST64PGs1sVI5wj4UWcmYpvmmJm10xnHxn/5bQzm/VrzTH4ZUuKvyAim7FPYtOGt49/Cukt57erQs2I+veTXJsHHzDW2A2Mu3sbic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geRwXK3l; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geRwXK3l"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70cb3121db1so8722277b3.3;
-        Sat, 24 May 2025 16:51:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748130714; x=1748735514; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=inv8KaaFc84F6JuDmwPOSqpQLRVQndyXV1UdIu5Oix4=;
-        b=geRwXK3lgjExjga2Q4aFhXy4XFTFWe7+e2pu8ctVeUO10rlf1pUoly0SxQzbtmCj5e
-         GU0GHBTLxcF/iUczg0yKVJ/ThKEjoNfowxmuFRxdNdV8OdDqztMFKUu8m1rkPPF60cu7
-         4Aab7OQjjB2rr3f+Wl/k1xHDmoBJY3esMD01YdppIw0vGerRY5FDQa/CCn1ynRG3hwES
-         02nqUU28FSyFVyJGUVPxSCRewk0w91z00BKS9wpCbQSaCIuUJLf8Uz0lxeVGMHXISEzp
-         2AkqmsVSp3EdpagF+YRo5YSDiLxTPdS+/3rDZvO1e0H+674JJd52iJXXc4aDOA6Zg+hG
-         vOtw==
+	s=arc-20240116; t=1748133334; c=relaxed/simple;
+	bh=L4zgyOYQkXe1TwEHTKOkIWG3mjooGvJuPtmysqGRdy4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T186oCz/L/QiBDVNUOE7v1dLsvPEGk0JyXF45qTjGz8Lp1Y1KyXyVjNcxORDElJG3NR+Y1M4mEub8ofOUYK/icWr4GNT+VSVvibm6i87RGS7/f5mldtTV56k7/647/rigaxXPIgRT67xmmbVzEHQdLLePLPooZzwdQpdtLjrVKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b41b906b3so103034039f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:35:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748130714; x=1748735514;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=inv8KaaFc84F6JuDmwPOSqpQLRVQndyXV1UdIu5Oix4=;
-        b=uz1laxPHyxjKWSNw9F4UIYC4Q5BM/MdkmRzUSsgAQy7AZG3p5zDn3oDrrP7X2eprLF
-         SybnmGOW5voTo9nPOW+JS/L0wDp10KQGUAZjF7JJPVqMw7mWTwI+Yx48m8UC222nOs+b
-         DpTwqnDNAe0Aj7AacVjunA3PlQOs0sZMDLLyd8iCrIA9Hp6EXbZyOBH0v8yM8rUfyTrM
-         oR52c8ITwXGs+RbTH1p6WHcNks50wuzHa0Szx2XWr6P62d0Zmyws8AvxFtw9nVId3YP+
-         /TlrClbINYuYTKpRmBwh56IfP2O8Ahs3Ns/dxg9MeIIL95DGYppfE58EQRfQe1Mg0WGb
-         k/Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhuT6nspqHhJXD3gx1K4TBeOE69FKFKSsgRqpSzZGUzAnyyI5PY3zvD5MwInRjtZVqnkce8ZW9hnUPhcMam9EZ@vger.kernel.org, AJvYcCXUrI14nEsvd6XehT2xV74p+i+BiWkMYRcGQTI6zXalnrL1QjGbwy0r2T8HLlLRjyVzsd7n3UcKj+Ro6Z4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrwOar6Wru86pK4BKIfTm1POKpO82Iia5Q2+gBSJ4CFQudvKxC
-	uvAmiy0F0dsCgs/YtRw+GeuAylla1r0jBUz/vX0BubG0Aa9B//7Ga6herYl+2Hqiw9TyFxodjLr
-	G1NdDkd3pkV8oJ1IVTnIUMREFbex0HEvUmQ==
-X-Gm-Gg: ASbGncuZcrSqOfisOy/KH22YiWd0g18IqwpghvPtgFdHEwqQrTiYMsnfC8J+DVlOg1R
-	hpAImM/U+Ys0Dm73T401T6sErXlvF/n85eNreeU4WOqQogNd4SUGw9FCL1LimYfHcLZm61GqZnE
-	tE8GBV/K/3OZQZp/qSShsA72sCIrlMonB+jet9u4FP+RXukehj1yOwHERfis/lWp9zonY=
-X-Google-Smtp-Source: AGHT+IHtT+6FtZi323BKbe02Tg28onDiUmd3DdzFaN3HimawQ+poIuje0XgcyrWxHdb/qLxjJzBW5cLB9cK+ZHFYRUE=
-X-Received: by 2002:a05:690c:6a0f:b0:6fd:318b:9acf with SMTP id
- 00721157ae682-70e2dabf9edmr31362287b3.38.1748130713661; Sat, 24 May 2025
- 16:51:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748133331; x=1748738131;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xWWK+qMVgJ3rdWvJXq9kGidb+mXQt3BP1CZfBdNoa60=;
+        b=hA2CuWC14d+CPAbQfR/lbH6ZKkgEHXRUzzLLXF129B4TNpU+IXOZhf9ntDui0Ah5y2
+         vi6W8SF/aqua6Cm5nDFB2aBDfuUoVL2dKPwHHyjR88Zkp7urIKKG8nrea9i8QBZdqznU
+         woL6OSJwFgppNQhqPv3WIlq4JwQSEEbe6L6ljIiONQEKJZ8d3WEO97VLNct3aV+26vZ5
+         39+HNmfNUtJGhXGkDHOTtG21LCQsM5DgzLqC0aXlf4oWWLlDvltAgpcMTcgsFKpx4QSI
+         9hZaMd7PrEJq5vniA0r/Cs0KpVKir083fmhBi+X4M9attMMITlH1SD5cMXJT6MjUTbZM
+         KVcw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2HtAFLp6epA9pn5d24jmIF4caPZBzNP/k5SsnzKC+V1vx5JDBhLj6YOsUsp9IwtmNWRXJh5UCClNWAK8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD4rShGPrRYAl/x6kBMti+Udq0W0ZCcI/mPv+Kg/Svu68tC3WU
+	1fu350HlW493+UEbqPhRRO17AZUdeL5PMN6w3a/ItDhsyIcmlAeT5RHpkZ7vvAuU8KPKJ+BFGNB
+	yI5YK5q6OLhRMV1Uyo9sgZOE6bKpBgQ1LLHnt4e074puNfdIt2AHa2PYgEZc=
+X-Google-Smtp-Source: AGHT+IEaW4BZX9jfmWZDDHdbtKveQDFudESHkmgH2lViz2Kq21ChgvLrxpEMkR2FQ5oY55Ya7BzNDa1fdPTwNPxlxc7tXLrvrWFd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aC_yu6Ll2E-3qRHj@brak3r-Ubuntu> <d86594f5-c6d0-4692-b1ec-41d76f947b7e@linuxfoundation.org>
-In-Reply-To: <d86594f5-c6d0-4692-b1ec-41d76f947b7e@linuxfoundation.org>
-From: Rujra Bhatt <braker.noob.kernel@gmail.com>
-Date: Sun, 25 May 2025 05:21:42 +0530
-X-Gm-Features: AX0GCFuCN754TTjc3XI9nZ-fSJL9rV3x8ViK6rj5OfiHnmyRtmFMbWwDC1xCGDM
-Message-ID: <CAG+54DajW=1cKGaHDg84RextOvB1FQtSJU8VwrWYNfuoHBigKA@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: timers: valid-adjtimex: fix coding style issues
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: shuah@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+X-Received: by 2002:a05:6602:3790:b0:86a:1fce:f1a6 with SMTP id
+ ca18e2360f4ac-86cbb7ece8dmr402586239f.5.1748133331449; Sat, 24 May 2025
+ 17:35:31 -0700 (PDT)
+Date: Sat, 24 May 2025 17:35:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683265d3.a70a0220.253bc2.0079.GAE@google.com>
+Subject: [syzbot] [net?] WARNING in ah6_output
+From: syzbot <syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	herbert@gondor.apana.org.au, horms@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Respected Shuah,
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    9e89db3d847f Merge tag 'linux-can-fixes-for-6.15-20250520'..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1476d1f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c3f0e807ec5d1268
+dashboard link: https://syzkaller.appspot.com/bug?extid=01b0667934cdceb4451c
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/8b09322b598e/disk-9e89db3d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/23ed08e707b5/vmlinux-9e89db3d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/be78b62450e7/bzImage-9e89db3d.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+memcpy: detected field-spanning write (size 40) of single field "&top_iph->saddr" at net/ipv6/ah6.c:439 (size 16)
+WARNING: CPU: 0 PID: 8838 at net/ipv6/ah6.c:439 ah6_output+0xe7e/0x14e0 net/ipv6/ah6.c:439
+Modules linked in:
+CPU: 0 UID: 0 PID: 8838 Comm: syz.1.814 Not tainted 6.15.0-rc6-syzkaller-00173-g9e89db3d847f #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:ah6_output+0xe7e/0x14e0 net/ipv6/ah6.c:439
+Code: ff e8 36 80 9f f7 c6 05 bb 97 48 05 01 90 b9 10 00 00 00 48 c7 c7 a0 56 7e 8c 4c 89 fe 48 c7 c2 00 59 7e 8c e8 a3 dc 63 f7 90 <0f> 0b 90 90 e9 b5 fe ff ff e8 74 e4 35 01 48 8b 4c 24 10 80 e1 07
+RSP: 0018:ffffc900049f70e0 EFLAGS: 00010246
+RAX: 3fffcb5d3bcc7c00 RBX: 0000000000000028 RCX: 0000000000080000
+RDX: ffffc9000ece1000 RSI: 00000000000052e8 RDI: 00000000000052e9
+RBP: ffffc900049f7250 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bba944 R12: dffffc0000000000
+R13: 1ffff9200093ee38 R14: ffff8881452e8800 R15: 0000000000000028
+FS:  00007fc3a1d2c6c0(0000) GS:ffff8881260c7000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555569628808 CR3: 000000005cf4e000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ xfrm_output_one net/xfrm/xfrm_output.c:555 [inline]
+ xfrm_output_resume+0x2c55/0x6170 net/xfrm/xfrm_output.c:590
+ __xfrm6_output+0x2eb/0x1070 net/ipv6/xfrm6_output.c:103
+ NF_HOOK_COND include/linux/netfilter.h:303 [inline]
+ xfrm6_output+0x1c6/0x4f0 net/ipv6/xfrm6_output.c:108
+ ip6_send_skb+0x1d5/0x390 net/ipv6/ip6_output.c:1981
+ l2tp_ip6_sendmsg+0x1378/0x1870 net/l2tp/l2tp_ip6.c:661
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x19c/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc3a0f8e969
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fc3a1d2c038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fc3a11b6080 RCX: 00007fc3a0f8e969
+RDX: 0000000000000800 RSI: 0000200000000540 RDI: 0000000000000004
+RBP: 00007fc3a1010ab1 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fc3a11b6080 R15: 00007ffc18a80a58
+ </TASK>
 
 
-On Fri, May 23, 2025 at 10:38=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.=
-org> wrote:
->
-> On 5/22/25 21:59, Rujra Bhatt wrote:
-> >
-> > This patch corrects minor coding style issues to comply with the Linux =
-kernel coding style:
-> >
-> > - Align closing parentheses to match opening ones in printf statements.
-> > - Break long lines to keep them within the 100-column limit.
-> >
-> > These changes address warnings reported by checkpatch.pl and do not
-> > affect functionality.
-> >
-> > changes in v2 :
-> > - Resubmitted the patch with a properly formatted commit message,
-> > following patch submission guidelines, as suggested by Shuah Khan.
-> >
-> > Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
->
-> Sorry - I didn't realize these are all coding style related
-> printf - I am no longer concerned about the length of print
-> statements.
->
-> It is too much churn with little benefit.
->
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Thank you for the feedback , also understanding your perspective.
-For future contributions, I will focus on more substantive changes,
-unless stylistic
-fixes are explicitly requested.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-thank you,
-regards,
-Rujra Bhatt
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
