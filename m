@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C57E3C463;
-	Sun, 25 May 2025 04:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF9B320F;
+	Sun, 25 May 2025 04:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748148202; cv=none; b=s6l3F3jQhFBelGUhW7gCImjGsCxYB+x6EG3O/pCNTAOLyKRxZbtbQsjT1FHJx1uAMK3Tm7pdM6s65DaebTzaouvSMuLOx48PWek+tUqQx3+5L5RGd4NZf5D1YMwxvNpz830MiJa756k5DkO1j7bZ8P6Oq/vzQBk0qUid5F2Wj1U=
+	t=1748148942; cv=none; b=DkgM7MHmuRwIKzHtrvNfGMeK6cGRkvR9aR5gPabFWp5tw6chpLAt7E4+YJAqCffI5NjbYNiyDeRCWMNKFyW9gWHm8Jj9MA1gOyuqRnfeuSYiozaqwsmbgH7+3yfxazkrMlYDCew048ZML5GPpoYkjp7HFZdkvH3aFXbgaUc7ONQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748148202; c=relaxed/simple;
-	bh=Vl23nmn5ZU4x9QK4zJMpzs2bH2zMPD7ia/kQlfk9KsI=;
+	s=arc-20240116; t=1748148942; c=relaxed/simple;
+	bh=bWw6f1oPVGszDiKHtYyvEIzbYdNJsCK4FK7ugxSRdS0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ksumiAnu8qRq0zcj+ZBLZ2PrKj0ROmYPIZIR9YW2CF99DXmHCXEIdA9s9a45leJfNbdxToIfhHlUA+DLcqBrNS/Eo4s44GWy8JjnNgELySITN7kfyULbzJwt6oCtakvhXx83k6V1Jos530a2vR6VN5F34IaZ0UVUTp0dgbJCOJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbMAR0X/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VhkW+zxEmqiN9I3PImxaJUgnOs0idWGxHJBMpXZPrZL3E6Koe9WgAMPhFfcbxSm6h2zhSAd4t1NcK1XkpuvXy3qbraWz9X7NRMImrkZgdVfE2nfyw0SQ2uiiWgHFFnDLPrX/X/oWtAoi8eGcHRn9wGNIwWiTGBBfoMAeaewiGMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPa07mHV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbMAR0X/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D58C4CEEA;
-	Sun, 25 May 2025 04:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPa07mHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABDB5C4CEEA;
+	Sun, 25 May 2025 04:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748148201;
-	bh=Vl23nmn5ZU4x9QK4zJMpzs2bH2zMPD7ia/kQlfk9KsI=;
+	s=k20201202; t=1748148942;
+	bh=bWw6f1oPVGszDiKHtYyvEIzbYdNJsCK4FK7ugxSRdS0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RbMAR0X/U2/VSDEADn8R9EYYHBLHCdka4GJdWcy+GZ8ENf1GzhijEWTwnuGuvAjsN
-	 PQDs0KrrgUxnFYUMjTpqo+jAAYweEXDlUXQ+6byHCBcg7RbXIR99F0TTRLFYLXd3h7
-	 A4mut6KHGuwYptVrpm7XkU6Wux/wjmaD3a3K//SUTjTgLF011cufk/wMzGjrT1dgOd
-	 7mifB0nc7k1eou5t2KHC/oVvyCKVWCrPE7DmeAgzbdXUyPtQRrZ+kcKZHLHQyBkig9
-	 7QfVAj4cr69UdfOSxKl9cmHEyaFrXSHIrHfeYVWEqddXvqW+J9CtLPvGrdRSTZDwb/
-	 nH2FxU9oRnl8A==
-Message-ID: <6277cbd5-d57d-404a-baef-e8d87a027e37@kernel.org>
-Date: Sun, 25 May 2025 06:43:17 +0200
+	b=oPa07mHVn+W/bK57GWXsNpWjBZGxRWs4pJYLeXBiBaWmDWOYIiN0qM7KWnImn1lVc
+	 T9Jw4t+7Mci12ZoQvQgv+wIHBksqyQId2xZQFXjg8wbIOR/pRoQTsHQ7iRh+I2z8yf
+	 H8GEGqtwkRF66y5gBOgXqttPcULKwgUAzp4hkAW9YD80vMfWZE5wjPXP/ufwre9i9q
+	 k3ybE0GCpZskmZSAnTmW4HPGUPtex47VOI6eg/+DfRryNqa87VqlkFQSXUQKwSzvAk
+	 hXzHtMH/b6QZYFC4M3nD6fEb2PlML7AkoofNcvEbXDopEMPTbMUVIfhJHdZPsh5olW
+	 y0BI/cqJ/giqw==
+Message-ID: <1e18c066-dc4c-4f54-a784-8edbfdd7b5d0@kernel.org>
+Date: Sun, 25 May 2025 06:55:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add pca9450: Add
- regulator-allowed-modes
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>,
- Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
- <174801730004.578098.7742808995079543725.b4-ty@kernel.org>
- <8ff817a3-c734-45de-afbd-5da9aecd4cbb@kernel.org>
- <aDJKUl2l3l08LPDe@finisterre.sirena.org.uk>
+Subject: Re: [PATCH v1 02/10] dt-bindings: media: Add MT8188 ImgSys's LARB
+To: Olivia Wen <olivia.wen@mediatek.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com, teddy.chen@mediatek.com,
+ yunkec@chromium.org
+References: <20250524115144.3832748-1-olivia.wen@mediatek.com>
+ <20250524115144.3832748-3-olivia.wen@mediatek.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,32 +93,108 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aDJKUl2l3l08LPDe@finisterre.sirena.org.uk>
+In-Reply-To: <20250524115144.3832748-3-olivia.wen@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/05/2025 00:38, Mark Brown wrote:
-> On Sat, May 24, 2025 at 08:34:41AM +0200, Krzysztof Kozlowski wrote:
->> On 23/05/2025 18:21, Mark Brown wrote:
+On 24/05/2025 13:49, Olivia Wen wrote:
+> This patch adds support for the MT8188 Image System's Local Arbiter
+> (LARB) in the device tree bindings. The LARB is a crucial component in
+> MediaTek's ImgSys architecture, responsible for managing memory access
+> and arbitration between various hardware modules.
 > 
->>> [1/2] dt-bindings: regulator: add pca9450: Add regulator-allowed-modes
->>>       commit: 0a4056a444c8d55beea470948c73befd6673aa6c
->>> [2/2] regulator: pca9450: Add support for mode operations
->>>       commit: 2616e5f4fe04eb25eb5cbabc0a3a2a374e14008e
+> Signed-off-by: Olivia Wen <olivia.wen@mediatek.com>
+> ---
+>  .../bindings/media/mediatek,imgsys-larbs.yaml | 75 +++++++++++++++++++
+
+Your patchset wasn't tested, so I won't do full review. Be sure you test
+it prior sending. Few nits below:
+
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+
+
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
 > 
->> Rob reported binding has failure (which also means binding was not
->> tested). Can you drop the patch?
-> 
-> That seemed to just be due to v1 splitting the header with the constants
-> from the binding change (the issue was that the header wasn't there)
-> which should be fixed by this version?
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml b/Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
+> new file mode 100644
+> index 000000000000..d2966c64ddb6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
 
-No, this v2:
+Filename equal to compatible.
 
-https://lore.kernel.org/all/174801020316.1711348.10193654747801258488.robh@kernel.org/
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/mediatek,imgsys-larbs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LARB Information for MediaTek Camera Image System Hardware
+> +
+> +maintainers:
+> +  - Olivia Wen <olivia.wen@mediatek.com>
+> +
+> +description:
+> +  Detailed configuration for MediaTek Camera Image System's Local Arbiter
+> +  (LARB) hardware integration.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt8188-imgsys-larbs
+> +
+> +  iommus:
+> +    minItems: 1
+> +    maxItems: 30
 
-I must admit after quick look I don't see the cause error, but
-nevertheless this should be address by someone, preferably author.
+This cannot be flexible. List the items, unless it is somehow obvious.
+
+
+> +
+> +  '#address-cells':
+> +    const: 2
+> +
+> +  '#size-cells':
+> +    const: 2
+
+These are useless.
+
+> +
+> +required:
+> +  - compatible
+> +  - iommus
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/memory/mediatek,mt8188-memory-port.h>
+> +
+> +    imgsys-l11b {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+
+> +        compatible = "mediatek,mt8188-imgsys-larb";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+
+Why?
+
+> +        iommus = <&vpp_iommu M4U_PORT_L11B_WPE_RDMA_0>,
+> +             <&vpp_iommu M4U_PORT_L11B_WPE_RDMA_1>,
+
+Fix alignment.
+
+
 
 Best regards,
 Krzysztof
