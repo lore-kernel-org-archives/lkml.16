@@ -1,144 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF93425C70D;
-	Sun, 25 May 2025 17:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00F41F2C44;
+	Sun, 25 May 2025 18:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748195769; cv=none; b=H8kkMOJQZK1X287AaLWzoXhr4cyr8RQ4topbUlucnN458f8WXwHi8jjn9WyQZiZ6AH/Y5lkdsUG7wTlBOCkhIQ+b+bL+g4DNvw71bxLyN5siikEcsfeye27ffKEr/Nl9tu3xFwNy1yDoF+Nu7KzPNLGc5amA1IIiJw6WeAA46ZA=
+	t=1748196305; cv=none; b=OYkGc/qesfNI6jOXQstKAl2sh7tefj9LfAjcLCvlbUWLyFuQGrl/js1OoJSeUZvQfZLpRAQC73DwkOlrKUNTC4DRe2XTPzBi0PFr2ARxsY1phF7bNI3HD2Dg8flEKeqoUS8sIC5qFxtdAfJhPpHnPQehVy3/pOmhLL4fDPrfVCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748195769; c=relaxed/simple;
-	bh=9A/6O9r2IqeLYzOFaVCEJKjY9Ul0YdWsU/rVzaX6qCc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=k54rlP0itJhXV5gFHrKflsdZbAe/mhnr+yHov9HbhR+nRhAvGyZijiMI1xZYiUD26XNrvPKepuBAOcfDG7hyL899zlBipMeJPvgfB2zqHxbQkWRT9NHKnfYje3IsdN91ISrngEqy7d2Y4OCzKPuqceFNzUZFblMYEu9p8z0JOoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSfbwS1+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748196305; c=relaxed/simple;
+	bh=UEyT1pHakFVzPNhDsCguw3RO5aCfnyuTBkTCbqhcDig=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NuCJnXah4dhz/c//6kaDHyYiDj//yQ81ULT9196PP+Y+Z256q7zz+HkFjVriD8Oznrq7KM54fn4VnnRS1nM66U/7VjpzPfrAXDEn5ny1HOZYD0lE26xaV8yEjAgXYJ3ksFyFxl1awile+qwpm5Wj/qF8dzYR5JIiwUqRb8ai47Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6ys5cxh; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSfbwS1+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 570D3C4CEFA;
-	Sun, 25 May 2025 17:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748195768;
-	bh=9A/6O9r2IqeLYzOFaVCEJKjY9Ul0YdWsU/rVzaX6qCc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=BSfbwS1+Z6WZKLQFpUmLvoXUwMsG9ZiYzfdy1Galm+2fkh0Zv97THsbe0HFw60iib
-	 GKS7NneNIYYOKPnNczhhCOQS9IfZHaIRiF8tavW1aPmGLQEicBxN7IS04jZF4NKUdP
-	 P8Rpip7Oz5rPiUSlJqxa02aRI/mmfzYNWKMhI0/R+La+3PB6vRAfV4uka3rl0WSn5x
-	 RBCRm0+BDQevps0HTt5xNBI6JJcdZRiGZ//uF7u31ddtiNU5hQHMPPk04ZcCBFgaR5
-	 PVcuJQqeUZFhh1rCd8R4zdimojkVMp4TdDlpPlSTpAdNa+GP3+6icVcgtREvdW9Nhq
-	 ZgwdSCgMMqNiw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D18FC54FB3;
-	Sun, 25 May 2025 17:56:08 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Sun, 25 May 2025 21:56:08 +0400
-Subject: [PATCH 5/5] arm64: dts: qcom: ipq5018: Add GE PHY to internal mdio
- bus
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6ys5cxh"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so9431745e9.2;
+        Sun, 25 May 2025 11:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748196302; x=1748801102; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WVKFYyD1oSY4+ApZBLJcuBPiQP9r3k9ZVrPBJZKw9wU=;
+        b=L6ys5cxhhpHmBVW+QtiEcqzHZaVrbLml1RCLKBfOPzRkeQvFROjxumSADpb5KtGayw
+         +GnR4QK4G5H8OPzxVWgJjMCZ2u4+cJAbfqvODk4VrsypgGBH7QKAtLaAKY/PtQB6l7Ov
+         u1TzZRFxWcOjVk8xc4XRl2kyrqkdF7Ez3dCDKqNvblxlgt8VOgVpcoeSuoQ0iEkk6dHi
+         m+20WkuERMFiEDJ+HRQmle+wiTjwnPI53KyczNPM7tylGqi9mDJEbimAJ8SRXxZ9z8u3
+         wLvMTEBl0aEkYWtQW7IJ347evYRfNqFRzKUDVfaY8ANUIxipqgLcnBUJWskAv8WZNObS
+         gKkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748196302; x=1748801102;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WVKFYyD1oSY4+ApZBLJcuBPiQP9r3k9ZVrPBJZKw9wU=;
+        b=uUeKZcYmpdFuK7X6pE8ZB3Y6ZG/jw8yqBAZl1Wj4v5FBiuawSreFYLLKcgrmNz2uhg
+         DoqglRdpbiA94QffucIbhXygW38tO6mZHDNIePw7oKXhSuI0HPEHjUezqk1bSrjAW3+V
+         yMZOye6PPtcyb4GJXJGc0ZxwLnvVsMZL9ujk9xCYpexcZjVY2yHHqhmXIn5GRMoRtLWz
+         Rl/DXvU1XBz9f1yY/bGouOEoogY8G7ynQ0/hGQ9Zt1Kj6kNR0NZkOPOyWAFZePIuzFml
+         Eb/AjNzCwQPU19xFR+NvwwTPGBRQGd/2VpWy2MOyC/q1BtMq1mN4yJaeG1y3OklkQOur
+         pqeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU90RdlFsz2c6np78MmQ6uWtEh02NVAl11tq2KhFII3Rmwf79jhiELL7wyW4IHpWsdR6hl+bi83GNCu@vger.kernel.org, AJvYcCUdLuqAdfkuYbZZZd7dKdxEz5XA8ObMHK1tDaTQZbafCPLcreDVZEHCUUU7Tvyhs0cmw4D1cfc4svJohnZg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/bAUH0XrYXu7+gIRHG6UDX1r/ibW6ZaBcFRuRKYFywNDXbtWS
+	PkQtseiA6Jg8W6Crab3/1uJcfmhh122UA7VbLJf8L5BLArXmQmGHoSam
+X-Gm-Gg: ASbGncuxdwvSwJkhTfHWCQAl+G90RrwOIVlTrKWERHxNFiJd+DTnEO/ef8PpdCZr7bn
+	lrGrx2Dru0RFjcVqlIPb53VD9KhHYAEPTagWRN8UwVP14M5O53q1gwK2Mru3NqgStGY6SDZcJO5
+	g8ddIn9OgF4ocNNlyBdo5atLcU4Kh3U9qAk76Xrr82bg3jdajKtaIHQ5ttDsN58UHhmp6VwHZfJ
+	1OYb2ty86/xab94uJqSOwvOWBEvYIrMbYlrWsIJc7TLJXdFh7f9g1C2zoa5suZ4RWu31OtUPDgN
+	DHF3fjGRee1g8mXgkRsMU9fUUTlIQm6/OkUsOPJ9jGZZ1GeGqbqLReJFrFoGqNawyA==
+X-Google-Smtp-Source: AGHT+IEHfg1uAoXP3YxY9kopRipOcC4EFMsn7CMAfN1zBrNw85aiCAUIDgW2f/sDcr3P3NHJYzai8g==
+X-Received: by 2002:a05:600c:3f08:b0:43d:fa58:700e with SMTP id 5b1f17b1804b1-44c930191bcmr55647345e9.33.1748196302044;
+        Sun, 25 May 2025 11:05:02 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cb450867sm5876612f8f.57.2025.05.25.11.05.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 11:05:01 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: rafael@kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: lenb@kernel.org,
+	hpa@zytor.com,
+	x86@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH] x86/ACPI: invalidate all cache lines on ACPI C-state transitions
+Date: Sun, 25 May 2025 18:00:42 +0000
+Message-ID: <20250525180052.1004-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250525-ipq5018-ge-phy-v1-5-ddab8854e253@outlook.com>
-References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
-In-Reply-To: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-clk@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748195765; l=1843;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=RbZYI9mHUjINGh38wXyVEQGgEtjNvQeZPMy+hpynOhA=;
- b=VYUp3FjEr6voXpngVWA+ruIyKayYUaXPmgTAd4U/eODjiXYYjWK3ETaw/TxwWWlHt2kUfaiox
- 8HhdPvf0hFaCND7OBVCC0uXcmYJy+ASmjLbH4aV7OY1jhuVkTc4GNSZ
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Transfer-Encoding: 8bit
 
-From: George Moussalem <george.moussalem@outlook.com>
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
-The IPQ5018 SoC contains an internal GE PHY, always at phy address 7.
-As such, let's add the GE PHY node to the SoC dtsi.
+According to ACPI spec 2.4 and 2.5, upon C-state
+transitions(specifically C2 and C3) it is required and explicitly
+mentioned to invalidate and writeback all modified cache line using
+WBINVD.
 
-In addition, the GE PHY outputs both the RX and TX clocks to the GCC
-which gate controls them and routes them back to the PHY itself.
-So let's create two DT fixed clocks and register them in the GCC node.
+However the current ACPI C-state entry using monitor/mwait instructions
+it have been used CLFLUSH by flushing the cache line associated by
+monitored address. That what all about this patch addresses,
+invalidating all cache lines instead of single cache line.
 
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+Let me know if there any reason and decisions behind the current
+implementation.
+
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ arch/x86/kernel/acpi/cstate.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 03ebc3e305b267c98a034c41ce47a39269afce75..ff2de44f9b85993fb2d426f85676f7d54c5cf637 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -16,6 +16,18 @@ / {
- 	#size-cells = <2>;
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index d5ac34186555..eb3d435e08ad 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -222,6 +222,9 @@ void __cpuidle acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cx)
+ 	struct cstate_entry *percpu_entry;
  
- 	clocks {
-+		gephy_rx_clk: gephy-rx-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <125000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		gephy_tx_clk: gephy-tx-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <125000000>;
-+			#clock-cells = <0>;
-+		};
-+
- 		sleep_clk: sleep-clk {
- 			compatible = "fixed-clock";
- 			#clock-cells = <0>;
-@@ -192,6 +204,17 @@ mdio0: mdio@88000 {
- 			clock-names = "gcc_mdio_ahb_clk";
- 
- 			status = "disabled";
-+
-+			ge_phy: ethernet-phy@7 {
-+				reg = <7>;
-+
-+				clocks = <&gcc GCC_GEPHY_RX_CLK>,
-+					 <&gcc GCC_GEPHY_TX_CLK>;
-+
-+				resets = <&gcc GCC_GEPHY_MISC_ARES>;
-+
-+				qca,eth-ldo-ready = <&tcsr 0x105c4>;
-+			};
- 		};
- 
- 		mdio1: mdio@90000 {
-@@ -232,8 +255,8 @@ gcc: clock-controller@1800000 {
- 				 <&pcie0_phy>,
- 				 <&pcie1_phy>,
- 				 <0>,
--				 <0>,
--				 <0>,
-+				 <&gephy_rx_clk>,
-+				 <&gephy_tx_clk>,
- 				 <0>,
- 				 <0>;
- 			#clock-cells = <1>;
-
+ 	percpu_entry = per_cpu_ptr(cpu_cstate_entry, cpu);
++	/* flush and invalidate all modified cache line on C3 and C2 state entry*/
++	if (cx->type == ACPI_STATE_C3 || cx->type == ACPI_STATE_C2)
++		wbinvd();
+ 	mwait_idle_with_hints(percpu_entry->states[cx->index].eax,
+ 	                      percpu_entry->states[cx->index].ecx);
+ }
 -- 
 2.49.0
-
 
