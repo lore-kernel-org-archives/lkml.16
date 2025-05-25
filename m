@@ -1,128 +1,255 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3BC7263F;
-	Sun, 25 May 2025 21:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BE77263F;
+	Sun, 25 May 2025 21:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748208249; cv=none; b=PgAsdpyFVzAQzbvl7keF/AmHRJswCuB8UeSKRg/Zp+20f9jcK+MkJBcN6ZWLxsUWkfJasmcB4TWWKOhC+ZLZ5t54qZD1Q4FvhQjHPWAJpSE1XQEiBDC2Yj/0nhridwmIhcTqsabtOs0OVdbhhpXcRVKfQKHXu69mhon4h5J10nA=
+	t=1748208356; cv=none; b=qivCRAFGdp5UoMNlNGIpQNnJ6WZU+VDTm3s1aYjol3VsSgmmUypDvX5FEjzlh2lzN/9+32z5rq1+5SYNh8EHBx/JSxD2rMmV1NWjjnPViP4msJUSede1SWoN0otAOj1/Kshwg8EmsI49DFWmUTUGJ74RHtdNxiVQamYx9dn2Mjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748208249; c=relaxed/simple;
-	bh=csjIbxkjXvsJic8Gju3XgtEF8puPjSWDZKkqI4fhte0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y56cq1UWOQdeys5S8CclrmecSseT5vmkYSikz61AE0HXLJqqVdQzP12kElQ8t+PpgwNwwRothnOgXWZ9Kh6v7y8Hv0llh1nJ5XpAGch/rzNIq4kQADojJBLzWe3dz71pIbGEotOiSgD1BlwExIKwki/q9RbPQXR1FzDo1BnHmZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=krZuRBt4; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748208356; c=relaxed/simple;
+	bh=pZ5pv2URNbGJHfJe1LId3MqzvYngg2w87QtQtHT8UIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DFmSceC0to4yBFf9/e8KvKpRE/JYMXENlfUo2Bpd4PBeG/Mp+LRvHgaZ3Uyf+JYrYqcdcbHdqPQGiuM5dtoXTF9JnbfazOaMgx4/YZuHYxmiuMjx6tjCcngHIucK59Lv24qRfS+7c0ajWe3Aq7p460xFOOmpKAxN14NdlUtxY5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r/7ZHKlt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krZuRBt4"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30e85955bebso353842a91.0;
-        Sun, 25 May 2025 14:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748208247; x=1748813047; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JdKkx0UX2sT9LmyAkFFCfAeiqt4ITwNiesIM4/v6r/Y=;
-        b=krZuRBt4Id5f3Bt9IsRvFqXDNuylgmJwXiQQheAZdvQZ2Sl3CqqrGXerg4ugI5bBvV
-         qxNy+UuYG2KfI+SKjQJy5CifsSA1v9IZMlIhF+5Ytpj9o0+EiRcfDak+TPUBKwri/n5h
-         acHjU5ieSQJ86pw1PENifXP7dxcMCpXzO+FhMdklYvOpEuUaQxEZvJJGjeKEY++uGUHl
-         lCZrEscgrtyKUH0ezb+xyCDeuYWhlNb68U3tgC/8ITOja0u18dZo8hV21SI4hyfmHgb5
-         +Fj9srCZCi4DEYMkROL4iN8jZcjKSIYQBirRjXnSvOooa0PJMsWE9lqRLdCzW75TgnJI
-         48Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748208247; x=1748813047;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JdKkx0UX2sT9LmyAkFFCfAeiqt4ITwNiesIM4/v6r/Y=;
-        b=Vq5onN4oXkhA0J6NdLqFurPfSz4OGnFFtJicXUTgLRN23Fysb2iEypgTZrBJ7qeZrH
-         /jMtH+9n6NuoBpfsKsd42TxpYcbKDURwhiDs0F69UIIgOFTVPLE5StIE740FtqNY9Ahl
-         ptuLtdUKdEVxIcGJOEvpLr8GXGOAIR6trYZPaLRE1ZutWoz5uQpeWrYx+hwTXicchEs7
-         tZo3T/7Q4JJB7xrVoCzPXAEIk182TCgz1MTQ6fTCpC/vhtsA8GlX5wMzbR546pA7eGIx
-         fXO5EUrli/oUlClMNbE918a6FODR5xUnjmTARsgkFN3tJi57Jfqj67XBorsrPJPamfJx
-         O5tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUf4ktBUpefOLdfqiLrRLofkUZ3XZDRXfLfUWbmIkawbmrSIckTovIHyEXudxT9lsnlAEfrnOBWvRyOHHyf8D4=@vger.kernel.org, AJvYcCX+BHMEwUKMcRapRyqb+Y14C+aeORSKaJcHdGgmqOI8mx8ON6rU23wVRGGG4zS1jHOUxicLx1V/@vger.kernel.org, AJvYcCXaRFKMoK5YRZxlrYD0BaGAdHu2wpmf1QNhbs9psfSQ3pMavWtG7vANS3SZkBsqAPJfhRTwDCTp5Ym3pig=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+MJcCFYY+mMFre04l+u62f3CY3+48kPIBmw322jGnUAG/GjdU
-	FjrxDKHpuMjRigH9wtTYXKxvXUIUiG95nqwUDAkatznbAZNndBoxKb+OkNJ5B+l/En98M0gE/rH
-	jfdsFuX7Y9TPHssvMdOzmWiSKoksHOAk=
-X-Gm-Gg: ASbGncvHVKRkCrSIYMBoDxBdVLJBO7kIOrbTIOO8LzxgpW1wLnB6NlGg7nSURQs6pOz
-	ux3v+ebw5fgYLRVW1iHMStfXvu3mKAJR63qByAmajPY5gtC4G+91eEid0FbJQyLNxHJhGuMBc/M
-	/SrGE154hofAD0dsLFGWx80PTbJtAOeIzYxwO5eAaLpWE=
-X-Google-Smtp-Source: AGHT+IHcuLaRbjXl0Aj4/4BR+A9R+bCebtg21XIgPASl/2RuX+lhDfXK6IbAOQCX4iv6575aG0IK7wrMVgKjrfOIDaE=
-X-Received: by 2002:a17:90b:1d12:b0:2fe:b879:b68c with SMTP id
- 98e67ed59e1d1-311104b93demr3933873a91.6.1748208247196; Sun, 25 May 2025
- 14:24:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r/7ZHKlt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3F2C4CEEA;
+	Sun, 25 May 2025 21:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748208355;
+	bh=pZ5pv2URNbGJHfJe1LId3MqzvYngg2w87QtQtHT8UIo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=r/7ZHKlt5B5zjS0Yqt/OaPtgBBJ0SVEWiiBDycs7TUJq2aGrXGUzsU9Il3t+EyWxG
+	 j74XHN+BmG/bU7RpUm643hihQnWzcfxG+F6SCjLoEsHItRxF2DbtWmq6fRS18p7wm9
+	 8rUvhAFsEmlJyWwBsBA9BgeYPk/aXutxxL4nncX9YoEIFecJI75nQOYHAeAQKex3Jm
+	 tmofEJpCMp0sYx43WrEjOAbWbf5O7U87GHrk/cb4algu7GumWdNen+yL/EhB9FwPMH
+	 Z03qqZDBCWBiiC4CB8Nyh/i+i5FXZpcfjA1nWdhgr7WHulNX1pI3mmIdNeNJ4B/Mft
+	 7sA5nT11xkG8A==
+Date: Sun, 25 May 2025 23:25:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Lee Jones <lee@kernel.org>, Andi Shyti <andi@smida.it>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] pwm: Changes for 6.16-rc1
+Message-ID: <rsnijkpfz2u2y67352hmcmo7bufcwm4ukdklf6ucw3fj72utxa@snrwsd27ye6a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517085600.2857460-1-gary@garyguo.net>
-In-Reply-To: <20250517085600.2857460-1-gary@garyguo.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 25 May 2025 23:23:54 +0200
-X-Gm-Features: AX0GCFu8WuLVBP8Vfcvlzqr7jzVCub9uuBZWJyDHsB9FiEQK29CL4RZwEw0BNls
-Message-ID: <CANiq72neLdtGORQ=GMsJ-mVgWscrAw4CB+_2cfbR4gtju4+azw@mail.gmail.com>
-Subject: Re: [PATCH] rust: compile libcore with edition 2024 for 1.87+
-To: Gary Guo <gary@garyguo.net>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, stable@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, est31@protonmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2b5waiygeda6pqj3"
+Content-Disposition: inline
+
+
+--2b5waiygeda6pqj3
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: [GIT PULL] pwm: Changes for 6.16-rc1
+MIME-Version: 1.0
 
-On Sat, May 17, 2025 at 10:56=E2=80=AFAM Gary Guo <gary@garyguo.net> wrote:
->
-> Rust 1.87 (released on 2025-05-15) compiles core library with edition
-> 2024 instead of 2021 [1]. Ensure that the edition matches libcore's
-> expectation to avoid potential breakage.
->
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned i=
-n older LTSs).
-> Link: https://github.com/rust-lang/rust/pull/138162 [1]
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1163
-> Signed-off-by: Gary Guo <gary@garyguo.net>
+Hello Linus,
 
-Applied to `rust-next` -- thanks everyone!
+the following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
-(I actually applied a couple days ago in advance of Monday's -next,
-which explains the following report)
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
 
-    [ J3m3 reported in Zulip [2] that the `rust-analyzer` target was
-      broken after this patch -- indeed, we need to avoid `core-cfgs`
-      since those are passed to the `rust-analyzer` target.
+are available in the Git repository at:
 
-      So, instead, I tweaked the patch to create a new `core-edition`
-      variable and explicitly mention the `--edition` flag instead of
-      reusing `core-cfg`s.
+  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
+wm/for-6.16-rc1
 
-      In addition, pass a new argument using this new variable to
-      `generate_rust_analyzer.py` so that we set the right edition there.
+for you to fetch changes up to c0c980f237e822fd9cc6c0ab5b60ce8efe76464e:
 
-      By the way, for future reference: the `filter-out` change is needed
-      for Rust < 1.87, since otherwise we would skip the `--edition=3D2021`
-      we just added, ending up with no edition flag, and thus the compiler
-      would default to the 2015 one.
+  dt-bindings: timer: renesas,tpu: remove binding documentation (2025-05-19=
+ 18:46:45 +0200)
 
-      [2] https://rust-for-linux.zulipchat.com/#narrow/channel/291565/topic=
-/x/near/520206547
+It contains a merge of the Renesas tree by Geert Uytterhoeven that you
+will also get a pull request for via the arm-soc tree. This was merged to
+allow to rename a few PWM Kconfig symbols where the old name was added
+to a defconfig file (commit 5ad7de623853 ("arm64: defconfig: Enable
+Renesas RZ/G2L GPT config")).
 
-        - Miguel ]
+You will get another pull request including a change to
+drivers/pwm/pwm-stm32-lp.c by Lee Jones. Lee provided an immutable
+branch for that, I didn't merge it however as there are no conflicting
+changes in my tree, so you will only notice that if you look carefully
+at the diffstat.
 
-I also added:
+There is a merge conflict in MAINTAINERS with commit 3887d3f64260
+("dt-bindings: i2c: i2c-wmt: Convert to YAML") from Andi Shyti's
+i2c-tree. The trivial resolution that is also in next looks as follows:
 
-    Reported-by: est31 <est31@protonmail.com>
+diff --cc MAINTAINERS
+index 26ef29a0c9bf,bc13b87e85c0..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -3427,8 -3434,7 +3434,8 @@@ M:	Alexey Charkov <alchark@gmail.com
+  M:	Krzysztof Kozlowski <krzk@kernel.org>
+  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+  S:	Odd Fixes
+- F:	Documentation/devicetree/bindings/i2c/i2c-wmt.txt
++ F:	Documentation/devicetree/bindings/i2c/wm,wm8505-i2c.yaml
+ +F:	Documentation/devicetree/bindings/pwm/via,vt8500-pwm.yaml
+  F:	arch/arm/boot/dts/vt8500/
+  F:	arch/arm/mach-vt8500/
+  F:	drivers/clocksource/timer-vt8500.c
 
-since est31 told Gary in RustWeek, and we discussed the patch there.
+Depending on merge order it also might conflict with commit 47cbd5d8693d
+("ARM: vt8500: MAINTAINERS: Include vt8500 soc driver in maintainers
+entry") from Krzysztof Kozlowski's dt tree again in MAINTAINERS. The
+difficulty is similar, I guess you hit these conflicts all the time and
+will cope just fine. If you still want a reference: next is fine here,
+too.
 
-@Gary: I hope the changes are OK with you (I can put the
-`generate_rust_analyzer` ones in a different commit if you prefer).
-Thanks!
+This time thanks for contributions and reviews go to Alexey Charkov,
+AngeloGioacchino Del Regno, Bartosz Golaszewski, Biju Das, Binbin Zhou,
+Dan Carpenter, Dimitri Fedrau, Geert Uytterhoeven, George Stark, Huacai
+Chen, Juxin Gao, Krzysztof Kozlowski, Kuninori Morimoto, Laurent
+Pinchart, Neil Armstrong, Nuno S=E1, Rob Herring, and Trevor Gamblin.
 
-Cheers,
-Miguel
+Best regards
+Uwe
+
+----------------------------------------------------------------
+pwm: Changes for v6.16-rc1
+
+This time around the pwm changes for the next release contain three new
+drivers (loongson, mc33xs2410 and rzg2l-gpt) and the usual collection of
+cleanups in both the core and drivers, support for new variants in
+existing drivers, conversion of dt bindings to yaml and documentation
+updates.
+
+----------------------------------------------------------------
+Alexey Charkov (1):
+      dt-bindings: pwm: vt8500-pwm: Convert to YAML
+
+AngeloGioacchino Del Regno (1):
+      dt-bindings: pwm: mediatek,pwm-disp: Add compatible for MT6893
+
+Bartosz Golaszewski (1):
+      pwm: pca9685: Use new GPIO line value setter callbacks
+
+Biju Das (3):
+      dt-bindings: pwm: Add RZ/G2L GPT binding
+      pwm: Add support for RZ/G2L GPT
+      arm64: defconfig: Enable Renesas RZ/G2L GPT config
+
+Binbin Zhou (2):
+      dt-bindings: pwm: Add Loongson PWM controller
+      pwm: Add Loongson PWM controller support
+
+Dan Carpenter (1):
+      pwm: loongson: Fix an error code in probe()
+
+Dimitri Fedrau (2):
+      dt-bindings: pwm: add support for MC33XS2410
+      pwm: add support for NXPs high-side switch MC33XS2410
+
+Geert Uytterhoeven (1):
+      ARM: shmobile: defconfig: Enable more support for RZN1D-DB/EB
+
+George Stark (5):
+      pwm: meson: Simplify get_state() callback
+      pwm: meson: Support constant and polarity bits
+      pwm: meson: Use separate device id data for axg and g12
+      pwm: meson: Enable constant and polarity features for g12, axg, s4
+      pwm: meson: Simplify meson_pwm_cnt_to_ns()
+
+Kuninori Morimoto (3):
+      arm64: defconfig: Add Renesas MSIOF sound support
+      pwm: Tidyup PWM menu for Renesas
+      dt-bindings: timer: renesas,tpu: remove binding documentation
+
+Lad Prabhakar (4):
+      soc: renesas: Kconfig: Enable SoCs by default when ARCH_RENESAS is set
+      arm64: defconfig: Remove individual Renesas SoC entries
+      arm: shmobile_defconfig: Drop individual Renesas SoC entries
+      arm: multi_v7_defconfig: Drop individual Renesas SoC entries
+
+Nuno S=E1 (1):
+      pwm: adp5585: make sure to include mod_devicetable.h
+
+Uwe Kleine-K=F6nig (15):
+      pwm: pxa: Improve using dev_err_probe()
+      pwm: Make chip parameter to pwmchip_get_drvdata() a const pointer
+      pwm: Add actual hardware state to pwm debugfs file
+      pwm: stm32: Don't open-code TIM_CCER_CCxE()
+      pwm: stm32: Emit debug output also for corner cases of the rounding c=
+allbacks
+      pwm: Do stricter return value checking for .round_waveform_tohw()
+      pwm: loongson: Fix u32 overflow in waveform calculation
+      pwm: Better document return value of pwm_round_waveform_might_sleep()
+      pwm: Fix various formatting issues in kernel-doc
+      pwm: rzg2l-gpt: Accept requests for too high period length
+      pwm: Let pwm_set_waveform_might_sleep() fail for exact but impossible=
+ requests
+      pwm: Let pwm_set_waveform_might_sleep() return 0 instead of 1 after r=
+ounding up
+      pwm: Formally describe the procedure used to pick a hardware waveform=
+ setting
+      pwm: Restore alphabetic ordering in Kconfig and Makefile
+      Merge tag 'renesas-arm-defconfig-for-v6.16-tag2' of https://git.kerne=
+l.org/pub/scm/linux/kernel/git/geert/renesas-devel into pwm/for-next
+
+ .../devicetree/bindings/pwm/loongson,ls7a-pwm.yaml |  67 +++
+ .../devicetree/bindings/pwm/mediatek,pwm-disp.yaml |   1 +
+ .../devicetree/bindings/pwm/nxp,mc33xs2410.yaml    | 118 ++++++
+ .../devicetree/bindings/pwm/renesas,rzg2l-gpt.yaml | 378 +++++++++++++++++
+ .../devicetree/bindings/pwm/renesas,tpu-pwm.yaml   |   9 -
+ .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    |  43 ++
+ .../devicetree/bindings/pwm/vt8500-pwm.txt         |  18 -
+ .../devicetree/bindings/timer/renesas,tpu.yaml     |  56 ---
+ MAINTAINERS                                        |   8 +
+ arch/arm/configs/multi_v7_defconfig                |  21 +-
+ arch/arm/configs/shmobile_defconfig                |  28 +-
+ arch/arm64/configs/defconfig                       |  29 +-
+ drivers/pwm/Kconfig                                | 113 ++++--
+ drivers/pwm/Makefile                               |  11 +-
+ drivers/pwm/core.c                                 | 118 ++++--
+ drivers/pwm/pwm-adp5585.c                          |   1 +
+ drivers/pwm/pwm-loongson.c                         | 290 +++++++++++++
+ drivers/pwm/pwm-mc33xs2410.c                       | 391 ++++++++++++++++++
+ drivers/pwm/pwm-meson.c                            | 123 ++++--
+ drivers/pwm/pwm-pca9685.c                          |   8 +-
+ drivers/pwm/pwm-pxa.c                              |  18 +-
+ drivers/pwm/pwm-rzg2l-gpt.c                        | 447 +++++++++++++++++=
+++++
+ drivers/pwm/pwm-stm32.c                            |  15 +-
+ drivers/soc/renesas/Kconfig                        |  42 ++
+ include/linux/pwm.h                                |  10 +-
+ 25 files changed, 2086 insertions(+), 277 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/loongson,ls7a-pwm=
+=2Eyaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/nxp,mc33xs2410.ya=
+ml
+ create mode 100644 Documentation/devicetree/bindings/pwm/renesas,rzg2l-gpt=
+=2Eyaml
+ create mode 100644 Documentation/devicetree/bindings/pwm/via,vt8500-pwm.ya=
+ml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
+ delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.yaml
+ create mode 100644 drivers/pwm/pwm-loongson.c
+ create mode 100644 drivers/pwm/pwm-mc33xs2410.c
+ create mode 100644 drivers/pwm/pwm-rzg2l-gpt.c
+
+--2b5waiygeda6pqj3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgzitwACgkQj4D7WH0S
+/k7sZAf/T2zWdbkMGeKeoT/of1eomiCF6XDGXDI5i1okI1foNY/tt2HPIFIenjKP
+rbRZl6xa+zw6O4Ibb/E5X6h1nazSqQNX6JETJ+1TmSZtQDqy7h+t+ZIQ8DSjsL9s
+o9EmiYwUkQSXyAUfGXZ1xjViKNLNveCZFYODgj4qoMzZVl1MhAH+z5tEIgpDuFse
+T6Gs97KrTOjRto3lYTtUfUc2oDphRRx5ICzTxwLOIlgxQUVhztOSB3qsInHhiga/
+xmwjH6PYejAEPgaUoAUB897aqPidE6WoZj31J8PEXpjWn6xqRGi5LYf71PhlEpYF
+1yAng1uQQh4N4uLgMMny/Czl7dsMEA==
+=cD4E
+-----END PGP SIGNATURE-----
+
+--2b5waiygeda6pqj3--
