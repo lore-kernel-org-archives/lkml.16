@@ -1,175 +1,165 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2045.outbound.protection.outlook.com [40.107.92.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD9725E461;
-	Sun, 25 May 2025 18:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748197254; cv=fail; b=aHhJ0ZgtxsA7eTbP21MJS7ryqrohF3+emVbUza49tuSIwChP5BuRd2n2d3YIUw/d+xf9vrh855HkgA6Niy58Brg/sM+5tkF3qZL64UTcuWDr4FSoQ/M5fcDLgkJ16FSKFv/aGsfTksAfZOuhkxd8FAeOXGi6+Qvg9rnRCvuLQE4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748197254; c=relaxed/simple;
-	bh=smQFjBITC7RUhnzlaHrr77jblJkoTNAwVanNp/0Rkac=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ubEEzNlDxSMfvjxX9UUy74nvnnWA7P3Pecv85SPutr+H6tSsm6217YnnQLO0CfardOWMbQMWd5hPNG2ePK7Xd3+KknR/rkRoXM+nyd+JdhSZIXDzEtqck4yLO1G39vm7JElOo6eIaOXoLji60Ogb+TKfXrL38FRQ0DgU09qVL68=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XAUdTKQl; arc=fail smtp.client-ip=40.107.92.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A364523D2A4;
+	Sun, 25 May 2025 18:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748197613; cv=none; b=lrwWaV248ZdFMPjXZxzCoqJ06sq8+5U2C3XA89CHOQTet+PXLl5J6My0ejfxNnw+8l//zvDxJG6fNUv2Xn9Qnv8gSvPdQ+Uu2HJldw0D2SlzcWsALMuM9iAGc/sv6O+nJOKF4a+l9HYz4SAqPpapUTXqUo9dXPhITLgRNqJcirc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748197613; c=relaxed/simple;
+	bh=Lp4APZVxa0/0BiLlhBNI1ETmFXHx8UAVaUVMg6qM4oc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=loyKZ/IcyfKJ9pq46EtV/ovDskNNnQYB1AJaT19+bK70J3tRaLsS6AzQbXttq/NOqIbdQ1pHN9fuuffm6F8hzrHYioMcloHsk2S/4JDUk2fLoCxaTkjY5cGdMoHaOMI+jqJANUPKWQZquXq/khkveWk12EeelRhhYFbG2Q3ofpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5S9Yz4A; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XAUdTKQl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZkaXfH1fhOQN9Nzd1WqSlilqrpknLfXGqZfO23nXfMMzMhstPFbVUs+5OrBhxxe3fO+Z3gJjyvOF7y6LxVhP4WNXKzNlJo++dSG5WWPB7ADoN6ywIkvh0/ZO3oKpaNa7vVssxGkHvp1emHz31tXRKv5Os0Wyu1LGPc/Cu+vM0C92u5sBR5hVBekz0ZA/nCXusL5OsOrUBch4NKkfA/4kjchoKe0ymo0Xt9EsHESTUfGLasoSku+en4WWTTuDFQACgF5Uel0ueeHXX1ze8WnDquUJj3zGk7x4NPQW0EI1zCOMvh7yKtwiWzTF/dRKd5wj36GbJOvTDQ1UPh5NoYAqSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=owaQj5tEvXkoy20pg+zNKxHw9AJWqy4zKDg6HGYegPI=;
- b=Ns7CjNEnD3w8Bx+QDynvIDQaeoJwQa2I2g1ZalThpib/R1aWfewCO8Km3uJ3C6dw6fBtfqtESGlRfZojKNaZSVuLbaBT55GbzMyFiYn0c3PoTf3pOP/ixIUMPAjxE7MZwpn609zDTUbVNKzJpmZ776a1Fb7sze5XEnJ77r1D5yZbfipMcYitK6lX0CcdbSARKclf7n1JX1RN5o2CEhDTLgwfYn/9iY8GOueap70JCiBDkvEFpaLv4n6mLZOmK7uC/h5pCD+oUsHlMmiO3yEScPW/Y99GG4THRkoljAYSFhlIrS9BoU4aLUopPgiGP4E33c1EPv14FQcALaKqMFrZnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
- is 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=temperror action=none header.from=nvidia.com; dkim=none (message not
- signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=owaQj5tEvXkoy20pg+zNKxHw9AJWqy4zKDg6HGYegPI=;
- b=XAUdTKQlTkvxxyDsg2TAC+afadHdiUSWqE53TfCdrmAy24301+te0lAVnulsma/gmyax3dxweADsKK7ctYhNxJDtyoVR/dDTL4tYQ+j8ZBZqbxFQMVBOdquJUOSBQGAlOKpxHAmKCEprRHGpk/imAc9SzOnmgio5fa6vtdHWXSEQNEX51bLu9dErebOhdORNGazfdASQ10RDTe0lJgyOVZajN5sG9RioNCp+b7CP2CDJJifNEAIO4g8pH8doH9qb2lzlyEgkctiKQN3mYiybD/g/aDxNoobpB4vqA1Lxji66HhyoZNtaCchZpCCgJctDCEJ0HEz+lfRi1ucYGbp6FA==
-Received: from BN9PR03CA0203.namprd03.prod.outlook.com (2603:10b6:408:f9::28)
- by PH7PR12MB8828.namprd12.prod.outlook.com (2603:10b6:510:26b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Sun, 25 May
- 2025 18:20:46 +0000
-Received: from BN3PEPF0000B36F.namprd21.prod.outlook.com
- (2603:10b6:408:f9:cafe::e7) by BN9PR03CA0203.outlook.office365.com
- (2603:10b6:408:f9::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.21 via Frontend Transport; Sun,
- 25 May 2025 18:20:45 +0000
-X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
- 216.228.117.160) smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=temperror action=none header.from=nvidia.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of nvidia.com: DNS Timeout)
-Received: from mail.nvidia.com (216.228.117.160) by
- BN3PEPF0000B36F.mail.protection.outlook.com (10.167.243.166) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8813.0 via Frontend Transport; Sun, 25 May 2025 18:20:44 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 25 May
- 2025 11:20:29 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 25 May
- 2025 11:20:29 -0700
-Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Sun, 25 May 2025 11:20:28 -0700
-From: Willie Thai <wthai@nvidia.com>
-To: <wthai@nvidia.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Joel Stanley
-	<joel@jms.id.au>, Andrew Jeffery <andrew@codeconstruct.com.au>
-CC: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, "Deepak
- Kodihalli" <dkodihalli@nvidia.com>, Ed Tanous <etanous@nvidia.com>, Leo Huang
-	<leohu@nvidia.com>
-Subject: [PATCH 3/3] ARM: dts: aspeed: nvidia: gb200nvl: Repurpose the HMC gpio pin
-Date: Sun, 25 May 2025 18:20:19 +0000
-Message-ID: <20250525-dts-v1-3-9ac63ad3bf15@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250525-dts-v1-0-9ac63ad3bf15@nvidia.com>
-References: <20250525-dts-v1-0-9ac63ad3bf15@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5S9Yz4A"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f8cf00d96fso14860306d6.0;
+        Sun, 25 May 2025 11:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748197610; x=1748802410; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3iQDuus6tHDjaYlJVgQfU6K3sGxod1e20Y6UqFJQz8E=;
+        b=Q5S9Yz4Av0gt9NCGGb8eSGJYCdXhyhAqcjImmqxFiDraTQc64AOvNv8Dys/HtVxN4f
+         6TpzJKpUY4bxbPrSDy/zQ1gurpkGhojq7vr5erFU1WLQDHs9lluP2fJcYJyIIKay3Tqq
+         qa3lX/HsvawCEsgkj3Qoa4JymKWge98ZZmCNf8LRuCx9uvEJDsAR+gJOP+v1AXkhEe2W
+         Hzk/diZVK8HNZ5Zi7WU6OQqmQxi6oB4CAiIsCuiRSMa4oMq0mhIgmwaBpZdFeOz2dnUv
+         T2I5jeVdDuYXXbrewvRdM32dM629KCUZm4+lqWma5pxXe7XnED/eYdsus1qq1MfYs+/+
+         ePhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748197610; x=1748802410;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3iQDuus6tHDjaYlJVgQfU6K3sGxod1e20Y6UqFJQz8E=;
+        b=h8yif2TIXWMttGWuYm5sigT4NvK3db0HvzvsbOSD+zsXuFg9MuK5GAfvqk7xb0X65m
+         QgDvQE3iXXnMB4E3pgM/5ujHFXtbh9Y8TbAz9swDCBcJsfQGVncNFnQNpSUxDxiy8GWn
+         7dt3J1wyjYt+dBQLwaeqsmq94E9BUc/jU5wHOg9gcQDoi0naPHj9bgjzVHrZiNjjqGQU
+         iuo+iwd2hUx4/rszlH1LkKeQff4eAnjdVLkkcbA9akZxWeZOHTfpPgy2cCVH1SaFZYFE
+         Yzv3zpk9zYpF61qkJzxTIPXsFQ/xGLC+5+LkBcloP4PjU61Cp7awlkbqMZuApbahNHY2
+         z1Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvuQlKBkoB0horrxLex4G5P1MF8QA4ZeygNrzahPTzFlKNc9fPeRL+SvEPRgoRo0gg4Ub4uYzEQA1NI5dVTae1@vger.kernel.org, AJvYcCVI1ZLQNvqMW1LQQnkg77o8+vgdfJN+clojrX73XBypSepGjZisg8kRw1SzmxY2uOlHUVvJX046aNelofA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ6nZbzcEDy8RTuRDbILpVrgzeWLpBMHErIPP84C/oievlapQt
+	kgnLZg/w55ZEs+NOQkwWXz/Tf8BAL25XX84AXZCOX7R5aGu7DeEUuSiRoiTDA6sm1W/R7G5zeOC
+	tPi3H2QPF4mcqj9gpM/2kcYGcvztbfKs=
+X-Gm-Gg: ASbGncufufaJLiO/RSRxy9ChpvH1elBKsDxXi+Ma3FzBSSrkVNkJhEBM8gOrFhhkt38
+	3OoogL9+bKZqcK4IXeAHMcPfg17CcCilA/J3GlCSy+H2IvHhUTFCmKO0KnxMFHRHVuFvno2uM5n
+	U9xi7WOAoPC3dLcHq2DbGrdTjB/t/sogGkbySjMIsOnVlBsU+z+rKrzjUfgxolzQkC
+X-Google-Smtp-Source: AGHT+IH/ciCbn34OAJnjEtsVPXlZMxHLOCNYfrbDPIJVqMMgLW3oTWLp5LliA1ycngh+GRJSBBjNNa948wlOeUzbXBU=
+X-Received: by 2002:a05:6214:c27:b0:6fa:980d:528 with SMTP id
+ 6a1803df08f44-6fa9d15983dmr111569806d6.23.1748197610414; Sun, 25 May 2025
+ 11:26:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748196599; l=1239; i=wthai@nvidia.com; s=20250525; h=from:subject:message-id; bh=smQFjBITC7RUhnzlaHrr77jblJkoTNAwVanNp/0Rkac=; b=TNZJkehxdJfwzJF5nWaNjn5ea0/ESUX/ofzFYYCjfKuJZ7lHORYzko69npSthS68+pk/GZUHh NLYLHAzUIypCldPWtdySD0t4a05fv2NfEtC1aOsBGu1a49bvUVc7NZv
-X-Developer-Key: i=wthai@nvidia.com; a=ed25519; pk=i/6dxnUqKdr7Z6GA0KECRkwz5HX4RCiodw0v6kB9fbs=
-Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36F:EE_|PH7PR12MB8828:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2191c0ef-335f-4a3a-3d53-08dd9bb8dd20
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VzAvTjRTajBZTnEvVnJieWhlL0pzVnc5b0pKR1V5SEFIdU1NcDJOb2RIZTU2?=
- =?utf-8?B?Kys5T2NuQ3dDTmI0V3RFNnlQZGpIVW51MHlaVzZzbERmMWlTS1REdmIweUVW?=
- =?utf-8?B?c2pocEh2UjB1ZHFOSjFlakw4VHhUWStsanJDV3k0c2xVTWd6UTlUT29nNnZo?=
- =?utf-8?B?SzV2am5MVVU1SnFxK1dwVTM1c3JzQnJGczJpeFNsVFByMWU4b3JLeElZdVBx?=
- =?utf-8?B?RW95R0NXRHdtRFJCemxmemhRa0kvZTIycFBTRVlTbjBXTUJPZ2Z5RDVFdFZ4?=
- =?utf-8?B?cXlSdHd5aUEyZkNSWGp3WWdHbXhDOGJ0N2pKNVNaM3RWOUZtd3hNZ2Rvenhi?=
- =?utf-8?B?bWV1SmFONVR3elMvRlJUbm5CbDRReGtjTzhRdGc2UDFFSENJZXk1NU40MS8z?=
- =?utf-8?B?czhTamlHN3NDQVVpRHZnMHBRalZqZnI5V3pVM3FVSnd2S2xrN05sNU1xNHJI?=
- =?utf-8?B?WTl3N3g4Q1hueWxsUW1QRGEyR2t3T1V6ajVUcmtNd3A2WDlxWXdKSkxRdFlQ?=
- =?utf-8?B?Q2xiQWxnb1lrcVM4R3FXc0t2SzlIQk01WmR4d0Z3bXN1OEZZclF4aC9EQmlr?=
- =?utf-8?B?ckY0TTdJYy9lNVNRVDRDeEFQR1ZEVUd4Y2ZqaHdLamxrTW55a1hJQ21SLzV3?=
- =?utf-8?B?aTkwY3dLVFFPd2YwYlRsQ3ZqZWxUSmpFTE92VVFqZ2FHcXJyaFlsRnlGRE9h?=
- =?utf-8?B?dGhoaXllUUtVV3I3bjg3TXIwVVljMUw2S0lsWlJwbSs2QWVTcmdEeVEvVnND?=
- =?utf-8?B?UkRVYjJKY0VlUHFtTmxjQ3pIWWhxVitwMys4eUtHRXVnZUF0WHh5WmlhSDY4?=
- =?utf-8?B?ZUxqR1dLd3kvaEVLSk5rRzBuYllQU3I1ZW1qTU1MeDRWR1RBNWhrSE1sMUFr?=
- =?utf-8?B?eFYxSkM4TUl6K3BhZjBCQ0lWRTBOZEhhc1YvQjEvbnZVUWhnSW9ULzkyNEhJ?=
- =?utf-8?B?OGhWbDZ5TlVYbDB1OFF0Ui93c20rMEhTbzErdXA1dnlGOUlKbVhBM2k2dTY2?=
- =?utf-8?B?T1hKWURrdERaRWtwb0NSaGVxWm14RGU2c04yWmJ2OHBUSXJnK1NmRUxqZ2Jp?=
- =?utf-8?B?eFljdzAzZDROK0wrZWI0ZlpQSFgxYVFMM1ZpMmhkZWs1c29uNlFPdTg5MStB?=
- =?utf-8?B?Wnc0UldPMjBtVXltUWpVMUlNYkpPUmx3akNQRXNISzZGSnZVZlBMY0wyZVlP?=
- =?utf-8?B?L1Mzd2UyU2pzZTJzclpkNDNydzc1VVJ6dHlQZFFURURObkJTY0xJOC9VSUJM?=
- =?utf-8?B?aW01c044VnlESEtjVzhNUlVlcm8vK1VnbFc4VU5vZEVjZ2piMmp4QmhWS014?=
- =?utf-8?B?VVZQZkxTRVFRNjUrTVNud1ZpK2k0Z0xQTzRRNit1ZWdOQzJtMENrNS91dmZ3?=
- =?utf-8?B?WnhhbmdQMzZVOEhWWkFITnRSekdPK0xXaWVwSnE1RFIwbWtPc3B0MU9zRHl1?=
- =?utf-8?B?ajFyUDdzb1VvSThwNzB4R3l4Z01tRHd1NXdUNWQrcGdHWEVUSTlWNHhxVGd3?=
- =?utf-8?B?cmhCemVvUGh6YTU3NWplYjVWMW5zWGtTV3NNV3ZRQWpNbTR3Y1JyN2dpSkhL?=
- =?utf-8?B?QWVYVllwTjZpTmlncC9wOExXYWhkS2hGTmZSREFhQzl2OTUzUm9mQXVyQ0JJ?=
- =?utf-8?B?M0NDb3NNbzlYYXh0dHdINUFUZVh6SURvMVA2bGVWOFlqcm1nMWE1Wk9GZ0V2?=
- =?utf-8?B?dE1YY094Uk9BSzg2MnlLS1lSd0RDNXJueGdRSnRwZkNVcDM2ZWVlakcrM1Jl?=
- =?utf-8?B?bEJ0TWVjZXJjUHE3RVp0amR3K2d4RExxTVRycnFDYjRrR2plT2cwais3enIz?=
- =?utf-8?B?L0g3bnErMlV5d0VFUlhHT0l0RG1OK282b2ZwaHRIT3ZXRjNuK2ZIRjV3RHM1?=
- =?utf-8?B?VTRJWmNyMXFERUF2V2xpTUF5NzFGWlUwYkpGR2c1MUxiemhMNGw0RDlWT1I3?=
- =?utf-8?B?ZG1HWnpRUmMrM1V6NUprV1JoMEJiU1RWQkovRlJQeDV3VlcyUHo5bWxhNDA0?=
- =?utf-8?B?T28zNTltWnpjTWdCYWo5eGpyaHd4ZWlnNDNhV2JsT2hUOTZ1Ym85QmtPN1VK?=
- =?utf-8?Q?vj6zL2?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 18:20:44.0657
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2191c0ef-335f-4a3a-3d53-08dd9bb8dd20
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B36F.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8828
+References: <20250516153955.111815-1-embedkari167@gmail.com> <73a4b1c9-44b4-4f06-a766-ea7ed391c578@linuxfoundation.org>
+In-Reply-To: <73a4b1c9-44b4-4f06-a766-ea7ed391c578@linuxfoundation.org>
+From: Harshal Wadhwa <embedkari167@gmail.com>
+Date: Sun, 25 May 2025 23:56:48 +0530
+X-Gm-Features: AX0GCFvYMuOMlqQOBQdvGQ_5hOiN-rfQdg0Zgzfo8_JP-XwbcWnufmY5l3adJvQ
+Message-ID: <CAPCCTVOXHUh7j6Vb=dmnY4wi37f4NMo+Pumuho-sA7jq1iH_fQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests: firmware: Add details in error logging
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Repurpose the HMC reset pin to FPGA reset pin.
-This change is according to hardware change.
+On Fri, 23 May 2025 at 03:49, Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> On 5/16/25 09:39, Harshal wrote:
+> > Specify details in logs of failed cases
+> >
+> > Use die() instead of exit() when write to
+> > sys_path fails
+>
+> Please explain why this change is needed?
+>
+> >
+> > Signed-off-by: Harshal <embedkari167@gmail.com>
+> > ---
+> >   tools/testing/selftests/firmware/fw_namespace.c | 17 +++++++++--------
+> >   1 file changed, 9 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/testing/selftests/firmware/fw_namespace.c b/tools/testing/selftests/firmware/fw_namespace.c
+> > index 04757dc7e546..deff7f57b694 100644
+> > --- a/tools/testing/selftests/firmware/fw_namespace.c
+> > +++ b/tools/testing/selftests/firmware/fw_namespace.c
+> > @@ -38,10 +38,11 @@ static void trigger_fw(const char *fw_name, const char *sys_path)
+> >
+> >       fd = open(sys_path, O_WRONLY);
+> >       if (fd < 0)
+> > -             die("open failed: %s\n",
+> > +             die("open of sys_path failed: %s\n",
+> >                   strerror(errno));
+> >       if (write(fd, fw_name, strlen(fw_name)) != strlen(fw_name))
+> > -             exit(EXIT_FAILURE);
+> > +             die("write to sys_path failed: %s\n",
+> > +                 strerror(errno));
+>
+> Hmm. Wrapper scripts key off of the EXIT_FAILURE - how does
+> the output change with this change?
 
-Signed-off-by: Deepak Kodihalli <dkodihalli@nvidia.com>
-Signed-off-by: Ed Tanous <etanous@nvidia.com>
-Signed-off-by: Willie Thai <wthai@nvidia.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
-index 1240f6ee92c8164dc642a83d94719a73c1c9bfd5..dcf3d075c7e373709820435a42260c6d2f7d2dbe 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
-@@ -1135,7 +1135,7 @@ &gpio0 {
- 		/*J0-J7*/ "", "", "", "", "", "", "", "",
- 		/*K0-K7*/ "", "", "", "", "", "", "", "",
- 		/*L0-L7*/ "", "", "", "", "", "", "", "",
--		/*M0-M7*/ "PCIE_EP_RST_EN-O", "BMC_FRU_WP-O", "HMC_RESET_L-O", "STBY_POWER_EN-O",
-+		/*M0-M7*/ "PCIE_EP_RST_EN-O", "BMC_FRU_WP-O", "FPGA_RST_L-O", "STBY_POWER_EN-O",
- 					"STBY_POWER_PG-I", "PCIE_EP_RST_L-O", "", "",
- 		/*N0-N7*/ "", "", "", "", "", "", "", "",
- 		/*O0-O7*/ "", "", "", "", "", "", "", "",
-
--- 
-2.25.1
-
+In the whole test file, all fail cases uses die() with the specified
+error log and error code, so just wanted to add a error log for this
+fault condition and maintain consistency.
+> >       close(fd);
+> >   }
+> >
+> > @@ -52,10 +53,10 @@ static void setup_fw(const char *fw_path)
+> >
+> >       fd = open(fw_path, O_WRONLY | O_CREAT, 0600);
+> >       if (fd < 0)
+> > -             die("open failed: %s\n",
+> > +             die("open of firmware file failed: %s\n",
+> >                   strerror(errno));
+> >       if (write(fd, fw, sizeof(fw) -1) != sizeof(fw) -1)
+> > -             die("write failed: %s\n",
+> > +             die("write to firmware file failed: %s\n",
+> >                   strerror(errno));
+> >       close(fd);
+> >   }
+> > @@ -66,7 +67,7 @@ static bool test_fw_in_ns(const char *fw_name, const char *sys_path, bool block_
+> >
+> >       if (block_fw_in_parent_ns)
+> >               if (mount("test", "/lib/firmware", "tmpfs", MS_RDONLY, NULL) == -1)
+> > -                     die("blocking firmware in parent ns failed\n");
+> > +                     die("blocking firmware in parent namespace failed\n");
+> >
+> >       child = fork();
+> >       if (child == -1) {
+> > @@ -99,11 +100,11 @@ static bool test_fw_in_ns(const char *fw_name, const char *sys_path, bool block_
+> >                       strerror(errno));
+> >       }
+> >       if (mount(NULL, "/", NULL, MS_SLAVE|MS_REC, NULL) == -1)
+> > -             die("remount root in child ns failed\n");
+> > +             die("remount root in child namespace failed\n");
+> >
+> >       if (!block_fw_in_parent_ns) {
+> >               if (mount("test", "/lib/firmware", "tmpfs", MS_RDONLY, NULL) == -1)
+> > -                     die("blocking firmware in child ns failed\n");
+> > +                     die("blocking firmware in child namespace failed\n");
+> >       } else
+> >               umount("/lib/firmware");
+> >
+> > @@ -129,8 +130,8 @@ int main(int argc, char **argv)
+> >               die("error: failed to build full fw_path\n");
+> >
+> >       setup_fw(fw_path);
+> > -
+> >       setvbuf(stdout, NULL, _IONBF, 0);
+> > +
+> >       /* Positive case: firmware in PID1 mount namespace */
+> >       printf("Testing with firmware in parent namespace (assumed to be same file system as PID1)\n");
+> >       if (!test_fw_in_ns(fw_name, sys_path, false))
+>
+> The rest look fine.
+>
+> thanks,
+> -- Shuah
+>
