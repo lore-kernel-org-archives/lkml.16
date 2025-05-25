@@ -1,60 +1,110 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08746A33F
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 21:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F19F3FE5;
+	Sun, 25 May 2025 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748209324; cv=none; b=uqlANFirVk/JjHoIHjXSeJbXjf2CzwYKk6gXYp/4lXxmYtTtCMmC4UvXKOyZs7sGbLdDSn9JMyjNL0/VtJq5DaHoRLC2OnTqiEAdfB92eh1IaBGTZpep+Po1kVoTwi58/tNYayCX4Opmv92JeJzFLWXxB/2dV4+t8+Dt1c/Bpho=
+	t=1748209380; cv=none; b=Wp6POSjXRgvWk69K5PZ5SgH4qIytlsxxaDJmNXeUEl/kGtBLwPxk2aVOY2Su7vbyao3lIIftQjqcvSGMltLHBW+/hEgWEZbkp4ztGJ2rTFSxNHL/BVHITGvKT2P0f80b+R2BSl+IXxCIaPRDK24v4V62IRdURLPpEvjt8z8R46k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748209324; c=relaxed/simple;
-	bh=bIyy4YlaAnitmqCYPR8vLW5WxPsArk6HGaEP9Hz2Lvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ul6CktVXkH4vx/5yMPRnPBo85plYhabkgikzX3z8MifyFHxmcvR4+oVd094+SXLulngU7N9/A86+TDksaM+UlnuELx13HKWjPgqaV7DKDj1lVeiAN+b+oh8kFsw6nhIWTPAfXfByjbSoW2OXjmcmLgqN/3pW+f/uKi3JD+huIhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=r8X3sMkx; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1748209380; c=relaxed/simple;
+	bh=QlJkMiueppZMRRDV9RhyQbTA08vyK4crlnYF7K8cCc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DPK/cR+SCiO4WfE4cW/zuREmU5wvNfE2RXKhWjbjbT9f5rbyVZDDb8a6dre9QoobhQeTAmP14T8hPINmlPeZSroM79OYQXChcG362BtiImPXxfeH65GJA62GYusdnHteSsoFCPs1k9XH8DTBf07Yn74jC7VMvasHsosZa1aaj+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S2QSUnEP; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="r8X3sMkx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=jV0eAQuxZquMZkIkG+EEpK9m6zlq0/VxrkCPW29T2/k=; b=r8X3sMkx3XZr+a90ZP8Zbj17ri
-	Sv8sIwIYzGbtTORcCaqrGxKApVm7GNL8UGO7vUbhqL4v2iNK+LkSYQDoTdyKs++Ld6K5nGK8cVoBt
-	wz7NUiRE8I9m6UW4IuO31Dp14vPPxMO5mTgqZjzpQ6JM86JaeJCuwa2Jiv6ZtZaMVIkig2azWCooI
-	8iipPMdBpX26t7qIpVkJq/3yTlwmWVVHQcJ3HY0adNyRj8IvGux0qkL4x3TR345cs4FKacfJiz13N
-	HRd5DmhUB0ocNiObwcAJT8Vb88AUu6fN13TVnxuYRrSjILPf8DZa4cCdJMhrdRheoBfdrW5MJch3h
-	6zKhFuWw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJJ6V-00000000PjZ-2G5B;
-	Sun, 25 May 2025 21:41:59 +0000
-Date: Sun, 25 May 2025 22:41:59 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Illia Ostapyshyn <illia@yshyn.com>
-Cc: linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RESEND] scripts/gdb: Use d_shortname instead of d_iname
-Message-ID: <20250525214159.GV2023217@ZenIV>
-References: <20250525213709.878287-2-illia@yshyn.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2QSUnEP"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2341814895bso10203245ad.0;
+        Sun, 25 May 2025 14:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748209379; x=1748814179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kQsZDQ8ChBqoa7gPK3pcsCRBK0QjdSKS6lDWtkEWdOs=;
+        b=S2QSUnEPSPka0w4+ImOuuatMKCviPpdS632dZT7mZ6Kkf4A1Y54nU7GciCR1qFK5/a
+         qkuZVfTx8qqljkUefQT/DoHWSDYNCFYcwK4q81mE80LgCX+ZCt3ghY3R9CGmOM5sR5ZE
+         o++q3znX/gtao5D0v/lQ2zKEMkEWnh9VLDl4Qv8KleNIrnVC2ETWLc2PuDUUMYETy5Tn
+         6AAkYTImMD+54g34zPGGOP9vy9GrZaCfQGnGDYvUlO0/vYa82/UJpjQXJpWmTPeCQ+4B
+         LVduA9zvTLZb9JaCd+v3AyttR8w+M2qwfubYtglPTLKtUDUtXXBh90IN2GWYJI+IBC+U
+         8+Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748209379; x=1748814179;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kQsZDQ8ChBqoa7gPK3pcsCRBK0QjdSKS6lDWtkEWdOs=;
+        b=nhNFCHE8H/eF0mlscO6kJGd/nfm450h9ipDnJYrJliXqi76HKI1u8wOlSKtDv/foxT
+         qCfvwDBuHMZRMV80R3C8NVpLYn5vOnVEGGzJTtRdRADN0ffq3QcqolkFV+3WwimTmoTW
+         wkamifbteBggc4uDriJGK/L9xNVx0TIowt3zFlNbONzwOoVSDwfTGU1dA/GeUgi/RTY0
+         rlPV7JOFdwZmHESLZ1vJEMFa/x/ArJpoDwJh3qjxS/E595LDQ2hoQxCGcEBFdt7zVcql
+         /yVhQR6TGD0QDHHrTPMaSIgKW4/S5/fCSu8jL760AmoIp8zqtMJy7oXgmU8DPeJ0eUNl
+         BChQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwJMdybFkuxa6uR9ceUaJLhca7COr7l9nJoJxSwbHXzG3yLwyTjn7fqNoC+4PJLmH88JUIGQdY38bQulT7@vger.kernel.org, AJvYcCWh84e/hdUarnA8u2tPBWTeIs53q5ahMXwBP5LuY8uvhWG6Iz04bpMur3cspGHl+g5Ba6ZdCyfnJjVU@vger.kernel.org, AJvYcCXxYbMgiBL4I8QEnp3xhUMBR6wHZeJq6eE8j2LKJFu84NdpaJonOEvsK4Sqmay+fO/aEIoxjC4SzTWEwQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi40K5y327qzidtqQHyc0/CtcUg7VO6S0h0D0H2mS0udqmQwvY
+	bBhlxCjyWL9WI0v9DUGwyqLFNxIED99JnPalqX03ltSenf9Vpq7EGosbguxbAw==
+X-Gm-Gg: ASbGncsABV1B5Nlvlsnjy6klN0HWtK0VMgu3Q1qifTl8yGYzqZc7OpIV0P8FwECAt6e
+	xwrcHO3zbAxb/Tl/ddjiDXpn8f1WZaYODvFFu1PyAZLt96MOSt1ZRP50FfmXTKr+yCLF2PhrG8i
+	WjKP98NmxEmCgBKDokJyaqjgyamG1q6sRBJVq8Ny8E0HX39VZsTFJQvhGr5LR/z4Wl2cgxznJ1T
+	g/9bBPrJ+hF5pbcIhV5fZS0NRLL7220ejxrKusnkqYqSAYAHz2thMiJ3zcBKjy6L+Uw3BzNv/b/
+	6D6WqzLuhPodffoHWDeiYEo1Rxg=
+X-Google-Smtp-Source: AGHT+IG8ghJC6zp8CVAOSrCv/ztl5IAMTcUVN3LNowVA0qXoh/su3TVmi4U1f+4p0BkKRacCcE+drg==
+X-Received: by 2002:a17:902:ebc6:b0:223:88af:2c30 with SMTP id d9443c01a7336-23414f4d252mr101857255ad.16.1748209378603;
+        Sun, 25 May 2025 14:42:58 -0700 (PDT)
+Received: from ryzen.lan ([2601:644:8200:dab8::a86])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2340934d91asm35083115ad.166.2025.05.25.14.42.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 14:42:58 -0700 (PDT)
+From: Rosen Penev <rosenp@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+	nbd@nbd.name,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-mips@vger.kernel.org (open list:MIPS)
+Subject: [PATCHv4 0/5] wifi: ath9k: add ahb OF support
+Date: Sun, 25 May 2025 14:42:51 -0700
+Message-ID: <20250525214256.8637-1-rosenp@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250525213709.878287-2-illia@yshyn.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 25, 2025 at 11:37:10PM +0200, Illia Ostapyshyn wrote:
-> Commit 58cf9c383c5c68666808 ("dcache: back inline names with a
-> struct-wrapped array of unsigned long") introduced a d_shortname union
-> in place of d_iname.  However, the gdb scripts for vfs still reference
-> the old field.  Update the scripts to reference the correct field and
-> union member.
+First two commits are small cleanups to make the changes of the third
+simpler. The fourth actually adds dts definitions to use ahb.
 
-You do realize that for dentries with names longer than 40 characters
-that field contains garbage, right?
+v2: Add documentation, use kernel_ulong_t, and of_device_get_match_data
+v3: Use qcom prefix and wifi suffix as in other ath drivers.
+v4: fix up dts example in Documentation
+
+Rosen Penev (5):
+  wifi: ath9k: ahb: reorder declarations
+  wifi: ath9k: ahb: reorder includes
+  wifi: ath9k: ahb: replace id_table with of
+  dt-bindings: net: wireless: ath9k: add OF bindings
+  mips: dts: qca: add wmac support
+
+ .../bindings/net/wireless/qca,ath9k.yaml      | 23 ++++++-
+ arch/mips/boot/dts/qca/ar9132.dtsi            |  9 +++
+ .../boot/dts/qca/ar9132_tl_wr1043nd_v1.dts    |  4 ++
+ arch/mips/boot/dts/qca/ar9331.dtsi            |  9 +++
+ arch/mips/boot/dts/qca/ar9331_dpt_module.dts  |  4 ++
+ .../mips/boot/dts/qca/ar9331_dragino_ms14.dts |  4 ++
+ arch/mips/boot/dts/qca/ar9331_omega.dts       |  4 ++
+ .../qca/ar9331_openembed_som9331_board.dts    |  4 ++
+ arch/mips/boot/dts/qca/ar9331_tl_mr3020.dts   |  4 ++
+ drivers/net/wireless/ath/ath9k/ahb.c          | 60 +++++++------------
+ 10 files changed, 84 insertions(+), 41 deletions(-)
+
+-- 
+2.49.0
+
