@@ -1,166 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8AD1547E7;
-	Sun, 25 May 2025 17:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449731F4289;
+	Sun, 25 May 2025 17:34:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748194322; cv=none; b=Mlkg+N2EnQL2SOXn+w0VhZoMyrsRKjQgNmQHEXZuUh9BSG4+gqK1SvY7oTkW7N/VaP9UusAHTS8oduunY2898b7UBjOWPHNYz2fhcTVkYYoZy/lfoaSXIMLZ0rGOu27ZeYtnH/slcTyCYKQzftlR7SXi67jbujTIkuYc/Vv8/Nc=
+	t=1748194497; cv=none; b=tQ26a9OenhJPAEdCGPkcWlYsGKIVXhnpb05Egtvh5dQRzDew/VH89HRZPAaCpjgNPi9yAmYFeXpLYn3tXho7haIOm4+BDxadG4e1owA5kEqTlUanXvPVh/YJci1PafaMhhZB1mxSNEN2xukSfgn6Mt4l/eNJccGVcqCvduDR6MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748194322; c=relaxed/simple;
-	bh=vX1a3Lyhy5rObSw6THuiwW0SmaqqYz91v7F9UPjRegU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCYVDiRlJqdWHlWWLcbAjoOxt+AeYbMnUvqewd35qnz3EhA/fs7qFBCSdiH8rIWr3KpaHtbSw9XK6IFtrH41ad55Ts+f3IvEm8gprTcrwAAfx3Df8yuSMBZ1VeydvsL8E9NaoSDMgQEZNNF5tTOWPg5PdqIYduWwXAeFQhKioXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqOnsPew; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748194497; c=relaxed/simple;
+	bh=FuaLd9YnT29y00ZR0LH0Z3neXVY4wzCj/xo9pzkkmrw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PJeyWOdC07/fyYUzL6Sn4uKFdmQDlu+zSvHlHP4hqkr0ELcYC8fDw6sDdftiNdAEs5CuHqT+fAc8hDFJNtpiRwnZU94ZzxTVRAx7TjTln9NUcp5aFzN5qQEfHctPbVO1NcSS/IWDW1L+LReE2A9PXcjZytScUM9glsa9wPb4Uuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rNxbHvmW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqOnsPew"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73CC0C4CEEA;
-	Sun, 25 May 2025 17:31:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rNxbHvmW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B79DC4CEEA;
+	Sun, 25 May 2025 17:34:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748194320;
-	bh=vX1a3Lyhy5rObSw6THuiwW0SmaqqYz91v7F9UPjRegU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DqOnsPew5w8ES843F7p3BqIx0iBrKObcVplPohMw4bqhz2AYB/yJ8DsNvnzon6rHZ
-	 DbHHHDGUV9C7foF9KJWpIfX0BUKO7oSP1A8OyBQcSCMSUIFfXSJIFnPQdeLK1vhyLl
-	 qTcTAFvJOaidMQjWsUc4Tx9bLqQtEP/M02ta8dJXLwMjiewyGcMiVHPTiG55DDDEhW
-	 q5oi4aXdByoDdtjNHP10FcPYHwaNGJey+0GwFKM0iEgfU9SoTjNwEIRRuR1qX5s30O
-	 i79AK0RA6ZyzsjiRSkE3FpRfAeR5CcE1CDX+N9DIhQcusvxAfwiIyENVFggQ+XSpv2
-	 MbBR0+wo3aPAA==
-Date: Sun, 25 May 2025 18:31:51 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Antoniu Miclaus	 <antoniu.miclaus@analog.com>,
- Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org"	
- <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] iio: amplifiers: ada4250: use DMA-safe memory for
- regmap_bulk_read()
-Message-ID: <20250525183151.341be5cc@jic23-huawei>
-In-Reply-To: <20250421145606.7620bf25@jic23-huawei>
-References: <20250418-iio-amplifiers-ada4250-simplify-data-buffer-in-init-v1-1-7e7bd6dad423@baylibre.com>
-	<CAHp75Vdxdbqu6qkbuo5y4jADOH_h9Re6m8icSj3Je4hnVsha0g@mail.gmail.com>
-	<ed5c4b46-0b3f-4278-ba8e-6f6977f18429@baylibre.com>
-	<aAO7Lw13xrEGmZLL@smile.fi.intel.com>
-	<9cdc7053-ae22-4ad5-801c-46df7398ebf9@baylibre.com>
-	<20250421115758.62c16f94@jic23-huawei>
-	<3875da4e070f991484b8536f6066347615b0815a.camel@gmail.com>
-	<20250421145606.7620bf25@jic23-huawei>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1748194496;
+	bh=FuaLd9YnT29y00ZR0LH0Z3neXVY4wzCj/xo9pzkkmrw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rNxbHvmWQD5ebSFR2tAa/TyfH9q6OWztXpy0N21h0+AgWimebrKoHjlHJ5ObKorzv
+	 0/qMiNWnaBXE8THR1aKe/fIfWXMQU80uPg/UNg2bwVcY3A2dXh95rOE904NnAOEtX3
+	 BYVvhQLzSDBTloEkFRqANkhcgf/j78xHEeKQqKUmKI2yH5bxQXhbH90oN6Xq2iSkZ0
+	 kPB02t7JUXwgvQDLV2nxYu/ttLlIXz8gZ9IuFSV/YzPSOI3WXk2jg/hM0Bc8U24SSC
+	 H2AMSG1zVtJz3U4d3ql+z9T8f3KuUdJqUzyUczXUzBPhdS6CXDayNx/uqrvDuKLKQ4
+	 T9kolGpBuH9RQ==
+From: Benno Lossin <lossin@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Fiona Behrens <me@kloenk.dev>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>
+Cc: stable@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rust: list: fix path of `assert_pinned!`
+Date: Sun, 25 May 2025 19:34:45 +0200
+Message-ID: <20250525173450.853413-1-lossin@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 21 Apr 2025 14:56:06 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+Commit dbd5058ba60c ("rust: make pin-init its own crate") moved all
+items from pin-init into the pin-init crate, including the
+`assert_pinned!` macro.
 
-> On Mon, 21 Apr 2025 14:00:30 +0100
-> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
->=20
-> > On Mon, 2025-04-21 at 11:57 +0100, Jonathan Cameron wrote: =20
-> > > On Sat, 19 Apr 2025 13:07:25 -0500
-> > > David Lechner <dlechner@baylibre.com> wrote:
-> > >    =20
-> > > > On 4/19/25 10:03 AM, Andy Shevchenko wrote:   =20
-> > > > > On Fri, Apr 18, 2025 at 02:09:04PM -0500, David Lechner wrote:=C2=
-=A0    =20
-> > > > > > On 4/18/25 1:58 PM, Andy Shevchenko wrote:=C2=A0    =20
-> > > > > > > =D0=BF=CA=BC=D1=8F=D1=82=D0=BD=D0=B8=D1=86=D1=8F, 18 =D0=BA=
-=D0=B2=D1=96=D1=82=D0=BD=D1=8F 2025=E2=80=AF=D1=80. David Lechner
-> > > > > > > <dlechner@baylibre.com=C2=A0<mailto:dlechner@baylibre.com>> =
-=D0=BF=D0=B8=D1=88=D0=B5:
-> > > > > > >=20
-> > > > > > > =C2=A0=C2=A0=C2=A0 Use DMA-safe memory instead of stack-alloc=
-ated memory for the call
-> > > > > > > to
-> > > > > > > =C2=A0=C2=A0=C2=A0 regmap_bulk_read() in the ada4250_init() f=
-unction as this could be
-> > > > > > > used
-> > > > > > > =C2=A0=C2=A0=C2=A0 directly by a SPI controller.
-> > > > > > >=20
-> > > > > > > Sorry, but can you elaborate more on this? If driver doesn=E2=
-=80=99t override
-> > > > > > > the
-> > > > > > > callbacks the regmap SPI uses spi_write_then_read() which is =
-supposed
-> > > > > > > to be
-> > > > > > > dma safe.=C2=A0=C2=A0    =20
-> > > > > >=20
-> > > > > > Ah, I didn't dig that far down. Will send a new patch that just=
- cleans
-> > > > > > up the
-> > > > > > unnecessary alignment and unaligned call.=C2=A0    =20
-> > > > >=20
-> > > > > But do you have a real life issue with that? Coincidentally we di=
-scussed
-> > > > > similar case in another driver with colleague of mine, and he ins=
-ists that
-> > > > > it
-> > > > > might be still broken (somewhere).
-> > > > > =C2=A0    =20
-> > > >=20
-> > > > Some drivers that use regmap with SPI implement their own read and =
-write
-> > > > callbacks if the default one doesn't work, so maybe something like =
-that?
-> > > >    =20
-> > >=20
-> > > I asked Mark about this long ago. Maybe the guidance has changed, but=
- the
-> > > request
-> > > if my memory is correct was to treat bulk regmap accesses with the sa=
-me care
-> > > wrt to
-> > > DMA safety that we treat direct use of the underlying bus accessors.
-> > > (unfortunately I have no idea what thread this was in!)
-> > >=20
-> > > The reasoning I think was that it was an implementation detail whether
-> > > regmap copied the data or not for bulk accesses.=C2=A0 Back then I ch=
-ased through
-> > > the SPI case and couldn't find a path that didn't bounce the data (th=
-ough some
-> > > paths could have been made zero copy).
-> > >    =20
-> >=20
-> > Looking on the implementation, indeed it looks like that everything sho=
-uld be
-> > fine... However, IMO, David's reasoning about potential drivers using t=
-heir own
-> > regmap_bus (or just overriding read and write) is perhaps justification=
- enough
-> > for doing it. =20
->=20
-> That's in a specific driver which is the same one allocating the buffer.
-> Doing it defensively in other drivers is probably a step too far if we do=
-n't
-> still want to do it everwhere regmap and SPI are combined.
+Thus fix the path.
 
-Given we don't believe this to be an active bug and no reply from Mark
-on any change on regmap, I'm going to queue this up the slow way and
-see if anyone objects.  Queued up for 6.17.
+This occurrence was missed in that commit, since it has no current
+users, although binder does.
 
-I dropped the fixes tag and added a bit of commentary on why.
+Cc: stable@kernel.org # I haven't found the commit in stable yet, but just to be sure.
+Fixes: dbd5058ba60c ("rust: make pin-init its own crate")
+Signed-off-by: Benno Lossin <lossin@kernel.org>
+---
+ rust/kernel/list/arc.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jonathan
+diff --git a/rust/kernel/list/arc.rs b/rust/kernel/list/arc.rs
+index 13c50df37b89..a88a2dc65aa7 100644
+--- a/rust/kernel/list/arc.rs
++++ b/rust/kernel/list/arc.rs
+@@ -96,7 +96,7 @@ unsafe fn on_drop_list_arc(&self) {}
+     } $($rest:tt)*) => {
+         impl$(<$($generics)*>)? $crate::list::ListArcSafe<$num> for $t {
+             unsafe fn on_create_list_arc_from_unique(self: ::core::pin::Pin<&mut Self>) {
+-                $crate::assert_pinned!($t, $field, $fty, inline);
++                ::pin_init::assert_pinned!($t, $field, $fty, inline);
+ 
+                 // SAFETY: This field is structurally pinned as per the above assertion.
+                 let field = unsafe {
 
->=20
-> Jonathan
->=20
->=20
-> >=20
-> > - Nuno S=C3=A1=20
-> >  =20
-> > > Anyhow, +CC Mark as maybe I remembered that wrong or his view has
-> > > changed!
-> > >=20
-> > > Jonathan   =20
->=20
->=20
+base-commit: f26449565019315650c9fe87743b10103910ca6b
+-- 
+2.49.0
 
