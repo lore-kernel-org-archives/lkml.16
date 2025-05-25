@@ -1,154 +1,157 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF0B25DAFB;
-	Sun, 25 May 2025 19:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759F12F2D
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 19:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748200096; cv=none; b=u7LQeOimWxgduULKu3SfuRITvWDWCzeg4FJKl4+kbF1YlfTmMMzOrwjInP6YP94MDG1HCYs4VAk+f8hgzm+vQQaqFPV3qeG7LRC5BSign/yZKrYuFq1bp8O1+p0Z27Cnx0yjRuVey2n6B+YU1XIobBcZVSjHacZf5zIghPmWssQ=
+	t=1748200387; cv=none; b=DxFVlDIGBHai09gOSJgB0FdEQTIZJIF+BxSuAVAP6Aa1+k9U3Pzhii1a8TmsEtxIjOyvLHubG72qi4Szx5fKzFTnETreU2KdPTha725cPlRiAMJFrRJwrItU4Gm9C6PQg3vr4sZapBpfDiHZXIfdIPf5PtCis+gj1DMEm5XLtyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748200096; c=relaxed/simple;
-	bh=OuKf9ibWLynECkjkcH+aIZ/gQOQvTsCAMruwIJbYKk4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qk8HcUdZ5czSxoNYMmcsA5yJx0dPsh+UXHQXE9U74RnRJJXvGcptoWyvdADaqncPeHmS2kcXrOp3goo+lQE//8P6PmhmULcom3e2RRLVmL2V0V+YX9a7uVsBE5iB1t5qrYaeHzh4Hr5IN15KrQZ4oerRDfGMR9pBwVzzr6lMD9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFYldRYg; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748200387; c=relaxed/simple;
+	bh=UodeGMQ8/36hFynpdApuECu5dDrxfqy7USHoaaccAzU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A6UQdiWl4dlE+1wGlpIDwGRaC4pV2FBkeQMGBz1vKQRIQsxIXCxWy0/fUjID0+5hVzP8fuL7qr9pPCDy9W9bkGt1b4irF/WKlox9Etcs8eSvzr7qiYs4ntq8QfLyQQiD1pYi4yAeTBiH5coEmHrPI1LZPMv0O0GQO4J7J0zj9U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dipe8c/X; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFYldRYg"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b0d638e86so2775881e87.1;
-        Sun, 25 May 2025 12:08:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dipe8c/X"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-600454d4798so248278a12.2
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 12:13:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748200093; x=1748804893; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hbyLyOQGCBxv96q8YzM/a2txuX18SnFJ3VEHo3ltwtk=;
-        b=NFYldRYgvKffK/uJDY/Xunf/4ZKoDaLcNFHfVRR9uGTkN5Lek8y8SvSFCfvGd+IYrH
-         oWAbVJXNYJrGttGXHP+CIAnqjeB9+CjKL9Tv7KoIccVQEpehvlLA0Nwc7kn2z45VTyZ1
-         9rVFjD0pcFQSxBGruQYzidDvqVZNYPNMdDMlSmC1u1cyHWHYALUok3UPVBYljLoqoCj+
-         bgJSY77Ma1cQkDcGgnQu4vhIHTW5RzUBeazte2w926nG2qJQZWuBhr6/jsJiSor5drEq
-         9Zej/BGPTPOm19DG6U2NBeEXgHMdlsb01YExft30k3XtS1dMQQ1jA1nOmMH/bFBfVqJ1
-         VL9Q==
+        d=linaro.org; s=google; t=1748200384; x=1748805184; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Ucq3gyLAIGSeXu4sFQOwhmUA0D2m+wAOAZQ5q93w2I=;
+        b=Dipe8c/XA8PxCSNwhw447aFdu6xFSjfdfHbdcyFBo9++e4J7XquA9do/JyplGQr3l3
+         +nGwQbvvzelpEiFRkiFNC6Hk4oo59+XMnkG+X4Lb/kaVHE73j/LVMDzo+npOSFh/OEZ7
+         1zbtye4V1IUKI04tHKLa3ZWJeX3vN7jit/OkeMgxFiuebWrjzFyIMy0FAgRn5tVZT6+V
+         nP7g5Cjy35m0Cu7D9PyOdZyISTjgtH1bqebVwAdXPoBcUNRThJ2uhv318dpDKeLu3EiQ
+         VyAN+LFT03Xn45m69sD5cQQmoj/+JPmkLs2kS+Kc1xOoFZcM3NhlvIeMUl2gHpwWan8E
+         bl9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748200093; x=1748804893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hbyLyOQGCBxv96q8YzM/a2txuX18SnFJ3VEHo3ltwtk=;
-        b=WMXZAcWzfyGYyLyqb95C0nqko+y+lojNlJP4iVZ61ZR1h5LkCnPMHLulS7DTyfHqwh
-         CczYEcqmZdPRyYMJ+ilxWxbI0LmfVqFssi1FyQZfGrh03Aidz/qfP/llvsevjAYoABWa
-         X5c/rxCdzOn9otTJZ5GidZIvg6cgKnZKef7U4zVAX5fIme7TQYyKmVBy2Ww0meYIQVXV
-         UqvgPubHCwRpBkTgZERgGs4IxbWmVf1ciuz20gVsBEzkV5q5CKLfuuFZz6nxH6FEg4j1
-         dOssgAmKzcIY6fzcPMVxngkBx+ybHz7LpLfP5vMSiaey9y6TATswnQ2RL4Se3Ngn1m7a
-         w6bA==
-X-Forwarded-Encrypted: i=1; AJvYcCVMumY6u1U2bQP0uc4LpoI3pDeapw/DAU82b51wZWPDOz6NNgRrrSMrR5j0CTUSUQvYH14ft5sqi7xX@vger.kernel.org, AJvYcCVSIQOn2dTJoNuFBHbZmftgRUBFLN/YB2AINM27b2lLshZWd2BeOakWtl8vTifjFOJl2kgNPD8h9uO+@vger.kernel.org, AJvYcCXhLMcaK5yxzGqmZ95zy8yjcESPsnhjJKz+6smI/r5QNbVYomZzzdJrJtmcNZh/wMUMMyCdADJVQdTFhqcA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfatAaBgvhTY3/VhEeqT/cbYbfhCGcqgpMx5CM2E/2smVY1IdI
-	lmwYEz8aEhJcmCY8F3E052kzsZLb5DSWC8od8bYIAqcqPTUrBvip30jFsg9aLwLYDZc=
-X-Gm-Gg: ASbGnct4G8mlEnwqJYqdy+/VJdk+exjzKmxJ1uFyygfD6mP4OP2uBCYsGUjaIZxmGnW
-	jwwQlhs31SlkOLuIXZRUsfllp3T9gbjpFLF5y3cY+urCZ4O/mYbTgezv3DlK3aJys2yE5+pt1gR
-	QgR5KktSASp8MyJULcvubAsXhr9I1Ws/7YGyK8Z8Ue9VHVX7VB4tFKmwY9HgWMhQh8V3beqfHBg
-	GloxbAAe19/bqmLUK6II82BCVW5v2w2Qz5XX+q7AHlBG5Z8xPViqOAVxEbVk1WnuDCbrnqLKyGq
-	y+2YbAWb9xVByprvUDsUSpwk1I+mlMTPG4njCSlGIE78koJN7zq44wU273Wc4igewio4JABvOJR
-	KJbYeRBBjPTnsmIgPPF+vFUzFgzAGR6OIfg==
-X-Google-Smtp-Source: AGHT+IHsTkjLFN9eSOj8UjXQ3oYdYwoQnuj8mqXDg5ghhfgQb/LqTqvDn5bq2N4XOC0VBo+OE3XBvQ==
-X-Received: by 2002:a05:6512:1245:b0:545:6fa:bf60 with SMTP id 2adb3069b0e04-5521c7ade9amr1647872e87.19.1748200092997;
-        Sun, 25 May 2025 12:08:12 -0700 (PDT)
-Received: from gmail.com (213-67-3-247-no600.tbcn.telia.com. [213.67.3.247])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702cf9fsm4760552e87.190.2025.05.25.12.08.11
+        d=1e100.net; s=20230601; t=1748200384; x=1748805184;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1Ucq3gyLAIGSeXu4sFQOwhmUA0D2m+wAOAZQ5q93w2I=;
+        b=arwj7/P8w+nDlYN1VScz+g1D/wZLGu00Age1hfi1Vt29bSaz0IXTRfgFV8MB0M4AvX
+         jMpSML0Phxrx8Az0dhVsOqOOl/7vEE7zP1qzYwZU6s90ut21CE1pH6v4NE2HFxzzLlU1
+         Gx173tX1GlT/B7Ilr7HsTE5+yiy4PlhYub+2fneqcs/By5SezwcdQuAfHtP0bmiknVru
+         8hfl9du5qAAhPx3YGpkSsJSpb0miiRwhUirg3z+XCmkWrR4rLJgcnld9a+qQMnuh3jUk
+         bM9TXXc+WP34a5n218AZSeh11V8bvU9i5NSSicdK7U65XPvCKGeC5xmPWG1wEpWJKYrU
+         +xCw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1ShkSclPwN56YuvDg8GEsq3+QpYyD8gzT6EjMVxdBvhfW4Tw24KHZiVE8cxsgpsLBozvfdHtxzoupRIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwZXLQANigWtR2gYKg3AHbGMMxxP0RrMh1wPyAaOJPg0ARuN0r
+	A94QAHgJj60515YNoXtmvuCpao1kfu1mkU+5CXuugp3pGhUdp4vE5ZnO588JPP8k4KA=
+X-Gm-Gg: ASbGncvOvvzM9NmvDz8dOLopYeSSqWiS1YCuN6aAHmzEBEzYfINpCYZfAKQIPM1F+q5
+	zvDj/nQMLG0cwVxEp1QExRkY6EnZUAW+75mPudu5Rp83Y4OQ0FO4FDF+dZb1iO6m0dJNfN+YfH7
+	2z8JKa6FY2Zt5WlU8lu6r2w2G0LVVww9b0FhlQhYvu4exxgZtnxUHv5OrgHw/uPgLCDQ304cwL+
+	XPj3HrqU9nX29YPVUb/kf0xp41RO/ow8FgtLf6TJpZk2RVEZzGnLXUY+Umw8DDcXXoGYlYtHmId
+	ZgEAZ3gvkGey3G5wWeQFjSTfMvqbalwsl/5Ea/tjTFX4TUNMIKGTBrcp4cakcg==
+X-Google-Smtp-Source: AGHT+IGf+2TeC9QK6dYZbJRoR56I7p53ILlhtD29asCKt0/mN+wu+zXhz6Rm84i7lO34hXxNMSklQA==
+X-Received: by 2002:a17:907:2ceb:b0:ad5:1ba6:2177 with SMTP id a640c23a62f3a-ad85b07045emr167132666b.1.1748200383657;
+        Sun, 25 May 2025 12:13:03 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4cbe90sm1554533466b.165.2025.05.25.12.13.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 12:08:11 -0700 (PDT)
-From: "Edgar E. Iglesias" <edgar.iglesias@gmail.com>
-To: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	jank@cadence.com
-Cc: edgar.iglesias@amd.com,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] clk: fixed-mmio: Add optional poll for clk readiness
-Date: Sun, 25 May 2025 21:08:04 +0200
-Message-ID: <20250525190806.1204531-3-edgar.iglesias@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250525190806.1204531-1-edgar.iglesias@gmail.com>
-References: <20250525190806.1204531-1-edgar.iglesias@gmail.com>
+        Sun, 25 May 2025 12:13:03 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Patrice Chotard <patrice.chotard@foss.st.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] memory: stm32_omm: Use syscon_regmap_lookup_by_phandle_args
+Date: Sun, 25 May 2025 21:13:00 +0200
+Message-ID: <20250525191300.50873-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2266; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=UodeGMQ8/36hFynpdApuECu5dDrxfqy7USHoaaccAzU=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoM2u8ux0aH1Fna9DGhdBNraJjTPdmFk5vieE69
+ Bby+tFVA0GJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDNrvAAKCRDBN2bmhouD
+ 17PsD/9JDR2rnMkSvRHRyOxDJn9SHRhKbdOGbr/z2BZUD2Q3Udhuoagd9HJVcK/w8YczZc4hURK
+ lU8HwJvJQmqZeNl52AbkfdE8AQwCm3Gq527piNZIF670p3fu4fvO6TTCfr0/7pQ0EypWkBTUMAq
+ g3ntprR9Ltc0PvMRv6JoILjlg6iFlt+RPV1uWm9Dgs04QX40e9IoEmD/s/eX22eKaAMQKWiqInb
+ i95/ALzUOFJK0UCt3WclL5kUv+Nm1jfgr27hV1A8uHuWQox2jpxqG+M2DxVenEhV8trKn7kaPPj
+ AfYUg9qHg2KcZRAxoitg157g0y51YJDMWzRIyBRJuhO4b0H+w0X05yLS06CpdyY7dBQpjFFXv0G
+ choT6n8YDDBtNDizwrSFeULMn0ASaThqtVctlLgzTUnbK+2br1abXSYlqOwaMiA7+twzcsX0yBa
+ 6+ko27RDUB7Kbu4FPFa5Iwl5VUqXK/oleCKlFPDdcGj/qYBEYASbYoH4wKYXy2OeKD3vFQHzL3x
+ 4qvgO67NFLfAV5+qEpCKQ9LcmImXPccX4GmIpiX96mGIm1gmmmwV5bCuNVOS5XlxHHpuyD4mLzb
+ DLz3cX+M4ExbFfiSOMwBZQkd3UEOIohp5u2llvVQJY8ncZ+byPDkrSrYrUPLOMJV2JWJnR0tvzW 88dCxUyJBpvPfPg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
-From: "Edgar E. Iglesias" <edgar.iglesias@amd.com>
+Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
+syscon_regmap_lookup_by_phandle() combined with getting the syscon
+argument.  Except simpler code this annotates within one line that given
+phandle has arguments, so grepping for code would be easier.
 
-Add optional poll for clk readiness prior to reading the fixed rate.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Edgar E. Iglesias <edgar.iglesias@amd.com>
 ---
- drivers/clk/clk-fixed-mmio.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/clk/clk-fixed-mmio.c b/drivers/clk/clk-fixed-mmio.c
-index 3bfcf4cd98a2..4b5ba1ad06ac 100644
---- a/drivers/clk/clk-fixed-mmio.c
-+++ b/drivers/clk/clk-fixed-mmio.c
-@@ -11,10 +11,36 @@
+Not tested on hardware.
+---
+ drivers/memory/stm32_omm.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/memory/stm32_omm.c b/drivers/memory/stm32_omm.c
+index 79ceb1635698..bee2ecc8c2b9 100644
+--- a/drivers/memory/stm32_omm.c
++++ b/drivers/memory/stm32_omm.c
+@@ -46,7 +46,7 @@ static int stm32_omm_set_amcr(struct device *dev, bool set)
+ 	struct regmap *syscfg_regmap;
+ 	struct device_node *node;
+ 	struct resource res, res1;
+-	u32 amcr_base, amcr_mask;
++	unsigned int syscon_args[2];
+ 	int ret, idx;
+ 	unsigned int i, amcr, read_amcr;
  
- #include <linux/clk-provider.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/platform_device.h>
+@@ -98,29 +98,20 @@ static int stm32_omm_set_amcr(struct device *dev, bool set)
+ 		of_node_put(node);
+ 	}
  
-+static int fixed_mmio_clk_wait_ready(struct device_node *node,
-+				     void __iomem *base)
-+{
-+	u32 ready_mask;
-+	u32 ready_val;
-+	u32 timeout;
-+	u32 v;
-+
-+	if (of_property_read_u32(node, "ready-timeout", &timeout))
-+		timeout = 0;
-+
-+	if (of_property_read_u32(node, "ready-mask", &ready_mask))
-+		ready_mask = ~0;
-+
-+	if (of_property_read_u32(node, "ready-val", &ready_val)) {
-+		pr_err("%pOFn: missing ready-val property\n", node);
-+		return -EINVAL;
-+	}
-+
-+	pr_info("%pOFn: wait for clock\n", node);
-+	return readl_relaxed_poll_timeout_atomic(base, v,
-+						 (v & ready_mask) == ready_val,
-+						 1, timeout);
-+}
-+
- static struct clk_hw *fixed_mmio_clk_setup(struct device_node *node)
- {
- 	struct clk_hw *clk;
-@@ -23,6 +49,15 @@ static struct clk_hw *fixed_mmio_clk_setup(struct device_node *node)
- 	u32 freq;
- 	int ret;
+-	syscfg_regmap = syscon_regmap_lookup_by_phandle(dev->of_node, "st,syscfg-amcr");
++	syscfg_regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node, "st,syscfg-amcr",
++							     2, syscon_args);
+ 	if (IS_ERR(syscfg_regmap))
+ 		return dev_err_probe(dev, PTR_ERR(syscfg_regmap),
+ 				     "Failed to get st,syscfg-amcr property\n");
  
-+	base = of_iomap(node, 1);
-+	if (base) {
-+		/* Wait for clk to get ready. */
-+		ret = fixed_mmio_clk_wait_ready(node, base);
-+		iounmap(base);
-+		if (ret)
-+			return ERR_PTR(ret);
-+	}
-+
- 	base = of_iomap(node, 0);
- 	if (!base) {
- 		pr_err("%pOFn: failed to map address\n", node);
+-	ret = of_property_read_u32_index(dev->of_node, "st,syscfg-amcr", 1,
+-					 &amcr_base);
+-	if (ret)
+-		return ret;
+-
+-	ret = of_property_read_u32_index(dev->of_node, "st,syscfg-amcr", 2,
+-					 &amcr_mask);
+-	if (ret)
+-		return ret;
+-
+ 	amcr = mm_ospi2_size / SZ_64M;
+ 
+ 	if (set)
+-		regmap_update_bits(syscfg_regmap, amcr_base, amcr_mask, amcr);
++		regmap_update_bits(syscfg_regmap, syscon_args[0], syscon_args[1], amcr);
+ 
+ 	/* read AMCR and check coherency with memory-map areas defined in DT */
+-	regmap_read(syscfg_regmap, amcr_base, &read_amcr);
+-	read_amcr = read_amcr >> (ffs(amcr_mask) - 1);
++	regmap_read(syscfg_regmap, syscon_args[0], &read_amcr);
++	read_amcr = read_amcr >> (ffs(syscon_args[1]) - 1);
+ 
+ 	if (amcr != read_amcr) {
+ 		dev_err(dev, "AMCR value not coherent with DT memory-map areas\n");
 -- 
-2.43.0
+2.45.2
 
