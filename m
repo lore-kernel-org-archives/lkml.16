@@ -1,208 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EF61A26B
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 15:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8526712B73;
+	Sun, 25 May 2025 15:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748188408; cv=none; b=FbsVHaEgGYnHJCF9rvDJSnXq/4a9FXLWUQamwPnVLB6eQl6eRqlEvb9jAZ7F+IF9d18w5DcssH9WIXwYiTtFP9FFGCOGOKaQA4gp7wbbC74X8JTrOLelsfKI09VZhT2gjEiPPrBvONgidp8M5IqQvcFgn0e+FEOHrZVSZ2vwzog=
+	t=1748188477; cv=none; b=Il/zkvZmuIp/XtWfY2G1j/K+mffNT2bSr4RoFQvFquna1dvh6LZRfp5YQqky8u36WyfaNbglQ+eWfxoZClLZCHAa5XGahsZq7naDMtXXKX+5MSsVpgG8vaa+X24IufBqk9c83Al0jeQsiLk4O28P1isTD/Ih9Xu3vJ2yZF91woQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748188408; c=relaxed/simple;
-	bh=+beQk7iofbXfuvxyD9wI06wOPGZdep0uGgwVcEnDhVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mx5iMc3Zzp8qRISpHDGpgZUyPe0OwaXHbf43s7H0Dn5n2n5lTicDOmOFV2w66pBKqcx5mDb0ra0fGecgATdGMo4AkH9iFOAsoeeF4PlrTOU/7mAGnNDdGPqfspjxAWWFmmHEThdWCdbnyifF1DK/3NUhxHh4+UuhRcnlnpbDIgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EmUK0+U6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EmUK0+U6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748188405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RfF8+8Y3CMDfplODDB2yfBcIHi+PCSzAf7h2lCPnkI8=;
-	b=EmUK0+U6bHnxRHdNdrSI5PMcqyUGI5FG200ND6ug0s/weJbUOipNNVue+794qTaM29W9Kd
-	HuTNT58oEXroxRitygWRpAYx1vQ+2T4h8gF1gMBTAeHEr5ITpb+CLmHMMDp1vwumV7OUhW
-	kAlkC8LsazDcroasmE4/c//pts/pQfk=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-550-PbTWK9THP0Kl8TOGSQL_2g-1; Sun, 25 May 2025 11:53:24 -0400
-X-MC-Unique: PbTWK9THP0Kl8TOGSQL_2g-1
-X-Mimecast-MFC-AGG-ID: PbTWK9THP0Kl8TOGSQL_2g_1748188403
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-3290947e288so6124281fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 08:53:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748188402; x=1748793202;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RfF8+8Y3CMDfplODDB2yfBcIHi+PCSzAf7h2lCPnkI8=;
-        b=XeYI9FGLnL8lKE48fDeEt0NvoSPEwlbzLm/Ugsck6hri/pDCrjGpAI/ONQ36bbisdN
-         Bs7Qarv1GmtHW9oc6namUIYe4/q+hdLtQfd/MHG4GB8xfryiSWk+mJnWSsKu1raPDzRj
-         yv6L7T3lMa7wAV2hYLfDvEG5jd0QOm6EOnIzuQ3A1p/2F/+BUtpkei5JAVenZfxadm68
-         u2zRPSRwJZSXB6MtxpobRcR7ZkxzSuJilUH2PwxIa6GjjdPIMRqL4lWqWEmtDGZHlsoH
-         h1XSAQQwqcfAmLOr5ACoFjzrbGqtIpcfjCfuD9iJGfsSHGRH0em6+Qymz/O2GSImAp7f
-         fcXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUg8bxY6TQik4NwZes/xU9bFrqo50UhCHYyNLVYAs50Ft1443YnfYihcIywhVNx2DwwtBaedcnBDTj9eh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ8l0YN4lJelaZJ5sYDiuZ+MDb46Vvg7x9Wxyoj6Sw1O+te3xA
-	TBCHnGA2DZjGrUWsIgQgAeGQEgp6wp1u5JK7TEY3Pn3ZuQ5G8QK59gOGtDZQyM9IHMRJE36ktlM
-	d6dr7ABCOumALfBHBnePWhnGrpNlNB1myptMCwJnxNWBTFy7ZkWboOd5R3fMLPbccroeo/xSUPl
-	xEPqhxNsaLLicdDDt2so49T+rfzHPwOk5liKY352Dp
-X-Gm-Gg: ASbGncuHcn6FiYVl+LKa+ljLj7N4DDhSQWZ9pGA2DRLfUZivwQ+V21JL158kSfl6OHr
-	PlT9I1/6gMV2Z616rOXbhwyXONyzD1PTFb9xQR1FBahx9qCsW394Ha2eLTiwuCvVtDZ7/gQ==
-X-Received: by 2002:a2e:be1d:0:b0:329:2657:c98 with SMTP id 38308e7fff4ca-3294f7df620mr28726231fa.15.1748188402427;
-        Sun, 25 May 2025 08:53:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEj4ilIq/lThsnnYfPBwAxQ+tUGxulkQvIvbb615Hm/PjSiYnfC1C+kwjnlDi8kPfx37cJirZyp9TcAYPdEIuQ=
-X-Received: by 2002:a2e:be1d:0:b0:329:2657:c98 with SMTP id
- 38308e7fff4ca-3294f7df620mr28726161fa.15.1748188402015; Sun, 25 May 2025
- 08:53:22 -0700 (PDT)
+	s=arc-20240116; t=1748188477; c=relaxed/simple;
+	bh=vrH5fpvU7vRjZ/W60VBI3qyQYO/Wlt462x6MyH8dQh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fRNKvp74JiZC7S4MPW04KQzueT8rkW/Uyq6vi/pmo93KGhC+6vPvTGgpX5s0IGk3kdJzJZqNTW6bUMR1bL1DY7hyqTC9R46LT45tRqRZNZlcuRL0CJfUAC+0fNnNW3tJ+KY2ph+D6MqL69wy10LL7jkfnV8yJRYe16AVwgAGZKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.199.70.239])
+	by APP-03 (Coremail) with SMTP id rQCowADHETEfPTNoi+BnAQ--.40252S2;
+	Sun, 25 May 2025 23:54:11 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: steffen.klassert@secunet.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] net: af_key: Add error check in set_sadb_address()
+Date: Sun, 25 May 2025 23:53:50 +0800
+Message-ID: <20250525155350.1948-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-5-yukuai1@huaweicloud.com>
-In-Reply-To: <20250524061320.370630-5-yukuai1@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Sun, 25 May 2025 23:53:10 +0800
-X-Gm-Features: AX0GCFtMMUph9jWUAowxw0wR7qBlq2PZcZtIwBdTVWYAeVV_UCLavZfGsNoSARw
-Message-ID: <CALTww28-Yoo-00c7Gpa+=Zh6V-N6OOdhPuWcD6e0S2609c21Xw@mail.gmail.com>
-Subject: Re: [PATCH 04/23] md/md-bitmap: support discard for bitmap ops
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
-	johnny.chenyi@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowADHETEfPTNoi+BnAQ--.40252S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFyDAryDKw4xur1UZrW3GFg_yoW8Gw4Up3
+	W3Gr1fXrn8Jw15ua1fGr1Fg3W5A34kKFyj9rW8KF4YkwsYgr1rZw45Cw4fWa4UJrZ3Xa1x
+	trWYgrZ5GF40vFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9j14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvf
+	C2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkNA2gzMwUSfgAAsB
 
-On Sat, May 24, 2025 at 2:19=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> Use two new methods {start, end}_discard to handle discard IO, prepare
-> to support new md bitmap.
->
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md-bitmap.c |  3 +++
->  drivers/md/md-bitmap.h | 12 ++++++++----
->  drivers/md/md.c        | 15 +++++++++++----
->  drivers/md/md.h        |  1 +
->  4 files changed, 23 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/md/md-bitmap.c b/drivers/md/md-bitmap.c
-> index 2997e09d463d..848626049dea 100644
-> --- a/drivers/md/md-bitmap.c
-> +++ b/drivers/md/md-bitmap.c
-> @@ -2991,6 +2991,9 @@ static struct bitmap_operations bitmap_ops =3D {
->
->         .start_write            =3D bitmap_start_write,
->         .end_write              =3D bitmap_end_write,
-> +       .start_discard          =3D bitmap_start_write,
-> +       .end_discard            =3D bitmap_end_write,
-> +
->         .start_sync             =3D bitmap_start_sync,
->         .end_sync               =3D bitmap_end_sync,
->         .cond_end_sync          =3D bitmap_cond_end_sync,
-> diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
-> index 9474e0d86fc6..4d804c07dbdd 100644
-> --- a/drivers/md/md-bitmap.h
-> +++ b/drivers/md/md-bitmap.h
-> @@ -70,6 +70,9 @@ struct md_bitmap_stats {
->         struct file     *file;
->  };
->
-> +typedef void (md_bitmap_fn)(struct mddev *mddev, sector_t offset,
-> +                           unsigned long sectors);
-> +
->  struct bitmap_operations {
->         struct md_submodule_head head;
->
-> @@ -90,10 +93,11 @@ struct bitmap_operations {
->         void (*end_behind_write)(struct mddev *mddev);
->         void (*wait_behind_writes)(struct mddev *mddev);
->
-> -       void (*start_write)(struct mddev *mddev, sector_t offset,
-> -                           unsigned long sectors);
-> -       void (*end_write)(struct mddev *mddev, sector_t offset,
-> -                         unsigned long sectors);
-> +       md_bitmap_fn *start_write;
-> +       md_bitmap_fn *end_write;
-> +       md_bitmap_fn *start_discard;
-> +       md_bitmap_fn *end_discard;
-> +
->         bool (*start_sync)(struct mddev *mddev, sector_t offset,
->                            sector_t *blocks, bool degraded);
->         void (*end_sync)(struct mddev *mddev, sector_t offset, sector_t *=
-blocks);
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 04a659f40cd6..466087cef4f9 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -8845,18 +8845,24 @@ EXPORT_SYMBOL_GPL(md_submit_discard_bio);
->  static void md_bitmap_start(struct mddev *mddev,
->                             struct md_io_clone *md_io_clone)
->  {
-> +       md_bitmap_fn *fn =3D unlikely(md_io_clone->rw =3D=3D STAT_DISCARD=
-) ?
-> +                          mddev->bitmap_ops->start_discard :
-> +                          mddev->bitmap_ops->start_write;
-> +
->         if (mddev->pers->bitmap_sector)
->                 mddev->pers->bitmap_sector(mddev, &md_io_clone->offset,
->                                            &md_io_clone->sectors);
->
-> -       mddev->bitmap_ops->start_write(mddev, md_io_clone->offset,
-> -                                      md_io_clone->sectors);
-> +       fn(mddev, md_io_clone->offset, md_io_clone->sectors);
->  }
->
->  static void md_bitmap_end(struct mddev *mddev, struct md_io_clone *md_io=
-_clone)
->  {
-> -       mddev->bitmap_ops->end_write(mddev, md_io_clone->offset,
-> -                                    md_io_clone->sectors);
-> +       md_bitmap_fn *fn =3D unlikely(md_io_clone->rw =3D=3D STAT_DISCARD=
-) ?
-> +                          mddev->bitmap_ops->end_discard :
-> +                          mddev->bitmap_ops->end_write;
-> +
-> +       fn(mddev, md_io_clone->offset, md_io_clone->sectors);
->  }
->
->  static void md_end_clone_io(struct bio *bio)
-> @@ -8895,6 +8901,7 @@ static void md_clone_bio(struct mddev *mddev, struc=
-t bio **bio)
->         if (bio_data_dir(*bio) =3D=3D WRITE && md_bitmap_enabled(mddev)) =
-{
->                 md_io_clone->offset =3D (*bio)->bi_iter.bi_sector;
->                 md_io_clone->sectors =3D bio_sectors(*bio);
-> +               md_io_clone->rw =3D op_stat_group(bio_op(*bio));
->                 md_bitmap_start(mddev, md_io_clone);
->         }
->
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index c241119e6ef3..13e3f9ce1b79 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -850,6 +850,7 @@ struct md_io_clone {
->         unsigned long   start_time;
->         sector_t        offset;
->         unsigned long   sectors;
-> +       enum stat_group rw;
->         struct bio      bio_clone;
->  };
->
-> --
-> 2.39.2
->
->
+The function set_sadb_address() calls the function
+pfkey_sockaddr_fill(), but does not check its return value.
+A proper implementation can be found in set_sadb_kmaddress().
 
-Reviewed-by: Xiao Ni <xni@redhat.com>
+Add an error check for set_sadb_address(), return error code
+if the function fails.
+
+Fixes: e5b56652c11b ("key: Share common code path to fill sockaddr{}.")
+Cc: stable@vger.kernel.org # v2.6
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ net/key/af_key.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index c56bb4f451e6..537c9604e356 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -3474,15 +3474,17 @@ static int set_sadb_address(struct sk_buff *skb, int sasize, int type,
+ 	switch (type) {
+ 	case SADB_EXT_ADDRESS_SRC:
+ 		addr->sadb_address_prefixlen = sel->prefixlen_s;
+-		pfkey_sockaddr_fill(&sel->saddr, 0,
+-				    (struct sockaddr *)(addr + 1),
+-				    sel->family);
++		if (!pfkey_sockaddr_fill(&sel->saddr, 0,
++					 (struct sockaddr *)(addr + 1),
++					 sel->family))
++			return -EINVAL;
+ 		break;
+ 	case SADB_EXT_ADDRESS_DST:
+ 		addr->sadb_address_prefixlen = sel->prefixlen_d;
+-		pfkey_sockaddr_fill(&sel->daddr, 0,
+-				    (struct sockaddr *)(addr + 1),
+-				    sel->family);
++		if (!pfkey_sockaddr_fill(&sel->daddr, 0,
++					 (struct sockaddr *)(addr + 1),
++					 sel->family))
++			return -EINVAL;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+-- 
+2.42.0.windows.2
 
