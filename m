@@ -1,95 +1,93 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5830725B697
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 18:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D828DD0;
+	Sun, 25 May 2025 18:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748197661; cv=none; b=r28T3VQgN8lUt9UV/D770nk9KMPOIehOIBdJt1JIkqBoNzUZ8bzz/1NdRO+VnjOx2XtD3Umab9UvHbpfSwll9xK4TAMTqnZfbkcPnzGW9E/lwjcWNIKzow4kCS3x66VYeEYaKnsks2LFO/iOzTGxL20fGN57S2MPaP7muhyWou8=
+	t=1748198410; cv=none; b=mptpVeW1X5A3LL921rY8uNmQIWmizvQXrmdrfGP5q3Ir/aKJtD11y7DzHI8E+Qkv7EXm7uo1LuRSOl0J4NkT29hAaFEUqEtmjzkdyFUTORmdmMV2U/yni43t6E3dMxEQdquWAsPpg31PGrGE0l8Qtutu4uuFtNgVqBV48rzacYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748197661; c=relaxed/simple;
-	bh=TBhcQpxz7HNWq/7nVSc0J8oZeSxGOWx2e0bMvNvC1HY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tXAsP1d0JkwQ3B21SquAqFo57t7ci5yQIsp59rzMBELfaUz5QSnYv9Aufi6YQVs3uZbyYtqdA7HG7e4usD+dzFWbVK+ep+qjfSf6S6xnR6jYVfGjCq47ggwdNRJCaHVaUb/gVV5N0yWG6rRi/bBCglFaDytvWmloOveHz+KDRGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VTNeKpGh; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748198410; c=relaxed/simple;
+	bh=kHSp76zFoxeSUgVBGIw/6WuJNJM5jnC/fA8Ys6gqaWA=;
+	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=mg0zgUfM5bMWtPkSiy18VgtsE1t691yFbB24pfGTTB4kOHXn0XRTifUWEIGyWS24nPpOB6oeSMOJVMFx11u4lltWq5mIwNY0oRBQeQpW/TEQwKksUsiyDSXJFgzIW+cEQqW278MFUbVYQs4BxFhnJZXXIWdZEEBTaq9SavYW/lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DU3jpDVZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0yWucKp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VTNeKpGh"
-Date: Sun, 25 May 2025 14:27:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748197647;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DU3jpDVZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0yWucKp"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748198405;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DaNkSQWN9L/rebLJrHsK3RAWcKyWAZuOCXXaHlmCli0=;
-	b=VTNeKpGh5eZO4me4KEGZzpIp8ytJoyo6F5H4MqwexcUq02SKnpJUElSU/3u7zgzQQ5hkBZ
-	fC82w0rkkTiFsomzKAlzTJNheLV3DKuF66JEobgeJAXDINsq7iq3RfOP549KTp/1pQK2e9
-	W0IErYHlmCIIoHzW2msPGdx8hIwBJ0E=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-Message-ID: <yp4whk37id7s4za6fv3ifvqjupo6ikylu34wvgd3ytbyu3uz2c@t7h3ncg6pwtz>
-References: <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
- <q6o6jrgwpdt67xsztsqjmewt66kjv6btyayazk7zlk4zjoww4n@2zzowgibx5ka>
- <CAOQ4uxisCFNuHtSJoP19525BDdfeN2ukehj_-7PxepSTDOte9w@mail.gmail.com>
- <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com>
- <ltzdzvmycohkgvmr3bd6f2ve4a4faxuvkav3d7wt2zoo5gkote@47o5yfse2mzn>
- <CAOQ4uxjHb4B1YL2hSMHxd2Y0mMmfpHMzgbHO5wLF3=rMVxsHyQ@mail.gmail.com>
+	bh=DL5eKWdLvzxwxUjFjhBRDJn82TzenWqENC7E1vpzwRY=;
+	b=DU3jpDVZBQFB/cqh02tFCXi5WwhB0P/pvyb6KtI+xKvqvr40r5G6IRiUX5BzN2N8Jjnmwn
+	JOGcyCsGRCEGNzuYBKJyRGBeM7frVVDW165+i38FG6gSgsPx4AMDeYLNAxSGrgs5HGG8r+
+	GfwDXUOmT7pFV8c3+Zb7Kxf5oRR8R0d1LEIeIKXS9Kjh7LCWQYiOSgGmGXwgzbSRekwe2e
+	TJ8y2VgP/A+e7rlYuLjXo4xZAK2VjrhA6XiS3YDzSr/kqb4J8XcJKuCVXAWo2uca8yU3YF
+	j0S9J5532ESRd4+NKJpt8EjAYG6k+YAMfBoYIWIMuulRDOrrVe7jyXOXDruN1A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748198405;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DL5eKWdLvzxwxUjFjhBRDJn82TzenWqENC7E1vpzwRY=;
+	b=G0yWucKpXuN2fNO1U0HdxGIAauj8takyJTVZ01biqkkjH3U7RqOxFqA4WmTLl1b28s6lPl
+	pf4Px72G3N2CgKDg==
+To: markus.stockhausen@gmx.de, tsbogend@alpha.franken.de,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ s.gottschall@dd-wrt.com
+Subject: Re: AW: [PATCH] irqchip/mips-gic: allow forced affinity for current
+ cpu during hotplug
+In-Reply-To: <043701dbcd59$73bcfb70$5b36f250$@gmx.de>
+References: <20250523151542.3903598-1-markus.stockhausen@gmx.de>
+ <87bjrhqcn8.ffs@tglx> <043701dbcd59$73bcfb70$5b36f250$@gmx.de>
+Date: Sun, 25 May 2025 20:40:04 +0200
+Message-ID: <878qmkr0u3.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxjHb4B1YL2hSMHxd2Y0mMmfpHMzgbHO5wLF3=rMVxsHyQ@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain
 
-On Sat, May 24, 2025 at 03:01:44PM +0200, Amir Goldstein wrote:
-> On Fri, May 23, 2025 at 11:10 PM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > On Fri, May 23, 2025 at 10:30:16PM +0200, Amir Goldstein wrote:
-> >
-> > That makes fstests generic/631 pass.
-> 
-> Yes, that is not very surprising.
-> I meant if you could help test that:
-> 
-> 1. mounting case folder upperdir/lowerdir fails
-> 2. lookup a case folder subdir fails
-> 3. lookup in a dir that was empty and became case folder while ovl was
-> mounted fails
-> 
-> For me, I do not have any setup with case folding subtrees
-> so testing those use cases would take me time and
-> I think that you must have tested all those scenarios with your patch set?
-> and maybe already have some fstests for them?
+On Sun, May 25 2025 at 11:43, markus stockhausen wrote:
+>> Von: Thomas Gleixner <tglx@linutronix.de> 
+>>
+>> On Fri, May 23 2025 at 11:15, Markus Stockhausen wrote:
+>> > +
+>> > +	if ((cpu >= NR_CPUS) && !force)
+>> > +		/* In normal mode allow only online CPUs. */
+>> >  		return -EINVAL;
+>> >  
+>> > +	if (cpu >= NR_CPUS) {
+>> > +		/* In force mode allow current not yet online CPU for
+> hotplug handlers. */
+>> > +		cpu = cpumask_first(cpumask);
+>> > +		if (cpu != get_cpu())
+>> > +			return -EINVAL;
+>> > +	}
+>>
+>> This logic really makes my brain hurt. Why not doing the obvious:
+>>
+>>	if (cpu >= NR_CPUS) {
+>>         	/* Sensible comment */	
+>>         	if (!force)
+>>                 	return -EINVAL;
+>>                 ...
+>>         }
+>
+> Then what about an even more relaxed and cleaner version like in other
+> drivers?
+>
+> If (force)
+>   cpu = cpumask_first(cpumask);
+> else
+>   cpu = cpumask_first_and(cpumask, cpu_online_mask);
 
-Unmount fauls after I test an overlayfs with a casefold subdir:
+Fine with me.
 
-Testing an overlayfs on a casefold fs with non-casefolded dirs
-Test using casefolded dir - should fail
-overlayfs: failed to resolve '/mnt/casefold': -2
-mount: /mnt/merged: special device overlay does not exist.
-       dmesg(1) may have more information after failed mount system call.
-Test using a dir with a casefold subdir - should mount
-overlayfs: upperdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
-overlayfs: workdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
-ls: cannot access '/mnt/merged/dir/casefold': No such file or directory
-umount: /mnt: target is busy.
-
-https://evilpiepirate.org/git/ktest.git/commit/?id=47d1f2a04d79bc4cbc843f81e71eb7d821fb8384
