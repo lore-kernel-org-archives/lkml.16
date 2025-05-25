@@ -1,200 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF9B320F;
-	Sun, 25 May 2025 04:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E612260C
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 05:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748148942; cv=none; b=DkgM7MHmuRwIKzHtrvNfGMeK6cGRkvR9aR5gPabFWp5tw6chpLAt7E4+YJAqCffI5NjbYNiyDeRCWMNKFyW9gWHm8Jj9MA1gOyuqRnfeuSYiozaqwsmbgH7+3yfxazkrMlYDCew048ZML5GPpoYkjp7HFZdkvH3aFXbgaUc7ONQ=
+	t=1748150214; cv=none; b=oFkqEcXkh8KVhSq+7dOIvMH4zIAC+WO3lsVFJbOPKrjq4JdXTY0lrh4f6qIvzfj5S/Jqsjkmb83IKVP2wn6Txvh0i/ZwnV7vZW97rCfrXcaXLgSY0ikq47iV7BbMJh8Hu+9RkCCtQ1Sh6DeDohYKLG6JZJk2bYkXdnajyisf6nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748148942; c=relaxed/simple;
-	bh=bWw6f1oPVGszDiKHtYyvEIzbYdNJsCK4FK7ugxSRdS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VhkW+zxEmqiN9I3PImxaJUgnOs0idWGxHJBMpXZPrZL3E6Koe9WgAMPhFfcbxSm6h2zhSAd4t1NcK1XkpuvXy3qbraWz9X7NRMImrkZgdVfE2nfyw0SQ2uiiWgHFFnDLPrX/X/oWtAoi8eGcHRn9wGNIwWiTGBBfoMAeaewiGMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPa07mHV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748150214; c=relaxed/simple;
+	bh=+5c0VEkCDydqP+dJvv5yWg3lhMM2EDfhOnBOrhDfWlw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uWjmUGQIJnECEEzQdWDXY1x20y1O1y3NBKJxlKjlWjCTZ0Zco10sk8rS64IzML1tca275A8zHtJkXAMwJ+IOEMbw1RDRfQYrbZJ1rH2LDmN2ZwEvj9YydwNV9dC0ltBx2z/2Gk+b9SA6t2x4ZxPGR/qChzeFdlmuXMvbqZJJDjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XAnc3jSe; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPa07mHV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABDB5C4CEEA;
-	Sun, 25 May 2025 04:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748148942;
-	bh=bWw6f1oPVGszDiKHtYyvEIzbYdNJsCK4FK7ugxSRdS0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oPa07mHVn+W/bK57GWXsNpWjBZGxRWs4pJYLeXBiBaWmDWOYIiN0qM7KWnImn1lVc
-	 T9Jw4t+7Mci12ZoQvQgv+wIHBksqyQId2xZQFXjg8wbIOR/pRoQTsHQ7iRh+I2z8yf
-	 H8GEGqtwkRF66y5gBOgXqttPcULKwgUAzp4hkAW9YD80vMfWZE5wjPXP/ufwre9i9q
-	 k3ybE0GCpZskmZSAnTmW4HPGUPtex47VOI6eg/+DfRryNqa87VqlkFQSXUQKwSzvAk
-	 hXzHtMH/b6QZYFC4M3nD6fEb2PlML7AkoofNcvEbXDopEMPTbMUVIfhJHdZPsh5olW
-	 y0BI/cqJ/giqw==
-Message-ID: <1e18c066-dc4c-4f54-a784-8edbfdd7b5d0@kernel.org>
-Date: Sun, 25 May 2025 06:55:36 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XAnc3jSe"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441c0d42233so650975e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 22:16:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748150211; x=1748755011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=msz6xS+TXEWf8BCe56XVsqhhuQHPDAmqJV6W3BuHJYo=;
+        b=XAnc3jSe2MjqDm4pxwwzZaoEBZxjIT3T/TqwBWEQ+m4KfalEGrf191VqSoRABGCV4M
+         BUocT2zybtzrZSfieZgH9r/pHGoTle2Yym9mdvKf95GLV37Pg4RszeRflrJDTSzPQtIh
+         R1Sh5FXnNvV/LJm/cN+qyVEoUlxqW3ZTxTZ4aVLNfO6BlhGIRX+g0qENpY1gxHG3W73l
+         guvvXNS4ksJTXUjBWaABXQJdQ80X/B7WkeyscVWBNu2ggE3qnQCF1TSdy/lQl11+xvGD
+         lTqvNaO58EQnbNiWv3zA5GpjblaLmX6/5j2wZTThV9CfqPQ5s2E4vmyTZGLrEiGOMNhM
+         kXkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748150211; x=1748755011;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=msz6xS+TXEWf8BCe56XVsqhhuQHPDAmqJV6W3BuHJYo=;
+        b=gQL17POFw+ILEy8tNlzR9hg5EZNwWlbHZDkiPuCzKNPtkav4nXID2qIASS2Wgk88Q0
+         zQx5d+mmYAtXTOVNDz171HFjn4Kt/V+I82WN6NOCk6BO0zkMk09Ih8y8oHnOpRBiQxvo
+         FSqM4q4doz7yL8x2qouOJ2M6U9lX5T/4hP4mu+4yYBQT0HUd2iTkf6xnR208U+F26Z3s
+         Ev/dqSZvYepFwa1Cr7cvptqAcQAG8wPovrj+G1coqxozxmJDjCMz+7m9ZiNf6pDBAP5R
+         ShwQFm+TZkUCVhnMAmucZD+gf7/n1VYAs8BtiTg4WmKvrBa7Hda2/LN5tSraPJbYFSbk
+         y8XA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLDdm5sIWe5upMwYC6NVAtzecJlkr+vdbglvq0zV+b6dO1rjzXRbRx1vMixss5lu2Ga+DrlX5iUHJTkp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqMQcKxer+ftOWroaMyNNJUwLJ/YsoQD1VOIvbffnzpTRyHsU+
+	CQTk71nUzx/xsy1TlgS0Xp8/NmDJH/L5FAS74TcPX/At5JxD3BUr5Gs9yVI6dMp33u8=
+X-Gm-Gg: ASbGncucBSMsmCgK3nxR4XeDk060p2i6GdFPhSoSBLNrq7Mbr44c8S24gMBo7TFF7/N
+	Xp3xseA9olGJF9p0z4BbMYaGZlnthHAWLXZjrlmD9SxlBLBre4t0zzAa5Ob061S/l/qqFCkQQXm
+	dVzzkbBaAys8GGtrjiT69Jw/lSNEhXa2GrW7C9uB064iLrZ6FOXhxyc9HUuBfaszeNd+rNPfv62
+	xmLaiwknVINnVvrXmOsjp5WFkSrBym2lNZ7IyLQ+wzZIp260Q1WVeS+oJjecQ+AQZPGtTt+I4nM
+	ERzoTLDb2l7vGco+j7cO0pEJvwWHS8wrKyDGVRvPGha85BKRoRDrhF4zGdTjUg==
+X-Google-Smtp-Source: AGHT+IF/jwowPMNweDb/B2JPyAKFGWGQxdc3mLIKIM4NNW5whKHA8bo7N+3jJruEbrSaU/3hrj+bdA==
+X-Received: by 2002:a05:6000:40e0:b0:3a3:62e1:a7dc with SMTP id ffacd0b85a97d-3a4cb434a24mr1333037f8f.1.1748150210738;
+        Sat, 24 May 2025 22:16:50 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d67795eesm372940f8f.86.2025.05.24.22.16.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 22:16:49 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] media: dt-bindings: mediatek: Constrain iommus
+Date: Sun, 25 May 2025 07:16:40 +0200
+Message-ID: <20250525051639.68753-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/10] dt-bindings: media: Add MT8188 ImgSys's LARB
-To: Olivia Wen <olivia.wen@mediatek.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com, teddy.chen@mediatek.com,
- yunkec@chromium.org
-References: <20250524115144.3832748-1-olivia.wen@mediatek.com>
- <20250524115144.3832748-3-olivia.wen@mediatek.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250524115144.3832748-3-olivia.wen@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3619; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=+5c0VEkCDydqP+dJvv5yWg3lhMM2EDfhOnBOrhDfWlw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoMqe34zQlzL+mH8sYednrPzCB+DkOTefFX/gsg
+ CPcqSp2phOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDKntwAKCRDBN2bmhouD
+ 1+d+D/wO4XWtaSL5Qb2EZcmthSwwShwp2UkTqt4aV2OtyA/7xavezOOZEsI64ORhN+e6aSKIJjt
+ 8aV5tclmOA+GGI92SpVK3nLJUWcuV1gn87alc+VfrGqU8UfrsDB/lMef5fNZIaqIHJhW3uXoEyK
+ jjSdxY2nwJS4tofa8kjxqmuAkmjv/wZasaEbDfw2YiTLu2wWCjmlmO3OsYM9z6KA3j8q1dnW7Dw
+ e7tf64cBf5FP0xdNNxBNNWpqggwSqwryvr+6Vxp7GefHghXl/luFwh/31n4jhV5twJXdFX4w6O5
+ BIFyepFm4VuMoDeHOXqQsnhUGEob2rU1GSpDzRHtodioeou+G1qQu6RZcRaXILpSMPMY8XTjKfd
+ jVQA/q0nNLYctkBfycPA5OiavcADRTUJ5I6a7zUY+7nf689HDwiBzyF9DV6N9djU0jug4Qe37Le
+ zzRBlrazoQT2FuQJY9YZiJWwXCG6lv83lYsMSkgHyL98/yTXdy0aHZl08HjdyICYGaHFJ4VnrOy
+ 0TsfjR0sbuBvtGme9HmCnlehtrp2kRR/gvMEGGAjNWaFb1ANYblR/W0BGN9CsWyiSQoW0Hzq30n
+ kxEL8vcOovz7A3QtUcXlvRmkvPf56Mua848yvHoIncqJFWv3t+Ls/bLbqjXzxoH940UIYc7UC1F +hPx0ET/ieWU3Gw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On 24/05/2025 13:49, Olivia Wen wrote:
-> This patch adds support for the MT8188 Image System's Local Arbiter
-> (LARB) in the device tree bindings. The LARB is a crucial component in
-> MediaTek's ImgSys architecture, responsible for managing memory access
-> and arbitration between various hardware modules.
-> 
-> Signed-off-by: Olivia Wen <olivia.wen@mediatek.com>
-> ---
->  .../bindings/media/mediatek,imgsys-larbs.yaml | 75 +++++++++++++++++++
+Lists should have fixed constraints, because binding must be specific in
+respect to hardware.  Add missing constraints to number of iommus in
+Mediatek media devices.
 
-Your patchset wasn't tested, so I won't do full review. Be sure you test
-it prior sending. Few nits below:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/display/mediatek/mediatek,ovl-2l.yaml           | 5 ++---
+ .../devicetree/bindings/display/mediatek/mediatek,ovl.yaml   | 5 ++---
+ .../devicetree/bindings/display/mediatek/mediatek,rdma.yaml  | 4 +---
+ .../devicetree/bindings/display/mediatek/mediatek,wdma.yaml  | 4 +---
+ 4 files changed, 6 insertions(+), 12 deletions(-)
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
+index bacdfe7d08a6..ac0d924a451b 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl-2l.yaml
+@@ -45,9 +45,8 @@ properties:
+       - description: OVL-2L Clock
+ 
+   iommus:
+-    description:
+-      This property should point to the respective IOMMU block with master port as argument,
+-      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
++    minItems: 1
++    maxItems: 2
+ 
+   mediatek,gce-client-reg:
+     description: The register of client driver can be configured by gce with
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
+index 4f110635afb6..c0fd0a91c4d8 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,ovl.yaml
+@@ -65,9 +65,8 @@ properties:
+       - description: OVL Clock
+ 
+   iommus:
+-    description:
+-      This property should point to the respective IOMMU block with master port as argument,
+-      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
++    minItems: 1
++    maxItems: 2
+ 
+   mediatek,gce-client-reg:
+     description: The register of client driver can be configured by gce with
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
+index 878f676b581f..7e5234def39a 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,rdma.yaml
+@@ -64,9 +64,7 @@ properties:
+       - description: RDMA Clock
+ 
+   iommus:
+-    description:
+-      This property should point to the respective IOMMU block with master port as argument,
+-      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
++    maxItems: 1
+ 
+   mediatek,rdma-fifo-size:
+     description:
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml
+index a3a2b71a4523..276868c0fde7 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,wdma.yaml
+@@ -43,9 +43,7 @@ properties:
+       - description: WDMA Clock
+ 
+   iommus:
+-    description:
+-      This property should point to the respective IOMMU block with master port as argument,
+-      see Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
++    maxItems: 1
+ 
+   mediatek,gce-client-reg:
+     description: The register of client driver can be configured by gce with
+-- 
+2.45.2
 
-
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml b/Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
-> new file mode 100644
-> index 000000000000..d2966c64ddb6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek,imgsys-larbs.yaml
-
-Filename equal to compatible.
-
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/mediatek,imgsys-larbs.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LARB Information for MediaTek Camera Image System Hardware
-> +
-> +maintainers:
-> +  - Olivia Wen <olivia.wen@mediatek.com>
-> +
-> +description:
-> +  Detailed configuration for MediaTek Camera Image System's Local Arbiter
-> +  (LARB) hardware integration.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt8188-imgsys-larbs
-> +
-> +  iommus:
-> +    minItems: 1
-> +    maxItems: 30
-
-This cannot be flexible. List the items, unless it is somehow obvious.
-
-
-> +
-> +  '#address-cells':
-> +    const: 2
-> +
-> +  '#size-cells':
-> +    const: 2
-
-These are useless.
-
-> +
-> +required:
-> +  - compatible
-> +  - iommus
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/memory/mediatek,mt8188-memory-port.h>
-> +
-> +    imgsys-l11b {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-> +        compatible = "mediatek,mt8188-imgsys-larb";
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-
-Why?
-
-> +        iommus = <&vpp_iommu M4U_PORT_L11B_WPE_RDMA_0>,
-> +             <&vpp_iommu M4U_PORT_L11B_WPE_RDMA_1>,
-
-Fix alignment.
-
-
-
-Best regards,
-Krzysztof
