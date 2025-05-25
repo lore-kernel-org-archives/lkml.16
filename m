@@ -1,158 +1,133 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A7223D29F
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7092AF0E;
+	Sun, 25 May 2025 17:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748195099; cv=none; b=p2haXwLA+ySWbEHKzlnS4P7QB36NTGJUYfhratI3fWVo+TMoIYxzFtqrUKt7kCstGaMeQULopCbNDOkUxflIzUTwuyq6hN+gT0fqJA/bSq3edGgQbH8no+72WXoFQxabFPYzwCjmDYPDtJOJIYT1O2dRYvAmEL5HILr9nZdm10M=
+	t=1748195282; cv=none; b=L1vvZe6xGf9zlglzI1bsOk0aP58tvJ1Y5R3zJwj3sUgV9uQdNYS9QiHVj9zPPxOKzlmzLOByOMG5V8r5kgmoateRm8qgBH+YTauS9HYZGBt8s1LDuLQ1fOt6hOGgc4uMz/RT2c+pr/CwGPOVFP+ZaGw2cCh6KAQU6gDRAYZU23g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748195099; c=relaxed/simple;
-	bh=nWsLzmIJWGS1Xl7vBXPSHkgM/qkaZf1/zzniqjOnEvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ToeouRRQ+4btDv5d7IXsfcANkkb1SjCsBWVRqrZ8vY3y887DSwk2lFsXh22RqIoPM26s5yarfIxphH+2st1GJF6WNA0cjOGfCCgNYvSHSRQGGyydziOWpAFPMR+EBfuCXbkG4umHRHmT1u2rcstikqv02XBzBFdt25Vzx0x9Zc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FcYx/Clo; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748195282; c=relaxed/simple;
+	bh=JcHqCmsSFPDcJJiAaYbKb37QS/ul6o9rxhbcf1SM+lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jJgMB+YrkQ93wXpC4ySRlFkx+3SK647kKIBtCROHzcgQUHGRpb6PQjfvPcAqb6xJKyrVx3o2/WDiKoWVp5KOCMVuSxlRWoTsd0lTkZQuuWxgkWe3fZ6so/FqyAEV/bK3oHpHMbjqNYCXDjeDlRCNY6kgNVeeo4+gdx6aua28smo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SanOulDg; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FcYx/Clo"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-231ba6da557so208285ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 10:44:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SanOulDg"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-440685d6afcso19882785e9.0;
+        Sun, 25 May 2025 10:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748195098; x=1748799898; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1748195279; x=1748800079; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IANK8/D/9AjR/6N4kd6bQcHsSXv8BeLUuMW3H+pxVUU=;
-        b=FcYx/CloyIEzXZXfRgC77VArpVM5dlMhgstq9qWZd8+2u8EnLckbqIuHVHhVTMf/MP
-         Vqjea4u5TLnq9u0Y0Y5cE6NJizVSpXKVJ2k4/rJQbdCZljIdrqijqShZTJ6ct53+UAnd
-         fmDkcZ02Q4EDhVKRgmWK93B/TyiRYBwPJWjCUgMtfd3J4TbGahG0b9nJ+W9LnWSrFWp6
-         eCEeqMTw6quZ8Iit/E7qcjMYJMqoG0FT9tFt3K1uNGuWvdW5OXKcuxM/lzlce7z9NXEu
-         ttDqz9mAljNt8qtsoPTojLcbhmbWaha8xdpyOtn9XCFt1CHx7Swpa9dPySPktwwFRsvk
-         jMpg==
+        bh=wQ0Oi+AEZGLioKq4Pf1ZIIAp9uKpwWAvvG0QNpbXWLg=;
+        b=SanOulDgCrzCr7qp2Ypay/jyZf5vzotzW6p/erDGbHUrFwIuowZopQVNKEC33QBYlj
+         Rzh7fPj+tr81m6HDNzbi41wKebWHp2YXcPbmyLzPt7VFsAfenqjAuNCB9xXRPFHxhWyE
+         IKCBBiTDURUbbq+USlGsMdstJKsIcEcjbEQ8wgfkmHW5AwTdUdccFFkxkcS0xNtbw8TO
+         TaSG00uggWODhSA17Qdc6il7CRjAHW7e2+18tVXWQR+Qwo+q9vm3AO0GnIPZkeyPp/Cc
+         Jnzx5by1E9K6/GiwoF2Np/jeFH3TSdyt2kENqqu+WvGw4Egn+YiW8iLhYgm9VNahA8g5
+         O2PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748195098; x=1748799898;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748195279; x=1748800079;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IANK8/D/9AjR/6N4kd6bQcHsSXv8BeLUuMW3H+pxVUU=;
-        b=dWfiIh65+PLr3s6+nV48e3CV0g87LNv6qMNzReJ0QaC7+zP/nGJLaytVbcC5V2iqJI
-         GZ0XUpFyXvVY7bbLyjWrDv44mhtsJ62fnYc4YtWJKtY85RQcVoZppNnflm4kvnz1ZCYv
-         dit6Uz0wvqhgl1S0uzwmhEoBvOmuiD8+tKXyvjsldzQPjTUQ2c2iXopGztcgvgMU9F37
-         WuyXWYAOxtaHDIgreBOBCKCPvtKnlnMDEK3nvbV5QTSK+SHtuApwTSliVXg6eDFHWUpw
-         E+uYdbahH5lEz2UvirS0fdiWeYTfwGKvjq+usRanuTHkDe+ZwG+/ImOr0ZbXK4e4ZxPO
-         bC+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUwLo0evAc3YZOIBKOtXbX9FIaHQ8Z15DsipdK4QEIg2ebLeZimqcrtb5yHsDiFEQIyQHN1QKtFLNeD/2c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1wehGaoZNOo/r+8e9iZ5Rzi30HhiQvrlny06XsJ7KMj8O4E7M
-	AHg9BWoaBleyz1+Nm1NRgCzqKBgC3mtXa+KiNUs7vnMHIFsM11XgqsOj2WWWRlpBgHCQjTa8Utx
-	m1vZgHmSw1HJmg+og/n26ieqspKgvDSbVURefzE7+
-X-Gm-Gg: ASbGnctWeUcL1Pm3lz8siZH/GccnBKf4IA/qqBMZopTeWAFbhw0EJnO0502s6iQ3op/
-	LGRst4D12kVlYg25swBvIwrwhSOv9q/dJPb2aAl3XdlkondW7SK+MEZ7xEaIB0NuR51L6WlLr0I
-	UZ4NVwN0uwbAwqx9F2KGSwqR308tRwK+13D3qoWtA4nWJM
-X-Google-Smtp-Source: AGHT+IGz7qYD3MLOkzKDUyyKjvvaPiJliOPXfnWKADod9dQ7d/qlG43TQQsvx5FNMeaXBQeuBvwVCG+Tbr8M3sTA7m0=
-X-Received: by 2002:a17:902:d2c9:b0:216:4d90:47af with SMTP id
- d9443c01a7336-2341b559cb1mr1954595ad.29.1748195097126; Sun, 25 May 2025
- 10:44:57 -0700 (PDT)
+        bh=wQ0Oi+AEZGLioKq4Pf1ZIIAp9uKpwWAvvG0QNpbXWLg=;
+        b=mdn45wP+z3UDC5QxefZaMYMGgVQTEIZZTp29d1ceT5Trp64v65GiN4TuPHlo/+7jfy
+         3Hq9nIGhCkKhNT2pxVEytFVnEcRE/+PHSKmYpwyicibc3/7BvtJ0EiJAkYH2okHJRLuW
+         9V63LzwKuh6fsayWc413ebqRZf/pLdIdHq1z0oXO9+zTU22UrRnTek5OIlOUHf8afY43
+         VTEs/Qtt1S/v4iVpKwfB5zGPytKhcNcYS++NQVUrSq0WspRmNAZBYJAR4AFymXMA2yf7
+         IpHGZ9XKUsLw96IgjrfFn2uIRn5turRONbQMaVjq/gSdSCqM8SS18PSon3WPWb2m3cnG
+         Nn0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUGlCkFKKz+G5bnKP7vg9OfOjtMtRkKD87o4qaNAvvLYa0A3OZCj1oYZ2wd1JuaXALFTizAUXyyapWN6k0=@vger.kernel.org, AJvYcCUfW8+4O6i6p49thYnQ7EqX0+M0h5a5rcrrFW5kQ7XKb7x6q8mGE1w/uaSNlrENuYPmi5yTHRo4IFUNWm4j@vger.kernel.org
+X-Gm-Message-State: AOJu0YznwlCWh4kteawI2ghpKt/zP0i3L7rgnV7OVqHruZ8xG1CvUPOr
+	iNbkG+YiRsa3RgT2Qo4h2xOS365+IIkwji7hgySHJM2TLSX9UgGlkYlj
+X-Gm-Gg: ASbGncuJOFLwINptG+NYEke7ewDYQpYjBTQrKxnn7aCxeVcsPPPPGVYSCnwV+064c2D
+	06uWhoApOSNhYL7WaHZmFBJ+sHCiadvU5USAk/IwAnY7fZA4dMHZQTh4Q9KbOKvjIfw4PUDa/YJ
+	Bx6KXqdeqypAR2lz2y3QMiTPFfbHirQnfz8VARK3/+33NaX8G9h1vFe+UpJ3Uoy3xIQsehGDHjO
+	Atg6KiEItLd+3q2WKxmxmpANkFMY4Pd4rYZCmKToT7TkjObpkdV7q9Y3tlQv7l1zOjoEuT42NhP
+	ftaRYq8H/R+zBla6DOZGH+gZfu8i4FEtZyfq7eqHBfnOsZpPnODLyMqtwqRBekRaapX3Gfs92hA
+	wxF+hevjszUbUvxW3mwcwspT3
+X-Google-Smtp-Source: AGHT+IGMx9RwnjN3gFTwm6NsJ1bSuN/SbYAqvI26NGXWUD2ifOyK8sgp8xRzjOdZXEkYm0U7HSgMUQ==
+X-Received: by 2002:a05:600c:3b8a:b0:442:f485:6fa4 with SMTP id 5b1f17b1804b1-44c95aad94fmr57860655e9.31.1748195278969;
+        Sun, 25 May 2025 10:47:58 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cce08411sm5300031f8f.51.2025.05.25.10.47.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 10:47:58 -0700 (PDT)
+Date: Sun, 25 May 2025 18:47:57 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Arnd Bergmann <arnd@arndb.de>, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, linux-bcache@vger.kernel.org, open list
+ <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Linux
+ Regressions <regressions@lists.linux.dev>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
+ larger than 2048 bytes [-Werror=frame-larger-than=]
+Message-ID: <20250525184757.23c5e5d2@pumpkin>
+In-Reply-To: <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
+References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
+	<6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
+	<CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
+	<6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
+	<7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
+	<566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
+	<hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
+	<692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
+	<20250525181842.2e2c47fd@pumpkin>
+	<zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
- <1747950086-1246773-3-git-send-email-tariqt@nvidia.com> <CAHS8izOUs-CEAzuBrE9rz_X5XHqJmWfrar8VtzrFJrS9=8zQLw@mail.gmail.com>
- <c677zoajklqi3dg7wtnyw65licssvxxt3lmz5hvzfw3sm6w32g@pfd2ynqjkyov>
-In-Reply-To: <c677zoajklqi3dg7wtnyw65licssvxxt3lmz5hvzfw3sm6w32g@pfd2ynqjkyov>
-From: Mina Almasry <almasrymina@google.com>
-Date: Sun, 25 May 2025 10:44:43 -0700
-X-Gm-Features: AX0GCFtdXkYKEpP6898csQCklxhoo91C4IqEXyK-lWaxbO_kBhPkxPiVpqQr_ws
-Message-ID: <CAHS8izMM9Hgk12zhoc+ify1MBwepqByHKC3k1gB5daH=ancgqA@mail.gmail.com>
-Subject: Re: [PATCH net-next V2 02/11] net: Add skb_can_coalesce for netmem
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, 
-	Leon Romanovsky <leon@kernel.org>, Richard Cochran <richardcochran@gmail.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, 
-	Cosmin Ratiu <cratiu@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 25, 2025 at 6:04=E2=80=AFAM Dragos Tatulea <dtatulea@nvidia.com=
-> wrote:
->
-> On Thu, May 22, 2025 at 04:09:35PM -0700, Mina Almasry wrote:
-> > On Thu, May 22, 2025 at 2:43=E2=80=AFPM Tariq Toukan <tariqt@nvidia.com=
-> wrote:
-> > >
-> > > From: Dragos Tatulea <dtatulea@nvidia.com>
-> > >
-> > > Allow drivers that have moved over to netmem to do fragment coalescin=
-g.
-> > >
-> > > Signed-off-by: Dragos Tatulea <dtatulea@nvidia.com>
-> > > Signed-off-by: Cosmin Ratiu <cratiu@nvidia.com>
-> > > Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> > > ---
-> > >  include/linux/skbuff.h | 12 ++++++++++++
-> > >  1 file changed, 12 insertions(+)
-> > >
-> > > diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> > > index 5520524c93bf..e8e2860183b4 100644
-> > > --- a/include/linux/skbuff.h
-> > > +++ b/include/linux/skbuff.h
-> > > @@ -3887,6 +3887,18 @@ static inline bool skb_can_coalesce(struct sk_=
-buff *skb, int i,
-> > >         return false;
-> > >  }
-> > >
-> > > +static inline bool skb_can_coalesce_netmem(struct sk_buff *skb, int =
-i,
-> > > +                                          const netmem_ref netmem, i=
-nt off)
-> > > +{
-> > > +       if (i) {
-> > > +               const skb_frag_t *frag =3D &skb_shinfo(skb)->frags[i =
-- 1];
-> > > +
-> > > +               return netmem =3D=3D skb_frag_netmem(frag) &&
-> > > +                      off =3D=3D skb_frag_off(frag) + skb_frag_size(=
-frag);
-> > > +       }
-> > > +       return false;
-> > > +}
-> > > +
-> >
-> > Can we limit the code duplication by changing skb_can_coalesce to call
-> > skb_can_coalesce_netmem? Or is that too bad for perf?
-> >
-> > static inline bool skb_can_coalesce(struct sk_buff *skb, int i, const
-> > struct page *page, int off) {
-> >     skb_can_coalesce_netmem(skb, i, page_to_netmem(page), off);
-> > }
-> >
-> > It's always safe to cast a page to netmem.
-> >
-> I think it makes sense and I don't see an issue with perf as everything
-> stays inline and the cast should be free.
->
-> As netmems are used only for rx and skb_zcopy() seems to be used
-> only for tx (IIUC), maybe it makes sense to keep the skb_zcopy() check
-> within skb_can_coalesce(). Like below. Any thoughts?
->
+On Sun, 25 May 2025 13:36:16 -0400
+Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-[net|dev]mems can now be in the TX path too:
-https://lore.kernel.org/netdev/20250508004830.4100853-1-almasrymina@google.=
-com/
+> +cc Steve
+...
+> > I've a cunning plan to do a proper static analysis of stack usage.
+> > It is a 'simple' matter of getting objtool to output all calls with
+> > the stack offset.
+> > Indirect calls need the function hashes from fine-ibt, but also need
+> > clang to support 'hash seeds' to disambiguate all the void (*)(void *)
+> > functions.
+> > That'll first barf at all recursion, and then, I expect, show a massive
+> > stack use inside snprintf() in some error path.  
+> 
+> I suspect recursion will make the results you get with that approach
+> useless.
 
-And even without explicit TX support, IIUC from Kuba RX packets can
-always be looped back to the TX path via forwarding or tc and what
-not. So let's leave the skb_zcopy check in the common path for now
-unless we're sure the move is safe.
+Recursion is an issue, but the kernel really doesn't support recursion.
+So you actually want to know the possible recursion loops anyway.
+I suspect (hope) most will be the 'recurses only once' type.
+If not they need some other bound.
 
---=20
-Thanks,
-Mina
+> We already have "trace max stack", but that only checks at process exit,
+> so it doesn't tell you much.
+> 
+> We could do better with tracing - just inject a trampoline that checks
+> the current stack usage against the maximum stack usage we've seen, and
+> emits a trace event with a stack trace if it's greater.
+
+Both those only tells you the stack you've used.
+The static analysis will show you the stack 'you might use'.
+Which is really much more important.
+
+I did this for an embedded system a long time ago.
+The outcome was that we didn't have enough memory to allocate the
+'worst case' stacks!
+
+	David
+
+
