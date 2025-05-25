@@ -1,100 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5181DED42;
-	Sun, 25 May 2025 11:26:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC2F7260D;
+	Sun, 25 May 2025 11:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748172416; cv=none; b=TEKwY6sY/un61ZPAZcgSLLQqv9L1WSRbH42dm+HWtz/Z1zf6kuMQzKP4EVlNJD8arAz6yz83bh7+6dzZ6wJsq4PcLBjz0BQR/PiMxMDUfwIGK4p+5Y+738UHOhRp+tFDzEMazups54Fhc89LsteBQOn6D6+uNo76nlT3D4mZ9Ck=
+	t=1748172518; cv=none; b=D6QzgUtEZyDOu8UxBgGjSU2bxqA0OjzZzBokBTBjkmwWjXmvEIr2iFjVjTZi+vJdvg6yCN3X0WnCe2rMk1UDTYoZw9QDHQorf48eXCFe9+CdcsWRCb5wh0+SEGDGiOEF7FdU9tS5+hORdYCnvI0ulimDUQseZ35SO+I0M/moPLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748172416; c=relaxed/simple;
-	bh=WcIHmZvlNdDhgDSlCzv1i0xcANKdKA3YFU7kHFc5euQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sf7AJyU98ywRNTgqpO1/qI1gkX+YZ/fin61+rhTysCEor/p4kWldb/sfEjzugNW1V2zAa5E/ixubNLTrh/6cZoJOKXMavp+xuyeh9ERHhzTQMG98KptNunv5qo1naYJxLW29uBq+bF7dgXM+0XMZc02krwzQpqY8QFt49YnvkwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkbUWayD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748172518; c=relaxed/simple;
+	bh=UYLwjzdv9Qt8WxVwZ4A/+Ogo3UVfgh3pwQ1MTY19UEo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kGRpDuag4D1XWOtWQ+L1vdOaHv1n5rPwAcRmHykipGJvflJORGarz6avOtkjZ0jOGEY9zh225K+NAAAZY4NjPLyfnSQSOrYz4mEeAuOvOOKvlmpibvwzUm9PolBDMEeKhVYHGwP3BnzPN8I+skHdSRcNPoT1AsPi8bbmjsMyeQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmTI0sx7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkbUWayD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA459C4CEEA;
-	Sun, 25 May 2025 11:26:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmTI0sx7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB20CC4CEEA;
+	Sun, 25 May 2025 11:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748172416;
-	bh=WcIHmZvlNdDhgDSlCzv1i0xcANKdKA3YFU7kHFc5euQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bkbUWayD4NAlJm1+XnBXjkFHYi051BYt3+nVLMZPCg2/cG3sYyhV2gEIDElQaidjW
-	 +SwVOSq9JYqmJ5jFrOaC8FHaHKtxXxbUL4w37hakibw3/dDYZiOeqHX7wpaegX17rF
-	 OjewbOQG27qFAgQUNujNTd6ZvYml4K3JcaWVEiNa4HOMXN+6U9wrFBO7qf1PG4zIdx
-	 q6LDvi7RQjC09WEuLfjOvjPcuWQWTioI2MAVYeNO1eXem1jJLx2uEBGX5Jbn3YEMLU
-	 +iD7RKR8L0/sRGe1KaTxh5tKqNAxBHjSnuqEHRPcqHIWlKljD2o/maKhxyw8c8dkiI
-	 p6t/gB2T2Hkcg==
-Date: Sun, 25 May 2025 12:26:48 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Lothar Rubusch <l.rubusch@gmail.com>, dlechner@baylibre.com,
- nuno.sa@analog.com, corbet@lwn.net, lucas.p.stankus@gmail.com,
- lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 06/12] iio: accel: adxl313: prepare interrupt
- handling
-Message-ID: <20250525122648.38428bc2@jic23-huawei>
-In-Reply-To: <aCzcskqKEXpM2jui@smile.fi.intel.com>
-References: <CAFXKEHYe_LBV=95Rm75UXF97oUU5CTYzDdwXJZ=cr+4fGOf80g@mail.gmail.com>
-	<aCzcskqKEXpM2jui@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1748172518;
+	bh=UYLwjzdv9Qt8WxVwZ4A/+Ogo3UVfgh3pwQ1MTY19UEo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QmTI0sx7O+ZUd9rOd9pHw8+s0s+nUVlLOLC75ghhBJxTdEwHtoIKYa0EY24dwVRG3
+	 aatbGGSCDnNVR+SjNaJ9p8vhOSWr5UX/smiTIn6paqKaeX21zsyStkoWDqJAmclCNF
+	 qxr2fEdNa92p2wRQnIZzbHdQR+K494gKu6NH7Q0aRBVcXuHXBIlPat369QhJXUc5qy
+	 DDYoUQeRpuNl8/GQMxmIp2FnhSfzOY1La/MWSBRZ6tmGbEe2+ztCgKgYd2xyXsJ+JX
+	 bvotPjK9hfuomsNZfZxTm5ARt6eWXQLrLEP2xqDKeopO5iqhqa800I9h5pNJ/eXHGu
+	 J1UUGazc38Ihw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	llvm@lists.linux.dev
+Subject: [PATCH] kbuild: replace deprecated T option with --thin for $(AR)
+Date: Sun, 25 May 2025 20:28:31 +0900
+Message-ID: <20250525112833.3808220-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 20 May 2025 22:49:06 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+According to 'man ar':
 
-> On Tue, May 20, 2025 at 09:32:18PM +0200, Lothar Rubusch wrote:
-> > Hi Andy, I forgot to put my mail addresses as well. I copied your answer
-> > now from the mailing list archive. Hence, sorry for the bad formatting
-> > of this mail.
-> > 
-> > One question / remark down below.
-> >   
-> > > On Sun, May 18, 2025 at 11:13:15AM +0000, Lothar Rubusch wrote:  
-> > > > Evaluate the devicetree property for an optional interrupt line, and
-> > > > configure the interrupt mapping accordingly. When no interrupt line
-> > > > is defined in the devicetree, keep the FIFO in bypass mode as before.  
-> 
-> ...
-> 
-> > > > +        ret = regmap_write(data->regmap, ADXL313_REG_INT_MAP, regval);  
-> > >
-> > > Don't you want to use regmap_assign_bits() or something like this to have
-> > > the above ternary be included?  
-> > 
-> > Thank you so much. I guess this is a function I was looking for quite
-> > a while and I know several places where to use it.
-> > 
-> > Anyway, I saw, my hardware test setup still runs on an older kernel
-> > w/o regmap_assign_bits().  
-> 
-> You are going to upstream the driver, right? So, we don't care about old
-> kernels as there was no such code at all, and since it's not a fix for
-> backporting I see no impediments to use the modern APIs.
-> 
-> > So, I kindly liked to ask if you have any objections against leaving
-> > regmap_write() for now? Actually I'd prefer first to see the
-> > activity/inactivity stuff in, in case this will need some more
-> > modifications and I need to verify them on hardware. I think, leaving
-> > regmap_write() here would make that easier for this patch set. Please,
-> > let me know?  
-> 
-> Ask maintainers. I will not object if they agree on your justification.
-> 
-Hmm. Given the good progress you are making on this driver anyway I'll
-go with 'maybe' particularly if you add a final patch on top that
-updates the code to use nicer bits of regmap that have been introduced
-more recently.
+    T   Deprecated alias for --thin.  T is not recommended because in
+        many ar implementations T has a different meaning, as specified
+        by X/Open System Interface.
 
-Jonathan
+'man llvm-ar' also states:
 
+    T   Alias for --thin. In many ar implementations T has a different
+        meaning, as specified by X/Open System interface.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Makefile               | 6 +++---
+ scripts/Makefile.build | 2 +-
+ scripts/Makefile.lib   | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index efbc0966b82a..682a8002b7a1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1201,12 +1201,12 @@ ifdef CONFIG_TRIM_UNUSED_KSYMS
+ KBUILD_MODULES := 1
+ endif
+ 
+-# '$(AR) mPi' needs 'T' to workaround the bug of llvm-ar <= 14
++# '$(AR) mPi' needs --thin to workaround the bug of llvm-ar <= 14
+ quiet_cmd_ar_vmlinux.a = AR      $@
+       cmd_ar_vmlinux.a = \
+ 	rm -f $@; \
+-	$(AR) cDPrST $@ $(KBUILD_VMLINUX_OBJS); \
+-	$(AR) mPiT $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F -f $(srctree)/scripts/head-object-list.txt)
++	$(AR) cDPrS --thin $@ $(KBUILD_VMLINUX_OBJS); \
++	$(AR) mPi --thin $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F -f $(srctree)/scripts/head-object-list.txt)
+ 
+ targets += vmlinux.a
+ vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-object-list.txt FORCE
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 8d8252229895..284931f2a9a2 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -456,7 +456,7 @@ $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
+ quiet_cmd_ar_builtin = AR      $@
+       cmd_ar_builtin = rm -f $@; \
+ 	$(if $(real-prereqs), printf "$(obj)/%s " $(patsubst $(obj)/%,%,$(real-prereqs)) | xargs) \
+-	$(AR) cDPrST $@
++	$(AR) cDPrS --thin $@
+ 
+ $(obj)/built-in.a: $(real-obj-y) FORCE
+ 	$(call if_changed,ar_builtin)
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index d858a3223bcd..e37e2db5f528 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -280,7 +280,7 @@ quiet_cmd_ld = LD      $@
+ # ---------------------------------------------------------------------------
+ 
+ quiet_cmd_ar = AR      $@
+-      cmd_ar = rm -f $@; $(AR) cDPrsT $@ $(real-prereqs)
++      cmd_ar = rm -f $@; $(AR) cDPrs --thin $@ $(real-prereqs)
+ 
+ # Objcopy
+ # ---------------------------------------------------------------------------
+-- 
+2.43.0
 
