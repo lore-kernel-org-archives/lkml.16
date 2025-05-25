@@ -1,163 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F112C181;
-	Sun, 25 May 2025 02:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F87972610
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 02:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748141169; cv=none; b=DKJIJIrCUeTheq2q6uD4zZJKU/gKQK1WV1cmmBZGM0VF7f3KX1FjsQdBmrI+MfCd0+0CJkNpxdyqRdlnoGa8tmK+1UeLb/064oBkx/SswuzGGBF5A4qi8mALBC8/bqrtij09CSpEhDgSadOWammS8O9Ku32RTHW4fP/eoyDgHf0=
+	t=1748141306; cv=none; b=J36aMQ8ui/QsSHPLA2SytrlqY4QQv8S9wGScxM6kxYMxQ8AJorWGjKIC85GYl2eRzgkofGovzb1LSmFj/BRSmEN2+lgeFL3OqGB3USgC35BMYMdwyihnVmS9TOP5roFlOLq5vsKI9ttRgJYyvQpmr4C1l6ca9YKEKE7psTmRwFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748141169; c=relaxed/simple;
-	bh=OxlWYued1qwgYdzX737Wr2KjNkSsaqCH+6uEdTlEtzA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GYgoVIssFUIHDrVccNElQzpwwSHpk0NUUMxGYVq2kjBUEXxGG4poyMuB70sriq3H5C3ECieSyRgKErUQeeBtq4QzcZYYZ+b/p6ZEObse5K95jPwaMONxnCIuay9+wfV48aTuR6VXyEBBaacdrpbwi4AwQPSshl0uv2bDMc5Mcus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D/u7UQ0L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748141306; c=relaxed/simple;
+	bh=pWTqB9al9MLBk/zKau+VF7mb/iqHgOdoI6eDiMU93vw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BopQqEBv3iJ6WZPXuvfYKaWmgL1BQpfkT0uhOMr7sTL5ZfnqKvZTCwgdnPydIlXN0SXhThP7y+oRixORntz2GhtBQo4/BZQfLa/63/SkXP6Nx3pz7++tZz4PjusTR0ky6PSswYQUqfZD0J3ICBxZD47Y6SL77Rg9MZkptv9R76c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NCnIOXLh; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D/u7UQ0L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6046C4CEE4;
-	Sun, 25 May 2025 02:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748141168;
-	bh=OxlWYued1qwgYdzX737Wr2KjNkSsaqCH+6uEdTlEtzA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=D/u7UQ0Lntycg+UCM4HEKiuCxHqOvjlFkLgOowzVYZvTUCTx+vs5zNU/euoLbJJV3
-	 LkhFgCnLWOpoY0bNHl0h4hanFAH8vCiYaA0pN4XZcQsNaaJSlMo5yJQNjrr7D2LIJP
-	 4RvFVFeKIpirfaxK2gOUeNwfphLj+p2ywlqppyFZNyznWQsUyKcD+uyekPmkx3CUp/
-	 mbk/fIqWLUl4cnH6aI4ih48HJ5mc6ItKClVK+HAQ2N77PMo8xjvD6LIFHMusz30YHX
-	 l96g4PnQmDaxhVv5deREyUMPJpTs35WJq+pLqVK9npgOeR26l1+04AtzY/NvkXjmzx
-	 0Q9eK4SxT8gmQ==
-Message-ID: <68eeeb84-5df1-4647-b247-6fdf87658c5a@kernel.org>
-Date: Sat, 24 May 2025 19:46:06 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCnIOXLh"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e7b9972069dso827494276.3
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 19:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748141303; x=1748746103; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J5H8miVdrreeo2R5rwgILx0vbH1/jlB+6nndREjSBVQ=;
+        b=NCnIOXLhtwW9wHTfQM2XoYhAi0ubHQUezgf9F4ky17qWkxjT88oqj4AiAhakVviZhq
+         aE3evIThQ31Ctbx8zUJ6jJEzrpxNbv973IvaK8aNlmxRV5skrQhNrBEqabI07xoSFWAB
+         YL5ptnD7i/ZBgi3A1x0bSfnOT752LYtes4eAoPbRsKTepK1qUZ6YNyT7gqxYB5KL7Fa9
+         z5nnh9f13so3Tt9XM5/K3qTzBUh9L0TaXjGpqs7RxKJBUE5677VdSK8fYXB0BPRTVBpK
+         1hZ2l7CzYiwLz/jAphME6GZJw78uhNEKHWlJ3xyeVFBOEFL4JQPE4kTJERKRdRPsDRjo
+         sSSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748141303; x=1748746103;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J5H8miVdrreeo2R5rwgILx0vbH1/jlB+6nndREjSBVQ=;
+        b=FonorLrJAa4W+oGx8wZKEtW3KEs90+nFbJliHs20ZQ8L6k3sv44mU6ISYY8Q3iXBkx
+         q9U/yuNOKWfnCWpGwYWEfB3Xn9QhVDXKpTjHJ3UTCSzxNEZusVZhw3NtdlOyodVauvWi
+         GqRKbf09qRzfqNr9gQ6HIGiPdKxDx8guRjAlLVvExqVzQUZVglWOBxQ4LJSzA6M//tb6
+         MV1mwwxmonGCzagbPBE+lTOunGPkhDMdNISpbCMONSheFr9qR+Jm/yL4ksF2ZYpIYrVE
+         TCD6fAA1zaZ7xBFgeJ/9hEgvuD7aQ9y3ibzbBg61/pd1PBQvuwCi975EiLSttHMmpk/b
+         tNhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmz59af3bQRPX4jKKNhwEwWGRPaiwlyXbFK+sEEydvHCf7wY14gh36w05c9r+jAgfXvyw7KOkm6Pj3wzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKz0riWynmvN3/pQrDYjXnK2Ugbjfopi5tO6l5rjBuUG310Vk8
+	0FYujj48vPAYpnJZj3F0AZWE5qz57cfU+XN2PKjAiDtbuUTUwCy9BYL9
+X-Gm-Gg: ASbGncuTE/hoXLyOYXI1ZEPuthVj4FtymlCDFAe2QpxMVWGVhNigt6AZ6DvqsbWYjtt
+	P82Vnwyx+zJi0IRFTYnW33YSuyP2dNApmf1dn5ADEun4Q++BY2XP32vdMiF2ReuErCQDhqg1fjp
+	mY81XYTvPfgjn56ahdT4Psaep1A3sSfA9+/kmOEHnroSM6JScl0mplx9FH5aODLK/Zm2jBQ3c9o
+	D+NR1NpY1eyNxa2c63EBouMarx1HKrmyNEeW3wMssJ6sctRqy5n48Ok1Sku+jKUxMhMQX1xqiZi
+	7hNxF32IkiG2ypgF65bDhWDAJDPy38vpLMzGDv2p12OIFR4GajE5rbiHq3QN3Ro5zVu7qHWhzdu
+	7x54=
+X-Google-Smtp-Source: AGHT+IGTYIpzzoB4R49eo/70y47qmccpJpO+y0657G/ZHOyDrLFSgO2Wihs19PpbwoGxGQMTdisH3g==
+X-Received: by 2002:a05:6902:330a:b0:e73:2da2:c300 with SMTP id 3f1490d57ef6-e7d91d84308mr3757453276.44.1748141302842;
+        Sat, 24 May 2025 19:48:22 -0700 (PDT)
+Received: from maquina-virtual-para-linux.. ([191.156.247.35])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7d696663ddsm2172687276.21.2025.05.24.19.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 May 2025 19:48:21 -0700 (PDT)
+From: Donny Turizo <donnyturizo13@gmail.com>
+To: gregkh@linuxfoundation.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Donny Turizo <donnyturizo13@gmail.com>
+Subject: [PATCH v3] staging: rtl8723bs: Fix camelCase to snake_case style in core files
+Date: Sun, 25 May 2025 02:48:14 +0000
+Message-ID: <20250525024814.4362-1-donnyturizo13@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: serial: Convert snps,arc-uart to DT
- schema
-To: "Rob Herring (Arm)" <robh@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Vineet Gupta <vgupta@kernel.org>
-Cc: Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250507154909.1602497-1-robh@kernel.org>
-From: Vineet Gupta <vgupta@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250507154909.1602497-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/7/25 08:49, Rob Herring (Arm) wrote:
-> Convert the Synopsys ARC UART binding to DT schema. Drop the "aliases"
-> portion which is not relevant to this schema.
->
-> Reviewed-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+This patch renames the functions _Read_MACREG and _Write_MACREG to
+_Read_macreg and _Write_macreg respectively, aligning them with the
+Linux kernel's naming convention of using snake_case for identifiers.
 
-Acked-by: Vineet Gupta <vgupta@kernel.org>
+These changes improve code readability and maintain consistency with
+the kernel coding style, particularly in the rtl8723bs staging driver.
 
-Thx,
--Vineet
+No functional changes introduced.
 
-> ---
-> v2:
->  - Fix $id path
-> ---
->  .../devicetree/bindings/serial/arc-uart.txt   | 25 ---------
->  .../bindings/serial/snps,arc-uart.yaml        | 51 +++++++++++++++++++
->  2 files changed, 51 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/arc-uart.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
->
-> diff --git a/Documentation/devicetree/bindings/serial/arc-uart.txt b/Documentation/devicetree/bindings/serial/arc-uart.txt
-> deleted file mode 100644
-> index 256cc150ca7e..000000000000
-> --- a/Documentation/devicetree/bindings/serial/arc-uart.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -* Synopsys ARC UART : Non standard UART used in some of the ARC FPGA boards
-> -
-> -Required properties:
-> -- compatible		: "snps,arc-uart"
-> -- reg			: offset and length of the register set for the device.
-> -- interrupts		: device interrupt
-> -- clock-frequency	: the input clock frequency for the UART
-> -- current-speed		: baud rate for UART
-> -
-> -e.g.
-> -
-> -arcuart0: serial@c0fc1000 {
-> -	compatible = "snps,arc-uart";
-> -	reg = <0xc0fc1000 0x100>;
-> -	interrupts = <5>;
-> -	clock-frequency = <80000000>;
-> -	current-speed = <115200>;
-> -};
-> -
-> -Note: Each port should have an alias correctly numbered in "aliases" node.
-> -
-> -e.g.
-> -aliases {
-> -	serial0 = &arcuart0;
-> -};
-> diff --git a/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml b/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
-> new file mode 100644
-> index 000000000000..dd3096fbfb6a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/snps,arc-uart.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/snps,arc-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys ARC UART
-> +
-> +maintainers:
-> +  - Vineet Gupta <vgupta@kernel.org>
-> +
-> +description:
-> +  Synopsys ARC UART is a non-standard UART used in some of the ARC FPGA boards.
-> +
-> +allOf:
-> +  - $ref: /schemas/serial/serial.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: snps,arc-uart
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clock-frequency:
-> +    description: the input clock frequency for the UART
-> +
-> +  current-speed:
-> +    description: baud rate for UART
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clock-frequency
-> +  - current-speed
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    serial@c0fc1000 {
-> +        compatible = "snps,arc-uart";
-> +        reg = <0xc0fc1000 0x100>;
-> +        interrupts = <5>;
-> +        clock-frequency = <80000000>;
-> +        current-speed = <115200>;
-> +    };
+Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
+
+---
+v2: Rebased the patch onto Greg Kroah-Hartman's staging branch for
+proper submission base.
+
+v3: Updated the commit message body to provide a clear description of
+the changes.
+Changed the "From" field to use my real name as author.
+Updated the existing Signed-off-by line to reflect my real name.
+---
+ drivers/staging/rtl8723bs/core/rtw_cmd.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index 557bfdf092c2..81f795a82711 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -9,8 +9,8 @@
+ #include <linux/jiffies.h>
+ 
+ static struct _cmd_callback rtw_cmd_callback[] = {
+-	{GEN_CMD_CODE(_Read_MACREG), NULL}, /*0*/
+-	{GEN_CMD_CODE(_Write_MACREG), NULL},
++	{GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
++	{GEN_CMD_CODE(_write_macreg), NULL},
+ 	{GEN_CMD_CODE(_Read_BBREG), &rtw_getbbrfreg_cmdrsp_callback},
+ 	{GEN_CMD_CODE(_Write_BBREG), NULL},
+ 	{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
+-- 
+2.43.0
 
