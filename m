@@ -1,251 +1,205 @@
-Received: from smtp.smtpout.orange.fr (smtp-70.smtpout.orange.fr [80.12.242.70])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D597E3BB48;
-	Sun, 25 May 2025 09:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5EB1E633C;
+	Sun, 25 May 2025 09:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748166098; cv=none; b=b4FMgvo/gfQmzv05K8W5pyDq2TqMzAt+A1+KxFYhp4QvJIKyuZJT+r7uLULCsxEocVlxd+im8hic/J17BaMVJcIYJoCaU8J+GktMq/2dyOmh1eQNDL7Rlf3OmDILDptab6I+tMBqkNUuFMbLoQGyYiaevljPW4dXptOANyE4JBQ=
+	t=1748166106; cv=none; b=GxtW1fAnlVD+iMY/DuPzSnlyNU9kIy3JRqOfIg2TurhTJdGFHZNy6LTAT3t2WSRKHHLLjWL2PGNtoBLOZppfY52XOeg5hwvd9E3luOZewdID0n+iMiIPR4ue8d/mrtY/2MeFUSReUJp3XQ3P4n00DH+EfRHT7TPfgzRdELikOyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748166098; c=relaxed/simple;
-	bh=Z0ULkCdlKxE7u445m/coZLXARw+PeS84yO1rRgMgIX4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oWbnr7jrcql2cqOJpxfoAcQEQerFZTOz7cfmmGU6zwxSTo/TdsQTm2pCGalnZWJIgp3r5RYeA/gt8bDMqnjyv8J/jj65juDnn0cJ7k3FIogTDvtlstvwLSuBxkuuZ3/w4kbLgV31IdrNItKksi32flMs7pqMrabqgvMXAHLyFwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QNCcU0zI; arc=none smtp.client-ip=80.12.242.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748166106; c=relaxed/simple;
+	bh=r9HzIRPgbmeJESQvUCAlvAlaFNhUXfcVE3jFVKC2nRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ABR3MdCIw9Fg67vnfbZubVukmlrgSVRVmWOe/Iy+0D8nu5lelosaNtPaIPm89ZAwNO0gqBfH4xuOPHtjuEcrehOihQICSOQsaQ/k3H6CAiY2vfOyNKYSgRUUx6FmM9BQC2Mz269C4sDSeceYaur7S69bTOdqc8JNiW/j+yR3VoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nYDyzMA+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QNCcU0zI"
-Received: from localhost.localdomain
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id J7qAu8zzkyzREJ7qAui2s9; Sun, 25 May 2025 11:40:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748166026;
-	bh=3Ge08bMJ+KqUgvFk44XiE+E22u5Ef56JB5n9nEZeKTY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=QNCcU0zI7f0vU6+wFHRG7lIrtw5urmVfKvivO5D8Y5S7LYVl6lFQ7dX5eJAyILRVr
-	 09pCf489Da9Ut9/+NZ6LDOt2eB2ZnrW4x1YhszeTfyuWsebOUWH/a5dOQZeJ0NDip5
-	 0FIiZ1sQM7zOTT9xE3VJQi9L5PIhpZuIB8izeoysO0z1sdTBr3cHSBQqUV0XlJ6kh1
-	 3ARq+4Hc1PXWf5zmkBAhsIV15AfbkUyvgpTWDiupR9oha+MINJQbOOIs8DxyEHm3Q6
-	 qiltI98qYc1vAsECAfjM92knuoBFe2a+jcIsQfWGJQp69eZ7UpedfhvCHl2+XtdpmY
-	 jJQoLtuMX9W6g==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 25 May 2025 11:40:26 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-pm@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH] thermal: Constify struct thermal_zone_device_ops
-Date: Sun, 25 May 2025 11:40:04 +0200
-Message-ID: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nYDyzMA+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D83C4CEEF;
+	Sun, 25 May 2025 09:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748166106;
+	bh=r9HzIRPgbmeJESQvUCAlvAlaFNhUXfcVE3jFVKC2nRQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nYDyzMA+/05HiyMAeBF4X18FxV3qM3tI/M6VCGLH1QI+DtxBxW/hU5hlO91rQbBxn
+	 VQaH89vukuAFFweCRspw4E3+meBZ1xMcxBzr+ShxxeUvXC9ComgIZUoYeuIM6FcGEC
+	 yWx/m4hNkJ2FojQ8MDIgdM9LB4gT0HwKxnqnJ2t6O9Xq8MC0mliHSylfTzxjyfQrBz
+	 kHFh6fKVX8mb4DeZ1CHf5cZkIFXa7nzIihRzirWB1EteJydAiWNAMDhdhyY36BmHg1
+	 VuEDBL17TbWZD8LJ4qjHXmoWLvIWfW7eS2GrMGMHWKUG2TYkEr8Yhd2MveKTHVsCQy
+	 3rOUF6njZ0lTQ==
+Date: Sun, 25 May 2025 10:41:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Jonathan Santos <jonath4nns@gmail.com>
+Cc: 20250518175832.77b8d670@jic23-huawei, Andy Shevchenko <andy@kernel.org>,
+ Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, nuno.sa@analog.com,
+ Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v8 08/11] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+Message-ID: <20250525104133.1ccf5bca@jic23-huawei>
+In-Reply-To: <aDEMEWQvu0r9stCh@JSANTO12-L01.ad.analog.com>
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+	<59f45c9af16fa68f2a479f824129f5a9f2cd0997.1747175187.git.Jonathan.Santos@analog.com>
+	<aCcFXolH0FVBSP11@smile.fi.intel.com>
+	<20250518175832.77b8d670@jic23-huawei>
+	<aDEMEWQvu0r9stCh@JSANTO12-L01.ad.analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-'struct thermal_zone_device_ops' are not modified in these drivers.
+On Fri, 23 May 2025 21:00:17 -0300
+Jonathan Santos <jonath4nns@gmail.com> wrote:
 
-Constifying these structures moves some data to a read-only section, so
-increases overall security, especially when the structure holds some
-function pointers.
+> On 05/18, Jonathan Cameron wrote:
+> > On Fri, 16 May 2025 12:29:02 +0300
+> > Andy Shevchenko <andy@kernel.org> wrote:
+> >   
+> > > On Thu, May 15, 2025 at 06:13:56PM -0300, Jonathan Santos wrote:  
+> > > > The synchronization method using GPIO requires the generated pulse to be
+> > > > truly synchronous with the base MCLK signal. When it is not possible to
+> > > > do that in hardware, the datasheet recommends using synchronization over
+> > > > SPI, where the generated pulse is already synchronous with MCLK. This
+> > > > requires the SYNC_OUT pin to be connected to the SYNC_IN pin.
+> > > > 
+> > > > Use trigger-sources property to enable device synchronization over SPI
+> > > > and multi-device synchronization while replacing sync-in-gpios property.    
+> > Given some discussion in here I'll not (yet) pick up this series.
+> > 
+> > It's almost certainly just missed the coming merge window anyway so
+> > we have time.
+> >   
+> > > 
+> > > ...
+> > >   
+> > > > +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> > > > +					   struct ad7768_state *st)
+> > > > +{
+> > > > +	struct fwnode_reference_args args;
+> > > > +	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> > > > +	int ret;
+> > > > +
+> > > > +	/*
+> > > > +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> > > > +	 * to synchronize one or more devices:
+> > > > +	 * 1. Using an external GPIO.
+> > > > +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> > > > +	 *    synchronization pulse that drives the SYNC_IN pin.
+> > > > +	 */
+> > > > +	if (!fwnode_property_present(fwnode, "trigger-sources")) {    
+> > > 
+> > > I'm wondering if you can split the below to a separate function and do something like
+> > > 
+> > > 	if (fwnode_property_present(...))
+> > > 		return setup_trigger_source(...);
+> > > 
+> > > 	...
+> > > 	en_spi_sync = true;
+> > > 	return 0;
+> > >   
+> > > > +		/*
+> > > > +		 * In the absence of trigger-sources property, enable self
+> > > > +		 * synchronization over SPI (SYNC_OUT).
+> > > > +		 */
+> > > > +		st->en_spi_sync = true;
+> > > > +		return 0;
+> > > > +	}
+> > > > +
+> > > > +	ret = fwnode_property_get_reference_args(fwnode,
+> > > > +						 "trigger-sources",
+> > > > +						 "#trigger-source-cells",
+> > > > +						 0,
+> > > > +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
+> > > > +						 &args);    
+> > > 
+> > > 
+> > > __free(fwnode_handle) ?  
+> > 
+> > For args.fwnode?
+> > 
+> > That's fiddly to do and needs a different local variable to...
+> > 
+> > 
+> >   
+> > >   
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	fwnode = args.fwnode;  
+> > 
+> > this one.
+> > 
+> > You could wrap it up in a function to make that works cleanly.
+> > So something similar to fwnode_find_reference() but with the
+> > rest of the arguments.  Is there appetite for such a wrapper
+> > in the generic property code?
+> >  
+> 
+> you mean like:
+> 
+> fwnode_find_reference_args(const struct fwnode_handle *fwnode,
+> 			   const char *name, const char *nargs_prop,
+> 			   unsigned int nargs, unsigned int index,
+> 			   struct fwnode_reference_args *args)
+> 
+> I don't know if it helps that much and since we are not handling
+> arguments right know, I think fwnode_find_reference() would work (or not?).
+> In that case maybe we add some note or TODO to explain why. 
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  28116	   5168	    128	  33412	   8284	drivers/thermal/armada_thermal.o
+The only reason for a new wrapper (exactly like you have it) is the
+return of struct fwnode_handle * that lets you use 
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  28244	   5040	    128	  33412	   8284	drivers/thermal/armada_thermal.o
+struct fwnode_handle *fwnode __free(fwnode_handle) =
+	fwnode_find_reference_args(fwnode, "trigger-sources",
+				   "#trigger-source-cells", 0,
+				    AD7768_TRIGGER_SOURCE_SYNC_IDX, &args);
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- drivers/thermal/armada_thermal.c                        | 2 +-
- drivers/thermal/da9062-thermal.c                        | 2 +-
- drivers/thermal/dove_thermal.c                          | 2 +-
- drivers/thermal/imx_thermal.c                           | 2 +-
- drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
- drivers/thermal/kirkwood_thermal.c                      | 2 +-
- drivers/thermal/mediatek/lvts_thermal.c                 | 2 +-
- drivers/thermal/renesas/rcar_thermal.c                  | 2 +-
- drivers/thermal/spear_thermal.c                         | 2 +-
- drivers/thermal/st/st_thermal.c                         | 2 +-
- drivers/thermal/testing/zone.c                          | 2 +-
- 11 files changed, 11 insertions(+), 11 deletions(-)
+So basically making it look like normal cleanup.h handling.
 
-diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-index 9bff21068721..c2fbdb534f61 100644
---- a/drivers/thermal/armada_thermal.c
-+++ b/drivers/thermal/armada_thermal.c
-@@ -408,7 +408,7 @@ static int armada_get_temp_legacy(struct thermal_zone_device *thermal,
- 	return ret;
- }
- 
--static struct thermal_zone_device_ops legacy_ops = {
-+static const struct thermal_zone_device_ops legacy_ops = {
- 	.get_temp = armada_get_temp_legacy,
- };
- 
-diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
-index 2077e85ef5ca..a8d4b766ba21 100644
---- a/drivers/thermal/da9062-thermal.c
-+++ b/drivers/thermal/da9062-thermal.c
-@@ -137,7 +137,7 @@ static int da9062_thermal_get_temp(struct thermal_zone_device *z,
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops da9062_thermal_ops = {
-+static const struct thermal_zone_device_ops da9062_thermal_ops = {
- 	.get_temp	= da9062_thermal_get_temp,
- };
- 
-diff --git a/drivers/thermal/dove_thermal.c b/drivers/thermal/dove_thermal.c
-index f9157a47156b..723bc72f0626 100644
---- a/drivers/thermal/dove_thermal.c
-+++ b/drivers/thermal/dove_thermal.c
-@@ -106,7 +106,7 @@ static int dove_get_temp(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops ops = {
-+static const struct thermal_zone_device_ops ops = {
- 	.get_temp = dove_get_temp,
- };
- 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index bab52e6b3b15..38c993d1bcb3 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -361,7 +361,7 @@ static bool imx_should_bind(struct thermal_zone_device *tz,
- 	return trip->type == THERMAL_TRIP_PASSIVE;
- }
- 
--static struct thermal_zone_device_ops imx_tz_ops = {
-+static const struct thermal_zone_device_ops imx_tz_ops = {
- 	.should_bind = imx_should_bind,
- 	.get_temp = imx_get_temp,
- 	.change_mode = imx_change_mode,
-diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-index 0e07693ecf59..5736638c586b 100644
---- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-+++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-@@ -515,7 +515,7 @@ static int int3400_thermal_change_mode(struct thermal_zone_device *thermal,
- 	return result;
- }
- 
--static struct thermal_zone_device_ops int3400_thermal_ops = {
-+static const struct thermal_zone_device_ops int3400_thermal_ops = {
- 	.get_temp = int3400_thermal_get_temp,
- 	.change_mode = int3400_thermal_change_mode,
- };
-diff --git a/drivers/thermal/kirkwood_thermal.c b/drivers/thermal/kirkwood_thermal.c
-index 7c2265231668..4619e090f756 100644
---- a/drivers/thermal/kirkwood_thermal.c
-+++ b/drivers/thermal/kirkwood_thermal.c
-@@ -48,7 +48,7 @@ static int kirkwood_get_temp(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops ops = {
-+static const struct thermal_zone_device_ops ops = {
- 	.get_temp = kirkwood_get_temp,
- };
- 
-diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
-index 985925147ac0..acce8fde2cba 100644
---- a/drivers/thermal/mediatek/lvts_thermal.c
-+++ b/drivers/thermal/mediatek/lvts_thermal.c
-@@ -571,7 +571,7 @@ static irqreturn_t lvts_irq_handler(int irq, void *data)
- 	return iret;
- }
- 
--static struct thermal_zone_device_ops lvts_ops = {
-+static const struct thermal_zone_device_ops lvts_ops = {
- 	.get_temp = lvts_get_temp,
- 	.set_trips = lvts_set_trips,
- };
-diff --git a/drivers/thermal/renesas/rcar_thermal.c b/drivers/thermal/renesas/rcar_thermal.c
-index 00a66ee0a5b0..fdd7afdc4ff6 100644
---- a/drivers/thermal/renesas/rcar_thermal.c
-+++ b/drivers/thermal/renesas/rcar_thermal.c
-@@ -277,7 +277,7 @@ static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
- 	return rcar_thermal_get_current_temp(priv, temp);
- }
- 
--static struct thermal_zone_device_ops rcar_thermal_zone_ops = {
-+static const struct thermal_zone_device_ops rcar_thermal_zone_ops = {
- 	.get_temp	= rcar_thermal_get_temp,
- };
- 
-diff --git a/drivers/thermal/spear_thermal.c b/drivers/thermal/spear_thermal.c
-index bb96be947521..603dadcd3df5 100644
---- a/drivers/thermal/spear_thermal.c
-+++ b/drivers/thermal/spear_thermal.c
-@@ -41,7 +41,7 @@ static inline int thermal_get_temp(struct thermal_zone_device *thermal,
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops ops = {
-+static const struct thermal_zone_device_ops ops = {
- 	.get_temp = thermal_get_temp,
- };
- 
-diff --git a/drivers/thermal/st/st_thermal.c b/drivers/thermal/st/st_thermal.c
-index a14a37d54698..1470ca519def 100644
---- a/drivers/thermal/st/st_thermal.c
-+++ b/drivers/thermal/st/st_thermal.c
-@@ -132,7 +132,7 @@ static int st_thermal_get_temp(struct thermal_zone_device *th, int *temperature)
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops st_tz_ops = {
-+static const struct thermal_zone_device_ops st_tz_ops = {
- 	.get_temp	= st_thermal_get_temp,
- };
- 
-diff --git a/drivers/thermal/testing/zone.c b/drivers/thermal/testing/zone.c
-index 1f4e450100e2..4257d813d572 100644
---- a/drivers/thermal/testing/zone.c
-+++ b/drivers/thermal/testing/zone.c
-@@ -381,7 +381,7 @@ static int tt_zone_get_temp(struct thermal_zone_device *tz, int *temp)
- 	return 0;
- }
- 
--static struct thermal_zone_device_ops tt_zone_ops = {
-+static const struct thermal_zone_device_ops tt_zone_ops = {
- 	.get_temp = tt_zone_get_temp,
- };
- 
--- 
-2.49.0
+I was hoping Any would chime in with a view on whether that is likely
+to go down well added to property.h
+
+Using fwnode_find_reference() is a bad idea because of the need for
+a TODO etc to explain that we are assuming the cells are always 1.
+
+
+> 
+> >   
+> > > > +	/* First, try getting the GPIO trigger source */
+> > > > +	if (fwnode_device_is_compatible(fwnode, "gpio-trigger")) {
+> > > > +		st->gpio_sync_in = devm_fwnode_gpiod_get_index(dev, fwnode,
+> > > > +							       NULL,
+> > > > +							       0,
+> > > > +							       GPIOD_OUT_LOW,
+> > > > +							       "sync-in");
+> > > > +		ret = PTR_ERR_OR_ZERO(st->gpio_sync_in);
+> > > > +		goto out_put_node;
+> > > > +	}
+> > > > +
+> > > > +	/*
+> > > > +	 * TODO: Support the other cases when we have a trigger subsystem to
+> > > > +	 * reliably handle other types of devices as trigger sources.
+> > > > +	 *
+> > > > +	 * For now, return an error message. For self triggering, omit the
+> > > > +	 * trigger-sources property.
+> > > > +	 */
+> > > > +	ret = dev_err_probe(dev, -EOPNOTSUPP, "Invalid synchronization trigger source\n");
+> > > > +
+> > > > +out_put_node:    
+> > > 
+> > > The above will allow to get rid of this label.
+> > >   
+> > > > +	fwnode_handle_put(args.fwnode);
+> > > > +	return ret;
+> > > > +}    
+> > >   
+> >   
 
