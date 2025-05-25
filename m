@@ -1,45 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA8519DF60
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 20:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164AF1B4153
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 20:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748206421; cv=none; b=VHv3Kl/K2k0XY1RNVnLZvXrBzugn3spfQETeH0Fi4PWFfg76XwQQOj+KOD6m4O3MJ2xe8okQbHD54a5V4PNCZ5PkVHDlsH+sJ0BRq4CryFnglhKygK/1+PjHd69JVJnVGZ8VTawSnNrTIo6J7Rkm1wgo2VC+jiJhOUqCIkogG3A=
+	t=1748206434; cv=none; b=bqZQKS/e+bJPbxumqT21MqAZ8mu9rtEwWD8crmOcq5PkxFgjhI611De4vkdeFkZc6amE0vhw+iI5CDLO1YuucqnKhFVZes9MAzVLnjXQ4JB6bOsTALBS6XTb4gUk4FogA5Rq+LiJwl6Xcnk2gfb6W7ZlOxTSi+RalKJmYm3PNn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748206421; c=relaxed/simple;
-	bh=31cAvtfY+qqBwc5qZmqe6IahPY30POvCWwxqwMojtIE=;
-	h=From:To:Cc:Subject:Message-ID:Content-Type:MIME-Version:Date; b=KX30o7UnLIEF+XDTMjgJOCE21WhR6Pcl9dzP+Q8zkiI6U0iUZjCMctwedL0H73rHNWe1dVLRbaRkLitan++iy4Sx5ADDKDOv5qIwLjnND9vpAoZSFhPUkTrhggtHXKOJTcwiVWlU1eYCUPmN1lo6QDYmS1CdiIxKYrGZAlaPbRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P/A3hc9+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f0cLy2sI; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1748206434; c=relaxed/simple;
+	bh=i8Dfmy4627QHBApSUO+0SUqo4oGtWxiKTv4fdj5zLOk=;
+	h=From:To:Cc:Subject:References:Message-ID:Content-Type:
+	 MIME-Version:Date; b=HX6e1sh+0sxHLDg0kng9vPgatpJV2QTmPdTk+M6kepP4eQ9OuHoostLSE14BkSjf25nt+KPcbtjQETWyyko1dL6ZZi2sgCPXJWYFhS/aEj+qifcbVRbTzWoEncSmcsKkUCQismCyP6Gq96jWM1PYzHsOnGWxCtiCfQIkRvWsJf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uyC3CoYY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YROkEQma; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P/A3hc9+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f0cLy2sI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uyC3CoYY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YROkEQma"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748206417;
+	s=2020; t=1748206430;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IrTbWNj3gUT2KY3fcXzCth0YPMjCrGbJA/ZvNTaKl0Q=;
-	b=P/A3hc9+yA7LAji3V/xeq0HJhz6rI1mA1BO3WrZ14bzcjzgPHqvUhjJq8d96ntvnEVJKx1
-	5ex5yyw7bzmcJiFP3mUESq0cF84/tyi0OhdM6WtExfMlG4UhoBGarCZgV723ymMaT6xLk1
-	X+/oFiLLCkotW82CnTJqmjKlu+iFZvFZmgIYSO/bNc2cCDmXTqextjXdCKwD2uLK1e5ppm
-	JLqwfOHxOTodM+wE6R9H7co2jo7KgOMmeSMUOgu8Y9p4H94Pubc9MUmrjP7VB+Gk1PHIgL
-	5Whns2zCgD5wdXXWkw5H4jPBv10PhPGOw7V0+wFuz6ED+6QO/WUq0B2Ol0/E9w==
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=Qj/Pm/XCKoacTtkCSF83xUfGL5PFHheKu6bbvBw0E2A=;
+	b=uyC3CoYYG9lWcjPfdpwueXU75xIfldetVdicbQme5v0QiTsRhkzr5KMVfTOIDr4Bs0OFDI
+	gJrtY+D3eOD1i1mlH+XVfTzDsIt8ZeQQDJ7AubBuRUdi/WGzPfkj/W7K/aJFg+921hBtVT
+	SCDO+hrWpyF2a6Y9Ma6MoZnEFaRp6BNYnv82G2dqfmP0J9XgsBO8eoE6M/VdKrIqCc+FUB
+	UDYA3K2r8gbbRNlPSTHOuZHUiUmN28OGdI9AMxm+Du8iIP9XlDoPHEtISPoswswZf7EYy/
+	k82LAa1W7B4RuOnaccWa6h1lZkWiFIN73SoVaFIG/7Kmg+Vvlf7hk5uohlMdlA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748206417;
+	s=2020e; t=1748206430;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=IrTbWNj3gUT2KY3fcXzCth0YPMjCrGbJA/ZvNTaKl0Q=;
-	b=f0cLy2sIMgbncrRchwCyq1c3KaFqQ2F9xiUsFM7FO7ruktrrAOvTLlX8+tQq6Yjh7ujs1Q
-	hLJM5maTguZ730Bg==
+	 content-transfer-encoding:content-transfer-encoding:  references:references;
+	bh=Qj/Pm/XCKoacTtkCSF83xUfGL5PFHheKu6bbvBw0E2A=;
+	b=YROkEQmaeGg7cb7GfakQWMhstoJRFK6HPXWWuN//lQzxIY9NMITrV2c4ZSQkpzJSH8YYjn
+	qxe5sGzUPuz2B6BA==
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] core/entry for v6.16-rc1
-Message-ID: <174820637262.238682.1985899398053030312.tglx@xen13>
+Subject: [GIT pull] timers/core for v6.16-rc1
+References: <174820637262.238682.1985899398053030312.tglx@xen13>
+Message-ID: <174820638487.238682.10229943723869983974.tglx@xen13>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -48,466 +50,476 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 25 May 2025 22:53:36 +0200 (CEST)
+Date: Sun, 25 May 2025 22:53:49 +0200 (CEST)
 
 Linus,
 
-please pull the latest core/entry branch from:
+please pull the latest timers/core branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-entry-2025-=
-05-25
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-core-2025=
+-05-25
 
-up to:  8278fd6006a0: LoongArch: entry: Fix include order
+up to:  6c58d2791d60: tick/nohz: Remove unused tick_nohz_full_add_cpus_to()
 
 
-Updates for the generic and architecture entry code:
+Updates for the time/timer core code:
 
-  - Move LoongArch and RISC-V ret_from_fork() implementations to C code so
-    that syscall_exit_user_mode() can be inlined.
+  - Rework the initialization of the posix-timer kmem_cache and move the
+    cache pointer into the timer_data structure to prevent false sharing.
 
-  - Split the RISC-V ret_from_fork() implementation into return to user and
-    return to kernel, which gives a measurable performance improvement.
+  - Switch the alarmtimer code to lock guards.
 
-  - Inline syscall_exit_user_mode() which benefits all architectures by
-    avoiding a function call and letting the compiler do better
-    optimizations.
+  - Improve the CPU selection criteria in the per CPU validation of the
+    clocksource watchdog to avoid arbitrary selections (or omissions) on
+    systems with a small number of CPUs.
+
+  - The usual cleanups and improvements
 
 Thanks,
 
 	tglx
 
 ------------------>
-Charlie Jenkins (5):
-      riscv: entry: Convert ret_from_fork() to C
-      riscv: entry: Split ret_from_fork() into user and kernel
-      LoongArch: entry: Migrate ret_from_fork() to C
-      entry: Inline syscall_exit_to_user_mode()
-      LoongArch: entry: Fix include order
+Alex Shi (1):
+      tick/nohz: Remove unused tick_nohz_full_add_cpus_to()
+
+Dr. David Alan Gilbert (1):
+      timers: Remove unused __round_jiffies(_up)
+
+Eric Dumazet (1):
+      posix-timers: Initialize cache early and move pointer into __timer_data
+
+Guilherme G. Piccoli (1):
+      clocksource: Fix the CPUs' choice in the watchdog per CPU verification
+
+Su Hui (3):
+      time/jiffies: Change register_refined_jiffies() to void __init
+      alarmtimer: Remove dead return value in clock2alarm()
+      alarmtimer: Switch spin_{lock,unlock}_irqsave() to guards
 
 
- arch/loongarch/include/asm/asm-prototypes.h |  8 +++++
- arch/loongarch/kernel/entry.S               | 22 ++++++-------
- arch/loongarch/kernel/process.c             | 33 +++++++++++++++----
- arch/riscv/include/asm/asm-prototypes.h     |  2 ++
- arch/riscv/kernel/entry.S                   | 20 +++++++-----
- arch/riscv/kernel/process.c                 | 21 +++++++++++--
- include/linux/entry-common.h                | 43 +++++++++++++++++++++++--
- kernel/entry/common.c                       | 49 +--------------------------=
+ include/linux/jiffies.h    |  2 +-
+ include/linux/tick.h       |  7 ----
+ include/linux/timer.h      |  2 --
+ kernel/time/alarmtimer.c   | 84 ++++++++++++++++++--------------------------=
 --
- 8 files changed, 119 insertions(+), 79 deletions(-)
+ kernel/time/clocksource.c  |  2 +-
+ kernel/time/jiffies.c      |  5 +--
+ kernel/time/posix-timers.c | 23 ++++++-------
+ kernel/time/timer.c        | 42 -----------------------
+ 8 files changed, 46 insertions(+), 121 deletions(-)
 
-diff --git a/arch/loongarch/include/asm/asm-prototypes.h b/arch/loongarch/inc=
-lude/asm/asm-prototypes.h
-index 51f224bcfc65..704066b4f736 100644
---- a/arch/loongarch/include/asm/asm-prototypes.h
-+++ b/arch/loongarch/include/asm/asm-prototypes.h
-@@ -12,3 +12,11 @@ __int128_t __ashlti3(__int128_t a, int b);
- __int128_t __ashrti3(__int128_t a, int b);
- __int128_t __lshrti3(__int128_t a, int b);
- #endif
-+
-+asmlinkage void noinstr __no_stack_protector ret_from_fork(struct task_struc=
-t *prev,
-+							   struct pt_regs *regs);
-+
-+asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct t=
-ask_struct *prev,
-+								    struct pt_regs *regs,
-+								    int (*fn)(void *),
-+								    void *fn_arg);
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index 48e7e34e355e..2abc29e57381 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -77,24 +77,22 @@ SYM_CODE_START(handle_syscall)
- SYM_CODE_END(handle_syscall)
- _ASM_NOKPROBE(handle_syscall)
+diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
+index 0ea8c9887429..91b20788273d 100644
+--- a/include/linux/jiffies.h
++++ b/include/linux/jiffies.h
+@@ -59,7 +59,7 @@
+ /* LATCH is used in the interval timer and ftape setup. */
+ #define LATCH ((CLOCK_TICK_RATE + HZ/2) / HZ)	/* For divider */
 =20
--SYM_CODE_START(ret_from_fork)
-+SYM_CODE_START(ret_from_fork_asm)
- 	UNWIND_HINT_REGS
--	bl		schedule_tail		# a0 =3D struct task_struct *prev
--	move		a0, sp
--	bl 		syscall_exit_to_user_mode
-+	move		a1, sp
-+	bl 		ret_from_fork
- 	RESTORE_STATIC
- 	RESTORE_SOME
- 	RESTORE_SP_AND_RET
--SYM_CODE_END(ret_from_fork)
-+SYM_CODE_END(ret_from_fork_asm)
+-extern int register_refined_jiffies(long clock_tick_rate);
++extern void register_refined_jiffies(long clock_tick_rate);
 =20
--SYM_CODE_START(ret_from_kernel_thread)
-+SYM_CODE_START(ret_from_kernel_thread_asm)
- 	UNWIND_HINT_REGS
--	bl		schedule_tail		# a0 =3D struct task_struct *prev
--	move		a0, s1
--	jirl		ra, s0, 0
--	move		a0, sp
--	bl		syscall_exit_to_user_mode
-+	move		a1, sp
-+	move		a2, s0
-+	move		a3, s1
-+	bl		ret_from_kernel_thread
- 	RESTORE_STATIC
- 	RESTORE_SOME
- 	RESTORE_SP_AND_RET
--SYM_CODE_END(ret_from_kernel_thread)
-+SYM_CODE_END(ret_from_kernel_thread_asm)
-diff --git a/arch/loongarch/kernel/process.c b/arch/loongarch/kernel/process.c
-index 6e58f65455c7..3582f591bab2 100644
---- a/arch/loongarch/kernel/process.c
-+++ b/arch/loongarch/kernel/process.c
-@@ -13,6 +13,7 @@
- #include <linux/cpu.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/entry-common.h>
- #include <linux/errno.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
-@@ -34,6 +35,7 @@
- #include <linux/nmi.h>
+ /* TICK_USEC is the time between ticks in usec assuming SHIFTED_HZ */
+ #define TICK_USEC ((USEC_PER_SEC + HZ/2) / HZ)
+diff --git a/include/linux/tick.h b/include/linux/tick.h
+index b8ddc8e631a3..ac76ae9fa36d 100644
+--- a/include/linux/tick.h
++++ b/include/linux/tick.h
+@@ -195,12 +195,6 @@ static inline bool tick_nohz_full_enabled(void)
+ 	__ret;								\
+ })
 =20
- #include <asm/asm.h>
-+#include <asm/asm-prototypes.h>
- #include <asm/bootinfo.h>
- #include <asm/cpu.h>
- #include <asm/elf.h>
-@@ -47,6 +49,7 @@
- #include <asm/pgtable.h>
- #include <asm/processor.h>
- #include <asm/reg.h>
-+#include <asm/switch_to.h>
- #include <asm/unwind.h>
- #include <asm/vdso.h>
+-static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask)
+-{
+-	if (tick_nohz_full_enabled())
+-		cpumask_or(mask, mask, tick_nohz_full_mask);
+-}
+-
+ extern void tick_nohz_dep_set(enum tick_dep_bits bit);
+ extern void tick_nohz_dep_clear(enum tick_dep_bits bit);
+ extern void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit);
+@@ -281,7 +275,6 @@ extern void __init tick_nohz_full_setup(cpumask_var_t cpu=
+mask);
+ #else
+ static inline bool tick_nohz_full_enabled(void) { return false; }
+ static inline bool tick_nohz_full_cpu(int cpu) { return false; }
+-static inline void tick_nohz_full_add_cpus_to(struct cpumask *mask) { }
 =20
-@@ -63,8 +66,9 @@ EXPORT_SYMBOL(__stack_chk_guard);
- unsigned long boot_option_idle_override =3D IDLE_NO_OVERRIDE;
- EXPORT_SYMBOL(boot_option_idle_override);
+ static inline void tick_nohz_dep_set_cpu(int cpu, enum tick_dep_bits bit) { }
+ static inline void tick_nohz_dep_clear_cpu(int cpu, enum tick_dep_bits bit) =
+{ }
+diff --git a/include/linux/timer.h b/include/linux/timer.h
+index 10596d7c3a34..e17aac74b5b3 100644
+--- a/include/linux/timer.h
++++ b/include/linux/timer.h
+@@ -172,12 +172,10 @@ extern void init_timers(void);
+ struct hrtimer;
+ extern enum hrtimer_restart it_real_fn(struct hrtimer *);
 =20
--asmlinkage void ret_from_fork(void);
--asmlinkage void ret_from_kernel_thread(void);
-+asmlinkage void restore_and_ret(void);
-+asmlinkage void ret_from_fork_asm(void);
-+asmlinkage void ret_from_kernel_thread_asm(void);
+-unsigned long __round_jiffies(unsigned long j, int cpu);
+ unsigned long __round_jiffies_relative(unsigned long j, int cpu);
+ unsigned long round_jiffies(unsigned long j);
+ unsigned long round_jiffies_relative(unsigned long j);
 =20
- void start_thread(struct pt_regs *regs, unsigned long pc, unsigned long sp)
- {
-@@ -138,6 +142,23 @@ int arch_dup_task_struct(struct task_struct *dst, struct=
- task_struct *src)
- 	return 0;
- }
-=20
-+asmlinkage void noinstr __no_stack_protector ret_from_fork(struct task_struc=
-t *prev,
-+							   struct pt_regs *regs)
-+{
-+	schedule_tail(prev);
-+	syscall_exit_to_user_mode(regs);
-+}
-+
-+asmlinkage void noinstr __no_stack_protector ret_from_kernel_thread(struct t=
-ask_struct *prev,
-+								    struct pt_regs *regs,
-+								    int (*fn)(void *),
-+								    void *fn_arg)
-+{
-+	schedule_tail(prev);
-+	fn(fn_arg);
-+	syscall_exit_to_user_mode(regs);
-+}
-+
- /*
-  * Copy architecture-specific thread state
+-unsigned long __round_jiffies_up(unsigned long j, int cpu);
+ unsigned long __round_jiffies_up_relative(unsigned long j, int cpu);
+ unsigned long round_jiffies_up(unsigned long j);
+ unsigned long round_jiffies_up_relative(unsigned long j);
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 0ddccdff119a..577f0e6842d4 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -70,12 +70,10 @@ static DEFINE_SPINLOCK(rtcdev_lock);
   */
-@@ -165,8 +186,8 @@ int copy_thread(struct task_struct *p, const struct kerne=
-l_clone_args *args)
- 		p->thread.reg03 =3D childksp;
- 		p->thread.reg23 =3D (unsigned long)args->fn;
- 		p->thread.reg24 =3D (unsigned long)args->fn_arg;
--		p->thread.reg01 =3D (unsigned long)ret_from_kernel_thread;
--		p->thread.sched_ra =3D (unsigned long)ret_from_kernel_thread;
-+		p->thread.reg01 =3D (unsigned long)ret_from_kernel_thread_asm;
-+		p->thread.sched_ra =3D (unsigned long)ret_from_kernel_thread_asm;
- 		memset(childregs, 0, sizeof(struct pt_regs));
- 		childregs->csr_euen =3D p->thread.csr_euen;
- 		childregs->csr_crmd =3D p->thread.csr_crmd;
-@@ -182,8 +203,8 @@ int copy_thread(struct task_struct *p, const struct kerne=
-l_clone_args *args)
- 		childregs->regs[3] =3D usp;
-=20
- 	p->thread.reg03 =3D (unsigned long) childregs;
--	p->thread.reg01 =3D (unsigned long) ret_from_fork;
--	p->thread.sched_ra =3D (unsigned long) ret_from_fork;
-+	p->thread.reg01 =3D (unsigned long) ret_from_fork_asm;
-+	p->thread.sched_ra =3D (unsigned long) ret_from_fork_asm;
-=20
- 	/*
- 	 * New tasks lose permission to use the fpu. This accelerates context
-diff --git a/arch/riscv/include/asm/asm-prototypes.h b/arch/riscv/include/asm=
-/asm-prototypes.h
-index cd627ec289f1..bfc8ea5f9319 100644
---- a/arch/riscv/include/asm/asm-prototypes.h
-+++ b/arch/riscv/include/asm/asm-prototypes.h
-@@ -52,6 +52,8 @@ DECLARE_DO_ERROR_INFO(do_trap_ecall_s);
- DECLARE_DO_ERROR_INFO(do_trap_ecall_m);
- DECLARE_DO_ERROR_INFO(do_trap_break);
-=20
-+asmlinkage void ret_from_fork_kernel(void *fn_arg, int (*fn)(void *), struct=
- pt_regs *regs);
-+asmlinkage void ret_from_fork_user(struct pt_regs *regs);
- asmlinkage void handle_bad_stack(struct pt_regs *regs);
- asmlinkage void do_page_fault(struct pt_regs *regs);
- asmlinkage void do_irq(struct pt_regs *regs);
-diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-index 33a5a9f2a0d4..0fb338000c6d 100644
---- a/arch/riscv/kernel/entry.S
-+++ b/arch/riscv/kernel/entry.S
-@@ -319,17 +319,21 @@ SYM_CODE_END(handle_kernel_stack_overflow)
- ASM_NOKPROBE(handle_kernel_stack_overflow)
- #endif
-=20
--SYM_CODE_START(ret_from_fork)
-+SYM_CODE_START(ret_from_fork_kernel_asm)
-+	call schedule_tail
-+	move a0, s1 /* fn_arg */
-+	move a1, s0 /* fn */
-+	move a2, sp /* pt_regs */
-+	call ret_from_fork_kernel
-+	j ret_from_exception
-+SYM_CODE_END(ret_from_fork_kernel_asm)
-+
-+SYM_CODE_START(ret_from_fork_user_asm)
- 	call schedule_tail
--	beqz s0, 1f	/* not from kernel thread */
--	/* Call fn(arg) */
--	move a0, s1
--	jalr s0
--1:
- 	move a0, sp /* pt_regs */
--	call syscall_exit_to_user_mode
-+	call ret_from_fork_user
- 	j ret_from_exception
--SYM_CODE_END(ret_from_fork)
-+SYM_CODE_END(ret_from_fork_user_asm)
-=20
- #ifdef CONFIG_IRQ_STACKS
- /*
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 7c244de77180..485ec7a80a56 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -17,7 +17,9 @@
- #include <linux/ptrace.h>
- #include <linux/uaccess.h>
- #include <linux/personality.h>
-+#include <linux/entry-common.h>
-=20
-+#include <asm/asm-prototypes.h>
- #include <asm/unistd.h>
- #include <asm/processor.h>
- #include <asm/csr.h>
-@@ -36,7 +38,8 @@ unsigned long __stack_chk_guard __read_mostly;
- EXPORT_SYMBOL(__stack_chk_guard);
- #endif
-=20
--extern asmlinkage void ret_from_fork(void);
-+extern asmlinkage void ret_from_fork_kernel_asm(void);
-+extern asmlinkage void ret_from_fork_user_asm(void);
-=20
- void noinstr arch_cpu_idle(void)
+ struct rtc_device *alarmtimer_get_rtcdev(void)
  {
-@@ -206,6 +209,18 @@ int arch_dup_task_struct(struct task_struct *dst, struct=
- task_struct *src)
- 	return 0;
+-	unsigned long flags;
+ 	struct rtc_device *ret;
+=20
+-	spin_lock_irqsave(&rtcdev_lock, flags);
++	guard(spinlock_irqsave)(&rtcdev_lock);
+ 	ret =3D rtcdev;
+-	spin_unlock_irqrestore(&rtcdev_lock, flags);
+=20
+ 	return ret;
  }
+@@ -83,7 +81,6 @@ EXPORT_SYMBOL_GPL(alarmtimer_get_rtcdev);
 =20
-+asmlinkage void ret_from_fork_kernel(void *fn_arg, int (*fn)(void *), struct=
- pt_regs *regs)
-+{
-+	fn(fn_arg);
-+
-+	syscall_exit_to_user_mode(regs);
-+}
-+
-+asmlinkage void ret_from_fork_user(struct pt_regs *regs)
-+{
-+	syscall_exit_to_user_mode(regs);
-+}
-+
- int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ static int alarmtimer_rtc_add_device(struct device *dev)
  {
- 	unsigned long clone_flags =3D args->flags;
-@@ -228,6 +243,7 @@ int copy_thread(struct task_struct *p, const struct kerne=
-l_clone_args *args)
+-	unsigned long flags;
+ 	struct rtc_device *rtc =3D to_rtc_device(dev);
+ 	struct platform_device *pdev;
+ 	int ret =3D 0;
+@@ -101,25 +98,18 @@ static int alarmtimer_rtc_add_device(struct device *dev)
+ 	if (!IS_ERR(pdev))
+ 		device_init_wakeup(&pdev->dev, true);
 =20
- 		p->thread.s[0] =3D (unsigned long)args->fn;
- 		p->thread.s[1] =3D (unsigned long)args->fn_arg;
-+		p->thread.ra =3D (unsigned long)ret_from_fork_kernel_asm;
- 	} else {
- 		*childregs =3D *(current_pt_regs());
- 		/* Turn off status.VS */
-@@ -237,12 +253,11 @@ int copy_thread(struct task_struct *p, const struct ker=
-nel_clone_args *args)
- 		if (clone_flags & CLONE_SETTLS)
- 			childregs->tp =3D tls;
- 		childregs->a0 =3D 0; /* Return value of fork() */
--		p->thread.s[0] =3D 0;
-+		p->thread.ra =3D (unsigned long)ret_from_fork_user_asm;
+-	spin_lock_irqsave(&rtcdev_lock, flags);
+-	if (!IS_ERR(pdev) && !rtcdev) {
+-		if (!try_module_get(rtc->owner)) {
++	scoped_guard(spinlock_irqsave, &rtcdev_lock) {
++		if (!IS_ERR(pdev) && !rtcdev && try_module_get(rtc->owner)) {
++			rtcdev =3D rtc;
++			/* hold a reference so it doesn't go away */
++			get_device(dev);
++			pdev =3D NULL;
++		} else {
+ 			ret =3D -1;
+-			goto unlock;
+ 		}
+-
+-		rtcdev =3D rtc;
+-		/* hold a reference so it doesn't go away */
+-		get_device(dev);
+-		pdev =3D NULL;
+-	} else {
+-		ret =3D -1;
  	}
- 	p->thread.riscv_v_flags =3D 0;
- 	if (has_vector() || has_xtheadvector())
- 		riscv_v_thread_alloc(p);
--	p->thread.ra =3D (unsigned long)ret_from_fork;
- 	p->thread.sp =3D (unsigned long)childregs; /* kernel sp */
+-unlock:
+-	spin_unlock_irqrestore(&rtcdev_lock, flags);
+=20
+ 	platform_device_unregister(pdev);
+-
+ 	return ret;
+ }
+=20
+@@ -198,7 +188,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtim=
+er *timer)
+ 	struct alarm *alarm =3D container_of(timer, struct alarm, timer);
+ 	struct alarm_base *base =3D &alarm_bases[alarm->type];
+=20
+-	scoped_guard (spinlock_irqsave, &base->lock)
++	scoped_guard(spinlock_irqsave, &base->lock)
+ 		alarmtimer_dequeue(base, alarm);
+=20
+ 	if (alarm->function)
+@@ -228,17 +218,16 @@ EXPORT_SYMBOL_GPL(alarm_expires_remaining);
+ static int alarmtimer_suspend(struct device *dev)
+ {
+ 	ktime_t min, now, expires;
+-	int i, ret, type;
+ 	struct rtc_device *rtc;
+-	unsigned long flags;
+ 	struct rtc_time tm;
++	int i, ret, type;
+=20
+-	spin_lock_irqsave(&freezer_delta_lock, flags);
+-	min =3D freezer_delta;
+-	expires =3D freezer_expires;
+-	type =3D freezer_alarmtype;
+-	freezer_delta =3D 0;
+-	spin_unlock_irqrestore(&freezer_delta_lock, flags);
++	scoped_guard(spinlock_irqsave, &freezer_delta_lock) {
++		min =3D freezer_delta;
++		expires =3D freezer_expires;
++		type =3D freezer_alarmtype;
++		freezer_delta =3D 0;
++	}
+=20
+ 	rtc =3D alarmtimer_get_rtcdev();
+ 	/* If we have no rtcdev, just return */
+@@ -251,9 +240,8 @@ static int alarmtimer_suspend(struct device *dev)
+ 		struct timerqueue_node *next;
+ 		ktime_t delta;
+=20
+-		spin_lock_irqsave(&base->lock, flags);
+-		next =3D timerqueue_getnext(&base->timerqueue);
+-		spin_unlock_irqrestore(&base->lock, flags);
++		scoped_guard(spinlock_irqsave, &base->lock)
++			next =3D timerqueue_getnext(&base->timerqueue);
+ 		if (!next)
+ 			continue;
+ 		delta =3D ktime_sub(next->expires, base->get_ktime());
+@@ -352,13 +340,12 @@ EXPORT_SYMBOL_GPL(alarm_init);
+ void alarm_start(struct alarm *alarm, ktime_t start)
+ {
+ 	struct alarm_base *base =3D &alarm_bases[alarm->type];
+-	unsigned long flags;
+=20
+-	spin_lock_irqsave(&base->lock, flags);
+-	alarm->node.expires =3D start;
+-	alarmtimer_enqueue(base, alarm);
+-	hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_ABS);
+-	spin_unlock_irqrestore(&base->lock, flags);
++	scoped_guard(spinlock_irqsave, &base->lock) {
++		alarm->node.expires =3D start;
++		alarmtimer_enqueue(base, alarm);
++		hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_ABS);
++	}
+=20
+ 	trace_alarmtimer_start(alarm, base->get_ktime());
+ }
+@@ -381,13 +368,11 @@ EXPORT_SYMBOL_GPL(alarm_start_relative);
+ void alarm_restart(struct alarm *alarm)
+ {
+ 	struct alarm_base *base =3D &alarm_bases[alarm->type];
+-	unsigned long flags;
+=20
+-	spin_lock_irqsave(&base->lock, flags);
++	guard(spinlock_irqsave)(&base->lock);
+ 	hrtimer_set_expires(&alarm->timer, alarm->node.expires);
+ 	hrtimer_restart(&alarm->timer);
+ 	alarmtimer_enqueue(base, alarm);
+-	spin_unlock_irqrestore(&base->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(alarm_restart);
+=20
+@@ -401,14 +386,13 @@ EXPORT_SYMBOL_GPL(alarm_restart);
+ int alarm_try_to_cancel(struct alarm *alarm)
+ {
+ 	struct alarm_base *base =3D &alarm_bases[alarm->type];
+-	unsigned long flags;
+ 	int ret;
+=20
+-	spin_lock_irqsave(&base->lock, flags);
+-	ret =3D hrtimer_try_to_cancel(&alarm->timer);
+-	if (ret >=3D 0)
+-		alarmtimer_dequeue(base, alarm);
+-	spin_unlock_irqrestore(&base->lock, flags);
++	scoped_guard(spinlock_irqsave, &base->lock) {
++		ret =3D hrtimer_try_to_cancel(&alarm->timer);
++		if (ret >=3D 0)
++			alarmtimer_dequeue(base, alarm);
++	}
+=20
+ 	trace_alarmtimer_cancel(alarm, base->get_ktime());
+ 	return ret;
+@@ -479,7 +463,6 @@ EXPORT_SYMBOL_GPL(alarm_forward_now);
+ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
+ {
+ 	struct alarm_base *base;
+-	unsigned long flags;
+ 	ktime_t delta;
+=20
+ 	switch(type) {
+@@ -498,13 +481,12 @@ static void alarmtimer_freezerset(ktime_t absexp, enum =
+alarmtimer_type type)
+=20
+ 	delta =3D ktime_sub(absexp, base->get_ktime());
+=20
+-	spin_lock_irqsave(&freezer_delta_lock, flags);
++	guard(spinlock_irqsave)(&freezer_delta_lock);
+ 	if (!freezer_delta || (delta < freezer_delta)) {
+ 		freezer_delta =3D delta;
+ 		freezer_expires =3D absexp;
+ 		freezer_alarmtype =3D type;
+ 	}
+-	spin_unlock_irqrestore(&freezer_delta_lock, flags);
+ }
+=20
+ /**
+@@ -515,9 +497,9 @@ static enum alarmtimer_type clock2alarm(clockid_t clockid)
+ {
+ 	if (clockid =3D=3D CLOCK_REALTIME_ALARM)
+ 		return ALARM_REALTIME;
+-	if (clockid =3D=3D CLOCK_BOOTTIME_ALARM)
+-		return ALARM_BOOTTIME;
+-	return -1;
++
++	WARN_ON_ONCE(clockid !=3D CLOCK_BOOTTIME_ALARM);
++	return ALARM_BOOTTIME;
+ }
+=20
+ /**
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index bb48498ebb5a..6a8bc7da9062 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -310,7 +310,7 @@ static void clocksource_verify_choose_cpus(void)
+ {
+ 	int cpu, i, n =3D verify_n_cpus;
+=20
+-	if (n < 0) {
++	if (n < 0 || n >=3D num_online_cpus()) {
+ 		/* Check all of the CPUs. */
+ 		cpumask_copy(&cpus_chosen, cpu_online_mask);
+ 		cpumask_clear_cpu(smp_processor_id(), &cpus_chosen);
+diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
+index bc4db9e5ab70..34eeacac2253 100644
+--- a/kernel/time/jiffies.c
++++ b/kernel/time/jiffies.c
+@@ -75,13 +75,11 @@ struct clocksource * __init __weak clocksource_default_cl=
+ock(void)
+=20
+ static struct clocksource refined_jiffies;
+=20
+-int register_refined_jiffies(long cycles_per_second)
++void __init register_refined_jiffies(long cycles_per_second)
+ {
+ 	u64 nsec_per_tick, shift_hz;
+ 	long cycles_per_tick;
+=20
+-
+-
+ 	refined_jiffies =3D clocksource_jiffies;
+ 	refined_jiffies.name =3D "refined-jiffies";
+ 	refined_jiffies.rating++;
+@@ -100,5 +98,4 @@ int register_refined_jiffies(long cycles_per_second)
+ 	refined_jiffies.mult =3D ((u32)nsec_per_tick) << JIFFIES_SHIFT;
+=20
+ 	__clocksource_register(&refined_jiffies);
+-	return 0;
+ }
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 6222112533a7..2053b1a4c9e4 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -30,8 +30,6 @@
+ #include "timekeeping.h"
+ #include "posix-timers.h"
+=20
+-static struct kmem_cache *posix_timers_cache;
+-
+ /*
+  * Timers are managed in a hash table for lockless lookup. The hash key is
+  * constructed from current::signal and the timer ID and the timer is
+@@ -49,10 +47,12 @@ struct timer_hash_bucket {
+ static struct {
+ 	struct timer_hash_bucket	*buckets;
+ 	unsigned long			mask;
+-} __timer_data __ro_after_init __aligned(2*sizeof(long));
++	struct kmem_cache		*cache;
++} __timer_data __ro_after_init __aligned(4*sizeof(long));
+=20
+-#define timer_buckets	(__timer_data.buckets)
+-#define timer_hashmask	(__timer_data.mask)
++#define timer_buckets		(__timer_data.buckets)
++#define timer_hashmask		(__timer_data.mask)
++#define posix_timers_cache	(__timer_data.cache)
+=20
+ static const struct k_clock * const posix_clocks[];
+ static const struct k_clock *clockid_to_kclock(const clockid_t id);
+@@ -283,14 +283,6 @@ static int posix_get_hrtimer_res(clockid_t which_clock, =
+struct timespec64 *tp)
  	return 0;
  }
-diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-index fc61d0205c97..f94f3fdf15fc 100644
---- a/include/linux/entry-common.h
-+++ b/include/linux/entry-common.h
-@@ -14,6 +14,7 @@
- #include <linux/kmsan.h>
 =20
- #include <asm/entry-common.h>
-+#include <asm/syscall.h>
-=20
+-static __init int init_posix_timers(void)
+-{
+-	posix_timers_cache =3D kmem_cache_create("posix_timers_cache", sizeof(struc=
+t k_itimer),
+-					       __alignof__(struct k_itimer), SLAB_ACCOUNT, NULL);
+-	return 0;
+-}
+-__initcall(init_posix_timers);
+-
  /*
-  * Define dummy _TIF work flags if not defined by the architecture or for
-@@ -366,6 +367,15 @@ static __always_inline void exit_to_user_mode(void)
- 	lockdep_hardirqs_on(CALLER_ADDR0);
+  * The siginfo si_overrun field and the return value of timer_getoverrun(2)
+  * are of type int. Clamp the overrun value to INT_MAX
+@@ -1556,6 +1548,11 @@ static int __init posixtimer_init(void)
+ 	unsigned long i, size;
+ 	unsigned int shift;
+=20
++	posix_timers_cache =3D kmem_cache_create("posix_timers_cache",
++					       sizeof(struct k_itimer),
++					       __alignof__(struct k_itimer),
++					       SLAB_ACCOUNT, NULL);
++
+ 	if (IS_ENABLED(CONFIG_BASE_SMALL))
+ 		size =3D 512;
+ 	else
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 4d915c0a263c..1b2a884f66e8 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -385,32 +385,6 @@ static unsigned long round_jiffies_common(unsigned long =
+j, int cpu,
+ 	return time_is_after_jiffies(j) ? j : original;
  }
 =20
-+/**
-+ * syscall_exit_work - Handle work before returning to user mode
-+ * @regs:	Pointer to current pt_regs
-+ * @work:	Current thread syscall work
-+ *
-+ * Do one-time syscall specific work.
-+ */
-+void syscall_exit_work(struct pt_regs *regs, unsigned long work);
-+
- /**
-  * syscall_exit_to_user_mode_work - Handle work before returning to user mode
-  * @regs:	Pointer to currents pt_regs
-@@ -379,7 +389,30 @@ static __always_inline void exit_to_user_mode(void)
-  * make the final state transitions. Interrupts must stay disabled between
-  * return from this function and the invocation of exit_to_user_mode().
-  */
--void syscall_exit_to_user_mode_work(struct pt_regs *regs);
-+static __always_inline void syscall_exit_to_user_mode_work(struct pt_regs *r=
-egs)
-+{
-+	unsigned long work =3D READ_ONCE(current_thread_info()->syscall_work);
-+	unsigned long nr =3D syscall_get_nr(current, regs);
-+
-+	CT_WARN_ON(ct_state() !=3D CT_STATE_KERNEL);
-+
-+	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-+		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-+			local_irq_enable();
-+	}
-+
-+	rseq_syscall(regs);
-+
-+	/*
-+	 * Do one-time syscall specific work. If these work items are
-+	 * enabled, we want to run them exactly once per syscall exit with
-+	 * interrupts enabled.
-+	 */
-+	if (unlikely(work & SYSCALL_WORK_EXIT))
-+		syscall_exit_work(regs, work);
-+	local_irq_disable_exit_to_user();
-+	exit_to_user_mode_prepare(regs);
-+}
-=20
- /**
-  * syscall_exit_to_user_mode - Handle work before returning to user mode
-@@ -410,7 +443,13 @@ void syscall_exit_to_user_mode_work(struct pt_regs *regs=
-);
-  * exit_to_user_mode(). This function is preferred unless there is a
-  * compelling architectural reason to use the separate functions.
-  */
--void syscall_exit_to_user_mode(struct pt_regs *regs);
-+static __always_inline void syscall_exit_to_user_mode(struct pt_regs *regs)
-+{
-+	instrumentation_begin();
-+	syscall_exit_to_user_mode_work(regs);
-+	instrumentation_end();
-+	exit_to_user_mode();
-+}
-=20
- /**
-  * irqentry_enter_from_user_mode - Establish state before invoking the irq h=
-andler
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-index 20154572ede9..a8dd1f27417c 100644
---- a/kernel/entry/common.c
-+++ b/kernel/entry/common.c
-@@ -146,7 +146,7 @@ static inline bool report_single_step(unsigned long work)
- 	return work & SYSCALL_WORK_SYSCALL_EXIT_TRAP;
- }
-=20
--static void syscall_exit_work(struct pt_regs *regs, unsigned long work)
-+void syscall_exit_work(struct pt_regs *regs, unsigned long work)
- {
- 	bool step;
-=20
-@@ -173,53 +173,6 @@ static void syscall_exit_work(struct pt_regs *regs, unsi=
-gned long work)
- 		ptrace_report_syscall_exit(regs, step);
- }
-=20
--/*
-- * Syscall specific exit to user mode preparation. Runs with interrupts
-- * enabled.
+-/**
+- * __round_jiffies - function to round jiffies to a full second
+- * @j: the time in (absolute) jiffies that should be rounded
+- * @cpu: the processor number on which the timeout will happen
+- *
+- * __round_jiffies() rounds an absolute time in the future (in jiffies)
+- * up or down to (approximately) full seconds. This is useful for timers
+- * for which the exact time they fire does not matter too much, as long as
+- * they fire approximately every X seconds.
+- *
+- * By rounding these timers to whole seconds, all such timers will fire
+- * at the same time, rather than at various times spread out. The goal
+- * of this is to have the CPU wake up less, which saves power.
+- *
+- * The exact rounding is skewed for each processor to avoid all
+- * processors firing at the exact same time, which could lead
+- * to lock contention or spurious cache line bouncing.
+- *
+- * The return value is the rounded version of the @j parameter.
 - */
--static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
+-unsigned long __round_jiffies(unsigned long j, int cpu)
 -{
--	unsigned long work =3D READ_ONCE(current_thread_info()->syscall_work);
--	unsigned long nr =3D syscall_get_nr(current, regs);
--
--	CT_WARN_ON(ct_state() !=3D CT_STATE_KERNEL);
--
--	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
--		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
--			local_irq_enable();
--	}
--
--	rseq_syscall(regs);
--
--	/*
--	 * Do one-time syscall specific work. If these work items are
--	 * enabled, we want to run them exactly once per syscall exit with
--	 * interrupts enabled.
--	 */
--	if (unlikely(work & SYSCALL_WORK_EXIT))
--		syscall_exit_work(regs, work);
+-	return round_jiffies_common(j, cpu, false);
 -}
+-EXPORT_SYMBOL_GPL(__round_jiffies);
 -
--static __always_inline void __syscall_exit_to_user_mode_work(struct pt_regs =
-*regs)
+ /**
+  * __round_jiffies_relative - function to round jiffies to a full second
+  * @j: the time in (relative) jiffies that should be rounded
+@@ -482,22 +456,6 @@ unsigned long round_jiffies_relative(unsigned long j)
+ }
+ EXPORT_SYMBOL_GPL(round_jiffies_relative);
+=20
+-/**
+- * __round_jiffies_up - function to round jiffies up to a full second
+- * @j: the time in (absolute) jiffies that should be rounded
+- * @cpu: the processor number on which the timeout will happen
+- *
+- * This is the same as __round_jiffies() except that it will never
+- * round down.  This is useful for timeouts for which the exact time
+- * of firing does not matter too much, as long as they don't fire too
+- * early.
+- */
+-unsigned long __round_jiffies_up(unsigned long j, int cpu)
 -{
--	syscall_exit_to_user_mode_prepare(regs);
--	local_irq_disable_exit_to_user();
--	exit_to_user_mode_prepare(regs);
+-	return round_jiffies_common(j, cpu, true);
 -}
+-EXPORT_SYMBOL_GPL(__round_jiffies_up);
 -
--void syscall_exit_to_user_mode_work(struct pt_regs *regs)
--{
--	__syscall_exit_to_user_mode_work(regs);
--}
--
--__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
--{
--	instrumentation_begin();
--	__syscall_exit_to_user_mode_work(regs);
--	instrumentation_end();
--	exit_to_user_mode();
--}
--
- noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
- {
- 	enter_from_user_mode(regs);
+ /**
+  * __round_jiffies_up_relative - function to round jiffies up to a full seco=
+nd
+  * @j: the time in (relative) jiffies that should be rounded
 
