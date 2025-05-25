@@ -1,100 +1,142 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4AC43146;
-	Sun, 25 May 2025 19:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916E33FE7;
+	Sun, 25 May 2025 19:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748200767; cv=none; b=lEMVlLuakcTNFzQfGrTR2LTO1tV3nwKmqzv04lkhUXVMwCJGK0C3c1I8uP1B8j5XgXTvOy486DP2aiD+w6TQj2WQQNBZqqQUbtR0LXBarl30riHgfOkgMIIsf6L8w7JbSMgiPoeJh1/z/mlirWn/LBlvRgmxw+5Natgn7FzaUyQ=
+	t=1748201051; cv=none; b=QNPahNLv2mNVTSPxpA1+Igm4qlwqLxSRlL0XcBtWM6JPyoWGpHgJrgk/ww5hFZKdqnbQcK3lxhp6PcUopO1jtjrUhjwAMnjPEAzvrveul/8Mr+gnPYiNtZ976LK3FCKQf/6ZI4vxI/BEoEXoC15LMuT7H4zI0J5CYIT949OeATs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748200767; c=relaxed/simple;
-	bh=uCbl56zTvR5oX3QuUueBzYZCm+S64yobnDZB90prxRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G4kzKRwQcpC7if9LdQ2XTYiuswd8i3W0kOTR18b8jG0ys2ifeFlpqsshOoVJ6YMVX8bIJ+F5xLHtwuB5GSBfy2x1cuWR4cLSIwqRkw8MY/dHEIv7nVhBO17ieLZ6EgWYK6wSGvZeJ7bQS6qejPb2b0BqbhqcdHMnCRbbwNmAZ0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4mDhzF4; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4mDhzF4"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2c02e79d31so952781a12.2;
-        Sun, 25 May 2025 12:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748200765; x=1748805565; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCbl56zTvR5oX3QuUueBzYZCm+S64yobnDZB90prxRQ=;
-        b=N4mDhzF4U9CbRYFEDfGSnz68ODW6xs++aKbmwtyT0CJu96LUDLnMCFldLKUBQkq+aS
-         G2NCOZ9bVqTsGQqBjAdyyWJG+9CX7Vi6D5ffWXUSx0UQFWgctGGQY1sxWh58/gLGpkhF
-         j9PZIVmuuIz0qrQrn9J6jUYmmoT7ZPCHRXlhGw78y3Zr8Gv3pg5+X4Oj2Goa6L+HW+AN
-         9CbyqFif1ZcMAtuN4i+YPq7t2/kIoSDg06AEzQzpp9WNufrHcrhZRDxfrc+/ITHGiB72
-         tpM7tFTLs0MzAO14WMkYGwRi/GZmEkyXtWNlNp+Ch7aeUJDRvu0oGI/T2JIUd6Sw4MBG
-         GRbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748200765; x=1748805565;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uCbl56zTvR5oX3QuUueBzYZCm+S64yobnDZB90prxRQ=;
-        b=MY/viP5vVxFtY4GUTx7w+GxajjrnXd6SRxXwgVcPxXEqpRB17Z2b8vmhHSq9kSjCiP
-         uoYQUL4w4k2nHF5YAXbAs2nWUvwNm9Djhg2ghWV1o5x4qu1ai1tMyLtFv+J3wtmsgJTR
-         35OK6dGI3VXcAFaK6I1oMNFCJXzgAVUBbSOmM8kFATYtB4EWqFx0OiT5Xc/HCyjAie7v
-         gsq5XHqhomNjyoVJPFP57VRWWfkPU1091u55jj3P8EQTGlSj4ObvbG55w4p65GXIsypl
-         pcUq1l5H33X2MLbJTSveEp5CeDfcl6eyo0PD7eXTeUbHcfbaJdoS6uv073GUJhaqLNST
-         xD/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOiJDIpn5tFmQFEdT2NUeS81m3A4Qv/EXrFofZ5qbzjsXOJoIF8zkbeelXy32JhTHUlGdx7jUqVuGfMk0=@vger.kernel.org, AJvYcCVmLv1b6L121bSAdsHuZZmBmYGmwG1lovq1HQOcrw3jrh4FnG8XmAZOEHfbtHWa74NbYtTZzb9q4XYgNKoCLpVs@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6dhrT50tT0WfU6QSbLdIDQOBGMSktQ39TBcVldhbmBqTeHxo2
-	o6/v8t+e7asvT12FfSnGZhyJQC1J9by21CjFLFhmntQ2ycUAd0qkPocVGgY7PZnqRxMQI/usEDr
-	MSqvXEY9N6NIkUj5M1pbH7247D7ulTQ==
-X-Gm-Gg: ASbGncuzCASusK8EIMhuSmVEezKGiG+yXF9y6tKuJUqZvqS5gO0X4LVzj0nyeuYRwkT
-	H1UeDRet28G+Ll5Un6P88TgJ82YcQlP35+5ShamJFmqCzANgja6RvKkiGGAqbIjIRjrUmF8vNKL
-	0CsdS6wLPfXNzGw6RcCQOwa5GbhYfzOLLFH2giXusrqLsXzyfuJ0Y+3raDLKHZlmlAQ6ayDMz06
-	nLJ
-X-Google-Smtp-Source: AGHT+IE49QtSZD/cKBZ5BP1yA1DXZJqPWlGny04gQQGYYgaEAFtSE3U5Dq1FLXkagjEVnZI5VV/7Hij8OlK/mpvnwpA=
-X-Received: by 2002:a17:90b:52c6:b0:305:5f25:59a5 with SMTP id
- 98e67ed59e1d1-311108a4e7fmr9846167a91.35.1748200765413; Sun, 25 May 2025
- 12:19:25 -0700 (PDT)
+	s=arc-20240116; t=1748201051; c=relaxed/simple;
+	bh=uO2WHAn2a2Pn5PVFMaAo43EEmj8uaQ+n0S+Z7LEZ/Xw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZQPiTkjmTcjAoJtVudDHoLYxPw+S1+Glu3cvG5ZYsj0hG4Ohbqqx5ayjJ+Spb4fCeojBIxr1dQf+EVFmzTpeQdWuIc0q2MkgKt9FTzfATS8Gdg63FD6QCa5kaym6aOUEt6lx5NPYy9AbfWZxfG3z7yDNpZmaDD1AU1Joox3R0jU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E76C4CEEA;
+	Sun, 25 May 2025 19:24:09 +0000 (UTC)
+Date: Sun, 25 May 2025 15:25:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: David Laight <david.laight.linux@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>, Naresh Kamboju <naresh.kamboju@linaro.org>,
+ linux-bcache@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Linux Regressions
+ <regressions@lists.linux.dev>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
+ larger than 2048 bytes [-Werror=frame-larger-than=]
+Message-ID: <20250525152502.224f8a99@gandalf.local.home>
+In-Reply-To: <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
+References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
+	<6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
+	<CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
+	<6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
+	<7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
+	<566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
+	<hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
+	<692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
+	<20250525181842.2e2c47fd@pumpkin>
+	<zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501163827.2598-1-ujwal.kundur@gmail.com> <20250510160335.1898-1-ujwal.kundur@gmail.com>
- <D9V0UTL5BCLM.1WHR6F4UN14QQ@google.com> <CALkFLLLfxT1pQ_ySB1NU4KXOEGLd2wB8pbhpBG2HfK3_mLOYAQ@mail.gmail.com>
- <DA0VHZ6KE96B.XOYNEFMGWD58@google.com>
-In-Reply-To: <DA0VHZ6KE96B.XOYNEFMGWD58@google.com>
-From: Ujwal Kundur <ujwal.kundur@gmail.com>
-Date: Mon, 26 May 2025 00:49:12 +0530
-X-Gm-Features: AX0GCFuYwumGBCs4IZFi7ChmVZQtrJenzu_p2fgKD9W_iisr7rslKvFgB_F8ufA
-Message-ID: <CALkFLLK19Uqr2veWCn79cbLLgde5f+otf9Qx0xSPGdhdnekGrw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] selftests/mm/uffd: Refactor non-composite global
- vars into struct
-To: Brendan Jackman <jackmanb@google.com>
-Cc: akpm@linux-foundation.org, peterx@redhat.com, shuah@kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> Sounds like that's your issue - for the kernel, tab is supposed to be
-> as wide as 8 spaces, not 4.
+On Sun, 25 May 2025 13:36:16 -0400
+Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-That fixed it, thanks! I've gone through the diff and made sure there
-are no longer any inconsistent indents.
+> We already have "trace max stack", but that only checks at process exit,
+> so it doesn't tell you much.
 
-> I'm afraid I'm too ignorant of this code to be able to suggest something
-> good here. But, can we just remove the comment and plumb the gopts
-> through to uffd_poll_thread()->uffd_handle_page_fault()->__copy_page()?
->
-> This is not pretty but it lets us remove the global vars which is
-> clearly a step in the right direction.
+Nope, it traces the stack at every function call, but it misses the leaf
+functions and also doesn't check interrupts as they may use a different
+stack.
 
-Perhaps Andrew can weigh in? If I understood this correctly, we're
-trying to assert that retrying a successful UFFDIO_COPY operation
-always results in EEXIST. This is being done in a somewhat racy
-fashion where a flag (test_uffdio_copy_eexist) is set every 10 seconds
-using alarm(2). IMO this is a flaky test, we should either:
-- remove this variable and associated logic entirely (preferred)
-- use a probability function to set this a % of the time instead of
-every 10 seconds
-- use an async library that can replace the implementation without the
-use of global vars
+> 
+> We could do better with tracing - just inject a trampoline that checks
+> the current stack usage against the maximum stack usage we've seen, and
+> emits a trace event with a stack trace if it's greater.
+> 
+> (and now Steve's going to tell us he's already done this :)
+
+Close ;-)
+
+# echo 1 > /proc/sys/kernel/stack_tracer_enabled
+
+Wait.
+
+# cat /sys/kernel/tracing/stack_trace
+        Depth    Size   Location    (33 entries)
+        -----    ----   --------
+  0)     8360      48   __msecs_to_jiffies+0x9/0x30
+  1)     8312     104   update_group_capacity+0x95/0x970
+  2)     8208     520   update_sd_lb_stats.constprop.0+0x278/0x2f40
+  3)     7688     416   sched_balance_find_src_group+0x96/0xe30
+  4)     7272     512   sched_balance_rq+0x53f/0x2fe0
+  5)     6760     344   sched_balance_newidle+0x6c1/0x1310
+  6)     6416      80   pick_next_task_fair+0x55/0xe60
+  7)     6336     328   __schedule+0x8a5/0x33d0
+  8)     6008      32   schedule+0xe2/0x3b0
+  9)     5976      32   io_schedule+0x8f/0xf0
+ 10)     5944     264   rq_qos_wait+0x12a/0x200
+ 11)     5680     144   wbt_wait+0x159/0x260
+ 12)     5536      40   __rq_qos_throttle+0x50/0x90
+ 13)     5496     320   blk_mq_submit_bio+0x70b/0x1ff0
+ 14)     5176     240   __submit_bio+0x1b3/0x600
+ 15)     4936     248   submit_bio_noacct_nocheck+0x546/0xca0
+ 16)     4688     144   ext4_bio_write_folio+0x69d/0x1870
+ 17)     4544      64   mpage_submit_folio+0x14c/0x2b0
+ 18)     4480      96   mpage_process_page_bufs+0x392/0x7a0
+ 19)     4384     632   mpage_prepare_extent_to_map+0xa5b/0x1080
+ 20)     3752     496   ext4_do_writepages+0x8af/0x2ee0
+ 21)     3256     304   ext4_writepages+0x26f/0x5c0
+ 22)     2952     344   do_writepages+0x183/0x7c0
+ 23)     2608     152   __writeback_single_inode+0x114/0xb00
+ 24)     2456     744   writeback_sb_inodes+0x52b/0xdf0
+ 25)     1712     168   __writeback_inodes_wb+0xf4/0x270
+ 26)     1544     312   wb_writeback+0x547/0x800
+ 27)     1232     328   wb_workfn+0x7b1/0xbc0
+ 28)      904     352   process_one_work+0x85a/0x1450
+ 29)      552     176   worker_thread+0x5b7/0xf80
+ 30)      376     168   kthread+0x371/0x720
+ 31)      208      32   ret_from_fork+0x34/0x70
+ 32)      176     176   ret_from_fork_asm+0x1a/0x30
+
+
+The code that does this is in kernel/trace/trace_stack.c
+
+It simply attaches to the function tracer and at ever function checks the
+current stack size.
+
+Hmm, I need to update this because today we even pass the stack pointer via
+the ftrace_regs if the arch supports it. Using that would allow me to get
+rid of the hack:
+
+
+static void check_stack(unsigned long ip, unsigned long *stack)
+{
+	[..]
+	this_size = ((unsigned long)stack) & (THREAD_SIZE-1);
+	this_size = THREAD_SIZE - this_size;
+
+
+	unsigned long stack;
+
+[..]
+
+static void
+stack_trace_call(unsigned long ip, unsigned long parent_ip,
+		 struct ftrace_ops *op, struct ftrace_regs *fregs)
+{
+	unsigned long stack;
+	[..]
+
+	check_stack(ip, &stack);
+
+
+-- Steve
