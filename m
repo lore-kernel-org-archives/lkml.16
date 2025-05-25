@@ -1,112 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12993D984;
-	Sun, 25 May 2025 12:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D41192D87;
+	Sun, 25 May 2025 12:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748176020; cv=none; b=kY53/H/Ja1FFiolu/AvEBkh0pgkKmUa8GemL4nx119N7SMP7hWKqLOopQAjT+woHg1eBaUVVwmayqXWFeq1MSGUjFUEqErg/Rc6g52ZKdHTQdTa5rnYgEzQ70Q65wS5oZhERJ1lHzspyguwZYZXA0CdCDSmjoC+O2/wmlN5FAEE=
+	t=1748176374; cv=none; b=cnN9jEeMKAYKoDbTYss7eiFxgPIc9k8Sbkl0T6SJ6GNFAKpVz9WEUuhApyGmWKjcgvQGh+KyygDQRN1H9tlJ09hrhE1pV8V0UHJFXSAHJzQDynISKRhtE0HsuILMysZufUBoI6g41d27SIhf/WKt6zTKSy2Ng13+NrB88GSFFS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748176020; c=relaxed/simple;
-	bh=g6gSSAx8RMkQAqBEmyaI2M4+2uwDbQxsl5jyh2U6Ad8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rtj0VbB8K9f/Z6oRFzyg6DD8Is4yBcW1njbOIIt2sKBQ97UP2Ym0/97aNnGpQoE/p59aDERhWvUQGzQeyxs0sHEQu3lpboCG+7f2tm0udn2PorPz/8MiqrZw+7laSZkCeT5xy/i6j7ujH3+3edaIiZZ23NKA23as27KSLRXZs7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFYdmNaK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748176374; c=relaxed/simple;
+	bh=Zm6sqqdLsuqM7CAR+q6ZjZWpT2f9BhhyD9qYALFxsnA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ovo8nHtVl6QiciYK7Gq93Sezq+/ATHNMYcVuxaobkH7PAy+VyWW4HONNUiV359VUdgGDxmb6bZXa/PJwdAsoiSHpZ+0Bbar+F2IFrIex0ZyaktdmYgFi++JQsEdNhnDxWoxTu1uhOtRbqb0cg8dmYGfOgpBrjyPIJ2wOxF3LvHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ENMmL7kz; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFYdmNaK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347B6C4CEEA;
-	Sun, 25 May 2025 12:26:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748176019;
-	bh=g6gSSAx8RMkQAqBEmyaI2M4+2uwDbQxsl5jyh2U6Ad8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mFYdmNaKTm/t5X/F/oR29UyZyyIGJiqEvFbkC3atb5+h1NyPDo9qqFgdAkhZL8K5R
-	 rcHagxt+S1LXLsplwEg9G/bviU32dScfjnXSQWHE7tvWmtbuecN8fdUkjx7872ecxs
-	 045UtYK4AhdBW/GOkggpfcYyW6eGv8KMveYoOTzBV+LK/AXwlTfn2M8KIcDu3+3r8N
-	 BDCVfR9r2VSrJQWV6g1AiapPWF6qJXydWlmu3qZZ4CawghxoPn5vPqqp2kfw/nn9nl
-	 QtgESpZJR/WHmGS0OAc0dt8MNiZ51a+JwskyJn3xzqrhqGWKtaNUOvnmIJ9eG8qGIS
-	 mo5gEdiD/2K6A==
-Date: Sun, 25 May 2025 13:26:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
- Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/12] iio: accel: adxl313: add function to enable
- measurement
-Message-ID: <20250525132652.0167f617@jic23-huawei>
-In-Reply-To: <20250523223523.35218-6-l.rubusch@gmail.com>
-References: <20250523223523.35218-1-l.rubusch@gmail.com>
-	<20250523223523.35218-6-l.rubusch@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ENMmL7kz"
+Received: from localhost.localdomain
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id JAWtu3FlrpEs6JAWuuNAR5; Sun, 25 May 2025 14:32:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1748176362;
+	bh=ezOSH7DNNbrcR1DYR5Ht3MTrtxBGiOkFfZgULPq3ODQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ENMmL7kzpGv6rNZQN7cEUa9d3mP8A8WR0med0d8Q53PjkvOPGSgTqUkN1a6mAlrTj
+	 oBQoZdtxm36eohIdFoSKZQsmOaU2NEK1cencEUC9tLRVk4MPKk4yeytrRnXwL5thl3
+	 TCoqig+9ziMj6RkrKH687W6L15XqGa2fB3cWmE9tnJ3Lf2UqPbkSKdTKzNdg6X5VWO
+	 a9EJlhdlO15hz4yJa0JBjTwqd2hRYDNeW3pqvRnRmwxlgEaNXB/TKNWfcm+P3rSV0A
+	 zF56VwhPHBWiieoP7E+Jm0cdQK/tcaIJvnl0rMZ8W+mCsyv6Xyg/WEWrkTPIKAyzIg
+	 xZkp/1EsKLvIg==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 25 May 2025 14:32:42 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: zhanghongchen <zhanghongchen@loongson.cn>,
+	Yinbo Zhu <zhuyinbo@loongson.cn>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pm@vger.kernel.org
+Subject: [PATCH] thermal/drivers/loongson2: Constify struct thermal_zone_device_ops
+Date: Sun, 25 May 2025 14:32:30 +0200
+Message-ID: <5f5f815f85a9450bca7848c6d47a1fee840f47e5.1748176328.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Fri, 23 May 2025 22:35:16 +0000
-Lothar Rubusch <l.rubusch@gmail.com> wrote:
+'struct thermal_zone_device_ops' could be left unmodified in this driver.
 
-> Add a function to enable measurement. The data-sheet recomments turning of
-> measurement while modifying certain config registers. This is a preparatory
-> step.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> ---
->  drivers/iio/accel/adxl313.h      |  3 +--
->  drivers/iio/accel/adxl313_core.c | 10 +++++++---
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
-> index fc937bdf83b6..9bf2facdbf87 100644
-> --- a/drivers/iio/accel/adxl313.h
-> +++ b/drivers/iio/accel/adxl313.h
-> @@ -36,8 +36,7 @@
->  #define ADXL313_RATE_MSK		GENMASK(3, 0)
->  #define ADXL313_RATE_BASE		6
->  
-> -#define ADXL313_POWER_CTL_MSK		GENMASK(3, 2)
-> -#define ADXL313_MEASUREMENT_MODE	BIT(3)
-> +#define ADXL313_POWER_CTL_MSK		BIT(3)
->  
->  #define ADXL313_RANGE_MSK		GENMASK(1, 0)
->  #define ADXL313_RANGE_MAX		3
-> diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl313_core.c
-> index 0c893c286017..6170c9daa30f 100644
-> --- a/drivers/iio/accel/adxl313_core.c
-> +++ b/drivers/iio/accel/adxl313_core.c
-> @@ -63,6 +63,12 @@ bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
->  }
->  EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
->  
-> +static int adxl313_set_measure_en(struct adxl313_data *data, bool en)
-> +{
-> +	return regmap_assign_bits(data->regmap, ADXL313_REG_POWER_CTL,
-> +				  ADXL313_POWER_CTL_MSK, en);
-> +}
-> +
->  static int adxl312_check_id(struct device *dev,
->  			    struct adxl313_data *data)
->  {
-> @@ -410,9 +416,7 @@ static int adxl313_setup(struct device *dev, struct adxl313_data *data,
->  	}
->  
->  	/* Enables measurement mode */
-> -	return regmap_update_bits(data->regmap, ADXL313_REG_POWER_CTL,
-> -				  ADXL313_POWER_CTL_MSK,
-> -				  ADXL313_MEASUREMENT_MODE);
-> +	return adxl313_set_measure_en(data, true);
-The original code is also clearing the sleep bit.
+Constifying this structure moves some data to a read-only section, so
+increases overall security, especially when the structure holds some
+function pointers.
 
-I'd expect the patch description to have stated why no longer doing that
-is fine. I guess no one ever sets it?
+This partly reverts commit 734b5def91b5 ("thermal/drivers/loongson2: Add
+Loongson-2K2000 support") which removed the const qualifier. Instead,
+define two different structures.
 
->  }
->  
->  /**
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+   5089	   1160	      0	   6249	   1869	drivers/thermal/loongson2_thermal.o
+
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+   5464	   1128	      0	   6592	   19c0	drivers/thermal/loongson2_thermal.o
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only
+---
+ drivers/thermal/loongson2_thermal.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/thermal/loongson2_thermal.c b/drivers/thermal/loongson2_thermal.c
+index 2d6b75b0539f..ea4dd2fb1f47 100644
+--- a/drivers/thermal/loongson2_thermal.c
++++ b/drivers/thermal/loongson2_thermal.c
+@@ -112,13 +112,19 @@ static int loongson2_thermal_set_trips(struct thermal_zone_device *tz, int low,
+ 	return loongson2_thermal_set(data, low/MILLI, high/MILLI, true);
+ }
+ 
+-static struct thermal_zone_device_ops loongson2_of_thermal_ops = {
++static const struct thermal_zone_device_ops loongson2_2k1000_of_thermal_ops = {
+ 	.get_temp = loongson2_2k1000_get_temp,
+ 	.set_trips = loongson2_thermal_set_trips,
+ };
+ 
++static const struct thermal_zone_device_ops loongson2_2k2000_of_thermal_ops = {
++	.get_temp = loongson2_2k2000_get_temp,
++	.set_trips = loongson2_thermal_set_trips,
++};
++
+ static int loongson2_thermal_probe(struct platform_device *pdev)
+ {
++	const struct thermal_zone_device_ops *thermal_ops;
+ 	struct device *dev = &pdev->dev;
+ 	struct loongson2_thermal_data *data;
+ 	struct thermal_zone_device *tzd;
+@@ -140,7 +146,9 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
+ 		if (IS_ERR(data->temp_reg))
+ 			return PTR_ERR(data->temp_reg);
+ 
+-		loongson2_of_thermal_ops.get_temp = loongson2_2k2000_get_temp;
++		thermal_ops = &loongson2_2k2000_of_thermal_ops;
++	} else {
++		thermal_ops = &loongson2_2k1000_of_thermal_ops;
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+@@ -152,8 +160,7 @@ static int loongson2_thermal_probe(struct platform_device *pdev)
+ 	loongson2_thermal_set(data, 0, 0, false);
+ 
+ 	for (i = 0; i <= LOONGSON2_MAX_SENSOR_SEL_NUM; i++) {
+-		tzd = devm_thermal_of_zone_register(dev, i, data,
+-						    &loongson2_of_thermal_ops);
++		tzd = devm_thermal_of_zone_register(dev, i, data, thermal_ops);
+ 
+ 		if (!IS_ERR(tzd))
+ 			break;
+-- 
+2.49.0
 
