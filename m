@@ -1,102 +1,132 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C601AAA1A;
-	Sun, 25 May 2025 21:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7556145B3F;
+	Sun, 25 May 2025 21:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748207592; cv=none; b=SBsQw1W9/SOSX/C55oRIl+um7h1OAkdk6CkJ4/Gcbsh01+w5eXumc8O68CSoHGOcOpEp3RnK83J6NaQjKLJRoFUVXeYAriUoz9/qAiiueARMj3ivN3oRzYHctu36KQm2UMv7kPk+lLfMnedqde7WSDJvyHgx5dSlWAnMaV/eYFc=
+	t=1748207819; cv=none; b=JUsE0V89IEoE3yRzhltK3Kmx8QHNLbKfpAje00J/PYK8ZTulGsosE2ePO8vfEqT29/AQ9KNb6sUkqvGFACVLWVxg4LTPIwCec6JZmo0bGk64Ih7oPw+ZTP6FZT6AGuHejwA5GcZq7sRwuw0BX59Tt7ePnuwkQNg3jQyftTMGziY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748207592; c=relaxed/simple;
-	bh=yutOagRm7/jPjwci0FN1tltP5msoKbQLQUfg1GE+uf8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K5DOVCFTBPeO4QvlUIBFG55h6lx/HxNzyBlOXiXoWiAB/XSxXIqeHX24apS/jEPDh7O+VzVwNZi8MGvAV3qrl/9/K7xkXHrgY/zSkAGlrPUjVTSPJeJj8sM75/DwIOJOAJKQ4Hoo1nDRCgW8kRONCwgCrOwBwQ49Bab3qIIyXPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IkXUQ4HQ; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748207819; c=relaxed/simple;
+	bh=TBH+C9FThePkUfdvX9cVY62+HGyS1ZOanwJDuFFOIyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=dA7m4wQXPtZ5LqH7JNcQgndy+UCyIxksgRxatsfjFJvbKNWbQ3JNCg2S0UL1uEcbqzvvVRVup+1NOQ8q/QFw+wqb45Re1S1+Iq75MtswKaz/dCPY3ZqLPxn9JXy7cywnN0jgF63fbbzpqzAGN5wPrlVCBoGCwD+kBkWm2G3l7AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=II3KIFuM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkXUQ4HQ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231b7b21535so1021005ad.1;
-        Sun, 25 May 2025 14:13:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748207590; x=1748812390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XX4Ox7nGMplfoPZEHRnuA8sBW2s4IqgCV4sN1QmT1+Q=;
-        b=IkXUQ4HQAtZschaEaIqs+kC0Qy5rVU++2fMTw7m2ZiKCRTsG5xFv0UrHQCLnFUmMv9
-         sS7MuFQqJhU6+4hAityNwsVywUlqV3Lj6wB++D8SSe/SkeBpLnIq5SSW0bcP7CmhmnIn
-         WFTfLGen1uUmfy3/htqQJ8G3pN8SX9bY3RdH89MRIa1uStP+IniIa5sBBFzCr29rBX2o
-         wdJFgSaLLlX38LvBc0esxq/K5ZoCH93Q3rwO7pA1TtwFUujlqy3t3fxMXRDNS9CPPwhn
-         YcREFbII+v2sCq5EjuVF1Od1Hy6g2k/c1y1UDPfPAFluk2X7w8VFA4fZvYDr+ThO6Rvd
-         6CNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748207590; x=1748812390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XX4Ox7nGMplfoPZEHRnuA8sBW2s4IqgCV4sN1QmT1+Q=;
-        b=UdkS1fM2Xv0wJx6aJrWfajhIEY73Lh4pqMLBZKTX1x5UqI21DHOGe06Y3acWgu5Y7K
-         /ayhfHDJWnOO+rmVx2ZRbBBnBGJtXdVg4EhturecreyLkTbe1QRENxMQiwInwTeByX0T
-         SiBfcsnq3fXVjPKIFKW/j2id+sR0McdcsHDrWgAsHaabevtOpxDJdOHCmFYFeb/0d9gr
-         bH1B47uYb/8tK6bztoe7DwC0P78tlOB6Z6mPuDWyQ1SNvEC0T8ZV257H1iTBaV21qWxm
-         VYQhxY7ZuBK+QzW25ylzDjZdEcEQbSwJeElGWER4x42/octs+CjtAt4muGAM0DUq6Ja1
-         v9bw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3jIDi3ajPnhrp3xZV2sRTMr9ZyTNishOLexLn4aVts+1VoKn4bcBpSt+HLG8FX7oJpF3JPMQ5J6uGOV9UdK8=@vger.kernel.org, AJvYcCWpN7DQ82b5fbfJsHCCu2HGZ7sGK9zMCnnWyQ83Tl/k4cubN2B0sL40GlOP1+1kxinYBYUDN3kVKdglROQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZkvkuA7aReF8zecoFDeZ/C5X/McjBg7P0hsbv5sTh01GP0xp/
-	mvRevQGUm5ggDQ/FDaH7xmuIBmHzG8GRJiMzkeE6NJKed7y4DTJxOFWu/pO//b6dYTwOZpGqEAE
-	3FGNArbLAiEzsBGuhFIiFYXi6dDJGMns=
-X-Gm-Gg: ASbGnctM3gAzXXrM0grnaz3zmUdvKCj1K6Iyl9BKZt6JBEzZxk7JKjIXQETzW2/Hdzh
-	wf63dUCdq71oHf5Kujt0CJ2CQBHDhmtMkmvPVPDBHU52LYpVcHOhAsaxDOZcji3fMuq7XvqL40z
-	GWlffeZ55sKvl4W3oC+bA64pnpu77rItE9
-X-Google-Smtp-Source: AGHT+IEfUYwvhLO0+MQrywuylW3sHqV8LRghvR/dDBShngF/P39+CL3M+a5Jusbe8qTBUzOuhXFa4dSPxQN6zgvf04k=
-X-Received: by 2002:a17:902:cf03:b0:21f:356:758f with SMTP id
- d9443c01a7336-23414f2f960mr42912265ad.3.1748207590309; Sun, 25 May 2025
- 14:13:10 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="II3KIFuM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D6BDA40E01A8;
+	Sun, 25 May 2025 21:16:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0vsKWCsRoWUX; Sun, 25 May 2025 21:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748207795; bh=43WyX77Gfj9FWc2KCKZRWlU4Eg/+PHerZt8pajAaHHI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=II3KIFuM/MCdmfemxw9ZMhi9j0Z/8zdKp7iQztONWfs9O26hX8xb2hfDK50fEihom
+	 p9NSTkriGkAuRVA5rqJ4Ej3AMbeTbQ6Y37ut9pIcpIooAvI/HchYLZjD62BqjOOBr0
+	 fzXGygjMftVmY9tRhR1ZV+2sGtW50gyJSqNuBpondm9nVHR9D+Dr+Ywlq5jaYQRAXR
+	 gw+bISQk5Rn189quLRloBS77BN1v1igyXK4PjH2Su/BWwMemUaUvS8NF0mcxG/H6CF
+	 r/h7azyzPFLWQb2mgQn32Lpgx8Jwwf6kfRyxtI5vZsVQhcFwfbD32ellcjcqLf/WLf
+	 7yVkc+lGwPAEqMgndIfC+WvfINeBaqMvpe5IERcckTaI+uHqZKM78o2WDk45HqkRJP
+	 Z0VN/H84paO7b5kFw2OtIFzT1FPqodWVjWgeS1iFBUwctNQCc3gqV8n4xo+L94gz8s
+	 b3fj9KPgNjVZmPp1EuUO6S7cRE1ZOxGkPyu89gjDDOnfrKinTj9DQVMAMs5GgZJd1K
+	 qWDptuostKv0/BySk++rBaNRtDk52IlgkjnJtjvBSWrasZd71KkmnaF7N5Vt5Xi3jr
+	 2pT8J6GSfpDnwqPFfV2llG8WQrj40lLsPV4XfJ+i334NZAvBwQE2ptfALGXmzagqLw
+	 ZpmzBsTLQufdqh1w4z+4EB6s=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 81A0440E0028;
+	Sun, 25 May 2025 21:16:32 +0000 (UTC)
+Date: Sun, 25 May 2025 23:16:18 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC updates for v6.16
+Message-ID: <20250525211618.GAaDOIolEntC03ernr@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413005650.1745894-1-ojeda@kernel.org>
-In-Reply-To: <20250413005650.1745894-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 25 May 2025 23:12:57 +0200
-X-Gm-Features: AX0GCFu4PPuuef2Ppk43U8NCIUkz-S7uTimHbFKJFw7xJySv4__UfxYhAvWU-hg
-Message-ID: <CANiq72kSsfBm1rKANrxyrcX=X0MvfJZKTYLGU-yRFaMzBTQ2Rw@mail.gmail.com>
-Subject: Re: [PATCH] rust: add C FFI types to the prelude
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Sun, Apr 13, 2025 at 2:57=E2=80=AFAM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> Rust kernel code is supposed to use the custom mapping of C FFI types,
-> i.e. those from the `ffi` crate, rather than the ones coming from `core`.
->
-> Thus, to minimize mistakes and to simplify the code everywhere, just
-> provide them in the `kernel` prelude and ask in the Coding Guidelines
-> to use them directly, i.e. as a single segment path.
->
-> After this lands, we can start cleaning up the existing users.
->
-> Ideally, we would use something like Clippy's `disallowed-types` to
-> prevent the use of the `core` ones, but that one sees through aliases.
->
-> Link: https://lore.kernel.org/rust-for-linux/CANiq72kc4gzfieD-FjuWfELRDXX=
-D2vLgPv4wqk3nt4pjdPQ=3Dqg@mail.gmail.com/
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+Hi Linus,
 
-    [ Reworded content of the documentation to focus on how to use the
-      aliases first. - Miguel ]
+please pull the EDAC updates for v6.16.
 
-Cheers,
-Miguel
+Thx.
+
+---
+
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_v6.16
+
+for you to fetch changes up to ea3b0b7f541b9511abe2b89547c95458804f38e2:
+
+  EDAC/bluefield: Don't use bluefield_edac_readl() result on error (2025-05-22 17:58:28 +0200)
+
+----------------------------------------------------------------
+- ie31200: Add support for Raptor Lake-S and Alder Lake-S compute dies
+
+- Rework how RRL registers per channel tracking is done in order to
+  support newer hardware with different RRL configurations and refactor
+  that code. Add support for Granite Rapids server
+
+- i10nm: explicitly set RRL modes to fix any wrong BIOS programming
+
+- Properly save and restore Retry Read error Log channel configuration
+  info on Intel drivers
+
+- igen6: Handle correctly the case of fused off memory controllers on
+  Arizona Beach and Amston Lake SoCs before adding support for them
+
+- the usual set of fixes and cleanups
+
+----------------------------------------------------------------
+David Thompson (1):
+      EDAC/bluefield: Don't use bluefield_edac_readl() result on error
+
+Qiuxu Zhuo (12):
+      EDAC/igen6: Skip absent memory controllers
+      EDAC/igen6: Add Intel Arizona Beach SoCs support
+      EDAC/igen6: Add Intel Amston Lake SoCs support
+      EDAC/skx_common: Fix general protection fault
+      EDAC/{skx_common,i10nm}: Fix the loss of saved RRL for HBM pseudo channel 0
+      EDAC/i10nm: Explicitly set the modes of the RRL register sets
+      EDAC/{skx_common,i10nm}: Structure the per-channel RRL registers
+      EDAC/{skx_common,i10nm}: Refactor enable_retry_rd_err_log()
+      EDAC/{skx_common,i10nm}: Refactor show_retry_rd_err_log()
+      EDAC/{skx_common,i10nm}: Add RRL support for Intel Granite Rapids server
+      EDAC/ie31200: Add two Intel SoCs for EDAC support
+      EDAC/i10nm: Fix the bitwise operation between variables of different sizes
+
+ drivers/edac/bluefield_edac.c |  20 +-
+ drivers/edac/i10nm_base.c     | 479 ++++++++++++++++++++++++------------------
+ drivers/edac/ie31200_edac.c   |   6 +
+ drivers/edac/igen6_edac.c     |  86 ++++++--
+ drivers/edac/skx_common.c     |   1 +
+ drivers/edac/skx_common.h     |  61 +++++-
+ 6 files changed, 422 insertions(+), 231 deletions(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
