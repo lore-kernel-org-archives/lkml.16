@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6DA26AF3;
-	Sun, 25 May 2025 13:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6362A26AF3;
+	Sun, 25 May 2025 13:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748178599; cv=none; b=TDkTEpc0gOg7nKrkL7B8HJvv260vFgPRB+QpHa9sEcmP4JPbO1hcnjMKP7iGlrmHCKyeq6q3wQmiU4D33EOBMf+DkPAkI0RDAqm19pOGcx6iW9WqmeT+HWCjoESQ00EbKNnmb1WNJE01JxtLDN+Z23UTeyYRkqEBzKctUqWx8AE=
+	t=1748178682; cv=none; b=q+W0KY/nk71uBC7b90N1775dq2fK8LiqyYNbFb3XlYqkLbZZoI2+EO24rj8FwgMfhkOrRQiqZ+GbWfZNhRaYUB8fHWHM9Gwd5G0XVNLV6aodRV1VXk7D+Pr3yEeyhSNHWJr5WVOIx56MUjaJH/kbPtu6E9ZOyAIBdpZOL8KTRxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748178599; c=relaxed/simple;
-	bh=WFnrzdwffDQrot3q6ZmBUqt+jd6v+agWz9yfZaf5PhA=;
+	s=arc-20240116; t=1748178682; c=relaxed/simple;
+	bh=6Mtb3b27NiBhNSscS2yTiu9ewI8biBsKNzBjI6Exyh4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eWQWTfj6qRnkTzvMNp+chcRU3GvBzCus7DoS24A5+XIZsCTS10g3A6b0NItPxuCfkLL4e+s/CCr9+SrO4rtx3wR+31lOgnyhwRYxbT/O/a2S5+sZQpaPHXXpv8X5LspX6c7WYl3z0529r/Pob7+PNAsJ9howGBINzJrWLW7y0ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2v/uEUY; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tk/puQFeE4idHAG+fDlhYdqBXjpHzEwId5GT2OTbFj1wH3yjyk/vpanRHbTuIejby/cMmxzj4f5MzLVMBi5Oi076/KTZ+RnrP0sTaxW//TbjURmPWLvELp6CiNbUeXxt3aylfqoa1ReiSUgiulrmQrW9qGJ8PXE4Bge62SjI0J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hW/nSUKW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2v/uEUY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42CCDC4CEEA;
-	Sun, 25 May 2025 13:09:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hW/nSUKW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB66EC4CEEA;
+	Sun, 25 May 2025 13:11:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748178598;
-	bh=WFnrzdwffDQrot3q6ZmBUqt+jd6v+agWz9yfZaf5PhA=;
+	s=k20201202; t=1748178681;
+	bh=6Mtb3b27NiBhNSscS2yTiu9ewI8biBsKNzBjI6Exyh4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=n2v/uEUY62MnVnk4bPiuso1CdFD98sV8XaalLHTTZ/gKHn0IDzeKL6tB9Sx8cwnf4
-	 HKS5lMTEHwpcI0V8B4joDR8tg4sVPvtY5vHaxSBtLFB5s4Ge3DByk8eEgTVKGtIxbX
-	 688lQTLlJqK9gd1sboc0K4zQBXWybN4fLdzArmIHuJKOIcrE6+3GcGFrzDdGdhTFDh
-	 hwVTpT32YbavpPIubP+hpbvA/zXYQNDXF2bw85G0YfXrDCUNc2aPSj/ZQ6DqF6FhFJ
-	 t6P7jULFwSI7GsL7/SHEtUhy9H3nxoX6cPpiUcL8cdTtp8lkJINtrGnaelCezke4r2
-	 8jCeRSmpRlXrw==
-Date: Sun, 25 May 2025 14:09:51 +0100
+	b=hW/nSUKWQ3tk+SuAJ4BvGm651ra1yKO8BbRsYdHrjXCha6HjZKsa3VzbwLu2d8xOF
+	 mOxhgGhfM7bD+NuVNVRcYa9hK5yW+4y6T6qk+eDadFTOCcPtHQyAHDcRM7WEMM/ER3
+	 +45+fhjPtE+KLGW2975R/fxSp41Lz0ZdURwyXv4HFOKZNfrvVLsifaOlrmATlRn3X5
+	 dmVrxFlrcE02hAKXq++wovjpYl8DtvcM0FRs84NndrB+foFp1w+DV6BmNVkx5HZRjy
+	 In8cPRtb/IuXPLJ9U0BvgZIHR7xMx24oOFqM6E0+hjAUjMFG22zmKsslboBCXh9gzf
+	 SNTBHHlDnoOSA==
+Date: Sun, 25 May 2025 14:11:12 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Lothar Rubusch <l.rubusch@gmail.com>
 Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
  corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
  Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 09/12] iio: accel: adxl313: add activity sensing
-Message-ID: <20250525140951.37039f49@jic23-huawei>
-In-Reply-To: <20250523223523.35218-10-l.rubusch@gmail.com>
+Subject: Re: [PATCH v3 10/12] iio: accel: adxl313: add inactivity sensing
+Message-ID: <20250525141112.35bee00a@jic23-huawei>
+In-Reply-To: <20250523223523.35218-11-l.rubusch@gmail.com>
 References: <20250523223523.35218-1-l.rubusch@gmail.com>
-	<20250523223523.35218-10-l.rubusch@gmail.com>
+	<20250523223523.35218-11-l.rubusch@gmail.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,46 +45,83 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-m adxl313_chans {
->  	chan_x, chan_y, chan_z,
->  };
-> @@ -238,6 +264,14 @@ static const struct iio_chan_spec adxl313_channels[]=
- =3D {
->  	ADXL313_ACCEL_CHANNEL(0, chan_x, X),
->  	ADXL313_ACCEL_CHANNEL(1, chan_y, Y),
->  	ADXL313_ACCEL_CHANNEL(2, chan_z, Z),
+On Fri, 23 May 2025 22:35:21 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
+
+> Extend the interrupt handler to process interrupts as inactivity events.
+> Add functions to set threshold and period registers for inactivity. Add
+> functions to enable / disable inactivity. Extend the fake iio channel to
+> deal with inactivity events on x, y and z combined with AND.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+
+Hi Lothar,  Comments inline.
+>  static const struct regmap_range adxl312_readable_reg_range[] = {
+> @@ -254,6 +258,14 @@ static const struct iio_event_spec adxl313_fake_chan_events[] = {
+>  		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+>  		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE),
+>  	},
 > +	{
-> +		.type =3D IIO_ACCEL,
-> +		.modified =3D 1,
-> +		.channel2 =3D IIO_MOD_X_AND_Y_AND_Z,
-I'm confused. If this is for activity it would be very unusual for it
-to be X&Y&Z.=20
+> +		/* inactivity */
 
-"A setting of 1 enables x-, y-, or z-axis participation in detecting
-activity or inactivity. A setting of 0 excludes the selected axis from
-participation. If all axes are excluded, the function is disabled. For
-activity detection, all participating axes are logically OR=E2=80=99ed, cau=
-sing
-the activity function to trigger when any of the participating axes
-exceeds the threshold. For inactivity detection, all participating axes
-are logically AND=E2=80=99ed, causing the inactivity function to trigger on=
-ly
-if all participating axes are below the threshold for the specified
-period of time."
+Ah. I only noticed this here, but the axis for these two types of
+detection should be different so awe shouldn't see them in a single
+array of events.
 
-Which matches with what I'd expect.
 
-> +		.scan_index =3D -1, /* Fake channel for axis AND'ing */
-> +		.event_spec =3D adxl313_fake_chan_events,
-> +		.num_event_specs =3D ARRAY_SIZE(adxl313_fake_chan_events),
+> +		.type = IIO_EV_TYPE_MAG,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +		.mask_shared_by_type = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_PERIOD),
 > +	},
 >  };
-> =20
->  static const unsigned long adxl313_scan_masks[] =3D {
-> @@ -300,6 +334,60 @@ static int adxl313_read_freq_avail(struct iio_dev *i=
-ndio_dev,
->  	}
->  }
+
+> @@ -550,16 +606,30 @@ static int adxl313_write_event_value(struct iio_dev *indio_dev,
+>  	if (type != IIO_EV_TYPE_MAG)
+>  		return -EINVAL;
+>  
+> -	if (info != IIO_EV_INFO_VALUE)
+> -		return -EINVAL;
+> -
+> -	/* Scale factor 15.625 mg/LSB */
+> -	regval = DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> -	switch (dir) {
+> -	case IIO_EV_DIR_RISING:
+> -		ret = regmap_write(data->regmap,
+> -				   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
+> -				   regval);
+> +	switch (info) {
+
+I got lost in earlier discussion you were having with Andy on this, but
+personally, if a series is going to introduce a simple test then flip
+it to a switch statement later, I'd rather see the switch statement from
+the start and reduce the churn a little.
+
+> +	case IIO_EV_INFO_VALUE:
+> +		/* The scale factor is 15.625 mg/LSB */
+> +		regval = DIV_ROUND_CLOSEST(MICRO * val + val2, 15625);
+> +		switch (dir) {
+> +		case IIO_EV_DIR_RISING:
+> +			ret = regmap_write(data->regmap,
+> +					   adxl313_act_thresh_reg[ADXL313_ACTIVITY],
+> +					   regval);
+> +			if (ret)
+> +				return ret;
+> +			return adxl313_set_measure_en(data, true);
+> +		case IIO_EV_DIR_FALLING:
+> +			ret = regmap_write(data->regmap,
+> +					   adxl313_act_thresh_reg[ADXL313_INACTIVITY],
+> +					   regval);
+> +			if (ret)
+> +				return ret;
+> +			return adxl313_set_measure_en(data, true);
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case IIO_EV_INFO_PERIOD:
+> +		ret = adxl313_set_inact_time_s(data, val);
+>  		if (ret)
