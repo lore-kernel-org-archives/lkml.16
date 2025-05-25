@@ -1,174 +1,167 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D58A2B2CF
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 20:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748203496; cv=none; b=kpR17vBl6rJYyCUQDwIgcpJzhL0sS74R7d1RKhET46lYnQ00w4bw2k0C855os7KZONjg0xVFa0wYWthoiP55XpUD+MZ2Yt5Aj1Jb9NnFYL4jIXjtd+yQ/mh5JPdK3fkdFW31rB2kQr2UIU9ydyto5uuc3euroSjCf8us2sbXTw4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748203496; c=relaxed/simple;
-	bh=h/adAkyvTMHCRUtOmvPIGpulvOnDhZqX8BHvZD9McVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EJ85KeyIO8z1C9Ux4c3ogAXZeWOK+TCcy7GYyHiOw8EkUDyRO/jwmKBVbobTZ8FWbTPYDOZtm101tPqCAd5A7cv3NzBf+P4l6Zz09qgmqNjKn19HFXiNNDRTsyDE5tFsBMx9s6l/QSkKdhBHolxm4N1iBxnCGFV8VVYMci6vo7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OKkev1Dt; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A83E12B93;
+	Sun, 25 May 2025 20:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748204333; cv=pass; b=TKll7hGmhLk1miCiNG9/GJ6fa1ioJkJmqtwGAHvmgwWwqKr8gQCL7mtLRdUt9y2xVC3E1C/VqOeuMBvEkRJUmFKesvGro1z61vG1J37XiJvkTlZ28zaoG1/MRgb7PYWfTb7HT1chNx6AbtoKUB/esPxyF34NAggYL5Ba/JTGp6Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748204333; c=relaxed/simple;
+	bh=s9lHYkvc5oBz7j98KfIQzHiKsdeOkegekBomotUI80Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AhiVL7pdwF8p+TpcXuonPvZ6N7T5xhle6XAY3RAzemaNBk3Xnx3RpRH0tp+xHMbi0GnGNHlz8/gXonyRGA9/k2MfzNxGPa7YOipuawknCNzvzO7Ck6+2aD4hnJKpzyD7PsPywDgLwpKHC9xvEActUYD0OH4W25ZqOQPXBQ7JCqQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe; spf=pass smtp.mailfrom=rong.moe; dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b=m9E052xi; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rong.moe
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rong.moe
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OKkev1Dt"
-Date: Sun, 25 May 2025 16:04:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748203492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2CB8jA/xXUsWi8lcPOVKNwDBtUDTUgtyorEjglqv6bE=;
-	b=OKkev1DtwD1+97EA3Jsx9OzAi1+lKPDEtpLVQglAoQOcMffXIdTW91FSgBSZJi+AyhQHfI
-	MnOFB5AM9kUIWVzoDBHtz9jD850mp6f/VSPqtwKyfRDe+C8YEBnuXL8zpxMO94t4pRun+/
-	SaA8IzdxGUDWikHUkL6syyHPwf8/AGI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: David Laight <david.laight.linux@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	linux-bcache@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, Linux Regressions <regressions@lists.linux.dev>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Message-ID: <bsvrygs6lzmwarionkbrxzeorkmf62pig2h7hobqlmtlftzrpt@kg4cs5h7qq5s>
-References: <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
- <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
- <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
- <7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
- <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
- <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
- <692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
- <20250525181842.2e2c47fd@pumpkin>
- <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
- <20250525152502.224f8a99@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=rong.moe header.i=i@rong.moe header.b="m9E052xi"
+ARC-Seal: i=1; a=rsa-sha256; t=1748204320; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=V8pScS/lA303Auz0ODxENTLz8QgfA8TmuPswUjFm0qPjOtyjdeSTuBg06h0Z8ELapC2v4HSTvw/GsXmQWUseAdMkU0RPAlpAzLCF83U02Us+Oqmv3A7TrIri5QWG2QnI9+AAWUi3SNzMU79uoYwOcVsjMdHG5CX/s5e0Sgc55Eo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748204320; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RvGbuKkqRFrhy2+M+9nl9ydQe9xza+jIrZCt2To8+kU=; 
+	b=aXE6tlAwFUzn+UtLllxk417GHOT65G8c7XvSRo6ReCDEtWmuxvaxPasHSOkRmQS65NeXjFtZ38ypmtB9g3RbfS3G+NQjM0rWtN/9LHvQHPP3k7PLaZCIQNJh8p9VXryBZvWc9r8jn8/C2PG38F0yzdQfFYxQdWe5qHqVTWRr070=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=rong.moe;
+	spf=pass  smtp.mailfrom=i@rong.moe;
+	dmarc=pass header.from=<i@rong.moe>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748204320;
+	s=zmail; d=rong.moe; i=i@rong.moe;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=RvGbuKkqRFrhy2+M+9nl9ydQe9xza+jIrZCt2To8+kU=;
+	b=m9E052xiI4GkzY86AOl03du6RDDvfQX7yd7TqkbG0bGRp7Ts5d38AVcYMj1mNBXf
+	3feWsoxHSVVpgr6ThgudElP3Ped2HqOBM7rPAQt86j9DDy8e8S8KAmzjxe5BdWxjcy8
+	CXJC2dkFTxQt8wrNxXx7I+uLTyPxj8CbLhgXvqfk=
+Received: by mx.zohomail.com with SMTPS id 1748204319360849.3143598149691;
+	Sun, 25 May 2025 13:18:39 -0700 (PDT)
+From: Rong Zhang <i@rong.moe>
+To: Ike Panhc <ikepanhc@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Rong Zhang <i@rong.moe>,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	Eric Long <i@hack3r.moe>
+Subject: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC polling
+Date: Mon, 26 May 2025 04:18:07 +0800
+Message-ID: <20250525201833.37939-1-i@rong.moe>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250525152502.224f8a99@gandalf.local.home>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Sun, May 25, 2025 at 03:25:02PM -0400, Steven Rostedt wrote:
-> On Sun, 25 May 2025 13:36:16 -0400
-> Kent Overstreet <kent.overstreet@linux.dev> wrote:
-> 
-> > We already have "trace max stack", but that only checks at process exit,
-> > so it doesn't tell you much.
-> 
-> Nope, it traces the stack at every function call, but it misses the leaf
-> functions and also doesn't check interrupts as they may use a different
-> stack.
+It was reported that ideapad-laptop sometimes causes some recent (since
+2024) Lenovo ThinkBook models shut down when:
+ - suspending/resuming
+ - closing/opening the lid
+ - (dis)connecting a charger
+ - reading/writing some sysfs properties, e.g., fan_mode, touchpad
+ - pressing down some Fn keys, e.g., Brightness Up/Down (Fn+F5/F6)
+ - (seldom) loading the kmod
 
-I was thinking of DEBUG_STACK_USAGE :)
+The issue has existed since the launch day of such models, and there
+have been some out-of-tree workarounds (see Link:) for the issue. One
+disables some functionalities, while another one simply shortens
+IDEAPAD_EC_TIMEOUT. The disabled functionalities have read_ec_data() in
+their call chains, which calls schedule() between each poll.
 
-> > We could do better with tracing - just inject a trampoline that checks
-> > the current stack usage against the maximum stack usage we've seen, and
-> > emits a trace event with a stack trace if it's greater.
-> > 
-> > (and now Steve's going to tell us he's already done this :)
-> 
-> Close ;-)
-> 
-> # echo 1 > /proc/sys/kernel/stack_tracer_enabled
-> 
-> Wait.
-> 
-> # cat /sys/kernel/tracing/stack_trace
->         Depth    Size   Location    (33 entries)
->         -----    ----   --------
->   0)     8360      48   __msecs_to_jiffies+0x9/0x30
->   1)     8312     104   update_group_capacity+0x95/0x970
->   2)     8208     520   update_sd_lb_stats.constprop.0+0x278/0x2f40
->   3)     7688     416   sched_balance_find_src_group+0x96/0xe30
->   4)     7272     512   sched_balance_rq+0x53f/0x2fe0
->   5)     6760     344   sched_balance_newidle+0x6c1/0x1310
->   6)     6416      80   pick_next_task_fair+0x55/0xe60
->   7)     6336     328   __schedule+0x8a5/0x33d0
->   8)     6008      32   schedule+0xe2/0x3b0
->   9)     5976      32   io_schedule+0x8f/0xf0
->  10)     5944     264   rq_qos_wait+0x12a/0x200
->  11)     5680     144   wbt_wait+0x159/0x260
->  12)     5536      40   __rq_qos_throttle+0x50/0x90
->  13)     5496     320   blk_mq_submit_bio+0x70b/0x1ff0
->  14)     5176     240   __submit_bio+0x1b3/0x600
->  15)     4936     248   submit_bio_noacct_nocheck+0x546/0xca0
->  16)     4688     144   ext4_bio_write_folio+0x69d/0x1870
->  17)     4544      64   mpage_submit_folio+0x14c/0x2b0
->  18)     4480      96   mpage_process_page_bufs+0x392/0x7a0
->  19)     4384     632   mpage_prepare_extent_to_map+0xa5b/0x1080
->  20)     3752     496   ext4_do_writepages+0x8af/0x2ee0
->  21)     3256     304   ext4_writepages+0x26f/0x5c0
->  22)     2952     344   do_writepages+0x183/0x7c0
->  23)     2608     152   __writeback_single_inode+0x114/0xb00
->  24)     2456     744   writeback_sb_inodes+0x52b/0xdf0
->  25)     1712     168   __writeback_inodes_wb+0xf4/0x270
->  26)     1544     312   wb_writeback+0x547/0x800
->  27)     1232     328   wb_workfn+0x7b1/0xbc0
->  28)      904     352   process_one_work+0x85a/0x1450
->  29)      552     176   worker_thread+0x5b7/0xf80
->  30)      376     168   kthread+0x371/0x720
->  31)      208      32   ret_from_fork+0x34/0x70
->  32)      176     176   ret_from_fork_asm+0x1a/0x30
+It turns out that these models suffer from the indeterminacy of
+schedule() because of their low tolerance for being polled too
+frequently. Sometimes schedule() returns too soon due to the lack of
+ready tasks, causing the margin between two polls to be too short.
+In this case, the command is somehow aborted, and too many subsequent
+polls (they poll for "nothing!") may eventually break the state machine
+in the EC, resulting in a hard shutdown. This explains why shortening
+IDEAPAD_EC_TIMEOUT works around the issue - it reduces the total number
+of polls sent to the EC.
 
-Nice! This is exactly what I was looking for :)
+Even when it doesn't lead to a shutdown, frequent polls may also disturb
+the ongoing operation and notably delay (+ 10-20ms) the availability of
+EC response. This phenomenon is unlikely to be exclusive to the models
+mentioned above, so dropping the schedule() manner should also slightly
+improve the responsiveness of various models.
 
-        Depth    Size   Location    (48 entries)
-        -----    ----   --------
-  0)     7728      48   __update_load_avg_se+0x9/0x440
-  1)     7680      80   update_load_avg+0x25f/0x2b0
-  2)     7600      56   set_next_task_fair+0x232/0x290
-  3)     7544      48   pick_next_task_fair+0xcf/0x1a0
-  4)     7496     120   __schedule+0x284/0xe80
-  5)     7376      16   preempt_schedule_irq+0x33/0x50
-  6)     7360     136   asm_common_interrupt+0x26/0x40
-  7)     7224      48   get_symbol_offset+0x43/0x70
-  8)     7176      56   kallsyms_lookup_buildid+0x55/0xf0
-  9)     7120      88   __sprint_symbol.isra.0+0x48/0xf0
- 10)     7032     720   symbol_string+0xf1/0x120
- 11)     6312     120   vsnprintf+0x3dc/0x5d0
- 12)     6192     128   bch2_prt_printf+0x57/0x140
- 13)     6064      64   bch2_prt_task_backtrace+0x71/0xc0
- 14)     6000      40   print_cycle+0x71/0xa0
- 15)     5960     104   trace_would_deadlock+0xb6/0x150
- 16)     5856     128   break_cycle+0xfe/0x260
- 17)     5728     368   bch2_check_for_deadlock+0x35f/0x5f0
- 18)     5360      96   six_lock_slowpath.isra.0+0x204/0x4c0
- 19)     5264      96   __bch2_btree_node_get+0x384/0x5b0
- 20)     5168     336   bch2_btree_path_traverse_one+0x7a5/0xd60
- 21)     4832     232   bch2_btree_iter_peek_slot+0x104/0x7f0
- 22)     4600     216   btree_key_cache_fill+0xcf/0x1a0
- 23)     4384      72   bch2_btree_path_traverse_cached+0x2bd/0x310
- 24)     4312     336   bch2_btree_path_traverse_one+0x705/0xd60
- 25)     3976     232   bch2_btree_iter_peek_slot+0x104/0x7f0
- 26)     3744     424   bch2_check_discard_freespace_key+0x172/0x5e0
- 27)     3320     224   bch2_bucket_alloc_freelist+0x422/0x610
- 28)     3096      88   bch2_bucket_alloc_trans+0x1f3/0x3a0
- 29)     3008     168   bch2_bucket_alloc_set_trans+0xf1/0x360
- 30)     2840     184   __open_bucket_add_buckets+0x40b/0x660
- 31)     2656      40   open_bucket_add_buckets+0x72/0xf0
- 32)     2616     280   bch2_alloc_sectors_start_trans+0x76d/0xd00
- 33)     2336     424   __bch2_write+0x1d1/0x11d0
- 34)     1912     168   __bch2_writepage+0x3b2/0x790
- 35)     1744      72   write_cache_pages+0x5c/0xa0
- 36)     1672     176   bch2_writepages+0x67/0xc0
- 37)     1496     184   do_writepages+0xcc/0x240
- 38)     1312      64   __writeback_single_inode+0x41/0x320
- 39)     1248     456   writeback_sb_inodes+0x216/0x4e0
- 40)      792      64   __writeback_inodes_wb+0x4c/0xe0
- 41)      728     168   wb_writeback+0x19c/0x310
- 42)      560     136   wb_workfn+0x2a4/0x400
- 43)      424      64   process_one_work+0x18c/0x330
- 44)      360      72   worker_thread+0x252/0x3a0
- 45)      288      80   kthread+0xf9/0x210
- 46)      208      32   ret_from_fork+0x31/0x50
- 47)      176     176   ret_from_fork_asm+0x11/0x20
+Fix these issues by migrating to usleep_range(150, 300). The interval is
+chosen to add some margin to the minimal 50us and considering EC
+responses are usually available after 150-2500us based on my test. It
+should be enough to fix these issues on all models subject to the EC bug
+without introducing latency on other models.
+
+Tested on ThinkBook 14 G7+ ASP and solved both issues. No regression was
+introduced in the test on a model without the EC bug (ThinkBook X IMH,
+thanks Eric).
+
+Link: https://github.com/ty2/ideapad-laptop-tb2024g6plus/commit/6c5db18c9e8109873c2c90a7d2d7f552148f7ad4
+Link: https://github.com/ferstar/ideapad-laptop-tb/commit/42d1e68e5009529d31bd23f978f636f79c023e80
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218771
+Fixes: 6a09f21dd1e2 ("ideapad: add ACPI helpers")
+Cc: stable@vger.kernel.org
+Tested-by: Eric Long <i@hack3r.moe>
+Signed-off-by: Rong Zhang <i@rong.moe>
+---
+ drivers/platform/x86/ideapad-laptop.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index ede483573fe0..b5e4da6a6779 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -15,6 +15,7 @@
+ #include <linux/bug.h>
+ #include <linux/cleanup.h>
+ #include <linux/debugfs.h>
++#include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/dmi.h>
+ #include <linux/i8042.h>
+@@ -267,6 +268,20 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
+  */
+ #define IDEAPAD_EC_TIMEOUT 200 /* in ms */
+ 
++/*
++ * Some models (e.g., ThinkBook since 2024) have a low tolerance for being
++ * polled too frequently. Doing so may break the state machine in the EC,
++ * resulting in a hard shutdown.
++ *
++ * It is also observed that frequent polls may disturb the ongoing operation
++ * and notably delay the availability of EC response.
++ *
++ * These values are used as the delay before the first poll and the interval
++ * between subsequent polls to solve the above issues.
++ */
++#define IDEAPAD_EC_POLL_MIN_US 150
++#define IDEAPAD_EC_POLL_MAX_US 300
++
+ static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
+ {
+ 	unsigned long long result;
+@@ -383,7 +398,7 @@ static int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *da
+ 	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
+ 
+ 	while (time_before(jiffies, end_jiffies)) {
+-		schedule();
++		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
+ 
+ 		err = eval_vpcr(handle, 1, &val);
+ 		if (err)
+@@ -414,7 +429,7 @@ static int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long dat
+ 	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
+ 
+ 	while (time_before(jiffies, end_jiffies)) {
+-		schedule();
++		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
+ 
+ 		err = eval_vpcr(handle, 1, &val);
+ 		if (err)
+
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+-- 
+2.49.0
+
