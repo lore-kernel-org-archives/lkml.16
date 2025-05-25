@@ -1,141 +1,106 @@
-Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385CA1548C
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 22:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E2139ACF;
+	Sun, 25 May 2025 22:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748210422; cv=none; b=DOJabbHGx6GZMT3Qw+c7c/K1bEhFdgJ2mJbchs1BZ8FQSxhOpbsA5mDg7SfFDaHfopi9sKFckDpr51MhUaDmv4bSauJiAUskehdYKKbwiQo6GiePaUtMfLyXpNChUszXbpInViSbXXJ5L/r0ijYUxOevxOLz6ej9Sa2cm5jkzgA=
+	t=1748211255; cv=none; b=UhZkjkHUF75swHTBydSx0S8D2jb9NmTAGbuGtIaIQgg5m0LKq1aaSLT1mMwW7C3hkkr2p0g2KBVBjDH3DvvuhWw7PI/BBirHdiHByFRqWz7XoDHBLvNNRaxTaW+QmuFoBVqSRYl40LAwT4HQk7L3CjmVfg7I9iL72AR/4erGuyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748210422; c=relaxed/simple;
-	bh=m/3D64u+Y6ojrM8R9pygglNj/ivUDcx/LFnlc4U5D+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=enhoTF7v0G7IbVFNBMeZAUGwvEC4K0FwwC62Eyhyc/UAtxf+ehizL0eiqvIzMQjk3j3R8K84gFS+vvMlxqxRnTEVmRfoLOLCHtWOkldJdBmEOYJZkXsWWDgqO8vamooRvdVgkHRAJPUJAgGMa3ewZKE6imvYWBRguVTpFXyuSlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=S8vhnmRL; arc=none smtp.client-ip=185.26.156.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
+	s=arc-20240116; t=1748211255; c=relaxed/simple;
+	bh=TMFhzal/+jzSrh6o7w/W516gZ7kIY5D+cZBchfp7QeY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LPklfQPsFHq8O296EoqwGSaQh1FHvyyHQN4fyDHBDd+6z/nIUwFV6+ljIe9vW964kWOOivd2MHxYrpHVk5RTxFzCY4mdCEsJXyhik+M7f9M3FYOQb3hkPeYpUVKyrfuFcdKPTeVHvOiCVTmgUTrH8dCScqUCPm9jpEMuriv3Hmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZqKF7sf6; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="S8vhnmRL"
-Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
-	by mailgate02.uberspace.is (Postfix) with ESMTPS id 1DD8C17FF61
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:00:09 +0200 (CEST)
-Received: (qmail 14458 invoked by uid 988); 25 May 2025 22:00:08 -0000
-Authentication-Results: phoenix.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Mon, 26 May 2025 00:00:07 +0200
-Message-ID: <fccf1dc8-de53-4bb0-9adb-61c2c3a5f569@yshyn.com>
-Date: Mon, 26 May 2025 00:00:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZqKF7sf6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748211253; x=1779747253;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TMFhzal/+jzSrh6o7w/W516gZ7kIY5D+cZBchfp7QeY=;
+  b=ZqKF7sf6vU4RzBO4Y7yJXl4wzBRVJKYRYQLnEegx8mZbAnxMmg84k9IB
+   yVMQFLBYZAtNlwvzZ3GcsOLTelk2LFtsNag9Y/BAx/XAuO7pMdHGqMN5/
+   o5V8YkLj83XQJzOV8XVBH2C/VuDb7xqlaUW/Qmn1hlr9l75wa+jf1Ja7b
+   hwjsscAnjHN/HAfFR74Eb8s2Owb3WU6wIiBHTNMaGwaF8CjZW1cRMuCAR
+   TnLzTVF5ShiKXotiiijOeAUe1ArgD1AXcrxoA8QIaTLJygGfwKB5fejLE
+   18ZYD7rwRDHreNFeRauDdnFtjpycZmSblH9Fc2sCWHSynw5esuL5jGYvz
+   w==;
+X-CSE-ConnectionGUID: I1FgtFEgQi+LUU8mg6yeBA==
+X-CSE-MsgGUID: Ow+3m2X8RXqz+7fHpK/3BA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="50293493"
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="50293493"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 15:14:12 -0700
+X-CSE-ConnectionGUID: waCve7QVRsWwxi6olYtr4g==
+X-CSE-MsgGUID: RXLuUwNaTaeOgTyeZpQLww==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="142668998"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 15:14:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 May 2025 01:14:06 +0300 (EEST)
+To: Stuart Hayes <stuart.w.hayes@gmail.com>
+cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] platform/x86: dell_rbu: Stop overwriting data
+ buffer
+In-Reply-To: <20250522200937.9578-4-stuart.w.hayes@gmail.com>
+Message-ID: <b975c429-25e9-3cff-8d43-d2b40f8fb9bd@linux.intel.com>
+References: <20250522200937.9578-1-stuart.w.hayes@gmail.com> <20250522200937.9578-4-stuart.w.hayes@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] scripts/gdb: Use d_shortname instead of d_iname
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20250525213709.878287-2-illia@yshyn.com>
- <20250525214159.GV2023217@ZenIV>
-Content-Language: en-US, de-DE
-From: Illia Ostapyshyn <illia@yshyn.com>
-Autocrypt: addr=illia@yshyn.com; keydata=
- xjMEYz1D0hYJKwYBBAHaRw8BAQdAkEJ4MRf4CNKWqtPb0AJAUCRvYAlFUieRCk/qaNH9E3PN
- IklsbGlhIE9zdGFweXNoeW4gPGlsbGlhQHlzaHluLmNvbT7CnAQTFgoARAIbAwUJCWYBgAUL
- CQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBNiFtvEJJXdNrRIjp5VQz7ooL4OuBQJnOKP5
- AhkBAAoJEJVQz7ooL4Ou/W8BAPtqkzabnqFsmISbPIG2WMaQ8bqpqkHOoAgZl1tUPY1tAQDp
- +l8U+jgNZWsFpyn/vqvfxN6F4Wkn5f29JTN5wPOpCs44BGM9Q9ISCisGAQQBl1UBBQEBB0AI
- K/waxSaK4bWN/x7usyXzOO+Ct1yClYvvTKjrSQiCcAMBCAfCfgQYFgoAJhYhBNiFtvEJJXdN
- rRIjp5VQz7ooL4OuBQJjPUPSAhsMBQkJZgGAAAoJEJVQz7ooL4OuPI8BAKnHL9VSlMWe+8Ox
- WY20ccITT692CR1c29irQA9QHiFcAP9m5dFAb0egybbrU0f4syB+Pt7f02NPzUygl5ulmt7O BA==
-In-Reply-To: <20250525214159.GV2023217@ZenIV>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ruDRdiOkeJH6SJwpSuYzhkc5"
-X-Rspamd-Bar: ----
-X-Rspamd-Report: MIME_UNKNOWN(0.1) BAYES_HAM(-2.585724) XM_UA_NO_VERSION(0.01) SIGNED_PGP(-2) MIME_GOOD(-0.2)
-X-Rspamd-Score: -4.675724
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=yshyn.com; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=m/3D64u+Y6ojrM8R9pygglNj/ivUDcx/LFnlc4U5D+4=;
-	b=S8vhnmRLB+oQqjbypDFnTqrcIvfmnIbTnHBZL1NHlm5AbdwYZJAF9mCmA5bl97GE8Xx8kEAmLZ
-	wSzZu/2U70tS9hcPescmbGLizQOqJ2sDeGm6FDl86KPt6bd+4RV4tnrz2xDaSgxkl+oti3uqT4kh
-	DCBF+iLoRpSqlHh6HFRwQqxAOiPwC7fiiwAPS1C6iHthe/kNs7hnY+hvH2iKIDYKtubwOukLPn8R
-	Tk3Vtcm+r37vzE9MVIOwfV/fo5qt/YNF9FEeFZw0CO9/7cP4Y2501VT45NR9vXJbnmNL/Zlk72YY
-	s3G/g0lngx3nCz6OXLs6TMUq/r7MMh9BzMGCk/qQ==
+Content-Type: text/plain; charset=US-ASCII
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ruDRdiOkeJH6SJwpSuYzhkc5
-Content-Type: multipart/mixed; boundary="------------bRPLrS7j0gA1hB5M095q4sFu";
- protected-headers="v1"
-From: Illia Ostapyshyn <illia@yshyn.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Message-ID: <fccf1dc8-de53-4bb0-9adb-61c2c3a5f569@yshyn.com>
-Subject: Re: [PATCH RESEND] scripts/gdb: Use d_shortname instead of d_iname
-References: <20250525213709.878287-2-illia@yshyn.com>
- <20250525214159.GV2023217@ZenIV>
-In-Reply-To: <20250525214159.GV2023217@ZenIV>
+On Thu, 22 May 2025, Stuart Hayes wrote:
 
---------------bRPLrS7j0gA1hB5M095q4sFu
-Content-Type: multipart/mixed; boundary="------------QVUVslR0TzW06IB0YwlseMAf"
+> The dell_rbu driver will use memset to clear the data held by each packet
 
---------------QVUVslR0TzW06IB0YwlseMAf
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Please add () after function names.
 
-On 5/25/25 23:41, Al Viro wrote:
-> You do realize that for dentries with names longer than 40 characters
-> that field contains garbage, right?
+> when it is no longer needed (when the driver is unloaded, the packet size
+> is changed, etc).
+> 
+> The amount of memory that is cleared is (currently) the normal packet
+> size.  However, the last packet in the list may be smaller.  Fix this to
 
-Is d_name.name a better choice here?  It seems to always reference the
-full valid name.
---------------QVUVslR0TzW06IB0YwlseMAf
-Content-Type: application/pgp-keys; name="OpenPGP_0x9550CFBA282F83AE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x9550CFBA282F83AE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+One space is enough after .
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+> only clear the memory actually used by each packet, to prevent it from
+> writing past the end of data buffer.
+> 
+> Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-xjMEYz1D0hYJKwYBBAHaRw8BAQdAkEJ4MRf4CNKWqtPb0AJAUCRvYAlFUieRCk/q
-aNH9E3PNIklsbGlhIE9zdGFweXNoeW4gPGlsbGlhQHlzaHluLmNvbT7CnAQTFgoA
-RAIbAwUJCWYBgAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgBYhBNiFtvEJJXdN
-rRIjp5VQz7ooL4OuBQJnOKP5AhkBAAoJEJVQz7ooL4Ou/W8BAPtqkzabnqFsmISb
-PIG2WMaQ8bqpqkHOoAgZl1tUPY1tAQDp+l8U+jgNZWsFpyn/vqvfxN6F4Wkn5f29
-JTN5wPOpCs0xSWxsaWEgT3N0YXB5c2h5biA8b3N0YXB5c2h5bkBzcmEudW5pLWhh
-bm5vdmVyLmRlPsKZBBMWCgBBFiEE2IW28Qkld02tEiOnlVDPuigvg64FAmc4o80C
-GwMFCQlmAYAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQlVDPuigvg649
-VAEA5NvviWtpk08IOOP54JzgbYDjcqaK+UXKSPFZbs2NxRsA/iUf64tBoYt/y5KU
-34XtDkElwmQAYrhROVuW1AB1hKUBzjgEYz1D0hIKKwYBBAGXVQEFAQEHQAgr/BrF
-JorhtY3/Hu6zJfM474K3XIKVi+9MqOtJCIJwAwEIB8J+BBgWCgAmFiEE2IW28Qkl
-d02tEiOnlVDPuigvg64FAmM9Q9ICGwwFCQlmAYAACgkQlVDPuigvg648jwEAqccv
-1VKUxZ77w7FZjbRxwhNPr3YJHVzb2KtAD1AeIVwA/2bl0UBvR6DJtutTR/izIH4+
-3t/TY0/NTKCXm6Wa3s4E
-=3D/atP
------END PGP PUBLIC KEY BLOCK-----
+Fixes tag?
 
---------------QVUVslR0TzW06IB0YwlseMAf--
+> ---
+>  drivers/platform/x86/dell/dell_rbu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+> index c03d4d55fcc1..7d5b26735a20 100644
+> --- a/drivers/platform/x86/dell/dell_rbu.c
+> +++ b/drivers/platform/x86/dell/dell_rbu.c
+> @@ -322,7 +322,7 @@ static void packet_empty_list(void)
+>  		 * zero out the RBU packet memory before freeing
+>  		 * to make sure there are no stale RBU packets left in memory
+>  		 */
+> -		memset(newpacket->data, 0, rbu_data.packetsize);
+> +		memset(newpacket->data, 0, newpacket->length);
+>  		set_memory_wb((unsigned long)newpacket->data,
+>  			1 << newpacket->ordernum);
+>  		free_pages((unsigned long) newpacket->data,
+> 
 
---------------bRPLrS7j0gA1hB5M095q4sFu--
+-- 
+ i.
 
---------------ruDRdiOkeJH6SJwpSuYzhkc5
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQTYhbbxCSV3Ta0SI6eVUM+6KC+DrgUCaDOS5AUDAAAAAAAKCRCVUM+6KC+Drtp+
-AQCJ1M51vtefrrwifHWzpDabiXkdASn3jMSXoxMsn+LW+QD7B5tyL8jNV7YsDaMcZ9pXbboGcrb9
-bCASQjhSSmbdfQw=
-=ToNp
------END PGP SIGNATURE-----
-
---------------ruDRdiOkeJH6SJwpSuYzhkc5--
