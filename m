@@ -1,126 +1,152 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE0D28EA
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 00:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF4523B0
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 00:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748133334; cv=none; b=m/hDAXxJ5Eg77wrBelKfhzAJYR8nHc8DlEQ6x9ULhVNN9LESlfAkhhGJCCtJYR6p7ac4T+LGnNz2d+zRvMvRBGjoYCzpdFWmV60pMDFoi3BjKxgoMWgq6iE0GxOsiecqUIBCkhRbLKO+s88IC0VLFd1tnDM9vM6eD2WRNUKl6FM=
+	t=1748133812; cv=none; b=dAUp5AQOrNda1SuWpvRdzXlaBv3Li1MC1zCX4kZZmak29l5UdIT2JyQ9Uhu2Ie6xKQbdPaHes6G/EmWXzqHTuBrf/UNxTwSjxMyQI4fRewNPYXIK0hWaSqRm07hGChk5tuzOHIjBY1UInhszNzpR5yNoOwcemj94e+uQb+f++6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748133334; c=relaxed/simple;
-	bh=L4zgyOYQkXe1TwEHTKOkIWG3mjooGvJuPtmysqGRdy4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T186oCz/L/QiBDVNUOE7v1dLsvPEGk0JyXF45qTjGz8Lp1Y1KyXyVjNcxORDElJG3NR+Y1M4mEub8ofOUYK/icWr4GNT+VSVvibm6i87RGS7/f5mldtTV56k7/647/rigaxXPIgRT67xmmbVzEHQdLLePLPooZzwdQpdtLjrVKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+	s=arc-20240116; t=1748133812; c=relaxed/simple;
+	bh=su7qm94gAficTMpg8rSWDP3Y4+nKz6pRk9RIjP329yA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=J0M94HX+zZrgD9En1/2aUSk/4GXAx0n2sNId/pGKWDSN1/PLaljt9nNJPk+oZSWOcN32Go3zdaSkqVFl43xxhlVUFGvewz+/vIjj9mcKXON/8fNZnZS3c+m7A5/GjGa9fev6MYEBDn4uDDAkQuWF0QAPT0x+FMKg3VDDXnbeQfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b41b906b3so103034039f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:35:32 -0700 (PDT)
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85b41b906b3so103263539f.0
+        for <linux-kernel@vger.kernel.org>; Sat, 24 May 2025 17:43:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748133331; x=1748738131;
+        d=1e100.net; s=20230601; t=1748133810; x=1748738610;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xWWK+qMVgJ3rdWvJXq9kGidb+mXQt3BP1CZfBdNoa60=;
-        b=hA2CuWC14d+CPAbQfR/lbH6ZKkgEHXRUzzLLXF129B4TNpU+IXOZhf9ntDui0Ah5y2
-         vi6W8SF/aqua6Cm5nDFB2aBDfuUoVL2dKPwHHyjR88Zkp7urIKKG8nrea9i8QBZdqznU
-         woL6OSJwFgppNQhqPv3WIlq4JwQSEEbe6L6ljIiONQEKJZ8d3WEO97VLNct3aV+26vZ5
-         39+HNmfNUtJGhXGkDHOTtG21LCQsM5DgzLqC0aXlf4oWWLlDvltAgpcMTcgsFKpx4QSI
-         9hZaMd7PrEJq5vniA0r/Cs0KpVKir083fmhBi+X4M9attMMITlH1SD5cMXJT6MjUTbZM
-         KVcw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2HtAFLp6epA9pn5d24jmIF4caPZBzNP/k5SsnzKC+V1vx5JDBhLj6YOsUsp9IwtmNWRXJh5UCClNWAK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD4rShGPrRYAl/x6kBMti+Udq0W0ZCcI/mPv+Kg/Svu68tC3WU
-	1fu350HlW493+UEbqPhRRO17AZUdeL5PMN6w3a/ItDhsyIcmlAeT5RHpkZ7vvAuU8KPKJ+BFGNB
-	yI5YK5q6OLhRMV1Uyo9sgZOE6bKpBgQ1LLHnt4e074puNfdIt2AHa2PYgEZc=
-X-Google-Smtp-Source: AGHT+IEaW4BZX9jfmWZDDHdbtKveQDFudESHkmgH2lViz2Kq21ChgvLrxpEMkR2FQ5oY55Ya7BzNDa1fdPTwNPxlxc7tXLrvrWFd
+        bh=rqHOmJFA8m2npjmyEJaevf7yl2IWLjfL6jgyzgqaidk=;
+        b=XSkFCEMh3Roqt/RXqUMXj/fDk8JDIUEFgQCU+uZXGACglsqqv7X2ljABjGChBWdsCg
+         a3jDKnndyeq6PQSvbIBrCCDdQzN+QlcEXauEDE7zuE0Y9BFVbeP67e97lIEQgMFlQzjp
+         9qiMyHGCxQw+7JkWatpIo6oVqWyPXe0wx16cDeTVJhZtVjNFIvlOQfH0mkzvRkx8SbpC
+         rj+iCjm5K02sXhmvySjhSXT+LhwRPVlI3xHglh1Pn5ClPMIZ604sBTTJiAeuir8MuChT
+         Miton/O7VQUMQoMXVtHVEX+cogqP+OUREc2z2jjMj1q/kSP2czrYeeugs+JzWXWTLNVI
+         gCaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZPv/XSY1aCFprHNlf8MMgj7bZJUS9f4TvJ7lu8XutHGJdAht52SzXf5e94q82UHiZYTCCRTLHCHi4swY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp7bcdBThBVH4RRv7daljYKId1cKJGB2HNbmKEufloW/D29n0t
+	830BWoyoo+KcyjPfGx/G/wX7NXEyAoXPVYLQkYF34Z9MPa06takBKsjxrw4AW3N2U2fTMpTmupX
+	ozH409qTDNJa08MzWxCaP33tIczexS3ZIOEZvNSFxJPn3imXn1StGMTpoUiQ=
+X-Google-Smtp-Source: AGHT+IEbIqtk7AHxOIHwCk054aGSUpS0LwyjSCm1XJFLsoqOwLzNpJZBKZd4KKS1gQSsEk1MSUnECsOhenvprvw55AclTe1oxrtk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3790:b0:86a:1fce:f1a6 with SMTP id
- ca18e2360f4ac-86cbb7ece8dmr402586239f.5.1748133331449; Sat, 24 May 2025
- 17:35:31 -0700 (PDT)
-Date: Sat, 24 May 2025 17:35:31 -0700
+X-Received: by 2002:a05:6602:4192:b0:85b:538e:1fad with SMTP id
+ ca18e2360f4ac-86cbb7f02admr480478539f.6.1748133809751; Sat, 24 May 2025
+ 17:43:29 -0700 (PDT)
+Date: Sat, 24 May 2025 17:43:29 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683265d3.a70a0220.253bc2.0079.GAE@google.com>
-Subject: [syzbot] [net?] WARNING in ah6_output
-From: syzbot <syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	herbert@gondor.apana.org.au, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
+Message-ID: <683267b1.a70a0220.253bc2.007b.GAE@google.com>
+Subject: [syzbot] [cgroups?] [mm?] BUG: unable to handle kernel paging request
+ in percpu_ref_get_many (2)
+From: syzbot <syzbot+3109abc43c8fcf15212b@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@kernel.org, 
+	muchun.song@linux.dev, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    9e89db3d847f Merge tag 'linux-can-fixes-for-6.15-20250520'..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1476d1f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=c3f0e807ec5d1268
-dashboard link: https://syzkaller.appspot.com/bug?extid=01b0667934cdceb4451c
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+HEAD commit:    d7fa1af5b33e Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=155428e8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=3109abc43c8fcf15212b
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
 
 Unfortunately, I don't have any reproducer for this issue yet.
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8b09322b598e/disk-9e89db3d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/23ed08e707b5/vmlinux-9e89db3d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/be78b62450e7/bzImage-9e89db3d.xz
+disk image: https://storage.googleapis.com/syzbot-assets/da97ad659b2c/disk-d7fa1af5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/659e123552a8/vmlinux-d7fa1af5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6ec5dbf4643e/Image-d7fa1af5.gz.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com
+Reported-by: syzbot+3109abc43c8fcf15212b@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-memcpy: detected field-spanning write (size 40) of single field "&top_iph->saddr" at net/ipv6/ah6.c:439 (size 16)
-WARNING: CPU: 0 PID: 8838 at net/ipv6/ah6.c:439 ah6_output+0xe7e/0x14e0 net/ipv6/ah6.c:439
+Unable to handle kernel paging request at virtual address fffe8001ffe7cc00
+KASAN: maybe wild-memory-access in range [0xfff8000fff3e6000-0xfff8000fff3e6007]
+Mem abort info:
+  ESR = 0x0000000096000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x04: level 0 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000002079fa000
+[fffe8001ffe7cc00] pgd=0000000000000000, p4d=1000000210124003, pud=0000000000000000
+Internal error: Oops: 0000000096000004 [#1]  SMP
 Modules linked in:
-CPU: 0 UID: 0 PID: 8838 Comm: syz.1.814 Not tainted 6.15.0-rc6-syzkaller-00173-g9e89db3d847f #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:ah6_output+0xe7e/0x14e0 net/ipv6/ah6.c:439
-Code: ff e8 36 80 9f f7 c6 05 bb 97 48 05 01 90 b9 10 00 00 00 48 c7 c7 a0 56 7e 8c 4c 89 fe 48 c7 c2 00 59 7e 8c e8 a3 dc 63 f7 90 <0f> 0b 90 90 e9 b5 fe ff ff e8 74 e4 35 01 48 8b 4c 24 10 80 e1 07
-RSP: 0018:ffffc900049f70e0 EFLAGS: 00010246
-RAX: 3fffcb5d3bcc7c00 RBX: 0000000000000028 RCX: 0000000000080000
-RDX: ffffc9000ece1000 RSI: 00000000000052e8 RDI: 00000000000052e9
-RBP: ffffc900049f7250 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bba944 R12: dffffc0000000000
-R13: 1ffff9200093ee38 R14: ffff8881452e8800 R15: 0000000000000028
-FS:  00007fc3a1d2c6c0(0000) GS:ffff8881260c7000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555569628808 CR3: 000000005cf4e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- xfrm_output_one net/xfrm/xfrm_output.c:555 [inline]
- xfrm_output_resume+0x2c55/0x6170 net/xfrm/xfrm_output.c:590
- __xfrm6_output+0x2eb/0x1070 net/ipv6/xfrm6_output.c:103
- NF_HOOK_COND include/linux/netfilter.h:303 [inline]
- xfrm6_output+0x1c6/0x4f0 net/ipv6/xfrm6_output.c:108
- ip6_send_skb+0x1d5/0x390 net/ipv6/ip6_output.c:1981
- l2tp_ip6_sendmsg+0x1378/0x1870 net/l2tp/l2tp_ip6.c:661
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x19c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc3a0f8e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fc3a1d2c038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fc3a11b6080 RCX: 00007fc3a0f8e969
-RDX: 0000000000000800 RSI: 0000200000000540 RDI: 0000000000000004
-RBP: 00007fc3a1010ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fc3a11b6080 R15: 00007ffc18a80a58
- </TASK>
+CPU: 0 UID: 0 PID: 6597 Comm: udevd Not tainted 6.15.0-rc7-syzkaller-gd7fa1af5b33e #0 PREEMPT 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : __percpu_add_case_64 arch/arm64/include/asm/percpu.h:127 [inline]
+pc : percpu_ref_get_many+0xc4/0x1f4 include/linux/percpu-refcount.h:205
+lr : rcu_read_lock include/linux/rcupdate.h:842 [inline]
+lr : percpu_ref_get_many+0x3c/0x1f4 include/linux/percpu-refcount.h:202
+sp : ffff8000a42973a0
+x29: ffff8000a42973b0 x28: 0000000000000000 x27: 0000000000000000
+x26: dfff800000000000 x25: ffff8000a42974e0 x24: ffff00019c365780
+x23: ffff00019c365738 x22: 1fffe000193557a1 x21: dfff800000000000
+x20: ffff0000c9aabd08 x19: 0000000000000001 x18: 0000000000000000
+x17: 0000000000000000 x16: ffff80008adbe9e4 x15: 0000000000000001
+x14: 1fffe00019b16b33 x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000087fac5b3 x10: 0000000000000003 x9 : ffff80010d0e8000
+x8 : fffe8001ffe7cc00 x7 : ffff800080c9fbbc x6 : 0000000000000000
+x5 : 0000000000000001 x4 : 0000000000000000 x3 : 0000000000000002
+x2 : 0000000000000008 x1 : ffff80008b3ebc40 x0 : 0000000000000001
+Call trace:
+ percpu_ref_get_many+0xc4/0x1f4 include/linux/percpu-refcount.h:205 (P)
+ percpu_ref_get include/linux/percpu-refcount.h:222 [inline]
+ obj_cgroup_get include/linux/memcontrol.h:760 [inline]
+ replace_stock_objcg mm/memcontrol.c:2774 [inline]
+ refill_obj_stock+0x150/0x470 mm/memcontrol.c:2952
+ obj_cgroup_uncharge mm/memcontrol.c:3015 [inline]
+ __memcg_slab_free_hook+0x110/0x228 mm/memcontrol.c:3102
+ memcg_slab_free_hook mm/slub.c:2205 [inline]
+ slab_free mm/slub.c:4639 [inline]
+ kmem_cache_free+0x270/0x550 mm/slub.c:4744
+ anon_vma_chain_free mm/rmap.c:147 [inline]
+ unlink_anon_vmas+0x224/0x520 mm/rmap.c:421
+ free_pgtables+0x200/0x63c mm/memory.c:370
+ vms_clear_ptes+0x358/0x45c mm/vma.c:1189
+ vms_complete_munmap_vmas+0x1d4/0x7e4 mm/vma.c:1233
+ do_vmi_align_munmap+0x2c4/0x310 mm/vma.c:1492
+ do_vmi_munmap+0x1dc/0x260 mm/vma.c:1540
+ __vm_munmap+0x218/0x390 mm/vma.c:3013
+ __do_sys_munmap mm/mmap.c:1084 [inline]
+ __se_sys_munmap mm/mmap.c:1081 [inline]
+ __arm64_sys_munmap+0x64/0x7c mm/mmap.c:1081
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+ el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+ el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+ el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+Code: 11000529 b9000289 d538d089 8b080128 (f833011f) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	11000529 	add	w9, w9, #0x1
+   4:	b9000289 	str	w9, [x20]
+   8:	d538d089 	mrs	x9, tpidr_el1
+   c:	8b080128 	add	x8, x9, x8
+* 10:	f833011f 	stadd	x19, [x8] <-- trapping instruction
 
 
 ---
