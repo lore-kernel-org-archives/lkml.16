@@ -1,142 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916E33FE7;
-	Sun, 25 May 2025 19:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E7272637;
+	Sun, 25 May 2025 19:25:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748201051; cv=none; b=QNPahNLv2mNVTSPxpA1+Igm4qlwqLxSRlL0XcBtWM6JPyoWGpHgJrgk/ww5hFZKdqnbQcK3lxhp6PcUopO1jtjrUhjwAMnjPEAzvrveul/8Mr+gnPYiNtZ976LK3FCKQf/6ZI4vxI/BEoEXoC15LMuT7H4zI0J5CYIT949OeATs=
+	t=1748201105; cv=none; b=iasVIqDqRFGCXf01CKG6ad4Cp3xJ0KV+MggsFsDco06cm/XpVgwEVE3gqNBJPew0zCpWV2HhZgVQeNtk7F1b+oLEfFsEe1vSYdc//+8CTwNv/JA3yK8beBiLqrNC+qW9xaUYbeDxFZIBxpVLU0+blc3J45v527cbMsYBMMg7Cak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748201051; c=relaxed/simple;
-	bh=uO2WHAn2a2Pn5PVFMaAo43EEmj8uaQ+n0S+Z7LEZ/Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZQPiTkjmTcjAoJtVudDHoLYxPw+S1+Glu3cvG5ZYsj0hG4Ohbqqx5ayjJ+Spb4fCeojBIxr1dQf+EVFmzTpeQdWuIc0q2MkgKt9FTzfATS8Gdg63FD6QCa5kaym6aOUEt6lx5NPYy9AbfWZxfG3z7yDNpZmaDD1AU1Joox3R0jU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E76C4CEEA;
-	Sun, 25 May 2025 19:24:09 +0000 (UTC)
-Date: Sun, 25 May 2025 15:25:02 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: David Laight <david.laight.linux@gmail.com>, Arnd Bergmann
- <arnd@arndb.de>, Naresh Kamboju <naresh.kamboju@linaro.org>,
- linux-bcache@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Linux Regressions
- <regressions@lists.linux.dev>, Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
- larger than 2048 bytes [-Werror=frame-larger-than=]
-Message-ID: <20250525152502.224f8a99@gandalf.local.home>
-In-Reply-To: <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
-References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
-	<6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
-	<CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
-	<6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
-	<7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
-	<566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
-	<hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
-	<692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
-	<20250525181842.2e2c47fd@pumpkin>
-	<zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748201105; c=relaxed/simple;
+	bh=Rfp4t3oNNdUnf4CSzby65fbywfI+1IZsu6oziz1pucM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MVAPPHWNLqlrDEhAQcZWNUuI5XWXRMR8cfXg4JKxkBVeWxYz1oYBIfbXFtLKLPmDYULnTsqeCBqdhkXDghOGRvmc5lWnVdB5wJmilova6EYD8+LIvs3A6LYh1+P3qPoCJKt5x8uxXPmBBY0BJ953VZABXG1/JQZNTvwz6JvVn3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTrLLJI5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTrLLJI5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81EE0C4CEEA;
+	Sun, 25 May 2025 19:25:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748201104;
+	bh=Rfp4t3oNNdUnf4CSzby65fbywfI+1IZsu6oziz1pucM=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=nTrLLJI5TxFJJSJtg7QqTXJZY7W+rRq4Ndi7OLyAwtjCUqyNYNcBVbcqVgSVxye/c
+	 YCYAHTz1QTfBOb1riBBI+iNZdMKJiB3992LOMl86KfJ3MYZyiDLrF4R2KcpgtTgSkX
+	 +W6XHPKFMqlvMfEjS2TAvceRvdbKApFQaKnUp/1mvFN6MUw9jCLBWkpbZQ90ij3F/x
+	 TKvkMeQIG2MYp8R5EqJmGV03cKIXIOxodGUL7Jns1RzRflHkwDX3mOCJfMHyETkLHp
+	 DkPJd1B5VEme85Zz23RHbznjufg9spZ6ptjc87DSf3BeLbzDtk2WjgS6mGjYtKgram
+	 OxcBbukxNvYDA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A0C5AE59;
+	Sun, 25 May 2025 19:25:04 +0000 (UTC)
+From: Vincent Knecht via B4 Relay <devnull+vincent.knecht.mailoo.org@kernel.org>
+Subject: [PATCH v2 0/4] CAMSS support for MSM8939
+Date: Sun, 25 May 2025 21:25:00 +0200
+Message-Id: <20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIxuM2gC/2WNwQ7CIBAFf6XZs2sAQwue/A/TA1JoN7GlAUNqG
+ v5dbLx5nEnevB2Si+QSXJsdosuUKCwVxKkBO5lldEhDZRBMSCZ5h9bMKaHaLhrzgzzqTnovFdd
+ cK6irNTpP21G895UnSq8Q38dB5l/7awn218ocGRou7NAy1hqvb7OhZwjnEEfoSykfDlOAh68AA
+ AA=
+X-Change-ID: 20250517-camss-8x39-vbif-975ff5819198
+To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ Vincent Knecht <vincent.knecht@mailoo.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748201103; l=2711;
+ i=vincent.knecht@mailoo.org; s=20250414; h=from:subject:message-id;
+ bh=Rfp4t3oNNdUnf4CSzby65fbywfI+1IZsu6oziz1pucM=;
+ b=cLggF4BQt2BLpzNbBwUmm3+tg/OQMV89+wZPGaUmai4j0vcMpvStMPHX2s3775Ku65XtuxSWc
+ FldLQSyTYygChOTnfZpgEXXvtklI9dzyIXgbslaompIW/2JT5MNqfbg
+X-Developer-Key: i=vincent.knecht@mailoo.org; a=ed25519;
+ pk=MFCVQkhL3+d3NHDzNPWpyZ4isxJvT+QTqValj5gSkm4=
+X-Endpoint-Received: by B4 Relay for vincent.knecht@mailoo.org/20250414
+ with auth_id=377
+X-Original-From: Vincent Knecht <vincent.knecht@mailoo.org>
+Reply-To: vincent.knecht@mailoo.org
 
-On Sun, 25 May 2025 13:36:16 -0400
-Kent Overstreet <kent.overstreet@linux.dev> wrote:
+This series adds CAMSS support for MSM8939.
+It's mostly identical to MSM8916, except for some clocks
+and an additional CSI.
 
-> We already have "trace max stack", but that only checks at process exit,
-> so it doesn't tell you much.
+To fix black stripes across sensor output, and garbage in
+CSID TPG output, 2 VFE VBIF register settings are needed.
+So the 1st patch adds helper functions to do just that.
 
-Nope, it traces the stack at every function call, but it misses the leaf
-functions and also doesn't check interrupts as they may use a different
-stack.
+Patch 1: adds helper for VFE VBIF settings
+Patch 2: adds CAMSS_8x39 version in CAMSS driver
+Patch 3: documents qcom,msm8939-camss DT bindings
+Patch 4: adds camss and cci in msm8939.dtsi
 
-> 
-> We could do better with tracing - just inject a trampoline that checks
-> the current stack usage against the maximum stack usage we've seen, and
-> emits a trace event with a stack trace if it's greater.
-> 
-> (and now Steve's going to tell us he's already done this :)
+Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+---
+Changes in v2:
+- Patch 1:
+  - Fix devm_platform_ioremap_resource_byname line to not end with
+    opening parenthesis (media-ci/1-checkpatch)
+  - Move camss-vfe-4-1.c handling of VBIF previously in patch 2 here
+    (Dmitry)
+- Patch 2:
+  - Declare regulators in PHY entries, not CSID ones (Bryan)
+- Patch 3: (bindings)
+  - Fix bindings checks for new errors (Rob)
+  - Fix properties ordering, code-style and example (Krzysztof)
+  - Sort reg-names, clock-names and interrupt-names alphanumerically (Bryan)
+- Patch 4: (dtsi)
+  - Move #address/#size cells before status (Konrad)
+  - Aligned CCI with msm8916, thus removing ispif_ahb mention (Konrad)
+    If "camss_ahb should be unnecessary", it's still required by qcom,i2c-cci.yaml
+- Link to v1: https://lore.kernel.org/r/20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org
 
-Close ;-)
+---
+Vincent Knecht (4):
+      media: qcom: camss: vfe: Add VBIF setting support
+      media: qcom: camss: Add support for MSM8939
+      media: dt-bindings: Add qcom,msm8939-camss
+      arm64: dts: qcom: msm8939: Add camss and cci
 
-# echo 1 > /proc/sys/kernel/stack_tracer_enabled
+ .../bindings/media/qcom,msm8939-camss.yaml         | 253 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8939-pm8916.dtsi       |   4 +
+ arch/arm64/boot/dts/qcom/msm8939.dtsi              | 146 ++++++++++++
+ drivers/media/platform/qcom/camss/Makefile         |   1 +
+ drivers/media/platform/qcom/camss/camss-csiphy.c   |   1 +
+ drivers/media/platform/qcom/camss/camss-ispif.c    |   8 +-
+ drivers/media/platform/qcom/camss/camss-vfe-4-1.c  |  11 +
+ drivers/media/platform/qcom/camss/camss-vfe-vbif.c |  37 +++
+ drivers/media/platform/qcom/camss/camss-vfe-vbif.h |  19 ++
+ drivers/media/platform/qcom/camss/camss-vfe.c      |  10 +
+ drivers/media/platform/qcom/camss/camss-vfe.h      |   3 +
+ drivers/media/platform/qcom/camss/camss.c          | 157 +++++++++++++
+ drivers/media/platform/qcom/camss/camss.h          |   1 +
+ 13 files changed, 649 insertions(+), 2 deletions(-)
+---
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+change-id: 20250517-camss-8x39-vbif-975ff5819198
 
-Wait.
-
-# cat /sys/kernel/tracing/stack_trace
-        Depth    Size   Location    (33 entries)
-        -----    ----   --------
-  0)     8360      48   __msecs_to_jiffies+0x9/0x30
-  1)     8312     104   update_group_capacity+0x95/0x970
-  2)     8208     520   update_sd_lb_stats.constprop.0+0x278/0x2f40
-  3)     7688     416   sched_balance_find_src_group+0x96/0xe30
-  4)     7272     512   sched_balance_rq+0x53f/0x2fe0
-  5)     6760     344   sched_balance_newidle+0x6c1/0x1310
-  6)     6416      80   pick_next_task_fair+0x55/0xe60
-  7)     6336     328   __schedule+0x8a5/0x33d0
-  8)     6008      32   schedule+0xe2/0x3b0
-  9)     5976      32   io_schedule+0x8f/0xf0
- 10)     5944     264   rq_qos_wait+0x12a/0x200
- 11)     5680     144   wbt_wait+0x159/0x260
- 12)     5536      40   __rq_qos_throttle+0x50/0x90
- 13)     5496     320   blk_mq_submit_bio+0x70b/0x1ff0
- 14)     5176     240   __submit_bio+0x1b3/0x600
- 15)     4936     248   submit_bio_noacct_nocheck+0x546/0xca0
- 16)     4688     144   ext4_bio_write_folio+0x69d/0x1870
- 17)     4544      64   mpage_submit_folio+0x14c/0x2b0
- 18)     4480      96   mpage_process_page_bufs+0x392/0x7a0
- 19)     4384     632   mpage_prepare_extent_to_map+0xa5b/0x1080
- 20)     3752     496   ext4_do_writepages+0x8af/0x2ee0
- 21)     3256     304   ext4_writepages+0x26f/0x5c0
- 22)     2952     344   do_writepages+0x183/0x7c0
- 23)     2608     152   __writeback_single_inode+0x114/0xb00
- 24)     2456     744   writeback_sb_inodes+0x52b/0xdf0
- 25)     1712     168   __writeback_inodes_wb+0xf4/0x270
- 26)     1544     312   wb_writeback+0x547/0x800
- 27)     1232     328   wb_workfn+0x7b1/0xbc0
- 28)      904     352   process_one_work+0x85a/0x1450
- 29)      552     176   worker_thread+0x5b7/0xf80
- 30)      376     168   kthread+0x371/0x720
- 31)      208      32   ret_from_fork+0x34/0x70
- 32)      176     176   ret_from_fork_asm+0x1a/0x30
-
-
-The code that does this is in kernel/trace/trace_stack.c
-
-It simply attaches to the function tracer and at ever function checks the
-current stack size.
-
-Hmm, I need to update this because today we even pass the stack pointer via
-the ftrace_regs if the arch supports it. Using that would allow me to get
-rid of the hack:
+Best regards,
+-- 
+Vincent Knecht <vincent.knecht@mailoo.org>
 
 
-static void check_stack(unsigned long ip, unsigned long *stack)
-{
-	[..]
-	this_size = ((unsigned long)stack) & (THREAD_SIZE-1);
-	this_size = THREAD_SIZE - this_size;
-
-
-	unsigned long stack;
-
-[..]
-
-static void
-stack_trace_call(unsigned long ip, unsigned long parent_ip,
-		 struct ftrace_ops *op, struct ftrace_regs *fregs)
-{
-	unsigned long stack;
-	[..]
-
-	check_stack(ip, &stack);
-
-
--- Steve
