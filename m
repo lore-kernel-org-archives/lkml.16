@@ -1,128 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8B91F1932;
-	Sun, 25 May 2025 14:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12ED21F463C;
+	Sun, 25 May 2025 14:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748181901; cv=none; b=SlaQxdlpH+LlPsGTxvLEhsZJJCEhKhhL7SFexQf593FOSpuAcwiJP2cexUH+j1R1SPdSBxlHD3hQOJgcWuGjBP1KkLZi9rS5ayOXNk8al9dfZI1e8mdX6D+3By/kCykWmH/pOM7UkBfmMpZ0M9CAqkO3OStgLVtt2RXYNYQzgI0=
+	t=1748182208; cv=none; b=bquXzeHBlsgulSNPdylDctWxn4JZgpnf8rDrQXAviDSQ4TOS79F0zFcGJGbtV3BWFFgVY3O9rEh8bIrInqaTWFqpxrVkAvdSXUvX7nSoKVBeaa6sTGBV/9nuC/zHuwBXAlo46fvvXs3QH9LiC+wkQagxM3BOYANfZe3UGpmE5ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748181901; c=relaxed/simple;
-	bh=xMa5PC1je1qkO3Hj32MvdEpsG9wNtaG0UU8XyLz1EUA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QlMPCmkUnHdXCsQyn4u5sYU8uNKccIGg/AmUeE0vUa8twQREsv+gmF/z5U+2fqD4Mu5/9r0M6OrEeGXwUCS27AUYxC1fADTteQcgTBUI5xHxNHKpeN45wbjwV6k19AjkS52k1ssRYFSk1paxSkbG6QAAadfxkl90POp4NzN2K4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciOSXdcN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748182208; c=relaxed/simple;
+	bh=A6JdPCfNNVlTjf/P13KKpdY6Inlbxpzb7Cr/udIBNo0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=J1/p1tyler8muWALK/fqrgAHKe2aOkUpv/6gQrSuQWqaFACEsdP90HRwgG9DEYTcxoU9KUkKU6GjZC+r5RK2vpwuPqVmA03kLE7TkcjLLPpqmWwh2YRHIQBcBQLLmGkWFHL1hG9MBqRoRDSgEGBSTNBRnZj2kxYJ40+aOAGM15M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vN4uDnFr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciOSXdcN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4909C4CEEA;
-	Sun, 25 May 2025 14:04:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vN4uDnFr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4655C4CEEB;
+	Sun, 25 May 2025 14:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748181900;
-	bh=xMa5PC1je1qkO3Hj32MvdEpsG9wNtaG0UU8XyLz1EUA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ciOSXdcN9N1O51EqxJ3Wzj4qSCjvwmNk4VFz97c0wE7EOnRU3row6gb4f/jJV9Wuj
-	 mkk3PYKCNtvAjXNgPkjdNZB9ImEkt1BPYyInmw2tXAUjRUapjtvm7V2Ob1t97Cd7OS
-	 Lwb1hsOPkNeGYFhv2cgbD5NYFmFQPXbmT29GpDNG5BdHSMuxERiO0l6JZjfJDZwoTM
-	 ZWApZOA2xN0PAwJJ886UM7I3lOZ+0HnrrrogaNI0K8jgprjYxBd0Epr19s2704yq61
-	 PJVftZsXW0/Q75lEVADjc+KsL6lGkM2hpx0/kkIcgPBzqxE+6p+mVysqK8Ud2wRGlt
-	 9AJqudYVwMOww==
-Date: Sun, 25 May 2025 15:04:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 6/6] iio: adc: ad7606: add gain calibration support
-Message-ID: <20250525150452.6638a917@jic23-huawei>
-In-Reply-To: <20250522-wip-bl-ad7606-calibration-v6-6-487b90433da0@baylibre.com>
-References: <20250522-wip-bl-ad7606-calibration-v6-0-487b90433da0@baylibre.com>
-	<20250522-wip-bl-ad7606-calibration-v6-6-487b90433da0@baylibre.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1748182207;
+	bh=A6JdPCfNNVlTjf/P13KKpdY6Inlbxpzb7Cr/udIBNo0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=vN4uDnFrV7GalNuQPqYVkTyO6K0xXbESzKRs6dWz01h7J8KgqTgkpzmIuVSe4ZerQ
+	 zsrTmq7wiursx9lRuOpUoZ6zeYXyvt4PKSiZYif+VW2b8W6E7S5oofv7lvOnK9FhK4
+	 oKust9/4uYoRwO17VzkEq+uSWsKUeZNUFRhtIbTSmVBxLCTdglTulKbZJWEzfmFfip
+	 HiSiFeR5+CWjNWQ6IT9vW3E+GUPK4R+7Djla7OqfkqCSdSVCiVlAXxRCaFxAGse/Ve
+	 VYnZvQASU40N0HSkVvJL8Hz2ndIEsmGhGTwZ7sOEb9hv3QsqnrqfFGadf6dwCPPYkM
+	 c/L8ufpQzfdKw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEF6380AAFA;
+	Sun, 25 May 2025 14:10:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [net-next] octeontx2-af: NPC: Clear Unicast rule on nixlf detach
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174818224274.4147910.3733595468697864340.git-patchwork-notify@kernel.org>
+Date: Sun, 25 May 2025 14:10:42 +0000
+References: <20250520060952.1080092-1-hkelam@marvell.com>
+In-Reply-To: <20250520060952.1080092-1-hkelam@marvell.com>
+To: Hariprasad Kelam <hkelam@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
+ jerinj@marvell.com, sbhatta@marvell.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
 
-On Thu, 22 May 2025 15:27:07 +0200
-Angelo Dureghello <adureghello@baylibre.com> wrote:
+Hello:
 
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add gain calibration support, using resistor values set on devicetree,
-> values to be set accordingly with ADC external RFilter, as explained in
-> the ad7606c-16 datasheet, rev0, page 37.
->=20
-> Usage example in the fdt yaml documentation.
->=20
-> Tested-by: David Lechner <dlechner@baylibre.com>
-> Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+This patch was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-A few minor things inline.
+On Tue, 20 May 2025 11:39:52 +0530 you wrote:
+> The AF driver assigns reserved MCAM entries (for unicast, broadcast,
+> etc.) based on the NIXLF number. When a NIXLF is detached, these entries
+> are disabled.
+> 
+> For example,
+> 
+>          PF           NIXLF
+> 
+> [...]
 
-> @@ -355,6 +363,46 @@ static int ad7606_get_chan_config(struct iio_dev *in=
-dio_dev, int ch,
->  	return 0;
->  }
-> =20
-> +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev)
-> +{
-> +	struct ad7606_state *st =3D iio_priv(indio_dev);
-> +	unsigned int num_channels =3D st->chip_info->num_adc_channels;
-> +	struct device *dev =3D st->dev;
-> +	int ret;
-> +
-> +	/*
-> +	 * This function is called once, and parses all the channel nodes,
-> +	 * so continuing on next channel node on errors, informing of them.
+Here is the summary with links:
+  - [net-next] octeontx2-af: NPC: Clear Unicast rule on nixlf detach
+    https://git.kernel.org/netdev/net-next/c/bb91f7547f79
 
-This doesn't seem correct any more as we don't continue on error with excep=
-tion
-of ones around the optional rfilter-ohms value.
-
-> +	 */
-> +	device_for_each_child_node_scoped(dev, child) {
-> +		u32 reg, r_gain;
-> +
-> +		ret =3D fwnode_property_read_u32(child, "reg", &reg);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/* Chan reg is a 1-based index. */
-> +		if (reg < 1 || reg > num_channels)
-> +			return ret;
-> +
-> +		ret =3D fwnode_property_read_u32(child, "adi,rfilter-ohms",
-> +					       &r_gain);
-> +		if (ret)
-> +			/* Keep the default register value. */
-> +			continue;
-
-Might be simpler to just write the default?
-
-		r_gain =3D /*WHATEVER DEFAULT IS */
-		fwnode_property_read_u32(child, "adi,rfilter-ohms", &r_gain);
-		if (r_gain > A7606...
-
-
-> +
-> +		if (r_gain > AD7606_CALIB_GAIN_MAX)
-> +			return -EINVAL;
-> +
-> +		ret =3D st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
-> +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
