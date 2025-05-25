@@ -1,229 +1,144 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DD91EB3D;
-	Sun, 25 May 2025 10:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896421EB3D;
+	Sun, 25 May 2025 10:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748169562; cv=none; b=ryjnpB0TLBD75s+tFyCZcHukZb+E5XhvLizdY+vRVxeOJTfXdtwVLXS2fwyTyPl3rO6HF3BQOTizQqjkCkuKQArk5VdWxIwESCGO7AJkL52/vrC2h/n9RnrZWXsOppCPzAycSILwyZjwmUZRsCDdYjNJ3mh8sVI7660oeu55f8I=
+	t=1748169634; cv=none; b=e6X+QsF45lGced64AbHPHO5yzT1NNe375ABp4sFMtDHtICZfW89yddtwPUBKo1CxO704ELCTZuLwHExHY/IM7dezx0mKGLXF/zjjx3BdXPbVW2plrqn52WWuHNJjhRrYE9s6RQo+t0heMaFivVodkqR3zznzO+jt9l0fJkO6SF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748169562; c=relaxed/simple;
-	bh=6ZObJ8+YGW2RmH7FaUiFSizkwsCGsWLpOMZ7FF91iAM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cIkNEc184Yslb3A+zcwAs8vx9JKuFdxVpXW0AUQm7wl095YEFQ3PEQdUYRu8EKgTko+kkm+YcxAXqcnM6GNcRSckfaKzuiFAOXBEjTrJuETVS595BPAZPPIzVIpzzbFt/cDfEeTvdGKTSyg37/tc/aGNZWqZS3Zx/wS/SWl818k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTcMnnIK; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1748169634; c=relaxed/simple;
+	bh=WgACCt68qfQfxTlmxlqUkIyjawT4I/8tTVhBz4juMQ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KWnrr9VblSbnAMCHMBBVBdiy3a+prYZXcga86nefKYgtQs9f9ykC+BvPhJMkABkX/wutwxLCaKYXPDMT3fxmwv346fQhVFqX18Er+k8dsulQ66JpTfce9JYdEufNM5/vDZdqtOpCgtUDO00kWu1B+GLesOWMn5WudbmjQqzOKDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1ueCzT+; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTcMnnIK"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad5297704aaso276772866b.2;
-        Sun, 25 May 2025 03:39:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1ueCzT+"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73972a54919so949215b3a.3;
+        Sun, 25 May 2025 03:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748169559; x=1748774359; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3LHWs91dzoPJQjXL2DHSMhs2R6AKcX+QCx6aoC+YCgc=;
-        b=HTcMnnIKBPC4t4bXEhwcsrVKQX0tT/K5GmthsplOTg0woyBkOvv7KXQgrRQnA1rv9s
-         y2iWn0BEchDkvXF+esP7ulem4EaM0NvjjCvhsxK/lf1TdDVMH/4qYKNAu+OUffQ9FQYq
-         Q53cbamXsgNu8WMWyfMPrJ102WRTl/ISb6oYJjKxRn269ZcaePl6wi6s7nT3ru7HZlgP
-         cYWVXUlXWKC02Xs/5U7VQzGOchESW+FlMv5PXcfwP6yaKif7i+MtmaXXV1/HY7CzIabz
-         jKrRnN6rToSjvx5Qd4Tm2t1+ac90quxJFFFz/ZhysPHbDtkc6IBjAq27NMzrzC+K+5mB
-         w3Lw==
+        d=gmail.com; s=20230601; t=1748169632; x=1748774432; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GaYAYQTXNpM2WMYfSuIUveFo2umn4ZAMC5svAIDE8aA=;
+        b=A1ueCzT+LMe/Kxtq2F71XhwDjdTT0mYryMGvrD2YUnH8JusCS4z6OPXT7GPS9MfAOb
+         5Y44+6BoDK+c+4HR9KvF16liSdF8RGo28qlT5YJ2h1J51eS7ZNeqm6KxbIkKbMm3TUyW
+         4AI0W75DURX9hsf/1Gawxdxcc7tFDC+ZJDQTSrJGkYpsn15IXp96gT2Otb4QB33pzIbB
+         XZ5ZKz62o2rkzRp2ZFmqqPKfUiDG6eILhqzOujpTjWeA21pjlN5rZNGbeECVRfX9Vj49
+         SiCCBCksMNH0Ylyfl4RZvyPY5AQqH8NdV9yUu/Ztyyl89Bk1QtDZBwRirlsZBHWeB4UY
+         9xww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748169559; x=1748774359;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3LHWs91dzoPJQjXL2DHSMhs2R6AKcX+QCx6aoC+YCgc=;
-        b=b21CXCIMbDafHgF1+Op2ygU6WBdHyit6tsB7S/l52huFMkDQAxE9w3buClDtHCfNIC
-         muHToSagLS5jRdlRUdPnRUJp2Yi5ULIqZfopxIrRC1IYeVuhx8aJXM/feKdEu3TCZrxu
-         VP9YD0zwHSuT3jx1mdAGLPtIvDM+1Clc98iP4+K6h++HAGhyP/XGuqrPQ96BlPXXdeaK
-         VJ5PKCO2vAiHi0l7eO9nIZyeDmjM97ed3taWAq4/hrUFTResqf/F+6w2vg0sGvVNCiuo
-         VMLeG7gm+TBVY0cmSSx6DRd/rA60K5MNlWFTKAvtIqsNNDIcKEz5nHMfesVFmACIEchj
-         Qjpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+m2b9GpdA7bLvW6yg/2ZvxiF17Yk912vhatj2TMw218TbUuDWZMWOtgth5UqVn6CScBDR/3vikM04/R+b@vger.kernel.org, AJvYcCUkRQafkMaIkufNA4qsKqt2ySwi2lIPp0XEh81B2WVsqarGzfthwBNGwN/1V6wJcYO7r/LXDQmPAyAq4DI49g==@vger.kernel.org, AJvYcCWb+/J/r9B3C7KXaA2ahFPdiBBsRWVxy0cwZCrVzOA1anbcPLCWN8V82MNaBnzetwX6nkd5t1CUnKcRlNlF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1YP2Y6Qeqfrp0uninnOmdWvcUcG/6DhLDbhinHrKIKRArau4/
-	wTTaiYCn7n9vm/sgatuDdcxYr+uQbZJizasENsXC7LPCcagLSs0DE3wa0vbJFZJffJ+cfSnsLu2
-	9yem4IaCUWXHLez6eai+tIkgfFisLlM8=
-X-Gm-Gg: ASbGnctZ+ljV+nxggrnQJHUOBgKdULZyzIwW7jJCa3flAKw+Chr1kavkmB28v2qIj0B
-	uBcPXRSFksILh/FdsdnQr9iGrr80BR1vtQsiPy2uKDuGfCZirzg+xJKWwze8B0gwHrvnGg+vUps
-	blsBdtkV8V2OHa5s48xzlnITRPKQoLfu/z
-X-Google-Smtp-Source: AGHT+IFno1Akxr/wJPhAiUeYUQGkgwtKtZ/T5e/mYBRpKqpoL41osOL9eLYIH81ToksZPcgucM67WaKFf0XQBysXM5w=
-X-Received: by 2002:a17:907:60cf:b0:ac7:e5c4:1187 with SMTP id
- a640c23a62f3a-ad85b050454mr456141066b.11.1748169559010; Sun, 25 May 2025
- 03:39:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748169632; x=1748774432;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GaYAYQTXNpM2WMYfSuIUveFo2umn4ZAMC5svAIDE8aA=;
+        b=K77YP0DCrZ1nO4OrtlV9fVkRXJw7VPnPMuYVv4pe5AL0/W9U3COvOo9cglzQLk+KbE
+         +JmBXMLsRAvBUYpRv4k7Uj2n1oHuGgk3DuVsTTztWnGoHA2dKWDTixHDtl105t3B/srk
+         bnmZMYMJLzQ74sUbdmZg4yQcp1OcslVBOrFu70XssXVF9h9qOE2yGD2M97/VNt+O1VN8
+         HuzG1bcr+mUrfl296sNyCHCb7xzg9S0hYc2mQxvwqsL7C60QGGIjgL2XB/8HRWHS4IMS
+         sIG/5kOMqJ6K6mKF2yYkproK1Cw1m7ig31XK6SHh+evNjGp3pbWXq6gZz5+Vhgrfj1la
+         pcjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXWcNhmwF6Q8P7HYkbi4pXFp3aeXAuircMlnP26Ft/n1vlFv7qtS0TxiBWGehB/iUJ6tSo2rpuRUNlYw==@vger.kernel.org, AJvYcCWHk+MyoloyX/ZWASF3Cz+rcQd49bWvukSicR5nCtvcOaay/UnFx+OqK6HUJICT9W20exzcKfId2UszTtQs@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWjJhKC6vEh2AFuQ7pfw5edh4Q7YH0PnTPwTQYd9h4Dr7SKhAN
+	GAstK+mA6cnUdJcgCRkPOA9Pj7s1rBfufozNrdn38BR+z93Q4zt677zf2pQ4TA==
+X-Gm-Gg: ASbGncufuhvWEaSEveGz8i9hIHy2pjnqh5iUYZfYQe2BYNHsKfR+H7lDNO26yH5m6QK
+	Na9iZMqvL8W+vMGkXeaZZ674+qtWUHDnbM90T9AfyjzMN1sey3xDwLSXeXUvmT90eo1P98p7e53
+	Yd27Vesrj2DIu30x15Bb6Hujt70w6oMLGZneHolqZvPLXavddLezAdpizKaqRXO1C1Md9Og1NfR
+	4EIwzwBM/0CSVqKU3lb1E2ePS9XvJbVMqJcURazVA9oHhQOjoP5XuwPh69x9bVaOGjExvMdOroi
+	8ke4ikijl6B2UReHCDZLJyNrpZFeCAtxKR/QB2INHFSM8YMbkw==
+X-Google-Smtp-Source: AGHT+IGlJGZJeHx8OGbctaBG1uExbLaC8Q3Ayyr+IhhjqqI6aLuKbhMEoRnhVaFAlORnkwrGEyDb6w==
+X-Received: by 2002:a05:6a20:c709:b0:217:4f95:6a51 with SMTP id adf61e73a8af0-2188c362e27mr9194105637.29.1748169631662;
+        Sun, 25 May 2025 03:40:31 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96defa1sm15833363b3a.12.2025.05.25.03.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 03:40:31 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Lee Jones <lee@kernel.org>,
+	Daniel Thompson <danielt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [RFC PATCH 1/2] backlight: Rename duplicated devices to support dual-backlight setups
+Date: Sun, 25 May 2025 18:40:21 +0800
+Message-ID: <20250525104022.1326997-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521-ovl_ro-v1-1-2350b1493d94@igalia.com> <CAOQ4uxgXP8WrgLvtR6ar+OncP6Fh0JLVO0+K+NtDX1tGa2TVxA@mail.gmail.com>
- <20250521-blusen-bequem-4857e2ce9155@brauner> <32f30f6d-e995-4f00-a8ec-31100a634a38@igalia.com>
- <CAOQ4uxg6RCJf6OBzKgaWbOKn3JhtgWhD6t=yOfufHuJ7jwxKmw@mail.gmail.com>
- <35eded72-c2a0-4bec-9b7f-a4e39f20030a@igalia.com> <CAOQ4uxihs3ORNu7aVijO0_GUKbacA65Y6btcrhdL_A-rH0TkAA@mail.gmail.com>
- <c555a382-fd74-4d9b-ab3e-995049d2947f@igalia.com>
-In-Reply-To: <c555a382-fd74-4d9b-ab3e-995049d2947f@igalia.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sun, 25 May 2025 12:39:07 +0200
-X-Gm-Features: AX0GCFsi6zXCclahrVGDtEMEZaDdtobghQ_tgx5mg66xZFtc9119qg0NLwEOTxs
-Message-ID: <CAOQ4uxieVpcGHoD2Q+tND-2R7137-VZSg4mDwAx3UBoU6wJZmA@mail.gmail.com>
-Subject: Re: [PATCH] ovl: Allow mount options to be parsed on remount
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: Karel Zak <kzak@redhat.com>, Christian Brauner <brauner@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 5:22=E2=80=AFPM Andr=C3=A9 Almeida <andrealmeid@iga=
-lia.com> wrote:
->
-> Em 22/05/2025 12:13, Amir Goldstein escreveu:
-> > cc libfuse maintainer
-> >
-> > On Thu, May 22, 2025 at 4:30=E2=80=AFPM Andr=C3=A9 Almeida <andrealmeid=
-@igalia.com> wrote:
-> >>
-> >> Em 22/05/2025 06:52, Amir Goldstein escreveu:
-> >>> On Thu, May 22, 2025 at 8:20=E2=80=AFAM Andr=C3=A9 Almeida <andrealme=
-id@igalia.com> wrote:
-> >>>>
-> >>>> Hi Christian, Amir,
-> >>>>
-> >>>> Thanks for the feedback :)
-> >>>>
-> >>>> Em 21/05/2025 08:20, Christian Brauner escreveu:
-> >>>>> On Wed, May 21, 2025 at 12:35:57PM +0200, Amir Goldstein wrote:
-> >>>>>> On Wed, May 21, 2025 at 8:45=E2=80=AFAM Andr=C3=A9 Almeida <andrea=
-lmeid@igalia.com> wrote:
-> >>>>>>>
-> >>>>
-> >>>> [...]
-> >>>>
-> >>>>>>
-> >>>>>> I see the test generic/623 failure - this test needs to be fixed f=
-or overlay
-> >>>>>> or not run on overlayfs.
-> >>>>>>
-> >>>>>> I do not see those other 5 failures although before running the te=
-st I did:
-> >>>>>> export LIBMOUNT_FORCE_MOUNT2=3Dalways
-> >>>>>>
-> >>>>>> Not sure what I am doing differently.
-> >>>>>>
-> >>>>
-> >>>> I have created a smaller reproducer for this, have a look:
-> >>>>
-> >>>>     mkdir -p ovl/lower ovl/upper ovl/merge ovl/work ovl/mnt
-> >>>>     sudo mount -t overlay overlay -o lowerdir=3Dovl/lower,upperdir=
-=3Dovl/
-> >>>> upper,workdir=3Dovl/work ovl/mnt
-> >>>>     sudo mount ovl/mnt -o remount,ro
-> >>>>
-> >>>
-> >>> Why would you use this command?
-> >>> Why would you want to re-specify the lower/upperdir when remounting r=
-o?
-> >>> And more specifically, fstests does not use this command in the tests
-> >>> that you mention that they fail, so what am I missing?
-> >>>
-> >>
-> >> I've added "set -x" to tests/generic/294 to see exactly which mount
-> >> parameters were being used and I got this from the output:
-> >>
-> >> + _try_scratch_mount -o remount,ro
-> >> + local mount_ret
-> >> + '[' overlay =3D=3D overlay ']'
-> >> + _overlay_scratch_mount -o remount,ro
-> >> + echo '-o remount,ro'
-> >> + grep -q remount
-> >> + /usr/bin/mount /tmp/dir2/ovl-mnt -o remount,ro
-> >> mount: /tmp/dir2/ovl-mnt: fsconfig() failed: ...
-> >>
-> >> So, from what I can see, fstests is using this command. Not sure if I
-> >> did something wrong when setting up fstests.
-> >>
-> >
-> > No you are right, I misread your reproducer.
-> > The problem is that my test machine has older libmount 2.38.1
-> > without the new mount API.
-> >
-> >
-> >>>> And this returns:
-> >>>>
-> >>>>     mount: /tmp/ovl/mnt: fsconfig() failed: overlay: No changes allo=
-wed in
-> >>>>     reconfigure.
-> >>>>           dmesg(1) may have more information after failed mount syst=
-em call.
-> >>>>
-> >>>> However, when I use mount like this:
-> >>>>
-> >>>>     sudo mount -t overlay overlay -o remount,ro ovl/mnt
-> >>>>
-> >>>> mount succeeds. Having a look at strace, I found out that the first
-> >>>> mount command tries to set lowerdir to "ovl/lower" again, which will=
- to
-> >>>> return -EINVAL from ovl_parse_param():
-> >>>>
-> >>>>       fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) =3D 4
-> >>>>       fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower",=
- 0) =3D
-> >>>> -1 EINVAL (Invalid argument)
-> >>>>
-> >>>> Now, the second mount command sets just the "ro" flag, which will re=
-turn
-> >>>> after vfs_parse_sb_flag(), before getting to ovl_parse_param():
-> >>>>
-> >>>>       fspick(3, "", FSPICK_NO_AUTOMOUNT|FSPICK_EMPTY_PATH) =3D 4
-> >>>>       fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) =3D 0
-> >>>>
-> >>>> After applying my patch and running the first mount command again, w=
-e
-> >>>> can set that this flag is set only after setting all the strings:
-> >>>>
-> >>>>       fsconfig(4, FSCONFIG_SET_STRING, "lowerdir", "/tmp/ovl/lower",=
- 0) =3D 0
-> >>>>       fsconfig(4, FSCONFIG_SET_STRING, "upperdir", "/tmp/ovl/upper",=
- 0) =3D 0
-> >>>>       fsconfig(4, FSCONFIG_SET_STRING, "workdir", "/tmp/ovl/work", 0=
-) =3D 0
-> >>>>       fsconfig(4, FSCONFIG_SET_STRING, "uuid", "on", 0) =3D 0
-> >>>>       fsconfig(4, FSCONFIG_SET_FLAG, "ro", NULL, 0) =3D 0
-> >>>>
-> >>>> I understood that the patch that I proposed is wrong, and now I wond=
-er
-> >>>> if the kernel needs to be fixed at all, or if the bug is how mount i=
-s
-> >>>> using fsconfig() in the first mount command?
-> >>>
-> >
-> > If you ask me, when a user does:
-> > /usr/bin/mount /tmp/dir2/ovl-mnt -o remount,ro
-> >
-> > The library only needs to do the FSCONFIG_SET_FLAG command and has no
-> > business re-sending the other config commands, but that's just me.
-> >
->
-> Yes, this makes sense to me as well.
->
-> > BTW, which version of libmount (mount --version) are you using?
-> > I think there were a few problematic versions when the new mount api
-> > was first introduced.
-> >
->
-> mount from util-linux 2.41 (libmount 2.41.0: btrfs, verity, namespaces,
-> idmapping, fd-based-mount, statmount, assert, debug)
->
+When registering a backlight device, if a device with the same name
+already exists, append "-secondary" to the new device's name. This is
+useful for platforms with dual backlight drivers (e.g. some panels use
+dual ktz8866), where both instances need to coexist.
 
-All right, I upgraded my test machine to a newer distro so
-I see those errors.
+For now, only one secondary instance is supported. If more instances
+are needed, this logic can be extended with auto-increment or a more
+flexible naming scheme.
 
-I will post a patch to xfstests to use LIBMOUNT_FORCE_MOUNT2
-for overlayfs remount.
+Suggested-by: Daniel Thompson <danielt@kernel.org>
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+ drivers/video/backlight/backlight.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-Thanks,
-Amir.
+diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+index 9dc93c5e4..991702f5d 100644
+--- a/drivers/video/backlight/backlight.c
++++ b/drivers/video/backlight/backlight.c
+@@ -365,7 +365,8 @@ struct backlight_device *backlight_device_register(const char *name,
+ 	struct device *parent, void *devdata, const struct backlight_ops *ops,
+ 	const struct backlight_properties *props)
+ {
+-	struct backlight_device *new_bd;
++	struct backlight_device *new_bd, *prev_bd;
++	const char *new_name = NULL;
+ 	int rc;
+ 
+ 	pr_debug("backlight_device_register: name=%s\n", name);
+@@ -377,10 +378,23 @@ struct backlight_device *backlight_device_register(const char *name,
+ 	mutex_init(&new_bd->update_lock);
+ 	mutex_init(&new_bd->ops_lock);
+ 
++	/*
++	 * If there is an instance with the same name already, then rename it.
++	 * We also can use an auto-increment field, but it seems that there is
++	 * no triple or quad case.
++	 */
++	prev_bd = backlight_device_get_by_name(name);
++	if (!IS_ERR_OR_NULL(prev_bd)) {
++		new_name = kasprintf(GFP_KERNEL, "%s-secondary", name);
++		if (!new_name)
++			return ERR_PTR(-ENOMEM);
++		put_device(&prev_bd->dev);
++	}
++
+ 	new_bd->dev.class = &backlight_class;
+ 	new_bd->dev.parent = parent;
+ 	new_bd->dev.release = bl_device_release;
+-	dev_set_name(&new_bd->dev, "%s", name);
++	dev_set_name(&new_bd->dev, "%s", new_name ? new_name : name);
+ 	dev_set_drvdata(&new_bd->dev, devdata);
+ 
+ 	/* Set default properties */
+@@ -414,6 +428,8 @@ struct backlight_device *backlight_device_register(const char *name,
+ 	list_add(&new_bd->entry, &backlight_dev_list);
+ 	mutex_unlock(&backlight_dev_list_mutex);
+ 
++	kfree(new_name);
++
+ 	return new_bd;
+ }
+ EXPORT_SYMBOL(backlight_device_register);
+-- 
+2.49.0
+
