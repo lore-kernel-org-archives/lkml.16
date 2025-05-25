@@ -1,199 +1,192 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F0FC2C9
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 11:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748173131; cv=none; b=i0DgaNvyv2jOednHgQJvuS7d73M3KEnbShPdQTU/v2dEC3kEqTkByScCkpgLpNJ+LdUmw6S8U/vDvTD8Ukut/vvSygTisQI8BQwXGk7lXA9xtFEfElC0dgP2akmRYLuZt+1T83SZY2qe/i7emR5Urzz2WCgEpagXmo7TmYpQpqU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748173131; c=relaxed/simple;
-	bh=gZ+329Gf8Ksd360Ad03Wnrg4lmp+brRRtiiXQxFLyEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dx2maepTlrjoDlB6V9Fikid1llISgRdZk4odW/K18+y+65Jz/wlQD4+Sxy9SZoE+q77Sx8x54BI3lciUItbIrRMRjnHsnkiICnoNomhvuQM4gqF39WquUqHmArNTmwQ5XLHWXBudwzVz7wD4Lf6zLiuJwrZYiN2cv9UzuamMf+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=co9svpV5; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D1C1E50E;
+	Sun, 25 May 2025 11:48:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748173703; cv=fail; b=L1skhhwfxz52rkRp8ogiJQjaPejBYjAw/1ZNyb9xZ6EAOuG66LpqDcEiSuv/6pnxH7HFDkLlTGH7SXtkkqxMRq7/Seq2NkKMvYyJzkUXvvwC3g/lKOuS21+whOuMqwwtsj9nr9MQ6xUQTmhH3Pi/0wDtJWvVpMdPQOSy4tusWoo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748173703; c=relaxed/simple;
+	bh=gLPYbRjJ91ycOC/D/RKwYAOdrH/0y5bgRUNabHeLcfw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dAzafxTCgXImTse9/ejq3uEO5gsG/BsvbPRrmaT6QzLgz9dB+kvO3PTSl/OffZsdzBfSpR/aivxIhwvqnjn07UFQMcKbkbrmE7wsVkox5Z8bwsnOsD3IYxKeeI5kfKxzVyCn6ycpQ/gwNAg+uQtaN7AW54RrqtyJToy1Qivd3sU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Qe1Rsyjl; arc=fail smtp.client-ip=40.107.237.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="co9svpV5"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6049431b0e9so246684a12.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 04:38:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748173128; x=1748777928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ERvriPVwqNPqNOdrGzW1XcUiINRpo2cYdPd3Dbw+Q0I=;
-        b=co9svpV5jnSf7xY46r/R3YfXguxjGSmLFQngND/HEbcPDmXQtypqll6gzcnnjOssye
-         RnecLlkoGWc4QvqwYyHKUb4zwwd1yp7x5uNzAp1I3hnzpdP3B/bJvZfkWXa0fJjunI7c
-         ZtYLWOU3a8JWOuniL+vY9rzn6Bp77HBNBx8MECQGlDMjWv8kO/H3W+1AvLhOKxCC3FwJ
-         MoqpebtngLDAcdOfen2+FAs7RnUUyELkcFwRgY8SL27GiIHQEl5OAystJAfCRiy1ZdaY
-         bDEMhEUX7JPQL4AIAzTCeX9sIcX05PdHp9DGNpAw3b3Hgim+WZ7ImPHVJANhabPfonDh
-         VYcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748173128; x=1748777928;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ERvriPVwqNPqNOdrGzW1XcUiINRpo2cYdPd3Dbw+Q0I=;
-        b=m3jcAmXihJh3jezYAQKCn7k5ODI/q1fFxt+hWOOL2SwkNtSwYfN8AqXRsD5T9670dV
-         0g5ab5oNUvT3v3ACiTmqHDv6wkhhJrzvEpZyqEpZp2i7N4O8o9pb271uNicxfydBdEAV
-         xbXs8v9IFSYe/ekiiPvOm4bTdsv2w3vWNmBk4TlLkUL6HZvU8/0J2NYDFpJbCLVOGP2M
-         /cQBw9f+vQ1l44ube/7QmZPBuj1EKla4qyIacfnZws8tmKu+EbxrzeElSZ/3AZBnvMGF
-         6ukhH0nX5uRGCB/I15DxEIshp98ToePgLzgv+xjuD8T9l5Zi4PyDQhh7jHts9bGy/V+p
-         +JDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0QGUkxC3pGqujnH3R4eXKaM2jtMmOxvsF1vywBSLsnIX1/PzFJetkImFgGruYkZHTWTUHNlzs0M10T80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeJveMjk3cyc48qtw16qvenRFCmfEKK06zi76CdcLzrUq4REhU
-	C05qWyDlS9tVd6f00gRzEMGXDgoR+fNX0jb/7oV3g9KngYESBymBVjy/
-X-Gm-Gg: ASbGncs9bKRCiT+ElveMkx4L9eO1O9kQzBzZyJcVlRGgcPHf+vcxW/8OSiUbTwB7YSK
-	CufdcHgjeoMeQiTdJOBe6kq9MVC8hUOcjVbNkOX+xY/8sFn7yy1Fl2C5EEQK3D6FNL/I7IRJ4vq
-	iG80JpRf18R5JVrMLH+yw+29OUI9tM/n3bDPYUsUf6VAZ+co82DHcwRalWGRnZPW3txc96jw7iC
-	hn0KES3w1XhNQzZi7mLIfzVJZ8dRZjKXfoUMqhi9KFB52StVMEto+RO24An6stL/e7BN74x1Ihr
-	4QVbhEwzmp0KPcAT/5B9GLUxujYR4vBDfFJRsaxLeaGGxb5oMhslHrARqNu6JiBcaig8ZsFTd2G
-	PLAOwhBlzWpra9g==
-X-Google-Smtp-Source: AGHT+IG+dd7Mw7rBsTAcM+F6iBgNAEFb4r3s0yJJuR+QycpbS1LmESYmw+i5gsM9WhPXoPrfrdsz0Q==
-X-Received: by 2002:a17:906:1e4d:b0:ad5:4806:4f07 with SMTP id a640c23a62f3a-ad85b0507dfmr346095366b.2.1748173127938;
-        Sun, 25 May 2025 04:38:47 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4382c0sm1543802666b.90.2025.05.25.04.38.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 04:38:47 -0700 (PDT)
-Date: Sun, 25 May 2025 12:38:45 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Nicolas Pitre <npitre@baylibre.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v2 next 3/4] lib: Add mul_u64_add_u64_div_u64() and
- mul_u64_u64_div_u64_roundup()
-Message-ID: <20250525123845.5b023297@pumpkin>
-In-Reply-To: <403s8q39-33sp-pp3s-95o8-14s190or25o5@onlyvoer.pbz>
-References: <20250518133848.5811-1-david.laight.linux@gmail.com>
-	<20250518133848.5811-4-david.laight.linux@gmail.com>
-	<321rs9r7-8858-p195-263n-49q78q8rn25o@onlyvoer.pbz>
-	<20250520223700.2ec735fd@pumpkin>
-	<148nop5q-s958-n0q4-66r8-o91ns4pnr4on@onlyvoer.pbz>
-	<20250521135246.7dab6bda@pumpkin>
-	<403s8q39-33sp-pp3s-95o8-14s190or25o5@onlyvoer.pbz>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Qe1Rsyjl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QbFidzwOcp886rmAuooEDD4IVftH835GBsy2UZyuYTYHYkw86CJ9S/7EEB2XEW7686HDr3aVQ7r81rZWsCiN7QJ/bhtakyizTXWLwlS0nl+92PLc0MJN1yA9S1rgdUiwe4bz4eVn3XvgzkjO0+mo1aHFci1KhaAOgtbz+fNOJsongj/zqvk4r1Cy6folgZS15kS8DT5okvUCq0BzGMwBaafFnwgairhwhkP4dFP3w2lRdVFBn6yXnyeW/bB8VPusHVELPppoeLpgYRFaEC53y4kKFPjzVi0HtwcLHE98gU6NSLQXIYirInFh4oKS91+D0Lp19h69b8UFCHoUvYwDZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YcfhkRqECYTzI+6yIMuzvcEdh7ES7xm6gvHJLdHOVZ0=;
+ b=GkKAw9hKkW4+gp0Hzxlq91NY7qWcFs0F7jR7UC6sHQVB8G2ojzu5Eens1j1ydj+wsWZci3va4xnE/XwaV35DhQl51DG69JRzmE09cx5E6jNVNvyGJau/7Z+ugRAdk57s/051LeYTMO/94P2FyH70VYjs5ON/B5OLD8sYOYxGY0qMsmEMtRnjcgWkAPMfFNHhMAm9HLi9KtheQN8BRu/y9twGpLru5Dv2JdpDG3lg/lsZIy+KEFtj2T/qtatznS4REekhmNmtv3JtiW3xem6Ldj0DvE0dfD/XYAgwaUVHT7S0bCzjeV3VKK33OEdb9RCD6gi6ibqFux/3OHvW1WygIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YcfhkRqECYTzI+6yIMuzvcEdh7ES7xm6gvHJLdHOVZ0=;
+ b=Qe1Rsyjl5lTaUABBltGKHvnf0ztLGYOYspBjuQ2Y/TkdLqabYWnGGAf1SmuqqV/quN95QZd79oed8J/PZV1ATk8dly2jieMuxUy1+BbdHmiL0jrbZE935vS8ljpkFfSA5Or0unxVlprIHzDXaqUkKlHnOS3YcRuh7UDyi34GtNJcSadc8c/vP0eosqXggm+8ux/YN5WAAvqKKtdXrB9Ly5N+UVf1u0LMuhrks6Q5YIYmQV+bSFTdZB6E6W0S6+aPPiaO1baOjO/+ML3YSA1RI+9kQHF7q4EpoIz6kunwSvJfyPu5O5rwXR/l3KpVIFLz48WAjwM06IhfPmrMv/6DLQ==
+Received: from DM6PR02CA0089.namprd02.prod.outlook.com (2603:10b6:5:1f4::30)
+ by SA1PR12MB6776.namprd12.prod.outlook.com (2603:10b6:806:25b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Sun, 25 May
+ 2025 11:48:13 +0000
+Received: from DS2PEPF00003448.namprd04.prod.outlook.com
+ (2603:10b6:5:1f4:cafe::d3) by DM6PR02CA0089.outlook.office365.com
+ (2603:10b6:5:1f4::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Sun,
+ 25 May 2025 11:48:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DS2PEPF00003448.mail.protection.outlook.com (10.167.17.75) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.18 via Frontend Transport; Sun, 25 May 2025 11:48:13 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Sun, 25 May
+ 2025 04:48:01 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Sun, 25 May
+ 2025 04:48:00 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.9)
+ with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Sun, 25
+ May 2025 04:47:57 -0700
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Moshe Shemesh
+	<moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Gal Pressman
+	<gal@nvidia.com>
+Subject: [PATCH net-next 0/2] net/mlx5: misc changes 2025-05-25
+Date: Sun, 25 May 2025 14:47:30 +0300
+Message-ID: <1748173652-1377161-1-git-send-email-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003448:EE_|SA1PR12MB6776:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f77943d-e6f1-4416-5c43-08dd9b820799
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?cho7xanldd26ZEFGRMFv5ZlaI4d65L25QvoD4dFMT3TgEsPk7Z+A3oCmcKfr?=
+ =?us-ascii?Q?g5t1M9UTm+GHkj0yceky5z0GpOc6xkij1YcqWSXAoK9YgIgdh/G2DgKWgLgn?=
+ =?us-ascii?Q?CGRihAxKyfZVzCc54H4HfvpTH+o/07ONhMnjKyuu9R62DtrSuA4NvMZeY5pd?=
+ =?us-ascii?Q?ZoR97lqGR2gorTJLn21fo4Wbe4uVM9Q/i9AO4IteTY1g1YerRqM4pLwtRyzn?=
+ =?us-ascii?Q?eecb7S3AMmQbiSdgHr7BaQN1Dg3D9O0NOOAnzDjnLoI1M3ekZO44AI6u9LzM?=
+ =?us-ascii?Q?CjISormhVeEXeEJTULEFbmV2dMXZttSdDpV+TAc0EknvadFZQvHP0T1E3x1n?=
+ =?us-ascii?Q?sai5dfdyuZp8qbIGDInndvBT/WLfRG05XcJ6MNLORMZt5pOFy4G8oAtHLP7W?=
+ =?us-ascii?Q?VisYNwBTjsWpC93OlEZx8jx5UEGcw3sJ2pzNIDopabNm+437mUcSI9O4oWj2?=
+ =?us-ascii?Q?lxZF+s+CmoANWHTGmjm9/zjQQHq/RI7qrAcRVNprBWcMAdRXeZKaZIiYqpgZ?=
+ =?us-ascii?Q?uRMrYXN4ijTP8Hf/q2pNcTk/Lunm6poxNqJM8JvM8rO4jt8obie4eNn844Tp?=
+ =?us-ascii?Q?QqBF5rEA0J2yqUK19gSCuUXGgj5aTHVCciL+qF9hH4aCCuZrkv9F3ykp/FSL?=
+ =?us-ascii?Q?DnSQGNkuTYJDMkg3k5/0sqD8js+ZC0lSRK1DkKYFhrx/vVqhZ75YqYze6n3u?=
+ =?us-ascii?Q?rqHQfaa2nI+pVjulxVAgUubqP0SjULNJUkzeDAg6Opm3QAKaT1v8PQ2IGl/I?=
+ =?us-ascii?Q?d+U/hz+EtQOuRBFBhH9Th4ZMouNFBd4H6aM8C/bRbEehJISR3r3kHf2ZfCuI?=
+ =?us-ascii?Q?j8TBJNGbJ9pU4wL5VvqDgudf+42YUF4wKUoIm1LzBhF1lWNX8ifFXgb2FZti?=
+ =?us-ascii?Q?h7pZ2Kc+xzgGnPMvimEj2TiiUM4JCv7iKKnLjQRQkt2NPANDFD1jxPGbqPY5?=
+ =?us-ascii?Q?QYUAQF+ajCguHpL+3o/f/Jm+EUT8ksOrjBh2xyvxNtFXgKCDaCZJnhfL2VYm?=
+ =?us-ascii?Q?mYVhfLdoHEe9/GAh9DG9e72dvxQjNP2v88iULdSEBvdpPi6RpDH/VdbKQpDS?=
+ =?us-ascii?Q?Sxhchus58fHv/u7gU5Q0+VwSSe9axco7/Z8ifK1P/8cEWEOVjQ74FtWQUfJD?=
+ =?us-ascii?Q?3TiBPtuhIK0jvCso0XQATgng+khFvN7VCEZcki70Mejch4muRzm394SI6j02?=
+ =?us-ascii?Q?ZGrNpb7zp91HJ9J88XbHpTQ86ZMo/FbT3mIPtm1KbytdBXHHUghhuypt8G4n?=
+ =?us-ascii?Q?pZQZJdRJB+f4ypJX2pt+f4BzBbTTsYvi60EfuXm30NFHNla9NaFGRm6qMYmv?=
+ =?us-ascii?Q?iUXXKdrv1qqc28Kas5AMv+Rb870sWuv0gHYEesT8qKr2uOZlDcXTOQa9okwz?=
+ =?us-ascii?Q?Fmx6ByPNwfBtXv7HNs0qcXAzeMig4130NCC0awsFJVZQE5tHu4vdtDuTrTnR?=
+ =?us-ascii?Q?adR+Vj2OcbzE2Wgw2oG2gdWuMPynrOvWE/De+r28DKBzGAkZZZBuQFXRAXMB?=
+ =?us-ascii?Q?wEalR5FKQtDFYf6TVaLHSX7FDPLwZLD312Nn?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2025 11:48:13.0474
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f77943d-e6f1-4416-5c43-08dd9b820799
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003448.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6776
 
-On Wed, 21 May 2025 09:50:28 -0400 (EDT)
-Nicolas Pitre <npitre@baylibre.com> wrote:
+Hi,
 
-> On Wed, 21 May 2025, David Laight wrote:
->...
-> 
-> Depends how costly the ilog2 is. On ARM the clz instruction is about 1 
-> cycle. If you need to figure out the MSB manually then it might be best 
-> to skip those ilog2's.
+This small series contains misc enhancements to the mlx5 driver.
 
-I was going to measure it.
-But I've pulled chunks from the kernel headers into a userspace build.
-This is the x86-32 code for the 'if (ilog2(a) + ilog2(b) < 62)' test:
+Regards,
+Tariq
 
-    1b2b:       0f bd c6                bsr    %esi,%eax
-    1b2e:       75 05                   jne    1b35 <mul_u64_add_u64_div_u64_new+0x75>
-    1b30:       b8 ff ff ff ff          mov    $0xffffffff,%eax
-    1b35:       85 c9                   test   %ecx,%ecx
-    1b37:       74 0d                   je     1b46 <mul_u64_add_u64_div_u64_new+0x86>
-    1b39:       0f bd c1                bsr    %ecx,%eax
-    1b3c:       75 05                   jne    1b43 <mul_u64_add_u64_div_u64_new+0x83>
-    1b3e:       b8 ff ff ff ff          mov    $0xffffffff,%eax
-    1b43:       83 c0 20                add    $0x20,%eax
-    1b46:       0f bd d5                bsr    %ebp,%edx
-    1b49:       75 05                   jne    1b50 <mul_u64_add_u64_div_u64_new+0x90>
-    1b4b:       ba ff ff ff ff          mov    $0xffffffff,%edx
-    1b50:       85 ff                   test   %edi,%edi
-    1b52:       74 0d                   je     1b61 <mul_u64_add_u64_div_u64_new+0xa1>
-    1b54:       0f bd d7                bsr    %edi,%edx
-    1b57:       75 05                   jne    1b5e <mul_u64_add_u64_div_u64_new+0x9e>
-    1b59:       ba ff ff ff ff          mov    $0xffffffff,%edx
-    1b5e:       83 c2 20                add    $0x20,%edx
-    1b61:       8d 1c 02                lea    (%edx,%eax,1),%ebx
-    1b64:       83 fb 3e                cmp    $0x3e,%ebx
-    1b67:       0f 8e 0b 03 00 00       jle    1e78 <mul_u64_add_u64_div_u64_new+0x3b8>
+Maor Gottlieb (1):
+  net/mlx5: Warn when write combining is not supported
 
-If 'cmov' is enabled (not by default even after the current plan to remove 486 support) it is:
+Yael Chemla (1):
+  net/mlx5e: Log error messages when extack is not present
 
-    1b2b:       ba ff ff ff ff          mov    $0xffffffff,%edx
-    1b30:       85 c9                   test   %ecx,%ecx
-    1b32:       0f 85 98 03 00 00       jne    1ed0 <mul_u64_add_u64_div_u64_new+0x410>
-    1b38:       0f bd c6                bsr    %esi,%eax
-    1b3b:       0f 44 c2                cmove  %edx,%eax
-    1b3e:       bb ff ff ff ff          mov    $0xffffffff,%ebx
-    1b43:       85 ff                   test   %edi,%edi
-    1b45:       0f 85 75 03 00 00       jne    1ec0 <mul_u64_add_u64_div_u64_new+0x400>
-    1b4b:       0f bd d5                bsr    %ebp,%edx
-    1b4e:       0f 44 d3                cmove  %ebx,%edx
-    1b51:       8d 1c 02                lea    (%edx,%eax,1),%ebx
-    1b54:       83 fb 3e                cmp    $0x3e,%ebx
-    1b57:       0f 8e 0b 03 00 00       jle    1e68 <mul_u64_add_u64_div_u64_new+0x3a8>
+ .../net/ethernet/mellanox/mlx5/core/devlink.c |  40 ++--
+ .../net/ethernet/mellanox/mlx5/core/dpll.c    |   3 +-
+ .../net/ethernet/mellanox/mlx5/core/en/htb.c  |  24 +--
+ .../net/ethernet/mellanox/mlx5/core/en/qos.c  |   8 +-
+ .../mellanox/mlx5/core/en/rep/bridge.c        |   2 +-
+ .../mellanox/mlx5/core/en/tc/act/csum.c       |   8 +-
+ .../mellanox/mlx5/core/en/tc/act/goto.c       |  16 +-
+ .../mellanox/mlx5/core/en/tc/act/mark.c       |   2 +-
+ .../mellanox/mlx5/core/en/tc/act/mirred.c     |  28 +--
+ .../mellanox/mlx5/core/en/tc/act/mirred_nic.c |   4 +-
+ .../mellanox/mlx5/core/en/tc/act/mpls.c       |   6 +-
+ .../mellanox/mlx5/core/en/tc/act/pedit.c      |   8 +-
+ .../mellanox/mlx5/core/en/tc/act/police.c     |  14 +-
+ .../mellanox/mlx5/core/en/tc/act/ptype.c      |   2 +-
+ .../mlx5/core/en/tc/act/redirect_ingress.c    |  16 +-
+ .../mellanox/mlx5/core/en/tc/act/tun.c        |   4 +-
+ .../mellanox/mlx5/core/en/tc/act/vlan.c       |   6 +-
+ .../mlx5/core/en/tc/act/vlan_mangle.c         |   4 +-
+ .../ethernet/mellanox/mlx5/core/en/tc_ct.c    |  20 +-
+ .../ethernet/mellanox/mlx5/core/en/tc_ct.h    |   4 +-
+ .../ethernet/mellanox/mlx5/core/en/tc_tun.c   |  12 +-
+ .../mellanox/mlx5/core/en/tc_tun_encap.c      |  14 +-
+ .../mellanox/mlx5/core/en/tc_tun_geneve.c     |  34 ++--
+ .../mellanox/mlx5/core/en/tc_tun_vxlan.c      |  20 +-
+ .../mellanox/mlx5/core/en_accel/ipsec.c       |  82 ++++----
+ .../ethernet/mellanox/mlx5/core/en_ethtool.c  |  45 ++---
+ .../net/ethernet/mellanox/mlx5/core/en_main.c |   4 +-
+ .../net/ethernet/mellanox/mlx5/core/en_tc.c   | 188 +++++++++---------
+ .../ethernet/mellanox/mlx5/core/esw/bridge.c  |  28 +--
+ .../net/ethernet/mellanox/mlx5/core/esw/qos.c |  24 +--
+ .../mellanox/mlx5/core/eswitch_offloads.c     | 120 +++++------
+ .../net/ethernet/mellanox/mlx5/core/fs_core.c |  16 +-
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    |  14 +-
+ .../net/ethernet/mellanox/mlx5/core/lag/lag.c |   8 +-
+ .../ethernet/mellanox/mlx5/core/lag/mpesw.c   |   2 +-
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |  14 ++
+ .../ethernet/mellanox/mlx5/core/sf/devlink.c  |  25 ++-
+ drivers/net/ethernet/mellanox/mlx5/core/wc.c  |   3 +
+ 38 files changed, 444 insertions(+), 428 deletions(-)
 
-with:
-    1ec0:       0f bd d7                bsr    %edi,%edx
-    1ec3:       0f 44 d3                cmove  %ebx,%edx
-    1ec6:       83 c2 20                add    $0x20,%edx
-    1ec9:       e9 83 fc ff ff          jmp    1b51 <mul_u64_add_u64_div_u64_new+0x91>
 
-    1ed0:       0f bd c1                bsr    %ecx,%eax
-    1ed3:       0f 44 c2                cmove  %edx,%eax
-    1ed6:       83 c0 20                add    $0x20,%eax
-    1ed9:       e9 60 fc ff ff          jmp    1b3e <mul_u64_add_u64_div_u64_new+0x7e>
-
-Neither is pretty...
-Some of the 'damage' is because the x86 'bsr' (bit scan reverse) sets 'z' for zero
-and leaves the output undefined (unchanged on later cpu).
-
-For reference I can get the multiply down to:
-    1b5d:       89 f0                   mov    %esi,%eax
-    1b5f:       f7 e5                   mul    %ebp
-    1b61:       03 44 24 38             add    0x38(%esp),%eax
-    1b65:       83 d2 00                adc    $0x0,%edx
-    1b68:       89 d3                   mov    %edx,%ebx
-    1b6a:       89 44 24 08             mov    %eax,0x8(%esp)
-    1b6e:       89 f0                   mov    %esi,%eax
-    1b70:       f7 e7                   mul    %edi
-    1b72:       03 44 24 3c             add    0x3c(%esp),%eax
-    1b76:       83 d2 00                adc    $0x0,%edx
-    1b79:       01 d8                   add    %ebx,%eax
-    1b7b:       83 d2 00                adc    $0x0,%edx
-    1b7e:       89 d6                   mov    %edx,%esi
-    1b80:       89 c3                   mov    %eax,%ebx
-    1b82:       89 c8                   mov    %ecx,%eax
-    1b84:       f7 e7                   mul    %edi
-    1b86:       89 c7                   mov    %eax,%edi
-    1b88:       89 c8                   mov    %ecx,%eax
-    1b8a:       01 f7                   add    %esi,%edi
-    1b8c:       83 d2 00                adc    $0x0,%edx
-    1b8f:       89 d6                   mov    %edx,%esi
-    1b91:       f7 e5                   mul    %ebp
-    1b93:       89 c1                   mov    %eax,%ecx
-    1b95:       8b 44 24 08             mov    0x8(%esp),%eax
-    1b99:       89 d5                   mov    %edx,%ebp
-    1b9b:       01 d9                   add    %ebx,%ecx
-    1b9d:       83 d5 00                adc    $0x0,%ebp
-    1ba0:       89 44 24 28             mov    %eax,0x28(%esp)
-    1ba4:       01 ef                   add    %ebp,%edi
-    1ba6:       83 d6 00                adc    $0x0,%esi
-    1ba9:       89 74 24 1c             mov    %esi,0x1c(%esp)
-    1bad:       8b 5c 24 1c             mov    0x1c(%esp),%ebx
-    1bb1:       89 7c 24 18             mov    %edi,0x18(%esp)
-    1bb5:       8b 44 24 18             mov    0x18(%esp),%eax
-    1bb9:       89 4c 24 2c             mov    %ecx,0x2c(%esp)
-    1bbd:       09 c3                   or     %eax,%ebx
-    1bbf:       0f 84 1b 03 00 00       je     1ee0 <mul_u64_add_u64_div_u64_new+0x420>
-
-If you follow the register dependency chain it won't be as long as it looks.
-(Although the last few instructions are terrible! - I've tried a few things
-and they won't go away.)
-
-	David
+base-commit: 33e1b1b3991ba8c0d02b2324a582e084272205d6
+-- 
+2.31.1
 
