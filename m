@@ -1,96 +1,127 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759AF1A26B
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 18:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F744EAE7
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 19:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748199398; cv=none; b=efJmNXp3ccFkL+A/m78+HYiKrVED3yArlllwl6JDooPnn6wf9JVhxogHYGHpy1DeIhw5s9AnarkDiskMSjlpYd3Go69runtxjeSfwJo2FxAaLpr8eEdywBVIrwopF0EcK6/cok788zJLMZ3R2kLwwdSTpU4sOiuO3427w69l1ec=
+	t=1748199633; cv=none; b=M6OEHQV+TOAPrbt8fBgdl6yeIUL3rA3q6HtlYfjDr3inonWlHt79J4/45AtLoHdoKS0rj5PABr8969fIaG1XW20s2Kdwj+5bHTHeXXFp1mmNmMKS3+rhPQVC/yHEEtdztLuEogSu/lGCXRUYMw3zPM1kLurjfgC1V9XWpX77UPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748199398; c=relaxed/simple;
-	bh=+ribFU9NDa7K/plfbT56JgotNUGIucMTrbIEe9hcOms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nS2whgr543isQ7nGdnFSpePgoYtIDIP82ye9bPX2yyLf2brDDqCPYfgO7NtRJMzc5fibYhkqjyCsfnyPJNH+RiF8K6K5935Le2o4x1b8QVMNf7iFTyO9V52Q0Ka6Q5XxDfxFMeR3N4Us9q+Q6ODVqcT2zKqsCnTrnjabQde/97M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ETwQNHIX; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1748199633; c=relaxed/simple;
+	bh=B85VVTyqk8cVv2J2dpmt2w8VDVRnFq3MXX/CJMWFGXo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n3sEM03IqftX5oOvgXsenqucVjDz7Ht7RSxspXmxdouzhsIdCNEi+YmZiYeVy854pbvsnWoW4L1KPvyLygFNLRBtZd0k+i9yxAQl2/abC3xvmMFiD0f55Pmv3DfRPiDV6zEtT1D41al0f2LIDvwNveBCULupjP0XMtRgtw02RCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pl6BnKoA; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ETwQNHIX"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6faabd1748cso467056d6.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 11:56:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pl6BnKoA"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442cd12d28cso2061075e9.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 12:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1748199395; x=1748804195; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJrESalrnRvoQ2Qmz3DKP1msimTTj9ieX5JVIeuWRNE=;
-        b=ETwQNHIXJI0QdTFeVY6etWSytDjyGwVI7xuLxiOG/HjtlLqHKGwZ+opUQvlKT5cKYV
-         rla62OWUPenLH9+YEmiuaBCNYkI0tUP7uTiPTUsruUKFQ4VPse9Zv5PgaRCyGGYTgOgT
-         bJ/MHQVicDkX71dXj3dIjB+Ubf/xQY2vYQe5ZK6fH8aoG91o8g7foRnEB+pP4g5m3GhY
-         Jm4/rAkmdGi/Yu8vS5Uf69YAUqNIvlt3Xe2n+E0/b18E917ApYWsIML6/JiMAdPLFUO3
-         vX4RdqAeiO+MPqUqRYPTGCtwE7Nir807K44y5l7uQRH58pJCJWstafYr6/M/61+igfd6
-         wHHg==
+        d=linaro.org; s=google; t=1748199629; x=1748804429; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RjLFxqY7XnLccRUOwo/zYDqB3IdQnhxagjUTUuoSWKI=;
+        b=pl6BnKoAvoIVj5IENAreM0exl9AdT2uP+LLBKx84D+a7UNYesyVkf7aOvzMtThKjAB
+         Ry8f7J0BTCuibh9l4Ye6znQ6JzBkXqjcp4pUtQcuRjbh+5SH8OiDJrfSfMNt1wBmjUjL
+         EOSibsadJLloRnkVfhxcjfFsKnEBr9m7Jij5L6z1IKDfuzS0i0YqJXzIAm/ucdnyqbAg
+         fv8eUWCgKNKirjEthnE5NC+sobgF8AVwLINIf08sQNo2nU765W9mgWNl0KKGjVJrzHoX
+         aQGvF/jqWqX7KFjJEamSKwPpp+rsJHIPYHaw+zBB2YESkpANHy+nGkWsow27DwBGOdcx
+         HGHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748199395; x=1748804195;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rJrESalrnRvoQ2Qmz3DKP1msimTTj9ieX5JVIeuWRNE=;
-        b=TNIKN7yOToBoaF01RJtz9odu+HzIpyFRmkuIJm6dcilxKM/SMZPFfw1+6EfqmOQx9H
-         MQgo1fkakDVraFW0WzTEAWM3pxJrCasEX123fuA5jhGp+kopjKZRLd9Fg+sIbTmJL63+
-         UMxIcmkWnWcdy7nycqNqcXgMmWCqYsa19cvzIxyJ1k2fJUixaI4pn2AbyvwwXt2xZqaP
-         hfl4per+Lh09Mlq69rYP51cR7K59Pr8rlORfG1xwYNHi1vWK7GPtdA9CkzejA5tj3UrV
-         ujn6G8RdRbMKy7674oviZZXj2KAiaTyzPA0R4/Snue0Y44MgvOLHN6Ypnoz/IPytGdCf
-         Xggg==
-X-Forwarded-Encrypted: i=1; AJvYcCX9IkXiWt7AXpef/etfwzusebrO7HnpF1HHarZ0yvlwu4QFN//t0xjMx4Sr5xGx8zswzus+8MpDUNt10Zw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzm5Q3RLAr6IVxnwZFwiBPMJnPaqe0O9vEKq5+0Ie60MZQth9TV
-	Tf9x0Lg7Oz11oW07komXhWcPZ331G9HyFUEMDrfnXIr3dDubNJwkSEuHnGwT7IVNpbY=
-X-Gm-Gg: ASbGncuN9cRV3iJ6hgYWGfeUzG+KajHTlwmW/z8WVbBrJU81APLo09MO0nErnvql42i
-	sEsjBMi0K6acCdfVNTng9qzRUR3PauhvFV9kjtcDqLu2gGoI9xOQPpgGZFtHjEuiaYzZjLufVI3
-	/Y/RLcFaLplwX6u1kgHYlGRVEHGsksVd0lEjaRHDyVA5L4+iSJkkFUTIHQtb+6lEM8+ynvhQ33h
-	9MYQkl8dsLWzNX7Cqx3AXu5p+NfvK/Lt31i+x1dxAFVHqRDu3SlINAl4ISiKSK8d0ysAERTNlje
-	7vin1PcBqol3XianbMQB1Zz2c/v1AGv5ySDYGE1sPZ1gGyxWWO/EBckmJPEFjGNW6Caa+MwOFm6
-	GRXdf0e5HPj3LagaI1ZJuGHaakmA=
-X-Google-Smtp-Source: AGHT+IFdrgC+U2AG6/sIA4KuMu9Om5n5t9ovZ8arytn8KzN5gu3jaF5s+iVxH5xYKfg/odrpNX0E9w==
-X-Received: by 2002:a05:6214:88d:b0:6fa:a428:8b1e with SMTP id 6a1803df08f44-6faa4288cb6mr48261776d6.22.1748199395280;
-        Sun, 25 May 2025 11:56:35 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6faa4818527sm13746796d6.20.2025.05.25.11.56.34
+        d=1e100.net; s=20230601; t=1748199629; x=1748804429;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RjLFxqY7XnLccRUOwo/zYDqB3IdQnhxagjUTUuoSWKI=;
+        b=eG0fktkKxfXebvXafuK3tSXm1l5yS/RKHvY+w+MHaFjHrBljVD3F1kaCytAafGvIDj
+         caVRnB/q1p2Iq22Q7uAh50GbsEBa0usipRfHzuJmN9oqpjHD17nSldP2aPOas6LoPiv/
+         0dzVZo3ySmwlzIYPee3+RZjQi+mHCbrOtQDsuw9W1pLJH8lxObyrJECIm0ci36UFlXYv
+         QXfGb6PbuQ7/6b4Ul0H1t8mQaKDbGjawjAWbdpwoKlu5a/2vV5RgayLcgKjeSQ0Vffix
+         kT6KCFpP3olV93YV7S0Ptrgu8H2XDtvbXyVKSEC1E3V1UhEOsrPXVsJNsnQaadHJJrvS
+         Njew==
+X-Forwarded-Encrypted: i=1; AJvYcCVXkqpmtzj9IjBfjvDUGp+2ZApA1SiIjivrp5oQpMsFFk8gxY/i0Zwv0lYf1Z6ISU27Ibr9FkYP6deVV9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYcxnBVxYfuQSZ0XKfDaubbXwHrbehrFyuJp0so0X0HMY7N6gm
+	fdJFCNN5p/NQ4j8p7JPT4eO59vshm+SdcmdCcxflaQiAFOWLqEZTfrxgRemRome4iGg=
+X-Gm-Gg: ASbGncsyn7N2qnnLyk9gQvvy81C+gv5QVva0jASo2pXlOOHMj39gGj3ybVnMvcaMb2p
+	fyYWU6g78YxcLz/H/OuqcI8/dRpaQKjZhc2anDXRsdndriJIDA7/OfaCchLSS2liVfHslilxMYw
+	viTRMQZlf02cvR6szMw3hEhjSgw9xJ6MjPUC7ZMyJgnRJuCvkeasyZ9QOpS3Cqz/Je+GRaeQfzm
+	CysUY43Ztql8qN4Sin+GrxfSBHW5HBUFy7shit9YMH9PEa2vA94AIfYvpo0qPRJJMrsOOLevhEh
+	WUBhSzV7dMHWbROkIynN0dVFcZkjo//acuFald+HgWpM9umLcBAkHs3oEmJHv1Z8+A816p/6
+X-Google-Smtp-Source: AGHT+IGcJtSyI6HBYQjTOimW44zIP6UUiFecVnILao/qEPMGVovWt4I3ZyyZO/nyuRGDWyrSto3LBQ==
+X-Received: by 2002:a5d:40ce:0:b0:3a4:d8b6:ca78 with SMTP id ffacd0b85a97d-3a4d8b6ce1amr319886f8f.16.1748199628644;
+        Sun, 25 May 2025 12:00:28 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d74843b2sm1629864f8f.53.2025.05.25.12.00.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 11:56:34 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uJGWQ-000000003Y6-1Sd6;
-	Sun, 25 May 2025 15:56:34 -0300
-Date: Sun, 25 May 2025 15:56:34 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmu_notifiers: remove leftover stub macros
-Message-ID: <20250525185634.GC12328@ziepe.ca>
-References: <20250523-mmu-notifier-cleanup-unused-v1-1-cc1f47ebec33@google.com>
+        Sun, 25 May 2025 12:00:27 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Amitkumar Karwar <amitkumar.karwar@nxp.com>,
+	Neeraj Kale <neeraj.sanjaykale@nxp.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] Bluetooth: btnxpuart: Fix missing devm_request_irq() return value check
+Date: Sun, 25 May 2025 21:00:21 +0200
+Message-ID: <20250525190020.27286-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523-mmu-notifier-cleanup-unused-v1-1-cc1f47ebec33@google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1183; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=B85VVTyqk8cVv2J2dpmt2w8VDVRnFq3MXX/CJMWFGXo=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoM2jEi82njqFcOjm2ocR19/nY4zOaTn8/mG2Vy
+ BgID+c/ufuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDNoxAAKCRDBN2bmhouD
+ 1/j3D/4tNb9p4+zQ6Hy51btWhPjOGB3zxCxwZYTIz2whrJZiQ0sV4AHtn2jBjw1sOIJYf32h/Yi
+ +LSNA+ITgfNYVhw1Ye02CL7nCchSnKJ0Lslhih42WkuZo/EAolSglMtvK0AT1I8mYRCNWQi0547
+ v1ur1tv9oEDNyQ0ADBScIZXLMVGeLP6x0RhPItq75iCUcpsPK4o4nXwa4CRY/f2uO8waUPhhA/t
+ S4Fy0E3uELhWvYTRm7WQkqRZwfeGLfLHqqj6CiNK6TNHvF5Kl79mobzMQawlrOpBekG5dUTwBrT
+ yaf4myzQohHYey6aJo/3FV4hV30Zl6BP3/7xm90HnAkHc0PAJ0cstilFgZy6BZP33680diRZ2Vj
+ YhGrHZnoq+D2Y/fLGQBP16kvnpSRVvGabhVZssF5tnvq6gFrR2gnn37rGRJ+lqzXg2F7cNtg1NG
+ Gcqn7Rkvtcs54N7cjdLnQcZf/oWi8+yo61nF07wL/AanSZ4a2dOWsKpX0VsDbHuJ7QCAbuvjsED
+ JFGVMuAnaeJsMv61vo0jzk3tlY/cgEvp9OxPBljFaEIgcIQkBkdm37tJ7Ut+Td6HHNV5b37YAOL
+ wUzV4v8MeqGdDoDX1Pw8H+BjiL3csva7JinarnOyRnzUEUUj+keVYkyIMRyX/GEj+fRogJyQko2 V2f8Xhttd+LsepQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 23, 2025 at 12:30:17AM +0200, Jann Horn wrote:
-> Commit ec8832d007cb ("mmu_notifiers: don't invalidate secondary TLBs as
-> part of mmu_notifier_invalidate_range_end()") removed the main definitions
-> of {ptep,pmdp_huge,pudp_huge}_clear_flush_notify; just their
-> !CONFIG_MMU_NOTIFIER stubs are left behind, remove them.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->  include/linux/mmu_notifier.h | 3 ---
->  1 file changed, 3 deletions(-)
+Return value of devm_request_irq() must be checked (function is even
+annotated) and without it clang W=1 complains:
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+  btnxpuart.c:494:6: error: unused variable 'ret' [-Werror,-Wunused-variable]
 
-Jason
+Setting up wakeup IRQ handler is not really critical, because the
+handler is empty, so just log the informational message so user could
+submit proper bug report and silences the clang warning.
+
+Fixes: c50b56664e48 ("Bluetooth: btnxpuart: Implement host-wakeup feature")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/bluetooth/btnxpuart.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
+index b34623a69b8a..6b13feed06df 100644
+--- a/drivers/bluetooth/btnxpuart.c
++++ b/drivers/bluetooth/btnxpuart.c
+@@ -533,6 +533,8 @@ static int ps_setup(struct hci_dev *hdev)
+ 					ps_host_wakeup_irq_handler,
+ 					IRQF_ONESHOT | IRQF_TRIGGER_FALLING,
+ 					dev_name(&serdev->dev), nxpdev);
++		if (ret)
++			bt_dev_info(hdev, "error setting wakeup IRQ handler, ignoring\n");
+ 		disable_irq(psdata->irq_handler);
+ 		device_init_wakeup(&serdev->dev, true);
+ 	}
+-- 
+2.45.2
+
