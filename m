@@ -1,203 +1,135 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933211F09B6;
-	Sun, 25 May 2025 10:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C861EFFA6;
+	Sun, 25 May 2025 10:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748169637; cv=none; b=q6WCeXSi3+D+4Oe/d5WokNygbUVgeYUG3lY/i2/602LwGXQWMWct4c23Z6mKQD8/N14nAlnFa6rx/OMi+sK5In7WmCsMa93NFI+32rv4iZKAHSRPGa07dYnzPNQ1KXWVGTLxZdgmJVlkZcvU6TNYhQj/CkUxfcARIapBIGuts9E=
+	t=1748169692; cv=none; b=VnOJpr7V8IZKZr2YbiJNiJSB60I/iB0Wy42I3tr64eNSRHv87DqX1LRcetkMsmafpB1Yb9JJutcxLQ4JmYPjs35pNyJCvyfB2N3rXFynSE1ISD1FDXlArctCRDBCemYcx9Vq8SUUpjG6xihYBqmXlIjAH4PAabdB2wBrxzuiP4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748169637; c=relaxed/simple;
-	bh=nO6zb6SjCFPUZ7IEufrR6PiJ70F6QMV0RRUqlhL9aNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LBI4s1KM1vffJa/wtKGGgaZtJhgnIlsnT0GNIIKz3djUxTZx8hA/rRi9U5dXtujidEobuRFBq8ty53i3Ylwmy7N55zR695KV7I+BDp2ykdwZixgb+IhHo3wZD354M9P9g4kIlYPAt45sepBRPN7w3XkfN3NK3ZqqLW54gjKjBjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HXvN6I5G; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748169692; c=relaxed/simple;
+	bh=eppwMoNxuv53Y6dYc/VtrVtiebLIN6LnMv+IH14fL0k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n4iMkTcsnUm82PiUiVK2msJ5Q4yrCMbHtkZC9mh4jPL0eCg8R/EcEKGEsYpDr/mwSq0RkASsJPnSz69yOVfkUe22bGe6eFaat1TIXwibOAsfMOpbRoObPpDBxnjhZlbqsI2B8dRtWEsMb+yLCUxwaafRvcUNdrdfsqrFZgYKYoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBS92/OY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXvN6I5G"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso983131b3a.2;
-        Sun, 25 May 2025 03:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748169635; x=1748774435; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AkaxFjVGSe2Qwk7a8pqzzV8ilfKVeuiiyO9oBhvP6G8=;
-        b=HXvN6I5GpnAr5lmhjAQgxOD7e+YhmQxYpXg4RVZXaeH4pUoMqcqxkR1duS7Ml8hBQH
-         NPNHUzh5AsNX/CACmKZJZLH2eKzE0PHeYLbM9FzNbg5vJxtM1XYIa0X03QUjE+lgjN6g
-         xYthIW6n7Bd+S/gGoFFD+xb5w3Sp1XJS8lsV7yStAXrVqnR1acUYPIoLPR+ALLh5qIAd
-         QSaC96yoGfjmbWqsEMAlMVbh5sDkQoJL36KYTEfyOQ+obtarMmnCGnjNycecDCzbnACd
-         wh8HyB1qylhJz+EWmq99PePFw0PsrhdYI02i8DQtogsYI6eqJPatKfPhcLj5D78XdcVk
-         WaDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748169635; x=1748774435;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AkaxFjVGSe2Qwk7a8pqzzV8ilfKVeuiiyO9oBhvP6G8=;
-        b=iuULv2agAgWyw4VgIsC1bxDTztc2MN2hItit6Rlw9ok6jEbeH1d4VW/zfDDBkPoiyS
-         DvPxgGwoexxhAInZqAR8/QJmcIhPLKyNSo/z6gs0gCVGf0kWDbnsojzoMCZhP4a3HOoP
-         4tfWxSPwZwoc7MZP8W4LGjMZvRYhwJIdyBNZkshODyi/l7s633nJbK9dSBejM6Ks+F4N
-         RgVUCo8dxEk9XH4j1/QCnVcUjyaNXsC4gOmAAUZeIjRiC6hYPbphYXCu2p8xAxZJZ1lN
-         weK+bppZyPwuEpyD+rJYtTsWD6+8+adpvTEgVIMAxS3PHGrYZkryVo2F+fsyXS63swIG
-         pFng==
-X-Forwarded-Encrypted: i=1; AJvYcCUUcRM9jLmrXAPnm3YwYHG1znJG8zNSIqOgrNygMNmuyDRr24/Vlh8cDa9H8/yfTQsZ0mgvoGdyv/hUOQ==@vger.kernel.org, AJvYcCXZ38u3SU9JsQ0eewHJxO+fKT+phPQmWaX5Q63XC8JkeW3n/PkXYycZNBdWre0YfIx+dlxaXCylcYrP8pSc@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/OGzE4/CA5fPksMWmekPp7oyN1V+hnt6QLbVX4wIongrgAeCQ
-	oa/wdJfuvhmlRA/uLa77fmKrMxPrkw1pTSFF5cfNlNwPSRLE/HICIK97
-X-Gm-Gg: ASbGnctV6F9NZ6cmTBz4wny0+LdmghoHOs2hSM5rzhA7nUQ5/llAWOK5PX32fsjWuL0
-	JVcV+IpPu8P9vSFZ6bPHzYHstqasjwbPU8NpUW6d6WO8UlSKWZPzqY8RLxHaTZcYpTA8rcJCgFf
-	i2vdqwz+e6013oXgHjooJpV7RDiykD2REALKd9297WYL4Y3jw5r+/8Sm53+bDKz++EbFLU1oLqN
-	7D1uk9qplYALDuf0oy5oXEaXSAT/85ndiMSy7DSFS7KfM9il9sH6CAoMDL26vUgbLjFyVFmPuQg
-	mKM9bWAMKK6XcopmGkVD/siL6jFkropS39Yp7jgAvY45ydYg8g==
-X-Google-Smtp-Source: AGHT+IGOV1Qoz9M8Hpj3ynpz5Bb7xb/5hezEEoZviGII3MnP9qNtCwtF+oiJboyMF+/MRa5DZgNxCg==
-X-Received: by 2002:a05:6a00:4b02:b0:742:a02e:dd8d with SMTP id d2e1a72fcca58-745fe05907amr9090249b3a.20.1748169634693;
-        Sun, 25 May 2025 03:40:34 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96defa1sm15833363b3a.12.2025.05.25.03.40.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 03:40:34 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Lee Jones <lee@kernel.org>,
-	Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Helge Deller <deller@gmx.de>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: [RFC PATCH 2/2] backlight: Improve support for dual backlight with primary/secondary linkage
-Date: Sun, 25 May 2025 18:40:22 +0800
-Message-ID: <20250525104022.1326997-2-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250525104022.1326997-1-mitltlatltl@gmail.com>
-References: <20250525104022.1326997-1-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBS92/OY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58E9FC4CEEA;
+	Sun, 25 May 2025 10:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748169691;
+	bh=eppwMoNxuv53Y6dYc/VtrVtiebLIN6LnMv+IH14fL0k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MBS92/OYdPMJCc70Eb1v2cjA1jukAeytkFQbobj95pQI9hdcGj4ZmTw1LMS6oa787
+	 9YB6E92bkTvRI91/3al/pnLjSlp/VsGXaQB77zED8lFuD94w/44n7ntLkysKeW5uLu
+	 LTzAJXXFPjTtQoWxkEP7vhEXNV3tjdgmhsTD8ijXl6dqZ+a/2p3EA3XSLx0Cp0dYWN
+	 bXksN1BvyM5BfODLcRJy4ISUkL4faNO9NXP+Yx2/AvvsboSKLtkC4nIuGQPwnaSHzA
+	 +cfKf0Ti90FEc8dpUoPp+egDUUXNfwr7Dhvst/5rhrkDMb9I18tZJ7imKgVgucFvd1
+	 XJLta+CJHt+sA==
+Date: Sun, 25 May 2025 11:41:19 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lars@metafoo.de>, <Michael.Hennerich@analog.com>, <dlechner@baylibre.com>,
+ <nuno.sa@analog.com>, <andy@kernel.org>, <robh@kernel.org>,
+ <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <linus.walleij@linaro.org>,
+ <brgl@bgdev.pl>, <marcelo.schmitt1@gmail.com>
+Subject: Re: [PATCH v3 05/10] iio: adc: ad4170: Add digital filter and
+ sample frequency config support
+Message-ID: <20250525114119.655e24ec@jic23-huawei>
+In-Reply-To: <c61fc067989f7ceda8ab38d38805839b9912c82e.1747083143.git.marcelo.schmitt@analog.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	<c61fc067989f7ceda8ab38d38805839b9912c82e.1747083143.git.marcelo.schmitt@analog.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This patch enhances dual-backlight handling by explicitly linking
-primary and secondary backlight devices using new fields:
+On Tue, 13 May 2025 09:35:03 -0300
+Marcelo Schmitt <marcelo.schmitt@analog.com> wrote:
 
-- `is_secondary`: Marks if a device is secondary in a pair
-- `secondary`: Points to the associated secondary device (if any)
-- `primary`: Points to the primary device (for secondary devices)
+> Add support for sinc3, sinc5, and averaged sinc5 digital filters along with
+> sample frequency configuration.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
-It also update `backlight_update_status()` to ensure that both primary
-and secondary devices are updated together during brightness changes.
-This provides a consistent update mechanism in dual-backlight case.
+> +static int ad4170_set_filter_type(struct iio_dev *indio_dev,
+> +				  struct iio_chan_spec const *chan,
+> +				  unsigned int val)
+> +{
+> +	struct ad4170_state *st = iio_priv(indio_dev);
+> +	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
+> +	struct ad4170_setup *setup = &chan_info->setup;
+> +	unsigned int old_filter_fs, old_filter, filter_type_conf;
+> +	int ret;
+> +
+> +	switch (val) {
+> +	case AD4170_SINC5_AVG:
+> +		filter_type_conf = AD4170_FILTER_FILTER_TYPE_SINC5_AVG;
+> +		break;
+> +	case AD4170_SINC5:
+> +		filter_type_conf = AD4170_FILTER_FILTER_TYPE_SINC5;
+> +		break;
+> +	case AD4170_SINC3:
+> +		filter_type_conf = AD4170_FILTER_FILTER_TYPE_SINC3;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!iio_device_claim_direct(indio_dev))
+> +		return -EBUSY;
+> +
+> +	guard(mutex)(&st->lock);
 
-Suggested-by: Daniel Thompson <danielt@kernel.org>
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- drivers/video/backlight/backlight.c |  9 +++++-
- include/linux/backlight.h           | 50 +++++++++++++++++++++++++++--
- 2 files changed, 56 insertions(+), 3 deletions(-)
+You need to scope this because otherwise locks are released in a different
+order to how they are taken.
 
-diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-index 991702f5d..2e7b179bc 100644
---- a/drivers/video/backlight/backlight.c
-+++ b/drivers/video/backlight/backlight.c
-@@ -388,7 +388,6 @@ struct backlight_device *backlight_device_register(const char *name,
- 		new_name = kasprintf(GFP_KERNEL, "%s-secondary", name);
- 		if (!new_name)
- 			return ERR_PTR(-ENOMEM);
--		put_device(&prev_bd->dev);
- 	}
- 
- 	new_bd->dev.class = &backlight_class;
-@@ -428,6 +427,14 @@ struct backlight_device *backlight_device_register(const char *name,
- 	list_add(&new_bd->entry, &backlight_dev_list);
- 	mutex_unlock(&backlight_dev_list_mutex);
- 
-+	/* set them until the secondary device is available */
-+	if (prev_bd) {
-+		prev_bd->secondary = new_bd;
-+		new_bd->primary = prev_bd;
-+		new_bd->is_secondary = true;
-+		put_device(&prev_bd->dev);
-+	}
-+
- 	kfree(new_name);
- 
- 	return new_bd;
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 10e626db7..cde992e10 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -291,13 +291,42 @@ struct backlight_device {
- 	 * @use_count: The number of unblanked displays.
- 	 */
- 	int use_count;
-+
-+	/**
-+	 * @is_secondary: Indicates whether this backlight device is secondary.
-+	 */
-+	bool is_secondary;
-+
-+	/**
-+	 * @secondary: Pointer to the secondary backlight device.
-+	 */
-+	struct backlight_device *secondary;
-+
-+	/**
-+	 * @primary: Pointer to the primary backlight device.
-+	 *
-+	 * Non-NULL only for secondary devices.
-+	 */
-+	struct backlight_device *primary;
- };
- 
-+static inline struct backlight_device *
-+to_primary_backlight_device(struct backlight_device *bd)
-+{
-+	return bd->is_secondary ? bd->primary : bd;
-+}
-+
-+static inline struct backlight_device *
-+to_secondary_backlight_device(struct backlight_device *bd)
-+{
-+	return bd->is_secondary ? bd : bd->secondary;
-+}
-+
- /**
-- * backlight_update_status - force an update of the backlight device status
-+ * backlight_update_status_single - force an update of the backlight device status
-  * @bd: the backlight device
-  */
--static inline int backlight_update_status(struct backlight_device *bd)
-+static inline int backlight_update_status_single(struct backlight_device *bd)
- {
- 	int ret = -ENOENT;
- 
-@@ -309,6 +338,23 @@ static inline int backlight_update_status(struct backlight_device *bd)
- 	return ret;
- }
- 
-+/**
-+ * backlight_update_status - update primary and secondary backlight devices
-+ * @bd: the backlight device
-+ */
-+static inline int backlight_update_status(struct backlight_device *bd)
-+{
-+	struct backlight_device *primary = to_primary_backlight_device(bd);
-+	struct backlight_device *secondary = to_secondary_backlight_device(bd);
-+	int ret;
-+
-+	ret = backlight_update_status_single(primary);
-+	if (!secondary || ret)
-+		return ret;
-+
-+	return backlight_update_status_single(secondary);
-+}
-+
- /**
-  * backlight_enable - Enable backlight
-  * @bd: the backlight device to enable
--- 
-2.49.0
+	iio_device_claim_direct (takes mlock in the core)
+	guard(mutex)(&st->lock)
+	iio_device_release_direct (releases mlock in the core.
+
+	... scope finishes
+	guard(mutex)(&st->lock) cleanup happens.
+
+
+Current code might be fine, but it's harder to reason about.
+
+> +	/*
+> +	 * The filters provide the same ODR for a given filter_fs value but
+> +	 * there are different minimum and maximum filter_fs limits for each
+> +	 * filter. The filter_fs value will be adjusted if the current filter_fs
+> +	 * is out of the limits of the just requested filter. Since the
+> +	 * filter_fs value affects the ODR (sampling_frequency), changing the
+> +	 * filter may lead to a change in the sampling frequency.
+> +	 */
+> +	old_filter = setup->filter;
+> +	old_filter_fs = setup->filter_fs;
+> +	if (val == AD4170_SINC5_AVG || val == AD4170_SINC3)
+> +		setup->filter_fs = clamp(val, AD4170_SINC3_MIN_FS,
+> +					 AD4170_SINC3_MAX_FS);
+> +	else
+> +		setup->filter_fs = clamp(val, AD4170_SINC5_MIN_FS,
+> +					 AD4170_SINC5_MAX_FS);
+> +
+> +	setup->filter &= ~AD4170_FILTER_FILTER_TYPE_MSK;
+> +	setup->filter |= FIELD_PREP(AD4170_FILTER_FILTER_TYPE_MSK,
+> +				    filter_type_conf);
+> +
+> +	ret = ad4170_write_channel_setup(st, chan->address, false);
+> +	if (ret) {
+> +		setup->filter = old_filter;
+> +		setup->filter_fs = old_filter_fs;
+> +	}
+> +
+> +	iio_device_release_direct(indio_dev);
+> +	return ret;
+> +}
+
 
