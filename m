@@ -1,119 +1,94 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00F41F2C44;
-	Sun, 25 May 2025 18:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3411DFF0
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 18:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748196305; cv=none; b=OYkGc/qesfNI6jOXQstKAl2sh7tefj9LfAjcLCvlbUWLyFuQGrl/js1OoJSeUZvQfZLpRAQC73DwkOlrKUNTC4DRe2XTPzBi0PFr2ARxsY1phF7bNI3HD2Dg8flEKeqoUS8sIC5qFxtdAfJhPpHnPQehVy3/pOmhLL4fDPrfVCk=
+	t=1748196621; cv=none; b=QWEngiwCvqcyY5V05S2zJTc5ZL/8vSk9Sd5IIMwTpSfCmis0DNf0HgD+nAWIt0Q4vcy1jQNOOvLAWXui3mmPCQ+HpzwOGEgmQgKfzEcK9aHXIJKaHF7qc622B3TZqOt24VvZiyYDlhiyaiEIGHGWwVsk32kg3HTjAH7aE6px32U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748196305; c=relaxed/simple;
-	bh=UEyT1pHakFVzPNhDsCguw3RO5aCfnyuTBkTCbqhcDig=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NuCJnXah4dhz/c//6kaDHyYiDj//yQ81ULT9196PP+Y+Z256q7zz+HkFjVriD8Oznrq7KM54fn4VnnRS1nM66U/7VjpzPfrAXDEn5ny1HOZYD0lE26xaV8yEjAgXYJ3ksFyFxl1awile+qwpm5Wj/qF8dzYR5JIiwUqRb8ai47Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6ys5cxh; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748196621; c=relaxed/simple;
+	bh=s89BNDQdKqJ5IqxY7EhHLW2SQhLkqmeGjSCo1kxun0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=COQm2kVgZOKXfixSrqhuKt/Z/Xy6tVxqxs+Hlsk5f3VlI6gYyU3+cvFowNxlCS0iq1kH72BZ2kXAKRZ+E7rGjY2d7WAfWv6h66OSYpEYtAWOR3x6oXxVgPWUNJEPoNhnYzHqQ+olHAgJZOZJE62P9g+RON9CC6MMoV+2t+0n1tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tI/SNjyf; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6ys5cxh"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so9431745e9.2;
-        Sun, 25 May 2025 11:05:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748196302; x=1748801102; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WVKFYyD1oSY4+ApZBLJcuBPiQP9r3k9ZVrPBJZKw9wU=;
-        b=L6ys5cxhhpHmBVW+QtiEcqzHZaVrbLml1RCLKBfOPzRkeQvFROjxumSADpb5KtGayw
-         +GnR4QK4G5H8OPzxVWgJjMCZ2u4+cJAbfqvODk4VrsypgGBH7QKAtLaAKY/PtQB6l7Ov
-         u1TzZRFxWcOjVk8xc4XRl2kyrqkdF7Ez3dCDKqNvblxlgt8VOgVpcoeSuoQ0iEkk6dHi
-         m+20WkuERMFiEDJ+HRQmle+wiTjwnPI53KyczNPM7tylGqi9mDJEbimAJ8SRXxZ9z8u3
-         wLvMTEBl0aEkYWtQW7IJ347evYRfNqFRzKUDVfaY8ANUIxipqgLcnBUJWskAv8WZNObS
-         gKkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748196302; x=1748801102;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WVKFYyD1oSY4+ApZBLJcuBPiQP9r3k9ZVrPBJZKw9wU=;
-        b=uUeKZcYmpdFuK7X6pE8ZB3Y6ZG/jw8yqBAZl1Wj4v5FBiuawSreFYLLKcgrmNz2uhg
-         DoqglRdpbiA94QffucIbhXygW38tO6mZHDNIePw7oKXhSuI0HPEHjUezqk1bSrjAW3+V
-         yMZOye6PPtcyb4GJXJGc0ZxwLnvVsMZL9ujk9xCYpexcZjVY2yHHqhmXIn5GRMoRtLWz
-         Rl/DXvU1XBz9f1yY/bGouOEoogY8G7ynQ0/hGQ9Zt1Kj6kNR0NZkOPOyWAFZePIuzFml
-         Eb/AjNzCwQPU19xFR+NvwwTPGBRQGd/2VpWy2MOyC/q1BtMq1mN4yJaeG1y3OklkQOur
-         pqeg==
-X-Forwarded-Encrypted: i=1; AJvYcCU90RdlFsz2c6np78MmQ6uWtEh02NVAl11tq2KhFII3Rmwf79jhiELL7wyW4IHpWsdR6hl+bi83GNCu@vger.kernel.org, AJvYcCUdLuqAdfkuYbZZZd7dKdxEz5XA8ObMHK1tDaTQZbafCPLcreDVZEHCUUU7Tvyhs0cmw4D1cfc4svJohnZg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/bAUH0XrYXu7+gIRHG6UDX1r/ibW6ZaBcFRuRKYFywNDXbtWS
-	PkQtseiA6Jg8W6Crab3/1uJcfmhh122UA7VbLJf8L5BLArXmQmGHoSam
-X-Gm-Gg: ASbGncuxdwvSwJkhTfHWCQAl+G90RrwOIVlTrKWERHxNFiJd+DTnEO/ef8PpdCZr7bn
-	lrGrx2Dru0RFjcVqlIPb53VD9KhHYAEPTagWRN8UwVP14M5O53q1gwK2Mru3NqgStGY6SDZcJO5
-	g8ddIn9OgF4ocNNlyBdo5atLcU4Kh3U9qAk76Xrr82bg3jdajKtaIHQ5ttDsN58UHhmp6VwHZfJ
-	1OYb2ty86/xab94uJqSOwvOWBEvYIrMbYlrWsIJc7TLJXdFh7f9g1C2zoa5suZ4RWu31OtUPDgN
-	DHF3fjGRee1g8mXgkRsMU9fUUTlIQm6/OkUsOPJ9jGZZ1GeGqbqLReJFrFoGqNawyA==
-X-Google-Smtp-Source: AGHT+IEHfg1uAoXP3YxY9kopRipOcC4EFMsn7CMAfN1zBrNw85aiCAUIDgW2f/sDcr3P3NHJYzai8g==
-X-Received: by 2002:a05:600c:3f08:b0:43d:fa58:700e with SMTP id 5b1f17b1804b1-44c930191bcmr55647345e9.33.1748196302044;
-        Sun, 25 May 2025 11:05:02 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cb450867sm5876612f8f.57.2025.05.25.11.05.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 11:05:01 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: rafael@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com
-Cc: lenb@kernel.org,
-	hpa@zytor.com,
-	x86@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH] x86/ACPI: invalidate all cache lines on ACPI C-state transitions
-Date: Sun, 25 May 2025 18:00:42 +0000
-Message-ID: <20250525180052.1004-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tI/SNjyf"
+Date: Sun, 25 May 2025 14:10:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748196606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0vd0sHl8w/GaeRmXhaDis/25ZNGdLqLOuwdI9AeDzOY=;
+	b=tI/SNjyfh707b6Koumbb11CNdfQwGScOVxUhy+Xr2XRkmAkaZWGt4OgAxlClrNkUCN/p/L
+	1foSIjuAXmmFWZEiPqt4toPnyoWt+eY/ttUDawykzgzKCJQUmJ4R1MhO0u+0hHaeSyQzTX
+	UHOZ97OgQpQxbSef2xIt1VO6xMUJSYA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, linux-bcache@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
+ larger than 2048 bytes [-Werror=frame-larger-than=]
+Message-ID: <tr3y27pqkm4d6txcqwh4eiwvcr4limzzwnbaybwuigfjcbw43f@krfnu37d5zd7>
+References: <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
+ <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
+ <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
+ <7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
+ <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
+ <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
+ <692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
+ <20250525181842.2e2c47fd@pumpkin>
+ <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
+ <20250525184757.23c5e5d2@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250525184757.23c5e5d2@pumpkin>
+X-Migadu-Flow: FLOW_OUT
 
-From: Khalid Ali <khaliidcaliy@gmail.com>
+On Sun, May 25, 2025 at 06:47:57PM +0100, David Laight wrote:
+> On Sun, 25 May 2025 13:36:16 -0400
+> Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> 
+> > +cc Steve
+> ...
+> > > I've a cunning plan to do a proper static analysis of stack usage.
+> > > It is a 'simple' matter of getting objtool to output all calls with
+> > > the stack offset.
+> > > Indirect calls need the function hashes from fine-ibt, but also need
+> > > clang to support 'hash seeds' to disambiguate all the void (*)(void *)
+> > > functions.
+> > > That'll first barf at all recursion, and then, I expect, show a massive
+> > > stack use inside snprintf() in some error path.  
+> > 
+> > I suspect recursion will make the results you get with that approach
+> > useless.
+> 
+> Recursion is an issue, but the kernel really doesn't support recursion.
+> So you actually want to know the possible recursion loops anyway.
+> I suspect (hope) most will be the 'recurses only once' type.
+> If not they need some other bound.
 
-According to ACPI spec 2.4 and 2.5, upon C-state
-transitions(specifically C2 and C3) it is required and explicitly
-mentioned to invalidate and writeback all modified cache line using
-WBINVD.
+Recursion is a fact of life when you get different subsystems
+interacting in unpredictable ways.
 
-However the current ACPI C-state entry using monitor/mwait instructions
-it have been used CLFLUSH by flushing the cache line associated by
-monitored address. That what all about this patch addresses,
-invalidating all cache lines instead of single cache line.
+You can be in one filesystem, and then end up in a fault handler (gup(),
+or a simple copy to/from user), and then end up in a completely
+different filesystem - and then you call into the block layer, or
+networking if it's NFS.
 
-Let me know if there any reason and decisions behind the current
-implementation.
-
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- arch/x86/kernel/acpi/cstate.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index d5ac34186555..eb3d435e08ad 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -222,6 +222,9 @@ void __cpuidle acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cx)
- 	struct cstate_entry *percpu_entry;
- 
- 	percpu_entry = per_cpu_ptr(cpu_cstate_entry, cpu);
-+	/* flush and invalidate all modified cache line on C3 and C2 state entry*/
-+	if (cx->type == ACPI_STATE_C3 || cx->type == ACPI_STATE_C2)
-+		wbinvd();
- 	mwait_idle_with_hints(percpu_entry->states[cx->index].eax,
- 	                      percpu_entry->states[cx->index].ecx);
- }
--- 
-2.49.0
-
+Static analysis might get you some useful data within a subsystem, but
+it won't tell you much about the kernel as a whole as people are
+actually running it.
