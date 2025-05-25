@@ -1,64 +1,63 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D438D1E7660
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 08:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B5827454
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 08:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748162897; cv=none; b=ZqKVzpNlxIolPDA0lsCkB2ePmIuISNeEZdWS9j627Wz4gfngmItVoQq3d3X2viV//QJZu4ghCpKt7W8B0RiFj+r7lThWCSJdk285h+tAN2zNhoxma2pG523so0lNRc+1nLI5xYQ6fnf7JjSJI1cO7EiSag0CAaY6jiSVxxe2/RY=
+	t=1748162906; cv=none; b=Fxx1BOXQXvTfTQpdmqpM234QGvYOXFO2Si1hUXnn4/tBz5Nw4dwwz+LVILLuaSjEXqw06tCbX/iuUxcl6tzSz6IT+7PT7NL190lFaYZBhokWi4BU7q9XKmD/g3ZWoyAoPOWRw7fnA8IYpYjst0S9z56xL4cGekdfkNAJGLk6HJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748162897; c=relaxed/simple;
-	bh=a7EmASSZ0lBK8fMNA15/YRl1jJ6fW9Bewy06JC1vdnY=;
+	s=arc-20240116; t=1748162906; c=relaxed/simple;
+	bh=J+bU4FKnQOCGlkLZ+SoZk8Ef1yJmgO83nEYlxz5U3ww=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VqPxFPNBc5HD0dAnJTSNPFCSPQqT1+18k2tsUncLbw4dxTsHV5362b7cb5YGH6gzPkhU4UeCwv9Thw42bOCWYXSsVvA5K3pQ9sIWQfX6lXL4wemM9Sh+EYWmvLTt8DiDMKKYJdS4lWc6yKHS7efebS/heKUnl7lHLG3in+2V4hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=DMMjSd/K; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=gWXDaiB8/2/uOaG47E+x71obN7V11vA2Re7VXwOm6edUd9uAP+S+Y6TJXRcSriQXNVObz4VZ8LUlu9binDt3RDSKgEKPmXhcyPOtU3aoYVflmAdGIRpxmY4vTN4ZHGgFA3DQAapFCUBzMo3Xf0kJ5DGIpFVoLfKkNem8aELfQSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Cb9vUYi9; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="DMMjSd/K"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so1621893b3a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 01:48:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Cb9vUYi9"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso1425422b3a.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 01:48:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748162895; x=1748767695; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1748162903; x=1748767703; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L2YZsv0slXJtEqKbNqOnaTZCtfyqgolmSJZjw1dwQuo=;
-        b=DMMjSd/KhLOAssuC75U9ME0Tiwz21GF6m/faproKdteG3O0zpIPg2BsSvv0S8rkc8J
-         DIf8pkPQw9md0XzrV+kQ7d7R9WjuCgFBAFWtMoo1NVEnmNchoCl11cdi8uOlGxy6u3HV
-         rQwrv81gdaJfHeJcur3H6vT2HMOR65Pa8kiusvUHCnGMMNscMsp3N95TLQe+blIbdz8o
-         G6LBdIs6YzhSMzjbgIHEQEoKOyQbIiwYrKRCmSp0N+dkwn0bqo1a2eNkuDI55tH6TPWo
-         45TwAFy2ea7Yy/JA2nnrcb4kDmdN3zty5QvBWpcIEZhAfU3fCqMSHh5+DqQ8/Ygmrr4W
-         Sdew==
+        bh=rMKEZglzhX2VZqgfqYM1yDb5018JRju43J0PNizK1NU=;
+        b=Cb9vUYi9nK/OpBCAAxIXdzVUnKHbngQ4l9FD6AFjdrpjP+6hG//ZGFnH1YJDPgkUoI
+         /P/rfZqlUw+Kzj6MlVxKmpxB1wT+LPK+fBLOlIGmcnpkkwpv2v3HTCn56u3jCp5tj4uh
+         tMDEi3SNCdndCMIz/GYXhFWlGYppBRQYwBzyXkMZdMc6QafR4qVYUEFUF1Qaf7MYjo37
+         ZIAWkfWGNbXdEoA7AtAYYgF3qpds5NPcSbTMQQdx6nI68830UiAXjrDRt19s7wE6YBXa
+         wXQyJprdXfDfqsRs+L5X+AgncxCfl31cMRa+7jRGgxPq/cHfr61V8uGUSWKX4sP0LDE+
+         HVXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748162895; x=1748767695;
+        d=1e100.net; s=20230601; t=1748162903; x=1748767703;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=L2YZsv0slXJtEqKbNqOnaTZCtfyqgolmSJZjw1dwQuo=;
-        b=bDPgO4YseJXitAQqBAv7SUr6UXLLllDN1qXBTh1kvoEcCtujpMSmWQctLDCW3ltQCs
-         xhV/XabncEZhHn2P7DgQrCEkrB2bkEQqRlHw0nNUL8pLdPbSFXe7/hI7oy09ek6LybJI
-         yK1uJNI5ofKNwnoe5fwc6PknEIhPdBgNHnqwuNxB4ZgTq6DiKyfAShX5dIKRa4lnB8ul
-         tm75gspC3bJMgPunnLrGezjPyYHKgg+Zc39QhSJIkh4+LaTh3Y1EbEgKgoOYrhAz3A4P
-         o2HAcFBfDlrfPw3PAi1bj17cnV+ZTCF4AWwA8ae2eJstZxfWuSgjyykYD7Z6NH+bq68R
-         AVcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNxHnFXGs4qhw289aEIUuWrprnY0q8NdVF1xAfri8eeaebpZofZ1YksKh+6dJeEnr+w4vOq8joHB14xCs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxiu/PaRwWHMSkIfnMxU+UEVU5pth0j5XE+rLLGvVkb1LAqyjud
-	q2sKmUA/jMhcyJqb1NvUG/80y9wKEKM/nQhHJ/PzBoYxLWYX6glZV4bGoMaLihw3NZvJmE6CHMZ
-	K60lQ
-X-Gm-Gg: ASbGncveyXOkGP7krWdGrucb/WyaOaZPSuU+EdL0krl3cXosuTKPDUAlZ2U/0+m5VmN
-	mGzkKG3+XGS4WXoVaO7MfuBXkxp4atYhAwjbgu1sOqK7izQgYvuI9aekEgC4mFWGLEBAVeLfGAB
-	qBHluQ1mH8vHUpZGlwDyal7u/znfNdiFR+eWD3r/RWj0sCHG+WkuCvm3Ob0X6QmdF5eciG2myic
-	Qzn1uaD/YRk54XA92FuUnrfS1rL2aGK3NmNzNMUMbsQsQ+Ojgv8++1p7CZG4U7OnVrBRNDCBVwO
-	7gZZoX7U4Krpw6TR3jAbLL7k3iCSMHLgfsLto9PW+p5KpjNpZ63mju03LMIA55/vygoij7WS83w
-	2nIjqaoltk+Xc/X3m8mc=
-X-Google-Smtp-Source: AGHT+IHM9LFVogkUZzQcx3ggP9+ZLqKm1aQkkdN9byS7+2CCq/9Ox/zC14iIeSMPjwcZoGra84FVAQ==
-X-Received: by 2002:a05:6a21:3406:b0:1f3:3547:f21b with SMTP id adf61e73a8af0-2188b5718cdmr9564106637.5.1748162894921;
-        Sun, 25 May 2025 01:48:14 -0700 (PDT)
+        bh=rMKEZglzhX2VZqgfqYM1yDb5018JRju43J0PNizK1NU=;
+        b=YMU6hnTb/TVRzR3a8+yCtCi41DEi4/g5XUt/eXf9OpzQFq5ZwPMcy2yF5jNWe8ThAs
+         kdZ1gueo75BGRoP7OPOXRzfCIjTb9zxEn671wgPTJb48CtOZ6wnM895rTwlHV9OSw0ZE
+         KzepvmezgxUNAkHq+rFRbl/vQeaQ/lGUkV1Yy9E0MBgqdob8NqVUjXI1yRF9kpZmJ4BB
+         m1ka+4RUHq/wGUg68eZp5VveS0+VdTFbsJSllZnzEEB7pqbui+7KDOH8pP0mOQN9m8Y6
+         dK8IuCDMRjhmKyzEI0VXZS53HCGmx535In/cAPfbcWA2k95ZbQvw6b8vAPaeR7o0xOGe
+         1iOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiLFjDaKcl7Hc78rXlH517lWNf7//mgStLuxv1s62o2Eazt1bII7n0IEsxBMInyJBp77/oQK+fVH5F+oo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwemRlsrK6Frj8vplBJWq24jZyuBIhkgIqGScR0x3PeCoYz9Owi
+	NxNShmVqYr96wg/T8dLCCUiD5IWy0VWBDdd+Cd7HhepOC34rBln0eyFujCvAnWgIjLo=
+X-Gm-Gg: ASbGncvrePNG97/nqk2el17pSEPebr3J0kSJ0VD5gk2677V9QkbDqn116A6Sh+kHQ+v
+	6cpSLtk9TEjjhK0UmxWsRQS7EZXZjzZn9PjaMZEgIprHQvbVJJqdaRot5fKJJ63YeUsdqRo+YSM
+	6kZ63wiS1xX7eWkl0yD2ifgzFvVTlp4P/PC434bt04H8X/nejLFn2iJUipROO6CsIWTaWNla/R+
+	KKLlaOLTARDiYa3QMYJUww2ytxfP9iSWuFcUGye4uHF4zE1NO/aXY8GGrGyQo88VDprFyeej+ew
+	1TSvJnW8yt4B59Mxsq3UcUraJMMi+vaI+7+Vgl/bCk3Z0UwaI0Takj3lme11kLeO+3sJnBEjyLE
+	9z0guI1onfmpKM2RkVZo=
+X-Google-Smtp-Source: AGHT+IHfQHtXL6tchHwpOiAzxsq8y7X1hJ76RHZ9CpRPgZQs/hxHHxQXiRO4R77WnMScosRK+7h/rw==
+X-Received: by 2002:a05:6a20:439e:b0:218:c01:ddce with SMTP id adf61e73a8af0-2188c3b4625mr8693111637.40.1748162903178;
+        Sun, 25 May 2025 01:48:23 -0700 (PDT)
 Received: from localhost.localdomain ([122.171.22.180])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6dd83sm15250627a12.18.2025.05.25.01.48.07
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6dd83sm15250627a12.18.2025.05.25.01.48.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 01:48:14 -0700 (PDT)
+        Sun, 25 May 2025 01:48:22 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -88,9 +87,9 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v4 06/23] mailbox: Allow controller specific mapping using fwnode
-Date: Sun, 25 May 2025 14:16:53 +0530
-Message-ID: <20250525084710.1665648-7-apatel@ventanamicro.com>
+Subject: [PATCH v4 07/23] mailbox: Add RISC-V SBI message proxy (MPXY) based mailbox driver
+Date: Sun, 25 May 2025 14:16:54 +0530
+Message-ID: <20250525084710.1665648-8-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250525084710.1665648-1-apatel@ventanamicro.com>
 References: <20250525084710.1665648-1-apatel@ventanamicro.com>
@@ -102,141 +101,1034 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce optional fw_node() callback which allows a mailbox controller
-driver to provide controller specific mapping using fwnode.
+Add a mailbox controller driver for the new SBI message proxy extension
+which is part of the SBI v3.0 specification.
 
-The Linux OF framework already implements fwnode operations for the
-Linux DD framework so the fw_xlate() callback works fine with device
-tree as well.
-
+Co-developed-by: Rahul Pathak <rpathak@ventanamicro.com>
+Signed-off-by: Rahul Pathak <rpathak@ventanamicro.com>
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/mailbox/mailbox.c          | 47 +++++++++++++++++-------------
- include/linux/mailbox_controller.h |  3 ++
- 2 files changed, 30 insertions(+), 20 deletions(-)
+ drivers/mailbox/Kconfig               |  11 +
+ drivers/mailbox/Makefile              |   2 +
+ drivers/mailbox/riscv-sbi-mpxy-mbox.c | 979 ++++++++++++++++++++++++++
+ 3 files changed, 992 insertions(+)
+ create mode 100644 drivers/mailbox/riscv-sbi-mpxy-mbox.c
 
-diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
-index 0593b4d03685..0100163c0390 100644
---- a/drivers/mailbox/mailbox.c
-+++ b/drivers/mailbox/mailbox.c
-@@ -399,35 +399,49 @@ EXPORT_SYMBOL_GPL(mbox_bind_client);
-  */
- struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
- {
-+	struct fwnode_reference_args fwspec;
- 	struct device *dev = cl->dev;
- 	struct mbox_controller *mbox;
- 	struct of_phandle_args spec;
- 	struct mbox_chan *chan;
--	int ret;
-+	int i, ret;
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index ed52db272f4d..cc29a1a1974a 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -330,4 +330,15 @@ config THEAD_TH1520_MBOX
+ 	  kernel is running, and E902 core used for power management among other
+ 	  things.
  
--	if (!dev || !dev->of_node) {
--		pr_debug("%s: No owner device node\n", __func__);
-+	if (!dev || !dev->fwnode) {
-+		pr_debug("%s: No owner %s\n", __func__, !dev ? "device" : "fwnode");
- 		return ERR_PTR(-ENODEV);
- 	}
++config RISCV_SBI_MPXY_MBOX
++	tristate "RISC-V SBI Message Proxy (MPXY) Mailbox"
++	depends on RISCV_SBI
++	default RISCV
++	help
++	  Mailbox driver implementation for RISC-V SBI Message Proxy (MPXY)
++	  extension. This mailbox driver is used to send messages to the
++	  remote processor through the SBI implementation (M-mode firmware
++	  or HS-mode hypervisor). Say Y here if you want to have this support.
++	  If unsure say N.
++
+ endif
+diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+index 9a1542b55539..833d72649790 100644
+--- a/drivers/mailbox/Makefile
++++ b/drivers/mailbox/Makefile
+@@ -70,3 +70,5 @@ obj-$(CONFIG_QCOM_CPUCP_MBOX)	+= qcom-cpucp-mbox.o
+ obj-$(CONFIG_QCOM_IPCC)		+= qcom-ipcc.o
  
--	ret = of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox-cells",
--					 index, &spec);
-+	ret = fwnode_property_get_reference_args(dev->fwnode, "mboxes",
-+						 "#mbox-cells", 0, index, &fwspec);
- 	if (ret) {
- 		dev_dbg(dev, "%s: can't parse \"mboxes\" property\n", __func__);
- 		return ERR_PTR(ret);
- 	}
- 
-+	memset(&spec, 0, sizeof(spec));
-+	if (dev->of_node) {
-+		spec.np = to_of_node(fwspec.fwnode);
-+		spec.args_count = fwspec.nargs;
-+		for (i = 0; i < spec.args_count; i++)
-+			spec.args[i] = fwspec.args[i];
+ obj-$(CONFIG_THEAD_TH1520_MBOX)	+= mailbox-th1520.o
++
++obj-$(CONFIG_RISCV_SBI_MPXY_MBOX)	+= riscv-sbi-mpxy-mbox.o
+diff --git a/drivers/mailbox/riscv-sbi-mpxy-mbox.c b/drivers/mailbox/riscv-sbi-mpxy-mbox.c
+new file mode 100644
+index 000000000000..121ee5fd3d0d
+--- /dev/null
++++ b/drivers/mailbox/riscv-sbi-mpxy-mbox.c
+@@ -0,0 +1,979 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * RISC-V SBI Message Proxy (MPXY) mailbox controller driver
++ *
++ * Copyright (C) 2025 Ventana Micro Systems Inc.
++ */
++
++#include <asm/sbi.h>
++#include <linux/cpu.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/jump_label.h>
++#include <linux/kernel.h>
++#include <linux/mailbox_controller.h>
++#include <linux/mailbox/riscv-rpmi-message.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/msi.h>
++#include <linux/of_irq.h>
++#include <linux/percpu.h>
++#include <linux/platform_device.h>
++#include <linux/smp.h>
++
++/* ====== SBI MPXY extension data structures ====== */
++
++/* SBI MPXY MSI related channel attributes */
++struct sbi_mpxy_msi_info {
++	/* Lower 32-bits of the MSI target address */
++	u32 msi_addr_lo;
++	/* Upper 32-bits of the MSI target address */
++	u32 msi_addr_hi;
++	/* MSI data value */
++	u32 msi_data;
++};
++
++/*
++ * SBI MPXY standard channel attributes.
++ *
++ * NOTE: The sequence of attribute fields are as-per the
++ * defined sequence in the attribute table in spec (or
++ * as-per the enum sbi_mpxy_attribute_id).
++ */
++struct sbi_mpxy_channel_attrs {
++	/* Message protocol ID */
++	u32 msg_proto_id;
++	/* Message protocol version */
++	u32 msg_proto_version;
++	/* Message protocol maximum message length */
++	u32 msg_max_len;
++	/* Message protocol message send timeout in microseconds */
++	u32 msg_send_timeout;
++	/* Message protocol message completion timeout in microseconds */
++	u32 msg_completion_timeout;
++	/* Bit array for channel capabilities */
++	u32 capability;
++	/* SSE event ID */
++	u32 sse_event_id;
++	/* MSI enable/disable control knob */
++	u32 msi_control;
++	/* Channel MSI info */
++	struct sbi_mpxy_msi_info msi_info;
++	/* Events state control */
++	u32 events_state_ctrl;
++};
++
++/*
++ * RPMI specific SBI MPXY channel attributes.
++ *
++ * NOTE: The sequence of attribute fields are as-per the
++ * defined sequence in the attribute table in spec (or
++ * as-per the enum sbi_mpxy_rpmi_attribute_id).
++ */
++struct sbi_mpxy_rpmi_channel_attrs {
++	/* RPMI service group ID */
++	u32 servicegroup_id;
++	/* RPMI service group version */
++	u32 servicegroup_version;
++};
++
++/* SBI MPXY channel IDs data in shared memory */
++struct sbi_mpxy_channel_ids_data {
++	/* Remaining number of channel ids */
++	__le32 remaining;
++	/* Returned channel ids in current function call */
++	__le32 returned;
++	/* Returned channel id array */
++	__le32 channel_array[];
++};
++
++/* SBI MPXY notification data in shared memory */
++struct sbi_mpxy_notification_data {
++	/* Remaining number of notification events */
++	__le32 remaining;
++	/* Number of notification events returned */
++	__le32 returned;
++	/* Number of notification events lost */
++	__le32 lost;
++	/* Reserved for future use */
++	__le32 reserved;
++	/* Returned channel id array */
++	u8 events_data[];
++};
++
++/* ====== MPXY data structures & helper routines ====== */
++
++/* MPXY Per-CPU or local context */
++struct mpxy_local {
++	/* Shared memory base address */
++	void *shmem;
++	/* Shared memory physical address */
++	phys_addr_t shmem_phys_addr;
++	/* Flag representing whether shared memory is active or not */
++	bool shmem_active;
++};
++
++static DEFINE_PER_CPU(struct mpxy_local, mpxy_local);
++static unsigned long mpxy_shmem_size;
++static bool mpxy_shmem_init_done;
++
++static int mpxy_get_channel_count(u32 *channel_count)
++{
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	struct sbi_mpxy_channel_ids_data *sdata = mpxy->shmem;
++	u32 remaining, returned;
++	struct sbiret sret;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!channel_count)
++		return -EINVAL;
++
++	get_cpu();
++
++	/* Get the remaining and returned fields to calculate total */
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_GET_CHANNEL_IDS,
++			 0, 0, 0, 0, 0, 0);
++	if (!sret.error) {
++		remaining = le32_to_cpu(sdata->remaining);
++		returned = le32_to_cpu(sdata->returned);
++		*channel_count = remaining + returned;
 +	}
 +
- 	mutex_lock(&con_mutex);
- 
- 	chan = ERR_PTR(-EPROBE_DEFER);
--	list_for_each_entry(mbox, &mbox_cons, node)
--		if (mbox->dev->of_node == spec.np) {
-+	list_for_each_entry(mbox, &mbox_cons, node) {
-+		if (mbox->fw_xlate && mbox->dev->fwnode == fwspec.fwnode) {
-+			chan = mbox->fw_xlate(mbox, &fwspec);
-+			if (!IS_ERR(chan))
-+				break;
-+		} else if (mbox->of_xlate && mbox->dev->of_node == spec.np) {
- 			chan = mbox->of_xlate(mbox, &spec);
- 			if (!IS_ERR(chan))
- 				break;
- 		}
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static int mpxy_get_channel_ids(u32 channel_count, u32 *channel_ids)
++{
++	u32 remaining, returned, sidx, start_index = 0, cidx = 0;
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	struct sbi_mpxy_channel_ids_data *sdata = mpxy->shmem;
++	struct sbiret sret;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!channel_count || !channel_ids)
++		return -EINVAL;
++
++	get_cpu();
++
++	do {
++		sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_GET_CHANNEL_IDS,
++				 start_index, 0, 0, 0, 0, 0);
++		if (sret.error)
++			goto done;
++
++		remaining = le32_to_cpu(sdata->remaining);
++		returned = le32_to_cpu(sdata->returned);
++
++		for (sidx = 0; sidx < returned && cidx < channel_count; sidx++) {
++			channel_ids[cidx] = le32_to_cpu(sdata->channel_array[sidx]);
++			cidx += 1;
++		}
++
++		start_index = cidx;
++
++	} while (remaining);
++
++done:
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static int mpxy_read_attrs(u32 channel_id, u32 base_attrid, u32 attr_count,
++			   u32 *attrs_buf)
++{
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	struct sbiret sret;
++	u32 i;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!attr_count || !attrs_buf)
++		return -EINVAL;
++
++	get_cpu();
++
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_READ_ATTRS,
++			 channel_id, base_attrid, attr_count, 0, 0, 0);
++	if (!sret.error) {
++		for (i = 0; i < attr_count; i++)
++			attrs_buf[i] = le32_to_cpu(((__le32 *)mpxy->shmem)[i]);
 +	}
- 
--	of_node_put(spec.np);
-+	fwnode_handle_put(fwspec.fwnode);
- 
- 	if (IS_ERR(chan)) {
- 		mutex_unlock(&con_mutex);
-@@ -446,15 +460,8 @@ EXPORT_SYMBOL_GPL(mbox_request_channel);
- struct mbox_chan *mbox_request_channel_byname(struct mbox_client *cl,
- 					      const char *name)
- {
--	struct device_node *np = cl->dev->of_node;
--	int index;
--
--	if (!np) {
--		dev_err(cl->dev, "%s() currently only supports DT\n", __func__);
--		return ERR_PTR(-EINVAL);
--	}
-+	int index = device_property_match_string(cl->dev, "mbox-names", name);
- 
--	index = of_property_match_string(np, "mbox-names", name);
- 	if (index < 0) {
- 		dev_err(cl->dev, "%s() could not locate channel named \"%s\"\n",
- 			__func__, name);
-@@ -492,8 +499,8 @@ void mbox_free_channel(struct mbox_chan *chan)
- EXPORT_SYMBOL_GPL(mbox_free_channel);
- 
- static struct mbox_chan *
--of_mbox_index_xlate(struct mbox_controller *mbox,
--		    const struct of_phandle_args *sp)
-+fw_mbox_index_xlate(struct mbox_controller *mbox,
-+		    const struct fwnode_reference_args *sp)
- {
- 	int ind = sp->args[0];
- 
-@@ -544,8 +551,8 @@ int mbox_controller_register(struct mbox_controller *mbox)
- 		spin_lock_init(&chan->lock);
- 	}
- 
--	if (!mbox->of_xlate)
--		mbox->of_xlate = of_mbox_index_xlate;
-+	if (!mbox->fw_xlate && !mbox->of_xlate)
-+		mbox->fw_xlate = fw_mbox_index_xlate;
- 
- 	mutex_lock(&con_mutex);
- 	list_add_tail(&mbox->node, &mbox_cons);
-diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
-index 5fb0b65f45a2..b91379922cb3 100644
---- a/include/linux/mailbox_controller.h
-+++ b/include/linux/mailbox_controller.h
-@@ -66,6 +66,7 @@ struct mbox_chan_ops {
-  *			no interrupt rises. Ignored if 'txdone_irq' is set.
-  * @txpoll_period:	If 'txdone_poll' is in effect, the API polls for
-  *			last TX's status after these many millisecs
-+ * @fw_xlate:		Controller driver specific mapping of channel via fwnode
-  * @of_xlate:		Controller driver specific mapping of channel via DT
-  * @poll_hrt:		API private. hrtimer used to poll for TXDONE on all
-  *			channels.
-@@ -79,6 +80,8 @@ struct mbox_controller {
- 	bool txdone_irq;
- 	bool txdone_poll;
- 	unsigned txpoll_period;
-+	struct mbox_chan *(*fw_xlate)(struct mbox_controller *mbox,
-+				      const struct fwnode_reference_args *sp);
- 	struct mbox_chan *(*of_xlate)(struct mbox_controller *mbox,
- 				      const struct of_phandle_args *sp);
- 	/* Internal to API */
++
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static int mpxy_write_attrs(u32 channel_id, u32 base_attrid, u32 attr_count,
++			    u32 *attrs_buf)
++{
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	struct sbiret sret;
++	u32 i;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!attr_count || !attrs_buf)
++		return -EINVAL;
++
++	get_cpu();
++
++	for (i = 0; i < attr_count; i++)
++		((__le32 *)mpxy->shmem)[i] = cpu_to_le32(attrs_buf[i]);
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_WRITE_ATTRS,
++			 channel_id, base_attrid, attr_count, 0, 0, 0);
++
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static int mpxy_send_message_with_resp(u32 channel_id, u32 msg_id,
++				       void *tx, unsigned long tx_len,
++				       void *rx, unsigned long max_rx_len,
++				       unsigned long *rx_len)
++{
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	unsigned long rx_bytes;
++	struct sbiret sret;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!tx && tx_len)
++		return -EINVAL;
++
++	get_cpu();
++
++	/* Message protocols allowed to have no data in messages */
++	if (tx_len)
++		memcpy(mpxy->shmem, tx, tx_len);
++
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_SEND_MSG_WITH_RESP,
++			 channel_id, msg_id, tx_len, 0, 0, 0);
++	if (rx && !sret.error) {
++		rx_bytes = sret.value;
++		if (rx_bytes > max_rx_len) {
++			put_cpu();
++			return -ENOSPC;
++		}
++
++		memcpy(rx, mpxy->shmem, rx_bytes);
++		if (rx_len)
++			*rx_len = rx_bytes;
++	}
++
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static int mpxy_send_message_without_resp(u32 channel_id, u32 msg_id,
++					  void *tx, unsigned long tx_len)
++{
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	struct sbiret sret;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!tx && tx_len)
++		return -EINVAL;
++
++	get_cpu();
++
++	/* Message protocols allowed to have no data in messages */
++	if (tx_len)
++		memcpy(mpxy->shmem, tx, tx_len);
++
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_SEND_MSG_WITHOUT_RESP,
++			 channel_id, msg_id, tx_len, 0, 0, 0);
++
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static int mpxy_get_notifications(u32 channel_id,
++				  struct sbi_mpxy_notification_data *notif_data,
++				  unsigned long *events_data_len)
++{
++	struct mpxy_local *mpxy = this_cpu_ptr(&mpxy_local);
++	struct sbiret sret;
++
++	if (!mpxy->shmem_active)
++		return -ENODEV;
++	if (!notif_data || !events_data_len)
++		return -EINVAL;
++
++	get_cpu();
++
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_GET_NOTIFICATION_EVENTS,
++			 channel_id, 0, 0, 0, 0, 0);
++	if (!sret.error) {
++		memcpy(notif_data, mpxy->shmem, sret.value + 16);
++		*events_data_len = sret.value;
++	}
++
++	put_cpu();
++	return sbi_err_map_linux_errno(sret.error);
++}
++
++static unsigned long mpxy_get_shmem_size(void)
++{
++	struct sbiret sret;
++
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_GET_SHMEM_SIZE,
++			 0, 0, 0, 0, 0, 0);
++	if (sret.error)
++		return sbi_err_map_linux_errno(sret.error);
++
++	return sret.value;
++}
++
++static int mpxy_setup_shmem(unsigned int cpu)
++{
++	struct page *shmem_page;
++	struct mpxy_local *mpxy;
++	struct sbiret sret;
++
++	mpxy = per_cpu_ptr(&mpxy_local, cpu);
++	if (mpxy->shmem_active)
++		return 0;
++
++	shmem_page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(mpxy_shmem_size));
++	if (!shmem_page)
++		return -ENOMEM;
++
++	/*
++	 * Linux setup of shmem is done in mpxy OVERWRITE mode.
++	 * flags[1:0] = 00b
++	 */
++	sret = sbi_ecall(SBI_EXT_MPXY, SBI_EXT_MPXY_SET_SHMEM,
++			 page_to_phys(shmem_page), 0, 0, 0, 0, 0);
++	if (sret.error) {
++		free_pages((unsigned long)page_to_virt(shmem_page),
++			   get_order(mpxy_shmem_size));
++		return sbi_err_map_linux_errno(sret.error);
++	}
++
++	mpxy->shmem = page_to_virt(shmem_page);
++	mpxy->shmem_phys_addr = page_to_phys(shmem_page);
++	mpxy->shmem_active = true;
++
++	return 0;
++}
++
++/* ====== MPXY mailbox data structures ====== */
++
++/* MPXY mailbox channel */
++struct mpxy_mbox_channel {
++	struct mpxy_mbox *mbox;
++	u32 channel_id;
++	struct sbi_mpxy_channel_attrs attrs;
++	struct sbi_mpxy_rpmi_channel_attrs rpmi_attrs;
++	struct sbi_mpxy_notification_data *notif;
++	u32 max_xfer_len;
++	bool have_events_state;
++	u32 msi_index;
++	u32 msi_irq;
++	bool started;
++};
++
++/* MPXY mailbox */
++struct mpxy_mbox {
++	struct device *dev;
++	u32 channel_count;
++	struct mpxy_mbox_channel *channels;
++	u32 msi_count;
++	struct mpxy_mbox_channel **msi_index_to_channel;
++	struct mbox_controller controller;
++};
++
++/* ====== MPXY RPMI processing ====== */
++
++static int mpxy_mbox_send_rpmi_data(struct mpxy_mbox_channel *mchan,
++				    struct rpmi_mbox_message *msg)
++{
++	int rc = 0;
++
++	switch (msg->type) {
++	case RPMI_MBOX_MSG_TYPE_GET_ATTRIBUTE:
++		switch (msg->attr.id) {
++		case RPMI_MBOX_ATTR_SPEC_VERSION:
++			msg->attr.value = mchan->attrs.msg_proto_version;
++			break;
++		case RPMI_MBOX_ATTR_MAX_MSG_DATA_SIZE:
++			msg->attr.value = mchan->max_xfer_len;
++			break;
++		case RPMI_MBOX_ATTR_SERVICEGROUP_ID:
++			msg->attr.value = mchan->rpmi_attrs.servicegroup_id;
++			break;
++		case RPMI_MBOX_ATTR_SERVICEGROUP_VERSION:
++			msg->attr.value = mchan->rpmi_attrs.servicegroup_version;
++			break;
++		default:
++			rc = -EOPNOTSUPP;
++			break;
++		}
++		break;
++	case RPMI_MBOX_MSG_TYPE_SET_ATTRIBUTE:
++		/* None of the RPMI linux mailbox attributes are writeable */
++		rc = -EOPNOTSUPP;
++		break;
++	case RPMI_MBOX_MSG_TYPE_SEND_WITH_RESPONSE:
++		if ((!msg->data.request && msg->data.request_len) ||
++		    (msg->data.request &&
++		     msg->data.request_len > mchan->max_xfer_len) ||
++		    (!msg->data.response && msg->data.max_response_len)) {
++			rc = -EINVAL;
++			break;
++		}
++		if (!(mchan->attrs.capability & SBI_MPXY_CHAN_CAP_SEND_WITH_RESP)) {
++			rc = -EIO;
++			break;
++		}
++		rc = mpxy_send_message_with_resp(mchan->channel_id,
++						 msg->data.service_id,
++						 msg->data.request,
++						 msg->data.request_len,
++						 msg->data.response,
++						 msg->data.max_response_len,
++						 &msg->data.out_response_len);
++		break;
++	case RPMI_MBOX_MSG_TYPE_SEND_WITHOUT_RESPONSE:
++		if ((!msg->data.request && msg->data.request_len) ||
++		    (msg->data.request &&
++		     msg->data.request_len > mchan->max_xfer_len)) {
++			rc = -EINVAL;
++			break;
++		}
++		if (!(mchan->attrs.capability & SBI_MPXY_CHAN_CAP_SEND_WITHOUT_RESP)) {
++			rc = -EIO;
++			break;
++		}
++		rc = mpxy_send_message_without_resp(mchan->channel_id,
++						    msg->data.service_id,
++						    msg->data.request,
++						    msg->data.request_len);
++		break;
++	default:
++		rc = -EOPNOTSUPP;
++		break;
++	}
++
++	msg->error = rc;
++	return 0;
++}
++
++static void mpxy_mbox_peek_rpmi_data(struct mbox_chan *chan,
++				     struct mpxy_mbox_channel *mchan,
++				     struct sbi_mpxy_notification_data *notif,
++				     unsigned long events_data_len)
++{
++	struct rpmi_notification_event *event;
++	unsigned long pos = 0, event_size;
++	struct rpmi_mbox_message msg;
++
++	while ((pos < events_data_len) && !(pos & 0x3) &&
++	       ((events_data_len - pos) <= sizeof(*event))) {
++		event = (struct rpmi_notification_event *)(notif->events_data + pos);
++
++		msg.type = RPMI_MBOX_MSG_TYPE_NOTIFICATION_EVENT;
++		msg.notif.event_datalen = le16_to_cpu(event->event_datalen);
++		msg.notif.event_id = event->event_id;
++		msg.notif.event_data = event->event_data;
++		msg.error = 0;
++
++		event_size = sizeof(*event) + msg.notif.event_datalen;
++		if (event_size > (events_data_len - pos)) {
++			event_size = events_data_len - pos;
++			goto skip_event;
++		}
++		if (event_size & 0x3)
++			goto skip_event;
++
++		mbox_chan_received_data(chan, &msg);
++
++skip_event:
++		pos += event_size;
++	}
++}
++
++static int mpxy_mbox_read_rpmi_attrs(struct mpxy_mbox_channel *mchan)
++{
++	return mpxy_read_attrs(mchan->channel_id,
++			       SBI_MPXY_ATTR_MSGPROTO_ATTR_START,
++			       sizeof(mchan->rpmi_attrs) / sizeof(u32),
++			       (u32 *)&mchan->rpmi_attrs);
++}
++
++/* ====== MPXY mailbox callbacks ====== */
++
++static int mpxy_mbox_send_data(struct mbox_chan *chan, void *data)
++{
++	struct mpxy_mbox_channel *mchan = chan->con_priv;
++
++	if (mchan->attrs.msg_proto_id == SBI_MPXY_MSGPROTO_RPMI_ID)
++		return mpxy_mbox_send_rpmi_data(mchan, data);
++
++	return -EOPNOTSUPP;
++}
++
++static bool mpxy_mbox_peek_data(struct mbox_chan *chan)
++{
++	struct mpxy_mbox_channel *mchan = chan->con_priv;
++	struct sbi_mpxy_notification_data *notif = mchan->notif;
++	bool have_notifications = false;
++	unsigned long data_len;
++	int rc;
++
++	if (!(mchan->attrs.capability & SBI_MPXY_CHAN_CAP_GET_NOTIFICATIONS))
++		return false;
++
++	while (1) {
++		rc = mpxy_get_notifications(mchan->channel_id, notif, &data_len);
++		if (rc || !data_len)
++			break;
++
++		if (mchan->attrs.msg_proto_id == SBI_MPXY_MSGPROTO_RPMI_ID)
++			mpxy_mbox_peek_rpmi_data(chan, mchan, notif, data_len);
++
++		have_notifications = true;
++	}
++
++	return have_notifications;
++}
++
++static irqreturn_t mpxy_mbox_irq_thread(int irq, void *dev_id)
++{
++	mpxy_mbox_peek_data(dev_id);
++	return IRQ_HANDLED;
++}
++
++static int mpxy_mbox_setup_msi(struct mbox_chan *chan,
++			       struct mpxy_mbox_channel *mchan)
++{
++	struct device *dev = mchan->mbox->dev;
++	int rc;
++
++	/* Do nothing if MSI not supported */
++	if (mchan->msi_irq == U32_MAX)
++		return 0;
++
++	/* Fail if MSI already enabled */
++	if (mchan->attrs.msi_control)
++		return -EALREADY;
++
++	/* Request channel MSI handler */
++	rc = request_threaded_irq(mchan->msi_irq, NULL, mpxy_mbox_irq_thread,
++				  0, dev_name(dev), chan);
++	if (rc) {
++		dev_err(dev, "failed to request MPXY channel 0x%x IRQ\n",
++			mchan->channel_id);
++		return rc;
++	}
++
++	/* Enable channel MSI control */
++	mchan->attrs.msi_control = 1;
++	rc = mpxy_write_attrs(mchan->channel_id, SBI_MPXY_ATTR_MSI_CONTROL,
++			      1, &mchan->attrs.msi_control);
++	if (rc) {
++		dev_err(dev, "enable MSI control failed for MPXY channel 0x%x\n",
++			mchan->channel_id);
++		mchan->attrs.msi_control = 0;
++		free_irq(mchan->msi_irq, chan);
++		return rc;
++	}
++
++	return 0;
++}
++
++static void mpxy_mbox_cleanup_msi(struct mbox_chan *chan,
++				  struct mpxy_mbox_channel *mchan)
++{
++	struct device *dev = mchan->mbox->dev;
++	int rc;
++
++	/* Do nothing if MSI not supported */
++	if (mchan->msi_irq == U32_MAX)
++		return;
++
++	/* Do nothing if MSI already disabled */
++	if (!mchan->attrs.msi_control)
++		return;
++
++	/* Disable channel MSI control */
++	mchan->attrs.msi_control = 0;
++	rc = mpxy_write_attrs(mchan->channel_id, SBI_MPXY_ATTR_MSI_CONTROL,
++			      1, &mchan->attrs.msi_control);
++	if (rc) {
++		dev_err(dev, "disable MSI control failed for MPXY channel 0x%x\n",
++			mchan->channel_id);
++	}
++
++	/* Free channel MSI handler */
++	free_irq(mchan->msi_irq, chan);
++}
++
++static int mpxy_mbox_setup_events(struct mpxy_mbox_channel *mchan)
++{
++	struct device *dev = mchan->mbox->dev;
++	int rc;
++
++	/* Do nothing if events state not supported */
++	if (!mchan->have_events_state)
++		return 0;
++
++	/* Fail if events state already enabled */
++	if (mchan->attrs.events_state_ctrl)
++		return -EALREADY;
++
++	/* Enable channel events state */
++	mchan->attrs.events_state_ctrl = 1;
++	rc = mpxy_write_attrs(mchan->channel_id, SBI_MPXY_ATTR_EVENTS_STATE_CONTROL,
++			      1, &mchan->attrs.events_state_ctrl);
++	if (rc) {
++		dev_err(dev, "enable events state failed for MPXY channel 0x%x\n",
++			mchan->channel_id);
++		mchan->attrs.events_state_ctrl = 0;
++		return rc;
++	}
++
++	return 0;
++}
++
++static void mpxy_mbox_cleanup_events(struct mpxy_mbox_channel *mchan)
++{
++	struct device *dev = mchan->mbox->dev;
++	int rc;
++
++	/* Do nothing if events state not supported */
++	if (!mchan->have_events_state)
++		return;
++
++	/* Do nothing if events state already disabled */
++	if (!mchan->attrs.events_state_ctrl)
++		return;
++
++	/* Disable channel events state */
++	mchan->attrs.events_state_ctrl = 0;
++	rc = mpxy_write_attrs(mchan->channel_id, SBI_MPXY_ATTR_EVENTS_STATE_CONTROL,
++			      1, &mchan->attrs.events_state_ctrl);
++	if (rc) {
++		dev_err(dev, "disable events state failed for MPXY channel 0x%x\n",
++			mchan->channel_id);
++	}
++}
++
++static int mpxy_mbox_startup(struct mbox_chan *chan)
++{
++	struct mpxy_mbox_channel *mchan = chan->con_priv;
++	int rc;
++
++	if (mchan->started)
++		return -EALREADY;
++
++	/* Setup channel MSI */
++	rc = mpxy_mbox_setup_msi(chan, mchan);
++	if (rc)
++		return rc;
++
++	/* Setup channel notification events */
++	rc = mpxy_mbox_setup_events(mchan);
++	if (rc) {
++		mpxy_mbox_cleanup_msi(chan, mchan);
++		return rc;
++	}
++
++	/* Mark the channel as started */
++	mchan->started = true;
++
++	return 0;
++}
++
++static void mpxy_mbox_shutdown(struct mbox_chan *chan)
++{
++	struct mpxy_mbox_channel *mchan = chan->con_priv;
++
++	if (!mchan->started)
++		return;
++
++	/* Mark the channel as stopped */
++	mchan->started = false;
++
++	/* Cleanup channel notification events */
++	mpxy_mbox_cleanup_events(mchan);
++
++	/* Cleanup channel MSI */
++	mpxy_mbox_cleanup_msi(chan, mchan);
++}
++
++static const struct mbox_chan_ops mpxy_mbox_ops = {
++	.send_data = mpxy_mbox_send_data,
++	.peek_data = mpxy_mbox_peek_data,
++	.startup = mpxy_mbox_startup,
++	.shutdown = mpxy_mbox_shutdown,
++};
++
++/* ====== MPXY platform driver ===== */
++
++static void mpxy_mbox_msi_write(struct msi_desc *desc, struct msi_msg *msg)
++{
++	struct device *dev = msi_desc_to_dev(desc);
++	struct mpxy_mbox *mbox = dev_get_drvdata(dev);
++	struct mpxy_mbox_channel *mchan;
++	struct sbi_mpxy_msi_info *minfo;
++	int rc;
++
++	mchan = mbox->msi_index_to_channel[desc->msi_index];
++	if (!mchan) {
++		dev_warn(dev, "MPXY channel not available for MSI index %d\n",
++			 desc->msi_index);
++		return;
++	}
++
++	minfo = &mchan->attrs.msi_info;
++	minfo->msi_addr_lo = msg->address_lo;
++	minfo->msi_addr_hi = msg->address_hi;
++	minfo->msi_data = msg->data;
++
++	rc = mpxy_write_attrs(mchan->channel_id, SBI_MPXY_ATTR_MSI_ADDR_LO,
++			      sizeof(*minfo) / sizeof(u32), (u32 *)minfo);
++	if (rc) {
++		dev_warn(dev, "failed to write MSI info for MPXY channel 0x%x\n",
++			 mchan->channel_id);
++	}
++}
++
++static struct mbox_chan *mpxy_mbox_fw_xlate(struct mbox_controller *ctlr,
++					    const struct fwnode_reference_args *pa)
++{
++	struct mpxy_mbox *mbox = container_of(ctlr, struct mpxy_mbox, controller);
++	struct mpxy_mbox_channel *mchan;
++	u32 i;
++
++	if (pa->nargs != 2)
++		return ERR_PTR(-EINVAL);
++
++	for (i = 0; i < mbox->channel_count; i++) {
++		mchan = &mbox->channels[i];
++		if (mchan->channel_id == pa->args[0] &&
++		    mchan->attrs.msg_proto_id == pa->args[1])
++			return &mbox->controller.chans[i];
++	}
++
++	return ERR_PTR(-ENOENT);
++}
++
++static int mpxy_mbox_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct mpxy_mbox_channel *mchan;
++	struct mpxy_mbox *mbox;
++	int i, msi_idx, rc;
++	u32 *channel_ids;
++
++	/*
++	 * Initialize MPXY shared memory only once. This also ensures
++	 * that SBI MPXY mailbox is probed only once.
++	 */
++	if (mpxy_shmem_init_done) {
++		dev_err(dev, "SBI MPXY mailbox already initialized\n");
++		return -EALREADY;
++	}
++
++	/* Probe for SBI MPXY extension */
++	if (sbi_spec_version < sbi_mk_version(1, 0) ||
++	    sbi_probe_extension(SBI_EXT_MPXY) <= 0) {
++		dev_info(dev, "SBI MPXY extension not available\n");
++		return -ENODEV;
++	}
++
++	/* Find-out shared memory size */
++	mpxy_shmem_size = mpxy_get_shmem_size();
++
++	/*
++	 * Setup MPXY shared memory on each CPU
++	 *
++	 * Note: Don't cleanup MPXY shared memory upon CPU power-down
++	 * because the RPMI System MSI irqchip driver needs it to be
++	 * available when migrating IRQs in CPU power-down path.
++	 */
++	cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "riscv/sbi-mpxy-shmem",
++			  mpxy_setup_shmem, NULL);
++
++	/* Mark as MPXY shared memory initialization done */
++	mpxy_shmem_init_done = true;
++
++	/* Allocate mailbox instance */
++	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
++	if (!mbox)
++		return -ENOMEM;
++	mbox->dev = dev;
++	platform_set_drvdata(pdev, mbox);
++
++	/* Find-out of number of channels */
++	rc = mpxy_get_channel_count(&mbox->channel_count);
++	if (rc)
++		return dev_err_probe(dev, rc, "failed to get number of MPXY channels\n");
++	if (!mbox->channel_count)
++		dev_err_probe(dev, -ENODEV, "no MPXY channels available\n");
++
++	/* Allocate and fetch all channel IDs */
++	channel_ids = devm_kcalloc(dev, mbox->channel_count,
++				   sizeof(*channel_ids), GFP_KERNEL);
++	if (!channel_ids)
++		return -ENOMEM;
++	rc = mpxy_get_channel_ids(mbox->channel_count, channel_ids);
++	if (rc)
++		return dev_err_probe(dev, rc, "failed to MPXY channel IDs\n");
++
++	/* Populate all channels */
++	mbox->channels = devm_kcalloc(dev, mbox->channel_count,
++				      sizeof(*mbox->channels), GFP_KERNEL);
++	if (!mbox->channels)
++		return -ENOMEM;
++	for (i = 0; i < mbox->channel_count; i++) {
++		mchan = &mbox->channels[i];
++		mchan->mbox = mbox;
++		mchan->channel_id = channel_ids[i];
++
++		rc = mpxy_read_attrs(mchan->channel_id, SBI_MPXY_ATTR_MSG_PROT_ID,
++				     sizeof(mchan->attrs) / sizeof(u32),
++				     (u32 *)&mchan->attrs);
++		if (rc) {
++			return dev_err_probe(dev, rc,
++					     "MPXY channel 0x%x read attrs failed\n",
++					     mchan->channel_id);
++		}
++
++		if (mchan->attrs.msg_proto_id == SBI_MPXY_MSGPROTO_RPMI_ID) {
++			rc = mpxy_mbox_read_rpmi_attrs(mchan);
++			if (rc) {
++				return dev_err_probe(dev, rc,
++						     "MPXY channel 0x%x read RPMI attrs failed\n",
++						     mchan->channel_id);
++			}
++		}
++
++		mchan->notif = devm_kzalloc(dev, mpxy_shmem_size, GFP_KERNEL);
++		if (!mchan->notif)
++			return -ENOMEM;
++
++		mchan->max_xfer_len = min(mpxy_shmem_size, mchan->attrs.msg_max_len);
++
++		if ((mchan->attrs.capability & SBI_MPXY_CHAN_CAP_GET_NOTIFICATIONS) &&
++		    (mchan->attrs.capability & SBI_MPXY_CHAN_CAP_EVENTS_STATE))
++			mchan->have_events_state = true;
++
++		if ((mchan->attrs.capability & SBI_MPXY_CHAN_CAP_GET_NOTIFICATIONS) &&
++		    (mchan->attrs.capability & SBI_MPXY_CHAN_CAP_MSI))
++			mchan->msi_index = mbox->msi_count++;
++		else
++			mchan->msi_index = U32_MAX;
++		mchan->msi_irq = U32_MAX;
++	}
++
++	/* Free-up channel IDs */
++	devm_kfree(dev, channel_ids);
++
++	/* Initialize mailbox controller */
++	mbox->controller.txdone_irq = false;
++	mbox->controller.txdone_poll = false;
++	mbox->controller.ops = &mpxy_mbox_ops;
++	mbox->controller.dev = dev;
++	mbox->controller.num_chans = mbox->channel_count;
++	mbox->controller.fw_xlate = mpxy_mbox_fw_xlate;
++	mbox->controller.chans = devm_kcalloc(dev, mbox->channel_count,
++					      sizeof(*mbox->controller.chans),
++					      GFP_KERNEL);
++	if (!mbox->controller.chans)
++		return -ENOMEM;
++	for (i = 0; i < mbox->channel_count; i++)
++		mbox->controller.chans[i].con_priv = &mbox->channels[i];
++
++	/* Set the MSI domain if not available */
++	if (!dev_get_msi_domain(dev)) {
++		/*
++		 * The device MSI domain for OF devices is only set at the
++		 * time of populating/creating OF device. If the device MSI
++		 * domain is discovered later after the OF device is created
++		 * then we need to set it explicitly before using any platform
++		 * MSI functions.
++		 */
++		if (is_of_node(dev_fwnode(dev)))
++			of_msi_configure(dev, to_of_node(dev_fwnode(dev)));
++	}
++
++	/* Setup MSIs for mailbox (if required) */
++	if (mbox->msi_count) {
++		mbox->msi_index_to_channel = devm_kcalloc(dev, mbox->msi_count,
++							  sizeof(*mbox->msi_index_to_channel),
++							  GFP_KERNEL);
++		if (!mbox->msi_index_to_channel)
++			return -ENOMEM;
++
++		for (msi_idx = 0; msi_idx < mbox->msi_count; msi_idx++) {
++			for (i = 0; i < mbox->channel_count; i++) {
++				mchan = &mbox->channels[i];
++				if (mchan->msi_index == msi_idx) {
++					mbox->msi_index_to_channel[msi_idx] = mchan;
++					break;
++				}
++			}
++		}
++
++		rc = platform_device_msi_init_and_alloc_irqs(dev, mbox->msi_count,
++							     mpxy_mbox_msi_write);
++		if (rc) {
++			return dev_err_probe(dev, rc, "Failed to allocate %d MSIs\n",
++					     mbox->msi_count);
++		}
++
++		for (i = 0; i < mbox->channel_count; i++) {
++			mchan = &mbox->channels[i];
++			if (mchan->msi_index == U32_MAX)
++				continue;
++			mchan->msi_irq = msi_get_virq(dev, mchan->msi_index);
++		}
++	}
++
++	/* Register mailbox controller */
++	rc = devm_mbox_controller_register(dev, &mbox->controller);
++	if (rc) {
++		dev_err_probe(dev, rc, "Registering SBI MPXY mailbox failed\n");
++		if (mbox->msi_count)
++			platform_device_msi_free_irqs_all(dev);
++		return rc;
++	}
++
++	dev_info(dev, "mailbox registered with %d channels\n",
++		 mbox->channel_count);
++	return 0;
++}
++
++static void mpxy_mbox_remove(struct platform_device *pdev)
++{
++	struct mpxy_mbox *mbox = platform_get_drvdata(pdev);
++
++	if (mbox->msi_count)
++		platform_device_msi_free_irqs_all(mbox->dev);
++}
++
++static const struct of_device_id mpxy_mbox_of_match[] = {
++	{.compatible = "riscv,sbi-mpxy-mbox", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mpxy_mbox_of_match);
++
++static struct platform_driver mpxy_mbox_driver = {
++	.driver = {
++		.name = "riscv-sbi-mpxy-mbox",
++		.of_match_table = mpxy_mbox_of_match,
++	},
++	.probe = mpxy_mbox_probe,
++	.remove = mpxy_mbox_remove,
++};
++module_platform_driver(mpxy_mbox_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Anup Patel <apatel@ventanamicro.com>");
++MODULE_DESCRIPTION("RISC-V SBI MPXY mailbox controller driver");
 -- 
 2.43.0
 
