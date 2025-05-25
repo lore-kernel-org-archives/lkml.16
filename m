@@ -1,96 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8F943ABC;
-	Sun, 25 May 2025 11:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8D743ABC
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 11:05:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748171017; cv=none; b=P+KTiCVPExUUeajVNTSh2k4Ug9l5e8sUti+djgUX09vTLF/vXYi6pii90jxnExd3o5gp6y1r5l34KlAlnNl3dPvZczpRPFVwvK5yXKs+H9BfDV1KeIesUcT+C7typ+j6jOkypq0Ed1O13VSPGHSb/cPW5JeZW+7Hz4LPSic1iRI=
+	t=1748171104; cv=none; b=r4Ycka4DaHM1QcZJDGEGS/Ayey0cgYXCiATD23PH9WjHaJG4CtykDLCM7L+Gxq6sE6zHJLowIzDSvZ0GUpvFr5y3jHsHtcZXE8pV4nyas07nFVeLOLWmlj71PLfLSpTWe7p0ak/ZMxMADbVXbCHNGXEzVHVFeS4xnivwRM05oNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748171017; c=relaxed/simple;
-	bh=chu79/4aGh/Hzre04wvQeJAuO9XJ4T5JaMtASKFMp4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U1tAR4vLl6X1us3AHetow0DPJ4OjNPx+TB2VqZrnPxkadIx4lHd4BEPNRYsvOU8Womv5trZiWyhvYTOAj8hYeO0+1hs3VaWQk+yu1jCg0oyndlTJAD2WJk+TCb3A385mN8Jsl1U1C29RSf55noNLxJh2puQHgKNqYSsInmavHEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2FjCTG8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748171104; c=relaxed/simple;
+	bh=cLoWNYhc1e7MFl/ZD4LpVncx6R7VUCs5j/Fhd6cQYyQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TWOCDGmPAd9vgvbCBiUOYPcxOjBcuaEtjrcYoHU1EHF2xPd11chq6YAnQq/VsfR05cJvVXriwvcOxpRGp8YfsDfxQDcoklmZBqW0n0Kd9B6SQmCRHWmmUKvuhDyD3fPOqUGvd7XOzFS9dHtpYISglwyv1r29BwrwW+ozC+/iL2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsAvpfS7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2FjCTG8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506E8C4CEEA;
-	Sun, 25 May 2025 11:03:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsAvpfS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243DCC4CEEA;
+	Sun, 25 May 2025 11:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748171017;
-	bh=chu79/4aGh/Hzre04wvQeJAuO9XJ4T5JaMtASKFMp4g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=G2FjCTG8MUY2tXDmBKlTMhycZaMFN2duUU3qL3e+A1mRfB89PbMv/QjYn3W3yskf/
-	 qjIn0Vvb4YEh1e5Qg77ky/ZprGtdD6O48RccJ4fPhIAzSNoAeX9cl4ZbT2Fryf/iS3
-	 HHOn7TjXaE+WxmxaLnkEehphJimigQa8LJq/dK0nM7IoTIVhqMgNrMHYtY+slSQUeD
-	 QOHJm79ithYIebFQUMhkE8g6TKZ1yjRuY40ip9leLYqkazpcLx3pmkelajPoYH8Pqk
-	 F7SGHlTi+eNWN/UBXyScVWEgV2LlPYvV4Ve/XOPVfVadF9+Z9t/jXfwN2GW7F8rXJy
-	 fqMtlXGIb3DkQ==
-Date: Sun, 25 May 2025 12:03:24 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, "David Lechner" <dlechner@baylibre.com>,
- Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Sergiu Cuciurean
- <sergiu.cuciurean@analog.com>, "Dragos Bogdan" <dragos.bogdan@analog.com>,
- Antoniu Miclaus <antoniu.miclaus@analog.com>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>, Matti Vaittinen
- <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, <linux-iio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 6/6] iio: adc: ad7405: add ad7405 driver
-Message-ID: <20250525120324.1e721515@jic23-huawei>
-In-Reply-To: <20250519140220.81489-7-pop.ioan-daniel@analog.com>
-References: <20250519140220.81489-1-pop.ioan-daniel@analog.com>
-	<20250519140220.81489-7-pop.ioan-daniel@analog.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	s=k20201202; t=1748171104;
+	bh=cLoWNYhc1e7MFl/ZD4LpVncx6R7VUCs5j/Fhd6cQYyQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ZsAvpfS7fRqmlDo6GMEZaV+hUrgxQ58ltC0t4o3UPeQNJsqMLMiqLUOqVQAKJ9wlo
+	 RIPXUWJykGGPupGG8D4fsVYtNSMreQAu9DFyS4EI37Nly4lgaydeV5WNs26MmYGSnF
+	 bpKPGaSPaTtiESKJ4POKL3BQXRkiyvEenm8Fk5OZ07yXCZ87f3WwCbUMCrDALAKfjn
+	 UrGpmg7sk0SHknhKbxiPG1zIV9if1QgJsW8enmFqkbibGSaeTquFVEDr30vmxdbNxm
+	 /0yn7rVAkfBj7OHYUmKnlmooae0CQfl3a3OXC0dlpPsbgYIWiGEE1rax6+g84POOMr
+	 HzBqZnc9PaiMg==
+Date: Sun, 25 May 2025 13:05:00 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, the arch/x86 maintainers <x86@kernel.org>
+Subject: [GIT PULL] x86/debug changes for v6.16
+Message-ID: <aDL5XBNMbYXn5txr@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 19 May 2025 17:02:14 +0300
-Pop Ioan Daniel <pop.ioan-daniel@analog.com> wrote:
+Linus,
 
-> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-> 1-channel, 16-bit with a second-order =CE=A3-=CE=94 modulator that conver=
-ts an
-> analog input signal into a high speed, single-bit data stream.
->=20
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-Hi Pop,
+Please pull the latest x86/debug Git tree from:
 
-Just one additional trivial comment from me as you are going around
-again anyway.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-debug-2025-05-25
 
-Thanks,
+   # HEAD: 06aa9378df017ea7482b1bfdcd750104c8b3c407 x86/tracing, x86/mm: Move page fault tracepoints to generic
 
-J
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 07d4b832c42e..8115f30b7862 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7291) +=3D ad7291.o
->  obj-$(CONFIG_AD7292) +=3D ad7292.o
->  obj-$(CONFIG_AD7298) +=3D ad7298.o
->  obj-$(CONFIG_AD7380) +=3D ad7380.o
-> +obj-$(CONFIG_AD7405) +=3D ad7405.o
->  obj-$(CONFIG_AD7476) +=3D ad7476.o
->  obj-$(CONFIG_AD7606_IFACE_PARALLEL) +=3D ad7606_par.o
->  obj-$(CONFIG_AD7606_IFACE_SPI) +=3D ad7606_spi.o
-> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
+Move the x86 page fault tracepoints to generic code, because
+other architectures would like to make use of them as well.
 
-> +
-> +/* Match table for of_platform binding */
+ Thanks,
 
-This comment doesn't really add anything useful so I'd drop it.
+	Ingo
 
-> +static const struct of_device_id ad7405_of_match[] =3D {
+------------------>
+Nam Cao (2):
+      x86/tracing, x86/mm: Remove redundant trace_pagefault_key
+      x86/tracing, x86/mm: Move page fault tracepoints to generic
+
+
+ arch/x86/include/asm/trace/common.h                | 12 ----------
+ arch/x86/include/asm/trace/irq_vectors.h           |  1 -
+ arch/x86/kernel/Makefile                           |  1 -
+ arch/x86/kernel/tracepoint.c                       | 21 -----------------
+ arch/x86/mm/Makefile                               |  2 --
+ arch/x86/mm/fault.c                                |  5 +---
+ .../trace => include/trace/events}/exceptions.h    | 27 +++++++---------------
+ 7 files changed, 9 insertions(+), 60 deletions(-)
+ delete mode 100644 arch/x86/include/asm/trace/common.h
+ delete mode 100644 arch/x86/kernel/tracepoint.c
+ rename {arch/x86/include/asm/trace => include/trace/events}/exceptions.h (55%)
