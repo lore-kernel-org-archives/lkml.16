@@ -1,93 +1,123 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406D828DD0;
-	Sun, 25 May 2025 18:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A658F6B
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 18:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748198410; cv=none; b=mptpVeW1X5A3LL921rY8uNmQIWmizvQXrmdrfGP5q3Ir/aKJtD11y7DzHI8E+Qkv7EXm7uo1LuRSOl0J4NkT29hAaFEUqEtmjzkdyFUTORmdmMV2U/yni43t6E3dMxEQdquWAsPpg31PGrGE0l8Qtutu4uuFtNgVqBV48rzacYk=
+	t=1748198709; cv=none; b=po7eUh+3acjtE6Vq4buxDw/PJvqsha0w9XLvm+17lVFv6FxJpNQ/lLaPBgsxhtjSnoHr+bf2+7/dG4o2YoRPqyianVs4VDicreA+c8KDqrXdyqn/xypImVyn55nR39wvp/pHQlv1E1+OY0wnTU5HybrOXA90hf5FdMljfTZg42s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748198410; c=relaxed/simple;
-	bh=kHSp76zFoxeSUgVBGIw/6WuJNJM5jnC/fA8Ys6gqaWA=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mg0zgUfM5bMWtPkSiy18VgtsE1t691yFbB24pfGTTB4kOHXn0XRTifUWEIGyWS24nPpOB6oeSMOJVMFx11u4lltWq5mIwNY0oRBQeQpW/TEQwKksUsiyDSXJFgzIW+cEQqW278MFUbVYQs4BxFhnJZXXIWdZEEBTaq9SavYW/lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DU3jpDVZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0yWucKp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748198709; c=relaxed/simple;
+	bh=u9GJY5Dd32G+pPeVm6bgx7/QVdprOpjyJWVsr2dt3Es=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AAOp6EsopRg+nAN6Mdk7FlkezQ8/kNlwujlQ05NB0XcXminkq+Va1t1yEo3x0nKO2cbGTJe6AhYQdp/LSlmKuw1waTzTPpMft6APCsVZVesXr6xQl/2mTDUoOVnvpVfLu0Dy3G9K82IdGnoWtdZ7Qtsh7Jf1m0OEQTZMb4wntw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UnbjgrUh; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DU3jpDVZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0yWucKp"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748198405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DL5eKWdLvzxwxUjFjhBRDJn82TzenWqENC7E1vpzwRY=;
-	b=DU3jpDVZBQFB/cqh02tFCXi5WwhB0P/pvyb6KtI+xKvqvr40r5G6IRiUX5BzN2N8Jjnmwn
-	JOGcyCsGRCEGNzuYBKJyRGBeM7frVVDW165+i38FG6gSgsPx4AMDeYLNAxSGrgs5HGG8r+
-	GfwDXUOmT7pFV8c3+Zb7Kxf5oRR8R0d1LEIeIKXS9Kjh7LCWQYiOSgGmGXwgzbSRekwe2e
-	TJ8y2VgP/A+e7rlYuLjXo4xZAK2VjrhA6XiS3YDzSr/kqb4J8XcJKuCVXAWo2uca8yU3YF
-	j0S9J5532ESRd4+NKJpt8EjAYG6k+YAMfBoYIWIMuulRDOrrVe7jyXOXDruN1A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748198405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DL5eKWdLvzxwxUjFjhBRDJn82TzenWqENC7E1vpzwRY=;
-	b=G0yWucKpXuN2fNO1U0HdxGIAauj8takyJTVZ01biqkkjH3U7RqOxFqA4WmTLl1b28s6lPl
-	pf4Px72G3N2CgKDg==
-To: markus.stockhausen@gmx.de, tsbogend@alpha.franken.de,
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
- s.gottschall@dd-wrt.com
-Subject: Re: AW: [PATCH] irqchip/mips-gic: allow forced affinity for current
- cpu during hotplug
-In-Reply-To: <043701dbcd59$73bcfb70$5b36f250$@gmx.de>
-References: <20250523151542.3903598-1-markus.stockhausen@gmx.de>
- <87bjrhqcn8.ffs@tglx> <043701dbcd59$73bcfb70$5b36f250$@gmx.de>
-Date: Sun, 25 May 2025 20:40:04 +0200
-Message-ID: <878qmkr0u3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UnbjgrUh"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72ec926e828so316538a34.0
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 11:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748198707; x=1748803507; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zlZFRhPE/eFCl215/JCvK2SWRrEZJvnFdKymxEp1wtc=;
+        b=UnbjgrUhkJI+0VcYe5tZK9f3k6ADxNoAzOig9wD974ypKxKG5L0FkSoYMP19yNz3es
+         SralZjhfe4lLB/+6mS9BDxFCfQhlxuoXYyCd6tT/XPx8ytaebm6Hidjur9hzJ6WVZlmb
+         PPfrAIaG9tE67+N8byB8yYmPKL7jOHz6XimDWmRUm6qCWGfvyMF2xEmdUj4vfdAyupqq
+         r28r39xsgWuPXPhYyJzekXHRxN9zhu2zq1gV6EGFJV9IHBM0UPiKfYjBHk5mTfrKDkZZ
+         MMqlxnUV9TwFhO+YmDKLifcl9w9KsVVTqC05DYj3oYwJ2btVgHkN21TAsF+oJS2yH8c3
+         Cqvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748198707; x=1748803507;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zlZFRhPE/eFCl215/JCvK2SWRrEZJvnFdKymxEp1wtc=;
+        b=IxP8MDu8hCjHcznfBqTaikoMZcCT1frZCvt1sCkRBOAhYx9F449uUZPxlGm85dh2fO
+         1CQZ9UJ9P11tfhvv88F+XvCR3CiX/78/mFMEE/tzfxuY/bGTRvZ8Y602Z/XGt8d2lkQl
+         SWyOQ3QwGGbInRROPOpa5mIHlaNSBy/b1xh8r5CGZ01xEQl3ZnRmMq8EXeijgw/XOIZA
+         z2SOBUdsUb6zzqPY1Fn1XbH4ux4xqqwTquV8WnDVljYrDlOZLehpFqEHk0Clk11wfxfP
+         NHAcpIfyYAxjhiJxnq9L0Hb2cVjkdIH/UoYWEiVc8mxdkiDPy5lcihjVVLfekKvL1pjk
+         C5cA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFPG59yhxj/r+LJ/egn+ZhMUYnpXGm1tJ3q59l6QRAipivPlfcqKKeCP81CyVao5f2KV9cE4o8sDXTY/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjbJFvk5Ca/4FTFd7z2KxCxf9YwomdAMqQ8fWwicReATQq6iXK
+	buQZi5htlfctaXtx/ZyRQN6MkULuNrBOsxgKPEulwJFFcV2i0PJsoY4M9mcLzzzvlLxxglh4HuM
+	k83yGZ3zWHYkz7Hz0uI4IX3ET0l3lidA=
+X-Gm-Gg: ASbGncsFsGLuxx3qRxJwpoOnrJ2GTrc2VG6OFerufnBQhHkCE7KSFPdX7fNAtNjJq0a
+	w8xvJLEXRcLQclC8e1Ne1Ea4XZhaGSt8L0geSKDPl4UiUKOMSvUb5H2Q3r6SyxdohGvtk2u184U
+	e9brXS4v0EThZ8NKWcMWSP/B3dgaCh0J0w
+X-Google-Smtp-Source: AGHT+IHDfTFdcBH/l37Le5WRDbeB3Misl7yxPPTRta05DvYdNwiRM3ITTTaCDvRLinRpF5oGY7zXsSu7NyLQCXH4h/Y=
+X-Received: by 2002:a05:6808:4448:b0:403:25bd:ca71 with SMTP id
+ 5614622812f47-406468431ebmr3410931b6e.15.1748198706976; Sun, 25 May 2025
+ 11:45:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250522122554.12209-1-shikemeng@huaweicloud.com> <20250522122554.12209-4-shikemeng@huaweicloud.com>
+In-Reply-To: <20250522122554.12209-4-shikemeng@huaweicloud.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Mon, 26 May 2025 02:44:48 +0800
+X-Gm-Features: AX0GCFubxZByYqpvGsq5c_LFRl1oMErG28xwsGlkRLdiAGNdLQs1v0jRUu0pFy0
+Message-ID: <CAMgjq7BHzid81f2cBDwQqN6enfJOh8XLjzOS6e+kiu6TMuu0ZA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] mm: swap: fix potensial buffer overflow in setup_clusters()
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, hannes@cmpxchg.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, May 25 2025 at 11:43, markus stockhausen wrote:
->> Von: Thomas Gleixner <tglx@linutronix.de> 
->>
->> On Fri, May 23 2025 at 11:15, Markus Stockhausen wrote:
->> > +
->> > +	if ((cpu >= NR_CPUS) && !force)
->> > +		/* In normal mode allow only online CPUs. */
->> >  		return -EINVAL;
->> >  
->> > +	if (cpu >= NR_CPUS) {
->> > +		/* In force mode allow current not yet online CPU for
-> hotplug handlers. */
->> > +		cpu = cpumask_first(cpumask);
->> > +		if (cpu != get_cpu())
->> > +			return -EINVAL;
->> > +	}
->>
->> This logic really makes my brain hurt. Why not doing the obvious:
->>
->>	if (cpu >= NR_CPUS) {
->>         	/* Sensible comment */	
->>         	if (!force)
->>                 	return -EINVAL;
->>                 ...
->>         }
+On Thu, May 22, 2025 at 11:32=E2=80=AFAM Kemeng Shi <shikemeng@huaweicloud.=
+com> wrote:
 >
-> Then what about an even more relaxed and cleaner version like in other
-> drivers?
+> In setup_swap_map(), we only ensure badpages are in range (0, last_page].
+> As maxpages might be < last_page, setup_clusters() will encounter a
+> buffer overflow when a badpage is >=3D maxpages.
+> Only call inc_cluster_info_page() for badpage which is < maxpages to
+> fix the issue.
 >
-> If (force)
->   cpu = cpumask_first(cpumask);
-> else
->   cpu = cpumask_first_and(cpumask, cpu_online_mask);
+> Fixes: b843786b0bd01 ("mm: swapfile: fix SSD detection with swapfile on b=
+trfs")
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> ---
+>  mm/swapfile.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index a82f4ebefca3..63ab9f14b2c6 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -3208,9 +3208,13 @@ static struct swap_cluster_info *setup_clusters(st=
+ruct swap_info_struct *si,
+>          * and the EOF part of the last cluster.
+>          */
+>         inc_cluster_info_page(si, cluster_info, 0);
+> -       for (i =3D 0; i < swap_header->info.nr_badpages; i++)
+> -               inc_cluster_info_page(si, cluster_info,
+> -                                     swap_header->info.badpages[i]);
+> +       for (i =3D 0; i < swap_header->info.nr_badpages; i++) {
+> +               unsigned int page_nr =3D swap_header->info.badpages[i];
+> +
+> +               if (page_nr >=3D maxpages)
+> +                       continue;
+> +               inc_cluster_info_page(si, cluster_info, page_nr);
 
-Fine with me.
+I think we might need a pr_err or pr_warn here, this means mkswap
+marked the wrong region as a bad block? Or some fs side things went
+wrong.
 
+
+> +       }
+>         for (i =3D maxpages; i < round_up(maxpages, SWAPFILE_CLUSTER); i+=
++)
+>                 inc_cluster_info_page(si, cluster_info, i);
+>
+> --
+> 2.30.0
+>
+>
