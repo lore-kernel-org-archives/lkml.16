@@ -1,242 +1,217 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D5C141987
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A64C1F0E26
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748192958; cv=none; b=IIvvaSBlu1T7tUA0lflMK5OrO4Gjb1P9w5X2tIPzQF2M7IV1HVr77av6xfEB9LYxVyzduyfkMDoBiWNIdAT7Ok/9h9uCBjjq0pxxGseE3fEzVeuoIY0BjeI8WIhXvQKlyWdML1h7dTYSXJ7XfIgvevNQdq5GIgZ3z1Hi3p2Mbfs=
+	t=1748193195; cv=none; b=WU8cknXP3SbN9I1Upxg8Do3GI6ow9pgs3asf7Qd1HiYUJAudDo3zAD+PJMvbfpSwupo4XlFfGhYoM9FQJX5OeUF/pOXlHDnjfr2Ch864cBGrIeOvFRyNy9Nf2AnjUb7CbH78aIGFQV4L0VzHtsaOz0QIkdJhauGicNzioqy3qmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748192958; c=relaxed/simple;
-	bh=N/Nb6Z98QE1h7opFxqcxfJBGI1w8NlOXvMkO3SDYkYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q8rKbKYOqOfCfbFDnsxXXIsf44w5mbx/BrVHnBPozXmlrulrpbAN82V/LBzBsQURbgZ2B0nr+YuEDh8qiCxbVV+eIiq4cY9ax8BNx4jop44AbW2Dnnj+yKnQRy2xxWfoN+kcieyZNS8NUd+gg05+PWYegxcjbSxNkyLYawwkuoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcPG1U+w; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748193195; c=relaxed/simple;
+	bh=I5ZR3FF82SsvspTEqF2Ta82jGt3jr3/1NWy23/LVojM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TpjGtbyM+tNoaCi6NvvENjKiF4rDuGBfEuz/CsbElfJ4DUkuT5kuewu1ojjfRjA1qwSrB7mMSB2Je3EsuOAOW1JKF98fQjhy7n6eBSPTLXvSTGAN8h4uLk8RS8jx0uBKbEpDg3FHvbXtKYGASe8n3n4ZGwmPudkUrXNF9/9tTaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LkLbjRu+; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcPG1U+w"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-3280ce0795bso14270141fa.2
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 10:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748192954; x=1748797754; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gCupfkLLBRXyvgezOvk1m5uJBgj9564oL6KNWBNiFkc=;
-        b=TcPG1U+wmagN0PfZX/VUUm8HLW+tCG3JGBDvvLZ3EVDHaGcsXJ3rb1IY6IkE/GNuNb
-         ojVOx0kvoi2JeMn4zKF5+1DL05W6+kWZnLsZSTTyTE5mB5Eq7iK3D6EH7o21PGM9d525
-         RdYZHr92PaAtC2L34oRomWqjRwO8FqjZbA0O319beEVrvJHizX4D5XCnakEoV3KPGcUF
-         gaK/BeVzal/O07HeCmpETxrfqG0bPBO0k0PztcKFBugO+pOKT5BETAislZFfGzrjCOh9
-         0X7iByPuHQqe3C3u7/Zc0cmsb1j/kd//BT7KvytzDYqM+4CBJVTZOagAF4KxaEAmg/0q
-         eTSw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LkLbjRu+"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PFX4YH027567
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:13:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	8GfQcrit3isg1rD3lf7/k9AB6FJ0WubhCzrMkEn3mXI=; b=LkLbjRu+7uyDduYT
+	1aTdldON6OIg8yuZ4p4HjgcGiomd48EnBwE7vJqoda7oSBUNWXFkJ6veEyQXvJac
+	7cOKQGI00HiGThk9uvRJAhTm03RYDdRlpehmTreLyQFJfPX8949w9Rut84pZdOD6
+	0uqSsouoovvxZX6dZdC9fT67o0cziPBbzWZ5igMAgGp2/alDTmU0dKdkVDWk95kh
+	5hQ55JmLa4RZkI9GhCLt49nIS0MRx1eH8BRgeGDfsI6tAqEZGYSiwbqX6Em7PvLj
+	sjMTHlHg3F+lW+8PGm5WoDRsVi1OiTkju2WlTZIYZb7N7Hc9tvy0lbDJs28Km0H4
+	CBPrZQ==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u79p25ry-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:13:12 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f8e23d6657so26238636d6.2
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 10:13:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748192954; x=1748797754;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gCupfkLLBRXyvgezOvk1m5uJBgj9564oL6KNWBNiFkc=;
-        b=YS2s6MM+uaa8Jbbe9uwlDHru5OZ2DxC81O5YuEg/SXgOyT0MjLstuUHk8mbsdHiv4d
-         iXp1YRB5t9e1YguU1XNTwoYOSsviDvt2ZogVzM2qNk0CO0iv8OFsVxrqRcsPWLFc7kJc
-         orSndMg+aWcEbioC7cRtfdwShZ+w2/JPh7xpGJxpcZ1DaFJeekom403roD3Zf/4PFlN0
-         1iYPKh8PuDG4KJzZGNyQVoHmXVnUSo8R7qSOsK3cEvtcPVaYP5dvUa0Z/llCNjx+qI+q
-         9I8+aDPd0Ez/Dqy0Dubj938opOy86eUPb5GkZ4I+fFCidCDGxlA0c3z5XdZEutcekDbu
-         pO2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVGEcVbYXxYlGZJ9clRNzGTCkVZKJpedAGgmxizVD9BFE0EoWbpNewSMXnMbpgbU0kV0aEnm7z/k7OTFj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQBscr/OJNoDnwUAnxXt6v1I90RnFMGn1pEsgY/deE5VuSwSY9
-	V8NtqOADFk2D7EedN8hXis1mlsZI3Ia+SrXEOsp9yCpYZCpd0CaIxeDhvKqUBAzXubfBBbx6hzP
-	T1PpCgbmKg76lbVIM+67xxbE6eZe5t78=
-X-Gm-Gg: ASbGncsVUgA5lct7WEDq/ROOkO3z8cTBDbaUF6Yh3S5RzvUHD+Qeg/GjvF1I0stjpam
-	RJV9wgqJDB7JHM0zAUofqbBss4cUBKJpvm9D/z/u+g0md8pqlOmNwUHKklLqkmUNy2fDuJZWbQb
-	bUHE7XBwXLdLb2QPwNOTnuwOPDorrHGBMC
-X-Google-Smtp-Source: AGHT+IFqpNFA9RLARunHpODR6agkcc/Fqy/z67dPDN2eW1f1qIOvdHUMZ4vppO5dzOIZ1Ov5h7+WWThr6lGEwY6atmQ=
-X-Received: by 2002:a05:651c:210c:b0:30b:d17b:269a with SMTP id
- 38308e7fff4ca-3295b9aea2fmr14116971fa.7.1748192954065; Sun, 25 May 2025
- 10:09:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748193191; x=1748797991;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8GfQcrit3isg1rD3lf7/k9AB6FJ0WubhCzrMkEn3mXI=;
+        b=gCx0M+to/FWooDkee6pk2hcG3es2ToTURsfbcm5+bfTkyYcMpiT3krSkZqLMtsA0Gc
+         pfBLTJlPLN2udro85KWnG3+A6DaSteOh/VRsmwRg7wJJ6JP59NrOVYyGDoAV6HQjxLcH
+         w3xyMgT0emifaSGq9UcHefmv/rsBHt4AXgP3NFKQHfbhiMDaC97NfPdPA1BA16PNSLNp
+         HTwspnTGpago5KR4BT+Eqv95lu2JF85Vf9aCti0Mg2T5XA6soLQP9X7Bk7KxRVVCZfJo
+         XmeWh7yRXaHApbe38fXpUMkklMM1eORfo1YLEPihy1fZLp2Aql2ksdEhKKSWCdoc/YZh
+         VtLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDmPIpZ84I/Hh91X2uu9O9VhDIAbjk2qmZnO/HIisTiEq3nbUIVs31ozgdTb8CjAg7tJbwtjRJy+qY5gY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOxbJbHM+oXfWZUtJD49kl3s7U4FAf9s2x4Y4ZOH1hWyohxhA7
+	2OQKSM3Irhxm8CDlw1NnZp/AQtOZ4xHNYX3JyP4TVNah28e/sPfeE1QDJEL8KkNESyaIWgAeL5K
+	DM8gkQhg0rfH2jJf8+el1y+7JEPgoQPv1hOIhUcH2mz2m1kv9WGfqVh9bfylwRq1ABQ0=
+X-Gm-Gg: ASbGncv2mgpaZTar7FJYbHKTHZoJXbzO+Cr599LnMWDrNSoaVhQ4GHEdqx6D5pSSFSU
+	waJnpkU2p13pJH2MyBWVtRucJY/SF2ZxPg6FGr8245q3zC9uK+T4tfXIBMnpckk7up7ortNyBij
+	rJGW33elL3gZL9TNZzXwxnXt6jEdnu62IXlu7StfJKL3UkgnLEI2sXtXjm7vf5kfEurCMz19LqJ
+	PaNrUT+lRIrWlPiF0g7fyT4JTdEBxdz6QhRaHbXW8BPB+RyvRDJo079yLi5XPEVdTziaMQOMgM+
+	nbTAilA1iKOmtTdw99qaOcf12Boy3qoUrx/vQ/xWjfwHmd8jMHI6zS/f5WJhBg==
+X-Received: by 2002:a05:6214:f2c:b0:6e6:5f28:9874 with SMTP id 6a1803df08f44-6fa9cfd2912mr112515306d6.2.1748193191164;
+        Sun, 25 May 2025 10:13:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGLy0QUxrOeWfkESnbDjqayvG3igEvUkE6sR/3TpigvF16g5Xho+6TvOHh9oCRLT8RtmZm88w==
+X-Received: by 2002:a05:6214:f2c:b0:6e6:5f28:9874 with SMTP id 6a1803df08f44-6fa9cfd2912mr112514936d6.2.1748193190710;
+        Sun, 25 May 2025 10:13:10 -0700 (PDT)
+Received: from [10.117.217.18] (194-204-13-220.ip.elisa.ee. [194.204.13.220])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc7d8a77sm2795716e87.186.2025.05.25.10.13.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 25 May 2025 10:13:09 -0700 (PDT)
+Message-ID: <cfd4f557-7f97-4da9-8eff-fe3749e336db@oss.qualcomm.com>
+Date: Sun, 25 May 2025 20:13:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522122554.12209-1-shikemeng@huaweicloud.com> <20250522122554.12209-3-shikemeng@huaweicloud.com>
-In-Reply-To: <20250522122554.12209-3-shikemeng@huaweicloud.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 26 May 2025 01:08:56 +0800
-X-Gm-Features: AX0GCFufTR1qMhjI3981pwKPLYMy0g5s9XrhAvw9WjaIlvBoxWEgOqJ3JrPida4
-Message-ID: <CAMgjq7AcMtsS-EX0065jvucLR=YiAvPkjp+rmr=hfxyv9JVW5g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] mm: swap: correctly use maxpages in swapon syscall to
- avoid potensial deadloop
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, hannes@cmpxchg.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: qcs9075-evk: Add sound card
+To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
+        kernel@oss.qualcomm.com
+References: <20250525155356.2081362-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250525155356.2081362-3-mohammad.rafi.shaik@oss.qualcomm.com>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <20250525155356.2081362-3-mohammad.rafi.shaik@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: DGMaCib385GlXIJwYa7XvtAJuJvNyayN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI1MDE1OSBTYWx0ZWRfXzATbQiJo0Csh
+ p12rgmC3vA+cy9yQFxNx+ybHFYr2hcIEWLC2eqaGvKQQhS6cVBdS4Utz2od8wSnmPw/u7dAjj3k
+ 2sGCp1cqFAKB8gJMxiC/qTIqvShuIKnRpiO4K+CsrezdFe3PxFiVVBNQHdsses1/9d8DJ09ZY/E
+ RpSMoXdVZ75MMjEK36I6c6stmjKQFSe2ptP2VE8SgRReM33XXJ8QeeXaDFFwwMaPFStad6uInIx
+ WDGF1GkIcIfs0ykUYZyMrNoJgpNrGFIBR+Bw4jyrpCZD2yqXjk90MbIqq0W7DTaPulOGVbpJb19
+ 6CZlbjekwFigcUIbFW+izdwlllHTVP9JVWCGP+/OPiOESf2xV93BIwx0fAFGTW1jTMuJva0Qv0H
+ IQZ0oLb7NKKhq/RaeUZI3Vyr9wH+Qjd6NwtFD61/043kG8VtvjMVrylq27TlLo/8tYZEkHWe
+X-Authority-Analysis: v=2.4 cv=HNnDFptv c=1 sm=1 tr=0 ts=68334fa8 cx=c_pps
+ a=wEM5vcRIz55oU/E2lInRtA==:117 a=zsrLd+foqYdeTGXumyX8oA==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=J2ExMKW3eQPLhXUHgQwA:9
+ a=QEXdDO2ut3YA:10 a=OIgjcC2v60KrkQgK7BGD:22
+X-Proofpoint-ORIG-GUID: DGMaCib385GlXIJwYa7XvtAJuJvNyayN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-25_07,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505250159
 
-On Thu, May 22, 2025 at 11:32=E2=80=AFAM Kemeng Shi <shikemeng@huaweicloud.=
-com> wrote:
->
-> We use maxpages from read_swap_header() to initialize swap_info_struct,
-> however the maxpages might be reduced in setup_swap_extents() and the
-> si->max is assigned with the reduced maxpages from the
-> setup_swap_extents().
->
-> Obviously, this could lead to memory waste as we allocated memory based o=
-n
-> larger maxpages, besides, this could lead to a potensial deadloop as
-> following:
-> 1) When calling setup_clusters() with larger maxpages, unavailable pages
-> within range [si->max, larger maxpages) are not accounted with
-> inc_cluster_info_page(). As a result, these pages are assumed available
-> but can not be allocated. The cluster contains these pages can be moved
-> to frag_clusters list after it's all available pages were allocated.
-> 2) When the cluster mentioned in 1) is the only cluster in frag_clusters
-> list, cluster_alloc_swap_entry() assume order 0 allocation will never
-> failed and will enter a deadloop by keep trying to allocate page from the
-> only cluster in frag_clusters which contains no actually available page.
->
-> Call setup_swap_extents() to get the final maxpages before swap_info_stru=
-ct
-> initialization to fix the issue.
->
-> Fixes: 661383c6111a3 ("mm: swap: relaim the cached parts that got scanned=
-")
->
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+On 25/05/2025 18:53, Mohammad Rafi Shaik wrote:
+> Add the sound card node with tested playback over max98357a
+> i2s speakers and i2s mic.
+
+I2S
+
+speaker amplifier
+
+> 
+> Introduce HS (High-Speed) MI2S pin control support.
+> The I2S max98357a speaker is connected via HS0 and I2S
+
+speaker amplifier
+
+> microphones utilize the HS2 interface.
+> 
+> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
 > ---
->  mm/swapfile.c | 47 ++++++++++++++++++++---------------------------
->  1 file changed, 20 insertions(+), 27 deletions(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 75b69213c2e7..a82f4ebefca3 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -3141,43 +3141,30 @@ static unsigned long read_swap_header(struct swap=
-_info_struct *si,
->         return maxpages;
->  }
->
-> -static int setup_swap_map_and_extents(struct swap_info_struct *si,
-> -                                       union swap_header *swap_header,
-> -                                       unsigned char *swap_map,
-> -                                       unsigned long maxpages,
-> -                                       sector_t *span)
-> +static int setup_swap_map(struct swap_info_struct *si,
-> +                         union swap_header *swap_header,
-> +                         unsigned char *swap_map,
-> +                         unsigned long maxpages)
->  {
-> -       unsigned int nr_good_pages;
->         unsigned long i;
-> -       int nr_extents;
-> -
-> -       nr_good_pages =3D maxpages - 1;   /* omit header page */
->
-> +       swap_map[0] =3D SWAP_MAP_BAD; /* omit header page */
->         for (i =3D 0; i < swap_header->info.nr_badpages; i++) {
->                 unsigned int page_nr =3D swap_header->info.badpages[i];
->                 if (page_nr =3D=3D 0 || page_nr > swap_header->info.last_=
-page)
->                         return -EINVAL;
->                 if (page_nr < maxpages) {
->                         swap_map[page_nr] =3D SWAP_MAP_BAD;
-> -                       nr_good_pages--;
-> +                       si->pages--;
->                 }
->         }
->
-> -       if (nr_good_pages) {
-> -               swap_map[0] =3D SWAP_MAP_BAD;
-> -               si->max =3D maxpages;
-> -               si->pages =3D nr_good_pages;
-> -               nr_extents =3D setup_swap_extents(si, span);
-> -               if (nr_extents < 0)
-> -                       return nr_extents;
-> -               nr_good_pages =3D si->pages;
-> -       }
-> -       if (!nr_good_pages) {
-> +       if (!si->pages) {
->                 pr_warn("Empty swap-file\n");
->                 return -EINVAL;
->         }
->
->
-> -       return nr_extents;
-> +       return 0;
->  }
->
->  #define SWAP_CLUSTER_INFO_COLS                                         \
-> @@ -3217,7 +3204,7 @@ static struct swap_cluster_info *setup_clusters(str=
-uct swap_info_struct *si,
->          * Mark unusable pages as unavailable. The clusters aren't
->          * marked free yet, so no list operations are involved yet.
->          *
-> -        * See setup_swap_map_and_extents(): header page, bad pages,
-> +        * See setup_swap_map(): header page, bad pages,
->          * and the EOF part of the last cluster.
->          */
->         inc_cluster_info_page(si, cluster_info, 0);
-> @@ -3354,6 +3341,15 @@ SYSCALL_DEFINE2(swapon, const char __user *, speci=
-alfile, int, swap_flags)
->                 goto bad_swap_unlock_inode;
->         }
->
-> +       si->max =3D maxpages;
-> +       si->pages =3D maxpages - 1;
-> +       nr_extents =3D setup_swap_extents(si, &span);
-> +       if (nr_extents < 0) {
-> +               error =3D nr_extents;
-> +               goto bad_swap_unlock_inode;
-> +       }
-> +       maxpages =3D si->max;
+>   .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 52 +++++++++++++++++++
+>   arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 14 +++++
+>   2 files changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> index 0e44e0e6dbd4..1ebf42b0b10e 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+> @@ -6,6 +6,7 @@
+>   
+>   #include <dt-bindings/gpio/gpio.h>
+>   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include <dt-bindings/sound/qcom,q6afe.h>
+>   
+>   #include "qcs9075-som.dtsi"
+>   
+> @@ -20,6 +21,57 @@ aliases {
+>   	chosen {
+>   		stdout-path = "serial0:115200n8";
+>   	};
+> +
+> +	max98357a: audio-codec-0 {
+> +		compatible = "maxim,max98357a";
+> +		#sound-dai-cells = <0>;
+> +	};
+> +
+> +	dmic_codec: dmic-codec {
 
-There seems to be a trivial problem here, previously the si->pages
-will be seen by swap_activate after bad blocks have been counted and
-si->pages means the actual available slots. But now si->pages will be
-seen by swap_active as `maxpages - 1`.
+Just dmic or audio-codec-1
 
-One current side effect now is the span value will not be updated
-properly so the pr_info in swap on may print a larger value, if the
-swap header contains badblocks and swapfile is on nfs/cifs.
+> +		compatible = "dmic-codec";
+> +		#sound-dai-cells = <0>;
+> +		num-channels = <1>;
+> +	};
+> +
+> +	sound {
+> +		compatible = "qcom,qcs9075-sndcard";
+> +		model = "qcs9075-rb8-snd-card";
 
-This should not be a problem but it's better to mention or add
-comments about it.
+Were the bindings and the driver sent? Cover letter doesn't mention 
+them. It is better to send them as a single patch series (this is the 
+case for all subsys except net-next and trees maintained by Greg, e.g. USB).
 
-And I think it's better to add a sanity check here to check if
-si->pages still equal to si->max - 1,  setup_swap_map_and_extents /
-setup_swap_map assumes the header section was already counted. This
-also helps indicate the setup_swap_extents may shrink and modify these
-two values.
+> +
+> +		pinctrl-0 = <&hs0_mi2s_active>, <&hs2_mi2s_active>;
+> +		pinctrl-names = "default";
+> +
+> +		hs0-mi2s-playback-dai-link {
+> +			link-name = "HS0 mi2s playback";
+> +
+> +			codec {
+> +				sound-dai = <&max98357a>;
+> +			};
+> +
+> +			cpu {
+> +				sound-dai = <&q6apmbedai PRIMARY_MI2S_RX>;
+> +			};
+> +
+> +			platform {
+> +				sound-dai = <&q6apm>;
+> +			};
+> +		};
+> +
+> +		hs2-mi2s-capture-dai-link {
+> +			link-name = "HS2 mi2s capture";
+> +
+> +			codec {
+> +				sound-dai = <&dmic_codec>;
+> +			};
+> +
+> +			cpu {
+> +				sound-dai = <&q6apmbedai TERTIARY_MI2S_TX>;
+> +			};
+> +
+> +			platform {
+> +				sound-dai = <&q6apm>;
+> +			};
+> +		};
+> +	};
+>   };
 
-BTW, I was thinking that we should get rid of the whole extents design
-after the swap table series is ready, so mTHP allocation will be
-usable for swap over fs too.
-
->         /* OK, set up the swap map and apply the bad block list */
->         swap_map =3D vzalloc(maxpages);
->         if (!swap_map) {
-> @@ -3365,12 +3361,9 @@ SYSCALL_DEFINE2(swapon, const char __user *, speci=
-alfile, int, swap_flags)
->         if (error)
->                 goto bad_swap_unlock_inode;
->
-> -       nr_extents =3D setup_swap_map_and_extents(si, swap_header, swap_m=
-ap,
-> -                                               maxpages, &span);
-> -       if (unlikely(nr_extents < 0)) {
-> -               error =3D nr_extents;
-> +       error =3D setup_swap_map(si, swap_header, swap_map, maxpages);
-> +       if (error)
->                 goto bad_swap_unlock_inode;
-> -       }
->
->         /*
->          * Use kvmalloc_array instead of bitmap_zalloc as the allocation =
-order might
-> --
-> 2.30.0
->
-
-Other than that:
-
-Reviewed-by: Kairui Song <kasong@tencent.com>
+-- 
+With best wishes
+Dmitry
