@@ -1,111 +1,108 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFF1A29
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5021F4725;
+	Sun, 25 May 2025 17:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748192731; cv=none; b=OcqqO0fYG67aWxFYeAyahfBAXGM8+rqr6YYkELGbVXVLCZx31vSdnsu9W3oCYqeuxivKa6M2uVTX4mjhSEbH9GDqVG217qGkx+GagxnRPsqmug4Y1e5wq3FWtNNaoqMAh7Sbcl03RoGlqM71GmgbY5Bmd9RjymA2f8G4XnqOwZk=
+	t=1748192754; cv=none; b=kNtNFprQy54qVKzDF6OgmS4xOc0I+IBROlnj9RpmoInS5mnf33OfosW5OR68EVxSZ7pXQjEM5WFfPKPwOm0KMk4AheM/UuFSPl/MQowUJ+R9sFNhJ2XnxM1FjMePPho+ClXLa/s1r9YETDQRlwOTaGsj5WzgnuBvK+mdGGvXYk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748192731; c=relaxed/simple;
-	bh=eb+nXstAdErMbNVg2RYJ9um1z2KftQc9yOrETFLQxSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T43L8GslxpkB6CurdCRUSW3VRVDM3YFZSViugr8K78WxJNZyZRZ3LD52c2cLJtUw9Nkw9S3f6elh5vProw9bUPSZPXOfC6iXJujzkmpedJymQqcBIeiAhY9jbkJUPZSvJ7XnZzqqDKlwwOlgGZZefdY7SAJA08KERf0WfeY/QrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgXBpD9O; arc=none smtp.client-ip=209.85.208.180
+	s=arc-20240116; t=1748192754; c=relaxed/simple;
+	bh=8lKrQhMe8HS9CsbhesAz8iyWZNUGIJ7KEPGbgdo4AFc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o/lYDAsRdMN2dq3DlSfk6o+LFWsH4oE5N/kZ/EkDtVdP71pA5NGubJXeP+ps+kwfgfo6M7InKkitq+RyzuRvoORBaxrblSKYBT9Ckozy7RvpE5u9HFn5qAUyYZAki5bEmP/YH5U8al2prFVj4HplKt26tjrBhckQZZx/pqrAoVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Belfy/qd; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgXBpD9O"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-31062172698so14307641fa.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 10:05:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Belfy/qd"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4c9024117so1131187f8f.0;
+        Sun, 25 May 2025 10:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748192728; x=1748797528; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L+MfSMNrhNlLP1WSYirVqpAIv2MNb4VocAlZZ/In95A=;
-        b=FgXBpD9OnCGbCRWqHQJ5k3f9HwxCrowkyVsxd//i5eaXl5yhJ/IrlAEO0cafdaOy94
-         k7/Q+LTFygAlPkAWqPHAbSuBh7R5/TC0JlYA4HPxbZRQATVedsioiSjv+KP1f98gvhtt
-         ub+4q9Brq7mPKB09k/Mxg8ivtxfUd2xWbRTCl3MifQodjSTOpNhhdFE9kEMQZFKItIRh
-         5AiZgOxLSL81KLczBgPk1B9iqr/hreuNgwb+0iSIHYIpi5Xq+leVA/BA6MqEBAxJ55Yr
-         aa82Vyp/nnRcwocXxoMCXwKDR0BERTsGte1QEsvQJsNtMMwL0bA5/wxqqwGYY6UkolFL
-         fXgg==
+        d=gmail.com; s=20230601; t=1748192750; x=1748797550; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CSPtkl2k2o6TvMihlt2eH/B28rLRtVyXETO98Nlddcg=;
+        b=Belfy/qdROFhVDPKlZJsTED3s2UFTgL/omqUMiM8Vk5gIi6xOtlVaZ4eL9QB6bO/X/
+         HIvt+fAVyKKKcyAP9mf1vcHgmWM4M+WNtcCiIDfKWbqJ2ln0ckafETDHIgXy6YSlwgGk
+         Jf0/hWtdN+y9uu+LXLl0DsW1NOY67GVJY1PMeASWUhZZKc2V2OC6PklhtxFZkvgWSgtg
+         z4840hZyko3qluZuYemq/B+zglJDdA1nV6O/i4he6bd098SIy2IIVPQVo9/jdE/KaV5t
+         CCizMxt6BAag44wgCUQLVVQUGRoj4dgBF7Fv0glkYMqW+iQCQZlSMjr2RwTHlWa6JOEg
+         Zbmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748192728; x=1748797528;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L+MfSMNrhNlLP1WSYirVqpAIv2MNb4VocAlZZ/In95A=;
-        b=Tgs5QhxqWj4YO+4d8bFc4eLFaNLp/Wn6bbUM8HoB5YOqpb/UaErgVMC3CsdivX1kfp
-         /Z7Dts60IDynRefPlJ9yftcQyXOInmKjR3UoV141G11Tr52aTg0781OPfQFIcTRbhfEh
-         KoFeHiblMzAufiARy1YVGVG019dS9LMobiuOpxzNjUzFy22gG68DRQREjKcqCXndjYLa
-         KPf6G4ygf7w/TtlfFCUmtA7aDAVrFfH/Dq3X7udepf9z/9vj/VGk/BiPwDA46cVUkYEm
-         23IId8x08kEurmSVqtBPOevsMX6jTW9lFio56vGZm1ZRjrr6wRXDl0igLGpkMArITxFN
-         xJyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWBgO9z7CKnVWMDuoHVAyElw2iR8QfcrSsp9VZLMNPj2TWJH98Us5cl7dAhaa8Vjx+4rW5YfcdPWf4M6h8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX/RVCCKJsdh+pmAu8+vhOrdavcMPQo3Hz7EkspRWrF/M+fTiv
-	CXlyvd2pgErfW1Y3cTnPZuoGiqgyaPGt4Mdfe/ugOVJVyYBP2jtEalJTb0sIgWwUqOyAZs1+5Cw
-	ZiPrv6b/yVoRcYX/7FOY82AN6Q9COO+k=
-X-Gm-Gg: ASbGncvqum+dJl5JMqiwII2p8M1B3PrJyNcmxMdwMB67+mdmoPUSyDfj8aZZz0uacFu
-	COYUq+bxB6BEZzQUMjeIeBhGKWbCJ1PHvYsZ9h1ob/ejnHwxYUuDAa1j1XstzOcqusHx0f32GAH
-	VXMsVHE2hcvtu1fCqmCUsU/zfDEdehoLHQ
-X-Google-Smtp-Source: AGHT+IH9QHwsiG/ZrFzq/XHsMtKha6acNdy3B0v+jXhvL1duuHwN6uPVX1AfjbhmBKx05HSISnLK/ASEylj8z5YHFe0=
-X-Received: by 2002:a05:651c:198d:b0:329:17b0:f45c with SMTP id
- 38308e7fff4ca-3295badab0cmr19062641fa.29.1748192727311; Sun, 25 May 2025
- 10:05:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748192750; x=1748797550;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CSPtkl2k2o6TvMihlt2eH/B28rLRtVyXETO98Nlddcg=;
+        b=ZqI3e/3YbOFONWjTtN8+1FF3tqWUqVInXtL+a1L89Rgvl7WBawra3AOs/4rTXRdvnY
+         GMxRYkF/2sPONDIn62EWRlSILxgyNlACZEi5cUrqqOON+hn5uL4uAgltD+al1SLOeU63
+         HrZ9Y1uWZi/CfNO75O3maCTqqD7zMcSk5gCoWN9PeWinm7X6CunAhiNOpneKfBD79OBf
+         OHqBITJM26DpYK0qSH3p86yGSr4tVwZZz3XYwcdl7RhQEZZPEsiPgMwiFgSLurEMZWGi
+         4RagPPpQqKJ/5uhgfZ1OZIroA/V+f4uLVKHUbdY1u8LXX/S3C1g7Cxz6QXFtOHxBi0nl
+         YzVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUC81v3WHZGxuwt2nMWAcd3j6eCkNzP9ypgam+EOuVRpau+fg4o0TrAvTGnZaj5uRW4cAmRYUneYNrOyjYg@vger.kernel.org, AJvYcCUw1voyAQK8rUNsaxlwrEHRFFIHy6xf3oOGrqz0c5hY/47omnnKpmEshIIvQW3m3oZ5AvNbQX8MPJVfztR3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoAzX9jb23SAAdWj25/iH9BNh7fCpG8Xb3tuUtea7XqHDdzwIB
+	SO6+FElCFxyWZ+TmbVeVefakPskaokI8ZcJ41i1rBSp1umaRKb13nQ5kEgu68g==
+X-Gm-Gg: ASbGncuJFR6sQRxpyYFZeyyvN9cuNrkhQWzG2AmnBUVIThiJG/8Cg5omToWpqbX8krp
+	EcyTFq3PxtuqE8VJe2RNyZxBrTMpYGEGG7vPIsc7VdlLQVN9IjbxliWqHcgfLKzftVzSCGWsGbX
+	/d/EnF+uv2RzXbyZPCbqCdOQBl4dW4KgAGy2ouEcv3FP5SHyqgI33wkx1vrZ7fcmnctH5BqGOeE
+	DGeqd87F96QVYgEuxMG/o5LD//jlEQEBERaMGavUdVQaULc0qxUW6xw6r2g4XQLo8omTEGT8e9E
+	3p6tQogR6nTwzoUUp0oWAPyx7uE3rXg7dViocycURPzXQlEThrjcxJF6L5RQ/oxEXMFlnOxLHQU
+	r4rMG
+X-Google-Smtp-Source: AGHT+IHrqdaTfd2CvQtrbD19G5LSxUJsrVd7AD2/hDFFT83q8/zfeCWuZFodkMnHDVSIbhoYgXl5Kw==
+X-Received: by 2002:a05:6000:22c7:b0:3a4:da0e:5170 with SMTP id ffacd0b85a97d-3a4da0e537cmr26224f8f.27.1748192750374;
+        Sun, 25 May 2025 10:05:50 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a03fsm32317405f8f.22.2025.05.25.10.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 10:05:49 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH 0/2] spi: spi-qpic-snand: avoid memory corruption
+Date: Sun, 25 May 2025 19:05:34 +0200
+Message-Id: <20250525-qpic-snand-avoid-mem-corruption-v1-0-5fe528def7fb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522122554.12209-1-shikemeng@huaweicloud.com> <20250522122554.12209-5-shikemeng@huaweicloud.com>
-In-Reply-To: <20250522122554.12209-5-shikemeng@huaweicloud.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Mon, 26 May 2025 01:05:07 +0800
-X-Gm-Features: AX0GCFs-YwPHykSN0mFdg3ysDg1OoLUVF-2jMtGLhl8BnRxZ_1WtUCwIg3JU8b4
-Message-ID: <CAMgjq7Ann=NwW7pQXgZtkjQT4Yujvcx0qS6ihH4T__QUUberww@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm: swap: remove stale comment stale comment in cluster_alloc_swap_entry()
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, hannes@cmpxchg.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN5NM2gC/x2NMQ7DIAwAv4I81xIhypKvVB0MOI2HADUtioTy9
+ 6CON9xdh8oqXGE1HZSbVMlpwPQwEHZKb0aJg8FZt9jFzfgpErAmShGpZYl48IEhq/7Kd7g424k
+ 28uwtexiVorzJ+T88X9d1A5+0GMlxAAAA
+X-Change-ID: 20250523-qpic-snand-avoid-mem-corruption-301afabeb0eb
+To: Mark Brown <broonie@kernel.org>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Thu, May 22, 2025 at 11:32=E2=80=AFAM Kemeng Shi <shikemeng@huaweicloud.=
-com> wrote:
->
-> As cluster_next_cpu was already dropped, the associated comment is stale
-> now.
->
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  mm/swapfile.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 63ab9f14b2c6..8525515fb06c 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -956,9 +956,8 @@ static unsigned long cluster_alloc_swap_entry(struct =
-swap_info_struct *si, int o
->         }
->
->         /*
-> -        * We don't have free cluster but have some clusters in
-> -        * discarding, do discard now and reclaim them, then
-> -        * reread cluster_next_cpu since we dropped si->lock
-> +        * We don't have free cluster but have some clusters in discardin=
-g,
-> +        * do discard now and reclaim them.
->          */
->         if ((si->flags & SWP_PAGE_DISCARD) && swap_do_scheduled_discard(s=
-i))
->                 goto new_cluster;
-> --
-> 2.30.0
->
+The 'spi-qpic-nand' driver may cause memory corruption under some
+circumstances. The first patch in the series changes the driver to
+avoid that, whereas the second adds some sanity checks to the common
+QPIC code in order to make detecting such errors easier in the future.
 
-Nice.
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Gabor Juhos (2):
+      spi: spi-qpic-snand: reallocate BAM transactions
+      mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
 
-Reviewed-by: Kairui Song <kasong@tencent.com>
+ drivers/mtd/nand/qpic_common.c       | 28 ++++++++++++++++++++++++----
+ drivers/spi/spi-qpic-snand.c         | 16 ++++++++++++++++
+ include/linux/mtd/nand-qpic-common.h |  8 ++++++++
+ 3 files changed, 48 insertions(+), 4 deletions(-)
+---
+base-commit: b00d6864a4c948529dc6ddd2df76bf175bf27c63
+change-id: 20250523-qpic-snand-avoid-mem-corruption-301afabeb0eb
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
+
