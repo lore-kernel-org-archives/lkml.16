@@ -1,123 +1,109 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3531A08BC;
-	Sun, 25 May 2025 09:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD8D15278E
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 10:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748167169; cv=none; b=aai92heszYhBTSbapuraYUwz+F1OYuLGPFbqLsJUxVi90mkhagps+RZHg3NOFtWB1UUMDINkE+MrXUVAkk2nHt2y3MCp9ohNIDQp8ZqssqMHliTABKEhbG7lDAJ27VZzRBGixkbEL9ytMZTIA9lYTk5RRmY2R/wNzMJoP7o5Dew=
+	t=1748167227; cv=none; b=F7UvpdBYAkRprYEKK2nvS5VoueMhCRmPiZEg4gNJfh+3JaW3U3o2lIrPC8tC7dBlkSVM2RJtztibQDRFNvYZ+7ZD2gHZqhv+r/wg/41aLfDi1gBDNqNegJc+Wu0k649OYDR9NOrdjhe655IATpRGCOzlhCyXYC4rF8rOQZ2Nm7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748167169; c=relaxed/simple;
-	bh=V3tmG3dLO9mr0GAHG2bi03/J92CNc+D6dI01p6IGmts=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V4Uac0TQk9i9CTiI9oIh4B0pjrxxqKpcvleDuxV5bTO5jSMit2juBSS/g0Ujy2L1JKdxC1LRIzTFNhyiKqsKFqC//+J9bOh3nL6/7NirrhO6JUs+rStfwgdWADVplIWh7FJ73bGFSdC7kHDFTUhZOmT5iGEO9lmY9saAB9lSCl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Wy2HljHu; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1748167227; c=relaxed/simple;
+	bh=cx8Hk+YhW0dcI/wiCkLp/Kgb7M9NuEEhLnAN+AwvZqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/Kxi0c1pfpFm2kD2riyfg/+7V3eIxVK34HgjcAgnLmFdcDR7AXF4i5oFzLr+a/0iqbmjpQV17t6wPp+2phhfiO7FvqnjCEHOCzqGMH3/kt/G3JgJq7TL9TgIKt6SVvrAUG24lBwdRCeuJhjXBUS5MbWZoBc0VWlTBb+ykdtqmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JMAMDw2u; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Wy2HljHu"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54P9tc31010346;
-	Sun, 25 May 2025 02:59:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=OplobE/ksS9d99f5uK5mcir
-	jzOQv08vitVJNOGxuBYI=; b=Wy2HljHum51U4MFHuIQjbNACxoE4cco9gSA6uhh
-	TZEht2PwhEe4xkPtbbZIrf12PiWqm8+o3xAQAfk0Jj9pKXTRyiXhrfb/bWfmrqHG
-	dDpEFsMfn0CMhTR2V6AyLUoqV4X5FxkSx9OUPWcPA5l2qCaVUUJZa+wD/FXmIs3l
-	+zzXupf3M4ZtXG7acxJ9kHyCkRzMOPc0aQfkuzP/Ab79d1EcfJaN7bosOL6Y45qA
-	r2Y9gDod+SxsMsH0M7AHsjmONfJiFkw/fjgR5fg+VvTgCpw0ZDHaPm6j50WLMicJ
-	7ZyHVJMAUBbeRnh1S1nkAVZNmiVEkhobkyKepq7GvBdFEqg==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46udmjh474-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 25 May 2025 02:59:04 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Sun, 25 May 2025 02:59:03 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Sun, 25 May 2025 02:59:03 -0700
-Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
-	by maili.marvell.com (Postfix) with ESMTP id 57C5F3F709D;
-	Sun, 25 May 2025 02:58:58 -0700 (PDT)
-From: Hariprasad Kelam <hkelam@marvell.com>
-To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Hariprasad Kelam <hkelam@marvell.com>,
-        Sunil Goutham
-	<sgoutham@marvell.com>,
-        Linu Cherian <lcherian@marvell.com>,
-        Geetha sowjanya
-	<gakula@marvell.com>,
-        Jerin Jacob <jerinj@marvell.com>,
-        Subbaraya Sundeep
-	<sbhatta@marvell.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Ratheesh Kannoth
-	<rkannoth@marvell.com>,
-        Simon Horman <horms@kernel.org>
-Subject: [net] Octeontx2-af: Skip overlap check for SPI field
-Date: Sun, 25 May 2025 15:28:54 +0530
-Message-ID: <20250525095854.1612196-1-hkelam@marvell.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JMAMDw2u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748167224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cx8Hk+YhW0dcI/wiCkLp/Kgb7M9NuEEhLnAN+AwvZqA=;
+	b=JMAMDw2uRCYJKTvuDG+ICMAzYykENDAwqvA1p3H4/Yz6gbhBuVd9uSYEKY6m5PucufU62M
+	0HuTNHvEyxRB7/6k9beEGE3nTkD5NUv2+5amKPQhF//dkC/3HGrchgfOai98YcTihW1QF4
+	CMoPxZLylpTXjKIxidwAErPQacbTvuc=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-411-NAkunapPOTuADtSfAGyKcA-1; Sun,
+ 25 May 2025 06:00:18 -0400
+X-MC-Unique: NAkunapPOTuADtSfAGyKcA-1
+X-Mimecast-MFC-AGG-ID: NAkunapPOTuADtSfAGyKcA_1748167216
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D07781800446;
+	Sun, 25 May 2025 10:00:15 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.4])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 095E419560AF;
+	Sun, 25 May 2025 10:00:09 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun, 25 May 2025 11:59:35 +0200 (CEST)
+Date: Sun, 25 May 2025 11:59:27 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Pu Lehui <pulehui@huaweicloud.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, mhiramat@kernel.org,
+	peterz@infradead.org, akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+	pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	pulehui@huawei.com, Andrii Nakryiko <andrii@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+Message-ID: <20250525095926.GA5391@redhat.com>
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+ <20250524164516.GA11642@redhat.com>
+ <e8a679eb-e40c-481d-b65a-d16f9e66c19a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=T8qMT+KQ c=1 sm=1 tr=0 ts=6832e9e8 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=KLocVHQyFJvDF4PZL-8A:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI1MDA5MSBTYWx0ZWRfX0CJoPIkmuRIV hNlU0zv13z5O1039yS1WdaTppLez8iGVzIVW3VvD00hoPej49+XCotDkuVq79IeFtmGxwsHM8iq 3n3fdlHD2rSISYvCL2AoEnPxvrKxjXjtR4Sn4tvBX7VHe50pzccuEZbi5j7AvLtqZc87avFKx/T
- MtMzOMD7u6uG8Y4VLf0n/2avSS1TvKcbPMLKL9mFCVoVMSMh5SiWzsYAX+HMb7gXXyjfs+tGH0v t8oW4qFpB7ZlfZFwWG23VnbCMWexhiKIg/E3GMhP4mOcZY/fFUqYQOlFL+beiOS0CHyQhFKLOOE dIfdPi8QfOvZSao2hMPcUuHveYZHovMHTrHCJb7TdmvJFWfXFN5/slyt1+q0PacNn2wmS+jt8aE
- Ap7C4nQMKRv0nnnZJ17pgBrexCQDTWzVas1QXw6z9gE9DH+Ib3bW/QVzqqWF1aWfhbYhjvYX
-X-Proofpoint-GUID: VzaG_KmzZslV0bbW84rBl6ycUkRTlecf
-X-Proofpoint-ORIG-GUID: VzaG_KmzZslV0bbW84rBl6ycUkRTlecf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-25_04,2025-05-22_01,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8a679eb-e40c-481d-b65a-d16f9e66c19a@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Currently, the AF driver scans the mkex profile to identify all
-supported features. This process also involves checking for any
-fields that might overlap with each other.
+On 05/24, David Hildenbrand wrote:
+>
+> On 24.05.25 18:45, Oleg Nesterov wrote:
+> >
+> >To be honest, I can't even understand this part due to my ignorance.
+> >What does "the old uprobe anon page to be orphan" actually mean?
+> >How can the unnecessary uprobe_mmap() lead to an "unbalanced"
+> >inc_mm_counter(MM_ANONPAGES) ? Or what else can explain the
+> >"BUG: Bad rss-counter state" from check_mm() ? Or there are more problems?
+>
+> Essentially, we end up mapping an anonymous page (when install the uprobe)
+> after preparing the new VMA, but before moving over the pages from the old
+> VMA.
+>
+> So when we then move over the pages from the old VMA, we overwrite the PTE
+> mapping an anonymous page (due to uprobe).
+>
+> As we simply overwrite the PTE that is mapping an anonymous page, we run
+> into inconsistency later: RSS counter mismatch, memory leak, etc.
 
-For example, NPC_TCP_SPORT field offset within the key should
-not overlap with NPC_DMAC/NPC_SIP_IPV4 or any other field.
+Ah, I seem to start understand... move_ptes() doesn't even check *new_pte,
+I guess it assumes pte_none(ptep_get(new_pte), right? So the old anonymous
+page is simply leaked after set_pte_at(mm, new_addr, new_pte, pte)...
 
-However, there are situations where some overlap is unavoidable.
-For instance, when extracting the SPI field, the same key offset might
-be used by both the AH and ESP layers. This patch addresses this
-specific scenario by skipping the overlap check and instead, adds
-a warning message to the user.
+Correct?
 
-Fixes: 12aa0a3b93f3 ("octeontx2-af: Harden rule validation.")
-Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
----
- drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> We should never be installing an anonymous page (due to uprobe) into a VMA
+> during mremap() before moving over the pages from the old VMA.
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
-index 1b765045aa63..163cbce8575f 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
-@@ -606,8 +606,10 @@ static void npc_set_features(struct rvu *rvu, int blkaddr, u8 intf)
- 		if (!npc_check_field(rvu, blkaddr, NPC_LB, intf))
- 			*features &= ~BIT_ULL(NPC_OUTER_VID);
- 
-+	if (npc_check_overlap(rvu, blkaddr, NPC_IPSEC_SPI, 0, intf))
-+		dev_warn(rvu->dev, "Overlap detected the field NPC_IPSEC_SPI\n");
- 	/* Set SPI flag only if AH/ESP and IPSEC_SPI are in the key */
--	if (npc_check_field(rvu, blkaddr, NPC_IPSEC_SPI, intf) &&
-+	if (npc_is_field_present(rvu, NPC_IPSEC_SPI, intf) &&
- 	    (*features & (BIT_ULL(NPC_IPPROTO_ESP) | BIT_ULL(NPC_IPPROTO_AH))))
- 		*features |= BIT_ULL(NPC_IPSEC_SPI);
- 
--- 
-2.34.1
+OK. But do you see any reason why uprobe_mmap() should be ever called during
+mremap() ? not to mention munmap() ...
+
+Thanks!
+
+Oleg.
 
