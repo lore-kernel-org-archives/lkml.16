@@ -1,79 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3471F4289;
-	Sun, 25 May 2025 17:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BA81F4289
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748194536; cv=none; b=CFGbi3f1+jxLPdUo7HaRil+LPfIxqenepMYzZMMHnA6gDc9ShK0XN5Bc2LNr6rEZ0cL5td7DWuV8XRDlDb928b4A62vzDCtINOshM9U9DMrkuCRFlihzFwvqj8+sJcfwvhImjNB7PDoj/6w4xnUzPNv7sJCrIknLA7KWnF3t220=
+	t=1748194599; cv=none; b=Aw7BJUCfwgc8/aWiHbKli7Wiz8yK87WPUN3tG+awvaZAwcHGbGk45bcof5Gkfae7e9Cudbu60kWRNKQcQomMJJQG/owA1jld2gpH5ZTxkrhhki8wltlx4R8XVn9aMcc96SC8mjgj732vuaQipdU7BeV/1fLUugKGLW25E5Nm8RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748194536; c=relaxed/simple;
-	bh=ven09nrg/Zbp4OZr5jcKKvIC9KJfxQcapKQr/5P3d+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rEfnaq2GxlYeuDppyJBPTPKU5l6qiPnK2CBR/ELAaHRwfARiDOWSw7EQBay4FVije7d/gHs6bZd81aSN50grkw70lRfTjjQ3i7HnZSJQxSPr3sHmr0zGl4S1KZTmeSrseukocxLcXHIexgrSTy5CVqa7rarD8//9VMg0wIU5Sy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eg992E3J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748194599; c=relaxed/simple;
+	bh=DH55LpZqJeh+O8Ipg9+CFUV+kshSj88VsgnPPzafZvU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KvYgx30ZxzNTEVMn55IX8xGGs9Bj2ARX1VDEiuMbEOJ+4rRllH3KV3ZUuuqWFL3ZKbctyv/Bo/P4VlvPsbSUlQ0mUl7a4c42LDz1/No+qtAHY5+k9b9+DbBydmzEM2dR+p5zIUr+9ofpt7AIQEa6tTdjTmDtZwpKrt2HPuhQ4ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Cu7rOmhS; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eg992E3J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC86FC4CEEA;
-	Sun, 25 May 2025 17:35:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748194535;
-	bh=ven09nrg/Zbp4OZr5jcKKvIC9KJfxQcapKQr/5P3d+A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eg992E3J6q9pzjbfy0YgxicmGf1LRhhS4YxCEOxPvWJph5+rTzmxnJKfee/KVjrwG
-	 9gLfJmAEwuPR3gua6qm3yPed/hWQWB1qXg3XzOQdHV4begTjVV6Db9aFBnx+53XioG
-	 OMphNVYh9U6oPJA4LPfbdUsU7nAqy7BBRaChqgu28Ydkb8p9rIQrD0jf9VP3OwLpgm
-	 kgNdIdiNXtRSxCS5idnzn0E6lWbzmM1wyCt9U+8S89xgpFLEm72Yi+xvlgtQzd4PfM
-	 mckQMATVtoMpX1zHMZbrSgGvbNAq3K8uZTIfmPnogkp18mk5gdi3Z0Gnp8KCWGJSBI
-	 n+A/7sxWctyCA==
-Date: Sun, 25 May 2025 18:35:28 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Gyeyoung Baek <gye976@gmail.com>
-Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/9] iio: buffer: Fix checkpatch.pl warning
-Message-ID: <20250525183528.14877bd2@jic23-huawei>
-In-Reply-To: <20250519-timestamp-v1-1-fcb4f6c2721c@gmail.com>
-References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
-	<20250519-timestamp-v1-1-fcb4f6c2721c@gmail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Cu7rOmhS"
+Date: Sun, 25 May 2025 13:36:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748194585;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hPquWNVcy25QbuJztp/q6NZqS5icVInrtL89/XNAjPk=;
+	b=Cu7rOmhSTjOeVqNCHzk3h40sQCJXPZN6hlE2eFukEAFOl2K7w+emJ7c4/q10/mNsm1G+J+
+	GAsz/+URbtyghiQzfeNP4YiwEHz3wEA7RjdQb3+hNfYwnA0LLeT4ryP8zmDeBH16jSCoJq
+	sdYrWqRHW92FqPUKaj8ncJ2tP7XBO28=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, linux-bcache@vger.kernel.org, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Anders Roxell <anders.roxell@linaro.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: riscv gcc-13 allyesconfig error the frame size of 2064 bytes is
+ larger than 2048 bytes [-Werror=frame-larger-than=]
+Message-ID: <zbifzd2fa3epywbhfznfr24mmacsndkwlengq3cqcgply5it5v@33zajtzvjetj>
+References: <CA+G9fYv08Rbg4f8ZyoZC9qseKdRygy8y86qFvts5D=BoJg888g@mail.gmail.com>
+ <6tgxbull5sqlxbpiw3jafxtio2a3kc53yh27td4g2otb6kae5t@lr6wjawp6vfa>
+ <CA+G9fYsjBXvm9NNKRbVo_7heX1537K8yOjH7OaSEQhGRmkLvgA@mail.gmail.com>
+ <6247de76-d1f5-4357-83bd-4dd9268f44aa@app.fastmail.com>
+ <7tsvzu2mubrpclr75yezqj7ncuzebpsgqskbehhjy6gll73rez@5cj7griclubx>
+ <566aefc9-7cad-4eb8-8eb0-8640d745efa2@app.fastmail.com>
+ <hplrd5gufo2feylgs4ieufticwemeteaaoilo2jllgauclua2c@o4erpizekm5y>
+ <692e313d-ea31-45c0-8c66-36b25c9d955d@app.fastmail.com>
+ <20250525181842.2e2c47fd@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250525181842.2e2c47fd@pumpkin>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 19 May 2025 23:25:53 +0900
-Gyeyoung Baek <gye976@gmail.com> wrote:
++cc Steve
 
-> Remove the following trivial warning:
-> "WARNING: Block comments should align the * on each line"
+On Sun, May 25, 2025 at 06:18:42PM +0100, David Laight wrote:
+> On Fri, 23 May 2025 20:01:33 +0200
+> "Arnd Bergmann" <arnd@arndb.de> wrote:
 > 
-> Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
-Applied.
-
-As a general rule don't send unrelated cleanup in an RFC series
-doing something interesting!  They might get missed.
-
-Jonathan
-> ---
->  drivers/iio/buffer/industrialio-triggered-buffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > On Fri, May 23, 2025, at 19:11, Kent Overstreet wrote:
+> > > On Fri, May 23, 2025 at 05:17:15PM +0200, Arnd Bergmann wrote:  
+> > >> 
+> > >> - KASAN_STACK adds extra redzones for each variable
+> > >> - KASAN_STACK further prevents stack slots from getting
+> > >>   reused inside one function, in order to better pinpoint
+> > >>   which instance caused problems like out-of-scope access
+> > >> - passing structures by value causes them to be put on
+> > >>   the stack on some architectures, even when the structure
+> > >>   size is only one or two registers  
+> > >
+> > > We mainly do this with bkey_s_c, which is just two words: on x86_64,
+> > > that gets passed in registers. Is riscv different?  
+> > 
+> > Not sure, I think it's mostly older ABIs that are limited,
+> > either not passing structures in registers at all, or only
+> > possibly one but not two of them.
+> > 
+> > >> - sanitizers turn off optimizations that lead to better
+> > >>   stack usage
+> > >> - in some cases, the missed optimization ends up causing
+> > >>   local variables to get spilled to the stack many times
+> > >>   because of a combination of all the above.  
+> > >
+> > > Yeesh.
+> > >
+> > > I suspect we should be running with a larger stack when the sanitizers
+> > > are running, and perhaps tweak the warnings accordingly. I did a bunch
+> > > of stack usage work after I found a kmsan build was blowing out the
+> > > stack, but then running with max stack usage tracing enabled showed it
+> > > to be a largely non issue on non-sanitizer builds, IIRC.  
+> > 
+> > Enabling KASAN does double the available stack space. However, I don't
+> > think we should use that as an excuse to raise the per-function
+> > warning limit, because
+> > 
+> >  - the majority of all function stacks do not grow that much when
+> >    sanitizers are enabled
+> >  - allmodconfig enables KASAN and should still catch mistakes
+> >    where a driver accidentally puts a large structure on the stack
 > 
-> diff --git a/drivers/iio/buffer/industrialio-triggered-buffer.c b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> index c06515987e7a..9bf75dee7ff8 100644
-> --- a/drivers/iio/buffer/industrialio-triggered-buffer.c
-> +++ b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0-only
-> - /*
-> +/*
->   * Copyright (c) 2012 Analog Devices, Inc.
->   *  Author: Lars-Peter Clausen <lars@metafoo.de>
->   */
+> That is rather annoying when you want to look at the generated code :-(
 > 
+> >  - 2KB on 64-bit targes is a really large limit. At some point
+> >    in the past I had a series that lowered the limit to 1536 byte
+> >    for 64-bit targets, but I never managed to get all the changes
+> >    merged.
+> 
+> I've a cunning plan to do a proper static analysis of stack usage.
+> It is a 'simple' matter of getting objtool to output all calls with
+> the stack offset.
+> Indirect calls need the function hashes from fine-ibt, but also need
+> clang to support 'hash seeds' to disambiguate all the void (*)(void *)
+> functions.
+> That'll first barf at all recursion, and then, I expect, show a massive
+> stack use inside snprintf() in some error path.
 
+I suspect recursion will make the results you get with that approach
+useless.
+
+We already have "trace max stack", but that only checks at process exit,
+so it doesn't tell you much.
+
+We could do better with tracing - just inject a trampoline that checks
+the current stack usage against the maximum stack usage we've seen, and
+emits a trace event with a stack trace if it's greater.
+
+(and now Steve's going to tell us he's already done this :)
