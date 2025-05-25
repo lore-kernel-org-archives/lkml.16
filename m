@@ -1,168 +1,172 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0358E4C6E;
-	Sun, 25 May 2025 22:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57AB1548C
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 22:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748212294; cv=none; b=ZfaRYOqK326cdBXlLQpss3FG044OnmumHmRy9S/gvxPmM9vLCJnbt2wVpxvueISsMT6GjbsGARCwgSeRVS/riHXCpoKQra878pZiuY95c1UIEnVm2RrwJXP7w5z57u3GP5JUhPlErGsGslEYaQ54epHbBczf+oidbGXjRLGhBNk=
+	t=1748212535; cv=none; b=TfLC41lCrm+e65uUqSDxgWLSRBDmGnwhi6ELdx9GKfeMFKUnUD1hLRqmPUUf1EElkJo8PBRs1FbHDHccTUo9TZOwJk3ATyVzO59Pa8SNME+62xdtKDZRC3cL5tlBvkYG5esUQihQK6aUUDs7gKRI6k9zUYH1xEHls+AEZqDazfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748212294; c=relaxed/simple;
-	bh=IeMM05OqHnOOhC29RLdPNxztZuvbTiFhqT0KwYHxVt8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=bToaSBoFpIjtv8SS7f7O59HCaVRHTe1NgNoZ3bL8tnByD5GrSZtUTOvHjAeEBJqIMv70PemOum4YWHmN3/c67qnU4Jsm/nEO6MPkCycFQInUQ8myQHeOt3ze9yX2iGY4RzWbv9OIMBNacbRkSgh0xNwzn3gM+/egoTVvZMTDKPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UlcI6sSF; arc=none smtp.client-ip=209.85.210.175
+	s=arc-20240116; t=1748212535; c=relaxed/simple;
+	bh=XzNn1hEBUN5DiRQV5cYLq+CWgu7pJ7TVMd7W6yhwJk0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VZLSBxjSFkoO+oh0e+fCgNu/6xDXEcnlIkaTE4YCYHtNO60HIkr0bU5T4dI72YoNv6WTpVVP+x3v2FfMP7kyFN/nbdTcwiOR7clkUtTQ2bdok4s6fJIscrHaxXkcM+AWb9t5jYInhfPjTEO/mlwQSVZXNVmSgiJBbLFGnuwk+/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kdS1wMG5; arc=none smtp.client-ip=209.85.219.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UlcI6sSF"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-74068f95d9fso1117531b3a.0;
-        Sun, 25 May 2025 15:31:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kdS1wMG5"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6f8b2682d61so26877906d6.0
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 15:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748212292; x=1748817092; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BNk1HW/GPBBVIki2yiAq9nzP3MYBLWG6yDhALpawHdE=;
-        b=UlcI6sSFmKna4AaP3zWAQLdGE/FGyza0kfA3OF1LQ5HvJOaT00f/UYVSJOcqTclReD
-         Fg8e3h9zI7AjIQ2zfinJMkry1XE6BA80v9tyxxkXj4VejGWQjKJtq6xbst0AJgYYjn6n
-         K0qxMQMFxUfou6soxK0lmMVYOoujs/6GmxXl6g3x7yZHdFzBrbkAA3vhWYw4o2L9fCHC
-         8TIpRKM5F/SWWMvJzmaPT2Ume3xWDEkoHsx9foqcEX0CnNlqxeSOjrH6/bubG1wVvcLG
-         30OmBkSWRd8D/jshhjQNi5dJlNrrvDB4ByRIXfNfQ0mV2kfpl/vIYNs8IrMX0rUEi1UQ
-         X/PQ==
+        d=gmail.com; s=20230601; t=1748212532; x=1748817332; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fqucush6JMkRyFTK9ShVSfONJsb3INsMZ4/sWv4TM88=;
+        b=kdS1wMG57TJwcXWLCsarx/hWXMzZE+8Kcj7qupovTO9HIq28VJtnYjJLkf6qhYU7xt
+         iU3p4F2Eyvi18SUTaHhzmmF6mwmF/TeXhwWEm9d0kxZbMCBNV6UbPq1mNOWiApJ23sq/
+         6atjLU4gMotXxQqOZA4wHQ/o5WBtNAWkFjGqnO+MTcywZ+KA65TAL9T3iwzrykxZswuc
+         Nzdqe/lx9LRV8hTuSsU+uopIc3PsLyJNTjwfylbWHibcaQfF4i6Nswf1c85RUdAUJU3H
+         ReBqT/etMUqs+/BjorNUosGSXKA2t4hnuhYhcorsOyV26kavET3+PUNQrUvLaMgyP8SD
+         w5qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748212292; x=1748817092;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BNk1HW/GPBBVIki2yiAq9nzP3MYBLWG6yDhALpawHdE=;
-        b=dxyqbEGLy8Bjzb9khyCNkaQkiAX9eR2CMegoACg22ukoNFNdNdqykoLy5N2l62JC5k
-         dUUfal5jd7bK+goI7mO0eMzbBluiiOTbgMPt/LEcIO7a/KgdKcIQfLQIIwNq550nzdRo
-         f+iWsi6dKfG9cTN1BTvDVs1KQ5k63z90Z6r8aOk6XPFBpp3YyXBNa9RD+veI4EvPpiBw
-         DWv5kX3c+rni3mZFh/avi/WGVjQ83hrnEPEYHoMuLakKiTd6HXJGTg1+SZPWM+GzEdz/
-         ytZTjlZXdThWtmDRDQL0B5PSsEjrNq/RhdVr+juJKIAv2JKUuVVuV7Ri05m2Wkh7l07T
-         R7xg==
-X-Forwarded-Encrypted: i=1; AJvYcCUp9Cvf217ewfOr976v1zI8QOgwiaKYQMT+4BaANNtsDEJHGiuB5ZjXw3OPBWktwDOz9yOEb/fVKZy679lflF14x2mCcw==@vger.kernel.org, AJvYcCWywklj5zgRVDja1PEqmNO8vCva8QMaxalszOu0X3zakXFDTjN2t8MjkZKvg+vhSOSCB5nTznG/sXzW27WY@vger.kernel.org, AJvYcCXhS3/MKC+DCDdf6V+EbYSpxVaQXi0VMIBhn4H5qa1FbxQ3R3fqKTJlAW3FiBh2FwquGQo/LovKaH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/aS3hts3wJ1BWooTRadsE3MYGjpg+Af8rxgXz+hjuDXutTkO4
-	hMD9scie3KZNrCamrJDMymlpzTjOhmyQ1rcNjsa/dcdM8QwIWIfMta3h
-X-Gm-Gg: ASbGncs6lz07eUOdRnKnnHGImMoBFNNJrC0pkbKJg/j88aQAXfJi5YETiMsApG1BPjF
-	x23b474ZpdzW/gs5GWEbUrqmQvdAe/jZCpy8RsDauZekXb7Pn1Zge/60Z3ojaqy1kPrHDOKbUgy
-	H+XqyaSC95YljMiRFVWinnIyW1i5RvcrgtmA+wAvZFKUmp62WRGcOsPo72cWSznl5NtR3IxZ/UN
-	ZMStPyMYKevNwvcWvVBplMiaz9BN2Wyb1nBEqaGaqFI1p6N9RAAplqnsCM0W1w98ljQ9qG4aqD0
-	m6svro6Cs6mqC6Eot5rQONaLCLxvRb2Bn1PxnvXlmBrv9KSRbXnEfyYEhJxuZFnG5NoQ10Wym8C
-	z7rWPabJszm4Ywsdch408BXy6vMBUQtgTviI1vVKf0CEGVA==
-X-Google-Smtp-Source: AGHT+IFTk+EvF2W9G//EcorjDe7dKdWV289H14hln+o8U9THUxAgVaqSH5tdMkI3QRz7WvL39iK3ag==
-X-Received: by 2002:a05:6a00:10d2:b0:72d:3b2e:fef9 with SMTP id d2e1a72fcca58-745fe03c2damr10085373b3a.20.1748212292052;
-        Sun, 25 May 2025 15:31:32 -0700 (PDT)
-Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9877030sm16403042b3a.148.2025.05.25.15.31.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 May 2025 15:31:31 -0700 (PDT)
-Date: Sun, 25 May 2025 15:31:29 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>,
- Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- Kurt Borja <kuurtb@gmail.com>, platform-driver-x86@vger.kernel.org,
- linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v11_0/6=5D_platform/x86=3A_A?=
- =?US-ASCII?Q?dd_Lenovo_WMI_Gaming_Series_Drivers?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com>
-References: <20250522015350.471070-1-derekjohn.clark@gmail.com> <2972c4c6-7080-e058-ec39-b8c1dc603f7a@linux.intel.com> <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com>
-Message-ID: <755BCB57-A912-44BF-AD6C-6B9AFA33A340@gmail.com>
+        d=1e100.net; s=20230601; t=1748212532; x=1748817332;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fqucush6JMkRyFTK9ShVSfONJsb3INsMZ4/sWv4TM88=;
+        b=I1t1pBN0BA9rES1xuHNuGJO5QqllFN+xl5LMv0zxTBjYthfAGF+Jvbyh248EiIOyW+
+         SOjwi+RGlF/wsbUc3D+I49WLWDYlGCM8iWje6G9vuWh6uSwqPL42/YBmWqf+ce+4mEVT
+         h/H60HrjLxlOBoRUh8VOu6P1OoiRcCkHyGx32xXsEUuKcWX3PHbe6h+VEQ3iWD348Mch
+         770stO1cDsLES9whFkT7pFPDGHQvqQrSYQQeEeL1aRlZvViJeaE2mJBZPK+esQjpaM4B
+         MFQw3/tBpfc2hkwAbLVmycA4P/AtNF0SImx9jQD+km03LxaRajwe/48ShieBnzkY3Td4
+         J0cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO9k9CwYxYgS7ObUC1BdO5omuedjBfQoRxIxBveUjEoqqYp+L0X7HHnMx82z751jVoJiBDzCpJOqNqLtI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7WRI/iUMC7r4kGbRc0P1FSnJ5Ub/k72UAHHr0hdo0yFvoXMyh
+	2adX4meLB2m5quFF6OShAZHCC0pirjUgnGMtKDQ0YKBy2LcQZrFQxxc3
+X-Gm-Gg: ASbGnct+00eIoyTpQDShp8K98ocOMc1MYeipteOM2CvxdUTxHu6WzeIFJjwsiswnNLt
+	ciWhCp9q8cnLDYxF2iSYVQPcbHMJMsmdlw8sjSS3AZ3IerLdwoJkQTbPnWBeK/iQ4k/QWn4Y8GW
+	525m6a75xGWvf/USzU3xmYlmmGF/hsCRezpmMveFA9nAVKxBKfvTiWxtRto0vR9u4TukNvKvNqK
+	nxcnMuwxf76jRIeE7TUQSJ6btlABJ8JLgEWONxr5/w4FCwDMwzNfNZdEho0G/BJCBWcWv5vNwpf
+	AT3dpd66SU7938JqYA404Tqp0Sbz+bDW1W3MFp+q6sVDuQOBU/WO+mWZJJGUcg==
+X-Google-Smtp-Source: AGHT+IGw3+o8sXZoe2+IkX24d6J0CKIxCdnJnWnhowfrpWon0kdkOX+edxTHAzHN++tR07ltxd+lwg==
+X-Received: by 2002:a0c:f985:0:b0:6fa:a018:b489 with SMTP id 6a1803df08f44-6faa018b551mr63093456d6.10.1748212532458;
+        Sun, 25 May 2025 15:35:32 -0700 (PDT)
+Received: from localhost.localdomain ([2607:fea8:54de:2200::dd7])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6faa18a8a23sm20937976d6.114.2025.05.25.15.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 15:35:32 -0700 (PDT)
+From: Albin Babu Varghese <albinbabuvarghese20@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com
+Cc: rust-for-linux@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Albin Babu Varghese <albinbabuvarghese20@gmail.com>
+Subject: [[PATCH]] rust/list: replace unwrap() with ? in doctest examples
+Date: Sun, 25 May 2025 18:34:50 -0400
+Message-ID: <20250525223450.13179-1-albinbabuvarghese20@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
+Replace panicking `unwrap()` calls in the `kernel::list` doctests with `ok_or(EINVAL)?` so they return a proper `Error` instead of panicking.
 
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
 
-On May 25, 2025 2:41:51 PM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvinen@linu=
-x=2Eintel=2Ecom> wrote:
->On Mon, 26 May 2025, Ilpo J=C3=A4rvinen wrote:
->
->> On Wed, 21 May 2025, Derek J=2E Clark wrote:
->>=20
->> > Adds support for the Lenovo "Gaming Series" of laptop hardware that u=
-se
->> > WMI interfaces that control various power settings=2E There are multi=
-ple WMI
->> > interfaces that work in concert to provide getting and setting values=
- as
->> > well as validation of input=2E Currently only the "Gamezone", "Other
->> > Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, bu=
-t
->> > I attempted to structure the driver so that adding the "Custom Mode",
->> > "Lighting", and other data block interfaces would be trivial in later
->> > patches=2E
->> >=20
->> > This driver attempts to standardize the exposed sysfs by mirroring th=
-e
->> > asus-armoury driver currently under review=2E As such, a lot of
->> > inspiration has been drawn from that driver=2E
->> > https://lore=2Ekernel=2Eorg/platform-driver-x86/20250319065827=2E5347=
-8-1-luke@ljones=2Edev/#t
->> >=20
->> > The drivers have been tested by me on the Lenovo Legion Go and Legion=
- Go
->> > S=2E
->> >=20
->> > Suggested-by: Mario Limonciello <superm1@kernel=2Eorg>
->> > Reviewed-by: Armin Wolf <W_Armin@gmx=2Ede>
->> > Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> > ---
->> > v11:
->> >   - Fix formmating issues=2E
->>=20
->> Thanks for the update, I've applied this now into the review-ilpo-next=
-=20
->> branch=2E BUT, this is very late in the cycle now and if there's a buil=
-d=20
->> issue (or LKP doesn't build test it in reasonable time), I'll have to d=
-rop=20
->> this series and postpone it into the next cycle as I don't want to dela=
-y=20
->> the main PR to Linus too long=2E
->>=20
->> But lets hope for the best, I think some depends on issues were fixed=
-=20
->> earlier (IIRC), so hopefully it works good enough now=2E :-)
+Link: https://github.com/Rust-for-Linux/linux/issues/1164
+Signed-off-by: Albin Babu Varghese <albinbabuvarghese20@gmail.com>
+---
+ rust/kernel/list.rs | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
->Hmpf, these give me a few new warnings related to this series:
->
->make W=3D1 drivers/platform/x86/
->make C=3D2 drivers/platform/x86/
->
->=2E=2E=2EI really don't know why sparse complains about the lock context=
-=20
->imbalance though, those functions use guard()=2E
+diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
+index c391c30b80f8..fe58a3920e70 100644
+--- a/rust/kernel/list.rs
++++ b/rust/kernel/list.rs
+@@ -82,9 +82,9 @@
+ /// // [15, 10, 30]
+ /// {
+ ///     let mut iter = list.iter();
+-///     assert_eq!(iter.next().unwrap().value, 15);
+-///     assert_eq!(iter.next().unwrap().value, 10);
+-///     assert_eq!(iter.next().unwrap().value, 30);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 15);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 10);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 30);
+ ///     assert!(iter.next().is_none());
+ ///
+ ///     // Verify the length of the list.
+@@ -93,9 +93,9 @@
+ ///
+ /// // Pop the items from the list using `pop_back()` and verify the content.
+ /// {
+-///     assert_eq!(list.pop_back().unwrap().value, 30);
+-///     assert_eq!(list.pop_back().unwrap().value, 10);
+-///     assert_eq!(list.pop_back().unwrap().value, 15);
++///     assert_eq!(list.pop_back().ok_or(EINVAL)?.value, 30);
++///     assert_eq!(list.pop_back().ok_or(EINVAL)?.value, 10);
++///     assert_eq!(list.pop_back().ok_or(EINVAL)?.value, 15);
+ /// }
+ ///
+ /// // Insert 3 elements using `push_front()`.
+@@ -107,9 +107,9 @@
+ /// // [30, 10, 15]
+ /// {
+ ///     let mut iter = list.iter();
+-///     assert_eq!(iter.next().unwrap().value, 30);
+-///     assert_eq!(iter.next().unwrap().value, 10);
+-///     assert_eq!(iter.next().unwrap().value, 15);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 30);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 10);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 15);
+ ///     assert!(iter.next().is_none());
+ ///
+ ///     // Verify the length of the list.
+@@ -118,8 +118,8 @@
+ ///
+ /// // Pop the items from the list using `pop_front()` and verify the content.
+ /// {
+-///     assert_eq!(list.pop_front().unwrap().value, 30);
+-///     assert_eq!(list.pop_front().unwrap().value, 10);
++///     assert_eq!(list.pop_front().ok_or(EINVAL)?.value, 30);
++///     assert_eq!(list.pop_front().ok_or(EINVAL)?.value, 10);
+ /// }
+ ///
+ /// // Push `list2` to `list` through `push_all_back()`.
+@@ -135,9 +135,9 @@
+ ///     // list: [15, 25, 35]
+ ///     // list2: []
+ ///     let mut iter = list.iter();
+-///     assert_eq!(iter.next().unwrap().value, 15);
+-///     assert_eq!(iter.next().unwrap().value, 25);
+-///     assert_eq!(iter.next().unwrap().value, 35);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 15);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 25);
++///     assert_eq!(iter.next().ok_or(EINVAL)?.value, 35);
+ ///     assert!(iter.next().is_none());
+ ///     assert!(list2.is_empty());
+ /// }
+@@ -809,11 +809,11 @@ fn next(&mut self) -> Option<ArcBorrow<'a, T>> {
+ /// merge_sorted(&mut list, list2);
+ ///
+ /// let mut items = list.into_iter();
+-/// assert_eq!(items.next().unwrap().value, 10);
+-/// assert_eq!(items.next().unwrap().value, 11);
+-/// assert_eq!(items.next().unwrap().value, 12);
+-/// assert_eq!(items.next().unwrap().value, 13);
+-/// assert_eq!(items.next().unwrap().value, 14);
++/// assert_eq!(items.next().ok_or(EINVAL)?.value, 10);
++/// assert_eq!(items.next().ok_or(EINVAL)?.value, 11);
++/// assert_eq!(items.next().ok_or(EINVAL)?.value, 12);
++/// assert_eq!(items.next().ok_or(EINVAL)?.value, 13);
++/// assert_eq!(items.next().ok_or(EINVAL)?.value, 14);
+ /// assert!(items.next().is_none());
+ /// # Result::<(), Error>::Ok(())
+ /// ```
+-- 
+2.49.0
 
-Hmm, I'll take a look at it=2E
-
-Is there a comprehensive list of all tests that need to be run? I'd like t=
-o improve my process to avoid these in the future=2E
-
->There's also a copy-paste error:
->
-> * lwmi_gz_profile_get_get() - Get the current platform profile=2E
->
->=2E=2E=2E_get_get -> =2E=2E=2E_set
->Get -> Set
-
-
-Do you want me to submit v12 whenever it's ready,  or wait for the merge w=
-indow to open? Trying to avoid too much noise on your end=2E
-
-Thanks,
-- Derek
