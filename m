@@ -1,159 +1,183 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F32198E91
-	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 21:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4C19CC3D;
+	Sun, 25 May 2025 21:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748209823; cv=none; b=Zh5WCVYoif8npf2mi66lokCq3m7D7s3He0vmC45nJmmFEfHW7Xkb5mXXVAb+oszJvIZcbpcb2T2fPeHFYfHQZ+DCOEG68LSHpHd+Ux8oqi+3zAd+HZW/1G/tAESqoCurXCw5agdQQtHEBPf70ov91ONMk5qUZjpljoE+ltLrm08=
+	t=1748210015; cv=none; b=mSEPmm4Jjlnlo1Tqrphlq8aCTHWadcFVyjaKeQu+hV7EtLJS4KkUMQi/+DGphSacqnVcOPEuYWuMGnTXsuOs2qreM/JRz8eFq0GIisjqLq/Sw9OkJJ/ybdUzs5SQjEXC/LbkDo32/KBji46736+ERETKDqby/qE4F73LwsmWsSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748209823; c=relaxed/simple;
-	bh=lBLIc964pJWx6CMbX1JLx4vGsWfmzZLz7dHvQSi5uHc=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fiDKBzFWv1rG7WmIwycX62cQa8QSuC3WGBv61Hz3e7WYuPfoKj3BQO6KYXfEbbsPT27FpcCl7vJ9u437i881ORyZzQuIiSfDka8ZeLHdeu8K8tYVD50tE9IkfPAMFitUbg4hRgrXSRMGjMyZGyfc1NSyE8aZV9P3cM6r1PDNXrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=JWfuSvjl; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1748210015; c=relaxed/simple;
+	bh=y5rT2ewj429hL1YZNClBKAuoapp2CjjiHYqsoHYBDa8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ivfXgqeQQawE+Act3qu6cJPHXlg2C9Rr1WGWgN2cmDTcH+gUfTWq62Qp8eMh/+ZnjW7AXEjyT46xzM9pNAuFWqcxakVkLnSozkfH4KzYT5OBLjeHBpSkk+9kYid/0nB+RzdPGzEQq3Gr4+SkcwfTCUC29R/FajMtoLLjIhKMqyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceT//yHx; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="JWfuSvjl"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4774d68c670so27273631cf.0
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 14:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748209819; x=1748814619; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pm1jMlXCLFReGUe3UakIYYmM8+KuW90b5lgWvldoqqM=;
-        b=JWfuSvjlNnVFpq49TPTNmAqe+BIy2Y7yB5zdVdv0HrGRObfHr+skI5QaR445CTXmZ3
-         cr1qRKYwoU9GzfBBg7J49M4hh+TTP9CHsDFGCos5QNulC3scUTmxIcoLfet5aajCkSci
-         cVgpEMQDaBk+3zewdAf/r25diRjhvecIa1/xxKpvDaKpzkVv1QnjM5/cG7mC7BJ6dnzV
-         tc32HsfzryVfzlhNg+ACTLczlrS5jLecQvFwDqFiexwqodHZz04X02FSICNWUvKrpFNE
-         ksfF6CVl9F8Y3gvSf18z01Gf0R5JjzfgZhrgDqByW3FCZpH1fZGIXzX7TBdi+t/S0FNe
-         P4OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748209819; x=1748814619;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Pm1jMlXCLFReGUe3UakIYYmM8+KuW90b5lgWvldoqqM=;
-        b=ZA8peL1TVPs5fETWMJbNUY9QjG7Y70qdl5cge21hUjOJEBmy+f6l45GnuLV9jb8hkJ
-         MmAf70LzpY65vxfHkbcC5LXg0w0IIBom+6Ip/HVBvJH+OslgzsMU4MfQCDTXQa/nZ1+8
-         QVeNTd1DJYxVvm6LnyRP9T/VnErQ8viwMtoAjIzz91uoEW4ibJJS+y/2G+zjr6nM14HQ
-         1N/bLit5GEbHegTCw0oprcDlglXdkuMxJxwfw5bFjfgB7Pof8+rA66oK/BCoYcity1G/
-         XaFMrgLrLB3Y2ylB6HsWQFYfTjEjdqxRDcqzflBij4xU6924jI0aWufzLygsiaHoaJr5
-         /FUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzzyHnI/GVVQ/Ebn+S5aD9x7MpHxqn0Bm4EuSOUJehpnsIODWdG8pW3B9ubCkpZOriYTWrYMfpohd9nCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxY1FRglT2O9lmMCtj0g1Wcnt7SnOjF/ZbMF7MahhEYROaeyZJC
-	wOMRdtzdN7LJLpTjMJ5EvpV3/9H4pRhjA1HkBt235E7ZroOh+umXRsYIMsHG4Ea3oII=
-X-Gm-Gg: ASbGncugvLGCKCPI1zar5uWl2UTN1nNM4cmi723NmETHwxJGOwPmAQEmp9tAJI/NLY4
-	BOKxGORqzq5d6oRhigf88PWGqV3oZWWacVmDVL2s5p3u5Dz+t78p2VTFHvASyjWuOYAx6u4ze+E
-	PdGj9POl2dJwHK2GKIlhx8ma5e/oZO3EtJayDu/APBAHmCU6s04Av1aBr7Wtm/NuXEOLQudAF6L
-	6Xvu37CintKHDEA1fZnA8CC1BAAO/Q0XWLQBgSPU5FqHU/pEJaw9tRWH5S8y48JfppBMafltKu9
-	5BA0A1A9DHtHolJXel1T7VHWG06abpmEWmoMGWxT/ZtzUqT/wT2jdra1
-X-Google-Smtp-Source: AGHT+IEVXwnSdTnPicIT3RqwyFuAzwpnXOpDvgI1IfPNgR4J4NsTJDMjpLuTDjjhVBcT9a1O+PZ5Wg==
-X-Received: by 2002:a05:622a:5148:b0:476:8e3e:2da3 with SMTP id d75a77b69052e-49f46e43961mr130428731cf.30.1748209819399;
-        Sun, 25 May 2025 14:50:19 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b2fc::5ac? ([2606:6d00:17:b2fc::5ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494b8fa2cebsm133817721cf.34.2025.05.25.14.50.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 14:50:18 -0700 (PDT)
-Message-ID: <86a27f47a72a2c2f9a7d15250150743c5c43c0a9.camel@ndufresne.ca>
-Subject: Re: [PATCH 3/5] MAINTAINERS: Add entry for allegrodvt Gen 3 drivers
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>, Mauro Carvalho Chehab	
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski	
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Michael Tretter	
- <m.tretter@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>,  Michal Simek <michal.simek@amd.com>, Neil
- Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner	 <heiko@sntech.de>,
- Junhao Xie <bigfoot@classfun.cn>,  =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?=	
- <rafal@milecki.pl>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,  Kever Yang
- <kever.yang@rock-chips.com>, Hans Verkuil <hverkuil@xs4all.nl>, Joe Hattori
-	 <joe@pf.is.s.u-tokyo.ac.jp>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=	
- <u.kleine-koenig@baylibre.com>, Gaosheng Cui <cuigaosheng1@huawei.com>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Ricardo Ribalda	
- <ribalda@chromium.org>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Date: Sun, 25 May 2025 17:50:15 -0400
-In-Reply-To: <20250523134207.68481-4-yassine.ouaissa@allegrodvt.com>
-References: <20250523134207.68481-1-yassine.ouaissa@allegrodvt.com>
-	 <20250523134207.68481-4-yassine.ouaissa@allegrodvt.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceT//yHx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748210014; x=1779746014;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=y5rT2ewj429hL1YZNClBKAuoapp2CjjiHYqsoHYBDa8=;
+  b=ceT//yHx7F0JqM4+bzORHTA3Hi0DK9vzfTD1ChrJRaNLXIhJqaQrPXuV
+   jeTpNhnEGDPaw8H78PwGHktNfpPl6dAdZnMrVh6xm1h0OeNOrtjXYgAQP
+   HYJvVZ8LewX/ce74CBC3V2xjHqrvNUpVDNL6sJy8F3rmaul/SA3qqMHai
+   2894vABY/4tUZ5uOvuNyUXGwk9+lY+VakC1LK4rQ/xwTjuuYThHsIEazu
+   MYeuZPolTV3eA+ejC3fihWhKEDYqtSrkTEPhz6SgE0HplDA2/xcMU0C6H
+   ve00bhfgJ3wnSFXHsbgX+rFdoGEUqCKzyEaz8CigT+qrPQKOHfw4ry55i
+   A==;
+X-CSE-ConnectionGUID: HQGD0TEPSUq8fOLusNMwCQ==
+X-CSE-MsgGUID: NdAAS2XBR6u4/DLqkNH5Dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="60435792"
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="60435792"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:53:32 -0700
+X-CSE-ConnectionGUID: srkUUk2LSiS9AVRoLfAP+A==
+X-CSE-MsgGUID: abYToWTKQVe6L6ZrKUUaNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="141991367"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:53:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 May 2025 00:53:13 +0300 (EEST)
+To: Kees Cook <kees@kernel.org>
+cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, 
+    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+    "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+    Vitaly Kuznetsov <vkuznets@redhat.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+    Mike Rapoport <rppt@kernel.org>, 
+    Michal Wilczynski <michal.wilczynski@intel.com>, 
+    Juergen Gross <jgross@suse.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+    Roger Pau Monne <roger.pau@citrix.com>, 
+    David Woodhouse <dwmw@amazon.co.uk>, Usama Arif <usama.arif@bytedance.com>, 
+    "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+    Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>, 
+    kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+    platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+    linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+    linux-mm@kvack.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>, 
+    Andrey Konovalov <andreyknvl@gmail.com>, 
+    Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+    Masahiro Yamada <masahiroy@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    Nicolas Schier <nicolas.schier@linux.dev>, 
+    Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+    LKML <linux-kernel@vger.kernel.org>, kasan-dev@googlegroups.com, 
+    linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org, 
+    linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org, 
+    linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org, 
+    linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org, 
+    llvm@lists.linux.dev
+Subject: Re: [PATCH v2 04/14] x86: Handle KCOV __init vs inline mismatches
+In-Reply-To: <20250523043935.2009972-4-kees@kernel.org>
+Message-ID: <ba4f4fd0-1bcf-3d84-c08e-ba0dd040af16@linux.intel.com>
+References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-4-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/mixed; BOUNDARY="8323328-965883235-1748206555=:933"
+Content-ID: <8656ab6c-8f8d-81d1-5dfa-740e7f21544c@linux.intel.com>
 
-Hi Yassine,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Le vendredi 23 mai 2025 =C3=A0 15:41 +0200, Yassine Ouaissa a =C3=A9crit=C2=
-=A0:
-> Add my self as maintainer of the allegrodvt Gen drivers
+--8323328-965883235-1748206555=:933
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <fa62886f-fdfb-f2a5-84db-475ce3a46169@linux.intel.com>
+
+On Thu, 22 May 2025, Kees Cook wrote:
+
+> When KCOV is enabled all functions get instrumented, unless the
+> __no_sanitize_coverage attribute is used. To prepare for
+> __no_sanitize_coverage being applied to __init functions, we have to
+> handle differences in how GCC's inline optimizations get resolved. For
+> x86 this means forcing several functions to be inline with
+> __always_inline.
 >=20
-> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
-> =C2=A0MAINTAINERS | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e59011a36e6b..9285bb2f43d9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -802,6 +802,7 @@ F:	drivers/platform/x86/dell/alienware-wmi*
-> =C2=A0
-> =C2=A0ALLEGRO DVT VIDEO IP CORE DRIVER
-> =C2=A0M:	Michael Tretter <m.tretter@pengutronix.de>
-> +M:	Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
-> =C2=A0R:	Pengutronix Kernel Team <kernel@pengutronix.de>
-> =C2=A0L:	linux-media@vger.kernel.org
-> =C2=A0S:	Maintained
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: <x86@kernel.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: "Ilpo J=E4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Michal Wilczynski <michal.wilczynski@intel.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Roger Pau Monne <roger.pau@citrix.com>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: Usama Arif <usama.arif@bytedance.com>
+> Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+> Cc: Thomas Huth <thuth@redhat.com>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: <kvm@vger.kernel.org>
+> Cc: <ibm-acpi-devel@lists.sourceforge.net>
+> Cc: <platform-driver-x86@vger.kernel.org>
+> Cc: <linux-acpi@vger.kernel.org>
+> Cc: <linux-trace-kernel@vger.kernel.org>
+> Cc: <linux-efi@vger.kernel.org>
+> Cc: <linux-mm@kvack.org>
+> ---
 
-Be aware that I do not endorse Krzysztof style of communication, and this
-does not reflect Linux Media values. We strongly encourage both new comers =
-and
-contributions coming from the hardware companies. Please, don't get discour=
-age,
-simply focus on the facts and the way forward. DT maintainers don't usually=
- deal
-with pre-silicon drivers, so we'll have to see what this means for
-bindings. But having drivers contributed before the hardware is a clear win
-for the Linux kernel, so we should all encourage this and find a way.
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index e7350c9fa3aa..0518d5b1f4ec 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -559,12 +559,12 @@ static unsigned long __init tpacpi_check_quirks(
+>  =09return 0;
+>  }
+> =20
+> -static inline bool __pure __init tpacpi_is_lenovo(void)
+> +static __always_inline bool __pure tpacpi_is_lenovo(void)
+>  {
+>  =09return thinkpad_id.vendor =3D=3D PCI_VENDOR_ID_LENOVO;
+>  }
+> =20
+> -static inline bool __pure __init tpacpi_is_ibm(void)
+> +static __always_inline bool __pure tpacpi_is_ibm(void)
+>  {
+>  =09return thinkpad_id.vendor =3D=3D PCI_VENDOR_ID_IBM;
+>  }
 
-In general, don't assume any of the above is known and document it. Its qui=
-te possible
-your reviewers so far have been thinking this driver is for existing hardwa=
-re already
-running in a known SoC. They cannot guess, you have to make things really c=
-lear and
-transparent.
+Hi Kees,
 
-Meanwhile, a better approach to maintenance, and the one I expected initial=
-ly, is to
-place yourself under Michael in the hierarchy, and remove yourself from the=
- bindings
-path. Bindings should really come from the SoC vendor in practice, so perha=
-ps we should
-not provide a generic one. Hopefully we can get proper feedback from DT mai=
-ntainers on
-that aspect.
-
-I'd like to see a focus move onto the driver code, which is at this stage m=
-uch more
-important. In parallel, spend time to re-read the guidelines for submission=
-s and
-check some automation tools. 'b4' is really my goto, and will help you avoi=
-d some
-of the common mistakes.
-
-regards,
-Nicolas
+What's your plan on upstreaming route/timeline for this? I'd prefer to=20
+retain full control over this file as we were planning on some=20
+reorganization of files into lenovo/ subdir.
 
 
-=20
+--=20
+ i.
+--8323328-965883235-1748206555=:933--
