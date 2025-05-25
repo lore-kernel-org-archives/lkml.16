@@ -1,140 +1,67 @@
-Received: from smtp.smtpout.orange.fr (smtp-79.smtpout.orange.fr [80.12.242.79])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5A913B284;
-	Sun, 25 May 2025 16:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD8D13A265;
+	Sun, 25 May 2025 16:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748192099; cv=none; b=kx+gnZNDuCP5ot8gIm9qK4jNBYQCHQ1qAWL891oLjN10yMkBqhnCtmrA/vjskFUmtDjyGgQc0mkx/rIVrIwMSOWnO2UsuhWnphpz49DkQpzFpRKHWJvahgsh+Z/K7zg7x0ZnvEDsgezkFxG7VER98euMEGOpb1XMuBGJu45+/LA=
+	t=1748192250; cv=none; b=VtaTdCxR74QpN7nJK6GhzP3FCeTMbU1y6pScTqRJRMXtjyuyvhEN40nzFpG8oOT/I5XD7CEj+1mFXg5v4HsfQgk8RVf4UarLV1Ftr7MRNqzgZBACy94qAs98K85X7NvoVTzhR8mEzFaX5VjvMtZPbgt+9yTLVlQEnqnlscQJsy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748192099; c=relaxed/simple;
-	bh=8bflu4UgxWs0JkpbKJIZNm34KO9JOk6Vak4CmKBaKs4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=shwthbDMohAbEU6XkLL9317WNksUF7kPeAV/X4q3e05SZe6oovJNm/i/yX8LVaZWDXF28RFXh1v81sAHdAZvNIbOPFh4dhrgwSIrDBw/n7NjXqUijxfvbJ8SU3IjzuIv3mSDKygS5cuvFzrgF8jUP3jPf4/Pf4HAlxnKHv16ey0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=scYq1qKT; arc=none smtp.client-ip=80.12.242.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1748192250; c=relaxed/simple;
+	bh=LvpXPK8omddopnkD/kBk2LAvftNHGFIktAVaV+ecyIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Diq2oJ71AvOPPUap3Xf5Jov2H03vngVJod3AxbqIEEDql/SAyl0kNN0B2++NzrqS4h/GEnzR++ZYT0lv96sNJoenSBodecPJ7E/i5BfazyPW51rfVNJvduNP81QNuAW9ucjg88SgKSlEWOJ7rMt5ITkHVEI3BSTrqoj2mQK3vX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IYz5nqsS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="scYq1qKT"
-Received: from localhost.localdomain
- ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
-	by smtp.orange.fr with ESMTPA
-	id JEbXuyhO3Q1a2JEbXuhZYT; Sun, 25 May 2025 18:53:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1748192025;
-	bh=MS4BOzI8pIQH6Em3Qo4qOWc4O/UmRIVViLq3oo0QcKY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=scYq1qKTLRlllmiICeOLIfueUqB/6hw9etqG4F/30KkzN6rpMNO2Vbc484c3OqkOK
-	 qWwnKY+lRYrFJoUHVkyUOp3JwPxxmyd+9POz++xRSKmRR545Z+NwPwEVBdqs05RnCC
-	 1eyPiYtKBFNo+RxwTfGFTWGvFdqrx/TUzlag56bwarjXdnCND8HEjcUcMm5TTb+MF/
-	 //gDATAJB7u7TIwH3t+ii28mg4UB+nFzvPilFsojeVfOZleWMWXQWqxlBXdcYR+w9M
-	 D3wbQM/BTVyTkPUVTFEO1+/DP5Zybopd414wzt8u80QiDWq2i4ie11x75aT0zQ3vAZ
-	 pXXaHVLa/yz0w==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 25 May 2025 18:53:44 +0200
-X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-mtd@lists.infradead.org
-Subject: [PATCH] mtd: spi-nor: Constify struct spi_nor_fixups
-Date: Sun, 25 May 2025 18:53:31 +0200
-Message-ID: <aa641732ba707ce3690217825c3ca7373ffde4f9.1748191985.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IYz5nqsS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4426EC4CEEA;
+	Sun, 25 May 2025 16:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748192250;
+	bh=LvpXPK8omddopnkD/kBk2LAvftNHGFIktAVaV+ecyIs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IYz5nqsSotVEa9uCVOC35JPW6rNeBFZ++2gJVnuZG0A85wDQbBjVvye44uHGDu4B8
+	 Krir70K6XzAOceJhZzvkQfABpINCJMtO6SzmFKRliGG6ZtT5uJxAbws5mYzLy82X8S
+	 mmGC7nbNhqwDkZOdhogiB96L957OcAkvaLmjxCGbR2e4j5KPh++Xe7JLvICcd8hazN
+	 zt/oSicufAxy4F7YMvsOidICquabh31nmVf9F8GgyQmkeiVV+yvCyRez4+2s0pKmjf
+	 DImTJeciN16Ep5rTQrETuOywMLLGhSuRH2f2c6ZUEIlCXI9JeZ4/6yhvbPjTbyIrMg
+	 U5lRBxckpSjIA==
+Date: Sun, 25 May 2025 17:57:24 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v8 1/7] iio: accel: adxl345: extend sample frequency
+ adjustments
+Message-ID: <20250525175724.680908b7@jic23-huawei>
+In-Reply-To: <20250510224405.17910-2-l.rubusch@gmail.com>
+References: <20250510224405.17910-1-l.rubusch@gmail.com>
+	<20250510224405.17910-2-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-'struct spi_nor_fixups' are not modified in this driver.
+On Sat, 10 May 2025 22:43:59 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Constifying these structures moves some data to a read-only section, so
-increases overall security, especially when the structure holds some
-function pointers.
+> Introduce enums and functions to work with the sample frequency
+> adjustments. Let the sample frequency adjust via IIO and configure
+> a reasonable default.
+> 
+> Replace the old static sample frequency handling. During adjustment of
+> bw registers, measuring is disabled and afterwards enabled again.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Applied to the testing branch of iio.git.
+Note I'll rebase that on rc1 once it is available.
 
-On a x86_64, with allmodconfig, as an example:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
-  23304	  13168	      0	  36472	   8e78	drivers/mtd/spi-nor/micron-st.o
+Thanks,
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
-  23560	  12912	      0	  36472	   8e78	drivers/mtd/spi-nor/micron-st.o
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- drivers/mtd/spi-nor/micron-st.c | 8 ++++----
- drivers/mtd/spi-nor/spansion.c  | 4 ++--
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mtd/spi-nor/micron-st.c b/drivers/mtd/spi-nor/micron-st.c
-index e6bab2d00c92..187239ccd549 100644
---- a/drivers/mtd/spi-nor/micron-st.c
-+++ b/drivers/mtd/spi-nor/micron-st.c
-@@ -189,7 +189,7 @@ static int mt25qu512a_post_bfpt_fixup(struct spi_nor *nor,
- 	return 0;
- }
- 
--static struct spi_nor_fixups mt25qu512a_fixups = {
-+static const struct spi_nor_fixups mt25qu512a_fixups = {
- 	.post_bfpt = mt25qu512a_post_bfpt_fixup,
- };
- 
-@@ -225,15 +225,15 @@ static int st_nor_two_die_late_init(struct spi_nor *nor)
- 	return spi_nor_set_4byte_addr_mode(nor, true);
- }
- 
--static struct spi_nor_fixups n25q00_fixups = {
-+static const struct spi_nor_fixups n25q00_fixups = {
- 	.late_init = st_nor_four_die_late_init,
- };
- 
--static struct spi_nor_fixups mt25q01_fixups = {
-+static const struct spi_nor_fixups mt25q01_fixups = {
- 	.late_init = st_nor_two_die_late_init,
- };
- 
--static struct spi_nor_fixups mt25q02_fixups = {
-+static const struct spi_nor_fixups mt25q02_fixups = {
- 	.late_init = st_nor_four_die_late_init,
- };
- 
-diff --git a/drivers/mtd/spi-nor/spansion.c b/drivers/mtd/spi-nor/spansion.c
-index bf08dbf5e742..920bb8dd5dc2 100644
---- a/drivers/mtd/spi-nor/spansion.c
-+++ b/drivers/mtd/spi-nor/spansion.c
-@@ -578,7 +578,7 @@ static int s25fs256t_late_init(struct spi_nor *nor)
- 	return 0;
- }
- 
--static struct spi_nor_fixups s25fs256t_fixups = {
-+static const struct spi_nor_fixups s25fs256t_fixups = {
- 	.post_bfpt = s25fs256t_post_bfpt_fixup,
- 	.post_sfdp = s25fs256t_post_sfdp_fixup,
- 	.late_init = s25fs256t_late_init,
-@@ -650,7 +650,7 @@ static int s25hx_t_late_init(struct spi_nor *nor)
- 	return 0;
- }
- 
--static struct spi_nor_fixups s25hx_t_fixups = {
-+static const struct spi_nor_fixups s25hx_t_fixups = {
- 	.post_bfpt = s25hx_t_post_bfpt_fixup,
- 	.post_sfdp = s25hx_t_post_sfdp_fixup,
- 	.late_init = s25hx_t_late_init,
--- 
-2.49.0
-
+Jonathan
