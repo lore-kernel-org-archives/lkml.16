@@ -1,37 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 304CC25A625;
-	Sun, 25 May 2025 19:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CB425A631
+	for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 19:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748201105; cv=none; b=b2eDd+ZRkCWJGVpopl03IwzHl3gE7vXAWmkQN5XZV05HPzkIoWTGPQw2/LB+S31QnT9FXxvG0YcDC99FBoy1xLcP75GdifLXAsMgM+2ldn48HdZRzSXdQkAq+bSSsjXoXQqqUr0u+fuJ2zZlUs0Hejflgi+85kpgxWGNmEQNmOg=
+	t=1748201174; cv=none; b=rn8/9jqFHuMPegrVbH0a9wV8uL3mLeudUIjaRB5BYJkDy3gWo76gfBcGUBbp7YzN1xddXaP8WxENRysoBZkl6fKt8onR3Ii/r7ZbgQcDEKbWQ4mb9HJZ2QzB6+OZTYpLlUEsr/dn/aEaQkj6dE5pZAKKjeOcVChy8/z1qbY5FjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748201105; c=relaxed/simple;
-	bh=TNcPp0hdxfFBLEv6R4OqPge+nSJHDwMxOnu9DfeKBbE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=N0ZBjE1Mb0t4X28qsp7h5LGi/yjUMsuZuFg57oCDm+SWs2S/sgu8h2Uzn6DkFOZ+C3NvR8wVxeAduIXKNbTOAWiwbyrvlec9uh057Hew4Ug7z7eyP63DKXw1/uC84NMxeYkDYsAk9wCQtlEdDnQx4voDAamEokqOnmWe0DmkMIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vv+EJZA+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748201174; c=relaxed/simple;
+	bh=jE7IlBQlM0F3rIIfVaJxXemnfRPX/+Oc/0OR0K58/Tw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TiG/pzyRa4KeQfav9wJV0PTfFoZJWb3fBhruXbFNk3ySq/lySdt8xQ+CCM3qemTJxSk86WTHPj4KnKnIrnvATInFW4O0HNMFRO63L7z47tZHXBgbJiqk4IGrf9JAshtkjjm7cEza4zRUlw6go4ngao6eyuiwXVkF0kMBV/zQfDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r0gH0rhG; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vv+EJZA+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A1D7BC4CEF0;
-	Sun, 25 May 2025 19:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748201104;
-	bh=TNcPp0hdxfFBLEv6R4OqPge+nSJHDwMxOnu9DfeKBbE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Vv+EJZA+aXQ1msRKZrixDFqr1TRnZOhLZg+vskAnGPnUrQ0975TlBw62PMg055866
-	 EuFegdzXYzeB3HAVk8jrke8oPtQKEiO30G0ogGphSdzGUnWpufo5qkcJPBWtltaA05
-	 uRazA9NlxarFqbWXNfOYd61957m8CkwSNf48kAZHhjBQi9F1RyWIENnoaPmZ2l9sDm
-	 s4mi4Tes9qGxdJQUg+MoJLdiSemkfaqXpm5uhIZciC7hYcrLtka8EzDdAF1BEeTuos
-	 I00crTA81go5RljN+or8Ox+pENGsxglVkzrOMufTlR7TFYMLSleEqPNvxlDZKdaYnd
-	 CgO79Y2wj1NNQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CBFC5B543;
-	Sun, 25 May 2025 19:25:04 +0000 (UTC)
-From: Vincent Knecht via B4 Relay <devnull+vincent.knecht.mailoo.org@kernel.org>
-Date: Sun, 25 May 2025 21:25:02 +0200
-Subject: [PATCH v2 2/4] media: qcom: camss: Add support for MSM8939
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r0gH0rhG"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f6f86580ecso347343a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 12:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748201171; x=1748805971; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYX2VxTDW3I8LwPElWAPGFQp/0/pEA9CwguT2DQks9Y=;
+        b=r0gH0rhGMr+1FVNQ68Flvrf0W2kPz0akxB3UVMJtJbgWWQK8qP6SxMqKHVrmIwgj7k
+         HiOmPnUWK53GR5jy/wW1lp8BcMc1BOowSeWuRfB+7aOm+i0r6d2pfvia9DtYPnOp9Wfm
+         ciUiq86UBte0Ro19dtLG4AwNJ+Hwk5GDyDFqK+GB4ss/kOdtQIiqzxLpNP1SNy1FPluc
+         YytPbes7tpHvxpIxrh2Wq8NZCafk8RmvPToSWnqminbp+og5aiPJoPXI67D42Qz6HjkN
+         3JyJKPUmRrKULsOVp5xRUxSZU6s/jCvOpntd8wrw346lyGlyMvdpiSctkeAiq6zMI0ng
+         Cn4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748201171; x=1748805971;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eYX2VxTDW3I8LwPElWAPGFQp/0/pEA9CwguT2DQks9Y=;
+        b=GW7x4LLKclQFsV7fLbvABSAJLz9Jn82jEBkzkbUu2hm2LHmNil4EgBRX8Ep6jBXGYc
+         US4/XE4a+GSvrHTjkxajtcuCpE/cz0iLa0Ttg8FhF1sSUhWourGw09UKO383672+j+qe
+         xXRLPX9FGBW7aANf3f/jyfUsIM+Y+kb8fCd71gJ6uNazvRlK8RQvVU2Zuwm4y1ZKHKrn
+         mqyAhBv2nBxd4SD8CZWUNcVV2WguAld+liKrj3BiFU9QWndAvcP2ejrLuA3rWZWYh63W
+         Chkv6nC15ubrbLSFyz8HUg09tXyFQbKp+dZSv2IEQp1EZhWf6D2iiMx3coQOMKPm07ty
+         DPZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyEEi10VPaEGaRRFmRi1Ue8xmOIwZNGf1c4a31IziNTB+ySVK63MUDoTAVqpI4XMmY8J3LdORDY8+3I0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTHquBtp8nHlQEDS6mNp9+GILJT3k2aEh+2BL6wLfxO0MBQRzT
+	ueIIZHxqXEq7MdbFbs4IbIo3SmFfLkfJmqWlPK4HYXF+fW0Hysw391tL5vxuXsjlM+0=
+X-Gm-Gg: ASbGncsJcJlhXwasb2m86zdZUXEfEme1gPv0ohkGbYuFwLQ3OpQRBZ8HdPZ+vo0wBoo
+	O304eyHFrPQtKUooGlDWkSQXLE2wFaXk1okUiNk/ilP2RTcPDXZ3AHLybWOAKUIZjcXxbsHzdBK
+	2ElOTp4m/2OkGSU3S06bXW4PN70R1Y+H1syUY+UE98KvhuRDRNrg48v1ELVgZcorNPAg9vivqLP
+	vQNe2jr5oFpM/hErD8mMELiunnFUaT6F1X5Yo5Ilfoz75/NdOrljdOPVnV6TCIwYSQaD4+FPjjr
+	I+OCxyb+J+y4B/dUk8YLcaG7iqxnNr4xP90oa33nYQ3WiONLKwmOYpd3B9UJ9OahPw/KbWk=
+X-Google-Smtp-Source: AGHT+IGY5IBd1z66/du4TlRG+M4D5MbhMOYD3sYEIBAG5BcmYK4WZDTuR9Zx90TCb9Ox6R+6iJuIjw==
+X-Received: by 2002:a17:907:1df1:b0:ad5:2b38:aa6d with SMTP id a640c23a62f3a-ad85b2ba866mr163136166b.13.1748201171003;
+        Sun, 25 May 2025 12:26:11 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047738sm1578899866b.19.2025.05.25.12.26.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 12:26:10 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/5] dmaengine: Minor fixes and cleanups
+Date: Sun, 25 May 2025 21:26:00 +0200
+Message-Id: <20250525-dma-fixes-v1-0-89d06dac9bcb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,339 +67,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250525-camss-8x39-vbif-v2-2-6d3d5c5af456@mailoo.org>
-References: <20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org>
-In-Reply-To: <20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org>
-To: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Vincent Knecht <vincent.knecht@mailoo.org>
+X-B4-Tracking: v=1; b=H4sIAMhuM2gC/y2MQQrCMBBFrxJm7UCMDEKvIl2k6URnkVQzUQqld
+ 3ewLt//j7eBchNWGNwGjT+islSD88lBesR6Z5TZGIIP5CkQziVilpUV/UTXnDhRDh7Mfzb+Hab
+ fxoMbv96W7McIU1TGtJQifXCV147/7AXGff8CnALkdIwAAAA=
+X-Change-ID: 20250525-dma-fixes-0b57fcec5f20
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Vinod Koul <vkoul@kernel.org>, 
+ Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, 
+ Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748201103; l=10640;
- i=vincent.knecht@mailoo.org; s=20250414; h=from:subject:message-id;
- bh=jbH/Tk3iZ/KQ/Qiij4iLe3xjaFaj87pxQYwOH/s8V1k=;
- b=Ex7M+g1p3/wJj38HMcZMFCHR347hkCI/hzhDQihRP4WuZsKH4dRDwU1qLfmSurvS/lAuATNqY
- pEfKfxFy7XVAj4O398/+mW8umGLCvdxLZEiCesrveEd+d0Wz0u0ET0s
-X-Developer-Key: i=vincent.knecht@mailoo.org; a=ed25519;
- pk=MFCVQkhL3+d3NHDzNPWpyZ4isxJvT+QTqValj5gSkm4=
-X-Endpoint-Received: by B4 Relay for vincent.knecht@mailoo.org/20250414
- with auth_id=377
-X-Original-From: Vincent Knecht <vincent.knecht@mailoo.org>
-Reply-To: vincent.knecht@mailoo.org
+X-Developer-Signature: v=1; a=openpgp-sha256; l=962;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=jE7IlBQlM0F3rIIfVaJxXemnfRPX/+Oc/0OR0K58/Tw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoM27MQSnocEls/HhQypawyfu0BaUs0u0+VFH8/
+ /LERg9+uXGJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDNuzAAKCRDBN2bmhouD
+ 1zf3EACNIKCh/Z6bW2K+8696jp9c86f5Qs4KVSWacPTu2cHmrNBJIn0WXa5/WYZcbiC2lr6sBaK
+ k+VkqgovuPRqo9KI+SX9nkZlYDV9k1qyFvTxznPWnfgkwYi8XK7Dn9+OBE6Arpc8PKM/AtHONXs
+ NWHz/Mtti04KKnhOfalOUfCtQDoHvlMhpzQlSczCdyWVLT4EJ8tjPkWkAkhjUI+bpKhafYzDq2X
+ IzefUKT8V0k2cALakyGpcCIwbPsMksym6/Iy8yr6Ie3hA/g6hktIK+AUrEOGZjUIPpikxeFSFtY
+ hyKyE6s7Bz5HqDqcy1d9NrVSeVZJaIwStYfPuHKy3c4E2o9ZqBPyftfQPwAhR93dkamRFWTLCKf
+ /DAVoPB7vI5ao0CtQCW3Sf7dCy5PBhlpK9TiPYtssm3isdrxuGMOzUyAfxYHfsNZT35G8hlUTlW
+ /tmKhhniJazrUly4qWvzW9WMUU3Xlu1e5VthTvRqYfxHnUHXpVGIwn8A87nqm3ZIiZS5RyaOjUd
+ U2BIg8e/2eiL/rf7oNg9iF3+hqTRpOQ9FSHz274Xf3GTE/Oz9Cq7nKxo3K6hnbuX6ZDgtWsB6of
+ W01lh05oTYSiFRn8fVKSnfx19Z2BX0INqDhjcCRr8KTuH7PyXHMqnhtS2fhH+cBeT+QseEBa6Gh
+ YNKMsau1w76OABw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-From: Vincent Knecht <vincent.knecht@mailoo.org>
+Just few cleanups and fixes.  Funny thing that the reported cast error
+I fix the second time.
 
-The camera subsystem for the MSM8939 is the same as MSM8916 except with
-3 CSID instead of 2, and some higher clock rates.
+Best regards,
+Krzysztof
 
-As a quirk, this SoC needs writing values to 2 VFE VBIF registers
-(see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
-This fixes black stripes across sensor and garbage in CSID TPG outputs.
-
-Add support for the MSM8939 camera subsystem.
-
-Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
 ---
- drivers/media/platform/qcom/camss/camss-csiphy.c   |   1 +
- drivers/media/platform/qcom/camss/camss-ispif.c    |   8 +-
- drivers/media/platform/qcom/camss/camss-vfe-vbif.c |   7 +
- drivers/media/platform/qcom/camss/camss-vfe.c      |   1 +
- drivers/media/platform/qcom/camss/camss.c          | 157 +++++++++++++++++++++
- drivers/media/platform/qcom/camss/camss.h          |   1 +
- 6 files changed, 173 insertions(+), 2 deletions(-)
+Krzysztof Kozlowski (5):
+      dmaengine: dw-edma: Drop unused dchan2dev() and chan2dev()
+      dmaengine: fsl-dpaa2-qdma: Drop unused mc_enc()
+      dmaengine: qcom: gpi: Drop unused gpi_write_reg_field()
+      dmaengine: fsl-qdma: Add missing fsl_qdma_format kerneldoc
+      dmaengine: mmp: Fix again Wvoid-pointer-to-enum-cast warning
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers/media/platform/qcom/camss/camss-csiphy.c
-index c622efcc92ff3781d7fc3ace0253c2d64c91e847..6311fc2975aa1345e430a477c8a6476f1d7e5663 100644
---- a/drivers/media/platform/qcom/camss/camss-csiphy.c
-+++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
-@@ -605,6 +605,7 @@ int msm_csiphy_subdev_init(struct camss *camss,
- 		return PTR_ERR(csiphy->base);
- 
- 	if (camss->res->version == CAMSS_8x16 ||
-+	    camss->res->version == CAMSS_8x39 ||
- 	    camss->res->version == CAMSS_8x53 ||
- 	    camss->res->version == CAMSS_8x96) {
- 		csiphy->base_clk_mux =
-diff --git a/drivers/media/platform/qcom/camss/camss-ispif.c b/drivers/media/platform/qcom/camss/camss-ispif.c
-index 2dc585c6123dd248a5bacd9c7a88cb5375644311..aaf3caa42d33dcb641651e7f5bc0c2a564d85bfa 100644
---- a/drivers/media/platform/qcom/camss/camss-ispif.c
-+++ b/drivers/media/platform/qcom/camss/camss-ispif.c
-@@ -1112,6 +1112,8 @@ int msm_ispif_subdev_init(struct camss *camss,
- 	/* Number of ISPIF lines - same as number of CSID hardware modules */
- 	if (camss->res->version == CAMSS_8x16)
- 		ispif->line_num = 2;
-+	else if (camss->res->version == CAMSS_8x39)
-+		ispif->line_num = 3;
- 	else if (camss->res->version == CAMSS_8x96 ||
- 		 camss->res->version == CAMSS_8x53 ||
- 		 camss->res->version == CAMSS_660)
-@@ -1128,7 +1130,8 @@ int msm_ispif_subdev_init(struct camss *camss,
- 		ispif->line[i].ispif = ispif;
- 		ispif->line[i].id = i;
- 
--		if (camss->res->version == CAMSS_8x16) {
-+		if (camss->res->version == CAMSS_8x16 ||
-+		    camss->res->version == CAMSS_8x39) {
- 			ispif->line[i].formats = ispif_formats_8x16;
- 			ispif->line[i].nformats =
- 					ARRAY_SIZE(ispif_formats_8x16);
-@@ -1162,7 +1165,8 @@ int msm_ispif_subdev_init(struct camss *camss,
- 	ispif->irq = ret;
- 	snprintf(ispif->irq_name, sizeof(ispif->irq_name), "%s_%s",
- 		 dev_name(dev), MSM_ISPIF_NAME);
--	if (camss->res->version == CAMSS_8x16)
-+	if (camss->res->version == CAMSS_8x16 ||
-+	    camss->res->version == CAMSS_8x39)
- 		ret = devm_request_irq(dev, ispif->irq, ispif_isr_8x16,
- 			       IRQF_TRIGGER_RISING, ispif->irq_name, ispif);
- 	else if (camss->res->version == CAMSS_8x96 ||
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe-vbif.c b/drivers/media/platform/qcom/camss/camss-vfe-vbif.c
-index 2ae61b7baa148f0ad63fe3b8751aeb7b8fc12d81..d461880e5379c21746b5b191910becdbab36d3f5 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe-vbif.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe-vbif.c
-@@ -14,6 +14,9 @@
- #include "camss-vfe.h"
- #include "camss-vfe-vbif.h"
- 
-+#define VBIF_FIXED_SORT_EN	0x30
-+#define VBIF_FIXED_SORT_SEL0	0x34
-+
- void vfe_vbif_reg_write(struct vfe_device *vfe, u32 reg, u32 val)
- {
- 	writel_relaxed(val, vfe->vbif_base + reg);
-@@ -22,6 +25,10 @@ void vfe_vbif_reg_write(struct vfe_device *vfe, u32 reg, u32 val)
- int vfe_vbif_apply_settings(struct vfe_device *vfe)
- {
- 	switch (vfe->camss->res->version) {
-+	case CAMSS_8x39:
-+		vfe_vbif_reg_write(vfe, VBIF_FIXED_SORT_EN, 0xfff);
-+		vfe_vbif_reg_write(vfe, VBIF_FIXED_SORT_SEL0, 0x555000);
-+		break;
- 	default:
- 		break;
- 	}
-diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
-index 3138562d399444c5cf2ae96bf16b75b85ff5c5ca..ac3a9579e3e6910eee8c1ec11c4fff6e1bc94443 100644
---- a/drivers/media/platform/qcom/camss/camss-vfe.c
-+++ b/drivers/media/platform/qcom/camss/camss-vfe.c
-@@ -290,6 +290,7 @@ static u32 vfe_src_pad_code(struct vfe_line *line, u32 sink_code,
- 
- 	switch (vfe->camss->res->version) {
- 	case CAMSS_8x16:
-+	case CAMSS_8x39:
- 	case CAMSS_8x53:
- 		switch (sink_code) {
- 		case MEDIA_BUS_FMT_YUYV8_1X16:
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 06f42875702f02f9d8d83d06ddaa972eacb593f8..6a68876a00a8d6eaf3ef55e8fde0d266f567879a 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -154,6 +154,149 @@ static const struct camss_subdev_resources vfe_res_8x16[] = {
- 	}
- };
- 
-+static const struct camss_subdev_resources csiphy_res_8x39[] = {
-+	/* CSIPHY0 */
-+	{
-+		.regulators = { "vdda" },
-+		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy0_timer" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 100000000, 200000000 } },
-+		.reg = { "csiphy0", "csiphy0_clk_mux" },
-+		.interrupt = { "csiphy0" },
-+		.csiphy = {
-+			.id = 0,
-+			.hw_ops = &csiphy_ops_2ph_1_0,
-+			.formats = &csiphy_formats_8x16
-+		}
-+	},
-+
-+	/* CSIPHY1 */
-+	{
-+		.regulators = { "vdda" },
-+		.clock = { "top_ahb", "ispif_ahb", "ahb", "csiphy1_timer" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 100000000, 200000000 } },
-+		.reg = { "csiphy1", "csiphy1_clk_mux" },
-+		.interrupt = { "csiphy1" },
-+		.csiphy = {
-+			.id = 1,
-+			.hw_ops = &csiphy_ops_2ph_1_0,
-+			.formats = &csiphy_formats_8x16
-+		}
-+	}
-+};
-+
-+static const struct camss_subdev_resources csid_res_8x39[] = {
-+	/* CSID0 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "csi0_ahb", "ahb",
-+			   "csi0", "csi0_phy", "csi0_pix", "csi0_rdi" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 100000000, 200000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid0" },
-+		.interrupt = { "csid0" },
-+		.csid = {
-+			.hw_ops = &csid_ops_4_1,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_4_1
-+		}
-+	},
-+
-+	/* CSID1 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "csi1_ahb", "ahb",
-+			   "csi1", "csi1_phy", "csi1_pix", "csi1_rdi" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 100000000, 200000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid1" },
-+		.interrupt = { "csid1" },
-+		.csid = {
-+			.hw_ops = &csid_ops_4_1,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_4_1
-+		}
-+	},
-+
-+	/* CSID2 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "csi2_ahb", "ahb",
-+			   "csi2", "csi2_phy", "csi2_pix", "csi2_rdi" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 100000000, 200000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "csid2" },
-+		.interrupt = { "csid2" },
-+		.csid = {
-+			.hw_ops = &csid_ops_4_1,
-+			.parent_dev_ops = &vfe_parent_dev_ops,
-+			.formats = &csid_formats_4_1
-+		}
-+	},
-+};
-+
-+static const struct camss_subdev_resources ispif_res_8x39 = {
-+	/* ISPIF */
-+	.clock = { "top_ahb", "ispif_ahb", "ahb",
-+		   "csi0", "csi0_pix", "csi0_rdi",
-+		   "csi1", "csi1_pix", "csi1_rdi",
-+		   "csi2", "csi2_pix", "csi2_rdi" },
-+	.clock_for_reset = { "vfe0", "csi_vfe0" },
-+	.reg = { "ispif", "csi_clk_mux" },
-+	.interrupt = { "ispif" },
-+};
-+
-+static const struct camss_subdev_resources vfe_res_8x39[] = {
-+	/* VFE0 */
-+	{
-+		.regulators = {},
-+		.clock = { "top_ahb", "ispif_ahb", "vfe0", "csi_vfe0",
-+			   "vfe_ahb", "vfe_axi", "ahb" },
-+		.clock_rate = { { 0 },
-+				{ 40000000, 80000000 },
-+				{ 50000000, 80000000, 100000000, 160000000,
-+				  177780000, 200000000, 266670000, 320000000,
-+				  400000000, 465000000, 480000000, 600000000 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 },
-+				{ 0 } },
-+		.reg = { "vfe0" },
-+		.interrupt = { "vfe0" },
-+		.vfe = {
-+			.line_num = 3,
-+			.has_vbif = true,
-+			.vbif_name = "vfe0_vbif",
-+			.hw_ops = &vfe_ops_4_1,
-+			.formats_rdi = &vfe_formats_rdi_8x16,
-+			.formats_pix = &vfe_formats_pix_8x16
-+		}
-+	}
-+};
-+
- static const struct camss_subdev_resources csid_res_8x53[] = {
- 	/* CSID0 */
- 	{
-@@ -3585,6 +3728,7 @@ static int camss_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	if (camss->res->version == CAMSS_8x16 ||
-+	    camss->res->version == CAMSS_8x39 ||
- 	    camss->res->version == CAMSS_8x53 ||
- 	    camss->res->version == CAMSS_8x96) {
- 		camss->ispif = devm_kcalloc(dev, 1, sizeof(*camss->ispif), GFP_KERNEL);
-@@ -3727,6 +3871,18 @@ static const struct camss_resources msm8916_resources = {
- 	.link_entities = camss_link_entities
- };
- 
-+static const struct camss_resources msm8939_resources = {
-+	.version = CAMSS_8x39,
-+	.csiphy_res = csiphy_res_8x39,
-+	.csid_res = csid_res_8x39,
-+	.ispif_res = &ispif_res_8x39,
-+	.vfe_res = vfe_res_8x39,
-+	.csiphy_num = ARRAY_SIZE(csiphy_res_8x39),
-+	.csid_num = ARRAY_SIZE(csid_res_8x39),
-+	.vfe_num = ARRAY_SIZE(vfe_res_8x39),
-+	.link_entities = camss_link_entities
-+};
-+
- static const struct camss_resources msm8953_resources = {
- 	.version = CAMSS_8x53,
- 	.icc_res = icc_res_8x53,
-@@ -3863,6 +4019,7 @@ static const struct camss_resources x1e80100_resources = {
- 
- static const struct of_device_id camss_dt_match[] = {
- 	{ .compatible = "qcom,msm8916-camss", .data = &msm8916_resources },
-+	{ .compatible = "qcom,msm8939-camss", .data = &msm8939_resources },
- 	{ .compatible = "qcom,msm8953-camss", .data = &msm8953_resources },
- 	{ .compatible = "qcom,msm8996-camss", .data = &msm8996_resources },
- 	{ .compatible = "qcom,sc7280-camss", .data = &sc7280_resources },
-diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
-index 63c0afee154a02194820016ccf554620d6521c8b..be11cf3af478627fa48827e70d5f0673939e1e63 100644
---- a/drivers/media/platform/qcom/camss/camss.h
-+++ b/drivers/media/platform/qcom/camss/camss.h
-@@ -80,6 +80,7 @@ enum camss_version {
- 	CAMSS_660,
- 	CAMSS_7280,
- 	CAMSS_8x16,
-+	CAMSS_8x39,
- 	CAMSS_8x53,
- 	CAMSS_8x96,
- 	CAMSS_8250,
+ drivers/dma/dw-edma/dw-edma-core.c  | 12 ------------
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.c |  5 -----
+ drivers/dma/fsl-qdma.c              |  3 +++
+ drivers/dma/mmp_tdma.c              |  2 +-
+ drivers/dma/qcom/gpi.c              | 11 -----------
+ 5 files changed, 4 insertions(+), 29 deletions(-)
+---
+base-commit: 781af674a40df73239e8907d5862fd6fbcf01a9a
+change-id: 20250525-dma-fixes-0b57fcec5f20
 
+Best regards,
 -- 
-2.49.0
-
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
