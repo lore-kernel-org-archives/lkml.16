@@ -1,101 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19ED11EF36C;
-	Mon, 26 May 2025 09:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776911EFFB2;
+	Mon, 26 May 2025 09:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748253108; cv=none; b=NDGwyMqOc7kxmuilBeofd2pGtckhOGU6sJXgJ3q2vSPrjJoOinYDFNdAAdbLgNizHxyDedIQ/gjUjrBuWTGcwLgQ3L3EDpIQWWUoNyXOGe/1bKbdQXImwxsT+cluQi4r8DWzCVZ0Q1rla7hRI7cRrY+ZRxVG+2VUpt2A0lh1Ao0=
+	t=1748253225; cv=none; b=u6vo6XOq4/x62Y0nmkCIyBUJa8Pu7rA/RpSYdW9IgEOijgD3s4M5sEYkPgvTmjbvU3+M/U1gnayC6urXoiQQKZDhbaFBsUETTIkyaq0RW/ibMaK03c16l7n/WYRB9AJPvBK3WbyJ9x6bI+ihvIAZY/zA4hstuXOqBkMVHsdFXgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748253108; c=relaxed/simple;
-	bh=3qgtqvR99/jckDm4wJuF1A1c37Gw/lv4DloT3Rig0lQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E5Fhm29B5pAH2Ia6As2EOLpzn8ILsLsprZW16k6kaXKroS6SNEzLevMqYsXRoNNhFbzfhQJw82VmbzcTz6sEUBysTQFuKcIdNepu9gA3D6tYPebci1inYyA/++EsdUri5PqlUAGIt0ZIb11a/Rc8Ap2iKWoit764SEaWYUZqcv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iy90u/JM; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748253225; c=relaxed/simple;
+	bh=ayi+iilYVEjRyZDjXtPujnVNmpmRyndyw79Hoc3feqE=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sF4yUWIMZxPf/KNoO+K9Wv86OgCh96vDIVvTkMYG2DfJ5vXepGQePNCI1QSLCTeZt9MALErMLPFMpPt7DSNAgj1sIQRenR6yE94KNMKPRKl23kFQ2wTfZJ0v/H11EqALJYlB7WKIJNC9N+QCOam5/Xhg0DS1UgKNwz/MgJ+42bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBhVMuij; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iy90u/JM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748253107; x=1779789107;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3qgtqvR99/jckDm4wJuF1A1c37Gw/lv4DloT3Rig0lQ=;
-  b=iy90u/JMsFfKIfBDYntdkO0Pkr2DKZsBSFTEFpJpggfFzEG7uf52CuiS
-   GhebsKL1Yi9ihSKCXwMwZJ2Wl3Bx6QpWLrvJm3noXSPfblFPShsFszCHp
-   YXXtt+dTTUNjfWxL1soGnsUFJmSUnZI3fuymEp6KG7b4+3tT7B3EKfG8B
-   OPUj4W42prHKTmgLuai3exPdpDn+dOuzJfEb+PmJ0d6RcV1v5LeujRbn6
-   rPG92s8PSFYc9pQb0t9SEgGXt7ToV84WG7g3XjEUoK/oVH+femjoppCsZ
-   tJiHTcaFHEVMS5nIx1+s6QKz4VYHiak6XCWpJ3G/sRyJP1keVPjtldLwA
-   g==;
-X-CSE-ConnectionGUID: 1C9Npc8/RQutka0fAiovGQ==
-X-CSE-MsgGUID: +EsVJaAYSzi95Ac03nZqeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="61631864"
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="61631864"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 02:51:47 -0700
-X-CSE-ConnectionGUID: MpZRJJz4QTupfXrYoxvo/A==
-X-CSE-MsgGUID: f38UmJFZTmW3MP8a2UHD2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="142679357"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 02:51:43 -0700
-Date: Mon, 26 May 2025 11:51:06 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Haoxiang Li <haoxiang_li2024@163.com>
-Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, sergey.temerkhanov@intel.com,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] ice: Fix a null pointer dereference in
- ice_copy_and_init_pkg()
-Message-ID: <aDQ5ipcH346PJPGp@mev-dev.igk.intel.com>
-References: <20250524072658.3586149-1-haoxiang_li2024@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBhVMuij"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-602e5dd500fso2738413a12.0;
+        Mon, 26 May 2025 02:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748253222; x=1748858022; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AXy+eKw+ntKe1vWZnveBx84g5rWssnbg4O55yPCdDII=;
+        b=WBhVMuijrGM6WwmLl3VJokgaIYclijTg5LestWTC61s/KXqeETbZ2w4Q8qOsNX1SS7
+         QR+vl++Tbq9y5d+yL2ch0XeoSfIcGZqgbA/2xXrPVp5+SjJdOMbHb+U3fPv2hYFdKpmO
+         lRHMoGs2ML29354GoBQhFryKMUv+ngLUES5oRUi+PXqXjWgEefxVijBmCTZ6BrD+LIy8
+         VWJLDEiYVY5+J5E3wGBHOt+ie4Y6NZ0MpjWNIM7wmP8v+tKT5rXiEHS3TYFUVgMDqq2J
+         M9Vlsw1AKiwUCujqYMfDibknk3LwBNPsk8REcsUZimdDOhdRMewgdTXXfoVXVbztuNfa
+         Hyuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748253222; x=1748858022;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AXy+eKw+ntKe1vWZnveBx84g5rWssnbg4O55yPCdDII=;
+        b=wgaxzJWAqZTCNCxBjb7e5imIUB3WI0lqzHr6UoYDFcoTErONLkOJ8ZBImhVfA9zh0K
+         xsNQfLSgM7QsrFPfykuQwgm2GJpDiAFgxFH7SQHjs2DwXAQP+zO+zCWdg3DaJDEM1TQY
+         Kv49SL3Cy382qEFjCnhHSvgyTeymcEMiO2Q+DrTBs9dVwlcZsRDUZrZfSDqbdqbf7ZI5
+         3NHHGpm8rqAnn+6pSlFE9hN6CafgmOHhHikxNZsnOpgTDpudBlQUa43o2VzemY7z2KKb
+         DYhYphmq9H/d0qDzl5Op5qkj0OBg/TtAa/f4KK7HJSUoppDc1njVjbonJkKBDO1ml/Z+
+         lGgA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcWj+54/fb3H4jEtm3hkhyxhiaOtF0obLiIGYOJjRduMMDbhRK9809J3nhmlh3RTmjXJ3d48c7l327IuBZ@vger.kernel.org, AJvYcCWoMuamHWjIwvagcakfhr58k+3bsS5nIkhREDdYeJckbvi0o4EkAcBU4oHMH53eYHUd9seMTTAfXX9k@vger.kernel.org, AJvYcCWpMFhAg9IFM4O4j6ZDbRxxa5rmvwTGgBemA1H2I2f3bDf8HGTjOMcxt+XuTTizvOZ/3omeSU1PrYSQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxCqo5RMGGfuIaNu8iqTc7ScJ8UOTA2rC+DWcLC2tYs+QRsAvo
+	heoGsu7EF4sUP4RUr2a1+5O4a3U2WT/29MNi0a9kRTGGLWCLZfLvVSUq
+X-Gm-Gg: ASbGnctUEQPnpXbJNHliGuJzUaQ1qSpMJXhRj6J2enbJItiW3E8yDHvILYWHmztEE13
+	AZfd9LWl3bYqzYxkWFESsEqnyIe4amU9eGo78u0hwd9cKkop6vh5LA/HUeCn9NIuUnO6CPK1RR7
+	DD0J0Ub/SAzyWjNiZ4Tgu531mBfhAwmSPWF9qi5OPizuiqJxHW6uRAXHArO6a2KSuWDoYyD/3Me
+	Qbpd5WMweNIurzWf0jHLB0V6Rke23ZOEYFnULKxGT39rRxnPEhVs4/FFtJpgySyMnV8JxtiCJjW
+	Kat8AkRLrM+TdyviYukA8n4qKRvC7vVYqA153DRYazrhe3RQeLqDOE08Pjp6wHawIKc=
+X-Google-Smtp-Source: AGHT+IGRa4S8yVCYNRKNxt+ZYbckrrkS8/+MXVDubpUZ5JCrPN2kkprLkP7za5MpRF6S+CpbcWORlQ==
+X-Received: by 2002:a17:906:6a01:b0:ad5:465d:8855 with SMTP id a640c23a62f3a-ad85b1f93ddmr875000866b.36.1748253221191;
+        Mon, 26 May 2025 02:53:41 -0700 (PDT)
+Received: from [100.73.1.233] ([185.128.9.226])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d498909sm1633929266b.126.2025.05.26.02.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 02:53:40 -0700 (PDT)
+Message-ID: <0fb2756ce0e34be56df40187370a28d7a2a3f321.camel@gmail.com>
+Subject: Re: [PATCH v4 3/6] iio: adc: adi-axi-adc: add
+ axi_adc_oversampling_ratio_set
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Pop Ioan Daniel	
+ <pop.ioan-daniel@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron
+ <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring	 <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>, Sergiu
+ Cuciurean <sergiu.cuciurean@analog.com>,  Dragos Bogdan
+ <dragos.bogdan@analog.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Olivier Moysan	 <olivier.moysan@foss.st.com>, Javier Carrasco
+ <javier.carrasco.cruz@gmail.com>,  Matti Vaittinen
+ <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
+ Alisa-Dariana Roman	 <alisadariana@gmail.com>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>,  =?ISO-8859-1?Q?Jo=E3o?= Paulo
+ =?ISO-8859-1?Q?Gon=E7alves?=	 <joao.goncalves@toradex.com>, Thomas
+ Bonnefille <thomas.bonnefille@bootlin.com>, 	linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org
+Date: Mon, 26 May 2025 10:53:43 +0100
+In-Reply-To: <556bb250-d7c6-48aa-8773-26799265f782@baylibre.com>
+References: <20250519140220.81489-1-pop.ioan-daniel@analog.com>
+	 <20250519140220.81489-4-pop.ioan-daniel@analog.com>
+	 <556bb250-d7c6-48aa-8773-26799265f782@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250524072658.3586149-1-haoxiang_li2024@163.com>
 
-On Sat, May 24, 2025 at 03:26:58PM +0800, Haoxiang Li wrote:
-> Add check for the return value of devm_kmemdup()
-> to prevent potential null pointer dereference.
-> 
-> Fixes: 2ffd87d38d6b ("ice: Move support DDP code out of ice_flex_pipe.c")
+On Mon, 2025-05-19 at 10:15 -0500, David Lechner wrote:
+> On 5/19/25 9:02 AM, Pop Ioan Daniel wrote:
+> > Add support for setting decimation rate.
+> >=20
+> > Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> > ---
+>=20
+> With the bit below fixed:
+>=20
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
+>=20
+> ...
+> > @@ -381,7 +397,8 @@ static int axi_adc_ad485x_data_size_set(struct
+> > iio_backend *back,
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0static int axi_adc_ad485x_oversampling_ratio_set(struct iio_backe=
+nd *back,
+> > -					=C2=A0 unsigned int ratio)
+> > +						 unsigned int chan,
+> > +						 unsigned int ratio)
+>=20
+> I think this change belongs in the previous patch. Most importantly becau=
+se
+> it could cause a compile error during a git bisect, but also because that
+> is where it logically belongs.
 
-This commit is only moving the code to new file. I think it should be:
-c76488109616 ("ice: Implement Dynamic Device Personalization (DDP) download")
+I was wondering about this. Definitely needs to be in the previous one...
 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-> ---
->  drivers/net/ethernet/intel/ice/ice_ddp.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_ddp.c b/drivers/net/ethernet/intel/ice/ice_ddp.c
-> index 59323c019544..351824dc3c62 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_ddp.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_ddp.c
-> @@ -2301,6 +2301,8 @@ enum ice_ddp_state ice_copy_and_init_pkg(struct ice_hw *hw, const u8 *buf,
->  		return ICE_DDP_PKG_ERR;
->  
->  	buf_copy = devm_kmemdup(ice_hw_to_dev(hw), buf, len, GFP_KERNEL);
-> +	if (!buf_copy)
-> +		return ICE_DDP_PKG_ERR;
-
-Fix looks fine, thanks
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
->  
->  	state = ice_init_pkg(hw, buf_copy, len);
->  	if (!ice_is_init_pkg_successful(state)) {
-> -- 
-> 2.25.1
+>=20
+> > =C2=A0{
+> > =C2=A0	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
+> > =C2=A0
