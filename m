@@ -1,38 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437141EA7CE;
-	Mon, 26 May 2025 09:08:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F3A1EFFBB;
+	Mon, 26 May 2025 09:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250500; cv=none; b=IyVf3cupKNxndsLArinINaq2rr2jkKIL17ZwZ6RlIDR2F0GYGqNwUPRDmw2DivxWF8pTLX6AKZmRMaEDNZgRYs/uWiq79Z0SQ+Hh+YXxXsOKm/UIVjuzFY+T7w2dxKJss5+SESiq1jnHwLUpSuErayZ8LVJmdPvZuCxkqGg5hMM=
+	t=1748250501; cv=none; b=AMJLfDYkULX8n2LWyii6+GZmvC2cGFaUPv4gi9M4t+7fWDVk0KvrfO9h52FvFyWrOttvHL9sLxHyFrULt8C/UVL3EX/DAK4wOBK7OClLPWxFATnNZo6Vr4Cz/5AqFIH8/UxcDPp9gGNOz+wNG3+qvZhCqiqq0DCct61Hz9o+SMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250500; c=relaxed/simple;
-	bh=nJBb/1/0YdGIGTTqBoalgYHLW1hWuWEj4N87pCrndLg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a1uuyrNSTsa4TjzUu2VIa6kka5L9+vPUSDQNVMiybvOD/IoXnffJVByvjUrtWusgfMiMgh5YSRYLPmbqN2knygiq+rtczo30aFZwhdEDopHBORiz1BYw3UOU9EAog/JhM50tLWsXoIVUH3FN5W3cyiCgvGLJ+f5DUeP54NXZEz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HG8kHD6M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748250501; c=relaxed/simple;
+	bh=r4vpfhgdTadsX6mz1zhFSBmVO2ukjTVGrtilLo/HSbg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dYGQS9eCNC4eshV8beeQo4HudbRGG+M0lnKu1rvPOok3RfaLMEH1k9+Q4F7hcVFukvzv7n59Y/yYu7haFMnVs0mHSKPfUSFFc2bGGKuHqOfwaSlNXef+GCQxO138HerR6pWpMHIPXFQRv2o1cnO3ME8W6WWBjcpiF8Xi2A+TFak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ixS11m5v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HG8kHD6M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B1BC4CEEE;
-	Mon, 26 May 2025 09:08:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ixS11m5v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2B2C4CEE7;
+	Mon, 26 May 2025 09:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748250499;
-	bh=nJBb/1/0YdGIGTTqBoalgYHLW1hWuWEj4N87pCrndLg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HG8kHD6Mi13KDEkpfxXvGcgdk7GqulDYqITm+MHSEGnLerWuJ00vnnSVJ6yPYqCE3
-	 65AZwRfmSDRj1T6lLX57tKBxUDYKGv5heSuF+57kg8An/p1fS+K1UE+mJrzOH8kC+n
-	 HyBWq/GiCBEbxKQC1w8+R86nDNYaO+Y+BsC56SLLsTqxE0qp6iof4TNpl6FvATc0VF
-	 U3SVoxJ9ChLHNfl8XOLQYMLqERJ4uXxkNxJzyYFPmbUi0y4NVYObcRnhVmhXYrkPQh
-	 5I/fDfod2ZsHFglRIl0ivKsd3sMaMogDSYMnwNlxmGpx2kJGaTEEtqA//YqWsYa8FU
-	 vhqgzziofg77g==
+	s=k20201202; t=1748250501;
+	bh=r4vpfhgdTadsX6mz1zhFSBmVO2ukjTVGrtilLo/HSbg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ixS11m5vNBl+x1MjxaJahoecwMd1genvJH/NwfkxBBjBjE9NeBR3l5Wmt6IlGzrcl
+	 0osT2yl/BYb548NG8iPJ5/2p+4ubluyPUkAb3+2tlexh8Uco45vrvS6q0xE8E+2bRP
+	 LYLiBhKn+ffXxVmzow/otwuuPXyStfDpD7sZ7G37UNTFeD7rQ4nV5Q+p3vxhVR+Qb0
+	 Q96m2vRik4uDzOktYUzKEWbThORuzYiW/BVWO7uAHTwLHtKy4nro/j23nVbBepnhDQ
+	 MX1h0bsEVXa+fkkmdn2do4d+17pkH3UUeH4y282m8aqqPQCyWWhEYWbYUfDA0UPaz1
+	 In5mWs7UMgamA==
 From: Masahiro Yamada <masahiroy@kernel.org>
 To: linux-kbuild@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 1/2] tinyconfig: enable CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
-Date: Mon, 26 May 2025 18:07:51 +0900
-Message-ID: <20250526090815.416922-1-masahiroy@kernel.org>
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Subject: [PATCH 2/2] kbuild: link lib-y objects to vmlinux forcibly even when CONFIG_MODULES=n
+Date: Mon, 26 May 2025 18:07:52 +0900
+Message-ID: <20250526090815.416922-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250526090815.416922-1-masahiroy@kernel.org>
+References: <20250526090815.416922-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,31 +46,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This CONFIG option, if supported by the architecture, helps reduce the
-size of vmlinux.
+Since commit 7273ad2b08f8 ("kbuild: link lib-y objects to vmlinux
+forcibly when CONFIG_MODULES=y"), all objects from lib-y have been
+forcibly linked to vmlinux when CONFIG_MODULES=y.
 
-For example, the size of vmlinux with ARCH=arm tinyconfig decreases as
-follows:
+To simplify future changes, this commit makes all objects from lib-y
+be linked regardless of the CONFIG_MODULES setting.
 
-   text	   data	    bss	    dec	    hex	filename
- 631684	 104500	  18176	 754360	  b82b8	vmlinux.before
- 455316	  93404	  15472	 564192	  89be0	vmlinux.after
+Most use cases (CONFIG_MODULES=y) are not affected by this change.
+
+The vmlinux size with ARCH=arm allnoconfig, where CONFIG_MODULES=n,
+increases as follows:
+
+   text    data     bss     dec     hex filename
+1368644  835104  206288 2410036  24c634 vmlinux.before
+1379440  837064  206288 2422792  24f808 vmlinux.after
+
+We no longer benefit from using static libraries, but the impact is
+mitigated by supporting CONFIG_LD_DEAD_CODE_DATA_ELIMINATION.
+
+For example, the size of vmlinux remains almost the same with ARCH=arm
+tinyconfig, where CONFIG_MODULES=n and
+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y.
+
+   text    data     bss     dec     hex filename
+ 455316   93404   15472  564192   89be0 vmlinux.before
+ 455312   93404   15472  564188   89bdc vmlinux.after
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- kernel/configs/tiny.config | 1 +
- 1 file changed, 1 insertion(+)
+ Makefile | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/kernel/configs/tiny.config b/kernel/configs/tiny.config
-index b753695c5a8f..5dd0f0a34a73 100644
---- a/kernel/configs/tiny.config
-+++ b/kernel/configs/tiny.config
-@@ -2,3 +2,4 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
- CONFIG_KERNEL_XZ=y
- CONFIG_SLUB=y
- CONFIG_SLUB_TINY=y
-+CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y
+diff --git a/Makefile b/Makefile
+index 682a8002b7a1..b8d94c7fe4af 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1184,13 +1184,8 @@ export ARCH_LIB		:= $(filter %/, $(libs-y))
+ export ARCH_DRIVERS	:= $(drivers-y) $(drivers-m)
+ # Externally visible symbols (used by link-vmlinux.sh)
+ 
+-KBUILD_VMLINUX_OBJS := ./built-in.a
+-ifdef CONFIG_MODULES
+-KBUILD_VMLINUX_OBJS += $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
++KBUILD_VMLINUX_OBJS := built-in.a $(patsubst %/, %/lib.a, $(filter %/, $(libs-y)))
+ KBUILD_VMLINUX_LIBS := $(filter-out %/, $(libs-y))
+-else
+-KBUILD_VMLINUX_LIBS := $(patsubst %/,%/lib.a, $(libs-y))
+-endif
+ 
+ export KBUILD_VMLINUX_LIBS
+ export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
 -- 
 2.43.0
 
