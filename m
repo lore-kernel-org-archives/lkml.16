@@ -1,201 +1,202 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427F31E5B9F
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E4A1D86DC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748252197; cv=none; b=O6xffujVER9gI/GLFE2ZGFFgJ4387KBz1iUJZgEoSg76K+714Ebbxgj7pC3srwRqPPVF10prO7RhF3LjEgpUL+NADTbPbOJpZ9tcmY4llXlxNGmdD25MhcAXrjE4vQnZNnrhR0h7oWLt6oRcORMX//JtoXUWWVG2y/tRHlbsCHU=
+	t=1748252301; cv=none; b=N5DBGcXYfoDkh8KmLhFL03YdRCR3fy0wsYIPb4fR+oxwldrDW+DKf3efIUUPyk/QbKLkFEs0LZ1FQySr4pJlunmwbi6kaaZ0KaovpSSJi/da0onciO3f1A2AzjRP2c609K5OGhk25zWw7eSvdOmS3Mf4x+S3WKUSTqzOEuyhVNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748252197; c=relaxed/simple;
-	bh=1Ny/0TbJZ5SAM22tau9raAi8EilYz9oUd2Wju+tI6XY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DQCILvoTu5RJsJmRbD4FGzU6DzJIFIIlUOVIYYp7tEwyLGcEz7qplkWVHEUTk1vneE9P4XtC3xv8lgQvAWiAhNqQIv1z5Eo0jrPjjPA0tMrcY5mH+AazqrSSjFcneCp16vH4X+cPJfoDpftVsfHcDbgt+ZHo1s6fpHzHGD+bEgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=udaZWIuA; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1748252301; c=relaxed/simple;
+	bh=i9i8/ewq7VfXozbNbj+b/u9iFiv/PHquWUPkUve+/0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C9NcYwrGAYI87QIEwq7y09zhb9IiDR09qcJCsW2UveTHR4POgNIhI5nX/1Z2QKRjPbcEX28T9rZwy6G/FtE+XxJ4nXE6LCK1CzRAcQNAtlvc4sZr/570SGDEmxiwG2VhQmk9dYM6wTbiW2veVGaLzVVHHINs4vLWx3SLNWvW6K4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=t75CBBJ7; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="udaZWIuA"
-X-UUID: e62f9dfc3a1411f082f7f7ac98dee637-20250526
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+L4VjX2JCCDTCMFLd88+LcuNW5Apnj1Z8Dzhxz61/yI=;
-	b=udaZWIuA5euLc9gnsnwhqyoWnGZyd5A6Ikz9+geKt0eQ/TLJ9hIaZdQdRj4iU+y3y4iCIww2ViqU6bu9+Iq7LgIOUv4vF617gAmDDN6iC4MnVBsKlGKM/AIUh2Cwi7pqiRh12YdetnkdNdh+YPjs9CKvJQCJSBu4fXyBZ0I5uVE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:47535e29-53b4-437b-a426-0eea808fb4a0,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:95cf1e59-eac4-4b21-88a4-d582445d304a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: e62f9dfc3a1411f082f7f7ac98dee637-20250526
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-	(envelope-from <jianhua.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1387515675; Mon, 26 May 2025 17:36:28 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Mon, 26 May 2025 17:36:27 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Mon, 26 May 2025 17:36:26 +0800
-From: Jianhua Lin <jianhua.lin@mediatek.com>
-To: <mchehab@kernel.org>, <matthias.bgg@gmail.com>,
-	<angelogioacchino.delregno@collabora.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jianhua Lin
-	<jianhua.lin@mediatek.com>
-Subject: [PATCH v3 1/1] media: mediatek: jpeg: fix buffer alignment
-Date: Mon, 26 May 2025 17:36:24 +0800
-Message-ID: <20250526093624.4760-1-jianhua.lin@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="t75CBBJ7"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742af84818cso1198249b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:38:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748252297; x=1748857097; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ayXEI8Cfv1/N/P9sk6QD8plzK1Zh4bjNNg4FyYTKeW8=;
+        b=t75CBBJ7R1LrkYCsBz5TIfMTqIl70m9KyqO7kgTF4RIHArUiDG3ZzgE1UVinXfohWk
+         GJ9cvQDAcoC/365RclM8JQL6xgG9pCX2slQfk/2DvrMbhVqdP8ZBZMJ+Al+U5ODE5Mhc
+         mp+M+7B7u8vQ7ENRPl6mzi0UZle+l8TqTtl2BmcoRorbmkr9sgdbD64QW0KEz8iopxT1
+         shCd5t/b7KEM92tFRZcN//Cxs23PDZt9jwtHhF7l5d1gTT+FpFqoj168WEvVYfqku8sq
+         gKLUvQdgDMvsLtsdUPHAoP3OpR0pFkmEleuPHHsfGjcnZRzU8JCOTCvWzEwMulLXWrDC
+         gxTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748252297; x=1748857097;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ayXEI8Cfv1/N/P9sk6QD8plzK1Zh4bjNNg4FyYTKeW8=;
+        b=TXMUHLhIvPbYys3lzUpI8ri6d4IVDYJHDi5bFo4dx9qcabgrOKiJy6SigCWPzMSGco
+         q15512HMODNe5iMvPEvj4B78j6L/ncUvdhoGYCqWSEdoHA9tOOUooFStMcH41BKkPatc
+         xOMVogp8vkpy7nIJXYixeLVLOKNQgbGHS/wQL39yIU65mBpQo3VnWV8ew31Qg4v9rpzY
+         W28CQQyam1Sbbfo4FpHAiGf0+eZarBJL3Y3H44Q+HFdmCr9+/gp9bGvQIJkQjL06BXRm
+         eYkvMmepGm7T8KYA93amW7YIhBXDMvR/JJodlFltYgr6MEtptSD00oSHBzvYRYzyzeo+
+         4Piw==
+X-Forwarded-Encrypted: i=1; AJvYcCULqWRfuuQ/LScpJ6GgorRoqMfVo17qpf2T6nLmCk0BoAZrf1AxgsCZhKa1urpc3wyM2tk6vz01Iz6rwvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQGD69kSpBFOWyusnt/f3JH+66Q5X2ZY8XgQBUdlAFwOZcHmzp
+	uIWi9pK2u359kZjKEh8apaZD9/CoJoW/U53dFT9GAMp/jhrFZJr1gTEocEEbcRG5eZ0=
+X-Gm-Gg: ASbGncsK5Jr8r6pEQ19tJmDhwvQGeUFTSWWHmiyOLLE+Huj1O8a5eqP55McTlG58WAc
+	LSarGFDDeEewaZs+fNw9jUW1lIEjxY0B6RQWMCTI3JuA6S9EWn2sDIiW7rTtuSIE6f+9PB3EZOH
+	jmIV+MH2Zs0uGJ2zjt4EBXepgePRwvvxbRmRL2RUF0c1Gs9x0b26c21OfEWE/Gv4AIZQ48Dqy+C
+	Tr/T5AJeGwHWSEasbE9rUxo55RsvGjizkkSoRb01KXZ7RkyyObya3QghNXDua0ayt7vbB2XA0Z8
+	8JQdcSh8JOPvmFPbT8K43vqJ6qsj8uHGc6v0pqU3/2gy/1/bQPLK2W54DSKCi1KXCMPTgBf/ooS
+	gH4bOfjXub1A6ZqiGwuTY
+X-Google-Smtp-Source: AGHT+IGtpgkfGcWHXNllZ6N7OfshZvdC/ul39y9uFpqnjdl5yZSiN5+nr2uee+5tOzhJpdCxTYM3zg==
+X-Received: by 2002:a05:6a21:8dc6:b0:20d:5076:dd78 with SMTP id adf61e73a8af0-2188c3c78f7mr13332787637.42.1748252297429;
+        Mon, 26 May 2025 02:38:17 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a4af6sm16624196a12.77.2025.05.26.02.38.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 02:38:16 -0700 (PDT)
+Message-ID: <20aeb166-6128-4dda-a963-c9f66f491bcc@rivosinc.com>
+Date: Mon, 26 May 2025 11:38:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 09/14] riscv: misaligned: move emulated access
+ uniformity check in a function
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Charlie Jenkins <charlie@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>,
+ Deepak Gupta <debug@rivosinc.com>
+References: <20250523101932.1594077-1-cleger@rivosinc.com>
+ <20250523101932.1594077-10-cleger@rivosinc.com> <aDC-0qe5STR7ow4m@ghost>
+ <b2afb9c7-a3d2-4bf6-bfaa-d804358ccd88@rivosinc.com>
+ <20250526-baaca3f03adcac2b6488f040@orel>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <20250526-baaca3f03adcac2b6488f040@orel>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-The JPEG encoder image stride register must be MCU aligned.
-For YUV422, it's 32-byte aligned, and for YUV420, it's
-16-byte aligned.
 
-The minimal DCT block size is 8x8, so the vertical buffer
-alignment for YUV422 is 8-byte aligned, and for YUV420,
-it's 16-byte aligned.
 
-Signed-off-by: Jianhua Lin <jianhua.lin@mediatek.com>
----
-Changes compared with v2:
-- Add missing subject
+On 26/05/2025 10:41, Andrew Jones wrote:
+> On Fri, May 23, 2025 at 09:21:51PM +0200, Clément Léger wrote:
+>>
+>>
+>> On 23/05/2025 20:30, Charlie Jenkins wrote:
+>>> On Fri, May 23, 2025 at 12:19:26PM +0200, Clément Léger wrote:
+>>>> Split the code that check for the uniformity of misaligned accesses
+>>>> performance on all cpus from check_unaligned_access_emulated_all_cpus()
+>>>> to its own function which will be used for delegation check. No
+>>>> functional changes intended.
+>>>>
+>>>> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>>>> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>>>> ---
+>>>>  arch/riscv/kernel/traps_misaligned.c | 20 ++++++++++++++------
+>>>>  1 file changed, 14 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+>>>> index f1b2af515592..7ecaa8103fe7 100644
+>>>> --- a/arch/riscv/kernel/traps_misaligned.c
+>>>> +++ b/arch/riscv/kernel/traps_misaligned.c
+>>>> @@ -645,6 +645,18 @@ bool __init check_vector_unaligned_access_emulated_all_cpus(void)
+>>>>  }
+>>>>  #endif
+>>>>  
+>>>> +static bool all_cpus_unaligned_scalar_access_emulated(void)
+>>>> +{
+>>>> +	int cpu;
+>>>> +
+>>>> +	for_each_online_cpu(cpu)
+>>>> +		if (per_cpu(misaligned_access_speed, cpu) !=
+>>>> +		    RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
+>>>> +			return false;
+>>>> +
+>>>> +	return true;
+>>>> +}
+>>>
+>>> This ends up wasting time when !CONFIG_RISCV_SCALAR_MISALIGNED since it
+>>> will always return false in that case. Maybe there is a way to simplify
+>>> the ifdefs and still have performant code, but I don't think this is a
+>>> big enough problem to prevent this patch from merging.
+>>
+>> Yeah I though of that as well but the amount of call to this function is
+>> probably well below 10 times so I guess it does not really matters in
+>> that case to justify yet another ifdef ?
+> 
+> Would it need an ifdef? Or can we just do
+> 
+>  if (!IS_ENABLED(CONFIG_RISCV_SCALAR_MISALIGNED))
+>     return false;
+> 
+> at the top of the function?
+> 
+> While the function wouldn't waste much time since it's not called much and
+> would return false on the first check done in the loop, since it's a
+> static function, adding the IS_ENABLED() check would likely allow the
+> compiler to completely remove it and all the branches depending on it.
 
-Changes compared with v1:
-- Fix the side effects of v1
-  when encoding YUV420 with resolution 720x480, the ouput image is abnormal.
-- Fix signed-off-by
+Ah yeah indeed ! I'll do that
 
- .../platform/mediatek/jpeg/mtk_jpeg_core.c    | 44 ++++++++++++-------
- 1 file changed, 29 insertions(+), 15 deletions(-)
+Thanks,
 
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-index 834d2a354692..f01a81feb692 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-@@ -40,8 +40,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
- 		.h_sample	= {4, 4},
- 		.v_sample	= {4, 2},
- 		.colplanes	= 2,
--		.h_align	= 4,
--		.v_align	= 4,
-+		.h_align	= 16,
-+		.v_align	= 16,
- 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
- 	},
- 	{
-@@ -50,8 +50,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
- 		.h_sample	= {4, 4},
- 		.v_sample	= {4, 2},
- 		.colplanes	= 2,
--		.h_align	= 4,
--		.v_align	= 4,
-+		.h_align	= 16,
-+		.v_align	= 16,
- 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
- 	},
- 	{
-@@ -60,8 +60,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
- 		.h_sample	= {8},
- 		.v_sample	= {4},
- 		.colplanes	= 1,
--		.h_align	= 5,
--		.v_align	= 3,
-+		.h_align	= 32,
-+		.v_align	= 8,
- 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
- 	},
- 	{
-@@ -70,8 +70,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
- 		.h_sample	= {8},
- 		.v_sample	= {4},
- 		.colplanes	= 1,
--		.h_align	= 5,
--		.v_align	= 3,
-+		.h_align	= 32,
-+		.v_align	= 8,
- 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
- 	},
- };
-@@ -87,8 +87,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
- 		.h_sample	= {4, 2, 2},
- 		.v_sample	= {4, 2, 2},
- 		.colplanes	= 3,
--		.h_align	= 5,
--		.v_align	= 4,
-+		.h_align	= 16,
-+		.v_align	= 16,
- 		.flags		= MTK_JPEG_FMT_FLAG_CAPTURE,
- 	},
- 	{
-@@ -96,8 +96,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
- 		.h_sample	= {4, 2, 2},
- 		.v_sample	= {4, 4, 4},
- 		.colplanes	= 3,
--		.h_align	= 5,
--		.v_align	= 3,
-+		.h_align	= 32,
-+		.v_align	= 8,
- 		.flags		= MTK_JPEG_FMT_FLAG_CAPTURE,
- 	},
- };
-@@ -260,6 +260,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_pix_format_mplane *pix_mp,
- 				   struct mtk_jpeg_fmt *fmt)
- {
- 	int i;
-+	u32 h_align;
- 
- 	pix_mp->field = V4L2_FIELD_NONE;
- 
-@@ -283,9 +284,15 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_pix_format_mplane *pix_mp,
- 	}
- 
- 	/* other fourcc */
-+	if (pix_mp->pixelformat == V4L2_PIX_FMT_YUYV ||
-+	    pix_mp->pixelformat == V4L2_PIX_FMT_YVYU)
-+		h_align = fmt->h_align / 2;
-+	else
-+		h_align = fmt->h_align;
-+
- 	pix_mp->height = clamp(round_up(pix_mp->height, fmt->v_align),
- 			       MTK_JPEG_MIN_HEIGHT, MTK_JPEG_MAX_HEIGHT);
--	pix_mp->width = clamp(round_up(pix_mp->width, fmt->h_align),
-+	pix_mp->width = clamp(round_up(pix_mp->width, h_align),
- 			      MTK_JPEG_MIN_WIDTH, MTK_JPEG_MAX_WIDTH);
- 
- 	for (i = 0; i < fmt->colplanes; i++) {
-@@ -293,8 +300,15 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_pix_format_mplane *pix_mp,
- 		u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
- 		u32 h = pix_mp->height * fmt->v_sample[i] / 4;
- 
--		pfmt->bytesperline = stride;
--		pfmt->sizeimage = stride * h;
-+		if (pix_mp->pixelformat == V4L2_PIX_FMT_YUYV ||
-+		    pix_mp->pixelformat == V4L2_PIX_FMT_YVYU) {
-+			stride = round_up(stride, fmt->h_align);
-+			pfmt->bytesperline = stride;
-+			pfmt->sizeimage = stride * h;
-+		} else {
-+			pfmt->bytesperline = stride;
-+			pfmt->sizeimage = stride * h;
-+		}
- 	}
- 	return 0;
- }
--- 
-2.46.0
+Clément
+
+> 
+> Thanks,
+> drew
+> 
+>>
+>>>
+>>> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+>>> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+>>
+>> Thanks,
+>>
+>> Clément
+>>
+>>>
+>>>> +
+>>>>  #ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+>>>>  
+>>>>  static bool unaligned_ctl __read_mostly;
+>>>> @@ -683,8 +695,6 @@ static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
+>>>>  
+>>>>  bool __init check_unaligned_access_emulated_all_cpus(void)
+>>>>  {
+>>>> -	int cpu;
+>>>> -
+>>>>  	/*
+>>>>  	 * We can only support PR_UNALIGN controls if all CPUs have misaligned
+>>>>  	 * accesses emulated since tasks requesting such control can run on any
+>>>> @@ -692,10 +702,8 @@ bool __init check_unaligned_access_emulated_all_cpus(void)
+>>>>  	 */
+>>>>  	on_each_cpu(check_unaligned_access_emulated, NULL, 1);
+>>>>  
+>>>> -	for_each_online_cpu(cpu)
+>>>> -		if (per_cpu(misaligned_access_speed, cpu)
+>>>> -		    != RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED)
+>>>> -			return false;
+>>>> +	if (!all_cpus_unaligned_scalar_access_emulated())
+>>>> +		return false;
+>>>>  
+>>>>  	unaligned_ctl = true;
+>>>>  	return true;
+>>>> -- 
+>>>> 2.49.0
+>>>>
+>>
 
