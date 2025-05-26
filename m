@@ -1,195 +1,108 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
+Received: from cantor.telenet-ops.be (cantor.telenet-ops.be [195.130.132.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DC22063F0
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748264143; cv=fail; b=OA9BBpU77TxToWcuuDj5nlb6tsTmlKNqnFX62pvg6FG2Ybxdum4IOeEFUhJTjUDByzcq/K80nHAd3A86v0OWne3kUZpJ1W9W9OzTqBAr1it6Px77pf2VReUJ4eeGmtipYsfpCAiPQYccIRKyY3e4ce31nJkidq9aRnRo6Hf9acI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748264143; c=relaxed/simple;
-	bh=vjmDnSkdlZt/DhCTho+/Avo1f7AVJwHzyIdzmT9zBKs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ShkJbF9TVzWfJU6u/ikmLdFQ/V9PRFenWBD97m4uXbm84Lg7Bv2Hg1Pij2YbClUB2kWx1mSLB88/fnIPqs/WxyQezt0HMdRg1RAVyNWpBV+IOxT3HZqSf0BhuV4AGfNZFaxWTfIrCpiT/loZvmSbBX9QuUUroXslbjqy1/i5A0g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AFvufF2s; arc=fail smtp.client-ip=40.107.237.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AFvufF2s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K3S6jmnI2JUzDq2tnSSrxF2L5sPR8O2dwBFkawSCFvUYEhvyUkQJC7Uku8KL7jtyZVQMdLCjSP79gDyY8KQfEn+q9FkBaL4ZcAzGP83QJY4G8enkRWr6B+RCsBGe7plMKwum4WL10FHAJp5Yo0+INVzzzSdW5zPXIKw6BnTzjIFbv22DABIxxu37s/kn/QY80YQv2uIIc//LEyMIr0xb9Ms3Xy132HV0tA1q0AFCgdFAut1Aue6rEKqtx8/j/rEV6jotC5F1ZCoDXiht1iDKcGCIdW/A+vyELrrl9mdf1kQi+LDTgys9EN1QS4qyaWQsuyPBearN6ybR89mR2ronXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YExrLBNmjk0Jky++4o/V4jEROgJRqTpVnrXzJ5VrY0A=;
- b=CREdCOizGhJ2ijE8F+rVWfEczxcLxZFVU/wTBMm0BYxrUkWtQqFdDfnbEKuo0L64csS7HhRfO5dCt84KoIIs05UgWRkyAMYSjmXsAkyEgYHDAdskPbQGHalV1leglTq+WLdurMS09MLmEMZFBByrFUX5SrQTwL7/fvlPzsJL2YiaD8jh8hDaB0EqRIdWNA8/NGx7PKyK4e/NqZZEof1eSfEcXOPg1Ibhe1sYxAWsk+vfXRJvjlx8kLw6AO27JvL32pNXhsGwJdC5TgvXvIUULcCVwI+/NS6IYPSrcWLPuWPrNp6iBlgMIqlKkzvqiWCuE6fsNzNwMe7ITiAT6allTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YExrLBNmjk0Jky++4o/V4jEROgJRqTpVnrXzJ5VrY0A=;
- b=AFvufF2saGJeq8Dg32vb/8LN2OOWJ3lJbx7bRfifje8oC8YsVEZ7GIKoFW8z2DFMVLzm82pCpFspDsZrDln0Mf3ZvsbiL8UQJCHiaw0NA0xWkdwrcP5Polj/z1QGfVKZi9/ccmp695PX5TLGRQ6c/APmCVN3suf4Hzl4Hhpmo/I=
-Received: from SJ0PR13CA0002.namprd13.prod.outlook.com (2603:10b6:a03:2c0::7)
- by DM4PR12MB9071.namprd12.prod.outlook.com (2603:10b6:8:bd::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Mon, 26 May
- 2025 12:55:36 +0000
-Received: from SJ1PEPF00001CEB.namprd03.prod.outlook.com
- (2603:10b6:a03:2c0:cafe::8) by SJ0PR13CA0002.outlook.office365.com
- (2603:10b6:a03:2c0::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Mon,
- 26 May 2025 12:55:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CEB.mail.protection.outlook.com (10.167.242.27) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Mon, 26 May 2025 12:55:35 +0000
-Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 26 May
- 2025 07:55:33 -0500
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v11 01/10] drm/debugfs: Output client_id in in drm_clients_info
-Date: Mon, 26 May 2025 14:54:43 +0200
-Message-ID: <20250526125505.2360-2-pierre-eric.pelloux-prayer@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D7420A5DD
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748264147; cv=none; b=OvwSTaPICtqEbVBk/Tl00puEPY0iY/DZalYYWCpFXYSkjwXJ76P5mc5i7UWs0r8lEEApWGcPxSjRsi7GQYmfJsYvSYGJV1//iFf2IOZ3+bImOQObxfXNkqNB2fmfS+7MoF3yUCn8wnMYIAw4HYlvPqVEVprD5eqDdiCih66vbDQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748264147; c=relaxed/simple;
+	bh=KkQwgXHw8yl2iRNVVytw7enFpOc2PlsBaF7EKHxMBZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GtdsTVUG0qie29xl1q4kTWhgJqdC7OUeoeYoFZRYu7YTtrDFIf6T3ol3OVFzZsgku7F2gYgBCqyeUOTs1qfMJOUfuNfcqwy1O6vtGhK0rbVO4Mg/PMIQPUB9RTwLrIszQSeLZMFW3cc7570yPE73mlmgmeHBOmnvuSgjPA+98KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+	by cantor.telenet-ops.be (Postfix) with ESMTPS id 4b5b9r3YZYz4x1b5
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:46:40 +0200 (CEST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9962:836e:244b:c4d7])
+	by xavier.telenet-ops.be with cmsmtp
+	id tomY2E00e0Y7Yez01omYtE; Mon, 26 May 2025 14:46:33 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uJXDc-00000003Rpo-2huh;
+	Mon, 26 May 2025 14:46:32 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uJXDs-0000000Beit-2cTP;
+	Mon, 26 May 2025 14:46:32 +0200
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Greg Ungerer <gerg@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [GIT PULL] m68k updates for v6.16
+Date: Mon, 26 May 2025 14:46:24 +0200
+Message-ID: <20250526124624.2778122-1-geert@linux-m68k.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEB:EE_|DM4PR12MB9071:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e0d6a01-f305-4309-ed03-08dd9c549b6d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UDgzeWRRSlk4RXVGUVZEZEIxc2Q2SkVBMTJNNjBFSVlqM0NlamlpWnIxQjd4?=
- =?utf-8?B?NWhzbTdsd0tCUnpQNU9ab2FJME1oTHBNbVZ3bCtRZWxBazlCYksvMDlWQWhj?=
- =?utf-8?B?dEJ4RS9QQU05NlZ5dVIzQ3JodmRHcTQybmhXeVdGc3B2ZzR3YWpxZWZ0UUpv?=
- =?utf-8?B?UzgweE5uVGtmeDRUbzlYV1FQSFB4SkRqcEVzQzlvbkUyMGNuNW02blZUNXRv?=
- =?utf-8?B?Y0tBWXRNQk5DaTFqVkE1MzBhUE5PNlFsbjdrWG9Ec1gxQWlWMkxCd25VaHhn?=
- =?utf-8?B?NDNWYWRwVGQxMFZEdUszZ0JXUWt0Y2ZXRWxoZitLL2lKdHRPb1U1d1Nyd2U4?=
- =?utf-8?B?Q1liZTk2bnJXODNEZUpuaXZHOFovNmpsVTNOUVdGMjlTQmFqZnRlQVJHRjBv?=
- =?utf-8?B?L1ZsMjFxQ3k3YjVHbk1CUmpVK1pFT2xuWjV0NXJiWU1Ibk1BU3FyY25JeGxq?=
- =?utf-8?B?NnE1dHBjQTdkYjlHWTRtekUvNzNmaG51UERGWmVUQzJZQXVkYUlWYloxRXdD?=
- =?utf-8?B?NVQ1c0FuWnRTNzlEUHUzc0h6VjM0ZnIrcnZBM3FnT2Q1aS9jakEwQ2FwVTlo?=
- =?utf-8?B?SGRoM29UU0J1TWJFQUQ1M3Z4SFV3UmRFZHpDbkVLYVRnMmR2MU9wZjZvd3I3?=
- =?utf-8?B?bHZNT1VyRkhOMmdpUGxCNXdUK1pJQWlVQkMwVEQyQXBiaVdPWC9MMGtLNkZv?=
- =?utf-8?B?Z1ZkK3N0bjRseWNjYisrU084N3ErS2lXWEFXZkF0c045OXRrcE1DMzhacmZI?=
- =?utf-8?B?V1ZHcnp4NWxHaS9lQmo2VFhjMm94R1Bja295c08ycERWdGpFK0ZnWTUwV2R0?=
- =?utf-8?B?UWx5Wm42L3pZdzNKU2tMcEFQZjRFT1dWNlU5cVI0OFZqT3dJVEtSVk92ei81?=
- =?utf-8?B?VUxmb0RwVnRpNmt6ODN2cFNpSjd6aG8zajM1cVF2WnF3Yk9sU05xbnJIWmNX?=
- =?utf-8?B?bnVKWW1vcXlyVTdRckMzV3lQdFlZTHp2SnlJQlh2UU1KVkFaeUQ0QitEOWJG?=
- =?utf-8?B?WDlSaXlTMU9FcXp0KzlDMUtyTkIxMVVkTjRwbncwTStZOE8xMytyK0I1R3lH?=
- =?utf-8?B?K1oxRUI5S0lza2w2WlVRYzF4OXBWOTlHUVBJR0pnTElGcTI2UWJQOWtxNyt3?=
- =?utf-8?B?RUV0ZkI5YnNNeGtMZzEvRnVzekNSa3d6WWxLV1F2RGdnTm84Q0JNZkExTG94?=
- =?utf-8?B?MVFpTDRqOFFWQkE2cjNXdjJ4bkhLdmZhMGtnNmlacTgxRzhDcldpUU8xZFZF?=
- =?utf-8?B?NkNtOUU2d21HWURTTitNbUdicER5TFNPNzU1eS9HWkN0OWNYWlpLZ09rOXBK?=
- =?utf-8?B?YW9peEZRSlRSaW8vSUk2eVl4bWkwNk5kaGZtTFpKNzkvTGVBQ1YrZWFlQjdo?=
- =?utf-8?B?MjNBQ2RtUEczZ3kvR3g3d1c4TnA3MXR0cmZEejJyeVZ4Mnc1TXcybGNnUWJB?=
- =?utf-8?B?RXNycWgrQ1dPT2twWWVVNUtrNVFBTFBFY3BILzZuMjFHUG1SazB1OVV5anJ2?=
- =?utf-8?B?MHlhVDA1OGtSczBoMUMraXFhY1VpSzN2ZVVKM0N2YW5JYjJCdjkvZ1gvVWxR?=
- =?utf-8?B?RGZnRFN3ZUNFMkVDVDV3K3h6Z2xsNS9vVjdqM21NVXFTU2RTZStlY1NhSmdY?=
- =?utf-8?B?TTN4VHBNQW1KQ1NudTNocUd4bmZHTUdhb0JsaDhFMHZTUWFNQmRHaTJwU3BT?=
- =?utf-8?B?b3VvNEw4aWRHUmkxN3laT1hMN3BqaHFsYkVyM3MrTXF3cmowQXZlWE1TNnUy?=
- =?utf-8?B?V2ZBeWp5cFZlTU42bGl3cDZpOThpckZKK1lRemNCS0pLbXNWU2wvb3JqQnRB?=
- =?utf-8?B?RngzNGhlSTJKM3BySU5jN3pIUHR6ZUx5NzdDaWJ1MytFanVJdHU4TUxYbWpu?=
- =?utf-8?B?NnRjRTE5Z3dSU2QrNnpEUnMwUTg3Z0t5TnY2QW5BK28wdVRXOHJJTHVzVnl4?=
- =?utf-8?B?YjdwdkZKRWpmZHYvU3YwSFVIeVNjcVhlRThOcDh2WHdRc1BDR0F5NWtRS2My?=
- =?utf-8?B?MWpOVXZkUUZ5ZXRTd1VLRjRtQk56dDZhMzZPZUpGVVlVVVlydkpOaHlpZ0hR?=
- =?utf-8?Q?DKrxTr?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 12:55:35.4070
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e0d6a01-f305-4309-ed03-08dd9c549b6d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CEB.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB9071
 
-client_id is a unique id used by fdinfo. Having it listed in 'clients'
-output means a userspace application can correlate the fields, eg:
-given a fdinfo id get the fdinfo name.
+	Hi Linus,
 
-Geiven that client_id is a uint64_t, we use a %20llu printf format to
-keep the output aligned (20 = digit count of the biggest uint64_t).
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
----
- drivers/gpu/drm/drm_debugfs.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
-index 3dfd8b34dceb..abceb28b23fc 100644
---- a/drivers/gpu/drm/drm_debugfs.c
-+++ b/drivers/gpu/drm/drm_debugfs.c
-@@ -77,14 +77,15 @@ static int drm_clients_info(struct seq_file *m, void *data)
- 	kuid_t uid;
- 
- 	seq_printf(m,
--		   "%20s %5s %3s master a %5s %10s %*s\n",
-+		   "%20s %5s %3s master a %5s %10s %*s %20s\n",
- 		   "command",
- 		   "tgid",
- 		   "dev",
- 		   "uid",
- 		   "magic",
- 		   DRM_CLIENT_NAME_MAX_LEN,
--		   "name");
-+		   "name",
-+		   "id");
- 
- 	/* dev->filelist is sorted youngest first, but we want to present
- 	 * oldest first (i.e. kernel, servers, clients), so walk backwardss.
-@@ -100,7 +101,7 @@ static int drm_clients_info(struct seq_file *m, void *data)
- 		pid = rcu_dereference(priv->pid);
- 		task = pid_task(pid, PIDTYPE_TGID);
- 		uid = task ? __task_cred(task)->euid : GLOBAL_ROOT_UID;
--		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u %*s\n",
-+		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u %*s %20llu\n",
- 			   task ? task->comm : "<unknown>",
- 			   pid_vnr(pid),
- 			   priv->minor->index,
-@@ -109,7 +110,8 @@ static int drm_clients_info(struct seq_file *m, void *data)
- 			   from_kuid_munged(seq_user_ns(m), uid),
- 			   priv->magic,
- 			   DRM_CLIENT_NAME_MAX_LEN,
--			   priv->client_name ? priv->client_name : "<unset>");
-+			   priv->client_name ? priv->client_name : "<unset>",
-+			   priv->client_id);
- 		rcu_read_unlock();
- 		mutex_unlock(&priv->client_name_lock);
- 	}
--- 
-2.43.0
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v6.16-tag1
+
+for you to fetch changes up to f440518f379d22c95329e9e0e0fb6caaafa0f8b0:
+
+  m68k: defconfig: Update defconfigs for v6.15-rc1 (2025-05-19 13:37:36 +0200)
+
+----------------------------------------------------------------
+m68k updates for v6.16
+
+  - One more strscpy() conversion,
+  - Fix detection of real Mac II,
+  - Defconfig updates.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Finn Thain (1):
+      m68k: mac: Fix macintosh_config for Mac II
+
+Geert Uytterhoeven (1):
+      m68k: defconfig: Update defconfigs for v6.15-rc1
+
+Thorsten Blum (1):
+      m68k: Replace strcpy() with strscpy() in hardware_proc_show()
+
+ arch/m68k/configs/amiga_defconfig    | 4 ----
+ arch/m68k/configs/apollo_defconfig   | 4 ----
+ arch/m68k/configs/atari_defconfig    | 4 ----
+ arch/m68k/configs/bvme6000_defconfig | 4 ----
+ arch/m68k/configs/hp300_defconfig    | 4 ----
+ arch/m68k/configs/mac_defconfig      | 4 ----
+ arch/m68k/configs/multi_defconfig    | 4 ----
+ arch/m68k/configs/mvme147_defconfig  | 4 ----
+ arch/m68k/configs/mvme16x_defconfig  | 4 ----
+ arch/m68k/configs/q40_defconfig      | 4 ----
+ arch/m68k/configs/sun3_defconfig     | 4 ----
+ arch/m68k/configs/sun3x_defconfig    | 4 ----
+ arch/m68k/kernel/setup_mm.c          | 2 +-
+ arch/m68k/mac/config.c               | 2 +-
+ 14 files changed, 2 insertions(+), 50 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
