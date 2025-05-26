@@ -1,120 +1,122 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9036F1E5729
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9914A2AEFE;
+	Mon, 26 May 2025 08:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748249931; cv=none; b=PJrsBFopkImoVs8CYLWoV6pa42UKBfEgxjbVwnaD/XmkbybHUTExesR7LaLd7sg1njq6KsI1OahYwFE/zFwqahyEMmwbz3m7DD+F8b72/HSfk0bw4ZKm1vuAh+J2/fAeyPKYJBslTSe8Q5IFKo36pkbt7iOsFvhYnTVkwlPSY0Y=
+	t=1748249962; cv=none; b=ck/zR01SpHfefEo0woQZKnPzzoLKDQexd99GXnTk5nAAthhjqPUrMkgiiPxpsI4mr1PjDaJJU1hLhQFt2PDIwNuNTBEC/8ktx29v6xBbj130yMO1I4XfG8IVYl/zpliz0inZXNDujNyRye4pdJysnn7Q+8HRf8wXTXSJzTLVL54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748249931; c=relaxed/simple;
-	bh=A07uMUlAiHODBnye6U6+ZYgmI+z5BqjupTHEKb1apD0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=WN6TlWrBi2cB2mLW2ptcaoxxeBHfUUxW4wyvMu0C2skmD3hJWf7wuhf6IcyDfkASJtFAIw14MJ288rWUDxEoh3k763qfwYfoV2txVkfjb0KG2mbAjdWicN+poDtP9VULOm0Zp5KyTo+mUTREMQhGzqzXwvRUxHS4QVll9OfW6f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=nBfqjNff; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1748249962; c=relaxed/simple;
+	bh=BdA9mPuHJ0+Hh9B8jPgulgQ8/U/ggWA26Ja0q9N75E8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JH05zei8wzwxEdg6yiioCxm99hQIk9FdLnFiHD0CtV98zRAnWDjd007Z7nl+9/rTDskedGtOZENRQczF/JvdTbjZQ6Ixxq2N1hK+ooqMJ2YbzIL48l9ASnG2/9aGLklx98snrAfpWckoiV6fu+lsCt/uLwtx5NFn3ma+JAtlN1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mo5iOhRd; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="nBfqjNff"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cee550af2so418065e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748249928; x=1748854728; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7XUa5QDzySuu6U8WB9K8OF+ZIZj9kEnHYCZp+dCaCR0=;
-        b=nBfqjNffw48hNkVyyQHtfWhCWLtfYgFnYlWzQxkgwUg1QVgDUfH9XpKxk+cOUvnn3g
-         IO4NuFbH15/FllezFedzKyq6v4jZkTFrzMIVGMorT1c/7reVH0HMY8Nz0YuVR5bcVmbb
-         2cYsdaUWh1i8uj+KivWANTASq1cxKAOyKd9hA6RY0Yh0COw9BO2AN9tbP4tIXopmWdOr
-         vd8Md2mx+PAJyt+XKTBrUa4maEOyVzugxAHU1ZQ8PjDSXzn4RTmGYVmL2OPWbec3tK7s
-         dOhESPB4+SQSYcav2M8frCWMcUsa5so2Kxplu5y0B8Tw/fsgpHC44Bnf6Ce9Gec8edEn
-         UqSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748249928; x=1748854728;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7XUa5QDzySuu6U8WB9K8OF+ZIZj9kEnHYCZp+dCaCR0=;
-        b=g8fQ3BPNqZtTlO7HRO8JubJ8FsunCcGQAnUq1mz9wxr3yACiLTeURcmHamsm7VZPW3
-         Cs1Y5CTuYuszSzYUWbLZFKCHcZx02zhrpTvYURh1X5CEylJjrFF0sQ95E4dZouSmgAfA
-         Bm0IVUbiuwQeOvYSpJdcdRWtfWmgKaoQFdQi1roSEbDJ/i2U/pgvLN5i5w6T7/bYqSJE
-         FO7xSZunQ5ixS4escGC97Pld2vK5OYherPxjGR2d5WI+mVdpOp5q90PMeAepki7BacMJ
-         e8zm4ecjNih//8xt4FyCchaAYzrmhWM3oPM22JW4AW7sHm4RkZLUZ01Qa6v+hrLxj0JC
-         Eotw==
-X-Forwarded-Encrypted: i=1; AJvYcCVb2PJnrbfMpLQmrX2ABvVELE+vEfr/k41DxqggREYDA9YO+y5zY2AhYG8DcaymtN6pEL0e3ty6wAYtXJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCnyAjfFAKcQN9IppXwyOd5e4TqNM1k+tNGhOxonQ3jVuYS2zu
-	GWaMs0MtwZMLPlHAedR4XHQeI9HfFHJlXV642V9ZJx4WOBpoJLR2XwZDggsyTXcqF80=
-X-Gm-Gg: ASbGnctywIRixZ4P1X2DQMmhba+0xuzfb5b68pKRfLph5nfPyKyslZ9DP+CN4DA4qWh
-	fix4tL9hoUKO5bBVQAX5YrNUAHjlOadyzenMlUKLvf+jpiD9SOIUyWe/7HO+/UO9c0B2qFBx3qi
-	nx5srVr7urK9d1ZZYSP/Su3oQUh50sjASthyybIVzvV/nJdkW/KqIScKROWVztNyu4Vwg2v52Ty
-	oqaiAGBtj+Qk2koZGCzrar49q0kw8NSjY1bC35apIE5xM2Tf+ZA3Oma3kSbhMAfuDaxsvPpldwf
-	N+hLnMspyknN352pCopHHHQUWXXqgze9oaEfUkqC24eyG9x1S0ccGDs3xrU=
-X-Google-Smtp-Source: AGHT+IEdx9Lxmxr6Jj4a/VtrbY6n55+AjozaESSFCcKKfyGvvRTO9hEvIbHH5Dnsj/C495VBfSOibw==
-X-Received: by 2002:a05:600c:1c24:b0:439:9ec5:dfa with SMTP id 5b1f17b1804b1-44c938cb1e6mr27073595e9.7.1748249927727;
-        Mon, 26 May 2025 01:58:47 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:b85a:a7d4:fa4e:bb11])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d007bbccsm5654781f8f.89.2025.05.26.01.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 01:58:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mo5iOhRd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748249961; x=1779785961;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BdA9mPuHJ0+Hh9B8jPgulgQ8/U/ggWA26Ja0q9N75E8=;
+  b=Mo5iOhRd3ecPEG1H8/lATWarZ8Oh/dKjFHad7XeXIO7F3QXzf2if21z2
+   7+hZNHG6E8axiFkIBic9vuCb+f9BZdNNAxEcWfWdc5QhwtXA1Zj9cQRco
+   GubB4UvoRqF67rmOWXdvDLD0J5Nj8cLIk7JrzO7lDDgFUNiXxZ5iUmg6d
+   xyp15rHEeBHkq1qaviGn6eosB+8kmhnYWIkKM7vewGopkgUVYq589i6sc
+   RC3jL3z318xfQadlfXXD7DLOC1mBcL+oPIW55No5LP8NuruNWW9ppGpIi
+   VhWi1lC31mOrkEcVB7Y65Mnp/L2swjqOs3ycrBir0ownek9RH/TC0xKSj
+   g==;
+X-CSE-ConnectionGUID: OQ5JYd+9QhKfx0qm07k4DQ==
+X-CSE-MsgGUID: 2lyc4xocTmO6KKkZ8jUrGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="60468911"
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="60468911"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 01:59:20 -0700
+X-CSE-ConnectionGUID: BJtMHkLOQhiTL9+A1un3Tg==
+X-CSE-MsgGUID: xx6T1i4oRE6sWLGokSRPsA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="165472427"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 01:59:17 -0700
+Date: Mon, 26 May 2025 10:58:39 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] net: af_key: Add error check in set_sadb_address()
+Message-ID: <aDQtPxmS3leVRJew@mev-dev.igk.intel.com>
+References: <20250525155350.1948-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 26 May 2025 10:58:46 +0200
-Message-Id: <DA5YVKW682V3.2DODRY4EDL3IW@ventanamicro.com>
-Subject: Re: [PATCH v8 13/14] RISC-V: KVM: add support for FWFT SBI
- extension
-Cc: "Samuel Holland" <samuel.holland@sifive.com>, "Andrew Jones"
- <ajones@ventanamicro.com>, "Deepak Gupta" <debug@rivosinc.com>, "Charlie
- Jenkins" <charlie@rivosinc.com>, "linux-riscv"
- <linux-riscv-bounces@lists.infradead.org>
-To: "Atish Patra" <atish.patra@linux.dev>,
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Anup
- Patel" <anup@brainfault.org>, "Atish Patra" <atishp@atishpatra.org>, "Shuah
- Khan" <shuah@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <kvm@vger.kernel.org>,
- <kvm-riscv@lists.infradead.org>, <linux-kselftest@vger.kernel.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250523101932.1594077-1-cleger@rivosinc.com>
- <20250523101932.1594077-14-cleger@rivosinc.com>
- <DA3K95ZYJ52S.1K6O3LN6WEI0N@ventanamicro.com>
- <9f9e2869-725d-4590-887a-9b0ef091472e@rivosinc.com>
- <DA3OJ7WWUGLT.35AVP0QQDJRZV@ventanamicro.com>
- <5dd587b3-8c04-41d1-b677-5b07266cfec5@linux.dev>
-In-Reply-To: <5dd587b3-8c04-41d1-b677-5b07266cfec5@linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250525155350.1948-1-vulab@iscas.ac.cn>
 
-2025-05-23T11:02:11-07:00, Atish Patra <atish.patra@linux.dev>:
-> On 5/23/25 9:27 AM, Radim Kr=C3=84m=C3=83=C2=A1=C3=85 wrote:
->> 2025-05-23T17:29:49+02:00, Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>=
-:
->>> Is this something blocking though ? We'd like to merge FWFT once SBI 3.=
-0
->>> is ratified so that would be nice not delaying it too much. I'll take a
->>> look at it to see if it isn't too long to implement.
->>=20
->> Not blocking, but I would at least default FWFT to disabled, because
->> current userspace cannot handle [14/14].  (Well... save/restore was
->> probably broken even before, but let's try to not make it worse. :])
->>=20
->
-> User space can not enable or disable misaligned access delegation as=20
-> there is no interface for now rightly pointed by you.
+On Sun, May 25, 2025 at 11:53:50PM +0800, Wentao Liang wrote:
+> The function set_sadb_address() calls the function
+> pfkey_sockaddr_fill(), but does not check its return value.
+> A proper implementation can be found in set_sadb_kmaddress().
+> 
+> Add an error check for set_sadb_address(), return error code
+> if the function fails.
+> 
+> Fixes: e5b56652c11b ("key: Share common code path to fill sockaddr{}.")
+> Cc: stable@vger.kernel.org # v2.6
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  net/key/af_key.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/key/af_key.c b/net/key/af_key.c
+> index c56bb4f451e6..537c9604e356 100644
+> --- a/net/key/af_key.c
+> +++ b/net/key/af_key.c
+> @@ -3474,15 +3474,17 @@ static int set_sadb_address(struct sk_buff *skb, int sasize, int type,
+>  	switch (type) {
+>  	case SADB_EXT_ADDRESS_SRC:
+>  		addr->sadb_address_prefixlen = sel->prefixlen_s;
+> -		pfkey_sockaddr_fill(&sel->saddr, 0,
+> -				    (struct sockaddr *)(addr + 1),
+> -				    sel->family);
+> +		if (!pfkey_sockaddr_fill(&sel->saddr, 0,
+> +					 (struct sockaddr *)(addr + 1),
+> +					 sel->family))
+> +			return -EINVAL;
+>  		break;
+>  	case SADB_EXT_ADDRESS_DST:
+>  		addr->sadb_address_prefixlen = sel->prefixlen_d;
+> -		pfkey_sockaddr_fill(&sel->daddr, 0,
+> -				    (struct sockaddr *)(addr + 1),
+> -				    sel->family);
+> +		if (!pfkey_sockaddr_fill(&sel->daddr, 0,
+> +					 (struct sockaddr *)(addr + 1),
+> +					 sel->family))
+> +			return -EINVAL;
+>  		break;
+>  	default:
+>  		return -EINVAL;
 
-I mean setting default_disabled=3Dtrue and just disabling FWFT for the
-guest unless userspace explicitly enables the incomplete extension.
-We would blame the user for wanting mutually exclusive features.
+There are few other calls to pfkey_sockaddr_fill() without checking, but
+family is already checked in such case, so it is fine.
 
->                                                       I guess supporting=
-=20
-> that would be quicker than fixing the broader guest save/restore=20
-> anyways. Isn't it ?
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-Yes.  The save/restore for FWFT is simple (if we disregard the
-discussions), but definitely more than a single line.
+I am not sure if it should be a fix. If family is set there is no
+problem. Probably it is set in all cases. Maybe you should target it to
+net-next, but as I said, I am not sure.
+
+Thanks
+
+> -- 
+> 2.42.0.windows.2
