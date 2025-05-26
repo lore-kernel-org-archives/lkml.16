@@ -1,105 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9677E9;
-	Mon, 26 May 2025 17:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A7F1420DD
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748280638; cv=none; b=qz9DtUBy+p2/3JVwbQkRH3mGzrWQWMh6T/OR0ppaAGpI9eegrdic3fw7g0J9X7yq+0nc76vpK2kV77+8SANBfNHLuR++ZxMLfhGtVLx2MK91FzpzABKzbFe9O+bUnDe1CVbdos93C/gPRStJxB/KqgLTvNj0u3POHQgLSFMiINw=
+	t=1748280849; cv=none; b=XiqCd8jdTQkctEUNtloJK1iQGG5s3BORwJJZ2EOM3oqiHD6bFQh362qqqPH67ozujIyLvo+oqKCwWpqiLNw5N3A9yQZNWKVEJ0v/yt/oedJQ6tDC1UvojhiHquWWRyirnSsTXARwZMOhKyKi8YFSXkQttCc+gn1l4x0LdvxiN88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748280638; c=relaxed/simple;
-	bh=++BoeWAgoVok/kbNT/X+LVWuRHe4UOQ0Rg+rCYlkPWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kXmZm8Fl39jvIoU00/MvoXBZXnwtBVgSpYfMLRUHR9qCD/4Ws4CoEqumXGxK9UXJUDnczpwOsauC2dVr9kIrsuil6hRl+3ynzYht0gpEHtU+B+DvYAU0yAskt2COjVkybm/ZKA5S9WslnHl7FSCNaw94etcLnMtmyQqQHTqRbjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLipo4G1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748280849; c=relaxed/simple;
+	bh=iLUd1Atl7F2XhGCO4Taa7I7wq59LVRkty/S6nhFd6J8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uC5iOBjoQJNieOdaP6icsqIyiV6Tm8fyGYzG6tRTJNAdtSXctvX6/SgYiRx9bNOb6QY5C6IBWowH0NrJ7QxkMNQN6kOLI6AR8nVEJSz2teFOfuk+L06vXBnCU5jYC2X86NmBHjgskMJGj87P35l7rId+ckrbaa0/dCUH6fBON90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j5+6Fx9T; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLipo4G1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FEFAC4CEE7;
-	Mon, 26 May 2025 17:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748280637;
-	bh=++BoeWAgoVok/kbNT/X+LVWuRHe4UOQ0Rg+rCYlkPWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TLipo4G1A4/dTZ2yoky4OJWMqtN5wnK1+8zs1tLfjZ37azdeDbxOn33urpKYPSj8R
-	 x7hghE+gkHJurHCis31OgpI80DarhFDkMPw0/4AiMVbZvClX1y7PyF1nC0d0BSbhAd
-	 InmAs8Nl5SeHnJo1wJwaLb9l1FkvqhO7yrPEEFr3H8O/iZUe7OhGgRsevEOX6YfFnQ
-	 CavK9GJ7YdSG+0+b2oCttmiBak6d5qtFueohieqLA++qkwJxVGAGkJ5Q77QSOoRTRt
-	 EtI238iv70lZ6dUrXk4VuvHpvcBa+jMrRI6Fp3gF/jGMs1q+OCI8lBa2nCsKMKHWht
-	 w9rxZuU6LjWrg==
-Date: Mon, 26 May 2025 19:30:35 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Michael <michael@fossekall.de>
-Cc: Chen-Yu Tsai <wens@csie.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
- BananaPI M1 on 6.9
-Message-ID: <20250526-refined-dog-of-blizzard-b48f11@houat>
-References: <aCJZmm8rC0RwbcBX@a98shuttle.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5+6Fx9T"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2349068ebc7so45225ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748280847; x=1748885647; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hgxk+Us9mQiW48CfwTTJ3SbvDd6vhg6S6WT+88w+Zks=;
+        b=j5+6Fx9T1x0ZI0mXrTN9DCk2lDY6v3exbploQnxTq4Shoum7qJArG4mv+L6xSe5myG
+         AI/Wq7eKLYlnP5ytjU4YIc/w3WNgmuHFCaY5LxW+59rVsApSrLm2CahADnCID+dY9Vm+
+         icVSo5zTkg9tQqifdNdi4hDrf8oLEkZFDsyLjuXWhYTDaHQQgkqywbUer9uE6LUrddrd
+         T0wJa8R/TFW+Gx3b1m2dc9Qmc1+LRrwllg5MFkYUqmShzhMglH0McTDwoXgwwg+qX+aw
+         FewAQt1YS6C8krImANDYY465dELMaqwB4CYYC4g+/e2gH5iKfGsrN2YtSvcesa8LRZ/b
+         ELHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748280847; x=1748885647;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Hgxk+Us9mQiW48CfwTTJ3SbvDd6vhg6S6WT+88w+Zks=;
+        b=N6pQPgICElDgqXRkCMyqm9towjAGbN/l03mkE7wZgFDTjzMRFi+02rPAf5YeoVvCpp
+         btSpHTl88LAG0ZeYg3hyr2rttqaJ3H9HWPSQrBUZs1dQDh0YN0b7pIxQJ9BMwr5Qow6V
+         19QwhN6dqFheUstESbOav3djSOjJ4fT63cHKFGM3RC+R6JIYZwagYhBZvRJi+VAoxvYP
+         Ul+uYRoyse76OB7MTn5TLBi/7lMJzqUgErXpxiiABsBHDL1omHQ3X/OUzLX8zO9HHCsy
+         G0YlX1ktmcYG79f41gVpLO4e4SW2gGjjADhlVhbgot+oCmp8i2ylor6zUa99kOFVz72j
+         cE3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUtjl/alZ5HfegdCQZ7QpOdmZN3/RUUvH/f8nDAkB1W8J9SsrtMpgGccX21iZRYxE1bHWT7i9s4WhlpGog=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLN5tIZNOlVtIdBmiILrPHTrMFWnalzF/ZFuFOp2CIczTwbeBJ
+	iGxMC6poXy+L4NElbz0Vv+WWuDX2sMFjfJv7e5D1er2qnCOcp4mZpba8wvWJes5HZHEJBQvznep
+	8qPnTliSZEoNBvIxgHFpE/HuOIbxRZWqyFSBkWhct
+X-Gm-Gg: ASbGncsSG8eK2ojr7Se6KaSw3UxV5HsYOZEIGhorH9m0wk+sqCPlDJeES+6o3WJxaYt
+	j23upA1JiKym0J66AHhoqDyZ5K65zlg3/f8Hz2/pHZJ6b4y7GOPG8KEoyfAnvNGHGXLT5q9k70m
+	t3sjvF3S5ATAn2xZEjxuU0mUhFuBz+7xTqvbVJdDse7Xxe
+X-Google-Smtp-Source: AGHT+IFQ3dUetNFfbOk0QYXpICwB0ij6uIvhORtrNLO5srstLqnDueoHgPjQ8gqgOvQXudMrOUcM53NL7t+iY+hfgmI=
+X-Received: by 2002:a17:903:234e:b0:22c:3cda:df11 with SMTP id
+ d9443c01a7336-2341807dc84mr4471365ad.10.1748280846532; Mon, 26 May 2025
+ 10:34:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="wx3fp4rhvd2s43t7"
-Content-Disposition: inline
-In-Reply-To: <aCJZmm8rC0RwbcBX@a98shuttle.de>
-
-
---wx3fp4rhvd2s43t7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250523032609.16334-1-byungchul@sk.com> <20250523032609.16334-19-byungchul@sk.com>
+ <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
+ <20250526013744.GD74632@system.software.com> <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
+In-Reply-To: <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 26 May 2025 10:33:52 -0700
+X-Gm-Features: AX0GCFvbcQEfDXG3A2E85eQ0suvZ9QGF79i6mkSHWdI2UWVhJN8XZ-nz6-kdVFg
+Message-ID: <CAHS8izM5xd=cBRuUpAUNtcFzZ3hMwmseyh6rsV+WPRAvdzv4cA@mail.gmail.com>
+Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct page
+To: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com, 
+	kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com, 
+	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com, 
+	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
- BananaPI M1 on 6.9
-MIME-Version: 1.0
 
-Hi,
+On Mon, May 26, 2025 at 9:57=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.=
+com> wrote:
+> >> Removing these asserts is actually a bit dangerous. Functions like
+> >> netmem_or_pp_magic() rely on the fact that the offsets are the same
+> >> between struct page and struct net_iov to access these fields without
+> >
+> > Worth noting this patch removes the page pool fields from struct page.
+>
+> static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
+> {
+>         return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
+V);
+> }
+>
+> static inline atomic_long_t *netmem_get_pp_ref_count_ref(netmem_ref netme=
+m)
+> {
+>         return &__netmem_clear_lsb(netmem)->pp_ref_count;
+> }
+>
+> That's a snippet of code after applying the series. So, let's say we
+> take a page, it's casted to netmem, then the netmem (as it was before)
+> is casted to net_iov. Before it relied on net_iov and the pp's part of
+> the page having the same layout, which was checked by static asserts,
+> but now, unless I'm mistaken, it's aligned in the exactly same way but
+> points to a seemingly random offset of the page. We should not be doing
+> that.
+>
 
-On Mon, May 12, 2025 at 10:27:06PM +0200, Michael wrote:
-> with v6.9 and later there is no output on the BananaPI HDMI connector.
->=20
-> I have bisected the issue to the following commit:
->=20
->   358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid=
-")
->=20
-> With this patch, sun4i_hdmi_connector_clock_valid() is occasionally called
-> with clock=3D0, causing the function to return MODE_NOCLOCK.
-> In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is
-> always!=3D0, maybe that gives someone a hint.
+Agreed.
 
-This doesn't make sense to me, if only because the two callers of
-tmds_char_rate_valid (hdmi_compute_clock and
-drm_hdmi_connector_mode_valid) have, right before calling it, checks to
-make sure the clock rate isn't 0, and would return MODE_ERROR or EINVAL
-in such a case.
+> Just to be clear, I think casting pages to struct net_iov *, as it
+> currently is, is quite ugly, but that's something netmem_desc and this
+> effort can help with.
+>
 
-https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_h=
-dmi_state_helper.c#L234
-https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_h=
-dmi_state_helper.c#L553
+Agreed it's quite ugly. It was done in the name of optimizing the page
+pool benchmark to the extreme as far as I can remember. We could use
+page pool benchmark numbers on this series to make sure these new
+changes aren't regressing the fast path.
 
-Do you have some logs (with dri.devel=3D0xff)? Does it happen with 6.15 as
-well?
-
-Maxime
-
---wx3fp4rhvd2s43t7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDSlOgAKCRAnX84Zoj2+
-dsbbAX99s9kKf45MW0A0sRoR7VuFGBnreiDwHOLIAAo4qprwTU4rlEcbnOBL7Y1m
-XpJezKkBgJizzKS4du2vMNyg/eBB/0g/gvrzOsCy21C78GxZsMiwUpQBB81Ja0fq
-gR2HdeNy8w==
-=UHi2
------END PGP SIGNATURE-----
-
---wx3fp4rhvd2s43t7--
+--=20
+Thanks,
+Mina
