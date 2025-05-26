@@ -1,65 +1,33 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0F0136349;
-	Mon, 26 May 2025 05:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59090282F5;
+	Mon, 26 May 2025 05:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748237964; cv=none; b=oTvo9l4JSYfGI1ejtjyv/bIWETdxUi/tlL5MwE2aUg+XpA72c1hH9BvrT4r+rJwLE6IFpA9BDW54g4FfYOoQ0CB+P1Vw0wR4aqkOzGR2XpuDl+f36imfIAB19phSBrasOQHtBwTyBNIJ5NbtuIrHfKqPC8UEPzL4rKi/9wTgW5g=
+	t=1748238060; cv=none; b=aBF9xM1jAP0iNHezkf22DKrOAziKjBa+k+XT6rIkXdW+Dr+gDaXXETPKq3bkpDEhMSyXolBzztKxWJ4sYsD8i5P+nndBf2OBnMn3E0WRFm2SBykNq2pxr88bP1d/PuveaWb3nKp3pKzSux8ciJD/g0IGGBFTI+jPWOX38taJT+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748237964; c=relaxed/simple;
-	bh=rB6DtSGBYvQRTpJ/h23/TPejO2Pzgd4zo6EBey4hcas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XktznBnxdYJpueEgQTtNrnKa9H9Djmu76tLn37lQaCtFKH2FWWUHW72iAUF8rck5L+cychXAf5go3VogZIcUFaBCJhb0pssiGWFGYoEbJdFNjxNmH0ioxB/3a7PcPhjX1WsEph1cUQaG47mlAatxJ6L2QyK4SX1Yi+CvDjN+of4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qsy0iSxE; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748238060; c=relaxed/simple;
+	bh=XRqjBzDwgvw1xP62Qq+XZ1FkytUcGBM5prprQQPTZFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q9P78Ltl1IpdK0fkpX6kpHVIuiPKNvjItf/33+m9vbZbuUM9leAFDKs6Lo47URbHv5fTS+RjMSIwCq+selywU7RB3cVwz8aai851gozFPGQfL/G9TisPLUbGRB2t1tz/YYMMamEkYQW4DdT+OB9VWCCvCOiXvlfR43lpQrHDKic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFmVplLZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qsy0iSxE"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2346846ee0eso3663885ad.3;
-        Sun, 25 May 2025 22:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748237962; x=1748842762; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dLp6cnqyCbjFDWsg2nybeJcpM5tSNUhvPi8JJGmzqF0=;
-        b=Qsy0iSxE85qWONzM3q1TXBzBFRit0OrFgHVdbG9gdGQeO6l+1sunRSyyYXklHYN9XT
-         MsHV+CH86Dots8bP3swyFaBxkJvU5H23U6/+Le+VH1UaADYDkMHxIph7S4vRR9iIgMR1
-         iOBCJLUFAiNQ0detzyuxAoQX+0eDW5w+TlfKSjOzEiXuKB6C+hi6TWeYkZX5O6Z/3vyX
-         yV1DrNX+US1w41Cxj6BnHNLtwb4fnqCpZo0yn56KWbvUX81d6DNQqSRwbl2B8QxKjLAK
-         QSnSmj/q3PWXdi5kKO2uNFmZJQWkVz24Pvit7v727T9QuHZKPvWgpKHETu3R1rDvbegx
-         awBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748237962; x=1748842762;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLp6cnqyCbjFDWsg2nybeJcpM5tSNUhvPi8JJGmzqF0=;
-        b=FVdtDOKI4R28D1cTVvdr+J00ygWDjUvbVSjOgoDJ39WYjTy1OCttwYBP5IWKO759oB
-         +sGcxBVqSyv8WeMZ0axl5wq0cHP5vQVPxxnAi6dAsq6k+5JWdPiOHudbWL86JRuKWQCk
-         FkPafe8+ARvCS0VJoJYP2IE6btB4yPz+j+y+UeMu+zjU0ZUO5WWJZsvbaJBiMr6Kewc7
-         3WHuafSfsxJ0mcT8AcUBeqH8xwe3tTj2stw88LVZPpGvytSCU1FgPA6MvD8xTze9cZn1
-         k7qbHR9jvyRrmpGjVdEEY7lImQOkkZSycWVviwGpruaxC6dXtjdr0x0JFH9eTBDTFmaT
-         jbRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsiNo1DAeV4IguNFN/FlmPY8eeyt6rf0Qe/wTiUTp4DYYWXFuFB5+DJx7oo1YxR4iN89VzpniPRY+2DkDx@vger.kernel.org, AJvYcCVhklqkhGnUCVSsVg1YGBHM11/Pq6X5Y3t3I36q4gtkUwnJHpE2f+FcThiATWjz4w2WGSJGnk9Xev9F@vger.kernel.org, AJvYcCWW9GqfQDeMMKjPWx0tsxtUHyqxI/3asavO7342sIuQUMIvRM5OkvAfw+NoLHGlG0dkFxVdBmlO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyorftQg3PhdpnpEFc5RHh5HNmwpBf643ex2tRUvBK6JEGV1khA
-	Z0nyg/OxF1SERn/c/m+NjUrJi1Zz0l0GZviq5rY9p4O+319ZqSG7TjFBpEJcpAKP
-X-Gm-Gg: ASbGncukWv3D5/lOmHYEG/NWraQGIviQsHpBQb4MB6/v2ACQ6sLtEIf7QYHGUO9uq7z
-	BtB7BuGGplwk1hc6UlQHjXUhPCwZ7vEYujQYe8XGwQlrxXIjkmqS+jR/Phv525q4mX+aANqNhEq
-	AdRxnw3CkJ+RrrASqAx0bryK1UHHIkhS+C6N/myoyJjksrm8nYREuEwDvcPuXbG3h4eHqKBCwMZ
-	rIa51kpka3DeEKYWSmEMckYi3KSZrSJHXlSR+RGft6J9cfH0vi/Q+BkjhXykxNTN25e84MNcD4l
-	n5m4h+ymTe0YYmFfGBgBmRcQx+9v5zzaLHRkihTnTsAHnjVqWLLN8iz2Cb8ShcSc6Xb8UGXKbKJ
-	Quh4oILVMkvH6d/iQQik3jcD7a2ps
-X-Google-Smtp-Source: AGHT+IG7xgzxnz1Grj9UzPDie6FzHib+saLpOZH8onxhz75DWnCGce9JBep2Vj0Bc2x5YD1GmylXew==
-X-Received: by 2002:a17:902:eccb:b0:22e:3f1e:b8c8 with SMTP id d9443c01a7336-23414f5cceamr132744715ad.15.1748237962243;
-        Sun, 25 May 2025 22:39:22 -0700 (PDT)
-Received: from [0.0.0.0] (ec2-54-193-105-225.us-west-1.compute.amazonaws.com. [54.193.105.225])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2343635891bsm22297405ad.130.2025.05.25.22.39.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 May 2025 22:39:21 -0700 (PDT)
-Message-ID: <705d99b3-9803-4f5f-a807-607b49349b68@gmail.com>
-Date: Sun, 25 May 2025 22:41:52 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFmVplLZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9EA6C4CEE7;
+	Mon, 26 May 2025 05:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748238059;
+	bh=XRqjBzDwgvw1xP62Qq+XZ1FkytUcGBM5prprQQPTZFY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cFmVplLZxAboZR4UYVMChIsRFViFCY3046HF2Xrmu+HfB+6+OOBh60eQ8hFWiit4s
+	 +ABXAYoP8DLLPCAk4jI4qC8offdiCsflbCh821YeAtQypEyzv8hsuOqwu0GR1mBykj
+	 R9Gkv3TigUwjqSECQ7VQppDvF39zbWD2SO9jurYSuUl6D196/1igG3cB0lg3gA2FhY
+	 WLlo8FI6pNI9anlqwpLUrwkbovMCvBT/gvIhZ+SmgOoCxaE5XO9rji7ekASMFffiWP
+	 bl6hJcbhcioZIv00vrayHVkmKnwjqHECZLBc76fdUfL5VUsnJYAGarQxAR2Z2npETT
+	 W7RMqHAMNNZHw==
+Message-ID: <44b5d5f1-f45e-4d81-809f-707bd756257d@kernel.org>
+Date: Mon, 26 May 2025 07:40:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,82 +35,124 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] ethernet: eswin: Document for eic7700 SoC
-To: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- richardcochran@gmail.com, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
- p.zabel@pengutronix.de, yong.liang.choong@linux.intel.com,
- rmk+kernel@armlinux.org.uk, jszhang@kernel.org, inochiama@gmail.com,
- jan.petrous@oss.nxp.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- lizhi2@eswincomputing.com
-References: <20250516010849.784-1-weishangjuan@eswincomputing.com>
- <20250516011040.801-1-weishangjuan@eswincomputing.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: i2c: nvidia,tegra20-i2c: Specify the
+ required properties
+To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com,
+ p.zabel@pengutronix.de, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250526052553.42766-1-akhilrajeev@nvidia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Bo Gan <ganboing@gmail.com>
-In-Reply-To: <20250516011040.801-1-weishangjuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250526052553.42766-1-akhilrajeev@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/15/25 18:10, weishangjuan@eswincomputing.com wrote:> From: Shangjuan Wei <weishangjuan@eswincomputing.com>
+On 26/05/2025 07:25, Akhil R wrote:
+> Specify the properties which are essential for the Tegra I2C driver to
+> function correctly. Though all the existing DT nodes have these
+> properties already, it was not mandated by the DT bindings.
+
+I was rather expecting to see explanation why these were missing.
+
+Fixes: f10a9b722f80 ("dt-bindings: i2c: tegra: Convert to json-schema")
+
+
 > 
-> Add ESWIN EIC7700 Ethernet controller, supporting
-> multi-rate (10M/100M/1G) auto-negotiation, PHY LED configuration,
-> clock/reset control, and AXI bus parameter optimization.
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+> v2->v3:
+>   * Updated commit description on the details and fixed indentation
+>     issue.
+> v1->v2:
+>   * Added all required properties
 > 
-> Signed-off-by: Zhi Li <lizhi2@eswincomputing.com>
-> Signed-off-by: Shangjuan Wei <weishangjuan@eswincomputing.com>
-> ---...> +  # Custom properties
-> +  eswin,hsp_sp_csr:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: HSP SP control register> +...> +additionalProperties: false
-> +
-> +  eswin,syscrg_csr:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: System clock registers
-> +
-> +  eswin,dly_hsp_reg:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: HSP delay control registers
-...
-> +examples:
-> +  - |
-> +    gmac0: ethernet@50400000 {...> +        dma-noncoherent;
-> +        eswin,hsp_sp_csr = <&hsp_sp_csr 0x1030 0x100 0x108>;
-> +        eswin,syscrg_csr = <&sys_crg 0x148 0x14c>;
-> +        eswin,dly_hsp_reg = <0x114 0x118 0x11c>;
+>  .../bindings/i2c/nvidia,tegra20-i2c.yaml      | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> index b57ae6963e62..c1d38e6ff7d7 100644
+> --- a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.yaml
+> @@ -97,7 +97,9 @@ properties:
+>  
+>    resets:
+>      items:
+> -      - description: module reset
+> +      - description: |
 
-Please help explain the meaning of eswin,<reg> array, and also the expected
-number of elements in it, like what starfive did to their JH71x0 device-
-tree bindings. E.g., this is what net/starfive,jh7110-dwmac.yaml looks like:
+Do not need '|' unless you need to preserve formatting.
 
-...
-   starfive,syscon:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     items:
-       - items:
-           - description: phandle to syscon that configures phy mode
-           - description: Offset of phy mode selection
-           - description: Shift of phy mode selection
-     description:
-       A phandle to syscon with two arguments that configure phy mode.
-       The argument one is the offset of phy mode selection, the
-       argument two is the shift of phy mode selection.
-...
 
-Otherwise, there's no way for people to reason about the driver code.
-The same should apply for your sdhci/usb/pcie/... patchsets as well.
-Also there's no reference to the first element of the hsp_sp_csr array.
- From the vendor code, I'm reading that you are using the first element
-as the register to set the stream ID of the device to tag the memory
-transactions for SMMU, but in the patch, there's no mentioning of it.
-I'm guessing you are planning to upstream that part later. If so, I
-think it's better to put that register index at the end of the array,
-and make it optional. It should then be properly documented as well.
+> +          Module reset. This property is optional for controllers in Tegra194 and later
 
-Bo
+Your binding says Tegra210 requires it, but 210 feels like something
+later than 194. Maybe that's obvious for people knowing that device?
+
+Anyway, please wrap at 80 (see kernel coding style).
+
+> +          chips where an internal software reset is available as an alternative.
+>  
+>    reset-names:
+>      items:
+> @@ -116,6 +118,13 @@ properties:
+>        - const: rx
+>        - const: tx
+>  
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+
+dmas, dma-names, power-domains, see TXT binding... or extend commit
+description why this should be different comparing to original binding.
+
+Best regards,
+Krzysztof
