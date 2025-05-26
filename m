@@ -1,290 +1,130 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68081D799D;
-	Mon, 26 May 2025 06:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE9E1D63EF;
+	Mon, 26 May 2025 06:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748240706; cv=none; b=lfBHKVwSZVW7AmXVjCSdYkqGOD5MCgTvMJmYyhtfZwnHCVHhb/tk/46AwPEqmI+9WeW+jlqS95bOSRan8tk4Sz7WhVG/Hv33TPA9ca3HNAC/Ep9F2+y5jWpXhyFbCGjHP2h87odBisikSR55acR+5kyNHfQzCt4h0Ass2QXcc4A=
+	t=1748240735; cv=none; b=PqYz6t3QkksYAjP/hdUvWcrmjW0USK5p+WijHI0u4luWnSxe+ldD3aRE71odoZw1IHYn04f5aHvWNf7uRWQRDoMLS+N8p7XyCJQAvjQAdiArsAh2Bx75O3wlD1s52yQn3bKE/4DVOO48POOyV+OkOI5KXLr3fIsN0UwWM8FCZ4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748240706; c=relaxed/simple;
-	bh=L8b1p5kbrVy+tMLeyLn1FM1MK9BLFpgzBzjIgI+UJy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C5ZPoHIXydZLjtkFJPrn3BqeC+xdpZXsdG3xTWdtklCgFnBLd7/CLWUcb7OxicxqvxiE0XSYw1hyoBLZFwg2Ta1lhZNFSz7TjZiPrPiroigQUZaomhFmK/nqD5KN2LBOo0uYFT1BC2rd/R0sQfvm5PFKxs3Jb4eMhxqTOJeYzEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iGxKrpK/; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748240735; c=relaxed/simple;
+	bh=BJeTERc5V0vrdbYgydnzT6w4VAFQlNqaTMpH8PV2Sr4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J9ZpvGRG3fv3G2epETe8a6O0gF+RIJ5uIU2rxo+mVWFMRBD5SlLGkMyROf6WLJc2xqj4XI5J52mcylX1vXxelErzJxij3JA3Jdf97ha0mxZarZamEzefOHRcIkHxYSh28gtVFQEJja5XaEAgTujX0yRk5EJaOnr6H9+CCyS/dbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jW7D+V/C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iGxKrpK/"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54Q6Oc9O2628339;
-	Mon, 26 May 2025 01:24:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748240678;
-	bh=76ZzqSisVzXfe0G42LdDt43iYzUKgkGIRLwgRXSzqJo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=iGxKrpK/jWti8I+82nyThAir3ryJESpZdIkbXJcCyH8KjtmblXmVovbMxmB0O2tPJ
-	 yD0bbmYYQT3VQ8HJmWk3Ps3GEvUqAcZ5vug1jh9up/RplI21G8/xcPJlQG3ueAjGSL
-	 HlIVbfK8lyKG5+tDPgE/SKiQqYSErfJGYy9sTTyo=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54Q6Ocb81916022
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 26 May 2025 01:24:38 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
- May 2025 01:24:37 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 26 May 2025 01:24:37 -0500
-Received: from [172.24.227.115] (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54Q6OW7R2628278;
-	Mon, 26 May 2025 01:24:33 -0500
-Message-ID: <482afba8-c6fb-4420-83f1-597fb7088ce4@ti.com>
-Date: Mon, 26 May 2025 11:54:32 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jW7D+V/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DD7DC4CEE7;
+	Mon, 26 May 2025 06:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748240735;
+	bh=BJeTERc5V0vrdbYgydnzT6w4VAFQlNqaTMpH8PV2Sr4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=jW7D+V/CCihEwWkT6Va0aSKGt6l5JJltxCWyGiNeFd4hjtkRDEbh+1QhtAon596eG
+	 5J2BYM4Zae2Odc1KP6BLWiYMQsoF48eqtbsWG3ZPzJHEkapJB+lMh6xLWx360tUN54
+	 xT1qdl1FuVxMqA88PhfCq3H3OCxvIMvUW5Fdz7Ci9HxHvKAFm9NtOKNKCO++t8lAmW
+	 RsHZTQsmi6OCafsXwGbFln8d45VBziZ7XWRNvqTzwc7XqyHM0qDbiGCaN9T9YZl/VN
+	 ngwlljdF3HTHZWG+s1p2fjnkXRTidUQi53O1lRUTvrNlfzHHO65XxsraJVbCCP4C6f
+	 3/+wegQw0NG4A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F3C54FB3;
+	Mon, 26 May 2025 06:25:35 +0000 (UTC)
+From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
+Subject: [PATCH v3 0/4] stratix10: Add framework for asynchronous
+ communication with SDM
+Date: Mon, 26 May 2025 14:25:03 +0800
+Message-Id: <20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] media: i2c: ds90ub960: Add support for DS90UB954-Q1
-To: Jai Luthra <jai.luthra@ideasonboard.com>, <conor+dt@kernel.org>,
-        <krzk+dt@kernel.org>, <mchehab@kernel.org>, <robh@kernel.org>,
-        <tomi.valkeinen@ideasonboard.com>
-CC: <hverkuil@xs4all.nl>, <sakari.ailus@linux.intel.com>,
-        <laurent.pinchart@ideasonboard.com>, <vaishnav.a@ti.com>,
-        <u-kumar1@ti.com>, <jai.luthra@linux.dev>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250523083655.3876005-1-y-abhilashchandra@ti.com>
- <20250523083655.3876005-3-y-abhilashchandra@ti.com>
- <174801920679.2094995.12860064357887094874@freya>
-Content-Language: en-US
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-In-Reply-To: <174801920679.2094995.12860064357887094874@freya>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-B4-Tracking: v=1; b=H4sIAEAJNGgC/23PTWrDMBAF4KsYraugH6uRveo9SjGSPEoEdexqF
+ NESfPcoMiGUZPkG5nszF4IQAyDpmwuJkAOG+VSCfGuIO5rTAWgYSyaCCcW45BTDMmB2w3nBFMF
+ MFPZ61K6zrZSKlLUlgg+/lfz82nKEn3OR0zZ8wH2zsayjODu/HMxw56eAjlrrRm/3hjGh+yxvu
+ jUI1M3TFFLf5PcdV+RWcgyY5vhX38i8tlS6FeL54swpo0xrpjreMS/5h/lOEM2uuFXL4iEo/ko
+ QRfAGlGuVK8z4T1jX9Qocq23ZWAEAAA==
+X-Change-ID: 20250131-sip_svc_upstream-e78d8c9b4335
+To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Mahesh Rao <mahesh.rao@altera.com>
+Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748240732; l=2648;
+ i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
+ bh=BJeTERc5V0vrdbYgydnzT6w4VAFQlNqaTMpH8PV2Sr4=;
+ b=AuY2GU47tnF1D7mAgvBZpACk55FmX1gmZr0GuOH1hXxSax/wFO6j+ZI2ianLuUINBnHQp3sMX
+ Ul19RhFy1iWAD+IjoFAudJRuTra3YHhTPla4aaDOFLbxHGdUB3zTggC
+X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
+ pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
+X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
+ auth_id=337
+X-Original-From: Mahesh Rao <mahesh.rao@altera.com>
+Reply-To: mahesh.rao@altera.com
 
-Hi Jai,
+The patch set includes the following changes:
 
-Thanks for the review.
+- Add protection for querying memory objects in
+  multi-threaded flow.
+- Add support to generate and maintain message id
+  and client id for asynchronous communication with SDM.
+- Add framework to communicate with Secure Device
+  Manager(SDM) asynchronously by sending a request
+  and polling for response.
+- Add interrupt definition in Agilex devicetree
+  for asynchronous communication.
+- Add SDM interrupt support for Agilex platform
+  supporting asynchronous communication.
+- Add support to optionally notify the clients if
+  response is available using interrupts from SDM.
+- Add commands for querying temperature and voltage
+  from SDM.
 
-On 23/05/25 22:23, Jai Luthra wrote:
-> Hi Abhilash,
-> 
-> Thanks for the patch.
-> 
-> Quoting Yemike Abhilash Chandra (2025-05-23 14:06:55)
->> DS90UB954-Q1 is an FPDLink-III deserializer that is mostly register
->> compatible with DS90UB960-Q1. The main difference is that it supports
->> half of the RX and TX ports, i.e. 2x FPDLink RX ports and 1x CSI TX
->> port.
->>
->> Some other registers are marked as reserved in the datasheet as well,
->> notably around CSI-TX frame and line-count monitoring and some other
->> status registers. The datasheet also does not mention anything about
-> 
-> So what happens when userspace calls LOG_STATUS and the driver tries to
-> read these monitoring registers? Are these populated in the device but just
-> marked as reserved in the datasheet?
-> 
-> Whatever is the case, please make sure the driver doesn't crash, and update
-> the commit message with the reality if the datasheet is wrong.
-> 
+---
+Changes in v3:
+- Changed "Stratix 10" to "Stratix10" in the commit
+  message and in source code.
+- Simplified stratix10_svc_add_async_client() by removing
+  redundant code for async common channel initialization.
+- Fixed resource cleanup on negative path in
+  stratix10_svc_remove_async_client() and stratix10_svc_async_init().
+- Removed optional interrupt handler support, will send the patches
+  in a separate patch-set.
 
-I don't see a crash while doing a log-status [1]. In the driver, we 
-check what
-TX and RX ports are active from the HW data and the do a register read
-accordingly. That should be fine I believe.
+- Link to v2: https://lore.kernel.org/r/20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com
 
->> setting strobe position, and fails to lock the RX ports if we forcefully
->> set it, so disable it through the hw_data.
->>
->> Link: https://www.ti.com/lit/gpn/ds90ub954-q1
->> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
->> ---
->>   drivers/media/i2c/Kconfig     |  2 +-
->>   drivers/media/i2c/ds90ub960.c | 46 +++++++++++++++++++++++++++++++++++
->>   2 files changed, 47 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
->> index e68202954a8f..6e265e1cec20 100644
->> --- a/drivers/media/i2c/Kconfig
->> +++ b/drivers/media/i2c/Kconfig
->> @@ -1662,7 +1662,7 @@ config VIDEO_DS90UB960
->>          select V4L2_FWNODE
->>          select VIDEO_V4L2_SUBDEV_API
->>          help
->> -         Device driver for the Texas Instruments DS90UB960
->> +         Device driver for the Texas Instruments DS90UB954/DS90UB960
->>            FPD-Link III Deserializer and DS90UB9702 FPD-Link IV Deserializer.
-> 
-> nit:
->             Device driver for the Texas Instruments DS90UB954, DS90UB960
->             FPD-Link III Deserializers and DS90UB9702 FPD-Link IV Deserializer.
-> 
->>   
->>   config VIDEO_MAX96714
->> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
->> index ed2cf9d247d1..38e4f006d098 100644
->> --- a/drivers/media/i2c/ds90ub960.c
->> +++ b/drivers/media/i2c/ds90ub960.c
->> @@ -460,6 +460,7 @@ struct ub960_hw_data {
->>          u8 num_txports;
->>          bool is_ub9702;
->>          bool is_fpdlink4;
->> +       bool is_ub954;
->>   };
->>   
->>   enum ub960_rxport_mode {
->> @@ -982,6 +983,10 @@ static int ub960_txport_select(struct ub960_data *priv, u8 nport)
->>   
->>          lockdep_assert_held(&priv->reg_lock);
->>   
->> +       /* TX port registers are shared for UB954*/
->> +       if (priv->hw_data->is_ub954)
->> +               return 0;
->> +
-> 
-> nit: This could be moved above the assertion
+Changes in v2:
+- Added Reviewed by tag from Rob Herring for dt-binding
+  patch.
+- Resending the patch-set as there is no response from
+  the maintainers for the previous patch submission.
 
-Will do that in next revision.
+- Link to v1: https://lore.kernel.org/r/20250422-sip_svc_upstream-v1-0-088059190f31@altera.com
 
-> 
->>          if (priv->reg_current.txport == nport)
->>                  return 0;
->>   
->> @@ -1415,6 +1420,13 @@ static int ub960_parse_dt_txport(struct ub960_data *priv,
->>                  goto err_free_vep;
->>          }
->>   
->> +       /* UB954 does not support 1.2 Gbps */
->> +       if (priv->tx_data_rate == MHZ(1200) && priv->hw_data->is_ub954) {
->> +               dev_err(dev, "tx%u: invalid 'link-frequencies' value\n", nport);
->> +               ret = -EINVAL;
->> +               goto err_free_vep;
->> +       }
->> +
-> 
-> The error handling is exactly the same as the previous if {} block that
-> checks the allowed data rates for UB960. IMO cleaner to move this condition
-> in that block.
-> 
+---
+Mahesh Rao (4):
+      firmware: stratix10-svc: Add mutex lock and unlock in stratix10 memory allocation/free
+      firmware: stratix10-svc: Implement ID pool management for asynchronous operations
+      firmware: stratix10-svc: Add initial support for asynchronous communication with Stratix10 service channel
+      firmware: stratix10-svc: Add support for HWMON temperature and voltage read command.
 
-Noted, will try to do that in a cleaner way in next revision.
+ drivers/firmware/stratix10-svc.c                   | 871 ++++++++++++++++++++-
+ include/linux/firmware/intel/stratix10-smc.h       |  62 ++
+ .../linux/firmware/intel/stratix10-svc-client.h    |  99 +++
+ 3 files changed, 1021 insertions(+), 11 deletions(-)
+---
+base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
+change-id: 20250131-sip_svc_upstream-e78d8c9b4335
+prerequisite-change-id: 20250109-socfpga_sip_svc_misc-bbcdfb7a0028:v3
+prerequisite-patch-id: 6a4223bd2c01a0fd20925e597c906dc64e11ec2f
+prerequisite-patch-id: 33ca4dbe8b8e18d3e51145c6bcaae55170878b22
+prerequisite-patch-id: a02bca91874f4405191e60704574a0c99f37d184
 
-> Maybe even a separate table for allowed data-rates for each chip, but that
-> is probably overkill.
-> 
->>          v4l2_fwnode_endpoint_free(&vep);
->>   
->>          priv->txports[nport] = txport;
->> @@ -1572,6 +1584,10 @@ static int ub960_rxport_set_strobe_pos(struct ub960_data *priv,
->>          u8 clk_delay, data_delay;
->>          int ret = 0;
->>   
->> +       /* FIXME: After writing to this area the UB954 chip no longer responds */
->> +       if (priv->hw_data->is_ub954)
->> +               return 0;
->> +
-> 
-> It would be good to understand if this is a hardware limitation or not.
-> Tomi, do you have any idea?
-> 
->>          clk_delay = UB960_IR_RX_ANA_STROBE_SET_CLK_NO_EXTRA_DELAY;
->>          data_delay = UB960_IR_RX_ANA_STROBE_SET_DATA_NO_EXTRA_DELAY;
->>   
->> @@ -5021,6 +5037,27 @@ static int ub960_enable_core_hw(struct ub960_data *priv)
->>          if (priv->hw_data->is_ub9702)
->>                  ret = ub960_read(priv, UB9702_SR_REFCLK_FREQ, &refclk_freq,
->>                                   NULL);
->> +       else if (priv->hw_data->is_ub954) {
->> +               /* From DS90UB954-Q1 datasheet:
->> +                * "REFCLK_FREQ measurement is not synchronized. Value in this
->> +                * register should read twice and only considered valid if
-> 
->                     * register should be read twice and only considered valid if
-> 
->> +                * REFCLK_FREQ is unchanged between reads."
->> +                */
->> +               unsigned long timeout = jiffies + msecs_to_jiffies(100);
->> +
->> +               do {
->> +                       u8 refclk_new;
->> +
->> +                       ret = ub960_read(priv, UB960_XR_REFCLK_FREQ, &refclk_new,
->> +                                        NULL);
->> +                       if (ret)
->> +                               goto err_pd_gpio;
->> +
->> +                       if (refclk_new == refclk_freq)
->> +                               break;
->> +                       refclk_freq = refclk_new;
->> +               } while (time_before(jiffies, timeout));
->> +       }
-> 
-> Hmm.. in your testing did you find this actually requiring more than one
-> read?
-> 
-> I'm surprised because this is missing from UB960 which is an older device.
-> 
-
-In my testing (around 20 reboots) , I had to do only 1 check i.e just 2
-iterations. I am not sure on how to proceed but the data sheet at7.6.121 
-REFCLK_FREQ Register clearly specifies the below.
-
-"REFCLK_FREQ measurement is not synchronized. Value in this
-register should read twice and only considered valid if
-REFCLK_FREQ is unchanged between reads."
+Best regards,
+-- 
+Mahesh Rao <mahesh.rao@altera.com>
 
 
-Thanks and Regards,
-Abhilash Chandra
-
-[1]: 
-https://gist.github.com/Yemike-Abhilash-Chandra/dc07a6389d06648d9e80de23d8cae954
-
->>          else
->>                  ret = ub960_read(priv, UB960_XR_REFCLK_FREQ, &refclk_freq,
->>                                   NULL);
->> @@ -5177,6 +5214,13 @@ static void ub960_remove(struct i2c_client *client)
->>          mutex_destroy(&priv->reg_lock);
->>   }
->>   
->> +static const struct ub960_hw_data ds90ub954_hw = {
->> +       .model = "ub954",
->> +       .num_rxports = 2,
->> +       .num_txports = 1,
->> +       .is_ub954 = true,
->> +};
->> +
->>   static const struct ub960_hw_data ds90ub960_hw = {
->>          .model = "ub960",
->>          .num_rxports = 4,
->> @@ -5192,6 +5236,7 @@ static const struct ub960_hw_data ds90ub9702_hw = {
->>   };
->>   
->>   static const struct i2c_device_id ub960_id[] = {
->> +       { "ds90ub954-q1", (kernel_ulong_t)&ds90ub954_hw },
->>          { "ds90ub960-q1", (kernel_ulong_t)&ds90ub960_hw },
->>          { "ds90ub9702-q1", (kernel_ulong_t)&ds90ub9702_hw },
->>          {}
->> @@ -5199,6 +5244,7 @@ static const struct i2c_device_id ub960_id[] = {
->>   MODULE_DEVICE_TABLE(i2c, ub960_id);
->>   
->>   static const struct of_device_id ub960_dt_ids[] = {
->> +       { .compatible = "ti,ds90ub954-q1", .data = &ds90ub954_hw },
->>          { .compatible = "ti,ds90ub960-q1", .data = &ds90ub960_hw },
->>          { .compatible = "ti,ds90ub9702-q1", .data = &ds90ub9702_hw },
->>          {}
->> -- 
->> 2.34.1
->>
->>
-> 
-> Thanks,
-> Jai
