@@ -1,104 +1,95 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C703595E;
-	Mon, 26 May 2025 08:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7B11B0439;
+	Mon, 26 May 2025 08:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246711; cv=none; b=eagQz/Z4Q8Gg7DmocZp7isKWlJ2s9x4AgrDjByaN4qK2I2zAY0GFg+GMb6bHV6GG48LNWPcXtQfggux0YoPBO00oX5u03CzaDVZ0bOkVQ9Hbi8c3nRFg2ycFuu6ak8JwH3zr0wWLPNjwWCiEurV9tjMkjBYNy9jaeHk/EQCeguc=
+	t=1748246751; cv=none; b=HWezS5Xu7mgylgTHhwHkh87aS6Rp188aHYdIBZofvN5xXR45YpocKGCAa8XCvroXtZ7K0XaL6bU0+gEWJ32Qdmp0EEj8Nq77Z495nhp29oYupwtzAWfhWiOs+XrOuVvUOLRxOFbXDWwcIspZAc7AdggGv5/E1qCk8F1e+pPxHNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246711; c=relaxed/simple;
-	bh=Xi/4wSWLk23OU5m5HrWBRgvE7nyhIYVAvXhoVjBKmmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gsBs2Oex0lZ7aKFgCJVxcAue3cm5E5cIomy4NMS4ahsDS/g2jGta57C8Gsox4/IJ4AJtCX6q5Mgh/nh1yvAaFPzj0WXIslVPBaYgYU9ffYWntvGL2wqCxE2e4xPWMfA79Y460DkbYAGYycetALQQF0C1cVM65g1SQ81NDVb2V14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ahmp7gVK; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ahmp7gVK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bbADdHqSyemEAUvSgp0Vxsp615wRz96ttPoTQeE5LAo=; b=ahmp7gVKJThDo8tM/ki0syfuDO
-	JQtPY1b6f/MhHhhkDOr6epdnAs23WIReEi4cS/jX2seK6jRV8D64egdPDbzu0ATYjmqV3uvgtyRuM
-	L28cPXQKHj4swBTuaFPS4vj1udkP0rrgNjalXHH8NVUfvoMPGGM4HxxAGptJvPlWeZJjCRu+CyH86
-	EGQDPvyoL7F1xXhi7G5cjdYnVCEex3JGS43fnm0UThcxWdZIqHy41Ry7ItnoTGLzrL621TA2cFa/4
-	wtDHSNK4r/xGSPQRieqC6Kranr7QD6YD0UPQjI9sjJWWQazCRZJjGd21XRaeXvljqFD+emrVJbpwY
-	0tGoJdlQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50816)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uJSpH-0006VC-1T;
-	Mon, 26 May 2025 09:04:51 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uJSp6-0000Fz-1l;
-	Mon, 26 May 2025 09:04:40 +0100
-Date: Mon, 26 May 2025 09:04:40 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] net: stmmac: dwmac-sun8i: Allow runtime
- AC200/AC300 phy selection
-Message-ID: <aDQgmJMIkkQ922Bd@shell.armlinux.org.uk>
-References: <20250526002924.2567843-1-james.hilliard1@gmail.com>
- <20250526002924.2567843-2-james.hilliard1@gmail.com>
+	s=arc-20240116; t=1748246751; c=relaxed/simple;
+	bh=VAks8kelq3T1bF1cj0QNfQxuyzA2YkGqf6FnO2lYeYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZJ3DFi5l6JWVA5xgCmV7ysyYmfHmpxvHEkH+sm55WGTHE+t/qfLp5WAH+sNUnM4aRylYf18j0kYcCXW4NJbak2tkU4xaPgnZ3UW3krtd1V4t5CKhSTyFv3Ej6rtHEBWnDGViafmmIszig06sGLvCbszkUf3D1lgyUi76gGuR+Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-527a2b89a11so661310e0c.2;
+        Mon, 26 May 2025 01:05:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748246748; x=1748851548;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IZExsB6c5QDJ1XTRzVwWuTeLT5rh0r2AKMowtMpKktA=;
+        b=cby/Yh6jYi3WpU8pmE9Zp6j8f0MA4jc4wTBehQZJFSQJR9/XPUv6foxXjikSV1P9yS
+         sQDRwCxu9N2aZgSpYbQ5etSBifFL8+aKpL27ubKZAXhHz7+Gh76Ck2qnP8o+gKwF3a6S
+         avre684meAUst4PewOlQyQw65xJer2WlEFmYvCtGYG2fGJ3Udan+O6ztIkcLXnWgCm9y
+         gfD93D7npJ4GJ2e/+/uuNFnOT+VYO/QteF/rRd5yH66cV6MINjm/rXeKwfA3XIup/vwi
+         STr9VrHCgT3eKP42OqA3Z2vs6nfgvIz4VdqMJCuC0y8S4L0mex/Y9jud2uXfm4NqZ9sV
+         cb6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUAa2qa5CJw/nbK63QB2yXNaDuucu0OTet6zMn+hsiTujRQ0rgqx9IetM3RlPceutkvwKtxccaWGrjHB/Y=@vger.kernel.org, AJvYcCVhQSw2EZeSb4Yk3/v+vUyN5ySqSVTYkBP3AS0IcweyexnBqIiX1q/64Jbtw8K3NrfmQiAUM2uYnwlegyjhg9ypQiY=@vger.kernel.org, AJvYcCWhratJEzOxh/g1w3o255uIQ7UOGKQnrOEQXdXoo7/L4wANNYniL7NPtHMzAOuBWCyEmRWNToc/1CnVDxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh9fbPBQIJCVdK/UEemXwW+DbhDnMNzkKceh9xOKAa7Af82IKa
+	r1xPQCVQrLKeFAkpooEyGOl0y1qmgnF4PMNLfU0HHbjh3yY8mg54ZfvjjOFFkclF
+X-Gm-Gg: ASbGnctEJsFMBN5PABzyCFTASPvd6d+cgnSrz+d6yHrGtF1TJPFxmSU7MD4ov40SDye
+	hmeDZvM+/uVn7M0cSXN0Yx/5Lfz7iC2Ywgg9xDS5s+KRD3496simBsaCUUF4RAJQo9DhwRHd/q3
+	glBtAMvaivXjwmylcXlW4kVChEF4HG4mRSdj969fFw6bdISu7YjKtXvYBhQRaX/Y/SXDjBElo0y
+	iBK8ItY9nBNX5xjFmKeibkZuEpBTCCsdKxdRs4iTcdoAplFWk/tUuhrA6RBmAIg78jd17nWEFAp
+	jxuW0GTmxRvJYdnq+ywcj4VbzcTjxcYKD1E8dFpDaDR2QQvvCIp0fTaR8fDqXhxAPKUgxvmDM9w
+	rGXCsRMtxPw4u1Q==
+X-Google-Smtp-Source: AGHT+IFqt+kNOXU/fUK2YfRkmNHuU3HzVNV8qFPCdwb0iQhdJqM30k5qEiQF2MbkYcnH6r0Uc0o5Jg==
+X-Received: by 2002:a05:6122:30e4:b0:52a:791f:7e20 with SMTP id 71dfb90a1353d-52f2c4ca21fmr6157940e0c.4.1748246747737;
+        Mon, 26 May 2025 01:05:47 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53011b001fesm75002e0c.18.2025.05.26.01.05.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 01:05:47 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4dfa5cee94fso304470137.1;
+        Mon, 26 May 2025 01:05:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUZaUY3MnM9YwHAmOhU8SCQbr5luXhsQ+TIlmtlkjKzjz8bGLxsOVjy+3F80vn+DJ8zl8GaXXhvTFvxIzg=@vger.kernel.org, AJvYcCVHJSxmzD+NgMCIngo0VcXBBVWlY60ooiax59OsE2JcP8zroWBDLa0XTfGfETylPr2otp/8y0OtPt6l39jjClL/368=@vger.kernel.org, AJvYcCX1bpJGvfGdOH4R+c3smEFG7FGNvrzU5leRrmu587I0n7x0N4ixzwlHJRCGVgn3rd1TXyVH9b15TyWh3YI=@vger.kernel.org
+X-Received: by 2002:a05:6102:3e24:b0:4dd:ad88:b9bb with SMTP id
+ ada2fe7eead31-4e424094745mr6288510137.10.1748246747377; Mon, 26 May 2025
+ 01:05:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526002924.2567843-2-james.hilliard1@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+References: <20250526075236.13489-1-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250526075236.13489-1-tommaso.merciai.xr@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 May 2025 10:05:35 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVeeYzJpw0KV+0jCys2hFGu6W3247dh92_jeAAznMy9-w@mail.gmail.com>
+X-Gm-Features: AX0GCFudv3U8dEnoIEg69dXge7iYJr7SZXstqqV0oANNyqHo0hGk0mjtoQN8w1o
+Message-ID: <CAMuHMdVeeYzJpw0KV+0jCys2hFGu6W3247dh92_jeAAznMy9-w@mail.gmail.com>
+Subject: Re: [PATCH] media: rzg2l-cru: Fix typo in rzg2l_cru_of_id_table struct
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, May 25, 2025 at 06:29:22PM -0600, James Hilliard wrote:
-> +	if (!nvmem_cell_read_u16(dev, "ac300", &val)) {
-> +		const char *phy_name = (val & AC300_KEY) ? "ac300" : "ac200";
-> +		int index = of_property_match_string(dev->of_node, "phy-names", phy_name);
-> +		if (index < 0) {
-> +			dev_err(dev, "PHY name not found in device tree\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		plat_dat->phy_node = of_parse_phandle(dev->of_node, "phys", index);
-> +		if (!plat_dat->phy_node) {
-> +			dev_err(dev, "Failed to get PHY node from phys property\n");
-> +			return -EINVAL;
-> +		}
-> +	}
+On Mon, 26 May 2025 at 09:53, Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+> Correct the misnamed .data member for the RZ/G2L CRU. Rename
+> `rzgl2_cru_info` to `rzg2l_cru_info` to match the intended
+> naming convention.
+>
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-1. You are re-using the drivers/phy binding for ethernet PHYs driven by
-   phylib here.
-2. You need to update
-   Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-   in a separate patch.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
