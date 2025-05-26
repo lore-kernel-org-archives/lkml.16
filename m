@@ -1,114 +1,144 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971A52CCDE
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6932CCDE;
+	Mon, 26 May 2025 19:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748288817; cv=none; b=AUebCk9QTOMvsBRncH9q208p8TJ1BWcPP6NgkuqmQffxDfrhp/O2Pe70BJwFv6Ogte5cDWskBtxAHr2VhSUD+dUgNuxVU/ltrcyYloZtRh7pseIKbl21Shn63gBqVi6PMnuIsFhb582lGSyLk1FH9LnPkfoRqU/YyT+3U44xhKQ=
+	t=1748288868; cv=none; b=ofkqlmtOak2v/fjQ7J8/rUFxqoSZbAGIqYzaLCnyQjY3Wdfll6+DcR8JZVfu6olVSNK05emeqZkU60oG4SXREC4rQz3cf5UC7aDMMNP+JQuah6ULUGvUl1uBz1qaiU2kd1FsU50iBAr48Gy9/t2xGfoU+7+ZTtU2fCJdH2t/NB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748288817; c=relaxed/simple;
-	bh=TBwXpU3yQ3TEqtnhSOdNQaUV4VZyUOf5OSjY2OJ2aXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=X9zqaObZha+r71FPwsGDmhgSQuHA5vjU4c/XoPUllztlEjcoUg4IG9y13SHkaAJxzc9/lh5MJFHNxXTvjE/vrlnx1UaA/q63/bPvVSsTFM9HVjMih11Wu2POIcqtUa4gm9fnDnWbINydox/F5t22JsfpLbekxuSE/7U+UVDy/8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=e6huNVc+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1748288868; c=relaxed/simple;
+	bh=4KqVkDJQJ7wmSaMRmXEyaIS0NkKBSX1F3vJIe8XNIxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rqAOlANv38JiJwF9EEn3ggtZTZrdApUU5r5kXJzcZ4J4quKzLm4SofbBrbKaGDuWfSegwZJT///n6OOcZqnekVNLI6VRGLU/R6jW5c4A6JJ+X4AwEfMYKtcC7nB4oBQtNExvBm7duzdOXQL/1Jo8x/RPwa6bHAlaxHsa/PV3O1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OplpTF+D; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="e6huNVc+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D60C740E0163;
-	Mon, 26 May 2025 19:46:51 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id JZjZeFkfASNq; Mon, 26 May 2025 19:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1748288807; bh=jpyiFtYUaAgmjrEHd3/VEhPjEmFMY9BCUY9FGe8SDKY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=e6huNVc+89N2ZAugUUnqw/k7keL3Qzx498fdDvEfoviGgMbLmg3byC55um7a8CpK1
-	 alas1GSHMP7Ca3CXYRcfoOF/naBUzjFxlT7Oh8kUZ0g0Xz5KDhsFf7+RPYmXvF02Bc
-	 HMgvxvsvRxdvWAiq8MEclOjH2C+ohl+/WlnJ0Kpr6MHPqOI9yS6IqWikY2IQo7OT0d
-	 gmvj324H9LGuPqJplbkD6BDgvhdBMe+Pu/mWdCN6OfY0VY0dL5ynkwPbiMjC2uqB8J
-	 3HTM4jXvnuZRYGCNka5MSVW4CLqmLimYWpr+kKg8IQiPAqCYdg03KqgQvDFRMKJq9O
-	 Eo4SPdP0a8oK6XWBd9hQ4t5GPKs8MnbSwVYtrK6nZfkjyzI2B0YGySug6ullqa279o
-	 eQYXUbGb/Rx+5cELevlzE8vewJ8zoKoKNfSmSTbvy6XhXMmwQyrrYtZHfehHCpuaUy
-	 005l92O+VX3CvnKR15Q6XpBt5JjgLEqiAmABC8l/+s+q3jzx169kq/mdp2LC0Z8/7J
-	 +BBfOfEE6Mpmuj5z9CDYK0Wk8OVu0JmpQy+D0A3p5YX8G44MkE9F/p9+kexY84rbRj
-	 CPvJsXzPYUE1MWRtC9FRU69h3yZnxVMTLprXhAIpRf6pH1YPWen83TP62mfqvnfYob
-	 jPs4DKLIIRLWQfHG2cnHwYuM=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 53C6B40E01AB;
-	Mon, 26 May 2025 19:46:44 +0000 (UTC)
-Date: Mon, 26 May 2025 21:46:34 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] x86/sev for v6.16-rc1
-Message-ID: <20250526194634.GAaDTFGr3LAfeGdCxe@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OplpTF+D"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-404a5f4cdedso456534b6e.0;
+        Mon, 26 May 2025 12:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748288866; x=1748893666; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4lxG4RwYQ0CNvC7KfH6KqgSMfyW5/kygutUZd5gmeVM=;
+        b=OplpTF+DzfjQeSN+XSmU6YNRoycLlmWNkrYEzWD94ZC5E+uNUVMwKM+6hkhPUJ86oE
+         tCNPagqbmunS9OJ/k999wFkQ26BVEUkypxR/4rn3B2L9e3gaGxTw8LZKNpNCmjrVg2eW
+         UjhnsZxkQey+Lw8qGMM1ajyqC90HAnT/A2SRfkzyNAAUfUQFOKdo987AJkrdj0SrfbEw
+         Wi8v2+zkrz8qV6wm7gGvutilkJJ14ieHvxlDl5DofDqT8eTTgaBO++P71t/KdCRBhhq9
+         RZJ8Q/V005owun/sLdeulTO4s07rcHtjzjjVlIDtQNRhZIY+CyLnmDBf4j3VfRcG+ZRI
+         4IQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748288866; x=1748893666;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4lxG4RwYQ0CNvC7KfH6KqgSMfyW5/kygutUZd5gmeVM=;
+        b=sYJo01PksQ+HY1K4hsd8r9f48zyOZJ8OYjJpvTrzdAH91bUFEHppn296avopHI7QrY
+         85/Gnn5pcXsBVA7FeS2Aa9WC0FtD5xwpeQZW/6DAMeXwkrdwMvaQxkldk9/sFazQNBbR
+         FD2SSFZRZ7l6FKXdFP1qau6xhmMcATnygoceqt8YU5VbLVjZAeh7j7OqXUNHXb83ps2C
+         oNrAg5OORO81Bs8bDfbiPtVjexb30sOBpxEzgxtQM4FyUukh1CgWEl6YJCBlUm26cg9G
+         TpZzAiI9MwPAoXqrQlcMYuQbPhhRMATnorBWS0WfFEahevhEDhM4WBoBtL5Ty8LUwxjZ
+         8ybw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCM8EGLon93RA4iPdqG8C3CyvU5do/YQtbsMkcms4amf58/L+XfYYKlt4YbNDoHuvpfOsx5clagBN7@vger.kernel.org, AJvYcCUWalmZYBLuRLLDzPKCDflaPSWSbWUcvvypXSn4zvtPkvIpTMaFLsJ04DRCkDOihJpV2i5wmivF5f72mL6gKg==@vger.kernel.org, AJvYcCVEx8E9wDE6/4fbp8TnGvoZK5dyyQqUpbzcChTwRm29TEIe5QjeKU1B2DCVdMTS7G9Ved7iF7e4GrUp94Zy@vger.kernel.org, AJvYcCVlsG0Dk7Sw0KGQduCz43WxvSstsxzak0pB5fVHrABaY9FnKV5PZX12YfmppnOCRODqhm8C7fFcVWLx@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzRrkhcHiESszBre/ep0v5mgTbtQV1tVK7a23eAhTTOUzW9O0h
+	3yV6Gh4jSfLgvI/2SQXXnSWdo0iNgl5L4en/fFpTcRXso1t56B8sRUlywf433Bg3JZEd3uZu0v5
+	UXmo9yOyTXDSY3i+FXUrQnmMmLdLwWUQ=
+X-Gm-Gg: ASbGnctG//SM60kgSx0BObdyxOUr8asVAi50OiwRzSzU/YlgDsY0/YBtlKu2gecEma+
+	7hY/zVNQ2649RIg2CpsgXhV+P/ICSE+aZ+70P65C3p0XBDqdlA9on6DFO6SFKKMo4ThT+z+oyoS
+	lL7r76m8tJQM0ikvd+5z/aRQLQwd+cAW7LrA==
+X-Google-Smtp-Source: AGHT+IEJ0rmGDYHVgbL2oFttoN7DXxvLwFI/X2w1GedL73u0g6JyCd2425ooHw3cpjUX86RjEOmynFxzWpFNfqwPYeI=
+X-Received: by 2002:a05:6808:80c5:b0:3fb:2937:937c with SMTP id
+ 5614622812f47-406467b8c4bmr5809894b6e.6.1748288866073; Mon, 26 May 2025
+ 12:47:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org> <20250506-qcom-apcs-mailbox-cc-v1-2-b54dddb150a5@linaro.org>
+In-Reply-To: <20250506-qcom-apcs-mailbox-cc-v1-2-b54dddb150a5@linaro.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Mon, 26 May 2025 14:47:34 -0500
+X-Gm-Features: AX0GCFteTgTgIIhEMNd3LV6B3AyZoLARNnuA73iJCsHKTCOp4z_ZcwMh59Zhjp0
+Message-ID: <CABb+yY2bSJ-dZ73DjZaNc+iEpXXU4bxbWBPaj0M_6qf+Zb=V_w@mail.gmail.com>
+Subject: Re: [PATCH 2/4] mailbox: qcom-apcs-ipc: Assign OF node to clock
+ controller child device
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+	Georgi Djakov <djakov@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Tue, May 6, 2025 at 8:10=E2=80=AFAM Stephan Gerhold
+<stephan.gerhold@linaro.org> wrote:
+>
+> Currently, the child device for the clock controller inside the APCS bloc=
+k
+> is created without any OF node assigned, so the drivers need to rely on t=
+he
+> parent device for obtaining any resources.
+>
+> Add support for defining the clock controller inside a "clock-controller"
+> subnode to break up circular dependencies between the mailbox and require=
+d
+> parent clocks of the clock controller. For backwards compatibility, if th=
+e
+> subnode is not defined, reuse the OF node from the parent device.
+>
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qc=
+om-apcs-ipc-mailbox.c
+> index 11c41e935a3619b74ad0f5e2d82699ca8aa05722..8b24ec0fa191efc975625d9b9=
+270140ad1fe7b9b 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -116,10 +116,18 @@ static int qcom_apcs_ipc_probe(struct platform_devi=
+ce *pdev)
+>         }
+>
+>         if (apcs_data->clk_name) {
+> -               apcs->clk =3D platform_device_register_data(&pdev->dev,
+> -                                                         apcs_data->clk_=
+name,
+> -                                                         PLATFORM_DEVID_=
+AUTO,
+> -                                                         NULL, 0);
+> +               struct device_node *np =3D of_get_child_by_name(pdev->dev=
+.of_node,
+> +                                                             "clock-cont=
+roller");
+> +               struct platform_device_info pdevinfo =3D {
+> +                       .parent =3D &pdev->dev,
+> +                       .name =3D apcs_data->clk_name,
+> +                       .id =3D PLATFORM_DEVID_AUTO,
+> +                       .fwnode =3D of_fwnode_handle(np) ?: pdev->dev.fwn=
+ode,
+> +                       .of_node_reused =3D !np,
+> +               };
+> +
+> +               apcs->clk =3D platform_device_register_full(&pdevinfo);
+> +               of_node_put(np);
+>                 if (IS_ERR(apcs->clk))
+>                         dev_err(&pdev->dev, "failed to register APCS clk\=
+n");
+>         }
+>
 
-please pull the x86/sev lineup for v6.16-rc1.
+I see the dt change is acked by the DT maintainer. I have no problem
+with this patch and can merge, but do you want to wait for ack from
+some Qcom dev?
 
-Thx.
-
----
-
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_sev_for_v6.16_rc1
-
-for you to fetch changes up to e396dd85172c6098e3b70b17e91424edc7bb2d8f:
-
-  x86/sev: Register tpm-svsm platform device (2025-04-10 16:25:33 +0200)
-
-----------------------------------------------------------------
-Add a virtual TPM driver glue which allows a guest kernel to talk to a TPM
-device emulated by a Secure VM Service Module (SVSM) - a helper module of sorts
-which runs at a different privilege level in the SEV-SNP VM stack.
-
-The intent being that a TPM device is emulated by a trusted entity and not by
-the untrusted host which is the default assumption in the confidential
-computing scenarios.
-
-----------------------------------------------------------------
-Stefano Garzarella (4):
-      x86/sev: Add SVSM vTPM probe/send_command functions
-      svsm: Add header with SVSM_VTPM_CMD helpers
-      tpm: Add SNP SVSM vTPM driver
-      x86/sev: Register tpm-svsm platform device
-
- arch/x86/coco/sev/core.c    |  69 +++++++++++++++++++-
- arch/x86/include/asm/sev.h  |   7 +++
- drivers/char/tpm/Kconfig    |  10 +++
- drivers/char/tpm/Makefile   |   1 +
- drivers/char/tpm/tpm_svsm.c | 125 +++++++++++++++++++++++++++++++++++++
- include/linux/tpm_svsm.h    | 149 ++++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 360 insertions(+), 1 deletion(-)
- create mode 100644 drivers/char/tpm/tpm_svsm.c
- create mode 100644 include/linux/tpm_svsm.h
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+thanks
