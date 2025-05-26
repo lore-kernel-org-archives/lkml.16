@@ -1,167 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575A31DF97F;
-	Mon, 26 May 2025 20:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6A81487F4;
+	Mon, 26 May 2025 20:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748292076; cv=none; b=Bfhp0MUFKvoXP1v8Kc7LroiKMAe6HlwBlwS1EMpDG9V81D70lICCVi2E8dwNkKyE8XkM/3yy1dP/MrbIgrfFwNEZSkZbBq1rE0GZb/COg+MTsMUpSWiP+vFCKa8VyeyPiYEUdDnFr0+luDap2qJnpU9wH/5aW10L8EUaXmAHk5g=
+	t=1748292148; cv=none; b=iMzJqPjYe72E+9uDXrrM1y6dbQC0A520x1TbaEJrDWq2scc/+d+h020ROj/KSKomzHJjhnTqOlw4yg7ua7AKF/WgfQ4gRMct4cooQYpqZ0Y9zgR5yeG5LBMrELq/VJeaXpxqXXpXU/Rl7tvV9bdOkC/ArIRIRERdgKbQfzIIA6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748292076; c=relaxed/simple;
-	bh=DdduRr9td+u2BBffEZ3WM/3w/57lanFQ09Acm8f3RgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5DVMdLCBjyHMswUXKMRrmGT/azrXpNFR2QbEICe3lUowWm7NrqqGax/hpl2AqwJxQFd+uO4sUqb7zM6ND/t3q/mKCraGzXCRYWwwNTIcIvWcA2VAQ4Gf7iHTGl/kGFuaFhYjj/HV4DxkCmGE+c9HeAq5/yKpdMq+9ZzvZT3YxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y9yG2rVK; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748292148; c=relaxed/simple;
+	bh=3gRNXhmVhQUXXi3jmcxIfz8vm/k3JI7NUoNq7z7BuyM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KprkRjATMgN2mi2hcqbi88gKGYZKgRBb+WxjeUV+QPD24e7roqSzvhMTnfz0RoLF5iwMa4O4qhOivn/Tl6OR5ybqQsBweYeNS61kAyO+SyFnH3HgYq0UowTmzG+zXRGYlpw1Fn6BkeiADSpQ+x7aUqMLnII/br6fScSqQrq+eUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JJ5fm9IU; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y9yG2rVK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748292075; x=1779828075;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DdduRr9td+u2BBffEZ3WM/3w/57lanFQ09Acm8f3RgM=;
-  b=Y9yG2rVKMoLl1hHFENX0tSkMdNK8Wb0DXtUzSTOfw0anYa+lttbAm6+x
-   ixmFNYR7Mn1mVG0aDo/NSnmZBEDK6YMai/+F6zhXyfztJswp7OHnXPx0u
-   lG+g5+bgz9CEig2HrG14mTrVkSHB/eBFGQbfREsWrB0OxuohcWBV3sB/o
-   yRQ3U+G0xqWvpf7w5yxKTMRGp5thRIHW/dMhcXqeINDuWT/KvUMWcpfyy
-   732teOcwekH0OJL7RgI1TX48FOIwqHO7HrkinuGWQnb7uPlKHsghQMBsp
-   WTho4HQ1EfBfgxFnCNAjdp3ZVOcEdWP7vYst/20u32rE6DoMnhxuHhrzb
-   Q==;
-X-CSE-ConnectionGUID: mGJleZfYR3OAePUYalhqrQ==
-X-CSE-MsgGUID: HMkiVqjmToyPOhQXzmloSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="72801051"
-X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
-   d="scan'208";a="72801051"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:41:14 -0700
-X-CSE-ConnectionGUID: /rZuVg9BSk+SMLA/dCLwGQ==
-X-CSE-MsgGUID: ZDzE5rA4TZ2vk6bNSTZxfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
-   d="scan'208";a="142966046"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.33])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:41:11 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 92DCF11FC8C;
-	Mon, 26 May 2025 23:41:08 +0300 (EEST)
-Date: Mon, 26 May 2025 20:41:08 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Richard Leitner <richard.leitner@linux.dev>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v4 07/10] media: i2c: ov9282: add led_mode v4l2 control
-Message-ID: <aDTR5JrYIvj2gxHR@kekkonen.localdomain>
-References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
- <20250507-ov9282-flash-strobe-v4-7-72b299c1b7c9@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JJ5fm9IU"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32923999549so25112141fa.2;
+        Mon, 26 May 2025 13:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748292145; x=1748896945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SUmUNbUCgQeGYiOspE2SyC9Ks1s3ZxLZ5UKKm2WjJzg=;
+        b=JJ5fm9IUFoQz3Xi14v9VQF9bp/Ns1xygdZXoSDR022wp9Pl8qWefMuCxpgeSwPoxbg
+         uxxAqV5UeY7BYpKVBwa5fh0TAMHAvDjwW+roCqY1URO8BQ3ZyQIa/98wKBxYLLLvILMW
+         XOm3hr3bvgUOBiWAEWk/OfJUjJvsGS5ocNrZvkQ91MZDhrmyix7St98KfoJQOQXK4Bmp
+         pmYbXIeJ9QJFdSkrrgbnEAWxxt7yUuVLwY24Ozp5jVdayxGnpCd8vYYAvUDmFvHNihBO
+         88wjv1+lb1ZXwCCZ0LWiy1511CJiUsQvN9CyLfkogMoWeBPzKDOZ1kYZaMpW69KRY0Po
+         xp2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748292145; x=1748896945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SUmUNbUCgQeGYiOspE2SyC9Ks1s3ZxLZ5UKKm2WjJzg=;
+        b=pU0571OOdlRFc+kqOTMMXcF+p83QXVcBujPDhgzNPnnZblYKQSl02tnfw4DhVYXDd1
+         R/c//cVUEJCCP+7fFT1pHJRwhXbYj8nFM/6fVeDBmf+k3xySmyZ6HP90yPtEz0Q6aD2F
+         S5X7oD3+ecsvawfsYdGU8UZ39kyr+QFb4f5tuEip2MLQ8GxmdjCdawd1RX2X4mueOybC
+         JHUbso/pXeel1jodktcMX2OCuss/k/O1AXk38AejMCBdKd1hNi2mtNJdYdfY41QBNCPv
+         XusMGoEOtPpupFMHYq0wks1ATgEWTk2Wyj/iMFe5UYSrM4hx5j7GVMQLr4aE/lga57Cd
+         itRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDNOfCh5iR5R4M5eD4/bHFwKNedVNcQrLQ80KSPu5OTXdJwYTeeObQXJ3xXar2lJtMwkoM+HYL@vger.kernel.org, AJvYcCVQtdWyIzD3vz+XfAJ94E7M1snVPUj/nonzJ6qJT5kn33KawtFbvN9FC41J8JbfPyidR0z7F9VPWbpSdXE=@vger.kernel.org, AJvYcCVcMF+k/IfNQwTGbODvsDSAbh5QaE8BVO3O9wdpa9Yh6yzlz+SJ18Gjk7HKSANpIctI+YpLYnxQJmS/@vger.kernel.org, AJvYcCWDtDLG2CG8541e+ekXCp+NqDuX+H8oSyYJzlk/r6iAs+4I+vX0+7Ax5kpwz1kzZNXJs9nBoR7qVuzpCLiS5CM1@vger.kernel.org, AJvYcCWKYLD/FH37RLiGzqnjwlORb0RjdJ9U+tS3X/5UJKh6Cp7kdzwOFSZTGlPjhRsjdQKC9P8qb9+o5IT2@vger.kernel.org, AJvYcCX4755Cuj7NXfsBe5TFfcJZx3Y03epPRtTnq9H/cjTeyq0ItKjfFOrvVIXRHnl8D9ghKuk7s/XgDwbTwM2EFU4=@vger.kernel.org, AJvYcCXDFmbI8wY6G3TMFYpYR90ZmQMRzW9k9D3iMzjNeBvXz5eCR9NwUOT+hq/+JLWHIbp2WNIsiIrmJYyiEvHU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJqlYiuC3OT/RzITTw9va7U337zabhkr5O3bpTQ69RCu3NCh7c
+	BrrawKqhtGRhlsqpMjfJECrkPinTATQU3dDhs7zgzy62BmEswA+N/6BIIa95r4xtIFURv6YM6qt
+	EP5HNHD2hdO18foO76r4oxZg7nmdlTZs=
+X-Gm-Gg: ASbGncumnEsySrTs4gSgIBk8cC07W5QcDK3lqmRWlUVCfs0oTYOng7hctCYjnnIR5VI
+	geKcGXDeVW2jLnOxyexJuA+MLXu39rM1utg4i0rMegmMjqW4OKloauAYQ3Chg3pt4ETO78UwV3+
+	7r5MHk6ui2HiJxcFzn9GX/doW7z/KYtBlTDGizWDdXz5f2CxzT3yhF5/zMpzAQzKZry9Ay/agzz
+	Zbl6g==
+X-Google-Smtp-Source: AGHT+IGPgo+KZWDTPWJ/8ifTkY1Vatt42x8Q1KGRg7v+MsCMTuGoZeMjT/G3sX9/OWQr2VdJiIhB6KXrUJ+SLPtTc/w=
+X-Received: by 2002:a2e:be8d:0:b0:30c:317:f3ec with SMTP id
+ 38308e7fff4ca-3295b9e2b19mr25881171fa.17.1748292144402; Mon, 26 May 2025
+ 13:42:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507-ov9282-flash-strobe-v4-7-72b299c1b7c9@linux.dev>
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-1-6412a94d9d75@gmail.com> <CANiq72nhNmLMdFTzpSQSxxMLanFA7Od6tBZ+3CrVERv9Spou5Q@mail.gmail.com>
+In-Reply-To: <CANiq72nhNmLMdFTzpSQSxxMLanFA7Od6tBZ+3CrVERv9Spou5Q@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 26 May 2025 16:41:48 -0400
+X-Gm-Features: AX0GCFtRDT-ngLir-CN5e7tolI7SMct6WsZy2xxM7WLN6cJzwd9Ur8Y0NvGqQWU
+Message-ID: <CAJ-ks9=8QXn9wQSX8frRqN0p7=nL+eUwLC6UV8HdQyY13=wx-w@mail.gmail.com>
+Subject: Re: [PATCH v10 1/5] rust: retitle "Example" section as "Examples"
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Patrick Miller <paddymills@proton.me>, Hridesh MG <hridesh699@gmail.com>, 
+	Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Richard,
+On Mon, May 26, 2025 at 12:15=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Sat, May 24, 2025 at 10:33=E2=80=AFPM Tamir Duberstein <tamird@gmail.c=
+om> wrote:
+> >
+> > This title is consistent with all other macros' documentation,
+> > regardless of the number of examples contained in their "Examples"
+> > sections.
+> >
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> I was going to say that I could take this one independently, but we
+> already had #1 of:
+>
+>     https://lore.kernel.org/rust-for-linux/20240906164448.2268368-1-paddy=
+mills@proton.me/
+>
+> I will take that one (which given the `checkpatch.pl` one got stalled,
+> I should have taken it separately as I mentioned at some point).
 
-On Wed, May 07, 2025 at 09:51:36AM +0200, Richard Leitner wrote:
-> Add V4L2_CID_FLASH_LED_MODE support using the "strobe output enable"
-> feature of the sensor. This implements following modes:
-
-The flash LED mode control is, well, setting the flash LED mode. There's no
-LED on the sensor so I think I'd add a new control for this.
-
-I'd call it V4L2_FLASH_LED_STROBE_ENABLE, and make it a boolean control.
-
-(My apologies for not giving a better review for this set earlier on.)
-
-How does this sensor make use the information? E.g. what's the latching
-point this setting in relation to a given frame?
-
-> 
->  - V4L2_FLASH_LED_MODE_NONE, which disables the strobe output
->  - V4L2_FLASH_LED_MODE_FLASH, which enables the strobe output
-> 
-> All values are based on the OV9281 datasheet v1.53 (january 2019) and
-> tested using an ov9281 VisionComponents module.
-> 
-> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
-> ---
->  drivers/media/i2c/ov9282.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-> index f42e0d439753e74d14e3a3592029e48f49234927..b6de96997426f7225a061bfdc841aa062e8d0891 100644
-> --- a/drivers/media/i2c/ov9282.c
-> +++ b/drivers/media/i2c/ov9282.c
-> @@ -670,6 +670,23 @@ static int ov9282_set_ctrl_vflip(struct ov9282 *ov9282, int value)
->  				current_val);
->  }
->  
-> +static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
-> +{
-> +	u32 current_val;
-> +	int ret = ov9282_read_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
-> +				  &current_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (mode == V4L2_FLASH_LED_MODE_FLASH)
-> +		current_val |= OV9282_OUTPUT_ENABLE6_STROBE;
-> +	else
-> +		current_val &= ~OV9282_OUTPUT_ENABLE6_STROBE;
-> +
-> +	return ov9282_write_reg(ov9282, OV9282_REG_OUTPUT_ENABLE6, 1,
-> +				current_val);
-> +}
-> +
->  /**
->   * ov9282_set_ctrl() - Set subdevice control
->   * @ctrl: pointer to v4l2_ctrl structure
-> @@ -736,6 +753,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
->  		ret = ov9282_write_reg(ov9282, OV9282_REG_TIMING_HTS, 2,
->  				       (ctrl->val + ov9282->cur_mode->width) >> 1);
->  		break;
-> +	case V4L2_CID_FLASH_LED_MODE:
-> +		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
-> +		break;
->  	default:
->  		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
->  		ret = -EINVAL;
-> @@ -1326,7 +1346,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
->  	u32 lpfr;
->  	int ret;
->  
-> -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 10);
-> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
->  	if (ret)
->  		return ret;
->  
-> @@ -1391,6 +1411,13 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
->  						OV9282_TIMING_HTS_MAX - mode->width,
->  						1, hblank_min);
->  
-> +	/* Flash/Strobe controls */
-> +	v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
-> +			       V4L2_CID_FLASH_LED_MODE,
-> +			       V4L2_FLASH_LED_MODE_TORCH,
-> +			       (1 << V4L2_FLASH_LED_MODE_TORCH),
-> +			       V4L2_FLASH_LED_MODE_NONE);
-> +
->  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
->  	if (!ret) {
->  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
-> 
-
--- 
-Regards,
-
-Sakari Ailus
+Sounds good. I'll drop this one.
