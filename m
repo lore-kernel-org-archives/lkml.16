@@ -1,45 +1,54 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B351F37D4;
-	Mon, 26 May 2025 14:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D1C1F4CA9;
+	Mon, 26 May 2025 14:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748268812; cv=none; b=dTUh6kbB3jiJsTB9NnRCl9WE7H4x/VOQEkO4guCqfEeNCwybXNl3wpkQQKipDY0URbEGqAY9tquaXCan/gGalIH+MVDNFR+Xea8SlW5kOjQiKWNZ13WjQGVCb3Qxbnmf0jzVByQJLQvOcdRMNRlmS3h0ZA+d1gmUrCsYUL7Hw6w=
+	t=1748268813; cv=none; b=BA1+oxA2ZFN97SpT0jQpcKAK5spJrQkeENE2Hy+lqMvmT2MyySf3f8c/KjLtLAim1SCtXDzgjnLlrlMIPUzxn13oA26o+VgUFvM6iwhAPGAjPLXg460/gC0keVfH157fg9hE9ElZRVEo4puHQY9I8ssQFQwjPjrJQB2wU7zAkIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748268812; c=relaxed/simple;
-	bh=RfOzpjQyx5CF5y4v62KF88B1iYfZaFwCnC7uIMdlFKg=;
+	s=arc-20240116; t=1748268813; c=relaxed/simple;
+	bh=f/owXgw9ScffIZ00lD0emc5hYUqH3HyegNXO81QgkG8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BGzv4D/Rg6iIB0WzltgHiiHfMk3VRm65C6V7l5CintGyuMFKWxry8r5jpUKFwuQlXImOAm0ep0FZkH1EVoPHzmn+YE7op0UPOavvj3RowkybdMYlRbWw4jQwL/lkX6yHwbTJeAxpuz+OrnvMkji/L706wBA5sQWscGMt1m48YV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZSlUmImI; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2NfzUc5R4H8/dFZZqBC0U438wp4+xshgh+BwzqV6iqwMfWsLi1HevXzlD6nneIhmhlWH77cr6K/rtlOTGreO59fOFEB/+uQAYWk/YJicyuLzMadpZSEmpLizZg4oXqgpuldSTx1UWXcCKb3h50Gk/GqHzx9xwOLQySveoVvOdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kweY6+yN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cWDL0IpV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZSlUmImI"
-Received: from pendragon.ideasonboard.com (237.69-130-109.adsl-dyn.isp.belgacom.be [109.130.69.237])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9BAD7743;
-	Mon, 26 May 2025 16:13:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748268784;
-	bh=RfOzpjQyx5CF5y4v62KF88B1iYfZaFwCnC7uIMdlFKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZSlUmImITcHygktdRLQLpoApXk0GjqO0wVOKgXdSY2bxdMiXtI7RH+0Wlfln5hxck
-	 shVUOzZDPWJFKoeuWHXQ4wuRZSEkuULuwko3eeLK8ChKipuLOMmXAfjRwEOl0PLD4O
-	 MbAIreXkJkUbnAphO18C5mrZJMwG/beoysi0Buwg=
-Date: Mon, 26 May 2025 16:13:23 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/4] media: Documentation: Add note about UVCH length
- field
-Message-ID: <20250526141323.GQ17743@pendragon.ideasonboard.com>
-References: <20250404-uvc-meta-v5-0-f79974fc2d20@chromium.org>
- <20250404-uvc-meta-v5-2-f79974fc2d20@chromium.org>
- <20250526134946.GN17743@pendragon.ideasonboard.com>
- <CANiDSCvPG_3qc4Emhat=NdRZXsmNDD0pwh182bXDFK2TgYN_ug@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kweY6+yN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cWDL0IpV"
+Date: Mon, 26 May 2025 16:13:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748268803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uhU0WO2dQAMWj/kzo5RVQUeOaaIgHRmgMITsK6Sw2ys=;
+	b=kweY6+yN8B68AUYrYcqV1Qi+ANpB+ee5JbUG4f2L6shs3fvVQ363hZNENe+HgoV9sfC2Ok
+	au11olbnNO9xp91XlKORj6KgM4aYwE+1Pc/teowAikr+LhjVQ9rYyG60BQHV0uLGzS8fbK
+	wxiVnb64sM06R89wPQqgjGeaxoZ6Leav86sP47YanFjD8J9rwQN8ucLk3Z70q1Ak5EJMT3
+	W6pfnA0LaleufYo97QCGxt88/0AFjeBlXzAoOjYdD5/u9ToQNwJhFbbIY0TNntn+1JxSaC
+	PCkyiJeN78NWC6N/0xLklh0AzOGZVfAVhq9XO3CbWdFTJjm06V7IIYx796sBGw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748268803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uhU0WO2dQAMWj/kzo5RVQUeOaaIgHRmgMITsK6Sw2ys=;
+	b=cWDL0IpVJmoFSU7EMfTMYxeuQrgWPOhe2U3BErDJBl4Is3vzkkXnvBJmg9Lom81NAZlZFZ
+	tPh+RJXesfcHoiDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Gatien Chevallier <gatien.chevallier@foss.st.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Paul Cercueil <paul@crapouillou.net>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Subject: Re: [PATCH] Input: gpio-keys - fix a sleep while atomic with
+ PREEMPT_RT
+Message-ID: <20250526141321.FcXEgnV4@linutronix.de>
+References: <20250526-gpio_keys_preempt_rt-v1-1-09ddadf8e19d@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,67 +57,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANiDSCvPG_3qc4Emhat=NdRZXsmNDD0pwh182bXDFK2TgYN_ug@mail.gmail.com>
+In-Reply-To: <20250526-gpio_keys_preempt_rt-v1-1-09ddadf8e19d@foss.st.com>
 
-On Mon, May 26, 2025 at 04:04:03PM +0200, Ricardo Ribalda wrote:
-> On Mon, 26 May 2025 at 15:49, Laurent Pinchart wrote:
-> > On Fri, Apr 04, 2025 at 06:37:35AM +0000, Ricardo Ribalda wrote:
-> > > The documentation currently describes the UVC length field as the "length
-> > > of the rest of the block", which can be misleading. The driver limits the
-> > > data copied to a maximum of 12 bytes.
-> > >
-> > > This change adds a clarifying sentence to the documentation to make this
-> > > restriction explicit.
-> > >
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > >  Documentation/userspace-api/media/v4l/metafmt-uvc.rst | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > > index 784346d14bbdbf28348262084d5b0646d30bd1da..42599875331c0066cf529153caccb731148023b9 100644
-> > > --- a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > > +++ b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > > @@ -44,7 +44,9 @@ Each individual block contains the following fields:
-> > >          them
-> > >      * - :cspan:`1` *The rest is an exact copy of the UVC payload header:*
-> > >      * - __u8 length;
-> > > -      - length of the rest of the block, including this field
-> > > +      - length of the rest of the block, including this field. Please note that
-> > > +        regardless of the this value, for V4L2_META_FMT_UVC the kernel will
-> >
-> > "the this value" looks like a typo.
+On 2025-05-26 15:56:29 [+0200], Gatien Chevallier wrote:
+> From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 > 
-> Thanks! Will fix in v2
+> When enabling PREEMPT_RT, the gpio_keys_irq_timer() callback runs in
+> hard irq context, but the input_event() takes a spin_lock, which isn't
+> allowed there as it is converted to a rt_spin_lock().
 > 
-> >
-> > > +        never copy more than 2-12 bytes.
-> >
-> > Are you saying here that length can be larger than 12, but only up to 12
-> > bytes will be copied (when both SCR and PTS are present) ? If that's the
-> > case, it would be better to fix the driver to clamp the length value to
-> > the number of bytes actually present in the buffer.
+> [ 4054.289999] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
+> [ 4054.290028] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/0
+> ...
+> [ 4054.290195]  __might_resched+0x13c/0x1f4
+> [ 4054.290209]  rt_spin_lock+0x54/0x11c
+> [ 4054.290219]  input_event+0x48/0x80
+> [ 4054.290230]  gpio_keys_irq_timer+0x4c/0x78
+> [ 4054.290243]  __hrtimer_run_queues+0x1a4/0x438
+> [ 4054.290257]  hrtimer_interrupt+0xe4/0x240
+> [ 4054.290269]  arch_timer_handler_phys+0x2c/0x44
+> [ 4054.290283]  handle_percpu_devid_irq+0x8c/0x14c
+> [ 4054.290297]  handle_irq_desc+0x40/0x58
+> [ 4054.290307]  generic_handle_domain_irq+0x1c/0x28
+> [ 4054.290316]  gic_handle_irq+0x44/0xcc
 > 
-> As the documentation says, this is an exact copy of the UVC payload header.
+> Considering the gpio_keys_irq_isr() can run in any context, e.g. it can
+> be threaded, it seems there's no point in requesting the timer isr to
+> run in hard irq context.
 > 
-> Assuming SCR and PTS, for devices that have metadata length will be
-> the real length provided by the hardware. but buf[] will only contain
-> 12 bytes.
-> 
-> Replacing the value of length with the actual value will be a uAPI
-> breakage. I do not think that is a very good idea to change it,
-> considering that this number is used by parsers.
+> So relax the hrtimer not to use the hard context. This requires the
+> spin_lock to be added back in gpio_keys_irq_timer().
 
-Do you think there could be userspace code that relies on the value
-being larger than 12, even though the metadata after the standard UVC
-block isn't present in the buffer ? Are you aware of any particular
-implementation of such userspace code ?
+Why does it? This needs to be explained or it deserves an independent
+patch/ fix. This flag change makes not difference on !PREEMPT_RT and so
+should be the requirements for locking here.
 
-> > >      * - __u8 flags;
-> > >        - Flags, indicating presence of other standard UVC fields
-> > >      * - __u8 buf[];
+> Fixes: 019002f20cb5 ("Input: gpio-keys - use hrtimer for release timer")
+> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
 
--- 
-Regards,
-
-Laurent Pinchart
+Sebastian
