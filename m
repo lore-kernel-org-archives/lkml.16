@@ -1,76 +1,60 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608683C465;
-	Mon, 26 May 2025 21:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945CF1957FC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748296701; cv=none; b=oYy9KZ6RaYbKJflhYF1apmMgRsxzdT4kq7F7OIDSCtIhncQNfSka6uRjVSNhNSTYKWyonQ1dhypNfv1DO4Ti5rFUhyp/niPgm4OdQ5wA+CpB+niBzarB+NL7BMRtEwbrZ6QBFRnMElzGWDb0lVksDkTjfcNIZ4PpuWVev5opuSI=
+	t=1748297871; cv=none; b=sSJcBov0WJssFrc3esSm3juw00xV5ZTYCRBAWJOrDDmZKS3Fi2Dld4EgutmshQzyoPs6QxdZ8qIGmuF9e41v2Y4xkCSi8F4ZwSHPtMQV1jKronbTPstqj5LHcXbYuI+oYlMMAWvovvg2YYUGBnqxKbW9A+oQVYDV6xXErBr4HHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748296701; c=relaxed/simple;
-	bh=xcUSEYoldTD1RC1lJhH+CpwaZzrcOK6quYSEv6cLkW0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oITvJfXsGR3YJKgiJ1oIMSNH2ZL3XCSbVP1CKrCwO5CnLP0bAktieHJgpyGeZoavRb/H5Q0nZMP+7+GYWjoSZjvVRGuVITx0o1/U6QZ+VhD2eUdxSmlXrOv+64lcalvb8LLqinf/yuBJoVgTfxeu5qnSUh6xXfNVbeyOtAbwPNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lHZRi3yg; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748297871; c=relaxed/simple;
+	bh=4D+AotAhkqyyq603rPCeRmywsUD0Aj+0e+3KhZu56IM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QcREDikP2At5n9Yldrp0Qid5X/pxs7I0Rdkx6vv1WIzLhLAXGtcJtT0mthv2uJIji9WpOfMTElr+0rxSIUCMwUE2hLMxum17usOjzoeDBtcOveLaTbZ5ynmZuvxi2KaTuqR3XcrP2MIZUpO7+2cP+/sr9TW8sEl18GJLs1S5v14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PQ4IVtBU; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHZRi3yg"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52edc9ad68aso757672e0c.0;
-        Mon, 26 May 2025 14:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748296699; x=1748901499; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1I+4BH67s9bB6lJRMyuQUMdvU+PZzM1tv6dmdmBbxHY=;
-        b=lHZRi3ygw7PSF5m/iSAA6AgXgJ9Jw3QIvN9SAsWLp6cXMzsber5/vjKohLEQntDgFU
-         sTZgAb+56a+qC+CMXsyrL/GpK/lYdn230+ZpC8N3LdSEq7WLisVIaMLlHlJ7qcXHNKtm
-         MC58V4cuZ1yK83mWyKEQA9Ub+PkcoCvdJ9EK1MHYn1nsIyCClueWa6zvgvLZ5asxv9+4
-         WjtBFu02+lIFOF5E+3/sQ1AFueMec1BZtG2GYicHQymHXqK/oIZWVVh0WoXPEf11+aoL
-         tRGMrSWB7JDz7ocV9nwuakNWag9s08t806bLwuPl9s7a+Q4rMUaycMg0zuS4CLKODwDh
-         Pu0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748296699; x=1748901499;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1I+4BH67s9bB6lJRMyuQUMdvU+PZzM1tv6dmdmBbxHY=;
-        b=Cqtx15e/skdsO3bcni1ImoNX3mxIUViK84MyoAiUdErnDZ/glRj+qQawTO20xYJh1f
-         RNiAl8i4iaUwgLiJuTBvUX3TILPq8zOeXlhOPUPzZMAUBF2TcRB/WUEvaMKFMtXJeg2y
-         WrEWaY27e3Ph34qTVbbXYwk8ZtHV1EJtBBXkaHq27FATQOU+leTn34y58vOcSvrhNDvd
-         CNJ87usQFy2CqeJurBNHlkyujnSc7vAPIab9cHRLXpnUyWhc6dNEN4nd2AK3pnwfwTY7
-         KCorEk9Ch5TLgEfJIdT2hXfhmAolc1PxcljVD/WP7wbnTJu989EAKdBxG0rCOM+b8bVg
-         vl1A==
-X-Forwarded-Encrypted: i=1; AJvYcCU4SlFvsrVkgHOtEdV6BV5k2w28lNXe3P7Ap3Ico/xXyNtzvshqYoL+zJBiHxW5Wa2xmrW5eKnf7y5VqoLX@vger.kernel.org, AJvYcCU7M6VxWj4f07606/FvcP/xf3gV4hGreKkFvkYUa82cuXbn8W8T/Khmyk3XZb8tqouEaoRy8ENK3edEFg==@vger.kernel.org, AJvYcCUV0KJawe2LLPBK3lqxBlNoj27IjGEAx9aoV16gFMDjvlimYFjryfbDzDPcmQoy/yV49RwfbCxjPP/U@vger.kernel.org, AJvYcCVE8tQigmCUKxDohqayeV5pY9hRCtcts32LdeKrqSa8r6k8LqGHZNSN0uawn8Hn/86IHwZEjmO2Ruwy@vger.kernel.org
-X-Gm-Message-State: AOJu0YykiWYbLejn2pnwyGA/4NW/wRYTLjyVVYxUwPR9jZlZXn2eGC3P
-	Rt524XB3fRh7qVgru2hnY6LyyVmB3HmH6xgVQjVQZaqGrqJd5EiYlzGNKrbZsgtmHUQ=
-X-Gm-Gg: ASbGncvRYkzXslXM3vf/D4zQa7Kt3aUe3UBgZTLhSJRjg/crlx+P7s3xosa58w76xvV
-	Qxo4G7fyzFX0QkL2JnpM83MmP4p4wiNa6knUhT1E2TZhNoBIW/qqz5dr5/Gb/sPvbT9nRgQFtYq
-	T0kPLX1XxpstW+56ECZeqcLlRvfq4iUCLJ3QP3S5i3mlxCadDQQuSL0N6iJdbKgo+ObH7TmP1Nm
-	AEkewPelZ3EHX08DPkxL8eAbyvDYKZl/A66c51OXGuO81IfWPLVyrQ0zos92dqtKMYzMj85t2G9
-	X5PbhrtNwa2V9JmaNp/vV+SKd2cej0cTs3pojKEIfiCLNQp7fkExXYxx2+g=
-X-Google-Smtp-Source: AGHT+IF8kRpMSFR2eFduvuz/OHFjktMA/BDCeXs95tsxes27B9OG84NRncpHF/uZo1yeIYKTNTAqUw==
-X-Received: by 2002:a05:6122:8b04:b0:520:997d:d0b4 with SMTP id 71dfb90a1353d-52f2c4c8022mr8154103e0c.4.1748296699064;
-        Mon, 26 May 2025 14:58:19 -0700 (PDT)
-Received: from localhost ([2804:30c:922:f300:98b4:5361:e180:4387])
-        by smtp.gmail.com with UTF8SMTPSA id 71dfb90a1353d-52dbab6d274sm18502645e0c.47.2025.05.26.14.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 14:58:18 -0700 (PDT)
-Date: Mon, 26 May 2025 18:59:48 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Subject: Re: [PATCH v3 01/10] dt-bindings: iio: adc: Add AD4170
-Message-ID: <aDTkVFDNYeyIldBs@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1747083143.git.marcelo.schmitt@analog.com>
- <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
- <20250525111148.4ca96a55@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PQ4IVtBU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748297870; x=1779833870;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=4D+AotAhkqyyq603rPCeRmywsUD0Aj+0e+3KhZu56IM=;
+  b=PQ4IVtBUDLDqYs1jCekLY6dTp6VgQvMsDgDkcSnzpb6vRjWnkvT8tpoG
+   gtvhydJL5Tj0gpoXcZjdP6V1IAc5qDcKM+4egOpsrZly3e4yyVkzeJ7qO
+   ppvc7OHeIwwRFK+jqI+8IJ4vE8IWKGoXS4al8+pxKXJHiiU6eOkjJK4zg
+   RfvZ/NgAclYIi0lu/tyKIRnpsiwuZWaGe1IL/+nbZndu/97opesMSpFcC
+   GGtk6Ra/dJBQuxKLEraQfbjcq0RWdXxRguoGi0EPRN83g75sGKTvVmNPA
+   zEZ1O1oA8JSFz/9nJyrQyi308xGILA2vPDv2TrLekDX/iOxnIwFZbcDhm
+   Q==;
+X-CSE-ConnectionGUID: EtEa5Z2QSDKutIiTI7iMOw==
+X-CSE-MsgGUID: JBJSpJwAQh2ohRCNeClZqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50384342"
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="50384342"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 15:17:49 -0700
+X-CSE-ConnectionGUID: F0mTqo3VS0GzVAdFgb41WQ==
+X-CSE-MsgGUID: WatK2GHVQXSgZFIK1oZ2gQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="143124224"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 26 May 2025 15:17:48 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uJg8f-000SjQ-0T;
+	Mon, 26 May 2025 22:17:45 +0000
+Date: Tue, 27 May 2025 06:17:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Qiu-ji Chen <chenqiuji666@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Vinod Koul <vkoul@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: drivers/dma/mediatek/mtk-cqdma.c:453:1-18: ERROR: nested
+ lock+irqsave that reuses flags from line 452.
+Message-ID: <202505270641.MStzJUfU-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,57 +63,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250525111148.4ca96a55@jic23-huawei>
 
-Hi Jonathan,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   49fffac983ac52aea0ab94914be3f56bcf92d5dc
+commit: 157ae5ffd76a2857ccb4b7ce40bc5a344ca00395 dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()
+date:   12 days ago
+config: hexagon-randconfig-r061-20250526 (https://download.01.org/0day-ci/archive/20250527/202505270641.MStzJUfU-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
 
-I'm still working on the changes suggested for this set.
-Just to mention, I've updated the dt-binding to declare only channel nodes under
-the ADC node.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505270641.MStzJUfU-lkp@intel.com/
 
-... 
-> > +      adi,sensor-type:
-> > +        description: |
-> > +          Type of sensor connected to the device. Depending on the sensor type
-> > +          (weigh scale, RTD, or thermocouple) the values of sensor-node
-> > +          properties have slightly different constraints. This property
-> > +          specifies which particular external sensor is connected to the ADC so
-> > +          the sensor-node properties can be properly parsed and verified. The
-> > +          possible sensor types are:
-> > +          0: weigh scale;
-> > +          1: RTD;
-> > +          2: thermocouple.
-> > +        $ref: /schemas/types.yaml#/definitions/uint8
-> 
-> I think this should be an enum of strings.  That will give us a clean
-> way to extend it for other sensor types in future.
-Ack
+cocci warnings: (new ones prefixed by >>)
+>> drivers/dma/mediatek/mtk-cqdma.c:453:1-18: ERROR: nested lock+irqsave that reuses flags from line 452.
 
-...
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> 
-> What if they are both wired?  At that point shouldn't software
-> make up it's mind which to use?
+vim +453 drivers/dma/mediatek/mtk-cqdma.c
 
-Not sure I understand the concern here. Is 'interrupt-names' property expected
-to precede 'interrupts' in dt-doc? For AD4170 and similar parts, the data
-ready signal (/RDY) is by default provided on the SDO line after the completion
-of a conversion. Alternatively, it can be provided on the DIG_AUX1 pin in
-which case the chip disables the RDY function on SDO. So, there can only be one
-data ready interrupt enabled at a time. Guess I'll add some description to make
-clear only one interrupt can be enabled.
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  436  
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  437  static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  438  					   dma_cookie_t cookie,
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  439  					   struct dma_tx_state *txstate)
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  440  {
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  441  	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  442  	struct mtk_cqdma_vdesc *cvd;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  443  	struct virt_dma_desc *vd;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  444  	enum dma_status ret;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  445  	unsigned long flags;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  446  	size_t bytes = 0;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  447  
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  448  	ret = dma_cookie_status(c, cookie, txstate);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  449  	if (ret == DMA_COMPLETE || !txstate)
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  450  		return ret;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  451  
+157ae5ffd76a285 Qiu-ji Chen  2025-05-08 @452  	spin_lock_irqsave(&cvc->pc->lock, flags);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18 @453  	spin_lock_irqsave(&cvc->vc.lock, flags);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  454  	vd = mtk_cqdma_find_active_desc(c, cookie);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  455  	spin_unlock_irqrestore(&cvc->vc.lock, flags);
+157ae5ffd76a285 Qiu-ji Chen  2025-05-08  456  	spin_unlock_irqrestore(&cvc->pc->lock, flags);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  457  
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  458  	if (vd) {
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  459  		cvd = to_cqdma_vdesc(vd);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  460  		bytes = cvd->residue;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  461  	}
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  462  
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  463  	dma_set_residue(txstate, bytes);
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  464  
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  465  	return ret;
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  466  }
+b1f01e48df5a345 Shun-Chih Yu 2018-10-18  467  
 
-> > +
-> > +  interrupt-names:
-> > +    description:
-> > +      Specify which pin should be configured as Data Ready interrupt.
-> > +    enum:
-> > +      - sdo
-> > +      - dig_aux1
-> > +    default: sdo
-> > +
+:::::: The code at line 453 was first introduced by commit
+:::::: b1f01e48df5a3454b88c5ff1eb4501f685351c67 dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for MT6765 SoC
 
-Thanks,
-Marcelo
+:::::: TO: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+:::::: CC: Vinod Koul <vkoul@kernel.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
