@@ -1,187 +1,114 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C893A433AC;
-	Mon, 26 May 2025 14:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087EE200132
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748268138; cv=none; b=Pyr4775B9Ut7tR/wmgsLyzfASUxHB+0zqdFmHW3LkHavQ6QATKSFSJWgl5rHRlcfJcjyttn3LiziOzYmvmCwepfdvOG4sfYT8j+k+l4EoYFiIkfgKl9a6J16ci5dLgHEEFIulAiTJgEoOcxY/beJOjV8M8CtcdcuAB/2IrdQQ0c=
+	t=1748268154; cv=none; b=e7JwUPoV8O8CrV6NVl1iJIJ8sUnQ1VUQPWJgUjPJwPlfaUPb5nuPzOXVcaXrOdyr1t/BWzHvThpDV0aw8vycXHTSrjB8an6vI9fKJ4XDhcm/jyEssbR7xqtPN4kxCNgqZ2zbECF3xZL6MoB0b7HScTirHsCukPGNXv/cgFZy9I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748268138; c=relaxed/simple;
-	bh=WdVXmaqBcQU32NC2s1ps5OllpizGuxaNbTkCBQyQglY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PgdyAAnR7qSOzoPMlDTycv6Ovv010TmjvqSxF36/psJolvED+xEvc0tZMKlsLzqlsI+ROdfjhZte5whCyC+RSbFunOiwySCOTknk0z7VTPeA8oJOWrYp0i6PGtFCjhfbDbbHJAI8y52Y3oFcuGdffXtlpJ91VncTEnLDnAxFzHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=j2hwryUs; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748268154; c=relaxed/simple;
+	bh=1FPYTLYFolCPqa4UiErcCX9Vk38FXUDWIxtP75x1kQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=LVS/aa9qkwEGWVb4zfjhFT4TzF8OHuNkp6EG2bu3iqcOyeWS6bGDn2d52mTOYM7K3hYPo9H6+zbORpCD0yirEyIhF1k8JFzhXX0jo2dq5iQKdcdquA+CmdSD+n7C2x2ArVok1SFoIyAL/0o+Is/nl/WWu9vadfSkCqIshxcBK8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LncjDDat; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j2hwryUs"
-Received: from pendragon.ideasonboard.com (237.69-130-109.adsl-dyn.isp.belgacom.be [109.130.69.237])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 393F07E6;
-	Mon, 26 May 2025 16:01:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748268110;
-	bh=WdVXmaqBcQU32NC2s1ps5OllpizGuxaNbTkCBQyQglY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j2hwryUssIWZKCMwUhyyxJC64fe5T29WaeP1JRIm9HxaKm/I40D5q43sgJ06oKSzh
-	 JHnbOt0iL6oaNbgjqRpfHY3iTKrJRzE3o3zK/HgVmUZ/Ot/CHWXCRex1ZQ0mPoM8gh
-	 00LM7/WnMDRQUe8ydk68ATqmDb0nEjLL7dc2H9S4=
-Date: Mon, 26 May 2025 16:02:09 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
-Message-ID: <20250526140209.GP17743@pendragon.ideasonboard.com>
-References: <20250404-uvc-meta-v5-0-f79974fc2d20@chromium.org>
- <20250404-uvc-meta-v5-4-f79974fc2d20@chromium.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LncjDDat"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250526140229euoutp02ec896a273b41603f01ea1bb9f85c42f9~DGJ6ZR99K0490304903euoutp028
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:02:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250526140229euoutp02ec896a273b41603f01ea1bb9f85c42f9~DGJ6ZR99K0490304903euoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1748268149;
+	bh=X9hidhnbjeXr79/7hjWdiP66/YfJFrDGrP9fti1zI8k=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=LncjDDatBDAFyd8dSMOXhSUWNzHT/wRYhIls3esbaJZnr9ufGHCuIeBUqXlzPNEAn
+	 3yRKkT6HOjdP0cSwXC6CW+HiLrwjwQ3sgaPFtLfKxXVvJTiPOmoItgIt/Ep0dyYhTH
+	 +zvLkck0VJPtip1ZELVDgfYh7qfus1bqVVLUqPUk=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250526140229eucas1p29ab92fba79975fb3f6f5d3f9831f9da6~DGJ5v-bu92582525825eucas1p2e;
+	Mon, 26 May 2025 14:02:29 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250526140227eusmtip1fc55917f132ab805ce6dd5cdab5f4fe9~DGJ4sSGgu1355013550eusmtip1C;
+	Mon, 26 May 2025 14:02:27 +0000 (GMT)
+Message-ID: <fec3e2d8-592a-4474-9a15-3a196829c9f6@samsung.com>
+Date: Mon, 26 May 2025 16:02:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250404-uvc-meta-v5-4-f79974fc2d20@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/6] rust: Add basic PWM abstractions
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin
+	<benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo
+	Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Guo Ren
+	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250526140229eucas1p29ab92fba79975fb3f6f5d3f9831f9da6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c
+X-EPHeader: CA
+X-CMS-RootMailID: 20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+	<CGME20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c@eucas1p1.samsung.com>
+	<20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
+	<enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
 
-Hi Ricardo,
 
-Thank you for the patch.
 
-On Fri, Apr 04, 2025 at 06:37:37AM +0000, Ricardo Ribalda wrote:
-> If the camera supports the MSXU_CONTROL_METADATA control, auto set the
-> MSXU_META quirk.
-
-Ah, that's why you introduce a quirk in 3/4.
-
-I would prefer if you could instead add a metadata format field in the
-uvc_device structure (I'd put it right after the info field, and while
-at it you could move the quirks field to that section too). The metadata
-format would be initialized from dev->info (when available) or set to
-the UVC format, and overridden when the MSXU is detected.
-
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_metadata.c | 54 ++++++++++++++++++++++++++++++++++++
->  include/linux/usb/uvc.h              |  3 ++
->  2 files changed, 57 insertions(+)
+On 5/26/25 09:53, Uwe Kleine-König wrote:
+> Hello Michal,
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-> index fe2678fc795d7fd5a64e8113199012f34c419176..776d280f34afad515594a873acf075acf0438304 100644
-> --- a/drivers/media/usb/uvc/uvc_metadata.c
-> +++ b/drivers/media/usb/uvc/uvc_metadata.c
-> @@ -10,6 +10,7 @@
->  #include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/usb.h>
-> +#include <linux/usb/uvc.h>
->  #include <linux/videodev2.h>
->  
->  #include <media/v4l2-ioctl.h>
-> @@ -187,11 +188,64 @@ static const struct v4l2_file_operations uvc_meta_fops = {
->  	.mmap = vb2_fop_mmap,
->  };
->  
-> +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
-> +
-> +#define MSXU_CONTROL_METADATA 0x9
-> +static int uvc_enable_msxu(struct uvc_device *dev)
-
-uvc_meta_detect_msxu()
-
-> +{
-> +	u32 *data __free(kfree) = NULL;
-> +	struct uvc_entity *entity;
-> +
-> +	list_for_each_entry(entity, &dev->entities, list) {
-> +		int ret;
-> +
-> +		if (memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
-> +			continue;
-> +
-> +		if (!data)
-> +			data = kmalloc(sizeof(*data), GFP_KERNEL);
-> +		if (!data)
-> +			return -ENOMEM;
-> +
-
-A comment here to explain how the control operates would be useful.
-Reading the code I assume that GET_MAX will indicate if the MS metadata
-format is supported by reporting a value different than 0 (is it always
-1, or can it take other values), and SET_CUR will enable metadata
-generation. I suppose the first GET_CUR call catches the case where it
-has already been enabled, are there also cameras where it can't be
-disabled, and where SET_CUR would fail ?
-
-> +		ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id,
-> +				     dev->intfnum, MSXU_CONTROL_METADATA,
-> +				     data, sizeof(*data));
-> +		if (ret)
-> +			continue;
-
-Can there be multiple MSXU instances, or can you break here (and below)
-?
-
-> +
-> +		if (*data) {
-> +			dev->quirks |= UVC_QUIRK_MSXU_META;
-> +			return 0;
-> +		}
-> +
-> +		ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id,
-> +				     dev->intfnum, MSXU_CONTROL_METADATA,
-> +				     data, sizeof(*data));
-> +		if (ret || !*data)
-> +			continue;
-> +
-> +		ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id,
-> +				     dev->intfnum, MSXU_CONTROL_METADATA,
-> +				     data, sizeof(*data));
-> +		if (!ret) {
-> +			dev->quirks |= UVC_QUIRK_MSXU_META;
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  int uvc_meta_register(struct uvc_streaming *stream)
->  {
->  	struct uvc_device *dev = stream->dev;
->  	struct video_device *vdev = &stream->meta.vdev;
->  	struct uvc_video_queue *queue = &stream->meta.queue;
-> +	int ret;
-> +
-> +	ret = uvc_enable_msxu(dev);
-> +	if (ret)
-> +		return ret;
->  
->  	stream->meta.format = V4L2_META_FMT_UVC;
->  
-> diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
-> index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
-> --- a/include/linux/usb/uvc.h
-> +++ b/include/linux/usb/uvc.h
-> @@ -29,6 +29,9 @@
->  #define UVC_GUID_EXT_GPIO_CONTROLLER \
->  	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
->  	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
-> +#define UVC_GUID_MSXU_1_5 \
-> +	{0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
-> +	 0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
->  
->  #define UVC_GUID_FORMAT_MJPEG \
->  	{ 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
+> On Sat, May 24, 2025 at 11:14:55PM +0200, Michal Wilczynski wrote:
+>> Introduce initial Rust abstractions for the Linux PWM subsystem. These
+>> abstractions provide safe wrappers around the core C data structures and
+>> functions, enabling the development of PWM chip drivers in Rust.
 > 
-> -- 
-> 2.49.0.504.g3bcea36a83-goog
+> Oh wow, thanks for rustifying PWM. That might be my chance to actually
+> learn Rust.
 > 
+> I don't know when I will find the time to look into that in detail but
+> one thing I'd like to have for Rust support is that the drivers use the
+> new abstraction (i.e. .round_waveform_tohw() + .round_waveform_fromhw()
+> + .read_waveform() + .write_waveform()) instead of the older .apply()
+> callback.
 
+Hi Uwe,
+
+Thanks for the valuable feedback. You're right, building on the newer
+waveform abstractions is a correct approach.
+
+I'll rework the patches to use .round_waveform_tohw(),
+.round_waveform_fromhw(), .read_waveform(), and .write_waveform() as you
+suggested, instead of the .apply() callback.
+
+I appreciate you steering me in the right direction.
+
+> 
+> Best regards
+> Uwe
+
+Best regards,
 -- 
-Regards,
-
-Laurent Pinchart
+Michal Wilczynski <m.wilczynski@samsung.com>
