@@ -1,50 +1,37 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCD719D88F;
-	Mon, 26 May 2025 09:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E931919D88F;
+	Mon, 26 May 2025 09:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250288; cv=none; b=Ie80/da+Em46SBf/Gps0F86/Kd+687urgHS+yRorKw33+O6DmfRK9FfWZqvF2G5U7F4hnoeuNQ+Ajtuy58aiyO38/tH9QSeCLLOJCOSgTBvPog9y8BqUjMoBd7dfvw1x0feA3Hre1Fy4M371IIKMuOwZaP+q8mYPOFYZANjnuew=
+	t=1748250335; cv=none; b=luW15YhtLzgRU//V3Dl7L1AxjDwbPllHH5g9s5nIazqo8UchfkO/+Hy59LPHqjFSdP8bP5+fRSazBOYUsiiwydodvFen7scCKESL+Ro2RTfRSqxSqcvT3mRftrCc8dxD0dicNmhuLLpozKkzxAKilRLMA+/jegE1RqNzf2XW83w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250288; c=relaxed/simple;
-	bh=EQoCePGQ/6HVLQQKdnXIzcsGARxwEDOhnym0PaBQGcM=;
+	s=arc-20240116; t=1748250335; c=relaxed/simple;
+	bh=vcMTXAzTiY0mStel4N+6Gk6K2+W/6O20TELFymJTcK0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tztfvFBWIntiNu1IKKWZeqqkoOAbABkKzId1EPGHzdu08OBeisIBj5VhQYijTj1lzdm/nE9HqtpX9Tun2QB+fDFTkWnZCQWxBlBNG929ejuqV4jKoFeliGsz86wkXXJuWwhZuY7J/vY5AR30VJktBDutbOONTG6PMOOTg36Wc4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cs7JLkxT; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejswtrtoubml/nE8wEHl6YBQHLiQuCecNq5T8pwfUvfm7HwzcCy4zzknt8yAY4X+4YYRrBrjZ4akCT+xbeCQ/xKxqXNiQc35VmV98PriSGx8FuSfK0TIQV/chMW8EtV8Q1zpXB2agBWJtfnGj4WeCsPmHksWMTcNcwv0Ij0XxQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AZPFdMco; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cs7JLkxT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rqxkoGqle+DY5KP+d10+n/tUx/tZ/tVc1Lafi/gnNYc=; b=cs7JLkxTx/8t/ZnbhrX1ad0r1r
-	gFAgYostA0td+ESHFtKShitkuZ53EjGuUVfO7sSy6bSo1RqMYL7MrrPVMOHTmSU+E5PUZhx8/v6l1
-	OMuyNFQyTM5QjVhXTbWWM+OSUWlU9Fp//BxcmSYPH2+oJiaIgjejkKezGV5lA/nmPW31wtfAN/7UD
-	BCX8NM5kYTNCc2PfdZhq0JDgRbQBtdldghC8rm40kn8LOELj8OJSVgx8WUNxRHI2N5RXXIDWgjyR5
-	OQN2srYlu9PoBayBSF+JxjU9J9QIK6AXiroaMYGjvaPQ4LhxXa/RJmTatk23VT4pPzfx0cZhkPQG/
-	Qar6JRqg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJTl6-00000001qMQ-0NTH;
-	Mon, 26 May 2025 09:04:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2D635300472; Mon, 26 May 2025 11:04:35 +0200 (CEST)
-Date: Mon, 26 May 2025 11:04:35 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, rafael@kernel.org,
-	viresh.kumar@linaro.org, mathieu.desnoyers@efficios.com,
-	paulmck@kernel.org, hannes@cmpxchg.org, surenb@google.com
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, tj@kernel.org,
-	masahiroy@kernel.org
-Subject: Re: [PATCH] sched: Make clangd usable
-Message-ID: <20250526090435.GD31726@noisy.programming.kicks-ass.net>
-References: <20250523164348.GN39944@noisy.programming.kicks-ass.net>
- <20250526085943.GQ39944@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AZPFdMco"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F28AC4CEE7;
+	Mon, 26 May 2025 09:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748250334;
+	bh=vcMTXAzTiY0mStel4N+6Gk6K2+W/6O20TELFymJTcK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AZPFdMcoc0LslowRmZ8t+cKbpMAmIM28iJfJAuIGtj2VpTephFMItg/PQ/PJrEuu3
+	 9Ttg3JLaHaRSUfONoDrWXyXUUAyZxfyo8hmog0s3Z3uXhQfmAVXztaP7ERodkBAay0
+	 xeFAUgXQnYjPYbAlQv8H/DQNlmFv96ZE6aU62EcI=
+Date: Mon, 26 May 2025 11:03:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Haoxiang Li <haoxiang_li2024@163.com>
+Cc: ioana.ciornei@nxp.com, agraf@suse.de, German.Rivera@freescale.com,
+	stuart.yoder@freescale.com, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] bus: fsl-mc: Fix an API misuse in fsl_mc_device_add()
+Message-ID: <2025052622-nautical-suitably-486c@gregkh>
+References: <20250526083622.3671123-1-haoxiang_li2024@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,60 +40,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526085943.GQ39944@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250526083622.3671123-1-haoxiang_li2024@163.com>
 
-On Mon, May 26, 2025 at 10:59:43AM +0200, Peter Zijlstra wrote:
-> On Fri, May 23, 2025 at 06:43:48PM +0200, Peter Zijlstra wrote:
+On Mon, May 26, 2025 at 04:36:22PM +0800, Haoxiang Li wrote:
+> In fsl_mc_device_add(), use put_device() to give up the
+> device reference instead of kfree().
 > 
-> > Setting up clangd on the kernel source is a giant pain in the arse
-> > (this really should be improved), but once you do manage, you run into
-> > dumb stuff like the above.
+> Fixes: bbf9d17d9875 ("staging: fsl-mc: Freescale Management Complex (fsl-mc) bus driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> Given Steve asked for an emacs lsp plugin, I'm guessing he's going to be
-> wanting this part too.
-> 
-> The way I got clangd working is something like:
-> 
-> 
-> $ mkdir clangd-build
-> $ make O=clangd-build allmodconfig
-> $ make O=clangd-build LLVM=-19 -j128
-> $ cd clangd-build
-> $ ../scripts/clang-tools/gen_compile_commands.py
-> $ sed -i "s'randomize-layout-seed-file=\.'randomize-layout-seed-file=$PWD'g" compile_commands.json
-> $ cd -
-> $ ln -s clang-build/compile_commands.json 
-> 
-> I then also have:
-> 
-> $ cat .clangd
-> # https://clangd.llvm.org/config
-> CompileFlags:
->   Add: -ferror-limit=0
-> Diagnostics:
->   ClangTidy:
->     Remove: bugprone-sizeof-expression
->   UnusedIncludes: None
-> Completion:
->   HeaderInsertion: Never
-> $
-> 
-> 
-> This has you sit on about 10G of build output, and while it is very
-> tempting to do make clean on clangd-build, this will in fact ruin
-> things. You can however manually delete all the compiler output, just
-> not the various generated files.
-> 
-> I've not been annoyed enough to (or out of diskspace enough) to go stare
-> at fixing the Makefiles to make all this easier. But ideally it would be
-> possible to do a no-op build to just generate the .cmd files without
-> doing any actual compiling -- building allmodconfig is slow, doubly so
-> with allmodconfig.
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index a8be8cf246fb..dfd79ecf65b6 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -905,9 +905,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
+>  	return 0;
+>  
+>  error_cleanup_dev:
+> -	kfree(mc_dev->regions);
+> -	kfree(mc_bus);
+> -	kfree(mc_dev);
+> +	put_device(&mc_dev->dev);
+>  
+>  	return error;
+>  }
 
-.. with clang -- gcc is still significantly faster; and I know there's a
-k.org clang build optimized for kernels, however I seem to end up using
-either distro builds or custom builds, neither of which are having
-whatever goodness the k.org build has.
+No, sorry, this is not corrrect at all.  Always test your patches before
+submitting them.
 
-> Or maybe this is already possible and I just didn't find the magic
-> incantations.
+greg k-h
