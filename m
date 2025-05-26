@@ -1,329 +1,195 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010055.outbound.protection.outlook.com [52.101.228.55])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9314207F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EABC1FAC4B;
 	Mon, 26 May 2025 14:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748268830; cv=fail; b=fpqN7n0FYnNQr7Vq7afHokr6zAF8RhNSrkroFPJIK90ig+dppbNu0D8QrtAu8ZBdTazXtN/kbGFTt0tXcMJVf5a+xySQPO4/oiVURywdhwAGWivvWGfKBMAVjhxqsYjC2y7Flv5O8z9lj36rmOEBpbkeJ71yObpHse0IJL77hCI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748268830; c=relaxed/simple;
-	bh=hwN5i8Aif76BfXnMKVNHHu68E859C9TXtp72f9SShuc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=iSQ83MRzErjf4+hNQ2HmD7LN9BDWwUxJhHbz3xe0W1c1r4/JdkhYnlct3TbIusfOFISAzQQqx9XyCNFYOeBOzu4Q2xvvr5p+yUki/Nno9rM2I+VGBjNU8Jm/qX6YiMd4LtGuP/1/yJpdlmMTi03cC2Wno7tQRNeYm/mrAG1Rrck=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=c9jjjkxL; arc=fail smtp.client-ip=52.101.228.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748268832; cv=none; b=tmYHBA/AeOyzMByLp2+VLwKc3QH9qm9IYbu5o41FxR5blfCfiLhFTwdCF8nRSMZjwYopVfSxlsnhBaYubgS7X/TYBVG60hFblRDcwYxHRtnPrXxAATBKXhpT3e1kcI1M8cuWxjHFYeSmaUgtcZXU0X4lSV4Udjz+Q65CQoOcLfQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748268832; c=relaxed/simple;
+	bh=RPoy9Y4/ap1Yc+wT8sGxDqqYXQ0B0KtcmpIpyGXnRFg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pplgm2gM0/5jWvmBaAWwCnFpeddDJEgQ50dMzj/veEYBqHO72nUprxjVsmv1AzRowHLEes2rriQ+u6RvzaQDjrHcg8xPMuM+3M/WPSi+4Vzc7/ZjxBBwcyfhjRXp9iQHY19pWUY5uHqYq1+uRYzmiChkL5nUOQAT/IZ3rns5eK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XWhddLeV; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="c9jjjkxL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VhagqhXTrS1qJvyWr5pC533T6mMNJEwPyd7x258QiwhNZZTXGn66DHSuL4DGRGh8cRkYkzhiCmovFkkHk5f1wOVWzlKnKdi9ai3qfbZ2b9oX68nSrjR549Z1g42+z+XRzcK6+qxA+cyhJeiNJsUJihzgJm9r2h3tjFoyC7u+d1Gys1WwSxQnAbmSqNKCB2pGgwZW64BLk5Ocv5h+oscydKFlyreJIMYpkYcL5yEc9cJK/O0ms4oY/BcNHLcIYLczG5kwqBpba7b9MC6gRDwY5tHY1lO8OE5zJK/c7Rc8KPzjMYmAKoxZkPE8yS346yKkCH7MbDvaQdeXV9a1AeUV3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y0wiZIEy3a7306QTfQ5xXCVqHInsjT8WxLfIvZTrFuQ=;
- b=Ngv8N+9DsCmYbuOvT/tAkmNh0U5FadCVE+8TN0r0QsucIPSYUSvFJJlk4P0oBkORVM+U0zxBiqP7pJ9dwF7WOoKoFkaYg5K9qle3nGN3pNLNn+YWTkIKf4tuJfN5fdnLjODv9HIoWfY3hDSwhvKY5uuItw7jVbM4/ndTxyVCJ1Vncs9pBqGNcGo9wIWXyy2Uz1X0pByy70i8GHoTUdFSun+ekx5uQTAj2hZ2I5JCpA0WdM226hHnkWxKMwq51KFlowu9d89mKYGfcnNZguIszfox3YZhLzqm3fi/rMfrx1ZLvXkNnzczOAToq+XG/s1tftUJ+USnO64zfKnQrdu5Vw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y0wiZIEy3a7306QTfQ5xXCVqHInsjT8WxLfIvZTrFuQ=;
- b=c9jjjkxLlIm1VI2/8iFAKS7XW9mlB1HpZypWTaxWPRfOc5z39q+G1YYwXA5xcbMATQfGVn7Fys3RRGcLNLYYjHuwzDKcy2lrXgGzEXCMwCEtIsx+tvyshKwjEXJu5SQgVLHrLjV0V84FP8tKjrWezkFsSU6h8R5PRgSewu4KjU8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
- by OS3PR01MB9349.jpnprd01.prod.outlook.com (2603:1096:604:1ca::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 26 May
- 2025 14:13:42 +0000
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3%3]) with mapi id 15.20.8769.025; Mon, 26 May 2025
- 14:13:35 +0000
-Message-ID: <d695e04c-b2f1-41ff-8510-33529bf5f916@bp.renesas.com>
-Date: Mon, 26 May 2025 16:13:23 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set() with
- atomic_enable()
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Maxime Ripard <mripard@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org,
- biju.das.jz@bp.renesas.com, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Douglas Anderson <dianders@chromium.org>,
- Adam Ford <aford173@gmail.com>, Jesse Van Gavere <jesseevg@gmail.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
- <20250526-cryptic-blue-mussel-ac57fe@houat>
- <91d8a288-1f2d-469c-a596-6265893584ae@bp.renesas.com>
- <20250526104902.GB17743@pendragon.ideasonboard.com>
- <209ddc02-01d2-4375-afcf-2c9a55fe8fc1@bp.renesas.com>
- <20250526-cherubic-ambitious-cobra-3c6a1e@houat>
- <7603c3b1-edff-4c02-a4a5-1d5f72720cad@oss.qualcomm.com>
- <aec5d09f-248b-4dcc-8536-89b4b9d47e9c@bp.renesas.com>
-Content-Language: en-US
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <aec5d09f-248b-4dcc-8536-89b4b9d47e9c@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR5P281CA0035.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:f3::11) To TYRPR01MB13941.jpnprd01.prod.outlook.com
- (2603:1096:405:21c::10)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XWhddLeV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
+	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=rjmaI4I+G6mZ+w0kjQErvouC/5ztSPf4S/mHzHL9c68=; b=XWhddLeVynno04d4RwDat2yaYn
+	0jXIRi7HqWO+x8lg+hRBE27KTOrjFXnrsAIX6DofI3DshflzLxq0zwoMtnSg5QqXscVU00CUvBGa/
+	2Ke4TW8TqaoLtosMqQJaKIFaiMksmoLtjK1tT0u9bDZQiYGbeZckvehYq/6XJmNLVVUf7SLEkw4pJ
+	bkGYYNsKpnvxl1SBNu60QSlKAvXlTK4NGi8f7VK0sJyBonBX0GhTZ+lgHGB0OXMNSTDKzGJig9Vgx
+	iq/fl6FnC+8IJf54agmQJ3LIG56u8SFXJY4qft+S1bkP41vH2i/31Zkx+BHNGRxGtD5wfOS8g+SS5
+	IDYKM1KQ==;
+Received: from 179-125-91-139-dinamico.pombonet.net.br ([179.125.91.139] helo=[127.0.0.1])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uJYaF-00DL1m-73; Mon, 26 May 2025 16:13:43 +0200
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Date: Mon, 26 May 2025 11:13:34 -0300
+Subject: [PATCH v2] ext4: inline: convert when mmap is called, not when
+ page is written
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|OS3PR01MB9349:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b3d6810-1f88-4262-d221-08dd9c5f80a9
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?LzJiK0JGOGxnQnkxbWJkc0lXU2R1MDVtNUt0WFNxcndNeGoxdloyK1FRN3hX?=
- =?utf-8?B?S0cwUEs1SWcrbGxoVUlvSUJSb0dReFVoRG1jMnJ0KzhUS21aajYvM0pLL1I1?=
- =?utf-8?B?UngxdlhlUDF6azZ0RjNOWnhsVmRwbEdGYVdKN3NDc3dwNHhXWlB2YVJnV2FV?=
- =?utf-8?B?N2svOU4yRmR0VGVrdTEwN2gxemFldHhobU5yMnZxbDJQTG5hdUdkQnpXYkJM?=
- =?utf-8?B?NlJORElkVVY1NnhEbENpVFFBTktiTXVjeFNES1lXQm4xVEtBU0FsT1phelY4?=
- =?utf-8?B?T1ZVczh1RVY3NHU5NWp5cjdFQjArWGlCOXp2N2VTREp3SnUyMHJaeWNqOUMv?=
- =?utf-8?B?NTE2MjU4R05Rdk9LaktOUVlNSGhKS2Y3S3V5V2VoY1JHNEJYMGdzMjZTcjZF?=
- =?utf-8?B?eDBZWGhKOElsV0RpMHhTcE5GRklPdTdicy9XbWFyUElEM2xyS081NlpHbU1y?=
- =?utf-8?B?ckhPWUtMWXdBTU0zY3I2OEJ5d3I2RTJVVlBPOXdNcEdyS0dZVTBjeXArTVdL?=
- =?utf-8?B?S0wxdURCZjFJUml5UUI4NFJBT1dBQnhDVW9pNDhrQlFrd1FXT09QK25pRkJu?=
- =?utf-8?B?c2tURVk1cEdRQTFNaFJocDBJSjhIdCtLUEUwSUdUcHQzSDZBMHpRam80dnU1?=
- =?utf-8?B?U2EwT1MraWFyUTVQemtyUWRtYzhJZWtJbTliaEpJK3RBcW4yZ1ZxaldHanE4?=
- =?utf-8?B?dnhTSEMwSVJEZWZoT01KcEZxZjFoZXBvZUxidFNFbWltR3FCbFcrMlFvZGRw?=
- =?utf-8?B?VnY1U2N2QVd2ZEhBNDdGMS9Xc1hVZHFrR2RqUXVXVXNRSjZUZHNpdDdWd2li?=
- =?utf-8?B?ZjUwWisvZTRDTVVLMGxwa0JRV3JyNkdoTFJpTktRTm4yRTMwVC9KaHphWURH?=
- =?utf-8?B?YWhqWDNydWM3cnRMWXVhNG54MW1sKzJjWEd4WmdBempxM2FDVFhmWmRyZTA3?=
- =?utf-8?B?MFJnU0Fab0FsRUFIV3Z5WG9CUzQ0U3V1NWhaZ2lBK2puM2pZa2traXUzMWts?=
- =?utf-8?B?WHY1b0w4UngxWDJkek5xMzE0cDJFdTdhNWhUTk9sMElXVnJtZGRFdnNCL1ZS?=
- =?utf-8?B?Sm1tSFBDN3l2SGFZOGRQUmpXcDBVSk1EZmh0SmJJeTRabjVUNXB3YmtDRlV3?=
- =?utf-8?B?K3NHWXJrWWxYREZpL2F4N3lrcThHcEZSa2ExY0VKc3FZcC9HcDh2VG94VEEx?=
- =?utf-8?B?MUtqdUl6aFZ1UE5EaUR1cHBOYzFDM3ZpT3VZTXYyWkpmb1loTXd2ZWFZanpC?=
- =?utf-8?B?dlMwd2lsQzR4ZXVZYVhCcDJ1THF0dzVKTTJtMzR6eCszTmxzMWgrc1FQcC9X?=
- =?utf-8?B?N0tWa0J6VUxsa2h2MUpuOVRHbWFYS25WRlg4ZzVuVjd0aU5nQ3JmUU5EYkM4?=
- =?utf-8?B?WnhRK040RGNnVEFENzRmSW9aa3lBM2JiZUp0VUhTaVA3eEZDeUF2S0JwUnVs?=
- =?utf-8?B?eWcya3h3Q0YzZUNna3JORjhhNmVqK2lxaytGZGlBUGZWVUE3bkRhL2NDMW91?=
- =?utf-8?B?dXd1aUxSajRqamtZa01pR2NXK3dNVk81Rlp5a1l0Tk9tQ1VaeW1OTE10MWw3?=
- =?utf-8?B?QUdveW9hcTdjMmJLZEpCMGF5dDhWQ2FqYUt5Y1lUOGZIVmROc2pZcGdvY1Yw?=
- =?utf-8?B?YzRGQXNYMjRQTVJQYXdlbjh4RXh1SFhUeDNBcjFnM2lnYWk1V1FqeUlNNWRp?=
- =?utf-8?B?ZDdnYlEwb0MvZjA3SzArUEp0SGZCbnRoRUV2cURYb0VtYVdoYk9MZUNTRGdI?=
- =?utf-8?B?UHpvYkFxdWJidCtobjRZQ01PUXJhajltWGhTTTkvVnM4WHcvY1RFSlJ1eGV0?=
- =?utf-8?B?MDlpZDJXSkUweU1tUVR0OFZzQW9hNjdUZm4vOHp2dUJQbzNzYlJlcWhDUFdB?=
- =?utf-8?B?enNRZEJqdVpEK0NXQ01uUUxSdlZyR1BOODhpQW9LWHVBY1QxWkNrMDlsNWh6?=
- =?utf-8?Q?vRt8eV13vPo=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?MmdyZlRpL0N0YnFrclFhMVlJYnpVTmJmeTAvY1dNZ1VtcXg4MmdrNExOSXZ4?=
- =?utf-8?B?QTBIc01aNlJXMzlwV3BpczVHNE9FSDJqN2tQSUpkY3dMemQxMUtyMWhrT0Ur?=
- =?utf-8?B?ZDZSbFlXZlVaSGx0bnphTmw5UWtXRGhsS1FLa2RXc3N0SmRDdFNWM1NSUUdI?=
- =?utf-8?B?NTZHbE43MmJ3YXZ4em1uMzdUTEVibDF1ajFZWFJiU2VKZ1paWkw4VWN5TXp0?=
- =?utf-8?B?b09DNFBiOGErdHQwalB3VldxUW8wcmt1Rjl2S3Q2ZDZQcjBGVTFUOFZCUjZw?=
- =?utf-8?B?QW1JbW85Y1B6Ym5qNDRmWFdNWGRhRFlPYkdCMEZ3bTRuS3V4dmdXM1lJSnRS?=
- =?utf-8?B?T3p3VWh6SVlwNDk0d0tuTWt4eEdIZng1WVU4a2VVN01GcEhpb1puSFc5VGQx?=
- =?utf-8?B?alY0b2RhQVFTRGh4UWdiVzRjRFJkeFU1NGk2eitTOVp0SkxYQUhLN21PUGdv?=
- =?utf-8?B?R1hJazVwZzljZVBWUXhFSmU0Q2s0djVzUTlGWlFwalhMcDZJNE93M0I1ZnJw?=
- =?utf-8?B?Rm00MlNKTXV2dWNUT0Z1R3czMW5uRUxpbUVkczlZSGFtOEJiTnZmUlcxL1oz?=
- =?utf-8?B?ZXc2cmZ0SVduamhZQWlGRmw1WlhNVldrUEJNdWI5L005WVlZUEJ2bkpTa1p6?=
- =?utf-8?B?NllCVkZ1VXh5YlgzZHBDZmdGbEhzU1ZleVp0dEg0MG9tY0p2MHhaUWE5R0gx?=
- =?utf-8?B?cVZaVTl3THZzQnJWSms0N2NocmZPcDBDeEc4MTVXbE51ZHJ4VitZNE9xbzJx?=
- =?utf-8?B?TGk2QnAzc2tDZEEvR0ppVVRsVm5pTWYxcnhnVUtDY05Fd0EwWUNVQjliZTNm?=
- =?utf-8?B?VFZ6SDYySy9TTzk0cFVnVmYrcCtsSVBNUXFSczVGSXRDc2hqQnBOZ2d4M0tn?=
- =?utf-8?B?Z2Q3d1VMdm1OTjNnejNYTVo1Z1NtOEtsMlJyOFN6V3ZIdXc1Z1BPdHJaUTVQ?=
- =?utf-8?B?S1I4SHpMZ1A1UlNuTkU3QTk5c3J3SzJaY0VFbHFRaVJ6MmxtSGhpN05QNHZX?=
- =?utf-8?B?Y0xqdTlpRDFtYTdlYWJVNnVROFl1cFVTYUtLNEFXN0VhOE9PdjBVOVNiOEoz?=
- =?utf-8?B?MU4yZGFEcVpJeWxZQVJLVmwxbjVtQkJacFFxeHZPRGpxUzNSRVJEdXp6TXdY?=
- =?utf-8?B?N0krb2RQVnNMeTRkSWN2cmt0YitOQVgza2lSTmJDVGUyV3poS09ZTEpxNkZK?=
- =?utf-8?B?S1VjTVFVRFl4MjI0OGFxWkVnWHRWWHAzRXgwZER2T1B5YS9QdDZZUUR4SUhV?=
- =?utf-8?B?OXM1ZkYyemhjWWNDUG5mMGNqZ3hLU3BBYmxCaXR5RHhvWW9abjFKZTR2Tmtt?=
- =?utf-8?B?TUFNWlJETWpJMjZTcWdHaXJodDJqMVEyQkVWajVKc2xuK2p6eWlkalZtTUxq?=
- =?utf-8?B?c3g0djBBTE5xUk93OWdCQ3BSblp1aHl6UVlNZ1dVWmM1SHZzNldhR094UHl1?=
- =?utf-8?B?dVlPNW1uczVObElBenJQa0JveTNsUHp3c1JvUU1HeHRHLzdndUNoeEN0NktR?=
- =?utf-8?B?b0V4aG5YUC8xSi9kTms3d2licVpqbWtHaFZEWHJpWDAzd25tUkxoTHhpQUV6?=
- =?utf-8?B?b0NBRUlSSFBDWVB4R2hYeUVGZUFVdkdTLzJmV3RCbmdzT1ozUm8xTmdINTY3?=
- =?utf-8?B?MnVPQ0RaU2dObjJHK0VFL0JQaEFiV0dBQWlkbmF0NG16c1Q3bWdBdUNTOGt6?=
- =?utf-8?B?SmVISW1uM2lvcTVwcHJWZnhsY05vanFtdG9vazhYeTAydnkreG5KdStiYlNi?=
- =?utf-8?B?bEVoY3Q3cDUxZytlYWNrSUw0NEFWS1dtWFRKaUNiUzZaN1NWTXkrdTVVc0RR?=
- =?utf-8?B?TFkwVksrT01WV0JPcXhZNkwwdDlSUjZqUFM5SnZHMnpaL1UycjZjNmZXWjFW?=
- =?utf-8?B?TTQvbHpOcVZZZnlrSDJKVUZjdjJVNjE1UXVJeS8wQjVZTVJxYnRtKzJWanN1?=
- =?utf-8?B?V1hNQWdEcThvbWhNc3hkS0ZYTi85ZkpNOEYwc1NDZndybDFWWDFXS0hSS0Jt?=
- =?utf-8?B?aW5ET0pVZC81RGZseEYwK0cyLytPTVpLU2dROFpTcE04WUhyNkhpeXFlWnBS?=
- =?utf-8?B?aXNBcEpHeG1PdDNueityVnVKb0FHV3dYSmFhMGJNbjhEdGs2TmdGU1NmdGpP?=
- =?utf-8?B?N2w3RXBwdTBsMzhqRkFnTmxVbmZpNU5xaXJ1cmdTWi9mU2V5WkZIMk1kRm1w?=
- =?utf-8?Q?x3/Yeb2fYbfMp5K081DpZCY=3D?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b3d6810-1f88-4262-d221-08dd9c5f80a9
-X-MS-Exchange-CrossTenant-AuthSource: TYRPR01MB13941.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 14:13:35.5504
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eR78WcdP/bAFRdAwb6lWtUNexG1shwTrY7mjzz4r6RrMTkjz1FZIHt0Nsy80Znc0dSMFjHAh7BPeKGuJI9h8yMHq8Ge61pVjZ+6LWgF+2vrIQg+A7kC2tvkF8zRuxCNI
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB9349
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250526-ext4_inline_page_mkwrite-v2-1-aa96d9bc287d@igalia.com>
+X-B4-Tracking: v=1; b=H4sIAA53NGgC/42NQQqDMBBFryKzbkoyGKld9R4iksZRh2qURKxFc
+ vemnqDL9+C/f0AgzxTgnh3gaePAs0uAlwzsYFxPgtvEgBK11KoUtK95w25kR81iemqm19vzSsL
+ maI3qJGKpIc0XTx3vZ7qqEw8c1tl/zqdN/ewf0U0JJW6FbktT4FMrfHBvRjZXO09Qxxi/z+eCn
+ sEAAAA=
+X-Change-ID: 20250519-ext4_inline_page_mkwrite-c42ca1f02295
+To: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>, 
+ Tao Ma <boyu.mt@taobao.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+ Eric Biggers <ebiggers@google.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
+ syzbot+0c89d865531d053abb2d@syzkaller.appspotmail.com, 
+ Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
 
+inline data handling has a race between writing and writing to a memory
+map.
 
+When ext4_page_mkwrite is called, it calls ext4_convert_inline_data, which
+destroys the inline data, but if block allocation fails, restores the
+inline data. In that process, we could have:
 
-On 26/05/25 16:02, Tommaso Merciai wrote:
-> Hi All,
-> Thanks for your comments.
-> 
-> On 26/05/25 15:18, Dmitry Baryshkov wrote:
->> On 26/05/2025 14:40, Maxime Ripard wrote:
->>> On Mon, May 26, 2025 at 01:19:23PM +0200, Tommaso Merciai wrote:
->>>> Hi Laurent,
->>>> Thanks for your comment.
->>>>
->>>> On 26/05/25 12:49, Laurent Pinchart wrote:
->>>>> On Mon, May 26, 2025 at 11:58:37AM +0200, Tommaso Merciai wrote:
->>>>>> Hi Maxime,
->>>>>> Thanks for your comment.
->>>>>>
->>>>>> On 26/05/25 11:26, Maxime Ripard wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On Mon, May 26, 2025 at 10:54:52AM +0200, Tommaso Merciai wrote:
->>>>>>>> After adv7511_mode_set() was merged into .atomic_enable(), only the
->>>>>>>> native resolution is working when using modetest.
->>>>>>>>
->>>>>>>> This is caused by incorrect timings: adv7511_mode_set() must not be
->>>>>>>> merged into .atomic_enable().
->>>>>>>>
->>>>>>>> Move adv7511_mode_set() back to the .mode_set() callback in
->>>>>>>> drm_bridge_funcs to restore correct behavior.
->>>>>>>>
->>>>>>>> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI 
->>>>>>>> connector helpers")
->>>>>>>> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
->>>>>>>> Closes: https://lore.kernel.org/all/aDB8bD6cF7qiSpKd@tom-desktop/
->>>>>>>> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
->>>>>>>
->>>>>>> Explaining why, both in the commit log and the comments, would be 
->>>>>>> nice.
->>>>>>> Because I can't think of any good reason it just can't work for that
->>>>>>> bridge.
->>>>>>
->>>>>> Sorry, let me clarify and share with you some details:
->>>>>>
->>>>>> adv7511_mode_set:
->>>>>>     - Is setting up timings registers for the DSI2HDMI bridge in 
->>>>>> our case
->>>>>>       we are using ADV7535 bridge.
->>>>>>
->>>>>> rzg2l_mipi_dsi_atomic_enable:
->>>>>>     - Is setting up the vclock for the DSI ip
->>>>>>
->>>>>> Testing new/old implementation a bit we found the following:
->>>>>>
->>>>>> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI- 
->>>>>> A-1:800x600-56.25@XR24
->>>>>> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
->>>>>> [   49.273134] adv7511_mode_set_old: drm_mode_vrefresh(mode) = 56
->>>>>> [   49.281006] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
->>>>>>
->>>>>> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI- 
->>>>>> A-1:800x600-56.25@XR24
->>>>>> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
->>>>>> [   74.076881] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
->>>>>> [   74.092130] adv7511_mode_set: drm_mode_vrefresh(adj_mode) = 56
->>>>>>
->>>>>> Same result but different timing (in function call perspective):
->>>>>>
->>>>>>     - old: adv7511_mode_set() is call before 
->>>>>> rzg2l_mipi_dsi_atomic_enable()
->>>>>>     - new: adv7511_mode_set() is call after 
->>>>>> rzg2l_mipi_dsi_atomic_enable()
->>>>>
->>>>> What is "old" and "new" here ? Is it before and after Dmitry's 
->>>>> patch, or
->>>>> before and after yours ? Please be precise when describing problems.
->>>>
->>>> Sorry, you are completely right:
->>>>
->>>>   - old --> before Dmitry's patch
->>>>   - new --> after Dmitry's patch
->>>>
->>>>>
->>>>>> What do you think? Thanks in advance.
->>>>>
->>>>> You're only explaining above what the "old" and "new" behaviours are,
->>>>> and claiming one of them is causing an issue, but you're not 
->>>>> explaining
->>>>> *why* it causes an issue. That's what your commit message is 
->>>>> expected to
->>>>> detail.
->>>>>
->>>>
->>>> Thanks for the clarification! :)
->>>> I will send v2 explaining better this.
->>>
->>> In particular, if the driver needs to have mode_set called before
->>> atomic_enable, you should say why moving the call to mode_set earlier in
->>> the function wouldn't work.
->>
->> It might be the same thing as we had on PS8640: it had to be brought 
->> up before the host starts the DSI link, so that there is no clock 
->> input on the DSI clock lane.
->>
-> 
-> Some updates on my side:
-> 
-> I'm not seeing any differences from a regs perspective when using the 
-> old driver version (before Dmitry's patch) and the new driver version 
-> (after Dmitry's patch).
-> 
-> In particular, i2cdump -f -y 7 0x4c shows me the same result.
+CPU1					CPU2
+destroy_inline_data
+					write_begin (does not see inline data)
+restory_inline_data
+					write_end (sees inline data)
 
-Please ignore this (wrong address)
+This leads to bugs like the one below, as write_begin did not prepare for
+the case of inline data, which is expected by the write_end side of it.
 
-The right test is: i2cdump -f -y 7 0x3d
+------------[ cut here ]------------
+kernel BUG at fs/ext4/inline.c:235!
+Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 1 UID: 0 PID: 5838 Comm: syz-executor110 Not tainted 6.13.0-rc3-syzkaller-00209-g499551201b5f #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:ext4_write_inline_data fs/ext4/inline.c:235 [inline]
+RIP: 0010:ext4_write_inline_data_end+0xdc7/0xdd0 fs/ext4/inline.c:774
+Code: 47 1d 8c e8 4b 3a 91 ff 90 0f 0b e8 63 7a 47 ff 48 8b 7c 24 10 48 c7 c6 e0 47 1d 8c e8 32 3a 91 ff 90 0f 0b e8 4a 7a 47 ff 90 <0f> 0b 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc900031c7320 EFLAGS: 00010293
+RAX: ffffffff8257f9a6 RBX: 000000000000005a RCX: ffff888012968000
+RDX: 0000000000000000 RSI: 000000000000005a RDI: 000000000000005b
+RBP: ffffc900031c7448 R08: ffffffff8257ef87 R09: 1ffff11006806070
+R10: dffffc0000000000 R11: ffffed1006806071 R12: 000000000000005a
+R13: dffffc0000000000 R14: ffff888076b65bd8 R15: 000000000000005b
+FS:  00007f5c6bacf6c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000a00 CR3: 0000000073fb6000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ generic_perform_write+0x6f8/0x990 mm/filemap.c:4070
+ ext4_buffered_write_iter+0xc5/0x350 fs/ext4/file.c:299
+ ext4_file_write_iter+0x892/0x1c50
+ iter_file_splice_write+0xbfc/0x1510 fs/splice.c:743
+ do_splice_from fs/splice.c:941 [inline]
+ direct_splice_actor+0x11d/0x220 fs/splice.c:1164
+ splice_direct_to_actor+0x588/0xc80 fs/splice.c:1108
+ do_splice_direct_actor fs/splice.c:1207 [inline]
+ do_splice_direct+0x289/0x3e0 fs/splice.c:1233
+ do_sendfile+0x564/0x8a0 fs/read_write.c:1363
+ __do_sys_sendfile64 fs/read_write.c:1424 [inline]
+ __se_sys_sendfile64+0x17c/0x1e0 fs/read_write.c:1410
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5c6bb18d09
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5c6bacf218 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00007f5c6bba0708 RCX: 00007f5c6bb18d09
+RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
+RBP: 00007f5c6bba0700 R08: 0000000000000000 R09: 0000000000000000
+R10: 000080001d00c0d0 R11: 0000000000000246 R12: 00007f5c6bb6d620
+R13: 00007f5c6bb6d0c0 R14: 0031656c69662f2e R15: 8088e3ad122bc192
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
 
-And I'm seeing the following differences:
+This happens because ext4_page_mkwrite is not protected by the inode_lock.
+The xattr semaphore is not sufficient to protect inline data handling in a
+sane way, so we need to rely on the inode_lock. Adding the inode_lock to
+ext4_page_mkwrite is not an option, otherwise lock-ordering problems with
+mmap_lock may arise.
 
-# WORK:
-reg | val
-0x3d → 0x00
-0x3e → 0x00
+The conversion inside ext4_page_mkwrite was introduced at commit
+7b4cc9787fe3 ("ext4: evict inline data when writing to memory map"). This
+fixes a documented bug in the commit message, which suggests some
+alternative fixes.
 
-# DON't WORK
-reg | val
-0x3d → 0x10
-0x3e → 0x40
+Convert inline data when mmap is called, instead of doing it only when the
+mmapped page is written to. Using the inode_lock there does not lead to
+lock-ordering issues.
 
-Thanks & Regards,
-Tommaso
+The drawback is that inline conversion will happen when the file is
+mmapped, even though the page will not be written to.
 
+Fixes: 7b4cc9787fe3 ("ext4: evict inline data when writing to memory map")
+Reported-by: syzbot+0c89d865531d053abb2d@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=0c89d865531d053abb2d
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: stable@vger.kernel.org
+---
+Changes in v2:
+- Convert inline data at mmap time, avoiding data loss.
+- Link to v1: https://lore.kernel.org/r/20250519-ext4_inline_page_mkwrite-v1-1-865d9a62b512@igalia.com
+---
+ fs/ext4/file.c  | 6 ++++++
+ fs/ext4/inode.c | 4 ----
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-> 
-> Unfortunately, since I don't have the ADV7535 datasheet, I believe this 
-> issue may be related to the functions call sequence.
-> 
-> I agree with Dmitry's theory.
-> 
-> Let me gently know if you need some more test on my side. Thanks in 
-> advance.
-> 
-> Regards,
-> Tommaso
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index beb078ee4811d6092e362e37307e7d87e5276cbc..f2380471df5d99500e49fdc639fa3e56143c328f 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -819,6 +819,12 @@ static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 	if (!daxdev_mapping_supported(vma, dax_dev))
+ 		return -EOPNOTSUPP;
+ 
++	inode_lock(inode);
++	ret = ext4_convert_inline_data(inode);
++	inode_unlock(inode);
++	if (ret)
++		return ret;
++
+ 	file_accessed(file);
+ 	if (IS_DAX(file_inode(file))) {
+ 		vma->vm_ops = &ext4_dax_vm_ops;
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 94c7d2d828a64e42ded09c82497ed7617071aa19..895ecda786194b29d32c9c49785d56a1a84e2096 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -6222,10 +6222,6 @@ vm_fault_t ext4_page_mkwrite(struct vm_fault *vmf)
+ 
+ 	filemap_invalidate_lock_shared(mapping);
+ 
+-	err = ext4_convert_inline_data(inode);
+-	if (err)
+-		goto out_ret;
+-
+ 	/*
+ 	 * On data journalling we skip straight to the transaction handle:
+ 	 * there's no delalloc; page truncated will be checked later; the
+
+---
+base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
+change-id: 20250519-ext4_inline_page_mkwrite-c42ca1f02295
+
+Best regards,
+-- 
+Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
 
