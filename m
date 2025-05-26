@@ -1,137 +1,107 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973D81B4236
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 18:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511C82147FB;
+	Mon, 26 May 2025 18:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748284918; cv=none; b=RZt3HpPAMY/a42rfp5Lm/1iqtD2V7JFaeeB1bN0RUnwf7Gocf61Uyh7oMrBKoVDAdRMQiiyVMW/6/A3ekXC3qBNq+Xgu0wJH55NxfJ0Qx5j3MFfwMzddVH+YDLurrgAKxA/U3wBE9vEX3Ypb3a6YbFCAsrWaPY/5ViCm94cxeSc=
+	t=1748285064; cv=none; b=jjmDfXqULJ1cpqXSLLaCNzRVRbAm+Ez6vBsLeEaEl9VxMvrCDJMU7fbMmY0p9UknfiYtvi07ceDi1jpsJwGrEfUPowTS+vr9Dk678MdHx23h9W5Cw2MOXpD/ZVoa9EK+c/hUhzCACaaEbk510g98PO40TEGfZIsUWYIkSqiuhxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748284918; c=relaxed/simple;
-	bh=gCWLJXPUdN7SbsvQhoScbIfa0JccmKZuImwSO62Gkjc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ruCluWlUk3AykDy+nTFM5BfFB0QB25rFlIjn0oYFlQj4+io5jPpU1MXtoNCuqKFucbzjbStp+lRjkFrixt2lP3EnA+UG3bb5ixzpfCdhSAA6arEqnMYiM8f3wwkLwLWfREz2La0FwOOQkByWFzT7+tVYCT2lmEnabL4wBJAPK0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ICp9nTJQ; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748285064; c=relaxed/simple;
+	bh=F0nXqeztZjLXSCez38dqnwS/rbBaPXXvjEwZG3KufIE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CuTZnQ5Eaatrxzomerg5Q+zUYLUTZEV5o2SnmizKL98VBaxB8jbLjRSQWUgJg6/TNMyDJbRx3OR3EhgqouxzLmRfs5MHJy6nP1hIwJKLeNqz0nTA5BfF+lYwfgAk7oUzFZ5nsPTqojj+7tARCsb+Ac35Y219PFvp67O4c/B2F3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHE4jY96; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ICp9nTJQ"
-Date: Mon, 26 May 2025 20:41:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748284904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=//3/4X1smOTo9euxVEzxPhU9KUsw8GBWxPVsUHdLyyQ=;
-	b=ICp9nTJQnuxWSIdzUsh0s7zukSsXAjgwAi5llaPPxzco7xWEkEo6SHVbtIGZsJcAc22E9Z
-	IDsxwjFLF79ggT+HholkwP3OMfGm8/dAz0P8J0vmIpGNLmdTcagiWfjskFTHZxl8ce96Tx
-	/iyD4pD57StExoWa9bVT0i5/puCFU3Y=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Richard Leitner <richard.leitner@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v4 00/10] Add strobe/flash duration v4l2 ctrl & use it
- for ov9282
-Message-ID: <kcobmtzu4zseepn5y6mf2kbnmmsqfewxkzpy5twvm32k6jr3iz@y2clbikgcxcw>
-References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHE4jY96"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4d152cb44so2099330f8f.2;
+        Mon, 26 May 2025 11:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748285061; x=1748889861; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hMCJtECyYLnVFjpZvyBd+ub3nNwjuB4xZOaytzPNUxg=;
+        b=EHE4jY96j1Z7xqd8cGojRsI6Arz3LFgCYrqUUVzJJv26a1DcHKGS1lhjySxoCoRipP
+         q38rU7C1IrnaWc7Pm9w/lDl8uL5IOHEe8J3yN5VaemyP/Gr1F6vLS2SVnhALtC1kL07X
+         mlmyFuJ8rqYznv29+zBAJ7CRfaLi6KTmcI4/QYnQo/E6neC47Ab9dPivSZ0Ol2IWh5WX
+         qsyZ0UO6wR6hbJYdknjWCbWZDvdWLKmG3MeazvHCl/HvWmidEi5yYUyKyvJAUQuukUh+
+         EINvEQFsiyrdVvJPmz57IuOFz9K+GEYQ5BsRUUShql+lp8bdwHe3U+kMIGG5sqtiFiyM
+         +wCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748285061; x=1748889861;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hMCJtECyYLnVFjpZvyBd+ub3nNwjuB4xZOaytzPNUxg=;
+        b=QqFK4b94O1OiqmLmbC7EUqWOL5tmcNsqpz3PGbYrxPGP8emzHqeLaNRY3lwe965+uA
+         Sbp4Y3i5/3nKBItjn8n9ZWHALcNXh7DHnfIfmzsMFcwqYy4H/fAXU/aEY8+15G21qcJl
+         uVCpl3OXIsKV75u+y+PDc0WPeAQD8pLD4r57OC2t56JzMZMWWftwTgSa8gyRxeVpCkxF
+         MRGe+2iV0/VrEBtjul0cWSzssxiPvAcGZYKPz0H9n9iOmmKEef0khFrNhyvGahxa7E5v
+         e2xCcvYcAQZYdawntTvvrq/AhLtPDM7QVlWKFshxpK5JBSXEpW0QKhzBfd2XPReCsGH0
+         MuOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkPr20LqYO1D+c8bkO57rI6jtsDq8p+Swk1j2CdLX15L7AGxjJ20+5a45UyuVkUTw5F0T9xW5IF7SBA4I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw86cfuW5CpVeYmGLs5zFDe3dtq3OAjzUXKzJ9qRNAQEB0lGBrb
+	ZYgW1HxgKb3tmZ7BtzsEv47Weik27W2GVRIXjcv90xIcfAR7PYEOT47cDRLR1Q==
+X-Gm-Gg: ASbGnct/+GdXLs78LlIiwWdog0j9QVf8AghhoSKlWhHouMiaL5BFmkNoqn6IOwWFCT2
+	mZ22JuHyKWo7nPu13Qcu9raLLVgvxWQ94CMEtGK1d3kIz3Pg2aZ9wt/0NzCv/Km4YunfkxwSUpy
+	FOk1MFLiWnbHm6kcIwWacY2a2Ka9gNrXNhqCblLNkY6J07ddkoM0grdZbTrFL5I434Jp4yxrBRR
+	EtZuM1IeckyzW11JT8CVRBrmpYBZpjHo/XOei/3l+qkesICIL78ap+9a6r6NgubrQ4A/4e7lI/k
+	WvZ21HvDjF3T7moVCHBT7lUWYzg/PDZhPW87/ELHtKl3o9WX5pR3glJKk4ZKoGQ6twHde5ek7U/
+	3/Q==
+X-Google-Smtp-Source: AGHT+IGTZSfVQ6dWElB0XLcV+e9gDpFNN4ZT+p1+bxpoMl8MrW/ZmACvkZFbP6thwQgK6HZ2PAqRXg==
+X-Received: by 2002:a05:6000:2503:b0:3a4:d048:124d with SMTP id ffacd0b85a97d-3a4d04812ddmr7668024f8f.26.1748285060991;
+        Mon, 26 May 2025 11:44:20 -0700 (PDT)
+Received: from localhost.localdomain ([154.183.23.207])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62b5dsm36455664f8f.55.2025.05.26.11.44.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 11:44:20 -0700 (PDT)
+From: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+To: linux-doc@vger.kernel.org
+Cc: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	corbet@lwn.net,
+	masahiroy@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: escape literal asterisk to fix reST emphasis warning
+Date: Mon, 26 May 2025 21:43:59 +0300
+Message-ID: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
-X-Migadu-Flow: FLOW_OUT
 
-Hi everybody,
+Escaped a literal '*' character in symbol-namespaces.rst to prevent
+a Docutils warning about unmatched emphasis markers during documentation build.
 
-this is a friendly ping :-)
+Signed-off-by: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+---
 
-Any feedback on this version of the series?
-(except for that one approved patch ;-) )
+Hello, this is probably too trivial to have its own patch, but I found
+it while building today's tag, so I thought I would send a patch.
 
-Thanks & regards;
-rl
+---
+ Documentation/core-api/symbol-namespaces.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, May 07, 2025 at 09:51:29AM +0200, Richard Leitner wrote:
-> This series adds a new v4l2 controls named "strobe duration" with id
-> V4L2_CID_FLASH_DURATION. This control enables setting a desired
-> flash/strobe length/duration in µs.
-> 
-> As a first user of this new control add basic flash/strobe support for
-> ov9282 sensors using their "hardware strobe output". The duration
-> calculation is only interpolated from various measurements, as no
-> documentation was found.
-> 
-> Further flash/strobe-related controls as well as a migration to v4l2-cci
-> helpers for ov9282 will likely be implemented in future series.
-> 
-> All register addresses/values are based on the OV9281 datasheet v1.53
-> (january 2019). This series was tested using an ov9281 VisionComponents
-> camera module.
-> 
-> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
-> ---
-> Changes in v4:
-> - Fix FLASH_DURATION implementation in v4l2-flash-led-class.c by adding a
->   missing brace and enum entry (thanks Sakari)
-> - Fix format of multiline comment in ov9282.c (thanks Sakari)
-> - Add missing NULL check in ov9282.c (thanks Sakari)
-> - Adapt nr_of_controls_hint for v4l2 handler in ov9282.c (thanks Sakari)
-> - Add patch for implementing try_ctrl for strobe_duration (thanks Sakari)
-> - Link to v3: https://lore.kernel.org/r/20250429-ov9282-flash-strobe-v3-0-2105ce179952@linux.dev
-> 
-> Changes in v3:
-> - create separate patch for leds driver changes (thanks Lee)
-> - Link to v2: https://lore.kernel.org/r/20250314-ov9282-flash-strobe-v2-0-14d7a281342d@linux.dev
-> 
-> Changes in v2:
-> - remove not needed controls in struct ov9282 (thanks Dave)
-> - Fix commit message of 3/3 regarding framerate get/set (thanks Dave)
-> - Add V4L2_CID_FLASH_STROBE_SOURCE impementation to ov9282
-> - Add new V4L2_CID_FLASH_DURATION control (as suggested by Laurent)
-> - Use FLASH_DURATION instead of FLASH_TIMEOUT for ov9282
-> - Link to v1: https://lore.kernel.org/r/20250303-ov9282-flash-strobe-v1-0-0fd57a1564ba@linux.dev
-> 
-> ---
-> Richard Leitner (10):
->       media: v4l: ctrls: add a control for flash/strobe duration
->       leds: flash: add support for flash/stobe duration
->       media: v4l2-flash: add support for flash/strobe duration
->       media: v4l2-flash: fix flash_timeout comment
->       Documentation: uAPI: media: add V4L2_CID_FLASH_DURATION
->       media: i2c: ov9282: add output enable register definitions
->       media: i2c: ov9282: add led_mode v4l2 control
->       media: i2c: ov9282: add strobe_duration v4l2 control
->       media: i2c: ov9282: add strobe_source v4l2 control
->       media: i2c: ov9282: implement try_ctrl for strobe_duration
-> 
->  .../userspace-api/media/v4l/ext-ctrls-flash.rst    |   5 +
->  drivers/leds/led-class-flash.c                     |  15 +++
->  drivers/media/i2c/ov9282.c                         | 148 ++++++++++++++++++++-
->  drivers/media/v4l2-core/v4l2-ctrls-defs.c          |   1 +
->  drivers/media/v4l2-core/v4l2-flash-led-class.c     |  25 ++++
->  include/linux/led-class-flash.h                    |  18 ++-
->  include/uapi/linux/v4l2-controls.h                 |   1 +
->  7 files changed, 208 insertions(+), 5 deletions(-)
-> ---
-> base-commit: 92a09c47464d040866cf2b4cd052bc60555185fb
-> change-id: 20250303-ov9282-flash-strobe-ac6bd00c9de6
-> prerequisite-change-id: 20250225-b4-ov9282-gain-ef1cdaba5bfd:v1
-> prerequisite-patch-id: 86f2582378ff7095ab65ce4bb25a143eb639e840
-> prerequisite-patch-id: b06eb6ec697aaf0b3155b4b2370f171d0d304ae2
-> prerequisite-patch-id: b123047d71bfb9b93f743bbdd6893d5a98495801
-> 
-> Best regards,
-> -- 
-> Richard Leitner <richard.leitner@linux.dev>
-> 
-> 
+diff --git a/Documentation/core-api/symbol-namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
+index f7cfa7b73e97..008b34fe6629 100644
+--- a/Documentation/core-api/symbol-namespaces.rst
++++ b/Documentation/core-api/symbol-namespaces.rst
+@@ -87,7 +87,7 @@ modules to access this symbol. Simple tail-globs are supported.
+
+ For example:
+
+-  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
++  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-\*")
+
+ will limit usage of this symbol to modules whoes name matches the given
+ patterns.
+--
+2.47.2
+
