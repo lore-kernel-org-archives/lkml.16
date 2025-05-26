@@ -1,105 +1,116 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971EB17AE11
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 15:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748274527; cv=pass; b=qe7iW/S+VF7i5h4tLfb8cFmNfWQqaAxTDDyX9hP6wEndiyl9lnfGT+fS+z39aMwrgvIPIS1rgQG6EfVuZqRmSc6nsBi7hdQ/mrwDRkinIk7eyAB1UJBhEwvmwXnFfI6uT0f4gcvJHunzOXGs/hxBTlR5cGxzO5jwzP9yPy87BVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748274527; c=relaxed/simple;
-	bh=82GBUa9Nldr58fzW7VM8zNc+/lL2Ued6wFmqFQSfTEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gc/dxpyvN6dQK+AHGKrOxS2Y9oLMqmzUlxMFIGNdsKlxYH/jcA0jkfs2QWPDIfPWA+fgsytkmFS/PILUWIgRyofm6IjBHXOlO3HW1ZCiWJwJAr+SWa4CbgRXXiBWjk6zv6cP5Nh2ayvY4FKQEDCfeF7L1ryQLmlyYBIxIWV1vL0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=WfZ1TXlu; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3D633991
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 15:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748274584; cv=none; b=mhK1VScsr6oJ5t3d8gt1a4Q2tDGR3jOp0T6cvhjcx0ZQUUYotZHn2qLDXPj2dtDbBiJe0E+xD5WmDze7IeOjzIR84mKLjzk/iTjR+nZfOaIZ7YohcjO0w9qKomMTRetFgTJkHrOlHtL54IhHdNdtf+eMxvKBxgGrYFIfMFqQrkQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748274584; c=relaxed/simple;
+	bh=VwZ4kx+tXYYa5loZ3PK7z3hK3x/IufSOURYacjqHQdg=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oUXNZyyEbNeqjUXkxzH9T9e7KZAnC6ncmKks0nae8YrhGuL5wJ949bCiEOIi8+wPQEwAKFm17DIWQreN9O1pXOhoe2tK0U/XOvq9ju57u018TTNbpYd+BF/W/SwYQuLNLzLlc1KUBp8Zpo0YUVWQgzuHVXK94DI6bkS3kSByVZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VsxnybnA; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="WfZ1TXlu"
-ARC-Seal: i=1; a=rsa-sha256; t=1748274499; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=naFkj9zmjJ2xcCm8fV/FlsMk8/dkeMOcl1YwlHmZX7ds/XoeeYF1klyHunWpoq0qG/M+W2tatyAX1Ym4HlpAk0pcX6ydAiQoGV5cziCIKpF8gvpSEECvP0v5OtJi2CwOQMTQR57gedDcVsD0xmPLX4hj6wvfYOSn82k50OoKCbk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748274499; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=7u8vO7Ws768JnzmKvh2GmG4PF4lJ+CEAJNx0uPhyhQE=; 
-	b=PUCvEeiZ+HlRLeM5uZhsKIKqMkZ6GGJs6i5MmTEKThCw+crouqHwC1MTIpAYfYmAHmCyHs6aEEi4WMyF9qcmekXci8tMOHOJxWgsUFTBVovV+AbQEor2AyQMm2fAFuNhViKUyZlcOO0fzlK+tuiLJWEc0A9yX0eRQKSVgDvXHV4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748274499;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=7u8vO7Ws768JnzmKvh2GmG4PF4lJ+CEAJNx0uPhyhQE=;
-	b=WfZ1TXlusW0K9YtTSApB3YEK7QfvL25+JrmhothPBfSMvMZG06jBawJPNenNuQbA
-	FBa6IxiJkTYRgxuBtQndDvVU8npG7NhqrQlfJ/7lUN7ml6WdX6PSnSDnarekr1OjSVb
-	rvaaUNot1I4/xqu0jB/ZPyKmB9mSDKxK+LKUt/Iw=
-Received: by mx.zohomail.com with SMTPS id 1748274498096817.1869686603382;
-	Mon, 26 May 2025 08:48:18 -0700 (PDT)
-Message-ID: <28c64a39-1deb-4e0e-a395-2b243019ae70@collabora.com>
-Date: Mon, 26 May 2025 18:48:13 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VsxnybnA"
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e1432aaa68so1616073137.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748274581; x=1748879381; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VwZ4kx+tXYYa5loZ3PK7z3hK3x/IufSOURYacjqHQdg=;
+        b=VsxnybnAveTuAnk61KssPKMXDy6L5HE9qh2VNVAPT3JE5DR1w1kJ+uMma1sqUOdfse
+         rHeUAX/m/Vk681COUsxqN1sTDbPMNhGF0/0BLjNkxuXCwxx5KAQ+J94jzis1Suyq1Ytv
+         UYHzTjxPS51y54OangTu0lovMCdx/CK4guI5z87OZC4dqX+fkF1vGrjFSW0LZ69YXshJ
+         lw00Bzsc5Er6bW5AMoVQsaFgrh4CkxU7EppbOue0kFBJhaC0bCyHqCyGFJvAa7lsYOPb
+         dHoKVj6qnJsrB6mD2B9bg7jxUeD1DLeF50pudB3c+Zj1BtAxipC8KDNKub3EWeQKQaAA
+         jrrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748274581; x=1748879381;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VwZ4kx+tXYYa5loZ3PK7z3hK3x/IufSOURYacjqHQdg=;
+        b=CbVPhvxfBs2gWW/rJ1rJKIDs1KmXzj6yo2ELmj9BLOm/iLlqTkzOJWEciuHTuHm3dU
+         tuLMxw/8q/DRP1w7Z9vrIxcTv7uBVgV1DDkajY8mgQFioMAxqTlB8v2RAo6PHsW125+m
+         T7P31uq2zq2JRNBDPsGFiVZFKderyfjG6Seu7DGSHwnztxX1aUwmPOzxWq9If5JfVW8s
+         oPo3VpdEyi1mmkVPW/t+F94uSaEcvxdUZpImEILGtsVHd7G/ModcWOyAEuhaxQNfCTwl
+         ZOusUOta0erN5NDAl17wY1ldQ0fPivwrNJWVBp7jHAJbPQ5Npmn9OhytTpnTIe8o2og+
+         00YA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDJSiLGq2mifNQ1zzR0xmZEBVK4NTXCgZHvG7dCvjrahEMJmgFkrP5XsMyUKF70DUoGTLPe20rHDGe0z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywoi4X8dJScnqjSKLmAa4/vsw39SmixJ/+MRiiBwRrNeF+gkDgX
+	n1N5pV393EOotaTNVfJmxnolk/oyrZbD/aqPFZdFYN9ytZ2UWV6BEuf5OiWfeUSpo+jpr5Ec3AT
+	A5qMxIsEdyhJN1URKcjw55PWIkn9CO0Quli7w
+X-Gm-Gg: ASbGncuUz9+swOXDOvctTQh7JWPQsRCbDnqJwFRQIK5CBF5lM9ypzLdRuNFQZMG5Drd
+	ngyosK6fCX77Jz9tkWI9PVA8BVMqJzKqIf+omqaSrVjGT1Aqi81f5Q3DhplL1ASjL3U3lkl4x3O
+	rNtwka8PqNY1oE449XiClQXNdWvuh+k/52MQ==
+X-Google-Smtp-Source: AGHT+IHxHI/WgYYSbd+L+4dIuaYdnza/2CAUBC3/gbbiQ6akT1ylcuRrP0ipSR8hMLf/hn9wzVHFuky8Uzro+oMqR0w=
+X-Received: by 2002:a05:6102:2907:b0:4c1:94df:9aea with SMTP id
+ ada2fe7eead31-4e4240c112emr6567236137.15.1748274581237; Mon, 26 May 2025
+ 08:49:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/virtio: implement virtio_gpu_shutdown
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Eric Auger
- <eric.auger@redhat.com>, David Airlie <airlied@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Simona Vetter <simona@ffwll.ch>,
- "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux.dev>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250507082821.2710706-1-kraxel@redhat.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250507082821.2710706-1-kraxel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+From: Xianying Wang <wangxianying546@gmail.com>
+Date: Mon, 26 May 2025 23:49:30 +0800
+X-Gm-Features: AX0GCFuH5q3K6rpEbnZIexqc0vbJnC9LpuAM7WMpr7TMYF6YvKC7kVCM8cgUaMY
+Message-ID: <CAOU40uDrsJH2562F4FdxEatGmxRyX0anmFiXN97+gOKDqAHmbA@mail.gmail.com>
+Subject: [BUG] BUG: scheduling while atomic in throttle_direct_reclaim
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/7/25 11:28, Gerd Hoffmann wrote:
-> Calling drm_dev_unplug() is the drm way to say the device
-> is gone and can not be accessed any more.
-> 
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Tested-by: Eric Auger <eric.auger@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> index e32e680c7197..71c6ccad4b99 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
->  
->  static void virtio_gpu_shutdown(struct virtio_device *vdev)
->  {
-> -	/*
-> -	 * drm does its own synchronization on shutdown.
-> -	 * Do nothing here, opt out of device reset.
-> -	 */
-> +	struct drm_device *dev = vdev->priv;
-> +
-> +	/* stop talking to the device */
-> +	drm_dev_unplug(dev);
->  }
->  
->  static void virtio_gpu_config_changed(struct virtio_device *vdev)
+Hi,
 
-Could you please describe whether this patch is fixing a specific
-problem or it's a generic improvement for avoiding potential problems on
-shutdown.
+I discovered a kernel crash described as "BUG: scheduling while atomic
+in throttle_direct_reclaim." This issue occurs in the memory reclaim
+path, specifically in the throttle_direct_reclaim function
+(mm/vmscan.c), where the kernel attempts to perform a potentially
+blocking operation (schedule_timeout) while still in an atomic or
+non-preemptible context, leading to an invalid scheduling state and
+triggering __schedule_bug().
 
--- 
+The crash trace shows that this condition can occur when the kernel
+mounts a specially crafted ISO9660 image via syz_mount_image$iso9660.
+During image parsing, the VFS initiates page readahead through
+read_pages, which issues block I/O backed by a loop device. This leads
+to a SCSI read path where scsi_alloc_sgtables
+(drivers/scsi/scsi_lib.c) attempts to allocate memory for a
+scatterlist using mempool_alloc. If memory pressure is present,
+mempool_alloc triggers try_to_free_pages, and subsequently
+throttle_direct_reclaim.
+
+At this point, the kernel is likely in an atomic context due to
+earlier direct reclaim or preemption disabling within the block layer
+or SCSI stack. As a result, schedule_timeout is not allowed and
+triggers a BUG.
+
+I recommend reviewing the reclaim context propagation in:
+
+scsi_alloc_sgtables and sg_alloc_table_chained
+mempool_alloc in SCSI I/O paths
+throttle_direct_reclaim to ensure blocking calls are not made from
+atomic contexts
+
+This can be reproduced on:
+
+HEAD commit:
+
+commit e8f897f4afef0031fe618a8e94127a0934896aba
+
+report: https://pastebin.com/raw/bxuLHCgu
+
+console output : https://pastebin.com/raw/mCZ4Ap8Q
+
+kernel config : https://pastebin.com/raw/aJ9rUnhG
+
+C reproducer : https://pastebin.com/raw/1dku01DG
+
 Best regards,
-Dmitry
 
+Xianying
