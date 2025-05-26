@@ -1,73 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09E853A7;
-	Mon, 26 May 2025 09:07:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437141EA7CE;
+	Mon, 26 May 2025 09:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250447; cv=none; b=mnt8y/n4zrN6rZ5pr6RVBBIolB+g0njjLJLtBIFNDCIE/JtMDeR3xXVjmGyfkp3fx8NpbOp7p2Yo4AQcndsXdjup7NgAag4GvN2dvosJ4I8eA5RmQX5SFaVG/hnigfaxQ1q+FxSMvBOEYjqorFu++cp1xpbiYkl5cFGX0+5p4ZE=
+	t=1748250500; cv=none; b=IyVf3cupKNxndsLArinINaq2rr2jkKIL17ZwZ6RlIDR2F0GYGqNwUPRDmw2DivxWF8pTLX6AKZmRMaEDNZgRYs/uWiq79Z0SQ+Hh+YXxXsOKm/UIVjuzFY+T7w2dxKJss5+SESiq1jnHwLUpSuErayZ8LVJmdPvZuCxkqGg5hMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250447; c=relaxed/simple;
-	bh=porOjdZ2lQuSg6mMXbJffwG6qck2syE0nNBjtW/CVzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GnuvLF9vP/p6ZBMlQkEiPPgaeoqiz/uD33/k+FCk8dFEFN1cbkBABPpoOutM41MHGuDxL6WQXbYbrNngqkJI9cqlo3UHe1Yy/xjzwFR1Ek0crnc7iWqbazb7xmnuh7uhY6LV6q/O2zgZ6f2wiNjEGg1QyDqrlvnDgWTRT2uuGzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5tZaT4h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748250500; c=relaxed/simple;
+	bh=nJBb/1/0YdGIGTTqBoalgYHLW1hWuWEj4N87pCrndLg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a1uuyrNSTsa4TjzUu2VIa6kka5L9+vPUSDQNVMiybvOD/IoXnffJVByvjUrtWusgfMiMgh5YSRYLPmbqN2knygiq+rtczo30aFZwhdEDopHBORiz1BYw3UOU9EAog/JhM50tLWsXoIVUH3FN5W3cyiCgvGLJ+f5DUeP54NXZEz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HG8kHD6M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5tZaT4h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E4BC4CEEE;
-	Mon, 26 May 2025 09:07:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HG8kHD6M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07B1BC4CEEE;
+	Mon, 26 May 2025 09:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748250446;
-	bh=porOjdZ2lQuSg6mMXbJffwG6qck2syE0nNBjtW/CVzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q5tZaT4h+cN2e4iwJpaAcrrJ6ku6xQazJCOTh65cc8vUpn2Mq1CV9KaqGwo9RGJJ4
-	 TlpR2fcrn4IjWX9tIKr7tAJenRuns4qbjQcMI4Lf/3BUueLvNQwg4Q/Qk/n5OiZCxM
-	 LKra1qnA2Ifa6CxhzkGSStRBgefeHdNzP1/r2ATlunFZzHHzebtWk08MKEN/g9KUD9
-	 FVnkcTXEEQvCSQS1DdkzNPcNN1RcV5vtP0gVNPWHQdUYDxNYMxoNIv1iHegUOZg6zD
-	 7APqf7ys7wDaAuI52KdbUyTcrx1ela+T1JUwdWgJaj6633vdCyr2kuENWULLs13Guq
-	 A8bubTL6gV8VQ==
-Date: Mon, 26 May 2025 12:07:22 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, jgg@ziepe.ca,
-	zyjzyj2000@gmail.com, Daisuke Matsuda <dskmtsd@gmail.com>
-Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
- virtual DMA devices
-Message-ID: <20250526090722.GY7435@unreal>
-References: <20250524144328.4361-1-dskmtsd@gmail.com>
- <174815946854.1055673.18158398913709776499.b4-ty@kernel.org>
- <aDQQyjJv9YKK_ZoV@infradead.org>
+	s=k20201202; t=1748250499;
+	bh=nJBb/1/0YdGIGTTqBoalgYHLW1hWuWEj4N87pCrndLg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HG8kHD6Mi13KDEkpfxXvGcgdk7GqulDYqITm+MHSEGnLerWuJ00vnnSVJ6yPYqCE3
+	 65AZwRfmSDRj1T6lLX57tKBxUDYKGv5heSuF+57kg8An/p1fS+K1UE+mJrzOH8kC+n
+	 HyBWq/GiCBEbxKQC1w8+R86nDNYaO+Y+BsC56SLLsTqxE0qp6iof4TNpl6FvATc0VF
+	 U3SVoxJ9ChLHNfl8XOLQYMLqERJ4uXxkNxJzyYFPmbUi0y4NVYObcRnhVmhXYrkPQh
+	 5I/fDfod2ZsHFglRIl0ivKsd3sMaMogDSYMnwNlxmGpx2kJGaTEEtqA//YqWsYa8FU
+	 vhqgzziofg77g==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/2] tinyconfig: enable CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
+Date: Mon, 26 May 2025 18:07:51 +0900
+Message-ID: <20250526090815.416922-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDQQyjJv9YKK_ZoV@infradead.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 25, 2025 at 11:57:14PM -0700, Christoph Hellwig wrote:
-> On Sun, May 25, 2025 at 03:51:08AM -0400, Leon Romanovsky wrote:
-> > 
-> > On Sat, 24 May 2025 14:43:28 +0000, Daisuke Matsuda wrote:
-> > > Drivers such as rxe, which use virtual DMA, must not call into the DMA
-> > > mapping core since they lack physical DMA capabilities. Otherwise, a NULL
-> > > pointer dereference is observed as shown below. This patch ensures the RDMA
-> > > core handles virtual and physical DMA paths appropriately.
-> > > 
-> > > This fixes the following kernel oops:
-> > > 
-> > > [...]
-> > 
-> > Applied, thanks!
-> 
-> So while this version look correct, the idea of open coding the
-> virtual device version of hmm_dma_map directly in the ODP code
-> is a nasty leaky abstraction.  Please pull it into a proper ib_dma_*
-> wrapper.
+This CONFIG option, if supported by the architecture, helps reduce the
+size of vmlinux.
 
-I did it on purpose as these ib_dma_* are used by all IB users (core, drivers
-and ULPs) and at this point I don't want them to use any of that specific API.
+For example, the size of vmlinux with ARCH=arm tinyconfig decreases as
+follows:
 
-Thanks 
+   text	   data	    bss	    dec	    hex	filename
+ 631684	 104500	  18176	 754360	  b82b8	vmlinux.before
+ 455316	  93404	  15472	 564192	  89be0	vmlinux.after
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ kernel/configs/tiny.config | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/configs/tiny.config b/kernel/configs/tiny.config
+index b753695c5a8f..5dd0f0a34a73 100644
+--- a/kernel/configs/tiny.config
++++ b/kernel/configs/tiny.config
+@@ -2,3 +2,4 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_KERNEL_XZ=y
+ CONFIG_SLUB=y
+ CONFIG_SLUB_TINY=y
++CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y
+-- 
+2.43.0
+
