@@ -1,208 +1,246 @@
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011060.outbound.protection.outlook.com [52.101.125.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADA61A2622;
-	Mon, 26 May 2025 09:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748251323; cv=fail; b=EQXlVIgrGcUDuGoysHBD0Z1U9/5zkQeL3f+1Fza93N7x0UL9BUsPqDmwslhrUyFQn80A5KSQWVdO2VMR60aV3GhQS5N/WAvIIukGR/JIgnFo7Yrx+MU1S1Oh0HS1WkTOA2XoKQPV9XrSyxtf1/ikr4BZwFgMM9V3I4cVwjOnmP4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748251323; c=relaxed/simple;
-	bh=1dE01Etq/Dj5WJhdY7yS/IVD0FnOu3EB1yJsRQttPy8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jtyZepqM6Jq7URVfl2XHVPB+bMrtjdOVMSjF0ECWoGclOU0ecJiJMuScndj6UCRw6OvvhIfX0m63b7GTrQUQb47B+Qn1LooKFuoVIFyL1hdex3US1eGy8mz+kLvuXD3U6Tr9V1qxzbFW/7TV9H3TCDjz7RSYJn9quldptHkHnE0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=AlVj9DIS; arc=fail smtp.client-ip=52.101.125.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C0D1A2622
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748251339; cv=none; b=PLraljEcIMny65UqCREeZOmNwscQZ7Z0R3R+dimJQsk7uh4JUHAFYvPDdpMtjWXBYGFMuKLrf2JVm81MQH2OyeClOHElnWweYS8KvpZP61OKXG6NYPcVAjyHXbbfjUuDmX5NEkPhorx9f914P1HNZqOeIL9MOYqA6IfJ+ysQ7Pg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748251339; c=relaxed/simple;
+	bh=v7yS7OXgu3hum6RTQqAlKfS4MyVozx6fNgU7cA4xzbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qHrA5FgmG5fIYxykDrLgW9eS8YH3jnQd699Zl37u7uQxFNkx8eQ+Ky3ExrAO0Gen+R29aUA5nxIU7J46OFbWoNPrX2mdlwvEriGmyoRc4YdYA+qR5z2naaFV27pK0dO6SBBclLBR2dKwrKbgRp5CllJel1iiESUD8E0ReDpawm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Jo2bkt3k; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="AlVj9DIS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fT4h+vN2w2GZm+4aHVFz7k9+izHGhpNQb2uMXZF7JjlZhNJfD2A3Qduqls7qN9L7iDR+O4THDIhzazcgvn0t4Wgq/krs3ykH3n4qKWJ3cKc/KFZKSXJ3WHfgOoaMdOpvwOxCX0XEMY6Xw0i5I2NXIGgJpEM0CS1jJaYwRR4NvaNgdkFIVg/rxcZhrQ/95g1dJ/Dz5hCpuD2DCd2j+Rqhml9RPWbvB7jUPkYiNDn1v1N7C0x88gApcgL8vEUcrUqH1sUMIgJmVtTM15YPMrRxiW47XFqXGFTdznK7yHVnbhfsPNHeESsCfNk79ENQCwob8HtUYSktss/z2tKqfZa9dw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xRV8rC/76RdwCpwx7ofihmIaEHqnfTR59oD/oVIwubA=;
- b=qYlZ4TzIUndqTWrQ7ctkketKH5uPpYIy+rAprLc6l6NdDr3Uwy8fBlw/+ksu966GT02kL3kZFOGJ7xJjrD6ybIp/1HNahjEApI9qAVtavdWAdIWKZNGUQ4rJmuWO6iUwB3ys6yjg9wgzCsslYCj1fNRqQLYuOvrgHtWyv5Qc+pfvJC91gTDejIHghU6lloFmMinWgDrXfhUzZXhFRQ5cpQs7AsH2q+I9JuuBRMf21Tc9OqFoW3T61eJrelmkOt78637H8chfzYJ5edQmRHrXpPEa7umHN8bTkh1mqzAqOaNJdMHLAjrueAorhArx8qbIYNqQCYUhEdx60nS4NvoQ7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xRV8rC/76RdwCpwx7ofihmIaEHqnfTR59oD/oVIwubA=;
- b=AlVj9DISAvA2//Hp/s+s21+79rrqC/Yc2bPFHBQb+p8zZ+BdzPsTSx2QSd+ktWdC+cIhat9TROCKYuXGbJvTB5fY0X/XhpzeEPVfaQmjgwIxcRPtGIlAMOxtF2umwQzL2G9g9+HiiL8Sy8O1v8BusWrdMdrbKkBMGBPsiz5jOV8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
- by OS7PR01MB11443.jpnprd01.prod.outlook.com (2603:1096:604:241::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Mon, 26 May
- 2025 09:21:57 +0000
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3%3]) with mapi id 15.20.8769.022; Mon, 26 May 2025
- 09:21:57 +0000
-Message-ID: <c0aa1d6f-4a2e-455f-b458-1b679beefe0f@bp.renesas.com>
-Date: Mon, 26 May 2025 11:21:44 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set() with
- atomic_enable()
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org,
- biju.das.jz@bp.renesas.com, Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Douglas Anderson <dianders@chromium.org>, Adam Ford <aford173@gmail.com>,
- Jesse Van Gavere <jesseevg@gmail.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
- <CAMuHMdVMDd2abFFzMY_Rbm=7pnX5C2qHBsa68tF_c=bRnp3zkg@mail.gmail.com>
-Content-Language: en-US
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <CAMuHMdVMDd2abFFzMY_Rbm=7pnX5C2qHBsa68tF_c=bRnp3zkg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0119.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9d::15) To OS9PR01MB13950.jpnprd01.prod.outlook.com
- (2603:1096:604:35e::5)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Jo2bkt3k"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a3771c0f8cso1441344f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1748251335; x=1748856135; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kVB1vMEDILwI7yDAI9DCK169GFiMbj0azQ2wkTKfU94=;
+        b=Jo2bkt3kIR6RlLEsE6p03VMwZsfRdrhbXPO53gOh9ZonWeENh6saDjAXxzWITSODP+
+         wL8nxlQ3az+aCYAM/wVh888QFHBrHmGHOf1bDNZvlMXHvFA2i0YhLmV8xYNnm9paRyxN
+         S83BfBImElCMUpUApAcu1nLkT2Kc0CFVKEoVUFhP/2ZNoKAp1qXttm0ykYR/Aa8eNTVg
+         jmG0XjloZugo7jlKP3Mdx1sdEvSHd5IChxj/4GleVNHBxuW1dCQaSI/2z+zWa4jqy40C
+         W5rWkJwvHwSoCijMVwhFwN5d1n5gF2f/685S6ggUIaQqnPllVDE5huCZHSfsVI8VBP7M
+         X9ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748251335; x=1748856135;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kVB1vMEDILwI7yDAI9DCK169GFiMbj0azQ2wkTKfU94=;
+        b=wOQ1B+Gfv1Y/bixZaHglEwkO2i5cUFZFtQVXecCRTCl+i6iPCAYINyuc6V15xaAI5k
+         am04+Mxbo81OKvwyqlDA0pwuMr0Kt7k1HUdBCjmTZeGsM3Bzs7P9/xS7tklTGT83BGNM
+         SuyrMUfLupB+z1U1P6nIH1ds/xlXx8x/ddkTjAJ0D0xXcTXFPv82cCm2HrTPYoKfXgT7
+         ZU+E4DyM0t1LYtKAwoOkSN0qVF7H+nux4r5NnbWwXwQH4WvWigaxR2mPnL2J7co41MCl
+         FJH9obnyaWoqA0DfUEi0prHqTlKiJX/LIvsVLwNekpPuPVYeulfOce5BPBD2Jci4USkU
+         o42A==
+X-Forwarded-Encrypted: i=1; AJvYcCXZJEkTtNtvgnLMb94uGQWighY6ina82v067Uckkpn7mzwJ15kRJB0osOMkBvqUdjm4wZK7LlM+e54sBcA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5c2yvhrzLA4H4mQ6WbSkdpmd2BwsNhshZuEJcDdGkd1MhiPMN
+	hmHSH1j5CmR6eZhetO7PjxP/aWpsqRyAKGqikwL+O8ApxFco5N/gXVWFF/BIWFaxXHc=
+X-Gm-Gg: ASbGncsiuhVfX9jmRvp8jRl2SuKq5YWSZt5WdBHkGbezwHhob66LQ/T17wII/3AMktB
+	oHdYIPC5BkLxuffEy0xc/ouSGucsIfWth3yBs44NlBTLWdD6n+lQ97K8TIn1oBH8YXdvpcUIi5J
+	CfBmOVd0Q7p4y0HS8SgWbiCE2o7EwjbASzC6iigDepGVUQIl/+l1cSz0qdg6AuzQHtYMl3ARnl3
+	RnGiIYGZee+Oqj+D9qpjKPEXuwGUMPYxpRZEMFZb9hJKR612bFe31tXIwqyZaL5Yq73Xdl/feSX
+	3bgRz2LPa6Ig7TY75wfJiCcE7LlNqwpDJMvg4iETjLtkU3CaooLo66N/14bqWA/WmAxNFxiMr4r
+	+xdA5
+X-Google-Smtp-Source: AGHT+IEGcjh7xBCh+DfeG8xrQT+wvABD+WF/Eu3axSyNQAacMD1k0+ulmhfWAKZW9jVFPAOFjD/p3g==
+X-Received: by 2002:a05:6000:2407:b0:3a3:6f26:5813 with SMTP id ffacd0b85a97d-3a4cb442ea4mr5934699f8f.25.1748251335337;
+        Mon, 26 May 2025 02:22:15 -0700 (PDT)
+Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cd0cf5ccsm6703658f8f.8.2025.05.26.02.22.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 02:22:14 -0700 (PDT)
+Date: Mon, 26 May 2025 11:22:14 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v4] RISC-V: KVM: add KVM_CAP_RISCV_USERSPACE_SBI
+Message-ID: <20250526-e67c64d52c84a8ad7cb519c4@orel>
+References: <20250523113347.2898042-3-rkrcmar@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|OS7PR01MB11443:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93cb31be-e1d7-4bc3-ffc9-08dd9c36c2cc
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?L3diSlA5andhaG5SQWt5ajE3bFVyQnBPU21tRjh4OWhqV1IxMlYvdEx5cHhV?=
- =?utf-8?B?MHVneTJXWWRRd3NLS2h0ZGNTQ1NxdW5WbEZVZmdlUUZsNU1qK2JHMnE5ck5K?=
- =?utf-8?B?Ung2WWlVWWNJZGxqWFlLN2FIZnZDTzVRVlhVam1rVFRpRWVqcjlxTkNEUits?=
- =?utf-8?B?ZUcxSU0xRUVRZmhuOEpaUUlBVU1yUHAxc0UvQjJkak9VdklVNHBGelpVdnJU?=
- =?utf-8?B?Y1pxd3VhdGRDUjN6YndzNjBhbXhmbzlHWXJ5RVpvekNQMU9WT3EvbzExT0VB?=
- =?utf-8?B?ZHN6RG9ZaWlmZXBXU0ZWTGU0N3dQTlJ1WjUxY2tsMXNuZ1ZHVXlLUXdEU2pw?=
- =?utf-8?B?bmQvenBET3J6VU4yTThqWnNHRVhUWXdKbytNaHQ2cnU1QjhLUG02MEdjV0Vi?=
- =?utf-8?B?ekFXZVZZaXZJQlNJaG5lcnhzdjZNQjZCdXZlYzFPVFgwZ0o2OURkMmZEeUtp?=
- =?utf-8?B?cDFITnNJNjhyRmtvNVdMRHluQVpVSDlnUmp3eXBFR1V4NCsySDBQWUFGRGRq?=
- =?utf-8?B?VndpWEIxZnRSR3JlT1ArbXMxZDVRYTBrM1BLUUwzUU5rOUdGdUFCKzBBV3NE?=
- =?utf-8?B?R2pvdTdCVGdZMVFiQ01ibUpYZm9CZ09pWjd6YmErSFJQQTc1OG91SGNpNVph?=
- =?utf-8?B?bVZzSXhyY01wR1c0ZXRqNDlpZDZFVWJZK2JMUUx2R1JUTXp5VXR0SnVhcUtB?=
- =?utf-8?B?QWxqYzZvZFJEOXdncnlzZFZxVGFiS2xBMzVyaE1tNzhJblRaeVFUU1lTOEpN?=
- =?utf-8?B?RldMMEtJcS9qR0Z0SVdEOGtDbm81aGp2RE5CemxETE56YXJjNFFmeTFNMVY5?=
- =?utf-8?B?RElaaXdmeVRZWGp5TWh1aEZVTE1UYW1CUGkzM2djeDg0WFlJdFlSMDdqeEJJ?=
- =?utf-8?B?eHArUVZmeG5IV1o3cnV6Uk15WGhweE9tb3dtUGp3NXJYSzRhaWY5MHRYZVVW?=
- =?utf-8?B?ZWVqdy83NVl4M3ZtVzFaZXhTZnQ0RmtVRWF4bFMyTzEzVzIwSFFPQkZPQk11?=
- =?utf-8?B?VDc2U3RpTUpBRUFKK1BSenZTTktidG1LU05rS1NtcUFwcFdKZkVhUmtPVDRK?=
- =?utf-8?B?OCt6dnROcUFjL1dHSmpsVmNLVE5WdWlxbTJkUEJ3emMwOFBnZmRib1p6WUhl?=
- =?utf-8?B?ODRIRy96L1BDRDI0bHU1aWU3cWo2UjZzTk10UXdZUmVZMmdZM25POG13LzJv?=
- =?utf-8?B?TkZMZFE2a1Y4VWRqQk1TVGJWOVdlQ0liRWZ6RW10UFE2RUF4ZC93QkNiZHV4?=
- =?utf-8?B?QVUzMzJpckl4Y3hMdS9TOWdqbzI1MEFMNVhqbTBDVXNjMlowMVRwNXBpd2VI?=
- =?utf-8?B?YXBBT0wxekp1UDd4WFFBS3kxQWx3SXNLMlhlYUx5aFJ4a1BPNTJDbUtwdE93?=
- =?utf-8?B?S1NnSzUyeitld010a0k5L0I5N0xCam1ob0JkcnlUdlBGamZQK1lvajZhZTR0?=
- =?utf-8?B?b3pmYjFCZEV6SmJSVm45blRoRFZQRERQejFNVnJVOUhZUm1VSGljOWJ4dXky?=
- =?utf-8?B?SGNyRjNiczB4TWNidTBiVmc5cFV6NlE1M0g2YUJCUVEzMUVERjVwaGhxMUZX?=
- =?utf-8?B?M2p6cHB4MEdON3oybGRUUHRpQmZqaGs5L3IzTVBEdTZERGRJK2pObGpuWmor?=
- =?utf-8?B?Ti92WWVaQlFVZXREMW9UN0lpZUM0aU84VnE2VEJVaFhBQmRPUi81MlRXZTBm?=
- =?utf-8?B?VUNhbXZsZHBnYm41alFUUmxVUWcwblpsb0FWMWhvN3E5ektVMkNUeXFFZG44?=
- =?utf-8?B?dEx4K1UrWFI5YktUS3UwOUZFVFJwMTZXcGE5cGtPZlRoNm04azFqTWV3amdM?=
- =?utf-8?Q?ySjNfGZo76Z2SxARoZWtw1IwrZR0UVOp/djO0=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?K2d2TTdxQjhNY1pOVzB0MjdQcHk0b1NpVlVQa1J5M3ZZeUsrcFVEMC9SeTBw?=
- =?utf-8?B?U3MweTZ3ekcyMjZ0ZWZweHJnaUlIT3JHZFhTTXRxL2xmTWNMbWtvM0xjaStR?=
- =?utf-8?B?ZnNWZ211Y25WYlZPbURjM2MrQmpQb3Y3QU1VbHF6aVY1d3hqUEhUUnJyMGV0?=
- =?utf-8?B?bUFqRUd5a0tuTHFXSVhKeE8vUzBLTVRUeW9PTXhIekdqT2dQYjR3ckpSeHFL?=
- =?utf-8?B?SGxMMDhrOGtaU0dlbnFnOUJRKzFRb1o5Z0w3RFJUTjlWclRrajNNeml1TjFy?=
- =?utf-8?B?eUlndXNTdk5jQktIUVVJckVPenhZK3dieEhZUTBFVnpMQ1hEZVFPWGFqWFhZ?=
- =?utf-8?B?cmJIT1N1OTlQSjBKY0dDcXZOK3Y1blhrY1BHYW81UW45SGNkR1RwbGNnYjc2?=
- =?utf-8?B?ZkVGTThqNU5Ed1BiQ0VNSkFYa0pibEtBVE5YVnhiK1hkMk1ZR2dtSzhybFQx?=
- =?utf-8?B?TUltR09GanpDN3NTQnViVGlPQ3BsN0xiZVg3bStkMkx5YkNlUGE2YTlmSjhB?=
- =?utf-8?B?dXI4Tjluc2FicEY4TUtGMGx5VElWb2pxcXpJM3QxN0lsaVRHNTNYRjVsZVp3?=
- =?utf-8?B?YmtYZDJCUHg2bUZyZUF3M0xDb1dGbFRGUjFiZlBzdGZDNlRTZ01vLzRBNEc0?=
- =?utf-8?B?TzdNM0JzUGhpemJUM2pCSEdVeSt2c0lMUmN1TVNlSjFHWlpyVmJzdVlNQnhs?=
- =?utf-8?B?UjRMQkM0Q01ndU5YMi9ZeFV1SS9iMU1zWTdXZXRFKzFIYk9kRXVVVmJaWVN1?=
- =?utf-8?B?SUFTRk9GSlc2TVp5R1lGbndMY1Q4SkQyNFdnODhJN2xEOHhhUXdIWGtRZjNi?=
- =?utf-8?B?Y0QzMjdRWTdPbEdHNjEvVjVFTTA2ZHVaS0dPZXh5aGtHeS9mdmlpb2x1ZU9D?=
- =?utf-8?B?Y3BGUk5oeE1UVkJVMk43aWJvRENvR05RVXB5Y3BsLzQvVCtab015eXZNMDlB?=
- =?utf-8?B?ekRUUVhtV1psMUZ4WjBiNklCVFpQSXhnT2h1Q0g5ZVdLL3M2UnhqeTlQdG51?=
- =?utf-8?B?Q0NmQUdmV3p3V3pUOXpFd3A3dEUwYmRZaGk2OXFvZ05iQ2Y1SnQxSklkWXZh?=
- =?utf-8?B?WmVWeXBTYUJLVnpxWStHa1pnZnVZbStXYUdhUFVXLzFPM0hqM1dKNWpEaVZi?=
- =?utf-8?B?cmprUEE3RVVUbURoT3QvVEgvdzlLc2VVSDk5Qm9kdTJCSlVTYVNjakNoOTJs?=
- =?utf-8?B?U0QyZ0RLQ2pIcW1ncDVjSlBsdUM0bFFIV1JxV1RRUmZ5WWRYWGtxVk15Mk9K?=
- =?utf-8?B?OE5CUmtJdzRxbXFSWndCeFhhSEFEWS9GK1ZNeEEveTlMS0h4RlRtek5BZ1FX?=
- =?utf-8?B?Wi9oeUQyYW9vT0k0WUk0VlFCY2tsVzdrMjlaQ0RHd1B1S0RtaDdoTnJUWlBv?=
- =?utf-8?B?UmRTR1QrMmt1emdEMDRhaVNrQnJWTXFDS0NhMkxkNzZnM2dIdklOVkZBbGxr?=
- =?utf-8?B?ZGhnQ0hCWVloUXREb3RoWWRSQ21ua1o2TTI1K3lzV3dCV041MXJmQTN6ZDVi?=
- =?utf-8?B?dHR2QWJaeVUyWGhEWFVYOVJ5dXdQL2hyYUh5VFdJOGhLKzA1alpBdjRqN243?=
- =?utf-8?B?SUlDZTNrM1ZSWjFJcThEaHNrZkIrSGdhcW9zbzdOSUtOYisrK3NQdFBDT0FG?=
- =?utf-8?B?a3Q5QkxHSWdtM1cwNGRySGZFTmcydDRHN1BUeEhvbVJFU1VMdmZjTmhNbGEr?=
- =?utf-8?B?M2JWeFNhMTV6UWVvOUgyNFRmQVY3cVVnTTBoWU5YbjZnOXRBVHdDeVhwM3JE?=
- =?utf-8?B?SVplYzJPQUFOQVJ1TkJBVkJ4dGhyaUNEVnBLMVFFUmxKeFc4QUhuejlacFl1?=
- =?utf-8?B?blFQZXJadFcrOHAvQUwvTHdRSFROTDlpa1p6RDZEMlFTajc1clptc2JZNmYr?=
- =?utf-8?B?eXFpTWNlZDRUTEtWd1ZFK0JpMjFZWGdYeWtkeUljc1ZhTkhMWHZFQWNmNUd3?=
- =?utf-8?B?MnN5QWJtaUR1dmQ1NGxjUEhhb1JwS1hSR2hxZkRZOWdYdUU3L3BsMVkzeFZu?=
- =?utf-8?B?a0ZZbWFXQ1ptaGpYTFluVVJxSlViVXZiQXdCeThwVk1Bd3AwMEFPYXVkQ1Va?=
- =?utf-8?B?V1UwZURoWDdqbm9GQ2xWdmJBdllMNDhucEpLaFZOQnFucGNSblhtZk5Kb0pL?=
- =?utf-8?B?bUJEeGMyMDBRakJXOEZrTnNIY2V2ZjJuZ0MwM3AwQnBNZ003NXRmc0tMd2Jj?=
- =?utf-8?Q?ojTepU4OHQLh7Hgq0vTSgbs=3D?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93cb31be-e1d7-4bc3-ffc9-08dd9c36c2cc
-X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 09:21:57.0506
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8I9OKE4j7t74RDiD0yynu4MnaDuLSAPqW7wwFlPuWp2TEwsZIJKGwjvlheLSJUeNPoi7w4tAPnkXcGm8ZcW5+sZhOv1tg6smhd1caqQNIFWZT4E/OhrQNqUEv4GRb/lJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB11443
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250523113347.2898042-3-rkrcmar@ventanamicro.com>
 
-Hi Geert,
-Thanks for your comment.
+On Fri, May 23, 2025 at 01:33:49PM +0200, Radim Krčmář wrote:
+> The new capability allows userspace to implement SBI extensions that KVM
+> does not handle.  This allows userspace to implement any SBI ecall as
+> userspace already has the ability to disable acceleration of selected
+> SBI extensions.
+> The base extension is made controllable as well, but only with the new
+> capability, because it was previously handled specially for some reason.
+> *** The related compatibility TODO in the code needs addressing. ***
+> 
+> This is a VM capability, because userspace will most likely want to have
+> the same behavior for all VCPUs.  We can easily make it both a VCPU and
+> a VM capability if there is demand in the future.
+> 
+> Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+> ---
+> v4:
+> * forward base extension as well
+> * change the id to 242, because 241 is already taken in linux-next
+> * QEMU example: https://github.com/radimkrcmar/qemu/tree/mp_state_reset
+> v3: new
+> ---
+>  Documentation/virt/kvm/api.rst    | 11 +++++++++++
+>  arch/riscv/include/asm/kvm_host.h |  3 +++
+>  arch/riscv/include/uapi/asm/kvm.h |  1 +
+>  arch/riscv/kvm/vcpu_sbi.c         | 17 ++++++++++++++---
+>  arch/riscv/kvm/vm.c               |  5 +++++
+>  include/uapi/linux/kvm.h          |  1 +
+>  6 files changed, 35 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index e107694fb41f..c9d627d13a5e 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -8507,6 +8507,17 @@ given VM.
+>  When this capability is enabled, KVM resets the VCPU when setting
+>  MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preserved.
+>  
+> +7.44 KVM_CAP_RISCV_USERSPACE_SBI
+> +--------------------------------
+> +
+> +:Architectures: riscv
+> +:Type: VM
+> +:Parameters: None
+> +:Returns: 0 on success, -EINVAL if arg[0] is not zero
+> +
+> +When this capability is enabled, KVM forwards ecalls from disabled or unknown
+> +SBI extensions to userspace.
+> +
+>  8. Other capabilities.
+>  ======================
+>  
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index 85cfebc32e4c..6f17cd923889 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -122,6 +122,9 @@ struct kvm_arch {
+>  
+>  	/* KVM_CAP_RISCV_MP_STATE_RESET */
+>  	bool mp_state_reset;
+> +
+> +	/* KVM_CAP_RISCV_USERSPACE_SBI */
+> +	bool userspace_sbi;
+>  };
+>  
+>  struct kvm_cpu_trap {
+> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+> index 5f59fd226cc5..dd3a5dc53d34 100644
+> --- a/arch/riscv/include/uapi/asm/kvm.h
+> +++ b/arch/riscv/include/uapi/asm/kvm.h
+> @@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
+>  	KVM_RISCV_SBI_EXT_DBCN,
+>  	KVM_RISCV_SBI_EXT_STA,
+>  	KVM_RISCV_SBI_EXT_SUSP,
+> +	KVM_RISCV_SBI_EXT_BASE,
+>  	KVM_RISCV_SBI_EXT_MAX,
+>  };
+>  
+> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+> index 31fd3cc98d66..497d5b023153 100644
+> --- a/arch/riscv/kvm/vcpu_sbi.c
+> +++ b/arch/riscv/kvm/vcpu_sbi.c
+> @@ -39,7 +39,7 @@ static const struct kvm_riscv_sbi_extension_entry sbi_ext[] = {
+>  		.ext_ptr = &vcpu_sbi_ext_v01,
+>  	},
+>  	{
+> -		.ext_idx = KVM_RISCV_SBI_EXT_MAX, /* Can't be disabled */
+> +		.ext_idx = KVM_RISCV_SBI_EXT_BASE,
+>  		.ext_ptr = &vcpu_sbi_ext_base,
+>  	},
+>  	{
+> @@ -217,6 +217,11 @@ static int riscv_vcpu_set_sbi_ext_single(struct kvm_vcpu *vcpu,
+>  	if (!sext || scontext->ext_status[sext->ext_idx] == KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE)
+>  		return -ENOENT;
+>  
+> +	// TODO: probably remove, the extension originally couldn't be
+> +	// disabled, but it doesn't seem necessary
+> +	if (!vcpu->kvm->arch.userspace_sbi && sext->ext_id == KVM_RISCV_SBI_EXT_BASE)
+> +		return -ENOENT;
+> +
 
-On 26/05/25 11:13, Geert Uytterhoeven wrote:
-> Hi Tommaso,
-> 
-> On Mon, 26 May 2025 at 10:55, Tommaso Merciai
-> <tommaso.merciai.xr@bp.renesas.com> wrote:
->> After adv7511_mode_set() was merged into .atomic_enable(), only the
->> native resolution is working when using modetest.
->>
->> This is caused by incorrect timings: adv7511_mode_set() must not be
->> merged into .atomic_enable().
->>
->> Move adv7511_mode_set() back to the .mode_set() callback in
->> drm_bridge_funcs to restore correct behavior.
-> 
-> Thanks for your patch!
-> 
->> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI connector helpers")
-> 
-> I can't find that commit? I guess you mean:
-> Fixes: ae01d3183d2763ed ("drm/bridge: adv7511: switch to the HDMI
-> connector helpers")
+I agree that we don't need to babysit userspace and it's even conceivable
+to have guests that don't need SBI. KVM should only need checks in its
+UAPI to protect itself from userspace and to enforce proper use of the
+API. It's not KVM's place to ensure userspace doesn't violate the SBI spec
+or create broken guests (userspace is the boss, even if it's a boss that
+doesn't make sense)
 
-Yes, sorry.
-You are completely right!
+So, I vote we drop the check.
 
-https://cgit.freedesktop.org/drm/drm-misc/commit/drivers/gpu/drm/bridge/adv7511?id=ae01d3183d2763ed27ab71f4ef5402b683d9ad8a
+>  	scontext->ext_status[sext->ext_idx] = (reg_val) ?
+>  			KVM_RISCV_SBI_EXT_STATUS_ENABLED :
+>  			KVM_RISCV_SBI_EXT_STATUS_DISABLED;
+> @@ -471,8 +476,14 @@ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  #endif
+>  		ret = sbi_ext->handler(vcpu, run, &sbi_ret);
+>  	} else {
+> -		/* Return error for unsupported SBI calls */
+> -		cp->a0 = SBI_ERR_NOT_SUPPORTED;
+> +		if (vcpu->kvm->arch.userspace_sbi) {
+> +			next_sepc = false;
+> +			ret = 0;
+> +			kvm_riscv_vcpu_sbi_forward(vcpu, run);
+> +		} else {
+> +			/* Return error for unsupported SBI calls */
+> +			cp->a0 = SBI_ERR_NOT_SUPPORTED;
+> +		}
+>  		goto ecall_done;
+>  	}
+>  
+> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+> index b27ec8f96697..0b6378b83955 100644
+> --- a/arch/riscv/kvm/vm.c
+> +++ b/arch/riscv/kvm/vm.c
+> @@ -217,6 +217,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+>  			return -EINVAL;
+>  		kvm->arch.mp_state_reset = true;
+>  		return 0;
+> +	case KVM_CAP_RISCV_USERSPACE_SBI:
+> +		if (cap->flags)
+> +			return -EINVAL;
+> +		kvm->arch.userspace_sbi = true;
+> +		return 0;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 454b7d4a0448..bf23deb6679e 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -931,6 +931,7 @@ struct kvm_enable_cap {
+>  #define KVM_CAP_X86_GUEST_MODE 238
+>  #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
+>  #define KVM_CAP_RISCV_MP_STATE_RESET 240
+> +#define KVM_CAP_RISCV_USERSPACE_SBI 242
+>  
+>  struct kvm_irq_routing_irqchip {
+>  	__u32 irqchip;
+> -- 
+> 2.49.0
+>
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+Otherwise,
 
-Thanks & Regards,
-Tommaso
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
