@@ -1,123 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F43A17FAC2;
-	Mon, 26 May 2025 17:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC6B13A258
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748280152; cv=none; b=ZiR+cgSPTRhr28lnm3ZFVj+Ft/L6EIKyFwml+M4TlV8G2SUcEwQ/R2FDzyxaIx14xquFCjualCe219kd+kSwqB5c/S1PAnu4EHs6R7LWorhXQfUXox0sP1MzqXqi2XzRDdB1+YPAajRB281vn/6GMKSMykdZN4kn73QBmCouM3c=
+	t=1748280274; cv=none; b=rMEHxUnFJO9euZDJunoNjMnXT6xr20TbP7qIWOZYzwxVy4lP4widHDzMBf2wsVkx/4WLEOFuLsrEbOPDqxtDWEaMKaH/LQDJjO9lpNOwRDJ9+OWTxTaMlRRvEPih6gqeISazGIaquaF8ZfbQRqTr8XafZ7IkE393HwvZmU2f2Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748280152; c=relaxed/simple;
-	bh=rR0L3LQFJl5lnuDlkm5fGXdF8rlpXRpdN7zYcCMT5tM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HDwKx0yhqBEJSDZWZNdBBtNPV/Eq+Woucmi5fgRXFIYuzQbT3fB0/bhk4n8Pt5N/+FkzifeX4vC2k6Vp5KcnoNmGjh3j6GajOKJbFnlt7G6daSFoHOsXEbdszo2HD1oo2acPBKGB8lVnZ1oTwgiKFUwMyy1WF1eB5rtyaM4jbIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCn0el/O; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCn0el/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E24C4CEE7;
-	Mon, 26 May 2025 17:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748280151;
-	bh=rR0L3LQFJl5lnuDlkm5fGXdF8rlpXRpdN7zYcCMT5tM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WCn0el/OQuUV5N4jWDVcQWObrc8/FZmxWKlyOSKLkxlBs2K4fOkzUda5X+0Kam+OT
-	 a4U7iSSqbk2PUqCHkmuDCSFsK1117VLQQOP3oMoetKAlRNGda2daoD9xj0G7dJLitA
-	 dw/uWtNgMXU5zhLg1sFQntHkJ27qbI3KYPv9HTlWeFWxpj+3/5jV+EcddRbpj0JdPh
-	 VBeFgw2tUhn0NNt3pZRJKUcIJ4DqhWU9zmGgWFdZzSRsebqKPrfnTybif0TWu2DLW1
-	 BzinUUgkIO5rttYtNfljchPqcRrApGlGbHAf4oG03LwY/2ailyMqgMsUKCLMJ/81rB
-	 BQan3t6wGdUWw==
-Date: Mon, 26 May 2025 19:22:29 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
-	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
-	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
-	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, heikki.krogerus@linux.intel.com, 
-	elder@riscstar.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
-Message-ID: <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
-References: <20250429085048.1310409-1-guodong@riscstar.com>
+	s=arc-20240116; t=1748280274; c=relaxed/simple;
+	bh=ZcpFRckONNk0IxICy9wdY3sQ8Q1X3+puSI8PoaWnr94=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Dc41Egxk81VmQ/U5Xygdvxl3A1HEUPY5P6WuR+8OvFVNuyFEOnt6s8UiA8YToMG1Z9l/nv2E+LfTOho643dphRAQOi5lMrEcwjmjsOT9qpJlwlxRLLDjkgDsruK5KkO3D9GMGlJL4MX+rXL4eeZLjzfM9hAwvctuH4ciHn2me/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b5hwT0xxFzcBF;
+	Mon, 26 May 2025 19:05:29 +0200 (CEST)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b5hwR6dDXzvWr;
+	Mon, 26 May 2025 19:05:27 +0200 (CEST)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Subject: [PATCH 0/4] rockchip: rk8xx: allow to customize PMIC reset method
+ on RK806
+Date: Mon, 26 May 2025 19:05:14 +0200
+Message-Id: <20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yljumz2plxfqhz5x"
-Content-Disposition: inline
-In-Reply-To: <20250429085048.1310409-1-guodong@riscstar.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEqfNGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyMz3aJsi4oK3aLiEt200jzdNCMzw2QTgySzFINkJaCegqLUtMwKsHn
+ RsbW1AKpXPrRfAAAA
+X-Change-ID: 20250526-rk8xx-rst-fun-f261c40b6d0c
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
+ Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
+This allows to customize the PMIC reset method (also called RST_FUN) on
+RK806 PMIC from Rockchip, mainly found on RK3588 devices.
 
---yljumz2plxfqhz5x
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
-MIME-Version: 1.0
+Although RK809 and RK817 also have this feature, this isn't implementing
+the feature for them.
 
-Hello,
+Finally, this is required on the two RK3588 devices from Theobroma as
+U-Boot changes the silicon-default (which is suitable for us) to
+something that breaks our companion microcontroller's reboot detection
+which breaks a bunch of assumptions in the MCU FW code.
 
-On Tue, Apr 29, 2025 at 04:50:42PM +0800, Guodong Xu wrote:
-> This patchset adds support for the SpacemiT K1 SoC in the PWM_PXA driver
-> and updates related device tree bindings. The changes enable PWM
-> functionality on the K1 platform through driver enhancements,
-> configuration updates, and device tree additions.
->=20
-> Functionality has been verified on the Banana Pi BPI-F3 board using PWM14,
-> configured as a pwm-backlight. Per community feedback, the actual
-> pwm-backlight node is not included in this patchset but can be found in
-> patch 7 of the v1 series, with modification of pwms property to 4-cell
-> format to match updated binding (#pwm-cells =3D <3>) since v3.
->=20
-> +		pwms =3D <&pwm14 0 2000 0>;
->=20
-> This patchset is based on [spacemit/for-next]
->   base: https://github.com/spacemit-com/linux for-next
->=20
-> Plus the following dependencies:
-> 1. Clock controller driver, posted by Heylen Chu (v8), with most of it has
->    been accepted:
-> https://lore.kernel.org/all/20250416135406.16284-1-heylenay@4d2.org/
-> 2. Reset controller driver, posted by Alex Elder (v5):
-> https://lore.kernel.org/all/20250418145401.2603648-1-elder@riscstar.com/
+To validate this works on those devices do the following:
 
-It's not clear to me if I have to look into this github tree and the
-listed dependencies. My impression is that it can go in on without these
-changes. Maybe it only starts working when these are also applied, but
-that shouldn't stop me applying this series, right?
+On Tiger:
+i2cset -y -f 6 0x6f 0x9 0x62
+On Jaguar:
+i2cset -y -f 0 0x6f 0x9 0x62
 
-There is a patch in pwm/for-6.16-rc1 (namely commit df08fff8add2 ("pwm:
-pxa: Improve using dev_err_probe()")) that conflicts with this series.
-I applied patches 1, 2 and 5 on top of my pwm/for-nexxt branch resolving
-that conflict and rewording the commit log of patch 5. The result was
-pushed to
+You hear a nice (loud :) ) beep, then reboot and it should stop right
+before entering U-Boot TPL again.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/pxa=
--spacemit
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+Quentin Schulz (4):
+      dt-bindings: mfd: rk806: allow to customize PMIC reset method
+      mfd: rk8xx-core: allow to customize RK806 reset method
+      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Jaguar
+      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Tiger
 
-=2E If you confirm that you're happy with my modifications and it's
-correct to apply them without the listed dependencies I will add the
-patches to my queue for 6.17-rc1.
+ .../devicetree/bindings/mfd/rockchip,rk806.yaml    | 24 ++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  1 +
+ arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  1 +
+ drivers/mfd/rk8xx-core.c                           | 15 ++++++++++++++
+ include/linux/mfd/rk808.h                          |  2 ++
+ 5 files changed, 43 insertions(+)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250526-rk8xx-rst-fun-f261c40b6d0c
 
-Best regards
-Uwe
+Best regards,
+-- 
+Quentin Schulz <quentin.schulz@cherry.de>
 
---yljumz2plxfqhz5x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0o1EACgkQj4D7WH0S
-/k4bgAf4o7db7SVDkKQD9FGqsTvIBAmE7TuWOKwRkL5saF9VkLJjDmgdOVZO3Hf/
-Y4uPkJPTAa3bOzVFbL7Eftrjkslzs7Kv6mniyoMuo5X1ggGrfTLcNA7Y3NwArC9l
-WUIiGKX84b20aHuYN9FXLAnAF4JtoXCc8gEI/m5nj0iGWi5UCFarRlIKCbKTXsXk
-MEDl2vL8OUUutk00El5zEdWQeyDiifhJfXA8nHj3YX1ghBkom8J8UTUhltviYwi2
-wZYWvs67N1uFChzLxAZrK8iJI+O5UeUevjGNlF4S7DymPNL6EAvOUY/9+QgALC2L
-Ac3leHKJIYqVMeU1E4K33CqmhpVQ
-=GSJk
------END PGP SIGNATURE-----
-
---yljumz2plxfqhz5x--
