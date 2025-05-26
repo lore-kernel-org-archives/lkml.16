@@ -1,571 +1,168 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F374420C006;
-	Mon, 26 May 2025 12:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A5D17CA1B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748263922; cv=none; b=b+nrtdYFhZCpawMpKdY4C55uepW8YJspMybdBJYz35cPmGFrKfD2ccmfymEHMsk4endmcuZ42UzdHCEPPAZiiV5bK2V0rve4NG/ycAcikjT2xDGmTee0d+eVw7+kUEzlJ1LL4XhbClleog7Wm00q46K2CochYKI4hMhyCHiaA2s=
+	t=1748263978; cv=none; b=m25hP6eEEQMWx+S1K65YeTlChRnbItfG/Qz/F7aLOm24UeTT4znRH8PVroQBX0wzlOhyRz/L+8MCXAlNVIGzIAd2fvfwXNQhcNCzqYIqwt9YtYSEpJGYuT6f61lPg0+8tPyzssscn9NicXK3hSDvOUzK/tlEizhnt2H+MNNjivI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748263922; c=relaxed/simple;
-	bh=lSTglBS5c78eW0mfLJFUnzmR4qH9CjKfeLJIwUvh/KY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eiY1h9THU3oqxkXR1+RgGu14+gh57WMnIxYa+LaX6jXL8NLyQyqF5HeZiskE9NLd2Sl1mOcCJuQduksTYr7u+lBCqSWHA3ZRz7cTJ9hYpKLvWZyPG4X8Knn3VqkGMko240YQ7WE3lDftUxR502KE2AF017NtH7DcDtTiLFQ+P1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TA5uKUYz; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1748263978; c=relaxed/simple;
+	bh=nT0m7GfcKAnpdpvmDRC3OSDZMmEe+DX+2LbEm7ym4iE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gb1s26dAPdWF77alFKycIaQonttDxd02aa++sT/7rAIe8YB+Uh9zr/tIqTAcYlrUfTXQMDmbMoArv+ztagqVeAd9BlnuFH3aTn7UKkthVQPUFHCGckg400raO1etZGeWN4XWUZFe9ukH4d9+okGhUIynNNtK9p5DfeVzrIVatSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gh6iEAGI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CHDDPm8y; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=gh6iEAGI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CHDDPm8y; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TA5uKUYz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1748263917;
-	bh=lSTglBS5c78eW0mfLJFUnzmR4qH9CjKfeLJIwUvh/KY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TA5uKUYzawgfoPMXBbZfXFQsnS57NGHc5dWjw09hpKvXpq9IJFXyhXJbgy2gsbzoq
-	 jhpc8iLb7Xn1eh2Sbg+eQjb2jW2dawgXQrNaS6Y3c8SFz0ihCmPoFxPq3WXz4GUnLm
-	 tMS6JvuSutDAaUdfn0oOqPYrMiPCnnNh2uQSnVwuMheROfQOdngcDm77LvLvx1i9eJ
-	 qcPvq6gN3f80+yb1UuLFftQQUz9QW/S0SyErValWZeuVsnW34ipP4p+ElO5fpZdc8K
-	 X4BjhqlPhgmNaF64qu7LQMs8D4BAE+GDX8ysGRXJlzfDyuizJm/rhMFeqWNti+hrx0
-	 eA6QMTlQV6Aqw==
-Received: from localhost (unknown [82.76.59.134])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gh6iEAGI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CHDDPm8y";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="gh6iEAGI";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CHDDPm8y"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 0D24217E36BB;
-	Mon, 26 May 2025 14:51:57 +0200 (CEST)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Mon, 26 May 2025 15:51:29 +0300
-Subject: [PATCH 06/11] HID: playstation: Fix all alignment and line length
- issues
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 44D271F797;
+	Mon, 26 May 2025 12:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748263975; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B/NJGHMIbSu2rWIzGT+9H1Iz52GI7/dBbjqe7HujUuI=;
+	b=gh6iEAGI2CLSfrGgj/SJsZvrUto9KKwIoRHACohFn1wx4ZUcA23R0MaxtV+ZaNjs4o3ol0
+	wn07QaxEdOdPbjbOyrbrFM67VgCekEpATKETARMJkSnYnN4n/9VN1ll+/w18gz/jH0PDMV
+	7blMW0IPXzLRW5XdrMTmXLalC/E9xRU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748263975;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B/NJGHMIbSu2rWIzGT+9H1Iz52GI7/dBbjqe7HujUuI=;
+	b=CHDDPm8yMDZIyYdlxTCVkNIQTukEAlfT4x0dav3DIhnBJWkYA8xdZbFEw8DsG1JtMxBK/I
+	mvi1KCRAO8/Xg+Dw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=gh6iEAGI;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=CHDDPm8y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748263975; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B/NJGHMIbSu2rWIzGT+9H1Iz52GI7/dBbjqe7HujUuI=;
+	b=gh6iEAGI2CLSfrGgj/SJsZvrUto9KKwIoRHACohFn1wx4ZUcA23R0MaxtV+ZaNjs4o3ol0
+	wn07QaxEdOdPbjbOyrbrFM67VgCekEpATKETARMJkSnYnN4n/9VN1ll+/w18gz/jH0PDMV
+	7blMW0IPXzLRW5XdrMTmXLalC/E9xRU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748263975;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B/NJGHMIbSu2rWIzGT+9H1Iz52GI7/dBbjqe7HujUuI=;
+	b=CHDDPm8yMDZIyYdlxTCVkNIQTukEAlfT4x0dav3DIhnBJWkYA8xdZbFEw8DsG1JtMxBK/I
+	mvi1KCRAO8/Xg+Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3525113964;
+	Mon, 26 May 2025 12:52:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ok/yDCdkNGiRLAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 26 May 2025 12:52:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 7CB53A09CC; Mon, 26 May 2025 14:52:50 +0200 (CEST)
+Date: Mon, 26 May 2025 14:52:50 +0200
+From: Jan Kara <jack@suse.cz>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
+Message-ID: <xlbmnncnw6swdtf74nlbqkn57sxpt5f3bylpvhezdwgavx5h2r@boz7f5kg3x2q>
+References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
+ <20250520123544.4087208-1-senozhatsky@chromium.org>
+ <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
+ <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-dualsense-hid-jack-v1-6-a65fee4a60cc@collabora.com>
-References: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
-In-Reply-To: <20250526-dualsense-hid-jack-v1-0-a65fee4a60cc@collabora.com>
-To: Roderick Colenbrander <roderick.colenbrander@sony.com>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Henrik Rydberg <rydberg@bitmath.org>
-Cc: kernel@collabora.com, linux-input@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,gmail.com,google.com,vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
+X-Rspamd-Queue-Id: 44D271F797
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-Format code to address the following checkpatch.pl reports:
+On Fri 23-05-25 16:18:19, Sergey Senozhatsky wrote:
+> On (25/05/21 12:18), Jan Kara wrote:
+> > On Tue 20-05-25 21:35:12, Sergey Senozhatsky wrote:
+> > > Once reply response is set for all outstanding requests
+> > > wake_up_all() of the ->access_waitq waiters so that they
+> > > can finish user-wait.  Otherwise fsnotify_destroy_group()
+> > > can wait forever for ->user_waits to reach 0 (which it
+> > > never will.)
+> > > 
+> > > Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > 
+> > We don't use exclusive waits with access_waitq so wake_up() and
+> > wake_up_all() should do the same thing?
+> 
+> Oh, non-exclusive waiters, I see.  I totally missed that, thanks.
+> 
+> So... the problem is somewhere else then.  I'm currently looking
+> at some crashes (across all LTS kernels) where group owner just
+> gets stuck and then hung-task watchdog kicks in and panics the
+> system.  Basically just a single backtrace in the kernel logs:
+> 
+>  schedule+0x534/0x2540
+>  fsnotify_destroy_group+0xa7/0x150
+>  fanotify_release+0x147/0x160
+>  ____fput+0xe4/0x2a0
+>  task_work_run+0x71/0xb0
+>  do_exit+0x1ea/0x800
+>  do_group_exit+0x81/0x90
+>  get_signal+0x32d/0x4e0
+> 
+> My assumption was that it's this wait:
+> 	wait_event(group->notification_waitq, !atomic_read(&group->user_waits));
 
-  CHECK: Alignment should match open parenthesis
-  CHECK: line length of <N> exceeds 100 columns
-  CHECK: Please don't use multiple blank lines
+Well, you're likely correct we are sleeping in this wait. But likely
+there's some process that's indeed waiting for response to fanotify event
+from userspace. Do you have a reproducer? Can you dump all blocked tasks
+when this happens?
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
----
- drivers/hid/hid-playstation.c | 163 +++++++++++++++++++++++-------------------
- 1 file changed, 89 insertions(+), 74 deletions(-)
-
-diff --git a/drivers/hid/hid-playstation.c b/drivers/hid/hid-playstation.c
-index 837d6917b1002b80474b4e0d6241c455708294c8..d8ef26ce41b24bc78a897708680136da52c01fa3 100644
---- a/drivers/hid/hid-playstation.c
-+++ b/drivers/hid/hid-playstation.c
-@@ -573,7 +573,7 @@ static int ps_devices_list_add(struct ps_device *dev)
- 	list_for_each_entry(entry, &ps_devices_list, list) {
- 		if (!memcmp(entry->mac_address, dev->mac_address, sizeof(dev->mac_address))) {
- 			hid_err(dev->hdev, "Duplicate device found for MAC address %pMR.\n",
--					dev->mac_address);
-+				dev->mac_address);
- 			return -EEXIST;
- 		}
- 	}
-@@ -608,7 +608,8 @@ static void ps_device_release_player_id(struct ps_device *dev)
- 	dev->player_id = U32_MAX;
- }
- 
--static struct input_dev *ps_allocate_input_dev(struct hid_device *hdev, const char *name_suffix)
-+static struct input_dev *ps_allocate_input_dev(struct hid_device *hdev,
-+					       const char *name_suffix)
- {
- 	struct input_dev *input_dev;
- 
-@@ -623,8 +624,8 @@ static struct input_dev *ps_allocate_input_dev(struct hid_device *hdev, const ch
- 	input_dev->uniq = hdev->uniq;
- 
- 	if (name_suffix) {
--		input_dev->name = devm_kasprintf(&hdev->dev, GFP_KERNEL, "%s %s", hdev->name,
--				name_suffix);
-+		input_dev->name = devm_kasprintf(&hdev->dev, GFP_KERNEL, "%s %s",
-+						 hdev->name, name_suffix);
- 		if (!input_dev->name)
- 			return ERR_PTR(-ENOMEM);
- 	} else {
-@@ -644,8 +645,8 @@ static enum power_supply_property ps_power_supply_props[] = {
- };
- 
- static int ps_battery_get_property(struct power_supply *psy,
--		enum power_supply_property psp,
--		union power_supply_propval *val)
-+				   enum power_supply_property psp,
-+				   union power_supply_propval *val)
- {
- 	struct ps_device *dev = power_supply_get_drvdata(psy);
- 	u8 battery_capacity;
-@@ -689,7 +690,7 @@ static int ps_device_register_battery(struct ps_device *dev)
- 	dev->battery_desc.num_properties = ARRAY_SIZE(ps_power_supply_props);
- 	dev->battery_desc.get_property = ps_battery_get_property;
- 	dev->battery_desc.name = devm_kasprintf(&dev->hdev->dev, GFP_KERNEL,
--			"ps-controller-battery-%pMR", dev->mac_address);
-+						"ps-controller-battery-%pMR", dev->mac_address);
- 	if (!dev->battery_desc.name)
- 		return -ENOMEM;
- 
-@@ -721,8 +722,9 @@ static bool ps_check_crc32(u8 seed, u8 *data, size_t len, u32 report_crc)
- 	return crc == report_crc;
- }
- 
--static struct input_dev *ps_gamepad_create(struct hid_device *hdev,
--		int (*play_effect)(struct input_dev *, void *, struct ff_effect *))
-+static struct input_dev *
-+ps_gamepad_create(struct hid_device *hdev,
-+		  int (*play_effect)(struct input_dev *, void *, struct ff_effect *))
- {
- 	struct input_dev *gamepad;
- 	unsigned int i;
-@@ -759,8 +761,8 @@ static struct input_dev *ps_gamepad_create(struct hid_device *hdev,
- 	return gamepad;
- }
- 
--static int ps_get_report(struct hid_device *hdev, u8 report_id, u8 *buf, size_t size,
--		bool check_crc)
-+static int ps_get_report(struct hid_device *hdev, u8 report_id, u8 *buf,
-+			 size_t size, bool check_crc)
- {
- 	int ret;
- 
-@@ -796,17 +798,20 @@ static int ps_get_report(struct hid_device *hdev, u8 report_id, u8 *buf, size_t
- }
- 
- static int ps_led_register(struct ps_device *ps_dev, struct led_classdev *led,
--		const struct ps_led_info *led_info)
-+			   const struct ps_led_info *led_info)
- {
- 	int ret;
- 
- 	if (led_info->name) {
--		led->name = devm_kasprintf(&ps_dev->hdev->dev, GFP_KERNEL,
--				"%s:%s:%s", ps_dev->input_dev_name, led_info->color, led_info->name);
-+		led->name = devm_kasprintf(&ps_dev->hdev->dev, GFP_KERNEL, "%s:%s:%s",
-+					   ps_dev->input_dev_name, led_info->color,
-+					   led_info->name);
- 	} else {
--		/* Backwards compatible mode for hid-sony, but not compliant with LED class spec. */
--		led->name = devm_kasprintf(&ps_dev->hdev->dev, GFP_KERNEL,
--				"%s:%s", ps_dev->input_dev_name, led_info->color);
-+		/* Backwards compatible mode for hid-sony, but not compliant
-+		 * with LED class spec.
-+		 */
-+		led->name = devm_kasprintf(&ps_dev->hdev->dev, GFP_KERNEL, "%s:%s",
-+					   ps_dev->input_dev_name, led_info->color);
- 	}
- 
- 	if (!led->name)
-@@ -830,7 +835,7 @@ static int ps_led_register(struct ps_device *ps_dev, struct led_classdev *led,
- 
- /* Register a DualSense/DualShock4 RGB lightbar represented by a multicolor LED. */
- static int ps_lightbar_register(struct ps_device *ps_dev, struct led_classdev_mc *lightbar_mc_dev,
--	int (*brightness_set)(struct led_classdev *, enum led_brightness))
-+				int (*brightness_set)(struct led_classdev *, enum led_brightness))
- {
- 	struct hid_device *hdev = ps_dev->hdev;
- 	struct mc_subled *mc_led_info;
-@@ -851,7 +856,7 @@ static int ps_lightbar_register(struct ps_device *ps_dev, struct led_classdev_mc
- 
- 	led_cdev = &lightbar_mc_dev->led_cdev;
- 	led_cdev->name = devm_kasprintf(&hdev->dev, GFP_KERNEL, "%s:rgb:indicator",
--			ps_dev->input_dev_name);
-+					ps_dev->input_dev_name);
- 	if (!led_cdev->name)
- 		return -ENOMEM;
- 	led_cdev->brightness = 255;
-@@ -867,8 +872,8 @@ static int ps_lightbar_register(struct ps_device *ps_dev, struct led_classdev_mc
- 	return 0;
- }
- 
--static struct input_dev *ps_sensors_create(struct hid_device *hdev, int accel_range, int accel_res,
--		int gyro_range, int gyro_res)
-+static struct input_dev *ps_sensors_create(struct hid_device *hdev, int accel_range,
-+					   int accel_res, int gyro_range, int gyro_res)
- {
- 	struct input_dev *sensors;
- 	int ret;
-@@ -904,8 +909,8 @@ static struct input_dev *ps_sensors_create(struct hid_device *hdev, int accel_ra
- 	return sensors;
- }
- 
--static struct input_dev *ps_touchpad_create(struct hid_device *hdev, int width, int height,
--		unsigned int num_contacts)
-+static struct input_dev *ps_touchpad_create(struct hid_device *hdev, int width,
-+					    int height, unsigned int num_contacts)
- {
- 	struct input_dev *touchpad;
- 	int ret;
-@@ -933,8 +938,7 @@ static struct input_dev *ps_touchpad_create(struct hid_device *hdev, int width,
- }
- 
- static ssize_t firmware_version_show(struct device *dev,
--				struct device_attribute
--				*attr, char *buf)
-+				     struct device_attribute *attr, char *buf)
- {
- 	struct hid_device *hdev = to_hid_device(dev);
- 	struct ps_device *ps_dev = hid_get_drvdata(hdev);
-@@ -945,8 +949,7 @@ static ssize_t firmware_version_show(struct device *dev,
- static DEVICE_ATTR_RO(firmware_version);
- 
- static ssize_t hardware_version_show(struct device *dev,
--				struct device_attribute
--				*attr, char *buf)
-+				     struct device_attribute *attr, char *buf)
- {
- 	struct hid_device *hdev = to_hid_device(dev);
- 	struct ps_device *ps_dev = hid_get_drvdata(hdev);
-@@ -984,7 +987,7 @@ static int dualsense_get_calibration_data(struct dualsense *ds)
- 		return -ENOMEM;
- 
- 	ret = ps_get_report(ds->base.hdev, DS_FEATURE_REPORT_CALIBRATION, buf,
--			DS_FEATURE_REPORT_CALIBRATION_SIZE, true);
-+			    DS_FEATURE_REPORT_CALIBRATION_SIZE, true);
- 	if (ret) {
- 		hid_err(ds->base.hdev, "Failed to retrieve DualSense calibration info: %d\n", ret);
- 		goto err_free;
-@@ -1038,8 +1041,9 @@ static int dualsense_get_calibration_data(struct dualsense *ds)
- 	 */
- 	for (i = 0; i < ARRAY_SIZE(ds->gyro_calib_data); i++) {
- 		if (ds->gyro_calib_data[i].sens_denom == 0) {
--			hid_warn(hdev, "Invalid gyro calibration data for axis (%d), disabling calibration.",
--					ds->gyro_calib_data[i].abs_code);
-+			hid_warn(hdev,
-+				 "Invalid gyro calibration data for axis (%d), disabling calibration.",
-+				 ds->gyro_calib_data[i].abs_code);
- 			ds->gyro_calib_data[i].bias = 0;
- 			ds->gyro_calib_data[i].sens_numer = DS_GYRO_RANGE;
- 			ds->gyro_calib_data[i].sens_denom = S16_MAX;
-@@ -1075,8 +1079,9 @@ static int dualsense_get_calibration_data(struct dualsense *ds)
- 	 */
- 	for (i = 0; i < ARRAY_SIZE(ds->accel_calib_data); i++) {
- 		if (ds->accel_calib_data[i].sens_denom == 0) {
--			hid_warn(hdev, "Invalid accelerometer calibration data for axis (%d), disabling calibration.",
--					ds->accel_calib_data[i].abs_code);
-+			hid_warn(hdev,
-+				 "Invalid accelerometer calibration data for axis (%d), disabling calibration.",
-+				 ds->accel_calib_data[i].abs_code);
- 			ds->accel_calib_data[i].bias = 0;
- 			ds->accel_calib_data[i].sens_numer = DS_ACC_RANGE;
- 			ds->accel_calib_data[i].sens_denom = S16_MAX;
-@@ -1088,7 +1093,6 @@ static int dualsense_get_calibration_data(struct dualsense *ds)
- 	return ret;
- }
- 
--
- static int dualsense_get_firmware_info(struct dualsense *ds)
- {
- 	u8 *buf;
-@@ -1099,7 +1103,7 @@ static int dualsense_get_firmware_info(struct dualsense *ds)
- 		return -ENOMEM;
- 
- 	ret = ps_get_report(ds->base.hdev, DS_FEATURE_REPORT_FIRMWARE_INFO, buf,
--			DS_FEATURE_REPORT_FIRMWARE_INFO_SIZE, true);
-+			    DS_FEATURE_REPORT_FIRMWARE_INFO_SIZE, true);
- 	if (ret) {
- 		hid_err(ds->base.hdev, "Failed to retrieve DualSense firmware info: %d\n", ret);
- 		goto err_free;
-@@ -1132,7 +1136,7 @@ static int dualsense_get_mac_address(struct dualsense *ds)
- 		return -ENOMEM;
- 
- 	ret = ps_get_report(ds->base.hdev, DS_FEATURE_REPORT_PAIRING_INFO, buf,
--			DS_FEATURE_REPORT_PAIRING_INFO_SIZE, true);
-+			    DS_FEATURE_REPORT_PAIRING_INFO_SIZE, true);
- 	if (ret) {
- 		hid_err(ds->base.hdev, "Failed to retrieve DualSense pairing info: %d\n", ret);
- 		goto err_free;
-@@ -1146,7 +1150,7 @@ static int dualsense_get_mac_address(struct dualsense *ds)
- }
- 
- static int dualsense_lightbar_set_brightness(struct led_classdev *cdev,
--	enum led_brightness brightness)
-+					     enum led_brightness brightness)
- {
- 	struct led_classdev_mc *mc_cdev = lcdev_to_mccdev(cdev);
- 	struct dualsense *ds = container_of(mc_cdev, struct dualsense, lightbar);
-@@ -1190,8 +1194,8 @@ static int dualsense_player_led_set_brightness(struct led_classdev *led, enum le
- 	return 0;
- }
- 
--static void dualsense_init_output_report(struct dualsense *ds, struct dualsense_output_report *rp,
--		void *buf)
-+static void dualsense_init_output_report(struct dualsense *ds,
-+					 struct dualsense_output_report *rp, void *buf)
- {
- 	struct hid_device *hdev = ds->base.hdev;
- 
-@@ -1242,7 +1246,7 @@ static inline void dualsense_schedule_work(struct dualsense *ds)
-  * for Bluetooth reports.
-  */
- static void dualsense_send_output_report(struct dualsense *ds,
--		struct dualsense_output_report *report)
-+					 struct dualsense_output_report *report)
- {
- 	struct hid_device *hdev = ds->base.hdev;
- 
-@@ -1323,7 +1327,7 @@ static void dualsense_output_worker(struct work_struct *work)
- }
- 
- static int dualsense_parse_report(struct ps_device *ps_dev, struct hid_report *report,
--		u8 *data, int size)
-+				  u8 *data, int size)
- {
- 	struct hid_device *hdev = ps_dev->hdev;
- 	struct dualsense *ds = container_of(ps_dev, struct dualsense, base);
-@@ -1340,10 +1344,10 @@ static int dualsense_parse_report(struct ps_device *ps_dev, struct hid_report *r
- 	 * the full report using reportID 49.
- 	 */
- 	if (hdev->bus == BUS_USB && report->id == DS_INPUT_REPORT_USB &&
--			size == DS_INPUT_REPORT_USB_SIZE) {
-+	    size == DS_INPUT_REPORT_USB_SIZE) {
- 		ds_report = (struct dualsense_input_report *)&data[1];
- 	} else if (hdev->bus == BUS_BLUETOOTH && report->id == DS_INPUT_REPORT_BT &&
--			size == DS_INPUT_REPORT_BT_SIZE) {
-+		   size == DS_INPUT_REPORT_BT_SIZE) {
- 		/* Last 4 bytes of input report contain crc32 */
- 		u32 report_crc = get_unaligned_le32(&data[size - 4]);
- 
-@@ -1678,7 +1682,7 @@ static struct ps_device *dualsense_create(struct hid_device *hdev)
- 	ps_dev->input_dev_name = dev_name(&ds->gamepad->dev);
- 
- 	ds->sensors = ps_sensors_create(hdev, DS_ACC_RANGE, DS_ACC_RES_PER_G,
--			DS_GYRO_RANGE, DS_GYRO_RES_PER_DEG_S);
-+					DS_GYRO_RANGE, DS_GYRO_RES_PER_DEG_S);
- 	if (IS_ERR(ds->sensors)) {
- 		ret = PTR_ERR(ds->sensors);
- 		goto err;
-@@ -1732,7 +1736,7 @@ static struct ps_device *dualsense_create(struct hid_device *hdev)
- 	 * can change behavior.
- 	 */
- 	hid_info(hdev, "Registered DualSense controller hw_version=0x%08x fw_version=0x%08x\n",
--			ds->base.hw_version, ds->base.fw_version);
-+		 ds->base.hw_version, ds->base.fw_version);
- 
- 	return &ds->base;
- 
-@@ -1755,7 +1759,8 @@ static void dualshock4_dongle_calibration_work(struct work_struct *work)
- 		 * DS4 hotplug is detect from sony_raw_event as any issues
- 		 * are likely resolved then (the dongle is quite stupid).
- 		 */
--		hid_err(ds4->base.hdev, "DualShock 4 USB dongle: calibration failed, disabling device\n");
-+		hid_err(ds4->base.hdev,
-+			"DualShock 4 USB dongle: calibration failed, disabling device\n");
- 		dongle_state = DONGLE_DISABLED;
- 	} else {
- 		hid_info(ds4->base.hdev, "DualShock 4 USB dongle: calibration completed\n");
-@@ -1799,14 +1804,17 @@ static int dualshock4_get_calibration_data(struct dualshock4 *ds4)
- 		 */
- 		for (retries = 0; retries < 3; retries++) {
- 			ret = ps_get_report(hdev, DS4_FEATURE_REPORT_CALIBRATION, buf,
--					DS4_FEATURE_REPORT_CALIBRATION_SIZE, true);
-+					    DS4_FEATURE_REPORT_CALIBRATION_SIZE, true);
- 			if (ret) {
- 				if (retries < 2) {
--					hid_warn(hdev, "Retrying DualShock 4 get calibration report (0x02) request\n");
-+					hid_warn(hdev,
-+						 "Retrying DualShock 4 get calibration report (0x02) request\n");
- 					continue;
- 				}
- 
--				hid_warn(hdev, "Failed to retrieve DualShock4 calibration info: %d\n", ret);
-+				hid_warn(hdev,
-+					 "Failed to retrieve DualShock4 calibration info: %d\n",
-+					 ret);
- 				ret = -EILSEQ;
- 				goto transfer_failed;
- 			} else {
-@@ -1821,7 +1829,7 @@ static int dualshock4_get_calibration_data(struct dualshock4 *ds4)
- 		}
- 
- 		ret = ps_get_report(hdev, DS4_FEATURE_REPORT_CALIBRATION_BT, buf,
--				DS4_FEATURE_REPORT_CALIBRATION_BT_SIZE, true);
-+				    DS4_FEATURE_REPORT_CALIBRATION_BT_SIZE, true);
- 
- 		if (ret) {
- 			hid_warn(hdev, "Failed to retrieve DualShock4 calibration info: %d\n", ret);
-@@ -1915,8 +1923,9 @@ static int dualshock4_get_calibration_data(struct dualshock4 *ds4)
- 	for (i = 0; i < ARRAY_SIZE(ds4->gyro_calib_data); i++) {
- 		if (ds4->gyro_calib_data[i].sens_denom == 0) {
- 			ds4->gyro_calib_data[i].abs_code = ABS_RX + i;
--			hid_warn(hdev, "Invalid gyro calibration data for axis (%d), disabling calibration.",
--					ds4->gyro_calib_data[i].abs_code);
-+			hid_warn(hdev,
-+				 "Invalid gyro calibration data for axis (%d), disabling calibration.",
-+				 ds4->gyro_calib_data[i].abs_code);
- 			ds4->gyro_calib_data[i].bias = 0;
- 			ds4->gyro_calib_data[i].sens_numer = DS4_GYRO_RANGE;
- 			ds4->gyro_calib_data[i].sens_denom = S16_MAX;
-@@ -1931,8 +1940,9 @@ static int dualshock4_get_calibration_data(struct dualshock4 *ds4)
- 	for (i = 0; i < ARRAY_SIZE(ds4->accel_calib_data); i++) {
- 		if (ds4->accel_calib_data[i].sens_denom == 0) {
- 			ds4->accel_calib_data[i].abs_code = ABS_X + i;
--			hid_warn(hdev, "Invalid accelerometer calibration data for axis (%d), disabling calibration.",
--					ds4->accel_calib_data[i].abs_code);
-+			hid_warn(hdev,
-+				 "Invalid accelerometer calibration data for axis (%d), disabling calibration.",
-+				 ds4->accel_calib_data[i].abs_code);
- 			ds4->accel_calib_data[i].bias = 0;
- 			ds4->accel_calib_data[i].sens_numer = DS4_ACC_RANGE;
- 			ds4->accel_calib_data[i].sens_denom = S16_MAX;
-@@ -1955,7 +1965,7 @@ static int dualshock4_get_firmware_info(struct dualshock4 *ds4)
- 	 * lacks CRC support, so must be disabled in ps_get_report.
- 	 */
- 	ret = ps_get_report(ds4->base.hdev, DS4_FEATURE_REPORT_FIRMWARE_INFO, buf,
--			DS4_FEATURE_REPORT_FIRMWARE_INFO_SIZE, false);
-+			    DS4_FEATURE_REPORT_FIRMWARE_INFO_SIZE, false);
- 	if (ret) {
- 		hid_err(ds4->base.hdev, "Failed to retrieve DualShock4 firmware info: %d\n", ret);
- 		goto err_free;
-@@ -1981,7 +1991,7 @@ static int dualshock4_get_mac_address(struct dualshock4 *ds4)
- 			return -ENOMEM;
- 
- 		ret = ps_get_report(hdev, DS4_FEATURE_REPORT_PAIRING_INFO, buf,
--				DS4_FEATURE_REPORT_PAIRING_INFO_SIZE, false);
-+				    DS4_FEATURE_REPORT_PAIRING_INFO_SIZE, false);
- 		if (ret) {
- 			hid_err(hdev, "Failed to retrieve DualShock4 pairing info: %d\n", ret);
- 			goto err_free;
-@@ -1994,9 +2004,9 @@ static int dualshock4_get_mac_address(struct dualshock4 *ds4)
- 			return -EINVAL;
- 
- 		ret = sscanf(hdev->uniq, "%02hhx:%02hhx:%02hhx:%02hhx:%02hhx:%02hhx",
--				&ds4->base.mac_address[5], &ds4->base.mac_address[4],
--				&ds4->base.mac_address[3], &ds4->base.mac_address[2],
--				&ds4->base.mac_address[1], &ds4->base.mac_address[0]);
-+			     &ds4->base.mac_address[5], &ds4->base.mac_address[4],
-+			     &ds4->base.mac_address[3], &ds4->base.mac_address[2],
-+			     &ds4->base.mac_address[1], &ds4->base.mac_address[0]);
- 
- 		if (ret != sizeof(ds4->base.mac_address))
- 			return -EINVAL;
-@@ -2031,7 +2041,7 @@ static enum led_brightness dualshock4_led_get_brightness(struct led_classdev *le
- }
- 
- static int dualshock4_led_set_blink(struct led_classdev *led, unsigned long *delay_on,
--		unsigned long *delay_off)
-+				    unsigned long *delay_off)
- {
- 	struct hid_device *hdev = to_hid_device(led->dev->parent);
- 	struct dualshock4 *ds4 = hid_get_drvdata(hdev);
-@@ -2099,7 +2109,7 @@ static int dualshock4_led_set_brightness(struct led_classdev *led, enum led_brig
- }
- 
- static void dualshock4_init_output_report(struct dualshock4 *ds4,
--		struct dualshock4_output_report *rp, void *buf)
-+					  struct dualshock4_output_report *rp, void *buf)
- {
- 	struct hid_device *hdev = ds4->base.hdev;
- 
-@@ -2214,7 +2224,7 @@ static void dualshock4_output_worker(struct work_struct *work)
- }
- 
- static int dualshock4_parse_report(struct ps_device *ps_dev, struct hid_report *report,
--		u8 *data, int size)
-+				   u8 *data, int size)
- {
- 	struct hid_device *hdev = ps_dev->hdev;
- 	struct dualshock4 *ds4 = container_of(ps_dev, struct dualshock4, base);
-@@ -2231,14 +2241,15 @@ static int dualshock4_parse_report(struct ps_device *ps_dev, struct hid_report *
- 	 * the full report using reportID 17.
- 	 */
- 	if (hdev->bus == BUS_USB && report->id == DS4_INPUT_REPORT_USB &&
--			size == DS4_INPUT_REPORT_USB_SIZE) {
--		struct dualshock4_input_report_usb *usb = (struct dualshock4_input_report_usb *)data;
-+	    size == DS4_INPUT_REPORT_USB_SIZE) {
-+		struct dualshock4_input_report_usb *usb =
-+			(struct dualshock4_input_report_usb *)data;
- 
- 		ds4_report = &usb->common;
- 		num_touch_reports = usb->num_touch_reports;
- 		touch_reports = usb->touch_reports;
- 	} else if (hdev->bus == BUS_BLUETOOTH && report->id == DS4_INPUT_REPORT_BT &&
--			size == DS4_INPUT_REPORT_BT_SIZE) {
-+		   size == DS4_INPUT_REPORT_BT_SIZE) {
- 		struct dualshock4_input_report_bt *bt = (struct dualshock4_input_report_bt *)data;
- 		u32 report_crc = get_unaligned_le32(&bt->crc32);
- 
-@@ -2409,7 +2420,7 @@ static int dualshock4_parse_report(struct ps_device *ps_dev, struct hid_report *
- }
- 
- static int dualshock4_dongle_parse_report(struct ps_device *ps_dev, struct hid_report *report,
--		u8 *data, int size)
-+					  u8 *data, int size)
- {
- 	struct dualshock4 *ds4 = container_of(ps_dev, struct dualshock4, base);
- 	bool connected = false;
-@@ -2420,7 +2431,8 @@ static int dualshock4_dongle_parse_report(struct ps_device *ps_dev, struct hid_r
- 	 * parsing code.
- 	 */
- 	if (data[0] == DS4_INPUT_REPORT_USB && size == DS4_INPUT_REPORT_USB_SIZE) {
--		struct dualshock4_input_report_common *ds4_report = (struct dualshock4_input_report_common *)&data[1];
-+		struct dualshock4_input_report_common *ds4_report =
-+			(struct dualshock4_input_report_common *)&data[1];
- 
- 		connected = ds4_report->status[1] & DS4_STATUS1_DONGLE_STATE ? false : true;
- 
-@@ -2547,11 +2559,14 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
- 	 * existing applications (e.g. Android). Nothing matches against MAC address.
- 	 */
- 	static const struct ps_led_info lightbar_leds_info[] = {
--		{ NULL, "red", 255, dualshock4_led_get_brightness, dualshock4_led_set_brightness },
--		{ NULL, "green", 255, dualshock4_led_get_brightness, dualshock4_led_set_brightness },
--		{ NULL, "blue", 255, dualshock4_led_get_brightness, dualshock4_led_set_brightness },
--		{ NULL, "global", 1, dualshock4_led_get_brightness, dualshock4_led_set_brightness,
--				dualshock4_led_set_blink },
-+		{ NULL, "red", 255, dualshock4_led_get_brightness,
-+		  dualshock4_led_set_brightness },
-+		{ NULL, "green", 255, dualshock4_led_get_brightness,
-+		  dualshock4_led_set_brightness },
-+		{ NULL, "blue", 255, dualshock4_led_get_brightness,
-+		  dualshock4_led_set_brightness },
-+		{ NULL, "global", 1, dualshock4_led_get_brightness,
-+		  dualshock4_led_set_brightness, dualshock4_led_set_blink },
- 	};
- 
- 	ds4 = devm_kzalloc(&hdev->dev, sizeof(*ds4), GFP_KERNEL);
-@@ -2621,7 +2636,7 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
- 	ps_dev->input_dev_name = dev_name(&ds4->gamepad->dev);
- 
- 	ds4->sensors = ps_sensors_create(hdev, DS4_ACC_RANGE, DS4_ACC_RES_PER_G,
--			DS4_GYRO_RANGE, DS4_GYRO_RES_PER_DEG_S);
-+					 DS4_GYRO_RANGE, DS4_GYRO_RES_PER_DEG_S);
- 	if (IS_ERR(ds4->sensors)) {
- 		ret = PTR_ERR(ds4->sensors);
- 		goto err;
-@@ -2660,7 +2675,7 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
- 	 * can change behavior.
- 	 */
- 	hid_info(hdev, "Registered DualShock4 controller hw_version=0x%08x fw_version=0x%08x\n",
--			ds4->base.hw_version, ds4->base.fw_version);
-+		 ds4->base.hw_version, ds4->base.fw_version);
- 	return &ds4->base;
- 
- err:
-@@ -2669,7 +2684,7 @@ static struct ps_device *dualshock4_create(struct hid_device *hdev)
- }
- 
- static int ps_raw_event(struct hid_device *hdev, struct hid_report *report,
--		u8 *data, int size)
-+			u8 *data, int size)
- {
- 	struct ps_device *dev = hid_get_drvdata(hdev);
- 
-
+									Honza
 -- 
-2.49.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
