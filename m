@@ -1,142 +1,75 @@
-Received: from mail-m49200.qiye.163.com (mail-m49200.qiye.163.com [45.254.49.200])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415F81EB5E5;
-	Mon, 26 May 2025 11:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9850A1EEA47
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748257334; cv=none; b=JHtbVx5c4IbwYbx+h1WMD9xnrY3kpjc65Sexxs+YjrOZEbR9a051ge0bZc9zquXNQgn9pCfj0LziDGUtGDzOsb375vh1Gkw5Etoz/mFQk4NfXraz8XtupMajs73/kfGZVWnSr0MML2HGnXHVHyJuVR3NxksNs6vWmB9NVFHzJ+I=
+	t=1748257377; cv=none; b=JxaaZrzoPLJ+1cL91lkE+xUWMwDkundLHIZOJWbMHio9gfQgURYBXMPDlKqPuzlNHo0rEDBJzD68czlcqNIw5lTUrMUrqY6RtJ4JlmtPFD5Mszvs5i+AqeYk27ScsHJ+cJXo55dMLN4jCLyBaovq9zjAyldYw/i7IAlYKgmnJuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748257334; c=relaxed/simple;
-	bh=nNZNAF1hEy1BM5e25X0MPXf0mDdxiy7pQ3s33raf/4o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mYbpDIiu9YiW3SAHS+9xDHdefgr5LfOpgpgJ+c8Wu3kVqor3RxsE6iWpWjpOmLpXhI24BiKpHRCuodnHdHXJ7VkGf8cR4DeN0BVrhbolgI2DGOsTNknS7lZT3xnNeP5iB4XYpS8rNOeXQG9tj2zi/4Y5JhJy4fc419Gg7nvMDc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=hd3eoDjJ; arc=none smtp.client-ip=45.254.49.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="hd3eoDjJ"
-Received: from rockchip.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1660c0163;
-	Mon, 26 May 2025 14:26:02 +0800 (GMT+08:00)
-From: Elaine Zhang <zhangqing@rock-chips.com>
-To: zhangqing@rock-chips.com,
-	mkl@pengutronix.de,
-	kernel@pengutronix.de,
-	mailhol.vincent@wanadoo.fr,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	heiko@sntech.de,
-	cl@rock-chips.com,
-	kever.yang@rock-chips.com
-Cc: linux-can@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v6 1/4] dt-bindings: can: rockchip_canfd: add rk3576 CAN-FD controller
-Date: Mon, 26 May 2025 14:25:56 +0800
-Message-Id: <20250526062559.2061311-2-zhangqing@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250526062559.2061311-1-zhangqing@rock-chips.com>
-References: <20250526062559.2061311-1-zhangqing@rock-chips.com>
+	s=arc-20240116; t=1748257377; c=relaxed/simple;
+	bh=RPruV8pXv+YWVj6ruOLKMcAXK77+t7eyorFAZ0RyD9A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cYc5IWqdg5SBxU0Fvx6yqgoOOfioQwB8qqQzW2C1zCdYDQUJyuRapIwMfGd/UlBEJYzI4iL1o9e+8Q1Y3clJKxF9dH/rZsC3q4xkW41X9T1x2yIZBcyqfo9N/EVFTwYFGYLkV7TDGDN0DE8yXvae/+Oyqnjo/j67gQyh+4d8DK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from dude06.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::5c])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <f.pflug@pengutronix.de>)
+	id 1uJVbX-0000Pi-9x; Mon, 26 May 2025 13:02:51 +0200
+From: Fabian Pflug <f.pflug@pengutronix.de>
+Date: Mon, 26 May 2025 13:02:35 +0200
+Subject: [PATCH v2 1/2] dt-bindings: arm: fsl: add i.MX93 11x11 FRDM board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUhNS1ZCTkkYSh4aGk9JTklWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCS0
-	NVSktLVUpCWQY+
-X-HM-Tid: 0a970b4505d703a3kunm902b49ed4a334f
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MDI6Ezo6KTE*TQ4YLSI2KiIv
-	VjgKCQxVSlVKTE9DSU9LTE1ITE5CVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlCTUM3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=hd3eoDjJnAomOvcH7u9EmQMC5Rx1mS43FbGLhnX5HSdDi9Gn+lrlsMB4++DVV9ZdqjLcRL1yXilw2rsr6I3W1W9DAwtOzOXatBt5f1TwTP+OxDJUAZTif1l5S1d/HYJYtbvUjX4I/ZifwEzmCVx7gwnnsWpqSp/70B3LzRgiHX4=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=7fytvpm/jX3lLm6RHxCGcgAQyOSDx3LtRYraqdpexfA=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250526-fpg-nxp-imx93-frdm-v2-1-e5ad0efaec33@pengutronix.de>
+References: <20250526-fpg-nxp-imx93-frdm-v2-0-e5ad0efaec33@pengutronix.de>
+In-Reply-To: <20250526-fpg-nxp-imx93-frdm-v2-0-e5ad0efaec33@pengutronix.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Fabian Pflug <f.pflug@pengutronix.de>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Daniel Baluta <daniel.baluta@nxp.com>
+X-Mailer: b4 0.14.2
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::5c
+X-SA-Exim-Mail-From: f.pflug@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add documentation for the rockchip rk3576 CAN-FD controller.
+Add DT compatible string for NXP i.MX93 11x11 FRDM board.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Fabian Pflug <f.pflug@pengutronix.de>
 ---
- .../net/can/rockchip,rk3568v2-canfd.yaml      | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml b/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml
-index a077c0330013..c6595fef6cb5 100644
---- a/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml
-+++ b/Documentation/devicetree/bindings/net/can/rockchip,rk3568v2-canfd.yaml
-@@ -12,11 +12,27 @@ maintainers:
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b90870958a22e49355dd1f932bf3d84cd864b5f..948b87150be813d24fce795b737723c20f512ec1 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1344,6 +1344,7 @@ properties:
+           - enum:
+               - fsl,imx93-9x9-qsb         # i.MX93 9x9 QSB Board
+               - fsl,imx93-11x11-evk       # i.MX93 11x11 EVK Board
++              - fsl,imx93-11x11-frdm      # i.MX93 11x11 FRDM Board
+               - fsl,imx93-14x14-evk       # i.MX93 14x14 EVK Board
+           - const: fsl,imx93
  
- allOf:
-   - $ref: can-controller.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3576-canfd
-+      required:
-+        - compatible
-+    then:
-+      required:
-+        - dmas
-+        - dma-names
-+    else:
-+      properties:
-+        dmas: false
-+        dma-names: false
- 
- properties:
-   compatible:
-     oneOf:
-       - const: rockchip,rk3568v2-canfd
-+      - const: rockchip,rk3576-canfd
-       - items:
-           - const: rockchip,rk3568v3-canfd
-           - const: rockchip,rk3568v2-canfd
-@@ -43,6 +59,13 @@ properties:
-       - const: core
-       - const: apb
- 
-+  dmas:
-+    maxItems: 1
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+
- required:
-   - compatible
-   - reg
-@@ -72,3 +95,21 @@ examples:
-             reset-names = "core", "apb";
-         };
-     };
-+
-+  - |
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        can@2ac00000 {
-+            compatible = "rockchip,rk3576-canfd";
-+            reg = <0x0 0x2ac00000 0x0 0x1000>;
-+            interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&cru CLK_CAN0>, <&cru PCLK_CAN0>;
-+            clock-names = "baud", "pclk";
-+            resets = <&cru SRST_CAN0>, <&cru SRST_P_CAN0>;
-+            reset-names = "core", "apb";
-+            dmas = <&dmac0 20>;
-+            dma-names = "rx";
-+        };
-+    };
+
 -- 
-2.34.1
+2.39.5
 
