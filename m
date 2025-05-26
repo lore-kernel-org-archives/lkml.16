@@ -1,44 +1,52 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD75272607;
-	Mon, 26 May 2025 19:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F026472607;
+	Mon, 26 May 2025 19:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748288128; cv=none; b=siDXsFoJFwn2WERFVs8QenSx/3YvQdDe4EIB0g/xXn6fFyV4udK8JYZItWVl0ZWtFe+qyIMyByj38kPg0KCPnRfeiwhCSeDrDTIml5vMJOkHP2J4cAxsNfKc5F7BAgcFkxAxXHBjErUP1r0z3cDZ/pSBwjtjlhdLrj6L8ogVJso=
+	t=1748288202; cv=none; b=PHjpGFTWHDbRNX0wZaUCTWkXS1+AsWDyL369Yk7gMygwv+sUq9wYxDhhhfrzxeN1ZIMEcK4a9j6vixqTdiFsbgmohq2+p/8tPlE9GteYsPffJVmx11lQoqIM0WUAR/HwmT86neAqoUO/t5mWT1XIuHXWdj15Rz1Qt6RQG5sfOa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748288128; c=relaxed/simple;
-	bh=e9kXzJCLhxxaB/nMDARoSmQTHAobzT6klqKO2qsIq7k=;
+	s=arc-20240116; t=1748288202; c=relaxed/simple;
+	bh=tUMYkhsjR+DV6weZBNIQDSbSGynVgSFULoxvGLVkw6E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HKN43yyomr7xazP7Cj0TC875Ssfsr9ooO+QYBEjDj6Tb685TxxwEUjycwgW69SyrteI4nujDy7GLGSlROoD29WvBfl8b4dPRrfZ3XTFoheOOdfJYOfE2DuSAhNUgxJsQ4vMykKufdrZaQnH+6xnCOiJ0vFFgMKIeNh+BvgWv3kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pw8S+dr2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7PuFBvMSWKTBnGd5irzDpY+80NTPXgHSx8wCDLH4bFVQWVecIJv1Zgh6dwUou18p6RzZVTlyaBhEZOp7mt6AHDCeai+hYXSa9QCpQIW1CgZudMu1F4MTNijWTDDhg3t7UEF7EIcEroCTXeMgJrg+ZcYrsUNsHApR7WIukJGVsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=dZEGbMI2; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pw8S+dr2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0k1xbCJ1xlanu6mhuuA1e5sIZnwYvon7/wqI3P7ZK2U=; b=pw8S+dr2PFAtq6iMgMGlOu9ugN
-	z9qsyTklUE8b5yUXNTBJnxUf0Anb2V87VDCed7Y2X0mpbK2nt5lJcFS389rbSbXktgWsQZBv+AfAB
-	SsM/xBndlesY2bssi1CrDraPpeZV0J4F+hDtluY9AU5oxccz4Ej+LMfYxjUdwVNjCkNzoTicQQTFH
-	AfH+ibBms/iVWAFxajiFALwshqmvvLqKgVA/oDwWztJsqW89D3N6/vTtT3gOa90wJMqV46rvqXcQz
-	KyqOmQOa2hTrwx5Vyby0t4tt7POchAf2FjgdwP9VPq7AWM6wvYmjIARYMRshP/9rUVWxXbOCSm07M
-	ZOGkPX5Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJdbR-0000000Bj9o-1O0P;
-	Mon, 26 May 2025 19:35:17 +0000
-Date: Mon, 26 May 2025 20:35:17 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
-	shuah@kernel.org, corbet@lwn.net, masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: escape literal asterisk to fix reST emphasis
- warning
-Message-ID: <aDTCdQNUN4Zlw2jJ@casper.infradead.org>
-References: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="dZEGbMI2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=4k9z3rNoaxvsZh30uSr90husp7CDgyQMsf5rUgjtaNU=; b=dZEGbMI244Z6VqhpAY3fWaIfh5
+	kV3jP75Ntv0uqIiDd10Gxfi5sxVDrEkSmsnMHGlo1knf8cIcEw2D74nfUmCPiE4OWoF+FzutuQow6
+	nQAxASczMZgn86iFIrH3w7Cpo0V3y85B4n1r+hg+EnFvebt0EPu2Qgs739YdtlFM9KdM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uJdcY-00E1Qy-2i; Mon, 26 May 2025 21:36:26 +0200
+Date: Mon, 26 May 2025 21:36:26 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] dt-bindings: net: sun8i-emac: Add AC300 EMAC1
+ nvmem phy selection
+Message-ID: <959e576e-bf36-4d01-9ffb-023931b61574@lunn.ch>
+References: <20250526182939.2593553-1-james.hilliard1@gmail.com>
+ <20250526182939.2593553-3-james.hilliard1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,35 +55,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
+In-Reply-To: <20250526182939.2593553-3-james.hilliard1@gmail.com>
 
-On Mon, May 26, 2025 at 09:43:59PM +0300, Khaled Elnaggar wrote:
-> Escaped a literal '*' character in symbol-namespaces.rst to prevent
-> a Docutils warning about unmatched emphasis markers during documentation build.
+> +        phy-mode = "rgmii";
 
-I don't think this is the right way to fix this problem.  We want
-the test to work in both rendered and un-rendered form.  I think
-we can do something like:
+Does the PCB have extra long clock lines?
 
--For example:
-+For example::
+https://elixir.bootlin.com/linux/v6.15/source/Documentation/devicetree/bindings/net/ethernet-controller.yaml#L287
 
-to turn it into a block that is rendered literally.  See
-
-                For example::
-
-                  echo $((100 * `cat active_duration` / `cat connected_duration`))
-
-as an example in Documentation/ABI/stable/sysfs-bus-usb
-
->  For example:
-> 
-> -  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
-> +  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-\*")
-> 
->  will limit usage of this symbol to modules whoes name matches the given
->  patterns.
-> --
-> 2.47.2
-> 
-> 
+	Andrew
