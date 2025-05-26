@@ -1,383 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652491E1E19;
-	Mon, 26 May 2025 07:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E435BF9D9;
+	Mon, 26 May 2025 07:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748243947; cv=none; b=NFgE49816ykEOjaUgIIU0E2lKsgpaTTVtEnZMaTqomnWQJXSS1eLqLoEgmoI6HOMwkoUAAlzBLcV2+CVX3v0PAjxXn6ADwsIB8KwyxWd+tibuZfhbhVmneYFSCMK1UiUXVuEyIG5la9ctc9rR67xRIJpMuXZnLRXwmtxz33CmVw=
+	t=1748244041; cv=none; b=thq+XN7yLTFYgC428Kwkh6sAgQNV8izgH372vMlDoGf/8XSGbcCnhEcZ3E5XGNslPnOxIN3dJ74E1fWUBRDAritlZoZeGfmOQT1+79A+Dy4hps0omzEo3sen2yqHGeHhODTGS6xoo4W+vaaYjE8aop43m+ZrHj45kHnz6Vj2rE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748243947; c=relaxed/simple;
-	bh=MjYPiAp6HUDGi6nKBvrWjFgh7veuqNf/NgjVVb31RgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fzvy20FF7DiuDGq0dnuExdYcmGu/og/lPa5jpPGM6ry4vdeY/tO1w5N/y/7RmeJA4hR7qJmQ3tEMzM6hanMu0quaxkUa9CsO65JU1VsaJbbQrgpBLplGba0Ah+b7SqigqiIOUCWMExDdnPJ1IE0+FvNVovB+j4Y5iebxTghzQ4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p6yYNvk1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748244041; c=relaxed/simple;
+	bh=E7nsl7EWs55+/uUhfc7iqd4zyB1Z1lv1eOZEgqQ0ZBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eD154JLeQPwa+KzKGaJc94uFlLAYtljoMRo4Nduvf+4tGjcJKlvw90nT4VxMlMdSAXhYEcyBWBA5HZ6Eb/k5HjKwtQnyEPwg7bTN++3SkB6sLhAOwKNosaqwp8x/mDiUMbkQH0P9ofTsxYOL9QoCfiP5OytR954dMh2g3aLtV5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ERsZFnNG; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p6yYNvk1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C92C4CEE7;
-	Mon, 26 May 2025 07:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748243946;
-	bh=MjYPiAp6HUDGi6nKBvrWjFgh7veuqNf/NgjVVb31RgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p6yYNvk1UZWsU9zZbkmavxfC8uunacknREKse3aaucerpdwp9F6kLDMWkQWb6DDod
-	 Vc6Uh6UwVuVY395SjjoGbswsZSWGKv5fDXisYecvI9/z2Mgx4to0suQluaTO5ARyDR
-	 cG63kecb7/uSZemKj3eKpM5wArxIFa/+FnHesIQiA7Do7pQhoZIBJn7yexMn4i2hwC
-	 ntOqS0ITdO9IOFmwN299nG81oVgmitV8y8pm/u/0cfPFyn1yjaOt8K0vRAxxdGnoQP
-	 f1RQh2VDJ+u0IVPv+odHaJqBNF7NtF+YKxZRA3sGVC5uj3AlCRrPC1+g/pfx05yZji
-	 5Br1R5PcNoMZQ==
-Date: Mon, 26 May 2025 10:18:45 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com,
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com,
-	corbet@lwn.net, rdunlap@infradead.org,
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
-	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
-	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
-	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
-	vincent.guittot@linaro.org, hannes@cmpxchg.org,
-	dan.j.williams@intel.com, david@redhat.com,
-	joel.granados@kernel.org, rostedt@goodmis.org,
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
-	linux@weissschuh.net, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
-	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
-	aleksander.lobakin@intel.com, ira.weiny@intel.com,
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-Message-ID: <aDQV1bAt0i8d95MQ@kernel.org>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-6-pasha.tatashin@soleen.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ERsZFnNG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 16875442B5;
+	Mon, 26 May 2025 07:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748244030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QLkd7DkuwItmUeCsro4GRU7KY1n+af+fkKCtRJvc72M=;
+	b=ERsZFnNGGx1taTjFML/F7g48As15TWrVqpm7AQM6ITdhjMQXPkfTl1YTY624dt2A61ojKn
+	C4GrIy3LvMnZuQ3f48MHbrAItO9yt2FMHAqBFQBNWnAd4H+GlbFkLp+0Q5jpHR5ME8BtSC
+	rLb2TykZsJeBxh/2UPnUC+byagvOBWEHs+mzz5buaw+VAmwRzWbNg55alaA49c/WX7dEK/
+	fsh2zNr1ZhqaGyMrCEJNSdr/QBQDpvqqwK5PYQ+P4KU7TlWYdbGXAPWQsVfUnDZH7GHJxL
+	bRcPS+1N1hdPuMOBL2LrEIz8HJMPOUVPD7+c3bsfVFBouRX3auSsw6Kbri6nhA==
+Date: Mon, 26 May 2025 09:20:24 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Liu Ying <victor.liu@nxp.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
+ Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
+ Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+ linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250526092024.48cae4ae@booty>
+In-Reply-To: <67252c36-8b31-4c40-9d89-4f502da4a087@nxp.com>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
+ <553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
+ <20250430112944.1b39caab@booty>
+ <f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+ <20250506224720.5cbcf3e1@booty>
+ <67252c36-8b31-4c40-9d89-4f502da4a087@nxp.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515182322.117840-6-pasha.tatashin@soleen.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduieeltdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgfeetieeutdeifefggfegheelgeefiefgffeifeeujeehkeffgeehhfevfefhjeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhfrhgvvgguvghskhhtohhprdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfeelpdhrtghpthhtohepvhhitghtohhrrdhlihhusehngihprdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkh
+ hhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Thu, May 15, 2025 at 06:23:09PM +0000, Pasha Tatashin wrote:
-> Integrate the LUO with the KHO framework to enable passing LUO state
-> across a kexec reboot.
-> 
-> This patch introduces the following changes:
-> - During the KHO finalization phase allocate FDT blob.
-> - Populate this FDT with a LUO compatibility string ("luo-v1") and the
->   current LUO state (`luo_state`).
-> - Implement a KHO notifier
+Hello Liu,
 
-Would be nice to have more details about how LUO interacts with KHO, like
-how LUO states correspond to the state of KHO, what may trigger
-corresponding state transitions etc.
- 
-> LUO now depends on `CONFIG_KEXEC_HANDOVER`. The core state transition
-> logic (`luo_do_*_calls`) remains unimplemented in this patch.
-> 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  drivers/misc/liveupdate/luo_core.c | 222 ++++++++++++++++++++++++++++-
->  1 file changed, 219 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/liveupdate/luo_core.c b/drivers/misc/liveupdate/luo_core.c
-> index 919c37b0b4d1..a76e886bc3b1 100644
-> --- a/drivers/misc/liveupdate/luo_core.c
-> +++ b/drivers/misc/liveupdate/luo_core.c
-> @@ -36,9 +36,12 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->  
->  #include <linux/err.h>
-> +#include <linux/kexec_handover.h>
->  #include <linux/kobject.h>
-> +#include <linux/libfdt.h>
->  #include <linux/liveupdate.h>
->  #include <linux/rwsem.h>
-> +#include <linux/sizes.h>
->  #include <linux/string.h>
->  #include "luo_internal.h"
->  
-> @@ -55,6 +58,12 @@ const char *const luo_state_str[] = {
->  
->  bool luo_enabled;
->  
-> +static void *luo_fdt_out;
-> +static void *luo_fdt_in;
-> +#define LUO_FDT_SIZE		SZ_1M
+On Thu, 22 May 2025 11:01:13 +0800
+Liu Ying <victor.liu@nxp.com> wrote:
 
-Does LUO really need that much?
+> On 05/07/2025, Luca Ceresoli wrote:
+>=20
+> [...]
+>=20
+> >> After looking into this patch and patch 31(though I've already provide=
+d my A-b)
+> >> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structu=
+res
+> >> should have the same life time with the embedded DRM bridges, because =
+for
+> >> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
+> >> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patch=
+es extend
+> >> the life time for the embedded channel/bridge structures only, but not=
+ for the
+> >> main structures.  What do you think ? =20
+> >=20
+> > I see you concern, but I'm sure the change I'm introducing is not
+> > creating the problem you are concerned about.
+> >=20
+> > The key aspect is that my patch is merely changing the lifetime of the
+> > _allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
+> > the bridge is removed from its encoder chain and it is completely not
+> > reachable, both before and after my patch. With my patch it is not =20
+>=20
+> drm_bridge_remove() only removes a bridge from the global bridge_list def=
+ined
+> in drm_bridge.c.  drm_bridge_detach() is the one which removes a bridge f=
+rom
+> it's encoder chain.  It looks like you wrongly thought drm_bridge_remove()
+> is drm_bridge_detach().
 
-> +#define LUO_KHO_ENTRY_NAME	"LUO"
-> +#define LUO_COMPATIBLE		"luo-v1"
-> +
->  static int __init early_liveupdate_param(char *buf)
->  {
->  	return kstrtobool(buf, &luo_enabled);
-> @@ -79,6 +88,60 @@ static inline void luo_set_state(enum liveupdate_state state)
->  	__luo_set_state(state);
->  }
->  
-> +/* Called during the prepare phase, to create LUO fdt tree */
-> +static int luo_fdt_setup(struct kho_serialization *ser)
-> +{
-> +	void *fdt_out;
-> +	int ret;
-> +
-> +	fdt_out = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-> +					   get_order(LUO_FDT_SIZE));
-> +	if (!fdt_out) {
-> +		pr_err("failed to allocate FDT memory\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = fdt_create_empty_tree(fdt_out, LUO_FDT_SIZE);
-> +	if (ret)
-> +		goto exit_free;
-> +
-> +	ret = fdt_setprop(fdt_out, 0, "compatible", LUO_COMPATIBLE,
-> +			  strlen(LUO_COMPATIBLE) + 1);
-> +	if (ret)
-> +		goto exit_free;
-> +
-> +	ret = kho_preserve_phys(__pa(fdt_out), LUO_FDT_SIZE);
-> +	if (ret)
-> +		goto exit_free;
-> +
-> +	ret = kho_add_subtree(ser, LUO_KHO_ENTRY_NAME, fdt_out);
-> +	if (ret)
-> +		goto exit_unpreserve;
-> +	luo_fdt_out = fdt_out;
-> +
-> +	return 0;
-> +
-> +exit_unpreserve:
-> +	kho_unpreserve_phys(__pa(fdt_out), LUO_FDT_SIZE);
-> +exit_free:
-> +	free_pages((unsigned long)fdt_out, get_order(LUO_FDT_SIZE));
-> +	pr_err("failed to prepare LUO FDT: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static void luo_fdt_destroy(void)
-> +{
-> +	kho_unpreserve_phys(__pa(luo_fdt_out), LUO_FDT_SIZE);
-> +	free_pages((unsigned long)luo_fdt_out, get_order(LUO_FDT_SIZE));
-> +	luo_fdt_out = NULL;
-> +}
-> +
-> +static int luo_do_prepare_calls(void)
-> +{
-> +	return 0;
-> +}
-> +
->  static int luo_do_freeze_calls(void)
->  {
->  	return 0;
-> @@ -88,11 +151,111 @@ static void luo_do_finish_calls(void)
->  {
->  }
->  
-> -int luo_prepare(void)
-> +static void luo_do_cancel_calls(void)
-> +{
-> +}
-> +
-> +static int __luo_prepare(struct kho_serialization *ser)
->  {
-> +	int ret;
-> +
-> +	if (down_write_killable(&luo_state_rwsem)) {
-> +		pr_warn("[prepare] event canceled by user\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	if (!is_current_luo_state(LIVEUPDATE_STATE_NORMAL)) {
-> +		pr_warn("Can't switch to [%s] from [%s] state\n",
-> +			luo_state_str[LIVEUPDATE_STATE_PREPARED],
-> +			LUO_STATE_STR);
-> +		ret = -EINVAL;
-> +		goto exit_unlock;
-> +	}
-> +
-> +	ret = luo_fdt_setup(ser);
-> +	if (ret)
-> +		goto exit_unlock;
+Indeed my sentence was inaccurate, sorry about that.
 
-At this point LUO should know how many subsystems are participating in live
-update, I believe it can properly size the fdt. 
+> So, even if drm_bridge_remove() is called, the removed
+> bridge could still be in it's encoder chain, hence an atomic commit could=
+ still
+> access the allocated bridge(with lifetime extended) and the clock_apb clo=
+ck
+> for example in struct imx8qxp_pc could also be accessed.  That's why I th=
+ink
+> the main structures should have the same lifetime with the allocated brid=
+ge.
 
-> +
-> +	ret = luo_do_prepare_calls();
-> +	if (ret)
-> +		goto exit_unlock;
-> +
-> +	luo_set_state(LIVEUPDATE_STATE_PREPARED);
-> +
-> +exit_unlock:
-> +	up_write(&luo_state_rwsem);
-> +
-> +	return ret;
-> +}
-> +
-> +static int __luo_cancel(void)
-> +{
-> +	if (down_write_killable(&luo_state_rwsem)) {
-> +		pr_warn("[cancel] event canceled by user\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	if (!is_current_luo_state(LIVEUPDATE_STATE_PREPARED) &&
-> +	    !is_current_luo_state(LIVEUPDATE_STATE_FROZEN)) {
-> +		pr_warn("Can't switch to [%s] from [%s] state\n",
-> +			luo_state_str[LIVEUPDATE_STATE_NORMAL],
-> +			LUO_STATE_STR);
-> +		up_write(&luo_state_rwsem);
-> +
-> +		return -EINVAL;
-> +	}
-> +
-> +	luo_do_cancel_calls();
-> +	luo_fdt_destroy();
-> +	luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +
-> +	up_write(&luo_state_rwsem);
-> +
->  	return 0;
->  }
->  
-> +static int luo_kho_notifier(struct notifier_block *self,
-> +			    unsigned long cmd, void *v)
-> +{
-> +	int ret;
-> +
-> +	switch (cmd) {
-> +	case KEXEC_KHO_FINALIZE:
-> +		ret = __luo_prepare((struct kho_serialization *)v);
-> +		break;
-> +	case KEXEC_KHO_ABORT:
-> +		ret = __luo_cancel();
-> +		break;
-> +	default:
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return notifier_from_errno(ret);
-> +}
-> +
-> +static struct notifier_block luo_kho_notifier_nb = {
-> +	.notifier_call = luo_kho_notifier,
-> +};
-> +
-> +/**
-> + * luo_prepare - Initiate the live update preparation phase.
-> + *
-> + * This function is called to begin the live update process. It attempts to
-> + * transition the luo to the ``LIVEUPDATE_STATE_PREPARED`` state.
-> + *
-> + * If the calls complete successfully, the orchestrator state is set
-> + * to ``LIVEUPDATE_STATE_PREPARED``. If any  call fails a
-> + * ``LIVEUPDATE_CANCEL`` is sent to roll back any actions.
-> + *
-> + * @return 0 on success, ``-EAGAIN`` if the state change was cancelled by the
-> + * user while waiting for the lock, ``-EINVAL`` if the orchestrator is not in
-> + * the normal state, or a negative error code returned by the calls.
-> + */
-> +int luo_prepare(void)
-> +{
-> +	return kho_finalize();
-> +}
-> +
->  /**
->   * luo_freeze() - Initiate the final freeze notification phase for live update.
->   *
-> @@ -188,9 +351,23 @@ int luo_finish(void)
->  	return 0;
->  }
->  
-> +/**
-> + * luo_cancel - Cancel the ongoing live update from prepared or frozen states.
-> + *
-> + * This function is called to abort a live update that is currently in the
-> + * ``LIVEUPDATE_STATE_PREPARED`` state.
-> + *
-> + * If the state is correct, it triggers the ``LIVEUPDATE_CANCEL`` notifier chain
-> + * to allow subsystems to undo any actions performed during the prepare or
-> + * freeze events. Finally, the orchestrator state is transitioned back to
-> + * ``LIVEUPDATE_STATE_NORMAL``.
-> + *
-> + * @return 0 on success, or ``-EAGAIN`` if the state change was cancelled by the
-> + * user while waiting for the lock.
-> + */
->  int luo_cancel(void)
->  {
-> -	return 0;
-> +	return kho_abort();
->  }
->  
->  void luo_state_read_enter(void)
-> @@ -205,7 +382,46 @@ void luo_state_read_exit(void)
->  
->  static int __init luo_startup(void)
->  {
-> -	__luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +	phys_addr_t fdt_phys;
-> +	int ret;
-> +
-> +	if (!kho_is_enabled()) {
-> +		if (luo_enabled)
-> +			pr_warn("Disabling liveupdate because KHO is disabled\n");
-> +		luo_enabled = false;
-> +		return 0;
-> +	}
-> +
-> +	ret = register_kho_notifier(&luo_kho_notifier_nb);
-> +	if (ret) {
-> +		luo_enabled = false;
-> +		pr_warn("Failed to register with KHO [%d]\n", ret);
-> +	}
-> +
-> +	/*
-> +	 * Retrieve LUO subtree, and verify its format.  Panic in case of
-> +	 * exceptions, since machine devices and memory is in unpredictable
-> +	 * state.
-> +	 */
-> +	ret = kho_retrieve_subtree(LUO_KHO_ENTRY_NAME, &fdt_phys);
-> +	if (ret) {
-> +		if (ret != -ENOENT) {
-> +			panic("failed to retrieve FDT '%s' from KHO: %d\n",
-> +			      LUO_KHO_ENTRY_NAME, ret);
-> +		}
-> +		__luo_set_state(LIVEUPDATE_STATE_NORMAL);
-> +
-> +		return 0;
-> +	}
-> +
-> +	luo_fdt_in = __va(fdt_phys);
-> +	ret = fdt_node_check_compatible(luo_fdt_in, 0, LUO_COMPATIBLE);
-> +	if (ret) {
-> +		panic("FDT '%s' is incompatible with '%s' [%d]\n",
-> +		      LUO_KHO_ENTRY_NAME, LUO_COMPATIBLE, ret);
-> +	}
-> +
-> +	__luo_set_state(LIVEUPDATE_STATE_UPDATED);
->  
->  	return 0;
->  }
-> -- 
-> 2.49.0.1101.gccaa498523-goog
-> 
-> 
+As the long-term goal is to allow bridges to be hot-removable,
+decoupling the lifetime of the various components is a necessary step.
+Definitely it will open other issues, and especially the removal during
+atomic updates. This has been discussed already, and there is a
+proposed plan to handle it.
 
--- 
-Sincerely yours,
-Mike.
+First, here is the grand plan (mentioned in the v3 cover letter):
+
+ 1. =E2=9E=9C add refcounting to DRM bridges (struct drm_bridge)
+ 2. handle gracefully atomic updates during bridge removal
+ 3. avoid DSI host drivers to have dangling pointers to DSI devices
+ 4. finally, let bridges be removable (depends on 1+2+3)
+
+We are now at step 1. Your concern, as I understand it, will be
+addressed at step 2. Bridges won't be removable until step 4, so the
+current changes are not introducing a misbehavior but rather preparing
+the ground with all the necessary infrastructure changes.
+
+Step 2 was discussed in the past [0], and the idea proposed by Maxime
+is to introduce a "gone" or "unplugged" flag and drm_bridge_enter() /
+drm_bridge_exit() functions. The principle is the same as struct
+drm_device.unplugged and drm_dev_enter/exit().
+
+In a nutshell the idea is:
+
+ - drm_bridge.unplugged is initialized to false
+ - drm_bridge_enter() returns false if drm_bridge.unplugged =3D=3D true
+ - any code holding a pointer to the bridge (including the bridge driver
+   itself) and operating on the bridge (including removal) needs to do:
+     if (drm_bridge_enter()) {
+         do something;
+         drm_bridge_exit();
+     }
+ - when the bridge is removed, the driver removal function sets
+   dev_bridge.unplugged =3D true
+
+The "do something" above includes any access to device resources,
+including clocks (and clk_apb).
+
+In other words, two pieces of code can not access the bridge structure
+at the same time. This includes bridge removal VS any atomic operations.
+
+Do you think this addresses your concern?
+
+
+For you to have a better picture of the path, here's an additional
+clarification about drm_bridge_attach/detach() and
+drm_bridge_add/remove(). As part of step 1 of the grand plan, both of
+them will drm_bridge_get/put() the bridge, so that no bridge is freed
+if it is either in the global bridge_list or in any encoder chain.
+
+Patches for this are already approved by Maxime [1][2]. They cannot be
+applied until all bridge drivers have been converted to the new
+devm_drm_bridge_alloc() API, so they depend on this series to be
+completely applied. We are getting pretty close: as of now the entire
+series has been applied except for this and another driver.
+
+[0] https://lore.kernel.org/all/20250129125153.35d0487a@booty/t/#u
+[1] https://patchwork.freedesktop.org/patch/643095/
+[2] https://patchwork.freedesktop.org/patch/643096/
+
+Best regards,
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
