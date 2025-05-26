@@ -1,223 +1,263 @@
-Received: from PR0P264CU014.outbound.protection.outlook.com (mail-francecentralazon11022127.outbound.protection.outlook.com [40.107.161.127])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473C0202987;
-	Mon, 26 May 2025 12:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.161.127
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748264339; cv=fail; b=Cqe6t/kQgHoDkLkSn7NfBeKf/GkTxVyQmt1m0vLaEN/BoqGaER8YWvp653tGS0DT7WekLqXIMxyWLZx89FYzOFYOuhdSvQFh0yUSJnmGfW2QCazAffZ4h3acRA7kAbFnYEKZiTmyYBvm4BZsOjPQ6ShoNESMp4Ryy/X/4jaJnhU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748264339; c=relaxed/simple;
-	bh=HjEYPCasp9by9v438UQyI9D8BUYiPSw3ndfUNB65cQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=cGG1wf7puyErvuej2Wcaxlu99vkduo5mjnoJ/PSe+2JRdIFQkOFX+/yVpJZy3w2MjTXbkd6Yl0ybrS86Vy5hYuxsUM5MYYReWrGXTj7dtzScr8QhNtb0eay1Xma0je4k+jhgSOG7y450NN6/XnToQQ95k5/8p+EgXNGCz/NXaCU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com; spf=pass smtp.mailfrom=allegrodvt.com; dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b=tSN0QeRg; arc=fail smtp.client-ip=40.107.161.127
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allegrodvt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90781F150B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748264401; cv=none; b=IVqhLQzE4DCkqD89k3YQvhsG+ccs7pGrs15wD44nfBmxlCRuFK6qwu6DFGRnm6Hc/uKEwH/2E0Bggl9xaOzv/+CAz2pGF1vll98H6Ys7MgDwQtFG3yNCCEeMuv1Ax0hkRUlNII5SDsh0f+Dr+4ShDMEpIwb2ZV5JzlfgpDgWyWQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748264401; c=relaxed/simple;
+	bh=GPDmM427tdPYI24Bk6z/gaji3dcD9ymvvBXqIVij4GI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L9RqqODA2IiIVSc9Frz98g/5ZixjZ3SRguphbm5ZIguEfridtfDgvv0H4RKlk+tgYPj0PQ/15ckV9cGyZdq+QgnG8SPi/vyxEgOw8NB1eHq9u2LWvTpsCsfLU/eiIL9aeLIePppVZxgkhnbkHojnmgIIHWtvN2o6cqjDWTOTIow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V1nx0LED; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b="tSN0QeRg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wt9dUtfR1k6i2AUZegLTCwkHh1MBnqJIsY07dgkIzo4KBaMlwfeM2C2QCbpMm7pdzqsRWEyFpTOCZ85CDV0oSXy72JLm9H7Lsi6GQgsI17hY67KTUqXrcLxE1hlofDOXfZVcNar8Yy3bm++8HXYom136lrxdHtdnTw6J8Pczm0Nkk4SuFY7RUstUvMa+1Mu7bPqAoDZVsZebMVjXtHJITBb5ZpI7Y/v4x+XkcAYiPvkEnX3IokZnddjy1Lj66uZ0DduRgH14DABbXhllicD4nm872S+IdYlG02i/ZA28ckbDak0r4STfXGp/d5pvYZFbOoNmGNp9x3FqeBcvLKnk6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HjEYPCasp9by9v438UQyI9D8BUYiPSw3ndfUNB65cQw=;
- b=SFmwPdYAIRdCT1Qfa9i2TP7YdzVpx0BvnIqNaNHBXXvA7B/s8LLLSv96dmSXvHJ2KDoSIyp7Y1JfNJkw9uAfthRUrb4jLWMwC5Q9qBrv3+zg6jbdYiDCeOtJr1aYDgXvRfaQW932MJgWukovJAQWnk1X/Sic09zO8EcxWEOH+cR+GqQcX/4cffxGxv69b1GdGg9G5PmBfplDbAlP9VPr4RQPpnim8r12jvnA8KoqKeRO6D+L1xuj+WMuKS/z5QxLqcF6jV61BCtcI629ru11i3B7hSkEBf3VPvlQoDiMDVIHai0t1lV5T26irB5pZkfobsgEkW9/l7HA9NHiQRINVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=allegrodvt.com; dmarc=pass action=none
- header.from=allegrodvt.com; dkim=pass header.d=allegrodvt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=allegrodvt.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HjEYPCasp9by9v438UQyI9D8BUYiPSw3ndfUNB65cQw=;
- b=tSN0QeRg3ajkgSxt/Et2Xm3FfuBzDjL1LanZ1LICZeaDkuE6gDAKLVB1bpq+j7K2hP3PNww2vAjYSWQEcjx0b1h2Bk1RHuJfyqMhXuMxrZqkJB3zjfM0M3KrQ7E3EUozlTF99LXzAesRmN+GQ34GaHCsaFV+kysV/Vdmbf1j0W/V2UuFXy2CR10j0CXdt1zsQXurF/YGuUDkPfiAt1a/zQVW+gC+gJB2seuakEqMB9ywLCy069Nl+4tSucoazh/ajVpo61NEFQUOL4iVmamSKadf6PcvKjdRUOswTvIWXJRhS9yczbLDGAmMduBRAMReXIpPpb8QbjZS8XxLpMjcWA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=allegrodvt.com;
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3d::18)
- by MR1P264MB2146.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:14::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 26 May
- 2025 12:58:53 +0000
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5]) by MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5%2]) with mapi id 15.20.8769.019; Mon, 26 May 2025
- 12:58:53 +0000
-Date: Mon, 26 May 2025 12:58:51 +0000
-From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michael Tretter <m.tretter@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Michal Simek <michal.simek@amd.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Junhao Xie <bigfoot@classfun.cn>, Rafa?? Mi??ecki <rafal@milecki.pl>, 
-	Kever Yang <kever.yang@rock-chips.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	Sebastian Fricke <sebastian.fricke@collabora.com>, Gaosheng Cui <cuigaosheng1@huawei.com>, 
-	Uwe Kleine-K??nig <u.kleine-koenig@baylibre.com>, Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Ricardo Ribalda <ribalda@chromium.org>, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/5] dt-bindings: media: allegro-dvt: add decoder
- dt-bindings for Gen3 IP
-Message-ID: <uys462vhrhzeapzkve7z5k3xg6bjvpdne4xw44voqn6uhjdkmc@owrdgvraiqyb>
-References: <20250523134207.68481-1-yassine.ouaissa@allegrodvt.com>
- <20250523134207.68481-3-yassine.ouaissa@allegrodvt.com>
- <3e6be40a-2644-416a-bd32-f6256f1501ff@kernel.org>
- <7863d15a-fa20-4db5-89b5-77a026d3f937@kernel.org>
- <a72z6exgol5cbur2cy7wjwyroi4zddtki5ab3zdkfuwpskpavr@r26wahldhd3r>
- <b5bb919e-6273-48ed-b5d8-29177dbbfb76@kernel.org>
- <flwocneutp64bxxwfkfqvm6dq7klc2nu33ybr3ap6qeovopfq7@7qognvdf4zew>
- <04e1f361-b3cf-4fdb-a008-42eb489f6c4d@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <04e1f361-b3cf-4fdb-a008-42eb489f6c4d@kernel.org>
-X-ClientProxiedBy: MR1P264CA0026.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:2f::13) To MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:3d::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V1nx0LED"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748264398;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=n6EYd9d/BuLZh3EC8tMgXIbGwz3KQXX+Z+svUMtDejY=;
+	b=V1nx0LED7UdtpCSqLC3ownUesgy7RFph8e+VS/kOWeJemHg8KH8elO+g8IrsEQVTUk9xOr
+	tSiCenGkv5eABDZiFJL/+Yq335JMuS23ZmVo4z/02N+7Ojd6HjLmEl6fnRCPum6Of/xqfR
+	B/YMzdlUfZtpfnZiCQwYB2WWZQoTgAc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-328-9C8jQUkgP3in9tONSK6AYw-1; Mon, 26 May 2025 08:59:57 -0400
+X-MC-Unique: 9C8jQUkgP3in9tONSK6AYw-1
+X-Mimecast-MFC-AGG-ID: 9C8jQUkgP3in9tONSK6AYw_1748264396
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a360d01518so1431596f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:59:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748264396; x=1748869196;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=n6EYd9d/BuLZh3EC8tMgXIbGwz3KQXX+Z+svUMtDejY=;
+        b=A2qve196QE2olrwrE78o0eC9m79JxqUAvCrrKexU5t7iUlvQU70M/3zrhr5Lecf1N/
+         94HOuPwbxmp0MHDAHKgcN9NvXtbM/VgHgCaLLTg+qltkmmrNJbCOSiHh+SNN5vOHk3fV
+         su14RgQfGIaf3voyvwOnAD1qLCEl2oQZwn8KC3i+kyucSI7BgPu4MMzxhA+8g8ZuSpc+
+         NCZypDgg+O9l/BRFYiczicQs3Po9W/Afh87ROSOlNJRekbO35pKXBEuCKk8u28tyTj0Y
+         Mr61jb7/vmDkd4avi1QbgbnTQhDG7VM4nXZAAQQoHgROcuGyVAPXAgYIIJvLNsn4op0Y
+         7shA==
+X-Forwarded-Encrypted: i=1; AJvYcCWM2mv6Rd8NV3GKhy518N54SjbmXMbhTvxYhQkqSgTVsGW4l2WWzd5Teoa50rNpbkq4zvIIyDQJfS/S560=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwggpsWWJk5BqwK0EVd24XJ9BmAfuhqQ+nqfyUhWK/WdhoOhMGk
+	wTIxt+Oafh8IqHY8kywojbxiSrX5eXXWxJD2r2MYF6Fka37aTVeVNRZA7+3a7zzm54oFih0sR6f
+	zSub/EswyHamhAlBHQJCpOsla6e4GjjpqaAf2vHc9hsmLrGQbO22PxETvZ/wp1azbsg==
+X-Gm-Gg: ASbGncunJxCY1gqx/9BjLdw8z6Zz4uh5fJ4weNW8GLra81K4zfsxfvpOoDsBtVs4mPP
+	VXdgmvs+OkbvL+MZ5RpVwsYOO1d+692jKE13a7nxXnul+Io8eaa/i5DJIrnfGrvCWMFM2yf/x/R
+	YfTPyfJ28o5lY6DGHFr4jsOp6vI5ZYShJpLxmySjjqRm3H7hwBLPlEDMeCoDAlfQbddxqjE03y1
+	WNGP33ADUlgiGUgtXAj90rjUXNabwnsxBEb0pjqgskS6bfqJ7hIYty2w7JyuHbqjwVRAUsQrenV
+	Bfg12vAV4oevc5h6UeZBTlM5WusT0og46OcJRg3Do5JmZQr+9sCM9aOXX7toWkYEeSyKKwDNZkw
+	NfPixGKmG9cFu1hrI+5N4mfAC+Wlvk66tFHBtc6M=
+X-Received: by 2002:a05:6000:2910:b0:3a0:9dfc:da4 with SMTP id ffacd0b85a97d-3a4cb489adcmr6051680f8f.42.1748264396150;
+        Mon, 26 May 2025 05:59:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFU7sCqih/eqD4nOcXRC1xvOuPP39fwhwretOa+FIqMiws+mWE4SttUe+YY9ZMHmwcoCHBVxA==
+X-Received: by 2002:a05:6000:2910:b0:3a0:9dfc:da4 with SMTP id ffacd0b85a97d-3a4cb489adcmr6051667f8f.42.1748264395757;
+        Mon, 26 May 2025 05:59:55 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:6500:e1c1:8216:4c25:efe4? (p200300d82f196500e1c182164c25efe4.dip0.t-ipconnect.de. [2003:d8:2f19:6500:e1c1:8216:4c25:efe4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d1ed8740sm5369659f8f.83.2025.05.26.05.59.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 05:59:55 -0700 (PDT)
+Message-ID: <87521d93-cc03-480d-a2ef-3ef8c84481c9@redhat.com>
+Date: Mon, 26 May 2025 14:59:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MR1P264MB3140:EE_|MR1P264MB2146:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9e9f578-ee4f-4168-492a-08dd9c5510fb
-X-LD-Processed: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|27256017;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?cHRPYko1S3FOTnFaVDhUdi9CdnN4S3Mveno1ejFDRks2YzZpNTMvZE1wZDF5?=
- =?utf-8?B?ME5TVkRqYUVJeTFLVU9IbWZ2N25tVHliWDZBdVJkU2Jta1RXV1NySXRPQmZy?=
- =?utf-8?B?a1pmMmU5SElBVS93ajhVRUV0b1lWWXp4UFJpSlA3Z1IrOHBzQU9CenF2NkVS?=
- =?utf-8?B?d09sbWVjRngxMFJ3clR1K1ZBc01jWTlOdWJoRnJWREsyYlF5cy9NOTN0VEs4?=
- =?utf-8?B?OExNbDBCUUV0SFphU3BFTFlJOE40VGJOVmNzclZjVVRKN2d0NDNsbHdoTU81?=
- =?utf-8?B?OVRqUER3WnFlT2wzWGhQR05NOGxtRXBWMjVEWjBEWTRVVWFiU3F6YzB4TU5v?=
- =?utf-8?B?Sjd3VWtuMFlpNk9iNGtKQTQySmIxNElFdnQzdU96ank5cXlOZG1ESTdUOERj?=
- =?utf-8?B?MlBZNG1mMHZRNnlKbUFSTGNoU3hDWTh0S0M4MDRkcHRSaEJrRTc0NlRMQTR0?=
- =?utf-8?B?elU5T0E1WS95T2lNQ2ZvdWRBMFBTZmtHWTM2ckNmR0NYRG5BYVFVR2FJYjFk?=
- =?utf-8?B?VWVNNENXZmZ0OGlZZGF6OXhhRVRDYjhHTFVrTlR1OGsrQktjVmJoM0FUSVJV?=
- =?utf-8?B?VUtUMVFVR1g0SmEvbjB3T2RDdml1c3Eydnp3Wnp0SGV4eFJFWUc0T092Qk1i?=
- =?utf-8?B?RkJxVzNWY3hKYmMyT3UxaC9HbFNLZm9RcEdsbDE4UFdIQ2h5amE1NWVpVlJv?=
- =?utf-8?B?TEc0S2hRbkdLQmE2RVBwMEtmdWcxcVlHNWxuSXFLTEFkZnZ3Vi9wRmRZN0xC?=
- =?utf-8?B?dkVMdlFuRFhCNWg3V3hrOE4rVXhtcy9yd25QUTR1cGwrSEhwU3lBd0kvcGI4?=
- =?utf-8?B?eGZ6TlRWZjk1Tko5blI3eG9QVGQwbmNXMzhGclErd0hGTWtIQmp0cU1XeVVk?=
- =?utf-8?B?VlZLdG1uRWJ2MkFQeVFrMmlRcEIwaFVPUDhMTnV6Vlh3V1Jrdk5TT1NsZnZ5?=
- =?utf-8?B?WU1ZS3JFblozeGpGRHpoaGJSU2dvdEcwSWZmWjMvdmpoUHpyQTUxRTNVUzZ4?=
- =?utf-8?B?Q3ZReWNkQkJlWDN1aE8wRStma3h3b1MzMy9zQ2c4R2o4cDhBb2srVG5halcr?=
- =?utf-8?B?V29DeWpEVXRodjdtdHptT1NBYmZrMXpuK3NFeFNnVHhXOTZWcTJrT0Rrdmxh?=
- =?utf-8?B?UWk2WlJtYnB1cGwyTzdMbENpSHhBYlVQeU1IcVVoZ2MxUnczNW5JSkEvdzlC?=
- =?utf-8?B?SHNJRnRnOHB5YXM1dG40TFhaenorYXJsNDdMTkdTbU51aVpFY3VHa1VrV2x5?=
- =?utf-8?B?TzlaT1VnNUZTcDBuTUs5Q1BBNFpaVzFrbmtjdUw2WFBNc1g3R0xjU2tQZ3Ra?=
- =?utf-8?B?ZmVFUUJaRlV5NkcrOVIwdURncElOMmlkOUhwVUcrajQvdEEyam1LcURGU1NO?=
- =?utf-8?B?a1JJU2wzSC96UmJJUWFjaGc1VzJpVWZuWHF3VUhKMXhXT3dpdS9OUEF1WjJ2?=
- =?utf-8?B?TWRzS0FjM2d2ZzlYU2lzOUZaTUQzeHdUOVhnbHBad0R3Ui9wQWd5dnBUSDhN?=
- =?utf-8?B?eU5oQVRkanFtcFU0bU5OL3pIbzNIYzVmNzkzalZrSklQRSttK0drM0YxNDAy?=
- =?utf-8?B?WU0zWHNLRktBT1dBdnJKQXY4OHVHWHZ4NnpQOVQzTTNqOHVDNWU5RDJLK3JO?=
- =?utf-8?B?WVBxMDJqZ2VxZUtEWkZIOXlLVC9PaTFZczIrbHJNZktkcTNRbVpsOUZwUTFO?=
- =?utf-8?B?cjJ4TWJtc2hVUE1Ndzl6bDJaVXZ6aElXc05lcUJlWk1Jajk0SlowdjJZZjhJ?=
- =?utf-8?B?SnUxemlFbUJuOHJMNHdjelljTnpPS1o4RVE3UWtVU2JGcXQ3bjU2Vm9UZDd0?=
- =?utf-8?B?dGtQOUh1dVEwLzdBSjBza2RFMXd1b0VyRHBUdkM2Z2k1TjlWTHNwdVQ0U09X?=
- =?utf-8?B?eXlmcG1SOG4vL1BON0MvNmRXZ0JhaUZSczRKcFk5UFlVdk5aZEdPcXlCRy8x?=
- =?utf-8?B?RTV3TGxVZHBKYnIrQWN2aVlwZUFBZ3Z0WWpNWDloYnBWSTNrVGRPN2Y2YUd3?=
- =?utf-8?B?SWU3TVQ5ZWdRPT0=?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(27256017);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?enhvaTd3eUhUeGJsNzhXWE1SOUZ3YnlsampWL1prd2NHMGQ1NDhiNURyZzlh?=
- =?utf-8?B?MmpnNFJuR2h2R01QSHFLNTRqZHV6MGQ5bzV1cVZJTEFiMUlWRWZ6NTdnNkNX?=
- =?utf-8?B?eThaMUFkNWxXZzkwVUpXVGc2VXcxVE5DSnlObFEwdzJMenVETGs5ckcwSkUw?=
- =?utf-8?B?QUpGeDNtSnlaR3Zwcm9Zdm5EazVsemlURUpVMkh2d1VOTmh3RXVBTFc0VWdX?=
- =?utf-8?B?dUQzNlVEQmNjMWNkamptdFJkNjJtM2dwYzZDSGRoSDBzdnRHSmF3SU92eWFN?=
- =?utf-8?B?ek81M3NWRVJmU0ZoOGpxeEVWbk13ajJnMFJBODUxcHBvdHJBM3poQ0IyeUc4?=
- =?utf-8?B?RmwwYUk0WEtMK0Nkdm1uekFJWjJ1Z1NEK1JlYXU3b1RxZWVDQzc2Wi9sSlFu?=
- =?utf-8?B?TmJFMlNLTzM0YVhOMGFER1QweDB0aHgwN3FNbmhSLzJhK2NsQlBqSnk0c3Vo?=
- =?utf-8?B?NHNCa3l3eXN3ZnZiekhFak1HQkZROXFSdkFDQUZBN1kwZkpRTWpNOXN6dlJQ?=
- =?utf-8?B?Y3BPbXR5YkFuaGd3bnFhczBmSjFXZ2xCS3Nva1d0c0xSQ3A0K3FteWlaV3Bh?=
- =?utf-8?B?ZUVXcm5CSVp6bkJqdGdpQ2FKMkFSUFc0Yk82NURqMzU2OEpYZCtDVG5XanpB?=
- =?utf-8?B?bmZJZzROTHMxWFVxWithUUJDR09GcDdHTWxGNjBaNUZTb2dZUEVoL1hXbTN5?=
- =?utf-8?B?bVdQUWhmK05OZWk3M0h6RFZ4VWNoM1NXZXhxSm8xOVNxOURuMHVMeTAvNm83?=
- =?utf-8?B?eXlVcU5abmJZZW1mYzVwNmxsODZlV1BlSFdZNkRIeDdWR1pEUHVBbGRZeXdr?=
- =?utf-8?B?Z2JGL1JDM3Irend4Q3VLVzVkc3B2aDIwNkJaT1VnbXN5c29tZXp4WWlaQjdV?=
- =?utf-8?B?MTRwMVlqQWl3VU9idkovZExFYkdhbGRIQ0kvUnRxbFJvWVoxTkJmMUpQTkR1?=
- =?utf-8?B?YnZybWc2SllrRzNpK281Y2lzRVRwOWtDcUt3SUlvczBDVi9UQjBwbE1RUk5t?=
- =?utf-8?B?VGNlRlpzR25IZGc4cGFnVVcxbEZkVGJJYTFnVFNwSUQ2RmkwMDQ2SWNPTXB2?=
- =?utf-8?B?REVoOXJxc2FLY2xrY2NVY1gzMWFSTEZxZlpaK0pLUHVoMjVBeDd4RmJabzUv?=
- =?utf-8?B?aWhPamx6bGx3Y3dVQzlVTy94UmIycklPeGxQc2lxaG9xbEJVYWtlcEp3ekJq?=
- =?utf-8?B?K2tMWlBVYktNcVF3SElDT3U4NFdJd0VqSGFEQ2xkc0pHZHM4ODg3TGxvSnhN?=
- =?utf-8?B?U29JTkorbDlib2xpS3p2M3Q4bkJqRC9kWHVzT2ZYVzY3YjcvR0pVWjRYSVBa?=
- =?utf-8?B?K3hlQlhHZEJ6VVVwWFhXT2M5cEczejM5Ym5oRFExdUdDRlFnc2dKUE8vRXpI?=
- =?utf-8?B?dEhQOXpWenZ3M1I4MnpDdFdNcHNXaVVNOElZZ0ZiNnJob2E1cUxPRGUwZE1m?=
- =?utf-8?B?Y0pWUlNtUWdVZEcySjRzMzNzbWU1Y21NejJSZVhoRGRtUXozR0grSkRQUzMr?=
- =?utf-8?B?WUo2c2NpeU5IMnpmK3RqV3VnT1haLzFEMnY4Skd2eVVNQlVGT3RKdEVFWW1E?=
- =?utf-8?B?U09xVXg4Z1JZcnVYL25OTlZ4cXNKKzJZSitNdG83ZU5KZERNUGNnNmQrVFZj?=
- =?utf-8?B?TXN1OVg1Z3FOSUFrQkFlSzU1RzNyMzNZWllaS1duc2UwR0hjNkZWeFBNd1Bo?=
- =?utf-8?B?amtDcU4zcldhdkxpVE5xTEx6T3dKcjM5c1RCTHBJUUQ4dENrd0RVVmc5MlRG?=
- =?utf-8?B?eEpNQkliWXI2emRyWlpUQW5laTViZ3g4NCtSUmNOaGNnZU0weWZBQmxjaG1E?=
- =?utf-8?B?RW1CaUtNdXc0MFZxKy96NGVOZEJkZGs4MlF0VnV5aHlzME9sVjNTcmRudzNO?=
- =?utf-8?B?RCszNjVtbFFpUmN6Q3UwWlIzaEZyNVVZVmNHVmlnN2tYelgwSUgydkNpTXlB?=
- =?utf-8?B?YVJTNTRJY0NxbWgxS2tOM2MrTnExcFhGeFFCSTM2TUo2dXA5TFZPK0VXWkJz?=
- =?utf-8?B?OWlibWZrUVB1S1F5ZFlTOVgzczgwaXdISWxYTmpEZTlhMUtVYi9ZZGt4aXp2?=
- =?utf-8?B?TEQvRlpVdUVpN2xjMGZCQUFTaWM1QXZTbXdDdmg3NXVUKzVwOVNpQ2JvRHpX?=
- =?utf-8?B?VnNxcmgrNit5VjZObzhLVnRRTU1uK0g5bUE4Z3Yvak4xM2hiNlVqWFJwZDdK?=
- =?utf-8?B?S0E9PQ==?=
-X-OriginatorOrg: allegrodvt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9e9f578-ee4f-4168-492a-08dd9c5510fb
-X-MS-Exchange-CrossTenant-AuthSource: MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 12:58:52.9308
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2e0mCI0DwxLE0dlDGLzHM+BAoJe2SUWr5Q6nYP+gcWT0HAe/KQWxETTr7Onv9MqbVSg4vMAQwABRyl9zocd+GrwuYK2v8YvVpoWXVkOcX7c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB2146
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
+ replacing free hugetlb folios
+To: Ge Yang <yangge1116@126.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
+ osalvador@suse.de, liuzixing@hygon.cn
+References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
+ <d405ba61-0002-4663-8ab7-ab728049d8a3@redhat.com>
+ <07b7d4fd-c600-4de1-aea4-037e148da79b@126.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <07b7d4fd-c600-4de1-aea4-037e148da79b@126.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 26.05.2025 14:46, Krzysztof Kozlowski wrote:
->On 26/05/2025 14:27, Yassine Ouaissa wrote:
->> On 26.05.2025 12:57, Krzysztof Kozlowski wrote:
->>> On 26/05/2025 09:25, Yassine Ouaissa wrote:
->>>> On 23.05.2025 19:13, Krzysztof Kozlowski wrote:
->>>>> On 23/05/2025 19:11, Krzysztof Kozlowski wrote:
->>>>>> On 23/05/2025 15:41, Yassine Ouaissa wrote:
->>>>>>> Add compatible for video decoder on allegrodvt Gen 3 IP.
->>>>>>>
->>>>>>> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
->>>>>> Please do not send the same patches over and over again. You got review
->>>>>> which you need to address.
->>>>>>
->>>>>> Once address you send NEXT version with proper CHANGELOG for each patch
->>>>>> or top of cover letter. See submitting patches... or just use b4. This
->>>>>> should be actually requirement for this work.
->>>>>>
->>>>>> Anyway, I see all of previous review ignored so let's be explicit:
->>>>>>
->>>>>> NAK
->>>>>>
->>>> Hi Krzysztof,
->>>>
->>>> Make sure that i'm not ignoring anyone reviews, i sent a new set of
->>>> patches to start cleanly, and i have sent you an email about this.
+On 26.05.25 14:57, Ge Yang wrote:
+> 
+> 
+> 在 2025/5/26 20:41, David Hildenbrand 写道:
+>> On 22.05.25 05:22, yangge1116@126.com wrote:
+>>> From: Ge Yang <yangge1116@126.com>
 >>>
->>> It is still v1 - the same? - while you already sent three patchsets before.
+>>> A kernel crash was observed when replacing free hugetlb folios:
+>>>
+>>> BUG: kernel NULL pointer dereference, address: 0000000000000028
+>>> PGD 0 P4D 0
+>>> Oops: Oops: 0000 [#1] SMP NOPTI
+>>> CPU: 28 UID: 0 PID: 29639 Comm: test_cma.sh Tainted 6.15.0-rc6-zp #41
+>>> PREEMPT(voluntary)
+>>> RIP: 0010:alloc_and_dissolve_hugetlb_folio+0x1d/0x1f0
+>>> RSP: 0018:ffffc9000b30fa90 EFLAGS: 00010286
+>>> RAX: 0000000000000000 RBX: 0000000000342cca RCX: ffffea0043000000
+>>> RDX: ffffc9000b30fb08 RSI: ffffea0043000000 RDI: 0000000000000000
+>>> RBP: ffffc9000b30fb20 R08: 0000000000001000 R09: 0000000000000000
+>>> R10: ffff88886f92eb00 R11: 0000000000000000 R12: ffffea0043000000
+>>> R13: 0000000000000000 R14: 00000000010c0200 R15: 0000000000000004
+>>> FS:  00007fcda5f14740(0000) GS:ffff8888ec1d8000(0000)
+>>> knlGS:0000000000000000
+>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> CR2: 0000000000000028 CR3: 0000000391402000 CR4: 0000000000350ef0
+>>> Call Trace:
+>>> <TASK>
+>>>    replace_free_hugepage_folios+0xb6/0x100
+>>>    alloc_contig_range_noprof+0x18a/0x590
+>>>    ? srso_return_thunk+0x5/0x5f
+>>>    ? down_read+0x12/0xa0
+>>>    ? srso_return_thunk+0x5/0x5f
+>>>    cma_range_alloc.constprop.0+0x131/0x290
+>>>    __cma_alloc+0xcf/0x2c0
+>>>    cma_alloc_write+0x43/0xb0
+>>>    simple_attr_write_xsigned.constprop.0.isra.0+0xb2/0x110
+>>>    debugfs_attr_write+0x46/0x70
+>>>    full_proxy_write+0x62/0xa0
+>>>    vfs_write+0xf8/0x420
+>>>    ? srso_return_thunk+0x5/0x5f
+>>>    ? filp_flush+0x86/0xa0
+>>>    ? srso_return_thunk+0x5/0x5f
+>>>    ? filp_close+0x1f/0x30
+>>>    ? srso_return_thunk+0x5/0x5f
+>>>    ? do_dup2+0xaf/0x160
+>>>    ? srso_return_thunk+0x5/0x5f
+>>>    ksys_write+0x65/0xe0
+>>>    do_syscall_64+0x64/0x170
+>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>
+>>> There is a potential race between __update_and_free_hugetlb_folio()
+>>> and replace_free_hugepage_folios():
+>>>
+>>> CPU1                              CPU2
+>>> __update_and_free_hugetlb_folio   replace_free_hugepage_folios
+>>>                                       folio_test_hugetlb(folio)
+>>>                                       -- It's still hugetlb folio.
+>>>
+>>>     __folio_clear_hugetlb(folio)
+>>>     hugetlb_free_folio(folio)
+>>>                                       h = folio_hstate(folio)
+>>>                                       -- Here, h is NULL pointer
+>>>
+>>> When the above race condition occurs, folio_hstate(folio) returns
+>>> NULL, and subsequent access to this NULL pointer will cause the
+>>> system to crash. To resolve this issue, execute folio_hstate(folio)
+>>> under the protection of the hugetlb_lock lock, ensuring that
+>>> folio_hstate(folio) does not return NULL.
+>>>
+>>> Fixes: 04f13d241b8b ("mm: replace free hugepage folios after migration")
+>>> Signed-off-by: Ge Yang <yangge1116@126.com>
+>>> Cc: <stable@vger.kernel.org>
+>>> ---
+>>>    mm/hugetlb.c | 8 ++++++++
+>>>    1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>> index 3d3ca6b..6c2e007 100644
+>>> --- a/mm/hugetlb.c
+>>> +++ b/mm/hugetlb.c
+>>> @@ -2924,12 +2924,20 @@ int replace_free_hugepage_folios(unsigned long
+>>> start_pfn, unsigned long end_pfn)
+>>>        while (start_pfn < end_pfn) {
+>>>            folio = pfn_folio(start_pfn);
+>>> +
+>>> +        /*
+>>> +         * The folio might have been dissolved from under our feet,
+>>> so make sure
+>>> +         * to carefully check the state under the lock.
+>>> +         */
+>>> +        spin_lock_irq(&hugetlb_lock);
+>>>            if (folio_test_hugetlb(folio)) {
+>>>                h = folio_hstate(folio);
+>>>            } else {
+>>> +            spin_unlock_irq(&hugetlb_lock);
+>>>                start_pfn++;
+>>>                continue;
+>>>            }
+>>> +        spin_unlock_irq(&hugetlb_lock);
 >>
->> As i mentioned, this patch is sent to start cleanly, so it still v1.
->> And the previous patchsets should be ignored.
->This is not how the process works and it is not making reviewers life
->easier. It makes it impossible for us to compare (try yourself with `b4
->diff`) and forces to re-review everything every time.
+>> As mentioned elsewhere, this will grab the hugetlb_lock for each and
+>> every pfn in the range if there are no hugetlb folios (common case).
+>>
+>> That should certainly *not* be done.
+>>
+>> In case we see !folio_test_hugetlb(), we should just move on.
+>>
+> 
+> The main reason for acquiring the hugetlb_lock here is to obtain a valid
+> hstate, as the alloc_and_dissolve_hugetlb_folio() function requires
+> hstate as a parameter. This approach is indeed not performance-friendly.
+> However, in the patch available at
+> https://lore.kernel.org/lkml/1747987559-23082-1-git-send-email-yangge1116@126.com/,
+> all these operations will be removed.
 
-I know that i made a mistake by not respecting the "submitting patches".
-this is why, i prefer to start from a good base ( clean patches ).
- From this patchsets, You & I can use the b4 or other tools to get the diffs.
+No, you still take locks on anything that is !folio_ref_count(folio).
 
->
->Best regards,
->Krzysztof
+We should really have an early folio_test_hugetlb(folio) check.
 
-Best regards,
-Yassine OUAISSA
+hugetlb is on most systems out there the absolute *corner case*.
+
+-- 
+Cheers,
+
+David / dhildenb
+
