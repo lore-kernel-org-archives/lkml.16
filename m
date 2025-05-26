@@ -1,125 +1,150 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC1335979;
-	Mon, 26 May 2025 02:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CB2C35979;
+	Mon, 26 May 2025 02:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748226891; cv=none; b=XzTSZzIF57GIyjl6BG6+rylCzaGBazdc2VK6UiSXw6cDl3Re/7PATovSEaJ5cMOeMltGk7MFsuVrRG4zuU4MERpTazFx4MqqqtRCUnRFlPFtsFMBvV93C5/ciIoVF3I2gZt5nyGnfhXvXeGGAuvZNWQ55qAvvLOhgyKxd81urkE=
+	t=1748226997; cv=none; b=qxDSpv4O0brolEVwejmCdzjbzHrtQEJ8Lc/Na1Jy3O2sFJ2YURZDOloLaY8rgH8cvQCy3Lfx4C6Uz7GAt/cmNbbZlAHGa0apbf37iLlNsE3W6XWw5eSZKnuwJm6oeP0NAonT0J/tJSieznKoB2nBRs5h2n4jbPU7g+yINIG7m+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748226891; c=relaxed/simple;
-	bh=BrsL6bLwBpPFSCG8U6SgP3NVr0sJJLRt3AVJmRMalIs=;
+	s=arc-20240116; t=1748226997; c=relaxed/simple;
+	bh=rB8e59f9DCmVM7INNnSN9zJLulQqCsUj1n2FnpHMHzo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9/Ietlm6WLdSSg41Qhl5lTisgPGNw0uzNVUaRh9ltgSsgAh9czqsXZS/YGA0GC4xK2+pLlpuoVmmXfxnGVphMfjW+Vnpfdu7YQsbbNcvbiceZRLMIdYAsnrr6A3oKzD1qsJdo4KkpI4yjsqLRUvU/6wfCCM8dqEPVvEUnylg78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ew+fm/hh; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew+fm/hh"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so1302074a91.3;
-        Sun, 25 May 2025 19:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748226889; x=1748831689; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WNdOJh+NnMF/Str+UwFKXBafijjedPkZ85jMh2ARzic=;
-        b=Ew+fm/hh/mg5+gKRmiqOU4tXdaiC/LzmsyCZRLGIqpugs0+rgfb10EngvdifcyURCD
-         zec/il3tzCim6mcggQ8tPzCwJq6Yjw8BhiA2qk5XZinsDkU1IjU+HxHtWPyqiu4MAT+d
-         SaSJqgLoa0zr2IVxdnoQqOCQudF5BrBqS30i9PWgPmJchIXYLszVOMQxtghF8GBr9Vpa
-         Y0LDRjaAMp7/JJMiXHbml+9gV6Fi52NiOYiBHtfaf7uXoAR5fYMW+wwxSL6rEyAlXX73
-         17ot2pBlCgGFzFxyVDNnMt9A2BD+H94Gt4znT6kTrDC74SB/FMv32iyItX9TfUUzAWP6
-         VUfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748226889; x=1748831689;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WNdOJh+NnMF/Str+UwFKXBafijjedPkZ85jMh2ARzic=;
-        b=aOGsVR8Jq3oIVvn7CSfgjAfDpJwy/nBNML4WoD2gUTZnA+UL6kBnvXzSgDeny3O6ap
-         8ExWhdAEndwxeYY3xmte7DdYDNiozU9/aZMb2gVV/fmYM9KVX9FA+j1MmHyExZej7h29
-         Tnr+CUkaqedbszjqibhh7tVU3D4UGPF0T0YIm61xccUgEAw+ExDHV0iZNc8U05nTvc7s
-         dAm2lDngDlnPymZCuJS+GezdAlkZkbvvnLBEgCLTicFg7LXM/1jwCAOg6zLg7alcPf6f
-         isRGfR2jpkRS95N7M0TKopf1OzjH/uk5wwm+Pn+8rYgme+PPEjL1WTecF5LblTQ/orjm
-         8dGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAMMEC6YCrpQrzzB3eRQPjzsY6uxGk382tnkMnC8lG/nvi23tHTsEHYzYe8j6y0Ug2oiOqC13ZFcIiupdg@vger.kernel.org, AJvYcCVv8+TS0dAY71HVsDqMGM6VCHNwjPTPhDZD0m1Pa+YmMKG4/bRhVEEZqi1zEmBSGinuYYVJzfeShUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi53ngsg9KO5EWShxS+WMYdwbqXZHwsPGDu0txxFHTUVxps3I2
-	Axxhd+RSNiK4dOYTnS10xgl/tF5hhKQYIR5KUjQ3wU7JW5kkmDA8hg/e
-X-Gm-Gg: ASbGncvPmW7WIcQULCTQAYhCeoN8vMBsh3fxqKxjPHNkzFd82vrr0VnebO1X9TlWeT/
-	TYBVfVJ/GK8Jj2yrcTodT1E9gAIxJL9YhluuAzUa3W+hr4LihI8oNd0wlEOg1zQI/MtbH2vKDbD
-	D9uTofMHxsV1ckHEn7CULqGbOGRma5CqnrHFGpRAgwrvBnRz73roNqXQQL9uUXs4LfkQ11St4rN
-	KxHfT1aJPn7dCuF83TVkuQFSdngNYnHbV/TQV3N03hdTglzfFRf9Soo03EvQW5z7jtI/7/7iREF
-	BGSJLhWWAnXGEDThu0MPAsH3BbGY/MIQG6oMkxgZP4kRRUY1F75tcC2S5HG9/g==
-X-Google-Smtp-Source: AGHT+IHEQfVO4jOQL3Of/QYcqiFqVxdgSNZqlpR3S0pBQS+f1Nln9HrB4Or+CN1VaN22zOC7F3nnsg==
-X-Received: by 2002:a17:90b:55c3:b0:2ee:94d1:7a89 with SMTP id 98e67ed59e1d1-3110f0ee05cmr11603312a91.1.1748226889213;
-        Sun, 25 May 2025 19:34:49 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e59b3sm11123443a91.33.2025.05.25.19.34.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 19:34:48 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id E3FD74230C03; Mon, 26 May 2025 09:34:44 +0700 (WIB)
-Date: Mon, 26 May 2025 09:34:44 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: George Anthony Vernon <contact@gvernon.com>, dmitry.torokhov@gmail.com,
-	corbet@lwn.net, skhan@kernel.org
-Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH 1/3] input: docs: Fix broken table formatting
-Message-ID: <aDPTRGHNx2P-_wXj@archie.me>
-References: <20250526011443.136804-1-contact@gvernon.com>
- <20250526011443.136804-2-contact@gvernon.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+fL+8dr6zzcsXUGo/8Z0CxP9o0WXhQw3FT7Ghi30Ffh+OeEX9BkwY5gPJKYkk49cMKpyAy8qcU+THR0PHpPFjrV9Gpp3eP88yAfwN6P1c2Of3TnS0GnVfgYzqxSkqGDMEw6Gwuxf4tNx+u1kL3444bnFKxYackrAoDynlGol+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-fe-6833d3ade381
+Date: Mon, 26 May 2025 11:36:24 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
+ page->pp_magic in page_pool_page_is_pp()
+Message-ID: <20250526023624.GB27145@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+ <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+ <20250526022307.GA27145@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NdA65ZAYfdmxNg3d"
-Content-Disposition: inline
-In-Reply-To: <20250526011443.136804-2-contact@gvernon.com>
-
-
---NdA65ZAYfdmxNg3d
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250526022307.GA27145@system.software.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa2yLURjHnb6np+9qjeM1nLpGRYS4bC7JI5HxQTgScQkhcV2tb7SsJd3M
+	Ji6dzW3ZhhGXrqyY3YxG1VYsC7ObEKZCOkaXYhLX2GaZbRm6RezbL8+T5//7f3hEQbqkHCGa
+	LAmy1aKP0xE1Vn8Nvzj1+vOZxsjU1wQcrhICVzuSoKDJqwRHcSmCtl+vVdBaVUvg8sV2ARxP
+	0zD8dHUK8KEmqIJAfjOG8sNlAgSP1RHITOsS4IC3UAH1pVlKONV5RYAyW5MKnt9xEHhb8lsJ
+	zZWZGB7aizAEsuZDjXMYtD/6gqDKVaaA9ozzBE76nATepQUQ+B4EMeSkZCFwVfiV0NXhIPPH
+	cU9Rg4Lftr9Rcad7J79ZOJmn+30CdxcfJdzdkq3ijS/LCa8724X5bW+rgmemfiP8x4dXmH+v
+	eEG4y/MC88fOKhVvdY9ZTteq5xrkOFOibJ0eHaM2lraV4B0NEUmdp08SG0qh6UgUGZ3Fau/G
+	pKOwXizJ7lGFGNMJzOsLoBATOpH5/b+EEEfQSSyv4oQyxAINKNkTx9YQD6FbWcarjyTEGgqs
+	uqDqb45alKgfsY68VNy3GMwennuP+44nsu4LPiHUQaAjWUGP2Dcey1Jv5fS6wugcduRMT2+H
+	oXQ8u1daqwhlMuoVWW5mHukrrWX3C/34OBps76ew91PY/yvs/RROhIuRZLIkmvWmuFnTjMkW
+	U9K02O1mN/r7Ofl7u9d5UUv9ykpERaQL18ToZholpT4xPtlciZgo6CI0oxyRRklj0Cfvlq3b
+	N1l3xsnxlWikiHXDNTPadxkkukWfIG+T5R2y9d9WIYaNsCHpZVBb8/kQt8VGf8p7pl4wPPrr
+	zyujqwcm1O/3KKZEeRbrb7UVZQfN42szGj0F5rSpKcuaNuxeuyR3k1YbvmRj47Vvawz5C6Wm
+	jUMsqw6u2BWJpYWfuw3BMTmxsxcsutHSsL56z0Bt84AjS+vKk2wevP736qjEjBP76OllmwfN
+	24sUOhxv1EdNFqzx+j/0dYZGNQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRiH+e9cdhwujmvmQYtiIZKkJZa8oZgJ0aHA6kNlftGlh7acU7Yp
+	WmQzLS+oXZSsOWuipZkyMJ3TRMK7GCqTclk5m7c+WGpe8IbllMhvD++P3/O+H14KE90n3Cm5
+	UsOplFKFhBTggrDAdJ+aQX/ZUfsLH9Abq0l4s5wMFaNmAvRVJgQLK1/4MN/eRUJZ6RIG+v4M
+	HBaNqxhMdNr5YHs1iUNzZgMG9gfdJORlrGFw11zJg7aSHgIGTPkEFK6+xKBBO8qHwSY9CSPV
+	fwiYbM3DoUf3Ggdbfgh0GvbAUu80gnZjAw+WcktIKLAYSBjLsCGwtNlxKE7LR2BssRKwtqwn
+	QyRs3evPPLZR943PGmoT2beV3myO1YKxtVXZJFv7+zGf/fqpmWS7n67hbKN5nsfmpf8i2bmJ
+	YZydaflIsmU/Znmsse4jzn4wtPMvuEQIgmI4hTyJUx0JjhLITAvVeMJncfLqkwJSi9LoHORE
+	MfQxpvrxBt/BOO3JmC025GCS9mKs1hXMwWL6EFPe8ohwMEbbCKZPf8PBu+kbTO7wFOlgIQ1M
+	R0X7pkdAiWgrYpbL0/HtwIXpeTaOb5e9mPXnlk0ptckeTMUGtT3ez6TXF2/tcqJPMFlFG1s3
+	uNIHmfemLt5DtEu3w6TbYdL9N+l2mAwIr0JiuTIpTipXHPdVx8pSlPJk3+j4uFq0+R2vbq8/
+	MqOFwTOtiKaQxFkYJfGXiQhpkjolrhUxFCYRC/fqj8pEwhhpyk1OFR+pSlRw6lbkQeESN+HZ
+	K1yUiL4u1XCxHJfAqf6lPMrJXYtG6sOuHQgKdx87Nz57KiA69WJ2d7Lfikt5iaLGdWjx8FXn
+	Kf6doTpP7ck56rRmGolHPX2EkTNDwUpS+L3DnFDUH0+7FWtiTE0BWRvh/iE/u0MH7iWdD/UM
+	jMg9GOQyD077Mit7YwLlhZThnSZ+1n7ZOLvUN3kr69LcQmxqqLxUgqtlUj9vTKWW/gUiqudE
+	GQMAAA==
+X-CFilter-Loop: Reflected
 
-On Mon, May 26, 2025 at 02:14:41AM +0100, George Anthony Vernon wrote:
-> diff --git a/Documentation/input/devices/amijoy.rst b/Documentation/input=
-/devices/amijoy.rst
-> index 8df7b11cd98d..f854ee975247 100644
-> --- a/Documentation/input/devices/amijoy.rst
-> +++ b/Documentation/input/devices/amijoy.rst
-> @@ -123,7 +123,7 @@ JOY1DAT   Y7  Y6  Y5  Y4  Y3  Y2  Y1  Y0     X7  X6  =
-X5  X4  X3  X2  X1  X0
->          clocked by 2 of the signals input from the mouse serial
->          stream. Starting with first bit received:
-> =20
-> -         +-------------------+-----------------------------------------+
-> +         +--------+----------+-----------------------------------------+
->           | Serial | Bit Name | Description                             |
->           +=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+
->           |   0    | M0H      | JOY0DAT Horizontal Clock                |
+On Mon, May 26, 2025 at 11:23:07AM +0900, Byungchul Park wrote:
+> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
+> > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> > >
+> > > To simplify struct page, the effort to seperate its own descriptor from
+> > > struct page is required and the work for page pool is on going.
+> > >
+> > > To achieve that, all the code should avoid accessing page pool members
+> > > of struct page directly, but use safe APIs for the purpose.
+> > >
+> > > Use netmem_is_pp() instead of directly accessing page->pp_magic in
+> > > page_pool_page_is_pp().
+> > >
+> > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > > ---
+> > >  include/linux/mm.h   | 5 +----
+> > >  net/core/page_pool.c | 5 +++++
+> > >  2 files changed, 6 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > index 8dc012e84033..3f7c80fb73ce 100644
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+> > >  #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+> > >
+> > >  #ifdef CONFIG_PAGE_POOL
+> > > -static inline bool page_pool_page_is_pp(struct page *page)
+> > > -{
+> > > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> > > -}
+> > 
+> > I vote for keeping this function as-is (do not convert it to netmem),
+> > and instead modify it to access page->netmem_desc->pp_magic.
+> 
+> Once the page pool fields are removed from struct page, struct page will
+> have neither struct netmem_desc nor the fields..
+> 
+> So it's unevitable to cast it to netmem_desc in order to refer to
+> pp_magic.  Again, pp_magic is no longer associated to struct page.
 
-Fix is verified in htmldocs output, thanks!
+Options that come across my mind are:
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+   1. use lru field of struct page instead, with appropriate comment but
+      looks so ugly.
+   2. instead of a full word for the magic, use a bit of flags or use
+      the private field for that purpose.
+   3. do not check magic number for page pool.
+   4. more?
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---NdA65ZAYfdmxNg3d
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDPTQAAKCRD2uYlJVVFO
-o2UyAP4uQBKtj4I45lSGFA3/M03jhbOnbCEU1RWANqhj+EXxuQEAwMBEdTeIbwPZ
-ed6fGLQmf/Gd9hfT6HKiFbyTPd3wvw8=
-=5jsN
------END PGP SIGNATURE-----
-
---NdA65ZAYfdmxNg3d--
+	Byungchul
+> 
+> Thoughts?
+> 
+> 	Byungchul
+> 
+> > The reason is that page_pool_is_pp() is today only called from code
+> > paths we have a page and not a netmem. Casting the page to a netmem
+> > which will cast it back to a page pretty much is a waste of cpu
+> > cycles. The page_pool is a place where we count cycles and we have
+> > benchmarks to verify performance (I pointed you to
+> > page_pool_bench_simple on the RFC).
+> > 
+> > So lets avoid the cpu cycles if possible.
+> > 
+> > -- 
+> > Thanks,
+> > Mina
