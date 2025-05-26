@@ -1,81 +1,81 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B02A1FE470
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:56:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A541FF1AD
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:57:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748267807; cv=none; b=aRNdUAvfR3WFWGM05Ozs5Hm2SHrsC91F/t7Ffm23HE5XqzhH3a8E5AwyFeHp9VQLw+csYFdKXQxlEKnohxXY118VzpHuaB0unPG3nGnYkJcsA8fWDTqyW1FhMM3qyP+OqpWykLQCzlpRxonpguvSvmmMQRwul434cKWVnSxDmGY=
+	t=1748267856; cv=none; b=cFtoTjrOuLYW9YPpwvt3K54OF+24BqInNlddp2Vgy7/h63ti4wQKkg8MlbtBYyNCQnQVExFBpbFxNJPhdxsw/UqmCAgNpEOFyoqoNG39eXrl+41s7iAGngrjyG7mwuhgRlZwcZAqRFSQTUK2J/bpXwT2ywMGlLQe61gg0DOkilc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748267807; c=relaxed/simple;
-	bh=GFEb1Jvn27Bd1/NJIq5LgWrlsVvTpX9CBEZhgDiy00o=;
+	s=arc-20240116; t=1748267856; c=relaxed/simple;
+	bh=08vwNt5EB7Bh5EOoYmyQHAZrViwtZkJqrPnrj6itpKk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EmHRSwLDP+YvW73bKNXl6PJt9R7l2ffvbY/BQgb8rY6NMq8zox63fSMnHl0R1Erk2RSxnU2viPLENLoZNXPkk4s61IpFF2g74lnsf5F3GCZ6IfEbExlauknso2evFrlCYNxTOlZxRKy3uaDlq69Nz838RcaMt7kzfvL4CMHJ0wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cs9LEpF2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=L0M5vaOC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cs9LEpF2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=L0M5vaOC; arc=none smtp.client-ip=195.135.223.130
+	 In-Reply-To:Content-Type; b=TLCVTQvJdoIwJ9zqENghuZdeHOrCo5qXUPV64Wg6Cg8/74NCEtex0Iuv1hpIVO5B0hncKMUHPuLBiHHlPuodZXYy0B6jS+NGQ5eQnBJ4izGNO0jF99IVOC2Q5AzV/DGEGoqL+BSOU1NqV3moJx38hkRd9MtChdmgFMlbE22fI/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pjLhy+xJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7dtDdtPB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pjLhy+xJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7dtDdtPB; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cs9LEpF2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L0M5vaOC";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cs9LEpF2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="L0M5vaOC"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pjLhy+xJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7dtDdtPB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pjLhy+xJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7dtDdtPB"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4FD7821D62;
-	Mon, 26 May 2025 13:56:42 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2AFFF21CBA;
+	Mon, 26 May 2025 13:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748267802; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1748267852; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q6xx4oBa5YjLP+7oKpGpEykvPKeyvfgb7MgvKd6+kPE=;
-	b=cs9LEpF2relRaYH5BbTn/0SKD3+Xk+TLB1dvIXpUG5/GnBxTQfD7grm03yWb+ODBj9n2uP
-	B6zQC3YBlacbL+TtkWtnTMp/Fyj8+oDtonJ856s9wkfrVKAh47ZPEQjhGvyc/l6iy6neTn
-	IjRZ8e87kh95qt+JoZp9Usr1xRLUBMc=
+	bh=jBMujsfGeHHLdcCqtL9Av1p7N3ykeQ7L5YUhPaT2Qmw=;
+	b=pjLhy+xJf3zQ4Yp6m6LdHkkDSadRTO0Jnpwl/al1h+3m+9cRV4NVIzyFPPvPjaSuWtKLrM
+	MMUUlJZkWbTOv8/N6RLib06iA9QMp92AM3RwJdfTpJmT5+CMKSTQiUi+4sl2pJl6kkWXQ4
+	DbLtVCW3s0qX+v0rer/I9OBNSBiIhqQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748267802;
+	s=susede2_ed25519; t=1748267852;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q6xx4oBa5YjLP+7oKpGpEykvPKeyvfgb7MgvKd6+kPE=;
-	b=L0M5vaOCh0Cbk7uDakCL9jpb+FbPVnf1r1P+WP3pX45E0udyzc3RBf2DYJIeJsnyApgAXm
-	knr+RXHPqlF2upAw==
+	bh=jBMujsfGeHHLdcCqtL9Av1p7N3ykeQ7L5YUhPaT2Qmw=;
+	b=7dtDdtPBhqj7yNELIME5FylOvhV+Gy3SmC/lk5f9tchq4LgLb9FCSjBqB0Zt/adckEhNTa
+	EjlqjD7s7QnG07BQ==
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=cs9LEpF2;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=L0M5vaOC
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=pjLhy+xJ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=7dtDdtPB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748267802; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1748267852; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q6xx4oBa5YjLP+7oKpGpEykvPKeyvfgb7MgvKd6+kPE=;
-	b=cs9LEpF2relRaYH5BbTn/0SKD3+Xk+TLB1dvIXpUG5/GnBxTQfD7grm03yWb+ODBj9n2uP
-	B6zQC3YBlacbL+TtkWtnTMp/Fyj8+oDtonJ856s9wkfrVKAh47ZPEQjhGvyc/l6iy6neTn
-	IjRZ8e87kh95qt+JoZp9Usr1xRLUBMc=
+	bh=jBMujsfGeHHLdcCqtL9Av1p7N3ykeQ7L5YUhPaT2Qmw=;
+	b=pjLhy+xJf3zQ4Yp6m6LdHkkDSadRTO0Jnpwl/al1h+3m+9cRV4NVIzyFPPvPjaSuWtKLrM
+	MMUUlJZkWbTOv8/N6RLib06iA9QMp92AM3RwJdfTpJmT5+CMKSTQiUi+4sl2pJl6kkWXQ4
+	DbLtVCW3s0qX+v0rer/I9OBNSBiIhqQ=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748267802;
+	s=susede2_ed25519; t=1748267852;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q6xx4oBa5YjLP+7oKpGpEykvPKeyvfgb7MgvKd6+kPE=;
-	b=L0M5vaOCh0Cbk7uDakCL9jpb+FbPVnf1r1P+WP3pX45E0udyzc3RBf2DYJIeJsnyApgAXm
-	knr+RXHPqlF2upAw==
+	bh=jBMujsfGeHHLdcCqtL9Av1p7N3ykeQ7L5YUhPaT2Qmw=;
+	b=7dtDdtPBhqj7yNELIME5FylOvhV+Gy3SmC/lk5f9tchq4LgLb9FCSjBqB0Zt/adckEhNTa
+	EjlqjD7s7QnG07BQ==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 018181397F;
-	Mon, 26 May 2025 13:56:41 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D6F101397F;
+	Mon, 26 May 2025 13:57:31 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nbxMOhlzNGiIQgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Mon, 26 May 2025 13:56:41 +0000
-Message-ID: <09eb306f-f751-41e7-956c-f6c7381c0353@suse.de>
-Date: Mon, 26 May 2025 15:56:41 +0200
+	id GdQBM0tzNGjHQgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 26 May 2025 13:57:31 +0000
+Message-ID: <ee9ca879-4bb7-4339-b827-78eb2d46a97f@suse.de>
+Date: Mon, 26 May 2025 15:57:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,7 +83,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 RESEND 2/3] drm/ast: use
+Subject: Re: [PATCH v5 RESEND 3/3] drm/udl: use
  DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT
 To: oushixiong1025@163.com, =?UTF-8?Q?Christian_K=C3=B6nig?=
  <christian.koenig@amd.com>
@@ -93,7 +93,7 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
  linux-kernel@vger.kernel.org, Shixiong Ou <oushixiong@kylinos.cn>
 References: <20250522070714.439824-1-oushixiong1025@163.com>
- <20250522070714.439824-2-oushixiong1025@163.com>
+ <20250522070714.439824-3-oushixiong1025@163.com>
 Content-Language: en-US
 From: Thomas Zimmermann <tzimmermann@suse.de>
 Autocrypt: addr=tzimmermann@suse.de; keydata=
@@ -120,12 +120,12 @@ Autocrypt: addr=tzimmermann@suse.de; keydata=
  SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
  Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
  4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250522070714.439824-2-oushixiong1025@163.com>
+In-Reply-To: <20250522070714.439824-3-oushixiong1025@163.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
 X-Spam-Level: 
-X-Rspamd-Queue-Id: 4FD7821D62
+X-Rspamd-Queue-Id: 2AFFF21CBA
 X-Spam-Score: -1.51
 X-Spam-Flag: NO
 X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
@@ -157,7 +157,7 @@ X-Spamd-Result: default: False [-1.51 / 50.00];
 	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
 	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,kylinos.cn:email,suse.de:email,suse.de:mid,suse.de:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,kylinos.cn:email]
 
 
 
@@ -165,29 +165,29 @@ Am 22.05.25 um 09:07 schrieb oushixiong1025@163.com:
 > From: Shixiong Ou <oushixiong@kylinos.cn>
 >
 > Import dmabuf without mapping its sg_table to avoid issues likes:
->    ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+>     udl 2-1.4:1.0: swiotlb buffer is full (sz: 2097152 bytes), total 65536 (slots), used 1 (slots)
 >
 > Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
 
 Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
 
 > ---
->   drivers/gpu/drm/ast/ast_drv.c | 2 +-
+>   drivers/gpu/drm/udl/udl_drv.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
-> index 6fbf62a99c48..054acda41909 100644
-> --- a/drivers/gpu/drm/ast/ast_drv.c
-> +++ b/drivers/gpu/drm/ast/ast_drv.c
-> @@ -64,7 +64,7 @@ static const struct drm_driver ast_driver = {
->   	.minor = DRIVER_MINOR,
->   	.patchlevel = DRIVER_PATCHLEVEL,
+> diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+> index 1922988625eb..ce5ae7cacb90 100644
+> --- a/drivers/gpu/drm/udl/udl_drv.c
+> +++ b/drivers/gpu/drm/udl/udl_drv.c
+> @@ -57,7 +57,7 @@ static const struct drm_driver driver = {
 >   
+>   	/* GEM hooks */
+>   	.fops = &udl_driver_fops,
 > -	DRM_GEM_SHMEM_DRIVER_OPS,
 > +	DRM_GEM_SHMEM_DRIVER_OPS_NO_MAP_SGT,
 >   	DRM_FBDEV_SHMEM_DRIVER_OPS,
->   };
 >   
+>   	.name = DRIVER_NAME,
 
 -- 
 --
