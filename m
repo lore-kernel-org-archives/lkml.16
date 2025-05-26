@@ -1,166 +1,114 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762491DE2AD;
-	Mon, 26 May 2025 08:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748249545; cv=fail; b=QcT/2TPsac8adONi0zde/NDsp/y9/4q74tNkotniS98xTBbFUMiXjFryCzdqdy1/2R8h0VIjqOFOAEAuxHGPMLKOIeFEwE3JEG39zStb6amjeDeMLHhfFoWXz8feY20id/Ods2ikXz9JqkrwQgGU/p3gYu1G4h6jq/KLhpdibuI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748249545; c=relaxed/simple;
-	bh=h7uRSKB0H2NKIzR94aIXteAVwBotb3d07s6rBlWrxrg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VLl2+8QKJevrfgLAjfrOI2lgw7NxhD4zjSM9Ut9MuVu3hvPiNGhL+XwfijbFR9HkXKlPjzMHmJwYb14/aibDiolennwbl8ieEEyfeASZlhHZ8RVFFHnzOcv6j655XlDBd5nxtRlwlruq2Cx812iHRHZ0QePXaJmcxM0KhuzOBJk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KI2ed8D8; arc=fail smtp.client-ip=40.107.92.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E741F3FDC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748249550; cv=none; b=NlPm0/Dh/RJ7u6Oolnj4Sow5g30otw4T9tNzlISC42k4A1uV06NNLLKpRF3vNg6UL76bA1iSG/NMx6DRCBIqpC+9nVfiO6uaPLvHMWeM2IanMN2uE66boqvuAVGhT6hlC39YtR3nq2VmC4o1mx91ogHnbQ1hXvMOE239nC1t68w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748249550; c=relaxed/simple;
+	bh=M+bGXnFCRXVHeFCtbYzsS97i8k7WsHr3F3WvzvxukKQ=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=CIvoYIW/HR6pSkRbaj0WfNFWTLrefbL6aPjqMZBPkbUDnehhaXxEEWZiRehnZ2bO8zKkzZzL0Lk/uXzyCL3/0VQghvtmXJZXmOfR8C39Xu9xW6c3QfrPOHqxRKcQPxXjP2XBfV/znRnPhPtap/fEsPWFXjn4tQqTT7yIdSIyejw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tMjbSCfB; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KI2ed8D8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xZJ5q4K+1/5mjUTAdZTGb+ey+dEVTBlk2M0axseLZaXzGBWwp4IqxUnVlTajuMQyE1V7j4DvEmsoxtSauDT37GFHso6BaAXvOrVMC3AIofJST39I8HnQuCqber/Qw/BolxJm+pEiRHUQntw2xzHMyZwyJzeEf1JGcY6xy3Rd0z/y2+yhpcbvkm6oGztPaf40DiEi81xV5mV78U1pMcqKvox348BVwX6wHZyRcwDWAwfqeDHR8WnF2v7mTYM3ymBGuvUjM2WZizOKRmAi2HmhjCNkZ58KEWFL8SR3fjwt20AFakrhvhgnWInDQinPzTENpH2LPblS3/7J9N3w1yWRiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zCVWm6aj10XvkEBP3F6pSIheRN+bS2GNzljGXYnaZ1k=;
- b=Jcp92uewmwrrC4nuKA/zZSIBcu4iYxmqI+UFOwVTdENH5V+BkxMSCpmbF3sUBYdKFYVw+zHQ0WdPrsLcnOak/lGIV3QPFVr1oAeoejr4DAO+ngAQz9nVRj85zX4AMOnBpcOEFY5+zkO0fkOgHfP9irXI4W+eFCSGP4WJEY0wRCZ+uzunf6n/bef9PfWNOwdacmD3JTbF/Ajy71PlJ7Iya92nCD/ycl/PA5WXLx11PYNdZTm6yhB7b/VcSwpkwNjUQD0j0NIZZwnMJZJwgKOeagPGEak+E7rD9s5Kf50FGZg0DF7PDOcvPDbmhmCM2lDZI03af9UyMg+FUS/PwTD04Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zCVWm6aj10XvkEBP3F6pSIheRN+bS2GNzljGXYnaZ1k=;
- b=KI2ed8D87NcZ8Hi+sS2PSJM/fdfXyB6ioLmnsJG2+V2qWJZxzSPOstCx5aaIU1UZYl0QRkqqXxoXllO0UuszLNE0UlkYnDOuYM3K8ACZN0suxMwN3OOsDCA7wIucqRT8d4BsN6Fu/uWC5E2nsGS0z81OFz5umebj3PpBNu8K+Eg=
-Received: from MN2PR22CA0012.namprd22.prod.outlook.com (2603:10b6:208:238::17)
- by CH3PR12MB8728.namprd12.prod.outlook.com (2603:10b6:610:171::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Mon, 26 May
- 2025 08:52:20 +0000
-Received: from BN3PEPF0000B076.namprd04.prod.outlook.com
- (2603:10b6:208:238:cafe::de) by MN2PR22CA0012.outlook.office365.com
- (2603:10b6:208:238::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.31 via Frontend Transport; Mon,
- 26 May 2025 08:52:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN3PEPF0000B076.mail.protection.outlook.com (10.167.243.121) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Mon, 26 May 2025 08:52:20 +0000
-Received: from [10.252.216.136] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 26 May
- 2025 03:52:16 -0500
-Message-ID: <76b4dd65-43a9-4d34-88bc-1632c08a9bb6@amd.com>
-Date: Mon, 26 May 2025 14:22:08 +0530
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tMjbSCfB"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/cpufreq: Fix cpufreq basic read and update
- testcases
-To: Viresh Kumar <viresh.kumar@linaro.org>
-CC: <rafael@kernel.org>, <shuah@kernel.org>, <gautham.shenoy@amd.com>,
-	<narasimhan.v@amd.com>, <linux-pm@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250430171433.10866-1-swapnil.sapkal@amd.com>
- <20250519075854.opnlhjlbybrkvd2k@vireshk-i7>
- <8a2149ca-a0fe-4b40-8fd4-61a5bf57c8b6@amd.com>
- <20250522094520.22zwevl6vgrjf3aw@vireshk-i7>
-Content-Language: en-US
-From: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-In-Reply-To: <20250522094520.22zwevl6vgrjf3aw@vireshk-i7>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B076:EE_|CH3PR12MB8728:EE_
-X-MS-Office365-Filtering-Correlation-Id: be3dd064-05bd-40dc-832b-08dd9c329fe3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eENjVTRvUWZRVDZGL3plZUtBTjJTdnBUYlZ4WnN3dzRsYUJva0d6KzZPSFRj?=
- =?utf-8?B?Ky9sTHF6WmdrTWJQeEp0cFVJdVR3TUU0SGMyTnp5UlhLWHZlM3kyZ3hwVHFL?=
- =?utf-8?B?QU0vcndxODl1bHVIdmt5VDFka29SUldWOGhjakw3K0lpc3d6MlhtR2cwWW5R?=
- =?utf-8?B?REhmbHZHTkMxNS9POUZZTy9rV0tBLy8wVmJJdCs2S25GSGxmSHMvZHVVenNo?=
- =?utf-8?B?Wmx6bUYyTk8wL0tZTzZIeExBWDNrY0VvbHhVR2V2dXFma2FLc3FOTVhtWC90?=
- =?utf-8?B?bDYyK3U1R3pXcVhRK1RhV3RKR1VLS0QycE84WUV0TXFGbkNSWit1SW1JSFJx?=
- =?utf-8?B?d0xvWDVRRmYxREk2bWM0R0F0N2hQbnd1OURHSjVqcytmZjFCYUFKUkFDVWRH?=
- =?utf-8?B?bzlhcUcxc0NkZHBEanBiNWdCc0lpS04xVTkzVzMrcWFUWUw4S0hGWWRhSHBB?=
- =?utf-8?B?SVNkYzl1YlQyQkp1UzZNSC93VjBaSlNhRFpTcDU1bSt0dnVULzlBTHJVaUZO?=
- =?utf-8?B?bVlYeVZEOU5HTndGYUxhQi8zM1BJV0tBRUdQYWoxeFQwamIzTlowMk5UaXZn?=
- =?utf-8?B?eXcycE1BMjN0dm1VbEphVTVqbXVORzgzV0Z1Q1VkY3pzOWY4TGpuaHJKZWI3?=
- =?utf-8?B?bVduMU9ETlgvcjdFd3I1Tmg0NFlQWGo4TVZPbDhodzZSMHZET2d4RzE3ZlNY?=
- =?utf-8?B?VHZGcllEb1NLNVFmMjVOaTZSOXFQOU1uYlZNdGRhNXIrcVliRnR2UklzY0g0?=
- =?utf-8?B?ZUdLcWpCeXpDbkJISXppTzZtL0tDKzVoKzlsYTk0VHpNZVNKZm9kSEQrWmZB?=
- =?utf-8?B?VEVMY3Y3RUxmMkp2T054WCtRUzBwbU5vZGw3M21rMTZIUkNXSHNWQTRkdjZD?=
- =?utf-8?B?ZWpNaEhUV0NSTEtubVR0SkJNTkpZd3grdUtadGtSSDRzVVF6aDVYL0I3TWV2?=
- =?utf-8?B?M0p3dU5wbHpHbzBaaUpkMFM4cVRIZzJCM3dTUXJFL1Zrem1HbDJzdVRvVllQ?=
- =?utf-8?B?UzRDL3JSd0ZzTnJqdmwyU2pETHFmNEZmcTR1eUVsNEtHc05ZdlZXQTlXRmE5?=
- =?utf-8?B?OTRwamg0TWIxaHptQTFCVFRDcys1dEtPVE9NRjhsL3I1Y29WaHZCYWN1aUp0?=
- =?utf-8?B?SjQvS25UWVcvRXRUNzRzdWdZaHRYbGhxeVhnSENKazMzbENiaU9HSTZ2QzNx?=
- =?utf-8?B?c2ozZXBzTmYzUzdCeEZ2QUN4QjIxa3VncFB2MjUzMlZPL1c0cDBnUjFxbmJX?=
- =?utf-8?B?cEIrYUFPTUxoMEFaWGJyemVHZDVoamRsQWVicWxXa2ZmK0RwU3F3eGdmcjhV?=
- =?utf-8?B?dTFWWHo2a3hzV2Jjb2JNSW5ScDl2dUJ3N3ZqZ0VJdktISWJMWW50TzhPVmxq?=
- =?utf-8?B?cVFPeDBRZDNUMGg4Z2thaWg3MHVYbFVjNWhCencxak1hNTlzZk8wbDc4U21P?=
- =?utf-8?B?YXQxblhnWFRkT1pqNjlUM2hCZEV4dXdvdXNiSkFUcEQwWkRqdDZ6RjlQbTFV?=
- =?utf-8?B?ZC9yV2VxaGFaTUcyREh1OHRHMlo3WXhheFZuYVo5RkxoeW1VcFIvRVQ1Vmtn?=
- =?utf-8?B?Z05GcnRSU3NYbGdqRUlaeUFTZEFxK3E1K3NXckYzNTg4eU9NQWJ0dWQwVW5y?=
- =?utf-8?B?VHNYSnNybU9wck8zZ0ZEaFFSY1VtQVAzTW5OdVE1L2hMeFdYWS9WaDM0SWV2?=
- =?utf-8?B?UmNrYW1VdmZZMnVpVUkyMWpObGswQS9NMUQ1RWZpcmdTTUFTbEkydHl1UjlJ?=
- =?utf-8?B?ZmJZR0E1Mm4zZER0R3NwWUtRUFFaeWJMMGVkZjRFUThHU0V3VEdQd2hQekFR?=
- =?utf-8?B?RTZIekdwSVpCY05POEVIZzNFZ3BaZXkrd3AreE1jWjBjSGs1TFBhOS9PYkli?=
- =?utf-8?B?bzQzSFlKTTN6K0FGbHN0aFlSN2V4UHlVUU1RcGJKMHpVYnRsWFNwUHJVVW1S?=
- =?utf-8?B?TldBZlExajArc3U3RVJzT0R1NVZqTDdwWUhZV0wvRW9Ga2w3QWZiMElOUzNl?=
- =?utf-8?B?TmpSRU51RGlCUlJBQkV5TlpYM1JpKzcwQjF3a3l0KzVPM21UYU1TbVJkQjBO?=
- =?utf-8?Q?GX0oKo?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 08:52:20.0835
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: be3dd064-05bd-40dc-832b-08dd9c329fe3
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B076.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8728
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748249535;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1CYXQfHMRVpFS4CUQUzSRarfKIEBSPUbPS3dEjTNyoo=;
+	b=tMjbSCfBJZAn1eUgzUyAC65QXJkT3bAsv9K3AivPB2mcjtoen6MnPHX4ciPsM/Vby04RlN
+	ZDEaCEBg6XpJqiZOQdTILwDn3aBz7P4Tc05qBvTgxO3P7pWKC6V+Pe+iFOBUJCDfoiP/Vj
+	XejAK3vE+Q1AiIsjwU9xnYPVj/Nf5tk=
+Date: Mon, 26 May 2025 08:52:12 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Yajun Deng" <yajun.deng@linux.dev>
+Message-ID: <552f550315dc503250cc61fdcd13db38c1ea00f5@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH net-next] net: phy: Add c45_phy_ids sysfs entry
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: "Andrew Lunn" <andrew@lunn.ch>, hkallweit1@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <aDQkLcfeu8zw8CJ_@shell.armlinux.org.uk>
+References: <20250523132606.2814-1-yajun.deng@linux.dev>
+ <2eec1d17-a6d1-4859-9cc9-43eeac23edbd@lunn.ch>
+ <fad26dc95cbe08a87b30d98a55b7e3d987683589@linux.dev>
+ <aDQkLcfeu8zw8CJ_@shell.armlinux.org.uk>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Viresh,
+May 26, 2025 at 4:19 PM, "Russell King (Oracle)" <linux@armlinux.org.uk> =
+wrote:
 
-On 5/22/2025 3:15 PM, Viresh Kumar wrote:
-> On 22-05-25, 14:07, Sapkal, Swapnil wrote:
->> Initially I tried the same, but it does not work properly with the root user.
-> 
-> Hmm,
-> 
-> Tried chatgpt now and it says this should work:
-> 
-> if ! cat "$1/$file" 2>/dev/null; then
->      printf "$file is not readable\n"
-> fi
-> 
-> - This attempts to read the file.
-> - If it fails, the cat command returns non-zero, and you print a message.
-> - 2>/dev/null suppresses error messages (Permission denied, etc.)
-> - This works reliably for both root and non-root users, because it actually tests the read action, not just permission bits.
-> 
 
-This looks clean. I will send v2 with this change.
 
---
-Thanks and Regards,
-Swapnil
+>=20
+>=20On Mon, May 26, 2025 at 08:11:21AM +0000, Yajun Deng wrote:
+>=20
+>=20>=20
+>=20> c45 device:
+> >=20
+>=20>  $ ls /sys/class/net/eth0/phydev/
+> >=20
+>=20>  attached_dev driver of_node phy_id power subsystem
+> >=20
+>=20>  c45_phy_ids hwmon phy_has_fixups phy_interface statistics uevent
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  $ ls /sys/class/net/eth0/phydev/c45_phy_ids
+> >=20
+>=20>  mmd10_device_id mmd17_device_id mmd23_device_id mmd2_device_id mmd=
+7_device_id
+> >=20
+>=20>  mmd11_device_id mmd18_device_id mmd24_device_id mmd30_device_id mm=
+d8_device_id
+> >=20
+>=20>  mmd12_device_id mmd19_device_id mmd25_device_id mmd31_device_id mm=
+d9_device_id
+> >=20
+>=20>  mmd13_device_id mmd1_device_id mmd26_device_id mmd3_device_id
+> >=20
+>=20>  mmd14_device_id mmd20_device_id mmd27_device_id mmd4_device_id
+> >=20
+>=20>  mmd15_device_id mmd21_device_id mmd28_device_id mmd5_device_id
+> >=20
+>=20>  mmd16_device_id mmd22_device_id mmd29_device_id mmd6_device_id
+> >=20
+>=20
+> I suspect you don't have a PHY that defines all these IDs. Are you sure
+>=20
+>=20your .is_visible() is working properly?
+>=20
+
+I'm=20just determining if it's a c45 device and not filtering PHY ID cont=
+ent now.
+I can add this condition.=20
+
+
+But=20the 'c45_phy_ids' directory could not be hidden if it's a c22 devic=
+e.
+If c45_phy_ids is a file and it has an array of values. We can hide this
+file even if it's a c22 device.
+
+
+> --=20
+>=20
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+>=20
+>=20FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>
