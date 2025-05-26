@@ -1,262 +1,110 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362AB1F4E34
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C442566;
+	Mon, 26 May 2025 10:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748256090; cv=none; b=uerVMAL0Ho31TEMtEuBk/cDLzWen82SRQtz7u6B6BFuD6/MY471Kux88OLjtUNn/UwWMKKG68gnk65lHW670UZKYMgGgu/WARoj5P/OcIOhwRIkwG9E9Te7pHqhtJ2npFhg01PkzCmZ8Bfhv1wgPldoQOsz3wp4J26Ww8NF+j7Q=
+	t=1748256246; cv=none; b=iaJqzRUAR0wF97zWdSNDR3nPpxT9j4YHkQ9Vzvi6m2GjvFflWfn9LnblK0HeDcosIOnqnU7PcqBeoQX3W9spiakLvJiGxyZhz/qI3NokSxwIADSgyCNtFTzGCrLMKRryPOohGAOGI6Q0ZAJ58HZxIHbW3gPtyWmjzn/iBvlwxt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748256090; c=relaxed/simple;
-	bh=ITYjsy2fleim43TQtPHJb0arxW8O/ITd8j3fbpHXGhg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Mn0giLkwMzaTWxC0gxMV6U0gbrnt2Lp3XtFEqbopZi/997ygrdtjLOdpVCEXJoKCCtQvYU4qYFTTlsjphuUIiuwwqaOP40WO7VpMsXQRY+nCCtQZ4piiwXo5iVcIsL/kvIHYk2cjaW56r5lgIDW+2EFHxOqSF+k1SDZCsYd1c9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b4ee2e69bso232455339f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 03:41:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748256087; x=1748860887;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=05YA94D5fjmVhBlXDtWQ7aBUY+X1+W6EacWBifoALes=;
-        b=cYABDiPbsfSumocJ6I+pqf77y07fBvB0abIopf+KzcMZqroG0WY0p8JqIlQlU4ICbj
-         UQYMUH21TLLNvq58XbBfdCTJadkUha+c8qJEX/pjJ0CN1cAqxP58UE9ZS3RQGoOrdJZu
-         Lx+cGILcS5o3Dq0XwFE+46PgGLdSroB0EQwaH2IIeLzemtD1rmdUPRctAdkVyVUaUwHc
-         bTbeAcFYLOqXKM3KHWqcKqobp6dXgF4Adq5PtfW8xc/28+OOZKP3FDcHJLVe6uAFZ79k
-         mn7EjKfmHJsptfRm9YSja0YZPjeu3+kEEzSlDYUR2oXSl5bRFGKseKUnDFPYo6bZEadX
-         bsKw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0jTLavdPcYkXwGCO0EPyLbplRNxgjtFE6vbcaHrPf7YcQC4Z/o+0BGOGbpDrFXjASr1aqnGpTN7a+ujE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS0XGsT8d2asZwwOjAoMBwDkPJ9x6cWm/+d0bhYQV2caLI07vs
-	ASZZq5nVTHg+aJmi3VzSBbOHsWYJKmlxzo4hGUVq42m3lQcZV/w7HrLnkIl7tOEn5/WWe988ZWF
-	5HiolOuMKUTw4YrxqMT0lemOB1WG4FOaS8fQIlIuGAjbxlYid4SfoEm0NMpg=
-X-Google-Smtp-Source: AGHT+IGK4lBMUV80AaLLBm4G65pDBv+4qL3nnKr5uEl5lNK7wTJU0Sq6ILsGHAof28yobV9NVxjCgwqVj8cv/A44IfFfQli+c3f5
+	s=arc-20240116; t=1748256246; c=relaxed/simple;
+	bh=1I7PdYugHiRgLZ0cApCjHoC+bBN3bd/ZZQOkfdIeqQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qQbM9Xuu8ooY9UTmvGuPdBbWZnAKZtU35NEMW/OTlA/vXntl57nC0THvEGUrMinkriBfvZIwabDS1BBWutiaLxPSDNgghpGTKTydj3TsB7bNmvEjBO7yOcM+iTLjB78SJXz7z4MEl6QShQg5u/plCUOjbBmLoqKocG34wPqA2Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FQ2fWIAK; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FQ2fWIAK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=5MSK+hCGwuICLk6ahEH9v1jcbgabrh3lw7OluZQ3VCY=; b=FQ2fWIAKlWxgWLdIgwUw6GJbhK
+	YU9bl3VGl3vjnMe1uqEWwqa8Lz5HYcHBO5qkjDNuqKtSN4bJYN5ij8CYTbuGgGrPcM/DmlHPfV43P
+	G06ubRAiH8xqRsNa1cwGzq5Ham89CI6HkGASwiMmQvdoPXo7PY9m6LNw3GDwLq+geoIXngAtmM1AG
+	HXVyZoujQxP6keCo/ocN+DObeP9unB/iS3iw1oxHqfl1c8N4vUGT/w0Typw8UyNOvqGCwbPax4yw5
+	ml6KyLl5eonXqTBvcS+L1ncON30ZjKgGMb18PTu30eOLJ1BOk0kpnANKVUjrWs+ho0LLbDsIGpm1N
+	92W8ImrQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJVJD-0000000BJxA-31tj;
+	Mon, 26 May 2025 10:43:55 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4906C300472; Mon, 26 May 2025 12:43:55 +0200 (CEST)
+Date: Mon, 26 May 2025 12:43:55 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 29/62] objtool: Mark prefix functions
+Message-ID: <20250526104355.GM24938@noisy.programming.kicks-ass.net>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <c4233972de0b0f2e6c94d4a225c953748d7c446b.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6cc7:b0:867:235d:32d9 with SMTP id
- ca18e2360f4ac-86cbb7caaa8mr715243939f.1.1748256087364; Mon, 26 May 2025
- 03:41:27 -0700 (PDT)
-Date: Mon, 26 May 2025 03:41:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68344557.a70a0220.1765ec.0165.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in bch2_sb_members_v2_to_text
-From: syzbot <syzbot+5138f00559ffb3cb3610@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4233972de0b0f2e6c94d4a225c953748d7c446b.1746821544.git.jpoimboe@kernel.org>
 
-Hello,
+On Fri, May 09, 2025 at 01:16:53PM -0700, Josh Poimboeuf wrote:
+> In preparation for the objtool klp diff subcommand, introduce a flag to
+> identify __pfx_*() and __cfi_*() functions in advance so they don't need
+> to be manually identified every time a check is needed.
+> 
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> ---
+>  tools/objtool/check.c               | 3 +--
+>  tools/objtool/elf.c                 | 5 +++++
+>  tools/objtool/include/objtool/elf.h | 6 ++++++
+>  3 files changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index a2a025ec57e8..6b2e57d9aaf8 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -3601,8 +3601,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+>  
+>  		if (func && insn_func(insn) && func != insn_func(insn)->pfunc) {
+>  			/* Ignore KCFI type preambles, which always fall through */
+> -			if (!strncmp(func->name, "__cfi_", 6) ||
+> -			    !strncmp(func->name, "__pfx_", 6))
+> +			if (is_prefix_func(func))
+>  				return 0;
+>  
+>  			if (file->ignore_unreachables)
+> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
+> index 59568381486c..9a1fc0392b7f 100644
+> --- a/tools/objtool/elf.c
+> +++ b/tools/objtool/elf.c
+> @@ -442,6 +442,11 @@ static void elf_add_symbol(struct elf *elf, struct symbol *sym)
+>  	elf_hash_add(symbol, &sym->hash, sym->idx);
+>  	elf_hash_add(symbol_name, &sym->name_hash, str_hash(sym->name));
+>  
+> +	if (is_func_sym(sym) && sym->len == 16 &&
 
-syzbot found the following issue on:
+Where did that 'sym->len == 16' thing come from? I mean, they are, but
+the old code didn't assert that.
 
-HEAD commit:    176e917e010c Add linux-next specific files for 20250523
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1159c5f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
-dashboard link: https://syzkaller.appspot.com/bug?extid=5138f00559ffb3cb3610
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a759f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e065f4580000
+I would rather objtool issue a warn if not 16, but still consider these
+as prefix.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5f7692c642fa/disk-176e917e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/057a442d42d0/vmlinux-176e917e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f8ebdb4dd96/bzImage-176e917e.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/9032c3d09738/mount_0.gz
-
-The issue was bisected to:
-
-commit 1c8dfd7ba50dbbb72113caf4fa7868512cdad2f4
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Wed Apr 16 03:35:48 2025 +0000
-
-    bcachefs: sb_validate() no longer requires members_v1
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d21ad4580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=13d21ad4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15d21ad4580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5138f00559ffb3cb3610@syzkaller.appspotmail.com
-Fixes: 1c8dfd7ba50d ("bcachefs: sb_validate() no longer requires members_v1")
-
-loop0: detected capacity change from 0 to 32768
-==================================================================
-BUG: KASAN: slab-out-of-bounds in members_v2_get fs/bcachefs/sb-members.c:68 [inline]
-BUG: KASAN: slab-out-of-bounds in bch2_sb_members_v2_to_text+0x1ae/0x310 fs/bcachefs/sb-members.c:347
-Read of size 136 at addr ffff88807716dfb8 by task syz-executor118/5842
-
-CPU: 0 UID: 0 PID: 5842 Comm: syz-executor118 Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x2b0/0x2c0 mm/kasan/generic.c:189
- __asan_memcpy+0x29/0x70 mm/kasan/shadow.c:105
- members_v2_get fs/bcachefs/sb-members.c:68 [inline]
- bch2_sb_members_v2_to_text+0x1ae/0x310 fs/bcachefs/sb-members.c:347
- bch2_sb_field_validate+0x1c6/0x280 fs/bcachefs/super-io.c:1380
- bch2_sb_validate+0x14bd/0x1980 fs/bcachefs/super-io.c:552
- __bch2_read_super+0xba4/0x1040 fs/bcachefs/super-io.c:925
- bch2_fs_open+0x1fe/0x25c0 fs/bcachefs/super.c:2371
- bch2_fs_get_tree+0x44d/0x15f0 fs/bcachefs/fs.c:2463
- vfs_get_tree+0x92/0x2b0 fs/super.c:1802
- do_new_mount+0x24a/0xa40 fs/namespace.c:3869
- do_mount fs/namespace.c:4206 [inline]
- __do_sys_mount fs/namespace.c:4417 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4394
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f813c8a7dfa
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffeafb83b88 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007ffeafb83ba0 RCX: 00007f813c8a7dfa
-RDX: 00002000000000c0 RSI: 0000200000000300 RDI: 00007ffeafb83ba0
-RBP: 0000000000000010 R08: 00007ffeafb83be0 R09: 00ffffffffffffff
-R10: 0000000000000010 R11: 0000000000000282 R12: 00002000000000c0
-R13: 0000200000000300 R14: 00007ffeafb83be0 R15: 0000000000000003
- </TASK>
-
-Allocated by task 5842:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_node_track_caller_noprof+0x271/0x4e0 mm/slub.c:4346
- __do_krealloc mm/slub.c:4904 [inline]
- krealloc_noprof+0x124/0x340 mm/slub.c:4957
- bch2_sb_realloc+0x348/0x630 fs/bcachefs/super-io.c:222
- read_one_super+0x3a3/0x850 fs/bcachefs/super-io.c:759
- __bch2_read_super+0x6c6/0x1040 fs/bcachefs/super-io.c:851
- bch2_fs_open+0x1fe/0x25c0 fs/bcachefs/super.c:2371
- bch2_fs_get_tree+0x44d/0x15f0 fs/bcachefs/fs.c:2463
- vfs_get_tree+0x92/0x2b0 fs/super.c:1802
- do_new_mount+0x24a/0xa40 fs/namespace.c:3869
- do_mount fs/namespace.c:4206 [inline]
- __do_sys_mount fs/namespace.c:4417 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4394
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff88807716c000
- which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 8120 bytes inside of
- allocated 8192-byte region [ffff88807716c000, ffff88807716e000)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x77168
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801a442280 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000080020002 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801a442280 dead000000000122 0000000000000000
-head: 0000000000000000 0000000080020002 00000000f5000000 0000000000000000
-head: 00fff00000000003 ffffea0001dc5a01 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd28c0(GFP_NOWAIT|__GFP_IO|__GFP_FS|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5759, tgid 5759 (sshd-session), ts 67004973254, free_ts 66925363852
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
- prep_new_page mm/page_alloc.c:1712 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2450 [inline]
- allocate_slab+0x8a/0x3b0 mm/slub.c:2618
- new_slab mm/slub.c:2672 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3858
- __slab_alloc mm/slub.c:3948 [inline]
- __slab_alloc_node mm/slub.c:4023 [inline]
- slab_alloc_node mm/slub.c:4184 [inline]
- __do_kmalloc_node mm/slub.c:4326 [inline]
- __kmalloc_node_track_caller_noprof+0x2f8/0x4e0 mm/slub.c:4346
- kmalloc_reserve+0x136/0x290 net/core/skbuff.c:601
- __alloc_skb+0x142/0x2d0 net/core/skbuff.c:670
- alloc_skb include/linux/skbuff.h:1336 [inline]
- netlink_dump+0x1c7/0xe20 net/netlink/af_netlink.c:2275
- netlink_recvmsg+0x67b/0xe00 net/netlink/af_netlink.c:1965
- sock_recvmsg_nosec net/socket.c:1017 [inline]
- sock_recvmsg+0x229/0x270 net/socket.c:1039
- ____sys_recvmsg+0x1c9/0x460 net/socket.c:2786
- ___sys_recvmsg+0x1b5/0x510 net/socket.c:2828
- __sys_recvmsg net/socket.c:2861 [inline]
- __do_sys_recvmsg net/socket.c:2867 [inline]
- __se_sys_recvmsg net/socket.c:2864 [inline]
- __x64_sys_recvmsg+0x198/0x260 net/socket.c:2864
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-page last free pid 5758 tgid 5758 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1248 [inline]
- __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
- discard_slab mm/slub.c:2716 [inline]
- __put_partials+0x161/0x1c0 mm/slub.c:3185
- put_cpu_partial+0x17c/0x250 mm/slub.c:3260
- __slab_free+0x2f7/0x400 mm/slub.c:4512
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x97/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4147 [inline]
- slab_alloc_node mm/slub.c:4196 [inline]
- kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4203
- getname_flags+0xb8/0x540 fs/namei.c:146
- getname include/linux/fs.h:2903 [inline]
- __do_sys_unlink fs/namei.c:4696 [inline]
- __se_sys_unlink fs/namei.c:4694 [inline]
- __x64_sys_unlink+0x3a/0x50 fs/namei.c:4694
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88807716df00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88807716df80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff88807716e000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                   ^
- ffff88807716e080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88807716e100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> +	    (strstarts(sym->name, "__pfx") || strstarts(sym->name, "__cfi_")))
+> +		sym->prefix = 1;
+> +
+> +
+>  	if (is_func_sym(sym) && strstr(sym->name, ".cold"))
+>  		sym->cold = 1;
+>  	sym->pfunc = sym->cfunc = sym;
