@@ -1,181 +1,137 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7EB20DD4E;
-	Mon, 26 May 2025 14:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A6320E6F3;
+	Mon, 26 May 2025 14:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270425; cv=none; b=exAO8XpEANKFqXc4IFVsE6/aZVc4ao+TP5mJCx4Nj9EjBgP4OY0smbLKcw6FOgSvDxXSTnLllLO7UCR93i5WvkdW4fkD8gR8veOqC0fb8DGPZyHlxdisibuangCT2aA/MWpz8gYA5ISd94rtLeUHHFlNLrG+KGHihO6blnHGSUw=
+	t=1748270435; cv=none; b=WrSsAyb9jOvZbvcTa4E3jkmvDa2/kAWjnlY2CrsECuWGd++uxrMsC4OZAZbL8QyjhXLd8KGeSRrJJ0y0XTTrbEmtqK3QNtiweLgZrZWHAuGoWPkKtuDt3RNurxmOwHYr29fP/LrBancVgTYs0rQHvXQN48gMmDKRMpyDyWn6GAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270425; c=relaxed/simple;
-	bh=ep1DMStgP4KLh6kjdF/WowDeKpc6b4Jr1zjb7jz95KE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bg4PtCZnG6qTAFDlN4JVwuVI0A/Ap9B7p0eTcQ95eTcNHsylhiG9clWB+OiN1hMw8m5pVx0R2Bo4aYXrVDvgZ5UXB5o4pWy9PGf9m+o9h8KcHKNvX5MFtAIE0uGZMUngxOO6Pdr/FwdNiTUvfsmFgkZPhiDP5lB0r29o6VodOhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YaqPh+cT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4UI7GP3j; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YaqPh+cT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4UI7GP3j"
-Date: Mon, 26 May 2025 16:40:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748270421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5TV7kVDxmFuWEFaBNT2bTxAWVnJUcrUxNAcskziBBPw=;
-	b=YaqPh+cTVv5lTI5hx6r+wn4iVxIXWsXlZq9NNG9ZJrowba5y96FUCXn4V9S9OtEmvsAnE1
-	BZeIXFupqA3oxM2jR+7gypjG7pLtOzQLmaA6NfHfW6w7EpLaJUJM9K/OsNu0TAav/1ZZyp
-	p3XHSmTeyQ3PdTEbF5TvaCGHyjh08ALd/czrLMDTCxgYW/1OgEV6phLi1zUBCHv4rfStV8
-	XYdUId9gJEhaL98yD0Wneh6LjOuLO29r/gJ51BWJlPkOck3+g0j8JBUNFketul+PQ8I24Q
-	OkzkjQYdCWQYkWo9BcEdzJwc6x+0pL71A9xM0ALChTPNFde0V3eekKclAcHhTg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748270421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5TV7kVDxmFuWEFaBNT2bTxAWVnJUcrUxNAcskziBBPw=;
-	b=4UI7GP3jRqpneYJ72JmNnXXUSJd4HUvvqHF+iKuexX3Mz+vq6IbmremQ77q1N5HxM7CFlp
-	31goQIRm4O7oynCQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 01/11] kbuild: userprogs: add nolibc support
-Message-ID: <20250526163610-88b7aae6-7be4-4a02-be20-ec7fe74cbf31@linutronix.de>
-References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
- <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
- <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
+	s=arc-20240116; t=1748270435; c=relaxed/simple;
+	bh=UwYs87yRsBWeAWhjsFHInESFLeGByLOKRNJA8pL/8tA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oept1SwIfBJHSNWUZ/nb0IMmBPqc8iNZ6awKuaO/mhXDF9pQvUpRh838WxxcJxX9j+0hlbmOIwG0LmIHsigFzdZoOzLmaMITMy/HkKWngxjgTnc+0DYk+Ff3+GUkured9nr0h2F9TyqZaQ1W7f13ldJfO58PoDH6TB1glq87JIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.37])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 16709a31a;
+	Mon, 26 May 2025 22:40:23 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Subject: [PATCH v4 0/4] Add SpacemiT K1 USB3.0 host controller support
+Date: Mon, 26 May 2025 22:40:16 +0800
+Message-Id: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
+X-B4-Tracking: v=1; b=H4sIAFB9NGgC/12OQW6DMBBFr4JmXUfGGI/JKveoshjbQ7GqQGIDa
+ RVx9zokq0qzeSP9p/eAzClyhmP1gMRrzHEaC+iPCvxA4xeLGAqDkqqVbY3CafFdi3D3jVgb0Sp
+ pSUqFyhKUzTVxH3923+f5xYlvS9HOryc4yiz8dLnE+ViRM8F3ZDyq2ivmYA36ukWtEY0mNrbvO
+ 4cMT9cQ8zyl3z11bXbZu8r+qyonBRrZeeuIFJnTfVjmA4fl4Ec4b9v2B7jy5tz4AAAA
+X-Change-ID: 20250517-b4-k1-dwc3-v3-5208a002728a
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748270423; l=3206;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=UwYs87yRsBWeAWhjsFHInESFLeGByLOKRNJA8pL/8tA=;
+ b=VKhvsm5zyaoz+pOknrfYlyH+CSJHZUmJn4KRjwnhQm3gtswdUiMWtwRYa/PZcZFjqn0ibmCn1
+ FMAG47sUzAHBen03n+EY+t1jemAzpmRu1L+H+tXCEDv1enfjEuAIhCZ
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHkwfVh5OTkhOGENLTxkeGVYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktJQk1KSlVKS0tVS1kG
+X-HM-Tid: 0a970d099e7703a1kunm5f56ec4c12d97
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PyI6KQw4GjE*TQwsGisLFQMv
+	AjEKFBVVSlVKTE9DSUxLT0hLSkNMVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVITFlXWQgBWUFPQkhNNwY+
 
-On Mon, May 26, 2025 at 04:19:53PM +0200, Nicolas Schier wrote:
-> On Mon, Apr 07, 2025 at 09:42:38AM +0200, Thomas Weiﬂschuh wrote:
-> > Userprogs are built with the regular kernel compiler $CC.
-> > A kernel compiler does not necessarily contain a libc which is required
-> > for a normal userspace application.
-> > However the kernel tree does contain a minimal libc implementation
-> > "nolibc" which can be used to build userspace applications.
-> > 
-> > Introduce support to build userprogs against nolibc instead of the
-> > default libc of the compiler, which may not exist.
-> > 
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > 
-> > ---
-> > This could probably be moved out of the generic kbuild makefiles.
-> > I think the ergonimics would suffer and this functionality could be
-> > used by other users of userprogs.
-> > 
-> > Also this does currently not support out-of-tree builds.
-> 
-> (out-of-tree == external kmods;  out-of-source == build-dir != source-dir)
-> 
-> you probably meant out-of-source.
+The USB 3.0 controller found in the SpacemiT K1 SoC[1] supports both USB3.0
+Host and USB2.0 Dual-Role Device (DRD). The PHY interfaces required for the
+K1 USB subsystem ‚Äî PIPE3 (for USB 3.0) and UTMI+ (for USB 2.0) ‚Äî have
+already been supported in a separate patchset [2].
 
-I *did* mean out-of-tree.
+This controller is compatible with DesignWare Core USB 3 (DWC3) driver.
+However, constraints in the snps,dwc3 binding limit the ability to extend
+properties to describe hardware variations. The existing generic DWC3 driver,
+dwc3-of-simple, still functions as a glue layer.
 
-Out-of-source already works with the current patchset. It is the default setup of kunit.py.
+To address this and promote trasition to flattened dwc node, this patch
+introduces dwc3-common, building upon prior work that exposed the DWC3 core
+driver [3].
 
-> > For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-> > installed into the build directory.
-> 
-> Out-of-source builds could be achieved by adding 'headers' as 
-> dependency, see below.
-> 
-> > ---
-> >  Documentation/kbuild/makefiles.rst | 12 ++++++++++++
-> >  scripts/Makefile.userprogs         | 16 +++++++++++++---
-> >  2 files changed, 25 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> > index 3b9a8bc671e2e92126857059e985d6e5b2c43fd4..f905a6f77c965311c491cfd7ab3103185af7e82e 100644
-> > --- a/Documentation/kbuild/makefiles.rst
-> > +++ b/Documentation/kbuild/makefiles.rst
-> > @@ -970,6 +970,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
-> >  
-> >  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
-> >  
-> > +Bulding userprogs against nolibc
-> 
-> Bulding -> Building
+This patchset is based on usb-next (6.15-rc6) and has been tested on BananaPi and Jupiter development boards.
 
-Ack.
+Link: https://developer.spacemit.com/documentation?token=AjHDwrW78igAAEkiHracBI9HnTb [1]
+Link: https://lore.kernel.org/linux-riscv/20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn [2]
+Link: https://lore.kernel.org/all/20250414-dwc3-refactor-v7-3-f015b358722d@oss.qualcomm.com [3]
 
-> > +--------------------------------
-> > +
-> > +Not all kernel toolchains provide a libc.
-> > +Simple userprogs can be built against a very simple libc call "nolibc" provided
-> > +by the kernel source tree.
-> > +
-> > +Example::
-> > +
-> > +  # lib/kunit/Makefile
-> > +  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
-> > +
-> >  When userspace programs are actually built
-> >  ------------------------------------------
-> >  
-> > diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-> > index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..a1447c02b948901631098b585f5cf4d3ea383a57 100644
-> > --- a/scripts/Makefile.userprogs
-> > +++ b/scripts/Makefile.userprogs
-> > @@ -16,10 +16,20 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
-> >  user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
-> >  user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
-> >  
-> > +user-libgcc     := $(call try-run,$(CC) -Werror $(KBUILD_USERCFLAGS) -lgcc -x c -shared /dev/null -o "$$TMP",-lgcc)
-> > +
-> > +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
-> > +		      -ffreestanding -fno-stack-protector \
-> > +		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
-> > +user_nolibc_ldflags := -nostdlib -nostdinc -static
-> > +user_nolibc_ldlibs  := $(user-libgcc)
-> > +
-> >  user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
-> > -			$($(target-stem)-userccflags)
-> > -user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
-> > -user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
-> > +			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
-> > +user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
-> > +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
-> > +user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
-> > +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
-> >  
-> >  # Create an executable from a single .c file
-> >  quiet_cmd_user_cc_c = CC [U]  $@
-> 
-> Adding another hunk for scripts/Makefile.userprogs would allow to build
-> out-of-source:
-> 
-> @@ -39,5 +49,5 @@ $(call multi_depend, $(user-cmulti), , -objs)
->  # Create .o file from a .c file
->  quiet_cmd_user_cc_o_c = CC [U]  $@
->        cmd_user_cc_o_c = $(CC) $(user_ccflags) -c -o $@ $<
-> -$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
-> +$(user-cobjs): $(obj)/%.o: $(src)/%.c headers FORCE
->         $(call if_changed_dep,user_cc_o_c)
-> 
-> But I am unsure if it is ok to add 'headers' as a build dependency for 
-> userprogs.  For me, it feels a bit odd, but I think it really makes 
-> sense here.
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+---
+Changes in v4:
+- dt-bindings spacemit,k1-dwc:
+  - reorder properties
+  - add properties of phys & phy-names
+  - add usb hub nodes in example dt
+- add support for spacemit,k1-mbus
+- dwc3 generic plat driver:
+  - rename dwc3-common.c to dwc3-generic-plat.c
+  - use SYSTEM_SLEEP_PM_OPS macros and drop PM guards
+- dts:
+  - reorder dts properties of usb dwc3 node
+  - move "dr_mode" of dwc3 from dtsi to dts
+- Link to v3: https://lore.kernel.org/r/20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn
 
-Currently this dependency is encoded in Kconfig.
-If CONFIG_HEADERS_INSTALL=y then the headers are installed in the 'prepare'
-phase and already available when building any userprog.
-To me this seems like the easier and nicer implementation.
+Changes in v3:
+- introduce dwc3-common for generic dwc3 hardware
+- fix warnings in usb host dt-bindings
+- fix errors in dts
+- Link to v2: https://lore.kernel.org/r/20250428-b4-k1-dwc3-v2-v1-0-7cb061abd619@whut.edu.cn
+
+Changes in v2:
+- dt-bindings:
+  - add missing 'maxItems'
+  - remove 'status' property in exmaple
+  - fold dwc3 node into parent
+- drop dwc3 glue driver and use snps,dwc3 driver directly
+- rename dts nodes and reorder properties to fit coding style
+- Link to v1: https://lore.kernel.org/all/20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn
+
+---
+Ze Huang (4):
+      dt-bindings: usb: dwc3: add support for SpacemiT K1
+      dt-bindings: soc: spacemit: Add K1 MBUS controller
+      usb: dwc3: add generic driver to support flattened DT
+      riscv: dts: spacemit: add usb3.0 support for K1
+
+ .../bindings/soc/spacemit/spacemit,k1-mbus.yaml    |  55 ++++++
+ .../devicetree/bindings/usb/spacemit,k1-dwc3.yaml  | 116 +++++++++++++
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts    |  51 ++++++
+ arch/riscv/boot/dts/spacemit/k1.dtsi               |  67 ++++++++
+ drivers/usb/dwc3/Kconfig                           |   9 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/dwc3-generic-plat.c               | 189 +++++++++++++++++++++
+ 7 files changed, 488 insertions(+)
+---
+base-commit: ab6dc9a6c721c2eed867c157447764ae68ff9b7e
+change-id: 20250517-b4-k1-dwc3-v3-5208a002728a
+
+Best regards,
+-- 
+Ze Huang <huangze@whut.edu.cn>
+
