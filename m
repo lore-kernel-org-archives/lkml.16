@@ -1,192 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b7-smtp.messagingengine.com (fout-b7-smtp.messagingengine.com [202.12.124.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E37E433AC;
-	Mon, 26 May 2025 14:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D942DCBE3;
+	Mon, 26 May 2025 15:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271577; cv=none; b=HNdP44JbOBJIDjpd/AK/CwkRJoZZwz/asHOQM9Rs/iKMU3h4r4CViOfYeXFdWeX7XpJbGDRzZIF2ketQYsQuhiA+5PHzzvX6SC0jB5xtzzi7EtS2cizq5sqJaXJRxkGYAE2EDegDh3ZZ3tTAHd7At6p3oAdw0WxC+vSf0QHQaf8=
+	t=1748271620; cv=none; b=LMz8MFbTZzWWv4AjAxbS5TtcvZJZkrg0kI3VSsCiguohNtX4unvpNuYhjvCKVQkx8FciCstTGYkZiVZwSY4dpbAZLH846pioFvWmRDM7HpSc3DOigrbDUV96vbGZKC3JRa/TrZxmodBBUL5b7MyJ8kcSGbxKzFcJ+E0U5GRYXKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271577; c=relaxed/simple;
-	bh=E8SaAUgrX/X3dekablDtQmiUY499qEqCSuaUoBIMc4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YV12vJrDYUAf/atC0QV3kpxbYLN9rcAkr8bSkLgl+4RZbzgDcxhnsSa1WiF80bhvmd64BuAXGHB0uLHj9n05rDEivddVCmB/CVS6rS6vRWe262HUBKoG3WLRWCPkiqzpwrMhczAIJ55qt48nqd+UwbRwpTNMuwkr9XYIA9K4z5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3MFvLKG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748271620; c=relaxed/simple;
+	bh=UYR8NFT7inRfGAcxP5CIJ/y4nSFCEgktZ1kfDarHDE8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=VdLLHnw+JJklRkAyrmlx97qgdzuYBzIUo6X//4SxV73TvbJflZvIrvHsSrM/yuPMF4PaMYIqz1JqonbYqWhv5Rtg9vHKBfuiCVVjHlLeuTs5CquwDZdcYS/eUGOAMD2weywZLTO6MjgQF7LaCD4981V2+bTHioYiBq/oPiiSQf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=oWmieSks; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a7+jvylU; arc=none smtp.client-ip=202.12.124.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3MFvLKG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC43C4CEE7;
-	Mon, 26 May 2025 14:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748271576;
-	bh=E8SaAUgrX/X3dekablDtQmiUY499qEqCSuaUoBIMc4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3MFvLKGV43p1eBMXVMy4czAhTXOz2ctCEOeVW2WnXnaTrpA/Q1ifkqOkKuCR9hQU
-	 w00FPOZ4osYXe03owq6G0dRPSqmrd+XAffAauMuPgLkHKhjNh/TzUMuaEQtX+Yk9yi
-	 9dGrirNlbBxKgDHBOMh/4zG7zPPuwz5zs/cq3k6PnLWIdwQRVDf/nqc48pHxJ9Qrff
-	 7S5ntnrO8nuYuwOH6YCsowbLnRqQ30cWeOe3ZcmA58WVEqYvce1wnJhgpXEDYlK5TY
-	 n6jC2/MwptaZ/AuiJLH76ugtEGlu6fAYbiWlst+dFQ+vSIpvU/4XBHRg8nB9dCbfHE
-	 +wYm/DVOMNFlA==
-Date: Mon, 26 May 2025 16:59:34 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Longbin Li <looong.bin@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v4 2/3] pwm: sophgo: reorganize the code structure
-Message-ID: <l57yh42pb7cfbnk5z4zo473vb5pac6t4hnpg36m3iph3og4wom@kmd35myokcgp>
-References: <20250428013501.6354-1-looong.bin@gmail.com>
- <20250428013501.6354-3-looong.bin@gmail.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="oWmieSks";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a7+jvylU"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 76B781140140;
+	Mon, 26 May 2025 11:00:16 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Mon, 26 May 2025 11:00:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1748271616;
+	 x=1748358016; bh=feW6Vp46TNKhZ8Vj3iv8V/8iTtcBEILvVp4173xslUA=; b=
+	oWmieSksPKUR4UIwRVJhQOYw8dGbyM5cxuy+Qi7SiuY8lbTGRax47AQ4vNmTEP3h
+	mohCij0Qmcv14GX+c8pHiO5uQga240lYV+QA7JUDlmoInHOdq6GRpj6ytv68PKry
+	oNr89/pSiYevh8fJ2vbfLNzTe+aDT2rflSdO4Qtf8ogqooiHuzkinF9YTeYJgkrV
+	iXz6yhV4FlV30B4xitqFryBBnJH3NZi1/OUcdX6URZL4LF1/wuifJCSqAktwiT03
+	SH4Deu/vvADk0SBrxF9/1JnpMS0PuIAdR4Hm33rJ5lk2622oSIKb4+YmfFkHRTsj
+	zxB3B4rb9MFy5QOwwRunUw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748271616; x=
+	1748358016; bh=feW6Vp46TNKhZ8Vj3iv8V/8iTtcBEILvVp4173xslUA=; b=a
+	7+jvylUX5eL1HsEccPZmAO3uNWOpmMbTo6eReV9isWwjn2djQo2bxwFnc7SXsF7e
+	46EwC8J/Dis8Z1x/ttsJcNTeO5x7Ad010ntM+Ii629PVxU2okv7KKPHTHqeAogC+
+	T4fs3fRpCsLrcCRnQ+7VVrECIxhQF7cJK6fZGNSK1D4Sesu7IhQDRbeKwLllbasT
+	qH0LD4xjR0NuDohI2ZY/iuBCymIAS87QY6JZyIJhyrbbi+EHQHXGMZL8y2sZC/mX
+	y5jFwhlrdKOK2OIh4sZ0iUw+6epsJENz9yqxCz6xMEbznKAgUqicq3u7KZLow3eh
+	vKj2YbnVeAqYz3f72Cvuw==
+X-ME-Sender: <xms:_4E0aEmOL2R-OOBmaN2wXMIJSY5fdP0RREDfNy3zsmgNoqUTsmtQTQ>
+    <xme:_4E0aD1HVyNBtlbP6GTdMVLG9ZiSwV3U0Td6zSg5mnk807jr_uYQYYvUtcpTC-1So
+    Y5VL5nSaLehgNIIBNo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujeekfeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
+    jghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfd
+    cuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeeh
+    udekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+    pdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepug
+    gvvhgvlhesughrihhvvghruggvvhdrohhsuhhoshhlrdhorhhgpdhrtghpthhtohepshgr
+    shhhrghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhguvghrshdrrhhogigvlh
+    hlsehlihhnrghrohdrohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehl
+    ihhnrghrohdrohhrghdprhgtphhtthhopehnrghrvghshhdrkhgrmhgsohhjuheslhhinh
+    grrhhordhorhhgpdhrtghpthhtoheprghgohhruggvvghvsehlihhnuhigrdhisghmrdgt
+    ohhmpdhrtghpthhtohepghhorheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhope
+    hhtggrsehlihhnuhigrdhisghmrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhn
+    uhigfhhouhhnuggrthhiohhnrdhorhhg
+X-ME-Proxy: <xmx:_4E0aCp7xv_pBB7vSuHXqsVgSsezML81qXvrHLB9euypNssojnOkmg>
+    <xmx:_4E0aAmZxXVakWbUSIHtUdn3l_urHikskWjoQEpmRWIV_XTjh092Yg>
+    <xmx:_4E0aC0DMMtnyMGXTBKiAdqwOIyihsAV05s5Ro7B0lpqmQcR751MAw>
+    <xmx:_4E0aHtkrhoiKTgzOtPGoSnO8vbeQBWGuWokr1mVdsa0Wv5QSn8ETg>
+    <xmx:AII0aBkCeEoxCFLFYIKWC8cGfWykS_zNOttIDqOodMIU3aC34_2nyV2Y>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 8F54C700061; Mon, 26 May 2025 11:00:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="y6wrgiquygeci5im"
-Content-Disposition: inline
-In-Reply-To: <20250428013501.6354-3-looong.bin@gmail.com>
+X-ThreadId: Tf1409be64a9c26e1
+Date: Mon, 26 May 2025 16:59:54 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ linux-stable <stable@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>, linux-s390@vger.kernel.org,
+ devel@driverdev.osuosl.org, lkft-triage@lists.linaro.org
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Sasha Levin" <sashal@kernel.org>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Dan Carpenter" <dan.carpenter@linaro.org>,
+ "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>
+Message-Id: <cdf339b3-f3a4-4ed3-9d40-8125b50c0991@app.fastmail.com>
+In-Reply-To: 
+ <CA+G9fYtSrmuXzvYbCrmT_4RHggpaYi__Qwr2SB2Y0=X3mB=byw@mail.gmail.com>
+References: 
+ <CA+G9fYtSrmuXzvYbCrmT_4RHggpaYi__Qwr2SB2Y0=X3mB=byw@mail.gmail.com>
+Subject: Re: stable-rc/queue/6.14: S390: devres.h:111:16: error: implicit declaration
+ of function 'IOMEM_ERR_PTR' [-Werror=implicit-function-declaration]
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+On Mon, May 26, 2025, at 16:49, Naresh Kamboju wrote:
+> Regressions on S390 tinyconfig builds failing with gcc-13, gcc-8 and
+> clang-20 and clang-nightly tool chains on the stable-rc/queue/6.14.
+>
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducible? Yes
+>
+> Build regression: S390 tinyconfig devres.h 'devm_ioremap_resource'
+> implicit declaration of function 'IOMEM_ERR_PTR'
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+>
+> Build log:
+> ---------
+> In file included from include/linux/device.h:31,
+>                  from include/linux/node.h:18,
+>                  from include/linux/cpu.h:17,
+>                  from arch/s390/kernel/traps.c:28:
+> include/linux/device/devres.h: In function 'devm_ioremap_resource':
+> include/linux/device/devres.h:111:16: error: implicit declaration of
+> function 'IOMEM_ERR_PTR' [-Werror=implicit-function-declaration]
+>   111 |         return IOMEM_ERR_PTR(-EINVAL);
+>       |                ^~~~~~~~~~~~~
 
---y6wrgiquygeci5im
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 2/3] pwm: sophgo: reorganize the code structure
-MIME-Version: 1.0
+The backport of 
+a21cad931276 ("driver core: Split devres APIs to device/devres.h")
+also needs a backport of
+18311a766c58 ("err.h: move IOMEM_ERR_PTR() to err.h")
 
-Hello,
-
-On Mon, Apr 28, 2025 at 09:34:49AM +0800, Longbin Li wrote:
-> As the driver logic can be used in both SG2042 and SG2044, it
-> will be better to reorganize the code structure.
->=20
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
-> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
-> ---
->  drivers/pwm/pwm-sophgo-sg2042.c | 62 +++++++++++++++++++--------------
->  1 file changed, 35 insertions(+), 27 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-sophgo-sg2042.c b/drivers/pwm/pwm-sophgo-sg2=
-042.c
-> index ff4639d849ce..23a83843ba53 100644
-> --- a/drivers/pwm/pwm-sophgo-sg2042.c
-> +++ b/drivers/pwm/pwm-sophgo-sg2042.c
-> @@ -26,18 +26,6 @@
->  #include <linux/pwm.h>
->  #include <linux/reset.h>
->=20
-> -/*
-> - * Offset RegisterName
-> - * 0x0000 HLPERIOD0
-> - * 0x0004 PERIOD0
-> - * 0x0008 HLPERIOD1
-> - * 0x000C PERIOD1
-> - * 0x0010 HLPERIOD2
-> - * 0x0014 PERIOD2
-> - * 0x0018 HLPERIOD3
-> - * 0x001C PERIOD3
-> - * Four groups and every group is composed of HLPERIOD & PERIOD
-> - */
-
-This seems to be still correct? Why remove it then?
-
->  #define SG2042_PWM_HLPERIOD(chan) ((chan) * 8 + 0)
->  #define SG2042_PWM_PERIOD(chan) ((chan) * 8 + 4)
->=20
-> @@ -53,6 +41,10 @@ struct sg2042_pwm_ddata {
->  	unsigned long clk_rate_hz;
->  };
->=20
-> +struct sg2042_chip_data {
-> +	const struct pwm_ops ops;
-> +};
-> +
->  /*
->   * period_ticks: PERIOD
->   * hlperiod_ticks: HLPERIOD
-> @@ -66,21 +58,13 @@ static void pwm_sg2042_config(struct sg2042_pwm_ddata=
- *ddata, unsigned int chan,
->  	writel(hlperiod_ticks, base + SG2042_PWM_HLPERIOD(chan));
->  }
->=20
-> -static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pw=
-m,
-> -			    const struct pwm_state *state)
-> +static void pwm_set_dutycycle(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-
-This is not a global pwm API function, so please stick to the pwm_sg2042
-prefix.
-
-> +			      const struct pwm_state *state)
->  {
->  	struct sg2042_pwm_ddata *ddata =3D pwmchip_get_drvdata(chip);
->  	u32 hlperiod_ticks;
->  	u32 period_ticks;
->=20
-> -	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> -		return -EINVAL;
-> -
-> -	if (!state->enabled) {
-> -		pwm_sg2042_config(ddata, pwm->hwpwm, 0, 0);
-> -		return 0;
-> -	}
-> -
->  	/*
->  	 * Duration of High level (duty_cycle) =3D HLPERIOD x Period_of_input_c=
-lk
->  	 * Duration of One Cycle (period) =3D PERIOD x Period_of_input_clk
-> [...]
-> @@ -123,13 +123,16 @@ static int pwm_sg2042_get_state(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
->  	return 0;
->  }
->=20
-> -static const struct pwm_ops pwm_sg2042_ops =3D {
-> -	.apply =3D pwm_sg2042_apply,
-> -	.get_state =3D pwm_sg2042_get_state,
-> +static const struct sg2042_chip_data sg2042_chip_data =3D {
-> +	.ops =3D {
-> +		.apply =3D pwm_sg2042_apply,
-> +		.get_state =3D pwm_sg2042_get_state,
-> +	}
->  };
->=20
->  static const struct of_device_id sg2042_pwm_ids[] =3D {
-> -	{ .compatible =3D "sophgo,sg2042-pwm" },
-> +	{ .compatible =3D "sophgo,sg2042-pwm",
-> +	  .data =3D &sg2042_chip_data },
-
-I would have expected that checkpatch doesn't like that. At least I
-don't. Please make this
-
-	{
-		.compatible =3D ...;
-		.data =3D ...;
-	},
-
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
-
---y6wrgiquygeci5im
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0gdMACgkQj4D7WH0S
-/k4J4Qf8CHX9dIGtIPbLOS9813DI9uLk4w5rJKuXFCntm61HNC7eEe0RbGwRynoZ
-A8E3zWI+tt4ZUmLp3nTHtrXTa3DBSG7FLpHXWCB7GogJcfcJ3NMgkqA9jJf6gjDY
-ogojTOXZ8Uti38J4uXeupkpybGA/ulpdAMaDlF8gx3l8NiVzg4Eycn7yV2Z0UBhB
-L1+TUXRyGKV6PZ0aKCZzVAGhBUGY3C09T5jF7xFL0ap500i5mRYeK2R+HU8ZJ8fi
-Nel1QgRdVXOxIZt+/zYOQB7021f9AqTwns1oxxTN24CXN6TzsDY4dTBlnPCG5uqt
-RA6ku7ja1Ot/ELHxpUYuQBSMEg+8Cg==
-=dnJY
------END PGP SIGNATURE-----
-
---y6wrgiquygeci5im--
+      Arnd
