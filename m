@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEF61D799D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF871D90DF;
 	Mon, 26 May 2025 06:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748240735; cv=none; b=uHGdBb7DA6IfAtaTHS2TMcNsWA/jctKEDSyv1IEOV/28KDAHuOedv17BjIXuCNH3Y/Wc6X4GBCTgwpNeatIGNwkTed4xYhpF5rw56OOENM38+yUskZL2uXCvjNtdRrF+locjHqDz/tqnXTblLFy9ER9SgpgEUQT9osoWHPBNjXI=
+	t=1748240735; cv=none; b=Rf/iuCJjtEkJrPhu+MYpgzl8/XOGubyK7gojq2uzFADlOHvFNwy8ynU+Qi9StGRU30ZyWjcREptRsQAeqPQkMk4RTyqm4r880Q97+8SLJ5kS/jLy1SwTSh1womJuqai3hrJcFPl9nbvs0UWmOL20wK3y3LGrFOQ7v+6Wkwlabqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748240735; c=relaxed/simple;
-	bh=HT6/2/GedgWpF6igAvBUqPc/BsGvXccamOg4GedgCHA=;
+	bh=rjWx7BLwzDHzTGPoZi5Ci7UHT5rzHaTz6fkskIYI2ps=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nDd5Ho845yjhhCQdbXuF2d9f6arCmamLGpxcDqdyTd6i6goCRBGya4Ts/lph54uxSUSdhuvaOyF3qn5DzmknkL7Pfjps2jxEoc9rRbyhBFgtrj92Ror+p9s253yO9/Q1cALmdtMqOSgKSduYeZFXpcbRo58r3NYpjNO3VsuEDek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1Bo9gHj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Pbe3D8++sLIyXDeElu9s9+Q8x04dZ20bbqqilekj/aN/k04YiLv59OBPIBlTH7Tr2eAT7v5tUUKIammtYOd8JBW7Ccg3duiMj1QgjvywimYc1SKG9CsNtBPXRoSO1A34bR4C5Ndq733f90ja36c/vPPxe3WHBCwYVg6RFFWe/ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFfYoRl4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1Bo9gHj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 374B6C4CEF0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFfYoRl4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F17CC4CEF4;
 	Mon, 26 May 2025 06:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748240735;
-	bh=HT6/2/GedgWpF6igAvBUqPc/BsGvXccamOg4GedgCHA=;
+	bh=rjWx7BLwzDHzTGPoZi5Ci7UHT5rzHaTz6fkskIYI2ps=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=E1Bo9gHjxKyD7yQCTLsbu20VGf6UFE0hEbe6Qvisw2roBWM5/tsJe/cS9FSFWOPMk
-	 0+5Zrg13h0pQKHqpvJJUNKhOFqPt+DYdNFzWygD9RxbdB54y/Oh4T++WCK5uuJIyQS
-	 PNHPZKQ3LBPXeUzqAXpzhTR0+zQbwBi5twqcXsrt1hbbxlGeP8qiyPFHT+q+/6apG6
-	 59gZv95dNIHr1aiRTNz903paS9PDaGkXhCjq6URGeW/NV822/I3AUYemvq9iDgFGGC
-	 sSLXEyGIkglqsRbSWhHEWM6p33NwysvIRaoGG3ozIKC85CerYbioTfDf6Tfybaf8Ad
-	 Bl7qtWTfYasRw==
+	b=cFfYoRl4KJa3TqG5YZA6f53DFWd+B0/OhAK0hS8oS4bn6OXiGOXaHugbLHqhCIANs
+	 wB36z7OMqk68NPGjtLj/MUonkhnrBY2Ih2vBVn33zsjRE1iHvmWiWrwQRCTFrX1C/g
+	 MxOuht3kpoIQbt+0DFY+OVUPLR9fVElcFoTkEIR1XYXPXjBBN1bRVggEVxf2O/G3zl
+	 CXwAyPGkhUlSCt/Y57gvnI65SmO4qoLxQtI2CQuPcquJnyRmD+4f+iBQxlMnlvNtuj
+	 dp9GFom/LWZAXC9gmvna9/nfNKUuoL8SENbKp45pOOQT070QncQqIrojB14JGKgT+/
+	 0ltoG+GOBDn0w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278EEC5B547;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F63C5B549;
 	Mon, 26 May 2025 06:25:35 +0000 (UTC)
 From: Mahesh Rao via B4 Relay <devnull+mahesh.rao.altera.com@kernel.org>
-Date: Mon, 26 May 2025 14:25:05 +0800
-Subject: [PATCH v3 2/4] firmware: stratix10-svc: Implement ID pool
- management for asynchronous operations
+Date: Mon, 26 May 2025 14:25:07 +0800
+Subject: [PATCH v3 4/4] firmware: stratix10-svc: Add support for HWMON
+ temperature and voltage read command.
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-sip_svc_upstream-v3-2-6a08a4502de3@altera.com>
+Message-Id: <20250526-sip_svc_upstream-v3-4-6a08a4502de3@altera.com>
 References: <20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com>
 In-Reply-To: <20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com>
 To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -50,11 +50,11 @@ To: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>,
 Cc: Matthew Gerlach <matthew.gerlach@altera.com>, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748240732; l=6225;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748240732; l=7578;
  i=mahesh.rao@altera.com; s=20250107; h=from:subject:message-id;
- bh=5FyTpVzGBXpgVnqCoQDLP/cb2s1zL/TKwkYIX3LjCZk=;
- b=z6Ro2ol9JtAcEXtg2IQWsLmffR1gGAb17N28slEieKlH+78bDuwTV02epwuf+wqQFJeXemYDb
- OJONw6ZzERNBgfGVP3tyEDqAgE8/FgEOX+Lnb+t4b6cbG3opqRhm2mP
+ bh=NbXdlT0TAtpSwJtw5xUJGWasfCwGb8vaYwcM1wH9ZBY=;
+ b=r2aIs1YIHqZw3KGvkhlOYdmKSsDuu35vUjBmHhU8K9jB5HEtEpStiQAOBfo5dmbqDLETuQ9qt
+ nIXJMRJbN2xD3kz8bHF3cSDB1a57IkdAT0p88fZZPqSuQ3rdb8AyJ4B
 X-Developer-Key: i=mahesh.rao@altera.com; a=ed25519;
  pk=tQiFUzoKxHrQLDtWeEeaeTeJTl/UfclUHWZy1fjSiyg=
 X-Endpoint-Received: by B4 Relay for mahesh.rao@altera.com/20250107 with
@@ -64,224 +64,208 @@ Reply-To: mahesh.rao@altera.com
 
 From: Mahesh Rao <mahesh.rao@altera.com>
 
-Implement ID pool management API's which will be
-used for Stratix10 Asynchronous communication with
-Secure Device Manager. These API's will be used
-in subsequent patches for ID management in asynchronous
-operations.
+Add support for HWMON commands in stratix10
+Asynchronous communication
 
 Signed-off-by: Mahesh Rao <mahesh.rao@altera.com>
 Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
 ---
- drivers/firmware/stratix10-svc.c | 191 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 191 insertions(+)
+ drivers/firmware/stratix10-svc.c                   | 60 +++++++++++++++++++++-
+ include/linux/firmware/intel/stratix10-smc.h       | 38 ++++++++++++++
+ .../linux/firmware/intel/stratix10-svc-client.h    | 11 ++++
+ 3 files changed, 108 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index 3d42d4b18b7299d0a9e5110159e06253dfeddf88..f487b6a7ef7b7cf7fdb4b4132d7a92b601803d8a 100644
+index 9c2aa7f61709683baa960f209659a931f06d3abf..e4954ad1cbbb58edf07e70a4f8ac7855086c0090 100644
 --- a/drivers/firmware/stratix10-svc.c
 +++ b/drivers/firmware/stratix10-svc.c
-@@ -170,10 +170,201 @@ struct stratix10_svc_chan {
- 	spinlock_t lock;
- };
+@@ -37,7 +37,7 @@
+  * timeout is set to 30 seconds (30 * 1000) at Intel Stratix10 SoC.
+  */
+ #define SVC_NUM_DATA_IN_FIFO			32
+-#define SVC_NUM_CHANNEL				3
++#define SVC_NUM_CHANNEL				4
+ #define FPGA_CONFIG_DATA_CLAIM_TIMEOUT_MS	200
+ #define FPGA_CONFIG_STATUS_TIMEOUT_SEC		30
+ #define BYTE_TO_WORD_SIZE              4
+@@ -1406,6 +1406,14 @@ int stratix10_svc_async_send(struct stratix10_svc_chan *chan, void *msg, void **
+ 		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
  
-+/**
-+ * struct stratix10_sip_id_pool - Structure representing a pool of IDs for
-+ *                                asynchronous operations.
-+ * @head:         The head index of the ID pool.
-+ * @size:         The total size of the ID pool.
-+ * @id_mask:      Pointer to an array representing the mask of allocated IDs.
-+ * @lock:         Mutex lock to protect access to the ID pool.
-+ */
-+struct stratix10_sip_id_pool {
-+	unsigned long head;
-+	unsigned long size;
-+	unsigned long *id_mask;
-+	struct mutex lock;
-+};
+ 	switch (p_msg->command) {
++	case COMMAND_HWMON_READTEMP:
++		args.a0 = INTEL_SIP_SMC_ASYNC_HWMON_READTEMP;
++		args.a2 = p_msg->arg[0];
++		break;
++	case COMMAND_HWMON_READVOLT:
++		args.a0 = INTEL_SIP_SMC_ASYNC_HWMON_READVOLT;
++		args.a2 = p_msg->arg[0];
++		break;
+ 	default:
+ 		dev_err(ctrl->dev, "Invalid command ,%d\n", p_msg->command);
+ 		ret = -EINVAL;
+@@ -1460,6 +1468,46 @@ int stratix10_svc_async_send(struct stratix10_svc_chan *chan, void *msg, void **
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(stratix10_svc_async_send);
 +
- static LIST_HEAD(svc_ctrl);
- static LIST_HEAD(svc_data_mem);
- static DEFINE_MUTEX(svc_mem_lock);
- 
 +/**
-+ * stratix10_id_pool_create - Create a new ID pool for Stratix10 async operation
-+ * @size: The size of the ID pool to create
++ * stratix10_svc_async_prepare_response - Prepare the response data for
++ * an asynchronous transaction.
++ * @chan: Pointer to the service channel structure.
++ * @handle: Pointer to the asynchronous handler structure.
++ * @data: Pointer to the callback data structure.
 + *
-+ * This function allocates and initializes a new ID pool structure for
-+ * Stratix10 async operations. It allocates memory for the ID pool structure
-+ * and the associated bitmaps for ID management.
++ * This function prepares the response data for an asynchronous transaction. It
++ * extracts the response data from the SMC response structure and stores it in
++ * the callback data structure. The function also logs the completion of the
++ * asynchronous transaction.
 + *
-+ * Return: Pointer to the newly created ID pool structure, or NULL on failure.
++ * Return: 0 on success, -ENOENT if the command is invalid
 + */
-+static struct stratix10_sip_id_pool *stratix10_id_pool_create(unsigned long size)
++static int stratix10_svc_async_prepare_response(struct stratix10_svc_chan *chan,
++						struct stratix10_svc_async_handler *handle,
++						struct stratix10_svc_cb_data *data)
 +{
-+	struct stratix10_sip_id_pool *id_pool = NULL;
++	struct stratix10_svc_client_msg *p_msg =
++		(struct stratix10_svc_client_msg *)handle->msg;
++	struct stratix10_svc_controller *ctrl = chan->ctrl;
 +
-+	if (size == 0)
-+		return NULL;
++	data->status = STRATIX10_GET_SDM_STATUS_CODE(handle->res.a1);
 +
-+	id_pool = kzalloc(sizeof(*id_pool), GFP_KERNEL);
-+	if (!id_pool)
-+		return NULL;
++	switch (p_msg->command) {
++	case COMMAND_HWMON_READTEMP:
++	case COMMAND_HWMON_READVOLT:
++		data->kaddr1 = (void *)&handle->res.a2;
++		break;
 +
-+	id_pool->size = size;
-+
-+	id_pool->id_mask = bitmap_zalloc(size, GFP_KERNEL);
-+	if (!id_pool->id_mask) {
-+		kfree(id_pool);
-+		return NULL;
++	default:
++		dev_alert(ctrl->dev, "Invalid command\n ,%d", p_msg->command);
++		return -ENOENT;
 +	}
-+
-+	id_pool->head = 0;
-+
-+	mutex_init(&id_pool->lock);
-+
-+	return id_pool;
-+}
-+
-+/**
-+ * stratix10_id_pool_destroy - Destroy an ID pool for Stratix10 async operation
-+ * @id_pool: Pointer to the ID pool structure
-+ *
-+ * This function destroys an ID pool for Stratix10 async operations. It first
-+ * checks if the ID pool is valid, then frees the associated bitmap and the
-+ * ID pool structure itself.
-+ *
-+ * Return: 0 on success, -EINVAL if the ID pool is invalid.
-+ */
-+static int stratix10_id_pool_destroy(struct stratix10_sip_id_pool *id_pool)
-+{
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	mutex_lock(&id_pool->lock);
-+
-+	if (id_pool->id_mask)
-+		bitmap_free(id_pool->id_mask);
-+
-+	mutex_unlock(&id_pool->lock);
-+	mutex_destroy(&id_pool->lock);
-+
-+	kfree(id_pool);
-+
-+	return 0;
-+}
-+
-+/**
-+ * stratix10_reserve_id - Reserve an ID in the ID pool
-+ * @id_pool: Pointer to the ID pool structure
-+ * @id: The ID to be reserved
-+ *
-+ * This function reserves an ID in the given ID pool. It first checks if the
-+ * ID pool is valid and if the ID is within the valid range.
-+ *
-+ * Return:
-+ * 0 on success,
-+ * -EINVAL if the ID pool is invalid, the ID is out of range, or the ID is
-+ * already reserved.
-+ */
-+static int stratix10_reserve_id(struct stratix10_sip_id_pool *id_pool, unsigned long id)
-+{
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	if (id >= id_pool->size)
-+		return -EINVAL;
-+
-+	mutex_lock(&id_pool->lock);
-+
-+	if (test_bit(id, id_pool->id_mask)) {
-+		mutex_unlock(&id_pool->lock);
-+		return -EINVAL;
-+	}
-+	set_bit(id, id_pool->id_mask);
-+
-+	mutex_unlock(&id_pool->lock);
-+	return 0;
-+}
-+
-+/**
-+ * stratix10_allocate_id - Allocate an ID from the ID pool
-+ * @id_pool: Pointer to the ID pool structure
-+ *
-+ * This function allocates an ID from the given ID pool. It searches for the
-+ * next available ID in the pool, marks it as allocated, and returns it.
-+ *
-+ * Return:
-+ * A non-negative integer representing the allocated ID on success
-+ * -EINVAL if the id_pool is NULL
-+ * -ENOMEM if no IDs are available in the pool
-+ */
-+static int stratix10_allocate_id(struct stratix10_sip_id_pool *id_pool)
-+{
-+	unsigned long tries = 0;
-+	int id;
-+
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	if (id_pool->head >= id_pool->size)
-+		return -ENOMEM;
-+
-+	mutex_lock(&id_pool->lock);
-+
-+	do {
-+		id_pool->head = find_next_zero_bit(id_pool->id_mask,
-+						   id_pool->size, id_pool->head);
-+		if (id_pool->head >= id_pool->size) {
-+			id_pool->head = 0;
-+			tries++;
-+		}
-+		/* cycle through the whole bitmap at least once*/
-+	} while (tries < 2 && test_bit(id_pool->head, id_pool->id_mask));
-+
-+	if (tries >= 2) {
-+		mutex_unlock(&id_pool->lock);
-+		return -ENOMEM;
-+	}
-+
-+	set_bit(id_pool->head, id_pool->id_mask);
-+	id = id_pool->head;
-+	id_pool->head = (id_pool->head + 1) % id_pool->size;
-+	mutex_unlock(&id_pool->lock);
-+	return id;
-+}
-+
-+/**
-+ * stratix10_deallocate_id - Deallocate an ID in the ID pool
-+ * @id_pool: Pointer to the ID pool structure
-+ * @id: The ID to be deallocated
-+ *
-+ * This function deallocates an ID in the given ID pool. It first checks if the
-+ * ID pool is valid and if the ID is within the valid range.
-+ *
-+ * Return:
-+ * 0 on success,
-+ * -EINVAL if the ID pool is invalid, the ID is out of range, or the ID is
-+ * not set.
-+ */
-+static int stratix10_deallocate_id(struct stratix10_sip_id_pool *id_pool, unsigned long id)
-+{
-+	if (!id_pool)
-+		return -EINVAL;
-+
-+	if (id >= id_pool->size)
-+		return -EINVAL;
-+
-+	mutex_lock(&id_pool->lock);
-+	if (!test_bit(id, id_pool->id_mask)) {
-+		mutex_unlock(&id_pool->lock);
-+		return -EINVAL;
-+	}
-+	clear_bit(id, id_pool->id_mask);
-+	mutex_unlock(&id_pool->lock);
-+
++	dev_dbg(ctrl->dev, "Async message completed transaction_id 0x%02x\n",
++		handle->transaction_id);
 +	return 0;
 +}
 +
  /**
-  * svc_pa_to_va() - translate physical address to virtual address
-  * @addr: to be translated physical address
+  * stratix10_svc_async_poll - Polls the status of an asynchronous transaction.
+  * @chan: Pointer to the service channel structure.
+@@ -1510,6 +1558,11 @@ int stratix10_svc_async_poll(struct stratix10_svc_chan *chan, void *tx_handle,
+ 
+ 	data->status = 0;
+ 	if (handle->res.a0 == INTEL_SIP_SMC_STATUS_OK) {
++		ret = stratix10_svc_async_prepare_response(chan, handle, data);
++		if (ret) {
++			dev_err(ctrl->dev, "Error in preparation of response,%d\n", ret);
++			WARN_ON_ONCE(1);
++		}
+ 		return 0;
+ 	} else if (handle->res.a0 == INTEL_SIP_SMC_STATUS_BUSY) {
+ 		dev_dbg(ctrl->dev, "async message is still in progress\n");
+@@ -1986,6 +2039,11 @@ static int stratix10_svc_drv_probe(struct platform_device *pdev)
+ 	chans[2].name = SVC_CLIENT_FCS;
+ 	spin_lock_init(&chans[2].lock);
+ 
++	chans[3].scl = NULL;
++	chans[3].ctrl = controller;
++	chans[3].name = SVC_CLIENT_HWMON;
++	spin_lock_init(&chans[3].lock);
++
+ 	list_add_tail(&controller->node, &svc_ctrl);
+ 	platform_set_drvdata(pdev, controller);
+ 
+diff --git a/include/linux/firmware/intel/stratix10-smc.h b/include/linux/firmware/intel/stratix10-smc.h
+index c98ed992d23bed5aa344868ca0c77a2d19d94c06..cc14201ba4810517c4de6636aa60e3e3fa43ad7d 100644
+--- a/include/linux/firmware/intel/stratix10-smc.h
++++ b/include/linux/firmware/intel/stratix10-smc.h
+@@ -625,6 +625,44 @@ INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FPGA_CONFIG_COMPLETED_WRITE)
+ #define INTEL_SIP_SMC_FCS_GET_PROVISION_DATA \
+ 	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_FCS_GET_PROVISION_DATA)
+ 
++/**
++ * Request INTEL_SIP_SMC_ASYNC_HWMON_READTEMP
++ * Async call to request temperature
++ *
++ * Call register usage:
++ * a0 INTEL_SIP_SMC_ASYNC_FUNCID_HWMON_READTEMP
++ * a1 transaction job id
++ * a2 Temperature Channel
++ * a3-a17 not used
++ *
++ * Return status
++ * a0 INTEL_SIP_SMC_STATUS_OK ,INTEL_SIP_SMC_STATUS_REJECTED
++ * or INTEL_SIP_SMC_STATUS_BUSY
++ * a1-a17 not used
++ */
++#define INTEL_SIP_SMC_ASYNC_FUNCID_HWMON_READTEMP (0xE8)
++#define INTEL_SIP_SMC_ASYNC_HWMON_READTEMP \
++	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNCID_HWMON_READTEMP)
++
++/**
++ * Request INTEL_SIP_SMC_ASYNC_HWMON_READVOLT
++ * Async call to request voltage
++ *
++ * Call register usage:
++ * a0 INTEL_SIP_SMC_ASYNC_HWMON_READVOLT
++ * a1 transaction job id
++ * a2 Voltage Channel
++ * a3-a17 not used
++ *
++ * Return status
++ * a0 INTEL_SIP_SMC_STATUS_OK ,INTEL_SIP_SMC_STATUS_REJECTED
++ * or INTEL_SIP_SMC_STATUS_BUSY
++ * a1-17 not used
++ */
++#define INTEL_SIP_SMC_ASYNC_FUNCID_HWMON_READVOLT (0xE9)
++#define INTEL_SIP_SMC_ASYNC_HWMON_READVOLT \
++	INTEL_SIP_SMC_ASYNC_VAL(INTEL_SIP_SMC_ASYNC_FUNCID_HWMON_READVOLT)
++
+ /**
+  * Request INTEL_SIP_SMC_ASYNC_POLL
+  * Async call used by service driver at EL1 to query mailbox response from SDM.
+diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
+index bda837815bae35fbf4df6280dba5bc02d747426e..032e780c7b545e2e238f9dea712779d979e491d6 100644
+--- a/include/linux/firmware/intel/stratix10-svc-client.h
++++ b/include/linux/firmware/intel/stratix10-svc-client.h
+@@ -16,6 +16,7 @@
+ #define SVC_CLIENT_FPGA			"fpga"
+ #define SVC_CLIENT_RSU			"rsu"
+ #define SVC_CLIENT_FCS			"fcs"
++#define SVC_CLIENT_HWMON		"hwmon"
+ 
+ /*
+  * Status of the sent command, in bit number
+@@ -71,6 +72,7 @@
+ #define SVC_RSU_REQUEST_TIMEOUT_MS              300
+ #define SVC_FCS_REQUEST_TIMEOUT_MS		2000
+ #define SVC_COMPLETED_TIMEOUT_MS		30000
++#define SVC_HWMON_REQUEST_TIMEOUT_MS		2000
+ 
+ struct stratix10_svc_chan;
+ 
+@@ -142,6 +144,12 @@ struct stratix10_svc_chan;
+  *
+  * @COMMAND_FCS_RANDOM_NUMBER_GEN: generate a random number, return status
+  * is SVC_STATUS_OK, SVC_STATUS_ERROR
++ *
++ * @COMMAND_HWMON_READTEMP: read temperature from the hardware sensor connected
++ * to the FPGA, return status is SVC_STATUS_OK, SVC_STATUS_ERROR
++ *
++ * @COMMAND_HWMON_READVOLT: read voltage from the hardware sensor connected
++ * to the FPGA, return status is SVC_STATUS_OK, SVC_STATUS_ERROR
+  */
+ enum stratix10_svc_command_code {
+ 	/* for FPGA */
+@@ -172,6 +180,9 @@ enum stratix10_svc_command_code {
+ 	COMMAND_MBOX_SEND_CMD = 100,
+ 	/* Non-mailbox SMC Call */
+ 	COMMAND_SMC_SVC_VERSION = 200,
++	/* for HWMON */
++	COMMAND_HWMON_READTEMP,
++	COMMAND_HWMON_READVOLT
+ };
+ 
+ /**
 
 -- 
 2.35.3
