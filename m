@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A192272634;
-	Mon, 26 May 2025 21:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D85C72634;
+	Mon, 26 May 2025 21:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748295503; cv=none; b=Pl86H8VyqjbdRK50Ph3atKIcF2sX5wvgVucjyr8raPIDbX5bgzJKk1XOFQ8P2KTs6Y0gWZWVv+m36XWccet+t5K4uyFjSbPztFwkZjb6y08x9CKZHePoIcIx0His83lw5+Ky+bjV7l3lgFMt3TL3fyhIP3Im8Dwd4d/idgkdIak=
+	t=1748295511; cv=none; b=Ecz0alYb94gJ8Vo+DDgds5mdYfWTlXGCZ0+qreDLkdVzgrc6M3T+ZZu9bAxWigMm3EUJB/iMe/s8f1MDUXPJQaNaDQURxpB9oY5g/jBXwbs2I52LBR+rTrq3gBlssWxFkVbklmsSIXAnrMzNF/KZlggGL4DFI6xBaTvE6OI+SyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748295503; c=relaxed/simple;
-	bh=HNHbJPr4s4X8lIPy4ONb7Rh9zCsz2STlmuFHms6xtT0=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Tl3mk04TvoMTM9buKX+h/WMYQESo9NuL2akDLaJH5J0eGeiv4PBBvsdp0chFWFURCo07iYMkhvzpBauOzUJYdqFh0Sft2U71b+/zrJbD+fbeaPu7RG+X2sAjkFgUPMo2wpGc8Y5eVs3Jmb2/74GcV3xIIc3YlVgyZUEC7+qrvas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGhc8l8K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748295511; c=relaxed/simple;
+	bh=8EbxoEHxOTTOAyFh3kIQL4xQp1JdkAaDvKMujtz07/U=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HtIda9wGEocyBYxh0/TwlaHcDbSDeaMpJ8AeQJC8BtUGUtNfWaHR8Dv/a/RJ7QFFSxGzsiYuwX9GylqBjUlVELn+a12xjfmyEt9DFmV0bapjgd9dqiglS6Lz4ZYxLmeFl4qMchAP1H2qmVyyiikh1CSo0nDGfAVYuSl5CFThkN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NARhk3JU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGhc8l8K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A32C4CEE7;
-	Mon, 26 May 2025 21:38:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NARhk3JU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495DDC4CEE7;
+	Mon, 26 May 2025 21:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748295503;
-	bh=HNHbJPr4s4X8lIPy4ONb7Rh9zCsz2STlmuFHms6xtT0=;
+	s=k20201202; t=1748295511;
+	bh=8EbxoEHxOTTOAyFh3kIQL4xQp1JdkAaDvKMujtz07/U=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=KGhc8l8KNg1j2L0wCj9wBiHaLokdEHxJEfQcJgwQSvJtTSmc0z3OvLg94Q9dWTn+Q
-	 0kxIZ4j6ue3QtX4PNgbesUuJ8hncRpa7bkkoaw8t1nz8DtdWzkWhpOjtoxZ0+ltw6P
-	 VZcIhJYlWth7bHe7okx8jbYeRaNFssrwy3PFevXn3zUPoxfmItrGsYWRHC+PpOHvB6
-	 Tos3G79ApRNAgxG2T3oJ4263hXBCVug9L2l0oKO4QelGbMv8Upfl6lh5+qXTVkIxWL
-	 heH2QsYxa1lnH0UUnm+R25GaZq7B+lVdABrWH8RPyacQOn9EyqCjrNULpZxa7zgLZt
-	 HqY6OwMy+98IA==
+	b=NARhk3JUT+wpd2L74Sy/zpNBiB9vNG4z2qTGjuRmvOVBNnaXyD7xuT65ast+fcYeC
+	 2nsYC4KKVkxSGiOaZigFmixk8QKc2jSvMZEJEUFINxwftPUmogSTt00prh3Bc879dX
+	 mAH+mZ0bC7ZBPW+qoonCWwGuJeXfUa6OrdV3fGUUD+LMu1wcfNx8FqhyahFvQYSpnM
+	 /DBjfqR1V3SHo/3LZ0BCRCapSQATxMUq+ZDedumypsp9huGQDsUWDwTZiPXAC7q3o5
+	 SylxTTTP/4kVmRII5SValwTbcUjLUZb1A5kUR6sAFoL8UX9QkM6G4l2In9c+Kk6+uc
+	 N3FhBWfsLlvyQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F6D3805D8E;
-	Mon, 26 May 2025 21:38:59 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 updates for 6.16 merge window
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ECCC73805D8E;
+	Mon, 26 May 2025 21:39:06 +0000 (UTC)
+Subject: Re: [GIT PULL] kunit next update for Linux 6.16-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250523183412.8641Ac6-hca@linux.ibm.com>
-References: <20250523183412.8641Ac6-hca@linux.ibm.com>
-X-PR-Tracked-List-Id: <linux-s390.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250523183412.8641Ac6-hca@linux.ibm.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.16-1
-X-PR-Tracked-Commit-Id: 774a1fa880bc949d88b5ddec9494a13be733dfa8
+In-Reply-To: <ab676145-a8cb-4f0f-83e3-79e073c47380@linuxfoundation.org>
+References: <ab676145-a8cb-4f0f-83e3-79e073c47380@linuxfoundation.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ab676145-a8cb-4f0f-83e3-79e073c47380@linuxfoundation.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-kunit-6.16-rc1
+X-PR-Tracked-Commit-Id: 772e50a76ee664e75581624f512df4e45582605a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d8cb068359f6210d790828714081d4ccb47014ff
-Message-Id: <174829553772.1063943.6963269122441410821.pr-tracker-bot@kernel.org>
-Date: Mon, 26 May 2025 21:38:57 +0000
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: ba450370980aeae32197b74c27e4563281cd3aaa
+Message-Id: <174829554554.1063943.2345206098554311395.pr-tracker-bot@kernel.org>
+Date: Mon, 26 May 2025 21:39:05 +0000
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 23 May 2025 20:34:12 +0200:
+The pull request you sent on Fri, 23 May 2025 13:39:01 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-6.16-1
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-kunit-6.16-rc1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d8cb068359f6210d790828714081d4ccb47014ff
+https://git.kernel.org/torvalds/c/ba450370980aeae32197b74c27e4563281cd3aaa
 
 Thank you!
 
