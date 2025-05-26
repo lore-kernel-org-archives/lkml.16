@@ -1,79 +1,125 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5F35979
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC1335979;
+	Mon, 26 May 2025 02:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748226832; cv=none; b=IdElbkMW8CX738hkCby1G1PKEU2+LtCVcMeO6DWXXSB2JC4BumoJd3uX7mhbtL47OC4YE/4Kaj770UdYI7D3xyiis0DtjYGmwrnxEbxzJ9uBfBKgo7+duOefZkQRnZ3q/awr6im+9YyHU3hh8UwVjK1s4X2TYHlXCg8QfzKMpfs=
+	t=1748226891; cv=none; b=XzTSZzIF57GIyjl6BG6+rylCzaGBazdc2VK6UiSXw6cDl3Re/7PATovSEaJ5cMOeMltGk7MFsuVrRG4zuU4MERpTazFx4MqqqtRCUnRFlPFtsFMBvV93C5/ciIoVF3I2gZt5nyGnfhXvXeGGAuvZNWQ55qAvvLOhgyKxd81urkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748226832; c=relaxed/simple;
-	bh=r4VTOKE7niw9o8hVYOZpbcu9LTu6vXx4wDNl8oA9EkI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rlb5ssN5M3xQxJL//ef0J/0YNtHEPHnOwH1Suo9/nognVSUkyJH4AW5ojd4j2iDOf8+PGi7wGQnOqemwf82kSnWUcy/132Be/KV9izb+A98oVSx3341cgBqlqKmHwv8QHKrxVpruiHG/jdSWXDbDYRqUeCdMGosbDwsFyPqB3zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NlPnUY/7; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748226891; c=relaxed/simple;
+	bh=BrsL6bLwBpPFSCG8U6SgP3NVr0sJJLRt3AVJmRMalIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9/Ietlm6WLdSSg41Qhl5lTisgPGNw0uzNVUaRh9ltgSsgAh9czqsXZS/YGA0GC4xK2+pLlpuoVmmXfxnGVphMfjW+Vnpfdu7YQsbbNcvbiceZRLMIdYAsnrr6A3oKzD1qsJdo4KkpI4yjsqLRUvU/6wfCCM8dqEPVvEUnylg78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ew+fm/hh; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NlPnUY/7"
-Message-ID: <ef9b8be5-075d-4611-8587-b1e63eb3aa3d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748226818;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Wk4aU1yhp9JXNIWuU63CnMtHHLuSiMgRMS/o0R8RjEY=;
-	b=NlPnUY/7PSyYa1cMtwbYdhICGQyhU8Jr3yl7oFhIdU/E64LdsnLL5vT6t8tonc2qcX9WrH
-	bN3Uecs3hbnvST39mK2U388lWedGpRgDqhJBNlAoiNpnrFSOPA+ZRbp3dKNjU68UyQoihn
-	gXySKBLYpVpNPLzLtOzeUfTH1AaX1W4=
-Date: Mon, 26 May 2025 10:33:30 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew+fm/hh"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so1302074a91.3;
+        Sun, 25 May 2025 19:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748226889; x=1748831689; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WNdOJh+NnMF/Str+UwFKXBafijjedPkZ85jMh2ARzic=;
+        b=Ew+fm/hh/mg5+gKRmiqOU4tXdaiC/LzmsyCZRLGIqpugs0+rgfb10EngvdifcyURCD
+         zec/il3tzCim6mcggQ8tPzCwJq6Yjw8BhiA2qk5XZinsDkU1IjU+HxHtWPyqiu4MAT+d
+         SaSJqgLoa0zr2IVxdnoQqOCQudF5BrBqS30i9PWgPmJchIXYLszVOMQxtghF8GBr9Vpa
+         Y0LDRjaAMp7/JJMiXHbml+9gV6Fi52NiOYiBHtfaf7uXoAR5fYMW+wwxSL6rEyAlXX73
+         17ot2pBlCgGFzFxyVDNnMt9A2BD+H94Gt4znT6kTrDC74SB/FMv32iyItX9TfUUzAWP6
+         VUfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748226889; x=1748831689;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WNdOJh+NnMF/Str+UwFKXBafijjedPkZ85jMh2ARzic=;
+        b=aOGsVR8Jq3oIVvn7CSfgjAfDpJwy/nBNML4WoD2gUTZnA+UL6kBnvXzSgDeny3O6ap
+         8ExWhdAEndwxeYY3xmte7DdYDNiozU9/aZMb2gVV/fmYM9KVX9FA+j1MmHyExZej7h29
+         Tnr+CUkaqedbszjqibhh7tVU3D4UGPF0T0YIm61xccUgEAw+ExDHV0iZNc8U05nTvc7s
+         dAm2lDngDlnPymZCuJS+GezdAlkZkbvvnLBEgCLTicFg7LXM/1jwCAOg6zLg7alcPf6f
+         isRGfR2jpkRS95N7M0TKopf1OzjH/uk5wwm+Pn+8rYgme+PPEjL1WTecF5LblTQ/orjm
+         8dGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAMMEC6YCrpQrzzB3eRQPjzsY6uxGk382tnkMnC8lG/nvi23tHTsEHYzYe8j6y0Ug2oiOqC13ZFcIiupdg@vger.kernel.org, AJvYcCVv8+TS0dAY71HVsDqMGM6VCHNwjPTPhDZD0m1Pa+YmMKG4/bRhVEEZqi1zEmBSGinuYYVJzfeShUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi53ngsg9KO5EWShxS+WMYdwbqXZHwsPGDu0txxFHTUVxps3I2
+	Axxhd+RSNiK4dOYTnS10xgl/tF5hhKQYIR5KUjQ3wU7JW5kkmDA8hg/e
+X-Gm-Gg: ASbGncvPmW7WIcQULCTQAYhCeoN8vMBsh3fxqKxjPHNkzFd82vrr0VnebO1X9TlWeT/
+	TYBVfVJ/GK8Jj2yrcTodT1E9gAIxJL9YhluuAzUa3W+hr4LihI8oNd0wlEOg1zQI/MtbH2vKDbD
+	D9uTofMHxsV1ckHEn7CULqGbOGRma5CqnrHFGpRAgwrvBnRz73roNqXQQL9uUXs4LfkQ11St4rN
+	KxHfT1aJPn7dCuF83TVkuQFSdngNYnHbV/TQV3N03hdTglzfFRf9Soo03EvQW5z7jtI/7/7iREF
+	BGSJLhWWAnXGEDThu0MPAsH3BbGY/MIQG6oMkxgZP4kRRUY1F75tcC2S5HG9/g==
+X-Google-Smtp-Source: AGHT+IHEQfVO4jOQL3Of/QYcqiFqVxdgSNZqlpR3S0pBQS+f1Nln9HrB4Or+CN1VaN22zOC7F3nnsg==
+X-Received: by 2002:a17:90b:55c3:b0:2ee:94d1:7a89 with SMTP id 98e67ed59e1d1-3110f0ee05cmr11603312a91.1.1748226889213;
+        Sun, 25 May 2025 19:34:49 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e59b3sm11123443a91.33.2025.05.25.19.34.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 19:34:48 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id E3FD74230C03; Mon, 26 May 2025 09:34:44 +0700 (WIB)
+Date: Mon, 26 May 2025 09:34:44 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: George Anthony Vernon <contact@gvernon.com>, dmitry.torokhov@gmail.com,
+	corbet@lwn.net, skhan@kernel.org
+Cc: linux-input@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH 1/3] input: docs: Fix broken table formatting
+Message-ID: <aDPTRGHNx2P-_wXj@archie.me>
+References: <20250526011443.136804-1-contact@gvernon.com>
+ <20250526011443.136804-2-contact@gvernon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
- controller
-To: Binbin Zhou <zhoubb.aaron@gmail.com>, Yao Zi <ziyao@disroot.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250523104552.32742-1-ziyao@disroot.org>
- <20250523104552.32742-2-ziyao@disroot.org>
- <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NdA65ZAYfdmxNg3d"
+Content-Disposition: inline
+In-Reply-To: <20250526011443.136804-2-contact@gvernon.com>
 
-在 5/23/25 8:30 PM, Binbin Zhou 写道:
-> On Fri, May 23, 2025 at 6:46 PM Yao Zi <ziyao@disroot.org> wrote:
->>
->> Document the clock controller shipped in Loongson 2K0300 SoC, which
->> generates various clock signals for SoC peripherals.
->>
->> Signed-off-by: Yao Zi <ziyao@disroot.org>
->> ---
->>   .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
->>   .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
->>   2 files changed, 106 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
-> 
-> I don't think a new binding file for 2K0300 is needed. Adding
-> compatible entries to loongson,ls2k-clk.yaml would be more appropriate
-> as they are almost all similar.
-> 
-Same here!
 
-Thanks,
-Yanteng
+--NdA65ZAYfdmxNg3d
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 26, 2025 at 02:14:41AM +0100, George Anthony Vernon wrote:
+> diff --git a/Documentation/input/devices/amijoy.rst b/Documentation/input=
+/devices/amijoy.rst
+> index 8df7b11cd98d..f854ee975247 100644
+> --- a/Documentation/input/devices/amijoy.rst
+> +++ b/Documentation/input/devices/amijoy.rst
+> @@ -123,7 +123,7 @@ JOY1DAT   Y7  Y6  Y5  Y4  Y3  Y2  Y1  Y0     X7  X6  =
+X5  X4  X3  X2  X1  X0
+>          clocked by 2 of the signals input from the mouse serial
+>          stream. Starting with first bit received:
+> =20
+> -         +-------------------+-----------------------------------------+
+> +         +--------+----------+-----------------------------------------+
+>           | Serial | Bit Name | Description                             |
+>           +=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+
+>           |   0    | M0H      | JOY0DAT Horizontal Clock                |
+
+Fix is verified in htmldocs output, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--NdA65ZAYfdmxNg3d
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDPTQAAKCRD2uYlJVVFO
+o2UyAP4uQBKtj4I45lSGFA3/M03jhbOnbCEU1RWANqhj+EXxuQEAwMBEdTeIbwPZ
+ed6fGLQmf/Gd9hfT6HKiFbyTPd3wvw8=
+=5jsN
+-----END PGP SIGNATURE-----
+
+--NdA65ZAYfdmxNg3d--
