@@ -1,125 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976C7320F;
-	Mon, 26 May 2025 05:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247CE1ACEDF
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748235822; cv=none; b=bMQ6QHyl9NhMXsA/tV5pW4wMKdpjT2HCQOy1cBqn0xxqk1icUlDUp1O4dS5Jrz4cxPNMpx2ck08M1l2OTl8xEw1Fu0whO4k+9kQZ7aiQPWwnk7SN5TmTjEQrIde89Q2AqZB/gf4fAiJWTZzZcGdupNox4xkN8ZZ6e3TXuWeuCeU=
+	t=1748236097; cv=none; b=DrihZvvQtrYFnRDT8Mt5amz9cJ0dcPFMtxcbMpFn/UopmxlCNKVLORbUNw/8tj/rxQRGCFCbt+tAC3IB6AW6Qteg7gvAYiwC9lU8pEDW+jlXMWX5Q1VoK7BZf/f0rxCZYumu/BeJh7WtzQuXVfa+wGE7NCRPbWLRekzJwlNxzM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748235822; c=relaxed/simple;
-	bh=l2SlDo3oSwaK6WFxJnFl4CLJ0LrKto5y42NBgTFlDcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JBCLqOUyUkUJCxxtXA+fNBiU+ieu9HeYqMv1DsmcUQ3azMLveadbQwv9SqO8IU9CC6Ze/pT/BLe0io01wHKlN+vbB1Uut1hHt9pMp+j5Xvfwf9LNqQlE4eevPvTeE/nnxTI5gTolokYTNMqqMk3bWGBsIm88b2o2n8irHmhHx3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSGPDOSL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748236097; c=relaxed/simple;
+	bh=VN3uKbL1JqOpb7xEOcPjFAJ2oOJbhSAV/lt65qfGpCY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=eGNRdGoRgVoR1a+fgP5GMjZ3T2betDcGiSsu0FvnNqtXWHRa8qoanlc5NVPwqKqaZOf+RaE1qQ9K2/f8RW1CcjUk7pG5uK13F6khHlonyLdpVJ+1zpzIJxiQHqnhJzo6pHjaMCq5v86UZMTChkYaIpv5LHpwON5y19UeaTmwrgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmo-cybersecurity.com; spf=pass smtp.mailfrom=gmo-cybersecurity.com; dkim=pass (2048-bit key) header.d=gmo-cybersecurity.com header.i=@gmo-cybersecurity.com header.b=Ic1RnCGr; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmo-cybersecurity.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmo-cybersecurity.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSGPDOSL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 551DFC4CEE7;
-	Mon, 26 May 2025 05:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748235822;
-	bh=l2SlDo3oSwaK6WFxJnFl4CLJ0LrKto5y42NBgTFlDcA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iSGPDOSLpy+Fr1a15P8h1WKLSt2rYKs5iug6LWRBteg4iYjPlPwHM3izsIF9DckSu
-	 yEYtSxi6d/m+hZ7kGk2egAQ9C1a6PQlEdb5g5yAdSWahcL/vnoTibsx9OGny0h5tb5
-	 1wFcFc5oedC0RvVbB487llrnIabKBIU0zTZUFA89K3UXyxrP2TMZLZTd1zfIEMGrFT
-	 NvR6kj5RknzfpJqms9IDpTWF880lTF7wEkTSI4kVr5yOKUeIWJ3ncksryWGycMzZCn
-	 kuzK0DGP32yoZKQzZSVoSBft2OsU9/Kr6ypNEQ0h+o5wZ465i1mGKf+5cQjZuz1Y1M
-	 JkK0hwAj9jfRg==
-Message-ID: <87caf3ce-1d65-4faf-89e0-1cebdf8391c4@kernel.org>
-Date: Mon, 26 May 2025 07:03:37 +0200
+	dkim=pass (2048-bit key) header.d=gmo-cybersecurity.com header.i=@gmo-cybersecurity.com header.b="Ic1RnCGr"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so22004665e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 22:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmo-cybersecurity.com; s=google; t=1748236092; x=1748840892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ywmyN/RiFF7WteRQHUKPH3zi5cyGT7RpRE4XhtfXD3Q=;
+        b=Ic1RnCGrmbto5he7xm8ingV94/4jNJ3MimwhNbJRNn01noUCtwTKxh+0gsQ7niSgNn
+         ZldYlZOm8YjokVNwrbjzCWz3ITuAhNokqMWbLz0S3cEOqEOcekXePPe84b530wSNyd/s
+         aIFsH7dSjiCX8fXI9xKnhfV2+qLQXWc/ksBH3ran1kJ597x1SpuyJp0FLg4uL0R+gRsp
+         sE1H8ytDQhRS6suc486V+4n7YaroVXJUiOCSOXSQ8uL5QHjOt50T7oE3Pj4P7CoX7wbl
+         TCU4tkmU22gOQzlPGdxb4jK/iVpW34fj3N/FPFeFxLOVyn5HiFpUjXK4i8HIMbAaLHvq
+         79Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748236092; x=1748840892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ywmyN/RiFF7WteRQHUKPH3zi5cyGT7RpRE4XhtfXD3Q=;
+        b=nkPYGll43yQpDxVWmZF1tlMlRtspeOs47uKgTcXB3CSoxrMY4vjGXCnyhfyWb0XIAI
+         yVc8DWLrPkwWhb5pr1RTX0xBkUsagltW9y/q/NXr3IoL06uEEwfa+z6qrAhTfvCmQ6+A
+         5jLyvXtLEOF7xGsx5JphSeDPfR+bimRlmbiQN/hCBa/Zbyd8gOL2a6B8MEv0XDeO83XW
+         V+aITCupe0iDV2zP9OVKe+HpiM0nPeOy8gB47lsMxqUIOE2CKHZ0HrAoQX+9e1ZPZnzK
+         HBdTXY8gteRAYbz3HjA1cum5vplAAmxxdZYZzGujECW1HUpERt/YdKdrDAv+A4v9JgQ/
+         umCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcxUbxZpTcJWA4fo1+GIU/Z8GB9LKYtNI8k0ZkPjQH2pQzG00K60YtLeidYEo4JRqSPLUrUQQqdZKcXrs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIRq6ouE3HtW64lKTUYe6bcXfpb+a7+Hpry8WYFxZs2dmYwWwc
+	s0rxDEriga01F9nc9yiv9LO6Dc8/k5nh/wBrZ/MIBFWn5R5ZXWGUSIyuwExUQMuaB0s9TnHbJKi
+	G0oQgF+dS1ae3bqiL3inWYx1tbnsc4JHKg/0+AYqAIw==
+X-Gm-Gg: ASbGncs8DtR2Fj24f5cpgajn0hCf2jIhXmriPFZ8dxPuA1zR42SaElu3Jit/QYjWfOc
+	0sMaPdOM1ZWf7qmiGHGF17pD/c/NTzUXcUxo++yS/fMNtT3xj9hIQT2OKc98m0ITEXSJsUFuxO2
+	sFFiKkosocw0gg0a9gCyflHhoIbdSx6eDiRSqE04cDlwqhJ/FvHuzvKYjgNVcsIm2yrhnCUu2ba
+	4s8
+X-Google-Smtp-Source: AGHT+IHQtcTKnTqIqu1AWfIXts75t/CEdk2U0zHZsJFQRNgEtFrrICKZ1gNLvc7nyaNDbGUkXhq5BKtnb5bMzcgZXLo=
+X-Received: by 2002:a05:600c:6215:b0:43d:40b0:5b with SMTP id
+ 5b1f17b1804b1-44c932f9411mr60425455e9.25.1748236092265; Sun, 25 May 2025
+ 22:08:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv4 4/5] wifi: ath9k: ahb: replace id_table with of
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-wireless@vger.kernel.org, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgens?=
- =?UTF-8?Q?en?= <toke@toke.dk>, nbd@nbd.name,
- Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20250525214256.8637-1-rosenp@gmail.com>
- <20250525214256.8637-5-rosenp@gmail.com>
- <297d936b-7ce2-4d9a-baff-e4b0503e6000@kernel.org>
- <CAKxU2N-b-qJNqdF94Q_cjFv9NU3r0KDNXtdzOTPenJYRyKqaGA@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAKxU2N-b-qJNqdF94Q_cjFv9NU3r0KDNXtdzOTPenJYRyKqaGA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: =?UTF-8?B?5oi455Sw5pmD5aSq?= <kota.toda@gmo-cybersecurity.com>
+Date: Mon, 26 May 2025 14:08:01 +0900
+X-Gm-Features: AX0GCFsCp7T-RWT5r2wyD3bTuMWuFueQJ7SnXQQHT4ejrzVyXl82yc9Vvz4Q4nc
+Message-ID: <CAA3_Gnogt7GR0gZVZwQ4vXXav6TpXMK6t=QTLsqKOaX3Bo_tNA@mail.gmail.com>
+Subject: [PATCH net] bonding: Fix header_ops type confusion
+To: =?UTF-8?B?5oi455Sw5pmD5aSq?= <kota.toda@gmo-cybersecurity.com>
+Cc: =?UTF-8?B?5bCP5rGg5oKg55Sf?= <yuki.koike@gmo-cybersecurity.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com, 
+	edumazet@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26/05/2025 06:59, Rosen Penev wrote:
-> On Sun, May 25, 2025 at 9:30 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 25/05/2025 23:42, Rosen Penev wrote:
->>> @@ -72,20 +55,15 @@ static const struct ath_bus_ops ath_ahb_bus_ops  = {
->>>
->>>  static int ath_ahb_probe(struct platform_device *pdev)
->>>  {
->>> -     const struct platform_device_id *id = platform_get_device_id(pdev);
->>>       struct ieee80211_hw *hw;
->>>       struct ath_softc *sc;
->>>       struct ath_hw *ah;
->>>       void __iomem *mem;
->>>       char hw_name[64];
->>> +     u16 dev_id;
->>
->> I don't think these are u16 in the headers, but unsigned int.
-> Sure. I can change to int or kernel_ulong_t. It doesn't matter much.
-> The function that uses this has an int parameter, so might make sense
-> to use that.
+In bond_setup_by_slave(), the slave=E2=80=99s header_ops are unconditionall=
+y
+copied into the bonding device. As a result, the bonding device may invoke
+the slave-specific header operations on itself, causing
+netdev_priv(bond_dev) (a struct bonding) to be incorrectly interpreted
+as the slave's private-data type.
 
-Ah, ok, that's fine then. Ignore both comments.
+This type-confusion bug can lead to out-of-bounds writes into the skb,
+resulting in memory corruption.
 
-Best regards,
-Krzysztof
+This patch adds two members to struct bonding, bond_header_ops and
+header_slave_dev, to avoid type-confusion while keeping track of the
+slave's header_ops.
+
+Fixes: 1284cd3a2b740 (bonding: two small fixes for IPoIB support)
+Signed-off-by: Kota Toda <kota.toda@gmo-cybersecurity.com>
+Signed-off-by: Yuki Koike <yuki.koike@gmo-cybersecurity.com>
+Co-Developed-by: Yuki Koike <yuki.koike@gmo-cybersecurity.com>
+Reviewed-by: Paolo Abeni <pabeni@redhat.com>
+Reported-by: Kota Toda <kota.toda@gmo-cybersecurity.com>
+---
+ drivers/net/bonding/bond_main.c | 61
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/net/bonding.h           |  5 +++++
+ 2 files changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_mai=
+n.c
+index 8ea183da8d53..690f3e0971d0 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1619,14 +1619,65 @@ static void bond_compute_features(struct bonding *b=
+ond)
+     netdev_change_features(bond_dev);
+ }
+
++static int bond_hard_header(struct sk_buff *skb, struct net_device *dev,
++        unsigned short type, const void *daddr,
++        const void *saddr, unsigned int len)
++{
++    struct bonding *bond =3D netdev_priv(dev);
++    struct net_device *slave_dev;
++
++    slave_dev =3D bond->header_slave_dev;
++
++    return dev_hard_header(skb, slave_dev, type, daddr, saddr, len);
++}
++
++static void bond_header_cache_update(struct hh_cache *hh, const
+struct net_device *dev,
++        const unsigned char *haddr)
++{
++    const struct bonding *bond =3D netdev_priv(dev);
++    struct net_device *slave_dev;
++
++    slave_dev =3D bond->header_slave_dev;
++
++    if (!slave_dev->header_ops || !slave_dev->header_ops->cache_update)
++        return;
++
++    slave_dev->header_ops->cache_update(hh, slave_dev, haddr);
++}
++
+ static void bond_setup_by_slave(struct net_device *bond_dev,
+                 struct net_device *slave_dev)
+ {
++    struct bonding *bond =3D netdev_priv(bond_dev);
+     bool was_up =3D !!(bond_dev->flags & IFF_UP);
+
+     dev_close(bond_dev);
+
+-    bond_dev->header_ops        =3D slave_dev->header_ops;
++    /* Some functions are given dev as an argument
++     * while others not. When dev is not given, we cannot
++     * find out what is the slave device through struct bonding
++     * (the private data of bond_dev). Therefore, we need a raw
++     * header_ops variable instead of its pointer to const header_ops
++     * and assign slave's functions directly.
++     * For the other case, we set the wrapper functions that pass
++     * slave_dev to the wrapped functions.
++     */
++    bond->bond_header_ops.create =3D bond_hard_header;
++    bond->bond_header_ops.cache_update =3D bond_header_cache_update;
++    if (slave_dev->header_ops) {
++        bond->bond_header_ops.parse =3D slave_dev->header_ops->parse;
++        bond->bond_header_ops.cache =3D slave_dev->header_ops->cache;
++        bond->bond_header_ops.validate =3D slave_dev->header_ops->validate=
+;
++        bond->bond_header_ops.parse_protocol =3D
+slave_dev->header_ops->parse_protocol;
++    } else {
++        bond->bond_header_ops.parse =3D NULL;
++        bond->bond_header_ops.cache =3D NULL;
++        bond->bond_header_ops.validate =3D NULL;
++        bond->bond_header_ops.parse_protocol =3D NULL;
++    }
++
++    bond->header_slave_dev      =3D slave_dev;
++    bond_dev->header_ops        =3D &bond->bond_header_ops;
+
+     bond_dev->type            =3D slave_dev->type;
+     bond_dev->hard_header_len   =3D slave_dev->hard_header_len;
+@@ -2676,6 +2727,14 @@ static int bond_release_and_destroy(struct
+net_device *bond_dev,
+     struct bonding *bond =3D netdev_priv(bond_dev);
+     int ret;
+
++    /* If slave_dev is the earliest registered one, we must clear
++     * the variables related to header_ops to avoid dangling pointer.
++     */
++    if (bond->header_slave_dev =3D=3D slave_dev) {
++        bond->header_slave_dev =3D NULL;
++        bond_dev->header_ops =3D NULL;
++    }
++
+     ret =3D __bond_release_one(bond_dev, slave_dev, false, true);
+     if (ret =3D=3D 0 && !bond_has_slaves(bond) &&
+         bond_dev->reg_state !=3D NETREG_UNREGISTERING) {
+diff --git a/include/net/bonding.h b/include/net/bonding.h
+index 95f67b308c19..cf8206187ce9 100644
+--- a/include/net/bonding.h
++++ b/include/net/bonding.h
+@@ -215,6 +215,11 @@ struct bond_ipsec {
+  */
+ struct bonding {
+     struct   net_device *dev; /* first - useful for panic debug */
++    struct   net_device *header_slave_dev;  /* slave net_device for
+header_ops */
++    /* maintained as a non-const variable
++     * because bond's header_ops should change depending on slaves.
++     */
++    struct   header_ops bond_header_ops;
+     struct   slave __rcu *curr_active_slave;
+     struct   slave __rcu *current_arp_slave;
+     struct   slave __rcu *primary_slave;
