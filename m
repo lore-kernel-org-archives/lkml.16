@@ -1,124 +1,113 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030201684B0;
-	Mon, 26 May 2025 02:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB561C6B4
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748227028; cv=none; b=ieBU9iqW67dgclvwjupJMMUy+SkAf5kxxipPha8bF5ojlorYkoi6doQLWpRRmGVwE5x9NL3Ru92Y/9AQAwoNHr+Oq2AwevXhY6Dv+YSG/Eh8ySbPJ6opIoFPfrx4P3Rlwz8VFNy520/ARQCPsrKP5JR2f7r7PubhBn6kBXDxjK0=
+	t=1748227058; cv=none; b=QOJwa5OBKflyGkdzj8KGS9cwNZPwfd6zeTLSio9+kv0vgGaSqwrl2TUehgRbcnFHlOONoDJ7UCh2Y0oaFxWS99VdFr5RWDCf3djB7QAfVzLxW5FjZZK0IJ7ah9wlYLgBUMVQwZOztTbrstf05NpSkaFn0fWqf7191wq0fBajCl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748227028; c=relaxed/simple;
-	bh=fULEnYkOybJaMF+q9MHZhS8Kp6AqrJAzRf0iQC9jV/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YSXMg0EnqITmQK+S/DOBlAtb+U9FTKH8O8lpvmjNGxXL3kbZ2LXgoPR25RL8h1IMVbPcjClq20ljIgjWw0m0HTBipXpVcAVKkWzFskfKB4+zXY6i0iL3pOCFRkQT+B1j0/F0sdUAU0r8OagzC8iq50Q+VfTSWkVjzJBeFxgJL4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=UvByZA9d; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748227058; c=relaxed/simple;
+	bh=BY4ErxoAP9augDOLnkIcoFs771/iVqBR1pRf44PMqxg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KYrp0B34T/2mEZLfqrdoahjJZlbE+wpg+Cbaxp0TWdJAG/0W3ZSbt3U9lqShxIFTf3Zh2ukGWJ1fjto2YMPkI5dTd/7/pgdh9K6uvS/HlXFJGTKNSzSTsfVkhhW8jC2wOHOTVD32Nj/q3ovahwRxRxlihal5rinZ8eD7DntllZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hzps+WCn; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UvByZA9d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748227022;
-	bh=MSgBsbhjopG/rJnEv9Yg3cH8BSoSdlSokua/t8EAc6I=;
-	h=Date:From:To:Cc:Subject:From;
-	b=UvByZA9dSua4l6ctX/Tbq76CXX6YyipO0ohiYAyq4eEyknx6FPA08tQgdJt56lSyh
-	 Yw83vW+L3RnCAHvL3YsYdVY1jbr+tfcpyRp2C6b9oVZGFmUIl2VncwSUdhpNGEZf5/
-	 kgfeumFM0M7SkLMydsYyyOcVF1r0y/6PC8RcwrTgFN4I47Tr38jg1d6QqYvxKBwmUi
-	 nQqET1fjeJ1ua/OEnH2MmpKCYE0NSgAUF4GQuqyeeeGQnTqPo20j9eRnnMyr3DXZeM
-	 GYqKUldbc+faADJjc8PPGsmNCUHuU6ICxPMCaDK+VoT+5EiKnBpzXwZJj1hUefhDCr
-	 hQtR4DlC6EO9Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b5KfQ3y3wz4wy6;
-	Mon, 26 May 2025 12:37:01 +1000 (AEST)
-Date: Mon, 26 May 2025 12:37:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Networking <netdev@vger.kernel.org>,
- Christian Brauner <brauner@kernel.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the net-next tree with the vfs-brauner
- tree
-Message-ID: <20250526123701.01aec1c4@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hzps+WCn"
+Message-ID: <0f20ac8a-317c-4ce9-8c17-113f7eb6ad90@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748227054;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7neqG58J+Ahj4nQSiH5zkGET3BZ/oA3S9VE4hGMMq20=;
+	b=hzps+WCnA2GLYz0L+XZeVTim2hgrK8TVQHIypRyLTq5k+W6Cvlp6ZGsEKxqIxkUGuISH6c
+	ISPYvh+Nyux23qZAe5bWlmdUDxr7Cpzs0Ce91mzkCHa+/o03qErNGXn59nuTrvl7bR8asI
+	qh9rx8lU1h/CjsnX5tpG+YOPGrIe73c=
+Date: Mon, 26 May 2025 10:37:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Edb.vmf1a8O2sEIpdK4PS+I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Subject: Re: [PATCH v2] riscv: vector: Fix context save/restore with
+ xtheadvector
+To: Han Gao <rabenda.cn@gmail.com>, linux-riscv@lists.infradead.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Charlie Jenkins <charlie@rivosinc.com>,
+ Andy Chiu <andybnac@gmail.com>, Jesse Taube <jesse@rivosinc.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>, linux-kernel@vger.kernel.org
+References: <9b9eb2337f3d5336ce813721f8ebea51e0b2b553.1747994822.git.rabenda.cn@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <9b9eb2337f3d5336ce813721f8ebea51e0b2b553.1747994822.git.rabenda.cn@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
---Sig_/Edb.vmf1a8O2sEIpdK4PS+I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+在 5/23/25 6:25 PM, Han Gao 写道:
+> Previously only v0-v7 were correctly saved/restored,
+> and the context of v8-v31 are damanged.
+> Correctly save/restore v8-v31 to avoid breaking userspace.
+> 
+> Fixes: d863910eabaf ("riscv: vector: Support xtheadvector save/restore")
+> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> Tested-by: Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>
+> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
-Hi all,
+Thanks,
+Yanteng
+> ---
+> 
+> Changes in v2:
+>    Add fix tag
+>    Improve commit mesage
+> 
+> v1: https://lore.kernel.org/linux-riscv/c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com/
+> 
+>   arch/riscv/include/asm/vector.h | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
+> index e8a83f55be2b..7df6355023a3 100644
+> --- a/arch/riscv/include/asm/vector.h
+> +++ b/arch/riscv/include/asm/vector.h
+> @@ -200,11 +200,11 @@ static inline void __riscv_v_vstate_save(struct __riscv_v_ext_state *save_to,
+>   			THEAD_VSETVLI_T4X0E8M8D1
+>   			THEAD_VSB_V_V0T0
+>   			"add		t0, t0, t4\n\t"
+> -			THEAD_VSB_V_V0T0
+> +			THEAD_VSB_V_V8T0
+>   			"add		t0, t0, t4\n\t"
+> -			THEAD_VSB_V_V0T0
+> +			THEAD_VSB_V_V16T0
+>   			"add		t0, t0, t4\n\t"
+> -			THEAD_VSB_V_V0T0
+> +			THEAD_VSB_V_V24T0
+>   			: : "r" (datap) : "memory", "t0", "t4");
+>   	} else {
+>   		asm volatile (
+> @@ -236,11 +236,11 @@ static inline void __riscv_v_vstate_restore(struct __riscv_v_ext_state *restore_
+>   			THEAD_VSETVLI_T4X0E8M8D1
+>   			THEAD_VLB_V_V0T0
+>   			"add		t0, t0, t4\n\t"
+> -			THEAD_VLB_V_V0T0
+> +			THEAD_VLB_V_V8T0
+>   			"add		t0, t0, t4\n\t"
+> -			THEAD_VLB_V_V0T0
+> +			THEAD_VLB_V_V16T0
+>   			"add		t0, t0, t4\n\t"
+> -			THEAD_VLB_V_V0T0
+> +			THEAD_VLB_V_V24T0
+>   			: : "r" (datap) : "memory", "t0", "t4");
+>   	} else {
+>   		asm volatile (
 
-Today's linux-next merge of the net-next tree got a conflict in:
-
-  net/unix/af_unix.c
-
-between commit:
-
-  fd0a109a0f6b ("net, pidfs: prepare for handing out pidfds for reaped sk->=
-sk_peer_pid")
-
-from the vfs-brauner tree and commit:
-
-  3f84d577b79d ("af_unix: Inherit sk_flags at connect().")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/unix/af_unix.c
-index 59a64b2ced6e,bd507f74e35e..000000000000
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@@ -1711,10 -1627,12 +1705,12 @@@ restart
-  	/* The way is open! Fastly set all the necessary fields... */
- =20
-  	sock_hold(sk);
-- 	unix_peer(newsk)	=3D sk;
-- 	newsk->sk_state		=3D TCP_ESTABLISHED;
-- 	newsk->sk_type		=3D sk->sk_type;
-+ 	unix_peer(newsk) =3D sk;
-+ 	newsk->sk_state =3D TCP_ESTABLISHED;
-+ 	newsk->sk_type =3D sk->sk_type;
-+ 	newsk->sk_scm_recv_flags =3D other->sk_scm_recv_flags;
- -	init_peercred(newsk);
- +	init_peercred(newsk, &peercred);
-+=20
-  	newu =3D unix_sk(newsk);
-  	newu->listener =3D other;
-  	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
-
---Sig_/Edb.vmf1a8O2sEIpdK4PS+I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgz080ACgkQAVBC80lX
-0GzCRwf/URgqf1W8RCrZ2RHotHnryHTDfpTQPQLpjLxWnDW68sDAtH26mJbsRx6K
-V5RjJiKA+0eDFeGt4Bfct7BacN1mx+G4UHFUuhijaGc5CkS6cIRjtVQiQUAphPcP
-ClDo5d3gDQeRY6F78LjWC4tniLSj+yo+Alwth0XWQpnxGBAQqf0ZLXk6iW9IOrqw
-/DGh67Ecj4/u8xMZ54+GMbOVIBxp9USlccymfysaU7SdXDQlFELzRKc8r64kGev3
-Vxgy7e3zTi4Mm7kGu+XafIwiwyC9eBBGvc9evV+gK22JA+727baRN2LZtvG2dviF
-nB/K7tq4nxn8X/pz7aZi0uBIMC17jA==
-=Ykql
------END PGP SIGNATURE-----
-
---Sig_/Edb.vmf1a8O2sEIpdK4PS+I--
