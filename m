@@ -1,189 +1,209 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D5D1FF7CD;
-	Mon, 26 May 2025 12:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6A2E406
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748262480; cv=none; b=grr70YPY2qAnluL1DE7S7fLhZAtayYswQp/nvN0O3FwbdlsdePlkiCQ3sHtBfv4krNtXbilBHrX5Lm2+7CKCYjilmbTahtAZmr7XLy7g2XLQ0hw3NhnhFgHewvBJuoK3a0eyz+isiDPnvsvR+ZKUA0qRcI16fleBdmsgGS1PjCk=
+	t=1748262481; cv=none; b=qnZBbVrH1hgjMD/G+yMF2JCfHYDzNXse6QvGDc1HRj/ogX2zqu/z95VNfnIojIhd3PYO9k+NKU7eXKeRAOQY2VxnDZadZVvoZ7Hh/kLuzeSeKldUh85GJo5rEiSZELwaTyYAKVIJWm0Z6GxnEjYyoXbxfHQOvQnoaSEyiPOLNWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748262480; c=relaxed/simple;
-	bh=z2OkRRgDb+V8wLFMS6yObcblnV66nbwgge/WZA5MiRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MB2AMD5V5Steze6Xk5/kCpr/3lambN3z0LeuxLTxfmTiAHSMCc+/Nurfcbq+gOJZR5sFRwyvv3eIBGrPPuXlFIz2xSjNkPF0XXIqBdlV97vg8zYhGpHB9dMq5xiVWoocRVXSWNXBmv00pvekDOe4P1eEy4ilhJq5OmvZ7ZM2Sk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=esVvCT1S; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="esVvCT1S"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q8dLu8002986;
-	Mon, 26 May 2025 12:26:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Cx6XOn2PoFhzZ/6d8Eju1VmGVG5xuLEUSViIIS/j7Sw=; b=esVvCT1SOootMzHc
-	+GkM2j0WSF8nAgdbCflLAcPhG0um4Bu6/FA90d+bywIe9qJZ24ybzUgLdifOCNJb
-	JTunxW5iaqJgcgwSNhVKTlzokz9i9H9qTkfXzPgD6iyYf2QWHZOuo5wXCjlOxSHs
-	lZ6wK+xh59vZ1zFFdpYhETVnSVzZGsxnO8vvb8qzt7Wue92yt0pVFRo9pKpmcaMt
-	L8PkaG1jOsbkuL+tpJ3RnEo3WogNdxbfWzHDVrLw6UAnS9wSo/IxI88M9M8NigG0
-	0cq1zYE6FP0/WMJRR062pdBnpCjPr2A3lBqKJVJjeoHkZn9AhlFvcqQAZGCNzfnU
-	uGf3Ow==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46vmyugjey-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 12:26:57 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54QCQvYm002042
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 12:26:57 GMT
-Received: from [10.64.68.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 26 May
- 2025 05:26:50 -0700
-Message-ID: <df3807e5-c381-4440-be64-9bd49a2ecd9d@quicinc.com>
-Date: Mon, 26 May 2025 20:26:47 +0800
+	s=arc-20240116; t=1748262481; c=relaxed/simple;
+	bh=0rmVmbMcJp5k3+ikOwmDGPnUvhGzziGf8qXeDsUY2u8=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=sKgvXYNz5kJEhGooMA5f4ut+stndGzrYXE4RyF8M5HcVqifJza6M4dsK3oKdxUS+xS4FnyyTm1VI7drkborwpp+D9QuNwuHxylf4pWrznGBzcXsMuyl6cgKX6VbJbSAo8G6ODMTA/DZb0m+AjOeOwv6SmIHjqxzkVw8F9VePino=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 10BBE240027
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:27:56 +0200 (CEST)
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4b5Zm94DKpz6tvc;
+	Mon, 26 May 2025 14:27:53 +0200 (CEST)
+References: <68342b55.a70a0220.253bc2.0091.GAE@google.com>
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+To: syzbot <syzbot+f0c4a4aba757549ae26c@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org,
+ jmaloy@redhat.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com, tipc-discussion@lists.sourceforge.net,
+ wangliang74@huawei.com
+Subject: Re: [syzbot] [tipc?] WARNING: refcount bug in tipc_crypto_xmit
+Date: Mon, 26 May 2025 12:21:22 +0000
+In-reply-to: <68342b55.a70a0220.253bc2.0091.GAE@google.com>
+Message-ID: <87msazftff.fsf@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/45] drm/msm/dp: add a helper to read mst caps for
- dp_panel
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "Chandan
- Uddaraju" <chandanu@codeaurora.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Vara Reddy <quic_varar@quicinc.com>,
-        Rob Clark
-	<robdclark@chromium.org>,
-        Tanmay Shah <tanmay@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20241205-dp_mst-v1-0-f8618d42a99a@quicinc.com>
- <20241205-dp_mst-v1-5-f8618d42a99a@quicinc.com>
- <aksnudxy2oyojjzwm73i4mulftcxccdsnddcdamypmscn6skpq@ijtp7x76m3pt>
-Content-Language: en-US
-From: Yongxing Mou <quic_yongmou@quicinc.com>
-In-Reply-To: <aksnudxy2oyojjzwm73i4mulftcxccdsnddcdamypmscn6skpq@ijtp7x76m3pt>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDEwNSBTYWx0ZWRfX/FIVSfANFpKM
- TbLw24WJE/GtaexIp1kafrznpEDG8pRDs7YHXmtlRy1blgavVxP9ZrhTI/3PGRa58Dcn/NJRKeO
- IH+0cSmmxXkH3ktp07WdBFzwD1jjvwnkTdxw/Ynh/nDhSBxj1dkG2bksXzOTqPZlEvP8B0eOmEC
- htEHaPvb6Mi+A5W8DMRKDfpauHZZp5H7ToG6Gegjh7DmyGFWpyn1mXvCfQm9f6hiTBVhm+ZZAVq
- KZBs9E+cTNKbUaD5PEmGVLcbJk/t/iLZYQDCXg3rLt503eg4YSI8e1v0w3Y0gMtWopER0D4BdT9
- rSKAHjD6tyaHNXKQZQaizbSf1J9TqZfgSbqIZCW891qfiLQyLnRcIZEJbU5jF3DIJU0NcSoqsfi
- 3PpV68qlapg7ptUuGMcThsVReWmiEioGN229ViB1Gy1Lt+5YArmSKwO12etUlgDluR2PQxeG
-X-Authority-Analysis: v=2.4 cv=MsdS63ae c=1 sm=1 tr=0 ts=68345e12 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=BYOfdb0HyH0VPR54-rAA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: q9peK1PaMGx0hbNCpzFdIcaJELhBfI3W
-X-Proofpoint-ORIG-GUID: q9peK1PaMGx0hbNCpzFdIcaJELhBfI3W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_06,2025-05-26_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0
- mlxscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505260105
+Content-Type: text/plain
 
 
+syzbot <syzbot+f0c4a4aba757549ae26c@syzkaller.appspotmail.com> writes:
 
-On 2024/12/6 16:52, Dmitry Baryshkov wrote:
-> On Thu, Dec 05, 2024 at 08:31:36PM -0800, Abhinav Kumar wrote:
->> Add a helper to check whether a dp_panel is mst capable.
->>
->> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
->> ---
->>   drivers/gpu/drm/msm/dp/dp_aux.h   |  1 +
->>   drivers/gpu/drm/msm/dp/dp_panel.c | 14 ++++++++++++++
->>   drivers/gpu/drm/msm/dp/dp_panel.h |  1 +
->>   3 files changed, 16 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/msm/dp/dp_aux.h b/drivers/gpu/drm/msm/dp/dp_aux.h
->> index 39c5b4c8596ab28d822493a6b4d479f5f786cdee..cb97a73cdd6ea74b612053bec578247a42214f23 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_aux.h
->> +++ b/drivers/gpu/drm/msm/dp/dp_aux.h
->> @@ -8,6 +8,7 @@
->>   
->>   #include "dp_catalog.h"
->>   #include <drm/display/drm_dp_helper.h>
->> +#include <drm/display/drm_dp_mst_helper.h>
->>   
->>   int msm_dp_aux_register(struct drm_dp_aux *msm_dp_aux);
->>   void msm_dp_aux_unregister(struct drm_dp_aux *msm_dp_aux);
->> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
->> index d277e9b2cbc03688976b6aa481ee724b186bab51..172de804dec445cb08ad8e3f058407f483cd6684 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_panel.c
->> +++ b/drivers/gpu/drm/msm/dp/dp_panel.c
->> @@ -108,6 +108,20 @@ static u32 msm_dp_panel_get_supported_bpp(struct msm_dp_panel *msm_dp_panel,
->>   	return min_supported_bpp;
->>   }
->>   
->> +bool msm_dp_panel_read_mst_cap(struct msm_dp_panel *msm_dp_panel)
->> +{
->> +	struct msm_dp_panel_private *panel;
->> +
->> +	if (!msm_dp_panel) {
->> +		DRM_ERROR("invalid input\n");
->> +		return 0;
->> +	}
->> +
->> +	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
->> +
->> +	return drm_dp_read_mst_cap(panel->aux, msm_dp_panel->dpcd);
-> 
-> So, it's a one-line wrapper. Do we actually need it?
-It beacuse the point of aux is in msm_dp_panel_private, so if we want to 
-call drm_dp_read_mst_cap in other file, we need this wrapper.
-> 
->> +}
->> +
->>   int msm_dp_panel_read_link_caps(struct msm_dp_panel *msm_dp_panel,
->>   				struct drm_connector *connector)
->>   {
->> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
->> index 7a38655c443af597c84fb78c6702b2a3ef9822ed..363b416e4cbe290f9c0e6171d6c0c5170f9fea62 100644
->> --- a/drivers/gpu/drm/msm/dp/dp_panel.h
->> +++ b/drivers/gpu/drm/msm/dp/dp_panel.h
->> @@ -67,6 +67,7 @@ int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
->>   		struct drm_connector *connector);
->>   void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel);
->>   void msm_dp_panel_tpg_config(struct msm_dp_panel *msm_dp_panel, bool enable);
->> +bool msm_dp_panel_read_mst_cap(struct msm_dp_panel *dp_panel);
->>   
->>   /**
->>    * is_link_rate_valid() - validates the link rate
->>
->> -- 
->> 2.34.1
->>
-> 
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    b1427432d3b6 Merge tag 'iommu-fixes-v6.15-rc7' of git://gi..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=17ba35f4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f0c4a4aba757549ae26c
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=161ee170580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164328e8580000
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/48a582dac9f0/disk-b1427432.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/94ad5463a7f5/vmlinux-b1427432.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/4d0af31b0b08/bzImage-b1427432.xz
+>
+> The issue was bisected to:
+>
+> commit e279024617134c94fd3e37470156534d5f2b3472
+> Author: Wang Liang <wangliang74@huawei.com>
+> Date:   Tue May 20 10:14:04 2025 +0000
+>
+>     net/tipc: fix slab-use-after-free Read in tipc_aead_encrypt_done
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10018df4580000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=12018df4580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14018df4580000
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+f0c4a4aba757549ae26c@syzkaller.appspotmail.com
+> Fixes: e27902461713 ("net/tipc: fix slab-use-after-free Read in tipc_aead_encrypt_done")
+>
+> ------------[ cut here ]------------
+> refcount_t: addition on 0; use-after-free.
+> WARNING: CPU: 1 PID: 36 at lib/refcount.c:25 refcount_warn_saturate+0xfa/0x1d0 lib/refcount.c:25
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 36 Comm: kworker/u8:2 Not tainted 6.15.0-rc7-syzkaller-00144-gb1427432d3b6 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> Workqueue: netns cleanup_net
+> RIP: 0010:refcount_warn_saturate+0xfa/0x1d0 lib/refcount.c:25
+> Code: 00 00 e8 79 f6 06 fd 5b 41 5e e9 81 6c a0 06 cc e8 6b f6 06 fd c6 05 06 3c b0 0a 01 90 48 c7 c7 80 aa c1 8b e8 e7 52 cb fc 90 <0f> 0b 90 90 eb d7 e8 4b f6 06 fd c6 05 e7 3b b0 0a 01 90 48 c7 c7
+> RSP: 0018:ffffc90000a08668 EFLAGS: 00010246
+> RAX: bb5b0788a28fc300 RBX: 0000000000000002 RCX: ffff888142681e00
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000002
+> RBP: ffffc90000a087e8 R08: 0000000000000003 R09: 0000000000000004
+> R10: dffffc0000000000 R11: fffffbfff1bba984 R12: ffff88807df80000
+> R13: dffffc0000000000 R14: ffff88807df8016c R15: ffff888033397800
+> FS:  0000000000000000(0000) GS:ffff8881261c2000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000555569a1e878 CR3: 000000007b8fc000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <IRQ>
+>  __refcount_add include/linux/refcount.h:-1 [inline]
+>  __refcount_inc include/linux/refcount.h:366 [inline]
+>  refcount_inc include/linux/refcount.h:383 [inline]
+>  get_net include/net/net_namespace.h:268 [inline]
+>  tipc_aead_encrypt net/tipc/crypto.c:821 [inline]
+>  tipc_crypto_xmit+0x1820/0x22c0 net/tipc/crypto.c:1761
+>  tipc_crypto_clone_msg+0x90/0x170 net/tipc/crypto.c:1656
+>  tipc_crypto_xmit+0x1998/0x22c0 net/tipc/crypto.c:1717
+>  tipc_bearer_xmit_skb+0x245/0x400 net/tipc/bearer.c:572
+>  tipc_disc_timeout+0x580/0x6d0 net/tipc/discover.c:338
+>  call_timer_fn+0x17b/0x5f0 kernel/time/timer.c:1789
+>  expire_timers kernel/time/timer.c:1840 [inline]
+>  __run_timers kernel/time/timer.c:2414 [inline]
+>  __run_timer_base+0x61a/0x860 kernel/time/timer.c:2426
+>  run_timer_base kernel/time/timer.c:2435 [inline]
+>  run_timer_softirq+0xb7/0x180 kernel/time/timer.c:2445
+>  handle_softirqs+0x286/0x870 kernel/softirq.c:579
+>  __do_softirq kernel/softirq.c:613 [inline]
+>  invoke_softirq kernel/softirq.c:453 [inline]
+>  __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+>  irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+>  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+>  sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
+>  </IRQ>
+>  <TASK>
+>  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+> RIP: 0010:lock_acquire+0x175/0x360 kernel/locking/lockdep.c:5870
+> Code: 00 00 00 00 9c 8f 44 24 30 f7 44 24 30 00 02 00 00 0f 85 cd 00 00 00 f7 44 24 08 00 02 00 00 74 01 fb 65 48 8b 05 8b 9f d7 10 <48> 3b 44 24 58 0f 85 f2 00 00 00 48 83 c4 60 5b 41 5c 41 5d 41 5e
+> RSP: 0018:ffffc90000ad7378 EFLAGS: 00000206
+> RAX: bb5b0788a28fc300 RBX: 0000000000000000 RCX: bb5b0788a28fc300
+> RDX: 0000000000000000 RSI: ffffffff8d939072 RDI: ffffffff8bc1f600
+> RBP: ffffffff8171ca05 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: ffffffff8171ca05 R12: 0000000000000002
+> R13: ffffffff8df3dee0 R14: 0000000000000000 R15: 0000000000000246
+>  rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+>  rcu_read_lock include/linux/rcupdate.h:841 [inline]
+>  class_rcu_constructor include/linux/rcupdate.h:1155 [inline]
+>  unwind_next_frame+0xc2/0x2390 arch/x86/kernel/unwind_orc.c:479
+>  arch_stack_walk+0x11c/0x150 arch/x86/kernel/stacktrace.c:25
+>  stack_trace_save+0x9c/0xe0 kernel/stacktrace.c:122
+>  kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
+>  kasan_record_aux_stack+0xbc/0xd0 mm/kasan/generic.c:548
+>  __call_rcu_common kernel/rcu/tree.c:3082 [inline]
+>  call_rcu+0x142/0x990 kernel/rcu/tree.c:3202
+>  inet_release+0x187/0x210 net/ipv4/af_inet.c:435
+>  __sock_release net/socket.c:647 [inline]
+>  sock_release+0x85/0x150 net/socket.c:675
+>  wg_netns_pre_exit+0xd6/0x1d0 drivers/net/wireguard/device.c:423
+>  ops_pre_exit_list net/core/net_namespace.c:162 [inline]
+>  cleanup_net+0x594/0xbd0 net/core/net_namespace.c:634
+>  process_one_work kernel/workqueue.c:3238 [inline]
+>  process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+>  worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+>  kthread+0x70e/0x8a0 kernel/kthread.c:464
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>  </TASK>
+> ----------------
+> Code disassembly (best guess):
+>    0:	00 00                	add    %al,(%rax)
+>    2:	00 00                	add    %al,(%rax)
+>    4:	9c                   	pushf
+>    5:	8f 44 24 30          	pop    0x30(%rsp)
+>    9:	f7 44 24 30 00 02 00 	testl  $0x200,0x30(%rsp)
+>   10:	00
+>   11:	0f 85 cd 00 00 00    	jne    0xe4
+>   17:	f7 44 24 08 00 02 00 	testl  $0x200,0x8(%rsp)
+>   1e:	00
+>   1f:	74 01                	je     0x22
+>   21:	fb                   	sti
+>   22:	65 48 8b 05 8b 9f d7 	mov    %gs:0x10d79f8b(%rip),%rax        # 0x10d79fb5
+>   29:	10
+> * 2a:	48 3b 44 24 58       	cmp    0x58(%rsp),%rax <-- trapping instruction
+>   2f:	0f 85 f2 00 00 00    	jne    0x127
+>   35:	48 83 c4 60          	add    $0x60,%rsp
+>   39:	5b                   	pop    %rbx
+>   3a:	41 5c                	pop    %r12
+>   3c:	41 5d                	pop    %r13
+>   3e:	41 5e                	pop    %r14
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
 
+#syz test: https://github.com/charmitro/linux.git d72ee421a78726747979874e8dba97c1641df213
