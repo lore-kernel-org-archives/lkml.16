@@ -1,54 +1,34 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDB6143C61;
-	Mon, 26 May 2025 10:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D23861F463B;
+	Mon, 26 May 2025 10:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748255012; cv=none; b=O3wwnXlX9zWKQb+N2WD4rAWbBm+7ST0eSjvqF95HYuUTt+k/XPhCm3lgijt9es/+z6iApJPv+IhztiC/kPkbXApgGTQx3ONOVnKpq+AzSkDYhBd7FMIrcitlwl7mI94lykZAJPioGJbOAoYkHvets5JDNcus9RpJ+j8QapyzSLc=
+	t=1748255015; cv=none; b=bRa1AQa6nhLDMuL10e26HA3xv+S9O2ZF4ryqgaV/WgXTN0Cno9m2xPkZ6LVy2I2m8nCnJJNv0Zgp1nQed5ur76BMOfp297xtZlpxleNM3W03EaCKt2zPIUydrKIHsZTKv+lkzVlbYehlPsbLyaU1/2U+vqnk5u62taZVePRXcKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748255012; c=relaxed/simple;
-	bh=xnQ6VmXRAwGuRZ5aPYiYgFzNnkSeQSoU+MVnGMzg23k=;
+	s=arc-20240116; t=1748255015; c=relaxed/simple;
+	bh=Cg3w/aTss7Xq9PEh9oXqGyGb9ze/I/m78kwhXSI3dxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aHVhjDBbuasor6lAhblcY8MAVWHD4YmJsAv64V9jtxc5rZ4/wlJw+NBMIK+XzYGgiPuFKqLrFzLPTJQcs5idirXH1IKHydtkDuY+stKG3LUpp5bqr/zTwcXP2E6lG789ZtiuOnSzIjy9z1DZZpy7BgCijA02guQdeCcpRh9cjzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HOOYW56h; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HOOYW56h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cgs5/uCgKWvg2WW05ScLvnLsCpBRvuGnBxviL1faJB0=; b=HOOYW56h9te7cwsmaaN5N1VBW1
-	rsov8WhEkM/50QZGK4FVLZIjJuf4l0cfJdABB18/h3NucmhKVZvpsKXduv6ZDq9LbXSllJ1IttnAb
-	X/lhFMnBFWcN9vuNRKrNgfK+KrEoIz79Sk6X14i7FkZ4NJCKGruJncb6fys65jWJKyvmFjVDORDcR
-	OTkclYCO0Evu5ey8cVdllfcDMvPPyt7E6fc3ZR+ulXPddt8KWVmV1VCIn3y2CpbaeNXDL0/BMbpk0
-	yNcyZnfShQ0ejC1PGWwwRnjX9Zleij/5AaGPCebbab5GUag5Bx0Nm49gjl++sBtJVTZrEr4u4Wfek
-	MyByUrAw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJUzD-0000000BIlD-3GK0;
-	Mon, 26 May 2025 10:23:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 29919300472; Mon, 26 May 2025 12:23:15 +0200 (CEST)
-Date: Mon, 26 May 2025 12:23:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
-	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
-	Marcos Paulo de Souza <mpdesouza@suse.com>,
-	Weinan Liu <wnliu@google.com>,
-	Fazla Mehrab <a.mehrab@bytedance.com>,
-	Chen Zhongjin <chenzhongjin@huawei.com>,
-	Puranjay Mohan <puranjay@kernel.org>
-Subject: Re: [PATCH v2 18/62] objtool: Fix x86 addend calculation
-Message-ID: <20250526102315.GK24938@noisy.programming.kicks-ass.net>
-References: <cover.1746821544.git.jpoimboe@kernel.org>
- <8064f40394e9f0438a36f53f54e3b56f8e5b5365.1746821544.git.jpoimboe@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r4q6dieYcTb1HzFlcDlgV5WJgsdYMJxClkK7RSRwsili3pj3cYrTgqeTQa4tsCJLEBGOvZZyqL6SzmmkNBjfGxfQZcgzITQ/RS+4ZpZX63dwMjIuTw0kV5DRRwoFhnrnaxeInchj1kxL8pKxjnHjaZYLJ5SljfyT2GyxLfuYShE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32BE72F;
+	Mon, 26 May 2025 03:23:16 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 378BE3F5A1;
+	Mon, 26 May 2025 03:23:30 -0700 (PDT)
+Date: Mon, 26 May 2025 11:23:24 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] kselftest/arm64: Update sve-ptrace for ABI changes
+Message-ID: <aDRBHDJZyXnic6i7@J2N7QTR9R3>
+References: <20250523-kselftest-arm64-ssve-fixups-v1-0-65069a263b21@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,42 +37,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8064f40394e9f0438a36f53f54e3b56f8e5b5365.1746821544.git.jpoimboe@kernel.org>
+In-Reply-To: <20250523-kselftest-arm64-ssve-fixups-v1-0-65069a263b21@kernel.org>
 
-On Fri, May 09, 2025 at 01:16:42PM -0700, Josh Poimboeuf wrote:
-> On x86, arch_dest_reloc_offset() hardcodes the addend adjustment to
-> four, but the actual adjustment depends on the relocation type.  Fix
-> that.
+On Fri, May 23, 2025 at 04:27:11PM +0100, Mark Brown wrote:
+> Mark Rutland's recent SME fixes updated the SME ABI to reject any
+> attempt to write FPSIMD register data via the streaming mode SVE
+> register set but did not update the sve-ptrace test to take account of
+> this, resulting in spurious failures.  Update the test for this, and
+> also fix another preexisting issue I noticed while looking at this.
 
-> +s64 arch_insn_adjusted_addend(struct instruction *insn, struct reloc *reloc)
->  {
-> -	return addend + 4;
-> +	s64 addend = reloc_addend(reloc);
-> +
-> +	switch (reloc_type(reloc)) {
-> +	case R_X86_64_PC32:
-> +	case R_X86_64_PLT32:
-> +		addend += insn->offset + insn->len - reloc_offset(reloc);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return addend;
->  }
+For the sake of the mail archive, that series of fixes was:
 
-Should this not be something like:
+  https://lore.kernel.org/linux-arm-kernel/20250508132644.1395904-1-mark.rutland@arm.com/
 
-s64 arch_insn_adjusted_addend(struct instruction *insn, struct reloc *reloc)
-{
-	s64 addend = reloc_addend(reloc);
+Evidently I only fixed up the fpsimd-ptrace tests, and missed the
+sve-ptrace tests. My bad; sorry about that.
 
-	if (arch_pc_relative_reloc(reloc))
-		addend += insn->offset + insn->len - reloc_offset(reloc);
+Mark.
 
-	return addend;
-}
-
-instead?
-
-AFAIU arch_pc_relative_reloc() is the exact same set of relocations.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+> Mark Brown (3):
+>       kselftest/arm64: Fix check for setting new VLs in sve-ptrace
+>       kselftest/arm64: Fix test for streaming FPSIMD write in sve-ptrace
+>       kselftest/arm64: Specify SVE data when testing VL set in sve-ptrace
+> 
+>  tools/testing/selftests/arm64/fp/sve-ptrace.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 1c1abfd151c824698830ee900cc8d9f62e9a5fbb
+> change-id: 20250523-kselftest-arm64-ssve-fixups-b68ae61c1ebf
+> 
+> Best regards,
+> -- 
+> Mark Brown <broonie@kernel.org>
+> 
