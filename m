@@ -1,205 +1,321 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B867E110;
-	Mon, 26 May 2025 03:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E75C7E110;
+	Mon, 26 May 2025 03:56:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748231610; cv=none; b=P6R7cuViRdc9rwfuJkrLgxnpWzEcBgWo3uCe8hUbQlwuOeKWkx4y7TfPRGeS0Oqn8C3lkcS2rKLjYDVqRuPRKAhfLkxBbQu1MP6iDyh71cw5PzVbEvIw5A9lT0THYy/Fe0io58xEqov9Kgq/6lUhYWNQSgYhuN4XI9Ian3NU+/o=
+	t=1748231800; cv=none; b=gv3fq4VMuBjLVRDSkAA0ykX6WV4uIMBffJcDxwGKboC+t/kLLmbN8hc3QgDbjFhX1JBJzQBAZVwIc3I59mIfvymOqgbCSCN+kyzwiAXBH5m407LrqrdxHD4CTPZwmCC80hpJ4JE9C+4pEnNDdZ4cfvfuG1yxyukzKaFIJOP6rcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748231610; c=relaxed/simple;
-	bh=ITsjG0dWsnMGW3i6jL6ZmrcLdIcJyFzXYsV7yW/0Asg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EorWGcxzugO4+Aym578VDy7OIOKBithrOECa+t7Ij1+H1HBktTvLIpPEl3YupHmBjSULQWv+3dlstAoPxckjHHGpFmO3RhBduT0eqGnnfRz2S6eoTaF7Bmb8W6t1LG4YpQFYas20XBl72+2bPoNA8nQ3B5uWO8xWSFhShLyfDuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Zv8br4FS; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1748231800; c=relaxed/simple;
+	bh=DZrlE/bv8rOS6qOE2CpBwzOco93+rwVtR9PKQ5hujjo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GPUesOuYk1Vlf00PfH4t1NSpBQrPtwi29YJcvhzATnr0tSCvCML0AFIaLaPqq+MZnoT2lrLMF6RlOXGXgwGVWfXlwx52L1LubDF5Aji4gY8vfxlhpDyVPzfb/s9z6vQ1aaMpy9oGMTl4tE+e5vtugsMyDOLnt7cUrWB2d0Qu8+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMYCWkrM; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Zv8br4FS"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id B3CE520276;
-	Mon, 26 May 2025 03:43:46 +0000 (UTC)
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 81A47261DE;
-	Mon, 26 May 2025 03:43:37 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 0A81F20312;
-	Mon, 26 May 2025 03:43:29 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 4499440093;
-	Mon, 26 May 2025 03:43:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1748231007; bh=ITsjG0dWsnMGW3i6jL6ZmrcLdIcJyFzXYsV7yW/0Asg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Zv8br4FSCCtzCbnIYIFAKDYXUPoA4iWvA8kAK1tmMEU023p/NChCG1U4MV7OpqRUv
-	 Z0dOHgg2xTLBMutKUGuQq2Nl65DX1w7r/HnvMpCQGrTgz5jea5oC/4NV+EzFuzTZig
-	 /9noWHf/aWg7FPS2gAPvg1l5RWz+FsYZ3+vhQJj4=
-Received: from [19.191.1.9] (unknown [223.76.243.206])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 7C97140CC8;
-	Mon, 26 May 2025 03:43:24 +0000 (UTC)
-Message-ID: <5c7537a3-4a23-44e9-860a-9c12203577f0@aosc.io>
-Date: Mon, 26 May 2025 11:43:16 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMYCWkrM"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7d90078caeso1500625276.3;
+        Sun, 25 May 2025 20:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748231797; x=1748836597; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zcXECQBhnFA3Mb5kPluHe4DGBg2LPiSyVzF0Ca7K9Ec=;
+        b=RMYCWkrM7R5ZrxWBG66m2SrHqAxK8QdeMeYRd4WEyvsjzp192AetjMcCHEB1P0lAvT
+         xZwrCW64Xll5ua7bxzGE0YQmOZOngVJBOpm8ujjJ8tqZ9Y5wF4b31r2uhBmYGsfUbsXN
+         x8mbrHsdVKAJr9SzGR+hTYDrE6vyLFt29VNq9CL+u21ule1TDaC3RushkNHzVFuJpGjE
+         w2arUYX/F9IKYSQUDwc3IGatHVS0qTgUwVabeqFt/74vrS2TAup1OQ8FfCFE8y/qn4fs
+         MRiSV1XRU26G4g6qjNo08w5HUQ95o3oaSzYkDnYCooCNwyuW0x0soiyjd3brKKvM+i/+
+         DGdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748231797; x=1748836597;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zcXECQBhnFA3Mb5kPluHe4DGBg2LPiSyVzF0Ca7K9Ec=;
+        b=Q82qQP9X2jvo436tXtVbrLQghcRZ/eeuwk7eyQHpdCyg4I6XSOTmAlXjPaifNGe0mt
+         e47nfZUJUXeclDw6MvlT/KUGr+iBci6l7t9Y9DIEpB0s/Ik71JLGcDJK1wgKHhHCt1ZH
+         F0mV2Zv7IMoQkIno/40hDgJwLP/HJsBa3X2T1Xag19pOI3GGQDDvnsN7+yDsvwwrQRna
+         RMRKXn3ectgdr7yts6m3E0wCzNnsNb/Id0dC2dBJw+eskv6SrOcr6/4YbSsFvzV/fMdt
+         mIfGQtDiBrKimV9DaOgyTP4dbcaDLGsyZo37W12CE53jEOFT0EkMJqP7abXCcz1C+2SC
+         4aSw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1McOvQl2oDEfsXYMDyGiDWo96bdn9wr+Q5sEOJAH56K9PnfOaWWSV0vsqDWwJP6kZ3oqLPmu0TjKX@vger.kernel.org, AJvYcCUuQMtfJvfc0AXw3Cm/lHO8ZJdiGP1YRIWbrDGxKi4gLSUV80NGjYOyAhX7MIHp0MeehmFv9N9mRQkiibG2uTo=@vger.kernel.org, AJvYcCVUUgttKaEUQovKA1kkAA59QoRyqNzjs3223JIO9GmWtLOGBPUiAdOdMkrBCUiPN8n//hmH1ZzhPVFD@vger.kernel.org, AJvYcCW4rbtYVd1Z9UGzFdMk85HpGKieNQcCJqjHiQ5aKFugLBNvDF2xrttyLV/8jVNrcA8728Ei4TSDBI8b78o=@vger.kernel.org, AJvYcCX/HK4zVuPf/gZUc4znx9MfmZSv3hZe8L1+e3He4lVGJdhR4H2UTa8bvVN17uKwNfLgDAVS+09W@vger.kernel.org, AJvYcCXQcCJgQRHyol/gNapEvTA0q60GXI0oxMIHPiceSmcZM0f+Q7ahnkU9R9xQ4Z0ptA4ADrb2maKJOvJ7IA==@vger.kernel.org, AJvYcCXSvHIk15Uza9iUxPQBHw8NEpFNtwDNsyPhAwDOwnEYes1Abf+7y6bHdlbK+dZSCrmJSVwA6zEo6sRL6jMv@vger.kernel.org, AJvYcCXhnVtlIiIctsi8XeKiqK32W5eOVExi72vDOaZshyLZqQycowx3lAyPEz45Y/ayUBNhYyYpWO+RwqJo@vger.kernel.org, AJvYcCXtUaZ2Ie53JDe2qFePFld0g9KMCmzIdzqhSeo0O6SlVmjEVUu06SeEXrOiaZG8W7IZM0dkDEG1GzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlPxpDYS8vZkpMVKiPN7pwvPTWrJrDbvVR/xRmf4x7f3eJXyVH
+	p6zrWc3lRG+uafbiMSi+W5JxavbDrG+iJ8sMQIV0oG7fcx/HaFskJVoGz8PkPHmbcRhq6dwFFBM
+	28lk+T8XWsImrd762sAYDgrrp62jL8xM=
+X-Gm-Gg: ASbGncu+SVlQhDdWLn+itM1616pZEAt3AUXl3DatBGlLpVKcU96DZEUlXxscdiIENsG
+	FgPnPbHYKUITUCsbSdxMKbyjEzF/6I/h+6KPLfQK22g6JoS67S57Klzs/pe0UA+GzLUlym9QCaq
+	m7Bro6X4QPXgg5mNUzE+8wIhYEkeAu5IxQ3dT/+/jwTZjNOzrslcIBy/96xfOuwJC/u0c=
+X-Google-Smtp-Source: AGHT+IHBOM1OanC7PctOKlKIA/qqdT+KTdJ1sIRiHPRM93YrlR6/SshGx6q+jmHoL85oR/ljjBwIGDPwYdyHzYtdif4=
+X-Received: by 2002:a05:6902:1543:b0:e6d:da84:e901 with SMTP id
+ 3f1490d57ef6-e7d919f01c5mr8035278276.27.1748231797046; Sun, 25 May 2025
+ 20:56:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
- polling
-To: Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Eric Long <i@hack3r.moe>,
- Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250525201833.37939-1-i@rong.moe>
-Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <20250525201833.37939-1-i@rong.moe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Rspamd-Queue-Id: 4499440093
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.10 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[rong.moe,gmail.com,redhat.com,linux.intel.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail,i.hack3r.moe:server fail,i.rong.moe:server fail];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[]
+References: <20250520020355.3885597-1-tmyu0@nuvoton.com> <20250520020355.3885597-2-tmyu0@nuvoton.com>
+ <20250523090207.GD1378991@google.com>
+In-Reply-To: <20250523090207.GD1378991@google.com>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Mon, 26 May 2025 11:56:25 +0800
+X-Gm-Features: AX0GCFuMuPJii5QWGzS547_08e9jROJWo5JYbgwGTIEUBA702NbvTfv_wsjtEQ0
+Message-ID: <CAOoeyxW-4ChnrgeUT-8Tfcx2=MkehcM6hUtztwrb7128iC95_Q@mail.gmail.com>
+Subject: Re: [PATCH v11 1/7] mfd: Add core driver for Nuvoton NCT6694
+To: Lee Jones <lee@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Ming Yu <tmyu0@nuvoton.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rong,
+Dear Lee,
 
-在 2025/5/26 04:18, Rong Zhang 写道:
-> It was reported that ideapad-laptop sometimes causes some recent (since
-> 2024) Lenovo ThinkBook models shut down when:
->   - suspending/resuming
->   - closing/opening the lid
->   - (dis)connecting a charger
->   - reading/writing some sysfs properties, e.g., fan_mode, touchpad
->   - pressing down some Fn keys, e.g., Brightness Up/Down (Fn+F5/F6)
->   - (seldom) loading the kmod
-> 
-> The issue has existed since the launch day of such models, and there
-> have been some out-of-tree workarounds (see Link:) for the issue. One
-> disables some functionalities, while another one simply shortens
-> IDEAPAD_EC_TIMEOUT. The disabled functionalities have read_ec_data() in
-> their call chains, which calls schedule() between each poll.
-> 
-> It turns out that these models suffer from the indeterminacy of
-> schedule() because of their low tolerance for being polled too
-> frequently. Sometimes schedule() returns too soon due to the lack of
-> ready tasks, causing the margin between two polls to be too short.
-> In this case, the command is somehow aborted, and too many subsequent
-> polls (they poll for "nothing!") may eventually break the state machine
-> in the EC, resulting in a hard shutdown. This explains why shortening
-> IDEAPAD_EC_TIMEOUT works around the issue - it reduces the total number
-> of polls sent to the EC.
-> 
-> Even when it doesn't lead to a shutdown, frequent polls may also disturb
-> the ongoing operation and notably delay (+ 10-20ms) the availability of
-> EC response. This phenomenon is unlikely to be exclusive to the models
-> mentioned above, so dropping the schedule() manner should also slightly
-> improve the responsiveness of various models.
-> 
-> Fix these issues by migrating to usleep_range(150, 300). The interval is
-> chosen to add some margin to the minimal 50us and considering EC
-> responses are usually available after 150-2500us based on my test. It
-> should be enough to fix these issues on all models subject to the EC bug
-> without introducing latency on other models.
-> 
-> Tested on ThinkBook 14 G7+ ASP and solved both issues. No regression was
-> introduced in the test on a model without the EC bug (ThinkBook X IMH,
-> thanks Eric).
-> 
-> Link: https://github.com/ty2/ideapad-laptop-tb2024g6plus/commit/6c5db18c9e8109873c2c90a7d2d7f552148f7ad4
-> Link: https://github.com/ferstar/ideapad-laptop-tb/commit/42d1e68e5009529d31bd23f978f636f79c023e80
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218771
-> Fixes: 6a09f21dd1e2 ("ideapad: add ACPI helpers")
-> Cc: stable@vger.kernel.org
-> Tested-by: Eric Long <i@hack3r.moe>
-> Signed-off-by: Rong Zhang <i@rong.moe>
-> ---
->   drivers/platform/x86/ideapad-laptop.c | 19 +++++++++++++++++--
->   1 file changed, 17 insertions(+), 2 deletions(-)
+Thank you for reviewing.
+I will fix the code which you mentioned.
 
-Tested good on my Lenovo ThinkBook 14 G6+ (AHP) with the following:
+Additionally, I will revert the mfd_cell changes to match version 10. (i.e.=
+,
+static const struct mfd_cell nct6694_dev[] =3D {
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+    ...
+}; ), since I found that using devm_mfd_add_devices() with id field
+set to 0 meets my needs. This allows me to use pdev->id in the
+sub-drivers.
 
-- Frequent Fn+F5/F6 inputs
-- Lid opening/closing to suspend: 20 times each whilst (1) plugged in 
-and (2) using battery power
-- Plugging in and unplugging USB-C power: 20 times while running
 
-Tested-by: Mingcong Bai <jeffbai@aosc.io>
+Best regards,
+Ming
 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index ede483573fe0..b5e4da6a6779 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -15,6 +15,7 @@
->   #include <linux/bug.h>
->   #include <linux/cleanup.h>
->   #include <linux/debugfs.h>
-> +#include <linux/delay.h>
->   #include <linux/device.h>
->   #include <linux/dmi.h>
->   #include <linux/i8042.h>
-> @@ -267,6 +268,20 @@ static void ideapad_shared_exit(struct ideapad_private *priv)
->    */
->   #define IDEAPAD_EC_TIMEOUT 200 /* in ms */
->   
-> +/*
-> + * Some models (e.g., ThinkBook since 2024) have a low tolerance for being
-> + * polled too frequently. Doing so may break the state machine in the EC,
-> + * resulting in a hard shutdown.
-> + *
-> + * It is also observed that frequent polls may disturb the ongoing operation
-> + * and notably delay the availability of EC response.
-> + *
-> + * These values are used as the delay before the first poll and the interval
-> + * between subsequent polls to solve the above issues.
-> + */
-> +#define IDEAPAD_EC_POLL_MIN_US 150
-> +#define IDEAPAD_EC_POLL_MAX_US 300
-> +
->   static int eval_int(acpi_handle handle, const char *name, unsigned long *res)
->   {
->   	unsigned long long result;
-> @@ -383,7 +398,7 @@ static int read_ec_data(acpi_handle handle, unsigned long cmd, unsigned long *da
->   	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
->   
->   	while (time_before(jiffies, end_jiffies)) {
-> -		schedule();
-> +		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
->   
->   		err = eval_vpcr(handle, 1, &val);
->   		if (err)
-> @@ -414,7 +429,7 @@ static int write_ec_cmd(acpi_handle handle, unsigned long cmd, unsigned long dat
->   	end_jiffies = jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1;
->   
->   	while (time_before(jiffies, end_jiffies)) {
-> -		schedule();
-> +		usleep_range(IDEAPAD_EC_POLL_MIN_US, IDEAPAD_EC_POLL_MAX_US);
->   
->   		err = eval_vpcr(handle, 1, &val);
->   		if (err)
-> 
-> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
-
+Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B45=E6=9C=8823=E6=97=A5 =E9=
+=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:02=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Tue, 20 May 2025, a0282524688@gmail.com wrote:
+>
+> > From: Ming Yu <tmyu0@nuvoton.com>
+> >
+> > The Nuvoton NCT6694 provides an USB interface to the host to
+> > access its features.
+> >
+> > Sub-devices can use the USB functions nct6694_read_msg() and
+> > nct6694_write_msg() to issue a command. They can also request
+> > interrupt that will be called when the USB device receives its
+> > interrupt pipe.
+> >
+> > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
+> > ---
+> >
+> > Changes since version 10:
+> > - Add change log for the patch
+> > - Fix mfd_cell to MFD_CELL_NAME()
+> > - Remove unnecessary blank line
+> >
+> > Changes since version 9:
+> > - Add KernelDoc to exported functions
+> >
+> > Changes since version 8:
+> > - Modify the signed-off-by with my work address
+> > - Rename all MFD cell names to "nct6694-xxx"
+> > - Fix some comments in nct6694.c and in nct6694.h
+> >
+> > Changes since version 7:
+> > - Add error handling for devm_mutex_init()
+> >
+> > Changes since version 6:
+> >
+> > Changes since version 5:
+> > - Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+> > - Drop unnecessary macros
+> >
+> > Changes since version 4:
+> > - Modify arguments in read/write function to a pointer to cmd_header
+> >
+> > Changes since version 3:
+> > - Modify array buffer to structure
+> > - Fix defines and comments
+> > - Add header <linux/bits.h> and use BIT macro
+> > - Modify mutex_init() to devm_mutex_init()
+> >
+> > Changes since version 2:
+> >
+> > Changes since version 1:
+> > - Implement IRQ domain to handle IRQ demux
+> > - Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API
+> > - Add command structure
+> > - Fix USB functions
+> > - Sort each driver's header files alphabetically
+> >
+> >  MAINTAINERS                 |   6 +
+> >  drivers/mfd/Kconfig         |  15 ++
+> >  drivers/mfd/Makefile        |   2 +
+> >  drivers/mfd/nct6694.c       | 387 ++++++++++++++++++++++++++++++++++++
+> >  include/linux/mfd/nct6694.h |  98 +++++++++
+> >  5 files changed, 508 insertions(+)
+> >  create mode 100644 drivers/mfd/nct6694.c
+> >  create mode 100644 include/linux/mfd/nct6694.h
+>
+> [...]
+>
+> I was just going to fix this up for you when I applied the set, but
+> seeing as it looks like you have to re-submit anyway ...
+>
+> > +static const struct usb_device_id nct6694_ids[] =3D {
+> > +     { USB_DEVICE_AND_INTERFACE_INFO(NCT6694_VENDOR_ID, NCT6694_PRODUC=
+T_ID, 0xFF, 0x00, 0x00)},
+>
+> You need a space before the '}'.
+>
+> > +     {}
+> > +};
+> > +MODULE_DEVICE_TABLE(usb, nct6694_ids);
+> > +
+> > +static struct usb_driver nct6694_usb_driver =3D {
+> > +     .name           =3D "nct6694",
+> > +     .id_table       =3D nct6694_ids,
+> > +     .probe          =3D nct6694_usb_probe,
+> > +     .disconnect     =3D nct6694_usb_disconnect,
+> > +};
+> > +module_usb_driver(nct6694_usb_driver);
+> > +
+> > +MODULE_DESCRIPTION("Nuvoton NCT6694 core driver");
+> > +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
+> > +MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/mfd/nct6694.h b/include/linux/mfd/nct6694.h
+> > new file mode 100644
+> > index 000000000000..5e172609be3f
+> > --- /dev/null
+> > +++ b/include/linux/mfd/nct6694.h
+> > @@ -0,0 +1,98 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2025 Nuvoton Technology Corp.
+> > + *
+> > + * Nuvoton NCT6694 USB transaction and data structure.
+> > + */
+> > +
+> > +#ifndef __MFD_NCT6694_H
+> > +#define __MFD_NCT6694_H
+> > +
+> > +#define NCT6694_VENDOR_ID    0x0416
+> > +#define NCT6694_PRODUCT_ID   0x200B
+> > +#define NCT6694_INT_IN_EP    0x81
+> > +#define NCT6694_BULK_IN_EP   0x02
+> > +#define NCT6694_BULK_OUT_EP  0x03
+> > +
+> > +#define NCT6694_HCTRL_SET    0x40
+> > +#define NCT6694_HCTRL_GET    0x80
+> > +
+> > +#define NCT6694_URB_TIMEOUT  1000
+> > +
+> > +enum nct6694_irq_id {
+> > +     NCT6694_IRQ_GPIO0 =3D 0,
+> > +     NCT6694_IRQ_GPIO1,
+> > +     NCT6694_IRQ_GPIO2,
+> > +     NCT6694_IRQ_GPIO3,
+> > +     NCT6694_IRQ_GPIO4,
+> > +     NCT6694_IRQ_GPIO5,
+> > +     NCT6694_IRQ_GPIO6,
+> > +     NCT6694_IRQ_GPIO7,
+> > +     NCT6694_IRQ_GPIO8,
+> > +     NCT6694_IRQ_GPIO9,
+> > +     NCT6694_IRQ_GPIOA,
+> > +     NCT6694_IRQ_GPIOB,
+> > +     NCT6694_IRQ_GPIOC,
+> > +     NCT6694_IRQ_GPIOD,
+> > +     NCT6694_IRQ_GPIOE,
+> > +     NCT6694_IRQ_GPIOF,
+> > +     NCT6694_IRQ_CAN0,
+> > +     NCT6694_IRQ_CAN1,
+> > +     NCT6694_IRQ_RTC,
+> > +     NCT6694_NR_IRQS,
+> > +};
+> > +
+> > +enum nct6694_response_err_status {
+> > +     NCT6694_NO_ERROR =3D 0,
+> > +     NCT6694_FORMAT_ERROR,
+> > +     NCT6694_RESERVED1,
+> > +     NCT6694_RESERVED2,
+> > +     NCT6694_NOT_SUPPORT_ERROR,
+> > +     NCT6694_NO_RESPONSE_ERROR,
+> > +     NCT6694_TIMEOUT_ERROR,
+> > +     NCT6694_PENDING,
+> > +};
+> > +
+> > +struct __packed nct6694_cmd_header {
+> > +     u8 rsv1;
+> > +     u8 mod;
+> > +     union __packed {
+> > +             __le16 offset;
+> > +             struct __packed {
+> > +                     u8 cmd;
+> > +                     u8 sel;
+> > +             };
+> > +     };
+> > +     u8 hctrl;
+> > +     u8 rsv2;
+> > +     __le16 len;
+> > +};
+> > +
+> > +struct __packed nct6694_response_header {
+> > +     u8 sequence_id;
+> > +     u8 sts;
+> > +     u8 reserved[4];
+> > +     __le16 len;
+> > +};
+> > +
+> > +union __packed nct6694_usb_msg {
+> > +     struct nct6694_cmd_header cmd_header;
+> > +     struct nct6694_response_header response_header;
+> > +};
+> > +
+> > +struct nct6694 {
+> > +     struct device *dev;
+> > +     struct irq_domain *domain;
+> > +     struct mutex access_lock;
+> > +     struct mutex irq_lock;
+> > +     struct urb *int_in_urb;
+> > +     struct usb_device *udev;
+> > +     union nct6694_usb_msg *usb_msg;
+> > +     unsigned char *int_buffer;
+> > +     unsigned int irq_enable;
+> > +};
+> > +
+> > +int nct6694_read_msg(struct nct6694 *nct6694, const struct nct6694_cmd=
+_header *cmd_hd, void *buf);
+> > +int nct6694_write_msg(struct nct6694 *nct6694, const struct nct6694_cm=
+d_header *cmd_hd, void *buf);
+> > +
+> > +#endif
+> > --
+> > 2.34.1
+> >
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
