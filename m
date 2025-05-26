@@ -1,120 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EF822425D
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 20:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB61C5661;
+	Mon, 26 May 2025 20:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748291218; cv=none; b=Di+0oRJ3dDm+mmiX7vekxnSUY7Rlo3R5bSHKM8Rt5O2NplmyNDhjxZNGpLclLMUaHNxyfSJX5oYQqwyE6ppwrrhdc6hETr6kvI0TPAbLr3CLf+nar9g2WV3N8UxY4KALUMGmCQ0O5RgYvWE2UsOSjBE1ObZ+o2U9o93lfXBzlsM=
+	t=1748291257; cv=none; b=QaP1buTPncbW95UjuBtMc+IHaNxZMlVmox1dgD9WEfJ6G5GQeYwq7wm+rXcXJP9CWL88sRNEpBLKgf6qB8xMUm2RtMqQyGTgconQGycan8OINkVMRxYm2VwFSLBqRUzJanB2SbArK9bBV7JdpYqKb4cNF2PaKz/gnXqa42yWXKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748291218; c=relaxed/simple;
-	bh=/pF8uflug4iJXw8P2bPeBVRDCzFidAhfVujarTx3tBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EJi8+SCvKo0uMICOkNNNP9tJcaKoOIVXNa3cacT4SWd35DoeL39ix7cvl+wlRGuI4utPyB3EVbZVxqtoZxL26dah08YcjYSNvN5KUPOKbELWSvnOE/qhpwLjHYQOVXM8sfU6b37OuUpqj8hrDSCy6JI2AVSUEen+ifkx/C0tndA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Achy2bFd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748291257; c=relaxed/simple;
+	bh=Nh8/1K7ZMzQEZ4JcLGLb/L+95yin+HM+S+Ls4yNlAj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SxkGNnDdvNmvOZeNZZWM0vDQFzdTi8+jPmFhJEGM2wbxAoo3O3P90muN6wZ7njkTKELYmWvhDn3LHXt9wVdTWDF4roYp+oYR8RpZvaf2vAxo2q2uvyybU7MmYHpXwRfJXe5hlokuPySTmxh6ttO78ax0LgTXRpzZ787/ZzAige8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Si7jau0A; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Achy2bFd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748291214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HyWXqN+5wHGnA02x8VIFqjuokIUgrwEnON4MEoIF74U=;
-	b=Achy2bFdw1F7eU14BhUsWCetWHQKM+VH0c+pzYI8f7YNO47F2Zbp9/RjZKRXRHs1XlG1jS
-	7uDeGH9sRjy9pnTTf9PUrRtK1iH0kN3Am61gonfgL/D8Vk4skjJZOXmjxVyDsLdsXpJnps
-	JEfyGTUr/F5fdUAkfWKJG1bip0QkQPc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-593-akJo8BoKNyefqfA5oKNFLw-1; Mon, 26 May 2025 16:26:52 -0400
-X-MC-Unique: akJo8BoKNyefqfA5oKNFLw-1
-X-Mimecast-MFC-AGG-ID: akJo8BoKNyefqfA5oKNFLw_1748291211
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so15030055e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:26:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748291211; x=1748896011;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HyWXqN+5wHGnA02x8VIFqjuokIUgrwEnON4MEoIF74U=;
-        b=fyfGztz46TdpQPFKUcogTXaIfSLhACnzjDGwhrVFbzlJmlBgi/ZALVCaFw7DA8FRtm
-         /6zrqv1+cuo6Rz8cE4Ror59CKz+SWWFCFpquoSq/SyYSBE1mn1ll+HaG0GIJJywG3GVa
-         dcfBgu2bnd1T7Y4j6GYp2C/Jq5JrJ49y6eFFt+DLcriAAGBP7BnOeeH5bE+koemfjrrK
-         nGHFr8uSb2FErop2487YZTfmkLrC3N/ilrWp14vuVKtNl5vB+tlbt97HRIcC6YSlNYqs
-         /xgf6BI3i0eFjApBlwUfcuLwkvDC19C/CVKU6XvSJFjtVyNEfiV5BcfIqK/fHfJurlsv
-         mGBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtUtyk7z+gjXtNy9buK872VbqGQS3mg0EXvLjdIM8Blgeh8USlbCqqwEo4rn2yE1YLUnCr4JHYBOAGUnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeSJVqCeaztdcCleZtc+V6nbnxHg8T9ZwVNeq9qWp3xG8Qi1cN
-	XTeok4JkOIjuxFPEm9eKGx2QsuxmSCaRo5wzMWlpqBhWdNebvEIJm3uUmg4q/YJAsIrkbPoh7RO
-	YQ9SDyT5Ai3M5ciezabj6EqE0lFyi+ZaslGNVxAfnOc3krlP7s0FyHQ/S6S3lWM0AlA==
-X-Gm-Gg: ASbGnctewamIW5NL78KCx0PQFae66OFPdBLre3pPwEhFZBQwrlmYOc/7L2xGfdbVFFH
-	Kh2HjUejfpyp65L9c4X+Z2pHBEGurmrmhZSCPN+RVrvmzM+ad/GifPMszjc2yRkOhPJR49eT1+W
-	mrY+p2agqtM7QZveysVtAfrT4RM5Q37P5pDyG/JehkkzQOIcnqpIB8foB54qk+WesW8G8BwDsLN
-	6LRltb0S5669RCG9Ab6pjwB2gP9dhpPcRssQrj+415bKtP226uFJ0eX/XPOLi2xSCmSPhLN/6A6
-	k63/ucnBo2TR9w1XmO6QXt6Cb3V+p/w3qodTllxn
-X-Received: by 2002:a05:600c:5126:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-44c93016686mr92837635e9.6.1748291211244;
-        Mon, 26 May 2025 13:26:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSrD54L0gvE46Mtr1bEDCW7JZuh1RueZXOjVf2VgxDZDxuwPNbxQGifhSFMWHJcVtKTkfH2g==
-X-Received: by 2002:a05:600c:5126:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-44c93016686mr92837385e9.6.1748291210810;
-        Mon, 26 May 2025 13:26:50 -0700 (PDT)
-Received: from [192.168.0.115] (146-241-32-247.dyn.eolo.it. [146.241.32.247])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cfcece9dsm7354854f8f.5.2025.05.26.13.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 13:26:50 -0700 (PDT)
-Message-ID: <b3e3293a-3220-4540-9c8b-9aa9a2ef6427@redhat.com>
-Date: Mon, 26 May 2025 22:26:47 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Si7jau0A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748291255; x=1779827255;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Nh8/1K7ZMzQEZ4JcLGLb/L+95yin+HM+S+Ls4yNlAj8=;
+  b=Si7jau0A1WNuLlv3rySPDfpEe0Dwp3e61AgnU89PCVHq7md42DJ4xKln
+   CICwP7CuqIe9aEQ5QZ1Du4tpiT01XNO0UVUAtWU8Ojr8QLAw7EW1NVEo8
+   CMfT4pUDnUR0O5ZIwgMmKo2AkyWofnPopFNZNfyAZtoVTlabBzjkI8Q7m
+   H3TqTGSIGi9SzwbvvC5Hgj6hRuRDelw5Q26QeBfJco1lx3PjhTtBuEL1k
+   LGXwFWyGCYshyg6Bk3+N6ugclQBPPBaTZmG0sj5iKIVmoEgBuiMEuq4kz
+   k/QWOmDvSj8X6ksXbYG+r/MqHMtAz9G/yz3gi9Qg7/fVKeoqDLjPr893Q
+   w==;
+X-CSE-ConnectionGUID: gHFGn4JYTI60+6ilYAfM4A==
+X-CSE-MsgGUID: 0PBHOQ2vR+K34u6luGX9Kg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="60526574"
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="60526574"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:27:35 -0700
+X-CSE-ConnectionGUID: 8t2yvuZYQUu/iUFasK6wdw==
+X-CSE-MsgGUID: Rw7AFbqWSlionXRNBlu78g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="173431596"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.33])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:27:33 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 9A1DB11FC38;
+	Mon, 26 May 2025 23:27:29 +0300 (EEST)
+Date: Mon, 26 May 2025 20:27:29 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Richard Leitner <richard.leitner@linux.dev>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 08/10] media: i2c: ov9282: add strobe_duration v4l2
+ control
+Message-ID: <aDTOsR_ctSsySEsr@kekkonen.localdomain>
+References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+ <20250507-ov9282-flash-strobe-v4-8-72b299c1b7c9@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: stmmac: platform: guarantee uniqueness of bus_id
-To: Quentin Schulz <foss+kernel@0leil.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
- Heiko Stuebner <heiko@sntech.de>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Quentin Schulz <quentin.schulz@cherry.de>
-References: <20250521-stmmac-mdio-bus_id-v1-1-918a3c11bf2c@cherry.de>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250521-stmmac-mdio-bus_id-v1-1-918a3c11bf2c@cherry.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250507-ov9282-flash-strobe-v4-8-72b299c1b7c9@linux.dev>
 
-On 5/21/25 5:21 PM, Quentin Schulz wrote:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
-> 
-> bus_id is currently derived from the ethernetX alias. If one is missing
-> for the device, 0 is used. If ethernet0 points to another stmmac device
-> or if there are 2+ stmmac devices without an ethernet alias, then bus_id
-> will be 0 for all of those.
-> 
-> This is an issue because the bus_id is used to generate the mdio bus id
-> (new_bus->id in drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-> stmmac_mdio_register) and this needs to be unique.
-> 
-> This allows to avoid needing to define ethernet aliases for devices with
-> multiple stmmac controllers (such as the Rockchip RK3588) for multiple
-> stmmac devices to probe properly.
-> 
-> Obviously, the bus_id isn't guaranteed to be stable across reboots if no
-> alias is set for the device but that is easily fixed by simply adding an
-> alias if this is desired.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+Hi Richard,
 
-I think no need to CC stable here, but you need to provide a suitable
-fixes tag, thanks!
+On Wed, May 07, 2025 at 09:51:37AM +0200, Richard Leitner wrote:
+> Add V4L2_CID_FLASH_DURATION support using the "strobe_frame_span"
+> feature of the sensor. This is implemented by transforming the given µs
+> value by an interpolated formula to a "span step width" value and
+> writing it to register PWM_CTRL_25, PWM_CTRL_26, PWM_CTRL_27,
+> PWM_CTRL_28 (0x3925, 0x3926, 0x3927, 0x3928).
+> 
+> The maximum control value is set to the period of the current default
+> framerate.
+> 
+> All register values are based on the OV9281 datasheet v1.53 (jan 2019)
+> and tested using an ov9281 VisionComponents module.
+> 
+> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> ---
+>  drivers/media/i2c/ov9282.c | 31 ++++++++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> index b6de96997426f7225a061bfdc841aa062e8d0891..0bbdf08d7cda8f72e05fdc292aa69a4c821e4e03 100644
+> --- a/drivers/media/i2c/ov9282.c
+> +++ b/drivers/media/i2c/ov9282.c
+> @@ -97,6 +97,10 @@
+>  #define OV9282_REG_MIPI_CTRL00	0x4800
+>  #define OV9282_GATED_CLOCK	BIT(5)
+>  
+> +/* Flash/Strobe control registers */
+> +#define OV9282_REG_FLASH_DURATION	0x3925
+> +#define OV9282_FLASH_DURATION_DEFAULT	0x0000001A
 
-Paolo
+Lower case hexadecimals are preferred.
 
+> +
+>  /* Input clock rate */
+>  #define OV9282_INCLK_RATE	24000000
+>  
+> @@ -687,6 +691,25 @@ static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
+>  				current_val);
+>  }
+>  
+> +static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, int value)
+
+I'd use u32 for the value here.
+
+> +{
+> +	/*
+> +	 * Calculate "strobe_frame_span" increments from a given value (µs).
+> +	 * This is quite tricky as "The step width of shift and span is
+> +	 * programmable under system clock domain.", but it's not documented
+> +	 * how to program this step width (at least in the datasheet available
+> +	 * to the author at time of writing).
+> +	 * The formula below is interpolated from different modes/framerates
+> +	 * and should work quite well for most settings.
+> +	 */
+> +	u32 val = value * 192 / (ov9282->cur_mode->width + ov9282->hblank_ctrl->val);
+> +
+> +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> 24) & 0xff);
+> +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val >> 16) & 0xff);
+> +	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 2, 1, (val >> 8) & 0xff);
+> +	return ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 3, 1, val & 0xff);
+> +}
+> +
+>  /**
+>   * ov9282_set_ctrl() - Set subdevice control
+>   * @ctrl: pointer to v4l2_ctrl structure
+> @@ -756,6 +779,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_FLASH_LED_MODE:
+>  		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
+>  		break;
+> +	case V4L2_CID_FLASH_DURATION:
+> +		ret = ov9282_set_ctrl_flash_duration(ov9282, ctrl->val);
+> +		break;
+>  	default:
+>  		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
+>  		ret = -EINVAL;
+> @@ -1346,7 +1372,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+>  	u32 lpfr;
+>  	int ret;
+>  
+> -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
+> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 12);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1418,6 +1444,9 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+>  			       (1 << V4L2_FLASH_LED_MODE_TORCH),
+>  			       V4L2_FLASH_LED_MODE_NONE);
+>  
+> +	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
+> +			  0, 13900, 1, 8);
+
+It'd be nice to calculate the limits based on the relevant parameters
+rather than use a hard-coded value here.
+
+> +
+>  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+>  	if (!ret) {
+>  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> 
+
+-- 
+Regards,
+
+Sakari Ailus
