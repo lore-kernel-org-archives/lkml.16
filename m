@@ -1,26 +1,65 @@
-Received: from mail-m1973182.qiye.163.com (mail-m1973182.qiye.163.com [220.197.31.82])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17E12E40B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A432E40B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748225208; cv=none; b=hDkFsgBVPDw2wDiFvh7fDvhLz2umqeUpfp2ionQjW42LjogDtLpL7oMFz/y3BGXZegY/b5ANhd64oxiFHtmiBUl73BN/6NXusYFwhGCOiPoLUFzm2iDucA3Qz7F0T+Bo+adm1ZNdrcehMCxPSHo5cB2gzxPoZFOn+qzahSYU9nY=
+	t=1748225231; cv=none; b=MqtcjjXqSWeiSXYvhQQ6xHe2pa7fPg/IssN9GcrRpQukbyk4vdowCZcdssPNUWlcqpIYYKtXyj13yu00a5OTSI8zAUc1w8X+r7qZF4/YrOXsY0MRUOtWIwwkhDUNEbBG67RMQ4Efx0cZmfp8v2ZPC9nRm+cNtiVKakhysNYZSAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748225208; c=relaxed/simple;
-	bh=eN+nhS1EidwPcoWytvMVJnMSFVzFLcBk60PXr9ip7Yk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZ8zxz2wlnhmu0iHFwLW62GBdn/QWjDjWPT7ItPlamHjH6rLSCW84TaT1blY6SzJIcbmsHZunq3uz8w4G1Nw3TowgesegMxShuKfZv/vNVr5qN7vvvbmeE0CDbcSlOM4t9q5fFx1OSfWUMjKRgmTnZkl6F9/m9Vdm0ncn+bQSps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=bWnyMkIi; arc=none smtp.client-ip=220.197.31.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1748225231; c=relaxed/simple;
+	bh=n9LxWI1yKygVMR4cLjmMpOaiqPZPcNa/QF1n38blbWI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ncTXG3CFbPabY12cWvypi723GoIL/MtNAzDR0BHW0inOsnbRfI0Ho9iMGgjrhF8CRF09IK435rI4WvrjUelUz56ozQX6AjVcb6dozZYJQX7Bu6705T4hy8zMtEkBv7vLN65Pr+WaeVH41UVj8UHNranI+oW4mDrHdZW9Y2a4x6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FYwmOgf/; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="bWnyMkIi"
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 165569652;
-	Mon, 26 May 2025 09:31:05 +0800 (GMT+08:00)
-Message-ID: <0100093d-e2e6-41c5-af90-f914dcbe7f62@rock-chips.com>
-Date: Mon, 26 May 2025 09:30:30 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FYwmOgf/"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PLKTXu004500;
+	Mon, 26 May 2025 02:06:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=PitWxaiKxB2zvXyYWVD0Sny9f/z0
+	Rk5C0t1+a76GPsw=; b=FYwmOgf/sQmj6oSnRzZjq23iyXhcyEA8PPYtiig8pFug
+	X8urlDyZKlVtWPvwZ/+L7t8O5Z9o6X7TjMtYca6uh5dT3kJ3OQ7t0xnRkzYU1VQq
+	5590bBt1QkAI7x5z04In9gFp7IMiS1f4vy1nGz2MRG0q/UsyNFBHL4SD1j70VIh0
+	DYu+MKXBdLG5U9CyggBVIgtsmDK/p6zd5V9dXsI6zaEHmLvEORBgOky1geMxs8RH
+	JBY6ltGwpBO4AbUNjdflDu0EUQqsgAy+gfmRSMwhZWvnHs1f0aWUabIs0at47v/U
+	uImnw8g3Mhcz9JllLw2hAT5LGf0xq7v/vKWNUGwJxQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5mbxrub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 02:06:14 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54Q26D8t012079;
+	Mon, 26 May 2025 02:06:13 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5mbxru7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 02:06:13 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54PLRvLJ010626;
+	Mon, 26 May 2025 02:06:12 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepm6hj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 02:06:12 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54Q26ADo31785696
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 02:06:11 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D42385805B;
+	Mon, 26 May 2025 02:06:10 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 298B65805C;
+	Mon, 26 May 2025 02:05:57 +0000 (GMT)
+Received: from [9.43.101.58] (unknown [9.43.101.58])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 26 May 2025 02:05:56 +0000 (GMT)
+Message-ID: <c8dcda66-14d5-4f76-8e83-69840e49af91@linux.ibm.com>
+Date: Mon, 26 May 2025 07:35:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,552 +67,251 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/rockchip: cdn-dp: Convert to drm bridge
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Chaoyi Chen <kernel@airkyi.com>
-Cc: Sandy Huang <hjc@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
- Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250523011310.120-1-kernel@airkyi.com>
- <ht7irlxoixjca5a6ljekgzqy7ztcgu3mahi5v45v5qjrluny75@nzbqei6pgenn>
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-In-Reply-To: <ht7irlxoixjca5a6ljekgzqy7ztcgu3mahi5v45v5qjrluny75@nzbqei6pgenn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhgeHVZMQklCGR9PGEJJTU1WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a970a36fdb503abkunm8457f33213c4131
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pzo6Gio6CTE4KggSIU4#ISkL
-	NhwaCUpVSlVKTE9DSUlIS0xKSUlNVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
-	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSkJOQ003Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=bWnyMkIi+sMQFlzkLZqHhuCfouXFID4u45+ms44GNiniVmH6B8Yi/Hpuh5pu7IaGSWxOX+WM5cFZuc5yVtbBBViKLLyKpcoJVTDqpdyjrcUfPrsg6oaOKFirf2QJJLIhhemf4OVyqG/bpcRg85BgU44CkTpZoQz5NLVM8d5LM+c=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=64PzMgcgGGuv3U9R5ZIP3HMtUpmou2744QyAuDbbDSE=;
-	h=date:mime-version:subject:message-id:from;
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: amachhiw@linux.ibm.com, atrajeev@linux.ibm.com,
+        bartosz.golaszewski@linaro.org, christophe.leroy@csgroup.eu,
+        eajames@linux.ibm.com, gautam@linux.ibm.com, gbatra@linux.ibm.com,
+        haren@linux.ibm.com, hbathini@linux.ibm.com, jirislaby@kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        msuchanek@suse.de, naveen@kernel.org, sfr@canb.auug.org.au,
+        sshegde@linux.ibm.com, thorsten.blum@linux.dev, vaibhav@linux.ibm.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.16-1 tag
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=E9bNpbdl c=1 sm=1 tr=0 ts=6833cc96 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=f0Zn45Wg_vv7Fsv5_ccA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: mICoUBTNK9cy4_e4eTj_uLnQXO7PDpmR
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDAxNSBTYWx0ZWRfXwi93XV5t2Xj7 hN/zEBhEY2Z6JSQoX1uLd6T74dqq0erKk5KPgxXfhtq1fEr0pOJzC3PL+i5WHfPX17WrzIxajPi hmlS7/uw8HalDP9zW8xPfZUZTGVH6IAxEpM2DsV8hqiH9sDV5c6vRlr8axcVsd/rQc/MHdWx/h3
+ n3Gs2iO2UVOBZBFD9l1xPoh9UjYv6Q9eU5XMXAA8OOtzx2psHAAMtHa+6TaVwFo8VJrLttCB7Y6 i9KT2E34+1Dv5jSRK58zRIvKADCCYABmEvqmzUOISGiq2JyPvvxM1jlAU//Dm7u+0kppT63PObA 2Pgyr2ixRXg4b3DVfA4lkHcLUqqM2C3RVMS/UuVKVy1cTkW62+f89vsrWd2FlZSGomiKLK0mP7E
+ TRs5pLcPkzFTHFbhG+EbxeeN/pc1deSlhFq1XYVaEMqAj7YFqJvxLbUGj2RDcibwVDU6ds3O
+X-Proofpoint-ORIG-GUID: 8N_TM_dPfhQ3FMgP0gfk-yF5oyECMdWo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_01,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505260015
 
-Hi Dmitry,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-On 2025/5/24 6:17, Dmitry Baryshkov wrote:
-> On Fri, May 23, 2025 at 09:13:10AM +0800, Chaoyi Chen wrote:
->> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
->>
->> Convert it to drm bridge driver, it will be convenient for us to
->> migrate the connector part to the display driver later.
->>
->> Considering that some code depend on the connector, the following
->> changes have been made:
->> - Do not get edid in cdn_dp_get_sink_capability() when connector is
->> not present.
->> - Update bpc info in cdn_dp_bridge_atomic_enable() instead of
->> cdn_dp_encoder_mode_set(). Actually, the bpc data will be used in
->> cdn_dp_bridge_atomic_enable().
->>
->> This patch also convert to use devm_drm_bridge_alloc() API.
->>
->> Tested with RK3399 EVB IND board.
->>
->> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
->> ---
->>
->> Changes in v2:
->> - Link to V1: https://lore.kernel.org/all/20250507035148.415-1-kernel@airkyi.com/
->> - Use drm_atomic_get_new_connector_for_encoder() to get connector
->> - Convert to use devm_drm_bridge_alloc() API
->> - Fix typo: cdn_dp_connector_edid_read -> cdn_dp_bridge_edid_read
->>
->>   drivers/gpu/drm/rockchip/cdn-dp-core.c | 204 +++++++++++++------------
->>   drivers/gpu/drm/rockchip/cdn-dp-core.h |   5 +-
->>   2 files changed, 112 insertions(+), 97 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.c b/drivers/gpu/drm/rockchip/cdn-dp-core.c
->> index 292c31de18f1..848f47d41111 100644
->> --- a/drivers/gpu/drm/rockchip/cdn-dp-core.c
->> +++ b/drivers/gpu/drm/rockchip/cdn-dp-core.c
->> @@ -25,9 +25,9 @@
->>   #include "cdn-dp-core.h"
->>   #include "cdn-dp-reg.h"
->>   
->> -static inline struct cdn_dp_device *connector_to_dp(struct drm_connector *connector)
->> +static inline struct cdn_dp_device *bridge_to_dp(struct drm_bridge *bridge)
->>   {
->> -	return container_of(connector, struct cdn_dp_device, connector);
->> +	return container_of(bridge, struct cdn_dp_device, bridge);
->>   }
->>   
->>   static inline struct cdn_dp_device *encoder_to_dp(struct drm_encoder *encoder)
->> @@ -231,9 +231,9 @@ static bool cdn_dp_check_sink_connection(struct cdn_dp_device *dp)
->>   }
->>   
->>   static enum drm_connector_status
->> -cdn_dp_connector_detect(struct drm_connector *connector, bool force)
->> +cdn_dp_bridge_detect(struct drm_bridge *bridge)
->>   {
->> -	struct cdn_dp_device *dp = connector_to_dp(connector);
->> +	struct cdn_dp_device *dp = bridge_to_dp(bridge);
->>   	enum drm_connector_status status = connector_status_disconnected;
->>   
->>   	mutex_lock(&dp->lock);
->> @@ -244,41 +244,25 @@ cdn_dp_connector_detect(struct drm_connector *connector, bool force)
->>   	return status;
->>   }
->>   
->> -static void cdn_dp_connector_destroy(struct drm_connector *connector)
->> +static const struct drm_edid *
->> +cdn_dp_bridge_edid_read(struct drm_bridge *bridge, struct drm_connector *connector)
->>   {
->> -	drm_connector_unregister(connector);
->> -	drm_connector_cleanup(connector);
->> -}
->> -
->> -static const struct drm_connector_funcs cdn_dp_atomic_connector_funcs = {
->> -	.detect = cdn_dp_connector_detect,
->> -	.destroy = cdn_dp_connector_destroy,
->> -	.fill_modes = drm_helper_probe_single_connector_modes,
->> -	.reset = drm_atomic_helper_connector_reset,
->> -	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
->> -	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->> -};
->> -
->> -static int cdn_dp_connector_get_modes(struct drm_connector *connector)
->> -{
->> -	struct cdn_dp_device *dp = connector_to_dp(connector);
->> -	int ret = 0;
->> +	struct cdn_dp_device *dp = bridge_to_dp(bridge);
->> +	const struct drm_edid *drm_edid;
->>   
->>   	mutex_lock(&dp->lock);
->> -
->> -	ret = drm_edid_connector_add_modes(connector);
->> -
->> +	drm_edid = drm_edid_read_custom(connector, cdn_dp_get_edid_block, dp);
->>   	mutex_unlock(&dp->lock);
-> I know that the lock has been here. What does it protect here?
+Hi Linus,
 
-The cdn worker may read the edid at the same time.
+Please pull powerpc updates for 6.16:
 
+No conflicts that I am aware of.
+Thanks
 
->
->>   
->> -	return ret;
->> +	return drm_edid;
->>   }
->>   
->>   static enum drm_mode_status
->> -cdn_dp_connector_mode_valid(struct drm_connector *connector,
->> -			    const struct drm_display_mode *mode)
->> +cdn_dp_bridge_mode_valid(struct drm_bridge *bridge,
->> +			 const struct drm_display_info *display_info,
->> +			 const struct drm_display_mode *mode)
->>   {
->> -	struct cdn_dp_device *dp = connector_to_dp(connector);
->> -	struct drm_display_info *display_info = &dp->connector.display_info;
->> +	struct cdn_dp_device *dp = bridge_to_dp(bridge);
->>   	u32 requested, actual, rate, sink_max, source_max = 0;
->>   	u8 lanes, bpc;
->>   
->> @@ -323,11 +307,6 @@ cdn_dp_connector_mode_valid(struct drm_connector *connector,
->>   	return MODE_OK;
->>   }
->>   
->> -static struct drm_connector_helper_funcs cdn_dp_connector_helper_funcs = {
->> -	.get_modes = cdn_dp_connector_get_modes,
->> -	.mode_valid = cdn_dp_connector_mode_valid,
->> -};
->> -
->>   static int cdn_dp_firmware_init(struct cdn_dp_device *dp)
->>   {
->>   	int ret;
->> @@ -360,7 +339,8 @@ static int cdn_dp_firmware_init(struct cdn_dp_device *dp)
->>   
->>   static int cdn_dp_get_sink_capability(struct cdn_dp_device *dp)
->>   {
->> -	const struct drm_display_info *info = &dp->connector.display_info;
->> +	struct drm_connector *connector = dp->connector;
->> +	const struct drm_display_info *info;
->>   	int ret;
->>   
->>   	if (!cdn_dp_check_sink_connection(dp))
->> @@ -373,10 +353,15 @@ static int cdn_dp_get_sink_capability(struct cdn_dp_device *dp)
->>   		return ret;
->>   	}
->>   
->> +	if (!connector)
->> +		return 0;
-> Just pass connector directly as an argument.
+Notable out of area changes:
+  Documentation/userspace-api/ioctl/ioctl-number.rst	# 03c9d1a5a30d Documentation: Fix description format for powerpc RTAS ioctls
+  MAINTAINERS						# 8682a5749a3d MAINTAINERS: powerpc: Remove myself as a reviewer
 
-Ok, will fix in v3.
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
+
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.16-1
+
+for you to fetch changes up to 8682a5749a3d2b416b57709115c0351b50c8efcb:
+
+  MAINTAINERS: powerpc: Remove myself as a reviewer (2025-05-21 09:23:36 +0530)
+
+- ------------------------------------------------------------------
+powerpc updates for 6.16
+
+ - Support for dynamic preemption
+
+ - Migrate powerpc boards GPIO driver to new setter API
+
+ - Added new PMU for KVM host-wide measurement
+
+ - Enhancement to htmdump driver to support more functions
+
+ - Added character device for couple RTAS supported APIs
+
+ - Minor fixes and cleanup
+
+Thanks to: Amit Machhiwal, Athira Rajeev, Bagas Sanjaya, Bartosz Golaszewski, Christophe Leroy, Eddie James, Gaurav Batra, Gautam Menghani, Geert Uytterhoeven, Haren Myneni, Hari Bathini, Jiri Slaby (SUSE), Linus Walleij, Michal Suchanek, Naveen N Rao (AMD), Nilay Shroff, Ricardo B. Marlière, Ritesh Harjani (IBM), Sathvika Vasireddy, Shrikanth Hegde, Stephen Rothwell, Sourabh Jain, Thorsten Blum, Vaibhav Jain, Venkat Rao Bagalkote, Viktor Malik
+
+- ------------------------------------------------------------------
+Amit Machhiwal (1):
+      KVM: PPC: Book3S HV: Fix IRQ map warnings with XICS on pSeries KVM Guest
+
+Athira Rajeev (10):
+      powerpc/pseries/htmdump: Add htm_hcall_wrapper to integrate other htm operations
+      powerpc/pseries/htmdump: Add htm configure support to htmdump module
+      powerpc/pseries/htmdump: Add htm start support to htmdump module
+      powerpc/pseries/htmdump: Add htm status support to htmdump module
+      powerpc/pseries/htmdump: Add htm info support to htmdump module
+      powerpc/pseries/htmdump: Add htm setup support to htmdump module
+      powerpc/pseries/htmdump: Add htm flags support to htmdump module
+      powerpc/pseries/htmdump: Add htm capabilities support to htmdump module
+      powerpc/pseries/htmdump: Add documentation for H_HTM debugfs interface
+      powerpc/pseries/htmdump: Include header file to get is_kvm_guest() definition
+
+Bartosz Golaszewski (5):
+      powerpc: sysdev/gpio: use new line value setter callbacks
+      powerpc: 83xx/gpio: use new line value setter callbacks
+      powerpc: 44x/gpio: use new line value setter callbacks
+      powerpc: 52xx/gpio: use new line value setter callbacks
+      powerpc: 8xx/gpio: use new line value setter callbacks
+
+Christophe Leroy (2):
+      powerpc: Don't use --- in kernel logs
+      powerpc/8xx: Reduce alignment constraint for kernel memory
+
+Eddie James (1):
+      powerpc/crash: Fix non-smp kexec preparation
+
+Gaurav Batra (1):
+      powerpc/pseries/iommu: Fix kmemleak in TCE table userspace view
+
+Gautam Menghani (1):
+      powerpc/pseries/msi: Avoid reading PCI device registers in reduced power states
+
+Haren Myneni (9):
+      powerpc/pseries: Define common functions for RTAS sequence calls
+      powerpc/pseries: Define papr_indices_io_block for papr-indices ioctls
+      powerpc/pseries: Add papr-indices char driver for ibm,get-indices
+      powerpc/pseries: Add ibm,set-dynamic-indicator RTAS call support
+      powerpc/pseries: Add ibm,get-dynamic-sensor-state RTAS call support
+      powerpc/pseries: Add papr-platform-dump character driver for dump retrieval
+      powerpc/pseries: Add a char driver for physical-attestation RTAS
+      powerpc/pseries: Include linux/types.h in papr-platform-dump.h
+      Documentation: Fix description format for powerpc RTAS ioctls
+
+Hari Bathini (2):
+      powerpc64/ftrace: fix clobbered r15 during livepatching
+      powerpc/bpf: fix JIT code size calculation of bpf trampoline
+
+Jiri Slaby (SUSE) (1):
+      powerpc: do not build ppc_save_regs.o always
+
+Madhavan Srinivasan (1):
+      powerpc/kernel: Fix ppc_save_regs inclusion in build
+
+Michal Suchanek (1):
+      powerpc/boot: Fix build with gcc 15
+
+Naveen N Rao (AMD) (1):
+      MAINTAINERS: powerpc: Remove myself as a reviewer
+
+Shrikanth Hegde (1):
+      powerpc: enable dynamic preemption
+
+Thorsten Blum (9):
+      powerpc/ps3: Use str_write_read() in ps3_notification_read_write()
+      powerpc: mpic: Use str_enabled_disabled() helper function
+      KVM: powerpc: Enable commented out BUILD_BUG_ON() assertion
+      fadump: Use str_yes_no() helper in fadump_show_config()
+      powerpc: Transliterate author name and remove FIXME
+      powerpc: Replace strcpy() with strscpy() in proc_ppc64_init()
+      powerpc/mm/fault: Use str_write_read() helper function
+      powerpc/powermac: Use str_enabled_disabled() and str_on_off() helpers
+      powerpc/iommu: Use str_disabled_enabled() helper
+
+Vaibhav Jain (6):
+      powerpc: Document APIv2 KVM hcall spec for Hostwide counters
+      kvm powerpc/book3s-apiv2: Add support for Hostwide GSB elements
+      kvm powerpc/book3s-apiv2: Add kunit tests for Hostwide GSB elements
+      kvm powerpc/book3s-apiv2: Introduce kvm-hv specific PMU
+      powerpc/kvm-hv-pmu: Implement GSB message-ops for hostwide counters
+      powerpc/kvm-hv-pmu: Add perf-events for Hostwide counters
 
 
->
->> +
->> +	info = &connector->display_info;
->> +
->>   	drm_edid_free(dp->drm_edid);
->> -	dp->drm_edid = drm_edid_read_custom(&dp->connector,
->> +	dp->drm_edid = drm_edid_read_custom(dp->connector,
->>   					    cdn_dp_get_edid_block, dp);
->> -	drm_edid_connector_update(&dp->connector, dp->drm_edid);
->> +	drm_edid_connector_update(dp->connector, dp->drm_edid);
->>   
->>   	dp->sink_has_audio = info->has_audio;
->>   
->> @@ -416,11 +401,11 @@ static int cdn_dp_enable_phy(struct cdn_dp_device *dp, struct cdn_dp_port *port)
->>   		goto err_power_on;
->>   	}
->>   
->> -	ret = extcon_get_property(port->extcon, EXTCON_DISP_DP,
->> -				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
->> -	if (ret) {
->> -		DRM_DEV_ERROR(dp->dev, "get property failed\n");
->> -		goto err_power_on;
->> +		ret = extcon_get_property(port->extcon, EXTCON_DISP_DP,
->> +					EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-> The indentation here is strange. Could you please doubltcheck it?
+ Documentation/arch/powerpc/htm.rst                        | 104 +++++
+ Documentation/arch/powerpc/kvm-nested.rst                 |  40 +-
+ Documentation/userspace-api/ioctl/ioctl-number.rst        |   6 +
+ MAINTAINERS                                               |   1 -
+ arch/powerpc/Kconfig                                      |  11 +-
+ arch/powerpc/boot/Makefile                                |   1 +
+ arch/powerpc/boot/rs6000.h                                |   6 +-
+ arch/powerpc/include/asm/guest-state-buffer.h             |  35 +-
+ arch/powerpc/include/asm/hvcall.h                         |  13 +-
+ arch/powerpc/include/asm/plpar_wrappers.h                 |  20 +-
+ arch/powerpc/include/asm/preempt.h                        |  16 +
+ arch/powerpc/include/asm/rtas.h                           |   4 +
+ arch/powerpc/include/uapi/asm/papr-indices.h              |  41 ++
+ arch/powerpc/include/uapi/asm/papr-physical-attestation.h |  31 ++
+ arch/powerpc/include/uapi/asm/papr-platform-dump.h        |  16 +
+ arch/powerpc/kernel/Makefile                              |   2 -
+ arch/powerpc/kernel/fadump.c                              |   6 +-
+ arch/powerpc/kernel/interrupt.c                           |   6 +-
+ arch/powerpc/kernel/iommu.c                               |   5 +-
+ arch/powerpc/kernel/proc_powerpc.c                        |   3 +-
+ arch/powerpc/kernel/process.c                             |   8 +-
+ arch/powerpc/kernel/rtas.c                                |   8 +-
+ arch/powerpc/kernel/trace/ftrace_entry.S                  |   2 +-
+ arch/powerpc/kexec/crash.c                                |   5 +-
+ arch/powerpc/kvm/Kconfig                                  |  13 +
+ arch/powerpc/kvm/book3s_hv.c                              |  20 +-
+ arch/powerpc/kvm/book3s_hv_nestedv2.c                     |   6 +
+ arch/powerpc/kvm/guest-state-buffer.c                     |  39 ++
+ arch/powerpc/kvm/test-guest-state-buffer.c                | 214 +++++++++
+ arch/powerpc/kvm/timing.h                                 |   4 -
+ arch/powerpc/lib/vmx-helper.c                             |   2 +-
+ arch/powerpc/mm/fault.c                                   |   5 +-
+ arch/powerpc/mm/nohash/8xx.c                              |  32 +-
+ arch/powerpc/net/bpf_jit.h                                |  20 +-
+ arch/powerpc/net/bpf_jit_comp.c                           |  33 +-
+ arch/powerpc/net/bpf_jit_comp32.c                         |   6 -
+ arch/powerpc/net/bpf_jit_comp64.c                         |  15 +-
+ arch/powerpc/perf/Makefile                                |   2 +
+ arch/powerpc/perf/kvm-hv-pmu.c                            | 435 +++++++++++++++++
+ arch/powerpc/platforms/44x/gpio.c                         |   7 +-
+ arch/powerpc/platforms/52xx/mpc52xx_gpt.c                 |   6 +-
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c            |  13 +-
+ arch/powerpc/platforms/8xx/cpm1.c                         |  12 +-
+ arch/powerpc/platforms/powermac/setup.c                   |   4 +-
+ arch/powerpc/platforms/powermac/time.c                    |   3 +-
+ arch/powerpc/platforms/ps3/device-init.c                  |   3 +-
+ arch/powerpc/platforms/pseries/Makefile                   |   3 +-
+ arch/powerpc/platforms/pseries/htmdump.c                  | 395 +++++++++++++++-
+ arch/powerpc/platforms/pseries/iommu.c                    |   2 +-
+ arch/powerpc/platforms/pseries/msi.c                      |   7 +-
+ arch/powerpc/platforms/pseries/papr-indices.c             | 488 ++++++++++++++++++++
+ arch/powerpc/platforms/pseries/papr-phy-attest.c          | 288 ++++++++++++
+ arch/powerpc/platforms/pseries/papr-platform-dump.c       | 411 +++++++++++++++++
+ arch/powerpc/platforms/pseries/papr-rtas-common.c         | 311 +++++++++++++
+ arch/powerpc/platforms/pseries/papr-rtas-common.h         |  61 +++
+ arch/powerpc/platforms/pseries/papr-vpd.c                 | 352 ++------------
+ arch/powerpc/sysdev/cpm_common.c                          |   6 +-
+ arch/powerpc/sysdev/mpic.c                                |   7 +-
+ arch/powerpc/xmon/xmon.c                                  |   2 +-
+ 59 files changed, 3146 insertions(+), 471 deletions(-)
+ create mode 100644 Documentation/arch/powerpc/htm.rst
+ create mode 100644 arch/powerpc/include/asm/preempt.h
+ create mode 100644 arch/powerpc/include/uapi/asm/papr-indices.h
+ create mode 100644 arch/powerpc/include/uapi/asm/papr-physical-attestation.h
+ create mode 100644 arch/powerpc/include/uapi/asm/papr-platform-dump.h
+ create mode 100644 arch/powerpc/perf/kvm-hv-pmu.c
+ create mode 100644 arch/powerpc/platforms/pseries/papr-indices.c
+ create mode 100644 arch/powerpc/platforms/pseries/papr-phy-attest.c
+ create mode 100644 arch/powerpc/platforms/pseries/papr-platform-dump.c
+ create mode 100644 arch/powerpc/platforms/pseries/papr-rtas-common.c
+ create mode 100644 arch/powerpc/platforms/pseries/papr-rtas-common.h
+-----BEGIN PGP SIGNATURE-----
 
-Oh sorry, I forgot to remove them. Will remove them in v3.
-
-
-
->
->> +		if (ret) {
->> +			DRM_DEV_ERROR(dp->dev, "get property failed\n");
->> +			goto err_power_on;
->>   	}
->>   
->>   	port->lanes = cdn_dp_get_port_lanes(port);
->> @@ -551,21 +536,8 @@ static void cdn_dp_encoder_mode_set(struct drm_encoder *encoder,
->>   				    struct drm_display_mode *adjusted)
->>   {
->>   	struct cdn_dp_device *dp = encoder_to_dp(encoder);
->> -	struct drm_display_info *display_info = &dp->connector.display_info;
->>   	struct video_info *video = &dp->video_info;
->>   
->> -	switch (display_info->bpc) {
->> -	case 10:
->> -		video->color_depth = 10;
->> -		break;
->> -	case 6:
->> -		video->color_depth = 6;
->> -		break;
->> -	default:
->> -		video->color_depth = 8;
->> -		break;
->> -	}
->> -
-> I'd suggest to perform this part in additional step, especially if you
-> keep an always-assigned dp->connector for a few commits.
-
-I will try to do it in v3.
-
-
->
->>   	video->color_fmt = PXL_RGB;
->>   	video->v_sync_polarity = !!(mode->flags & DRM_MODE_FLAG_NVSYNC);
->>   	video->h_sync_polarity = !!(mode->flags & DRM_MODE_FLAG_NHSYNC);
->> @@ -599,12 +571,31 @@ static void cdn_dp_audio_handle_plugged_change(struct cdn_dp_device *dp,
->>   		dp->plugged_cb(dp->codec_dev, plugged);
->>   }
->>   
->> -static void cdn_dp_encoder_enable(struct drm_encoder *encoder)
->> +static void cdn_dp_bridge_atomic_enable(struct drm_bridge *bridge, struct drm_atomic_state *state)
->>   {
->> -	struct cdn_dp_device *dp = encoder_to_dp(encoder);
->> +	struct cdn_dp_device *dp = bridge_to_dp(bridge);
->> +	struct video_info *video = &dp->video_info;
->> +	struct drm_display_info *display_info;
->>   	int ret, val;
->>   
->> -	ret = drm_of_encoder_active_endpoint_id(dp->dev->of_node, encoder);
->> +	dp->connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
->> +	if (!dp->connector)
->> +		return;
->> +
->> +	display_info = &dp->connector->display_info;
->> +	switch (display_info->bpc) {
->> +	case 10:
->> +		video->color_depth = 10;
->> +		break;
->> +	case 6:
->> +		video->color_depth = 6;
->> +		break;
->> +	default:
->> +		video->color_depth = 8;
->> +		break;
->> +	}
->> +
->> +	ret = drm_of_encoder_active_endpoint_id(dp->dev->of_node, &dp->encoder.encoder);
->>   	if (ret < 0) {
->>   		DRM_DEV_ERROR(dp->dev, "Could not get vop id, %d", ret);
->>   		return;
->> @@ -625,7 +616,7 @@ static void cdn_dp_encoder_enable(struct drm_encoder *encoder)
->>   
->>   	ret = cdn_dp_enable(dp);
->>   	if (ret) {
->> -		DRM_DEV_ERROR(dp->dev, "Failed to enable encoder %d\n",
->> +		DRM_DEV_ERROR(dp->dev, "Failed to enable bridge %d\n",
->>   			      ret);
->>   		goto out;
->>   	}
->> @@ -661,9 +652,9 @@ static void cdn_dp_encoder_enable(struct drm_encoder *encoder)
->>   	mutex_unlock(&dp->lock);
->>   }
->>   
->> -static void cdn_dp_encoder_disable(struct drm_encoder *encoder)
->> +static void cdn_dp_bridge_atomic_disable(struct drm_bridge *bridge, struct drm_atomic_state *state)
->>   {
->> -	struct cdn_dp_device *dp = encoder_to_dp(encoder);
->> +	struct cdn_dp_device *dp = bridge_to_dp(bridge);
->>   	int ret;
->>   
->>   	mutex_lock(&dp->lock);
->> @@ -672,7 +663,7 @@ static void cdn_dp_encoder_disable(struct drm_encoder *encoder)
->>   	if (dp->active) {
->>   		ret = cdn_dp_disable(dp);
->>   		if (ret) {
->> -			DRM_DEV_ERROR(dp->dev, "Failed to disable encoder %d\n",
->> +			DRM_DEV_ERROR(dp->dev, "Failed to disable bridge %d\n",
->>   				      ret);
->>   		}
->>   	}
->> @@ -703,13 +694,31 @@ static int cdn_dp_encoder_atomic_check(struct drm_encoder *encoder,
->>   	return 0;
->>   }
->>   
->> +static void cdn_dp_hpd_notify(struct drm_bridge *bridge,
->> +			   enum drm_connector_status status)
->> +{
->> +	struct cdn_dp_device *dp = bridge_to_dp(bridge);
->> +
->> +	schedule_work(&dp->event_work);
->> +}
->> +
->>   static const struct drm_encoder_helper_funcs cdn_dp_encoder_helper_funcs = {
->>   	.mode_set = cdn_dp_encoder_mode_set,
->> -	.enable = cdn_dp_encoder_enable,
->> -	.disable = cdn_dp_encoder_disable,
->>   	.atomic_check = cdn_dp_encoder_atomic_check,
->>   };
->>   
->> +static const struct drm_bridge_funcs cdn_dp_bridge_funcs = {
->> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
->> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
->> +	.atomic_reset = drm_atomic_helper_bridge_reset,
->> +	.detect = cdn_dp_bridge_detect,
->> +	.edid_read = cdn_dp_bridge_edid_read,
->> +	.atomic_enable = cdn_dp_bridge_atomic_enable,
->> +	.atomic_disable = cdn_dp_bridge_atomic_disable,
->> +	.mode_valid = cdn_dp_bridge_mode_valid,
->> +	.hpd_notify = cdn_dp_hpd_notify,
->> +};
->> +
->>   static int cdn_dp_parse_dt(struct cdn_dp_device *dp)
->>   {
->>   	struct device *dev = dp->dev;
->> @@ -859,7 +868,7 @@ static int cdn_dp_audio_get_eld(struct device *dev, void *data,
->>   {
->>   	struct cdn_dp_device *dp = dev_get_drvdata(dev);
->>   
->> -	memcpy(buf, dp->connector.eld, min(sizeof(dp->connector.eld), len));
->> +	memcpy(buf, dp->connector->eld, min(sizeof(dp->connector->eld), len));
-> get_eld() might be called before .atomic_enable(). I'd suggest to switch
-> to DP_AUDIO helpers, which would remove a need to store dp->connector
-> here. You can do converstion graciously: store connector in the probe
-> path (as you create it anyway), switch to DRM_BRIDGE_OP_DP_AUDIO (should
-> be relatively easy), then drop dp->connector completely.
-
-That make sense. I will try to do it in v3.
-
-
->
->>   
->>   	return 0;
->>   }
->> @@ -1006,7 +1015,6 @@ static void cdn_dp_pd_event_work(struct work_struct *work)
->>   
->>   out:
->>   	mutex_unlock(&dp->lock);
->> -	drm_connector_helper_hpd_irq_event(&dp->connector);
-> Don't you need to call drm_bridge_hpd_notify() here?
-
-No, this could get into an infinite call loop. Also, the 
-drm_bridge_hpd_notify() related changes have nothing to do with this 
-patch, I forgot to remove them. I'll remove them in v3.
-
-
->
->>   }
->>   
->>   static int cdn_dp_pd_event(struct notifier_block *nb,
->> @@ -1030,9 +1038,9 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   {
->>   	struct cdn_dp_device *dp = dev_get_drvdata(dev);
->>   	struct drm_encoder *encoder;
->> -	struct drm_connector *connector;
->>   	struct cdn_dp_port *port;
->>   	struct drm_device *drm_dev = data;
->> +	struct drm_connector *connector;
-> Kind of useless move. Please move it back.
-
-Will fix in v3.
-
-
->
->>   	int ret, i;
->>   
->>   	ret = cdn_dp_parse_dt(dp);
->> @@ -1053,6 +1061,15 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   							     dev->of_node);
->>   	DRM_DEBUG_KMS("possible_crtcs = 0x%x\n", encoder->possible_crtcs);
->>   
->> +	/*
->> +	 * If we failed to find the CRTC(s) which this encoder is
->> +	 * supposed to be connected to, it's because the CRTC has
->> +	 * not been registered yet. Defer probing, and hope that
->> +	 * the required CRTC is added later.
->> +	 */
->> +	if (encoder->possible_crtcs == 0)
->> +		return -EPROBE_DEFER;
-> I don't see this check beforehand. If this is a fix, please move it to a
-> separate commit.
-
-Okay, will fix in v3.
-
-
->
->> +
->>   	ret = drm_simple_encoder_init(drm_dev, encoder,
->>   				      DRM_MODE_ENCODER_TMDS);
->>   	if (ret) {
->> @@ -1062,26 +1079,29 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   
->>   	drm_encoder_helper_add(encoder, &cdn_dp_encoder_helper_funcs);
->>   
->> -	connector = &dp->connector;
->> -	connector->polled = DRM_CONNECTOR_POLL_HPD;
->> -	connector->dpms = DRM_MODE_DPMS_OFF;
->> +	dp->bridge.ops = DRM_BRIDGE_OP_DETECT |
->> +			   DRM_BRIDGE_OP_EDID |
->> +			   DRM_BRIDGE_OP_HPD;
->> +	dp->bridge.of_node = dp->dev->of_node;
->> +	dp->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
->>   
->> -	ret = drm_connector_init(drm_dev, connector,
->> -				 &cdn_dp_atomic_connector_funcs,
->> -				 DRM_MODE_CONNECTOR_DisplayPort);
->> -	if (ret) {
->> -		DRM_ERROR("failed to initialize connector with drm\n");
->> -		goto err_free_encoder;
->> -	}
->> +	ret = devm_drm_bridge_add(dev, &dp->bridge);
->> +	if (ret)
->> +		return ret;
->>   
->> -	drm_connector_helper_add(connector, &cdn_dp_connector_helper_funcs);
->> +	ret = drm_bridge_attach(encoder, &dp->bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
->> +	if (ret)
->> +		return ret;
->>   
->> -	ret = drm_connector_attach_encoder(connector, encoder);
->> -	if (ret) {
->> -		DRM_ERROR("failed to attach connector and encoder\n");
->> -		goto err_free_connector;
->> +	connector = drm_bridge_connector_init(drm_dev, encoder);
->> +	if (IS_ERR(connector)) {
->> +		ret = PTR_ERR(connector);
->> +		dev_err(dp->dev, "failed to init bridge connector: %d\n", ret);
->> +		return ret;
->>   	}
->>   
->> +	drm_connector_attach_encoder(connector, encoder);
->> +
->>   	for (i = 0; i < dp->ports; i++) {
->>   		port = dp->port[i];
->>   
->> @@ -1092,7 +1112,7 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   		if (ret) {
->>   			DRM_DEV_ERROR(dev,
->>   				      "register EXTCON_DISP_DP notifier err\n");
->> -			goto err_free_connector;
->> +			return ret;
->>   		}
->>   	}
->>   
->> @@ -1101,24 +1121,15 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   	schedule_work(&dp->event_work);
->>   
->>   	return 0;
->> -
->> -err_free_connector:
->> -	drm_connector_cleanup(connector);
->> -err_free_encoder:
->> -	drm_encoder_cleanup(encoder);
->> -	return ret;
->>   }
->>   
->>   static void cdn_dp_unbind(struct device *dev, struct device *master, void *data)
->>   {
->>   	struct cdn_dp_device *dp = dev_get_drvdata(dev);
->>   	struct drm_encoder *encoder = &dp->encoder.encoder;
->> -	struct drm_connector *connector = &dp->connector;
->>   
->>   	cancel_work_sync(&dp->event_work);
->> -	cdn_dp_encoder_disable(encoder);
->>   	encoder->funcs->destroy(encoder);
-> You've dropped drm_encoder_cleanup() from the bind path. Should it be
-> dropped here too? DRM subsystem will do it for you, if I'm not mistaken.
-
-Will fix in v3.
-
-
->
->> -	connector->funcs->destroy(connector);
->>   
->>   	pm_runtime_disable(dev);
->>   	if (dp->fw_loaded)
->> @@ -1171,9 +1182,10 @@ static int cdn_dp_probe(struct platform_device *pdev)
->>   	int ret;
->>   	int i;
->>   
->> -	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
->> -	if (!dp)
->> -		return -ENOMEM;
->> +	dp = devm_drm_bridge_alloc(dev, struct cdn_dp_device, bridge,
->> +				   &cdn_dp_bridge_funcs);
->> +	if (IS_ERR(dp))
->> +		return PTR_ERR(dp);
->>   	dp->dev = dev;
->>   
->>   	match = of_match_node(cdn_dp_dt_ids, pdev->dev.of_node);
->> diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.h b/drivers/gpu/drm/rockchip/cdn-dp-core.h
->> index 17498f576ce7..d2778f7a5b31 100644
->> --- a/drivers/gpu/drm/rockchip/cdn-dp-core.h
->> +++ b/drivers/gpu/drm/rockchip/cdn-dp-core.h
->> @@ -8,6 +8,8 @@
->>   #define _CDN_DP_CORE_H
->>   
->>   #include <drm/display/drm_dp_helper.h>
->> +#include <drm/drm_bridge.h>
->> +#include <drm/drm_bridge_connector.h>
->>   #include <drm/drm_panel.h>
->>   #include <drm/drm_probe_helper.h>
->>   #include <sound/hdmi-codec.h>
->> @@ -65,7 +67,8 @@ struct cdn_dp_port {
->>   struct cdn_dp_device {
->>   	struct device *dev;
->>   	struct drm_device *drm_dev;
->> -	struct drm_connector connector;
->> +	struct drm_bridge bridge;
->> +	struct drm_connector *connector;
->>   	struct rockchip_encoder encoder;
->>   	struct drm_display_mode mode;
->>   	struct platform_device *audio_pdev;
->> -- 
->> 2.49.0
->>
+iQIzBAEBCAAdFiEEqX2DNAOgU8sBX3pRpnEsdPSHZJQFAmgzy6oACgkQpnEsdPSH
+ZJS1VhAAsftkx1Gu6WV8njI6CX9agz3F0JJKm8eT3A8tZx8dfeko4IDgJSY4kZW8
+BSt67AL12ZxCwo73scJF0sZIg/6CKMMV5qglWeWvONm4AJfs323H0UgdreSFvGXh
+ow63jZ7/feVAq77iynVpVTQoAFlX+7+JIL3b4eHOAGp9gn1q+0tyr4fvEarJgxtC
+BHOVywfo9GZKV/PoVQWqLCg70rILo0NUFmle6GxXUcShJ9ZcuAHzW48iYidzWMsW
+qFJj/l0S1wHhOVl+6vk3zrFEYT3VlR3YqXUfjN6FPT4VM/Ac7H7QL5S+0g+vQj7l
+UprO0JKiBSZRprMSnmcgTgRiph45g6No3dhEYL4mVkVsnEoGdGU3y6/vsfBnCBvi
+/un8vNNdD4aAn5Gu1BAjjpZ6Y2SK77l292OZ1XZw3KeWL57RSMl1GPL/j99ULO44
+Rz121YTlWmOdIghiHTfMqPMZyuH10LLEAVTd82Zyds+M/lrI0OmXtz0X9pS2c/Ov
+3wbFIJnhNI1NyrY4pLUgbHR6hjGTgdYoSs9Kc0wu/hMMJX/NcXDR0DSOxccGCmUy
+EelYHCFchBOjrGV/gdQTcDLV0UUVj1bKxndko4mzsOALF+YzModzx+gyUw9rJINc
+qZqirjg6NOCmvSsz5nw6zXQFlwZUlZMSVhj6FXeI/U1A7PX9tf8=
+=HTEY
+-----END PGP SIGNATURE-----
