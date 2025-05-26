@@ -1,86 +1,114 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2740D19B5B1;
-	Mon, 26 May 2025 07:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D37F19B5B1;
+	Mon, 26 May 2025 07:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748243359; cv=none; b=joszJjDL6obyaP64jRDKydI473WSXNpyZ3zTDbeRzZQj0VHD32Db1tU08cCxeDbRH96UfAmLNhW0TjO9t6Hwyon1ZWMuqVNRhwLfm6AacphfZy64tREKF6Xc2j6t3d1UdxhJjtD8Hp+ih91Do3LTsdgSvB2yIDazSufXg+aHHM4=
+	t=1748243489; cv=none; b=WsALZoXPsRV+KXx75Cp4siEoOgPuXWNAChgQKhpDmyueG2XxAwPXc+iz3SpOq9dTI+pbXHHCOjFwR55VY0tOq3xMp9iHmmpxKFywsX43Ct+n9uQ3+vsEx39ZAUQ9z7D3c9rnXk+X2P+83eQHDHdkI6pYn4EXM3j1bOuo/Wzac3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748243359; c=relaxed/simple;
-	bh=Ep8pWuTGdd57kw8khC2EvLH50zr6Nz4uqutJaSY52R0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W3bnrLiZPVLyJ3IH8c0/9z24CESyliECXzLyxYpU6oAsoLVS7ddVjnnDn/JrOmg7VtD+JZf39hfSDvT3aJGZJkD+WvCRJRlTNFsbSlKK5/ZWc8dLZBFXZ+tgGIU6o0jpCrKkq9LdYmmwKVf1Gg2ErHfpl8bH2tCa3uJwj8t1Toc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzASV0XA; arc=none smtp.client-ip=209.85.216.45
+	s=arc-20240116; t=1748243489; c=relaxed/simple;
+	bh=j9vcmJ4bsZVYfNqI2zJH02TBZ9pju+nhGbTNH9bRCyM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=dKV/wTmyATyxpGZ1r3nUAGvZzqOFVaDgKzXayx8XUGMdCLbadwIgP++7RQnquabq/6bgWc6c/mfThITVJLL9OaVNPdX9e6RiEZ/+q2LTQW8C3nSilxL1f04mXl8KkwDjNjX7jFkaBG2//71DrdELyPuoL7g9IqySoRxeH+o+u0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XtJeO9/N; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzASV0XA"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-311374f95b8so895667a91.0;
-        Mon, 26 May 2025 00:09:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtJeO9/N"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553245cad29so277979e87.1;
+        Mon, 26 May 2025 00:11:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748243357; x=1748848157; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748243486; x=1748848286; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ep8pWuTGdd57kw8khC2EvLH50zr6Nz4uqutJaSY52R0=;
-        b=mzASV0XAotsTWDwE273LGrRbjTLmX8OU0fhlfkZx4valtRTphNgb5pSzm9FdNHMe7P
-         28fPo3NPtMVc+IhvhLOykv4tK+t9AMHetZgvbXNLzod7CPdEQ7jCS9fwsf3ISbDi79N0
-         DNz6aRzBy2LmyHF5WanP3wU1mX9WVWw0f8RRdHIfeu580DgCQGnEqRBxYpnUf4wIAm2h
-         B3amBttpvy1s2GQf4zb6hoz4/usI42KSFbOywbQaL7GPDBpoA5Hx+AvDw4Jnkndx2//2
-         xa6S64O5v0uDPuF199tTxYk/bIR+KOK3fbjQK/686h0FomGE+VKrmx+m3CoPfVEacF5f
-         EzFQ==
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cBY907wiCnUkLWJScXJ1dfdiQqTjZmqM/QrU/G8NFQg=;
+        b=XtJeO9/NJ8cYStzn51OCEVJt48Vx881oHgdKJ+JlocS43LMULxQYzMc5PRIq09Vl+m
+         Ul+80b2/8jIQTggmWp4XwVrzZ6nhRAH56Zyu+maJjen5sDtbRD1d53GX7dQK9TC1pD2r
+         DyS0Ow9TwQnkFUv0nBoesJLwczmYyUJI8V0VbHBF/4ybj4KuO09SxUNa9bgpOp+uYN10
+         lBDM1NlS0K9rA9WH5WNu9xHKQzE8Ph8zUJxTlGDXNyLWdSI3mTqNf0Ia4g2Sq1P8wPog
+         mdHe3ID/LYylvY3Ifg40ZTBPavRcRHTPllfrmtTzlqaE8lKzYIwRzNYuHfYzyxMK4UBy
+         W+bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748243357; x=1748848157;
+        d=1e100.net; s=20230601; t=1748243486; x=1748848286;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ep8pWuTGdd57kw8khC2EvLH50zr6Nz4uqutJaSY52R0=;
-        b=DUqD8Qw5GJQ8U6u1SY9Y9N0waDl8mDyJOG3qqRd3C1GtXQrw0egN48v9liVNBu6BsV
-         iWL5FAstDiAPhTdSAf5gJugSo40XV/Wqe9Hu6z9NM8MDzxCBkk7RZAf7kpYf54qvqUGB
-         x+RAMqdr2J3UCglGkQ9XCgZLL36NsQ5YxEqDOF4Do4SKdomM0rS2N0ClgKhNSzssO7Ze
-         loCyty/bAVQgFz037QC5ebYMEaz2J+iNU6Y7F3F5Cr8X0NxHWV2MmNoHasftMKsAcB+r
-         xQdi5r5k+P3oOyntlX3//Iyo48VzF3HOj4LdgRolg1wKR7KVDcIdCyAU3RVvPMniUoEu
-         NVCw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9OWKkNGbqw+UqRZKKJEHeJhyMKMBOZFIMG5QCfB/deTpGdJUlXjoleTzjX2G+JYcyXOAvLfWXklhh@vger.kernel.org, AJvYcCV13+Gch9H8uSKVbZiN9x+U8OLPANMhxWFfRkTbqvw1cmd+gb6r6SFUnOM3N2uC2wJbOODcnGl7eMPZYyoq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHLG974T87ZuWVEjTVdnhvdI/O/jWEoEOyap4ZBM9oVTNwTjSx
-	PLyjfuyx9eEztmATyc5pVhg2mLnZuGlNDQ1mo5JJnXbaPF8CGc1R28+GNR1Zl94KGywEvjYptM2
-	1mJFcopb69j7zJehBeE1lgs8ttZ6MVTA=
-X-Gm-Gg: ASbGncuRdtgnmfHaI+jI010rWLCZ4g2X2FcmlfI5enVuBsJ3f6pF/rFXdT7fxX1jqIk
-	IyXasAcNCHEuBu7jW7ED+tr+OMU+t4+kRX3OrN0BSKfHBU9lg9XdLZZRvow7kZFuzIC/HJupN9U
-	qCXrwcgBUKZoe34keMdxGSMuPAHZcftw==
-X-Google-Smtp-Source: AGHT+IGDBhEGxaTSbxJX/MclhB7uE2CthxbT/tmia39DeSZa/GGYPMt39TPrTSYqE/n/l5Ew/IWxpQUxNJkM2ryQllI=
-X-Received: by 2002:a17:90a:ec8b:b0:30c:52c5:3dc5 with SMTP id
- 98e67ed59e1d1-3111108e58fmr10342094a91.26.1748243357211; Mon, 26 May 2025
- 00:09:17 -0700 (PDT)
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cBY907wiCnUkLWJScXJ1dfdiQqTjZmqM/QrU/G8NFQg=;
+        b=KdXLv3a4cvV0lL94Bk8yluvET8GyZNUgPQPQwMLMMJ5aqzc7sIFJIcDTZnaChBsazy
+         cA2gUMe1Yq07m5cRKN0nTttLnuZtxC/6Egt1C4o2m9DlIOZRsmKVhI0tMhLt/kPGDDir
+         mSROJSKKXnk+O2o+cZZ3kqg0blvOyT+k1CzfAJeHVLx93n37U9qNurxzvuOPGfndIKuw
+         hkW0BHqA4NDsnPziwLHcIY7xBbHd9Ne8I/gzRJQpEdhArvQ7HUiQ4RCOTDsNxa+wrfhE
+         eWaRzsOwN71aNAvhVgu64eRLi2e6M7zGqp9/W/ZBumugkfQKcj6PqmgBOAvybsdB07H/
+         l4SA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcGSmYPjCqfTw83nDVYkmlT3xCcoSZLOSUkusgt7svdwwGP2kpahWfVMSYdSl2jvjmLXKYCI/h@vger.kernel.org, AJvYcCXaFvPWGNkoUta+/2GJgPIhtbcNOuisNq65zWnJ/ycZbcbHR95KDeIRxLCGGPnECgeZsNQFtPjw2Q9LaJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7l4MUpuruLXpQOrcn4TOlUheuedTRhrcdZH01aFTH2U7Sih3Q
+	UfVaZPpzOgBDjKdsZMo/G+jXnlsrjUtyIklEt6EA6iQaGEGd9YyU+y8YgXTrtYNI3LQguGvA2OF
+	4SKSksdFjvPAIB2Ks9Avehdlt2SoUyA==
+X-Gm-Gg: ASbGncvWyYTI9eyUp81xM4jvzGjb2T52J+T+UJMMVTOMG/JoHLZFaFQuPJWL6hzko1A
+	pgMyLSO2MbLbWiq+lsqdXbGuhW8uagEI4ODkRjLPoW2ewrrx1IpdDmcXJmpsDxvgm7wCCGb4NPy
+	0xHat2GC21ULBJA9HDihVOet2lPVLOWBJwBA==
+X-Google-Smtp-Source: AGHT+IFDrcQK3O9mjDh0NUrjn5bbVXF7lgII1LyYTyZlH1zUdfBqg5XfANH+K2Bre26zHgfOTxSALvBFJZX3MqJ7PWk=
+X-Received: by 2002:a05:6512:3c8e:b0:54f:c4e0:e147 with SMTP id
+ 2adb3069b0e04-5521c7ba2f0mr1848364e87.34.1748243485302; Mon, 26 May 2025
+ 00:11:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523-fpg-nxp-imx93-frdm-v1-0-546b2d342855@pengutronix.de> <20250523-fpg-nxp-imx93-frdm-v1-2-546b2d342855@pengutronix.de>
-In-Reply-To: <20250523-fpg-nxp-imx93-frdm-v1-2-546b2d342855@pengutronix.de>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Mon, 26 May 2025 10:11:00 +0300
-X-Gm-Features: AX0GCFvGtjeGuTsvrA5ltKe4oercB6wbJNzfoRXxRx6ArLhn3Fe7vBf3doOq90o
-Message-ID: <CAEnQRZD+P0PhZe2snV33mvT2=2E_zHEPfkxBASVRtESDziw3-A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: fsl: add i.MX93 11x11 FRDM board
-To: Fabian Pflug <f.pflug@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
+From: John <john.cs.hey@gmail.com>
+Date: Mon, 26 May 2025 15:11:13 +0800
+X-Gm-Features: AX0GCFsUEWv4bUdJ_o3X0732kjLFE8YPM6w_Hf9J5wloJw-OHOmaPZcJDYFpBPI
+Message-ID: <CAP=Rh=MXN2U7ydg2f9k1cywF8Q1qpizXmcBg6mmzwpt86=PaWw@mail.gmail.com>
+Subject: [Bug] "WARNING in corrupted" in Linux Kernel v6.15-rc5
+To: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 9:18=E2=80=AFPM Fabian Pflug <f.pflug@pengutronix.d=
-e> wrote:
->
-> Add DT compatible string for NXP i.MX93 11x11 FRDM board.
->
-> Signed-off-by: Fabian Pflug <f.pflug@pengutronix.de>
+Dear Linux Kernel Maintainers,
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+I hope this message finds you well.
+
+I am writing to report a potential vulnerability I encountered during
+testing of the Linux Kernel version v6.15-rc5.
+
+Git Commit: 92a09c47464d040866cf2b4cd052bc60555185fb (tag: v6.15-rc5)
+
+Bug Location: 20628 at net/ipv4/ipmr.c:440 ipmr_free_table
+net/ipv4/ipmr.c:440 [inline]
+
+Bug report: https://hastebin.com/share/idudaveten.yaml
+
+Complete log: https://hastebin.com/share/ojonatucos.perl
+
+Entire kernel config:  https://hastebin.com/share/padecilimo.ini
+
+Root Cause Analysis:
+A kernel warning is triggered during the execution of
+ipmr_rules_exit() at line 440 of net/ipv4/ipmr.c, when attempting to
+free a multicast routing (mr) table that may have already been
+released or was never correctly initialized.
+This function is called as part of the ipmr_net_exit_batch() logic
+when a network namespace is being torn down (copy_net_ns() =E2=86=92
+create_new_namespaces() =E2=86=92 unshare() syscall).
+The crash is accompanied by a FAULT_INJECTION trace involving
+copy_from_user_iter, suggesting this might be a fuzzing-induced fault
+where the data passed via netlink_sendmsg() is malformed.
+However, the primary issue lies in ipmr_free_table() dereferencing a
+potentially invalid pointer=E2=80=94either due to a race condition during
+namespace teardown or improper error handling during netns
+initialization.
+
+At present, I have not yet obtained a minimal reproducer for this
+issue. However, I am actively working on reproducing it, and I will
+promptly share any additional findings or a working reproducer as soon
+as it becomes available.
+
+Thank you very much for your time and attention to this matter. I
+truly appreciate the efforts of the Linux kernel community.
+
+Best regards,
+John
