@@ -1,147 +1,267 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131521F4604
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA18E1E1DEE
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748252838; cv=none; b=O8OSFSDAxKfH5u0iIoNkkNQvEmkqtfYSTc4Mgf7JpYKKjeCwMZZyxwJ5COhhLe4FOUuAA6yUJ8jrKhBvWgKc7SRoBJOM2nhxxEMe+4VyNdvX4pZ1VIy+uxNLkTv4m9ZBbrW55bL1HjlHrQDKpCjbVzpGujnKbGa+zn6CuBMbmlo=
+	t=1748252904; cv=none; b=HHboYCjUTNvZrVuTzawljYGvz6vLAfA90hf5xXFwjOthevtl/YRZz0hEt2/IWlRA3xNnt77FCXu5x4UDc1QbWdIQMdF+wJCu6pPr4EgcWaKSWltBJ75iGdvn936eVrO8YkJlLd/OwMuRKY3cMEBeMGzLiyMKL4NDGRf5DubaNWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748252838; c=relaxed/simple;
-	bh=JFqzsTfm9DdoRKLGO7u+iVRbtQ2IB4LCND0J4CbvlC8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i1wjUKq6sxQ9C4Yvs3RmZfs+ZEfsoCTu2q0DNQlBeU/eC3DIsyi0SWTjsplbYTaKFVk8dlO7hj95260g7d1j87p6kHOm2SvPzPaqtGKFHeLNoDB51k1mNrPdR1qVZrzCzBvfX2qwyLBzzGMIWR4qScCSB09eQeCU6Nna+WYoolo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hN62oGW8; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748252904; c=relaxed/simple;
+	bh=IbN6/KivZVMlm7ALQ/66xVG0rSo5kKzIvU12FoY4xC8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z6bIZVmjKncEuLP+uFtQwEf1mL1jBDYt2GAwCx8qfHlLsQHSgTEXd3D/ZMDQHGhaUmeyr3BvnkZkG0+Mtpt7vMGcEvijL+31X2szPw/qZqQh/ilxORApBNmgyA0M6vOOiQvZMmujabTBKOsHCGA99f9nW8PnwCZZRKZgOK/FpQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UKpnf/yN; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hN62oGW8"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5faaa717cfbso303984a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:47:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UKpnf/yN"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad8826c05f2so36010366b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748252834; x=1748857634; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kSZZR0qMZkVAUpEjFq17SeucbREofsX6jeLhn+A+x9c=;
-        b=hN62oGW8jcD5k9dcQnE57f7awlc/z/N01Xa9aE4iCkblAPmUKbxW8+6SSqD05N8o/Z
-         6g3pwrW5guDhwaLhVbqEvnd8GPyJYf+FdAuiVrNIh6BPuZXPZdtrYa6KBfXuENIDrTxL
-         LtLXqD72FDqQZpd0sqSasT40VyhaqrhhcjUPS2YTMbns6i2kTtk6v/mOQk3fVF2RThAs
-         vGEB95PgAQH2qWygttgacRM5fIQBg1FhfIfP2O6xPDRNCZzUbPoAmBvz0rQ939IxaJO9
-         L1DGlTTiKC0z+k4+uOx1bJmzCWF/Di5Xez5y1kKno2XFzw4eMYWy7paOODw5m3nN/c7w
-         sN/w==
+        d=google.com; s=20230601; t=1748252901; x=1748857701; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I/dM407EBptpdXaJ6/rYo7kerjNoj/FeGvLWecyQnx8=;
+        b=UKpnf/yNUjwW9qZUndAiVuERWobv8TyhHyZ7NssKLOHWiEKK3KaMp7FUZX+6lJh6yz
+         mZpZFx2JA3Zqka6bRme1QZ2G1icB3PhhyXIpM+T+Pg2eqrGaA7HpKVpX0r2WTjLz0bRQ
+         65bC7BbcNJtWGN3iKgiHwJ8jrHPEa3QpdWtyEFCZZWnoNkGWBDJvPHLDNeX2zJOpTkU9
+         BweFC6jL8d7JgJd+JGrcMrKP3pjyJ8sBAzZScock0Cthi9ibrFl6OZFBhZoz8iE7SFMJ
+         vbDzzti53bQJbourBQRJRsA2Zkt9RPn++ebD2zJIe4itvzCBIo+Z4XUm8d67tvmz6Iug
+         w9uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748252834; x=1748857634;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1748252901; x=1748857701;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kSZZR0qMZkVAUpEjFq17SeucbREofsX6jeLhn+A+x9c=;
-        b=hVVdTP96M6FFfN4/Hqby3161lkKopcQzTMzGJImcSHL4WN46yIEXkd5mHkyUjrFZOI
-         gXEZbfE+PDPNpzQgTqspbJHih0w+Ut4qf4o93JTXcXSwNn3Qzms4ZBpruykeuC9P3yDx
-         WgmJgu0L4dcM33a43zRX2MoOsXkLcKghOj3PalxX4jgWzOUw7mzFHBVt82H0ZD7atcet
-         JBiimmgPTKPLDOYQZRkfSS7UaC03SyECZoEZEObbWkZ5w8cbkFJckVS4Zc809KnpUAlu
-         B+vbmGbGScB1NIc3NyLdsCoNjzvpTGWwURRb2iqDb/US0hLn1km8ZKpX5i3mx7c30vLc
-         qQZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXspOGRiRb1ZHSaSGRerYOhRYZIEOafOq3v+JHZISHrbK/WEXzRLllQLrpHllwuw3BYMGdNkt/Fqovje4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbkC5gkh+Xt2f8R/qrxoPrNQePNkgkiLYOuq4/CGPhZllXwYNH
-	ugUVWdO9ObD7p4L6cB+4lWRp3Uu9fxP1tV1ssYSJmgkpbYKjm2t2qJR6ggq8+JUiA1U=
-X-Gm-Gg: ASbGncsWYA0L7JV2HiTHKNI3ccXUCW19xRPoEjH9y8q1hnYMTWSaT+iMPiacGxMvpEP
-	Ve2JmxJx8onTeWCuOQyyBtcV0eOFGZxgNQj7n3tiXNPkQMxrfX3flnGNIwfNjXvmqtCe9mTzA6y
-	h9Hp4nXjGy/rO1td1cDDgt6ZE9WsPCd6Ao5jtUawrvkip+YqRoX8CG2/IIkbLwBF5zLEC+gRp5y
-	Wzn+mwpWxs4kwL+s0bESP/DGqc5BQeZ2DapslWrRKX7w3l8E+jTlOT3qbAi6Ou/pIVYPResjrPV
-	z7K0nyDSvegeqlMJETzSMtVGh+BOox/rF7SM6CVuSOon0FeuCkhmkrQ0zYhCgRpMqpfWGgA=
-X-Google-Smtp-Source: AGHT+IE1rLSqoI6VnW/NLYoSivs2MuuZWDVumnm9UU8M7AtHBTKkJd/NjnzZ8iSRnfZzOFIqVY6fmg==
-X-Received: by 2002:a05:6402:2742:b0:602:a0:1f47 with SMTP id 4fb4d7f45d1cf-602daeb6a85mr2510849a12.8.1748252834261;
-        Mon, 26 May 2025 02:47:14 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6049d482cc7sm1486427a12.19.2025.05.26.02.47.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 02:47:13 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Mon, 26 May 2025 11:47:03 +0200
-Subject: [PATCH 3/3] ASoC: codecs: wcd9375: Fix double free of regulator
- supplies
+        bh=I/dM407EBptpdXaJ6/rYo7kerjNoj/FeGvLWecyQnx8=;
+        b=qFI1PQcVzZRol4viJtuV8mgBnZ7KGyRjonm5vG9xuVUjxRSsFjSc4SbqNbXdDFcnR2
+         2+2qgbV5pIyDiNqXeJyt1KQGPjeLgpe7hhyBnERon/Hr869w10mltUlzWsuMOl1w5h09
+         uoxU2tupYAgs0EwIN6euYotI1xed050ZUlFIQ3mYy2vsrr3aiLy1V+b7Tm9fRf4Y7sgd
+         7LoJq1Ha3RTnQWpQtppt49/P34bhl/2PKBTwROIZ830PL+NrowouGUocqDEouVHuGca3
+         c+vJpS7N9ylYK0ndNED5zFQNQzJZvk9jCkGDzBvLo+WhG4IcY2vqZIdoJaAa+4cDHdn5
+         j3Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUTV7rMKVpByqXOqw8yKZRw14RpgkyAZwa2r4vQM6+DoS0hn95LLlxZpmxenASB0VKq4JLO02VVFJriANg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuX8+adJLHdk7Bo27DWo407l4rD5UUCBCBsT33P1dH4dBnZ6Go
+	Z++9QliS3kRC0q6O1esJ7fhWLbkvc5SuTalEivjlHbYA2buNCDwzd8Ciuhr3IpW7jWHgDVpQ06b
+	az/J5FlS8La4KSopdUV8iEJ0DHtWdskms9k6dipUt
+X-Gm-Gg: ASbGncvSSWkKvHB9khazcQNfTypsM7PkLT5gZfY6QTvUbefavWRThZHDFyACEiOxlKr
+	7OdHWGrToGBqs/GeME25Fsg1STc3L8Fsc8tjEhDk+m08/jKRgt1T5iTRI+1668I1x5t9P3vMdSW
+	Xh2CM5BO/N+dZYZ2yBh4PnVnyP+aGe5Pd779RpZ7AlAJfwaW5/IKrau56rWCRgJBfpVLG1hBZJM
+	g==
+X-Google-Smtp-Source: AGHT+IGOsLPlFlEvlYkCbus5+x3MBMYKoCe7UkbI/PuCUN4NG3EUAT4RU2knzTA5Ul1WnnYLmtViQvSgi4fXiCoywyw=
+X-Received: by 2002:a17:907:6eab:b0:ad5:822d:b00d with SMTP id
+ a640c23a62f3a-ad85b2119damr754537866b.45.1748252900886; Mon, 26 May 2025
+ 02:48:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-b4-b4-asoc-wcd9395-vdd-px-fixes-v1-3-0b8a2993b7d3@linaro.org>
-References: <20250526-b4-b4-asoc-wcd9395-vdd-px-fixes-v1-0-0b8a2993b7d3@linaro.org>
-In-Reply-To: <20250526-b4-b4-asoc-wcd9395-vdd-px-fixes-v1-0-0b8a2993b7d3@linaro.org>
-To: Srinivas Kandagatla <srini@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Vinod Koul <vkoul@kernel.org>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Cc: linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1715;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=JFqzsTfm9DdoRKLGO7u+iVRbtQ2IB4LCND0J4CbvlC8=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoNDibdl94YMZwfVYjatgUDK/f/MsGw7A+4YxeR
- 4h2FKW1fSeJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDQ4mwAKCRDBN2bmhouD
- 1xdCD/9vbaZu8P3oo43OAFrxr0vkTiREG8aTp5vpTZPLskJ+htHbnhA044cu38T+qsQF9RQc34s
- MH9ZhhXXdTkJPECc+RyRkdOO6CV41gQOlhzV8ucdoTYo7EBwzHXx9/QkGxcFEU6EJH278hhCBfG
- 8SEZJdrdNHri6a2MavtaOl3ZSaTkmJZXfM+wT8hiVYi7Cc17b4ZFpH5IyyZg/UczuXuCu8ghOJu
- GAaN+AqBcxVtOVGR2p9OLksELtTp5ico4csmbo/fdx/jNKa9VcxKfq8jseZSFi/4o0mf5rI/c3t
- uUwWjes6UcL6Lumzlh1pMm5I7+kjY40avjkF2POvtPtN85MuwDPqZCI2RVA98Os1YlvR43YSs65
- 02JVU7LboKXWH5cmviFsAHsdJJT7LYW+AYMBK7VVxjey4cPYvkJ/YwBZ1ywIOLr8Z8DbTzYotSS
- +L+9FQtWWS6EU8D09M9A5rOh8bqUT1Dt0nDwZfArDBvTx2Sl4QUJlZPGX/QawbtigbAfdI0CAWu
- eEfou2JRH9F5d7Hve/pnDQSGrAKxqwfdmC3wCDqBvq9ng438hcxrZY1aM8gVde6d9rkb9Z28Kpl
- AZFaVOu0Nulq9n3Ad0lJqPqqTGaxR4queZIllBjl0EztEW5IDmYw87McvXlvQTdKcqS+ToPILj1
- f+4LnRh+j9PDAHQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+References: <cover.1747349530.git.babu.moger@amd.com> <6a2cdedc0b2bf7e3da82d453b0104b46a2e85529.1747349530.git.babu.moger@amd.com>
+In-Reply-To: <6a2cdedc0b2bf7e3da82d453b0104b46a2e85529.1747349530.git.babu.moger@amd.com>
+From: Peter Newman <peternewman@google.com>
+Date: Mon, 26 May 2025 11:48:10 +0200
+X-Gm-Features: AX0GCFs5QnLJ7LzQu3TrunXdv4Y7Ov3b367Y6o1OV9QQKODd-523j7ZA10IRPKc
+Message-ID: <CALPaoCjvUSKLKOXzF85j8mHT=eZYM-7R0=gJ3PRgOk4yuF5ZhQ@mail.gmail.com>
+Subject: Re: [PATCH v13 24/27] x86/resctrl: Introduce the interface to modify
+ assignments in a group
+To: Babu Moger <babu.moger@amd.com>
+Cc: corbet@lwn.net, tony.luck@intel.com, reinette.chatre@intel.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, james.morse@arm.com, dave.martin@arm.com, 
+	fenghuay@nvidia.com, x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, 
+	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org, 
+	ardb@kernel.org, gregkh@linuxfoundation.org, daniel.sneddon@linux.intel.com, 
+	jpoimboe@kernel.org, alexandre.chartre@oracle.com, 
+	pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com, 
+	perry.yuan@amd.com, seanjc@google.com, kai.huang@intel.com, 
+	xiaoyao.li@intel.com, kan.liang@linux.intel.com, xin3.li@intel.com, 
+	ebiggers@google.com, xin@zytor.com, sohil.mehta@intel.com, 
+	andrew.cooper3@citrix.com, mario.limonciello@amd.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maciej.wieczor-retman@intel.com, eranian@google.com, Xiaojian.Du@amd.com, 
+	gautham.shenoy@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Driver gets regulator supplies in probe path with
-devm_regulator_bulk_get(), so should not call regulator_bulk_free() in
-error and remove paths to avoid double free.
+Hi Babu,
 
-Fixes: 216d04139a6d ("ASoC: codecs: wcd937x: Remove separate handling for vdd-buck supply")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- sound/soc/codecs/wcd937x.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+On Fri, May 16, 2025 at 12:56=E2=80=AFAM Babu Moger <babu.moger@amd.com> wr=
+ote:
 
-diff --git a/sound/soc/codecs/wcd937x.c b/sound/soc/codecs/wcd937x.c
-index a3a4b1f53e88e7ade13455387a65de736b1f0bec..b9df58b86ce953427e01ffb8c7eb7e52f9c2392a 100644
---- a/sound/soc/codecs/wcd937x.c
-+++ b/sound/soc/codecs/wcd937x.c
-@@ -2944,10 +2944,8 @@ static int wcd937x_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, ret, "Failed to get supplies\n");
- 
- 	ret = regulator_bulk_enable(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
--	if (ret) {
--		regulator_bulk_free(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
-+	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to enable supplies\n");
--	}
- 
- 	wcd937x_dt_parse_micbias_info(dev, wcd937x);
- 
-@@ -2983,7 +2981,6 @@ static int wcd937x_probe(struct platform_device *pdev)
- 
- err_disable_regulators:
- 	regulator_bulk_disable(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
--	regulator_bulk_free(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
- 
- 	return ret;
- }
-@@ -3000,7 +2997,6 @@ static void wcd937x_remove(struct platform_device *pdev)
- 	pm_runtime_dont_use_autosuspend(dev);
- 
- 	regulator_bulk_disable(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
--	regulator_bulk_free(WCD937X_MAX_BULK_SUPPLY, wcd937x->supplies);
- }
- 
- #if defined(CONFIG_OF)
+> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+> index 8d970b99bbbd..ea1782723f81 100644
+> --- a/fs/resctrl/rdtgroup.c
+> +++ b/fs/resctrl/rdtgroup.c
+> @@ -2126,6 +2126,168 @@ static int mbm_L3_assignments_show(struct kernfs_=
+open_file *of, struct seq_file
+>         return ret;
+>  }
+>
+> +/*
+> + * mbm_get_mon_event_by_name() - Return the mon_evt entry for the matchi=
+ng
+> + * event name.
+> + */
+> +static struct mon_evt *mbm_get_mon_event_by_name(struct rdt_resource *r,
+> +                                                char *name)
+> +{
+> +       struct mon_evt *mevt;
+> +
+> +       list_for_each_entry(mevt, &r->mon.evt_list, list) {
+> +               if (!strcmp(mevt->name, name))
+> +                       return mevt;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static unsigned int resctrl_get_assing_type(char *assign)
+> +{
+> +       unsigned int mon_state =3D ASSIGN_NONE;
+> +       int len =3D strlen(assign);
 
--- 
-2.45.2
+[  395.013183] BUG: kernel NULL pointer dereference, address: 0000000000000=
+000
+[  395.013426] #PF: supervisor read access in kernel mode
+[  395.013600] #PF: error_code(0x0000) - not-present page
+[  395.013779] PGD 39322c067 P4D 2a4f49067 PUD 2a4f4a067 PMD 0
+[  395.013973] Oops: Oops: 0000 [#1] SMP DEBUG_PAGEALLOC NOPTI
+[  395.014156] CPU: 37 UID: 0 PID: 24147 Comm: bash Not tainted
+6.15.0-dbg-DEV #13 NONE
+[  395.014403] Hardware name: Google Astoria-Turin/astoria, BIOS
+0.20241223.2-0 01/17/2025
+[  395.014652] RIP: 0010:strlen+0xb/0x20
+[  395.014778] Code: 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00 90
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 48 c7 c0 ff
+ff ff ff <80> 7c 07 01 00 48 8d 40 01 75 f5 c3 cc cc cc cc cc 0f 1f 40
+00 90
+[  395.015356] RSP: 0018:ffa000002f743d58 EFLAGS: 00010246
+[  395.015522] RAX: ffffffffffffffff RBX: ff11000129a00600 RCX: 00000000000=
+00000
+[  395.015747] RDX: ff110001299f5253 RSI: ffffffff827b9651 RDI: 00000000000=
+00000
+[  395.015968] RBP: 0000000000000000 R08: 000000000000003d R09: 00000000000=
+00000
+[  395.016202] R10: ffffffff827b9652 R11: 0000000000000000 R12: ffffffff830=
+5b7f8
+[  395.016421] R13: ff110001299f5240 R14: 0000000000000014 R15: 00000000000=
+00000
+[  395.016644] FS:  00007f1281ff8b80(0000) GS:ff1100bdc8276000(0000)
+knlGS:0000000000000000
+[  395.016893] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  395.017071] CR2: 0000000000000000 CR3: 0000000420bc8002 CR4: 00000000007=
+71ef0
+[  395.017298] PKRU: 55555554
+[  395.017388] Call Trace:
+[  395.017471]  <TASK>
+[  395.017545]  mbm_L3_assignments_write+0x2d4/0x4e0
+[  395.017700]  kernfs_fop_write_iter+0x132/0x1c0
+[  395.017851]  vfs_write+0x2bf/0x3c0
+[  395.017963]  ksys_write+0x82/0x100
+[  395.018074]  do_syscall_64+0xee/0x210
+[  395.018198]  ? exc_page_fault+0x81/0xe0
+[  395.018321]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  395.018482] RIP: 0033:0x7f128177f8b3
+[  395.018598] Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc
+cc cc cc cc cc cc cc 48 8b 05 99 91 07 00 83 38 00 75 10 b8 01 00 00
+00 0f 05 <48> 3d 01 f0 ff ff 73 4d c3 55 48 89 e5 41 57 41 56 53 50 48
+89 d3
+[  395.019167] RSP: 002b:00007ffff66e80f8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000001
+[  395.019409] RAX: ffffffffffffffda RBX: 0000000000000014 RCX: 00007f12817=
+7f8b3
+[  395.019636] RDX: 0000000000000014 RSI: 0000000001eedb60 RDI: 00000000000=
+00001
+[  395.019861] RBP: 00007ffff66e8120 R08: 0000000000000000 R09: 00000000000=
+00000
+[  395.020081] R10: 00007ffff66e81b0 R11: 0000000000000246 R12: 0000000001e=
+edb60
+[  395.020303] R13: 0000000000000001 R14: 00007f12817fa650 R15: 00000000000=
+00014
+[  395.020532]  </TASK>
 
+> +
+> +       if (!len || len > 1)
+> +               return ASSIGN_INVALID;
+> +
+> +       switch (*assign) {
+> +       case 'e':
+> +               mon_state =3D ASSIGN_EXCLUSIVE;
+> +               break;
+> +       case '_':
+> +               mon_state =3D ASSIGN_NONE;
+> +               break;
+> +       default:
+> +               mon_state =3D ASSIGN_INVALID;
+> +               break;
+> +       }
+> +
+> +       return mon_state;
+> +}
+> +
+> +static int resctrl_process_assign(struct rdt_resource *r, struct rdtgrou=
+p *rdtgrp,
+> +                                 char *config, char *tok)
+> +{
+> +       struct rdt_mon_domain *d;
+> +       char *dom_str, *id_str;
+> +       unsigned long dom_id =3D 0;
+> +       struct mon_evt *mevt;
+> +       int assign_type;
+> +       char domain[10];
+> +       bool found;
+> +       int ret;
+> +
+> +       mevt =3D mbm_get_mon_event_by_name(r, config);
+> +       if (!mevt) {
+> +               rdt_last_cmd_printf("Invalid assign configuration %s\n", =
+config);
+> +               return  -ENOENT;
+> +       }
+> +
+> +next:
+> +       if (!tok || tok[0] =3D=3D '\0')
+> +               return 0;
+> +
+> +       /* Start processing the strings for each domain */
+> +       dom_str =3D strim(strsep(&tok, ";"));
+> +
+> +       id_str =3D strsep(&dom_str, "=3D");
+
+If there's no '=3D' then dom_str becomes NULL...
+
+> +
+> +       /* Check for domain id '*' which means all domains */
+> +       if (id_str && *id_str =3D=3D '*') {
+> +               d =3D NULL;
+> +               goto check_state;
+> +       } else if (!id_str || kstrtoul(id_str, 10, &dom_id)) {
+> +               rdt_last_cmd_puts("Missing domain id\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Verify if the dom_id is valid */
+> +       found =3D false;
+> +       list_for_each_entry(d, &r->mon_domains, hdr.list) {
+> +               if (d->hdr.id =3D=3D dom_id) {
+> +                       found =3D true;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (!found) {
+> +               rdt_last_cmd_printf("Invalid domain id %ld\n", dom_id);
+> +               return -EINVAL;
+> +       }
+> +
+> +check_state:
+> +       assign_type =3D resctrl_get_assing_type(dom_str);
+
+then the resulting type of whatever this is supposed to mean is "panic"
+
+Thanks,
+-Peter
