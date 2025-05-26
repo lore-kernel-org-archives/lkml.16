@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209551DFE12
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F26E1DFE12
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:41:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748263180; cv=none; b=BYQqWhy5yrAU9e3eKF3HqLoqhHJFzsAqIKLGRCTuSmPffSiRx+HOdP7o8YmIUp1rqEBKVOPSo5J3ByUMM+w8HZEXOb2uBfRNaoZGOX/tJHcJQ+WIVCCu/WipgpgHQWkzyvNOHSziPPJmclVSPngfR0TNlMaaBbKuqfjGFlIgAZs=
+	t=1748263316; cv=none; b=UmibtQ+nRQscV8DW9IGKBw0oSSlXp8v8tydBREmNyjB0P51kRnagKKsJAjsJZKgphk1oFg+ZZlA/0T28jzypFwolK6KQzHfNlret4hFcWJyJiDWTX1tBqt9xHThDbJQNeoFDYLcK1MChdGf5aUfguxzx0eKfL9XTAceggUHKuxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748263180; c=relaxed/simple;
-	bh=HwWjoyW0FLcKWJAW8HxTn/3hfoUkUOGOBDjOXlkO1Hk=;
+	s=arc-20240116; t=1748263316; c=relaxed/simple;
+	bh=B7ug52vPyNHb8w0pYavpaolp51SYJco0zPo1gWUACmk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLBzwBFDkN1nQoUeEXyj2akzoEdw4Op/wSfjrij8MpZjpwcp7jtC8Oxp55cnwHP2glRps3ffJUTYU5a0m3psUqwGwGDHco0K8ILE5BKnaxf0gnWas0M+V7rTXqJ93N8Vp/LAQT1teQrSHhoNBwunRhR/QFiKJaXIYSSsyUk+Pwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J3QFMR/X; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=SuRiWWGdGr8TT1l/vCbqyiPdJH6uDRG69iWygpUULUahP5dCEB985GDe+FRQUaWOCei+JJ5ZQ/RfWsLyQUYqbv8+8aqg4Y0HvnlzRP3BzSKm8BKkaPZfaYG1VcdJNNfVJsxMqRrDokRr6W7S+G1P+s+u9UpoywiHy2rnca8x2IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dUKucwSL; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J3QFMR/X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dUKucwSL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748263177;
+	s=mimecast20190719; t=1748263313;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=f+MJ+rD4wu541gsfva4/MFHxHhJlGS+dtYhFcOT6l88=;
-	b=J3QFMR/Xtx/FBOobewBePLcPB53+Y/4rDDbMLX63vaWv6KOaDdsDECooLqn5l0STaYSxTR
-	IML+bp5n4dQv6NMAE3KTGD9v2bNhH2MSV82A8XUuz6asdtT89IDlt3YeA1w08cn47BP0jl
-	U0e1kJYu+3htlmvBBQ/TUTg+AcngzHU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=S/ETi802qf64YaxZQVEnQEIF2B/+4bz5j9A/TOJclzg=;
+	b=dUKucwSL+DcJhyx3TMeNnwLbGlDL7kVzrMYGsm/oPU8p8gv3VYJ1qnrwl7Y4vCtxgDrgPu
+	uKklKjB5KqwK0m+IApBF/u0vHCahuGgxMr5vgLBn2GZS6jed3KpGjE7kryMz7CNgHNeznC
+	P/2dgzlYTxxgafgS2Y4CZzJLn/3uz9I=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-2-XF5BucsYMCWyT_pKmwqcnA-1; Mon, 26 May 2025 08:39:35 -0400
-X-MC-Unique: XF5BucsYMCWyT_pKmwqcnA-1
-X-Mimecast-MFC-AGG-ID: XF5BucsYMCWyT_pKmwqcnA_1748263174
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a362939f61so593206f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:39:35 -0700 (PDT)
+ us-mta-658-RiwtrYy6P4qiIBjQuIW96g-1; Mon, 26 May 2025 08:41:52 -0400
+X-MC-Unique: RiwtrYy6P4qiIBjQuIW96g-1
+X-Mimecast-MFC-AGG-ID: RiwtrYy6P4qiIBjQuIW96g_1748263311
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4d8983eecso425791f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:41:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748263174; x=1748867974;
+        d=1e100.net; s=20230601; t=1748263311; x=1748868111;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=f+MJ+rD4wu541gsfva4/MFHxHhJlGS+dtYhFcOT6l88=;
-        b=baE5EB76z0VyTCIszbIijHBVCm/WRoeRKrGm/TBgm0KhDiYOApAFxU/Papg8d1AO7k
-         2zdtgaErzSNsymgV0HhM5oc2+q5tHglHtCavmZmTKdjOnfMEfkdm9CPDpsryvu4UiiVd
-         cGbKFCQ5PlIlT6B27+WlvsDRZtTPqwzz6YSwHk0nD6jYYao4EUZBux2Q2qo0Kz871MgS
-         9cvQFELob3DEktt3BDLaEvqKtt41Ab7ZWIRsaApyjAXZOp3UgmpTMAt22kWBgo7vmj7w
-         9HFgXn4PlGcWAzsoa+4LGvrKcho9JNt/IlVUiIeJGATv1+t0MZ0RL5WqXGVcnuH8Abab
-         S8aA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIaCXnXBU/i4YdIXjZ0plHXNdGwiZkLPCgCAesaAemOivz0/ViVSyUDs+0oYgdep1P3La6L0wRBhuF8Gc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw55Qq7FGPd1UHdyTQYzN/yPyWF6jRTLyv4VYDkrZQZ6lu28Ycx
-	VoelS6d5B0mL2WtOh4T2Cd1KhQkUk/YDoEZsaPV3XrW8Be34KU/yqwF8rgEEeZ6hIbIvdz6SMv1
-	xqRzZJDaHMwEjKp3rsfGvwEa3vU2ANol05RhbUzuYOL7ExHb1VZL6MoDWBLDl9Ve/ww==
-X-Gm-Gg: ASbGncvsXYioatCYBKd/sosaCZ6BAsAt1q6KfwZJBexkdM53977tP2otUPy48o1nbcS
-	OSi77CObbkGGmpMfFaMa791lU434gEge0KV9B/uTYv33MKlvk/4Qf1Hu54xwaNtv0XWsOsfuD6V
-	RD6BQnnRWOwLPZ2ZubejXxiW5soD0L5IIZQ/+yTh8GhNDlmfhW6Sk4OcmQMy4cYZC5GrPdbKdF3
-	CrGS5rzk0ohD+1hIPaO+q7ZxPwr/JtNRw/DRuc3ngEcF1uayPOFYj2qnhfXj9RTDGNoybvVozsr
-	i50nVxv1i6L3j43UqOuMrTtcUIbuebbfBxVC6PAazPXE5kBftYu2RGq1ftsCDNmlphV+yF7M5zt
-	YodPj3q023ks1gHTMvh746qhX+/xd5TFiMer61D8=
-X-Received: by 2002:a05:6000:40cf:b0:3a1:fc6d:971c with SMTP id ffacd0b85a97d-3a4cb46d689mr7142470f8f.21.1748263174395;
-        Mon, 26 May 2025 05:39:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH1po2j4G0EELTJLR9OfyHDXwqrHi2hqTZt/UpJrGsdNEjYSlXMb4yTeqcWOg0KCEOMbZAJSA==
-X-Received: by 2002:a05:6000:40cf:b0:3a1:fc6d:971c with SMTP id ffacd0b85a97d-3a4cb46d689mr7142443f8f.21.1748263173991;
-        Mon, 26 May 2025 05:39:33 -0700 (PDT)
+        bh=S/ETi802qf64YaxZQVEnQEIF2B/+4bz5j9A/TOJclzg=;
+        b=kSYz7EUoMhRMHFYxclYV9CbQnrMnyHQfMWPPMymzsXQ9dY5waenpdXUJrbMqloagdN
+         3LXeGLEERa9XdBEbLg9ehbpEA5x0IqVYDmtGLfr4kLg+dLYfmaFj3OGYJNqZmDQpYlM5
+         8ufe8yNNa8nRsMpXEs0J5lnFF910853JhEJKMfTRfj+Uh6lM1aCt7BTdTxkZoN7/4xQy
+         iH01e6TWU9lqmuGmonK/6FqPZ0S9tjg8kJlvrLOzSf/huCrRhKuk/zM5ax7Cu3y04CHf
+         p7pRgTHTK1ftvh7fupHR8CujpSqzuk2flR8ZrAk3SU3vAE2rZvHFwqxVUpr2V9MV7c62
+         MwPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYs67Dcct3eI/DXY5PSnOdFP4BSCNQVKPb+jpZC7NMCH+UwEkNaUPuU8pYM7gw2SfbqVsnmB7UR20c3Yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCWX4rTcplLgzUeL3T43Sn+tgmd/SajWPF8HzQC0PiDrjO/IfW
+	IIeMNwWwO6Xb/hJ2hY7/8+iZiX6Heb/1+Ccutwrpro/cAF5ttKefELz1p9bCs/NOgdPJ6ydkHMV
+	xsQGYUnKwQI1gqk3TmgkMVH4FBEECy3oyhhVBT4JPKqpO8Wx5xJT0j+Hqm7wsvVJiKA==
+X-Gm-Gg: ASbGncvbIBEwpoy2p+q00aeJey+QclFfqKYxFRsOx/I05Gw1lEHn5cw6BUjiLShnfkI
+	tcm80B0ALy+40kpFqdWKToIpL5OV0cxkMD3hRQ9TsXsXl0KOju+jC9BVr+ROyklbpRUOV9FNfxW
+	kRbvbd7/sG2d7p9nGsHhhZAghw0+nATohr5ie3ZMd2iHgHrJ9Pzff4EvC2xKOL+coWvR/AV0d4f
+	xb6AWyRfFRvtH4J0XnlldpR6dJc9WoU/DZpfTddMa5HCgJcA6qhxkN1HKi+5SDZGOww3uJNJS14
+	YCuNfoN/RB5d16EBlPkB0qFDkcnc4c/Nc16Rymyc+BEmDfAk7uthGpmmaXn140UOjOjpGWqyLWf
+	9TSHxGHhN7Yd1YLZ0xHuXHZlPqPLhutzfac1Rzfk=
+X-Received: by 2002:a05:6000:3112:b0:3a4:d79a:359f with SMTP id ffacd0b85a97d-3a4d79a3787mr3996861f8f.14.1748263311356;
+        Mon, 26 May 2025 05:41:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG/16mi/MASs2oP8FT7hHWDKlwpnwRqmfhtUxX7Vi9qRJuvn5j7Ix99uQiBZkMJx3GVNB/I7A==
+X-Received: by 2002:a05:6000:3112:b0:3a4:d79a:359f with SMTP id ffacd0b85a97d-3a4d79a3787mr3996842f8f.14.1748263310889;
+        Mon, 26 May 2025 05:41:50 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f19:6500:e1c1:8216:4c25:efe4? (p200300d82f196500e1c182164c25efe4.dip0.t-ipconnect.de. [2003:d8:2f19:6500:e1c1:8216:4c25:efe4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4c868745esm8880176f8f.30.2025.05.26.05.39.32
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d652e8b9sm4125796f8f.34.2025.05.26.05.41.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 05:39:33 -0700 (PDT)
-Message-ID: <5abe8b0c-2354-4107-9004-ccf86cf90d25@redhat.com>
-Date: Mon, 26 May 2025 14:39:31 +0200
+        Mon, 26 May 2025 05:41:50 -0700 (PDT)
+Message-ID: <d405ba61-0002-4663-8ab7-ab728049d8a3@redhat.com>
+Date: Mon, 26 May 2025 14:41:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,14 +75,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG]userfaultfd_move fails to move a folio when swap-in occurs
- concurrently with swap-out
-To: Barry Song <21cnbao@gmail.com>, Peter Xu <peterx@redhat.com>,
- Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
- <lokeshgidra@google.com>, Andrea Arcangeli <aarcange@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Linux-MM <linux-mm@kvack.org>,
- Kairui Song <ryncsn@gmail.com>, LKML <linux-kernel@vger.kernel.org>
-References: <CAGsJ_4zMNaNjRXbtDD6xYfDhckcDCnTvv+4-yB1xpuYcur=fyw@mail.gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
+ replacing free hugetlb folios
+To: yangge1116@126.com, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ 21cnbao@gmail.com, baolin.wang@linux.alibaba.com, muchun.song@linux.dev,
+ osalvador@suse.de, liuzixing@hygon.cn
+References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -130,82 +129,109 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <CAGsJ_4zMNaNjRXbtDD6xYfDhckcDCnTvv+4-yB1xpuYcur=fyw@mail.gmail.com>
+In-Reply-To: <1747884137-26685-1-git-send-email-yangge1116@126.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 23.05.25 01:23, Barry Song wrote:
-> Hi All,
-
-Hi!
-
+On 22.05.25 05:22, yangge1116@126.com wrote:
+> From: Ge Yang <yangge1116@126.com>
 > 
-> I'm encountering another bug that can be easily reproduced using the small
-> program below[1], which performs swap-out and swap-in in parallel.
+> A kernel crash was observed when replacing free hugetlb folios:
 > 
-> The issue occurs when a folio is being swapped out while it is accessed
-> concurrently. In this case, do_swap_page() handles the access. However,
-> because the folio is under writeback, do_swap_page() completely removes
-> its exclusive attribute.
+> BUG: kernel NULL pointer dereference, address: 0000000000000028
+> PGD 0 P4D 0
+> Oops: Oops: 0000 [#1] SMP NOPTI
+> CPU: 28 UID: 0 PID: 29639 Comm: test_cma.sh Tainted 6.15.0-rc6-zp #41 PREEMPT(voluntary)
+> RIP: 0010:alloc_and_dissolve_hugetlb_folio+0x1d/0x1f0
+> RSP: 0018:ffffc9000b30fa90 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: 0000000000342cca RCX: ffffea0043000000
+> RDX: ffffc9000b30fb08 RSI: ffffea0043000000 RDI: 0000000000000000
+> RBP: ffffc9000b30fb20 R08: 0000000000001000 R09: 0000000000000000
+> R10: ffff88886f92eb00 R11: 0000000000000000 R12: ffffea0043000000
+> R13: 0000000000000000 R14: 00000000010c0200 R15: 0000000000000004
+> FS:  00007fcda5f14740(0000) GS:ffff8888ec1d8000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000000000028 CR3: 0000000391402000 CR4: 0000000000350ef0
+> Call Trace:
+> <TASK>
+>   replace_free_hugepage_folios+0xb6/0x100
+>   alloc_contig_range_noprof+0x18a/0x590
+>   ? srso_return_thunk+0x5/0x5f
+>   ? down_read+0x12/0xa0
+>   ? srso_return_thunk+0x5/0x5f
+>   cma_range_alloc.constprop.0+0x131/0x290
+>   __cma_alloc+0xcf/0x2c0
+>   cma_alloc_write+0x43/0xb0
+>   simple_attr_write_xsigned.constprop.0.isra.0+0xb2/0x110
+>   debugfs_attr_write+0x46/0x70
+>   full_proxy_write+0x62/0xa0
+>   vfs_write+0xf8/0x420
+>   ? srso_return_thunk+0x5/0x5f
+>   ? filp_flush+0x86/0xa0
+>   ? srso_return_thunk+0x5/0x5f
+>   ? filp_close+0x1f/0x30
+>   ? srso_return_thunk+0x5/0x5f
+>   ? do_dup2+0xaf/0x160
+>   ? srso_return_thunk+0x5/0x5f
+>   ksys_write+0x65/0xe0
+>   do_syscall_64+0x64/0x170
+>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
 > 
-> do_swap_page:
->                 } else if (exclusive && folio_test_writeback(folio) &&
->                            data_race(si->flags & SWP_STABLE_WRITES)) {
->                          ...
->                          exclusive = false;
+> There is a potential race between __update_and_free_hugetlb_folio()
+> and replace_free_hugepage_folios():
 > 
-> As a result, userfaultfd_move() will return -EBUSY, even though the
-> folio is not shared and is in fact exclusively owned.
+> CPU1                              CPU2
+> __update_and_free_hugetlb_folio   replace_free_hugepage_folios
+>                                      folio_test_hugetlb(folio)
+>                                      -- It's still hugetlb folio.
 > 
->                          folio = vm_normal_folio(src_vma, src_addr,
-> orig_src_pte);
->                          if (!folio || !PageAnonExclusive(&folio->page)) {
->                                  spin_unlock(src_ptl);
-> +                               pr_err("%s %d folio:%lx exclusive:%d
-> swapcache:%d\n",
-> +                                       __func__, __LINE__, folio,
-> PageAnonExclusive(&folio->page),
-> +                                       folio_test_swapcache(folio));
->                                  err = -EBUSY;
->                                  goto out;
->                          }
+>    __folio_clear_hugetlb(folio)
+>    hugetlb_free_folio(folio)
+>                                      h = folio_hstate(folio)
+>                                      -- Here, h is NULL pointer
 > 
-> I understand that shared folios should not be moved. However, in this
-> case, the folio is not shared, yet its exclusive flag is not set.
+> When the above race condition occurs, folio_hstate(folio) returns
+> NULL, and subsequent access to this NULL pointer will cause the
+> system to crash. To resolve this issue, execute folio_hstate(folio)
+> under the protection of the hugetlb_lock lock, ensuring that
+> folio_hstate(folio) does not return NULL.
 > 
-> Therefore, I believe PageAnonExclusive is not a reliable indicator of
-> whether a folio is truly exclusive to a process.
-
-It is. The flag *not* being set is not a reliable indicator whether it 
-is really shared. ;)
-
-The reason why we have this PAE workaround (dropping the flag) in place 
-is because the page must not be written to (SWP_STABLE_WRITES). CoW 
-reuse is not possible.
-
-uffd moving that page -- and in that same process setting it writable, 
-see move_present_pte()->pte_mkwrite() -- would be very bad.
-
+> Fixes: 04f13d241b8b ("mm: replace free hugepage folios after migration")
+> Signed-off-by: Ge Yang <yangge1116@126.com>
+> Cc: <stable@vger.kernel.org>
+> ---
+>   mm/hugetlb.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
 > 
-> The kernel log output is shown below:
-> [   23.009516] move_pages_pte 1285 folio:fffffdffc01bba40 exclusive:0
-> swapcache:1
-> 
-> I'm still struggling to find a real fix; it seems quite challenging.
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 3d3ca6b..6c2e007 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2924,12 +2924,20 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
+>   
+>   	while (start_pfn < end_pfn) {
+>   		folio = pfn_folio(start_pfn);
+> +
+> +		/*
+> +		 * The folio might have been dissolved from under our feet, so make sure
+> +		 * to carefully check the state under the lock.
+> +		 */
+> +		spin_lock_irq(&hugetlb_lock);
+>   		if (folio_test_hugetlb(folio)) {
+>   			h = folio_hstate(folio);
+>   		} else {
+> +			spin_unlock_irq(&hugetlb_lock);
+>   			start_pfn++;
+>   			continue;
+>   		}
+> +		spin_unlock_irq(&hugetlb_lock);
 
-PAE tells you that you can immediately write to that page without going 
-through CoW. However, here, CoW is required.
+As mentioned elsewhere, this will grab the hugetlb_lock for each and 
+every pfn in the range if there are no hugetlb folios (common case).
 
-> Please let me know if you have any ideas. In any case It seems
-> userspace should fall back to userfaultfd_copy.
+That should certainly *not* be done.
 
-We could try detecting whether the page is now exclusive, to reset PAE. 
-That will only be possible after writeback completed, so it adds 
-complexity without being able to move the page in all cases (during 
-writeback).
-
-Letting userspace deal with that in these rate scenarios is 
-significantly easier.
+In case we see !folio_test_hugetlb(), we should just move on.
 
 -- 
 Cheers,
