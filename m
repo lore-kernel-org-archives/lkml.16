@@ -1,140 +1,230 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615C6157A48;
-	Mon, 26 May 2025 20:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE1E1A23A6;
+	Mon, 26 May 2025 20:45:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748292265; cv=none; b=cPxbg4stra1GhbMuRk8s9Ho/7r0PWiG3FOR31KzNqVDVXzIUG/IbhTkpmimRUcNXrGOu5Lq+1oro+PCamnZ4/QS3mVhBcAaQ1QHXWjfAEqhH8BEavhMJdtbBbNXLFuEUVSeJvJvIWsltXq/LHcQ9WUAV+APvSGo1eOJsrOpdjds=
+	t=1748292315; cv=none; b=GxHRBqLjbcUuRcc5peFPLmADaujC0uVOf/q7QZZvevH5XIwFwDXkfYjUYpJ34mZZpoCx4BOOzzXl5fTEUlCU5O4gMozQv0MhP/h95ctaSK/+gm9hYRoJ0lU/SvyCQXp7lZ6JHFF5zzRQPxkz+n/XekBn1x0GyIJPjP/vbCsmHdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748292265; c=relaxed/simple;
-	bh=AzHiRE5DxccH0Bzd1aTfIjXj6/9DytdedTfIvmOw/LM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CU/th3SSfKPFOlb0OJPPiULDFe/0T8sSnJ30qHePTBYdoMJ5lMnSzcei/sQgq05mdT2bRuf73Fvm2gZx0gdq9RoFWMqq/cU1KPE/2euFjEeJlydhzzUHP75941ghOWF+T7FsJ+ew/GUSHkT5/RCcsFRuGOLMJCatXnzPj0RJCmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=C6I22oNA; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1748292315; c=relaxed/simple;
+	bh=8XlFPKAgRZu8iNf7wu/BNssYGbs3cVElibPBDElcwUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CoTOxQYKPAeNEack0ecsxWpTIGvedSKgThZVRAMTDQA/ov6gQ9XXwLIXzCphe6zi+0Y18p8M8eFwf1C0+USt++f7GN+8CDS/gAJaqtUHNVM8C7GY5NcsUwGtQhb9RsXlimJDnQMFnyS0SFmMJx/6GmcDpnRVbkDGqrY/SqRg4Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gd7sQbpK; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="C6I22oNA"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uJegD-000jxM-5x; Mon, 26 May 2025 22:44:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=uz4Vu/ISMkzQ793816pVBACGXuYBKQfBQsZEMTq5ytE=; b=C6I22oNAw1YNt9k8nGPGZB1iib
-	bk5hFcF0CwbTu0ozMDx6LfzVe5acNt+uDmLbz7lVv4JZTeHjgbT+zfBQr855M63GSQ6z3hQoVPhzG
-	mw5E3tJjznlEn/D1xx2Aad2pvOHFZboJIiBW81aVNGALt51VjKfTNxze2UQBa9QttF0m6XTBQX8+z
-	iSn5jG+zvE8INPTcBPkrXmFhelxsogi/KtgbfznRPQvjj0ak8LOWL6+rNSlpqBGW5/14FHSNBOcBh
-	nO6othcbH3pgeDX3RTQhC1c5aYlCla6GqvS2nWTLOg8s9sBMPjqS3t6a+6dq37Ft+Vuu3s3+9NZI2
-	yU6oXcbg==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uJegC-0004yz-J4; Mon, 26 May 2025 22:44:16 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uJeg2-001oJV-CI; Mon, 26 May 2025 22:44:06 +0200
-Message-ID: <151bf5fe-c9ca-4244-aa21-8d7b8ff2470f@rbox.co>
-Date: Mon, 26 May 2025 22:44:05 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gd7sQbpK"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7db5b0ddb1so139592276.2;
+        Mon, 26 May 2025 13:45:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748292312; x=1748897112; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rqf564IOkfuJ6413mTRFf6vGhtbkwIX3nVlwVv5RmSQ=;
+        b=gd7sQbpKACMcly2FkJKdWqcF8eAohKD8pghxCtrLuZ4aSEOhmEA/Xv6VixN/83nJGz
+         2fYAdVeZ11Y2TNvtxy9POd2BKHVKtywSXReiwQUDyY0X5rSSUmXYgrQdI3L2zjvZ0bhb
+         MbrjctrHG/U34c4mdlExXf+KxChmF6a/A3PLfsVIgRloWqrwqa+7HBMpdgJB+/syzvWb
+         3zYhYLFd4Kl4dlkXvycX3ZROZ/xnJC5WZ82Tf5sGW3S46GtIFMhqT4kVJ7XOlEXvPAsc
+         EgsOUEK8+2P+8za8dBXdIYG2gXEFm7cvw4KPVPDHUoGpXUJJKSw1DWTkb/+EBU85gVqh
+         VNdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748292312; x=1748897112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rqf564IOkfuJ6413mTRFf6vGhtbkwIX3nVlwVv5RmSQ=;
+        b=Hm9TAcnzwiXhwgBTcSxV9wEnzE6Nfu8nmDDc9OabE2dUExoJz2wUshHXlBqjyvBpcY
+         XS5xlC4Rb2km729SmQjoCZbkEUX0fi4Z6k9jgqfd2EQ35gL+UnivDPdFsmlS4m6HO4kC
+         OuHYNWj6qCI5bOjq3LO2JlkmJuur/vSheGuqUyIYCi+hB46RKyfkDcWzgUFLvBTQ9X8u
+         I1CIEXtrVWKQM85LWINosdLyfTyGk681TKN2Km2UTar734QTPcLuOVSnpiOjV+HWiG/z
+         aQse6NgZ9YwSrFfZYpH51KJ33xcZJcEqH2QQwQeBJqthkIoToOJ4LTNrC3pd8U47bZg2
+         nlaA==
+X-Forwarded-Encrypted: i=1; AJvYcCW09K8Rrf5kwmBm3qHRsN8vGADGMtSpuBDCNyU5QWURZOtFAgCJIqc44TmiEt1gglATA7Pc8SJYJblnBppO@vger.kernel.org, AJvYcCWaGCL/bDsZfopShcObuyGgUPgjrPoGOLdvRRegJn1a0ANfmWpb+flz4loErG+/sea52PEDvREWjWSi@vger.kernel.org, AJvYcCXWH2OZfaRJX5X2JFIjPptUkLh/M78NjCTEr5NYV/v5Kv6h/2Y0Hy6C0IpalILC2goncNcCKgZk0Dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcnLESfn2GSh86iSnBRIbmdMvfEf0EfieAGHRvLXWg3NR7gQqb
+	VVomWObgeBU/uquAUYGgVWXMWESsX2eS/I2hJaEO0vBtEGD0jAB7vxkxliUhypSYJtl+sgrPg13
+	1FQPyUOAErkLJMRmnS6uM3sguHh1MbFCCM98j
+X-Gm-Gg: ASbGncvuAFdYSw95NDaMYQVmikBJlp72DlReqlRQG0aXNlpLaMemz0Hq1arTQm3EvL4
+	w+PFPbVJbEFHjyvxr6tOemLwPXFg1QhOgAJACCEWh3pXV0A2Ca8A8b2biWOutwhCX/r6kuATic+
+	jJAOp9VNxHzu+NvKnenAC9QS4oBZnallHoLWfUamZD22I=
+X-Google-Smtp-Source: AGHT+IGdBy5zw4tTzbnTdoJ6ppl77oUzVRKJu8Q+Tu2nce+ksoqH7+b9/m0gtrRcpaYpMh/JI1/29vanzAd5xvFReh8=
+X-Received: by 2002:a05:690c:4d03:b0:70e:4745:33d4 with SMTP id
+ 00721157ae682-70e474534d2mr39344047b3.7.1748292312213; Mon, 26 May 2025
+ 13:45:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] vsock/test: Cover more CIDs in transport_uaf
- test
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250523-vsock-test-inc-cov-v1-1-fa3507941bbd@rbox.co>
- <limbmrszio42lvkmalapooflj5miedlszkmnnm4ckmy2upfghw@24vxuhgdji2z>
- <1f5cc46a-de4c-4361-a706-fc7fe06a7068@rbox.co>
- <gfmoupl72tjyymhwxcstwpgaabbfaz6f4v6vj4lwwzwssg577c@urkmgn7rapnj>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <gfmoupl72tjyymhwxcstwpgaabbfaz6f4v6vj4lwwzwssg577c@urkmgn7rapnj>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250523223523.35218-1-l.rubusch@gmail.com> <20250523223523.35218-5-l.rubusch@gmail.com>
+ <20250525132216.0bbc7067@jic23-huawei>
+In-Reply-To: <20250525132216.0bbc7067@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Mon, 26 May 2025 22:44:35 +0200
+X-Gm-Features: AX0GCFuNL-6WiLGB2hsMgCme7HXIhsANbBf-3eOD4wpjLlWpAt_OeqCzXs3Td90
+Message-ID: <CAFXKEHa5pK_wc+JJR1EWtJt=Z5Dwj-+rKD9+W-sEMn7uxFNvcg@mail.gmail.com>
+Subject: Re: [PATCH v3 04/12] iio: accel: adxl313: make use of regmap cache
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
+	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/26/25 16:39, Stefano Garzarella wrote:
-> On Mon, May 26, 2025 at 02:51:18PM +0200, Michal Luczaj wrote:
->> On 5/26/25 10:25, Stefano Garzarella wrote:
->>> On Fri, May 23, 2025 at 12:31:16AM +0200, Michal Luczaj wrote:
->>>> Increase the coverage of test for UAF due to socket unbinding, and losing
->>>> transport in general. It's a follow up to commit 301a62dfb0d0 ("vsock/test:
->>>> Add test for UAF due to socket unbinding") and discussion in [1].
->>>>
->>>> The idea remains the same: take an unconnected stream socket with a
->>>> transport assigned and then attempt to switch the transport by trying (and
->>>> failing) to connect to some other CID. Now do this iterating over all the
->>>> well known CIDs (plus one).
->>>>
->>>> Note that having only a virtio transport loaded (without vhost_vsock) is
->>>> unsupported; test will always pass. Depending on transports available, a
->>>
->>> Do you think it might make sense to print a warning if we are in this
->>> case, perhaps by parsing /proc/modules and looking at vsock
->>> dependencies?
->>
->> That'd nice, but would parsing /proc/modules work if a transport is
->> compiled-in (not a module)?
-> 
-> Good point, I think not, maybe we can see something under /sys/module,
-> though, I would say let's do best effort without going crazy ;-)
+Hi,
 
-Grepping through /proc/kallsyms would do the trick. Is this still a sane
-ground?
+On Sun, May 25, 2025 at 2:22=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Fri, 23 May 2025 22:35:15 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Setup regmap cache to cache register configuration. This is a preparato=
+ry
+> > step for follow up patches, to allow easy acces to the cached
+> > configuration.
+>
+> I think this stands on it's own given registers like the calibbias
+> are already both written and read from.  So I'd generalize the justificat=
+ion
+> to simply reducing unnecessary bus traffic.
+>
 
->> And I've just realized feeding VMADDR_CID_HYPERVISOR to bind() doesn't make
->> sense at all. Will fix.
-> 
-> Yeah, we don't support it for now and maybe it makes sense only in the 
-> VMM code (e.g. QEMU), but it's a test, so if you want to leave to stress 
-> it more, I don't think it's a big issue.
+I (think I) need regmap cache especially for activity / inactivity.
+For instance, using cached settings should make it easier to verify
+what was enabled when evaluating incomming interrupts. I will rework
+the commit message here.
 
-All right, I'll keep it then. Fails quickly and politely anyway.
+Best,
+L
 
->>>> +static void test_stream_transport_uaf_client(const struct test_opts *opts)
->>>> +{
->>>> +	bool tested = false;
->>>> +	int cid;
->>>> +
->>>> +	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
->>>
->>>> +		tested |= test_stream_transport_uaf(cid);
->>>> +
->>>> +	if (!tested)
->>>> +		fprintf(stderr, "No transport tested\n");
->>>> +
->>>> 	control_writeln("DONE");
->>>
->>> While we're at it, I think we can remove this message, looking at
->>> run_tests() in util.c, we already have a barrier.
->>
->> Ok, sure. Note that console output gets slightly de-synchronised: server
->> will immediately print next test's prompt and wait there.
-> 
-> I see, however I don't have a strong opinion, you can leave it that way 
-> if you prefer.
-
-How about adding a sync point to run_tests()? E.g.
-
-diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
-index de25892f865f..79a02b52dc19 100644
---- a/tools/testing/vsock/util.c
-+++ b/tools/testing/vsock/util.c
-@@ -451,6 +451,9 @@ void run_tests(const struct test_case *test_cases,
- 			run(opts);
-
- 		printf("ok\n");
-+
-+		control_writeln("RUN_TESTS_SYNC");
-+		control_expectln("RUN_TESTS_SYNC");
- 	}
- }
-
+> Jonathan
+>
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > ---
+> >  drivers/iio/accel/adxl313.h      |  2 ++
+> >  drivers/iio/accel/adxl313_core.c | 17 +++++++++++++++++
+> >  drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
+> >  drivers/iio/accel/adxl313_spi.c  |  6 ++++++
+> >  4 files changed, 31 insertions(+)
+> >
+> > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
+> > index 72f624af4686..fc937bdf83b6 100644
+> > --- a/drivers/iio/accel/adxl313.h
+> > +++ b/drivers/iio/accel/adxl313.h
+> > @@ -54,6 +54,8 @@ extern const struct regmap_access_table adxl312_writa=
+ble_regs_table;
+> >  extern const struct regmap_access_table adxl313_writable_regs_table;
+> >  extern const struct regmap_access_table adxl314_writable_regs_table;
+> >
+> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
+> > +
+> >  enum adxl313_device_type {
+> >       ADXL312,
+> >       ADXL313,
+> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl3=
+13_core.c
+> > index 06a771bb4726..0c893c286017 100644
+> > --- a/drivers/iio/accel/adxl313_core.c
+> > +++ b/drivers/iio/accel/adxl313_core.c
+> > @@ -46,6 +46,23 @@ const struct regmap_access_table adxl314_readable_re=
+gs_table =3D {
+> >  };
+> >  EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
+> >
+> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
+> > +{
+> > +     switch (reg) {
+> > +     case ADXL313_REG_DATA_AXIS(0):
+> > +     case ADXL313_REG_DATA_AXIS(1):
+> > +     case ADXL313_REG_DATA_AXIS(2):
+> > +     case ADXL313_REG_DATA_AXIS(3):
+> > +     case ADXL313_REG_DATA_AXIS(4):
+> > +     case ADXL313_REG_DATA_AXIS(5):
+> > +     case ADXL313_REG_FIFO_STATUS:
+> > +             return true;
+> > +     default:
+> > +             return false;
+> > +     }
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
+> > +
+> >  static int adxl312_check_id(struct device *dev,
+> >                           struct adxl313_data *data)
+> >  {
+> > diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl31=
+3_i2c.c
+> > index a4cf0cf2c5aa..e8636e8ab14f 100644
+> > --- a/drivers/iio/accel/adxl313_i2c.c
+> > +++ b/drivers/iio/accel/adxl313_i2c.c
+> > @@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regmap_=
+config[] =3D {
+> >               .rd_table       =3D &adxl312_readable_regs_table,
+> >               .wr_table       =3D &adxl312_writable_regs_table,
+> >               .max_register   =3D 0x39,
+> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
+> > +             .cache_type     =3D REGCACHE_MAPLE,
+> >       },
+> >       [ADXL313] =3D {
+> >               .reg_bits       =3D 8,
+> > @@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regmap_=
+config[] =3D {
+> >               .rd_table       =3D &adxl313_readable_regs_table,
+> >               .wr_table       =3D &adxl313_writable_regs_table,
+> >               .max_register   =3D 0x39,
+> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
+> > +             .cache_type     =3D REGCACHE_MAPLE,
+> >       },
+> >       [ADXL314] =3D {
+> >               .reg_bits       =3D 8,
+> > @@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regmap_=
+config[] =3D {
+> >               .rd_table       =3D &adxl314_readable_regs_table,
+> >               .wr_table       =3D &adxl314_writable_regs_table,
+> >               .max_register   =3D 0x39,
+> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
+> > +             .cache_type     =3D REGCACHE_MAPLE,
+> >       },
+> >  };
+> >
+> > diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl31=
+3_spi.c
+> > index 9a16b40bff34..68e323e81aeb 100644
+> > --- a/drivers/iio/accel/adxl313_spi.c
+> > +++ b/drivers/iio/accel/adxl313_spi.c
+> > @@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regmap_=
+config[] =3D {
+> >               .max_register   =3D 0x39,
+> >               /* Setting bits 7 and 6 enables multiple-byte read */
+> >               .read_flag_mask =3D BIT(7) | BIT(6),
+> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
+> > +             .cache_type     =3D REGCACHE_MAPLE,
+> >       },
+> >       [ADXL313] =3D {
+> >               .reg_bits       =3D 8,
+> > @@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regmap_=
+config[] =3D {
+> >               .max_register   =3D 0x39,
+> >               /* Setting bits 7 and 6 enables multiple-byte read */
+> >               .read_flag_mask =3D BIT(7) | BIT(6),
+> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
+> > +             .cache_type     =3D REGCACHE_MAPLE,
+> >       },
+> >       [ADXL314] =3D {
+> >               .reg_bits       =3D 8,
+> > @@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regmap_=
+config[] =3D {
+> >               .max_register   =3D 0x39,
+> >               /* Setting bits 7 and 6 enables multiple-byte read */
+> >               .read_flag_mask =3D BIT(7) | BIT(6),
+> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
+> > +             .cache_type     =3D REGCACHE_MAPLE,
+> >       },
+> >  };
+> >
+>
