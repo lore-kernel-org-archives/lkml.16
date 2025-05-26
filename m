@@ -1,166 +1,99 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7AD2136349
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39752136349;
+	Mon, 26 May 2025 07:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748244495; cv=none; b=ED1Ulqq32Nm04UZh3IZQkyhV9xT3VYV6PdkYBu2EJO6HhjBFJYeqBqCN6ZeZcX6IfTgY7uc7MqIFSsYDcdTFsfO81n/yYwWeZBJfYXpLk8dkSxc7KrCQEcmlBCXsPZvOZHzLOAg6U5ZI6ditvKgGLA9ki1aHaOcr18O/K9nOcwQ=
+	t=1748244532; cv=none; b=D95PjL/S/YAeXKExyn8DNgmmk5MWLmwH7RPbqKuAP0cLWhhPBG+VifQ/84k2pp81gNyYlKArphi6vByS/QnPQaZ9HEGTpb6JdH51U3+igw6zDbIWAMesxDkcyEtgT3s9cDsi1lNie9w+B6/Y5MsEjsW4nqJgKfjUEtO7aLvrn88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748244495; c=relaxed/simple;
-	bh=UcDt4cPcuwjvzRJGvPkjzQK+Ga5UNyPVtCkAy/5rP2c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lFpeffVw8J9Wh5HsAuntqDF0+2xAFIJ18j1FLoxYh5JLHMzEM++4qw6jilN98b7wgAc0H0WbS67qARcsVF70a5B5g3tTSLzAjhxl3VFnkXM7eTCidobM4xSCDUKlR+3U1D5cxzfAsQ0jM943DIJX5sXymcZtijl5OKGrVTkrkkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m/nJKWzi; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m/nJKWzi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 115C71FD57;
-	Mon, 26 May 2025 07:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748244486;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JXhPQXCLhDCgYneej08WV86s5Giw6eGuE0pYiMGU66g=;
-	b=m/nJKWziJhOQY9nl6l4s/wHgvsOUsW31W/CsW1ew99KrW/l8fWBmJq2Wlhztpa6lI7B3HT
-	/NfHNwsT1rkc+/YgVCkWNLlbmmVIqaeM7wblJ/ZLiJPuke6FEITyLiCK05dSpIaJXVqpNR
-	EOVhDdqBEfRetefABhjzpfOrIsK3UcVTlmp3862g6yloKHB/JpGkGX0brDclxszaaomYPo
-	qnHlAjfD7L7pZTJcnlWqNsStcGrcOTp+CGe1NmdVK6EaYiOpJHjkTkFZ3gkKbQW29dWD5S
-	LKCh7JIE10cAwk7+x7yPuUfQ8NDKuoulLmP/kSnre4EWXSSCVm3mk33sDGQzLg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez?= Rojas <noltari@gmail.com>
-Cc: linux-mtd@lists.infradead.org,  dregan@broadcom.com,
-  bcm-kernel-feedback-list@broadcom.com,  florian.fainelli@broadcom.com,
-  rafal@milecki.pl,  computersforpeace@gmail.com,  kamal.dasu@broadcom.com,
-  dan.beygelman@broadcom.com,  william.zhang@broadcom.com,
-  frieder.schrempf@kontron.de,  linux-kernel@vger.kernel.org,
-  vigneshr@ti.com,  richard@nod.at,  bbrezillon@kernel.org,
-  kdasu.kdev@gmail.com,  jaimeliao.tw@gmail.com,  kilobyte@angband.pl,
-  jonas.gorski@gmail.com,  dgcbueu@gmail.com
-Subject: Re: [PATCH v5] mtd: rawnand: brcmnand: legacy exec_op implementation
-In-Reply-To: <CAKR-sGeUGpUFBf_Zvg=7ro0EpGKy0dQVF58mAQt27YX+79qv1A@mail.gmail.com>
-	(=?utf-8?Q?=22=C3=81lvaro_Fern=C3=A1ndez?= Rojas"'s message of "Fri, 23 May
- 2025 20:08:56
-	+0200")
-References: <20250521080325.581366-1-noltari@gmail.com>
-	<87wma74ceh.fsf@bootlin.com>
-	<CAKR-sGeUGpUFBf_Zvg=7ro0EpGKy0dQVF58mAQt27YX+79qv1A@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 26 May 2025 09:28:02 +0200
-Message-ID: <874ix74yrh.fsf@bootlin.com>
+	s=arc-20240116; t=1748244532; c=relaxed/simple;
+	bh=1Xp4cd5s2O6SqWi4xlQf0/9NNfx7uvU2mHKZG/rrOo8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TmWHDoD+gY4H/EnYGU8JLn/OYCooYNgCSlfI56fqpk3s2m9DDcbULjTQfO8M6filpFxT44LhmfoEulqT/XrJ7OMXqGt8PMMj8+50nkcV/3CAyBcwignJCi3lDtgZCKaLICPElKCMax9VFXM9iQV5zEsVQgLY3RPbKXu5IoavEWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5S6f4wYnz4f3jt0;
+	Mon, 26 May 2025 15:28:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id BBD5B1A1CF6;
+	Mon, 26 May 2025 15:28:46 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2AsGDRootk0Ng--.16762S3;
+	Mon, 26 May 2025 15:28:46 +0800 (CST)
+Subject: Re: [PATCH 01/23] md: add a new parameter 'offset' to
+ md_super_write()
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, song@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-2-yukuai1@huaweicloud.com>
+ <20250526062820.GA12730@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <a5c43105-a864-910d-94c3-bf815e2fc596@huaweicloud.com>
+Date: Mon, 26 May 2025 15:28:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduieelvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftdehieelledvveduudelieeggeehkedvheeikeelkefhkeelffetffeitdethfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdgvtggtrdhrvggrugenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehnohhlthgrrhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegurhgvghgrnhessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepsggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghom
- hdrtghomhdprhgtphhtthhopehflhhorhhirghnrdhfrghinhgvlhhlihessghrohgruggtohhmrdgtohhmpdhrtghpthhtoheprhgrfhgrlhesmhhilhgvtghkihdrphhlpdhrtghpthhtoheptghomhhpuhhtvghrshhfohhrphgvrggtvgesghhmrghilhdrtghomhdprhgtphhtthhopehkrghmrghlrdgurghsuhessghrohgruggtohhmrdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+In-Reply-To: <20250526062820.GA12730@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHK2AsGDRootk0Ng--.16762S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw4kZw48Xw4DKF4DGFWktFb_yoW3GFbE93
+	Z2yF48WF1DWrn5tr17Cw1IvFWDX3WUG3WDXFWFqFWkJrWkJ397Ary5Wr95Z34jvryxJ3WY
+	v3Z3WFyfta1jgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 23/05/2025 at 20:08:56 +02, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
-ail.com> wrote:
+Hi,
 
-> Hi Miqu=C3=A8l,
->
-> El vie, 23 may 2025 a las 16:42, Miquel Raynal
-> (<miquel.raynal@bootlin.com>) escribi=C3=B3:
->>
->> On 21/05/2025 at 10:03:25 +02, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari=
-@gmail.com> wrote:
->>
->> > Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
->> > removed legacy interface functions, breaking < v5.0 controllers suppor=
-t.
->> > In order to fix older controllers we need to add an alternative exec_op
->> > implementation which doesn't rely on low level registers.
->> >
->> > Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
->> > Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
->> > Reviewed-by: David Regan <dregan@broadcom.com>
->> > ---
->> >  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 222 ++++++++++++++++++++++-
->> >  1 file changed, 215 insertions(+), 7 deletions(-)
->> >
->> >  v5: add changes requested by Miqu=C3=A8l Raynal:
->> >   - Mention and explain legacy in native_cmd_conv.
->> >   - EOPNOTSUPP instead of EINVAL for instr->type else.
->> >   - Implement missing check_only functionality.
->> >
->> >  v4: add changes requested by Jonas Gorski:
->> >   - Add missing breaks in brcmnand_exec_instructions_legacy.
->> >   - Restore missing ret assignment in brcmnand_exec_op.
->> >
->> >  v3: add changes requested by Florian and other improvements:
->> >   - Add associative array for native command conversion.
->> >   - Add function pointer to brcmnand_controller for exec_instr
->> >     functionality.
->> >   - Fix CMD_BLOCK_ERASE address.
->> >   - Drop NAND_CMD_READOOB support.
->> >
->> >  v2: multiple improvements:
->> >   - Use proper native commands for checks.
->> >   - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
->> >   - Remove host->last_addr usage.
->> >   - Remove sector_size_1k since it only applies to v5.0+ controllers.
->> >   - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers.
->> >   - Use j instead of i for flash_cache loop.
->> >
->>
->> ...
->>
->> > +static int brcmnand_check_instructions_legacy(struct nand_chip *chip,
->> > +                                           const struct nand_operatio=
-n *op)
->> > +{
->> > +     const struct nand_op_instr *instr;
->> > +     unsigned int i;
->> > +     u8 cmd;
->> > +
->> > +     for (i =3D 0; i < op->ninstrs; i++) {
->> > +             instr =3D &op->instrs[i];
->> > +
->> > +             switch (instr->type) {
->> > +             case NAND_OP_CMD_INSTR:
->> > +                     cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
->> > +                     if (cmd =3D=3D CMD_NOT_SUPPORTED)
->> > +                             return -EOPNOTSUPP;
->> > +                     break;
->> > +             case NAND_OP_ADDR_INSTR:
->> > +             case NAND_OP_DATA_IN_INSTR:
->>
->> No NAND_OP_DATA_OUT_INSTR?
->
-> AFAIK, the legacy functions were only using it for
-> NAND_CMD_SET_FEATURES, which we don't support:
-> https://github.com/torvalds/linux/blob/c86b63b82fde4f96ee94dde827a5f28ff5=
-adeb57/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L1922-L1938
->
-> The other uses I could find are already covered by our
-> chip->ecc.read/write functions.
->
-> In any case I've tested the patch for reading, erasing and writing the
-> NAND and so far I haven't found any unsupported error apart from
-> NAND_CMD_GET_FEATURES with a Macronix NAND in the Sercom H500-s
-> (BCM63268).
-> I believe it's used for unlocking the NAND, which isn't needed in that
-> device.
+ÔÚ 2025/05/26 14:28, Christoph Hellwig Ð´µÀ:
+> On Sat, May 24, 2025 at 02:12:58PM +0800, Yu Kuai wrote:
+>> -void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
+>> -		   sector_t sector, int size, struct page *page)
+>> +void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
+>> +		       sector_t sector, int size, struct page *page,
+>> +		       unsigned int offset)
+> 
+> Maybe add a little command explaining what it does?
 
-Well, you are restoring an old behavior so I won't ask for a better
-support, but you should normally allow software ECC engines (and even no
-engine at all) and in this case the core will require a write path. I
-honestly think it is not very complex to implement but if someone is
-lacking this feature it can be added later.
+OK.
+> 
+>> +extern void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
+>> +			      sector_t sector, int size, struct page *page,
+>> +			      unsigned int offset);
+> 
+> No need for the extern.  Otherwise looks good:
 
-Please just fix the braces in the for loop that was reported, but no
-hurry, I'll only take this after -rc1.
+Got it.
+Thanks for the review!
 
-Thanks,
-Miqu=C3=A8l
+Kuai
+
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> .
+> 
+
