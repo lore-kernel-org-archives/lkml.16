@@ -1,54 +1,54 @@
 Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6FC13C3F2
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 15:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433E7213240
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 15:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271709; cv=none; b=uWsk/bE/CIB2S2Ksz5MlweBdzTIjP555/xjeyiC0AC3MDDbB+CBW+/z7wdxWQUqCi/WjvL4r2cgD1qTX8Hdu7Jl/4OeBYMlvC1liSq4lqq2kmTYBZ0+66AshPBsFIIcbe0MDmCgc6Z4704FOALKEe7Y2ZzIB98kC8mCDIRi53Lc=
+	t=1748271712; cv=none; b=AcgNHpkhzCxHIvn7WVQKqxh2BkeeWhYyKY4gpro9YJmm8zDZa9R2S0P9iIdX5/BcfeUB0UgJ/+o4xtXZvrz/6J8B88p6Z2NuBat/ywl5WfHwv0ajVqZ8F/LyhGQqmVKnR88XM0WTrJqn21BYQFWdDQJRDHmqGhjnh2RE8VhFUsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271709; c=relaxed/simple;
-	bh=rCRXTHiAgtKu3dsFNLxOBHNNzDWRNYIKX6JbwfEQaok=;
+	s=arc-20240116; t=1748271712; c=relaxed/simple;
+	bh=Q/2BsgKz24Vtl8wIJjkgERERw7Spq2sdcAdXYaotMo4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qmESKACpE84Ee6/MbIvnBPODKJXlmN9lVZv12QZcy+wlJE4Z/bspdlycRv4e3Ix6HDregEvqtXu8CSQWhLtWBZCHVRXodlwkBi8oy+fGRWl0LUaoKYPg7x4qsHFrSEPEVA9NUoxVDd5MXtoncj4T7qyr9m+9kAk6OZrKmlUden8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WRfZMEcT; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=moDSbtmL1dn/+T5Fb09eaReX1+dLw6kersBTVKefQ8tH311kbjC1YywLYMB1s6tDMqokMOv2+EUvyPxll1c91z3//xgQ0gQ/jq/bs71WSXsab5QsWq81eQgGy8xPIvKpgB9+bGofd0betEYFnvp9jWlhL3iTupJkU7dRNaNpUv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xyfCek5l; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRfZMEcT"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-44a3b5996d2so11422055e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:01:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xyfCek5l"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ea256f039so18437315e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748271706; x=1748876506; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748271709; x=1748876509; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHkjvhIISCSHj9u0ZO7czldP5cDtBrvbmLtc67N+RWM=;
-        b=WRfZMEcTJmTBZAvYYUSgVOlGFLHwQ7DqEo+jLdIypERwTT7DD0YjX2q90EHRzzKgsq
-         vL7dOwUnnSWcSEAGCvVu6/RAtPCNk2RgvFMZXu2Qfy17TZFheVgHzKgz5Ewehpc/GFdo
-         t8FXVYQzi+EkAaWp5CTIWmkoR0dmoXVU5P8S3EN/K/9GZ77ISVKIf/7+48fzcTHRQE7U
-         jZSWgMVH1YVhCkGb7H4LM/arOUc9YG+/UlGeKSjKJKWZGib3Ks+Aoxen3yxiqA0/vN0O
-         gVPaoSg/nC2fezCVCxbjeMNGjV8pylTtqBjjpSRZMwEayLEjhCw734/NaEgD3ieGAE9F
-         tsyQ==
+        bh=SQP6Td3kWKuKqRj2KRN0QM8NzsKBYR8G0PzCVMLQtO0=;
+        b=xyfCek5lFvjMqll2gBHEc4LafERAqOh7SnvH4KLBQgPSAQFTOhtNbqI0SX4hZo7u96
+         xgbQy5+7CWGo7wUy+jSRqEu2/u7Q2Gwy173jcqadFh4Z6XsrKrXX1BmH3PccBk5uGQ2+
+         KEnjZ7orfy0gZiFGbso8nsnR2CJBAAujtTCtwfdFZZ0mqUhlSlzg+TGwcqfDJ7UWCH7S
+         iAKkQt789pwFGTMSQQ9lhkdSWVjBdg6KKscPwYMRfdxhg+GwMge8l2u4C9B5sLqshPQL
+         dBNZAu6wKQGbLswM/pKfEOoX39RSgd1nRkAjP1cNJBefH+Hc4a/v6GOaluL2HP+Wf5nj
+         PQmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748271706; x=1748876506;
+        d=1e100.net; s=20230601; t=1748271709; x=1748876509;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHkjvhIISCSHj9u0ZO7czldP5cDtBrvbmLtc67N+RWM=;
-        b=tz+hnGWfErqCNEzY+GR2vBDdONincm+LggeoFTkRBGpiCtYTEwC9XnkBGMWCpYYv0d
-         DPsdfYgOZXUj04b2X+9lYLD+Np8cBMgP6Ty6sN4E0jDODsUlWVUC8CfDSTADmDVwKhxl
-         kK87O+hu1GYtPlYx4L+exE+4BNULIe82/1YBfcmoIlscFmVooe0C2uZ+ICjDQSR4iSNP
-         uLZGXUq0udDypTW6QAMDkPutCb4rbSJiunUqfsND7xx6Ae5s3doJpMwXQqeGr+q8mpIL
-         C0TfmpaV0Q8n3uWNNAt/yaJtilrki+5rympIvSwgFxMqa8pNiBn/Y9+mIka5jM1tRIgl
-         no4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVP+nSAluEPaGQO/Y2wZjoSiKaQPz1c4Qt4x4zaRNQ5uWVJ93mhbcUGJIx+qcwSzgP2H4SKQYc4RJ7T6K0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4uPVJwjImCofB5obuJibhaac38u3YX9cfMS4g5Cb5D34ID+PK
-	DD1nMehLloRZSGg/iMuxXO7mBL6IuNnGgQ8mtRaYuKSEfq82CBX7pBNuZnwTQKBYoKYUpQ==
-X-Google-Smtp-Source: AGHT+IGPo8nUzY2Rj6nkPhVFDqh1Zc0DKoHnIQDw9+T3ld33w/KON4X7whx9IUxnJRj1Tiiw5NGdXf4=
-X-Received: from wmbez3.prod.google.com ([2002:a05:600c:83c3:b0:442:f8e9:a2ac])
- (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1c1f:b0:43d:300f:fa3d
- with SMTP id 5b1f17b1804b1-44c9141d8a2mr73618805e9.5.1748271706538; Mon, 26
- May 2025 08:01:46 -0700 (PDT)
-Date: Mon, 26 May 2025 15:01:30 +0000
+        bh=SQP6Td3kWKuKqRj2KRN0QM8NzsKBYR8G0PzCVMLQtO0=;
+        b=El2res85+hd2qoSzmvrH5Nb+2bM/3VSuVSHocLq7NmWQ7hsfrAPFptgv0c/nB8S5lL
+         ii5Z0/+7xFxSxxB9tuxejNaz9FpcWthQrkX0AqEEXVaOY7NHoVG0DeWPjn3C5yGqvob4
+         QxWqlZ+6WgCFtFXsUFSbnDySeRU/YuzDV/51BmUfHY7fegI0SJKDV/CnYu/OoHkpDnls
+         2JJxe/oj4otgj0xDCMX88qxSzEMJU8Ckr2Gf7QrT/Sb/d6D6L1dQ7vGMDLoMpCrqFHh8
+         JLSOpMq5UV+mcSbeTeXjdhDs67o4kYo70AK5plYbNQLBI9y35jQFpUwDBieitLPWeLV6
+         JrnA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4vk49gxMYPFIk2xvLaqRWWmQTgnGT8yXwVGFeZF8KnBbcN1z7qkBQhVHHMZt9p3iZcD3MfNGlVgKophE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ4MZqKneq8fx87OMJAKhiNnOvnO7BsoC8fMQQgf7ll4K7LjK5
+	0J+YXnZAaljnEmLr3B+bhi+3yFI9Z1WpoeVlY/Il0Vn6JVHYM7MhwqaXKP2gYPKROjgSLw==
+X-Google-Smtp-Source: AGHT+IG7bMDz+nyV21aR+cR9rz6T4gu5RRq0QfvbqOxOM4k37bGT04jZzRz8bA5euIEZI5NyPC9+hsM=
+X-Received: from wmrn43.prod.google.com ([2002:a05:600c:502b:b0:43c:ef1f:48d3])
+ (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5396:b0:43c:f63c:babb
+ with SMTP id 5b1f17b1804b1-44c91607264mr72968455e9.1.1748271708454; Mon, 26
+ May 2025 08:01:48 -0700 (PDT)
+Date: Mon, 26 May 2025 15:01:31 +0000
 In-Reply-To: <20250526150141.3407433-1-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250526150141.3407433-1-bqe@google.com>
 X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250526150141.3407433-2-bqe@google.com>
-Subject: [PATCH v9 1/5] rust: add bindings for bitmap.h
+Message-ID: <20250526150141.3407433-3-bqe@google.com>
+Subject: [PATCH v9 2/5] rust: add bindings for bitops.h
 From: Burak Emir <bqe@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>
 Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
@@ -73,69 +73,75 @@ Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Makes the bitmap_copy_and_extend inline function available to Rust.
-Adds F: to existing MAINTAINERS section BITMAP API BINDINGS [RUST].
+Makes atomic set_bit and clear_bit inline functions as well as the
+non-atomic variants __set_bit and __clear_bit available to Rust.
+Adds a new MAINTAINERS section BITOPS API BINDINGS [RUST].
 
 Suggested-by: Alice Ryhl <aliceryhl@google.com>
 Suggested-by: Yury Norov <yury.norov@gmail.com>
 Signed-off-by: Burak Emir <bqe@google.com>
 Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
- MAINTAINERS                     | 1 +
- rust/bindings/bindings_helper.h | 1 +
- rust/helpers/bitmap.c           | 9 +++++++++
- rust/helpers/helpers.c          | 1 +
- 4 files changed, 12 insertions(+)
- create mode 100644 rust/helpers/bitmap.c
+ MAINTAINERS            |  5 +++++
+ rust/helpers/bitops.c  | 23 +++++++++++++++++++++++
+ rust/helpers/helpers.c |  1 +
+ 3 files changed, 29 insertions(+)
+ create mode 100644 rust/helpers/bitops.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index d48dd6726fe6..86cae0ca5287 100644
+index 86cae0ca5287..04d6727e944c 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -4124,6 +4124,7 @@ F:	tools/lib/find_bit.c
- BITMAP API BINDINGS [RUST]
- M:	Yury Norov <yury.norov@gmail.com>
+@@ -4141,6 +4141,11 @@ F:	include/linux/bitops.h
+ F:	lib/test_bitops.c
+ F:	tools/*/bitops*
+ 
++BITOPS API BINDINGS [RUST]
++M:	Yury Norov <yury.norov@gmail.com>
++S:	Maintained
++F:	rust/helpers/bitops.c
++
+ BLINKM RGB LED DRIVER
+ M:	Jan-Simon Moeller <jansimon.moeller@gmx.de>
  S:	Maintained
-+F:	rust/helpers/bitmap.c
- F:	rust/helpers/cpumask.c
- 
- BITOPS API
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70..b6bf3b039c1b 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -7,6 +7,7 @@
-  */
- 
- #include <kunit/test.h>
-+#include <linux/bitmap.h>
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
- #include <linux/blkdev.h>
-diff --git a/rust/helpers/bitmap.c b/rust/helpers/bitmap.c
+diff --git a/rust/helpers/bitops.c b/rust/helpers/bitops.c
 new file mode 100644
-index 000000000000..a50e2f082e47
+index 000000000000..1fe9e3b23a39
 --- /dev/null
-+++ b/rust/helpers/bitmap.c
-@@ -0,0 +1,9 @@
++++ b/rust/helpers/bitops.c
+@@ -0,0 +1,23 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+#include <linux/bitmap.h>
++#include <linux/bitops.h>
 +
-+void rust_helper_bitmap_copy_and_extend(unsigned long *to, const unsigned long *from,
-+		unsigned int count, unsigned int size)
++void rust_helper___set_bit(unsigned int nr, unsigned long *addr)
 +{
-+	bitmap_copy_and_extend(to, from, count, size);
++	__set_bit(nr, addr);
++}
++
++void rust_helper___clear_bit(unsigned int nr, unsigned long *addr)
++{
++	__clear_bit(nr, addr);
++}
++
++void rust_helper_set_bit(unsigned int nr, volatile unsigned long *addr)
++{
++	set_bit(nr, addr);
++}
++
++void rust_helper_clear_bit(unsigned int nr, volatile unsigned long *addr)
++{
++	clear_bit(nr, addr);
 +}
 diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 1e7c84df7252..92721d165e35 100644
+index 92721d165e35..4de8ac390241 100644
 --- a/rust/helpers/helpers.c
 +++ b/rust/helpers/helpers.c
-@@ -7,6 +7,7 @@
-  * Sorted alphabetically.
+@@ -8,6 +8,7 @@
   */
  
-+#include "bitmap.c"
+ #include "bitmap.c"
++#include "bitops.c"
  #include "blk.c"
  #include "bug.c"
  #include "build_assert.c"
