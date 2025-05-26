@@ -1,131 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F366D1F416C
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110681F4703;
+	Mon, 26 May 2025 10:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748256531; cv=none; b=nyuQwmPu8YubuII5KjqzohxmZZF7OzZykB2CqRQzMy+lUK8EHny9agcs1h55YDixr9mRJxwLNBfU6ncR6bUYsnPHqUEqHy9egu7ENlkjy6VO0kA+6ocW9nxmLFBPpdWaABY2fA0kjeXtsmbG6kiVAtPYgVd6n55fnN5485kJaX0=
+	t=1748256551; cv=none; b=R4J1b3qk+54SJZ9WUU7JifvAg9h1plmZV78TL1mi2RhTctgwKkDVvJZF5OXICjczXrNqYeqU9RelF2Xqvo7ms5CwlPxcb/I4wttdNhUZAt+Rix2EcrbWN6ABy1o+BJUMIuy8z2JmDIM177IHJi+l02Xm9aeLc1lnm+1Cf7IC8Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748256531; c=relaxed/simple;
-	bh=Kst9MAEyZldpaV026jibp7tTB98u4DWNAEscoyLWHUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iIPxcpn0WeUoHyEsrMW3PcgE0Z1//xCmu8JA95MQkUjIqYt5FUf3pE6BxY4PmWTuNOSL8m0AYDSm0FNW4QDiu9i7iEa9PR7lL7zIKSf5gnw+SOdvEvhopDa8eRqfLSQB+OUNPOIWCojBrQm8Yo/LUvVvg2TkJXRtps+9FLDeMLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DERUmgEl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748256551; c=relaxed/simple;
+	bh=w7VKIU8NnqyjQvkqkLPKDk49GnoKd3o1S/upuQ6J118=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jiSIKHU6YBO3WhDlrBTui+wiFR59NyrRh52Umuyv9k3BBYWj/+WnllQeP1rBnGCc4CkcbtlIPp9WvVaEtZ5Zlt0CCa4Q+IGZ0iK3p4i8M6u+agWQsgg3PeLyZBajE9cZHeOhAx7kGuETi1pIxdW4+8cffUPybGnbW8jlVzFK+kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=djykV4Lr; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DERUmgEl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748256528;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rBFnGHZomc41cOQHCuqheUgzba5w7SB3h0vc8x00N3s=;
-	b=DERUmgElMQL4sj9v/sVVtmk3M2I+V8RapdY3S2eYuRUOMXA7phnQFZXANmY00R4WayJLIu
-	FwtjtW6lQsRto69PBZsPAfT6ZBERDtNgRhoeuSPjL6SfTfa0fch0CP725igBBhnDqdFGjq
-	BJzO6V/v75bggHfvtP9QbyH1OqTOZWA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-2Tg01_e_MCSIddE4hx7sDg-1; Mon, 26 May 2025 06:48:43 -0400
-X-MC-Unique: 2Tg01_e_MCSIddE4hx7sDg-1
-X-Mimecast-MFC-AGG-ID: 2Tg01_e_MCSIddE4hx7sDg_1748256523
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43eed325461so14279125e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 03:48:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748256522; x=1748861322;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rBFnGHZomc41cOQHCuqheUgzba5w7SB3h0vc8x00N3s=;
-        b=ZrjrEHScb+nPdCvqg3rKHc9XR71AzMhGtgwuyFkegoClCUqYsDO0GKn7ES3xr3hXML
-         0Q1UrwjjWWyo5dxkmiWp74eQ2ZVUP/gb7LjGpuoI3mfYBySBC/01jojWSVNnZhoPm2zr
-         bgKSSURnq7Cs+MWZBFpvnUbhzc4DVzQE4AKGpMDrOdSsT/9ok7juJp+OcZJnseXTeNR6
-         y8MwFGUayfsok+MZBFChL+ESRpad/gMD2VRR105o0yCE1jLK4Eoj7P7sKWjfQ3Z8Z+bu
-         67xY7twPwEEbohBpyC6behl23d0ixRf1VgItV+/kgQTlirJnl7HS4fij7mVcLcY86MaP
-         2n8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXAJPQWypy2pxWRmaCjEpvBRhrhHs6bLfGqj8UGQC4nkQBqHuEgUSpOS9BX+jsP2o6gtS18Tivi7+irG1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUg5thlQ0leNIjlT1TVsh7CJud1l2KOC2ExwvFbkAJXWx4THRw
-	3v45gWMMKV3mAQ5RMkUBrUyjNB3rQblAvG1dQNdn0LND0uw22wWxgZP2d6X0SwhUq4coEidNdh9
-	FJgD4Duh1FaCvHXVeE5kg1s+TCB0Qn1fEAqtXA/zttIZ2OBCwSIaw6aGVPSsK2KktVg==
-X-Gm-Gg: ASbGnctjGjxg7xbqWDI2XZhXQQFmVakdcfyfa/uilLqvjx+Q5aR6kPT5mnXp+ht5pql
-	qKyA5p7zUseGqXNIPUN/lTgNs4pQYmuy2rIlwkyuFNv1y4lLCwQvZslhGlB+qi+YX4RYWiEa2Vc
-	ZYlPuvkTR65s+ggMBCCd1t3SPmi14OEpjZb3g1FE0uhIuMhfRi0MffSgkujXtr8NZhe8DRtsfrw
-	vsiOorhR3+xFhPxUm9kbK9gy3pXcuRZFAyzKjkqipATU2PPM7fBqf8kTisRjPTmdLgY3fRVJ5at
-	loFsW1BzIq278LLwJxE=
-X-Received: by 2002:a05:600c:1547:b0:440:54ef:dfdc with SMTP id 5b1f17b1804b1-44c935dca2emr70542225e9.8.1748256522553;
-        Mon, 26 May 2025 03:48:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaHqtt4SIdUKPpxF+y2ywQ+DoleofDlr7xvNRb+xDN4kfs1Upx+FfTRAAPhRLVzIc2DQnSKQ==
-X-Received: by 2002:a05:600c:1547:b0:440:54ef:dfdc with SMTP id 5b1f17b1804b1-44c935dca2emr70542025e9.8.1748256522163;
-        Mon, 26 May 2025 03:48:42 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2728:e810::f39? ([2a0d:3344:2728:e810::f39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b295fdsm242103435e9.5.2025.05.26.03.48.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 03:48:41 -0700 (PDT)
-Message-ID: <451f45a0-4db4-40a7-ba22-d2a7dd1a1c7d@redhat.com>
-Date: Mon, 26 May 2025 12:48:40 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="djykV4Lr"
+Received: from pendragon.ideasonboard.com (237.69-130-109.adsl-dyn.isp.belgacom.be [109.130.69.237])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 330EC7E6;
+	Mon, 26 May 2025 12:48:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748256523;
+	bh=w7VKIU8NnqyjQvkqkLPKDk49GnoKd3o1S/upuQ6J118=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=djykV4LrIM8V/L45q9W1sIokBsApt4v9E6YwdYXqzRmVe4QYw2LT8eZM2fsW47x50
+	 Q2QGaGm/Lmih+akZcNVTrEE6HzIdJg5PBKZfMeNnv0tJ6x8DM4P9vid58q4JimCvvm
+	 YUZIdhGMkAC0IQmu7PXL4C96/pw17dRI1vM+Td64=
+Date: Mon, 26 May 2025 12:49:02 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: Maxime Ripard <mripard@kernel.org>, tomm.merciai@gmail.com,
+	linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Adam Ford <aford173@gmail.com>,
+	Jesse Van Gavere <jesseevg@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set()
+ with atomic_enable()
+Message-ID: <20250526104902.GB17743@pendragon.ideasonboard.com>
+References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250526-cryptic-blue-mussel-ac57fe@houat>
+ <91d8a288-1f2d-469c-a596-6265893584ae@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Bug] "WARNING in corrupted" in Linux Kernel v6.15-rc5
-To: John <john.cs.hey@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <CAP=Rh=MXN2U7ydg2f9k1cywF8Q1qpizXmcBg6mmzwpt86=PaWw@mail.gmail.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CAP=Rh=MXN2U7ydg2f9k1cywF8Q1qpizXmcBg6mmzwpt86=PaWw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <91d8a288-1f2d-469c-a596-6265893584ae@bp.renesas.com>
 
-On 5/26/25 9:11 AM, John wrote:
-> I am writing to report a potential vulnerability I encountered during
-> testing of the Linux Kernel version v6.15-rc5.
+On Mon, May 26, 2025 at 11:58:37AM +0200, Tommaso Merciai wrote:
+> Hi Maxime,
+> Thanks for your comment.
 > 
-> Git Commit: 92a09c47464d040866cf2b4cd052bc60555185fb (tag: v6.15-rc5)
+> On 26/05/25 11:26, Maxime Ripard wrote:
+> > Hi,
+> > 
+> > On Mon, May 26, 2025 at 10:54:52AM +0200, Tommaso Merciai wrote:
+> >> After adv7511_mode_set() was merged into .atomic_enable(), only the
+> >> native resolution is working when using modetest.
+> >>
+> >> This is caused by incorrect timings: adv7511_mode_set() must not be
+> >> merged into .atomic_enable().
+> >>
+> >> Move adv7511_mode_set() back to the .mode_set() callback in
+> >> drm_bridge_funcs to restore correct behavior.
+> >>
+> >> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI connector helpers")
+> >> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
+> >> Closes: https://lore.kernel.org/all/aDB8bD6cF7qiSpKd@tom-desktop/
+> >> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> > 
+> > Explaining why, both in the commit log and the comments, would be nice.
+> > Because I can't think of any good reason it just can't work for that
+> > bridge.
 > 
-> Bug Location: 20628 at net/ipv4/ipmr.c:440 ipmr_free_table
-> net/ipv4/ipmr.c:440 [inline]
+> Sorry, let me clarify and share with you some details:
 > 
-> Bug report: https://hastebin.com/share/idudaveten.yaml
+> adv7511_mode_set:
+>   - Is setting up timings registers for the DSI2HDMI bridge in our case
+>     we are using ADV7535 bridge.
 > 
-> Complete log: https://hastebin.com/share/ojonatucos.perl
+> rzg2l_mipi_dsi_atomic_enable:
+>   - Is setting up the vclock for the DSI ip
 > 
-> Entire kernel config:  https://hastebin.com/share/padecilimo.ini
+> Testing new/old implementation a bit we found the following:
 > 
-> Root Cause Analysis:
-> A kernel warning is triggered during the execution of
-> ipmr_rules_exit() at line 440 of net/ipv4/ipmr.c, when attempting to
-> free a multicast routing (mr) table that may have already been
-> released or was never correctly initialized.
-> This function is called as part of the ipmr_net_exit_batch() logic
-> when a network namespace is being torn down (copy_net_ns() →
-> create_new_namespaces() → unshare() syscall).
-> The crash is accompanied by a FAULT_INJECTION trace involving
-> copy_from_user_iter, suggesting this might be a fuzzing-induced fault
-> where the data passed via netlink_sendmsg() is malformed.
-> However, the primary issue lies in ipmr_free_table() dereferencing a
-> potentially invalid pointer—either due to a race condition during
-> namespace teardown or improper error handling during netns
-> initialization.
+> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI-A-1:800x600-56.25@XR24
+> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
+> [   49.273134] adv7511_mode_set_old: drm_mode_vrefresh(mode) = 56
+> [   49.281006] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
 > 
-> At present, I have not yet obtained a minimal reproducer for this
-> issue. However, I am actively working on reproducing it, and I will
-> promptly share any additional findings or a working reproducer as soon
-> as it becomes available.
+> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI-A-1:800x600-56.25@XR24
+> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
+> [   74.076881] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
+> [   74.092130] adv7511_mode_set: drm_mode_vrefresh(adj_mode) = 56
 > 
-> Thank you very much for your time and attention to this matter. I
-> truly appreciate the efforts of the Linux kernel community.
+> Same result but different timing (in function call perspective):
+> 
+>   - old: adv7511_mode_set() is call before rzg2l_mipi_dsi_atomic_enable()
+>   - new: adv7511_mode_set() is call after rzg2l_mipi_dsi_atomic_enable()
 
-Should be fixed by commit c46286fdd6aa, which landed in 6.15
+What is "old" and "new" here ? Is it before and after Dmitry's patch, or
+before and after yours ? Please be precise when describing problems.
 
-/P
+> What do you think? Thanks in advance.
 
+You're only explaining above what the "old" and "new" behaviours are,
+and claiming one of them is causing an issue, but you're not explaining
+*why* it causes an issue. That's what your commit message is expected to
+detail.
+
+-- 
+Regards,
+
+Laurent Pinchart
