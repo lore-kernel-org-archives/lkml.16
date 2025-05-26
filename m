@@ -1,125 +1,113 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+Received: from mail-wm1-f98.google.com (mail-wm1-f98.google.com [209.85.128.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E431474CC
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 16:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6E2110E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 16:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748275777; cv=none; b=ahlGz3ScFuADOLJSqzXxDu93Iq/3hvFbEZn6XYWNSSC2Lmr3MwEdvbACjahx6KRK5hJjX1TF6dVPsTYWjwY7xiQAXa8caiQtPAu/v84N8DwG3sc7etSMK3jIjXfZIk6nixoEjgNmZo4GjOpdV06eR1x0kyJvCDJ/zyZal9Xotss=
+	t=1748275987; cv=none; b=fLS+AfF0wcA19a4bEdBma/OKe7upt8VE8frYTmVKOBAjBzraUeYpmfRR3MR4uA9ABhk5dzVRdBARJF4mCgrFpbXcw3WhlBvXZF2U5FJE1H8PpV0oQzQIMdGIMEZgjs+hfz9UB36shHlHLL97A3/pNKAET9KvAm0NW88+x6D4WLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748275777; c=relaxed/simple;
-	bh=O7gwoSwLwrYbofmq2nMcMcYP2vlGWdWA/IukGP7dCpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ld0mf1DrK60iHl0mJKOPiPDnVF6FEvKcUIAuz7QP0Lm0Anr/dgWgtLXi7k8TR9xWiu+6Y+rCehHF2h4EHBWWXnkj5PegkMpBcTipBbOPDN7f2OslMvLG2r7WS4qvmxLvk8uxuzDy8gCMhtUwSImt6xqpMDqgTlrzhVr+XWj8jGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZZ0IgCa6; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748275987; c=relaxed/simple;
+	bh=NI/OMUec2usdoLBvlfF1jggeIGrfCEBPdwkE8290v6o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=DbcpcsCLnQSlgJMdlyKuofmKe61BdaDsywyrjSuc+pqion7BEWfTx6QWYwckS+pBa6bniXLmvBzuWASQopNkQQbUFG7ON3Stq5O7V10CRHLG3e1dOzfkfiqTIUqIaQMFGHVcBDB9ZjJO7SBQMBzbQiNr3b8dn2fNIlfwgijCCO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sferalabs.cc; spf=pass smtp.mailfrom=sferalabs.cc; dkim=pass (2048-bit key) header.d=sferalabs.cc header.i=@sferalabs.cc header.b=log9DSDf; arc=none smtp.client-ip=209.85.128.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sferalabs.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sferalabs.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZZ0IgCa6"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-234477e3765so10071245ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:09:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sferalabs.cc header.i=@sferalabs.cc header.b="log9DSDf"
+Received: by mail-wm1-f98.google.com with SMTP id 5b1f17b1804b1-43d0618746bso19136555e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:13:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748275775; x=1748880575; darn=vger.kernel.org;
+        d=sferalabs.cc; s=google; t=1748275984; x=1748880784; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GaK97i1hckM+p++FUYHPcvRcogoa1z6MqyKl4267mk4=;
-        b=ZZ0IgCa6KIoNw19ZI5ggRKbquZURFqP3r2OUaTsrhJAlxCUvxi1/7jkB8Ihv929iQl
-         wfXu0LgdYryUi/CbYj1eiALlvyBR1PYpup/Vq5eO72NJ4l75G0igiB+DInhzhrS0JDQT
-         5KgS+6XlhdXpsU9ngRw2yYpU4kxWshHbRNhR7SjTcLjohqBfpiQc+s+hLt5QUMDJYN/X
-         YAhSa4fGW4R77s3pYZlnXt7sG/ZXHjebQCPAsMteivf0WfivJVk7C9HYfmRxuqrJzbym
-         Y6AFchgiUExD9NReE8cAq5B4o3jkn1IdOx4CYEFGbtO8bCxtpZMnlZRZH0fvopyzdfI8
-         Y0GQ==
+        bh=wsS+0LtRwDL05ZQn//FChAFOcAReeJDC/8+kYOO8seM=;
+        b=log9DSDf7WzforFJgsOhL+VJF0M70vmOJtMY354+9btEzOaCmmH/YZiKNc+V2BalKx
+         34oVIkponN5GD1SkYjsqUz6OSyiTOqP4V1WJEYRrNOgnzoOA8uVD0qfGxUh7qVT7ryu4
+         E7m443SqSWT1IkKtSZsezzho6UVekiSDj378dN35xLInFjLE9AFwrB2Ef/TSV//Lm3pl
+         bB090eoRM4M7hzT1SeArNTg5JP7rAmnrnjWu9QMJoCqSfaPm2CJy/TcrujjdU+/C9Nux
+         SAFJyj8PiKzKIYeR0x60iJfI6ll2/lHCyeGIybh1QFHLbnIemp2KWHC+NiQ16WDDBf4s
+         0+/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748275775; x=1748880575;
+        d=1e100.net; s=20230601; t=1748275984; x=1748880784;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GaK97i1hckM+p++FUYHPcvRcogoa1z6MqyKl4267mk4=;
-        b=Lmw/aaMf2G13jJeu5VknQI7rzH0o/eRyxW3bSmuTQl4vA3aUsV7273Go1ZFiyGfJVo
-         1FFTd/EiQ8yGw8L5Gba8safgXHvYKt4QQZZg6HXIvm3B667rYagPgdkvkn3OjgM+QDEa
-         cMuHIT9vToxdy/ImVrYifJE8dZ4FABsuQ1OLh3rUD/5kHBYcqU6f9ZYXAbg654YZ3huk
-         4rSeR3B4OV5WKmAAZ5rcZKOBt5PXmaMjkO8GD6HnMll+ZkZpli1mcLuLnuZ7WPC6r+pG
-         MRUiO6LMld7bLi9OERzSuK41UiWb4IxAqMFbjgLtoxyEXiWjF1/fRsWRFWEkX7ajQoW0
-         r36A==
-X-Forwarded-Encrypted: i=1; AJvYcCWh2YgBE27lQP2B8/AAnvU1ehbPPuP+FJZiwsuAAEXZ1RQH84NVzv31OMryeJCpL1CBKmSnKbcrmb4AU6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAF0aLK+hVA/5TtF4O2rh/lyK2R48KX5+vWH9DZKLSzVfvq4uv
-	8Vzan/fXO7eV5zY1VbC4e0dp3XJAvnlZGHaGp4thwpTUOhJ1Qxboq788
-X-Gm-Gg: ASbGnctmp46UyRJFny8W9mmClpzqnCAq+rmg3j6SONICbzl3Vclu+3P+ZJUy1Ifvwyg
-	ackrtJZXD5lFIrOM4qV747R2wFU56w86ScYIPKMlupkFs5W/5JTJBIj1psyS6E8mOf2HvSPRLsg
-	sOlDxW7huI3N8wqbu2rjM/4s2P044mOndylz6JuuOM3vzcCDjtpyVq1id6S6LKRnJvFzwzW5lGi
-	u6x/k2gIWd736cHjF3Hg6nooWCUbU2r49RmTr6QbXItfvmqf9jswZ8avTFxC7K3fWBjG+ddRMkj
-	G0DtvmkaaYQXIRGOVpbhabBPhEiBL35o8GqINqkaMzzg8+zqX7yQlunKfweVHelukTZjOOiO30O
-	Lzceks0E1
-X-Google-Smtp-Source: AGHT+IFq+30P3nuTMIXrgPQIxeLjYe0Xtv7YuAft3zd9xq4wH6Z7ua1BeI8YL4YdNBGr8PTTqfSKxw==
-X-Received: by 2002:a17:903:1249:b0:233:fdc6:3ce1 with SMTP id d9443c01a7336-23414f84e15mr135035035ad.27.1748275774688;
-        Mon, 26 May 2025 09:09:34 -0700 (PDT)
-Received: from CHINAMI-1168E6D.localdomain ([42.89.86.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23401ab6c69sm51708125ad.67.2025.05.26.09.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 09:09:34 -0700 (PDT)
-From: Jony Lynn <1198715581lxf@gmail.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
+        bh=wsS+0LtRwDL05ZQn//FChAFOcAReeJDC/8+kYOO8seM=;
+        b=xJOL8ng4WeOB426idt8A+Yn5X50PfHelH40g5i/yiWQMQG9h+K5NnpK4m7KLH3zQPO
+         tQbc02n406euVKHOdurDmO3T3JS+FTWeXx7QjkpQPadoepjP1N2vijUqkHYQEBXzCIrg
+         crRP3GDP10t9Gr0jHVyxK0Qp/aNFArnbOla4Hc9r87s7yAnimvodGRUW0Wc6E0OaGyAl
+         wmkRTiHi5frOt1eXhBVPwTWj4Y5fHg/ohObmmYd9akSp/iH+HhXQGUXEsn86fs8yQHpf
+         bm/7hB5ZiQ5bz8H67Poy6j/YCJO/J4jnltriL/2Ba1HapF77TE3SzGxSXGLwuD/t6XjE
+         l6eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYopeGxBB/GrsPfiVsti9sS3RGVOGYtByhj7S9YxmhnOOpo2vmBFDDkOquLHb754iphVua6qDLXJoahg8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh3rr+XIRs2xLqx+kdbPGnO8NHSXUlqqElXqjg+XOYXbCq17Dt
+	FscS/Z/hfooGrHri6Qv5o7H7d4ZNzIpqYUSQh/f+PMSEN1L2vov7fm62MBfKD7251vWNAebS7RR
+	Yp0ekn45XGBqW1N4pb7IeR/mapFKHVPAMgQp/
+X-Gm-Gg: ASbGncvnELUZXuB9Nzb0IJuYJC9XYaYXklxph3sAaQXtlqLM9uIKqO0Yj0Rq0Df/zpm
+	ACofZEIVsTJp7YB9RWrncXOQTgEzyBIKKfKVlvPkfBcJ6iylGCrlw8u1DGbuAEEyGyOC35VH5/g
+	yJ4NnGM8SouiZIJrazmcLIGUNGhSEZdrMNoyvoN2emaRFyseAeDzbd+Ra6a/MInyqDzf1ujx9N7
+	TOuxlcOr1dKc6SRQWaG8DodmWlLiLyDu2NI1PcwuL9H6/V8Lr/WpWC+ORk4KqwCuNVP/90DP6hg
+	PdgjyRGgshQkAK41/9k82+JDKa9t3+xq1R3p6N0cV8B8JCGjT1D7TEaBVVvI+bZmGT7s
+X-Google-Smtp-Source: AGHT+IH0g6FE2f7zN/oIK2mWRyULJDNx6nM32OtLWp8hn/k3j7zaBjmvWmX/XmHRj3KLDTbwO9NBV6wS4gic
+X-Received: by 2002:a05:600c:8283:b0:43d:45a:8fca with SMTP id 5b1f17b1804b1-44c94c2a4c6mr87142115e9.30.1748275983808;
+        Mon, 26 May 2025 09:13:03 -0700 (PDT)
+Received: from localhost.localdomain (net-5-89-7-58.cust.vodafonedsl.it. [5.89.7.58])
+        by smtp-relay.gmail.com with ESMTPS id 5b1f17b1804b1-447f1fe4fbcsm14730775e9.12.2025.05.26.09.13.03
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 26 May 2025 09:13:03 -0700 (PDT)
+X-Relaying-Domain: sferalabs.cc
+From: Giampiero Baggiani <giampiero@sferalabs.cc>
+To: alexandre.belloni@bootlin.com
+Cc: Giampiero Baggiani <giampiero@sferalabs.cc>,
+	linux-rtc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Jony Lynn <1198715581lxf@gmail.com>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] sched/smp: Fix redefinition of flush_smp_call_function_queue()
-Date: Tue, 27 May 2025 00:08:42 +0800
-Message-ID: <20250526160842.567434-1-1198715581lxf@gmail.com>
-X-Mailer: git-send-email 2.43.0
+Subject: [PATCH] rtc: pcf2127: align power management configuration
+Date: Mon, 26 May 2025 18:12:34 +0200
+Message-Id: <20250526161234.13236-1-giampiero@sferalabs.cc>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The header file kernel/sched/smp.h currently defines
-flush_smp_call_function_queue() unconditionally in the #else branch,
-but lacks appropriate header guards, which causes multiple inclusion
-and a redefinition error during compilation.
+The PCF2131 comes with the following default settings:
+- battery switch-over function is disabled;
+- battery low detection function is disabled.
+These defaults differ from those of other models supported by this driver.
 
-This patch adds a proper header guard to prevent multiple inclusion of
-kernel/sched/smp.h and thus avoid the redefinition of
-flush_smp_call_function_queue() when included multiple times in
-different compilation units.
+This commit aligns the behavior across all supported models, configuring
+them to the settings typically expected from an RTC.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505262213.QsOaQU24-lkp@intel.com/
-
-Signed-off-by: Jony Lynn <1198715581lxf@gmail.com>
+Signed-off-by: Giampiero Baggiani <giampiero@sferalabs.cc>
 ---
- kernel/sched/smp.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/rtc/rtc-pcf2127.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/sched/smp.h b/kernel/sched/smp.h
-index 21ac44428bb0..8f1483b79e60 100644
---- a/kernel/sched/smp.h
-+++ b/kernel/sched/smp.h
-@@ -4,6 +4,9 @@
-  * and other internal parts of the core kernel:
-  */
- 
-+#ifndef _KERNEL_SCHED_SMP_H
-+#define _KERNEL_SCHED_SMP_H
-+
- extern void sched_ttwu_pending(void *arg);
- 
- extern bool call_function_single_prep_ipi(int cpu);
-@@ -13,3 +16,5 @@ extern void flush_smp_call_function_queue(void);
- #else
- static inline void flush_smp_call_function_queue(void) { }
- #endif
-+
-+#endif
+diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
+index 31c7dca8f469..cbdf7f23e6a6 100644
+--- a/drivers/rtc/rtc-pcf2127.c
++++ b/drivers/rtc/rtc-pcf2127.c
+@@ -1312,8 +1312,15 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
+ 	 * Clear battery interrupt flags which can block new trigger events.
+ 	 * Note: This is the default chip behaviour but added to ensure
+ 	 * correct tamper timestamp and interrupt function.
++	 *
++	 * Power management functions set to:
++	 * - battery switch-over function is enabled in standard mode;
++	 * - battery low detection function is enabled;
++	 * - extra power fail detection function is enabled.
++	 * Note: This is the default configuration except for pcf2131.
+ 	 */
+ 	ret = regmap_update_bits(pcf2127->regmap, PCF2127_REG_CTRL3,
++				 PCF2127_CTRL3_PM |
+ 				 PCF2127_BIT_CTRL3_BTSE |
+ 				 PCF2127_BIT_CTRL3_BIE |
+ 				 PCF2127_BIT_CTRL3_BLIE, 0);
 -- 
-2.43.0
+2.39.2 (Apple Git-143)
 
