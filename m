@@ -1,60 +1,79 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BC023ED75;
-	Mon, 26 May 2025 19:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEC71DD88F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748289361; cv=none; b=XRdF/x6CZQcVRPf+r/xXR497IT17scwj18jcMDqzWGqdQyEtt2QfYoExTGdP5Z+P+SHVo/ZHjOveJpuWfxN4+cBwm63Kl1Qko02uXl49ReXAldIREtoj3OeyIJSXHOb+BrP84E26CsLSJ6P996uervzQOaI26sObJeERQlQZsW8=
+	t=1748289441; cv=none; b=o82ozKqHyXaFuuofb6ukLbzTR2SFrppw77AisXjAnAfJWSiMEu33xy319wbUI52pOUWomaHpvnCglDGtRKPifMt4ygbRAW9JmmAJYcsCTEh1dpKrdH/4crHobiRfAVYQ+SHJWrFhpBhHs2ed0B5jyCcXdnAhEipwrslpTQradeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748289361; c=relaxed/simple;
-	bh=U8tGrcORNhsrVTb5sJb22d4+YfDP9oQ0T4Y+3poIiVM=;
+	s=arc-20240116; t=1748289441; c=relaxed/simple;
+	bh=JjAbM7bwUENza5M+9Ys+LTpnMeBhw+VDL+sZEhskg8o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=donXKkwpSDzd+mZvebR9CUNPo5bNz13OqPG83FBoTnjgm0I0lm+P+vh7MdPgvLDWrfBtuYVCWjxQPVoxqJSq3y9nutWakZk5UYrCRBMgmVn/KnJUtUkgdwD8g0QjNTFshB/QaPchXHKkmMGiOIPKuHomIWHYft3iPN4R7F9Zbtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4tEXRGQf; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFIrL+HIkMpoCgd4UiJy3GibATAxH09pS79fowVYUGphC9TiKG/4pFl187E4IFlUNe1o9XbPA6GR9I1eOP7Y0NHCADMcjEAQwB3gZR3/Jc8F3WqS2m16OgD9fFdIwJJmSCmf+X+k6UNVmpqakIg3oj4ElD9MFcBQ4oF3ngN42E0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=jZ+DXS1p; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4tEXRGQf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=4+r/nHRyZltKy41tZTedOu70Px/F9mZ4F2bNtsI59OU=; b=4tEXRGQfPFBKpQqSc4z3gLgkOI
-	2o4h5Mvi6Sh0ZTFi1D2+yNvmyXjWCGYdmEHfGYz0Cg28GnJ2XGysRQrywM1DpEhKGquRqpftFPcNI
-	8DjUFHygH594V/sfYAptUWciuDPafHD5BXrYWXj9wRwcblq7YpMgBF+7bvyXY3SQXb9Y=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uJdvL-00E1V8-N2; Mon, 26 May 2025 21:55:51 +0200
-Date: Mon, 26 May 2025 21:55:51 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] net: stmmac: dwmac-sun8i: Allow runtime
- AC200/AC300 phy selection
-Message-ID: <a2ac65eb-e240-48f1-b787-c57b5f3ce135@lunn.ch>
-References: <20250526182939.2593553-1-james.hilliard1@gmail.com>
- <20250526182939.2593553-2-james.hilliard1@gmail.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jZ+DXS1p"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c5b8d13f73so267293685a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:57:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1748289439; x=1748894239; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=52+nhUj+fXQPtnoww4dOPn+bKeui7Kmj06MnKB1tkio=;
+        b=jZ+DXS1p39MIdM+QtX+2ZF1iLDJdidx33EM0yeC5VzUre39wRNz5DSGYzK5mbw2RnC
+         Vd5VK/oYpjxdooMNPSmna0mjnAQQGlIDWrHigAzngXtj/Wcyvw4o7EyZtY7BZGhIosuY
+         ZQd4Cicm/aBcnRM9a7S+F+nFi5fsdIwQvcrM34fZktCjbvOVv1VB3Z8m4VTBRyXIl8hJ
+         hhTfcQiCOJ+Pyj3hDmsHHImFqPZ/xr/zdzQl+Esb2u8Q/awl0v/Dr+9xoBbtyzYfmetB
+         9XUdhr8OAXSRF+pWf8GbSZS40LxXJuzy8K7S+N+nU6NewG939FQhncf8l6Pkpwhr9R65
+         l7NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748289439; x=1748894239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=52+nhUj+fXQPtnoww4dOPn+bKeui7Kmj06MnKB1tkio=;
+        b=WUEHFaiKjrR44TAPgYXw3YKqlflhpGoAyInmXbmRZVr6DXCfyuXh8dxLRg1+EJHXK6
+         HrF4zcNArbXOYcbR51bzz951WjV6uTMiOT4LcNZXUy4+ByqAJ3n8RnJgT/oUEOcuAk0o
+         4AqHD02TAtVJQcpM6cIH0/7OKJrUx2RwFSbAxjKXpgSRy6Uwlo0ZV+HdZ3PTVqDwkzSK
+         +WhIpN4kdbVoAMkunK6O8yRwmnRVsf+yobTblULJu0CJmjGnyf0BT6KusDFYjRYiWB1R
+         9XOwNr5wQ/DA/P+i5DGkc8nv9HGr2w4rzhzC7Rf8otTb3K51oACA4/DKCTxJo8vWDE7R
+         nw5A==
+X-Forwarded-Encrypted: i=1; AJvYcCW9PasiO46KN3vGHq2AllSSoo8XaRCQQl55N7Tg1qpmT0KHKD0YhBZRZ+Rl5+joOKpuRuCzwHFvP6E9EQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGEhOrTeuDBhjHCZ8GMIX5T5uX7oKpv01nN6GyPhJ5YPXQ18c5
+	6Ynuw1zHt0KP90GCMmYyeGUtHzXUYSA7Y/bdLtjq7xWaH2v1WWWSp7n1NQNkVwPDGbxmk+7E153
+	HcikU
+X-Gm-Gg: ASbGnct6y6xAVlS973F92V7IGWV4n8HVvrf4m+QJvH4ieKc8vjQ21fvLSWdNlXrNlFE
+	tBUKZXG8yYE9wobKqoBujLqkL6NXPufa8wmitLZuZXMqHhcEaVQ8mnVpgS6e8eiCbZNWiEzwm58
+	VaZn69RSZ/RrkKu+qsARQKsiqnFjOTTcLxi2BG2wZy3Bg9Jk9IUCKB95h2L1ND+KUWTALo+Jcut
+	/zskQooywVC6kIkiSIkoWUWrIfkQR3VfJyyNtSaO9l3MrsD7YDvJi7CUwMMmznp0KqiCGsMCogl
+	9qsCoZlGJXjUFnsVo2Gya9GKohulEIpUASa+XQu4RvG9LSiBs1+188CM/dx7tSYFR8gmSykFXVk
+	7bSJWM4z5h253QlgJ9peqWbPAPy8=
+X-Google-Smtp-Source: AGHT+IFylJzlr+Hf21yAJjGNjVN0dUWZdqK9Jw5gc+JL3yLgiy4iZKIjMcJvpGVnbPd2NANnBq9o+w==
+X-Received: by 2002:a05:6214:21a3:b0:6f5:421b:623c with SMTP id 6a1803df08f44-6fa9d173b40mr195321546d6.25.1748289438786;
+        Mon, 26 May 2025 12:57:18 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6faa050c0b8sm33866496d6.74.2025.05.26.12.57.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 12:57:18 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uJdwj-00000000Ude-3Scs;
+	Mon, 26 May 2025 16:57:17 -0300
+Date: Mon, 26 May 2025 16:57:17 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org, zyjzyj2000@gmail.com,
+	Daisuke Matsuda <dskmtsd@gmail.com>
+Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
+ virtual DMA devices
+Message-ID: <20250526195717.GH12328@ziepe.ca>
+References: <20250524144328.4361-1-dskmtsd@gmail.com>
+ <174815946854.1055673.18158398913709776499.b4-ty@kernel.org>
+ <aDQQyjJv9YKK_ZoV@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,17 +82,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526182939.2593553-2-james.hilliard1@gmail.com>
+In-Reply-To: <aDQQyjJv9YKK_ZoV@infradead.org>
 
-On Mon, May 26, 2025 at 12:29:35PM -0600, James Hilliard wrote:
-> The Allwinner H616 ships with two different on-die phy variants, in
-> order to determine the phy being used we need to read an efuse and
-> then select the appropriate PHY based on the AC300 bit.
+On Sun, May 25, 2025 at 11:57:14PM -0700, Christoph Hellwig wrote:
+> On Sun, May 25, 2025 at 03:51:08AM -0400, Leon Romanovsky wrote:
+> > 
+> > On Sat, 24 May 2025 14:43:28 +0000, Daisuke Matsuda wrote:
+> > > Drivers such as rxe, which use virtual DMA, must not call into the DMA
+> > > mapping core since they lack physical DMA capabilities. Otherwise, a NULL
+> > > pointer dereference is observed as shown below. This patch ensures the RDMA
+> > > core handles virtual and physical DMA paths appropriately.
+> > > 
+> > > This fixes the following kernel oops:
+> > > 
+> > > [...]
+> > 
+> > Applied, thanks!
 > 
-> By defining an emac node without a phy-handle we can override the
-> default PHY selection logic in stmmac by passing a specific phy_node
-> selected based on the ac200 and ac300 names in a phys list.
+> So while this version look correct, the idea of open coding the
+> virtual device version of hmm_dma_map directly in the ODP code
+> is a nasty leaky abstraction.  Please pull it into a proper ib_dma_*
+> wrapper.
 
-The normal way to do this is phy_find_first().
+IMHO the ib_dma_* family was intended to be a ULP facing API so that
+verbs using drivers can pass the right information through the WQE
+APIs. Inside a driver it should not be calling these functions.
 
-    Andrew
+I think the bigger issue is that the virt drivers all expect to be
+working in terms of struct page. It doesn't make any sense that rxe
+would be using struct hmm_dma_map *at all*.
+
+Indeed maybe it shouldn't even be using ib_umem_odp at all, since
+basically everything it needs to do is different.
+
+The nasty bit here is trying to make umem_odp overload struct
+hmm_dma_map to also handle a struct page * array for the virtual
+drivers.
+
+Jason
