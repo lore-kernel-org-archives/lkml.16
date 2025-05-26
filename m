@@ -1,135 +1,252 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1705B1EF36C;
-	Mon, 26 May 2025 14:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC708F5E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270576; cv=none; b=KrSWGgTIXjkkvyiELVtrKLWRQqvkrvd5HooGruRfF+yt4vrizNkgRDBoaUKv7/A24ul4QZcDckZO3Z2xcwpEq8w512VGEdyke45RIAb37l9uHf7nWmHq0u7rez0WrHpWw9HICrvxZ5nj0076DTt9HV6YTbj2ZrKW6VlrDFQwj6E=
+	t=1748270604; cv=none; b=ej5APW1sNZqDiGHwqbliL564TPc+O/O8YNXb2j6PQOWzviH+++BZy2+OE/N3D8uv4CUe/b3dp0eXNPfcLwL6WYB6ydSQ1kLU5zsMVR5GgBE3MLit8imho6AJJB9CJIyNqYbShoowQmonYGu50GLnGPg9gxfCJbE8V+B878aI6lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270576; c=relaxed/simple;
-	bh=2re7boeytqH1ze4jSfdyO/nDEwx8RWmbmO83cuM5XmQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=rAhqFvF/v4KoirZVjfksnfdmNeLkL3bULOWi0qghnkz+UkhVMUk85fvRFUC1+w6nOQSFR2vMG+3FGye9wlKKXfYcLpv2tyyFj5tFbGsEYF1pncahvrbK25EEQDGp+UOLRi0d0lN9Ox6YyZjJqo6FW8pzsziexBcz+Y5uglPlvwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BELkQeUY; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748270604; c=relaxed/simple;
+	bh=GMaIJgyrPjcbcc93q81XUSFkisTAw05O6u+Q6t9sLjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hxwJ2Zrufwc4yCzdJA6vv99H1lI9Vtj9D+0N2SJhJ9bb1FquZF1l6XiO/+084BcLePV4Z73d/JW9qbzP4TdsD9M7X/1iWp8fZV9E3EQmbdPYr6BT1C5tmPRc+OVDvEm/AMO+Ek3b8IvODpAp4XzeSL5kfz8s4+wdJgaQjVCJI7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bemqJ1oe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=74lpXO/u; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Sp+5vaHz; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FfYmqdEe; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BELkQeUY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 01A2F439AC;
-	Mon, 26 May 2025 14:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748270565;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bemqJ1oe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="74lpXO/u";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Sp+5vaHz";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FfYmqdEe"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B709E21C46;
+	Mon, 26 May 2025 14:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748270600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mbr5t4PGFq3eJGZHk+DUNUJrzlxkWy9snikx9mhwYS0=;
-	b=BELkQeUY7THmMuVRkP+N4HdC1Lr5zPHIYYHtrR0qFZLRS8sz5Y13t9DjJqM4NG36gR9kQI
-	hCPQ5ualzVOFms+l8O2joDdvzoKzbAyGqrOpi1vPmgQF7/FfHfOVoD3L5F9SLMZoVvOrnz
-	zTSf/qZAuqbFXMm1ydNIwOPZaqFrcmhQO30IZCcve/hH8klVakvpqsQ3ItKUYaEbe63WYy
-	lHNeo3ru3Bpqmk9Bc0Pug8tuoZiEU9BJZEDnUbhq19eD2XAGjGhb7KC3fJH7wTB5lLI0tK
-	3zJwjfkiw0l6JLk+vLi12Xhb9stwbw5+HJi0V5vp0C5EC9/o9p1sfTwkHsG4IQ==
+	bh=1uKS8UNPZ3JhbI2XYFdVQhp2m0ZjsoL3mwofOQaqEJ0=;
+	b=bemqJ1oeMDcEdXubspkllQBcP0ih9JNMpLm0vOkgSVVfWJCpyLmAUlm8AZqxNwTrJGxhRy
+	PsuKWMiK3mx++ZhT7qHuOSsT7F0u8cCIFD65HDCtBRLVuHqbieGaaH6OHX3HLymAihMCCM
+	FsNAblqX+HYIXcGRxodPbAFSovjUErw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748270600;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1uKS8UNPZ3JhbI2XYFdVQhp2m0ZjsoL3mwofOQaqEJ0=;
+	b=74lpXO/uc1CtzKImw0xOu8u25I4VrvQdkjcuyWZDBJM2wn9Z4TYJXCc053Bti2QZ1cfn44
+	RNODT0uQ9DrbpnDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748270599; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1uKS8UNPZ3JhbI2XYFdVQhp2m0ZjsoL3mwofOQaqEJ0=;
+	b=Sp+5vaHz+ld4Y9WrGs08MEhr17SAmusgfYUCtDevsHYHTYJ44iiKNW8hf3mJqPV4Lfv88Y
+	0oV85gmEo8Zl3Em3ZWhpNJbgBq1cKxIUvx1nq/cr+ZGWMj7xd9qVXkC5zDvC9nHofj4cjZ
+	bWzY0Xd2/TXbo6bpgUS+vOAPlRZWZ20=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748270599;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1uKS8UNPZ3JhbI2XYFdVQhp2m0ZjsoL3mwofOQaqEJ0=;
+	b=FfYmqdEeIikgclD0wVCrOLZwT5m/vtLeqQzpL4lpsbSzwwGEmv1CIEJunztSZ9qyJsWUyu
+	8nQn8X989RQO7iAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 98FF813964;
+	Mon, 26 May 2025 14:43:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AllRJQd+NGhxUgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 26 May 2025 14:43:19 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 529DEA09B7; Mon, 26 May 2025 16:43:19 +0200 (CEST)
+Date: Mon, 26 May 2025 16:43:19 +0200
+From: Jan Kara <jack@suse.cz>
+To: Alistair Popple <apopple@nvidia.com>
+Cc: akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, dan.j.williams@intel.com, willy@infradead.org, 
+	linux-kernel@vger.kernel.org, Alison Schofield <alison.schofield@intel.com>, 
+	Balbir Singh <balbirs@nvidia.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	Dave Chinner <david@fromorbit.com>, David Hildenbrand <david@redhat.com>, Jan Kara <jack@suse.cz>, 
+	John Hubbard <jhubbard@nvidia.com>, Ted Ts'o <tytso@mit.edu>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH] fs/dax: Fix "don't skip locked entries when scanning
+ entries"
+Message-ID: <pj6yk4s25vyyosf3hevafrp7r23267rninns5jkaghlyfz5bc6@ag54j7hoy4sg>
+References: <20250523043749.1460780-1-apopple@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 26 May 2025 16:42:42 +0200
-Message-Id: <DA666WVCP2OB.300LVHEGH5V4Y@bootlin.com>
-Subject: Re: [PATCH] net: stmmac: add explicit check and error on invalid
- PTP clock rate
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Yanteng Si" <si.yanteng@linux.dev>, "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>, "Jose Abreu" <joabreu@synopsys.com>,
- "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Richard Cochran"
- <richardcochran@gmail.com>
-Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>, "Maxime Chevallier"
- <maxime.chevallier@bootlin.com>, <netdev@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250523-stmmac_tstamp_div-v1-1-bca8a5a3a477@bootlin.com>
- <8f1928e5-472e-4140-875c-6b5743be8fd3@linux.dev>
-In-Reply-To: <8f1928e5-472e-4140-875c-6b5743be8fd3@linux.dev>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujeejleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuhffvvefofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptedugfevhfevueeggedutefhgfevhfeltefgieejjeeijeejveegtdehgeefkefhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopehsihdrhigrnhhtvghngheslhhinhhugidruggvvhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomhdprhgtphhtthhopehjohgrsghrvghusehshihnohhpshihshdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehlu
- hhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523043749.1460780-1-apopple@nvidia.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo,infradead.org:email]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
 
-On Mon May 26, 2025 at 4:22 AM CEST, Yanteng Si wrote:
-> =E5=9C=A8 5/23/25 7:46 PM, Alexis Lothor=C3=83=C2=A9 =E5=86=99=E9=81=93:
->> While some platforms implementing dwmac open-code the clk_ptp_rate
->> value, some others dynamically retrieve the value at runtime. If the
->> retrieved value happens to be 0 for any reason, it will eventually
->> propagate up to PTP initialization when bringing up the interface,
->> leading to a divide by 0:
+On Fri 23-05-25 14:37:49, Alistair Popple wrote:
+> Commit 6be3e21d25ca ("fs/dax: don't skip locked entries when scanning
+> entries") introduced a new function, wait_entry_unlocked_exclusive(),
+> which waits for the current entry to become unlocked without advancing
+> the XArray iterator state.
+> 
+> Waiting for the entry to become unlocked requires dropping the XArray
+> lock. This requires calling xas_pause() prior to dropping the lock
+> which leaves the xas in a suitable state for the next iteration. However
+> this has the side-effect of advancing the xas state to the next index.
+> Normally this isn't an issue because xas_for_each() contains code to
+> detect this state and thus avoid advancing the index a second time on
+> the next loop iteration.
+> 
+> However both callers of and wait_entry_unlocked_exclusive() itself
+> subsequently use the xas state to reload the entry. As xas_pause()
+> updated the state to the next index this will cause the current entry
+> which is being waited on to be skipped. This caused the following
+> warning to fire intermittently when running xftest generic/068 on an XFS
+> filesystem with FS DAX enabled:
+> 
+> [   35.067397] ------------[ cut here ]------------
+> [   35.068229] WARNING: CPU: 21 PID: 1640 at mm/truncate.c:89 truncate_folio_batch_exceptionals+0xd8/0x1e0
+> [   35.069717] Modules linked in: nd_pmem dax_pmem nd_btt nd_e820 libnvdimm
+> [   35.071006] CPU: 21 UID: 0 PID: 1640 Comm: fstest Not tainted 6.15.0-rc7+ #77 PREEMPT(voluntary)
+> [   35.072613] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/204
+> [   35.074845] RIP: 0010:truncate_folio_batch_exceptionals+0xd8/0x1e0
+> [   35.075962] Code: a1 00 00 00 f6 47 0d 20 0f 84 97 00 00 00 4c 63 e8 41 39 c4 7f 0b eb 61 49 83 c5 01 45 39 ec 7e 58 42 f68
+> [   35.079522] RSP: 0018:ffffb04e426c7850 EFLAGS: 00010202
+> [   35.080359] RAX: 0000000000000000 RBX: ffff9d21e3481908 RCX: ffffb04e426c77f4
+> [   35.081477] RDX: ffffb04e426c79e8 RSI: ffffb04e426c79e0 RDI: ffff9d21e34816e8
+> [   35.082590] RBP: ffffb04e426c79e0 R08: 0000000000000001 R09: 0000000000000003
+> [   35.083733] R10: 0000000000000000 R11: 822b53c0f7a49868 R12: 000000000000001f
+> [   35.084850] R13: 0000000000000000 R14: ffffb04e426c78e8 R15: fffffffffffffffe
+> [   35.085953] FS:  00007f9134c87740(0000) GS:ffff9d22abba0000(0000) knlGS:0000000000000000
+> [   35.087346] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   35.088244] CR2: 00007f9134c86000 CR3: 000000040afff000 CR4: 00000000000006f0
+> [   35.089354] Call Trace:
+> [   35.089749]  <TASK>
+> [   35.090168]  truncate_inode_pages_range+0xfc/0x4d0
+> [   35.091078]  truncate_pagecache+0x47/0x60
+> [   35.091735]  xfs_setattr_size+0xc7/0x3e0
+> [   35.092648]  xfs_vn_setattr+0x1ea/0x270
+> [   35.093437]  notify_change+0x1f4/0x510
+> [   35.094219]  ? do_truncate+0x97/0xe0
+> [   35.094879]  do_truncate+0x97/0xe0
+> [   35.095640]  path_openat+0xabd/0xca0
+> [   35.096278]  do_filp_open+0xd7/0x190
+> [   35.096860]  do_sys_openat2+0x8a/0xe0
+> [   35.097459]  __x64_sys_openat+0x6d/0xa0
+> [   35.098076]  do_syscall_64+0xbb/0x1d0
+> [   35.098647]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> [   35.099444] RIP: 0033:0x7f9134d81fc1
+> [   35.100033] Code: 75 57 89 f0 25 00 00 41 00 3d 00 00 41 00 74 49 80 3d 2a 26 0e 00 00 74 6d 89 da 48 89 ee bf 9c ff ff ff5
+> [   35.102993] RSP: 002b:00007ffcd41e0d10 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+> [   35.104263] RAX: ffffffffffffffda RBX: 0000000000000242 RCX: 00007f9134d81fc1
+> [   35.105452] RDX: 0000000000000242 RSI: 00007ffcd41e1200 RDI: 00000000ffffff9c
+> [   35.106663] RBP: 00007ffcd41e1200 R08: 0000000000000000 R09: 0000000000000064
+> [   35.107923] R10: 00000000000001a4 R11: 0000000000000202 R12: 0000000000000066
+> [   35.109112] R13: 0000000000100000 R14: 0000000000100000 R15: 0000000000000400
+> [   35.110357]  </TASK>
+> [   35.110769] irq event stamp: 8415587
+> [   35.111486] hardirqs last  enabled at (8415599): [<ffffffff8d74b562>] __up_console_sem+0x52/0x60
+> [   35.113067] hardirqs last disabled at (8415610): [<ffffffff8d74b547>] __up_console_sem+0x37/0x60
+> [   35.114575] softirqs last  enabled at (8415300): [<ffffffff8d6ac625>] handle_softirqs+0x315/0x3f0
+> [   35.115933] softirqs last disabled at (8415291): [<ffffffff8d6ac811>] __irq_exit_rcu+0xa1/0xc0
+> [   35.117316] ---[ end trace 0000000000000000 ]---
+> 
+> Fix this by using xas_reset() instead, which is equivalent in
+> implementation to xas_pause() but does not advance the XArray state.
+> 
+> Fixes: 6be3e21d25ca ("fs/dax: don't skip locked entries when scanning entries")
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alison Schofield <alison.schofield@intel.com>
+> Cc: Matthew Wilcow (Oracle) <willy@infradead.org>
+> Cc: Balbir Singh <balbirs@nvidia.com>
+> Cc: "Darrick J. Wong" <djwong@kernel.org>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Ted Ts'o <tytso@mit.edu>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Christian Brauner <brauner@kernel.org>
 
-[...]
+Looks good to me. Feel free to add:
 
->  From your description, I cannot determine the scope
-> of "some platforms". My point is: if there are only
-> a few platforms, can we find a way to handle this in
-> the directory of the corresponding platform?
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-From what I can see, it can affect any platform using the stmmac driver as
-the platform driver (except maybe dwmac-qcom-ethqos.c, which enforces an
-open-coded clk_ptp_rate after the stmmac_probe_config_dt call that sets
-the clk_ptp_rate), if the platform declares a dedicated clk_ptp_ref clock.
-So I would rather say that it can affect most of the platforms.
+								Honza
 
-In my case, I have observed the issue with the dwmac-stm32.c driver, on an
-STM32MP157a-dk1 platform.
-
-> And there need a Fixes tag.
-
-Ok, I'll add a relevant Fixes tag.
-
-Alexis
-
->> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
->> ---
->>   drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>=20
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers=
-/net/ethernet/stmicro/stmmac/stmmac_main.c
->> index 918d7f2e8ba992208d7d6521a1e9dba01086058f..f68e3ece919cc88d0bf199a3=
-94bc7e44b5dee095 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> @@ -835,6 +835,11 @@ int stmmac_init_tstamp_counter(struct stmmac_priv *=
-priv, u32 systime_flags)
->>   	if (!(priv->dma_cap.time_stamp || priv->dma_cap.atime_stamp))
->>   		return -EOPNOTSUPP;
->>  =20
->> +	if (!priv->plat->clk_ptp_rate) {
->> +		netdev_err(priv->dev, "Invalid PTP clock rate");
->> +		return -EINVAL;
->> +	}
->> +
->>   	stmmac_config_hw_tstamping(priv, priv->ptpaddr, systime_flags);
->>   	priv->systime_flags =3D systime_flags;
->>  =20
->>=20
->> ---
->> base-commit: e0e2f78243385e7188a57fcfceb6a19f723f1dff
->> change-id: 20250522-stmmac_tstamp_div-f55112f06029
->>=20
->> Best regards,
-
-
-
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+> ---
+> 
+> Hi Andrew,
+> 
+> Apologies for finding this so late in the cycle. This is a very
+> intermittent issue for me, and it seems it was only exposed by a recent
+> upgrade to my test machine/setup. The user visible impact is the same
+> as for the original commit this fixes. That is possible file data
+> corruption if a device has a FS DAX page pinned for DMA.
+> 
+> So in other words it means my original fix was not 100% effective.
+> The issue that commit fixed has existed for a long time without being
+> reported, so not sure if this is worth trying to get into v6.15 or not.
+> 
+> Either way I figured it would be best to send this ASAP, which means I
+> am still waiting for a complete xfstest run to complete (although the
+> failing test does now pass cleanly).
+> ---
+>  fs/dax.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/dax.c b/fs/dax.c
+> index 676303419e9e..f8d8b1afd232 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -257,7 +257,7 @@ static void *wait_entry_unlocked_exclusive(struct xa_state *xas, void *entry)
+>  		wq = dax_entry_waitqueue(xas, entry, &ewait.key);
+>  		prepare_to_wait_exclusive(wq, &ewait.wait,
+>  					TASK_UNINTERRUPTIBLE);
+> -		xas_pause(xas);
+> +		xas_reset(xas);
+>  		xas_unlock_irq(xas);
+>  		schedule();
+>  		finish_wait(wq, &ewait.wait);
+> -- 
+> 2.47.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
