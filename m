@@ -1,189 +1,88 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEEC1C2335
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 18:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 061371C5F06;
+	Mon, 26 May 2025 18:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748283636; cv=none; b=hwbF59Nm+TESxL7plJuzEIwwR1hiU7frUrSgae/8uyqPghYkOgpOdLMZ8xIrMHMDN7pafSCN2FvIsbO3gP4LZAXdrPLOevpQh4XfHa6rKRbe0tJw86XxHYvS467uyQrejgN7YQppkmevl7L93yX83YGAx+PuCCqL51Qo/P/2WB0=
+	t=1748283794; cv=none; b=UbqKb0J1nW0S+OXskbwKWNCdnSwj11z9xzIMlEYgJTlmSFDvu3xC9Tc/b+27bGxzf/8/dVfxofBhUL2VQb9DoT8w7Ah3pi6dIW46o7fzrUno7Bi6wj41mfFQG/w/wi617H8RkMkj0UPfwCl/t8sGA1/0vvnKNqp0j3Xc893vQy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748283636; c=relaxed/simple;
-	bh=WM/6bLMnHAI8PjYbFLVDPXJEySqlfrUhVK9zQO6tXLU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DRbWRD2OESWr1KtlPMe8+mNdUWfp86m+3zvfM55kxEz0qtua+9igBxBfHe/mnnao05gMdzVGN+nLUmxxSdJpjccG1Cqb87Sy7Jp6HALLSxK9TbMnbnGu1eAg6Vn8iYuWbgAUQVZnlrXUdbAwMqfQdrQW4VWtcwuyZjtC+zvt3sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KiP5GWYF; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748283794; c=relaxed/simple;
+	bh=/ZivUZ2jD6VS6PcDRw4zkoytgj+gbfKu/YNw1XBjkiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pn11iTJv4qtG7wAA3C8a4DVoKzyl9nYmpUOJnk1wo8WA96ucE1OIG3EQluS0tP8fK20+vRxnf4UfDPE76qeLC16wXzk4Y4uVAV+0yNGVxajHn9NOMqeUSvyW5AenQhQ/Jr847ihevE/gXU3ScOtZmQSZ/LnQPxkjVKTS0Lka/SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dYk3FSZo; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KiP5GWYF"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4cad7d6bdso1601318f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:20:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748283632; x=1748888432; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZLm2u+K+PI/38ypNwBYrTuGrq0xLDvMbTxRXLnz2xDI=;
-        b=KiP5GWYFdfSY1Exhk/sJH8XjKUTr0sI+Mh9ljzXT55TnaIRsJY5Kjzr76gKIMWuMa9
-         S0BJCTcat4hVdy8xPhEmKJLye+L/0YK1u7A3SvXrv+w1vyf3/xLQqqS80u+eSr2ku9sa
-         nTFl4tn05iSNYcOmTjZhKvhOiovacnvusaIA0JIwVNJwZm/hqnxaqRKBqYt9Bcs7auNj
-         gieiSvDDBbdPTgDqWKHKkeO9O9pUmgZmCpiPmrXOdSZvF8/YsxazfaaYilcix3pR2eP9
-         A6VDo5YNTC2Cc7atJaSSmv36p/WyDW8VXhdIligGfMJ2yt5pffdJ0WM0GyXlw45RZpGA
-         CoyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748283632; x=1748888432;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZLm2u+K+PI/38ypNwBYrTuGrq0xLDvMbTxRXLnz2xDI=;
-        b=ifLqYcegIkSKxTXGQ7etltwBM/iAl5aTh2fXUD4GINc4xUXMQLy0UAKQJkOIXKYivf
-         uGDoPH/QkOh/bJySqcbBnJ6zQgekEkqDuX234/Jf+9RNRoDs8w9WJMoE4nxzfe43aSTU
-         pry3GD8V5DwXL9jRxy6BDePcbVNWdUFitpVbV0pgvAVnHHhcZw+E71Q+xE/gDET4+4LF
-         IVcnp5C3q4g2VHyeipOluOilIMdTbjylDQgCp/pHcAXtw9ysAD74kNO+0TG/2EW6u43G
-         UjETn6T7heRmkzQ7Mq2MUpdlADCH9vWL1S31qy8dNEVKSMvvxKgp6+s82a66eZKhm37o
-         1MSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCuafKhKmOSmoS0CGC1hJ4abs45QBsnFp89uHKcISsg35IVtESRdS45Azl+dK/gjVr2mbOnX8OICJKHbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy97woDqXo1DrpNdPN5mwDi1ndPhmHikJ6Qu73hkAuYXcpndNn
-	92RYz6rHBbbSzUI8e6uec8xcDlwcGFiyyFCjTzITDy6VLDLeplgNhB1ZU7uPTKerYmc=
-X-Gm-Gg: ASbGnctE5oaMok6bJEF7obzo9dkQoI0+fWfRv3r+d7L21xmmTp1b1ZFLizE44GYmXPC
-	Hu4QV5Tyy8nT2PxncW6eI+aWdpz3Aaybaplx6iEbzhzYlfPpPu1i9mDsSeP3p5FvSy54OuLNEo2
-	8RP3jt66pNvxYxJXAsbtV/03fNshheCWSBP1zat1HS8LjAjgHp/yq3TNf+KVSab2y7OvJpP8UiR
-	m5wwAMSa1ApZop9c0SubB/+UNf9HgBYtsINCCPezfGDA6cOWIDbbzCMjiVnt/PGDwpf/PytV/Fx
-	p6OtDrEgp/nIgL3EFpMvVEqzue/Wyd57C4h5l2h+fHL7yDJ0JL68
-X-Google-Smtp-Source: AGHT+IHu8Gg1J8BbsWgqjCqgkp/CdznFrPX5IKNjnPHBnTXYL0HJEukNqC3gh5NYw3XdXDtRMjCSCg==
-X-Received: by 2002:a5d:588d:0:b0:3a3:6a77:3391 with SMTP id ffacd0b85a97d-3a4ca4139bemr8058309f8f.15.1748283632092;
-        Mon, 26 May 2025 11:20:32 -0700 (PDT)
-Received: from [192.168.2.177] ([91.116.220.47])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d53ce0b4sm5179796f8f.37.2025.05.26.11.20.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 11:20:31 -0700 (PDT)
-Message-ID: <7f986e07-69b5-48fc-89f1-8ae37b998faa@suse.com>
-Date: Mon, 26 May 2025 20:20:30 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dYk3FSZo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=W2+meQg3To1cGOpAlWAssGTDKsq8XRcAsog4lNXiHUg=; b=dYk3FSZoKfLFaF/6VQNaUpXU4X
+	3PkeJVRqb6YpYM5ZSb+UGFMFHVI99ZftEJ2yY4HUfeq2MAExwFlBQKuv46dNs14If/A14CC/fOW7U
+	mkSd02GgMnPl8y5/IShphTfLywoHhr7S/zcQGClPNsNypqnb+8IInO9n0MJbERTyazm1+SsEUY2Rz
+	hXGOs/g6UfmMOYYIJ4f2up8An5OL9gvQ89OZU5XTFBjm1q/LERWx6Z3Uelr/Q+GYTR53+nFx5YAzq
+	Hs4a+c1Ylcam3zM5N0rGEBffymFcl7BKYxbCdy+LVHeykBdB1OqN8cuOO7WGcR0KFUXOtTn6df19L
+	uRWauITw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJcTU-0000000BgE4-3P99;
+	Mon, 26 May 2025 18:23:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E2D6B300472; Mon, 26 May 2025 20:22:59 +0200 (CEST)
+Date: Mon, 26 May 2025 20:22:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
+ diffing object files
+Message-ID: <20250526182259.GP24938@noisy.programming.kicks-ass.net>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: s32g: add RTC node
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>,
- Chester Lin <chester62515@gmail.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: NXP S32 Linux Team <s32@nxp.com>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>,
- Enric Balletbo <eballetb@redhat.com>, Eric Chanudet <echanude@redhat.com>
-References: <20250526162140.2460122-1-ciprianmarian.costea@oss.nxp.com>
-Content-Language: en-US, ca-ES, es-ES
-From: Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; keydata=
- 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
- PVrr2NoUqi/bxI8fFQJD1jVj8K0=
-In-Reply-To: <20250526162140.2460122-1-ciprianmarian.costea@oss.nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
 
+On Fri, May 09, 2025 at 01:17:16PM -0700, Josh Poimboeuf wrote:
 
-
-On 26/05/2025 18:21, Ciprian Costea wrote:
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+> Without '-ffunction-sections -fdata-sections', reliable object diffing
+> would be infeasible due to toolchain limitations:
 > 
-> The RTC module on S32G2/S32G3 based SoCs is used as a wakeup source from
-> system suspend.
+>   - For intra-file+intra-section references, the compiler might
+>     occasionally generated hard-coded instruction offsets instead of
+>     relocations.
 > 
-> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
-
-> ---
->   arch/arm64/boot/dts/freescale/s32g2.dtsi | 8 ++++++++
->   arch/arm64/boot/dts/freescale/s32g3.dtsi | 9 +++++++++
->   2 files changed, 17 insertions(+)
+>   - Section-symbol-based references can be ambiguous:
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/s32g2.dtsi b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-> index fa054bfe7d5c..39d12422e3f3 100644
-> --- a/arch/arm64/boot/dts/freescale/s32g2.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-> @@ -114,6 +114,14 @@ soc@0 {
->   		#size-cells = <1>;
->   		ranges = <0 0 0 0x80000000>;
->   
-> +		rtc0: rtc@40060000 {
-> +			compatible = "nxp,s32g2-rtc";
-> +			reg = <0x40060000 0x1000>;
-> +			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clks 54>, <&clks 55>;
-> +			clock-names = "ipg", "source0";
-> +		};
-> +
->   		pinctrl: pinctrl@4009c240 {
->   			compatible = "nxp,s32g2-siul2-pinctrl";
->   				/* MSCR0-MSCR101 registers on siul2_0 */
-> diff --git a/arch/arm64/boot/dts/freescale/s32g3.dtsi b/arch/arm64/boot/dts/freescale/s32g3.dtsi
-> index b4226a9143c8..e71b80e048dc 100644
-> --- a/arch/arm64/boot/dts/freescale/s32g3.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/s32g3.dtsi
-> @@ -171,6 +171,15 @@ soc@0 {
->   		#size-cells = <1>;
->   		ranges = <0 0 0 0x80000000>;
->   
-> +		rtc0: rtc@40060000 {
-> +			compatible = "nxp,s32g3-rtc",
-> +				     "nxp,s32g2-rtc";
-> +			reg = <0x40060000 0x1000>;
-> +			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clks 54>, <&clks 55>;
-> +			clock-names = "ipg", "source0";
-> +		};
-> +
->   		pinctrl: pinctrl@4009c240 {
->   			compatible = "nxp,s32g2-siul2-pinctrl";
->   				/* MSCR0-MSCR101 registers on siul2_0 */
+>     - Overlapping or zero-length symbols create ambiguity as to which
+>       symbol is being referenced.
+> 
+>     - A reference to the end of a symbol (e.g., checking array bounds)
+>       can be misinterpreted as a reference to the next symbol, or vice
+>       versa.
+> 
+> A potential future alternative to '-ffunction-sections -fdata-sections'
+> would be to introduce a toolchain option that forces symbol-based
+> (non-section) relocations.
 
+Urgh.. So the first issue we can fix with objtool, but the ambiguous
+cases are indeed very hard to fix up in post.
+
+Did you already talk to toolchain people about this?
