@@ -1,230 +1,102 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE1E1A23A6;
-	Mon, 26 May 2025 20:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180881AC891
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 20:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748292315; cv=none; b=GxHRBqLjbcUuRcc5peFPLmADaujC0uVOf/q7QZZvevH5XIwFwDXkfYjUYpJ34mZZpoCx4BOOzzXl5fTEUlCU5O4gMozQv0MhP/h95ctaSK/+gm9hYRoJ0lU/SvyCQXp7lZ6JHFF5zzRQPxkz+n/XekBn1x0GyIJPjP/vbCsmHdo=
+	t=1748292337; cv=none; b=rZbhpxqw03tq0N8X0j+KO8OxbsUrLorLUAuDgOw/OcDUSNX/AdBy81BkPp5mHf/w+QjS7mGTwgBZeDze4t23lqUM740kggmY1VLvu2nYIgIzFT5IMbC4g6NVKlC0wmqBiyBz6P28jhHoRUVxCyNqKCqpwZ0NcucGzuh0X4G6MxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748292315; c=relaxed/simple;
-	bh=8XlFPKAgRZu8iNf7wu/BNssYGbs3cVElibPBDElcwUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CoTOxQYKPAeNEack0ecsxWpTIGvedSKgThZVRAMTDQA/ov6gQ9XXwLIXzCphe6zi+0Y18p8M8eFwf1C0+USt++f7GN+8CDS/gAJaqtUHNVM8C7GY5NcsUwGtQhb9RsXlimJDnQMFnyS0SFmMJx/6GmcDpnRVbkDGqrY/SqRg4Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gd7sQbpK; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748292337; c=relaxed/simple;
+	bh=YzVfqM7isCpur9lKuyl8+MnXjqPSAYoEufr181o/ojU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VRsXxHpfc5XWJ3vKHA2bG/VQcCJcpuwq1qAI9GWClbOiXV3/Z8Sz45x0INIWGgYGm8h0/WbFsZG8pdzfs5aG2X3P7fqUl0xZomdxORqQ2TqAT6EhfYijwuOUUA8IwuM5rSuZBFXXKVZFj7LsYQ5woiqk9NbdBX9/agw7qSFr6/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JHYMzsmu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gd7sQbpK"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7db5b0ddb1so139592276.2;
-        Mon, 26 May 2025 13:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748292312; x=1748897112; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Rqf564IOkfuJ6413mTRFf6vGhtbkwIX3nVlwVv5RmSQ=;
-        b=gd7sQbpKACMcly2FkJKdWqcF8eAohKD8pghxCtrLuZ4aSEOhmEA/Xv6VixN/83nJGz
-         2fYAdVeZ11Y2TNvtxy9POd2BKHVKtywSXReiwQUDyY0X5rSSUmXYgrQdI3L2zjvZ0bhb
-         MbrjctrHG/U34c4mdlExXf+KxChmF6a/A3PLfsVIgRloWqrwqa+7HBMpdgJB+/syzvWb
-         3zYhYLFd4Kl4dlkXvycX3ZROZ/xnJC5WZ82Tf5sGW3S46GtIFMhqT4kVJ7XOlEXvPAsc
-         EgsOUEK8+2P+8za8dBXdIYG2gXEFm7cvw4KPVPDHUoGpXUJJKSw1DWTkb/+EBU85gVqh
-         VNdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748292312; x=1748897112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rqf564IOkfuJ6413mTRFf6vGhtbkwIX3nVlwVv5RmSQ=;
-        b=Hm9TAcnzwiXhwgBTcSxV9wEnzE6Nfu8nmDDc9OabE2dUExoJz2wUshHXlBqjyvBpcY
-         XS5xlC4Rb2km729SmQjoCZbkEUX0fi4Z6k9jgqfd2EQ35gL+UnivDPdFsmlS4m6HO4kC
-         OuHYNWj6qCI5bOjq3LO2JlkmJuur/vSheGuqUyIYCi+hB46RKyfkDcWzgUFLvBTQ9X8u
-         I1CIEXtrVWKQM85LWINosdLyfTyGk681TKN2Km2UTar734QTPcLuOVSnpiOjV+HWiG/z
-         aQse6NgZ9YwSrFfZYpH51KJ33xcZJcEqH2QQwQeBJqthkIoToOJ4LTNrC3pd8U47bZg2
-         nlaA==
-X-Forwarded-Encrypted: i=1; AJvYcCW09K8Rrf5kwmBm3qHRsN8vGADGMtSpuBDCNyU5QWURZOtFAgCJIqc44TmiEt1gglATA7Pc8SJYJblnBppO@vger.kernel.org, AJvYcCWaGCL/bDsZfopShcObuyGgUPgjrPoGOLdvRRegJn1a0ANfmWpb+flz4loErG+/sea52PEDvREWjWSi@vger.kernel.org, AJvYcCXWH2OZfaRJX5X2JFIjPptUkLh/M78NjCTEr5NYV/v5Kv6h/2Y0Hy6C0IpalILC2goncNcCKgZk0Dc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcnLESfn2GSh86iSnBRIbmdMvfEf0EfieAGHRvLXWg3NR7gQqb
-	VVomWObgeBU/uquAUYGgVWXMWESsX2eS/I2hJaEO0vBtEGD0jAB7vxkxliUhypSYJtl+sgrPg13
-	1FQPyUOAErkLJMRmnS6uM3sguHh1MbFCCM98j
-X-Gm-Gg: ASbGncvuAFdYSw95NDaMYQVmikBJlp72DlReqlRQG0aXNlpLaMemz0Hq1arTQm3EvL4
-	w+PFPbVJbEFHjyvxr6tOemLwPXFg1QhOgAJACCEWh3pXV0A2Ca8A8b2biWOutwhCX/r6kuATic+
-	jJAOp9VNxHzu+NvKnenAC9QS4oBZnallHoLWfUamZD22I=
-X-Google-Smtp-Source: AGHT+IGdBy5zw4tTzbnTdoJ6ppl77oUzVRKJu8Q+Tu2nce+ksoqH7+b9/m0gtrRcpaYpMh/JI1/29vanzAd5xvFReh8=
-X-Received: by 2002:a05:690c:4d03:b0:70e:4745:33d4 with SMTP id
- 00721157ae682-70e474534d2mr39344047b3.7.1748292312213; Mon, 26 May 2025
- 13:45:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JHYMzsmu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748292332;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Hwbp3hCpje483Sa0qCp5UGHnKUUud+4LtTTy2eYUPhE=;
+	b=JHYMzsmuxCX/pa296sTMQYOWAak8Yz5Xs1rUssH2cgnJ2Gm/J9IyrnqejANm/Ca96crEfv
+	X1SrvI1nAb5DpKlVOq8McxlGCZWV4E+sWsrN5p14ydOydTfQBjnAxRbMdBvWsg2bFFLaGT
+	bw6aXhpid56Bv+cQ2TPPELNGwyFw1+k=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-153-CRjVJVarN0S7xBTdGm2FGA-1; Mon,
+ 26 May 2025 16:45:26 -0400
+X-MC-Unique: CRjVJVarN0S7xBTdGm2FGA-1
+X-Mimecast-MFC-AGG-ID: CRjVJVarN0S7xBTdGm2FGA_1748292325
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 022C319560B1;
+	Mon, 26 May 2025 20:45:25 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 33F9A19560A3;
+	Mon, 26 May 2025 20:45:24 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH] x86/tdx: mark tdh_vp_enter() as __flatten
+Date: Mon, 26 May 2025 16:45:23 -0400
+Message-ID: <20250526204523.562665-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523223523.35218-1-l.rubusch@gmail.com> <20250523223523.35218-5-l.rubusch@gmail.com>
- <20250525132216.0bbc7067@jic23-huawei>
-In-Reply-To: <20250525132216.0bbc7067@jic23-huawei>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Mon, 26 May 2025 22:44:35 +0200
-X-Gm-Features: AX0GCFuNL-6WiLGB2hsMgCme7HXIhsANbBf-3eOD4wpjLlWpAt_OeqCzXs3Td90
-Message-ID: <CAFXKEHa5pK_wc+JJR1EWtJt=Z5Dwj-+rKD9+W-sEMn7uxFNvcg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/12] iio: accel: adxl313: make use of regmap cache
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, corbet@lwn.net, 
-	lucas.p.stankus@gmail.com, lars@metafoo.de, Michael.Hennerich@analog.com, 
-	linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Hi,
+In some cases tdx_tdvpr_pa() is not fully inlined into tdh_vp_enter(), which
+causes the following warning:
 
-On Sun, May 25, 2025 at 2:22=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Fri, 23 May 2025 22:35:15 +0000
-> Lothar Rubusch <l.rubusch@gmail.com> wrote:
->
-> > Setup regmap cache to cache register configuration. This is a preparato=
-ry
-> > step for follow up patches, to allow easy acces to the cached
-> > configuration.
->
-> I think this stands on it's own given registers like the calibbias
-> are already both written and read from.  So I'd generalize the justificat=
-ion
-> to simply reducing unnecessary bus traffic.
->
+  vmlinux.o: warning: objtool: tdh_vp_enter+0x8: call to tdx_tdvpr_pa() leaves .noinstr.text section
 
-I (think I) need regmap cache especially for activity / inactivity.
-For instance, using cached settings should make it easier to verify
-what was enabled when evaluating incomming interrupts. I will rework
-the commit message here.
+This happens if the compiler considers tdx_tdvpr_pa() to be "large", for example
+because CONFIG_SPARSEMEM adds two function calls to page_to_section() and
+__section_mem_map_addr():
 
-Best,
-L
+({      const struct page *__pg = (pg);                         \
+        int __sec = page_to_section(__pg);                      \
+        (unsigned long)(__pg - __section_mem_map_addr(__nr_to_section(__sec)));
+\
+})
 
-> Jonathan
->
-> >
-> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> > ---
-> >  drivers/iio/accel/adxl313.h      |  2 ++
-> >  drivers/iio/accel/adxl313_core.c | 17 +++++++++++++++++
-> >  drivers/iio/accel/adxl313_i2c.c  |  6 ++++++
-> >  drivers/iio/accel/adxl313_spi.c  |  6 ++++++
-> >  4 files changed, 31 insertions(+)
-> >
-> > diff --git a/drivers/iio/accel/adxl313.h b/drivers/iio/accel/adxl313.h
-> > index 72f624af4686..fc937bdf83b6 100644
-> > --- a/drivers/iio/accel/adxl313.h
-> > +++ b/drivers/iio/accel/adxl313.h
-> > @@ -54,6 +54,8 @@ extern const struct regmap_access_table adxl312_writa=
-ble_regs_table;
-> >  extern const struct regmap_access_table adxl313_writable_regs_table;
-> >  extern const struct regmap_access_table adxl314_writable_regs_table;
-> >
-> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg);
-> > +
-> >  enum adxl313_device_type {
-> >       ADXL312,
-> >       ADXL313,
-> > diff --git a/drivers/iio/accel/adxl313_core.c b/drivers/iio/accel/adxl3=
-13_core.c
-> > index 06a771bb4726..0c893c286017 100644
-> > --- a/drivers/iio/accel/adxl313_core.c
-> > +++ b/drivers/iio/accel/adxl313_core.c
-> > @@ -46,6 +46,23 @@ const struct regmap_access_table adxl314_readable_re=
-gs_table =3D {
-> >  };
-> >  EXPORT_SYMBOL_NS_GPL(adxl314_readable_regs_table, IIO_ADXL313);
-> >
-> > +bool adxl313_is_volatile_reg(struct device *dev, unsigned int reg)
-> > +{
-> > +     switch (reg) {
-> > +     case ADXL313_REG_DATA_AXIS(0):
-> > +     case ADXL313_REG_DATA_AXIS(1):
-> > +     case ADXL313_REG_DATA_AXIS(2):
-> > +     case ADXL313_REG_DATA_AXIS(3):
-> > +     case ADXL313_REG_DATA_AXIS(4):
-> > +     case ADXL313_REG_DATA_AXIS(5):
-> > +     case ADXL313_REG_FIFO_STATUS:
-> > +             return true;
-> > +     default:
-> > +             return false;
-> > +     }
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(adxl313_is_volatile_reg, "IIO_ADXL313");
-> > +
-> >  static int adxl312_check_id(struct device *dev,
-> >                           struct adxl313_data *data)
-> >  {
-> > diff --git a/drivers/iio/accel/adxl313_i2c.c b/drivers/iio/accel/adxl31=
-3_i2c.c
-> > index a4cf0cf2c5aa..e8636e8ab14f 100644
-> > --- a/drivers/iio/accel/adxl313_i2c.c
-> > +++ b/drivers/iio/accel/adxl313_i2c.c
-> > @@ -21,6 +21,8 @@ static const struct regmap_config adxl31x_i2c_regmap_=
-config[] =3D {
-> >               .rd_table       =3D &adxl312_readable_regs_table,
-> >               .wr_table       =3D &adxl312_writable_regs_table,
-> >               .max_register   =3D 0x39,
-> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
-> > +             .cache_type     =3D REGCACHE_MAPLE,
-> >       },
-> >       [ADXL313] =3D {
-> >               .reg_bits       =3D 8,
-> > @@ -28,6 +30,8 @@ static const struct regmap_config adxl31x_i2c_regmap_=
-config[] =3D {
-> >               .rd_table       =3D &adxl313_readable_regs_table,
-> >               .wr_table       =3D &adxl313_writable_regs_table,
-> >               .max_register   =3D 0x39,
-> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
-> > +             .cache_type     =3D REGCACHE_MAPLE,
-> >       },
-> >       [ADXL314] =3D {
-> >               .reg_bits       =3D 8,
-> > @@ -35,6 +39,8 @@ static const struct regmap_config adxl31x_i2c_regmap_=
-config[] =3D {
-> >               .rd_table       =3D &adxl314_readable_regs_table,
-> >               .wr_table       =3D &adxl314_writable_regs_table,
-> >               .max_register   =3D 0x39,
-> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
-> > +             .cache_type     =3D REGCACHE_MAPLE,
-> >       },
-> >  };
-> >
-> > diff --git a/drivers/iio/accel/adxl313_spi.c b/drivers/iio/accel/adxl31=
-3_spi.c
-> > index 9a16b40bff34..68e323e81aeb 100644
-> > --- a/drivers/iio/accel/adxl313_spi.c
-> > +++ b/drivers/iio/accel/adxl313_spi.c
-> > @@ -24,6 +24,8 @@ static const struct regmap_config adxl31x_spi_regmap_=
-config[] =3D {
-> >               .max_register   =3D 0x39,
-> >               /* Setting bits 7 and 6 enables multiple-byte read */
-> >               .read_flag_mask =3D BIT(7) | BIT(6),
-> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
-> > +             .cache_type     =3D REGCACHE_MAPLE,
-> >       },
-> >       [ADXL313] =3D {
-> >               .reg_bits       =3D 8,
-> > @@ -33,6 +35,8 @@ static const struct regmap_config adxl31x_spi_regmap_=
-config[] =3D {
-> >               .max_register   =3D 0x39,
-> >               /* Setting bits 7 and 6 enables multiple-byte read */
-> >               .read_flag_mask =3D BIT(7) | BIT(6),
-> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
-> > +             .cache_type     =3D REGCACHE_MAPLE,
-> >       },
-> >       [ADXL314] =3D {
-> >               .reg_bits       =3D 8,
-> > @@ -42,6 +46,8 @@ static const struct regmap_config adxl31x_spi_regmap_=
-config[] =3D {
-> >               .max_register   =3D 0x39,
-> >               /* Setting bits 7 and 6 enables multiple-byte read */
-> >               .read_flag_mask =3D BIT(7) | BIT(6),
-> > +             .volatile_reg   =3D adxl313_is_volatile_reg,
-> > +             .cache_type     =3D REGCACHE_MAPLE,
-> >       },
-> >  };
-> >
->
+Because exiting the noinstr section is a no-no, just mark tdh_vp_enter() for
+full inlining.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Analyzed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505240530.5KktQ5mX-lkp@intel.com/
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/virt/vmx/tdx/tdx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+index f5e2a937c1e7..2457d13c3f9e 100644
+--- a/arch/x86/virt/vmx/tdx/tdx.c
++++ b/arch/x86/virt/vmx/tdx/tdx.c
+@@ -1517,7 +1517,7 @@ static void tdx_clflush_page(struct page *page)
+ 	clflush_cache_range(page_to_virt(page), PAGE_SIZE);
+ }
+ 
+-noinstr u64 tdh_vp_enter(struct tdx_vp *td, struct tdx_module_args *args)
++noinstr __flatten u64 tdh_vp_enter(struct tdx_vp *td, struct tdx_module_args *args)
+ {
+ 	args->rcx = tdx_tdvpr_pa(td);
+ 
+-- 
+2.43.5
+
