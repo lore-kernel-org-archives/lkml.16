@@ -1,105 +1,155 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8E61EF09D;
-	Mon, 26 May 2025 09:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D1411DED51;
+	Mon, 26 May 2025 09:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748252581; cv=none; b=VFqYhP4bCndc1Yvi0dh3MMt/GsboZ4250XTPOzeTr6MYg5m9/ajYS/GhbVO0DZB4Ythbmbvzo/pevfud5QXj0o7aO+1ONXe1HTIKUp6l5xREDFn6/IdZ1Qz06Wwos+bjA/fdAiw5qRqfCLKZzPS92U0BQw5AI4Faa5PHgbalNFc=
+	t=1748252600; cv=none; b=IB8lR4UNIp7A4kVLqMbOgWs+sBYvAzB/BnaN05cVXM7l36LeeNdUVR4BoPo/yzPo7uPEPFGsuqqfZpz88j5RDfrd6x6a2vu830MCKGoxR2fDQ2JadRcvvvmqLU6cty2nxVa5JvBXZv9yT6iwmcPehTl7sGyfa70XWeRmvtwAE2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748252581; c=relaxed/simple;
-	bh=ZGtEimytY+dhPlqQ+yJjRc35Hwn8LmWRiTBDEgIWdeA=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=nxpUhAJJJUokVWmPzYigWKAd3DIWTUo0PT4bq1j+ttPY2y6hP33IkSKjrrnbrCZWuQ6wi/9BrwfdLT1RpDGNLjS2MY3quNNmolJdAi9mz5RFYrBw3rBFM8yryWSvUhv6t/zjcJbyQ5QbNcRZwEYRC5ZsSEA42JmM1PzAQKRQcWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn; spf=pass smtp.mailfrom=kylinos.com.cn; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.com.cn
-EX-QQ-RecipientCnt: 7
-X-QQ-GoodBg: 2
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqQGDUD8fynKBEtT7UhPSW3KwhcbCNuks8I=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: qGfvyB4E8QFdIgczcn18xzsKsELUIMeaEU8LuucsHgI=
-X-QQ-STYLE: 
-X-QQ-mid: lv3sz3a-2t1748252527td06cbce0
-From: "=?utf-8?B?WmhvdSBKaWZlbmc=?=" <zhoujifeng@kylinos.com.cn>
-To: "=?utf-8?B?Q29seSBMaQ==?=" <i@coly.li>
-Cc: "=?utf-8?B?Q29seSBMaQ==?=" <colyli@kernel.org>, "=?utf-8?B?6YKT5pe65rOi?=" <dengwangbo@kylinos.com.cn>, "=?utf-8?B?a2VudC5vdmVyc3RyZWV0?=" <kent.overstreet@linux.dev>, "=?utf-8?B?bGludXgtYmNhY2hl?=" <linux-bcache@vger.kernel.org>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?5aSP5Y2O?=" <xiahua@kylinos.com.cn>
-Subject: Re: [PATCH v2] bcache: add the deferred_flush IO processing path in the writeback mode
+	s=arc-20240116; t=1748252600; c=relaxed/simple;
+	bh=RAownFC008qLgAz0i6YGuiM00cnuDux7xgF6Vj1jySM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZG3hOJuy4RH4v1y0E5hjOx9vhEJBZdcxpDMxGdCF/b2qqE3/5mSoYX2YyxiDlX6BjgXuqAKQeeuMFTg11TUgcRtFpXztfx46LR6IxcLbJ2cEn8+gJqAMVQf0MzOa4xn/P+wwKN7jsgapPUl+ZmFCjvFET1F/NWG6MH625w46mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-0e-683437af7710
+Date: Mon, 26 May 2025 18:43:05 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, tariqt@nvidia.com, edumazet@google.com,
+	pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
+ page->pp_magic in page_pool_page_is_pp()
+Message-ID: <20250526094305.GA29080@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+ <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+ <20250526022307.GA27145@system.software.com>
+ <20250526023624.GB27145@system.software.com>
+ <87o6vfahoh.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Mon, 26 May 2025 17:42:07 +0800
-X-Priority: 3
-Message-ID: <tencent_0AEE08B04C9DDE6C2354F36C@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <ug3sqyn42af4bjsp3l5d5ymiabtc767oaoud3ddzv6jnw2eh27@4gcxqaq5tatf>
-	<20250428073445.24108-1-zhoujifeng@kylinos.com.cn>
-	<tencent_2272EC35532EE12E3CCD543A@qq.com>
-	<C16766D1-0FDE-40C7-822B-96927F6A683A@coly.li>
-In-Reply-To: <C16766D1-0FDE-40C7-822B-96927F6A683A@coly.li>
-X-QQ-ReplyHash: 1866073068
-X-BIZMAIL-ID: 5775426963038862376
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Mon, 26 May 2025 17:42:08 +0800 (CST)
-Feedback-ID: lv:kylinos.com.cn:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: N2v4nqiyABSwy4NEKnVO3YzS6BkGawvPdQiLW6pPKZRmIJiRZ0ogjxOx
-	6Tm8EDXYbkVqKc4G8kdUL6VNq6fpRA2OtvMf0ZWB9++CNaXcxMnRZMzOqKsIWilrQWIbwZj
-	mOTXaf3X/qy4EBjUkPMbhbjM8U1Sk/K9iFRdB6wJWrf/r23V+MAg2KDDd5VEoUz7Zlf7iyp
-	z9eypmpfshC5O3afMqr+7aEmfNa4oPQSsKgV/xDQYC2rP6qryNtisV0OjINVMnlwB/dF/qH
-	0TLeTGg8fQZU2HHQVDy0S2gH48o4g9mubBcerQQnomOqrZZXxX3tjBBwjo9J/kNocy3VwgO
-	tDYDDvTQo4f7U+x9yjjW9dYvvoZm9nR/fDPlWU+nNMZ4DTybwA2Gz3/nMo0nc2b/kup8hCG
-	NmBRcm7lIkaxakSYaUF48l83KNfKWB6Ku0vbJ/2aO2Re+/ZaKlongs6T/r2U8x8q+YYa57a
-	rz4ZmLmZvwMB5H7It/zLl7dNBiD52z2aMuOtLpFzZvxGp2EdEW3ozt/AO853ey6Cq7S0Ch3
-	QnzyA/Uv0986VQqmyBMn0pIm35Clotki4Jzyxuoa9U3Py1nN91D+iGxKqqlqaKHy9W7+s3w
-	sjQy+SXlOCBOsG+fWynZXHm6AB2A1YNWYETvd+WhN1j1LGojB3UBLzTUqOJMLV1VFO4qNYV
-	27qwSRUnJsrVLlwwMFaoZ2vTs/SdZh+e93ma60fYYSQGZKyaS4kEEEnsPx29Z6WzT0O/lz0
-	OR3kenaCdCaNsx+K7pQlB9vHKw/gC5yJjOJL+1SQ5I+yomVhqKKkag7kBDweDhtglItG6D9
-	k58VEqlU2ZX4alclhBF3Is1hrg66WjehRz5eAflkXpvj+yoF7M9ya1WIzvQRHqhta3nrYcA
-	rvQ8NmimcKeR8PYODnseVVPNcpUaNVGD/Z8PR7wNl7nO7tsKcj15b6SuCZEU3ihArC7H2Aa
-	6ghLAzy2Vag1z42W7MrFwRZe2bFenIbFhCCrm5IYMiQqbVk/Z8IwfEhDzFp6kFepnj83XO6
-	tKw0J86MXjO3040+hO6ry6XntqF9XGzgkJl6xvA+2bD2aRatfPVPJmx1eTRWU=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87o6vfahoh.fsf@toke.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGe3fOzo7L0XFmvWkoLSQoKithf0rCiOAQFGF0QYMa7eSWc8o0
+	0yjUNMp5zfygc9lUsrUuq2VuRWjpUIdRtlCm5QWvlV28NTSlcpPIbz+e932f3/PhpQlxJT+Q
+	VqqTOY1appJQQlL4zbdqs1kargh7OxIAevN9Cu7NpMKdfhsf9KY6BNOzHwQwZW+hoLrSTYD+
+	bTYJP82/CBhuHhBAX80ICS+uWgkYKGylID97joDLNiMP2usK+FDy6zYB1ox+Abx/rqeg9/4f
+	Pow05pPg0N0loa8gEpoNq8Dd9hWB3WzlgTvvJgU3nAYKBrP7EDibBkgozyxAYK538WFuRk9F
+	rmNr73bx2Ge6HgFrsJxjnxg3slqXk2AtphyKtUwWC9iPnS8otrV0jmSf2aZ4bH7Wd4qdGO4m
+	2R/1HRRrru0g2dcGu4CdsgQfYqKFEXJOpUzhNFt3nxIqSgqPJObgVHfOI14G6hJrkQ+NmXD8
+	OleL/nF7TwPpYZIJxa6rTsLDFLMBu1yzC0zTK5k9uG0mVouENMFM8bFpMt97x585i/O6RykP
+	ixjADY5iby5mqni4q/XEYu6HHWVD3n5ioXO+wuntJJggfOc3vRiH4Kyn5d6nPgsTbk2/8U4L
+	YNbjl3UtPI8XMw9ofH38DbG4eQ1+ZXSRRchPt0ShW6LQ/VfoligMiDQhsVKdEi9TqsK3KNLU
+	ytQtpxPiLWjh49Rcmo+xocn2w42IoZHEV3RKskMh5stSktLiGxGmCclK0Vp9mEIsksvSLnCa
+	hJOacyouqREF0aRktWi7+7xczMTKkrk4jkvkNP9OebRPYAZadWyscLSs6J10LLOyYnXZK1vz
+	nuLQTQe/Fh+Q7vI3lqbaI0L+DPXkxcq/xwSMOTTRn5p7o/afkeyIuFC7z9oWJ093XHNpS1eM
+	T+rnjwfvbeqNCv9y5ejOBwc+n2gZK8odEjGP/SY6VXsHw0o+FUgfjq/A6dWRcRdDS5ZJn9cE
+	UteXS8gkhWzbRkKTJPsL/3bhnjQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRiA+845OzuuFqel9ZGSsAhLSo2MXqgsf/kVJPWjgpBy5Mktddam
+	okUw20A0L138oXPVTHRm0WyVrpuKiilJycyamhesWT+66lze0LZF5L+H53vfh/fHx9Eyg2gd
+	p1JnCBq1IlXOShhJ/C79VuvOaGWUpQGByXqPhbvT2WAZtYvAVOdV7plBMUy2v2ShqtJDg+mN
+	gYEp6ywNro4xMYzUjDPwPK+RhrGSThaKDHM0XLLXUtB2o0sEPQ3FIiidraahUTcqht6nJhaG
+	7y2KYLy1iIEu4x0GRor3QYd5DXhefUXQbm2kwFN4g4XrDjMLHw0jCBxtYwxU5BYjsDY5RTA3
+	bWL3ycmjO/0UeWIcEhOzLZM8rA0nBU4HTWx1+SyxTVwTkw/vnrOks2yOIU/skxQp0n9nyS/X
+	AEN+NPWxpOrLT4pYH/UxpNvcLj606rhkd5KQqsoSNJExiRJlacmRs/k425NfT+lQv6wABXCY
+	j8Y9Q82Mjxl+I3bmOWgfs3wYdjpnvMxxgXwsfjWdXIAkHM1PinDdRJF/ZjV/BhcOfGZ9LOUB
+	N3dd83sZf5vC/Z0Jf/0q3FX+yd+nvc35mw5/k+aDsWWB+6tDsf5xhX81wHvCLfdr5OMgfgNu
+	aXhJXUErjUtKxiUl4/+ScUnJjJg6FKhSZ6UpVKk7IrQpyhy1KjviVHqaDXn/Rs3F+at25O6N
+	a0U8h+QrpIny7UqZSJGlzUlrRZij5YHSEFOUUiZNUuScFzTpJzWZqYK2FQVzjHyt9MAxIVHG
+	JysyhBRBOCto/r1SXMA6HQq/2b0psayF73Ddnw3ecjkEmpfNr30muXJB4TqcEXE1xPVtc+iE
+	IFuPu5mYwQfvTxzVW8K01l3pNVMnLOVUi7viF3YkDdfXHlx8cTruNLWnOvLngni/u/JUu22b
+	wZ5w5FysK63pcUKeUxcUB9XP7F/eGrRuw/LfOfF7K5WkJlfOaJWKbeG0Rqv4AwzywKAXAwAA
+X-CFilter-Loop: Reflected
 
-T24gTW9uLCAyNiBNYXkgMjAyNSBhdCAxNTo0MiwgQ29seSBMaSA8aUBjb2x5LmxpPiB3cm90
-ZToNCj4NCj4gSGkgSmlmZW5nLA0KPg0KPiA+IDIwMjXlubQ15pyIMjbml6UgMTQ6NDHvvIxa
-aG91IEppZmVuZyA8emhvdWppZmVuZ0BreWxpbm9zLmNvbS5jbj4g5YaZ6YGT77yaDQo+ID4N
-Cj4gPiBPbiBNb24sIDI4IEFwciAyMDI1IGF0IDE1OjM2LCBaaG91IEppZmVuZyA8emhvdWpp
-ZmVuZ0BreWxpbm9zLmNvbS5jbj4gd3JvdGU6DQo+ID4gLi4uLi4NCj4gPj4gdjEtPnYyOiBW
-ZXJzaW9uIHYyIG1haW5seSBhZGRyZXNzZXMgdGhlIGlzc3VlIG9mIGxvdyBlZmZpY2llbmN5
-IGluDQo+ID4+IHdyaXRpbmcgYmFjayBkaXJ0eSBkYXRhIGluIHZlcnNpb24gdjEuIFdoZW4g
-d3JpdGluZyBiYWNrIGRpcnR5IGRhdGEsDQo+ID4+IGl0IG5vIGxvbmdlciB1c2VzIHRoZSBG
-VUEgbWV0aG9kIGJ1dCBpbnN0ZWFkIHdyaXRlcyBiYWNrIG5vIG1vcmUgdGhhbg0KPiA+PiA1
-MDAgZGlydHkgYmtleXMgYW5kIHRoZW4gdW5pZm9ybWx5IHNlbmRzIGEgUFJFRkxVU0ggaW5z
-dHJ1Y3Rpb24gb25jZS4NCj4gPj4gSSB3aWxsIHN1cHBsZW1lbnQgbW9yZSB0ZXN0IGRhdGEg
-bGF0ZXIuDQo+ID4gLi4uLi4NCj4gPg0KPiA+IENvbXBhcmlzb24gdGVzdCBkYXRhOjoNCj4g
-PiBodHRwczovL2dpdGh1Yi5jb20vamlmZW5nemhvdS9maWxlL2Jsb2IvbWFpbi9iY2FjaGUt
-ZGVmZXJyZWQtcGF0Y2gtY29ycmVsYXRpb24tZGF0YS5wZGYNCj4gPg0KPg0KPiBDYW4gSSBh
-Y2Nlc3MgdGhlIHJhdyBkYXRhIHRvIGhhdmUgYSBsb29rPw0KPg0KPiBBbmQgdGhlIHRocmVl
-IGRpZmZlcmVudCB0ZXN0aW5ncywgd2hpY2ggcGFyYW1ldGVycyBvZiBiY2FjaGUgYXJlIG1v
-ZGlmaWVkIGZyb20gZGVmYXVsdD8NCj4NCj4gVGhhbmsuDQo+DQo+DQo+IENvbHkgTGkNCg0K
-VGVzdCByYXcgZGF0YSBhZGRyZXNzOg0KaHR0cHM6Ly9naXRodWIuY29tL2ppZmVuZ3pob3Uv
-ZmlsZS90cmVlL21haW4vZGVmZXJyZWQlMjB0ZXN0JTIwZGF0YQ0KDQpJIGhhdmUgbm90IGxl
-YXJuZWQgdGhlIGRlZmF1bHQgdmFsdWVzIOKAi+KAi29mIHRoZSBwYXJhbWV0ZXJzIGluIHRo
-ZSBjb25maWd1cmF0aW9uIGZpbGUuIEdlbmVyYWxseSwgdGhleSBhcmUgDQpjb25maWd1cmVk
-IGFjY29yZGluZyB0byB0aGUgcmVxdWlyZWQgY2hhcmFjdGVyaXN0aWNzLCBzdWNoIGFzIHJh
-bmRvbSBJTywgc2VxdWVudGlhbCBJTywgYmxvY2sgc2l6ZSwgZXRjLg0KVGhlIG9ubHkgZGlm
-ZmVyZW5jZSBiZXR3ZWVuIHRoZSBmaXJzdCBhbmQgc2Vjb25kIHRlc3QgcGFyYW1ldGVycyBp
-cyBvcGVuZmxhZ3MuIFRoZSBkaWZmZXJlbmNlIGJldHdlZW4gDQp0aGUgdGhpcmQgdGVzdCBh
-bmQgdGhlIGZpcnN0IHR3byBncm91cHMgaXMgb3BlbmZsYWdzLCB4ZmVyc2l6ZSwgYW5kIHNl
-ZWtwY3QuIFRoZSB4ZmVyc2l6ZSBwYXJhbWV0ZXIgaXMgDQp1c2VkIHRvIGNvbnRyb2wgdGhl
-IGFjY2VzcyBibG9jayBzaXplLCBhbmQgdGhlIHNlZWtwY3QgcGFyYW1ldGVyIGlzIHVzZWQg
-dG8gY29udHJvbCB0aGUgcmFuZG9tIHJhdGlvLiAwIA0KcmVwcmVzZW50cyBjb21wbGV0ZSBv
-cmRlciBhbmQgMTAwIHJlcHJlc2VudHMgMTAwJSByYW5kb20u
+On Mon, May 26, 2025 at 10:40:30AM +0200, Toke Høiland-Jørgensen wrote:
+> Byungchul Park <byungchul@sk.com> writes:
+> 
+> > On Mon, May 26, 2025 at 11:23:07AM +0900, Byungchul Park wrote:
+> >> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
+> >> > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> >> > >
+> >> > > To simplify struct page, the effort to seperate its own descriptor from
+> >> > > struct page is required and the work for page pool is on going.
+> >> > >
+> >> > > To achieve that, all the code should avoid accessing page pool members
+> >> > > of struct page directly, but use safe APIs for the purpose.
+> >> > >
+> >> > > Use netmem_is_pp() instead of directly accessing page->pp_magic in
+> >> > > page_pool_page_is_pp().
+> >> > >
+> >> > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> >> > > ---
+> >> > >  include/linux/mm.h   | 5 +----
+> >> > >  net/core/page_pool.c | 5 +++++
+> >> > >  2 files changed, 6 insertions(+), 4 deletions(-)
+> >> > >
+> >> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >> > > index 8dc012e84033..3f7c80fb73ce 100644
+> >> > > --- a/include/linux/mm.h
+> >> > > +++ b/include/linux/mm.h
+> >> > > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+> >> > >  #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+> >> > >
+> >> > >  #ifdef CONFIG_PAGE_POOL
+> >> > > -static inline bool page_pool_page_is_pp(struct page *page)
+> >> > > -{
+> >> > > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> >> > > -}
+> >> > 
+> >> > I vote for keeping this function as-is (do not convert it to netmem),
+> >> > and instead modify it to access page->netmem_desc->pp_magic.
+> >> 
+> >> Once the page pool fields are removed from struct page, struct page will
+> >> have neither struct netmem_desc nor the fields..
+> >> 
+> >> So it's unevitable to cast it to netmem_desc in order to refer to
+> >> pp_magic.  Again, pp_magic is no longer associated to struct page.
+> >
+> > Options that come across my mind are:
+> >
+> >    1. use lru field of struct page instead, with appropriate comment but
+> >       looks so ugly.
+> >    2. instead of a full word for the magic, use a bit of flags or use
+> >       the private field for that purpose.
+> >    3. do not check magic number for page pool.
+> >    4. more?
+> 
+> I'm not sure I understand Mina's concern about CPU cycles from casting.
+> The casting is a compile-time thing, which shouldn't affect run-time
 
+I didn't mention it but yes.
+
+> performance as long as the check is kept as an inline function. So it's
+> "just" a matter of exposing struct netmem_desc to mm.h so it can use it
+
+Then.. we should expose net_iov as well, but I'm afraid it looks weird.
+Do you think it's okay?
+
+As I told in another thread, embedding strcut netmem_desc into struct
+net_iov will require a huge single patch altering all the users of
+struct net_iov.
+
+	Byungchul
+
+> in the inline definition. Unless I'm missing something?
+> 
+> -Toke
