@@ -1,238 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5606F1E47AD;
-	Mon, 26 May 2025 08:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96E213BC3F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247236; cv=none; b=B44nPBU5ZmLofCjkQ6N3CboQB1PWnqaNfuSE5Rf6eD7JJdyDaxebGIhTntXxokSvvIsRFaTt/msgjqxD5eY1UKa1ZHdr7QLa+FZbbOx6vAiX+YbtSNY6BklvlSZyVGZzOWyURRUFnillQB9QZFNB8fbSPBW95hOaS7htyqfKorc=
+	t=1748247443; cv=none; b=Xn7V+Vzg0FZhzCrMRQXTZzxIyvTAk3QPO/tCoZIVslCt2mZNPEY2YZOCyRIvhKiDZd7/Rnuxg/Mykx4I1VYvqos5Oa7UewhSK9C5iPCh8FUcmv6injdsJ1B8rj8+K6BOKkzLQ2Wo9C4/irBT8LQjsZM2wB1fetnpKuTJu2+nTdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247236; c=relaxed/simple;
-	bh=1FEQ33EDgRQThqrYNVwsS/ECQVP2rLowPOJ80r0AksE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UTyhTXXR7tNJJOMeu3wv6BbOibcai9Y+DvAodZtZaGuLiD2Nt3YiqQ6KiFsCSAikb9yAadfhM/XufLFP3+/+2x7v8AVcqAuEQBEzTYQPtmhB1pds+xUkL+HvtOYhO4OgV7b06H5AQ1pGnjwou2K0+HWbvKq0LflFtRFI79X2q7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agdSSmCb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748247443; c=relaxed/simple;
+	bh=MIXfHY6sOeRkc2Mn1pmkJI+xlrF09B3eUiKuFzrBZ+A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RvVSTUegHvjEr5/+I5n0gG+98ERBeHjjZabCvGOspTPtvbVIWf7Q4cwVtA/EsypmJRo1xmo6aqWjtCHldQEYLoy4BHbhtL6nydsu5d2kzIO6xn7jREKGQlseSWUQqxWXzcpPNlBg3zOJDmeXhqbXbXP4lcvuH2jWsmOdpuyGrXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ZzUiDgRV; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agdSSmCb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A82C4CEEF;
-	Mon, 26 May 2025 08:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748247235;
-	bh=1FEQ33EDgRQThqrYNVwsS/ECQVP2rLowPOJ80r0AksE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=agdSSmCbJrmUXnITkYok9W4XfBvVB3JWo5GH7/dUZ9OT3dikuYr7e8Jk3qFWtEget
-	 w/e3Tg4Xa5FJo2ZWKv/DtFisTjezwtQ0tRlsVDf1IIUcRak8q9MzXq45Ch8UfkYClb
-	 ka3PsgQmgIVO6YONcdIrFSl+IAerxjmNQjGUlEEzZ9SttcolFiC0lmQsjnsiLwGX4j
-	 HN51afGR8nZvZ8JZC19m42t//vGUbVlaavR7ykLnO5rN7/iAXZy2QnloB7CyOb0pKU
-	 6AB9wlpNLcpMmiY+RTCrrkyePD1fe3IeqNWdRyIeT6vXVuRups6lO42EbG7qLy2kaw
-	 NrXyQoUuDiD5g==
-Date: Mon, 26 May 2025 13:43:41 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Subject: Re: [PATCH v9 9/9] optee: smc abi: dynamic protected memory
- allocation
-Message-ID: <aDQitSd27Z4qC0xT@sumit-X1>
-References: <20250520152436.474778-1-jens.wiklander@linaro.org>
- <20250520152436.474778-10-jens.wiklander@linaro.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ZzUiDgRV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748247429; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=ZfYIQZDZ3jae9SXir7MKTbFoTwWvnvk/F4s97c9ME2I=;
+	b=ZzUiDgRVFb37RqPrnRvHiCPQNayaWNb+cW4Pku3+DqutojjjizpjwdNb4n+5OIkc5emHPPWCNMr+VlMTzJkEybRgzVt1StTBTo8FD4jNfVCgNKGJiXBbZR0Eo2tzjnx3ULysa8QKyYy7n2FCDAyHeDE8iOfHkEpgB4HH8yyIf5k=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WbmONlS_1748247416 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 26 May 2025 16:17:07 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Bharata B Rao <bharata@amd.com>,  <gourry@gourry.net>
+Cc: <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,
+  <Jonathan.Cameron@huawei.com>,  <dave.hansen@intel.com>,
+  <hannes@cmpxchg.org>,  <mgorman@techsingularity.net>,
+  <mingo@redhat.com>,  <peterz@infradead.org>,  <raghavendra.kt@amd.com>,
+  <riel@surriel.com>,  <rientjes@google.com>,  <sj@kernel.org>,
+  <weixugc@google.com>,  <willy@infradead.org>,  <ziy@nvidia.com>,
+  <dave@stgolabs.net>,  <nifan.cxl@gmail.com>,  <joshua.hahnjy@gmail.com>,
+  <xuezhengchu@huawei.com>,  <yiannis@zptcorp.com>,
+  <akpm@linux-foundation.org>,  <david@redhat.com>
+Subject: Re: [RFC PATCH v0 1/2] migrate: implement
+ migrate_misplaced_folio_batch
+In-Reply-To: <20250521080238.209678-2-bharata@amd.com> (Bharata B. Rao's
+	message of "Wed, 21 May 2025 13:32:37 +0530")
+References: <20250521080238.209678-1-bharata@amd.com>
+	<20250521080238.209678-2-bharata@amd.com>
+Date: Mon, 26 May 2025 16:16:55 +0800
+Message-ID: <871psbdbwo.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520152436.474778-10-jens.wiklander@linaro.org>
+Content-Type: text/plain; charset=ascii
 
-On Tue, May 20, 2025 at 05:16:52PM +0200, Jens Wiklander wrote:
-> Add support in the OP-TEE backend driver for dynamic protected memory
-> allocation using the SMC ABI.
-> 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Bharata B Rao <bharata@amd.com> writes:
+
+> From: Gregory Price <gourry@gourry.net>
+>
+> A common operation in tiering is to migrate multiple pages at once.
+> The migrate_misplaced_folio function requires one call for each
+> individual folio.  Expose a batch-variant of the same call for use
+> when doing batch migrations.
+>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Bharata B Rao <bharata@amd.com>
 > ---
->  drivers/tee/optee/smc_abi.c | 102 ++++++++++++++++++++++++++++++------
->  1 file changed, 85 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
-> index f3cae8243785..6b3fbe7f0909 100644
-> --- a/drivers/tee/optee/smc_abi.c
-> +++ b/drivers/tee/optee/smc_abi.c
-> @@ -965,6 +965,70 @@ static int optee_smc_do_call_with_arg(struct tee_context *ctx,
->  	return rc;
->  }
->  
-> +static int optee_smc_lend_protmem(struct optee *optee, struct tee_shm *protmem,
-> +				  u16 *end_points, unsigned int ep_count,
-> +				  u32 use_case)
-> +{
-> +	struct optee_shm_arg_entry *entry;
-> +	struct optee_msg_arg *msg_arg;
-> +	struct tee_shm *shm;
-> +	u_int offs;
-> +	int rc;
-> +
-> +	msg_arg = optee_get_msg_arg(optee->ctx, 2, &entry, &shm, &offs);
-> +	if (IS_ERR(msg_arg))
-> +		return PTR_ERR(msg_arg);
-> +
-> +	msg_arg->cmd = OPTEE_MSG_CMD_LEND_PROTMEM;
-> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT;
-> +	msg_arg->params[0].u.value.a = use_case;
-> +	msg_arg->params[1].attr = OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
-> +	msg_arg->params[1].u.tmem.buf_ptr = protmem->paddr;
-> +	msg_arg->params[1].u.tmem.size = protmem->size;
-> +	msg_arg->params[1].u.tmem.shm_ref = (u_long)protmem;
-> +
-> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
-> +	if (rc)
-> +		goto out;
-> +	if (msg_arg->ret != TEEC_SUCCESS) {
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +	protmem->sec_world_id = (u_long)protmem;
-> +
-> +out:
-> +	optee_free_msg_arg(optee->ctx, entry, offs);
-> +	return rc;
-> +}
-> +
-> +static int optee_smc_reclaim_protmem(struct optee *optee,
-> +				     struct tee_shm *protmem)
-> +{
-> +	struct optee_shm_arg_entry *entry;
-> +	struct optee_msg_arg *msg_arg;
-> +	struct tee_shm *shm;
-> +	u_int offs;
-> +	int rc;
-> +
-> +	msg_arg = optee_get_msg_arg(optee->ctx, 1, &entry, &shm, &offs);
-> +	if (IS_ERR(msg_arg))
-> +		return PTR_ERR(msg_arg);
-> +
-> +	msg_arg->cmd = OPTEE_MSG_CMD_RECLAIM_PROTMEM;
-> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_RMEM_INPUT;
-> +	msg_arg->params[0].u.rmem.shm_ref = (u_long)protmem;
-> +
-> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
-> +	if (rc)
-> +		goto out;
-> +	if (msg_arg->ret != TEEC_SUCCESS)
-> +		rc = -EINVAL;
-> +
-> +out:
-> +	optee_free_msg_arg(optee->ctx, entry, offs);
-> +	return rc;
-> +}
-> +
->  /*
->   * 5. Asynchronous notification
->   */
-> @@ -1216,6 +1280,8 @@ static const struct optee_ops optee_ops = {
->  	.do_call_with_arg = optee_smc_do_call_with_arg,
->  	.to_msg_param = optee_to_msg_param,
->  	.from_msg_param = optee_from_msg_param,
-> +	.lend_protmem = optee_smc_lend_protmem,
-> +	.reclaim_protmem = optee_smc_reclaim_protmem,
->  };
->  
->  static int enable_async_notif(optee_invoke_fn *invoke_fn)
-> @@ -1586,11 +1652,14 @@ static inline int optee_load_fw(struct platform_device *pdev,
->  
->  static int optee_protmem_pool_init(struct optee *optee)
+>  include/linux/migrate.h |  6 ++++++
+>  mm/migrate.c            | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 37 insertions(+)
+>
+> diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+> index aaa2114498d6..c9496adcf192 100644
+> --- a/include/linux/migrate.h
+> +++ b/include/linux/migrate.h
+> @@ -145,6 +145,7 @@ const struct movable_operations *page_movable_ops(struct page *page)
+>  int migrate_misplaced_folio_prepare(struct folio *folio,
+>  		struct vm_area_struct *vma, int node);
+>  int migrate_misplaced_folio(struct folio *folio, int node);
+> +int migrate_misplaced_folio_batch(struct list_head *foliolist, int node);
+>  #else
+>  static inline int migrate_misplaced_folio_prepare(struct folio *folio,
+>  		struct vm_area_struct *vma, int node)
+> @@ -155,6 +156,11 @@ static inline int migrate_misplaced_folio(struct folio *folio, int node)
 >  {
-> +	bool protm = optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_PROTMEM;
-> +	bool dyn_protm = optee->smc.sec_caps &
-> +			 OPTEE_SMC_SEC_CAP_DYNAMIC_PROTMEM;
->  	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
-> -	struct tee_protmem_pool *pool;
-> -	int rc;
-> +	struct tee_protmem_pool *pool = ERR_PTR(-EINVAL);
-> +	int rc = -EINVAL;
->  
-> -	if (optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_PROTMEM) {
-> +	if (protm) {
->  		union {
->  			struct arm_smccc_res smccc;
->  			struct optee_smc_get_protmem_config_result result;
-> @@ -1598,26 +1667,26 @@ static int optee_protmem_pool_init(struct optee *optee)
->  
->  		optee->smc.invoke_fn(OPTEE_SMC_GET_PROTMEM_CONFIG, 0, 0, 0, 0,
->  				     0, 0, 0, &res.smccc);
-> -		if (res.result.status != OPTEE_SMC_RETURN_OK) {
-> -			pr_err("Secure Data Path service not available\n");
-> -			return 0;
-> -		}
-> -		rc = optee_set_dma_mask(optee, res.result.pa_width);
-> +		if (res.result.status == OPTEE_SMC_RETURN_OK)
-> +			rc = optee_set_dma_mask(optee, res.result.pa_width);
-
-This change should be folded in patch 7/9.
-
->  		if (!rc)
->  			pool = tee_protmem_static_pool_alloc(res.result.start,
->  							     res.result.size);
-> -		if (IS_ERR(pool))
-> -			return PTR_ERR(pool);
-> +	}
->  
-> +	if (dyn_protm && IS_ERR(pool))
-> +		pool = optee_protmem_alloc_dyn_pool(optee, heap_id);
-> +
-> +	if (!IS_ERR(pool)) {
->  		rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
->  		if (rc)
-> -			goto err;
-> +			pool->ops->destroy_pool(pool);
->  	}
->  
-> +	if (protm || dyn_protm)
-> +		return rc;
-> +
->  	return 0;
-> -err:
-> -	pool->ops->destroy_pool(pool);
-> -	return rc;
+>  	return -EAGAIN; /* can't migrate now */
 >  }
+> +static inline int migrate_misplaced_folio_batch(struct list_head *foliolist,
+> +						int node)
+> +{
+> +	return -EAGAIN; /* can't migrate now */
+> +}
+>  #endif /* CONFIG_NUMA_BALANCING */
 >  
->  static int optee_probe(struct platform_device *pdev)
-> @@ -1788,9 +1857,8 @@ static int optee_probe(struct platform_device *pdev)
->  		pr_info("Asynchronous notifications enabled\n");
->  	}
->  
-> -	rc = optee_protmem_pool_init(optee);
-> -	if (rc)
-> -		goto err_notif_uninit;
-> +	if (optee_protmem_pool_init(optee))
-> +		pr_info("Protected memory service not available\n");
+>  #ifdef CONFIG_MIGRATION
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 676d9cfc7059..32cc2eafb037 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -2733,5 +2733,36 @@ int migrate_misplaced_folio(struct folio *folio, int node)
+>  	BUG_ON(!list_empty(&migratepages));
+>  	return nr_remaining ? -EAGAIN : 0;
+>  }
+> +
+> +/*
+> + * Batch variant of migrate_misplaced_folio. Attempts to migrate
+> + * a folio list to the specified destination.
+> + *
+> + * Caller is expected to have isolated the folios by calling
+> + * migrate_misplaced_folio_prepare(), which will result in an
+> + * elevated reference count on the folio.
+> + *
+> + * This function will un-isolate the folios, dereference them, and
+> + * remove them from the list before returning.
+> + */
+> +int migrate_misplaced_folio_batch(struct list_head *folio_list, int node)
+> +{
+> +	pg_data_t *pgdat = NODE_DATA(node);
+> +	unsigned int nr_succeeded;
+> +	int nr_remaining;
+> +
+> +	nr_remaining = migrate_pages(folio_list, alloc_misplaced_dst_folio,
+> +				     NULL, node, MIGRATE_ASYNC,
+> +				     MR_NUMA_MISPLACED, &nr_succeeded);
+> +	if (nr_remaining)
+> +		putback_movable_pages(folio_list);
+> +
+> +	if (nr_succeeded) {
+> +		count_vm_numa_events(NUMA_PAGE_MIGRATE, nr_succeeded);
+> +		mod_node_page_state(pgdat, PGPROMOTE_SUCCESS, nr_succeeded);
+> +	}
+> +	BUG_ON(!list_empty(folio_list));
+> +	return nr_remaining ? -EAGAIN : 0;
+> +}
+>  #endif /* CONFIG_NUMA_BALANCING */
+>  #endif /* CONFIG_NUMA */
 
-This change can be folded in patch 7/9.
+migrate_misplaced_folio_batch() looks quite similar as
+migrate_misplaced_folio(), can we merge them?
 
-Rest looks good to me.
-
--Sumit
-
->  
->  	/*
->  	 * Ensure that there are no pre-existing shm objects before enabling
-> -- 
-> 2.43.0
-> 
+---
+Best Regards,
+Huang, Ying
