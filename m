@@ -1,95 +1,111 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6225E6D17;
-	Mon, 26 May 2025 22:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8691D5141;
+	Mon, 26 May 2025 22:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748299104; cv=none; b=GqPTvxDeLPWFM5bkwBzGuuRi/4Gn6aK8HWU9Cly7aSQXLUhA6rL87JhSKWeH8t446zYgZQCn4043qWnErr7/p+TGTcjX1P410TOBwmQV2f35+X0WkUjkpXEEv2CaDpkwuTlWpKGhe6scQSirWYv0BS7RTOR3vIl3uhEoEwOBgnw=
+	t=1748299436; cv=none; b=KXIN7w6uuExIYU5CgeefSQajBeUbgFhqHrOOkPY73vw9EIV8SNasR5GSj9FjbM2c3FPFS3hn7lSY0ACCsw+pgemCeNH9igZ62bt3DVA8YpKn7pw/lw5svxsngvwATC664E0EcjN0v9PVsnBaEsEU+Y7fc3rSfgbGtSjShIIArQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748299104; c=relaxed/simple;
-	bh=v3ZRDAtj5YcQbpSBqOF+FI4njniS2m/8ePwB5QwfiT8=;
+	s=arc-20240116; t=1748299436; c=relaxed/simple;
+	bh=Mi2Ff9KcvJlJ1I5165WQX0hXzW7MVIgLgJ+u7JSVo2M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HqdqM1qoYjQKwI64vGiF8ajFBDGZH6/qDCdzWfuuAdaG7CSlO2rTff7FgSWNPXF08wwWPktMsyDcz0CXa5jEAkZrziWzL5+x0VvEJ/ERY+kIAlC9BUQN6g9H4JYiyqUcwuv+Vwo4oC7GiZf/sPq9qqlwIGpkENGmT7w2Az0T4DE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=IubjOqNG; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=nPwlg3DQqlh1OuRuJd2mZoO6e3DQnACA1yQ0R+NxyUi+TOzlG/LfuhladmEq0jUVEWYwmmJFu1o0mA+wd3hXNB9F9V20ml3B3sQjEoDCA5ozbQDSoY1websU6vGzWbV5MLFF02ZEjOc5sz7//k//q1TQd4ukfYPX/VFMH8pE12c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mDx90iXx; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IubjOqNG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=rvGrGQY6GrI5CIu+KGfqk3UB3L4We71OJCOlHdzEnqc=; b=Iu
-	bjOqNGBqi7kZdOZUsIJmfdxJSh5dGZvTn81tqDWY+m5F8tpYrCLHOSNWmdRrhhWhYu18TI7T9Xa5Q
-	dVCCViWCC272L+Bca8cL6c7py3tGDApC58mmSZPYX4HwK+Z+5p9dwK/hpweJHtk628kDuIYpX8sEZ
-	eiCGgfQiQX6Zdbg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uJgSV-00E1z3-K7; Tue, 27 May 2025 00:38:15 +0200
-Date: Tue, 27 May 2025 00:38:15 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] dt-bindings: net: sun8i-emac: Add AC300 EMAC1
- nvmem phy selection
-Message-ID: <d4109cc5-83d5-4acd-b0fb-39a50043060b@lunn.ch>
-References: <20250526182939.2593553-1-james.hilliard1@gmail.com>
- <20250526182939.2593553-3-james.hilliard1@gmail.com>
- <959e576e-bf36-4d01-9ffb-023931b61574@lunn.ch>
- <CADvTj4oqjCkMeK0p8ZBa8PQmctc77hpiFK2pqgBJaxRFDgQoDQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDx90iXx"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6faacf5d5adso10571896d6.1;
+        Mon, 26 May 2025 15:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748299433; x=1748904233; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wYcdN/ntCi0NW6y9Z+ruW/GeFwKcxSJjeh5zF0q4iZs=;
+        b=mDx90iXxQbXx8SSLFgtaXDIhgsV3Tvo2KHbnajz2LuDiyDUd/QtyTZsp1HgmDNdoNF
+         fVgCqvb+ZjzFt/lU8LwwhFztXdFR/4l/kC4cIR+5e248+UoDG/Nw2ylUOc347MMUfTnt
+         BmcuxwYXHQQdXkTIE8DOXHk2PgC+2KrSNRIwNaCIsGMxESaQJuUdldoOSqacClOQXBBZ
+         FX+kgOmqwxwmbudl7wkQ6xzP39l7fQ2amX9KANebwuIMSi1I946z9xY8b5au+7hMW/7x
+         YgrhZf0lwr9hQf7CtiKXQUYYYONmsrs3U13LvjhjZ+cBcNb6xSFv8aJhGuplbYAyKXt1
+         hZUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748299433; x=1748904233;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wYcdN/ntCi0NW6y9Z+ruW/GeFwKcxSJjeh5zF0q4iZs=;
+        b=Xal26G7N9H/WZXWscD03u27ijg9HMxIfgwhAyYT0/WUlW3/lf4fQQ5E2y53nAaZ1DR
+         9nKpH6ffZQuK0gUOTeLBlcHvKneAXlVDVFCgks/458+OMKXKnjZ/+fs4D4tZUHGkq8mg
+         U0csHtKdJnLzjO9USIWCu+0rtslHB2Tr+GdW431/m/8ugSW+Z5SCOMkL/zJgRDpjPYJa
+         b3XBt3ehPgONYnY9ycRJwLZDdi4jh+Muc8N0+8dJ9L3mdOs7JBMpI8mhrRZ8Vd6YFVNc
+         eClUosC8imapckk5mnoWqrw8ZoD1SzjMmM0zVcbjwgwzZEv4iOZXdX4seCtvi7qQE4YX
+         g4xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjlUMCXsNm+G9X9uOVoWDqUEq/90eUVXZIQc7jFY2S6nNG2kFGjnCB7uWo4v5x6cCcxGxcvs1hqcejGvRK@vger.kernel.org, AJvYcCXqX5tgIb0RJy/eerpw+X7Zv3T/w8JNRGxa3/2E1kWP9PK/DaIWSufYoyZfACQlS7yzf94Vz210wtgU@vger.kernel.org, AJvYcCXvxVU2+FBqWB6UH29a/xwIU0dDutSCHtOVajJ9vS6OaJgkU9DKul4VUVcqjrP9NIDiBpSqFv9tI53T@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwaT0HN1tPJ+/E4vfXbcZJji1zcyDtxcu4v8tMjJ7Cd0SfpTWo
+	7rrx8NP8NHcdmocadnbAq8I/dnc76eCtLCJJw2HRSxuaB6rKqf0WDL2e
+X-Gm-Gg: ASbGncv+8n9hWEZNQ5Db+18iuJiu4lCdQsOpeNQlxlUPLPPKoZ4CcVnn97hZx3J+xYp
+	YVr/gxCHUchefpPvWveC0+JpVR4/9XJlkUxCvF8rPbYHWZEooX+UbXu06HUwYfSqG5b+unXcI7l
+	4xTBrqRSaWwuEIqIfjUuifrheiOSFJ5bSus29qjwTbdcdxL7XLtWlcBoNlU+m+TAOAEQnFhnmvn
+	czANdXPXRTjTnwZ5ZKR1dgbEtuwoqknKkiljWuHeRFvcHwaODMgk8T23A929ruDDoyRuWERPZkL
+	AIqy/9/8HyOxRNBM+Qrgw/gbA6PisjF4mHpyTA==
+X-Google-Smtp-Source: AGHT+IE6GrG91KwWKCqmvlXD/KUQzQglLbhJ+TsLp61QU4Z6DEm1+X0Gf8hRzNSZJMd0jsM2Dvj8rw==
+X-Received: by 2002:a05:6214:f04:b0:6f8:aec7:1cda with SMTP id 6a1803df08f44-6fa9d00a343mr172227576d6.17.1748299433456;
+        Mon, 26 May 2025 15:43:53 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6faa481854esm29328266d6.22.2025.05.26.15.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 15:43:53 -0700 (PDT)
+Date: Tue, 27 May 2025 06:43:06 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v8 0/2] riscv: pwm: sophgo: add pwm support for CV1800
+Message-ID: <r65g6xww45zdnsuusobnzfg4pszjzkscg7t464e5eas2ycikzx@xed62astc3az>
+References: <20250509-pwm_sophgo-v8-0-cfaebeb8ee17@bootlin.com>
+ <sfqdke7xkxg3sr2acber6kjzbcnoay6bnu3enda2xe5wzdi6id@eqiqmkdeovlb>
+ <uy4idpkmmyswci3o5dul3xwees7azrs2dhorjgb5lxipi4bllb@7lbldfrwdsj7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADvTj4oqjCkMeK0p8ZBa8PQmctc77hpiFK2pqgBJaxRFDgQoDQ@mail.gmail.com>
+In-Reply-To: <uy4idpkmmyswci3o5dul3xwees7azrs2dhorjgb5lxipi4bllb@7lbldfrwdsj7>
 
-On Mon, May 26, 2025 at 03:32:03PM -0600, James Hilliard wrote:
-> On Mon, May 26, 2025 at 1:36â€¯PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > +        phy-mode = "rgmii";
-> >
-> > Does the PCB have extra long clock lines?
+On Mon, May 26, 2025 at 06:31:42PM +0200, Uwe Kleine-König wrote:
+> On Fri, May 09, 2025 at 08:14:57PM +0800, Inochi Amaoto wrote:
+> > On Fri, May 09, 2025 at 11:45:42AM +0200, Thomas Bonnefille wrote:
+> > > The Sophgo CV1800 chip provides a set of four independent
+> > > PWM channel outputs.
+> > > This series adds PWM controller support for Sophgo cv1800.
+> > > 
+> > > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
+> > > [Thomas since v8]
+> > > Signed-off-by: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+> > > ---
+> > 
+> > As now we have pwm support for SG2042, I suggest sharing driver code and
+> > binding file with SG2042.
 > 
-> I'm not sure, it's a copackaged(maybe on-die is the wrong terminology)
-> PHY I think so I assume the clock lines are internal, in the device specific
-> dts we set something like this on the emac1 node:
-> allwinner,rx-delay-ps = <3100>;
-> allwinner,tx-delay-ps = <700>;
+> How does the two relate? Is CV1800 the same as SG2042? I'd like to know
+> before I spend time reviewing a driver that is better spent elsewhere.
+> 
 
-Those values are just weird. The RGMII delay should be 2000ps. 3100 is
-way too big, and 700 is way too small.
+IIRC the pwm SG2044 is based on it on CV1800. And they both share some
+common logic with SG2042, like setting PERIOD register. So I request a
+merge for it.
 
-I think phy-mode = "internal" would be better, and just hard code the
-delays either in the MAC or PHY driver.
-
-Thanks for the link to the old thread, which was 5 years
-ago. Hopefully since then, a bit more has been learnt. Quickly reading
-through that thread, i don't think an MFD is not the correct solution.
-In the last 5 years we have had to deal with more chicken/egg problems
-with PHYs. It has now become pretty much standard practice to put the
-ID values in DT, to get the driver probed when the device does not
-respond on the bus. The DT node can then use phandles to the reset and
-clock controller to configure them as needed, the core will probably
-do that. I2C is a bit messier, you probably want a phandle pointing to
-the i2c_adapter, so you can use i2c_transfer() on it in the probe()
-function.
-
-	Andrew
+Regards,
+Inochi
