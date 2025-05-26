@@ -1,85 +1,70 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EA01F8EFA
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA94E1F2388
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748259428; cv=none; b=cL75zS3tsgl634E9F9tffipNufL4pK0Jm1QpX6RS/mI5mv5t+cwL1wa4Vuu+ubM9UY94hSlDQsc2C2oUK1V2v5kysZ/o08Ueoh1Pn6UMnoNK9g36xr8HNppvO+uixCDlJ5HVrm8SUXZFT4uVqTLZ+gptkzjRvc+An5FcHR0xitg=
+	t=1748259440; cv=none; b=IzbMixkzD2dpxXvjwXyGWSYWJNNP3UaHlHGQ+sxeH32JniqjkiNSfVIakWL12LFrGdF2JXbUOumnsdYDZwa2Z2GeD3EHbhROhL3N8x6f4gXoVZicCogpK+xdop+b4AutLkEwEL/ecZI7FUFIXLSWcWLh7v1zfQt5N1nsbknDX4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748259428; c=relaxed/simple;
-	bh=SifRE1pYhzr1J7tzHiNbuqYAETJ4W9tXkZ1v+z8uW40=;
+	s=arc-20240116; t=1748259440; c=relaxed/simple;
+	bh=nSDYH4WEhkI0c4mWAbs9ei0wGtWyyYjJxPJ8Zztq6V8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AE9OamlwG/4prnNPquc92TGprHW9gaVfm8ag9DxA/UCEN0iH9W6W5juzZ+a0N6j2lhb/Ht8L2JFuL8yK3WeJsD7Ap4HX5AM/MoXRfzFjJZlQsEysMq9y4D6vcRlDROsAwkfsrrizBo8twJa3eAoqV2CX+om/0HpDXMT0QQXWILg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Zy8w4a2h; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pPPkcZ5uoTXD11jqKqkLEGwOK8PZxopV/WbLS192IfaaTKffJVrX0PkF58RYe3p5lZbZ2hffxQ+KZm+vd6zYFamNkZc5dmwKZ4J8qEXBf4odlAOghgMjQ1Cw6n4FzTbP1hl4VUu3pU3m35ih3X1UFtNvY3D3+EP/3RgohPEcE9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ScdH/Yoi; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Zy8w4a2h"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234593b0613so8124075ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:37:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ScdH/Yoi"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a374f727dbso67289f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:37:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748259426; x=1748864226; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748259437; x=1748864237; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1YomwbiNk+MK6OcEHnF5yaSCssRPLKQjTNK8YI+C2Y=;
-        b=Zy8w4a2hbA4zWSV1dsvrvz5yj26N9OnxL2t6h/lbxNiSbNX3AJzxy9QGw3gpu0yohJ
-         FtaTqqumlXaqxVlB5Ro/55cg32aAihxfd02gNeASfpldLhmyhzn/CvVafvOm52pHgEcG
-         F9cdOEao3jRhM0mTk/OVvpNrn9JCCXk9PAVs4ivzXU3oqjBPxox17FRLcH3Hfka1226a
-         dz8gDq79v3PlkgLwO+6hiTEOCm2x3JxvpmnjyXD1APFS0TU+w/QNKbm2Ui0/TnMgKul3
-         BDQ6nf5rMTb6rtC3SqPfIsEVc1SbelehApv6Chua4fEmEuCf8rHXFn6TP+2ae4qLoNKg
-         Wz7A==
+        bh=q+rDiPz0qSiYsyHG9zqVRKjQE9VlYlwaE/0xL4WFAXE=;
+        b=ScdH/YoiFPxoMBbOD6lhW0f7B7pot7t5pETKHfKXpgM445bToixc2S0ECXCN5bBlPm
+         24Qi9YUk3hKPS1zzUDQvCxWKh6arP2ePb2j9aGn3vW0RigfXDsdOK6RUAzIN4JToy2AL
+         YgmIvgOgi3epmQumVuywj5Sls/fX1whN1vwGHzQxj1sbN6JoTutCKxaud0oRT5wYTx28
+         UOMNNpiA0bkjeTjORP1447x0WIcijMN8qGNo8m46g/MIg8L2EWaRuThs7l7210eJ8UYt
+         C23P2GY6NdIqvAagaJlITQou4pf5MhRo33LV21XTeGq8GGJIoOCRM2kDu4QPfwPyLQuP
+         mwiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748259426; x=1748864226;
+        d=1e100.net; s=20230601; t=1748259437; x=1748864237;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c1YomwbiNk+MK6OcEHnF5yaSCssRPLKQjTNK8YI+C2Y=;
-        b=nv0d6PX3ywFGescj+NpiRROXHWsBO+hwKeb2ccJ2ad4Ria5y4y4EDHp6eP98Z73ou7
-         yu4Q2t2q/SfK4twH3Sh4AndxdI6weaKnez1fkhA/vSaTuVs/v2Cjip5hzZnb659veSDR
-         ReFwpmlSq+hB42Crg7necin25VpDiuZ4JU8Nu2jOPuv3YXBxE4V5Xl+f9+WuX6al3uoa
-         KBYp4Jx7YbfRjGsXg2i4Hf4kWTfyDaCP0W09hJIj2Zq0PtY6h5wZqyKdf0EjI2sqQarE
-         zAB2PWFwzwymvYsSAExigR9kcBR+DmkpUG3TTxA05x0D81EmCkndGt7lyI2o1ydAq7PI
-         8ByA==
-X-Forwarded-Encrypted: i=1; AJvYcCULfinT8dpWmQVIcWs/C9MCGMFSaibsY0PkyJHP50LjEZ1tdIBKgW/L+kbVObyODnUFgN0rySZOSxMAr10=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOWIe3dk4qE3wEQBMxrSvkY1RLSlQlis3KZmJkQ9wkWlEWzw6/
-	bxk4npB7tBBGvjEIPLEm9y0VjRzHdY/7ON/pLEb2jc2l1FJzUKWxWGT5A1wToQt+Pw==
-X-Gm-Gg: ASbGncsCEYwjaIFfb7BvDUhNuKEeq74LMHaYSI6CwBn3DxQbhyslUsPgxx/S852KLnC
-	6MP41zxBJ8B/3XSsQQJ58xw9e0ovQRv/lFMD2iAP5b11slFN7/iGffdHSmbkmnR8Nxqm3Wt109L
-	93xQQVQSXwTSyRgB+Grqm8eIOIeGIfQzraxvZDyAaQP6+4K8KrkVl8FzfDcnzbMwmNouNWxd4+d
-	E8gqgZNLLjJ/TK2XhlE4QFrdFo9mLN8KVfRG7gjADyKFZ5QWjF6A59KcaL0mPbgqtw0Q0kNO5zL
-	oAhB1njKt4SrZrEeuoqDwnGssLwpPw6GpUYA6eQSZVwN5ztW2S36x3qaSYNOXg==
-X-Google-Smtp-Source: AGHT+IFkQDFmBkAnPnGneftimFbtdgNNGN+E/VrtolpuT3CD+/ZFJJ8ALPGEbQBknrRt5IOpY+a3dA==
-X-Received: by 2002:a17:903:2ce:b0:224:2207:5130 with SMTP id d9443c01a7336-23414fdb06amr135077855ad.45.1748259425852;
-        Mon, 26 May 2025 04:37:05 -0700 (PDT)
-Received: from bytedance ([115.190.40.14])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97fa6sm165962285ad.135.2025.05.26.04.37.00
+        bh=q+rDiPz0qSiYsyHG9zqVRKjQE9VlYlwaE/0xL4WFAXE=;
+        b=cCPQxzt3sFmt+PPzAonAodvFGyP0uqDjmFMIGWHKPdGqMnjlS1BD4OU/BZ4zNp19jj
+         BxMZWk606cXrOoI0GmSmPt9MgYza4tpB2ScsbDli4N7kn95Gm2ndGOGBIQnCOboF+/+c
+         OCk4x3x3fCQGI36Ztu3DGyddLefiG06UDQ7M3urgcgdH3TERclFZ52HkZ2+PDMTa0n3J
+         9KPi0mxs9EaCb37xdaAnqaOHF27p+IiRGMI4Sc3RkfQ/6WlEttHsLeQl9vQDDVPZ8UD4
+         3EY5OfKkxYl2uVif/dd8blQJ9HkPoHYIaAGIhdZs4rjtsYmHLo361dSA2Sjj4K56qJle
+         s/lA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6DtFz6uRC3qJHiOv1XVAlSt512dVfq7NlDF1RwACeZG7HsS+weFuyHSJxtzkWeNfR9zEbEsvd7xR5Hh4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjGZKthijAFrPvKYPKSUnu82xn01U4ZLO0ssYgznApdenMFddt
+	BZJ+yTq71nqsZdzjB9m0gDvHe2MWnBDHTze3YSajljvgknU0cigRhF3mDnKdb1Mt5Sw=
+X-Gm-Gg: ASbGncu0dmaV+ZyT3jT07r3N9vyvEwd66odsPMxfp8h0wSUDWNEsrOE6ud6/ZsIlUDN
+	/3v2Tgq3A5FD9wNtEOeF8LcoUzn7WlmvTah2Pfj8Z4ggu/FcXJmScB1OSqaykmbcSMau5tnDQD4
+	/BY1/ibcgbHmd3imZ5MkmTn22kZdAWHIO0xwUOi7jVDljVu7KsoSs4kRaPaIlnQI9m0O3HCCwWO
+	bUprO9Zfoj4WMR4jaSDajlTiVeO6TOyEcJXa41zyMDpkx4+SlpzsuiIrAlp9NRTtVy1W/0cdk27
+	XtB9xdf3c4rnrRSwD5IYpASoq8esod3wF3QMe0u8yXsg5zqlJiP/w5vq
+X-Google-Smtp-Source: AGHT+IEv5PUqkz+rdGK7cMHOMrelnch8JlHVRcoDJFXgNKq4OweFef3f63o86S/y+HO8Dwb3Au7C2g==
+X-Received: by 2002:a05:6000:40ca:b0:3a4:d8f8:fba7 with SMTP id ffacd0b85a97d-3a4d8f8fd9dmr2806239f8f.2.1748259436914;
+        Mon, 26 May 2025 04:37:16 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4cce08411sm7388745f8f.51.2025.05.26.04.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 04:37:05 -0700 (PDT)
-Date: Mon, 26 May 2025 19:36:50 +0800
-From: Aaron Lu <ziqianlu@bytedance.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
- change for throttled task
-Message-ID: <20250526113352.GA2993700@bytedance>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-5-ziqianlu@bytedance.com>
- <20250522120336.GI39944@noisy.programming.kicks-ass.net>
- <20250522124840.GC672414@bytedance>
- <20250523145942.GL39944@noisy.programming.kicks-ass.net>
+        Mon, 26 May 2025 04:37:16 -0700 (PDT)
+Date: Mon, 26 May 2025 14:37:13 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: clingfei <clf700383@gmail.com>, Kees Cook <keescook@chromium.org>
+Cc: elder@kernel.org, johan@kernel.org, vireshk@kernel.org,
+	gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] greybus: Avoid fake flexible array for response data
+Message-ID: <aDRSaZ4Rq47hjMuY@stanley.mountain>
+References: <20250526110654.3916536-1-clf700383@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,52 +73,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523145942.GL39944@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250526110654.3916536-1-clf700383@gmail.com>
 
-On Fri, May 23, 2025 at 04:59:42PM +0200, Peter Zijlstra wrote:
-> On Thu, May 22, 2025 at 08:49:43PM +0800, Aaron Lu wrote:
-> > On Thu, May 22, 2025 at 02:03:36PM +0200, Peter Zijlstra wrote:
+On Mon, May 26, 2025 at 07:06:54PM +0800, clingfei wrote:
+> As https://lore.kernel.org/all/20240304211940.it.083-kees@kernel.org/
+
+I don't want to have to read a link to understand the commit message.
+
+Does this change really affect anything in terms of "enforce the 0-sized
+destinations" rule?  I don't think this is a destination.  I think Kees
+enabled the checking he wanted.  You should probably CC him since we're
+refering to his email.
+
+> pointed out, to enforce the 0-sized destinations, the remaining 0-sized
+> destinations need to be handled. Thus the struct
+> gb_control_get_manifest_response and struct gb_i2c_transfer_response
+> are removed.
+
+Here is a better commit message;
+
+"We want to get rid of zero size arrays and use flexible arrays instead.
+However, in this case the struct is just one flexible array of u8 which
+adds no value.  Just use a char pointer instead."
+
+I would have ignored it, probably but actually the
+gb_control_get_manifest_response struct is not used so put that in a
+separate commit.  That's a simpler commit to review.
+
+"The gb_control_get_manifest_response struct is not used.  Delete it."
+
 > 
-> > > This is asymmetric -- dequeue removes it from that throttle list, but
-> > > the corresponding enqueue will not add it back, what gives?
-> > > 
-> > > Because now we have:
-> > > 
-> > >  p->on_rq=1
-> > >  p->throttle_node on list
-> > > 
-> > > move_queued_task()
-> > >   deactivate_task()
-> > >     dequeue_task_fair()
-> > >       list_del_init(throttle_node)
-> > >     p->on_rq = 2
-> > > 
-> > >   activate_task()
-> > >     enqueue_task_fair()
-> > >       // nothing special, makes the thing runnable
-> > >     p->on_rq = 1;
-> > > 
-> > > and we exit with a task that is on-rq and not throttled ?!?
-> > >
-> > > Why is this? Are we relying on pick_task_fair() to dequeue it again and
-> > > fix up our inconsistencies? If so, that had better have a comment on.
-> > 
-> > Correct.
+> Signed-off-by: clingfei <clf700383@gmail.com>
+> ---
+>  drivers/staging/greybus/i2c.c             | 9 ++++-----
+>  include/linux/greybus/greybus_protocols.h | 9 ---------
+>  2 files changed, 4 insertions(+), 14 deletions(-)
 > 
-> But would it not be better to have enqueue bail when we're trying to
-> enqueue an already throttled task into a throttled cfs_rq?
-> 
-> It seems a waste to do the actual enqueue, pick, dequeue when we
-> could've just avoided all that.
->
+> diff --git a/drivers/staging/greybus/i2c.c b/drivers/staging/greybus/i2c.c
+> index 14f1ff6d448c..2857c2834206 100644
+> --- a/drivers/staging/greybus/i2c.c
+> +++ b/drivers/staging/greybus/i2c.c
+> @@ -144,15 +144,14 @@ gb_i2c_operation_create(struct gb_connection *connection,
+>  }
+>  
+>  static void gb_i2c_decode_response(struct i2c_msg *msgs, u32 msg_count,
+> -				   struct gb_i2c_transfer_response *response)
+> +				   u8 *data)
+>  {
+>  	struct i2c_msg *msg = msgs;
+> -	u8 *data;
+>  	u32 i;
+>  
+> -	if (!response)
+> +	if (!data)
+>  		return;
+> -	data = response->data;
+> +
+>  	for (i = 0; i < msg_count; i++) {
+>  		if (msg->flags & I2C_M_RD) {
+>  			memcpy(msg->buf, data, msg->len);
+> @@ -188,7 +187,7 @@ static int gb_i2c_transfer_operation(struct gb_i2c_device *gb_i2c_dev,
+>  
+>  	ret = gb_operation_request_send_sync(operation);
+>  	if (!ret) {
+> -		struct gb_i2c_transfer_response *response;
+> +		u8 *response;
+>  
+>  		response = operation->response->payload;
+>  		gb_i2c_decode_response(msgs, msg_count, response);
 
-The original idea is to keep code simple but surely this can be
-optimized. I'm working on it and will paste diff here once I get it
-work.
+I like when parameters are called the same thing on both sides.  The
+name "response" adds no value.  Instead get rid of that variable and
+pass operation->response->payload directly.
 
-Thanks,
-Aaron
+		gb_i2c_decode_response(msgs, msg_count,
+				       operation->response->payload);
 
-> The immediate problem seems to be that you destroy the
-> task_is_throttled() state on dequeue, but surely that is trivially
-> fixable by not keeping that state in the list.
+regards,
+dan carpenter
+
