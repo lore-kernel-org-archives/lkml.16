@@ -1,204 +1,168 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDFB1DF98B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C631E00A0
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246027; cv=none; b=MHxPsdAxcaGMVeoUPA1NIaG62V79abaqirwB/UxRPkPjOmnekbpOdJycEr0mI8HYCTa+QGiwhQko80j152dDrQJTV/24YO6gUYfVaPhVA8i5BHxNLP1YpTR3ZQqfXqSVI60E5NM7jgtlInGep95Vg9X9PogNazSWsW0BunMb5YE=
+	t=1748246054; cv=none; b=YGt9QNOOxejls7Wjm9vVmEoIchE9hT/c+D69nLz6zifxMXiE1HvJ519PgYbs3Sy3XgCsq9UW5NYO6IEbkRahu3NH+Jzp7U1JI/3NQqbCZQyv6I7IDmVflYg7ADkp2pNgUO55kFKsA1edGlmxvSw7m76DMr07eOfty7w1kvywMZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246027; c=relaxed/simple;
-	bh=VzqMQ6BPztDkXD7uvZChlsEo13UPBuBr5teLaXHRfTQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oNFLPZ2IggXrZCxSgNZmTBIRqY8HQEunt17eGQkBZeFvSvgsHAxQaztOn4qnGKX0FZTTk5PSIccLs1S7wt4w8PCvuqxXD36UENwEFNHEfBN7O3GZwjFCfBjk7NZOOW+kLgziWSBpRjl6zVIKiuzCtam7fDzIqTq3Ekvik+mvgNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pHeIK4FU; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748246054; c=relaxed/simple;
+	bh=ICHW/uN1OvSvaGQ7jIZodYWZnLa0EL03cumMRfWphYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AEXEaGJeYrPg78a39Ids7kJu2twUTWAmtVOQUCUi9T6Wq0/bXSaGHOFDYapy4t2QQUD9eIa4gqSkXACKLPY7Vsx4sBsl3p8oEEW2PvJAwL2OuDD22Tgvise1wfx6i1n/uwwJNQa4kHMYxptfemOigeBPQdmLI2QJY2Mw+9B/G1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EfQgBNOi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pHeIK4FU"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso14835365e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748246023; x=1748850823; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DigRWTVI0uPVJYJftU+HN/4UIE7wd9YCnIfkF7dbku4=;
-        b=pHeIK4FU0AsK6ZOpqpILyGRqzNm3RXL7l/x2iPYd5gukRSmWhxb3PztPN5XWk4r0qe
-         tvRSypA0/q3LNQKPG3zvIrtSJ6I9Yl7dlYAzpyIUeygAscWcUXnNAZGjuZtlgbOSQPaY
-         ZmFGg3WF2x0o5Zhuvdcshg8DFtSPgYTfplIwycYAkdTjTW3ppfYLBMPGjfkutWdvI/yK
-         2juV6iPTA3CThk1fAH7RYjNvZ/+tBtHBNkCwfwL72tqIN4l9CJlhATg3tZVfAvUDeqom
-         XI71joYXn/Xy9fVaSMyPg6Znc2EdLeeygwrx/7p/crkCY+Zz9J4/jwwaX7MObMV23J95
-         6Irg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EfQgBNOi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748246051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xr52sKmwroB97DOF/8SzXO2IZSVBxqAkPJsvVxhDFw0=;
+	b=EfQgBNOiq4Kmm/NDtGYSmGHXwLr8Gmjwd/DYrIIJT/ovYa5pVbo25WpKrFKFg3ijclJcGb
+	yrd8XKnqjr2XPMXM6ONSNfkVyqMmkydFfIxVtqRvUEsF2LzN/B3mRD39OL5e+EdFnddI8B
+	p1I8raS9GoGjPdazshEZCABfRgFM75k=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-383-Xisb3gZMPSqIS3UzhbK66g-1; Mon, 26 May 2025 03:54:09 -0400
+X-MC-Unique: Xisb3gZMPSqIS3UzhbK66g-1
+X-Mimecast-MFC-AGG-ID: Xisb3gZMPSqIS3UzhbK66g_1748246048
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-acbbb0009aeso132241166b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:54:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748246023; x=1748850823;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DigRWTVI0uPVJYJftU+HN/4UIE7wd9YCnIfkF7dbku4=;
-        b=FilhhE01kstRPFAgj5UFYHQjIpTilSsske4fWcQHIt703nqMSEt+Sctjsn36JHuV/o
-         zH2WTbctzqZinyBwEKf3WCHZeU0AwgjLG9t/3d6OozownYORvKbiC1KnXe2yXGxXPA6I
-         VCjzHntZzW+ykI0QSQFRluSYezNLsXI4aTzYhVQ2hbHzq2dxg17fi9Xgf3GsOWgdXITd
-         rrU7McuELq4xngDclrxzLVbpnQJXWLswfdqjQWeLpG+MzqZUs9sbnJUUEKs95avyARVB
-         mE3ln+rGIR3sJr9LcP9LLkVM/kdI5F6kg2oKxgdhc8VjBafcp6vx7LkOvM43nhCzR5pa
-         RqfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxH8Rj+4EXd2qk8Njchp6fk8Sc4v/xwTl0EdC4rzdgmNvXUXjlsL6fFMjIuVji2+MODby5supL7wwt1dk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4S5v8Qpn4xjnROmNvpFNoBqANHll+2x6rpN+AcrnIQW3H7P1/
-	Ixqpf6jOKYux7IDjZOB0q5moTsKhCxQNBq1TIAwvOfZlGc7u6SQu/JdKqm+dPvw5rKE=
-X-Gm-Gg: ASbGncuRMTdSdPomhZa2A5rLc3vI6mXjkQ6M8kqtIc0+q0c2GPs54PjIzM56qVpuM51
-	yr4eE9lLtBqZzHX1AoOZQ6QP/ZDRe2DQO1xmmWDieMo5OpxMSipJsxM3CE5TA/f/8DRCBoakEWV
-	nE4MHWyQvhB6bq3k2mgVkIOtGDBjhTECyhuJS2tKga+5+1d3KIHRFrUhjqoPYOuOVDWLQB4UU29
-	p134C8FKMVsBgqrJfgvV/Q4dQi8u+tzPl9o/C14CKsrZKF1WiojkPKe1KO3Xcv7AgH7Hlvgxom3
-	77KgmiLDCA7Vr1LLDHn1IFfySx1z927/QE6BglSY+1cZQfanNYhvQVdwzfZmZ8/uFLcbYoqiXCy
-	G3amXDnJTfAxZWAnmdp/ra0sEthz3
-X-Google-Smtp-Source: AGHT+IGWdBUcLbcA1h/WiJjqZmIsNuvIOn3f1f5WjTJad311S1FkCQ75ovkfI98vT0bYRt1o41+pIg==
-X-Received: by 2002:a05:6000:2389:b0:3a4:d98e:edbb with SMTP id ffacd0b85a97d-3a4d98eef5emr1643661f8f.58.1748246023167;
-        Mon, 26 May 2025 00:53:43 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4ceecddcesm6244589f8f.99.2025.05.26.00.53.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 00:53:42 -0700 (PDT)
-Message-ID: <408e79e9-4998-4b5c-b378-bd61eda85882@linaro.org>
-Date: Mon, 26 May 2025 09:53:42 +0200
+        d=1e100.net; s=20230601; t=1748246048; x=1748850848;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xr52sKmwroB97DOF/8SzXO2IZSVBxqAkPJsvVxhDFw0=;
+        b=BxI0Ixkg8Lbal41cvW7VDBLwCRjc6eAIANpLQ+MhRjaMGJ+/lJdtgR1ALuwMUBMrjl
+         iV1rW+22FiQKKcEckceBvNrt8gMDRzuhwaCY4x2a7uQYuSbOK/yFMrvLFGdb4lK7M577
+         EaJyRzXeRap8TWgWNdNfRZh/vexZzEoWXfxR1Csg0TQDYGnFejbKI9I2TDGUYasxcY2V
+         1k3a4puV8Z9QBStvloCoNjHKkx4sRNIH+6oWvzR0V5TVRcopK4OEM817QjkbpaRvdr+1
+         8+ZylyMaNIXo5HZBrCr2oxAaizJVS3JfAOnXRwguKBK3TT311XzXi5IwLr9sUvcw0wCL
+         X4lA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtBtY/8l+Nse5lcZqYwwx9OB/WCwzhqJJZymbAi0D4Ox1EpsZDN2O9NIpuQbBhx2Wzo0cEh5BBG00UFBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuF5MeX0xi3WzzijNukVmX3MJCMGY7QNTxJyXPE0tdk4xv0/Pu
+	D4i23fuwJCJTrnAVtoDxtYUSPpRPyix4XiRu9ywGZtlXyK6tIObgKyyDh5hRlPgTKUEOnmj5qct
+	ZQSG3UemeErmQw8F6981Lyvm4YDn9DJ875Ea8LAo9v4T15Tn2yPmy45ubjhO5V4A9mQ==
+X-Gm-Gg: ASbGncs/eC72hZ8gTKRxeX2J9IzJ7y46k7HvAZftE9bnugs13L1QEzJicsKaP8vhNq9
+	D495x0oHCxmN1nesMXCQ008p7OQV3JSHZt5aqlPZ03ZoVLXzuv/4Kr0RILy4fpxEkf4YhG2pNsb
+	T+uzlW5K9s4Qq1N3KSDCddWQMfxNAEHAnw4GJmC/dJxhIWn15N8NguTIrhwcSVP2EyW90jEOOdg
+	2jnLVIcS3DyFbU/IFofpl1H8tz0Yx2Kzl/uWO8OSHVH/lLAkAgg4hSI7WWaYPZxlm+7VelP72le
+	ggf57+dWYVFdGqkK8V2VEVjXcamhOgLAtKmdKu0+Dsk4rmqP5Njk0c9vK6/m
+X-Received: by 2002:a17:906:dc89:b0:ad2:4e96:ee11 with SMTP id a640c23a62f3a-ad85b03b73dmr652295066b.8.1748246048097;
+        Mon, 26 May 2025 00:54:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXDorcGibcC8mJCNU0lHQiUbuXJHSvC/4551ubBzHRPqBuymTAUbX8ir3OqGUx+Fn5tp1GUA==
+X-Received: by 2002:a17:906:dc89:b0:ad2:4e96:ee11 with SMTP id a640c23a62f3a-ad85b03b73dmr652292866b.8.1748246047597;
+        Mon, 26 May 2025 00:54:07 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4e8afdsm1652640066b.176.2025.05.26.00.54.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 00:54:07 -0700 (PDT)
+Date: Mon, 26 May 2025 09:54:02 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Konstantin Shkolnyy <kshk@linux.ibm.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mjrosato@linux.ibm.com
+Subject: Re: [PATCH net] vsock/test: Fix occasional failure in SOCK_STREAM
+ SHUT_RD test
+Message-ID: <2y6v7vog4dylnnu7j625gkijth7lnznvgcjl4kg2q3xy5ht6fe@uikdt45mmocp>
+References: <20250526043220.897565-1-kshk@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad
- Pro (caihong)
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- konrad.dybcio@oss.qualcomm.com, konradybcio@kernel.org, krzk+dt@kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
-References: <d455a8d0-0a43-4bb5-8592-f22f1835a3c6@linaro.org>
- <20250522100526.914341-1-mitltlatltl@gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250522100526.914341-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250526043220.897565-1-kshk@linux.ibm.com>
 
-On 22/05/2025 12:05, Pengyu Luo wrote:
-> On Wed, May 21, 2025 at 8:43 PM <neil.armstrong@linaro.org> wrote:
->> On 21/05/2025 10:37, Pengyu Luo wrote:
->>> On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
->>>> On 5/20/25 6:42 PM, Pengyu Luo wrote:
->>>>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
->>>>> platform. Its device codename is "caihong". This patch adds an initial
->>>>> devicetree for basic functionality.
->>>>>
->>>>> Currently working components include:
->>>>> - Backlight
->>>>> - Bluetooth
->>>>> - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
->>>>> are many unknown notifications)
->>>>> - Display panel ([1])
->>>>> - Keyboard (via BT)
->>>>> - Power key & volume keys
->>>>> - Touchscreen & stylus ([2])
->>>>> - USB Type-c port
->>>>> - UFS storage
->>>>> - Wi-Fi
->>>>>
->>>>> The following components are currently non-functional:
->>>>> - Audio
->>>>> - Cameras
->>>>> - Charging pump (dual sc8547)
->>>>> - Keyboard (via pogo pin)
->>>>> - Stylus wireless charger (cps8601)
->>>>> - UCSI over GLINK (PPM init fails)
->>>>>
->>>>> [1]: The panel is a dual-DSI, dual-DSC display that requires setting
->>>>>        'slice_per_pkt = 2' in the DPU configuration. The panel driver
->>>>>        will be submitted separately later.
->>>>> [2]: Touchscreen/stylus driver available at:
->>>>>        https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
->>>>>        The downstream driver has been ported and tested locally, but
->>>>>        requires cleanup, it may be submitted separately later.
->>>>
->>>> I have a Lenovo Tab P11 with a nt36523w (-23, not -32) for which I have once
->>>> poked at the driver for.. I see the driver you posted mentions -23 as well,
->>>> please keep me in the loop if you're going to upstream it
->>>>
->>>
->>> I see. Actually, they share the most part of nt36xxx, but with
->>> different memory maps. See
->>> https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/elish-r-oss/drivers/input/touchscreen/nt36xxx/nt36xxx_mem_map.h
->>>
->>>> [...]
->>>>
->>>>> +             /*
->>>>> +              * This memory region is required to initialize the backlight
->>>>> +              * and display for bootloader. Normally, this region is not
->>>>> +              * needed. However, due to limitations in the current mainline
->>>>> +              * KTZ8866 driver, dual backlight ICs cannot be properly
->>>>> +              * initialized.
->>>>> +              *
->>>>> +              * A workaround involving secondary registration was proposed,
->>>>> +              * but rejected by reviewers. This reserved region is kept as
->>>>> +              * a temporary solution until a proper initialization method
->>>>> +              * that satisfies upstream requirements is found.
->>>>> +              */
->>>>> +             splash_region {
->>>>> +                     reg = <0 0xd5100000 0 0x2b00000>;
->>>>> +                     no-map;
->>>>> +             };
->>>>
->>>> I assume this means "if the bootloader sees /reserved-memory/splash_region,
->>>> it keeps the display online" - let's not do that, as underscores are not
->>>> allowed in node names (kernel coding style, not dt syntax)
->>>>
->>>
->>> Right, without it, BL won't initialize backlight and display. We need
->>> it to initialize backlight here since mainline ktz8866 won't program
->>> partial registers properly. If there is no other workaround, I will
->>> remove it to keep kernel coding style.
->>
->> Can't you add a simple-framebuffer for v1 and drop all the DSI stuff until
->> you figured out the backlight and upstreamed the panel driver ?
->>
-> 
-> I am thinking about it. But still, if backlight can't be properly
-> programmed, simple-framebuffer won't help.
+On Sun, May 25, 2025 at 11:32:20PM -0500, Konstantin Shkolnyy wrote:
+>The test outputs:
+>"SOCK_STREAM SHUT_RD...expected send(2) failure, got 1".
+>
+>It tests that shutdown(fd, SHUT_RD) on one side causes send() to fail on
+>the other side. However, sometimes there is a delay in delivery of the
+>SHUT_RD command, send() succeeds and the test fails, even though the
+>command is properly delivered and send() starts failing several
+>milliseconds later.
+>
+>The delay occurs in the kernel because the used buffer notification
+>callback virtio_vsock_rx_done(), called upon receipt of the SHUT_RD
+>command, doesn't immediately disable send(). It delegates that to
+>a kernel thread (via vsock->rx_work). Sometimes that thread is delayed
+>more than the test expects.
+>
+>Change the test to keep calling send() until it fails or a timeout occurs.
+>
+>Fixes: b698bd97c5711 ("test/vsock: shutdowned socket test")
+>Signed-off-by: Konstantin Shkolnyy <kshk@linux.ibm.com>
+>---
+> tools/testing/vsock/vsock_test.c | 25 +++++++++++++------------
+> 1 file changed, 13 insertions(+), 12 deletions(-)
+>
+>diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+>index 613551132a96..c3b90a94a281 100644
+>--- a/tools/testing/vsock/vsock_test.c
+>+++ b/tools/testing/vsock/vsock_test.c
+>@@ -1058,17 +1058,22 @@ static void sigpipe(int signo)
+> 	have_sigpipe = 1;
+> }
+>
+>-static void test_stream_check_sigpipe(int fd)
+>+static void test_for_send_failure(int fd, int send_flags)
+> {
+>-	ssize_t res;
+>+	timeout_begin(TIMEOUT);
+>+	while (true) {
+>+		if (send(fd, "A", 1, send_flags) == -1)
+>+			return;
+>+		timeout_check("expected send(2) failure");
+>+	}
+>+	timeout_end();
+>+}
 
-Sure but with this version you have simply have no display at all,
-so just drop the backlight + dsi stuff for initial patchset, then
-when you figured out the backlight and the panel driver update the DT.
+I'd move this in util.c like we did in 
+https://lore.kernel.org/virtualization/20250522-vsock-linger-v6-3-2ad00b0e447e@rbox.co/
 
-Neil
+And I'd rename following the other functions we have there.
 
-> 
-> Best wishes,
-> Pengyu
+Thanks,
+Stefano
+
+>
+>+static void test_stream_check_sigpipe(int fd)
+>+{
+> 	have_sigpipe = 0;
+>
+>-	res = send(fd, "A", 1, 0);
+>-	if (res != -1) {
+>-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+>-		exit(EXIT_FAILURE);
+>-	}
+>+	test_for_send_failure(fd, 0);
+>
+> 	if (!have_sigpipe) {
+> 		fprintf(stderr, "SIGPIPE expected\n");
+>@@ -1077,11 +1082,7 @@ static void test_stream_check_sigpipe(int fd)
+>
+> 	have_sigpipe = 0;
+>
+>-	res = send(fd, "A", 1, MSG_NOSIGNAL);
+>-	if (res != -1) {
+>-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+>-		exit(EXIT_FAILURE);
+>-	}
+>+	test_for_send_failure(fd, MSG_NOSIGNAL);
+>
+> 	if (have_sigpipe) {
+> 		fprintf(stderr, "SIGPIPE not expected\n");
+>-- 
+>2.34.1
+>
 
