@@ -1,44 +1,53 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC6F1876;
-	Mon, 26 May 2025 06:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA1CA1876
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748241306; cv=none; b=PWJNWE6BXoPgWo/zydKEvNMx+BW0d5eunKuBCEw/fX2/PYJRuItazdG4JAnbOfP6VYvoqt8SS28wWioNPlc9tlKfCwZ5Yyro+RwV5xDjFogcwjEJysXQ/4ylWdRsrbr3w6IY587rapMb5gBe1VfwMaKAyHNN48T3vSYK7ZyIPoQ=
+	t=1748241348; cv=none; b=A4r7CmgMYynaztsx5BVEAYDH17R+uEQy9EHe9JV5v1GLpI4y5VZBRiyfh+85exyWbKKaRAYN5P+l48hMXwV1ZokwnlzzQacuzsp0b3XSDlkXJtWt4sNXM/9FTsPcSmNfhVZX5hXWzuH1a0Aps2d8HIEi6SA3tzkmRaZrzo82p/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748241306; c=relaxed/simple;
-	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KANk3ZBQg8g/LpSTkEajx1Rgn5TT+4q1DVojTBilGoJoouRYXBp1azPQY2jcJrLKLgDfiPIkJzixZmw+Iq0QOa/Az2d20Bpa6rrjcfju/sp6ojokdqeZnA/ZZ+hzYM+iz7JcpOFMejGSalt99qBuHMFyOo3nrtSO6ZRibXcQ6aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 8124F68AFE; Mon, 26 May 2025 08:34:59 +0200 (CEST)
-Date: Mon, 26 May 2025 08:34:59 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, song@kernel.org,
-	yukuai3@huawei.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
-Subject: Re: [PATCH 11/23] md/md-bitmap: make method
- bitmap_ops->daemon_work optional
-Message-ID: <20250526063459.GD12811@lst.de>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-12-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1748241348; c=relaxed/simple;
+	bh=xx8UQce5G1X0v9V8KkMFPofzo8dSpORDUL1PqfJD/AA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PQWQ4TacJOLlxDTxRyZLubtf9mBbyfvg/LKmUlq7EJioKWOZcamUspIF7vMH7VTpkDfq7IyI+sUNoZX7DZkioz9+IviDF91WbKU2ll0PoiKvIyVBp7Y8wPJl9gP/NlvPTj/zRVQvuqGLBYJHIyjomIxErNO/9LCdseGovU1/LF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5004B153B;
+	Sun, 25 May 2025 23:35:23 -0700 (PDT)
+Received: from MacBook-Pro.blr.arm.com (unknown [10.164.18.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DECC53F5A1;
+	Sun, 25 May 2025 23:35:35 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: david@redhat.com,
+	ziy@nvidia.com,
+	willy@infradead.org,
+	dhowells@redhat.com,
+	hughd@google.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	ryan.roberts@arm.com,
+	aneesh.kumar@kernel.org
+Subject: [QUESTION] xas_reload() in iter_xarray_populate_pages()
+Date: Mon, 26 May 2025 12:05:24 +0530
+Message-Id: <20250526063524.22597-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250524061320.370630-12-yukuai1@huaweicloud.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-Looks good:
+Hello all,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+After doing an xas_load() and xas_retry(), we take neither a reference nor a lock
+on the folio, and we do an xas_reload(). Is this just to reduce the time window
+for a race?
+
+If the above is true, then, there is a negligible window between xas_load() and
+xas_reload(), because only xas_retry() exists between them, so why to even reload()?
+
+Thanks,
+Dev
 
