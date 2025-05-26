@@ -1,94 +1,99 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E0F1A9B24;
-	Mon, 26 May 2025 14:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6791C19BBA;
+	Mon, 26 May 2025 14:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748268857; cv=none; b=ee5GGvc/37YzYNOFX5ee/4cBVlGdj3CR7aMr20b6xMLw72YDwY+ln4Hy0jc4wo1XoT1veP/ppmYZZtyE3ZNijw/hNwa+/V2/R13dlIrXvm0hqG+tGmBs4HrqBmZ/c4sziHRgwAvK3tlL8qx6iC7dOLJzXI5SM7c2USNucWGyBQ8=
+	t=1748268968; cv=none; b=tXVC8cd6X0OlOO0qk0iWiTu1R/qL+8G1+ZkdVxHQz9g99TKRxO0ij7rhRZrllyqlsGYZO7tY6F/C+J020Q8qAEqFLdqpjm8ip+sycqXYfYAb0UXmga1g1JfdKkd3u/aIV2dej08q11I9qj6RCtEJuCIZvuHuCfCl+z2W1JSl+yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748268857; c=relaxed/simple;
-	bh=ETTjRBcczpFag2Ns20oIEcNc2E4vGNitf8zIGNoNDaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VjcNj2Ou9pKi8vqhDcyUENMnhtzXtJPV1ActAPGhwSBDFedeEHAusHIY+lQCXhEh9DiuHSSwQ1mllNKBWpt6Ixy8jaapvUwslCz5t7slphgZz5Rf8MuxWeNyDoX52+oeZd0fExoOMJjfUhD84pMLC7oyjt5TyUNZlp8LjldFmLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Ci1RKDb6; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748268968; c=relaxed/simple;
+	bh=yS4lvg5BCVIIEJbHc6Mprc6sI5O+lunrZT59p/2eUL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M5hvU+ZC/MZtbzgBm7hjzhWnBbmIdRB723zoEHrde2W0VAfSoTE6F2QAoT1yb8EC7EVr/tAbcFw09jfKEdrehrzWzyxu0pkPCiRepOBn85aw+CqV1Nq7Qnwt9oqmiok7ZBrVHb6TsmBa4FC4D6lYb5KSukPBkZJYCPJ7/M3TyPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZE0Dl0Ar; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ci1RKDb6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=gTUQIv6xtVQdEIhWmKs1GCL0HyslUp2+oj7lqnt+NHQ=; b=Ci1RKDb6871pfBSzyscgJXu0GQ
-	rqWL6a6oZXu1JWVoZrzBArnlLSOMg0jGzEsX9C+54h22e0E79PbXd5vCv/kb/scMxfqVR+0Sy5rkj
-	FTHPaIn1AIf27eudzyyjNlNPfgrVDJ8XFac94nsGGF8cxeHADlC+aoh5itlnIaFaCM44=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uJYad-00E0Oq-Sg; Mon, 26 May 2025 16:14:07 +0200
-Date: Mon, 26 May 2025 16:14:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: James Hilliard <james.hilliard1@gmail.com>, netdev@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] net: stmmac: dwmac-sun8i: Allow runtime
- AC200/AC300 phy selection
-Message-ID: <4a2c60a2-03a7-43b8-9f40-ea2b0a3c4154@lunn.ch>
-References: <20250526002924.2567843-1-james.hilliard1@gmail.com>
- <20250526002924.2567843-2-james.hilliard1@gmail.com>
- <aDQgmJMIkkQ922Bd@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZE0Dl0Ar"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60462000956so2112198a12.0;
+        Mon, 26 May 2025 07:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748268965; x=1748873765; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=k/crlRBagCnIOIZRNJ+r+raWiHrCUa2+Lr7j4P1GLWY=;
+        b=ZE0Dl0Arw6UBPxSKo/fwyOqHK3PhX7AqW66TWDIm8Z3AkkiTzjjd/3PO9KZhC3tt6k
+         rc8TRGg2S1qAFMwsEpQAGKTxnCp5q5AgP6081mTLmdk6+yrVB7UzB+roCnb6AQ+MJ+9y
+         /Jtlz9PbZy7VyKOZYgO6NTURDWwV3ikb45nCwoPrlrWPIIfqVETOFx9nNxFGvEVo0Zka
+         gZa/+qX3feqm9j5VNjxi+q4JH4asgrUYCADDLKVgn3/7btYGbZ98hI70gT7UT5VOEg52
+         1DbXfQZGoBKRLz8pJtmjG1OLt3Lv26smYQh7q7xlJnHrTQDi/cfa5Jt2j4Dbgh4tNvsy
+         bRVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748268965; x=1748873765;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k/crlRBagCnIOIZRNJ+r+raWiHrCUa2+Lr7j4P1GLWY=;
+        b=AdrEdqRMsH/hNlovAI24JYV+yNhrX6NsMV3CrMZq5myj1r8GTpMG+cXr7F2/Ep2AHj
+         +4zIACj0+oyvh+WcaD2sXEPFck9+asUEjDdCkTNo9+9pjgefO3i0n3DFFrs5oB+NKbb7
+         RPsw0g/KN7aLuaOPrKT3E0b9t1OWP0nw8OuPPDrmazR/x4FQjXm1+gyQTcmF6TMCu0ZR
+         iwdlqYNKVx37Kxsd+WSRUVU+EqcT7el74Asi/T6/OA4BWxkU75SBPrjkAg8rNz7rpkhD
+         9lE4HCUoNGFeD7jdopBrZGIL3mYEI97H5JwSRWJ+XzRY6U4/4xpqNT6P9tRUP9qf2GWy
+         PYBA==
+X-Forwarded-Encrypted: i=1; AJvYcCXW7Uu/bqAoLqcdkUkrtfToeswMyezVZG8j5I4LbzIAq1Vxus2Yum4lPD9hfRsUAcX9kSWLqHMUwbA3s9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH8o6RrD0fsLrG3H2dfJ61DSUvUjAVhnYek1lhsllF0v7+77x6
+	kkuSdSSvPnpgVlyRLWV9blvsk9ZkiwUzGsz0NqNg1UfYnjAy9aM2rRe/+WuwCNMR9RE=
+X-Gm-Gg: ASbGncsEp6/70Cjt9aXxcYwm6XQXfbFBihsk5Rl0vjbMoTHkjJhKHEoktbzPwpcBk1l
+	B/g1pZ6nsZx5PJwAYNaeTqH3zj53jBRlvymVzNWy5QSw6V/o4I1qoQMSYmpB+3jCL9ZmNw3C+z5
+	SBXEdK3WVj+l+pJeKvjaxAugoikaWahFrx/+m1+XzHav3M4t/puWvSjQfqesXmLk3q+ipr4mhSb
+	MrqkzWQkKdvuZeSX/K4iM0yoa9MWepIl4pyxal+BlXwdPAoL29mUE6bY6cT25LimZzdDAIzosJV
+	fCEZ7np243bHlAXa9DYU/efxqVuo9+km3x1dD8Fo6NCMXt4FOoRhwtF6mtaERj15BYvm1TNOQfw
+	RRViib3oqyh7oVhq36Xb7sM8ZUgz7tLKmPmo=
+X-Google-Smtp-Source: AGHT+IF0pFk+od97RSJU8Mzlpr1c0Tay/B2Ch7lBQWROD9O/7pqRN+VP9iEbsYTEaCtevx0JLeAh/Q==
+X-Received: by 2002:a17:907:8e87:b0:ad5:3504:a6d with SMTP id a640c23a62f3a-ad85b2d6e72mr665567566b.47.1748268964486;
+        Mon, 26 May 2025 07:16:04 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:8617:d700:125e:f885:2a24:cf3d? ([2a02:8109:8617:d700:125e:f885:2a24:cf3d])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06b105sm1671885866b.41.2025.05.26.07.16.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 07:16:04 -0700 (PDT)
+Message-ID: <4e97af0e-0cc1-4b92-9876-927624a981f7@gmail.com>
+Date: Mon, 26 May 2025 16:16:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDQgmJMIkkQ922Bd@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] MAINTAINERS: Update my email address to gmail.com
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mchehab@kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+ tomm.merciai@gmail.com, martin.hecht@avnet.eu, michael.roeder@avnet.eu
+References: <20250515145150.1419247-2-mhecht73@gmail.com>
+ <aDQfcnIzJDLcK-U-@kekkonen.localdomain>
+Content-Language: en-US
+From: Martin Hecht <mhecht73@gmail.com>
+In-Reply-To: <aDQfcnIzJDLcK-U-@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 26, 2025 at 09:04:40AM +0100, Russell King (Oracle) wrote:
-> On Sun, May 25, 2025 at 06:29:22PM -0600, James Hilliard wrote:
-> > +	if (!nvmem_cell_read_u16(dev, "ac300", &val)) {
-> > +		const char *phy_name = (val & AC300_KEY) ? "ac300" : "ac200";
-> > +		int index = of_property_match_string(dev->of_node, "phy-names", phy_name);
-> > +		if (index < 0) {
-> > +			dev_err(dev, "PHY name not found in device tree\n");
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		plat_dat->phy_node = of_parse_phandle(dev->of_node, "phys", index);
-> > +		if (!plat_dat->phy_node) {
-> > +			dev_err(dev, "Failed to get PHY node from phys property\n");
-> > +			return -EINVAL;
-> > +		}
-> > +	}
+Hi Sakari,
+
+On 5/26/25 09:59, Sakari Ailus wrote:
+> Hi Martin,
 > 
-> 1. You are re-using the drivers/phy binding for ethernet PHYs driven by
->    phylib here.
-> 2. You need to update
->    Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
->    in a separate patch.
+> On Thu, May 15, 2025 at 04:51:50PM +0200, Martin Hecht wrote:
+>> Replace my corporate email address by @gmail.com.
+>>
+>> Signed-off-by: Martin Hecht <mhecht73@gmail.com>
+> 
+> I've picked this patch but do the other instances also need updating?
+> 
 
-A real user, i.e. a patch to a .dts file, would also be good.
+Thank you. If it is okay I will update this later. Both email addresses 
+are valid.
 
-  Andrew
+
