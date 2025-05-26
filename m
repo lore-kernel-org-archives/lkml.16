@@ -1,175 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B484B1E8324;
-	Mon, 26 May 2025 09:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB263596A;
+	Mon, 26 May 2025 09:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250665; cv=none; b=hXJa0ixmuDsHgkSWxZ7KWmAawi9tyzjnD5Dqm0g2qLwhb3XzVHi1+jv+JB05r1vTI9DeyOIj+j/NFuLSGRY6Y99vcwOM35y3dddASldG+nGI2Ul0A5OSlxFvTXYrTrrg1KbI4BkJVQaGCkUviP9KnxB6MJf8CI1OFykkDNCXkt8=
+	t=1748250850; cv=none; b=iE0OkNDg2cJL2xkMdyeHCABSjNpnMrDezOzDgzOchfSWFKi8HprzDPvF1OXqsoOE+hmEfsotHaE596HN7XhSqXuYKhqvZEh3neV5CCo8qZBVK5QaGbDjzfBnD6DvjGDlMGX6Z+patlW0jE4DyvJRY/0qIs3iMLVUVh2MiSA0Wo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250665; c=relaxed/simple;
-	bh=vV4FBCFkwq6PyUFkRrLKn+LL8FlEQvtmUBn1sC+uQvQ=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YRd7jXLKTqg5EZb8OSEdTsvf5dMksgh6lVj/Jc0tNYibblDuan/h6kLY1z7WdfWwxJyoUEZ729fezmyEu5h6lVJb0ozbSeeYhVl5ThFARGibq77HfIV3KKffupLMwwcMh1OpO+WNC520HMDmLVg30sFZ6FU66NjSLrcp+BW2MfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jgfLpO9Y; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jgfLpO9Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748250663; x=1779786663;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=vV4FBCFkwq6PyUFkRrLKn+LL8FlEQvtmUBn1sC+uQvQ=;
-  b=jgfLpO9Y6PRBrZbmw03vQKdU51In3pfK3+3SVNoQAfzbvVt8wormfrZX
-   X6WY9j8rtEpiJsE97HTr63JJHBukEnxYFMWZyhZDTDNoR+OqL6UsQiHyP
-   F94j0j7I79cWC1YDmMGsAgK5iRyyusQIbZqZCXP7LF8gu6RY4qmq2PK5Q
-   txt2sI+4IeJ9VcA7KJ232gQBz+H2Um4VKSU1FSWOCb9jFh4o+GVlWzEE3
-   /woPWmS/ObvQQx3DnYn8Po8reVltl4IBDu5n+3vzPUhfKaEILbfCO568V
-   /tdvXGe1LQuSNIDUFPMwY+TpUyr+ZJSc3u8uFaUpcaWBp7oTw6gB7x0rI
-   Q==;
-X-CSE-ConnectionGUID: ZjZCVgtGTXKx3aPj4E/XDA==
-X-CSE-MsgGUID: bOtBtVvMQRKhgRbcmDsnFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="67628423"
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="67628423"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 02:11:02 -0700
-X-CSE-ConnectionGUID: 578vrcYzTpClzj62Mmi7zw==
-X-CSE-MsgGUID: bZeN2YJ5QsW5NogFl5qb4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="142195432"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.245.206])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 02:10:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 May 2025 12:10:53 +0300 (EEST)
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
-    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
-    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
-    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
-    Mark Pearson <mpearson-lenovo@squebb.ca>, 
-    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
-    "Cody T . -H . Chiu" <codyit@gmail.com>, 
-    John Martens <johnfanv2@gmail.com>, Kurt Borja <kuurtb@gmail.com>, 
-    platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 0/6] platform/x86: Add Lenovo WMI Gaming Series
- Drivers
-In-Reply-To: <755BCB57-A912-44BF-AD6C-6B9AFA33A340@gmail.com>
-Message-ID: <b178447d-362e-1ef9-03a0-796dda036626@linux.intel.com>
-References: <20250522015350.471070-1-derekjohn.clark@gmail.com> <2972c4c6-7080-e058-ec39-b8c1dc603f7a@linux.intel.com> <2c7ffaa6-e639-e215-42d0-78a2b185ad45@linux.intel.com> <755BCB57-A912-44BF-AD6C-6B9AFA33A340@gmail.com>
+	s=arc-20240116; t=1748250850; c=relaxed/simple;
+	bh=2/SVAaHCAZFysnEgfwG3OLk5mEvVV8sfktksjtDC8ls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QSjLFNCQLTFg7eLS5O6HkF2Bl7FQ0vtlYWa5LbRsChwKY7CNl0PwuqbzAIPtw8u9RqUvtBpACBSslVXgILS1FdBwuC16H76KjO5oLZ6r/OBbyaIbCUZdPJKUrYVssSSCrFmhNx/KnnzmcVECy9532Nnj/EG7D6DPw3LLwD4+7lM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5240a432462so1328462e0c.1;
+        Mon, 26 May 2025 02:14:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748250847; x=1748855647;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OHHl3kxB/rKMhdmAcTI6YIxxCctpYm2ZTkKcUrpPxy8=;
+        b=Zt4oWaQDDlVW72TT6C+je0ZEV34H9qrJ3sMygHs7yWOgnRUn4l02b7KgQur0c3nx7z
+         0JhHU5Us4ZnAT4qF1RDih1QsDDYbYzKPBoYY/jiVbEB4XHYTsBS4sfFdvQskeDjuZTxq
+         wMib0LIg5+s8uRBvUCdDCQ79GFj6m7il3rygKhF8p2mNKMPL2OL5qDPxYiQHBCgmyutR
+         cRGGKKTEYaHfwEYX626XfYPcj4ndtrG8aq1ja7ftKS12G14AYJ+jIC09Q1AiO/fS9j+q
+         BIbId/AguW2iKM88lC/RqDHWiUWKcyp7BPdyeARlnGOxnf5l3O14NCAdk0UKbOv9TbRM
+         cJvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtghdiYf9c2twEKNG4AH85rnzOXDn9wf1XCIwxk/VSkTnEXy1wiYxSrhKuCaRTEarCYgmuqJ1KvNiY9Urt/wY3Kqo=@vger.kernel.org, AJvYcCWg9NO6HncbdY9eVobottXWfWVj2Sd3a81sFcunawrZ7O3f2aGEcKQVVs7HLuj18whu/+q5hNlhGdgO6dA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlInqaA3XMQ/p2fXv6W563aecBbfvQSOzIGPgWozOW/lvRj106
+	W7aEi62wQHxw52clv+QpIi1qezcq/NLFqpYG00FI9/aBYOZ3MP3lduN7Z0SiUMQd
+X-Gm-Gg: ASbGncu1I/1n/Sid9nOna083pmDLoa9b/XJkcbr0Eu8rkySLt/x+wBnB7OLPHo7fKxS
+	IByDmkHWF1m5PIbpS2A6qPmFadAzSngzstO82dUJz029ECxRueiKdF+I0CIX4IUKPp+cM/S4ANZ
+	/dMGJZKm041HAhPD6nDKaincqVhFoLIiWLDakh/QJSc7A0AcWuMjQnRF2XrFoczTlI1Ih3fSoYu
+	kLrwSsMN7Lk44V+tFG8yfNE2SyxRPx3RgH/2cmTTfZ1w3bSdRfzVDU6mlaSEdDJdcbPvuK4heeG
+	+8OOgzh5EIhVfn6ZT8eqmMReNhh3fWDiXQ3Yju63rfCYTT4MXMI5PN2zeCsUDZ2XCcZPMd1qnXw
+	fctPdLKRVlQmevQ==
+X-Google-Smtp-Source: AGHT+IG6p0ULGqSIY6DiRzvQueeZzisJweOXW/aUNs+Y+HvFyS3mTxYtOQ2uck51XYZ+kPWo90OLgQ==
+X-Received: by 2002:a05:6122:3547:b0:52e:630b:166f with SMTP id 71dfb90a1353d-52f1eec45a4mr9548283e0c.3.1748250846838;
+        Mon, 26 May 2025 02:14:06 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87de8b6b864sm3980161241.25.2025.05.26.02.14.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 02:14:06 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so1279928241.1;
+        Mon, 26 May 2025 02:14:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUrngsCdMal8XIg58Jq4nrFP3Ia7NDrNEl5LJSFUmwSt5Q2goFXyHZu1QLTvBpC4KLda2bLwlt9Cml8dgM=@vger.kernel.org, AJvYcCXuMJPpuXToAlNZ9XAAUM18QhdUx7KChWr8ge2yOdff/LkoqziCbKYMNF3W4wm8BjCepA6bODFDYCnEqyR84DMm6gg=@vger.kernel.org
+X-Received: by 2002:a67:e446:0:b0:4e4:3c3a:f163 with SMTP id
+ ada2fe7eead31-4e43c3af25bmr2968298137.7.1748250846395; Mon, 26 May 2025
+ 02:14:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-796157268-1748250653=:932"
+References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 May 2025 11:13:54 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVMDd2abFFzMY_Rbm=7pnX5C2qHBsa68tF_c=bRnp3zkg@mail.gmail.com>
+X-Gm-Features: AX0GCFs0iTAPJyn3o_dQ93Zo1B5zmQvHXVBeKOyo9bKkSBZ5LaEVKWOqRf2Nfi4
+Message-ID: <CAMuHMdVMDd2abFFzMY_Rbm=7pnX5C2qHBsa68tF_c=bRnp3zkg@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set() with atomic_enable()
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Douglas Anderson <dianders@chromium.org>, Adam Ford <aford173@gmail.com>, 
+	Jesse Van Gavere <jesseevg@gmail.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Tommaso,
 
---8323328-796157268-1748250653=:932
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Mon, 26 May 2025 at 10:55, Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+> After adv7511_mode_set() was merged into .atomic_enable(), only the
+> native resolution is working when using modetest.
+>
+> This is caused by incorrect timings: adv7511_mode_set() must not be
+> merged into .atomic_enable().
+>
+> Move adv7511_mode_set() back to the .mode_set() callback in
+> drm_bridge_funcs to restore correct behavior.
 
-On Sun, 25 May 2025, Derek J. Clark wrote:
-> On May 25, 2025 2:41:51 PM PDT, "Ilpo J=C3=A4rvinen" <ilpo.jarvinen@linux=
-=2Eintel.com> wrote:
-> >On Mon, 26 May 2025, Ilpo J=C3=A4rvinen wrote:
-> >
-> >> On Wed, 21 May 2025, Derek J. Clark wrote:
-> >>=20
-> >> > Adds support for the Lenovo "Gaming Series" of laptop hardware that =
-use
-> >> > WMI interfaces that control various power settings. There are multip=
-le WMI
-> >> > interfaces that work in concert to provide getting and setting value=
-s as
-> >> > well as validation of input. Currently only the "Gamezone", "Other
-> >> > Mode", and "LENOVO_CAPABILITY_DATA_01" interfaces are implemented, b=
-ut
-> >> > I attempted to structure the driver so that adding the "Custom Mode"=
-,
-> >> > "Lighting", and other data block interfaces would be trivial in late=
-r
-> >> > patches.
-> >> >=20
-> >> > This driver attempts to standardize the exposed sysfs by mirroring t=
-he
-> >> > asus-armoury driver currently under review. As such, a lot of
-> >> > inspiration has been drawn from that driver.
-> >> > https://lore.kernel.org/platform-driver-x86/20250319065827.53478-1-l=
-uke@ljones.dev/#t
-> >> >=20
-> >> > The drivers have been tested by me on the Lenovo Legion Go and Legio=
-n Go
-> >> > S.
-> >> >=20
-> >> > Suggested-by: Mario Limonciello <superm1@kernel.org>
-> >> > Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-> >> > Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> >> > ---
-> >> > v11:
-> >> >   - Fix formmating issues.
-> >>=20
-> >> Thanks for the update, I've applied this now into the review-ilpo-next=
-=20
-> >> branch. BUT, this is very late in the cycle now and if there's a build=
-=20
-> >> issue (or LKP doesn't build test it in reasonable time), I'll have to =
-drop=20
-> >> this series and postpone it into the next cycle as I don't want to del=
-ay=20
-> >> the main PR to Linus too long.
-> >>=20
-> >> But lets hope for the best, I think some depends on issues were fixed=
-=20
-> >> earlier (IIRC), so hopefully it works good enough now. :-)
->=20
-> >Hmpf, these give me a few new warnings related to this series:
-> >
-> >make W=3D1 drivers/platform/x86/
-> >make C=3D2 drivers/platform/x86/
-> >
-> >...I really don't know why sparse complains about the lock context=20
-> >imbalance though, those functions use guard().
->=20
-> Hmm, I'll take a look at it.
+Thanks for your patch!
 
-Thanks.
+> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI connector helpers")
 
-> Is there a comprehensive list of all tests that need to be run? I'd like=
-=20
-> to improve my process to avoid these in the future.=20
+I can't find that commit? I guess you mean:
+Fixes: ae01d3183d2763ed ("drm/bridge: adv7511: switch to the HDMI
+connector helpers")
 
-There's some list in Documentation/process/submit-checklist.rst
-but use reason with some of the items whether they're relevant, I think=20
-very few patches would meet _all_ of those in the most literal=20
-interpretation :-).
+Gr{oetje,eeting}s,
 
-> >There's also a copy-paste error:
-> >
-> > * lwmi_gz_profile_get_get() - Get the current platform profile.
-> >
-> >..._get_get -> ..._set
-> >Get -> Set
->=20
->=20
-> Do you want me to submit v12 whenever it's ready,  or wait for the merge=
-=20
-> window to open? Trying to avoid too much noise on your end.
+                        Geert
 
-Just send v12 when it's ready. For pdx86, there's no need to avoid sending=
-=20
-during merge window (just don't assume anything gets applied during merge=
-=20
-window :-)).
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=20
- i.
-
---8323328-796157268-1748250653=:932--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
