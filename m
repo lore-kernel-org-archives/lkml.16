@@ -1,790 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6526F2F2;
-	Mon, 26 May 2025 14:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0C48460
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748269011; cv=none; b=JsSLIn8Tu808P2cc5g04jbaSxS909kpBGalti0viPD4tB4FQzrq32VL/lF16YxCd36XhT0kc9XA5kCisLIe4ITPLCzGf26EBWJNJKP566ZOmXScbuI9KozoRDEx6mF4kqd1T/JLkm8QXWwtXZU6sXdfLEz/3jbytL5S/lF4iwco=
+	t=1748269064; cv=none; b=XB5ZU012JXsMtNz2M+K8fEWHVH3/x7HTfz9SQGeXTtcr70/tQdbe+BUYswUpy8xGhPBxqHGDA0Z/tgp+5BQ/nVIVdTUQioGN7LzE7es4l4gfl2trdqrfiqHA6FRJlQUpqyzAxIxHHZA25r2EAdAnLfxzxZZs2WYgfim5fx/dqqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748269011; c=relaxed/simple;
-	bh=JR1IUKABILoT3RF8KX2qBjM/PKmnCXyAD5AiBvXhUGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dtzf0LWeaBISUeibHrRvloHYT0rNzY05pikeDmH/veV+OdaqgOcekAdu6tos0XmzDEH6IOMjlQ2KGG8lQlGBv1vChPHEh1KfijhvKDnj3UohlTBRQoxrjLMsY+UcMr0KOHfGashXn71ymHwSSQW7MZaQ/qpVX04tZoMjXtLWsEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJz+XpOP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748269064; c=relaxed/simple;
+	bh=cuPtAl70DsIAdto7tODFdWELXw3QIDw6d8jyOYNKrxg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BHp+9PUANxsDyg84a8adpBkiGYWJcFj/5VvWVe0hipS7uATFJKEPGXWq8Sq7LBWrujGPgebZWX10MFmwzI2+fGyUeWM7T+PGWyDC3CVE3dtJkCW2VgsuvDWIj5A7haksE8paV+Hbav/kOL4ZyHcffrp1qfet7ZoWGypcz6dcXT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lDCTKBbW; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJz+XpOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61175C4CEE7;
-	Mon, 26 May 2025 14:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748269011;
-	bh=JR1IUKABILoT3RF8KX2qBjM/PKmnCXyAD5AiBvXhUGk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GJz+XpOPxaKJXTwEVufkxLP/penoUXtv+7bc+BJQSoCVB4twx5KaUDd+12z3MQP+B
-	 WdHk+VRwOtUoErrerxfdfYov0MHQUgXvz9Tml0PSYCOEjqGccgiuYB+PsxpMNi1tbv
-	 ul4AiKXjNPRv6uLt/aQgdf1ibwC3BpPkk5p25J6PxxtT83volNuZ1rkRrxyyGhI6BX
-	 0HocjGSjNOyg/TK/f54LXunQgpk74gi4pGzei24ErL6uP0Yd8DuNZRtMxrNmEy+qcx
-	 Zj1WrYuXOYO3CdoDJX1G9xKOefKby3ToYjpqnEM+gMCjiXcAPlx8x4AgDZSW7DAyCb
-	 nENbpdVR7GL1A==
-Message-ID: <e5d1af07-d08c-4fba-a093-06fbd89607c8@kernel.org>
-Date: Mon, 26 May 2025 16:16:46 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lDCTKBbW"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b0d638e86so3909881e87.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1748269060; x=1748873860; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=raAeqcWcFDwjO1XVy3sHjLwVxrUwawrB+c5wzY4h6ig=;
+        b=lDCTKBbWLviJJotK9LtuDRHyjBgwWRd09o6Ht3xImKwkBPTcERvq5BIAjYMuEq1qZc
+         93lEHHaWg72KD+Z8oG9aj8HtP3Yd9U8VOKSd2Zy7syssKOlbRHjlgHewwHcZ/RHrQSqJ
+         xO3cg6mMdT+D1Y36ughAzJ+c0f/U4hZM0E564=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748269060; x=1748873860;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=raAeqcWcFDwjO1XVy3sHjLwVxrUwawrB+c5wzY4h6ig=;
+        b=Pz+s4+6ODcWdyhCOwt+5PyepSnH0WnK18F1AjNpVu2tqsZU9e0Yp1t8ohsiEsWQRw8
+         qm25SmerpkwiELoQmqdg2lKUirKCUQlxcgQooE5cnAdZ/5OX1VXCT2wBVpfWrPEkqIsD
+         qjevc8zzdXKWf7JHoENxkI1Il4GHaNx6vNQ57+dJ+z9j1CMDMEoWDiqYLkcS0U66Ek2r
+         N8zEdDUhKbZ9NKWtDqtAkA/ry2Xss0ggxzrkeDw2WNgNz5JYSLD85rWvA8krt4LoE6qZ
+         AcqfV8Rxa9HGKVWhzUj7cVwHdjLQ3IGJdMHqz8K1Ndv6pk5mIVlhBT8APBZKUuRNAz39
+         xsqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdb3KTFtvBN2ytLeq7PvFkeDtYoSSLIqzW6Uc/WTuW9h30gS9TpeL06GrfaETvIuxvYWZNI5RBNIfsnFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpREOQZx3BtGZGe7C+Ygqgyd7Ves2ASsUNaYyzpQKo9iUSTY/R
+	OS58Fr/Hu58Qa0IhjuGB6X6SDpNz5ZWWB+mpPA/OqmyZOTTJYp6Nbxc9YL/iIMxjOSO/c98A0FD
+	v56Q=
+X-Gm-Gg: ASbGncs8d1gstlt2daa0OK+S9L7FYCyIA9R5jBXG/tUrNwcAbgV1ta7C+T9IMUY+Bu+
+	DbJjW9DEqx3Jh7N/lU+RCTZW/+dlW3NeuKUL14R2viTd5v4rY/eOYCXzRCRlgdFmYgerwjEQTa5
+	eijW+6g3rG9b+Gy9SJUpqTL1vbzeskmUks4AW/0dFk5xP77LgbleBDUDOyFCyTNxTXfCNE8wS/z
+	bAj8pJpq0Z1eZ5sy5Z/J13H5NUFcrpaQD9uKruRQ5tWdeBtRzZnfd1PF79e9bvMdTE5lBldUNWr
+	ZRKPICiIE+Cy/8eZ1Pr3OXBPLWSW13SYc2EmScE8Zg/xV5AJG+nDPuS2XbmPXFxnhJ7NWPeDEBT
+	Pzu5iwtalGbZiLA==
+X-Google-Smtp-Source: AGHT+IFnOVc77XmzvNnpamn120rJfh/7KNNXwqcdJ5U9FKnkepPA60SF2kuexTRiQBF53T06FxyHgw==
+X-Received: by 2002:a05:6512:3b8f:b0:54d:65e8:31e0 with SMTP id 2adb3069b0e04-5521c7a831cmr2456585e87.5.1748269060208;
+        Mon, 26 May 2025 07:17:40 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc7d8a4bsm3213367e87.115.2025.05.26.07.17.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 07:17:39 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-55220699ba8so2164532e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:17:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUzDHQ8Tm5gCMtTcDzKG7r7EYkEEwv6TIRu4nu5IBEwHQKF88gswQJ3nyHh3kjTb4hIQPZFJXhp29gpNMs=@vger.kernel.org
+X-Received: by 2002:a05:6512:ba6:b0:552:21b9:8bab with SMTP id
+ 2adb3069b0e04-55221b98dc0mr1726710e87.38.1748269058492; Mon, 26 May 2025
+ 07:17:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] media: uvcvideo: Use vb2 ioctl and fop helpers
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans Verkuil <hans@jjverkuil.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250522-uvc-fop-v1-0-3bfe7a00f31d@chromium.org>
- <20250522-uvc-fop-v1-2-3bfe7a00f31d@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250522-uvc-fop-v1-2-3bfe7a00f31d@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250404-uvc-meta-v5-0-f79974fc2d20@chromium.org>
+ <20250404-uvc-meta-v5-4-f79974fc2d20@chromium.org> <20250526140209.GP17743@pendragon.ideasonboard.com>
+In-Reply-To: <20250526140209.GP17743@pendragon.ideasonboard.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 26 May 2025 16:17:25 +0200
+X-Gmail-Original-Message-ID: <CANiDSCv-U_suiOQjF5iaPzBw_mZ9uxPDNqyr4CAi5WtWGEX0ng@mail.gmail.com>
+X-Gm-Features: AX0GCFuKM1Q7H0R6OuSws2HvXrAAdO7EuxMEZWgM3pjt66_hxx74imqyluzNgpk
+Message-ID: <CANiDSCv-U_suiOQjF5iaPzBw_mZ9uxPDNqyr4CAi5WtWGEX0ng@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hi Laurent
 
-On 22-May-25 19:58, Ricardo Ribalda wrote:
-> From: Hans Verkuil <hans@jjverkuil.nl>
-> 
-> When uvc was written the vb2 ioctl and file operation helpers didn't exist.
-> 
-> This patch switches uvc over to those helpers, which removes a lot of
-> boilerplatecode and simplifies VIDIOC_G/S_PRIORITY handling and allows us
-> to drop the 'privileges' scheme, since that's now handled inside the vb2
-> helpers.
-> 
-> This makes it possible for uvc to fix the v4l2-compliance streaming tests:
->  warn: v4l2-test-formats.cpp(1075): Could not set fmt2
-> 
-> This patch introduces a change on behavior on the uvcdriver to be
-> aligned with the rest of the subsystem. Now S_INPUT, S_PARM and
-> S_FORMAT do no gran exclusive ownership of the device.
-> 
-> Signed-off-by: Hans Verkuil <hans@jjverkuil.nl>
-> Co-developed-by: Ricardo Ribalda <ribalda@chromium.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+On Mon, 26 May 2025 at 16:02, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> On Fri, Apr 04, 2025 at 06:37:37AM +0000, Ricardo Ribalda wrote:
+> > If the camera supports the MSXU_CONTROL_METADATA control, auto set the
+> > MSXU_META quirk.
+>
+> Ah, that's why you introduce a quirk in 3/4.
+>
+> I would prefer if you could instead add a metadata format field in the
+> uvc_device structure (I'd put it right after the info field, and while
+> at it you could move the quirks field to that section too). The metadata
+> format would be initialized from dev->info (when available) or set to
+> the UVC format, and overridden when the MSXU is detected.
 
-Thanks, patch looks good to me:
+I assume that there will be plenty of devices that do not have the
+MSXU_CONTROL_METADATA control and have metadata.
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
+With a quirk, users can try enabling the metadata without rebuilding
+their kernel. They can report it to the mailing list and they or we
+improve the driver. The contribution barrier is lower.
 
-Regards,
+Another issue of the dev->info would be that D4XX devices will not
+support the MSXU_META format. I'd expect userspace to prefer
+supporting one format instead of 2.
 
-Hans
 
-> ---
->  drivers/media/usb/uvc/uvc_driver.c   |  34 +----
->  drivers/media/usb/uvc/uvc_metadata.c |   8 +-
->  drivers/media/usb/uvc/uvc_queue.c    | 143 --------------------
->  drivers/media/usb/uvc/uvc_v4l2.c     | 251 +++--------------------------------
->  drivers/media/usb/uvc/uvcvideo.h     |  37 +-----
->  5 files changed, 30 insertions(+), 443 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-> index da24a655ab68cc0957762f2b67387677c22224d1..4eeedab93b90939fc4c925012a18b7d018ade39f 100644
-> --- a/drivers/media/usb/uvc/uvc_driver.c
-> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> @@ -1725,7 +1725,6 @@ static struct uvc_video_chain *uvc_alloc_chain(struct uvc_device *dev)
->  	INIT_LIST_HEAD(&chain->entities);
->  	mutex_init(&chain->ctrl_mutex);
->  	chain->dev = dev;
-> -	v4l2_prio_init(&chain->prio);
->  
->  	return chain;
->  }
-> @@ -1958,31 +1957,7 @@ static void uvc_unregister_video(struct uvc_device *dev)
->  		if (!video_is_registered(&stream->vdev))
->  			continue;
->  
-> -		/*
-> -		 * For stream->vdev we follow the same logic as:
-> -		 * vb2_video_unregister_device().
-> -		 */
-> -
-> -		/* 1. Take a reference to vdev */
-> -		get_device(&stream->vdev.dev);
-> -
-> -		/* 2. Ensure that no new ioctls can be called. */
-> -		video_unregister_device(&stream->vdev);
-> -
-> -		/* 3. Wait for old ioctls to finish. */
-> -		mutex_lock(&stream->mutex);
-> -
-> -		/* 4. Stop streaming. */
-> -		uvc_queue_release(&stream->queue);
-> -
-> -		mutex_unlock(&stream->mutex);
-> -
-> -		put_device(&stream->vdev.dev);
-> -
-> -		/*
-> -		 * For stream->meta.vdev we can directly call:
-> -		 * vb2_video_unregister_device().
-> -		 */
-> +		vb2_video_unregister_device(&stream->vdev);
->  		vb2_video_unregister_device(&stream->meta.vdev);
->  
->  		/*
-> @@ -2029,7 +2004,8 @@ int uvc_register_video_device(struct uvc_device *dev,
->  	vdev->fops = fops;
->  	vdev->ioctl_ops = ioctl_ops;
->  	vdev->release = uvc_release;
-> -	vdev->prio = &stream->chain->prio;
-> +	vdev->queue = &queue->queue;
-> +	vdev->lock = &queue->mutex;
->  	if (type == V4L2_BUF_TYPE_VIDEO_OUTPUT)
->  		vdev->vfl_dir = VFL_DIR_TX;
->  	else
-> @@ -2399,8 +2375,8 @@ static int __uvc_resume(struct usb_interface *intf, int reset)
->  		if (stream->intf == intf) {
->  			ret = uvc_video_resume(stream, reset);
->  			if (ret < 0)
-> -				uvc_queue_streamoff(&stream->queue,
-> -						    stream->queue.queue.type);
-> +				vb2_streamoff(&stream->queue.queue,
-> +					      stream->queue.queue.type);
->  			return ret;
->  		}
->  	}
-> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
-> index 82de7781f5b6b70c5ba16bcba9e0741231231904..d3aab22f91cea21aefc56409924dfa1451aec914 100644
-> --- a/drivers/media/usb/uvc/uvc_metadata.c
-> +++ b/drivers/media/usb/uvc/uvc_metadata.c
-> @@ -96,7 +96,7 @@ static int uvc_meta_v4l2_set_format(struct file *file, void *fh,
->  	 */
->  	mutex_lock(&stream->mutex);
->  
-> -	if (uvc_queue_allocated(&stream->queue))
-> +	if (vb2_is_busy(&stream->meta.queue.queue))
->  		ret = -EBUSY;
->  	else
->  		stream->meta.format = fmt->dataformat;
-> @@ -164,12 +164,6 @@ int uvc_meta_register(struct uvc_streaming *stream)
->  
->  	stream->meta.format = V4L2_META_FMT_UVC;
->  
-> -	/*
-> -	 * The video interface queue uses manual locking and thus does not set
-> -	 * the queue pointer. Set it manually here.
-> -	 */
-> -	vdev->queue = &queue->queue;
-> -
->  	return uvc_register_video_device(dev, stream, vdev, queue,
->  					 V4L2_BUF_TYPE_META_CAPTURE,
->  					 &uvc_meta_fops, &uvc_meta_ioctl_ops);
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index 2ee142621042167c2587b6a6fdd51c1a46d31c11..72c5494dee9f46ff61072e7d293bfaddda40e615 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -242,153 +242,10 @@ int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type)
->  	return 0;
->  }
->  
-> -void uvc_queue_release(struct uvc_video_queue *queue)
-> -{
-> -	mutex_lock(&queue->mutex);
-> -	vb2_queue_release(&queue->queue);
-> -	mutex_unlock(&queue->mutex);
-> -}
-> -
-> -/* -----------------------------------------------------------------------------
-> - * V4L2 queue operations
-> - */
-> -
-> -int uvc_request_buffers(struct uvc_video_queue *queue,
-> -			struct v4l2_requestbuffers *rb)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_reqbufs(&queue->queue, rb);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret ? ret : rb->count;
-> -}
-> -
-> -int uvc_query_buffer(struct uvc_video_queue *queue, struct v4l2_buffer *buf)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_querybuf(&queue->queue, buf);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_create_buffers(struct uvc_video_queue *queue,
-> -		       struct v4l2_create_buffers *cb)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_create_bufs(&queue->queue, cb);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_queue_buffer(struct uvc_video_queue *queue,
-> -		     struct media_device *mdev, struct v4l2_buffer *buf)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_qbuf(&queue->queue, mdev, buf);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_export_buffer(struct uvc_video_queue *queue,
-> -		      struct v4l2_exportbuffer *exp)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_expbuf(&queue->queue, exp);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_dequeue_buffer(struct uvc_video_queue *queue, struct v4l2_buffer *buf,
-> -		       int nonblocking)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_dqbuf(&queue->queue, buf, nonblocking);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_queue_streamon(struct uvc_video_queue *queue, enum v4l2_buf_type type)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_streamon(&queue->queue, type);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
-> -{
-> -	int ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_streamoff(&queue->queue, type);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
-> -int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
-> -{
-> -	return vb2_mmap(&queue->queue, vma);
-> -}
-> -
-> -#ifndef CONFIG_MMU
-> -unsigned long uvc_queue_get_unmapped_area(struct uvc_video_queue *queue,
-> -		unsigned long pgoff)
-> -{
-> -	return vb2_get_unmapped_area(&queue->queue, 0, 0, pgoff, 0);
-> -}
-> -#endif
-> -
-> -__poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
-> -			    poll_table *wait)
-> -{
-> -	__poll_t ret;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	ret = vb2_poll(&queue->queue, file, wait);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return ret;
-> -}
-> -
->  /* -----------------------------------------------------------------------------
->   *
->   */
->  
-> -/*
-> - * Check if buffers have been allocated.
-> - */
-> -int uvc_queue_allocated(struct uvc_video_queue *queue)
-> -{
-> -	int allocated;
-> -
-> -	mutex_lock(&queue->mutex);
-> -	allocated = vb2_is_busy(&queue->queue);
-> -	mutex_unlock(&queue->mutex);
-> -
-> -	return allocated;
-> -}
-> -
->  /*
->   * Cancel the video buffers queue.
->   *
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index 862b4e34e5b629cf324479a9bb59ebe8784ccd5d..7a5ecbefa32c0a6b74c85d7f77a25b433598471e 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -47,8 +47,6 @@ void uvc_pm_put(struct uvc_device *dev)
->  	usb_autopm_put_interface(dev->intf);
->  }
->  
-> -static int uvc_acquire_privileges(struct uvc_fh *handle);
-> -
->  static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
->  				      struct uvc_control_mapping *map,
->  				      const struct uvc_xu_control_mapping *xmap)
-> @@ -436,10 +434,6 @@ static int uvc_ioctl_s_fmt(struct file *file, void *fh,
->  	const struct uvc_frame *frame;
->  	int ret;
->  
-> -	ret = uvc_acquire_privileges(handle);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	if (fmt->type != stream->type)
->  		return -EINVAL;
->  
-> @@ -448,8 +442,7 @@ static int uvc_ioctl_s_fmt(struct file *file, void *fh,
->  		return ret;
->  
->  	mutex_lock(&stream->mutex);
-> -
-> -	if (uvc_queue_allocated(&stream->queue)) {
-> +	if (vb2_is_busy(&stream->queue.queue)) {
->  		ret = -EBUSY;
->  		goto done;
->  	}
-> @@ -513,10 +506,6 @@ static int uvc_ioctl_s_parm(struct file *file, void *fh,
->  	unsigned int i;
->  	int ret;
->  
-> -	ret = uvc_acquire_privileges(handle);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	if (parm->type != stream->type)
->  		return -EINVAL;
->  
-> @@ -593,63 +582,6 @@ static int uvc_ioctl_s_parm(struct file *file, void *fh,
->  	return 0;
->  }
->  
-> -/* ------------------------------------------------------------------------
-> - * Privilege management
-> - */
-> -
-> -/*
-> - * Privilege management is the multiple-open implementation basis. The current
-> - * implementation is completely transparent for the end-user and doesn't
-> - * require explicit use of the VIDIOC_G_PRIORITY and VIDIOC_S_PRIORITY ioctls.
-> - * Those ioctls enable finer control on the device (by making possible for a
-> - * user to request exclusive access to a device), but are not mature yet.
-> - * Switching to the V4L2 priority mechanism might be considered in the future
-> - * if this situation changes.
-> - *
-> - * Each open instance of a UVC device can either be in a privileged or
-> - * unprivileged state. Only a single instance can be in a privileged state at
-> - * a given time. Trying to perform an operation that requires privileges will
-> - * automatically acquire the required privileges if possible, or return -EBUSY
-> - * otherwise. Privileges are dismissed when closing the instance or when
-> - * freeing the video buffers using VIDIOC_REQBUFS.
-> - *
-> - * Operations that require privileges are:
-> - *
-> - * - VIDIOC_S_INPUT
-> - * - VIDIOC_S_PARM
-> - * - VIDIOC_S_FMT
-> - * - VIDIOC_CREATE_BUFS
-> - * - VIDIOC_REQBUFS
-> - */
-> -static int uvc_acquire_privileges(struct uvc_fh *handle)
-> -{
-> -	/* Always succeed if the handle is already privileged. */
-> -	if (handle->state == UVC_HANDLE_ACTIVE)
-> -		return 0;
-> -
-> -	/* Check if the device already has a privileged handle. */
-> -	if (atomic_inc_return(&handle->stream->active) != 1) {
-> -		atomic_dec(&handle->stream->active);
-> -		return -EBUSY;
-> -	}
-> -
-> -	handle->state = UVC_HANDLE_ACTIVE;
-> -	return 0;
-> -}
-> -
-> -static void uvc_dismiss_privileges(struct uvc_fh *handle)
-> -{
-> -	if (handle->state == UVC_HANDLE_ACTIVE)
-> -		atomic_dec(&handle->stream->active);
-> -
-> -	handle->state = UVC_HANDLE_PASSIVE;
-> -}
-> -
-> -static int uvc_has_privileges(struct uvc_fh *handle)
-> -{
-> -	return handle->state == UVC_HANDLE_ACTIVE;
-> -}
-> -
->  /* ------------------------------------------------------------------------
->   * V4L2 file operations
->   */
-> @@ -671,7 +603,6 @@ static int uvc_v4l2_open(struct file *file)
->  	v4l2_fh_add(&handle->vfh);
->  	handle->chain = stream->chain;
->  	handle->stream = stream;
-> -	handle->state = UVC_HANDLE_PASSIVE;
->  	file->private_data = handle;
->  
->  	return 0;
-> @@ -686,18 +617,11 @@ static int uvc_v4l2_release(struct file *file)
->  
->  	uvc_ctrl_cleanup_fh(handle);
->  
-> -	/* Only free resources if this is a privileged handle. */
-> -	if (uvc_has_privileges(handle))
-> -		uvc_queue_release(&stream->queue);
-> -
->  	if (handle->is_streaming)
->  		uvc_pm_put(stream->dev);
->  
->  	/* Release the file handle. */
-> -	uvc_dismiss_privileges(handle);
-> -	v4l2_fh_del(&handle->vfh);
-> -	v4l2_fh_exit(&handle->vfh);
-> -	kfree(handle);
-> +	vb2_fop_release(file);
->  	file->private_data = NULL;
->  
->  	return 0;
-> @@ -753,91 +677,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
->  	return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
->  }
->  
-> -static int uvc_ioctl_reqbufs(struct file *file, void *fh,
-> -			     struct v4l2_requestbuffers *rb)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -	int ret;
-> -
-> -	ret = uvc_acquire_privileges(handle);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	mutex_lock(&stream->mutex);
-> -	ret = uvc_request_buffers(&stream->queue, rb);
-> -	mutex_unlock(&stream->mutex);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	if (ret == 0)
-> -		uvc_dismiss_privileges(handle);
-> -
-> -	return 0;
-> -}
-> -
-> -static int uvc_ioctl_querybuf(struct file *file, void *fh,
-> -			      struct v4l2_buffer *buf)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	if (!uvc_has_privileges(handle))
-> -		return -EBUSY;
-> -
-> -	return uvc_query_buffer(&stream->queue, buf);
-> -}
-> -
-> -static int uvc_ioctl_qbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	if (!uvc_has_privileges(handle))
-> -		return -EBUSY;
-> -
-> -	return uvc_queue_buffer(&stream->queue,
-> -				stream->vdev.v4l2_dev->mdev, buf);
-> -}
-> -
-> -static int uvc_ioctl_expbuf(struct file *file, void *fh,
-> -			    struct v4l2_exportbuffer *exp)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	if (!uvc_has_privileges(handle))
-> -		return -EBUSY;
-> -
-> -	return uvc_export_buffer(&stream->queue, exp);
-> -}
-> -
-> -static int uvc_ioctl_dqbuf(struct file *file, void *fh, struct v4l2_buffer *buf)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	if (!uvc_has_privileges(handle))
-> -		return -EBUSY;
-> -
-> -	return uvc_dequeue_buffer(&stream->queue, buf,
-> -				  file->f_flags & O_NONBLOCK);
-> -}
-> -
-> -static int uvc_ioctl_create_bufs(struct file *file, void *fh,
-> -				  struct v4l2_create_buffers *cb)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -	int ret;
-> -
-> -	ret = uvc_acquire_privileges(handle);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	return uvc_create_buffers(&stream->queue, cb);
-> -}
-> -
->  static int uvc_ioctl_streamon(struct file *file, void *fh,
->  			      enum v4l2_buf_type type)
->  {
-> @@ -845,11 +684,6 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
->  	struct uvc_streaming *stream = handle->stream;
->  	int ret;
->  
-> -	if (!uvc_has_privileges(handle))
-> -		return -EBUSY;
-> -
-> -	guard(mutex)(&stream->mutex);
-> -
->  	if (handle->is_streaming)
->  		return 0;
->  
-> @@ -857,7 +691,7 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
->  	if (ret)
->  		return ret;
->  
-> -	ret = uvc_queue_streamon(&stream->queue, type);
-> +	ret = vb2_ioctl_streamon(file, fh, type);
->  	if (ret) {
->  		uvc_pm_put(stream->dev);
->  		return ret;
-> @@ -873,13 +707,12 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
->  {
->  	struct uvc_fh *handle = fh;
->  	struct uvc_streaming *stream = handle->stream;
-> +	int ret;
->  
-> -	if (!uvc_has_privileges(handle))
-> -		return -EBUSY;
-> -
-> -	guard(mutex)(&stream->mutex);
-> +	ret = vb2_ioctl_streamoff(file, fh, type);
-> +	if (ret)
-> +		return ret;
->  
-> -	uvc_queue_streamoff(&stream->queue, type);
->  	if (handle->is_streaming) {
->  		handle->is_streaming = false;
->  		uvc_pm_put(stream->dev);
-> @@ -962,13 +795,13 @@ static int uvc_ioctl_g_input(struct file *file, void *fh, unsigned int *input)
->  static int uvc_ioctl_s_input(struct file *file, void *fh, unsigned int input)
->  {
->  	struct uvc_fh *handle = fh;
-> +	struct uvc_streaming *stream = handle->stream;
->  	struct uvc_video_chain *chain = handle->chain;
->  	u8 *buf;
->  	int ret;
->  
-> -	ret = uvc_acquire_privileges(handle);
-> -	if (ret < 0)
-> -		return ret;
-> +	if (vb2_is_busy(&stream->queue.queue))
-> +		return -EBUSY;
->  
->  	if (chain->selector == NULL ||
->  	    (chain->dev->quirks & UVC_QUIRK_IGNORE_SELECTOR_UNIT)) {
-> @@ -1471,50 +1304,6 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
->  	return ret;
->  }
->  
-> -static ssize_t uvc_v4l2_read(struct file *file, char __user *data,
-> -		    size_t count, loff_t *ppos)
-> -{
-> -	struct uvc_fh *handle = file->private_data;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	uvc_dbg(stream->dev, CALLS, "%s: not implemented\n", __func__);
-> -	return -EINVAL;
-> -}
-> -
-> -static int uvc_v4l2_mmap(struct file *file, struct vm_area_struct *vma)
-> -{
-> -	struct uvc_fh *handle = file->private_data;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
-> -
-> -	return uvc_queue_mmap(&stream->queue, vma);
-> -}
-> -
-> -static __poll_t uvc_v4l2_poll(struct file *file, poll_table *wait)
-> -{
-> -	struct uvc_fh *handle = file->private_data;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
-> -
-> -	return uvc_queue_poll(&stream->queue, file, wait);
-> -}
-> -
-> -#ifndef CONFIG_MMU
-> -static unsigned long uvc_v4l2_get_unmapped_area(struct file *file,
-> -		unsigned long addr, unsigned long len, unsigned long pgoff,
-> -		unsigned long flags)
-> -{
-> -	struct uvc_fh *handle = file->private_data;
-> -	struct uvc_streaming *stream = handle->stream;
-> -
-> -	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
-> -
-> -	return uvc_queue_get_unmapped_area(&stream->queue, pgoff);
-> -}
-> -#endif
-> -
->  const struct v4l2_ioctl_ops uvc_ioctl_ops = {
->  	.vidioc_g_fmt_vid_cap = uvc_ioctl_g_fmt,
->  	.vidioc_g_fmt_vid_out = uvc_ioctl_g_fmt,
-> @@ -1527,12 +1316,13 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
->  	.vidioc_enum_fmt_vid_out = uvc_ioctl_enum_fmt,
->  	.vidioc_try_fmt_vid_cap = uvc_ioctl_try_fmt,
->  	.vidioc_try_fmt_vid_out = uvc_ioctl_try_fmt,
-> -	.vidioc_reqbufs = uvc_ioctl_reqbufs,
-> -	.vidioc_querybuf = uvc_ioctl_querybuf,
-> -	.vidioc_qbuf = uvc_ioctl_qbuf,
-> -	.vidioc_expbuf = uvc_ioctl_expbuf,
-> -	.vidioc_dqbuf = uvc_ioctl_dqbuf,
-> -	.vidioc_create_bufs = uvc_ioctl_create_bufs,
-> +	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-> +	.vidioc_querybuf = vb2_ioctl_querybuf,
-> +	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-> +	.vidioc_qbuf = vb2_ioctl_qbuf,
-> +	.vidioc_expbuf = vb2_ioctl_expbuf,
-> +	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-> +	.vidioc_create_bufs = vb2_ioctl_create_bufs,
->  	.vidioc_streamon = uvc_ioctl_streamon,
->  	.vidioc_streamoff = uvc_ioctl_streamoff,
->  	.vidioc_enum_input = uvc_ioctl_enum_input,
-> @@ -1559,11 +1349,10 @@ const struct v4l2_file_operations uvc_fops = {
->  #ifdef CONFIG_COMPAT
->  	.compat_ioctl32	= uvc_v4l2_compat_ioctl32,
->  #endif
-> -	.read		= uvc_v4l2_read,
-> -	.mmap		= uvc_v4l2_mmap,
-> -	.poll		= uvc_v4l2_poll,
-> +	.mmap		= vb2_fop_mmap,
-> +	.poll		= vb2_fop_poll,
->  #ifndef CONFIG_MMU
-> -	.get_unmapped_area = uvc_v4l2_get_unmapped_area,
-> +	.get_unmapped_area = vb2_fop_get_unmapped_area,
->  #endif
->  };
->  
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index b9f8eb62ba1d82ea7788cf6c10cc838a429dbc9e..3ddbf065a2cbae40ee48cb06f84ca8f0052990c4 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -326,7 +326,10 @@ struct uvc_buffer {
->  
->  struct uvc_video_queue {
->  	struct vb2_queue queue;
-> -	struct mutex mutex;			/* Protects queue */
-> +	struct mutex mutex;			/*
-> +						 * Serializes vb2_queue and
-> +						 * fops
-> +						 */
->  
->  	unsigned int flags;
->  	unsigned int buf_used;
-> @@ -349,7 +352,6 @@ struct uvc_video_chain {
->  						 * uvc_fh.pending_async_ctrls
->  						 */
->  
-> -	struct v4l2_prio_state prio;		/* V4L2 priority state */
->  	u32 caps;				/* V4L2 chain-wide caps */
->  	u8 ctrl_class_bitmap;			/* Bitmap of valid classes */
->  };
-> @@ -619,16 +621,10 @@ struct uvc_device {
->  	struct uvc_entity *gpio_unit;
->  };
->  
-> -enum uvc_handle_state {
-> -	UVC_HANDLE_PASSIVE	= 0,
-> -	UVC_HANDLE_ACTIVE	= 1,
-> -};
-> -
->  struct uvc_fh {
->  	struct v4l2_fh vfh;
->  	struct uvc_video_chain *chain;
->  	struct uvc_streaming *stream;
-> -	enum uvc_handle_state state;
->  	unsigned int pending_async_ctrls;
->  	bool is_streaming;
->  };
-> @@ -687,36 +683,11 @@ struct uvc_entity *uvc_entity_by_id(struct uvc_device *dev, int id);
->  
->  /* Video buffers queue management. */
->  int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type);
-> -void uvc_queue_release(struct uvc_video_queue *queue);
-> -int uvc_request_buffers(struct uvc_video_queue *queue,
-> -			struct v4l2_requestbuffers *rb);
-> -int uvc_query_buffer(struct uvc_video_queue *queue,
-> -		     struct v4l2_buffer *v4l2_buf);
-> -int uvc_create_buffers(struct uvc_video_queue *queue,
-> -		       struct v4l2_create_buffers *v4l2_cb);
-> -int uvc_queue_buffer(struct uvc_video_queue *queue,
-> -		     struct media_device *mdev,
-> -		     struct v4l2_buffer *v4l2_buf);
-> -int uvc_export_buffer(struct uvc_video_queue *queue,
-> -		      struct v4l2_exportbuffer *exp);
-> -int uvc_dequeue_buffer(struct uvc_video_queue *queue,
-> -		       struct v4l2_buffer *v4l2_buf, int nonblocking);
-> -int uvc_queue_streamon(struct uvc_video_queue *queue, enum v4l2_buf_type type);
-> -int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type);
->  void uvc_queue_cancel(struct uvc_video_queue *queue, int disconnect);
->  struct uvc_buffer *uvc_queue_next_buffer(struct uvc_video_queue *queue,
->  					 struct uvc_buffer *buf);
->  struct uvc_buffer *uvc_queue_get_current_buffer(struct uvc_video_queue *queue);
->  void uvc_queue_buffer_release(struct uvc_buffer *buf);
-> -int uvc_queue_mmap(struct uvc_video_queue *queue,
-> -		   struct vm_area_struct *vma);
-> -__poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
-> -			poll_table *wait);
-> -#ifndef CONFIG_MMU
-> -unsigned long uvc_queue_get_unmapped_area(struct uvc_video_queue *queue,
-> -					  unsigned long pgoff);
-> -#endif
-> -int uvc_queue_allocated(struct uvc_video_queue *queue);
->  static inline int uvc_queue_streaming(struct uvc_video_queue *queue)
->  {
->  	return vb2_is_streaming(&queue->queue);
-> 
+>
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_metadata.c | 54 ++++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/uvc.h              |  3 ++
+> >  2 files changed, 57 insertions(+)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
+> > index fe2678fc795d7fd5a64e8113199012f34c419176..776d280f34afad515594a873acf075acf0438304 100644
+> > --- a/drivers/media/usb/uvc/uvc_metadata.c
+> > +++ b/drivers/media/usb/uvc/uvc_metadata.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/list.h>
+> >  #include <linux/module.h>
+> >  #include <linux/usb.h>
+> > +#include <linux/usb/uvc.h>
+> >  #include <linux/videodev2.h>
+> >
+> >  #include <media/v4l2-ioctl.h>
+> > @@ -187,11 +188,64 @@ static const struct v4l2_file_operations uvc_meta_fops = {
+> >       .mmap = vb2_fop_mmap,
+> >  };
+> >
+> > +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
+> > +
+> > +#define MSXU_CONTROL_METADATA 0x9
+> > +static int uvc_enable_msxu(struct uvc_device *dev)
+>
+> uvc_meta_detect_msxu()
+>
+> > +{
+> > +     u32 *data __free(kfree) = NULL;
+> > +     struct uvc_entity *entity;
+> > +
+> > +     list_for_each_entry(entity, &dev->entities, list) {
+> > +             int ret;
+> > +
+> > +             if (memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
+> > +                     continue;
+> > +
+> > +             if (!data)
+> > +                     data = kmalloc(sizeof(*data), GFP_KERNEL);
+> > +             if (!data)
+> > +                     return -ENOMEM;
+> > +
+>
+> A comment here to explain how the control operates would be useful.
+> Reading the code I assume that GET_MAX will indicate if the MS metadata
+> format is supported by reporting a value different than 0 (is it always
+> 1, or can it take other values), and SET_CUR will enable metadata
+> generation. I suppose the first GET_CUR call catches the case where it
+> has already been enabled, are there also cameras where it can't be
+> disabled, and where SET_CUR would fail ?
+>
+> > +             ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id,
+> > +                                  dev->intfnum, MSXU_CONTROL_METADATA,
+> > +                                  data, sizeof(*data));
+> > +             if (ret)
+> > +                     continue;
+>
+> Can there be multiple MSXU instances, or can you break here (and below)
+> ?
 
+I think it is safe to break. Thanks :)
+
+
+>
+> > +
+> > +             if (*data) {
+> > +                     dev->quirks |= UVC_QUIRK_MSXU_META;
+> > +                     return 0;
+> > +             }
+> > +
+> > +             ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id,
+> > +                                  dev->intfnum, MSXU_CONTROL_METADATA,
+> > +                                  data, sizeof(*data));
+> > +             if (ret || !*data)
+> > +                     continue;
+> > +
+> > +             ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id,
+> > +                                  dev->intfnum, MSXU_CONTROL_METADATA,
+> > +                                  data, sizeof(*data));
+> > +             if (!ret) {
+> > +                     dev->quirks |= UVC_QUIRK_MSXU_META;
+> > +                     return 0;
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  int uvc_meta_register(struct uvc_streaming *stream)
+> >  {
+> >       struct uvc_device *dev = stream->dev;
+> >       struct video_device *vdev = &stream->meta.vdev;
+> >       struct uvc_video_queue *queue = &stream->meta.queue;
+> > +     int ret;
+> > +
+> > +     ret = uvc_enable_msxu(dev);
+> > +     if (ret)
+> > +             return ret;
+> >
+> >       stream->meta.format = V4L2_META_FMT_UVC;
+> >
+> > diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
+> > index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
+> > --- a/include/linux/usb/uvc.h
+> > +++ b/include/linux/usb/uvc.h
+> > @@ -29,6 +29,9 @@
+> >  #define UVC_GUID_EXT_GPIO_CONTROLLER \
+> >       {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+> >        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
+> > +#define UVC_GUID_MSXU_1_5 \
+> > +     {0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
+> > +      0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
+> >
+> >  #define UVC_GUID_FORMAT_MJPEG \
+> >       { 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
+> >
+> > --
+> > 2.49.0.504.g3bcea36a83-goog
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+
+
+--
+Ricardo Ribalda
