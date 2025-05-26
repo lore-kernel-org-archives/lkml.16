@@ -1,132 +1,188 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E695F9D9;
-	Mon, 26 May 2025 00:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748221014; cv=none; b=VDSWMKDopDxjlEbdXGC3OkVouuzGAYUV2T0f60GodDHBGmlWAy/clo5kwkmXWpRjS/WyzK2NPkIlFiwy4Y6dZHhDtbifHxEtTnCKos5Yj2TO33en57lTZ9ZGbT/y4ZxVahiDiEW0F37aBlIsaOVoTxPhdvv1jbJjdXbV5rbtKnk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748221014; c=relaxed/simple;
-	bh=K47UkHVob1O4NflDYAefhNTIq7anxymMfXawllReXnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PQnAJtJBjHQydwzMjJsjzdpCSL6yge9c6fGp2iRqniMyW7/FpxMYVL3FsjaGr0JM/5IAQ7PjJcIdkop9Ou4i4KpW+GngABILClcedTInoX5dT/P8M2ZtBUOlXMUHp6wOfe2GplemJcx+61MzWMr26EzEIZ5djTuYOiiGN7zdxf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-4f-6833bc4813ec
-Date: Mon, 26 May 2025 09:56:34 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, tariqt@nvidia.com, edumazet@google.com,
-	pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH 01/18] netmem: introduce struct netmem_desc
- struct_group_tagged()'ed on struct net_iov
-Message-ID: <20250526005634.GA74632@system.software.com>
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-2-byungchul@sk.com>
- <87bjrjn1ki.fsf@toke.dk>
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2063.outbound.protection.outlook.com [40.107.20.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4A1134A8;
+	Mon, 26 May 2025 01:02:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748221374; cv=fail; b=h0BZFmeodCRasy79aLAbZesJb2LmD8UQna3T6aN0yCjfjxpxQemeqPIubEO1KJ0JBD3SCHxrOCN7IOv0ILAwsH8cyTtw3igAq6kAhYixcK9WrVv1/L9oKTzD8p9/vLezhziuhzq0Y0V9dMcTuntVdjLxiOT4VL2E0OswY6xeUus=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748221374; c=relaxed/simple;
+	bh=OkJ0NPMgiBs6a5Pif9iXXmmSyy7kQMXDE2NR1nSXDR0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=paiG8JXnvDqoKUXsX1F4EbJnQMhjvscBUlBRwwCvjCgg7BVp6115po1+whpRGV65yq9lfpy+Ap+KDtT27uvSpgNPwrRNk7fJKjoF53OhXYmLh6k4jcNV4v+/E9KxKz1oucuJtkDUcmlw5N/9Z4DDuLPhQH+3aNX1z16XYTL6OMY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=MynP2SvO; arc=fail smtp.client-ip=40.107.20.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="MynP2SvO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AzTIjv8jTGiC79DlBPoIrNxcmGp56WM6IDrHWgYJtyVw/+nBO+kih9YH84Ue3Me2gFoQz8Fd3WkYzLwttWRYUpZrfzVGC1iTtqfWMMzWP6Yey9yiF7Tjk3DGvYdTUF+Wx0yEh4olflfOlvhzg8Fr9k7Lmi/vXU4JmSqdPPOsH/ffj28WtTIYYRCPuLY9UcBeiDyxScVJuvXn+g2oVItDymnCkMv6pU2EVAyQ7hBWAHTrt6l9IJzwmBZvf8rdPgOFRTAfAamu3bzgI4aqfstTSsjSjRNUe1RpYgGvRMSci01o72mt7bW5jFMpust5h7UjOz4hI7EqJilOKIUqrBPihw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=76bL5ryw5Moc5lkjChCREYrpXhV3Pkh2oVT2+Xnq+u0=;
+ b=Irrg8UwO5XvBftl5ZU/4XiY/NeChwS/CahGdDrWrcvO65F2QML0YcJAQ6mh2vIo+qdhEPlwkBsys+zAIvs9eJdek1ol21QmlgCgL1Pt5Th5mEa3fkcT18YKyePyFyJ+6iNSkV7LAoGXQL0O+i9If/w+AgCLpVli/v/5ECK/zhjmfFNtFDLJMdiNsCIXYFgfN6QTKIJmZRZwall9RXZUsi/CxXrC8ha2LEvK/Cke7GWsGdBTKRNHfr9+VoqMuKxGbd3JLaAbrWK5yGr2HVRaY5gQm8qrhOlHfE82Sx400D9jq/UrXFVcMKgVM/htzoVvM2Rq3xsv524Ej1L8RHDaHoA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
+ dkim=pass header.d=est.tech; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=76bL5ryw5Moc5lkjChCREYrpXhV3Pkh2oVT2+Xnq+u0=;
+ b=MynP2SvO9t006zvZdmiReWga9erL0uiYBVHE5ZjJZLXYqVc82PnIx3582YpA4CZN9emaNj7iIxpQ2dbvApW/GDgL4wJKEG5MP4ymnjU+IR41ZyJzfzDGbo3pXx4v7QZMiYJWOV7ZQMjHj7tKlotCeHEB81QJaUOznUpRGib/zOIhTjPUnvxLv1u5T1IUXGhEhX5gFsZW7gANz2YPVWdy2w4Olehesc4039KFLkUbOtemtk0CckNPjVD3UNU75eGlv0ntOCxSfqxjcGReyEM+454sjCjKWLEdFDuzp5Ih75aruBxrGWELuPs66GW/SCvyQrbal+eQi8jLPxO7OM1g5A==
+Received: from AM8P189MB1314.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:249::7)
+ by DU4P189MB2717.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:56a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Mon, 26 May
+ 2025 01:02:48 +0000
+Received: from AM8P189MB1314.EURP189.PROD.OUTLOOK.COM
+ ([fe80::4123:5ff7:5d38:8900]) by AM8P189MB1314.EURP189.PROD.OUTLOOK.COM
+ ([fe80::4123:5ff7:5d38:8900%3]) with mapi id 15.20.8769.022; Mon, 26 May 2025
+ 01:02:48 +0000
+From: Tung Quang Nguyen <tung.quang.nguyen@est.tech>
+To: Zilin Guan <zilin@seu.edu.cn>
+CC: "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, "horms@kernel.org"
+	<horms@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"tipc-discussion@lists.sourceforge.net"
+	<tipc-discussion@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "jianhao.xu@seu.edu.cn"
+	<jianhao.xu@seu.edu.cn>, "jmaloy@redhat.com" <jmaloy@redhat.com>
+Subject: RE: [PATCH] tipc: use kfree_sensitive() for aead cleanup
+Thread-Topic: [PATCH] tipc: use kfree_sensitive() for aead cleanup
+Thread-Index: AQHby9iD/KkjLtBMq0yEMiLhz0+ATbPkG1Ww
+Date: Mon, 26 May 2025 01:02:48 +0000
+Message-ID:
+ <AM8P189MB13141C14A4AC551B718CB285C665A@AM8P189MB1314.EURP189.PROD.OUTLOOK.COM>
+References: <20250523114717.4021518-1-zilin@seu.edu.cn>
+In-Reply-To: <20250523114717.4021518-1-zilin@seu.edu.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=est.tech;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM8P189MB1314:EE_|DU4P189MB2717:EE_
+x-ms-office365-filtering-correlation-id: cc0767c2-7dd2-4970-d7e4-08dd9bf1084c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?F+O86v6vSEiecs/eHKEbBU5La9qVWt/ETeZmhEYNNQ9P+Z+cA6DgkTcqjb72?=
+ =?us-ascii?Q?aD1y1hxV5ZK76IGUZ4ulfB2PZ4iZK9KZ973ZLnmBRRxqS/CIztfQKAgvZNtN?=
+ =?us-ascii?Q?6qwufQ1epWDzUJV32a637hbuMSI2khPLJZvAtv3aYvctBLsP33BtjXQOpEdA?=
+ =?us-ascii?Q?5XRXIPQWiUJ0y4O8a/Y7+g24gLOJFVm8JNzH9j/ZcOfh7YfkkxcDbbkFaPr5?=
+ =?us-ascii?Q?VuruV+ak5EuLVlKFROyAIRX8/R1i+z8b9nJnx9wCugelkzvjUC7Czu99vA/Q?=
+ =?us-ascii?Q?Qn8lkrq0Sbonu+ofCz0yAKjB9j6Tk5Z2IitRblY4Noy1pQT12l+2uTtkQ4iW?=
+ =?us-ascii?Q?6h1J3g8btLjXYb1xpKHowPgu5/aOIsqEWtBHsoJhxbZVBaVzjvxxCaP3VkEh?=
+ =?us-ascii?Q?udcNggrT089JQ5WrpxkIPVErjpfsI8scuinWL4qB57m1IPBbcu6UBeRmPu3n?=
+ =?us-ascii?Q?AoeH6UQMFxjC9wEnGB0APqNgKtWD1fvTLXqCOdrmNMhX2RHEVaQ5h0BjHR9k?=
+ =?us-ascii?Q?SpZtQBFvlWNQ0f9Z7PD0GzFapSuSq6rKwzQ4dZAmfQjOrHahseTSJ6QFZpJ3?=
+ =?us-ascii?Q?Enf38lrUN1Og7AfUi0jArFo+uwhOCK+7bKHNCM7r/0XRyTEEUYMq4B17hnCk?=
+ =?us-ascii?Q?PL5m5NmVm2V/mKRTAdn3G1DNNOxG/Wm8Z5eIiV0x6ncvQO8pCGz4GRKxmzVf?=
+ =?us-ascii?Q?mt9/G2PlwNwLctRSJWTO+bLBk/vC5Nv7c0ClLlr151eMIOdhOuLPp0/SWtok?=
+ =?us-ascii?Q?iNUJn9aHVUYwS2dCZlVbezUOqP9KncOIG2HMAPGdeopeyfJKx2Xo0GWrfS+Z?=
+ =?us-ascii?Q?6pNHKut7KZqKf15fGlZzI3GyizVTe4F1G2zaF2o3hsyh4vQxIHWVgx3dGPvy?=
+ =?us-ascii?Q?QZjgTZHbThQiPwUEzALZTpqMPXPSPWRf3JoE0fhwR2l+HcirJ1ZQ4Q9LHCC7?=
+ =?us-ascii?Q?EaqsEqBQE7UDUx8JjrYbMqPqvrzEqYoQSkRxjBG6f/1GomvotNRvjHG+HKx3?=
+ =?us-ascii?Q?3AYc/9N+l9FJLX4T8x2xGhrulvvHzd6KtxueAQCrprBIkDDclvDzCLxO0XlR?=
+ =?us-ascii?Q?/HOKGDuxGexWA4A6Hcx1GVaWPfOfZTKgxhBM0L9QEpVewThedF6DMIsMFKYY?=
+ =?us-ascii?Q?dL10cvDcaB/8bD92OzdTXu+l9uHaw3MN/0AMm42j6Imj4yfzfszOtqIyZE8I?=
+ =?us-ascii?Q?kl2138CTAZW2/MYwa+mKS7ibzF7LwDnRLRntHSaSgfCmwVsEQwneihUpsoRF?=
+ =?us-ascii?Q?LaCX9jupf6qHTNrRYjVdAYTtUQmbFpp96tG5knI3tDWCxnEOZEiaKo/9/Iib?=
+ =?us-ascii?Q?UR5Namp8a2t6LlksDhLBQWUtqD1suWqh+1Ts8O85dN9+F46FEN96UqF9tGUM?=
+ =?us-ascii?Q?18kev899QDcv7/eEe5u2mDBoFwTi5oDJvTrd8YoPUK/n21KWrPwWJ2sK9Y6/?=
+ =?us-ascii?Q?Z9NF4uKylYwrotA7PENzH+gLcp6uJLmbgZYI38JeDNZsWQ35eYtRIA=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8P189MB1314.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Q821lv60EX1KOu03C3ToHrdJ9RQch3ZS7TcDOtx7jQPTbg1bwIiSzoMkfx8W?=
+ =?us-ascii?Q?bK/BEESexzisGCaZ/XOCNbGxSsJszM0k5PqV7VZJw6nApHbVifz1jesNCX6t?=
+ =?us-ascii?Q?Cnip5avu6MOMzODCsBLPL98e3cU2xrl/BVd3mEL6yORcXTYWiJLu5yhAJO1m?=
+ =?us-ascii?Q?hH2/nCTlS8CyY+knnGfTp+z6eBVx9Fg4hJx1fj9SS9XSLiGqPJeZaw2UDDer?=
+ =?us-ascii?Q?+f2qdmXDx6+OmSd8bQMstwIWXUKF1yXnvocgkg5Jm9OSZLQZFssdH4EHgucA?=
+ =?us-ascii?Q?wZ9KB60pnAkdpD9dXUiFx+MqIp4YAZKIW0NJ1uq28r9vzuDwTQu/3gup30v9?=
+ =?us-ascii?Q?d41Y6eCxCo8i9CKlvwtF0bvh1CPKcTRwsKSsNXeHx/tuvxtD3OOmQMoEfp+o?=
+ =?us-ascii?Q?hYaROHDWz4HSc6OVls1yTQa/WdiG/ENmEwFgPTSICCmrpJnGWkOHU2qPVX+R?=
+ =?us-ascii?Q?WlrsEiS2dcur3TIBIH0DcpCEFASybgq5EimMaKfAF5TO/nloc08E2uen34j+?=
+ =?us-ascii?Q?ylIAAOly9msgcL5UNIPY8j/PR0L26fzWOvVhwsyuuNgmzRTfehQRW+B153Tw?=
+ =?us-ascii?Q?A+iAdCT+pfzImrBhMvBCXrlUpWxHhwV0jvm0NI3D04WOrXWbML0GhS1e0+r8?=
+ =?us-ascii?Q?OLG/V4u/dlmEnXh2Hss1A55JAxi/+05I9uRZsSHuiNnXixXTcq9Z/PE2HEXa?=
+ =?us-ascii?Q?HOa4NbzIQZc2QtzfzvIK5P4xrEI0fQKnIPEL6+nyRg8FMOnH8SY/Rwsn7KwE?=
+ =?us-ascii?Q?7KaJ/a2F2V8xUlaIwZR6/wvNf9oHVbPuofBOWzvJGLd4HRazLLnKKpzAsdAA?=
+ =?us-ascii?Q?pdvUFcyUH3MLjf65B/Y+Nmj7aYjNtZ2vRbszEYk0/DwWneXrhGdo2iR5QGcq?=
+ =?us-ascii?Q?u+ZNsK6psbfPRWAkmnzm2zyvfsU6SmsmPdC1oVVYSWGPtoZ6f+Tx2zGE7I+4?=
+ =?us-ascii?Q?UypG3IoxWalzdz7lD5Wc/P4hgqtNnqYHAAsOMRFez3Mwg/CEuARtcmXmAHvx?=
+ =?us-ascii?Q?nhdxZAHWoArU9yQKIHiKGxlODfL0vcWHFIQjyvp46DuH7qjL2K2kVV+S6E0A?=
+ =?us-ascii?Q?rIVPRoryTx1Dqgvw/sfpoE1vA0WCwhtg3TIVY0m4x/A7KCsTMWRQFbcM7YBZ?=
+ =?us-ascii?Q?vxpb8DfzJ3txrLqsPQLK7oiqmWxsW/KLIBSt4W6HmVd7eRfpj5jjWmu624gO?=
+ =?us-ascii?Q?VYt7+kLqlEVXQ9fq5Ttc+Gm8ymUx9XRXDVS0wzUPWGNjLFjf+KDs6n3BV0lN?=
+ =?us-ascii?Q?T1uCU0IQVEZH3xDiswlZ2W5Rf2oqe0oP2uAzKtqyX2J8OOWyxuOqiIgfV55D?=
+ =?us-ascii?Q?ys9Ne8o6qg+kXAe7kZR+oBPvZalV2sOt/2MWB32A17gtE7iutCatH0C7uDu2?=
+ =?us-ascii?Q?c0T4zw7zSePwjo4vixvOLaMZ7gWg6xFkKcKiWhdQFxND69xvHrJJ4B/o9VLs?=
+ =?us-ascii?Q?YznXr9cskFs0UZiAB/VXpzlvI1ksB4XhWcorz9ZGnR0orNxXLM5MT14ycrHJ?=
+ =?us-ascii?Q?ro5D/n5SF+eTpvjCwbAAsO4wymXCrqKB2Qr9SUM2XKKvOAyH9WUqSw/Wvdjq?=
+ =?us-ascii?Q?9ZI8gKev9ch80OG9f9nAthFCtJDZjVMbg8p084fE?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87bjrjn1ki.fsf@toke.dk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHefZe9rpcvS2zp5SkRRRRZilxPkQURDxdPgQFXSFHvrXpnDGd
-	aRR4A2nqshK1tWhqeUsZLZ2zzGqJZjMSzVppaU6toJLUlk27OC3y249z/uf8zofDUbIiZgmn
-	0iQIWo1CLWcltOSzf/Fa0hCuDHvfHAQmSxULN8eToKzPzoCp0oZg7Ee3GEabWlgoKfJQYHqW
-	QcM3i5eCweZ+MfSWDtHQkFlHQf/5xyzkZExQkGYvF0G7zcBAnvcGBXUpfWLovGNi4W3VbwaG
-	HDk0tBoraOg1bIFmcyB4nJ8QNFnqRODJvsrCpQ4zC+6MXgQdj/ppuJJqQGBpdDEwMW5itywj
-	NRWvRKTe+EZMzFYduV2+muhdHRSxVp5jiXXkopj0vGhgyePCCZrU20dFJCf9C0u+Dr6myXBj
-	F0ssNV00aTM3icmodeke/pBkU5SgViUK2nWbIyXKwt5c6mTVvKSXDzQp6PscPfLjMB+BC/IL
-	2H9sSKsW+5jmV+Dah5mMj1l+JXa5flB6xHEB/FbsHD+hRxKO4gcYXPexYjqzgFfj4kuTtI+l
-	PODu6+8oH8v4M9imd4tn6vNx6+WB6QzFr8H1tT2sbyfFB+GyX9xMOQSn116ZHvWbOsFtm4kv
-	5JfjB7YWkc+LeTuH8/Sdf29ejB+Wu+hcNN84S2GcpTD+VxhnKcyIrkQylSYxVqFSR4QqkzWq
-	pNBjcbFWNPU4pWcnD9vRSPteB+I5JPeXRsrDlTJGkRifHOtAmKPkAdJgU5hSJo1SJJ8WtHFH
-	tTq1EO9AQRwtXyTd4DkVJeNPKBKEGEE4KWj/dUWc35IUFPi6JexCm+78xbu66GzW6726Zhdp
-	zTyeHTmWG/LeGZ7qsGU0t4y6nas6d0x0fT27rG8o/95wTtbBxs7hkYr9Tt3w/aoP/oxKG3Ps
-	Qupg+G3Zbs/452uxXT/n7nw5FMxU79sWd2Bge3DNucr7/SXuW4boF/XPF0e7254e8W4MUGTZ
-	nsjpeKVi/WpKG6/4A6Zhe4w0AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe/Ze9m61el3LXjIKVyJI3srqkF3sQ/QUkUFE0Jdc+uaGc9Wm
-	pmVkuqhGrrQCmzNXmres0dRthkg5UYfRxdCWafNORVR28ZLRZUrktx//8z8/zofDEFI9tYRR
-	aVJ4rUahltNiUrw7OicUN6xRRhR1iMBsrabhzkQ6lPc5KTBX2RF8m3wthK/NrTSU3BwjwPxU
-	T8J36w8ChlsGhOAtGyGh4ZyDgIFLbTTk6qcIyHZWCMBV5Kbgmd1IwdUftwlwZPUJ4cUDMw1v
-	qn9TMNKUS4LbVEmC1xgDLRZ/GGv/gKDZ6hDA2MUiGq50WGgY1HsRdLgGSCg8Y0RgbfRQMDVh
-	pmPkuLbylQDXm3qF2GJLxTUVIdjg6SCwreoCjW1f8oW4p6uBxm0FUySud34V4NycjzQeHe4m
-	8afGThqXvP0swNbaThI/tjQL9/gdEG9M4NWqNF4bvjlOrCzwXiaOVi9If/lQk4XG5xqQiOHY
-	KM6YfVfoY5IN4uoenaN8TLPBnMczSRgQw8jYrVz7RKIBiRmCHaI4x7vK6c5CVs3duvKT9LGE
-	Be51aT/hYymbydkNg8KZ3I9zXx+a7hDsKq6+rof2OQk2gCv/xczEy7mcusLpVdHfEwbtM/VF
-	7Aruob1VcBnNN80ymWaZTP9NplkmCyKrkEylSUtWqNRrw3RJygyNKj0s/kiyDf39jbJTP/Oc
-	6NuL7U2IZZB8niROvkYppRRpuozkJsQxhFwmWWqOUEolCYqME7z2yEFtqprXNaEAhpQvluzc
-	z8dJ2URFCp/E80d57b+pgBEtyUIXXIP6dcZlwduoTbHF41sELZP+CfN2nTxcY7qW9VL85EZX
-	17HnojnxCX3enYtSJZ/khyb6gyhdLLM4e2xfY5lseS831aOku7t3uErXvx0t2TCy0b56iyzk
-	fPDp6L0F72Pye8OjeIUzMu94ToDN3T50tv1+RfGx0MAPq1YOB+pM9zLlpE6piAwhtDrFH2vK
-	gPgXAwAA
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: est.tech
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM8P189MB1314.EURP189.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc0767c2-7dd2-4970-d7e4-08dd9bf1084c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2025 01:02:48.4748
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DZ8+SssvOT1bS0Dh/XhjDxnK8NmLS81v0jjx3h2+F8zkcP3jnRqQC3Y1zuweCCklk/DwPeKR0JUMveFvlDA5qkStpgu1p0+R72v5ItIFsT0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4P189MB2717
 
-On Fri, May 23, 2025 at 11:01:01AM +0200, Toke Høiland-Jørgensen wrote:
-> Byungchul Park <byungchul@sk.com> writes:
-> 
-> > To simplify struct page, the page pool members of struct page should be
-> > moved to other, allowing these members to be removed from struct page.
-> >
-> > Introduce a network memory descriptor to store the members, struct
-> > netmem_desc, reusing struct net_iov that already mirrored struct page.
-> >
-> > While at it, relocate _pp_mapping_pad to group struct net_iov's fields.
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > ---
-> >  include/linux/mm_types.h |  2 +-
-> >  include/net/netmem.h     | 43 +++++++++++++++++++++++++++++++++-------
-> >  2 files changed, 37 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > index 56d07edd01f9..873e820e1521 100644
-> > --- a/include/linux/mm_types.h
-> > +++ b/include/linux/mm_types.h
-> > @@ -120,13 +120,13 @@ struct page {
-> >  			unsigned long private;
-> >  		};
-> >  		struct {	/* page_pool used by netstack */
-> > +			unsigned long _pp_mapping_pad;
-> >  			/**
-> >  			 * @pp_magic: magic value to avoid recycling non
-> >  			 * page_pool allocated pages.
-> >  			 */
-> >  			unsigned long pp_magic;
-> >  			struct page_pool *pp;
-> > -			unsigned long _pp_mapping_pad;
-> >  			unsigned long dma_addr;
-> >  			atomic_long_t pp_ref_count;
-> >  		};
-> 
-> The reason that field is called "_pp_mapping_pad" is that it's supposed
-> to overlay the page->mapping field, so that none of the page_pool uses
-> set a value here. Moving it breaks that assumption. Once struct
-
-Right.  I will fix it.  Thanks.
-
-	Byungchul
-
-> netmem_desc is completely decoupled from struct page this obviously
-> doesn't matter, but I think it does today? At least, trying to use that
-> field for the DMA index broke things, which is why we ended up with the
-> bit-stuffing in pp_magic...
-> 
-> -Toke
-> 
+>Subject: [PATCH] tipc: use kfree_sensitive() for aead cleanup
+>
+>The tipc_aead_free() function currently uses kfree() to release the aead
+>structure. However, this structure contains sensitive information, such as=
+ key's
+>SALT value, which should be securely erased from memory to prevent potenti=
+al
+>leakage.
+>
+>To enhance security, replace kfree() with kfree_sensitive() when freeing t=
+he
+>aead structure. This change ensures that sensitive data is explicitly clea=
+red
+>before memory deallocation, aligning with the approach used in
+>tipc_aead_init() and adhering to best practices for handling confidential
+>information.
+>
+>Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
+>---
+> net/tipc/crypto.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c index
+>8584893b4785..f4cfe88670f5 100644
+>--- a/net/tipc/crypto.c
+>+++ b/net/tipc/crypto.c
+>@@ -425,7 +425,7 @@ static void tipc_aead_free(struct rcu_head *rp)
+> 	}
+> 	free_percpu(aead->tfm_entry);
+> 	kfree_sensitive(aead->key);
+>-	kfree(aead);
+>+	kfree_sensitive(aead);
+> }
+>
+> static int tipc_aead_users(struct tipc_aead __rcu *aead)
+>--
+>2.34.1
+>
+Reviewed-by: Tung Nguyen <tung.quang.nguyen@est.tech>
