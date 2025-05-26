@@ -1,146 +1,93 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7373864A98
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:38:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BBD1C6B4;
+	Mon, 26 May 2025 01:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748223537; cv=none; b=JTOU8kKp2D/p+NZ8m7hmUqkPy5nijahA5CYOPoLEtZ5B0YfQLBb3PAAirI+DtvDUDx+lcoJhfvspDK9d309wYox6+OlIgfv5kSfSlZWQ5rD6AkU8iF6wc29PuirrMBXkFp7IAjeM909/NqCVDtvYBITrzDpr4IztTI4kd7OjQX0=
+	t=1748223702; cv=none; b=cqDtc3zkKziXpDUOznmxPKWHYjW/xf735wxYtjEkINqgzkkarzy8Kru9wNFdgwDYfHuYvZqcveNTjDuvvJZcD7/54A6LPeQx8Tjhdk7Pb57Lel1E3ILBNiiVe6wlTcitWpPSBTRdHQFOkuv/Fj3VCPTiWpirRuJQ9u3ZJpZ8LDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748223537; c=relaxed/simple;
-	bh=VIW94w16yOpBMokEAjRnl0da6S/B+huTLDB0mXI095c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=udrZuile3w2puXe3Ax6EIhZLnmm8/dHobQS6UhefnRT4oNSosn0h3Yp3Bau5x+VwlQUor8z67ElFzVPeaNw324FiOWTv2RlWCKYqh1GZ99B4p4i7jqIt8poDbMsgLo7iEkukVg4RUdFXryVkZBVIyVJU/ZbO3TQ1ZxBRxSI10Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SRmnfHNI; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748223702; c=relaxed/simple;
+	bh=Yax1o+MAKbtmK05dYLpi7aye+qylXJ7V9v7XhzQLysw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PhfaGg/tYSqDlmPgTmQ30JbnHn2K/fZ3fCwTFki9qvmO4z4b469+D67o5r6xIReza1OpT4d11VFyRs3IjFTZKv5NiSvH+m3BbweT1iQ5FRsR+qG2RVLuHS0krW3U6Skw6toA1l5KzGbzG2svnRIuJuZri9NBzBLxICn6n0qPKeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BC6bGXIp; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SRmnfHNI"
-Message-ID: <7a42e9d1-93ce-4666-b7e7-3c0b4e2c0c99@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748223531;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2hFUsN/K02BBP5aa1d+e+JjhSauhkH1OuFe7JHH5P4E=;
-	b=SRmnfHNINkkKfSn8W6N3pK4Z32Bvd80Uh08Q+VdxonIAirvRyyHDvIwm8ANYNOvux0/JLO
-	0U2c1dWTONVN/nJbFvjAgwMBItF9uxzGpG/L5ch0SkuohWyu1lMmpHsVjDjvtxMxO1S6Z2
-	TyB5xx15aOYf1UA8YhwNyYLwFBVbGo0=
-Date: Mon, 26 May 2025 09:38:41 +0800
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BC6bGXIp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1748223688;
+	bh=Yax1o+MAKbtmK05dYLpi7aye+qylXJ7V9v7XhzQLysw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=BC6bGXIpZUt3tv10QmwdrbmpBYbG4lC7PqcK/6MEVWtSbOx8nwFvK1sKXIC7bHZMt
+	 GpZhXF939EIMaoxfTH3f3ko+8ZHmk2SBgTWN2OxVXynghDZMedWNUyCjv59tDnu/ww
+	 h0myJRRBBJc0Fmbd2ZKK9krlXXnlhMBg2HQ+usNo=
+X-QQ-mid: zesmtpsz3t1748223686t10d7057d
+X-QQ-Originating-IP: JztrNHiARVaOEtjp27R4f7wQdO2XWozoWxAFuztRmMU=
+Received: from mail-yw1-f171.google.com ( [209.85.128.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 26 May 2025 09:41:24 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 6048472936183854145
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70e5599b795so3497447b3.3;
+        Sun, 25 May 2025 18:41:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWfgSvdvKy/lTVCaFjMIdiYoJM1GqxTA33iT4eMjz5m1NDI2czD5RS/JTiXJADbf/Zv6iLwOd1b4JAg0FQ+@vger.kernel.org, AJvYcCWjk44dmzw5BbtwEgpfSre/lsOJwAXxHVx2TYtyihQl7pHQfSDyYU/x74JnxoLaUMZDoouyOYifk58Fty1X@vger.kernel.org, AJvYcCXZA19BzfjkxfQitSpLaKHCtBQpaT8dP6/zazTthZXeSkFBptLGUiQP6+W6rP5NoJ/hIwq0tQY7tYWIUfpmTmxo@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr2MwusPd13PD+BF6it+mc4hFu426bmolU6h69T9zyG8iCEoKb
+	DB1SpFYk8GXC+2hPyvmuudHvKAjRZjcnaPYE/P4LA14sFJp2Rq9K3DdQpVLywTviLrfDn/VXY8a
+	8Tvt+dCNo9BR/sJ2WeaKEHMledM9gm/k=
+X-Google-Smtp-Source: AGHT+IFIcNzEsjgbznnYQzRXW0ygG2vmSSt7rowHf9HC1swZI/0KiyyfqvJCuOzjjBY3dlhapMk0D9DQbRZBDk+LahI=
+X-Received: by 2002:a05:690c:6410:b0:70e:27fe:ae64 with SMTP id
+ 00721157ae682-70e2d955c62mr76737287b3.3.1748223683571; Sun, 25 May 2025
+ 18:41:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH 2/2] net: stmmac: dwmac-sun8i: Allow runtime
- AC200/AC300 phy selection
-To: James Hilliard <james.hilliard1@gmail.com>, netdev@vger.kernel.org
-Cc: linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>,
- Feiyang Chen <chenfeiyang@loongson.cn>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Jinjie Ruan <ruanjinjie@huawei.com>, Paul Kocialkowski <paulk@sys-base.io>,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
-References: <20250526002924.2567843-1-james.hilliard1@gmail.com>
- <20250526002924.2567843-2-james.hilliard1@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250526002924.2567843-2-james.hilliard1@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250517012350.10317-2-chenlinxuan@uniontech.com> <57f3f9ec-41bf-4a7b-b4b2-a4dd78ad7801@linuxfoundation.org>
+In-Reply-To: <57f3f9ec-41bf-4a7b-b4b2-a4dd78ad7801@linuxfoundation.org>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Mon, 26 May 2025 09:41:12 +0800
+X-Gmail-Original-Message-ID: <3E15862E876BC25C+CAC1kPDOH+QZDjg46KRNmQQpH-_yLbQwMUGsiBk9gW1kqjyy9xw@mail.gmail.com>
+X-Gm-Features: AX0GCFsBni7qi8Ac7p4cj_ZgxAOmlOpRhCXgN6pmm8WD3Mcg5CwSWbbJiA44GgQ
+Message-ID: <CAC1kPDOH+QZDjg46KRNmQQpH-_yLbQwMUGsiBk9gW1kqjyy9xw@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests: Add functional test for the abort file in fusectl
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, zhanjun@uniontech.com, niecheng1@uniontech.com, 
+	wentao@uniontech.com, Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: NwIPvWX4YDagj9WH+q98X3TrRPxO0s/DoSAygTtCbBMnwTNbYzjOOrZq
+	mC5EESqb5nlkXd7SGm7/+1DssQrvaCr/rdjEDr6AD3LfMQlzVS+7Vo4to3KhhwkmVBmP1LA
+	/2f4wOh9mpA22IWAw2k4/0aoAot2OCj5LRkTDq++M5Qskzg97MBXIuLavzVZIvNixhyHaRN
+	oLXTkgDzFRlmjD3eAD/7HsqtWJRqqHfbegaIFLKVT1VVRmDYrB4n/PtsS6zKyi1I+L6od4D
+	3WRXc3W1v2ox0e1QT0jGLZ7ftzmWFvJb+0W39xyuJ79VPTG70eDzRq9juU04G3nY4xPgYj4
+	TrGv8+LPrpw/eb2V3PlZdHecALQAhWdjVpRkru7YfXbVRsWxo0hV06+HSDKyP7aWY+QxkEk
+	0bvPidhEns7D5mxsJWB7SN6ZQgW0acFDcXLrmitfbTdWoCADcQWIpruwMiGLJE8hKz51NEs
+	LNwFUF32sQNeoYCR8roGHGR3p0FZy/nJveit2f2EJIrtY2yhI1WUue4bDnTa5N80+kjKWA0
+	hpmJYIK9oFFEeglAoxgeFYo8iItimOHmh6mr74VN4lbXDVq0aE4JhJ5Ec7uUHEf0bQSdw/h
+	ZxGpI8GZLk46HEni4yFnmkGszpp80BoGytrtSdjgEriirdZ5Yk8YsXyTRWYZPZPfAkTgH7J
+	lJ38kzG3ubDJAIqdOSpNzulWzMI/OYSvc56h3/+8vXT7tsp8fFypyKJddeK++vUYQX3GkAJ
+	zJZMM6/WWZm7mWRb0PHrGkCBC0DuBOei7qzxvA+AfNGXLc8EFyC5eet0upu9RUFnjkCI5Oc
+	GAeHPvp/TNRfaRwx6BQeUiQhYngYsrfXiRD3oPL3k269YnHB7xfcya8vGPhyAFJfm84tibM
+	3s35Zimw0jp0DWwbqPcGIVe7b08PFSz2zW2Iey8BMIB2u0TQ4Jrk0zDE5MqkGjFfh6+MicP
+	CzUD6jBCoTI2T6mX7L1mztSq6dY5S/JAY0pKsbFi14FmLVg==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
+On Fri, May 23, 2025 at 6:50=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.o=
+rg> wrote:
 
-在 5/26/25 8:29 AM, James Hilliard 写道:
-> The Allwinner H616 ships with two different on-die phy variants, in
-> order to determine the phy being used we need to read an efuse and
-> then select the appropriate PHY based on the AC300 bit.
->
-> By defining an emac node without a phy-handle we can override the
-> default PHY selection logic in stmmac by passing a specific phy_node
-> selected based on the ac200 and ac300 names in a phys list.
->
-> This allows us to have a device tree that defines both PHY variants
-> even though only one will actually end up being used at runtime
-> based on the ac300 nvmem efuse bit.
->
-> Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-> ---
->   .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> index 6c7e8655a7eb..e275f4caa684 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> @@ -11,6 +11,7 @@
->   #include <linux/mdio-mux.h>
->   #include <linux/mfd/syscon.h>
->   #include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
->   #include <linux/of.h>
->   #include <linux/of_mdio.h>
->   #include <linux/of_net.h>
-> @@ -280,6 +281,8 @@ static const struct emac_variant emac_variant_h6 = {
->   #define SYSCON_ETCS_EXT_GMII	0x1
->   #define SYSCON_ETCS_INT_GMII	0x2
->   
+> Also if this test requires root previlege, add check for it.
 
-> +#define AC300_KEY		BIT(8)
-> +
-
-I have observed all the BIT macros in this file, and they all
-
-have a line of comments. I think a comment is also needed here.
-
->   /* sun8i_dwmac_dma_reset() - reset the EMAC
->    * Called from stmmac via stmmac_dma_ops->reset
->    */
-> @@ -1159,6 +1162,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
->   	struct net_device *ndev;
->   	struct regmap *regmap;
->   	int ret;
-> +	u16 val;
->   
->   	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
->   	if (ret)
-> @@ -1222,6 +1226,21 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
->   	if (IS_ERR(plat_dat))
->   		return PTR_ERR(plat_dat);
->   
-> +	if (!nvmem_cell_read_u16(dev, "ac300", &val)) {
-> +		const char *phy_name = (val & AC300_KEY) ? "ac300" : "ac200";
-> +		int index = of_property_match_string(dev->of_node, "phy-names", phy_name);
-> +		if (index < 0) {
-> +			dev_err(dev, "PHY name not found in device tree\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		plat_dat->phy_node = of_parse_phandle(dev->of_node, "phys", index);
-> +		if (!plat_dat->phy_node) {
-> +			dev_err(dev, "Failed to get PHY node from phys property\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-How about preparing a separate function for it?  Then call it in probe().
-
-If you are willing to do so, remember to write a code comment.
-
+Currently, this test does not require root privileges.
 
 Thanks,
-
-Yanteng
-
-
+Chen Linxuan
