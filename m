@@ -1,103 +1,134 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailo.com (msg-3.mailo.com [213.182.54.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A451C28E;
-	Mon, 26 May 2025 16:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7D7202C26;
+	Mon, 26 May 2025 16:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.182.54.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748276814; cv=none; b=jIrWD9aaL3EyFCrrO9Pfrqw17X9CLGkhuAq/XEqLAuaZTPSwsM8WrUHexUEDdYEztFjE+/fusuks/FA5ZWKhsTOGDFDQQJC14XbBvmH8i6qGTl6gm8sNVYhXvscWB4fXF3UtDU9cxBSFRUwliEug0OsneyHAotAZmWioT3Z8y7E=
+	t=1748276926; cv=none; b=mNS4WgMLqAw1g8iVE6KcRbh1yEgA9P+9yOtXbvad2FXBdWnulXyWv6+L27RICZJDtN/Ss/+4YzROhI3eWFAAFFx2HHulADtbyar//UnAHOmZzWGlLeB0gtDIkxPaprtwFXNMAF7k50Alk1yDkKqICe7iJW7X5QJ5b3/9eOur18A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748276814; c=relaxed/simple;
-	bh=hFaWO1V0viwCaw8Ns+3kw9xrqwrKvjvEvwkIlOSKQrc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zzp/DYgY434gYhOeEsjyAYcuCpAflHOn1Ug+rOSbrvcmCi9TlVIBHsde1PGpaQZYW/U1SH3k4j2GQ0qRWCLcSTmAd/pl/98ztY6Nc0/Hbj4y75Cb8aO6+iPEP4SD8UCwkr5YIiUpLWcA5NdbbFJBy/PXrjUbFgcITZ2t0EFodgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kj0bebA0; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748276926; c=relaxed/simple;
+	bh=WesYvToAs6WtM8/JvS/w8lPmZbCAauuQs9r0LMUFeFE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hhkbETGAzVDb6nb7b3An9f7PIZBuW5Mt31uEwM6I3CSblFzFor4ykdkPgpVdyYxssWfuxRc/in774rw7Xe8wf9kQ12bBQu0G/ONyQtwcJv3SqAAZmGR+TxPwqsWabF60H9Dcj59jp2oLvcs6F9jfFi8rTUsAUg2+T6y0+hjFax8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org; spf=pass smtp.mailfrom=mailoo.org; dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b=Z19Do2EK; arc=none smtp.client-ip=213.182.54.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailoo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kj0bebA0"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742a018da9cso231703b3a.1;
-        Mon, 26 May 2025 09:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748276812; x=1748881612; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hFaWO1V0viwCaw8Ns+3kw9xrqwrKvjvEvwkIlOSKQrc=;
-        b=Kj0bebA0AP+daaT3A5MiyUCQncCoDEAa40J6gW7DtheFG1L7t5g0/DAdxZsg+ura1e
-         ZkySRaDB+0nLEdt9Pwfm9rk91o3UT0nZuqjXDNJg466LUj7nKwagfrt1dbJQt6rs55Tp
-         Yf1sUSjgQ+BMVZWKC4Y+Woc5EVpJ/nSB9mK3SUwWF9Ohg6GWHYKUNqSxaOmuUNrR3Dpj
-         yyYfVRO0XULhwVwW2EB2oYREKAUy8VjE4WPD9Zz4qQV/HflHgD6CGkut2nTvpanKphV6
-         2gu14wHNw6/Hzb6xgGj3W+AsBVkRMUOehWyn424xW9TqtLXCbzdqmLnPfZ8pQEDQYlLb
-         lp1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748276812; x=1748881612;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hFaWO1V0viwCaw8Ns+3kw9xrqwrKvjvEvwkIlOSKQrc=;
-        b=dfFSS6xIh54EWt3i9cYSBZSTgLCbnzdIfUl19HRg4FunmxT/iNNEHxKjvupi+E6+r8
-         zyu21s+eVVwbQkISTD3hRa162qXPX2ZxNdUvB1ofOPLyjf0jOaZgi74HL3TeHbhFRr6v
-         lFNDLcllIIuvxapqo9Kv+PTsdjcOym/ZofcO8VAuXLpIlAmwTl1DPqA/FaWrfiTxaojk
-         hKbkFnB31kmjJcfO/hQKOF0WtlSfKBqeSutfdMzhU2QxHMhv3rh8s7Z2pv96R/qItHUp
-         /bh0wCOGwkVJ9ezgK8xvM/lr7sk8lHW9+JSH6h6oZGqlosBZdXVQprsDTXwrYfB4uYQZ
-         /a/w==
-X-Forwarded-Encrypted: i=1; AJvYcCW2o5SkHHvoqQ2iBf5jZKBPo9O/ICTFWrfW7uLl/UJPNqz5o0em/HEUDG7/SXDE96YxYoh/+X5zOjfbr9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl84rqDHhg+7owBVhrqaI/yEe/MIugsA3m/gMTvy8mzlGskXV2
-	dQ2PQfx3B5vILjY6aeaRq1XJPfrFV1vuR25pH/thc1d+F8UBE4pEyIzgVMJRypPcvqhseGSNVTW
-	Okjvl1WcV1k5GUNcQygF7MNUpxc/W2EgxZ1d5pVp/Ww==
-X-Gm-Gg: ASbGnct5HrU8Vqku8eO/FFNpRGsPnQIJmoSW/2dzT7Zjaf8QxRhLQrQhJN9M7oYdjFT
-	BAUvwOOiTVGd13n2n7NPbuytsIZ0cPAbMsV5gYGgrbNAUyxALzFy1oO9Iwxanmx3uxTu84ZELEs
-	G/DykMDw9Q7L4Fc8EmAiPyzons0G80vtvPEzqHpxPxLNM=
-X-Google-Smtp-Source: AGHT+IGI2U3B2DPkCaWxul9oLSOwlvNeRO1ugJRo3NawxC4B0GRJsCUsp0cPHyMuWk00lqKz8FoVwu1sUwVq7QH0sHs=
-X-Received: by 2002:a17:90b:4b06:b0:2ff:7b67:2358 with SMTP id
- 98e67ed59e1d1-3110f0be892mr5708540a91.2.1748276812091; Mon, 26 May 2025
- 09:26:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b="Z19Do2EK"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailoo.org; s=mailo;
+	t=1748276913; bh=WesYvToAs6WtM8/JvS/w8lPmZbCAauuQs9r0LMUFeFE=;
+	h=X-EA-Auth:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=Z19Do2EKRVwFrJHxN1AoJcz9J3VcCpGqfS0gsNY0Nn9dsvxE8wC1GwQFRJQI5tvk0
+	 kQNNoZ13VhGNjRcgRrmwkXClnvzCaKD1GRO5Mb5Yo54me8ne+ZqYX43/VwQBY+1XtG
+	 H+r53OMlqUbJzdLHXCzLzDPgPJsAxxZIzf044/98=
+Received: by b221-5.in.mailobj.net [192.168.90.25] with ESMTP
+	via ip-22.mailoo.org [213.182.54.22]
+	Mon, 26 May 2025 18:28:31 +0200 (CEST)
+X-EA-Auth: thZI+eq+wJnB9pJ071hare+VCuHcapIAEi1zIKZM2k/VH4RxG/+cQFwy5X4Kg1nKahXEAeXZY5flnhMcupOr8OYi0eaUG8aXoIBwG0RcQos=
+Message-ID: <a1645a74b59c29a567477e4b3a42391f40ba0591.camel@mailoo.org>
+Subject: Re: [PATCH v2 2/4] media: qcom: camss: Add support for MSM8939
+From: Vincent Knecht <vincent.knecht@mailoo.org>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Robert Foss	
+ <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, Mauro Carvalho
+ Chehab	 <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn
+ Andersson	 <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ =?ISO-8859-1?Q?Andr=E9?= Apitzsch
+	 <git@apitzsch.eu>, phone-devel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht
+Date: Mon, 26 May 2025 18:28:30 +0200
+In-Reply-To: <cc43d9b7-13ba-44ea-9b37-fc54c0d1f2e0@linaro.org>
+References: <20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org>
+	 <20250525-camss-8x39-vbif-v2-2-6d3d5c5af456@mailoo.org>
+	 <cc43d9b7-13ba-44ea-9b37-fc54c0d1f2e0@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42app2) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1728818976.git.hridesh699@gmail.com> <5f42e19fe52adc07d44d1fde225e8d933fde54f8.1728818976.git.hridesh699@gmail.com>
-In-Reply-To: <5f42e19fe52adc07d44d1fde225e8d933fde54f8.1728818976.git.hridesh699@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 26 May 2025 18:26:38 +0200
-X-Gm-Features: AX0GCFtolGqeR5oCBTsnixiaNpfcnCBdpIfYfA4ccGOLkthNj7Zy7-_xnpEOdgw
-Message-ID: <CANiq72=0a2x7jLDuYtzDf5NxAvVpCDuCYMsiysoJ+GK3pF-kPg@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] rust: kernel: clean up empty `///` lines
-To: Hridesh MG <hridesh699@gmail.com>, Andreas Hindborg <a.hindborg@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Jens Axboe <axboe@kernel.dk>, Wedson Almeida Filho <walmeida@microsoft.com>, 
-	Valentin Obst <kernel@valentinobst.de>, Patrick Miller <paddymills@proton.me>, 
-	Alex Mantel <alexmantel93@mailbox.org>, Matt Gilbride <mattgilbride@google.com>, 
-	Aswin Unnikrishnan <aswinunni01@gmail.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 15, 2024 at 5:52=E2=80=AFPM Hridesh MG <hridesh699@gmail.com> w=
-rote:
->
-> Remove unnecessary empty `///` lines in the rust docs.
->
-> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
-> Link: https://github.com/Rust-for-Linux/linux/issues/1109
-> Reviewed-by: Trevor Gross <tmgross@umich.edu>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Hridesh MG <hridesh699@gmail.com>
+Le lundi 26 mai 2025 =C3=A0 09:20 +0100, Bryan O'Donoghue a =C3=A9crit=C2=
+=A0:
+> On 25/05/2025 20:25, Vincent Knecht via B4 Relay wrote:
+> > From: Vincent Knecht <vincent.knecht@mailoo.org>
+> >=20
+> > The camera subsystem for the MSM8939 is the same as MSM8916 except with
+> > 3 CSID instead of 2, and some higher clock rates.
+> >=20
+> > As a quirk, this SoC needs writing values to 2 VFE VBIF registers
+> > (see downstream msm8939-camera.dtsi vbif-{regs,settings} properties).
+> > This fixes black stripes across sensor and garbage in CSID TPG outputs.
+> >=20
+> > Add support for the MSM8939 camera subsystem.
+> >=20
+> > Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> > ---
+> > =C2=A0 drivers/media/platform/qcom/camss/camss-csiphy.c=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 1 +
+> > =C2=A0 drivers/media/platform/qcom/camss/camss-ispif.c=C2=A0=C2=A0=C2=
+=A0 |=C2=A0=C2=A0 8 +-
+> > =C2=A0 drivers/media/platform/qcom/camss/camss-vfe-vbif.c |=C2=A0=C2=A0=
+ 7 +
+> > =C2=A0 drivers/media/platform/qcom/camss/camss-vfe.c=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0 drivers/media/platform/qcom/camss/camss.c=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 157 +++++++++++++++++++++
+> > =C2=A0 drivers/media/platform/qcom/camss/camss.h=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> > =C2=A0 6 files changed, 173 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/media/platform/qcom/camss/camss-csiphy.c b/drivers=
+/media/platform/qcom/camss/camss-csiphy.c
+> > index c622efcc92ff3781d7fc3ace0253c2d64c91e847..6311fc2975aa1345e430a47=
+7c8a6476f1d7e5663 100644
+> > --- a/drivers/media/platform/qcom/camss/camss-csiphy.c
+> > +++ b/drivers/media/platform/qcom/camss/camss-csiphy.c
+> > @@ -605,6 +605,7 @@ int msm_csiphy_subdev_init(struct camss *camss,
+> > =C2=A0=C2=A0		return PTR_ERR(csiphy->base);
+> > =C2=A0=20
+> > =C2=A0=C2=A0	if (camss->res->version =3D=3D CAMSS_8x16 ||
+> > +	=C2=A0=C2=A0=C2=A0 camss->res->version =3D=3D CAMSS_8x39 ||
+> > =C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0 camss->res->version =3D=3D CAMSS_8x53 |=
+|
+> > =C2=A0=C2=A0	=C2=A0=C2=A0=C2=A0 camss->res->version =3D=3D CAMSS_8x96) =
+{
+> > =C2=A0=C2=A0		csiphy->base_clk_mux =3D
+> > diff --git a/drivers/media/platform/qcom/camss/camss-ispif.c b/drivers/=
+media/platform/qcom/camss/camss-ispif.c
+> > index 2dc585c6123dd248a5bacd9c7a88cb5375644311..aaf3caa42d33dcb641651e7=
+f5bc0c2a564d85bfa 100644
+> > --- a/drivers/media/platform/qcom/camss/camss-ispif.c
+> > +++ b/drivers/media/platform/qcom/camss/camss-ispif.c
+> > @@ -1112,6 +1112,8 @@ int msm_ispif_subdev_init(struct camss *camss,
+> > =C2=A0=C2=A0	/* Number of ISPIF lines - same as number of CSID hardware=
+ modules */
+> > =C2=A0=C2=A0	if (camss->res->version =3D=3D CAMSS_8x16)
+> > =C2=A0=C2=A0		ispif->line_num =3D 2;
+> > +	else if (camss->res->version =3D=3D CAMSS_8x39)
+> > +		ispif->line_num =3D 3;
+>=20
+> > +		.interrupt =3D { "vfe0" },
+> > +		.vfe =3D {
+> > +			.line_num =3D 3,
+>=20
+> Hmm should we really be setting line_num inline in the code ?
+>=20
+> I don't believe we should.
+>=20
+> These parameters should be passed from the resources structures.
+>=20
+> ---
+> bod
 
-Andreas: this is trivial and perhaps you prefer that I pick this sort
-of thing automatically, but just in case, could you please Acked-by
-the block part? Then I will pick it and hopefully the authors can
-restart the discussion on the `checkpatch.pl` side of this series.
-Thanks!
+I've just followed suit, no strong opinion about it.
+Can we agree this could be changed in another series ?
 
-Cheers,
-Miguel
+
