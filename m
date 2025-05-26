@@ -1,86 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEEB171C9;
-	Mon, 26 May 2025 16:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07BD202997;
+	Mon, 26 May 2025 16:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748277179; cv=none; b=joWBPO1CaP7CaW+flAXmF3LdGhtKnrsoszUXwx05BkzR8v7L+TZPA7WiObSxvtE3lrivPVIkj+GvSNNSwkavg5H4ix+FEc8+MMkL0fHvFEIW/aTcBLsofkxCqrXlIOlNkj157FsLHXqiS7XZukif9pZdhGwipJgmNVixDuXtG1A=
+	t=1748277184; cv=none; b=uB+CRrcHK1UCU+wLEiM3DkJ35Mdx/+lTbQIAWTcTLVhj5VMIiNZ1qYQPCIYTZpF+PT8JnejGkfa6aquiWud+Vyi7DtTUgdfyyANLmpWfq4R8BDV3cKH+OBTCgJG7J9wzOpvev3h1ZNU7jk6OKtj8BMTPbJFksjOCG7NcgM+CD90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748277179; c=relaxed/simple;
-	bh=c32tG7DvGoUbKdoz3SeKC+DeGUkkAO0kbYZEA+WJbpo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=P5iY/NZjA1c/maeBQxXuORfJ1Z2W3a6iEtVxcQX4iL8/vbIkz/r9UfcAOhOFDvmLk/aggo/jlijqi2aBJGV1+z5Qs46Vvoyq+bDj2z7P75aErAjoLDsNp8fEMHaGo2/JguxPYDjC4mFtnOi9zaS/ErtXGlYZsTI38C0FbCEtAnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiF0jrnO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748277184; c=relaxed/simple;
+	bh=oBX3nGJZkm65kJYi/wZh7jMVYKo8z9H1xxl+NXM/IVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iQnvPVE3SvqOUuqCMVlj8skjj5xb7TnbWLFADEg+fqh+CXnwjJXGnzJKvvBUY10O1uYo5hifN6UHNU7vor4XDahSU97p5bCUZa2xW2RLL402k2PwDktIbafCiVVbJlcfiolu9lOWzZSS2xeZon72Y1U70nbVsOTSn5qSgLw2+dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iNipAPOW; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiF0jrnO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 446BBC4CEE7;
-	Mon, 26 May 2025 16:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748277178;
-	bh=c32tG7DvGoUbKdoz3SeKC+DeGUkkAO0kbYZEA+WJbpo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=aiF0jrnOIkvPCZghN5Jcs09lWNqwfUIn7GMkK+JDZCH3i5CjrDLdSu/Xb6GcQ5F6J
-	 nWhetWvZCQmWeudNmyRio96VpuKn1pzXVQZzBlI6zPc6xDycZqPnTHu91ZRvExotJ2
-	 CdBYsEDM3BOPwys3/t7BPr1uHCcsJbJUZZJvJSLBbi0B+5qVoG7epZCSe0YSFGBxKW
-	 kdjgh2jxdcoxcM+U1skEOFZ9ZFmCPLcx9zWWIA8VfI8ODUVCMSalMq4gCQ67wm7kaU
-	 5w65APL3x2ZHHwAILPoqfiTQ9Sx1QLk5Fhzo2HfCk4Au5UHPKZOLFyv07tZ0YuEzMi
-	 d3kSttQfMP/lQ==
-From: Mark Brown <broonie@kernel.org>
-To: cw00.choi@samsung.com, krzk@kernel.org, lgirdwood@gmail.com, 
- Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20250526025627.407-1-vulab@iscas.ac.cn>
-References: <20250526025627.407-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] regulator: max14577: Add error check for
- max14577_read_reg()
-Message-Id: <174827717705.619417.16011537123487299524.b4-ty@kernel.org>
-Date: Mon, 26 May 2025 17:32:57 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNipAPOW"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b2700de85d0so215390a12.2;
+        Mon, 26 May 2025 09:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748277182; x=1748881982; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oBX3nGJZkm65kJYi/wZh7jMVYKo8z9H1xxl+NXM/IVM=;
+        b=iNipAPOWPkmyskPWL+aV/64+DloCE5SBZyeMN1iDbwuwYjWowo7eZ3nK9rwXuDvB4w
+         tdE2qX1Wqsk7HQ/J8naNsziEVqgwJanFx2cuM8StQjrFkL/HFr7wz57yA8k2hy19qRlr
+         JHnQWhJd2I+x6rGE0a13XnY8BY42ToiybBJyaK9Qid+4h5dqxJh4wXlc8uWDF20ITslO
+         SjCEuce2jgXTfQBFxgWnoM2LRiR13R/k867z1sgD0mnSkH8hnpGK7cg+fincM4LIBKNp
+         top5HBzS7JiyzD30oszWXKnix1K3cjuS7mktzn35kfMUvjPIomHnMP3Kn58pLGMX/F3k
+         J25g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748277182; x=1748881982;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oBX3nGJZkm65kJYi/wZh7jMVYKo8z9H1xxl+NXM/IVM=;
+        b=fo4M0Xp7WltWbBQZgJhnSegg/22K5n10o8ewPpDPZM5NQruwS8E4/9YVO9H3ogX3fE
+         Q0BRZ09WUpg71li9wOEe/ZX2V8Ff4fbDPkZeAqcOLrn5XyWK1R+wG1miwYmJKoC4l8jm
+         PAEYKaqJBQvtVAuhd+Fii6xWABkFBaH1RExOvvC/oPHN7RQAmv6Tq92zXGBly6vvwcrW
+         yjHVKQVCrbQdvDtOQwEE9lVRwhXZsCYuYtBa1zKNe7TWVdr/Y2RWsHfjU7yOJB+u4glf
+         MGpfE4vEvVnqIpUR9VeKyfsjqivXzyYqaHgEirB1kPaym0sqMsOVUzcxyK2o8ZxfXBOK
+         d8Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWibOdGn3uhr/a3JCH2btiOyRhMaAqvQqWP+m4ng6ZNZUcmGdPKvgj2RlVjh/DJ02ogA5dn45LVCrQxZI+7dUHD@vger.kernel.org, AJvYcCX57E6lS6duCAkAAEvHu2MvRIlLvsaGX2OQN1jXZmb7dwD8J/UhElATLh9+6F34FAyXqokios2KoYsIKto=@vger.kernel.org, AJvYcCXqAr9UKt+U4Qq7Wjx048uUTIqF9PeIKsQzWl/4xjBGXcBqc5eyLsknm0Pyr3VW1TGoMbwie2hxYKMZaYhMbVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTAp/Yv45OT43YqRdHOuBETirAP8VjaPnxBAqsEN4HnpklPoUw
+	7sLtLrT6z4YMpFwsTHjWyiwiMMYK0C6v2ED+iBcTIVVNrLGph9R/sQ4uKWB52NOe8YaKQk2P8Fh
+	KzeCpQIzk84ghJl5WWQiTBOAqwGsZwFY/zaEWZYnw+/Hg
+X-Gm-Gg: ASbGncuVimJUgGm4ApCRitFliB1BwGu6E1kRdkBGU4Dnq3/Mpz/oQpdR4YIWKoKBAcM
+	i0tSqy/hjhWCo9vJdPuO3ewOFB6VDhN+1qokGss58W3RpgcUgDwZQFej3D/heYHZGApR5W7+DYj
+	lz7gIU8RcZgkE/kXM6A1gkZ5zlnlla9iha
+X-Google-Smtp-Source: AGHT+IEeSG0n7ehhVOoESnQux1xpNOuBanOUMCLNlX3yyDGthV4KhuWZRSp/Dq4T8uCR1SZVJ++rnFMO42A6T9LVFtg=
+X-Received: by 2002:a17:90b:1b51:b0:310:cf8f:48e2 with SMTP id
+ 98e67ed59e1d1-311108a0e9amr5921408a91.8.1748277181833; Mon, 26 May 2025
+ 09:33:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+References: <20250526162429.1114862-1-y.j3ms.n@gmail.com>
+In-Reply-To: <20250526162429.1114862-1-y.j3ms.n@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 26 May 2025 18:32:49 +0200
+X-Gm-Features: AX0GCFtaEjDrnXGZgOSiQXbYSiqvotIG0xz7ZDUZgnA7xOt6QSocK4DknJ3FBX4
+Message-ID: <CANiq72mGiQeQPZY39_URhTM4-3U2Pf9WvWETfnTMAJsfpH_NyA@mail.gmail.com>
+Subject: Re: [PATCH] rust: kunit: use crate-level mapping for `c_void`
+To: Jesung Yang <y.j3ms.n@gmail.com>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 26 May 2025 10:56:27 +0800, Wentao Liang wrote:
-> The function max14577_reg_get_current_limit() calls the function
-> max14577_read_reg(), but does not check its return value. A proper
-> implementation can be found in max14577_get_online().
-> 
-> Add a error check for the max14577_read_reg() and return error code
-> if the function fails.
-> 
-> [...]
+On Mon, May 26, 2025 at 6:26=E2=80=AFPM Jesung Yang <y.j3ms.n@gmail.com> wr=
+ote:
+>
+> Since `kernel::ffi::c_void` is a transparent wrapper around
+> `core::ffi::c_void`, both are functionally equivalent. However, using
 
-Applied to
+Hmm... It is not a transparent wrapper, but a reexport, right? (it is
+not even a type alias, like the others in the `ffi` crate).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Other than that, the change looks fine -- thanks for the patch!
 
-Thanks!
+(By the way, in general, please provide the `--base` flag to
+`format-patch` when possible, since that makes later on applying
+commits much easier. And it usually doesn't hurt to have a "Link:" tag
+to the discussion in Zulip.)
 
-[1/1] regulator: max14577: Add error check for max14577_read_reg()
-      commit: 65271f868cb1dca709ff69e45939bbef8d6d0b70
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Cheers,
+Miguel
