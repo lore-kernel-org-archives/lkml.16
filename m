@@ -1,91 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575EE8460;
-	Mon, 26 May 2025 15:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3C433991;
+	Mon, 26 May 2025 15:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748272499; cv=none; b=pcWf9ZFT1QGgcUOuR/1A0kpNX3HY7nVl/0xryYILH2XTA02grIf/c6Lzt60IazNrN9CBhJy5kiIcpAC2yQur6sBaJ2p4FPmcpE5ulF4KA3Pgb2MobNzApGC8yqtOXluB4Padiv5En7kEd1vmJQ4EGJYFwtYf41OS5fEQto5H3uA=
+	t=1748272608; cv=none; b=FTUk2fZ8DbWWloIg8XZgCpo0SpnsRf03vbFOk8H2QWBG6WHV2syB/F+7xRn55kq8F3YYej9okagUF9UlRnjkS0Q8oySis5SxO6gCOCO5cMRvVTYiTszzXGVhR0V5b7QpYwNXVFfEv2a62U18CpOHhNOy1Z5GQs3MP6qCCPRHGTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748272499; c=relaxed/simple;
-	bh=hFGRcfD0Y2n8tquVud5hBr54D9H+RrZF/YlhNIB3mp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kj5LPx/91X4Pm+Iqs8JZDHdIVtMGfIKeMG+pBRMyk+agVN+sJqjHgwPex3xFwccO30aVBNafkFJ+Dtm5evx1jLXFLghMTFa3rVz6DphLrjrDkb1g3UeWwRytroXLwTXWSRwMy/fB4EE1eggp3QPTyYnp/FZa99wCAoNLZ+KRpH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d11PDPZw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748272608; c=relaxed/simple;
+	bh=5zGyar15BAha63jrL1gRTW6pt5Nkf8aEXoiv/ujCouw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E+37x79ypEoA3E669f2I49v+mnsgWn5o65FEYUlSCYKjsSkf0JuA9N6VnMCJN7awMicVuQBjjK5+BoBUDBXGStqY87Sswe/3B/8ar3sVvVjNvmWlNv9cE/ABHAl0vmNWUG3fzSAGk8gVTUMuwSsNIekovA4zdXhfHloYVlvaUBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IInbJKBJ; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d11PDPZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2BBC4CEE9;
-	Mon, 26 May 2025 15:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748272498;
-	bh=hFGRcfD0Y2n8tquVud5hBr54D9H+RrZF/YlhNIB3mp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d11PDPZwjxXYqjOAS0hpdMCtQMffOYc96Z0AX5n2fka3qyWh35Qs6jXhlgTe7Sh3s
-	 QEp6vRfFQbqv0L0CTkR3ujXn6IrNJVCwnZMju/6qUoTlKr+1Lb7oX+8Xw45Eh4LlsX
-	 SP4TN5/frytZ2tl9d68YmZIWJkkJnrcGCr3uhm0RwJsZiDVnQzfbvon272Z3ILDM9Q
-	 4RgMjjyeMZ9Fdg4CJ4Ag3ivVHKARNjrJvvWJMAKnjL7vSzRSuKV5XcOUrIy05zizkr
-	 876DBdToY1mKDKetGx0LQwJMh6eBTzn5zpLatzX++1t+5o+qCBrX+KgKksbIHPtPGj
-	 iGd7Td8r1h2jA==
-Date: Mon, 26 May 2025 16:14:52 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Zixian Zeng <sycamoremoon376@gmail.com>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Longbin Li <looong.bin@gmail.com>, linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org, sophgo@lists.linux.dev,
-	linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] spi: dt-bindings: spi-sg2044-nor: Add SOPHGO
- SG2042
-Message-ID: <20250526-celery-penniless-adeed760308b@spud>
-References: <20250525-sfg-spifmc-v2-0-a3732b6f5ab4@gmail.com>
- <20250525-sfg-spifmc-v2-1-a3732b6f5ab4@gmail.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IInbJKBJ"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q8tv0w001007;
+	Mon, 26 May 2025 15:16:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=d0RgDuiFWdp7TccO4EmCvBzMLDBNY
+	Cs6WqadtvY6liw=; b=IInbJKBJuiocOWs64zNn7Y3UWy793ds5O2ZUbdd9atpCD
+	mmJM/dUegi4RUqwXQfDFFfSuvhxC9Qr7a/7PAEMisBvEwNu6tA/FvoLX/4m98WPA
+	WYBcMpMxDJeY6AyEgRnLAPCrYWb22u1/hg2UV53rWR2+4+7sjduAmMVQNgeLH8V4
+	y/QO21v5HY1tvuHQQUevFjswaL49+JAhOvpTV46QRRgLUd/CsgLwulhByoofVYBo
+	QviAmsiHhZtdFmrwBSTYZfTHNioSMS0MVtbITFzdG6WLKgzIXsoyp3IGYep1V0uF
+	pRuyRT9vfMVxr2tqQmpaHH06enRhKLRQvSwMGQRMw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46v46tshaf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 15:16:39 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54QEgxKZ007367;
+	Mon, 26 May 2025 15:16:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46u4j84v5j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 15:16:39 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54QFGctb030072;
+	Mon, 26 May 2025 15:16:38 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46u4j84v5a-1;
+	Mon, 26 May 2025 15:16:38 +0000
+From: Alok Tiwari <alok.a.tiwari@oracle.com>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org
+Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
+        darren.kenny@oracle.com
+Subject: [PATCH RESEND] selftests: nettest: Fix typo in log and error messages for clarity
+Date: Mon, 26 May 2025 08:16:27 -0700
+Message-ID: <20250526151636.1485230-1-alok.a.tiwari@oracle.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3cRYTBgHkSKip73E"
-Content-Disposition: inline
-In-Reply-To: <20250525-sfg-spifmc-v2-1-a3732b6f5ab4@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_07,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=999 bulkscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2505260130
+X-Proofpoint-GUID: dncyt1cErtYSCGMjezJOOE15QkGDJq_6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDEzMCBTYWx0ZWRfXy8kYMymhMwOc /cV0E5BM6fOdKEJZvRHb3BTw3Htw9ecpY/x64W3zdaxOGqaDMdQ5BXsu0bgGbjOK/JDfreY9Avb 3XfVGzNC6qXGDeqZYB8A4NHUyUJrokli4Xbwnex3R9zcANmP0Z4ygdsqnjYcvyGTFtD2hqFWq/H
+ p/kEKv8pTSfSrW4Z5azGydUVq+GLPRNvZNwZBaOeDMKMsMGhB6XGgbM5+sR7m/5pitN5xoLcdA7 7NUMqOJxEk8Br/GvEWwjiq086qKZs5nqADjUlZaiRavzPT5sa5cF/dqaOEYHeHnTHxQHGflkmza PIuRybF85QlbW4ME6DMPhX4LCqYJ45RgY8H4hQwYUPWsNWWhime4PhJT7BoPnXEfnP54T4aCtIj
+ 8pX5ns4ZweDLzZDWt2331JVkzih0BldqMyNigxEzYQj9UM46YZfmxSjOzo9x1LhnlGMC3Wye
+X-Authority-Analysis: v=2.4 cv=VskjA/2n c=1 sm=1 tr=0 ts=683485d8 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=9X4DUQxQdoZdu0pZ4wIA:9
+X-Proofpoint-ORIG-GUID: dncyt1cErtYSCGMjezJOOE15QkGDJq_6
 
+This patch corrects several logging and error message typos in nettest.c:
+- Corrects function name in log messages "setsockopt" -> "getsockopt".
+- Closes missing parentheses in "setsockopt(IPV6_FREEBIND)".
+- Replaces misleading error text ("Invalid port") with the correct
+  description ("Invalid prefix length").
+- remove Redundant wording like "status from status" and clarifies
+  context in IPC error messages.
 
---3cRYTBgHkSKip73E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These changes improve readability and aid in debugging test output.
 
-On Sun, May 25, 2025 at 10:58:41PM +0800, Zixian Zeng wrote:
-> Add bindings for the SOPHGO SG2042 SPI-NOR flash controller,
-> which is compatible with SOPHGO SG2044.
->=20
-> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+---
+Resending: Previous email used incorrect address for David S. Miller
+---
+ tools/testing/selftests/net/nettest.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/tools/testing/selftests/net/nettest.c b/tools/testing/selftests/net/nettest.c
+index cd8a58097448..250189309e69 100644
+--- a/tools/testing/selftests/net/nettest.c
++++ b/tools/testing/selftests/net/nettest.c
+@@ -385,7 +385,7 @@ static int get_bind_to_device(int sd, char *name, size_t len)
+ 	name[0] = '\0';
+ 	rc = getsockopt(sd, SOL_SOCKET, SO_BINDTODEVICE, name, &optlen);
+ 	if (rc < 0)
+-		log_err_errno("setsockopt(SO_BINDTODEVICE)");
++		log_err_errno("getsockopt(SO_BINDTODEVICE)");
+ 
+ 	return rc;
+ }
+@@ -535,7 +535,7 @@ static int set_freebind(int sd, int version)
+ 		break;
+ 	case AF_INET6:
+ 		if (setsockopt(sd, SOL_IPV6, IPV6_FREEBIND, &one, sizeof(one))) {
+-			log_err_errno("setsockopt(IPV6_FREEBIND");
++			log_err_errno("setsockopt(IPV6_FREEBIND)");
+ 			rc = -1;
+ 		}
+ 		break;
+@@ -812,7 +812,7 @@ static int convert_addr(struct sock_args *args, const char *_str,
+ 			sep++;
+ 			if (str_to_uint(sep, 1, pfx_len_max,
+ 					&args->prefix_len) != 0) {
+-				fprintf(stderr, "Invalid port\n");
++				fprintf(stderr, "Invalid prefix length\n");
+ 				return 1;
+ 			}
+ 		} else {
+@@ -1912,7 +1912,7 @@ static int ipc_parent(int cpid, int fd, struct sock_args *args)
+ 	 * waiting to be told when to continue
+ 	 */
+ 	if (read(fd, &buf, sizeof(buf)) <= 0) {
+-		log_err_errno("Failed to read IPC status from status");
++		log_err_errno("Failed to read IPC status from pipe");
+ 		return 1;
+ 	}
+ 	if (!buf) {
+-- 
+2.47.1
 
---3cRYTBgHkSKip73E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDSFbAAKCRB4tDGHoIJi
-0vvRAQC1yxztI2Z6owktYW9zecEyYKO6H2lY5nM7yjC9X9ZNsQEAjHE9q523CcF7
-ugJZyD6pN+G7L/lRxhr81CKvhalv5wA=
-=aYhi
------END PGP SIGNATURE-----
-
---3cRYTBgHkSKip73E--
