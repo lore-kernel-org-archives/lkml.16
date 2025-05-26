@@ -1,131 +1,182 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FCF1A2389;
-	Mon, 26 May 2025 10:25:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40614C2C9;
+	Mon, 26 May 2025 10:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748255144; cv=none; b=WPflRkCjQ7UYROvEY5G23G0QFp3Bv6ky0BeHJP/Vd2yTgaKhZojumJ/oe623c9cjkllm6So0TwTvESgvbyRCyKDuZm3GnWIiCFnNrP2K1FZbD2HOuc6q2CzSOYUWM3bvKL0GQlhRQwjt14tT6CiV/tznlLueeO/DMocHr79l5Xs=
+	t=1748255223; cv=none; b=m8EsNEG2ttzNb9uJ8J6e5rb47KSwRcCAMz/PVt59XJb7dnApubjQxz2199QSSfbk3pc/Fh2ocj8po24z1jtvH1aF2cnxpVQwCug2b056f4qj7/AEet0fRkSzMTkmCZITibxcvgYRSFU1OU2g5kQyDsH+lm2X7yOVl5s6fGve534=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748255144; c=relaxed/simple;
-	bh=wpYpfRibajhbsBFIKajU4Wqv7umJK6VTaJyKWuxTIzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLutzMumI7jBOOZQZRQAEGnmPWXfcMAzAW4XlUGSYjM4XtZGWTCEHsBxifdmL1wpRxLyuZVodQY5ZCzfuLVQudFiSCoJlsUDBVIUroapf8A3Ddoftj/tiP/qu456TYVEDC7yuiCrLdjYxtKlPzkCaRQAiRjzMrr4XxbRHsSlcWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=pFIHv5KW; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TVV0urUM; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	s=arc-20240116; t=1748255223; c=relaxed/simple;
+	bh=dPuYs8ZY39+Pul95GDrqOBDvqKhfpBvFI4NCSRl5KXA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mnt+Q0FQWLaGh9+SqRJCpZEcN2hpEYChWdIF50SZuvrL3YXRkgGU7QqjygL3+tUNdmvWFYBgNtClx8IZI0DeWGh1YGz0CiP83RJYokzU05LtCHNr7WGV5bqWtKCqGJ8321Bv6Q0QVogq8uAZzkKvi8DLAFCHd56sn0p+hAxFSks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2n7yzCQ; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="pFIHv5KW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TVV0urUM"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 9DF452540167;
-	Mon, 26 May 2025 06:25:39 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Mon, 26 May 2025 06:25:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1748255139; x=1748341539; bh=gUmwzWFa+K
-	A3n9fwudnjTG7WQzrbdsSG+HVDrsGvcUg=; b=pFIHv5KWvYsXr6TdntGmH0whSD
-	NyHkFouvTbXEMiYmtH7E5disSOWhY/Qz1aDogJIdZQguZntLGeLtIz2xnBjoqR43
-	Iu+BoisoN3X5A0If3lMaPy576V680ikfhIKoXxpZkG6p1r1Yawi8QCc7+Pt0JoDD
-	kYK+5oZ6OFwUgu/CKxbOSQyoXRqXBD1K9ZTzPdgrspHJhximFi6w+4+66O26wlkF
-	Jn1H1vtM9oAF1k7Tzs18A0y01V0gg7Z34b8YK09JaFNabac0dEzqqf3Ka/JS9Pnq
-	5gRUc97Nh+yk/SHbqm3R5xbGv8sYllGNGMzHQgKF8ELUWaF4x5+FmjPvuL7w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1748255139; x=1748341539; bh=gUmwzWFa+KA3n9fwudnjTG7WQzrbdsSG+HV
-	DrsGvcUg=; b=TVV0urUMT9sueGK/I4GJriU9pVidd5py0kWVH70znExO035oXjF
-	PzhvXOYwRTGKEs5vLC+QX4uihOcAkFRmQCRHb59H3Y2lWkwHKqFxL+7rWecKMZOC
-	OTXBch/II4fNBFJ4DhTaOGR5xOJ+fXBRqKCSQ6Mjc+rB3FWEZynlCEjyGS4FBRmU
-	WbyhUezzOXqfxhOcDeVQq546sj/8uOaYlneHcFjCisDYMg7oZEG/cLtU+jJL0xmF
-	O7CXnfQhcHjKFWBuTHNJYWVvKz8dXUydhSGI9wRCqZIWhc1baSGdS2MrJj+bnaLT
-	GoC8Rh1YJ74F/IxN9hqepdRqH4sHdMjnqHQ==
-X-ME-Sender: <xms:o0E0aDBxORqq41Z83fuJ3tfE5Ksc2dA3DDrytT7aCbI5EB4QHGSCrw>
-    <xme:o0E0aJhtXAYPpD3im_YLIckWdSkhsOzN9doN114wBy1jfeMxvb7oHKOVMjb2ALKYF
-    b9NbGpDA1mG3g>
-X-ME-Received: <xmr:o0E0aOmRUY_-3qC1lsYlJi4363RmhwFbmW0RvivykcVVk0iByY46dNJdLhJhWOyUhM46wsuXvBYIja_CWkIiT54pGrG1ClM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujedvkeculddtuddrgeefvddrtd
-    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
-    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
-    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
-    gggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrh
-    horghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehgedvvedvleejuefgtdduudfhkeel
-    tdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhdpnhgspghrtghp
-    thhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjohhhrghnnhgvsh
-    esshhiphhsohhluhhtihhonhhsrdhnvghtpdhrtghpthhtohepvhhulhgrsgesihhstggr
-    shdrrggtrdgtnhdprhgtphhtthhopehluhgtihgrnhhordgtohgvlhhhohesihhnthgvlh
-    drtghomhdprhgtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrdhkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdr
-    ohhrgh
-X-ME-Proxy: <xmx:o0E0aFzigSSPMX0FH0jZ62rED7Sn0UC9CqT6quXhb0Wq8QgXVSKemg>
-    <xmx:o0E0aITNv-0GZPhVRNKg2KU2GN03vjHO8xUdcpRqH8eI7qktwlNeuA>
-    <xmx:o0E0aIa15ftg-kZfvx2e8OVI7Ymd70TZ6Mo7JObAE6vt984q7Q3yPQ>
-    <xmx:o0E0aJQ_CqCYG9-JmU5K95iw083XGBBm-iUNt97Y9dOeCiil4yxVdw>
-    <xmx:o0E0aLnY8Z9KugFS96NezSYwlFaAS0T5sLEEDCsMsVrsb55A2v_VVDUd>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 26 May 2025 06:25:38 -0400 (EDT)
-Date: Mon, 26 May 2025 12:25:37 +0200
-From: Greg KH <greg@kroah.com>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Wentao Liang <vulab@iscas.ac.cn>, luciano.coelho@intel.com,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] mac80211: Add null pointer check for
- ieee80211_link_get_chanctx()
-Message-ID: <2025052607-hertz-duly-cca2@gregkh>
-References: <20250526091903.587-1-vulab@iscas.ac.cn>
- <2025052614-spring-ether-8d09@gregkh>
- <2137c5905fc87e80698e6578ebf360be6d899f6f.camel@sipsolutions.net>
- <293fe5ea564a98113443bbe93e6022c5bb6dd747.camel@sipsolutions.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2n7yzCQ"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d51dso3159406a12.2;
+        Mon, 26 May 2025 03:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748255219; x=1748860019; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tHE0ZJ0TqdsK0fp/lr3eubGhx74JGPnQNFF7VOPckjI=;
+        b=l2n7yzCQzJwE1ja7lD1Dq1izITcDoQC4CSeq6/EHPzwmkN0V/BLRn3QkthjiMPMxrw
+         9y/KUqrwt6vjjeUFE5kjg1UhVNNhrGjuFgsoU3mIGqGfPXyRuPKDd95fKi2wHN+BfbeU
+         LNYLRccry2JsQ/eitpfdJUoX554rcIXWlyib+HGPMR0+BDTjH25IMt9LxvoG4KFurEy2
+         Zcc1nnF1eQUrS/i874d7oEuRL4urn8+QUEdFBiZ+CV3r0BZ0o3ri4Ca0kF3KsPffux2W
+         tI67nmvxJxx3NSGtzhIpzSqiIffigAc2t597/7sfgmUDViqnbYT3Vj8L7dMbYQkRjnWb
+         xbzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748255219; x=1748860019;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tHE0ZJ0TqdsK0fp/lr3eubGhx74JGPnQNFF7VOPckjI=;
+        b=WOfjDe8HxsiIXTJBPRcKxTzqYBAIErnZM/qVAUkjfFSV6rsJgXQUX6Pq/DfqYHARPg
+         whn1zH19rfnL1rQuSv6x0aOOrb0cwk0nfReQVBK3J9kw/r7B+CeplglIzLIWIAScLSGF
+         LeIgnxJfJsGVXAUt3fxRU/4PM3DEJ0fiSy/5FOiCE4xu51FUTiIitC4HDOQaH1/Rc5mV
+         x6tFWW9uBWd5IslDXzrgdkhJSSWFK4KiYjv+cSwKKivevsnh7cAciDs5j0g4KQ2YevJf
+         kwuj+AXu+k98uZXJ5A4nAiOaELe7m8qADI2xe4qYTUUy1CCTY2eJRUo/BTpbsCI02KpS
+         ErSw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3rLJl1+0BhTsO40OSzFc/LoiwOAbJB+4lkc85b+CyCy3qyZHtt2G9tWNjVSeVtbSk27jAYZahX9JR@vger.kernel.org, AJvYcCWPBzsBclEHClw+lj/q4wQe8n2gbnoP78NDlD5HT+JbX9xLhs6F4L6eDRpfLHpzEcC/3AK9dJNu5Sw4nQ==@vger.kernel.org, AJvYcCWRvV9xQ9tCHmClbW28z7tBWVWnVoBBPZYdPaPsHrvLAyPYd/IysXVOno8+xiZGV85/y2FspdjGnYfeftoD@vger.kernel.org, AJvYcCWc/8V5zhK92MoSniIPBF6LjVyop9UDNpOz9dbUAj6Q9Nm/hKjpf78CFxMas9E+fMxh2jzrS/HqUKrS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzakUSqOa/i998+z4KTWgkvRgwJO6FxX9ruCJR0aZlL9dHtnah
+	LyUWONNWG61nqHT8DLNrSv4hdk6/3ns9Rz+gfiNi2OhocBOnxpLwX3dW
+X-Gm-Gg: ASbGncsAPJ+Odr73FY4CIyNPKTSSfVW1wvnDFmX2e6R9oFPiJk9E+4ha+wrptR5DqGL
+	At8JFjUelr3VviQlKksYrtLzDuq1Phh8XrjWIhFHLz55NdN8iMZn0zHaJxSERGuY2y1HCoCYHss
+	Gyn4DESrpvBeoq8YbeOr9x7I2EKdwF0I3qdmSyoFRfT6m22Rz9aNgpIvfk06C0s27sKTFX0NJqv
+	m4vmJe8baEN+vmvfyaRfO8X8DTHIdto2+br8VbS51TbfLGdLD55PsJJ3nb0YyxE/yS6ZwO0xokI
+	MyF14ZnkfHzoVCwbzAF8rwrk7erlvEi/thNi1ghcYzbTfOZuuzxghejG
+X-Google-Smtp-Source: AGHT+IH7cr16I1HNzlBRugMrtVWhxbTsl2cH5hAPpyL+USeIX4OTS7khiNdg6zTIN2LNgUpEbMagFA==
+X-Received: by 2002:a17:907:da7:b0:acb:88ac:e30f with SMTP id a640c23a62f3a-ad85b18309bmr789057066b.20.1748255219310;
+        Mon, 26 May 2025 03:26:59 -0700 (PDT)
+Received: from [100.73.1.233] ([185.128.9.226])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d27192dsm1655720766b.71.2025.05.26.03.26.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 03:26:58 -0700 (PDT)
+Message-ID: <b198ab8bcae5e9a31164bb565a089d14ff297b81.camel@gmail.com>
+Subject: Re: [PATCH v3 04/10] iio: adc: ad4170: Add support for calibration
+ bias
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+ 	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+ robh@kernel.org, 	krzk+dt@kernel.org, conor+dt@kernel.org,
+ linus.walleij@linaro.org, brgl@bgdev.pl, 	marcelo.schmitt1@gmail.com
+Date: Mon, 26 May 2025 11:27:02 +0100
+In-Reply-To: <6213d7b7fb913520f1f143e7ccf8fe16b8579d0c.1747083143.git.marcelo.schmitt@analog.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+	 <6213d7b7fb913520f1f143e7ccf8fe16b8579d0c.1747083143.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <293fe5ea564a98113443bbe93e6022c5bb6dd747.camel@sipsolutions.net>
 
-On Mon, May 26, 2025 at 11:56:16AM +0200, Johannes Berg wrote:
-> On Mon, 2025-05-26 at 11:50 +0200, Johannes Berg wrote:
-> > 
-> > I still very much disagree with you and _will_ keep adding warnings to
-> > the wireless stack. This would be one of those places where it's totally
-> > warranted, because it's actually impossible that this happens, for it to
-> > something else would have to be changed to go wrong in how this is
-> > called, for example.
-> 
-> And come to think of it, cases like this are exactly why some people
-> decide to crash the system on warnings. It's things that the developers
-> thought were impossible, but should be double-checked. If we stop
-> putting warnings on such places, then the decision to crash on warnings
-> becomes entirely meaningless. So seems to me that just lashing out
-> against warnings all the time is actually detrimental to the intent of
-> such configurations?
+On Tue, 2025-05-13 at 09:34 -0300, Marcelo Schmitt wrote:
+> Add support for ADC calibration bias/offset configuration.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+> Change log v2 -> v3
+> - New patch spun out of the base driver patch.
+>=20
+> =C2=A0drivers/iio/adc/ad4170.c | 26 ++++++++++++++++++++++++++
+> =C2=A01 file changed, 26 insertions(+)
+>=20
+> diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
+> index 1df214f7fdec..b02fdd25b4c8 100644
+> --- a/drivers/iio/adc/ad4170.c
+> +++ b/drivers/iio/adc/ad4170.c
+> @@ -643,6 +643,7 @@ static const struct iio_chan_spec ad4170_channel_temp=
+late
+> =3D {
+> =C2=A0	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(IIO_CHAN_INFO_SCALE) |
+> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(IIO_CHAN_INFO_OFFSET) |
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(IIO_CHAN_INFO_CALIBBIAS) |
+> =C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(IIO_CHAN_INFO_CALIBSCALE),
+> =C2=A0	.info_mask_separate_available =3D BIT(IIO_CHAN_INFO_SCALE),
+> =C2=A0	.scan_type =3D {
+> @@ -954,6 +955,9 @@ static int ad4170_read_raw(struct iio_dev *indio_dev,
+> =C2=A0		pga =3D FIELD_GET(AD4170_AFE_PGA_GAIN_MSK, setup->afe);
+> =C2=A0		*val =3D chan_info->offset_tbl[pga];
+> =C2=A0		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		*val =3D setup->offset;
 
-If you can detect a problem, like this, and properly handle the issue,
-handle the issue, do NOT crash the machine which causes the issue to be
-uable to be noticed at all (all that is noticed is that the machine
-rebooted.)
+same nit...
 
-Only do a WARN() if this is something that you can not recover from for
-whatever reason (data is lost anyway, system is hosed, etc.)  If you
-just sprinkle these WARN_ON() calls around to be defensive in the
-programming, that's counter-productive as you are setting yourself up to
-make angry users of the system if they ever fire.
+> +		return IIO_VAL_INT;
+> =C2=A0	case IIO_CHAN_INFO_CALIBSCALE:
+> =C2=A0		*val =3D setup->gain;
+> =C2=A0		return IIO_VAL_INT;
+> @@ -1083,6 +1087,25 @@ static int ad4170_set_pga(struct ad4170_state *st,
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +static int ad4170_set_calib_offset(struct ad4170_state *st,
+> +				=C2=A0=C2=A0 struct iio_chan_spec const *chan, int val)
+> +{
+> +	struct ad4170_chan_info *chan_info =3D &st->chan_infos[chan->address];
+> +	struct ad4170_setup *setup =3D &chan_info->setup;
+> +	u32 old_offset;
+> +	int ret;
+> +
+> +	guard(mutex)(&st->lock);
+> +	old_offset =3D setup->offset;
+> +	setup->offset =3D val;
 
-I have no problem with logging the error/issue in the kernel log, but if
-a wifi driver decides to panic the box for something that it did
-properly detect and could handle just fine, that's just not nice.
+Why doing the above dance?
 
-thanks,
+> +
+> +	ret =3D ad4170_write_channel_setup(st, chan->address, false);
+> +	if (ret)
+> +		setup->offset =3D old_offset;
+> +
 
-greg k-h
+We could update the value in here.
+
+> +	return ret;
+
+I guess ret > 0 is not a thing? I find it more readable:
+
+return 0;
+
+It makes it clear we got success :)
+
+- Nuno S=C3=A1
+
+> +}
+> +
+> =C2=A0static int ad4170_set_calib_gain(struct ad4170_state *st,
+> =C2=A0				 struct iio_chan_spec const *chan, int val)
+> =C2=A0{
+> @@ -1111,6 +1134,8 @@ static int __ad4170_write_raw(struct iio_dev *indio=
+_dev,
+> =C2=A0	switch (info) {
+> =C2=A0	case IIO_CHAN_INFO_SCALE:
+> =C2=A0		return ad4170_set_pga(st, chan, val, val2);
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> +		return ad4170_set_calib_offset(st, chan, val);
+> =C2=A0	case IIO_CHAN_INFO_CALIBSCALE:
+> =C2=A0		return ad4170_set_calib_gain(st, chan, val);
+> =C2=A0	default:
+> @@ -1139,6 +1164,7 @@ static int ad4170_write_raw_get_fmt(struct iio_dev
+> *indio_dev,
+> =C2=A0	switch (info) {
+> =C2=A0	case IIO_CHAN_INFO_SCALE:
+> =C2=A0		return IIO_VAL_INT_PLUS_NANO;
+> +	case IIO_CHAN_INFO_CALIBBIAS:
+> =C2=A0	case IIO_CHAN_INFO_CALIBSCALE:
+> =C2=A0		return IIO_VAL_INT;
+> =C2=A0	default:
