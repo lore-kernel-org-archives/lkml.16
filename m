@@ -1,95 +1,115 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610CA202998
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6908213AA27;
+	Mon, 26 May 2025 14:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748269376; cv=none; b=Fr50QVRtgAgYj0Qo1nxs4m55TuxziXhodvg8pVuoo+eAzL1CXpBC+jetBYQ80jKlb9TjAg3aSTTJTM+gsRzitNTpsBvWZIwneWHRTnfQs+XVnhxS/KrhP88fEIXR8xLWz5FjccMWTqDKe8f4pjB71dsU8cJmMMt1j6Peep2Kwd4=
+	t=1748269644; cv=none; b=cJS9FMHfRDcqJEl5kndJBYxGWHO8sSe2OLovR13HA9t582dhVrMXpnAi9nqNW+UknnJhG4bz+T2OVV2RV0UGRWeDw5AKfON5uf+LwIYUPI3YtkUldGiC3+CgVctEjHCtIuLrKWIk6/HiLciSGQ4qH2WGDlpW6chVBzz1CivbPrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748269376; c=relaxed/simple;
-	bh=6tyZzFxwTEh7vwm56WBVSH9nMTmVdJ60mb2zHCZCeHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iu3R+1pdcWGGwkJxhtwJX/VE6qGQhfbFz2vMfSyxY7vMIPxaecvJY2rNUS/o1kY2FLEVCbhY3WA9n51KA/JRPONJAnijQ9XZRgJpGMp6KfxFkHBbaswdwvm3hAwo4K2Eheh7AOqgYTNnX5ujyt9qKKfzHPTMrqZzIHtJqL8m2+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FaoY7DB1; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FaoY7DB1"
-Date: Mon, 26 May 2025 16:22:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748269372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L0jJ419c9TQJYpt8/HdhSjujvIg2qtT/0uU4zHv/OUs=;
-	b=FaoY7DB1eb92OEvQEM/Bd7zXr+LKpNn5fDIEF+n85ZBimrjFNJtDAzEZeyRmRRIKbtYMIu
-	3Lua8ADw9+04wDepr/JB6P2UcyTOu3LimORzN64NY/wEbgmOgJzMoV7n9aTrhE7SJhe/4i
-	IkawBw03qS5psCUQt3sj5cilOvk9FlA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 10/11] kunit: uapi: Introduce preinit executable
-Message-ID: <20250526-woodoo-hoatzin-from-tartarus-538641@l-nschier-aarch64>
-References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
- <20250407-kunit-kselftests-v2-10-454114e287fd@linutronix.de>
+	s=arc-20240116; t=1748269644; c=relaxed/simple;
+	bh=tMySMh7fSjlVmPWIompo773sVXwgdTssh0oKTI+pz/w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=O08dbe/RRwN8FoT4Dz7HL3chLgtbUlXAKyH71hWqiIBfXzmozSGTCIThd/mMoIJA0oCAtiK8XkuM6RQZjF+ebUjx2H6oMbkp6n55rvH75v4vFxXfEct+hsP3wFcdDZl4VXvUPFzzkKh7NzWUiCu3jAcPH22CHimnIa8J2oETJmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4b5dNP23lXztRxC;
+	Mon, 26 May 2025 22:25:57 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id EB137180B51;
+	Mon, 26 May 2025 22:27:11 +0800 (CST)
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 26 May 2025 22:27:11 +0800
+Received: from [10.174.177.223] (10.174.177.223) by
+ kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 26 May 2025 22:27:10 +0800
+Message-ID: <2c4a2655-2e0d-4c16-82e6-2d9d33d5a276@huawei.com>
+Date: Mon, 26 May 2025 22:27:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407-kunit-kselftests-v2-10-454114e287fd@linutronix.de>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] page_pool: Fix use-after-free in
+ page_pool_recycle_in_ring
+To: Yunsheng Lin <linyunsheng@huawei.com>, <hawk@kernel.org>,
+	<ilias.apalodimas@linaro.org>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+	<almasrymina@google.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhangchangzhong@huawei.com>,
+	<syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com>
+References: <20250523064524.3035067-1-dongchenchen2@huawei.com>
+ <a5cc7765-0de2-47ca-99c4-a48aaf6384d2@huawei.com>
+From: "dongchenchen (A)" <dongchenchen2@huawei.com>
+In-Reply-To: <a5cc7765-0de2-47ca-99c4-a48aaf6384d2@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
-On Mon, Apr 07, 2025 at 09:42:47AM +0200, Thomas Weißschuh wrote:
-> UAPI selftests may expect a "normal" userspace environment.
-> For example the normal kernel API pseudo-filesystems should be mounted.
-> This could be done from kernel code but it is non-idiomatic.
-> 
-> Add a preinit userspace executable which performs these setup steps
-> before running the final test executable.
-> This preinit executable is only ever run from the kernel.
-> Give it access to autoconf.h and kconfig.h to adapt itself to the
-> tested kernel.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->  lib/kunit/Makefile       |  9 ++++++-
->  lib/kunit/uapi-preinit.c | 65 ++++++++++++++++++++++++++++++++++++++++++++++++
->  lib/kunit/uapi.c         | 11 ++++++--
->  3 files changed, 82 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-> index 1b6be12676f89cafa34f0093d8136b36f4cf5532..0e9a26d90bf4d5128e270ecaa8f3465f28da0fa2 100644
-> --- a/lib/kunit/Makefile
-> +++ b/lib/kunit/Makefile
-> @@ -12,7 +12,14 @@ kunit-objs +=				test.o \
->  					device.o \
->  					platform.o
->  
-> -kunit-$(CONFIG_KUNIT_UAPI) +=		uapi.o
-> +userprogs +=				uapi-preinit
 
-as for kunit-example-uapi, please add a 'clean-files' definition:
+> On 2025/5/23 14:45, Dong Chenchen wrote:
+>
+>>   
+>>   static bool page_pool_recycle_in_ring(struct page_pool *pool, netmem_ref netmem)
+>>   {
+>> +	bool in_softirq;
+>>   	int ret;
+> int -> bool?
 
-clean-files +=				uapi-preinit
+Thanks for your review!
 
--- 
-Nicolas Schier
+v2 will fix it.
+
+>>   	/* BH protection not needed if current is softirq */
+>> -	if (in_softirq())
+>> -		ret = ptr_ring_produce(&pool->ring, (__force void *)netmem);
+>> -	else
+>> -		ret = ptr_ring_produce_bh(&pool->ring, (__force void *)netmem);
+>> -
+>> -	if (!ret) {
+>> +	in_softirq = page_pool_producer_lock(pool);
+>> +	ret = !__ptr_ring_produce(&pool->ring, (__force void *)netmem);
+>> +	if (ret)
+>>   		recycle_stat_inc(pool, ring);
+>> -		return true;
+>> -	}
+>> +	page_pool_producer_unlock(pool, in_softirq);
+>>   
+>> -	return false;
+>> +	return ret;
+>>   }
+>>   
+>>   /* Only allow direct recycling in special circumstances, into the
+>> @@ -1091,10 +1088,14 @@ static void page_pool_scrub(struct page_pool *pool)
+>>   
+>>   static int page_pool_release(struct page_pool *pool)
+>>   {
+>> +	bool in_softirq;
+>>   	int inflight;
+>>   
+>>   	page_pool_scrub(pool);
+>>   	inflight = page_pool_inflight(pool, true);
+>> +	/* Acquire producer lock to make sure producers have exited. */
+>> +	in_softirq = page_pool_producer_lock(pool);
+>> +	page_pool_producer_unlock(pool, in_softirq);
+> Is a compiler barrier needed to ensure compiler doesn't optimize away
+> the above code?
+
+All the code logic of this function accesses the pool. Do we need to
+add a compiler barrier for it?
+
+Best Regards,
+Dong Chenchen
+
+>>   	if (!inflight)
+>>   		__page_pool_destroy(pool);
+>>   
