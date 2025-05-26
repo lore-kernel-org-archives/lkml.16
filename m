@@ -1,271 +1,352 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F3B126C03
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD36126C03
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748263353; cv=none; b=PwyXwKdI9lxjQutCqiZaYw36OoF7UQ8SXEmSKO+aKAAPhxpLknp+u+mxTRUwqI55uwVL713RVcaKoXy0jiiLaIdmQ1OQivesGxlHdQJIR6sVVOyBGgTYDap/dnEIZhUHYB2MhDjlHRq0+C49S3wE9sKH8s6DWD+OUrd983fO0Uw=
+	t=1748263408; cv=none; b=u4mRit2xP0KYcHZj81yP8KWRmXeyf+HgRydvqtpcqZpa3vYlHar3H2RVYvp+QVoDk/KN1XhNnH0CeUUHmxoFXCFttIak0MsaUoBBrM+sPssV7TBXbJHrF9ykrQrN5mf1wUFjZID2qSRmjwEh6tQ4OrmOAwIsi8s5Age7MPHo5k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748263353; c=relaxed/simple;
-	bh=wabvdY6iXWN7fKPKUIXkwmqKXj3xjuQyMQ7cQ1+Pf+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g05PTRVI1C6YY71ReFj5sZYn+PkzSrXMW7sTrQMxSekxpOuO8B5zZ33FeL04DHQ619JJe4tWSAHjGtdD6XvsUzME+XZl2rM1OOxPMf5rDMT64K3GsMCloS9w7F7Ld8v7l+lyP8Qhc2E42+ccjsEJiOX1p3Aws1lXtfbFRy0mTSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=YlQBa+iG; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1748263408; c=relaxed/simple;
+	bh=MY7Mww48Wb2heP6kP4DbISMh3gCNbdAFLdWx6dh/D5U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hBoDwhabB38B4JnzI+BoB9flqK4m1Qwr5BRjsMjlTguOCSws8HrrOhqZ9bOYcX5VexMcDDHwchkF7vQKY1NTo9FOhcccQg/ZOBZuEoemsUaXmgUWiElm6J/TNBp48BjBk3ctunPAKQtcj+uSmFzvn1cQ4CrTrktVeleINLlJxxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PcogCTkA; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="YlQBa+iG"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-867347b8de9so91293739f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:42:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1748263351; x=1748868151; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LWUnArj1hPFx4s/1Awe4zRs6iqJh4kdVZSKnLxEE17g=;
-        b=YlQBa+iGXjugezBU9JqSYOaLQVdXnFoprktZb5CohBs4+KAIbrBMqMcYHyGUDaUjAZ
-         qQwxb9E85oV5TkV/fY8X6IneyrsvJqEUgTzxhOcm2iQcWZOqGpKdZ0N37NLcsmjIsUKP
-         vSbBhnP6AP+NeRe8aOCBVpCxMdvb08UzyPeGkl/y2liVGBVjdb77cSCGZvvD7kmFh/Lm
-         EYPTfgkG00bECoWIVYqcMWt8F84Eglgv2ytVsjjWGPyBZwklLqRx8EJeQgi+GydqIdcE
-         xhGdAXXEfV0YabqBE7ThvyAXUoYysze0h04UGWtUBLYY4iC/UAzWuY1GwMCx4vp3EMdF
-         OJBg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PcogCTkA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748263404;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pC/xh3DosBNUBs4qr5hgqy7gIKboDid152+Tr30uYck=;
+	b=PcogCTkAYs2UxJfFIGuuIfkA+Y3po1phv6FN4/QuTntYzAbtPwLA0FmoGjr1UXnk/QPkre
+	iSl+KLFFTzc/F9bKUPJf78LDJVNJrGaRcbIy1zxmAPe1+6vEzZ2/NYaeSu1ZNwE1/xQvMm
+	CgHbWo96w/O4aXVg573TAYiee6YfTbw=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-339-ilGXEHDzNiO1jNJ2paIIVQ-1; Mon, 26 May 2025 08:43:23 -0400
+X-MC-Unique: ilGXEHDzNiO1jNJ2paIIVQ-1
+X-Mimecast-MFC-AGG-ID: ilGXEHDzNiO1jNJ2paIIVQ_1748263402
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-60488876b2bso913036a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:43:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748263351; x=1748868151;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LWUnArj1hPFx4s/1Awe4zRs6iqJh4kdVZSKnLxEE17g=;
-        b=oWEfX4nfiUxNkS8rJ8ZszJzaVAehNGYsmLEsLyJJirpqDgdwPS7BWMgxMvkyspIwtV
-         ChbHi1YLb1h/9Y+8v2DWgtAX7wzkJhZBQIy+NmvTWfpRedMnNhWdI3I1voUP5bVUOW6e
-         eIrcFWTkCuT+XXB+3wRXxZZ/5IdqVbex5q/lYqTEHTEaftqRLrFkaF8mhsZw38BANHED
-         Fmy36zUMLK/ca2PWkj4zdBb7uleVxuRCj2yCwiOIJRkyWi/SVBF4Yo/uQnRGOZQGHk+W
-         TS8+L7c1YzGIQ1cnjXCZYzxbzI277J89Sq+EA2hIFezYfsA41LGMAQ3uucZ03q4oRrg6
-         u5Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5QhriDSUEOybgntLcFjetT7gDqDwT00MGbQy7EiPCNOocZKzPs21mSi0BqMtbUkRM9pGvo6ZKgPhP3nQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXHj4cjjBC1mME6BEgIwIPAxYfqkk99rVDyb95tSREu5rD+SUj
-	tQhp5nXary57wRETLcI0nxnzDj14aEaQk9vQH0WGxap7GWC3pmo6B6BGaGyz71+hGCkvou2qivn
-	0NIz/EJUoa8etQ4Rv9hoJeO9ctEHYKlUDYF3BYwVipA==
-X-Gm-Gg: ASbGnct7+MS6+W1GDB/zJ0P+V724dkQhOIyVrj33H4OW29BTzAduFRFhzF1G9KaF9DH
-	T1R2J3nj+TJg3YhhFAlxxUNoRzc7ivqVQ4L4EtysaHOVmBoT/YkJZCVW8TpsuTRVlZ233RYlmyY
-	z19Lxbfg9//VIHh45J9ujofpjog5pQ2YKBQA==
-X-Google-Smtp-Source: AGHT+IGu7If+xrmf0hNrIvv6brDz9Z3waO+dySUDZU2XW8kb1xb85BRptKjinU+AOJhFvfh64k5LuqPmJwWHYVgeMx8=
-X-Received: by 2002:a05:6e02:3993:b0:3dc:8e8b:42af with SMTP id
- e9e14a558f8ab-3dc9ae6add9mr79151775ab.7.1748263350871; Mon, 26 May 2025
- 05:42:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748263402; x=1748868202;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pC/xh3DosBNUBs4qr5hgqy7gIKboDid152+Tr30uYck=;
+        b=WrteLem6Hvkd+X3URTbUliEgOX+4/sjm3wq5JT97gaAynOChmCva85rkxIH2E1WnFS
+         /2CIhCHtRRIA44hliQvkhNw/EggJBo8cPqBrQpYmsWyNp2mzEaJDT3DD+SRsIErZhzhy
+         OWTpsXfxz59uNRYEoLpKbctELZi6Fhj7zjxpA3PqHH8vr3EP+Mo4gBFM1PmtUGwv+I67
+         OWBFnvY50K3c56E8Y9+CLEGWCaL6+nZs/QPbod1txtBuChLqFRJIt0c6SC15UMShK70K
+         6Yr/ev9O0s5rk8cGzPV5WDw+sCkX1XIHNWs0mreILZdm0u1LUVbcrumJ02aI0zfU0TLS
+         +c3g==
+X-Forwarded-Encrypted: i=1; AJvYcCW/ZdyrX1sj8d/HzpcDyoGIIcawj+/NQfQwGIIIyrXX3GNXTtQy7Le6cSf7U24uZAzJlTaA0MOFTlJWn3A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmxhRpElQicyKjiL4ynb6oR/Xn1akRyGT5wnyotZKYrmkT6G6z
+	KHk4krBYiEaebf/g6x1a8Jp30ICZZ0v8O2lOxyGFI5KPeC31r4ptSEas879jSZFwqRJY4+/hIq0
+	jK2SczXRPsrVaKTUFA1Jr7HGKbTni5T0FC34Mkflxg2W1sECL+NcJR6R+lvTH/SkFNybKTkUkPA
+	==
+X-Gm-Gg: ASbGncvilifK638uVYz6czAuOICNQml2w8HkpCJFjO5E74++dOeBH785LzDtDVl8A2Z
+	PS3Y6qmsaUCDWA4tLMYQqqz+i/IJUoKdBHVxyIqgZLU/K4/yhkHVIIbZARfSrKjtoHAG0P5gYPZ
+	gICPrpssP9FWPVFdV/HYRDJbzttroh0cAr3TzG43mWovlxIC0QeNC5+G5Y0K7rMrbZuL9vs4hx5
+	Rg7nrpbTK4gAwM55ENcFSi8d9z6/fXVRklZPpZo4Vi96lNRODn+KkFYRJW9za8O9DOu7bBO/Wha
+	/vzOUdNL6ngd9EQ=
+X-Received: by 2002:a05:6402:2713:b0:602:2d06:6b19 with SMTP id 4fb4d7f45d1cf-602d8e4f276mr6583274a12.1.1748263402037;
+        Mon, 26 May 2025 05:43:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGPGDt6d7DUrLAEESyxOXfmu6xxR7R70aSYpwzwapfP4Cv1cX7iXwygc7puv0N/t7SWTSh8IA==
+X-Received: by 2002:a05:6402:2713:b0:602:2d06:6b19 with SMTP id 4fb4d7f45d1cf-602d8e4f276mr6583245a12.1.1748263401517;
+        Mon, 26 May 2025 05:43:21 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ae3888esm16106821a12.65.2025.05.26.05.43.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 05:43:20 -0700 (PDT)
+Message-ID: <df397c55-c3e5-42f9-bd69-d5356d517eb1@redhat.com>
+Date: Mon, 26 May 2025 14:43:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523113347.2898042-3-rkrcmar@ventanamicro.com> <20250526-e67c64d52c84a8ad7cb519c4@orel>
-In-Reply-To: <20250526-e67c64d52c84a8ad7cb519c4@orel>
-From: Anup Patel <anup@brainfault.org>
-Date: Mon, 26 May 2025 18:12:19 +0530
-X-Gm-Features: AX0GCFuKk6Htt7XYnEu1WPLNKulrHECVaYCqOdb4gk38bWr8dEzfg-J6AXRf2_E
-Message-ID: <CAAhSdy1wtuLm2O7EwfVzCT7wgKf7-n9q9_DxfpA6kQA1oSoZoQ@mail.gmail.com>
-Subject: Re: [PATCH v4] RISC-V: KVM: add KVM_CAP_RISCV_USERSPACE_SBI
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
-	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] media: uvcvideo: Set V4L2_CTRL_FLAG_DISABLED during
+ queryctrl errors
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans@jjverkuil.nl>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250502-uvc-eaccess-v8-1-0b8b58ac1142@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250502-uvc-eaccess-v8-1-0b8b58ac1142@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 26, 2025 at 2:52=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
-om> wrote:
->
-> On Fri, May 23, 2025 at 01:33:49PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
-te:
-> > The new capability allows userspace to implement SBI extensions that KV=
-M
-> > does not handle.  This allows userspace to implement any SBI ecall as
-> > userspace already has the ability to disable acceleration of selected
-> > SBI extensions.
-> > The base extension is made controllable as well, but only with the new
-> > capability, because it was previously handled specially for some reason=
-.
-> > *** The related compatibility TODO in the code needs addressing. ***
-> >
-> > This is a VM capability, because userspace will most likely want to hav=
-e
-> > the same behavior for all VCPUs.  We can easily make it both a VCPU and
-> > a VM capability if there is demand in the future.
-> >
-> > Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
-> > ---
-> > v4:
-> > * forward base extension as well
-> > * change the id to 242, because 241 is already taken in linux-next
-> > * QEMU example: https://github.com/radimkrcmar/qemu/tree/mp_state_reset
-> > v3: new
-> > ---
-> >  Documentation/virt/kvm/api.rst    | 11 +++++++++++
-> >  arch/riscv/include/asm/kvm_host.h |  3 +++
-> >  arch/riscv/include/uapi/asm/kvm.h |  1 +
-> >  arch/riscv/kvm/vcpu_sbi.c         | 17 ++++++++++++++---
-> >  arch/riscv/kvm/vm.c               |  5 +++++
-> >  include/uapi/linux/kvm.h          |  1 +
-> >  6 files changed, 35 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/ap=
-i.rst
-> > index e107694fb41f..c9d627d13a5e 100644
-> > --- a/Documentation/virt/kvm/api.rst
-> > +++ b/Documentation/virt/kvm/api.rst
-> > @@ -8507,6 +8507,17 @@ given VM.
-> >  When this capability is enabled, KVM resets the VCPU when setting
-> >  MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preser=
-ved.
-> >
-> > +7.44 KVM_CAP_RISCV_USERSPACE_SBI
-> > +--------------------------------
-> > +
-> > +:Architectures: riscv
-> > +:Type: VM
-> > +:Parameters: None
-> > +:Returns: 0 on success, -EINVAL if arg[0] is not zero
-> > +
-> > +When this capability is enabled, KVM forwards ecalls from disabled or =
-unknown
-> > +SBI extensions to userspace.
-> > +
-> >  8. Other capabilities.
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm=
-/kvm_host.h
-> > index 85cfebc32e4c..6f17cd923889 100644
-> > --- a/arch/riscv/include/asm/kvm_host.h
-> > +++ b/arch/riscv/include/asm/kvm_host.h
-> > @@ -122,6 +122,9 @@ struct kvm_arch {
-> >
-> >       /* KVM_CAP_RISCV_MP_STATE_RESET */
-> >       bool mp_state_reset;
-> > +
-> > +     /* KVM_CAP_RISCV_USERSPACE_SBI */
-> > +     bool userspace_sbi;
-> >  };
-> >
-> >  struct kvm_cpu_trap {
-> > diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uap=
-i/asm/kvm.h
-> > index 5f59fd226cc5..dd3a5dc53d34 100644
-> > --- a/arch/riscv/include/uapi/asm/kvm.h
-> > +++ b/arch/riscv/include/uapi/asm/kvm.h
-> > @@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
-> >       KVM_RISCV_SBI_EXT_DBCN,
-> >       KVM_RISCV_SBI_EXT_STA,
-> >       KVM_RISCV_SBI_EXT_SUSP,
-> > +     KVM_RISCV_SBI_EXT_BASE,
-> >       KVM_RISCV_SBI_EXT_MAX,
-> >  };
-> >
-> > diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> > index 31fd3cc98d66..497d5b023153 100644
-> > --- a/arch/riscv/kvm/vcpu_sbi.c
-> > +++ b/arch/riscv/kvm/vcpu_sbi.c
-> > @@ -39,7 +39,7 @@ static const struct kvm_riscv_sbi_extension_entry sbi=
-_ext[] =3D {
-> >               .ext_ptr =3D &vcpu_sbi_ext_v01,
-> >       },
-> >       {
-> > -             .ext_idx =3D KVM_RISCV_SBI_EXT_MAX, /* Can't be disabled =
-*/
-> > +             .ext_idx =3D KVM_RISCV_SBI_EXT_BASE,
-> >               .ext_ptr =3D &vcpu_sbi_ext_base,
-> >       },
-> >       {
-> > @@ -217,6 +217,11 @@ static int riscv_vcpu_set_sbi_ext_single(struct kv=
-m_vcpu *vcpu,
-> >       if (!sext || scontext->ext_status[sext->ext_idx] =3D=3D KVM_RISCV=
-_SBI_EXT_STATUS_UNAVAILABLE)
-> >               return -ENOENT;
-> >
-> > +     // TODO: probably remove, the extension originally couldn't be
-> > +     // disabled, but it doesn't seem necessary
-> > +     if (!vcpu->kvm->arch.userspace_sbi && sext->ext_id =3D=3D KVM_RIS=
-CV_SBI_EXT_BASE)
-> > +             return -ENOENT;
-> > +
->
-> I agree that we don't need to babysit userspace and it's even conceivable
-> to have guests that don't need SBI. KVM should only need checks in its
-> UAPI to protect itself from userspace and to enforce proper use of the
-> API. It's not KVM's place to ensure userspace doesn't violate the SBI spe=
-c
-> or create broken guests (userspace is the boss, even if it's a boss that
-> doesn't make sense)
->
-> So, I vote we drop the check.
->
-> >       scontext->ext_status[sext->ext_idx] =3D (reg_val) ?
-> >                       KVM_RISCV_SBI_EXT_STATUS_ENABLED :
-> >                       KVM_RISCV_SBI_EXT_STATUS_DISABLED;
-> > @@ -471,8 +476,14 @@ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu=
-, struct kvm_run *run)
-> >  #endif
-> >               ret =3D sbi_ext->handler(vcpu, run, &sbi_ret);
-> >       } else {
-> > -             /* Return error for unsupported SBI calls */
-> > -             cp->a0 =3D SBI_ERR_NOT_SUPPORTED;
-> > +             if (vcpu->kvm->arch.userspace_sbi) {
-> > +                     next_sepc =3D false;
-> > +                     ret =3D 0;
-> > +                     kvm_riscv_vcpu_sbi_forward(vcpu, run);
-> > +             } else {
-> > +                     /* Return error for unsupported SBI calls */
-> > +                     cp->a0 =3D SBI_ERR_NOT_SUPPORTED;
-> > +             }
-> >               goto ecall_done;
-> >       }
-> >
-> > diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-> > index b27ec8f96697..0b6378b83955 100644
-> > --- a/arch/riscv/kvm/vm.c
-> > +++ b/arch/riscv/kvm/vm.c
-> > @@ -217,6 +217,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struc=
-t kvm_enable_cap *cap)
-> >                       return -EINVAL;
-> >               kvm->arch.mp_state_reset =3D true;
-> >               return 0;
-> > +     case KVM_CAP_RISCV_USERSPACE_SBI:
-> > +             if (cap->flags)
-> > +                     return -EINVAL;
-> > +             kvm->arch.userspace_sbi =3D true;
-> > +             return 0;
-> >       default:
-> >               return -EINVAL;
-> >       }
-> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> > index 454b7d4a0448..bf23deb6679e 100644
-> > --- a/include/uapi/linux/kvm.h
-> > +++ b/include/uapi/linux/kvm.h
-> > @@ -931,6 +931,7 @@ struct kvm_enable_cap {
-> >  #define KVM_CAP_X86_GUEST_MODE 238
-> >  #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-> >  #define KVM_CAP_RISCV_MP_STATE_RESET 240
-> > +#define KVM_CAP_RISCV_USERSPACE_SBI 242
-> >
-> >  struct kvm_irq_routing_irqchip {
-> >       __u32 irqchip;
-> > --
-> > 2.49.0
-> >
->
-> Otherwise,
->
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Hi Ricardo,
 
-We are not going ahead with this approach for the reasons
-mentioned in v3 series [1].
+On 2-May-25 09:48, Ricardo Ribalda wrote:
+> To implement VIDIOC_QUERYCTRL, we need to know the minimum, maximum,
+> step and flags of the control. For some of the controls, this involves
+> querying the actual hardware.
+> 
+> Some non-compliant cameras produce errors when we query them. These
+> error can be triggered every time, sometimes, or when other controls do
+> not have the "right value". Right now, we populate that error to userspace.
+> When an error happens, the v4l2 framework does not copy the v4l2_queryctrl
+> struct to userspace. Also, userspace apps are not ready to handle any
+> other error than -EINVAL.
+> 
+> One of the main usecases of VIDIOC_QUERYCTRL is enumerating the controls
+> of a device. This is done using the V4L2_CTRL_FLAG_NEXT_CTRL flag. In
+> that usecase, a non-compliant control will make it almost impossible to
+> enumerate all controls of the device.
+> 
+> A control with an invalid max/min/step/flags is better than non being
+> able to enumerate the rest of the controls.
+> 
+> This patch:
+> - Retries for an extra attempt to read the control, to avoid spurious
+>   errors. More attempts do not seem to produce better results in the
+>   tested hardware.
+> - Makes VIDIOC_QUERYCTRL return 0 for -EIO errors.
+> - Introduces a warning in dmesg so we can have a trace of what has happened
+>   and sets the V4L2_CTRL_FLAG_DISABLED.
+> - Makes sure we keep returning V4L2_CTRL_FLAG_DISABLED for all the next
+>   attempts to query that control (other operations have the same
+>   functionality as now).
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+
+Thank you for your patch.
+
+I have merged this into:
+
+https://gitlab.freedesktop.org/linux-media/users/uvc/-/commits/next/
 
 Regards,
-Anup
 
-[1] https://patchwork.ozlabs.org/project/kvm-riscv/cover/20250515143723.245=
-0630-4-rkrcmar@ventanamicro.com/
+Hans
+
+
+
+
+> ---
+> Hi 2*Hans and Laurent!
+> 
+> I came around a device that was listing just a couple of controls when
+> it should be listing much more.
+> 
+> Some debugging later I found that the device was returning -EIO when
+> all the focal controls were read.
+> 
+> Lots of good arguments in favor/against this patch in the v1. Please
+> check!
+> 
+> Without this patch:
+> $ v4l2-ctl --list-ctrls
+> User Controls
+> 
+>                      brightness 0x00980900 (int)    : min=0 max=255 step=1 default=128 value=128
+>                        contrast 0x00980901 (int)    : min=0 max=100 step=1 default=32 value=32
+>                      saturation 0x00980902 (int)    : min=0 max=100 step=1 default=64 value=64
+>                             hue 0x00980903 (int)    : min=-180 max=180 step=1 default=0 value=0
+>         white_balance_automatic 0x0098090c (bool)   : default=1 value=1
+>                           gamma 0x00980910 (int)    : min=90 max=150 step=1 default=120 value=120
+>            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=2 (60 Hz)
+>       white_balance_temperature 0x0098091a (int)    : min=2800 max=6500 step=1 default=4600 value=4600 flags=inactive
+> 
+> With this patch:
+> $ v4l2-ctl --list-ctrls
+> 
+> User Controls
+> 
+>                      brightness 0x00980900 (int)    : min=0 max=255 step=1 default=128 value=128
+>                        contrast 0x00980901 (int)    : min=0 max=100 step=1 default=32 value=32
+>                      saturation 0x00980902 (int)    : min=0 max=100 step=1 default=64 value=64
+>                             hue 0x00980903 (int)    : min=-180 max=180 step=1 default=0 value=0
+>         white_balance_automatic 0x0098090c (bool)   : default=1 value=1
+>                           gamma 0x00980910 (int)    : min=90 max=150 step=1 default=120 value=120
+>            power_line_frequency 0x00980918 (menu)   : min=0 max=2 default=2 value=2 (60 Hz)
+>       white_balance_temperature 0x0098091a (int)    : min=2800 max=6500 step=1 default=4600 value=4600 flags=inactive
+>                       sharpness 0x0098091b (int)    : min=0 max=0 step=0 default=0 value=3 flags=disabled
+>          backlight_compensation 0x0098091c (int)    : min=0 max=2 step=1 default=1 value=1
+> 
+> Camera Controls
+> 
+>                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
+>          exposure_time_absolute 0x009a0902 (int)    : min=2 max=1250 step=1 default=156 value=156 flags=inactive
+>      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=1
+>                         privacy 0x009a0910 (bool)   : default=0 value=0 flags=read-only
+>    region_of_interest_rectangle 0x009a1901 (rect)   : value=(0,0)/1924x1084 flags=has-payload
+> 
+> Emulating error with:
+> +       if (cs == UVC_PU_SHARPNESS_CONTROL && query == UVC_GET_MAX) {
+> +               printk(KERN_ERR "%s:%d %s\n", __FILE__, __LINE__, __func__);
+> +               return -EIO;
+> +       }
+> In uvc_query_ctrl()
+> ---
+> Changes in v8:
+> - Return error when != -EIO
+> - Fix typo in comment
+> - Link to v7: https://lore.kernel.org/r/20250403-uvc-eaccess-v7-1-033d0c3d6368@chromium.org
+> 
+> Changes in v7:
+> - Only retry on -EIO (Thanks Hans).
+> - Add comment for retry (Thanks Hans).
+> - Rebase patch
+> - Check master_map->disabled before reading the master control.
+> - Link to v6: https://lore.kernel.org/r/20250310-uvc-eaccess-v6-1-bf4562f7cabd@chromium.org
+> 
+> Changes in v6:
+> - Keep returning V4L2_CTRL_FLAG_DISABLED in future control queries.
+> - Link to v5: https://lore.kernel.org/r/20250224-uvc-eaccess-v5-1-690d73bcef28@chromium.org
+> 
+> Changes in v5:
+> - Explain the retry in the commit message (Thanks Laurent).
+> - Link to v4: https://lore.kernel.org/r/20250111-uvc-eaccess-v4-1-c7759bfd1bd4@chromium.org
+> 
+> Changes in v4:
+> - Display control name (Thanks Hans)
+> - Link to v3: https://lore.kernel.org/r/20250107-uvc-eaccess-v3-1-99f3335d5133@chromium.org
+> 
+> Changes in v3:
+> - Add a retry mechanism during error.
+> - Set V4L2_CTRL_FLAG_DISABLED flag.
+> - Link to v2: https://lore.kernel.org/r/20241219-uvc-eaccess-v2-1-bf6520c8b86d@chromium.org
+> 
+> Changes in v2:
+> - Never return error, even if we are not enumerating the controls
+> - Improve commit message.
+> - Link to v1: https://lore.kernel.org/r/20241213-uvc-eaccess-v1-1-62e0b4fcc634@chromium.org
+> ---
+>  drivers/media/usb/uvc/uvc_ctrl.c | 55 ++++++++++++++++++++++++++++++++++------
+>  drivers/media/usb/uvc/uvcvideo.h |  2 ++
+>  2 files changed, 49 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
+> index 44b6513c526421943bb9841fb53dc5f8e9f93f02..f24272d483a2d77f01e072684fc9f67899a48801 100644
+> --- a/drivers/media/usb/uvc/uvc_ctrl.c
+> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
+> @@ -1483,14 +1483,28 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
+>  	return ~0;
+>  }
+>  
+> +/*
+> + * Maximum retry count to avoid spurious errors with controls. Increasing this
+> + * value does no seem to produce better results in the tested hardware.
+> + */
+> +#define MAX_QUERY_RETRIES 2
+> +
+>  static int __uvc_queryctrl_boundaries(struct uvc_video_chain *chain,
+>  				      struct uvc_control *ctrl,
+>  				      struct uvc_control_mapping *mapping,
+>  				      struct v4l2_query_ext_ctrl *v4l2_ctrl)
+>  {
+>  	if (!ctrl->cached) {
+> -		int ret = uvc_ctrl_populate_cache(chain, ctrl);
+> -		if (ret < 0)
+> +		unsigned int retries;
+> +		int ret;
+> +
+> +		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
+> +			ret = uvc_ctrl_populate_cache(chain, ctrl);
+> +			if (ret != -EIO)
+> +				break;
+> +		}
+> +
+> +		if (ret)
+>  			return ret;
+>  	}
+>  
+> @@ -1567,6 +1581,7 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+>  {
+>  	struct uvc_control_mapping *master_map = NULL;
+>  	struct uvc_control *master_ctrl = NULL;
+> +	int ret;
+>  
+>  	memset(v4l2_ctrl, 0, sizeof(*v4l2_ctrl));
+>  	v4l2_ctrl->id = mapping->id;
+> @@ -1587,18 +1602,31 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+>  		__uvc_find_control(ctrl->entity, mapping->master_id,
+>  				   &master_map, &master_ctrl, 0, 0);
+>  	if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
+> +		unsigned int retries;
+>  		s32 val;
+>  		int ret;
+>  
+>  		if (WARN_ON(uvc_ctrl_mapping_is_compound(master_map)))
+>  			return -EIO;
+>  
+> -		ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
+> -		if (ret < 0)
+> -			return ret;
+> +		for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
+> +			ret = __uvc_ctrl_get(chain, master_ctrl, master_map,
+> +					     &val);
+> +			if (!ret)
+> +				break;
+> +			if (ret < 0 && ret != -EIO)
+> +				return ret;
+> +		}
+>  
+> -		if (val != mapping->master_manual)
+> -			v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
+> +		if (ret == -EIO) {
+> +			dev_warn_ratelimited(&chain->dev->udev->dev,
+> +					     "UVC non compliance: Error %d querying master control %x (%s)\n",
+> +					     ret, master_map->id,
+> +					     uvc_map_get_name(master_map));
+> +		} else {
+> +			if (val != mapping->master_manual)
+> +				v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
+> +		}
+>  	}
+>  
+>  	v4l2_ctrl->elem_size = uvc_mapping_v4l2_size(mapping);
+> @@ -1613,7 +1641,18 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+>  		return 0;
+>  	}
+>  
+> -	return __uvc_queryctrl_boundaries(chain, ctrl, mapping, v4l2_ctrl);
+> +	ret = __uvc_queryctrl_boundaries(chain, ctrl, mapping, v4l2_ctrl);
+> +	if (ret && !mapping->disabled) {
+> +		dev_warn(&chain->dev->udev->dev,
+> +			 "UVC non compliance: permanently disabling control %x (%s), due to error %d\n",
+> +			 mapping->id, uvc_map_get_name(mapping), ret);
+> +		mapping->disabled = true;
+> +	}
+> +
+> +	if (mapping->disabled)
+> +		v4l2_ctrl->flags |= V4L2_CTRL_FLAG_DISABLED;
+> +
+> +	return 0;
+>  }
+>  
+>  int uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index b9f8eb62ba1d82ea7788cf6c10cc838a429dbc9e..11d6e3c2ebdfbabd7bbe5722f88ff85f406d9bb6 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -134,6 +134,8 @@ struct uvc_control_mapping {
+>  	s32 master_manual;
+>  	u32 slave_ids[2];
+>  
+> +	bool disabled;
+> +
+>  	const struct uvc_control_mapping *(*filter_mapping)
+>  				(struct uvc_video_chain *chain,
+>  				struct uvc_control *ctrl);
+> 
+> ---
+> base-commit: d0faa9505840c711740eca80e255fdabafbcdb1a
+> change-id: 20250403-uvc-eaccess-8f3666151830
+> 
+> Best regards,
+
