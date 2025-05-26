@@ -1,547 +1,233 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925901F2388
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755491F416B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748251756; cv=none; b=iU6kqGzRPPCK71ZnEOH0/lxfVso0y3B9oOXLSNUVG03ZmWSTvz3cMmV0HDohY+uItFUh2yUaEI/FCkATq8bpXk5TVxG0k0ZURNtxSnyEEXJGFDt/2Dopkc5Q5CbJm98PRKEtsYjxE2Y8wAnOWbsv0sST5tdHFtwwdBcsJIqcjss=
+	t=1748251759; cv=none; b=LipscI7M5qLL9s1KfGt3k4dR8vGVp7sQRj2QC5NVdc92Z5b66uPJsGPVAoPwiGtWguz6nvNAgpKwZh3EBcJLmBwBbICrPm6FnbydFB/QkW97OnaiZhEtMmrXImgpruBTqzkVvQ7geS9GyB54blTItkN/i+vYsJTIsq4vZLrcfyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748251756; c=relaxed/simple;
-	bh=hc6q66cKgkBOcJ7mYc6DWQLuDQTTFturaGzmFHg7IF0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AJkyKqCCKkZQ+4bnfVa1v/piImFgGBSMwpD0MKab/qHlb4/3vTBWAXS/A5HxEzh0+Hvvihdq2rcnWH7HV6riuk2CgqC/3wnrk3mzMXpCNZO7Cq/LJRkxmx1cZ63d8MkumpBZOBvfR9BzXPdEq+e2Kl3HFglVeIKzWJbstjDJpjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=khB3kvyT; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748251759; c=relaxed/simple;
+	bh=Xe3vi7ENNMH1j/u/5pu4GOZqnQeAC5v0Ldme1+1Y8pg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lH2HW3PW90s6syy5wUHv2e6+xZdjnGmkndu1F1gs9eYxyYulujZHveXSVZXtDRoQ7t7zd3MuUN+DRdM4TIe2qMgUt2ZmGIXH50er4oIBsPKVMMomvQH3TPeB4O1MiRq2+ElmLpt4wbtKspeB9w0uXDZbIzU/vlJliAv4fCBEKCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iNZYxPFJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="khB3kvyT"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so2100029b3a.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iNZYxPFJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748251756;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=IMZoildo8uZCd/Eo0gESUyxMqAeWKWWm7Nj0lUCDNuY=;
+	b=iNZYxPFJP4fLwiqPeZUfJ+Y8ByG7VoM7mjueJ27/+rYI/hR+2kUMfu+IMasNswYYjKTAlz
+	LV8w9FYg3cF9JSMjfMhpjInhhMi7QBRgNPUJQ0OVBgrYUjgE8FYgTtgGordGgL7j6TtRJ2
+	othLkxGDO8TdpVPKYkU6DPFkZCt9cV4=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-342-plMLEDhkMuaesnPfBZg5tQ-1; Mon, 26 May 2025 05:29:14 -0400
+X-MC-Unique: plMLEDhkMuaesnPfBZg5tQ-1
+X-Mimecast-MFC-AGG-ID: plMLEDhkMuaesnPfBZg5tQ_1748251753
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442f90418b0so10922215e9.2
         for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748251753; x=1748856553; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zUV6CqYs5paz3rXS7jEcTHJV+cA4LT/Pp4TEwOc0Qoo=;
-        b=khB3kvyT5ld9p7L/oFlC49SNDcqcbqmVPOVaRBAJ3voDYi9rYpiMX406MfVZBjcuSN
-         PM6dgRPyRT7htGVJ60tHsnHBPWJWqQAk8KnNSNxqnXV0JEaLeb6ZEERgrFEN9LB9nUcN
-         LdNqiDWugQOuJXxwmixuCtJZ8Lwnf1BiqSdZmhpXUpZThHYAg9OGmHp73YTStIbRA+Zz
-         C7xq07+jTNG0z7HBHmAspNcwQnxxa9DAW686Uv5qgpHFfjxykheEdqkw7e/aUvxOeqXU
-         EpBhxkAELk5qhkuMzvPUoCKA77d7TkjDfUimEpJBY+gywBAS5CTDVLNQchVrkmdktc2Y
-         h8aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748251753; x=1748856553;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zUV6CqYs5paz3rXS7jEcTHJV+cA4LT/Pp4TEwOc0Qoo=;
-        b=jl+rPmjJHEnzwaNf6av3pdCug/nFGLCpDwGVgYlL1ska7S1c++Pi8PHI1MvOeVsJ3y
-         Etf+OL5FXU28z91P0+IuQRUej0Z6FbOUCYSY0jvcPC5ZRWkWPfL2wMDW18gD0mgHZu80
-         pLcVr7SmKfb72AhOIfwuU0W3s5nrZ83xXwmhePp5WuWCTYeMBI6xKlYZldgot4Em6GBS
-         FPGPzBbg1QPzUyO7LQmtZ7tOp+0M+5cgOp8X+mBtvsr+NDeIiSwhk1fTVXjNsFfjlNxb
-         QXDqdF68cplPabg3EtjYlMZxRQlbdhq/j32F9ZEQU4yHUw2/OvsbB3K8OIcfnsDwbcTc
-         rJ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUDHS0r1bHO1+LXJQNtwYTmEZquSVBroxFPMwgTwe4mzGxQIwzv/NMq4TeXFG/4YGkh6VqCzJNtWi3gN78=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzl22IsU2GgNh9YT8NGtc3W5niVFBl7wDt30GQL5MMwa6d3ld2
-	Rc/E4xRNiA9qw1hwz+X8JdwKPRX8oM8Z6SdOoxCM6/7s/mR5wDvwuz9SF4vZRo5Dapw=
-X-Gm-Gg: ASbGnctOtNUXsB+d/tYV3yJeOvYQo/PYSQFY+XBINbQYkZ6ulByoB2oCReDVhfen0Xf
-	/f3y27YzrqB3laA3tST7GqQ4FFD4TxVpxVs0mToKDrbcUxVMuNp//zR79A170+0PR7jNgaxWelG
-	Jl9gdMzMZm85U3pcvONI128dB4NtHDB/wS6nLpvF6Zo878sQ5vwuB72UJNt33BUQPrj+WHDJ1hn
-	PgPpMaOW3GKyCdUfFx0fkkvODKwRxpOGFJ0x8dDTFekaC2Toj8FmIjKx6DUqL7sadHs51jeQ0yn
-	RFgzaRGhq5A/OoNjshFtI3MoZIbRt76hMxWhOImrwDlIFHBpkhtmL6pWtvvX
-X-Google-Smtp-Source: AGHT+IGdAmoWQYugnl+PbBLMlbnc02yPO58njpKwG0ntq2oeE/DkpMSxUe6kb0/uvbOiVHlIvcGHPg==
-X-Received: by 2002:a05:6a20:9f8e:b0:218:574e:830d with SMTP id adf61e73a8af0-2188b78d232mr13330984637.21.1748251752742;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IMZoildo8uZCd/Eo0gESUyxMqAeWKWWm7Nj0lUCDNuY=;
+        b=CDluvzdaa9cIREPoZWmiN1n7jlizXoN6RhQqEh9v6ED0x/XgAn7JuP1dKaCvyiAHp9
+         c1AKagIs/dmoCV6LEPXnJX1Adae1DSILIrRycptqbi83waDHeQ2cS12wUMyEznaKJZog
+         aGabOOHuwUFLS1GQdvFgkvNAoWaXfyWtEZyv3wsQea3lJ4Q20Dwf6Hu8lqyXiUoc2pd4
+         Ef/p1LmtEw4uiCqPyirS13jpmINV5gcBJnsze0W5u6W3vK/bBMwYwxWCl+07vMn9Ma/X
+         iR2CB2jGXpkdOZUmmRqQS9Ye3YtYn/PqFCOsRDModjZGqt3aX+WoGL0q7XcIj86Lg5w/
+         vrkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKUNdraVsrwyQyLDWJPam5IXnz5xwVlxCuWO/hrDXZlRJ3pAsF5X38M/3SQKCpRyQJgSsHIo0+DG6z4gs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNFWJ7DXqNBDVUxy2CzxzahIIhoQr15HwC+0MhYZH5EaHI+JyO
+	bSckIQHOC7EWF0WpDuMyjVzuYPv+z4eUHz051lWwj3B4rgVCF1XjaRmVcTbwf6+54P+wflj0FNc
+	2/w5VdXtWaTPY7Aw/gqxYgBly101a2JBlO8IZlx975CdwqwwmkQSInsvwwdDRR9C7sA==
+X-Gm-Gg: ASbGnct9NO9HQwpfD3jqi5aX5JOFdTydSOeMSC9LrUoV5bXysWyz0V9fySk6uUZNpSt
+	EQbBzzYhrGr649K9zEHASInn2ZYb+WHgeUOaSDXB5O1x+T0mEif3PmrVbGiwYtzDidu3pziQyhK
+	FN65kYgdu22vyprC8fhyALsYYd8XzP8OfKBo2K9+7mO882mpyd76gT7X9h/ivl3Z0oZwA4VhHJ6
+	aCGXtl6rspZPz9rpAzqqw0IyX7TCyX+98rSD+6IahxM0THn3clO9XhAjSexE7tCY5PsN8VvA9I+
+	mN4bdGhQhDLypt6C4MxpfHnNWcANn3nWa152OqsR9aKTujthPT8DhkH1+PPzblJKh1uCP25uQ+t
+	u8RzEnPJ7zF1HMeTmfrMsRWFNKMnVG/otN/gOHrg=
+X-Received: by 2002:a05:600c:4f52:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-44c919e1684mr75482405e9.14.1748251752795;
         Mon, 26 May 2025 02:29:12 -0700 (PDT)
-Received: from [127.0.1.1] ([104.234.225.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9876e62sm17162393b3a.147.2025.05.26.02.29.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+X-Google-Smtp-Source: AGHT+IHTunjhfmdiMmCnUy4TVsNn3Xc64kFhImUqJVrq64nA5IfjlCoeJDr+2370sEhKOY96qYgXxw==
+X-Received: by 2002:a05:600c:4f52:b0:43c:f44c:72b7 with SMTP id 5b1f17b1804b1-44c919e1684mr75482085e9.14.1748251752380;
         Mon, 26 May 2025 02:29:12 -0700 (PDT)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Mon, 26 May 2025 17:28:24 +0800
-Subject: [PATCH v10 06/12] drm/msm/dpu: handle pipes as array
+Received: from ?IPV6:2003:d8:2f19:6500:e1c1:8216:4c25:efe4? (p200300d82f196500e1c182164c25efe4.dip0.t-ipconnect.de. [2003:d8:2f19:6500:e1c1:8216:4c25:efe4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f23bfe80sm227992765e9.20.2025.05.26.02.29.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 02:29:11 -0700 (PDT)
+Message-ID: <dbc7c66b-24c9-49f4-8988-a7eec1280ca8@redhat.com>
+Date: Mon, 26 May 2025 11:29:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v0 2/2] mm: sched: Batch-migrate misplaced pages
+To: Zi Yan <ziy@nvidia.com>
+Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Jonathan.Cameron@huawei.com, dave.hansen@intel.com,
+ gourry@gourry.net, hannes@cmpxchg.org, mgorman@techsingularity.net,
+ mingo@redhat.com, peterz@infradead.org, raghavendra.kt@amd.com,
+ riel@surriel.com, rientjes@google.com, sj@kernel.org, weixugc@google.com,
+ willy@infradead.org, ying.huang@linux.alibaba.com, dave@stgolabs.net,
+ nifan.cxl@gmail.com, joshua.hahnjy@gmail.com, xuezhengchu@huawei.com,
+ yiannis@zptcorp.com, akpm@linux-foundation.org
+References: <20250521080238.209678-1-bharata@amd.com>
+ <20250521080238.209678-3-bharata@amd.com>
+ <62cef618-123c-4ffa-b45a-c38b65d2a5a3@redhat.com>
+ <AE28D27C-58C2-41A4-B553-50049E963745@nvidia.com>
+ <5d6b92d8-251f-463b-adde-724ea25b2d89@redhat.com>
+ <996B013E-4143-4182-959F-356241BE609A@nvidia.com>
+ <382839fc-ea63-421a-8397-72cb35dd8052@redhat.com>
+ <FF2F9A08-9BD8-4207-901D-AC9B21443BF6@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <FF2F9A08-9BD8-4207-901D-AC9B21443BF6@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-v6-15-quad-pipe-upstream-v10-6-5fed4f8897c4@linaro.org>
-References: <20250526-v6-15-quad-pipe-upstream-v10-0-5fed4f8897c4@linaro.org>
-In-Reply-To: <20250526-v6-15-quad-pipe-upstream-v10-0-5fed4f8897c4@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>, Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748251705; l=18035;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=hc6q66cKgkBOcJ7mYc6DWQLuDQTTFturaGzmFHg7IF0=;
- b=BmLQh70QX5CHf9lnzOmLT3n7JFYxkAWmahghyNeDCl+5G29pqME6GHOgvS0dxV5wK/N6QSZDp
- RS6LbBsw4Q4Brb8hDtFNkWFkJDQlmYOEXL3I/lNkBG9oZIe8WXyX+qg
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-There are 2 pipes in a drm plane at most currently, while 4 pipes are
-required for quad-pipe case. Generalize the handling to pipe pair and
-ease handling to another pipe pair later. Store pipes in array with
-removing dedicated r_pipe.
+On 22.05.25 19:30, Zi Yan wrote:
+> On 22 May 2025, at 13:21, David Hildenbrand wrote:
+> 
+>> On 22.05.25 18:38, Zi Yan wrote:
+>>> On 22 May 2025, at 12:26, David Hildenbrand wrote:
+>>>
+>>>> On 22.05.25 18:24, Zi Yan wrote:
+>>>>> On 22 May 2025, at 12:11, David Hildenbrand wrote:
+>>>>>
+>>>>>> On 21.05.25 10:02, Bharata B Rao wrote:
+>>>>>>> Currently the folios identified as misplaced by the NUMA
+>>>>>>> balancing sub-system are migrated one by one from the NUMA
+>>>>>>> hint fault handler as and when they are identified as
+>>>>>>> misplaced.
+>>>>>>>
+>>>>>>> Instead of such singe folio migrations, batch them and
+>>>>>>> migrate them at once.
+>>>>>>>
+>>>>>>> Identified misplaced folios are isolated and stored in
+>>>>>>> a per-task list. A new task_work is queued from task tick
+>>>>>>> handler to migrate them in batches. Migration is done
+>>>>>>> periodically or if pending number of isolated foios exceeds
+>>>>>>> a threshold.
+>>>>>>
+>>>>>> That means that these pages are effectively unmovable for other purposes (CMA, compaction, long-term pinning, whatever) until that list was drained.
+>>>>>>
+>>>>>> Bad.
+>>>>>
+>>>>> Probably we can mark these pages and when others want to migrate the page,
+>>>>> get_new_page() just looks at the page's target node and get a new page from
+>>>>> the target node.
+>>>>
+>>>> How do you envision that working when CMA needs to migrate this exact page to a different location?
+>>>>
+>>>> It cannot isolate it for migration because ... it's already isolated ... so it will give up.
+>>>>
+>>>> Marking might not be easy I assume ...
+>>>
+>>> I guess you mean we do not have any extra bit to indicate this page is isolated,
+>>> but it can be migrated. My point is that if this page is going to be migrated
+>>> due to other reasons, like CMA, compaction, why not migrate it to the target
+>>> node instead of moving it around within the same node.
+>>
+>> I think we'd have to identify that
+>>
+>> a) This page is isolate for migration (could be isolated for other
+>>     reasons)
+>>
+>> b) The one responsible for the isolation is numa code (could be someone
+>>     else)
+>>
+>> c) We're allowed to grab that page from that list (IOW sync against
+>>     others, and especially also against), to essentially "steal" the
+>>     isolated page.
+> 
+> Right. c) sounds like adding more contention to the candidate list.
+> I wonder if we can just mark the page as migration candidate (using
+> a page flag or something else), then migrate it whenever CMA,
+> compaction, long-term pinning and more look at the page.
 
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  35 +++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 181 +++++++++++++++++-------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h |  12 +-
- 3 files changed, 119 insertions(+), 109 deletions(-)
+I mean, all these will migrate the page either way, no need to add 
+another flag for that.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 3a7e030e1241a5115460a1e9d552341f8dff7d85..8cda5ba7f4042492d7c8a7e65960aeee51565615 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -442,7 +442,7 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
- 	const struct msm_format *format;
- 	struct dpu_hw_ctl *ctl = mixer->lm_ctl;
- 
--	uint32_t lm_idx;
-+	uint32_t lm_idx, i;
- 	bool bg_alpha_enable = false;
- 	DECLARE_BITMAP(active_fetch, SSPP_MAX);
- 
-@@ -463,20 +463,15 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
- 		if (pstate->stage == DPU_STAGE_BASE && format->alpha_enable)
- 			bg_alpha_enable = true;
- 
--		set_bit(pstate->pipe.sspp->idx, active_fetch);
--		_dpu_crtc_blend_setup_pipe(crtc, plane,
--					   mixer, cstate->num_mixers,
--					   pstate->stage,
--					   format, fb ? fb->modifier : 0,
--					   &pstate->pipe, 0, stage_cfg);
--
--		if (pstate->r_pipe.sspp) {
--			set_bit(pstate->r_pipe.sspp->idx, active_fetch);
-+		for (i = 0; i < PIPES_PER_STAGE; i++) {
-+			if (!pstate->pipe[i].sspp)
-+				continue;
-+			set_bit(pstate->pipe[i].sspp->idx, active_fetch);
- 			_dpu_crtc_blend_setup_pipe(crtc, plane,
- 						   mixer, cstate->num_mixers,
- 						   pstate->stage,
- 						   format, fb ? fb->modifier : 0,
--						   &pstate->r_pipe, 1, stage_cfg);
-+						   &pstate->pipe[i], i, stage_cfg);
- 		}
- 
- 		/* blend config update */
-@@ -1636,15 +1631,15 @@ static int _dpu_debugfs_status_show(struct seq_file *s, void *data)
- 		seq_printf(s, "\tdst x:%4d dst_y:%4d dst_w:%4d dst_h:%4d\n",
- 			state->crtc_x, state->crtc_y, state->crtc_w,
- 			state->crtc_h);
--		seq_printf(s, "\tsspp[0]:%s\n",
--			   pstate->pipe.sspp->cap->name);
--		seq_printf(s, "\tmultirect[0]: mode: %d index: %d\n",
--			pstate->pipe.multirect_mode, pstate->pipe.multirect_index);
--		if (pstate->r_pipe.sspp) {
--			seq_printf(s, "\tsspp[1]:%s\n",
--				   pstate->r_pipe.sspp->cap->name);
--			seq_printf(s, "\tmultirect[1]: mode: %d index: %d\n",
--				   pstate->r_pipe.multirect_mode, pstate->r_pipe.multirect_index);
-+
-+		for (i = 0; i < PIPES_PER_STAGE; i++) {
-+			if (!pstate->pipe[i].sspp)
-+				continue;
-+			seq_printf(s, "\tsspp[%d]:%s\n",
-+				   i, pstate->pipe[i].sspp->cap->name);
-+			seq_printf(s, "\tmultirect[%d]: mode: %d index: %d\n",
-+				   i, pstate->pipe[i].multirect_mode,
-+				   pstate->pipe[i].multirect_index);
- 		}
- 
- 		seq_puts(s, "\n");
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 421138bc3cb779c45fcfd5319056f0d31c862452..7efee42943866e4999b0ca04ecdc67380a1b1d08 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -619,6 +619,7 @@ static void _dpu_plane_color_fill(struct dpu_plane *pdpu,
- 	struct msm_drm_private *priv = plane->dev->dev_private;
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(plane->state);
- 	u32 fill_color = (color & 0xFFFFFF) | ((alpha & 0xFF) << 24);
-+	int i;
- 
- 	DPU_DEBUG_PLANE(pdpu, "\n");
- 
-@@ -632,12 +633,13 @@ static void _dpu_plane_color_fill(struct dpu_plane *pdpu,
- 		return;
- 
- 	/* update sspp */
--	_dpu_plane_color_fill_pipe(pstate, &pstate->pipe, &pstate->pipe_cfg.dst_rect,
--				   fill_color, fmt);
--
--	if (pstate->r_pipe.sspp)
--		_dpu_plane_color_fill_pipe(pstate, &pstate->r_pipe, &pstate->r_pipe_cfg.dst_rect,
-+	for (i = 0; i < PIPES_PER_STAGE; i++) {
-+		if (!pstate->pipe[i].sspp)
-+			continue;
-+		_dpu_plane_color_fill_pipe(pstate, &pstate->pipe[i],
-+					   &pstate->pipe_cfg[i].dst_rect,
- 					   fill_color, fmt);
-+	}
- }
- 
- static int dpu_plane_prepare_fb(struct drm_plane *plane,
-@@ -827,8 +829,8 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
- 	struct dpu_kms *kms = _dpu_plane_get_kms(&pdpu->base);
- 	u64 max_mdp_clk_rate = kms->perf.max_core_clk_rate;
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
--	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
--	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
-+	struct dpu_sw_pipe_cfg *pipe_cfg;
-+	struct dpu_sw_pipe_cfg *r_pipe_cfg;
- 	struct drm_rect fb_rect = { 0 };
- 	uint32_t max_linewidth;
- 
-@@ -853,6 +855,9 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
- 		return -EINVAL;
- 	}
- 
-+	/* move the assignment here, to ease handling to another pairs later */
-+	pipe_cfg = &pstate->pipe_cfg[0];
-+	r_pipe_cfg = &pstate->pipe_cfg[1];
- 	/* state->src is 16.16, src_rect is not */
- 	drm_rect_fp_to_int(&pipe_cfg->src_rect, &new_plane_state->src);
- 
-@@ -965,10 +970,10 @@ static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
- 		drm_atomic_get_new_plane_state(state, plane);
- 	struct dpu_plane *pdpu = to_dpu_plane(plane);
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
--	struct dpu_sw_pipe *pipe = &pstate->pipe;
--	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
--	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
--	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
-+	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
-+	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
-+	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
-+	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->pipe_cfg[1];
- 	int ret = 0;
- 
- 	ret = dpu_plane_atomic_check_pipe(pdpu, pipe, pipe_cfg,
-@@ -1023,15 +1028,15 @@ static int dpu_plane_try_multirect_shared(struct dpu_plane_state *pstate,
- 					  const struct msm_format *fmt,
- 					  uint32_t max_linewidth)
- {
--	struct dpu_sw_pipe *pipe = &pstate->pipe;
--	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
--	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
--	struct dpu_sw_pipe *prev_pipe = &prev_adjacent_pstate->pipe;
--	struct dpu_sw_pipe_cfg *prev_pipe_cfg = &prev_adjacent_pstate->pipe_cfg;
-+	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
-+	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
-+	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
-+	struct dpu_sw_pipe *prev_pipe = &prev_adjacent_pstate->pipe[0];
-+	struct dpu_sw_pipe_cfg *prev_pipe_cfg = &prev_adjacent_pstate->pipe_cfg[0];
- 	const struct msm_format *prev_fmt = msm_framebuffer_format(prev_adjacent_pstate->base.fb);
- 	u16 max_tile_height = 1;
- 
--	if (prev_adjacent_pstate->r_pipe.sspp != NULL ||
-+	if (prev_adjacent_pstate->pipe[1].sspp != NULL ||
- 	    prev_pipe->multirect_mode != DPU_SSPP_MULTIRECT_NONE)
- 		return false;
- 
-@@ -1090,10 +1095,10 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
- 	struct dpu_plane *pdpu = to_dpu_plane(plane);
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
- 	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
--	struct dpu_sw_pipe *pipe = &pstate->pipe;
--	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
--	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
--	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
-+	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
-+	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
-+	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
-+	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->pipe_cfg[1];
- 	const struct drm_crtc_state *crtc_state = NULL;
- 	uint32_t max_linewidth = dpu_kms->catalog->caps->max_linewidth;
- 
-@@ -1137,7 +1142,7 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
- 		drm_atomic_get_old_plane_state(state, plane);
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(plane_state);
- 	struct drm_crtc_state *crtc_state;
--	int ret;
-+	int ret, i;
- 
- 	if (IS_ERR(plane_state))
- 		return PTR_ERR(plane_state);
-@@ -1155,8 +1160,8 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
- 		 * resources are freed by dpu_crtc_assign_plane_resources(),
- 		 * but clean them here.
- 		 */
--		pstate->pipe.sspp = NULL;
--		pstate->r_pipe.sspp = NULL;
-+		for (i = 0; i < PIPES_PER_STAGE; i++)
-+			pstate->pipe[i].sspp = NULL;
- 
- 		return 0;
- 	}
-@@ -1194,6 +1199,7 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
- 	struct dpu_sw_pipe_cfg *pipe_cfg;
- 	struct dpu_sw_pipe_cfg *r_pipe_cfg;
- 	const struct msm_format *fmt;
-+	int i;
- 
- 	if (plane_state->crtc)
- 		crtc_state = drm_atomic_get_new_crtc_state(state,
-@@ -1202,13 +1208,14 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
- 	pstate = to_dpu_plane_state(plane_state);
- 	prev_adjacent_pstate = prev_adjacent_plane_state ?
- 		to_dpu_plane_state(prev_adjacent_plane_state) : NULL;
--	pipe = &pstate->pipe;
--	r_pipe = &pstate->r_pipe;
--	pipe_cfg = &pstate->pipe_cfg;
--	r_pipe_cfg = &pstate->r_pipe_cfg;
- 
--	pipe->sspp = NULL;
--	r_pipe->sspp = NULL;
-+	pipe = &pstate->pipe[0];
-+	r_pipe = &pstate->pipe[1];
-+	pipe_cfg = &pstate->pipe_cfg[0];
-+	r_pipe_cfg = &pstate->pipe_cfg[1];
-+
-+	for (i = 0; i < PIPES_PER_STAGE; i++)
-+		pstate->pipe[i].sspp = NULL;
- 
- 	if (!plane_state->fb)
- 		return -EINVAL;
-@@ -1319,6 +1326,7 @@ void dpu_plane_flush(struct drm_plane *plane)
- {
- 	struct dpu_plane *pdpu;
- 	struct dpu_plane_state *pstate;
-+	int i;
- 
- 	if (!plane || !plane->state) {
- 		DPU_ERROR("invalid plane\n");
-@@ -1339,8 +1347,8 @@ void dpu_plane_flush(struct drm_plane *plane)
- 		/* force 100% alpha */
- 		_dpu_plane_color_fill(pdpu, pdpu->color_fill, 0xFF);
- 	else {
--		dpu_plane_flush_csc(pdpu, &pstate->pipe);
--		dpu_plane_flush_csc(pdpu, &pstate->r_pipe);
-+		for (i = 0; i < PIPES_PER_STAGE; i++)
-+			dpu_plane_flush_csc(pdpu, &pstate->pipe[i]);
- 	}
- 
- 	/* flag h/w flush complete */
-@@ -1441,15 +1449,12 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
- 	struct dpu_plane *pdpu = to_dpu_plane(plane);
- 	struct drm_plane_state *state = plane->state;
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(state);
--	struct dpu_sw_pipe *pipe = &pstate->pipe;
--	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
- 	struct drm_crtc *crtc = state->crtc;
- 	struct drm_framebuffer *fb = state->fb;
- 	bool is_rt_pipe;
- 	const struct msm_format *fmt =
- 		msm_framebuffer_format(fb);
--	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
--	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
-+	int i;
- 
- 	pstate->pending = true;
- 
-@@ -1464,12 +1469,12 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
- 			crtc->base.id, DRM_RECT_ARG(&state->dst),
- 			&fmt->pixel_format, MSM_FORMAT_IS_UBWC(fmt));
- 
--	dpu_plane_sspp_update_pipe(plane, pipe, pipe_cfg, fmt,
--				   drm_mode_vrefresh(&crtc->mode),
--				   &pstate->layout);
--
--	if (r_pipe->sspp) {
--		dpu_plane_sspp_update_pipe(plane, r_pipe, r_pipe_cfg, fmt,
-+	/* move the assignment here, to ease handling to another pairs later */
-+	for (i = 0; i < PIPES_PER_STAGE; i++) {
-+		if (!pstate->pipe[i].sspp)
-+			continue;
-+		dpu_plane_sspp_update_pipe(plane, &pstate->pipe[i],
-+					   &pstate->pipe_cfg[i], fmt,
- 					   drm_mode_vrefresh(&crtc->mode),
- 					   &pstate->layout);
- 	}
-@@ -1477,15 +1482,17 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
- 	if (pstate->needs_qos_remap)
- 		pstate->needs_qos_remap = false;
- 
--	pstate->plane_fetch_bw = _dpu_plane_calc_bw(pdpu->catalog, fmt,
--						    &crtc->mode, pipe_cfg);
--
--	pstate->plane_clk = _dpu_plane_calc_clk(&crtc->mode, pipe_cfg);
--
--	if (r_pipe->sspp) {
--		pstate->plane_fetch_bw += _dpu_plane_calc_bw(pdpu->catalog, fmt, &crtc->mode, r_pipe_cfg);
-+	pstate->plane_fetch_bw = 0;
-+	pstate->plane_clk = 0;
-+	for (i = 0; i < PIPES_PER_STAGE; i++) {
-+		if (!pstate->pipe[i].sspp)
-+			continue;
-+		pstate->plane_fetch_bw += _dpu_plane_calc_bw(pdpu->catalog, fmt,
-+							     &crtc->mode, &pstate->pipe_cfg[i]);
- 
--		pstate->plane_clk = max(pstate->plane_clk, _dpu_plane_calc_clk(&crtc->mode, r_pipe_cfg));
-+		pstate->plane_clk = max(pstate->plane_clk,
-+					_dpu_plane_calc_clk(&crtc->mode,
-+							    &pstate->pipe_cfg[i]));
- 	}
- }
- 
-@@ -1493,17 +1500,31 @@ static void _dpu_plane_atomic_disable(struct drm_plane *plane)
- {
- 	struct drm_plane_state *state = plane->state;
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(state);
--	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
-+	struct dpu_sw_pipe *pipe;
-+	int i;
- 
--	trace_dpu_plane_disable(DRMID(plane), false,
--				pstate->pipe.multirect_mode);
-+	for (i = 0; i < PIPES_PER_STAGE; i += 1) {
-+		pipe = &pstate->pipe[i];
-+		if (!pipe->sspp)
-+			continue;
- 
--	if (r_pipe->sspp) {
--		r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
--		r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
-+		trace_dpu_plane_disable(DRMID(plane), false,
-+					pstate->pipe[i].multirect_mode);
- 
--		if (r_pipe->sspp->ops.setup_multirect)
--			r_pipe->sspp->ops.setup_multirect(r_pipe);
-+		if (!pipe->sspp)
-+			continue;
-+
-+		if (i % PIPES_PER_STAGE == 0)
-+			continue;
-+
-+		/*
-+		 * clear multirect for the right pipe so that the SSPP
-+		 * can be further reused in the solo mode
-+		 */
-+		pipe->multirect_index = DPU_SSPP_RECT_SOLO;
-+		pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
-+		if (pipe->sspp->ops.setup_multirect)
-+			pipe->sspp->ops.setup_multirect(pipe);
- 	}
- 
- 	pstate->pending = true;
-@@ -1598,31 +1619,26 @@ static void dpu_plane_atomic_print_state(struct drm_printer *p,
- 		const struct drm_plane_state *state)
- {
- 	const struct dpu_plane_state *pstate = to_dpu_plane_state(state);
--	const struct dpu_sw_pipe *pipe = &pstate->pipe;
--	const struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
--	const struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
--	const struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
-+	const struct dpu_sw_pipe *pipe;
-+	const struct dpu_sw_pipe_cfg *pipe_cfg;
-+	int i;
- 
- 	drm_printf(p, "\tstage=%d\n", pstate->stage);
- 
--	if (pipe->sspp) {
--		drm_printf(p, "\tsspp[0]=%s\n", pipe->sspp->cap->name);
--		drm_printf(p, "\tmultirect_mode[0]=%s\n",
-+	for (i = 0; i < PIPES_PER_STAGE; i++) {
-+		pipe = &pstate->pipe[i];
-+		if (!pipe->sspp)
-+			continue;
-+		pipe_cfg = &pstate->pipe_cfg[i];
-+		drm_printf(p, "\tsspp[%d]=%s\n", i, pipe->sspp->cap->name);
-+		drm_printf(p, "\tmultirect_mode[%d]=%s\n", i,
- 			   dpu_get_multirect_mode(pipe->multirect_mode));
--		drm_printf(p, "\tmultirect_index[0]=%s\n",
-+		drm_printf(p, "\tmultirect_index[%d]=%s\n", i,
- 			   dpu_get_multirect_index(pipe->multirect_index));
--		drm_printf(p, "\tsrc[0]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&pipe_cfg->src_rect));
--		drm_printf(p, "\tdst[0]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&pipe_cfg->dst_rect));
--	}
--
--	if (r_pipe->sspp) {
--		drm_printf(p, "\tsspp[1]=%s\n", r_pipe->sspp->cap->name);
--		drm_printf(p, "\tmultirect_mode[1]=%s\n",
--			   dpu_get_multirect_mode(r_pipe->multirect_mode));
--		drm_printf(p, "\tmultirect_index[1]=%s\n",
--			   dpu_get_multirect_index(r_pipe->multirect_index));
--		drm_printf(p, "\tsrc[1]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&r_pipe_cfg->src_rect));
--		drm_printf(p, "\tdst[1]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&r_pipe_cfg->dst_rect));
-+		drm_printf(p, "\tsrc[%d]=" DRM_RECT_FMT "\n", i,
-+			   DRM_RECT_ARG(&pipe_cfg->src_rect));
-+		drm_printf(p, "\tdst[%d]=" DRM_RECT_FMT "\n", i,
-+			   DRM_RECT_ARG(&pipe_cfg->dst_rect));
- 	}
- }
- 
-@@ -1660,14 +1676,17 @@ void dpu_plane_danger_signal_ctrl(struct drm_plane *plane, bool enable)
- 	struct dpu_plane *pdpu = to_dpu_plane(plane);
- 	struct dpu_plane_state *pstate = to_dpu_plane_state(plane->state);
- 	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
-+	int i;
- 
- 	if (!pdpu->is_rt_pipe)
- 		return;
- 
- 	pm_runtime_get_sync(&dpu_kms->pdev->dev);
--	_dpu_plane_set_qos_ctrl(plane, &pstate->pipe, enable);
--	if (pstate->r_pipe.sspp)
--		_dpu_plane_set_qos_ctrl(plane, &pstate->r_pipe, enable);
-+	for (i = 0; i < PIPES_PER_STAGE; i++) {
-+		if (!pstate->pipe[i].sspp)
-+			continue;
-+		_dpu_plane_set_qos_ctrl(plane, &pstate->pipe[i], enable);
-+	}
- 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
- }
- #endif
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-index acd5725175cdde4fcf7a9f71bb446251c5a14d22..052fd046e8463855b16b30389c2efc67c0c15281 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
-@@ -18,10 +18,8 @@
-  * struct dpu_plane_state: Define dpu extension of drm plane state object
-  * @base:	base drm plane state object
-  * @aspace:	pointer to address space for input/output buffers
-- * @pipe:	software pipe description
-- * @r_pipe:	software pipe description of the second pipe
-- * @pipe_cfg:	software pipe configuration
-- * @r_pipe_cfg:	software pipe configuration for the second pipe
-+ * @pipe:	software pipe description array
-+ * @pipe_cfg:	software pipe configuration array
-  * @stage:	assigned by crtc blender
-  * @needs_qos_remap: qos remap settings need to be updated
-  * @multirect_index: index of the rectangle of SSPP
-@@ -35,10 +33,8 @@
- struct dpu_plane_state {
- 	struct drm_plane_state base;
- 	struct msm_gem_address_space *aspace;
--	struct dpu_sw_pipe pipe;
--	struct dpu_sw_pipe r_pipe;
--	struct dpu_sw_pipe_cfg pipe_cfg;
--	struct dpu_sw_pipe_cfg r_pipe_cfg;
-+	struct dpu_sw_pipe pipe[PIPES_PER_STAGE];
-+	struct dpu_sw_pipe_cfg pipe_cfg[PIPES_PER_STAGE];
- 	enum dpu_stage stage;
- 	bool needs_qos_remap;
- 	bool pending;
+I guess what you mean, indicating that the migration destination should 
+be on a different node than the current one.
+
+Well, and for the NUMA scanner (below) to find which pages to migrate.
+
+... to be this raises some questions: like, if we don't migrate 
+immediately, could that information ("migrate this page") actually now 
+be wrong? I guess a way to obtain the destination node would suffice: if 
+the destination node matches, no need to migrate from that NUMA scanner.
+
+In addition,
+> periodically, the migration task would do a PFN scanning and migrate
+> any migration candidate. I remember Willy did some experiments showing
+> that PFN scanning is very fast.
+
+PFN scanning can be faster than walking lists, but I suspect it depends 
+on how many pages there really are to be migrated ... and some other 
+factors :)
 
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
