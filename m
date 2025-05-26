@@ -1,107 +1,98 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF3672607;
-	Mon, 26 May 2025 18:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDE93A1CD;
+	Mon, 26 May 2025 18:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748285213; cv=none; b=APufKtCmXZ3Xf/KMg41tt9IUA55Da1goWugXFmHOIQzSIyrEiO+D4AA4d+ZRWfRf5NwNXkbLbc1t4KbG2WmVpODFJxMa8d+4mUv2XlDyhh14AMWarqcK0eB9WOy7ctYGHHs9ARIJpCTDJnGNG14D+4PmjWX6pVyJBy8tZAtNzjQ=
+	t=1748285233; cv=none; b=UtYN2uPR5b12/pEnls+8P6NOWKf63l9Qeaob055yqoG9i20icKkWUiQO0yeo9aPJv5hdu4iw6KyTug7WFDr0nykGWhUXe5+D8foMZZjO/QwAVFAjGgWvUa9H7oewVbyIlUy+xp3ax1CNtTGfbv0xwlAnbpKgVYF+fNVzW24jqKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748285213; c=relaxed/simple;
-	bh=Lsr4bVmd+hLUzILtQaE7DnjbxkvXxlOzELoVmKLYLBg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qtkpj558Ktf9M5PJQdqM2fZmdozTBIWMuYpK/Urh89vqQcdjM3Mf76lzOEjcUC+S61j+esWxY2RK8X4I1qINP86vlRl+U0MWUsxNTfqVFpjZ/dc21jURuaxLJ6eYSN2oFNv9zLrPCTXmZyMLKwyecY1urZPMCk3+nYcqBeY47Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUuJSQYa; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748285233; c=relaxed/simple;
+	bh=jzGOBQX+0zj/vrazzO8cJZjXMJAbGaqaTo7qCySR91U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RNAmTAEk9/dsyB8D3rGEtZpYFsinZEcZfecx7f1O6Kw85pqpGL91wvt33uLnGm4UVa4B9W2IjsZDDjWVX4uSDQMODvPvUjrbxFrZg5OhdPmPfG1OVJxK5ckQn13bWrn0We7K9oaQcF7De9FVRQ7woOoahKXnjfUf0Fw7v1TwRrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UDydgizv; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUuJSQYa"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-309e54e469cso347006a91.1;
-        Mon, 26 May 2025 11:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748285211; x=1748890011; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Fof5SyO9Y1rauzqYmUz1Uops4LK2EJWd8S1VclhC/s=;
-        b=LUuJSQYarbLvnmOHx6ny7SUgyxD+1pVCIG4PLvF0YDNMlDyKexSjcoexFB3RD6j3cm
-         MKYVQ73Dc1pAB/HGuMv6JjY/xnog9msPrLq80skFQ2qajtjLZnzytgsy+1ogN3xPR6zK
-         NXhN0BH2zbrkO4IcytLtZbI31beIzWGyKevjsBdduDGoNAHsITO1H7l6IRZj68bKwWGl
-         vjM9Mj7ZmgjJcSDWKaxInzcuyHoHRlwYrQvq6PEoxf9w82bi7NRHYOAxlQG668YqPGYI
-         EycDJC/uXrxPGX9/4egoGuCiaSVjIMjeLS37kOSgDWN/Y3JlPwRT25JB0Flk6wi0ZWXC
-         EWTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748285211; x=1748890011;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Fof5SyO9Y1rauzqYmUz1Uops4LK2EJWd8S1VclhC/s=;
-        b=vIC1diWtoin2nSiTdPrzMHZpw/bcRSyYq155+AJ/ihlxafKpOA310zag6WXcws5xRq
-         A82bqfTTmCRzjWyS+BeLtH7mBtexIscxuxsrkYH5oMxjdp7ZDI5IaLpwv4SFECjd3BaJ
-         u8osFmCydnYtzlD6nfOpnY8GQ1gdXIkqdy9LpFPAnJtIYvEHgzcKLIzDOt+tbMon/Rcm
-         4IbawXiU8ISr+kXbRZWsQ4LJ3tl9EkS1rGpWm+LT8HIKGlGyYK64m+IFfaefnxvi3Qd8
-         EnrUVzI2V2xEnvmKCgCs0mPZE0n8xxAswxcftvz4kZERm6hmnAC3XUykXV93ajLI+lD5
-         RB7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzTt8wMYbYCqP6UWDCnGukuGyvuZ8wiNFUYO4IeCCHO9QFnn6QOT/vZISeQlSLHoGLK91+BEyGaNepvknJ/jU=@vger.kernel.org, AJvYcCXzZaHQMlA62WWJkg5rdH+iGQDlCLA/TcjmpZyYIzNVCGu4EwZN2Sjj49bH9JQ8aLffkOEpttiZODQsaos=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrwS3HAEBe69MaJo0lmmCdSez8opyokF2b7oHIVNc+Km3pzG1B
-	W6W+P9WbhuzyNo0JPqWt8mWgRs6RhwmKZD9Fl+eW7F8ubFQhUFOdYE4l/uMqvhDURO2EVgZFBnN
-	i8HCVy7p4melgSu+niVCPGwhlfb2gegQ=
-X-Gm-Gg: ASbGncs3OOB0AHBvKPfOiy55ZhMKjOy8WznXdg+qc21iz3EIBPvc+tjjWoGp5+aPwwr
-	8i1+fsLDqQiZKYyFq63kwX2noO+ZZso0MhwUpbtM38LkuOMWxJF3Ozh/GgAKJ8LLY5ScxZ2vOj6
-	qm5FUJXUp96Z2A0KdFusDeZmPW+3em+k5vzM4dIIBslpk=
-X-Google-Smtp-Source: AGHT+IFzl1m7HWc2fjOsnOSy6UjMQrC1VDyLJQxaAXZswGlaFWkZe5vYMzKYaAOh1/w1zUrRNpSoZXFmVO5YVBnHFBg=
-X-Received: by 2002:a17:90b:2250:b0:310:cfd2:bad5 with SMTP id
- 98e67ed59e1d1-3110efe16b1mr5997256a91.0.1748285211494; Mon, 26 May 2025
- 11:46:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UDydgizv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Sj87Za/iw31CvhVQt/q6ROhrTKLU0QPoaoZQ4SPAFIQ=; b=UDydgizvtNd6ngXdFh9zdV1+HH
+	bhbFzv78I2717nxvEhD2EQvTxSZDh9phVsdjIunoYFITsDNFZVBrpYi56PT55WwcsdQMLzk+D4TeN
+	FX47foL4z7ep3KTZ4vGYlhKTlA/bEXrBjflmrd4HI8RRlKncsgj4SOt9KHB5acJxoOJRM31btDVPE
+	oB+qag2VA+i0SEDqubaXz1Pe0E7ds91/duT4Ez0dX+EOC+g3iLPdJ12fH3NeU9B9nuMgljb4SrjOU
+	YMx0GtF3e5rC+eqiFwVsZGPxD0xFZDUTQ4BuDHpEW13GK5Ocg6Cv82s/yQR/lw9gs18N1lwuMX8m8
+	Q6hdDxKg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJcqj-00000001yCo-1ehx;
+	Mon, 26 May 2025 18:47:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E9AA5300472; Mon, 26 May 2025 20:47:00 +0200 (CEST)
+Date: Mon, 26 May 2025 20:47:00 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 52/62] objtool/klp: Introduce klp diff subcommand for
+ diffing object files
+Message-ID: <20250526184700.GS24938@noisy.programming.kicks-ass.net>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250525173450.853413-1-lossin@kernel.org>
-In-Reply-To: <20250525173450.853413-1-lossin@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 26 May 2025 20:46:38 +0200
-X-Gm-Features: AX0GCFu4Dw5twC8ejdBaxSvVXT5rnEG8M4cTShj0x4LieLkSWrUT9T53bN1Gpw8
-Message-ID: <CANiq72=G5w4D=c4U0KEQnRcy7vmARbWovmJwO3+vkyhixFinjw@mail.gmail.com>
-Subject: Re: [PATCH] rust: list: fix path of `assert_pinned!`
-To: Benno Lossin <lossin@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
-	Xiangfei Ding <dingxiangfei2009@gmail.com>, stable@kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6ffe58daf771670a6732fd0f741ca83b19ee253.1746821544.git.jpoimboe@kernel.org>
 
-On Sun, May 25, 2025 at 7:34=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> Commit dbd5058ba60c ("rust: make pin-init its own crate") moved all
-> items from pin-init into the pin-init crate, including the
-> `assert_pinned!` macro.
->
-> Thus fix the path.
->
-> This occurrence was missed in that commit, since it has no current
-> users, although binder does.
->
-> Cc: stable@kernel.org # I haven't found the commit in stable yet, but jus=
-t to be sure.
-> Fixes: dbd5058ba60c ("rust: make pin-init its own crate")
-> Signed-off-by: Benno Lossin <lossin@kernel.org>
+On Fri, May 09, 2025 at 01:17:16PM -0700, Josh Poimboeuf wrote:
+> +#define SEC_NAME_LEN		512
+>  #define SYM_NAME_LEN		512
+>  
 
-Applied to `rust-next` -- thanks!
+> +static int validate_ffunction_fdata_sections(struct elf *elf)
+> +{
+> +	struct symbol *sym;
+> +	bool found_text = false, found_data = false;
+> +
+> +	for_each_sym(elf, sym) {
+> +		char sec_name[SEC_NAME_LEN];
+> +
+> +		if (!found_text && is_func_sym(sym)) {
+> +			snprintf(sec_name, SEC_NAME_LEN, ".text.%s", sym->name);
 
-    [ Reworded slightly as discussed in the list. - Miguel ]
+So given SYM_NAME_LEN is 512, this SEC_NAME_LEN should be at least 6
+more, no?
 
-The commit is in v6.15 (rather than just in e.g. rust-next), so it
-should indeed have the Cc: stable (I removed the suffix).
-
-Thanks!
-
-Cheers,
-Miguel
+> +			if (!strcmp(sym->sec->name, sec_name))
+> +				found_text = true;
+> +		}
+> +
+> +		if (!found_data && is_object_sym(sym)) {
+> +			snprintf(sec_name, SEC_NAME_LEN, ".data.%s", sym->name);
+> +			if (!strcmp(sym->sec->name, sec_name))
+> +				found_data = true;
+> +		}
+> +
+> +		if (found_text && found_data)
+> +			return 0;
+> +	}
+> +
+> +	ERROR("changed object '%s' not built with -ffunction-sections and -fdata-sections", elf->name);
+> +	return -1;
+> +}
