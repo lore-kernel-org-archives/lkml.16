@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561C220010C
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06FB20298E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748264245; cv=none; b=MWkX5SeTgGvGPHdkmFZeJbC3XC0r9jrANBE2qzU32Qbifab4ZtfiOWqPf7T69ukQ3V6wgJ26hj2QHKZYom+8j1k2B8kZpTp8/D9I1spz/bVhc1/NIUavz+usa4JB+38dxPvH1IgMLE3MbP0fQbmwHpA34dHWKlIf8SfeOjGZJF8=
+	t=1748264283; cv=none; b=KZSo7fVmXW+ceG664TFbqmVzKJLh8mN9QOlImED45akMootCxeaGnyKpUOc09dmNfEOvvLjnc4riMk3m/iaBp7+n4a9pig7PIppgn46j14MN/aj9M4/h5pwWF8cGxggUVHKhyDHQZZlursoGmz0bTD2IFsaqRYrxwWeAYXlTN1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748264245; c=relaxed/simple;
-	bh=n4huyPMO4/X42xZu+9qZoHMd+IX7dk0uovDPy4AF9To=;
+	s=arc-20240116; t=1748264283; c=relaxed/simple;
+	bh=BAtTg1IAz2Pq4xa5WP5MKDboCtbXwFTv3JIyx9SvTNQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KvbTDl3L/4mNgOui9KUku9YxM94Ue1NRF/SzKp8GkbGLeI2eCryZ3fQnBdfkwBWjAomHjKf9YOitU7jtlt/u4PSfMmgORlfmkHQZJjuAydhrZUybwUrNlBNHRcCLbc/A5Znx6ZS4dPcfmmolqvDjor9iqwiyKf8dTGr1Nn1JcjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mk39sru+; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=eGjB9ZiCxWxUlUAYpOl/sq1CpxaLi1h8YOeazyfoVvECH3fQgtuU2nb/kMFJ02MsdfZ9ZEEpvP/O556wsanVF95Yna1oTZdasB8WF9VCqtuxyklGpZ01vVazAAx2k31xr5UHkERHBUua+xz9kVEOvNE2WlBH3jr3V1Aw8VYcMfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gwttz2mu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mk39sru+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gwttz2mu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748264242;
+	s=mimecast20190719; t=1748264280;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WL+ruCNUWwEKdiiLFkuRLW2VoKFDdxUqIK4QLCM8Sgg=;
-	b=Mk39sru+yaa9oXrrKuhWMY/IrD8D3thG7Bru+Fy27jZTtZs/7p+of3QqHPF9XZ39ol9Kkt
-	cdj3wTMwGbBfUiNvBpftx6P7fLWmYGMidDdeRdJJKdqE19xWGVWraedNv5fj9/IIAf5/gX
-	zRY2UqkbrPnqUShlQ+1edelauyt8gy8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=pWIfCfk8Tmt/gpieQtOyE1YH2gioYRnHCPB+QvtRvzo=;
+	b=gwttz2muk5+fkd+lzB9ASIGj6XpRQlgqfKrT5zGZkE3KoS4xLucCFVHe0Hs9u0Mo06wUxE
+	bLEgrGhq5V2edFMXxhk2Df3h919zPaIWJn7d984qu5/CGZbPnmeT5xzLrU8xxCoiZYOmgW
+	/edv2eZhxsl1pSPcDnmMDsmSAueAAxk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-613--WToRrkQO-2sjHuuelOo2w-1; Mon, 26 May 2025 08:57:21 -0400
-X-MC-Unique: -WToRrkQO-2sjHuuelOo2w-1
-X-Mimecast-MFC-AGG-ID: -WToRrkQO-2sjHuuelOo2w_1748264240
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442ffaa7dbeso16476245e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:57:20 -0700 (PDT)
+ us-mta-650-oedFx6PxO3igQaTZC1zbHg-1; Mon, 26 May 2025 08:57:57 -0400
+X-MC-Unique: oedFx6PxO3igQaTZC1zbHg-1
+X-Mimecast-MFC-AGG-ID: oedFx6PxO3igQaTZC1zbHg_1748264276
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a3561206b3so890017f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:57:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748264240; x=1748869040;
+        d=1e100.net; s=20230601; t=1748264276; x=1748869076;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=WL+ruCNUWwEKdiiLFkuRLW2VoKFDdxUqIK4QLCM8Sgg=;
-        b=ZoZTw62SC9DtT2IacC8ukUnvs5JWQ6l/cJeS4NB9gUd4DDHRtxi1TSfxbzhAfhNjfJ
-         K8r3F7sXKLB5e4Cw7yhZt0H6Cm752xyw7R1Z8lShHG79XB3+xjiwgeDu+9H6je4dB4Jp
-         qLSHuJLquevyvSkBeaVFrVlcuFtAO3jbo0vqK/h4A4M+ltH5AowquUiwuH14SfIWoOKF
-         FdOBULy1NPiY4lUtNnRseh0KG7+rpwZWmwkHlReOCGjyKVXtXAZVUA1zeabgkT/1vTu7
-         p5MdgdpZ5UuSrReOnbhFL6klyLBiqAuZfOMjNjjTY8EcOesWhntDAcofS9VgHnNYVcpT
-         p6Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjRg0fxRvRj+uTzky3qg58Ama1phswWNMliQudUlxIuWtPvWHAQDxrsk1OJgMVaTVoJtBkZ+M9YX2oQmU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz9Cvp+vNIpnfBI8ocQjygd1LSVIk+3RSC9zKsfUXSavJQdhBU
-	B0eNxFX6/qrb6k+guDdmMIaaPqcxtSMGjtN/cZ2FH7aDEivqmbICuZ2kr5hkg16ZrKdoiugIIiy
-	498SOPAbtntF3fNMS2GrZ3eDa7+gO8jWRhll08ARsI/nwXtdIspW1OeQPrhxrSjWKvg==
-X-Gm-Gg: ASbGncvHtLGM6aI/BS0XKxbR7UEAM2zSmPq5306oQTfW1LvTzhhWQCNjraLC3uyIvV6
-	1rit6dClKW69Zyi8x7y4anlj+5Y77ryyflwHVivInEeOnMsljUYPbRHavJwdCdHxuusfpfnaQPB
-	SUKXclDtuPI2pfYKDYv12zLPgnhYeRHXKhzOX/BgHQPq6xBxM74htzXBPMOltMglr5+3r0VjhDv
-	NlsT5HlSefIYhjZSEB6j9LeV88FX8EKrYQ0rsVCzlE6R40laz4e/jR9Ec7frt+lrqaCDr4Cypoe
-	ijKv62AKaidMvgdsSlrsAqN6+m5KhTueQtsAveAcyYRIB8RkdqwoSmOO61WEE7MwP6Bm0K8E5VV
-	Gupe7TUttAMy7Kjq+LWh7tvmaFzomofNHig029xA=
-X-Received: by 2002:a05:600c:64c5:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-44c935dbb26mr88081775e9.30.1748264239761;
-        Mon, 26 May 2025 05:57:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGsj2yVg6GQyvPIsfBqR6TicSZOd6Jk+h3Evd8KqH3QryvnfOsfvZJ4MBvT1e9QXcVH65VfsQ==
-X-Received: by 2002:a05:600c:64c5:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-44c935dbb26mr88081405e9.30.1748264239355;
-        Mon, 26 May 2025 05:57:19 -0700 (PDT)
+        bh=pWIfCfk8Tmt/gpieQtOyE1YH2gioYRnHCPB+QvtRvzo=;
+        b=NhkWwhIeBlOAeCbLnMRaNfH2iTSm3Zg3/usglWvcQ5ORoZ4eckm6UedT7nyLBhAYGf
+         edpA/NIMuCjAoNR0eozL0bXgQ6r3UPyNFvKjP44TdXf2457lbX6Q0hGm7sLO0ZMj9j6s
+         F1GNthqg/UDnoPm4WrHsK0/VN8ocMBW57UKp3Oa/ylApF02pBL3mqMKG0sUbbusmsN4U
+         JsKjJAN1ZClBuOwQISYug6/YDip/DvvMA+P1hus9tXswdSyNDkCmQNV/FHkEK6uxfSG9
+         iBYuKQdheE70oZcjVOG5Ntb8UxPHzWWcJCB30LwNZypJr/7n+xQIuLVrtR0amBdEJ38/
+         /caQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWx+gp7Ou9ouaf6mpxDtMgIy4ABvELtdBZzmvtZjQlVoA8otx/7MAPbvcv6vpZmx3Zdx1NL0LDzaYZ1sig=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAn658jIfRcazzTksP3zIkIAHvI8aMLdWccwj8Ej0A7Z+f6OEW
+	DXXnafy7qwiVybH7L4nM2AiJZKdcVnZNFQLk8I1NMa9+lGC8GAGupLogo00kmg6rUUlxrNQ7X9h
+	rKX/nt5UT87niDffnymA0i2QpP9BcJAOlXOdllhmCpCaJABLVadP4H+iStntIqtkUgw==
+X-Gm-Gg: ASbGncvxt82Uj4XpU60RSEVYt24hlHq6pJXSfY0ckOsNTk7bCh2+KVuY9BZJCl6R4vO
+	rX+aY0+FD9DtMihAcnRWJxHmOMEi41445gKD3EeSjUs9q/gFLbT7uEtPbsquay4600zdXxc4/kP
+	nZmlt9wTXaDq2+zj7Yg1yKZKhBs6HlM/Pt2Pcy8P8HhzW4JIqw/D7D4NruKcl0M8yOKLDY3D/xz
+	OUn6abj/frmcrLWAXWdIN5GM7c/Rv0Qv6oTgyIfjo/7r5a2gYt82BdCsoHNvzlQHahN905A4znv
+	FaB2nHlt9asXnOzpVA9Cs/i5auWgsgB/Hh/EK4Dsl7vr6fPV5/0LQl+jzVkJYE7i01HTBUkuXmm
+	d55160SD/toEcZOuHRQb7b+NjAM/hhq0W4jJLAK8=
+X-Received: by 2002:a05:6000:4203:b0:3a3:648e:17da with SMTP id ffacd0b85a97d-3a4cb449628mr6930393f8f.7.1748264275882;
+        Mon, 26 May 2025 05:57:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGjHzgu2wHsQTTM5XNjk6hrAMmOf9m3x1GeSPiXUCnbdAfJ+yu2Z2J7ENby+z8F/q3Gqcf27A==
+X-Received: by 2002:a05:6000:4203:b0:3a3:648e:17da with SMTP id ffacd0b85a97d-3a4cb449628mr6930371f8f.7.1748264275515;
+        Mon, 26 May 2025 05:57:55 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f19:6500:e1c1:8216:4c25:efe4? (p200300d82f196500e1c182164c25efe4.dip0.t-ipconnect.de. [2003:d8:2f19:6500:e1c1:8216:4c25:efe4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78b2f19sm232109465e9.32.2025.05.26.05.57.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f0554fsm234468685e9.9.2025.05.26.05.57.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 05:57:18 -0700 (PDT)
-Message-ID: <955fd396-10b1-48cb-977d-74f3e158b1cd@redhat.com>
-Date: Mon, 26 May 2025 14:57:17 +0200
+        Mon, 26 May 2025 05:57:55 -0700 (PDT)
+Message-ID: <a360912b-4d07-47ce-bdaf-7125fc020e65@redhat.com>
+Date: Mon, 26 May 2025 14:57:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,27 +75,12 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
- linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>,
- Usama Arif <usamaarif642@gmail.com>
-References: <7tzfy4mmbo2utodqr5clk24mcawef5l2gwrgmnp5jmqxmhkpav@jpzaaoys6jro>
- <5604190c-3309-4cb8-b746-2301615d933c@lucifer.local>
- <uxhvhja5igs5cau7tomk56wit65lh7ooq7i5xsdzyqsv5ikavm@kiwe26ioxl3t>
- <e8c459cb-c8b8-4c34-8f94-c8918bef582f@lucifer.local>
- <226owobtknee4iirb7sdm3hs26u4nvytdugxgxtz23kcrx6tzg@nryescaj266u>
- <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
- <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
- <e4d9dd63-5000-4939-b09c-c322d41a9d70@lucifer.local>
- <x6uzxhwrgamet2ftqtgzxcg7osnw62rcv4eym52nr4l6awsqgt@qivrdfpguaop>
- <9433c2d6-200c-4320-80f3-840ca5e66f64@redhat.com>
- <uhla5o5xqshcrihc5gpkqqyoplj7hxrbptp6prmwd2mh3ikw4m@m6apbkyfny6c>
+Subject: Re: [PATCH] selftests/mm: Deduplicate test names in madv_populate
+To: Mark Brown <broonie@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250522-selftests-mm-madv-populate-dedupe-v1-1-fd1dedd79b4b@kernel.org>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -143,89 +128,21 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <uhla5o5xqshcrihc5gpkqqyoplj7hxrbptp6prmwd2mh3ikw4m@m6apbkyfny6c>
+In-Reply-To: <20250522-selftests-mm-madv-populate-dedupe-v1-1-fd1dedd79b4b@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
->>
->> To summarize my current view:
->>
->> 1) ebpf: most people are are not a fan of that, and I agree, at least
->>     for this purpose. If we were talking about making better *placement*
->>     decisions using epbf, it would be a different story.
+On 22.05.25 18:29, Mark Brown wrote:
+> The madv_populate selftest has some repetitive code for several different
+> cases that it covers, included repeated test names used in ksft_test_result()
+> reports. This causes problems for automation, the test name is used to both
+> track the test between runs and distinguish between multiple tests within
+> the same run. Fix this by tweaking the messages with duplication to be more
+> specific about the contexts they're in.
 > 
->  From placement decisions, do you mean placement between memory
-> tiers/nodes or something else?
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-More like: which size to place, but it could be extended to other 
-policies, maybe.
-
-Assume we have a page fault and have to decide which size to place.
-
-For a process that we really want to use THPs (VM_HUEPAGE?), we could 
-use the largest free folio possible.
-
-For a process that we don't want to spend valuable THPs on (VM_HUEPAGE 
-not set?), we could use the smallest free folio possible.
-
-Such a possibly might be encoded in an ebpf program I assume.
-
-The hints (prioritize regions/processes, deprioritize 
-regions/processes), such as VM_HUGEPAGE, inputs into such a program.
-> 
->>
->> 2) prctl(): the unloved child, and I can understand why. Maybe now is
->>     the right time to stop adding new MM things that feel weird in there.
->>     Maybe we should already have done that with the KSM toggle (guess who
->>     was involved in that ;) ).
-> 
-> At the moment systemd is the user I know of and I think it would very
-> easy to migrate it to whatever new thing we decide here.
-
-Agreed.
-
-> 
->>
->> 3) process_madvise(): I think it's an interesting extension, but
->>     probably we should just have something that applies to the whole
->>     address space naturally. At least my take for now.
->>
->> 4) new syscall: worth exploring how it would look. I'm especially
->>     interested in flag options (e.g., SET_DEFAULT_EXEC) and how we could
->>     make them only apply to selected controls.
-> 
-> Were there any previous discussion on SET_DEFAULT_EXEC? First time I am
-> hearing about it.
-
-I think it evolved in the discussion here from PMADV_SET_FORK_EXEC_DEFAULT.
-
-> 
-> Overall I agree with your assessment and thus I was requesting to at
-> least discuss the new syscall option as well.
-
-Yes.
-
-I am still not sure if having a new "process" [1] mode would be a 
-reasonable alternative to setting the VM_HUGEPAGE/VM_NOHUGEPAGE default. 
-Assuming we would have a "process" mode, we could (a) set the policy 
-per-process using the new syscall we discuss here, and options to (B) 
-set the policy to use for the exec child and (c) maybe an option to seal 
-the policy (depending on who is allowed to set the policy in the first 
-place).
-
-On the + side, we don't lose hints/instructions from the app 
-(VM_HUGEPAGE/VM_NOHUGEPAGE) when changing the policy on an already 
-running process.
-
-The problem I see with the "process" policy is that people might want 
-different "default" policies for processes, which means that we will 
-have to add yet another toggle.
-
-
-How I hate THP toggles. :)
-
-[1] 
-https://lore.kernel.org/all/CALOAHbB-KQ4+z-Lupv7RcxArfjX7qtWcrboMDdT4LdpoTXOMyw@mail.gmail.com/
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
