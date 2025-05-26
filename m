@@ -1,67 +1,67 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040FC4204E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4B41DF99C
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245776; cv=none; b=OJrNbAhL96My1YmUMeUWF1gk1t1UJzTjl0ftPzmlq92o2fSMR/s6YlprY6hgmGg1H+ym3+moPYWwhXQ+GUPpKPH0KKr/PYBRK5Rh+EIHEo5niGhrjiO2utheXniXu51sH2f76WycRP23WAdVrXoq6mpz8KZ/XyKXRnPTQEJM8zU=
+	t=1748245795; cv=none; b=gbADfZDSYU2SVwTxidZ9V+FX6WaWO+XU9q63dQzRNvQk+VX2TDNfj3T7dRrbZv/AP3ExFdL89jUFEaC10pTrV8MKHZilaUKtNDWromPBL6Xz7gXdrpQmd7pU/YWQvgjpw+sx2fECaVSBoNoqdmbbIXqsL9C9EcWcuntzNmKLeXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245776; c=relaxed/simple;
-	bh=uc3i1WhQUUkwMMY3yQUDHZw1NsQvbmjAnwg2hbLg+iM=;
+	s=arc-20240116; t=1748245795; c=relaxed/simple;
+	bh=r3tw+ci1cJWQMLJ1vCQPJY06Tj5BfzJgIqNFwcTNgYU=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cxzVJHXcudQXmI0+0Jm0iX26Os7nQroNzPsG6inqld3F6zpB6/kxY504xpmwe5EaP+OXmOBODiZUGBWBbi5RTwI1SK+SnJNuTlkj2wH83pSOaScRe4oqUY7aydxX3Zu0esQNw9mKjDKeDsn+a0I/sShBVuFeTlX+4pRd9K4eoNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EVdIdi4d; arc=none smtp.client-ip=209.85.221.53
+	 In-Reply-To:Content-Type; b=On0PzRsxEumYaa/b5+LpgutCJyUMerfM442r8I/SFhziAqPeLJ4ghQQHyXiEnJtgbynycyZTd/gBPufOz0VD9+G7e2KbHcqPcqoBUOBHLH1fKRKZ5qnZimpZglatDBsx8sJs+FvfC3lJqnjT35fqnnfty7AlZ2nJPfEL6MazOhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tLZ5Fe33; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EVdIdi4d"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a36748920cso2003210f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:49:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLZ5Fe33"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0618746bso14783985e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748245773; x=1748850573; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748245791; x=1748850591; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uRUTU1NetmsFrFoWWpkcXRiBW9YN8yoQeAXDLuhOFNA=;
-        b=EVdIdi4daG46f9BEnoSfwURVvnssscycbCog2FpCUcEnLOQmGYQY8jKfEcYQJ0lzP8
-         S4Vglb++P8sChNb9xjE77E1VcEiPHGXTjrVYhHcRMDfFW+RltMuq8jIvwtBQ3FE6hww1
-         gOzCXtZx6cVvjvjs1QC1a1liN7FDQQTtma6u7RVZA9Vrwfbz5rw5bJcDkxHczU0x2/Zf
-         adMwBnEWEDUJXmULprBfegLuPSKC+hRV4euQCmnVLd3WDUJ74g6883ci1A5BWo0duF8O
-         z83UPIXI5hRcEeOKrmzQ6jdOShMt3YwoN60Kiah3RE0PmTnNH2eoqgbc0pL2EKBtKYOI
-         gVmg==
+        bh=AOJrJ+WcHdALj8ZK6IlDndbV9NrPe74V0z2ftU80FfI=;
+        b=tLZ5Fe33YakRn9EcbenC1hWV17KYJ3ZaUiozjJjuFgUv5yQHgJsKtXQbdKtVlgkCI5
+         Rrh6c7AMJmonTOLsRx7/oeOnRDk3U+hCnqnTN0abf+F058dOc8rjsp3MY/WTnItCtNeA
+         HY2mLU2/BthjgI8xrmY3A7iQNCw+JvCbR/+3g5Dfyhvczi1sMLKLFElWgOt6Pxw0JsVP
+         9Yp+liNrWy40u7KG3Xw6a+kR7qZJVyCSjwC9xWKzkSo+k1tIjslhr+QnkAkHI27zOskN
+         523cDvbNc8GMJWkSMDQGEyjydrbmjhD3bz67Gsy5H6YyhrDQ3q/+a+5JMbApD5XrgLno
+         tEDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748245773; x=1748850573;
+        d=1e100.net; s=20230601; t=1748245791; x=1748850591;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=uRUTU1NetmsFrFoWWpkcXRiBW9YN8yoQeAXDLuhOFNA=;
-        b=Xi3TqYMGPrMs5j8qYZaICcBFAzi4xRRwZl6ky5HgUUOr/fEuOXQBvskEEdN6wOCBkQ
-         swHMOllajJPIvd/sfzYioAWExdjEQxs8gV0TdLy97C/f2IVJizQDbEwhQToCp0Fe7344
-         qLcdjCGxr87GXduTLMuXDG3ySXYV1xAbqlDt4/2SNVKQMp6LxDV9k71yWXONn3ykD36g
-         dv77cq2cyUt/QSh6sksVLFBOFHsUWoeG0DUPkWxawZBATW1GbccPRjHWtM51GAqwhw8P
-         nzI8aSUBpq8smVXVarupAD7V0mIr2SmuE9hmTi/aOujRJU80rZUSeWV6o6VoOGo5wXEu
-         rMvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1kXsfwm4P7ZpKIcLCasAD0Ky3zIfTfe/mwda6aOsMSz2NbBEOkv9rq60APKHuw9r8w5m/yuTz0NzW3hw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ3TU9HokTr5Yi6P7/lmzE3tyFzW8x1vVr22GzR2H9TJvhPowI
-	J3nJ6EEOS20qvRIEvjc8kNuRIVPY7ALH+AjX71pPK50FoNXO2scYw1g/mE1V+gg0otM=
-X-Gm-Gg: ASbGncusaZ3HqISvYw859RCvq1ko3HbFoZTq9x0sBwcLUS2BQhkWZLGaaIS1zyaouT5
-	Y40nJv6vhwF92UBQiQUzLALBf8h5rsJrw8JBf5BU1fP/2jsVaGgqXPGUfFwDboXo6Ham7n8xSkK
-	+GQ7pQd8H52Kmq5itklM6Af4w83YV+AHvIMq2WtLclnX3ck1XcYHvLq3qQ/cwmDSlfRRhopMqFV
-	kL/Imn1De//c37AhY8uWWwTJ2r1yO0gpVdCGxxwSawJ6cMbBQyEMWHVJK4eE6qpkYUkPdQx9aeo
-	SduA+cwdeHLGWFOs7tkoOJREofFUEKgnKjFtYsHv3TzxM4pAwXLnsdbhTvWEMZ+60ImChkrtUdQ
-	+eGuPRQkcrC7plXMGaBmhynCoG1su
-X-Google-Smtp-Source: AGHT+IGY0fzSwOzvu/t5G721cP6pa2lSOTELMsSGevJGpoz3wocXRKDBG0SQoxtENkHGJLPrEEcAkg==
-X-Received: by 2002:a05:6000:258a:b0:39c:30cd:352c with SMTP id ffacd0b85a97d-3a4cb43dbe5mr6053731f8f.8.1748245773190;
-        Mon, 26 May 2025 00:49:33 -0700 (PDT)
+        bh=AOJrJ+WcHdALj8ZK6IlDndbV9NrPe74V0z2ftU80FfI=;
+        b=IZ0qjizc7km4Erp3ng/YK8PP6Mvo7rrHMIJlmenpwWBi14/Kvqgp+PdteV5l1A01LW
+         WVNnfh2BpSXxTunvrMTGcL3S5Xdgq0GuvzTJOU+t/Q/RG8RPSlaSJq0lr/6JlQBixM6l
+         zUs+NY3piW8RqHgzc/chyo3EwxWLWDruvstM0QCyOzkSDeOFKksz0Jqv2x95lMbr8UOv
+         eUAN1w3Y2MHstehp/Pc9K/m5A/oUIajrk6i5Y/zGrBQ/ucAn25/AFu5DVwYMtnO5QD6w
+         J9yYt3EJ65wyxBqAtYslh7NxAFBggna5vNkMBBev2/rcO2r8w3jHKoME+XohQz6WgRRW
+         R1Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcq2VQB+mlI3X8i7wyryum83NKZmkp0mMv8GB7/PvF77B6PN7u03PUVBxNlVevTwhIhIMNfCg2J5c6eIA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGVfci0TGGdf1c7o41ZgBS/VfYwYQIPK7temDBKXUKgbz4hO43
+	HV4X2KLnO/11NTYEef/ONCttBFQD1Wa6WCeJUJS4yB0NHGOxeBJ/+d9ZZAD6bjOoABk=
+X-Gm-Gg: ASbGnctaCpZK12mAi4TSx3fsDcbyBmypPL+vEaGSvmaoGfDd4/iGU+CWmxq0n18zptL
+	3nUztJE+6WkC5zO/LXsSb8Awonj0yby467KlYxVJ/U3jDwezPkYBmo9/iQTtpUpBnNp3Hz07IdS
+	1103vb7ArpCaEIxUn/Fp+SFeZJBkyFflSUHHYUBiikk3G3UUXCZ9O9eqezOV/kA/HUc+3nmZYmj
+	aZeloz7NGcpFW4tVvXIXi7Nehos3VrUDh+aXk5pHQWM/5R3Ixzk7y0u0gv7DGYl0cLsZvoqabr2
+	OR2tIi60ar6mdlxAxD91JgjuwTKRlZmcxlt8MQazYl/gVYMqEIgbYcE4m+zhytk1seVWo5rymZl
+	WPRDadtjqG4WFs32+vI+HK1De6qRc
+X-Google-Smtp-Source: AGHT+IE2QRNyeWAqbbRxvo9gVKikVL04vtydrrHrGM1Z/4U24oHBwqOt7h8xJ1Ql9nYZOS5KSXuQDQ==
+X-Received: by 2002:a05:6000:26ce:b0:3a4:db49:94ad with SMTP id ffacd0b85a97d-3a4db4996bemr1006829f8f.13.1748245791552;
+        Mon, 26 May 2025 00:49:51 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb7fsm224254685e9.26.2025.05.26.00.49.32
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0b20sm234954645e9.14.2025.05.26.00.49.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 00:49:32 -0700 (PDT)
-Message-ID: <848ada30-37d7-4890-834a-4de91b215ff0@linaro.org>
-Date: Mon, 26 May 2025 09:49:32 +0200
+        Mon, 26 May 2025 00:49:51 -0700 (PDT)
+Message-ID: <6e2d7c7e-9464-4936-a738-5caf1a363125@linaro.org>
+Date: Mon, 26 May 2025 09:49:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,17 +69,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
+From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 2/7] phy: phy-snps-eusb2: fix repeater imbalance on
- phy_init() failure
+Subject: Re: [PATCH 3/7] phy: phy-snps-eusb2: rename phy_init() clock error
+ label
 To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>
 Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
  Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Abel Vesa <abel.vesa@linaro.org>, linux-phy@lists.infradead.org,
  linux-kernel@vger.kernel.org
 References: <20250523084839.11015-1-johan+linaro@kernel.org>
- <20250523084839.11015-3-johan+linaro@kernel.org>
+ <20250523084839.11015-4-johan+linaro@kernel.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -106,43 +106,51 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250523084839.11015-3-johan+linaro@kernel.org>
+In-Reply-To: <20250523084839.11015-4-johan+linaro@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 23/05/2025 10:48, Johan Hovold wrote:
-> Make sure to disable the repeater PHY also on phy_init() failure.
+> Rename the clock error label which is now used to disable all clocks and
+> not just the ref clock on phy_init() errors.
 > 
-> Fixes: 3584f6392f09 ("phy: qcom: phy-qcom-snps-eusb2: Add support for eUSB2 repeater")
-> Cc: Abel Vesa <abel.vesa@linaro.org>
-> Cc: Neil Armstrong <neil.armstrong@linaro.org>
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->   drivers/phy/phy-snps-eusb2.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+>   drivers/phy/phy-snps-eusb2.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
 > diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
-> index 19af3f99692c..a799c3d2bcfb 100644
+> index a799c3d2bcfb..c8f14f8fb9ac 100644
 > --- a/drivers/phy/phy-snps-eusb2.c
 > +++ b/drivers/phy/phy-snps-eusb2.c
-> @@ -468,7 +468,7 @@ static int snps_eusb2_hsphy_init(struct phy *p)
->   	ret = clk_bulk_prepare_enable(phy->data->num_clks, phy->clks);
+> @@ -474,7 +474,7 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+>   	ret = reset_control_assert(phy->phy_reset);
 >   	if (ret) {
->   		dev_err(&p->dev, "failed to enable ref clock, %d\n", ret);
-> -		goto disable_vreg;
-> +		goto exit_repeater;
+>   		dev_err(&p->dev, "failed to assert phy_reset, %d\n", ret);
+> -		goto disable_ref_clk;
+> +		goto disable_clks;
 >   	}
 >   
->   	ret = reset_control_assert(phy->phy_reset);
-> @@ -493,7 +493,8 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+>   	usleep_range(100, 150);
+> @@ -482,16 +482,16 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+>   	ret = reset_control_deassert(phy->phy_reset);
+>   	if (ret) {
+>   		dev_err(&p->dev, "failed to de-assert phy_reset, %d\n", ret);
+> -		goto disable_ref_clk;
+> +		goto disable_clks;
+>   	}
 >   
->   disable_ref_clk:
+>   	ret = phy->data->phy_init(p);
+>   	if (ret)
+> -		goto disable_ref_clk;
+> +		goto disable_clks;
+>   
+>   	return 0;
+>   
+> -disable_ref_clk:
+> +disable_clks:
 >   	clk_bulk_disable_unprepare(phy->data->num_clks, phy->clks);
-> -
-> +exit_repeater:
-> +	phy_exit(phy->repeater);
->   disable_vreg:
->   	regulator_bulk_disable(ARRAY_SIZE(phy->vregs), phy->vregs);
->   
+>   exit_repeater:
+>   	phy_exit(phy->repeater);
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
