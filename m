@@ -1,153 +1,165 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C961F9F70
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541613C465
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748268261; cv=none; b=ioN6OXQ4wZKSxlCDxVCwM6FYwunQBkxZmR9ThEKpCLKpQGH9oZ3W0/jIPnre7DQs+49t+Qz+dP9ng9BCEZNsnrED/Nzg0Z42w7L0SOMPK/UovG8akYQJ1R6Fs2S9MhUIv27L8iv43pv/o2ZDTPHBVubjerAYCZHMUJhePitnU9A=
+	t=1748268365; cv=none; b=RI7J7/XW+XZqugDwjM5wIZc0Xd4KSOuvnWbt0670t5OH/95QfmPk3d5ZKG5HQAMyF1ugsizO74ZwRJOHZwh9fM1K9lpTgk6lI9Lv4ArHS6V/vAnuboD6DliTvvjtJ6dHUn5mXtKV91mf2l9wU96/m+CJ8/36CLLpth3FdsonvuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748268261; c=relaxed/simple;
-	bh=ph8IzBD5aYSKzdcePSSh//PMBD+pbdghPU0Swt3H/Zk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NabGjo/R8mLfUjl8eZlxwCA6CATst7IRdBBKTnh9tuccCZwLmr2DmN43ngvFV9LM3KVLGy4aJx9PJmpPFaCgVHGEBMAqc6DTb9p/XUogdZmrU0VPcLh0ElEvkyeJvx3nDu7mlko43TXDsvI++KWaL5AIZPTU1yZzIcdAl2YV2j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GUPFIERq; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748268365; c=relaxed/simple;
+	bh=KzhaOxqOJsWeZIeq7vo6rI0JW45k0M6z2V5NAlTmR0s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KpMsDOdW87HDaAO7i+Mf+87VK+TpJsU58WvjU4EriIiUqIdTu8HbvQyUQknne+puII3MlLnhe2D2Nh0OobDcIzmKfVXDKf+4ngKfTD1b657tknsmeZcUVFN1uh83ySfztNJNiJqZKI2iZEOEdN6bFYzm+gE0JXvReQrWwJmr3hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=geZPHyLb; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GUPFIERq"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553233211d3so1280259e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748268257; x=1748873057; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=q1BjnRhRn4veSe+cpc/v/4Q+Md2q5st6ZbxmQhpMa2c=;
-        b=GUPFIERqLhXLs+okbqDlb2SOXmr/53DWthFwVAzdsBqMObLY+1KXjdrv8GJJG8qgOc
-         oIkHp3dtk8z7rHvIRxQk0NPhxxYzHB6AH2SdQ7ZqY69zI4rMvRVEaNNShfjC9xfBaRTZ
-         aE9vt4C/9jIiqkCk5c7jCkxjfVU8SJebavCM8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748268257; x=1748873057;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q1BjnRhRn4veSe+cpc/v/4Q+Md2q5st6ZbxmQhpMa2c=;
-        b=RXY81FLeYeXvFaKbQ4E+pVAfCFpPoN/PpDPk8t/P1EvdiS8mmmHYMGiHVZO3TFJkGC
-         DniXLHrKM67SwxiHA0c13VfEEzkhx26k881iE73KX8c/wCUoPOSTTXuacsooupE1h+B3
-         7Rlhgc0y562/5PZfj8qXciHrJchL7spaGmisceqAzvRe1UH9geQgFvv2Ilmw9Ewkbhp5
-         Mof5DtLR2CgzqBcZtk3Q/YVSf///9ZQ6NAsKeIJHH4ocpOfKFbAArBZ7K4Q7+3pSnI6R
-         Ym7hSlHRvZKAZTqqsGgKGIWUZ6a5gAaSVKU7HJ2g7UC2B/vC6ntHDxg2RfPVY/5v0FZL
-         3xFA==
-X-Forwarded-Encrypted: i=1; AJvYcCX2zN3a7S1c8aVpIbGHrS/2CCOqegBMT0OR5V6dTrbc9vxeHdu4xGKwKjY3aHacdiBPx58JfdiZObFD3zk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHEPd7VJWUd+sqHEqy14nRKiU+8ruSPHyY0GOKOz284UlYbECF
-	pFR3HbUP8u2HXEXej4WHe5bXBhkJEY3NBAnBOhAmDekRlAFyB08P/a3NL3gVPWTM/tOBsAGrdfm
-	JV0k=
-X-Gm-Gg: ASbGncvbBMV5Ovv7lbJ4LK+J+ckjI/egICeKJgiMJbsX+CXbJM493R0zzOJ5AeiFqsy
-	HldnWFMeaAHXmGImU0YWzwLln3bGb//4+VVhISlFAr9mjV9nYYk3ztKrdf8Rrp/llQUPk/E9lvf
-	7HnWHOPvxrn446P767ZRj2SGoFnSy4QNtNcLBAkOeN19Qurcdh0SynWDHzzlBDg6l0lai/MISJF
-	l1/L1ha2yc1l59b5FrSQ091ZPfTY1MQiZQHdTUJGVx02zC/wxYJZkWUwxGs8v02DUeubnif98Q8
-	O/QjcokhSs0kTjM2SAU50kcanTZHKDgOsiIR3TKeTCBBh/Suwb4hy28emFMgCqsCSFXh751gmYR
-	W1UBWoLZPi85X9xyOklQQNuD3
-X-Google-Smtp-Source: AGHT+IEK2kRv6oBDNGjiYqc05uf9S1lwTiczdPWQx1CvBB8lZB3PwL0xasTieI1twsXOsKaQgsg6CQ==
-X-Received: by 2002:a2e:9a15:0:b0:32a:6994:59f0 with SMTP id 38308e7fff4ca-32a69945decmr2415381fa.14.1748268257263;
-        Mon, 26 May 2025 07:04:17 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32a6884fe72sm1149941fa.29.2025.05.26.07.04.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 07:04:16 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553233211d3so1280210e87.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:04:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUq3sYBZX+K61M8a+J9etZqyKNG40a6w0wC5TcyZzlZOqaP2RtVBWN0Sz5I0nwHMhW/9OceLLfNokmrFC0=@vger.kernel.org
-X-Received: by 2002:a05:6512:b87:b0:545:60b:f38c with SMTP id
- 2adb3069b0e04-5521cba4319mr2738618e87.41.1748268255880; Mon, 26 May 2025
- 07:04:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="geZPHyLb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748268360;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4/sGzOaVUDnFa7JhGT/QLWfv+Pie+2XGZOuEFBnSP9Q=;
+	b=geZPHyLbkIGxuqAKl7X1cdpupmFcJ3Jo7W1sGAfOWtS8+/kIogQu54+Rn4YQzmI69qgHHA
+	Q+qPn7nag/Seu0pu2TIKVEXTAn4CTHEVXo5UUGDt6fxZd7ebMU9iODBsrYds0nX0lQQhfN
+	P4x81ucPmbNSsPJZ5SMPNAwFSM6AsnM=
+From: Yajun Deng <yajun.deng@linux.dev>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yajun Deng <yajun.deng@linux.dev>
+Subject: [PATCH net-next v2] net: phy: Add c45_phy_ids sysfs directory entry
+Date: Mon, 26 May 2025 22:05:39 +0800
+Message-Id: <20250526140539.6457-1-yajun.deng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404-uvc-meta-v5-0-f79974fc2d20@chromium.org>
- <20250404-uvc-meta-v5-2-f79974fc2d20@chromium.org> <20250526134946.GN17743@pendragon.ideasonboard.com>
-In-Reply-To: <20250526134946.GN17743@pendragon.ideasonboard.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 26 May 2025 16:04:03 +0200
-X-Gmail-Original-Message-ID: <CANiDSCvPG_3qc4Emhat=NdRZXsmNDD0pwh182bXDFK2TgYN_ug@mail.gmail.com>
-X-Gm-Features: AX0GCFvLus6wSHUCxD3q_9w63GGCFq7D3IfeAgh7ku37JSUzb68p0H7rgIVZxVI
-Message-ID: <CANiDSCvPG_3qc4Emhat=NdRZXsmNDD0pwh182bXDFK2TgYN_ug@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] media: Documentation: Add note about UVCH length field
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Laurent
+The phy_id field only shows the PHY ID of the C22 device, and the C45
+device did not store its PHY ID in this field.
 
-On Mon, 26 May 2025 at 15:49, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Ricardo,
->
-> On Fri, Apr 04, 2025 at 06:37:35AM +0000, Ricardo Ribalda wrote:
-> > The documentation currently describes the UVC length field as the "length
-> > of the rest of the block", which can be misleading. The driver limits the
-> > data copied to a maximum of 12 bytes.
-> >
-> > This change adds a clarifying sentence to the documentation to make this
-> > restriction explicit.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> >  Documentation/userspace-api/media/v4l/metafmt-uvc.rst | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > index 784346d14bbdbf28348262084d5b0646d30bd1da..42599875331c0066cf529153caccb731148023b9 100644
-> > --- a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > +++ b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> > @@ -44,7 +44,9 @@ Each individual block contains the following fields:
-> >          them
-> >      * - :cspan:`1` *The rest is an exact copy of the UVC payload header:*
-> >      * - __u8 length;
-> > -      - length of the rest of the block, including this field
-> > +      - length of the rest of the block, including this field. Please note that
-> > +        regardless of the this value, for V4L2_META_FMT_UVC the kernel will
->
-> "the this value" looks like a typo.
+Add the new phy_mmd_group, and export the mmd<n>_device_id for the C45
+device. These files are invisible to the C22 device.
 
-Thanks! Will fix in v2
+Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+---
+v2: Only one vale for per file and invisible to the C22 device.
+v1: https://lore.kernel.org/all/20250523132606.2814-1-yajun.deng@linux.dev/
+---
+ .../ABI/testing/sysfs-class-net-phydev        | 10 +++
+ drivers/net/phy/phy_device.c                  | 62 ++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 2 deletions(-)
 
->
-> > +        never copy more than 2-12 bytes.
->
-> Are you saying here that length can be larger than 12, but only up to 12
-> bytes will be copied (when both SCR and PTS are present) ? If that's the
-> case, it would be better to fix the driver to clamp the length value to
-> the number of bytes actually present in the buffer.
-
-As the documentation says, this is an exact copy of the UVC payload header.
-
-Assuming SCR and PTS, for devices that have metadata length will be
-the real length provided by the hardware. but buf[] will only contain
-12 bytes.
-
-Replacing the value of length with the actual value will be a uAPI
-breakage. I do not think that is a very good idea to change it,
-considering that this number is used by parsers.
-
->
-> >      * - __u8 flags;
-> >        - Flags, indicating presence of other standard UVC fields
-> >      * - __u8 buf[];
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
-
-
+diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
+index ac722dd5e694..c97029d77b16 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-phydev
++++ b/Documentation/ABI/testing/sysfs-class-net-phydev
+@@ -26,6 +26,16 @@ Description:
+ 		This ID is used to match the device with the appropriate
+ 		driver.
+ 
++What:		/sys/class/mdio_bus/<bus>/<device>/c45_phy_ids/mmd<n>_device_id
++Date:		May 2025
++KernelVersion:	6.16
++Contact:	netdev@vger.kernel.org
++Description:
++		This attribute contains the 32-bit PHY Identifier as reported
++		by the device during bus enumeration, encoded in hexadecimal.
++		These C45 IDs are used to match the device with the appropriate
++		driver. These files are invisible to the C22 device.
++
+ What:		/sys/class/mdio_bus/<bus>/<device>/phy_interface
+ Date:		February 2014
+ KernelVersion:	3.15
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 0f6f86252622..5678191fb283 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -645,11 +645,69 @@ static struct attribute *phy_dev_attrs[] = {
+ 	&dev_attr_phy_dev_flags.attr,
+ 	NULL,
+ };
+-ATTRIBUTE_GROUPS(phy_dev);
++
++static const struct attribute_group phy_dev_group = {
++	.attrs = phy_dev_attrs,
++};
++
++#define MMD_INDICES \
++	_(1) _(2) _(3) _(4) _(5) _(6) _(7) _(8) \
++	_(9) _(10) _(11) _(12) _(13) _(14) _(15) _(16) \
++	_(17) _(18) _(19) _(20) _(21) _(22) _(23) _(24) \
++	_(25) _(26) _(27) _(28) _(29) _(30) _(31)
++
++#define MMD_DEVICE_ID_ATTR(n) \
++static ssize_t mmd##n##_device_id_show(struct device *dev, \
++				struct device_attribute *attr, char *buf) \
++{ \
++	struct phy_device *phydev = to_phy_device(dev); \
++	return sysfs_emit(buf, "0x%.8lx\n", \
++			 (unsigned long)phydev->c45_ids.device_ids[n]); \
++} \
++static DEVICE_ATTR_RO(mmd##n##_device_id)
++
++#define _(x) MMD_DEVICE_ID_ATTR(x);
++MMD_INDICES
++#undef _
++
++static struct attribute *phy_mmd_attrs[] = {
++	#define _(x) &dev_attr_mmd##x##_device_id.attr,
++	MMD_INDICES
++	#undef _
++	NULL
++};
++
++static umode_t phy_mmd_is_visible(struct kobject *kobj,
++				  struct attribute *attr, int index)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct phy_device *phydev = to_phy_device(dev);
++	const int i = index + 1;
++
++	if (!phydev->is_c45)
++		return 0;
++	if (i >= ARRAY_SIZE(phydev->c45_ids.device_ids) ||
++	    phydev->c45_ids.device_ids[i] == 0xffffffff)
++		return 0;
++
++	return attr->mode;
++}
++
++static const struct attribute_group phy_mmd_group = {
++	.name = "c45_phy_ids",
++	.attrs = phy_mmd_attrs,
++	.is_visible = phy_mmd_is_visible,
++};
++
++static const struct attribute_group *phy_device_groups[] = {
++	&phy_dev_group,
++	&phy_mmd_group,
++	NULL,
++};
+ 
+ static const struct device_type mdio_bus_phy_type = {
+ 	.name = "PHY",
+-	.groups = phy_dev_groups,
++	.groups = phy_device_groups,
+ 	.release = phy_device_release,
+ 	.pm = pm_ptr(&mdio_bus_phy_pm_ops),
+ };
 -- 
-Ricardo Ribalda
+2.34.1
+
