@@ -1,115 +1,104 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AB74D599
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C703595E;
+	Mon, 26 May 2025 08:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246666; cv=none; b=l/V4tHGUlnn+oNqxTmCY6dNe3rkQ3/UQB1uV2tS7Pdn2Q2TC+4MbmPkABHhpShMgVcY21pF1cWQYViR7GRo6JorwMLivebUYBaybRhLr6AT+wlsrbhKK03plfkO/NWkJdUtJ2RNIi/tNx3a1UIgWPlV5dHHFS7cM7xNiwVSQXuQ=
+	t=1748246711; cv=none; b=eagQz/Z4Q8Gg7DmocZp7isKWlJ2s9x4AgrDjByaN4qK2I2zAY0GFg+GMb6bHV6GG48LNWPcXtQfggux0YoPBO00oX5u03CzaDVZ0bOkVQ9Hbi8c3nRFg2ycFuu6ak8JwH3zr0wWLPNjwWCiEurV9tjMkjBYNy9jaeHk/EQCeguc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246666; c=relaxed/simple;
-	bh=DKj4jGMJwsluLhTtm1XSb43QIvPVBkJotokBx9IzykQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RiB5OPEnqUGRn8rdACrPzXVo3RrwdDd+8c24DIl5qhdy/7YNiRmYEIilGj6SJ73FhR+L9d0DnnWjl/pVSQnqqrLEuVLzoQW5cxwCx12vvDhGV+dEsbm4R0wWc1SXeCpsMl0hzBTwCBZe68exIy/i1j8Avc8nrq7WL0qBNAxfRi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=bns86RnX; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1748246711; c=relaxed/simple;
+	bh=Xi/4wSWLk23OU5m5HrWBRgvE7nyhIYVAvXhoVjBKmmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gsBs2Oex0lZ7aKFgCJVxcAue3cm5E5cIomy4NMS4ahsDS/g2jGta57C8Gsox4/IJ4AJtCX6q5Mgh/nh1yvAaFPzj0WXIslVPBaYgYU9ffYWntvGL2wqCxE2e4xPWMfA79Y460DkbYAGYycetALQQF0C1cVM65g1SQ81NDVb2V14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ahmp7gVK; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="bns86RnX"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso3525623a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:04:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1748246662; x=1748851462; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/EqSXiGxXEzz4CTzqLi7kZXZnKST1GLrijY4jxIYksg=;
-        b=bns86RnXUSYQ17WuMn/xo1SXbKER9aD8VQwT8oR0EolmXttjVzCigXkcck4a4zWn8t
-         6lL26FvysTSFzgOpDKs5wiOSpiEwKcmtyRHjRVTgzvoU1ACR0vBDDbV4EIjvGA2s3PZl
-         IeNbHR4VJJlHF88T93t5niZdgT/3eru6MOput90j0ZKHxmsT4evySdBXFdvD9Se808yz
-         AQbCQvV4EjaufYx2eHm186akiB+igf8smPXtm9snXcB106g0knzPl6bFbY5FdiNuCdRz
-         zbm2sas4eu4uncwihYvgQZPfnGYSbVA9ekPnravqwIai4O7DiwLDWgRTeSWi1y6MNgGO
-         sYsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748246662; x=1748851462;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/EqSXiGxXEzz4CTzqLi7kZXZnKST1GLrijY4jxIYksg=;
-        b=WiBIudCxxCA5FXbpY/0E4w8x8dohZyXFdprZU+XihKx8JnZX+3+r3WXIZ6DhC5nl1i
-         pKM9rom9ZAMk+EVaUCdhJOQAfeRn3f6Rf1MCvYOOKm37681Sq/8uApnJbOmfAef89d2f
-         k40yjUrz9SLLWMvrakneyHO2RpdDJHFW+u0sWahulnWekhxOptdwux8WheRRe34Y/TzT
-         IcmEMyzWNN3A0CUSV4JnbaUkcHJOul0v8RcbDJz7DYEEsT+ISHuGN3XENJgrN2oqni83
-         XLzlqtSSIrI3w67SYe1H/3Ux/RzTatBgi3wwKUyLioHoe8fvPFkQhrtEw3pCHv4xklmU
-         josg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqUfmn/UkVEKSHmDjQAApMGK2BYUeBprMP8w3Uje8pjW1Eub6dOGba003eDpqa/wpMCboi7AlIDzrOXGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye60CLilkX2IRJC+x1hHAnMZcqijVKiwJ0F/zZzsINKm00YM3P
-	iOBibHjcFZvDMr/oQK5xmb+oFGPrp0UVk7FvxqfgM27Km2ghXCJZUU1q9ngqkTkvfQU=
-X-Gm-Gg: ASbGncvXARlN1M9orRMh4BZN+gLlN3MgVTnIQ22ye8VxSEHi/2LoEApjt3ZWnPkMAJL
-	xZmHT8Qa3ws/e+IMgMb/A3y/qoFuDNiXQQLOZJy4TRJqmRasvVPj7S+U8eN+wzUKEtY+7kwl9la
-	cxdThpiIduakXh7GXEEtN4VaTrGN4mWiqIljrlRr/ICd9eqS44pNoRbvraqNdDvfgbr0IRKJMel
-	VnlXxFj5Y99ks6mdCwlOooX0iLtaFeq7SzqDIyMrc3oK+dIq0DKiDYyu/RS1xGSrORxCkImLDzm
-	osswaJZyo2dByg6OobNfFI9VZ56SbswIF5JLgT3ieyi2vmy5Zp0qZzy6z98=
-X-Google-Smtp-Source: AGHT+IFQQixy/VvIvZqVFDIkQNPaQDo10Gudza//G/gS6tJHfmV5TcIjld7nrBM3z67ERb/Rc4yYRA==
-X-Received: by 2002:a17:907:7faa:b0:ad2:59c4:83 with SMTP id a640c23a62f3a-ad85b2b5649mr715969266b.42.1748246662344;
-        Mon, 26 May 2025 01:04:22 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-604be9d8ca6sm581136a12.79.2025.05.26.01.04.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 01:04:21 -0700 (PDT)
-Message-ID: <8e1250b2-b6da-4294-b02b-98c9d231a181@tuxon.dev>
-Date: Mon, 26 May 2025 11:04:20 +0300
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ahmp7gVK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bbADdHqSyemEAUvSgp0Vxsp615wRz96ttPoTQeE5LAo=; b=ahmp7gVKJThDo8tM/ki0syfuDO
+	JQtPY1b6f/MhHhhkDOr6epdnAs23WIReEi4cS/jX2seK6jRV8D64egdPDbzu0ATYjmqV3uvgtyRuM
+	L28cPXQKHj4swBTuaFPS4vj1udkP0rrgNjalXHH8NVUfvoMPGGM4HxxAGptJvPlWeZJjCRu+CyH86
+	EGQDPvyoL7F1xXhi7G5cjdYnVCEex3JGS43fnm0UThcxWdZIqHy41Ry7ItnoTGLzrL621TA2cFa/4
+	wtDHSNK4r/xGSPQRieqC6Kranr7QD6YD0UPQjI9sjJWWQazCRZJjGd21XRaeXvljqFD+emrVJbpwY
+	0tGoJdlQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50816)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uJSpH-0006VC-1T;
+	Mon, 26 May 2025 09:04:51 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uJSp6-0000Fz-1l;
+	Mon, 26 May 2025 09:04:40 +0100
+Date: Mon, 26 May 2025 09:04:40 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chenfeiyang@loongson.cn>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Paul Kocialkowski <paulk@sys-base.io>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] net: stmmac: dwmac-sun8i: Allow runtime
+ AC200/AC300 phy selection
+Message-ID: <aDQgmJMIkkQ922Bd@shell.armlinux.org.uk>
+References: <20250526002924.2567843-1-james.hilliard1@gmail.com>
+ <20250526002924.2567843-2-james.hilliard1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: macb: Check return value of
- dma_set_mask_and_coherent()
-To: Sergio Perez Gonzalez <sperezglz@gmail.com>, nicolas.ferre@microchip.com
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, shuah@kernel.org
-References: <20250526032034.84900-1-sperezglz@gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250526032034.84900-1-sperezglz@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526002924.2567843-2-james.hilliard1@gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-
-
-On 26.05.2025 06:20, Sergio Perez Gonzalez wrote:
-> Issue flagged by coverity. Add a safety check for the return value
-> of dma_set_mask_and_coherent, go to a safe exit if it returns error.
-> 
-> Link: https://scan7.scan.coverity.com/#/project-view/53936/11354?selectedIssue=1643754
-> 
-> Signed-off-by: Sergio Perez Gonzalez <sperezglz@gmail.com>
-
-Reviewed-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-
-> ---
->  drivers/net/ethernet/cadence/macb_main.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index e1e8bd2ec155..d1f1ae5ea161 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -5283,7 +5283,11 @@ static int macb_probe(struct platform_device *pdev)
->  
->  #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
->  	if (GEM_BFEXT(DAW64, gem_readl(bp, DCFG6))) {
-> -		dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(44));
-> +		err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(44));
-> +		if (err) {
-> +			dev_err(&pdev->dev, "failed to set DMA mask\n");
-> +			goto err_out_free_netdev;
+On Sun, May 25, 2025 at 06:29:22PM -0600, James Hilliard wrote:
+> +	if (!nvmem_cell_read_u16(dev, "ac300", &val)) {
+> +		const char *phy_name = (val & AC300_KEY) ? "ac300" : "ac200";
+> +		int index = of_property_match_string(dev->of_node, "phy-names", phy_name);
+> +		if (index < 0) {
+> +			dev_err(dev, "PHY name not found in device tree\n");
+> +			return -EINVAL;
 > +		}
->  		bp->hw_dma_cap |= HW_DMA_CAP_64B;
->  	}
->  #endif
+> +
+> +		plat_dat->phy_node = of_parse_phandle(dev->of_node, "phys", index);
+> +		if (!plat_dat->phy_node) {
+> +			dev_err(dev, "Failed to get PHY node from phys property\n");
+> +			return -EINVAL;
+> +		}
+> +	}
 
+1. You are re-using the drivers/phy binding for ethernet PHYs driven by
+   phylib here.
+2. You need to update
+   Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+   in a separate patch.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
