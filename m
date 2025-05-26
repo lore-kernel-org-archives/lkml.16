@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AF3242D69;
-	Mon, 26 May 2025 21:19:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AA3243958;
+	Mon, 26 May 2025 21:19:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748294378; cv=none; b=JsJYcnnfwgHuAt5GjTSLa4t43bQ0dV6qUMuNuTl+f4FfnU6TXHVyyonyQ4Fdh1e3G0XgqTUYNA9NROZOXwWmFAey5N9BjynNStCKbdqE44Tf0RB9DHIzWWB4XJwZc8ByXb/krZ4X4ubvlTa3R77Ia5NAEeh3c8Y5X53dRz2RuXs=
+	t=1748294380; cv=none; b=Rf+VFjZ5+w59aBAhFuB2jP0w5Kt5YEgFQMXhLmZZ2xMP8yzpjNjEcVPbQifUZn4YpGyF/AotxIQxAjY49xO1u/q/NZO+g4/0m2hr3TwFfl6IUzNIoldT7XR5T02u6//D6C5JBf6luaJfa8hcOKYKh3v2DvkfI6jqmhIFXrl9K4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748294378; c=relaxed/simple;
-	bh=SAllJ45hTY3udtl1fqt6/wd5ohSPsuns725LM+/YgYk=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=j8x1/auQQklpr7CPuhcRj5y3GmlRupnXO2V1TOUWT1BRbxi6Z/G1HV3ud280wh8cS588FRPeLNuay9st19EXnfEXXSCL/Zv5uesy8O/yCIfEvjBjnEoYvfmCW0Eon8W0aHI3YnLFUxnW3DjJs/uNQi/MI1XcHunsgmdGj6iy5YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6qfyDxa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748294380; c=relaxed/simple;
+	bh=qAUgO2UoJoGGmaThYuKXzBBxafo6Rn1ajluvpjT56/M=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ln20Ffi2JNe/Av71U+yMEm4uefcuO5dBn/Kg2lrDiNFG9h1BXup/N9UDnaWbxIzfQCKgcjT2ExFtWP2tGLw82Z8W5zibigobRnUKZb7pueNCqgI8hQ2RrB8nU4dkmDMb+DH3Fhds+Aozvp9wSEYyLKwItMb0SY6bLv54aiet+B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rv1Cr14Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6qfyDxa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 381C2C4CEF3;
-	Mon, 26 May 2025 21:19:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rv1Cr14Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7956DC4CEE7;
+	Mon, 26 May 2025 21:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748294378;
-	bh=SAllJ45hTY3udtl1fqt6/wd5ohSPsuns725LM+/YgYk=;
+	s=k20201202; t=1748294380;
+	bh=qAUgO2UoJoGGmaThYuKXzBBxafo6Rn1ajluvpjT56/M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=L6qfyDxa0uEkLtRyMhd7m6I68Hkz2pEm+WQ+4v+YFC7Mphs2ihq8gDrMCXh73zLxD
-	 zGXRsM/EcYGOdyFuyq6OtZhwlENuU0OM7dKu2AvTCprO7zT38ZUgXH16DeAZTz7afx
-	 omI2AWNPrvhKMRdX787rtpvC86gRj6s03G2mEvLcyyDutjw7OYw0lN2KVUdo57Xu1n
-	 C7Xql3AsLiniRDBW9A4pYZWDBPhhZ79U5+9SdcV/P/cawrQFEDtS/h4unQCg6h8Qh8
-	 PyUa8fsijSSIznJOi3qvoQhQa49/l+CPIh4bxjj6Zh5MaYNwPRaZYAYAcUJBcOn0E4
-	 a4PQ7Osjf86Kw==
+	b=rv1Cr14ZORdoUAbRijFq8HGOj2PqMu7YdxmNUDwrip35k1hbnuC3EojURtFT+dCsX
+	 7iKlZUdasY8IGleYNZLopEEmuDhJLM5RMPmGfuKkObRVJZ6jnzC6xcSnnCXp8aVwM1
+	 4invRn0W/ZNvpddDPvlCTdSTGB5Ci0slP/Hf/TzndcwkNFp44kgsWMD7KHzAQRh92C
+	 gbIebRCNBoT8zpxzqwfroiHsbDv/HtL0FY51j9Fb2ZA1UJUWbxWt6OYIK8HV3lIOnS
+	 rmYXjdmeO0wvqTSjpxLzK2EearJAwgEy1scx6sfP1yo2sfdbdH6nrAa17CxDnwVyki
+	 6aJ7bxazOGkDQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB1E8380AAE2;
-	Mon, 26 May 2025 21:20:13 +0000 (UTC)
-Subject: Re: [GIT PULL] gfs2 changes for 6.16
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33F10380AAE2;
+	Mon, 26 May 2025 21:20:16 +0000 (UTC)
+Subject: Re: [GIT PULL] configfs for v6.16
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250523205122.1783753-1-agruenba@redhat.com>
-References: <20250523205122.1783753-1-agruenba@redhat.com>
-X-PR-Tracked-List-Id: <gfs2.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20250523205122.1783753-1-agruenba@redhat.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-6.16
-X-PR-Tracked-Commit-Id: e320050eb75e914aa5e12de2a9ab830c9a2ce311
+In-Reply-To: <871psp56yb.fsf@kernel.org>
+References: <871psp56yb.fsf@kernel.org>
+X-PR-Tracked-List-Id: <rust-for-linux.vger.kernel.org>
+X-PR-Tracked-Message-Id: <871psp56yb.fsf@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/a.hindborg/linux.git tags/configfs-for-v6.16
+X-PR-Tracked-Commit-Id: c6b1908224593db76f77b904894cd51933559ae9
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8fdabcd9c01d9ac585d8109a921e0734a69479fb
-Message-Id: <174829441289.1051981.8038892790938571851.pr-tracker-bot@kernel.org>
-Date: Mon, 26 May 2025 21:20:12 +0000
-To: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Andreas Gruenbacher <agruenba@redhat.com>, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: a56d3133bd875d90ef3237f24e37b75b6d0326a9
+Message-Id: <174829441512.1051981.17323216450657444824.pr-tracker-bot@kernel.org>
+Date: Mon, 26 May 2025 21:20:15 +0000
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Breno Leitao <leitao@debian.org>, Miguel Ojeda <ojeda@kernel.org>, Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>, "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 23 May 2025 22:51:21 +0200:
+The pull request you sent on Fri, 16 May 2025 09:51:40 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-for-6.16
+> https://git.kernel.org/pub/scm/linux/kernel/git/a.hindborg/linux.git tags/configfs-for-v6.16
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8fdabcd9c01d9ac585d8109a921e0734a69479fb
+https://git.kernel.org/torvalds/c/a56d3133bd875d90ef3237f24e37b75b6d0326a9
 
 Thank you!
 
