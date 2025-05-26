@@ -1,147 +1,228 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2015.outbound.protection.outlook.com [40.92.42.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ED57260D
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748241820; cv=none; b=S+qOZqqaBVEj0VtVdQUqs6wMwEHzKrS/VZT7gpSR7LJjqA5KM8BtPNrKpdU0S5qo8m/kozB4prPViZyJ2csvrHSFWkXjnX40Ye01SEGb5vU9Oa3kTfiKCqgJrqGerOgolbaGZYbBn7tHSI4tKvJt+plh0mn45xEDDsPcf6GDHi0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748241820; c=relaxed/simple;
-	bh=p/2UHlUrtuZJbhIGnneRhtd3c3E8IObzkRipcL+Gjug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CyQ+9WDjv7XCNbRRdf5uLYpx6UaL7JQAkELkWqa36qoLo+OGCYs9NLqqYTDT2VX4lztkHbnL99I2UzK6rK3g6KZ3dSAkg8we6FsIqAeC8dnBuGAV3ZdmVUH48GQOEJesEuvh0CsHuhHR6GpwhH199uh1sW8Ll/bdoxSZdqWDRYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=NkJRz0lf; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B0C1DE3CA;
+	Mon, 26 May 2025 06:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748241825; cv=fail; b=j6lUOWj3ZDWxmds3XyI5rkH0IACpAXF9HOtwrwxjdA8sC/5DNGpCHLBiONDdFSnYEGyAfNkcm8r6/GB4GP7b4orxygZZCyikgCeQ7VmWKw5Urt7YpA9LMbYna9fLoR/n2NUHbK0NcVCbFDvbjPYBWVyk3yLY5exGc4sZttOzk/s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748241825; c=relaxed/simple;
+	bh=+NW8t3CC5uft5b56Fjc38KR6VqSUkvJJ18a97PJUP18=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NvDYmY9IaC9RppIA3abGZMG+a5lux1rEvuBW5yXlFAoWxF/OBNfdT2gojZ4wteIokl1JIbOCEiRTruzn0SEnXRSs5I2lQyxbDWnhZWOx2lh+a2fNE9yLEucI1SAyserj0qha2rKNOuwz/7jDSBtSHcEa3BDy1JrcALar+I3M2Ko=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=u+ioteaV; arc=fail smtp.client-ip=40.92.42.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="NkJRz0lf"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q6SNec021065;
-	Mon, 26 May 2025 08:43:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	OS8PvSfwRlhjZGN6jsgBRmNG5LhO25xsjz5q3ncqIDU=; b=NkJRz0lf3bhigiZE
-	eaVdiOwH0if/ejdiiR5pcQ7fSr7JwOushQIUk00jA3tcubbaQGZDwj8Tq4epNT1d
-	3YrhJ2BQLBBNSymYHLhaZB/T/sg7D8KoY0lhcwWDujtb8W/+74wyotC7eflbuqkD
-	3cVO1Ra83+u//xwjbLRAZGCxjeBsH2sA2zZGt60FOO2qyvCa91I2oqWrU+E82Z/D
-	T8dxWsF4qJC7AgZLSXxV/wbuOkIBNzdjYD+mXbJY3ODl+YBrwPlqOBs6Xr1LJDxD
-	N022icQCA/bO9rgSkVE/6OD25sP3b9zESQt41nfytHGvKaJ+fvVide+buAXh2GWs
-	x8GhFw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46uqp4bbub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 08:43:11 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C73B440044;
-	Mon, 26 May 2025 08:42:19 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E1FEEB1D8AA;
-	Mon, 26 May 2025 08:41:55 +0200 (CEST)
-Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 26 May
- 2025 08:41:55 +0200
-Message-ID: <8f948025-a40e-417c-bbc1-a43356118ce4@foss.st.com>
-Date: Mon, 26 May 2025 08:41:54 +0200
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="u+ioteaV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I75XiKGsmeK12wpwlWa7VjXeQp/B/Ie8SqoTrJIEuTT0qWa+Wew5hc5Zn9FidlkSEeBrrQy43z32wtTj3//bvTTIsDVDzUq0ZrDEzv6sS+cvqgYQtlBuwbNYsRJcUq3y6qjnpoTuS1PQfLNRpxRBiY+t3KjRqTAolcPjoQFHd89eXNw+pdJCxuEGcwu4ayHBpaTS8LlqonokhSZ7QL2CP86R8Bwla4mgSszPt1/usrhj6/jdwjH30XwsPLEy7V823WcVxAOxPNESPh8x8mbKJ798uYmVWjf3QeSXZWF497RfA2C+9hg2Z3LKjrUewvFsxj9NSonvq9IGiEdyjcwnKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P41zjMhTMAsCzm5acKLAITZ0khZkuCSVukPhgYOCtJY=;
+ b=CJcQ8Jnk9GHNSVsE/TM7aaoKUE47FdOGH3eB0BX5mSxGzud+vO3IPBxuMBMBgm+Z2vuyg8UuLOVygUFI1ibxKGsvksqG8exN0QQaFGkWJZhWP8Pnp6sFN95H0t7HZ5vul3pIHGDJ5c8b4PF3NSw5VeShyNEjt6j7gyf1w0XSnYEEzSM0oaWmfPU3AKgJ1Nv6iNl77wEfSHG/DH34+MetZ+faLVJQTK8OQs9kufLD6l55NWTfPcVNQWKacHc5pxm/O+S4R21FBci5VF092LhWuy4gZP5JSAJsHJz8NmBCxIzeBHYJv1rMlxGVrIJdPxdV3TfW8cevrVCL3UcnGHUDDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P41zjMhTMAsCzm5acKLAITZ0khZkuCSVukPhgYOCtJY=;
+ b=u+ioteaV1JhSHoyPXPrNSG3XZQwURroPSbzKPpezEK5CjV+WGnv1lhmbdcRMwd+gHaL1lCFZhWF+G4BcY39XcVk6tVZGjzKFAUYIAkVVNO54kOLTJ+RiO2c2to1/vUgqMH/Gj7E4weeXzSPpx/rml4rUeLPGfhZDOMLyqSp88IUpAwFGvI5ihNWfcGo1HM5GWFFde1U90jTZ1II4qBd1B3ggXB1rOR3UZB5RZS0Yny3qR23Oy6szcPctAvN3llULfVETpVZL1gQeGO0SczFGtCHscEn74cNBYAM1dMg927IYzYXJjqYyHKDyt+qEp/lZXCNMqRQg2BfMk5RAtEDOOQ==
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
+ by IA1PR19MB8866.namprd19.prod.outlook.com (2603:10b6:208:59b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Mon, 26 May
+ 2025 06:43:39 +0000
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305%4]) with mapi id 15.20.8769.025; Mon, 26 May 2025
+ 06:43:39 +0000
+Message-ID:
+ <DS7PR19MB888328937A1954DF856C150B9D65A@DS7PR19MB8883.namprd19.prod.outlook.com>
+Date: Mon, 26 May 2025 10:43:27 +0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal GE
+ PHY support
+To: Krzysztof Kozlowski <krzk@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+ <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
+ <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
+Content-Language: en-US
+From: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MR1P264CA0199.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:57::10) To DS7PR19MB8883.namprd19.prod.outlook.com
+ (2603:10b6:8:253::16)
+X-Microsoft-Original-Message-ID:
+ <66fd4642-6415-4d2a-b6e0-de405d34b22a@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memory: stm32_omm: Use
- syscon_regmap_lookup_by_phandle_args
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre
- Torgue <alexandre.torgue@foss.st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250525191300.50873-2-krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <20250525191300.50873-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_03,2025-05-22_01,2025-03-28_01
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|IA1PR19MB8866:EE_
+X-MS-Office365-Filtering-Correlation-Id: 318f5510-596e-4fee-3dc1-08dd9c20a58a
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|6090799003|15080799009|19110799006|461199028|7092599006|8060799009|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aURsL3phQjhTYncwSitvbDlQVEJDVWFMSDRabWljdXg5OGtJVmJoUGcyUzRZ?=
+ =?utf-8?B?QTl4bmdyRkdac3FsQ0haeC9WTnZTaVB3NWE0M1Jkclk1YXNybFpGb1B1Ums3?=
+ =?utf-8?B?MFd0Y0NkZGJMSXlSanNidjhScU5FbVFuSzluUUhKaG1qRURncXloNnJwYmcx?=
+ =?utf-8?B?amhyOUpyYzhxcEZaUm9Nblc2c1AzeXBWSG9FZWdvS3ZKNm5BMmF2M2xLZjZ1?=
+ =?utf-8?B?NmZucWU4VXdJdlRtOVE1UTdPOUFwSEJWVjBxUjdJOCtBK0xXTjdGbEIvZzE0?=
+ =?utf-8?B?OEc2YkcwS2tYL250OVZCSE4wM3Zqa0t1NGVyT2dYd1k5Y28vcnpUSTA3SFFJ?=
+ =?utf-8?B?azFhcDl4WkFIYUllUHQySnl1cHVWcHpUd3ZkZ3JTajgvYUdPcm1xYmgrUXpM?=
+ =?utf-8?B?a3AzWE1JZGJNTm1lQ1RsN2VnTlFUeXlmb1JVMjhzY2JCRjdKWnk5anZFeENk?=
+ =?utf-8?B?ZzNhWlJXZWZvYzF4L0lMZ20rc0ZmUUlyOW5BZ0hSYW5wQmlyMHJtN3J4N2dY?=
+ =?utf-8?B?M3JaTGx2a3VXbCsyTXNhY3AzZzF3cTVxVGVEWUJoOVE3RWZ6RnJIZTJDbGtt?=
+ =?utf-8?B?L0txVWRMbytzckQweVNzZ04xOWRuMktOL3dnYWorSGhoTUJaTSt1aHRzSWFi?=
+ =?utf-8?B?VUUzRTlHUmtGN0Y2b2xXd3RIWjJJUTVCMVc1YU5iUUpueUhKRXdXenhMREZH?=
+ =?utf-8?B?bWc0Wk1reE5KZG9MVzRNQzZKc2FUdVEyVDc1T2pzbWkwUGk2UkZubWlRSGwz?=
+ =?utf-8?B?M1FLaWtxK2t3SU1lbXloYk9uZjE0UGRJWlV0cWk4OWRySWQyTmRneXZwZ1Bw?=
+ =?utf-8?B?bnpjUlRLMWFIQ2ZhOGExQXRjU0Fuc3BsbjJUdUNaL2xOMG1QekY5aUNiNDFT?=
+ =?utf-8?B?S2xmeHZIa2lqeG5KcHpDMWs0dUJpcXN2bzB5QUJLdjFtb1lyT2hBdm1Wdlho?=
+ =?utf-8?B?azV0SmtRQmpmbFE1UFk4YmNoQStpTUEyeUVDV1hGaW02V0NmM2NRZjFvUTRj?=
+ =?utf-8?B?MW9SbVRmNEdocVNaaGU4blVGaDFkOWZtcEo5RVdxU3VOUDA2bGhYa2FjQ2x0?=
+ =?utf-8?B?cVJKVXA2VTdsNE1tOGFIU2Nld1JWdVlZNlFqbkY3cEgzRzhnUmpXNEdNRUJ1?=
+ =?utf-8?B?RXhKODJrU0dIOUhaTzBzL2c5Nzh5TUhHeCtVZXQySGthdlJHYmZmL25QRVNr?=
+ =?utf-8?B?ZGZiNDZqNml0UlN3UHNlTzRyUkFNYll1aUtrNzhmNWJTcFcyVGxYVmxhZSth?=
+ =?utf-8?B?a0N5UElmZ0lJU3dDV0NKdlgzMFdFQ1YrQlJCU2xiN2c1bFZCV3hmb0dXTE1V?=
+ =?utf-8?B?Kyt5ZDd6a3pHRnpiaXZFS291N05uY3dISXYzMWhVSUQzSkFOV0tIZnlud05t?=
+ =?utf-8?B?Q0QrR1p4OUUwMk9XWlNGZVFRdkFJZFZ1TWFEVXplNm96Q2xJOFZaWEVtSnlM?=
+ =?utf-8?B?cmJldmhNTVNHWG5nTU1UV0lQUys5bzc2cFZXUG16emNYYmxIMzNkbzFGaE41?=
+ =?utf-8?B?QWdKSThCY2QzbEcvMDBJVTZtNVc1OVJhZHpTMVFxVEdHbzBoT0szYkJ5TFMy?=
+ =?utf-8?B?dkd6QT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dG00YjA5UGJMN1kyRjM2WUNlQkVPMllaQjMwUzBYSlM3L29xMUJOdGpQajNl?=
+ =?utf-8?B?eUxOQ3gxMmxJL1JzUW9QUVY0VGFJNjd2UkhmWGZkcWk1ZDhsWVptWlRRTDFL?=
+ =?utf-8?B?WVVPZVU2eGN2SkhkT2hJZzE2L0s2ZmVrd1owWmcwTk8xN2pLT1kxVWpiNElV?=
+ =?utf-8?B?NVJJaHkrUkRVS2o3T1E5NVBYYTlrTUQ3N2UrZ2JsM2ZpL2U1YjF3UG1vK1RT?=
+ =?utf-8?B?ZEl0M1hzcVpQVUxzeXI0RS9zNDdjUmVNSkx4ditMUjF2SG9aSHIzRk5aZ0hY?=
+ =?utf-8?B?TnRCRnJJSWRtUTErN0tYK2p5UTZ0eWtzZGZwM1RBbm1rRjJTLzhVWUxRY1JQ?=
+ =?utf-8?B?TFo0L29KcGNqVG1JamVOa0JmNTJtN0R3RWpwalROc0c5TzBHUVJoSlc2Q1p3?=
+ =?utf-8?B?bDdmNS8yVGZKbktpcklscmFzMHczR0tFZnpEZ3lCZnRsMzF1WmdIOHBoK252?=
+ =?utf-8?B?NUxzYkhGbTRNamN0TGpYalp1bVE5bmxvdVM1VzFjSGdCSUREdXlXcXNsaldr?=
+ =?utf-8?B?OG8rOEx4cjh1aEcyRnpNQlNTcnNwdDZ5QUh1dkVOMEdXa094THlQeUFWWDk3?=
+ =?utf-8?B?a3hpdVRLOWtHaWhtTmp3aDc3MnhFeGcxWkRxTFRuS0MwYmNYSThBbHZTdzdi?=
+ =?utf-8?B?b3M4aVo0dkh1eDlTcFBveGQ3MVkrMEpSdkNQcGdROWI1dytsanpnNFpYalZB?=
+ =?utf-8?B?cGRRQWVJYUpBN09WRC8vdmpaYjlTYi9kZ0lZN3p3cDV6ZFd5TCt1QVNQSis1?=
+ =?utf-8?B?VzJlMGo2enNNZkxFQURPZmx2SzhGSjFBZmplRVFwSkJubUdxQTdDWGtkLzU5?=
+ =?utf-8?B?bFI3Y3FnTmQ5RlN1RGhTaXh6MmozdU5JK2VIMklVUEJZMGtwMVZpdXdZdFdp?=
+ =?utf-8?B?TGtmTElpR1JuaFVHZ05RcE92M08xSkl6alNCYTF2NnNGT2NiM2k1K3VBVDJP?=
+ =?utf-8?B?emNZWU02S0N0aUprYWxPQ2ZlNm5FVkJIZ0ZSRkE2N3UyRWtkVExFdnpFUDZJ?=
+ =?utf-8?B?aXFTaXUzemgveUtLc25UTjJ4Z3VSdUJBaXVzaHRyMG81cmx0VFhCQStDOTQx?=
+ =?utf-8?B?dUlJcHVRV28zckp2SHlCclN4RC9KcEdTRGZhdUxRRW15RjdacENWc0J5eklw?=
+ =?utf-8?B?RlVEVUo2SmZkNDdhZjNrTW1acCtEam0xYVROYkxaNytSaXUxajlNa2c1Q2VK?=
+ =?utf-8?B?OFJqTXhpMW5wekprYXRtM0Q1eFNLUTlnQStkQVFycnpvSmxXZHZhR012VlB6?=
+ =?utf-8?B?MXZZK014VUZzMnBDbG56cnE0TFFYK3NIMitablltVVVZTG1WK1llNjJrWEly?=
+ =?utf-8?B?bEd0VGdHV0dva1R1TkFmYVN4ajlxaHFSak0vNDBlK053eFllUjhjN2VOVkEw?=
+ =?utf-8?B?NEh0RkQrS0xVdUJSUlI4WUhnUEt4Q0JKQ1A1Q1FjYm85NTVTY3IyYVFHZUxo?=
+ =?utf-8?B?SlByemQ2WktvYlFBSFNTSWRzQzczYWxka1RQaldhaVlJaHVlSGRaNmN4WGNT?=
+ =?utf-8?B?dFQ5MDEwdk5Xd2dGMFJNQ0orZ09rTmdOL3h5dVR5dnIvR3hmVmswcnZXL2Iv?=
+ =?utf-8?B?NFYzMkYrR0UzKzNvVkVsdFBmdkx2aDcxVE1EUzdMbGc3eUl0czFSSlpaV0lD?=
+ =?utf-8?B?bWFZYVJ6eE5SclpkU3l1czhaY3dKMjdJZ3NXN3hFanI3bnh5YkpMSUx0dXN0?=
+ =?utf-8?Q?1ReMnTH0e79d7S1z0noM?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 318f5510-596e-4fee-3dc1-08dd9c20a58a
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 06:43:39.4143
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR19MB8866
 
 
 
-On 5/25/25 21:13, Krzysztof Kozlowski wrote:
-> Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
-> syscon_regmap_lookup_by_phandle() combined with getting the syscon
-> argument.  Except simpler code this annotates within one line that given
-> phandle has arguments, so grepping for code would be easier.
+On 5/26/25 08:17, Krzysztof Kozlowski wrote:
+> On 25/05/2025 19:56, George Moussalem via B4 Relay wrote:
+>> diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+>> index 3acd09f0da863137f8a05e435a1fd28a536c2acd..a9e94666ff0af107db4f358b144bf8644c6597e8 100644
+>> --- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+>> +++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+>> @@ -60,6 +60,29 @@ properties:
+>>       minimum: 1
+>>       maximum: 255
+>>   
+>> +  qca,dac:
+>> +    description:
+>> +      Values for MDAC and EDAC to adjust amplitude, bias current settings,
+>> +      and error detection and correction algorithm. Only set in a PHY to PHY
+>> +      link architecture to accommodate for short cable length.
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    items:
+>> +      - items:
+>> +          - description: value for MDAC. Expected 0x10, if set
+>> +          - description: value for EDAC. Expected 0x10, if set
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Not tested on hardware.
-> ---
->  drivers/memory/stm32_omm.c | 21 ++++++---------------
->  1 file changed, 6 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/memory/stm32_omm.c b/drivers/memory/stm32_omm.c
-> index 79ceb1635698..bee2ecc8c2b9 100644
-> --- a/drivers/memory/stm32_omm.c
-> +++ b/drivers/memory/stm32_omm.c
-> @@ -46,7 +46,7 @@ static int stm32_omm_set_amcr(struct device *dev, bool set)
->  	struct regmap *syscfg_regmap;
->  	struct device_node *node;
->  	struct resource res, res1;
-> -	u32 amcr_base, amcr_mask;
-> +	unsigned int syscon_args[2];
->  	int ret, idx;
->  	unsigned int i, amcr, read_amcr;
->  
-> @@ -98,29 +98,20 @@ static int stm32_omm_set_amcr(struct device *dev, bool set)
->  		of_node_put(node);
->  	}
->  
-> -	syscfg_regmap = syscon_regmap_lookup_by_phandle(dev->of_node, "st,syscfg-amcr");
-> +	syscfg_regmap = syscon_regmap_lookup_by_phandle_args(dev->of_node, "st,syscfg-amcr",
-> +							     2, syscon_args);
->  	if (IS_ERR(syscfg_regmap))
->  		return dev_err_probe(dev, PTR_ERR(syscfg_regmap),
->  				     "Failed to get st,syscfg-amcr property\n");
->  
-> -	ret = of_property_read_u32_index(dev->of_node, "st,syscfg-amcr", 1,
-> -					 &amcr_base);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = of_property_read_u32_index(dev->of_node, "st,syscfg-amcr", 2,
-> -					 &amcr_mask);
-> -	if (ret)
-> -		return ret;
-> -
->  	amcr = mm_ospi2_size / SZ_64M;
->  
->  	if (set)
-> -		regmap_update_bits(syscfg_regmap, amcr_base, amcr_mask, amcr);
-> +		regmap_update_bits(syscfg_regmap, syscon_args[0], syscon_args[1], amcr);
->  
->  	/* read AMCR and check coherency with memory-map areas defined in DT */
-> -	regmap_read(syscfg_regmap, amcr_base, &read_amcr);
-> -	read_amcr = read_amcr >> (ffs(amcr_mask) - 1);
-> +	regmap_read(syscfg_regmap, syscon_args[0], &read_amcr);
-> +	read_amcr = read_amcr >> (ffs(syscon_args[1]) - 1);
->  
->  	if (amcr != read_amcr) {
->  		dev_err(dev, "AMCR value not coherent with DT memory-map areas\n");
+> If this is fixed to 0x10, then this is fully deducible from compatible.
+> Drop entire property.
 
-Reviewed-by: Patrice Chotard <patrice.chotard@foss.st.com>
+as mentioned to Andrew, I can move the required values to the driver 
+itself, but a property would still be required to indicate that this PHY 
+is connected to an external PHY (ex. qca8337 switch). In that case, the 
+values need to be set. Otherwise, not..
 
-Thanks
-Patrice
+Would qcom,phy-to-phy-dac (boolean) do?
+
+> 
+>> +      - maxItems: 1
+>> +
+>> +  qca,eth-ldo-enable:
+> 
+> qcom,tcsr-syscon to match property already used.
+
+to make sure I understand correctly, rename it to qcom,tcsr-syscon?
+
+> 
+>> +    description:
+>> +      Register in TCSR to enable the LDO controller to supply
+>> +      low voltages to the common ethernet block (CMN BLK).
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    items:
+>> +      - items:
+>> +          - description: phandle of TCSR syscon
+>> +          - description: offset of TCSR register to enable the LDO controller
+>> +      - maxItems: 1
+> You listed two items, but second is just one item? Drop.
+
+What is expected is one item that has two values, in this case: <&tcsr 
+0x019475c4>
+
+I could move the offset to the driver itself as it's a fixed offset, so 
+ultimately the property would become:
+
+qcom,tcsr-syscon = <&tscr>;
+
+agreed?
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
+Best regards,
+George
