@@ -1,95 +1,113 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7B11B0439;
-	Mon, 26 May 2025 08:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4DA1E1DE0;
+	Mon, 26 May 2025 08:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246751; cv=none; b=HWezS5Xu7mgylgTHhwHkh87aS6Rp188aHYdIBZofvN5xXR45YpocKGCAa8XCvroXtZ7K0XaL6bU0+gEWJ32Qdmp0EEj8Nq77Z495nhp29oYupwtzAWfhWiOs+XrOuVvUOLRxOFbXDWwcIspZAc7AdggGv5/E1qCk8F1e+pPxHNk=
+	t=1748246901; cv=none; b=nT6yoinAgxOovoyBgaCWITLhNfPfkjRHNavHttTEZwb27aO+/+WEjEL1Y8vsRcH1Oi0q7oeodWhJ+ppZ7TPOuqmHNx7RRq/INjVADOlqGzBqg8I9fFLdmkJlQ1UTOLDoZzEtxn6NhSlqRE1mwf2++o4CZYpLYUFJRtmwrJi/JLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246751; c=relaxed/simple;
-	bh=VAks8kelq3T1bF1cj0QNfQxuyzA2YkGqf6FnO2lYeYY=;
+	s=arc-20240116; t=1748246901; c=relaxed/simple;
+	bh=8Q0TqPpgyELDBtvVUMwLRgpXMyfs4Zf3sAWQ0I20ce4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZJ3DFi5l6JWVA5xgCmV7ysyYmfHmpxvHEkH+sm55WGTHE+t/qfLp5WAH+sNUnM4aRylYf18j0kYcCXW4NJbak2tkU4xaPgnZ3UW3krtd1V4t5CKhSTyFv3Ej6rtHEBWnDGViafmmIszig06sGLvCbszkUf3D1lgyUi76gGuR+Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=fNYedgBtZLmiwkeZdc5hHnthoI2h8oksxwgRpb9m/76f70cYP6/qHWBzvj4hseHgILjBeYYGTNtrC3hHePBf60mzJwWNQY/GefD6NzMdyO1BcU9mYsWixnNgwwPR3ITeG3RDEMFBZmUjoJsbb7fsyzM91b/IxMc9ZCipLlnrEVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZdUq+2D; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-527a2b89a11so661310e0c.2;
-        Mon, 26 May 2025 01:05:49 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZdUq+2D"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2dfe2913a4bso483543fac.1;
+        Mon, 26 May 2025 01:08:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748246898; x=1748851698; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Q0TqPpgyELDBtvVUMwLRgpXMyfs4Zf3sAWQ0I20ce4=;
+        b=AZdUq+2DGx2DjWCYnI8AS7Nh7loMsjW6gwh5QXnQQvaguK3y5iLh4FPGOZAibBEVce
+         zdk3069erDD06OG2Wk6qAlr+Cvh/vJxSthrFXJ02I0f6uj8BGBx0MoPvrsB8iaimx2bi
+         1iNdJo7Lu9CcrbtpOOaK3/bpixqqNHlpBMRHXfLnek+LbN5tQGrp3emIJhkMZ+bdkTBR
+         h1q1LeHG7VvzvSxhhIQ42wFYzAF/7HhVHRJlAVkcm/9Y9LHP5huzJsPVIFndcakWklKZ
+         42jf+uLIjT2NJyKFD+cEKdTldzqX95X2CkdIM+Cpingt4MhP0/svzihKjMaKrFFaozQL
+         5tuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748246748; x=1748851548;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IZExsB6c5QDJ1XTRzVwWuTeLT5rh0r2AKMowtMpKktA=;
-        b=cby/Yh6jYi3WpU8pmE9Zp6j8f0MA4jc4wTBehQZJFSQJR9/XPUv6foxXjikSV1P9yS
-         sQDRwCxu9N2aZgSpYbQ5etSBifFL8+aKpL27ubKZAXhHz7+Gh76Ck2qnP8o+gKwF3a6S
-         avre684meAUst4PewOlQyQw65xJer2WlEFmYvCtGYG2fGJ3Udan+O6ztIkcLXnWgCm9y
-         gfD93D7npJ4GJ2e/+/uuNFnOT+VYO/QteF/rRd5yH66cV6MINjm/rXeKwfA3XIup/vwi
-         STr9VrHCgT3eKP42OqA3Z2vs6nfgvIz4VdqMJCuC0y8S4L0mex/Y9jud2uXfm4NqZ9sV
-         cb6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUAa2qa5CJw/nbK63QB2yXNaDuucu0OTet6zMn+hsiTujRQ0rgqx9IetM3RlPceutkvwKtxccaWGrjHB/Y=@vger.kernel.org, AJvYcCVhQSw2EZeSb4Yk3/v+vUyN5ySqSVTYkBP3AS0IcweyexnBqIiX1q/64Jbtw8K3NrfmQiAUM2uYnwlegyjhg9ypQiY=@vger.kernel.org, AJvYcCWhratJEzOxh/g1w3o255uIQ7UOGKQnrOEQXdXoo7/L4wANNYniL7NPtHMzAOuBWCyEmRWNToc/1CnVDxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzh9fbPBQIJCVdK/UEemXwW+DbhDnMNzkKceh9xOKAa7Af82IKa
-	r1xPQCVQrLKeFAkpooEyGOl0y1qmgnF4PMNLfU0HHbjh3yY8mg54ZfvjjOFFkclF
-X-Gm-Gg: ASbGnctEJsFMBN5PABzyCFTASPvd6d+cgnSrz+d6yHrGtF1TJPFxmSU7MD4ov40SDye
-	hmeDZvM+/uVn7M0cSXN0Yx/5Lfz7iC2Ywgg9xDS5s+KRD3496simBsaCUUF4RAJQo9DhwRHd/q3
-	glBtAMvaivXjwmylcXlW4kVChEF4HG4mRSdj969fFw6bdISu7YjKtXvYBhQRaX/Y/SXDjBElo0y
-	iBK8ItY9nBNX5xjFmKeibkZuEpBTCCsdKxdRs4iTcdoAplFWk/tUuhrA6RBmAIg78jd17nWEFAp
-	jxuW0GTmxRvJYdnq+ywcj4VbzcTjxcYKD1E8dFpDaDR2QQvvCIp0fTaR8fDqXhxAPKUgxvmDM9w
-	rGXCsRMtxPw4u1Q==
-X-Google-Smtp-Source: AGHT+IFqt+kNOXU/fUK2YfRkmNHuU3HzVNV8qFPCdwb0iQhdJqM30k5qEiQF2MbkYcnH6r0Uc0o5Jg==
-X-Received: by 2002:a05:6122:30e4:b0:52a:791f:7e20 with SMTP id 71dfb90a1353d-52f2c4ca21fmr6157940e0c.4.1748246747737;
-        Mon, 26 May 2025 01:05:47 -0700 (PDT)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53011b001fesm75002e0c.18.2025.05.26.01.05.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 01:05:47 -0700 (PDT)
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4dfa5cee94fso304470137.1;
-        Mon, 26 May 2025 01:05:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUZaUY3MnM9YwHAmOhU8SCQbr5luXhsQ+TIlmtlkjKzjz8bGLxsOVjy+3F80vn+DJ8zl8GaXXhvTFvxIzg=@vger.kernel.org, AJvYcCVHJSxmzD+NgMCIngo0VcXBBVWlY60ooiax59OsE2JcP8zroWBDLa0XTfGfETylPr2otp/8y0OtPt6l39jjClL/368=@vger.kernel.org, AJvYcCX1bpJGvfGdOH4R+c3smEFG7FGNvrzU5leRrmu587I0n7x0N4ixzwlHJRCGVgn3rd1TXyVH9b15TyWh3YI=@vger.kernel.org
-X-Received: by 2002:a05:6102:3e24:b0:4dd:ad88:b9bb with SMTP id
- ada2fe7eead31-4e424094745mr6288510137.10.1748246747377; Mon, 26 May 2025
- 01:05:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748246898; x=1748851698;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Q0TqPpgyELDBtvVUMwLRgpXMyfs4Zf3sAWQ0I20ce4=;
+        b=ZKzpHQ7JLxChp/zJe2aRa4cLIQmzBPmqH10UOKcHJtvUrWltU1TUH/6AqZY3+F93M3
+         1m86tyyhkSIBaRvAvwg+EhRFzihmR2Zvh3HeduCcq1bms1liHeQG+plVxevO7NoBfNNR
+         B5yh3m38LCg/TCxmbxb+OBrCD8RJD0J0VhLAFGzISkM8VnlEvp8sE2EGQ+6YAC124dT9
+         UW7eGqqXMES3TpY5t2T6j0HLSbquCLgvZpbRHB80FUuhKtZEfnmokms0zYKVjJSPlr3t
+         w8myVrXulq53MsiiWARkPCpXA6tvzlhZtfvEpxBfVO2pIz2zJPaE3RNghD/6taRFemUB
+         PIug==
+X-Forwarded-Encrypted: i=1; AJvYcCWelnr+e+/hjKMkjndmk2VpS7qwmCOIPqyBFvAw9e6h59lwMDEs+tmYQb0QfsOmvI6CeS2GC7i8E3CUTTY=@vger.kernel.org, AJvYcCXvjrFHw8D1VRMu57BajZ7ZUQupfPC7cLrvpZO+qA4hwxEhBatxjlGLPuplqMU4j7Lfgk0qPNDMlN9tZnBe@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmOOo0Kk8A1VqKdkW0aD3sYEPjHLBEK8oiwiwH/8YXtwCAb1Um
+	J94nY+CYwB2OZZCCkzZGjehupznLqfTHQG39/Kd7e7ysB5J/CqqfG7pW7IhcqjXOLou553nXnbt
+	EPEGX3mKUMl8lT1g209+UawTV0qpfLj8=
+X-Gm-Gg: ASbGncuLqMoF1XFE9UWR5gvotLz5R0mxK1Pi9ScPdOn8XnBbysfzDC9y69z++TB/1mW
+	Wpv/6abPX9qBA5jG1vZ6aYymnnSys6yh1T84WdaMBhjSIZJAoSwY/Kt+eDiHIH8rhwyEfIYcYiY
+	4TnchVI+d9TtfSqSXnpKmdojjfmJdHJ3M=
+X-Google-Smtp-Source: AGHT+IGxNiJ2JN9yQaaNmhzBJ4exMZFiM1orR0HsJgV8LTuslVDwxXw8qKaRDg0MyPI7W9BYifpPey/SXK/CXMI1Uig=
+X-Received: by 2002:a05:6870:9126:b0:2d4:ce45:6993 with SMTP id
+ 586e51a60fabf-2e862051001mr3658252fac.30.1748246897938; Mon, 26 May 2025
+ 01:08:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526075236.13489-1-tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <20250526075236.13489-1-tommaso.merciai.xr@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 26 May 2025 10:05:35 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVeeYzJpw0KV+0jCys2hFGu6W3247dh92_jeAAznMy9-w@mail.gmail.com>
-X-Gm-Features: AX0GCFudv3U8dEnoIEg69dXge7iYJr7SZXstqqV0oANNyqHo0hGk0mjtoQN8w1o
-Message-ID: <CAMuHMdVeeYzJpw0KV+0jCys2hFGu6W3247dh92_jeAAznMy9-w@mail.gmail.com>
-Subject: Re: [PATCH] media: rzg2l-cru: Fix typo in rzg2l_cru_of_id_table struct
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CAGG=3QU5Yi2AfHS_poi8SgmatedRg-X8Ct74FOCJUc9iJNPnhg@mail.gmail.com>
+ <CAGG=3QVw5+4-7f+gMJSanb0ixC=SujDQyA1=CPRvR+a6+c0U_Q@mail.gmail.com>
+ <27de0526-0b19-4e14-8c51-1e8b0ddcf490@gmail.com> <CAK7LNAQAoPhZrbY=5iBSCxWegSaoqsdtY=3zK+u+ZrgevidAsw@mail.gmail.com>
+In-Reply-To: <CAK7LNAQAoPhZrbY=5iBSCxWegSaoqsdtY=3zK+u+ZrgevidAsw@mail.gmail.com>
+From: Bill Wendling <isanbard@gmail.com>
+Date: Mon, 26 May 2025 01:08:06 -0700
+X-Gm-Features: AX0GCFvABg0Oy4QBciPdw3oAuT7SDVaQ11met7fEnftYSd7Nx1ImszWK7jvl_w4
+Message-ID: <CAEzuVAdu3bDXUGgi4U-XY4dRmBxKaCA_OjKrvK-2ftOWWwVEYA@mail.gmail.com>
+Subject: Re: [PATCH v3] kconfig: check for a NULL pointer before access
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Bill Wendling <morbo@google.com>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 26 May 2025 at 09:53, Tommaso Merciai
-<tommaso.merciai.xr@bp.renesas.com> wrote:
-> Correct the misnamed .data member for the RZ/G2L CRU. Rename
-> `rzgl2_cru_info` to `rzg2l_cru_info` to match the intended
-> naming convention.
+On Sat, May 24, 2025 at 10:08=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.=
+org> wrote:
 >
-> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> On Sat, May 24, 2025 at 9:49=E2=80=AFAM Bill Wendling <isanbard@gmail.com=
+> wrote:
+> >
+> > The call to 'prop_get_symbol' may return NULL in some cases. The if-the=
+n
+> > statement accesses the returned value without cheecking if it's
+> > non-NULL. After inlining, the compiler may treat the conditional as
+> > 'undefined behavior', which the compiler may take the opportunity to do
+> > whatever it wants with the UB path. This patch simply adds a check to
+> > ensure that 'def_sym' is non-NULL to avoid this behavior.
+> >
+> > Signed-off-by: Bill Wendling <isanbard@gmail.com>
+>
+> Same reaction to this patch
+>
+> https://lore.kernel.org/linux-kbuild/20250212154537.235297-1-ant.v.moryak=
+ov@gmail.com/
+>
+I apologize for the whitespace problems. My mailer is crap and
+sendmail isn't available on my local machine (it's a long story).
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Please attach a test case
+> that causes a segfault with NULL pointer dereference.
+>
+I don't have a testcase. I discovered this while working on a Clang
+feature to isolate paths with undefined behavior. (GCC already has
+this pass.) The compiler notices that, after inlining, the path has
+UB. It's not necessarily important whether the current compiler messes
+up the code path, it's more a matter of *when* the compiler will mess
+up the code path, as marking UB paths as "not executable therefore not
+executed" is a common trope for some compiler developers.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-bw
