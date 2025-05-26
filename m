@@ -1,71 +1,115 @@
-Received: from mailo.com (msg-3.mailo.com [213.182.54.8])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C591BDDBC;
-	Mon, 26 May 2025 16:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.182.54.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9506820299E;
+	Mon, 26 May 2025 16:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748276611; cv=none; b=JVokJ0njE7iW2V4l9dHXuXCS1QAl2GNd4sWikqCLuHeMGqg9RYpgQ33qvLQEau9U+7DAMe/zqVO4ziGVW1vNUwB8WcSjHIglwTlF0ZKWpMASJumDL7sK6iyqZ4SPlVfKwfZYFCt7xEDl7q3/HHhjad83S68tw2W8DhjgvS5FOyE=
+	t=1748276631; cv=none; b=EYexVKprqDh1iI+8YBWbceGvoFRIfSLuJztQzUdrd8oIGDhV9DHVI0AaQwfnk32xAKraWH3d+J2X7nMiS9slGUYIuM8TNFdWfKaRLcI4V62tFNpQUDpcf6DbWsmlxLTYH+Ly8xOI8ZMsZIKMd6jNw2NoW+WwrPV4i2EbkG1UjvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748276611; c=relaxed/simple;
-	bh=4N6gJ0FhNDbJX77zeO9xz/HC/fn9r+8rYWuBbn8xDcc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ob8Zsq5gR2gKVt8KL7lmefvEiS67N66aiDoQqZIngW4+HVNLjVq6Y0UMLm0kgCVIujMzBCBQthIbJlpvFCu19GNhB5MFD54CWvnkeBYEO4wgFMTCHvhvx85Y4COljQbsz1KJ9nwNKuQbCL+ckEvWHtv93iMxPp1y3NKRDdC4G38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org; spf=pass smtp.mailfrom=mailoo.org; dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b=S1aSAhzA; arc=none smtp.client-ip=213.182.54.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mailoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailoo.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailoo.org header.i=@mailoo.org header.b="S1aSAhzA"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mailoo.org; s=mailo;
-	t=1748276595; bh=4N6gJ0FhNDbJX77zeO9xz/HC/fn9r+8rYWuBbn8xDcc=;
-	h=X-EA-Auth:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=S1aSAhzAk6CIQN31Ww4v79nHUmmiiv6O7zOYTfldRjY7tbl9SFLpT0FrSLQKYRDAV
-	 WQy4ZIxmngqDWeEUbaNnxhtEdhPl4TdrzEXAFBU9EVbLqJPmli3VvOZQcreUegZd2L
-	 jj/V75c0e+gg+MsjMoGW/VYicTczIBF/pSMVpxDs=
-Received: by b221-1.in.mailobj.net [192.168.90.21] with ESMTP
-	via ip-22.mailoo.org [213.182.54.22]
-	Mon, 26 May 2025 18:23:12 +0200 (CEST)
-X-EA-Auth: AJCTH2JAplmk8gUgYuFTOwwgdqiQXiBIr8EzluI+jeWKbd5bKjFL3G5CZAe28NCuq4IqybX+zBfuBJTqkNrQz0cTl+JwGPG1RA4IO3nXuME=
-Message-ID: <4688737b90f26ce56e7043a006f25e28cddc928a.camel@mailoo.org>
-Subject: Re: [PATCH v2 1/4] media: qcom: camss: vfe: Add VBIF setting support
-From: Vincent Knecht <vincent.knecht@mailoo.org>
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Robert Foss	
- <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, Mauro Carvalho
- Chehab	 <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bjorn
- Andersson	 <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- =?ISO-8859-1?Q?Andr=E9?= Apitzsch
-	 <git@apitzsch.eu>, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Date: Mon, 26 May 2025 18:23:11 +0200
-In-Reply-To: <e8750bc1-11ab-480c-a0fb-262ff6a0dd22@linaro.org>
-References: <20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org>
-	 <20250525-camss-8x39-vbif-v2-1-6d3d5c5af456@mailoo.org>
-	 <e8750bc1-11ab-480c-a0fb-262ff6a0dd22@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42app2) 
+	s=arc-20240116; t=1748276631; c=relaxed/simple;
+	bh=3rKM3t8ghJaT33UAt7ML5cI5/HQFX7a1T3aoNNJ6cRI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dSUjb/PBPmvcFEls14IXxigglx9qJHuZ7dQqsAO427paZFqfdbIHqvszSKq/5SEe1v5RHeM2Xf/pvpcAK8nvLiH5ntQDcDQkuhDYsObJOKIG+Ftki5/nDXZcSEDVKRjTDz0rbSDJzcrDKbNXgyvvsJwUyu9/63ZsKIJ2OB/CUFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [27.18.99.37])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 16718efe6;
+	Tue, 27 May 2025 00:23:41 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Date: Tue, 27 May 2025 00:23:35 +0800
+Subject: [PATCH] dt-bindings: pinctrl: k230: fix child node name patterns
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250527-k230-binding-fix-v1-1-3c18ae5221ab@whut.edu.cn>
+X-B4-Tracking: v=1; b=H4sIAIaVNGgC/yWMywqDMBAAfyXsuVuSTSPUXykefGzsUoxtolIQ/
+ 71LPc7AzA6Fs3CB2uyQeZMic1JwFwP9s00jowzKQJaCDVThi7zFTtIgacQoX/SOQow3H+/egmb
+ vzKr/y0dzcubPqufllNC1hbGfp0mW2mzV1QVojuMHOm41f4sAAAA=
+X-Change-ID: 20250526-k230-binding-fix-3125ff43f930
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+ Inochi Amaoto <inochiama@gmail.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, sophgo@lists.linux.dev, 
+ Ze Huang <huangze@whut.edu.cn>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748276621; l=1885;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=3rKM3t8ghJaT33UAt7ML5cI5/HQFX7a1T3aoNNJ6cRI=;
+ b=s92TgKISQNeKR5510+Ky6wgaq4zbHjoGIaAAXPtBHjdq+sk3UaYAjX/xh7VS/BQA3ayAcvpcs
+ Yjw8lrnp/GZDN7mFZcx6qqPGEY7iYYibLZggADmf+H0MSZIA1Z0Gwq5
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHkxCVhoaGB9PGUhNQk4aQlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0tVSkJLS1
+	kG
+X-HM-Tid: 0a970d6831a803a1kunm4c5611af1d643
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mxw6Kyo6EjEzCAxITSsxSyMD
+	TTdPCjFVSlVKTE9DSUxNTUlNT0hCVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVITFlXWQgBWUFISUJMNwY+
 
-Le lundi 26 mai 2025 =C3=A0 09:13 +0100, Bryan O'Donoghue a =C3=A9crit=C2=
-=A0:
-> On 25/05/2025 20:25, Vincent Knecht via B4 Relay wrote:
-> > +void vfe_vbif_reg_write(struct vfe_device *vfe, u32 reg, u32 val);
->=20
-> write_reg() / read_reg()
->=20
-> ---
-> bod
+Rename child node name patterns to align with conventions.
 
-Do you mean to just rename to vfe_vbif_write_reg(),
-or that I should also add a getter function ?
+    uart0-pins      =>   uart0-cfg
+        uart0-cfg            uart0-pins
 
+This avoids potential confusion and improves consistency with existing
+bindings like sophgo,sg2042-pinctrl and starfive,jh7110-aon-pinctrl.
+
+Fixes: 561f3e9d21a1 ("dt-bindings: pinctrl: Add support for canaan,k230 SoC")
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+---
+ .../devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml          | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
+index 0b462eb6dfe169a292bf716503c03d029f1ac7ee..f4e0da0bf7fa30af5132644109dbd371ddfc0228 100644
+--- a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
+@@ -22,7 +22,7 @@ properties:
+     maxItems: 1
+ 
+ patternProperties:
+-  '-pins$':
++  '-cfg$':
+     type: object
+     additionalProperties: false
+     description:
+@@ -30,7 +30,7 @@ patternProperties:
+       pinctrl groups available on the machine.
+ 
+     patternProperties:
+-      '-cfg$':
++      '-pins$':
+         type: object
+         allOf:
+           - $ref: /schemas/pinctrl/pincfg-node.yaml
+@@ -112,8 +112,8 @@ examples:
+         compatible = "canaan,k230-pinctrl";
+         reg = <0x91105000 0x100>;
+ 
+-        uart2-pins {
+-            uart2-pins-cfg {
++        uart2-cfg {
++            uart2-pins {
+                 pinmux = <0x503>, /* uart2 txd */
+                          <0x603>; /* uart2 rxd */
+                 slew-rate = <0>;
+
+---
+base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
+change-id: 20250526-k230-binding-fix-3125ff43f930
+
+Best regards,
+-- 
+Ze Huang <huangze@whut.edu.cn>
 
