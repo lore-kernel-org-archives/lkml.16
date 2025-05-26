@@ -1,115 +1,136 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265AE7E110;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4674E202F83;
 	Mon, 26 May 2025 14:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271023; cv=none; b=WDpUTZBN36Uq7WwDh6QCas82pd223oAoRU9YpWneDjtf8xkQMtn6xGwivS3i93aadNCWO65hEO8JHr6V0rs5p1NhSs0SDhcPWJsCp89btJapVNBUoKjANiQ6B9YKfE45PWtn1m/u05P7s4mNVAaXm2kxgfUY7kk4oTSOr6qBybU=
+	t=1748271024; cv=none; b=NsobHpoFdE4P6bOYYoAs+wm8MZ75NM4hf1ZTy3VF/SJddYJgJMHoPYMdL1C8o+4g7A8ntOQd1XvwyyxrPFu+CLmWzCSZMJPqAebVTU+VIUfu+mFMEZCFl3hWEnTlxj+tzv/VlgeMFsKQD51obIB8M7iOKXO/J0G6IRQtXCd9A4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271023; c=relaxed/simple;
-	bh=ZxYIp2TgdyRyWrfp3iOr00VxDZSBZjiNlSPLs0mE9as=;
+	s=arc-20240116; t=1748271024; c=relaxed/simple;
+	bh=6aKzDgGB/ZUmFcoUldyOCp1+E10okRiX8GJYWNpjka0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jYtLLBIcoigXhb9yyKTgGSv+PjUMfcPWcvmxBvRK5fBnOn1Pn5sLvOy9C9u73AH8D7RjOr9i9fyc9yFYGAdzOL9ZSfo2pzW1cKloot6lDIGIeOdkP00o6HPgkt3OaZCZPCPjRUpyfZqmALFJ9vGIL9VhcL2rJe8+J2OX1wadJP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q8InF6CJ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=PWmCzNoqBwN02WSz6hgmJHG0s/9dA4EU499/UJj2MxoWghB4HhxsSPED3e8swXS/dZVYObRnL277Kia7M32KzwHcu1hpFbd/8u+jDNEam164alH3fLew8jgXZqNfReXy/6Xt866mQJ9JJNUgkf3vgb/lvKg8AUdBxLRWu39EEyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lDnKj95H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zm8REmFi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q8InF6CJ"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q6qcxL029745;
-	Mon, 26 May 2025 14:50:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=ZxYIp2TgdyRyWrfp3iOr00VxDZSBZj
-	iNlSPLs0mE9as=; b=Q8InF6CJ+rx2e9m0K9x2iRdmpsLHg1tw8WQ49XxKruhyae
-	vYiWEQKf5R0DDrKO2n4C9+VFiN9EtqnjFpbCUSUuRzwOMAiXLP/3kV6EtzEndNeF
-	05SPEBR9/O0XtlDVxuqqgVc2hz06DAJR535zrwvXHxTQ//Om7RUduQ9FJfuBMQNI
-	mtbVEnVAVQrOCOhaDXhgH4CyCOs1iteo8b1pfAwy0k2aycvmcrtUTT7lMHHCC0/f
-	LwggzbkkfmGAsZA0BJ5H4xmg58iyTIU1Um3lPmm3kWNYPa40KR9l1OJAJFYbXtrA
-	r4GDSS61LQBxydJ1l6Ji5oxTV18WEC37o62RGxZQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u3hrt3xr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 14:50:08 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54QEg6GC012848;
-	Mon, 26 May 2025 14:50:07 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u3hrt3xm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 14:50:07 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54QDW4SI006819;
-	Mon, 26 May 2025 14:50:06 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46utnmebws-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 14:50:06 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54QEo5Pg22479170
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 May 2025 14:50:05 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1A69C2004B;
-	Mon, 26 May 2025 14:50:05 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BF92F20040;
-	Mon, 26 May 2025 14:50:01 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com (unknown [9.124.209.42])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 26 May 2025 14:50:01 +0000 (GMT)
-Date: Mon, 26 May 2025 20:19:58 +0530
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
-Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
- to return counter data
-Message-ID: <3wn3cpouicbzkwlzlgfetqxnrfpwpbgryna2nk2etjks7wtedz@gwvsm2bd2p23>
-References: <20250519195148.1708988-1-irogers@google.com>
- <20250519195148.1708988-5-irogers@google.com>
- <aC-jR0b3mji4oJ7Q@x1>
- <CAP-5=fXdpT3-=e4cqZN4fBJK1c4TnYC1ZVV5Q5zTjmf7T7Fffg@mail.gmail.com>
- <aC-m7G-AVJP6sDD3@x1>
- <aC-nOmMADRlnqkP8@x1>
- <aC_PNda-nDPHGr19@x1>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lDnKj95H";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zm8REmFi"
+Date: Mon, 26 May 2025 16:50:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748271020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LNlsAOL7ZgwI2HEsBSEBPxt6J5Za4EdYqqyFjUCPx+s=;
+	b=lDnKj95HzNnLs+kNUe+FsdhY6xmb8zMvOyt3YglhAP4AMP1McZ0Q0WRq30XvZ1dD8AHl96
+	EKaEYdE7+Ref10HJ7RgivJBYUoIUsl2/HFxLcm/jABo+S75ibkApABSHxCIJbFfnVBjWDY
+	+w1UuaI2jAV8MB58wsgr0q+Mz7ZsylyNpQx2A9VtnD3ifETfyqdJ2GaMyyH+bddcsTmG/R
+	tudzmruX3Dvk2rH3i+WuyqbrckCRdcT6XcuilC50BwB3QudmW8NcyzbMoEPnrTKXwyajek
+	8yUA+jn8dg70ny23F9a/XWbZYGT0vfmdXtz6XoTRslHHkwyOniU90HnYGL5o8g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748271020;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LNlsAOL7ZgwI2HEsBSEBPxt6J5Za4EdYqqyFjUCPx+s=;
+	b=zm8REmFiKPwOTZ24+PZoOb7jWmzgaIsmL406pqgMB9q9a/Alo73hYSk10LJpi6Wb0fJKVA
+	9XxmVxesYvMMHIAQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] kunit: uapi: Add example for UAPI tests
+Message-ID: <20250526164038-12259c68-586f-4a24-a814-8ffed5778742@linutronix.de>
+References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+ <20250407-kunit-kselftests-v2-9-454114e287fd@linutronix.de>
+ <20250526-marvellous-abstract-koala-317cb4@l-nschier-aarch64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aC_PNda-nDPHGr19@x1>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=AOOMbaiN c=1 sm=1 tr=0 ts=68347fa0 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=a59WGzUNEWtFLksj9kYA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: 3m8QtZlCsjg9ufuxZyvWWbp5avUEQ6sx
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDEyNCBTYWx0ZWRfX60hMF0YTAA48 lp8ceG4L16CDHoD3SxrKOTKv8+143NCtTu5GNsAZHLCRQGbU8iNU/6Woof/ZTI1CisDpUhMSsfW F8koiSQZ00ThgTEBnIQWXQhc8EXfGlocJ+0P6q6INmnDCvzC/ytCQWo7fBa5Lu+FDrz9tQifkaT
- XAWlmlAPT7rJKdYvliuRT8melPG1lprVnYKlCSbCXX1nNu1YdeGho3KCQWPPNnFAo1Ec60OZSzT FfosOjD3bNylL0vNUj2kEo5EfytDeTUUiEPS0dNM1GdBXaDvknRSibeBJMlUJL87i69S/qV9yC1 rxrMpo/9YAmThQnkG7q8bUvzN9r+Oii7iPhJVpUW2mFonqhKe8Bzcrb1MliV6VzB8UWBTToCNLa
- ngAnC8fPSnlqz00VLTbesppJm6rD0Nouj3RRsin/vlTDEuzEkY9Udo32P27490HY5uUYJjnC
-X-Proofpoint-GUID: uDLsIOHoBmNYxnQXch7-i1saFITF079F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_07,2025-05-26_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=925 malwarescore=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505260124
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250526-marvellous-abstract-koala-317cb4@l-nschier-aarch64>
 
-Hi Arnaldo,
+On Mon, May 26, 2025 at 04:22:02PM +0200, Nicolas Schier wrote:
+> On Mon, Apr 07, 2025 at 09:42:46AM +0200, Thomas Weiﬂschuh wrote:
+> > Extend the example to show how to run a userspace executable.
+> > 
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > ---
+> >  lib/kunit/.kunitconfig         |  2 ++
+> >  lib/kunit/Makefile             |  9 ++++++++-
+> >  lib/kunit/kunit-example-test.c | 15 +++++++++++++++
+> >  lib/kunit/kunit-example-uapi.c | 22 ++++++++++++++++++++++
+> >  4 files changed, 47 insertions(+), 1 deletion(-)
+> 
+> 
+> Adding this diff allows 'make clean' to clean up the UAPI test binary:
+> 
+> 
+> diff --git a/lib/Makefile b/lib/Makefile
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -112,8 +112,6 @@ CFLAGS_REMOVE_test_fpu_impl.o += $(CC_FLAGS_NO_FPU)
+>  # Some KUnit files (hooks.o) need to be built-in even when KUnit is a module,
+>  # so we can't just use obj-$(CONFIG_KUNIT).
+> -ifdef CONFIG_KUNIT
+> -obj-y += kunit/
+> -endif
+> +obj-$(if $(CONFIG_KUNIT),y) += kunit/
 
-Thanks for fixing this, I should have looked at the other
-initializations in the file.
+Wouldn't the following be sufficient?
 
-Thanks,
-Gautam
+obj-y += kunit/
+
+The the kunit Makefile doesn't do anything if CONFIG_KUNIT=y and AFAIK for
+directories obj-m and obj-y should do the same.
+
+>  
+>  ifeq ($(CONFIG_DEBUG_KOBJECT),y)
+>  CFLAGS_kobject.o += -DDEBUG
+> 
+> 
+> 
+> plus the 'clean-files' addition below.
+
+<snip>
+
+> > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+> > index 989933dab9ad2267f376db470b876ce2a88711b4..1b6be12676f89cafa34f0093d8136b36f4cf5532 100644
+> > --- a/lib/kunit/Makefile
+> > +++ b/lib/kunit/Makefile
+> > @@ -30,4 +30,11 @@ obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
+> >  obj-$(CONFIG_KUNIT_TEST) +=		assert_test.o
+> >  endif
+> >  
+> > -obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-test.o
+> > +userprogs +=				kunit-example-uapi
+> 
+> clean-files +=				kunit-example-uapi
+
+This shouldn't be necessary as $(userprogs) is automatically added to
+__clean-files in scripts/Makefile.clean.
+
+> > +kunit-example-uapi-userccflags :=	-static
+> > +kunit-example-uapi-nolibc :=		$(CONFIG_ARCH_HAS_NOLIBC)
+> > +blobs +=				kunit-example-uapi.blob.o
+> > +
+> > +obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-mod.o
+> > +kunit-example-mod-y +=			kunit-example-test.o
+> > +kunit-example-mod-$(CONFIG_KUNIT_UAPI) += kunit-example-uapi.blob.o
+> 
+> -- 
+> Nicolas Schier
