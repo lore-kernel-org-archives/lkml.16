@@ -1,407 +1,363 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37561876;
-	Mon, 26 May 2025 07:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263CC1DE882
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246127; cv=none; b=rnJteAtw7z+z5SIKzDzSM0iONRgTch7nA4GJ9j3PywcebGVy42A96ssJfwsVkVEHVJ+92xE9NeHZb/Aa2AkmCITblhtpe6KwJVf3BR6Imj8LWDLjhOzwZFTCWC/vZE88rfI3M4PVtSOfOYwTd6rJtZpB2GW3OU55bxzdMJ7l/hE=
+	t=1748246185; cv=none; b=pTqqZZh8iIbEjgArxKASmb2vVbO5mlCrc2gjqlfQLVxhs9X7e9+yI0rNM8Oma7Mga6jX9r5GPhH99NohICUzn0jWah0Li+cb0Bf0FVF1xM/GcB+HoEYHZ6bkc2rqzIoZHA2ga7WzrytyMsyGsDgbNvTZDyk8AtcZ5OxMFnWbFfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246127; c=relaxed/simple;
-	bh=XPCLcuQrkBzjgmsDuHAMHHYumQ6KKsF+a1N2EU9j+p8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XoowFPWkUs4qQ8F2RkY11QcguKZM+j8zU5o4finSNFmJvUlj0iak4QAMOw6q3Iq9uWmu5uADdXybbk0W4eJ5r2ZmEEO/LhZXvDeOQ0/i8pCjqOR3E2mv9ohIBX6DpWHmS7UCL4OEv7lGYXU+AoGGbgNsn9MlhdIzKb9qPy/eVeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjUPbOA7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748246185; c=relaxed/simple;
+	bh=rT96umT3UJo4od70CROtSfigxcGHz0gDRlhvpyiLUos=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=K/3VSC76oOhoKXMePNA11YH5xMXDJSHtCh+MRBMyt39hHa76GMWiAF6GHbAS8zCU0NfQMgls+dewspK9mbbRUu6xjqcY9QnEjDqNS7koxzYIwkzvlFIXA7oiHIMvlP6mCfFFnUalzpwIPVXZUGBVNsnQW8lNQWUEG/rgQff+oLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XI2kXR7t; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjUPbOA7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464EBC4CEE7;
-	Mon, 26 May 2025 07:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748246126;
-	bh=XPCLcuQrkBzjgmsDuHAMHHYumQ6KKsF+a1N2EU9j+p8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LjUPbOA7zwjKsj+w4sk5AiUtss5DphFGS0alQKoH56L5gaMq7ge1sRWfuH9khTE8w
-	 nP/S+B/3yT3Zsft50yYymVmGWxG9eV87VlGAntfSXarhGNdecMMkqL0FcRTa2+9lXg
-	 RS3It96GbTMgPdZpuvgflqpQoSHU4GWRxXXq1gWDEwte4rpQBxDyF2SZWWjkIYrkk8
-	 udgTYbXQ9PShzRWwDFEnLZcr8jtocabRUiBPlpupOLmaNisXxRaSJvkeVYFqwufxsQ
-	 9zyY45LQjzECtgCC46yZbuXM1o06InDawRUwJClNjgApX6aWmGvw8knVEcg/Cz5MmP
-	 NtjG3IOhUD3WA==
-Date: Mon, 26 May 2025 10:55:05 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com,
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com,
-	corbet@lwn.net, rdunlap@infradead.org,
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
-	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
-	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
-	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
-	vincent.guittot@linaro.org, hannes@cmpxchg.org,
-	dan.j.williams@intel.com, david@redhat.com,
-	joel.granados@kernel.org, rostedt@goodmis.org,
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
-	linux@weissschuh.net, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
-	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
-	aleksander.lobakin@intel.com, ira.weiny@intel.com,
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Subject: Re: [RFC v2 08/16] luo: luo_files: add infrastructure for FDs
-Message-ID: <aDQeWT9sLNQVZKf-@kernel.org>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-9-pasha.tatashin@soleen.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XI2kXR7t"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so26226025e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:56:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748246181; x=1748850981; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dduT01owytSsr5asNudJ/teBGGdc9J5ofCYmeklonuM=;
+        b=XI2kXR7thgJUBTuf8StZJGjQKxQsZu/gVl1IC8iYR+alXs439fT6HnqdR0p+xN4IQP
+         IGjNXQS5VDOlaeSNBq3iTA3dXMCSDksRSiIfX42VgdckzCHi9iHz62MYor4fRek+G1uo
+         e9HzTPssKPdp6ZpCVnIf4VG3AMS5+wnEyCV1BN7wododgg98LzwfCmFiKiHzFFnUMR0M
+         FzN0caGJ/srTheX7VbXenBslSp/RbRA5SdXdnFZ8jRfAzBgcSEKcTkk67BhMP0reX3NK
+         XE8JIEod4EyyGfChRgvqOOZhU6dDS9RF96YdPOf6xCw5YS1bXPZ3GHhBH5eS+AvIbXLl
+         z59w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748246181; x=1748850981;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dduT01owytSsr5asNudJ/teBGGdc9J5ofCYmeklonuM=;
+        b=iiHHDSWJ+RmOa+goaqz+pXTJGzX1/m2RKJzRDlgcSIbWv3Hz5fKG+M07KMR7OqBq85
+         R8u5+QPsYW07IrwMV9hkPkuceJBvqDnZrI85duxIp/dP5bb8W9rbDDsiHaAUK1wOtw7U
+         lfyPuGH8J+0CzN5R4XxAXGdk0dXFjBBvm2hitFHhNWVYBzhDCX++1WilKM+9q4K3ITvH
+         j8/yOYaFarjV6cSN12mTq35OGun+3r7zNh9yadKGBZhIgV7VGPzN7Ivb89claaEyYvfj
+         gomduaGQh53asEN5GwCHqTSMT5A1aoe84+0ZiUENQ6S97GwoSDCduSG+XkUFvi4MUFfz
+         Z+Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVH3ocCQ489jEXUPvCJStliTuWixukAdYW6ioH0p8taew73Rk4mOhIz2ecc9iuZ4yNRF8fiX+zsm90vcoY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRsahWg0nRWjRCzYQ96bcKe8ckfDbt9QZQeIcIavbMFVE04h45
+	AdAKG4gBY6KRDu3uZcuIj21Xl6m5LpQ2jam9oAI73amVufV0IbKbVoqykDG5ytHvf54=
+X-Gm-Gg: ASbGncvi/vJXHZpCuNtflFboXf2rIRrcmBbDvAS6TYaVyithob1pgsg0skEfhUOnwdT
+	+9LUIMj4j8V9Ak1QtEv3ZFY0RgFPdP2OeTinkk0EuqV1lVDXxKsc1emWf5VugPcuFMBCOw+75Rr
+	6WV8dCQVasfNa+kODtqOSsbIrZ/YnM6Lqv+u4sCgTu+ZD+4xGqHxyJGGgts4jkFCxIEtpU8Lw5S
+	AiOUknea2UcRVW+GCayMTQcoaElD81OyXt/eVL8aWWqENJbjE5VJiY6lWusTamW5D/sJmgw08/N
+	wxmJTf05a1mNio03Dbn7iskoPy2/nDUw04Nh//eoj4VlIZldwbaa0YLTOH9u4uHydtveg4H95mJ
+	Et+SbT5+nUxdDP96hS0s2lQGTYYh+
+X-Google-Smtp-Source: AGHT+IGie9E2mDHqhXLLVf8m3fc94zPihdmNh7y738oAz9CJSBp+23Ok6ePY58BDaNgOF19enHZEbg==
+X-Received: by 2002:a05:600c:3ca6:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-44c9465c97cmr70098395e9.17.1748246181376;
+        Mon, 26 May 2025 00:56:21 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f38142aasm224596595e9.27.2025.05.26.00.56.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 00:56:21 -0700 (PDT)
+Message-ID: <80df7074-c5b8-4d3b-8265-51bb71e6e1c3@linaro.org>
+Date: Mon, 26 May 2025 09:56:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515182322.117840-9-pasha.tatashin@soleen.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad
+ Pro (caihong)
+To: Pengyu Luo <mitltlatltl@gmail.com>
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ konradybcio@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, robh@kernel.org
+References: <11329f37-e410-4912-84cc-d5bcc01e6715@linaro.org>
+ <20250522100605.914443-1-mitltlatltl@gmail.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250522100605.914443-1-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 06:23:12PM +0000, Pasha Tatashin wrote:
-> Introduce the framework within LUO to support preserving specific types
-> of file descriptors across a live update transition. This allows
-> stateful FDs (like memfds or vfio FDs used by VMs) to be recreated in
-> the new kernel.
+On 22/05/2025 12:05, Pengyu Luo wrote:
+> On Wed, May 21, 2025 at 8:49 PM <neil.armstrong@linaro.org> wrote:
+>>
+>> Hi,
+>>
+>> On 20/05/2025 18:42, Pengyu Luo wrote:
+>>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
+>>> platform. Its device codename is "caihong". This patch adds an initial
+>>> devicetree for basic functionality.
+>>>
+>>> Currently working components include:
+>>> - Backlight
+>>> - Bluetooth
+>>> - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
+>>> are many unknown notifications)
+>>> - Display panel ([1])
+>>> - Keyboard (via BT)
+>>> - Power key & volume keys
+>>> - Touchscreen & stylus ([2])
+>>> - USB Type-c port
+>>> - UFS storage
+>>> - Wi-Fi
+>>>
+>>> The following components are currently non-functional:
+>>> - Audio
+>>> - Cameras
+>>> - Charging pump (dual sc8547)
+>>> - Keyboard (via pogo pin)
+>>> - Stylus wireless charger (cps8601)
+>>> - UCSI over GLINK (PPM init fails)
+>>
+>> Are you sure the QMP PHY and the dwc3 probes ? if one is missing, UCSI PPM init will timeout because it doesn't find the connectors muxes & otg devices.
+>>
 > 
-> Note: The core logic for iterating through the luo_files_list and
-> invoking the handler callbacks (prepare, freeze, cancel, finish)
-> within luo_do_files_*_calls, as well as managing the u64 data
-> persistence via the FDT for individual files, is currently implemented
-> as stubs in this patch. This patch sets up the registration, FDT layout,
-> and retrieval framework.
+> I am pretty sure.
+> ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
 > 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  drivers/misc/liveupdate/Makefile       |   1 +
->  drivers/misc/liveupdate/luo_core.c     |  19 +
->  drivers/misc/liveupdate/luo_files.c    | 563 +++++++++++++++++++++++++
->  drivers/misc/liveupdate/luo_internal.h |  11 +
->  include/linux/liveupdate.h             |  62 +++
->  5 files changed, 656 insertions(+)
->  create mode 100644 drivers/misc/liveupdate/luo_files.c
+>>>
+>>> [1]: The panel is a dual-DSI, dual-DSC display that requires setting
+>>>        'slice_per_pkt = 2' in the DPU configuration. The panel driver
+>>>        will be submitted separately later.
+>>> [2]: Touchscreen/stylus driver available at:
+>>>        https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
+>>>        The downstream driver has been ported and tested locally, but
+>>>        requires cleanup, it may be submitted separately later.
+>>>
+>>> To test this device tree, follow these minimal steps:
+>>>
+>>> 1. Build the kernel. Ensure that all `compatible` strings used in
+>>> this device tree (or any included dtsi files) have corresponding
+>>> drivers enabled in the kernel configuration.
+>>>
+>>> 2. Creating boot image
+>>>
+>>> Merge the kernel and device tree blob:
+>>>
+>>> cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm8650-oneplus-\
+>>> caihong.dtb > kernel-dtb
+>>>
+>>> Then create a boot.img:
+>>>
+>>> mkbootimg \
+>>> --base 0x00000000 \
+>>> --kernel_offset 0x00008000 \
+>>> --ramdisk_offset 0x01000000 \
+>>> --second_offset 0x00f00000 \
+>>> --tags_offset 0x00000100 \
+>>> --pagesize 4096 \
+>>> --header_version 4 \
+>>> --kernel kernel-dtb \
+>>> --ramdisk some_ramdisk \
+>>> --cmdline "some comeline" \
+>>> -o mainline-boot.img
+>>
+>> Isn't image version 2 working ?
+>>
 > 
-> diff --git a/drivers/misc/liveupdate/Makefile b/drivers/misc/liveupdate/Makefile
-> index df1c9709ba4f..b4cdd162574f 100644
-> --- a/drivers/misc/liveupdate/Makefile
-> +++ b/drivers/misc/liveupdate/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y					+= luo_core.o
-> +obj-y					+= luo_files.o
->  obj-y					+= luo_subsystems.o
-> diff --git a/drivers/misc/liveupdate/luo_core.c b/drivers/misc/liveupdate/luo_core.c
-> index 417e7f6bf36c..ab1d76221fe2 100644
-> --- a/drivers/misc/liveupdate/luo_core.c
-> +++ b/drivers/misc/liveupdate/luo_core.c
-> @@ -110,6 +110,10 @@ static int luo_fdt_setup(struct kho_serialization *ser)
->  	if (ret)
->  		goto exit_free;
->  
-> +	ret = luo_files_fdt_setup(fdt_out);
-> +	if (ret)
-> +		goto exit_free;
-> +
->  	ret = luo_subsystems_fdt_setup(fdt_out);
->  	if (ret)
->  		goto exit_free;
-
-The duplication of files and subsystems does not look nice here and below.
-Can't we make files to be a subsystem?
-
-> @@ -145,7 +149,13 @@ static int luo_do_prepare_calls(void)
->  {
->  	int ret;
->  
-> +	ret = luo_do_files_prepare_calls();
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = luo_do_subsystems_prepare_calls();
-> +	if (ret)
-> +		luo_do_files_cancel_calls();
->  
->  	return ret;
->  }
-> @@ -154,18 +164,26 @@ static int luo_do_freeze_calls(void)
->  {
->  	int ret;
->  
-> +	ret = luo_do_files_freeze_calls();
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = luo_do_subsystems_freeze_calls();
-> +	if (ret)
-> +		luo_do_files_cancel_calls();
->  
->  	return ret;
->  }
->  
->  static void luo_do_finish_calls(void)
->  {
-> +	luo_do_files_finish_calls();
->  	luo_do_subsystems_finish_calls();
->  }
->  
->  static void luo_do_cancel_calls(void)
->  {
-> +	luo_do_files_cancel_calls();
->  	luo_do_subsystems_cancel_calls();
->  }
->  
-> @@ -436,6 +454,7 @@ static int __init luo_startup(void)
->  	}
->  
->  	__luo_set_state(LIVEUPDATE_STATE_UPDATED);
-> +	luo_files_startup(luo_fdt_in);
->  	luo_subsystems_startup(luo_fdt_in);
->  
->  	return 0;
-> diff --git a/drivers/misc/liveupdate/luo_files.c b/drivers/misc/liveupdate/luo_files.c
-> new file mode 100644
-> index 000000000000..953fc40db3d7
-> --- /dev/null
-> +++ b/drivers/misc/liveupdate/luo_files.c
-> @@ -0,0 +1,563 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (c) 2025, Google LLC.
-> + * Pasha Tatashin <pasha.tatashin@soleen.com>
-> + */
-> +
-> +/**
-> + * DOC: LUO file descriptors
-> + *
-> + * LUO provides the infrastructure necessary to preserve
-> + * specific types of stateful file descriptors across a kernel live
-> + * update transition. The primary goal is to allow workloads, such as virtual
-> + * machines using vfio, memfd, or iommufd to retain access to their essential
-> + * resources without interruption after the underlying kernel is  updated.
-> + *
-> + * The framework operates based on handler registration and instance tracking:
-> + *
-> + * 1. Handler Registration: Kernel modules responsible for specific file
-> + * types (e.g., memfd, vfio) register a &struct liveupdate_filesystem
-> + * handler. This handler contains callbacks (&liveupdate_filesystem.prepare,
-> + * &liveupdate_filesystem.freeze, &liveupdate_filesystem.finish, etc.)
-> + * and a unique 'compatible' string identifying the file type.
-> + * Registration occurs via liveupdate_register_filesystem().
-
-I wouldn't use filesystem here, as the obvious users are not really
-filesystems. Maybe liveupdate_register_file_ops?
-
-> + *
-> + * 2. File Instance Tracking: When a potentially preservable file needs to be
-> + * managed for live update, the core LUO logic (luo_register_file()) finds a
-> + * compatible registered handler using its &liveupdate_filesystem.can_preserve
-> + * callback. If found,  an internal &struct luo_file instance is created,
-> + * assigned a unique u64 'token', and added to a list.
-> + *
-> + * 3. State Persistence (FDT): During the LUO prepare/freeze phases, the
-> + * registered handler callbacks are invoked for each tracked file instance.
-> + * These callbacks can generate a u64 data payload representing the minimal
-> + * state needed for restoration. This payload, along with the handler's
-> + * compatible string and the unique token, is stored in a dedicated
-> + * '/file-descriptors' node within the main LUO FDT blob passed via
-> + * Kexec Handover (KHO).
-> + *
-> + * 4. Restoration: In the new kernel, the LUO framework parses the incoming
-> + * FDT to reconstruct the list of &struct luo_file instances. When the
-> + * original owner requests the file, luo_retrieve_file() uses the corresponding
-> + * handler's &liveupdate_filesystem.retrieve callback, passing the persisted
-> + * u64 data, to recreate or find the appropriate &struct file object.
-> + */
-
-The DOC is mostly about what luo_files does, we'd also need a description
-of it's intended use, both internally in the kernel and by the userspace.
-
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-
-...
-
-> +/**
-> + * luo_register_file - Register a file descriptor for live update management.
-> + * @tokenp: Return argument for the token value.
-> + * @file: Pointer to the struct file to be preserved.
-> + *
-> + * Context: Must be called when LUO is in 'normal' state.
-> + *
-> + * Return: 0 on success. Negative errno on failure.
-> + */
-> +int luo_register_file(u64 *tokenp, struct file *file)
-> +{
-> +	struct liveupdate_filesystem *fs;
-> +	bool found = false;
-> +	int ret = -ENOENT;
-> +	u64 token;
-> +
-> +	luo_state_read_enter();
-> +	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
-> +		pr_warn("File can be registered only in normal or prepared state\n");
-> +		luo_state_read_exit();
-> +		return -EBUSY;
-> +	}
-> +
-> +	down_read(&luo_filesystems_list_rwsem);
-> +	list_for_each_entry(fs, &luo_filesystems_list, list) {
-> +		if (fs->can_preserve(file, fs->arg)) {
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (found) {
-
-	if (!found)
-		goto exit_unlock;
-
-> +		struct luo_file *luo_file = kmalloc(sizeof(*luo_file),
-> +						    GFP_KERNEL);
-> +
-> +		if (!luo_file) {
-> +			ret = -ENOMEM;
-> +			goto exit_unlock;
-> +		}
-> +
-> +		token = luo_next_file_token;
-> +		luo_next_file_token++;
-> +
-> +		luo_file->private_data = 0;
-> +		luo_file->reclaimed = false;
-> +
-> +		luo_file->file = file;
-> +		luo_file->fs = fs;
-> +		mutex_init(&luo_file->mutex);
-> +		luo_file->state = LIVEUPDATE_STATE_NORMAL;
-> +		ret = xa_err(xa_store(&luo_files_xa_out, token, luo_file,
-> +				      GFP_KERNEL));
-> +		if (ret < 0) {
-> +			pr_warn("Failed to store file for token %llu in XArray: %d\n",
-> +				token, ret);
-> +			kfree(luo_file);
-> +			goto exit_unlock;
-> +		}
-> +		*tokenp = token;
-> +	}
-> +
-> +exit_unlock:
-> +	up_read(&luo_filesystems_list_rwsem);
-> +	luo_state_read_exit();
-> +
-> +	return ret;
-> +}
-> +
-> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> index 7a130680b5f2..7afe0aac5ce4 100644
-> --- a/include/linux/liveupdate.h
-> +++ b/include/linux/liveupdate.h
-> @@ -86,6 +86,55 @@ enum liveupdate_state  {
->  	LIVEUPDATE_STATE_UPDATED = 3,
->  };
->  
-> +/* Forward declaration needed if definition isn't included */
-> +struct file;
-> +
-> +/**
-> + * struct liveupdate_filesystem - Represents a handler for a live-updatable
-> + * filesystem/file type.
-> + * @prepare:       Optional. Saves state for a specific file instance (@file,
-> + *                 @arg) before update, potentially returning value via @data.
-> + *                 Returns 0 on success, negative errno on failure.
-> + * @freeze:        Optional. Performs final actions just before kernel
-> + *                 transition, potentially reading/updating the handle via
-> + *                 @data.
-> + *                 Returns 0 on success, negative errno on failure.
-> + * @cancel:        Optional. Cleans up state/resources if update is aborted
-> + *                 after prepare/freeze succeeded, using the @data handle (by
-> + *                 value) from the successful prepare. Returns void.
-> + * @finish:        Optional. Performs final cleanup in the new kernel using the
-> + *                 preserved @data handle (by value). Returns void.
-> + * @retrieve:      Retrieve the preserved file. Must be called before finish.
-> + * @can_preserve:  callback to determine if @file with associated context (@arg)
-> + *                 can be preserved by this handler.
-> + *                 Return bool (true if preservable, false otherwise).
-> + * @compatible:    The compatibility string (e.g., "memfd-v1", "vfiofd-v1")
-> + *                 that uniquely identifies the filesystem or file type this
-> + *                 handler supports. This is matched against the compatible
-> + *                 string associated with individual &struct liveupdate_file
-> + *                 instances.
-> + * @arg:           An opaque pointer to implementation-specific context data
-> + *                 associated with this filesystem handler registration.
-> + * @list:          used for linking this handler instance into a global list of
-> + *                 registered filesystem handlers.
-> + *
-> + * Modules that want to support live update for specific file types should
-> + * register an instance of this structure. LUO uses this registration to
-> + * determine if a given file can be preserved and to find the appropriate
-> + * operations to manage its state across the update.
-> + */
-> +struct liveupdate_filesystem {
-> +	int (*prepare)(struct file *file, void *arg, u64 *data);
-> +	int (*freeze)(struct file *file, void *arg, u64 *data);
-> +	void (*cancel)(struct file *file, void *arg, u64 data);
-> +	void (*finish)(struct file *file, void *arg, u64 data, bool reclaimed);
-> +	int (*retrieve)(void *arg, u64 data, struct file **file);
-> +	bool (*can_preserve)(struct file *file, void *arg);
-> +	const char *compatible;
-> +	void *arg;
-> +	struct list_head list;
-> +};
-> +
-
-Like with subsystems, I'd split ops and make the data part private to
-luo_files.c
-
->  /**
->   * struct liveupdate_subsystem - Represents a subsystem participating in LUO
->   * @prepare:      Optional. Called during LUO prepare phase. Should perform
-> @@ -142,6 +191,9 @@ int liveupdate_register_subsystem(struct liveupdate_subsystem *h);
->  int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h);
->  int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h, u64 *data);
->  
-> +int liveupdate_register_filesystem(struct liveupdate_filesystem *h);
-> +int liveupdate_unregister_filesystem(struct liveupdate_filesystem *h);
-
-int liveupdate_register_file_ops(name, ops, data, ret_token) ?
-
-> +
->  #else /* CONFIG_LIVEUPDATE */
->  
->  static inline int liveupdate_reboot(void)
-> @@ -180,5 +232,15 @@ static inline int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h,
->  	return -ENODATA;
->  }
->  
-> +static inline int liveupdate_register_filesystem(struct liveupdate_filesystem *h)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int liveupdate_unregister_filesystem(struct liveupdate_filesystem *h)
-> +{
-> +	return 0;
-> +}
-> +
->  #endif /* CONFIG_LIVEUPDATE */
->  #endif /* _LINUX_LIVEUPDATE_H */
-> -- 
-> 2.49.0.1101.gccaa498523-goog
+> Yes, '--header_version 2' works, I followed the version of stock boot
+> image. If there is a rule to follow?
 > 
+>>>
+>>> 3. Flashing the boot image
+>>>
+>>> fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
+>>> fastboot erase dtbo
+>>> fastboot flash boot mainline-boot.img
+>>>
+>>> See also https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=39c5963
+>>>
+>>> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+>>> ---
+>>>    .../boot/dts/qcom/sm8650-oneplus-caihong.dts  | 960 ++++++++++++++++++
+>>>    1 file changed, 960 insertions(+)
+>>>    create mode 100644 arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts b/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
+>>> new file mode 100644
+>>> index 0000000000..93aed47e10
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
+>>> @@ -0,0 +1,960 @@
+>>> +// SPDX-License-Identifier: BSD-3-Clause
+>>> +/*
+>>> + * Based on Qualcomm Reference Device DeviceTree
+>>> + *
+>>> + * Copyright (c) 2023, Linaro Limited
+>>> + * Copyright (c) 2025, Pengyu Luo <mitltlatltl@gmail.com>
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>>> +#include "sm8650.dtsi"
+>>> +#include "pm8550.dtsi"
+>>> +#include "pm8550b.dtsi"
+>>> +#define PMK8550VE_SID 8
+>>> +#include "pm8550ve.dtsi"
+>>> +#include "pm8550vs.dtsi"
+>>> +#include "pmk8550.dtsi"
+>>> +
+>>> +/delete-node/ &adspslpi_mem;
+>>> +/delete-node/ &hwfence_shbuf;
+>>> +
+>>> +/* No Modem */
+>>> +/delete-node/ &mpss_mem;
+>>> +/delete-node/ &q6_mpss_dtb_mem;
+>>> +/delete-node/ &mpss_dsm_mem;
+>>> +/delete-node/ &mpss_dsm_mem_2;
+>>> +/delete-node/ &qlink_logging_mem;
+>>> +/delete-node/ &remoteproc_mpss;
+>>> +
+>>> +/* Unused now, and reusable, taking 144 MiB back */
+>>> +/delete-node/ &trust_ui_vm_mem;
+>>> +/delete-node/ &oem_vm_mem;
+>>> +/delete-node/ &qdss_mem;
+>>
+>> Are you sure QTEE won't use this ?
+>>
+> 
+> I am not sure, but these two VM nodes are never referred by any device
+> in the downstream DT. QDSS and coresight things are unnecessary on the
+> retail devices.
+> 
+>>> +
+>>> +/ {
+>>> +     model = "Oneplus Pad Pro";
+>>> +     compatible = "oneplus,caihong", "qcom,sm8650";
+>>> +     chassis-type = "tablet";
+>>> +
+>>> +     aliases {
+>>> +             serial0 = &uart14;
+>>> +     };
+>>> +
+>>> +     bl_avdd_5p9: bl-avdd-regulator {
+>>> +             compatible = "regulator-fixed";
+>>> +             regulator-name = "bl_avdd_5p9";
+>>> +             regulator-min-microvolt = <5900000>;
+>>> +             regulator-max-microvolt = <5900000>;
+>>> +             gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
+>>> +             enable-active-high;
+>>> +     };
+>>> +
+>>> +     bl_avee_5p9: bl-avee-regulator {
+>>> +             compatible = "regulator-fixed";
+>>> +             regulator-name = "bl_avee_5p9";
+>>> +             regulator-min-microvolt = <5900000>;
+>>> +             regulator-max-microvolt = <5900000>;
+>>> +             gpio = <&tlmm 91 GPIO_ACTIVE_HIGH>;
+>>> +             enable-active-high;
+>>> +     };
+>>> +
+>>> +     gpio-keys {
+>>> +             compatible = "gpio-keys";
+>>> +
+>>> +             pinctrl-0 = <&volume_up_n>;
+>>> +             pinctrl-names = "default";
+>>> +
+>>> +             key-volume-up {
+>>> +                     label = "Volume Up";
+>>> +                     linux,code = <KEY_VOLUMEDOWN>;
+>>> +                     gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
+>>> +                     debounce-interval = <15>;
+>>> +                     linux,can-disable;
+>>> +                     wakeup-source;
+>>> +             };
+>>> +     };
+>>> +
+>>> +     pmic-glink {
+>>> +             compatible = "qcom,sm8650-pmic-glink",
+>>> +                          "qcom,sm8550-pmic-glink",
+>>> +                          "qcom,pmic-glink";
+>>> +             #address-cells = <1>;
+>>> +             #size-cells = <0>;
+>>> +             orientation-gpios = <&tlmm 29 GPIO_ACTIVE_HIGH>;
+>>> +
+>>> +             connector@0 {
+>>> +                     compatible = "usb-c-connector";
+>>> +                     reg = <0>;
+>>> +
+>>> +                     power-role = "dual";
+>>> +                     data-role = "dual";
+>>> +
+>>> +                     ports {
+>>> +                             #address-cells = <1>;
+>>> +                             #size-cells = <0>;
+>>> +
+>>> +                             port@0 {
+>>> +                                     reg = <0>;
+>>> +
+>>> +                                     pmic_glink_hs_in: endpoint {
+>>> +                                             remote-endpoint = <&usb_1_dwc3_hs>;
+>>> +                                     };
+>>> +                             };
+>>> +
+>>> +                             port@1 {
+>>> +                                     reg = <1>;
+>>> +
+>>> +                                     pmic_glink_ss_in: endpoint {
+>>> +                                             remote-endpoint = <&usb_dp_qmpphy_out>;
+>>> +                                     };
+>>> +                             };
+>>
+>> No Altmode display ? no SBU mux nor redrivers ?
+>>
+> 
+> There should be a wcd939x_i2c@e, it will be added after I figure out
+> sound things. Actually, I added it locally, it does not work. Since
+> its name is wcd939x, it made me feel it is for usb dac handling only.
+> I never checked it carefully. But you mentioned this, I just checked
+> downstream bindings, it says
+> 
+> QTI WCD9395 Device
+> 
+> This device is used for switching orientation of USB-C analog
+> and for display. It uses I2C communication to set the registers
+> to configure the switches inside the WCD9395 chip to change
+> orientation and also to set SBU1/SBU2 connections of USB-C.
+
+The WCD9395 has 2 independent functions on the same die, one
+as a codec and the other one as an SBU mux for Altmode and audio
+headset. They are representd as 2 devices since they have 2
+separate communication ports (one is i2c, and the other is via soundwire)
+
+Neil
+
+> 
+> Thanks. I will check it again.
+> 
+> Best wishes,
+> Pengyu
 > 
 
--- 
-Sincerely yours,
-Mike.
