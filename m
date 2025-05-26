@@ -1,93 +1,115 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59BBD1C6B4;
-	Mon, 26 May 2025 01:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269E98BEE;
+	Mon, 26 May 2025 01:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748223702; cv=none; b=cqDtc3zkKziXpDUOznmxPKWHYjW/xf735wxYtjEkINqgzkkarzy8Kru9wNFdgwDYfHuYvZqcveNTjDuvvJZcD7/54A6LPeQx8Tjhdk7Pb57Lel1E3ILBNiiVe6wlTcitWpPSBTRdHQFOkuv/Fj3VCPTiWpirRuJQ9u3ZJpZ8LDY=
+	t=1748223809; cv=none; b=U3zxZoN2L0MHptAsIigN6cicsdm/mvRrzgMEN4Y5WH+OHbTFgC1ZBNxk9JW+pvRJ+tZ2jY9uKuPW4MLAWi176l5TREgHNF9aECrF9BcqBi4FMd0kV3hqxgo5/p9bLcqFx6zCiu6Tv8ikERNUxmSVDWhAoZPsjQUMRalX+V/awkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748223702; c=relaxed/simple;
-	bh=Yax1o+MAKbtmK05dYLpi7aye+qylXJ7V9v7XhzQLysw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PhfaGg/tYSqDlmPgTmQ30JbnHn2K/fZ3fCwTFki9qvmO4z4b469+D67o5r6xIReza1OpT4d11VFyRs3IjFTZKv5NiSvH+m3BbweT1iQ5FRsR+qG2RVLuHS0krW3U6Skw6toA1l5KzGbzG2svnRIuJuZri9NBzBLxICn6n0qPKeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BC6bGXIp; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1748223809; c=relaxed/simple;
+	bh=LLzuF6atmoLAtdgeB97udFx8tGNSqJglLQfkQHOx55c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NKm1dw6/QvapmBiDJ2bZUiwd7KKBg02F0vr/k3S2b+TrSYSxkA2Uq1e2v2hM75o2kSFN19/TUjuboekmI70ANfMYdB5jz3IEgBik1J0/ehtm5BaVodwfKzU3pPeIv8HrRq+QPXZza+D9gHieLoLAK2JslnznJJrRdll+Mei75KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=s2Uz9F/B; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BC6bGXIp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1748223688;
-	bh=Yax1o+MAKbtmK05dYLpi7aye+qylXJ7V9v7XhzQLysw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=BC6bGXIpZUt3tv10QmwdrbmpBYbG4lC7PqcK/6MEVWtSbOx8nwFvK1sKXIC7bHZMt
-	 GpZhXF939EIMaoxfTH3f3ko+8ZHmk2SBgTWN2OxVXynghDZMedWNUyCjv59tDnu/ww
-	 h0myJRRBBJc0Fmbd2ZKK9krlXXnlhMBg2HQ+usNo=
-X-QQ-mid: zesmtpsz3t1748223686t10d7057d
-X-QQ-Originating-IP: JztrNHiARVaOEtjp27R4f7wQdO2XWozoWxAFuztRmMU=
-Received: from mail-yw1-f171.google.com ( [209.85.128.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 26 May 2025 09:41:24 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 6048472936183854145
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70e5599b795so3497447b3.3;
-        Sun, 25 May 2025 18:41:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWfgSvdvKy/lTVCaFjMIdiYoJM1GqxTA33iT4eMjz5m1NDI2czD5RS/JTiXJADbf/Zv6iLwOd1b4JAg0FQ+@vger.kernel.org, AJvYcCWjk44dmzw5BbtwEgpfSre/lsOJwAXxHVx2TYtyihQl7pHQfSDyYU/x74JnxoLaUMZDoouyOYifk58Fty1X@vger.kernel.org, AJvYcCXZA19BzfjkxfQitSpLaKHCtBQpaT8dP6/zazTthZXeSkFBptLGUiQP6+W6rP5NoJ/hIwq0tQY7tYWIUfpmTmxo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr2MwusPd13PD+BF6it+mc4hFu426bmolU6h69T9zyG8iCEoKb
-	DB1SpFYk8GXC+2hPyvmuudHvKAjRZjcnaPYE/P4LA14sFJp2Rq9K3DdQpVLywTviLrfDn/VXY8a
-	8Tvt+dCNo9BR/sJ2WeaKEHMledM9gm/k=
-X-Google-Smtp-Source: AGHT+IFIcNzEsjgbznnYQzRXW0ygG2vmSSt7rowHf9HC1swZI/0KiyyfqvJCuOzjjBY3dlhapMk0D9DQbRZBDk+LahI=
-X-Received: by 2002:a05:690c:6410:b0:70e:27fe:ae64 with SMTP id
- 00721157ae682-70e2d955c62mr76737287b3.3.1748223683571; Sun, 25 May 2025
- 18:41:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s2Uz9F/B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748223797;
+	bh=GukcE8YDOVhu/U89crmZAPYL47oVpM/EXOi3tA0x4PU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=s2Uz9F/BDlYG0QINDL3oZyFzqlTJkLKgBZflv3BbqtVlDxZQhRRz9YLFSYRpTCo6x
+	 wHdXqFde9haGGa/fzhyM4hiV2uHPyP6uSFCFG0LhkfjkfqkydfT6nTl6Io9Q0lGcMX
+	 WOvqNsPmJmyRucilFgLadJyrdj1tnguyiChab9Mgwr7/M1p2DrRuwXzVLZwjazDkJH
+	 AI+7OQmZN41IgCfisNejRa9ljS0FpXtDozouGftsx6qolBNf/c/WI0sc96khrOwmOB
+	 AhZuBH+oZzRc6CNq4Jpxxsy2JWjts2hZscIMhDa+t2IC9+8mvDGL5mh7Hq3JBP+YWn
+	 4Sis7K0tDVI8A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b5JSP0QNPz4wcT;
+	Mon, 26 May 2025 11:43:17 +1000 (AEST)
+Date: Mon, 26 May 2025 11:43:15 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the i2c-host tree
+Message-ID: <20250526114315.733b0728@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517012350.10317-2-chenlinxuan@uniontech.com> <57f3f9ec-41bf-4a7b-b4b2-a4dd78ad7801@linuxfoundation.org>
-In-Reply-To: <57f3f9ec-41bf-4a7b-b4b2-a4dd78ad7801@linuxfoundation.org>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Mon, 26 May 2025 09:41:12 +0800
-X-Gmail-Original-Message-ID: <3E15862E876BC25C+CAC1kPDOH+QZDjg46KRNmQQpH-_yLbQwMUGsiBk9gW1kqjyy9xw@mail.gmail.com>
-X-Gm-Features: AX0GCFsBni7qi8Ac7p4cj_ZgxAOmlOpRhCXgN6pmm8WD3Mcg5CwSWbbJiA44GgQ
-Message-ID: <CAC1kPDOH+QZDjg46KRNmQQpH-_yLbQwMUGsiBk9gW1kqjyy9xw@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: Add functional test for the abort file in fusectl
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, zhanjun@uniontech.com, niecheng1@uniontech.com, 
-	wentao@uniontech.com, Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/j6f.eH.17RndcIjLbnsHMiZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/j6f.eH.17RndcIjLbnsHMiZ
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: NwIPvWX4YDagj9WH+q98X3TrRPxO0s/DoSAygTtCbBMnwTNbYzjOOrZq
-	mC5EESqb5nlkXd7SGm7/+1DssQrvaCr/rdjEDr6AD3LfMQlzVS+7Vo4to3KhhwkmVBmP1LA
-	/2f4wOh9mpA22IWAw2k4/0aoAot2OCj5LRkTDq++M5Qskzg97MBXIuLavzVZIvNixhyHaRN
-	oLXTkgDzFRlmjD3eAD/7HsqtWJRqqHfbegaIFLKVT1VVRmDYrB4n/PtsS6zKyi1I+L6od4D
-	3WRXc3W1v2ox0e1QT0jGLZ7ftzmWFvJb+0W39xyuJ79VPTG70eDzRq9juU04G3nY4xPgYj4
-	TrGv8+LPrpw/eb2V3PlZdHecALQAhWdjVpRkru7YfXbVRsWxo0hV06+HSDKyP7aWY+QxkEk
-	0bvPidhEns7D5mxsJWB7SN6ZQgW0acFDcXLrmitfbTdWoCADcQWIpruwMiGLJE8hKz51NEs
-	LNwFUF32sQNeoYCR8roGHGR3p0FZy/nJveit2f2EJIrtY2yhI1WUue4bDnTa5N80+kjKWA0
-	hpmJYIK9oFFEeglAoxgeFYo8iItimOHmh6mr74VN4lbXDVq0aE4JhJ5Ec7uUHEf0bQSdw/h
-	ZxGpI8GZLk46HEni4yFnmkGszpp80BoGytrtSdjgEriirdZ5Yk8YsXyTRWYZPZPfAkTgH7J
-	lJ38kzG3ubDJAIqdOSpNzulWzMI/OYSvc56h3/+8vXT7tsp8fFypyKJddeK++vUYQX3GkAJ
-	zJZMM6/WWZm7mWRb0PHrGkCBC0DuBOei7qzxvA+AfNGXLc8EFyC5eet0upu9RUFnjkCI5Oc
-	GAeHPvp/TNRfaRwx6BQeUiQhYngYsrfXiRD3oPL3k269YnHB7xfcya8vGPhyAFJfm84tibM
-	3s35Zimw0jp0DWwbqPcGIVe7b08PFSz2zW2Iey8BMIB2u0TQ4Jrk0zDE5MqkGjFfh6+MicP
-	CzUD6jBCoTI2T6mX7L1mztSq6dY5S/JAY0pKsbFi14FmLVg==
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
 
-On Fri, May 23, 2025 at 6:50=E2=80=AFAM Shuah Khan <skhan@linuxfoundation.o=
-rg> wrote:
+Hi all,
 
-> Also if this test requires root previlege, add check for it.
+The following commits are also in the i2c tree as different commits
+(but the same patches):
 
-Currently, this test does not require root privileges.
+  a088ce22c118 ("i2c: mlxbf: avoid 64-bit division")
+  50f317545149 ("i2c: viai2c-wmt: Replace dev_err() with dev_err_probe() in=
+ probe function")
+  608e2d633096 ("i2c: designware: Don't warn about missing get_clk_rate_khz=
+")
+  481391b537bb ("i2c: designware: Invoke runtime suspend on quick slave re-=
+registration")
+  736f258f0a9b ("i2c-mlxbf: Improve I2C bus timing configuration")
+  a1a8ccd53458 ("i2c-mlxbf: Add repeated start condition support")
+  c43383e2ffa4 ("i2c: xgene-slimpro: Replace dev_err() with dev_err_probe()=
+ in probe function")
+  3887d3f64260 ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
+  66234d6c7157 ("i2c: microchip-corei2c: add smbus support")
+  55d144eaea36 ("i2c: mlxbf: Allow build with COMPILE_TEST")
+  52360f31e6ba ("i2c: I2C_DESIGNWARE_AMDISP should depend on DRM_AMD_ISP")
 
-Thanks,
-Chen Linxuan
+These are commits
+
+  2b2805404c92 ("i2c: mlxbf: avoid 64-bit division")
+  3b7d8d151a7e ("i2c: viai2c-wmt: Replace dev_err() with dev_err_probe() in=
+ probe function")
+  bdf4442f4c7e ("i2c: designware: Don't warn about missing get_clk_rate_khz=
+")
+  2fe2b969d911 ("i2c: designware: Invoke runtime suspend on quick slave re-=
+registration")
+  e981364d89bf ("i2c-mlxbf: Improve I2C bus timing configuration")
+  6bdc662c05c5 ("i2c-mlxbf: Add repeated start condition support")
+  24d9f6050520 ("i2c: xgene-slimpro: Replace dev_err() with dev_err_probe()=
+ in probe function")
+  29b0b4ce6417 ("dt-bindings: i2c: i2c-wmt: Convert to YAML")
+  d6ceb4053826 ("i2c: microchip-corei2c: add smbus support")
+  053859002c20 ("i2c: mlxbf: Allow build with COMPILE_TEST")
+  66e64b457c23 ("i2c: I2C_DESIGNWARE_AMDISP should depend on DRM_AMD_ISP")
+
+in the i2c tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/j6f.eH.17RndcIjLbnsHMiZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgzxzQACgkQAVBC80lX
+0GzM2gf/WR2etlL0RFcGOhBDs61K9XusaY3h63EUSPa9rmKYH7f3ZWjl2t6tQweU
+SeB6BCxlludWnmGhfd0rXwXV+20nFJxLrcFZsv/7onOJArCf6oOg+kBEZ+QeuCVo
+qCxargOIiehPVjmEU4GPGb/fKCsirl1PzwQvLWY5nhoF5KG5sGZHkfgAsnGvLBHc
+M5+GYEc6+KqcpSwoK650miOEdOtHi9d+jF96YlCDlrvU9H3nEa5hFavQi1S3EnS3
+9LM4JaC9MqZ4ToI8tx5WakSJorBtMIyXLbz+AzdINu4ShSRpepSuK/n4Wq3gUgN9
+jgs0p30SSKdUhw3gsFM7SIrc6ZvlBw==
+=cWka
+-----END PGP SIGNATURE-----
+
+--Sig_/j6f.eH.17RndcIjLbnsHMiZ--
