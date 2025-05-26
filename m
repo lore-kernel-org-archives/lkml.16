@@ -1,102 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180881AC891
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 20:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EC98460;
+	Mon, 26 May 2025 21:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748292337; cv=none; b=rZbhpxqw03tq0N8X0j+KO8OxbsUrLorLUAuDgOw/OcDUSNX/AdBy81BkPp5mHf/w+QjS7mGTwgBZeDze4t23lqUM740kggmY1VLvu2nYIgIzFT5IMbC4g6NVKlC0wmqBiyBz6P28jhHoRUVxCyNqKCqpwZ0NcucGzuh0X4G6MxU=
+	t=1748293213; cv=none; b=HcxIWgmOiyvvb6SBRFJGFNHSh2LCsAGMhvjTkYqvFKo74Q1AfzdvphAa6opwMDQcpa9TMVnWfwXGYBqQDIayhw1cRNfPdiI8B7urJ4Loqx50Z8/EgbDeFtpWRjEgFLg19ZegzZHmoxUWQ+VEPZEb3ts/Z7BBlX1nANDsaLu5H9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748292337; c=relaxed/simple;
-	bh=YzVfqM7isCpur9lKuyl8+MnXjqPSAYoEufr181o/ojU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VRsXxHpfc5XWJ3vKHA2bG/VQcCJcpuwq1qAI9GWClbOiXV3/Z8Sz45x0INIWGgYGm8h0/WbFsZG8pdzfs5aG2X3P7fqUl0xZomdxORqQ2TqAT6EhfYijwuOUUA8IwuM5rSuZBFXXKVZFj7LsYQ5woiqk9NbdBX9/agw7qSFr6/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JHYMzsmu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748293213; c=relaxed/simple;
+	bh=QnOzZJosDZwQmHUjH11bMfDX1vpKijtZ/w27pwfOkAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ssEKX2iVXeSVqT126ceeEyGmOgwPCmoFvVGcnSdCR2TS3dt3Ght9nRL2rR8hH5apLE8KX/G+JEDZvDTpL7PJqMlP8sRMBcFMCckSNkrF/LKM0O4bb+QW9x0guFQEpaECaiUkBLhEkFlyqkZptjX0+Aj+pf6j0GVdhmnwM1w2cZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dbV8TnNy; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JHYMzsmu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748292332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Hwbp3hCpje483Sa0qCp5UGHnKUUud+4LtTTy2eYUPhE=;
-	b=JHYMzsmuxCX/pa296sTMQYOWAak8Yz5Xs1rUssH2cgnJ2Gm/J9IyrnqejANm/Ca96crEfv
-	X1SrvI1nAb5DpKlVOq8McxlGCZWV4E+sWsrN5p14ydOydTfQBjnAxRbMdBvWsg2bFFLaGT
-	bw6aXhpid56Bv+cQ2TPPELNGwyFw1+k=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-153-CRjVJVarN0S7xBTdGm2FGA-1; Mon,
- 26 May 2025 16:45:26 -0400
-X-MC-Unique: CRjVJVarN0S7xBTdGm2FGA-1
-X-Mimecast-MFC-AGG-ID: CRjVJVarN0S7xBTdGm2FGA_1748292325
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 022C319560B1;
-	Mon, 26 May 2025 20:45:25 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 33F9A19560A3;
-	Mon, 26 May 2025 20:45:24 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>,
-	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH] x86/tdx: mark tdh_vp_enter() as __flatten
-Date: Mon, 26 May 2025 16:45:23 -0400
-Message-ID: <20250526204523.562665-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbV8TnNy"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87e075fe92fso260274241.3;
+        Mon, 26 May 2025 14:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748293211; x=1748898011; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N/VsZ6IE0jdOkCcZ5aD8yrns3Cyc4PjTDiK26k40UxU=;
+        b=dbV8TnNyh+ifewX1fPtmAEE9Lr4Xf4Gm2PUoi4irBf+m14JsAf1N8sl0dVvMkoEx5a
+         Obyo2+ExY6Zrx7QfMynq+c2F5h22xnvYbSDcxlP3in3mSlhRf6w0ZDwYSOE3rXqhC0D0
+         t/oLXSqbIr3q6wjPYhaJUeZzzOoO6GXlz28zlK169ID5O+BJ15/8gvfGba+AEJjY93kU
+         yjLvhEjEm4UVL8ho3I3NSStNRGQGZeuSXH+f+N5ysRXNSOUoGoztMdvUfyp6Kr6F11fK
+         xUEmdJNU25U7Rxu5eT7ZSZ7CEp/tKFdxdTjQcGKwknh748zGEH2y/aNQ0r2p/cGdn/S8
+         RhCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748293211; x=1748898011;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N/VsZ6IE0jdOkCcZ5aD8yrns3Cyc4PjTDiK26k40UxU=;
+        b=hj6TiNnOZ0O4eS/LvJtAH28gHp35Rq45ZfM2riG3/FYOWbjUEtidx4WQn/2QJcmQfn
+         aItR066/scZDx9ZGjERPq9RaE2W/GZBbR7ly99im6ceWjLZ/c1wecpp2k3Ais2LSTtwg
+         nyRktGuorR+5LMSkXnh6BMo+rT35xVoW+G4eblSJxdZ5uyfvDVMnucHv/TosXlExY9nC
+         YUG1Rn2U6LEISG1HKERJgKXapg2QM87vI1CvKKZlJehnvgkCL0Gbd8SpwAI4Gh1I90mL
+         0ToXRJDBLNd8QaI0TDdUa9/CupuHpBfEWYpkWTFZA+bgI9JKwHip6sbovhAptdFnDclu
+         vYWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqvoGKvFVigF5tblRBMDY0oF5l4fd+PyXUM/TcOq3V+cihcP7cmUQFjKybagq3IXAYcdiCjTOLXAdD06A=@vger.kernel.org, AJvYcCXVsdSC8nbNjWoufJfbHTso098UbxivHz7d0NLDBMbVC7PkoUi70QNJCkx9ErEPmyFC5VkpH1Y2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRY2pDRWB/F3U8QAijUDtGMNRC1VicjTXvEygRj3vw8ImWSX9b
+	7t3Eii4wgmAQQWsRyckcyY80h2/1FWCNvMhFwUXVCe8TMWR2UaXzeXsbRP6zVnU55z6f/meFaU+
+	iT2uvdubtKyLnrdqtN2dvnEk7KwTKc3w=
+X-Gm-Gg: ASbGncuBUAoPRU17banJksKoG57YriZnN+r8n5Oh9H+Kd3EIdAdK8JUjdpXU0YDkzry
+	Tf03Upstcc3CzTIXAYddg1zmJkSqtbA/bzbpds4nu4R2/rF0YUapOmu1RUw7WVzDBOxqLhdwNeL
+	bDBGMi7QYHnH1fxAxKWHMUXDqueDrHn+vaWQ==
+X-Google-Smtp-Source: AGHT+IH1F819UdbqKdjXVnrU+7ibb4kb7PWACyBEmwPcni1wlQBFRsB0+/IWFIf8hbs072AoO3ylAlqbgpDxsk8Lh1Y=
+X-Received: by 2002:a05:6122:82a5:b0:50a:c70b:9453 with SMTP id
+ 71dfb90a1353d-52f2c5bf4admr7622487e0c.10.1748293211020; Mon, 26 May 2025
+ 14:00:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+References: <20250526002924.2567843-1-james.hilliard1@gmail.com>
+ <20250526002924.2567843-2-james.hilliard1@gmail.com> <aDQgmJMIkkQ922Bd@shell.armlinux.org.uk>
+ <4a2c60a2-03a7-43b8-9f40-ea2b0a3c4154@lunn.ch> <CADvTj4qvu+FCP1AzMx6xFsFXVuo=6s0UBCLSt7_ok3War09BNA@mail.gmail.com>
+ <a2538232-be98-42ed-ae82-45e2fcff3368@lunn.ch>
+In-Reply-To: <a2538232-be98-42ed-ae82-45e2fcff3368@lunn.ch>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Mon, 26 May 2025 14:59:59 -0600
+X-Gm-Features: AX0GCFtdyKxOISq6OJd3jmhemPTpifVHzFplXIgoyjcfXkmvrrAzTnbwIsfNJc4
+Message-ID: <CADvTj4pCo=d8ehkz6JoPNYEGtUWsgmGCqT7vFEyHTtD7yF5ZAA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] net: stmmac: dwmac-sun8i: Allow runtime
+ AC200/AC300 phy selection
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
+	Yanteng Si <si.yanteng@linux.dev>, Feiyang Chen <chenfeiyang@loongson.cn>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Jinjie Ruan <ruanjinjie@huawei.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	linux-arm-kernel@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In some cases tdx_tdvpr_pa() is not fully inlined into tdh_vp_enter(), which
-causes the following warning:
+On Mon, May 26, 2025 at 1:58=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > I'm currently doing most of the PHY initialization in u-boot to simplif=
+y testing
+> > of the efuse based PHY selection logic in the kernel. I'm sending this
+> > separately as a number of subsequent drivers for kernel side PHY
+> > initialization will be dependent upon specific PHY's being discovered a=
+t
+> > runtime via the ac300 efuse bit.
+>
+> Do the different PHYs have different ID values in register 2 and 3?
 
-  vmlinux.o: warning: objtool: tdh_vp_enter+0x8: call to tdx_tdvpr_pa() leaves .noinstr.text section
+Well...for the primary phy address in the device tree, no:
+AC300(does not appear to support address 1 unlike AC200):
+PHY at address 0:
+0 - 0x3100
+1 - 0x79ed
+2 - 0x44
+3 - 0x1400
 
-This happens if the compiler considers tdx_tdvpr_pa() to be "large", for example
-because CONFIG_SPARSEMEM adds two function calls to page_to_section() and
-__section_mem_map_addr():
+AC300 address used for PHY initialization sequence on address 16(0x10),
+appears to be used as replacement for i2c init sequence on AC200:
+PHY at address 10:
+0 - 0x1f80
+1 - 0x1084
+2 - 0xc000
+3 - 0x0
 
-({      const struct page *__pg = (pg);                         \
-        int __sec = page_to_section(__pg);                      \
-        (unsigned long)(__pg - __section_mem_map_addr(__nr_to_section(__sec)));
-\
-})
+AC200:
+PHY at address 0:
+0 - 0x3000
+1 - 0x79ed
+2 - 0x44
+3 - 0x1400
 
-Because exiting the noinstr section is a no-no, just mark tdh_vp_enter() for
-full inlining.
+AC200:
+PHY at address 1:
+0 - 0x3000
+1 - 0x79ed
+2 - 0x44
+3 - 0x1400
 
-Reported-by: kernel test robot <lkp@intel.com>
-Analyzed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505240530.5KktQ5mX-lkp@intel.com/
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/virt/vmx/tdx/tdx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+AC200 appears to support either address 0 or address 1.
 
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index f5e2a937c1e7..2457d13c3f9e 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1517,7 +1517,7 @@ static void tdx_clflush_page(struct page *page)
- 	clflush_cache_range(page_to_virt(page), PAGE_SIZE);
- }
- 
--noinstr u64 tdh_vp_enter(struct tdx_vp *td, struct tdx_module_args *args)
-+noinstr __flatten u64 tdh_vp_enter(struct tdx_vp *td, struct tdx_module_args *args)
- {
- 	args->rcx = tdx_tdvpr_pa(td);
- 
--- 
-2.43.5
-
+>
+>         Andrew
+>
