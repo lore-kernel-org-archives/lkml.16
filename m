@@ -1,131 +1,140 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9891D1D90DF;
-	Mon, 26 May 2025 06:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5C44315F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748241905; cv=none; b=oihuH0WSAfmtXtw/EvP+EpwP953FtQKc5rQB6Azjq3OJB8RbujWrAkB6lLocEqnyam63bWlfn8AV5X5eYA1NbR/yc0H0z1FxELQWiOM60hTDYyOVvQ18ak7+H+RtP461+y4vony04Gyi7bHTmqmxvhifB5DTBLQ5w0p4HT7SQBk=
+	t=1748242015; cv=none; b=o/0upBAQkFi1bx/nkduSE8TY79yhI6t9oBIB2LAZJSKduZBtOKVnbuvvfbXHIheOsPRZ+r52gAfeSyX/kC8fQT3tIuU3Lo7cIeLQ7ykidW2KX+rWT8u82JrI/yO5epvdGBll5i7wVe4GfcTehh6GGgBHcr6XzT82aFNUYuSBu6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748241905; c=relaxed/simple;
-	bh=D2YAD4z4FAAQI1xaLvUcWAdnhPutm4v51ZaI19IXR34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bKqslpzPdmuJ+Xx0D6kR/g+zdB3NprHn3r2CnPQ4+rTO6MTmWbYtyKQ4YgmcmUZ0keBXbRPrrLbYiyV5YxrVezuG7sfXWaOhBFJs3HMkWPL3alkpzQFMw/6NC0Ckvh4nc4MUK9xifoD8qjZO2yRLI9V7Q2Dk7n8ebOuCPGpyjCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=BSwwCZ4A; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1748242015; c=relaxed/simple;
+	bh=zF5a6CbWQaQ1v8nXdGyp0eEQDySwSivavhf1guhcNnw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zmh3AhNalLHvcj3QdHlMJDdjufcjUkJdWdsrvcZjLEQyWHS7VyeZiDbwLfSSd9bRbSlIWPwUZjeykbGvL37vpKLPKaWtUjvpB/kgT9Bddo5qle/CDhse+AyeyyKpO1LN1SXQgm60C/YEyMvNbzndVi9iL3RgyHunwiZpnnpWxls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PUfSEheL; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="BSwwCZ4A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1748241881; x=1748846681; i=wahrenst@gmx.net;
-	bh=bXLBbRXb9JjyhEWZwNFKMW2jVBUOhwFOuXiY7E3i2cs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BSwwCZ4AyWMShrQcY8p9qbW1mJ9tWwzAYiyfDbW95pioE9oElatTbabXVEs9uZfy
-	 hH80/TASN7N+ysfNxz28xXrq5w067XiSQpDiVfMJHCt79374ScM2Gk1AyVjfRwNNi
-	 YgyeuJ7hY7CiltKGx3oNCQKrgYKbfSYQO+4E1cs7xGSnOSz4KGEinRuHK9LFlBcei
-	 8wqzcnuLjx/xxKvD3fPmwFeL8EXcvqjaz9d1+s7lvYY96w3yzBVVTZrL+qzIeionx
-	 DfBOhoeUnpRI7VWVNtGif1G9jsS7xTKGetPCA/AUYEf642ZPA4J2SpJ7W74XVTipo
-	 44iHId3YMhV+cUhXEA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.105] ([91.41.216.208]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MnJlc-1uiuRJ1sii-00caSY; Mon, 26
- May 2025 08:44:41 +0200
-Message-ID: <b2ea6b7f-3623-4486-82a0-cab97053a53e@gmx.net>
-Date: Mon, 26 May 2025 08:44:36 +0200
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PUfSEheL"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2345c1246efso4522985ad.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 23:46:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748242013; x=1748846813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E+feYia0z4AbJzGUj7Ynki7IIualikheA0eQ0iNGi48=;
+        b=PUfSEheLhhKTPjLRimMWG0xFtWIGnBmxvz9+h/3tq647jFETx9UEQPtvnk3uXwRzM1
+         WZV1Jw4NshEp77P/0xyShxEXFDwbayzJd+YwhTHLHYAjFNFDRZxhRjR2ZlpssTWN7Nd8
+         uHm+19yDa5BOtfh8bvOkuOlKxCF9Hu+BKviHmlFe9NW5WDiuwOS7vaYugyueSd0T2oCp
+         +tcg/42hsvCFc7/CJ42iEz96lYyomNQan4uQYy197En5U0X8DL8WNPX+MUHbfEL8z8jA
+         DwbB87SEJGPrAQdH5ShHOCYmjF6rQaFi6DOSAMWIC3kKkbREbSnrq7e2OHd3DWYPbIj0
+         7+Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748242013; x=1748846813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E+feYia0z4AbJzGUj7Ynki7IIualikheA0eQ0iNGi48=;
+        b=Wx65+Ke/NZJODSdwdtvdCaDIjaIP/qJ8xq5Y8oKFJpChCNLJGDZ3PYWtAiZn7y/TBp
+         7M7aRM899K3RGb6ov9OsESBmJ3DruPUFHaB4TNhL5Z6ZJnLXfpyxvK/16POhJYBq9LTP
+         up5xngMVbHaaftLkDXgZ/nMwGK/72QwFDWpbplI3ncZMrKvtSdvl+ITGVoaNQmOhNYHw
+         AEIDTwE/VEE9XyXFuUqn4V96qjqJyrrrrED67L9e5GGIuvC/hwY8OBipq2Js+CC4mpAg
+         II+hOgOZCGSd2/JU+vn0/epv6faGckadZNoZCs67NeIq8jgnbweohzvEq4IImIBScG+Y
+         Zyeg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmY2dHREb5Cq9VWvLG77I7y7dyRsMsBTw+egTABew0h50txNueJKaAOGJyMdot3bt8/jIO5jgx5KRvGVw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTkTr34M/EglFj2UvR8LiXCXEhw7iPPUVsSB9xhlrEXeq72l97
+	1U/Le8aThGF/FF/hAPdRpBwndKeKrOHdHzPZq96KZ/H4lTe1XsyhWfiN0T0rmiEmpVw=
+X-Gm-Gg: ASbGnctGOuy3Vk1QMpjXvd9trcRuM8oWpcjFalCsJ1aQLccswXMYOWsxagpDrYPKTE5
+	VZkY5cHOcFqdsNm4+jb3ajr3lw7Iowxl9sUIArgSzQ9Y2jlSS6mFmqH7FooLOvX5UkokfQygkrw
+	c7e7UKHUnf6xBSN42yMsXXIt7qbWYD79tSxxkB5EcHWjpa0uB5KxXKy1b28okePncy07pm/C2aY
+	rOOKSWoHNq7OvXJ4IV2V0hXYz5xO2Vcoc8XvoOKkdDHMjWR3l6KWnhhTe4633LAFAPdyPDj5NGO
+	OSLWIXtI+BUwHfGHPmvZOL0ezXMOEhjH7sBrXLUm8vxU3CJxCDG8UkWLQrsHGjMtNhSkCHuAezw
+	gqJb5YgMcacwaFg==
+X-Google-Smtp-Source: AGHT+IHnoO5tLCbaoBLiTXZayzEX2KB9z6ecdf5HOv6WlNKWWxkB7PzMeH306LsSOdDaUJvdAxKi2w==
+X-Received: by 2002:a17:903:32c3:b0:234:18a:d8ce with SMTP id d9443c01a7336-23414fce6a1mr113266005ad.46.1748242012779;
+        Sun, 25 May 2025 23:46:52 -0700 (PDT)
+Received: from G9X75MXGL4.bytedance.net ([139.177.225.227])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2345948c2acsm13570755ad.34.2025.05.25.23.46.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 25 May 2025 23:46:52 -0700 (PDT)
+From: <yangtengteng@bytedance.com>
+To: edumazet@google.com,
+	kuniyu@amazon.com,
+	pabeni@redhat.com,
+	willemb@google.com,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	horms@kernel.org,
+	wuyun.abel@bytedance.com,
+	shakeel.butt@linux.dev
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhoufeng.zf@bytedance.com,
+	wangdongdong.6@bytedance.com,
+	zhangrui.rod@bytedance.com,
+	yangzhenze@bytedance.com,
+	yangtengteng@bytedance.com
+Subject: [PATCH net-next] Fix sock_exceed_buf_limit not being triggered in __sk_mem_raise_allocated
+Date: Mon, 26 May 2025 14:46:19 +0800
+Message-Id: <20250526064619.5412-1-yangtengteng@bytedance.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: dts: freescale: imx93-phycore-som: Delay the
- phy reset by a gpio
-To: Andrew Lunn <andrew@lunn.ch>, Christoph Stoidner <c.stoidner@phytec.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-References: <20250524112315.695376-1-c.stoidner@phytec.de>
- <047c963e-f24d-4995-aea0-4a8cf8e343f5@lunn.ch>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <047c963e-f24d-4995-aea0-4a8cf8e343f5@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:d3SViVT6UuD8sACbcKXL3zBeEF4rxfGJnzrZMMPpEW9ZXSe6eOF
- 5GeBk3c/4PdlPLjATAHrB27ytUMLTffZzerpfT6bAw5Ke1vTdZCUIA+xrT9p/uS9oeAeKhd
- ehucj2IAlY0wVnJTpBzXAYYTEEtSOsrfvnP7FsGnYfAjXjCOAQM67Xt4ZCGXGB2jguYPEIz
- +3B+2sN8eCHOh/rlTGhMw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:b2r4lkKUbQI=;8Re9IFuguwVF2R67lDE6iNYKuLA
- D9vBYrKBB+hiM8tycVGy4JIV30ozIP9QC2yHiMX/yy6tGHDSu5ghzFODU2qH1iSHi0jKdaJpV
- ND/T/Wp9Jm0ZQAlF9slVTAh7T5B+gApn+BzeGFM7SqlL49fZZVWREH0cTXHhLMSKkI+mCSZLQ
- SRflpR/yNI7mDdnXyYXmlEU1A+L1EvzP9Wgd4WTk6rFBf02yBtWQqakpbNpOBeA4D5AzArQcz
- 8fVZBeQr+BHLNOSj4CZMnxLoEeJRcEg9E94FB61J/tgOO+AMVGjeobiL1e0yt3AGL0LkU9dNb
- ya2j6E7hIKQyu8kcApbNLrRhMuNIGiMldU5yDN+G9mKBH5Bt+STZweSgQt2xH7Jbjp7Fv/P6F
- YoveI/FD74Pahto+1FrJLf42ePTgsJ2QBoX81QesSIAeRLu3kt0a/Cub3yLgNBr2w11TGjhHn
- bmVGjmgL9adrDTM/v4ccDAtA6UgCKBvqhbOBI3xMqN4/U4vrr5LSTYtWSDlqwDKhQFx+o9YUH
- 4XOo3A50taxZQekBsSC7EtrdCtqhsDMfN+2Uv+GYo35SogcH+Okm5Vj08p9UWyUizGnj+wfSI
- +VWAZrBBhuXu3N2sX+4RrwSUTA8FzaUNA6C8GXs/smln9b/eHoWG8GorpsykkWT7oI9cpaMat
- Od5fSxf7siup8tlpAifLmy9PA3huGGJgtrEkB3+ZWHMePt6NFdnuWMvLqSPpV8XTqV0+Q/vXW
- AUimH8VxglDQfAAYOWy19DZRtC9zEebQVpvcIqLjE/WLQ8CdwQLtDRB1UfgENjw+Ov60iTunc
- fFCG4YLiZMqAGee6G0uKFvncicoDnhNcMmFK3G4uE5hGbxNumEVL7TSomv++WtNGXGd3xwEwE
- Nxj4bAxwLspaO7vBlW3al5xo/cQR7z38JV3pRjay0vAwt4fOmb8slOat+yODSAdN89OCefDC0
- pM8UoDP4FVxQbSj76KNnPM9rb9tyi8fn/rMDR4L0Zq8PyqjFa2zbC1AWlhUqjYUxwTNL6HbCI
- gDTkxWQ/bmqi2YyJOQRMQqOduLE8jM2SNoyD7okHmcPozFnsvTAsH68gr5LH2ANPLT40yN17D
- zoA/cpZYc2KN0l9QZd4otdCqkM7v0vIsdI0m3AVGH54R8YnTTSIZ5V7m8R7+AjuWi77VoiZkR
- 4fIgPL7Kb/Aex94Ub0sNdoUy0N6el7KR450BKQ7kKcfbiu0uAvXosMoq377O0T1BJNrXA0yHs
- L3+WxnGfBzBFS1DVEy7PEnJPVGzc7q4fUj7/I89X8b069Csf4ybJoJ94iStmEUGW13kd6s7R4
- 6PjyEYK0DHpGMg9QW3YZX1HU8o7UEuTtxnXyyjSDDHmVqQCPaZ/di79EwXVSAFADv22sZfKT1
- I50sXxw9ohyVvksQD0G7waqL9HVw7YLeABRPPdxRkZ5ghtv5tUIXOXQphtdQ1JwrsT6ZnGODd
- AzXICHA==
+Content-Transfer-Encoding: 8bit
 
-Hi Andrew,
-hi Christoph
+From: Tengteng Yang <yangtengteng@bytedance.com>
 
-Am 24.05.25 um 19:44 schrieb Andrew Lunn:
->> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arc=
-h/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
->> index 88c2657b50e6..b481097f08a4 100644
->> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
->> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
->> @@ -68,6 +68,8 @@ mdio: mdio {
->>   		ethphy1: ethernet-phy@1 {
->>   			compatible =3D "ethernet-phy-ieee802.3-c22";
->>   			reg =3D <1>;
->> +			reset-gpios =3D <&gpio4 23 GPIO_ACTIVE_HIGH>;
->> +			reset-assert-us =3D <30>;
-> Is there anything in the datasheet about needing a delay after the
-> reset? There is a DT property for this:
->
->    reset-deassert-us:
->      description:
->        Delay after the reset was deasserted in microseconds. If
->        this property is missing the delay will be skipped.
-is it the time until the PHY finished its post reset stabilization=20
-(datasheet to call it T2 "reset to SMI ready")?
->
-> Anyway:
->
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->
->      Andrew
->
+When a process under memory pressure is not part of any cgroup and
+the charged flag is false, trace_sock_exceed_buf_limit was not called
+as expected.
+
+This regression was introduced by commit 2def8ff3fdb6 ("sock:
+Code cleanup on __sk_mem_raise_allocated()"). The fix changes the
+default value of charged to true while preserving existing logic.
+
+Fixes: 2def8ff3fdb6 ("sock: Code cleanup on __sk_mem_raise_allocated()")
+Signed-off-by: Abel Wu <wuyun.abel@bytedance.com>
+Signed-off-by: Tengteng Yang <yangtengteng@bytedance.com>
+---
+ net/core/sock.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 347ce75482f5..b817ac711bc9 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3235,16 +3235,16 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
+ {
+ 	struct mem_cgroup *memcg = mem_cgroup_sockets_enabled ? sk->sk_memcg : NULL;
+ 	struct proto *prot = sk->sk_prot;
+-	bool charged = false;
++	bool charged = true;
+ 	long allocated;
+ 
+ 	sk_memory_allocated_add(sk, amt);
+ 	allocated = sk_memory_allocated(sk);
+ 
+ 	if (memcg) {
+-		if (!mem_cgroup_charge_skmem(memcg, amt, gfp_memcg_charge()))
++		charged = mem_cgroup_charge_skmem(memcg, amt, gfp_memcg_charge();
++		if (!charged)
+ 			goto suppress_allocation;
+-		charged = true;
+ 	}
+ 
+ 	/* Under limit. */
+@@ -3329,7 +3329,7 @@ int __sk_mem_raise_allocated(struct sock *sk, int size, int amt, int kind)
+ 
+ 	sk_memory_allocated_sub(sk, amt);
+ 
+-	if (charged)
++	if (memcg && charged)
+ 		mem_cgroup_uncharge_skmem(memcg, amt);
+ 
+ 	return 0;
+-- 
+2.20.1
 
