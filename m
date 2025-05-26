@@ -1,248 +1,195 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011011.outbound.protection.outlook.com [52.101.125.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF5A226D11
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 16:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748276415; cv=none; b=JduargMx73/z1IjbF49VMtuxk6bs8K6L+zjhhcZW2Y/z4jlNCUe8diVu0r6GP7Y/Cc1CNw77F/+sw3NiqmAqBBDo2IKNN7pQcJTZz2Mh6swTrnjNV6TVKIj56hECOkBc0+JnYJCRlJX8Xxxi+JEvpfdbh9NRN4fICQGjSoAm+Ts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748276415; c=relaxed/simple;
-	bh=y4CBjWuKKN8L9SNiDECKLF61mSLD4R7ZHdrASlShWHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgFASwGrx0+pOt2jDlWEcHxZ54DtcpZw8wPSTXcjwttRrulXfyop1brdEw8PqE2xMDPub6DxndenaLb5dPqjWTNGaZ/lKATP3w+U3sGPtgImfOMN4PmUDTuZX80JEcnD7VYzdk7SnU1AQL7hZbDTPaH7U8bdzgAgQh8WNsRN2Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aUn/qKDg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CsXavt/H; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aUn/qKDg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CsXavt/H; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300BC23CEF8
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 16:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748276439; cv=fail; b=rTlCiuw/7s1iGK7HsWTRu4HMdHdQr88y5KpxmHCfFWIHYjjOLSxFahPdUeZ4ScLzrs5fi/WO7BXjKmaKrHooEarmijRBpaY6SKuKBCPtSLMgRmM6BpfWkoMeWQb/thJ2rhIsw7AC4/O3Jjb7fe+KBVndEBbbRJmUOsF/Uyr6WYo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748276439; c=relaxed/simple;
+	bh=AuAOLe1u5BYcU0SXCzbwj6vfU8D8fj6Za0R2bnV/hLo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ik/ijn5eZdoWQ7zCwsk4E+9wDn0+4rRdBR6ajJ+rI1hQkksdBmD3Mw5W67lAq2ntoduRVF9E7kB+gwN1A6jElg3Bpwy5BiwyTZ/I8r015qpcVaVtgZF6x+dY231pnHVXwQ2mon2Yrqh987TT6opaEYKazet6xCszws8F+93zOWY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=ErOFB573; arc=fail smtp.client-ip=52.101.125.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aUn/qKDg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CsXavt/H";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aUn/qKDg";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CsXavt/H"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9CCE41F793;
-	Mon, 26 May 2025 16:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748276411; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sOBZoZzUHONLoLLpsI1CHtBErIDxMTl1jzUF4RYHAYo=;
-	b=aUn/qKDgg+y3FtQF37V6MyQVVrBxVCfA0/Rbe9z+P3xXh40B2bhzvQN7QFeMyJ12YnirXR
-	/9tjAQ6WsaiLQXbM1HaMzqPPguokFhI9N+BFJRQBMeuqWmGxSeE78H9mdlI/XtEjYV/pFS
-	WDBa9TyAA1hvCky3hCU/rQK43A32HzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748276411;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sOBZoZzUHONLoLLpsI1CHtBErIDxMTl1jzUF4RYHAYo=;
-	b=CsXavt/HdsMZtvjnL93SN6j8O9kxB5P3HO4XnpHyYwPw2kgW70n+KrYQUkz7xjOYzpEdJZ
-	KvtIIH9/SQ5cyfCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748276411; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sOBZoZzUHONLoLLpsI1CHtBErIDxMTl1jzUF4RYHAYo=;
-	b=aUn/qKDgg+y3FtQF37V6MyQVVrBxVCfA0/Rbe9z+P3xXh40B2bhzvQN7QFeMyJ12YnirXR
-	/9tjAQ6WsaiLQXbM1HaMzqPPguokFhI9N+BFJRQBMeuqWmGxSeE78H9mdlI/XtEjYV/pFS
-	WDBa9TyAA1hvCky3hCU/rQK43A32HzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748276411;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sOBZoZzUHONLoLLpsI1CHtBErIDxMTl1jzUF4RYHAYo=;
-	b=CsXavt/HdsMZtvjnL93SN6j8O9kxB5P3HO4XnpHyYwPw2kgW70n+KrYQUkz7xjOYzpEdJZ
-	KvtIIH9/SQ5cyfCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8A7D213964;
-	Mon, 26 May 2025 16:20:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QazJIbuUNGjFcgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 26 May 2025 16:20:11 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3EB5AA09B7; Mon, 26 May 2025 18:20:11 +0200 (CEST)
-Date: Mon, 26 May 2025 18:20:11 +0200
-From: Jan Kara <jack@suse.cz>
-To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Cc: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>, 
-	Tao Ma <boyu.mt@taobao.com>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Eric Biggers <ebiggers@google.com>, linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
-	syzbot+0c89d865531d053abb2d@syzkaller.appspotmail.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] ext4: inline: convert when mmap is called, not when
- page is written
-Message-ID: <ko3bgsd2wdluordh6phnmou3232yqlqsehxte6bvq34udq5in7@4phfw73mywjo>
-References: <20250526-ext4_inline_page_mkwrite-v2-1-aa96d9bc287d@igalia.com>
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="ErOFB573"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fQn99iw+hpkmQZbjF3/W13LY/NzMchHo6o0jGpkfCRgQg5foYd6atdnYpT79ZU/zQE55s+IpvkOwnnSxH2cEK2kglwEl08OO3rk4sAXc4lcxghdgNiKLvzvzkYx98yCIpGHPdU+224rqc4/XaRPXRtiAmXC8NF5gKqMb3CbOXQuMBuz4cuHdb8r3lqDpIB6rZOiWhZAQWkoAz6j8GehsrKL3vPVvbjmyDbAgYWSFylkFtSz2DExe9ljb+1AnwQ1Dv/AmYUNG11Aj8oG9fhpY3AsJp9Hp1VSnYDUH6nTfP7kD3PQv8yvCASvt5QDOUivdkLKExUBbDB5JdKjIj4FjjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AuAOLe1u5BYcU0SXCzbwj6vfU8D8fj6Za0R2bnV/hLo=;
+ b=CTbEseq6f53gjgwzkzA91S3PaYcwDu7fo9Ae4HWa7ez7pqawoIlDXkw9EAKv1FMAc0wUdOkg8ALetVOpY1PdgvWGHsTqNhwVXB/BI+rZL8i6XDQJiFmIc0VKls036lRBaMJ16IjOdOd9yd25DDVBgvJi9wogpynxMS4BEb/7VIJ1GpuP+mxBZDsZyVTzUlYVPEshg3by1aEqb2PPz3QlVryoB41E7wYHfOXZrTXvtSuBnfs2sdV+SSg+u+EGfyrDiQErwxT32nzOrisIHc3U8EUIpEu9aUiO4wY5R/XSJe5qcOsOZcUIJrdGgvOVizGRz0+S0nE5EcsH0EutstHxtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AuAOLe1u5BYcU0SXCzbwj6vfU8D8fj6Za0R2bnV/hLo=;
+ b=ErOFB573bvnbIaaoGjUiU9XmkQwXHN5aQZK+H1hEGZ6JJtFx0c+xsyEGVr9n2VMyGVbC3ihYGa4oZ0/hNb90F+g39ao6OCQ8uSVqshlzz9unsJCdvsz6d/tyA5v7X7+uzVEjY+X9lZNVYvejk93q4kFODRFUcXzW/rR7R988kBs=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by OS3PR01MB5941.jpnprd01.prod.outlook.com (2603:1096:604:b4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Mon, 26 May
+ 2025 16:20:29 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8769.025; Mon, 26 May 2025
+ 16:20:29 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Dave Stevenson
+	<dave.stevenson@raspberrypi.com>, =?utf-8?B?TWHDrXJhIENhbmFs?=
+	<mcanal@igalia.com>, Raspberry Pi Kernel Maintenance
+	<kernel-list@raspberrypi.com>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+	laurent.pinchart <laurent.pinchart@ideasonboard.com>, Jonas Karlman
+	<jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry
+ Baryshkov <lumag@kernel.org>
+Subject: RE: (subset) [PATCH v6 00/10] drm/display: generic HDMI CEC helpers
+Thread-Topic: (subset) [PATCH v6 00/10] drm/display: generic HDMI CEC helpers
+Thread-Index: AQHbxs9ir1hJF42rS02+yM7B24cENLPcIpWAgAOfSiCAAArFgIAFWXjw
+Date: Mon, 26 May 2025 16:20:29 +0000
+Message-ID:
+ <TY3PR01MB113466FD9CE2BA104C3C9E1CE8665A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References:
+ <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
+ <174778079318.1447836.14176996867060604138.b4-ty@oss.qualcomm.com>
+ <TY3PR01MB1134687A2A762FE803EFA04F28698A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CAO9ioeUf_nQXfP490fDx0Ord55z6EsR+3SOhcee2B-ymewkuCg@mail.gmail.com>
+In-Reply-To:
+ <CAO9ioeUf_nQXfP490fDx0Ord55z6EsR+3SOhcee2B-ymewkuCg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS3PR01MB5941:EE_
+x-ms-office365-filtering-correlation-id: 5a43556b-5b4a-410c-40f5-08dd9c713b42
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?eXE0bFo1SFdjZURmSnJLQ3JGcFk2ZVE0VUFzMXdOd0VQakV4UnFiRnIvUndw?=
+ =?utf-8?B?VlhHSmVvWUowWFhPN0k1TlQ2RDhUc1VPcHpyTmdiamtqaUFMK3owWHFnWDV4?=
+ =?utf-8?B?QUsxdGU0TkJ1OHJSQk1vZmx6UEpoVkprR2w2R3crZDNjam9Ec2JmUkRIN09D?=
+ =?utf-8?B?dkFvS3E2RVAyeTdxb3lCMWFtbjliZ0xqYUpMWWtBeTNjYWdncVhkUGx5dzBJ?=
+ =?utf-8?B?eGd4WEJ3L0VGTVlDZVAvcTR4S2hoRzhBQXBSMDdsbmFuSFJIYmRpWTFUVkNC?=
+ =?utf-8?B?YWhJdzVUb1ZFQmRTNjdPbm5WSGxyMHhUV1Nhd1BhNk9paXA4ZlYrWklYSEpy?=
+ =?utf-8?B?b0tXdGdJNG5Qb2JNWnU3MUF5bnN6SzBkUlc2d1pLVm9CdmFXbG1FYWYzUE1I?=
+ =?utf-8?B?bEduR1RnK0VhMTNlY1BKVWp6YTZUL0lEd0d3SFFzVTZYbFd1c3ZQeG1CYWpH?=
+ =?utf-8?B?bXZKTjBRM09pMVhPb0NqNkZ0dkgvZDNKaTFXUHU2MlpmMEF4TXRCT0FYclZl?=
+ =?utf-8?B?a053Y0E2Q3REcVJhK3VQeHFaQWJzYUJqdDJxOUhxeUJFUDJJQ3BxNzVsTWV4?=
+ =?utf-8?B?b2I1eXhUS3hPQzhtd2RFU05HRUlUZzdKeWIxSFF0N08xeDhaU0VzZGYwdkNJ?=
+ =?utf-8?B?dUVzT21Na3p3ekhZM01MalI0Vzl3VWdXNHB4ek5GWEg0dFIwZUJGMGZEbitz?=
+ =?utf-8?B?ckxlOUlFZEE4d25KTGhseU1lUGtvV0xZbUxJUlJHR1dsdkF5a2JaSXdxSFdo?=
+ =?utf-8?B?OWIyVmNubzlDSnhVMVZtN0o3TlpDeERZdGg4UEdWZldTdFlNRkg1Q1ZzMFpY?=
+ =?utf-8?B?dmZkSDZIRVZIQWllaVZRNHE4eDdydi9vU0JaZHNTcnhrOEVjRmZqVjhmaEpK?=
+ =?utf-8?B?aExoc2VnL0t1dkVkRm5WRm03a3RrTlVZTTRJZ1ZxOU1RZllYL1NkSDJMajhL?=
+ =?utf-8?B?MkpDdkl1d1gvdHQrY09jMHFmVTEraFNJcm9vTXlYaGdHZFROVHM4STNGRkdY?=
+ =?utf-8?B?U2NPcHkrUGtHZzRNbkhLWUxtY2hkaHpzOEQwbzZ0SzE4WmUzSG9yay9VZG1V?=
+ =?utf-8?B?MGsrWWdSZlQxRGtuSzY2SHhUM1ZkRWtLTjNQd1BBTU9INHFPc0Nkd3E5eE1F?=
+ =?utf-8?B?QzhYeVdYTlhOaDNKWTdQV1hmb01Ed0ZmajMrV0YxbzRLRTkvNmN4ajNKOFhZ?=
+ =?utf-8?B?VlRmc2Q4ZHk1NUxLV0ZMUXc0V1VrcDFBRnR3bGNvUWRpMU1GOXFnMDFUa1Ri?=
+ =?utf-8?B?RVNOR3RVT3oydjlZSnBJWWFuQWNzajZjMEV2MERoakZlZ2l3bXR4Slh1b29a?=
+ =?utf-8?B?dFNVRmFjZlFqSkE4WnU1alkvR0NsSDdhZ2g4QndlNXRSb0c3dmU0S290ZGRU?=
+ =?utf-8?B?VmF6NUFwZzJCbE00NENRNGVPQzV1ODgyS0w3UTB0YmZRUFBUdkVOdEgvckJ4?=
+ =?utf-8?B?MGZUczVUbGxFUC9pd1hFc3psRDcvaFVkckRUZ0ZNQkNUbExrOTNicUxjM1A2?=
+ =?utf-8?B?T2lRR09KVldXaFRVTGdvRWNpK3hwL1htUnpFTmdIMGVTUzdaSTdPdmVpZHlr?=
+ =?utf-8?B?eXRPWStCTDR5YUFVK3JsSjNjNUN5ZUlnSWdpQUd6UCswTmgwMm4vdjdVS3hV?=
+ =?utf-8?B?VktTL25lLzNRbXBqN01FK05SRWVlUnpZRnkzSUZwQ0VJTXkzUUJzWkJmaVl3?=
+ =?utf-8?B?aWFMSVlzZGdabTNHS28zSlpLK0g1NVNtQlRDQXc0ZG83V1g3eld2UHE1SC9m?=
+ =?utf-8?B?cytDRTNIOGMvakxrN25nRVRGRmx4VkdheXZ0d2V2Tkt5RkM4TU9XM2FJYi9Z?=
+ =?utf-8?B?c1Z1bHl4ckg3S3oxOE85OGNVR0xMOHlrenFqS1pKaWVSR29pRkVSZjRaczE0?=
+ =?utf-8?B?dUlseTBBcXBrdEJ6aFFmRkxHMkJpZC9FUUI1cGxublJvdlNUalhCcE5kK3lU?=
+ =?utf-8?B?eDg2VWxzYnFRYWNQV1U3bkh1SVA2Um40N2FaQ0l0dUt1VGtHWlViNVhtclNI?=
+ =?utf-8?Q?xgks25m36kJITGlUgI/+ArZjZMlm4Q=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?ckcxOWpKcy9zRUt0Tk9LaFFHRU80OG1nczF3Y0dQUnByVmdKcktvMHVXVHpk?=
+ =?utf-8?B?aVdLcGo0Vy9LemxKL2cvSkJLRktHMVBsQ1BmSm5rM2NYYXlvSkIxa2NmakpG?=
+ =?utf-8?B?SmNZOTNoTEpaVkQrdHJvcjFidXRtaU9SelV6Nm5EOEdoamV5ZTk0cm9zd2k5?=
+ =?utf-8?B?Q2t4eitWYVdTNGlDYzhMZHNQVlM3a2o0enlEemx0QzZBNDVlYzlyWWd1bGtn?=
+ =?utf-8?B?Y3RtQW9oYjRBYmt6RWlpd3ZlTTcvbWVPekhZZ0huVjRuTFRCNGxiNUNreldF?=
+ =?utf-8?B?UTc2UUIvQkxLUG1EL1cwTDNxcTJkMXlDRmd4WEJJY1l3d1hqTGltbGFEZlhl?=
+ =?utf-8?B?SVp6WXBEOXEwYnl3MFpFTXN5WUhtSFpCQVRiLzF5ZWV6WGRZSDZuZDk5OWNX?=
+ =?utf-8?B?alRUL0c3KzB5TC9IeE1XQTdnQXRidmUrQndxbXM2eDJGSVBVQWkwWHdrZExM?=
+ =?utf-8?B?T0RNazcxblA0MmNhMG92ZmlKSUN1MHJMVk5JQURveDQ0NXRHL1puK3ZRY1I4?=
+ =?utf-8?B?Nm10V01NQjZOUE1ZZDZ6bWFjcjk5RVBiVDRpeVc0SXAxSjVuY2ljUGlraVVY?=
+ =?utf-8?B?WlArOEJIbDBRY3VQZFk1Z294OGp4MnI3a29XQ1dBRHlPdm5BYTIrdStIYlJJ?=
+ =?utf-8?B?YkxTaFZ1eXMvTnRmZ1RZZUR1RlNuUjBtVXE0Y01nRUwxZW1xcjRoc2dHaXgw?=
+ =?utf-8?B?S3MxKzY1STRld0dHQVhjbWxDRHpieHlWV1FFaUdHYzg3MTVsczEyUjBMTHN5?=
+ =?utf-8?B?aTNNRlJtTkNFOTBsZEJET3cweFJCNjFCa29QSG43cjdvd25jQTUyVmZneGsv?=
+ =?utf-8?B?US85SFBKVzZIYVFVVi92UVh2RFdabFpLUm1LdmtzR3hCb1A0S3AzQTZBQ1Ni?=
+ =?utf-8?B?eWg4Y1RocHorM0NBUHNKRUVpQmJtYU1sY2Fwb1ovZnMvWUJYYlhzc2NFTi9t?=
+ =?utf-8?B?cVZWUE9QRjRkWkZIOExoa0ovOWpMR1dJeWg0R1ZlMjlXTS9FS0lvN1Q3ZjVa?=
+ =?utf-8?B?U05XclErQi84R29KZExqUldUSENHQmJROXhVMVhsVnZlUkZqMHJGd1pDRHFO?=
+ =?utf-8?B?Vzl6Y25NL0xzNUc5eUVaeFZLb2pKdVZ0d1FJNWRycnNlTTJDeU5JOHdUVkxE?=
+ =?utf-8?B?bW91czFCbVdKbGpycm1pSTl4WlVVUjFaUS92dUxpUXd5OGI0K05UWVc2Sk1R?=
+ =?utf-8?B?dnVYKzR2bnRhUTdNUVU1UnNtd2RiUUpzT1JpdFR6d3lFQ2Z6RHJ3N1ZRN0JB?=
+ =?utf-8?B?NkYrVUFhQkZHcTVGL05pQXZXaHJIODZmdVNJV00wZm1WdUJyUC9UUkxVaXVh?=
+ =?utf-8?B?WlFnbEllckpGSjdsOXU2ZnlRanlmb0o1ZTBxb1ZKaDlTeURIczVDR0ZCZE9w?=
+ =?utf-8?B?dk9nSUxiSjE2WWdCeDdhQ2FNQVRDa3NNR1J0V1Zjd3ZCWFUrdHV2NFYzZ1ND?=
+ =?utf-8?B?bTd5UkZDRDFhdkZMUGxaWkUxUWhCMnNvT2NjdTM0bkZKQ3pJcGlpNnREYWVO?=
+ =?utf-8?B?Vkg4b0tCTkUyZTArQXZkRW12S3FtZXVnWEJIbTIrQitHcWhNMFVBQW9RUEk0?=
+ =?utf-8?B?Ymo0K3A4d3g1eXJjQ0g0aW9yVmgyWTZ6c3Nja0pmUEJqanNmbkFXbVFZRFB3?=
+ =?utf-8?B?L1h1TXNwbGRJZmVqeXdxZ0hzL1ZwWUJPK3dDcENlNWdMWFRyaHJFRkR5cTF4?=
+ =?utf-8?B?U2EvSURhSnJYTUdaZHBLMUVha2g4Q042Ni9DTWRESXd0R0FVcVJDRXI0aTAv?=
+ =?utf-8?B?QjhDNDErYzlDdStGN01YV0N2Zk9pcTA0TTJYZ252QWtvU2U3enNPMkVvVElO?=
+ =?utf-8?B?Rk45eGRYT1NKVUY3YVdqK0dSVDJ1Q08zV0dESUt3OTJxMDV3N015Ti9JeUth?=
+ =?utf-8?B?cThqbEpZTlhSeHhWMW1MSkttME1BK1NGNnp6Sk4zSHRScUs4YXBQdUtFbG5U?=
+ =?utf-8?B?VC92S2tramNISDNNVGhZNkFDVTBFYWVoNW42SmRQWjBmNzRVVXpRTG9BblZ0?=
+ =?utf-8?B?UHZJSDhaTlRUWmJuV1BvWUJlZlVCcWRaRkFHNm1MbzBPSHNMaDhOTUd1RzRs?=
+ =?utf-8?B?cnVrOTI1N1ZsZ0ZIL1JXdHAvNjhTSmlnNFdvdENZV1NkM2lGcnY5MjEwUGZl?=
+ =?utf-8?Q?k9KD4XYHcr/HHUptYJZpzF1PR?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526-ext4_inline_page_mkwrite-v2-1-aa96d9bc287d@igalia.com>
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[0c89d865531d053abb2d];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Score: -2.30
-X-Spam-Level: 
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a43556b-5b4a-410c-40f5-08dd9c713b42
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2025 16:20:29.5848
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZO5bo2AjlDxe/zsxO47XpRi9rUOsjh08HGSA0PtoD4m+YqAQI/3b0RaSel2KfMBZqr+qFaV32oRLdAOfTv6zv2qIP9BLUmIxBUMB1fXYXiA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB5941
 
-On Mon 26-05-25 11:13:34, Thadeu Lima de Souza Cascardo wrote:
-> inline data handling has a race between writing and writing to a memory
-> map.
-> 
-> When ext4_page_mkwrite is called, it calls ext4_convert_inline_data, which
-> destroys the inline data, but if block allocation fails, restores the
-> inline data. In that process, we could have:
-> 
-> CPU1					CPU2
-> destroy_inline_data
-> 					write_begin (does not see inline data)
-> restory_inline_data
-> 					write_end (sees inline data)
-> 
-> This leads to bugs like the one below, as write_begin did not prepare for
-> the case of inline data, which is expected by the write_end side of it.
-> 
-> ------------[ cut here ]------------
-> kernel BUG at fs/ext4/inline.c:235!
-> Oops: invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> CPU: 1 UID: 0 PID: 5838 Comm: syz-executor110 Not tainted 6.13.0-rc3-syzkaller-00209-g499551201b5f #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-> RIP: 0010:ext4_write_inline_data fs/ext4/inline.c:235 [inline]
-> RIP: 0010:ext4_write_inline_data_end+0xdc7/0xdd0 fs/ext4/inline.c:774
-> Code: 47 1d 8c e8 4b 3a 91 ff 90 0f 0b e8 63 7a 47 ff 48 8b 7c 24 10 48 c7 c6 e0 47 1d 8c e8 32 3a 91 ff 90 0f 0b e8 4a 7a 47 ff 90 <0f> 0b 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90
-> RSP: 0018:ffffc900031c7320 EFLAGS: 00010293
-> RAX: ffffffff8257f9a6 RBX: 000000000000005a RCX: ffff888012968000
-> RDX: 0000000000000000 RSI: 000000000000005a RDI: 000000000000005b
-> RBP: ffffc900031c7448 R08: ffffffff8257ef87 R09: 1ffff11006806070
-> R10: dffffc0000000000 R11: ffffed1006806071 R12: 000000000000005a
-> R13: dffffc0000000000 R14: ffff888076b65bd8 R15: 000000000000005b
-> FS:  00007f5c6bacf6c0(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000a00 CR3: 0000000073fb6000 CR4: 0000000000350ef0
-> Call Trace:
->  <TASK>
->  generic_perform_write+0x6f8/0x990 mm/filemap.c:4070
->  ext4_buffered_write_iter+0xc5/0x350 fs/ext4/file.c:299
->  ext4_file_write_iter+0x892/0x1c50
->  iter_file_splice_write+0xbfc/0x1510 fs/splice.c:743
->  do_splice_from fs/splice.c:941 [inline]
->  direct_splice_actor+0x11d/0x220 fs/splice.c:1164
->  splice_direct_to_actor+0x588/0xc80 fs/splice.c:1108
->  do_splice_direct_actor fs/splice.c:1207 [inline]
->  do_splice_direct+0x289/0x3e0 fs/splice.c:1233
->  do_sendfile+0x564/0x8a0 fs/read_write.c:1363
->  __do_sys_sendfile64 fs/read_write.c:1424 [inline]
->  __se_sys_sendfile64+0x17c/0x1e0 fs/read_write.c:1410
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f5c6bb18d09
-> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f5c6bacf218 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-> RAX: ffffffffffffffda RBX: 00007f5c6bba0708 RCX: 00007f5c6bb18d09
-> RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
-> RBP: 00007f5c6bba0700 R08: 0000000000000000 R09: 0000000000000000
-> R10: 000080001d00c0d0 R11: 0000000000000246 R12: 00007f5c6bb6d620
-> R13: 00007f5c6bb6d0c0 R14: 0031656c69662f2e R15: 8088e3ad122bc192
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> 
-> This happens because ext4_page_mkwrite is not protected by the inode_lock.
-> The xattr semaphore is not sufficient to protect inline data handling in a
-> sane way, so we need to rely on the inode_lock. Adding the inode_lock to
-> ext4_page_mkwrite is not an option, otherwise lock-ordering problems with
-> mmap_lock may arise.
-> 
-> The conversion inside ext4_page_mkwrite was introduced at commit
-> 7b4cc9787fe3 ("ext4: evict inline data when writing to memory map"). This
-> fixes a documented bug in the commit message, which suggests some
-> alternative fixes.
-> 
-> Convert inline data when mmap is called, instead of doing it only when the
-> mmapped page is written to. Using the inode_lock there does not lead to
-> lock-ordering issues.
-> 
-> The drawback is that inline conversion will happen when the file is
-> mmapped, even though the page will not be written to.
-> 
-> Fixes: 7b4cc9787fe3 ("ext4: evict inline data when writing to memory map")
-> Reported-by: syzbot+0c89d865531d053abb2d@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=0c89d865531d053abb2d
-> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-> Cc: stable@vger.kernel.org
-> ---
-> Changes in v2:
-> - Convert inline data at mmap time, avoiding data loss.
-> - Link to v1: https://lore.kernel.org/r/20250519-ext4_inline_page_mkwrite-v1-1-865d9a62b512@igalia.com
-> ---
->  fs/ext4/file.c  | 6 ++++++
->  fs/ext4/inode.c | 4 ----
->  2 files changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index beb078ee4811d6092e362e37307e7d87e5276cbc..f2380471df5d99500e49fdc639fa3e56143c328f 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -819,6 +819,12 @@ static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
->  	if (!daxdev_mapping_supported(vma, dax_dev))
->  		return -EOPNOTSUPP;
->  
-> +	inode_lock(inode);
-> +	ret = ext4_convert_inline_data(inode);
-> +	inode_unlock(inode);
-> +	if (ret)
-> +		return ret;
-> +
->  	file_accessed(file);
->  	if (IS_DAX(file_inode(file))) {
->  		vma->vm_ops = &ext4_dax_vm_ops;
-
-So I would *love* to do this and was thinking about this as well. But the
-trouble is that this causes lock inversion as well because ->mmap callback
-is called with mmap_lock held and so we cannot acquire inode_lock here
-either.
-
-Recent changes which switch from ->mmap to ->mmap_prepare callback are
-actually going in a suitable direction but we'd need a rather larger
-rewrite to get from under mmap_lock and I'm not sure that's justified.
-
-Anyway, thanks for having a look!
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+SGkgRG1pdHJ5IEJhcnlzaGtvdiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBG
+cm9tOiBEbWl0cnkgQmFyeXNoa292IDxkbWl0cnkuYmFyeXNoa292QG9zcy5xdWFsY29tbS5jb20+
+DQo+IFNlbnQ6IDIzIE1heSAyMDI1IDA3OjM3DQo+IFN1YmplY3Q6IFJlOiAoc3Vic2V0KSBbUEFU
+Q0ggdjYgMDAvMTBdIGRybS9kaXNwbGF5OiBnZW5lcmljIEhETUkgQ0VDIGhlbHBlcnMNCj4gDQo+
+IEhpIEJpanUNCj4gDQo+IE9uIEZyaSwgMjMgTWF5IDIwMjUgYXQgMDk6MTcsIEJpanUgRGFzIDxi
+aWp1LmRhcy5qekBicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBEbWl0cnkgQmFy
+eXNoa292LA0KPiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgc2VyaWVzLg0KPiA+DQo+ID4gTG9va3Mg
+bGlrZSwgQWZ0ZXIgdGhpcyBwYXRjaCwgd2hlbiBJIGNoYW5nZSByZXNvbHV0aW9uIHVzaW5nIG1v
+ZGV0ZXN0IGl0IGlzIG5vdCB3b3JraW5nLg0KPiA+IE1vbml0b3IgaXMgc2hvd2luZyBvdXQgb2Yg
+cmFuZ2UvTm8gc2lnbmFsIG9uIFJaL1YyTCBTTUFSQyBFVksgY29ubmVjdGVkIHRvIEFEVjc1MzUu
+DQo+ID4NCj4gPiBOb3Qgc3VyZSwgSSBhbSB0aGUgb25seSBvbmUgZmFjaW5nIHRoaXMgaXNzdWU/
+DQo+IA0KPiBJIGhhdmUgYmVlbiB0ZXN0aW5nIHRoZSBzZXJpZXMgb24gZGI0MTBjIC8gYWR2NzUz
+MywgYnV0IHNvbWV0aGluZyBtaWdodCBoYXZlIGNoYW5nZWQgYmV0d2VlbiB0aGUNCj4gdGVzdGlu
+ZyB0aW1lIGFuZCB0aGUgcHJlc2VudCB0aW1lLiBJIHdpbGwgdHJ5IGNoZWNraW5nIGl0IG5leHQg
+d2Vlay4NCg0KSGF2ZSB5b3UgdGVzdGVkIEhETUkgd2l0aCBhbGwgdGhlIHN1cHBvcnRlZCBtb2Rl
+cyBnaXZlbiBmcm9tIHRoZSBFRElEIHVzaW5nIG1vZGV0ZXN0Pw0KT3IgdGVzdGVkIGp1c3QgMSBu
+YXRpdmUgcmVzb2x1dGlvbj8NCg0KQ2hlZXJzLA0KQmlqdQ0K
