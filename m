@@ -1,111 +1,202 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7634ABA2D;
-	Mon, 26 May 2025 09:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4201A255C
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250933; cv=none; b=r97M7P/KYrjjIps6UQWdumjPhJ77ZqeIOSYroIKNA4QVb17eLH93QZFxHdl9gjNc/Md6nDISvXIFrqIWC4bn6NGYjsxZFnnuAQSFqWR2Fd7j9cTo1keWPQ6jF+0/wncS6p4IFhot9VD4hx1DDWKEek9TOoaHrda5XaS/2o+vlyg=
+	t=1748251091; cv=none; b=GLy3DhjFTrB31WpPzYVq2GQ7cpjcAyWL4njod061Q75/1ZRHZZMFoTaDUxLF3Tehfc3JZx+jMko1eH1zzmeLjm/1srRM1D6gs0VZj4Ne0Aqp2YoxOml3ddEaDkef3sajIQLbJWT+STeRaO6xtbm+jpckyN8UXYqtalk0mVbBFA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250933; c=relaxed/simple;
-	bh=RcV0qtMVDeWuRTQZCyCWKIuHoaHolysHZXhbzn702yk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qacSzr1X93sGqAWC6aJdxDe16fghGcTxtbQEjiMH8sUPgEIS9R2FPQVi9D6nD4AlNAmhb/Byk+9FJNZikLxD/3PEQOahomn5cPp9IDTaqAlenPGybOBh9jwwDn7BeOtaReK9aTZ0AdYx7a5wQw6tFtEKxnHZ/pYJUcKwI73occY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=FzCA+JDg; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1748251091; c=relaxed/simple;
+	bh=NhBLYF1HFo5n9PEe4eyvC+5+YILnPLVN7kiiKAPmw9M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k8W2+FDnlyBFuCnWZU8NcZF4GXpdP73jqx66NAcGZTArc+Ic6OBzmJOmnO30KK/ssTZkrn6xUF4MzJsXkvYevaq6l2bSsHErqgNFAlHWPj/6xPbriEzGDIacpNphjdi32aMHCNPuOFvhX1/ZK2SJhUQ+tdpIoFI+msHiqB21oFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Z+9HtLxk; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FzCA+JDg"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q1D5PU028926;
-	Mon, 26 May 2025 02:15:14 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=77kYee0Z5IdZcMXbAYyH3uUjY
-	FG8JhyjDjN8zCwtD1Y=; b=FzCA+JDgKQj2rBQeRhpjpbcSOXdr2I1s/Hf9acqHr
-	SQRhfCPzZQ7LGjgZaRCdDJ0iT2iCZFDzW6At4pGaEHL5Tc3K27LgD5cYhYSJLSMa
-	kGn1CBPoGxKugPVRISmW6cVxh+uGkryZ9keOr0ISVtODwyeGuXC9bwfJap/AAqZ3
-	w2EL8WKK6dQM7NYzQpkMXAmgi3PZkT2oNmiTDXoAIJ1bNM32xRmzqzPYgUB0WPK6
-	F5xWF1aBukcY+Q9qQiuS2KbErxVxTlIEygDoYVOfoemld8ZldWFyDAQZC0gBTr4h
-	6R5BNh61vXaNC7wCbLF/subf9hAI017eTpY+yizhB3s4w==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46veebgr00-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 02:15:14 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Z+9HtLxk"
+X-UUID: 54aefa1e3a1211f082f7f7ac98dee637-20250526
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=rRfVgOLCK1+Qzud3CM/iJIj+EKcaxLM/ijVTcctlVGw=;
+	b=Z+9HtLxkf3I5ZrkJjal0tcD9vXU7137wv7ksetGoHSJ7rqJCbvW24SxBmKb8XndYIfeTKvEI5RhfWHhsYzsO+ioF8hgJj18xaD4ZI9ZoDIy7HwzeBmE6X+ukZJvmE4MFTje3mHENUMXQte1lJqdypYFFMwaB/RS53xD8/XYTq5Q=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:f2257b39-79e3-4d49-a236-2842547e8105,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:b0ae49f1-2ded-45ed-94e2-b3e9fa87100d,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:-7|-6|0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,USB|NGT
+X-CID-BAS: 2,USB|NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 54aefa1e3a1211f082f7f7ac98dee637-20250526
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+	(envelope-from <jianhua.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 344087377; Mon, 26 May 2025 17:18:05 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 26 May 2025 02:15:12 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 26 May 2025 02:15:12 -0700
-Received: from 928cf0ec7572 (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id 68F3E3F7063;
-	Mon, 26 May 2025 02:15:06 -0700 (PDT)
-Date: Mon, 26 May 2025 09:15:04 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Sai Krishna <saikrishnag@marvell.com>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sgoutham@marvell.com>, <gakula@marvell.com>, <lcherian@marvell.com>,
-        <jerinj@marvell.com>, <hkelam@marvell.com>, <andrew+netdev@lunn.ch>,
-        <bbhushan2@marvell.com>, <nathan@kernel.org>,
-        <ndesaulniers@google.com>, <morbo@google.com>,
-        <justinstitt@google.com>, <llvm@lists.linux.dev>, <horms@kernel.org>
-Subject: Re: [net-next PATCH v3 2/2] octeontx2-af: fix compiler warnings
- flagged by Sparse
-Message-ID: <aDQxGAxAMRrYHk2-@928cf0ec7572>
-References: <20250311182631.3224812-1-saikrishnag@marvell.com>
- <20250311182631.3224812-3-saikrishnag@marvell.com>
- <3bc07f4f-73b4-4d34-98cb-79e84d9f1493@lunn.ch>
+ 15.2.1258.39; Mon, 26 May 2025 17:18:03 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Mon, 26 May 2025 17:18:02 +0800
+From: Jianhua Lin <jianhua.lin@mediatek.com>
+To: <mchehab@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jianhua Lin
+	<jianhua.lin@mediatek.com>
+Subject:
+Date: Mon, 26 May 2025 17:17:34 +0800
+Message-ID: <20250526091734.4591-1-jianhua.lin@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3bc07f4f-73b4-4d34-98cb-79e84d9f1493@lunn.ch>
-X-Proofpoint-ORIG-GUID: -waQTk1gsQhSsnxd1mu0NI2cXCZZEcZP
-X-Authority-Analysis: v=2.4 cv=TJ9FS0la c=1 sm=1 tr=0 ts=68343122 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=jtlm59152YgxJQHRqcEA:9 a=CjuIK1q_8ugA:10 a=quENcT-jsP8hFS3YNsuE:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA3OCBTYWx0ZWRfX+uLKSgjLSQhW xoiiOdMvntTlrX7H/j3S24IFPf+9jOlxCXqYt9JN+6/rKGpKcPYnlv3uK1SC8pj+4yBBAvoOqwE 6Eb6asdmCqo6xuQRIbtq5tfUCLChk/F/aTaO3ZVYVNk1GYOZS8A3X9MjcrkFtwyC3J6tEU0kuT6
- gdzzRQ3yG94gDbQeoYkcA2oUuHLfd78QYLUftzykcdo32aEfyuSMVqg+DohXvvCXFN4L23EnEXC XIYtfo7M+2YSH/tF5/+v6qPT+hLBkg6ZoBazwP0f4L0VIZO5toEjv0F3Kcw45uWqFvQkcSUk0QL 5qzBRfsO4B8Gi1XmGuj8NLIh6m9FU8k6Vy5atqx5yvYRwfAiFJyvqmM+uQiw2VIhVUloNDwmcXn
- xtYIt71PW5Y2gFVmruy6WwJaLivtdohQa3Xkx1JLBSrIJBVPPDgLrBLWFp1fCGoWXpmn6h2L
-X-Proofpoint-GUID: -waQTk1gsQhSsnxd1mu0NI2cXCZZEcZP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_05,2025-05-22_01,2025-03-28_01
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 2025-03-11 at 21:32:12, Andrew Lunn (andrew@lunn.ch) wrote:
-> On Tue, Mar 11, 2025 at 11:56:31PM +0530, Sai Krishna wrote:
-> > Sparse flagged a number of warnings while typecasting iomem
-> > type to required data type.
->  
-> > For example, fwdata is just a shared memory data structure used
-> > between firmware and kernel, thus remapping and typecasting
-> > to required data type may not cause issue.
-> 
-> This is generally wrong. __iomem is there for a reason. If you are
-> removing it, it suggests what you do next with the pointer is wrong.
-> 
->     Andrew
-Hi Andrew,
+From: Jianhua Lin <jianhua.lin@mediatek.com>
+Date: Thu, 17 Apr 2025 11:28:00 +0800
+Subject: [PATCH v2 1/1] media: mediatek: jpeg: fix buffer alignment
 
-Sorry for delay in response. To provide some information, firmware sets
-aside some DDR memory region for firmware and kernel communication.
-Kernel ioremaps that space and typecasts to fwdata structure and uses it.
-Agree that ioremap is for io device's csr space but since we know that it
-is not really a register space but DDR we are ioremapping, typecasting
-and using it. We assumed __force is there for these kind of exceptions.
-Please suggest how to proceed with this. memcpy_fromio can done for fwdata
-but this fwdata is NOT read only once structure, firmware keeps updating it in
-cases like link speed changes and ethtool eeprom info changes. So everytime
-we have to ioremap, memcpy_fromio and iounmap which we want to avoid.
+The JPEG encoder image stride register must be MCU aligned.
+For YUV422, it's 32-byte aligned, and for YUV420, it's
+16-byte aligned.
 
-Thanks.
-Sundeep
-> 
-> ---
-> pw-bot: cr
+The minimal DCT block size is 8x8, so the vertical buffer
+alignment for YUV422 is 8-byte aligned, and for YUV420,
+it's 16-byte aligned.
+
+Signed-off-by: Jianhua Lin <jianhua.lin@mediatek.com>
+---
+Changes compared with v1:
+- Fix the side effects of v1
+  when encoding YUV420 with resolution 720x480, the ouput image is abnormal.
+- Fix signed-off-by
+
+ .../platform/mediatek/jpeg/mtk_jpeg_core.c    | 44 ++++++++++++-------
+ 1 file changed, 29 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
+index 834d2a354692..f01a81feb692 100644
+--- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
++++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
+@@ -40,8 +40,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {4, 4},
+ 		.v_sample	= {4, 2},
+ 		.colplanes	= 2,
+-		.h_align	= 4,
+-		.v_align	= 4,
++		.h_align	= 16,
++		.v_align	= 16,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ 	{
+@@ -50,8 +50,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {4, 4},
+ 		.v_sample	= {4, 2},
+ 		.colplanes	= 2,
+-		.h_align	= 4,
+-		.v_align	= 4,
++		.h_align	= 16,
++		.v_align	= 16,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ 	{
+@@ -60,8 +60,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {8},
+ 		.v_sample	= {4},
+ 		.colplanes	= 1,
+-		.h_align	= 5,
+-		.v_align	= 3,
++		.h_align	= 32,
++		.v_align	= 8,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ 	{
+@@ -70,8 +70,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_enc_formats[] = {
+ 		.h_sample	= {8},
+ 		.v_sample	= {4},
+ 		.colplanes	= 1,
+-		.h_align	= 5,
+-		.v_align	= 3,
++		.h_align	= 32,
++		.v_align	= 8,
+ 		.flags		= MTK_JPEG_FMT_FLAG_OUTPUT,
+ 	},
+ };
+@@ -87,8 +87,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
+ 		.h_sample	= {4, 2, 2},
+ 		.v_sample	= {4, 2, 2},
+ 		.colplanes	= 3,
+-		.h_align	= 5,
+-		.v_align	= 4,
++		.h_align	= 16,
++		.v_align	= 16,
+ 		.flags		= MTK_JPEG_FMT_FLAG_CAPTURE,
+ 	},
+ 	{
+@@ -96,8 +96,8 @@ static struct mtk_jpeg_fmt mtk_jpeg_dec_formats[] = {
+ 		.h_sample	= {4, 2, 2},
+ 		.v_sample	= {4, 4, 4},
+ 		.colplanes	= 3,
+-		.h_align	= 5,
+-		.v_align	= 3,
++		.h_align	= 32,
++		.v_align	= 8,
+ 		.flags		= MTK_JPEG_FMT_FLAG_CAPTURE,
+ 	},
+ };
+@@ -260,6 +260,7 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_pix_format_mplane *pix_mp,
+ 				   struct mtk_jpeg_fmt *fmt)
+ {
+ 	int i;
++	u32 h_align;
+ 
+ 	pix_mp->field = V4L2_FIELD_NONE;
+ 
+@@ -283,9 +284,15 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_pix_format_mplane *pix_mp,
+ 	}
+ 
+ 	/* other fourcc */
++	if (pix_mp->pixelformat == V4L2_PIX_FMT_YUYV ||
++	    pix_mp->pixelformat == V4L2_PIX_FMT_YVYU)
++		h_align = fmt->h_align / 2;
++	else
++		h_align = fmt->h_align;
++
+ 	pix_mp->height = clamp(round_up(pix_mp->height, fmt->v_align),
+ 			       MTK_JPEG_MIN_HEIGHT, MTK_JPEG_MAX_HEIGHT);
+-	pix_mp->width = clamp(round_up(pix_mp->width, fmt->h_align),
++	pix_mp->width = clamp(round_up(pix_mp->width, h_align),
+ 			      MTK_JPEG_MIN_WIDTH, MTK_JPEG_MAX_WIDTH);
+ 
+ 	for (i = 0; i < fmt->colplanes; i++) {
+@@ -293,8 +300,15 @@ static int mtk_jpeg_try_fmt_mplane(struct v4l2_pix_format_mplane *pix_mp,
+ 		u32 stride = pix_mp->width * fmt->h_sample[i] / 4;
+ 		u32 h = pix_mp->height * fmt->v_sample[i] / 4;
+ 
+-		pfmt->bytesperline = stride;
+-		pfmt->sizeimage = stride * h;
++		if (pix_mp->pixelformat == V4L2_PIX_FMT_YUYV ||
++		    pix_mp->pixelformat == V4L2_PIX_FMT_YVYU) {
++			stride = round_up(stride, fmt->h_align);
++			pfmt->bytesperline = stride;
++			pfmt->sizeimage = stride * h;
++		} else {
++			pfmt->bytesperline = stride;
++			pfmt->sizeimage = stride * h;
++		}
+ 	}
+ 	return 0;
+ }
+-- 
+2.46.0
+
