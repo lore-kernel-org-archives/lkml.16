@@ -1,95 +1,128 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2398B20E00A;
-	Mon, 26 May 2025 13:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DDE1F463B;
+	Mon, 26 May 2025 13:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748267208; cv=none; b=ZB0NWStRESY8ReyjCleNB0j+b03gMG57FXXDL3iSirMScg11qY9u72zLZvdjg4V4bE/Ykby9FEwDnlyOyWVcvZDZyMVWo6IhmgH1jdaOmWjX9yQo4MDaIY94SZM/4TVOkIePk5Q3e8FqTG+lC1tzgP+m13BmmvCJlIHDH/Yc5R8=
+	t=1748267226; cv=none; b=X06IvbQb3IWQRHplakdxBUL+tiqBwj0d+BACjpQQtvC+AWc9u6sk6racy01jWgwZbGW3BuTyn26Q+X0jW9l4S0FnZQO96t+BdsogQzg6vLuE4MwqqNydZq9Iwv9q758PwdnlDzXB8grFSnJGD5gqpBpabJsqLeTXu4YcB3SMJoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748267208; c=relaxed/simple;
-	bh=gEIcXbeyJylzemFfm58X30GOjXDyhHO6XtAq4kotWx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sQnvHCZLou3SewAUpGKZ2kuAv7uOI9HpPTjkTMAF+tMsP2PmjdZwfbKtN71B7x0y1IajHNGGRaxgnOjswbo1ClioAj4e+sicbGfguavQZlBKenauapls+bGuXzv5DEXA7F/T9N0m5/gBU5TFrROXgBkxACavdg2RVpEEBZAt+Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EeFwupQW; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748267226; c=relaxed/simple;
+	bh=+uw55Nbvzmy9FIP+DbRI7fubC+YGBHVWZbVdo3cwGXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=If/69Xe0ZR0HlRJnZGgmSj1PG1xt8vaLTvCAYL/sgVmrpfQm/75xGFe4VPS4x2Cerk3G0Gz8ZsxRb6QLCfKdLLUH3n4jwvXpRpoqp+gRdg8ym4UMoFIgN4I7zrhWovYXdhXcbFHYqrfGLC96CHMCOBYkT3gcVS/UpaFJZ955m4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFET7oiZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeFwupQW"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so14206165e9.2;
-        Mon, 26 May 2025 06:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748267205; x=1748872005; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gEIcXbeyJylzemFfm58X30GOjXDyhHO6XtAq4kotWx4=;
-        b=EeFwupQWE1wqoFx2PYUH6axCdwkJOkdH3zckqyAdokdsHvwGqDLINWIAE4mLNts2jk
-         c+msyjARqIpZhHl2MaBu3llANsMOUgXeRy9WYMx5oldt0l0+fHs5s5Di4C43+f0Hktj6
-         E7blTLAsPvEKM21KiVX29RHgbXOiOWtUKid4qCKZMuMj0oFAKuPGmP8UPxHSVIgEAwBP
-         9zFYTRPRfRGOp/UiIE8o1JMI8sPKyAsKcry6iqQBuQqDnDMsIB6U8q7R8P7PuueONSIx
-         hCltMajhGSIzeqTd/jp5XQHNQeKLkaRvGT+6d5LPBenR2Df7H1yYeR/VktPfwa7kYCKn
-         zBdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748267205; x=1748872005;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gEIcXbeyJylzemFfm58X30GOjXDyhHO6XtAq4kotWx4=;
-        b=nm+sIpYrr/1SXae6LvNZMB8SyQP5g0Z8QcQDldv9I/SA+RtvQDiWIMAnlwGFZ1jvBw
-         ZQPJIuUlThzZscTrbo9z7j8J+kUxDuwSpPEyb2tAT2HDJ9t9XPz4Hl0PiRRYJntRAkiT
-         wS+VOWzB/NTnIqEMCKySTa6JwiipfJl7w7F5pbI4xGy2nlSppIk/GnOYsS1LrfAlVSEs
-         Aiw3wRIqUIbqsYokkLzh0yGOnzAbZlc+56KGLV8b0+KJBKDFm/EQ7GDTaMvgyAqluy5H
-         k0SlaSp9tX7ZhnpxPV2d9Qrnpb7Av8/xBt4rmFXfquhbvpkw9IJFxV+V9BXf44JPJUZx
-         QEdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4answNTcpXtnUpW8GOuuTfWRqqhgWsFJ+tyLXt+FLRrFOwyYFs4oMsYkv47VQ6owSpEzpenthr6fL@vger.kernel.org, AJvYcCUpFoBGmq6XnTGMtPoerpvGTeSbq8kZKN/fg1xNQYiyqLk7Fi/EXT9Pj6StDeYp9ieBsP6xCYvhsubVb/Ov@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT8JDy2Wp0E/jRD3cd1zmgdfhjemyIpEqn4j+YuW752w0IPuRA
-	M3fBLDgQj8co3V9CPQGSSCoq/4BsuV6SK7yA38z0PLWushnO96RIdpSP
-X-Gm-Gg: ASbGncuzY7jfKp3eA4G/Bl0cygS57THLspcktwrFAFtg+xm8COfQzwar1tlfKh3aoqj
-	9yKVNEEAWFk8N0trErQUBrIPBTE2wQWEFBo/rB2AMDWt4csRMvCjH/OwZXq6bj3RBJWiDy27376
-	iYbqIqra3+4jW550PJJeGZiQWsnOzJ1UqpIE99L3pLFj/vIw6z+851MWvQt5L+P35lDkoU4dhIy
-	zreUYWJww1ifa2jSQ2onGQIv1RiNsbJclxZB0wjYUMCbYwB00ksgwk59Xebqyzwc6KkaapM7Yb/
-	nBvFkxBEbLLQP+sanE6b2kw+TC3YPPAqmPLlDOLu9r5sEQh04lYAHnIsDNBdv+SEAg==
-X-Google-Smtp-Source: AGHT+IF0w9TRTgFRE1/w5CXqazhpiPGG/3gemNBKdnwqA3lLvRBETofTT6VO4WQ+GxGnfbleVvKptQ==
-X-Received: by 2002:a5d:64ee:0:b0:3a3:6e44:eb5f with SMTP id ffacd0b85a97d-3a4cb49b40amr7421372f8f.46.1748267205141;
-        Mon, 26 May 2025 06:46:45 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3edcsm244864055e9.20.2025.05.26.06.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 06:46:44 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: peterz@infradead.org
-Cc: bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	khaliidcaliy@gmail.com,
-	lenb@kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	rafael@kernel.org,
-	tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [PATCH] x86/ACPI: invalidate all cache lines on ACPI C-state transitions
-Date: Mon, 26 May 2025 13:45:33 +0000
-Message-ID: <20250526134600.619-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250526120029.GR39944@noisy.programming.kicks-ass.net>
-References: <20250526120029.GR39944@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFET7oiZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E36C4CEE7;
+	Mon, 26 May 2025 13:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748267226;
+	bh=+uw55Nbvzmy9FIP+DbRI7fubC+YGBHVWZbVdo3cwGXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KFET7oiZCv2S5pqcYt2OWuU+DnRfYohENWFHzO/Tcht2eH6zoID3fSUPZXwerY66r
+	 IUM0Zrglcad3bUC9ID2bRYC1Kspi/rN52PNt2eHMeH68jhDG/kJo3Wy+BXkiuImvUJ
+	 mikk9wzRVHk5/Z87IAVRaUejfFTPvp9nEGvKYRDk4UELKkYlvqYABUuzvHSiiEw2pM
+	 Kh93BTRBXrHg4AvarAYkvQTPPJ5hHC/MW5hn6TTW07f9l0w3g3wD5WEcoxcDzt/tcP
+	 vbp6fXV5PqQiBfN3lMe6Eh/HZNEm+n+IUChv2x1cc3ol4osNC6io0daB3dmVgA4Y6V
+	 5ZS5FKs+Fkw+A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uJYAU-000000006H8-3uM7;
+	Mon, 26 May 2025 15:47:07 +0200
+Date: Mon, 26 May 2025 15:47:06 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Qiang Yu <quic_qianyu@quicinc.com>,
+	Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
+	will@kernel.org, linux-arm-kernel@lists.infradead.org,
+	andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, vkoul@kernel.org, kishon@kernel.org,
+	sfr@canb.auug.org.au, linux-phy@lists.infradead.org,
+	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+	quic_mrana@quicinc.com, quic_cang@quicinc.com,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Abel Vesa <abel.vesa@linaro.org>
+Subject: Re: [PATCH v3 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
+Message-ID: <aDRw2rJ39t9W10YG@hovoldconsulting.com>
+References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
+ <20250508081514.3227956-6-quic_wenbyao@quicinc.com>
+ <aBxpMuFGKgWrw1TV@hovoldconsulting.com>
+ <5fd4abe7-3621-4119-9482-de823b247b0d@quicinc.com>
+ <aBx9LB_qQIvA0bj8@hovoldconsulting.com>
+ <55a85622-fe33-4b5f-81b2-4a4270fab680@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55a85622-fe33-4b5f-81b2-4a4270fab680@oss.qualcomm.com>
 
-> This is absolutely insane. This day and age, nobody should use WBINVD
-> ever. We've managed to not do this for decades, and I'm thinking that
-> either the SPEC is 'mistaken' or otherwise out of line with reality.
+On Thu, May 22, 2025 at 10:03:18PM +0200, Konrad Dybcio wrote:
+> On 5/8/25 11:45 AM, Johan Hovold wrote:
+> > On Thu, May 08, 2025 at 04:50:30PM +0800, Qiang Yu wrote:
+> >> On 5/8/2025 4:20 PM, Johan Hovold wrote:
 
-> If you hate performance, and you want to break things like CAT, feel
-> free to put this in your own kernel.
-Sorry, i made a mistake, i meant ACPI 6.4 and 6.5. I already resent this patch
-please check the resended one.
+> >>> This still looks wrong and you never replied to why these supplies
+> >>> shouldn't be handled by the tcsr clock driver that supplies these
+> >>> clocks:
+> >>>
+> >>> 	https://lore.kernel.org/lkml/aBHUmXx6N72_sCH9@hovoldconsulting.com/
+> > 
+> >> Sorry, I thought Konrad had convinced you.
+> > 
+> > IIRC, he just said you guys were told to add the QREF supply to the PHY.
+> > That's not an argument.
+> > 
+> >> If the TCSR driver manages these supplies, would it be possible for tscr
+> >> driver to recognize when it needs to turn vdda-qref on or off for a
+> >> specific PCIe port?
+> > 
+> > Sure, just add a lookup table to the driver and enable the required
+> > supplies when a ref clock is enabled.
+> > 
+> > As I mentioned in the other thread, the T14s has the following QREF
+> > supplies:
+> > 
+> > 	
+> > 	VDD_A_QREFS_1P2_A
+> > 	VDD_A_QREFS_1P2_B
+> > 
+> > 	VDD_A_QREFS_0P875_A
+> > 	VDD_A_QREFS_0P875_B
+> > 	VDD_A_QREFS_0P875_0
+> > 	VDD_A_QREFS_0P875_2
+> > 	VDD_A_QREFS_0P875_3
+> > 
+> > and it's not clear how these maps to the various consumer ref clocks,
+> > including the PCIe ones:
+> > 
+> > 	#define TCSR_PCIE_2L_4_CLKREF_EN
+> > 	#define TCSR_PCIE_2L_5_CLKREF_EN
+> > 	#define TCSR_PCIE_8L_CLKREF_EN
+> > 	#define TCSR_PCIE_4L_CLKREF_EN
+> > 
+> > That mapping can be done by the TCSR clock driver (which would also take
+> > care of the 1.2 V supplies).
+> 
+> So we had an internal discussion about this and while it may work, it
+> would only do so for some SoCs, and maybe only on the surface, as the
+> wiring behind it is rather peculiar..
+
+Care to expand on why it cannot be made to work generally?
+
+Also, what would the mapping of the above QREF supplies to PCIe PHYs
+even look like?
+
+> Plus, not all QREF consumers have a clock expressed in TCSR as of
+> right now.
+
+Is that because there is no corresponding bit in the TCSR or simply
+because it has not been described yet?
+
+Johan
