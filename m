@@ -1,144 +1,219 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE251B661;
-	Mon, 26 May 2025 01:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CC3272632;
+	Mon, 26 May 2025 01:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748222146; cv=none; b=dcdeVdk+cIZjlAZnQ044a0Spks+Ae8CYcATiydwgcMPDxqXgBkMEfgJKMmemAuoGcFf5XKmyfWEGM1hLvEcF3kO7ldl+QJGKPAOjh1NK43/EBtumkouVwbq4kfOD/s0O0Abwm5XMeTe5P2VmHVvuBiQzXEgOTSdC2UQSsB3/CiU=
+	t=1748222154; cv=none; b=m3z0iN8SH2c3zeJgmIbT8Gul5UZXet24hEeoLbDjZaeqUIFgL3PuBsmgYsU2yMo8JO3N2i65eKyMGk5d835NPQgoAgGsWTW/SRewKju4y5vgFQUnI23fw7TllaVoSyKs8j+xEF7kSMmwaqygn/wjLDEhlmkMtEPaOQhw5Xis2gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748222146; c=relaxed/simple;
-	bh=kLgHflASkk+AOoCMgwo9BpScIU/wjvk0wobHRl8/3gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BHn9/8LfSio/yGBIDEta+Diu8jMALnaRN83rMTt8QyUBioxP+AqVEOhGdc+CcaD5GY6znDOq0scl0N072/rubE94fG+sSlLWNi+NW8qpUnicllxDikRYUTQ8yAivP22HNexibCmt0KlWXGKrfpzrjn9NOa4KkFOQLhDnt77x6uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b5HrZ2CCYzYQtG9;
-	Mon, 26 May 2025 09:15:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 71C3B1A018D;
-	Mon, 26 May 2025 09:15:41 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP3 (Coremail) with SMTP id _Ch0CgDHG8a6wDNooAxJNQ--.29873S2;
-	Mon, 26 May 2025 09:15:39 +0800 (CST)
-Message-ID: <faa23d11-4387-4952-bd29-034b4558668c@huaweicloud.com>
-Date: Mon, 26 May 2025 09:15:37 +0800
+	s=arc-20240116; t=1748222154; c=relaxed/simple;
+	bh=KnP9D4nEn84ADjghm0wYPiimIQxnyGqc/x5TYmetFsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y1AzmUUcVCe70efAANyf46tfgWTYg72FVvDaOzxSzYpNDSWN6WzQQ60EPRG5Ibg5j+tjNTijwZjfqQsvVd6XI8M64KklUYvIwu7pxzk5kCjaL6mdFJRvXM/9nrw2VoAQGG81y17QpBzJpWOKyC/PfKb3fkqZ0cuLGUdOI8KypyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-0f-6833c0c0b097
+Date: Mon, 26 May 2025 10:15:39 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 01/18] netmem: introduce struct netmem_desc
+ struct_group_tagged()'ed on struct net_iov
+Message-ID: <20250526011539.GB74632@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-2-byungchul@sk.com>
+ <CAHS8izPYrMMcqKiF1DmNqWW_=92joVrPE55rQTqGWaJ2=itHaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] padata: avoid UAF for reorder_work
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
- nstange@suse.de, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
- chenridong@huawei.com, wangweiyang2@huawei.com
-References: <20250110061639.1280907-1-chenridong@huaweicloud.com>
- <20250110061639.1280907-4-chenridong@huaweicloud.com>
- <aC_yoWXJcsLxfLR4@gondor.apana.org.au>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <aC_yoWXJcsLxfLR4@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgDHG8a6wDNooAxJNQ--.29873S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF4kCFWrJrWUtr4kAF1xuFg_yoW8tryxpr
-	WYkay7tF48trs7G3s2qryaq3W093yfZw13Krs7K34rC390qry0vr42vrWa9Fnrurn7Ar1j
-	kFs5ZrnIv3yqvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izPYrMMcqKiF1DmNqWW_=92joVrPE55rQTqGWaJ2=itHaw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA03Sf0zMYRzAcc99f9y3023fTvSoljkjZYiafYbR+sOemT8U/ulsuumbO66y
+	u6QYizKkkmrKt692d36dNKerrstaOyfSGC3D+VkLYYqRWvqBrtb032vPZ8/n/fzxcJTKygRz
+	+rQMwZimNahZBa3o97csd7ujdVHdrqUg2WtYuDGcBde6XQxI1U4Ev36/lsNAaxsLlyxDFEhP
+	8mgYtI9Q8PF+jxy6rvbS0HyykYKesw9YKMwbpeC4yyaDDmcRA2UjVyhozOmWw9PbEgvvav4y
+	0OsppKFdvE5DV1Es3DfPg6GHfQha7Y0yGCq4yEJpp5mF93ldCDrv9tBQeawIgb3Fy8DosMTG
+	LiT111/KSJP4Vk7MjgOkzhZJ8r2dFHFUn2aJ42eJnLx53sySBxWjNGlyDchIYe43lvz4+Iom
+	31uescRe/4wmj8ytcjLgCNvKJyrWJwsGfaZgXLkhSaFzfora3xee9bTWw+Sg8uB85MdhPgZ/
+	+FIkm7btvWXSNL8YW04Vsz6zfDj2en9TPgfyEfhyyznGZ4rvYvBjaa/Pc3gDtpaO0T4recBf
+	O9zyfKTgVLwN4bbBUnZqEIDbL3ygpy6H47Gqzoml3IRD8LU/3NTxApzbUDnZ8uPj8fi7kknP
+	5Rdht7NN5tuJ+XoOj58fZKYePR/fsXnpYhQgzkiIMxLi/4Q4I2FGdDVS6dMyU7V6Q8wKXXaa
+	PmvF7vRUB5r4OVePjGlc6GfHNg/iOaT2Vyapo3UqRptpyk71IMxR6kBlqBSlUymTtdmHBGP6
+	LuMBg2DyoBCOVgcpVw8dTFbxe7QZwj5B2C8Yp6cyzi84B8UdtZauV3W4IOhw/+yKFBle6Y7Q
+	3zxRrvuruGLXfA6VNOPHrZvLNNHZiXFrDeHLEm5Z238dXBK90+hXsyPsRa8mfdbG1wVSbfH2
+	ecn2MwniybrKdZ8snjUDQQ3lVfGbSiKqiSfjXt1wiunMluAvwtHAxHvii5iouGKxzpPyijjV
+	tEmnXRVJGU3af2EOoSQ1AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA03Sf0zMYRzAcc/3dzfHtxOeVbJdI7VJhu2zMTR/eNg0/jArjW76csd12h2p
+	pknlV5Qow3W4kx9X4tbJdVmS01RjatfO8iNZlFbKj5JSpNNM/732fPa8P/98BFpxhPUXNLp9
+	kl6n0io5GSOLWp65sKZmiTrCYxHBZCvl4NZQMtx852TBVOJAMDD8mof+2joOiiyDNJgasxj4
+	bvtJQ8eTdh7abnQyUHWsgob20/Uc5GSN0JDhtFLw+FIDC02OXBYKfl6noSL9HQ/N900cvC0d
+	Y6HTlcNAg7GYgbbc1fDEPAsGn35CUGuroGDw1CUO8t1mDt5ntSFwP25noPBwLgJbdQsLI0Mm
+	brWSlBe/pEilsZUnZvt+ctcaRrJb3DSxl5zgiP3bWZ68eVHFkfoLIwypdPZTJCezjyNfO14x
+	5HO1hyNFXV8oYiv3MOSZuZbf6BsjWxEvaTVJkn7RyjiZ2vExIvFTSHJzmYtNR+f9s5GPgMWl
+	2PreQnnNiPOw5Xge5zUnhuCWlmHaaz8xFF+rPsN6TYttLH5u2u31DFGLr+aPMl7LRcA9TTV8
+	NpIJCtGKcN33fG5i4IsbLn5gJj6H4NHL7vGoMO4AfPO3MPE8F2feK/y7y0fchH+9PfvXM8Vg
+	XOOoo/LQNOOkknFSyfi/ZJxUMiOmBPlpdEkJKo12WbhhjzpFp0kO37E3wY7Gj+NG2ugZJxpo
+	XutCooCUU+VxyiVqBatKMqQkuBAWaKWfPNAUoVbI41UpqZJ+73b9fq1kcKEAgVHOlq/fIsUp
+	xF2qfdIeSUqU9P+mlODjn44OrJnPZ2+ICXoQW1VgsU95dTCwkZxrD9QHKXsVzTOE7gtTiuf0
+	xT7cftLg6PNAt7W+9Ue0bmBdSs+2ptYHj6KnqwdDIwuLy/gh2bdIQ1d1UUbd2DG/nf3JOC3D
+	Hf75qGdzecJwTLBv7+1Dq7ZW9t6pWvqVyki9onXGVm49EbQgilEyBrVqcRitN6j+ABfPTRkY
+	AwAA
+X-CFilter-Loop: Reflected
 
+On Fri, May 23, 2025 at 10:00:55AM -0700, Mina Almasry wrote:
+> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > To simplify struct page, the page pool members of struct page should be
+> > moved to other, allowing these members to be removed from struct page.
+> >
+> > Introduce a network memory descriptor to store the members, struct
+> > netmem_desc, reusing struct net_iov that already mirrored struct page.
+> >
+> > While at it, relocate _pp_mapping_pad to group struct net_iov's fields.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > ---
+> >  include/linux/mm_types.h |  2 +-
+> >  include/net/netmem.h     | 43 +++++++++++++++++++++++++++++++++-------
+> >  2 files changed, 37 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index 56d07edd01f9..873e820e1521 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -120,13 +120,13 @@ struct page {
+> >                         unsigned long private;
+> >                 };
+> >                 struct {        /* page_pool used by netstack */
+> > +                       unsigned long _pp_mapping_pad;
+> >                         /**
+> >                          * @pp_magic: magic value to avoid recycling non
+> >                          * page_pool allocated pages.
+> >                          */
+> >                         unsigned long pp_magic;
+> >                         struct page_pool *pp;
+> > -                       unsigned long _pp_mapping_pad;
+> 
+> Like Toke says, moving this to the beginning of this struct is not
+> allowed. The first 3 bits of pp_magic are overlaid with page->lru so
+> the pp makes sure not to use them. _pp_mapping_pad is overlaid with
+> page->mapping, so the pp makes sure not to use it. AFAICT, this moving
+> of _pp_mapping_pad is not necessary for this patch. I think just drop
+> it.
 
+Sure, I will.  Thanks.
 
-On 2025/5/23 11:59, Herbert Xu wrote:
-> On Fri, Jan 10, 2025 at 06:16:39AM +0000, Chen Ridong wrote:
->> From: Chen Ridong <chenridong@huawei.com>
->>
->> Although the previous patch can avoid ps and ps UAF for _do_serial, it
->> can not avoid potential UAF issue for reorder_work. This issue can
->> happen just as below:
->>
->> crypto_request			crypto_request		crypto_del_alg
->> padata_do_serial
->>   ...
->>   padata_reorder
->>     // processes all remaining
->>     // requests then breaks
->>     while (1) {
->>       if (!padata)
->>         break;
->>       ...
->>     }
->>
->> 				padata_do_serial
->> 				  // new request added
->> 				  list_add
->>     // sees the new request
->>     queue_work(reorder_work)
->> 				  padata_reorder
->> 				    queue_work_on(squeue->work)
->> ...
->>
->> 				<kworker context>
->> 				padata_serial_worker
->> 				// completes new request,
->> 				// no more outstanding
->> 				// requests
->>
->> 							crypto_del_alg
->> 							  // free pd
->>
->> <kworker context>
->> invoke_padata_reorder
->>   // UAF of pd
+> >                         unsigned long dma_addr;
+> >                         atomic_long_t pp_ref_count;
+> >                 };
+> > diff --git a/include/net/netmem.h b/include/net/netmem.h
+> > index 386164fb9c18..08e9d76cdf14 100644
+> > --- a/include/net/netmem.h
+> > +++ b/include/net/netmem.h
+> > @@ -31,12 +31,41 @@ enum net_iov_type {
+> >  };
+> >
+> >  struct net_iov {
+> > -       enum net_iov_type type;
+> > -       unsigned long pp_magic;
+> > -       struct page_pool *pp;
+> > -       struct net_iov_area *owner;
+> > -       unsigned long dma_addr;
+> > -       atomic_long_t pp_ref_count;
+> > +       /*
+> > +        * XXX: Now that struct netmem_desc overlays on struct page,
+> > +        * struct_group_tagged() should cover all of them.  However,
+> > +        * a separate struct netmem_desc should be declared and embedded,
+> > +        * once struct netmem_desc is no longer overlayed but it has its
+> > +        * own instance from slab.  The final form should be:
+> > +        *
+> > +        *    struct netmem_desc {
+> > +        *         unsigned long pp_magic;
+> > +        *         struct page_pool *pp;
+> > +        *         unsigned long dma_addr;
+> > +        *         atomic_long_t pp_ref_count;
+> > +        *    };
+> > +        *
+> > +        *    struct net_iov {
+> > +        *         enum net_iov_type type;
+> > +        *         struct net_iov_area *owner;
+> > +        *         struct netmem_desc;
+> > +        *    };
+> > +        */
 > 
-> Looking back this explanation is actually broken.  The call
-> crypto_del_alg does not free anything immediately.  It can only
-> start freeing things once the final tfm user goes away.  Any crypto
-> request of that tfm must have completed before that happens.
+> I'm unclear on why moving to this format is a TODO for the future. Why
+> isn't this state in the comment the state in the code? I think I gave
+> the same code snippet on the RFC, but here again:
 > 
-> If not there is a serious bug in the Crypto API.
+> struct netmem_desc {
+>                         /**
+>                          * @pp_magic: magic value to avoid recycling non
+>                          * page_pool allocated pages.
+>                          */
+>                         unsigned long pp_magic;
+>                         struct page_pool *pp;
+>                        unsigned long _pp_mapping_pad;
+>                         unsigned long dma_addr;
+>                         atomic_long_t pp_ref_count;
+> };
 > 
-> So if crypto_del_alg is leading to a freeing of the pd while there
-> are still outstanding users of that tfm, then this points to a bug
-> in the Crypto API and not padata.
+> (Roughly):
 > 
-> Can you still reproduce this bug easily if you revert the patches
-> in this series? If so we should be able to track down the real bug.
-> 
+> struct page {
+>    ...
+>   struct {        /* page_pool used by netstack */
+>      struct netmem_desc;
 
-Unfortunately, I did not reproduce this bug, It was mentioned:
-https://lore.kernel.org/all/20221019083708.27138-6-nstange@suse.de/
+This is unnecessary since it will be removed shortly.
 
-We through that the kworker is asynchronous, and this scenarios may happen.
+>   };
+>   ...
+> };
+> 
+> struct net_iov {
+>     enum net_iov_type type;
+>     struct netmem_desc;
 
-Thanks,
-Ridong
+This requires a huge change in a single commit since all the code
+referring to any of the page pool fields, struct net_iov, and maybe
+io_uring(?) should be altered at once.
 
-> To recap, every tfm holds a ref count on the underlying crypto_alg.
-> All crypto requests must complete before a tfm can be freed, which
-> then leads to a drop of the refcount on crypto_alg.
+Plus, much more changes are required since struct netmem_desc would not
+overlay on struct page with what you suggest, which breaks the
+assumption that struct netmem_desc overlays on struct page in the
+current code.
+
+So at least, the work should be started once the code doesn't need the
+assumption.
+
+Thoughts?
+
+	Byungchul
+
+>     struct net_iov_area *owner;
+> }
 > 
-> A crypto_alg can only be freed when its ref count hits zero.  Only
-> then will the associated pd be freed.
+> AFAICT, this should work..?
 > 
-> So what's missing in the above picture is the entity that is freeing
-> the tfm, thus leading to the actual freeing of the alg and pd.
-> 
+> -- 
 > Thanks,
-
+> Mina
