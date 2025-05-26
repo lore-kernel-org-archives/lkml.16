@@ -1,260 +1,335 @@
-Received: from mail.archlinux.org (mail.archlinux.org [95.216.189.61])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6215125569;
-	Mon, 26 May 2025 06:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.189.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5253D148832
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748242302; cv=none; b=cl2dEFD9HZKT18plteTKJU42Ddp7pmLzOtZyMMQ4Oclo65gPRFykwh0LciLulnCnVFWxBtlLtmurbl/ZJ/odB2CUTgDz6gWgmixcokiicKQX+FyrbhfJ9bZ3VbLZYOmsPGPee8TcVOeZaAklFs/bX+FFD2HmS6Wmq5l2RTFO8Eg=
+	t=1748242353; cv=none; b=oFX1f7+FhHGvwpmCzMVRFiMbz2TygKVXREby69QCU9fYH4PrUj6asVI+GV8BAfwPNlju1/RnOP6lesp3fNtBkgaDoyy85x88zmDbYHLHxDN8GE+VO1S3OXqFYSVkj4qfc8iq+Vdkthp66SX1sJ50y+RPgLSe3ZTBVFY/xHB31H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748242302; c=relaxed/simple;
-	bh=hynhwHAyv/sP3M5Tv87cjFqLJNqC7D3aaHFITwgUxyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DXY4TlPiYndFg/pEEiKIGKPG+fH2xUo2W2+EYAMihRmfPp+Hy9+fwU9739a9zpATV2gdoeplorN1quUTgBVjnT8EaQGRcV0Q8nd0mkZTzL6ncsHKs3jTwBdlvk09MGv7hJcW17VANrvg8D26l+zj4fsXQZelRYPajfYsQlx3tuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org; spf=pass smtp.mailfrom=archlinux.org; dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=cYFzAF0Z; dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=CU5kWGDr; arc=none smtp.client-ip=95.216.189.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinux.org
+	s=arc-20240116; t=1748242353; c=relaxed/simple;
+	bh=ZlOwcc3VkcgMEcapoxgQ8V2pPpI1bt/bQ0cPBZzebSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yxn5LeBhyneogJnQNgs4Nc63UI2DT0Yc3nuijzSYrECXKtnEQvXzDPGnHxrka6ZmcTkOyuex5pV+wkaYB+oMInQjiEd/QM6IMZmitwJpo320rLiIUzHzHZldH9CqEF8ZWRPg9J7z6bKiUbr/xsLECuSYgoStaPu2BsxrsuiTWDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MqepkjPl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="cYFzAF0Z";
-	dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="CU5kWGDr"
-Message-ID: <be5d2f98-0424-4b29-be79-0e8c61bb7f28@archlinux.org>
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=archlinux.org;
-	s=dkim-ed25519; t=1748241906;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MqepkjPl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748242348;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hynhwHAyv/sP3M5Tv87cjFqLJNqC7D3aaHFITwgUxyM=;
-	b=cYFzAF0ZV3WI25BoHgIVkaPSZJyToJCMZZWzeYD9NBu++9R1xtNfuhafq5+GBbl4FEbRUo
-	1PV4Is/q6OL4uTBw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=archlinux.org;
-	s=dkim-rsa; t=1748241906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=hynhwHAyv/sP3M5Tv87cjFqLJNqC7D3aaHFITwgUxyM=;
-	b=CU5kWGDrvCjO2THiymfBpjB32gOpbn+UAyJ6NjHLfoTVBYn/8dM5vUzLiD/ByShg+i47yL
-	ZNFe6jPGYmHaqBbsGXPaKC76RhvHwp1cHSKZHn65jbAMYscwQzbtngy0bPSKekUAdGAF9E
-	DVn9RhmBQEuc9cfeVVHvuL6ut+hrE5joNqSoHkWBckD5I1zFNrsTdY1V7O/T/Pc7BWUSd8
-	MDbftBaNZL9PhHlGHJlNvOcmrTxcqu18ymDBRWyL29AkKubcCx/O1iNZWQfnkcfwou0NwJ
-	T+HZ5w+nm8QLHIPRUxJhWl2vWZN7XtReVx8LK5Bl+QJPe4y01dzJY90QB0Rgi7hCJORCis
-	uDf1OsMk7jrRXtYMstoxzTGZvk3unUrWz7EyN3U06ILf7cXUTQ50eA/UrtpypbFNoxOMQx
-	l+6Jd9f0uZuBAHQxVCPhL6VcM6jSIgW/+2drOnkAy0J8hZ6AVHH1OxLEFrC2ntBmyog6Tp
-	afnWw6kdp25acM54TaFf/Fsjijx28/QzZMbdck+RPg/NIbTwf0Av/AAVeEE+pUR4HQ8ls3
-	jatY7vAA1ThcEVw5M2+pV5xSCHnkQ9M1R8RCSESnmdQx3GVx1vAtvivrOXHBuJfuej0Ba/
-	99L51Yvv3jpre5FNXfg0pe4GWpqptrnbSeiVF0i0ZZQGq0bozsTJY=
-Authentication-Results: mail.archlinux.org;
-	auth=pass smtp.auth=felixonmars smtp.mailfrom=felixonmars@archlinux.org
-Date: Mon, 26 May 2025 14:44:59 +0800
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yCawJ0dFDpBtyEVTwgAC5gJwKklBKm4JN0UMebcRJJs=;
+	b=MqepkjPlOzCVWtClHVbr4y6Y7uoUil8sG2goYXmCXVG945iEa03X39vYEx59Af/Jmd+ozP
+	qaeJA1yyuCsHhwmNRWpLtXMSuay+tz3ljGraR2KldQT89hfkXVP1gOf2/MrCa/oxVYhuU9
+	5yAYE8sLIYXFT+Qs7yx0Yjk3+1up59E=
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
+ [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-3o8plT2nPgeLNRVdVcKOPQ-1; Mon, 26 May 2025 02:52:26 -0400
+X-MC-Unique: 3o8plT2nPgeLNRVdVcKOPQ-1
+X-Mimecast-MFC-AGG-ID: 3o8plT2nPgeLNRVdVcKOPQ_1748242345
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-32a6759deabso218601fa.3
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 23:52:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748242345; x=1748847145;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yCawJ0dFDpBtyEVTwgAC5gJwKklBKm4JN0UMebcRJJs=;
+        b=wZFuYrSiccvn1hyCMyXlIonDat/BUILDrPI5FbKEawXFPK6XoYrkmZdqB+r28WXex3
+         r7NiUH7Qx8jH+ftp4WGAOqWbIYyhuwfTNwXurlrA+I+gLgLhzCuQkQ54hcMP8tzWH05E
+         n9khMgeks3RvNT5o4J0VDphIAyL7yTbDF9YAgdZKMh7K7raQWt4/rueyU8JdTtgggsnI
+         8LiH6PigWVra4dq98Q3FSsMNi/v5nitfhXhKrjgjrOZ1zzZwDg4ouUdAqXo4ywXzcRWN
+         1oyW+Lal+S3cchwe6lOi86EbZa4Nz0drd/pii7EmnwbqxJrbWjRY6xns+K8Y+0oZniuF
+         96OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWfvDNrcQ4a1RLlT3XH9JxEtJC3YqQQCPIcMTKtdYuyNHyWkgnqph6DTzjgxnUCAkfobe8RfihPQ179wfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypCPalElK7TvJ+XAPYtC3Ghnb2ouvdLd7mox6xgTdnVI+Y3TSe
+	8b9nAsXFpMyhIgjiA2wv9/cpLz8AeVbG2zgHJCn1V2iShgAVj6ufQwczNN2zMFIAaz7IDCgJl8I
+	D8VgttbKI3a4ISF1yAdwl757vu/FoL7H5z0COKcNfeiohulwOlPWYWC08kzARRCu4q6nYzLYreb
+	mj6RtGNA6f8m3BmZ6HJFc6ZZgzFOohmjxCV3zQ21Yb
+X-Gm-Gg: ASbGncv/2k3wiDyiiZb7K+lTYTPeRguFWqNO1e+CI286RlUsm/XFg3UJ+BEqDBa1cZK
+	POUFxAccq2EB94a5wgCV8DEwjBNuvfwrwhLlU8hEBd2T9AuZvEJx0gzPVbD8Pg56GT/QWlg==
+X-Received: by 2002:a05:651c:19ab:b0:307:e498:1254 with SMTP id 38308e7fff4ca-3295baeff9dmr18498241fa.35.1748242344838;
+        Sun, 25 May 2025 23:52:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHszLz76zAR4JvYoIBlb5ySuIUmig7t9FtU7r6WgUonz9U2v+LHNp5oX3arfEHLt11Gwff9YPos8+RUDqFLJ4I=
+X-Received: by 2002:a05:651c:19ab:b0:307:e498:1254 with SMTP id
+ 38308e7fff4ca-3295baeff9dmr18498111fa.35.1748242344293; Sun, 25 May 2025
+ 23:52:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
- polling
-To: Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Eric Long <i@hack3r.moe>, jeffbai@aosc.io
-References: <20250525201833.37939-1-i@rong.moe>
-From: Felix Yan <felixonmars@archlinux.org>
-Content-Language: en-US-large
-Autocrypt: addr=felixonmars@archlinux.org; keydata=
- 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
- EAXqa6vUBxBrfkBwwf11sYqqZyFORHr8
-In-Reply-To: <20250525201833.37939-1-i@rong.moe>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------ssfCMzWuDrsAMe0uEPqRDEHP"
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-8-yukuai1@huaweicloud.com>
+In-Reply-To: <20250524061320.370630-8-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Mon, 26 May 2025 14:52:12 +0800
+X-Gm-Features: AX0GCFv9c4SwTsia3eNC4sWIirkkKBWV3G9f__Cg0e6F32b-Njv-SJIRMs18ANE
+Message-ID: <CALTww2_03_fVt+KMcmtbGw-kcRsLLpAG7W62e3y0W9SpvhUVtg@mail.gmail.com>
+Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
+ until creating bitmap
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+	johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------ssfCMzWuDrsAMe0uEPqRDEHP
-Content-Type: multipart/mixed; boundary="------------lsgaCJLygDxGvMm7fpKfGrdb";
- protected-headers="v1"
-From: Felix Yan <felixonmars@archlinux.org>
-To: Rong Zhang <i@rong.moe>, Ike Panhc <ikepanhc@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Eric Long <i@hack3r.moe>, jeffbai@aosc.io
-Message-ID: <be5d2f98-0424-4b29-be79-0e8c61bb7f28@archlinux.org>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC
- polling
-References: <20250525201833.37939-1-i@rong.moe>
-In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+On Sat, May 24, 2025 at 2:18=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> Currently bitmap_ops is registered while allocating mddev, this is fine
+> when there is only one bitmap_ops, however, after introduing a new
+> bitmap_ops, user space need a time window to choose which bitmap_ops to
+> use while creating new array.
 
---------------lsgaCJLygDxGvMm7fpKfGrdb
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Could you give more explanation about what the time window is? Is it
+between setting llbitmap by bitmap_type and md_bitmap_create?
 
-SGkgUm9uZywNCg0KT24gNS8yNi8yNSAwNDoxOCwgUm9uZyBaaGFuZyB3cm90ZToNCj4gSXQg
-d2FzIHJlcG9ydGVkIHRoYXQgaWRlYXBhZC1sYXB0b3Agc29tZXRpbWVzIGNhdXNlcyBzb21l
-IHJlY2VudCAoc2luY2UNCj4gMjAyNCkgTGVub3ZvIFRoaW5rQm9vayBtb2RlbHMgc2h1dCBk
-b3duIHdoZW46DQo+ICAgLSBzdXNwZW5kaW5nL3Jlc3VtaW5nDQo+ICAgLSBjbG9zaW5nL29w
-ZW5pbmcgdGhlIGxpZA0KPiAgIC0gKGRpcyljb25uZWN0aW5nIGEgY2hhcmdlcg0KPiAgIC0g
-cmVhZGluZy93cml0aW5nIHNvbWUgc3lzZnMgcHJvcGVydGllcywgZS5nLiwgZmFuX21vZGUs
-IHRvdWNocGFkDQo+ICAgLSBwcmVzc2luZyBkb3duIHNvbWUgRm4ga2V5cywgZS5nLiwgQnJp
-Z2h0bmVzcyBVcC9Eb3duIChGbitGNS9GNikNCj4gICAtIChzZWxkb20pIGxvYWRpbmcgdGhl
-IGttb2QNCj4gDQo+IFRoZSBpc3N1ZSBoYXMgZXhpc3RlZCBzaW5jZSB0aGUgbGF1bmNoIGRh
-eSBvZiBzdWNoIG1vZGVscywgYW5kIHRoZXJlDQo+IGhhdmUgYmVlbiBzb21lIG91dC1vZi10
-cmVlIHdvcmthcm91bmRzIChzZWUgTGluazopIGZvciB0aGUgaXNzdWUuIE9uZQ0KPiBkaXNh
-YmxlcyBzb21lIGZ1bmN0aW9uYWxpdGllcywgd2hpbGUgYW5vdGhlciBvbmUgc2ltcGx5IHNo
-b3J0ZW5zDQo+IElERUFQQURfRUNfVElNRU9VVC4gVGhlIGRpc2FibGVkIGZ1bmN0aW9uYWxp
-dGllcyBoYXZlIHJlYWRfZWNfZGF0YSgpIGluDQo+IHRoZWlyIGNhbGwgY2hhaW5zLCB3aGlj
-aCBjYWxscyBzY2hlZHVsZSgpIGJldHdlZW4gZWFjaCBwb2xsLg0KPiANCj4gSXQgdHVybnMg
-b3V0IHRoYXQgdGhlc2UgbW9kZWxzIHN1ZmZlciBmcm9tIHRoZSBpbmRldGVybWluYWN5IG9m
-DQo+IHNjaGVkdWxlKCkgYmVjYXVzZSBvZiB0aGVpciBsb3cgdG9sZXJhbmNlIGZvciBiZWlu
-ZyBwb2xsZWQgdG9vDQo+IGZyZXF1ZW50bHkuIFNvbWV0aW1lcyBzY2hlZHVsZSgpIHJldHVy
-bnMgdG9vIHNvb24gZHVlIHRvIHRoZSBsYWNrIG9mDQo+IHJlYWR5IHRhc2tzLCBjYXVzaW5n
-IHRoZSBtYXJnaW4gYmV0d2VlbiB0d28gcG9sbHMgdG8gYmUgdG9vIHNob3J0Lg0KPiBJbiB0
-aGlzIGNhc2UsIHRoZSBjb21tYW5kIGlzIHNvbWVob3cgYWJvcnRlZCwgYW5kIHRvbyBtYW55
-IHN1YnNlcXVlbnQNCj4gcG9sbHMgKHRoZXkgcG9sbCBmb3IgIm5vdGhpbmchIikgbWF5IGV2
-ZW50dWFsbHkgYnJlYWsgdGhlIHN0YXRlIG1hY2hpbmUNCj4gaW4gdGhlIEVDLCByZXN1bHRp
-bmcgaW4gYSBoYXJkIHNodXRkb3duLiBUaGlzIGV4cGxhaW5zIHdoeSBzaG9ydGVuaW5nDQo+
-IElERUFQQURfRUNfVElNRU9VVCB3b3JrcyBhcm91bmQgdGhlIGlzc3VlIC0gaXQgcmVkdWNl
-cyB0aGUgdG90YWwgbnVtYmVyDQo+IG9mIHBvbGxzIHNlbnQgdG8gdGhlIEVDLg0KPiANCj4g
-RXZlbiB3aGVuIGl0IGRvZXNuJ3QgbGVhZCB0byBhIHNodXRkb3duLCBmcmVxdWVudCBwb2xs
-cyBtYXkgYWxzbyBkaXN0dXJiDQo+IHRoZSBvbmdvaW5nIG9wZXJhdGlvbiBhbmQgbm90YWJs
-eSBkZWxheSAoKyAxMC0yMG1zKSB0aGUgYXZhaWxhYmlsaXR5IG9mDQo+IEVDIHJlc3BvbnNl
-LiBUaGlzIHBoZW5vbWVub24gaXMgdW5saWtlbHkgdG8gYmUgZXhjbHVzaXZlIHRvIHRoZSBt
-b2RlbHMNCj4gbWVudGlvbmVkIGFib3ZlLCBzbyBkcm9wcGluZyB0aGUgc2NoZWR1bGUoKSBt
-YW5uZXIgc2hvdWxkIGFsc28gc2xpZ2h0bHkNCj4gaW1wcm92ZSB0aGUgcmVzcG9uc2l2ZW5l
-c3Mgb2YgdmFyaW91cyBtb2RlbHMuDQo+IA0KPiBGaXggdGhlc2UgaXNzdWVzIGJ5IG1pZ3Jh
-dGluZyB0byB1c2xlZXBfcmFuZ2UoMTUwLCAzMDApLiBUaGUgaW50ZXJ2YWwgaXMNCj4gY2hv
-c2VuIHRvIGFkZCBzb21lIG1hcmdpbiB0byB0aGUgbWluaW1hbCA1MHVzIGFuZCBjb25zaWRl
-cmluZyBFQw0KPiByZXNwb25zZXMgYXJlIHVzdWFsbHkgYXZhaWxhYmxlIGFmdGVyIDE1MC0y
-NTAwdXMgYmFzZWQgb24gbXkgdGVzdC4gSXQNCj4gc2hvdWxkIGJlIGVub3VnaCB0byBmaXgg
-dGhlc2UgaXNzdWVzIG9uIGFsbCBtb2RlbHMgc3ViamVjdCB0byB0aGUgRUMgYnVnDQo+IHdp
-dGhvdXQgaW50cm9kdWNpbmcgbGF0ZW5jeSBvbiBvdGhlciBtb2RlbHMuDQo+IA0KPiBUZXN0
-ZWQgb24gVGhpbmtCb29rIDE0IEc3KyBBU1AgYW5kIHNvbHZlZCBib3RoIGlzc3Vlcy4gTm8g
-cmVncmVzc2lvbiB3YXMNCj4gaW50cm9kdWNlZCBpbiB0aGUgdGVzdCBvbiBhIG1vZGVsIHdp
-dGhvdXQgdGhlIEVDIGJ1ZyAoVGhpbmtCb29rIFggSU1ILA0KPiB0aGFua3MgRXJpYykuDQo+
-IA0KPiBMaW5rOiBodHRwczovL2dpdGh1Yi5jb20vdHkyL2lkZWFwYWQtbGFwdG9wLXRiMjAy
-NGc2cGx1cy9jb21taXQvNmM1ZGIxOGM5ZTgxMDk4NzNjMmM5MGE3ZDJkN2Y1NTIxNDhmN2Fk
-NA0KPiBMaW5rOiBodHRwczovL2dpdGh1Yi5jb20vZmVyc3Rhci9pZGVhcGFkLWxhcHRvcC10
-Yi9jb21taXQvNDJkMWU2OGU1MDA5NTI5ZDMxYmQyM2Y5NzhmNjM2Zjc5YzAyM2U4MA0KPiBD
-bG9zZXM6IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjE4
-NzcxDQo+IEZpeGVzOiA2YTA5ZjIxZGQxZTIgKCJpZGVhcGFkOiBhZGQgQUNQSSBoZWxwZXJz
-IikNCj4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gVGVzdGVkLWJ5OiBFcmljIExv
-bmcgPGlAaGFjazNyLm1vZT4NCj4gU2lnbmVkLW9mZi1ieTogUm9uZyBaaGFuZyA8aUByb25n
-Lm1vZT4NCj4gLS0tDQo+ICAgZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1sYXB0b3Au
-YyB8IDE5ICsrKysrKysrKysrKysrKysrLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5z
-ZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCg0KVGVzdGVkIHRvIHdvcmsgYXMgZXhwZWN0
-ZWQgb24gbXkgVGhpbmtCb29rIDE0IEc2KyBJTUggKEludGVsIG1vZGVsKSB3aXRoIA0KdGhl
-IGZvbGxvd2luZzoNCg0KLSBGbitGNS9GNiBpbnB1dHMsIG1vcmUgcmVzcG9uc2l2ZSB0aGFu
-IGJlZm9yZSBhbmQgbm8gc2h1dGRvd24uDQotIFNsZWVwIHZpYSBwb3dlciBidXR0b24gYW5k
-IGNsb3NlIHRoZSBsaWQgKHdoaWNoIGlzIGJvdW5kIHRvIHNsZWVwIGFzIA0Kd2VsbCk7IFdh
-a2UgdmlhIHNoYWtpbmcgdGhlIG1vdXNlIGFuZCBvcGVuIGxpZC4gQm90aCBjYXVzZWQgdW5l
-eHBlY3RlZCANCnNodXRkb3duIGJlZm9yZSBhbmQgZml4ZWQgbm93Lg0KDQpUaGFua3MgZm9y
-IGZpZ3VyaW5nIG91dCB0aGlzIGxvbmctc3RhbmRpbmcgaXNzdWUhDQoNClRlc3RlZC1ieTog
-RmVsaXggWWFuIDxmZWxpeG9ubWFyc0BhcmNobGludXgub3JnPg0KDQo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pZGVhcGFkLWxhcHRvcC5jIGIvZHJpdmVycy9wbGF0
-Zm9ybS94ODYvaWRlYXBhZC1sYXB0b3AuYw0KPiBpbmRleCBlZGU0ODM1NzNmZTAuLmI1ZTRk
-YTZhNjc3OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1s
-YXB0b3AuYw0KPiArKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pZGVhcGFkLWxhcHRvcC5j
-DQo+IEBAIC0xNSw2ICsxNSw3IEBADQo+ICAgI2luY2x1ZGUgPGxpbnV4L2J1Zy5oPg0KPiAg
-ICNpbmNsdWRlIDxsaW51eC9jbGVhbnVwLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2RlYnVn
-ZnMuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPg0KPiAgICNpbmNsdWRlIDxsaW51
-eC9kZXZpY2UuaD4NCj4gICAjaW5jbHVkZSA8bGludXgvZG1pLmg+DQo+ICAgI2luY2x1ZGUg
-PGxpbnV4L2k4MDQyLmg+DQo+IEBAIC0yNjcsNiArMjY4LDIwIEBAIHN0YXRpYyB2b2lkIGlk
-ZWFwYWRfc2hhcmVkX2V4aXQoc3RydWN0IGlkZWFwYWRfcHJpdmF0ZSAqcHJpdikNCj4gICAg
-Ki8NCj4gICAjZGVmaW5lIElERUFQQURfRUNfVElNRU9VVCAyMDAgLyogaW4gbXMgKi8NCj4g
-ICANCj4gKy8qDQo+ICsgKiBTb21lIG1vZGVscyAoZS5nLiwgVGhpbmtCb29rIHNpbmNlIDIw
-MjQpIGhhdmUgYSBsb3cgdG9sZXJhbmNlIGZvciBiZWluZw0KPiArICogcG9sbGVkIHRvbyBm
-cmVxdWVudGx5LiBEb2luZyBzbyBtYXkgYnJlYWsgdGhlIHN0YXRlIG1hY2hpbmUgaW4gdGhl
-IEVDLA0KPiArICogcmVzdWx0aW5nIGluIGEgaGFyZCBzaHV0ZG93bi4NCj4gKyAqDQo+ICsg
-KiBJdCBpcyBhbHNvIG9ic2VydmVkIHRoYXQgZnJlcXVlbnQgcG9sbHMgbWF5IGRpc3R1cmIg
-dGhlIG9uZ29pbmcgb3BlcmF0aW9uDQo+ICsgKiBhbmQgbm90YWJseSBkZWxheSB0aGUgYXZh
-aWxhYmlsaXR5IG9mIEVDIHJlc3BvbnNlLg0KPiArICoNCj4gKyAqIFRoZXNlIHZhbHVlcyBh
-cmUgdXNlZCBhcyB0aGUgZGVsYXkgYmVmb3JlIHRoZSBmaXJzdCBwb2xsIGFuZCB0aGUgaW50
-ZXJ2YWwNCj4gKyAqIGJldHdlZW4gc3Vic2VxdWVudCBwb2xscyB0byBzb2x2ZSB0aGUgYWJv
-dmUgaXNzdWVzLg0KPiArICovDQo+ICsjZGVmaW5lIElERUFQQURfRUNfUE9MTF9NSU5fVVMg
-MTUwDQo+ICsjZGVmaW5lIElERUFQQURfRUNfUE9MTF9NQVhfVVMgMzAwDQo+ICsNCj4gICBz
-dGF0aWMgaW50IGV2YWxfaW50KGFjcGlfaGFuZGxlIGhhbmRsZSwgY29uc3QgY2hhciAqbmFt
-ZSwgdW5zaWduZWQgbG9uZyAqcmVzKQ0KPiAgIHsNCj4gICAJdW5zaWduZWQgbG9uZyBsb25n
-IHJlc3VsdDsNCj4gQEAgLTM4Myw3ICszOTgsNyBAQCBzdGF0aWMgaW50IHJlYWRfZWNfZGF0
-YShhY3BpX2hhbmRsZSBoYW5kbGUsIHVuc2lnbmVkIGxvbmcgY21kLCB1bnNpZ25lZCBsb25n
-ICpkYQ0KPiAgIAllbmRfamlmZmllcyA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZmaWVzKElE
-RUFQQURfRUNfVElNRU9VVCkgKyAxOw0KPiAgIA0KPiAgIAl3aGlsZSAodGltZV9iZWZvcmUo
-amlmZmllcywgZW5kX2ppZmZpZXMpKSB7DQo+IC0JCXNjaGVkdWxlKCk7DQo+ICsJCXVzbGVl
-cF9yYW5nZShJREVBUEFEX0VDX1BPTExfTUlOX1VTLCBJREVBUEFEX0VDX1BPTExfTUFYX1VT
-KTsNCj4gICANCj4gICAJCWVyciA9IGV2YWxfdnBjcihoYW5kbGUsIDEsICZ2YWwpOw0KPiAg
-IAkJaWYgKGVycikNCj4gQEAgLTQxNCw3ICs0MjksNyBAQCBzdGF0aWMgaW50IHdyaXRlX2Vj
-X2NtZChhY3BpX2hhbmRsZSBoYW5kbGUsIHVuc2lnbmVkIGxvbmcgY21kLCB1bnNpZ25lZCBs
-b25nIGRhdA0KPiAgIAllbmRfamlmZmllcyA9IGppZmZpZXMgKyBtc2Vjc190b19qaWZmaWVz
-KElERUFQQURfRUNfVElNRU9VVCkgKyAxOw0KPiAgIA0KPiAgIAl3aGlsZSAodGltZV9iZWZv
-cmUoamlmZmllcywgZW5kX2ppZmZpZXMpKSB7DQo+IC0JCXNjaGVkdWxlKCk7DQo+ICsJCXVz
-bGVlcF9yYW5nZShJREVBUEFEX0VDX1BPTExfTUlOX1VTLCBJREVBUEFEX0VDX1BPTExfTUFY
-X1VTKTsNCj4gICANCj4gICAJCWVyciA9IGV2YWxfdnBjcihoYW5kbGUsIDEsICZ2YWwpOw0K
-PiAgIAkJaWYgKGVycikNCj4gDQo+IGJhc2UtY29tbWl0OiBhNTgwNmNkNTA2YWY1YTdjMTli
-Y2Q1OTZlNDcwOGI1YzQ2NGJmZDIxDQo=
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md.c | 86 +++++++++++++++++++++++++++++++------------------
+>  1 file changed, 55 insertions(+), 31 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 4eb0c6effd5b..dc4b85f30e13 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -674,39 +674,50 @@ static void no_op(struct percpu_ref *r) {}
+>
+>  static bool mddev_set_bitmap_ops(struct mddev *mddev)
+>  {
+> +       struct bitmap_operations *old =3D mddev->bitmap_ops;
+> +       struct md_submodule_head *head;
+> +
+> +       if (mddev->bitmap_id =3D=3D ID_BITMAP_NONE ||
+> +           (old && old->head.id =3D=3D mddev->bitmap_id))
+> +               return true;
+> +
+>         xa_lock(&md_submodule);
+> -       mddev->bitmap_ops =3D xa_load(&md_submodule, mddev->bitmap_id);
+> +       head =3D xa_load(&md_submodule, mddev->bitmap_id);
+>         xa_unlock(&md_submodule);
+>
+> -       if (!mddev->bitmap_ops) {
+> -               pr_warn_once("md: can't find bitmap id %d\n", mddev->bitm=
+ap_id);
+> +       if (WARN_ON_ONCE(!head || head->type !=3D MD_BITMAP)) {
+> +               pr_err("md: can't find bitmap id %d\n", mddev->bitmap_id)=
+;
+>                 return false;
+>         }
+>
+> +       if (old && old->group)
+> +               sysfs_remove_group(&mddev->kobj, old->group);
 
---------------lsgaCJLygDxGvMm7fpKfGrdb--
+I think you're handling a competition problem here. But I don't know
+how the old/old->group is already created when creating an array.
+Could you explain this?
 
---------------ssfCMzWuDrsAMe0uEPqRDEHP
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Regards
+Xiao
 
------BEGIN PGP SIGNATURE-----
+> +
+> +       mddev->bitmap_ops =3D (void *)head;
+> +       if (mddev->bitmap_ops && mddev->bitmap_ops->group &&
+> +           sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
+> +               pr_warn("md: cannot register extra bitmap attributes for =
+%s\n",
+> +                       mdname(mddev));
+> +
+>         return true;
+>  }
+>
+>  static void mddev_clear_bitmap_ops(struct mddev *mddev)
+>  {
+> +       if (mddev->bitmap_ops && mddev->bitmap_ops->group)
+> +               sysfs_remove_group(&mddev->kobj, mddev->bitmap_ops->group=
+);
+> +
+>         mddev->bitmap_ops =3D NULL;
+>  }
+>
+>  int mddev_init(struct mddev *mddev)
+>  {
+> -       mddev->bitmap_id =3D ID_BITMAP;
+> -
+> -       if (!mddev_set_bitmap_ops(mddev))
+> -               return -EINVAL;
+> -
+>         if (percpu_ref_init(&mddev->active_io, active_io_release,
+> -                           PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+> -               mddev_clear_bitmap_ops(mddev);
+> +                           PERCPU_REF_ALLOW_REINIT, GFP_KERNEL))
+>                 return -ENOMEM;
+> -       }
+>
+>         if (percpu_ref_init(&mddev->writes_pending, no_op,
+>                             PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+> -               mddev_clear_bitmap_ops(mddev);
+>                 percpu_ref_exit(&mddev->active_io);
+>                 return -ENOMEM;
+>         }
+> @@ -734,6 +745,7 @@ int mddev_init(struct mddev *mddev)
+>         mddev->resync_min =3D 0;
+>         mddev->resync_max =3D MaxSector;
+>         mddev->level =3D LEVEL_NONE;
+> +       mddev->bitmap_id =3D ID_BITMAP;
+>
+>         INIT_WORK(&mddev->sync_work, md_start_sync);
+>         INIT_WORK(&mddev->del_work, mddev_delayed_delete);
+> @@ -744,7 +756,6 @@ EXPORT_SYMBOL_GPL(mddev_init);
+>
+>  void mddev_destroy(struct mddev *mddev)
+>  {
+> -       mddev_clear_bitmap_ops(mddev);
+>         percpu_ref_exit(&mddev->active_io);
+>         percpu_ref_exit(&mddev->writes_pending);
+>  }
+> @@ -6093,11 +6104,6 @@ struct mddev *md_alloc(dev_t dev, char *name)
+>                 return ERR_PTR(error);
+>         }
+>
+> -       if (md_bitmap_registered(mddev) && mddev->bitmap_ops->group)
+> -               if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->g=
+roup))
+> -                       pr_warn("md: cannot register extra bitmap attribu=
+tes for %s\n",
+> -                               mdname(mddev));
+> -
+>         kobject_uevent(&mddev->kobj, KOBJ_ADD);
+>         mddev->sysfs_state =3D sysfs_get_dirent_safe(mddev->kobj.sd, "arr=
+ay_state");
+>         mddev->sysfs_level =3D sysfs_get_dirent_safe(mddev->kobj.sd, "lev=
+el");
+> @@ -6173,6 +6179,26 @@ static void md_safemode_timeout(struct timer_list =
+*t)
+>
+>  static int start_dirty_degraded;
+>
+> +static int md_bitmap_create(struct mddev *mddev)
+> +{
+> +       if (mddev->bitmap_id =3D=3D ID_BITMAP_NONE)
+> +               return -EINVAL;
+> +
+> +       if (!mddev_set_bitmap_ops(mddev))
+> +               return -ENOENT;
+> +
+> +       return mddev->bitmap_ops->create(mddev);
+> +}
+> +
+> +static void md_bitmap_destroy(struct mddev *mddev)
+> +{
+> +       if (!md_bitmap_registered(mddev))
+> +               return;
+> +
+> +       mddev->bitmap_ops->destroy(mddev);
+> +       mddev_clear_bitmap_ops(mddev);
+> +}
+> +
+>  int md_run(struct mddev *mddev)
+>  {
+>         int err;
+> @@ -6337,9 +6363,9 @@ int md_run(struct mddev *mddev)
+>                         (unsigned long long)pers->size(mddev, 0, 0) / 2);
+>                 err =3D -EINVAL;
+>         }
+> -       if (err =3D=3D 0 && pers->sync_request && md_bitmap_registered(md=
+dev) &&
+> +       if (err =3D=3D 0 && pers->sync_request &&
+>             (mddev->bitmap_info.file || mddev->bitmap_info.offset)) {
+> -               err =3D mddev->bitmap_ops->create(mddev);
+> +               err =3D md_bitmap_create(mddev);
+>                 if (err)
+>                         pr_warn("%s: failed to create bitmap (%d)\n",
+>                                 mdname(mddev), err);
+> @@ -6412,8 +6438,7 @@ int md_run(struct mddev *mddev)
+>                 pers->free(mddev, mddev->private);
+>         mddev->private =3D NULL;
+>         put_pers(pers);
+> -       if (md_bitmap_registered(mddev))
+> -               mddev->bitmap_ops->destroy(mddev);
+> +       md_bitmap_destroy(mddev);
+>  abort:
+>         bioset_exit(&mddev->io_clone_set);
+>  exit_sync_set:
+> @@ -6436,7 +6461,7 @@ int do_md_run(struct mddev *mddev)
+>         if (md_bitmap_registered(mddev)) {
+>                 err =3D mddev->bitmap_ops->load(mddev);
+>                 if (err) {
+> -                       mddev->bitmap_ops->destroy(mddev);
+> +                       md_bitmap_destroy(mddev);
+>                         goto out;
+>                 }
+>         }
+> @@ -6627,8 +6652,7 @@ static void __md_stop(struct mddev *mddev)
+>  {
+>         struct md_personality *pers =3D mddev->pers;
+>
+> -       if (md_bitmap_registered(mddev))
+> -               mddev->bitmap_ops->destroy(mddev);
+> +       md_bitmap_destroy(mddev);
+>         mddev_detach(mddev);
+>         spin_lock(&mddev->lock);
+>         mddev->pers =3D NULL;
+> @@ -7408,16 +7432,16 @@ static int set_bitmap_file(struct mddev *mddev, i=
+nt fd)
+>         err =3D 0;
+>         if (mddev->pers) {
+>                 if (fd >=3D 0) {
+> -                       err =3D mddev->bitmap_ops->create(mddev);
+> +                       err =3D md_bitmap_create(mddev);
+>                         if (!err)
+>                                 err =3D mddev->bitmap_ops->load(mddev);
+>
+>                         if (err) {
+> -                               mddev->bitmap_ops->destroy(mddev);
+> +                               md_bitmap_destroy(mddev);
+>                                 fd =3D -1;
+>                         }
+>                 } else if (fd < 0) {
+> -                       mddev->bitmap_ops->destroy(mddev);
+> +                       md_bitmap_destroy(mddev);
+>                 }
+>         }
+>
+> @@ -7732,12 +7756,12 @@ static int update_array_info(struct mddev *mddev,=
+ mdu_array_info_t *info)
+>                                 mddev->bitmap_info.default_offset;
+>                         mddev->bitmap_info.space =3D
+>                                 mddev->bitmap_info.default_space;
+> -                       rv =3D mddev->bitmap_ops->create(mddev);
+> +                       rv =3D md_bitmap_create(mddev);
+>                         if (!rv)
+>                                 rv =3D mddev->bitmap_ops->load(mddev);
+>
+>                         if (rv)
+> -                               mddev->bitmap_ops->destroy(mddev);
+> +                               md_bitmap_destroy(mddev);
+>                 } else {
+>                         struct md_bitmap_stats stats;
+>
+> @@ -7763,7 +7787,7 @@ static int update_array_info(struct mddev *mddev, m=
+du_array_info_t *info)
+>                                 put_cluster_ops(mddev);
+>                                 mddev->safemode_delay =3D DEFAULT_SAFEMOD=
+E_DELAY;
+>                         }
+> -                       mddev->bitmap_ops->destroy(mddev);
+> +                       md_bitmap_destroy(mddev);
+>                         mddev->bitmap_info.offset =3D 0;
+>                 }
+>         }
+> --
+> 2.39.2
+>
 
-wsF5BAABCAAjFiEEtZcfLFwQqaCMYAMPeGxj8zDXy5IFAmg0DesFAwAAAAAACgkQeGxj8zDXy5L6
-Lw/8CyY1Y9PBwEocLWS5Ut3B8Ka0SEqSjhTazXjj2eWj6RKSy6WbGQuUO9lQFfM7oO0D5jj625Xc
-3G3hrZNE9f/p2CVZ6TGpFhPANUQjsQOTomyO3tdzW5ENFkiUMemXgY4gidvsiSaEZjQTPsDocfYT
-L+xQs5cFOVzgQfU0fGOeQiab28fex+95jGkR+GBJz7NnTL890MWBlUo7+WnF+DxtgdVmAq/+yzoF
-GXIChBkRQBn5trxJ4QBglBpjQZSAAqfTwOEAz3IQ1uXFtDWc/QfuAoyJH0Ec8EhMJDXH7MsfNxQA
-LZ/yRLEyS6mWCa+buZ9hPcmNrkZughfxnVoIWYYILLZjgT8loMsvbakahp3zox0CBUZp7lv87ThI
-OL897D3v125TqpS7rdKdzqv20HNALJKvSQ9VN8dpetzk7Jnc4eCm6OBRXy09oNm9RnbBY57Fjvto
-Z6XimmKgoBVyFkgkl6Y5JOxuH+/+HTmPNH2079qihs8Z2rHBw278OcX3fUDkk6nU7xhV6lXPQW1k
-EABA8Xp4SdbFCArMJ5MUuBjc2FIIeTpKv+Tj38mZBpLBLoEjI7YQrpSJNsbAuxij5bLLg+EpFRwr
-PpU0HmKPvXQEO7JRhNuxJPc15eFpf5eaBi1nhzhy9FOSoYEnj3cAEJKkn3Iu+8seNEWTx1iWNd3l
-TBk=
-=ESfk
------END PGP SIGNATURE-----
-
---------------ssfCMzWuDrsAMe0uEPqRDEHP--
