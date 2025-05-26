@@ -1,116 +1,103 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96EC4A2D;
-	Mon, 26 May 2025 05:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB4872615;
+	Mon, 26 May 2025 05:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748237455; cv=none; b=mXIE4bzCM7aIM5ulZnbRtkD2/QHBHGUZzR5ELe7emUY82a+4wABzGPk2vwlqLd/ugY5ZQLapKQJAY5VqZ8kUr0h/bZSwZOj/iytxm8YBavy+M2UM+kqi0RgB/CFia49kz5bsuB8ULvK1hJv6qpIN7/5irjk2Q/zKnA4t4cKMphQ=
+	t=1748237557; cv=none; b=fdTROk6t5gfw6oYZwYscF17GYAyb/zN50IzwonU9kqe0JYTJuWEdG2jk18EKdMnqJBR/O9buZr0tvIEJ3V/CDJ1Vy2wcMxk/+IJadjUpwpct1dqFJYAJeQOxuzCZPZQ+eNOHusuUvCVYIYoVUFgZTrLTD6A2IznPIQ1Jk5Vn/Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748237455; c=relaxed/simple;
-	bh=xdgJ/s1d5qleqQQSCqAZIvgqGPyVLwQY9pj3cjg16ls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HQTnPgLJSJsYqY1dQ7YPZJ+bb+JtzOlU9cpLzb5CGwxoddMvjjnHA1zQBrdSbAqsl/SAldXcn8vxq/cT5t7j/Tb7rcKX/TpTzEK2BsPTwPhG74AnC2nZgSO6tT7R09Vmg/ud3XMeNVp0q0lQ3uQatH4Ums8Tgap08B844Ts43q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FfJmzcp6; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748237557; c=relaxed/simple;
+	bh=85rFq+5p+XU7DPVtNBLCJZao5ByBt1eDsLVgQn8O7n4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cl6tZjph8BFvMrGvseFPvcG2qdtIseSSznL/+9+tdC7vcz01TPdAZRfhM04b1odhJauE2IFCMZKoN/Nel3/T1gmJ6cCEtfkdo3DHpigPMONEnh5oqXwpRFlehxgMe+vqhc6cR+d7b2Y1unln6J2qJ3lZTemFqK+U6TFdH1fpnC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RtFiJnYd; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfJmzcp6"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c27df0daso1218406b3a.1;
-        Sun, 25 May 2025 22:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748237452; x=1748842252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LdO23MbUOx89Kzc2rQ7utwQi4LgYhCMYtqB+mEcz+FE=;
-        b=FfJmzcp6M+Pspcnl1wYbq4/rdnv9BjCdt0i2WBE4f+Xb4GcvMpAzbzvfhYbS/SCVp5
-         O0UuNtqyWTbonIIxrqFnHwbdYyGaVNj/khN2/xILeIRwTwhV5MyPt9XsyTJDtsn6/El9
-         f5i8OU6upkXlTzKwqm6Zte6ByhuPoPjjfkF6rJVeAES0lt7dMJzBruveqSxfpfR68heC
-         lu8cBwltY6Mzuku2XKXMeoa9ZsCqMFVa9XdswJJqlOeGmcNAP9Xac/2sLG1nyMXiFX6S
-         jTpA0arMj17IwVgcZuID+VcT5KJWOr5WmpH5wPViErkf6EsT+Ay5gQfq9KYgZApV3YEU
-         ofXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748237452; x=1748842252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LdO23MbUOx89Kzc2rQ7utwQi4LgYhCMYtqB+mEcz+FE=;
-        b=cKB4aDIYJrIZx7FQ51RN4hsGVd1cSR6usTYTh9e2DAGBaaQWe8pRp1FIN60W+je9TK
-         bDmrypmR5Vuvw2l4PJK5iCZt/WArWMu66ghbDerGyCp4cuEbL4uXKtXZI950JC/3Ph42
-         wqQwhHF4aLfX6R8QXWA7/ocdSzwk6lEws/of+vX7DDDkINOmJ0dFjOPKC1HxYVlCgAez
-         oYwi4dEYeutOP9ZVlROlZLiFtzw2kBWkrxNDNyNDnTthKCMWSBfiqxUXh9lawNYJylD1
-         Db5YCs2r15/M3yX9J6szaiQHJJMTPAj7Yz+xqZllPlRPhHbvX1QgKnRO0yBQo7162hUL
-         51Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6+bHiUR3AEYxUxan3mK/LFLCWINQGlkFtFGQZSUlyrSXs35oNBhFW5uxwHnYQpbL8VBqgvY0zP6c=@vger.kernel.org, AJvYcCWCTBZep2KPUa0f+m0lZ+dAEsbIqYURA88DalQPRZrj3XDEuTGMsplHh6VDEcT2ncoeSlxdi+EHuVqn6S2b@vger.kernel.org
-X-Gm-Message-State: AOJu0YytysIyUS6i6hF7Fw8qL7ojS6Q8ngFoWUxsAXi11ASrDiKmDy+X
-	rQ6+djQ5huy4+mfYjWCuU3J/7WWY2STSAgFvwfEIIq9DO8aHIRC9C14uae6N8+DFuAbmGOmdK3z
-	yhdDZkmiDV0vd05wdISyZ6I+R854seS979mU4
-X-Gm-Gg: ASbGncsWXKWLtASqMXjHnBlZKpddaR3nGgYcnTOMqSrUihDifT/as9e3VfHQs94t441
-	vYeGC/fihcvBybaKMVyWO31Gg+m405iw5MoNa3F7+0K4B0wzqSUYqRAE0/7FfhMBUjX1CJHWBZt
-	V1UPCmyUrGW+a+UaRrcGbISGkUqvJBG0R+oFxUnAdVvIJM
-X-Google-Smtp-Source: AGHT+IENjvfF0dwyW/7RUyfdpxFCqR0Ayc/O+26qxUf6BM2b+i8gHjMhXYZB0HnYTOqt82vaNS2ZNByqUrPq5E9Gjrw=
-X-Received: by 2002:a05:6a21:338b:b0:1f5:8a1d:38f3 with SMTP id
- adf61e73a8af0-2188c1924dbmr12589936637.2.1748237452017; Sun, 25 May 2025
- 22:30:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RtFiJnYd"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54Q5W96h2608394;
+	Mon, 26 May 2025 00:32:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748237529;
+	bh=DO4UKFcjT1jdMKNGMOOu+sLadecJqRP1bouop32CCm0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=RtFiJnYd7nXxwSojuQIrd9mJgtNDVSvW+AGDmXTVJ19vlc3+816bilhY7/7m+vG1f
+	 2HD7EMgz8BfN0DLww5VD9VTMSLsjxHU4m/kzMFIVJtcUFxyLlqTRreooPydkElIPVk
+	 ZupVL31Wl2OeHaoP8CGE9KC8zHq//Hvn9q3wb+bM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54Q5W9G14007162
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Mon, 26 May 2025 00:32:09 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
+ May 2025 00:32:09 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 26 May 2025 00:32:08 -0500
+Received: from [10.24.69.185] (dhcp-10-24-69-185.dhcp.ti.com [10.24.69.185])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54Q5W5HQ116398;
+	Mon, 26 May 2025 00:32:06 -0500
+Message-ID: <4f660adb-1cb4-4bcf-9d1c-c13e62818f07@ti.com>
+Date: Mon, 26 May 2025 11:02:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519-timestamp-v1-0-fcb4f6c2721c@gmail.com>
- <20250519-timestamp-v1-1-fcb4f6c2721c@gmail.com> <20250525183528.14877bd2@jic23-huawei>
-In-Reply-To: <20250525183528.14877bd2@jic23-huawei>
-From: Gyeyoung Baek <gye976@gmail.com>
-Date: Mon, 26 May 2025 14:30:41 +0900
-X-Gm-Features: AX0GCFu6hpZGSdGf2LyXPbj3gBPrbLOf7AI5iTMz2mPRdgctiyz0zfM3ndI6cI4
-Message-ID: <CAKbEznvdKJx_t2OcYfAJuAP8FVpTjup63Ct6aFvSYuK=-B061A@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/9] iio: buffer: Fix checkpatch.pl warning
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: ti: k3-am642-phyboard-electra: Fix PRU-ICSSG
+ Ethernet ports
+To: Wadim Egorov <w.egorov@phytec.de>, <nm@ti.com>, <kristo@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
+References: <20250521053339.1751844-1-w.egorov@phytec.de>
+From: Vignesh Raghavendra <vigneshr@ti.com>
+Content-Language: en-US
+In-Reply-To: <20250521053339.1751844-1-w.egorov@phytec.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, May 26, 2025 at 2:35=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Mon, 19 May 2025 23:25:53 +0900
-> Gyeyoung Baek <gye976@gmail.com> wrote:
->
-> > Remove the following trivial warning:
-> > "WARNING: Block comments should align the * on each line"
-> >
-> > Signed-off-by: Gyeyoung Baek <gye976@gmail.com>
-> Applied.
->
-> As a general rule don't send unrelated cleanup in an RFC series
-> doing something interesting!  They might get missed.
 
-Well, since the patches modify the same file, I considered them
-dependent and grouped them into a single series. But now realize it
-would be more appropriate to split patches logically.
-Thanks for pointing it out.
 
-Gyeyoung
+On 21/05/25 11:03, Wadim Egorov wrote:
+> For the ICSSG PHYs to operate correctly, a 25 MHz reference clock must
+> be supplied on CLKOUT0. Previously, our bootloader configured this
+> clock, which is why the PRU Ethernet ports appeared to work, but the
+> change never made it into the device tree.
+> 
 
-> Jonathan
-> > ---
-> >  drivers/iio/buffer/industrialio-triggered-buffer.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iio/buffer/industrialio-triggered-buffer.c b/drive=
-rs/iio/buffer/industrialio-triggered-buffer.c
-> > index c06515987e7a..9bf75dee7ff8 100644
-> > --- a/drivers/iio/buffer/industrialio-triggered-buffer.c
-> > +++ b/drivers/iio/buffer/industrialio-triggered-buffer.c
-> > @@ -1,5 +1,5 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> > - /*
-> > +/*
-> >   * Copyright (c) 2012 Analog Devices, Inc.
-> >   *  Author: Lars-Peter Clausen <lars@metafoo.de>
-> >   */
-> >
->
+Should this patch have a Fixes tag then?
+
+> Add clock properties to make EXT_REFCLK1.CLKOUT0 output a 25MHz clock.
+> 
+> Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+> index f63c101b7d61..129524eb5b91 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+> +++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+> @@ -322,6 +322,8 @@ AM64X_IOPAD(0x0040, PIN_OUTPUT, 7)	/* (U21) GPMC0_AD1.GPIO0_16 */
+>  &icssg0_mdio {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&icssg0_mdio_pins_default &clkout0_pins_default>;
+> +	assigned-clocks = <&k3_clks 157 123>;
+> +	assigned-clock-parents = <&k3_clks 157 125>;
+>  	status = "okay";
+>  
+>  	icssg0_phy1: ethernet-phy@1 {
+
+-- 
+Regards
+Vignesh
+https://ti.com/opensource
+
