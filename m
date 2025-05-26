@@ -1,72 +1,118 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mail-m19731102.qiye.163.com (mail-m19731102.qiye.163.com [220.197.31.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5701D63C7;
-	Mon, 26 May 2025 06:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54C54C9F;
+	Mon, 26 May 2025 07:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748242637; cv=none; b=OO3NCvrt+x9McGhZ/OVu2F1IFybHucLn0Tisf4iNVCl3ZjuOi1M/7rPNi1DAONxMsK0cVU/0NnfdEorLfEofH1sLDKpaEsoGizBCAJj6rx6YjM45ZR/Pz5cDFGjfQTtMPiQn3YSQ90fU47SQiPl5n4YzX+j1w59EmYGGjmPrQ4w=
+	t=1748242897; cv=none; b=DwMVJyIsTNqJhcrZElnU2Jp8RJ5IsfLTjrofKVhK+Cjs8UbRDLPYL7wTI2coB7pPVULdcdLiSW43BuJuTo+ok+YTPNuRh5v48C4eswyBd65iEJR6I+5sWQO94Gk23C3eKzCKvPCOWtKgtZGj/27WWc3KTlDeg2NdgemCVm47AY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748242637; c=relaxed/simple;
-	bh=xx1G0IYpkddJ0UURedTcGID3WAvrp5o/oNP8111w3E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kQOZkl0s7LUOjSw7F3JG8DbLyAizaqFkmbMvnbe3gRFTSJd6aic4G+Wgg4ktSGNjLVQ2QVF3TemfqcAzFx4VT3zxWTZ/MfNWHAyBGHGc0rMAtfgEvYily4njE2ZF5LrhQbTclpKKoDoJeyAc497BHd7xwiHK3uounb6gbU0euVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=F5fb1/2Q; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1748242897; c=relaxed/simple;
+	bh=vUTy9fgiQM1M9OXGFsdExlNkdH738vTuRpj/XUexG2A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bZ2Ew9SxUDiEju3wh03RssJWvsmIZ6MPHTyaxVD9mCTzld/cpYatVOfnyvVEtXogc+MTP0IcGtKij+UfnQyzHGVkOzfSvR4+CdGtbJ/qnow6ooZJ2ni7e4+RgKklw9G56yCHvBpMMfmeo8cnI3K4vuCAGO25cEdtM+K+95pfPho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Uwr3msEK; arc=none smtp.client-ip=220.197.31.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F5fb1/2Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3N5HVYn95TiR6tJjSW/C9FetSHwnCCxJu25MIh3EBkc=; b=F5fb1/2QHKzRbttsGm0r+q54qI
-	H7HZrcgE4M58see/1CKgkrCjrs2Ig/FYVJmX3ZsG2JQ6rkUYSV9UmD9v2nt+ibO0JZaej0rgB8xOR
-	NG7I1BFqbpus+ljHBsviSXS0sPiLAo1knXvQZSeG1gXYwN99qC2J0cnGKcjREtniTiq1/MPvgl97m
-	t6BShkxGpJSwirIzfwkUktj9kdttZ3lQZzd6fXVYzsujrogA2tn9UDEK1kBoVg6Zqv3Pr2BSnamw+
-	yOZsCrEx1v6E8Gu1ZnbNqNGhNECMppJcjCbdArw8JQlTgaom8ZQI64pxslfI9DKjJf2Sk/jhyk9xd
-	xoqZiueQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJRlq-00000008F7Y-3DxB;
-	Mon, 26 May 2025 06:57:14 +0000
-Date: Sun, 25 May 2025 23:57:14 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, jgg@ziepe.ca,
-	zyjzyj2000@gmail.com, Daisuke Matsuda <dskmtsd@gmail.com>,
-	hch@infradead.org
-Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
- virtual DMA devices
-Message-ID: <aDQQyjJv9YKK_ZoV@infradead.org>
-References: <20250524144328.4361-1-dskmtsd@gmail.com>
- <174815946854.1055673.18158398913709776499.b4-ty@kernel.org>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Uwr3msEK"
+Received: from rockchip.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1660c015a;
+	Mon, 26 May 2025 14:26:00 +0800 (GMT+08:00)
+From: Elaine Zhang <zhangqing@rock-chips.com>
+To: zhangqing@rock-chips.com,
+	mkl@pengutronix.de,
+	kernel@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	cl@rock-chips.com,
+	kever.yang@rock-chips.com
+Cc: linux-can@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v6 0/4] rockchip: add can for RK3576 Soc
+Date: Mon, 26 May 2025 14:25:55 +0800
+Message-Id: <20250526062559.2061311-1-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174815946854.1055673.18158398913709776499.b4-ty@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhlLSlYZHk1NTEtIGkhOHk9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a970b44ff8b03a3kunm902b49ed4a332d
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PFE6Hgw6MDE0Og40ViENKiMR
+	HigwFCtVSlVKTE9DSU9LTE1JSU5KVTMWGhIXVQETGhUcChIVHDsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUlDSU43Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=Uwr3msEKJ8hrOXUNf0OS1lAQsZf/fqwM9a+9WoTz6+M6zGwCZalkAUXq1Xl2Uw+qvsxpHtSyiAJYL1svVhTiFf4k8u2aIruSbsZs+/KmS9U5GWP13z/3zzIL3oXar2sr3rw5eITYQ3C2h0m9R2IALsXO3ezqYTe+P3ZSaUfF8wE=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=PLZ0qwoosUUE5XwgBZkpDsN7ujf59+z2ZeMIful5s1Q=;
+	h=date:mime-version:subject:message-id:from;
 
-On Sun, May 25, 2025 at 03:51:08AM -0400, Leon Romanovsky wrote:
-> 
-> On Sat, 24 May 2025 14:43:28 +0000, Daisuke Matsuda wrote:
-> > Drivers such as rxe, which use virtual DMA, must not call into the DMA
-> > mapping core since they lack physical DMA capabilities. Otherwise, a NULL
-> > pointer dereference is observed as shown below. This patch ensures the RDMA
-> > core handles virtual and physical DMA paths appropriately.
-> > 
-> > This fixes the following kernel oops:
-> > 
-> > [...]
-> 
-> Applied, thanks!
+rk3576 can is a new controller,new register layout and Bit position
+definition:
+Support CAN and CANFD protocol.
+Support Dma.
 
-So while this version look correct, the idea of open coding the
-virtual device version of hmm_dma_map directly in the ODP code
-is a nasty leaky abstraction.  Please pull it into a proper ib_dma_*
-wrapper.
+There are major differences from the previous rk3568.
+All errata on the rk3568 have been fixed and redesigned.
+
+Change in V6:
+[PATCH v6 1/4]: Fix dma is support only for rk3576.
+[PATCH v6 2/4]: Fix the compilation warning.
+[PATCH v6 3/4]: Fix the compilation warning.
+[PATCH v6 4/4]: Fix the compilation warning.
+
+Change in V5:
+[PATCH v5 1/4]: Add rk3576 canfd to rockchip,rk3568v2-canfd.yaml, remove
+                rockchip,rk3576-canfd.yaml
+[PATCH v5 2/4]: Encapsulate some hardware operation functions into
+                rkcanfd_devtype_data to provide differentiated
+                implementations for different models
+                (such as RK3568v2/v3)..
+[PATCH v5 3/4]: Add rk3576 canfd,fix the register naming rule,
+                Delete the variables used by rockchip itself.
+[PATCH v5 4/4]: Fix .h sorting.
+
+
+Change in V4:
+[PATCH v4 1/3]: Correct the format and add explanations.
+[PATCH v4 2/3]: No change.
+[PATCH v4 3/3]: No change.
+
+Change in V3:
+[PATCH v3 1/3]: Add documentation for the rk3576 CAN-FD.
+[PATCH v3 2/3]: Adjust the differentiated code section and
+                add dma function.
+[PATCH v3 3/3]: Remove dma, no use dma by default.
+
+Change in V2:
+[PATCH v2 1/2]: remove rk3576_canfd.c, use the rockchip_canfd driver
+[PATCH v2 2/2]: code style.
+
+Elaine Zhang (4):
+  dt-bindings: can: rockchip_canfd: add rk3576 CAN-FD controller
+  net: can: rockchip: Refactor the rkcanfd_devtype_data structure
+  net: can: rockchip: add can for RK3576 Soc
+  net: can: rockchip: support dma for rk3576 rx
+
+ .../net/can/rockchip,rk3568v2-canfd.yaml      |  41 ++
+ .../net/can/rockchip/rockchip_canfd-core.c    | 596 ++++++++++++++++--
+ drivers/net/can/rockchip/rockchip_canfd-rx.c  | 198 ++++++
+ drivers/net/can/rockchip/rockchip_canfd-tx.c  |  27 +
+ drivers/net/can/rockchip/rockchip_canfd.h     | 289 +++++++++
+ 5 files changed, 1108 insertions(+), 43 deletions(-)
+
+-- 
+2.34.1
 
