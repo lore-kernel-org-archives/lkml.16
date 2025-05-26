@@ -1,89 +1,76 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BCB288DB;
-	Mon, 26 May 2025 15:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F21A288DB;
+	Mon, 26 May 2025 15:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748274943; cv=none; b=cRHMbs+knIdUljS7abtc4B5CcxXt+i8JQ9jIPgIRjmnsP1Myr8mFhQk7stAvW3ZYLi2jTS8jb8gjQnjurheh0IN5y0UzKx0ubXuwDoiNiA45xJoO6KmdjZDxFPUQTV8wdEzEUVWxin6prLqkhHUONSVSdViK5lSa3kn1ZO2Nu7g=
+	t=1748274949; cv=none; b=UTOCJJ5JRJQBXwo3oft7j5uQepDOt6J8O1lkrzwZWhnMW5SJJOvX+J4o133dT1NQCCNxuN0GV+jW6eECThWVV4VKOtyMrlTPpG4hIrUFqoZAtQcr3xahlCdVAOMwPbQ9ZjHRGV+YamwpvJZOZwEPkzy3XCQYQ++Zk1awC/KjCYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748274943; c=relaxed/simple;
-	bh=p37ePxDF2lBDX76mRz579xeYoozUIkfhRnxxXh8QAV4=;
+	s=arc-20240116; t=1748274949; c=relaxed/simple;
+	bh=qS06HAU2Ci7YnW1f4F114KPUB3jPs6XZjrbv1n35RWQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLEERXN3XZigD87u+TK3S69bArliiqkY9GGzN7AhZNmTNkKCWMxCrgGLd+/jl5KBe07EP6RB4x6hUHA1uAKaQDjruTDG7jRxGBJ8gq+abJ1JvWPu/IDAzTuoN5utgFOeKjt3c0tiDBt+AY5WdH/68H5acmOnwn/fbmidWdYSXeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mUO+ZsyM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NOSftc+Q; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqmatlN07FSHEyCMwoV5y/wHFipZr05PnViGOgouAnjqn0+vFVjV4G4gzgY01I+frNbvg0gpVCkBnFR0sFI7fnXc5gUCwR8gzxdOkKj5J1ffgbZa7haPS56v9lcQKrrWKjJQCuMK7vxcVKVaEno7Q1oQdS/zgYahsbo+Lq2nGgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oci25Iw7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mUO+ZsyM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NOSftc+Q"
-Date: Mon, 26 May 2025 17:55:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748274940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tRp8E46LP8WV7k/mxfs8lvZ8NC6UVmuKo+RU3Fuo9Y=;
-	b=mUO+ZsyMoqdbqQ18RfMi1L+Tw5T0JCJh7My2mTJdW0w9KOJRobBrEfG/Bvy0SjE6WcNE7c
-	ciV+ObwkuwR7ksCYNCrTs6Ec1mvmWvMY/G4NJwv9Nyet4lSRD9te5V7/V23mSqV/MRLZSl
-	8rjN4Hmo0bVXRefyYYT5gdT2OsV1RrNvaZnzat0mPHB2wv1Bt6tHRO40T2TW+R/TJyqedy
-	nfaQP1l7yssWf5TZpiQpTrwwj69n3BeZXa8VNo0rH+xvbOqa8F8UuZoPJeUsxyL6nXffaI
-	MTC1VQPuYzivEY1ynfyAdXQjBf++Vo2a87wrrLM5f1nnqJ4uTS1Z5r3llxNjyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748274940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2tRp8E46LP8WV7k/mxfs8lvZ8NC6UVmuKo+RU3Fuo9Y=;
-	b=NOSftc+QaQbSPyEdBQXFGG1FlRFv7+ls249JuWdh62f9qt3wBzezKnIY6R+2XsiC/l9YSg
-	ZGnwpoWZ1NXPToBQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v2] prctl: Add documentation for PR_FUTEX_HASH
-Message-ID: <20250526155539.gpxfT3pS@linutronix.de>
-References: <20250516161422.BqmdlxlF@linutronix.de>
- <fuudjpar7kv7liwj4aucekktkzuhkalzkhsz5gv3mxzletlstk@tzokaret52cv>
- <20250520104247.S-gVcgxM@linutronix.de>
- <fzoy24xjr4w3kxt6suya5dfici6uxk6d3gzrjwruujlkca3zwh@3dqnmbah3bxg>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oci25Iw7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C09C9C4CEE7;
+	Mon, 26 May 2025 15:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748274949;
+	bh=qS06HAU2Ci7YnW1f4F114KPUB3jPs6XZjrbv1n35RWQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Oci25Iw7cICH9wSYAVHcMpPZAobINJcYhC0ocbLxrFW9SpyyJHy61pMBQlLNi5C24
+	 jMcALgExK51zd9RrSF/gdo/TgBplSDkJeUi8IraM99Hl+drKRgMy0q2qre4dwRjRQ9
+	 q6y+N5iKgcXPkj4VW01/a4YDpXcUGef+yA3CEuoQMsZlo+dPVDEfahVu285Bgi4QPR
+	 A1jCae8wbF0MSyrlRjAaMpZ+x/I2AcbOeJdi8ueknLEJPHji7aum/2BgUYgpLOsYYM
+	 WVjuk9LzQE9mY1VEyeMbwi4vQDa2DHchTWUL646/Iok1I9p6I0ctuozgrRAQBZpYoJ
+	 +63jfYDEguVYg==
+Date: Mon, 26 May 2025 16:55:44 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	andy@kernel.org, ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: iio: adc: st,spear600-adc: txt to yaml
+ format conversion.
+Message-ID: <20250526-overtake-charger-6c5ffcc2bc09@spud>
+References: <20250522204130.21604-1-rodrigo.gobbi.7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="LmK9+h1hO9uXVFdC"
+Content-Disposition: inline
+In-Reply-To: <20250522204130.21604-1-rodrigo.gobbi.7@gmail.com>
+
+
+--LmK9+h1hO9uXVFdC
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <fzoy24xjr4w3kxt6suya5dfici6uxk6d3gzrjwruujlkca3zwh@3dqnmbah3bxg>
 
-On 2025-05-22 14:22:15 [+0200], Alejandro Colomar wrote:
-> Hi Sebastian,
-Hi Alejandro,
-
-=E2=80=A6
-> > --- /dev/null
-> > +++ b/man/man2const/PR_FUTEX_HASH.2const
-=E2=80=A6
-> > +number of CPUs in the system.
-> > +Since the mapping from the provided
-> > +.I uaddr
+On Thu, May 22, 2025 at 05:37:16PM -0300, Rodrigo Gobbi wrote:
+> Straight forward conversion from spear-adc.txt into yaml format.
 >=20
-> This is the only reference in the entire page, and is also not mentioned
-> in prctl(2).  I guess it refers to the one passed to futex(2), but I
-> think that should be mentioned.
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
 
-I reworded the sentence and hopefully improved it. And yes, it refers to
-the argument passed to futex(2).
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Sebastian
+--LmK9+h1hO9uXVFdC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDSPAAAKCRB4tDGHoIJi
+0oauAQDC2i3XwsjInSgkRG4ihMN85z6WwylF17vm4QnQ0bOwUwD/QvmkaQDqD859
+lPXenQgZI10wenbzgy2vMCa279YpRQk=
+=fIq6
+-----END PGP SIGNATURE-----
+
+--LmK9+h1hO9uXVFdC--
