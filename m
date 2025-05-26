@@ -1,117 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581A07E110
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755D7202C26
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270991; cv=none; b=uUC040uAmyqSnR2HJMjjB4Dztb3qx7J7vTHBsrOv/dTjb+xZoTkJwhAhLft1tP17LBEL3FY5lepuHAVpyLkVxjF5G12RRBMs2QD1yvNDzwq9Kb4bz9pgNQzV8Afnq6kT9FEHm72pjH8NfEPWCFzlJ4j3yd4q+mnJeRiB32AiRx8=
+	t=1748271001; cv=none; b=FBGr74+WqPoytAFI8kgSB9sznGKt97o/NbQhzNZeLMBymEV8Fab8RWQvyNQJJZY+TjVdQfDoYpsJrL0xMyX87RiYuRzo6NZQSnn3rxVAnv9LKxe7BRWqfM5MSnIYXJTlVSw8FRMtCr4GmV3Bhh8avJqYzZQSRZCp85riPylMnMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270991; c=relaxed/simple;
-	bh=W0/hyEwuqgPFvCrdO4dCJvxI2sNISkt+32J7IVABea0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nq1UW02+IZYYNVehI4HU+LDJmyHSFcasTk0a8kfy0B2xhTL6/dzJrDmaGmP1O1fLP0TJIew9eTtMk18vNdcWpZM8j0MIcsK6znAG+GoxWMd9b+V/jH9grwFlGt0ctXb2dzwgQ/5QWxjyef2Zd8VYBCS8njEj72LZeehwzaVaKco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G6VzZtRL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748271001; c=relaxed/simple;
+	bh=zfitFxB7TLlYSZl2n8OvoUs1pS/YDRXYg4yZgpeEH24=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IqAy0SXaAZzQWkdPQ3XUNoegHs2BxBrrF9Baq5dVYpU71wzN5RFXW2o8hn1tre3h58nLGhZyIEvbwL7SfhTJO/NXq++3RUKIQD6gN437pZHikJtEQL4hozz8Zflu3PF1zfPRjgQvmXGFE1bxXtMFg1t8l7+JYDfmdCD5Pd0Kf2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rrAMw9hE; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G6VzZtRL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748270988;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tbRsQjXJhtCNd3c3uCPjlNU72gknC55NyPzUX0RnmC4=;
-	b=G6VzZtRLDoyRQPlSxefVuDcufTXeR9HMecn7B212BckD+Soq8G1NXQUDuHhpjHGqbOCZJV
-	xGv8OwzUJgWk3h1MPbaZeSdbW0vDvt+w3IaSgQThAEVErfvGkTxgCCvDF2saT5cOJkcOLi
-	BYM6AR1tcdU7aK5Uc9P4eah085dSapY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-573-YH9Uur0zNc2cnP83a--nrg-1; Mon, 26 May 2025 10:49:47 -0400
-X-MC-Unique: YH9Uur0zNc2cnP83a--nrg-1
-X-Mimecast-MFC-AGG-ID: YH9Uur0zNc2cnP83a--nrg_1748270986
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-445135eb689so15354985e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:49:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rrAMw9hE"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-528ce9730cfso516376e0c.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748270998; x=1748875798; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FPt3TJeeSWlSX7gMhtUXG84+XDQKLnMOq5NBKVq0EzE=;
+        b=rrAMw9hErUZzO9Ch4Ma/veu6UZ2pBbxq59BUKlBFNnWvpz6m00mh5djPczsb3Ubn7D
+         wtYqVt68eg/osksGwK5McRv7yQ5M3enxz4Vcr/1Qi7iccmq0wE7QDlFCIWtzhgTQEGhm
+         blZkgFuCCS2x6L2LyG2k5FXXPExDPxRdBkQLTa+KyLUUZJclnHQ07fNRZJ0kIY2ZkNhd
+         JxVLoULeF8PVtbLkjyf9RcoU1XeXJ55akZHN3OOtH18EcnN8IEgcFLTjqBSQGmIhuWK/
+         qpnd6VdLNoyS1dChDBAq6t97yjhVZea6b7FU662KqgG2d964bsEUOdihYj3A23TdDG2w
+         zYZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748270986; x=1748875786;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tbRsQjXJhtCNd3c3uCPjlNU72gknC55NyPzUX0RnmC4=;
-        b=O9a1KycVc5zVgGFf7H5LKsZOW5ZkPfi03BwFn8x/2N88IhAYwOYlBq5I7WBqCAaFFi
-         HRLFL1oOVzJb52VORbHAIj44Z3gpggTo8oNMDq5gd8C3vDs4ksAQbJSK7gzooT5UKNKx
-         WC/TqJi6EJWYe2N0iXi/B8I3XeN2R0iQG1OcHWIdNvTDabCI161hN4GRoqierYHxFsom
-         89eHpHAOw7NTBdxjlWL0E7Z/lV1yLamLtFU15+yLZ4qbxOZ77oFxdviaApq+V4Du9Ufd
-         +r5saRkbJQtWcLq486mYKQRc+cvDCDWh9+uS3LWPbwqGK3yR2f2KybO757ZgzO+/9HGv
-         yL5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXAaIRLnrIpSEmkvpiAATHL8W1a2Ldy8N6gvuYllhTVSzthJUSV/VTFOtc7KyG+OsItPT5ftsYuYouj3Q0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeuzXshafL9VGqJWGHE1kuIwPuasv9UUttwAHp4S4T2Bex4H4J
-	/V0xio/YW/855wI6g2zoCYRp+AEdbqTQu/4NAIbhrPH1HVy27UL1aN25iCcrug0FFDxOoCmfv/q
-	daPjE3EO2SRBJHsfXHfpKHgwFceB/L4c/gW7WdRpLA3PPYcsVOjI0mY3Jj46TfD/avA==
-X-Gm-Gg: ASbGnct+fk4qeLiKbO2e590pCbKSdIlh9cclEWZ9yqFVFvM9nk2vHDb4SVHLah36ESx
-	xDqDitFgp5eeq6UDTJNrwevO9IkbShzl4gtjkwU6Vv3+kMdqnlQYH+RPhYHQPJQ90iPQZfzrt/C
-	pPApojfr1vw6SJNpv+nou3c5snZNAdxc1paJXamug98nRztPDkmh7eun6AZPBsCvuoVWsltCo5A
-	JjEh+hnfh3i/MehkLGM9nZHh1/oMtgTfPa+Am5FCy6HoxQsSPNgs5X4PdDwKnPSxsXCt8KCOuCC
-	TjWh12oqQVDPkAdaQoPEwnYSme9sn7huJ5bQib+8gA==
-X-Received: by 2002:a05:600c:3c93:b0:43d:fa58:81d3 with SMTP id 5b1f17b1804b1-44c933f0edfmr65831305e9.32.1748270985829;
-        Mon, 26 May 2025 07:49:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEquk3MK1EwO75qTut3w5b91J9jZc5mObLtXUOPqbGkVkc0NrRzBSxJyEDfbLBKJarvXMNWxg==
-X-Received: by 2002:a05:600c:3c93:b0:43d:fa58:81d3 with SMTP id 5b1f17b1804b1-44c933f0edfmr65831105e9.32.1748270985456;
-        Mon, 26 May 2025 07:49:45 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.57.104])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44804e89c42sm247878465e9.21.2025.05.26.07.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 07:49:44 -0700 (PDT)
-Date: Mon, 26 May 2025 16:49:42 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, rafael@kernel.org, viresh.kumar@linaro.org,
-	mathieu.desnoyers@efficios.com, paulmck@kernel.org,
-	hannes@cmpxchg.org, surenb@google.com, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, tj@kernel.org
-Subject: Re: [PATCH] sched: Make clangd usable
-Message-ID: <aDR_hptEDqSxf112@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250523164348.GN39944@noisy.programming.kicks-ass.net>
+        d=1e100.net; s=20230601; t=1748270998; x=1748875798;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FPt3TJeeSWlSX7gMhtUXG84+XDQKLnMOq5NBKVq0EzE=;
+        b=dOByQ0ovW4eIJ9LiMCQB1M0ZafWCpoqMzbzm55YxqIy2xv037NpgJI3bgohKhtwwn2
+         XDYIo3E9iO+3DGGjW/NDckXz6IbFFMjjVhutMyyb6AliGyRp61IezfY3Gx95+28DW0eK
+         rwIhhJivA95cqHf3SMZqvQbN+I0nRVAszGsGX3Z3AMTJeS+9/x8dzzLQmgYZdPZVUWJc
+         sEW611mWhPyZ00CQCjiABp17798fiZMIyWvI0Xn+UVBHl2c65AYE7/1a6uENvNmbP5ya
+         7Tq0gm6f4c6mNF86PmBZ1DBlSJR0e074eRIdCRGFwjzzha0ZiIW1r52Az6ztU5SXOAKg
+         wNKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtA816mZTGszQFW/ZYcg9XEOkEpEVTaliG1yic7RsEyNac9aJ4ZomlHmuYro6gpWE9O+7DPm5mOwcIpV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDhUdyymIDRghR1Mv7LhdXQ64eK2SZflVccYYZbDIUmtDPP9/1
+	8N+wRW502x/rFWVzbr3cZVnKQj7S/Z4MkoitKijuqHqqEyDxFqYKMWFQsGNpBYsG609BBYS18sH
+	3Z5Aq/2WzC3kvjo9IFs+CVMZNR08DLr2/8fIlPwV0UA==
+X-Gm-Gg: ASbGncuNEucMgIeBIS0V35Ht9cJbY+RndIs7dNJHKTIl93lVBDxGxscKx/nyVAtryvR
+	SpBdf7Rl4sTN9lwfNb9l1jdYtuQ6QQJt9BhE1XcbhzqvLEIRuN3LwSRHnYjtJAUiW0tBGIAJ4lL
+	/GlVM7EEZNKQckRVejoLR23Zu8m8v9R/mNz0ONG396wJrc42eiB47VZvCVZWwHCMEu8A==
+X-Google-Smtp-Source: AGHT+IFAwHkN7yPij1DIkj7z46mEiXlTGAcwIz2YT+ZMH8oPDmB5X5hWuI846iTsf1oWgfSFkOzQJJJIW+9kBdiXyIc=
+X-Received: by 2002:a05:6122:8c8:b0:528:f40f:347f with SMTP id
+ 71dfb90a1353d-52f2c4fb8efmr7658464e0c.2.1748270998229; Mon, 26 May 2025
+ 07:49:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523164348.GN39944@noisy.programming.kicks-ass.net>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 26 May 2025 20:19:46 +0530
+X-Gm-Features: AX0GCFvxh27JNfDxKLaqsriHok2z-zPYobJmZed9nNW7mlvIzu0hQJg4gxzXv60
+Message-ID: <CA+G9fYtSrmuXzvYbCrmT_4RHggpaYi__Qwr2SB2Y0=X3mB=byw@mail.gmail.com>
+Subject: stable-rc/queue/6.14: S390: devres.h:111:16: error: implicit
+ declaration of function 'IOMEM_ERR_PTR' [-Werror=implicit-function-declaration]
+To: linux-stable <stable@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-s390@vger.kernel.org, devel@driverdev.osuosl.org, 
+	lkft-triage@lists.linaro.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Regressions on S390 tinyconfig builds failing with gcc-13, gcc-8 and
+clang-20 and clang-nightly tool chains on the stable-rc/queue/6.14.
 
-On 23/05/25 18:43, Peter Zijlstra wrote:
-> 
-> Due to the weird Makefile setup of sched the various files do not
-> compile as stand alone units. The new generation of editors are trying
-> to do just this -- mostly to offer fancy things like completions but
-> also better syntax highlighting and code navigation.
-> 
-> Specifically, I've been playing around with neovim and clangd.
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
 
-Me too very recently. :)
+Build regression: S390 tinyconfig devres.h 'devm_ioremap_resource'
+implicit declaration of function 'IOMEM_ERR_PTR'
 
-> Setting up clangd on the kernel source is a giant pain in the arse
-> (this really should be improved), but once you do manage, you run into
-> dumb stuff like the above.
-> 
-> Fix up the scheduler files to at least pretend to work.
-> 
-> (this excludes ext because those include games are worse than average)
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-This indeed works for me as well. Thanks!
 
-Tested-by: Juri Lelli <juri.lelli@redhat.com>
+Build log:
+---------
+In file included from include/linux/device.h:31,
+                 from include/linux/node.h:18,
+                 from include/linux/cpu.h:17,
+                 from arch/s390/kernel/traps.c:28:
+include/linux/device/devres.h: In function 'devm_ioremap_resource':
+include/linux/device/devres.h:111:16: error: implicit declaration of
+function 'IOMEM_ERR_PTR' [-Werror=implicit-function-declaration]
+  111 |         return IOMEM_ERR_PTR(-EINVAL);
+      |                ^~~~~~~~~~~~~
 
-Best,
-Juri
 
+## Source
+* kernel version: 6.14.8
+* git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* git sha: 3413aa4d097e291186719c26f341c52f8550e22c
+* git describe: v6.14.8-756-g3413aa4d097e
+* project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-queues-queue_6.14/build/v6.14.8-756-g3413aa4d097e/
+* architecture: S390
+* toolchain: gcc-8, gcc-13, clang-20, clang-nightly
+* config : tinyconfig
+* Build config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xbEAey3MY3M8lp7doND4hPoZo3/config
+* Build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xbEAey3MY3M8lp7doND4hPoZo3/
+
+## Boot log
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-queues-queue_6.14/build/v6.14.8-756-g3413aa4d097e/testrun/28546580/suite/build/test/gcc-13-tinyconfig/log
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-queues-queue_6.14/build/v6.14.8-756-g3413aa4d097e/testrun/28546580/suite/build/test/gcc-13-tinyconfig/details/
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-queues-queue_6.14/build/v6.14.8-756-g3413aa4d097e/testrun/28546580/suite/build/test/gcc-13-tinyconfig/history/
+
+## Steps to reproduce
+ - tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
+--kconfig tinyconfig
+
+--
+Linaro LKFT
+https://lkft.linaro.org
