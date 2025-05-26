@@ -1,81 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38901FAC50;
-	Mon, 26 May 2025 17:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80731BF33F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748279394; cv=none; b=blAc/ptgcVlJkbSvWm+4S9EGMrIaz8wGZdb11qag3Q2f1D5k6B7LuO7NMUe0ppusG3fLxMPtFiLoBn7+L6MTebDRsm0GtvDYUMbs0gGVd3KDEfK+SY33UVT7hcVesZ3A8UW+xdtZ/vky2IcYY+rtQQAme9ayYPApDHHCxdM0YMc=
+	t=1748279675; cv=none; b=ht6xBUUo4qpVItTNQWD74nwpinwLkhTKkdqAI5/NAILSb4FcVuaQyMm5Sp1dDP/0wEKbq0WzlMR95xFlM6n5az6OONwqxuPBIdPRQzl6Ry+9H1MKzeHn84q64AN1puwBYyPcCEn64FxWwiES0yAw/unjZdBMMZ3hr8uwcAGzrqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748279394; c=relaxed/simple;
-	bh=z4yImdCu2KPkvao83kEmLKDtuR+75PQAGlxugu1dFko=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LIlfDfwJRN+C/rgvUReJGf2PcMx5rOQ9z7Jv+/jSe1XWQAMppYtUi4unZMCke3oJX/ohj+cb6ZTP8Qdi8CfzfKYRlnj6fUxOJH6i6SW5sSowV/UWh3rH/pGOS7T/CL/6id9Wj+kPeMYtrCVL+uP74+eIjujD7hVzEPn+JCE7D+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ugjP4evT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ugjP4evT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42826C4CEED;
-	Mon, 26 May 2025 17:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748279394;
-	bh=z4yImdCu2KPkvao83kEmLKDtuR+75PQAGlxugu1dFko=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ugjP4evT0vqT7MCPyw8mNfyAjhttnF5ZTSzjYSxS1UDydhPBXW5g6rUT1AS2Evkjb
-	 AufVW+Atx23BOdOl2pbJqPaBZYOn/9MI0jd1qbnodFsheQXOgSOAxPadas/+bfRWwd
-	 CkLg3pZig086DJ3Af+iG/hVkVUaKMQANCvdMfgWCx41w6jPDIc2gS+ShBGQUlsfnyX
-	 lJI/biAJHnYWltgTifpOpmhL6jOt3/xT8ogG1wrzN+JakrPHMQreVxP8S9MK2wotXq
-	 WefeniBnbvZCB3hXvkyBCNe3VuEUtF2fCu8o2V8PaDUOuA3N4VmrzZ9NKtxAXHT2k/
-	 vF0WdZZUGXjog==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEFB3805D8E;
-	Mon, 26 May 2025 17:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1748279675; c=relaxed/simple;
+	bh=KXiqGKoZyH6LuBo66fpOiaE/GV/GU0CXrTONxIFeMBY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=X1R/c2vasa4bqbL6nDOhYUDMTZVmb3jixr/TTK4TQZ0J/eZz/WdAhzEscGF5Zd6+LKEDo2Vli/kLPA5Mcp2GYxmlLsNIncF/NkhaWa1in2jDMx9rfT/p+/aCxs7JK2+pP7LW7lbVjPA8sS2yjsEC8Jtdi+nzAn9b2WN7KA4Jhmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=83.166.143.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b5hwW2rvszbGf;
+	Mon, 26 May 2025 19:05:31 +0200 (CEST)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b5hwV2x1nz4kJ;
+	Mon, 26 May 2025 19:05:30 +0200 (CEST)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Mon, 26 May 2025 19:05:16 +0200
+Subject: [PATCH 2/4] mfd: rk8xx-core: allow to customize RK806 reset method
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] vsock/virtio: fix `rx_bytes` accounting for stream
- sockets
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174827942876.985160.7017354014266756923.git-patchwork-notify@kernel.org>
-Date: Mon, 26 May 2025 17:10:28 +0000
-References: <20250521121705.196379-1-sgarzare@redhat.com>
-In-Reply-To: <20250521121705.196379-1-sgarzare@redhat.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: netdev@vger.kernel.org, virtualization@lists.linux.dev, pabeni@redhat.com,
- linux-kernel@vger.kernel.org, xuanzhuo@linux.alibaba.com,
- edumazet@google.com, mst@redhat.com, eperezma@redhat.com,
- kvm@vger.kernel.org, kuba@kernel.org, avkrasnov@salutedevices.com,
- jasowang@redhat.com, niuxuewei97@gmail.com, Oxffffaa@gmail.com,
- horms@kernel.org, davem@davemloft.net, stefanha@redhat.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250526-rk8xx-rst-fun-v1-2-ea894d9474e0@cherry.de>
+References: <20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de>
+In-Reply-To: <20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
+ Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-Hello:
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+The RK806 PMIC (and RK809, RK817; but those aren't handled here) has a
+bitfield for configuring the restart/reset behavior (which I assume
+Rockchip calls "function") whenever the PMIC is reset (at least by
+software; c.f. DEV_RST in the datasheet).
 
-On Wed, 21 May 2025 14:17:05 +0200 you wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> In `struct virtio_vsock_sock`, we maintain two counters:
-> - `rx_bytes`: used internally to track how many bytes have been read.
->   This supports mechanisms like .stream_has_data() and sock_rcvlowat().
-> - `fwd_cnt`: used for the credit mechanism to inform available receive
->   buffer space to the remote peer.
-> 
-> [...]
+For RK806, the following values are possible for RST_FUN:
 
-Here is the summary with links:
-  - [net] vsock/virtio: fix `rx_bytes` accounting for stream sockets
-    https://git.kernel.org/netdev/net/c/45ca7e9f0730
+0b00 means "restart PMU"
+0b01 means "Reset all the power off reset registers, forcing
+	the state to switch to ACTIVE mode"
+0b10 means "Reset all the power off reset registers, forcing
+	the state to switch to ACTIVE mode, and simultaneously
+	pull down the RESETB PIN for 5mS before releasing"
+0b11 means the same as for 0b10 just above.
 
-You are awesome, thank you!
+This adds the appropriate logic in the driver to parse the new
+rockchip,rst-fun DT property to pass this information.
+
+If it is missing, the register is left untouched and relies either on
+the silicon default or on whatever was set earlier in the boot stages
+(e.g. the bootloader).
+
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ drivers/mfd/rk8xx-core.c  | 15 +++++++++++++++
+ include/linux/mfd/rk808.h |  2 ++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/drivers/mfd/rk8xx-core.c b/drivers/mfd/rk8xx-core.c
+index 71c2b80a4678d627e86cfbec8135f08e262559d3..c59cda7709c01d938870795c55bd1ea2b541b006 100644
+--- a/drivers/mfd/rk8xx-core.c
++++ b/drivers/mfd/rk8xx-core.c
+@@ -720,12 +720,27 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
+ 		nr_cells = ARRAY_SIZE(rk805s);
+ 		break;
+ 	case RK806_ID:
++		u32 rst_fun;
++
+ 		rk808->regmap_irq_chip = &rk806_irq_chip;
+ 		pre_init_reg = rk806_pre_init_reg;
+ 		nr_pre_init_regs = ARRAY_SIZE(rk806_pre_init_reg);
+ 		cells = rk806s;
+ 		nr_cells = ARRAY_SIZE(rk806s);
+ 		dual_support = IRQF_SHARED;
++
++		ret = device_property_read_u32(dev, "rockchip,rst-fun", &rst_fun);
++		if (ret) {
++			dev_dbg(dev,
++				"rockchip,rst-fun property missing, not setting RST_FUN\n");
++			break;
++		}
++
++		ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
++					 RK806_RST_FUN_MSK,
++					 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
++		if (ret)
++			return dev_err_probe(dev, ret, "RST_FUN write err\n");
+ 		break;
+ 	case RK808_ID:
+ 		rk808->regmap_irq_chip = &rk808_irq_chip;
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index 69cbea78b430b562a23d995263369d475daa6287..28170ee08898ca59c76a741a1d42763a42b72380 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -812,6 +812,8 @@ enum rk806_pin_dr_sel {
+ #define RK806_INT_POL_H			BIT(1)
+ #define RK806_INT_POL_L			0
+ 
++/* SYS_CFG3 */
++#define RK806_RST_FUN_MSK		GENMASK(7, 6)
+ #define RK806_SLAVE_RESTART_FUN_MSK	BIT(1)
+ #define RK806_SLAVE_RESTART_FUN_EN	BIT(1)
+ #define RK806_SLAVE_RESTART_FUN_OFF	0
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.49.0
 
