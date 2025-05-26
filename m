@@ -1,225 +1,151 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D9379E1
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5CEAE7;
+	Mon, 26 May 2025 07:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245083; cv=none; b=GyzjS1AASC9pGeL4pEcOif6vgQL0+tdkxqzsKBXeAoUWGtjYpCFLypV19lqokUnidlSWhRNmpivVifGbLnXSJpKKdNAegHEeB3h7UiysVocz379Rq6DKrKrkQTVqZ2A4QKMn4FwBC+6qrxOkQQcbGYzedUP2AaT3ssDe2pYgkMM=
+	t=1748245193; cv=none; b=fdP8TbHhM1p94YTWJw0c7JY0JHUE8tor4Kb21x8UJw2Uh9NxW7Swtsubw0b43POd8PVstHd3uGX76iP6nsHQAVaqIKyFU9A/E7FjwGBraD8jIH59MZsbUQNRkTPQSfHPAVZMcs/+u7YQvlABH2xdbq/zxBhFVttNMfR4yVjI1SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245083; c=relaxed/simple;
-	bh=Fc4Mf8ThZqe33IhFJjclIN/WRod1aBWnLNBB22FViG0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h2AKxpn2RH0+zxYey14wWHJgocpsjrI1tjE2JkW6vzDYAr+uo7sTY96kgIzlme2TlrxvQ8IVgynMiDagDnYCqgXxxI2izI3nMmZGepYh0m3pCvewRUKW12pzoIQEFP1DD2FfWO0z3hc6CYvgFBZ5zC3qiDkN5/vn28yeKm26zKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vJOaRSvQ; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748245193; c=relaxed/simple;
+	bh=IBYAM02gDnPNQWz4PJvgXSa+zSTTw55qR4Wjew9vvcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N20vTkm+tf86nwPM7TQ/Z1956XebWEPXOb0aLE2RlPLUPcR1eC5cFnwr3yLr9t7G4UY4gugfohQBQgPK3r1/j6ABf31QhCYzN6JezNjmHDxln/vInnC6dvIl8yIDvPgSvt8q3D8k2KWBwt/hs65KFrJb04Od79yue53acwejrlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NqtRUhMw; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vJOaRSvQ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748245070; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=AwEyg523MrJL9wDAtTjH+tGk/i5tP5YaPrRodxMfQFM=;
-	b=vJOaRSvQEteUHBYxiGbZ2eJCgkaxACn9fMRytEZIWA9NTkmfRgbYoO46Bk6I9ylqjt9gpxu9WFlHsepNCA52FJlicVYSsFMHoV9pQdCrpWDiT0JfmM1V0yiTGcVizwLx0HIo0dAIO1IRT86iptUL3LKGmSktu7hqMdx1jHi87dw=
-Received: from localhost.localdomain(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WbmG7gU_1748245066 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 26 May 2025 15:37:49 +0800
-From: Qinyun Tan <qinyuntan@linux.alibaba.com>
-To: Tony Luck <tony.luck@intel.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Qinyun Tan <qinyuntan@linux.alibaba.com>
-Subject: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo in the resctrl subsystem.
-Date: Mon, 26 May 2025 15:37:44 +0800
-Message-ID: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NqtRUhMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748245191; x=1779781191;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IBYAM02gDnPNQWz4PJvgXSa+zSTTw55qR4Wjew9vvcA=;
+  b=NqtRUhMwZPv068y92INuiwkrNvMh3wllX87sRSXuJ7vPIKdClv+OfAaP
+   /e+/SM6z6XgkwtO+Hp09UPoHfZ1eMLsV/zDL9qi1ikC/HEiGsrxf9c215
+   9zExfYIlSVBnurhdzBqBFg9TCEofskKsiADLw+2rwuuh0m6sMQ2DD/WkM
+   wfclbNfMSnt4an40yFT472zn7gXLzNxnEhel3iMBSxb2rBV+TydPL1D89
+   QNViMcAkPlQS6ny+i5Q6Jvr3gBAr85yfqj0N5Bd0SK5Be50lN5ZabRtN/
+   JGWj+Y3i7uYFS/qYQ1jjOnTMvcgrdTSY/NRwVbq9NQo3buhIVcNo+Z3i0
+   Q==;
+X-CSE-ConnectionGUID: bQ5DraHTSXG/FzuiSpFJ1A==
+X-CSE-MsgGUID: t4d0K/PxS+CSmg3kc/hRYA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="50266426"
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="50266426"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 00:39:50 -0700
+X-CSE-ConnectionGUID: Y9e57ER8SDy5G6wGIUAEmw==
+X-CSE-MsgGUID: RVKkfV8RTK6gwePf1FzckQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="147412219"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa004.fm.intel.com with ESMTP; 26 May 2025 00:39:48 -0700
+Message-ID: <b982ff0e-1ae8-429d-aa11-c3e81a9c14e5@linux.intel.com>
+Date: Mon, 26 May 2025 10:39:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] usb: xhci: Skip xhci_reset in xhci_resume if xhci
+ is being removed
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
+ Roy Luo <royluo@google.com>
+Cc: "quic_ugoswami@quicinc.com" <quic_ugoswami@quicinc.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "michal.pecio@gmail.com" <michal.pecio@gmail.com>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250522190912.457583-1-royluo@google.com>
+ <20250522190912.457583-2-royluo@google.com>
+ <20250523230633.u46zpptaoob5jcdk@synopsys.com>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250523230633.u46zpptaoob5jcdk@synopsys.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
-structure previously relied on the cacheinfo interface to store L3 cache
-information (e.g., shared_cpu_map) for monitoring. However, this approach
-introduces risks when CPUs go offline:
+On 24.5.2025 2.06, Thinh Nguyen wrote:
+> Hi Mathias, Roy,
+> 
+> On Thu, May 22, 2025, Roy Luo wrote:
+>> xhci_reset() currently returns -ENODEV if XHCI_STATE_REMOVING is
+>> set, without completing the xhci handshake, unless the reset completes
+>> exceptionally quickly. This behavior causes a regression on Synopsys
+>> DWC3 USB controllers with dual-role capabilities.
+>>
+>> Specifically, when a DWC3 controller exits host mode and removes xhci
+>> while a reset is still in progress, and then attempts to configure its
+>> hardware for device mode, the ongoing, incomplete reset leads to
+>> critical register access issues. All register reads return zero, not
+>> just within the xHCI register space (which might be expected during a
+>> reset), but across the entire DWC3 IP block.
+>>
+>> This patch addresses the issue by preventing xhci_reset() from being
+>> called in xhci_resume() and bailing out early in the reinit flow when
+>> XHCI_STATE_REMOVING is set.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state() helper")
+>> Suggested-by: Mathias Nyman <mathias.nyman@intel.com>
+>> Signed-off-by: Roy Luo <royluo@google.com>
+>> ---
+>>   drivers/usb/host/xhci.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+>> index 90eb491267b5..244b12eafd95 100644
+>> --- a/drivers/usb/host/xhci.c
+>> +++ b/drivers/usb/host/xhci.c
+>> @@ -1084,7 +1084,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool power_lost, bool is_auto_resume)
+>>   		xhci_dbg(xhci, "Stop HCD\n");
+>>   		xhci_halt(xhci);
+>>   		xhci_zero_64b_regs(xhci);
+>> -		retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+>> +		if (xhci->xhc_state & XHCI_STATE_REMOVING)
+>> +			retval = -ENODEV;
+>> +		else
+>> +			retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+> 
+> How can this prevent the xhc_state from changing while in reset? There's
+> no locking in xhci-plat.
 
-1. Inconsistency: The ci field in rdt_mon_domain was initialized using the
-first online CPU of a NUMA node. If this CPU later goes offline, the
-shared_cpu_map (managed by the cache subsystem) is cleared, leading to
-incorrect or undefined behavior when accessed via rdt_mon_domain.
+Patch 2/2, which is the revert of 6ccb83d6c497 prevents xhci_reset() from
+aborting due to xhc_state flags change.
 
-2. Lifecycle dependency: The cacheinfo structure's lifecycle is managed
-by the cache subsystem, making it unsafe for resctrl to hold
-long-term references.
+This patch makes sure xHC is not reset twice if xhci is resuming due to
+remove being called. (XHCI_STATE_REMOVING is set).
+The Qcom platform has watchdog issues with the 10 second XHCI_RESET_LONG_USEC
+timeout reset during resume at remove.
 
-To resolve these issues and align with design principles:
+> 
+> I would suggest to simply revert the commit 6ccb83d6c497 that causes
+> regression first. We can investigate and look into a solution to the
+> specific Qcom issue afterward.
 
-1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
-rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+Why intentionally bring back the Qcom watchdog issue by only reverting
+6ccb83d6c497 ?. Can't we solve both in one go?
 
-2. Use hdr.cpu_mask (already maintained by resctrl) to replace
-shared_cpu_map logic for determining valid CPUs for RMID counter reads
-via the MSR interface.
+> 
+> Note that this commit may impact role-switching flow for all DRD dwc3
+> (and perhaps others), which may also impact other Qcom DRD platforms.
 
-Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
----
- arch/x86/kernel/cpu/resctrl/core.c        | 6 ++++--
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 6 +++---
- arch/x86/kernel/cpu/resctrl/internal.h    | 4 ++--
- arch/x86/kernel/cpu/resctrl/monitor.c     | 6 +-----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 6 +++---
- include/linux/resctrl.h                   | 4 ++--
- 6 files changed, 15 insertions(+), 17 deletions(-)
+Could you expand on this, I'm not sure I follow.
 
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index cf29681d01e04..a0dff742e9e93 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -516,6 +516,7 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
- 	struct rdt_hw_mon_domain *hw_dom;
- 	struct rdt_domain_hdr *hdr;
- 	struct rdt_mon_domain *d;
-+	struct cacheinfo *ci;
- 	int err;
- 
- 	lockdep_assert_held(&domain_list_lock);
-@@ -543,12 +544,13 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
- 	d = &hw_dom->d_resctrl;
- 	d->hdr.id = id;
- 	d->hdr.type = RESCTRL_MON_DOMAIN;
--	d->ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
--	if (!d->ci) {
-+	ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
-+	if (!ci) {
- 		pr_warn_once("Can't find L3 cache for CPU:%d resource %s\n", cpu, r->name);
- 		mon_domain_free(hw_dom);
- 		return;
- 	}
-+	d->ci_id = ci->id;
- 	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
- 
- 	arch_mon_domain_online(r, d);
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index 0a0ac5f6112ec..f9768669ce806 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -690,10 +690,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 		 * one that matches this cache id.
- 		 */
- 		list_for_each_entry(d, &r->mon_domains, hdr.list) {
--			if (d->ci->id == domid) {
--				rr.ci = d->ci;
-+			if (d->ci_id == domid) {
-+				rr.ci_id = d->ci_id;
- 				mon_event_read(&rr, r, NULL, rdtgrp,
--					       &d->ci->shared_cpu_map, evtid, false);
-+					       &d->hdr.cpu_mask, evtid, false);
- 				goto checkresult;
- 			}
- 		}
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index eaae99602b617..91e71db554a9c 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -136,7 +136,7 @@ union mon_data_bits {
-  *	   domains in @r sharing L3 @ci.id
-  * @evtid: Which monitor event to read.
-  * @first: Initialize MBM counter when true.
-- * @ci:    Cacheinfo for L3. Only set when @d is NULL. Used when summing domains.
-+ * @ci_id:    Cacheinfo id for L3. Only set when @d is NULL. Used when summing domains.
-  * @err:   Error encountered when reading counter.
-  * @val:   Returned value of event counter. If @rgrp is a parent resource group,
-  *	   @val includes the sum of event counts from its child resource groups.
-@@ -150,7 +150,7 @@ struct rmid_read {
- 	struct rdt_mon_domain	*d;
- 	enum resctrl_event_id	evtid;
- 	bool			first;
--	struct cacheinfo	*ci;
-+	unsigned int	ci_id;
- 	int			err;
- 	u64			val;
- 	void			*arch_mon_ctx;
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index a93ed7d2a1602..bedccd62158c3 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -620,10 +620,6 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 		return 0;
- 	}
- 
--	/* Summing domains that share a cache, must be on a CPU for that cache. */
--	if (!cpumask_test_cpu(cpu, &rr->ci->shared_cpu_map))
--		return -EINVAL;
--
- 	/*
- 	 * Legacy files must report the sum of an event across all
- 	 * domains that share the same L3 cache instance.
-@@ -633,7 +629,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 	 */
- 	ret = -EINVAL;
- 	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
--		if (d->ci->id != rr->ci->id)
-+		if (d->ci_id != rr->ci_id)
- 			continue;
- 		err = resctrl_arch_rmid_read(rr->r, d, closid, rmid,
- 					     rr->evtid, &tval, rr->arch_mon_ctx);
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index cc4a54145c83d..075fdca2080d8 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3146,7 +3146,7 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
- 	char name[32];
- 
- 	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
--	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
-+	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci_id : d->hdr.id);
- 	if (snc_mode)
- 		sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
- 
-@@ -3171,7 +3171,7 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
- 		return -EPERM;
- 
- 	priv.u.rid = r->rid;
--	priv.u.domid = do_sum ? d->ci->id : d->hdr.id;
-+	priv.u.domid = do_sum ? d->ci_id : d->hdr.id;
- 	priv.u.sum = do_sum;
- 	list_for_each_entry(mevt, &r->evt_list, list) {
- 		priv.u.evtid = mevt->evtid;
-@@ -3198,7 +3198,7 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
- 	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
--	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
-+	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci_id : d->hdr.id);
- 	kn = kernfs_find_and_get(parent_kn, name);
- 	if (kn) {
- 		/*
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-index 880351ca3dfcb..c990670d18c02 100644
---- a/include/linux/resctrl.h
-+++ b/include/linux/resctrl.h
-@@ -145,7 +145,7 @@ struct rdt_ctrl_domain {
- /**
-  * struct rdt_mon_domain - group of CPUs sharing a resctrl monitor resource
-  * @hdr:		common header for different domain types
-- * @ci:			cache info for this domain
-+ * @ci_id:			cache info id for this domain
-  * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
-  * @mbm_total:		saved state for MBM total bandwidth
-  * @mbm_local:		saved state for MBM local bandwidth
-@@ -156,7 +156,7 @@ struct rdt_ctrl_domain {
-  */
- struct rdt_mon_domain {
- 	struct rdt_domain_hdr		hdr;
--	struct cacheinfo		*ci;
-+	unsigned int			ci_id;
- 	unsigned long			*rmid_busy_llc;
- 	struct mbm_state		*mbm_total;
- 	struct mbm_state		*mbm_local;
--- 
-2.43.5
+xHC will be reset later in remove path:
+
+xhci_plat_remove()
+   usb_remove_hcd()
+     hcd->driver->stop(hcd) -> xhci_stop()
+       xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
+
+Thanks
+Mathias
 
