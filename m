@@ -1,215 +1,83 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBE4433AC
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D3620CCCC;
+	Mon, 26 May 2025 14:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748269151; cv=none; b=q3oeTY6tJ15UNLlsPukEar8cgRmzBn8GiYMFf9K6q1XQFzmmAyMDRujPAPkpBSgPVQIes+Z7nl5QqmJADKQZ0sumoFZ/UsVj7c4HLJx89KI6cYGHGl/5FazHXZDhWga9JUISlwOkfErCvumXpl8Z+l2fkuADlK2Nib3HKZMk61c=
+	t=1748269194; cv=none; b=oYsNILOgFTXlEeFedKQQYFSeRAaVhXVrs8F8IZPal3Vk126aSUVDL4s28nOaBVH9MqNnmSHt9FZpGXraE41o+juaKprlfwlgQtyorQxMGvTmv/2S0WRFBbJ0tREmiE0m64LIXwNvp5dmO1zT+4WuxKld5/vSl3xp9uNoRQ6Db48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748269151; c=relaxed/simple;
-	bh=zZY12G2RUE6dyOkl3opChCWHjj1XJx+3D/Lm++dU8bA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=trxquOh8pIFDNAZPXvgi1yGP229lZ3jIaFEKUc9FZiF6a52qiJ5XfqvHZde1VVDfoPi+AFUzSRtDDAMrFSOvhlXfnmglITFMRmje7yKjlKV+0nEDYJhRhfFXq8juzBNazohHubqnFV9ctrsTKx6Gsb2h2LNmno/rGQuxJUrU/5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=U4T43Ytx; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748269194; c=relaxed/simple;
+	bh=xeJSnqHA0JVNhysIqhxWNknATT0guijmTw8rMyR29DY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=L+58AbxRKvKWNIKvEGFLbEL83YEGOyynyPkovbXe+RPh9qqS5vU9Fh/kkTq1z4va0GATEghaC4oNBpyPXCx7pC+SPyKFDx6WSMSrJuZ59qCk76447Lq+VyS2s3lmmu/igzEaThRoOh/uhDC4ams1VGcvoa1QTPbJlWjujlXzYj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3zgUI6n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U4T43Ytx"
-Date: Mon, 26 May 2025 16:19:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748269147;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QP47mBiBQT/WSbbK5SaleZH/+hgZqZTeZEh/OAuW384=;
-	b=U4T43Ytxt22kYjLevAzW8hC3OqOrtz6ZyCo6XjtEFtQOFqdwKb/z5GADfUlQUJaLmnxPNI
-	GT7jkQhvfOJoKjyOq2fC3ODIg8T45kHtE/3roqnuIesTaamXRb6xrk+9/IAh8SaNswuUVa
-	dhjX8nnp5bca2pOtF/0OQwtOVRZW/Ow=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 00/11] kunit: Introduce UAPI testing framework
-Message-ID: <20250523-winged-donkey-of-advance-fffac7@l-nschier-aarch64>
-References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3zgUI6n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCCC2C4CEE9;
+	Mon, 26 May 2025 14:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748269193;
+	bh=xeJSnqHA0JVNhysIqhxWNknATT0guijmTw8rMyR29DY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=G3zgUI6n3NwRmIAVvm8ZHf7np6UTirqaICARVa6YnI+03m8Vk9+MMMAbl5LVsT/oA
+	 tiNxRFdQb6w5a05rJ/YwGt3mfVl3yMspBNyNIfroh5bbdOo1u7DTf0GEvvkqfsRqZn
+	 jr1nvVXWBopiK2tkT8wiPbRzc9at5zQkw+UT/Pyf7L2YtFf2DQLMQkLuUdXoAvUXQz
+	 uRjkdwX7dCsmATU0bktFFOch+R6kep2NXifX17lPpqDZkLB3aYWbixAlx4vlbhzALG
+	 hC4bFgfZe37ZlJTt5JBmT3Wkx6qWv7zsHDxD7ZQnbhZigYK4siiiKwZAQe6TIXPXSZ
+	 KmqvZ32X2rOqQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D8B3805D8E;
+	Mon, 26 May 2025 14:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+Subject: Re: [PATCH net-next] net: usb: aqc111: fix error handling of usbnet read
+ calls
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174826922825.939427.1321439383834289633.git-patchwork-notify@kernel.org>
+Date: Mon, 26 May 2025 14:20:28 +0000
+References: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
+In-Reply-To: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
+To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-usb@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com,
+ lvc-project@linuxtesting.org
 
-On Mon, Apr 07, 2025 at 09:42:37AM +0200, Thomas Weißschuh wrote:
-> Currently testing of userspace and in-kernel API use two different
-> frameworks. kselftests for the userspace ones and Kunit for the
-> in-kernel ones. Besides their different scopes, both have different
-> strengths and limitations:
-> 
-> Kunit:
-> * Tests are normal kernel code.
-> * They use the regular kernel toolchain.
-> * They can be packaged and distributed as modules conveniently.
-> 
-> Kselftests:
-> * Tests are normal userspace code
-> * They need a userspace toolchain.
->   A kernel cross toolchain is likely not enough.
-> * A fair amout of userland is required to run the tests,
->   which means a full distro or handcrafted rootfs.
-> * There is no way to conveniently package and run kselftests with a
->   given kernel image.
-> * The kselftests makefiles are not as powerful as regular kbuild.
->   For example they are missing proper header dependency tracking or more
->   complex compiler option modifications.
-> 
-> Therefore kunit is much easier to run against different kernel
-> configurations and architectures.
-> This series aims to combine kselftests and kunit, avoiding both their
-> limitations. It works by compiling the userspace kselftests as part of
-> the regular kernel build, embedding them into the kunit kernel or module
-> and executing them from there. If the kernel toolchain is not fit to
-> produce userspace because of a missing libc, the kernel's own nolibc can
-> be used instead.
-> The structured TAP output from the kselftest is integrated into the
-> kunit KTAP output transparently, the kunit parser can parse the combined
-> logs together.
-> 
-> Further room for improvements:
-> * Call each test in its completely dedicated namespace
-> * Handle additional test files besides the test executable through
->   archives. CPIO, cramfs, etc.
-> * Compatibility with kselftest_harness.h (in progress)
-> * Expose the blobs in debugfs
-> * Provide some convience wrappers around compat userprogs
-> * Figure out a migration path/coexistence solution for
->   kunit UAPI and tools/testing/selftests/
-> 
-> Output from the kunit example testcase, note the output of
-> "example_uapi_tests".
-> 
-> $ ./tools/testing/kunit/kunit.py run --kunitconfig lib/kunit example
-> ...
-> Running tests with:
-> $ .kunit/linux kunit.filter_glob=example kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-> [11:53:53] ================== example (10 subtests) ===================
-> [11:53:53] [PASSED] example_simple_test
-> [11:53:53] [SKIPPED] example_skip_test
-> [11:53:53] [SKIPPED] example_mark_skipped_test
-> [11:53:53] [PASSED] example_all_expect_macros_test
-> [11:53:53] [PASSED] example_static_stub_test
-> [11:53:53] [PASSED] example_static_stub_using_fn_ptr_test
-> [11:53:53] [PASSED] example_priv_test
-> [11:53:53] =================== example_params_test  ===================
-> [11:53:53] [SKIPPED] example value 3
-> [11:53:53] [PASSED] example value 2
-> [11:53:53] [PASSED] example value 1
-> [11:53:53] [SKIPPED] example value 0
-> [11:53:53] =============== [PASSED] example_params_test ===============
-> [11:53:53] [PASSED] example_slow_test
-> [11:53:53] ======================= (4 subtests) =======================
-> [11:53:53] [PASSED] procfs
-> [11:53:53] [PASSED] userspace test 2
-> [11:53:53] [SKIPPED] userspace test 3: some reason
-> [11:53:53] [PASSED] userspace test 4
-> [11:53:53] ================ [PASSED] example_uapi_test ================
-> [11:53:53] ===================== [PASSED] example =====================
-> [11:53:53] ============================================================
-> [11:53:53] Testing complete. Ran 16 tests: passed: 11, skipped: 5
-> [11:53:53] Elapsed time: 67.543s total, 1.823s configuring, 65.655s building, 0.058s running
-> 
-> Based on v6.15-rc1.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
-> Changes in v2:
-> - Rebase onto v6.15-rc1
-> - Add documentation and kernel docs
-> - Resolve invalid kconfig breakages
-> - Drop already applied patch "kbuild: implement CONFIG_HEADERS_INSTALL for Usermode Linux"
-> - Drop userprogs CONFIG_WERROR integration, it doesn't need to be part of this series
-> - Replace patch prefix "kconfig" with "kbuild"
-> - Rename kunit_uapi_run_executable() to kunit_uapi_run_kselftest()
-> - Generate private, conflict-free symbols in the blob framework
-> - Handle kselftest exit codes
-> - Handle SIGABRT
-> - Forward output also to kunit debugfs log
-> - Install a fd=0 stdin filedescriptor
-> - Link to v1: https://lore.kernel.org/r/20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de
-> 
-> ---
-> Thomas Weißschuh (11):
->       kbuild: userprogs: add nolibc support
->       kbuild: introduce CONFIG_ARCH_HAS_NOLIBC
->       kbuild: doc: add label for userprogs section
->       kbuild: introduce blob framework
->       kunit: tool: Add test for nested test result reporting
->       kunit: tool: Don't overwrite test status based on subtest counts
->       kunit: tool: Parse skipped tests from kselftest.h
->       kunit: Introduce UAPI testing framework
->       kunit: uapi: Add example for UAPI tests
->       kunit: uapi: Introduce preinit executable
->       kunit: uapi: Validate usability of /proc
-> 
->  Documentation/dev-tools/kunit/api/index.rst        |   5 +
->  Documentation/dev-tools/kunit/api/uapi.rst         |  12 +
->  Documentation/kbuild/makefiles.rst                 |  37 ++-
->  MAINTAINERS                                        |   2 +
->  include/kunit/uapi.h                               |  24 ++
->  include/linux/blob.h                               |  32 +++
->  init/Kconfig                                       |   2 +
->  lib/kunit/.kunitconfig                             |   2 +
->  lib/kunit/Kconfig                                  |  11 +
->  lib/kunit/Makefile                                 |  18 +-
->  lib/kunit/kunit-example-test.c                     |  15 ++
->  lib/kunit/kunit-example-uapi.c                     |  56 ++++
->  lib/kunit/uapi-preinit.c                           |  65 +++++
->  lib/kunit/uapi.c                                   | 294 +++++++++++++++++++++
->  scripts/Makefile.blobs                             |  19 ++
->  scripts/Makefile.build                             |   6 +
->  scripts/Makefile.clean                             |   2 +-
->  scripts/Makefile.userprogs                         |  16 +-
->  scripts/blob-wrap.c                                |  27 ++
->  tools/include/nolibc/Kconfig.nolibc                |  13 +
->  tools/testing/kunit/kunit_parser.py                |  13 +-
->  tools/testing/kunit/kunit_tool_test.py             |   9 +
->  .../test_is_test_passed-failure-nested.log         |  10 +
->  .../test_data/test_is_test_passed-kselftest.log    |   3 +-
->  24 files changed, 682 insertions(+), 11 deletions(-)
-> ---
-> base-commit: bf9962cc9ec3ac1dae2bf81b126657c1c49c348a
-> change-id: 20241015-kunit-kselftests-56273bc40442
-> 
-> Best regards,
-> -- 
-> Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> 
+Hello:
 
-Hi Thomas,
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-sorry for the long delay.  I started reviewing but am not completely 
-through the whole set (especially, I did not really look at the kunit 
-patches, yet) but would like to send you at least some feedback already.
+On Tue, 20 May 2025 14:32:39 +0300 you wrote:
+> Syzkaller, courtesy of syzbot, identified an error (see report [1]) in
+> aqc111 driver, caused by incomplete sanitation of usb read calls'
+> results. This problem is quite similar to the one fixed in commit
+> 920a9fa27e78 ("net: asix: add proper error handling of usb read errors").
+> 
+> For instance, usbnet_read_cmd() may read fewer than 'size' bytes,
+> even if the caller expected the full amount, and aqc111_read_cmd()
+> will not check its result properly. As [1] shows, this may lead
+> to MAC address in aqc111_bind() being only partly initialized,
+> triggering KMSAN warnings.
+> 
+> [...]
 
-In general, I really like the idea and your approach and am looking 
-forward for an integration.
+Here is the summary with links:
+  - [net-next] net: usb: aqc111: fix error handling of usbnet read calls
+    https://git.kernel.org/netdev/net-next/c/405b0d610745
 
-Kind regards,
-Nicolas
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
