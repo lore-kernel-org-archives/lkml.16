@@ -1,50 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5CEAE7;
-	Mon, 26 May 2025 07:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEC21A725A
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245193; cv=none; b=fdP8TbHhM1p94YTWJw0c7JY0JHUE8tor4Kb21x8UJw2Uh9NxW7Swtsubw0b43POd8PVstHd3uGX76iP6nsHQAVaqIKyFU9A/E7FjwGBraD8jIH59MZsbUQNRkTPQSfHPAVZMcs/+u7YQvlABH2xdbq/zxBhFVttNMfR4yVjI1SY=
+	t=1748245214; cv=none; b=L9E2Kv9PX7unY6LxfFdbsK4IYogMZLW7If22IdYr55N3E71t8Vcp6SX2osAtY1WLz0aZyLbk9BfQy9d1Lb592AP2mC9pBzcdent2dMWm5zNCxxuL6oAnCNSXYTLGeb5zf5/rUbgcvdWdFTAfJ5nZo4gVBOsjpPnEcVg+VBAjKVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245193; c=relaxed/simple;
-	bh=IBYAM02gDnPNQWz4PJvgXSa+zSTTw55qR4Wjew9vvcA=;
+	s=arc-20240116; t=1748245214; c=relaxed/simple;
+	bh=TdmyJ6vC6GRN5vIJSVTte+bSyRoC6d4bnYwr+fN5GlU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N20vTkm+tf86nwPM7TQ/Z1956XebWEPXOb0aLE2RlPLUPcR1eC5cFnwr3yLr9t7G4UY4gugfohQBQgPK3r1/j6ABf31QhCYzN6JezNjmHDxln/vInnC6dvIl8yIDvPgSvt8q3D8k2KWBwt/hs65KFrJb04Od79yue53acwejrlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NqtRUhMw; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=WxOj4fj6cVlH4LuCFyPQrsNSVc0UXEbKZj7VXpFRyyjN5ro71BOMOS1aF2xyvA+4RpZylCmk9Po3HSgmByixQNe0BRjpwSBER5bgCQyJHMVldgxtSx0zuraYfQG7X0zXXOlfOW80+yktdqqYXwrhBY7DNDS8ymaX2AnQQ1yRYyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpHOAlBf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NqtRUhMw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748245191; x=1779781191;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IBYAM02gDnPNQWz4PJvgXSa+zSTTw55qR4Wjew9vvcA=;
-  b=NqtRUhMwZPv068y92INuiwkrNvMh3wllX87sRSXuJ7vPIKdClv+OfAaP
-   /e+/SM6z6XgkwtO+Hp09UPoHfZ1eMLsV/zDL9qi1ikC/HEiGsrxf9c215
-   9zExfYIlSVBnurhdzBqBFg9TCEofskKsiADLw+2rwuuh0m6sMQ2DD/WkM
-   wfclbNfMSnt4an40yFT472zn7gXLzNxnEhel3iMBSxb2rBV+TydPL1D89
-   QNViMcAkPlQS6ny+i5Q6Jvr3gBAr85yfqj0N5Bd0SK5Be50lN5ZabRtN/
-   JGWj+Y3i7uYFS/qYQ1jjOnTMvcgrdTSY/NRwVbq9NQo3buhIVcNo+Z3i0
-   Q==;
-X-CSE-ConnectionGUID: bQ5DraHTSXG/FzuiSpFJ1A==
-X-CSE-MsgGUID: t4d0K/PxS+CSmg3kc/hRYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="50266426"
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="50266426"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 00:39:50 -0700
-X-CSE-ConnectionGUID: Y9e57ER8SDy5G6wGIUAEmw==
-X-CSE-MsgGUID: RVKkfV8RTK6gwePf1FzckQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="147412219"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa004.fm.intel.com with ESMTP; 26 May 2025 00:39:48 -0700
-Message-ID: <b982ff0e-1ae8-429d-aa11-c3e81a9c14e5@linux.intel.com>
-Date: Mon, 26 May 2025 10:39:47 +0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpHOAlBf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748245211;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tgfPyghdNKeNstPw0hlFT74xvMeUiDTtqqo5DgSnAPo=;
+	b=EpHOAlBfzRjQZGYrQ7iA4r6AqMh4IHm06ykfzLwnvwwM0Qvb9faKmhFTqV3RP3TV4aFuMo
+	FJO32GqWR3wfpGw0K0tNFDptcK5cG6RSndJzUqXT9ydnznIjXyElL5luCtCsespLSti5bi
+	G7qkT1IvRCCxiKS29G7RVKUhRK1azts=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-67h7PtgBOeixlwYXkUB5Sg-1; Mon, 26 May 2025 03:40:09 -0400
+X-MC-Unique: 67h7PtgBOeixlwYXkUB5Sg-1
+X-Mimecast-MFC-AGG-ID: 67h7PtgBOeixlwYXkUB5Sg_1748245209
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4d95375c6so222778f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:40:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748245209; x=1748850009;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tgfPyghdNKeNstPw0hlFT74xvMeUiDTtqqo5DgSnAPo=;
+        b=FqPgm7NvXprMsxKNJ619pXBNyi760WCt2S/20IUdUlg05OUzEluMx2fGfo6Tpoocil
+         VmuBqyVRgSQbIIUycPCZaxcug02nlgKFn4X5XvVy2XKCrFbhhrSNW/4GkbQWALrzgBP+
+         mAJNoZccezaozNKKlKFN4pzFCFy1xTzOWOOsxCYwO8jJVteISvkeDshFMnDig3a0pJk3
+         iPyB4P1VuvaQ0iLQqZWevLB59WghCpkVsf9NXY8Xtx7RURheGrkzkgUQYH+NEtv7Hwmq
+         LqN91x7BjobE1yZNp1O+nClEeOzFK2NH406VEV+ZiVPyTaKV617pcpsKIYfF969bZJO9
+         U6CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXn3/bQhduwpmtlszbBs1o/LHwrHXrIHyBDjkEOsbWOznGEOjHah9JLDhlqQziW4v0mbSNawQuxfKjiGec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyawnHIwdCiIdfzgcESK0ERgyLs049LlM5MP3ulWGpgYBn33f6p
+	79TiIM+gDkux+ARhkI61Dj5PJzOBVQeLIpWZq1JRChqAhtg1M8mUKgxah5Z0+AZFrOlBLDmzP5B
+	thxb5RBYhY/3PD3NGvz7bXiXqr5Yjs86nTVPB1bVIzaOGWOA/Saa09WkIvYEpqQl1aA==
+X-Gm-Gg: ASbGncv41Sr55yxEh5pfq+tQBGMHaGa9Kw/fkd+Ocy9Huo/DQVQ2Dp6CKvcFui6HVjY
+	hTruR6YJcP5TyQ2SsxRS6TtwM2YasXbd8V3J6PzPa03v3JKO3Nql0XNUsT+JdYzz8tDob5Bahjz
+	JKvlLyHp5eadFWFT3myPzH7gDIR46yaDzkb+kkKL4IbQT8eq7mu02zwXwHJqF0SXDfAfne6qofj
+	eAsdc/iBcxkt1dBDe/mUkkCw5NK1gz2QNDljNP/2k2SGvKVccbcbZauBZkfSa0IAZnbfhjiyseR
+	m3ODiiWci1vtY2eUq2vJDu7kjyKhDGWc0ia47y3G0Wfass0DXMH80nEXd+ay1XOB+rhNbMHQF/v
+	83Nt648eYVd1Hk9yit6Pl6TSah8FIMmC83w2+tnY=
+X-Received: by 2002:adf:e381:0:b0:3a4:cbbd:6345 with SMTP id ffacd0b85a97d-3a4cbbd64bcmr4362169f8f.13.1748245208629;
+        Mon, 26 May 2025 00:40:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdSQcxG+7GRa/3fimPQAcX44Cqrbym2zy6oRVwNrciRP1tWml6Iz+Ki3+n+w3eQZrvNLH9CQ==
+X-Received: by 2002:adf:e381:0:b0:3a4:cbbd:6345 with SMTP id ffacd0b85a97d-3a4cbbd64bcmr4362143f8f.13.1748245208272;
+        Mon, 26 May 2025 00:40:08 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f19:6500:e1c1:8216:4c25:efe4? (p200300d82f196500e1c182164c25efe4.dip0.t-ipconnect.de. [2003:d8:2f19:6500:e1c1:8216:4c25:efe4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d6ae802esm3162648f8f.71.2025.05.26.00.40.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 00:40:07 -0700 (PDT)
+Message-ID: <8da60934-0670-4f8a-8bde-fa4de320cdbb@redhat.com>
+Date: Mon, 26 May 2025 09:40:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,100 +75,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] usb: xhci: Skip xhci_reset in xhci_resume if xhci
- is being removed
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
- "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
- Roy Luo <royluo@google.com>
-Cc: "quic_ugoswami@quicinc.com" <quic_ugoswami@quicinc.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "michal.pecio@gmail.com" <michal.pecio@gmail.com>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250522190912.457583-1-royluo@google.com>
- <20250522190912.457583-2-royluo@google.com>
- <20250523230633.u46zpptaoob5jcdk@synopsys.com>
+Subject: Re: [QUESTION] xas_reload() in iter_xarray_populate_pages()
+To: Dev Jain <dev.jain@arm.com>, ziy@nvidia.com, willy@infradead.org,
+ dhowells@redhat.com, hughd@google.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, ryan.roberts@arm.com,
+ aneesh.kumar@kernel.org
+References: <20250526063524.22597-1-dev.jain@arm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20250523230633.u46zpptaoob5jcdk@synopsys.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250526063524.22597-1-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 24.5.2025 2.06, Thinh Nguyen wrote:
-> Hi Mathias, Roy,
+On 26.05.25 08:35, Dev Jain wrote:
+> Hello all,
 > 
-> On Thu, May 22, 2025, Roy Luo wrote:
->> xhci_reset() currently returns -ENODEV if XHCI_STATE_REMOVING is
->> set, without completing the xhci handshake, unless the reset completes
->> exceptionally quickly. This behavior causes a regression on Synopsys
->> DWC3 USB controllers with dual-role capabilities.
->>
->> Specifically, when a DWC3 controller exits host mode and removes xhci
->> while a reset is still in progress, and then attempts to configure its
->> hardware for device mode, the ongoing, incomplete reset leads to
->> critical register access issues. All register reads return zero, not
->> just within the xHCI register space (which might be expected during a
->> reset), but across the entire DWC3 IP block.
->>
->> This patch addresses the issue by preventing xhci_reset() from being
->> called in xhci_resume() and bailing out early in the reinit flow when
->> XHCI_STATE_REMOVING is set.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state() helper")
->> Suggested-by: Mathias Nyman <mathias.nyman@intel.com>
->> Signed-off-by: Roy Luo <royluo@google.com>
->> ---
->>   drivers/usb/host/xhci.c | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
->> index 90eb491267b5..244b12eafd95 100644
->> --- a/drivers/usb/host/xhci.c
->> +++ b/drivers/usb/host/xhci.c
->> @@ -1084,7 +1084,10 @@ int xhci_resume(struct xhci_hcd *xhci, bool power_lost, bool is_auto_resume)
->>   		xhci_dbg(xhci, "Stop HCD\n");
->>   		xhci_halt(xhci);
->>   		xhci_zero_64b_regs(xhci);
->> -		retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
->> +		if (xhci->xhc_state & XHCI_STATE_REMOVING)
->> +			retval = -ENODEV;
->> +		else
->> +			retval = xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+> After doing an xas_load() and xas_retry(), we take neither a reference nor a lock
+> on the folio, and we do an xas_reload(). Is this just to reduce the time window
+> for a race?
 > 
-> How can this prevent the xhc_state from changing while in reset? There's
-> no locking in xhci-plat.
+> If the above is true, then, there is a negligible window between xas_load() and
+> xas_reload(), because only xas_retry() exists between them, so why to even reload()?
 
-Patch 2/2, which is the revert of 6ccb83d6c497 prevents xhci_reset() from
-aborting due to xhc_state flags change.
+The usual sequence for the pagecache is (see filemap_get_entry())
 
-This patch makes sure xHC is not reset twice if xhci is resuming due to
-remove being called. (XHCI_STATE_REMOVING is set).
-The Qcom platform has watchdog issues with the 10 second XHCI_RESET_LONG_USEC
-timeout reset during resume at remove.
+1) xas_load(): Load the entry
 
-> 
-> I would suggest to simply revert the commit 6ccb83d6c497 that causes
-> regression first. We can investigate and look into a solution to the
-> specific Qcom issue afterward.
+2) xas_retry(): Test if we have to retry immediately
 
-Why intentionally bring back the Qcom watchdog issue by only reverting
-6ccb83d6c497 ?. Can't we solve both in one go?
+3) folio || xa_is_value(folio): check if the entry stores a folio
 
-> 
-> Note that this commit may impact role-switching flow for all DRD dwc3
-> (and perhaps others), which may also impact other Qcom DRD platforms.
+4) folio_try_get(): try getting a folio reference, might get freed
+    concurrently, so a folio_get() is not safe
 
-Could you expand on this, I'm not sure I follow.
+5) folio != xas_reload(&xas): recheck whether the entry was changed
+    concurrently
 
-xHC will be reset later in remove path:
+iter_xarray_get_pages()->iter_xarray_populate_pages() works on whatever 
+xarray was provided to iov_iter_xarray().
 
-xhci_plat_remove()
-   usb_remove_hcd()
-     hcd->driver->stop(hcd) -> xhci_stop()
-       xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
+erofs/netfs/orangefs seem to pass the pagecache ... so I would also 
+assume that we have to use the same sequence as above.
 
-Thanks
-Mathias
+Willy and me had a look ad that code in b57f4f4f186d ("iov_iter: convert 
+iter_xarray_populate_pages() to use folios").
+
+But looking at it now, I think that code is incorrect. At least the 
+folio_get() and reload-before-folio-get is weird.
+
+-- 
+Cheers,
+
+David / dhildenb
 
