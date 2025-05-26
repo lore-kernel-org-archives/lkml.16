@@ -1,118 +1,128 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5221C84C4;
-	Mon, 26 May 2025 20:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71444A2D;
+	Mon, 26 May 2025 20:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748291027; cv=none; b=L2+/Ij+7YSa/KnFOrLc+MC1Rsgf3v+VGp/Bc2mpZJslNMwYupNwGdsMzxJ3hXZJ+ud4qswUTLc5f1JF8mAc5GRIOfzIHZo5QF4o0K1m1p06Tse7HEMR6DZxdciCjYYf8sCjeAUWhOlaH4u1/3YJ1M/HeN9clTvN2kBwClmJxpUI=
+	t=1748291087; cv=none; b=JUsmWHVW2AETHKFV0Xo0K5jQ6JcynpYKRQeJWeKXtjkOYTy7LNNoXF9Vgtk9KsQxbQNnqz4oSiRClYtkvveL1p8zVVILxp2N5/y0V9Qk0+5GEfdAUctZjNOQNLIm/miK6CLXNFILL56v+ikdB5rNsR2+IroC0k4Dn5LcuEQn5qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748291027; c=relaxed/simple;
-	bh=+6BRoM2/WXB05O0ZhT3DqDkDWPn5rCY/4zpmHwarQlk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mPlcd6rJ6PuoUSZqgiDuanDhbrG7NUGoaDnh+aowpUw7s/WVvy8yJ5qTk2+7gXQ1ZV3pas4iIcmnqCllC1Rxr1lmEmd/0e3o/5vlJcMHlg5Gz7d/WPf/3H+maoPQRphHd2Z2eK4JQAYBnqvCkimhtiTp+d5AHOJOBPCp9lDTAMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jVBdCNiW; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748291087; c=relaxed/simple;
+	bh=UGbA0UOJtFBcarurx1bwS7YYbgaQo0zI/HA7rHSSLMg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hqH+P/lIqTriHKxKFcPimhy61jHkRHU3MJ7cTIgnF5bsp7CyHC1NkftEemMArfclLTTSIFgRgZYH60b41+raG/m6TF8llKj87PYy4TDqFacsJzayTWQdJ7UHR/enRQsdGgvKcun4rAMHZLbnW379Bdj+0ZC+KkOAgjgsvk5PCCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ys9WgTCc; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVBdCNiW"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ede096d73so19984725e9.2;
-        Mon, 26 May 2025 13:23:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748291023; x=1748895823; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H7+gUcKKexaxy5novFqIZxIAX0ITBngrhPCqKSxeyIA=;
-        b=jVBdCNiWlUrPjf83kbgurIdSDZJG6qChM2aPPZEZSgyT+CSSDlhxTyy8VSVjBzUkCC
-         kU1eFAD2J+DHFiv90dNvGrdPFR5N359J+brDSXVwjVWTFs1NUbJSCIm6HDA4jmlIg39g
-         07h67q6ax07Zc6iXs5K7g+7lUOWsmvdpdXTxDso2fJxMFwLDH03o5Acvjzn91Hco+7aC
-         1jWM3lm0x/2Ft8vwjn25KLVxNanQwfjfstqo1V7pxdVw4FZ5v1bOaL1IPF+sBqaqHBXy
-         Dg6aWVoaUDhrY89h3tE3mqiG0LomIG8/B9jpLuHdtXZj+dv8g4q5dJCj8aOGypoqyGJ3
-         43zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748291023; x=1748895823;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H7+gUcKKexaxy5novFqIZxIAX0ITBngrhPCqKSxeyIA=;
-        b=Xn78uMX4EMSC5WhhD3yuHyclEnAfnSobbrgX8Gzic3yhUDXSWwWmwRAsbhH8O9kY1Y
-         TYSfJR01TTgEelEf/Z2e9PEvn3UGgA0eWLDpsBee0m9ZWpC0w0zkd3htl3XyNXcmGzZZ
-         ST8jndppxMvx4HtNch4K+8F6JZ3g4hgXFJo3CWg9jwLZTCQ/TT6AFSWSDvQmXmoJg3jk
-         mmt8g4en7tR29qV7PsLR5lztUknX4fzOiDK3OOkJX1MjRI0Mp4kHEbpbX2Dq8R/XmvgG
-         2JEuWnvYwUMAxTghiZBRP1TXKzN6A6uVJCPpuvrEjIpVLvPyn75OxhEo6HBgLkX06S5h
-         3CFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSaxhaiJ7TgkJMoVrQ8UnloLonHZn9Nn9O8cTjPJq8WVaHI+BTo5eKDoS5i28IR7KrIxfgolqmdmIVPlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxD3MQx/uIAiECPolWrBrqM073Z0y9Fg/Lpofy8aOwU4m3CmvF
-	iG29W+nqysBTFHCE3IfOVGK6nFXyLOKmD09kAFSws6kBORSlE4eqByTq
-X-Gm-Gg: ASbGncsXWC4JuZsvZJndSH0oS0/W/pmz5FUhuTBKeALRJ8m+vzb9bon9EBT5YO1nmvq
-	Upj8bcUQR4udA70eaT6dfHPlqX1pdTw+93xIb2Hk0SNU3Bktk4xMNzfP2K5jhSL8YzTbtDdXGN8
-	x2hQwS3h1RYM7caMw6N4MHBY8TVpn+vDILPwnJdFVWSpNKr9hmedVjmCKxeGKZv0AwEuNj+eNdZ
-	mAprhAS20zWfFogjvv3K5WhiyyVLu48GKCA6Z5nzE7UtCdR4TZE1OX1dzdQei9oFBF9blv3sAra
-	/iwUgICyEU5ouFc0RC9i+g0Uy1LrAU8y7p3UpVJ/CN3Nh0JNIBpJ41bM9AR2rqJhJ/ZvUAOE2QB
-	II3Q=
-X-Google-Smtp-Source: AGHT+IFZTWjswAKPy+IU0hlmiBXBclD4o7fhR3ZoHwVNe9Sl7RasJ8jOpeu5CcVSK0cpxpF4k1GPsw==
-X-Received: by 2002:a05:6000:2401:b0:3a4:dd63:4ad2 with SMTP id ffacd0b85a97d-3a4dd634c14mr2939557f8f.37.1748291023340;
-        Mon, 26 May 2025 13:23:43 -0700 (PDT)
-Received: from [192.168.1.46] ([154.183.23.207])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cc52ab88sm8737719f8f.11.2025.05.26.13.23.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 13:23:42 -0700 (PDT)
-Message-ID: <4c4ff0ea-509a-4e33-b5b5-ddf6e7213474@gmail.com>
-Date: Mon, 26 May 2025 23:23:40 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ys9WgTCc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748291086; x=1779827086;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UGbA0UOJtFBcarurx1bwS7YYbgaQo0zI/HA7rHSSLMg=;
+  b=Ys9WgTCct03fcAlr8eiAvtcWYFdz6zD/sTtlEJQ6MzI+YdtppeCDjUWU
+   zN6KAXpADaPb3nmJ39a4l1EPbnyGrtGbZ7APbEuycygr5+EL9PWFQJfmf
+   0b6fOwKTjz00B3lrXYZwcR+b2pjzSELRoI3d0ihEtbt55+H3Chqb/Xx3a
+   ycXrrk9vfr7k8yXuNqLpHs9wSQmz/X/0POkg2Uf5SyVkGGbwVOjX1NiCd
+   rt4KWyEVgXegDGzCJQCesYhQqdRROzUxogpXpkyILUY685YGbdJTjD809
+   SbdjQZ+UY8RMKsSJgljtO6ClVS7Ex3ygsI1SJHslGm3MsoUTijhU84oZB
+   Q==;
+X-CSE-ConnectionGUID: hAmv2YegR/iCoK4PZFvXIg==
+X-CSE-MsgGUID: VXw/lHlKQOedrur2KfKGYw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="53926347"
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="53926347"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:24:46 -0700
+X-CSE-ConnectionGUID: DAvYNKGfSrq69SGtJ8qtcg==
+X-CSE-MsgGUID: r91yiV3HQn+2YRITYQhGFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="147660281"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.33])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:24:42 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 1965D11FC38;
+	Mon, 26 May 2025 23:24:40 +0300 (EEST)
+Date: Mon, 26 May 2025 20:24:40 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Richard Leitner <richard.leitner@linux.dev>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: Re: [PATCH v4 09/10] media: i2c: ov9282: add strobe_source v4l2
+ control
+Message-ID: <aDTOCC1wE26Md_Zo@kekkonen.localdomain>
+References: <20250507-ov9282-flash-strobe-v4-0-72b299c1b7c9@linux.dev>
+ <20250507-ov9282-flash-strobe-v4-9-72b299c1b7c9@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: escape literal asterisk to fix reST emphasis
- warning
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- shuah@kernel.org, corbet@lwn.net, masahiroy@kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
- <aDTCdQNUN4Zlw2jJ@casper.infradead.org>
-Content-Language: en-US
-From: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
-In-Reply-To: <aDTCdQNUN4Zlw2jJ@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507-ov9282-flash-strobe-v4-9-72b299c1b7c9@linux.dev>
 
-On 26/05/2025 10:35 pm, Matthew Wilcox wrote:
-> On Mon, May 26, 2025 at 09:43:59PM +0300, Khaled Elnaggar wrote:
->> Escaped a literal '*' character in symbol-namespaces.rst to prevent
->> a Docutils warning about unmatched emphasis markers during documentation build.
-> 
-> I don't think this is the right way to fix this problem.  We want
-> the test to work in both rendered and un-rendered form.  I think
-> we can do something like:
-> 
-> -For example:
-> +For example::
-> 
-> to turn it into a block that is rendered literally.  See
-> 
->                 For example::
-> 
->                   echo $((100 * `cat active_duration` / `cat connected_duration`))
-> 
-> as an example in Documentation/ABI/stable/sysfs-bus-usb
-> 
->>  For example:
->>
->> -  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
->> +  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-\*")
->>
->>  will limit usage of this symbol to modules whoes name matches the given
->>  patterns.
->> --
->> 2.47.2
->>
->>
+Hi Richard,
 
-That even looks better in rendered, (::) are actually so prevalent I don't know
-how I did not see it before. I will send v2, thank you for the proper fix.
+On Wed, May 07, 2025 at 09:51:38AM +0200, Richard Leitner wrote:
+> Add read-only V4L2_CID_FLASH_STROBE_SOURCE control. Its value is fixed
+> to V4L2_FLASH_STROBE_SOURCE_EXTERNAL as the camera sensor triggers the
+> strobe based on its register settings.
 
+Is strobe source control relevant for the sensor? It's triggering the flash
+but the flash LED isn't connected to it, is it?
+
+> 
+> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> ---
+>  drivers/media/i2c/ov9282.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> index 0bbdf08d7cda8f72e05fdc292aa69a4c821e4e03..09d522d5977ec6fb82028ddb6015f05c9328191d 100644
+> --- a/drivers/media/i2c/ov9282.c
+> +++ b/drivers/media/i2c/ov9282.c
+> @@ -1368,11 +1368,12 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+>  	struct v4l2_ctrl_handler *ctrl_hdlr = &ov9282->ctrl_handler;
+>  	const struct ov9282_mode *mode = ov9282->cur_mode;
+>  	struct v4l2_fwnode_device_properties props;
+> +	struct v4l2_ctrl *ctrl;
+>  	u32 hblank_min;
+>  	u32 lpfr;
+>  	int ret;
+>  
+> -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 12);
+> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 13);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1447,6 +1448,14 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
+>  	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
+>  			  0, 13900, 1, 8);
+>  
+> +	ctrl = v4l2_ctrl_new_std_menu(ctrl_hdlr, &ov9282_ctrl_ops,
+> +				      V4L2_CID_FLASH_STROBE_SOURCE,
+> +				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL,
+> +				      ~(1 << V4L2_FLASH_STROBE_SOURCE_EXTERNAL),
+> +				      V4L2_FLASH_STROBE_SOURCE_EXTERNAL);
+> +	if (ctrl)
+> +		ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+>  	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
+>  	if (!ret) {
+>  		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> 
+
+-- 
+Regards,
+
+Sakari Ailus
