@@ -1,94 +1,84 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA271EB5DB
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB66126BFF;
+	Mon, 26 May 2025 08:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247185; cv=none; b=Rx06DXyGJdqKVzFHYV/60gRXOvbFvAcPHGFKLjtGEKk1CGpmurYZ/S4Gyc2ndLb6th8psZvXRtpG4SDnegY8icmlJ48X91jUSfO0EnnxJVwV9hX0RF8drULQVK+GJY6jMD8i/lCdzcmEfHRLrvvEelNhMjClT3T5uCzooHl0McY=
+	t=1748247224; cv=none; b=kN0eASsWFs5GXYqlfscoffqADpY9QMBgvFF+gfZGDHsBKFA19GoPgsgltERHEo/kdF6DDjuuO20aXPPoxctshjK5SN8JLtiaQmaMZSTwy9SJnQvygApIjsuzvyvmKE+CChlDIhhf7Q3YKLs4omHk9oPO85Ymi+ZheByG3w3101o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247185; c=relaxed/simple;
-	bh=6dMenWW9G9+jrd7FF1PAJg9qND6VwFxBlkOpgHYc29k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mPQdPSXJFpTGf0dq03h0hOil4T+JFnNqnSAZ+Xyx5NCW7FNXtwNBjjzlstygeCS28Sj48+CAv5Et1I9G15TIM4daBZv1koti9a8ahGOkDnXo74LZIDErdtYuINr+Aw7b8DKoVGmnwebJzNVSqBO0qQWPSleZfe0ZqdtV1tC7pOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sd/xVPxS; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748247224; c=relaxed/simple;
+	bh=uORZKIv+jWoyhEOoZVbHfLhvUmceHasoafLASmLyLB8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=qYMX5XQJ5WGChzMANvMecg6r0DmM+V5isEZH8LNoBBt5WsDTMjT/jvQ5OihWII+VI2GI7ap8D09KEW1A+W5g1UzJEi1r1vRNL7vObzUfERLYK83sekcuGZGFfbkMcvnoBc5Beg8HRdhuDoxjmGyIlmVYaBUKhVt6LHBs7xEnw/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GSXFkOTy; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sd/xVPxS"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4dba2c767so261907f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748247182; x=1748851982; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6dMenWW9G9+jrd7FF1PAJg9qND6VwFxBlkOpgHYc29k=;
-        b=sd/xVPxSFGLvyz7LKqDzLZhGNXqoFKu7+ucNEgIKbRH+1hyeArcNCT1OW9VoVAOgBs
-         N/xwIHI8Ch9pwVEFXW7ipYS2B6ri0EWCAw4eUNQCZGZQz809wf5ucyl3k0yJPnJ60uFo
-         t04t3MssAPXRXu35rdMAM0bEhCNAFcR6UEKyugHhiw1Moj/5ERABN5JpgQ5P/kBoqVje
-         kVfyYvo9hg+JBhpNO+WvIx2svOYPVRaVZHRrU2QL+WF3ThXMTxyPep05ZVx2jXT+CTjV
-         HwL3+eQ1LDI/KNT+390leRj+lzUY6oj7Q6JTALTzmUvoJAGe3uj1V1OxNq7Mirv0aHCc
-         fUKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748247182; x=1748851982;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6dMenWW9G9+jrd7FF1PAJg9qND6VwFxBlkOpgHYc29k=;
-        b=KCPmr0RnfVd9oobUHsJUEwuM4RO8iFPMHlqJFLQ0EhH+wdlg2WOV1Z0VotiiZ4/5vs
-         fwe/P3V515LIX5qOJ0k5LTfe6hGi+K8UEg/UMUDy4NrMDZAndmVK5no/V82O8OpIR1Yf
-         P/Jmh1ouneqiZARf1/zEt/JGa/S8nkF4AZ+AOvocHXFD9U5z8nexGe9sAKtFxakRFLl7
-         FNOEOB/0mhIVUfNVaOqs24BdJjMvPVGRV8SyV8ByEl291sRkKihv2vv9DUM4p3fYfo8J
-         yJ3V8+UV4uHybaIAUXLAt3bgPv04unq02TL1/e6/L02bYidtKlj35QYTwBM8B2e8kBVM
-         t3hg==
-X-Gm-Message-State: AOJu0YwIh2RU95fTSmlvvXjKNu0ZkDxbkeCh2F9cIYzlYGOL6A2cCak1
-	TIbEpdufTOibrugFTACfMSBAQflpw0W2mtwUFoZI6xS7ZnIVH/cBa/R3mlGn9OoCPF4=
-X-Gm-Gg: ASbGncvxhZAgKgFyNyRHSrBAGOORRI+zGtf1Gt6LmhmmXtszapdFTh2v97lCPyePyAU
-	jm49499p2ACJXuc/ljc0Ie5/ZfvZM2d9sheFX0472GJ9Ty854FbXCKJs0xOnvA3GKgNK3KSDNhh
-	QgIf/Ow4NjB8+nExFogVXQ1zI54Sdzipv/QES69xoFOe79q/ISQmL8FcyTI65xUKmWVuMZHSrOK
-	G3RQek8JZVtHURtzpDgahqOkcDW1xi/39Lzq/y6sUhHnNxeDxGkcM8nTGhc5xosKgq2N2sgyIHA
-	3uYEnI42scXK7QDXK41GahErnENLkt1H1PgrDKwymEg6094aQLfd+izY0FSDSMdDLLhqC0ziSa0
-	lRUmGMQ5YTDeuNViT
-X-Google-Smtp-Source: AGHT+IHGSsVUmWj3Jah1vKvr6sQDWVSDBSGyOlSKcnIVvmpIKC/Y46McYZjwHULPKpThDtSFgrrx3Q==
-X-Received: by 2002:a05:6000:1acb:b0:3a3:6434:5d34 with SMTP id ffacd0b85a97d-3a4ca413eafmr6970418f8f.17.1748247182279;
-        Mon, 26 May 2025 01:13:02 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d8ea9520sm2349448f8f.70.2025.05.26.01.13.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 01:13:01 -0700 (PDT)
-Message-ID: <e8750bc1-11ab-480c-a0fb-262ff6a0dd22@linaro.org>
-Date: Mon, 26 May 2025 09:13:00 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GSXFkOTy"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 49AB6432E9;
+	Mon, 26 May 2025 08:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748247220;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yPkgd48Z0fU+G9rkmci+M6NLNIeowZJAaBi38kKpI/4=;
+	b=GSXFkOTy/bPwBna80bRK3A7S6b3mQ+AVesQBtrPG37HgK95uhweCltEuc5zaZpIHH12Isz
+	bTaikgUSgYB7xMY42Wo2O4BAU+Zu8xP0qMDfcc8h+LdRx+0GH6LbbzschM/rBy404ZyYAI
+	U5ChMgTkEJS0H61LTNX6qGwf27MJDBLYmnBOzRN6BICHwvbZ1sHoLfxPGR472mtWBRrO8L
+	16UqoF4kUa4LJGebsY0yfkXQereAoynP34DDGInSKFivas4mTF1B/Hr/O8xcuVx/SqF2TP
+	xDFSa68fGAAneBXVz6uqRodG3rgs2DM0sbzUCXQx5vKDSpHa4b/UDa7AIYs2KA==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,  Md Sadre Alam
+ <quic_mdalam@quicinc.com>,  Varadarajan Narayanan
+ <quic_varada@quicinc.com>,  Sricharan Ramabadhran
+ <quic_srichara@quicinc.com>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  linux-spi@vger.kernel.org,
+  linux-mtd@lists.infradead.org,  linux-arm-msm@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] spi: spi-qpic-snand: avoid memory corruption
+In-Reply-To: <20250525-qpic-snand-avoid-mem-corruption-v1-0-5fe528def7fb@gmail.com>
+	(Gabor Juhos's message of "Sun, 25 May 2025 19:05:34 +0200")
+References: <20250525-qpic-snand-avoid-mem-corruption-v1-0-5fe528def7fb@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 26 May 2025 10:13:39 +0200
+Message-ID: <87r00b23ik.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] media: qcom: camss: vfe: Add VBIF setting support
-To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250525-camss-8x39-vbif-v2-0-6d3d5c5af456@mailoo.org>
- <20250525-camss-8x39-vbif-v2-1-6d3d5c5af456@mailoo.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250525-camss-8x39-vbif-v2-1-6d3d5c5af456@mailoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujedtudculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepjhegghekhiejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepqhhuihgtpghmuggrlhgrmhesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehquhhitggpvhgrrhgruggrsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepqhhuihgtpghsrhhitghhrghrrgesqhhuihgti
+ hhntgdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugidqshhpihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 25/05/2025 20:25, Vincent Knecht via B4 Relay wrote:
-> +void vfe_vbif_reg_write(struct vfe_device *vfe, u32 reg, u32 val);
+Hi Gabor,
 
-write_reg() / read_reg()
+On 25/05/2025 at 19:05:34 +02, Gabor Juhos <j4g8y7@gmail.com> wrote:
 
----
-bod
+> The 'spi-qpic-nand' driver may cause memory corruption under some
+> circumstances. The first patch in the series changes the driver to
+> avoid that, whereas the second adds some sanity checks to the common
+> QPIC code in order to make detecting such errors easier in the future.
+>
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+> ---
+> Gabor Juhos (2):
+>       spi: spi-qpic-snand: reallocate BAM transactions
+>       mtd: nand: qpic_common: prevent out of bounds access of BAM
+> arrays
+
+Are these two paches related somehow? Or can we apply them in
+two different trees? If yes, please send the patches separately, which
+eases our work.
+
+Thanks,
+Miqu=C3=A8l
