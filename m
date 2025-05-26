@@ -1,118 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EFE1607AC;
-	Mon, 26 May 2025 20:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3B03594B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 20:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748291682; cv=none; b=RnGLZERMOXrukBH6cHHOFVGxUOmBBseUr3e8G/LytfQXUXdBIbWovhhBrhTceKLen1A6baVU6bBnf76cjhWlTyOGXSsm2c2A5KqW78QCSNjjIBr8QhaLj7YMs+VLJuwz6YldV076UPvT0Cc86/joko/mtO34gZDWzfi9cfAceSI=
+	t=1748291983; cv=none; b=HLaK0hjNleBqYThxpcV5jr3zOp1+RD8ejLVKgG2cQqbYQ0l0dif6jglJFYlLgf3IncZSICqSCnR9FzgdkLEkzyitmAsJoack7FLjBTrVCequg78GNANueORLltY503NQQ3HI1ILfu/bfTZ3CB+G+xRYkwQhN5lqLkuiU9XGGXNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748291682; c=relaxed/simple;
-	bh=T40zv2BAbAAN5c8Kb2iLFjCSDe/dOZ4P0aid1xJ+yWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPgAHXei+rr3rwaol4cz/LMHdomA0nEgvbzvVRcFih1xqv69ep2r7vDqRTJQcm3k2w4mfUyBtOchcYrbOq9ZXhJbc/yMsNIsr7D0OMFvCwB9dc1pL6nXCo7bFTRBMvOtXAeZ1HU55SaEbVRyxj4x+4ajbs8DK/EXXv5d1tSBhew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lpw4mthy; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lpw4mthy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748291681; x=1779827681;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T40zv2BAbAAN5c8Kb2iLFjCSDe/dOZ4P0aid1xJ+yWk=;
-  b=Lpw4mthyXX99j6o6Aa9e3Yrhu31IWXlY4YnO5zz++dd3XyWiaeF+7/6O
-   towjigPg61CYmbQdGxU6uHoXGIdVeeFWxHkEsplpGqKVWlzb0K4H8604B
-   MSynP9HXZdnEdI1acTkInFfvcFJNHph44gtHNhlBU2ZjFDurSWXFC4TMR
-   wWTmeF1huTeth+WqGlE7hBSJD1+GgYzoBejD3LgcgmzhrQjGyKIzp72Wm
-   y6J1sgvrm3MOMufiZ/MUdSQao5e/+w24CoxqnDbpM5FJovrN0abNQDCaj
-   lCbCxQFMoDGSMAj2+PEy3Z0TFWDXxaE2J0a2XDQdfOxjlIBSmjBpLUsCG
-   A==;
-X-CSE-ConnectionGUID: /LTgkgTqQzerOU38DCNQvw==
-X-CSE-MsgGUID: MSYZ78FsR6O5XZAH8RKOnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="54076956"
-X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
-   d="scan'208";a="54076956"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 13:34:40 -0700
-X-CSE-ConnectionGUID: thHqHVQNTF6ZChP9KB98xw==
-X-CSE-MsgGUID: S+67gckpT0q9fyK79kpnpw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
-   d="scan'208";a="147746767"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 26 May 2025 13:34:36 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uJeWn-000ShA-25;
-	Mon, 26 May 2025 20:34:33 +0000
-Date: Tue, 27 May 2025 04:34:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Claudiu <claudiu.beznea@tuxon.dev>, gregkh@linuxfoundation.org,
-	rafael@kernel.org, dakr@kernel.org, len.brown@intel.com,
-	pavel@kernel.org, ulf.hansson@linaro.org, jic23@kernel.org,
-	daniel.lezcano@linaro.org, dmitry.torokhov@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, claudiu.beznea@tuxon.dev,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	bhelgaas@google.com, geert@linux-m68k.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH v2 1/2] PM: domains: Add devres variant for
- dev_pm_domain_attach()
-Message-ID: <202505270434.ft8ekK9H-lkp@intel.com>
-References: <20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com>
+	s=arc-20240116; t=1748291983; c=relaxed/simple;
+	bh=ERi5YTbguzqq4OHrDyVQB9/NLONl5boeXhq3Tqi8l4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=njAOq74GWCcJA/0gaCnHIO4MzCI9pH1yD6FPZYjsdTQ9fEiluPQXi9mYmMk88AeUrfBAvzrNDjEYH/S5gZQHnQyIojkeohzkBykdXNKTGuQ94e8VhZP0i7odwJoL/DfKviPFVJUHmxRw9uv3WUwjl+nj5R8QQiN0G7ql39EqcuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 00E29444DA;
+	Mon, 26 May 2025 20:39:35 +0000 (UTC)
+Message-ID: <2c07d65e-0641-42a0-9eb4-9e42d9325ff2@ghiti.fr>
+Date: Mon, 26 May 2025 22:39:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526122054.65532-2-claudiu.beznea.uj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: uaccess: Only restore the CSR_STATUS SUM bit
+To: Cyril Bur <cyrilbur@tenstorrent.com>, samuel.holland@sifive.com,
+ ben.dooks@codethink.co.uk, palmer@dabbelt.com, linux-kernel@vger.kernel.org
+Cc: jszhang@kernel.org, paul.walmsley@sifive.com, charlie@rivosinc.com,
+ jrtc27@jrtc27.com, aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+ Andy Chiu <andybnac@gmail.com>, Deepak Gupta <debug@rivosinc.com>
+References: <20250522160954.429333-1-cyrilbur@tenstorrent.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250522160954.429333-1-cyrilbur@tenstorrent.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddukeehtdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepteekfeetveffgfehgfeiieefvedukeejtdevhffgudfffeevieeigffhudeuueetnecuffhomhgrihhnpegvnhhtrhihrdhssgdpkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemsgdtieemleeikehfmeekrgegieemledvtggrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegstdeimeelieekfhemkegrgeeimeelvdgtrgdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemsgdtieemleeikehfmeekrgegieemledvtggrngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegthihrihhlsghurhesthgvnhhsthhorhhrvghnthdrtghomhdprhgtphhtthhopehsrghmuhgvlhdrhhhol
+ hhlrghnugesshhifhhivhgvrdgtohhmpdhrtghpthhtohepsggvnhdrughoohhkshestghouggvthhhihhnkhdrtghordhukhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjshiihhgrnhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopegthhgrrhhlihgvsehrihhvohhsihhntgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-Hi Claudiu,
++cc linux-riscv, Andy, Deepak
 
-kernel test robot noticed the following build warnings:
+On 5/22/25 18:09, Cyril Bur wrote:
+> During switch to csrs will OR the value of the register into the
+> corresponding csr. In this case we're only interested in restoring the
+> SUM bit not the entire register.
+>
+> Fixes: 788aa64c0 ("riscv: save the SR_SUM status over switches")
+> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+> ---
+> I've put the Fixes tag in but I assume this will get squashed into the
+> patch. Either way I hope this works to fix the immediate issue.
+>
+>   arch/riscv/kernel/entry.S | 12 ++++++++----
+>   1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 00bd0de9faa2..6ed3bd80903d 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -399,14 +399,18 @@ SYM_FUNC_START(__switch_to)
+>   	REG_S s11, TASK_THREAD_S11_RA(a3)
+>   
+>   	/* save the user space access flag */
+> -	li    s0, SR_SUM
+> -	csrr  s1, CSR_STATUS
+> -	REG_S s1, TASK_THREAD_STATUS_RA(a3)
+> +	csrr  s0, CSR_STATUS
+> +	REG_S s0, TASK_THREAD_STATUS_RA(a3)
+>   
+>   	/* Save the kernel shadow call stack pointer */
+>   	scs_save_current
+> -	/* Restore context from next->thread */
+> +	/*
+> +	 * Restore context from next->thread. csrs will OR the bits from s0 and
+> +	 * only want to restore the SR_SUM bit
+> +	 */
+>   	REG_L s0,  TASK_THREAD_STATUS_RA(a4)
+> +	li    s1,  SR_SUM
+> +	and   s0,  s0, s1
+>   	csrs  CSR_STATUS, s0
+>   	REG_L ra,  TASK_THREAD_RA_RA(a4)
+>   	REG_L sp,  TASK_THREAD_SP_RA(a4)
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus amd-pstate/linux-next amd-pstate/bleeding-edge linus/master v6.15 next-20250526]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To conclude the discussion we had here 
+https://lore.kernel.org/linux-riscv/aDCtATl2N21fBsyT@debug.ba.rivosinc.com/#t, 
+in addition to Cyril's patch above, to me we only have to rename the 
+status field into sum and we're good to go. @Andy, @Deepak @Samuel Do 
+you agree?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Claudiu/PM-domains-Add-devres-variant-for-dev_pm_domain_attach/20250526-202318
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20250526122054.65532-2-claudiu.beznea.uj%40bp.renesas.com
-patch subject: [PATCH v2 1/2] PM: domains: Add devres variant for dev_pm_domain_attach()
-config: arm-randconfig-002-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270434.ft8ekK9H-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270434.ft8ekK9H-lkp@intel.com/reproduce)
+As this is an important fix (along with 2 other fixes, one for thead 
+vector and vdso static values), I'd like to send another PR soon for 
+inclusion in 6.16-rc1, I did not want to delay the second PR any longer.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505270434.ft8ekK9H-lkp@intel.com/
+Thanks for your feedbacks,
 
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/amba/bus.c:15:0:
->> include/linux/pm_domain.h:534:12: warning: 'devm_pm_domain_attach' defined but not used [-Wunused-function]
-    static int devm_pm_domain_attach(struct device *dev, bool attach_power_on,
-               ^~~~~~~~~~~~~~~~~~~~~
+Alex
 
 
-vim +/devm_pm_domain_attach +534 include/linux/pm_domain.h
-
-   533	
- > 534	static int devm_pm_domain_attach(struct device *dev, bool attach_power_on,
-   535					 bool detach_power_off)
-   536	{
-   537		return 0;
-   538	}
-   539	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
