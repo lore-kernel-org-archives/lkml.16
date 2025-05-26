@@ -1,91 +1,105 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC6B13A258
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9677E9;
+	Mon, 26 May 2025 17:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748280274; cv=none; b=rMEHxUnFJO9euZDJunoNjMnXT6xr20TbP7qIWOZYzwxVy4lP4widHDzMBf2wsVkx/4WLEOFuLsrEbOPDqxtDWEaMKaH/LQDJjO9lpNOwRDJ9+OWTxTaMlRRvEPih6gqeISazGIaquaF8ZfbQRqTr8XafZ7IkE393HwvZmU2f2Z0=
+	t=1748280638; cv=none; b=qz9DtUBy+p2/3JVwbQkRH3mGzrWQWMh6T/OR0ppaAGpI9eegrdic3fw7g0J9X7yq+0nc76vpK2kV77+8SANBfNHLuR++ZxMLfhGtVLx2MK91FzpzABKzbFe9O+bUnDe1CVbdos93C/gPRStJxB/KqgLTvNj0u3POHQgLSFMiINw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748280274; c=relaxed/simple;
-	bh=ZcpFRckONNk0IxICy9wdY3sQ8Q1X3+puSI8PoaWnr94=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Dc41Egxk81VmQ/U5Xygdvxl3A1HEUPY5P6WuR+8OvFVNuyFEOnt6s8UiA8YToMG1Z9l/nv2E+LfTOho643dphRAQOi5lMrEcwjmjsOT9qpJlwlxRLLDjkgDsruK5KkO3D9GMGlJL4MX+rXL4eeZLjzfM9hAwvctuH4ciHn2me/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b5hwT0xxFzcBF;
-	Mon, 26 May 2025 19:05:29 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b5hwR6dDXzvWr;
-	Mon, 26 May 2025 19:05:27 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Subject: [PATCH 0/4] rockchip: rk8xx: allow to customize PMIC reset method
- on RK806
-Date: Mon, 26 May 2025 19:05:14 +0200
-Message-Id: <20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de>
+	s=arc-20240116; t=1748280638; c=relaxed/simple;
+	bh=++BoeWAgoVok/kbNT/X+LVWuRHe4UOQ0Rg+rCYlkPWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kXmZm8Fl39jvIoU00/MvoXBZXnwtBVgSpYfMLRUHR9qCD/4Ws4CoEqumXGxK9UXJUDnczpwOsauC2dVr9kIrsuil6hRl+3ynzYht0gpEHtU+B+DvYAU0yAskt2COjVkybm/ZKA5S9WslnHl7FSCNaw94etcLnMtmyQqQHTqRbjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLipo4G1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLipo4G1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FEFAC4CEE7;
+	Mon, 26 May 2025 17:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748280637;
+	bh=++BoeWAgoVok/kbNT/X+LVWuRHe4UOQ0Rg+rCYlkPWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TLipo4G1A4/dTZ2yoky4OJWMqtN5wnK1+8zs1tLfjZ37azdeDbxOn33urpKYPSj8R
+	 x7hghE+gkHJurHCis31OgpI80DarhFDkMPw0/4AiMVbZvClX1y7PyF1nC0d0BSbhAd
+	 InmAs8Nl5SeHnJo1wJwaLb9l1FkvqhO7yrPEEFr3H8O/iZUe7OhGgRsevEOX6YfFnQ
+	 CavK9GJ7YdSG+0+b2oCttmiBak6d5qtFueohieqLA++qkwJxVGAGkJ5Q77QSOoRTRt
+	 EtI238iv70lZ6dUrXk4VuvHpvcBa+jMrRI6Fp3gF/jGMs1q+OCI8lBa2nCsKMKHWht
+	 w9rxZuU6LjWrg==
+Date: Mon, 26 May 2025 19:30:35 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Michael <michael@fossekall.de>
+Cc: Chen-Yu Tsai <wens@csie.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
+ BananaPI M1 on 6.9
+Message-ID: <20250526-refined-dog-of-blizzard-b48f11@houat>
+References: <aCJZmm8rC0RwbcBX@a98shuttle.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEqfNGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDUyMz3aJsi4oK3aLiEt200jzdNCMzw2QTgySzFINkJaCegqLUtMwKsHn
- RsbW1AKpXPrRfAAAA
-X-Change-ID: 20250526-rk8xx-rst-fun-f261c40b6d0c
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
- Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="wx3fp4rhvd2s43t7"
+Content-Disposition: inline
+In-Reply-To: <aCJZmm8rC0RwbcBX@a98shuttle.de>
 
-This allows to customize the PMIC reset method (also called RST_FUN) on
-RK806 PMIC from Rockchip, mainly found on RK3588 devices.
 
-Although RK809 and RK817 also have this feature, this isn't implementing
-the feature for them.
+--wx3fp4rhvd2s43t7
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
+ BananaPI M1 on 6.9
+MIME-Version: 1.0
 
-Finally, this is required on the two RK3588 devices from Theobroma as
-U-Boot changes the silicon-default (which is suitable for us) to
-something that breaks our companion microcontroller's reboot detection
-which breaks a bunch of assumptions in the MCU FW code.
+Hi,
 
-To validate this works on those devices do the following:
+On Mon, May 12, 2025 at 10:27:06PM +0200, Michael wrote:
+> with v6.9 and later there is no output on the BananaPI HDMI connector.
+>=20
+> I have bisected the issue to the following commit:
+>=20
+>   358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid=
+")
+>=20
+> With this patch, sun4i_hdmi_connector_clock_valid() is occasionally called
+> with clock=3D0, causing the function to return MODE_NOCLOCK.
+> In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is
+> always!=3D0, maybe that gives someone a hint.
 
-On Tiger:
-i2cset -y -f 6 0x6f 0x9 0x62
-On Jaguar:
-i2cset -y -f 0 0x6f 0x9 0x62
+This doesn't make sense to me, if only because the two callers of
+tmds_char_rate_valid (hdmi_compute_clock and
+drm_hdmi_connector_mode_valid) have, right before calling it, checks to
+make sure the clock rate isn't 0, and would return MODE_ERROR or EINVAL
+in such a case.
 
-You hear a nice (loud :) ) beep, then reboot and it should stop right
-before entering U-Boot TPL again.
+https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_h=
+dmi_state_helper.c#L234
+https://elixir.bootlin.com/linux/v6.15/source/drivers/gpu/drm/display/drm_h=
+dmi_state_helper.c#L553
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
-Quentin Schulz (4):
-      dt-bindings: mfd: rk806: allow to customize PMIC reset method
-      mfd: rk8xx-core: allow to customize RK806 reset method
-      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Jaguar
-      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Tiger
+Do you have some logs (with dri.devel=3D0xff)? Does it happen with 6.15 as
+well?
 
- .../devicetree/bindings/mfd/rockchip,rk806.yaml    | 24 ++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  1 +
- arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  1 +
- drivers/mfd/rk8xx-core.c                           | 15 ++++++++++++++
- include/linux/mfd/rk808.h                          |  2 ++
- 5 files changed, 43 insertions(+)
----
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-change-id: 20250526-rk8xx-rst-fun-f261c40b6d0c
+Maxime
 
-Best regards,
--- 
-Quentin Schulz <quentin.schulz@cherry.de>
+--wx3fp4rhvd2s43t7
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDSlOgAKCRAnX84Zoj2+
+dsbbAX99s9kKf45MW0A0sRoR7VuFGBnreiDwHOLIAAo4qprwTU4rlEcbnOBL7Y1m
+XpJezKkBgJizzKS4du2vMNyg/eBB/0g/gvrzOsCy21C78GxZsMiwUpQBB81Ja0fq
+gR2HdeNy8w==
+=UHi2
+-----END PGP SIGNATURE-----
+
+--wx3fp4rhvd2s43t7--
