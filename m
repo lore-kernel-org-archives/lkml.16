@@ -1,260 +1,285 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BD913A258
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB838488
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748267259; cv=none; b=EnIyNvXnwB7p/sTKTrIblf0YwHU/IbuD0M4yQmxRUw9DJLjE16NRl2MR8ph97vc6rSMqphp2kq7SMSTK5BaO3CkGDk7ZjkF1WHzj9PFrMW+ENsZkezzw5Qbz2Avjm3dKCG2fUM9zHx8fAkAvY/FQKb0ILpig2TIzX3RHkzUWUBg=
+	t=1748267378; cv=none; b=eosLm+ZNE8L1ofzrqws/Z3y4nv7TctJiK0oZY1hfzCj+tW1FzyqEpfJhxs+jiCX1xonnZ15c/gSy9CP/oKdu0/IhzyENVbydgiinZwzyaGfIOfb0jpWpPxGdh2K9HfiwYtql+3aNXYd0u0LTxIK/27fY4wjnYTIz6EkB7wIfHi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748267259; c=relaxed/simple;
-	bh=tgpJdsWgfx+eVVG0bcNwZcea+f0rX2pH0AfuaPYqCWQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZiT8tbIzI2Teo/9PDDPbTI5Ber+XgVDS6T3avZ5r4rzzTDhhORlsqMG6aa+w/XZ8m03IDld7+iOLcTpzmTjGkY4I+9AxbRUxVei7JWubdShGC61gZvcyqQEAWH4zC7YjQnXBa1dIYwPblkFE8teqMBdQLVnBM+FQiGaOZm8UJ5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+	s=arc-20240116; t=1748267378; c=relaxed/simple;
+	bh=cvnvZ3UrSz3r6535yN/sqSWAfLNCPfSiZ8OvJtfpOro=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UPFNFzKn47TLJgn1OPRw8uMLdj01hsXbk8/KmOB5yZG5tEGq7qDZp/OceF/hwwPPzw15LOasPKxu6n3IfPoGDrDinsEyuv/npUXKptkd0CpcIKy5F44+xGE2az2HnMw0khxwx/VIIyJRARE31UJ+9ohElJ1tT9Z2WoBKatutDDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-861d6e340e2so186139839f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:47:37 -0700 (PDT)
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so436510039f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:49:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748267257; x=1748872057;
+        d=1e100.net; s=20230601; t=1748267376; x=1748872176;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=T6h+kPtsipsL2l83ymIcp6QfVvVLFYNQseaLUjiA7AM=;
-        b=kMXtgJkvxWG0Jz0K5kyE18Wghk7qNw480OA7bKj2LYz+3p2GJtS1GNkqIisJ8Yd2ag
-         rimW97e6+yfj2sme8TFk4oIwC+PKmEqNDtZJex126dfRMxdNVlK+Poirm+Z4+oIixu2Y
-         4nQl5BRDvDfGmHg2CDdYZKhxTc9QF7QPi57iKssBRffyEnu2icEQEAlhPZkbFy9zOX5i
-         KjQ/OfrXBMnaTfIv/TFi32w9WBjPR7+jEt7iy9jId1RLbX54XvdQD+vwU/l8fZXtyAJU
-         I6gTLXpP97L7wTluxw9NOOv8ZU30k7IsOtZwjt/nt2rLBRxEwxt6D8X6tCf/o+bLW2tT
-         awgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNE5IOPUXbnL3rETsovA4Z+qnT2o6OmCmSRkEnosC+JU9I9IzhiGPGGdpzT0jVfvu5izpgae7JotA2dnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGU2XJBvdGbewe55XDjppG4O3frwPadlC/DNkr1DEcSbN6Vijt
-	RK6UC7RPBLKaxmirabn8YD2+g07YMcH1xIe/C74DpBU8s4zpL6DnMneUva7HhzuuHApZbLGok9G
-	/wG3Rh5+vMcJe/ctmjcxyMowXOoksiZU3U7Y+ESx4L/dXmXHPDv52WFf/Ddo=
-X-Google-Smtp-Source: AGHT+IFTSMm6o4vNCyvEE4pSeQ/QNhwixfp8b0f+ZlUQOHr6x7eNuo7TarKfX6TlMJjtW4X9Tz2Q9XhPRzoQCmHybG6KwFjZ6Pli
+        bh=UmFokkzn5mcKbRnZHeTBezskT8hzunwZsF9u+hWNDQQ=;
+        b=Tv2XsPF6RgHdeJx0II6z+UKjB7YNvpXDu9WBcS2JxHFKCeiiLcGDyVhj+bENHsjT3u
+         TLHaUPBmiq3qHvUELFjXTFQFYmFPM+aR7vRmYWbe92j5sH39G3gv7a2WA7b80fnVihkq
+         SeLdoP5q25D3GvsvulexJiEJgD1MHclXlNB0qzmFQ01sJ/TKM2aJmoPewG2WjqwEnBa/
+         FYEOTwfYUHpwu99uFOL1RyTFtplAfdRJ+Q8KqCPp3aaNKFejzOVio112TLgjUPCcaRv5
+         BJIlAiEoQpF2bDbL6c3FWZVXq4DzFFZg78ZBungPDfEGXRaswyuiP10qFo1aASrRbNCH
+         NLTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdBPqVx3dbtRbKcTBjFWZZXdugveUsFFOFTjGoFEBJHa0+NrcfefdNQ93eovx4nLGdakVqAC+iN9rItVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwIxg5WKKKisVB5Gv/z9G+QEeh6nEoZBcbxW3HrNnSLIaRHWG4
+	bdohWLML2Tn6nW3kr7DNhejX7pHC9PPagyCUaDzWHpCzvDi8kgOyhTkdIhuQsPPLbcbDnyQgLeR
+	M1FF9KAw7AeY8Pmq0gx0hj5xDS4l51grm8mPW+r+MnRDX5MjIPOx3+kHfRBU=
+X-Google-Smtp-Source: AGHT+IH8EVUjQrNy6gHBsioPAj/7gSTRlKPS45Mp82NZzkF36zz4PXNQZDVakiwDhdwwNVBNOlSiuYlr6BOse4XG+P7QnpgxbvRf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3684:b0:85e:a8db:fa10 with SMTP id
- ca18e2360f4ac-86cbb7b82bcmr853909639f.1.1748267257030; Mon, 26 May 2025
- 06:47:37 -0700 (PDT)
-Date: Mon, 26 May 2025 06:47:37 -0700
+X-Received: by 2002:a05:6602:7211:b0:864:a1e9:f07 with SMTP id
+ ca18e2360f4ac-86cbb80a7ecmr1068032539f.8.1748267375896; Mon, 26 May 2025
+ 06:49:35 -0700 (PDT)
+Date: Mon, 26 May 2025 06:49:35 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <683470f9.a70a0220.1765ec.0169.GAE@google.com>
-Subject: [syzbot] [ext4?] KASAN: slab-out-of-bounds Read in ext4_ext_correct_indexes
-From: syzbot <syzbot+04c4e65cab786a2e5b7e@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Message-ID: <6834716f.a70a0220.1765ec.016a.GAE@google.com>
+Subject: [syzbot] [serial?] possible deadlock in debug_check_no_obj_freed (2)
+From: syzbot <syzbot+84186930788ce222de35@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    d0c22de9995b Merge tag 'input-for-v6.15-rc7' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15cff5f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a1de0d8596cea805
-dashboard link: https://syzkaller.appspot.com/bug?extid=04c4e65cab786a2e5b7e
+HEAD commit:    176e917e010c Add linux-next specific files for 20250523
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f2e8e8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
+dashboard link: https://syzkaller.appspot.com/bug?extid=84186930788ce222de35
 compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=158eb5f4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=109d1170580000
+
+Unfortunately, I don't have any reproducer for this issue yet.
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/cf852e5656de/disk-d0c22de9.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/761933abe01b/vmlinux-d0c22de9.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/187857154891/bzImage-d0c22de9.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/62e5a099f2de/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=122868e8580000)
+disk image: https://storage.googleapis.com/syzbot-assets/5f7692c642fa/disk-176e917e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/057a442d42d0/vmlinux-176e917e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8f8ebdb4dd96/bzImage-176e917e.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+04c4e65cab786a2e5b7e@syzkaller.appspotmail.com
+Reported-by: syzbot+84186930788ce222de35@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in ext4_ext_correct_indexes+0x72/0x5b0 fs/ext4/extents.c:1710
-Read of size 8 at addr ffff88807b361f50 by task syz-executor191/6954
+ODEBUG: object ffffc90014597b90 is on stack ffffc90014590000, but NOT annotated.
+======================================================
+WARNING: possible circular locking dependency detected
+6.15.0-rc7-next-20250523-syzkaller #0 Not tainted
+------------------------------------------------------
+bch-copygc/loop/7681 is trying to acquire lock:
+ffffffff8e133280 (console_owner){-...}-{0:0}, at: console_trylock_spinning kernel/printk/printk.c:2048 [inline]
+ffffffff8e133280 (console_owner){-...}-{0:0}, at: vprintk_emit+0x444/0x7a0 kernel/printk/printk.c:2449
 
-CPU: 0 UID: 0 PID: 6954 Comm: syz-executor191 Not tainted 6.15.0-rc7-syzkaller-00152-gd0c22de9995b #0 PREEMPT(full) 
+but task is already holding lock:
+ffffffff99c703d8 (&obj_hash[i].lock){-.-.}-{2:2}, at: __debug_object_init+0x85/0x3c0 lib/debugobjects.c:741
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&obj_hash[i].lock){-.-.}-{2:2}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+       __debug_check_no_obj_freed lib/debugobjects.c:1088 [inline]
+       debug_check_no_obj_freed+0x17a/0x470 lib/debugobjects.c:1129
+       free_pages_prepare mm/page_alloc.c:1255 [inline]
+       __free_frozen_pages+0x509/0xe70 mm/page_alloc.c:2706
+       stack_depot_save_flags+0x445/0x900 lib/stackdepot.c:678
+       kasan_save_stack mm/kasan/common.c:48 [inline]
+       kasan_save_track+0x4f/0x80 mm/kasan/common.c:68
+       poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+       __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
+       kasan_kmalloc include/linux/kasan.h:260 [inline]
+       __do_kmalloc_node mm/slub.c:4327 [inline]
+       __kmalloc_noprof+0x27a/0x4f0 mm/slub.c:4339
+       kmalloc_noprof include/linux/slab.h:909 [inline]
+       tty_buffer_alloc drivers/tty/tty_buffer.c:180 [inline]
+       __tty_buffer_request_room+0x1c8/0x520 drivers/tty/tty_buffer.c:273
+       __tty_insert_flip_string_flags+0xb8/0x430 drivers/tty/tty_buffer.c:309
+       tty_insert_flip_string_fixed_flag include/linux/tty_flip.h:35 [inline]
+       tty_insert_flip_string include/linux/tty_flip.h:83 [inline]
+       tty_insert_flip_string_and_push_buffer+0xa3/0x1f0 drivers/tty/tty_buffer.c:559
+       pty_write+0xa7/0xe0 drivers/tty/pty.c:118
+       tty_put_char+0x10e/0x160 drivers/tty/tty_io.c:3154
+       n_tty_process_echo_ops drivers/tty/n_tty.c:647 [inline]
+       __process_echoes+0x40a/0xa20 drivers/tty/n_tty.c:693
+       commit_echoes drivers/tty/n_tty.c:756 [inline]
+       n_tty_receive_char+0x89e/0xc30 drivers/tty/n_tty.c:1421
+       n_tty_receive_buf_standard+0x5e2/0x5150 drivers/tty/n_tty.c:1590
+       __receive_buf drivers/tty/n_tty.c:1624 [inline]
+       n_tty_receive_buf_common+0xab3/0x12f0 drivers/tty/n_tty.c:1723
+       tty_port_default_receive_buf+0x6e/0xa0 drivers/tty/tty_port.c:37
+       receive_buf drivers/tty/tty_buffer.c:445 [inline]
+       flush_to_ldisc+0x2c5/0x810 drivers/tty/tty_buffer.c:495
+       process_one_work kernel/workqueue.c:3238 [inline]
+       process_scheduled_works+0xade/0x17b0 kernel/workqueue.c:3321
+       worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+       kthread+0x711/0x8a0 kernel/kthread.c:464
+       ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #2 (&port->lock#2){-.-.}-{3:3}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+       tty_port_tty_get drivers/tty/tty_port.c:307 [inline]
+       tty_port_default_wakeup+0x21/0xf0 drivers/tty/tty_port.c:66
+       serial8250_tx_chars+0x72e/0x970 drivers/tty/serial/8250/8250_port.c:1838
+       serial8250_handle_irq+0x633/0xbb0 drivers/tty/serial/8250/8250_port.c:1946
+       serial8250_default_handle_irq+0xbf/0x1b0 drivers/tty/serial/8250/8250_port.c:1966
+       serial8250_interrupt+0xa2/0x1d0 drivers/tty/serial/8250/8250_core.c:86
+       __handle_irq_event_percpu+0x289/0x980 kernel/irq/handle.c:158
+       handle_irq_event_percpu kernel/irq/handle.c:193 [inline]
+       handle_irq_event+0x8b/0x1e0 kernel/irq/handle.c:210
+       handle_edge_irq+0x267/0x9c0 kernel/irq/chip.c:789
+       generic_handle_irq_desc include/linux/irqdesc.h:173 [inline]
+       handle_irq arch/x86/kernel/irq.c:254 [inline]
+       call_irq_handler arch/x86/kernel/irq.c:266 [inline]
+       __common_interrupt+0x140/0x250 arch/x86/kernel/irq.c:292
+       common_interrupt+0xb6/0xe0 arch/x86/kernel/irq.c:285
+       asm_common_interrupt+0x26/0x40 arch/x86/include/asm/idtentry.h:693
+       __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+       _raw_spin_unlock_irqrestore+0xa8/0x110 kernel/locking/spinlock.c:194
+       spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+       uart_port_unlock_irqrestore include/linux/serial_core.h:788 [inline]
+       uart_port_unlock_deref+0x111/0x2f0 drivers/tty/serial/serial_core.c:91
+       uart_write+0xe8/0x130 drivers/tty/serial/serial_core.c:637
+       process_output_block drivers/tty/n_tty.c:561 [inline]
+       n_tty_write+0xd35/0x11d0 drivers/tty/n_tty.c:2377
+       iterate_tty_write drivers/tty/tty_io.c:1006 [inline]
+       file_tty_write+0x4fe/0x990 drivers/tty/tty_io.c:1081
+       new_sync_write fs/read_write.c:593 [inline]
+       vfs_write+0x548/0xa90 fs/read_write.c:686
+       ksys_write+0x145/0x250 fs/read_write.c:738
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #1 (&port_lock_key){-.-.}-{3:3}:
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0xa7/0xf0 kernel/locking/spinlock.c:162
+       uart_port_lock_irqsave include/linux/serial_core.h:717 [inline]
+       serial8250_console_write+0x17e/0x1ba0 drivers/tty/serial/8250/8250_port.c:3415
+       console_emit_next_record kernel/printk/printk.c:3138 [inline]
+       console_flush_all+0x728/0xc40 kernel/printk/printk.c:3226
+       __console_flush_and_unlock kernel/printk/printk.c:3285 [inline]
+       console_unlock+0xc4/0x270 kernel/printk/printk.c:3325
+       vprintk_emit+0x5b7/0x7a0 kernel/printk/printk.c:2450
+       _printk+0xcf/0x120 kernel/printk/printk.c:2475
+       register_console+0xa8b/0xf90 kernel/printk/printk.c:4125
+       univ8250_console_init+0x52/0x90 drivers/tty/serial/8250/8250_core.c:513
+       console_init+0x1a1/0x670 kernel/printk/printk.c:4323
+       start_kernel+0x2cc/0x500 init/main.c:1035
+       x86_64_start_reservations+0x24/0x30 arch/x86/kernel/head64.c:307
+       x86_64_start_kernel+0x143/0x1c0 arch/x86/kernel/head64.c:288
+       common_startup_64+0x13e/0x147
+
+-> #0 (console_owner){-...}-{0:0}:
+       check_prev_add kernel/locking/lockdep.c:3168 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+       console_trylock_spinning kernel/printk/printk.c:2048 [inline]
+       vprintk_emit+0x460/0x7a0 kernel/printk/printk.c:2449
+       _printk+0xcf/0x120 kernel/printk/printk.c:2475
+       debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+       lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+       __debug_object_init+0x2c8/0x3c0 lib/debugobjects.c:743
+       rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
+       bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
+       kthread+0x711/0x8a0 kernel/kthread.c:464
+       ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+other info that might help us debug this:
+
+Chain exists of:
+  console_owner --> &port->lock#2 --> &obj_hash[i].lock
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&obj_hash[i].lock);
+                               lock(&port->lock#2);
+                               lock(&obj_hash[i].lock);
+  lock(console_owner);
+
+ *** DEADLOCK ***
+
+1 lock held by bch-copygc/loop/7681:
+ #0: ffffffff99c703d8 (&obj_hash[i].lock){-.-.}-{2:2}, at: __debug_object_init+0x85/0x3c0 lib/debugobjects.c:741
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 7681 Comm: bch-copygc/loop Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
 Call Trace:
  <TASK>
  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xb4/0x290 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- ext4_ext_correct_indexes+0x72/0x5b0 fs/ext4/extents.c:1710
- ext4_ext_insert_extent+0x1fdd/0x4af0 fs/ext4/extents.c:2186
- ext4_ext_map_blocks+0x179c/0x67c0 fs/ext4/extents.c:4400
- ext4_map_create_blocks fs/ext4/inode.c:520 [inline]
- ext4_map_blocks+0x807/0x1740 fs/ext4/inode.c:706
- _ext4_get_block+0x200/0x4c0 fs/ext4/inode.c:785
- ext4_get_block_unwritten+0x2e/0x100 fs/ext4/inode.c:818
- ext4_block_write_begin+0x543/0x1290 fs/ext4/inode.c:1067
- ext4_write_begin+0x6f6/0x12c0 fs/ext4/ext4_jbd2.h:-1
- ext4_da_write_begin+0x33a/0xa60 fs/ext4/inode.c:2932
- generic_perform_write+0x2c4/0x910 mm/filemap.c:4103
- ext4_buffered_write_iter+0xce/0x3a0 fs/ext4/file.c:299
- ext4_file_write_iter+0x298/0x1bc0 fs/ext4/file.c:-1
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x54b/0xa90 fs/read_write.c:684
- ksys_pwrite64 fs/read_write.c:791 [inline]
- __do_sys_pwrite64 fs/read_write.c:799 [inline]
- __se_sys_pwrite64 fs/read_write.c:796 [inline]
- __x64_sys_pwrite64+0x193/0x220 fs/read_write.c:796
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fcafd410be9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fcafcbb4168 EFLAGS: 00000246 ORIG_RAX: 0000000000000012
-RAX: ffffffffffffffda RBX: 00007fcafd4984a8 RCX: 00007fcafd410be9
-RDX: 000000000000fdef RSI: 0000200000000140 RDI: 0000000000000004
-RBP: 00007fcafd4984a0 R08: 00007fcafcbb46c0 R09: 0000000000000000
-R10: 000000000000fecc R11: 0000000000000246 R12: 00007fcafd4984ac
-R13: 000000000000000b R14: 00007fff140f2480 R15: 00007fff140f2568
- </TASK>
-
-Allocated by task 12:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __do_kmalloc_node mm/slub.c:4327 [inline]
- __kmalloc_noprof+0x27a/0x4f0 mm/slub.c:4339
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- cfg80211_inform_single_bss_data+0x905/0x1ac0 net/wireless/scan.c:2339
- cfg80211_inform_bss_data+0x1fb/0x3b20 net/wireless/scan.c:3222
- cfg80211_inform_bss_frame_data+0x362/0x700 net/wireless/scan.c:3317
- ieee80211_bss_info_update+0x746/0x9e0 net/mac80211/scan.c:226
- ieee80211_rx_bss_info net/mac80211/ibss.c:1102 [inline]
- ieee80211_rx_mgmt_probe_beacon net/mac80211/ibss.c:1581 [inline]
- ieee80211_ibss_rx_queued_mgmt+0xa36/0x2ae0 net/mac80211/ibss.c:1608
- ieee80211_iface_process_skb net/mac80211/iface.c:1625 [inline]
- ieee80211_iface_work+0x806/0xfe0 net/mac80211/iface.c:1679
- cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
+ check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
+ check_prev_add kernel/locking/lockdep.c:3168 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+ validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
+ __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
+ lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
+ console_trylock_spinning kernel/printk/printk.c:2048 [inline]
+ vprintk_emit+0x460/0x7a0 kernel/printk/printk.c:2449
+ _printk+0xcf/0x120 kernel/printk/printk.c:2475
+ debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
+ lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+ __debug_object_init+0x2c8/0x3c0 lib/debugobjects.c:743
+ rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
+ bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
  kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-Last potentially related work creation:
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xbc/0xd0 mm/kasan/generic.c:548
- kvfree_call_rcu+0xbb/0x410 mm/slab_common.c:1962
- cfg80211_update_known_bss+0x634/0x1330 net/wireless/scan.c:1925
- __cfg80211_bss_update+0x147/0x2120 net/wireless/scan.c:1972
- cfg80211_inform_single_bss_data+0xba9/0x1ac0 net/wireless/scan.c:2363
- cfg80211_inform_bss_data+0x1fb/0x3b20 net/wireless/scan.c:3222
- cfg80211_inform_bss_frame_data+0x362/0x700 net/wireless/scan.c:3317
- ieee80211_bss_info_update+0x746/0x9e0 net/mac80211/scan.c:226
- ieee80211_scan_rx+0x527/0x9b0 net/mac80211/scan.c:340
- __ieee80211_rx_handle_packet net/mac80211/rx.c:5179 [inline]
- ieee80211_rx_list+0x22fc/0x2d80 net/mac80211/rx.c:5416
- ieee80211_rx_napi+0x1a8/0x3d0 net/mac80211/rx.c:5439
- ieee80211_rx include/net/mac80211.h:5179 [inline]
- ieee80211_handle_queued_frames+0xe8/0x1f0 net/mac80211/main.c:441
- tasklet_action_common+0x369/0x580 kernel/softirq.c:829
- handle_softirqs+0x283/0x870 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-
-The buggy address belongs to the object at ffff88807b361f00
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 8 bytes to the right of
- allocated 72-byte region [ffff88807b361f00, ffff88807b361f48)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x7b361
-flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000000 ffff88801a041280 ffffea0000bd3a40 dead000000000002
-raw: 0000000000000000 0000000000200020 00000000f5000000 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52820(GFP_ATOMIC|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 36, tgid 36 (kworker/u8:2), ts 101928270930, free_ts 101772582052
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1d8/0x230 mm/page_alloc.c:1714
- prep_new_page mm/page_alloc.c:1722 [inline]
- get_page_from_freelist+0x21c7/0x22a0 mm/page_alloc.c:3684
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4966
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
- alloc_slab_page mm/slub.c:2450 [inline]
- allocate_slab+0x8a/0x3b0 mm/slub.c:2618
- new_slab mm/slub.c:2672 [inline]
- ___slab_alloc+0xbfc/0x1480 mm/slub.c:3858
- __slab_alloc mm/slub.c:3948 [inline]
- __slab_alloc_node mm/slub.c:4023 [inline]
- slab_alloc_node mm/slub.c:4184 [inline]
- __kmalloc_cache_noprof+0x296/0x3d0 mm/slub.c:4353
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- nsim_fib_event_schedule_work drivers/net/netdevsim/fib.c:990 [inline]
- nsim_fib_event_nb+0x187/0x1080 drivers/net/netdevsim/fib.c:1043
- notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
- atomic_notifier_call_chain+0xda/0x180 kernel/notifier.c:223
- call_fib_notifiers+0x31/0x60 net/core/fib_notifier.c:35
- call_fib6_entry_notifiers net/ipv6/ip6_fib.c:397 [inline]
- fib6_add_rt2node net/ipv6/ip6_fib.c:1231 [inline]
- fib6_add+0x1a78/0x4360 net/ipv6/ip6_fib.c:1488
- __ip6_ins_rt net/ipv6/route.c:1351 [inline]
- ip6_ins_rt+0xc8/0x120 net/ipv6/route.c:1361
- __ipv6_ifa_notify+0x63f/0xac0 net/ipv6/addrconf.c:6286
- ipv6_ifa_notify net/ipv6/addrconf.c:6325 [inline]
- addrconf_dad_completed+0x180/0xd60 net/ipv6/addrconf.c:4324
- addrconf_dad_work+0xc36/0x14b0 net/ipv6/addrconf.c:-1
-page last free pid 5847 tgid 5847 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1258 [inline]
- __free_frozen_pages+0xb05/0xcd0 mm/page_alloc.c:2721
- discard_slab mm/slub.c:2716 [inline]
- __put_partials+0x161/0x1c0 mm/slub.c:3185
- put_cpu_partial+0x17c/0x250 mm/slub.c:3260
- __slab_free+0x2f7/0x400 mm/slub.c:4512
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x9a/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4147 [inline]
- slab_alloc_node mm/slub.c:4196 [inline]
- __do_kmalloc_node mm/slub.c:4326 [inline]
- __kmalloc_noprof+0x224/0x4f0 mm/slub.c:4339
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
- tomoyo_encode+0x28b/0x550 security/tomoyo/realpath.c:80
- tomoyo_realpath_from_path+0x58d/0x5d0 security/tomoyo/realpath.c:283
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x213/0x4b0 security/tomoyo/file.c:822
- tomoyo_path_unlink+0xa2/0xe0 security/tomoyo/tomoyo.c:162
- security_path_unlink+0x167/0x360 security/security.c:1965
- do_unlinkat+0x2de/0x560 fs/namei.c:4640
- __do_sys_unlink fs/namei.c:4689 [inline]
- __se_sys_unlink fs/namei.c:4687 [inline]
- __x64_sys_unlink+0x47/0x50 fs/namei.c:4687
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-
-Memory state around the buggy address:
- ffff88807b361e00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88807b361e80: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
->ffff88807b361f00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
-                                                 ^
- ffff88807b361f80: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff88807b362000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
+ </TASK>
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7681 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:655 [inline]
+WARNING: CPU: 0 PID: 7681 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+WARNING: CPU: 0 PID: 7681 at lib/debugobjects.c:655 __debug_object_init+0x2c9/0x3c0 lib/debugobjects.c:743
+Modules linked in:
+CPU: 0 UID: 0 PID: 7681 Comm: bch-copygc/loop Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:debug_object_is_on_stack lib/debugobjects.c:655 [inline]
+RIP: 0010:lookup_object_or_alloc lib/debugobjects.c:688 [inline]
+RIP: 0010:__debug_object_init+0x2c9/0x3c0 lib/debugobjects.c:743
+Code: cc cc cc 41 ff c7 44 89 3d a4 18 14 15 48 c7 c1 80 9b e2 8b 48 c7 c7 e0 9b e2 8b 84 c0 48 0f 45 f9 48 89 de e8 48 2b 61 fc 90 <0f> 0b 90 e9 c0 fe ff ff e8 3a 1c 00 00 8b 05 1c 9c c6 09 3b 05 1a
+RSP: 0018:ffffc900145976e0 EFLAGS: 00010046
+RAX: 0000000000000050 RBX: ffffc90014597b90 RCX: 64ea118d10585500
+RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
+RBP: ffff8880535b8020 R08: ffffffff8e133223 R09: 1ffffffff1c26644
+R10: dffffc0000000000 R11: fffffbfff1c26645 R12: ffff8880774b08d8
+R13: ffff888075dce8f8 R14: dffffc0000000000 R15: 0000000000000001
+FS:  0000000000000000(0000) GS:ffff888125c56000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000020000057f000 CR3: 0000000075822000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
+ bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
 
 
 ---
@@ -267,10 +292,6 @@ https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
 
 If you want to overwrite report's subsystems, reply with:
 #syz set subsystems: new-subsystem
