@@ -1,197 +1,183 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4B2212FA0
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F8F7E110
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271080; cv=none; b=OSdHGLqHemLdpT5HwMn8x/lUQIiWxnE1QLWO+A0s/Ln/53uguostPTE6VO9q3EWL70mMr4tOsCAaveOWyvPfsozjv7An1KEgc/xXvGnAXIrKz4HHaqZ+Z9JP2SnIU5v5PHFd6tFeeTqNiCKDg9EtLfHu0cxGJRCt2YYFqJBIBCg=
+	t=1748271166; cv=none; b=SpY3ALdcfJ4h4sWkU3OnjcSPtC21s3OSQ05kX82Zm+2ABHkp3HNB6l4TsmxJBBFDdhPGfQ8lcyt7lUoRqdg2ZhVgZtvxdge4yy7/2WlPlRFnNqwCRywFXZQf10yaUceMixyQmN7HzvZC+o6EB9cZEtjCedr1FmESTJFFFYT0jyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271080; c=relaxed/simple;
-	bh=7PiqybYma0dlaRu0rJ2Djeg8WyOzpuNaamPMS8Qblq8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BxzD/8QpROA+6Hwx43TKb1P+vIifHgir71Swwlz/ClpKPKwWIXjOBQJUNQO9i0jck0RMKrYOSCPYkuLo+SriogeFowMjuoHFvhyGh9nfMSjZ1wlVYElqbPjsCkx2kel/xnmijBL4dC8lvb2X36ri44BsR3rMorKJZOkL5phn+jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HW6MpTzV; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HW6MpTzV"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q3HW2v001284;
-	Mon, 26 May 2025 14:50:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=mEbyvPQr2gVwbgCiE
-	SakcT+TQCA2g4GL1G0/MZDlAx0=; b=HW6MpTzVLt4j1oK8P9dlyto7LgE3rfNj4
-	/vJZ0J792APv/Z0K/nf7gZPqFFGc6AEdk5IaUvzbiuF9CBqqzmUQShfiUDCB4GUG
-	3boMY1bITC2+OdYVazroyoYqjZIeZTrenhTT3SmTVe7F/bbBdLw7y45EJ6wuIhzu
-	OOuiShpnLkEkSfm8+O4DOoYofJur3rRNbxVp7Bxsg6ioZWS2wBgbmWv7SyQCQBr+
-	3L4HN901s2EgSME3FoGI9syPZdobQ8Fyz/zlHHnUJ7+EviF99kzo04v6DS63Kj2V
-	gcyLV2W00wudcTB6AC0yy/uOT4ra8LaLLPabGtMYqk1WNsWSCdz1A==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5uchpx5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 14:50:48 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54QEfsqr009052;
-	Mon, 26 May 2025 14:50:48 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5uchpx3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 14:50:47 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54QEDdlZ007940;
-	Mon, 26 May 2025 14:50:46 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu52x93m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 14:50:46 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54QEoh6S30540446
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 26 May 2025 14:50:43 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B5D620043;
-	Mon, 26 May 2025 14:50:43 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A18EC20040;
-	Mon, 26 May 2025 14:50:40 +0000 (GMT)
-Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 26 May 2025 14:50:40 +0000 (GMT)
-From: Donet Tom <donettom@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
-        Zi Yan <ziy@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
-        Danilo Krummrich <dakr@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Nilay Shroff <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        Donet Tom <donettom@linux.ibm.com>
-Subject: [PATCH v6 4/5] drivers/base/node: Rename register_memory_blocks_under_node() and remove context argument
-Date: Mon, 26 May 2025 09:50:12 -0500
-Message-ID: <030838b43c052079be40e036a4d0f084165e1006.1748270306.git.donettom@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <bc754a238aa91fa36be463985ccde66aac7055e7.1748270306.git.donettom@linux.ibm.com>
-References: <bc754a238aa91fa36be463985ccde66aac7055e7.1748270306.git.donettom@linux.ibm.com>
+	s=arc-20240116; t=1748271166; c=relaxed/simple;
+	bh=G7c72AV8gS3wkfxDivSJ+ckK3flK2C0qPAWpZppbbr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uj2xGruqunkkdtaF+wAMNVnP71lschQmu4quEbKloA+xnR225Xz2XuSHsdr6K0CD3VViAz5KbCDNJnfEgN6qdc43Xk4bHcsoQbS7Ii05z6k6ipojS/fI+yybAL/y1eYsY1R0Uap3dHsfC/UHE8Dvzv6+tTAN8QhyHSKIkk+o9qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5dyg534Bz4f3lDG
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:52:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 717351A0A11
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:52:38 +0800 (CST)
+Received: from [10.67.109.184] (unknown [10.67.109.184])
+	by APP3 (Coremail) with SMTP id _Ch0CgD3lsE0gDRoZo2CNQ--.12408S2;
+	Mon, 26 May 2025 22:52:38 +0800 (CST)
+Message-ID: <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
+Date: Mon, 26 May 2025 22:52:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
+ oleg@redhat.com
+Cc: mhiramat@kernel.org, peterz@infradead.org, Liam.Howlett@oracle.com,
+ akpm@linux-foundation.org, vbabka@suse.cz, jannh@google.com,
+ pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ pulehui@huawei.com
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+ <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
+ <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
+ <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
+From: Pu Lehui <pulehui@huaweicloud.com>
+In-Reply-To: <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XU-eQ3M37H_5J9CbBH6jpezQo86iJwvr
-X-Proofpoint-GUID: TiTI2N2-MW1PZXMyGh2diXtASNGxD-k9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDEyNCBTYWx0ZWRfX+p7cEPRlTyK/ z0C1hfP+cyChD48/p7qazdp2S2jWX/pnQxqmvYH3ZdyKbkVfPivg/VmafYxxSwolAYLRPwyV0bp wqdiPsnLZRWs8cdqTktoDNaV+ONOVK/Lfj0hR35XUaVZBu08ASnK3iZ0jk0T83j4wej6YXvbNr9
- Vf2dkP1wwIhF3u48EkDMbEg3E52WA+vpP8GWkQtE8qP3uGleWq6Afr+wsZRPXF3fin0xyPfTjNU 9P4ap155zKcTu9wM5TNN8ksgyWctTF0mTMFn0r4aomJ2ixftL7Hy16X8c5LDam9vXtBPnSv2DSd JSHOHnEYreNaO7ntx9endag0m2z4qzjr5Md6UEfrZ4trpXV8J6gpmUw2Zh6alTFkESu4t4C3fFU
- ds7lo84V4WRw+eYTgGw5KNASOaLWwMfXTymfZeXkBtvXriTLb/UWJgeDolGUPZ1GzMaxHezL
-X-Authority-Analysis: v=2.4 cv=fJM53Yae c=1 sm=1 tr=0 ts=68347fc8 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=Ikd4Dj_1AAAA:8 a=xjaU-GFjuEzJSOh1rDoA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_07,2025-05-26_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
- phishscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505260124
+X-CM-TRANSID:_Ch0CgD3lsE0gDRoZo2CNQ--.12408S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxur4Duw13KrWxJw47AF1UKFg_yoWrGr4xpa
+	yxJas8KF1DJFWFyryqv34DtFyrtw4Ut3yUXrn8JFya93s8Kr1aqFW7ZFWjkFy3XrZ3tF4U
+	tr4Ut343Xa47JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
-The function register_memory_blocks_under_node() is now only called from
-the memory hotplug path, as register_memory_blocks_under_node_early()
-handles registration during early boot. Therefore, the context argument
-used to differentiate between early boot and hotplug is no longer needed
-and was removed.
 
-Since the function is only called from the hotplug path, we renamed
-register_memory_blocks_under_node() to
-register_memory_blocks_under_node_hotplug()
+On 2025/5/22 23:14, David Hildenbrand wrote:
+> On 22.05.25 16:37, Pu Lehui wrote:
+>>
+>>
+>> On 2025/5/21 18:25, David Hildenbrand wrote:
+>>> On 21.05.25 11:25, Pu Lehui wrote:
+>>>> From: Pu Lehui <pulehui@huawei.com>
+>>>>
+>>>> We encountered a BUG alert triggered by Syzkaller as follows:
+>>>>      BUG: Bad rss-counter state mm:00000000b4a60fca type:MM_ANONPAGES
+>>>> val:1
+>>>>
+>>>> And we can reproduce it with the following steps:
+>>>> 1. register uprobe on file at zero offset
+>>>> 2. mmap the file at zero offset:
+>>>>      addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
+>>>
+>>> So, here we will install a uprobe.
+>>>
+>>>> 3. mremap part of vma1 to new vma2:
+>>>>      addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
+>>>
+>>> Okay, so we'll essentially move the uprobe as we mremap.
+>>>
+>>>
+>>>> 4. mremap back to orig addr1:
+>>>>      mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
+>>>
+>>> And here, we would expect to move the uprobe again.
+>>>
+>>>>
+>>>> In the step 3, the vma1 range [addr1, addr1 + 4096] will be remap to 
+>>>> new
+>>>> vma2 with range [addr2, addr2 + 8192], and remap uprobe anon page from
+>>>> the vma1 to vma2, then unmap the vma1 range [addr1, addr1 + 4096].
+>>>> In tht step 4, the vma2 range [addr2, addr2 + 4096] will be remap back
+>>>> to the addr range [addr1, addr1 + 4096]. Since the addr range [addr1 +
+>>>> 4096, addr1 + 8192] still maps the file, it will take
+>>>> vma_merge_new_range to merge these two addr ranges, and then do
+>>>> uprobe_mmap in vma_complete. Since the merged vma pgoff is also zero
+>>>> offset, it will install uprobe anon page to the merged vma.
+>>>
+>>> Oh, so we're installing the uprobe into the extended VMA before moving
+>>> the page tables.
+>> Yep!
+>>>
+>>> Gah.
+>>>
+>>>> However, the
+>>>> upcomming move_page_tables step, which use set_pte_at to remap the vma2
+>>>> uprobe anon page to the merged vma, will over map the old uprobe anon
+>>>> page in the merged vma, and lead the old uprobe anon page to be orphan.
+>>>
+>>> Right, when moving page tables we don't expect there to already be
+>>> something from the uprobe code.
+>>>
+>>>>
+>>>> Since the uprobe anon page will be remapped to the merged vma, we can
+>>>> remove the unnecessary uprobe_mmap at merged vma, that is, do not
+>>>> perform uprobe_mmap when there is no vma in the addr range to be
+>>>> expaned.
+>>>
+>>> Hmmm, I'll have to think about other corner cases ....
+>>>
+>> looking forward to it
+> 
+> I think, the rule is that we must not install a uprobe for the range 
+> that we will be actually moving the page tables for.
+> 
+> So, for the range we're effectively moving (not the one we're extending).
+> 
+> Because logically, the uprobe will be already handled by the existing 
+> page tables that we're moving.
+> 
+> For the range we're extending, we must call uprobe handling code ...
+> 
+> 
+> Alternatively, maybe we could call uprobe handling code after moving the 
+> page tables. We'd probably find that the uprobe is already installed and 
+> do nothing (so the theory :) ). ... if that would simplify anything.
+> 
 
-Acked-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Zi Yan <ziy@nvidia.com>
-Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+Hi David, Lorenzo, Oleg,
 
----
-v5 -> v6
+My apologies for the delay. Thanks for your reply.
 
-No change
+To make things simpler, perhaps we could try post-processing, that is:
 
-v5 - https://lore.kernel.org/all/d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com/
-v4 - https://lore.kernel.org/all/f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com/
-v3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
-v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
-v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
----
----
- drivers/base/node.c  |  5 ++---
- include/linux/node.h | 11 +++++------
- mm/memory_hotplug.c  |  5 ++---
- 3 files changed, 9 insertions(+), 12 deletions(-)
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 83e359754961..46a757fd26dc 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -240,6 +240,11 @@ static int move_ptes(struct pagetable_move_control 
+*pmc,
+                 if (pte_none(ptep_get(old_pte)))
+                         continue;
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 71ddf2d0d1af..9d0977fa50e3 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -843,9 +843,8 @@ static void register_memory_blocks_under_nodes(void)
- 	}
- }
- 
--void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
--				       unsigned long end_pfn,
--				       enum meminit_context context)
-+void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
-+					       unsigned long end_pfn)
- {
- 	walk_memory_blocks(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn - start_pfn),
- 			   (void *)&nid, register_mem_block_under_node_hotplug);
-diff --git a/include/linux/node.h b/include/linux/node.h
-index b15de78e0408..75b036a100d2 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -111,13 +111,12 @@ struct memory_block;
- extern struct node *node_devices[];
- 
- #if defined(CONFIG_MEMORY_HOTPLUG) && defined(CONFIG_NUMA)
--void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
--				       unsigned long end_pfn,
--				       enum meminit_context context);
-+void register_memory_blocks_under_node_hotplug(int nid, unsigned long start_pfn,
-+					       unsigned long end_pfn);
- #else
--static inline void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
--						     unsigned long end_pfn,
--						     enum meminit_context context)
-+static inline void register_memory_blocks_under_node_hotplug(int nid,
-+							     unsigned long start_pfn,
-+							     unsigned long end_pfn)
- {
- }
- static inline void register_memory_blocks_under_nodes(void)
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 8305483de38b..f734cc924b51 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1575,9 +1575,8 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
- 		BUG_ON(ret);
- 	}
- 
--	register_memory_blocks_under_node(nid, PFN_DOWN(start),
--					  PFN_UP(start + size - 1),
--					  MEMINIT_HOTPLUG);
-+	register_memory_blocks_under_node_hotplug(nid, PFN_DOWN(start),
-+					  PFN_UP(start + size - 1));
- 
- 	/* create new memmap entry */
- 	if (!strcmp(res->name, "System RAM"))
--- 
-2.43.5
++               /* skip move pte when expanded range has uprobe */
++               if (unlikely(pte_present(*new_pte) &&
++                            vma_has_uprobes(pmc->new, new_addr, 
+new_addr + PAGE_SIZE)))
++                       continue;
++
+                 pte = ptep_get_and_clear(mm, old_addr, old_pte);
+                 /*
+                  * If we are remapping a valid PTE, make sure
+
+What do you think?
+
+Thanks,
+Lehui
 
