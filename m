@@ -1,33 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333741A26B;
-	Mon, 26 May 2025 05:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51931C3BF7
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748238494; cv=none; b=Udd2Sc8klFTqSPnsfuHjM7Uo1I+H9Bez5VtcL/fsIW0EnW6k+nNSWkYfa1yDYIHuIzdoI2OHS0HsNV+das7lkrX+A26Cj+nHEcgKLyoTsadyi6AmXhxzt8BubMZvmkefEvCW8YfW257X8im6HT9IlPwKplw/iT1T+KXnM1NG3Kc=
+	t=1748238546; cv=none; b=D8R+LT//2jy23TTu3jDnhOsqDwzhqzmmjaajFwnP82rIlElFdTR8C69lqbCpH3yr2NS4WXF/whrUV+xnQhxlClj26vAlRAgizyr8eQfsUiiWr8PBLXFy2WwPg1i9LWb9bxUkBQhFv1FuvBFLAepayIz80jxfUXMkcjWtKk86igc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748238494; c=relaxed/simple;
-	bh=bdCCiAUM39wgNEBtRijLIZNzyMM8ZIX0c28i/gBEN9g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=I9vzqlSCql8/BSNyGRi9dwRQuqpPsziRzFalKuC5o4nF+n9tPMIgCEJPdP9viQbt0H+doEkv8llaszAykfwQ1kYw/1WXvn33+ZQgDD/W0GjEr7SGu1tR+Q3+uOuXGWgDjZYVjmL+u1cEtMyOlcthfzagePv0k5N7eGByn66WdJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cprSY10D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748238546; c=relaxed/simple;
+	bh=k1E77LZzqWPACgRClxG/Iz/D1GERBH4o8Dtv6xv+TZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qjSRT+U6G+ugwHnPnnZhM+H9OI8JbC/F11ZDoM3TlPmLPcbMuD0TL+GYzYRV19Q0UgMAEYH4enPPJ3uELeA9M8dP41+wSZ8c8DI0T22AMghiX1Jv5xeH1xuywPORXyisB/rsAmUR5keQ5I/AXhWl1lOTBtfNAJah5bkUTMkvn+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=BRFd8EQ6; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cprSY10D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 579B6C4CEE7;
-	Mon, 26 May 2025 05:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748238493;
-	bh=bdCCiAUM39wgNEBtRijLIZNzyMM8ZIX0c28i/gBEN9g=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=cprSY10DcSwnHX3T8uesB5jegtXD8Gt8oxLbuZ49sz613i76bKDJT1dF3nJDK6bby
-	 uIMibDFhXVQ+R/H+Wrr2ZOC0YPh8aJ88RzKw3zKYIcLU8dAWxmOXCJH4p8KO7CzE6i
-	 9ujStQd9vczJZjIJltiDlfCdTgom3DJskR/5hhcWL4M21jOBl7z8iVQkiNgJiESN2u
-	 TldvRfP9Y2GqEejuxAzO4FDoGonL/KkRv+ZCxWZn8xh6Xk/cSMmEmD6jFRLC3GA53Z
-	 F9LclGtRDhAUoyI59VBsekGbMoHHpqlFB+EU1x3gP5sz7MS1Dav04VXDgdmXlVYn5C
-	 9249rAKTNy/iw==
-Message-ID: <6067561e-14d4-4512-afd7-4a4eca27ecfa@kernel.org>
-Date: Mon, 26 May 2025 07:48:08 +0200
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="BRFd8EQ6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1748238545; x=1779774545;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=k1E77LZzqWPACgRClxG/Iz/D1GERBH4o8Dtv6xv+TZw=;
+  b=BRFd8EQ6987P/0f0RJyT1eD1MN6alwK6l56c5/KKVl3hQ+BLaCvTH0M5
+   pc8af6KgcP+JfNu+MAX4/jvEAclKt4r1OD1DlKxVqYye5PkZjyPO+OAtN
+   tSZKM5rkNnLOkSUv5e5fGqC0H4RZdwZJMd8ib5ggiGyRvPX9dwbAY2rNZ
+   2Xg9YNHzpUsWQV+JsZODUM5SFLpyDMKUOnnr3H/T6kqAodLM0mUoaqNgg
+   JLReSw/K3/4BesDydbWX2/gL6wLb4iuJzteeGemJNqSIpGeoY8mWsLTS2
+   orkvr0nsJWoxmXNqvIsoSEwkieyVfTQLp3qLwZwKHKAk3JzUQjAdNMW51
+   w==;
+X-IronPort-AV: E=Sophos;i="6.15,315,1739836800"; 
+   d="scan'208";a="53857290"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 05:49:04 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:11457]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.53.71:2525] with esmtp (Farcaster)
+ id a05f7f2e-b313-4a0b-b7aa-85bc43f445bc; Mon, 26 May 2025 05:49:02 +0000 (UTC)
+X-Farcaster-Flow-ID: a05f7f2e-b313-4a0b-b7aa-85bc43f445bc
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Mon, 26 May 2025 05:49:02 +0000
+Received: from [0.0.0.0] (172.19.99.218) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Mon, 26 May 2025
+ 05:49:00 +0000
+Message-ID: <e35d0f10-74d3-40c3-a43c-0e96edf3a121@amazon.com>
+Date: Mon, 26 May 2025 07:48:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,80 +54,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dt-bindings: i2c: nvidia,tegra20-i2c: Specify the
- required properties
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Akhil R <akhilrajeev@nvidia.com>, andi.shyti@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, thierry.reding@gmail.com,
- jonathanh@nvidia.com, ldewangan@nvidia.com, digetx@gmail.com,
- p.zabel@pengutronix.de, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250526052553.42766-1-akhilrajeev@nvidia.com>
- <44b5d5f1-f45e-4d81-809f-707bd756257d@kernel.org>
+Subject: Re: [PATCH v4] kexec: Enable CMA based contiguous allocation
+To: Baoquan He <bhe@redhat.com>
+CC: <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Pasha
+ Tatashin" <pasha.tatashin@soleen.com>, <nh-open-source@amazon.com>, "Zhongkun
+ He" <hezhongkun.hzk@bytedance.com>
+References: <20250521152934.48841-1-graf@amazon.com> <aDPbWW1x1RhnJNza@fedora>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <44b5d5f1-f45e-4d81-809f-707bd756257d@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <aDPbWW1x1RhnJNza@fedora>
+X-ClientProxiedBy: EX19D041UWB002.ant.amazon.com (10.13.139.179) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 
-On 26/05/2025 07:40, Krzysztof Kozlowski wrote:
-> On 26/05/2025 07:25, Akhil R wrote:
->> Specify the properties which are essential for the Tegra I2C driver to
->> function correctly. Though all the existing DT nodes have these
->> properties already, it was not mandated by the DT bindings.
-> 
-> I was rather expecting to see explanation why these were missing.
+Ck9uIDI2LjA1LjI1IDA1OjA5LCBCYW9xdWFuIEhlIHdyb3RlOgo+IE9uIDA1LzIxLzI1IGF0IDAz
+OjI5cG0sIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+PiBXaGVuIGJvb3RpbmcgYSBuZXcga2VybmVs
+IHdpdGgga2V4ZWNfZmlsZSwgdGhlIGtlcm5lbCBwaWNrcyBhIHRhcmdldAo+PiBsb2NhdGlvbiB0
+aGF0IHRoZSBrZXJuZWwgc2hvdWxkIGxpdmUgYXQsIHRoZW4gYWxsb2NhdGVzIHJhbmRvbSBwYWdl
+cywKPj4gY2hlY2tzIHdoZXRoZXIgYW55IG9mIHRob3NlIHBhdGNoZXMgbWFnaWNhbGx5IGhhcHBl
+bnMgdG8gY29pbmNpZGUgd2l0aAo+PiBhIHRhcmdldCBhZGRyZXNzIHJhbmdlIGFuZCBpZiBzbywg
+dXNlcyB0aGVtIGZvciB0aGF0IHJhbmdlLgo+Pgo+PiBGb3IgZXZlcnkgcGFnZSBhbGxvY2F0ZWQg
+dGhpcyB3YXksIGl0IHRoZW4gY3JlYXRlcyBhIHBhZ2UgbGlzdCB0aGF0IHRoZQo+PiByZWxvY2F0
+aW9uIGNvZGUgLSBjb2RlIHRoYXQgZXhlY3V0ZXMgd2hpbGUgYWxsIENQVXMgYXJlIG9mZiBhbmQg
+d2UgYXJlCj4+IGp1c3QgYWJvdXQgdG8ganVtcCBpbnRvIHRoZSBuZXcga2VybmVsIC0gY29waWVz
+IHRvIHRoZWlyIGZpbmFsIG1lbW9yeQo+PiBsb2NhdGlvbi4gV2UgY2FuIG5vdCBwdXQgdGhlbSB0
+aGVyZSBiZWZvcmUsIGJlY2F1c2UgY2hhbmNlcyBhcmUgcHJldHR5Cj4+IGdvb2QgdGhhdCBhdCBs
+ZWFzdCBzb21lIHBhZ2UgaW4gdGhlIHRhcmdldCByYW5nZSBpcyBhbHJlYWR5IGluIHVzZSBieQo+
+PiB0aGUgY3VycmVudGx5IHJ1bm5pbmcgTGludXggZW52aXJvbm1lbnQuIENvcHlpbmcgaXMgaGFw
+cGVuaW5nIGZyb20gYQo+PiBzaW5nbGUgQ1BVIGF0IFJBTSByYXRlLCB3aGljaCB0YWtlcyBhcm91
+bmQgNC01MCBtcyBwZXIgMTAwIE1pQi4KPj4KPj4gQWxsIG9mIHRoaXMgaXMgaW5lZmZpY2llbnQg
+YW5kIGVycm9yIHByb25lLgo+Pgo+PiBUbyBzdWNjZXNzZnVsbHkga2V4ZWMsIHdlIG5lZWQgdG8g
+cXVpZXNjZSBhbGwgZGV2aWNlcyBvZiB0aGUgb3V0Z29pbmcKPj4ga2VybmVsIHNvIHRoZXkgZG9u
+J3Qgc2NyaWJibGUgb3ZlciB0aGUgbmV3IGtlcm5lbCdzIG1lbW9yeS4gV2UgaGF2ZSBzZWVuCj4+
+IGNhc2VzIHdoZXJlIHRoYXQgZG9lcyBub3QgaGFwcGVuIHByb3Blcmx5ICgqY291Z2gqIEdJQyAq
+Y291Z2gqKSBhbmQgaGVuY2UKPj4gdGhlIG5ldyBrZXJuZWwgd2FzIGNvcnJ1cHRlZC4gVGhpcyBz
+dGFydGVkIGEgbW9udGggbG9uZyBqb3VybmV5IHRvIHJvb3QKPj4gY2F1c2UgZmFpbGluZyBrZXhl
+Y3MgdG8gZXZlbnR1YWxseSBzZWUgbWVtb3J5IGNvcnJ1cHRpb24sIGJlY2F1c2UgdGhlIG5ldwo+
+PiBrZXJuZWwgd2FzIGNvcnJ1cHRlZCBzZXZlcmVseSBlbm91Z2ggdGhhdCBpdCBjb3VsZCBub3Qg
+ZW1pdCBvdXRwdXQgdG8KPj4gdGVsbCB1cyBhYm91dCB0aGUgZmFjdCB0aGF0IGl0IHdhcyBjb3Jy
+dXB0ZWQuIEJ5IGFsbG9jYXRpbmcgbWVtb3J5IGZvciB0aGUKPj4gbmV4dCBrZXJuZWwgZnJvbSBh
+IG1lbW9yeSByYW5nZSB0aGF0IGlzIGd1YXJhbnRlZWQgc2NyaWJibGluZyBmcmVlLCB3ZSBjYW4K
+Pj4gYm9vdCB0aGUgbmV4dCBrZXJuZWwgdXAgdG8gYSBwb2ludCB3aGVyZSBpdCBpcyBhdCBsZWFz
+dCBhYmxlIHRvIGRldGVjdAo+PiBjb3JydXB0aW9uIGFuZCBtYXliZSBldmVuIHN0b3AgaXQgYmVm
+b3JlIGl0IGJlY29tZXMgc2V2ZXJlLiBUaGlzIGluY3JlYXNlcwo+PiB0aGUgY2hhbmNlIGZvciBz
+dWNjZXNzZnVsIGtleGVjcy4KPj4KPj4gU2luY2Uga2V4ZWMgZ290IGludHJvZHVjZWQsIExpbnV4
+IGhhcyBnYWluZWQgdGhlIENNQSBmcmFtZXdvcmsgd2hpY2gKPj4gY2FuIHBlcmZvcm0gcGh5c2lj
+YWxseSBjb250aWd1b3VzIG1lbW9yeSBtYXBwaW5ncywgd2hpbGUga2VlcGluZyB0aGF0Cj4+IG1l
+bW9yeSBhdmFpbGFibGUgZm9yIG1vdmFibGUgbWVtb3J5IHdoZW4gaXQgaXMgbm90IG5lZWRlZCBm
+b3IgY29udGlndW91cwo+PiBhbGxvY2F0aW9ucy4gVGhlIGRlZmF1bHQgQ01BIGFsbG9jYXRvciBp
+cyBmb3IgRE1BIGFsbG9jYXRpb25zLgo+Pgo+PiBUaGlzIHBhdGNoIGFkZHMgbG9naWMgdG8gdGhl
+IGtleGVjIGZpbGUgbG9hZGVyIHRvIGF0dGVtcHQgdG8gcGxhY2UgdGhlCj4+IHRhcmdldCBwYXls
+b2FkIGF0IGEgbG9jYXRpb24gYWxsb2NhdGVkIGZyb20gQ01BLiBJZiBzdWNjZXNzZnVsLCBpdCB1
+c2VzCj4+IHRoYXQgbWVtb3J5IHJhbmdlIGRpcmVjdGx5IGluc3RlYWQgb2YgY3JlYXRpbmcgY29w
+eSBpbnN0cnVjdGlvbnMgZHVyaW5nCj4+IHRoZSBob3QgcGhhc2UuIFRvIGVuc3VyZSB0aGF0IHRo
+ZXJlIGlzIGEgc2FmZXR5IG5ldCBpbiBjYXNlIGFueXRoaW5nIGdvZXMKPj4gd3Jvbmcgd2l0aCB0
+aGUgQ01BIGFsbG9jYXRpb24sIGl0IGFsc28gYWRkcyBhIGZsYWcgZm9yIHVzZXIgc3BhY2UgdG8g
+Zm9yY2UKPj4gZGlzYWJsZSBDTUEgYWxsb2NhdGlvbnMuCj4+Cj4+IFVzaW5nIENNQSBhbGxvY2F0
+aW9ucyBoYXMgdHdvIGFkdmFudGFnZXM6Cj4+Cj4+ICAgIDEpIEZhc3RlciBieSA0LTUwIG1zIHBl
+ciAxMDAgTWlCLiBUaGVyZSBpcyBubyBtb3JlIG5lZWQgdG8gY29weSBpbiB0aGUKPj4gICAgICAg
+aG90IHBoYXNlLgo+IFdvbmRlcmluZyBhdCB3aGF0IHN0YWdlIHRoaXMgJ2ZhdGVyIGJ5IDQtNTBt
+cyBwZXIgMTAwTUInIGlzIGdvdC4gVXN1YWxseQo+IGtlcm5lbCBpYW1nZSArIGluaXRyZCB3b24n
+dCBiZSBtb3JlIHRoYW4gMTAwTUIsIGFuZCBpZiBzeXN0ZW0gaXMgcnVubmluZwo+IGFuZCBtZW1v
+cnkgaXMgYWxsb2NhdGVkIGhlYXZpbHksIGtleGVjIGxvYWRpbmcgY291bGQgbWVldCBtaWdyYXRp
+b24gaW4KPiBDTUEgYXJlYS4KCgpUaGlzIHBhdGNoIG9wdGltaXplcyB0aGUgaGFuZG92ZXIuIExv
+YWRpbmcgdGhlIGtleGVjIGltYWdlIGlzIG5vdCByZWFsbHkgCnRpbWUgY3JpdGljYWw6IFlvdXIg
+c3lzdGVtIHN0aWxsIGZ1bmN0aW9ucyB3aGlsZSB5b3UgcGVyZm9ybSBhIGtleGVjIApsb2FkLiBJ
+dCdzIHRoZSB0aW1lIHdoZW4geW91IGRvIHRoZSBqdW1wIHRoYXQgeW91IHdhbnQgdG8gZG8gYXMg
+bGl0dGxlIAphcyBwb3NzaWJsZSB3b3JrIGluIHRvIGFjY2VsZXJhdGUgYSBrZXhlYyBiYXNlZCB1
+cGRhdGUgZmxvdy4KCgo+Cj4+ICAgIDIpIE1vcmUgcm9idXN0LiBFdmVuIGlmIGJ5IGFjY2lkZW50
+IHNvbWUgcGFnZSBpcyBzdGlsbCBpbiB1c2UgZm9yIERNQSwKPj4gICAgICAgdGhlIG5ldyBrZXJu
+ZWwgaW1hZ2Ugd2lsbCBiZSBzYWZlIGZyb20gdGhhdCBhY2Nlc3MgYmVjYXVzZSBpdCByZXNpZGVz
+Cj4+ICAgICAgIGluIGEgbWVtb3J5IHJlZ2lvbiB0aGF0IGlzIGNvbnNpZGVyZWQgYWxsb2NhdGVk
+IGluIHRoZSBvbGQga2VybmVsIGFuZAo+PiAgICAgICBoYXMgYSBjaGFuY2UgdG8gcmVpbml0aWFs
+aXplIHRoYXQgY29tcG9uZW50Lgo+IFllYWgsIHRoaXMgaXMgdGhlIHNpZ25pZmljYW50IGJlbmVm
+aXQgaW4gdmlldyBvZiBzb21lIGRyaXZlciBsYWNraW5nCj4gLnNodXRkb3duIGxpa2VseSBjb2xs
+YXBzaW5nIGtleGVjIHJlYm9vdGVkIGtlcm5lbC4gVGhlIHRoaW5nIGlzIHN5c3RlbQo+IHdpdGgg
+aGVhdmlseSBhbGxvY2F0aW5nIG1lbW9yeSBjb3VsZCBmYWlsIHRvIGFsbG9jYXRlIG1lbW9yeSBm
+cm9tIENNQQo+IGR1ZSB0byBtaWdyYXRpb24gZmFpbHVyZSwgYW5kIHNvbWUgc3lzdGVtIG1heSBl
+dmVuIG5vdCBoYXZlIENNQSBhcmVhLgoKCkNvcnJlY3QuIEluIHRob3NlIGNhc2VzLCB0aGUgbG9h
+ZCBmYWxscyBiYWNrIHRvIHRoZSBjdXJyZW50IHNjaGVtZSBvZiAKYWxsb2NhdGluZyByYW5kb20g
+bWVtb3J5LiBBbGwgd2UncmUgZG9pbmcgaGVyZSBpcyBzaGlmdCB0aGUgb2RkcyAtIGJvdGggCm9m
+IGV4ZWN1dGluZyB0aGUga2V4ZWMgcXVpY2tlciBidXQgYWxzbyBvZiBsZXNzIG92ZXJsYXAgd2l0
+aCBwb3RlbnRpYWxseSAKc3RpbGwgaW4gdXNlIHBhZ2VzLgoKCkFsZXgKCgoKCgpBbWF6b24gV2Vi
+IFNlcnZpY2VzIERldmVsb3BtZW50IENlbnRlciBHZXJtYW55IEdtYkgKVGFtYXJhLURhbnotU3Ry
+LiAxMwoxMDI0MyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2Vy
+LCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVy
+ZyB1bnRlciBIUkIgMjU3NzY0IEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMzY1IDUzOCA1OTcK
 
-To clarify: I meant, explain the bug/mistake. Rest of explanation is ok.
-
-> 
-> Fixes: f10a9b722f80 ("dt-bindings: i2c: tegra: Convert to json-schema")
-> 
-> 
-
-
-Best regards,
-Krzysztof
