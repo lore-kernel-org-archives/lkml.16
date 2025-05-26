@@ -1,192 +1,248 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15390258A;
-	Mon, 26 May 2025 08:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357FF1DE3DC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748248981; cv=none; b=oA0QjtKtu+wJRSkqy3cil+HTXFOuXHWQsDlncBMWDGhatuQBy/5FsQRaqVnVKWRWcvMhfDBAVkfooyLfx6fZfvQCn5Ss4P+ninm1BOSVjLoxRC8INXmad5X2+LEce9PLs/DSHitnGsub8mM6LbykG+SQhckO/Tt45HiznZEhJLQ=
+	t=1748248991; cv=none; b=jJJdY1kMsMSP88HML3vTQNNQ4+Hsv4olPEveGRLf9RclxLQ05vmucU/8wqZb7gy1qMxGl5WGWIOkvaT3MyMX61izfSbIKWsJB+KUcn4amBxnBmPMbNGyML28iRol1F4vMiwZRXlwwu8HhoMo+nP2h0g72fQ4oPPuvFiWaVjgsmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748248981; c=relaxed/simple;
-	bh=FcJdfFFxShk3YZXuaYCNmm4+hYbTjiztce8ew17pr90=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIFaYiit3ttKeLfKVuiOBG1yYwCTTlPFdM6gRUyGeg/w25us3Q5jZN6cKGkalja5BPVZdxQmZZZ8MgrgG4qg8r2H3bmoos7EktNM0O3shnGlhCo5Emox37kP/b/sqejN+7vvbjU2Nw7QB3VywzR7WXqbnAPH0eRVC0kAeYQ+MPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnbFa4cH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748248991; c=relaxed/simple;
+	bh=wvtD7UOxWptjnLXoK3lgX+akul/om9cVgjZjaIgSqCI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=mvYzpVdSXs77XUjUI+Km+bAjp0mH4i51VGAlqwVHxhi+dCcyOn3gb69vSFRdEmhUdd5PXKQyV01UIaVriWH9DKxTQFx1QaYE+nNJpD3PRdkh7vygZZ3W4zwzjz63To9YfNmbG8vK85bG4bVygwHHVHzYWwf3KtPCi9gfLwe3zlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ca08TtmH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnbFa4cH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B754C4CEE7;
-	Mon, 26 May 2025 08:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748248980;
-	bh=FcJdfFFxShk3YZXuaYCNmm4+hYbTjiztce8ew17pr90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lnbFa4cHSvgK+Qehdz8hCiwz9B6ysGp++OYKv4ATNTws0oMYDe9I5jDgXFUhM9XVQ
-	 o8n5XlWze2x4AcdsZIqvrWTZ3Lr8hAPD8f8OGpWQl10XkYeWPwoYIeKBgf1vAPu3Gp
-	 SUG42rl3nLDP6CKx2cKGI1RndqSOTCtLfN+V2e8K0qLo3WeQwbMpaXjGRHpMsQ0zLq
-	 u2ykFu1MdWX/Zb2PxKGKeThre48Fi+312JSB7zK0d3Kq5PxkhPnz2eg1wIt/XzDN4e
-	 /ATyfW7f359XDMhWa8HOY6niQN+kszbFjuPIopg7Sf7SMtYoPE6lp0rhlFJGiRgEl0
-	 JhT0KRH5DKQcQ==
-Date: Mon, 26 May 2025 11:42:38 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com,
-	changyuanl@google.com, dmatlack@google.com, rientjes@google.com,
-	corbet@lwn.net, rdunlap@infradead.org,
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
-	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
-	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
-	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
-	vincent.guittot@linaro.org, hannes@cmpxchg.org,
-	dan.j.williams@intel.com, david@redhat.com,
-	joel.granados@kernel.org, rostedt@goodmis.org,
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
-	linux@weissschuh.net, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
-	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
-	aleksander.lobakin@intel.com, ira.weiny@intel.com,
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-Message-ID: <aDQpfiykuRrk_xnr@kernel.org>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ca08TtmH"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PMZCS9021749
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:43:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sinlLLdJcZNbmFp3xHrrm5fCnPkdkH7iM8nLujxdoeY=; b=Ca08TtmHn6xL1Kff
+	9TY+DrLlT5tBGf2HciqNM3pLFiHurugr8mbxD+kee1q+ZRVdVXwhy8+pqMo3o1u4
+	RHcv4lOz412qSamlE7WkpvGLTufVaR63UDAHpxqKPQVd1GtE4OPK8m93y4YZhW7E
+	lzF9vbNQNfGZlllJe/gPfkZtPuOBrgdXcYbRp9LOrhuR3VZjLlX4/6HEv1KhEHEJ
+	DjFyyhYfC6JakozqpmoPuQxEXaRqtn9w+HVMnSHmiKg7LKlN47EpHmsAtvkc2vNr
+	819CDeb5zqiXjx9XPebktV4TdnaKYf9+8fra5jkTH9aXh1J/zgCE/fHwzES0fRwe
+	xjcwdg==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjkh9t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:43:09 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-742c7227d7dso1357401b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:43:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748248988; x=1748853788;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sinlLLdJcZNbmFp3xHrrm5fCnPkdkH7iM8nLujxdoeY=;
+        b=aO5bS9BflCVb0Mm3ZIkXR4YbrE4+HuDpta45FnEo81AVOEoj+MzFtBI2k4OheWUkFP
+         x/vg/trCSCW9sS8tN5G8iOXihFc+sf4KJ+XnP39Aj0xrI0Ih6TcTuEojJ10EI9ggBCEF
+         DYTdWWkdy2LPVc7g6BWZx61csOHYyJ6Cil0CoDSMi6ixLjs3e0xe5XRNMNkUDNvmEmRm
+         a9Upjni/XhoVTASwZhp28qJHdXPzS/AQOsDxRzOi76Z34zSkhfdX7DWcrj3A0d4bqOQX
+         TqN5rariWS92Nr1HXEuych/TzNHY/GsYW+2oh9BGGo6TuR5Ims/4dmyDp35o5fSzGd4y
+         lJNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQf1zdQ/Y7lGrSPydKLfTFkmKrkN2vtuQ1XBczBkkSm2sp/7/x5iW2lsY0MJhqZgETIK5LBe7QIlbm2M0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAtE2CVcQTswVQ/s5J9gPJxsyde1bpLjBo1DlWFHc79p6o7rET
+	HQMMe6H8DKI8fSGMbNOTbsGhrZKDgJ/0e2I01+TTEmsXcW0jGbpSN1suDa4v6uvE7X2AYMPGzSB
+	UGcW/RxJfdqQbW2EWTayNL0NyQQ8yz7CSHDx959mw00sr3A9K5dzoMx6dr71EQCxsZrg=
+X-Gm-Gg: ASbGncvHI0cl8L/TPZrXUp4KdoDyCOY4SVd5Vwpy+viFhxhcHBF7SRS2Ol6Aievpot5
+	b1pH+U5GMeBKJg34HSqNJo9GotlpvUXJaTmNVwfVJH71pL9iXZiqrFmycip12CN29V6Pv9yuxhJ
+	Hb3WJKoxYhDuLoDmMyjaW5j/wxASHg/GjY+0pcoJ5tGSQnKZqWsMvnS0rahEFun82qn1XvBwwRs
+	BGyJqBoEdYbkV9mP2vZEaDl9hK5zdaqe1bljS8HDgUC8Dd0vighTfoHrexSVGtXz3OVsLOmrMxQ
+	rZ3hGSpZlujqv0dGz8s+O6syjGiTPs/bzQ==
+X-Received: by 2002:a05:6a00:14c6:b0:736:5438:ccc with SMTP id d2e1a72fcca58-745fde87a75mr12107158b3a.9.1748248988325;
+        Mon, 26 May 2025 01:43:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFoizJR5p+a89MPZAfJfUO3m/tGSDp0byZESTr1wQfYRLYacqwKo8ENa6edgbqkfWqehnyKgg==
+X-Received: by 2002:a05:6a00:14c6:b0:736:5438:ccc with SMTP id d2e1a72fcca58-745fde87a75mr12107134b3a.9.1748248987935;
+        Mon, 26 May 2025 01:43:07 -0700 (PDT)
+Received: from [10.239.154.73] ([114.94.8.21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c8a8sm17197718b3a.60.2025.05.26.01.43.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 01:43:07 -0700 (PDT)
+Message-ID: <a6deee53-6106-4e50-8d53-f1a87e50e9f0@oss.qualcomm.com>
+Date: Mon, 26 May 2025 16:43:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515182322.117840-11-pasha.tatashin@soleen.com>
+User-Agent: Mozilla Thunderbird
+From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+Subject: Re: [PATCH 5/5] power: supply: qcom-battmgr: Add charge control
+ support
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        =?UTF-8?Q?Gy=C3=B6rgy_Kurucz?= <me@kuruczgy.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc: Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>,
+        David Collins <david.collins@oss.qualcomm.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, kernel@oss.qualcomm.com
+References: <20250523-qcom_battmgr_update-v1-0-2bb6d4e0a56e@oss.qualcomm.com>
+ <20250523-qcom_battmgr_update-v1-5-2bb6d4e0a56e@oss.qualcomm.com>
+ <db0e40b6-22f3-46aa-b35d-7a8729370ddf@kuruczgy.com>
+ <1b1c4617-0e5b-40c8-9a66-d243b48c0977@oss.qualcomm.com>
+ <70b6d885-ca52-4731-9a78-80dd25248e2f@linaro.org>
+Content-Language: en-US
+In-Reply-To: <70b6d885-ca52-4731-9a78-80dd25248e2f@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6834299d cx=c_pps
+ a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=Uz3yg00KUFJ2y2WijEJ4bw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=Htw2NgF16vZQhe7wStQA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: Z9_CKaAGkSXTTe0y2hwzyNzwu4acTxj_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA3MiBTYWx0ZWRfX7LOuPob77Nll
+ FrCcEh1h8kbMX1U3DTYfH36TEBs0GrlliSF8XEtZKNN9ZhtUSNI5KM79hpJH95/uk7dtSN+rT5i
+ HUQ/75C9vmosgV9fTR3Z3StKDos53pdgB24GnTSsX4fe8SISHaM4X3vol8N3MNcJdJZIoUxvwae
+ GdhoKIL1TcP9V5rJORynsX7MH60RKCSqBey4RyBuRsU1uU9bP5wH0MOQqrC1SGKqYRA076dil/b
+ ppvTwBdK2c9mxgsjoBVm5ASykhqIsyWyUghiWxNobkSYDbGLhbi5/+4cj1HRNS8GV8lHeXGGyyx
+ SuzHN/5goJvNVU0IxqJ0twvnJ1cPGV1CynRI7+F//tjBrZcabHu6ni54owJ79All0ow2YfP0bPg
+ 2EwUlk40zvf0sYheRmHSsa/oSzKOuRDoV1Bms663jkxYb4cQtd58l5pU//sEklMEWYB/CbBa
+X-Proofpoint-GUID: Z9_CKaAGkSXTTe0y2hwzyNzwu4acTxj_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_04,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505260072
 
-On Thu, May 15, 2025 at 06:23:14PM +0000, Pasha Tatashin wrote:
-> Introduce the user-space interface for the Live Update Orchestrator
-> via ioctl commands, enabling external control over the live update
-> process and management of preserved resources.
-> 
-> Create a misc character device at /dev/liveupdate. Access
-> to this device requires the CAP_SYS_ADMIN capability.
-> 
-> A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
-> structures. The magic number is registered in
-> Documentation/userspace-api/ioctl/ioctl-number.rst.
-> 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
- 
-...
 
-> -/**
-> - * enum liveupdate_state - Defines the possible states of the live update
-> - * orchestrator.
-> - * @LIVEUPDATE_STATE_NORMAL:         Default state, no live update in progress.
-> - * @LIVEUPDATE_STATE_PREPARED:       Live update is prepared for reboot; the
-> - *                                   LIVEUPDATE_PREPARE callbacks have completed
-> - *                                   successfully.
-> - *                                   Devices might operate in a limited state
-> - *                                   for example the participating devices might
-> - *                                   not be allowed to unbind, and also the
-> - *                                   setting up of new DMA mappings might be
-> - *                                   disabled in this state.
-> - * @LIVEUPDATE_STATE_FROZEN:         The final reboot event
-> - *                                   (%LIVEUPDATE_FREEZE) has been sent, and the
-> - *                                   system is performing its final state saving
-> - *                                   within the "blackout window". User
-> - *                                   workloads must be suspended. The actual
-> - *                                   reboot (kexec) into the next kernel is
-> - *                                   imminent.
-> - * @LIVEUPDATE_STATE_UPDATED:        The system has rebooted into the next
-> - *                                   kernel via live update the system is now
-> - *                                   running the next kernel, awaiting the
-> - *                                   finish event.
-> - *
-> - * These states track the progress and outcome of a live update operation.
-> - */
-> -enum liveupdate_state  {
-> -	LIVEUPDATE_STATE_NORMAL = 0,
-> -	LIVEUPDATE_STATE_PREPARED = 1,
-> -	LIVEUPDATE_STATE_FROZEN = 2,
-> -	LIVEUPDATE_STATE_UPDATED = 3,
-> -};
-> -
+On 5/26/2025 4:27 PM, neil.armstrong@linaro.org wrote:
+> On 26/05/2025 08:19, Fenglin Wu wrote:
+>>
+>> On 5/24/2025 5:29 AM, György Kurucz wrote:
+>>> Hi!
+>>>
+>>>> +static int qcom_battmgr_set_charge_control(struct qcom_battmgr 
+>>>> *battmgr,
+>>>> +                       u32 target_soc, u32 delta_soc)
+>>>> +{
+>>>> +    struct qcom_battmgr_charge_ctrl_request request = {
+>>>> +        .hdr.owner = cpu_to_le32(PMIC_GLINK_OWNER_BATTMGR),
+>>>> +        .hdr.type = cpu_to_le32(PMIC_GLINK_REQ_RESP),
+>>>> +        .hdr.opcode = cpu_to_le32(BATTMGR_CHG_CTRL_LIMIT_EN),
+>>>> +        .enable = cpu_to_le32(1),
+>>>> +        .target_soc = cpu_to_le32(target_soc),
+>>>> +        .delta_soc = cpu_to_le32(delta_soc),
+>>>> +    };
+>>>> +
+>>>> +    return qcom_battmgr_request(battmgr, &request, sizeof(request));
+>>>> +}
+>>>> +
+>>>> +static int qcom_battmgr_set_charge_start_threshold(struct 
+>>>> qcom_battmgr *battmgr, int soc)
+>>>> +{
+>>>> +    u32 target_soc, delta_soc;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (soc < CHARGE_CTRL_START_THR_MIN ||
+>>>> +            soc > CHARGE_CTRL_START_THR_MAX) {
+>>>> +        dev_err(battmgr->dev, "charge control start threshold 
+>>>> exceed range: [%u - %u]\n",
+>>>> +                CHARGE_CTRL_START_THR_MIN, 
+>>>> CHARGE_CTRL_START_THR_MAX);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +
+>>>> +    /*
+>>>> +     * If the new start threshold is larger than the old end 
+>>>> threshold,
+>>>> +     * move the end threshold one step (DELTA_SOC) after the new 
+>>>> start
+>>>> +     * threshold.
+>>>> +     */
+>>>> +    if (soc > battmgr->info.charge_ctrl_end) {
+>>>> +        target_soc = soc + CHARGE_CTRL_DELTA_SOC;
+>>>> +        target_soc = min_t(u32, target_soc, CHARGE_CTRL_END_THR_MAX);
+>>>> +        delta_soc = target_soc - soc;
+>>>> +        delta_soc = min_t(u32, delta_soc, CHARGE_CTRL_DELTA_SOC);
+>>>> +    } else {
+>>>> +        target_soc =  battmgr->info.charge_ctrl_end;
+>>>> +        delta_soc = battmgr->info.charge_ctrl_end - soc;
+>>>> +    }
+>>>> +
+>>>> +    mutex_lock(&battmgr->lock);
+>>>> +    ret = qcom_battmgr_set_charge_control(battmgr, target_soc, 
+>>>> delta_soc);
+>>>> +    mutex_unlock(&battmgr->lock);
+>>>> +    if (!ret) {
+>>>> +        battmgr->info.charge_ctrl_start = soc;
+>>>> +        battmgr->info.charge_ctrl_end = target_soc;
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int qcom_battmgr_set_charge_end_threshold(struct 
+>>>> qcom_battmgr *battmgr, int soc)
+>>>> +{
+>>>> +    u32 delta_soc = CHARGE_CTRL_DELTA_SOC;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (soc < CHARGE_CTRL_END_THR_MIN ||
+>>>> +            soc > CHARGE_CTRL_END_THR_MAX) {
+>>>> +        dev_err(battmgr->dev, "charge control end threshold exceed 
+>>>> range: [%u - %u]\n",
+>>>> +                CHARGE_CTRL_END_THR_MIN, CHARGE_CTRL_END_THR_MAX);
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +
+>>>> +    if (battmgr->info.charge_ctrl_start && soc > 
+>>>> battmgr->info.charge_ctrl_start)
+>>>> +        delta_soc = soc - battmgr->info.charge_ctrl_start;
+>>>> +
+>>>> +    mutex_lock(&battmgr->lock);
+>>>> +    ret = qcom_battmgr_set_charge_control(battmgr, soc, delta_soc);
+>>>> +    mutex_unlock(&battmgr->lock);
+>>>> +    if (!ret) {
+>>>> +        battmgr->info.charge_ctrl_start = soc - delta_soc;
+>>>> +        battmgr->info.charge_ctrl_end = soc;
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>
+>>> These function names sound quite generic, but AFAIU this patch is 
+>>> only adding charge control support for the SM8550. Is sc8280xp and 
+>>> x1e80100 also expected to be supported using the same 
+>>> qcom_battmgr_charge_ctrl_request format?
+>>
+>> No, sc8280xp and x1e80100 don't support it. So I didn't add the 
+>> support for them.
+>
+> And what about SM8650 and SM8750 ?
+>
+> Neil
+>
+Both SM8650 and SM8750 support charge control functionality. I saw 
+SM8650 has already used "qcom,sm8550-pmic-glink" as fallback compatible 
+string, so it will have it enabled by default when the change gets 
+accepted. SM8750 platform can also use "qcom,sm8550-pmic-glink" as 
+fallback to support it when uploading the DT change.
 
-Nit: this seems an unnecessary churn, these definitions can go to
-include/uapi from the start.
+Fenglin
 
-> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-> +/**
-> + * struct liveupdate_fd - Holds parameters for preserving and restoring file
-> + * descriptors across live update.
-> + * @fd:    Input for %LIVEUPDATE_IOCTL_FD_PRESERVE: The user-space file
-> + *         descriptor to be preserved.
-> + *         Output for %LIVEUPDATE_IOCTL_FD_RESTORE: The new file descriptor
-> + *         representing the fully restored kernel resource.
-> + * @flags: Unused, reserved for future expansion, must be set to 0.
-> + * @token: Output for %LIVEUPDATE_IOCTL_FD_PRESERVE: An opaque, unique token
-> + *         generated by the kernel representing the successfully preserved
-> + *         resource state.
-> + *         Input for %LIVEUPDATE_IOCTL_FD_RESTORE: The token previously
-> + *         returned by the preserve ioctl for the resource to be restored.
-> + *
-> + * This structure is used as the argument for the %LIVEUPDATE_IOCTL_FD_PRESERVE
-> + * and %LIVEUPDATE_IOCTL_FD_RESTORE ioctls. These ioctls allow specific types
-> + * of file descriptors (for example memfd, kvm, iommufd, and VFIO) to have their
-> + * underlying kernel state preserved across a live update cycle.
-> + *
-> + * To preserve an FD, user space passes this struct to
-> + * %LIVEUPDATE_IOCTL_FD_PRESERVE with the @fd field set. On success, the
-> + * kernel populates the @token field.
-> + *
-> + * After the live update transition, user space passes the struct populated with
-> + * the *same* @token to %LIVEUPDATE_IOCTL_FD_RESTORE. The kernel uses the @token
-> + * to find the preserved state and, on success, populates the @fd field with a
-> + * new file descriptor referring to the fully restored resource.
-> + */
-> +struct liveupdate_fd {
-> +	int		fd;
-> +	__u32		flags;
-> +	__u64		token;
-> +};
-
-Consider using __aligned_u64 here for size-based versioning.
-
-> +
-> +/* The ioctl type, documented in ioctl-number.rst */
-> +#define LIVEUPDATE_IOCTL_TYPE		0xBA
-
-...
-
-> +/**
-> + * LIVEUPDATE_IOCTL_EVENT_PREPARE - Initiate preparation phase and trigger state
-> + * saving.
-
-This (and others below) is more a command than an event IMHO. Maybe just
-LIVEUPDATE_IOCTL_PREPARE?
-
-> + * Argument: None.
-> + *
-> + * Initiates the live update preparation phase. This action corresponds to
-> + * the internal %LIVEUPDATE_PREPARE kernel event and can also be triggered
-
-This action is a reason for LIVEUPDATE_PREPARE event, isn't it?
-The same applies to other IOCTL_EVENTS
-
-> + * by writing '1' to ``/sys/kernel/liveupdate/prepare``. This typically
-> + * triggers the main state saving process for items marked via the PRESERVE
-> + * ioctls. This occurs *before* the main "blackout window", while user
-> + * applications (e.g., VMs) may still be running. Kernel subsystems
-> + * receiving the %LIVEUPDATE_PREPARE event should serialize necessary state.
-> + * This command does not transfer data.
-
-I'm not sure I follow what this sentence means.
-
--- 
-Sincerely yours,
-Mike.
+>>
+>> These are generic functions are similar to 
+>> "qcom_battmgr_update_charge_time" and "qcom_battmgr_update_info" 
+>> which are only used for sc8280xp platform. Even right now charge 
+>> control is only supported in mobile platforms starting from SM8550, 
+>> however, it could be potentially supported in battery management 
+>> firmware of any future platforms and the same functions could be reused.
+>>
+>>> Thanks,
+>>> György
+>>
+>
