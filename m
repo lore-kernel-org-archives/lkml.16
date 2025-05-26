@@ -1,131 +1,271 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A581F7580;
-	Mon, 26 May 2025 11:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A91F429C
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260005; cv=none; b=d9YDfj9H0dH0Pe4+uInXdS9BW4FoaU7XTS32bYxEfRyCKjpKdyqhk5aF4VPukYw8Ci/e26vBGh6rGtgbMLjDzB5YFxBu/k+BgMSlbHq1noXjUbizaFwvGUdp6NsbFhS8YMEoef6WpiPEfjd5/OG6+6sPhOJC5uqK+gMRbxGJA6o=
+	t=1748260003; cv=none; b=jSk3dJj70EVr/Z0ZfmfoFGDs4oHCRZtGe/eFSmixrQqSjAdHbO4TcrUNcCRbnQC9IOM7g5qC+9BLNFtSw6k92+dH9cSD1LA+8pwsrADKGPz/G6Ramnnc2mMF5aXs/lth74l03DkArGn0kCoC4YTYgVzuzPrLF84LBAu0NVhz9nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260005; c=relaxed/simple;
-	bh=ctdWOqVhw8PP7NozucmroMp+2QHGZHR7hJ6JgXHeR0k=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=U7/uLWGRMUxxYEV479NZJx/FLc3XVlkae/d6Zrx1kF1FuaEvs68Q7PM+8s/rxNnGp2TO12F4sF/S5MeaxB5L9q60TI2W6IXUo5yst3yk2BIDTV0ReMLupniEc0BQpT5XsLemudf7MVMYZd9dlooCRkBNBc5r6RVCRjGhZBzJdGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b5YrK5YSBz51SW7;
-	Mon, 26 May 2025 19:46:25 +0800 (CST)
-Received: from njy2app08.zte.com.cn ([10.40.13.206])
-	by mse-fl2.zte.com.cn with SMTP id 54QBkGU1075015;
-	Mon, 26 May 2025 19:46:16 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njb2app05[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Mon, 26 May 2025 19:46:19 +0800 (CST)
-Date: Mon, 26 May 2025 19:46:19 +0800 (CST)
-X-Zmail-TransId: 2afd6834548b4f5-54aaa
-X-Mailer: Zmail v1.0
-Message-ID: <20250526194619126ArX868H3UosA7Jz31tRqF@zte.com.cn>
-In-Reply-To: <CANn89i+C-qk-WhEanMS_tRiYJHHixH33MAO3u-wQVdWGJOjskw@mail.gmail.com>
-References: 20250526162746319JPXpL0xRJ-n7onnZApOiV@zte.com.cn,CANn89i+C-qk-WhEanMS_tRiYJHHixH33MAO3u-wQVdWGJOjskw@mail.gmail.com
+	s=arc-20240116; t=1748260003; c=relaxed/simple;
+	bh=jjd4GeBbAtuwlRPuLLleMWt4peQC4Vu7ly9/mKRLATo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gI2KwWQWFT5+Ok5iA+v6dmhQtU48M+b/gaGXiMVDvS/tqaZVTiEn/ZRFQo3fTSX6ZqZ3xEkIcHAR8lsKEEbRTJ+9TN0uocYzGU3a17FnUAqeF5y45NKirpU8qofSM3xPrymi8QfBO38wobODbLX7BrQq460jzI3truc1m73/ir8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aySdbvSw; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aySdbvSw"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so4069535e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748260000; x=1748864800; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I1OmNo2Qm8ZDm0Bz1e9gms44TxcRGKOxtlMto4OxWLw=;
+        b=aySdbvSwSywhsP24JK0MpeKbHAfQNa6imkZLeUVlNGX3Mj6/z41LHRFbDyqXPwNOdE
+         JDzEgLfFXjzUK0+aPjvrSsY9oMLw3gQ1LcaTWp7lVV3Oh1IkQKatO38nTvXfbrY6Tzmd
+         geqg4p2fGBG3PBfAmPV04UBJgv4C943Ekcuaki47b/q+DHCcWCj7/WkKQrSMcJVRpu8R
+         yvOss+NCOA7WuXPIiyqeJDUkXUFEUw4S2ocS66rd/n3LSlURym3GP3IeC1k9a32TUOhx
+         NfwqeX0qF3BZtP4ycecdbBIWUDSTEB9l2UBrfKl2LEc7qByTbrro0b7B8MtJur9nJlVE
+         1lyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748260000; x=1748864800;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I1OmNo2Qm8ZDm0Bz1e9gms44TxcRGKOxtlMto4OxWLw=;
+        b=mndQPhS/4EA90tWM6wnCLjq8EqIDBYqdbWWZtOefYBNj+qn6dCB/aHi4mMrSHbgjkH
+         qNDzA61whmjLmiUhXHG7LTBdi1sC6AqokG45WCmGLYc5LTu/92a+WmV9ialyZ/e/nKkC
+         e5mONqU4C3FtUrr7P/a20WM+RFwrjwEREYzAnrgbKAvge5uC9EUexlSPMAPGBV66JhbW
+         CqfSx+hbudmtVshowndF9urakmJwaGAPa1F45jnC/rgoWHDW9zq155TcOKfIZhAA8iUS
+         xNebyxswS8kuZYRizNz6z08/YkoZIkzu0Vq5PP9HRIPsY6oqEiesDI6wfvReNu4vI91l
+         DaEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXbPOUkATI+319qkxY0kzGP/OgWT97j0it7iSAMvTrCI7TGnn20gj4Ql+mp5cxD3awbap5GVfmjQ3WtbQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY/CuVDB28lbPLpxAAWZoKb5efiLL3GRtdrw5I5Dkt9QWqBoT0
+	aFabrXNd3IBGg6lCFnJ5HxB5OIga/WCnvo7mARotv5prKig9O7tsTP+daVKFYIUP6no=
+X-Gm-Gg: ASbGncumRBgEqVMlSSnPSiSuAaqYjGsZDNBfd/Dr1FC8x2cefXBqaxPPyxVEfjyViP2
+	+lPHR7e2of6wCMiPNXdNv7ahCtM0SUBIlSj2JTw1Yh5mAfy90xvgaJbASOqS/MR9Z15A4sJdQEF
+	j+yGfKsfahS0E1OI5bsO0bufLdZWMagFzgaQtNDMj8X/sE6aREtRAe8bbDDDhYSoW7ehmvtoP3G
+	gPLy3us6bJwNP9oXzRf0xG+u0ZYe3hvwEFhQTfKOcHxLiA9V2VC3QugfALZP9yo9Pn0ZHx1whzz
+	BLcsFr5GRwKAas66+Q5IfcW1+NmjJLHUv1AQ62jCbGG/kVi0X9j1Dy7iGygw3eqA4EqaBxI=
+X-Google-Smtp-Source: AGHT+IH0HEEI5Y3c9wERynZXMmGvEnsD4iAVhZwQNb4LD/V/a6G6+ztZI5SPNKq1HgnPFLDXB5nrPg==
+X-Received: by 2002:a05:6000:240d:b0:3a4:d6ed:8e28 with SMTP id ffacd0b85a97d-3a4d6eda6b3mr1253598f8f.8.1748259999906;
+        Mon, 26 May 2025 04:46:39 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cc52ab88sm7592310f8f.11.2025.05.26.04.46.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 04:46:39 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Mon, 26 May 2025 13:46:32 +0200
+Subject: [PATCH v3 1/3] arm64: dts: qcom: sm8750: Add Soundwire nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <edumazet@google.com>
-Cc: <davem@davemloft.net>, <kuba@kernel.org>, <dsahern@kernel.org>,
-        <pabeni@redhat.com>, <horms@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xu.xin16@zte.com.cn>,
-        <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dF0gbmV0OiBhcnA6IHVzZSBrZnJlZV9za2JfcmVhc29uKCkgaW4gYXJwX3Jjdigp?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 54QBkGU1075015
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68345491.000/4b5YrK5YSBz51SW7
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250526-sm8750-audio-part-2-v3-1-74429c686bb1@linaro.org>
+References: <20250526-sm8750-audio-part-2-v3-0-74429c686bb1@linaro.org>
+In-Reply-To: <20250526-sm8750-audio-part-2-v3-0-74429c686bb1@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7310;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=jjd4GeBbAtuwlRPuLLleMWt4peQC4Vu7ly9/mKRLATo=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoNFSawL3MsJn5R4OszQcefmLWhjODYNPKTRj3f
+ QjiTsd2uJOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDRUmgAKCRDBN2bmhouD
+ 1+rgEACac7dFXAfLbbCo3fGIcNoE3TiKSJl6ozgEUbLTnQu0VtLboNPa6NklpHay0T2MpfDKppw
+ 36q3q0VCHGJQlh//Vw/+cLfEWylrO7C2S+lFThTccQmPDm7TZSCE2RN275Y3QTb87HLZMBQ+pPn
+ N2wi8Y5DP0I4onMI2DypQukfz2JqKMEga1+YSPW+WukPTrbZSNheeSYJIMWj9t9C/fzTeubp/h5
+ M7NIOpmGB2BJ1nmpaHccVpB0YjxXcY2DnbpQ7wotDKTBKTQ7KdaWHYsi/kI0jvtgB/bLw1tQ1Ax
+ xCu+dQTpL2cN/tm0WvplC6Ulgoi1A8vaPSuqCFXjRM6SNf5WKX5TPUZfpa+w5vpviB4NBSb40Xm
+ BN+y2peTrxMzhKfGrsACtyPvIaNJ9moR6hHM5OU5Y6Xo1CsVRu9raoooFT04+j/P+0pH11PN4nJ
+ vrym8gZ3nc+calCSqJX6RvaXCYdJNXqjss6/ptzBZhwXIltKHaxG5kHV8U0jdden9tSjQbJaoPE
+ V/wlmELVqV+KeVRGuyz3mMjIRM2ucR4vpFiT9Z++bRAp166SuLNig+Dk+zJgHVoZ0CD5PdgMgnS
+ 4cnUuxCNCQTohtlakfeK3INSwRzeZJ/hgcvJaPBzh5s+TF33i9W3M5GhNB/wQkWLr5X32A/q3aU
+ 4PFeoPe9Ui/yFdA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
+Add Soundwire controllers on SM8750, fully compatible with earlier
+SM8650 generation.
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+Bindings / new compatible:
+https://lore.kernel.org/r/20250519080453.29858-2-krzysztof.kozlowski@linaro.org/T/#u
+---
+ arch/arm64/boot/dts/qcom/sm8750.dtsi | 122 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+index 149d2ed17641a085d510f3a8eab5a96304787f0c..68ea48854c61b3aed6e089afaebe9edba7a1475f 100644
+--- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+@@ -2257,6 +2257,36 @@ lpass_wsa2macro: codec@6aa0000 {
+ 			#sound-dai-cells = <1>;
+ 		};
+ 
++		swr3: soundwire@6ab0000 {
++			compatible = "qcom,soundwire-v2.1.0", "qcom,soundwire-v2.0.0";
++			reg = <0x0 0x06ab0000 0x0 0x10000>;
++			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&lpass_wsa2macro>;
++			clock-names = "iface";
++			label = "WSA2";
++
++			pinctrl-0 = <&wsa2_swr_active>;
++			pinctrl-names = "default";
++
++			qcom,din-ports = <4>;
++			qcom,dout-ports = <9>;
++
++			qcom,ports-sinterval =		/bits/ 16 <0x07 0x1f 0x3f 0x07 0x1f 0x3f 0x18f 0x18f 0x18f 0x0f 0x0f 0xff 0x31f>;
++			qcom,ports-offset1 =		/bits/ 8 <0x01 0x03 0x05 0x02 0x04 0x15 0x00 0x00 0x00 0x06 0x0d 0xff 0x00>;
++			qcom,ports-offset2 =		/bits/ 8 <0xff 0x07 0x1f 0xff 0x07 0x1f 0xff 0xff 0xff 0xff 0xff 0xff 0xff>;
++			qcom,ports-hstart =		/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0x08 0x0e 0x0e 0xff 0xff 0xff 0x0f>;
++			qcom,ports-hstop =		/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0x08 0x0e 0x0e 0xff 0xff 0xff 0x0f>;
++			qcom,ports-word-length =	/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0x08 0x0f 0x0f 0x00 0xff 0xff 0x18>;
++			qcom,ports-block-pack-mode =	/bits/ 8 <0x00 0x01 0x01 0x00 0x01 0x01 0x00 0x01 0x01 0x01 0x01 0x00 0x00>;
++			qcom,ports-block-group-count =	/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x00 0x00 0xff 0xff 0xff 0xff>;
++			qcom,ports-lane-control =	/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x00 0x00 0xff 0xff 0xff 0xff>;
++
++			#address-cells = <2>;
++			#size-cells = <0>;
++			#sound-dai-cells = <1>;
++			status = "disabled";
++		};
++
+ 		lpass_rxmacro: codec@6ac0000 {
+ 			compatible = "qcom,sm8750-lpass-rx-macro", "qcom,sm8550-lpass-rx-macro";
+ 			reg = <0x0 0x06ac0000 0x0 0x1000>;
+@@ -2274,6 +2304,36 @@ lpass_rxmacro: codec@6ac0000 {
+ 			#sound-dai-cells = <1>;
+ 		};
+ 
++		swr1: soundwire@6ad0000 {
++			compatible = "qcom,soundwire-v2.1.0", "qcom,soundwire-v2.0.0";
++			reg = <0x0 0x06ad0000 0x0 0x10000>;
++			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&lpass_rxmacro>;
++			clock-names = "iface";
++			label = "RX";
++
++			pinctrl-0 = <&rx_swr_active>;
++			pinctrl-names = "default";
++
++			qcom,din-ports = <1>;
++			qcom,dout-ports = <11>;
++
++			qcom,ports-sinterval =		/bits/ 16 <0x03 0x3f 0x1f 0x07 0x00 0x18f 0xff 0xff 0x31 0xff 0xff 0xff>;
++			qcom,ports-offset1 =		/bits/ 8 <0x00 0x00 0x0b 0x01 0x00 0x00 0xff 0xff 0x00 0xff 0xff 0xff>;
++			qcom,ports-offset2 =		/bits/ 8 <0x00 0x00 0x0b 0x00 0x00 0x00 0xff 0xff 0x00 0xff 0xff 0xff>;
++			qcom,ports-hstart =		/bits/ 8 <0xff 0x03 0xff 0xff 0xff 0x08 0xff 0xff 0x00 0xff 0xff 0xff>;
++			qcom,ports-hstop =		/bits/ 8 <0xff 0x06 0xff 0xff 0xff 0x08 0xff 0xff 0x0f 0xff 0xff 0xff>;
++			qcom,ports-word-length =	/bits/ 8 <0x01 0x07 0x04 0xff 0xff 0x0f 0xff 0xff 0x18 0xff 0xff 0xff>;
++			qcom,ports-block-pack-mode =	/bits/ 8 <0xff 0x00 0x01 0xff 0xff 0x00 0xff 0xff 0x01 0xff 0xff 0xff>;
++			qcom,ports-block-group-count =	/bits/ 8 <0xff 0xff 0xff 0xff 0x00 0x00 0xff 0xff 0x00 0xff 0xff 0xff>;
++			qcom,ports-lane-control =	/bits/ 8 <0x01 0x00 0x00 0x00 0x00 0x00 0xff 0xff 0x01 0xff 0xff 0xff>;
++
++			#address-cells = <2>;
++			#size-cells = <0>;
++			#sound-dai-cells = <1>;
++			status = "disabled";
++		};
++
+ 		lpass_txmacro: codec@6ae0000 {
+ 			compatible = "qcom,sm8750-lpass-tx-macro", "qcom,sm8550-lpass-tx-macro";
+ 			reg = <0x0 0x06ae0000 0x0 0x1000>;
+@@ -2308,6 +2368,36 @@ lpass_wsamacro: codec@6b00000 {
+ 			#sound-dai-cells = <1>;
+ 		};
+ 
++		swr0: soundwire@6b10000 {
++			compatible = "qcom,soundwire-v2.1.0", "qcom,soundwire-v2.0.0";
++			reg = <0x0 0x06b10000 0x0 0x10000>;
++			interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&lpass_wsamacro>;
++			clock-names = "iface";
++			label = "WSA";
++
++			pinctrl-0 = <&wsa_swr_active>;
++			pinctrl-names = "default";
++
++			qcom,din-ports = <4>;
++			qcom,dout-ports = <9>;
++
++			qcom,ports-sinterval =		/bits/ 16 <0x07 0x1f 0x3f 0x07 0x1f 0x3f 0x18f 0x18f 0x18f 0x0f 0x0f 0xff 0x31f>;
++			qcom,ports-offset1 =		/bits/ 8 <0x01 0x03 0x05 0x02 0x04 0x15 0x00 0x00 0x00 0x06 0x0d 0xff 0x00>;
++			qcom,ports-offset2 =		/bits/ 8 <0xff 0x07 0x1f 0xff 0x07 0x1f 0xff 0xff 0xff 0xff 0xff 0xff 0xff>;
++			qcom,ports-hstart =		/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0x08 0x0e 0x0e 0xff 0xff 0xff 0x0f>;
++			qcom,ports-hstop =		/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0x08 0x0e 0x0e 0xff 0xff 0xff 0x0f>;
++			qcom,ports-word-length =	/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0x08 0x0f 0x0f 0x00 0xff 0xff 0x18>;
++			qcom,ports-block-pack-mode =	/bits/ 8 <0x00 0x01 0x01 0x00 0x01 0x01 0x00 0x01 0x01 0x01 0x01 0x00 0x00>;
++			qcom,ports-block-group-count =	/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x00 0x00 0xff 0xff 0xff 0xff>;
++			qcom,ports-lane-control =	/bits/ 8 <0xff 0xff 0xff 0xff 0xff 0xff 0xff 0x00 0x00 0xff 0xff 0xff 0xff>;
++
++			#address-cells = <2>;
++			#size-cells = <0>;
++			#sound-dai-cells = <1>;
++			status = "disabled";
++		};
++
+ 		lpass_ag_noc: interconnect@7e40000 {
+ 			compatible = "qcom,sm8750-lpass-ag-noc";
+ 			reg = <0x0 0x07e40000 0x0 0xe080>;
+@@ -2329,6 +2419,38 @@ lpass_lpicx_noc: interconnect@7420000 {
+ 			#interconnect-cells = <2>;
+ 		};
+ 
++		swr2: soundwire@7630000 {
++			compatible = "qcom,soundwire-v2.1.0", "qcom,soundwire-v2.0.0";
++			reg = <0x0 0x07630000 0x0 0x10000>;
++			interrupts = <GIC_SPI 761 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 785 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "core", "wakeup";
++			clocks = <&lpass_txmacro>;
++			clock-names = "iface";
++			label = "TX";
++
++			pinctrl-0 = <&tx_swr_active>;
++			pinctrl-names = "default";
++
++			qcom,din-ports = <4>;
++			qcom,dout-ports = <0>;
++
++			qcom,ports-sinterval-low =	/bits/ 8 <0x01 0x01 0x03 0x03>;
++			qcom,ports-offset1 =		/bits/ 8 <0x00 0x00 0x01 0x01>;
++			qcom,ports-offset2 =		/bits/ 8 <0x00 0x00 0x00 0x00>;
++			qcom,ports-hstart =		/bits/ 8 <0xff 0xff 0xff 0xff>;
++			qcom,ports-hstop =		/bits/ 8 <0xff 0xff 0xff 0xff>;
++			qcom,ports-word-length =	/bits/ 8 <0xff 0xff 0xff 0xff>;
++			qcom,ports-block-pack-mode =	/bits/ 8 <0xff 0xff 0xff 0xff>;
++			qcom,ports-block-group-count =	/bits/ 8 <0xff 0xff 0xff 0xff>;
++			qcom,ports-lane-control =	/bits/ 8 <0x01 0x02 0x00 0x00>;
++
++			#address-cells = <2>;
++			#size-cells = <0>;
++			#sound-dai-cells = <1>;
++			status = "disabled";
++		};
++
+ 		lpass_vamacro: codec@7660000 {
+ 			compatible = "qcom,sm8750-lpass-va-macro", "qcom,sm8550-lpass-va-macro";
+ 			reg = <0x0 0x07660000 0x0 0x2000>;
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
-
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PkFyZSB0aGVzZSBlcnJvcnMgY29tbW9uIGVub3VnaCB0byBnZXQgZGVkaWNhdGVkIGRyb3AgcmVh
-c29ucyA/IE1vc3QNCj5zdGFja3MgaGF2ZSBpbXBsZW1lbnRlZCBBUlAgbW9yZSB0aGFuIDIwIHll
-YXJzIGFnby4NCj4NCj5JIHRoaW5rIHRoYXQgZm9yIHJhcmUgZXZlbnRzIGxpa2UgdGhpcywgdGhl
-IHN0YW5kYXJkIGNhbGwgZ3JhcGggc2hvdWxkDQo+YmUgcGxlbnR5IGVub3VnaC4gKHBlcmYgcmVj
-b3JkIC1hZyAtZSBza2I6a2ZyZWVfc2tiKQ0KPg0KPk90aGVyd2lzZSB3ZSB3aWxsIGdldCAxMDAw
-IGRyb3AgcmVhc29ucywgYW5kIHRoZSBwcm9mdXNpb24gb2YgbmFtZXMNCj5tYWtlcyB0aGVtIHVz
-ZWxlc3MuDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjay4NCg0KTWFsaWNpb3VzbHkgY3Jh
-ZnRlZCBBUlAgcGFja2V0cyBvZnRlbiB0cmlnZ2VyIHRoZXNlIHR3byBzY2VuYXJpb3MuIA0KVXNp
-bmcgcGVyZiBjYW5ub3QgZGlyZWN0bHkgZGlzdGluZ3Vpc2ggYmV0d2VlbiB0aGUgdHdvIGNhc2Vz
-OyANCmFkZGl0aW9uYWxseSwgZW5hYmxpbmcgcGVyZiBpbiBlbWJlZGRlZCBlbnZpcm9ubWVudHMg
-bWF5IGxlYWQgdG8gDQpub3RpY2VhYmxlIHBlcmZvcm1hbmNlIG92ZXJoZWFkLg0KDQpNb3JlIGlt
-cG9ydGFudGx5LCBpbiB0aGlzIHBhdGNoLCBJIGJlbGlldmUgcmVwbGFjaW5nIHBza2JfbWF5X3B1
-bGwgd2l0aCANCnBza2JfbWF5X3B1bGxfcmVhc29uIG1ha2VzIHNlbnNlLCBzbyB1c2luZyBrZnJl
-ZV9za2JfcmVhc29uKCkgaW4gDQphcnBfcmN2KCkgaXMgbWVhbmluZ2Z1bC4=
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxkaXYgc3R5bGU9ImZvbnQtc2l6ZToxNHB4O2ZvbnQt
-ZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7bGluZS1oZWlnaHQ6MS41Ij48ZGl2
-IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPiZndDtBcmUgdGhlc2UgZXJyb3JzIGNvbW1vbiBlbm91
-Z2ggdG8gZ2V0IGRlZGljYXRlZCBkcm9wIHJlYXNvbnMgPyBNb3N0PC9kaXY+PGRpdiBzdHlsZT0i
-bGluZS1oZWlnaHQ6MS41Ij4mZ3Q7c3RhY2tzIGhhdmUgaW1wbGVtZW50ZWQgQVJQIG1vcmUgdGhh
-biAyMCB5ZWFycyBhZ28uPC9kaXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij4mZ3Q7PC9k
-aXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij4mZ3Q7SSB0aGluayB0aGF0IGZvciByYXJl
-IGV2ZW50cyBsaWtlIHRoaXMsIHRoZSBzdGFuZGFyZCBjYWxsIGdyYXBoIHNob3VsZDwvZGl2Pjxk
-aXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+Jmd0O2JlIHBsZW50eSBlbm91Z2guIChwZXJmIHJl
-Y29yZCAtYWcgLWUgc2tiOmtmcmVlX3NrYik8L2Rpdj48ZGl2IHN0eWxlPSJsaW5lLWhlaWdodDox
-LjUiPiZndDs8L2Rpdj48ZGl2IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPiZndDtPdGhlcndpc2Ug
-d2Ugd2lsbCBnZXQgMTAwMCBkcm9wIHJlYXNvbnMsIGFuZCB0aGUgcHJvZnVzaW9uIG9mIG5hbWVz
-PC9kaXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij4mZ3Q7bWFrZXMgdGhlbSB1c2VsZXNz
-LjwvZGl2PjxkaXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9
-ImxpbmUtaGVpZ2h0OjEuNSI+VGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrLjwvZGl2PjxkaXYg
-c3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+PGJyPjwvZGl2PjxkaXYgc3R5bGU9ImxpbmUtaGVpZ2h0
-OjEuNSI+TWFsaWNpb3VzbHkgY3JhZnRlZCBBUlAgcGFja2V0cyBvZnRlbiB0cmlnZ2VyIHRoZXNl
-IHR3byBzY2VuYXJpb3MuJm5ic3A7PC9kaXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij5V
-c2luZyBwZXJmIGNhbm5vdCBkaXJlY3RseSBkaXN0aW5ndWlzaCBiZXR3ZWVuIHRoZSB0d28gY2Fz
-ZXM7Jm5ic3A7PC9kaXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij5hZGRpdGlvbmFsbHks
-IGVuYWJsaW5nIHBlcmYgaW4gZW1iZWRkZWQgZW52aXJvbm1lbnRzIG1heSBsZWFkIHRvJm5ic3A7
-PC9kaXY+PGRpdiBzdHlsZT0ibGluZS1oZWlnaHQ6MS41Ij5ub3RpY2VhYmxlIHBlcmZvcm1hbmNl
-IG92ZXJoZWFkLjwvZGl2PjxkaXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+PGJyPjwvZGl2Pjxk
-aXYgc3R5bGU9ImxpbmUtaGVpZ2h0OjEuNSI+TW9yZSBpbXBvcnRhbnRseSwgaW4gdGhpcyBwYXRj
-aCwgSSBiZWxpZXZlIHJlcGxhY2luZyBwc2tiX21heV9wdWxsIHdpdGgmbmJzcDs8L2Rpdj48ZGl2
-IHN0eWxlPSJsaW5lLWhlaWdodDoxLjUiPnBza2JfbWF5X3B1bGxfcmVhc29uIG1ha2VzIHNlbnNl
-LCBzbyB1c2luZyBrZnJlZV9za2JfcmVhc29uKCkgaW4mbmJzcDs8L2Rpdj48ZGl2IHN0eWxlPSJs
-aW5lLWhlaWdodDoxLjUiPmFycF9yY3YoKSBpcyBtZWFuaW5nZnVsLjwvZGl2PjwvZGl2Pjxicj48
-YnI+PGJyPjxicj48L2Rpdj4=
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
+-- 
+2.45.2
 
