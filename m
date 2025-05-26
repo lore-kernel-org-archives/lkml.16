@@ -1,160 +1,87 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381931E104E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22FDE1E3762
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748249211; cv=none; b=YIce8lrsL7FkbMNt6lm6f5y5abtOLNshdRxi3md7UMjNKzaEYzcumnr6UG/64uRIeelwD1Uryh9w03SZqnMMiYOMaZLkk4FlB1ZJDWRispchxMYemKtoiawchZp387cy96T8aKsh3jz9RX9aGLOSU7yUPe6QScDfAXghSGhy5Y8=
+	t=1748249417; cv=none; b=snAe1GY6mQedm67oOmzaeq0aYBgNoL0+ZM4CpxZaOXNZv0GcOmwXXunz3OwwDb9nt6VCNjjmqNnnFTO8rtH7vswaE6STlmNsmsxmzH1neANbm2ppSBx0iu61/YUADe6qvVo+vctxPlBjJx3Ffe7yzOZ0X5Gy+hp4x3K7O/cOByE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748249211; c=relaxed/simple;
-	bh=JOumsy8f69M8YdIc4xojwmVYWLFBA796grd9FipnoNs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=l3R/tHqOyKe+XLhLVgW2qofn/MO5fAAIsfTfMHIyXwk6YByRiAJyHEY9SqErYrC7qJqDKV0GBXWhf/t5x2Q4+E/L4rS3Y3atq6ZK+ON4IjlrSyvAZhSlzGhzsdovgfgSvjU/dsTVaI0qdfKpe2ZtEnMiNewQyzOImtww2KXqdN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=eeenQEqb; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="eeenQEqb"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748249200; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=oBqyPTu8lskfG4nnPphpIwrCfBbzNKVNhmRKwastU4c=;
-	b=eeenQEqb4GtS015h2ucn1frhLDdDghbUnUtzbKCee7bxm9g2ltCG7M06KDZ4ELFRoApLEO1q8CNPZLzPFLgjLlvQGrd56Td8pKHDn0vVO3iNm+6HxVLDfoP82MmKq21tHZb36GeBpJsBETJF4rwPntMBl2ThgMI6wGA8DtMXlAo=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WbnAuIq_1748249197 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 26 May 2025 16:46:38 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: <linux-kernel@vger.kernel.org>,  <linux-mm@kvack.org>,
-  <Jonathan.Cameron@huawei.com>,  <dave.hansen@intel.com>,
-  <gourry@gourry.net>,  <hannes@cmpxchg.org>,
-  <mgorman@techsingularity.net>,  <mingo@redhat.com>,
-  <peterz@infradead.org>,  <raghavendra.kt@amd.com>,  <riel@surriel.com>,
-  <rientjes@google.com>,  <sj@kernel.org>,  <weixugc@google.com>,
-  <willy@infradead.org>,  <ziy@nvidia.com>,  <dave@stgolabs.net>,
-  <nifan.cxl@gmail.com>,  <joshua.hahnjy@gmail.com>,
-  <xuezhengchu@huawei.com>,  <yiannis@zptcorp.com>,
-  <akpm@linux-foundation.org>,  <david@redhat.com>
-Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
-In-Reply-To: <20250521080238.209678-1-bharata@amd.com> (Bharata B. Rao's
-	message of "Wed, 21 May 2025 13:32:36 +0530")
-References: <20250521080238.209678-1-bharata@amd.com>
-Date: Mon, 26 May 2025 16:46:36 +0800
-Message-ID: <87sekrbvyr.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1748249417; c=relaxed/simple;
+	bh=7r8aRdMgPggrmvpJvLCdX0/pBmsKKNimBRQjqP19w0Y=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SSTrdx6yvuUohrpZsImMvSp/RKLmuua6HGhWLKuPQVwGy9/bVVKIzF1jAj5x8Rz9ZbjetBxmoEc3lIDKOVVpn7GR0BRX5NlcVj/OFrPYCZmCQfFZcSwWFjPN3TfbWwCAMpBCXCm+CE0jOWwAXc0bIEKzJL+CdxWMvz03JlxeACM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b5875e250so169097239f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:50:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748249415; x=1748854215;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7r8aRdMgPggrmvpJvLCdX0/pBmsKKNimBRQjqP19w0Y=;
+        b=bzUmn+0jTcUBxTpNoPLoWYTWRfNxXKJe6XWm1AeJdl0MsZhrbHl9LbJAHweKo5ht+Q
+         Dz2ElQeHueQ8gV5Ifwg3sS6nkCT0JbjBx1V3NBUqON+ecdMJ6jWjBjk0/oow92IiAHST
+         cUUU6kCYcTZm0vEkZ8+lU/dlqe80+2muUWGACS4lSTUY/tplq/1D/cTToiFXPlbSH/6+
+         7AhMCvz88/8w+6o2kdC0Y7uO3AL8luNtak/XoTmiriId5ON8tDW1+91aXVsL7J0EE0dn
+         0Rd0trg70akGVyu0+OJCbqXaz0kc0XqqpIJHvYdR2KGSzBQRg8hHac/nFXD6LrIuff24
+         TgqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVluhHrssGSfwak0sf0xTP48WpeD/SgF56l9ii5IFmC+/53F1W5wJB6BQlSnqFO/I/d3m4BkVej5r1PVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1BKevha7g3TMHCcfdROMuEJqJ3M4dV+1dptkR30C6gmDm6o8p
+	rJmmhGdaWRw4iRLB2G0Knu3HOLX2czf0xJBQbrKiz7RMu4bV7Um0Xtyo4wDdWPqh20T9BoZiJTM
+	6yZf2wvCqQEotNzBB8Lu0Mdn1XTwIQi09fTisQuEA5T6sgxtZkPMkJb37jUc=
+X-Google-Smtp-Source: AGHT+IGOo2lmULrjR/iwGplRL30bkcEhPuZyxc72lp41LzzTtXiefpjNjJTk+foGvQNbtScr17PtZxNvTpCgIG9KaABh//fr/chr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-Received: by 2002:a05:6602:3e98:b0:86a:24a7:cecb with SMTP id
+ ca18e2360f4ac-86cbb7da7c2mr1179440439f.4.1748249415172; Mon, 26 May 2025
+ 01:50:15 -0700 (PDT)
+Date: Mon, 26 May 2025 01:50:15 -0700
+In-Reply-To: <67bd7af0.050a0220.bbfd1.009e.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68342b47.a70a0220.253bc2.0090.GAE@google.com>
+Subject: Re: [syzbot] general protection fault in lock_vma_under_rcu
+From: syzbot <syzbot+556fda2d78f9b0daa141@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, asml.silence@gmail.com, axboe@kernel.dk, 
+	eadavis@qq.com, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, shivankg@amd.com, surenb@google.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Bharata,
+This bug is marked as fixed by commit:
+mm: fix a crash due to vma_end_read() that should have been removed
 
-Bharata B Rao <bharata@amd.com> writes:
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
 
-> Hi,
->
-> This is an attempt to convert the NUMA balancing to do batched
-> migration instead of migrating one folio at a time. The basic
-> idea is to collect (from hint fault handler) the folios to be
-> migrated in a list and batch-migrate them from task_work context.
-> More details about the specifics are present in patch 2/2.
->
-> During LSFMM[1] and subsequent discussions in MM alignment calls[2],
-> it was suggested that separate migration threads to handle migration
-> or promotion request may be desirable. Existing NUMA balancing, hot
-> page promotion and other future promotion techniques could off-load
-> migration part to these threads.
+#syz fix: exact-commit-title
 
-What is the expected benefit of the change?
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
 
-For code reuse, we can use migrate_misplaced_folio() or
-migrate_misplaced_folio_batch() in various promotion path.
-
-For workload latency influence, per my understanding, PTE scanning is
-much more serious than migration.  Why not start from that?
-
-> Or if we manage to have a single
-> source of hotness truth like kpromoted[3], then that too can hand
-> over migration requests to the migration threads. I am envisaging
-> that different hotness sources like kmmscand[4], MGLRU[5], IBS[6]
-> and CXL HMU would push hot page info to kpromoted, which would
-> then isolate and push the folios to be promoted to the migrator
-> thread.
->
-> As a first step, this is an attempt to batch and perform NUMAB
-> migrations in async manner. Separate migration threads aren't
-> yet implemented but I am using Gregory's patch[7] that provides
-> migrate_misplaced_folio_batch() API to do batch migration of
-> misplaced folios.
->
-> Some points for discussion
-> --------------------------
-> 1. To isolate the misplaced folios or not?
->
-> To do batch migration, the misplaced folios need to be stored in
-> some manner. I thought isolating them and using the folio->lru
-> field to link them up would be the most straight-forward way. But
-> then there were concerns expressed about folios remaining isolated
-> for long until they get migrated.
->
-> Or should we just maintain the PFNs instead of folios and
-> isolate them only just prior to migrating them?
->
-> 2. Managing target_nid for misplaced pages
->
-> NUMAB provides the accurate target_nid for each folio that is
-> detected as misplaced. However when we don't migrate the folio
-> right away, but instead want to batch and do asyn migration later,
-> then where do we keep track of target_nid for each folio?
->
-> In this implementation, I am using last_cpupid field as it appeared
-> that this field could be reused (with some challenges mentioned
-> in 2/2) for isolated folios. This approach may be specific to NUMAB
-> but then each sub-system that hands over pages to the migrator thread
-> should also provide a target_nid and hence each sub-system should be
-> free to maintain and track the target_nid of folios that it has
-> isolated/batched for migration in its own specific manner.
->
-> 3. How many folios to batch?
->
-> Currently I have a fixed threshold for number of folios to batch.
-> It could be a sysctl to allow a setting between a min and max. It
-> could also be auto-tuned if required.
->
-> The state of the patchset
-> -------------------------
-> * Still raw and very lightly tested
-> * Just posted to serve as base for subsequent discussions
->   here and in MM alignment calls.
->
-> References
-> ----------
-> [1] LSFMM LWN summary - https://lwn.net/Articles/1016519/
-> [2] MM alignment call summary - https://lore.kernel.org/linux-mm/263d7140-c343-e82e-b836-ec85c52b54eb@google.com/
-> [3] kpromoted patchset - https://lore.kernel.org/linux-mm/20250306054532.221138-1-bharata@amd.com/
-> [4] Kmmscand: PTE A bit scanning - https://lore.kernel.org/linux-mm/20250319193028.29514-1-raghavendra.kt@amd.com/
-> [5] MGLRU scanning for page promotion - https://lore.kernel.org/lkml/20250324220301.1273038-1-kinseyho@google.com/
-> [6] IBS base hot page promotion - https://lore.kernel.org/linux-mm/20250306054532.221138-4-bharata@amd.com/
-> [7] Unmapped page cache folio promotion patchset - https://lore.kernel.org/linux-mm/20250411221111.493193-1-gourry@gourry.net/
->
-> Bharata B Rao (1):
->   mm: sched: Batch-migrate misplaced pages
->
-> Gregory Price (1):
->   migrate: implement migrate_misplaced_folio_batch
->
->  include/linux/migrate.h |  6 ++++
->  include/linux/sched.h   |  4 +++
->  init/init_task.c        |  2 ++
->  kernel/sched/fair.c     | 64 +++++++++++++++++++++++++++++++++++++++++
->  mm/memory.c             | 44 ++++++++++++++--------------
->  mm/migrate.c            | 31 ++++++++++++++++++++
->  6 files changed, 130 insertions(+), 21 deletions(-)
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=556fda2d78f9b0daa141
 
 ---
-Best Regards,
-Huang, Ying
+[1] I expect the commit to be present in:
+
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 10 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
