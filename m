@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D4E2147F6;
-	Mon, 26 May 2025 15:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6322C214814;
+	Mon, 26 May 2025 15:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748274934; cv=none; b=MyiDB9X51ZcMzpdF2xoroxberACPwvNSnDcB8arSZrLwz9DPFplYtOS8TWiQkERpeqWfQ/TrTVXeMdGxmoBOFGivNiE5+9Y6M6qxmcWTjlb30bNMl2AtBHDtKXTj0smt45diJLyWEkSa4vngzSnxoTmD/hv4Yp/f1Y2Ic3uLtgU=
+	t=1748274935; cv=none; b=QVJ8wW8kOuWmaWAsnyukCYRNgqibL5uSczI2uQ7q42+gcIFm2HHZaBux711urieygX2njGRHAIKHSObkouFgGmSmXrRaUedH14Bek87JcclNeJtyerZkHcxmOnRYjYSC3r4dBLSOTOxt23PsNzLyfNcWYzU0V01tg5TVl4rmZYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748274934; c=relaxed/simple;
-	bh=pRkavSSrKLELLYEyxG8VOAx6a1OSCKlwEsUsa/rhHXw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lKiasH1rstXPYdEqHKKYlKWxvD6QN2oyKpEv6o/98AsWYIHWvOPt/iei7iGw/DTManIg/8eykbbSh5eYIfzDrULLSKdIp5SwybWLzVskWwzc+9Ysdw00T3FBnF7cYilqoVjGVYLz3xZizUZrunamRGdLIrqZekPazMHuhyz/N7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O/mdelKY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0cWyXiF8; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1748274935; c=relaxed/simple;
+	bh=xNb2fUmdU6gy1AwVZb1coVyANqdmOtxJQQa65Ddy+zE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S1qyu4uEyAJAZ1RavmR6ayY6cem+wrSkzTZW4/bkWoBJbPamSqwCh7Gf2F3WShSRGE+1Xk9A08skwV7Pe46N6dh/1nFtMItZnK9zs6XldNQU3vjBUPeXD9HI4Xa8EEKj7e3ytPEN1dC29yj4izRDhV0n/Rl1vETq6qaflLTyUKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=alXORGgA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dA7DJIB2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O/mdelKY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0cWyXiF8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="alXORGgA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dA7DJIB2"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1748274931;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UJlE224RmBYGNDbS+Mw+IYOqU6oo4BkO2oGnbjLwdYM=;
-	b=O/mdelKYDkGlnypUkTTSDHGnbK0Py4y55Wqu6Ug1AkXXuARsVU2RNGQg1Bw9xMk3mXwQmg
-	iGjGFywpxRZjkKujG3E0IeesXOIxC+g+V0q7HceO84QOJX+Aj9Ecv8tYVyAlbP239DDZo4
-	9AN+dKdUhL7gGE80pFzm4wHCziCd1tVbi/aJPM8f2ujyAYYzCumnjXK+NNq1hsC4cK/rGP
-	Esuv2WImjcFTgCUKg65uDxyTveJU0BFgvDv1uYu8rU8+HL8+2/7M9op4dHTATPSEGcy0rc
-	+SVfhPwhmjWgDT8Alq15uUHu+fVtuNd04alTOw5Y1150c7+2vi/wqkrNrJihrg==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1i7ee9IVUGt54lC8ozjiLfER1RgZIUKwRtYJARj60hA=;
+	b=alXORGgAqhJMlYFhzaS8p3nB48T+zzyrET8TxPC19JO9guTO/4oOKh9PwYHGvn7CqesFBw
+	C8E4Qmaum9FCRTWmXtdZ4mMZGwDc8kHYbb2TbwZ/jZznpfVy/mn13Qi1Rw7TsBup5deEvr
+	kivXqF48KTX3oanhuTuK4rviPwTFVg9y9KtcgOLPZp/KB9eb2EPVIZJXEJWng6xTD87S3J
+	3wUFyH+qc++Yjd34BjyupNF7gBuKnznB0JKV1B1M7kd7paLQA3nsYhFhHn0hIOjndz7v/I
+	wFLDQhGV8OIYTCOQwAqg8kiKvN+ALF976+d5AGO3j8UZhk9RByjqc6Wrv5llYw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1748274931;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UJlE224RmBYGNDbS+Mw+IYOqU6oo4BkO2oGnbjLwdYM=;
-	b=0cWyXiF8ZdUYWma/Dl1MrsuO4uYAiJjtpHI4qfAG95e/JdN+d2GfeAjTUrnubq7IMzn0xY
-	kkAB6Yjsl2Rga5Ag==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1i7ee9IVUGt54lC8ozjiLfER1RgZIUKwRtYJARj60hA=;
+	b=dA7DJIB2yYcFuD/F57IEJP4ycehvq9KhxyTf6En0EC8HamU5ZdTE2X5Er32G53PjFG44es
+	mCKZcZ2jiZ1K9ZBA==
 To: linux-kernel@vger.kernel.org,
 	linux-man@vger.kernel.org
 Cc: Alejandro Colomar <alx@kernel.org>,
@@ -49,54 +52,115 @@ Cc: Alejandro Colomar <alx@kernel.org>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [[PATCH v3] 0/4] Add documentation for PR_FUTEX_HASH
-Date: Mon, 26 May 2025 17:55:19 +0200
-Message-ID: <20250526155523.1382465-1-bigeasy@linutronix.de>
+Subject: [[PATCH v3] 2/4] man/man2/prctl.2, PR_FUTEX_HASH_SET_SLOTS.2const: Document PR_FUTEX_HASH_SET_SLOTS
+Date: Mon, 26 May 2025 17:55:21 +0200
+Message-ID: <20250526155523.1382465-3-bigeasy@linutronix.de>
+In-Reply-To: <20250526155523.1382465-1-bigeasy@linutronix.de>
+References: <20250526155523.1382465-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-
-Add some documentation of the prctl(PR_FUTEX_HASH, =E2=80=A6) interface.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
-v2=E2=80=A6v3: https://lore.kernel.org/all/20250520104247.S-gVcgxM@linutron=
-ix.de/
-  - Split the individual PR_FUTEX_HASH ops into their own man page.
-  - Reword a sentence referring to uaddr in order to link to futex(2).
-  - Address remaining review feedback such the semantic new line.
-
-v1=E2=80=A6v2: https://lore.kernel.org/all/20250516161422.BqmdlxlF@linutron=
-ix.de/
-  - Partly reword
-  - Use "semantic newlines"
-
-Sebastian Andrzej Siewior (4):
-  man/man2/prctl.2, man/man2const/PR_FUTEX_HASH.2const: Document
-    PR_FUTEX_HASH
-  man/man2/prctl.2, PR_FUTEX_HASH_SET_SLOTS.2const: Document
-    PR_FUTEX_HASH_SET_SLOTS
-  man/man2/prctl.2, PR_FUTEX_HASH_GET_SLOTS.2const: Document
-    PR_FUTEX_HASH_GET_SLOTS
-  man/man2/prctl.2, PR_FUTEX_HASH_GET_IMMUTABLE.2const: Document
-    PR_FUTEX_HASH_GET_IMMUTABLE
-
- man/man2/prctl.2                              |  3 +
- man/man2const/PR_FUTEX_HASH.2const            | 92 +++++++++++++++++++
- .../PR_FUTEX_HASH_GET_IMMUTABLE.2const        | 37 ++++++++
- man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const  | 37 ++++++++
- man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const  | 83 +++++++++++++++++
- 5 files changed, 252 insertions(+)
- create mode 100644 man/man2const/PR_FUTEX_HASH.2const
- create mode 100644 man/man2const/PR_FUTEX_HASH_GET_IMMUTABLE.2const
- create mode 100644 man/man2const/PR_FUTEX_HASH_GET_SLOTS.2const
+ man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const | 83 ++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
  create mode 100644 man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const
 
+diff --git a/man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const b/man/man2const/P=
+R_FUTEX_HASH_SET_SLOTS.2const
+new file mode 100644
+index 0000000000000..1f08d1bb30485
+--- /dev/null
++++ b/man/man2const/PR_FUTEX_HASH_SET_SLOTS.2const
+@@ -0,0 +1,83 @@
++.\" Copyright, the authors of the Linux man-pages project
++.\"
++.\" SPDX-License-Identifier: Linux-man-pages-copyleft
++.\"
++.TH PR_FUTEX_HASH_SET_SLOTS 2const (date) "Linux man-pages (unreleased)"
++.SH NAME
++PR_FUTEX_HASH_SET_SLOTS
++\-
++set the size of the private hash
++.SH LIBRARY
++Standard C library
++.RI ( libc ,\~ \-lc )
++.SH SYNOPSIS
++.nf
++.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
++.B #include <sys/prctl.h>
++.P
++.B int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS,
++.BI "          unsigned long " hash_size ", unsigned long " hash_flags ");
++.fi
++.SH DESCRIPTION
++Set the number of slots to use for the private hash.
++.TP
++.I hash_size
++Specifies the size of private hash to allocate.
++.RS
++.TP
++.I 0
++Use the global hash.
++This is the behaviour used before 6.16.
++The operation implies the
++.I FH_FLAG_IMMUTABLE
++flag.
++.TP
++.I >0
++Specifies the number of slots to allocate.
++The value must be power of two and the lowest possible value is 2.
++The upper limit depends on the available memory in the system.
++Each slot requires 64bytes of memory.
++Kernels compiled with
++.I CONFIG_PROVE_LOCKING
++will consume more than that.
++.RE
++.TP
++.I hash_flags
++.RS
++The following flags can be specified:
++.TP
++.I FH_FLAG_IMMUTABLE
++The private hash can no longer be changed.
++By using an immutable private hash
++the kernel can avoid some accounting for the data structure.
++This accounting is visible in benchmarks if many
++.BR futex (2)
++operations are invoked in parallel on different CPUs.
++.RE
++.RE
++.SH RETURN VALUE
++On success,
++0 is returned.
++On error, \-1 is returned, and
++.I errno
++is set to indicate the error.
++.SH ERRORS
++.TP
++.B EINVAL
++One of the supplied argument is invalid.
++.TP
++.B ENOMEM
++Failed to allocate memory.
++.TP
++.B EBUSY
++An immutable hash is already in use
++and can not be changed.
++.SH STANDARDS
++Linux.
++.SH HISTORY
++Linux 6.16.
++.SH SEE ALSO
++.BR prctl (2),
++.BR PR_FUTEX_HASH (2const),
++.BR PR_FUTEX_HASH_GET_IMMUTABLE (2const),
++.BR PR_FUTEX_HASH_GET_SLOTS (2const)
 --=20
 2.49.0
 
