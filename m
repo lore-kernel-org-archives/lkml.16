@@ -1,1146 +1,251 @@
-Received: from www571.your-server.de (www571.your-server.de [78.46.3.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEB61E3762;
-	Mon, 26 May 2025 08:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.46.3.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E199E1DE2AD;
+	Mon, 26 May 2025 08:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748249491; cv=none; b=DP7B4bk8/VaQjFWIkRZHE5ASQjT8Uy95s4i9+Sg3opGatqNxXICjHSdgUw4eaxi8+nl33bFeXpFOmttEVA8tWm801//+oQlJ+HnuXzSVWjCcXbboN2MJepZsnpuC1AlEtwM/quIhd6WPCZX7gn5hDFeZNd291mBnolmvkAqFgmM=
+	t=1748249514; cv=none; b=RRYwbkIwneLwfiZiq7e6pMDiUSDLuu6/fXjs3qiA6NNl/yNh/7OWt/97r4ZWu0LKB90DgRQy9NmExdWpUyTV+Q7sNAKv5O8d3rHn0e5f4vQSkkZI++i/NpNRZthlULGp4237lskVGp8t9WNCVCznmVqoCR1vqj4EWdltpWlPj7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748249491; c=relaxed/simple;
-	bh=iML0t7IXmJ8l2J0UvI+3zqBtOFe+KD7hpYxIkwQfKL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HLsRYsnaNW7sUOlDduu6dMSjuSP9MQSo2aeaWOSo56aruoIP/lc8lZEOA58rAfoCY5lmvnl2LevqrIgUMp0iu0W4QIP7JmbbVwE2qv/bzvorfPQIpZGMagx0g0pTI/YN6tMYLe9ffgOIJSCptRzUhb+QuDdQY4Zi/YDSbDfdReE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de; spf=pass smtp.mailfrom=it-klinger.de; dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b=dIssKk0y; arc=none smtp.client-ip=78.46.3.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=it-klinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=it-klinger.de
+	s=arc-20240116; t=1748249514; c=relaxed/simple;
+	bh=zvra6HZl9Z3MP0n1eJxJdrcAGuePSjq1PbQ5QlWDQQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dwbTh5amai9DI0RfQ4GbptvmRfB0jmWi4ArhhT8kuI6OfkRwKMcaWu3yaZviElYfFJiS2FHdIFEDG0oW4b99LtYQ/BLI0/1WlaokTxasTzRRa9PJovt1nGPfewyHilF6joM60cXr5ZgjqmuhbRtl9lbv0nF8AHWmFWol+Jmucbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDMdOgR8; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=it-klinger.de header.i=@it-klinger.de header.b="dIssKk0y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=it-klinger.de; s=default2502; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=/pQ7IhW6TfXiHCuuCcidepkJlq1EWy4uvFfD6CHQ6dU=; b=dIssKk0yZC+69OBom+WKHRnYmu
-	t3JDm/72YAyjdlvw7SPDsAfkLR1A0gIwYXWe73Tx7FEKpaVz5xY794atuzU/87MG+mSjntlxRXAp9
-	v6Koy67CppeV9XlqxD84zbNu1AmCqK8TMVZVh8neOu1J70pnDhhxmWw/VG+104vcNJxAdX2a6ZVgG
-	OWzSoKNr9aXNMT/MFxepg51npFnfX/JdAr0Hj1BklrZeguz6hFiyZGQ9H5tA9bVJKTDHpXnx03JKA
-	D9LYB6c4ahm0/K5lu4ssGL0yEZG++AJgTymFDl3/T34VKyM5pko85SeXtIuszjNT1u+nsum9GwYQM
-	wnOyJW7g==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www571.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <ak@it-klinger.de>)
-	id 1uJTYL-000Cr3-1C;
-	Mon, 26 May 2025 10:51:25 +0200
-Received: from localhost ([127.0.0.1])
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ak@it-klinger.de>)
-	id 1uJTYK-000C3y-2m;
-	Mon, 26 May 2025 10:51:24 +0200
-From: Andreas Klinger <ak@it-klinger.de>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: lars@metafoo.de,
-	javier.carrasco.cruz@gmail.com,
-	mazziesaccount@gmail.com,
-	andriy.shevchenko@linux.intel.com,
-	arthur.becker@sentec.com,
-	perdaniel.olsson@axis.com,
-	mgonellabolduc@dimonoff.com,
-	muditsharma.info@gmail.com,
-	clamor95@gmail.com,
-	emil.gedenryd@axis.com,
-	ak@it-klinger.de,
-	devicetree@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/3] iio: light: add support for veml6046x00 RGBIR color sensor
-Date: Mon, 26 May 2025 10:50:40 +0200
-Message-Id: <20250526085041.9197-3-ak@it-klinger.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250526085041.9197-1-ak@it-klinger.de>
-References: <20250526085041.9197-1-ak@it-klinger.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDMdOgR8"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7398d65476eso1253205b3a.1;
+        Mon, 26 May 2025 01:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748249512; x=1748854312; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jAKi39KJyx4nPhzTCMTmMmK3H8uV0z0zL/rPiOL2COA=;
+        b=gDMdOgR8H8MZFRJf6NUtoIPrI3TgxzutVvgG6RFCBph5euCNPcdlpUdF3LbR9lPZOz
+         35qN8ERcDCvG2jM+D9Vj0nUpEpwYt1PAgMU9MOJ71kWn9kVTQIJFyZkRJwtNeg/MT4hF
+         GiYFSLQqgIAM+LCgDHyYx8ko7HUJGInHfBJPDAcsx8tLNyD8n5k+96idbenzCm3AjwS6
+         S9oFVMBZ7PiA+w1727Gefdu8X/Xxg156n5LBfqXCvTDItJvPazVgscShnPQ0IbCvsdoa
+         I7gwg3YaHiot7wWowYPoSFtQP6smmdhy08FQmk4ogMMNhpVn1uwq0XVCT6pjxsrzf9Hx
+         ZBhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748249512; x=1748854312;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jAKi39KJyx4nPhzTCMTmMmK3H8uV0z0zL/rPiOL2COA=;
+        b=v4C1dUqTcgc/YPDVVB7q27jLAqWi+CSA4KLf1Vf/4/9hhnZQs0tm/0+pI/UvMlODWe
+         DCn+1wHZj6hysi9v5Oab/kUlqa0KnTxsz5T8gnyV7LfhXuKG0tGBGZkxNkO0Xj0YewSA
+         IVP4gkaaRq+wG5cAU3/6ukvMZm3otRA4dBXcPHQ2ohm1imtR+SmfRJt05rIyrfEFujfz
+         5ZiWIZPdNyL++P9W34HSNjLGBd9cLCZm3qkQ8gkKLWgDcckyiXy7OWIb3L6Kh4ZbyTrb
+         pyemH88XU48JDch7UtIBsyP+kq1JIPnVOLW4M9gcSsxnnFI4iYRrVcR6MTVv6lBv+LDD
+         Rnlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWg/nA+Kxtz6F433F4l/xefw3RoIJVP/RiJAiHVKMTMaNII33/lAB6z+wyYADHkhz3LErd5cw0gd7o8PWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHavYRG+P4smoT5EPl2DnKCjc4tK/imtzNUivc607R8A/USXNc
+	np66Ny4bHwM3I6XSnAWbvAuf826owtmcGml/F+O2ICKaIy3FbYHY0v7Z
+X-Gm-Gg: ASbGncsZyBIAgFMcd68yLHE9o/0+OHcnUOwnEGvbYAl9oxnJScldwmtx+XxoLyNsjWP
+	i7dt3K8wL305fSxWH3SEzZpVBEotvNV3zRYoIdxtdGf2d+nrELob4V9ZeEc/5ql2FdVeTu5v4OO
+	5MNxcFniJp5zevp55z6cH1fpDdST41O6NqIiG5If08z1LIPr6NiRAcPW6DY445tfXmk6HRgBcLf
+	7HoComW8ryKTIJG8LsOWnIbUstX9cfNLkGG4fZRAm0Ws1zZS96hS2yyqwzMfnm9ASHm7rQWiAAx
+	jWY8sQkteYcPqNzXIyZntxFUZR9XvdLFO9dxOj1cL2Pi/Wg/l+s079/i
+X-Google-Smtp-Source: AGHT+IHZ6dxFmJ0CCz8tTX2ecJYrhJXPRDslBcpPPLLQ0CQOzng4GJHDlDWj3e3Wmi5Agu/O7euQEg==
+X-Received: by 2002:aa7:93b9:0:b0:746:1c67:f6cb with SMTP id d2e1a72fcca58-7461c67f943mr1288493b3a.5.1748249511901;
+        Mon, 26 May 2025 01:51:51 -0700 (PDT)
+Received: from fedora ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9878b53sm16560267b3a.152.2025.05.26.01.51.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 01:51:51 -0700 (PDT)
+Date: Mon, 26 May 2025 08:51:43 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	Liang Li <liali@redhat.com>
+Subject: Re: [PATCH net] bonding: fix multicast MAC address synchronization
+Message-ID: <aDQrn8EslaWx_jEA@fedora>
+References: <20250523022313.906-1-liuhangbin@gmail.com>
+ <302767.1748034227@famine>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: ak@it-klinger.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27648/Sun May 25 10:31:16 2025)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <302767.1748034227@famine>
 
-Add Vishay VEML6046X00 high accuracy RGBIR color sensor.
+On Fri, May 23, 2025 at 02:03:47PM -0700, Jay Vosburgh wrote:
+> Hangbin Liu <liuhangbin@gmail.com> wrote:
+> 
+> >There is a corner case where the NS (Neighbor Solicitation) target is set to
+> >an invalid or unreachable address. In such cases, all the slave links are
+> >marked as down and set to backup. This causes the bond to add multicast MAC
+> >addresses to all slaves.
+> >
+> >However, bond_ab_arp_probe() later tries to activate a carrier on slave and
+> >sets it as active. If we subsequently change or clear the NS targets, the
+> >call to bond_slave_ns_maddrs_del() on this interface will fail because it
+> >is still marked active, and the multicast MAC address will remain.
+> 
+> 	This seems complicated, so, just to make sure I'm clear, the bug
+> being fixed here happens when:
+> 
+> (a) ARP monitor is running with NS target(s), all of which do not
+> solicit a reply (invalid address or unreachable), resulting in all
+> interfaces in the bond being marked down
+> 
+> (b) while in the above state, the ARP monitor will cycle through each
+> interface, making them "active" (active-ish, really, just enough for the
+> ARP mon stuff to work) in turn to check for a response to a probe
 
-This sensor provides three colour (red, green and blue) as well as one
-infrared (IR) channel through I2C.
+Yes
 
-Support direct and buffered mode.
+> 
+> (c) while the cycling from (b) is occurring, attempts to change a NS
+> target will fail on the interface that happens to be quasi-"active" at
+> the moment.
 
-An optional interrupt for signaling green colour threshold underflow or
-overflow is not supported so far.
+Yes, this is because bond_slave_ns_maddrs_del() must ensure the deletion
+happens on a backup slave only. However, during ARP monitor, it set one of
+the slaves to active, this causes the deletion of multicast MAC addresses to
+be skipped on that interface.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- drivers/iio/light/Kconfig       |   13 +
- drivers/iio/light/Makefile      |    1 +
- drivers/iio/light/veml6046x00.c | 1007 +++++++++++++++++++++++++++++++
- 3 files changed, 1021 insertions(+)
- create mode 100644 drivers/iio/light/veml6046x00.c
+> 	Is my summary correct?
+> 
+> 	Doesn't the failure scenario also require that arp_validate be
+> enabled?  Looking at bond_slave_ns_maddrs_{add,del}, they do nothing if
+> arp_validate is off.
 
-diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-index 4a7d983c9cd4..ac1408d374c9 100644
---- a/drivers/iio/light/Kconfig
-+++ b/drivers/iio/light/Kconfig
-@@ -724,6 +724,19 @@ config VEML6040
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called veml6040.
- 
-+config VEML6046X00
-+	tristate "VEML6046X00 RGBIR color sensor"
-+	select REGMAP_I2C
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	depends on I2C
-+	help
-+	  Say Y here if you want to build a driver for the Vishay VEML6046X00
-+	  high accuracy RGBIR color sensor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called veml6046x00.
-+
- config VEML6070
- 	tristate "VEML6070 UV A light sensor"
- 	depends on I2C
-diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-index 8229ebe6edc4..c0048e0d5ca8 100644
---- a/drivers/iio/light/Makefile
-+++ b/drivers/iio/light/Makefile
-@@ -67,6 +67,7 @@ obj-$(CONFIG_VCNL4035)		+= vcnl4035.o
- obj-$(CONFIG_VEML3235)		+= veml3235.o
- obj-$(CONFIG_VEML6030)		+= veml6030.o
- obj-$(CONFIG_VEML6040)		+= veml6040.o
-+obj-$(CONFIG_VEML6046X00)	+= veml6046x00.o
- obj-$(CONFIG_VEML6070)		+= veml6070.o
- obj-$(CONFIG_VEML6075)		+= veml6075.o
- obj-$(CONFIG_VL6180)		+= vl6180.o
-diff --git a/drivers/iio/light/veml6046x00.c b/drivers/iio/light/veml6046x00.c
-new file mode 100644
-index 000000000000..9972eeb57fd2
---- /dev/null
-+++ b/drivers/iio/light/veml6046x00.c
-@@ -0,0 +1,1007 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * VEML6046X00 High Accuracy RGBIR Color Sensor
-+ *
-+ * Copyright (c) 2025 Andreas Klinger <ak@it-klinger.de>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/time.h>
-+#include <linux/types.h>
-+#include <linux/units.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+
-+/*
-+ * Device registers
-+ * Those which are accessed as bulk io are omitted
-+ */
-+#define VEML6046X00_REG_CONF0       0x00
-+#define VEML6046X00_REG_CONF1       0x01
-+#define VEML6046X00_REG_THDH        0x04
-+#define VEML6046X00_REG_THDL        0x06
-+#define VEML6046X00_REG_R           0x10
-+#define VEML6046X00_REG_G           0x12
-+#define VEML6046X00_REG_B           0x14
-+#define VEML6046X00_REG_IR          0x16
-+#define VEML6046X00_REG_ID          0x18
-+#define VEML6046X00_REG_INT         0x1A
-+#define VEML6046X00_REG_INT_H       0x1B
-+#define VEML6046X00_REG_DATA(ch)    (VEML6046X00_REG_R_L + (ch))
-+
-+/* Bit masks for specific functionality */
-+#define VEML6046X00_CONF0_ON_0      BIT(0)
-+#define VEML6046X00_CONF0_INT       BIT(1)
-+#define VEML6046X00_CONF0_AF_TRIG   BIT(2)
-+#define VEML6046X00_CONF0_AF        BIT(3)
-+#define VEML6046X00_CONF0_IT        GENMASK(6, 4)
-+#define VEML6046X00_CONF1_CAL       BIT(0)
-+#define VEML6046X00_CONF1_PERS      GENMASK(2, 1)
-+#define VEML6046X00_CONF1_GAIN      GENMASK(4, 3)
-+#define VEML6046X00_CONF1_PD_D2     BIT(6)
-+#define VEML6046X00_CONF1_ON_1      BIT(7)
-+#define VEML6046X00_INT_TH_H        BIT(1)
-+#define VEML6046X00_INT_TH_L        BIT(2)
-+#define VEML6046X00_INT_DRDY        BIT(3)
-+#define VEML6046X00_INT_MASK						       \
-+	(VEML6046X00_INT_TH_H | VEML6046X00_INT_TH_L | VEML6046X00_INT_DRDY)
-+
-+#define	VEML6046X00_GAIN_1          0x0
-+#define	VEML6046X00_GAIN_2          0x1
-+#define	VEML6046X00_GAIN_0_66       0x2
-+#define	VEML6046X00_GAIN_0_5        0x3
-+
-+#define VEML6046X00_PD_2_2          0x0
-+#define VEML6046X00_PD_1_2          BIT(6)
-+
-+/* Autosuspend delay */
-+#define VEML6046X00_AUTOSUSPEND_MS  (3 * MSEC_PER_SEC)
-+
-+enum veml6046x00_scan {
-+	VEML6046X00_SCAN_R,
-+	VEML6046X00_SCAN_G,
-+	VEML6046X00_SCAN_B,
-+	VEML6046X00_SCAN_IR,
-+	VEML6046X00_SCAN_TIMESTAMP,
-+};
-+
-+/**
-+ * struct veml6046x00_rf - Regmap field of configuration registers.
-+ * @int_en:	Interrupt enable of green channel.
-+ * @mode:	Mode of operation.
-+ *		Driver uses always Active force mode.
-+ * @trig:	Trigger to be set in active force mode for starting
-+ *		measurement.
-+ * @it:		Integration time.
-+ * @pers:	Persistense - Number of threshold crossing for triggering
-+ *		interrupt.
-+ */
-+struct veml6046x00_rf {
-+	struct regmap_field *int_en;
-+	struct regmap_field *mode;
-+	struct regmap_field *trig;
-+	struct regmap_field *it;
-+	struct regmap_field *pers;
-+};
-+
-+/**
-+ * struct veml6046x00_data - Private data of driver.
-+ * @regmap:	Regmap definition of sensor.
-+ * @trig:	Industrial-IO trigger.
-+ * @rf:		Regmap field of configuration.
-+ */
-+struct veml6046x00_data {
-+	struct regmap *regmap;
-+	struct iio_trigger *trig;
-+	struct veml6046x00_rf rf;
-+};
-+
-+/**
-+ * DOC: Valid integration times (IT)
-+ *
-+ * static const int veml6046x00_it contains the array with valid IT.
-+ *
-+ * Register value to be read or written in regmap_field it on veml6046x00 is
-+ * identical with array index.
-+ * This means there is no separate translation table between valid integration
-+ * times and register values needed. The index of the array is identical with
-+ * the register value.
-+ *
-+ * The array is in the form as expected by the callback of the sysfs attribute
-+ * integration_time_available (IIO_CHAN_INFO_INT_TIME). So there is no
-+ * additional conversion needed.
-+ */
-+static const int veml6046x00_it[][2] = {
-+	{ 0, 3125 },
-+	{ 0, 6250 },
-+	{ 0, 12500 },
-+	{ 0, 25000 },
-+	{ 0, 50000 },
-+	{ 0, 100000 },
-+	{ 0, 200000 },
-+	{ 0, 400000 },
-+};
-+
-+/**
-+ * DOC: Handling of gain and photodiode size (PD)
-+ *
-+ * Gains here in the driver are not exactly the same as in the datasheet of the
-+ * sensor. The gain in the driver is a combination of the gain of the sensor
-+ * with the photodiode size (PD).
-+ * The following combinations are possible:
-+ *   gain(driver) = gain(sensor) * PD
-+ *           0.25 = x0.5  * 1/2
-+ *           0.33 = x0.66 * 1/2
-+ *           0.5  = x0.5  * 2/2
-+ *           0.66 = x0.66 * 2/2
-+ *           1    = x1    * 2/2
-+ *           2    = x2    * 2/2
-+ */
-+
-+/**
-+ * struct veml6046x00_gain_pd - Translation of gain and photodiode size (PD).
-+ * @gain_sen:	Gain used in the sensor as described in the datasheet of the
-+ *		sensor
-+ * @pd:		Photodiode size in the sensor
-+ *
-+ * This is the translation table from the gain used in the driver (and also used
-+ * by the userspace interface in sysfs) to the gain and PD used in the sensor
-+ * hardware.
-+ *
-+ * There are six gain values visible to the user (0.25 .. 2) which translate to
-+ * two different gains in the sensor hardware (x0.5 .. x2) and two PD (1/2 and
-+ * 2/2). Theoretical are there eight combinations, but gain values 0.5 and 1 are
-+ * doubled and therefore the combination with the larger PD (2/2) is taken as
-+ * more photodiode cells are supposed to deliver a more precise result.
-+ */
-+struct veml6046x00_gain_pd {
-+	int gain_sen;
-+	int pd;
-+};
-+
-+static const struct veml6046x00_gain_pd veml6046x00_gain_pd[] = {
-+	{ .gain_sen = VEML6046X00_GAIN_0_5, .pd = VEML6046X00_PD_1_2 },
-+	{ .gain_sen = VEML6046X00_GAIN_0_66, .pd = VEML6046X00_PD_1_2 },
-+	{ .gain_sen = VEML6046X00_GAIN_0_5, .pd = VEML6046X00_PD_2_2 },
-+	{ .gain_sen = VEML6046X00_GAIN_0_66, .pd = VEML6046X00_PD_2_2 },
-+	{ .gain_sen = VEML6046X00_GAIN_1, .pd = VEML6046X00_PD_2_2 },
-+	{ .gain_sen = VEML6046X00_GAIN_2, .pd = VEML6046X00_PD_2_2 },
-+};
-+
-+/**
-+ * DOC: Factors for calculation of lux
-+ *
-+ * static const int veml6046x00_it_gains contains the factors for calculation of
-+ * lux.
-+ *
-+ * Depending on the set up integration time (IT), gain and photodiode size (PD)
-+ * the measured raw values are different if the light is constant. As the gain
-+ * and PD are already coupled in the driver (see &struct veml6046x00_gain_pd)
-+ * there are two dimensions remaining: IT and gain(driver).
-+ *
-+ * The array of available factors for a certain IT are grouped together in the
-+ * same form as expected by the callback of scale_available
-+ * (IIO_CHAN_INFO_SCALE).
-+ *
-+ * Factors for lux / raw count are taken directly from the datasheet.
-+ */
-+static const int veml6046x00_it_gains[][6][2] = {
-+	/* integration time: 3.125 ms */
-+	{
-+		{ 5, 376000 },	/* gain: x0.25 */
-+		{ 4,  72700 },	/* gain: x0.33 */
-+		{ 2, 688000 },	/* gain: x0.5 */
-+		{ 2,  36400 },	/* gain: x0.66 */
-+		{ 1, 344000 },	/* gain: x1 */
-+		{ 0, 672000 },	/* gain: x2 */
-+	},
-+	/* integration time: 6.25 ms */
-+	{
-+		{ 2, 688000 },	/* gain: x0.25 */
-+		{ 2,  36350 },	/* gain: x0.33 */
-+		{ 1, 344000 },	/* gain: x0.5 */
-+		{ 1,  18200 },	/* gain: x0.66 */
-+		{ 0, 672000 },	/* gain: x1 */
-+		{ 0, 336000 },	/* gain: x2 */
-+	},
-+	/* integration time: 12.5 ms */
-+	{
-+		{ 1, 344000 },	/* gain: x0.25 */
-+		{ 1,  18175 },	/* gain: x0.33 */
-+		{ 0, 672000 },	/* gain: x0.5 */
-+		{ 0, 509100 },	/* gain: x0.66 */
-+		{ 0, 336000 },	/* gain: x1 */
-+		{ 0, 168000 },	/* gain: x2 */
-+	},
-+	/* integration time: 25 ms */
-+	{
-+		{ 0, 672000 },	/* gain: x0.25 */
-+		{ 0, 509087 },	/* gain: x0.33 */
-+		{ 0, 336000 },	/* gain: x0.5 */
-+		{ 0, 254550 },	/* gain: x0.66 */
-+		{ 0, 168000 },	/* gain: x1 */
-+		{ 0,  84000 },	/* gain: x2 */
-+	},
-+	/* integration time: 50 ms */
-+	{
-+		{ 0, 336000 },	/* gain: x0.25 */
-+		{ 0, 254543 },	/* gain: x0.33 */
-+		{ 0, 168000 },	/* gain: x0.5 */
-+		{ 0, 127275 },	/* gain: x0.66 */
-+		{ 0,  84000 },	/* gain: x1 */
-+		{ 0,  42000 },	/* gain: x2 */
-+	},
-+	/* integration time: 100 ms */
-+	{
-+		{ 0, 168000 },	/* gain: x0.25 */
-+		{ 0, 127271 },	/* gain: x0.33 */
-+		{ 0,  84000 },	/* gain: x0.5 */
-+		{ 0,  63637 },	/* gain: x0.66 */
-+		{ 0,  42000 },	/* gain: x1 */
-+		{ 0,  21000 },	/* gain: x2 */
-+	},
-+	/* integration time: 200 ms */
-+	{
-+		{ 0,  84000 },	/* gain: x0.25 */
-+		{ 0,  63635 },	/* gain: x0.33 */
-+		{ 0,  42000 },	/* gain: x0.5 */
-+		{ 0,  31818 },	/* gain: x0.66 */
-+		{ 0,  21000 },	/* gain: x1 */
-+		{ 0,  10500 },	/* gain: x2 */
-+	},
-+	/* integration time: 400 ms */
-+	{
-+		{ 0,  42000 },	/* gain: x0.25 */
-+		{ 0,  31817 },	/* gain: x0.33 */
-+		{ 0,  21000 },	/* gain: x0.5 */
-+		{ 0,  15909 },	/* gain: x0.66 */
-+		{ 0,  10500 },	/* gain: x1 */
-+		{ 0,   5250 },	/* gain: x2 */
-+	},
-+};
-+
-+/*
-+ * Two bits (RGB_ON_0 and RGB_ON_1) must be cleared to power on the device.
-+ */
-+static int veml6046x00_power_on(struct veml6046x00_data *data)
-+{
-+	int ret;
-+	struct device *dev = regmap_get_device(data->regmap);
-+
-+	ret = regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF0,
-+				VEML6046X00_CONF0_ON_0);
-+	if (ret) {
-+		dev_err(dev, "Failed to set bit for power on %d\n", ret);
-+		return ret;
-+	}
-+
-+	return regmap_clear_bits(data->regmap, VEML6046X00_REG_CONF1,
-+				 VEML6046X00_CONF1_ON_1);
-+}
-+
-+/*
-+ * Two bits (RGB_ON_0 and RGB_ON_1) must be set to power off the device.
-+ */
-+static int veml6046x00_shutdown(struct veml6046x00_data *data)
-+{
-+	int ret;
-+	struct device *dev = regmap_get_device(data->regmap);
-+
-+	ret = regmap_set_bits(data->regmap, VEML6046X00_REG_CONF0,
-+			      VEML6046X00_CONF0_ON_0);
-+	if (ret) {
-+		dev_err(dev, "Failed to set bit for shutdown %d\n", ret);
-+		return ret;
-+	}
-+
-+	return regmap_set_bits(data->regmap, VEML6046X00_REG_CONF1,
-+			       VEML6046X00_CONF1_ON_1);
-+}
-+
-+static void veml6046x00_shutdown_action(void *data)
-+{
-+	veml6046x00_shutdown(data);
-+}
-+
-+static const struct iio_chan_spec veml6046x00_channels[] = {
-+	{
-+		.type = IIO_LIGHT,
-+		.address = VEML6046X00_REG_R,
-+		.modified = 1,
-+		.channel2 = IIO_MOD_LIGHT_RED,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
-+					   BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
-+						     BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = VEML6046X00_SCAN_R,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	{
-+		.type = IIO_LIGHT,
-+		.address = VEML6046X00_REG_G,
-+		.modified = 1,
-+		.channel2 = IIO_MOD_LIGHT_GREEN,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
-+					   BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
-+						     BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = VEML6046X00_SCAN_G,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	{
-+		.type = IIO_LIGHT,
-+		.address = VEML6046X00_REG_B,
-+		.modified = 1,
-+		.channel2 = IIO_MOD_LIGHT_BLUE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
-+					   BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
-+						     BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = VEML6046X00_SCAN_B,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	{
-+		.type = IIO_LIGHT,
-+		.address = VEML6046X00_REG_IR,
-+		.modified = 1,
-+		.channel2 = IIO_MOD_LIGHT_IR,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_INT_TIME) |
-+					   BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_INT_TIME) |
-+						     BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = VEML6046X00_SCAN_IR,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 16,
-+			.storagebits = 16,
-+			.endianness = IIO_LE,
-+		},
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(VEML6046X00_SCAN_TIMESTAMP),
-+};
-+
-+static const struct regmap_config veml6046x00_regmap_config = {
-+	.name = "veml6046x00_regm",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = VEML6046X00_REG_INT_H,
-+};
-+
-+static const struct reg_field veml6046x00_rf_int_en =
-+	REG_FIELD(VEML6046X00_REG_CONF0, 1, 1);
-+
-+static const struct reg_field veml6046x00_rf_trig =
-+	REG_FIELD(VEML6046X00_REG_CONF0, 2, 2);
-+
-+static const struct reg_field veml6046x00_rf_mode =
-+	REG_FIELD(VEML6046X00_REG_CONF0, 3, 3);
-+
-+static const struct reg_field veml6046x00_rf_it =
-+	REG_FIELD(VEML6046X00_REG_CONF0, 4, 6);
-+
-+static const struct reg_field veml6046x00_rf_pers =
-+	REG_FIELD(VEML6046X00_REG_CONF1, 1, 2);
-+
-+static int veml6046x00_regfield_init(struct veml6046x00_data *data)
-+{
-+	struct regmap *regmap = data->regmap;
-+	struct device *dev = regmap_get_device(data->regmap);
-+	struct regmap_field *rm_field;
-+	struct veml6046x00_rf *rf = &data->rf;
-+
-+	rm_field = devm_regmap_field_alloc(dev, regmap, veml6046x00_rf_int_en);
-+	if (IS_ERR(rm_field))
-+		return PTR_ERR(rm_field);
-+	rf->int_en = rm_field;
-+
-+	rm_field = devm_regmap_field_alloc(dev, regmap, veml6046x00_rf_mode);
-+	if (IS_ERR(rm_field))
-+		return PTR_ERR(rm_field);
-+	rf->mode = rm_field;
-+
-+	rm_field = devm_regmap_field_alloc(dev, regmap, veml6046x00_rf_trig);
-+	if (IS_ERR(rm_field))
-+		return PTR_ERR(rm_field);
-+	rf->trig = rm_field;
-+
-+	rm_field = devm_regmap_field_alloc(dev, regmap, veml6046x00_rf_it);
-+	if (IS_ERR(rm_field))
-+		return PTR_ERR(rm_field);
-+	rf->it = rm_field;
-+
-+	rm_field = devm_regmap_field_alloc(dev, regmap, veml6046x00_rf_pers);
-+	if (IS_ERR(rm_field))
-+		return PTR_ERR(rm_field);
-+	rf->pers = rm_field;
-+
-+	return 0;
-+}
-+
-+static int veml6046x00_get_it_index(struct veml6046x00_data *data)
-+{
-+	int ret;
-+	unsigned int reg;
-+
-+	ret = regmap_field_read(data->rf.it, &reg);
-+	if (ret)
-+		return ret;
-+
-+	/* register value is identical with index of array */
-+	if (reg >= ARRAY_SIZE(veml6046x00_it))
-+		return -EINVAL;
-+
-+	return reg;
-+}
-+
-+static int veml6046x00_get_it_usec(struct veml6046x00_data *data, int *it_usec)
-+{
-+	int ret;
-+	unsigned int reg;
-+
-+	ret = regmap_field_read(data->rf.it, &reg);
-+	if (ret)
-+		return ret;
-+
-+	if (reg >= ARRAY_SIZE(veml6046x00_it))
-+		return -EINVAL;
-+
-+	*it_usec = veml6046x00_it[reg][1];
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int veml6046x00_set_it(struct iio_dev *iio, int val, int val2)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(veml6046x00_it); i++) {
-+		if ((veml6046x00_it[i][0] == val) &&
-+		    (veml6046x00_it[i][1] == val2))
-+			return regmap_field_write(data->rf.it, i);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int veml6046x00_get_val_gain_idx(struct veml6046x00_data *data, int val,
-+					int val2)
-+{
-+	int i, it_idx;
-+
-+	it_idx = veml6046x00_get_it_index(data);
-+	if (it_idx < 0)
-+		return it_idx;
-+
-+	for (i = 0; i < ARRAY_SIZE(veml6046x00_it_gains[it_idx]); i++) {
-+		if ((veml6046x00_it_gains[it_idx][i][0] == val) &&
-+		    (veml6046x00_it_gains[it_idx][i][1] == val2)) {
-+			return i;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int veml6046x00_get_gain_idx(struct veml6046x00_data *data)
-+{
-+	int ret, i;
-+	unsigned int reg, reg_gain, reg_pd;
-+
-+	ret = regmap_read(data->regmap, VEML6046X00_REG_CONF1, &reg);
-+	if (ret)
-+		return ret;
-+
-+	reg_gain = FIELD_GET(VEML6046X00_CONF1_GAIN, reg);
-+	reg_pd = reg & VEML6046X00_CONF1_PD_D2;
-+
-+	for (i = 0; i < ARRAY_SIZE(veml6046x00_gain_pd); i++) {
-+		if ((veml6046x00_gain_pd[i].gain_sen == reg_gain) &&
-+		    (veml6046x00_gain_pd[i].pd == reg_pd)) {
-+			return i;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int veml6046x00_set_scale(struct iio_dev *iio, int val, int val2)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	unsigned int new_scale;
-+	int gain_idx;
-+
-+	gain_idx = veml6046x00_get_val_gain_idx(data, val, val2);
-+	if (gain_idx < 0)
-+		return gain_idx;
-+
-+	new_scale = FIELD_PREP(VEML6046X00_CONF1_GAIN,
-+			       veml6046x00_gain_pd[gain_idx].gain_sen) |
-+			       veml6046x00_gain_pd[gain_idx].pd;
-+
-+	return regmap_update_bits(data->regmap, VEML6046X00_REG_CONF1,
-+				  VEML6046X00_CONF1_GAIN |
-+				  VEML6046X00_CONF1_PD_D2,
-+				  new_scale);
-+}
-+
-+static int veml6046x00_get_scale(struct veml6046x00_data *data,
-+				 int *val, int *val2)
-+{
-+	int gain_idx, it_idx;
-+
-+	gain_idx = veml6046x00_get_gain_idx(data);
-+	if (gain_idx < 0)
-+		return gain_idx;
-+
-+	it_idx = veml6046x00_get_it_index(data);
-+	if (it_idx < 0)
-+		return it_idx;
-+
-+	*val = veml6046x00_it_gains[it_idx][gain_idx][0];
-+	*val2 = veml6046x00_it_gains[it_idx][gain_idx][1];
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+/**
-+ * veml6046x00_wait_data_available() - Wait until data is available
-+ * @iio:	Industrial IO.
-+ * @usecs:	Microseconds to wait for data.
-+ *
-+ * This function waits for a certain bit in the interrupt register which signals
-+ * that there is data to be read available.
-+ *
-+ * It tries it two times with a waiting time of usecs in between.
-+ *
-+ * Return:
-+ * * %1		- Data is available (AF_DATA_READY is set)
-+ * * %0		- Timeout, no data available after usecs timeout
-+ * * %-EIO	- Error during bulk read
-+ */
-+static int veml6046x00_wait_data_available(struct iio_dev *iio, int usecs)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret, i, cnt = 2;
-+	u8 reg[2];
-+
-+	for (i = 0; i < cnt; i++) {
-+		/*
-+		 * Note from the vendor, but not explicitly in the datasheet: we
-+		 * should always read both registers together
-+		 */
-+		ret = regmap_bulk_read(data->regmap, VEML6046X00_REG_INT,
-+				       &reg, sizeof(reg));
-+		if (ret) {
-+			dev_err(dev,
-+				"Failed to read interrupt register %d\n", ret);
-+			return -EIO;
-+		}
-+
-+		if (reg[1] & VEML6046X00_INT_DRDY)
-+			return 1;
-+
-+		if (i < (cnt - 1))
-+			fsleep(usecs);
-+	}
-+
-+	return 0;
-+}
-+
-+static int veml6046x00_single_read(struct iio_dev *iio,
-+				   enum iio_modifier modifier, int *val)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int addr, it_usec, ret;
-+	__le16 reg;
-+
-+	switch (modifier) {
-+	case IIO_MOD_LIGHT_RED:
-+		addr = VEML6046X00_REG_R;
-+		break;
-+	case IIO_MOD_LIGHT_GREEN:
-+		addr = VEML6046X00_REG_G;
-+		break;
-+	case IIO_MOD_LIGHT_BLUE:
-+		addr = VEML6046X00_REG_B;
-+		break;
-+	case IIO_MOD_LIGHT_IR:
-+		addr = VEML6046X00_REG_IR;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	ret = pm_runtime_resume_and_get(dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = veml6046x00_get_it_usec(data, &it_usec);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get integration time ret: %d", ret);
-+		goto no_data;
-+	}
-+
-+	ret = regmap_field_write(data->rf.mode, 1);
-+	if (ret) {
-+		dev_err(dev, "Failed to write mode ret: %d", ret);
-+		goto no_data;
-+	}
-+
-+	ret = regmap_field_write(data->rf.trig, 1);
-+	if (ret) {
-+		dev_err(dev, "Failed to write trigger ret: %d", ret);
-+		goto no_data;
-+	}
-+
-+	/* integration time + 12.5 % to ensure completion */
-+	fsleep(it_usec + it_usec / 8);
-+
-+	ret = veml6046x00_wait_data_available(iio, it_usec * 4);
-+	if (ret < 0)
-+		return ret;
-+	else if (ret == 0)
-+		return -EAGAIN;
-+
-+	if (!iio_device_claim_direct(iio))
-+		return -EBUSY;
-+
-+	ret = regmap_bulk_read(data->regmap, addr, &reg, sizeof(reg));
-+	iio_device_release_direct(iio);
-+	if (ret)
-+		return ret;
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	*val = le16_to_cpu(reg);
-+
-+	return IIO_VAL_INT;
-+
-+no_data:
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return -EAGAIN;
-+}
-+
-+static int veml6046x00_read_raw(struct iio_dev *iio,
-+				struct iio_chan_spec const *chan, int *val,
-+				int *val2, long mask)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (chan->type != IIO_LIGHT)
-+			return -EINVAL;
-+		return veml6046x00_single_read(iio, chan->channel2, val);
-+	case IIO_CHAN_INFO_INT_TIME:
-+		*val = 0;
-+		return veml6046x00_get_it_usec(data, val2);
-+	case IIO_CHAN_INFO_SCALE:
-+		return veml6046x00_get_scale(data, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int veml6046x00_read_avail(struct iio_dev *iio,
-+				  struct iio_chan_spec const *chan,
-+				  const int **vals, int *type, int *length,
-+				  long mask)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	int it_idx;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_INT_TIME:
-+		*vals = (int *)&veml6046x00_it;
-+		*length = 2 * ARRAY_SIZE(veml6046x00_it);
-+		*type = IIO_VAL_INT_PLUS_MICRO;
-+		return IIO_AVAIL_LIST;
-+	case IIO_CHAN_INFO_SCALE:
-+		it_idx = veml6046x00_get_it_index(data);
-+		if (it_idx < 0)
-+			return it_idx;
-+		*vals = (int *)&veml6046x00_it_gains[it_idx];
-+		*length = 2 * ARRAY_SIZE(veml6046x00_it_gains[it_idx]);
-+		*type = IIO_VAL_INT_PLUS_MICRO;
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int veml6046x00_write_raw(struct iio_dev *iio,
-+				 struct iio_chan_spec const *chan,
-+				 int val, int val2, long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_INT_TIME:
-+		return veml6046x00_set_it(iio, val, val2);
-+	case IIO_CHAN_INFO_SCALE:
-+		return veml6046x00_set_scale(iio, val, val2);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info veml6046x00_info_no_irq = {
-+	.read_raw = veml6046x00_read_raw,
-+	.read_avail = veml6046x00_read_avail,
-+	.write_raw = veml6046x00_write_raw,
-+};
-+
-+static int veml6046x00_buffer_preenable(struct iio_dev *iio)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+
-+	ret = regmap_field_write(data->rf.mode, 0);
-+	if (ret) {
-+		dev_err(dev, "Failed to set mode %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_field_write(data->rf.trig, 0);
-+	if (ret) {
-+		dev_err(dev, "Failed to set trigger %d\n", ret);
-+		return ret;
-+	}
-+
-+	return pm_runtime_resume_and_get(dev);
-+}
-+
-+static int veml6046x00_buffer_postdisable(struct iio_dev *iio)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+
-+	ret = regmap_field_write(data->rf.mode, 1);
-+	if (ret) {
-+		dev_err(dev, "Failed to set mode %d\n", ret);
-+		return ret;
-+	}
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	return 0;
-+}
-+
-+static const struct iio_buffer_setup_ops veml6046x00_buffer_setup_ops = {
-+	.preenable = veml6046x00_buffer_preenable,
-+	.postdisable = veml6046x00_buffer_postdisable,
-+};
-+
-+static irqreturn_t veml6046x00_trig_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *iio = pf->indio_dev;
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	int ret;
-+	struct {
-+		__le16 chans[4];
-+		aligned_s64 timestamp;
-+	} scan = {};
-+
-+	ret = regmap_bulk_read(data->regmap, VEML6046X00_REG_R,
-+			       &scan.chans, sizeof(scan.chans));
-+	if (ret)
-+		goto done;
-+
-+	iio_push_to_buffers_with_timestamp(iio, &scan, iio_get_time_ns(iio));
-+
-+done:
-+	iio_trigger_notify_done(iio->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int veml6046x00_validate_part_id(struct veml6046x00_data *data)
-+{
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int part_id, ret;
-+	__le16 reg;
-+
-+	ret = regmap_bulk_read(data->regmap, VEML6046X00_REG_ID,
-+			       &reg, sizeof(reg));
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read ID\n");
-+
-+	part_id = le16_to_cpu(reg);
-+	if (part_id != 0x0001)
-+		dev_info(dev, "Unknown ID %#04x\n", part_id);
-+
-+	return 0;
-+}
-+
-+static int veml6046x00_setup_device(struct iio_dev *iio)
-+{
-+	struct veml6046x00_data *data = iio_priv(iio);
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+	__le16 reg16;
-+	u8 reg[2] = { VEML6046X00_CONF0_AF, 0x00 };
-+
-+	ret = regmap_bulk_write(data->regmap, VEML6046X00_REG_CONF0,
-+				reg, sizeof(reg));
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to set configuration\n");
-+
-+	reg16 = cpu_to_le16(0);
-+	ret = regmap_bulk_write(data->regmap, VEML6046X00_REG_THDL,
-+				&reg16, sizeof(reg16));
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to set low threshold\n");
-+
-+	reg16 = cpu_to_le16(U16_MAX);
-+	ret = regmap_bulk_write(data->regmap, VEML6046X00_REG_THDH,
-+				&reg16, sizeof(reg16));
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to set high threshold\n");
-+
-+	ret = regmap_bulk_read(data->regmap, VEML6046X00_REG_INT,
-+			       &reg16, sizeof(reg16));
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to clear interrupts\n");
-+
-+	return 0;
-+}
-+
-+static int veml6046x00_probe(struct i2c_client *i2c)
-+{
-+	struct device *dev = &i2c->dev;
-+	struct veml6046x00_data *data;
-+	struct iio_dev *iio;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	regmap = devm_regmap_init_i2c(i2c, &veml6046x00_regmap_config);
-+	if (IS_ERR(regmap))
-+		return dev_err_probe(dev, PTR_ERR(regmap),
-+				     "Failed to set regmap\n");
-+
-+	iio = devm_iio_device_alloc(dev, sizeof(*data));
-+	if (!iio)
-+		return -ENOMEM;
-+
-+	data = iio_priv(iio);
-+	i2c_set_clientdata(i2c, iio);
-+	data->regmap = regmap;
-+
-+	ret = veml6046x00_regfield_init(data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to init regfield\n");
-+
-+	ret = devm_regulator_get_enable(dev, "vdd");
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to enable regulator\n");
-+
-+	/* bring device in a known state and switch device on */
-+	ret = veml6046x00_setup_device(iio);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, veml6046x00_shutdown_action, data);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to add shut down action\n");
-+
-+	ret = pm_runtime_set_active(dev);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to activate PM runtime\n");
-+
-+	ret = devm_pm_runtime_enable(dev);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to enable PM runtime\n");
-+
-+	pm_runtime_get_noresume(dev);
-+	pm_runtime_set_autosuspend_delay(dev, VEML6046X00_AUTOSUSPEND_MS);
-+	pm_runtime_use_autosuspend(dev);
-+
-+	ret = veml6046x00_validate_part_id(data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to validate device ID\n");
-+
-+	iio->name = "veml6046x00";
-+	iio->channels = veml6046x00_channels;
-+	iio->num_channels = ARRAY_SIZE(veml6046x00_channels);
-+	iio->modes = INDIO_DIRECT_MODE;
-+
-+	iio->info = &veml6046x00_info_no_irq;
-+
-+	ret = devm_iio_triggered_buffer_setup(dev, iio, NULL,
-+					      veml6046x00_trig_handler,
-+					      &veml6046x00_buffer_setup_ops);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to register triggered buffer");
-+
-+	pm_runtime_mark_last_busy(dev);
-+	pm_runtime_put_autosuspend(dev);
-+
-+	ret = devm_iio_device_register(dev, iio);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register iio device");
-+
-+	return 0;
-+}
-+
-+static int veml6046x00_runtime_suspend(struct device *dev)
-+{
-+	struct veml6046x00_data *data = iio_priv(dev_get_drvdata(dev));
-+
-+	return veml6046x00_shutdown(data);
-+}
-+
-+static int veml6046x00_runtime_resume(struct device *dev)
-+{
-+	struct veml6046x00_data *data = iio_priv(dev_get_drvdata(dev));
-+
-+	return veml6046x00_power_on(data);
-+}
-+
-+static DEFINE_RUNTIME_DEV_PM_OPS(veml6046x00_pm_ops,
-+				 veml6046x00_runtime_suspend,
-+				 veml6046x00_runtime_resume, NULL);
-+
-+static const struct of_device_id veml6046x00_of_match[] = {
-+	{
-+		.compatible = "vishay,veml6046x00",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, veml6046x00_of_match);
-+
-+static const struct i2c_device_id veml6046x00_id[] = {
-+	{ "veml6046x00" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, veml6046x00_id);
-+
-+static struct i2c_driver veml6046x00_driver = {
-+	.driver = {
-+		.name = "veml6046x00",
-+		.of_match_table = veml6046x00_of_match,
-+		.pm = pm_ptr(&veml6046x00_pm_ops),
-+	},
-+	.probe = veml6046x00_probe,
-+	.id_table = veml6046x00_id,
-+};
-+module_i2c_driver(veml6046x00_driver);
-+
-+MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
-+MODULE_DESCRIPTION("VEML6046X00 RGBIR Color Sensor");
-+MODULE_LICENSE("GPL");
--- 
-2.39.5
+Yes, it need.
 
+> 
+> >To fix this issue, move the NS multicast address add/remove logic into
+> >bond_set_slave_state() to ensure multicast MAC addresses are updated
+> >synchronously whenever the slave state changes.
+> 
+> 	Ok, but state change calls happen in a lot more places than the
+> existing bond_hw_addr_swap(), which is only called during change of
+> active for active-backup, balance-alb, and balance-tlb.  Are you sure
+> that something goofy like setting arp_validate and an NS target with the
+> ARP monitor disabled (or in a mode that disallows it) will behave
+> rationally?
+
+The slave_can_set_ns_maddr() in slave_set_ns_maddrs could check the bond mode
+and if the slave is active. But no arp_interval checking. I can add it in the
+checking to avoid the miss-config. e.g.
+
+diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+index 91893c29b899..21116362cc24 100644
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1241,6 +1241,7 @@ static int bond_option_arp_ip_targets_set(struct bonding *bond,
+ static bool slave_can_set_ns_maddr(const struct bonding *bond, struct slave *slave)
+ {
+        return BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP &&
++              bond->params.arp_interval &&
+               !bond_is_active_slave(slave) &&
+               slave->dev->flags & IFF_MULTICAST;
+ }
+
+> 
+> >Note: The call to bond_slave_ns_maddrs_del() in __bond_release_one() is
+> >kept, as it is still required to clean up multicast MAC addresses when
+> >a slave is removed.
+> >
+> >Fixes: 8eb36164d1a6 ("bonding: add ns target multicast address to slave device")
+> >Reported-by: Liang Li <liali@redhat.com>
+> >Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+> >---
+> > drivers/net/bonding/bond_main.c | 9 ---------
+> > include/net/bonding.h           | 7 +++++++
+> > 2 files changed, 7 insertions(+), 9 deletions(-)
+> >
+> >diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> >index 8ea183da8d53..6dde6f870ee2 100644
+> >--- a/drivers/net/bonding/bond_main.c
+> >+++ b/drivers/net/bonding/bond_main.c
+> >@@ -1004,8 +1004,6 @@ static void bond_hw_addr_swap(struct bonding *bond, struct slave *new_active,
+> > 
+> > 		if (bond->dev->flags & IFF_UP)
+> > 			bond_hw_addr_flush(bond->dev, old_active->dev);
+> >-
+> >-		bond_slave_ns_maddrs_add(bond, old_active);
+> > 	}
+> > 
+> > 	if (new_active) {
+> >@@ -1022,8 +1020,6 @@ static void bond_hw_addr_swap(struct bonding *bond, struct slave *new_active,
+> > 			dev_mc_sync(new_active->dev, bond->dev);
+> > 			netif_addr_unlock_bh(bond->dev);
+> > 		}
+> >-
+> >-		bond_slave_ns_maddrs_del(bond, new_active);
+> > 	}
+> > }
+> > 
+> >@@ -2350,11 +2346,6 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+> > 	bond_compute_features(bond);
+> > 	bond_set_carrier(bond);
+> > 
+> >-	/* Needs to be called before bond_select_active_slave(), which will
+> >-	 * remove the maddrs if the slave is selected as active slave.
+> >-	 */
+> >-	bond_slave_ns_maddrs_add(bond, new_slave);
+> >-
+> > 	if (bond_uses_primary(bond)) {
+> > 		block_netpoll_tx();
+> > 		bond_select_active_slave(bond);
+> >diff --git a/include/net/bonding.h b/include/net/bonding.h
+> >index 95f67b308c19..0041f7a2bd18 100644
+> >--- a/include/net/bonding.h
+> >+++ b/include/net/bonding.h
+> >@@ -385,7 +385,14 @@ static inline void bond_set_slave_state(struct slave *slave,
+> > 	if (slave->backup == slave_state)
+> > 		return;
+> > 
+> >+	if (slave_state == BOND_STATE_ACTIVE)
+> >+		bond_slave_ns_maddrs_del(slave->bond, slave);
+> >+
+> > 	slave->backup = slave_state;
+> >+
+> >+	if (slave_state == BOND_STATE_BACKUP)
+> >+		bond_slave_ns_maddrs_add(slave->bond, slave);
+> 
+> 	This code pattern kind of makes it look like the slave->backup
+> assignment must happen between the two new if blocks.  I don't think
+> that's true, and things would work correctly if the slave->backup
+> assignment happened first (or last).
+
+The slave->backup assignment must happen between the two if blocks, because
+
+bond_slave_ns_maddrs_add/del only do the operation on backup slave.
+So if a interface become active, we need to call maddrs_del before it set
+backup state to active. If a interface become backup. We need to call
+maddrs_add after the backup state set to backup.
+
+I will add a comment in the code.
+
+Thanks
+Hangbin
+> 
+> 	Assuming I'm correct, could you move the assignment so it's not
+> in the middle?  If, however, it does need to be in the middle, that
+> deserves a comment explaining why.
+> 
+> 	-J
+> 
+> >+
+> > 	if (notify) {
+> > 		bond_lower_state_changed(slave);
+> > 		bond_queue_slave_event(slave);
+> >-- 
+> >2.46.0
+> >
+> 
+> ---
+> 	-Jay Vosburgh, jv@jvosburgh.net
