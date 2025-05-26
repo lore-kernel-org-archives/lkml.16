@@ -1,205 +1,222 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00098248C;
-	Mon, 26 May 2025 01:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD26323D
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748224315; cv=none; b=LGZlYHuI6EBa5FmbM3USWqcxPchNNharm2C2oN3Vk3bV2SlmjUauTPpPk0kqjVWSlPRt/GyEpGBtdgZKsJfqJxGQRV+iy9cnLvS8G3X8xzjYAenG85pZch+9kZktaNM1GvE5xSw4Mr5tKioGmcE7iDNN08cC/iDzMmHm89l0FRg=
+	t=1748224851; cv=none; b=e/r+jD0iUBFi5YH3/IDYaAFGML7S0izbcB+OPy2bMhrO81yvX00j9on3NKEaQEa173PyRxHr0s1CebdqpOumG5xf1tw57VOCDd8oCXvEg6XZPbVYqAhhEUjtX2ckgVuUrYgBd4cDmo+hlpXkJEJj6XtJwP+9pMWYJA8+lTh5XYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748224315; c=relaxed/simple;
-	bh=QY2ohkza2x1tajvdG6eeg4JxxBs3fEmJoktrKFBxEgk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NeTMm293NH39czmFS9i6j0mZvE7Xhd+pQY2jlWax0tc3bpzfL9eK98KKO1WuyqGv3xPrgnBxxvXuWg0Bogy0QFsJSaXeMq9DE2Rno2Ti8bS7bMizb8HnrnAYBh/edElJToc0qUoRDH5bQCuktR5b26VEb2lckMoBV4FnIH1yy1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ze5KlatB; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748224851; c=relaxed/simple;
+	bh=YLlvQENeDiv2i4fpl5NY8uA/5+q6WwMma5ub+G3xzV8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=VlzmsnvpcDs3REduEkeeSnMNPGTsKUsL+qq6t9BoXSPFI7wz4+u8xeGOwwkbHvRwyo6SvJdjNtwpH6m2NAv4+JaPMG57D+pNc8NptzrlRRVTfXsfWi9g4UwsDVHKIZgrckIuOR2iILwbjg8NrH5olgT7B0/dw11RbgFkksw98mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=l8LPU9oh; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ze5KlatB"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1692899b3a.2;
-        Sun, 25 May 2025 18:51:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748224313; x=1748829113; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/DKj8oNkwRWAiy5DwXiV4r+Z3UZ5RRrUNHD6WtNis8g=;
-        b=Ze5KlatBmy7jdVmSrhn8t8PA63mU84+o2dmg4OaW24mGhX/wm7UJOr2AIb8NhB6M2G
-         1+Qh/YpycL6QwCvr+HomSigfBuAUGnwOwg+YN2/xzfx8QXJwjqHIATYnd1f240GOWlL5
-         F67jOTbhta5DbkFwhPt4gHZ3W6rynJ5mdE40EeBea16inqfjpiZiD0eJIiOj0PQG7xwW
-         flKaYl9lIiLNrl0AZQqE0PIiEL7OxIg8ITL8g99lP9+7nwHiSxaZSRNSRPgtm30r2ZDZ
-         algrQDccQcFdJzC2Xftfm80IT/y1qYJpJao2M0+ke4HV6ubqfi6XcqGtoT0LlKgvKZq2
-         mPfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748224313; x=1748829113;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/DKj8oNkwRWAiy5DwXiV4r+Z3UZ5RRrUNHD6WtNis8g=;
-        b=gbdZ96UJStu3v/20uezZYu/3s451IKYxeche2IyRrEA2oI+z24WxGkPbnLUmvVAdJg
-         ybL0e3IP5Kom4NRm3cYDE2TPe+QdhlTo0KAjZPB+Vglc/3lHOZ4OgiGFTNQpj/eAHelA
-         CiLmWc1oR9UskO94DkUs/tLgJt6hi8vL4yRiQb3znEc45g6iC8pQ6RN2WlQd99O/jpNM
-         ivB6Al61kzMj1d8jm+Z7WHPnnkl2HXaBN24Jzl0UXp/FvYIPZgzJjs9fYzV7iioIV+ZF
-         h3De3pKgvKTBooLo7b0PHC61YJZzE9S8SK6J4OKsjmBk1KJh7rGn5mxc0uLVs1yI67xe
-         nnJA==
-X-Forwarded-Encrypted: i=1; AJvYcCU87IdeMUuzv6YYYopDp9/1zz1yNDa+n+y2LHtpx2AUc0WTFn43UQwV7WdqkNDJvl+4EoinYgDjLFk=@vger.kernel.org, AJvYcCX694GptvhHfrnwCakntm3Id5WlNJC2jadd4vide+q+LppgOQOFHPP0QrEenKvHCMvEEB+Md3KL1kBeYJKU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfCxsV7l3ywooQBDdj1q5ZrVgT9SQPwzJllYhnmId9qobCbEeq
-	IOoVn4o0HPzpvaXEL0Z+fkPBw13Jps0sX8OtspszU/U4ebDU5MDIH8yl
-X-Gm-Gg: ASbGncuwDsRAYmuEtFUo4VZTlukJG/37JmrlvFs1UXiNtlMexr5qNNYd7sf23bQ3tC9
-	RCb5TE9cjJyTGpOXl30BIugzPtUTx8cpa9Nm/Oef55Yc+q6nSeDFK/wJ1QImHBUHQvN67a+w901
-	ALNoRYVl16C0EntCsVnhHLp9oL1gW2+GgUQqviMWS+qJ3RI8i2g5C3Pv+Ca1krGv5hBOckY/keq
-	eoOSvdrF+K8UBAsgg9Mrr0HFCtUs8ta9mi0XVb/key/AsuCDycZQx1JLFQX25Plet1JLB9h8lI0
-	LVa0J5lMf1/DHVE1DJy0Nst1HV5kDI+jFNPIQKMvQ0t0nuAV5CN0nFJkbkrigA==
-X-Google-Smtp-Source: AGHT+IEej+6PkcO2/DXbswdOAlQW3W/DYX0Gbdx4UIAQjE96Wze4Ix7GvGI6pQ+GrMV3odHkPK89sg==
-X-Received: by 2002:a05:6a00:2905:b0:742:a9ed:a3d6 with SMTP id d2e1a72fcca58-745fe035fa7mr9505358b3a.17.1748224312672;
-        Sun, 25 May 2025 18:51:52 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96def30sm15993990b3a.20.2025.05.25.18.51.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 18:51:51 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id E85A84230C03; Mon, 26 May 2025 08:51:48 +0700 (WIB)
-Date: Mon, 26 May 2025 08:51:48 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="l8LPU9oh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
+	s=altu2504; t=1748224757;
+	bh=sChjnz3feZFvWyNyBBV/ChTfvU6U/f+UOVHotNV47zs=;
+	h=From:To:Subject:Date:Message-Id;
+	b=l8LPU9ohrxUzo8CKMWaIQgwopRxBybEcjvVcV+zysweakpU8F3DZpStRBRbi/Y/fq
+	 ugnD4NO/fvIJNDObPxWWz/m2ntSTzyA1Q7Xa5rex5S0SkzoM6/hplbV0Afw8D93NRz
+	 Mj4V2N2yT1Ihm8pIX4dM/6t54vq6l6PQjlD+BeR0=
+X-QQ-mid: esmtpgz11t1748224755t5a444bdf
+X-QQ-Originating-IP: YmnDtwGOyJXaeiI+4J0/OlWIfmc02uUidzVxFPmFi9k=
+Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 26 May 2025 09:59:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 11916620477028258212
+From: Chaoyi Chen <kernel@airkyi.com>
+To: Sandy Huang <hjc@rock-chips.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] drm: add overview diagram for drm stack
-Message-ID: <aDPJNBTDmHoZ-z1d@archie.me>
-References: <20250523-drm-doc-updates-v2-0-e517df152cf6@gmail.com>
- <20250523-drm-doc-updates-v2-2-e517df152cf6@gmail.com>
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>
+Subject: [PATCH] drm/rockchip: lvds: Convert to drm bridge
+Date: Mon, 26 May 2025 09:58:34 +0800
+Message-Id: <20250526015834.102-1-kernel@airkyi.com>
+X-Mailer: git-send-email 2.17.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: Nec0PqG26E9wcPYeyCpdNquLWbVB0QBfauc3uPvmSzxI3H4iGsgp/ohz
+	TiSe+dCf6mo8kP0xCv5HY4me0+y9I79oBj1G5Xq6Dd4+YE0hHuHeMmRPhx0gVmcPJnR9qLt
+	9fEwSyd1dnY1hyZcynkTYUUTAwRcbnyBv2f5YsfW2p7ecJSlSa4KzMdQ71cY/4b3E9BLfSm
+	LoTJFw7xrxjzFImtsB+3Pvmydc+VL+jzTlw00I6Oa+L7fAdRj0nhir8lCbXMwXZEKUkVZ+x
+	LSwxoV6I5gPgCEfFQoj3mzAhjY7PlIg1lwkZpLNGD6Z7i2Gi+vgvaqd074clFTRHb4POOy7
+	SfzXHrLshDQq3t4vZjmvuXi4ZShGWCFUSj3pbOP2dM0hX3qYZC9y8jkPySPpi/gQFQWG3Wj
+	6Z21u6ZLd9z8Gd09/0pw5SDFJPNOOZu2qvo7He3hQRIStX1/A9I6yvWsjTqgQ2doUqpLJFC
+	g+zWjiEnSTHlzreLun0jxSZ68eL9SYk9tI/xZY7MCBMdKJufeGvMw16veVgX2C1OKRI/iyQ
+	+e07CzASwLx/c/6M2xHbF3pIpZ5D92Dl2xgSICrZmkVGPoqS2iWDVn4VDxqAo8fqfF4m5Ae
+	b+lLcHnybzloPMlqvBykpCZXzQ8uDZo/AzvnP9ohjvwctjtrb7tOOxhy4t/ce6IsPdfOSNo
+	OTVWm22aU7v3S+3voQH61UqcKsxE6jZkHbjtAoqRVo46xNUTbrjUW2PEO8Ed/zpXzttgBtX
+	cEiY+LqRp6c8IPVkJIcUm+vJmUTuF6WUgZ4VWIxCFMRcy36L7fg7Y6ZOWcXXQ/kcllX2A0v
+	D+XuM53BPd9xN4Pl4YUP0KxBgDqTAYLfV7ZuTzYcOkm9eVT+jh/PqCmpJf/f31CELDVGUeb
+	VOtPD2PXr8n0yAXEhiDd0/OPIk7FAM4w3fkj6W/qx0Yk11wTsU40NxGle0VG650CIqNdV8D
+	+r/FL7FR3rfEIzg==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hXCUMJnyg9VmLHa2"
-Content-Disposition: inline
-In-Reply-To: <20250523-drm-doc-updates-v2-2-e517df152cf6@gmail.com>
 
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
---hXCUMJnyg9VmLHa2
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Convert it to drm bridge driver, it will be convenient for us to
+migrate the connector part to the display driver later.
 
-On Fri, May 23, 2025 at 03:52:26PM -0400, Abdulrasaq Lawani wrote:
-> diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/intro=
-duction.rst
-> index 91bb0efc96d69921a122c5265b1431fa18110a7a..2653048ad4bb0ecbc2b676295=
-440442dddbabae6 100644
-> --- a/Documentation/gpu/introduction.rst
-> +++ b/Documentation/gpu/introduction.rst
-> @@ -15,41 +15,43 @@ and the new vblank internals, in addition to all the =
-regular features
->  found in current kernels.
-> =20
->  Overview of the Linux DRM Architecture
-> ------------------------------------------------
-> -+-----------------------------+
-> -|     User-space Apps         |
-> -| (Games, Browsers, ML, etc.) |
-> -+-----------------------------+
-> -              |
-> -              v
-> -+---------------------------------------+
-> -|    Graphics APIs   |   Compute APIs   |
-> -|  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
-> -+---------------------------------------+
-> -          |                   |
-> -          v                   v
-> -+---------------------+  +-----------------------+
-> -|  User-space Driver  |  |    Compute Runtime    |
-> -|  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
-> -+---------------------+  +-----------------------+
-> -          |                   |
-> -          +--------+----------+
-> -                   |
-> -                   v
-> -        +-----------------------+
-> -        |   libdrm (DRM API)    |
-> -        +-----------------------+
-> -                   |
-> -                   v
-> -+-------------------------------------------+
-> -|     Kernel DRM/KMS Driver (i915, amdgpu,  |
-> -|     nouveau, etc.)                        |
-> -+-------------------------------------------+
-> -        |                       |
-> -        v                       v
-> -+----------------+     +-------------------+
-> -| GPU Display HW |     | GPU Compute Units |
-> -+----------------+     +-------------------+
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+---
+ drivers/gpu/drm/rockchip/rockchip_lvds.c | 68 ++++++++++--------------
+ 1 file changed, 29 insertions(+), 39 deletions(-)
 
-Why promoting the section heading?
+diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+index a673779de3d2..2411260db51d 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
++++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
+@@ -56,14 +56,13 @@ struct rockchip_lvds {
+ 	struct drm_device *drm_dev;
+ 	struct drm_panel *panel;
+ 	struct drm_bridge *bridge;
+-	struct drm_connector connector;
+ 	struct rockchip_encoder encoder;
+ 	struct dev_pin_info *pins;
+ };
+ 
+-static inline struct rockchip_lvds *connector_to_lvds(struct drm_connector *connector)
++static inline struct rockchip_lvds *brige_to_lvds(struct drm_bridge *bridge)
+ {
+-	return container_of(connector, struct rockchip_lvds, connector);
++	return (struct rockchip_lvds *)bridge->driver_private;
+ }
+ 
+ static inline struct rockchip_lvds *encoder_to_lvds(struct drm_encoder *encoder)
+@@ -106,25 +105,21 @@ static inline int rockchip_lvds_name_to_output(const char *s)
+ 	return -EINVAL;
+ }
+ 
+-static const struct drm_connector_funcs rockchip_lvds_connector_funcs = {
+-	.fill_modes = drm_helper_probe_single_connector_modes,
+-	.destroy = drm_connector_cleanup,
+-	.reset = drm_atomic_helper_connector_reset,
+-	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+-	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+-};
+-
+-static int rockchip_lvds_connector_get_modes(struct drm_connector *connector)
++static int
++rockchip_lvds_bridge_get_modes(struct drm_bridge *bridge, struct drm_connector *connector)
+ {
+-	struct rockchip_lvds *lvds = connector_to_lvds(connector);
++	struct rockchip_lvds *lvds = brige_to_lvds(bridge);
+ 	struct drm_panel *panel = lvds->panel;
+ 
+ 	return drm_panel_get_modes(panel, connector);
+ }
+ 
+ static const
+-struct drm_connector_helper_funcs rockchip_lvds_connector_helper_funcs = {
+-	.get_modes = rockchip_lvds_connector_get_modes,
++struct drm_bridge_funcs rockchip_lvds_bridge_funcs = {
++	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
++	.atomic_reset = drm_atomic_helper_bridge_reset,
++	.get_modes = rockchip_lvds_bridge_get_modes,
+ };
+ 
+ static int
+@@ -606,26 +601,23 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 	}
+ 
+ 	drm_encoder_helper_add(encoder, lvds->soc_data->helper_funcs);
+-	connector = &lvds->connector;
+ 
+ 	if (lvds->panel) {
+-		connector->dpms = DRM_MODE_DPMS_OFF;
+-		ret = drm_connector_init(drm_dev, connector,
+-					 &rockchip_lvds_connector_funcs,
+-					 DRM_MODE_CONNECTOR_LVDS);
+-		if (ret < 0) {
+-			drm_err(drm_dev,
+-				"failed to initialize connector: %d\n", ret);
++		lvds->bridge = drm_panel_bridge_add_typed(lvds->panel, DRM_MODE_CONNECTOR_LVDS);
++		if (IS_ERR(lvds->bridge)) {
++			ret = PTR_ERR(lvds->bridge);
+ 			goto err_free_encoder;
+ 		}
++	}
+ 
+-		drm_connector_helper_add(connector,
+-					 &rockchip_lvds_connector_helper_funcs);
+-	} else {
+-		ret = drm_bridge_attach(encoder, lvds->bridge, NULL,
+-					DRM_BRIDGE_ATTACH_NO_CONNECTOR);
++	if (lvds->bridge) {
++		lvds->bridge->driver_private = lvds;
++		lvds->bridge->ops = DRM_BRIDGE_OP_MODES;
++		lvds->bridge->funcs = &rockchip_lvds_bridge_funcs;
++
++		ret = drm_bridge_attach(encoder, lvds->bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+ 		if (ret)
+-			goto err_free_encoder;
++			goto err_free_bridge;
+ 
+ 		connector = drm_bridge_connector_init(lvds->drm_dev, encoder);
+ 		if (IS_ERR(connector)) {
+@@ -633,14 +625,14 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 				"failed to initialize bridge connector: %pe\n",
+ 				connector);
+ 			ret = PTR_ERR(connector);
+-			goto err_free_encoder;
++			goto err_free_bridge;
+ 		}
+-	}
+ 
+-	ret = drm_connector_attach_encoder(connector, encoder);
+-	if (ret < 0) {
+-		drm_err(drm_dev, "failed to attach encoder: %d\n", ret);
+-		goto err_free_connector;
++		ret = drm_connector_attach_encoder(connector, encoder);
++		if (ret < 0) {
++			drm_err(drm_dev, "failed to attach encoder: %d\n", ret);
++			goto err_free_bridge;
++		}
+ 	}
+ 
+ 	pm_runtime_enable(dev);
+@@ -649,8 +641,8 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
+ 
+ 	return 0;
+ 
+-err_free_connector:
+-	drm_connector_cleanup(connector);
++err_free_bridge:
++	drm_panel_bridge_remove(lvds->bridge);
+ err_free_encoder:
+ 	drm_encoder_cleanup(encoder);
+ err_put_remote:
+@@ -670,8 +662,6 @@ static void rockchip_lvds_unbind(struct device *dev, struct device *master,
+ 	encoder_funcs = lvds->soc_data->helper_funcs;
+ 	encoder_funcs->disable(&lvds->encoder.encoder);
+ 	pm_runtime_disable(dev);
+-	drm_connector_cleanup(&lvds->connector);
+-	drm_encoder_cleanup(&lvds->encoder.encoder);
+ }
+ 
+ static const struct component_ops rockchip_lvds_component_ops = {
+-- 
+2.49.0
 
-> +::
-> +
-> +        +-----------------------------+
-> +        |     User-space Apps         |
-> +        | (Games, Browsers, ML, etc.) |
-> +        +-----------------------------+
-> +                      |
-> +                      v
-> +        +---------------------------------------+
-> +        |    Graphics APIs   |   Compute APIs   |
-> +        |  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
-> +        +---------------------------------------+
-> +                |                   |
-> +                v                   v
-> +        +---------------------+  +-----------------------+
-> +        |  User-space Driver  |  |    Compute Runtime    |
-> +        |  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
-> +        +---------------------+  +-----------------------+
-> +                |                   |
-> +                +--------+----------+
-> +                         |
-> +                         v
-> +                +-----------------------+
-> +                |   libdrm (DRM API)    |
-> +                +-----------------------+
-> +                          |
-> +                          v
-> +        +-------------------------------------------+
-> +        |     Kernel DRM/KMS Driver (i915, amdgpu,  |
-> +        |     nouveau, etc.)                        |
-> +        +-------------------------------------------+
-> +                |                       |
-> +                v                       v
-> +        +----------------+     +-------------------+
-> +        | GPU Display HW |     | GPU Compute Units |
-> +        +----------------+     +-------------------+
-> =20
-
-This is not how reviews from v1 should be addressed. Instead of making
-separate commit for review suggestions, you need to squash them into affect=
-ed
-commit(s) in v1. In this case, there should be only one resulting patch. Do=
-n't
-forget to send it as v3.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---hXCUMJnyg9VmLHa2
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDPJMQAKCRD2uYlJVVFO
-oy74AQDPmxrQb9rYKD39w7NaTsaOldYEhp+puSEJ2KpMwsY1SAEA9lVhnB307H4N
-uJLfQF9+cMButgaKwwW89bmWLnPxTQ0=
-=XjDz
------END PGP SIGNATURE-----
-
---hXCUMJnyg9VmLHa2--
