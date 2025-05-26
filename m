@@ -1,102 +1,183 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF10A2DCBFB
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD5323E320
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748281567; cv=none; b=QG6PVZGR+BMY1Qt1r+M/NBbIXbzlmTVUxKUs2jAgYg/St5VtzfMLynGmxsaBvkz3DNVOsGETj+Fte3kIckbKPEBCxmnvWQCcIxZWmb6o4o61dMPISqiz9lOQh7UicQCmteIYfOulFde1HkgZUZ8jAvZBskK/hjSsCoqk1lseVk0=
+	t=1748281902; cv=none; b=fXpU42adxN9GKexb22z+9v5S/je4jzXz7/B4Kv4bQeqAobBlWtAlLIv0stak7qDxbD59tioI9ZL4vM9jJEOQUr2qzdNdxSXPOEwK2EgSE8+RQGC1N99tuinSX3uznchUOUqDDYcDdrVQr8BWPCVS4JI6/p5+tsfALQsur1nhqK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748281567; c=relaxed/simple;
-	bh=Rq9/3aCOUwohSbNkJLhOOSA8WRStZcP1e2RR3X2QZcA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rsWqIiuLw4C2D3MVo3HcI9RmDGtECtF6vH6Tj0ihez/OJHeFHHftiDWHzWzIydS/MfA4fVK8sdqJwKO/l5TfaJPKoZZhY2L1Fx3BiEpTZ06UGy+ZIgBJIUky0fxXdDmQskeffXdHp9aeruaYsuGN33QJ+84erkoPDW+Ho809pXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aVUtZbMj; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748281902; c=relaxed/simple;
+	bh=6DLePd+PP4uNkX6tcilWPj79dtNl6QyGIaJcJPJoclE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GFWR40bbbB+1wQQWQq3c3AFU8GcDIXQWzyJEEbVbh0jAA5z46AkjSg7u1Lk6Rp4GVtOU2pfYsmwDEK6untdN79aHW0BBiqUpHSdjHc3g99QSu6Z5I4E7XOMTUv7+eTNR8jxYxfTL4H0pKFYNMAiCklJ1paI/HlG1RE4gmkDZsbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oGqDu9wk; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aVUtZbMj"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2347012f81fso11746465ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:46:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oGqDu9wk"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2349068ebc7so47245ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:51:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748281565; x=1748886365; darn=vger.kernel.org;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=F7qumZUcoGtX38Cmc4lHFRFFrnEuMPICmiWU+876mek=;
-        b=aVUtZbMjTUyqS/Z2EPOS/pI8wPn2/B8uXwzO7Z99uqJtrpDs4cLsqL/cnUeA5xnY5P
-         0Pv6pBQOSUZG1YBSk0d/waXkqZSTTkAT4V7JRBGJfEbOBDWBWVbrTShNOa/cwKVm3Ank
-         vQPpi04GrQDBYvHXuYP2zzIkPVKTGNRVN0UVQ5tN8OxXFwUCnZE0yZLPVSV1Evh/cnAq
-         Cc3qDpPAv6orBprnytXnr96zR9/2DZLSLPoLFe2OmJhSEa0PRhmnhA12fwjaev1ORfkb
-         vZW12uLq0wpwI/bVFsW0hzlRrvkt+XbpElMvE5e8A9bFZv7DhGV2oCjydm/KLxl8TyiQ
-         KECw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748281565; x=1748886365;
-        h=mime-version:user-agent:message-id:date:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1748281900; x=1748886700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=F7qumZUcoGtX38Cmc4lHFRFFrnEuMPICmiWU+876mek=;
-        b=GbUA5hyGLxCn8Cn5GfJhGSijh7cxHbab6Z5mchHPBXJVeEy4YlsLoHkIRVxr+fK86g
-         4V2n4Iey3bMdPRWZ4JmEYiV8RMOUVHdfvKmhBr6atB+C8m3q8Y2YTyfisD0bGmtCFnuJ
-         r4O5Tnf4d0a5l26x6J0PKMvCsdRdq7KtI+CvjoyJB9XH5jxWXyBjYTSfeh1qX3xjeRmg
-         Taczv/0HPef1K0bUNabVk8SOvVihur/E4aXAWxFHEUJ8l8KE4cuIAeNffbAeH1Khr5O/
-         ARyOT9InVg/OLIaSbpFOA50kB39ifd/fM4vVYu26GV1ownPASORuopdtRDWjbC6/Iwd6
-         KjMg==
-X-Gm-Message-State: AOJu0YyHrZJXPcuCGLKwd8w02hWGhjrF1rsVs/GC68YcSSRJV1btRmII
-	3rt/SxphtzWt8Ygiu19HD8weLfhARI/cJOLYh//uPLKTVNYcI/YU1m58Qaatsg==
-X-Gm-Gg: ASbGncvXOc8YE0RqDHCBcx/lK6EzZSAL/S8KirQPCEdP69rKWWAXqtzSY8l0eJoVDA6
-	bphVq4NoLqZonsj4Q6sgA2qTgKeKd8YbzCL+99zdl112mhkYwxxqp81EXTm1EmYO+MIhjd3Cg7N
-	5/DceAy4Mr3FUfbgTv8gORKtSnlZWntIriEcjHz5dKFyR3G1swl92ZynhR6MzBb8jK/bDEY+YFp
-	rki+z+VHBRsmyQZQ9eskiREErlL+Jw14y1dwf8C5zFw0osW7jDsImJ9TFzvsP6Hbw6VOb5B/eSl
-	fXZhPDgMY/qjjsLGw20Z//7Wj1ZPLQU=
-X-Google-Smtp-Source: AGHT+IFthzvCyxbSGN9QIV29VfCwGvMFZNWGHK5Y+FhrLC7STTy8cxJ0FLiteLjAvqyLIuKiRvzXkQ==
-X-Received: by 2002:a17:903:41cc:b0:21f:1202:f2f5 with SMTP id d9443c01a7336-23414f34c83mr125064865ad.8.1748281564965;
-        Mon, 26 May 2025 10:46:04 -0700 (PDT)
-Received: from fedora ([2601:646:8081:3770::9eb])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2348a065cb1sm8035745ad.143.2025.05.26.10.46.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 10:46:04 -0700 (PDT)
-From: Collin Funk <collin.funk1@gmail.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] groups: Use bsearch instead of hand rolled implementation
-In-Reply-To: <20250526002519.GX2023217@ZenIV>
-References: <ab5708c1e35e1b2a54a1d83fafda1b3f8fa01103.1748218528.git.collin.funk1@gmail.com>
-	<20250526002519.GX2023217@ZenIV>
-Date: Mon, 26 May 2025 10:46:03 -0700
-Message-ID: <87jz63jmec.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        bh=A6FocSUFbWGC4UbXQHwbO+J5QjuVS7G5DVoCQNhcZX0=;
+        b=oGqDu9wkAtk+TewpQCWTjaFxjm1zA1DET98QseuB4hWRC9vXzbLyrj761leVANLT2E
+         GKbznCeM1//F49R2igdgo7akvmNS5bNhzhlGIYMnRQCXZDc/l1Yj+FzavZZXAWexoMpr
+         gZRofDeePHx5OL3UVDTINUhsA/hVsMr3d0YSW9n9LnbIhsJAh4WxNaFFvsMloQUAmM71
+         ocDl0DVY6AqasIC3+UXCpTnRe4mmYSpWoj9FkPYCarikVFXrXQdGWdgDUZ+LEdbvVsXd
+         d/Fs4DuJCUnPP1I7XpQqd8hcEYU+fbQz8DwLhshh7YDwHwOhyw9vNBrCFC/t+rCn/FoV
+         MM7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748281900; x=1748886700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A6FocSUFbWGC4UbXQHwbO+J5QjuVS7G5DVoCQNhcZX0=;
+        b=VSde7NN+9Ae/1p6Fmtv53IGE1fDHY/7Zjbb2m7V5NFZQuDlxcAbpVGKGdeTW1SyGdA
+         LjXdmRBlDhndAQbvuQd40DqKR/oivDtkeK27FJHq4PH6gWVrK/oSCLaAHIfwmHt44vB5
+         P7ntWaAVqBzAj48cy0Uh4HL17GpwFUIdIrV63vMKbSzg9ilVqFePAskMnTBoa6UfsW/b
+         DUOjMnrYOUUJ1wYAZXeTNsxfrrOqPC1FpB1Vbeie8/Z2JlPnWGr8XHNnBdQyR6YLrifL
+         8S/Bd3iDgPId0yaMVcsrFQN5MYHFeczqA4PQA/EXrgukMqeAbVJGrs+TA45D8OufUqRx
+         6vzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdkXU9xTiOylGR5IhGhFpgBO6mLc+7dJ6sE2W7hrnJ61bJJ2zZcn+3bN5wsgXKPaD2vA0rwNZaQZv+sek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRghelRixcjN+w/vjDUf5n8oOS/4V3aceSN4MiGtfgOnKpMsk9
+	2o3kfHLreql3x0qoFohW/03ODKSx4HsQkpgvqaqBx/C5LN+qq+VfnPwXHP4cjqz4RBDM/5afqOb
+	YIayh0fHhzCkYmp89S/gj+a2cIkKKZi3E1w5fsBN5
+X-Gm-Gg: ASbGncvplHyAQB4l5dnzAEGexKUsr5MpCMvFCTk49iFm4kcE+cfWdE9HHqygsP/BwJl
+	do/feqHcEW6BfX128qDuF1bU7O/1fhsRjWjp+FZWPE7CDUVPGlaTehfyXEbDg/Z4QnX++5JuKRB
+	IonLr/HRTJavHT39SmIksXTsj+GQdT4BlYvedyHmOEcnoT
+X-Google-Smtp-Source: AGHT+IHxw5kFD97qu6/S6TmfiDU0cDQb33odUZGDT5ciTtFyA8/W5y/Ppc1tRpCaVQHp6ijmqTOE4Cz6czANaXkuDQw=
+X-Received: by 2002:a17:903:46ce:b0:231:f6bc:5c84 with SMTP id
+ d9443c01a7336-2341807dceamr4601285ad.8.1748281899944; Mon, 26 May 2025
+ 10:51:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250523064524.3035067-1-dongchenchen2@huawei.com>
+ <a5cc7765-0de2-47ca-99c4-a48aaf6384d2@huawei.com> <CAHS8izP=AuPbV6N=c05J2kJLJ16-AmRzu983khXaR91Pti=cNw@mail.gmail.com>
+ <5305c0d1-c7eb-4c79-96ae-67375f6248f1@huawei.com>
+In-Reply-To: <5305c0d1-c7eb-4c79-96ae-67375f6248f1@huawei.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Mon, 26 May 2025 10:51:26 -0700
+X-Gm-Features: AX0GCFvICH5Qjo3M4gJa_hQ9VbxiimhOklMmvepPin5U8PBr-TSru9AVogsH9hc
+Message-ID: <CAHS8izPY9BYWzAVR9LNdSP4+-0TsgOoMXvD658i22VFWHZfvfA@mail.gmail.com>
+Subject: Re: [PATCH net] page_pool: Fix use-after-free in page_pool_recycle_in_ring
+To: "dongchenchen (A)" <dongchenchen2@huawei.com>
+Cc: Yunsheng Lin <linyunsheng@huawei.com>, hawk@kernel.org, ilias.apalodimas@linaro.org, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	zhangchangzhong@huawei.com, 
+	syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Al,
+)
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
-
-> Careful - that really needs profiling with setups where processes have
-> a bunch of supplementary groups.
+On Mon, May 26, 2025 at 7:47=E2=80=AFAM dongchenchen (A)
+<dongchenchen2@huawei.com> wrote:
 >
-> It *is* on hot paths, and while the current version will be inlined,
-> yours will do a bunch of indirect calls.  These days that can be
-> costly.
+>
+> > On Fri, May 23, 2025 at 1:31=E2=80=AFAM Yunsheng Lin <linyunsheng@huawe=
+i.com> wrote:
+> >> On 2025/5/23 14:45, Dong Chenchen wrote:
+> >>
+> >>>   static bool page_pool_recycle_in_ring(struct page_pool *pool, netme=
+m_ref netmem)
+> >>>   {
+> >>> +     bool in_softirq;
+> >>>        int ret;
+> >> int -> bool?
+> >>
+> >>>        /* BH protection not needed if current is softirq */
+> >>> -     if (in_softirq())
+> >>> -             ret =3D ptr_ring_produce(&pool->ring, (__force void *)n=
+etmem);
+> >>> -     else
+> >>> -             ret =3D ptr_ring_produce_bh(&pool->ring, (__force void =
+*)netmem);
+> >>> -
+> >>> -     if (!ret) {
+> >>> +     in_softirq =3D page_pool_producer_lock(pool);
+> >>> +     ret =3D !__ptr_ring_produce(&pool->ring, (__force void *)netmem=
+);
+> >>> +     if (ret)
+> >>>                recycle_stat_inc(pool, ring);
+> >>> -             return true;
+> >>> -     }
+> >>> +     page_pool_producer_unlock(pool, in_softirq);
+> >>>
+> >>> -     return false;
+> >>> +     return ret;
+> >>>   }
+> >>>
+> >>>   /* Only allow direct recycling in special circumstances, into the
+> >>> @@ -1091,10 +1088,14 @@ static void page_pool_scrub(struct page_pool =
+*pool)
+> >>>
+> >>>   static int page_pool_release(struct page_pool *pool)
+> >>>   {
+> >>> +     bool in_softirq;
+> >>>        int inflight;
+> >>>
+> >>>        page_pool_scrub(pool);
+> >>>        inflight =3D page_pool_inflight(pool, true);
+> >>> +     /* Acquire producer lock to make sure producers have exited. */
+> >>> +     in_softirq =3D page_pool_producer_lock(pool);
+> >>> +     page_pool_producer_unlock(pool, in_softirq);
+> >> Is a compiler barrier needed to ensure compiler doesn't optimize away
+> >> the above code?
+> >>
+> > I don't want to derail this conversation too much, and I suggested a
+> > similar fix to this initially, but now I'm not sure I understand why
+> > it works.
+> >
+> > Why is the existing barrier not working and acquiring/releasing the
+> > producer lock fixes this issue instead? The existing barrier is the
+> > producer thread incrementing pool->pages_state_release_cnt, and
+> > page_pool_release() is supposed to block the freeing of the page_pool
+> > until it sees the
+> > `atomic_inc_return_relaxed(&pool->pages_state_release_cnt);` from the
+> > producer thread. Any idea why this barrier is not working? AFAIU it
+> > should do the exact same thing as acquiring/dropping the producer
+> > lock.
+>
+> Hi, Mina
+> As previously mentioned:
+> page_pool_recycle_in_ring
+>    ptr_ring_produce
+>      spin_lock(&r->producer_lock);
+>      WRITE_ONCE(r->queue[r->producer++], ptr)
+>        //recycle last page to pool, producer + release_cnt =3D hold_cnt
 
-Sure, makes sense.
+This is not right. release_cnt !=3D hold_cnt at this point.
 
-I would assume that gid_cmp/gid_lt/gid_gt all get inlined no matter
-what, but I am not sure if the conversion to 'grp' to a void pointer for
-the generic bsearch prevents some optimizations.
+Release_cnt is only incremented by the producer _after_ the
+spin_unlock and the recycle_stat_inc have been done. The full call
+stack on the producer thread:
 
-> Reducing code duplication is a good thing, but not when it creates
-> measurable regressions...
+page_pool_put_unrefed_netmem
+    page_pool_recycle_in_ring
+        ptr_ring_produce(&pool->ring, (__force void *)netmem);
+             spin_lock(&r->producer_lock);
+             __ptr_ring_produce(r, ptr);
+             spin_unlock(&r->producer_lock);
+        recycle_stat_inc(pool, ring);
+    recycle_stat_inc(pool, ring_full);
+    page_pool_return_page
+        atomic_inc_return_relaxed(&pool->pages_state_release_cnt);
 
-Yes, that makes sense.
+The atomic_inc_return_relaxed happens after all the lines that could
+cause UAF are already executed. Is it because we're using the _relaxed
+version of the atomic operation, that the compiler can reorder it to
+happen before the spin_unlock(&r->producer_lock) and before the
+recycle_stat_inc...?
 
-There is '__inline_bsearch', but I'll have to do some expirementing to
-make sure that gets optimized well.
-
+--=20
 Thanks,
-Collin
+Mina
