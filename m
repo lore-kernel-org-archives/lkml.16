@@ -1,71 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3946C7483;
-	Mon, 26 May 2025 13:24:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2811B4409;
+	Mon, 26 May 2025 13:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748265874; cv=none; b=p7AzkqGKg3m63OB7SFU9Y5ebYatnm4UQX0xxS/XMHR5WcjhFFup+lWP+4zVOJyjdzP/iV3Pqd872JSXBWfb8u92s6Nf5yab2cUElMDBw+wrj40wp0ZmxT69+OLOSpjX9N6401pQDmNmguTCvWceLB8elShTBkRQeddf+WYRA3mM=
+	t=1748265996; cv=none; b=jMZQTf+RaTtbDmeXpr+UVnQ4NMEwe+MMkzAeFRWA9tNEUYxgfPFFyIwO63Acb/mNvBAXlwQw/Mlftt7zxy1gcDG4ecNTrGRtcUOdsYPz+1XRLWI//S9UKOuuiGW+mvpT1/2h8cjP78TPztOF01UniPcHLS2D2Rd/OUALtWL+1gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748265874; c=relaxed/simple;
-	bh=osVsQrSYzdvef7/iUa+Or5IvPPYVb5WN4ATbcQpHmJI=;
+	s=arc-20240116; t=1748265996; c=relaxed/simple;
+	bh=/SLFAqxiwV6NX3LLR7zyJeAV4tFkk7mKaF5PqobB750=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pSXzqeX+MmORiwB7UOwrQas9DJws1J0T55X7G09Hcp98c62VU1rjakR0lMz9DQf+sXZJqXpCTz7akR4F9p1Tn7ZVi6myDzdGxxfp89j3XfJJViP/7cjx+cKsfJ/EcoskjVnktokUFnn27h6HpRaxYuQcBt4HmfhusU8OYmczKBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bh6oT24+; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nN9z6rq/tQdZGjS6XpHXnIFWlg/QEoZqOB/rMsFFqVSWnfnooaP3A1p8TDbcrc5siTxgGGDW1C4Fr60xaGUECAAHrUSeTN/UlxL8Nx6OQsrQzlcIWDLkeRUbyxin78xpLm7WMXa0gxqmzsEfw9XFT7V0t5P4PnNnV09y3Y/BKSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=tI09oY9s; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bh6oT24+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748265872; x=1779801872;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=osVsQrSYzdvef7/iUa+Or5IvPPYVb5WN4ATbcQpHmJI=;
-  b=Bh6oT24+KRJFeZ16ERJK9nTXyDMjI/Wr+7WwrDrf+NprOGanFh8JNmRE
-   EOKemGd2Zh+2ruueBfHvR6D9mYyBPulitsIxOG6Ydd1M6B6+zUyZzS+Oq
-   SeAJFwUN+H2/dx2WhwalTwfj+ay++CI5ITVWFdbViawXA6V+a5Co6VFFR
-   mF78c63L92POgNOuAVS9lsOheeKfOBl9tv3ReYwT9eoDmGeA7SRB2HDvL
-   YNdBECJB2/INQMMQ2EAPLT6S3ENs3RIXuv8r5J1CRV++mgSUlNS3p3LXF
-   OIaDaxk4rD+n/l1qiYF+6JiIIv8MHvFHU4rqab7+fv4jKTk0EikkYDcdP
-   A==;
-X-CSE-ConnectionGUID: wakVJeRzQkSSc/zmctbZnA==
-X-CSE-MsgGUID: fDmB/B7pQo23foPmIbrBig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50399316"
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="50399316"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 06:24:30 -0700
-X-CSE-ConnectionGUID: oNfceUcwQBayUJ0E7hEkpQ==
-X-CSE-MsgGUID: ARCWEYm6TSKL23rOyExWAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="146271278"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.125])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 06:24:27 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 4685711F732;
-	Mon, 26 May 2025 16:24:24 +0300 (EEST)
-Date: Mon, 26 May 2025 13:24:24 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Akshay Gupta <akshay.gupta@amd.com>, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, hans@jjverkuil.nl,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: Bump media IOCTL reserved numbers
-Message-ID: <aDRriOnRfEYPeziC@kekkonen.localdomain>
-References: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
- <20250526111732.487229-2-sakari.ailus@linux.intel.com>
- <20250526114802.GD17743@pendragon.ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tI09oY9s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5fjQ8NH+J7LqXK3CTrDlWPgjbLLt8OQoZe12tENaFA0=; b=tI09oY9s4zR5aC/d4HPeHmagsq
+	RCRRe4YBs/Pi0n8hL68SMhuxa0WMzU1HVfNrPJVT18D3hFsYtrMx3kXcAaxTYT7VzOLdL5JOTwYoA
+	B7fDFMm85BdnS3Z85wNgZdRlo6+ud8Ccu9vBcDJdIRWs6UfWyFJjSuu62HdYbsjtSMzc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uJXqI-00E0AO-Vy; Mon, 26 May 2025 15:26:14 +0200
+Date: Mon, 26 May 2025 15:26:14 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	richardcochran@gmail.com, kory.maincent@bootlin.com,
+	wintera@linux.ibm.com, viro@zeniv.linux.org.uk,
+	quentin.schulz@bootlin.com, atenart@kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: phy: mscc: Stop clearing the the UDPv4 checksum
+ for L2 frames
+Message-ID: <e4ae3712-5417-4d90-a83d-e2507a518992@lunn.ch>
+References: <20250523082716.2935895-1-horatiu.vultur@microchip.com>
+ <13c4a8b2-89a8-428c-baad-a366ff6ab8b0@lunn.ch>
+ <20250526065445.o7pchn5tilq7izmx@DEN-DL-M31836.microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,64 +50,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526114802.GD17743@pendragon.ideasonboard.com>
+In-Reply-To: <20250526065445.o7pchn5tilq7izmx@DEN-DL-M31836.microchip.com>
 
-Hi Laurent,
-
-On Mon, May 26, 2025 at 01:48:02PM +0200, Laurent Pinchart wrote:
-> Hi Sakari,
+On Mon, May 26, 2025 at 08:54:45AM +0200, Horatiu Vultur wrote:
+> The 05/23/2025 14:59, Andrew Lunn wrote:
 > 
-> Thank you for the patch.
-
-Thank you for the review.
-
+> Hi Andrew,
 > 
-> On Mon, May 26, 2025 at 02:17:31PM +0300, Sakari Ailus wrote:
-> > The Media Controller uses IOCTL numbers up to 0x81. Given that nothing
-> > appears to be using them for other purposes, even in the samples
-> > allocation (checked with $ git grep "#define.*_IO.*'|'"), just reassign
-> > the numbers up to 0x8f to linux/media.h and bump the samples allocation by
-> > 0x10.
-> 
-> The commit message should explain why. The explanation is in the cover
-> letter, just move it to this patch. With that,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-I'll use this in v2:
-
-The Media Controller uses IOCTL type '|' with numbers up to 0x81 while
-numbers from 0x80 onwards are allocated for samples, creating a conflict
-between allocations for MC and samples. Given that nothing appears to be
-using numbers between 0x80 and 0x8f for other purposes than MC, even in
-the samples allocation (checked with $ git grep "#define.*_IO.*'|'"), just
-reassign the numbers up to 0x8f to linux/media.h and bump the samples
-allocation by 0x10.
-
-> 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  Documentation/userspace-api/ioctl/ioctl-number.rst | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > > 
-> > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > index bc91756bde73..6b3be3fb0b15 100644
-> > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> > @@ -312,8 +312,8 @@ Code  Seq#    Include File                                           Comments
-> >  'z'   40-7F                                                          CAN bus card conflict!
-> >                                                                       <mailto:oe@port.de>
-> >  'z'   10-4F  drivers/s390/crypto/zcrypt_api.h                        conflict!
-> > -'|'   00-7F  linux/media.h
-> > -'|'   80-9F  samples/                                                Any sample and example drivers
-> > +'|'   00-8F  linux/media.h
-> > +'|'   90-AF  samples/                                                Any sample and example drivers
-> >  0x80  00-1F  linux/fb.h
-> >  0x81  00-1F  linux/vduse.h
-> >  0x89  00-06  arch/x86/include/asm/sockios.h
+> > On Fri, May 23, 2025 at 10:27:16AM +0200, Horatiu Vultur wrote:
+> > > We have noticed that when PHY timestamping is enabled, L2 frames seems
+> > > to be modified by changing two 2 bytes with a value of 0. The place were
+> > > these 2 bytes seems to be random(or I couldn't find a pattern).  In most
+> > > of the cases the userspace can ignore these frames but if for example
+> > > those 2 bytes are in the correction field there is nothing to do.  This
+> > > seems to happen when configuring the HW for IPv4 even that the flow is
+> > > not enabled.
+> > > These 2 bytes correspond to the UDPv4 checksum and once we don't enable
+> > > clearing the checksum when using L2 frames then the frame doesn't seem
+> > > to be changed anymore.
+> > >
+> > > Fixes: 7d272e63e0979d ("net: phy: mscc: timestamping and PHC support")
+> > > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > > ---
+> > >  drivers/net/phy/mscc/mscc_ptp.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+> > > index 6f96f2679f0bf..6b800081eed52 100644
+> > > --- a/drivers/net/phy/mscc/mscc_ptp.c
+> > > +++ b/drivers/net/phy/mscc/mscc_ptp.c
+> > > @@ -946,7 +946,9 @@ static int vsc85xx_ip1_conf(struct phy_device *phydev, enum ts_blk blk,
+> > >       /* UDP checksum offset in IPv4 packet
+> > >        * according to: https://tools.ietf.org/html/rfc768
+> > >        */
+> > > -     val |= IP1_NXT_PROT_UDP_CHKSUM_OFF(26) | IP1_NXT_PROT_UDP_CHKSUM_CLEAR;
+> > > +     val |= IP1_NXT_PROT_UDP_CHKSUM_OFF(26);
+> > > +     if (enable)
+> > > +             val |= IP1_NXT_PROT_UDP_CHKSUM_CLEAR;
+> > 
+> > Is this towards the media, or received from the media?
 > 
+> It is when the vsc85xx PHY receives frames from the link partner.
+> 
+> >Have you tried sending packets with deliberately broken UDPv4 checksum?
+> >Does the PHYs PTP engine correctly ignore such packets?
+> 
+> No, I have not done that. What I don't understand is why should I send
+> UDPv4 frames when we enable to timestamp only L2 frames.
 
--- 
-Regards,
+Ah, O.K. I was just wondering if the UDP checksumming in the hardware
+is broken in general. If so, you might want to disable it, and do the
+checks in software.
 
-Sakari Ailus
+       Andrew
