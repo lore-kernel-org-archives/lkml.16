@@ -1,180 +1,106 @@
-Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71A814B08A;
-	Mon, 26 May 2025 07:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDFF163
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748243923; cv=none; b=U/StmaPRMLaHNeV1e7LM4KoqzvxCYIZx/u3t4Dq5QkxsGvbHOeH8aPBhDKgArnA2VjshNfW8lz7I37fT3+rtR6x1Q//5nixhKrHMEpS5qw7NXcwsv+KiFUGl6mz4ZbgGmm24uFHVapcm0g5ufdVbBfPZ23x5h25NoIARStA77OU=
+	t=1748243924; cv=none; b=JtlQbaEwALu+SkNCAk/lbUoXXEY/l79RaWaZwxzk4B5nHLkEfe+75VYZcQVilv4M9muNywAp4tF8B+Z69KurhyPM1Kfn6nwbwtg7DAjXUmvvAK7W7LTJ73I6mtzDUGAhs+bPgu3X+YmTqr4Eru9idrVPusYf8rdLVTKKyc12dmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748243923; c=relaxed/simple;
-	bh=uYwsoGBRi4UEMldh/TOZkUyO2U3VyrozBxpBoaecFgM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=prQRXBUdyVBxZzIOkbbCxZDlnDDpgrodMkYDVS+7jtZzRAAk+dQ+dSX+4+HVTwf/rEismM+6HfOt2MlaGZiHkIifB3oT8eaJmOZH28oV6l/nVVPUUG6arv1HzBnepEgh+dwXNIsWFW3aXU3YcFhawfYsoXbOOfMcvFqSS11PXrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=HnX+VoA8; arc=none smtp.client-ip=168.119.41.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
+	s=arc-20240116; t=1748243924; c=relaxed/simple;
+	bh=An7YfCK9P5Y4IqEAGSFIZ+7Dm9ye7HbtEMNfRfd0Il4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fVqlHQfyeMX+YxzgslqX9Kv/5sFCKCH9MP8VGQ/7OjOc5+EG3wiQboUJezzQCqA57gvr8LFWLh+Ym0QhpuGBazRy6D09o3DkgwSizkCCvM/dtt5eMAwgcw+JRGXfTQAJssCicWeVJTMR8QTb754eAyZYCqCsEgK6F11oq0fynMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=flSGD7em; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="HnX+VoA8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
-	 s=mail; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=W7k8yWwZg01j6cbxI2o5cZM1DGrlB/tRDyaJlg6zKWY=; b=HnX+VoA89TnDler0SpqeXuCmbO
-	gOWyZzzjc2sOUSV+/Er9si7Qll2a3xnZb+l9RnArRlhhhwQBt0P1BX/J4mvloXc7G1RBmuI8Us2Sg
-	MA4AUiVfc1r9iUaEaz6w8pEHFyBdkuLDkrTBtJ27KC/e8mpBS3Xfi9N2JL1kM2COaP8Y=;
-Received: from 194-208-208-245.tele.net ([194.208.208.245]:50860 helo=[127.0.1.1])
-	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <matthias.fend@emfend.at>)
-	id 1uJRo3-0004nZ-P9; Mon, 26 May 2025 08:59:32 +0200
-From: Matthias Fend <matthias.fend@emfend.at>
-Subject: [PATCH v2 0/2] media: add Himax HM1246 image sensor
-Date: Mon, 26 May 2025 08:59:26 +0200
-Message-Id: <20250526-hm1246-v2-0-6b882827a3a5@emfend.at>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="flSGD7em"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1748243920;
+	bh=An7YfCK9P5Y4IqEAGSFIZ+7Dm9ye7HbtEMNfRfd0Il4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=flSGD7emFIbdlp0qLXRG111oWl4A1cXDZllM5+HlHPV8FSxMcXygIY8kqbdRVR4TE
+	 xWsIZ/bDeyHsAj7dM7MlqPNP/2Q37wROemXksM6LnBG56lQ4Lx5q6/D6pxwiDBTktN
+	 zMsqq8u4tWtRzkFxWcwO4VSXc4+1fHek9fqrEGUM9X/jMagfzeHBIOlJdnaYPO1bMa
+	 NGBdIR36V494xeHB9VtCOaf9dT3bgtvgIY57MMDr99Zui+FNTpbjvpbSd1mxCMFKTh
+	 GHkLE0gagkaOcz2ZqidnB2Ur2Fc44uOG+NJVtDPel9XPUGvIEAGeDFsrQ0xXRj99fv
+	 Ui5dqla013DpA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7765917E0E89;
+	Mon, 26 May 2025 09:18:40 +0200 (CEST)
+Date: Mon, 26 May 2025 09:18:34 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/panthor: Reset queue slots if termination fails
+Message-ID: <20250526091834.16548264@collabora.com>
+In-Reply-To: <20250519145150.2265020-1-ashley.smith@collabora.com>
+References: <20250519145150.2265020-1-ashley.smith@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAE4RNGgC/2XMSw6CMBSF4a2QO7bm9iFNHbEPw6CPi+2AYlpCN
- IS9W5k6/E9Ovh0qlUQV7t0OhbZU05JbiEsHPtr8JJZCaxAobqhQsjhzoXpmeoc+WKe19NDOr0J
- Tep/QY2wdU12X8jndjf/WP2LjDJlEYzBo7rwSA80T5XC1K4zHcXwBTjcWh5wAAAA=
-X-Change-ID: 20250403-hm1246-96b0cdab773c
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
- bsp-development.geo@leica-geosystems.com
-X-Mailer: b4 0.14.2
-X-Spam-Score: 
-X-Spam-Bar: 
-X-Spam-Report: 
 
-Hello,
+On Mon, 19 May 2025 15:50:19 +0100
+Ashley Smith <ashley.smith@collabora.com> wrote:
 
-this series adds support for the Himax HM1246 image sensor.
-The Himax HM1246-AWD is a 1/3.7-Inch CMOS image sensor SoC with an active
-array size of 1296 x 976. The datasheet can b
-Currently, only the native RAW mode is supported. Other modes and the
-internal image signal processing pipeline are not currently supported.
-The data sheet is available on the manufacturer's website [1].
-Tested on i.MX8MP hardware. A Toshiba TC358746 bridge was used to convert
-the sensor's parallel video output into MIPI signals for the i.MX8MP.
+> This fixes a bug where if we timeout after a suspend and the termination
+> fails, due to waiting on a fence that will never be signalled for
+> example, we do not resume the group correctly. The fix forces a reset
+> for groups that are not terminated correctly.
+> 
+> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
 
-Best regards
- ~Matthias
- 
-[1] https://www.himax.com.tw/wp-content/uploads/2024/03/HM1246-AWD_DS_v01.pdf
+We clearly need a Fixes tag, otherwise "drm/panthor: Make the timeout
+per-queue instead of per-job" will be backported, but not this one,
+which will lead to UAF. Can you send a v5 with both patches in the same
+series, each with a proper Fixes tag?
 
-v4l2-compliance 1.28.1, 64 bits, 64-bit time_t
-
-Compliance test for device /dev/v4l-subdev4:
-
-Driver Info:
-        Driver version   : 6.12.0
-        Capabilities     : 0x00000000
-        Client Capabilities: 0x0000000000000003
-streams interval-uses-which
-Required ioctls:
-        test VIDIOC_SUDBEV_QUERYCAP: OK
-        test invalid ioctls: OK
-
-Allow for multiple opens:
-        test second /dev/v4l-subdev4 open: OK
-        test VIDIOC_SUBDEV_QUERYCAP: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-        test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-        test VIDIOC_QUERYCTRL: OK
-        test VIDIOC_G/S_CTRL: OK
-        test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-        test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-        test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-        Standard Controls: 15 Private Controls: 0
-
-Format ioctls:
-        test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
-        test VIDIOC_G/S_PARM: OK (Not Supported)
-        test VIDIOC_G_FBUF: OK (Not Supported)
-        test VIDIOC_G_FMT: OK (Not Supported)
-        test VIDIOC_TRY_FMT: OK (Not Supported)
-        test VIDIOC_S_FMT: OK (Not Supported)
-        test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-        test Cropping: OK (Not Supported)
-        test Composing: OK (Not Supported)
-        test Scaling: OK (Not Supported)
-
-Codec ioctls:
-        test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-        test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-        test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-        test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-        test CREATE_BUFS maximum buffers: OK
-        test VIDIOC_REMOVE_BUFS: OK
-        test VIDIOC_EXPBUF: OK (Not Supported)
-        test Requests: OK (Not Supported)
-
-Total for device /dev/v4l-subdev4: 45, Succeeded: 45, Failed: 0, Warnings: 0
-
-Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
----
-Changes in v2:
-- Use macros for 64-bit division
-- Avoid compiler warnings about potentially uninitialized variables
-- Fix two uses of dev_err_probe
-- Link to v1: https://lore.kernel.org/r/20250403-hm1246-v1-0-30990d71bc42@emfend.at
-
----
-Matthias Fend (2):
-      media: dt-bindings: i2c: add Himax HM1246 image sensor
-      media: i2c: add Himax HM1246 image sensor driver
-
- .../bindings/media/i2c/himax,hm1246.yaml           |  111 ++
- MAINTAINERS                                        |    8 +
- drivers/media/i2c/Kconfig                          |    9 +
- drivers/media/i2c/Makefile                         |    1 +
- drivers/media/i2c/hm1246.c                         | 1421 ++++++++++++++++++++
- 5 files changed, 1550 insertions(+)
----
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-change-id: 20250403-hm1246-96b0cdab773c
-
-Best regards,
--- 
-Matthias Fend <matthias.fend@emfend.at>
+> ---
+> Changes in v2:
+>  - Fixed syntax error
+> ---
+>  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index 43ee57728de5..65d8ae3dcac1 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+>  			 * automatically terminate all active groups, so let's
+>  			 * force the state to halted here.
+>  			 */
+> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
+> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
+>  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
+> +
+> +				/* Reset the queue slots manually if the termination
+> +				 * request failed.
+> +				 */
+> +				for (i = 0; i < group->queue_count; i++) {
+> +					if (group->queues[i])
+> +						cs_slot_reset_locked(ptdev, csg_id, i);
+> +				}
+> +			}
+>  			slot_mask &= ~BIT(csg_id);
+>  		}
+>  	}
+> 
+> base-commit: 9934ab18051118385c7ea44d8e14175edbe6dc9c
 
