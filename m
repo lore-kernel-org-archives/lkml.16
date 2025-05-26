@@ -1,110 +1,107 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1611E1DE2;
-	Mon, 26 May 2025 11:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362C81F75A6
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258195; cv=none; b=f8L+UOih8beutq/MfnHWP6nd21ZeMcmIPl31uLQ7XOcv4vZQQTHrruY60U/Nox0RZJtWqDnczyFaev3yPC0bGvQvahs+kVaUPBPJT04BlRUwgCxb0tQUAYXXnCItchvgziwn4+WOyvVNRhH4fYbFJLJUFrF1Nu4U4i4F01JSTu0=
+	t=1748258214; cv=none; b=RNnxtFhV8sVtJ9goWeek6OQdNqTDKwKJmqtYmbQ6xHyE17A6sda914DvpL+oLCWEX4yClx4ea2P/sGrzCtJH1kC/a8ArwCe4qha3l3kqbWXFoQdCXWf+LjMa/DZuqJrbmfxWz0k/+GJlZnPk7/L9Q7SuIGbgvw72trfS0r8MYWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258195; c=relaxed/simple;
-	bh=Opjk65paFLJ2yocp1B1kEaydI6C3FZxcuvHE6R2phXo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iUA9p7BNTCDt9PMq5oUVNiElE+glXbCAmWVJpx9IsQ0jDEnzkERZgXp9gpPbpXtVey5T3UkcWP/SqF8oTjyF8OIyk3yR9ieo9r3R1AFq9TySylZ0bO8L3OHnAkFAVwyHt7XtZr+vunMG1SRqSucjUy8VEXUlwPXE39m22M8he0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QhjIp0dF; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748258214; c=relaxed/simple;
+	bh=oc+X8bF/5frSyry5RmoMGZugC3S28EX+om9zx6pPuzk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEUufQ4OkGPF+c05zIC1RbeieU/GCj1xp9JiZX3F5F1Gk3ta4MG+4PkztCgiZS5Y4GitvIBYUhcYkG54YHULpXdC1Fxf6uCbofPtHYZNg/TBLLXVAKt0HfHMkE5d+86DY7dyWKSO5ofX/Jmhnz/kjBVFjxfmAXdpJ1EdTudhBNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jr895s3t; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QhjIp0dF"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-234593b0613so7948935ad.1;
-        Mon, 26 May 2025 04:16:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jr895s3t"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23446bb8785so13840645ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:16:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748258193; x=1748862993; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Opjk65paFLJ2yocp1B1kEaydI6C3FZxcuvHE6R2phXo=;
-        b=QhjIp0dFLStGYBat9U8cICPoGYYC3Yen++Ln1ow2MC5YS04W/NQvBpIkT0jb8inQvi
-         hBpcItrxVye4onrQG+2mazHbDKgYekktMW7eGWedz97pUS5/op34hel/RNzt8Aov4y44
-         lXjdfiyCyLifzaNdF84yXGvG0ffaic0SSAjVEDzs7jXzy6RHxwgWNZd5FOwrD4BO9FRv
-         +vAXA78AzdrZRq0trlG7blS1AijM0Cg6WmNzRWIB2Nzk2ZISC4vvl+UjJlOHMLZB60S/
-         sSeQ1vCGgoL8a5Zhv2TMj8lwPXJZXBWKb7iGJLy3gDV2PsQfh46Ggn2pp+wjyDCSN6Jw
-         50VA==
+        d=linaro.org; s=google; t=1748258212; x=1748863012; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ulxYmn9OC6+sDst91oQAEFfcIS70kmh66nNINkuqjTQ=;
+        b=jr895s3tV1MBSAWPfXqDo93zmyExxl4EhiDUsSLC4hv0CumYvXZUUGiGnony6JNsVN
+         /DZ541bnerw82EGtaMJfl5YQI7WaPP3ZMlDLSCyA8gDsgQnC0JCwNBG+FTcZ1rcRvypr
+         cha90JWZxBzo7nt+dYTYgzI6iMV+k1fcf0kYO6VVTgLDM2J6RtCQMTK6wTH+KZsUHS8g
+         OONMYnBuTnwYNVwDQO1Lo9jSBTS3cGRc/JbsiHomCOlCcjiECDRQZyvWhTPy29oSCcs1
+         +hry76irJdfajtCmOkra1XUCuCcwID2KtCHAd13lwL66Awzh0tbTjtx3wDBY1mseXcVA
+         eWcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748258193; x=1748862993;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Opjk65paFLJ2yocp1B1kEaydI6C3FZxcuvHE6R2phXo=;
-        b=HNiiMHHOO7RHAAeHuUQcL1vdKH7KaMFBAdtiqhU6+eXmt3vqmkLy3LBm2v8Epf6kek
-         yyDZZeL54BbNvtSbZYMW61Jxn3BrjyKBZCMe7MDn3Q/AqK6/kDWuH0dT9AWgvVYw29FB
-         XJkMbxXi/blL4stTcHR5SD5aiBKTQ4Om7vO6SyKO6vg618FsBWz6HsfCCiCA/HljdJxB
-         OoQSrEK4GsyBQajNgcLsLCy1HI7gqzg6mtvSjW+fXg2yc6O7P0+tS1JyFw7ErTRFitKi
-         P5pLgo/tEEjEK5rbhU5jVQ83Q96TBeHRJcCeqGLT5MuHxNNmSlRSmXceq0DmTQJxdzq2
-         Sgeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF8nrAJ6g3In2Eoe+x0gqvY6p4/qDHMfSCOjNv8EPDRSwxQOYvKT0dd1WYBiHNO+GJ7lItC7zm7qR9eFqk@vger.kernel.org, AJvYcCUzGFdBRxhzuSYV7y4a+r3h8NcWEHxLsn6gmDIptjb7vybE+D5ajjsXyCuQ5t8QuCJUduCESj60773D@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTQ9nZP6Dh6mSSK3K21dAQiGoyP/gVAawPDbQydum/rGPJWkfs
-	sU25QVglyg78CiepcyAw6K0Cmr/kJ/b6GvGLvvtTXjQjC9BFSRbKMU2Yoiwy0bYOsRhkQApgtsk
-	PpPmdP9njGB8JTppqSl5bjIqy0z/FSSM=
-X-Gm-Gg: ASbGnctv+0MUYylCjMZKRsfzHf24UovayUAwPZc/1/MsrtOMBkqWVB3NkCZfO8fYsYJ
-	RQT7nCB4Q+sDCdfS2zPfSyDqy0XNVCbvJZw5uSRJbS9o39PrHfw0uaoCM8fUsIjA+wcXb8RMKgi
-	qoftanFrzWZ5B0o20ubTsuKtANS876Pg==
-X-Google-Smtp-Source: AGHT+IFtzvYREQF4e5RGyWZ3F4MYtqkkNGOvg9UsSWp9ip8U8N2Jl9OoCM3bMnVLyNovfB23/E5xH1xXxzKgvocOJGI=
-X-Received: by 2002:a17:90a:d60e:b0:30c:540b:9ba with SMTP id
- 98e67ed59e1d1-3110f0f9b4cmr14756973a91.10.1748258193279; Mon, 26 May 2025
- 04:16:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748258212; x=1748863012;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ulxYmn9OC6+sDst91oQAEFfcIS70kmh66nNINkuqjTQ=;
+        b=DMPUB2RkSwKeTCVMej4ZyNgIMJ3J0XIk6dDA8l077Nifm9kSkvsZDrXy6J0esfMmfn
+         2X6bciW3er3CYiseUSWkcQUmxdU/HhC3fQ5Lca+Wm9AunVa3A9rCmOYwAHZJf6H7mEzE
+         qU7ck7YnSnibOlKCmU/Ta77TAhuZzGmesaYIP071sZLed7OjgqOqlNki4LcUOl8AN+Bl
+         tpsttSuwzNev+Pw4qPBtwqSrLYV/a5Nc0RBCGsYm6hRrdp0hhcRXmeklsch65KYFaIm7
+         MMMfqm9WNSwZdJiRSi+WMvMdkFsoRkVvLPOuuxE+QFmcq3YLgk1F0LGAGofnfjQRCP1x
+         JT2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUKJkEQi87QoCbkqYwfRi5PoDBo3RSILwRnG5x58rUpW5ZWmUgijqX1MR1nddpAgzRRnkE+Y/6MdEgGlOs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7EU0N8Pu0LkOwuacodTXuC7GmOs+wanG1Jp57e3feUf9lCsQh
+	qdLw64RjU5X/Kiso8SmBFC8sJ7XDvOkuIkcrzNMKMIEsSeQOiksazq2Hvd9c5Bfjqg==
+X-Gm-Gg: ASbGncsZiDZnuHh2mJw1PPtfflXaph42jFTwo7TfgNYBhEahl4RS/S19zmuO6xclQvI
+	cHrgIz3buB87HNoDactufPIssPd6u3G9BBJcA88BbEJThqufIz1drQigNNCGtrRsLD3JK9opcRp
+	O8gMyQlPEL/NxLFMP2qyA/8Ha49DDihCtOOvehYwh0kOXtngjtqhNCj2Gbsve00BdfM4qtIgMV9
+	fYGY0/9uSzTsPJnDD4cTukUXie+DRpC/wynov6lUFYiWJiAJynJrtNPtmPJwipRxhsaSbn4VDt0
+	IVCEtBspy5BRrLZgq1AtSHX2xyeKdLjbrQTBKWxFnwrZt+EvWh8iQVAzk6WMLOH6jN3/CiekCg=
+	=
+X-Google-Smtp-Source: AGHT+IE3knpqyPoHytl1HTPVu5Io02EXVExU+HLdRLl7BELYi33dIBObAhSkST7PxeVLbJc2K7u30g==
+X-Received: by 2002:a17:903:4b30:b0:224:24d5:f20a with SMTP id d9443c01a7336-23414fe558emr147961405ad.48.1748258212357;
+        Mon, 26 May 2025 04:16:52 -0700 (PDT)
+Received: from thinkpad ([120.56.205.192])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234180b2c31sm39997795ad.155.2025.05.26.04.16.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 04:16:51 -0700 (PDT)
+Date: Mon, 26 May 2025 16:46:42 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	cassel@kernel.org, wilfred.mallawa@wdc.com
+Subject: Re: [PATCH 1/2] PCI: Save and restore root port config space in
+ pcibios_reset_secondary_bus()
+Message-ID: <crihkpezsnfuzwm4b7fkyy5b3je55zwxhnk65ctq5wncr4hwq5@63f4fr3bvrsx>
+References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
+ <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
+ <aDLFG06J-kXnvckG@wunner.de>
+ <qujhzxzysxm6keqcnjx5jvt5ggsoiiogy2kpv4cu5qo4dcfrvm@yonxobo7jrk7>
+ <aDQQLU1wrgstypEi@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526-fpg-nxp-imx93-frdm-v2-0-e5ad0efaec33@pengutronix.de> <20250526-fpg-nxp-imx93-frdm-v2-2-e5ad0efaec33@pengutronix.de>
-In-Reply-To: <20250526-fpg-nxp-imx93-frdm-v2-2-e5ad0efaec33@pengutronix.de>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Mon, 26 May 2025 14:18:15 +0300
-X-Gm-Features: AX0GCFtcQ3gPsieet4uz43pbRsMbpHjmv7-rKiXRxjWLyoqRErH-OX-1hcUkpwM
-Message-ID: <CAEnQRZCn0bBgn_FHS1Dn_p_gOraoLzU_1pLiyKoJTrbdD=LP3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: freescale: add support for NXP i.MX93 FRDM
-To: Fabian Pflug <f.pflug@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aDQQLU1wrgstypEi@wunner.de>
 
-On Mon, May 26, 2025 at 2:03=E2=80=AFPM Fabian Pflug <f.pflug@pengutronix.d=
-e> wrote:
->
-> The FRDM i.MX 93 development board is a low-cost and compact development
-> board featuring the i.MX93 applications processor.
->
-> It features:
-> - Dual Cortex-A55
-> - 2 GB LPDDR4X / LPDDR4
-> - 32 GB eMMC5.1
-> - MicroSD slot
-> - GbE RJ45 x 2
-> - USB2.0 1x Type C, 1x Type A
->
-> This file is based upon the one provided by nxp in their own kernel and
-> yocto meta layer for the device, but adapted for mainline.
->
-> Signed-off-by: Fabian Pflug <f.pflug@pengutronix.de>
+On Mon, May 26, 2025 at 08:54:37AM +0200, Lukas Wunner wrote:
+> On Sun, May 25, 2025 at 01:28:18PM +0530, Manivannan Sadhasivam wrote:
+> > On Sun, May 25, 2025 at 09:22:03AM +0200, Lukas Wunner wrote:
+> > > "The device state" is ambiguous as the Root Port is a device itself
+> > > and even referred to by the "dev" variable.  I think what you mean
+> > > is "The Endpoint state".
+> > > 
+> > 
+> > Yes! Will fix them while applying, thanks!
+> 
+> ICYMI, current controller/dw-rockchip branch still uses
+> "The device state", not "The Endpoint state" in commit
+> 56eecfc8f46f ("PCI/ERR: Add support for resetting the
+> Root Ports in a platform specific way").
+> 
 
-Hello Fabian,
+Ah, missed this comment. Incorported now!
 
-Can you also add the original S-o-b to give credit to NXP
-developers who started this?
+- Mani
 
-
-https://github.com/nxp-imx-support/meta-imx-frdm/blob/lf-6.6.36-2.1.0/meta-=
-imx-bsp/recipes-kernel/linux/linux-imx/0002-arm64-dts-add-i.MX93-11x11-FRDM=
--basic-support.patch
-
-Signed-off-by: Haidong Zheng <haidong.zheng@nxp.com>
-Signed-off-by: Danwei Luo <danwei.luo@nxp.com>
-Signed-off-by: Lei Xu <lei.xu@nxp.com>
+-- 
+மணிவண்ணன் சதாசிவம்
