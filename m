@@ -1,62 +1,68 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5322C1F1906;
-	Mon, 26 May 2025 21:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90B5A32
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 21:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748294550; cv=none; b=aYLRQ17a51wpzVNxka+otNwsbHlzysLl/jbgE6r+N8vMd7hDgBXxWXtVDanCyHulPs1sGwARg2zGOgivKsQzk+sHlQ8MInw/YB8KkDM3oa1n5mP8xsbeDTGWiVRtOtseqEC8Va+N8OTurxcLJaugFNc5zTOgnGUGIlB/CI6vDjM=
+	t=1748294812; cv=none; b=beeb5DjILgFq/fZUEgSuvWOuXc+s2a3fP6qFiTK3MpK+vwY+gG1vDQ+pMFm2GJ7wWFQqJsRlEkddZlOwQBerx/6Ba4oX3xQsXDvc294YgZlHrfP5mvdTYClMyYFOP/aTNL8OmlfrWFJlAEVFVm3D/L1bYrzYdVGlTgUdsVCAQBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748294550; c=relaxed/simple;
-	bh=AEB3sdJFEe6kq1nhAoqoXatxYCvpL//JbaGJhy7u9NE=;
+	s=arc-20240116; t=1748294812; c=relaxed/simple;
+	bh=izTJpRLc1S6KxFHAdKVD5qbNu8KNoNUHX2UeBgqMpqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DpWXaF41FuTq4tqAD4f4yAB0vP5yLW8q+JFKFEoeWY+pb8hEUcU2pNH5dHDknr8sMXwYDrT4KORcAc4scvLi0erKVN5Li1On/Wqhg58le0rAozq1Qjj42NnN5pgcMVzvFxSJZsgbnpkv1wfubAcxMM49vwyTvz/Sjrk5FKlPTo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=T879ss70; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnRujhipXnrv5fQgGydRrMZoAdVzcSZ9OxKjtCwOHSLsG6bxgxxpEDAPRZQB5xBpDaCwM01bgauEYVwv204DEJlLS+S3VoUWqrJMSz10XZ35WtWgIu+gzbYMUtLmap5RGDhi3mGJ8cO2zL4tZCH4dyV+cedhXkdCqmSz3lqEDqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pb2ZPlrv; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="T879ss70"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=Kk/X2iMwkZ9QRWnt0o+BzHTjRbwP4NWs5dzU8KffOaA=; b=T879ss70/t9wA4mWiMI6mNI8BN
-	UsnlixureesQqmV8uikvpnWFL2TZSc/FkVkD80DuZqSV07g5JosbMXOrJsiurr98FpjN+fcIdl4+2
-	+RrySl2KnWyJagD2A3mOAbo80nAx0wASVHs7OeWfsVASTy0ha7jq2Nl7E9IdsODflT7I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uJfH0-00E1mE-Dn; Mon, 26 May 2025 23:22:18 +0200
-Date: Mon, 26 May 2025 23:22:18 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Feiyang Chen <chenfeiyang@loongson.cn>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Paul Kocialkowski <paulk@sys-base.io>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] net: stmmac: dwmac-sun8i: Allow runtime
- AC200/AC300 phy selection
-Message-ID: <5b7bf54e-4838-48b3-a357-70f117674523@lunn.ch>
-References: <20250526182939.2593553-1-james.hilliard1@gmail.com>
- <20250526182939.2593553-2-james.hilliard1@gmail.com>
- <a2ac65eb-e240-48f1-b787-c57b5f3ce135@lunn.ch>
- <CADvTj4rO-thqYE3VZPE0B0fTTR_v=gJDAxBA3=fo501OL+qvNg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pb2ZPlrv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748294809; x=1779830809;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=izTJpRLc1S6KxFHAdKVD5qbNu8KNoNUHX2UeBgqMpqE=;
+  b=Pb2ZPlrvdOTn5F10w78ThVLkItBtIUQsWJtwYLtF30klef7Myk6D2dfN
+   3G61xiCldxNwphE2luRtEgoGpfvKoLc5t/fJbU3t31+S6XqwhdYaCFya7
+   bEfOLer2wGa7z7WhN24m1uE55uW3Y/y7LzdA6SA391NnxnSP7CZNsr0aR
+   S/OiMKALF0vS/irhdj+Pr5Yv6cC+j9oKWXIOXI0tJOJOb9/88ZXYsFxyK
+   BM4l9qkZpaX5SQBaQlETlhHbIjKanR723F8qjTkKoOebAmziSL3Ht9mnU
+   3v5SVJPyKqh//YEjaf9AiZsk4suBvxavI2RVjuikOdlKMbHtAGlsgjksX
+   w==;
+X-CSE-ConnectionGUID: rfjmN+WYQruOSsBTcvhMIQ==
+X-CSE-MsgGUID: NbCkc/TFQ6ej6vtZwYlEUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50431280"
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="50431280"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 14:26:48 -0700
+X-CSE-ConnectionGUID: XPXKgrLUSKS6R22GBHy8aw==
+X-CSE-MsgGUID: R5/MVKnTTqKNENq8UMRTPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,316,1739865600"; 
+   d="scan'208";a="142526922"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 26 May 2025 14:26:44 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uJfLF-000SiO-2P;
+	Mon, 26 May 2025 21:26:41 +0000
+Date: Tue, 27 May 2025 05:26:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Damon Ding <damon.ding@rock-chips.com>, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, andy.yan@rock-chips.com,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, dmitry.baryshkov@oss.qualcomm.com,
+	l.stach@pengutronix.de, dianders@chromium.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>
+Subject: Re: [PATCH v1 3/3] drm/bridge: analogix_dp: Apply
+ drm_bridge_connector helper
+Message-ID: <202505270453.H3muv5WW-lkp@intel.com>
+References: <20250526120742.3195812-4-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,26 +71,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADvTj4rO-thqYE3VZPE0B0fTTR_v=gJDAxBA3=fo501OL+qvNg@mail.gmail.com>
+In-Reply-To: <20250526120742.3195812-4-damon.ding@rock-chips.com>
 
-> > The normal way to do this is phy_find_first().
-> 
-> Sure, but there are problems with that approach here.
-> 
-> The initialization sequences are rather different and the devices
-> won't be visible on the mdio bus until after they are initialized.
-> 
-> The resets will be specific to either the AC200 or AC300 so we
-> need to choose the correct PHY based on the efuse value rather
-> than a mdio bus scan to avoid a circular dependency essentially.
-> 
-> AC200: i2c based reset/init sequence
-> AC300: mdio based reset/init sequence
+Hi Damon,
 
-O.K. so you need to post more, so we get to see the complete
-problem/solution. It seems to me, AC200 and AC300 are not compatible,
-so should have different compatible strings. That might be part of the
-solution. But it is too early to say.
+kernel test robot noticed the following build errors:
 
-	Andrew
+[auto build test ERROR on drm-misc/drm-misc-next]
+[also build test ERROR on next-20250526]
+[cannot apply to linus/master v6.15]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Damon-Ding/drm-bridge-analogix_dp-Formalize-the-struct-analogid_dp_device/20250526-201358
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20250526120742.3195812-4-damon.ding%40rock-chips.com
+patch subject: [PATCH v1 3/3] drm/bridge: analogix_dp: Apply drm_bridge_connector helper
+config: arm64-randconfig-001-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270453.H3muv5WW-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270453.H3muv5WW-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505270453.H3muv5WW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/gpu/drm/exynos/exynos_dp.c: In function 'exynos_dp_probe':
+>> drivers/gpu/drm/exynos/exynos_dp.c:240:16: error: 'struct analogix_dp_plat_data' has no member named 'skip_connector'; did you mean 'connector'?
+     dp->plat_data.skip_connector = !!bridge;
+                   ^~~~~~~~~~~~~~
+                   connector
+
+
+vim +240 drivers/gpu/drm/exynos/exynos_dp.c
+
+f37cd5e8098441a drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2014-05-09  194  
+f37cd5e8098441a drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2014-05-09  195  static int exynos_dp_probe(struct platform_device *pdev)
+f37cd5e8098441a drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2014-05-09  196  {
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  197  	struct device *dev = &pdev->dev;
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  198  	struct device_node *np;
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  199  	struct exynos_dp_device *dp;
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  200  	struct drm_panel *panel;
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  201  	struct drm_bridge *bridge;
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  202  	int ret;
+df5225bc9a87f15 drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2014-05-29  203  
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  204  	dp = devm_kzalloc(&pdev->dev, sizeof(struct exynos_dp_device),
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  205  			  GFP_KERNEL);
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  206  	if (!dp)
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  207  		return -ENOMEM;
+5f1dcd8b7ec8189 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2014-07-31  208  
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  209  	dp->dev = dev;
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  210  	/*
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  211  	 * We just use the drvdata until driver run into component
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  212  	 * add function, and then we would set drvdata to null, so
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  213  	 * that analogix dp driver would take charge of the drvdata.
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  214  	 */
+1df6e5fb79f6141 drivers/gpu/drm/exynos/exynos_dp_core.c Andrzej Hajda            2014-11-17  215  	platform_set_drvdata(pdev, dp);
+1df6e5fb79f6141 drivers/gpu/drm/exynos/exynos_dp_core.c Andrzej Hajda            2014-11-17  216  
+a9fa852886fd5a7 drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2015-11-26  217  	/* This is for the backward compatibility. */
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  218  	np = of_parse_phandle(dev->of_node, "panel", 0);
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  219  	if (np) {
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  220  		dp->plat_data.panel = of_drm_find_panel(np);
+5fa8e4a22182df8 drivers/gpu/drm/exynos/exynos_dp.c      Boris Brezillon          2018-05-09  221  
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  222  		of_node_put(np);
+5fa8e4a22182df8 drivers/gpu/drm/exynos/exynos_dp.c      Boris Brezillon          2018-05-09  223  		if (IS_ERR(dp->plat_data.panel))
+5fa8e4a22182df8 drivers/gpu/drm/exynos/exynos_dp.c      Boris Brezillon          2018-05-09  224  			return PTR_ERR(dp->plat_data.panel);
+5fa8e4a22182df8 drivers/gpu/drm/exynos/exynos_dp.c      Boris Brezillon          2018-05-09  225  
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  226  		goto out;
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  227  	}
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  228  
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  229  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  230  	if (ret)
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  231  		return ret;
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  232  
+37e110625eeeaba drivers/gpu/drm/exynos/exynos_dp_core.c Javier Martinez Canillas 2016-01-29  233  	/* The remote port can be either a panel or a bridge */
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  234  	dp->plat_data.panel = panel;
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  235  	dp->plat_data.dev_type = EXYNOS_DP;
+6d4618ad04e1a14 drivers/gpu/drm/exynos/exynos_dp.c      Lucas Stach              2024-06-19  236  	dp->plat_data.power_on = exynos_dp_poweron;
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  237  	dp->plat_data.power_off = exynos_dp_poweroff;
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  238  	dp->plat_data.attach = exynos_dp_bridge_attach;
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  239  	dp->plat_data.get_modes = exynos_dp_get_modes;
+2e9b3e74b4a184f drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2018-03-05 @240  	dp->plat_data.skip_connector = !!bridge;
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  241  
+ebc9446135671b8 drivers/gpu/drm/exynos/exynos_dp.c      Rob Herring              2017-03-29  242  	dp->ptn_bridge = bridge;
+801855671ad1dc7 drivers/gpu/drm/exynos/exynos_dp_core.c Ajay Kumar               2015-01-20  243  
+a9fa852886fd5a7 drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2015-11-26  244  out:
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  245  	dp->adp = analogix_dp_probe(dev, &dp->plat_data);
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  246  	if (IS_ERR(dp->adp))
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  247  		return PTR_ERR(dp->adp);
+152cce0006abf7e drivers/gpu/drm/exynos/exynos_dp.c      Marek Szyprowski         2020-03-10  248  
+3424e3a4f844c0a drivers/gpu/drm/exynos/exynos_dp_core.c Yakir Yang               2016-03-29  249  	return component_add(&pdev->dev, &exynos_dp_ops);
+f37cd5e8098441a drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2014-05-09  250  }
+f37cd5e8098441a drivers/gpu/drm/exynos/exynos_dp_core.c Inki Dae                 2014-05-09  251  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
