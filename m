@@ -1,321 +1,217 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E75C7E110;
-	Mon, 26 May 2025 03:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8581D19D08F;
+	Mon, 26 May 2025 03:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748231800; cv=none; b=gv3fq4VMuBjLVRDSkAA0ykX6WV4uIMBffJcDxwGKboC+t/kLLmbN8hc3QgDbjFhX1JBJzQBAZVwIc3I59mIfvymOqgbCSCN+kyzwiAXBH5m407LrqrdxHD4CTPZwmCC80hpJ4JE9C+4pEnNDdZ4cfvfuG1yxyukzKaFIJOP6rcs=
+	t=1748231844; cv=none; b=Cyjxu668jket/ZjH7ex/5OE1t1JdIsHw6lM2rp+chgzoCTGqYthURhQhZWZTuCMDaxY9vosz9L7uzGokJwLqdIeSL3MECNF344FBTtQ4PTFoiB9adC2tAUfLL4r6Wv80mlF0JvS9AghlRQZlZG1L04/Hju6olA8Or6XYhJd15To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748231800; c=relaxed/simple;
-	bh=DZrlE/bv8rOS6qOE2CpBwzOco93+rwVtR9PKQ5hujjo=;
+	s=arc-20240116; t=1748231844; c=relaxed/simple;
+	bh=pWUuIdj/mES3UrDkctgQF/95KeFIX871EUzEOhGNdu8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GPUesOuYk1Vlf00PfH4t1NSpBQrPtwi29YJcvhzATnr0tSCvCML0AFIaLaPqq+MZnoT2lrLMF6RlOXGXgwGVWfXlwx52L1LubDF5Aji4gY8vfxlhpDyVPzfb/s9z6vQ1aaMpy9oGMTl4tE+e5vtugsMyDOLnt7cUrWB2d0Qu8+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMYCWkrM; arc=none smtp.client-ip=209.85.219.177
+	 To:Cc:Content-Type; b=T7VfbFerr/T2+ctUOg5/v+NLNXxVUa4guvNM+GVO1PmokXjhQGx3IC0R1DOGM6rCiDFZm+kdDz+yp6MGIzZdyfLxdaCjEkSsjsso0eG1/o+OsNPmer4F6FtSloVtOSn9geDH2EQznfEHoPJw5mHXvvmmCK+u6gY9RcfdpliWEHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZrNrGyWs; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMYCWkrM"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7d90078caeso1500625276.3;
-        Sun, 25 May 2025 20:56:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZrNrGyWs"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30db1bc464dso18181661fa.0;
+        Sun, 25 May 2025 20:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748231797; x=1748836597; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748231840; x=1748836640; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zcXECQBhnFA3Mb5kPluHe4DGBg2LPiSyVzF0Ca7K9Ec=;
-        b=RMYCWkrM7R5ZrxWBG66m2SrHqAxK8QdeMeYRd4WEyvsjzp192AetjMcCHEB1P0lAvT
-         xZwrCW64Xll5ua7bxzGE0YQmOZOngVJBOpm8ujjJ8tqZ9Y5wF4b31r2uhBmYGsfUbsXN
-         x8mbrHsdVKAJr9SzGR+hTYDrE6vyLFt29VNq9CL+u21ule1TDaC3RushkNHzVFuJpGjE
-         w2arUYX/F9IKYSQUDwc3IGatHVS0qTgUwVabeqFt/74vrS2TAup1OQ8FfCFE8y/qn4fs
-         MRiSV1XRU26G4g6qjNo08w5HUQ95o3oaSzYkDnYCooCNwyuW0x0soiyjd3brKKvM+i/+
-         DGdg==
+        bh=zFYKaF5MdOzMoUJdYK+pJqy+h1cRWqDSmXlmSKPedVg=;
+        b=ZrNrGyWsvQKLmATwdpVzDARiphfh7bV3pILAg6WwTxJhxUTmJ2S+AgjpuY977V0qqa
+         zCe8jRRD/fgnVKKt84KGtzfL1PZq4Ue/77AnnDnsqhz8lw6/Z3D+p0lA8vpBe/fiTCIu
+         M2hSQY2jt6f6CPKpz6Eci9z+/59LKKo1j89qqD9YaLcTfz38lFUUX/Q0A6MUjSaK4DdO
+         x5dZJrxKLIpAVJD2LwjqRQNPOzLP+f/z2NGJ1GucV2//zVtDb1ioUcllQ3R8cIR4Dk3A
+         66g+najA+P6IPBdNzzjBaN9MVACPUgStDqyIZ7dr3AAyb4cyagOuS/te4wHAaqGw05ar
+         xgGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748231797; x=1748836597;
+        d=1e100.net; s=20230601; t=1748231840; x=1748836640;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zcXECQBhnFA3Mb5kPluHe4DGBg2LPiSyVzF0Ca7K9Ec=;
-        b=Q82qQP9X2jvo436tXtVbrLQghcRZ/eeuwk7eyQHpdCyg4I6XSOTmAlXjPaifNGe0mt
-         e47nfZUJUXeclDw6MvlT/KUGr+iBci6l7t9Y9DIEpB0s/Ik71JLGcDJK1wgKHhHCt1ZH
-         F0mV2Zv7IMoQkIno/40hDgJwLP/HJsBa3X2T1Xag19pOI3GGQDDvnsN7+yDsvwwrQRna
-         RMRKXn3ectgdr7yts6m3E0wCzNnsNb/Id0dC2dBJw+eskv6SrOcr6/4YbSsFvzV/fMdt
-         mIfGQtDiBrKimV9DaOgyTP4dbcaDLGsyZo37W12CE53jEOFT0EkMJqP7abXCcz1C+2SC
-         4aSw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1McOvQl2oDEfsXYMDyGiDWo96bdn9wr+Q5sEOJAH56K9PnfOaWWSV0vsqDWwJP6kZ3oqLPmu0TjKX@vger.kernel.org, AJvYcCUuQMtfJvfc0AXw3Cm/lHO8ZJdiGP1YRIWbrDGxKi4gLSUV80NGjYOyAhX7MIHp0MeehmFv9N9mRQkiibG2uTo=@vger.kernel.org, AJvYcCVUUgttKaEUQovKA1kkAA59QoRyqNzjs3223JIO9GmWtLOGBPUiAdOdMkrBCUiPN8n//hmH1ZzhPVFD@vger.kernel.org, AJvYcCW4rbtYVd1Z9UGzFdMk85HpGKieNQcCJqjHiQ5aKFugLBNvDF2xrttyLV/8jVNrcA8728Ei4TSDBI8b78o=@vger.kernel.org, AJvYcCX/HK4zVuPf/gZUc4znx9MfmZSv3hZe8L1+e3He4lVGJdhR4H2UTa8bvVN17uKwNfLgDAVS+09W@vger.kernel.org, AJvYcCXQcCJgQRHyol/gNapEvTA0q60GXI0oxMIHPiceSmcZM0f+Q7ahnkU9R9xQ4Z0ptA4ADrb2maKJOvJ7IA==@vger.kernel.org, AJvYcCXSvHIk15Uza9iUxPQBHw8NEpFNtwDNsyPhAwDOwnEYes1Abf+7y6bHdlbK+dZSCrmJSVwA6zEo6sRL6jMv@vger.kernel.org, AJvYcCXhnVtlIiIctsi8XeKiqK32W5eOVExi72vDOaZshyLZqQycowx3lAyPEz45Y/ayUBNhYyYpWO+RwqJo@vger.kernel.org, AJvYcCXtUaZ2Ie53JDe2qFePFld0g9KMCmzIdzqhSeo0O6SlVmjEVUu06SeEXrOiaZG8W7IZM0dkDEG1GzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlPxpDYS8vZkpMVKiPN7pwvPTWrJrDbvVR/xRmf4x7f3eJXyVH
-	p6zrWc3lRG+uafbiMSi+W5JxavbDrG+iJ8sMQIV0oG7fcx/HaFskJVoGz8PkPHmbcRhq6dwFFBM
-	28lk+T8XWsImrd762sAYDgrrp62jL8xM=
-X-Gm-Gg: ASbGncu+SVlQhDdWLn+itM1616pZEAt3AUXl3DatBGlLpVKcU96DZEUlXxscdiIENsG
-	FgPnPbHYKUITUCsbSdxMKbyjEzF/6I/h+6KPLfQK22g6JoS67S57Klzs/pe0UA+GzLUlym9QCaq
-	m7Bro6X4QPXgg5mNUzE+8wIhYEkeAu5IxQ3dT/+/jwTZjNOzrslcIBy/96xfOuwJC/u0c=
-X-Google-Smtp-Source: AGHT+IHBOM1OanC7PctOKlKIA/qqdT+KTdJ1sIRiHPRM93YrlR6/SshGx6q+jmHoL85oR/ljjBwIGDPwYdyHzYtdif4=
-X-Received: by 2002:a05:6902:1543:b0:e6d:da84:e901 with SMTP id
- 3f1490d57ef6-e7d919f01c5mr8035278276.27.1748231797046; Sun, 25 May 2025
- 20:56:37 -0700 (PDT)
+        bh=zFYKaF5MdOzMoUJdYK+pJqy+h1cRWqDSmXlmSKPedVg=;
+        b=dORWbHN2Odr/959j5KdXFBYdNATGxqkv42DCCwOwOv0b3iaPHfad8CUD/x/wMiw2p+
+         yGh+rKosJu5DiC+HufZVBLKv9G7EWjYBTe2y4eZ7LVMCNruyC6RXCc46HqdTGYi2bIMO
+         gEtlXYPX+QgB88fSC23f4G6p/2WgzRSMUTooi2fJBQjDAh+bQ2dGxVmXbthvwFDctAhe
+         WMPWW6C4y/JMrYG+LeihlEpsiLpeA7SvKEYfvkOq+MEaIg2TR5llHt+3PIhauUji5u5M
+         T9JJvhzS422qlnfcU54WTUKzq67yHxdKvMQHQQfQXM04bwU8i/RqKV0mkzCM/UOSh6a1
+         ikuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzIHXkdla4hksrMp3JyfpdB5nIrIf+3iFiBWPLcHSz/d02G5wVBoKOnohTr34lJWme2YbWsLKwVhR8@vger.kernel.org, AJvYcCXmqMg03HFlnaV2YJ7bu76lzWRNW+G6DMcZCYwPNAxlFZeuS0vEoyB8qPfYWDNaeCD+7o0nJTytehRnH4MC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKgwXBa49Dm7z13i6npdNqdQqbVM+PEcVZSWFAVr5UCKo9woML
+	p0c6d+Q4844nRA7U4Bs37axdr8HX/c+5fms5l3zMIcyr0S/KiQnK0U1KpQCKwVx2tw2vYJVPQwD
+	nF6UJrmY4yEf4ZrFVM3tIGvOGWBnni9I=
+X-Gm-Gg: ASbGnctnXW1QaAOzLWGJGR0FTvsKHNgChrcMx88olemi9rftRbOTYZn6kIdbWJWFMc+
+	mZjQjhTj3tYTrEGRlJDVK3afOgep70tvtJ0bhNWkPOkvP/KCpDMgNMM4g/G2FjRSRZVIfXQr9/A
+	J3QayRnxilaRRGN9EXq7jOXWQJGBRIPRFvR8pC+inlumVYE8F9DOstXD/RQmQkRzjSiIk=
+X-Google-Smtp-Source: AGHT+IFglGOFvc94hDJJ+iVTcL3H6Lguo5HUhsNTeHxD1snKYkGJepa0VX6LderHITQpczdb+2Xp4I0HIVJ8Ctj4OUQ=
+X-Received: by 2002:a05:651c:b25:b0:30b:cb10:3a20 with SMTP id
+ 38308e7fff4ca-3295ba791e0mr21311351fa.32.1748231840130; Sun, 25 May 2025
+ 20:57:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520020355.3885597-1-tmyu0@nuvoton.com> <20250520020355.3885597-2-tmyu0@nuvoton.com>
- <20250523090207.GD1378991@google.com>
-In-Reply-To: <20250523090207.GD1378991@google.com>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Mon, 26 May 2025 11:56:25 +0800
-X-Gm-Features: AX0GCFuMuPJii5QWGzS547_08e9jROJWo5JYbgwGTIEUBA702NbvTfv_wsjtEQ0
-Message-ID: <CAOoeyxW-4ChnrgeUT-8Tfcx2=MkehcM6hUtztwrb7128iC95_Q@mail.gmail.com>
-Subject: Re: [PATCH v11 1/7] mfd: Add core driver for Nuvoton NCT6694
-To: Lee Jones <lee@kernel.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org, 
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org, 
-	Ming Yu <tmyu0@nuvoton.com>
+References: <20250503234030.130605-1-linux@treblig.org>
+In-Reply-To: <20250503234030.130605-1-linux@treblig.org>
+From: Steve French <smfrench@gmail.com>
+Date: Sun, 25 May 2025 22:57:08 -0500
+X-Gm-Features: AX0GCFvPd0Adolnn1ZM7I39tciaAPW3DaBAHk6K8jPSv5S55usBDLzH4A01Y66g
+Message-ID: <CAH2r5mvG_y6-z618TyHnNVf9ueS3hrWP8NPP_HJOTCxAnBvYKQ@mail.gmail.com>
+Subject: Re: [PATCH] smb: client: Remove an unused function and variable
+To: linux@treblig.org
+Cc: sfrench@samba.org, pc@manguebit.com, ronniesahlberg@gmail.com, 
+	sprasad@microsoft.com, tom@talpey.com, bharathsm@microsoft.com, 
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Dear Lee,
+merged into cifs-2.6.git for-next
 
-Thank you for reviewing.
-I will fix the code which you mentioned.
-
-Additionally, I will revert the mfd_cell changes to match version 10. (i.e.=
-,
-static const struct mfd_cell nct6694_dev[] =3D {
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
-    MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
-    ...
-}; ), since I found that using devm_mfd_add_devices() with id field
-set to 0 meets my needs. This allows me to use pdev->id in the
-sub-drivers.
-
-
-Best regards,
-Ming
-
-Lee Jones <lee@kernel.org> =E6=96=BC 2025=E5=B9=B45=E6=9C=8823=E6=97=A5 =E9=
-=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:02=E5=AF=AB=E9=81=93=EF=BC=9A
+On Sat, May 3, 2025 at 6:40=E2=80=AFPM <linux@treblig.org> wrote:
 >
-> On Tue, 20 May 2025, a0282524688@gmail.com wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 >
-> > From: Ming Yu <tmyu0@nuvoton.com>
-> >
-> > The Nuvoton NCT6694 provides an USB interface to the host to
-> > access its features.
-> >
-> > Sub-devices can use the USB functions nct6694_read_msg() and
-> > nct6694_write_msg() to issue a command. They can also request
-> > interrupt that will be called when the USB device receives its
-> > interrupt pipe.
-> >
-> > Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
-> > ---
-> >
-> > Changes since version 10:
-> > - Add change log for the patch
-> > - Fix mfd_cell to MFD_CELL_NAME()
-> > - Remove unnecessary blank line
-> >
-> > Changes since version 9:
-> > - Add KernelDoc to exported functions
-> >
-> > Changes since version 8:
-> > - Modify the signed-off-by with my work address
-> > - Rename all MFD cell names to "nct6694-xxx"
-> > - Fix some comments in nct6694.c and in nct6694.h
-> >
-> > Changes since version 7:
-> > - Add error handling for devm_mutex_init()
-> >
-> > Changes since version 6:
-> >
-> > Changes since version 5:
-> > - Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
-> > - Drop unnecessary macros
-> >
-> > Changes since version 4:
-> > - Modify arguments in read/write function to a pointer to cmd_header
-> >
-> > Changes since version 3:
-> > - Modify array buffer to structure
-> > - Fix defines and comments
-> > - Add header <linux/bits.h> and use BIT macro
-> > - Modify mutex_init() to devm_mutex_init()
-> >
-> > Changes since version 2:
-> >
-> > Changes since version 1:
-> > - Implement IRQ domain to handle IRQ demux
-> > - Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API
-> > - Add command structure
-> > - Fix USB functions
-> > - Sort each driver's header files alphabetically
-> >
-> >  MAINTAINERS                 |   6 +
-> >  drivers/mfd/Kconfig         |  15 ++
-> >  drivers/mfd/Makefile        |   2 +
-> >  drivers/mfd/nct6694.c       | 387 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/nct6694.h |  98 +++++++++
-> >  5 files changed, 508 insertions(+)
-> >  create mode 100644 drivers/mfd/nct6694.c
-> >  create mode 100644 include/linux/mfd/nct6694.h
+> SMB2_QFS_info() has been unused since 2018's
+> commit 730928c8f4be ("cifs: update smb2_queryfs() to use compounding")
 >
-> [...]
+> sign_CIFS_PDUs has been unused since 2009's
+> commit 2edd6c5b0517 ("[CIFS] NTLMSSP support moving into new file, old de=
+ad
+> code removed")
 >
-> I was just going to fix this up for you when I applied the set, but
-> seeing as it looks like you have to re-submit anyway ...
+> Remove them.
 >
-> > +static const struct usb_device_id nct6694_ids[] =3D {
-> > +     { USB_DEVICE_AND_INTERFACE_INFO(NCT6694_VENDOR_ID, NCT6694_PRODUC=
-T_ID, 0xFF, 0x00, 0x00)},
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  fs/smb/client/cifsfs.c    |  1 -
+>  fs/smb/client/smb2pdu.c   | 65 ---------------------------------------
+>  fs/smb/client/smb2proto.h |  3 --
+>  3 files changed, 69 deletions(-)
 >
-> You need a space before the '}'.
+> diff --git a/fs/smb/client/cifsfs.c b/fs/smb/client/cifsfs.c
+> index a08c42363ffc..d192a19bd761 100644
+> --- a/fs/smb/client/cifsfs.c
+> +++ b/fs/smb/client/cifsfs.c
+> @@ -70,7 +70,6 @@ bool require_gcm_256; /* false by default */
+>  bool enable_negotiate_signing; /* false by default */
+>  unsigned int global_secflags =3D CIFSSEC_DEF;
+>  /* unsigned int ntlmv2_support =3D 0; */
+> -unsigned int sign_CIFS_PDUs =3D 1;
 >
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(usb, nct6694_ids);
-> > +
-> > +static struct usb_driver nct6694_usb_driver =3D {
-> > +     .name           =3D "nct6694",
-> > +     .id_table       =3D nct6694_ids,
-> > +     .probe          =3D nct6694_usb_probe,
-> > +     .disconnect     =3D nct6694_usb_disconnect,
-> > +};
-> > +module_usb_driver(nct6694_usb_driver);
-> > +
-> > +MODULE_DESCRIPTION("Nuvoton NCT6694 core driver");
-> > +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/include/linux/mfd/nct6694.h b/include/linux/mfd/nct6694.h
-> > new file mode 100644
-> > index 000000000000..5e172609be3f
-> > --- /dev/null
-> > +++ b/include/linux/mfd/nct6694.h
-> > @@ -0,0 +1,98 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2025 Nuvoton Technology Corp.
-> > + *
-> > + * Nuvoton NCT6694 USB transaction and data structure.
-> > + */
-> > +
-> > +#ifndef __MFD_NCT6694_H
-> > +#define __MFD_NCT6694_H
-> > +
-> > +#define NCT6694_VENDOR_ID    0x0416
-> > +#define NCT6694_PRODUCT_ID   0x200B
-> > +#define NCT6694_INT_IN_EP    0x81
-> > +#define NCT6694_BULK_IN_EP   0x02
-> > +#define NCT6694_BULK_OUT_EP  0x03
-> > +
-> > +#define NCT6694_HCTRL_SET    0x40
-> > +#define NCT6694_HCTRL_GET    0x80
-> > +
-> > +#define NCT6694_URB_TIMEOUT  1000
-> > +
-> > +enum nct6694_irq_id {
-> > +     NCT6694_IRQ_GPIO0 =3D 0,
-> > +     NCT6694_IRQ_GPIO1,
-> > +     NCT6694_IRQ_GPIO2,
-> > +     NCT6694_IRQ_GPIO3,
-> > +     NCT6694_IRQ_GPIO4,
-> > +     NCT6694_IRQ_GPIO5,
-> > +     NCT6694_IRQ_GPIO6,
-> > +     NCT6694_IRQ_GPIO7,
-> > +     NCT6694_IRQ_GPIO8,
-> > +     NCT6694_IRQ_GPIO9,
-> > +     NCT6694_IRQ_GPIOA,
-> > +     NCT6694_IRQ_GPIOB,
-> > +     NCT6694_IRQ_GPIOC,
-> > +     NCT6694_IRQ_GPIOD,
-> > +     NCT6694_IRQ_GPIOE,
-> > +     NCT6694_IRQ_GPIOF,
-> > +     NCT6694_IRQ_CAN0,
-> > +     NCT6694_IRQ_CAN1,
-> > +     NCT6694_IRQ_RTC,
-> > +     NCT6694_NR_IRQS,
-> > +};
-> > +
-> > +enum nct6694_response_err_status {
-> > +     NCT6694_NO_ERROR =3D 0,
-> > +     NCT6694_FORMAT_ERROR,
-> > +     NCT6694_RESERVED1,
-> > +     NCT6694_RESERVED2,
-> > +     NCT6694_NOT_SUPPORT_ERROR,
-> > +     NCT6694_NO_RESPONSE_ERROR,
-> > +     NCT6694_TIMEOUT_ERROR,
-> > +     NCT6694_PENDING,
-> > +};
-> > +
-> > +struct __packed nct6694_cmd_header {
-> > +     u8 rsv1;
-> > +     u8 mod;
-> > +     union __packed {
-> > +             __le16 offset;
-> > +             struct __packed {
-> > +                     u8 cmd;
-> > +                     u8 sel;
-> > +             };
-> > +     };
-> > +     u8 hctrl;
-> > +     u8 rsv2;
-> > +     __le16 len;
-> > +};
-> > +
-> > +struct __packed nct6694_response_header {
-> > +     u8 sequence_id;
-> > +     u8 sts;
-> > +     u8 reserved[4];
-> > +     __le16 len;
-> > +};
-> > +
-> > +union __packed nct6694_usb_msg {
-> > +     struct nct6694_cmd_header cmd_header;
-> > +     struct nct6694_response_header response_header;
-> > +};
-> > +
-> > +struct nct6694 {
-> > +     struct device *dev;
-> > +     struct irq_domain *domain;
-> > +     struct mutex access_lock;
-> > +     struct mutex irq_lock;
-> > +     struct urb *int_in_urb;
-> > +     struct usb_device *udev;
-> > +     union nct6694_usb_msg *usb_msg;
-> > +     unsigned char *int_buffer;
-> > +     unsigned int irq_enable;
-> > +};
-> > +
-> > +int nct6694_read_msg(struct nct6694 *nct6694, const struct nct6694_cmd=
-_header *cmd_hd, void *buf);
-> > +int nct6694_write_msg(struct nct6694 *nct6694, const struct nct6694_cm=
-d_header *cmd_hd, void *buf);
-> > +
-> > +#endif
-> > --
-> > 2.34.1
-> >
+>  /*
+>   * Global transaction id (XID) information
+> diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+> index c4d52bebd37d..eef971509589 100644
+> --- a/fs/smb/client/smb2pdu.c
+> +++ b/fs/smb/client/smb2pdu.c
+> @@ -5919,71 +5919,6 @@ SMB311_posix_qfs_info(const unsigned int xid, stru=
+ct cifs_tcon *tcon,
+>         return rc;
+>  }
 >
+> -int
+> -SMB2_QFS_info(const unsigned int xid, struct cifs_tcon *tcon,
+> -             u64 persistent_fid, u64 volatile_fid, struct kstatfs *fsdat=
+a)
+> -{
+> -       struct smb_rqst rqst;
+> -       struct smb2_query_info_rsp *rsp =3D NULL;
+> -       struct kvec iov;
+> -       struct kvec rsp_iov;
+> -       int rc =3D 0;
+> -       int resp_buftype;
+> -       struct cifs_ses *ses =3D tcon->ses;
+> -       struct TCP_Server_Info *server;
+> -       struct smb2_fs_full_size_info *info =3D NULL;
+> -       int flags =3D 0;
+> -       int retries =3D 0, cur_sleep =3D 1;
+> -
+> -replay_again:
+> -       /* reinitialize for possible replay */
+> -       flags =3D 0;
+> -       server =3D cifs_pick_channel(ses);
+> -
+> -       rc =3D build_qfs_info_req(&iov, tcon, server,
+> -                               FS_FULL_SIZE_INFORMATION,
+> -                               sizeof(struct smb2_fs_full_size_info),
+> -                               persistent_fid, volatile_fid);
+> -       if (rc)
+> -               return rc;
+> -
+> -       if (smb3_encryption_required(tcon))
+> -               flags |=3D CIFS_TRANSFORM_REQ;
+> -
+> -       memset(&rqst, 0, sizeof(struct smb_rqst));
+> -       rqst.rq_iov =3D &iov;
+> -       rqst.rq_nvec =3D 1;
+> -
+> -       if (retries)
+> -               smb2_set_replay(server, &rqst);
+> -
+> -       rc =3D cifs_send_recv(xid, ses, server,
+> -                           &rqst, &resp_buftype, flags, &rsp_iov);
+> -       free_qfs_info_req(&iov);
+> -       if (rc) {
+> -               cifs_stats_fail_inc(tcon, SMB2_QUERY_INFO_HE);
+> -               goto qfsinf_exit;
+> -       }
+> -       rsp =3D (struct smb2_query_info_rsp *)rsp_iov.iov_base;
+> -
+> -       info =3D (struct smb2_fs_full_size_info *)(
+> -               le16_to_cpu(rsp->OutputBufferOffset) + (char *)rsp);
+> -       rc =3D smb2_validate_iov(le16_to_cpu(rsp->OutputBufferOffset),
+> -                              le32_to_cpu(rsp->OutputBufferLength), &rsp=
+_iov,
+> -                              sizeof(struct smb2_fs_full_size_info));
+> -       if (!rc)
+> -               smb2_copy_fs_info_to_kstatfs(info, fsdata);
+> -
+> -qfsinf_exit:
+> -       free_rsp_buf(resp_buftype, rsp_iov.iov_base);
+> -
+> -       if (is_replayable_error(rc) &&
+> -           smb2_should_replay(tcon, &retries, &cur_sleep))
+> -               goto replay_again;
+> -
+> -       return rc;
+> -}
+> -
+>  int
+>  SMB2_QFS_attr(const unsigned int xid, struct cifs_tcon *tcon,
+>               u64 persistent_fid, u64 volatile_fid, int level)
+> diff --git a/fs/smb/client/smb2proto.h b/fs/smb/client/smb2proto.h
+> index 4662c7e2d259..035aa1624053 100644
+> --- a/fs/smb/client/smb2proto.h
+> +++ b/fs/smb/client/smb2proto.h
+> @@ -259,9 +259,6 @@ extern int smb2_handle_cancelled_close(struct cifs_tc=
+on *tcon,
+>                                        __u64 volatile_fid);
+>  extern int smb2_handle_cancelled_mid(struct mid_q_entry *mid, struct TCP=
+_Server_Info *server);
+>  void smb2_cancelled_close_fid(struct work_struct *work);
+> -extern int SMB2_QFS_info(const unsigned int xid, struct cifs_tcon *tcon,
+> -                        u64 persistent_file_id, u64 volatile_file_id,
+> -                        struct kstatfs *FSData);
+>  extern int SMB311_posix_qfs_info(const unsigned int xid, struct cifs_tco=
+n *tcon,
+>                          u64 persistent_file_id, u64 volatile_file_id,
+>                          struct kstatfs *FSData);
 > --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> 2.49.0
+>
+>
+
+
+--=20
+Thanks,
+
+Steve
