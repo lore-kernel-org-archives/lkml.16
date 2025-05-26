@@ -1,161 +1,153 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5395019047A
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 03:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67339FC0E;
+	Mon, 26 May 2025 03:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748230666; cv=none; b=TP0OGtfJEKq3VmS1ueP8cZQtE4jOevwCxX5jjgUfaRL1SRLNraBii26aQNt2k8Xe7tBUry3cnnKy6jmhDzrjUMFe6FTAuQzrG36kCR5m9EB5RoX6IOWP3/TjdDcdwCvOSoP1ZvSNnCodW+mpTnwlLqkZKOC0sRhXKGXSpqB/wMo=
+	t=1748231046; cv=none; b=h+kcZINMPvnJBpJXtYZOpeS6HNusq8Nq6POhU8ecNd6UIh9+3idtU8bFjqxvibYnX9FKvvVqJr91vXfMWuFX7ucAgLqqDVOXBnqZztqTlkPUElcZ4DrxbFaDRSkSAt99Ngoqr8qe+giI5xy1WXEaKulKz9Cr+bRRZTNF3BrQ4Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748230666; c=relaxed/simple;
-	bh=0z3DW3eLiT/2glKaCIDZdbh8rsKGTVe5AAcsr06pFM4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VGRVpaDcrD82kDB6c91mAf5CZHAYKH3rc2RmcOau1rumDxCreIzxJeK6VozrhxB12AOy3Q4XuQNqhfiKpt6zxhuYAbp5P3HTcTUgRg5IN+bdu6InqjIoL2tsum1VSlxSI4E1ii/wn5Ys5EJiI/OlUYXwR0PQ4+s+f2r7+V+5xDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OSDNFJmK; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1748231046; c=relaxed/simple;
+	bh=2pPImFlewxGzk5QWdrC4f2XBLGZkKF1SdzJVsmk2aXI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=cFAhIuPjEF5+W081ISqNGOMhS453kNNjrg4eVCCLt9qCMBSnojFDgQn6VZ7w/duyn2vxJYxcTsaFo8qZpZicYrJGPuCokzFo8zB8YU5l3gHCCbpfjchmeV4YrrKi0ujUeLUZYdhW5RPqMVv6Hu7S8AtS1wRTA1EbTSbx4a6YI0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQ7YDSn5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OSDNFJmK"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2342867786dso9436105ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 20:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748230663; x=1748835463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7vLgGkN6Vnumpz6d29VuOLpHKqUjZ78pRp6q7r9W+mI=;
-        b=OSDNFJmKWS3bacMH9gBXbPhnb2dnFRUUhdmfOly8Vw4TABMt2E/n0vEKU5WsoNoP0W
-         xp1U+zyN4Bn6CPRK/skiOm2/hvAr/VS3VCKhvQ7dStBXqRjR5FFIQ94KmGuRFiGTiqs5
-         4CbMnTPWpYpO2vg+2ncehDW8KgyIPKmyDX2GWUYgezV8VYI/TPud/Xe9cIyFa5RSZ9jX
-         oyjcOXfqZVydocThKMPJsG/LpeL0c8UJFA6r+K+xXI4FhTYroWSYKsECufWK6gsZ+SnH
-         RzFfYuZmhR3LjpAgEmQsCVm5ZvYl5cfvEwa6JddiNDg7Y4QtdgeqiRyCbAThw/jUAs4E
-         gK5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748230663; x=1748835463;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7vLgGkN6Vnumpz6d29VuOLpHKqUjZ78pRp6q7r9W+mI=;
-        b=igudeY/4Mpi08CHxH0AICY4pCG9H0W44ABEc0I0/NIdxUg8RSV5vJcDuxSfXZkgdpk
-         qPiqiQu7eWlZ83wPJ++qf23WZRWC7EMf2tn7SlgrJAKIUwL89jl01/yeohvVHduKsKrN
-         Y3myD7CjAzwag8w3UyFnpA6TA7nMZFsJoSD+0XPqWhKOvZq9VvZEkQ1TOcus93x+ihOA
-         G53FiN2e1QPEMYNOjge0z1fN7Q0z+etjUO7s/sZ6Tm74qkms0dsjtz/z5xyP8+7+6N0P
-         wTCV/Ly8EMt2BPRf8Fr6AHUCetaPAGRcCcIRMbZRdyBOYVONMTInc7Ev29a+rFZywRjA
-         hN/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXRf5KeSzvFDyuH0q42XvNk/ikLm5WQ+e633MtqJB2GfIQPUA413pKgN0I/Vue3ax3Pl5cGzgrQgfMVfKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLeDHZ1rNePaDZxzhBAMTrLg8Cj+7Kwt7Ql0Msni5fjnvBlhHA
-	SiiqnLHLQbkeD2lGdRQTA3+Mxvxpg+Raeogp9YFxtZR+Pi0pGavYbHX0xXvKQy8Fg3c=
-X-Gm-Gg: ASbGncv7yZCM2B2GXvsf+EtS2DvlrfjlxmweigtO/D9+6Hq09rJwF/x4v+NNDi4bzhT
-	3kW+5FIG+Kz2aNF++0aA9DOuCrR5rbxV0Hn9N2jcdpzDH1LScLRmGYkYfCKuGj1onIGTNmWM8im
-	cBcPgJegwHxvM1X/Dw0JDklPkXJjDD6hte+mm6OFf/wRCm+JLslXIJ4swThLJBUV7xZxRUte9Xw
-	YWA1zF6QvHpmBvuj/J2MUCu16hacSY7UtijSo1QyML5HHHnbaFci9F3ybQlRvM9L5leHJHRZI/h
-	qLke5sFixubzDkexG9myJ2mP1FgkYRkypRogok8xGyUHhWsu5rc5Hk9LiI9zELhaKPphn6M/KlC
-	fshw=
-X-Google-Smtp-Source: AGHT+IGbfiSdJOKz3VR9Jajl4YpNiSwAfCQWBstzwpdi7q7BkwasjxqLVZbvgivWpF4goMfpxNNnZA==
-X-Received: by 2002:a17:903:22c6:b0:22e:7c70:ed12 with SMTP id d9443c01a7336-23415000f42mr140216175ad.48.1748230663605;
-        Sun, 25 May 2025 20:37:43 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.11])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2345d5b7952sm9760505ad.145.2025.05.25.20.37.40
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Sun, 25 May 2025 20:37:43 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: alex.williamson@redhat.com
-Cc: david@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev,
-	peterx@redhat.com
-Subject: Re: [PATCH v4] vfio/type1: optimize vfio_pin_pages_remote() for large folio
-Date: Mon, 26 May 2025 11:37:37 +0800
-Message-ID: <20250526033737.7657-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250523085415.6f316c84.alex.williamson@redhat.com>
-References: <20250523085415.6f316c84.alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQ7YDSn5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B60C4CEE7;
+	Mon, 26 May 2025 03:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748231045;
+	bh=2pPImFlewxGzk5QWdrC4f2XBLGZkKF1SdzJVsmk2aXI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AQ7YDSn5QSyW4Gk6hpbtTYaxDx9OrMWEAbvxX0A/ygNkwGYQqELsijB4+teUqddWF
+	 uPuzdQZxcSf3L8ns251secLN3+RDtFaaiuYRw2N579RJhR9KDYwUhbntvvYH6eh9Kg
+	 IyosiH5CJxrSJR/QrJS89DQpWCvZgOGqMQXMT33IdHNnYtGshptiw3Eh7gAhajKrxB
+	 fB3ijSEAYvhpOv6Yh8x0LK0JzCIgfrxSagHzWlLrFkGN665hYSysWyO1LsZxFwhgES
+	 ES47kYbwFjeFR+5RrYbLA2akTCNJAmK3B1zNd3EhmbO1H5cDiYaTgFrbERPh380Xt/
+	 hjqcRT4lDogcA==
+Date: Mon, 26 May 2025 12:44:03 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
+ buffer when reboot
+Message-Id: <20250526124403.3bf41a0634733b640620ad8a@kernel.org>
+In-Reply-To: <20250523192053.47054e6e@gandalf.local.home>
+References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
+	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
+	<20250523165425.0275c9a1@gandalf.local.home>
+	<20250523192053.47054e6e@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 23 May 2025 08:54:15 -0600, alex.williamson@redhat.com wrote: 
+On Fri, 23 May 2025 19:20:53 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > > +static long vpfn_pages(struct vfio_dma *dma,
-> > > +		       dma_addr_t iova_start, long nr_pages)
-> > > +{
-> > > +	dma_addr_t iova_end = iova_start + (nr_pages << PAGE_SHIFT);
-> > > +	struct vfio_pfn *vpfn;
-> > > +	long count = 0;
-> > > +
-> > > +	do {
-> > > +		vpfn = vfio_find_vpfn_range(dma, iova_start, iova_end);
+> On Fri, 23 May 2025 16:54:25 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > >   spin:
+> > > @@ -6642,7 +6739,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
+> > >  
+> > >  		/* swap the pages */
+> > > -		rb_init_page(bpage);  
 > > 
-> > I am somehow confused here. Function vfio_find_vpfn_range()is designed
-> > to find, through the rbtree, the node that is closest to the root node
-> > and satisfies the condition within the range [iova_start, iova_end),
-> > rather than the node closest to iova_start? Or perhaps I have
-> > misunderstood something?
+> > This isn't needed, because the persistent ring buffer is never swapped. And
+> > this is what caused my test to fail. For some reason (and I'm still trying
+> > to figure out exactly why), it causes my stress test that runs:
+> > 
+> >   perf record -o perf-test.dat -a -- trace-cmd record -e all -p function /work/c/hackbench 10 || exit -1
+> > 
+> > To never end after tracing is stopped, and it fills up all the disk space.
+
+Thanks for sharing the test code. So it means perf reads the ring buffer
+endlessly?
+
+[reader commit=X1, ts=1]
+
+[head commit=X2, ts=2]...[tail commit=Xn, ts=n]
+  |                           |
+  |---------------------------|
+
+I thought that the read will end when it hits tail or ts < ts_current.
+
+
+> > 
+> > But again, this part isn't needed because the persistent ring buffer
+> > doesn't do the swapping. This replaces what the user passed in with the
+> > current page.
+> > 
+> > >  		bpage = reader->page;
+> > >  		reader->page = data_page->data;
+> > >  		local_set(&reader->write, 0);  
 > 
-> Sorry, that's an oversight on my part.  We might forego the _range
-> version and just do an inline walk of the tree counting the number of
-> already accounted pfns within the range.  Thanks,
+> So I analyzed why this fails and we need to reset the commit here.
 > 
-> Alex
+> Adding a bunch of trace_printk() (and using the new trace_printk_dest
+> option where I can have trace_printk go into an instance) I was able to see
+> why this was an issue.
 > 
-> > > +		if (likely(!vpfn))
-> > > +			break;
-> > > +
-> > > +		count++;
-> > > +		iova_start = vpfn->iova + PAGE_SIZE;
-> > > +	} while (iova_start < iova_end);
-> > > +
-> > > +	return count;
-> > > +}
+> This part of the code swaps the reader page with what was passed in by the
+> caller. The page doesn't go back into the write part of the ring buffer.
+> The "commit" field is used to know if there's more data or not.
+> 
+> By not resetting the "commit" field, we have:
+> 
+> 	reader = rb_get_reader_page(cpu_buffer)
+> 		if (cpu_buffer->reader_page->read < rb_page_size(reader))
+> 			return reader;
+> 	// swap passed in page with reader
+> 
+> Without resetting "commit", the caller consumes the page and then uses that
+> same page to pass back to this function. Since the "commit" field is never
+> zero'd, it the above if statement always returns true! And this function
+> just keeps swapping the reader each time and goes into an infinite loop
+> (this loop requires user space to do a read or splice on this page so it's
+> not a kernel infinite loop).
 
-The utilization of the function vpfn_pages() is undoubtedly a
-good idea. It can swiftly determine the num of vpfn pages
-within a specified range, which will evidently expedite the
-process of vfio_pin_pages_remote(). Given that the function
-vfio_find_vpfn_range() returns the "top" node in the rb tree
-that satisfies the condition within the range
-[iova_start, iova_end), might we consider implementing the
-functionality of vpfn_pages() using the following approach?
 
-+static long _vpfn_pages(struct vfio_pfn *vpfn,
-+               dma_addr_t iova_start, dma_addr_t iova_end)
-+{
-+       struct vfio_pfn *left;
-+       struct vfio_pfn *right;
-+
-+       if (!vpfn)
-+               return 0;
-+
-+       left = vpfn->node.rb_left ?
-+               rb_entry(vpfn->node.rb_left, struct vfio_pfn, node) : NULL;
-+       right = vpfn->node.rb_right ?
-+               rb_entry(vpfn->node.rb_right, struct vfio_pfn, node) : NULL;
-+
-+       if ((vpfn->iova >= iova_start) && (vpfn->iova < iova_end))
-+               return 1 + _vpfn_pages(left, iova_start, iova_end) +
-+                               _vpfn_pages(right, iova_start, iova_end);
-+
-+       if (vpfn->iova >= iova_end)
-+               return _vpfn_pages(left, iova_start, iova_end);
-+
-+       return _vpfn_pages(right, iova_start, iova_end);
-+}
-+
-+static long vpfn_pages(struct vfio_dma *dma,
-+               dma_addr_t iova_start, long nr_pages)
-+{
-+       dma_addr_t iova_end = iova_start + (nr_pages << PAGE_SHIFT);
-+       struct vfio_pfn *top = vfio_find_vpfn_range(dma, iova_start, iova_end);
-+
-+       return _vpfn_pages(top, iova_start, iova_end);
-+}
+Ah, in rb_get_reader_page(cpu_buffer),
 
-Thanks,
-Zhe
+	/* If there's more to read, return this page */
+	if (cpu_buffer->reader_page->read < rb_page_size(reader))
+		goto out;
 
+	/* Never should we have an index greater than the size */
+	if (RB_WARN_ON(cpu_buffer,
+		       cpu_buffer->reader_page->read > rb_page_size(reader)))
+		goto out;
+
+	/* check if we caught up to the tail */
+	reader = NULL;
+	if (cpu_buffer->commit_page == cpu_buffer->reader_page)
+		goto out;
+
+It checks remaining (unread) data first, and move to the next.
+
+> 
+> Now the question is, can this affect the persistent ring buffer too? I'll
+> memory map the buffer and see if it causes the same issue.
+
+Yeah, it can happen, but I didn't hit that.
+Let me test it too.
+
+Hmm, BTW, is there any possible solution? records the consumed
+bytes in meta data?
+
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
