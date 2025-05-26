@@ -1,374 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABA219CD1B;
-	Mon, 26 May 2025 07:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B9B19CD1B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:04:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748243025; cv=none; b=PeuVne3Ubg8LQbzk238q1VTvUExD++GTP8v9BfYAY4q+/IslFUPlu4Z+o8UMClyvkx7uFSXIFm0kIfF3H1R6QAIkf73oHnMks2MPXtZZDjJp6wJWh1C4qKQ23y3mSpF9yhHtT1wzfqlZAkkdrmClVNUGWR6/HGwcEq2ANd3r90o=
+	t=1748243067; cv=none; b=uR/iE5viFO3VHF/SQeoVFsG7zEILo4m8VeXjOhjWKSMJE+N1vASzuktAPLJAykwug4uM8tVz26/BHfQHz8hTpc8fjXqjZa0TE/qbf9yA2GZ4I9rP0KhvOzx+jD9wANRybNHwYdtk2L5oHZn02ZstGnoHmpr6UzVYp5PhPwAdD/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748243025; c=relaxed/simple;
-	bh=MMk5/uMd+GF1UB5m73CeK6sdi688uKa5o4LyBYY2AI0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WiIFdhimBLj/B/lsha0T6JYs3GNMz0Y0+CiaImVQcH5OpugZQkIS2OC2HjzTID7IwRKvoniUJGVKLO60VaLnGw4rCCFK/1q45io+0r3bkjDhFk9sZ8fV9LUKtncvXFnv0FGIQwslWB2RgTiJyZYGMuCJo3aLd6heE0W9SyrCrJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/Ki+qMh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748243067; c=relaxed/simple;
+	bh=/KjtSwvPWJ1jRSl2ED9yyTGBt2MsUlLauotMZbELXeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TUcGbyrSsPb3vwwqWbnKnFkWL9fu56Z+tywrnJYkXwDZhkq5tVp8WLEtLOwq1D4xMpjQvDh9c1X7XBiDFKTVn7geRDd6lWr6W/+8hZijf8jtj+Pkj9Q+OWyeiRWRs9QqPB80QtPsXadBAU8Wppbhs3xqrKh2EJYozI9L6GRDCCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vc8g1cOX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/Ki+qMh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5E491C4CEE7;
-	Mon, 26 May 2025 07:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748243024;
-	bh=MMk5/uMd+GF1UB5m73CeK6sdi688uKa5o4LyBYY2AI0=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=B/Ki+qMhgvcOxmPYEi4S16rbY/tc1Ze9VgXfNm507bQ11vqFThTL3//gpZkRNB7pg
-	 nSK4W9JpyHu4KLvCNoHWi3Z7wuSZ3bzKJ8a71tyddhf/QWnK7446WM3XDs3ft166zB
-	 Az9EgQuScgCLe7g4UwAvsmCTvxJ0Ow0dqbTBTlbE7xNskE9eqGGySbeeGBXJn4ssie
-	 VKZzyVgIXLzJYV/5RMTszNKVioJeBW+rYRiL/24JCpHlX0AAswo45LHu5aRmI8FnIS
-	 0JBGOM7IP6riyJLN6bf7SG03qMU0HEKczmOiRwT/yu0O5V0gCahbH7Kbiplkb9GfAS
-	 NSQD3ixlByvWg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0FFC54FB3;
-	Mon, 26 May 2025 07:03:44 +0000 (UTC)
-From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Mon, 26 May 2025 09:03:40 +0200
-Subject: [PATCH v3] iio: common: st_sensors: Fix use of uninitialize device
- structs
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vc8g1cOX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748243061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZsSqa4El9fWisOjdIZpyGfNCohIxqbRRIDaHJl1MAcg=;
+	b=Vc8g1cOX6i+6wluOw+6FpbSX61PXgQKXtQPsCAnVJVWnA2Sp9CR/L+1umaxrNjzF2T3scg
+	RvvH1/PYDRSu2BHx8Ixaob9KEGUxq0EaMcWoSNbOt5gvSn+AKFRQO50FBzjKav61VsV6hT
+	zaxfiG9e2SR7p+jwSnd2IPpFV6VcN5c=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-35-FXZa4aNZNJetE_Ma2OJAGA-1; Mon, 26 May 2025 03:03:49 -0400
+X-MC-Unique: FXZa4aNZNJetE_Ma2OJAGA-1
+X-Mimecast-MFC-AGG-ID: FXZa4aNZNJetE_Ma2OJAGA_1748243028
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-550d7bd9a7fso944064e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:03:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748243028; x=1748847828;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZsSqa4El9fWisOjdIZpyGfNCohIxqbRRIDaHJl1MAcg=;
+        b=nqbZLazUAnQHhKyVDVefOTP4/XEZLDKuoXSjML9kDZuC9/QzgIIDOyZDtNuX2+ynIM
+         9kv8+5y5yosuIs9ed9FhgHH+wpETTs0wHyI4XWD7Z++lPfkEbNWdn9y/KtcHANnmpSP0
+         7jpHt9gp+PN8QFfYQOBMetS4cOHGFZj2UUhya4em3Z2p9m1Tp0XzQxYqCi26JmS1Gc9N
+         gbzfFD1tuOPk7oXXEV3ah+a1G5PYy26W9mn7k8XAOA/1KO8r1neb6DgA2OCrJXGZ8fTf
+         WSUn0hthOqShp1OpnyxwpaQGnXa7URq9p6bnsXbg9PRbjK7bIXYSEUExWXdaGZLiq4LV
+         wEcg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6oP+WoGaR8aInvJVenEYlNzE1kDoTmukwky3ZfIE7XSmyxMe1i+lMT/Q3GV2B439h+vcAzTG8aEfVQ1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh3R8L8oqzIsYkt4LBCV+PSC7hyVcaEZEEHi5Vx4SUBunRTuw/
+	akqO/K6PM3RowGE4X+mv4UE3ZvrauwQIBhw0geE+c+paAFnLT6hw6wCAswVOK7p284Z8TskDzNW
+	bdybO70iEmRXyrYMfzqow8vx9XKlHz/Uxdpzjl4myM48J89CQEAnPRual2JtFDnA6ck7PZ82MUl
+	/wIKOfRp/sTWrw/3xHcyucRou6KTjjgbCZgRCzHp1o
+X-Gm-Gg: ASbGncuo7j4UCEftpC3Fxg+wsZuOZalqvVWC1lDC02G9rDDv5pe7cc3iPdTAK4rWSgS
+	QiBuJyLmUgK0rCV8zZxEHjy7Yx1z4LNaFiWXzAvmh3wYZR9wi3e7VraDM166Ev5mesP1LLQ==
+X-Received: by 2002:a05:6512:e81:b0:54a:c4af:29 with SMTP id 2adb3069b0e04-5521c9b49c3mr2194372e87.52.1748243027678;
+        Mon, 26 May 2025 00:03:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFiI1Yk6wtJQGChMVRuaINop3PCJafppboQa8n3wGOEjdM+iFjM89BfGUysLGx/bSchoPaUn/ub/pVQf6fAwJQ=
+X-Received: by 2002:a05:6512:e81:b0:54a:c4af:29 with SMTP id
+ 2adb3069b0e04-5521c9b49c3mr2194360e87.52.1748243027250; Mon, 26 May 2025
+ 00:03:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-st_iio_fix-v3-1-039fec38707c@gocontroll.com>
-X-B4-Tracking: v=1; b=H4sIAEsSNGgC/3WMQQ6CMBAAv0L2bE270Aqe/IcxBNsCm2BrWtJoC
- H+3cFWPM8nMAtEGshHOxQLBJorkXYbyUIAeOzdYRiYzIEfJJSKLc0vk255eTGhZ98ZUpkIOOXg
- Gm/U+u94yjxRnH977O4nN/twkwQQzqm7upeyFEngZvPZuDn6ajto/YHsl/N9j7vmpK1FJ2TWN+
- urXdf0ASZiCR+kAAAA=
-X-Change-ID: 20250522-st_iio_fix-1c58fdd4d420
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Christian Heusel <christian@heusel.eu>, 
- Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Maud Spierings <maudspierings@gocontroll.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748243023; l=11339;
- i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=Qqt9XE7k6jzMfflRu7bsFCiZg9ry06DYpLkn0Zt2L2Q=;
- b=bqPTkRr9BBTpX41rBICDyxe77dGsOEIQir7BfcLJ+oYQYKlV1nplyL+70McBjpkcJcNl1ESAe
- Xli2YR/8adADEtM43uqEKTlyAVDNiq3qYipt0HUvTxULLb/L+JZRAqv
-X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
- pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
-X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
- with auth_id=341
-X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
-Reply-To: maudspierings@gocontroll.com
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-9-yukuai1@huaweicloud.com>
+In-Reply-To: <20250524061320.370630-9-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Mon, 26 May 2025 15:03:33 +0800
+X-Gm-Features: AX0GCFvwXVzrH9q1dPb-evKEBo6AYWl9O-76qs7DSfOVQGYh8gvgg_A7YC7NPKI
+Message-ID: <CALTww2-bZ83SjNntJOmKmY8J8+8b2tE3JMTXbzcRr3K8yCj9xQ@mail.gmail.com>
+Subject: Re: [PATCH 08/23] md/md-bitmap: add a new method skip_sync_blocks()
+ in bitmap_operations
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, yukuai3@huawei.com, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, 
+	johnny.chenyi@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Maud Spierings <maudspierings@gocontroll.com>
+On Sat, May 24, 2025 at 2:18=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> This method is used to check if blocks can be skipped before calling
+> into pers->sync_request(), llbiltmap will use this method to skip
 
-Throughout the various probe functions &indio_dev->dev is used before it
-is initialized. This caused a kernel panic in st_sensors_power_enable()
-when the call to devm_regulator_bulk_get_enable() fails and then calls
-dev_err_probe() with the uninitialized device.
+type error: s/llbiltmap/llbitmap/g
 
-This seems to only cause a panic with dev_err_probe(), dev_err(),
-dev_warn() and dev_info() don't seem to cause a panic, but are fixed
-as well.
+> resync for unwritten/clean data blocks, and recovery/check/repair for
+> unwritten data blocks;
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/md/md-bitmap.h | 1 +
+>  drivers/md/md.c        | 7 +++++++
+>  2 files changed, 8 insertions(+)
+>
+> diff --git a/drivers/md/md-bitmap.h b/drivers/md/md-bitmap.h
+> index 2b99ddef7a41..0de14d475ad3 100644
+> --- a/drivers/md/md-bitmap.h
+> +++ b/drivers/md/md-bitmap.h
+> @@ -98,6 +98,7 @@ struct bitmap_operations {
+>         md_bitmap_fn *start_discard;
+>         md_bitmap_fn *end_discard;
+>
+> +       sector_t (*skip_sync_blocks)(struct mddev *mddev, sector_t offset=
+);
+>         bool (*start_sync)(struct mddev *mddev, sector_t offset,
+>                            sector_t *blocks, bool degraded);
+>         void (*end_sync)(struct mddev *mddev, sector_t offset, sector_t *=
+blocks);
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index dc4b85f30e13..890c8da43b3b 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -9362,6 +9362,12 @@ void md_do_sync(struct md_thread *thread)
+>                 if (test_bit(MD_RECOVERY_INTR, &mddev->recovery))
+>                         break;
+>
+> +               if (mddev->bitmap_ops && mddev->bitmap_ops->skip_sync_blo=
+cks) {
+> +                       sectors =3D mddev->bitmap_ops->skip_sync_blocks(m=
+ddev, j);
+> +                       if (sectors)
+> +                               goto update;
+> +               }
+> +
+>                 sectors =3D mddev->pers->sync_request(mddev, j, max_secto=
+rs,
+>                                                     &skipped);
+>                 if (sectors =3D=3D 0) {
+> @@ -9377,6 +9383,7 @@ void md_do_sync(struct md_thread *thread)
+>                 if (test_bit(MD_RECOVERY_INTR, &mddev->recovery))
+>                         break;
+>
+> +update:
+>                 j +=3D sectors;
+>                 if (j > max_sectors)
+>                         /* when skipping, extra large numbers can be retu=
+rned. */
+> --
+> 2.39.2
+>
 
-The issue is reported and traced here: [1]
-
-[1]: https://lore.kernel.org/all/AM7P189MB100986A83D2F28AF3FFAF976E39EA@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM/
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
----
-When I search for general &indio_dev->dev usage, I see quite a lot more
-hits, but I am not sure if there are issues with those too.
-
-This issue has existed for a long time it seems and therefore it is
-nearly impossible to find a proper fixes tag. I would love to see it at
-least backported to 6.12 as that is where I encountered it, and I
-believe the patch should apply without conflicts.
----
-Changes in v3:
-- Added the stable cc to the commit message
-- Move the link to the original issue to the commit message
-- Fix function notation in the commit message
-- Move some more of the dev_*() calls to one line
-- Link to v2: https://lore.kernel.org/r/20250522-st_iio_fix-v2-1-07a32655a996@gocontroll.com
-
-Changes in v2:
-- Added SoB in commit message
-- Link to v1: https://lore.kernel.org/r/20250522-st_iio_fix-v1-1-d689b35f1612@gocontroll.com
----
- drivers/iio/accel/st_accel_core.c                  | 10 +++---
- drivers/iio/common/st_sensors/st_sensors_core.c    | 36 ++++++++++------------
- drivers/iio/common/st_sensors/st_sensors_trigger.c | 20 ++++++------
- 3 files changed, 31 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index 99cb661fabb2d9cc1943fa8d0a6f3becb71126e6..a7961c610ed203d039bbf298c8883031a578fb0b 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -1353,6 +1353,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
- 	union acpi_object *ont;
- 	union acpi_object *elements;
- 	acpi_status status;
-+	struct device *parent = indio_dev->dev.parent;
- 	int ret = -EINVAL;
- 	unsigned int val;
- 	int i, j;
-@@ -1371,7 +1372,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
- 	};
- 
- 
--	adev = ACPI_COMPANION(indio_dev->dev.parent);
-+	adev = ACPI_COMPANION(parent);
- 	if (!adev)
- 		return -ENXIO;
- 
-@@ -1380,8 +1381,7 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
- 	if (status == AE_NOT_FOUND) {
- 		return -ENXIO;
- 	} else if (ACPI_FAILURE(status)) {
--		dev_warn(&indio_dev->dev, "failed to execute _ONT: %d\n",
--			 status);
-+		dev_warn(parent, "failed to execute _ONT: %d\n", status);
- 		return status;
- 	}
- 
-@@ -1457,12 +1457,12 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev)
- 	}
- 
- 	ret = 0;
--	dev_info(&indio_dev->dev, "computed mount matrix from ACPI\n");
-+	dev_info(parent, "computed mount matrix from ACPI\n");
- 
- out:
- 	kfree(buffer.pointer);
- 	if (ret)
--		dev_dbg(&indio_dev->dev,
-+		dev_dbg(parent,
- 			"failed to apply ACPI orientation data: %d\n", ret);
- 
- 	return ret;
-diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
-index 8ce1dccfea4f5aaff45d3d40f6542323dd1f0b09..dac593be56958fd0be92e13f628350fcfd0f040d 100644
---- a/drivers/iio/common/st_sensors/st_sensors_core.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-@@ -154,7 +154,7 @@ static int st_sensors_set_fullscale(struct iio_dev *indio_dev, unsigned int fs)
- 	return err;
- 
- st_accel_set_fullscale_error:
--	dev_err(&indio_dev->dev, "failed to set new fullscale.\n");
-+	dev_err(indio_dev->dev.parent, "failed to set new fullscale.\n");
- 	return err;
- }
- 
-@@ -231,8 +231,7 @@ int st_sensors_power_enable(struct iio_dev *indio_dev)
- 					     ARRAY_SIZE(regulator_names),
- 					     regulator_names);
- 	if (err)
--		return dev_err_probe(&indio_dev->dev, err,
--				     "unable to enable supplies\n");
-+		return dev_err_probe(parent, err, "unable to enable supplies\n");
- 
- 	return 0;
- }
-@@ -241,13 +240,14 @@ EXPORT_SYMBOL_NS(st_sensors_power_enable, "IIO_ST_SENSORS");
- static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 					struct st_sensors_platform_data *pdata)
- {
-+	struct device *parent = indio_dev->dev.parent;
- 	struct st_sensor_data *sdata = iio_priv(indio_dev);
- 
- 	/* Sensor does not support interrupts */
- 	if (!sdata->sensor_settings->drdy_irq.int1.addr &&
- 	    !sdata->sensor_settings->drdy_irq.int2.addr) {
- 		if (pdata->drdy_int_pin)
--			dev_info(&indio_dev->dev,
-+			dev_info(parent,
- 				 "DRDY on pin INT%d specified, but sensor does not support interrupts\n",
- 				 pdata->drdy_int_pin);
- 		return 0;
-@@ -256,29 +256,27 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
- 	switch (pdata->drdy_int_pin) {
- 	case 1:
- 		if (!sdata->sensor_settings->drdy_irq.int1.mask) {
--			dev_err(&indio_dev->dev,
--					"DRDY on INT1 not available.\n");
-+			dev_err(parent, "DRDY on INT1 not available.\n");
- 			return -EINVAL;
- 		}
- 		sdata->drdy_int_pin = 1;
- 		break;
- 	case 2:
- 		if (!sdata->sensor_settings->drdy_irq.int2.mask) {
--			dev_err(&indio_dev->dev,
--					"DRDY on INT2 not available.\n");
-+			dev_err(parent, "DRDY on INT2 not available.\n");
- 			return -EINVAL;
- 		}
- 		sdata->drdy_int_pin = 2;
- 		break;
- 	default:
--		dev_err(&indio_dev->dev, "DRDY on pdata not valid.\n");
-+		dev_err(parent, "DRDY on pdata not valid.\n");
- 		return -EINVAL;
- 	}
- 
- 	if (pdata->open_drain) {
- 		if (!sdata->sensor_settings->drdy_irq.int1.addr_od &&
- 		    !sdata->sensor_settings->drdy_irq.int2.addr_od)
--			dev_err(&indio_dev->dev,
-+			dev_err(parent,
- 				"open drain requested but unsupported.\n");
- 		else
- 			sdata->int_pin_open_drain = true;
-@@ -336,6 +334,7 @@ EXPORT_SYMBOL_NS(st_sensors_dev_name_probe, "IIO_ST_SENSORS");
- int st_sensors_init_sensor(struct iio_dev *indio_dev,
- 					struct st_sensors_platform_data *pdata)
- {
-+	struct device *parent = indio_dev->dev.parent;
- 	struct st_sensor_data *sdata = iio_priv(indio_dev);
- 	struct st_sensors_platform_data *of_pdata;
- 	int err = 0;
-@@ -343,7 +342,7 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
- 	mutex_init(&sdata->odr_lock);
- 
- 	/* If OF/DT pdata exists, it will take precedence of anything else */
--	of_pdata = st_sensors_dev_probe(indio_dev->dev.parent, pdata);
-+	of_pdata = st_sensors_dev_probe(parent, pdata);
- 	if (IS_ERR(of_pdata))
- 		return PTR_ERR(of_pdata);
- 	if (of_pdata)
-@@ -370,7 +369,7 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
- 		if (err < 0)
- 			return err;
- 	} else
--		dev_info(&indio_dev->dev, "Full-scale not possible\n");
-+		dev_info(parent, "Full-scale not possible\n");
- 
- 	err = st_sensors_set_odr(indio_dev, sdata->odr);
- 	if (err < 0)
-@@ -405,7 +404,7 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
- 			mask = sdata->sensor_settings->drdy_irq.int2.mask_od;
- 		}
- 
--		dev_info(&indio_dev->dev,
-+		dev_info(parent,
- 			 "set interrupt line to open drain mode on pin %d\n",
- 			 sdata->drdy_int_pin);
- 		err = st_sensors_write_data_with_mask(indio_dev, addr,
-@@ -593,21 +592,20 @@ EXPORT_SYMBOL_NS(st_sensors_get_settings_index, "IIO_ST_SENSORS");
- int st_sensors_verify_id(struct iio_dev *indio_dev)
- {
- 	struct st_sensor_data *sdata = iio_priv(indio_dev);
-+	struct device *parent = indio_dev->dev.parent;
- 	int wai, err;
- 
- 	if (sdata->sensor_settings->wai_addr) {
- 		err = regmap_read(sdata->regmap,
- 				  sdata->sensor_settings->wai_addr, &wai);
- 		if (err < 0) {
--			dev_err(&indio_dev->dev,
--				"failed to read Who-Am-I register.\n");
--			return err;
-+			return dev_err_probe(parent, err,
-+					     "failed to read Who-Am-I register.\n");
- 		}
- 
- 		if (sdata->sensor_settings->wai != wai) {
--			dev_warn(&indio_dev->dev,
--				"%s: WhoAmI mismatch (0x%x).\n",
--				indio_dev->name, wai);
-+			dev_warn(parent, "%s: WhoAmI mismatch (0x%x).\n",
-+				 indio_dev->name, wai);
- 		}
- 	}
- 
-diff --git a/drivers/iio/common/st_sensors/st_sensors_trigger.c b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-index 9d4bf822a15dfcdd6c2835f6b9d7698cd3cb0b08..8a8ab688d7980f6dd43c660f90a0eba32c38388b 100644
---- a/drivers/iio/common/st_sensors/st_sensors_trigger.c
-+++ b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-@@ -127,7 +127,7 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 	sdata->trig = devm_iio_trigger_alloc(parent, "%s-trigger",
- 					     indio_dev->name);
- 	if (sdata->trig == NULL) {
--		dev_err(&indio_dev->dev, "failed to allocate iio trigger.\n");
-+		dev_err(parent, "failed to allocate iio trigger.\n");
- 		return -ENOMEM;
- 	}
- 
-@@ -143,7 +143,7 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 	case IRQF_TRIGGER_FALLING:
- 	case IRQF_TRIGGER_LOW:
- 		if (!sdata->sensor_settings->drdy_irq.addr_ihl) {
--			dev_err(&indio_dev->dev,
-+			dev_err(parent,
- 				"falling/low specified for IRQ but hardware supports only rising/high: will request rising/high\n");
- 			if (irq_trig == IRQF_TRIGGER_FALLING)
- 				irq_trig = IRQF_TRIGGER_RISING;
-@@ -156,21 +156,19 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 				sdata->sensor_settings->drdy_irq.mask_ihl, 1);
- 			if (err < 0)
- 				return err;
--			dev_info(&indio_dev->dev,
-+			dev_info(parent,
- 				 "interrupts on the falling edge or active low level\n");
- 		}
- 		break;
- 	case IRQF_TRIGGER_RISING:
--		dev_info(&indio_dev->dev,
--			 "interrupts on the rising edge\n");
-+		dev_info(parent, "interrupts on the rising edge\n");
- 		break;
- 	case IRQF_TRIGGER_HIGH:
--		dev_info(&indio_dev->dev,
--			 "interrupts active high level\n");
-+		dev_info(parent, "interrupts active high level\n");
- 		break;
- 	default:
- 		/* This is the most preferred mode, if possible */
--		dev_err(&indio_dev->dev,
-+		dev_err(parent,
- 			"unsupported IRQ trigger specified (%lx), enforce rising edge\n", irq_trig);
- 		irq_trig = IRQF_TRIGGER_RISING;
- 	}
-@@ -179,7 +177,7 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 	if (irq_trig == IRQF_TRIGGER_FALLING ||
- 	    irq_trig == IRQF_TRIGGER_RISING) {
- 		if (!sdata->sensor_settings->drdy_irq.stat_drdy.addr) {
--			dev_err(&indio_dev->dev,
-+			dev_err(parent,
- 				"edge IRQ not supported w/o stat register.\n");
- 			return -EOPNOTSUPP;
- 		}
-@@ -214,13 +212,13 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
- 					sdata->trig->name,
- 					sdata->trig);
- 	if (err) {
--		dev_err(&indio_dev->dev, "failed to request trigger IRQ.\n");
-+		dev_err(parent, "failed to request trigger IRQ.\n");
- 		return err;
- 	}
- 
- 	err = devm_iio_trigger_register(parent, sdata->trig);
- 	if (err < 0) {
--		dev_err(&indio_dev->dev, "failed to register iio trigger.\n");
-+		dev_err(parent, "failed to register iio trigger.\n");
- 		return err;
- 	}
- 	indio_dev->trig = iio_trigger_get(sdata->trig);
-
----
-base-commit: 7bac2c97af4078d7a627500c9bcdd5b033f97718
-change-id: 20250522-st_iio_fix-1c58fdd4d420
-
-Best regards,
--- 
-Maud Spierings <maudspierings@gocontroll.com>
-
+Reviewed-by: Xiao Ni <xni@redhat.com>
 
