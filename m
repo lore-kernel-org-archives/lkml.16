@@ -1,144 +1,82 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6932CCDE;
-	Mon, 26 May 2025 19:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9502CCDE;
+	Mon, 26 May 2025 19:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748288868; cv=none; b=ofkqlmtOak2v/fjQ7J8/rUFxqoSZbAGIqYzaLCnyQjY3Wdfll6+DcR8JZVfu6olVSNK05emeqZkU60oG4SXREC4rQz3cf5UC7aDMMNP+JQuah6ULUGvUl1uBz1qaiU2kd1FsU50iBAr48Gy9/t2xGfoU+7+ZTtU2fCJdH2t/NB4=
+	t=1748288994; cv=none; b=HlXlSrXms8TkD+RbAraAMHuQRGeKpNYS5zQSHLBBf7ZbGCS395KbSx4apewI8NLPujz/f0GNWDf4JdMZYTEl9PnUBHCtmlsUBzKj69hp4BNCn8piVR7Dqv1fB9GHvoYhamVtCKnb8x/JtNQca/h3cdW0D7TeSOB3CUaCQyKIZL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748288868; c=relaxed/simple;
-	bh=4KqVkDJQJ7wmSaMRmXEyaIS0NkKBSX1F3vJIe8XNIxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rqAOlANv38JiJwF9EEn3ggtZTZrdApUU5r5kXJzcZ4J4quKzLm4SofbBrbKaGDuWfSegwZJT///n6OOcZqnekVNLI6VRGLU/R6jW5c4A6JJ+X4AwEfMYKtcC7nB4oBQtNExvBm7duzdOXQL/1Jo8x/RPwa6bHAlaxHsa/PV3O1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OplpTF+D; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748288994; c=relaxed/simple;
+	bh=Ga+2N+JbxfGIi55YTKG5xpDsUC3+mtfi/Wldi3SdsO4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=o3qX+3cHeodpaAj2QhxABYSe45uojTW5u6dW76gQhj8GgV7gAox3eLCQgXm/w2j07HDPY9akNqzqdSCqFOdyYnGOaq91mB/WiYIwgap6i3NAA5cePN0fLwj6iSlQks00p0Vbpa32rveaQZGM63deO9EgRXuAqhTbEBgDyKtVJDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tu+IVvFh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OplpTF+D"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-404a5f4cdedso456534b6e.0;
-        Mon, 26 May 2025 12:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748288866; x=1748893666; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4lxG4RwYQ0CNvC7KfH6KqgSMfyW5/kygutUZd5gmeVM=;
-        b=OplpTF+DzfjQeSN+XSmU6YNRoycLlmWNkrYEzWD94ZC5E+uNUVMwKM+6hkhPUJ86oE
-         tCNPagqbmunS9OJ/k999wFkQ26BVEUkypxR/4rn3B2L9e3gaGxTw8LZKNpNCmjrVg2eW
-         UjhnsZxkQey+Lw8qGMM1ajyqC90HAnT/A2SRfkzyNAAUfUQFOKdo987AJkrdj0SrfbEw
-         Wi8v2+zkrz8qV6wm7gGvutilkJJ14ieHvxlDl5DofDqT8eTTgaBO++P71t/KdCRBhhq9
-         RZJ8Q/V005owun/sLdeulTO4s07rcHtjzjjVlIDtQNRhZIY+CyLnmDBf4j3VfRcG+ZRI
-         4IQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748288866; x=1748893666;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4lxG4RwYQ0CNvC7KfH6KqgSMfyW5/kygutUZd5gmeVM=;
-        b=sYJo01PksQ+HY1K4hsd8r9f48zyOZJ8OYjJpvTrzdAH91bUFEHppn296avopHI7QrY
-         85/Gnn5pcXsBVA7FeS2Aa9WC0FtD5xwpeQZW/6DAMeXwkrdwMvaQxkldk9/sFazQNBbR
-         FD2SSFZRZ7l6FKXdFP1qau6xhmMcATnygoceqt8YU5VbLVjZAeh7j7OqXUNHXb83ps2C
-         oNrAg5OORO81Bs8bDfbiPtVjexb30sOBpxEzgxtQM4FyUukh1CgWEl6YJCBlUm26cg9G
-         TpZzAiI9MwPAoXqrQlcMYuQbPhhRMATnorBWS0WfFEahevhEDhM4WBoBtL5Ty8LUwxjZ
-         8ybw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCM8EGLon93RA4iPdqG8C3CyvU5do/YQtbsMkcms4amf58/L+XfYYKlt4YbNDoHuvpfOsx5clagBN7@vger.kernel.org, AJvYcCUWalmZYBLuRLLDzPKCDflaPSWSbWUcvvypXSn4zvtPkvIpTMaFLsJ04DRCkDOihJpV2i5wmivF5f72mL6gKg==@vger.kernel.org, AJvYcCVEx8E9wDE6/4fbp8TnGvoZK5dyyQqUpbzcChTwRm29TEIe5QjeKU1B2DCVdMTS7G9Ved7iF7e4GrUp94Zy@vger.kernel.org, AJvYcCVlsG0Dk7Sw0KGQduCz43WxvSstsxzak0pB5fVHrABaY9FnKV5PZX12YfmppnOCRODqhm8C7fFcVWLx@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzRrkhcHiESszBre/ep0v5mgTbtQV1tVK7a23eAhTTOUzW9O0h
-	3yV6Gh4jSfLgvI/2SQXXnSWdo0iNgl5L4en/fFpTcRXso1t56B8sRUlywf433Bg3JZEd3uZu0v5
-	UXmo9yOyTXDSY3i+FXUrQnmMmLdLwWUQ=
-X-Gm-Gg: ASbGnctG//SM60kgSx0BObdyxOUr8asVAi50OiwRzSzU/YlgDsY0/YBtlKu2gecEma+
-	7hY/zVNQ2649RIg2CpsgXhV+P/ICSE+aZ+70P65C3p0XBDqdlA9on6DFO6SFKKMo4ThT+z+oyoS
-	lL7r76m8tJQM0ikvd+5z/aRQLQwd+cAW7LrA==
-X-Google-Smtp-Source: AGHT+IEJ0rmGDYHVgbL2oFttoN7DXxvLwFI/X2w1GedL73u0g6JyCd2425ooHw3cpjUX86RjEOmynFxzWpFNfqwPYeI=
-X-Received: by 2002:a05:6808:80c5:b0:3fb:2937:937c with SMTP id
- 5614622812f47-406467b8c4bmr5809894b6e.6.1748288866073; Mon, 26 May 2025
- 12:47:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tu+IVvFh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2193C4CEEE;
+	Mon, 26 May 2025 19:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748288993;
+	bh=Ga+2N+JbxfGIi55YTKG5xpDsUC3+mtfi/Wldi3SdsO4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=tu+IVvFhAKkr9oiXM6WvKZtF+eS0u+j77ca4wPaR2RmK0jHDaeaJkwU5ge/lPLnNA
+	 ClIcgYs95pgwf7duY+gdkL1Zm3hLP8cYwbYgyweVWfmQR53YU1Rz6iZV29TkUMAaOc
+	 aQKfQP07KwOOMsTZdwvbA1szRjSKMWdI4oelTGNtCTaYaFKFG0kNDx2rozSAjDqO4B
+	 D8qCAipOkc8TlPreJ9vmHxeeaABXNqMrg6eg2K2LyfeQkHARJds883jC0nQ0rX4Roj
+	 +I8ED8PPw3/1SrNHl27bpFJ9JZnIIdxZG05c5CxsuNDitWnA6RBH284Sp8rIMB1y29
+	 SNe0ESNB95h2w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 712793805D8E;
+	Mon, 26 May 2025 19:50:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506-qcom-apcs-mailbox-cc-v1-0-b54dddb150a5@linaro.org> <20250506-qcom-apcs-mailbox-cc-v1-2-b54dddb150a5@linaro.org>
-In-Reply-To: <20250506-qcom-apcs-mailbox-cc-v1-2-b54dddb150a5@linaro.org>
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Date: Mon, 26 May 2025 14:47:34 -0500
-X-Gm-Features: AX0GCFteTgTgIIhEMNd3LV6B3AyZoLARNnuA73iJCsHKTCOp4z_ZcwMh59Zhjp0
-Message-ID: <CABb+yY2bSJ-dZ73DjZaNc+iEpXXU4bxbWBPaj0M_6qf+Zb=V_w@mail.gmail.com>
-Subject: Re: [PATCH 2/4] mailbox: qcom-apcs-ipc: Assign OF node to clock
- controller child device
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Georgi Djakov <djakov@kernel.org>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: lan966x: Fix 1-step timestamping over ipv4 or ipv6
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174828902825.1028237.3579220220361870619.git-patchwork-notify@kernel.org>
+Date: Mon, 26 May 2025 19:50:28 +0000
+References: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ richardcochran@gmail.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-On Tue, May 6, 2025 at 8:10=E2=80=AFAM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> Currently, the child device for the clock controller inside the APCS bloc=
-k
-> is created without any OF node assigned, so the drivers need to rely on t=
-he
-> parent device for obtaining any resources.
->
-> Add support for defining the clock controller inside a "clock-controller"
-> subnode to break up circular dependencies between the mailbox and require=
-d
-> parent clocks of the clock controller. For backwards compatibility, if th=
-e
-> subnode is not defined, reuse the OF node from the parent device.
->
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> ---
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qc=
-om-apcs-ipc-mailbox.c
-> index 11c41e935a3619b74ad0f5e2d82699ca8aa05722..8b24ec0fa191efc975625d9b9=
-270140ad1fe7b9b 100644
-> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> @@ -116,10 +116,18 @@ static int qcom_apcs_ipc_probe(struct platform_devi=
-ce *pdev)
->         }
->
->         if (apcs_data->clk_name) {
-> -               apcs->clk =3D platform_device_register_data(&pdev->dev,
-> -                                                         apcs_data->clk_=
-name,
-> -                                                         PLATFORM_DEVID_=
-AUTO,
-> -                                                         NULL, 0);
-> +               struct device_node *np =3D of_get_child_by_name(pdev->dev=
-.of_node,
-> +                                                             "clock-cont=
-roller");
-> +               struct platform_device_info pdevinfo =3D {
-> +                       .parent =3D &pdev->dev,
-> +                       .name =3D apcs_data->clk_name,
-> +                       .id =3D PLATFORM_DEVID_AUTO,
-> +                       .fwnode =3D of_fwnode_handle(np) ?: pdev->dev.fwn=
-ode,
-> +                       .of_node_reused =3D !np,
-> +               };
-> +
-> +               apcs->clk =3D platform_device_register_full(&pdevinfo);
-> +               of_node_put(np);
->                 if (IS_ERR(apcs->clk))
->                         dev_err(&pdev->dev, "failed to register APCS clk\=
-n");
->         }
->
+Hello:
 
-I see the dt change is acked by the DT maintainer. I have no problem
-with this patch and can merge, but do you want to wait for ack from
-some Qcom dev?
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-thanks
+On Wed, 21 May 2025 14:41:59 +0200 you wrote:
+> When enabling 1-step timestamping for ptp frames that are over udpv4 or
+> udpv6 then the inserted timestamp is added at the wrong offset in the
+> frame, meaning that will modify the frame at the wrong place, so the
+> frame will be malformed.
+> To fix this, the HW needs to know which kind of frame it is to know
+> where to insert the timestamp. For that there is a field in the IFH that
+> says the PDU_TYPE, which can be NONE  which is the default value,
+> IPV4 or IPV6. Therefore make sure to set the PDU_TYPE so the HW knows
+> where to insert the timestamp.
+> Like I mention before the issue is not seen with L2 frames because by
+> default the PDU_TYPE has a value of 0, which represents the L2 frames.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] net: lan966x: Fix 1-step timestamping over ipv4 or ipv6
+    https://git.kernel.org/netdev/net/c/57ee9584fd86
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
