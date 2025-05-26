@@ -1,77 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEB4EEB5;
-	Mon, 26 May 2025 01:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FEC35972;
+	Mon, 26 May 2025 01:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748221883; cv=none; b=WO0IIVQczYIxq6u5zTqHRthCN1WEtbEN6bVxfXhYNHywF38Jwf0Ri3leBrh1sl+IgzQOTMoEf+17Mj7K6A14zS0TfSum+JVDFD2MAkHweoH1KyKF8KAhEW0n6zHdTjLLFDew1NO/vQBQK73yh3uOJx86h2gLs93d95LECOv/JEg=
+	t=1748221934; cv=none; b=LzF0/5HTmVLArdk8t1vlzn+KAvhlAEcRjtU4CLUGRZWzSEHD6flCSR24qmxGiPjsRADVCzC9EQN4uA0rA36HQx9ynNCtrFZvpdQFS0aUCVcXgHFQKNFjf64sMSaXFi7g0ZeitVkgQvGhPIRHBPQxvtU8CF6TkPOt0qe2T/wkT30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748221883; c=relaxed/simple;
-	bh=qRqEQb252iaBK7d6Hgik+7uMTw2Xwx0bPvuaYn2hEdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WDOPTWJnkaT2n2ltV4KPhmFEc05ixbYGLNFmVd1yML9avnWDoyEPDX3twbgzX4+cbNUYtDw7WTPLiRQz2SNTadGjAhjSn4hyxVyEz2wC8gp1W/3ab37YHUVpNmAgPpqm3iSU1AiBloRXMt1UWS+GSp36CZm7ZfkrFfDnDCN6j4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iEifvHuG; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748221934; c=relaxed/simple;
+	bh=Hdf+EjjTXZohy7wvzsrbiXVv91he59uK5ObP7uvDCFk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=oTrvDnOmYXt7FXJGdM+xwBGRTtMTMcyjOLobjJ4eGMctQ5IRtzTGudsjbeh5WaRZPwdaKJosedAFynqjmVuAH6VMKEkMhmnnHQqxcy62m+cNNdQ9IKL7Q5E9+LtW8T75BRvR+tTp1UMLqB+lnqYLDBazvniRpf2+LO5aH2gmc3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBqZdmJ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iEifvHuG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748221882; x=1779757882;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qRqEQb252iaBK7d6Hgik+7uMTw2Xwx0bPvuaYn2hEdo=;
-  b=iEifvHuGW2ZUtqbx0z26YjqE8/kwnF+aZi8eLTzIRJbaimcpd++pALqi
-   l4OaMU6GNumGyReYvEL9QkbTzo68rRyKbeG2xr6rEJdaXkVr1RNvYF+KB
-   /3pigrGXUMaTFDKiCOkRZyS8/GHIP0GEkB6v+p4Tg8lR40bUra5mxLvQI
-   NTWV7P7KSzhPC+/gzIjJkk6PeXBEadl+z3FJK6djTu08FL3WB0v11gmer
-   k9sx6Ru7g03Bf6ykmbxWLGkkr6p6x5ILjFC7J62QfMl8rL5j2zOO0NP0Q
-   G6USfH/J7OodNgKtKc1Vj6E8L7Tl7zEneZUT6QnmJ5HmsBl5dUuHpWG2r
-   w==;
-X-CSE-ConnectionGUID: Uox+4q76SmaVDEwZLAMXHw==
-X-CSE-MsgGUID: D5BtXZvtTNe75h8tqVFilQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="53993793"
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="53993793"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 18:11:21 -0700
-X-CSE-ConnectionGUID: QicwbyTGQPCDmw7tSpgWCw==
-X-CSE-MsgGUID: SuG/HLrFTwq0RP67UwzE9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="142156035"
-Received: from yungchua-mobl2.ccr.corp.intel.com (HELO [10.246.105.120]) ([10.246.105.120])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 18:11:19 -0700
-Message-ID: <8b31c5a4-14ba-42ef-812a-b277656c5250@linux.intel.com>
-Date: Mon, 26 May 2025 09:11:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBqZdmJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CAE8C4CEEA;
+	Mon, 26 May 2025 01:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748221933;
+	bh=Hdf+EjjTXZohy7wvzsrbiXVv91he59uK5ObP7uvDCFk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=SBqZdmJ/v5YNWL0MNAgOodpQ2MPdxMHNJh21PffomPOdBJBGshC4LaqDUttDtg+Nc
+	 rqmN8p4KcWg7TelM/WUzeRiJ2LunogRlcyMsBf/cZabuk5QS4SdL/H6YhaMb4CbNqp
+	 sHo9Gs16plVIVnKnzJIuk/51Ik81S7c+uX52VWLkYkSYS0YRB76AwZRcQFXlJj01Rq
+	 EvhH8DTaDknnbQ/AYw8pUJg9txdtqkljBXDzxcalfkriV3T43aeOn//DPCo0H9y0Ub
+	 m+A1TFazvRqku8RhSKOp/Wt8wiYOpmzouI6lt/mqNWqYwDbta28a6Xs8ybB+BFXR/6
+	 0/sFt6PAX/s7w==
+Date: Sun, 25 May 2025 18:11:59 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Theodore Ts'o <tytso@mit.edu>
+Subject: [GIT PULL] fscrypt update for 6.16
+Message-ID: <20250526011159.GA23241@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soundwire: intel_ace2.x: Use str_read_write() helper
-To: long.yunjian@zte.com.cn, vkoul@kernel.org
-Cc: pierre-louis.bossart@linux.dev, sanyog.r.kale@intel.com,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
- mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn, fang.yumeng@zte.com.cn,
- ouyang.maochun@zte.com.cn
-References: <20250523141910793yUFpjomfu0byK_yFddHQu@zte.com.cn>
-Content-Language: en-US
-From: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
-In-Reply-To: <20250523141910793yUFpjomfu0byK_yFddHQu@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-On 5/23/2025 2:19 PM, long.yunjian@zte.com.cn wrote:
-> From: Yumeng Fang <fang.yumeng@zte.com.cn>
-> 
-> Remove hard-coded strings by using the str_read_write() helper.
-> 
-> Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
-> Signed-off-by: Yunjian Long <long.yunjian@zte.com.cn>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/fs/fscrypt/linux.git tags/fscrypt-for-linus
+
+for you to fetch changes up to c07d3aede2b26830ee63f64d8326f6a87dee3a6d:
+
+  fscrypt: add support for hardware-wrapped keys (2025-04-08 19:32:11 -0700)
+
+----------------------------------------------------------------
+
+Add support for "hardware-wrapped inline encryption keys" to fscrypt.
+When enabled on supported platforms, this feature protects file contents
+keys from certain attacks, such as cold boot attacks.
+
+This feature uses the block layer support for wrapped keys which was
+merged in 6.15.  Wrapped key support has existed out-of-tree in Android
+for a long time, and it's finally ready for upstream now that there is a
+platform on which it works end-to-end with upstream.  Specifically,
+it works on the Qualcomm SM8650 HDK, using the Qualcomm ICE (Inline
+Crypto Engine) and HWKM (Hardware Key Manager).  The corresponding
+driver support is included in the SCSI tree for 6.16.  Validation for
+this feature includes two new tests that were already merged into
+xfstests (generic/368 and generic/369).
+
+----------------------------------------------------------------
+Eric Biggers (1):
+      fscrypt: add support for hardware-wrapped keys
+
+ Documentation/filesystems/fscrypt.rst | 187 +++++++++++++++++++++++++++-------
+ fs/crypto/fscrypt_private.h           |  75 ++++++++++++--
+ fs/crypto/hkdf.c                      |   4 +-
+ fs/crypto/inline_crypt.c              |  44 ++++++--
+ fs/crypto/keyring.c                   | 132 +++++++++++++++++-------
+ fs/crypto/keysetup.c                  |  63 ++++++++++--
+ fs/crypto/keysetup_v1.c               |   4 +-
+ include/uapi/linux/fscrypt.h          |   6 +-
+ 8 files changed, 410 insertions(+), 105 deletions(-)
