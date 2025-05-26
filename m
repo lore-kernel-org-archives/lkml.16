@@ -1,142 +1,138 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAF32DCC0B;
-	Mon, 26 May 2025 07:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 044401607AC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245549; cv=none; b=VbQ+V2M2UeLozMiM8MyH0TH08ZIXeTYMCPu3HeI99zeKHABIsFQtpPChpOuFFihVWPRjvwQrDOubXv2/JO4WXaQVt9OhI/ir8X9L6ed5vGJmtHBKknDmu+RjDQyhBInnAYJzUZ4D0bqVjXHWe4egey3+qWuIZhx13IMmzdoTCc4=
+	t=1748245768; cv=none; b=VB8rQyAKyj/TaaHyKLR9rxbs18zCPGLJ/9eWp9yUb4wz8oLvZJdFHNs3zJ2yTpCjIiWhE1ws6g2lNoKFx9nd6FgOvoM9Qh9Sx4C0ctIDJMNBa4XgZ7nwboeWqP/c1VDk1f/YtL1lVw2q+cpkVXrYu6utuOa+X9hKqj9y9oleg/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245549; c=relaxed/simple;
-	bh=IKPOttPlF0NgyQsdYLx3uMrMrLsnXJ7+pj+nFrwqMAo=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RQa0+V5NS9PwgrqtwrR75e7k0sgdxZYDgpeIQ/tGiYFT8G2y+mp+P/pX+n6W2jSTRRqsUjbG3ZYG3aOPW28YT7RS9ewHrOxIzTG1vghsGxILdUIJ3nZNiLqo4v5s0Y23L4hZqeJvmSLD0c4IqVHhM0T7sFX7gIkZjOqCSlv4jxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5SV966zYz4f3k5c;
-	Mon, 26 May 2025 15:45:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E4ED11A16A0;
-	Mon, 26 May 2025 15:45:41 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl8kHDRoqxQ2Ng--.6543S3;
-	Mon, 26 May 2025 15:45:41 +0800 (CST)
-Subject: Re: [PATCH 06/23] md/md-bitmap: add a new sysfs api bitmap_type
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-7-yukuai1@huaweicloud.com>
- <20250526063226.GB12811@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <577a1bf6-9f23-0ccd-c269-d625ae11890d@huaweicloud.com>
-Date: Mon, 26 May 2025 15:45:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748245768; c=relaxed/simple;
+	bh=qaWGdtWWEDWbuAk2OjVRZIF2uXcMsAOUPGyIsxogANQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=s25DRvPlNLOMUYvKYohzKGGV+5MHCCIOyp/Wbl0BFsY10zA85aEJ4mTQVaSf9KLx0c6E7gy3ttCEYxc49ySUzLxP8CgfV8NjIKnvx6+YUuSxdeQGUNKY1ifTXPO4Sw2ApRIRLgFyQyAS741JHcSI9oEmT2kINgAYZkfZyQjaa/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E344Hcw/; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E344Hcw/"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a366843fa6so1167382f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748245765; x=1748850565; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6h0uQSHhstORVTEbKYqVuq9uAIameHHdgMLaxLpM/tQ=;
+        b=E344Hcw/I3MQIwZbL9HYi5u9QEy9UhfSuGO5sK2z3E2hf5Yiow9NgaIc5lPtM0XPei
+         fTRzvfu+oWgigN5mr52J3mUiv6AvA6SMD6bgY1F1cSO2Lzepxp1hRBVbkR5+iUyhxJWP
+         PuJeeLNX6l1hOFjbYjVCo/3rRumSBiS+8JRZhRbQLBx5cbxsGdYOOxxqSd6l+kCanYHM
+         etk57sLX2R1vWRWTcxe6u8Kf31TT/+R6Mm1/ZiaIIB2CqfoVgZ3RFrC93zUTBvulTwDI
+         4eOEsTw3M+hIakjv/M9r0nZ1UBldf2a8/Roti77oY+2CB/2vSw8Ld2C/4aK5Ia7DVNvw
+         v6cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748245765; x=1748850565;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6h0uQSHhstORVTEbKYqVuq9uAIameHHdgMLaxLpM/tQ=;
+        b=pnxrD2a5CJKQ4yNKz6h3z8f6zMSL9614TYs4MY5FfTgX4ddR+1iAq1lvfhvSI5bUHb
+         6xSJrSiFGj8YyILVIitLb8pbh0PHZizUwPMhbl4ekexW7qBJIM0GSBcEIYOpSM2QOA7V
+         toW+bT3LFFI+GzapVwDIjFVMtJJUZ6+meUiFT2n8Ntzmi/BtpovvvL6Z0AOLvGJ7l3tl
+         14SQL50JcwWhOMoHbP6KSz47neYPhRd+eQXGi3tLXmKwitFh59OeYHjPfop3YDd9Ay1E
+         3NfyKGeeIw3KI/gewQsJD4bve4loodTc2pYe3ODPeD1ecwhYOwZ/0O6MQmhpzgqiUAy1
+         n1Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCVa4AeaQRt+PrWj08eXjja4+uV+mn5LLp6U65yK3EVErdJUiUFHAQcehlRC5dirns2JVbJl+TbuApLfFOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWSz/tRpZE2EV1fLakQUTz+hq+V7L8bDO2DTopyGldW5AOSA9x
+	hWXtk22QRwAVJXQP0e+TPy0V2tzKYRMRKn0ts4aUZ2gnsrgRr12qvNb2XGS+njNSkGc=
+X-Gm-Gg: ASbGncuHstscbq4oIAX7l7rU7seFl4VnUjhJb0ERimfjRZVBcalhH35dgxTCTrgCkDw
+	sHE4yaKie5rbkflEJekl0iey4MBh/SUMxqtFGSQg2hplBprefUWqzXL4nxHKAzYb+w4bqyIQNXO
+	APxQds/ad0iFii4BgplZ+Sq4YemVeH1yCDYcpFnSXr+Ljjzs5rELvEJmXPDx71a3rmJLM0AsTUN
+	IhFapk0qQ8eGZ6ACUDGsteQTNpfk+JeN0BxWg06kDpuVJES0UyIs9v82Z24RkIWfctkfZ/8oHpO
+	3EfsOReDXFOcxzjSxBErrIpWCa1tVp6Cuj8E1ackjE1rFxzK/94xyI0Iriorb8mkOGVZbU7K2Ij
+	LgXDXaUsuxclTal2CZb3TxjkLVr/U
+X-Google-Smtp-Source: AGHT+IFwn6e9zs2iK8JeOSnEW3hHwjsZM4zOs5Vujf9EUKXgUomiCoAj1Q8i7GhrfTZfdCXNcRPt1Q==
+X-Received: by 2002:a05:6000:1a8d:b0:38d:de45:bf98 with SMTP id ffacd0b85a97d-3a4cb408865mr5600086f8f.8.1748245765248;
+        Mon, 26 May 2025 00:49:25 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62b5dsm34899073f8f.55.2025.05.26.00.49.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 00:49:24 -0700 (PDT)
+Message-ID: <fe84a168-a6a7-4663-8c42-e469272b497b@linaro.org>
+Date: Mon, 26 May 2025 09:49:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250526063226.GB12811@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl8kHDRoqxQ2Ng--.6543S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7trykGry8ur43Aw1DWF1xZrb_yoW8WrWxp3
-	yfJ3ZxCFs5XFWFgw17uasF9FnYqw4DJF9IqryfX345Grn8XrsxWFWrWa1Dtw17A3W8ZF4D
-	Za45JrW8WryUuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 1/7] phy: phy-snps-eusb2: fix clock imbalance on
+ phy_exit()
+To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+ Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Abel Vesa <abel.vesa@linaro.org>, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250523084839.11015-1-johan+linaro@kernel.org>
+ <20250523084839.11015-2-johan+linaro@kernel.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250523084839.11015-2-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
-
-ÔÚ 2025/05/26 14:32, Christoph Hellwig Ð´µÀ:
-> On Sat, May 24, 2025 at 02:13:03PM +0800, Yu Kuai wrote:
->> +  consistency_policy
+On 23/05/2025 10:48, Johan Hovold wrote:
+> Make sure to disable all clocks enabled at phy_init() also on
+> phy_exit().
 > 
-> .. these doc changes look unrelated, or am I missing something?
-
-The position are moved to the front of the bitmap fields, because now
-bitmap/xxx is not always here.
-
-Before:
-
-All md devices contain:
-	level
-	...
-	bitmap/xxx
-	bitmap/xxx
-	consistency_policy
-	uuid
-
-After:
-All md devices contain:
-	level
-	...
-	consistency_policy
-	uuid
-	bitmap_type
-		none xxx
-		bitmap xxx
-If bitmap_type is bitmap, then the md device will also contain:
-	bitmap/xxx
-	bitmap/xxx
-
+> Fixes: c4098f3e6134 ("phy: phy-snps-eusb2: add support for exynos2200")
+> Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>   drivers/phy/phy-snps-eusb2.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->> -static void mddev_set_bitmap_ops(struct mddev *mddev, enum md_submodule_id id)
->> +static bool mddev_set_bitmap_ops(struct mddev *mddev)
->>   {
->>   	xa_lock(&md_submodule);
->> -	mddev->bitmap_ops = xa_load(&md_submodule, id);
->> +	mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
->>   	xa_unlock(&md_submodule);
->> -	if (!mddev->bitmap_ops)
->> -		pr_warn_once("md: can't find bitmap id %d\n", id);
->> +
->> +	if (!mddev->bitmap_ops) {
->> +		pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
->> +		return false;
->> +	}
->> +
->> +	return true;
-> 
-> This also looks unrelated and like another prep patch?
+> diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
+> index b73a1d7e57b3..19af3f99692c 100644
+> --- a/drivers/phy/phy-snps-eusb2.c
+> +++ b/drivers/phy/phy-snps-eusb2.c
+> @@ -504,7 +504,7 @@ static int snps_eusb2_hsphy_exit(struct phy *p)
+>   {
+>   	struct snps_eusb2_hsphy *phy = phy_get_drvdata(p);
+>   
+> -	clk_disable_unprepare(phy->ref_clk);
+> +	clk_bulk_disable_unprepare(phy->data->num_clks, phy->clks);
+>   
+>   	regulator_bulk_disable(ARRAY_SIZE(phy->vregs), phy->vregs);
+>   
 
-The new api will set mddev->bitmap_id, and the above change switch to
-use mddev->bitmap_id to register bitmap_ops, perhaps I can factor the
-change to a new prep patch, like:
-
-md: add a new field mddev->bitmap_id
-
-Before:
-mddev_set_bitmap_ops(mddev, ID_BITMAP);
-
-After:
-mddev->bitmap_id = ID_BITMAP;
-if (!mddev_set_bitmap_ops(mddev))
-	return -EINVAL;
-
-Thanks,
-Kuai
-
-> 
-> .
-> 
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
