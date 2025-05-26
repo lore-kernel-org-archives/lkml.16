@@ -1,133 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DF71DE3DB
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E2138FA3
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748265166; cv=none; b=ik2Dp1trX69pvRbEJHBMVwr2IscUCuzEIUBzsxM0/DvDMlxAzmndnBe+ZqqssHGW6O3EwJtk6dG0KrYP4yqD/U/zIdcPj3GRHS2MzGaEC+r01Mm/81vXsuDw/FG/BHLoycbC3TJozDEw8Wb0wsBwmB5Gc4Ef604FDgy864mrojY=
+	t=1748265263; cv=none; b=MVXl2DuP1w/6jS9DcBYf9a8mR8lQdFHhSXNADyGknXgybPQeIw3OASCli2pxY2UQry0sdQT8W8WFfYYT3xTHbg0n+RaueiVIx7yRi0PG/Psuglqz5RRBPcp3H3PT6ZSNDjYaysZ6jDYJCe2ViEsdwNNGZeXAwdxnHa4HIRuzon8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748265166; c=relaxed/simple;
-	bh=vZhyA16i4QBSEsNG/mrzQfpgHB+jBlz4tGq06KsD/94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oNbC0Hiv88d+I5UbRBFHSy4aR6mtM1EeUZfizpdjXZeZx98F/WuZoyMgjnJGzYMZWZV7+tH1QnkSJi4S1gwuY4N0mLamEuRhNh2bcqBteTmQn2zoHeyJycvY1Mnw1Xb01oWQkBlEvHnMi/bWSae4bYQ38MD7o4O5zAv77FwJfwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KSrKYNp7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748265263; c=relaxed/simple;
+	bh=bO/0Xaesh46tkH/6EtZkwZJC/Ke1U0YJEB9UHrN+Dm8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D1q7IltMLS0f3kuYc6tpElYQVS+mnkmvvgBsbokJKT3dLgpq7Xa+iMYpelEFZkAyJMrxd8Lime78lYqaxOXEWaAACuM3pEirHmQsXN2GW2cu6zbrRNEmwrCEzEy/az1W5BQAc7SQmVbuSSp3PWYi/hZLCNv+dR0loKCGvL7y5I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QKuRH+LY; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSrKYNp7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748265163;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LGsF0H7qCgK7/aWOj+Nk3etjewi4LnEg9nKOYPaMqno=;
-	b=KSrKYNp7EilJdui/sGMacITXZj52v1J/evVB9CvHCqi8itrWugMjv3pPTU8O/qYfvKP4e1
-	ppmzmatN6FOgUMkX3REHCUMgFHxocbCdPM/hUtZ6+Mci9mC6a5pjX2dkws59KqabL72ZQE
-	bpKtQuPCwuIsgXCYyfZJe5n5OP4Gm3U=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-573-BX4CmhvGNhOF7pIXtT_9nA-1; Mon, 26 May 2025 09:12:41 -0400
-X-MC-Unique: BX4CmhvGNhOF7pIXtT_9nA-1
-X-Mimecast-MFC-AGG-ID: BX4CmhvGNhOF7pIXtT_9nA_1748265161
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad5921edf06so258347166b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:12:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QKuRH+LY"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso3703373a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748265260; x=1748870060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w4+k+Nu4YkKy6LiE5cuySMYYEE0NwgP2DNr9A1G8YXc=;
+        b=QKuRH+LY1NOE1YAGOwll4HD0duTKyGYI7G/DN1kwjJmzGywhQiyqqv4gt9aM3LEVaa
+         EZ/IFOBh0HiDNQuVnVCdcejuu4xqnQ0U0E0iF17vdsE5oroGskHVbv1dbPGY0NIKqAvW
+         vdN5KzkSbLCDxkGXTIRu7lm0YXkJL8lSDFzOWqtz4WJX8azVWzWKaRssutWvtzkuYbvc
+         bAxOjrIW+Jz3v4fHI4HaFr5IFm9T8MAcYJPs9TsSmu9YeI5LQZXqHw6OYdnDNNIxd5o4
+         8AdlL9DNGEY0Q+iGYiYTpObkMIyswm7kjZLGfKU1Pu/GLqmjqC/h9NNAD4FSOTptBrJd
+         ISUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748265161; x=1748869961;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LGsF0H7qCgK7/aWOj+Nk3etjewi4LnEg9nKOYPaMqno=;
-        b=eA3bO/sbNs/rVuIW+aT/YI0cCfm8PMN4OC2XiYhWP+3n6OYYsz4bppTzzdNJTTHgIS
-         dqQxy7ZN2XOQA568tS24Bqm2hypxNvPLgN/0yX5bTLX7ucbIpdRFlXiNSLW9jySRRx7+
-         +nQz2I17Lju0GtFJ6cm1haKX289zupfwGNvJqbDcdooRUa0f1AuxVGA4cpKhaYXmh66p
-         cmASq2kyzUHX4uGTKeWIz5B7PuUUEDQvLjyfnHCHQvsu6fhcXn/Z0KxkozZtkB6LW8xB
-         4SgE8lDOEew3N9C0tr625U4qanmazoFJCSsLJMXGovVve4Xa2QrP4mBJWA4LI8DCojQb
-         Ev9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX6ZHD6wXlqMHBYqExhjZPe6YkKRmboT9Qxf2RS9wS3oV2EjZGAeInjXNo/VC1SN5yQlrTLIAQWDduW9bI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziLbDY9mzVWgl9tigsymtQWwNjZe9vv7Kh3ouya7dEZeuj1bBH
-	gAlWfpnM+42lg66/PMx+5jlY6n9J5CTrWLoaIlpSb0Z1+QrLVOhA9kVTf8bkdSc2m1SFt6K3W+s
-	DcKaAdz5hwvDZvtc3DNkQbsmgPQMELZ0bt9Hswk4u+9NL3mY7jldpWzQ3xvv/xGZZ8Q==
-X-Gm-Gg: ASbGnct7Cj7qM1nGqZH0C9tGGiw6fiKCo8QL9ftI0418g4zdkvzECbNFvLQuMtdh1XM
-	NBYl1oyMHpzrR3QFZO1yzcJsRIFWtHw+4ElOnH7CKeYGqKPA8Vh24faemiqbGKzhiZWtuZ69SHR
-	7UXNqjc3O+xnu4+hizbiW9Ajiwk5htlD/yjWdpVx89j9Vccv2rDM869731gJi3z6F44H1K4zxzM
-	A+kQen0Kr9bA9ovmCmD81+4YQ+uIJRofz2/ltUEPvQC6YakQ+NpRzgZ47YFsKFxH/jTDVvH/cHY
-	16uMGe7/A365d9s=
-X-Received: by 2002:a17:907:e98a:b0:ad5:3a7b:de91 with SMTP id a640c23a62f3a-ad85b1bfa4amr972803666b.27.1748265160507;
-        Mon, 26 May 2025 06:12:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH8QvnLtVJhSpJ26PCw53K12teQU0kcApIkCEK6+L/O1mhz5DN4sVNTnhfSEoC9TKB9oRBNBA==
-X-Received: by 2002:a17:907:e98a:b0:ad5:3a7b:de91 with SMTP id a640c23a62f3a-ad85b1bfa4amr972799866b.27.1748265160087;
-        Mon, 26 May 2025 06:12:40 -0700 (PDT)
-Received: from [10.40.98.122] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04b059sm1702170766b.10.2025.05.26.06.12.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 06:12:39 -0700 (PDT)
-Message-ID: <f3454fcc-ec8c-4735-8188-9f44fffa6df8@redhat.com>
-Date: Mon, 26 May 2025 15:12:39 +0200
+        d=1e100.net; s=20230601; t=1748265260; x=1748870060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w4+k+Nu4YkKy6LiE5cuySMYYEE0NwgP2DNr9A1G8YXc=;
+        b=j0Ul8Usnefv8ON1M9bpCvJ7pwiGuAyCoRT9SiKikQIXxl6v5GrWO46glFllNHzh3Ax
+         chJpAvZcrvb9Mv9f06g6e9i06+Y+kgmQx2iT45UH8cSnb2v18Alaa4K4CXzu1qYVNj/9
+         T2TX0S1wTcnHTVa7HH44Wz96SsUjjnb55NNvIOyiBk77uxS3fuiI+IGW+9qowu1SZrBS
+         JQHNTAco5lOhq4AMBkmImZ2picb0b6BPATyMrEQD1alhmTKTo49p5jSJ5mt+i6RiazkA
+         qy4XevbS4Npty3qUX+Wr/tIGz/1rMXKAurxUeYdqKL62uuwJfR0wOnYdNQnW7zs8JfVu
+         qEQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvV6WqIZi0atKz0MQmjuPjUe3Rdc1uHxbFl35i+80ER0/9CS/ApIqQKCXIPWlmyTIh/EL13BXl4oQOgOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU5uXljxqvxgKXTr4auhl0aEEg04OfZvxuQ453DzK8IT6yVPib
+	cESFro+OyDpmD+4F9cD7NS6SM96m/+f2CdOwCFcRTQbY5XJjHCsERBYSFqySaA/uQ4k1hOOCvpT
+	B0Z2Xdj8vRGbvq0h8e4Brsq6borQHC/RM+qCPQtUy
+X-Gm-Gg: ASbGncuC+0nBeFz5ixwpQt6EQfDm7zjKq5ZbXd52ik5bwEI32qzH65MEbOXNiwxvEym
+	sz2aZnHhfcezXsM8GKKVGBPjAI3oqISM1UYnmvqRu2mHRFCFzl41HQA43du5DQSHJ9mIh1sF+x5
+	gOBW3CbPNkUseWczxfsduwfWcJytBp7l2wdAK6Dse/i2JzPxhIcsPocIe1Dt7Dgp75BKJ2EthrE
+	aBTg3BaJyTT
+X-Google-Smtp-Source: AGHT+IGSDYm4oUBrMvAWr4qV6JEwgtkxAoXA09ViNidu+7oqcKIQevQbpQyCq8UT33Rf3UPLw9iojM9JPNyO0bGNSiY=
+X-Received: by 2002:a05:6402:5cb:b0:5f8:36b2:dc1a with SMTP id
+ 4fb4d7f45d1cf-602d9dfb022mr6373984a12.16.1748265259311; Mon, 26 May 2025
+ 06:14:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] media: Documentation: Add note about UVCH length
- field
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250404-uvc-meta-v5-0-f79974fc2d20@chromium.org>
- <20250404-uvc-meta-v5-2-f79974fc2d20@chromium.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20250404-uvc-meta-v5-2-f79974fc2d20@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1747349530.git.babu.moger@amd.com> <e7e8f489ef148a4dcd5837d71c83efad47b5b7c3.1747349530.git.babu.moger@amd.com>
+ <dd195d60-3e40-42be-88e5-7f3bbbba63ce@intel.com> <SJ1PR11MB6083C5179F98E3873CA34C35FC99A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <aDDjs4PZxeouNJr0@agluck-desk3>
+In-Reply-To: <aDDjs4PZxeouNJr0@agluck-desk3>
+From: Peter Newman <peternewman@google.com>
+Date: Mon, 26 May 2025 15:14:08 +0200
+X-Gm-Features: AX0GCFs_DCKZgy9xuJ0w8LNwHoWYFzGA3d96dNjxjpA4WAsm7kDE__eyTTN92UE
+Message-ID: <CALPaoCj7FBv_vfDp+4tgqo4p8T7Eov_Ys+CQRoAX6u43a4OTDQ@mail.gmail.com>
+Subject: Re: [PATCH v13 11/27] x86/resctrl: Implement resctrl_arch_config_cntr()
+ to assign a counter with ABMC
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: "Chatre, Reinette" <reinette.chatre@intel.com>, Babu Moger <babu.moger@amd.com>, 
+	"corbet@lwn.net" <corbet@lwn.net>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "james.morse@arm.com" <james.morse@arm.com>, 
+	"dave.martin@arm.com" <dave.martin@arm.com>, "fenghuay@nvidia.com" <fenghuay@nvidia.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"paulmck@kernel.org" <paulmck@kernel.org>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "thuth@redhat.com" <thuth@redhat.com>, 
+	"rostedt@goodmis.org" <rostedt@goodmis.org>, "ardb@kernel.org" <ardb@kernel.org>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>, 
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
+	"alexandre.chartre@oracle.com" <alexandre.chartre@oracle.com>, 
+	"pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "perry.yuan@amd.com" <perry.yuan@amd.com>, 
+	"seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	"Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "Li, Xin3" <xin3.li@intel.com>, 
+	"ebiggers@google.com" <ebiggers@google.com>, "xin@zytor.com" <xin@zytor.com>, 
+	"Mehta, Sohil" <sohil.mehta@intel.com>, 
+	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>, 
+	"mario.limonciello@amd.com" <mario.limonciello@amd.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>, "Eranian, Stephane" <eranian@google.com>, 
+	"Xiaojian.Du@amd.com" <Xiaojian.Du@amd.com>, "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Tony,
 
-On 4-Apr-25 08:37, Ricardo Ribalda wrote:
-> The documentation currently describes the UVC length field as the "length
-> of the rest of the block", which can be misleading. The driver limits the
-> data copied to a maximum of 12 bytes.
-> 
-> This change adds a clarifying sentence to the documentation to make this
-> restriction explicit.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+On Fri, May 23, 2025 at 11:08=E2=80=AFPM Luck, Tony <tony.luck@intel.com> w=
+rote:
+>
+> On Thu, May 22, 2025 at 10:16:16PM +0000, Luck, Tony wrote:
+> > > It looks to me as though there are a couple of changes in the telemet=
+ry work
+> > > that would benefit this work. https://lore.kernel.org/lkml/2025052122=
+5049.132551-2-tony.luck@intel.com/
+> > > switches the monitor events to be maintained in an array indexed by e=
+vent ID, eliminating the
+> > > need for searching the evt_list that this work does in a couple of pl=
+aces. Also note the handy
+> > > new for_each_mbm_event() helper (https://lore.kernel.org/lkml/2025052=
+1225049.132551-5-tony.luck@intel.com/).
+> >
+> > Yesterday I ran through the exercise of rebasing my AET patches on top =
+of these
+> > ABMC patches in order to check whether the ABMC patches painted resctrl
+> > into some corner that would be hard to get back out of.
+> >
+> > Good news: they don't.
+> >
+> > There was a bunch of manual patching to make the first four patches fit=
+ on top
+> > of the ABMC code, but I also noticed a few places where things were sim=
+pler
+> > after combining the two series.
+> >
+> > Maybe a good path forward would be to take those first four patches fro=
+m
+> > my AET series and then build ABMC on top of those.
+>
+> As an encouragement to try this direction, I took my four patches
+> on top of tip x86/cache and then applied Babu's ABMC series.
 
-Thanks, patch looks good to me:
+I did the same thing last week, except in the other order, so I
+switched to your changes to test.
 
-Reviewed-by: Hans de Goede <hansg@kernel.org>
+>
+> Changes to Babu's code:
+> 1) Adapt where needed for removal of evt_list. Use event array instead.
+> 2) Use for_each_mbm_event() [Maybe didn't get all places?]
+> 3) Bring the s/evt_val/evt_cfg/ fix into patch 20 from 21
+> 4) Fix fir tree declaration for resctrl_process_assign()
+>
+> I don't have an AMD system to check if the ABMC parts still work. But
+> it does pass the resctrl self tests, so legacy isn't broken.
+>
+> Patches in the "my_mbm_plus_babu_abmc" branch of my kernel.org
+> repo: git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux.git
 
-Regards,
+Thanks for applying my suggestion[1] about the array entry sizes, but
+you needed one more dereference:
 
-Hans
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c
+b/arch/x86/kernel/cpu/resctrl/core.c
+index 1db6a61e27746..0c27e0a5a7b96 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -399,7 +399,7 @@ static int domain_setup_ctrlval(struct
+rdt_resource *r, struct rdt_ctrl_domain *
+  */
+ static int arch_domain_mbm_alloc(u32 num_rmid, struct
+rdt_hw_mon_domain *hw_dom)
+ {
+-       size_t tsize =3D sizeof(hw_dom->arch_mbm_states[0]);
++       size_t tsize =3D sizeof(*hw_dom->arch_mbm_states[0]);
+        enum resctrl_event_id evt;
+        int idx;
+
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index 098ff002d2232..44ec33cb165f7 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -4819,7 +4823,7 @@ void resctrl_offline_mon_domain(struct
+rdt_resource *r, struct rdt_mon_domain *d
+ static int domain_setup_mon_state(struct rdt_resource *r, struct
+rdt_mon_domain *d)
+ {
+        u32 idx_limit =3D resctrl_arch_system_num_rmid_idx();
+-       size_t tsize =3D sizeof(d->mbm_states[0]);
++       size_t tsize =3D sizeof(*d->mbm_states[0]);
+        enum resctrl_event_id evt;
+        int idx;
 
 
+You should be able to repro an array overrun without ABMC, and a page
+fault is likely if the system implements a lot of RMIDs. The AMD EPYC
+9B45 I tested on implements 4096 RMIDs.
 
-> ---
->  Documentation/userspace-api/media/v4l/metafmt-uvc.rst | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> index 784346d14bbdbf28348262084d5b0646d30bd1da..42599875331c0066cf529153caccb731148023b9 100644
-> --- a/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> +++ b/Documentation/userspace-api/media/v4l/metafmt-uvc.rst
-> @@ -44,7 +44,9 @@ Each individual block contains the following fields:
->          them
->      * - :cspan:`1` *The rest is an exact copy of the UVC payload header:*
->      * - __u8 length;
-> -      - length of the rest of the block, including this field
-> +      - length of the rest of the block, including this field. Please note that
-> +        regardless of the this value, for V4L2_META_FMT_UVC the kernel will
-> +        never copy more than 2-12 bytes.
->      * - __u8 flags;
->        - Flags, indicating presence of other standard UVC fields
->      * - __u8 buf[];
-> 
+Thanks,
+-Peter
 
+
+[1] https://lore.kernel.org/lkml/CALPaoCj8yfzJ=3D5CkxTPQXc0-WRWpu0xKRX8v4FA=
+WFGQKtXtMUw@mail.gmail.com/
