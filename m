@@ -1,116 +1,110 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3D633991
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 15:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91671F37D4
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 15:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748274584; cv=none; b=mhK1VScsr6oJ5t3d8gt1a4Q2tDGR3jOp0T6cvhjcx0ZQUUYotZHn2qLDXPj2dtDbBiJe0E+xD5WmDze7IeOjzIR84mKLjzk/iTjR+nZfOaIZ7YohcjO0w9qKomMTRetFgTJkHrOlHtL54IhHdNdtf+eMxvKBxgGrYFIfMFqQrkQ=
+	t=1748274585; cv=none; b=DOSgkkpsMVS8LXZr+TRvFOHfijBUCxw2tV0SCMBFwjvbUzYcibDfKXDmb+yCUG3386y0GA5PrkXkpoeSoELzGREKHy7ciZo9Pk5JtUyh8DpcOoeErn4h/FnmFs/oLfIZy2RTy5rET+mw4WBzic7zGAyDigoPAnoeNmVw1bD4iCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748274584; c=relaxed/simple;
-	bh=VwZ4kx+tXYYa5loZ3PK7z3hK3x/IufSOURYacjqHQdg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=oUXNZyyEbNeqjUXkxzH9T9e7KZAnC6ncmKks0nae8YrhGuL5wJ949bCiEOIi8+wPQEwAKFm17DIWQreN9O1pXOhoe2tK0U/XOvq9ju57u018TTNbpYd+BF/W/SwYQuLNLzLlc1KUBp8Zpo0YUVWQgzuHVXK94DI6bkS3kSByVZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VsxnybnA; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748274585; c=relaxed/simple;
+	bh=esfR/7E9RzNnrtv3HQf3a0vNmNHimAlYwcMIVFZe6Z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P+Wi3sXQWI86cqgirsuTpj3XaLCi5dNB78HSPTbYlBzyrXN4xHCfu8Lh4wCkzOXhgkPWHNJ/3TlzQwlwNxc5V5WbSGCRUXI+ZVjzrg7DRUdq5/X4XTUtHGUvttIsVQH2JFlv0ieGkSYVYEPbYx74PBqE1PXOlt0zRsafHPDK8wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cOjbiuJB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VsxnybnA"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4e1432aaa68so1616073137.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748274581; x=1748879381; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VwZ4kx+tXYYa5loZ3PK7z3hK3x/IufSOURYacjqHQdg=;
-        b=VsxnybnAveTuAnk61KssPKMXDy6L5HE9qh2VNVAPT3JE5DR1w1kJ+uMma1sqUOdfse
-         rHeUAX/m/Vk681COUsxqN1sTDbPMNhGF0/0BLjNkxuXCwxx5KAQ+J94jzis1Suyq1Ytv
-         UYHzTjxPS51y54OangTu0lovMCdx/CK4guI5z87OZC4dqX+fkF1vGrjFSW0LZ69YXshJ
-         lw00Bzsc5Er6bW5AMoVQsaFgrh4CkxU7EppbOue0kFBJhaC0bCyHqCyGFJvAa7lsYOPb
-         dHoKVj6qnJsrB6mD2B9bg7jxUeD1DLeF50pudB3c+Zj1BtAxipC8KDNKub3EWeQKQaAA
-         jrrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748274581; x=1748879381;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VwZ4kx+tXYYa5loZ3PK7z3hK3x/IufSOURYacjqHQdg=;
-        b=CbVPhvxfBs2gWW/rJ1rJKIDs1KmXzj6yo2ELmj9BLOm/iLlqTkzOJWEciuHTuHm3dU
-         tuLMxw/8q/DRP1w7Z9vrIxcTv7uBVgV1DDkajY8mgQFioMAxqTlB8v2RAo6PHsW125+m
-         T7P31uq2zq2JRNBDPsGFiVZFKderyfjG6Seu7DGSHwnztxX1aUwmPOzxWq9If5JfVW8s
-         oPo3VpdEyi1mmkVPW/t+F94uSaEcvxdUZpImEILGtsVHd7G/ModcWOyAEuhaxQNfCTwl
-         ZOusUOta0erN5NDAl17wY1ldQ0fPivwrNJWVBp7jHAJbPQ5Npmn9OhytTpnTIe8o2og+
-         00YA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDJSiLGq2mifNQ1zzR0xmZEBVK4NTXCgZHvG7dCvjrahEMJmgFkrP5XsMyUKF70DUoGTLPe20rHDGe0z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywoi4X8dJScnqjSKLmAa4/vsw39SmixJ/+MRiiBwRrNeF+gkDgX
-	n1N5pV393EOotaTNVfJmxnolk/oyrZbD/aqPFZdFYN9ytZ2UWV6BEuf5OiWfeUSpo+jpr5Ec3AT
-	A5qMxIsEdyhJN1URKcjw55PWIkn9CO0Quli7w
-X-Gm-Gg: ASbGncuUz9+swOXDOvctTQh7JWPQsRCbDnqJwFRQIK5CBF5lM9ypzLdRuNFQZMG5Drd
-	ngyosK6fCX77Jz9tkWI9PVA8BVMqJzKqIf+omqaSrVjGT1Aqi81f5Q3DhplL1ASjL3U3lkl4x3O
-	rNtwka8PqNY1oE449XiClQXNdWvuh+k/52MQ==
-X-Google-Smtp-Source: AGHT+IHxHI/WgYYSbd+L+4dIuaYdnza/2CAUBC3/gbbiQ6akT1ylcuRrP0ipSR8hMLf/hn9wzVHFuky8Uzro+oMqR0w=
-X-Received: by 2002:a05:6102:2907:b0:4c1:94df:9aea with SMTP id
- ada2fe7eead31-4e4240c112emr6567236137.15.1748274581237; Mon, 26 May 2025
- 08:49:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cOjbiuJB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748274582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=71sBxG+HNn06KJZZiyUhTeRS7hpVP19g02Rul7ZiNbM=;
+	b=cOjbiuJBrWvwGE9OSta8UhBPt6YZTqeG4kSR0Tpolfr5dRzOYrn46tB2Yg34VYAMRZxZvI
+	8ZFtt4EwfIXdqtRWygLubzfTihWXk4Vzkt3blKbns8N7rvZz584t4USdwcJBvBUSXtokvs
+	M/GbGuTG3DmHzAC11oG6HpU72E3depk=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-156-YiTpz-tYOrCvnBpakVAylA-1; Mon,
+ 26 May 2025 11:49:41 -0400
+X-MC-Unique: YiTpz-tYOrCvnBpakVAylA-1
+X-Mimecast-MFC-AGG-ID: YiTpz-tYOrCvnBpakVAylA_1748274579
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5130B19560B5;
+	Mon, 26 May 2025 15:49:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.4])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 0FE69195608D;
+	Mon, 26 May 2025 15:49:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 26 May 2025 17:48:57 +0200 (CEST)
+Date: Mon, 26 May 2025 17:48:51 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Pu Lehui <pulehui@huaweicloud.com>
+Cc: David Hildenbrand <david@redhat.com>, lorenzo.stoakes@oracle.com,
+	mhiramat@kernel.org, peterz@infradead.org, Liam.Howlett@oracle.com,
+	akpm@linux-foundation.org, vbabka@suse.cz, jannh@google.com,
+	pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	pulehui@huawei.com
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+Message-ID: <20250526154850.GA4156@redhat.com>
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+ <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
+ <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
+ <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
+ <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Xianying Wang <wangxianying546@gmail.com>
-Date: Mon, 26 May 2025 23:49:30 +0800
-X-Gm-Features: AX0GCFuH5q3K6rpEbnZIexqc0vbJnC9LpuAM7WMpr7TMYF6YvKC7kVCM8cgUaMY
-Message-ID: <CAOU40uDrsJH2562F4FdxEatGmxRyX0anmFiXN97+gOKDqAHmbA@mail.gmail.com>
-Subject: [BUG] BUG: scheduling while atomic in throttle_direct_reclaim
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Hi,
+Hi Lehui,
 
-I discovered a kernel crash described as "BUG: scheduling while atomic
-in throttle_direct_reclaim." This issue occurs in the memory reclaim
-path, specifically in the throttle_direct_reclaim function
-(mm/vmscan.c), where the kernel attempts to perform a potentially
-blocking operation (schedule_timeout) while still in an atomic or
-non-preemptible context, leading to an invalid scheduling state and
-triggering __schedule_bug().
+As I said, I don't understand mm/, so can't comment, but...
 
-The crash trace shows that this condition can occur when the kernel
-mounts a specially crafted ISO9660 image via syz_mount_image$iso9660.
-During image parsing, the VFS initiates page readahead through
-read_pages, which issues block I/O backed by a loop device. This leads
-to a SCSI read path where scsi_alloc_sgtables
-(drivers/scsi/scsi_lib.c) attempts to allocate memory for a
-scatterlist using mempool_alloc. If memory pressure is present,
-mempool_alloc triggers try_to_free_pages, and subsequently
-throttle_direct_reclaim.
+On 05/26, Pu Lehui wrote:
+>
+> To make things simpler, perhaps we could try post-processing, that is:
+>
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 83e359754961..46a757fd26dc 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -240,6 +240,11 @@ static int move_ptes(struct pagetable_move_control
+> *pmc,
+>                 if (pte_none(ptep_get(old_pte)))
+>                         continue;
+>
+> +               /* skip move pte when expanded range has uprobe */
+> +               if (unlikely(pte_present(*new_pte) &&
+> +                            vma_has_uprobes(pmc->new, new_addr, new_addr +
+> PAGE_SIZE)))
+> +                       continue;
+> +
 
-At this point, the kernel is likely in an atomic context due to
-earlier direct reclaim or preemption disabling within the block layer
-or SCSI stack. As a result, schedule_timeout is not allowed and
-triggers a BUG.
+I was thinking about
 
-I recommend reviewing the reclaim context propagation in:
+	WARN_ON(!pte_none(*new_pte))
 
-scsi_alloc_sgtables and sg_alloc_table_chained
-mempool_alloc in SCSI I/O paths
-throttle_direct_reclaim to ensure blocking calls are not made from
-atomic contexts
+at the start of the main loop.
 
-This can be reproduced on:
+Obviously not to fix the problem, but rather to make it more explicit.
 
-HEAD commit:
+This matches the similar xxx_none() checks in the move_pgt_entry() paths,
+say, move_normal_pmd().
 
-commit e8f897f4afef0031fe618a8e94127a0934896aba
+Oleg.
 
-report: https://pastebin.com/raw/bxuLHCgu
-
-console output : https://pastebin.com/raw/mCZ4Ap8Q
-
-kernel config : https://pastebin.com/raw/aJ9rUnhG
-
-C reproducer : https://pastebin.com/raw/1dku01DG
-
-Best regards,
-
-Xianying
