@@ -1,126 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B2E23DE;
-	Mon, 26 May 2025 04:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719531A8F84;
+	Mon, 26 May 2025 04:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748233599; cv=none; b=N+jW8B+v3pXNWAYAoFs4ID69S9ZORrVFpKkZxlyNrcru13wXe5irWoLInoyO33mdqF33SvqDmgIneSEUF1tnOe6MIYd/q15h+Iz1JDJFcnz6Z5x8w4luSx3/7whhafcQKR/68vIB9UQDZiv9XPWlgmbtqDPEoufAVtbqVFzBOMw=
+	t=1748233607; cv=none; b=cIWmesvmbdPh7EfRdq+Dz7nWs1gbtOSztZHQgvbOiBaj5gEZ6yYz8d+WUljh9LY1BVTn52ivkN+CBxKeW6CRpQ/DtcH5SvYnyjpZa/Ldz9hW6nZu38TYD4w2DBtwI8TyZJ4rUwLuMNjXWSVdGBgjmQ1VBwSLB5JXVUqQDu6F1VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748233599; c=relaxed/simple;
-	bh=cCUT6TGf4rq537FVpuZsd/k0W6VS4o78mseuo2Q7ftg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T8LHbrwNpB2Ln26/3sq/Hwg4Iz+6KVWF453CCUufBbTS3t/AUxjEgbXWGd6TrqjuHKC+X5/U4tgecdlBc7KRGcQyK4+f+cTOzr7+Q47YZpMHNY3sKUKLN20od0JZizMqu26WU/HOCvg57w4Uh0vxK5BC7phI+bvN1slZI6uSgxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFWnNvO0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748233607; c=relaxed/simple;
+	bh=6PrPi9eX42dSkCoFKZGOsYQ5511s37Wj9FNKGaHX6vU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OJyEFIn5/KOMU/ocL57xIP4+N/n2sMwUzVdKdbCMfDdgf5C0dFjA54Qox2W9xvWXCOZqkh6lpKMkFw6BeGfpbsJWselB9YdP56EsFPGrL95P6RRr6zlOaXt9Tyjoms+dyhybNg7AoqePc/XnkKj4o9V1Vu4w6Ax7WAT2KvHc+Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=QGPnJFsq; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFWnNvO0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0408EC4CEE7;
-	Mon, 26 May 2025 04:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748233598;
-	bh=cCUT6TGf4rq537FVpuZsd/k0W6VS4o78mseuo2Q7ftg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JFWnNvO07+vRZ8X8fR73UnJ0MHlh29OhOALFk4paXNNbUB0UfdsDhAx9EjQrlO6Yb
-	 OZdcBfx6AE0mgXukxKaMAPZyQX5SmB+WKDzgWlAw05T3H5//T21+Vh1ahw99QQaKfV
-	 oCVHvmzrA0hELGZ5IE5i6+t8Tft7kNVPjf7LXqRnQMnX/g1SrabIHKojwhGc9M2EhI
-	 nngJ96Fp3TNh1nLAakRwjHQZ3332v0aqeqKMgIxgXWaNIxvIBl9YApP9bxQgM03JZU
-	 c40mPep2sE4meSma1l1gWG+uY4XjXbJ+m2cG6r1dw6GhS/3NBFwslecRp9mErhGSIK
-	 lJmd89guhFtHQ==
-Message-ID: <ba9da2f0-7728-49f5-95aa-d8250ac0f4a7@kernel.org>
-Date: Mon, 26 May 2025 06:26:34 +0200
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="QGPnJFsq"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id D17C725D11;
+	Mon, 26 May 2025 06:17:26 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id UhSyIzB5lUhx; Mon, 26 May 2025 06:17:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1748233046; bh=6PrPi9eX42dSkCoFKZGOsYQ5511s37Wj9FNKGaHX6vU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=QGPnJFsq5HFRsSxNe8GJ0s/gbSy4rFAwF81ecgDgIMkKkDHVH76UVsRbrt/Hfa3DB
+	 a3TWtyqBbPmUAtn1Vw4pFXGfDaLsgycSSwcsoZdbXweeK/6d7obxqDm3wDTZWELZSg
+	 NiPLVTtkM7giWjnPCiaUlqctWvYEC7BIHQZgtKGwmUBFtDbz86WdE6FOf7SVOrydt5
+	 DYdHodk94NqNvLF3c/D9Iw/oliu3HZnOB7TCOlpIj9g+NhAbuyKwIeYeoHliXzdA3h
+	 YXXsn0JNzudCTOp5qSvOFdHawgqvO6QjrWwW6vYj74ZfX3VhMJpsCW+VMjvYIbO3tO
+	 0JTW8EruNIzpg==
+Date: Mon, 26 May 2025 04:17:13 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	Binbin Zhou <zhoubb.aaron@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
+ controller
+Message-ID: <aDPrSYeKp-YMNdhu@pie.lan>
+References: <20250523104552.32742-1-ziyao@disroot.org>
+ <20250523104552.32742-2-ziyao@disroot.org>
+ <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
+ <aDB4DTd1Y29lJlyM@pie.lan>
+ <dfe02190-8e7a-48e7-8d2d-8d3af2392eb5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv4 5/5] mips: dts: qca: add wmac support
-To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
-Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
- nbd@nbd.name, Johannes Berg <johannes@sipsolutions.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20250525214256.8637-1-rosenp@gmail.com>
- <20250525214256.8637-6-rosenp@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250525214256.8637-6-rosenp@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dfe02190-8e7a-48e7-8d2d-8d3af2392eb5@kernel.org>
 
-On 25/05/2025 23:42, Rosen Penev wrote:
-> Now that OF ahb support was added to the ath9k driver, we can use it to
-> enable and use the SoC wireless found in these chipsets.
+On Mon, May 26, 2025 at 06:11:22AM +0200, Krzysztof Kozlowski wrote:
+> On 23/05/2025 15:28, Yao Zi wrote:
+> > On Fri, May 23, 2025 at 08:30:57PM +0800, Binbin Zhou wrote:
+> >> On Fri, May 23, 2025 at 6:46 PM Yao Zi <ziyao@disroot.org> wrote:
+> >>>
+> >>> Document the clock controller shipped in Loongson 2K0300 SoC, which
+> >>> generates various clock signals for SoC peripherals.
+> >>>
+> >>> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> >>> ---
+> >>>  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
+> >>>  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
+> >>>  2 files changed, 106 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
+> >>
+> >> I don't think a new binding file for 2K0300 is needed. Adding
+> >> compatible entries to loongson,ls2k-clk.yaml would be more appropriate
+> >> as they are almost all similar.
+> > 
+> > Originally I've tried to integrate the 2K0300 stuff with
+> > loongson,ls2k-clk.yaml, but found it's hard to describe some properties.
+> > 
+> > For example, currently in loongson,ls2k-clk.yaml, the clocks property is
+> > described as
+> > 
+> >   clocks:
+> >     items:
+> >       - description: 100m ref
+> > 
+> > what should the description look like with 2K0300 introduced, whose
+> > reference clock runs at 120MHz instead of 100MHz? It'll be hard to
+> > describe things correctly without losing existing information. "120MHz
+> > reference clock for Loongson 2K0300, or 100MHz reference clock for other
+> > SoCs" sounds even a worse idea.
 > 
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> Drop the frequency anyway, it is kind of pointless here.
+> 
+> > 
+> > Another example is about the description of clock IDs. loongson,ls2k-clk.yaml
+> > describes available clock IDs as
+> > 
+> >   '#clock-cells':
+> >     const: 1
+> >     description:
+> >       The clock consumer should specify the desired clock by having the clock
+> >       ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
+> >       for the full list of Loongson-2 SoC clock IDs.
+> > 
+> > what should the description look like if we add 2K0300 support? With a
+> > different header being introduced, the description will be messy.
+> 
+> No, just list the headers.
+> 
+> > 
+> > I think keeping SoCs peripherals that are different in hardware design
+> > in the same binding is really a bad idea. Yes, these clock controllers
+> > are similar enough to reuse the clock hardware driver, but they have
+> > different clock tree structures and register definitions, making them
+> > essentially different things. Trying to keep everything in the same
+> > place only makes the binding messy.
+> 
+> How is binding messy if you only add one compatible?
+> 
+> 
+> Best regards,
+> Krzysztof
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Okay, thanks for the suggestions. Will merge 2K0300-related stuff into
+loongson,ls2k-clk.yaml in the next version.
 
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-Best regards,
-Krzysztof
+Thanks,
+Yao Zi
