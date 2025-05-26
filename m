@@ -1,448 +1,178 @@
-Received: from mail-m3283.qiye.163.com (mail-m3283.qiye.163.com [220.197.32.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A6E1F4639
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B281DF26B
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748261306; cv=none; b=HNWoHJdroXHyxCdDwHqQs7WM+Ynd5lruK4GgtKJD9tVjd8r2krjdIVrFYDJCvvCtoswT0ioiUz1X7GEijcs7F0tDUMJBb8cBrVB0K0b6id/FH2xozKBFhZWlLGaoTnawDHa/5GhPW8tE0Zw/DXGv8fH7dXOivviH0Ncp0Yh+eGw=
+	t=1748261383; cv=none; b=bPWKFh888TS6YBDkzhfkLBcuGhd8PdSQuWQ14FaBkCb6ox1KbRLS1ucPa6Av8364B2ADSRlEMZq0NeWVnIuPzWdDppNpEM5ZLfug23M5MC3oMRIBQaq7abS7+rxs+qPfLqbCiW3MoWfX3sg4sxMlI/ZQsQWg6meQThnMVFsfeUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748261306; c=relaxed/simple;
-	bh=UowPKidM/+kQIdC88v7ijq5CJhvpIcLX1D0EF1y98a0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Sx1Eob7RH6iniSTxQAJ7oTj8hYOY/ozP+o4eo+RqHHRo9fb958LlvFs1U+GjblVLnzrwYtEReahrxfdw2yBOVDcU/7E6T/TSKcxSCGeQQ5WZby4PdD3kHNcPPxusBHvdkIQAj4uis/PgItnJPWv2LPrn0U9ry3QMD0RXQKU43uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=M40owbTq; arc=none smtp.client-ip=220.197.32.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="M40owbTq"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 166d9dc8f;
-	Mon, 26 May 2025 20:08:13 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org
-Cc: andy.yan@rock-chips.com,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dmitry.baryshkov@oss.qualcomm.com,
-	l.stach@pengutronix.de,
-	dianders@chromium.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v1 3/3] drm/bridge: analogix_dp: Apply drm_bridge_connector helper
-Date: Mon, 26 May 2025 20:07:42 +0800
-Message-Id: <20250526120742.3195812-4-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250526120742.3195812-1-damon.ding@rock-chips.com>
-References: <20250526120742.3195812-1-damon.ding@rock-chips.com>
+	s=arc-20240116; t=1748261383; c=relaxed/simple;
+	bh=r307oOav27bh/GCtWSjsyjOv2ysXRUjLoCTrGOgjejs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WPeO7dz6nDRqQqDXN12N/+nZoTjQo3Gm4QnOro11bZxGkRsTFnKFSIUwYymAzaMGOUlB2NZOde5FxsHCKr/RKQj4bhldnvoWaW4mNkABvh8yGVuY94ZZAXr16qSlsGWxNlX0ey15ghVNpOTrVsRr9qmT4cnPehO7PT23RPomzgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3dc6e2441caso43592805ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:09:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748261380; x=1748866180;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bc8m3uNBk63pQUs0Jd3xv2CJLuGkI7NaSEPp2nrSNRA=;
+        b=fSXNHwly9gRMLUGu61gASQWvnwrRbMojg4XFwfbe3dOPvsRxt/Xz6LPrBM25AGLlvO
+         hb+9STFiBtFw/gz4rFOK573a9ZrQ1btXNRsIBOWXs42EbMtVweIhVJ6U2YYGllMrD5Tk
+         2BA5yjHq+qplSwYooTasmky+OAyhB1/s2O/RyKdKjnSw4sUCpzhE2kTJH/3EVLAZaQOg
+         x5BFezWKzFQVgIYjfqWxtjI4erct9VlGJB0QiiQ65xn+YUG5TUjtO9nzFhhV4sDZCfVi
+         zmQlGau69sWI6i8UgpC93LfY0tWkHh6v5Cqxkj/EOlW6i+RAqXMMUPgIVabdpETi3fJW
+         +PLg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+UOPNnakbs2RHg4EZGoTELrnGJz96NvNccPdxLrnuDzrciYCq0w1uaalbMWfB6gtu3dPjGliqCUtQChw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxGtNxDb6e4NRHL5fKUrQ7yygBzmX5rXhCXmxYrH1L8yXfBcLU
+	kRvOeC+usyTtFAWP6c3rRn/Ymq0quJMyMg7vSY70k6cHr1m+u+sIXOReWCDj5bb3y+BXamSepn5
+	ShS4NROmcAO1HZlrfoiNmzya3VRyBP3AB9toZkeIEBQ3WCZGK3qGCO1aXP8U=
+X-Google-Smtp-Source: AGHT+IGvaYFtuaWbLF8NbZasy9S/7LrbIMg8qGIOkMvKzUGj72+KOaJCK9nruNqiA0FvdcTdrIACw8gIyvwCPvtC5jHPwDgZPcBi
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGk0dQlZDHU9JGhgaSUxPGRpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a970c7e4bca03a3kunm0ad049025254d0
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Okk6Thw6FzEzHAwvUUoiOBgc
-	CiMaCgFVSlVKTE9DSU1KSUJPTUtNVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKT0xNTjcG
-DKIM-Signature:a=rsa-sha256;
-	b=M40owbTqPt21TbvCZFTdk4DvPyfPq3CP/4a31Q2ESwgp6mcfMIHbQZg3p131yHhCBh+xf8y1T5gLnRM8z/uFRdqTZKTdqMI4AfyrZ6mRWNBUoepKGWMHJ5iqQS50z7j1X7I6x4oZneD3LK22SWdak3AwKYgqJ8wjuaWqpbrJt0w=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=n4pS+JY3yVm/hmb6oIsxX+WSE0Be/ORqC+kIfKKe2rI=;
-	h=date:mime-version:subject:message-id:from;
+X-Received: by 2002:a05:6602:7211:b0:864:a1e9:f07 with SMTP id
+ ca18e2360f4ac-86cbb80a7ecmr1015145839f.8.1748261370375; Mon, 26 May 2025
+ 05:09:30 -0700 (PDT)
+Date: Mon, 26 May 2025 05:09:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <683459fa.a70a0220.29d4a0.0805.GAE@google.com>
+Subject: [syzbot] [net?] KMSAN: uninit-value in neigh_parms_release (2)
+From: syzbot <syzbot+e92e583f97128c407c8f@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Apply drm_bridge_connector helper for Analogix DP driver.
+Hello,
 
-The following changes have been made:
-- Remove &analogix_dp_device.connector and change
-  &analogix_dp_device.bridge from a pointer to an instance.
-- Apply drm_bridge_connector helper to get rid of &drm_connector_funcs
-  and &drm_connector_helper_funcs.
-- Remove &analogix_dp_plat_data.skip_connector.
+syzbot found the following issue on:
 
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+HEAD commit:    d608703fcdd9 Merge tag 'clk-fixes-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14faaad4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a423536a47898618
+dashboard link: https://syzkaller.appspot.com/bug?extid=e92e583f97128c407c8f
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1fda1290c911/disk-d608703f.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/4551a247db11/vmlinux-d608703f.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3d7ce8478d11/bzImage-d608703f.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e92e583f97128c407c8f@syzkaller.appspotmail.com
+
+team0 (unregistering): Port device team_slave_1 removed
+team0 (unregistering): Port device team_slave_0 removed
+=====================================================
+BUG: KMSAN: uninit-value in ref_tracker_free+0x4fa/0xe80 lib/ref_tracker.c:228
+ ref_tracker_free+0x4fa/0xe80 lib/ref_tracker.c:228
+ netdev_tracker_free include/linux/netdevice.h:4351 [inline]
+ netdev_put include/linux/netdevice.h:4368 [inline]
+ neigh_parms_release+0x20d/0x3e0 net/core/neighbour.c:1709
+ addrconf_ifdown+0x2e39/0x32e0 net/ipv6/addrconf.c:4011
+ addrconf_notify+0x183/0x1d10 net/ipv6/addrconf.c:3780
+ notifier_call_chain kernel/notifier.c:85 [inline]
+ raw_notifier_call_chain+0xe0/0x410 kernel/notifier.c:453
+ call_netdevice_notifiers_info+0x1ac/0x2b0 net/core/dev.c:2176
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ unregister_netdevice_many_notify+0x2cc8/0x4980 net/core/dev.c:11972
+ unregister_netdevice_many net/core/dev.c:12036 [inline]
+ default_device_exit_batch+0x1186/0x1250 net/core/dev.c:12530
+ ops_exit_list net/core/net_namespace.c:177 [inline]
+ cleanup_net+0x1218/0x1de0 net/core/net_namespace.c:654
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xb9a/0x1d90 kernel/workqueue.c:3319
+ worker_thread+0xedf/0x1590 kernel/workqueue.c:3400
+ kthread+0xd5c/0xf00 kernel/kthread.c:464
+ ret_from_fork+0x71/0x90 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+Uninit was created at:
+ __alloc_frozen_pages_noprof+0x689/0xf00 mm/page_alloc.c:4989
+ alloc_pages_mpol+0x328/0x860 mm/mempolicy.c:2301
+ alloc_frozen_pages_noprof+0xf7/0x200 mm/mempolicy.c:2372
+ alloc_slab_page mm/slub.c:2450 [inline]
+ allocate_slab+0x24d/0x1210 mm/slub.c:2618
+ new_slab mm/slub.c:2672 [inline]
+ ___slab_alloc+0xfec/0x3480 mm/slub.c:3858
+ __slab_alloc mm/slub.c:3948 [inline]
+ __slab_alloc_node mm/slub.c:4023 [inline]
+ slab_alloc_node mm/slub.c:4184 [inline]
+ __do_kmalloc_node mm/slub.c:4326 [inline]
+ __kmalloc_noprof+0xa96/0x1310 mm/slub.c:4339
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ new_dir fs/proc/proc_sysctl.c:963 [inline]
+ get_subdir fs/proc/proc_sysctl.c:1007 [inline]
+ sysctl_mkdir_p fs/proc/proc_sysctl.c:1317 [inline]
+ __register_sysctl_table+0x1988/0x2b90 fs/proc/proc_sysctl.c:1392
+ register_net_sysctl_sz+0x3dc/0x3f0 net/sysctl_net.c:171
+ neigh_sysctl_register+0x18bb/0x1b30 net/core/neighbour.c:3793
+ devinet_sysctl_register+0x164/0x420 net/ipv4/devinet.c:2715
+ inetdev_init+0x5f8/0x970 net/ipv4/devinet.c:291
+ inetdev_event+0x1162/0x25e0 net/ipv4/devinet.c:1591
+ notifier_call_chain kernel/notifier.c:85 [inline]
+ raw_notifier_call_chain+0xe0/0x410 kernel/notifier.c:453
+ call_netdevice_notifiers_info+0x1ac/0x2b0 net/core/dev.c:2176
+ call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+ call_netdevice_notifiers net/core/dev.c:2228 [inline]
+ register_netdevice+0x22d4/0x2610 net/core/dev.c:11037
+ ipvlan_link_new+0x619/0x1090 drivers/net/ipvlan/ipvlan_main.c:592
+ rtnl_newlink_create+0x416/0x1230 net/core/rtnetlink.c:3833
+ __rtnl_newlink net/core/rtnetlink.c:3950 [inline]
+ rtnl_newlink+0x2f13/0x3a90 net/core/rtnetlink.c:4065
+ rtnetlink_rcv_msg+0x106c/0x14b0 net/core/rtnetlink.c:6955
+ netlink_rcv_skb+0x54a/0x680 net/netlink/af_netlink.c:2534
+ rtnetlink_rcv+0x35/0x40 net/core/rtnetlink.c:6982
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0xed5/0x1290 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x10b3/0x1250 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x333/0x3d0 net/socket.c:727
+ __sys_sendto+0x590/0x710 net/socket.c:2180
+ __do_sys_sendto net/socket.c:2187 [inline]
+ __se_sys_sendto net/socket.c:2183 [inline]
+ __x64_sys_sendto+0x130/0x200 net/socket.c:2183
+ x64_sys_call+0x3c0b/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:45
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 0 UID: 0 PID: 4200 Comm: kworker/u8:17 Not tainted 6.15.0-rc7-syzkaller-00014-gd608703fcdd9 #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: netns cleanup_net
+=====================================================
+
+
 ---
- .../drm/bridge/analogix/analogix_dp_core.c    | 157 ++++++++----------
- .../drm/bridge/analogix/analogix_dp_core.h    |   4 +-
- include/drm/bridge/analogix_dp.h              |   1 -
- 3 files changed, 72 insertions(+), 90 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index 2c51d3193120..d67afd63d999 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-@@ -22,6 +22,7 @@
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
-+#include <drm/drm_bridge_connector.h>
- #include <drm/drm_crtc.h>
- #include <drm/drm_device.h>
- #include <drm/drm_edid.h>
-@@ -946,9 +947,10 @@ static int analogix_dp_disable_psr(struct analogix_dp_device *dp)
- 	return analogix_dp_send_psr_spd(dp, &psr_vsc, true);
- }
- 
--static int analogix_dp_get_modes(struct drm_connector *connector)
-+static int analogix_dp_bridge_get_modes(struct drm_bridge *bridge,
-+					struct drm_connector *connector)
- {
--	struct analogix_dp_device *dp = to_dp(connector);
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	const struct drm_edid *drm_edid;
- 	int num_modes = 0;
- 
-@@ -957,10 +959,10 @@ static int analogix_dp_get_modes(struct drm_connector *connector)
- 	} else {
- 		drm_edid = drm_edid_read_ddc(connector, &dp->aux.ddc);
- 
--		drm_edid_connector_update(&dp->connector, drm_edid);
-+		drm_edid_connector_update(connector, drm_edid);
- 
- 		if (drm_edid) {
--			num_modes += drm_edid_connector_add_modes(&dp->connector);
-+			num_modes += drm_edid_connector_add_modes(connector);
- 			drm_edid_free(drm_edid);
- 		}
- 	}
-@@ -971,51 +973,25 @@ static int analogix_dp_get_modes(struct drm_connector *connector)
- 	return num_modes;
- }
- 
--static struct drm_encoder *
--analogix_dp_best_encoder(struct drm_connector *connector)
-+static int analogix_dp_bridge_atomic_check(struct drm_bridge *bridge,
-+					   struct drm_bridge_state *bridge_state,
-+					   struct drm_crtc_state *crtc_state,
-+					   struct drm_connector_state *conn_state)
- {
--	struct analogix_dp_device *dp = to_dp(connector);
--
--	return dp->encoder;
--}
--
--
--static int analogix_dp_atomic_check(struct drm_connector *connector,
--				    struct drm_atomic_state *state)
--{
--	struct analogix_dp_device *dp = to_dp(connector);
--	struct drm_connector_state *conn_state;
--	struct drm_crtc_state *crtc_state;
--
--	conn_state = drm_atomic_get_new_connector_state(state, connector);
--	if (WARN_ON(!conn_state))
--		return -ENODEV;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 
- 	conn_state->self_refresh_aware = true;
- 
--	if (!conn_state->crtc)
--		return 0;
--
--	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
--	if (!crtc_state)
--		return 0;
--
- 	if (crtc_state->self_refresh_active && !dp->psr_supported)
- 		return -EINVAL;
- 
- 	return 0;
- }
- 
--static const struct drm_connector_helper_funcs analogix_dp_connector_helper_funcs = {
--	.get_modes = analogix_dp_get_modes,
--	.best_encoder = analogix_dp_best_encoder,
--	.atomic_check = analogix_dp_atomic_check,
--};
--
- static enum drm_connector_status
--analogix_dp_detect(struct drm_connector *connector, bool force)
-+analogix_dp_bridge_detect(struct drm_bridge *bridge)
- {
--	struct analogix_dp_device *dp = to_dp(connector);
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	enum drm_connector_status status = connector_status_disconnected;
- 
- 	if (dp->plat_data->panel)
-@@ -1027,20 +1003,11 @@ analogix_dp_detect(struct drm_connector *connector, bool force)
- 	return status;
- }
- 
--static const struct drm_connector_funcs analogix_dp_connector_funcs = {
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.detect = analogix_dp_detect,
--	.destroy = drm_connector_cleanup,
--	.reset = drm_atomic_helper_connector_reset,
--	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
--};
--
- static int analogix_dp_bridge_attach(struct drm_bridge *bridge,
- 				     struct drm_encoder *encoder,
- 				     enum drm_bridge_attach_flags flags)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	struct drm_connector *connector = NULL;
- 	int ret = 0;
- 
-@@ -1049,23 +1016,15 @@ static int analogix_dp_bridge_attach(struct drm_bridge *bridge,
- 		return -EINVAL;
- 	}
- 
--	if (!dp->plat_data->skip_connector) {
--		connector = &dp->connector;
--		connector->polled = DRM_CONNECTOR_POLL_HPD;
--
--		ret = drm_connector_init(dp->drm_dev, connector,
--					 &analogix_dp_connector_funcs,
--					 DRM_MODE_CONNECTOR_eDP);
--		if (ret) {
--			DRM_ERROR("Failed to initialize connector with drm\n");
--			return ret;
--		}
--
--		drm_connector_helper_add(connector,
--					 &analogix_dp_connector_helper_funcs);
--		drm_connector_attach_encoder(connector, encoder);
-+	connector = drm_bridge_connector_init(dp->drm_dev, encoder);
-+	if (IS_ERR(connector)) {
-+		ret = PTR_ERR(connector);
-+		dev_err(dp->dev, "Failed to initialize connector with drm\n");
-+		return ret;
- 	}
- 
-+	drm_connector_attach_encoder(connector, encoder);
-+
- 	/*
- 	 * NOTE: the connector registration is implemented in analogix
- 	 * platform driver, that to say connector would be exist after
-@@ -1124,7 +1083,7 @@ struct drm_crtc *analogix_dp_get_new_crtc(struct analogix_dp_device *dp,
- static void analogix_dp_bridge_atomic_pre_enable(struct drm_bridge *bridge,
- 						 struct drm_atomic_state *old_state)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state;
- 
-@@ -1177,14 +1136,21 @@ static int analogix_dp_set_bridge(struct analogix_dp_device *dp)
- }
- 
- static void analogix_dp_bridge_mode_set(struct drm_bridge *bridge,
-+					struct drm_atomic_state *state,
- 					const struct drm_display_mode *mode)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
--	struct drm_display_info *display_info = &dp->connector.display_info;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	struct video_info *video = &dp->video_info;
- 	struct device_node *dp_node = dp->dev->of_node;
-+	struct drm_connector *connector;
-+	struct drm_display_info *display_info;
- 	int vic;
- 
-+	connector = drm_atomic_get_new_connector_for_encoder(state, bridge->encoder);
-+	if (!connector)
-+		return;
-+	display_info = &connector->display_info;
-+
- 	/* Input video interlaces & hsync pol & vsync pol */
- 	video->interlaced = !!(mode->flags & DRM_MODE_FLAG_INTERLACE);
- 	video->v_sync_polarity = !!(mode->flags & DRM_MODE_FLAG_NVSYNC);
-@@ -1255,7 +1221,7 @@ static void analogix_dp_bridge_mode_set(struct drm_bridge *bridge,
- static void analogix_dp_bridge_atomic_enable(struct drm_bridge *bridge,
- 					     struct drm_atomic_state *old_state)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
- 	int timeout_loop = 0;
-@@ -1268,7 +1234,7 @@ static void analogix_dp_bridge_atomic_enable(struct drm_bridge *bridge,
- 	new_crtc_state = drm_atomic_get_new_crtc_state(old_state, crtc);
- 	if (!new_crtc_state)
- 		return;
--	analogix_dp_bridge_mode_set(bridge, &new_crtc_state->adjusted_mode);
-+	analogix_dp_bridge_mode_set(bridge, old_state, &new_crtc_state->adjusted_mode);
- 
- 	old_crtc_state = drm_atomic_get_old_crtc_state(old_state, crtc);
- 	/* Not a full enable, just disable PSR and continue */
-@@ -1297,7 +1263,7 @@ static void analogix_dp_bridge_atomic_enable(struct drm_bridge *bridge,
- 
- static void analogix_dp_bridge_disable(struct drm_bridge *bridge)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 
- 	if (dp->dpms_mode != DRM_MODE_DPMS_ON)
- 		return;
-@@ -1320,7 +1286,7 @@ static void analogix_dp_bridge_disable(struct drm_bridge *bridge)
- static void analogix_dp_bridge_atomic_disable(struct drm_bridge *bridge,
- 					      struct drm_atomic_state *old_state)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	struct drm_crtc *old_crtc, *new_crtc;
- 	struct drm_crtc_state *old_crtc_state = NULL;
- 	struct drm_crtc_state *new_crtc_state = NULL;
-@@ -1358,7 +1324,7 @@ static void analogix_dp_bridge_atomic_disable(struct drm_bridge *bridge,
- static void analogix_dp_bridge_atomic_post_disable(struct drm_bridge *bridge,
- 						   struct drm_atomic_state *old_state)
- {
--	struct analogix_dp_device *dp = bridge->driver_private;
-+	struct analogix_dp_device *dp = to_dp(bridge);
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *new_crtc_state;
- 	int ret;
-@@ -1384,24 +1350,27 @@ static const struct drm_bridge_funcs analogix_dp_bridge_funcs = {
- 	.atomic_enable = analogix_dp_bridge_atomic_enable,
- 	.atomic_disable = analogix_dp_bridge_atomic_disable,
- 	.atomic_post_disable = analogix_dp_bridge_atomic_post_disable,
-+	.atomic_check = analogix_dp_bridge_atomic_check,
- 	.attach = analogix_dp_bridge_attach,
-+	.get_modes = analogix_dp_bridge_get_modes,
-+	.detect = analogix_dp_bridge_detect,
- };
- 
- static int analogix_dp_create_bridge(struct drm_device *drm_dev,
- 				     struct analogix_dp_device *dp)
- {
--	struct drm_bridge *bridge;
--
--	bridge = devm_kzalloc(drm_dev->dev, sizeof(*bridge), GFP_KERNEL);
--	if (!bridge) {
--		DRM_ERROR("failed to allocate for drm bridge\n");
--		return -ENOMEM;
--	}
-+	struct drm_bridge *bridge = &dp->bridge;
-+	int ret;
- 
--	dp->bridge = bridge;
-+	bridge->ops = DRM_BRIDGE_OP_DETECT |
-+		      DRM_BRIDGE_OP_HPD |
-+		      DRM_BRIDGE_OP_MODES;
-+	bridge->of_node = dp->dev->of_node;
-+	bridge->type = DRM_MODE_CONNECTOR_eDP;
- 
--	bridge->driver_private = dp;
--	bridge->funcs = &analogix_dp_bridge_funcs;
-+	ret = devm_drm_bridge_add(dp->dev, &dp->bridge);
-+	if (ret)
-+		return ret;
- 
- 	return drm_bridge_attach(dp->encoder, bridge, NULL, 0);
- }
-@@ -1493,9 +1462,10 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	dp = devm_kzalloc(dev, sizeof(struct analogix_dp_device), GFP_KERNEL);
--	if (!dp)
--		return ERR_PTR(-ENOMEM);
-+	dp = devm_drm_bridge_alloc(dev, struct analogix_dp_device, bridge,
-+				   &analogix_dp_bridge_funcs);
-+	if (IS_ERR(dp))
-+		return ERR_CAST(dp);
- 
- 	dp->dev = &pdev->dev;
- 	dp->dpms_mode = DRM_MODE_DPMS_OFF;
-@@ -1670,8 +1640,7 @@ EXPORT_SYMBOL_GPL(analogix_dp_bind);
- 
- void analogix_dp_unbind(struct analogix_dp_device *dp)
- {
--	analogix_dp_bridge_disable(dp->bridge);
--	dp->connector.funcs->destroy(&dp->connector);
-+	analogix_dp_bridge_disable(&dp->bridge);
- 
- 	drm_panel_unprepare(dp->plat_data->panel);
- 
-@@ -1681,7 +1650,8 @@ EXPORT_SYMBOL_GPL(analogix_dp_unbind);
- 
- int analogix_dp_start_crc(struct drm_connector *connector)
- {
--	struct analogix_dp_device *dp = to_dp(connector);
-+	struct analogix_dp_device *dp;
-+	struct drm_bridge *bridge;
- 
- 	if (!connector->state->crtc) {
- 		DRM_ERROR("Connector %s doesn't currently have a CRTC.\n",
-@@ -1689,13 +1659,26 @@ int analogix_dp_start_crc(struct drm_connector *connector)
- 		return -EINVAL;
- 	}
- 
-+	bridge = drm_bridge_chain_get_first_bridge(connector->encoder);
-+	if (bridge->type != DRM_MODE_CONNECTOR_eDP)
-+		return -EINVAL;
-+
-+	dp = to_dp(bridge);
-+
- 	return drm_dp_start_crc(&dp->aux, connector->state->crtc);
- }
- EXPORT_SYMBOL_GPL(analogix_dp_start_crc);
- 
- int analogix_dp_stop_crc(struct drm_connector *connector)
- {
--	struct analogix_dp_device *dp = to_dp(connector);
-+	struct analogix_dp_device *dp;
-+	struct drm_bridge *bridge;
-+
-+	bridge = drm_bridge_chain_get_first_bridge(connector->encoder);
-+	if (bridge->type != DRM_MODE_CONNECTOR_eDP)
-+		return -EINVAL;
-+
-+	dp = to_dp(bridge);
- 
- 	return drm_dp_stop_crc(&dp->aux);
- }
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-index 9f9e492da80f..22f28384b4ec 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-+++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.h
-@@ -10,6 +10,7 @@
- #define _ANALOGIX_DP_CORE_H
- 
- #include <drm/display/drm_dp_helper.h>
-+#include <drm/drm_bridge.h>
- #include <drm/drm_crtc.h>
- 
- #define DP_TIMEOUT_LOOP_COUNT 100
-@@ -153,8 +154,7 @@ struct analogix_dp_device {
- 	struct drm_encoder	*encoder;
- 	struct device		*dev;
- 	struct drm_device	*drm_dev;
--	struct drm_connector	connector;
--	struct drm_bridge	*bridge;
-+	struct drm_bridge	bridge;
- 	struct drm_dp_aux	aux;
- 	struct clk		*clock;
- 	unsigned int		irq;
-diff --git a/include/drm/bridge/analogix_dp.h b/include/drm/bridge/analogix_dp.h
-index cf17646c1310..cb9663ff61fb 100644
---- a/include/drm/bridge/analogix_dp.h
-+++ b/include/drm/bridge/analogix_dp.h
-@@ -29,7 +29,6 @@ struct analogix_dp_plat_data {
- 	struct drm_panel *panel;
- 	struct drm_encoder *encoder;
- 	struct drm_connector *connector;
--	bool skip_connector;
- 
- 	int (*power_on)(struct analogix_dp_plat_data *);
- 	int (*power_off)(struct analogix_dp_plat_data *);
--- 
-2.34.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
