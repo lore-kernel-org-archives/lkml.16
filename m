@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBFC1C8601;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CAB1F8ADD;
 	Mon, 26 May 2025 11:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260336; cv=none; b=W4YRrb/QJ3WAfQt1XCg6XzMd+Kt9ifgab59MwuIfmtEonCF6cjc5KpD2MP979aZ/fzw8pfcrPNaYN+H/khGUdTAeJDSC6/VbP/Ce59LO3nbrSk4Vn/2hlL4H8ea6rauoXfCnSIIwhUYrWfQeMNP83JUfviK5BP5bSb2PCnYH4kw=
+	t=1748260336; cv=none; b=DUIAhkwqm4l8gb3VEKCkGuAntvpAZBvoOERsrQ6rkfaHywhE+yICm7JKTYDaOCc4fLcrOp5Jnk8aOC5YvvPkInHoNbmQe+DL4VTTaq63cDUOXOt4tXVDZSiUxqCRWW7I87XabeQX8j5jEYnaD+U/b4Tnw7mSJ4XmdrmWRvfmgYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748260336; c=relaxed/simple;
-	bh=6z7x8xoEqYgfeTyuv+MxW6E85QUdFqBt/3KadJRmPQo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tFg50jizlZJQDDC9evlnDfWhZPPiemwYVbHI140pVu0PUz1VJCUyu1e2OqOVuLiL6uUl6N9uDCefJeuTBsMPlhtw+b3pWZn1o5WlcfvnhbNybC+ndVzfcGFoZABsLL1LwG2brb58VdxqpLemjWGNsFR4gqothgPjP3C0ZMI8klI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgTJt3KJ; arc=none smtp.client-ip=10.30.226.201
+	bh=m/OPqTtOeOWGN0cjMWn0CbNb8uPAv1c+dguTeasO26A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YismrGv/mqw6Wk0Fn3iQ8G8ZsR8ona7jqcOZPOAOCU/kRWpfaLfFGsDvfX9E8eEgK+sJ1KKeJ7E+q+1FX9wHrqFngWhbS/Hwzz1O9R4RHRVZThDEq8ZEnUK59cwC5zesyWRkO2QyXrZ40jJiZJ3Af+FD0pggf3GQmTxJvHhdmi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JDoL/kKK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgTJt3KJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40141C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JDoL/kKK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F34DC4CEE9;
 	Mon, 26 May 2025 11:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748260336;
-	bh=6z7x8xoEqYgfeTyuv+MxW6E85QUdFqBt/3KadJRmPQo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IgTJt3KJcKq4yFa6XclWnQZrI/0oIx9+/pMynCoYToLZz4U/7o1JNR7iIKC8rgOz8
-	 bgAfdbyj3SgxHjjGRn2RlSiV+ULf1X58f26nrlZ+V5CE9N9OPmEi61adC5E8Kq4zFw
-	 diWY3H2Lcs/EkQK6jFj2nMKovePbkg/VQ9vKAT1cseFcZeWOIRd4o/FWzJc7KaULvz
-	 sMwIhcnuO0NLV5YeDz2XMCJipN/8adTk8szmX1bak4D5EbI4CJIVl02+0XHi4+IDNI
-	 OWCjCI4WyqmwlAav4/Zh6REHeiu+IgcZ1OxEG7X++K3VkJdY1EwUdLk9VUxOLKPsV7
-	 5/2sYMqxKSESg==
+	bh=m/OPqTtOeOWGN0cjMWn0CbNb8uPAv1c+dguTeasO26A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JDoL/kKKaSk9jl3zUPXAyhGbkth+ySalJ+cLkSgCVOQu1TIsK4btml/Xtl3SunHfd
+	 BPuvVTG1m4unmBGKsfSoFpOxSI1ddjqcB/oyUBaRJQjXN/KDpA/Scd5uUdh01+A+ko
+	 tUBMkrVPPVHz/21W70lBgvMu8Z8WMRhPiIblJXQdefwUs19mYV1vnWb6ajAkn/Ihkt
+	 HjlVa63ASsR1/lnGo4bYB3cQRiA3rVP9T5wX7pZSzjJ6v0+sAhPt49f5BVfwsJHtnM
+	 V7dJVgR4xludzUG/HvdM60YvYPeungx0ok1hvMS6jFPclrZKxPIj/pp/4djzBCOzEn
+	 JawGvZHhFp02Q==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1uJWNN-000000000fE-3MDh;
-	Mon, 26 May 2025 13:52:17 +0200
+	id 1uJWNO-000000000fI-054Q;
+	Mon, 26 May 2025 13:52:18 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jeff Johnson <jjohnson@kernel.org>
 Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
@@ -37,10 +38,12 @@ Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
 	ath12k@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/2] wifi: ath12k: fix dest ring-buffer corruption
-Date: Mon, 26 May 2025 13:51:35 +0200
-Message-ID: <20250526115137.2490-1-johan+linaro@kernel.org>
+Subject: [PATCH 2/2] wifi: ath12k: use plain access for descriptor length
+Date: Mon, 26 May 2025 13:51:37 +0200
+Message-ID: <20250526115137.2490-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250526115137.2490-1-johan+linaro@kernel.org>
+References: <20250526115137.2490-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,30 +52,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As a follow up to commit:
+The read memory barrier added by commit 6b67d2cf14ea ("wifi: ath12k: fix
+ring-buffer corruption") is enough to guarantee ordering also for plain
+descriptor accesses if the length helper is ever inlined so drop the
+unnecessary READ_ONCE().
 
-	b67d2cf14ea ("wifi: ath12k: fix ring-buffer corruption")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/net/wireless/ath/ath12k/hal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-add the remaining missing memory barriers to make sure that destination
-ring descriptors are read after the head pointers to avoid using stale
-data on weakly ordered architectures like aarch64.
-
-Also switch back to plain accesses for the descriptor fields which is
-sufficient after the memory barrier.
-
-Johan
-
-
-Johan Hovold (2):
-  wifi: ath12k: fix dest ring-buffer corruption
-  wifi: ath12k: use plain access for descriptor length
-
- drivers/net/wireless/ath/ath12k/dp_mon.c |  3 +++
- drivers/net/wireless/ath/ath12k/dp_rx.c  | 12 ++++++++++++
- drivers/net/wireless/ath/ath12k/dp_tx.c  |  3 +++
- drivers/net/wireless/ath/ath12k/hal.c    |  2 +-
- 4 files changed, 19 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/net/wireless/ath/ath12k/hal.c b/drivers/net/wireless/ath/ath12k/hal.c
+index 91d5126ca149..962111c66a3e 100644
+--- a/drivers/net/wireless/ath/ath12k/hal.c
++++ b/drivers/net/wireless/ath/ath12k/hal.c
+@@ -1962,7 +1962,7 @@ u32 ath12k_hal_ce_dst_status_get_length(struct hal_ce_srng_dst_status_desc *desc
+ {
+ 	u32 len;
+ 
+-	len = le32_get_bits(READ_ONCE(desc->flags), HAL_CE_DST_STATUS_DESC_FLAGS_LEN);
++	len = le32_get_bits(desc->flags, HAL_CE_DST_STATUS_DESC_FLAGS_LEN);
+ 	desc->flags &= ~cpu_to_le32(HAL_CE_DST_STATUS_DESC_FLAGS_LEN);
+ 
+ 	return len;
 -- 
 2.49.0
 
