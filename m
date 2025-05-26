@@ -1,108 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD67256D
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE6F4D599
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246562; cv=none; b=OTOUuuvbFXFGC6bU9wOxJKCEIHl3JzPktg0kvGm0k3Iv7YWwC6OmBi4BuTQAmPt0sMp850P3vgY238rJMnO1Oqfqc7yO09jFamUJ+lsgT0JpxquQnpMZ8caYDFCzyOet1E8za6M57w6QTPRLvT/P5LxgeNIRu+i9QerL/lS3BC8=
+	t=1748246604; cv=none; b=kTVacBfkW2LKTo+0uerO6vwWSYTiVsmRp3lY5xIWOnpkbV7uZD/HVoZKO85yJ7EGEi4Q2iLP18v82bTxcZ4btagqRW1DLh0hx78f3rz7CKh3PBFbCBPvMim3Jobgi/88NSCFZ+vBabBa3cQK1mJIjTR6V7I3IhKIJlIqzattX9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246562; c=relaxed/simple;
-	bh=AQphoJ265lGo7sNOh0YNwRvk4m7dRYdocE5/tdcaqx8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Qz0y7ZcbiEqq223RYBSqZwsn1ZDQcUlAbEnQaZPt2RiDGdyLgbl95qFiaJLppILpqa5ugdjIw2YZcXbkuevGmEuHpFI3KGWWs9C1MBPuK0jGg8JA9W15iz9Nn6VNOSUpPGR2SP5Fq/30zk8n3Ef1M+fLcl7+8jYo7oPJRvKVSKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEsnCnHt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748246604; c=relaxed/simple;
+	bh=lVTcXDtD6g0a+NcnMtEyejIbZBedLWO3vOFVjaXJwR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qlefok+TO+bNJ35Zk/Snyje6EnCZGxd8kM7GmDNa4siP9wvkAVceghhIZc5i7yJyjVIsNuZGW+XfynPrFIewb1HLt0VGsYdHB29WF9O2pG0UKMAW9npey1zBKBlzCWzun4Gn+nFh9ZKbuB+MR/xZYbVSKO29WFPuu/chvcsu02Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VFuGoCFn; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEsnCnHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363EDC4CEE7;
-	Mon, 26 May 2025 08:02:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748246562;
-	bh=AQphoJ265lGo7sNOh0YNwRvk4m7dRYdocE5/tdcaqx8=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=kEsnCnHtBgqvyIcLVu7cvG+2W0NexKvLYLK7U2Ge9d3i5dpCdyPinFXz4Yu9+vxwM
-	 p4MHnxECewPxMq5rwD4M7XTldVY81+FiDx7T2aZqq18tjaWDcbONnysqvlVUfKRwZx
-	 sIC5s+p8K29G2aK76ra7CEDr3gN1kuTBXISwsxuPHOu4+WKRYuqb3eVwCAnmRSDRZJ
-	 W0jjOe+a/874Hz5NtctPW+wty2LvN5+LvcCgMp8LbrTW7dOpkllrrc9izeihBrRvXB
-	 o4Kr3bfsSPG03xf2MjMPeBu0jZL1SmSWLSS/TsELS44OHr19M3e6ix2E8jhF5gpGoJ
-	 If7Z/witJ5osQ==
-Message-ID: <10dde2aa-f2f3-4553-9fc0-a0659e0c5543@kernel.org>
-Date: Mon, 26 May 2025 16:02:39 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFuGoCFn"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a363d15c64so1376960f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748246599; x=1748851399; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SPYtiJxPEj4NMJqNxT1zar3Wry/PsazM942gqJr3gSY=;
+        b=VFuGoCFnMzlwZM82INrnNmRomunKSJNPPQSbu0YqivQvmydzJn1U1yiHCTlqer0N19
+         wkjMG2PWiCUuLsqqkCBhNjDc5z3G9PRNHm7FGMQxcwb5m6BcM7qL0f0gBdHFTdvfdV9m
+         WsmI4aZRis0d5XNRFAJ8OqU49U0FMWouwW2cqmgq0AoHJAgd7kYiPQXV6nJiw0hswC3O
+         7VWHuVTQzrqSxW1yzazAosXTXiWSGEZO4U8kRlAipKZVN7aqzFB07PA2Q6bkQQ8yFMQ4
+         MnBMUu7tO+zFJMNRsz9mITrj7cpyvqH1yEyKpXSmhgKIPCCaLNSVl+bMd8HasFYuSkfu
+         RUew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748246599; x=1748851399;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SPYtiJxPEj4NMJqNxT1zar3Wry/PsazM942gqJr3gSY=;
+        b=PTCgXbktnw3PvuFIGfAGTOThXAqpj7FGcbntNc3B/4uq6LP6FUwqrflMz5kQFz9GP2
+         5gNsUHfj7wNNkTuvcL1wM5YIOFeYTJDhnFtkkGCgo9cptCDNqJ+Rk8wWkeN7Av7CfhOB
+         tY+FleJvh1JVAbus7/crlkqWWiOKMmUkuAWhvgIfrl1LoaNxsjnsD10NaHfkkOiqqDhO
+         RgLFullpaeZ/2YjYHntoVVF/QeVoLT1Z15E/Yau1MyW/eCArltC0V0dM5CC/cc5iY6ug
+         4qi65LfjFeGwaebF9kemL4mhvj5PPD0iCMSmdRv2Rq3ZeI+isRAF7dQ8dlqvFgS9wtav
+         PnpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwCpW7sqH8Lem85YoC5EB5X3RnZ/IK/nccsrBItT6sGvcBccoGscqbRK4vsrp2TKUSMcymkGcIt6Xef0w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4jHcW/2oo08EEHYtqllDDtGZIgUy+PJQzWoUMVKEMcjEUlGnB
+	M/bswQ5/vOOPeeLx/S2nMGUQlLkN6atKWPYRHVUOZrZw8ncHaWSHIJb5bEj/4LzkGVJwpFQyEBb
+	Dhrjp
+X-Gm-Gg: ASbGnctsIBN//40LXMagsNlSV6xi1E8g4dJVfGeeVHT06NT3ZfdHwZXreSoSUW9Qjj/
+	78FuJBp8/ekpKGSTvCAouyVWjIY6fHKetIwFp+ciXPa8ZfWQUqLM+BShkReabJa0Bl6UPceznxH
+	Om6jHdXFuYjaqXQYJ0Q1hoKf8i5f/lXBT8lCKI4eXICZxQNRqtNIY98G+L7/TpJf2ZkCUtwq6YI
+	EX/YCJADUl3FEleL0KslvF/jiVQjOaowan4KkQNqnHO0FlICZ0szXNgWOvL8Nu3hWzXhWGDyVjh
+	+9Fq3UHiuHYHHkNEj86zRXeASoYMzv4QH9jL3d7c6vdfWKrYTvqqBBpO
+X-Google-Smtp-Source: AGHT+IEMr0TmkUd9qX2Oy/Wo5X7vaanyihC1ehKQZ1EHSEnhJI+iGEHT6/vJgAx1HAnkKnJSZJINgQ==
+X-Received: by 2002:a05:6000:2f88:b0:3a4:d0fe:42af with SMTP id ffacd0b85a97d-3a4d0fe4f10mr4548065f8f.33.1748246599461;
+        Mon, 26 May 2025 01:03:19 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f6f04334sm224252025e9.10.2025.05.26.01.03.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 01:03:18 -0700 (PDT)
+Date: Mon, 26 May 2025 11:03:15 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Donny Turizo <donnyturizo13@gmail.com>
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] staging: rtl8723bs: rename _Read_EEPROM and other
+ functions to snake_case
+Message-ID: <aDQgQw9XZV_7BIf-@stanley.mountain>
+References: <20250524173745.4907-1-donnyturizo13@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
- Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH v2] mkfs.f2fs: ensure zone size is equal or
- bigger than segment size
-To: Daeho Jeong <daeho43@gmail.com>
-References: <20250522182644.2176645-1-daeho43@gmail.com>
- <52eee781-f53c-46a9-8ce4-96c5a0589240@kernel.org>
- <CACOAw_xCQpmiRRuhjpGbB4mKzonE24Uyg=jtrxge-hFZrn5dXg@mail.gmail.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <CACOAw_xCQpmiRRuhjpGbB4mKzonE24Uyg=jtrxge-hFZrn5dXg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250524173745.4907-1-donnyturizo13@gmail.com>
 
-On 5/24/25 00:40, Daeho Jeong wrote:
-> On Thu, May 22, 2025 at 7:06 PM Chao Yu <chao@kernel.org> wrote:
->>
->> On 5/23/25 02:26, Daeho Jeong wrote:
->>> From: Daeho Jeong <daehojeong@google.com>
->>>
->>> Otherwise, it doesn't work with a crash.
->>>
->>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>> ---
->>> v2: relocate the code
->>> ---
->>>  lib/libf2fs.c | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/lib/libf2fs.c b/lib/libf2fs.c
->>> index d2579d7..148dc12 100644
->>> --- a/lib/libf2fs.c
->>> +++ b/lib/libf2fs.c
->>> @@ -1347,6 +1347,11 @@ int f2fs_get_f2fs_info(void)
->>>                       }
->>>                       c.zone_blocks = c.devices[i].zone_blocks;
->>>               }
->>> +             if (c.zone_blocks < DEFAULT_BLOCKS_PER_SEGMENT) {
->>
->> If c.zone_blocks can not be aligned to DEFAULT_BLOCKS_PER_SEGMENT, do we need to
->> handle below code?
+On Sat, May 24, 2025 at 05:37:45PM +0000, Donny Turizo wrote:
+> Renamed _Read_EEPROM and several other functions in rtw_cmd.c to follow
+> the kernel coding style (snake_case). This fixes checkpatch warnings
+> related to naming conventions.
 > 
-> We need to make sure that c.zone_blocks is a multiple of
-> DEFAULT_BLOCKS_PER_SEGMENT, right?
-
-Yes, if c.zone_blocks % DEFAULT_BLOCKS_PER_SEGMENT is true, we should fail mkfs?
-
-Thanks,
-
+> Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
 > 
->>
->>                 /*
->>                  * Align sections to the device zone size and align F2FS zones
->>                  * to the device zones. For F2FS_ZONED_HA model without the
->>                  * BLKZONED feature set at format time, this is only an
->>                  * optimization as sequential writes will not be enforced.
->>                  */
->>                 c.segs_per_sec = c.zone_blocks / DEFAULT_BLOCKS_PER_SEGMENT;
->>
->> Thanks,
->>
->>> +                     MSG(0, "\tError: zone size should not be less "
->>> +                             "than segment size\n");
->>> +                     return -1;
->>> +             }
->>>
->>>               /*
->>>                * Align sections to the device zone size and align F2FS zones
->>
+> ---
+> v2: Initial patch rejected by the robot due to naming issues.
+> 
+> v3: Rebased the patch onto GregKH's staging branch for better integration.
+> 
+> v4: Changed the commit author to my name and renamed all remaining functions
+>     to snake_case following kernel coding style.
+> 
+> v5: Renamed command _set_h2c_Lbk to _set_h2c_lbk to fix CamelCase issue.
+> 
+> v6: Actually fixed the misspelled name that was incorrectly stated as
+>   fixed in v5.
+
+Surely, this breaks the build?  You're not working against staging-next
+so it's difficult for me to apply this and actually check.
+
+regards,
+dan carpenter
 
