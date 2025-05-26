@@ -1,107 +1,102 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362C81F75A6
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C011DF26B;
+	Mon, 26 May 2025 11:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258214; cv=none; b=RNnxtFhV8sVtJ9goWeek6OQdNqTDKwKJmqtYmbQ6xHyE17A6sda914DvpL+oLCWEX4yClx4ea2P/sGrzCtJH1kC/a8ArwCe4qha3l3kqbWXFoQdCXWf+LjMa/DZuqJrbmfxWz0k/+GJlZnPk7/L9Q7SuIGbgvw72trfS0r8MYWY=
+	t=1748258261; cv=none; b=NqpCgI8+Hj6alCFlF0hl9OCoUOUachxUGUtTkTgvRvnV6JHWp0DLJXqADAPxcHYn2xnx4HRurKVmuD0HwVBsk8oK3NfcYXZayKDi+uAp3YWHP2EbsZvf4BOwZdGjLF/UEkRuRPB8i3iKqL/BtFAz2OqaZjfcHKdWIPybp2zc/rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258214; c=relaxed/simple;
-	bh=oc+X8bF/5frSyry5RmoMGZugC3S28EX+om9zx6pPuzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UEUufQ4OkGPF+c05zIC1RbeieU/GCj1xp9JiZX3F5F1Gk3ta4MG+4PkztCgiZS5Y4GitvIBYUhcYkG54YHULpXdC1Fxf6uCbofPtHYZNg/TBLLXVAKt0HfHMkE5d+86DY7dyWKSO5ofX/Jmhnz/kjBVFjxfmAXdpJ1EdTudhBNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jr895s3t; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748258261; c=relaxed/simple;
+	bh=kCChXdcNhNNPk3GCnN7qlQQVTqcDW8bmk78IzTynL50=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EcQGqU8C/jPv5XbLFrgNPYLIdWNrO3nrEbBnimEJEMErj+KKMR1e6KL0J28E8ipKgxTBbieEHJ8DsUoKnXyM3l6drgPWaUi6PFUF6vARVoJTiYyCH4r5CByUjuVlecaChPEtLR177D3Df+gjGir9yCgya98z1TLpCOIT5g/Gs6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W0FHW8vI; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jr895s3t"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23446bb8785so13840645ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:16:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748258212; x=1748863012; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ulxYmn9OC6+sDst91oQAEFfcIS70kmh66nNINkuqjTQ=;
-        b=jr895s3tV1MBSAWPfXqDo93zmyExxl4EhiDUsSLC4hv0CumYvXZUUGiGnony6JNsVN
-         /DZ541bnerw82EGtaMJfl5YQI7WaPP3ZMlDLSCyA8gDsgQnC0JCwNBG+FTcZ1rcRvypr
-         cha90JWZxBzo7nt+dYTYgzI6iMV+k1fcf0kYO6VVTgLDM2J6RtCQMTK6wTH+KZsUHS8g
-         OONMYnBuTnwYNVwDQO1Lo9jSBTS3cGRc/JbsiHomCOlCcjiECDRQZyvWhTPy29oSCcs1
-         +hry76irJdfajtCmOkra1XUCuCcwID2KtCHAd13lwL66Awzh0tbTjtx3wDBY1mseXcVA
-         eWcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748258212; x=1748863012;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ulxYmn9OC6+sDst91oQAEFfcIS70kmh66nNINkuqjTQ=;
-        b=DMPUB2RkSwKeTCVMej4ZyNgIMJ3J0XIk6dDA8l077Nifm9kSkvsZDrXy6J0esfMmfn
-         2X6bciW3er3CYiseUSWkcQUmxdU/HhC3fQ5Lca+Wm9AunVa3A9rCmOYwAHZJf6H7mEzE
-         qU7ck7YnSnibOlKCmU/Ta77TAhuZzGmesaYIP071sZLed7OjgqOqlNki4LcUOl8AN+Bl
-         tpsttSuwzNev+Pw4qPBtwqSrLYV/a5Nc0RBCGsYm6hRrdp0hhcRXmeklsch65KYFaIm7
-         MMMfqm9WNSwZdJiRSi+WMvMdkFsoRkVvLPOuuxE+QFmcq3YLgk1F0LGAGofnfjQRCP1x
-         JT2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUKJkEQi87QoCbkqYwfRi5PoDBo3RSILwRnG5x58rUpW5ZWmUgijqX1MR1nddpAgzRRnkE+Y/6MdEgGlOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7EU0N8Pu0LkOwuacodTXuC7GmOs+wanG1Jp57e3feUf9lCsQh
-	qdLw64RjU5X/Kiso8SmBFC8sJ7XDvOkuIkcrzNMKMIEsSeQOiksazq2Hvd9c5Bfjqg==
-X-Gm-Gg: ASbGncsZiDZnuHh2mJw1PPtfflXaph42jFTwo7TfgNYBhEahl4RS/S19zmuO6xclQvI
-	cHrgIz3buB87HNoDactufPIssPd6u3G9BBJcA88BbEJThqufIz1drQigNNCGtrRsLD3JK9opcRp
-	O8gMyQlPEL/NxLFMP2qyA/8Ha49DDihCtOOvehYwh0kOXtngjtqhNCj2Gbsve00BdfM4qtIgMV9
-	fYGY0/9uSzTsPJnDD4cTukUXie+DRpC/wynov6lUFYiWJiAJynJrtNPtmPJwipRxhsaSbn4VDt0
-	IVCEtBspy5BRrLZgq1AtSHX2xyeKdLjbrQTBKWxFnwrZt+EvWh8iQVAzk6WMLOH6jN3/CiekCg=
-	=
-X-Google-Smtp-Source: AGHT+IE3knpqyPoHytl1HTPVu5Io02EXVExU+HLdRLl7BELYi33dIBObAhSkST7PxeVLbJc2K7u30g==
-X-Received: by 2002:a17:903:4b30:b0:224:24d5:f20a with SMTP id d9443c01a7336-23414fe558emr147961405ad.48.1748258212357;
-        Mon, 26 May 2025 04:16:52 -0700 (PDT)
-Received: from thinkpad ([120.56.205.192])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234180b2c31sm39997795ad.155.2025.05.26.04.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 04:16:51 -0700 (PDT)
-Date: Mon, 26 May 2025 16:46:42 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	cassel@kernel.org, wilfred.mallawa@wdc.com
-Subject: Re: [PATCH 1/2] PCI: Save and restore root port config space in
- pcibios_reset_secondary_bus()
-Message-ID: <crihkpezsnfuzwm4b7fkyy5b3je55zwxhnk65ctq5wncr4hwq5@63f4fr3bvrsx>
-References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
- <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
- <aDLFG06J-kXnvckG@wunner.de>
- <qujhzxzysxm6keqcnjx5jvt5ggsoiiogy2kpv4cu5qo4dcfrvm@yonxobo7jrk7>
- <aDQQLU1wrgstypEi@wunner.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W0FHW8vI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748258260; x=1779794260;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=kCChXdcNhNNPk3GCnN7qlQQVTqcDW8bmk78IzTynL50=;
+  b=W0FHW8vILL28XLOPoz8ZydYKLn3zeJeUxYRSNGrUSaUpoYEyf5bmfm07
+   LRe1VQUt3ZwKWpVnUi2Cu9vgkP1fbgx0vcjBeH93Kfmi+01A/gzvw3jPO
+   bq5kxfWpbUa/V0+Y10TQFiJCxavY8GxAfQcNb3gXSFWyUn/n4qDbsO753
+   EW1iAdBNaPXwvk3hIEIcYaYN09pcVtKgL+wsqgOM5yYLED6ms5GGRA8gR
+   /FYX0QoTHwQFr+g3WCPpwi171Np90++E8Zg8+OlcjXQGJywU6zr+zPKk5
+   JKIAzNVwxWEr6r0jtmkqRxVv2Y/04fPL2jFtAaaZjYuX64IKr54CrPAkT
+   w==;
+X-CSE-ConnectionGUID: wFwNyaQ5RHaB7e86Mzjp+A==
+X-CSE-MsgGUID: 73NDAWGZSi2FLghZl7qNDQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="49935345"
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="49935345"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 04:17:39 -0700
+X-CSE-ConnectionGUID: 8A2kWhQFS6KhFf8BMcqFsQ==
+X-CSE-MsgGUID: aufz7FY+QhWwRkuJ2Mvc4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="142273286"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.125])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 04:17:35 -0700
+Received: from punajuuri.localdomain (unknown [192.168.240.130])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id C171C11F732;
+	Mon, 26 May 2025 14:17:32 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.96)
+	(envelope-from <sakari.ailus@linux.intel.com>)
+	id 1uJVpk-0022kn-2B;
+	Mon, 26 May 2025 14:17:32 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: linux-doc@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Akshay Gupta <akshay.gupta@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	hans@jjverkuil.nl,
+	laurent.pinchart@ideasonboard.com,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Lee Jones <lee@kernel.org>
+Subject: [PATCH 0/2] Document Media Controller IOCTL number assignments
+Date: Mon, 26 May 2025 14:17:30 +0300
+Message-Id: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aDQQLU1wrgstypEi@wunner.de>
 
-On Mon, May 26, 2025 at 08:54:37AM +0200, Lukas Wunner wrote:
-> On Sun, May 25, 2025 at 01:28:18PM +0530, Manivannan Sadhasivam wrote:
-> > On Sun, May 25, 2025 at 09:22:03AM +0200, Lukas Wunner wrote:
-> > > "The device state" is ambiguous as the Root Port is a device itself
-> > > and even referred to by the "dev" variable.  I think what you mean
-> > > is "The Endpoint state".
-> > > 
-> > 
-> > Yes! Will fix them while applying, thanks!
-> 
-> ICYMI, current controller/dw-rockchip branch still uses
-> "The device state", not "The Endpoint state" in commit
-> 56eecfc8f46f ("PCI/ERR: Add support for resetting the
-> Root Ports in a platform specific way").
-> 
+Hello all,
 
-Ah, missed this comment. Incorported now!
+The Media Controller uses IOCTL numbers with '|' type up to 0x81 but the
+range from 0x80 upwards is documented to belong to samples. The samples,
+however, are not currently using these values. Solve the problem by
+bumping the top of the MC range and the samples allocation by 0x10.
 
-- Mani
+Some sample code in samples/rust/rust_misc_device.rs also uses MC IOCTL
+numbers below the current limit 0x80, it'd be nice to address that as well
+as align with the changes in this patch.
+
+Sakari Ailus (2):
+  Documentation: Bump media IOCTL reserved numbers
+  media: uapi: Document IOCTL number assignment
+
+ Documentation/userspace-api/ioctl/ioctl-number.rst | 4 ++--
+ include/uapi/linux/media.h                         | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.5
+
