@@ -1,169 +1,145 @@
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011011.outbound.protection.outlook.com [52.101.125.11])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D998E163;
-	Mon, 26 May 2025 01:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748221440; cv=fail; b=ilonXxTYa5inVmNgEItF9Krl//GmfhhTY5cPCgxTKdA8bf0sPJxdVVonKhiGkZvdl3kM79eUnIBXuhUfZDQ1LbY3mr+8agd5zrYU0OAgq6PgCMiy4sY/RlPsbWrKF3L8aa9GapWvg6sfOAyT/myhpfsP7TSYcp1HuqhT7bkWeos=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748221440; c=relaxed/simple;
-	bh=N5OCw6iK4tR4Ve4BxgRa0iJmezpGb3kuncx12q3XtWA=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=XdNbOHyaTVjX7t3v1Gl2v5DbRf3i+J3EuHvnaZr3mYL9GFfju6IHTEhUYEDpSVfQXPfCZU7aJs2bC7VCUO/oNhjz1zbPs4yCAH8QjHJYHXAfHwSabyqLzskYAivlhNiJJTx5HhbvyrEEjr8AGf1LrZhoRzFjE1dkfmSxCHCne7c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=h4mtSNLI; arc=fail smtp.client-ip=52.101.125.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B99EEB5;
+	Mon, 26 May 2025 01:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748221784; cv=none; b=dTq2OYwAsXDvmcDwBR54BichkspwoGX3n9ChciLPgv3U6EN5DpQsShLjBKSRNt8XK67Izkhq0QRpId3punk6fsTa04rGbpCXcCeoZJwyljAWXcfMbZqp5mSi8TvFIy6/0v4WM6cAjwRtHMxZoBJqSkMvhzz1e9A0oF4nDE3tlXc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748221784; c=relaxed/simple;
+	bh=lyQbcMnMs8dX4DMzsRHTjruddW9G7tL/vXLm73bUpXI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pLit5+l4E1YyaQVG2OW7ZuB2MKjNZGRk1guoNNQFPLPUS1vtTqWxEtZmD/SJyx7QTJkWBNd4EK+wePqS4V46fAndFsUMtlQL9uNfno+TDcYpv1XiWZWwaAzypPDEPFBfmaALLbv3uPT98Eg5SdxnRXBnfSC1Qz8CiiqEMagw7r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dgt9sDO6; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="h4mtSNLI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VgKGywzZL9VkASUt96ZicuFnw91uPQmlxz+61+4wO0EoLMVbsuJl3xHVUeWGT/cWw1ituXPZRgLAhOecautKEt0KcpRilF4cEot4ACZO8Bx5Uhb9D5IVlL8L06caQSacFTRu3XshLLZcBYsKljq2TJUvSrS6Rr0L9WSUNsdAHr727+/TEP9/CjzuWdfkMVxHB/W+nKKADEnGylDiLJaNT43WPJhycQFD+BPhzaGfdhYTn7BwlKwyhbWftcqt1WxpzQBBtkx69rNhUotLBaYcAWK3/zAqhn8lRpYMi2lq3ZzE0dTYg1+LWmLv2l+TbY+wI3P1UbeYGIx4fNJt66JZNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5TPqY8WHC90hNN4g80evX8vT2+XF2TACEJO28JUI7+c=;
- b=MF2fOeIBfB8XDWEHl02JBgSArJ7OfumJs+t3r5ws75fZwAjqAFkYxw7EyEXzrHirTAc4Cnp/Weg63xMdcQz8cVkxMcbuGOC1xcaxHfKClBjmAvSTgXHAZVySGijLNXm7bTRAp76wo30mYOwdGXm+C2G4BFlS9zBnumRtBmg0co3ExYpWSih+6dBbJhfM+25qtRpv5mGmqC/5em3TQVSjk7KbOzA4jJZZYQhDWEMkE/6E+a7UFVWOtEpoAJXgkowUHKswaPRtz5lQ+TAjJdx27K8w+Dd9dz2KCHXqJUiaRQ33R7gqGpgDPvUhZSEl7wLqnBWsNZI2ilce8rr2DcqceQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5TPqY8WHC90hNN4g80evX8vT2+XF2TACEJO28JUI7+c=;
- b=h4mtSNLI1juzc3pUhhANLpS453R+VTlly2cPFLqjqRh6uNS8TRb2H70u7NsFGN0myeWpUiMduYc3B4sdRlYgOjJDLbKzZNiKXb/lX5JqiNi0Z1vik4daxAiPZFXuZpJYVwHRNhkBGODH0BR+e0ZlGSV7w5jND2qayHoFukpdqSY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11) by TYRPR01MB13673.jpnprd01.prod.outlook.com
- (2603:1096:405:189::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.22; Mon, 26 May
- 2025 01:03:53 +0000
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11%6]) with mapi id 15.20.8769.025; Mon, 26 May 2025
- 01:03:53 +0000
-Message-ID: <87cybwb2ti.wl-kuninori.morimoto.gx@renesas.com>
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To: Marek Vasut <marek.vasut+renesas@mailbox.org>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dgt9sDO6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1748221749;
+	bh=0Vtc3S2mEro9O/XVJHGv22xQ3o76ZyvNYJM4dyAwtnw=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=dgt9sDO689Wi5nGqPV1fjq88O628b/cy2LcLM9btd4zOOct+QvZL+/yfNF7WPD4q8
+	 +PgIPxwqtgX8Vs0Ubv/dLBLrsVn4GymFmXDoilnSumis+kEKOJ/rGj1rU8bqiq49bR
+	 EGI9HmxTEgbAW6SzOem3/7uPv/v3Rt02U9weT+2s=
+X-QQ-mid: zesmtpip2t1748221739t553697ba
+X-QQ-Originating-IP: eUnGCWoyBzA2+FGT0SFHQPqzlWFCJXGLdr9ji9qQKfs=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Mon, 26 May 2025 09:08:57 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 10172135018990717116
+EX-QQ-RecipientCnt: 8
+From: tuhaowen <tuhaowen@uniontech.com>
+To: rafael@kernel.org
+Cc: huangbibo@uniontech.com,
+	len.brown@intel.com,
 	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: renesas: r8a779g3: Sort DT on V4H Sparrow Hawk
-In-Reply-To: <20250525160336.82960-1-marek.vasut+renesas@mailbox.org>
-References: <20250525160336.82960-1-marek.vasut+renesas@mailbox.org>
-User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date: Mon, 26 May 2025 01:03:53 +0000
-X-ClientProxiedBy: TYCP301CA0008.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:400:386::6) To TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11)
+	linux-pm@vger.kernel.org,
+	pavel@kernel.org,
+	tuhaowen@uniontech.com,
+	wangyuli@uniontech.com
+Subject: [PATCH v3] PM/console: Fix the black screen issue
+Date: Mon, 26 May 2025 09:08:54 +0800
+Message-Id: <20250526010854.7834-1-tuhaowen@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CAJZ5v0jazfh7A8-6werFtsQ=XOYzDioYh19p4S4v=0to2Na4Hw@mail.gmail.com>
+References: <CAJZ5v0jazfh7A8-6werFtsQ=XOYzDioYh19p4S4v=0to2Na4Hw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|TYRPR01MB13673:EE_
-X-MS-Office365-Filtering-Correlation-Id: de9b8845-e7c9-4f97-c0f3-08dd9bf12f03
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|52116014|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nWiL3IawkdMsTd1BFIJ+r4/uxFL0qeqQF5AuPpPam7FuVPFX6qIt+MihKWYm?=
- =?us-ascii?Q?xsn2VEwBC94EGXmH2LtOOciDcF/jbz38FvJerQfQGoxA8FcYoCeqGiu7MxwR?=
- =?us-ascii?Q?cBrwX14kg+QJ6XAmfXR54aTo981A/K3fG40nYeQ6v+kEMHOnOy1Spw+9mE6e?=
- =?us-ascii?Q?pw3Ey7fIGk50vkmY1NP8ipVPqr713cIlGIzd7Ilrl5g9Fvta5/LIP+QHygby?=
- =?us-ascii?Q?quJ3UxPGM3J05KF7jCEYsDXkeWPEVvay2pt/RfFwhOeEgYqeYpV0C6qYypAQ?=
- =?us-ascii?Q?cY4H1kWmiIISUV8eLm6DUSRJqg5gHMmjNGxktxvZKv5bx/AWqfYJNqTBAtiO?=
- =?us-ascii?Q?TDyQ4c3BfJeunTFsjZZ5X51VXqhkTYbqUG2iSUFDEeoFM8HZhGlqHl6dMmF8?=
- =?us-ascii?Q?TsK3CyqRKq1YTE7sQkHeEkFazxMaa4RMTeYC3v7RH3M+ArSHtss7abGIOPrw?=
- =?us-ascii?Q?QSVKx/Ma4y9ra84p4bWE4QaeBfa0ukhWSmWIFQLMM8kG/yD2mbTlfKGoe3zW?=
- =?us-ascii?Q?0k7NZKb3jVD9AEcoUDjdSMrJuSDQBDMheCdNYyo9qliutXloS+6lOa622FVb?=
- =?us-ascii?Q?7TifPK9gLeFHi1DyPXjNBnNu4OpiM0TEwWYhuRI3WbZrjg1qYDkC38Rz/wia?=
- =?us-ascii?Q?UbuKG5k/NojrFsosGtlrCCBQ6DMKXUbBSNwKNfXtE7H+9sZrN1He97ycf9hF?=
- =?us-ascii?Q?fD6v/LCHvr+FvWWEJI3yvpp65QaQz+DfLcyJ1nkVjOzWdqeindGF+REVYK5w?=
- =?us-ascii?Q?G9JUwI4QZ8QiCXGAgoZNI5k7csPDt5vaHdYHcPZmqk9hxxbZR9FNAGBgUTWn?=
- =?us-ascii?Q?SfabAPpicgNB242MAyO+i20Ev1xcjwLOqhgd3BdY2FmQxoQeH8SS6A6MwvSR?=
- =?us-ascii?Q?uz8gXjOeRvoqrbuUrDgaKh28L7r1o74flJKo6h5NjocgFYihrealT58L+ESo?=
- =?us-ascii?Q?0W2Sg/vaefx+aASlDnAK7nonnsHmiynl9jR3WVmTWXlrHSLv11gODkdudGO7?=
- =?us-ascii?Q?g3xtYCwaZWtVjI7e0MZbWyR5tkuMy/F+ApEa41iRLBc5lAIPWdjHHz62yh93?=
- =?us-ascii?Q?0cCnpf3Hh3WCHuCqoMOY0gMDVgnSHDrXELQNETXuSd/RgE+c65Ju52IFwWuw?=
- =?us-ascii?Q?sxY01SBTJNQyrw0YS+HRbkuHuyWU2L50fz0sRn/09v14qG4pcIsYOh/38JlF?=
- =?us-ascii?Q?o1EYzgIDhLJc06VRHPoRcxjzR5AQMSiyaDN36aqvk5CcTSHzTDrBOnPpGhvs?=
- =?us-ascii?Q?i4D3iqeHOF7WJXAXkg1NYQEQBwrk0r1AbHyjA15tLuiO1536YAy6sfBf/CH5?=
- =?us-ascii?Q?2X3JyAQuSvTqapeI05F+5k7jXcmE91o/I6HpI8ngyQe/ojA1sC8HBD41Yfab?=
- =?us-ascii?Q?cJTMY0zf2YXBpf2db5L70IUXpU9q7c2J4fPLzz9UC5PMj+zTA8Whnm6f7Nsd?=
- =?us-ascii?Q?m4cX2TB8nr7lI/4PTzDDJmLV3t9NcKCLd7OgFaVfn2hHhenJIrySkfXs0uO0?=
- =?us-ascii?Q?jIUigSMzvnBnFko=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(52116014)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yG0lDkijSLxsUPb3PZ46jEpG0/7ghtYaeyGAnsO1Wy8wjZc4wgszaa6Cd1H4?=
- =?us-ascii?Q?IsxQCjfsbwNwdiu8/LV7JykiYYL0u15fOw50GERXjyHo7jwyxuI3GSFlLDJG?=
- =?us-ascii?Q?xv+x+SgOuCbWtcYqSUG6ut9Jtzc8abbn0fNzyVCBDOHmGxIvYNqcjt69a5sr?=
- =?us-ascii?Q?mDE7p02+vdr+6E+TxqqLcWB8hzIlJQBpDPsg/ghcs44KYRi3TqLp2HAInAuk?=
- =?us-ascii?Q?kzY4u0cXM6XZffanuPKzmABJTlavRiV1JtKLZNCB1Sm6tBSa+71zk7scvbcE?=
- =?us-ascii?Q?RA71epGVNSY/NlBRb31er6EmjhUTK1WRwSG0m4A7JMh+hKDYEVjfnBrDNKQ+?=
- =?us-ascii?Q?hsrEZSiOAHeSuLuiVjcda2noyoM764ijCxL3D6HufUkk0XkYutkroi6YEEgj?=
- =?us-ascii?Q?ElczPzkMHsc49I8Y7G0XixLYFoJ0XLTq5zWO1vW+D1acRw/UNIMFM/BshQEF?=
- =?us-ascii?Q?PSkPgtGFO2aTuYSsW6pYKKsSN/k3Pke0S+vXBvCrM2219vave17Ci6w0rx9C?=
- =?us-ascii?Q?X1JGwtxcTSe03UXEJCpFp/V4bNNAgsGjsJACu0+x3UiEumS/E8sm0pD9mNbk?=
- =?us-ascii?Q?XzLiP9laJ+u/LFhMDXwzSahgTJxe/YvoLL+dloSyByrb8KljyDVvviPKmjd0?=
- =?us-ascii?Q?baB1Fka6kejQ7jEx9Isc6wQR6qalTXYlQkKYHLXaSsAYWm00xXbb+N5gPUO/?=
- =?us-ascii?Q?i01BuG+sdVYIcjDrJFbZEIvlLfzNcGQMeNCkjRabq936YOlcceLH+b1tvvZS?=
- =?us-ascii?Q?H9Jx/DmhTVbe6n90gO0lwQ+wppbCJJICnD9go9wKFsd4cNL4O/YbQdT9pHk8?=
- =?us-ascii?Q?hpAKASPxq+OF214P/BKeaa8qH9hPfmFHQQn0KYoALzgoa7AzPkp/Zb7oJJ6Q?=
- =?us-ascii?Q?L0ERCE1/wPOJxwH8niBmh766j2jrEqpfLmyAlO6b53nzZG+CoeZNeipqQkkT?=
- =?us-ascii?Q?ZGVzVrJ2gO4ISI7YCO+KAQXkYmWaxZil+liFBkMJsJapPPDerfVOWLnz4E5B?=
- =?us-ascii?Q?LzYDAC2BzhxlPNUyOis607s2fzBQ1khw8FjZ+FjKWfN4vWq8dZ3LjR8sBF8F?=
- =?us-ascii?Q?gj2qH3MqYPP48ffdUcqtxtma2CksHtN1yr5toVVPm8EdCf5hirWwJ5Bf9S5a?=
- =?us-ascii?Q?Ghqo6W/XSBcLY5aVkMS43zS6icsZr4of2D2bdl5fy2hqEFahDJnXZ3C/V2nQ?=
- =?us-ascii?Q?sg/jPHpdmRqMoqkEDfl4pmJ8woMRr670vIcidiFMGNCpV4a35Pwc6QjWZ4ja?=
- =?us-ascii?Q?rZVf2u7Ix45upT0GTCT78ZRxYV1V83sYmVqiV06CvrXzvnTrXQXTq3XkbXPp?=
- =?us-ascii?Q?LZD5J+zzQzLkbpWKuTUzqGH5ywv5y4t8v0amoX2169tkbpqagHLwUG0c0UDk?=
- =?us-ascii?Q?yNqMbhXx+s4h4dTPa3z6US8DbNp3YUrRFAgcO4197eNis0sdgeGfYOdvyqWb?=
- =?us-ascii?Q?ZlDluWV4TqDOwlU4fa4Ia2lNgIntU6ocBN4doEp49RVw6/vBG4EjRhxTrSyg?=
- =?us-ascii?Q?z5h4yby1ChfoOvNEuhZePCQVlTS8r4F6EZpsN0dSgf6gM4iOHYIfYpK6Tu3R?=
- =?us-ascii?Q?fjdB2VORfhcV+mOajM3pEuxvT9OnhNFW6/ihtye6HzET8wu0hloqNiS6sWiu?=
- =?us-ascii?Q?hhABWg9xxUYN1KJbh2z6jck=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de9b8845-e7c9-4f97-c0f3-08dd9bf12f03
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 01:03:53.6178
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pwfqOPPa5nH1jFJw1XH8835J4VkIWZWw05vFtZCYcIvzoCbTw3wTpydSEQEpghuKEta26GAXNl0stu/6AZypD6gsRtKCHhLpY2frESDlS33+FDP9Km8M3ZN4P4lSYMEi
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB13673
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OQNQM5UP8StMNVxiEF9KO90pLI83zZkp1BXVXv0FlKAuNWI+HzXGNM81
+	iDroMDgXmijz63lzi70iM4UI+yvGSZyBEQJZYzxlz8B75lPGMpdtgc9YbB661Ttmb0lk6YC
+	9kdqUlm/LyzBwPO+pdLIUrMxHpt2q/4RjunYuCf+3932pjpP58GowkwZWovfpH2KB8PU2pz
+	nF7E9sN+acM9qTUpQu1AoEcROzqf1RJJYTptkKFQdimySqkLeKAcFLygvtHwl+IgnAAGAWc
+	kEmhzb2RQ/XfheZy4l+zi7jM4klsS+aGomx1mWMGQeEDA74Ya2qYdtkCWIgi9QmzLQ307y3
+	3FowIqs3ae+aB2eWd9M317tEiaDePEtb969owGRTtmf4G+M5yw/60smDqyU4gxBJkEioH/X
+	dSdoHtoOPRtc4gUBuuRBg/A5sBJB7eoQ51VJa+xURQg96bozxLJYOFc1B7gtRhWIrhDzdq1
+	feI5MD4eBsdjjctYH8gmFITXXMEZiGf6vvp2d/DypZf8q30tXe+YStgOKDtt+9wAGpzrOfm
+	tFGRxBpXTaqgE+rxArpU7I+0L+jFbTHeC6N0Io1a5XSFiVBp0rjIaJVCuIQJ6Wgn9u9iYBV
+	HVxDxSRarWcqqczYcMl4e7BQ6H0rmnVUKZR8VUufHbVd4HE/8JbacM6oNVKmhiaCUo8boKQ
+	ablzDDzFGLFgHt1bMZiByHss2uTMY4LSM6hHY0XCqTo1KAj4Mq2wps1Jg8Onrpq8YXHZjkf
+	d5oWgB9LlFwQLaolyBYq4RSGY6UJa/l9oupweCw8xYZb1P9LNsFsf561fNt/H4TQJXZFi9J
+	hsri9iegq4k0dj5pMwDuVp1b4F8r+Bjp9kAQbSHVQR1JZPeMljPUv20W4zi7iDRE58xBMR+
+	e/uVoV0pIfgqSEhCwG2MzEUIie1tSrHQCJY00NmG4Xy/Ty5g9TCfeRlxSj4Nuu50RPbayLp
+	JUgYiLsFJMZIRm/ihIWVDJBIx3dbBMQlPK9Qkf5/a3bVKG4JMc5RytNkePVPfrMou9QM1Sg
+	2EYf/LVBFy0eFzOveY
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
+When the computer enters sleep status without a monitor
+connected, the system switches the console to the virtual
+terminal tty63(SUSPEND_CONSOLE).
 
-Hi Marek
+If a monitor is subsequently connected before waking up,
+the system skips the required VT restoration process
+during wake-up, leaving the console on tty63 instead of
+switching back to tty1.
 
-> Sort DT alphabetically. Fix up the placement of &rcar_sound {} .
-> No functional change.
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
-> ---
+To fix this issue, a global flag vt_switch_done is introduced
+to record whether the system has successfully switched to
+the suspend console via vt_move_to_console() during suspend.
 
-Yes, indeed.
-Hmm.. I think I had sorted it...
+If the switch was completed, vt_switch_done is set to 1.
+Later during resume, this flag is checked to ensure that
+the original console is restored properly by calling
+vt_move_to_console(orig_fgconsole, 0).
 
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+This prevents scenarios where the resume logic skips console
+restoration due to incorrect detection of the console state,
+especially when a monitor is reconnected before waking up.
 
-
-Thank you for your help !!
-
-Best regards
+Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
 ---
-Kuninori Morimoto
+Changes in v3:
+- Changed the type of `vt_switch_done` from `int` to `bool`.
+- Link to v2: https://lore.kernel.org/all/20250516084011.29309-1-tuhaowen@uniontech.com
+- Link to v1: https://lore.kernel.org/all/20250516034643.22355-1-tuhaowen@uniontech.com
+---
+ kernel/power/console.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/power/console.c b/kernel/power/console.c
+index fcdf0e14a47d..2a0722038f02 100644
+--- a/kernel/power/console.c
++++ b/kernel/power/console.c
+@@ -16,6 +16,7 @@
+ #define SUSPEND_CONSOLE	(MAX_NR_CONSOLES-1)
+ 
+ static int orig_fgconsole, orig_kmsg;
++static bool vt_switch_done;
+ 
+ static DEFINE_MUTEX(vt_switch_mutex);
+ 
+@@ -136,15 +137,19 @@ void pm_prepare_console(void)
+ 	if (orig_fgconsole < 0)
+ 		return;
+ 
++	vt_switch_done = true;
++
+ 	orig_kmsg = vt_kmsg_redirect(SUSPEND_CONSOLE);
+ 	return;
+ }
+ 
+ void pm_restore_console(void)
+ {
+-	if (!pm_vt_switch())
++	if (!pm_vt_switch() && !vt_switch_done)
+ 		return;
+ 
++	vt_switch_done = false;
++
+ 	if (orig_fgconsole >= 0) {
+ 		vt_move_to_console(orig_fgconsole, 0);
+ 		vt_kmsg_redirect(orig_kmsg);
+-- 
+2.20.1
+
