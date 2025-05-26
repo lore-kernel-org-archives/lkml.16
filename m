@@ -1,86 +1,238 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E121E5B72;
-	Mon, 26 May 2025 08:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5606F1E47AD;
+	Mon, 26 May 2025 08:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247228; cv=none; b=GsKkEF95uNRQI4vSSx48WL0w5aaThrxg79L2GT0ptxAA+Qrzs3na9jXbE7o/9uMba/5T+gKQ7DdndQ4n+rs8jkVpufrU6Gfx6g6knDGvWF1cwqaMPAT8aDOq/jPEbQMwBZ+xKnZHkLpLZXUBC2QPyIp57h+lA7IIfNJOU0nfN1M=
+	t=1748247236; cv=none; b=B44nPBU5ZmLofCjkQ6N3CboQB1PWnqaNfuSE5Rf6eD7JJdyDaxebGIhTntXxokSvvIsRFaTt/msgjqxD5eY1UKa1ZHdr7QLa+FZbbOx6vAiX+YbtSNY6BklvlSZyVGZzOWyURRUFnillQB9QZFNB8fbSPBW95hOaS7htyqfKorc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247228; c=relaxed/simple;
-	bh=+itlrWYzfhQ7YhSm6Rwr1H/9x36GVhI08lVyKj97jHk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ng9IbER/3EGYoS0yYpX4gy2rnEH+UOLO6IbrPGQwKj1DO5koSBNYGZEyi77vs+fymVvIbAbJP4G1rNwgkq0qATN4UcO8qf31Dz9TWZoa2wsEedh6pkuPa2mhDESuoL70olWlbk7PsOMn7e+taeehjV7yZLxdifev4hs112eL7QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=iCPb/AcH; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1748247236; c=relaxed/simple;
+	bh=1FEQ33EDgRQThqrYNVwsS/ECQVP2rLowPOJ80r0AksE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UTyhTXXR7tNJJOMeu3wv6BbOibcai9Y+DvAodZtZaGuLiD2Nt3YiqQ6KiFsCSAikb9yAadfhM/XufLFP3+/+2x7v8AVcqAuEQBEzTYQPtmhB1pds+xUkL+HvtOYhO4OgV7b06H5AQ1pGnjwou2K0+HWbvKq0LflFtRFI79X2q7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=agdSSmCb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="iCPb/AcH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=+itlrWYzfhQ7YhSm6Rwr1H/9x36GVhI08lVyKj97jHk=;
-	t=1748247226; x=1749456826; b=iCPb/AcHDU6xG2x4fpv6MMjLVYp219VtBpAxWy4oXe75HWE
-	n3V4EhYUOqImhZx0CH9FVoqMBysskPOjz5H12PUByFqzmrd0mZQ7wI5mKG1uYL7MW5ylnHuoU16Q7
-	o/n8foKno8h0UK6qJ1PLN/AyJb+wRmw9TyyFLl/MD5Qh9mRT8qrxrcju7sEcUD2NOM973DbrJtKgu
-	AUUbYpVHxltjFXq+7RVjCj4HUxzOFA2A4pfDvML4Fjw2qvdu/u8l8XtoDvQ2qolb0xmt4lfGhwC1+
-	aq2c3uGUz+XPZ1zQH/7CNJPSYBQxA3WyBDOZmVHLgUSH1QJ31arq88CmDTqYksXA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uJSxj-0000000DOyV-1Dst;
-	Mon, 26 May 2025 10:13:35 +0200
-Message-ID: <23aadbd78d3585c900c579c26f360011cf1ca830.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 2/6] ASoC: aoa: Use helper function
- for_each_child_of_node_scoped()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Ai Chao <aichao@kylinos.cn>, perex <perex@perex.cz>, tiwai
- <tiwai@suse.com>,  "kuninori.morimoto.gx"
- <kuninori.morimoto.gx@renesas.com>, lgirdwood <lgirdwood@gmail.com>,
- broonie <broonie@kernel.org>, jbrunet	 <jbrunet@baylibre.com>,
- "neil.armstrong" <neil.armstrong@linaro.org>, khilman	
- <khilman@baylibre.com>, "martin.blumenstingl"	
- <martin.blumenstingl@googlemail.com>, "shengjiu.wang"
- <shengjiu.wang@gmail.com>,  "Xiubo.Lee" <Xiubo.Lee@gmail.com>, festevam
- <festevam@gmail.com>, nicoleotsuka <nicoleotsuka@gmail.com>,  shawnguo
- <shawnguo@kernel.org>, "s.hauer" <s.hauer@pengutronix.de>,
- "srinivas.kandagatla"	 <srinivas.kandagatla@linaro.org>
-Cc: linux-sound <linux-sound@vger.kernel.org>, linux-kernel	
- <linux-kernel@vger.kernel.org>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>,  linux-renesas-soc
- <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel
- <linux-arm-kernel@lists.infradead.org>,  linux-amlogic
- <linux-amlogic@lists.infradead.org>, imx <imx@lists.linux.dev>, kernel
- <kernel@pengutronix.de>,  linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Date: Mon, 26 May 2025 10:13:33 +0200
-In-Reply-To: <eb1ddeb3-06b6-4ac5-b20a-06b92c7f1363@kylinos.cn>
-References: <2aq0nyvyf7t-2aq4hsc7kp6@nsmail7.0.0--kylin--1>
-	 <7e708dcc98c6f0f615b1b87d190464cfe78be668.camel@sipsolutions.net>
-	 <eb1ddeb3-06b6-4ac5-b20a-06b92c7f1363@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="agdSSmCb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A82C4CEEF;
+	Mon, 26 May 2025 08:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748247235;
+	bh=1FEQ33EDgRQThqrYNVwsS/ECQVP2rLowPOJ80r0AksE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=agdSSmCbJrmUXnITkYok9W4XfBvVB3JWo5GH7/dUZ9OT3dikuYr7e8Jk3qFWtEget
+	 w/e3Tg4Xa5FJo2ZWKv/DtFisTjezwtQ0tRlsVDf1IIUcRak8q9MzXq45Ch8UfkYClb
+	 ka3PsgQmgIVO6YONcdIrFSl+IAerxjmNQjGUlEEzZ9SttcolFiC0lmQsjnsiLwGX4j
+	 HN51afGR8nZvZ8JZC19m42t//vGUbVlaavR7ykLnO5rN7/iAXZy2QnloB7CyOb0pKU
+	 6AB9wlpNLcpMmiY+RTCrrkyePD1fe3IeqNWdRyIeT6vXVuRups6lO42EbG7qLy2kaw
+	 NrXyQoUuDiD5g==
+Date: Mon, 26 May 2025 13:43:41 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>
+Subject: Re: [PATCH v9 9/9] optee: smc abi: dynamic protected memory
+ allocation
+Message-ID: <aDQitSd27Z4qC0xT@sumit-X1>
+References: <20250520152436.474778-1-jens.wiklander@linaro.org>
+ <20250520152436.474778-10-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520152436.474778-10-jens.wiklander@linaro.org>
 
-On Mon, 2025-05-26 at 16:12 +0800, Ai Chao wrote:
-> Hi Johannes:
->=20
-> > > "simplifies the code" is no need to callof_node_put() .
-> > Fair. Except that's not what you _actually_ changed here. Like I said,
-> > either it's buggy before or after.
-> >=20
-> In the function i2sbus_probe, it not return a struct device_node, so , I=
-=20
-> think function for_each_child_of_node_scoped is better than=20
-> for_each_child_of_node.
+On Tue, May 20, 2025 at 05:16:52PM +0200, Jens Wiklander wrote:
+> Add support in the OP-TEE backend driver for dynamic protected memory
+> allocation using the SMC ABI.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/optee/smc_abi.c | 102 ++++++++++++++++++++++++++++++------
+>  1 file changed, 85 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
+> index f3cae8243785..6b3fbe7f0909 100644
+> --- a/drivers/tee/optee/smc_abi.c
+> +++ b/drivers/tee/optee/smc_abi.c
+> @@ -965,6 +965,70 @@ static int optee_smc_do_call_with_arg(struct tee_context *ctx,
+>  	return rc;
+>  }
+>  
+> +static int optee_smc_lend_protmem(struct optee *optee, struct tee_shm *protmem,
+> +				  u16 *end_points, unsigned int ep_count,
+> +				  u32 use_case)
+> +{
+> +	struct optee_shm_arg_entry *entry;
+> +	struct optee_msg_arg *msg_arg;
+> +	struct tee_shm *shm;
+> +	u_int offs;
+> +	int rc;
+> +
+> +	msg_arg = optee_get_msg_arg(optee->ctx, 2, &entry, &shm, &offs);
+> +	if (IS_ERR(msg_arg))
+> +		return PTR_ERR(msg_arg);
+> +
+> +	msg_arg->cmd = OPTEE_MSG_CMD_LEND_PROTMEM;
+> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_VALUE_INPUT;
+> +	msg_arg->params[0].u.value.a = use_case;
+> +	msg_arg->params[1].attr = OPTEE_MSG_ATTR_TYPE_TMEM_INPUT;
+> +	msg_arg->params[1].u.tmem.buf_ptr = protmem->paddr;
+> +	msg_arg->params[1].u.tmem.size = protmem->size;
+> +	msg_arg->params[1].u.tmem.shm_ref = (u_long)protmem;
+> +
+> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
+> +	if (rc)
+> +		goto out;
+> +	if (msg_arg->ret != TEEC_SUCCESS) {
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +	protmem->sec_world_id = (u_long)protmem;
+> +
+> +out:
+> +	optee_free_msg_arg(optee->ctx, entry, offs);
+> +	return rc;
+> +}
+> +
+> +static int optee_smc_reclaim_protmem(struct optee *optee,
+> +				     struct tee_shm *protmem)
+> +{
+> +	struct optee_shm_arg_entry *entry;
+> +	struct optee_msg_arg *msg_arg;
+> +	struct tee_shm *shm;
+> +	u_int offs;
+> +	int rc;
+> +
+> +	msg_arg = optee_get_msg_arg(optee->ctx, 1, &entry, &shm, &offs);
+> +	if (IS_ERR(msg_arg))
+> +		return PTR_ERR(msg_arg);
+> +
+> +	msg_arg->cmd = OPTEE_MSG_CMD_RECLAIM_PROTMEM;
+> +	msg_arg->params[0].attr = OPTEE_MSG_ATTR_TYPE_RMEM_INPUT;
+> +	msg_arg->params[0].u.rmem.shm_ref = (u_long)protmem;
+> +
+> +	rc = optee->ops->do_call_with_arg(optee->ctx, shm, offs, false);
+> +	if (rc)
+> +		goto out;
+> +	if (msg_arg->ret != TEEC_SUCCESS)
+> +		rc = -EINVAL;
+> +
+> +out:
+> +	optee_free_msg_arg(optee->ctx, entry, offs);
+> +	return rc;
+> +}
+> +
+>  /*
+>   * 5. Asynchronous notification
+>   */
+> @@ -1216,6 +1280,8 @@ static const struct optee_ops optee_ops = {
+>  	.do_call_with_arg = optee_smc_do_call_with_arg,
+>  	.to_msg_param = optee_to_msg_param,
+>  	.from_msg_param = optee_from_msg_param,
+> +	.lend_protmem = optee_smc_lend_protmem,
+> +	.reclaim_protmem = optee_smc_reclaim_protmem,
+>  };
+>  
+>  static int enable_async_notif(optee_invoke_fn *invoke_fn)
+> @@ -1586,11 +1652,14 @@ static inline int optee_load_fw(struct platform_device *pdev,
+>  
+>  static int optee_protmem_pool_init(struct optee *optee)
+>  {
+> +	bool protm = optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_PROTMEM;
+> +	bool dyn_protm = optee->smc.sec_caps &
+> +			 OPTEE_SMC_SEC_CAP_DYNAMIC_PROTMEM;
+>  	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
+> -	struct tee_protmem_pool *pool;
+> -	int rc;
+> +	struct tee_protmem_pool *pool = ERR_PTR(-EINVAL);
+> +	int rc = -EINVAL;
+>  
+> -	if (optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_PROTMEM) {
+> +	if (protm) {
+>  		union {
+>  			struct arm_smccc_res smccc;
+>  			struct optee_smc_get_protmem_config_result result;
+> @@ -1598,26 +1667,26 @@ static int optee_protmem_pool_init(struct optee *optee)
+>  
+>  		optee->smc.invoke_fn(OPTEE_SMC_GET_PROTMEM_CONFIG, 0, 0, 0, 0,
+>  				     0, 0, 0, &res.smccc);
+> -		if (res.result.status != OPTEE_SMC_RETURN_OK) {
+> -			pr_err("Secure Data Path service not available\n");
+> -			return 0;
+> -		}
+> -		rc = optee_set_dma_mask(optee, res.result.pa_width);
+> +		if (res.result.status == OPTEE_SMC_RETURN_OK)
+> +			rc = optee_set_dma_mask(optee, res.result.pa_width);
 
-You still haven't explained why it's even correct.
+This change should be folded in patch 7/9.
 
-johannes
+>  		if (!rc)
+>  			pool = tee_protmem_static_pool_alloc(res.result.start,
+>  							     res.result.size);
+> -		if (IS_ERR(pool))
+> -			return PTR_ERR(pool);
+> +	}
+>  
+> +	if (dyn_protm && IS_ERR(pool))
+> +		pool = optee_protmem_alloc_dyn_pool(optee, heap_id);
+> +
+> +	if (!IS_ERR(pool)) {
+>  		rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
+>  		if (rc)
+> -			goto err;
+> +			pool->ops->destroy_pool(pool);
+>  	}
+>  
+> +	if (protm || dyn_protm)
+> +		return rc;
+> +
+>  	return 0;
+> -err:
+> -	pool->ops->destroy_pool(pool);
+> -	return rc;
+>  }
+>  
+>  static int optee_probe(struct platform_device *pdev)
+> @@ -1788,9 +1857,8 @@ static int optee_probe(struct platform_device *pdev)
+>  		pr_info("Asynchronous notifications enabled\n");
+>  	}
+>  
+> -	rc = optee_protmem_pool_init(optee);
+> -	if (rc)
+> -		goto err_notif_uninit;
+> +	if (optee_protmem_pool_init(optee))
+> +		pr_info("Protected memory service not available\n");
+
+This change can be folded in patch 7/9.
+
+Rest looks good to me.
+
+-Sumit
+
+>  
+>  	/*
+>  	 * Ensure that there are no pre-existing shm objects before enabling
+> -- 
+> 2.43.0
+> 
