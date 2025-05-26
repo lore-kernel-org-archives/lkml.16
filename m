@@ -1,90 +1,79 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDB37260F
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5F35979
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748226536; cv=none; b=KEoliJUHwjpMdwJZ3n7qlo1A94w5fsdepJQZ4OELzaceWlj4n3VvCELzRirXgqT6OtHeA+ErJTXLZsLd/Hefe4DA5DGh81oM17e7v1Ukwix3IS+0fbD4JkrCEM72QvoWNygXTjmsg6rKmc8TL0mb8cD5UbJujMZw7uOmxYzt/AA=
+	t=1748226832; cv=none; b=IdElbkMW8CX738hkCby1G1PKEU2+LtCVcMeO6DWXXSB2JC4BumoJd3uX7mhbtL47OC4YE/4Kaj770UdYI7D3xyiis0DtjYGmwrnxEbxzJ9uBfBKgo7+duOefZkQRnZ3q/awr6im+9YyHU3hh8UwVjK1s4X2TYHlXCg8QfzKMpfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748226536; c=relaxed/simple;
-	bh=lxR24Tcyal93aVfwLlVLRxPeDe6bjXtUARPgt/PEhOk=;
+	s=arc-20240116; t=1748226832; c=relaxed/simple;
+	bh=r4VTOKE7niw9o8hVYOZpbcu9LTu6vXx4wDNl8oA9EkI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCOeMO8+e76ItCwYf2VSbwJl0mXoa419SDz2uo4SKON4E+y+X6EudPOvWcyHR0+6RiaBp5aqmvXTsD9eGeK5KalkIP77FOPwqPYPmiQWvCkDwQhV3xKB8/sXs8ibuDBU/ydRF7yRLNTVCZUan6zSO1ocBS1r1V9imr1S0BsuhuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qm0L+3I7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=Rlb5ssN5M3xQxJL//ef0J/0YNtHEPHnOwH1Suo9/nognVSUkyJH4AW5ojd4j2iDOf8+PGi7wGQnOqemwf82kSnWUcy/132Be/KV9izb+A98oVSx3341cgBqlqKmHwv8QHKrxVpruiHG/jdSWXDbDYRqUeCdMGosbDwsFyPqB3zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NlPnUY/7; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qm0L+3I7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=Q38bzlFvafJEjNOPNr4Btufxla4Ukr/BqMH7YE9oa7A=; b=qm0L+3I7Xsp+Dr895AemcIGaJt
-	FQ8xzi2XRu0PYHBL864RRa+jR7LN1ZLi/RdCEM9lwbuEg2i7V2M8pTRA+RL5FIl56PU3kSXg+osDe
-	wZuz6zEdAV21zBL6PkWtm2wr+REXTCDvs3zEuOnm/AreCbHRr4QQyZ247EwPc3QGZ2BNbZQPZdwHP
-	mU9s9dlYV73du5d81N/MTegv/QVCofBwu8Y6uWmICBeDIFo+xMWxsprJ+pIQBXVfJTc++tOgJ8i2T
-	/cUpcTXXNmipjBLWqCQiOmBkWSWZDg7wmTARM4dZTxMWA8y4BYlZLzIRx2HyLWb/s581jAFDOzHxS
-	/+M6qvYg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJNa1-0000000AtRJ-3xl3;
-	Mon, 26 May 2025 02:28:46 +0000
-Message-ID: <31c8c819-6814-499c-8d55-d22d4939c851@infradead.org>
-Date: Sun, 25 May 2025 19:28:41 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NlPnUY/7"
+Message-ID: <ef9b8be5-075d-4611-8587-b1e63eb3aa3d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748226818;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Wk4aU1yhp9JXNIWuU63CnMtHHLuSiMgRMS/o0R8RjEY=;
+	b=NlPnUY/7PSyYa1cMtwbYdhICGQyhU8Jr3yl7oFhIdU/E64LdsnLL5vT6t8tonc2qcX9WrH
+	bN3Uecs3hbnvST39mK2U388lWedGpRgDqhJBNlAoiNpnrFSOPA+ZRbp3dKNjU68UyQoihn
+	gXySKBLYpVpNPLzLtOzeUfTH1AaX1W4=
+Date: Mon, 26 May 2025 10:33:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] extcon: max14526: add CONFIG_I2C dependency
-To: Arnd Bergmann <arnd@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>,
- Chanwoo Choi <cw00.choi@samsung.com>, Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Hans de Goede <hdegoede@redhat.com>,
- linux-kernel@vger.kernel.org
-References: <20250520152618.1975840-1-arnd@kernel.org>
+Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
+ controller
+To: Binbin Zhou <zhoubb.aaron@gmail.com>, Yao Zi <ziyao@disroot.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
+References: <20250523104552.32742-1-ziyao@disroot.org>
+ <20250523104552.32742-2-ziyao@disroot.org>
+ <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250520152618.1975840-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 5/20/25 8:26 AM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+在 5/23/25 8:30 PM, Binbin Zhou 写道:
+> On Fri, May 23, 2025 at 6:46 PM Yao Zi <ziyao@disroot.org> wrote:
+>>
+>> Document the clock controller shipped in Loongson 2K0300 SoC, which
+>> generates various clock signals for SoC peripherals.
+>>
+>> Signed-off-by: Yao Zi <ziyao@disroot.org>
+>> ---
+>>   .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
+>>   .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
+>>   2 files changed, 106 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
 > 
-> When I2C is in a loadable module, the newly added driver causes
-> a build failure. The problem is shown by Kconfig:
+> I don't think a new binding file for 2K0300 is needed. Adding
+> compatible entries to loongson,ls2k-clk.yaml would be more appropriate
+> as they are almost all similar.
 > 
-> WARNING: unmet direct dependencies detected for REGMAP_I2C
->   Depends on [m]: I2C [=m]
->   Selected by [y]:
->   - EXTCON_MAX14526 [=y] && EXTCON [=y]
-> 
-> Add the required dependency here.
+Same here!
 
-Same as my patch:
-https://lore.kernel.org/lkml/20250515234803.1385375-1-rdunlap@infradead.org/
-
-
-> 
-> Fixes: c2aeb8647e53 ("extcon: Add basic support for Maxim MAX14526 MUIC")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/extcon/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-> index 1096afc0b5bb..aec46bf03302 100644
-> --- a/drivers/extcon/Kconfig
-> +++ b/drivers/extcon/Kconfig
-> @@ -136,6 +136,7 @@ config EXTCON_MAX8997
->  
->  config EXTCON_MAX14526
->  	tristate "Maxim MAX14526 EXTCON Support"
-> +	depends on I2C
->  	select IRQ_DOMAIN
->  	select REGMAP_I2C
->  	help
-
+Thanks,
+Yanteng
