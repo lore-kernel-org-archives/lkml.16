@@ -1,112 +1,123 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C703D994
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.164
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748280046; cv=pass; b=GRsStJz+uohMIbyQ7pUz+UZEINTTwSMha0weoc2a0aUZE9jBB6keAhSXswPRpdxeist0F5eeUdx6phsvFWH8gnRoiKAxc0QqeA6sLFXU1QX6yoBmyOTQ0yMiEX5VtQM1dpijtDn/ElK+gI83i0LiX+czWOePVjHzqZnB0jphpEg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748280046; c=relaxed/simple;
-	bh=AReNlDCDvkdxzgDCwtiXPsWg+c+DXFxkE3ktxNi2+a4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F43A17FAC2;
+	Mon, 26 May 2025 17:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748280152; cv=none; b=ZiR+cgSPTRhr28lnm3ZFVj+Ft/L6EIKyFwml+M4TlV8G2SUcEwQ/R2FDzyxaIx14xquFCjualCe219kd+kSwqB5c/S1PAnu4EHs6R7LWorhXQfUXox0sP1MzqXqi2XzRDdB1+YPAajRB281vn/6GMKSMykdZN4kn73QBmCouM3c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748280152; c=relaxed/simple;
+	bh=rR0L3LQFJl5lnuDlkm5fGXdF8rlpXRpdN7zYcCMT5tM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ran3sJ0SswCNsDEQ2Fawprf1CnJ9LF/cDDjQer3tyDUtZ2PPLZTqEzxxTemseObdb6HjpeJhzEqHAdTrsvqGB4npg65GIzRVVqKf+RxaXhdVCBdq8HnvyWFpR1ErV6/jvpjTD5GOjmRUj8MCa2eMuM6su/g2jZgWGBks519ejws=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=NmKL7wLG; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=GBRC65P7; arc=pass smtp.client-ip=81.169.146.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fossekall.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDwKx0yhqBEJSDZWZNdBBtNPV/Eq+Woucmi5fgRXFIYuzQbT3fB0/bhk4n8Pt5N/+FkzifeX4vC2k6Vp5KcnoNmGjh3j6GajOKJbFnlt7G6daSFoHOsXEbdszo2HD1oo2acPBKGB8lVnZ1oTwgiKFUwMyy1WF1eB5rtyaM4jbIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WCn0el/O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="NmKL7wLG";
-	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="GBRC65P7"
-ARC-Seal: i=1; a=rsa-sha256; t=1748278598; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=i7AcLzz45flSV8SSZmZhvXwGgwbDoaHEs7uIFRTZue5U7aVa4QdjLD7zNTOGxmhfwg
-    gmBvwAJjp6JoLI8dHJ8Pi7KGWSYOOFFe0LpySIaReDxGoRYU194TuOx2JX/vAOPnaJ7R
-    /Z/OMA2Bfu4pDwOy3i6UXM2XGfWA169ZX+mqfFGAHP7LOGe9Lg1mel/WTsiJhwjF8g7C
-    Mo0Gihryn8av4+8kbNO3gElJQYKwsxcmuWjic1skFDsD2B51d8ktcEFiF0jRY+bf2Odk
-    FeD8c6Hl2EDq9elcA2B3gUzRSkYiQsGDVE5ZUoIZ6XgZZUT4p6ZYJ+Afddv5Z4jpOtmd
-    cMlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1748278598;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=nhNexaZwGrSTtPYexPk0Wd9pTu46clPu7eQ6bt8QEfQ=;
-    b=X+BrlcPZdYrxCBUfjGWCIXg0epVbk6dTLloW47KedVLOY0X4y3RmaHwH8RGaM54TgM
-    gNKl9Sdjwez7x15ZMjgl9yDhgVVA4ZZ3oCWz7hutH+Brvc7ovfR4pR3AQPV/j4itJVBq
-    TudP1aAU7hRN3fEHCg/r/RkGpReI1MBQghJEAxJrL6oLTkBjJDFBkNBMMSPIXjQVJVsj
-    FTTigrU+lpc05KpDi2hzVfbRAjRVQoJIAarxX026SGDkyXIelDh0bbqyxLEVMVL4BXCD
-    0QQBZTKGxs/x6ZEJSOSU4AHXxH7HT0nIxY34POHm0O84qt1g2PkqPBKYSzQ2DrbsVNMN
-    45iA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1748278598;
-    s=strato-dkim-0002; d=fossekall.de;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=nhNexaZwGrSTtPYexPk0Wd9pTu46clPu7eQ6bt8QEfQ=;
-    b=NmKL7wLGsztWlXp2jeEPXJPwGnXXt3hWCoew4C0Gsvn4WPlEgMJbng7u51FwAOOxta
-    BwWAAcOb3KSwoZJLMtM3vdWmy4tfhF17Ekxgg0TLQSYqPB3eZFsw8YtURqdXb/qztD8J
-    SWc7+EikE9U+Bl+9I2LFcG/SKCHzUwcX5QVTAB0MKHLmnqnKwTUMtjxv5VPWEZQuM2bS
-    QsUkckZGVgXN3URkS0xwQLQaJkoljr78Jfj65bV0lxJl4DE3asDbyi/N6Qx92uXxDITW
-    NVjtj+ngsbxNW3XG7gbltmYPpDZHu5lqCxQ4GNIm1do+b+W3eTDdiLLzcGsv3rAbhCs3
-    k49A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1748278598;
-    s=strato-dkim-0003; d=fossekall.de;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=nhNexaZwGrSTtPYexPk0Wd9pTu46clPu7eQ6bt8QEfQ=;
-    b=GBRC65P7hVOrFVkuy6GQ6ePZePBDujRGvGAspMk7n78OkCQpc4tlZWFnBtOLkP7FTB
-    1VcTXatBNDy7sihriyDg==
-X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
-Received: from aerfugl
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id f28b3514QGubYuV
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 26 May 2025 18:56:37 +0200 (CEST)
-Received: from koltrast.home ([192.168.1.32] helo=a98shuttle.de)
-	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <michael@fossekall.de>)
-	id 1uJb7s-0002DX-1y;
-	Mon, 26 May 2025 18:56:36 +0200
-Date: Mon, 26 May 2025 18:56:35 +0200
-From: Michael Klein <michael@fossekall.de>
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] [BISECTED] drm/sun4i: hdmi: No HDMI output with
- BananaPI M1 on 6.9
-Message-ID: <aDSdQwwMYQHYX5Rn@a98shuttle.de>
-References: <aCJZmm8rC0RwbcBX@a98shuttle.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WCn0el/O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E24C4CEE7;
+	Mon, 26 May 2025 17:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748280151;
+	bh=rR0L3LQFJl5lnuDlkm5fGXdF8rlpXRpdN7zYcCMT5tM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WCn0el/OQuUV5N4jWDVcQWObrc8/FZmxWKlyOSKLkxlBs2K4fOkzUda5X+0Kam+OT
+	 a4U7iSSqbk2PUqCHkmuDCSFsK1117VLQQOP3oMoetKAlRNGda2daoD9xj0G7dJLitA
+	 dw/uWtNgMXU5zhLg1sFQntHkJ27qbI3KYPv9HTlWeFWxpj+3/5jV+EcddRbpj0JdPh
+	 VBeFgw2tUhn0NNt3pZRJKUcIJ4DqhWU9zmGgWFdZzSRsebqKPrfnTybif0TWu2DLW1
+	 BzinUUgkIO5rttYtNfljchPqcRrApGlGbHAf4oG03LwY/2ailyMqgMsUKCLMJ/81rB
+	 BQan3t6wGdUWw==
+Date: Mon, 26 May 2025 19:22:29 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, heikki.krogerus@linux.intel.com, 
+	elder@riscstar.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+Message-ID: <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
+References: <20250429085048.1310409-1-guodong@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yljumz2plxfqhz5x"
 Content-Disposition: inline
-In-Reply-To: <aCJZmm8rC0RwbcBX@a98shuttle.de>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20250429085048.1310409-1-guodong@riscstar.com>
 
-On Mon, May 12, 2025 at 10:27:07PM +0200, Michael wrote:
->with v6.9 and later there is no output on the BananaPI HDMI connector.
->
->I have bisected the issue to the following commit:
->
->  358e76fd613a ("drm/sun4i: hdmi: Consolidate atomic_check and mode_valid")
->
->With this patch, sun4i_hdmi_connector_clock_valid() is occasionally 
->called with clock=0, causing the function to return MODE_NOCLOCK.
->In the old sun4i_hdmi_mode_valid() before the patch, mode->clock is 
->always!=0, maybe that gives someone a hint.
 
-#regzbot introduced: 358e76fd613a
+--yljumz2plxfqhz5x
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+MIME-Version: 1.0
+
+Hello,
+
+On Tue, Apr 29, 2025 at 04:50:42PM +0800, Guodong Xu wrote:
+> This patchset adds support for the SpacemiT K1 SoC in the PWM_PXA driver
+> and updates related device tree bindings. The changes enable PWM
+> functionality on the K1 platform through driver enhancements,
+> configuration updates, and device tree additions.
+>=20
+> Functionality has been verified on the Banana Pi BPI-F3 board using PWM14,
+> configured as a pwm-backlight. Per community feedback, the actual
+> pwm-backlight node is not included in this patchset but can be found in
+> patch 7 of the v1 series, with modification of pwms property to 4-cell
+> format to match updated binding (#pwm-cells =3D <3>) since v3.
+>=20
+> +		pwms =3D <&pwm14 0 2000 0>;
+>=20
+> This patchset is based on [spacemit/for-next]
+>   base: https://github.com/spacemit-com/linux for-next
+>=20
+> Plus the following dependencies:
+> 1. Clock controller driver, posted by Heylen Chu (v8), with most of it has
+>    been accepted:
+> https://lore.kernel.org/all/20250416135406.16284-1-heylenay@4d2.org/
+> 2. Reset controller driver, posted by Alex Elder (v5):
+> https://lore.kernel.org/all/20250418145401.2603648-1-elder@riscstar.com/
+
+It's not clear to me if I have to look into this github tree and the
+listed dependencies. My impression is that it can go in on without these
+changes. Maybe it only starts working when these are also applied, but
+that shouldn't stop me applying this series, right?
+
+There is a patch in pwm/for-6.16-rc1 (namely commit df08fff8add2 ("pwm:
+pxa: Improve using dev_err_probe()")) that conflicts with this series.
+I applied patches 1, 2 and 5 on top of my pwm/for-nexxt branch resolving
+that conflict and rewording the commit log of patch 5. The result was
+pushed to
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/pxa=
+-spacemit
+
+=2E If you confirm that you're happy with my modifications and it's
+correct to apply them without the listed dependencies I will add the
+patches to my queue for 6.17-rc1.
+
+Best regards
+Uwe
+
+--yljumz2plxfqhz5x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0o1EACgkQj4D7WH0S
+/k4bgAf4o7db7SVDkKQD9FGqsTvIBAmE7TuWOKwRkL5saF9VkLJjDmgdOVZO3Hf/
+Y4uPkJPTAa3bOzVFbL7Eftrjkslzs7Kv6mniyoMuo5X1ggGrfTLcNA7Y3NwArC9l
+WUIiGKX84b20aHuYN9FXLAnAF4JtoXCc8gEI/m5nj0iGWi5UCFarRlIKCbKTXsXk
+MEDl2vL8OUUutk00El5zEdWQeyDiifhJfXA8nHj3YX1ghBkom8J8UTUhltviYwi2
+wZYWvs67N1uFChzLxAZrK8iJI+O5UeUevjGNlF4S7DymPNL6EAvOUY/9+QgALC2L
+Ac3leHKJIYqVMeU1E4K33CqmhpVQ
+=GSJk
+-----END PGP SIGNATURE-----
+
+--yljumz2plxfqhz5x--
