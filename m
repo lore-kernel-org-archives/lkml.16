@@ -1,246 +1,142 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB53F16A956
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAF32DCC0B;
+	Mon, 26 May 2025 07:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245464; cv=none; b=J930Gqp/E2szbEY8GmHS1PKJFBJf262gzgW5BK3yEZ888PoKRBZQT+Y9CiyFFfawsH+MxLaC/Cb6ln/q4wCq6M5dQpPKUDSCLW8G1TV0HfKAwBBJ+pt5HJTAbtIscJlNLAtd+BzphPABRspCqEspoBeI3NrbZ1GfnTMRy617Blw=
+	t=1748245549; cv=none; b=VbQ+V2M2UeLozMiM8MyH0TH08ZIXeTYMCPu3HeI99zeKHABIsFQtpPChpOuFFihVWPRjvwQrDOubXv2/JO4WXaQVt9OhI/ir8X9L6ed5vGJmtHBKknDmu+RjDQyhBInnAYJzUZ4D0bqVjXHWe4egey3+qWuIZhx13IMmzdoTCc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245464; c=relaxed/simple;
-	bh=f+ESKyFJ+mdFlEs1iGJbPVKlmFTChKxh4lvJirCZ+GQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DAyBaDG3UTQMwdLNWr/IvsmPCNs6qrJPxZy5c4rVVT2BgdkQAyHY3RgP8bgwONJAUMg/wdKkU4G6vop/+06bmsy9dowBZ/FzY2NVRm9tFwRQO6JOTpEnoq1SXVlM2Ar94qKCajT9KoMsoRDSX2BK/XMJLGLoaWutkL6ZuB+LZjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Y4ykRYuv; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y4ykRYuv"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54Q7hhVl1446791;
-	Mon, 26 May 2025 02:43:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748245423;
-	bh=pfNxNBtxFbE6b5isOFlmebHM/gu4Na0OpYCEd6fKOLo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=Y4ykRYuvtep7ANL8NgvCo/Gd1Y3XuSfhlsTLDmys8WVn/3/WPFKJc56n2AO2XiXqQ
-	 EfKp72trsCjM7LJrsoa/CEwth68Hi3Phw16tkKb0t5pBetaz6a2knfpNWSKmjTKfoD
-	 ikT5yK4uUGdP0tgRywalustnZFIfLFb7D4vZv9Hs=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54Q7hgSn1960879
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Mon, 26 May 2025 02:43:42 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 26
- May 2025 02:43:42 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 26 May 2025 02:43:42 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54Q7hZCE2635573;
-	Mon, 26 May 2025 02:43:36 -0500
-Message-ID: <97764129-e78a-47d2-8f2c-e219b3686f53@ti.com>
-Date: Mon, 26 May 2025 13:13:34 +0530
+	s=arc-20240116; t=1748245549; c=relaxed/simple;
+	bh=IKPOttPlF0NgyQsdYLx3uMrMrLsnXJ7+pj+nFrwqMAo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RQa0+V5NS9PwgrqtwrR75e7k0sgdxZYDgpeIQ/tGiYFT8G2y+mp+P/pX+n6W2jSTRRqsUjbG3ZYG3aOPW28YT7RS9ewHrOxIzTG1vghsGxILdUIJ3nZNiLqo4v5s0Y23L4hZqeJvmSLD0c4IqVHhM0T7sFX7gIkZjOqCSlv4jxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5SV966zYz4f3k5c;
+	Mon, 26 May 2025 15:45:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E4ED11A16A0;
+	Mon, 26 May 2025 15:45:41 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl8kHDRoqxQ2Ng--.6543S3;
+	Mon, 26 May 2025 15:45:41 +0800 (CST)
+Subject: Re: [PATCH 06/23] md/md-bitmap: add a new sysfs api bitmap_type
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, song@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-7-yukuai1@huaweicloud.com>
+ <20250526063226.GB12811@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <577a1bf6-9f23-0ccd-c269-d625ae11890d@huaweicloud.com>
+Date: Mon, 26 May 2025 15:45:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
- connector type
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Doug Anderson
-	<dianders@chromium.org>
-CC: <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <max.krummenacher@toradex.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <kieran.bingham+renesas@ideasonboard.com>,
-        <linux-kernel@vger.kernel.org>, <max.oss.09@gmail.com>,
-        <devarsht@ti.com>
-References: <20250508115433.449102-1-j-choudhary@ti.com>
- <CAD=FV=V1mNX-WidTAaENH66-2ExN=F_ovuX818uQGfc+Gsym1Q@mail.gmail.com>
- <cr7int6r6lnpgdyvhhqccccuyrh7ltw5qzh7kj5upznhea4pfh@rn6rwlf7ynqt>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <cr7int6r6lnpgdyvhhqccccuyrh7ltw5qzh7kj5upznhea4pfh@rn6rwlf7ynqt>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <20250526063226.GB12811@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-CM-TRANSID:gCh0CgCnCl8kHDRoqxQ2Ng--.6543S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7trykGry8ur43Aw1DWF1xZrb_yoW8WrWxp3
+	yfJ3ZxCFs5XFWFgw17uasF9FnYqw4DJF9IqryfX345Grn8XrsxWFWrWa1Dtw17A3W8ZF4D
+	Za45JrW8WryUuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hello Dmitry, Doug,
+Hi,
 
-Thanks a lot for the review.
-
-On 22/05/25 18:44, Dmitry Baryshkov wrote:
-> On Wed, May 21, 2025 at 06:10:59PM -0700, Doug Anderson wrote:
->> Hi,
->>
->> On Thu, May 8, 2025 at 4:54â€¯AM Jayesh Choudhary <j-choudhary@ti.com> wrote:
->>>
->>> By default, HPD was disabled on SN65DSI86 bridge. When the driver was
->>> added (commit "a095f15c00e27"), the HPD_DISABLE bit was set in pre-enable
->>> call which was moved to other function calls subsequently.
->>> Later on, commit "c312b0df3b13" added detect utility for DP mode. But with
->>> HPD_DISABLE bit set, all the HPD events are disabled[0] and the debounced
->>> state always return 1 (always connected state)
->>>
->>> Also, with the suspend and resume calls before every register access, the
->>> bridge starts with disconnected state and the HPD state is reflected
->>> correctly only after debounce time (400ms). However, adding this delay
->>> in the detect function causes frame drop and visible glitch in display.
->>>
->>> So to get the detect utility working properly for DP mode without any
->>> performance issues in display, instead of reading HPD state from the
->>> register, rely on aux communication. Use 'drm_dp_dpcd_read_link_status'
->>> to find if we have something connected at the sink.
->>>
->>> [0]: <https://www.ti.com/lit/gpn/SN65DSI86> (Pg. 32)
->>>
->>> Fixes: c312b0df3b13 ("drm/bridge: ti-sn65dsi86: Implement bridge connector operations for DP")
->>> Cc: Max Krummenacher <max.krummenacher@toradex.com>
->>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>> ---
->>>
->>> v1 patch link which was sent as RFC:
->>> <https://patchwork.kernel.org/project/dri-devel/patch/20250424105432.255309-1-j-choudhary@ti.com/>
->>>
->>> Changelog v1->v2:
->>> - Drop additional property in bindings and use conditional.
->>> - Instead of register read for HPD state, use dpcd read which returns 0
->>>    for success and error codes for no connection
->>> - Add relevant history for the required change in commit message
->>> - Drop RFC subject-prefix in v2 as v2 is in better state after discussion
->>>    in v1 and Max's mail thread
->>> - Add "Cc:" tag
->>>
->>> This approach does not make suspend/resume no-op and no additional
->>> delay needs to be added in the detect hook which causes frame drops.
->>>
->>> Here, I am adding conditional to HPD_DISABLE bit even when we are
->>> not using the register read to get HPD state. This is to prevent
->>> unnecessary register updates in every resume call.
->>> (It was adding to latency and leading to ~2-3 frame drop every 10 sec)
->>>
->>> Tested and verified on TI's J784S4-EVM platform:
->>> - Display comes up
->>> - Detect utility works with a couple of seconds latency.
->>>    But I guess without interrupt support, this is acceptable.
->>> - No frame-drop observed
->>>
->>> Discussion thread for Max's patch:
->>> <https://patchwork.kernel.org/project/dri-devel/patch/20250501074805.3069311-1-max.oss.09@gmail.com/>
->>>
->>>   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 17 ++++++++++-------
->>>   1 file changed, 10 insertions(+), 7 deletions(-)
->>
->> Sorry for the delay in responding. Things got a little crazy over the
->> last few weeks.
->>
->>
->>> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> index 60224f476e1d..9489e78b6da3 100644
->>> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
->>> @@ -352,8 +352,10 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
->>>           * change this to be conditional on someone specifying that HPD should
->>>           * be used.
->>>           */
->>> -       regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
->>> -                          HPD_DISABLE);
->>> +
->>> +       if (pdata->bridge.type == DRM_MODE_CONNECTOR_eDP)
->>> +               regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
->>> +                                  HPD_DISABLE);
->>
->> Given your an Max's testing, I'm totally on-board with the above.
->>
->>>
->>>          pdata->comms_enabled = true;
->>>
->>> @@ -1194,13 +1196,14 @@ static enum drm_connector_status ti_sn_bridge_detect(struct drm_bridge *bridge)
->>>   {
->>>          struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
->>>          int val = 0;
->>> +       u8 link_status[DP_LINK_STATUS_SIZE];
->>>
->>> -       pm_runtime_get_sync(pdata->dev);
->>> -       regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
->>> -       pm_runtime_put_autosuspend(pdata->dev);
->>> +       val = drm_dp_dpcd_read_link_status(&pdata->aux, link_status);
->>>
->>> -       return val & HPD_DEBOUNCED_STATE ? connector_status_connected
->>> -                                        : connector_status_disconnected;
->>> +       if (val < 0)
->>> +               return connector_status_disconnected;
->>> +       else
->>> +               return connector_status_connected;
->>
->> I'd really rather not do this. It took me a little while to realize
->> why this was working and also not being slow like your 400ms delay
->> was. I believe that each time you do the AUX transfer it grabs a
->> pm_runtime reference and then puts it with "autosuspend". Then you're
->> relying on the fact that detect is called often enough so that the
->> autosuspend doesn't actually hit so the next time your function runs
->> then it's fast. Is that accurate?
->>
->> I'd rather see something like this in the bridge's probe (untested)
->>
->>    if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort) {
->>      pdata->bridge.ops = DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
->>
->>      /*
->>       * In order for DRM_BRIDGE_OP_DETECT to work in a reasonable
->>       * way we need to keep the bridge powered on all the time.
->>       * The bridge takes hundreds of milliseconds to debounce HPD
->>       * and we simply can't wait that amount of time in every call
->>       * to detect.
->>       */
->>      pm_runtime_get_sync(pdata->dev);
->>    }
->>
->> ...obviously you'd also need to find the right times to undo this in
->> error handling and in remove.
+ÔÚ 2025/05/26 14:32, Christoph Hellwig Ð´µÀ:
+> On Sat, May 24, 2025 at 02:13:03PM +0800, Yu Kuai wrote:
+>> +  consistency_policy
 > 
-> What about:
-> - keeping pm_runtime_get()/put_autosuspend() in detect, but..
-> - also adding .hpd_enable() / .hpd_disable() callbacks which would also
->    get and put the runtime PM, making sure that there is no additional
->    delay in .detect()?
+> .. these doc changes look unrelated, or am I missing something?
+
+The position are moved to the front of the bitmap fields, because now
+bitmap/xxx is not always here.
+
+Before:
+
+All md devices contain:
+	level
+	...
+	bitmap/xxx
+	bitmap/xxx
+	consistency_policy
+	uuid
+
+After:
+All md devices contain:
+	level
+	...
+	consistency_policy
+	uuid
+	bitmap_type
+		none xxx
+		bitmap xxx
+If bitmap_type is bitmap, then the md device will also contain:
+	bitmap/xxx
+	bitmap/xxx
+
+> 
+>> -static void mddev_set_bitmap_ops(struct mddev *mddev, enum md_submodule_id id)
+>> +static bool mddev_set_bitmap_ops(struct mddev *mddev)
+>>   {
+>>   	xa_lock(&md_submodule);
+>> -	mddev->bitmap_ops = xa_load(&md_submodule, id);
+>> +	mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
+>>   	xa_unlock(&md_submodule);
+>> -	if (!mddev->bitmap_ops)
+>> -		pr_warn_once("md: can't find bitmap id %d\n", id);
+>> +
+>> +	if (!mddev->bitmap_ops) {
+>> +		pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
+>> +		return false;
+>> +	}
+>> +
+>> +	return true;
+> 
+> This also looks unrelated and like another prep patch?
+
+The new api will set mddev->bitmap_id, and the above change switch to
+use mddev->bitmap_id to register bitmap_ops, perhaps I can factor the
+change to a new prep patch, like:
+
+md: add a new field mddev->bitmap_id
+
+Before:
+mddev_set_bitmap_ops(mddev, ID_BITMAP);
+
+After:
+mddev->bitmap_id = ID_BITMAP;
+if (!mddev_set_bitmap_ops(mddev))
+	return -EINVAL;
+
+Thanks,
+Kuai
+
+> 
+> .
 > 
 
-Keeping a reference alive via hpd_enable() fixes the issue.
-Things works with the previous detect logic and I do not need to
-rely on reading link status.
-
-
-In hpd_enable()/disable(), I do not need to add anything else:
-
-+static void ti_sn_bridge_hpd_enable(struct drm_bridge *bridge)
-+{
-+       struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
-+       pm_runtime_get_sync(pdata->dev);
-+}
-+
-+static void ti_sn_bridge_hpd_disable(struct drm_bridge *bridge)
-+{
-+       struct ti_sn65dsi86 *pdata = bridge_to_ti_sn65dsi86(bridge);
-+       pm_runtime_put_sync(pdata->dev);
-+}
-+
-
-Posting v3 with these changes.
-
-Warm Regards,
-Jayesh
-
->>
->> Nicely, this would be the same type of solution needed for if we ever
->> enabled interrupts.
-> 
