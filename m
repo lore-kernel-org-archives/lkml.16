@@ -1,53 +1,54 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C011DF26B;
-	Mon, 26 May 2025 11:17:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4C51F75A6;
+	Mon, 26 May 2025 11:17:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258261; cv=none; b=NqpCgI8+Hj6alCFlF0hl9OCoUOUachxUGUtTkTgvRvnV6JHWp0DLJXqADAPxcHYn2xnx4HRurKVmuD0HwVBsk8oK3NfcYXZayKDi+uAp3YWHP2EbsZvf4BOwZdGjLF/UEkRuRPB8i3iKqL/BtFAz2OqaZjfcHKdWIPybp2zc/rM=
+	t=1748258263; cv=none; b=jPgbElGgazTDn4YoSRWmdy/Z8yRLBDuG2KHeATAHz3r8TZj1lPwB69tFdIcEXYcaf5IG7ZSmuM1oq/3Tym3ND7OG4s9dqypiK2tJTsKCnx2KXQC5z5s0BXqIORLw2wIFygaInwc5xpdLcVO165EDln1z3RXt6UDtvCRubkLZsjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258261; c=relaxed/simple;
-	bh=kCChXdcNhNNPk3GCnN7qlQQVTqcDW8bmk78IzTynL50=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EcQGqU8C/jPv5XbLFrgNPYLIdWNrO3nrEbBnimEJEMErj+KKMR1e6KL0J28E8ipKgxTBbieEHJ8DsUoKnXyM3l6drgPWaUi6PFUF6vARVoJTiYyCH4r5CByUjuVlecaChPEtLR177D3Df+gjGir9yCgya98z1TLpCOIT5g/Gs6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W0FHW8vI; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1748258263; c=relaxed/simple;
+	bh=m8YQVofkJCtwe20yeLll70xpn3T43Wc4zSl6gncAeOI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ngvhRNNu1IwMEcVTeZ0jOAn/1cXKrmrk2xXssXoVFy5knFpo/NWv93FiRKFCiS5H1GRw7L3U5HgNKCYghJ4DHbnb/Scvj8fqYzrLBL92JH8ghqO2TV0BiPFS61jGuudhZmIMettAwCdJbzSWjUOa4Gz5HucuXC5TXAfv2KMXWQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M6A4FA0/; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W0FHW8vI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M6A4FA0/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748258260; x=1779794260;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kCChXdcNhNNPk3GCnN7qlQQVTqcDW8bmk78IzTynL50=;
-  b=W0FHW8vILL28XLOPoz8ZydYKLn3zeJeUxYRSNGrUSaUpoYEyf5bmfm07
-   LRe1VQUt3ZwKWpVnUi2Cu9vgkP1fbgx0vcjBeH93Kfmi+01A/gzvw3jPO
-   bq5kxfWpbUa/V0+Y10TQFiJCxavY8GxAfQcNb3gXSFWyUn/n4qDbsO753
-   EW1iAdBNaPXwvk3hIEIcYaYN09pcVtKgL+wsqgOM5yYLED6ms5GGRA8gR
-   /FYX0QoTHwQFr+g3WCPpwi171Np90++E8Zg8+OlcjXQGJywU6zr+zPKk5
-   JKIAzNVwxWEr6r0jtmkqRxVv2Y/04fPL2jFtAaaZjYuX64IKr54CrPAkT
+  t=1748258262; x=1779794262;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=m8YQVofkJCtwe20yeLll70xpn3T43Wc4zSl6gncAeOI=;
+  b=M6A4FA0/VvkG7RT1UrreLy7w6qUr78ccAEnIFutU8GbCZxIVAVLotVXH
+   6TFStSRq7Z4or4I5iIMc5WOunpyc3iEWJ2SsVzH6Z81cbLS4k5krLBBhE
+   oNRvCZWVRq+RJsRAC3Y+uDjeGF+2PrYvVozduEBU25iYG8yNoLh1/WqM2
+   ChuJsMaCx9gKWv3itTU5dmhZ17jO0b2vtX+MetkPhZyzFWYo7aqFmj0Qm
+   bgyZmGOjkABxRUT+Lw4/OwOeqHFCluijlEaV7w7hn01ONjEvr3l9KJYuI
+   vublpa7bFTdYSLIV/LeKk70kBJj1xBul9Q/JEf0CUBQbdds/0cYGGNO0a
    w==;
-X-CSE-ConnectionGUID: wFwNyaQ5RHaB7e86Mzjp+A==
-X-CSE-MsgGUID: 73NDAWGZSi2FLghZl7qNDQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="49935345"
+X-CSE-ConnectionGUID: tDMKyG+zSPKiL/ybljjD7A==
+X-CSE-MsgGUID: wnK7a0GSShGWvtiqkQO6LQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="49935373"
 X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="49935345"
+   d="scan'208";a="49935373"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
   by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 04:17:39 -0700
-X-CSE-ConnectionGUID: 8A2kWhQFS6KhFf8BMcqFsQ==
-X-CSE-MsgGUID: aufz7FY+QhWwRkuJ2Mvc4Q==
+X-CSE-ConnectionGUID: upL2KudERTeStd7qkOas0w==
+X-CSE-MsgGUID: SCCraYAhSlecBQ5miMJAfg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="142273286"
+   d="scan'208";a="142273288"
 Received: from smoticic-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.125])
   by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 04:17:35 -0700
 Received: from punajuuri.localdomain (unknown [192.168.240.130])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id C171C11F732;
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id C26C211F743;
 	Mon, 26 May 2025 14:17:32 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.96)
 	(envelope-from <sakari.ailus@linux.intel.com>)
-	id 1uJVpk-0022kn-2B;
+	id 1uJVpk-0022ku-2O;
 	Mon, 26 May 2025 14:17:32 +0300
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
@@ -66,10 +67,12 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	laurent.pinchart@ideasonboard.com,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Lee Jones <lee@kernel.org>
-Subject: [PATCH 0/2] Document Media Controller IOCTL number assignments
-Date: Mon, 26 May 2025 14:17:30 +0300
-Message-Id: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/2] media: uapi: Document IOCTL number assignment
+Date: Mon, 26 May 2025 14:17:32 +0300
+Message-Id: <20250526111732.487229-3-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
+References: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,25 +81,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello all,
+Document MC IOCTL number assignment in linux/media.h. In the past the
+assignment up to 0x7f was missed so to prevent that from happening again,
+document the value here as well.
 
-The Media Controller uses IOCTL numbers with '|' type up to 0x81 but the
-range from 0x80 upwards is documented to belong to samples. The samples,
-however, are not currently using these values. Solve the problem by
-bumping the top of the MC range and the samples allocation by 0x10.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ include/uapi/linux/media.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Some sample code in samples/rust/rust_misc_device.rs also uses MC IOCTL
-numbers below the current limit 0x80, it'd be nice to address that as well
-as align with the changes in this patch.
-
-Sakari Ailus (2):
-  Documentation: Bump media IOCTL reserved numbers
-  media: uapi: Document IOCTL number assignment
-
- Documentation/userspace-api/ioctl/ioctl-number.rst | 4 ++--
- include/uapi/linux/media.h                         | 4 ++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index 1c80b1d6bbaf..2808132fcf49 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -381,6 +381,10 @@ struct media_v2_topology {
+  */
+ #define MEDIA_REQUEST_IOC_QUEUE		_IO('|',  0x80)
+ #define MEDIA_REQUEST_IOC_REINIT	_IO('|',  0x81)
++/*
++ * Don't allocate new IOCTL numbers past 0x8f, MC IOCTL number assignment ends
++ * there!
++ */
+ 
+ #ifndef __KERNEL__
+ 
 -- 
 2.39.5
 
