@@ -1,105 +1,205 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9A93594B;
-	Mon, 26 May 2025 01:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00098248C;
+	Mon, 26 May 2025 01:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748224082; cv=none; b=ur/osDXSR85SD/mIfxumObEF022WN1AW9Q+D+jwHbbrwM8dORwC7X0UcLEUdCxxc9C6i5jkS5cJVJwLkEOPOIb6h7vUQ08l0ecbeJSU2DjyduM/YVqjv4yQkyCRpJ4LGdMAfcR/MW7eHjdHi7inv1jltIG2cqApv1iP4EZbFxBI=
+	t=1748224315; cv=none; b=LGZlYHuI6EBa5FmbM3USWqcxPchNNharm2C2oN3Vk3bV2SlmjUauTPpPk0kqjVWSlPRt/GyEpGBtdgZKsJfqJxGQRV+iy9cnLvS8G3X8xzjYAenG85pZch+9kZktaNM1GvE5xSw4Mr5tKioGmcE7iDNN08cC/iDzMmHm89l0FRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748224082; c=relaxed/simple;
-	bh=EK5+g2KRPgs09M5g0IkpysmjiVXyuNapUrxE2vvMBss=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uJeRcOIk+JWdq9SX5yinTa7Nxjh/M8ygOJ4glLJpk2GWxyugAs3kkNE1zzTX+ttt63QAjjuObWbaCXnUkeZlWm5KChhm2k/Lg1e6KpmyHX8n6hsRfGVR2m0/0Iez8m/Z3aNwBShDeXcaSHDGhuhpzXsu16nrjCOkUxQZsIm1J28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5JYG1LtYz4f3kvp;
-	Mon, 26 May 2025 09:47:30 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E3E801A07BD;
-	Mon, 26 May 2025 09:47:56 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.95])
-	by APP2 (Coremail) with SMTP id Syh0CgC3c2ZLyDNo8e+uNQ--.34254S2;
-	Mon, 26 May 2025 09:47:56 +0800 (CST)
-From: Pan Taixi <pantaixi@huaweicloud.com>
-To: pantaixi1@huawei.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	aha310510@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: yeweihua4@huawei.com
-Subject: [PATCH] tracing: Fix compilation warning on arm32
-Date: Mon, 26 May 2025 09:37:31 +0800
-Message-Id: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1748224315; c=relaxed/simple;
+	bh=QY2ohkza2x1tajvdG6eeg4JxxBs3fEmJoktrKFBxEgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NeTMm293NH39czmFS9i6j0mZvE7Xhd+pQY2jlWax0tc3bpzfL9eK98KKO1WuyqGv3xPrgnBxxvXuWg0Bogy0QFsJSaXeMq9DE2Rno2Ti8bS7bMizb8HnrnAYBh/edElJToc0qUoRDH5bQCuktR5b26VEb2lckMoBV4FnIH1yy1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ze5KlatB; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ze5KlatB"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1692899b3a.2;
+        Sun, 25 May 2025 18:51:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748224313; x=1748829113; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/DKj8oNkwRWAiy5DwXiV4r+Z3UZ5RRrUNHD6WtNis8g=;
+        b=Ze5KlatBmy7jdVmSrhn8t8PA63mU84+o2dmg4OaW24mGhX/wm7UJOr2AIb8NhB6M2G
+         1+Qh/YpycL6QwCvr+HomSigfBuAUGnwOwg+YN2/xzfx8QXJwjqHIATYnd1f240GOWlL5
+         F67jOTbhta5DbkFwhPt4gHZ3W6rynJ5mdE40EeBea16inqfjpiZiD0eJIiOj0PQG7xwW
+         flKaYl9lIiLNrl0AZQqE0PIiEL7OxIg8ITL8g99lP9+7nwHiSxaZSRNSRPgtm30r2ZDZ
+         algrQDccQcFdJzC2Xftfm80IT/y1qYJpJao2M0+ke4HV6ubqfi6XcqGtoT0LlKgvKZq2
+         mPfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748224313; x=1748829113;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/DKj8oNkwRWAiy5DwXiV4r+Z3UZ5RRrUNHD6WtNis8g=;
+        b=gbdZ96UJStu3v/20uezZYu/3s451IKYxeche2IyRrEA2oI+z24WxGkPbnLUmvVAdJg
+         ybL0e3IP5Kom4NRm3cYDE2TPe+QdhlTo0KAjZPB+Vglc/3lHOZ4OgiGFTNQpj/eAHelA
+         CiLmWc1oR9UskO94DkUs/tLgJt6hi8vL4yRiQb3znEc45g6iC8pQ6RN2WlQd99O/jpNM
+         ivB6Al61kzMj1d8jm+Z7WHPnnkl2HXaBN24Jzl0UXp/FvYIPZgzJjs9fYzV7iioIV+ZF
+         h3De3pKgvKTBooLo7b0PHC61YJZzE9S8SK6J4OKsjmBk1KJh7rGn5mxc0uLVs1yI67xe
+         nnJA==
+X-Forwarded-Encrypted: i=1; AJvYcCU87IdeMUuzv6YYYopDp9/1zz1yNDa+n+y2LHtpx2AUc0WTFn43UQwV7WdqkNDJvl+4EoinYgDjLFk=@vger.kernel.org, AJvYcCX694GptvhHfrnwCakntm3Id5WlNJC2jadd4vide+q+LppgOQOFHPP0QrEenKvHCMvEEB+Md3KL1kBeYJKU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfCxsV7l3ywooQBDdj1q5ZrVgT9SQPwzJllYhnmId9qobCbEeq
+	IOoVn4o0HPzpvaXEL0Z+fkPBw13Jps0sX8OtspszU/U4ebDU5MDIH8yl
+X-Gm-Gg: ASbGncuwDsRAYmuEtFUo4VZTlukJG/37JmrlvFs1UXiNtlMexr5qNNYd7sf23bQ3tC9
+	RCb5TE9cjJyTGpOXl30BIugzPtUTx8cpa9Nm/Oef55Yc+q6nSeDFK/wJ1QImHBUHQvN67a+w901
+	ALNoRYVl16C0EntCsVnhHLp9oL1gW2+GgUQqviMWS+qJ3RI8i2g5C3Pv+Ca1krGv5hBOckY/keq
+	eoOSvdrF+K8UBAsgg9Mrr0HFCtUs8ta9mi0XVb/key/AsuCDycZQx1JLFQX25Plet1JLB9h8lI0
+	LVa0J5lMf1/DHVE1DJy0Nst1HV5kDI+jFNPIQKMvQ0t0nuAV5CN0nFJkbkrigA==
+X-Google-Smtp-Source: AGHT+IEej+6PkcO2/DXbswdOAlQW3W/DYX0Gbdx4UIAQjE96Wze4Ix7GvGI6pQ+GrMV3odHkPK89sg==
+X-Received: by 2002:a05:6a00:2905:b0:742:a9ed:a3d6 with SMTP id d2e1a72fcca58-745fe035fa7mr9505358b3a.17.1748224312672;
+        Sun, 25 May 2025 18:51:52 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96def30sm15993990b3a.20.2025.05.25.18.51.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 18:51:51 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id E85A84230C03; Mon, 26 May 2025 08:51:48 +0700 (WIB)
+Date: Mon, 26 May 2025 08:51:48 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] drm: add overview diagram for drm stack
+Message-ID: <aDPJNBTDmHoZ-z1d@archie.me>
+References: <20250523-drm-doc-updates-v2-0-e517df152cf6@gmail.com>
+ <20250523-drm-doc-updates-v2-2-e517df152cf6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgC3c2ZLyDNo8e+uNQ--.34254S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZryDKFyUCr4fXr13Zr4fZrb_yoW8XrW8pF
-	1xGrnrG3yUGr42ka4xWF10934xGwnrG347Gan3Gw1fX34DtFyagrZ2gFy2qa1FgrZIk342
-	kr129398Kw4UuaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6r106r1rM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
-X-CM-SenderInfo: xsdq3thl0lqx5xdzvxpfor3voofrz/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hXCUMJnyg9VmLHa2"
+Content-Disposition: inline
+In-Reply-To: <20250523-drm-doc-updates-v2-2-e517df152cf6@gmail.com>
 
-On arm32, size_t is defined to be unsigned int, while PAGE_SIZE is
-unsigned long. This hence triggers a compilation warning as min()
-asserts the type of two operands to be equal. Casting PAGE_SIZE to size_t
-solves this issue and works on other target architectures as well.
 
-Compilation warning details:
+--hXCUMJnyg9VmLHa2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
-./include/linux/minmax.h:20:28: warning: comparison of distinct pointer types lacks a cast
-  (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
-                            ^
-./include/linux/minmax.h:26:4: note: in expansion of macro '__typecheck'
-   (__typecheck(x, y) && __no_side_effects(x, y))
-    ^~~~~~~~~~~
+On Fri, May 23, 2025 at 03:52:26PM -0400, Abdulrasaq Lawani wrote:
+> diff --git a/Documentation/gpu/introduction.rst b/Documentation/gpu/intro=
+duction.rst
+> index 91bb0efc96d69921a122c5265b1431fa18110a7a..2653048ad4bb0ecbc2b676295=
+440442dddbabae6 100644
+> --- a/Documentation/gpu/introduction.rst
+> +++ b/Documentation/gpu/introduction.rst
+> @@ -15,41 +15,43 @@ and the new vblank internals, in addition to all the =
+regular features
+>  found in current kernels.
+> =20
+>  Overview of the Linux DRM Architecture
+> ------------------------------------------------
+> -+-----------------------------+
+> -|     User-space Apps         |
+> -| (Games, Browsers, ML, etc.) |
+> -+-----------------------------+
+> -              |
+> -              v
+> -+---------------------------------------+
+> -|    Graphics APIs   |   Compute APIs   |
+> -|  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
+> -+---------------------------------------+
+> -          |                   |
+> -          v                   v
+> -+---------------------+  +-----------------------+
+> -|  User-space Driver  |  |    Compute Runtime    |
+> -|  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
+> -+---------------------+  +-----------------------+
+> -          |                   |
+> -          +--------+----------+
+> -                   |
+> -                   v
+> -        +-----------------------+
+> -        |   libdrm (DRM API)    |
+> -        +-----------------------+
+> -                   |
+> -                   v
+> -+-------------------------------------------+
+> -|     Kernel DRM/KMS Driver (i915, amdgpu,  |
+> -|     nouveau, etc.)                        |
+> -+-------------------------------------------+
+> -        |                       |
+> -        v                       v
+> -+----------------+     +-------------------+
+> -| GPU Display HW |     | GPU Compute Units |
+> -+----------------+     +-------------------+
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-...
+Why promoting the section heading?
 
-kernel/trace/trace.c:6771:8: note: in expansion of macro 'min'
-        min((size_t)trace_seq_used(&iter->seq),
-        ^~~
+> +::
+> +
+> +        +-----------------------------+
+> +        |     User-space Apps         |
+> +        | (Games, Browsers, ML, etc.) |
+> +        +-----------------------------+
+> +                      |
+> +                      v
+> +        +---------------------------------------+
+> +        |    Graphics APIs   |   Compute APIs   |
+> +        |  (OpenGL, Vulkan)  |  (OpenCL, CUDA)  |
+> +        +---------------------------------------+
+> +                |                   |
+> +                v                   v
+> +        +---------------------+  +-----------------------+
+> +        |  User-space Driver  |  |    Compute Runtime    |
+> +        |  (Mesa, AMD/NVIDIA) |  |  (OpenCL, CUDA, ROCm) |
+> +        +---------------------+  +-----------------------+
+> +                |                   |
+> +                +--------+----------+
+> +                         |
+> +                         v
+> +                +-----------------------+
+> +                |   libdrm (DRM API)    |
+> +                +-----------------------+
+> +                          |
+> +                          v
+> +        +-------------------------------------------+
+> +        |     Kernel DRM/KMS Driver (i915, amdgpu,  |
+> +        |     nouveau, etc.)                        |
+> +        +-------------------------------------------+
+> +                |                       |
+> +                v                       v
+> +        +----------------+     +-------------------+
+> +        | GPU Display HW |     | GPU Compute Units |
+> +        +----------------+     +-------------------+
+> =20
 
-Fixes: f5178c41bb43 ("tracing: Fix oob write in trace_seq_to_buffer()")
-Signed-off-by: Pan Taixi <pantaixi@huaweicloud.com>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is not how reviews from v1 should be addressed. Instead of making
+separate commit for review suggestions, you need to squash them into affect=
+ed
+commit(s) in v1. In this case, there should be only one resulting patch. Do=
+n't
+forget to send it as v3.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5b8db27fb6ef..766cb3cd254e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6824,7 +6824,7 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
- 		ret = trace_seq_to_buffer(&iter->seq,
- 					  page_address(spd.pages[i]),
- 					  min((size_t)trace_seq_used(&iter->seq),
--						  PAGE_SIZE));
-+						  (size_t)PAGE_SIZE));
- 		if (ret < 0) {
- 			__free_page(spd.pages[i]);
- 			break;
--- 
-2.34.1
+Thanks.
 
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--hXCUMJnyg9VmLHa2
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDPJMQAKCRD2uYlJVVFO
+oy74AQDPmxrQb9rYKD39w7NaTsaOldYEhp+puSEJ2KpMwsY1SAEA9lVhnB307H4N
+uJLfQF9+cMButgaKwwW89bmWLnPxTQ0=
+=XjDz
+-----END PGP SIGNATURE-----
+
+--hXCUMJnyg9VmLHa2--
