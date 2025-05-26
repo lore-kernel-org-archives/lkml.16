@@ -1,250 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B761D2F42;
-	Mon, 26 May 2025 11:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F031F09A1;
+	Mon, 26 May 2025 11:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748259678; cv=none; b=ugqO8CUn1RfX1OZNAIb1y9n5Zq7Vafj1Zdwkj7UgfftqSlKU+DzHtqEC1YjDrBO1lnNGE2EvdpOMNaeyY8bwaiaulgIfCea44KfF1Tim+fRq7OyFpkJrVrjco7n2zOq1V9ZxjT3Yvt5AIkACwLnTrBGTBgp6wLt5/shCmQqClHE=
+	t=1748259866; cv=none; b=ZDGgYlaWqgy0pcZOYlqE6Ot87o7OL8Qnu/6dhqwuDOjHe+AS7dpYW/Zln1V4lWppV4jkvGqo6p09XQ6s/Ny4ItKAR02h6No72IX5RXE+KNkM2DtJBoGckoiKsIWVEAtif2G5wqhTnAImleC+eMdfCFhNtiMXkiosJas+AIJGnwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748259678; c=relaxed/simple;
-	bh=9i7MvmICkgbd+ZJq3VnyeJ/DAjkLW/+jSZJbWWJ/Ys0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ICwKSlVuYbP+8C1+SKzC3KdgEtuhdkrZoO47+Zgf3JQj1F75Xo/0ivNmIjDpKyV08MuJtmLuRJnOsJGgyXpOJ+iuAz/0I96Eu9pypsKEC24QTFlKB4xHQWXye5NYtIzRoUfUdtMag/K2mgfrwQ5y7pUG5QE4SK6WTIyUVk2Luk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9qY6bzM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748259866; c=relaxed/simple;
+	bh=UbXGIfiPR5kfYlJIk/TBOAQZKPAS/pho9YQIdNowK+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uAgOBoHS0jfTdJu7x+kehqghed4/+nSo4MUKyovYnkARiSfhSvefYIp3p9mS0iIxEjGOFis5d0L1taGJemMeKBR9wUgUixrn9ubOkgRoS1GXgFXJlYUKZtT4X6lIVaMxfl1iiYlze223eesbynOeSQqz2nnD7M/SXepz3g8CsXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GHSUrC1F; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9qY6bzM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1D0BC4CEE7;
-	Mon, 26 May 2025 11:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748259677;
-	bh=9i7MvmICkgbd+ZJq3VnyeJ/DAjkLW/+jSZJbWWJ/Ys0=;
-	h=Date:From:To:Cc:Subject:From;
-	b=k9qY6bzMX66E9wsJ/VIrVqmBc5yOzokjcsYCFRkLlBdLA+D8HbIJIB3GBibkTIaft
-	 sYrqOwfP1OQPyQxvyn3hUjdsFd+CoNbDYOaxcbaoECxh4cF3cPg8V4dt9DJz8WQ7Ex
-	 C5vypp1GhiAM/xDqp1ETK4v7b/0AP0GhU6+XllHFGUOx6Y5Sj4BXAiqmbHF26ehLTy
-	 dRuI4yUJBmHpgr59gBONdmEeVNPt+hKaoJqfJe1nY7NgV664HDUDJS6jYTdAevSzCL
-	 n162ii/tNQb7AdxzFcGA9mhQO4Gogqk/iSn+RC9s5bXe8Hc4zfkMJ1KU5FGePmCQzU
-	 Ts5DFRDifhYaw==
-Received: by venus (Postfix, from userid 1000)
-	id C6CA01805BA; Mon, 26 May 2025 13:41:14 +0200 (CEST)
-Date: Mon, 26 May 2025 13:41:14 +0200
-From: Sebastian Reichel <sre@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [GIT PULL] power-supply changes for 6.16
-Message-ID: <qhvmgti6jmqnepwx2fbhgsflclznw7hnjco5xebytwxuh2mf5g@m33klrxrhaew>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GHSUrC1F"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-6020ff8d51dso3258375a12.2;
+        Mon, 26 May 2025 04:44:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748259863; x=1748864663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EAIaiM17e9vEsXi6JQZ3zU1G6+zswjSGbk11YUFfR5E=;
+        b=GHSUrC1F/7Rs6iOWgvvuNAgG6MxSMOo5/48xDIKLZybKgPBDuN4btZFYVc7FqC/kAK
+         SSYXPbAU3Esu8Vqvx/hsaV1POeXi0gSyGRFR5k3AHgHMZKxQTlxouKw2wb43bEw16iYN
+         7d2Dp8gBtKPdXxmvSQN+OGjyhl2UuJ6sxpccWVd0T+mrZ9vz3z6sk0Yv9ZRhpgCo0ZAW
+         02xlQfuFpJIIspmJGF5Qer4tVDVES0TWreh9Z4LawE7+P7mDTdsEdcQRsNdLsQyv+Jwv
+         Cow2ay+44scBIj9hcOELkZWbLP+mHuijS1ld2WIcm0czwGiCcW2lCq5OhQkYSPgC3M57
+         LGow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748259863; x=1748864663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EAIaiM17e9vEsXi6JQZ3zU1G6+zswjSGbk11YUFfR5E=;
+        b=mCRIg7z+hfNp7fgNQd+qwYpQFlCIvRtJoFRQkEmelwSbKFKmXTBr9RKn6Ow8Lj0c9o
+         p5rtM0TbYZw81vhclEGrLQ7B4avUAGO4HdIca2C91O6K/EI6iX9BP8gT9t58OKaC0fS7
+         92T24ByAIuq6n0YpUsCWV2plygHNW0Isdw8keokkSTbz3UTLCvSyPWn1ifX17AMjDn/4
+         OPG1eiuPEHtXS60VQ/qflJ0HAoqo3XKsIhAf+VHtrHgDHe/wrD7Ii+ZeXpWxoX9zLSej
+         a4WSSvjXgQPpkRY9LWr0QSSSzAjICGCFl5E2i817wl5REXy7K645N62O5yDSvhddESBv
+         mZzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUz/UgkUrvdEv2TSarqpipNjc/PPPSCdhKYGiNtlSsFR+7+KJr4s4tchKJBByh9rAvWyCjqD3ERg3otYZmb@vger.kernel.org, AJvYcCX9qp6ehBacMkRBCFTTzLEg12AXQoOH7RLUzs/1WyGnHS7SYN/MxAH0q2SlOpkChWkUYoFE0eO1d20x@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7jPX0/QCK+IMfW2b+u6bISMeZoiSd9xFQoRbymP5P/VmpkvSl
+	iCrzkXeW6V3dX9qUtSfy2knJhFf11yg0ig36NOXrvU+0mPRby4poRcnF
+X-Gm-Gg: ASbGncvNtixge9spe7lQes9kxDITBP0PxSrfmy9KOwuZWmkqp+u0u94NlqTz3IkmIG+
+	OPIFaL2bCAJlNRETYgUE0YA2FbUZ33Kl99zx0ygMXoCcNtbFH2SV9igOI0IKKK8wRbINYKS+8CA
+	B1yWAD6IAG0FZ9sNr3dK4iWZyzdpJLoOGAWoUBbiUZxKeihLszDrlKgWeDL9dr5iWvV0c25LC+6
+	kIBKhcINSCEYBwbMPtXZrzBFH76D4w35ALhn1bq/Zzs+KDFkApEhjsRx/OBX6m6xwearxfPIgjS
+	6DZtnuZY5eZJv/BAATCsYfv4SdwBYOKIRhpGHzFst5o=
+X-Google-Smtp-Source: AGHT+IFeDKj2wwKjk7FZaDOe+mf9EF9EwY6Pnj5HmbLPqahaPtLmowD8Q0xEX/SgcvIJNbpNPRuTqg==
+X-Received: by 2002:a05:6402:2789:b0:5fb:f31a:df83 with SMTP id 4fb4d7f45d1cf-602d8e4e90dmr7578503a12.3.1748259863301;
+        Mon, 26 May 2025 04:44:23 -0700 (PDT)
+Received: from xeon.. ([188.163.112.65])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d4f1be3sm16270716a12.5.2025.05.26.04.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 04:44:22 -0700 (PDT)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] drm: bridge: add ssd2825 RGB/DSI bridge support
+Date: Mon, 26 May 2025 14:43:51 +0300
+Message-ID: <20250526114353.12081-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o3kinmntwcc6dqdm"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
+Solomon SSD2825 is a RGB to MIPI DSI bridge used in LG Optimus 4D P880
+and LG Optimus Vu P895
 
---o3kinmntwcc6dqdm
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [GIT PULL] power-supply changes for 6.16
-MIME-Version: 1.0
+---
+Changes on switching from v5 to v6:
+- set correct module name in Kconfig help
+- return error if spi sync failed for reading
 
-Hi Linus,
+Changes on switching from v4 to v5:
+- rebased on top of drm-misc-next with adjustments to fit
 
-Everything has been in linux-next for 3 weeks, so I don't expect
-any issues. Some additional power-supply patches are flowing through
-the platform tree this time as they are used by x86 laptops. Stephen
-Rothwell reported a trivial merge conflict in the MAINTAINERS file
-between the USB and my tree:                                               =
-       =20
-                                                                           =
- =20
-https://lore.kernel.org/linux-next/20250501161515.21916747@canb.auug.org.au=
-/   =20
-=20
-Last but not least: I will be on a 3 week trekking trip without my         =
-  =20
-laptop starting today, so if (unexpectedly) something urgent pops          =
-            =20
-up don't expect any response from me.
-                                                                          =
-=20
-Greetings,
+Changes on switching from v3 to v4:
+- no changes, resend
 
--- Sebastian
+Changes on switching from v2 to v3:
+- added mutex guard
+- configuration register flags parametrized using panel flags
+- removed unneded debug messages
+- removed unimplemented modes checks
+- added check for maximum pixel row length
+- use types header
+- remove ssd2825_to_ns
+- shift bridge setup into atomic pre-enable
+- cleaned default values of hzd and hpd
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Changes on switching from v1 to v2:
+- added description for clock
+- removed clock-names
+- added boundries for hs-zero-delay-ns and hs-prep-delay-ns
+- added mutex lock for host transfers
+- converted to atomic ops
+- get drm_display_mode mode with atomic helpers
+- parameterized INTERFACE_CTRL_REG_6 configuration
+- added video mode validation and fixup
+- removed clock name
+- switched to devm_regulator_bulk_get_const
+- added default timings
+---
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Svyatoslav Ryhel (2):
+  dt-bindings: display: bridge: Document Solomon SSD2825
+  drm: bridge: Add support for Solomon SSD2825 RGB/DSI bridge
 
-are available in the Git repository at:
+ .../display/bridge/solomon,ssd2825.yaml       | 141 +++
+ drivers/gpu/drm/bridge/Kconfig                |  13 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/ssd2825.c              | 814 ++++++++++++++++++
+ 4 files changed, 969 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/solomon,ssd2825.yaml
+ create mode 100644 drivers/gpu/drm/bridge/ssd2825.c
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.gi=
-t tags/for-v6.16
+-- 
+2.48.1
 
-for you to fetch changes up to b1d8766052eb0534b27edda8af1865d53621bd6a:
-
-  power: supply: rt9471: Simplify definition of some struct linear_range (2=
-025-05-03 19:17:02 +0200)
-
-----------------------------------------------------------------
-power supply and reset changes for the 6.16 series
-
- * power-supply core
-  - power: supply: support charge_types in extensions
- * power-supply drivers
-  - new driver for Pegatron Chagall battery
-  - new driver for Maxim MAX8971 charger
-  - new driver for Huawei Matebook E Go
-  - bq27xxx: retry failed I2C transmissions
-  - bq24190: add BQ24193 support
-  - misc. small cleanups and fixes
- * reset drivers
-  - new driver for Toradex SMARC Embedded Controller
-  - reboot-mode: add support for modes containing / in DT
-  - atmel,at91sam9260-reset: support sama7d65
-  - syscon-reboot: add Google GS101 support
-  - misc. small cleanups and fixes
-
-----------------------------------------------------------------
-Aaron Kling (2):
-      dt-bindings: power: supply: bq24190: Add BQ24193 compatible
-      power: bq24190: Add BQ24193 support
-
-Alexander Shiyan (1):
-      power: reset: at91-reset: Optimize at91_reset()
-
-Andr=E9 Draszik (3):
-      power: reset: reboot-mode: better compatibility with DT (replace ' ,/=
-')
-      dt-bindings: reset: syscon-reboot: add google,gs101-reboot
-      power: reset: syscon-reboot: add gs101-specific reset
-
-Arnd Bergmann (1):
-      power: supply: max77976: add EXTCON dependency
-
-Christophe JAILLET (2):
-      power: supply: wm831x: Constify struct chg_map and some arrays
-      power: supply: rt9471: Simplify definition of some struct linear_range
-
-Colin Ian King (1):
-      power: supply: rk817: remove redundant null check on node
-
-Dan Carpenter (1):
-      power: supply: max77705: Fix workqueue error handling in probe
-
-Emanuele Ghidoli (2):
-      dt-bindings: power: reset: add toradex,smarc-ec
-      power: reset: add Toradex Embedded Controller
-
-Gustavo A. R. Silva (1):
-      power: supply: cros_charge-control: Avoid -Wflex-array-member-not-at-=
-end warning
-
-Jelle van der Waa (1):
-      power: supply: support charge_types in extensions
-
-Jerry Lv (1):
-      power: supply: bq27xxx: Retrieve again when busy
-
-Kees Cook (1):
-      power: supply: sysfs: Remove duplicate NUL termination
-
-Krzysztof Kozlowski (3):
-      power: supply: collie: Fix wakeup source leaks on device unbind
-      power: supply: gpio-charger: Fix wakeup source leaks on device unbind
-      dt-bindings: power: supply: Correct indentation and style in DTS exam=
-ple
-
-Pengyu Luo (1):
-      power: supply: add Huawei Matebook E Go psy driver
-
-Ryan Wanner (1):
-      dt-bindings: reset: atmel,at91sam9260-reset: add microchip,sama7d65-r=
-stc
-
-Svyatoslav Ryhel (6):
-      dt-bindings: vendor-prefixes: add prefix for Pegatron Corporation
-      dt-bindings: power: supply: Document Pegatron Chagall fuel gauge
-      power: supply: Add driver for Pegatron Chagall battery
-      power: supply: max17040: adjust thermal channel scaling
-      dt-bindings: power: supply: Document Maxim MAX8971 charger
-      power: supply: Add support for Maxim MAX8971 charger
-
- Documentation/ABI/testing/sysfs-class-power        |  43 ++
- Documentation/ABI/testing/sysfs-class-power-gaokun |  27 +
- .../bindings/power/reset/syscon-reboot.yaml        |  42 +-
- .../bindings/power/reset/toradex,smarc-ec.yaml     |  52 ++
- .../devicetree/bindings/power/supply/bq24190.yaml  |   1 +
- .../devicetree/bindings/power/supply/bq25980.yaml  |  34 +-
- .../bindings/power/supply/ingenic,battery.yaml     |  14 +-
- .../bindings/power/supply/ltc4162-l.yaml           |  18 +-
- .../bindings/power/supply/maxim,max77705.yaml      |   4 +-
- .../bindings/power/supply/maxim,max8971.yaml       |  68 ++
- .../bindings/power/supply/pegatron,chagall-ec.yaml |  49 ++
- .../bindings/reset/atmel,at91sam9260-reset.yaml    |   3 +
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- MAINTAINERS                                        |   8 +
- drivers/power/reset/Kconfig                        |  13 +
- drivers/power/reset/Makefile                       |   1 +
- drivers/power/reset/at91-reset.c                   |   5 +-
- drivers/power/reset/reboot-mode.c                  |  25 +-
- drivers/power/reset/syscon-reboot.c                |  96 ++-
- drivers/power/reset/tdx-ec-poweroff.c              | 150 ++++
- drivers/power/supply/Kconfig                       |  37 +
- drivers/power/supply/Makefile                      |   3 +
- drivers/power/supply/bq24190_charger.c             |  14 +
- drivers/power/supply/bq27xxx_battery.c             |   2 +-
- drivers/power/supply/bq27xxx_battery_i2c.c         |  13 +-
- drivers/power/supply/chagall-battery.c             | 291 ++++++++
- drivers/power/supply/collie_battery.c              |   1 +
- drivers/power/supply/cros_charge-control.c         |  23 +-
- drivers/power/supply/gpio-charger.c                |   4 +-
- drivers/power/supply/huawei-gaokun-battery.c       | 645 ++++++++++++++++++
- drivers/power/supply/max17040_battery.c            |   5 +-
- drivers/power/supply/max77705_charger.c            |  20 +-
- drivers/power/supply/max8971_charger.c             | 752 +++++++++++++++++=
-++++
- drivers/power/supply/power_supply_sysfs.c          |  25 +-
- drivers/power/supply/rk817_charger.c               |   2 +-
- drivers/power/supply/rt9471.c                      |  12 +-
- drivers/power/supply/test_power.c                  |  20 +-
- drivers/power/supply/wm831x_power.c                |  20 +-
- include/linux/power_supply.h                       |   1 +
- 39 files changed, 2419 insertions(+), 126 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-class-power-gaokun
- create mode 100644 Documentation/devicetree/bindings/power/reset/toradex,s=
-marc-ec.yaml
- create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,ma=
-x8971.yaml
- create mode 100644 Documentation/devicetree/bindings/power/supply/pegatron=
-,chagall-ec.yaml
- create mode 100644 drivers/power/reset/tdx-ec-poweroff.c
- create mode 100644 drivers/power/supply/chagall-battery.c
- create mode 100644 drivers/power/supply/huawei-gaokun-battery.c
- create mode 100644 drivers/power/supply/max8971_charger.c
-
---o3kinmntwcc6dqdm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmg0U1YACgkQ2O7X88g7
-+pqJDBAAlLINmrRR+0Gl5tp+RTVPxhm/8bIjJzLA0yjwOzFn+aoOaQXXQL8AEaSb
-pdZTcGGEtU7Vydh8Sfu/9X1icrFN+MJo1lxIt57kt1DnxPxSwjFHx41LaA6hiW9a
-bg/2XVRn/T+x7VS62e+WosNUcmVccgKjSv0XSTClbel0hH6JorcWoeGqBwb9jjki
-S8ujriKurkDqUsYNm1awofLBvVg4307PRdYR3ZGnXJTb0KFf4zguD8/rJYt9hy1Z
-ICV16QpxJC+wSL39nu18NBTVDfFiqc+2rPimX9kK6W1Ku726b+bOEo/LX31XjUD0
-/4xc1Ii23wl+MKNblkY6NerCJu9PD976eM4cGLKyBHYuRqggaFeVWFW5ysWpz71L
-4Mb5QN6iyyJj8YDB1rF53VZMNtZGPI6cx1/BxVzs499OTvWIJLgAlv0gpWJdMS0u
-ve4aIRVpjtT+GXJSR5+wyzv1piYpT/2fl2MGrst+ODGTDWRqyBdg+IWbyA3G5cx5
-O0SHAyPkytxj+AVy/lq3CRe4i+QJZwkVxcOEKSdXH/oK+S/+BK5ao5QdDG8dMrJa
-xdZzoN+erlOsz1UxdAN7fthrvQp+RWZHHsOdfyeQL/IY4Unm/lpbvxuR7faW0x/C
-xmm+btXsXlBWtaYmtmzwWNhWcRnwrQDl3gQT1pVQvRny0TX0Ano=
-=7KcP
------END PGP SIGNATURE-----
-
---o3kinmntwcc6dqdm--
