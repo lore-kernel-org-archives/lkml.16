@@ -1,113 +1,97 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB561C6B4
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C8E1C6B4;
+	Mon, 26 May 2025 02:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748227058; cv=none; b=QOJwa5OBKflyGkdzj8KGS9cwNZPwfd6zeTLSio9+kv0vgGaSqwrl2TUehgRbcnFHlOONoDJ7UCh2Y0oaFxWS99VdFr5RWDCf3djB7QAfVzLxW5FjZZK0IJ7ah9wlYLgBUMVQwZOztTbrstf05NpSkaFn0fWqf7191wq0fBajCl8=
+	t=1748227132; cv=none; b=GmbC1spWKSHMGsSeie0nJ443gvkxB8dFv7Sgd6OB/GNl8/GbsLfkvlf37S0qUH5bP2kFiTebQXY6RGK5tgTpYm7G3+e6hsg4IB7iWHf/uHV4LXcchxFJXlp4xy8rmwWZGg3Ho7oEa7QU4TkdxHRhG20ywy8HLy86n7i7EnEpdEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748227058; c=relaxed/simple;
-	bh=BY4ErxoAP9augDOLnkIcoFs771/iVqBR1pRf44PMqxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KYrp0B34T/2mEZLfqrdoahjJZlbE+wpg+Cbaxp0TWdJAG/0W3ZSbt3U9lqShxIFTf3Zh2ukGWJ1fjto2YMPkI5dTd/7/pgdh9K6uvS/HlXFJGTKNSzSTsfVkhhW8jC2wOHOTVD32Nj/q3ovahwRxRxlihal5rinZ8eD7DntllZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hzps+WCn; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hzps+WCn"
-Message-ID: <0f20ac8a-317c-4ce9-8c17-113f7eb6ad90@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748227054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7neqG58J+Ahj4nQSiH5zkGET3BZ/oA3S9VE4hGMMq20=;
-	b=hzps+WCnA2GLYz0L+XZeVTim2hgrK8TVQHIypRyLTq5k+W6Cvlp6ZGsEKxqIxkUGuISH6c
-	ISPYvh+Nyux23qZAe5bWlmdUDxr7Cpzs0Ce91mzkCHa+/o03qErNGXn59nuTrvl7bR8asI
-	qh9rx8lU1h/CjsnX5tpG+YOPGrIe73c=
-Date: Mon, 26 May 2025 10:37:25 +0800
+	s=arc-20240116; t=1748227132; c=relaxed/simple;
+	bh=3oAnMTvt0OO/ipksasFtW6n/8Gz/YRwaYDZyeSEjbSg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cs6V/bYMCY7BU7iqek/w1j/nBt/qMfILq5JZXjh4ofMVbohVBFocnPXtbgxLE3Uljo0Geo/Oo1dyV4fmvUt7K0hTqVUouJY/KDeswh+Fm4J83xfTc0DG05r3sR43ZPJbORaH1bWRIY5H+ZdClNHtMZPosxmvo6cPXutNnaJAL6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-01 (Coremail) with SMTP id qwCowABXCNco1DNoOSgHAA--.2474S2;
+	Mon, 26 May 2025 10:38:34 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	crypto@vger.kernel.org,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: alex.hung@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/amd/display: Add null pointer check for get_first_active_display()
+Date: Mon, 26 May 2025 10:37:31 +0800
+Message-ID: <20250526023732.325-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] riscv: vector: Fix context save/restore with
- xtheadvector
-To: Han Gao <rabenda.cn@gmail.com>, linux-riscv@lists.infradead.org
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Charlie Jenkins <charlie@rivosinc.com>,
- Andy Chiu <andybnac@gmail.com>, Jesse Taube <jesse@rivosinc.com>,
- Conor Dooley <conor.dooley@microchip.com>,
- Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>, linux-kernel@vger.kernel.org
-References: <9b9eb2337f3d5336ce813721f8ebea51e0b2b553.1747994822.git.rabenda.cn@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <9b9eb2337f3d5336ce813721f8ebea51e0b2b553.1747994822.git.rabenda.cn@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:qwCowABXCNco1DNoOSgHAA--.2474S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF15uFyrur4fAFWrZrWUurg_yoW8Wr13pw
+	45XFy3ury5CFnFgay8J3WkWF98Kw18ZFy3GFZ5Cwn3ua18Ar43Aa4rCr13urWUGFWUWa1S
+	yF10gay7trWDArDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRAOA2gzuBuKxQAAsj
 
-在 5/23/25 6:25 PM, Han Gao 写道:
-> Previously only v0-v7 were correctly saved/restored,
-> and the context of v8-v31 are damanged.
-> Correctly save/restore v8-v31 to avoid breaking userspace.
-> 
-> Fixes: d863910eabaf ("riscv: vector: Support xtheadvector save/restore")
-> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
-> Tested-by: Xiongchuan Tan <tanxiongchuan@isrc.iscas.ac.cn>
-> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+The function mod_hdcp_hdcp1_enable_encryption() calls the function
+get_first_active_display(), but does not check its return value.
+The return value is a null pointer if the display list is empty.
+This will lead to a null pointer dereference in
+mod_hdcp_hdcp2_enable_encryption().
 
-Thanks,
-Yanteng
-> ---
-> 
-> Changes in v2:
->    Add fix tag
->    Improve commit mesage
-> 
-> v1: https://lore.kernel.org/linux-riscv/c221c98dc2369ea691e3eb664bf084dc909496f6.1747934680.git.rabenda.cn@gmail.com/
-> 
->   arch/riscv/include/asm/vector.h | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
-> index e8a83f55be2b..7df6355023a3 100644
-> --- a/arch/riscv/include/asm/vector.h
-> +++ b/arch/riscv/include/asm/vector.h
-> @@ -200,11 +200,11 @@ static inline void __riscv_v_vstate_save(struct __riscv_v_ext_state *save_to,
->   			THEAD_VSETVLI_T4X0E8M8D1
->   			THEAD_VSB_V_V0T0
->   			"add		t0, t0, t4\n\t"
-> -			THEAD_VSB_V_V0T0
-> +			THEAD_VSB_V_V8T0
->   			"add		t0, t0, t4\n\t"
-> -			THEAD_VSB_V_V0T0
-> +			THEAD_VSB_V_V16T0
->   			"add		t0, t0, t4\n\t"
-> -			THEAD_VSB_V_V0T0
-> +			THEAD_VSB_V_V24T0
->   			: : "r" (datap) : "memory", "t0", "t4");
->   	} else {
->   		asm volatile (
-> @@ -236,11 +236,11 @@ static inline void __riscv_v_vstate_restore(struct __riscv_v_ext_state *restore_
->   			THEAD_VSETVLI_T4X0E8M8D1
->   			THEAD_VLB_V_V0T0
->   			"add		t0, t0, t4\n\t"
-> -			THEAD_VLB_V_V0T0
-> +			THEAD_VLB_V_V8T0
->   			"add		t0, t0, t4\n\t"
-> -			THEAD_VLB_V_V0T0
-> +			THEAD_VLB_V_V16T0
->   			"add		t0, t0, t4\n\t"
-> -			THEAD_VLB_V_V0T0
-> +			THEAD_VLB_V_V24T0
->   			: : "r" (datap) : "memory", "t0", "t4");
->   	} else {
->   		asm volatile (
+Add a null pointer check for get_first_active_display() and return
+MOD_HDCP_STATUS_DISPLAY_NOT_FOUND if the function return null.
+
+Fixes: 2deade5ede56 ("drm/amd/display: Remove hdcp display state with mst fix")
+Cc: stable@vger.kernel.org # v5.8
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
+index 8c137d7c032e..e58e7b93810b 100644
+--- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
++++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
+@@ -368,6 +368,9 @@ enum mod_hdcp_status mod_hdcp_hdcp1_enable_encryption(struct mod_hdcp *hdcp)
+ 	struct mod_hdcp_display *display = get_first_active_display(hdcp);
+ 	enum mod_hdcp_status status = MOD_HDCP_STATUS_SUCCESS;
+ 
++	if (!display)
++		return MOD_HDCP_STATUS_DISPLAY_NOT_FOUND;
++
+ 	mutex_lock(&psp->hdcp_context.mutex);
+ 	hdcp_cmd = (struct ta_hdcp_shared_memory *)psp->hdcp_context.context.mem_context.shared_buf;
+ 	memset(hdcp_cmd, 0, sizeof(struct ta_hdcp_shared_memory));
+-- 
+2.42.0.windows.2
 
