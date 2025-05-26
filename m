@@ -1,215 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77487258A;
-	Mon, 26 May 2025 07:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375CF258A;
+	Mon, 26 May 2025 07:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748244816; cv=none; b=Cs5m+UE29pTGrWD+BCPaQ/wv73B2Mce7bQYYtqsxl8DCpSZ+xv72F5Hmin3Bp91ndcNwIqX4ogLJz7y46EpdVecRSSboNwV023IekEI7bkG+XLSIYxcvPZ0OvYJBZ+R4yTYigSXnykzSD+SmHtSUFVpz5wDFnR3pUOeImy/o9sE=
+	t=1748244826; cv=none; b=bzAC6GhNxqfKWeyR4JSuLjOCd6Uw9jO4vRpucWvNVQXXYEku7emtloSeQcKFsFWbHQ4iSoX9neQNlRPXaWPWVpr0eyRUlXMA+o5Lucg/tQEfu3KFI7jMgngM47o5U7+t3MDHJCK39iuZD55JprPtoGjrmrrvNbWDHgYKf/VTbxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748244816; c=relaxed/simple;
-	bh=n06pjiR3hX6mJ2V6ci9WvZueX0ybWrSTpdyrRyQUxww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pca/TQJi1D9JOvJ3Gk8h50y/6uE4Avgk5qaZlAA4FO9HI1Qu4mnV4VMlMYU77bFSO0MFoehkPMebgnDncwKodGzTiBhmnc98mT8YYPDRqHh1W+kxyKtM4kcOQKwUA3jsrv/PS5MZck6/hzAbzlTofQaHr+u8V8uWLOrnrDqPLuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlH4K3Nl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlH4K3Nl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532ADC4CEE7;
-	Mon, 26 May 2025 07:33:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748244815;
-	bh=n06pjiR3hX6mJ2V6ci9WvZueX0ybWrSTpdyrRyQUxww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tlH4K3NlopK8NwFlAUzj3LDpVkIdJAYwYJ2MYUMGCqcetxLG7vnPmXJYBZWWyR51U
-	 j08tn++djKFXkX+3JQlQXy4tC5mtIX5OBiBeapxjNNajb3Gu6gfItSiOmZx4TPc1VH
-	 HDvZWb+lr8YvcXPJbFeCbeldXJUysGZN1dwpNxnpMuDqANvh1tPN6AptLgYEY2tjcg
-	 19yOKh4mk6DgmFxXBW82XrZ/YEbHTCPAeKK81H9Wccz7gphhe+tMfYXTaZUym9CjFq
-	 HIfXhWz3NgQj7Nwb/2LoODSYMcmO7n1KqE85/+JsVs7xJOEOjxkK0f6Yi8B2EIDAAl
-	 1swcErzoeYZLQ==
-Date: Mon, 26 May 2025 13:03:11 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Subject: Re: [PATCH v9 7/9] optee: support protected memory allocation
-Message-ID: <aDQZN-frPnr1_N5I@sumit-X1>
-References: <20250520152436.474778-1-jens.wiklander@linaro.org>
- <20250520152436.474778-8-jens.wiklander@linaro.org>
+	s=arc-20240116; t=1748244826; c=relaxed/simple;
+	bh=ICCe66OUmPnjP4obmcEuusVn6AjbIvICqWX9MnKMeDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n8G6HtOejG8P++vE7H0GHUsaeEGxWLoncUgN3oIMNMyHZdFQV1dXXqix9T9KfM0TnBdmy/SmWAK05WxRxO4+WLg/Tnq1KE1FuxgWGkJ2J5LyvkxldiL5Lvpw5oxnFzb4Ar+QE7JvhvoyZAEEU0+ZmHTSxR8VdsB8hYDHoegBwWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4dfa0f6127dso513089137.1;
+        Mon, 26 May 2025 00:33:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748244822; x=1748849622;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=buDjsHUOrU1N61z2NjEKXi8mfrqkbTQ+ONutH5nLRvQ=;
+        b=L5715JDmP6UWwi5vGtO1dsTVSttqe6WPZ+j/KiCuaOiJ+xtySpaxlzw81qcivv/nso
+         XDilfIkfRZyeZa3IL4bR/GN+vO95M0ZPK76itJhbhtnF7uALweRsti/QTreKOu36+3mE
+         Y+TacbOlj5/WqlcDHhFVirivGzNkaLb1G0TpMy+oyGav+aI0vjg92I7ASSwMiiRmp5uP
+         QV54qI1zKL4ridt2b/32Ub/IrvkVPRcHYZAF5+AHkqZRdBRJGUyRzH63uKqw2Ol96cGP
+         MNZN2ZmVhLz4lF4mW5TtUOFyyndNsYBWQSV9BH5D1tsLXcriE2/wcVV3EIqggOLHS2Ib
+         RE6A==
+X-Forwarded-Encrypted: i=1; AJvYcCV9ld6Zu07oYE6cradR527RT0ktOiOoUoMCQe7BEjw/iJ7wMD771ASdMUpqHa8o0LJ0moAi20P3ni3yXj+o@vger.kernel.org, AJvYcCVcKGF7NVI31Lcav9zdRa8DKaow0bNw3f8h4qYgNCIovttTwC28ORFjC9FgiqLUPrKy2agETogBt3Oe@vger.kernel.org, AJvYcCXrLtASsmOvLABFjxLZNx3Vr/NOg4OzswpdxaObqJIe1M+pOCWtE2Y0lIVkKZj8zfIOodndh5PSdKnJyLkt9kWoa+M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyswsjKLVmLG6DxOUlAkc9mSoUcBOhDxPzAC5PhsKP7Dw7vPRgu
+	U8NuDOkVETetdfDXOxt5oB9ILGa+tI4CMJ/8BfxgCrL/K1rvuxWyVO04yHlFCCHJ
+X-Gm-Gg: ASbGncs21RoW2hgTOuhjPIxOyOoIIvydqbNk+UHRam7JyRWYBA/lYelcKdZLOENAUDW
+	/gRhMn2T9UWYyNOrQ/5S6Yee/BAkXbb08546/Kbbii41w5KKlWQlMZJ0FlvghlNWCSsP5OlmnRP
+	y9pP6/7l7K60zD0ZEZYKDojK8tA8KujwMDkwLkFMJ1WPJcY2sDbSbgZCgCATbY5LuRk3x/l5Pic
+	t39YyG0GlAiEB27qxRxngeXw1J3LWSQOWAUAXhipZkuncN5wSDgBIxEyj2p7Bz4zdROpKbLCbPr
+	Hwl41bpqVLHrzYnPzsuEGnUeveZARPrG7kx1D360n+3AEM5Zu/TyXmzes0TloDqpGafpfGY+juu
+	2UuBeHetzqeZjCpQ85QukdfdM
+X-Google-Smtp-Source: AGHT+IFr0h9JWKk29CdNy6Qf1NGdDZs4gr7+Eve3RtZoFpVsGUnfpbkljhh66KWtbG+NgocYfZtogQ==
+X-Received: by 2002:a05:6102:4b19:b0:4e2:bacd:9ee9 with SMTP id ada2fe7eead31-4e42416bbe0mr6284189137.17.1748244822609;
+        Mon, 26 May 2025 00:33:42 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dfa66ed7desm16297456137.14.2025.05.26.00.33.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 00:33:42 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4e45d07d66fso85298137.3;
+        Mon, 26 May 2025 00:33:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU++GCEOfkKONtq77D3JNL4S6/3MUe9DVrF2p1WWpp+MHP5sGMuoYSWZOOH+cxCK01B0XxpLTxTvLDNu4jXhNLTIi0=@vger.kernel.org, AJvYcCUMg0mPlFyn7L98Vxis1Ei+z2zuKaLQeGNgdBFdho0B9/rRCZ3xSHG8FhH6occwmtPu4FOHrwMRJ4tsL0+c@vger.kernel.org, AJvYcCUg7zRCMKXhTuMOznFcLXKw/3mNN9zTE9mefEiML5SGgcZocTunhxC0gOd2PEHUR2yd5D4k1L1KK1Hp@vger.kernel.org
+X-Received: by 2002:a05:6102:c4e:b0:4e2:aafe:1bb7 with SMTP id
+ ada2fe7eead31-4e4240e70a3mr5279874137.15.1748244822251; Mon, 26 May 2025
+ 00:33:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520152436.474778-8-jens.wiklander@linaro.org>
+References: <20250525160336.82960-1-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250525160336.82960-1-marek.vasut+renesas@mailbox.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 May 2025 09:33:30 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUMyaUgct_iUed3LO5Brmb4vGJ2=Pgwqtoa0eLvWf4frg@mail.gmail.com>
+X-Gm-Features: AX0GCFstOU72XTrRPlHMMlrcLXZJoTUFgukeaL2XLu42JRLwExEXTH8GUTjbES4
+Message-ID: <CAMuHMdUMyaUgct_iUed3LO5Brmb4vGJ2=Pgwqtoa0eLvWf4frg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a779g3: Sort DT on V4H Sparrow Hawk
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 20, 2025 at 05:16:50PM +0200, Jens Wiklander wrote:
-> Add support in the OP-TEE backend driver for protected memory
-> allocation. The support is limited to only the SMC ABI and for secure
-> video buffers.
-> 
-> OP-TEE is probed for the range of protected physical memory and a
-> memory pool allocator is initialized if OP-TEE have support for such
-> memory.
-> 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->  drivers/tee/optee/core.c          | 10 +++++++
->  drivers/tee/optee/optee_private.h |  2 ++
->  drivers/tee/optee/smc_abi.c       | 45 +++++++++++++++++++++++++++++--
->  3 files changed, 55 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> index c75fddc83576..4b14a7ac56f9 100644
-> --- a/drivers/tee/optee/core.c
-> +++ b/drivers/tee/optee/core.c
-> @@ -56,6 +56,15 @@ int optee_rpmb_intf_rdev(struct notifier_block *intf, unsigned long action,
->  	return 0;
->  }
->  
-> +int optee_set_dma_mask(struct optee *optee, u_int pa_width)
-> +{
-> +	u64 mask = DMA_BIT_MASK(min(64, pa_width));
-> +
-> +	optee->teedev->dev.dma_mask = &optee->teedev->dev.coherent_dma_mask;
-> +
-> +	return dma_set_mask_and_coherent(&optee->teedev->dev, mask);
-> +}
-> +
->  static void optee_bus_scan(struct work_struct *work)
->  {
->  	WARN_ON(optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP));
-> @@ -181,6 +190,7 @@ void optee_remove_common(struct optee *optee)
->  	tee_device_unregister(optee->supp_teedev);
->  	tee_device_unregister(optee->teedev);
->  
-> +	tee_device_unregister_all_dma_heaps(optee->teedev);
->  	tee_shm_pool_free(optee->pool);
->  	optee_supp_uninit(&optee->supp);
->  	mutex_destroy(&optee->call_queue.mutex);
-> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-> index dc0f355ef72a..5e3c34802121 100644
-> --- a/drivers/tee/optee/optee_private.h
-> +++ b/drivers/tee/optee/optee_private.h
-> @@ -272,6 +272,8 @@ struct optee_call_ctx {
->  
->  extern struct blocking_notifier_head optee_rpmb_intf_added;
->  
-> +int optee_set_dma_mask(struct optee *optee, u_int pa_width);
-> +
->  int optee_notif_init(struct optee *optee, u_int max_key);
->  void optee_notif_uninit(struct optee *optee);
->  int optee_notif_wait(struct optee *optee, u_int key, u32 timeout);
-> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
-> index f0c3ac1103bb..f3cae8243785 100644
-> --- a/drivers/tee/optee/smc_abi.c
-> +++ b/drivers/tee/optee/smc_abi.c
-> @@ -1584,6 +1584,42 @@ static inline int optee_load_fw(struct platform_device *pdev,
->  }
->  #endif
->  
-> +static int optee_protmem_pool_init(struct optee *optee)
-> +{
-> +	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
-> +	struct tee_protmem_pool *pool;
-> +	int rc;
-> +
-> +	if (optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_PROTMEM) {
-> +		union {
-> +			struct arm_smccc_res smccc;
-> +			struct optee_smc_get_protmem_config_result result;
-> +		} res;
-> +
-> +		optee->smc.invoke_fn(OPTEE_SMC_GET_PROTMEM_CONFIG, 0, 0, 0, 0,
-> +				     0, 0, 0, &res.smccc);
-> +		if (res.result.status != OPTEE_SMC_RETURN_OK) {
-> +			pr_err("Secure Data Path service not available\n");
-> +			return 0;
-> +		}
-> +		rc = optee_set_dma_mask(optee, res.result.pa_width);
-> +		if (!rc)
-> +			pool = tee_protmem_static_pool_alloc(res.result.start,
-> +							     res.result.size);
-> +		if (IS_ERR(pool))
-> +			return PTR_ERR(pool);
-> +
-> +		rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
-> +		if (rc)
-> +			goto err;
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	pool->ops->destroy_pool(pool);
-> +	return rc;
-> +}
-> +
->  static int optee_probe(struct platform_device *pdev)
->  {
->  	optee_invoke_fn *invoke_fn;
-> @@ -1679,7 +1715,7 @@ static int optee_probe(struct platform_device *pdev)
->  	optee = kzalloc(sizeof(*optee), GFP_KERNEL);
->  	if (!optee) {
->  		rc = -ENOMEM;
-> -		goto err_free_pool;
-> +		goto err_free_shm_pool;
->  	}
->  
->  	optee->ops = &optee_ops;
-> @@ -1752,6 +1788,10 @@ static int optee_probe(struct platform_device *pdev)
->  		pr_info("Asynchronous notifications enabled\n");
->  	}
->  
-> +	rc = optee_protmem_pool_init(optee);
+Hi Marek,
 
-Here we should do a Kconfig check for CONFIG_DMABUF_HEAPS so that we
-don't proceed any further with initialization.
+On Sun, 25 May 2025 at 18:03, Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+> Sort DT alphabetically. Fix up the placement of &rcar_sound {} .
+> No functional change.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-Rest looks good to me.
+Thanks for your patch!
 
--Sumit
+My bad, I moved some nodes while applying to fix sort order,
+but still made a mistake...
 
-> +	if (rc)
-> +		goto err_notif_uninit;
-> +
->  	/*
->  	 * Ensure that there are no pre-existing shm objects before enabling
->  	 * the shm cache so that there's no chance of receiving an invalid
-> @@ -1787,6 +1827,7 @@ static int optee_probe(struct platform_device *pdev)
->  		optee_disable_shm_cache(optee);
->  	optee_smc_notif_uninit_irq(optee);
->  	optee_unregister_devices();
-> +	tee_device_unregister_all_dma_heaps(optee->teedev);
->  err_notif_uninit:
->  	optee_notif_uninit(optee);
->  err_close_ctx:
-> @@ -1803,7 +1844,7 @@ static int optee_probe(struct platform_device *pdev)
->  	tee_device_unregister(optee->teedev);
->  err_free_optee:
->  	kfree(optee);
-> -err_free_pool:
-> +err_free_shm_pool:
->  	tee_shm_pool_free(pool);
->  	if (memremaped_shm)
->  		memunmap(memremaped_shm);
-> -- 
-> 2.43.0
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
