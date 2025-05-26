@@ -1,207 +1,140 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247CE1ACEDF
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DE41A3155
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 05:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748236097; cv=none; b=DrihZvvQtrYFnRDT8Mt5amz9cJ0dcPFMtxcbMpFn/UopmxlCNKVLORbUNw/8tj/rxQRGCFCbt+tAC3IB6AW6Qteg7gvAYiwC9lU8pEDW+jlXMWX5Q1VoK7BZf/f0rxCZYumu/BeJh7WtzQuXVfa+wGE7NCRPbWLRekzJwlNxzM0=
+	t=1748236315; cv=none; b=NQ5uPOt7ryrYqnaDTL8m7sPVcCvZ5rTDyRi9bQTsXdJ5u6wHcuFZF+uSi4cv91jvf3tPRBh/T9RJIccRXCQ2prUsFSpY7LIMHYV6Dbh/TG/hw7/t33DtQL3VkRsjw64yt1BJJcd1uaZ+sX/hGCm/ul3A234bhPb4u5AWPV7x2hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748236097; c=relaxed/simple;
-	bh=VN3uKbL1JqOpb7xEOcPjFAJ2oOJbhSAV/lt65qfGpCY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=eGNRdGoRgVoR1a+fgP5GMjZ3T2betDcGiSsu0FvnNqtXWHRa8qoanlc5NVPwqKqaZOf+RaE1qQ9K2/f8RW1CcjUk7pG5uK13F6khHlonyLdpVJ+1zpzIJxiQHqnhJzo6pHjaMCq5v86UZMTChkYaIpv5LHpwON5y19UeaTmwrgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmo-cybersecurity.com; spf=pass smtp.mailfrom=gmo-cybersecurity.com; dkim=pass (2048-bit key) header.d=gmo-cybersecurity.com header.i=@gmo-cybersecurity.com header.b=Ic1RnCGr; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmo-cybersecurity.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmo-cybersecurity.com
+	s=arc-20240116; t=1748236315; c=relaxed/simple;
+	bh=4DpoN7sYp3PTjm74hIgwij9fHOMm5aACDaenmUmgJOU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S6TeAHyFFAu+ryUVqc6Qb8P0NO8mqIbgu8yR06gZSdcGmtJm0Mu7SLCRXy6y4ESQK2V7OdkoeAfg5NnaEZElhVlQ2PjVjBWCc5yySZwtIM5tDEZS62dr/u68vPN67xcyy/HFO3T/pkWWn33YBqrrPH0nGiIFei059lRM8MSuUVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SCPpDUix; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmo-cybersecurity.com header.i=@gmo-cybersecurity.com header.b="Ic1RnCGr"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so22004665e9.1
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 22:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmo-cybersecurity.com; s=google; t=1748236092; x=1748840892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ywmyN/RiFF7WteRQHUKPH3zi5cyGT7RpRE4XhtfXD3Q=;
-        b=Ic1RnCGrmbto5he7xm8ingV94/4jNJ3MimwhNbJRNn01noUCtwTKxh+0gsQ7niSgNn
-         ZldYlZOm8YjokVNwrbjzCWz3ITuAhNokqMWbLz0S3cEOqEOcekXePPe84b530wSNyd/s
-         aIFsH7dSjiCX8fXI9xKnhfV2+qLQXWc/ksBH3ran1kJ597x1SpuyJp0FLg4uL0R+gRsp
-         sE1H8ytDQhRS6suc486V+4n7YaroVXJUiOCSOXSQ8uL5QHjOt50T7oE3Pj4P7CoX7wbl
-         TCU4tkmU22gOQzlPGdxb4jK/iVpW34fj3N/FPFeFxLOVyn5HiFpUjXK4i8HIMbAaLHvq
-         79Ww==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SCPpDUix"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748236312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hm8EFX3oBVzLtQdjE7Y+rPduhLbN0QlZeaN+4xj0avM=;
+	b=SCPpDUixNVHKFLx+1fGe+mIDJyrb99SimEFwH+PwAEdZUb3XjMVtylXdSQPF64QdW4rzju
+	PibFKwhBzpQ3wSFRTHA3HpudJbilNSrn6gXcVAQXY7czFzeqmmhL+zhgmahDRhvrTha9CC
+	txPpGvPE5ZbLWXJk8L9zbSLnWejHPk0=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-583-oDE87cg8POCXu53ucwYJWQ-1; Mon, 26 May 2025 01:11:50 -0400
+X-MC-Unique: oDE87cg8POCXu53ucwYJWQ-1
+X-Mimecast-MFC-AGG-ID: oDE87cg8POCXu53ucwYJWQ_1748236309
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-32804a710b5so6106251fa.1
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 22:11:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748236092; x=1748840892;
+        d=1e100.net; s=20230601; t=1748236309; x=1748841109;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ywmyN/RiFF7WteRQHUKPH3zi5cyGT7RpRE4XhtfXD3Q=;
-        b=nkPYGll43yQpDxVWmZF1tlMlRtspeOs47uKgTcXB3CSoxrMY4vjGXCnyhfyWb0XIAI
-         yVc8DWLrPkwWhb5pr1RTX0xBkUsagltW9y/q/NXr3IoL06uEEwfa+z6qrAhTfvCmQ6+A
-         5jLyvXtLEOF7xGsx5JphSeDPfR+bimRlmbiQN/hCBa/Zbyd8gOL2a6B8MEv0XDeO83XW
-         V+aITCupe0iDV2zP9OVKe+HpiM0nPeOy8gB47lsMxqUIOE2CKHZ0HrAoQX+9e1ZPZnzK
-         HBdTXY8gteRAYbz3HjA1cum5vplAAmxxdZYZzGujECW1HUpERt/YdKdrDAv+A4v9JgQ/
-         umCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcxUbxZpTcJWA4fo1+GIU/Z8GB9LKYtNI8k0ZkPjQH2pQzG00K60YtLeidYEo4JRqSPLUrUQQqdZKcXrs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIRq6ouE3HtW64lKTUYe6bcXfpb+a7+Hpry8WYFxZs2dmYwWwc
-	s0rxDEriga01F9nc9yiv9LO6Dc8/k5nh/wBrZ/MIBFWn5R5ZXWGUSIyuwExUQMuaB0s9TnHbJKi
-	G0oQgF+dS1ae3bqiL3inWYx1tbnsc4JHKg/0+AYqAIw==
-X-Gm-Gg: ASbGncs8DtR2Fj24f5cpgajn0hCf2jIhXmriPFZ8dxPuA1zR42SaElu3Jit/QYjWfOc
-	0sMaPdOM1ZWf7qmiGHGF17pD/c/NTzUXcUxo++yS/fMNtT3xj9hIQT2OKc98m0ITEXSJsUFuxO2
-	sFFiKkosocw0gg0a9gCyflHhoIbdSx6eDiRSqE04cDlwqhJ/FvHuzvKYjgNVcsIm2yrhnCUu2ba
-	4s8
-X-Google-Smtp-Source: AGHT+IHQtcTKnTqIqu1AWfIXts75t/CEdk2U0zHZsJFQRNgEtFrrICKZ1gNLvc7nyaNDbGUkXhq5BKtnb5bMzcgZXLo=
-X-Received: by 2002:a05:600c:6215:b0:43d:40b0:5b with SMTP id
- 5b1f17b1804b1-44c932f9411mr60425455e9.25.1748236092265; Sun, 25 May 2025
- 22:08:12 -0700 (PDT)
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hm8EFX3oBVzLtQdjE7Y+rPduhLbN0QlZeaN+4xj0avM=;
+        b=Q1W0iAERbZNE2fYXa5YhDUkjTfXxTHs7/3sxNFDM9aiyiAfTaIZvNe1f8Wkw9IEc3W
+         W09ifp26Mh7rbec9UC/tr0+H3D6zavikcZjjl72pKlTUeZuJ8dZeKzWmHTDoNv+dvBtS
+         aPRU/a6En9jNz6FnaUS8doW0xAiAx74WZfucGjufEu1FY5xdOPmN6ygKoj/KJOwXEFNn
+         sJT3wRgLAY33KqJ1ZYB2GJN00ppRRYJDC6s5poIHcGFu7cMyV76fyV/rYx7FVvkw9yKh
+         I/5tENYV2eaPuDCXuPKgpeKxjfwMfiAEbJ2r5YY3tv+sk7r47xqHeZ3bzuV3HGC5WA4b
+         Cqiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQz0rDJJXqKiYDH/g/k8N3HXpNohUa2BxXA+wfwhr/d7odQcF7jl1+Q11y5xEJfKXzvwuA8AJgWJiNh1c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPLzredB98QQcNE3stzZUPtZ2BKAsplRA2NVEPSDyZkVq5El3E
+	OcODRbIQXrvVBdpavEgSw6iWv9uzzo27fcq9oNidwQjX6LvtFrhTSGJkHq0FeKbi64+clIEuRJG
+	bnlZLyVAr3/3yMm+y2Csvy6/btlEqL19gEj2+t3HFxQkAVUdBRAtAovWIlCmGJWQB/g1z9bwwx3
+	rnKCLjNYS5SDCu75G3tFu43uw9i2zYtZF44KzCm1pY
+X-Gm-Gg: ASbGncvm+2cQ7lU8jvi2VyuwzUk3EcQn9JI2CCdlkjqzodyh55cY0G1We7+3H9Dim1+
+	wBwiC8fFzgwc60gmAiBmjUXCfkNjn3DZrcnJrh6YhH434TM1QyRw72BpLD6dCzlumRV3KSQ==
+X-Received: by 2002:a2e:a9a8:0:b0:30b:f775:bae0 with SMTP id 38308e7fff4ca-3295bb08af9mr20214791fa.36.1748236309198;
+        Sun, 25 May 2025 22:11:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkeoBBm0s8wnRag407w6g6VTzBbfotg1uM2hr4L9oZ5LkaVUSvEpg2AFicZaEQ2mVAlRAqBoEJbWU/D7JUBZA=
+X-Received: by 2002:a2e:a9a8:0:b0:30b:f775:bae0 with SMTP id
+ 38308e7fff4ca-3295bb08af9mr20214621fa.36.1748236308703; Sun, 25 May 2025
+ 22:11:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: =?UTF-8?B?5oi455Sw5pmD5aSq?= <kota.toda@gmo-cybersecurity.com>
-Date: Mon, 26 May 2025 14:08:01 +0900
-X-Gm-Features: AX0GCFsCp7T-RWT5r2wyD3bTuMWuFueQJ7SnXQQHT4ejrzVyXl82yc9Vvz4Q4nc
-Message-ID: <CAA3_Gnogt7GR0gZVZwQ4vXXav6TpXMK6t=QTLsqKOaX3Bo_tNA@mail.gmail.com>
-Subject: [PATCH net] bonding: Fix header_ops type confusion
-To: =?UTF-8?B?5oi455Sw5pmD5aSq?= <kota.toda@gmo-cybersecurity.com>
-Cc: =?UTF-8?B?5bCP5rGg5oKg55Sf?= <yuki.koike@gmo-cybersecurity.com>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com, 
-	edumazet@google.com
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-7-yukuai1@huaweicloud.com> <CALTww2_sxkU83=F+BqBJB29-gada2=sF-cZR98e5UiARJQuNjg@mail.gmail.com>
+ <0e527b24-3980-2126-67f0-0958f2bc3789@huaweicloud.com>
+In-Reply-To: <0e527b24-3980-2126-67f0-0958f2bc3789@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Mon, 26 May 2025 13:11:36 +0800
+X-Gm-Features: AX0GCFv3eQO4frkeDpWCH9Sa5P5LFU16Bs3flExBAX3Dd3osDvI28iA3t2cmcC8
+Message-ID: <CALTww2_wuO+uf2rf=VWvUChY1-zOdkoXPRT7dSLr69Nfkkoz8g@mail.gmail.com>
+Subject: Re: [PATCH 06/23] md/md-bitmap: add a new sysfs api bitmap_type
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
+	yangerkun@huawei.com, johnny.chenyi@huawei.com, 
+	"yukuai (C)" <yukuai3@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-In bond_setup_by_slave(), the slave=E2=80=99s header_ops are unconditionall=
-y
-copied into the bonding device. As a result, the bonding device may invoke
-the slave-specific header operations on itself, causing
-netdev_priv(bond_dev) (a struct bonding) to be incorrectly interpreted
-as the slave's private-data type.
+On Mon, May 26, 2025 at 9:14=E2=80=AFAM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> Hi,
+>
+> =E5=9C=A8 2025/05/26 0:32, Xiao Ni =E5=86=99=E9=81=93:
+> >> The api will be used by mdadm to set bitmap_ops while creating new arr=
+ay
+> > Hi Kuai
+> >
+> > Maybe you want to say "set bitmap type" here? And can you explain more
+> > here, why does it need this sys file while creating a new array? The
+> > reason I ask is that it doesn't use a sys file when creating an array
+> > with bitmap.
+>
+> I do mean mddev->bitmap_ops here, this is the same as mddev->pers and
+> the md/level api. The mdadm patch will write the new helper before
+> running array.
 
-This type-confusion bug can lead to out-of-bounds writes into the skb,
-resulting in memory corruption.
++ if (s->btype =3D=3D BitmapLockless &&
++    sysfs_set_str(&info, NULL, "bitmap_type", "llbitmap") < 0)
++ goto abort_locked;
 
-This patch adds two members to struct bonding, bond_header_ops and
-header_slave_dev, to avoid type-confusion while keeping track of the
-slave's header_ops.
+The three lines of code are in the Create function. From an intuitive
+perspective, it's used to set bitmap type to llbitmap rather than
+bitmap ops. And in this patch, it adds the bitmap_type sysfs api to
+set mddev->bitmap_id. After adding some debug logs, I understand you.
+It's better to describe here more. Because the sysfs file api is used
+to set bitmap type. Then it can be used to choose the bitmap ops when
+creating array in md_create_bitmap
 
-Fixes: 1284cd3a2b740 (bonding: two small fixes for IPoIB support)
-Signed-off-by: Kota Toda <kota.toda@gmo-cybersecurity.com>
-Signed-off-by: Yuki Koike <yuki.koike@gmo-cybersecurity.com>
-Co-Developed-by: Yuki Koike <yuki.koike@gmo-cybersecurity.com>
-Reviewed-by: Paolo Abeni <pabeni@redhat.com>
-Reported-by: Kota Toda <kota.toda@gmo-cybersecurity.com>
----
- drivers/net/bonding/bond_main.c | 61
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- include/net/bonding.h           |  5 +++++
- 2 files changed, 65 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_mai=
-n.c
-index 8ea183da8d53..690f3e0971d0 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1619,14 +1619,65 @@ static void bond_compute_features(struct bonding *b=
-ond)
-     netdev_change_features(bond_dev);
- }
+> >
+> > And if it really needs this, can this be gotten by superblock?
+>
+> Theoretically, I can, however, the bitmap superblock is read by
+> bitmap_ops->create method, and we need to set the bitmap_ops
+> first. And changing the framwork will be much complex.
 
-+static int bond_hard_header(struct sk_buff *skb, struct net_device *dev,
-+        unsigned short type, const void *daddr,
-+        const void *saddr, unsigned int len)
-+{
-+    struct bonding *bond =3D netdev_priv(dev);
-+    struct net_device *slave_dev;
-+
-+    slave_dev =3D bond->header_slave_dev;
-+
-+    return dev_hard_header(skb, slave_dev, type, daddr, saddr, len);
-+}
-+
-+static void bond_header_cache_update(struct hh_cache *hh, const
-struct net_device *dev,
-+        const unsigned char *haddr)
-+{
-+    const struct bonding *bond =3D netdev_priv(dev);
-+    struct net_device *slave_dev;
-+
-+    slave_dev =3D bond->header_slave_dev;
-+
-+    if (!slave_dev->header_ops || !slave_dev->header_ops->cache_update)
-+        return;
-+
-+    slave_dev->header_ops->cache_update(hh, slave_dev, haddr);
-+}
-+
- static void bond_setup_by_slave(struct net_device *bond_dev,
-                 struct net_device *slave_dev)
- {
-+    struct bonding *bond =3D netdev_priv(bond_dev);
-     bool was_up =3D !!(bond_dev->flags & IFF_UP);
+After adding some debug logs, I understand you. Now the default bitmap
+is "bitmap", so it can set bitmap ops in md_run->md_bitmap_create. If
+it wants to use llbitmap, it needs to set bitmap type first. Then it
+can set bitmap ops in md_run->md_bitmap_create.
 
-     dev_close(bond_dev);
+And it's better to explain why it's a better choice to use bitmap_type
+sys rather than reading from superblock. So in future, developers can
+understand the design easily.
 
--    bond_dev->header_ops        =3D slave_dev->header_ops;
-+    /* Some functions are given dev as an argument
-+     * while others not. When dev is not given, we cannot
-+     * find out what is the slave device through struct bonding
-+     * (the private data of bond_dev). Therefore, we need a raw
-+     * header_ops variable instead of its pointer to const header_ops
-+     * and assign slave's functions directly.
-+     * For the other case, we set the wrapper functions that pass
-+     * slave_dev to the wrapped functions.
-+     */
-+    bond->bond_header_ops.create =3D bond_hard_header;
-+    bond->bond_header_ops.cache_update =3D bond_header_cache_update;
-+    if (slave_dev->header_ops) {
-+        bond->bond_header_ops.parse =3D slave_dev->header_ops->parse;
-+        bond->bond_header_ops.cache =3D slave_dev->header_ops->cache;
-+        bond->bond_header_ops.validate =3D slave_dev->header_ops->validate=
-;
-+        bond->bond_header_ops.parse_protocol =3D
-slave_dev->header_ops->parse_protocol;
-+    } else {
-+        bond->bond_header_ops.parse =3D NULL;
-+        bond->bond_header_ops.cache =3D NULL;
-+        bond->bond_header_ops.validate =3D NULL;
-+        bond->bond_header_ops.parse_protocol =3D NULL;
-+    }
-+
-+    bond->header_slave_dev      =3D slave_dev;
-+    bond_dev->header_ops        =3D &bond->bond_header_ops;
+Regards
+Xiao
+>
+> Thanks,
+> Kuai
+>
+>
 
-     bond_dev->type            =3D slave_dev->type;
-     bond_dev->hard_header_len   =3D slave_dev->hard_header_len;
-@@ -2676,6 +2727,14 @@ static int bond_release_and_destroy(struct
-net_device *bond_dev,
-     struct bonding *bond =3D netdev_priv(bond_dev);
-     int ret;
-
-+    /* If slave_dev is the earliest registered one, we must clear
-+     * the variables related to header_ops to avoid dangling pointer.
-+     */
-+    if (bond->header_slave_dev =3D=3D slave_dev) {
-+        bond->header_slave_dev =3D NULL;
-+        bond_dev->header_ops =3D NULL;
-+    }
-+
-     ret =3D __bond_release_one(bond_dev, slave_dev, false, true);
-     if (ret =3D=3D 0 && !bond_has_slaves(bond) &&
-         bond_dev->reg_state !=3D NETREG_UNREGISTERING) {
-diff --git a/include/net/bonding.h b/include/net/bonding.h
-index 95f67b308c19..cf8206187ce9 100644
---- a/include/net/bonding.h
-+++ b/include/net/bonding.h
-@@ -215,6 +215,11 @@ struct bond_ipsec {
-  */
- struct bonding {
-     struct   net_device *dev; /* first - useful for panic debug */
-+    struct   net_device *header_slave_dev;  /* slave net_device for
-header_ops */
-+    /* maintained as a non-const variable
-+     * because bond's header_ops should change depending on slaves.
-+     */
-+    struct   header_ops bond_header_ops;
-     struct   slave __rcu *curr_active_slave;
-     struct   slave __rcu *current_arp_slave;
-     struct   slave __rcu *primary_slave;
