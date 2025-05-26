@@ -1,123 +1,106 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD971F9F70;
-	Mon, 26 May 2025 11:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F891917F4;
+	Mon, 26 May 2025 11:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260406; cv=none; b=mmX3CTpjwm9Wr9YzfOC0DeTWjyFQb/Oj0dQfh1AeuXDEdSetw4WFV8oKRjqCb0YpoEKmvp/1yuQ/IrfBxMFczHYU9OQdGCdiHtD2baVdeunei68sMNiI5WL01QmsJj+9IQ8xd79qJ6zWRJmCjPAxlAcNSESLe35psxAsJDq4RKU=
+	t=1748260783; cv=none; b=kevbb0M3rBbFwkuGD05rm/ZNzxbU4M0cwVkLw18XZ0tXvfHJl43Kpvv7lZdo9DMXfqVYN0G6rZM07OVbG5aa1VxOGLcT2lKsIStv+YIvR/1vGXhn0JpxvG3p9VhMAxxURK2dvNWhEuGQ8L9zyDhOZpPqHf3a8bU4cYM0xM8D1kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260406; c=relaxed/simple;
-	bh=tKe39hpMYxZ66TPljkbq2DpeIkR0YpIH8Yyuw2QRc/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QcWgQ6aMKyru2IntWGPOsJ1YA2CZtfY1RfpCKY6j6mJXi1MVvzttiHI8NmPhbideovemqyHoDHbGQWMpGsKAHjky+TE7IHnJQGasp4sicngnaUSQAphXqJfuh3xbYYvbYhSKTs0qjn5/TsXRESk+CixoO8IYtDU8BaTSaeSJDC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pg37fU62; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748260783; c=relaxed/simple;
+	bh=MnHpRjPvW3aq1b/uS80zhdjWa9KR/tq+IPd/wUVedkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GGsE/luxuYL2zQWiaUUvjJCwbbzZrCmFqSQBh1LjvrVrmCiopm0LmE1RUyxraJ2uHl4SGsAfpGfSQEYzDstEnbRYd1SVQnmHCVqXhksizchL9hzopWYSi7xLqVgX7UEuhOIF1l0k0GXYJfuq7syYa/zJS6Oi44Oncd7i0TgFwrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ikAI/jXo; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg37fU62"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31149f0393dso812355a91.1;
-        Mon, 26 May 2025 04:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748260404; x=1748865204; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=371RwblsY76gtSLbLWcDDtjllCtSvyNzkqLXY8Z9aBs=;
-        b=Pg37fU62aopn7BF6LCADsdigReqjdXm01IEOD33JNlRoacS1O0N17Y1nd36KBMGnKl
-         QPcbxarv3cioWxfRooPozMLOwulzLL4HRr52tHDTdHId/9pz/29jHpQ5+4Y97jqLuj6B
-         9MwkKgVUGMKMnwFCePEm9sD/8UsiUoh5i9qiVxdQrMP/OevwnzbFzxgHrjw+F2ef30FW
-         aOjaRZVw3DVY/9S8FPKRByEWiVs6k8y0b6bsGCZWXcHqC3Q/jheqPQ0GZs368TznuPCd
-         9iQOzgF/dNUogFIjrK74MM7s1iAHwwgE8OFmIz8nO+8K3N1Z0a6V2x/rElH9s4tozcOc
-         7eSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748260404; x=1748865204;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=371RwblsY76gtSLbLWcDDtjllCtSvyNzkqLXY8Z9aBs=;
-        b=d37M4S7eIHE7L/gCj/HL36freu6nBzqOk53/+/7+mVYmeWCvcz732IjcMZrsatkeRu
-         NnLcEWkmN4mtzz0nRa4pGk5iKdAPiHBVsB+BAykzHWdeyvgQ/XXbO57dHsqGtLdUEzuO
-         5HIRFhnADnHD5+s3dfPQISMJBUPehOHhQ2RyLb1AbB47bJQ+ZVKIW3D1GAgwKdI1uvi5
-         uoqLFAiZH6iF8FqqhHNVW/lsaGyxSCkSl1OoUWrusWeOCcQclU7yadCsvhwV+uvbakkm
-         lDwheHjpxrJz0mH7AH6rKB7OVDalj4zTgGqV5IlutYlygSTwqC+d96m/XtAQNj4osuFG
-         PD0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV09KJSzF9VFoNNSKgIYKomHitmqEchH3q2lFE+17TtjSIRdaoBUPinOV8HJ9kVmJRyggJVfAfYjPvJzYqEny1YSbSm@vger.kernel.org, AJvYcCW9n/PazB5SFwFMUTkh4/yPramYJpJsNChYnN8BydCBTVmSIc8zLGM4V36Pg82guSmwy+O3EGmLK/Ooyps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsRZh5+Oc7gwoMUHzOhifdsVuOogjDw4vDAkv2682O79M8JnzP
-	9MNhCMiaIBAdWxae1VdbI4XL0CgPWkP379qzpM0jcbuZV8xcCbVIAgJhqx5ObWfW6G4QlJ+V/mS
-	RXESxrxmgOYPqUcmxv/QFzFlWbuThPUM=
-X-Gm-Gg: ASbGncs7/5X0EK1x9KheFMsO15SjDSgbBDK5Trkz9IshjBYD38rRw9bDEQ3fkX5HSjF
-	z47zTd6w/z+WAV3Ib2zHHiHg+ggTRCAZhIJNd0t+49OpCcmC9evlEfPMfWRh55Y2iM9/NoZquPb
-	f3iz16nitGFXChwGIPbU9jU5vFjrFtllSEko33voCZnR32xg==
-X-Google-Smtp-Source: AGHT+IGES8hD189zVYyWtpyydz601Uwzv0yWfSFjcgHFrJnEFiVlWr4awbyARjVyC0Qmes99zkOgUoalvxOueKUs8vs=
-X-Received: by 2002:a17:90a:d606:b0:310:8d4a:a246 with SMTP id
- 98e67ed59e1d1-3110f333de1mr14062468a91.1.1748260403786; Mon, 26 May 2025
- 04:53:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ikAI/jXo"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q94jqD003410;
+	Mon, 26 May 2025 11:59:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=qEcsi4sugToy0puC4SQ6ejY5Nd4Qv8
+	pEwggNDelhiwE=; b=ikAI/jXoBAXdrLhqfWEengQNog0rmVjRbsGUYtqo7gSyTh
+	N6aMMiQqh6QzmYhAsKTyT/z+EJ+4T4egr2tdq5I7gCinwmk8zOSpNMLOGUVmBGst
+	K3sxuPUoI+J7YgstD0YiaDB6UAQWGnx8qSH2li9kSuOXi6Fdt2xrt0q/IEA5/cNh
+	EjO+/oACNA1ug7uwyX0qcfiKo820SSAYP6694P8GIcjaX1QUFoxQMYD/QY9+kthQ
+	sxMl0DrxDk8OOz8lcJwrVRk5YRU24fVWaLzCsGDDNq2az4nNjRjkWtNp2F0Dkg+S
+	xri9oEl0fSiYzmT/kseKTHa5sKqj3ukvdwVDPdLQ==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u4hn938m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 11:59:38 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q7kSQZ010727;
+	Mon, 26 May 2025 11:59:37 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0e46n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 11:59:37 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54QBxX2S29491904
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 11:59:33 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8EC2520043;
+	Mon, 26 May 2025 11:59:33 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFEF220040;
+	Mon, 26 May 2025 11:59:32 +0000 (GMT)
+Received: from osiris (unknown [9.111.60.222])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 26 May 2025 11:59:32 +0000 (GMT)
+Date: Mon, 26 May 2025 13:59:31 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
+        nrb@linux.ibm.com, david@redhat.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
+Subject: Re: [PATCH v2 4/5] KVM: s390: refactor and split some gmap helpers
+Message-ID: <20250526115931.13937Ce7-hca@linux.ibm.com>
+References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
+ <20250520182639.80013-5-imbrenda@linux.ibm.com>
+ <5e058fd1-ccee-43c3-92eb-ad72d2dbc1f3@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
-In-Reply-To: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
-From: Jeongjun Park <aha310510@gmail.com>
-Date: Mon, 26 May 2025 20:53:14 +0900
-X-Gm-Features: AX0GCFue50ON86AAW6mPPHdQEVwUBXnvQzLEZz33D0IhBo98NIUPFkuG7CTaGbA
-Message-ID: <CAO9qdTHt2vSRhajEYEsaTJRB8yi_5sjLUq12W=8uKf=DnX6PSA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Fix compilation warning on arm32
-To: Pan Taixi <pantaixi@huaweicloud.com>
-Cc: pantaixi1@huawei.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, yeweihua4@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e058fd1-ccee-43c3-92eb-ad72d2dbc1f3@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=HvB2G1TS c=1 sm=1 tr=0 ts=683457aa cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=M7XJmygFYX4lr_Cfcu8A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: 1pBigA7jbHTWY1yjCHMM0voVyFDbOolU
+X-Proofpoint-ORIG-GUID: 1pBigA7jbHTWY1yjCHMM0voVyFDbOolU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA5OCBTYWx0ZWRfX/3m1et90QLGw t/3b1/zXdsMNMmT0GOYTl/yn8WRsG0OBD9oRmDL9oe8Nf/ODe4sfpQ531OL1Ayfgt3ev3CpK/cN 34366jWsRR9yQF75ixyX6s0+JAJvv24I1lW/+3mWwBqg7JjrfpOA3b1M64MPYj6varTn1ETgtEP
+ /ZFNrBBP7H20qrp7B9FQMqOuP6yGuym82vu2O/kwsrtIMU9yhehuLu3VE+8ebh200H76aw3dgJn IBZx7/jEE7UpbaFxwcH2ZM3ISadA63t8FR9KYUD9zJ0NripIxEcGDq277bUTWUXk3uMDJQ1WVwm mX69mhPP48LD4G8tCIg84xvshWd+LLwG7dq8Z1RvF15u/nhf/TjKjU+Cs46EnJ1WCadeagrMy16
+ 73NeUrkQna5arvegPGJH7TYHZsioeNH7IO/h3WThNcNkqJnBL8iY49y49JVi+7XTmj+UeaQf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 mlxlogscore=730 impostorscore=0 spamscore=0
+ mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505260098
 
-Pan Taixi <pantaixi@huaweicloud.com> wrote:
->
-> On arm32, size_t is defined to be unsigned int, while PAGE_SIZE is
-> unsigned long. This hence triggers a compilation warning as min()
-> asserts the type of two operands to be equal. Casting PAGE_SIZE to size_t
-> solves this issue and works on other target architectures as well.
->
+On Mon, May 26, 2025 at 01:17:35PM +0200, Janosch Frank wrote:
+> On 5/20/25 8:26 PM, Claudio Imbrenda wrote:
+> > +
+> > +obj-$(subst m,y,$(CONFIG_KVM))	+= gmap_helpers.o
+> 
+> So gmap.o depends on PGSTE but gmap_helpers.o depends on KVM.
+> Yes, PGSTE is Y if KVM is set, but this looks really strange.
+> 
+> @Heiko:
+> Can we move away from CONFIG_PGSTE and start using CONFIG_KVM instead?
+> Well, maybe this goes away with Claudio's rework anyway.
 
-Thanks! I forgot to cast PAGE_SIZE to size_t
-
-Reviewed-by: Jeongjun Park <aha310510@gmail.com>
-
-> Compilation warning details:
->
-> kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
-> ./include/linux/minmax.h:20:28: warning: comparison of distinct pointer types lacks a cast
->   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
->                             ^
-> ./include/linux/minmax.h:26:4: note: in expansion of macro '__typecheck'
->    (__typecheck(x, y) && __no_side_effects(x, y))
->     ^~~~~~~~~~~
->
-> ...
->
-> kernel/trace/trace.c:6771:8: note: in expansion of macro 'min'
->         min((size_t)trace_seq_used(&iter->seq),
->         ^~~
->
-> Fixes: f5178c41bb43 ("tracing: Fix oob write in trace_seq_to_buffer()")
-> Signed-off-by: Pan Taixi <pantaixi@huaweicloud.com>
-> ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5b8db27fb6ef..766cb3cd254e 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6824,7 +6824,7 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
->                 ret = trace_seq_to_buffer(&iter->seq,
->                                           page_address(spd.pages[i]),
->                                           min((size_t)trace_seq_used(&iter->seq),
-> -                                                 PAGE_SIZE));
-> +                                                 (size_t)PAGE_SIZE));
->                 if (ret < 0) {
->                         __free_page(spd.pages[i]);
->                         break;
-> --
-> 2.34.1
->
+Sure, I'd appreciate if we can get rid of config options.
