@@ -1,145 +1,105 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3561C8C0E;
-	Mon, 26 May 2025 19:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB048C0E;
+	Mon, 26 May 2025 19:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748286328; cv=none; b=Rwe8dUalFns9BRv+TtspFKKPfrRhXESTW35zBXM0do760YXn4AhTGbOJnTtSpxMSAhy391n+oiTYxewI4jAh9kXF2ywwg5sbLFvu3cUU5AYsxxLIYPJXLd2eMNVDv/9E+6m6brW+wM8MsgnIAOWe8uHhGyoh3ssOkiJ5iQWnkmM=
+	t=1748286409; cv=none; b=Ir+VxK7iLPtohaH3mb9h7kvAcwPOnh+9/0SD2bZd+e5NsggmIHscygxvEbChbMkleGccwBoDcvGdWyHk7ipfSJcdaDLKBjpSJ76Fc8KkmIHw/9ZZn44jcPsVREgj2bkI44EKsICsDXgitIotMWZNCBVTSFk7rbJ1FBYhQcc/R5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748286328; c=relaxed/simple;
-	bh=qbLNtumBrWjiSYsmDA3GQS4jPxLUNzJRPt+i7A4sKjs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M/wtJb2V/OAab/13c52U1juuMVWVtxkr4V43TV3bjSGwumArYtRVAGA2dogOwwqniigo08cAT7ec/gHhPA6MhCa9Mfat5O1/NoY4xeDOV+H0tBetBa703LPY84BeWrTjpK7l0ZxPQKDhm/BFepl5t2QPJ5Jv7iUoVugTzGfDBD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcJKKyYQ; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748286409; c=relaxed/simple;
+	bh=TlARb42wyJW4mHm9xZyYPfGjZsDx6XEnfL458goqJwU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=KtMRl5aH+qgcV4FwIgBBDUtA2kVPF9tuPZCi9IAZNJJERkHaRKPuk8EpTHEfUfnoWtlfp6x56q0veG4/Kp+53Chv14OShpJ4f9G7dru2c31gr22POE1l2KmlXJyHOOKvzj6/Qe9a1rgocZ1D52XUFXCp6Qr9oLQV9pU+cX7dOrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JomNSK+m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcJKKyYQ"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c542ffec37so274477685a.2;
-        Mon, 26 May 2025 12:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748286326; x=1748891126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9zM/XnPPB9BX6DI+X/tdBdbdDGUH15z/crP7yYd1Fx8=;
-        b=TcJKKyYQKJi9Z6yqFpv6kUvac9j6N39wgqhridcuuThtJywDpwHem6Abt3E/D4fdH/
-         XSJ2N5zM3hA915rXQqBqYhcXtJAMIWENKqKTyjj5yy+h8NRx1rfykF6COMcUMKpVSyN+
-         LMZqOvwrgGAUvpRMxY65nBfMA1EsZd0VxCTO6mST1Tbg9lhpD+2zSjBgCvIpS0NNUOM9
-         rcizTWHrfg0z6lJY5JUVHOU17sSQcWJ324dOy76w1jqhxxcxXqzbqD5joYdYdfYCQv61
-         lLEu+p7tQQgu5bCwkrR+26V+SYnlpF7Jo5x0K7cGPQEY2E/ie/oOSbqOpTNKKUWRdU7b
-         0WqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748286326; x=1748891126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9zM/XnPPB9BX6DI+X/tdBdbdDGUH15z/crP7yYd1Fx8=;
-        b=iLfr2lzj708UFbP1q6kSccw55Zskd/LcAVyTFjByaRtz+ZeoAG2nVy+xsGS1J+MCHB
-         kukf8XMaZSB/ppQurPeoBSzyPrqtuQQix/X6701AYshOkdXOyKyzULQRZRxQr9wBcbZE
-         YQS2xVJqUbNIWN7vxCECcyMgIxfYyewaPCmEpEfe3JalTOF2nK4V7j6R/NRguqwlhrwd
-         ccs6rkx5Blz9EzUJoUcpjLicA5BgXT/vmGTrgT+7g4TCuiKC6gyBp9vR8xFBBqD2kcl3
-         QuQLowYkwE8DgLbRLJ1UsBkwPEEPtoG38f+4FvdQNiV31zWvIJ1Uny8diVAa4tI5GQlp
-         mo5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUqlyEsFJunDI6vYsrPVkJ3XCTsi3pUSJUEjix3XOtBEGLsaiH+UjZhoNNwr4nPCo+h/gb4X1uq+0Ug+q0=@vger.kernel.org, AJvYcCXOcza/9ObMYRxvzq+f0kCFwC47y6Oj3ZIPQocL4ge6XFJSK7tml12c4L2DRurYIzW+BBeERbXb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxi66rioxP0cXLX9l3EWq9CZz5kTjAQDeXo66e2ioIGtlU+AdyR
-	ZuD7yNPtU0m+aN8UKE8s7KXqtsOkw/DxxrWa9GfbPgD90Q/ksUbLoEbftHiEnKtn7r3dJ28YBEv
-	ZRsgnO+rTwr6PuUTbeA8Nftfmt3GKWB4z4rHAa7ZD/A==
-X-Gm-Gg: ASbGncvrLJImnXp6WNau/N1CCPw35N2gdMek69xpI/BEbjc8AFbrGravWBRhQ8AWy6L
-	T+NIEYo2z0hI3TiXODpNOA35Cg8Fku9e8a5Ld4m8x9Xc4RJdEPtYEya7w4dItRFgGkEKk/EvERG
-	+kUDOTFLPKHDSppYs7G2lbRhJenRDZtKUrn1W9VFU1Ygp+
-X-Google-Smtp-Source: AGHT+IEzr1D0xPyVVTqgXnkaxzNsP6OY+ZVcUjK4Q6hjbSAkhccfV9zIJl49kHyZ9kmtGtW7FN9E3h5L1m5LIHvS+oA=
-X-Received: by 2002:a05:620a:4505:b0:7c5:a55b:fa6c with SMTP id
- af79cd13be357-7ceecc2b525mr1410143685a.38.1748286326033; Mon, 26 May 2025
- 12:05:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JomNSK+m"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 840FAC4CEE7;
+	Mon, 26 May 2025 19:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748286408;
+	bh=TlARb42wyJW4mHm9xZyYPfGjZsDx6XEnfL458goqJwU=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=JomNSK+mAVpSSOAkpm4bFGI0vMWw4r35od4bKNMuGGUBkAblbMGkj/qjqi0mX6lRz
+	 SREWnX6MBV8Qv9IP076z6/apmDqT08TaFXmKiQkv9m4Oo7YwhKvRsOZIMY8B1FkpYI
+	 2cBUwW/HLBn+HVZ2Uc2Y8R08gl0j3lxM/vH9sRGKQ3Al3JJSYT3F+CPmGQZRwnFkFo
+	 gPke/k9NpSgMtLcRHMigllqCkEQ2nMhbMKQlxpbgBlYD/sTM6p6IPeB9U7jsjYOhUd
+	 LdSseWnJqmI88XemtiBazkp4VazA8G9H5ZdSO/aqrsrv9TkfnRvrfY4XqxdU8YWWxK
+	 02WlDuzyAgWbA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AE9C5AD49;
+	Mon, 26 May 2025 19:06:48 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Mon, 26 May 2025 14:06:46 -0500
+Subject: [PATCH RFC] arm64: tegra: Add reserved-memory node for P3450
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526002924.2567843-1-james.hilliard1@gmail.com>
- <20250526002924.2567843-2-james.hilliard1@gmail.com> <aDQgmJMIkkQ922Bd@shell.armlinux.org.uk>
- <4a2c60a2-03a7-43b8-9f40-ea2b0a3c4154@lunn.ch>
-In-Reply-To: <4a2c60a2-03a7-43b8-9f40-ea2b0a3c4154@lunn.ch>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Mon, 26 May 2025 13:05:14 -0600
-X-Gm-Features: AX0GCFufJmB1WnNeY40vi62AOOmldrFuv3uM6nfuatEvw8W1yQgwUxsIUPzPUZI
-Message-ID: <CADvTj4qvu+FCP1AzMx6xFsFXVuo=6s0UBCLSt7_ok3War09BNA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] net: stmmac: dwmac-sun8i: Allow runtime
- AC200/AC300 phy selection
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
-	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Yanteng Si <si.yanteng@linux.dev>, Feiyang Chen <chenfeiyang@loongson.cn>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Jinjie Ruan <ruanjinjie@huawei.com>, Paul Kocialkowski <paulk@sys-base.io>, 
-	linux-arm-kernel@lists.infradead.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250526-p3450-mts-bug-v1-1-78500613f02c@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAMW7NGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyMz3QJjE1MD3dySYt2k0nRdAyNjS5PENGPDNINEJaCegqLUtMwKsHn
+ RSkFuzkqxtbUAwMoqkGQAAAA=
+X-Change-ID: 20250526-p3450-mts-bug-02394af31f0a
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748286407; l=1219;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=lJ7CQIivb8F58FIvgU/VSOHUF2zLzJTp4211UVT4t2k=;
+ b=4GxshBtdNZF4P2qcPsOYPmwtNXVwDr983XH7CBMrDGcFV3kIdY9ox2nDfDqYubluUY3KErMon
+ Nzgh1smI6qhCMY4V7h/d/9AgM2B6L6LyRV79IamYlphtEcFTjngbb+4
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Mon, May 26, 2025 at 8:14=E2=80=AFAM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Mon, May 26, 2025 at 09:04:40AM +0100, Russell King (Oracle) wrote:
-> > On Sun, May 25, 2025 at 06:29:22PM -0600, James Hilliard wrote:
-> > > +   if (!nvmem_cell_read_u16(dev, "ac300", &val)) {
-> > > +           const char *phy_name =3D (val & AC300_KEY) ? "ac300" : "a=
-c200";
-> > > +           int index =3D of_property_match_string(dev->of_node, "phy=
--names", phy_name);
-> > > +           if (index < 0) {
-> > > +                   dev_err(dev, "PHY name not found in device tree\n=
-");
-> > > +                   return -EINVAL;
-> > > +           }
-> > > +
-> > > +           plat_dat->phy_node =3D of_parse_phandle(dev->of_node, "ph=
-ys", index);
-> > > +           if (!plat_dat->phy_node) {
-> > > +                   dev_err(dev, "Failed to get PHY node from phys pr=
-operty\n");
-> > > +                   return -EINVAL;
-> > > +           }
-> > > +   }
-> >
-> > 1. You are re-using the drivers/phy binding for ethernet PHYs driven by
-> >    phylib here.
-> > 2. You need to update
-> >    Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-> >    in a separate patch.
->
-> A real user, i.e. a patch to a .dts file, would also be good.
+From: Aaron Kling <webgeek1234@gmail.com>
 
-That will be added that down the line, for now I added an example in the do=
-cs:
-https://lore.kernel.org/netdev/20250526182939.2593553-3-james.hilliard1@gma=
-il.com/
+The Tegra210 L4T bootloader ram training will corrupt the in-ram kernel
+dt if no reserved-memory node exists. This prevents said bootloader from
+being able to boot a kernel without this node, unless a chainloaded
+bootloader loads the dt. Add the node to eliminate the requirement for
+extra boot stages.
 
-Currently there's a few other drivers needed to fully bring up the h616 ema=
-c1
-with AC200/AC300 PHY's such as PWM driver support.
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-i.e. this(which will also need a few additional patches for the H616
-PWM variant):
-https://lore.kernel.org/all/20250427142500.151925-3-privatesub2@gmail.com/
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+index 0ecdd7243b2eb1abba9adbe9a404b226c29b85ef..8fc995e71696f2ef5e662a21feb96ea771c7a53f 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
+@@ -22,6 +22,12 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++	};
++
+ 	memory@80000000 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x1 0x0>;
 
-I'm currently doing most of the PHY initialization in u-boot to simplify te=
-sting
-of the efuse based PHY selection logic in the kernel. I'm sending this
-separately as a number of subsequent drivers for kernel side PHY
-initialization will be dependent upon specific PHY's being discovered at
-runtime via the ac300 efuse bit.
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250526-p3450-mts-bug-02394af31f0a
 
-I've currently verified this works on AC200 and AC300 boards by checking
-that the appropriate phy address is used(address 0 on AC300 and address 1
-on AC200).
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
 
->
->   Andrew
+
