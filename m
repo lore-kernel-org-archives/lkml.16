@@ -1,275 +1,132 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FBE258A;
-	Mon, 26 May 2025 16:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551963595E;
+	Mon, 26 May 2025 17:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748278623; cv=none; b=H0u1hsnR/lE7WJVRO2uBpqDwCdk17FTjKWD4VBDLWxb3J8EJ2/Qp+ne1PiAX5a+ywtWrvWYh4fhAGDekQZ7MVO0adyr+WLRgFI+m9Ep2510M+AgM//NIOWlmC9qqi6yeGmfFAjlwcWhBC1WIhfZzfUijeKL8eQXnZD2lWEHhYa4=
+	t=1748279010; cv=none; b=f+uUqrCqk3/Po/vsdVuWdMezcAdH2MRqHx3NnLs/NMltLosflXPLiCGi1FWpYupkOa7dHRurmTA3WsDVCqiSgt8BNUQRr1GgMQTnYYb61gFoBCEci1foBNLCZ5IgTWOcIxEfC1wIoWdDzQvQ3Nyi5UIkdGOCgOcpzzIcxlgG4rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748278623; c=relaxed/simple;
-	bh=1l8lnc7L4jN1keZKVH38PKDpIBVamt8y+Pd2Q8GjsZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ctzQ8GL8P87z0hJqxizfu3EvAXAmnrKcJECFozcoJxgDhBrDPySHcCkhHbov02bpm5yu9XHRKJBMVaR+AtK7enTRTm43Q8OctjYDq6RCNQcsgF3DRyiXtgUjdU6qhn8kjAnCp56veH9wKeYfrdxD7Iuy5QYJq1Q3laJgU95mckw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z05gML5/; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1748279010; c=relaxed/simple;
+	bh=S6MYSVF8EsvwxyfLZcoepSZZXUPzFm1P/4bcMAYCajI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NsdD+RvhzkPkS5YXuhcVeXi5Rdp9ImMeau+YDDMYKx3/ZnEwuQei7mDpBqsIfu5vCGLA2OVplak+017vzvssw8FkOOjXr1KNoyvTYu2ZCwQ13SiHIxyLbsNXizgfvyKYSoMf2InL50TBytw27QLiR6y3CYHV2a/xYroMrz5hNCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z05gML5/"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60462000956so2330613a12.0;
-        Mon, 26 May 2025 09:57:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748278619; x=1748883419; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wtI2+wIxxv2aUKRPo8uX1bj6NM14E537wEMghl0q2io=;
-        b=Z05gML5/WZzqrTOnY79aMt4HsfyXOVi9ks2zW+CE4Oj6NC/J8WNoieJLXDoeTdrwj0
-         sVEtwRYq+840KymDhEPy1S5j5Ei+wvlZwP/oqtTXRzj8yiKfJiUoUPaeo7SZzTv9qo9a
-         d0e0AmgW2OMiYLMJq5H428pvZHMiCfOWgzGidHNsUed3dZMnGUrDwYW5TA8gXwTVkrfs
-         kJxgFYTnjqJrYGEA9hq3lLkwAeifgv3MeUGExGrJAmzNk1Qfb/S08D4GBCQPSs8WUkjj
-         XcwxgzqP80Q+Kh+4DM3I8NOnCRTcbbIKmcglLgbl8Lel2/K2HESD5Z9Fr6XXkOVlIvaz
-         hkug==
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-48d71b77cc0so26994301cf.1;
+        Mon, 26 May 2025 10:03:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748278619; x=1748883419;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wtI2+wIxxv2aUKRPo8uX1bj6NM14E537wEMghl0q2io=;
-        b=fyJlYKWwPRzVtTgHrsDT90YiNEl9N/1U72cM5zEbbNt4ZJ9EO4b5Dt58ndq58QDLHw
-         A9aq81/o1baY5m1gBCGSow5MVoIhaD/9GXYH9Eeyw6uENE23LcW1yDt4GwG2bM3THkVu
-         DJhDDwlRkk9UEDIrC9/95W/xFhBPKkmJiPDJIct3Azv92cxWeJuKsIaVKaRhENkRehgT
-         rPWq4Pc50oYPSnKlw5iBbMHw9fI/iPeSI46sTDXjbKReDusg6J8Lf7qM+kgwyW/cK43h
-         zk57lyYdh8cvhVQxzO5C037Fq1uaQj98wtK+vyRwN/9m9sWRSBDW+cixDJDz1hLnResm
-         K0gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTSSZfsjKesqKtx16pIJ8wPp5RMj19GGdWWPjzWKy/rZQdnr2CLfqB6raNOAchkx05tlbSLrJ2hK/6iw==@vger.kernel.org, AJvYcCVtEG7uuRg/kQGR0StnBjgeaj3wES5ApLIkFCXT0MVtN+9+dvVZjoOBj6/xqNmDoQ39pqQ0WAqG@vger.kernel.org, AJvYcCWiPQWhRjbHtqUZqCZd+FhMp/nduWbqXEAIZFZidQeVbLobvOhGitPrhCFXV58RZszv8NSUsIS4rKzFBsJ4@vger.kernel.org, AJvYcCXS0pL9VHjxdTaewv4jZ4aGX1SKeq6fsjUxeOT2SsRbjPqEzuPmjiqjN2nlrqlRGddA+d8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXOqmKTkCm/vIDyhO7G9t7J0KtOBUQ7R/xdIX0kfmDDDO2BzdN
-	Hapq6+hnehn8jO2SJ9t0xKlqP/98uPzfGPn2AvtmhEsjmDZDSTMx6Ltb
-X-Gm-Gg: ASbGncueO5WzYxVZZ8om318TzFoYwFGWvzrm/APNxzck5Bdbt7xdpKOc+SuDyNTDoDm
-	DksoXazP9/0WqXTDX8g+Deqn/3UZyAAjCAsYMq1gcWaEV0ziIxuJEhaLEL22GkwqDO4SVgm0oMK
-	yVvVLjkflwvDMBDXF6JRvZVlOH69fGfClZk88FtWI5KMgzf2zCdnGxVjndsfo3mt7hNuEk2GRh5
-	EJtSMHJLZpzJVfrBDMoFB1PzBEDvp1mutVbhwJE8Fek2jeaoK2yaA+F8xULaN08MRDQsXXMfUF5
-	gvE1rKTtwh98JTR3PfFN1AKcbylE06Vprcm685UXW8ETVwllmO3QyfsWJR42
-X-Google-Smtp-Source: AGHT+IHIU4hwSe/lUANY7Ot/pQUZbeTO+/Y8j+ii+4Tvkv/qi38bDUgS2PtlnL+W0MaH1RZhir1pXQ==
-X-Received: by 2002:a05:6402:26c1:b0:5ff:addb:653e with SMTP id 4fb4d7f45d1cf-602da304c36mr7451507a12.23.1748278619230;
-        Mon, 26 May 2025 09:56:59 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.132.24])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-604533ace77sm3390798a12.6.2025.05.26.09.56.56
+        d=1e100.net; s=20230601; t=1748279007; x=1748883807;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7ezYcjK/kuLdHuSHwh/ef2ocXIk2CuNxW7qZXpfVeTs=;
+        b=CyaMGcXn4zUkdpHR+1iDB0wLyv/o4cqXj8n69lhlkbYxx1wD9cogCbRNym1vk+78Jy
+         OYpO9LFN8awVspMz3nA6LWdKfO66+EjRxgF0z9j7qb5+0J4KMoaocHl0f4L2OzdM4sTW
+         6nIUUV/D18/VUCBdWipaggv2x/9+xp3nY+yCcScUOvxowBLmWoXvajYxLsweKtSMDuoW
+         w5kcp6LGju1R+HvdeIdRzc6yEX2trMyrIIffxVDGTe95CPawjTDaVjB8VSDrEkwFB/In
+         xyO8zG9yH+7432qe5vNvfz8kCywCuwXtGnnrysHXazRLWfivB/vq2EBgg9ADJRjIW/x3
+         5esw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB2T7lYGfAmZPShnLgUdarLniiZeiZNQ4nRwJAaSHgave7Eg00HhwHSYbDS5WJmnkVcb2N/nyRkJpXvTUzxwzQOAM=@vger.kernel.org, AJvYcCUY256NP3U7AWAdwytB+8e1gI1ZrILUtwohVARzTGtkzcM90iOj2QMaQVycDd3TXIaY5M0eCzfd2vK5JSWD@vger.kernel.org, AJvYcCWKarhzjYs5Gc4KWpgyA1u5HzoBFOoMutqR4s9BWqO1e0/bFRJrcqTYrgT93AYAHA3W47jD/US97bWX@vger.kernel.org, AJvYcCXHWkBP9NTjoxGihFyM0+2HYXbYFtMJk4PgUU0UySIzgXiqZIsoMCGrougesY+v9UKRJAfu7MNfm8dzXg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC0SZikWr5ju1n4r3k1T69SteXKpqVdI98YqPvJpLZ21IPOwYd
+	GyRC/XRXZE5rGTKDBHtDG419/ir7rfnpO4Fa4olEz3QzBmm1O9UyZZNYYUtHAl2a
+X-Gm-Gg: ASbGncuZRx6vOUMQlTw40Zs2+7JzCtBFTfR2oiLYzhQE8qr+7BcboTvIQzQm0ah01Eu
+	c2zlnqWCcaUmkeImNNYlkpFRWXtRxLYymaET5E+N52VcGokvfCg0x8cjpDnFY+mx4+Gvrb9Gt56
+	YhqSLvv33D0YvitahXC7CumUbDrZB9W23Vb3/DDsaC1+4fTmHk97uAgSgFH3NSzjeEBIkVLd+uh
+	8P6O4/r24fyQplFIFhZ7QRLr+aAHulO2vx5dx3duMM5tWcZ1vMFcwZiDHiUDov1btToCxbUUkz2
+	jOLTqZAGyIgpi7U2wNvfW3OQ4OEc5LVH9KDwstMF5lxTTdJbu23p+xwiMCBa8ndCkzDEadLYrVf
+	AfovDotECAPEKVw==
+X-Google-Smtp-Source: AGHT+IGfAC16fwvcKeA3Xzx89f+r53ggyhRfmOySsq+ksQvW3N2iwqJnB4tP28TQgj+bqaheqQbTSg==
+X-Received: by 2002:a05:6830:6307:b0:72c:10db:f210 with SMTP id 46e09a7af769-7355cff50demr6874377a34.13.1748278995283;
+        Mon, 26 May 2025 10:03:15 -0700 (PDT)
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com. [209.85.161.49])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a4afb9sm4039258a34.13.2025.05.26.10.03.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 09:56:58 -0700 (PDT)
-Message-ID: <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
-Date: Mon, 26 May 2025 17:58:10 +0100
+        Mon, 26 May 2025 10:03:15 -0700 (PDT)
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6060167af73so1513002eaf.2;
+        Mon, 26 May 2025 10:03:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUR8VfWb1DboBWTvkxEbfuYyWYcI1BsHI3nJ9Jpj2HkDzTB+lw6NYpGSPkwd+n4DyzZaVF/3TY7uM49@vger.kernel.org, AJvYcCUSgoFgIvqVOPIcNwWGuwY+2sLCSj9fIx5v9KEb4avGiD6jGIcSlRbppZHG/pMJXhttiahhlWCL/5TixA==@vger.kernel.org, AJvYcCUsaMT91BUEo1j2p5JdxBJnqwgxk7fpd0zHZfea8Y37MuyliCpxLnq79EcqjJekkicQpQy3HwimFu5BSsAJ@vger.kernel.org, AJvYcCVzzosWBy2LdQFDMdgWhUdXwSGvdvLT8GluRa+DGULgdNvemMDl3Nb89MZ0wwv1nX+ILBT/k09uznZGYhvU+ICdi1g=@vger.kernel.org
+X-Received: by 2002:a05:6214:62b:b0:6f5:106a:271e with SMTP id
+ 6a1803df08f44-6fa9d2be7e9mr168460116d6.38.1748278983943; Mon, 26 May 2025
+ 10:03:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct
- page
-To: Byungchul Park <byungchul@sk.com>, Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com,
- kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com,
- hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net,
- john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
- tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-19-byungchul@sk.com>
- <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
- <20250526013744.GD74632@system.software.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250526013744.GD74632@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250519215734.577053-1-thierry.bultel.yh@bp.renesas.com> <20250519215734.577053-2-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250519215734.577053-2-thierry.bultel.yh@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 26 May 2025 19:02:52 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWHUuLiwG+-znzGxqWzYHo3Um7e+yrTJeb-Ei=SQ8TjGg@mail.gmail.com>
+X-Gm-Features: AX0GCFvT7iN4yfX8D71Vm8JTSTnk1aSrctC0JzIhU0KPMEe0rEDICsFhXWYVd_E
+Message-ID: <CAMuHMdWHUuLiwG+-znzGxqWzYHo3Um7e+yrTJeb-Ei=SQ8TjGg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: add compatible for Renesas RZ/T2H
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org, 
+	paul.barker.ct@bp.renesas.com, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/26/25 02:37, Byungchul Park wrote:
-> On Fri, May 23, 2025 at 10:55:54AM -0700, Mina Almasry wrote:
->> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
->>>
->>> Now that all the users of the page pool members in struct page have been
->>> gone, the members can be removed from struct page.
->>>
->>> However, since struct netmem_desc might still use the space in struct
->>> page, the size of struct netmem_desc should be checked, until struct
->>> netmem_desc has its own instance from slab, to avoid conficting with
->>> other members within struct page.
->>>
->>> Remove the page pool members in struct page and add a static checker for
->>> the size.
->>>
->>> Signed-off-by: Byungchul Park <byungchul@sk.com>
->>> ---
->>>   include/linux/mm_types.h | 11 -----------
->>>   include/net/netmem.h     | 28 +++++-----------------------
->>>   2 files changed, 5 insertions(+), 34 deletions(-)
->>>
->>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->>> index 873e820e1521..5a7864eb9d76 100644
->>> --- a/include/linux/mm_types.h
->>> +++ b/include/linux/mm_types.h
->>> @@ -119,17 +119,6 @@ struct page {
->>>                           */
->>>                          unsigned long private;
->>>                  };
->>> -               struct {        /* page_pool used by netstack */
->>> -                       unsigned long _pp_mapping_pad;
->>> -                       /**
->>> -                        * @pp_magic: magic value to avoid recycling non
->>> -                        * page_pool allocated pages.
->>> -                        */
->>> -                       unsigned long pp_magic;
->>> -                       struct page_pool *pp;
->>> -                       unsigned long dma_addr;
->>> -                       atomic_long_t pp_ref_count;
->>> -               };
->>>                  struct {        /* Tail pages of compound page */
->>>                          unsigned long compound_head;    /* Bit zero is set */
->>>                  };
->>> diff --git a/include/net/netmem.h b/include/net/netmem.h
->>> index c63a7e20f5f3..257c22398d7a 100644
->>> --- a/include/net/netmem.h
->>> +++ b/include/net/netmem.h
->>> @@ -77,30 +77,12 @@ struct net_iov_area {
->>>          unsigned long base_virtual;
->>>   };
->>>
->>> -/* These fields in struct page are used by the page_pool and net stack:
->>> - *
->>> - *        struct {
->>> - *                unsigned long _pp_mapping_pad;
->>> - *                unsigned long pp_magic;
->>> - *                struct page_pool *pp;
->>> - *                unsigned long dma_addr;
->>> - *                atomic_long_t pp_ref_count;
->>> - *        };
->>> - *
->>> - * We mirror the page_pool fields here so the page_pool can access these fields
->>> - * without worrying whether the underlying fields belong to a page or net_iov.
->>> - *
->>> - * The non-net stack fields of struct page are private to the mm stack and must
->>> - * never be mirrored to net_iov.
->>> +/* XXX: The page pool fields in struct page have been removed but they
->>> + * might still use the space in struct page.  Thus, the size of struct
->>> + * netmem_desc should be under control until struct netmem_desc has its
->>> + * own instance from slab.
->>>    */
->>> -#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
->>> -       static_assert(offsetof(struct page, pg) == \
->>> -                     offsetof(struct net_iov, iov))
->>> -NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
->>> -NET_IOV_ASSERT_OFFSET(pp, pp);
->>> -NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
->>> -NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
->>> -#undef NET_IOV_ASSERT_OFFSET
->>> +static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
->>>
->>
->> Removing these asserts is actually a bit dangerous. Functions like
->> netmem_or_pp_magic() rely on the fact that the offsets are the same
->> between struct page and struct net_iov to access these fields without
-> 
-> Worth noting this patch removes the page pool fields from struct page.
+Hi Thierry,
 
-static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-{
-	return (struct net_iov *)((__force unsigned long)netmem & ~NET_IOV);
-}
+On Mon, 19 May 2025 at 23:57, Thierry Bultel
+<thierry.bultel.yh@bp.renesas.com> wrote:
+> Document RZ/T2H (a.k.a r9a09g077) pinctrl
+>
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 
-static inline atomic_long_t *netmem_get_pp_ref_count_ref(netmem_ref netmem)
-{
-	return &__netmem_clear_lsb(netmem)->pp_ref_count;
-}
+Thanks for your patch!
 
-That's a snippet of code after applying the series. So, let's say we
-take a page, it's casted to netmem, then the netmem (as it was before)
-is casted to net_iov. Before it relied on net_iov and the pp's part of
-the page having the same layout, which was checked by static asserts,
-but now, unless I'm mistaken, it's aligned in the exactly same way but
-points to a seemingly random offset of the page. We should not be doing
-that.
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+> @@ -29,6 +29,7 @@ properties:
+>        - renesas,pfc-r8a774b1    # RZ/G2N
+>        - renesas,pfc-r8a774c0    # RZ/G2E
+>        - renesas,pfc-r8a774e1    # RZ/G2H
+> +      - renesas,pfc-r9a09g077   # RZ/T2H
+>        - renesas,pfc-r8a7778     # R-Car M1
+>        - renesas,pfc-r8a7779     # R-Car H1
+>        - renesas,pfc-r8a7790     # R-Car H2
 
-Just to be clear, I think casting pages to struct net_iov *, as it
-currently is, is quite ugly, but that's something netmem_desc and this
-effort can help with.
+From a quick glance at the docs and driver, adding support for RZ/T2H
+to this DT binding is a not good match, as the RZ/T2H PFC hardware
+does not have the concept of pin groups and functions.
 
-What you likely want to do is:
+Using separate DT bindings, as for most other SoCs in the RZ family,
+also allows you to use the preferred order "renesas,r9a09g077-<foo>".
 
-Patch 1:
+> @@ -194,3 +209,13 @@ examples:
+>                      power-source = <3300>;
+>              };
+>      };
+> +
+> +  - |
+> +    pinctrl: pinctrl@812c0000 {
 
-struct page {
-	unsigned long flags;
-	union {
-		struct_group_tagged(netmem_desc, netmem_desc) {
-			// same layout as before
-			...
-			struct page_pool *pp;
-			...
-		};
-	}
-}
+The unit address does not match the first reg property.
 
-struct net_iov {
-	unsigned long flags_padding;
-	union {
-		struct {
-			// same layout as in page + build asserts;
-			...
-			struct page_pool *pp;
-			...
-		};
-		struct netmem_desc desc;
-	};
-};
+> +            compatible = "renesas,pfc-r9a09g077";
+> +            reg = <0x802c0000 0x2000>,
+> +                  <0x812c0000 0x2000>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            gpio-ranges = <&pinctrl 0 0 287>;
 
-struct netmem_desc *page_to_netmem_desc(struct page *page)
-{
-	return &page->netmem_desc;
-}
+GPIOs without interrupts?
 
-struct netmem_desc *netmem_to_desc(netmem_t netmem)
-{
-	if (netmem_is_page(netmem))
-		return page_to_netmem_desc(netmem_to_page(netmem);
-	return &netmem_to_niov(netmem)->desc;
-}
+> +    };
 
-The compiler should be able to optimise the branch in netmem_to_desc(),
-but we might need to help it a bit.
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
-Then, patch 2 ... N convert page pool and everyone else accessing
-those page fields directly to netmem_to_desc / etc.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-And the final patch replaces the struct group in the page with a
-new field:
-
-struct netmem_desc {
-	struct page_pool *pp;
-	...
-};
-
-struct page {
-	unsigned long flags_padding;
-	union {
-		struct netmem_desc desc;
-		...
-	};
-};
-
-net_iov will drop its union in a later series to avoid conflicts.
-
-btw, I don't think you need to convert page pool to netmem for this
-to happen, so that can be done in a separate unrelated series. It's
-18 patches, and netdev usually requires it to be no more than 15.
-
--- 
-Pavel Begunkov
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
