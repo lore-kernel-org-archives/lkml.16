@@ -1,82 +1,137 @@
-Received: from mail-m19731102.qiye.163.com (mail-m19731102.qiye.163.com [220.197.31.102])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09EAB7483
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:23:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3946C7483;
+	Mon, 26 May 2025 13:24:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748265824; cv=none; b=JScnuF10Hz5/F+gdn1w+in0a4C5spNpQ8yUYU1jme/Lykh2hErYlQs6q/TIIe+qIqi1vGZEcG/G9ReaMMSviqzpHInQotBCcPP1IYxA5iPLtJDy89YbnMrjG56rGrYY0agjl7hcaNCy8Ed/03uyWD+uOkqkOHZh0WbefAT/4I94=
+	t=1748265874; cv=none; b=p7AzkqGKg3m63OB7SFU9Y5ebYatnm4UQX0xxS/XMHR5WcjhFFup+lWP+4zVOJyjdzP/iV3Pqd872JSXBWfb8u92s6Nf5yab2cUElMDBw+wrj40wp0ZmxT69+OLOSpjX9N6401pQDmNmguTCvWceLB8elShTBkRQeddf+WYRA3mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748265824; c=relaxed/simple;
-	bh=F7DUUBlHEmFn2tOU9JR1JkwLwTsaZrshfzhE8XtGNYc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VOrTzjOp8dayZUaExbMuPb68ZGJ3Lu696r1AzHQhj9lI3RyOiZKN41WWBI6Cp7ShHC0OZdNDRueF6u1r2uvWZQS8tTkdV1SVRRaCCP8noZyYZMDusc7fQlotBRt6Cu1JPaZfoPNQ1tmQ5MlIlBzX34ASiG2sqZOsS9lpXfrpVLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=OtIWIlKP; arc=none smtp.client-ip=220.197.31.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1748265874; c=relaxed/simple;
+	bh=osVsQrSYzdvef7/iUa+Or5IvPPYVb5WN4ATbcQpHmJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSXzqeX+MmORiwB7UOwrQas9DJws1J0T55X7G09Hcp98c62VU1rjakR0lMz9DQf+sXZJqXpCTz7akR4F9p1Tn7ZVi6myDzdGxxfp89j3XfJJViP/7cjx+cKsfJ/EcoskjVnktokUFnn27h6HpRaxYuQcBt4HmfhusU8OYmczKBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bh6oT24+; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="OtIWIlKP"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 166d9dc7d;
-	Mon, 26 May 2025 20:08:02 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org
-Cc: andy.yan@rock-chips.com,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dmitry.baryshkov@oss.qualcomm.com,
-	l.stach@pengutronix.de,
-	dianders@chromium.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v1 0/3] Apply drm_bridge_connector helper for the Analogix DP driver
-Date: Mon, 26 May 2025 20:07:39 +0800
-Message-Id: <20250526120742.3195812-1-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bh6oT24+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748265872; x=1779801872;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=osVsQrSYzdvef7/iUa+Or5IvPPYVb5WN4ATbcQpHmJI=;
+  b=Bh6oT24+KRJFeZ16ERJK9nTXyDMjI/Wr+7WwrDrf+NprOGanFh8JNmRE
+   EOKemGd2Zh+2ruueBfHvR6D9mYyBPulitsIxOG6Ydd1M6B6+zUyZzS+Oq
+   SeAJFwUN+H2/dx2WhwalTwfj+ay++CI5ITVWFdbViawXA6V+a5Co6VFFR
+   mF78c63L92POgNOuAVS9lsOheeKfOBl9tv3ReYwT9eoDmGeA7SRB2HDvL
+   YNdBECJB2/INQMMQ2EAPLT6S3ENs3RIXuv8r5J1CRV++mgSUlNS3p3LXF
+   OIaDaxk4rD+n/l1qiYF+6JiIIv8MHvFHU4rqab7+fv4jKTk0EikkYDcdP
+   A==;
+X-CSE-ConnectionGUID: wakVJeRzQkSSc/zmctbZnA==
+X-CSE-MsgGUID: fDmB/B7pQo23foPmIbrBig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50399316"
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="50399316"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 06:24:30 -0700
+X-CSE-ConnectionGUID: oNfceUcwQBayUJ0E7hEkpQ==
+X-CSE-MsgGUID: ARCWEYm6TSKL23rOyExWAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
+   d="scan'208";a="146271278"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.125])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 06:24:27 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 4685711F732;
+	Mon, 26 May 2025 16:24:24 +0300 (EEST)
+Date: Mon, 26 May 2025 13:24:24 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Andrew Donnellan <ajd@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Akshay Gupta <akshay.gupta@amd.com>, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, hans@jjverkuil.nl,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Lee Jones <lee@kernel.org>
+Subject: Re: [PATCH 1/2] Documentation: Bump media IOCTL reserved numbers
+Message-ID: <aDRriOnRfEYPeziC@kekkonen.localdomain>
+References: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
+ <20250526111732.487229-2-sakari.ailus@linux.intel.com>
+ <20250526114802.GD17743@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh0aQlZOSB8aQx8dSB5PGBpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
-	1VSktLVUpCWQY+
-X-HM-Tid: 0a970c7e23d203a3kunm0ad0490252545c
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pkk6Nxw*HDE#IgwOPlE1OBgM
-	P0waFA5VSlVKTE9DSU1KSUNPSENOVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKTk1ONwY+
-DKIM-Signature:a=rsa-sha256;
-	b=OtIWIlKP4EL4syWe2tXIHkJIar+CXGpIoabGYjZZVzZWNUjVraiJyEjzRtHW+Ryb+8Az4qHwyRD5D3kx9MwRfXE58an7R1Z/88DsQ8GEDuW/hwAkhyo3ucRXoO40rGk39/lvexs6JkGE3zKEJsxoejACQhDhlWXTUox9yWa0Fmk=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=lljjPoI6SdvD8GOzzIvTZHMV542gJWVDXF4AErEZ/zw=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526114802.GD17743@pendragon.ideasonboard.com>
 
-PATCH 1 is a small format optimization.
-PATCH 2 is to perform mode setting in &drm_bridge_funcs.atomic_enable.
-PATCH 3 is to apply the drm_bridge_connector helper.
+Hi Laurent,
 
-Damon Ding (3):
-  drm/bridge: analogix_dp: Formalize the struct analogid_dp_device
-  drm/bridge: analogix_dp: Move &drm_bridge_funcs.mode_set to
-    &drm_bridge_funcs.atomic_enable
-  drm/bridge: analogix_dp: Apply drm_bridge_connector helper
+On Mon, May 26, 2025 at 01:48:02PM +0200, Laurent Pinchart wrote:
+> Hi Sakari,
+> 
+> Thank you for the patch.
 
- .../drm/bridge/analogix/analogix_dp_core.c    | 312 +++++++++---------
- .../drm/bridge/analogix/analogix_dp_core.h    |   8 +-
- include/drm/bridge/analogix_dp.h              |   1 -
- 3 files changed, 153 insertions(+), 168 deletions(-)
+Thank you for the review.
+
+> 
+> On Mon, May 26, 2025 at 02:17:31PM +0300, Sakari Ailus wrote:
+> > The Media Controller uses IOCTL numbers up to 0x81. Given that nothing
+> > appears to be using them for other purposes, even in the samples
+> > allocation (checked with $ git grep "#define.*_IO.*'|'"), just reassign
+> > the numbers up to 0x8f to linux/media.h and bump the samples allocation by
+> > 0x10.
+> 
+> The commit message should explain why. The explanation is in the cover
+> letter, just move it to this patch. With that,
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+I'll use this in v2:
+
+The Media Controller uses IOCTL type '|' with numbers up to 0x81 while
+numbers from 0x80 onwards are allocated for samples, creating a conflict
+between allocations for MC and samples. Given that nothing appears to be
+using numbers between 0x80 and 0x8f for other purposes than MC, even in
+the samples allocation (checked with $ git grep "#define.*_IO.*'|'"), just
+reassign the numbers up to 0x8f to linux/media.h and bump the samples
+allocation by 0x10.
+
+> 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  Documentation/userspace-api/ioctl/ioctl-number.rst | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > index bc91756bde73..6b3be3fb0b15 100644
+> > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > @@ -312,8 +312,8 @@ Code  Seq#    Include File                                           Comments
+> >  'z'   40-7F                                                          CAN bus card conflict!
+> >                                                                       <mailto:oe@port.de>
+> >  'z'   10-4F  drivers/s390/crypto/zcrypt_api.h                        conflict!
+> > -'|'   00-7F  linux/media.h
+> > -'|'   80-9F  samples/                                                Any sample and example drivers
+> > +'|'   00-8F  linux/media.h
+> > +'|'   90-AF  samples/                                                Any sample and example drivers
+> >  0x80  00-1F  linux/fb.h
+> >  0x81  00-1F  linux/vduse.h
+> >  0x89  00-06  arch/x86/include/asm/sockios.h
+> 
 
 -- 
-2.34.1
+Regards,
 
+Sakari Ailus
