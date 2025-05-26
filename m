@@ -1,121 +1,147 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D32198E91;
-	Mon, 26 May 2025 23:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A287222D4F3;
+	Mon, 26 May 2025 23:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748302646; cv=none; b=nYxXCdDAWw0UNykKyEaS3KATWlsgrKzVtfNF3pjSKGq64RUgKtbGRmhQJNOy5FScANtazKKN4FKcA8yGNBSBE059F4NVqvy7DJAQVic+0WrkJTQQQg4ALdZt8eLZz7xJAPa/kpT5K6T6CyO6bwtUV/OdAKFKdm3QnLFQTmS7u0A=
+	t=1748303104; cv=none; b=EZfK4L5DDXro1LhyW4gPqS/Lq29a5PhJNz5hJgd3u0DIDTtHXM85NbzLDWaXplwIMPInzSuB1XS2SdHA7n5KFJrE8p3KZysWvRMXk4vNdM/fnAw+q9CwILm+YdNF/XfbxLq6aHY7aGNTgZOnlxqFQPAWCpSaaEi8j+o0veV/ObM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748302646; c=relaxed/simple;
-	bh=Io1s0ucwQzNq4LIHtzo99IEww7I3qEbMJYor71jOtuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y68wSfMSnj9prO5CqCWeD5FcyUmMC+6rCf6bsWqdcIB8hFF01V0taN0PazvcyDSvojp10OwPJGU6PE2p4KqRJIsQxh7DkPZykiSxz8TOVEkcNDe2PeNDEnzc42sXy9ZWALAFpnJXMo8/KYkEt4ComR2xplnolaRazCTMXl0ZsCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0BSZ9x9; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748303104; c=relaxed/simple;
+	bh=FZSBS27OaAKhhV4whTtVW8ZK3jzD7UI+u09fqhveTBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOQendXH6pp6QII08uSEWsbrIYablDcRFZ84iSYcYr6aUfNfCK7Lnb++3lvD6r8ngc8FIdaiFB4SW+qeHI6CvKCeGlQVlWUs3lwe0ZkSK1O2LqWHcHhBRpybm9ipX1gO8EjTHunQlkJ+XA/puYVrYFllt7kLEoIXGzEVznc1TxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=yWWKgFek; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0BSZ9x9"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442f4a3a4d6so18549915e9.0;
-        Mon, 26 May 2025 16:37:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748302643; x=1748907443; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Io1s0ucwQzNq4LIHtzo99IEww7I3qEbMJYor71jOtuM=;
-        b=b0BSZ9x9l46n1aTDtbUYtwgTcIoAOJEkk87FNJ7dwkX8wPFdVTBxKdXsgzi8oTzEiz
-         0KHnRb476XKZ7coiFA9hAaT2Sw2xLYgaGgRj/rSFI5hjwRKPI86lzz4dbZz1MEia0tGQ
-         xKG+3i53E2NJh7xWoghYICiCwQ09kQ7ZvPirRV2jQKA9DslXNTLVpK+YRpNH4SqrlmFO
-         AqqIuXUu0wm23PRgVMxo3YWp14yrLHNRC0G0CRN6S12EVQsXpyh8WPQVsPAm6xP5Es6q
-         xUGCAlwVWUzIH+iiD/T+Yn7N9nAuBPcCu/v2Xzl21yNXxJMA+ddr2RZDeMEW7jbQ+KP4
-         ogGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748302643; x=1748907443;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Io1s0ucwQzNq4LIHtzo99IEww7I3qEbMJYor71jOtuM=;
-        b=sKlrNmbrK5JFVx+84N6VDpGxDUD0+hfs1q7Puog+lqX4bTkXtF7C1opnyEwn3B12E1
-         1l9WW1Gp5enW/kEytguySteZ1MdXPuOVFvEW0+M9UME/CPikPTYEJvNGkcx5U1cEcK3h
-         3EKVIxQoBMm4vcdPabISQwqmz8eMM9dZliJzf6uMSe+VIirCmyufA2SJoSCYjJRbcHgp
-         jHrY7b12xwUtdl1aW9i6fjQCusIut6ViXGl3T0OG5YJctvzNJ6iL5nELsxYtwBuEE6A9
-         4yftQ7UA7uqfXYrWz5f9+sUzJnlNL29HqbPIE8kxEfR26c4sG6Z+Lwp9S1StXe3uJGSR
-         PLuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVWf3Kz0IjL5UIkEZcdP11haBPWLX0Ag5pyipx7w8z+UqbiJxTHrxKP+XrxsZIX8QD8c3fquIOEEI=@vger.kernel.org, AJvYcCW27LU6r9hXXVyC8Z0IcIQMf/UxKgGtDHrnbDwwPgyFf7J3nE4qEM4SbAVfxdTrlnA3UjwCEl9h3kb10eZz@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKvI8Phq6GADJhZDZyDJQpN7LJddy5lpQt3Px3wLfCXqV/Ltc8
-	51s1297JfS3NqPu1do3VcX79e+JkbcT75V1AbXc14hpqKmNvApeF+KgS
-X-Gm-Gg: ASbGnctCuxQ20zrsSHdcfx+vEqOhaXhovXxIKCiTyFG9otWMpYlgGwhOqnbodocX+sI
-	vbgZoXRseBnl5DAD5PMOJ7wTfzZnByU4b4HJwaVa+0CO/mbg4iPw400cyywIhKIaxKALi+nHGGw
-	oy/fGvov8M1r2905OLp3h3dRA+8d9CPgLW9ALyEXrMfKDY6B23GKSEu5j3y4f3jt0SISOVDhzc1
-	JgLZpZCDlACuodb2RLrBz2eItFVa8bnrFky7z442F4jN86cy8e26hCqwed3HdPMPygBzyB/hS5r
-	J5tRaXz+XmxSyh9+cA9QoO4CLY77Ndu6XYYmv5Wkqu/yvTgulVtXrNgGYW2bDQA=
-X-Google-Smtp-Source: AGHT+IEeW10VyZ+dmhwNbjqDFFTTiEqy50O9g1oMePmSq7t+DvTZrAFmo26tTi90MSvFkL28S0mWEw==
-X-Received: by 2002:a05:600c:4f46:b0:442:7c40:fda4 with SMTP id 5b1f17b1804b1-44b516966damr119157985e9.1.1748302643043;
-        Mon, 26 May 2025 16:37:23 -0700 (PDT)
-Received: from [192.168.1.121] ([176.206.99.211])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef035csm245570305e9.11.2025.05.26.16.37.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 16:37:21 -0700 (PDT)
-Message-ID: <b552663f-b3f3-44b0-8042-533d249dcabe@gmail.com>
-Date: Tue, 27 May 2025 01:37:21 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yWWKgFek"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=wpx05RwRHHkVRpqjDEcKuQQ8Zth2dvnTm25o9c3BaDo=; b=yW
+	WKgFekByTfK2c2ak42pq1t6Q/4epu/H/rih7ndmoBkH4Tfq8mq8RQSW0Ke2Bqjtzc5Y5fk9Q+tu8i
+	N1a3VYLjmnICX2YYoqkO72HKmg4sbjT3EfplsuOb4gh/Q8G2uYOajHdjha+xAFKy+rg9Vlkt3L4x7
+	5LiRrnzSt2MJTBA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uJhV0-00E27K-Pv; Tue, 27 May 2025 01:44:54 +0200
+Date: Tue, 27 May 2025 01:44:54 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] dt-bindings: net: sun8i-emac: Add AC300 EMAC1
+ nvmem phy selection
+Message-ID: <d9d0881b-12cd-40af-bb22-d84236d2e04d@lunn.ch>
+References: <20250526182939.2593553-1-james.hilliard1@gmail.com>
+ <20250526182939.2593553-3-james.hilliard1@gmail.com>
+ <959e576e-bf36-4d01-9ffb-023931b61574@lunn.ch>
+ <CADvTj4oqjCkMeK0p8ZBa8PQmctc77hpiFK2pqgBJaxRFDgQoDQ@mail.gmail.com>
+ <d4109cc5-83d5-4acd-b0fb-39a50043060b@lunn.ch>
+ <CADvTj4qdoD-mo7CxNW8VitZf+wXTiZ7m28R4JPQ9kQJGhUH7bA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] iio: fix suspend and resume triggering for bmi160
- and bmi270
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Alex Lanzano <lanzano.alex@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Peter Zijlstra <peterz@infradead.org>, Danila Tikhonov <danila@jiaxyga.com>,
- Greg KH <gregkh@linuxfoundation.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>,
- =?UTF-8?Q?Philip_M=C3=BCller?= <philm@manjaro.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250525142530.71955-1-benato.denis96@gmail.com>
- <aDTHzs5AtiNmYIAF@smile.fi.intel.com>
- <86d1b019-faec-40ab-b850-8fad22dc4321@gmail.com>
- <aDTMseDPCGoTRJR_@smile.fi.intel.com>
-Content-Language: en-US, it-IT, en-US-large
-From: Denis Benato <benato.denis96@gmail.com>
-In-Reply-To: <aDTMseDPCGoTRJR_@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADvTj4qdoD-mo7CxNW8VitZf+wXTiZ7m28R4JPQ9kQJGhUH7bA@mail.gmail.com>
 
+On Mon, May 26, 2025 at 05:22:48PM -0600, James Hilliard wrote:
+> On Mon, May 26, 2025 at 4:38 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > On Mon, May 26, 2025 at 03:32:03PM -0600, James Hilliard wrote:
+> > > On Mon, May 26, 2025 at 1:36 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> > > >
+> > > > > +        phy-mode = "rgmii";
+> > > >
+> > > > Does the PCB have extra long clock lines?
+> > >
+> > > I'm not sure, it's a copackaged(maybe on-die is the wrong terminology)
+> > > PHY I think so I assume the clock lines are internal, in the device specific
+> > > dts we set something like this on the emac1 node:
+> > > allwinner,rx-delay-ps = <3100>;
+> > > allwinner,tx-delay-ps = <700>;
+> >
+> > Those values are just weird. The RGMII delay should be 2000ps. 3100 is
+> > way too big, and 700 is way too small.
+> 
+> I think these may not actually be required when using the internal
+> EPHY's now that I think about it again.
+> 
+> > I think phy-mode = "internal" would be better, and just hard code the
+> > delays either in the MAC or PHY driver.
+> 
+> Hmm, would that make sense even though the MAC driver also
+> supports external PHY's?
 
-On 5/26/25 22:18, Andy Shevchenko wrote:
-> On Mon, May 26, 2025 at 10:13:00PM +0200, Denis Benato wrote:
->> On 5/26/25 21:58, Andy Shevchenko wrote:
->>> On Sun, May 25, 2025 at 04:25:28PM +0200, Denis Benato wrote:
->>>> Two imu devices bmi160 and bmi270 are similar to bmi323, with the same bug and
->>>> a common usecase: fix the aforementioned bug about triggering not resuming
->>>> after sleep in the same way it was solved for the bmi323 device driver.
->>>>
->>>> The bmi270 patch has been tested on a device where the device irq pin
->>>> is connected to the CPU ensuring it doesn't cause harm to devices that
->>>> do not use hrtimer or other external triggers.
->>>>
->>>> Changelog from v1 [1]
->>>> - include linux/pm.h where needed
->>>> - used "Closed" to reference the solved issue for each driver
->>>> - merged two lines into one (on both drivers)
->>> I got this series twice without any (?) difference in the versions. Care to
->>> explain what's going on?
->>>
->> I am sorry: mails were not being sent to the main lkml nor the iio mailing list and so
->> I resent to everybody, otherwise doing "answer to all" would have created a mess
->> where discussions would get lost.
-> Always mention this kind of things in a cover letter when resending and
-> ideally add a word 'resend' to the Subject.
->
-Thank you. I wasn't sure if using RESEND was a good idea because I have only read about it being mentioned in
-the context of the original being lost and was thinking about the mailing list receiving a RESEND without the original one.
-I will keep this in mind for the future, hoping I won't do this silly mistake again.
+If an external PHY is being used, i would not expect a phy-mode of
+internal.
+ 
+> > Thanks for the link to the old thread, which was 5 years
+> > ago. Hopefully since then, a bit more has been learnt. Quickly reading
+> > through that thread, i don't think an MFD is not the correct solution.
+> 
+> Well the current patches I've been playing around with for the AC200
+> phy are pretty similar to those patches still.
+> 
+> Here's a branch that works on both AC200/AC300 but only if I do
+> the PHY initialization in u-boot:
+> https://github.com/jameshilliard/linux-h616/commits/acx00
 
-Thanks for you patience.
+I personally don't like depending on the bootloader. I often replace
+the bootloader, because it is a crippled version that does not let me
+TFTP boot, does not have flash enabled for saving configuration, and i
+want to use barebox etc. I think it is much better when Linux drives
+the hardware, not the bootloader.
+
+> 
+> > In the last 5 years we have had to deal with more chicken/egg problems
+> > with PHYs. It has now become pretty much standard practice to put the
+> > ID values in DT, to get the driver probed when the device does not
+> > respond on the bus.
+> 
+> This is what I'm doing right? I mean I'm putting the phy ID in the
+> DT for both the AC200 and AC300. When doing the reset driver
+> for say the AC200 I would wire that up to only the AC200 phy
+> node and not the AC300 node(since the AC300 reset is MDIO
+> based while the AC200 is i2c based).
+> 
+> > The DT node can then use phandles to the reset and
+> > clock controller to configure them as needed, the core will probably
+> > do that. I2C is a bit messier, you probably want a phandle pointing to
+> > the i2c_adapter, so you can use i2c_transfer() on it in the probe()
+> > function.
+> 
+> Without a MFD or some other node that exposes a reset I'm a bit
+> confused about what driver would actually issue the reset.
+> 
+> Yeah, we need a phandle to the i2c_adapter, but since the resets
+> would be under the AC200 PHY node I assume there would need
+> to be some sort of intermediary driver implementing the i2c reset
+> right?
+
+You need an reset controller, yes, but is that an MFD? Or just a reset
+controller? Where does this reset controller live?
+
+Question like this show we are missing the big picture. What are all
+the different parts, how are they interconnected? Once we see that, we
+can give you better advice.
+
+	Andrew
