@@ -1,144 +1,114 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1451DED5D;
-	Mon, 26 May 2025 05:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92B51C3BE0;
+	Mon, 26 May 2025 05:23:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748236957; cv=none; b=UZvZxeAmKK0xbVaEkjQ7CjiDM3FcPbYhvl6PUqGB6bfoH5JY3FvDttBa33OBQb/7lx88LKiiHEk4OE0cprcf4mBTxLUkOUpaUrbP/+CR+YxdzaoALXWGXg0tDzH2lx7TSEWH7xtYadKXa2A4QpQ7Q7piHzvKvg0RtKmLsz/YQhA=
+	t=1748237027; cv=none; b=Gk4x/PvZafY8/r0hRtVPVONJ8L2SsXFmFK8SEfv+/1H7LP8v+f3nWWVB7sOMYKBfjNWR/YO9TxR8x4J8rpTZUy6eDnbG+cXj7YUsw3Dj5jfexX6fpZAmljAHAFmXTDNiEDBO6WpMi6xX/M4nXtjvs6mcuXWM6UX/CjIbgsAJ5Bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748236957; c=relaxed/simple;
-	bh=WbclKrKNpH+XumO8udCZ+WnQuj7DovTwmfHCDYT4Vbo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=oxbbDNiYHvMlG63/atF5Qf8nLiFvmCpLe8/FSgS3BUX12J7MI+Fk12Q5E6Jwrz4HzrVFhfYnH+BT0RL6MOOC4pzAAt0Lti/SkhlVhD64+5oSuUbFHdLVpfNwF2z/Y2VaUpCdAJ2wBVlpqLaUNbr1fIUe3HX/s031M9ABmgN2F8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cFPlsg7z; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748237027; c=relaxed/simple;
+	bh=poyvu3mJmW3dH9OrT6r4NkL9IgFF3fjuXEbkG7Tt7uU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kv/8vsEg6XMEjHQvCXNewD3/4/LK32W17im1E9LkQkTb1dSUGirlntXgMH7yBjOwnYEfHUQBM7xZWlbcvEWNnVzeHRun4V7fjgtJCZqNFPZ/MF6T6VPi5bdPI8udmptESliQOT1d9TuJ65TVmMM8xvPHev76oZ9Fwv9vBMxak/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKeb7sKz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cFPlsg7z"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PNSv0Z030632;
-	Mon, 26 May 2025 05:22:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2xgZgVXFHKNEqF2MV79SagmshPphfRqIpWisK7VReKk=; b=cFPlsg7zsQ7ESr7E
-	mT2cSXXRIdPPdcEIStqFkMJyLBV780LR29/dEmyMmunOVx21WFwdhhTCo4auF0ZG
-	S5XJU8xSmmYzE4Kp8AHXU6MmBZoqN3qut1Fa7enid5oC0/M/7V79/3+JCAUTPnGj
-	utlU0g3Kp2PhGmJGqOxJtyy4CDAxhaKcykTC+Wwn41vVjrl1KDsEkWHuvPdJViX6
-	b6cs7knPzjAXxwmve3dAsXYsxniJOCWAYHTeZNm/TaRGwTf5bSxvrBm2MlUdWTzI
-	FXt7YU3XfKFrJMQjDvP8jQ7nYNkTy2VlikaeoLjJHGNWV+/IyNyE3XycO+v9bjph
-	jy0ZFA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5q1u1ac-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 05:22:31 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54Q5MUAE023684
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 26 May 2025 05:22:30 GMT
-Received: from lijuang3-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sun, 25 May 2025 22:22:24 -0700
-From: Lijuan Gao <quic_lijuang@quicinc.com>
-Date: Mon, 26 May 2025 13:21:52 +0800
-Subject: [PATCH v4 6/6] arm64: dts: qcom: qcs615-ride: enable remoteprocs
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKeb7sKz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 919B9C4CEE7;
+	Mon, 26 May 2025 05:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748237026;
+	bh=poyvu3mJmW3dH9OrT6r4NkL9IgFF3fjuXEbkG7Tt7uU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eKeb7sKz7NpVkkCtW1A++awkMdxmxViRaOpaJs/TXRQ4xaRR3dwZvEqjQyZyIa48v
+	 wrOKotOYb1ay2QBfewcc3l2Yuf/MMR5p6bTmoETZGvcykII9L3EDgfcG8FyAemfsGR
+	 T5idY2pSZEQ/Jr6YYBmZnJ0J19aRhF3CDn60Y8KL3Ly4MK8vaJUFqg3Ee6BeMSsfCm
+	 PY5xRcQcvZvrRwUfh0GqjULRxLPVqi1RHkj7/jsb1xz01oEiBg5atmY0rqDYHmDbZD
+	 IqHN6Ig+Na/wTOoceC3Q8Ulv4jOwOjDU4jzbm3UHB4tVvR20pr1TUA8v1Dk4twO/OB
+	 RiMMS3yS2g5tQ==
+Message-ID: <b66f6891-5546-4a71-9945-bea237b104c8@kernel.org>
+Date: Mon, 26 May 2025 07:23:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv4 3/5] dt-bindings: net: wireless: ath9k: add WIFI
+ bindings
+To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
+Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+ nbd@nbd.name, Johannes Berg <johannes@sipsolutions.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:MIPS" <linux-mips@vger.kernel.org>
+References: <20250525214256.8637-1-rosenp@gmail.com>
+ <20250525214256.8637-4-rosenp@gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250525214256.8637-4-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250526-add_qcs615_remoteproc_support-v4-6-06a7d8bed0b5@quicinc.com>
-References: <20250526-add_qcs615_remoteproc_support-v4-0-06a7d8bed0b5@quicinc.com>
-In-Reply-To: <20250526-add_qcs615_remoteproc_support-v4-0-06a7d8bed0b5@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Lijuan Gao <quic_lijuang@quicinc.com>,
-        "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748236923; l=980;
- i=quic_lijuang@quicinc.com; s=20240827; h=from:subject:message-id;
- bh=WbclKrKNpH+XumO8udCZ+WnQuj7DovTwmfHCDYT4Vbo=;
- b=9nCoEAijqSv7wjSjsUe6+n1WYuq3TRVJN1fOKNcLVyrKnGa+2qlMWc6xX4P3qzFy45838St7v
- VW3JXHoB9ilCgrdy/QZXKhBh7Xcc8zHQHcnsbiMwnZcufcffjQD3BwM
-X-Developer-Key: i=quic_lijuang@quicinc.com; a=ed25519;
- pk=1zeM8FpQK/J1jSFHn8iXHeb3xt7F/3GvHv7ET2RNJxE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: tRTrA4B9BM9E5SVoOEaenfIEZgFhCUax
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA0MiBTYWx0ZWRfX8usXWeq9ADMM
- h77ArXRu1o4aWJZvgcIYR7OqEE2517nFN2KP7DqSWG5Yvrjh2rvCn7JGapICnfcKAfar7tuYGoO
- htpYxsu6Ka8Qf6KpPOmIr1Bqq3ZTXvhKUIOJkyWex3nMNMnM41ZVThgdWVjjY6rKkS4dRvCpDmR
- tJbbiD3x9cLDSYnEsppT2uOvsCRhzvQoaCXSih5q95DK5s8eH+03qasaCkIMlB0yA1uGfew/TpF
- ohu+GSAKGwmxH3vbXN6fNf7og69yiBGZzu20FtikpeOYLS5h/aI24EMSkxi5mgk67v1CHaItKB4
- VatQFiI94bRLrhfUH7liaN3/yq9q8Em99MQZoS840lENuBj2p2IqHrsLAaBDrPgXD6I0V/krm1k
- dFUgETC6wUE7wVf/GXnWTu1WKZ6gMDTiu3QkdA4B6Wzvrmk9YHjCF0cZiIT6nW4yRP0I3bOZ
-X-Proofpoint-ORIG-GUID: tRTrA4B9BM9E5SVoOEaenfIEZgFhCUax
-X-Authority-Analysis: v=2.4 cv=FLcbx/os c=1 sm=1 tr=0 ts=6833fa97 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=tk-iKo2JpmutBzwaR1gA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_03,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 phishscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- mlxlogscore=638 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505260042
 
-Enable all remoteproc nodes on the qcs615-ride board and point to the
-appropriate firmware files to allow proper functioning of the remote
-processors.
+On 25/05/2025 23:42, Rosen Penev wrote:
+> These are for the wireless chips that come built in with various
+> Atheros/QCA SoCs. dts wise, the difference between pcie and the wmac is
+> 
+> AHB > PCIE > WIFI
+> AHB > WIFI
+> 
+> These will be used to replace the platform_device code with OF in the
+> following patch.
+> 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs615-ride.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-index 2b5aa3c66867676bda59ff82b902b6e4974126f8..a6652e4817d1c218c7981b04daeb035e2852ac1a 100644
---- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-@@ -240,6 +240,18 @@ &qupv3_id_0 {
- 	status = "okay";
- };
- 
-+&remoteproc_adsp {
-+	firmware-name = "qcom/qcs615/adsp.mbn";
-+
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/qcs615/cdsp.mbn";
-+
-+	status = "okay";
-+};
-+
- &rpmhcc {
- 	clocks = <&xo_board_clk>;
- };
-
--- 
-2.34.1
-
+Best regards,
+Krzysztof
