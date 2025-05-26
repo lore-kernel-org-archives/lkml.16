@@ -1,108 +1,116 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9684D16D9BF
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAB71C3BFC;
+	Mon, 26 May 2025 08:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247927; cv=none; b=Jo+s95Nvds8kFh5sGQYjS1LMJzoNDSsIw1ikbu9TksVaG2mMXcpCU34XV/zC24nRa3kehgRyU/Nj99kVyLQiW6ZkpkKB9nMaO8vLCq4CBShrh1kPZG8xKZHkTmjgKbQQ9u98BDf7CxCBKfwAtLdeMxuvobItACvCUO3wptP8x5s=
+	t=1748247938; cv=none; b=l/3Jb95tdfHWJYHMSv4USBvTdiegjSUjMTcVjV1MZeWBg9yZ6vxqffvlI6yASfC4mNRXOf9EkQ1Lz/XpBNuZAOXVVX//FTHcULRSwtUm2a6f6xtMl8LWJOjXh7pGXafJVlvx5gCNfmWfCmO9t8GMfJAVpWAoRgRJsX9carKvWnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247927; c=relaxed/simple;
-	bh=A86gVWyxt3fqHTgPnFRNwt6qGwUVCyI9lJ66h0Lsauc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gbHWWFaicrUniMnkfj9c9SNglrV3zRNbwfn99YSzEpMJCjrgaoU9SDFkfMoXVV4KXhd/tAntnLlXOL4IiylPav3YrditlPlXotYRpbMqUVnr9xwdMvfoEW2j6VIUnDetQXUaFBqEkqNIC548cUYunc3fAIHc7UaPpHqnlrhEyDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O5tTg7rg; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1748247938; c=relaxed/simple;
+	bh=mrau+5W3Z8JvklmOOYvgbOSIomPEjlwRXbUD0M51bdo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=lqVVetWpFM+vHJvoOVanyYolpKlKl/ahb0hqFBjcsOCBtyA7nIQ0ElNmgIzCBh9Nx8onrAUiyy4hfzrapgKQndK2GyYo6zVg8Y+B4GXUnFvh2wcIz6azteHwapNrRZqF8u8rxUdQZaBGbq9+Rjc6M1fT6Lh9a6EiI1nApHqWGek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zy8xMqda; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O5tTg7rg"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-443a787bd14so21517885e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:25:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zy8xMqda"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso11574655e9.1;
+        Mon, 26 May 2025 01:25:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748247924; x=1748852724; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IjTfQZqn1PiQ/alPx5E/R8fl2JQ4RFmD3TN8UG47HJE=;
-        b=O5tTg7rg0ofOsZlUpLS0cWuBuq+ica9VmwxwT+5LmDQ6i6S0hpysDIGF1lx7X23Z2t
-         75imo/jiMWLbzb5WSghW0zCIMAG/Af/WcNq+2tMQerjhOthKraM2X05SljLnweWddteZ
-         LZRcaimZaZsa64+J5Swe+2e3XGOTgfGNA1fYoPorsicknZCzXPLFUEzELbGuTsidkv8Y
-         oc4SaOOKq/vXlIHzG4BU+AKike885DFpPjXmvfb2eofMCc+xNLSY7o4UkWto4YKPODxZ
-         SJNMzwDZjOFu/f4uSR1/9xOLhu5ZLXXrpStXtuxrcPHpTODiA+DVnY86U7kNnwZ/oJw0
-         rNHQ==
+        d=gmail.com; s=20230601; t=1748247935; x=1748852735; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K3LtL4dcePRmP7dRZnkQEwm7VTaCE+JP89biT5r/gZE=;
+        b=Zy8xMqdadRBi3vYot6elSV+9STHswxJbRLlhziCIeqMfQjsVq8G9+kuycYrXfifSHR
+         iC4/F0ibhjKCNf1Ysk/kwauIOxp4oy57+3j0XeqH80TMSb/tXvE+Hhu+3xFVa262zYEx
+         yEfjgLRX9mEWD/fIWQsR8MDRp/1FWyIoVcaxZLzmu2aps+mpwiSeOON8X/scELdceDsr
+         YwJh884cLM5AfF6Jev9ZjzFjAjKGTnDpDunSgZpVkxPLBj4luvSN1Rx/iJ3MEaERyzU0
+         AmYIPzuNBDCz5MmNMIlUkQGcoD13SJNCexsHT6gQ+HCgRSqLGDG5YLscfZcT7R5ss1bL
+         kpww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748247924; x=1748852724;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IjTfQZqn1PiQ/alPx5E/R8fl2JQ4RFmD3TN8UG47HJE=;
-        b=K652ND1MiS5dr2tCfIf84exx1O3Mbt+O6LhY0ZdssJv6JMdwO/mVDcC25QJCeMd79E
-         CKEniC7PZGpPWjXIuNqv8x7A3amar7It7jXo6mHNxsOAeilJlbch4GuaxlPjxkjo1km8
-         ZMT8baS2TV8/akIT/6AHpD5yqNDTxt6SViYYRuCnsBfrVdo1l6W5rBje6oQO03CI8qax
-         Y+VHnRKZzftszt5GiswOqaMyVPMJSkea3hWeF4kg/TYR3MSLcFtwokBIOWW53PIBTyB0
-         bPYAoHWJJ+Dorp0tLj5ieie5jdASBadRmVZTXH8ShYfpfTThxWoogUmihse1D4lEVpSY
-         Bq0w==
-X-Forwarded-Encrypted: i=1; AJvYcCX1OSqUeaRAtd8PdWq9yMa2hNONz4GEXT+tBdvtYWmldJ6fS66z1QXFBCNhDJN/ZeurEuUy9zDTPdzKNtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlLPKflnMHfm3gWK98CvLI6+sFIratwKsZQyKEeXxz76P/Fcf4
-	+7zG2KVqEO0lX8kcGBlX+DUj+IKSv6mKuSi2l0EgJb2OZGRz6UAND2yL
-X-Gm-Gg: ASbGncu9D0/LkbTd6i3g9iMfALqW5BR+TckjTkjrDyTEgWRF2PbCFMF8YJIfCSfjz/A
-	KBLRmqOGToUCupTmZNAlDknD0Yqcb57/5Nt2nvXlLMuY7qXi/HjQYkHIkq5nu4yA+BSa+klv8wZ
-	lMNLCSwtn5EV45f4mUBIPTTRYRrWcDBIY1bcEAPJfe6vwFdQCpAlW/36A5KFkDlKBrdlfI6lFOU
-	6hh8eY6710TTSSM5al2c53fQVK1Onl5MCFPGlWJgmBgSE+zDBdQsF61sKVnNXczxwTk/6eh7CtK
-	N1HlFrQM/LVJY3ym3E3/N7I601vTzkVI4xDrdi81++zx8WQmtNL4/EPQ3FOL8LTT+B/cbTWFgR2
-	u
-X-Google-Smtp-Source: AGHT+IFBl/+xet0BN01vYtH+quwU5fxmlIYd+ljBiL9S3v8VXGWzm9YbKPOJn383AQ8UM2AngthXSw==
-X-Received: by 2002:a05:6000:4026:b0:3a0:b8ba:849f with SMTP id ffacd0b85a97d-3a4ca123b72mr7178853f8f.4.1748247923507;
-        Mon, 26 May 2025 01:25:23 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d74843b2sm3063748f8f.53.2025.05.26.01.25.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 01:25:23 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com
-Cc: x86@kernel.org,
-	hpa@zytor.com,
-	linux-kernel@vger.kernel.org,
-	Khalid Ali <khaliidcaliy@gmail.com>
-Subject: [PATCH] x86/kerrnel/FPU: clear MP bit of cr0
-Date: Mon, 26 May 2025 08:22:44 +0000
-Message-ID: <20250526082414.689-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1748247935; x=1748852735;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=K3LtL4dcePRmP7dRZnkQEwm7VTaCE+JP89biT5r/gZE=;
+        b=mEMDFkxzK7gH/es/cOpfpFCtOt4VcUhKqHUC/UI5zdN5LdyMdPxOd2/pDRYmYOKsJm
+         5q7OA2teX2GczMh3YAR42xuj1l53tnp8wblpdGTFuH9JIP+9kZ1r3pvYa9ZO2w6xZHQf
+         CbMNLeGStKgsDwv/r88pVHhz8rVjj5J+HjCpwG9q3dX8K7wZgrMhebeYxuuvsd0VkkPW
+         ozj+bmFgGOIHmZGtD9B1ZU+Yt3V/uiZPAVQiUfgiNAM2fTG209HpY2dV4vq3Jj2cDfAr
+         VZWCe9ebOufGlkDm4LEMTCpEISuNs7jPsU9Gf9nHRJQVb7VgHDswQ85Lp49r/yyk71Sp
+         +JJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUPWP1tgQjs38Kw7fB1b2cSRgiNkZ+sxsKkUrKMK+mg9WSNy8C6ZcKwo3r9JXQ5GqS/ANNyggWx@vger.kernel.org, AJvYcCXl97hRSNlQdqNQ20Xno9Ekvn8xbGtnZ/8RewoyH1HrhaU6b5HiPS9rGtyw8K1ReIcFgIwLtzq+6g/f09s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxahXC67vOF2nlB5yGapcp6Ph3jcuDxQ7X8a9sLm9Sw4IRJdv1q
+	nYsBZ+Rn3jaSz3uhLGAUKnbKg1r+e0zOtZyTgaaxZ1thecsh6rzqgnUFxgKDnQ==
+X-Gm-Gg: ASbGncvCxQNSNkLFr/+DSYR35UEE5NnM+3+f85fdXQ9vnqjYwIQXXtKQQ6qQ9dKFq6y
+	Iyt0lA68zGuaaqZlfPIG7mGiLBp08b3GNMQaVIptjVVAcGMfie5mRomaxrw9Oi9W6uXqzJKO4BU
+	N2B00e2O2GG4PXGFsUKkYg6DavSvyMTABkDrioYqITj68htYtsw2OpWuOGrjHevc0Z1HZPcCvud
+	nxjMMwGSY4szhHiqhN9OA6fDhmBe4RecaLeia6zx66+Kt2MnYRGaSi3FnQTV6BgoLY4F1MYtQS3
+	TluKvmeZX4WvqiOxauPmPuutRGKtiZ/ypbo06Kqd6x1Mo76qz/T0V1gKvND6nRClH7Hm4A==
+X-Google-Smtp-Source: AGHT+IHONOG2O48qIuY4eklj5S69BfbVICIKGxv25oIduenSsheivugPO42TjE+T9bsPuDinayEQ5A==
+X-Received: by 2002:a05:600c:138f:b0:43d:fa5d:9315 with SMTP id 5b1f17b1804b1-44c94c2d54emr65618275e9.33.1748247934614;
+        Mon, 26 May 2025 01:25:34 -0700 (PDT)
+Received: from localhost (freebox.vlq16.iliad.fr. [213.36.7.13])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4481ca9f2d9sm233086655e9.19.2025.05.26.01.25.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 01:25:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 26 May 2025 10:25:33 +0200
+Message-Id: <DA5Y65C1FEEX.1YVIUHMANNAYC@gmail.com>
+Cc: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH] mac80211: Add null pointer check for
+ ieee80211_link_get_chanctx()
+From: "Nicolas Escande" <nico.escande@gmail.com>
+To: "Wentao Liang" <vulab@iscas.ac.cn>, <johannes@sipsolutions.net>,
+ <luciano.coelho@intel.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250525164211.2039-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250525164211.2039-1-vulab@iscas.ac.cn>
 
-From: Khalid Ali <khaliidcaliy@gmail.com>
-
-Clear MP bit when initializing x87 FPU, since what it does
-is making WAIT/FWAIT instructions to react to setting of TS flag.
-Right now TS bit is cleared so MP should be cleared, as it is not
-needed. This should set the bit in defined state.
-
-Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
----
- arch/x86/kernel/fpu/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 998a08f17e33..2a2b45610b74 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -30,7 +30,7 @@ static void fpu__init_cpu_generic(void)
- 		cr4_set_bits(cr4_mask);
- 
- 	cr0 = read_cr0();
--	cr0 &= ~(X86_CR0_TS|X86_CR0_EM); /* clear TS and EM */
-+	cr0 &= ~(X86_CR0_TS|X86_CR0_EM|X86_CR0_MP); /* clear TS, EM and MP*/
- 	if (!boot_cpu_has(X86_FEATURE_FPU))
- 		cr0 |= X86_CR0_EM;
- 	write_cr0(cr0);
--- 
-2.49.0
+On Sun May 25, 2025 at 6:42 PM CEST, Wentao Liang wrote:
+> The function ieee80211_chsw_switch_vifs() calls the function
+> ieee80211_link_get_chanctx(), but does not check its return value.
+> The return value is a null pointer if the ieee80211_link_get_chanctx()
+> fails. This will lead to a null pointer dereference in the following
+> code "&old_ctx->conf". A proper implementation can be found in
+> ieee80211_link_use_reserved_assign().
+>
+> Add a null pointer check and goto error handling path if the
+> function fails.
+>
+> Fixes: 5d52ee811019 ("mac80211: allow reservation of a running chanctx")
+> Cc: stable@vger.kernel.org # v3.16
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  net/mac80211/chan.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/net/mac80211/chan.c b/net/mac80211/chan.c
+> index a442cb667520..9e6235001e0a 100644
+> --- a/net/mac80211/chan.c
+> +++ b/net/mac80211/chan.c
+> @@ -1503,6 +1503,10 @@ static int ieee80211_chsw_switch_vifs(struct ieee8=
+0211_local *local,
+>  				continue;
+> =20
+>  			old_ctx =3D ieee80211_link_get_chanctx(link);
+> +			if (WARN_ON(old_ctx)) {
+Don't you mean 'if (WARN_ON(!old_ctx)) {'
+> +				err =3D -EINVAL;
+> +				goto out;
+> +			}
+>  			vif_chsw[i].vif =3D &link->sdata->vif;
+>  			vif_chsw[i].old_ctx =3D &old_ctx->conf;
+>  			vif_chsw[i].new_ctx =3D &ctx->conf;
 
