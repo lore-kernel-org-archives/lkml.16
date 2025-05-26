@@ -1,324 +1,191 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010028.outbound.protection.outlook.com [52.101.228.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8148721127E;
-	Mon, 26 May 2025 16:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748277822; cv=fail; b=jTr6xFOvWDsNSdDRU4gJUlUdWdv+kq4L12MsGFWvARJYwxP6G+Yi8lQ3CED7tUBoDQ0KnvbGZUeiOUUZeqhQtoIh6gpeilJ4Gmu26eaYMfWC8XBJ7r97dehTsEMl+MyPkse8zvEZCVARDwqFgwf38WpQdBNDaMXdJi7PHKwa2A0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748277822; c=relaxed/simple;
-	bh=Y/scm2rXsOmjcY3KgmqNDkOKS6le9p5xRH26gdFpWpo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=YHWAO8sCTZvCt659xYbfm8+OFgDpC+J9XRsp50EDmzxDbaBvqseA2BHxlH2BausfeFQJbgNSzMtS6ATWpziTPQi+xrEQWSwbj3qTGP22IvHANQwE1R8Xkt0h89wWaksiXyJcmKmbRpKzcI2RBOnsUFEJ+EJRWUUelunmyErFP6k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=VWWQ2qpK; arc=fail smtp.client-ip=52.101.228.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFA9155C88
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 16:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748278063; cv=none; b=iGCO8MbaXwgmUuhg9FoMuHlFMI+j1LyI/viM4Mvxnuf0xQn56k/eQIRtLt/jDhyOZj4z7GYMvKj1tMJ1REBtH/Y5gwcA1l0DBYB/ddC6e8YqHLkbhOveYmMiGWC1mhEFw4d5R75DzQmlRZNSTVxlgnh0XkJ6TPHes+wmyvFa23Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748278063; c=relaxed/simple;
+	bh=fy8oSnaOu8lhMsAWRJ22nE28YnXiQk7iIrtz7pBQmBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fGRBWzQrEatTcZASMeZguJC130z+LNxK8y8tFjorm37tO4OfpASJ67FGcjCO3ZWfrFVmJ15Ka145DvtAtO7iZqCUnKs/JPDlJh8Oy+neJUuyeQdsBwQH6tbtE+dWU7G18qW+3HY0WMZ3gKfvtyYxKnCT3qui8MPnfOIXbJjrZe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CR2yFrwP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rA6csdm0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CR2yFrwP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rA6csdm0; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="VWWQ2qpK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KWmFnUmAE4FWjEvn3sx0YYDbbJR+t1OIElxjhXXvQPHxq07JLsH5vbZq5nWKfqTDD189pPSZXRtguTEbjyEN4D0tKEQJqSGWOlrD/SU4djLmG1aiKuDRgYwDzXV2x0rC+BHZ0cBWd+12EMLaT7rVO7uv5YQzjA8IIRWudEU3DBChsFMi7qMBO9RnVV2yuFGfjCSZ+q9wWUnZVl23Lk/ljX9kcX0K3QqrfaZML4pMp4HycbfY3eUSVAcU1H31HrOt32oFTvraDtorpFOK5AX7VfICPrJs3CWe4HUbQGefUtLtOUTlgUB7YcucxGA+gdOadU7X0so+v39wMVke7Qu0Lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rV8px/pPwO20P6yizli8DekJk731OyGBSGZaaMNn77g=;
- b=b93iyzV2RQ9GpPYZYznWrGU0lH8mW6Ss7KJB0m6kkg9o35YyPlVO2rUIAxjRNMx1l0cyHbGaEsPPoH4kk79Y91FRh6OxEFKolelOt3cpAcBsFu8wNyLPiSGkDOio3O6Zq86jbZnb48fA+vScjVp9nQDhJg7a98UJ11VjvLJd0w9qa2Xm2iGjPTS6iTCkl6FVgmWxYjEUPATPsGamxh34sbkzSdejt4GjL98uvUH0IxBO/6CN+0qF8R5HRm8qcfKgFmXwVqCfV9cgeBo/3/iegH3JDys/6EEYsY22wC4+HHV1Uc5cROOA4LJiUXroLVsMd0Tkqj7lgnjRvqTwPk2CsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rV8px/pPwO20P6yizli8DekJk731OyGBSGZaaMNn77g=;
- b=VWWQ2qpKqZtQFaY+dS2qCwm05SCWe492PAgt6qHdA4dl/sjn0R18ueI4KSjAK2J9sprbabZVfS+buj8okRE0hcxCExgSxaV85H4OyreRgbdFio8BnoTHeudINMn4KrQOWbC3ayemfAWc57/YDcuMqH6tPmFL3NVfbai2Dp6niaU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
- by OS3PR01MB10358.jpnprd01.prod.outlook.com (2603:1096:604:1fa::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 26 May
- 2025 16:43:33 +0000
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3%3]) with mapi id 15.20.8769.025; Mon, 26 May 2025
- 16:43:33 +0000
-Message-ID: <f93bb774-157c-4514-b7e3-d28d0866ad25@bp.renesas.com>
-Date: Mon, 26 May 2025 18:43:21 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set() with
- atomic_enable()
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Maxime Ripard <mripard@kernel.org>, tomm.merciai@gmail.com,
- linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Douglas Anderson <dianders@chromium.org>,
- Adam Ford <aford173@gmail.com>, Jesse Van Gavere <jesseevg@gmail.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
- <20250526-cryptic-blue-mussel-ac57fe@houat>
- <91d8a288-1f2d-469c-a596-6265893584ae@bp.renesas.com>
- <20250526104902.GB17743@pendragon.ideasonboard.com>
- <209ddc02-01d2-4375-afcf-2c9a55fe8fc1@bp.renesas.com>
- <20250526-cherubic-ambitious-cobra-3c6a1e@houat>
- <7603c3b1-edff-4c02-a4a5-1d5f72720cad@oss.qualcomm.com>
- <aec5d09f-248b-4dcc-8536-89b4b9d47e9c@bp.renesas.com>
- <d695e04c-b2f1-41ff-8510-33529bf5f916@bp.renesas.com>
- <20250526142808.GR17743@pendragon.ideasonboard.com>
-Content-Language: en-US
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <20250526142808.GR17743@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0248.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:af::7) To OS9PR01MB13950.jpnprd01.prod.outlook.com
- (2603:1096:604:35e::5)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CR2yFrwP";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rA6csdm0";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CR2yFrwP";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rA6csdm0"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1B6461FD5A;
+	Mon, 26 May 2025 16:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748278060; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IVetfcgHxBZ3iNICgIiotNVqlXUl9NqH4jmcGaCtt50=;
+	b=CR2yFrwP0RQnkMR8r0/UBcrtpzjqfepizF2y/ir+GsHc4VhyYzeHSKlE69HDZbHBM2zqex
+	KP0fsDQ6rlleU6/oaYz5o8UA6xeJjVFw7TcTUMDxbbf8uxy1qfz539ZOsjgU/CFOaH6KiY
+	u/silOWyr80JRBIeq6HKyfHgfYFNXUY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748278060;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IVetfcgHxBZ3iNICgIiotNVqlXUl9NqH4jmcGaCtt50=;
+	b=rA6csdm0YikkO57xbnBImz4E90JP96jIkqY/UzQ99Z3YPOLYsXQ4nDDzjzO7hsO8jP4XDy
+	Pa79WEJ2qgC+csCg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1748278060; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IVetfcgHxBZ3iNICgIiotNVqlXUl9NqH4jmcGaCtt50=;
+	b=CR2yFrwP0RQnkMR8r0/UBcrtpzjqfepizF2y/ir+GsHc4VhyYzeHSKlE69HDZbHBM2zqex
+	KP0fsDQ6rlleU6/oaYz5o8UA6xeJjVFw7TcTUMDxbbf8uxy1qfz539ZOsjgU/CFOaH6KiY
+	u/silOWyr80JRBIeq6HKyfHgfYFNXUY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1748278060;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IVetfcgHxBZ3iNICgIiotNVqlXUl9NqH4jmcGaCtt50=;
+	b=rA6csdm0YikkO57xbnBImz4E90JP96jIkqY/UzQ99Z3YPOLYsXQ4nDDzjzO7hsO8jP4XDy
+	Pa79WEJ2qgC+csCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EEAF013964;
+	Mon, 26 May 2025 16:47:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /Xf/OSubNGggewAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 26 May 2025 16:47:39 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B4961A09B7; Mon, 26 May 2025 18:47:38 +0200 (CEST)
+Date: Mon, 26 May 2025 18:47:38 +0200
+From: Jan Kara <jack@suse.cz>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
+	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
+Message-ID: <pehvvmy3vzimalic3isygd4d66j6tb6cnosoiu6xkgfjy3p3up@ikj4bhpmx4yt>
+References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
+ <20250520123544.4087208-1-senozhatsky@chromium.org>
+ <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
+ <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
+ <xlbmnncnw6swdtf74nlbqkn57sxpt5f3bylpvhezdwgavx5h2r@boz7f5kg3x2q>
+ <yo2mrodmg32xw3v3pezwreqtncamn2kvr5feae6jlzxajxzf6s@dclplmsehqct>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|OS3PR01MB10358:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0365649-56f5-4b59-23a6-08dd9c7473da
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?dkhOSk85RVEySEtrbVVvNk5BQTlGbC9ER3BQMXBWMGhQWEtBUU5MMDZENGN6?=
- =?utf-8?B?TlNzNWM2S3FuRU1hZGw4UGk1eVFzbGVTbStIakY3NmVzNzc1ZGFGeDd2djg5?=
- =?utf-8?B?U1FaemhLSkJaUE05d011QWRzSmJCcmg2aVpLNlFlVHJCRU92Q3VhQXU2SjY5?=
- =?utf-8?B?ay80ZU5JNUtrYUFHaFdqa082dTZvbFprTld2dmVXQnJxS1ZPWCtOU2o5NEEz?=
- =?utf-8?B?RnAvMjYzUHl1WDRoQlVqWEZ5U2VwNFV6SCtsVWlyNFhFMWl3U2pnRlRmQkEz?=
- =?utf-8?B?d0k4b0FMVlg4NitZcWMxZjVDb1ZvWUJ5Ykl5SGJFNmZ6TEhJbmx1OXh1QXNj?=
- =?utf-8?B?Z29YTlFCYnRudHlHZUdWREJqQlhHZXcwb044S3JDMU8yZlZIZlFHVzh1V2Iy?=
- =?utf-8?B?c2xqamFkMy9hNkZkTmlJekVNaGlPODg3MG5jdlBFZUQzbTNhOC9vUkYxOWt3?=
- =?utf-8?B?TVFkekhidXpGY2RNdkJaN01kWThKR1hMTlZtNnpZSEpxcVpkWko2cFBRUitL?=
- =?utf-8?B?TmNQTUt1bmEyUk01dktwcE9NZ1VqTU9MSjFiaFI2aGkybWdNdlhJOW9TQ2c2?=
- =?utf-8?B?Y2E3NUpUMVlpMGpqbjllV1JjNkplMnZxY3RkdVZsSW5FbW04U2l4dGdLS3FP?=
- =?utf-8?B?djhUNnlaZHArOVkwWlZybWlQQWxsc01pMWFWQzdkbVRzVHo5dzRacDVHSStx?=
- =?utf-8?B?aWxYcVlKYjJ6eUNuaHFCY3J1ZUtYbnZiRlB0U0JGcERNcHVzMGhOdTF0VUFa?=
- =?utf-8?B?ZmxHVmdqUS9OeUFGaWNJTnY3dUU5WjBRWHNBNTQ5TDNTSVhHdDNLSGxVbmRD?=
- =?utf-8?B?dnhtbWhnS1FqWDVhcFB1cE45L3ZhbWZqdys1MG5kVGh2TVpJZmh2T1pVMCtT?=
- =?utf-8?B?QUIrbWYzM0pDNTluZnRkSGp6eFZ3NkYxekhReXpyc1NWK1JJSVp1QkwySFU3?=
- =?utf-8?B?WnBFUHBiNnZXa1dDdkFwUjVoc2ZkQVR4YmVHUE5ITDliTklIc2JuTWJVSG92?=
- =?utf-8?B?aFJXdHIyZSswSWgrMmZzWVNmWEFGTlM4Z2RIZUtYNms5dkl4dE81MEtjVU9X?=
- =?utf-8?B?RVhmNGNPckhrd25BaFhJT21WcExwY1hQcDZtczRxZUVZRFdSakYvclI3MHJ3?=
- =?utf-8?B?WGhaY3JQZzNPSzNZdFdPVW5rbG5WNkJ1emkxbWdkRW54NGZENG9JRGp6aFlR?=
- =?utf-8?B?aG5BMzduM1M4ZG9XQXFSQWY3U2U4UmY2UUxyYlpKdWVOV1VNRFlWbWhlS0l3?=
- =?utf-8?B?emhXcVIvZnY5OWp1eTNxaDc2NlM1ZHVXTk14aEJsTHhPNnBoSC9kY1loV2pz?=
- =?utf-8?B?NHRJc0pNZWtkWm9iZEEzOEZacWFqS1ZKb0Nyb2pCSlN2QkxnMnAvK0ZCemxH?=
- =?utf-8?B?VTQ3MVhnWkxkK3I1dlBocncrRThwYkd2cnlVcHpKL1JZMUl5aVQrQjNlTjR4?=
- =?utf-8?B?ZmtXSnRHTmVHVTVUVk1YZzlrT3A1TzFmaW9PNVhLaERTa1JBZnhIalNKY01j?=
- =?utf-8?B?VjRZSldDQ1kwK2FNdzdvaDJFbU80Qnc4SlBkR1VkMHFUaXAzRGUyZk53b2JL?=
- =?utf-8?B?TG0vV0syamlZKzdjYUsrSDZGd0gwazVBaWRubTQrSkQ1N0lXdnBVTVZ5QWxQ?=
- =?utf-8?B?VFE2c3RVQlZER1pJUkNLNjBNU2l5SWUyd0FOUHVmOVcrNFUveW9OdjY4NHJN?=
- =?utf-8?B?aEo2OGI4RmJ5SXJPVVdhUFlPUURZd0kra2EzTTVwUWxXTXhSQUphM1JOSWVI?=
- =?utf-8?B?akRTaUt6ODNGbUdpcXI5aVdTZTJnaU5NTklXcmZoalM5TEJEU2daYU80OGw0?=
- =?utf-8?B?OEl0emE5ZXppYTZ0TFZSZUEvc0MxMTE4Q3FEOUxIVzRUSlU5aEdLZ2o4YkRu?=
- =?utf-8?B?M0VndG5KYXA4NU5iRkNyOGRRYjBEZGFOM1RuNHgwWUp4Rkg0Nm1KSjJDK2sx?=
- =?utf-8?Q?/blgxhw8a/M=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?NEJOb0k1UXlVbFR4OVpGeHFPQ3EvNUFqMG03WDk3YzFHMHVSSDBNdWJxa0Uz?=
- =?utf-8?B?eU8xa0RtaDVucnNwaE5KandwMWsvamI1cFBYdHZtbWNQc3FtOTVHLzNUYnk4?=
- =?utf-8?B?ZFFwb1Z6RU90bEpDRjdZWFVDL2YwQUYvUW9oWTA2VEFrcW9MdFZ5WlpkdEQ1?=
- =?utf-8?B?SDU4elM2d3lUajFDS1pBQy9VMVMzRCsyVUFvVVZHZkp4RDBFYzQyalBxc3Rs?=
- =?utf-8?B?UGc4M01XTVRkOFltSlVBSk5YTkI0S2NEdkxPM1lkaHAxZFV0TmNWNmpwbWNV?=
- =?utf-8?B?U2xZTE0yTXIvWk9qb3ZIZjVpSGFPYTBxem1QeEtnSG1jeTJ5MTRtbGRLOE9B?=
- =?utf-8?B?K3JUNE1lUTR5M2N3d1E5UGRuUmdBZ2dUUU0vVy9ZOFNZazRWYk9DZnFQcHYw?=
- =?utf-8?B?VW5uMWFnTmhMajVybDYvZVpmTzJ3aXIzRVB6WXFMZGd4T1Qreml6a1k0M0ln?=
- =?utf-8?B?OUZMUWpSc1AxbjhkUGJON1ArWlRwVGRLMGdGUDlHSS9pUDNwUWQydyt0S20r?=
- =?utf-8?B?NE5WZjhoSFhNZUhuVjJMZkZrblpoU2Z3UWdFNGhkM0FUS2IxMUd6OE4zZGpH?=
- =?utf-8?B?VjhvMGdybHl5bGprS2FFMFdZUDB6bHl5TUtBTnFuMTF3YlZjQmpPK3h3Wm00?=
- =?utf-8?B?MWxNRFVkdnUranZ1Zzl2NHhnSWxBdEhpVzJBenQwTFp5MGV3UGFFYmE4TjJk?=
- =?utf-8?B?cERGUytwalFYeGV3SWt4VXhBUkVjQmZxczJWbk5IQnVJY3h1OG83RTM0UGtV?=
- =?utf-8?B?a0JEV2UrTjA2Q0pMamRrb1VKVjBqZHFobTRmQkFtZ09taUJoVVNxZm1rWmcx?=
- =?utf-8?B?eGI0aHdLUzg2N2gvOVJsaGNoTEhjWDNWSEh6cUJ5QVptOG9DcXo5RUVuaHVx?=
- =?utf-8?B?MXlXWW52SHhxb1RYWURqWXBsSHJBTUI2ZUx2aXNTZDMwMTYraGFzOEpqQTFD?=
- =?utf-8?B?emdlam1CYUY2b0VsRnNHVG9vMzA3VHF3OUZyYzR5L1owSFBKaHNKZGFueGJx?=
- =?utf-8?B?WTN1VE1VNk84YXZtZkpnTEFxc1JHQ05JK2dJL1pUWFIyK1BEY3BTNzIzWEt3?=
- =?utf-8?B?Z3BOT0JmaFZoUC9PVXFGeXNHbTY4czEzekcybXVMQ2MzeDk1SEM5OEpSWFEy?=
- =?utf-8?B?YWdFQkJ3c0szaWY4cEVzVnB1U1pLNXRuSG43M3N3ZzNLVm9iNjByUFBWYklR?=
- =?utf-8?B?UFFMUjlnWWt0YkRzSXhoQVpqQklMMkhRZlorbVhVV0ZyOG9Ca09NSWlMZ1NI?=
- =?utf-8?B?NHo4aVU1VFBSMld3WW90MjNJcTdOVS80TDYvakN0YXluZGN1TkFURUd0TU9O?=
- =?utf-8?B?QkRZZUxkSDVuMXdlZTdmUk50Q1VEbkhkcTRqdWc5eUVWK1pYb2pOU2hTeDE1?=
- =?utf-8?B?c3hHa0FYemxpZSsyMENQZjFaNGRZdEwvWmhKaTFPcjBZdFVmUTJyS2RXUkVO?=
- =?utf-8?B?WThMckpqSy9pblBDcGk0UkVDcEw4WmhyTWdJdGNuTjZUZDE1Rm5wdm9icmNH?=
- =?utf-8?B?a0t2ODRqdUpUdGV2cUlRMlc5a0gvZXRBVnBZVWNmRk05cm15Qjd4MWNwWXVh?=
- =?utf-8?B?VlQ0V1dCSExkRjBvV2FJMjRQeGcyMmdXV1dqVWJGOCt1TXdnUE9tRTcrZFBt?=
- =?utf-8?B?Z3dBRnJuL2pCM1RMMC8weEZnclBjRFRrVUtEdmwwSlZPdWRmblRCekNRdlRt?=
- =?utf-8?B?dXVDVEU2cFc3MHVXaGtyMTJFUkhsVHVhRTBTWmJUa0FabXI0bHdGaWF5elI2?=
- =?utf-8?B?dkhPcTVIZFU5OFYyTi9hd2xmeVdLblBqMzNOSDJCeEJORkd1TS82bkRtNFZP?=
- =?utf-8?B?N0RIZHhiZ0k2QnFRV0YzUUhnWEJQZklzT2swT3VEMFBXOThtRDVINSttam1J?=
- =?utf-8?B?bFdPOEpNSXA3VUxzeUVsbWlSa09MT1drRFNCTERjTExTUkoveldxVEpZY3JZ?=
- =?utf-8?B?WGM3alJVKzM4RnlOVE0vUDdwQTgrZ1pVQ0JTQzB6M0lxVG1nK01mWkxHYVhv?=
- =?utf-8?B?S01YME9LRjBEWXNNRUtaQWdlM1NmT29Eejd1bEdrckx3NHdOVkh1N3pPRWsw?=
- =?utf-8?B?NG1oa2haRUQvYTVUNjJyZ1FIMFp0ZGdMYWpZd3RTZms3WjZxanpUTVJkMG5O?=
- =?utf-8?B?cDNLQm02WWp2OGNFTWJFemY5MUkzMkhZbi90VGgxMDI3UFBXUXRWelBHUUhy?=
- =?utf-8?Q?g0aAjqWtpY4VZOVatsTETkI=3D?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0365649-56f5-4b59-23a6-08dd9c7473da
-X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 16:43:33.4058
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J2+xO4+zh+2fDQB7zCuxXwaezAMp/HSHlm4csjOxJywf/KgYHOnrKMJef7oEQ/WW/7nsRoy1VwVjdebzHoh/pXgEAmvVVowMWswr0wiNyeNsRJZuAAApq2pghzhOiqyl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB10358
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yo2mrodmg32xw3v3pezwreqtncamn2kvr5feae6jlzxajxzf6s@dclplmsehqct>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.cz,gmail.com,google.com,vger.kernel.org];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
+X-Spam-Level: 
 
-Hi All,
-
-On 26/05/25 16:28, Laurent Pinchart wrote:
-> On Mon, May 26, 2025 at 04:13:23PM +0200, Tommaso Merciai wrote:
->> On 26/05/25 16:02, Tommaso Merciai wrote:
->>> On 26/05/25 15:18, Dmitry Baryshkov wrote:
->>>> On 26/05/2025 14:40, Maxime Ripard wrote:
->>>>> On Mon, May 26, 2025 at 01:19:23PM +0200, Tommaso Merciai wrote:
->>>>>> On 26/05/25 12:49, Laurent Pinchart wrote:
->>>>>>> On Mon, May 26, 2025 at 11:58:37AM +0200, Tommaso Merciai wrote:
->>>>>>>> On 26/05/25 11:26, Maxime Ripard wrote:
->>>>>>>>> On Mon, May 26, 2025 at 10:54:52AM +0200, Tommaso Merciai wrote:
->>>>>>>>>> After adv7511_mode_set() was merged into .atomic_enable(), only the
->>>>>>>>>> native resolution is working when using modetest.
->>>>>>>>>>
->>>>>>>>>> This is caused by incorrect timings: adv7511_mode_set() must not be
->>>>>>>>>> merged into .atomic_enable().
->>>>>>>>>>
->>>>>>>>>> Move adv7511_mode_set() back to the .mode_set() callback in
->>>>>>>>>> drm_bridge_funcs to restore correct behavior.
->>>>>>>>>>
->>>>>>>>>> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI
->>>>>>>>>> connector helpers")
->>>>>>>>>> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
->>>>>>>>>> Closes: https://lore.kernel.org/all/aDB8bD6cF7qiSpKd@tom-desktop/
->>>>>>>>>> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
->>>>>>>>>
->>>>>>>>> Explaining why, both in the commit log and the comments, would be
->>>>>>>>> nice.
->>>>>>>>> Because I can't think of any good reason it just can't work for that
->>>>>>>>> bridge.
->>>>>>>>
->>>>>>>> Sorry, let me clarify and share with you some details:
->>>>>>>>
->>>>>>>> adv7511_mode_set:
->>>>>>>>      - Is setting up timings registers for the DSI2HDMI bridge in
->>>>>>>> our case
->>>>>>>>        we are using ADV7535 bridge.
->>>>>>>>
->>>>>>>> rzg2l_mipi_dsi_atomic_enable:
->>>>>>>>      - Is setting up the vclock for the DSI ip
->>>>>>>>
->>>>>>>> Testing new/old implementation a bit we found the following:
->>>>>>>>
->>>>>>>> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI-
->>>>>>>> A-1:800x600-56.25@XR24
->>>>>>>> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
->>>>>>>> [   49.273134] adv7511_mode_set_old: drm_mode_vrefresh(mode) = 56
->>>>>>>> [   49.281006] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
->>>>>>>>
->>>>>>>> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI-
->>>>>>>> A-1:800x600-56.25@XR24
->>>>>>>> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
->>>>>>>> [   74.076881] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
->>>>>>>> [   74.092130] adv7511_mode_set: drm_mode_vrefresh(adj_mode) = 56
->>>>>>>>
->>>>>>>> Same result but different timing (in function call perspective):
->>>>>>>>
->>>>>>>>      - old: adv7511_mode_set() is call before
->>>>>>>> rzg2l_mipi_dsi_atomic_enable()
->>>>>>>>      - new: adv7511_mode_set() is call after
->>>>>>>> rzg2l_mipi_dsi_atomic_enable()
->>>>>>>
->>>>>>> What is "old" and "new" here ? Is it before and after Dmitry's
->>>>>>> patch, or
->>>>>>> before and after yours ? Please be precise when describing problems.
->>>>>>
->>>>>> Sorry, you are completely right:
->>>>>>
->>>>>>    - old --> before Dmitry's patch
->>>>>>    - new --> after Dmitry's patch
->>>>>>
->>>>>>>
->>>>>>>> What do you think? Thanks in advance.
->>>>>>>
->>>>>>> You're only explaining above what the "old" and "new" behaviours are,
->>>>>>> and claiming one of them is causing an issue, but you're not
->>>>>>> explaining
->>>>>>> *why* it causes an issue. That's what your commit message is
->>>>>>> expected to
->>>>>>> detail.
->>>>>>>
->>>>>>
->>>>>> Thanks for the clarification! :)
->>>>>> I will send v2 explaining better this.
->>>>>
->>>>> In particular, if the driver needs to have mode_set called before
->>>>> atomic_enable, you should say why moving the call to mode_set earlier in
->>>>> the function wouldn't work.
->>>>
->>>> It might be the same thing as we had on PS8640: it had to be brought
->>>> up before the host starts the DSI link, so that there is no clock
->>>> input on the DSI clock lane.
->>>>
->>>
->>> Some updates on my side:
->>>
->>> I'm not seeing any differences from a regs perspective when using the
->>> old driver version (before Dmitry's patch) and the new driver version
->>> (after Dmitry's patch).
->>>
->>> In particular, i2cdump -f -y 7 0x4c shows me the same result.
->>
->> Please ignore this (wrong address)
->>
->> The right test is: i2cdump -f -y 7 0x3d
->>
->> And I'm seeing the following differences:
->>
->> # WORK:
->> reg | val
->> 0x3d → 0x00
->> 0x3e → 0x00
->>
->> # DON't WORK
->> reg | val
->> 0x3d → 0x10
->> 0x3e → 0x40
->>
->>> Unfortunately, since I don't have the ADV7535 datasheet, I believe this
->>> issue may be related to the functions call sequence.
+On Mon 26-05-25 23:12:20, Sergey Senozhatsky wrote:
+> On (25/05/26 14:52), Jan Kara wrote:
+> > > > We don't use exclusive waits with access_waitq so wake_up() and
+> > > > wake_up_all() should do the same thing?
+> > > 
+> > > Oh, non-exclusive waiters, I see.  I totally missed that, thanks.
+> > > 
+> > > So... the problem is somewhere else then.  I'm currently looking
+> > > at some crashes (across all LTS kernels) where group owner just
+> > > gets stuck and then hung-task watchdog kicks in and panics the
+> > > system.  Basically just a single backtrace in the kernel logs:
+> > > 
+> > >  schedule+0x534/0x2540
+> > >  fsnotify_destroy_group+0xa7/0x150
+> > >  fanotify_release+0x147/0x160
+> > >  ____fput+0xe4/0x2a0
+> > >  task_work_run+0x71/0xb0
+> > >  do_exit+0x1ea/0x800
+> > >  do_group_exit+0x81/0x90
+> > >  get_signal+0x32d/0x4e0
+> > > 
+> > > My assumption was that it's this wait:
+> > > 	wait_event(group->notification_waitq, !atomic_read(&group->user_waits));
+> > 
+> > Well, you're likely correct we are sleeping in this wait. But likely
+> > there's some process that's indeed waiting for response to fanotify event
+> > from userspace. Do you have a reproducer? Can you dump all blocked tasks
+> > when this happens?
 > 
-> You could try to get the documentation from Analog Devices.
+> Unfortunately, no.  This happens on consumer devices, which are
+> not available for any sort of debugging, due to various privacy
+> protection reasons.  We only get anonymized kernel ramoops/dmesg
+> on crashes.
 > 
-> This being said, the above registers are documented in the ADV7511
-> programming guide, which is publicly available. They may differ in the
-> ADV7535 though.
+> So my only option is to add something to the kernel, then roll-out
+> the patched kernel to the fleet and wait for new crash reports.  The
+> problem is, all that I can think of sort of fixes the crash as far as
+> the hung-task watchdog is concerned.  Let me think more about it.
 > 
->>> I agree with Dmitry's theory.
->>>
->>> Let me gently know if you need some more test on my side. Thanks in
->>> advance.
+> Another silly question: what decrements group->user_waits in case of
+> that race-condition?
 > 
+> ---
+> 
+> diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+> index 9dac7f6e72d2b..38b977fe37a71 100644
+> --- a/fs/notify/fanotify/fanotify.c
+> +++ b/fs/notify/fanotify/fanotify.c
+> @@ -945,8 +945,10 @@ static int fanotify_handle_event(struct fsnotify_group *group, u32 mask,
+>         if (FAN_GROUP_FLAG(group, FANOTIFY_FID_BITS)) {
+>                 fsid = fanotify_get_fsid(iter_info);
+>                 /* Racing with mark destruction or creation? */
+> -               if (!fsid.val[0] && !fsid.val[1])
+> -                       return 0;
+> +               if (!fsid.val[0] && !fsid.val[1]) {
+> +                       ret = 0;
+> +                       goto finish;
+> +               }
+>         }
 
-FYI, I've tested the following pipeline:
+This code is not present in current upstream kernel. This seems to have
+been inadvertedly fixed by commit 30ad1938326b ("fanotify: allow "weak" fsid
+when watching a single filesystem") which you likely don't have in your
+kernel.
 
-DU1 (RGB Output) -> adv7513 -> HDMI Panel
+								Honza
 
-All working fine on my side with the Dmitry's patch.
-Same driver, But broken on DSI interface(ADV7535)
-
-Thanks & Regards,
-Tommaso
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
