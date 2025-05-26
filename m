@@ -1,90 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3431FA14E;
-	Mon, 26 May 2025 11:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7624910E3;
+	Mon, 26 May 2025 11:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258942; cv=none; b=d+KOEWEWFohijRGxYy+H6/v/8342QHfCuhQeek8h8tEWlLoskh7lPAM9lInp/+W41Mm5rkPiYDq0MuCAZwHpTmQXB5cx+dGauY8hwLUxqYNund8n4PIAd/+pqhiDPqbTN8cbLUGhRdUBSNDz6VRKYYoBT4Vj11n/ifoTHD80gyk=
+	t=1748259070; cv=none; b=Dr4UXvkZPiItQzpqJPHcLlE57qI5Uu+8DIJnEUw9PMA/Tu2Dl1N+JJ+76Pr4FJ2KC4R3r4MiQuu9BpfzCTlsE4eLoQXreTIS0QvYVYyS+jKVt2rEUxyOnhwcd7b67loib2RfgHKJd5s3sXXKCnioF0oFysPARZ9bDWQWRv2vdwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258942; c=relaxed/simple;
-	bh=wZGfiWYVYSInJYNXkga0gk8tFNqCzxPMMLGzyZzTFy4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=dF2hb2xkizNB1bJ2AjXHsjvE+9CCL54ydYrAjZmdzb1CNaYOnIvgeY8RJX3mmP+A1T2MCO38sSOoz2kFrxVPpgbxIy8TRCEpAPHcot6gAddZUWxu5Q3+g5Uo9MCb941dR7hJkcBcsOUWCDgsxsMjnLsk+9j9nQm/YCopzRaoDE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lFdGv/CE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lFdGv/CE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30424C4CEE7;
-	Mon, 26 May 2025 11:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748258941;
-	bh=wZGfiWYVYSInJYNXkga0gk8tFNqCzxPMMLGzyZzTFy4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=lFdGv/CEZw1hKNeDE0Ks7bL79xRdXrXWHwyJ/sqNw1dwFFuOwn0P2TnrImlv7RoQg
-	 ugS8p7xMTaFRTnQhI6iwtssQscNCg2o74IsqPtujXvBjE0ZC59C5F0ra/ORDzUagBL
-	 Do5HmR7FxiX4TVwBPvgtL5KqejyOqbnDY2KszgIUhXlvuaZnD3yEsxD/uIdARFLw36
-	 kM6IF5DD14CiWxILs3BiMiWrXuG9uIXq+GW9C4j3d2ZSjU/6SSmdDsSr66rlWGjXQR
-	 Y0EYYwEEccwxKoZF+fIk6/C6FQOhU8aQWymeZLPCx2YtpkcQfEuDmMxeOtor47Z8+C
-	 4zGb9qaWRvOIw==
+	s=arc-20240116; t=1748259070; c=relaxed/simple;
+	bh=aWKAJqxQ5cA15GSoq6PTN/J56VFxZG1kjousgJwks5o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GeKWMbxMHCOL/C14v+e5o5vfQphXKE5rlprjaBW4MTIBVD3zs2p3oTVGnLdOCisFVSg3hn3Ng1HDaT4GNw3g+BtcNsGIl1PkZ1s5SpTY34eZrkU9yv4O3LuPGOFbU340l/lUIpyAMx4rpbbQ/6WWNM3F31kuJa6ESD5y5/loaKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b5YSf5LpYz13LvC;
+	Mon, 26 May 2025 19:29:22 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9387C18006C;
+	Mon, 26 May 2025 19:31:04 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemh100008.china.huawei.com (7.202.181.93) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 26 May 2025 19:31:03 +0800
+From: Lifeng Zheng <zhenglifeng1@huawei.com>
+To: <rafael@kernel.org>, <viresh.kumar@linaro.org>, <robert.moore@intel.com>,
+	<lenb@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-acpi@vger.kernel.org>, <acpica-devel@lists.linux.dev>,
+	<linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>,
+	<cenxinghai@h-partners.com>, <yubowen8@huawei.com>, <zhenglifeng1@huawei.com>
+Subject: [PATCH 0/3] cpufreq: CPPC: Some optimizations for cppc_cpufreq.c.
+Date: Mon, 26 May 2025 19:30:54 +0800
+Message-ID: <20250526113057.3086513-1-zhenglifeng1@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 26 May 2025 13:28:49 +0200
-Message-Id: <DA622GQOFB4B.2MDK03ECPO3DA@kernel.org>
-Subject: Re: [PATCH v10 1/5] rust: retitle "Example" section as "Examples"
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>, "Michal Rostecki"
- <vadorovsky@protonmail.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex
- Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary
- Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Brendan Higgins" <brendan.higgins@linux.dev>, "David Gow"
- <davidgow@google.com>, "Rae Moar" <rmoar@google.com>, "Danilo Krummrich"
- <dakr@kernel.org>, "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>, "Thomas Zimmermann"
- <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, "Luis Chamberlain"
- <mcgrof@kernel.org>, "Russ Weight" <russ.weight@linux.dev>, "FUJITA
- Tomonori" <fujita.tomonori@gmail.com>, "Rob Herring" <robh@kernel.org>,
- "Saravana Kannan" <saravanak@google.com>, "Peter Zijlstra"
- <peterz@infradead.org>, "Ingo Molnar" <mingo@redhat.com>, "Will Deacon"
- <will@kernel.org>, "Waiman Long" <longman@redhat.com>, "Nathan Chancellor"
- <nathan@kernel.org>, "Nick Desaulniers" <nick.desaulniers+lkml@gmail.com>,
- "Bill Wendling" <morbo@google.com>, "Justin Stitt"
- <justinstitt@google.com>, "Andrew Lunn" <andrew@lunn.ch>, "Heiner Kallweit"
- <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>, "David S.
- Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Bjorn
- Helgaas" <bhelgaas@google.com>, "Arnd Bergmann" <arnd@arndb.de>, "Jens
- Axboe" <axboe@kernel.dk>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>
-Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>,
- <dri-devel@lists.freedesktop.org>, <netdev@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <llvm@lists.linux.dev>,
- <linux-pci@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <linux-block@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-1-6412a94d9d75@gmail.com>
-In-Reply-To: <20250524-cstr-core-v10-1-6412a94d9d75@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
-On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
-> This title is consistent with all other macros' documentation,
-> regardless of the number of examples contained in their "Examples"
-> sections.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+This patch series makes some minor optimizations for cppc_cpufreq.c to
+makes codes cleaner.
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+Lifeng Zheng (3):
+  cpufreq: CPPC: Remove cpu_data_list
+  cpufreq: CPPC: Return void in populate_efficiency_class()
+  cpufreq: CPPC: Remove forward declaration of
+    cppc_cpufreq_register_em()
 
----
-Cheers,
-Benno
+ drivers/cpufreq/cppc_cpufreq.c | 59 +++++++++-------------------------
+ include/acpi/cppc_acpi.h       |  1 -
+ 2 files changed, 15 insertions(+), 45 deletions(-)
+
+-- 
+2.33.0
+
