@@ -1,42 +1,34 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1768B148832;
-	Mon, 26 May 2025 06:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C1A148832;
+	Mon, 26 May 2025 06:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748242490; cv=none; b=eOYIeBv4AQbAWsqsARR7/yTF9CA9ZXzDOOIUowX1SPUyOh40FthCLX6ypHRX2+87atr3ZOwENoI3AukZPL7hx3ExUPvGKbhPd8gs/JSfzUuOUbE7BNZ05M8XhQLi8Vgfonm1rLcI3oDIXieena8mE9EKEdgyisnGAMuPdrUHKUc=
+	t=1748242496; cv=none; b=NZIv3hpA+3lfzgrdkSSSbHjFBzypZL0x4o2PL3u1l0hGD21EIFkVeX4CyLrIej3ZBOACRTwqDQRTTSWIdW4d8+QMWvM5RC0dbFl2a8y7vZIgUWpSbcd7Uv/HIlE5AloGJJeGWE9CmEMtXC08Whcd0W3IazuSzkHbI5vHBLJYctI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748242490; c=relaxed/simple;
-	bh=osuS7BKWqOzSF3PaONFsCZYNsU9T5QvIVA2MXQscbUs=;
+	s=arc-20240116; t=1748242496; c=relaxed/simple;
+	bh=MdTOaq3posLXtFIw77bYtXg1zoLZtm5ps1W3lVWfd5I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8ly8p96v3mQQcr5k0iMOEcT/rMIZYp4w1aZ0emWfeSIKfmsjDrvUHPeD/0nRwU+wknx9PhOFCiHQC8hI9chJkcBKbLyL5PNIA/gAeyu75U+SxZqoqt0MM54dtw0WxMwSjchNaXMZi4U9c50uUrHLBA0rhOfL2XS8Kh3YjTkz/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E66FB2C01633;
-	Mon, 26 May 2025 08:54:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9CA99250B2A; Mon, 26 May 2025 08:54:37 +0200 (CEST)
-Date: Mon, 26 May 2025 08:54:37 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, cassel@kernel.org,
-	wilfred.mallawa@wdc.com
-Subject: Re: [PATCH 1/2] PCI: Save and restore root port config space in
- pcibios_reset_secondary_bus()
-Message-ID: <aDQQLU1wrgstypEi@wunner.de>
-References: <20250524185304.26698-1-manivannan.sadhasivam@linaro.org>
- <20250524185304.26698-2-manivannan.sadhasivam@linaro.org>
- <aDLFG06J-kXnvckG@wunner.de>
- <qujhzxzysxm6keqcnjx5jvt5ggsoiiogy2kpv4cu5qo4dcfrvm@yonxobo7jrk7>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BEvsSJWLclh6Zm43vdoS6NG2KES6TY94ZUKtn/MmoLKO9pDhe8jCA3Nh/tGAtNnlPh6V0hyvUg/hlgIxLZcvLzQZcuJSM1Jey//B618kx53T3+g3VlH1z8jXtBTsxPs9banvsHQhQYZkooZxvXFnXqNic8FeOzftzno3cruyI00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 9583068AFE; Mon, 26 May 2025 08:54:48 +0200 (CEST)
+Date: Mon, 26 May 2025 08:54:48 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: mhklinux@outlook.com
+Cc: simona@ffwll.ch, deller@gmx.de, haiyangz@microsoft.com,
+	kys@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	akpm@linux-foundation.org, weh@microsoft.com, tzimmermann@suse.de,
+	hch@lst.de, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 3/4] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+Message-ID: <20250526065448.GB13065@lst.de>
+References: <20250523161522.409504-1-mhklinux@outlook.com> <20250523161522.409504-4-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,24 +37,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <qujhzxzysxm6keqcnjx5jvt5ggsoiiogy2kpv4cu5qo4dcfrvm@yonxobo7jrk7>
+In-Reply-To: <20250523161522.409504-4-mhklinux@outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Sun, May 25, 2025 at 01:28:18PM +0530, Manivannan Sadhasivam wrote:
-> On Sun, May 25, 2025 at 09:22:03AM +0200, Lukas Wunner wrote:
-> > "The device state" is ambiguous as the Root Port is a device itself
-> > and even referred to by the "dev" variable.  I think what you mean
-> > is "The Endpoint state".
-> > 
+On Fri, May 23, 2025 at 09:15:21AM -0700, mhkelley58@gmail.com wrote:
+> Commit 37b4837959cb ("video: deferred io with physically contiguous
+> memory") from the year 2008 purported to add support for contiguous
+> kernel memory framebuffers. The motivating device, sh_mobile_lcdcfb, uses
+> dma_alloc_coherent() to allocate framebuffer memory, which is likely to
+> use alloc_pages(). It's unclear to me how this commit actually worked at
+> the time, unless dma_alloc_coherent() was pulling from a CMA pool instead
+> of alloc_pages(). Or perhaps alloc_pages() worked differently or on the
+> arm32 architecture on which sh_mobile_lcdcfb is used.
 > 
-> Yes! Will fix them while applying, thanks!
+> In any case, for x86 and arm64 today, commit 37b4837959cb9 is not
+> sufficient to support contiguous kernel memory framebuffers. The problem
+> can be seen with the hyperv_fb driver, which may allocate the framebuffer
+> memory using vmalloc() or alloc_pages(), depending on the configuration
+> of the Hyper-V guest VM (Gen 1 vs. Gen 2) and the size of the framebuffer.
 
-ICYMI, current controller/dw-rockchip branch still uses
-"The device state", not "The Endpoint state" in commit
-56eecfc8f46f ("PCI/ERR: Add support for resetting the
-Root Ports in a platform specific way").
+That langugage is far too nice.  The existing users of fb_defio are
+all gravely broken because they violate the dma API restriction to
+not poke into the memory.  You can't speculate what you get from
+dma_alloc_coherent and it can change behind you all the time.
 
-Otherwise LGTM.
+> Fix this limitation by adding defio support for contiguous kernel memory
+> framebuffers. A driver with a framebuffer allocated from contiguous
+> kernel memory must set the FBINFO_KMEMFB flag to indicate such.
 
-Thanks,
+Honestly, the right thing is to invert the flag.  What hypervs is doing
+here - take kernel memory in the direct mapping or from vmalloc is fine.
 
-Lukas
+What others drivers do it completely broken crap.  So add a flag
+FBINFO_BROKEN_CRAP to maybe keep the guessing.  Or just disable it
+because it's dangerous.
+
