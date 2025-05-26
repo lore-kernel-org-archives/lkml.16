@@ -1,145 +1,77 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B99EEB5;
-	Mon, 26 May 2025 01:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEB4EEB5;
+	Mon, 26 May 2025 01:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748221784; cv=none; b=dTq2OYwAsXDvmcDwBR54BichkspwoGX3n9ChciLPgv3U6EN5DpQsShLjBKSRNt8XK67Izkhq0QRpId3punk6fsTa04rGbpCXcCeoZJwyljAWXcfMbZqp5mSi8TvFIy6/0v4WM6cAjwRtHMxZoBJqSkMvhzz1e9A0oF4nDE3tlXc=
+	t=1748221883; cv=none; b=WO0IIVQczYIxq6u5zTqHRthCN1WEtbEN6bVxfXhYNHywF38Jwf0Ri3leBrh1sl+IgzQOTMoEf+17Mj7K6A14zS0TfSum+JVDFD2MAkHweoH1KyKF8KAhEW0n6zHdTjLLFDew1NO/vQBQK73yh3uOJx86h2gLs93d95LECOv/JEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748221784; c=relaxed/simple;
-	bh=lyQbcMnMs8dX4DMzsRHTjruddW9G7tL/vXLm73bUpXI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pLit5+l4E1YyaQVG2OW7ZuB2MKjNZGRk1guoNNQFPLPUS1vtTqWxEtZmD/SJyx7QTJkWBNd4EK+wePqS4V46fAndFsUMtlQL9uNfno+TDcYpv1XiWZWwaAzypPDEPFBfmaALLbv3uPT98Eg5SdxnRXBnfSC1Qz8CiiqEMagw7r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dgt9sDO6; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1748221883; c=relaxed/simple;
+	bh=qRqEQb252iaBK7d6Hgik+7uMTw2Xwx0bPvuaYn2hEdo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WDOPTWJnkaT2n2ltV4KPhmFEc05ixbYGLNFmVd1yML9avnWDoyEPDX3twbgzX4+cbNUYtDw7WTPLiRQz2SNTadGjAhjSn4hyxVyEz2wC8gp1W/3ab37YHUVpNmAgPpqm3iSU1AiBloRXMt1UWS+GSp36CZm7ZfkrFfDnDCN6j4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iEifvHuG; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dgt9sDO6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1748221749;
-	bh=0Vtc3S2mEro9O/XVJHGv22xQ3o76ZyvNYJM4dyAwtnw=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=dgt9sDO689Wi5nGqPV1fjq88O628b/cy2LcLM9btd4zOOct+QvZL+/yfNF7WPD4q8
-	 +PgIPxwqtgX8Vs0Ubv/dLBLrsVn4GymFmXDoilnSumis+kEKOJ/rGj1rU8bqiq49bR
-	 EGI9HmxTEgbAW6SzOem3/7uPv/v3Rt02U9weT+2s=
-X-QQ-mid: zesmtpip2t1748221739t553697ba
-X-QQ-Originating-IP: eUnGCWoyBzA2+FGT0SFHQPqzlWFCJXGLdr9ji9qQKfs=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 26 May 2025 09:08:57 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10172135018990717116
-EX-QQ-RecipientCnt: 8
-From: tuhaowen <tuhaowen@uniontech.com>
-To: rafael@kernel.org
-Cc: huangbibo@uniontech.com,
-	len.brown@intel.com,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	pavel@kernel.org,
-	tuhaowen@uniontech.com,
-	wangyuli@uniontech.com
-Subject: [PATCH v3] PM/console: Fix the black screen issue
-Date: Mon, 26 May 2025 09:08:54 +0800
-Message-Id: <20250526010854.7834-1-tuhaowen@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CAJZ5v0jazfh7A8-6werFtsQ=XOYzDioYh19p4S4v=0to2Na4Hw@mail.gmail.com>
-References: <CAJZ5v0jazfh7A8-6werFtsQ=XOYzDioYh19p4S4v=0to2Na4Hw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iEifvHuG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748221882; x=1779757882;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qRqEQb252iaBK7d6Hgik+7uMTw2Xwx0bPvuaYn2hEdo=;
+  b=iEifvHuGW2ZUtqbx0z26YjqE8/kwnF+aZi8eLTzIRJbaimcpd++pALqi
+   l4OaMU6GNumGyReYvEL9QkbTzo68rRyKbeG2xr6rEJdaXkVr1RNvYF+KB
+   /3pigrGXUMaTFDKiCOkRZyS8/GHIP0GEkB6v+p4Tg8lR40bUra5mxLvQI
+   NTWV7P7KSzhPC+/gzIjJkk6PeXBEadl+z3FJK6djTu08FL3WB0v11gmer
+   k9sx6Ru7g03Bf6ykmbxWLGkkr6p6x5ILjFC7J62QfMl8rL5j2zOO0NP0Q
+   G6USfH/J7OodNgKtKc1Vj6E8L7Tl7zEneZUT6QnmJ5HmsBl5dUuHpWG2r
+   w==;
+X-CSE-ConnectionGUID: Uox+4q76SmaVDEwZLAMXHw==
+X-CSE-MsgGUID: D5BtXZvtTNe75h8tqVFilQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="53993793"
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="53993793"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 18:11:21 -0700
+X-CSE-ConnectionGUID: QicwbyTGQPCDmw7tSpgWCw==
+X-CSE-MsgGUID: SuG/HLrFTwq0RP67UwzE9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="142156035"
+Received: from yungchua-mobl2.ccr.corp.intel.com (HELO [10.246.105.120]) ([10.246.105.120])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 18:11:19 -0700
+Message-ID: <8b31c5a4-14ba-42ef-812a-b277656c5250@linux.intel.com>
+Date: Mon, 26 May 2025 09:11:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OQNQM5UP8StMNVxiEF9KO90pLI83zZkp1BXVXv0FlKAuNWI+HzXGNM81
-	iDroMDgXmijz63lzi70iM4UI+yvGSZyBEQJZYzxlz8B75lPGMpdtgc9YbB661Ttmb0lk6YC
-	9kdqUlm/LyzBwPO+pdLIUrMxHpt2q/4RjunYuCf+3932pjpP58GowkwZWovfpH2KB8PU2pz
-	nF7E9sN+acM9qTUpQu1AoEcROzqf1RJJYTptkKFQdimySqkLeKAcFLygvtHwl+IgnAAGAWc
-	kEmhzb2RQ/XfheZy4l+zi7jM4klsS+aGomx1mWMGQeEDA74Ya2qYdtkCWIgi9QmzLQ307y3
-	3FowIqs3ae+aB2eWd9M317tEiaDePEtb969owGRTtmf4G+M5yw/60smDqyU4gxBJkEioH/X
-	dSdoHtoOPRtc4gUBuuRBg/A5sBJB7eoQ51VJa+xURQg96bozxLJYOFc1B7gtRhWIrhDzdq1
-	feI5MD4eBsdjjctYH8gmFITXXMEZiGf6vvp2d/DypZf8q30tXe+YStgOKDtt+9wAGpzrOfm
-	tFGRxBpXTaqgE+rxArpU7I+0L+jFbTHeC6N0Io1a5XSFiVBp0rjIaJVCuIQJ6Wgn9u9iYBV
-	HVxDxSRarWcqqczYcMl4e7BQ6H0rmnVUKZR8VUufHbVd4HE/8JbacM6oNVKmhiaCUo8boKQ
-	ablzDDzFGLFgHt1bMZiByHss2uTMY4LSM6hHY0XCqTo1KAj4Mq2wps1Jg8Onrpq8YXHZjkf
-	d5oWgB9LlFwQLaolyBYq4RSGY6UJa/l9oupweCw8xYZb1P9LNsFsf561fNt/H4TQJXZFi9J
-	hsri9iegq4k0dj5pMwDuVp1b4F8r+Bjp9kAQbSHVQR1JZPeMljPUv20W4zi7iDRE58xBMR+
-	e/uVoV0pIfgqSEhCwG2MzEUIie1tSrHQCJY00NmG4Xy/Ty5g9TCfeRlxSj4Nuu50RPbayLp
-	JUgYiLsFJMZIRm/ihIWVDJBIx3dbBMQlPK9Qkf5/a3bVKG4JMc5RytNkePVPfrMou9QM1Sg
-	2EYf/LVBFy0eFzOveY
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soundwire: intel_ace2.x: Use str_read_write() helper
+To: long.yunjian@zte.com.cn, vkoul@kernel.org
+Cc: pierre-louis.bossart@linux.dev, sanyog.r.kale@intel.com,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn, fang.yumeng@zte.com.cn,
+ ouyang.maochun@zte.com.cn
+References: <20250523141910793yUFpjomfu0byK_yFddHQu@zte.com.cn>
+Content-Language: en-US
+From: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20250523141910793yUFpjomfu0byK_yFddHQu@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When the computer enters sleep status without a monitor
-connected, the system switches the console to the virtual
-terminal tty63(SUSPEND_CONSOLE).
 
-If a monitor is subsequently connected before waking up,
-the system skips the required VT restoration process
-during wake-up, leaving the console on tty63 instead of
-switching back to tty1.
 
-To fix this issue, a global flag vt_switch_done is introduced
-to record whether the system has successfully switched to
-the suspend console via vt_move_to_console() during suspend.
-
-If the switch was completed, vt_switch_done is set to 1.
-Later during resume, this flag is checked to ensure that
-the original console is restored properly by calling
-vt_move_to_console(orig_fgconsole, 0).
-
-This prevents scenarios where the resume logic skips console
-restoration due to incorrect detection of the console state,
-especially when a monitor is reconnected before waking up.
-
-Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
----
-Changes in v3:
-- Changed the type of `vt_switch_done` from `int` to `bool`.
-- Link to v2: https://lore.kernel.org/all/20250516084011.29309-1-tuhaowen@uniontech.com
-- Link to v1: https://lore.kernel.org/all/20250516034643.22355-1-tuhaowen@uniontech.com
----
- kernel/power/console.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/power/console.c b/kernel/power/console.c
-index fcdf0e14a47d..2a0722038f02 100644
---- a/kernel/power/console.c
-+++ b/kernel/power/console.c
-@@ -16,6 +16,7 @@
- #define SUSPEND_CONSOLE	(MAX_NR_CONSOLES-1)
- 
- static int orig_fgconsole, orig_kmsg;
-+static bool vt_switch_done;
- 
- static DEFINE_MUTEX(vt_switch_mutex);
- 
-@@ -136,15 +137,19 @@ void pm_prepare_console(void)
- 	if (orig_fgconsole < 0)
- 		return;
- 
-+	vt_switch_done = true;
-+
- 	orig_kmsg = vt_kmsg_redirect(SUSPEND_CONSOLE);
- 	return;
- }
- 
- void pm_restore_console(void)
- {
--	if (!pm_vt_switch())
-+	if (!pm_vt_switch() && !vt_switch_done)
- 		return;
- 
-+	vt_switch_done = false;
-+
- 	if (orig_fgconsole >= 0) {
- 		vt_move_to_console(orig_fgconsole, 0);
- 		vt_kmsg_redirect(orig_kmsg);
--- 
-2.20.1
-
+On 5/23/2025 2:19 PM, long.yunjian@zte.com.cn wrote:
+> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+> 
+> Remove hard-coded strings by using the str_read_write() helper.
+> 
+> Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+> Signed-off-by: Yunjian Long <long.yunjian@zte.com.cn>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
