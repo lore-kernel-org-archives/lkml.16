@@ -1,145 +1,146 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9351E5213
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20DF1E9B0B;
+	Mon, 26 May 2025 08:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748248079; cv=none; b=CQIF00WoIqeR1jBjAvt7fJE0WUv9/IWgYVmKZ8rDQLWt2ILMrM/p9RWyHLocaPwYrEiSLEGcFuKAVjfnROu7rCO4Yq1qIlBiG3f65hEeFBH9R36PhuzslkDzgLd1L7nshHUaUEXnn1P5VSAKBUNnr6YbSPBSCROpFXKyRckeKK8=
+	t=1748248085; cv=none; b=qB5TbNyLdoLhQIcmAIP23UmqYFZXHsQBUdY00oJA9h6qAsPXOe5IGjKW38yAmd1ZGAyVeDa1xM04GQ0rMYE3haPo2LgJxvz+uw0CVPNYuMMdUCVA8PmvhsHi3y+wyCCaaxkmbah4OnIGSuD/7jk9caRg2e4oGg5O0YQnkunQ84M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748248079; c=relaxed/simple;
-	bh=tvR5PRn7x4LAHfOEndwVRZgDVfRb/y/8vcNMeiIGbLg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jKVA+4v1jH/ko4QHo/0Epsdt88Lr4x/kTF99eboDmbOyQdq/jg6h/K9YtxOilsxYtPraIp+cG/hLQ5DtAafZXHpiTkggBaGpwAHpAd60fKRaHdI+n6DxvU2ar9/jx9IwFp1Ie4pyCAkpwyxqnZyylHZUtMpZo6RAinww05OoOgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dD1ATx9u; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dD1ATx9u"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a374f727dbso1810287f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748248076; x=1748852876; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5G6tpDiyouJsVacd8rEiVDib8LJf2JZCq2348YM5t4Y=;
-        b=dD1ATx9uNOXg0G2Wca75EJtmaD9FLTsAihnnyap91eUAD0rylw8ogw08JHI/mnuqlg
-         uvmBZnXDahwjucrY4uOiFaVbTADmBTVsruTdPGS4ayb0JNcMoVuzzhdUdvC5h6rSrw3P
-         MB1xNc1P7KO/x/lrzRqM2E+mBPM3DAAkdEPjTyQzJY+uV3Jxp1bCdk3gdk2P+ysi7fZZ
-         Enz0A6GNfGJkIoykJAmkEwz0uY0QyVy/tLP5qPnXs7ZdM+PLyVih6y+mCwxQtmldNkxO
-         RyTLHEIpiW6L0u9kwWzOi6uPvxn1l+LEKh5fGGFG0Ewk+thvjKLWqiESlSLJUyuvyaJY
-         Cb9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748248076; x=1748852876;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5G6tpDiyouJsVacd8rEiVDib8LJf2JZCq2348YM5t4Y=;
-        b=EIVx4ncwTKNyNaIyokg4OA7nEMvRTahWLdim0k88XsgC0vjz8CqIxZWi+Xy2oq30p3
-         Sihg97NGzL2Cw/RRI+Fn3+k4f8I0X6QRIoTj5mDgqwoUVQdkSfuedQM0qs5Edczz6d8E
-         PeZygrVWbo8IPBeXaxi8suvBCDAB9CkXvFyfaxEHUUG0ssW28HUFBKorF24hWVWDT/Eb
-         yBSieDhl+4TSX8CfEB4J76hAowrLiG98uNrr/Kj0TYniXvufpc/gXegcvCb6vnDUz4m8
-         KS9+FPYJgr7tTLX51ptheEZSrJhnirh5rvJONis6Aguj6hFBbeNfLwnaGLhG85O4jj/6
-         uXnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWU3v6vFMnV7A5bxfdcQOOZFmoWvyHIH5DvC/JH7PsJSSqMfBPCq5AJllrhUzIy84lxDwCG/nLrxve+ar4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM5rKSv+OjlI0HDvPLYNpmh57moa8NKYO238Dp5po7vGxhVUJd
-	Y/ALozN0Hlrj6Rg2Nn6Kr6X8YyMhCyn67QuWrGJzNCoX+HojpP46eEVgIcUbWWGO0Vc=
-X-Gm-Gg: ASbGncs0NOKyU1n1FmCifS1AhOE0PSyp+xHYoGY0eGcx/MLX7tP8k60HhLMscTucSEh
-	/haQZKcljLdp/n0slYGUmNAp5IhRNMaY4QCbywBMZhnMYmT3GN8IPG+fUnYYfQ0bMqvzezMRrvC
-	ZiqBrXOujo0oSN7NcyBViuc70q+1j9K4kL8c2eMY9LFlxuyLCfHnLOCLIawPpN5IJWtXATOeE1u
-	rBpVcdRpSegWu8F2znjVG0bqd/NJo+dmwSb8l2rr4JvzBlNJQFC+1Y7TcyTWl+wDRcLOmgEzt/K
-	K6jm9bRkGVK60Z9gl+Clmie7bkFynKUWAXEKJSqCIAEejX0EUiqq7x8PvL3+X6EkMAgo59UruWM
-	NasPzzQTN6m9HMuiP9SV4R9Ij3eRC
-X-Google-Smtp-Source: AGHT+IFywaZ7WQt9f4W28PM6YKq+YZunMKGH51H/mKJNCRL7k6NgtNSZnnr6EgePKY0RqirHPggd6w==
-X-Received: by 2002:a05:6000:18ad:b0:3a4:d994:be4b with SMTP id ffacd0b85a97d-3a4d994bfa2mr1808284f8f.1.1748248075922;
-        Mon, 26 May 2025 01:27:55 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4c5360a13sm9086499f8f.96.2025.05.26.01.27.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 01:27:55 -0700 (PDT)
-Message-ID: <178d1344-6c0e-4500-b26f-151e57ae9a34@linaro.org>
-Date: Mon, 26 May 2025 10:27:55 +0200
+	s=arc-20240116; t=1748248085; c=relaxed/simple;
+	bh=MLH7gSBcJPJZeIiOZ7z+35hYV1Sh5TAL4nPmBWlEf5I=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=nPsHemywv216apo0+XNf3CC/f7hTUgB5e0ZRy3XPJMXo5HPKKKXhbMEF+o6y25UGHjtlVWNm88Z1+9FLaHAqxq5DfvHRqCv/L2GQTVOQlFxCQ1yaNzmpUgW4AjGcNbC5jOtWN18TsG8c2pJpBcZBdbaWYAvMCUOWFkL9+T6e/oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4b5TRB5Hx7z8RTZN;
+	Mon, 26 May 2025 16:27:50 +0800 (CST)
+Received: from njy2app08.zte.com.cn ([10.40.13.206])
+	by mse-fl2.zte.com.cn with SMTP id 54Q8RiBX001679;
+	Mon, 26 May 2025 16:27:44 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njy2app01[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Mon, 26 May 2025 16:27:46 +0800 (CST)
+Date: Mon, 26 May 2025 16:27:46 +0800 (CST)
+X-Zmail-TransId: 2af968342602255-1d940
+X-Mailer: Zmail v1.0
+Message-ID: <20250526162746319JPXpL0xRJ-n7onnZApOiV@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 6/7] phy: phy-snps-eusb2: drop unnecessary loop index
- declarations
-To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
- Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
- Abel Vesa <abel.vesa@linaro.org>, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250523084839.11015-1-johan+linaro@kernel.org>
- <20250523084839.11015-7-johan+linaro@kernel.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250523084839.11015-7-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <davem@davemloft.net>, <kuba@kernel.org>
+Cc: <dsahern@kernel.org>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <horms@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xu.xin16@zte.com.cn>,
+        <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0XSBuZXQ6IGFycDogdXNlIGtmcmVlX3NrYl9yZWFzb24oKSBpbiBhcnBfcmN2KCk=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 54Q8RiBX001679
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 68342606.001/4b5TRB5Hx7z8RTZN
 
-On 23/05/2025 10:48, Johan Hovold wrote:
-> There is already a loop index variable declared at function scope so
-> drop the unnecessary overloaded loop declarations.
-> 
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->   drivers/phy/phy-snps-eusb2.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
-> index 328e67ebfe03..c67712bd8bba 100644
-> --- a/drivers/phy/phy-snps-eusb2.c
-> +++ b/drivers/phy/phy-snps-eusb2.c
-> @@ -552,7 +552,7 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
->   	if (!phy->clks)
->   		return -ENOMEM;
->   
-> -	for (int i = 0; i < phy->data->num_clks; ++i)
-> +	for (i = 0; i < phy->data->num_clks; ++i)
->   		phy->clks[i].id = phy->data->clk_names[i];
->   
->   	ret = devm_clk_bulk_get(dev, phy->data->num_clks, phy->clks);
-> @@ -561,7 +561,7 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
->   				     "failed to get phy clock(s)\n");
->   
->   	phy->ref_clk = NULL;
-> -	for (int i = 0; i < phy->data->num_clks; ++i) {
-> +	for (i = 0; i < phy->data->num_clks; ++i) {
->   		if (!strcmp(phy->clks[i].id, "ref")) {
->   			phy->ref_clk = phy->clks[i].clk;
->   			break;
+From: Qiu Yutan <qiu.yutan@zte.com.cn>
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Replace kfree_skb() with kfree_skb_reason() in arp_rcv(). Following
+new skb drop reasons are introduced for arp:
+
+/* ARP header hardware address length mismatch */
+SKB_DROP_REASON_ARP_HLEN_MISMATCH
+/* ARP header protocol addresslength is invalid */
+SKB_DROP_REASON_ARP_PLEN_INVALID
+
+Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
+Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+---
+ include/net/dropreason-core.h | 12 ++++++++++++
+ net/ipv4/arp.c                | 15 ++++++++++++---
+ 2 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/include/net/dropreason-core.h b/include/net/dropreason-core.h
+index bea77934a235..dc846b705c24 100644
+--- a/include/net/dropreason-core.h
++++ b/include/net/dropreason-core.h
+@@ -118,6 +118,8 @@
+ 	FN(TUNNEL_TXINFO)		\
+ 	FN(LOCAL_MAC)			\
+ 	FN(ARP_PVLAN_DISABLE)		\
++	FN(ARP_HLEN_MISMATCH)		\
++	FN(ARP_PLEN_INVALID)		\
+ 	FN(MAC_IEEE_MAC_CONTROL)	\
+ 	FN(BRIDGE_INGRESS_STP_STATE)	\
+ 	FNe(MAX)
+@@ -560,6 +562,16 @@ enum skb_drop_reason {
+ 	 * enabled.
+ 	 */
+ 	SKB_DROP_REASON_ARP_PVLAN_DISABLE,
++	/**
++	 * @SKB_DROP_REASON_ARP_HLEN_MISMATCH: ARP header hardware address
++	 * length mismatch.
++	 */
++	SKB_DROP_REASON_ARP_HLEN_MISMATCH,
++	/**
++	 * @SKB_DROP_REASON_ARP_PLEN_INVALID: ARP header protocol address
++	 * length is invalid.
++	 */
++	SKB_DROP_REASON_ARP_PLEN_INVALID,
+ 	/**
+ 	 * @SKB_DROP_REASON_MAC_IEEE_MAC_CONTROL: the destination MAC address
+ 	 * is an IEEE MAC Control address.
+diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
+index a648fff71ea7..ca19f2645ccb 100644
+--- a/net/ipv4/arp.c
++++ b/net/ipv4/arp.c
+@@ -967,6 +967,7 @@ static int arp_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		   struct packet_type *pt, struct net_device *orig_dev)
+ {
+ 	const struct arphdr *arp;
++	enum skb_drop_reason drop_reason;
+
+ 	/* do not tweak dropwatch on an ARP we will ignore */
+ 	if (dev->flags & IFF_NOARP ||
+@@ -979,12 +980,20 @@ static int arp_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		goto out_of_mem;
+
+ 	/* ARP header, plus 2 device addresses, plus 2 IP addresses.  */
+-	if (!pskb_may_pull(skb, arp_hdr_len(dev)))
++	drop_reason = pskb_may_pull_reason(skb, arp_hdr_len(dev));
++	if (drop_reason != SKB_NOT_DROPPED_YET)
+ 		goto freeskb;
+
+ 	arp = arp_hdr(skb);
+-	if (arp->ar_hln != dev->addr_len || arp->ar_pln != 4)
++	if (arp->ar_hln != dev->addr_len) {
++		drop_reason = SKB_DROP_REASON_ARP_HLEN_MISMATCH;
+ 		goto freeskb;
++	}
++
++	if (arp->ar_pln != 4) {
++		drop_reason = SKB_DROP_REASON_ARP_PLEN_INVALID;
++		goto freeskb;
++	}
+
+ 	memset(NEIGH_CB(skb), 0, sizeof(struct neighbour_cb));
+
+@@ -996,7 +1005,7 @@ static int arp_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	consume_skb(skb);
+ 	return NET_RX_SUCCESS;
+ freeskb:
+-	kfree_skb(skb);
++	kfree_skb_reason(skb, drop_reason);
+ out_of_mem:
+ 	return NET_RX_DROP;
+ }
+-- 
+2.25.1
