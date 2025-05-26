@@ -1,152 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8637919CC3D;
-	Mon, 26 May 2025 11:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971A71917F4
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748259302; cv=none; b=SGd/gwhx1kuODuvc4tU9mv3VYUNheblHf1zChK4+c1RKmGQsxiYbKKd+NBAoymfCH2JLSAkv5U9YNcsZBBwrAQt5wDV6QKVI629JtlT6WQpkKNHEowNQF30zmthnyDbSeSfl6ZOrJRyPcxeFiht0JqZt0IioYqwpINpr/JeVDmU=
+	t=1748259425; cv=none; b=oAKldhurAXvO6VaBghTdIZWixAY4fbFlb8SG6d11rhWUPT/HUq9GOy8QKHIMEGmSiTxviBd+UtZw2GheubT5kqneZiyEoXSkVhNQLpocLe5YTrGZs/j1/rLi8z2xNAys/9u0z91Kn2y+I/cVJ4W/1fOfsgQDzC8U+QYK2Knn9Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748259302; c=relaxed/simple;
-	bh=5SkZ27MFt+s5gbVQg3eH6ITCcs8U+KTTQskKya4Ci2M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNs5LuBrHn08QEnHpjzOzkwbKgRLk6+6uRHmLPYuYi14KYzK0gLF6yY5xuM+cWcni3f0I0aH7D5qp4OwOGHV1WcaV9jUZwN0nJgdcA3PanIXsl84yDFYjFHyc/FNRYZKrx6G8yu9r3nZVcbun7HcKrt7pp35t68kMq7Tuv03DLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gG1noKS+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gG1noKS+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB06BC4CEE7;
-	Mon, 26 May 2025 11:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748259302;
-	bh=5SkZ27MFt+s5gbVQg3eH6ITCcs8U+KTTQskKya4Ci2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gG1noKS+2rYdiUxvikU5MDWDqnSdzxnC9pj6g76zAGYnk1dcH6cnfbBUQgOsDClG+
-	 GUpED1jEpKKy5Te/ypi2RuF822sr2UMZX50rQRtwMktVq8Vqcj9Bjz0s4uPhX1JMSf
-	 Jo4fIK1u2alLzFlyrie5kSUgfwgVwtS4K25V1aGH6IIYKEUmGmA2XEjYxD2/1FsfHk
-	 yXqubXIUIXoXcRXZ2AEFBWiOxX8DeXGI14kqOrW04n+pU+MoXURCJM7DcMdrMQAYAd
-	 uy/yRH4aR8OzcuaiXIky6inPYCq4VcYdM6fvZc8ReXgddoXcwS6QbjqkItVNpXCpTU
-	 5Bvzd3q9bASjg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uJW6g-000000000GJ-1m26;
-	Mon, 26 May 2025 13:35:03 +0200
-Date: Mon, 26 May 2025 13:35:02 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Remi Pommarel <repk@triplefau.lt>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Miaoqing Pan <quic_miaoqing@quicinc.com>,
-	Steev Klimaszewski <steev@kali.org>,
-	Clayton Craft <clayton@craftyguy.net>,
-	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-	Nicolas Escande <nico.escande@gmail.com>,
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] wifi: ath12k: fix ring-buffer corruption
-Message-ID: <aDRR5oYBU0Z-DaWr@hovoldconsulting.com>
-References: <20250321095219.19369-1-johan+linaro@kernel.org>
- <aC8-mUinxA6y688X@pilgrim>
+	s=arc-20240116; t=1748259425; c=relaxed/simple;
+	bh=PBP4BRHa3zQlpTVFq9T8QfgQEs8bqvS+dL8cF6PY40o=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Xp8hgDTeyIMVIg+Hn6zZZkx4jqpnCVvkR08vpdqQTroEdzfOEDKSaPYMy/Xdei5v9uhknM9iq5cq1Juwvf7Ml8njPPSFKhWzWJbG8HX5nYSPjSrQK+rUWdkri/8ql+M0ngsexrL1FCGEIHBr+qv9iN3Lbi1Ei0GtZv+tcRjvqa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b3a6c37e2so202125939f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:37:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748259423; x=1748864223;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zvECZZhMo/HKpBAjwfYomPTuSxbG9Ek5XgXDE+jfvn8=;
+        b=mz37X3/7RH1NxNiMRrulvhoUmEJgrNeVlS8NYyBqygb/w6KFQlw9g1trBzqEflaQMz
+         x7bXg/EmFYZJohkAHLG77nQSutIESzt2+D74JnASAL11FotmaNKPRIm06XEM9+w/ln+b
+         +Wy8S3do6lkwdKvel+E8QchS4yrd+/IBzt1/MNhl8xgnmM/6/BuT8lHRsEbBzuaKttgb
+         uczb/zIAKz1mwN+x264QhV8FasG5hLWBgCT53DpZt1B+Tla4i5b3Yovwifp/PtePI0xZ
+         P5spxCo/wLpo1YOuJmbAvrXDZGIz4sOQTAU5dRtWtNHZhPQsEHLi8I/00f1jsVxtn5xN
+         aqrg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2mihY/bupsIQCtj6NdSd1zGl6TpFUgXsoNdJpjPOXF5rqrwyrDKRn1AwR65ZI2T2C6Dl+ZTMmRo8r1us=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz28tc5jn48AmumRHCdYvcg2wB8FPKkrDWpLQtCUXa/dfLeABMV
+	ZfeaifW+XdBe9pZAPSra47z47EI+e4mK+/Rm7ncPhLe+pvzEe2MStmaQ5ni8mjhI1Vkmv7DIPMI
+	tcLz8oPjV9Y4X1sHYvDAz3Fa4qsdUcHCsH+uRwWhIYoPVEk1OZt3ABwymhSA=
+X-Google-Smtp-Source: AGHT+IHcHmAxV2OXMcbS+/EJq5tl+Fy1ptes1d6BkrDL68ToRQ/TYAPnfT2LAtjnW/vGF2r33ryvgAxcmpAbTuffZtzd633s18AY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC8-mUinxA6y688X@pilgrim>
+X-Received: by 2002:a05:6602:379b:b0:85b:4ad1:70e with SMTP id
+ ca18e2360f4ac-86cbb8706c1mr1064294339f.6.1748259422753; Mon, 26 May 2025
+ 04:37:02 -0700 (PDT)
+Date: Mon, 26 May 2025 04:37:02 -0700
+In-Reply-To: <20250526105115.2345-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6834525e.a70a0220.29d4a0.0804.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in hci_sock_get_channel
+From: syzbot <syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 22, 2025 at 05:11:21PM +0200, Remi Pommarel wrote:
-> On Fri, Mar 21, 2025 at 10:52:19AM +0100, Johan Hovold wrote:
-> > Users of the Lenovo ThinkPad X13s have reported that Wi-Fi sometimes
-> > breaks and the log fills up with errors like:
-> > 
-> >     ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1484, expected 1492
-> >     ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, expected 1484
-> > 
-> > which based on a quick look at the ath11k driver seemed to indicate some
-> > kind of ring-buffer corruption.
-> > 
-> > Miaoqing Pan tracked it down to the host seeing the updated destination
-> > ring head pointer before the updated descriptor, and the error handling
-> > for that in turn leaves the ring buffer in an inconsistent state.
-> > 
-> > While this has not yet been observed with ath12k, the ring-buffer
-> > implementation is very similar to the ath11k one and it suffers from the
-> > same bugs.
+Hello,
 
-> > Note that the READ_ONCE() are only needed to avoid compiler mischief in
-> > case the ring-buffer helpers are ever inlined.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> > @@ -343,11 +343,10 @@ static int ath12k_ce_completed_recv_next(struct ath12k_ce_pipe *pipe,
-> >  		goto err;
-> >  	}
-> >  
-> > +	/* Make sure descriptor is read after the head pointer. */
-> > +	dma_rmb();
-> > +
-> 
-> That does not seem to be the only place descriptor is read just after
-> the head pointer, ath12k_dp_rx_process{,err,reo_status,wbm_err} seem to
-> also suffer the same sickness.
+Reported-by: syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com
+Tested-by: syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com
 
-Indeed, I only started with the corruption issues that users were
-reporting (with ath11k) and was gonna follow up with further fixes once
-the initial ones were merged (and when I could find more time).
+Tested on:
 
-> Why not move the dma_rmb() in ath12k_hal_srng_access_begin() as below,
-> that would look to me as a good place to do it.
-> 
-> @@ -2133,6 +2133,9 @@ void ath12k_hal_srng_access_begin(struct
-> ath12k_base *ab, struct hal_srng *srng)
->                         *(volatile u32 *)srng->u.src_ring.tp_addr;
->         else
->                 srng->u.dst_ring.cached_hp = *srng->u.dst_ring.hp_addr;
-> +
-> +       /* Make sure descriptors are read after the head pointer. */
-> +       dma_rmb();
->  }
-> 
-> This should ensure the issue does not happen anywhere not just for
-> ath12k_ce_recv_process_cb().
+commit:         d7fa1af5 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fbe8e8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=89c13de706fbf07a
+dashboard link: https://syzkaller.appspot.com/bug?extid=0a7039d5d9986ff4ecec
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+userspace arch: arm64
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=170e5170580000
 
-We only need the read barrier for dest rings so the barrier would go in
-the else branch, but I prefer keeping it in the caller so that it is
-more obvious when it is needed and so that we can skip the barrier when
-the ring is empty (e.g. as done above).
-
-I've gone through and reviewed the remaining call sites now and will
-send a follow-on fix for them.
-
-> Note that ath12k_hal_srng_dst_get_next_entry() does not need a barrier
-> as it uses cached_hp from ath12k_hal_srng_access_begin().
-
-Yeah, it's only needed before accessing the descriptor fields.
-
-> > @@ -1962,7 +1962,7 @@ u32 ath12k_hal_ce_dst_status_get_length(struct hal_ce_srng_dst_status_desc *desc
-> >  {
-> >  	u32 len;
-> >  
-> > -	len = le32_get_bits(desc->flags, HAL_CE_DST_STATUS_DESC_FLAGS_LEN);
-> > +	len = le32_get_bits(READ_ONCE(desc->flags), HAL_CE_DST_STATUS_DESC_FLAGS_LEN);
-> >  	desc->flags &= ~cpu_to_le32(HAL_CE_DST_STATUS_DESC_FLAGS_LEN);
-> >  
-> >  	return len;
-> > @@ -2132,7 +2132,7 @@ void ath12k_hal_srng_access_begin(struct ath12k_base *ab, struct hal_srng *srng)
-> >  		srng->u.src_ring.cached_tp =
-> >  			*(volatile u32 *)srng->u.src_ring.tp_addr;
-> >  	else
-> > -		srng->u.dst_ring.cached_hp = *srng->u.dst_ring.hp_addr;
-> > +		srng->u.dst_ring.cached_hp = READ_ONCE(*srng->u.dst_ring.hp_addr);
-> 
-> dma_rmb() acting also as a compiler barrier why the need for both
-> READ_ONCE() ?
-
-Yeah, I was being overly cautious here and it should be fine with plain
-accesses when reading the descriptor after the barrier, but the memory
-model seems to require READ_ONCE() when fetching the head pointer.
-Currently, hp_addr is marked as volatile so READ_ONCE() could be
-dropped for that reason, but I'd rather keep it here explicitly (e.g. in
-case someone decides to drop the volatile).
-
-Johan
+Note: testing is done by a robot and is best-effort only.
