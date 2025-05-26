@@ -1,32 +1,71 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5D520CCC9;
-	Mon, 26 May 2025 13:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E45618871F;
+	Mon, 26 May 2025 13:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748266561; cv=none; b=MfjL9WmP0xbnty7+gFOJwzzoC8Gi7/jPNQ3J3AHhVlGyRiw2QXC25j39ch/sf6QIzIF9hAWCU1/CocHbvzWJjn93kvYw+aRCAYSDGCb1Jnn8aMZnn6e0YkDtXkPJrlervbyuOxnWuumGuTFbiRqbm+njkElzH9Ep+rm/tRBdBB8=
+	t=1748266741; cv=none; b=CGE94IyDsEJNYeI6ONt3NyI8jvRR7qB0zW9puIstbPClm0nFaZ9+QvCaKP4+37rY/Q37osoxxqOXq3DmcCCifIb9Di9LXnsIAHZEoQERXHECboYJiBmcOwX5yktcNnlDPSVfvrxKAquzUsBa0nl6zvDTu4XS73yMNop1ur34Y5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748266561; c=relaxed/simple;
-	bh=lYD8aeO0DFimcxJZhc6BRW4J9nzRNcVMdWowXtbjMSg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iDbPNh1dU0XXWCZN6s8lYpaQENXoqzvr3BbmqBoUgR6tJusv6UIYT+zzFM9jwqHO8t87C4bBO7kNhnDGiMFH26R7DzcgWMUWt/0VTSjPuzTfC2vt+ug6LJ1BhXQspvF0u1dbYCCDwNFxbuIESk8eUOHl+dBL0nYWwOxXJfuaCoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (188.234.28.56) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 26 May
- 2025 16:35:39 +0300
-From: d.privalov <d.privalov@omp.ru>
-To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu
-	<huyue2@coolpad.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	<linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dmitriy Privalov <d.privalov@omp.ru>
-Subject: [PATCH 6.1 1/1] erofs: get rid of z_erofs_fill_inode()
-Date: Mon, 26 May 2025 16:34:35 +0300
-Message-ID: <20250526133435.47105-1-d.privalov@omp.ru>
+	s=arc-20240116; t=1748266741; c=relaxed/simple;
+	bh=1tUSF8lKVGOcvcJE1XdgtGuHr86xeDeDWjv+SJbV7Qw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DBAI57EN1e34F4hucAWpjpja2k76PY6rSKkTMqDXO7nr+gLUAck7zRm9SKkH8pa55Kfd3zKlj6HSHpCOAh+R1KEd9xTpwzqMvRS544Q82r8SAcif2od5vz+11DFe6eChw7QoGCUL0GqPDKBKxVlTo0UxLoNOXsLk3rx8QGmfknc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dyuFdBPt; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyuFdBPt"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c5f3456fso1641366b3a.0;
+        Mon, 26 May 2025 06:38:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748266739; x=1748871539; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0F4i0Dy24Jd9tfOmTGUXWMV0Le8qMAUOTwRm7IYY+LE=;
+        b=dyuFdBPtzhjCbQiDkWffFSyglOKxCZacviTLmlNyYISH6LsIycXdU/NAvJ5ABktyL2
+         7RApixqeJMzoOyAF9ZClQYxJazw+/a8VPFxeXvY8cTXx+L5g6FW+hbyDcYe2WJFIEVWQ
+         lMTkRHvVJnUHvjoLce2RjAJ7RexlXbAKpNSnOfs1sByL/DMp5u7PJg4y9wopES4B4CmX
+         QixhsqUy6dBgTNeK5X6yMefPmJ4FjPCdNYDBzdaagl9Kl+vAim51nlo+9w/Tcyss3gxm
+         Ftevhw26KVJFdGXYbreULIOH3CEyJCgRzTxDpCZYsOR+fW9YN/ZeYCUpYvg2SHURbHQm
+         g0Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748266739; x=1748871539;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0F4i0Dy24Jd9tfOmTGUXWMV0Le8qMAUOTwRm7IYY+LE=;
+        b=wFdmZYgJrwWYX2/2vs0/zfUjxVQ5xZ0QoiiiqIC2w+eEkinLH5cnWNDNUT3ftVzslM
+         R+/JVRu9L+xqTrLXGrunXp8RBFBsSzq/3i5gh0RGbC/ryfuaXeHQoEGzQlWez5fMq4EC
+         WGkhkDLsKm0AaaQIf84jJ1MiLn6aNkmxX+2GRD2GfC8Qo+4x+TUw5QxQg214tXOFSHb5
+         utc3eOB16voPeiZ6542bIPgqCDyNK7STrcyLorf+gefu4paMmb+f+YxmqR+l6FKZYJzt
+         KTWvS8ejd5j39j3aKi8TaZcPjNjWy/lXKCC2GcxEvE3R0BzdDodxI5C8rIdGMY4jP7+f
+         RK5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWgQCieFAyszNjfiBpgkjbVgE8/poo7BOGrvGXRrtRKz/qz0Gr+533AH7T46hHjp8O6z6U9RbWRFcX/LF0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyX5jbGEOV50qEbOGEExTyxYGr9V8v8LtlZDWCTeHw/3Vnzrn4
+	11xWQ4Uw8A61n8d1gWPwyaVz9kJFtggA2j01VtA4OVrflzEh7gvRpFS/
+X-Gm-Gg: ASbGncvJtEPVlZckFWYA/OTqgnCpU9UqBcMjl0uZYdM1E1+QBIhgX9mFJDk8rLouaOX
+	gfFqF/mpijVuLmdWmMC4mFfnNjGK97ipfTILstcxYnqvje7/zsbk8VYnDNF1N1hkTVZaGA6N+3F
+	hjSHfvulmki18jnMiWd7y2dneVduX6qtFFTns8iENF05u7quTPd9VJO+BSuLNUKIpK5NFnZZIaG
+	GCINM6UooFowPas3lrPLLTpuLDurKz6hO5+7fggp5z+UXbolroZLSoDHg9e2wiZc4ohYPkX1xjS
+	stGkRqRSKIv463VTsZ6/DAK0lbuV0ZipikTn9+nvq1lg/NGRTXl0zhcK19tF3g==
+X-Google-Smtp-Source: AGHT+IGiWE10oEwNg/vmfba3UaQ0l09Ni284yqf8ynB5mkWfOFUqBbPYejslg09NRxQJkAJS9mfUUA==
+X-Received: by 2002:a05:6a00:3a0e:b0:736:3979:369e with SMTP id d2e1a72fcca58-745fde9e443mr13012863b3a.9.1748266738763;
+        Mon, 26 May 2025 06:38:58 -0700 (PDT)
+Received: from ti-am64x-sdk.. ([2409:40f2:3b:9933:39a:4805:6c67:6b00])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74617036291sm1337018b3a.89.2025.05.26.06.38.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 06:38:58 -0700 (PDT)
+From: bhanuseshukumar <bhanuseshukumar@gmail.com>
+To: cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com,
+	kyungmin.park@samsung.com,
+	skhan@linuxfoundation.org
+Cc: linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bhanuseshukumar <bhanuseshukumar@gmail.com>
+Subject: [PATCH] docs: devfreq: Fix typo 'enabeld' to 'enabled' in devfreq-event.c
+Date: Mon, 26 May 2025 19:08:39 +0530
+Message-Id: <20250526133839.64455-1-bhanuseshukumar@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -35,140 +74,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 05/26/2025 13:24:02
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 193597 [May 26 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: d.privalov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 59 0.3.59
- 65f85e645735101144875e459092aa877af15aaa
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 188.234.28.56 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info:
-	lore.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 188.234.28.56
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 05/26/2025 13:27:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 5/26/2025 10:26:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+Fixed a typo in  description of the function 
 
-commit 4fdadd5b0f0c723c812842454f8cca1619f2e731 upstream.
+This is me trying my way into opensource linux kernel contribution
+journey beginning with this  first patch of trivial spelling 
+mistake fix. 
 
-Prior to big pclusters, non-compact compression indexes could have
-empty headers.
-
-Let's just avoid the legacy path since it can be handled properly
-as a specific compression header with z_erofs_fill_inode_lazy() too.
-
-Tested with erofs-utils exist versions.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Link: https://lore.kernel.org/r/20230413092241.73829-1-hsiangkao@linux.alibaba.com
-Signed-off-by: Dmitriy Privalov <d.privalov@omp.ru>
+Signed-off-by: bhanuseshukumar <bhanuseshukumar@gmail.com>
 ---
- fs/erofs/inode.c    | 12 ++++++++----
- fs/erofs/internal.h |  2 --
- fs/erofs/zmap.c     | 18 ------------------
- 3 files changed, 8 insertions(+), 24 deletions(-)
+ drivers/devfreq/devfreq-event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 7dcf350b9fef9..550b93fd12031 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -283,11 +283,15 @@ static int erofs_fill_inode(struct inode *inode)
- 	}
- 
- 	if (erofs_inode_is_data_compressed(vi->datalayout)) {
-+#ifdef CONFIG_EROFS_FS_ZIP
- 		if (!erofs_is_fscache_mode(inode->i_sb) &&
--		    inode->i_sb->s_blocksize_bits == PAGE_SHIFT)
--			err = z_erofs_fill_inode(inode);
--		else
--			err = -EOPNOTSUPP;
-+		    inode->i_sb->s_blocksize_bits == PAGE_SHIFT) {
-+			inode->i_mapping->a_ops = &z_erofs_aops;
-+			err = 0;
-+			goto out_unlock;
-+		}
-+#endif
-+		err = -EOPNOTSUPP;
- 		goto out_unlock;
- 	}
- 	inode->i_mapping->a_ops = &erofs_raw_access_aops;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index d7cd1e619d46f..161317f8fe266 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -425,12 +425,10 @@ enum {
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
- #ifdef CONFIG_EROFS_FS_ZIP
--int z_erofs_fill_inode(struct inode *inode);
- int z_erofs_map_blocks_iter(struct inode *inode,
- 			    struct erofs_map_blocks *map,
- 			    int flags);
- #else
--static inline int z_erofs_fill_inode(struct inode *inode) { return -EOPNOTSUPP; }
- static inline int z_erofs_map_blocks_iter(struct inode *inode,
- 					  struct erofs_map_blocks *map,
- 					  int flags)
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 2cd70cf4c8b27..b030a04bdd283 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -7,24 +7,6 @@
- #include <asm/unaligned.h>
- #include <trace/events/erofs.h>
- 
--int z_erofs_fill_inode(struct inode *inode)
--{
--	struct erofs_inode *const vi = EROFS_I(inode);
--	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
--
--	if (!erofs_sb_has_big_pcluster(sbi) &&
--	    !erofs_sb_has_ztailpacking(sbi) && !erofs_sb_has_fragments(sbi) &&
--	    vi->datalayout == EROFS_INODE_COMPRESSED_FULL) {
--		vi->z_advise = 0;
--		vi->z_algorithmtype[0] = 0;
--		vi->z_algorithmtype[1] = 0;
--		vi->z_logical_clusterbits = inode->i_sb->s_blocksize_bits;
--		set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
--	}
--	inode->i_mapping->a_ops = &z_erofs_aops;
--	return 0;
--}
--
- struct z_erofs_maprecorder {
- 	struct inode *inode;
- 	struct erofs_map_blocks *map;
+diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+index 70219099c604..020fe30ed5d9 100644
+--- a/drivers/devfreq/devfreq-event.c
++++ b/drivers/devfreq/devfreq-event.c
+@@ -100,7 +100,7 @@ EXPORT_SYMBOL_GPL(devfreq_event_disable_edev);
+  * @edev	: the devfreq-event device
+  *
+  * Note that this function check whether devfreq-event dev is enabled or not.
+- * If return true, the devfreq-event dev is enabeld. If return false, the
++ * If return true, the devfreq-event dev is enabled. If return false, the
+  * devfreq-event dev is disabled.
+  */
+ bool devfreq_event_is_enabled(struct devfreq_event_dev *edev)
 -- 
 2.34.1
 
