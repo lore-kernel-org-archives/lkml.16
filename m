@@ -1,161 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEEE19F424
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEFB1E9B0B;
+	Mon, 26 May 2025 09:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250124; cv=none; b=oWWHpAgCasA1n+eRvE6kHOdMtWaMcty0uLqRCdpp4ViP4CBasgSoZ8gsx9AEvlVr3sgosnbvMHG5loabuJBczon/dG2FiN2ECHLIr4MuZtsIvaZYS5IUySwK7nx+lWRPh/bK84j5T1S0bbYY2zmWGgp1RCF7ZB1h4KsILKhasQ4=
+	t=1748250126; cv=none; b=a9iNe6lN/Ymuw3k9tleEzMAQsUXJcjJbSHg5F4RN1LZK3GyfKVYWDjIZMxaqixPgMhGohXoH+4WYmq7OtfUsWTsnB83EUXjYgn3FrFEwppXMgRfhfWWEUYDRjlW+BWuH83NVnAPVSx/eP9+dWlD78ybOa7m5TTloKrFSnY4nX/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250124; c=relaxed/simple;
-	bh=ZWoEjjeEptPnbRRuBqE27xtL0VYN5ov9J5JNbJVkCuY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XdBWuMuWbvBBGjwOgdnOu+p7m2QQFGk1zzV9VQu7qxZTl0ygPltM29rEzUFTQFDagd3ic+dhdtAFX0kkjIoBQSM8T6i1n7UX7U70MEju88IqyV871aMLbPpqyAE0VjVr4+TBbrHgbYrDRIRNmYHs3RHrTiQ0wHOI9q/Ea9v5rDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hEYajLq+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748250126; c=relaxed/simple;
+	bh=dN/e6uhiPG0gbtb1wPFzzVl1DX4FB152MF7H9e4ibV8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=KYvIPRtMnmVBk1XYGDHZhKzfJ2VxIjfCPlsr2gKhdD5vDdwZd/VDEMxwUdmUW1cuGiU7KIr7poRNPYZUyIvMepay/JibrWdhSZlQ9BfXU5jNRkizOsMT9O8P0HL1aVW8SmOQf3QicobjmELEtq2CIyjWCR48AVzVeYprDJyWVdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdR91CGU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hEYajLq+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748250119;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+BhiDXyikhO1cftzHYfIEafnStrf4kEMf7dwcV0MPQY=;
-	b=hEYajLq+pbAmx3riU+0v14cA1hVOeW5Bz3osggJVsYuaKhFVWzw70xe1SXZfLaZjwipIFt
-	SRRdogdoUAvvV7mzjZeKarUKhH13dcTXZHWIPiDArWGpn0rKtgWvhgXxMtEu6gBSVr7NLC
-	s5gC0n0r5ESCL6R9tr6s4jnLRfRMlSY=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-KeQKQQpQNs2971WlloL1VQ-1; Mon, 26 May 2025 05:01:58 -0400
-X-MC-Unique: KeQKQQpQNs2971WlloL1VQ-1
-X-Mimecast-MFC-AGG-ID: KeQKQQpQNs2971WlloL1VQ_1748250117
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-742cf6f6a10so2917940b3a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 02:01:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748250117; x=1748854917;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+BhiDXyikhO1cftzHYfIEafnStrf4kEMf7dwcV0MPQY=;
-        b=rbaQzmMozmp9GbuMQPaJoxGBQy+r6cTfCEmVbcziFl2ps7DfiuoltDeUap5QYt/9uU
-         ANjAP4dKQyAC+hQxz4+k39RvnTotbJCgwP2mrYIRHwexDspwrlOeWHlfcP7QPL/JFYbE
-         PwcsFcjxZk7ubFD2sFhS5KYBV5Sq8W5diAn1cG0aoK52tgwqhAnycGqypFCSUZyh08RA
-         qReUnFFHkCkA9pwOJN3COItc9+cfQKcpcOcKDU08I8bRo30ZtBWC9aC0Gv6UNpSkMXuR
-         bPtgueMJS3MtVuy56ilYS8LHf0aP6NtQxHGmzhGBcHW8Z2anLJ65Y9M5CKkfazVQ2Yyz
-         IfLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPw8CXho5OAhr1aBoPJbxqiSPoI5XF2cae6JyH+YPmuqhiiVxdrYVh6zcPvExCpjKYBfLB4Hu0XmxOvdE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx90Y8avTcC7ntpPCCfb2eWcm+jgNII63uimjxZNHDo8Nn00l8B
-	nZhxwaR8nb9MTjYZgwJpXrl4HkHTHyymMIS2HjLZXv5YSV7X27hT1vF7zl4GfbDmyJaoiRcV2uj
-	teAxTTR/jUNkUJ9xjRTWZVLthPoYB3e8t3hQRu4IGvgrl1rpICt6fKyr+FMEKYs/FXQ==
-X-Gm-Gg: ASbGnctqbtFwq+MT+35CGH2Oap4QRKf043JyZ5CC3yZ2OicVWod/KrAgHDqenCgKC05
-	Trv5RiDO1RNzvLCLYzZP4l1Sa7ogg8gWw3CQK7Pi9u973d8DGnV3kEbgDnbVRZ9N+yGMqrhhoUr
-	YoU+wlrTlKSSEcAEt/VVYWYgWMG2KrJEWx+8nw12j2nS85iGmhuoN8pEgsKktH7u1Hfr5u2+m8L
-	HN2fNnWilqlGCYUeF5vfk/b14c9GJD8W+aFxRpgaPeJl+nfHO4bt4M6f7gTjdsYxhMNXLHFslem
-	FLJPbNTeNcQV
-X-Received: by 2002:a05:6a00:21c2:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-745fde9f3b7mr12076488b3a.10.1748250117055;
-        Mon, 26 May 2025 02:01:57 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFODFO9ppwsV5E+FFuQuGGeBW483IYeVBee2OXT2Zb9+eI8FLSHDED6cuwUZJgQFPu/emkBcQ==
-X-Received: by 2002:a05:6a00:21c2:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-745fde9f3b7mr12076460b3a.10.1748250116707;
-        Mon, 26 May 2025 02:01:56 -0700 (PDT)
-Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9878b53sm16575092b3a.152.2025.05.26.02.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 02:01:56 -0700 (PDT)
-From: Ryosuke Yasuoka <ryasuoka@redhat.com>
-To: drawat.floss@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	jfalempe@redhat.com
-Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH RFC drm-misc-next v2 1/1] drm/hyperv: Add support for drm_panic
-Date: Mon, 26 May 2025 18:01:05 +0900
-Message-ID: <20250526090117.80593-2-ryasuoka@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250526090117.80593-1-ryasuoka@redhat.com>
-References: <20250526090117.80593-1-ryasuoka@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdR91CGU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 355C0C4CEE7;
+	Mon, 26 May 2025 09:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748250125;
+	bh=dN/e6uhiPG0gbtb1wPFzzVl1DX4FB152MF7H9e4ibV8=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=bdR91CGUEmWkCYOZTftiSKKI4OzJqQ3ATjbzVx9FaySp2fTLbRstZR0/VYQMdirxI
+	 ihEUXGt2TX9j6+AEXjLgjxoy2k+75rvx+6eVrFdYy08O3SYWwNXgUc3lr9051mnF+P
+	 1z4TNJ4qwATNqXRl7ZOHvgzr6FHi1RPwcWgN/RE9cz9q7nEmTNHj7xPIVGo5D5RmiZ
+	 RU6FAvPeVL6ri6u6wG7lbtL46aLMGxfau3O45zztpA0mqmuJnhFaHWe2hiY1SeSEE/
+	 aOhDXjTYaI7vCq5OHwCdVJENXPFQUin5ak4mR7yipel7BrfRfmmFiKE/1aoIn+CaAE
+	 e9FGsdk8YMIPg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 26 May 2025 11:01:58 +0200
+Message-Id: <DA5YY0YF28GO.3DONTQDLY6VBD@kernel.org>
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Drew Fustini" <drew@pdp7.com>, "Guo
+ Ren" <guoren@kernel.org>, "Fu Wei" <wefu@redhat.com>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Alexandre Ghiti" <alex@ghiti.fr>, "Marek Szyprowski"
+ <m.szyprowski@samsung.com>, <linux-kernel@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH RFC 0/6] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Michal Wilczynski" <m.wilczynski@samsung.com>, "Drew Fustini"
+ <pdp7pdp7@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <CGME20250524211519eucas1p218997c69b98b14d3af2eb6bf4e9d3187@eucas1p2.samsung.com> <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com> <aDJGgLZ9tITwGBxq@x1> <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
+In-Reply-To: <b5f4af17-05ef-453d-8f04-283590ae5b87@samsung.com>
 
-Add drm_panic module for hyperv drm so that panic screen can be
-displayed on panic.
+On Mon May 26, 2025 at 10:22 AM CEST, Michal Wilczynski wrote:
+> On 5/25/25 00:21, Drew Fustini wrote:
+>> Thanks for the patch series. It will be great to have PWM working
+>> upstream.
+>>=20
+>> I've not built Linux with Rust before, so I'm going through the quick
+>> start [1]. I've also never built Linux with LLVM before but clang seems
+>> like the best compiler to use for Rust. Are you using LLVM?
+>
+> Hi Drew,
+> You're correct, Clang is the way to go for Rust in the kernel. I also
+> followed the official quick start guide. To answer your question
+> directly: yes, I'm using LLVM.
 
-Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Just to let you know, there is an effort to get rustc to work with a gcc
+backend rustc_gcc_codegen [1]. And there also is the gccrs project [2]
+trying to create a gnu Rust compiler.
+
+[1]: https://rust-for-linux.com/rustc_codegen_gcc
+[2]: https://rust-for-linux.com/gccrs
+
+They have made a lot of progress over the last year, so we're hopeful
+that they become usable in the near future. But for the moment,
+Clang/LLVM is the way to go.
+
+Hope this helps!
+
 ---
- drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 36 +++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-index f7d2e973f79e..945b9482bcb3 100644
---- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-+++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
-@@ -17,6 +17,7 @@
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_gem_shmem_helper.h>
- #include <drm/drm_probe_helper.h>
-+#include <drm/drm_panic.h>
- #include <drm/drm_plane.h>
- 
- #include "hyperv_drm.h"
-@@ -181,10 +182,45 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
- 	}
- }
- 
-+static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
-+					   struct drm_scanout_buffer *sb)
-+{
-+	struct hyperv_drm_device *hv = to_hv(plane->dev);
-+	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
-+
-+	if (plane->state && plane->state->fb) {
-+		sb->format = plane->state->fb->format;
-+		sb->width = plane->state->fb->width;
-+		sb->height = plane->state->fb->height;
-+		sb->pitch[0] = plane->state->fb->pitches[0];
-+		sb->map[0] = map;
-+		return 0;
-+	}
-+	return -ENODEV;
-+}
-+
-+static void hyperv_plane_panic_flush(struct drm_plane *plane)
-+{
-+	struct hyperv_drm_device *hv = to_hv(plane->dev);
-+	struct drm_rect rect;
-+
-+	if (!plane->state || !plane->state->fb)
-+		return;
-+
-+	rect.x1 = 0;
-+	rect.y1 = 0;
-+	rect.x2 = plane->state->fb->width;
-+	rect.y2 = plane->state->fb->height;
-+
-+	hyperv_update_dirt(hv->hdev, &rect);
-+}
-+
- static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
- 	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
- 	.atomic_check = hyperv_plane_atomic_check,
- 	.atomic_update = hyperv_plane_atomic_update,
-+	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
-+	.panic_flush = hyperv_plane_panic_flush,
- };
- 
- static const struct drm_plane_funcs hyperv_plane_funcs = {
--- 
-2.49.0
-
+Cheers,
+Benno
