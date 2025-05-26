@@ -1,117 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F893C17
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB6579CD
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748218453; cv=none; b=pDJ2pbHTjH0RQgJndgcWZTbl6tdtCECM/DDVEHUoIBp/2J5idyB3w2eqUI8aXEaotU5xCvYmiV9GJBb97HRfTs9iSYzdOMmsdIp8nDSFE+EaXlGB1vjHxhmk9Ie6Os4rqSvunBEcStIShDowDym4aD9DG8uJX5qlgycKW+YvMXQ=
+	t=1748218694; cv=none; b=r7bBzZ8vuZZ9LKeSTGxXSpJaNVJdHk9RtRbphDW+AqAIXLzQFabMIujl2s2JYrkPLA+ySGEPYMzJ5OCM4YG4J3/vDfE+acJsfh98r3KlKfsehNVWTNxvpYSKo1jWnXkyC6466bJAQQlSp5T1zY7r19fTKeM3kQPNEHBuOF9Vfmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748218453; c=relaxed/simple;
-	bh=iDe4lZDbETTr6cH+2ajupIG1T+2mY+/63euX+PSeyeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FhUL3GcbG1DXW+YyS0Tc8Bu298uBu4+i7tWQ+yE+i0NN7HQ7rwOS0GeIRpfwk5AbNUgm5aUoBbXDepeh+HjFtHb0qolRqw10J8Ifj2Zzza1oX3R/ZL96w+M3DoLtJRaOHnQpUBJeBVI8biZFeHQ59xt4if0Prt+QBw5YYkP8aP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PZ9IVZWN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748218694; c=relaxed/simple;
+	bh=Kuc3r4rA+HWLoyVv+/mY2zwtWx5X9PD0wGmu2sdY5EU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VuTYLTozGiyxBP64f1hMbpo49wA0mbpyvQmEby03u0vqRmWJ+/uYUHd0Zl2uitQavIV8QPyvwfZ9INQzKVCcEdeS8Z0rYxG6G4j5bVjzBIBKQsuJiff4OnvtZSKkmRVW98bA96KsflWdoXM2lcAMwOuYb3L4pclZMF0YgnQ09B4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZQL2XJMn; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZ9IVZWN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748218450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eN3oaj49SxpTapfrR5Kx6feyOINmy5ifmldeIsI+GdE=;
-	b=PZ9IVZWN6RZbLn84cHlCwSQh6v2O+mzvI+YDLgqkcGc7t3Kpp4ov7JCHrAQOJmUqKgF9lZ
-	pjafF2t2gyX3E6wZ8BY+lOZGiVk/ocnTJCxGIzy7E+hd2ukKxjX+ywWCYFYASIZ4KAHk7Y
-	S+/ppUbtgXVppNL/EUfC4VsTaJXIO5w=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-179-oLlQlbSAMm-zTRMJ1AkwcA-1; Sun, 25 May 2025 20:14:09 -0400
-X-MC-Unique: oLlQlbSAMm-zTRMJ1AkwcA-1
-X-Mimecast-MFC-AGG-ID: oLlQlbSAMm-zTRMJ1AkwcA_1748218447
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-32a63984ff3so811401fa.2
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:14:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQL2XJMn"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74068f95d9fso1143444b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 17:18:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748218692; x=1748823492; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MES10eRP2jIg4njBVqwcLcQbCZFTDkOjjaxYmSH1gh0=;
+        b=ZQL2XJMnr+lk/qUjIIXdqq+zeEhk1tRKX/XUjEQ/bVwQ9j1NyrpbEf223w8LLH6dEU
+         zwGuNe2Xk+jclIzHR8NRIzxETxs3CPAe4S3lxZQww2aU7cV9bMeqtIBJip82Yod9lOe9
+         tPfb6anmqwyo08chrPSwjOuRLB7N0GEGXT7elUdDBSG7gUrlwb4cFGhoLU0fUAKfgi+k
+         8lhk6wmipisXXeVSNor94X6MBFSH89KlWkkU7YNBy2yJJ5uNTYdReOdqo0czbeSra7Qz
+         atfbz8VKZTRAtMqlvch53d8wr45i8RWBn9vvRU0RavacMkaTeq9q0f683it5WRCPu42z
+         7wOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748218447; x=1748823247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eN3oaj49SxpTapfrR5Kx6feyOINmy5ifmldeIsI+GdE=;
-        b=P+TrMmOVlVhMdD2onWFTd/x8qn5oZGl4dATm9SfXmVYbrkqVvnL6LsSNXSDCBtW9Qg
-         cN1fmmzq80cQPnC2CE9i2oqFJHQT7nCCXJEnbhht4jbWYB0TBfvJ49r/1GETiPb42WSN
-         fAiHIVhty3TdKG2txsKge8kt3SWlwXBiqTUM+2i7k6m6H0YpDAc9KDDVfd6vCwPk4Hy3
-         ocITKl/eSeikd63AWimPH5CORByIb0zrbkybXjaLuw1MT+OvQDJUDrfp7yFPrbOlGC5p
-         GOnD+7KhFC4HSVp+Jt/qnJF8sfVfm/Htnp8n159fnT01XedD0onfF/eU+6qR5nenD+Sb
-         RtJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWHCjfkfmPPr6J5GW06CKPBh+cVy6xgAO78xNxtL/iasjeVaZ9eq4nPvI2sKaIM1exBlggWLoTp6NPQXzg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8gRlLn8VQKkYH5Zo6PBOYsUlaxs8Bts7EFV2kd+ovu4xUKIKo
-	T9DCOgtPcARoKQXY+sR7EEPVZj6wp2Ew1mRxgkZhOGp2AdlJK5RIimaVU1k8N2IONjUf2G6AdMi
-	cKqnwzYlazg9j478mF5q2vVspZYeYxsgSuaX9JgKkb6qp4DCiTuqgeeXEMJwYIeUn8vFnHrFMmz
-	e7BYRuPNPsRCuIpJg8JRl518Fha+mjxGfd+nMDKoix
-X-Gm-Gg: ASbGncsHSHXnBHwz1SuQ7lOWfZFlAFgWVS4zOkpeyv1XMyQ+EQN44iu1C+sVV+cobqc
-	TZ5JW22x31F2Jp3/zsdmWOILl/U+yP1HyX4PhSh5Fof0GwoJYcDVjGOa3MibjKyGfeRUGgT353V
-	mLEAEEaVnue3y41NhQ/TNXxWs+bew=
-X-Received: by 2002:a2e:9a0d:0:b0:306:10d6:28b0 with SMTP id 38308e7fff4ca-3295b9abf5bmr19741101fa.1.1748218447440;
-        Sun, 25 May 2025 17:14:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYqd7DRtWr3jaLJFSDKEWBnLHgljTK2lxtoH5ZXpV4VmU21DbDCzjAl96FL+9zjwCpV7PWR8b4L3B3BLETJg4=
-X-Received: by 2002:a2e:9a0d:0:b0:306:10d6:28b0 with SMTP id
- 38308e7fff4ca-3295b9abf5bmr19741051fa.1.1748218447033; Sun, 25 May 2025
- 17:14:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748218692; x=1748823492;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MES10eRP2jIg4njBVqwcLcQbCZFTDkOjjaxYmSH1gh0=;
+        b=EqMbFJV+ZtOdLeF61gSkJW1ubTHB7ekDaroCANw1oUXzEx5BHUHSaseQ+RXA/lzL1f
+         vvXnmzlGvVO7dby1Cu3fx5iaq71olw4t0dBF9S00rGIbqBehs55YeaRktCGy2MZJ640X
+         zAlkgxUAPnTG9vB1zegcjusXqKjDdPqa0YUVshyQBnK4ShUpTdNnuUXQFn/xHxDgu9Gk
+         5iYNE4hMQ3kQeIITZE8C4mjTPIOxZx3mtinhvVZnsPtCwyWIH7Q18A46rLvXc7N1TrPf
+         uSUVfdhNd/BjdtaIlhJCI4tmpSzjlo2ezp3XrLewpqjkz1e/nLE3X9GGcsJrM2qHJpgY
+         H5Jg==
+X-Gm-Message-State: AOJu0Yx5MXj0oMEElPVnIEfMzU+1XD0g//cfIQq8vli65kNfHnv2HHYc
+	g5gi1mv7AyRs28CYUQylwdmJDko4DCIzV8bWHHmTxPgrEY2XIDh0SGeEd3IS4w==
+X-Gm-Gg: ASbGncu9swAB0Jo0xdFkBtnlf+2VEmYYQQNRWeqzUsKNqt59cAUjCPBdsA7epY/u3xD
+	t/jMtee2UqH4eCQ9Oo8DUmbroSIf7VNaDnjn+cxcl+yr8pIkQcHilK0nuH1DxuHKA7pkHAgTE9o
+	3b8gcvWLaZQLsVxsSX3J+UEOHJ7OTZ71x28x1+egykW2Oeg63o6byGq+Sdll30nGG3SwX3FBoPt
+	zBlnG3qT0g2ouaqmOqIdVPXGD7SJnT8uCLAk9SEU3WNzSZe5yEXs9PN7m2BhmFbZq1GGuvqIEMR
+	/3WuDpC3p1r4febJoEcOUaT52k2ZJjWUgQ==
+X-Google-Smtp-Source: AGHT+IH9lNq4/uSOKIJy38i5dAlnNWnQIIU0uvi5IfoHJkWfhsYR9zq9c7RU0deSZf/MHm5fkwJAUg==
+X-Received: by 2002:a05:6a20:cf8a:b0:1fd:f4df:9a89 with SMTP id adf61e73a8af0-2188c299354mr11398992637.25.1748218692598;
+        Sun, 25 May 2025 17:18:12 -0700 (PDT)
+Received: from fedora.. ([2601:646:8081:3770::9eb])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2c3613b0ebsm180810a12.44.2025.05.25.17.18.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 17:18:12 -0700 (PDT)
+From: Collin Funk <collin.funk1@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Collin Funk <collin.funk1@gmail.com>
+Subject: [PATCH] groups: Use bsearch instead of hand rolled implementation
+Date: Sun, 25 May 2025 17:17:46 -0700
+Message-ID: <ab5708c1e35e1b2a54a1d83fafda1b3f8fa01103.1748218528.git.collin.funk1@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522052453.GA42746@system.software.com> <20250522052806.GB42746@system.software.com>
-In-Reply-To: <20250522052806.GB42746@system.software.com>
-From: Alexander Aring <aahringo@redhat.com>
-Date: Sun, 25 May 2025 20:13:55 -0400
-X-Gm-Features: AX0GCFtad-uSwrsrLSYZwA4ixTVDWUaEjIYDh7krVi0_0wqWeyR7j22VFo8HiVU
-Message-ID: <CAK-6q+hOCq8aksDp33utOGwfFngnTbJo-mY3+FiCJVPzwP-xsg@mail.gmail.com>
-Subject: Re: [RFC] DEPT(DEPendency Tracker) with DLM(Distributed Lock Manager)
-To: Byungchul Park <byungchul@sk.com>
-Cc: kernel_team@skhynix.com, linux-kernel@vger.kernel.org, 
-	gfs2 <gfs2@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+This code predates <linux/bsearch.h>. Now that the bsearch function
+exists there we can use it to reduce code duplication.
 
-On Thu, May 22, 2025 at 1:28=E2=80=AFAM Byungchul Park <byungchul@sk.com> w=
-rote:
->
-> On Thu, May 22, 2025 at 02:24:53PM +0900, Byungchul Park wrote:
-> > Hi Alexander,
-> >
-> > We briefly talked about dept with DLM in an external channel.  However,
-> > it'd be great to discuss what to aim and how to make it in more detail,
-> > in this mailing list.
-> >
-> > It's worth noting that dept doesn't track dependencies beyond different
-> > contexts to avoid adding false dependencies by any chance, which means
-> > though dept checks the dependency sanity *globally*, when it comes to
-> > creating dependencies, it happens only within e.g. each single system
-> > call context, each single irq context, each worker context, and so on,
-> > with its unique context id assigned to each independent context.
-> >
-> > In order for dept to work on DLM, we need a way to assign a unique
-> > context id to each interesting context in DLM's point of view, and let
-> > dept know the id.  Once making it done, I think dept can work on DLM
-> > perfectly.
->
-> Plus, we need a way to share the global dependency graph used by dept
-> between nodes too.
->
+Signed-off-by: Collin Funk <collin.funk1@gmail.com>
+---
+ kernel/groups.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-Having everything simulated and having nodes separated as
-net-namespaces in one Linux kernel instance is I think at first
-simpler to do and will show the "proof of concepts".
-Sharing data between nodes is then just some memory area that is not
-separated by per "struct net" context.
-
-- Alex
+diff --git a/kernel/groups.c b/kernel/groups.c
+index 9b43da22647d..4294a97e4ea8 100644
+--- a/kernel/groups.c
++++ b/kernel/groups.c
+@@ -2,6 +2,7 @@
+ /*
+  * Supplementary group IDs
+  */
++#include <linux/bsearch.h>
+ #include <linux/cred.h>
+ #include <linux/export.h>
+ #include <linux/slab.h>
+@@ -91,23 +92,13 @@ EXPORT_SYMBOL(groups_sort);
+ /* a simple bsearch */
+ int groups_search(const struct group_info *group_info, kgid_t grp)
+ {
+-	unsigned int left, right;
++	void *result;
+ 
+ 	if (!group_info)
+ 		return 0;
+-
+-	left = 0;
+-	right = group_info->ngroups;
+-	while (left < right) {
+-		unsigned int mid = (left+right)/2;
+-		if (gid_gt(grp, group_info->gid[mid]))
+-			left = mid + 1;
+-		else if (gid_lt(grp, group_info->gid[mid]))
+-			right = mid;
+-		else
+-			return 1;
+-	}
+-	return 0;
++	result = bsearch(&grp, group_info->gid, group_info->ngroups,
++			 sizeof(*group_info->gid), gid_cmp);
++	return !!result;
+ }
+ 
+ /**
+-- 
+2.49.0
 
