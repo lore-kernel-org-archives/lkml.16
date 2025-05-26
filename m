@@ -1,97 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1CF2DCBF0;
-	Mon, 26 May 2025 03:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B98BE13A41F;
+	Mon, 26 May 2025 03:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748228626; cv=none; b=PXsnJ3GmvSOcroCPu3b3Vpeell2oep/iDfnntBqH9FgJG8MMbkEhqrqmHUCmZnBuOADqa42CnXLbej+Bsg7cj5HaYWAYdR9uNegs4kgE1S3yermyLxqZyzt88+OX3wy5t+F0xhhMHLhJ3IE6wEs3wGwkqn1s1DjRSLmk4ofcDSo=
+	t=1748228952; cv=none; b=Es2Davy/Nk2xSyKAf+3MngDxr3i543PrT+fkaVYTWZ5Zc168Pi2IuY/g/aB91/EeHLw4RJ/aaxcHn2WPzR5cKttb6XzOmuYAW2jj9e79tmZK0cLREje9lZhJi+Ej1CoSq6vE5yjGL/DrCSG8MVT1bfiRQCSxw6mEkMruigX3d1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748228626; c=relaxed/simple;
-	bh=Wv86JuCfVaaJ8z4khY3hTwzcVnR1Opi+FwW14hAOfdM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XogVDkB0Nvp69viKI1nEHgZOpYCRFyjmeok1nkPAjj86hralivWCHtdubIUcjcs5XnHjPQKGN2sR5/fHdXr68YhICaXCt3QK1iaouGyNVWqaQ2a13imUvQM4A58gix6iy14DchH52DHwpZD6qTUWQqnvIwrMsOygOga5POlu/hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOdYL3yf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOdYL3yf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80AE3C4CEEA;
-	Mon, 26 May 2025 03:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748228625;
-	bh=Wv86JuCfVaaJ8z4khY3hTwzcVnR1Opi+FwW14hAOfdM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YOdYL3yfnBQBsvhZNe3bBnw5EIVCFOHgvNRwOCPIplLMqWr5pXZwI6tBz4s4IuZmK
-	 q2AFU9ruTiwiDWXa89pCc5FxqhZKI5QL447FSBzpaXuMd/aaajvLDjjP13lJoDEHZq
-	 qsQUnF4qM+dsy01jCeD+mTgKgLSCBllol9y2M3PIukshL5rxl3qYSaofTN6YR23f+1
-	 +qSKqUBxJMBBTwQ/2mkL4Yr+TzF+LcvIWhIlkwj5bnrL2BqXLbFLPwjIwGts4uX2WR
-	 dDYvmEn6ARJqB1ZRZncI8v6UHsp7y0vVYbBM+AvxTBa4EQLBt94IdmlSMgSDBzqRSq
-	 oytwSmgUfHEJg==
-Date: Mon, 26 May 2025 12:03:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-Id: <20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
-In-Reply-To: <20250523172857.02ab4a75@gandalf.local.home>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-	<20250523172857.02ab4a75@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748228952; c=relaxed/simple;
+	bh=n2R/XKA+q3Xd+D2urEIVEv0qpf0OjXPZ7JL3kfzUtCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cF9jT0MgfmnSDykTcH2GpOQ+Ufew9k++oPb/kR44qfkV8DtHnjCd5uaqToYwmY5r3BdoRgIKQZdUiTKA/vCkChNcSDGb/Si/ZQp1HinKFt6DQU+p9d72rSbtj+EgeN7ze5Y8GNgB424+UAuCwr1UwgKs28wMYfKS01mxrxA4/1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-42-6833db5079af
+Date: Mon, 26 May 2025 12:08:58 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 13/18] mlx5: use netmem descriptor and APIs for page pool
+Message-ID: <20250526030858.GA56990@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-14-byungchul@sk.com>
+ <CAHS8izOX0j04=KB-=_kpyR+_HZHk+4hKK-xTEtsGNNHzZFvhKQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izOX0j04=KB-=_kpyR+_HZHk+4hKK-xTEtsGNNHzZFvhKQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfec3Ycro7L6k2zyyoiQ7sY9HTFIOJAFEV9iCLykIe20mUz
+	TaXMcmFaajeo1kmWlbeMyTK3wkSneUdNMdZ1YhZ90C5e5ryUOS3y24//c/k9Hx6WUploP1ar
+	OynqdUKEmlFgRY/3vaBd70I0K60V00EyFzLwyB0HuR02GqSCEgT9Q+/k0FdVw8D9ey4KpGYD
+	hgHzMAWfqzvl4Mz5gqE0xUpBZ2YtA+mGEQrO2/Jk0FKSQcON4YcUWJM65ND2XGLgY+EYDV/s
+	6RjqjPkYnBmhUG2aBa6GbgRVZqsMXJfvMnC91cTAJ4MTQWtlJ4Y75zIQmMscNIy4JSZ0IV+c
+	/0bGPzN+kPMmSwz/JC+QT3O0UrylIJXhLb3X5Pz716UMX3trBPPPbH0yPj35G8P//PwW89/L
+	2hneXNyO+UZTlZzvs8zbxe1XbAwXI7Sxon7F5jCFpqYuD0elecU1FK9NQrflaciLJdwa8tht
+	oP6xJdVOpyGWxdwSktK2wxMz3FLicAxNtPhyy8iDsqu0hynOSZMm6aiHZ3A7iDWzW+ZhJQfk
+	e08m9rCKy0ekaGz5ZO5D6m534cnZpWQ0q5XyqCjOn+T+Zifj+ST56Z0JlRe3m1R3JU+0z+QW
+	kfKSmvH1ivEri1ky3HPp7/lzSEWeA19BPsYpCuMUhfG/wjhFYUK4AKm0uthIQRuxJlgTr9PG
+	BR8+HmlB43+Tc2b0gA31tuyxI45Fam9lmDpEo6KF2Oj4SDsiLKX2Vc6VVmpUynAhPkHUHz+k
+	j4kQo+3In8Xq2crVrlPhKu6IcFI8JopRov5fVcZ6+SWhXGfbiYD+nqJ8qfbXAmWCwyUkvAi7
+	FdXdrrk5mnj6SvO2jvrBmReczkHThjO6gUplrg0HOTourkrQNWc3v5xGbVo842hAouSbfbax
+	vOzG9r7Bka17X61bsDPzR+hXQ/1iQ8lBWU7G+uS3bq4/a6it5bK74em+HP8PTdu3CVuq5gUG
+	q3G0RlgVSOmjhT8Ja5nvMwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHefZe9iotXpfWg0rCQkxLsyw8VIQh1EOhJkGFBTr1zU3nhU1F
+	o8CaIY3UrCCdU2amThMny7yEiEzzQmmiGKbVxEuEeSlvaEaXJZHffvzPOb//l8NRUi3jyimT
+	UgV1klwlYx1px9BjWt+wsQCFf95AIBjMtSw8XcuAqvFmBgw1jQiW18fEsNTZzUJ52SoFhjfZ
+	NKyYv1Mw3TUhBlvlJxpac5oomMjvYSE3e4OCW80mEXSU9DIw0JjHwMPvFRQ0ZY2LYeiFgYWP
+	tb8Y+GTNpaFXX02DLS8Iuow7YfXVLIJOc5MIVu+WsPBg0MjCZLYNwWDHBA3FN/MQmNtGGNhY
+	M7BBMtJQ/U5EWvQfxMRoSSPPTD5ENzJIEUvNHZZYFu+Lyfu3rSzpKdygSUvzkojkaudZ8m16
+	lCYLbcMsKf/8VUTMDcM0eW3sFJ9zinA8HiuolOmC+sCJKEdFd6+JTtE5ZLxqCMxCRWIdcuAw
+	fxhb7lgZHeI4mvfEOUMh9pjlvfDIyDplZ2feGz9pK2DsTPE2Bvcb4u28gw/BTfmzIjtLeMAL
+	c/m0naV8NcL1v/Zt5k64t2iK3rz1wj9KByl7FcW74aqf3GbsgbXPi/9WOfDhuGtK+3fdhd+D
+	2xu7RffQdv0Wk36LSf/fpN9iMiK6Bjkrk9IT5UrVET9NgiIzSZnhF5OcaEF/XqPyxo+CZrQ8
+	dNqKeA7JtkmiZAEKKSNP12QmWhHmKJmzxN3gr5BKYuWZ1wR1cqQ6TSVorMiNo2W7JGcuClFS
+	Pk6eKiQIQoqg/jcVcQ6uWchUV30quK3e75xb6cuVN0crSuZlA2Vy5Zwm3iN8t278UqFn7B5y
+	Ymatx8tpcSai0b21zh1HjxXsP9t35PL24zbTySH2tr9vqsuV+fjgUe+6/vqrU0FxpX0Lpabr
+	C+fbY/ojH/c9Ut29UBvWfTpmMnR5aviLom4gfm/chv/Ew0NB0ZkyWqOQH/Sh1Br5b+5GyJYW
+	AwAA
+X-CFilter-Loop: Reflected
 
-On Fri, 23 May 2025 17:28:57 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Fri, 23 May 2025 16:54:25 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, May 23, 2025 at 10:13:27AM -0700, Mina Almasry wrote:
+> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> >
+> > To simplify struct page, the effort to seperate its own descriptor from
+> > struct page is required and the work for page pool is on going.
+> >
+> > Use netmem descriptor and APIs for page pool in mlx5 code.
+> >
+> > Signed-off-by: Byungchul Park <byungchul@sk.com>
 > 
-> > I think we also need this:
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 7d837963dd1e..456efebc396a 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -3638,6 +3638,9 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
-> >  
-> >  	rb_reset_tail(cpu_buffer, tail, info);
-> >  
-> > +	/* The new page should have zero committed */
-> > +	rb_init_page(next_page->page);
-> > +
-> >  	/* Commit what we have for now. */
-> >  	rb_end_commit(cpu_buffer);
-> >  	/* rb_end_commit() decs committing */
+> Just FYI, you're racing with Nvidia adding netmem support to mlx5 as
+> well. Probably they prefer to take their patch. So try to rebase on
+> top of that maybe? Up to you.
 > 
-> No we don't need it ;-)
+> https://lore.kernel.org/netdev/1747950086-1246773-9-git-send-email-tariqt@nvidia.com/
 > 
-> I'm looking deeper into the code and we have this:
+> I also wonder if you should send this through the net-next tree, since
+> it seem to race with changes that are going to land in net-next soon.
+> Up to you, I don't have any strong preference. But if you do send to
+> net-next, there are a bunch of extra rules to keep in mind:
 > 
-> 		/*
-> 		 * No need to worry about races with clearing out the commit.
-> 		 * it only can increment when a commit takes place. But that
-> 		 * only happens in the outer most nested commit.
-> 		 */
-> 		local_set(&next_page->page->commit, 0);
+> https://docs.kernel.org/process/maintainer-netdev.html
+
+I can send to net-next, but is it okay even if it's more than 15 patches?
+
+	Byungchul
 > 
-> When the tail page gets moved.
-
-Yeah, when the page gets written, it is cleared.
-
-Thanks,
-
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> -- 
+> Thanks,
+> Mina
