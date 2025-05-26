@@ -1,380 +1,173 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E217C3C465;
-	Mon, 26 May 2025 10:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F4A14AD2B;
+	Mon, 26 May 2025 10:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748253646; cv=none; b=m5Aoifkt4E+dBsyxLI0tcCJ3W4caaJn+GgJDw3cIT5keZxqcqomwJ2XrcH8DoU5euQYxt4FYNvhQMvlBea44PJ5373IX0tKVUi2k1LzrfiatQxH4vqvBKPFYIGJ0iTuEr48R2WRSWZ4c4sPMsOEsAMa2ToNTrlIT5KfcU3L7iek=
+	t=1748253685; cv=none; b=MEYnsWf5iotrbarISJROUsB0JJfwSxUc2AlApjCIqkjAJ1URWJPPMlSEV5eGkeZ53Vigh0P6t8lpX00U8epO0k7dDX64dS5Ag/1lUuUv8ByLDa88vsDoc8R2WfBheEDe6nxoQtEUUvueUPUYG1b16zgQPj0PHBkpETx1SzUX8fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748253646; c=relaxed/simple;
-	bh=QMOcHQKOixiFHCCoUumVRhB/j/Jn50UQw+FeHbfYf5o=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WwdlFHxFUbzZFfkSLQ7e06dX/LFrD9JbCIgtQ2efeTOgdULPJn9Ij++IlcImXE7yGMifWvt3v2VUWe/l+WauJ7+4Q2NGTfj4143mDcZXFG7A+DDTjYVD/XMSGZkme6j6XPJpnpRCbpD6VefRPXrPsdfaC0eC0/EjBip6gu4jIxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LT+VaS5U; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LT+VaS5U"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso15495335e9.3;
-        Mon, 26 May 2025 03:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748253643; x=1748858443; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eicpoJrb0fZY7y6sTaFmu8OzAD0wjIi85iAmFVAlBtI=;
-        b=LT+VaS5UnPpdKYgaw5Kaw/J9v0z3bPhwiItt8SV3p34PhuHvOWqG0BSNVLmeYTLgG6
-         qzop3xIMQuJzD3rPjMe0BqU/vwoWTq8F+qzqwfelC5QXDMNFkdE9FLkesHJAP5Aqm80O
-         G6tkOGrRzvcfcHma75f0a01xs+57V4jhtOzvnwHr1Rp7bqoI1kJJIfcsH/zjBfEjRQqt
-         GNq1nXyuU0pjY4CMnd7rhmKHfxrrBD8cCtCUNh/xlkuT02ldHrWjs+QxpvC6Y+InliGl
-         T/fxbadhIsrDgfZIvVO/nfJLhOhHpgRbUFHDQ7N52Z7WGBfsqWkh8TA7HtIt82snYHLQ
-         xzWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748253643; x=1748858443;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=eicpoJrb0fZY7y6sTaFmu8OzAD0wjIi85iAmFVAlBtI=;
-        b=EswfiIKxrsOGqQyxMKpqbXa6Mbbku6DL1qwzX0Kg+4yYnrKMeczrYPfr9auLYZ4zdI
-         kzlgDtppJXZnEsw6nyJFaf7h9q419LNayqPGVUdZ/qY0SXvO4Fsymud7APCuZccb9XYl
-         UqGyR3HR1EtCb+vJ7PvahjV8urmmJclMqc9k8xS0h9vBCMY9nn5KtOds83Pg58JFrQuj
-         n/uHhZNV3YQdl7llvpJXhyNXZgl9ywIEOlo1TkAnhFgd41ovKNQJjmjJVds/KOU87k7I
-         ztKeqZ5U3IMhDcgmW3Uz/KkYfH6ik00VJqf/ULcNXTDAeqLOJouEjLpkm90vn3TdiSnf
-         lQzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEPg7mBkiBHIkkYmy9qhrv1ug1GfiUBWhKKNpqAGM2/zvX/j1ETAdT56H+fO4lB5iGIKFckgmRowLbC86u@vger.kernel.org, AJvYcCVYsnJEjoFhrDDNrIt2QWlcBiGk7Doxw4onOuvASRBNZ0BMRLYFC3LQCw2KjzgesjbeaB3G/1M4LlNZ@vger.kernel.org, AJvYcCWz3RRAPOqqyj6H5wffPpCnXJdEiQRjLMn4CmfrsDHFWfmgh9oa7ZB+RFaOcCGRqRr019v7NQ1pSezQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXLMDVcSP0tncqwSLp4VKJVEhejQFQnD/DwufZNSloDRJOrrq4
-	PbsqyhkmnGDeFKWSF2qaVokgtuVjmG2voNl/UzgHBrpd14CMybNKzq/P
-X-Gm-Gg: ASbGnctOe8gVbJaj/TU66IR4ASfTKiR2p0VEyeHV8kluQdMpeWLhLEWcTlOCV+gBEA1
-	hvgD28hU7XsaHG/L8KdztKnOTEpoFsE+sPHB72x40HsegwUUEMwEK5VdDZhK6adqx+IfAyn8juz
-	atPtUuqO5/ibufxua7Dh1rNsXyeTatzRU0o4R5uDbQRFTHfDG3afV/lwgjZr5LGbBlLKccJGKaE
-	OOwZS6WXESzqGfGnRm6FpeNnymYQMX6m1sfnss6LsyGMgX797Tuq8yfJUhGmNiiizFkmL4scUpa
-	X2Fb3dclOH9929FUsPOfDZSJ6APC1r3oPzzaQVfsUCafNrYYAMWnU2Jp
-X-Google-Smtp-Source: AGHT+IFyPQ4Wmke7I/ldBmQ9xIXo1pz+RbcwWPzddrOPwodQoUH2HBPsO/ug0U9yclj2a7jniWZ4gA==
-X-Received: by 2002:a05:6000:2585:b0:3a3:5918:bb9e with SMTP id ffacd0b85a97d-3a4cb4b8792mr6363492f8f.59.1748253642985;
-        Mon, 26 May 2025 03:00:42 -0700 (PDT)
-Received: from [100.73.1.233] ([185.128.9.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4c90624cfsm8194980f8f.62.2025.05.26.03.00.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 03:00:42 -0700 (PDT)
-Message-ID: <4a357e2412efe86cd9efc46baeb2e5d475e29515.camel@gmail.com>
-Subject: Re: [PATCH v4 6/6] iio: adc: ad7405: add ad7405 driver
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>, Lars-Peter Clausen	
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron	 <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring	 <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Sergiu Cuciurean <sergiu.cuciurean@analog.com>, 
- Dragos Bogdan <dragos.bogdan@analog.com>, Antoniu Miclaus
- <antoniu.miclaus@analog.com>, Olivier Moysan	 <olivier.moysan@foss.st.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,  Matti Vaittinen
- <mazziesaccount@gmail.com>, Tobias Sperling <tobias.sperling@softing.com>,
- Alisa-Dariana Roman	 <alisadariana@gmail.com>, Marcelo Schmitt
- <marcelo.schmitt@analog.com>, 	linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Mon, 26 May 2025 11:00:45 +0100
-In-Reply-To: <20250519140220.81489-7-pop.ioan-daniel@analog.com>
-References: <20250519140220.81489-1-pop.ioan-daniel@analog.com>
-	 <20250519140220.81489-7-pop.ioan-daniel@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	s=arc-20240116; t=1748253685; c=relaxed/simple;
+	bh=7xnBbO9oZrXF/pz7tZt0xLcfgxXrxwyrfMm82fzzaRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCbjRs/DT3HvQYD7PH72TnQJXvHt5pK/6s1l7gVo61dZ96rNg0tokKCVVFXU3rdGxmX5cPcIBnOfQCrvbIKvUxpYrvzbVUL23htHE7fdAdZcopZOJLS/1YTEw7hm1DPRdw/XtTUbcoOaVUzySOdjEx1XIGVa1Fqjc4CcJQAymqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-43-68343beced90
+Date: Mon, 26 May 2025 19:01:11 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, tariqt@nvidia.com, edumazet@google.com,
+	pabeni@redhat.com, saeedm@nvidia.com, leon@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, david@redhat.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
+ page->pp_magic in page_pool_page_is_pp()
+Message-ID: <20250526100111.GA39311@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-13-byungchul@sk.com>
+ <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+ <20250526022307.GA27145@system.software.com>
+ <20250526023624.GB27145@system.software.com>
+ <87o6vfahoh.fsf@toke.dk>
+ <20250526094305.GA29080@system.software.com>
+ <87ldqjae92.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87ldqjae92.fsf@toke.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+Z9zdnYcDo5T868rw3UxhMpK7KVCCjL+9CG6fIiMqJWnNi8z
+	NjMXRFajUJxZCdZcOYu8rGC1vEzx1hItLTJDWbPSzAvB7KJl5ro5RfLbj+d9eJ7nw8vRslui
+	ME6tSRe0GmWKgpUwklH/Wys9G2NU0Ya6DWC23WPh7mQmlPU7RGC2ViP49rNXDOMtbSzcLpmg
+	wfzCwMB32xQNQ60DYugrHWag/mINDQOXnrBgNHhpOOcop6CzOk8EBVN3aKjJ6hfDqzozC+/u
+	/RXBsNPIwFNTBQN9eZuh1bIAJjo8CFpsNRRM5N5g4WqXhYUPhj4EXY8HGCg6m4fA1ugSgXfS
+	zG6OIJUVrylSa3orJhb7CfKwPIrkuLpoYrdms8Q+dkVM3vTUs+TJNS9Dah3jFDGe/8SSr0Nu
+	hnxu7GaJrbKbIc8sLWIybg/fySdINiUKKeoMQbs67pBE9aChGB2/EZ75vv25KAtZQ3KQH4f5
+	GDx2P5+a4+JsG+1jhl+GCw1FM8zykdjl+jnNHBfEb8Edk8dykISj+XERto4ZZzyBfBLOdY+w
+	PpbygEt62hmfScZ7KNzhaRXPHgLw0+uDjI/p6dBfN7tmQmlejsv+cLPyYny+qmhG9pve8LJ5
+	l08O5pfg5uo2yheJeQeHLxT+Fc9uDsWPyl1MPgowzWswzWsw/W8wzWuwIMaKZGpNRqpSnRKz
+	SqXXqDNXHUlLtaPpzyk9/Wu/A4117nEinkMKf+khxTqVTKTM0OlTnQhztCJIutAcrZJJE5X6
+	U4I27aD2RIqgcyI5xyhCpGsnTibK+GPKdCFZEI4L2rkrxfmFZaGC9cm793rccZ2Ud2jHSoLl
+	1uDMhKratojqwsjIGu375VqqKXCF+fWoO/WT29/47ELIvoVefYarLMkzOjIlf6z/feYB/kKP
+	lupaDg4u9d/fmSC/3CRfPbjox2TMx7KAm7H347ceiA/fHtTfcCd099HyM9mWXmP3Ng3tjD38
+	xTkcp2B0KuWaKFqrU/4DmdcGhTUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+Z/bzkar4zI7aRid6GKQFRq8oYVR0MEwukEQRK46tKlbuqm4
+	oFg6i9TZRaOaMyfm1GWMzHRFxTBTp0W6Lqx10SwrQiuvTNfNKZHffjzPw4/3w0vjslwylFaq
+	0wWNWp7CURJCsj0mZ1V/TLRiTbZrBZjttRRc92VBVY+DBLOtAcHI+GsRDDe3UlBRPoaD+amB
+	gFH7BA59Lb0i6LZ+IuDe6UYces+2UWA0+HHIdlRj8LDURUJnQyEJxROVODTqe0Tw7K6Zgne1
+	f0j41GQkwGWqIaC7MA5aLCEw1tGPoNneiMFYQSkFRW4LBR8M3QjcD3sJKDlZiMD+wEOC32em
+	4ji+vuYVxt8xvRXxlroM/lb1Sj7P48b5OtsZiq8buiDi37y8R/Ftl/0Ef8cxjPHGnG8UP9jn
+	JfjvD15QfMWXHxhvr39B8I8tzaIdQfsksYeFFGWmoFm9MVGiuHm/DKWWhme9b39C6pFtfh4S
+	0ywTzZadseMBJpil7CVDyRRTzHLW4xmfZJoOZjaxHb4jeUhC48wwydqGjFObuUwSW+D9TAVY
+	ygBb/rKdCIxkTD/GdvS3iKaLINZ15SMRYHxS+vOqe0qKM2Fs1W96Ol7E5twumYrFkzd0OXcG
+	4nnMEtbZ0IqdQ7NNM0SmGSLTf5FphsiCCBsKVqozVXJlyrpIbbJCp1ZmRR46qqpDk89hPf7z
+	vAONPNvahBgacbOkiVyUQkbKM7U6VRNiaZwLli40r1HIpIflumOC5ugBTUaKoG1CYTTBzZfG
+	7xUSZcwRebqQLAipguZfi9HiUD0qfr4s1+NwstFnrWWWfeF3VRJbxOjEQH1bF7Uhl938I//G
+	7ljlrs8FA2hO1LYF68OqRkHUc78zBAZ3mKwR4V7uVHvaV6duoy9h9bVU//lWX3KItWjuvF+4
+	8pHYnx9h7FsfG6/fr0sbrN2SkbSh0ntx8UDC0297Kl1xZTHXD9ac4AitQr52Ja7Ryv8C3w2N
+	oBgDAAA=
+X-CFilter-Loop: Reflected
 
-On Mon, 2025-05-19 at 17:02 +0300, Pop Ioan Daniel wrote:
-> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-> 1-channel, 16-bit with a second-order =CE=A3-=CE=94 modulator that conver=
-ts an
-> analog input signal into a high speed, single-bit data stream.
->=20
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
+On Mon, May 26, 2025 at 11:54:33AM +0200, Toke Høiland-Jørgensen wrote:
+> Byungchul Park <byungchul@sk.com> writes:
+> 
+> > On Mon, May 26, 2025 at 10:40:30AM +0200, Toke Høiland-Jørgensen wrote:
+> >> Byungchul Park <byungchul@sk.com> writes:
+> >> 
+> >> > On Mon, May 26, 2025 at 11:23:07AM +0900, Byungchul Park wrote:
+> >> >> On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
+> >> >> > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> >> >> > >
+> >> >> > > To simplify struct page, the effort to seperate its own descriptor from
+> >> >> > > struct page is required and the work for page pool is on going.
+> >> >> > >
+> >> >> > > To achieve that, all the code should avoid accessing page pool members
+> >> >> > > of struct page directly, but use safe APIs for the purpose.
+> >> >> > >
+> >> >> > > Use netmem_is_pp() instead of directly accessing page->pp_magic in
+> >> >> > > page_pool_page_is_pp().
+> >> >> > >
+> >> >> > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> >> >> > > ---
+> >> >> > >  include/linux/mm.h   | 5 +----
+> >> >> > >  net/core/page_pool.c | 5 +++++
+> >> >> > >  2 files changed, 6 insertions(+), 4 deletions(-)
+> >> >> > >
+> >> >> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >> >> > > index 8dc012e84033..3f7c80fb73ce 100644
+> >> >> > > --- a/include/linux/mm.h
+> >> >> > > +++ b/include/linux/mm.h
+> >> >> > > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+> >> >> > >  #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
+> >> >> > >
+> >> >> > >  #ifdef CONFIG_PAGE_POOL
+> >> >> > > -static inline bool page_pool_page_is_pp(struct page *page)
+> >> >> > > -{
+> >> >> > > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
+> >> >> > > -}
+> >> >> > 
+> >> >> > I vote for keeping this function as-is (do not convert it to netmem),
+> >> >> > and instead modify it to access page->netmem_desc->pp_magic.
+> >> >> 
+> >> >> Once the page pool fields are removed from struct page, struct page will
+> >> >> have neither struct netmem_desc nor the fields..
+> >> >> 
+> >> >> So it's unevitable to cast it to netmem_desc in order to refer to
+> >> >> pp_magic.  Again, pp_magic is no longer associated to struct page.
+> >> >
+> >> > Options that come across my mind are:
+> >> >
+> >> >    1. use lru field of struct page instead, with appropriate comment but
+> >> >       looks so ugly.
+> >> >    2. instead of a full word for the magic, use a bit of flags or use
+> >> >       the private field for that purpose.
+> >> >    3. do not check magic number for page pool.
+> >> >    4. more?
+> >> 
+> >> I'm not sure I understand Mina's concern about CPU cycles from casting.
+> >> The casting is a compile-time thing, which shouldn't affect run-time
+> >
+> > I didn't mention it but yes.
+> >
+> >> performance as long as the check is kept as an inline function. So it's
+> >> "just" a matter of exposing struct netmem_desc to mm.h so it can use it
+> >
+> > Then.. we should expose net_iov as well, but I'm afraid it looks weird.
+> > Do you think it's okay?
+> 
+> Well, it'll be ugly, I grant you that :)
+> 
+> Hmm, so another idea could be to add the pp_magic field to the inner
+> union that the lru field is in, and keep the page_pool_page_is_pp()
+> as-is. Then add an assert for offsetof(struct page, pp_magic) ==
+> offsetof(netmem_desc, pp_magic) on the netmem side, which can be removed
+> once the two structs no longer shadow each other?
 
-Hi,
+It would work, but still that's what I wanted to avoid.
 
-Just a couple of notes from me...
-=20
-> changes in v4:
-> =C2=A0- changes in "depends on" instead of "select" for IIO_BACKEND in Kc=
-onfig
-> =C2=A0- remove scale_tables variables
-> =C2=A0- remove sample_frequency_tbl, sample_frequency
-> =C2=A0- remove ad7405_fill_samp_freq_table function
-> =C2=A0- rewrite ad7405_get_scale function as suggested
-> =C2=A0- make sampling_frequency read-only
-> =C2=A0- implement IIO_CHAN_INFO_OFFSET as suggested
-> =C2=A0- fix code style
->=20
-> =C2=A0drivers/iio/adc/Kconfig=C2=A0 |=C2=A0 10 ++
-> =C2=A0drivers/iio/adc/Makefile |=C2=A0=C2=A0 1 +
-> =C2=A0drivers/iio/adc/ad7405.c | 250 ++++++++++++++++++++++++++++++++++++=
-+++
-> =C2=A03 files changed, 261 insertions(+)
-> =C2=A0create mode 100644 drivers/iio/adc/ad7405.c
->=20
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index ad06cf556785..43af2070e27f 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -251,6 +251,16 @@ config AD7380
-> =C2=A0	=C2=A0 To compile this driver as a module, choose M here: the modu=
-le will
-> be
-> =C2=A0	=C2=A0 called ad7380.
-> =C2=A0
-> +config AD7405
-> +	tristate "Analog Device AD7405 ADC Driver"
-> +	depends on IIO_BACKEND
-> +	help
-> +	=C2=A0 Say yes here to build support for Analog Devices AD7405, ADUM770=
-1,
-> +	=C2=A0 ADUM7702, ADUM7703 analog to digital converters (ADC).
-> +
-> +	=C2=A0 To compile this driver as a module, choose M here: the module wi=
-ll
-> be
-> +	=C2=A0 called ad7405.
-> +
-> =C2=A0config AD7476
-> =C2=A0	tristate "Analog Devices AD7476 1-channel ADCs driver and other
-> similar devices from AD and TI"
-> =C2=A0	depends on SPI
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 07d4b832c42e..8115f30b7862 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7291) +=3D ad7291.o
-> =C2=A0obj-$(CONFIG_AD7292) +=3D ad7292.o
-> =C2=A0obj-$(CONFIG_AD7298) +=3D ad7298.o
-> =C2=A0obj-$(CONFIG_AD7380) +=3D ad7380.o
-> +obj-$(CONFIG_AD7405) +=3D ad7405.o
-> =C2=A0obj-$(CONFIG_AD7476) +=3D ad7476.o
-> =C2=A0obj-$(CONFIG_AD7606_IFACE_PARALLEL) +=3D ad7606_par.o
-> =C2=A0obj-$(CONFIG_AD7606_IFACE_SPI) +=3D ad7606_spi.o
-> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
-> new file mode 100644
-> index 000000000000..fb249c83b87b
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7405.c
-> @@ -0,0 +1,250 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Analog Devices AD7405 driver
-> + *
-> + * Copyright 2025 Analog Devices Inc.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/util_macros.h>
-> +
-> +#include <linux/iio/backend.h>
-> +#include <linux/iio/iio.h>
-> +
-> +static const unsigned int ad7405_dec_rates[] =3D {
-> +	4096, 2048, 1024, 512, 256, 128, 64, 32,
-> +};
-> +
-> +struct ad7405_chip_info {
-> +	const char *name;
-> +	struct iio_chan_spec channel;
-> +	const unsigned int full_scale_mv;
-> +};
-> +
-> +struct ad7405_state {
-> +	struct iio_backend *back;
-> +	const struct ad7405_chip_info *info;
-> +	unsigned int ref_frequency;
-> +	unsigned int dec_rate;
-> +};
-> +
-> +static int ad7405_set_dec_rate(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct iio_chan_spec *chan=
-,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int dec_rate)
-> +{
-> +	struct ad7405_state *st =3D iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	ret =3D iio_backend_oversampling_ratio_set(st->back, chan->scan_index,
-> dec_rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->dec_rate =3D dec_rate;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7405_get_scale(struct ad7405_state *st, int *val, int *val2=
-)
-> +{
-> +	*val =3D st->info->full_scale_mv;
-> +	*val2 =3D st->info->channel.scan_type.realbits - 1;
-> +
-> +	return IIO_VAL_FRACTIONAL_LOG2;
-> +}
-> +
-> +static int ad7405_read_raw(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0 const struct iio_chan_spec *chan, int *val,
-> +			=C2=A0=C2=A0 int *val2, long info)
-> +{
-> +	struct ad7405_state *st =3D iio_priv(indio_dev);
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_SCALE:
-> +		return ad7405_get_scale(st, val, val2);
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*val =3D st->dec_rate;
+To Matthew and mm folks,
 
-I'm typically picky with this but I really think that we need a lock to be =
-used
-here and in ad7405_set_dec_rate(). Alternatively we could add
-iio_backend_oversampling_ratio_get() but I would likely avoid a new op just=
- for
-this.
+Does it look okay?
 
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val =3D DIV_ROUND_CLOSEST_ULL(st->ref_frequency, st-
-> >dec_rate);
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		*val =3D 2 << (st->info->channel.scan_type.realbits - 1);
-> +		return IIO_VAL_INT;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad7405_write_raw(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan, int val,
-> +			=C2=A0=C2=A0=C2=A0 int val2, long info)
-> +{
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		return ad7405_set_dec_rate(indio_dev, chan, val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int ad7405_read_avail(struct iio_dev *indio_dev,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0 struct iio_chan_spec const *chan,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0 const int **vals, int *type, int *length,
-> +			=C2=A0=C2=A0=C2=A0=C2=A0 long info)
-> +{
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*vals =3D ad7405_dec_rates;
-> +		*length =3D ARRAY_SIZE(ad7405_dec_rates);
-> +		*type =3D IIO_VAL_INT;
-> +		return IIO_AVAIL_LIST;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info ad7405_iio_info =3D {
-> +	.read_raw =3D &ad7405_read_raw,
-> +	.write_raw =3D &ad7405_write_raw,
-> +	.read_avail =3D &ad7405_read_avail,
-> +};
-> +
-> +#define AD7405_IIO_CHANNEL {					\
-> +	.type =3D IIO_VOLTAGE,					\
-> +	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE) |	\
-> +			BIT(IIO_CHAN_INFO_OFFSET),		\
-> +	.info_mask_shared_by_all =3D IIO_CHAN_INFO_SAMP_FREQ |	\
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
-> +	.info_mask_shared_by_all_available =3D			\
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
-> +	.indexed =3D 1,						\
-> +	.channel =3D 0,						\
-> +	.channel2 =3D 1,						\
-> +	.differential =3D 1,					\
-> +	.scan_index =3D 0,					\
-> +	.scan_type =3D {						\
-> +		.sign =3D 'u',					\
-> +		.realbits =3D 16,					\
-> +		.storagebits =3D 16,				\
-> +	},							\
-> +}
-> +
-> +static const struct ad7405_chip_info ad7405_chip_info =3D {
-> +	.name =3D "AD7405",
-> +	.full_scale_mv =3D 320,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const struct ad7405_chip_info adum7701_chip_info =3D {
-> +	.name =3D "ADUM7701",
-> +	.full_scale_mv =3D 320,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const struct ad7405_chip_info adum7702_chip_info =3D {
-> +	.name =3D "ADUM7702",
-> +	.full_scale_mv =3D 64,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const struct ad7405_chip_info adum7703_chip_info =3D {
-> +	.name =3D "ADUM7703",
-> +	.full_scale_mv =3D 320,
-> +	.channel =3D AD7405_IIO_CHANNEL,
-> +};
-> +
-> +static const char * const ad7405_power_supplies[] =3D {
-> +	"vdd1",	"vdd2",
-> +};
-> +
-> +static int ad7405_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct iio_dev *indio_dev;
-> +	struct ad7405_state *st;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	indio_dev =3D devm_iio_device_alloc(dev, sizeof(*st));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	st =3D iio_priv(indio_dev);
-> +
-> +	st->info =3D device_get_match_data(dev);
-> +	if (!st->info)
-> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
-> +
-> +	ret =3D devm_regulator_bulk_get_enable(dev,
-> ARRAY_SIZE(ad7405_power_supplies),
-> +					=C2=A0=C2=A0=C2=A0=C2=A0 ad7405_power_supplies);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to get and enable
-> supplies");
-> +
-> +	clk =3D devm_clk_get_enabled(dev, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	st->ref_frequency =3D clk_get_rate(clk);
-> +	if (!st->ref_frequency)
-> +		return -EINVAL;
-> +
-> +	indio_dev->dev.parent =3D dev;
-
-no need for the above
-
-- Nuno S=C3=A1
+	Byungchul
+> 
+> That way you can still get rid of the embedded page_pool struct in
+> struct page, and the pp_magic field will just be a transition thing
+> until things are completely separated...
+> 
+> -Toke
