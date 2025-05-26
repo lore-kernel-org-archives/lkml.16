@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2743F9E8;
-	Mon, 26 May 2025 04:11:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEFF23DE;
+	Mon, 26 May 2025 04:17:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748232688; cv=none; b=NaA315ZqmHILbV6k36FjRojDIt/X4kojTqDqpjZGN8h4Mmlh+V654wdxwmQUFxljZ7KvZENiYcVit0CoWhXvyFrkoX1gWnJDKYirV6yQ+TysCALWMdGsTRXJeTn2CSl3Mz/95/iRQFFYGVYsVSUU63qTOp/WlAndJnHfBghj1Is=
+	t=1748233057; cv=none; b=JDHEjzexFVzYNfallE6w1CdGnQTYUgiO1G9cw2FRnae4KetBWilAK0kepkdfPIvUl//WSCrDkIBXs5QObeAJQXnvFrBE3LqYVkEP0/KHu7BtlUYFKkvEZFGdeBFQrCh3Br9Y+F/aSY09qMifqzTFTDbtZOrRoEegIuVwbJbMq9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748232688; c=relaxed/simple;
-	bh=dgbarJqXPFPUQBlWN+OqzRIxfFDHAFWwjZTEUideGZY=;
+	s=arc-20240116; t=1748233057; c=relaxed/simple;
+	bh=aqUOswUxr57O4DWG+gsk6e2Kr5wYGDmSgJBU8K+2NYk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f1GkQKSxzJoEAHZlFswP/AUX75L1nUWMsEARqqCEpE3KedgPFchsoMH+NhS4EYTwIQkvvjbvKsbYYJ1jIiKNu6RL3CRxj0FFYV5yiy+7ji6VEeSbtcenVbPX33Q+p3RB1LrkngFWTbdehP4d1+4N9kCPKB1Hy/twQGXEAbYAGUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uWs35SBJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bVXUgTezOovIVhtWEfTXVrIEI6cEvG+Tm2W05e0efGHky8KHlC5XMBXUYAI2Wz2BfJthIcnDc3uazWvt2obbI+NP5F7rvaV7BI5kvQTk7y/PPG3E6CU/5FsGhMOkGrGRGBKldbmM0/Zioeo/j+6G99xPBu5U5ofv6lS/eqG27tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDrTDkEL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uWs35SBJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE39C4CEE7;
-	Mon, 26 May 2025 04:11:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDrTDkEL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39CA1C4CEE7;
+	Mon, 26 May 2025 04:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748232688;
-	bh=dgbarJqXPFPUQBlWN+OqzRIxfFDHAFWwjZTEUideGZY=;
+	s=k20201202; t=1748233057;
+	bh=aqUOswUxr57O4DWG+gsk6e2Kr5wYGDmSgJBU8K+2NYk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uWs35SBJKzSqyMwakQmnKqopKL+DK5eMs0nVpGp+xS4/ijv2aTyfFW4e36cR0bGj8
-	 n7Mp7l94vSKmdMyu5J6YDNeUB2NOy75q8kFzvrO0jIBMKrEsjVIk+Sw2K/28r9j0LX
-	 9I9qF3I1VPntkfzU/ckiKr1CiJF9fDlbfWmjY3v1ckKnBCAnDVvWNseY0nUC9slD0D
-	 TyOotJKv+Htv6v7nmxkkZ0XxGcXtOohblmPtcQxYwCRijSbpVw2r0pW3iUT8TiIkSF
-	 3qGH8vy262+zIJF3jsqsKzV4AyxdukCVlBtLbh8Sk2bnRIojPR2/bGJZb8Zd0R88bg
-	 2cLhL/Xu/Zovg==
-Message-ID: <dfe02190-8e7a-48e7-8d2d-8d3af2392eb5@kernel.org>
-Date: Mon, 26 May 2025 06:11:22 +0200
+	b=pDrTDkEL9dQmxIZV5A/mQy9mfxvVwvkslRYZavFPCRAXuDC/ZGS9cEPcvO+7+YTIu
+	 SiRt+K7ZRyfjiZhIyIheiRfOkNgt9FuP19jyXJ5slG5oayVwNxovsKeGMP/rj9riW1
+	 ZcXf1hNxQWt5ymCABIa1NP1TbrNS9P+f9mTfckWEWrKoYhvi8Ox2EBNChGpaDJkeOx
+	 x16UrRa4kG1hpahTiHKH27O1LhYfiFOjOT5ubMBJjcdfc4i4lx087g0OqL7Yt+YjQT
+	 t8UqjHALdxeOV271pGHo7VIV/GIiBy/XP3cJ/T7OGaGbQ8WpI/CmBQaB8duKVaVh2+
+	 nP/MHu9FhaBuQ==
+Message-ID: <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
+Date: Mon, 26 May 2025 06:17:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +35,24 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: clock: Document Loongson 2K0300 clock
- controller
-To: Yao Zi <ziyao@disroot.org>, Binbin Zhou <zhoubb.aaron@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+Subject: Re: [PATCH 1/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal GE
+ PHY support
+To: george.moussalem@outlook.com, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
- WANG Xuerui <kernel@xen0n.name>, Yinbo Zhu <zhuyinbo@loongson.cn>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250523104552.32742-1-ziyao@disroot.org>
- <20250523104552.32742-2-ziyao@disroot.org>
- <CAMpQs4JRy+Q2D5B9cOLyuD=8EcWNqqyhJcm+X5wiqTgjy5cikA@mail.gmail.com>
- <aDB4DTd1Y29lJlyM@pie.lan>
+ <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+ <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,72 +98,49 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aDB4DTd1Y29lJlyM@pie.lan>
+In-Reply-To: <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 23/05/2025 15:28, Yao Zi wrote:
-> On Fri, May 23, 2025 at 08:30:57PM +0800, Binbin Zhou wrote:
->> On Fri, May 23, 2025 at 6:46 PM Yao Zi <ziyao@disroot.org> wrote:
->>>
->>> Document the clock controller shipped in Loongson 2K0300 SoC, which
->>> generates various clock signals for SoC peripherals.
->>>
->>> Signed-off-by: Yao Zi <ziyao@disroot.org>
->>> ---
->>>  .../bindings/clock/loongson,ls2k0300-clk.yaml | 52 ++++++++++++++++++
->>>  .../dt-bindings/clock/loongson,ls2k0300-clk.h | 54 +++++++++++++++++++
->>>  2 files changed, 106 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/clock/loongson,ls2k0300-clk.yaml
->>
->> I don't think a new binding file for 2K0300 is needed. Adding
->> compatible entries to loongson,ls2k-clk.yaml would be more appropriate
->> as they are almost all similar.
-> 
-> Originally I've tried to integrate the 2K0300 stuff with
-> loongson,ls2k-clk.yaml, but found it's hard to describe some properties.
-> 
-> For example, currently in loongson,ls2k-clk.yaml, the clocks property is
-> described as
-> 
->   clocks:
->     items:
->       - description: 100m ref
-> 
-> what should the description look like with 2K0300 introduced, whose
-> reference clock runs at 120MHz instead of 100MHz? It'll be hard to
-> describe things correctly without losing existing information. "120MHz
-> reference clock for Loongson 2K0300, or 100MHz reference clock for other
-> SoCs" sounds even a worse idea.
+On 25/05/2025 19:56, George Moussalem via B4 Relay wrote:
+> diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+> index 3acd09f0da863137f8a05e435a1fd28a536c2acd..a9e94666ff0af107db4f358b144bf8644c6597e8 100644
+> --- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+> +++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
+> @@ -60,6 +60,29 @@ properties:
+>      minimum: 1
+>      maximum: 255
+>  
+> +  qca,dac:
+> +    description:
+> +      Values for MDAC and EDAC to adjust amplitude, bias current settings,
+> +      and error detection and correction algorithm. Only set in a PHY to PHY
+> +      link architecture to accommodate for short cable length.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      - items:
+> +          - description: value for MDAC. Expected 0x10, if set
+> +          - description: value for EDAC. Expected 0x10, if set
 
-Drop the frequency anyway, it is kind of pointless here.
+If this is fixed to 0x10, then this is fully deducible from compatible.
+Drop entire property.
 
-> 
-> Another example is about the description of clock IDs. loongson,ls2k-clk.yaml
-> describes available clock IDs as
-> 
->   '#clock-cells':
->     const: 1
->     description:
->       The clock consumer should specify the desired clock by having the clock
->       ID in its "clocks" phandle cell. See include/dt-bindings/clock/loongson,ls2k-clk.h
->       for the full list of Loongson-2 SoC clock IDs.
-> 
-> what should the description look like if we add 2K0300 support? With a
-> different header being introduced, the description will be messy.
+> +      - maxItems: 1
+> +
+> +  qca,eth-ldo-enable:
 
-No, just list the headers.
+qcom,tcsr-syscon to match property already used.
 
-> 
-> I think keeping SoCs peripherals that are different in hardware design
-> in the same binding is really a bad idea. Yes, these clock controllers
-> are similar enough to reuse the clock hardware driver, but they have
-> different clock tree structures and register definitions, making them
-> essentially different things. Trying to keep everything in the same
-> place only makes the binding messy.
-
-How is binding messy if you only add one compatible?
-
+> +    description:
+> +      Register in TCSR to enable the LDO controller to supply
+> +      low voltages to the common ethernet block (CMN BLK).
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: phandle of TCSR syscon
+> +          - description: offset of TCSR register to enable the LDO controller
+> +      - maxItems: 1
+You listed two items, but second is just one item? Drop.
 
 Best regards,
 Krzysztof
