@@ -1,67 +1,68 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4B41DF99C
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4894204E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245795; cv=none; b=gbADfZDSYU2SVwTxidZ9V+FX6WaWO+XU9q63dQzRNvQk+VX2TDNfj3T7dRrbZv/AP3ExFdL89jUFEaC10pTrV8MKHZilaUKtNDWromPBL6Xz7gXdrpQmd7pU/YWQvgjpw+sx2fECaVSBoNoqdmbbIXqsL9C9EcWcuntzNmKLeXY=
+	t=1748245813; cv=none; b=hYrfVhvlgLrV3fjMD4TkdpP8nKm8Z4SBrHS/B0myqUAntwP5hQ4cJymQSdKtoVKvybZzkhEAI7qn04zC+vLvrN4B1Cq3dAGytXCwSvHXO7zll033XiMDyYdw8QnOpCFmqGzev34wc1ue8ChTr1jsdz2hdCCxEnzb/ABHmFlFsu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245795; c=relaxed/simple;
-	bh=r3tw+ci1cJWQMLJ1vCQPJY06Tj5BfzJgIqNFwcTNgYU=;
+	s=arc-20240116; t=1748245813; c=relaxed/simple;
+	bh=xFLY31dxkf/JJEPmjQh4uECytDTloz/dZP17HYOyk5Q=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=On0PzRsxEumYaa/b5+LpgutCJyUMerfM442r8I/SFhziAqPeLJ4ghQQHyXiEnJtgbynycyZTd/gBPufOz0VD9+G7e2KbHcqPcqoBUOBHLH1fKRKZ5qnZimpZglatDBsx8sJs+FvfC3lJqnjT35fqnnfty7AlZ2nJPfEL6MazOhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tLZ5Fe33; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:Content-Type; b=KAMuG3edbsxm7EgTJB7db/TkfqJSq7VVxs1yWuTaRtzZxtfTAu9K++GBmhigR2htGGhzKVI7Xl/EJd2cmWsCrsDC0XC+rw421K86XqOtr3GEcRqk4mXYjJYVWXuyalOCEvOlssOPiPokzjB6LUhFM6adWJtoMvRecWNoMdL6IcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vx5rNZXb; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLZ5Fe33"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0618746bso14783985e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:49:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vx5rNZXb"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43edb40f357so16028165e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748245791; x=1748850591; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1748245810; x=1748850610; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AOJrJ+WcHdALj8ZK6IlDndbV9NrPe74V0z2ftU80FfI=;
-        b=tLZ5Fe33YakRn9EcbenC1hWV17KYJ3ZaUiozjJjuFgUv5yQHgJsKtXQbdKtVlgkCI5
-         Rrh6c7AMJmonTOLsRx7/oeOnRDk3U+hCnqnTN0abf+F058dOc8rjsp3MY/WTnItCtNeA
-         HY2mLU2/BthjgI8xrmY3A7iQNCw+JvCbR/+3g5Dfyhvczi1sMLKLFElWgOt6Pxw0JsVP
-         9Yp+liNrWy40u7KG3Xw6a+kR7qZJVyCSjwC9xWKzkSo+k1tIjslhr+QnkAkHI27zOskN
-         523cDvbNc8GMJWkSMDQGEyjydrbmjhD3bz67Gsy5H6YyhrDQ3q/+a+5JMbApD5XrgLno
-         tEDA==
+        bh=7s2TD6bDYSb15QeqSffpz33dcHGJGRttLHbdrFUHcio=;
+        b=Vx5rNZXbn8F5HPZnTz+lNb4Dis+iDRP6pQMQjU3D20j3D9CgMEdP5XEHvMRLYNfUUn
+         Qzll5TRfvwbMwb/ZDHQrtjqysNpIdjEYtLGoVI+NUL2sIO95hCab6pML/ipitfVVeyWH
+         LByNBLIsoFwpPWw3vGOOI2fpNLZ4tfEzFl3j+YHN3EUKFjieXE/i47FgfwG54SwKeUk5
+         vLU0KKAaCLWr9CDCbYxPyAdSm+nshPgiEP/Kqk0LIZjwOreQidt+xEJzOp5o2YaDj2BN
+         BU2lCB3qOnNYOxFEQ1HPVy5m+midn5lVWIJdgAQSsSSEfilZHp+kqUVIXevdofxPSrtT
+         XuzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748245791; x=1748850591;
+        d=1e100.net; s=20230601; t=1748245810; x=1748850610;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=AOJrJ+WcHdALj8ZK6IlDndbV9NrPe74V0z2ftU80FfI=;
-        b=IZ0qjizc7km4Erp3ng/YK8PP6Mvo7rrHMIJlmenpwWBi14/Kvqgp+PdteV5l1A01LW
-         WVNnfh2BpSXxTunvrMTGcL3S5Xdgq0GuvzTJOU+t/Q/RG8RPSlaSJq0lr/6JlQBixM6l
-         zUs+NY3piW8RqHgzc/chyo3EwxWLWDruvstM0QCyOzkSDeOFKksz0Jqv2x95lMbr8UOv
-         eUAN1w3Y2MHstehp/Pc9K/m5A/oUIajrk6i5Y/zGrBQ/ucAn25/AFu5DVwYMtnO5QD6w
-         J9yYt3EJ65wyxBqAtYslh7NxAFBggna5vNkMBBev2/rcO2r8w3jHKoME+XohQz6WgRRW
-         R1Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcq2VQB+mlI3X8i7wyryum83NKZmkp0mMv8GB7/PvF77B6PN7u03PUVBxNlVevTwhIhIMNfCg2J5c6eIA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGVfci0TGGdf1c7o41ZgBS/VfYwYQIPK7temDBKXUKgbz4hO43
-	HV4X2KLnO/11NTYEef/ONCttBFQD1Wa6WCeJUJS4yB0NHGOxeBJ/+d9ZZAD6bjOoABk=
-X-Gm-Gg: ASbGnctaCpZK12mAi4TSx3fsDcbyBmypPL+vEaGSvmaoGfDd4/iGU+CWmxq0n18zptL
-	3nUztJE+6WkC5zO/LXsSb8Awonj0yby467KlYxVJ/U3jDwezPkYBmo9/iQTtpUpBnNp3Hz07IdS
-	1103vb7ArpCaEIxUn/Fp+SFeZJBkyFflSUHHYUBiikk3G3UUXCZ9O9eqezOV/kA/HUc+3nmZYmj
-	aZeloz7NGcpFW4tVvXIXi7Nehos3VrUDh+aXk5pHQWM/5R3Ixzk7y0u0gv7DGYl0cLsZvoqabr2
-	OR2tIi60ar6mdlxAxD91JgjuwTKRlZmcxlt8MQazYl/gVYMqEIgbYcE4m+zhytk1seVWo5rymZl
-	WPRDadtjqG4WFs32+vI+HK1De6qRc
-X-Google-Smtp-Source: AGHT+IE2QRNyeWAqbbRxvo9gVKikVL04vtydrrHrGM1Z/4U24oHBwqOt7h8xJ1Ql9nYZOS5KSXuQDQ==
-X-Received: by 2002:a05:6000:26ce:b0:3a4:db49:94ad with SMTP id ffacd0b85a97d-3a4db4996bemr1006829f8f.13.1748245791552;
-        Mon, 26 May 2025 00:49:51 -0700 (PDT)
+        bh=7s2TD6bDYSb15QeqSffpz33dcHGJGRttLHbdrFUHcio=;
+        b=kXQg+LeXAUJzOpAer2pFF39SpTJChr7mx+3a2ICo/NERlpEjpTEs2X5IMvOFdkJjlF
+         oqp8SDGfcUqbP7JmVbt54R8e/KPgjtG+C3MZ9/LPqiG7f66Ma/2Lh47xjSlR0YPw5HSN
+         BSy+uczktsB50ifItxxPFmZFYuq9n80uqLmHaMiYkmh5ONfv7PWdjlfPKFTisEwnY7eb
+         7EuNe2reJWqkGjuoXBzaszDmZ3izdM19Gn4XVb+yZUmuqzAQuMfcDjxT7Py5NjDhs3tG
+         CMX5JLBZDJID8iwMl0spV+OhVEYSvgmlHlAdrm5VQujvO5sdZ6tVT91vwutzygYVH8jx
+         6lkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWQB4dVQonsC43RCTGLa42bhvVs1e2Em3witZxwEfWrk3qTpkZ963WHvRc6bT4WTTU7Ld7NcM95DGUg1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmtl5K85m+Y2Mrxbr0RW3Z+QMAyi39b4Q63/BtWWopeidABZDf
+	cbw6gm7EMb39JeAtReGzWoHDq0rJHw8Wym7KzvYqHNby7qdqeyJb7oHDYw/0kH4WDHSqMn30T3X
+	iRL9l
+X-Gm-Gg: ASbGncuCcgbbuKGyIIUyuBsGbkk9eW3Z1F+sRwEHGSzTKNo2vMZnLkSj5PhhRb8X5zK
+	2U2WBLNPm8IvfkoK6Of0jSWYI6jwg466kTZCPj5MRKCYngotywIItf+hkrdSjk8vBJlLdyhmBnV
+	9WXkKro9T8l4mCJzlGVme8wcdxtaezrzOfln22pwqjl9LcIaQUPlBlNl3hb0I6zgfJndhp2N3Ey
+	la7b2+fdhgcakdETw4d0uVCbf7oetdjnx8t/CaxLLPeA9wMF0/JFS2CX9QqNdmSsLITqs+V+PkE
+	98oSEFnP5VHsCdTlEhKjK9uqY38QMMhBx6MmAbVoRjPLiO/nngYq2twYxWYObbZLe6zpyknxgJK
+	TCFyzxzlutrA5Do2KFNJ3L+axLZIfOxkWZ9SviHE=
+X-Google-Smtp-Source: AGHT+IHVWT68ZiYLEJCf/N+WMc0R3baXtGAcc1HRtOWNhQ5KgUM9rath+/pJxLrpBJVB1YAClPqo2w==
+X-Received: by 2002:a05:6000:3111:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-3a4cb445323mr6181832f8f.9.1748245810012;
+        Mon, 26 May 2025 00:50:10 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0b20sm234954645e9.14.2025.05.26.00.49.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4ce458830sm6439665f8f.14.2025.05.26.00.50.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 00:49:51 -0700 (PDT)
-Message-ID: <6e2d7c7e-9464-4936-a738-5caf1a363125@linaro.org>
-Date: Mon, 26 May 2025 09:49:50 +0200
+        Mon, 26 May 2025 00:50:09 -0700 (PDT)
+Message-ID: <00f6b550-d5e0-498e-82a1-68b0925efb02@linaro.org>
+Date: Mon, 26 May 2025 09:50:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,15 +72,14 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 3/7] phy: phy-snps-eusb2: rename phy_init() clock error
- label
+Subject: Re: [PATCH 4/7] phy: phy-snps-eusb2: clean up error messages
 To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>
 Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
  Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
  Abel Vesa <abel.vesa@linaro.org>, linux-phy@lists.infradead.org,
  linux-kernel@vger.kernel.org
 References: <20250523084839.11015-1-johan+linaro@kernel.org>
- <20250523084839.11015-4-johan+linaro@kernel.org>
+ <20250523084839.11015-5-johan+linaro@kernel.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -106,51 +106,81 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250523084839.11015-4-johan+linaro@kernel.org>
+In-Reply-To: <20250523084839.11015-5-johan+linaro@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 23/05/2025 10:48, Johan Hovold wrote:
-> Rename the clock error label which is now used to disable all clocks and
-> not just the ref clock on phy_init() errors.
+> Clean up the error messages by using a consistent format with a colon
+> followed by a space and an errno (or unsupported frequency).
 > 
 > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
->   drivers/phy/phy-snps-eusb2.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+>   drivers/phy/phy-snps-eusb2.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
-> index a799c3d2bcfb..c8f14f8fb9ac 100644
+> index c8f14f8fb9ac..232c5e8a554f 100644
 > --- a/drivers/phy/phy-snps-eusb2.c
 > +++ b/drivers/phy/phy-snps-eusb2.c
-> @@ -474,7 +474,7 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+> @@ -256,7 +256,7 @@ static int exynos_eusb2_ref_clk_init(struct snps_eusb2_hsphy *phy)
+>   	}
+>   
+>   	if (!config) {
+> -		dev_err(&phy->phy->dev, "unsupported ref_clk_freq:%lu\n", ref_clk_freq);
+> +		dev_err(&phy->phy->dev, "unsupported ref_clk_freq: %lu\n", ref_clk_freq);
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -293,7 +293,7 @@ static int qcom_eusb2_ref_clk_init(struct snps_eusb2_hsphy *phy)
+>   	}
+>   
+>   	if (!config) {
+> -		dev_err(&phy->phy->dev, "unsupported ref_clk_freq:%lu\n", ref_clk_freq);
+> +		dev_err(&phy->phy->dev, "unsupported ref_clk_freq: %lu\n", ref_clk_freq);
+>   		return -EINVAL;
+>   	}
+>   
+> @@ -461,19 +461,19 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+>   
+>   	ret = phy_init(phy->repeater);
+>   	if (ret) {
+> -		dev_err(&p->dev, "repeater init failed. %d\n", ret);
+> +		dev_err(&p->dev, "repeater init failed: %d\n", ret);
+>   		goto disable_vreg;
+>   	}
+>   
+>   	ret = clk_bulk_prepare_enable(phy->data->num_clks, phy->clks);
+>   	if (ret) {
+> -		dev_err(&p->dev, "failed to enable ref clock, %d\n", ret);
+> +		dev_err(&p->dev, "failed to enable ref clock: %d\n", ret);
+>   		goto exit_repeater;
+>   	}
+>   
 >   	ret = reset_control_assert(phy->phy_reset);
 >   	if (ret) {
->   		dev_err(&p->dev, "failed to assert phy_reset, %d\n", ret);
-> -		goto disable_ref_clk;
-> +		goto disable_clks;
+> -		dev_err(&p->dev, "failed to assert phy_reset, %d\n", ret);
+> +		dev_err(&p->dev, "failed to assert phy_reset: %d\n", ret);
+>   		goto disable_clks;
 >   	}
 >   
->   	usleep_range(100, 150);
-> @@ -482,16 +482,16 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+> @@ -481,7 +481,7 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+>   
 >   	ret = reset_control_deassert(phy->phy_reset);
 >   	if (ret) {
->   		dev_err(&p->dev, "failed to de-assert phy_reset, %d\n", ret);
-> -		goto disable_ref_clk;
-> +		goto disable_clks;
+> -		dev_err(&p->dev, "failed to de-assert phy_reset, %d\n", ret);
+> +		dev_err(&p->dev, "failed to de-assert phy_reset: %d\n", ret);
+>   		goto disable_clks;
 >   	}
 >   
->   	ret = phy->data->phy_init(p);
->   	if (ret)
-> -		goto disable_ref_clk;
-> +		goto disable_clks;
+> @@ -588,7 +588,7 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
 >   
->   	return 0;
+>   	generic_phy = devm_phy_create(dev, NULL, &snps_eusb2_hsphy_ops);
+>   	if (IS_ERR(generic_phy)) {
+> -		dev_err(dev, "failed to create phy %d\n", ret);
+> +		dev_err(dev, "failed to create phy: %d\n", ret);
+>   		return PTR_ERR(generic_phy);
+>   	}
 >   
-> -disable_ref_clk:
-> +disable_clks:
->   	clk_bulk_disable_unprepare(phy->data->num_clks, phy->clks);
->   exit_repeater:
->   	phy_exit(phy->repeater);
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
