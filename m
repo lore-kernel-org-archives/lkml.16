@@ -1,209 +1,263 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B844136349
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 09:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D621DDC22;
+	Mon, 26 May 2025 09:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748252007; cv=none; b=QtyxLl5/2iCp2ZE89MNlI/etQ7vslXC0+alyGrVYNS4k9oR8icm5sS2zKQOIxKQtZpO3JjwyIUKD0jBBXGfMKpOI6dMt8awm7jDk5tSZFKFcQU2+/j6QVQsS03TtTVRHmePHG+tnlgSRmNqTPnRw8T/8NjQfW/0pKQxKaVX3PAU=
+	t=1748252018; cv=none; b=hB8Uux2E/IUcjm3cBZPSDrfKnC9v0mCJoJQ1hOyy4zPPAewlwlUJoiWQMY+/Ih04ZxI+1yZmAwQEPu2zbod3xEU1pde5200cJxzT6jCjI0om3ZjeBSbugLiOG0mx2zInKCN0fQ2D0MPVSa/N9SNK/F/9xg5afMpSL+JTBUD3mh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748252007; c=relaxed/simple;
-	bh=3tm6agur6ae/wOOaqL4X7fFh0aJ6jSsJL/SEvfVUHfA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TuoBqT/+fZb0sa1DM43hYMQhkOdsda/3rp/POIJu/ovOy7klRePQmfSPq/XW/Vx4Tq73yffRaMvyzhMjIgcmEUAvWYall2BJA80NlZjgOTdvUaesRI24Nocb0FS16V0jFsJwhdCxxwzO0rU9YeYbrWT/5mboK9OVs0Rwc85mDcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VvPIebfd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SkXKhKJ5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VvPIebfd; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SkXKhKJ5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1748252018; c=relaxed/simple;
+	bh=j5u6GeKfGRt01uKZ1DWq/krRDd3IxYawjOABhTomJIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dQdcwTpMm5gvqrCIX6FWwRqdZU+RNCdFcuXoul578B3M1+11Aej7XuiQ5lDAx0W3NlZ+a5fzImpkbiNqtY7t86Jjeg88JlR2JoJ7l5KQCOl7bI6B9bLl6TYawEwzM3gI7YRoMjmxmFM4wm5T5Wm8PBCftYyownrbBfKAHLYiLFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFHrONzK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VvPIebfd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SkXKhKJ5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VvPIebfd";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SkXKhKJ5"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 672C3219D1;
-	Mon, 26 May 2025 09:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748252003; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JbubNeHtWJVe2F33QaV8s7k8BApXPhrbC0o3OqVKHQQ=;
-	b=VvPIebfdab+tSGi1+aHrEqTVdzcDQaR3F70456T4bQ0CvVfqVxc2N653r5GQFh7pHPue85
-	Ls4g7xPKd0eshdhu4RENcuqC8G8VBp9aL+D2oUwlb/zyjrV6UQEZY4cKKw+IXiApI46vtb
-	w/0J5d2v/9EfWLtW8BR9CXKGRvbOMw8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748252003;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JbubNeHtWJVe2F33QaV8s7k8BApXPhrbC0o3OqVKHQQ=;
-	b=SkXKhKJ5ZjjQSNGiqd+qiyrz+IgDTCZSALlpFGFLWEDU2/cMkYpTJYoGPp+cuwdlkca7Ag
-	oLM65W8IrCAZ93AQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748252003; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JbubNeHtWJVe2F33QaV8s7k8BApXPhrbC0o3OqVKHQQ=;
-	b=VvPIebfdab+tSGi1+aHrEqTVdzcDQaR3F70456T4bQ0CvVfqVxc2N653r5GQFh7pHPue85
-	Ls4g7xPKd0eshdhu4RENcuqC8G8VBp9aL+D2oUwlb/zyjrV6UQEZY4cKKw+IXiApI46vtb
-	w/0J5d2v/9EfWLtW8BR9CXKGRvbOMw8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748252003;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JbubNeHtWJVe2F33QaV8s7k8BApXPhrbC0o3OqVKHQQ=;
-	b=SkXKhKJ5ZjjQSNGiqd+qiyrz+IgDTCZSALlpFGFLWEDU2/cMkYpTJYoGPp+cuwdlkca7Ag
-	oLM65W8IrCAZ93AQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4D6371397F;
-	Mon, 26 May 2025 09:33:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LfuJEmM1NGjqYAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Mon, 26 May 2025 09:33:23 +0000
-Message-ID: <5b0301cd-cc14-4dae-943a-6a300fb560d1@suse.cz>
-Date: Mon, 26 May 2025 11:33:23 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFHrONzK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F021BC4CEEE;
+	Mon, 26 May 2025 09:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748252017;
+	bh=j5u6GeKfGRt01uKZ1DWq/krRDd3IxYawjOABhTomJIw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CFHrONzKTbnwow4S3bzcO7VcXUvND1JG7WNzhUwiL/79/1EFCNY4mOro9s/dAOOXO
+	 hpVqP+S3ihCrM5yUwGl4inEqAqShAvKpwH6gcaELHHRLfpGZnvfglnq4negLhrSDKj
+	 ffkH4Qp4Hh3QuQV7kVC7Yz/qmmu6EVJTUJFKckrQ9WaEcL1hwpLVAribKGZw+s3NDe
+	 mmB7/TD8aHKtOl4M5LS8l1JVI2KWIad8fxJO2lXBXPqWThHnCooVYmdP77Ad1IIHCL
+	 PMxuD73WteTm6D+j0tW0mJb8+4bEfg3y0CxP7uTSudEQoCtCzK8GonUTWkvTEwdDHM
+	 gDU8BP68rKMyQ==
+Date: Mon, 26 May 2025 15:03:21 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>
+Subject: Re: [PATCH v9 6/9] tee: add tee_shm_alloc_dma_mem()
+Message-ID: <aDQ1YR5jbcOFctty@sumit-X1>
+References: <20250520152436.474778-1-jens.wiklander@linaro.org>
+ <20250520152436.474778-7-jens.wiklander@linaro.org>
+ <aDQWt5Ck1Bo01Z_4@sumit-X1>
+ <CAHUa44E4-z7-7DQjyGXYRiZDf6mRBKYZDuxWFGy+3JxtWO1ocg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: slub: only warn once when allocating slab obj
- extensions fails
-Content-Language: en-US
-To: Usama Arif <usamaarif642@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, surenb@google.com
-Cc: hannes@cmpxchg.org, shakeel.butt@linux.dev, vlad.wing@gmail.com,
- linux-mm@kvack.org, kent.overstreet@linux.dev, cl@gentwo.org,
- rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com,
- linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20250523165240.1477006-1-usamaarif642@gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250523165240.1477006-1-usamaarif642@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com,linux-foundation.org,google.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[cmpxchg.org,linux.dev,gmail.com,kvack.org,gentwo.org,google.com,oracle.com,vger.kernel.org,meta.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHUa44E4-z7-7DQjyGXYRiZDf6mRBKYZDuxWFGy+3JxtWO1ocg@mail.gmail.com>
 
-On 5/23/25 18:52, Usama Arif wrote:
-> In memory bound systems, a large number of warnings for failing this
-> allocation repeatedly may mask any real issues in the system
-> during memory pressure being reported in dmesg. Change this to
-> warning only once.
+On Mon, May 26, 2025 at 11:21:47AM +0200, Jens Wiklander wrote:
+> On Mon, May 26, 2025 at 9:22 AM Sumit Garg <sumit.garg@kernel.org> wrote:
+> >
+> > On Tue, May 20, 2025 at 05:16:49PM +0200, Jens Wiklander wrote:
+> > > Add tee_shm_alloc_dma_mem() to allocate DMA memory. The memory is
+> > > represented by a tee_shm object using the new flag TEE_SHM_DMA_MEM to
+> > > identify it as DMA memory. The allocated memory will later be lent to
+> > > the TEE to be used as protected memory.
+> > >
+> > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> > > ---
+> > >  drivers/tee/tee_shm.c    | 74 ++++++++++++++++++++++++++++++++++++++--
+> > >  include/linux/tee_core.h |  5 +++
+> > >  2 files changed, 77 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+> > > index e1ed52ee0a16..92a6a35e1a1e 100644
+> > > --- a/drivers/tee/tee_shm.c
+> > > +++ b/drivers/tee/tee_shm.c
+> > > @@ -5,6 +5,8 @@
+> > >  #include <linux/anon_inodes.h>
+> > >  #include <linux/device.h>
+> > >  #include <linux/dma-buf.h>
+> > > +#include <linux/dma-mapping.h>
+> > > +#include <linux/highmem.h>
+> > >  #include <linux/idr.h>
+> > >  #include <linux/io.h>
+> > >  #include <linux/mm.h>
+> > > @@ -13,9 +15,14 @@
+> > >  #include <linux/tee_core.h>
+> > >  #include <linux/uaccess.h>
+> > >  #include <linux/uio.h>
+> > > -#include <linux/highmem.h>
+> > >  #include "tee_private.h"
+> > >
+> > > +struct tee_shm_dma_mem {
+> > > +     struct tee_shm shm;
+> > > +     dma_addr_t dma_addr;
+> > > +     struct page *page;
+> > > +};
+> > > +
+> > >  static void shm_put_kernel_pages(struct page **pages, size_t page_count)
+> > >  {
+> > >       size_t n;
+> > > @@ -49,7 +56,14 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
+> > >       struct tee_shm *parent_shm = NULL;
+> > >       void *p = shm;
+> > >
+> > > -     if (shm->flags & TEE_SHM_DMA_BUF) {
+> > > +     if (shm->flags & TEE_SHM_DMA_MEM) {
+> > > +             struct tee_shm_dma_mem *dma_mem;
+> > > +
+> > > +             dma_mem = container_of(shm, struct tee_shm_dma_mem, shm);
+> > > +             p = dma_mem;
+> > > +             dma_free_pages(&teedev->dev, shm->size, dma_mem->page,
+> > > +                            dma_mem->dma_addr, DMA_BIDIRECTIONAL);
+> >
+> > Although the kernel bot already found a randconfig issue, it looks like
+> > we need to add Kconfig dependencies like HAS_DMA, DMA_CMA etc.
+> >
+> > Also, I was thinking if we should rather add a new TEE subsystem
+> > specific Kconfig option like: TEE_DMABUF_HEAPS which can then be used to
+> > select whatever dependency is needed as well as act as a gating Kconfig
+> > for relevant features.
 > 
-> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
-> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
-> ---
-> v2 -> v3:
-> - Put warning back, but only warn once with pr_warn_once.
-> v1 -> v2:
-> - remove the warning completely. We will have a way in the
->   future to indicate that the mem alloc profile is inaccurate.
-> ---
->  mm/slub.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+> You mean something like this?
 > 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index dc9e729e1d26..36d7c43a6f2a 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -2102,10 +2102,12 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
->  
->  	slab = virt_to_slab(p);
->  	if (!slab_obj_exts(slab) &&
-> -	    WARN(alloc_slab_obj_exts(slab, s, flags, false),
-> -		 "%s, %s: Failed to create slab extension vector!\n",
-> -		 __func__, s->name))
-> +	    alloc_slab_obj_exts(slab, s, flags, false)) {
-> +		pr_warn_once("%s, %s: Failed to create slab extension vector!\n",
-> +			__func__, s->name);
->  		return NULL;
-> +	}
+> --- a/drivers/tee/Kconfig
+> +++ b/drivers/tee/Kconfig
+> @@ -13,6 +13,14 @@ menuconfig TEE
+> 
+>  if TEE
+> 
+> +config TEE_DMABUF_HEAPS
+> +       bool
+> +       depends on HAS_DMA && DMABUF_HEAPS
+
+Yeah this looks fine to me but needs to be tested if DMA_CMA is a
+dependency here too.
+
 > +
+> +config TEE_STATIC_PROTMEM_POOL
+> +       bool
+> +       depends on HAS_IOMEM && TEE_DMABUF_HEAPS
 
-I've removed the extra line locally.
+The static and dynamic protected memory pools should get auto enabled if
+TEE_DMABUF_HEAPS is enabled since they are pre-requisite to provide the
+protected heaps support. Something like:
 
-Added to slab/for-next, thanks.
++config TEE_STATIC_PROTMEM_POOL
++       bool
++       default y if TEE_DMABUF_HEAPS
++       depends on HAS_IOMEM
 
->  
->  	return slab_obj_exts(slab) + obj_to_index(s, slab, p);
->  }
+-Sumit
 
+> +
+> 
+> Cheers,
+> Jens
+> 
+> >
+> > -Sumit
+> >
+> > > +     } else if (shm->flags & TEE_SHM_DMA_BUF) {
+> > >               struct tee_shm_dmabuf_ref *ref;
+> > >
+> > >               ref = container_of(shm, struct tee_shm_dmabuf_ref, shm);
+> > > @@ -306,6 +320,62 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
+> > >
+> > > +/**
+> > > + * tee_shm_alloc_dma_mem() - Allocate DMA memory as shared memory object
+> > > + * @ctx:     Context that allocates the shared memory
+> > > + * @page_count:      Number of pages
+> > > + *
+> > > + * The allocated memory is expected to be lent (made inaccessible to the
+> > > + * kernel) to the TEE while it's used and returned (accessible to the
+> > > + * kernel again) before it's freed.
+> > > + *
+> > > + * This function should normally only be used internally in the TEE
+> > > + * drivers.
+> > > + *
+> > > + * @returns a pointer to 'struct tee_shm'
+> > > + */
+> > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
+> > > +                                   size_t page_count)
+> > > +{
+> > > +     struct tee_device *teedev = ctx->teedev;
+> > > +     struct tee_shm_dma_mem *dma_mem;
+> > > +     dma_addr_t dma_addr;
+> > > +     struct page *page;
+> > > +
+> > > +     if (!tee_device_get(teedev))
+> > > +             return ERR_PTR(-EINVAL);
+> > > +
+> > > +     page = dma_alloc_pages(&teedev->dev, page_count * PAGE_SIZE,
+> > > +                            &dma_addr, DMA_BIDIRECTIONAL, GFP_KERNEL);
+> > > +     if (!page)
+> > > +             goto err_put_teedev;
+> > > +
+> > > +     dma_mem = kzalloc(sizeof(*dma_mem), GFP_KERNEL);
+> > > +     if (!dma_mem)
+> > > +             goto err_free_pages;
+> > > +
+> > > +     refcount_set(&dma_mem->shm.refcount, 1);
+> > > +     dma_mem->shm.ctx = ctx;
+> > > +     dma_mem->shm.paddr = page_to_phys(page);
+> > > +     dma_mem->dma_addr = dma_addr;
+> > > +     dma_mem->page = page;
+> > > +     dma_mem->shm.size = page_count * PAGE_SIZE;
+> > > +     dma_mem->shm.flags = TEE_SHM_DMA_MEM;
+> > > +
+> > > +     teedev_ctx_get(ctx);
+> > > +
+> > > +     return &dma_mem->shm;
+> > > +
+> > > +err_free_pages:
+> > > +     dma_free_pages(&teedev->dev, page_count * PAGE_SIZE, page, dma_addr,
+> > > +                    DMA_BIDIRECTIONAL);
+> > > +err_put_teedev:
+> > > +     tee_device_put(teedev);
+> > > +
+> > > +     return ERR_PTR(-ENOMEM);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
+> > > +
+> > >  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
+> > >                            int (*shm_register)(struct tee_context *ctx,
+> > >                                                struct tee_shm *shm,
+> > > diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
+> > > index 02c07f661349..925690e1020b 100644
+> > > --- a/include/linux/tee_core.h
+> > > +++ b/include/linux/tee_core.h
+> > > @@ -29,6 +29,8 @@
+> > >  #define TEE_SHM_POOL         BIT(2)  /* Memory allocated from pool */
+> > >  #define TEE_SHM_PRIV         BIT(3)  /* Memory private to TEE driver */
+> > >  #define TEE_SHM_DMA_BUF              BIT(4)  /* Memory with dma-buf handle */
+> > > +#define TEE_SHM_DMA_MEM              BIT(5)  /* Memory allocated with */
+> > > +                                     /* dma_alloc_pages() */
+> > >
+> > >  #define TEE_DEVICE_FLAG_REGISTERED   0x1
+> > >  #define TEE_MAX_DEV_NAME_LEN         32
+> > > @@ -310,6 +312,9 @@ void *tee_get_drvdata(struct tee_device *teedev);
+> > >   */
+> > >  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
+> > >
+> > > +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
+> > > +                                   size_t page_count);
+> > > +
+> > >  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
+> > >                            int (*shm_register)(struct tee_context *ctx,
+> > >                                                struct tee_shm *shm,
+> > > --
+> > > 2.43.0
+> > >
