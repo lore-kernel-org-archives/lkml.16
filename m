@@ -1,36 +1,55 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E9FB1885A1;
-	Mon, 26 May 2025 10:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D6F2AE77;
+	Mon, 26 May 2025 10:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748255455; cv=none; b=HYxntBNUnv9JIPrlucTq+5CVNUzTeJh4MR7BDxsIu58blaVRWdw84mFwQHs11hTkokpmHuQYlzWEg6vVBSHgj6ghvSFhQNo9i7l/wXhQKoVWv7cqSk09XoY4riiaeCd3Q8evi+yQ2ycgGtBYzSSFYEzjXKWcyhwZJj6+QFl31yo=
+	t=1748255917; cv=none; b=jC9Hz7xtOhd5mM6cGCLqYmkjxytgj5rWsFF9eqHb4hA+f+TqUXt8F+35qUqPWNXGm5wrBwcLblx/ITKIx+F6lInoKFpWyApt1crRJ0scu0bceDkUMFlQ6VBEEqayneb5I3rk51BseLhSdrxKZFASLOTBfkKMLj6aqijfOtERZ38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748255455; c=relaxed/simple;
-	bh=eqq9mvdtmV+u0J80UCNQOsXE89t6MP1L/Dyt+TiUW0Y=;
+	s=arc-20240116; t=1748255917; c=relaxed/simple;
+	bh=9B4mWsZPbzEZ8Xs+cFKS5QSfxZ3kZC8bqmCUk3T4YdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltNu6eE9Wb/UomPapYuf3Js1xF3EjPUGyhvZN8KgrfMsGe+BLJTGfRVmTTF0SDCT/BM++qpYq8CU9MNxYdvoRPyuCnP36Wuf08UviuT8KzhkFpVJmSvCSz4yrNCbMnLpsQITSQuenBJrE452UNFn0NI2DqwqGSycTCNE47oGkJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E12D42F;
-	Mon, 26 May 2025 03:30:36 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2A163F5A1;
-	Mon, 26 May 2025 03:30:50 -0700 (PDT)
-Date: Mon, 26 May 2025 11:30:48 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] kselftest/arm64: Fix check for setting new VLs in
- sve-ptrace
-Message-ID: <aDRC2BJddPL8v8TD@J2N7QTR9R3>
-References: <20250523-kselftest-arm64-ssve-fixups-v1-0-65069a263b21@kernel.org>
- <20250523-kselftest-arm64-ssve-fixups-v1-1-65069a263b21@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSoSd9/0YqXFBTLyjJLRO2F0bUa49N+WslA8nF3aJmXoLLgnQIxfQ0iseNT2yPzxETbS6yW/hC23TKXDngvgDdEQO1+wwjNEKl70HTi3nX8triwjnzvzAZLXS3Fd/aiuJQASlzHUM006sKw7O0MxASkexm0XrO6Vqlb9Etaj1zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TN2H/03/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TN2H/03/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vlaOsRZCapfMxnw8GOIAPMbOZTsf1rhyIwhvYu2Fhms=; b=TN2H/03/JNwx3gaiD+MrDozJac
+	1/yLsE3QrrZUeG7okDdGL/g4mCSfCYvzAO4rl4mIhEaJjF2NXUp0uavZPlQZqkmMKhjP6fkCH1CVX
+	HkL2SH5Nkrjj80McLU8NerIAUciuOq4GLxaLNEtSazEL5NE/hbDcbIEeivh1/CNFMUMXTGzr+39Jh
+	2+9CY3EoaskRetZdl84alDWZ0q0pXXw3KDF0b8lIQnamCzRUuzIlek8t8RCnyURnzew0kMmHPd85u
+	0lsZ6OCsqufaQSgntdoBBxUovu8og/Gjz6mVHtGzNEmf/YarJsTSfes+D5fskcxe/IA5pEFSWRZvJ
+	zBHPdOnA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJVDq-00000001rnl-3vT2;
+	Mon, 26 May 2025 10:38:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 656C8300472; Mon, 26 May 2025 12:38:22 +0200 (CEST)
+Date: Mon, 26 May 2025 12:38:22 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org, Song Liu <song@kernel.org>,
+	laokz <laokz@foxmail.com>, Jiri Kosina <jikos@kernel.org>,
+	Marcos Paulo de Souza <mpdesouza@suse.com>,
+	Weinan Liu <wnliu@google.com>,
+	Fazla Mehrab <a.mehrab@bytedance.com>,
+	Chen Zhongjin <chenzhongjin@huawei.com>,
+	Puranjay Mohan <puranjay@kernel.org>
+Subject: Re: [PATCH v2 28/62] objtool: Fix weak symbol hole detection for
+ .cold functions
+Message-ID: <20250526103822.GL24938@noisy.programming.kicks-ass.net>
+References: <cover.1746821544.git.jpoimboe@kernel.org>
+ <8ae052ab65412c0fc0359e780dc382f9feb53ace.1746821544.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,47 +58,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523-kselftest-arm64-ssve-fixups-v1-1-65069a263b21@kernel.org>
+In-Reply-To: <8ae052ab65412c0fc0359e780dc382f9feb53ace.1746821544.git.jpoimboe@kernel.org>
 
-On Fri, May 23, 2025 at 04:27:12PM +0100, Mark Brown wrote:
-> The check that the new vector length we set was the expected one was typoed
-> to an assignment statement which for some reason the compilers didn't spot,
-> most likely due to the macros involved.
+On Fri, May 09, 2025 at 01:16:52PM -0700, Josh Poimboeuf wrote:
+> When ignore_unreachable_insn() looks for weak function holes which jump
+> to their .cold functions, it assumes the parent function comes before
+> the corresponding .cold function in the symbol table.  That's not
+> necessarily the case with -ffunction-sections.
 > 
-> Fixes: 0dca276ac4d2 ("selftests: arm64: Add test for the SVE ptrace interface")
+> Mark all the holes beforehand (including .cold functions) so the
+> ordering of the discovery doesn't matter.
 
-I don't think that fixes tag is correct. AFAICT, this code was
-introduced in commit:
+One of the things I have a 'todo' entry on, is rewriting all sections
+that reference any one of these instructions.
 
-  a1d7111257cd ("selftests: arm64: More comprehensively test the SVE ptrace interface")
+That is, things like fentry, alternatives, retpoline, static_call,
+jump_label.  Everything that can cause runtime code patching.
 
-... and there wasn't something equivalent prior to that.
-
-With that fixed:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  tools/testing/selftests/arm64/fp/sve-ptrace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/arm64/fp/sve-ptrace.c b/tools/testing/selftests/arm64/fp/sve-ptrace.c
-> index 577b6e05e860..c499d5789dd5 100644
-> --- a/tools/testing/selftests/arm64/fp/sve-ptrace.c
-> +++ b/tools/testing/selftests/arm64/fp/sve-ptrace.c
-> @@ -253,7 +253,7 @@ static void ptrace_set_get_vl(pid_t child, const struct vec_type *type,
->  		return;
->  	}
->  
-> -	ksft_test_result(new_sve->vl = prctl_vl, "Set %s VL %u\n",
-> +	ksft_test_result(new_sve->vl == prctl_vl, "Set %s VL %u\n",
->  			 type->name, vl);
->  
->  	free(new_sve);
-> 
-> -- 
-> 2.39.5
-> 
+Once we are sure none of those sections will contain references to this
+dead code, we can go and wipe the actual code. Perhaps fill it with a
+UD1 instruction with some identifying immediate.
