@@ -1,183 +1,98 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD5323E320
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BFB1F37D4;
+	Mon, 26 May 2025 17:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748281902; cv=none; b=fXpU42adxN9GKexb22z+9v5S/je4jzXz7/B4Kv4bQeqAobBlWtAlLIv0stak7qDxbD59tioI9ZL4vM9jJEOQUr2qzdNdxSXPOEwK2EgSE8+RQGC1N99tuinSX3uznchUOUqDDYcDdrVQr8BWPCVS4JI6/p5+tsfALQsur1nhqK8=
+	t=1748281915; cv=none; b=Cz18kCCaMK/uAuP/Pi76wdqtH5rVHYF6t83TXdSzqBEJTKgOS+d45EShBwmbk5eq5emabb+BA8/Gwj4I9PcfF2skT7QSj6NaX8xlK8XyRm2pxokBFqo/dhgvOQNFYZm6hBK6caBkYK3YG6s0p5jWfb5NrlmgP1gdCm9uBprBRCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748281902; c=relaxed/simple;
-	bh=6DLePd+PP4uNkX6tcilWPj79dtNl6QyGIaJcJPJoclE=;
+	s=arc-20240116; t=1748281915; c=relaxed/simple;
+	bh=2k88PnJhpaw0nwX/rLtY9mHSGuWNeOjNdRUmXCcIA7w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GFWR40bbbB+1wQQWQq3c3AFU8GcDIXQWzyJEEbVbh0jAA5z46AkjSg7u1Lk6Rp4GVtOU2pfYsmwDEK6untdN79aHW0BBiqUpHSdjHc3g99QSu6Z5I4E7XOMTUv7+eTNR8jxYxfTL4H0pKFYNMAiCklJ1paI/HlG1RE4gmkDZsbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oGqDu9wk; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=NRjHrRYUSMxJ0dx6ekknnn5b8z9UuJI+PwFXMHjxZlDZDvsnBm5DgRUfctMk4lmovl1/ZNZ3lxeqz8GLFbaNTct1ngl4REnMiP+LbAyBzSeqYnliN4C5qtr6+YgL6vqV9cr4QF57IhUJu6qeavcilwmCpws0iUzdFkS1mSVqzQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Teg6X/wj; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oGqDu9wk"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2349068ebc7so47245ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:51:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Teg6X/wj"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-601ad30bc0cso2112859eaf.0;
+        Mon, 26 May 2025 10:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748281900; x=1748886700; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1748281913; x=1748886713; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A6FocSUFbWGC4UbXQHwbO+J5QjuVS7G5DVoCQNhcZX0=;
-        b=oGqDu9wkAtk+TewpQCWTjaFxjm1zA1DET98QseuB4hWRC9vXzbLyrj761leVANLT2E
-         GKbznCeM1//F49R2igdgo7akvmNS5bNhzhlGIYMnRQCXZDc/l1Yj+FzavZZXAWexoMpr
-         gZRofDeePHx5OL3UVDTINUhsA/hVsMr3d0YSW9n9LnbIhsJAh4WxNaFFvsMloQUAmM71
-         ocDl0DVY6AqasIC3+UXCpTnRe4mmYSpWoj9FkPYCarikVFXrXQdGWdgDUZ+LEdbvVsXd
-         d/Fs4DuJCUnPP1I7XpQqd8hcEYU+fbQz8DwLhshh7YDwHwOhyw9vNBrCFC/t+rCn/FoV
-         MM7Q==
+        bh=2k88PnJhpaw0nwX/rLtY9mHSGuWNeOjNdRUmXCcIA7w=;
+        b=Teg6X/wjghzcir4ybGuWUedickjSRo8zS2k9FjY74B4G2/t7RVeF0Xyfmo+dtRpeGM
+         EILOWwXImyd7OEr3YMeoAW4zzzvrNJ19cVypq12x1KQmSPAZJ186W+tTY7ZHiCf7NYP7
+         b4NOLjQLPHcOfe+tLPKaB9M6FyaRUT3agpMOxXXduD6ixxGmrgQWEfM4hdg8Z1CeAlnc
+         Hhp16NkErJS+60lNfG1qgoW61/Wx80ZOZ+yVjvEdUsc3G7HifwkZkSCaLBXrG5qjXj2p
+         a6yRU1irtLKe5bV2R45h6y0pWeNEO0SQZ0JUbhMfJh4IGW71TIpF9zdUg/+v5VKrPCZL
+         Mz8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748281900; x=1748886700;
+        d=1e100.net; s=20230601; t=1748281913; x=1748886713;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A6FocSUFbWGC4UbXQHwbO+J5QjuVS7G5DVoCQNhcZX0=;
-        b=VSde7NN+9Ae/1p6Fmtv53IGE1fDHY/7Zjbb2m7V5NFZQuDlxcAbpVGKGdeTW1SyGdA
-         LjXdmRBlDhndAQbvuQd40DqKR/oivDtkeK27FJHq4PH6gWVrK/oSCLaAHIfwmHt44vB5
-         P7ntWaAVqBzAj48cy0Uh4HL17GpwFUIdIrV63vMKbSzg9ilVqFePAskMnTBoa6UfsW/b
-         DUOjMnrYOUUJ1wYAZXeTNsxfrrOqPC1FpB1Vbeie8/Z2JlPnWGr8XHNnBdQyR6YLrifL
-         8S/Bd3iDgPId0yaMVcsrFQN5MYHFeczqA4PQA/EXrgukMqeAbVJGrs+TA45D8OufUqRx
-         6vzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdkXU9xTiOylGR5IhGhFpgBO6mLc+7dJ6sE2W7hrnJ61bJJ2zZcn+3bN5wsgXKPaD2vA0rwNZaQZv+sek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRghelRixcjN+w/vjDUf5n8oOS/4V3aceSN4MiGtfgOnKpMsk9
-	2o3kfHLreql3x0qoFohW/03ODKSx4HsQkpgvqaqBx/C5LN+qq+VfnPwXHP4cjqz4RBDM/5afqOb
-	YIayh0fHhzCkYmp89S/gj+a2cIkKKZi3E1w5fsBN5
-X-Gm-Gg: ASbGncvplHyAQB4l5dnzAEGexKUsr5MpCMvFCTk49iFm4kcE+cfWdE9HHqygsP/BwJl
-	do/feqHcEW6BfX128qDuF1bU7O/1fhsRjWjp+FZWPE7CDUVPGlaTehfyXEbDg/Z4QnX++5JuKRB
-	IonLr/HRTJavHT39SmIksXTsj+GQdT4BlYvedyHmOEcnoT
-X-Google-Smtp-Source: AGHT+IHxw5kFD97qu6/S6TmfiDU0cDQb33odUZGDT5ciTtFyA8/W5y/Ppc1tRpCaVQHp6ijmqTOE4Cz6czANaXkuDQw=
-X-Received: by 2002:a17:903:46ce:b0:231:f6bc:5c84 with SMTP id
- d9443c01a7336-2341807dceamr4601285ad.8.1748281899944; Mon, 26 May 2025
- 10:51:39 -0700 (PDT)
+        bh=2k88PnJhpaw0nwX/rLtY9mHSGuWNeOjNdRUmXCcIA7w=;
+        b=O0B0muLTnDrxYVrPnjo/aEWTAKAHOft8WumleKxyEcCCFRHPyKb7mkl+6e8jVsgPh1
+         dpKOLzXrHou7yQ+ljdGHB3GA92wOHWPlatQQQR6x8zWmA/3WsRK0eXu+s2dl6criSrH+
+         aw7i2fkNEBn5mpE0Ft2FQ+KvuSfGT/iA3zRcHhb0xR5so3gktzd94kVr0ASyZnuhmYIg
+         FMlg2cWIZI16JaCqdBGHlGB44Lcx96WsRL1Vn2pNLJ1MCyMW+3RZetqRx5Nu6F/Vywn6
+         /FGg3+PqYxgEw3li31T0tDX9w9PnLRrM3KOE2bC3l+bDOPXO+swxr8WmyRxVuYfuBmtG
+         VwKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOrnlLR3Va2gJ6ZRklc/vqxTNjfPg8Cgu1TLBYZ7x+bFdkeLgehnkplG1ITETuy049Hxenlv1907ao@vger.kernel.org
+X-Gm-Message-State: AOJu0YxG7cHrpuIQKd/ioCZaot6smEX/5qUKrzc3Z9fdCRyVGJRQbCxq
+	toLHniXdtX8VYNMIrqRRUBVHCy9ZIsHJGZKonKJa6VdGY5ueRXrQ26Pu2B9s286E/fckDJZvJ8Y
+	RLVTx14aLL//2MXgIFOuYIRhT4Mb47+8=
+X-Gm-Gg: ASbGncsMKwU4Z3Bfi71pS5YY5nRnKbU7MDrkZAxkQVtaad9fjRkr83jTZYW9A5il9Px
+	1CtTLH9tLP7jY7o62+6Va9dZTXrnXQ6/QkIRyo6EkLqyQStIcH0rWkXvCn2J2xB+ECoRB96/ka4
+	X7QlEXPl9ObM1YfaV1V5MPf+9mBiEX1gL2
+X-Google-Smtp-Source: AGHT+IHfQzUQlWpF3xqMyX71z6KhzG9Q7TBZLdmiLySLL7YcDhNzHNOHQWNhFnhWKVRrbrQnK/7FWB1TjDqwBrKBPLE=
+X-Received: by 2002:a05:6820:818e:b0:606:3abb:1934 with SMTP id
+ 006d021491bc7-60b9f9373ccmr5453708eaf.2.1748281912877; Mon, 26 May 2025
+ 10:51:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523064524.3035067-1-dongchenchen2@huawei.com>
- <a5cc7765-0de2-47ca-99c4-a48aaf6384d2@huawei.com> <CAHS8izP=AuPbV6N=c05J2kJLJ16-AmRzu983khXaR91Pti=cNw@mail.gmail.com>
- <5305c0d1-c7eb-4c79-96ae-67375f6248f1@huawei.com>
-In-Reply-To: <5305c0d1-c7eb-4c79-96ae-67375f6248f1@huawei.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 26 May 2025 10:51:26 -0700
-X-Gm-Features: AX0GCFvICH5Qjo3M4gJa_hQ9VbxiimhOklMmvepPin5U8PBr-TSru9AVogsH9hc
-Message-ID: <CAHS8izPY9BYWzAVR9LNdSP4+-0TsgOoMXvD658i22VFWHZfvfA@mail.gmail.com>
-Subject: Re: [PATCH net] page_pool: Fix use-after-free in page_pool_recycle_in_ring
-To: "dongchenchen (A)" <dongchenchen2@huawei.com>
-Cc: Yunsheng Lin <linyunsheng@huawei.com>, hawk@kernel.org, ilias.apalodimas@linaro.org, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhangchangzhong@huawei.com, 
-	syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com
+References: <20250524144328.4361-1-dskmtsd@gmail.com> <CAEz=LcsmU0A1oa40fVnh_rEDE+wxwfSo0HpKFa_1BzZGzGG71g@mail.gmail.com>
+ <dbf60d49-fa1e-49ce-b6db-16e834e42e42@gmail.com>
+In-Reply-To: <dbf60d49-fa1e-49ce-b6db-16e834e42e42@gmail.com>
+From: Greg Sword <gregsword0@gmail.com>
+Date: Tue, 27 May 2025 01:51:40 +0800
+X-Gm-Features: AX0GCFtT0baM6oZKA_mDPeBTGvWFL0qzuDBj_usrFR8qpdJumaxPdCqhTum73-0
+Message-ID: <CAEz=LcurXJWDws=D1CkkDhOrUQB-xatszjpZp67AUou-Cs39dQ@mail.gmail.com>
+Subject: Re: [PATCH for-next v3] RDMA/core: Avoid hmm_dma_map_alloc() for
+ virtual DMA devices
+To: Daisuke Matsuda <dskmtsd@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, leon@kernel.org, 
+	jgg@ziepe.ca, zyjzyj2000@gmail.com, hch@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-)
+On Sun, May 25, 2025 at 10:54=E2=80=AFAM Daisuke Matsuda <dskmtsd@gmail.com=
+> wrote:
+>
+>
+> > Your ODP patches have caused significant issues, including system
+> > instability. The latest version of your patches has led to critical
+> > failures in our environment. Due to these ongoing problems, we have
+> > decided that our system will no longer incorporate your patches going
+> > forward.
+>
+> I always wonder why this kind of "report" seen around RXE never includes
+> the details of the problem encountered and the steps to reproduce them.
+> Everybody else in the linux kernel community does so.
 
-On Mon, May 26, 2025 at 7:47=E2=80=AFAM dongchenchen (A)
-<dongchenchen2@huawei.com> wrote:
+Test it a few more times on your local machine and you can re this
+issue, it's such a simple test, can't you do it?
+
 >
+> --D--
 >
-> > On Fri, May 23, 2025 at 1:31=E2=80=AFAM Yunsheng Lin <linyunsheng@huawe=
-i.com> wrote:
-> >> On 2025/5/23 14:45, Dong Chenchen wrote:
-> >>
-> >>>   static bool page_pool_recycle_in_ring(struct page_pool *pool, netme=
-m_ref netmem)
-> >>>   {
-> >>> +     bool in_softirq;
-> >>>        int ret;
-> >> int -> bool?
-> >>
-> >>>        /* BH protection not needed if current is softirq */
-> >>> -     if (in_softirq())
-> >>> -             ret =3D ptr_ring_produce(&pool->ring, (__force void *)n=
-etmem);
-> >>> -     else
-> >>> -             ret =3D ptr_ring_produce_bh(&pool->ring, (__force void =
-*)netmem);
-> >>> -
-> >>> -     if (!ret) {
-> >>> +     in_softirq =3D page_pool_producer_lock(pool);
-> >>> +     ret =3D !__ptr_ring_produce(&pool->ring, (__force void *)netmem=
-);
-> >>> +     if (ret)
-> >>>                recycle_stat_inc(pool, ring);
-> >>> -             return true;
-> >>> -     }
-> >>> +     page_pool_producer_unlock(pool, in_softirq);
-> >>>
-> >>> -     return false;
-> >>> +     return ret;
-> >>>   }
-> >>>
-> >>>   /* Only allow direct recycling in special circumstances, into the
-> >>> @@ -1091,10 +1088,14 @@ static void page_pool_scrub(struct page_pool =
-*pool)
-> >>>
-> >>>   static int page_pool_release(struct page_pool *pool)
-> >>>   {
-> >>> +     bool in_softirq;
-> >>>        int inflight;
-> >>>
-> >>>        page_pool_scrub(pool);
-> >>>        inflight =3D page_pool_inflight(pool, true);
-> >>> +     /* Acquire producer lock to make sure producers have exited. */
-> >>> +     in_softirq =3D page_pool_producer_lock(pool);
-> >>> +     page_pool_producer_unlock(pool, in_softirq);
-> >> Is a compiler barrier needed to ensure compiler doesn't optimize away
-> >> the above code?
-> >>
-> > I don't want to derail this conversation too much, and I suggested a
-> > similar fix to this initially, but now I'm not sure I understand why
-> > it works.
 > >
-> > Why is the existing barrier not working and acquiring/releasing the
-> > producer lock fixes this issue instead? The existing barrier is the
-> > producer thread incrementing pool->pages_state_release_cnt, and
-> > page_pool_release() is supposed to block the freeing of the page_pool
-> > until it sees the
-> > `atomic_inc_return_relaxed(&pool->pages_state_release_cnt);` from the
-> > producer thread. Any idea why this barrier is not working? AFAIU it
-> > should do the exact same thing as acquiring/dropping the producer
-> > lock.
->
-> Hi, Mina
-> As previously mentioned:
-> page_pool_recycle_in_ring
->    ptr_ring_produce
->      spin_lock(&r->producer_lock);
->      WRITE_ONCE(r->queue[r->producer++], ptr)
->        //recycle last page to pool, producer + release_cnt =3D hold_cnt
-
-This is not right. release_cnt !=3D hold_cnt at this point.
-
-Release_cnt is only incremented by the producer _after_ the
-spin_unlock and the recycle_stat_inc have been done. The full call
-stack on the producer thread:
-
-page_pool_put_unrefed_netmem
-    page_pool_recycle_in_ring
-        ptr_ring_produce(&pool->ring, (__force void *)netmem);
-             spin_lock(&r->producer_lock);
-             __ptr_ring_produce(r, ptr);
-             spin_unlock(&r->producer_lock);
-        recycle_stat_inc(pool, ring);
-    recycle_stat_inc(pool, ring_full);
-    page_pool_return_page
-        atomic_inc_return_relaxed(&pool->pages_state_release_cnt);
-
-The atomic_inc_return_relaxed happens after all the lines that could
-cause UAF are already executed. Is it because we're using the _relaxed
-version of the atomic operation, that the compiler can reorder it to
-happen before the spin_unlock(&r->producer_lock) and before the
-recycle_stat_inc...?
-
---=20
-Thanks,
-Mina
+> > --G--
