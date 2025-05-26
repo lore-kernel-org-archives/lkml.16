@@ -1,62 +1,83 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A6C13BC3F
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7818B13BC3F;
+	Mon, 26 May 2025 08:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247560; cv=none; b=NIaIuEb16KJVOlFbHUB83/RMyRJrvamd+BHuTm0TYqyIgesw/ipyw83nFzFyKDDPEAfu0YbVL/x2c8R1D/d7QGoDSryUSjWr/noch39jYEDOJ6YHqjOVe85nO34Y/9WqOZZ134Mfhq8CSm6tge8MCtu0zpajDwA8RARULqsKZeQ=
+	t=1748247607; cv=none; b=I+yb0IhGwhvsyE/NPOS0UteFfgGZinjgtulshkQqhhbiOCJyUOjZmPsfEXYXp+Rl+MuQtQqNE+dnHm/SYRa5dUnSj6qcK3hI+IoC5TNTYbGdPuz6K3MZslms27FXJ04v+gmA3Fg7pPJFgMmImTaSczaY1CTY+Ov7byTvjXCQUwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247560; c=relaxed/simple;
-	bh=+7FlR7wbH2QVX/4UL4sFvRsl1MY48ikGRf29bMZQsco=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=dT5hPEgw9R0Gl6bgLqRkWXQUwGS6OQdB5SOqrG6GbqKOcSmsKaGqljonHZVD/VHMHoCNl8VUYREgKqewDVe3to8gkfV22c8MJAZ2lLXbPQDdkcQbzALzlptLCZATkZOeQIjsBJ7OMLmrCGe4AsDcYT0Qd7cgjL0tZWbMEUYBtds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85dad56a6cbso267437939f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:19:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748247557; x=1748852357;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+7FlR7wbH2QVX/4UL4sFvRsl1MY48ikGRf29bMZQsco=;
-        b=bXlZ7BYrbeL8oKsW0cVpreT0+of1PJ8CbX0MIz0Rq3NvUy58t74zgM7D1Laniu4/WA
-         Q5O695MCLOMCErq3W1svnLLCZDGDWybamtUspz2Rjt6RIBsCQcTBgMqSi+QEUEW+Q/jd
-         0vz1Ji7vGjlvOjpZLh94rNcow0qxD0WQ3EJq75R76txl0N2DhVsArd2/EVYFxgdeATHP
-         HvxXIx0Qh9bmz5zcM0meBxxEoxaejmetZnf7OHXXmO4eTOqdvw1Sft7xCxP/yuHzHITO
-         z3wJipqTvS/eTOBLqsLEEXB4F00O3WiQaZ3coVeKxBIvyIRR99auCx/rLVcwwBiCtCDN
-         5GlQ==
-X-Gm-Message-State: AOJu0YwmKWE7+5GT6ZKm/Y8d1IuKScw1qTP22BhcSN9+mVg/Pw4siNev
-	QkT69EwPIRPO7sI/vK1B/Xvel+EMIffzwXOoC/oIeKP4fARhDrMkuEQggWyVG1HVonjWaJ5QO3C
-	PziFXPN40OA46zEwYO8m6vUlDWnJ+V+40QHIOUHVI4TcuTlNWpTToHwdlG/I=
-X-Google-Smtp-Source: AGHT+IE7SU5tWY0+rUlkjlDUl8Ffos+1ZiFrD2BYR8gGgvSbvh7lPP3UpGp1g1MELbttTzSn7u1u/wHrGnOeqq8FSjjV5gRReIGY
+	s=arc-20240116; t=1748247607; c=relaxed/simple;
+	bh=1XBov8LKCCh3CXoBRsiUyshAPN3tdk9qVy0hUvJ1KyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fE+Dn/yt/F+5qT0J10eEzxZh1/JCQKZERLrV5tcQ/tl5vp9S2FksmZDzuVkA/4LgFGfogFcQau0qJE3MdXBEXAUaV1e8teMbLsRgCavKSdq58K9HLHIQRSrhER+AtIlxySLeS/VBOMwDTIUxZvfG9iYuaejKlAqCowictta51k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Vv6k3Obm; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Vv6k3Obm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=RbR8wNWzK8yk4bknHCAW6sX5XZ5jnzKaNd3Odaryp2c=; b=Vv6k3Obm93JVskdS9j3mndnvWB
+	K9UTQyl2EuE2O6dFYef6+u9w4kJ3+H0AkTnRx4tmIT82OjHXqqOZdBNOzdIqUcu2zzXZoqFrU6tDb
+	Sj10hrpXMsTyOBxrBXnbma3ZwOkRf+/lzfQQOin1texHcqz2wdxla/PQRxOTw01M8Quc+FWRd9UDk
+	JW0tbQyzcB/WOM873gicAc2ozW5tf/cMGX7IPTzeOmIQJgQFHN9JhKZzp/4W7gMRHEsxSamXCHCSG
+	+aI1jkdiRvAl0FvwyINr/b3+ERcmcq21gt88QqCQIcV6Y94VohRRPnvmtkMDwPmdUEVua3QYxrMSe
+	ioOkDLfQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56448)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uJT3v-0006WT-1s;
+	Mon, 26 May 2025 09:19:59 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uJT3t-0000HA-2U;
+	Mon, 26 May 2025 09:19:57 +0100
+Date: Mon, 26 May 2025 09:19:57 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Yajun Deng <yajun.deng@linux.dev>
+Cc: Andrew Lunn <andrew@lunn.ch>, hkallweit1@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: phy: Add c45_phy_ids sysfs entry
+Message-ID: <aDQkLcfeu8zw8CJ_@shell.armlinux.org.uk>
+References: <20250523132606.2814-1-yajun.deng@linux.dev>
+ <2eec1d17-a6d1-4859-9cc9-43eeac23edbd@lunn.ch>
+ <fad26dc95cbe08a87b30d98a55b7e3d987683589@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4a0d:b0:86a:25d5:2dbe with SMTP id
- ca18e2360f4ac-86cbb7dcffamr971512839f.4.1748247557666; Mon, 26 May 2025
- 01:19:17 -0700 (PDT)
-Date: Mon, 26 May 2025 01:19:17 -0700
-In-Reply-To: <6832ca5f.a70a0220.1765ec.015d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68342405.a70a0220.253bc2.008f.GAE@google.com>
-Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
- 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-From: syzbot <syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fad26dc95cbe08a87b30d98a55b7e3d987683589@linux.dev>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Mon, May 26, 2025 at 08:11:21AM +0000, Yajun Deng wrote:
+> c45 device:
+> $ ls /sys/class/net/eth0/phydev/
+> attached_dev  driver  of_node         phy_id         power       subsystem
+> c45_phy_ids   hwmon   phy_has_fixups  phy_interface  statistics  uevent
+> 
+> $ ls /sys/class/net/eth0/phydev/c45_phy_ids
+> mmd10_device_id  mmd17_device_id  mmd23_device_id  mmd2_device_id   mmd7_device_id
+> mmd11_device_id  mmd18_device_id  mmd24_device_id  mmd30_device_id  mmd8_device_id
+> mmd12_device_id  mmd19_device_id  mmd25_device_id  mmd31_device_id  mmd9_device_id
+> mmd13_device_id  mmd1_device_id   mmd26_device_id  mmd3_device_id
+> mmd14_device_id  mmd20_device_id  mmd27_device_id  mmd4_device_id
+> mmd15_device_id  mmd21_device_id  mmd28_device_id  mmd5_device_id
+> mmd16_device_id  mmd22_device_id  mmd29_device_id  mmd6_device_id
 
-***
+I suspect you don't have a PHY that defines all these IDs. Are you sure
+your .is_visible() is working properly?
 
-Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-Author: dmantipov@yandex.ru
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
