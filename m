@@ -1,196 +1,215 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4162146A72
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBE4433AC
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748269095; cv=none; b=EhqZpoYer9xa31tRP5JKJVYawpNDiXlbQr1O1BpMyd3JBhAF9EY11nulrmzTXaxf2FMuM+EOFJFAm7yTxTH3AM0tZLVxNHOJlNbLXZqfXQYpRCw27D5yVwr+H1vmNkI3qGpZnNmlB2i2WqhtsG5rSIHSfekUu/zsvui8QAsmr2c=
+	t=1748269151; cv=none; b=q3oeTY6tJ15UNLlsPukEar8cgRmzBn8GiYMFf9K6q1XQFzmmAyMDRujPAPkpBSgPVQIes+Z7nl5QqmJADKQZ0sumoFZ/UsVj7c4HLJx89KI6cYGHGl/5FazHXZDhWga9JUISlwOkfErCvumXpl8Z+l2fkuADlK2Nib3HKZMk61c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748269095; c=relaxed/simple;
-	bh=9nFS6Z+Qr9uYWg+WgnqklpMTBF4mg9ANTFsLb7GrZEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBKcZlvarrixFLzTy7QARm/ONGv2kxHPyjUlOZz+oinRg0awSruEGaFZgH/PlLAi1Hj/l9f5fByS9PA9BjE2WTaHk0xuplLRsQ5cPxBqOU9gMflCGijBEUZKv9EngY3ymIte8hFdFfHmq4XnFw9qVNC0jWjZUdVNkcIm4qQu7Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bsNCDAGm; arc=none smtp.client-ip=95.215.58.171
+	s=arc-20240116; t=1748269151; c=relaxed/simple;
+	bh=zZY12G2RUE6dyOkl3opChCWHjj1XJx+3D/Lm++dU8bA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=trxquOh8pIFDNAZPXvgi1yGP229lZ3jIaFEKUc9FZiF6a52qiJ5XfqvHZde1VVDfoPi+AFUzSRtDDAMrFSOvhlXfnmglITFMRmje7yKjlKV+0nEDYJhRhfFXq8juzBNazohHubqnFV9ctrsTKx6Gsb2h2LNmno/rGQuxJUrU/5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=U4T43Ytx; arc=none smtp.client-ip=95.215.58.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bsNCDAGm"
-Message-ID: <a98ad2e7-50de-4d04-8d99-2cf77354b1d6@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U4T43Ytx"
+Date: Mon, 26 May 2025 16:19:01 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748269080;
+	t=1748269147;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CG65uiG820yU4E9kA+la6nKKENDkdykyFfNseCcdUss=;
-	b=bsNCDAGmpl6C8L2Lkj0cxztxBBCc75SVO1eCCy6WLnR1zVp5j74zJdDgFqA28LK/IHvuCG
-	6tV+4J0V5d4+xrsoFHcgWE6TIg/xREsvVEbNfcrBJ1XN+h7iqQvzNCZVRLclPy0pN4DG8N
-	VXHnkor97AA8Fjb15mrYGKLKegxIRkU=
-Date: Mon, 26 May 2025 19:47:02 +0530
+	bh=QP47mBiBQT/WSbbK5SaleZH/+hgZqZTeZEh/OAuW384=;
+	b=U4T43Ytxt22kYjLevAzW8hC3OqOrtz6ZyCo6XjtEFtQOFqdwKb/z5GADfUlQUJaLmnxPNI
+	GT7jkQhvfOJoKjyOq2fC3ODIg8T45kHtE/3roqnuIesTaamXRb6xrk+9/IAh8SaNswuUVa
+	dhjX8nnp5bca2pOtF/0OQwtOVRZW/Ow=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] kunit: Introduce UAPI testing framework
+Message-ID: <20250523-winged-donkey-of-advance-fffac7@l-nschier-aarch64>
+References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v8 4/4] drm/tidss: Add OLDI bridge support
-To: Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Jyri Sarha <jyri.sarha@iki.fi>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Simona Vetter <simona@ffwll.ch>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
- Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
- Jayesh Choudhary <j-choudhary@ti.com>,
- Francesco Dolcini <francesco@dolcini.it>,
- Alexander Sverdlin <alexander.sverdlin@siemens.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Devicetree List <devicetree@vger.kernel.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250525151721.567042-1-aradhya.bhatia@linux.dev>
- <20250525151721.567042-5-aradhya.bhatia@linux.dev>
- <DA5ZNDCHXC6M.1CDYDG6KKMAP0@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <DA5ZNDCHXC6M.1CDYDG6KKMAP0@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+Organization: AVM GmbH
 X-Migadu-Flow: FLOW_OUT
 
-Hi Michael,
-
-Thank you for reviewing and testing the patches! =)
-
-On 26/05/25 15:05, Michael Walle wrote:
-> Hi Aradhya,
+On Mon, Apr 07, 2025 at 09:42:37AM +0200, Thomas Weißschuh wrote:
+> Currently testing of userspace and in-kernel API use two different
+> frameworks. kselftests for the userspace ones and Kunit for the
+> in-kernel ones. Besides their different scopes, both have different
+> strengths and limitations:
 > 
->> +static int get_oldi_mode(struct device_node *oldi_tx, int *companion_instance)
->> +{
->> +	struct device_node *companion;
->> +	struct device_node *port0, *port1;
->> +	u32 companion_reg;
->> +	bool secondary_oldi = false;
->> +	int pixel_order;
->> +
->> +	/*
->> +	 * Find if the OLDI is paired with another OLDI for combined OLDI
->> +	 * operation (dual-link or clone).
->> +	 */
->> +	companion = of_parse_phandle(oldi_tx, "ti,companion-oldi", 0);
->> +	if (!companion)
->> +		/*
->> +		 * The OLDI TX does not have a companion, nor is it a
->> +		 * secondary OLDI. It will operate independently.
->> +		 */
->> +		return OLDI_MODE_SINGLE_LINK;
+> Kunit:
+> * Tests are normal kernel code.
+> * They use the regular kernel toolchain.
+> * They can be packaged and distributed as modules conveniently.
 > 
-> How is this supposed to work? If I read this code correctly, the
-> second (companion) port is always reported as SINGLE_LINK if its
-> device tree node doesn't have a ti,companion-oldi property. But
-> reading the device tree binding, the companion-old property is only
-> for the first OLDI port.
-
-With this series, the dt-schema for oldi changes a bit as well. Both the
-OLDIs, primary or secondary, need to pass each other's phandles now.
-The "ti,companion-oldi" and "ti,secondary-oldi" properties are not
-mutually exclusive anymore.
-
-Something like this.
-
-&oldi0 {
-	// primary oldi
-	ti,companion-oldi = <&oldi1>;
-};
-
-
-&oldi1 {
-	// secondary oldi
-	ti,secondary-oldi = true;
-	ti,companion-oldi = <&oldi0>;
-};
-
-
-If there is no companion for any OLDI dt node, then the OLDI TX will be
-deemed as acting by itself, and in a single-link mode.
-
-
+> Kselftests:
+> * Tests are normal userspace code
+> * They need a userspace toolchain.
+>   A kernel cross toolchain is likely not enough.
+> * A fair amout of userland is required to run the tests,
+>   which means a full distro or handcrafted rootfs.
+> * There is no way to conveniently package and run kselftests with a
+>   given kernel image.
+> * The kselftests makefiles are not as powerful as regular kbuild.
+>   For example they are missing proper header dependency tracking or more
+>   complex compiler option modifications.
 > 
-> FWIW, I've tested this series and I get twice the clock rate as
-> expected and the second link is reported as "OLDI_MODE_SINGLE_LINK".
-> I'll dig deeper into this tomorrow.
->
-
-I was able to reproduce this behavior as you mention when the second
-oldi dt does not have a companion-oldi property.
-
-However, upon analysis, I realize that even having the correct dt as I
-mention above, will fall into another bug in the code and fail during
-the OLDI init.
-
-Unfortunately, two wrongs in my setup yesterday caused my testing to
-pass!
-
-I will post another revision, if you want to hold out on debugging
-further!
-
-Thank you for reporting this!
-
---
-Regards
-Aradhya
-
+> Therefore kunit is much easier to run against different kernel
+> configurations and architectures.
+> This series aims to combine kselftests and kunit, avoiding both their
+> limitations. It works by compiling the userspace kselftests as part of
+> the regular kernel build, embedding them into the kunit kernel or module
+> and executing them from there. If the kernel toolchain is not fit to
+> produce userspace because of a missing libc, the kernel's own nolibc can
+> be used instead.
+> The structured TAP output from the kselftest is integrated into the
+> kunit KTAP output transparently, the kunit parser can parse the combined
+> logs together.
 > 
->> +
->> +	if (of_property_read_u32(companion, "reg", &companion_reg))
->> +		return OLDI_MODE_UNSUPPORTED;
->> +
->> +	if (companion_reg > (TIDSS_MAX_OLDI_TXES - 1))
->> +		/* Invalid companion OLDI reg value. */
->> +		return OLDI_MODE_UNSUPPORTED;
->> +
->> +	*companion_instance = (int)companion_reg;
->> +
->> +	if (of_property_read_bool(oldi_tx, "ti,secondary-oldi"))
->> +		secondary_oldi = true;
->> +
->> +	/*
->> +	 * We need to work out if the sink is expecting us to function in
->> +	 * dual-link mode. We do this by looking at the DT port nodes, the
->> +	 * OLDI TX ports are connected to. If they are marked as expecting
->> +	 * even pixels and odd pixels, then we need to enable dual-link.
->> +	 */
->> +	port0 = of_graph_get_port_by_id(oldi_tx, 1);
->> +	port1 = of_graph_get_port_by_id(companion, 1);
->> +	pixel_order = drm_of_lvds_get_dual_link_pixel_order(port0, port1);
->> +	of_node_put(port0);
->> +	of_node_put(port1);
->> +	of_node_put(companion);
->> +
->> +	switch (pixel_order) {
->> +	case -EINVAL:
->> +		/*
->> +		 * The dual-link properties were not found in at least
->> +		 * one of the sink nodes. Since 2 OLDI ports are present
->> +		 * in the DT, it can be safely assumed that the required
->> +		 * configuration is Clone Mode.
->> +		 */
->> +		return (secondary_oldi ? OLDI_MODE_CLONE_SECONDARY_SINGLE_LINK :
->> +					 OLDI_MODE_CLONE_SINGLE_LINK);
->> +
->> +	case DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS:
->> +		return (secondary_oldi ? OLDI_MODE_SECONDARY_DUAL_LINK :
->> +					 OLDI_MODE_DUAL_LINK);
->> +
->> +	/* Unsupported OLDI Modes */
->> +	case DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS:
->> +	default:
->> +		return OLDI_MODE_UNSUPPORTED;
->> +	}
->> +}
+> Further room for improvements:
+> * Call each test in its completely dedicated namespace
+> * Handle additional test files besides the test executable through
+>   archives. CPIO, cramfs, etc.
+> * Compatibility with kselftest_harness.h (in progress)
+> * Expose the blobs in debugfs
+> * Provide some convience wrappers around compat userprogs
+> * Figure out a migration path/coexistence solution for
+>   kunit UAPI and tools/testing/selftests/
+> 
+> Output from the kunit example testcase, note the output of
+> "example_uapi_tests".
+> 
+> $ ./tools/testing/kunit/kunit.py run --kunitconfig lib/kunit example
+> ...
+> Running tests with:
+> $ .kunit/linux kunit.filter_glob=example kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
+> [11:53:53] ================== example (10 subtests) ===================
+> [11:53:53] [PASSED] example_simple_test
+> [11:53:53] [SKIPPED] example_skip_test
+> [11:53:53] [SKIPPED] example_mark_skipped_test
+> [11:53:53] [PASSED] example_all_expect_macros_test
+> [11:53:53] [PASSED] example_static_stub_test
+> [11:53:53] [PASSED] example_static_stub_using_fn_ptr_test
+> [11:53:53] [PASSED] example_priv_test
+> [11:53:53] =================== example_params_test  ===================
+> [11:53:53] [SKIPPED] example value 3
+> [11:53:53] [PASSED] example value 2
+> [11:53:53] [PASSED] example value 1
+> [11:53:53] [SKIPPED] example value 0
+> [11:53:53] =============== [PASSED] example_params_test ===============
+> [11:53:53] [PASSED] example_slow_test
+> [11:53:53] ======================= (4 subtests) =======================
+> [11:53:53] [PASSED] procfs
+> [11:53:53] [PASSED] userspace test 2
+> [11:53:53] [SKIPPED] userspace test 3: some reason
+> [11:53:53] [PASSED] userspace test 4
+> [11:53:53] ================ [PASSED] example_uapi_test ================
+> [11:53:53] ===================== [PASSED] example =====================
+> [11:53:53] ============================================================
+> [11:53:53] Testing complete. Ran 16 tests: passed: 11, skipped: 5
+> [11:53:53] Elapsed time: 67.543s total, 1.823s configuring, 65.655s building, 0.058s running
+> 
+> Based on v6.15-rc1.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+> Changes in v2:
+> - Rebase onto v6.15-rc1
+> - Add documentation and kernel docs
+> - Resolve invalid kconfig breakages
+> - Drop already applied patch "kbuild: implement CONFIG_HEADERS_INSTALL for Usermode Linux"
+> - Drop userprogs CONFIG_WERROR integration, it doesn't need to be part of this series
+> - Replace patch prefix "kconfig" with "kbuild"
+> - Rename kunit_uapi_run_executable() to kunit_uapi_run_kselftest()
+> - Generate private, conflict-free symbols in the blob framework
+> - Handle kselftest exit codes
+> - Handle SIGABRT
+> - Forward output also to kunit debugfs log
+> - Install a fd=0 stdin filedescriptor
+> - Link to v1: https://lore.kernel.org/r/20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de
+> 
+> ---
+> Thomas Weißschuh (11):
+>       kbuild: userprogs: add nolibc support
+>       kbuild: introduce CONFIG_ARCH_HAS_NOLIBC
+>       kbuild: doc: add label for userprogs section
+>       kbuild: introduce blob framework
+>       kunit: tool: Add test for nested test result reporting
+>       kunit: tool: Don't overwrite test status based on subtest counts
+>       kunit: tool: Parse skipped tests from kselftest.h
+>       kunit: Introduce UAPI testing framework
+>       kunit: uapi: Add example for UAPI tests
+>       kunit: uapi: Introduce preinit executable
+>       kunit: uapi: Validate usability of /proc
+> 
+>  Documentation/dev-tools/kunit/api/index.rst        |   5 +
+>  Documentation/dev-tools/kunit/api/uapi.rst         |  12 +
+>  Documentation/kbuild/makefiles.rst                 |  37 ++-
+>  MAINTAINERS                                        |   2 +
+>  include/kunit/uapi.h                               |  24 ++
+>  include/linux/blob.h                               |  32 +++
+>  init/Kconfig                                       |   2 +
+>  lib/kunit/.kunitconfig                             |   2 +
+>  lib/kunit/Kconfig                                  |  11 +
+>  lib/kunit/Makefile                                 |  18 +-
+>  lib/kunit/kunit-example-test.c                     |  15 ++
+>  lib/kunit/kunit-example-uapi.c                     |  56 ++++
+>  lib/kunit/uapi-preinit.c                           |  65 +++++
+>  lib/kunit/uapi.c                                   | 294 +++++++++++++++++++++
+>  scripts/Makefile.blobs                             |  19 ++
+>  scripts/Makefile.build                             |   6 +
+>  scripts/Makefile.clean                             |   2 +-
+>  scripts/Makefile.userprogs                         |  16 +-
+>  scripts/blob-wrap.c                                |  27 ++
+>  tools/include/nolibc/Kconfig.nolibc                |  13 +
+>  tools/testing/kunit/kunit_parser.py                |  13 +-
+>  tools/testing/kunit/kunit_tool_test.py             |   9 +
+>  .../test_is_test_passed-failure-nested.log         |  10 +
+>  .../test_data/test_is_test_passed-kselftest.log    |   3 +-
+>  24 files changed, 682 insertions(+), 11 deletions(-)
+> ---
+> base-commit: bf9962cc9ec3ac1dae2bf81b126657c1c49c348a
+> change-id: 20241015-kunit-kselftests-56273bc40442
+> 
+> Best regards,
+> -- 
+> Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> 
 
+Hi Thomas,
+
+sorry for the long delay.  I started reviewing but am not completely 
+through the whole set (especially, I did not really look at the kunit 
+patches, yet) but would like to send you at least some feedback already.
+
+In general, I really like the idea and your approach and am looking 
+forward for an integration.
+
+Kind regards,
+Nicolas
