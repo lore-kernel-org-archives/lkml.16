@@ -1,221 +1,189 @@
-Received: from PAUP264CU001.outbound.protection.outlook.com (mail-francecentralazon11021093.outbound.protection.outlook.com [40.107.160.93])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63156156C62;
-	Mon, 26 May 2025 12:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.160.93
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748262438; cv=fail; b=LXaa7xzEB8YTTnhO4OH2Sw7omBZBOWi3gyhe81E7Sp8JlpJcr2BQ1BKqXT8EXXIkiszSdiC/+i2M9FW6a4nPuj5G6MJ7nZ81bteSTw/RG4dY1u+ICwez1XFBthzeKwHLSN0l1HiR3k8W2JnYGD/E62EoFHL2F+nKNGmFdP0tCk4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748262438; c=relaxed/simple;
-	bh=zvFkKS19Tk8Yoi/P10WUDFGc81JmtSZlIVv8S/JUa/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=tcftcHe1Un/SgTYRMGEzTxbX3yAKXVPj5LYQXprCxQlBLQqqjntM0biNG67fJ8kaQh7VOoXAZgdGnb9DnI8o3sTDpIVH5Yg+0LgMyHz9GggwJ/tsRrMzt5O0FTAWkQ4fPg5SEVSP+NcT+neTiYbJAudmMCfgDggsIN+BdRqyWXM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com; spf=pass smtp.mailfrom=allegrodvt.com; dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b=eFeXD7HD; arc=fail smtp.client-ip=40.107.160.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allegrodvt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D5D1FF7CD;
+	Mon, 26 May 2025 12:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748262480; cv=none; b=grr70YPY2qAnluL1DE7S7fLhZAtayYswQp/nvN0O3FwbdlsdePlkiCQ3sHtBfv4krNtXbilBHrX5Lm2+7CKCYjilmbTahtAZmr7XLy7g2XLQ0hw3NhnhFgHewvBJuoK3a0eyz+isiDPnvsvR+ZKUA0qRcI16fleBdmsgGS1PjCk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748262480; c=relaxed/simple;
+	bh=z2OkRRgDb+V8wLFMS6yObcblnV66nbwgge/WZA5MiRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MB2AMD5V5Steze6Xk5/kCpr/3lambN3z0LeuxLTxfmTiAHSMCc+/Nurfcbq+gOJZR5sFRwyvv3eIBGrPPuXlFIz2xSjNkPF0XXIqBdlV97vg8zYhGpHB9dMq5xiVWoocRVXSWNXBmv00pvekDOe4P1eEy4ilhJq5OmvZ7ZM2Sk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=esVvCT1S; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b="eFeXD7HD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UIQDqY+VigV9sKaM0mHKS6TEmHvDD0LVbhgcAtPFPdEAViVo6Ge/w4qcfPBZwcbNLBYFybDwqJ5axoMyf8YDBSoJRwFzJ6mwg/PO440VJjHjd6swdZlTniHfN+qsfdPaQn59oAoMT2DHcsuaZvSdROF9gQv8z/hWV+eYwZdHhUoAXxD3T69zkmeuB59Lff5IAhIKwCusMS6nypD7d8wPBZbdQ+ey10qLy1v25V3eSzE614ik6YFCh/5W1ESJz7EBZ+xpFMdZLIFQqkekDDYWDSS5lcsjEt3okQehUa7/lCTZLXaQViN1qkqruVCPtybGSyfdqyVegalLihes5jDHrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zvFkKS19Tk8Yoi/P10WUDFGc81JmtSZlIVv8S/JUa/c=;
- b=PK/MOSOucHzpJ5qsPrTQ5ZXRQ93JzKaTxr+umc0iwf9N5jFDfrR7zf3mVvXxR4nqUMJQpq/qOuscpTEMbJJ5VFCVSh+ANOU3CsiygPGNt4p72pre592xvJn7zJpKj//Aw0eVj90DP2gwzEpKEPFuWrzDH6dtA5y5Xs/Ibznmcj2bYcTMj2TQ91mcgGhxYgKKEDGFL3RsFkA+C6dAB8PM5GPPox4U2zHOoFa5NCTGpa4GCiJ0v0v6Ey+MvY2592yD5ZtEvjWYNjPTsG8mtoZaWVKtbplXbXww5i8hqBciATvRHR6z8mZyKOuvWZUiR/rAbATXiJ3ZlJbqnRAyoxYaNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=allegrodvt.com; dmarc=pass action=none
- header.from=allegrodvt.com; dkim=pass header.d=allegrodvt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=allegrodvt.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zvFkKS19Tk8Yoi/P10WUDFGc81JmtSZlIVv8S/JUa/c=;
- b=eFeXD7HDjiNK52ZCCQ6P9Jw1Ozg6gD7oX9+QVtNavdLvUMoPlKf/UXJbfBSVLfu7mQDbBsVGXDtxmP0UQeYKnisLO+CH4lqRZRikAS4qgFG1EJwt3UBMQIkpb8IvhF10O2QabjFm0UEkuu0ZugAYbR/fB0FsRRKFvV+7Ay09qdhatw5oz+RKFKsyAPc/2FJ2KZAw42j9ifEaj9PH06+3+HtZ/fN/WENAtuFtwTwYPUUapJk2BChUuGmkXPJ0FIjBK4ves5S9pAxuUdBZxrFcnPpGkwyf0bjsxQLgZcxnWuY7bYKrNSmeOU9YnWfA1CnxPmOW3zkTC9EYPUxh23uG2g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=allegrodvt.com;
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3d::18)
- by PATP264MB5094.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:3f5::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 26 May
- 2025 12:27:09 +0000
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5]) by MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5%2]) with mapi id 15.20.8769.019; Mon, 26 May 2025
- 12:27:09 +0000
-Date: Mon, 26 May 2025 12:27:07 +0000
-From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michael Tretter <m.tretter@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Michal Simek <michal.simek@amd.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Junhao Xie <bigfoot@classfun.cn>, Rafa?? Mi??ecki <rafal@milecki.pl>, 
-	Kever Yang <kever.yang@rock-chips.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Christophe JAILLET <christophe.jaillet@wanadoo.fr>, 
-	Sebastian Fricke <sebastian.fricke@collabora.com>, Gaosheng Cui <cuigaosheng1@huawei.com>, 
-	Uwe Kleine-K??nig <u.kleine-koenig@baylibre.com>, Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Ricardo Ribalda <ribalda@chromium.org>, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/5] dt-bindings: media: allegro-dvt: add decoder
- dt-bindings for Gen3 IP
-Message-ID: <flwocneutp64bxxwfkfqvm6dq7klc2nu33ybr3ap6qeovopfq7@7qognvdf4zew>
-References: <20250523134207.68481-1-yassine.ouaissa@allegrodvt.com>
- <20250523134207.68481-3-yassine.ouaissa@allegrodvt.com>
- <3e6be40a-2644-416a-bd32-f6256f1501ff@kernel.org>
- <7863d15a-fa20-4db5-89b5-77a026d3f937@kernel.org>
- <a72z6exgol5cbur2cy7wjwyroi4zddtki5ab3zdkfuwpskpavr@r26wahldhd3r>
- <b5bb919e-6273-48ed-b5d8-29177dbbfb76@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <b5bb919e-6273-48ed-b5d8-29177dbbfb76@kernel.org>
-X-ClientProxiedBy: PA7P264CA0098.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:348::9) To MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:3d::18)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="esVvCT1S"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q8dLu8002986;
+	Mon, 26 May 2025 12:26:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Cx6XOn2PoFhzZ/6d8Eju1VmGVG5xuLEUSViIIS/j7Sw=; b=esVvCT1SOootMzHc
+	+GkM2j0WSF8nAgdbCflLAcPhG0um4Bu6/FA90d+bywIe9qJZ24ybzUgLdifOCNJb
+	JTunxW5iaqJgcgwSNhVKTlzokz9i9H9qTkfXzPgD6iyYf2QWHZOuo5wXCjlOxSHs
+	lZ6wK+xh59vZ1zFFdpYhETVnSVzZGsxnO8vvb8qzt7Wue92yt0pVFRo9pKpmcaMt
+	L8PkaG1jOsbkuL+tpJ3RnEo3WogNdxbfWzHDVrLw6UAnS9wSo/IxI88M9M8NigG0
+	0cq1zYE6FP0/WMJRR062pdBnpCjPr2A3lBqKJVJjeoHkZn9AhlFvcqQAZGCNzfnU
+	uGf3Ow==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46vmyugjey-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 12:26:57 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54QCQvYm002042
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 12:26:57 GMT
+Received: from [10.64.68.119] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 26 May
+ 2025 05:26:50 -0700
+Message-ID: <df3807e5-c381-4440-be64-9bd49a2ecd9d@quicinc.com>
+Date: Mon, 26 May 2025 20:26:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MR1P264MB3140:EE_|PATP264MB5094:EE_
-X-MS-Office365-Filtering-Correlation-Id: b0bc174d-43dd-486a-4d45-08dd9c50a241
-X-LD-Processed: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?NVArN29oU0pJT3J0aytmWVJWY3BoTWVTTDVMMFJqWWRaQm9jYXIrU1dZU1Nw?=
- =?utf-8?B?S29pVVVOcEhBaytQbGI2NjFoY2krZzExdDNQS1ZLc3Rra0RqK3J2YUxuM3hC?=
- =?utf-8?B?NlZvcXlreWxVRlhodEQwdktKWTJTdG9keDFDV09PSXBSRlFvNlh4OUxaSnNU?=
- =?utf-8?B?eVFpR2k4eHlmY0U0TlFmM1J2OGZiWHVBYXo2WEVoVG5DZC8zWFl5TkxQQ0hW?=
- =?utf-8?B?NVR5aEN0QVBDWEIxOHNLS0VPNDNVRWwvbkIyRkQ3ZFRUT01pSUs5bkt6U3dQ?=
- =?utf-8?B?N3creGNvdDhNSlp3Y1Fkay9BZmRIVGJhMEcwRThoL0M5NFYyN1d0SWtpd21G?=
- =?utf-8?B?WXplYm5xYm5NY2tNZml5NnRvK0R1NHJESnpqRlZaemtLcmNKOTI2YWw0VDJM?=
- =?utf-8?B?N09QdkFkZElIMS9KeXNsSlQxWlNicUIrQ3NPQVNjUVdSNUxOK3FHdE1vM3pl?=
- =?utf-8?B?YkwzcTc1Q1NSUWZzbWwzZUkyQTc0dFZJTENGRWc2SFRHeVZhejlFNXNrUzVT?=
- =?utf-8?B?cmxFRDA0L2V2Rlk0aytBZ01jekNYbmFWM0sxL0l2eXIzLzBRcnNtZ3pSMysz?=
- =?utf-8?B?Ly9iaFUyejllcDhJa3RyU0h0YllqRjlBTXo5ZThPbGNqY1VweGVTdkFGWGdy?=
- =?utf-8?B?bXdBVER3L3l1YUFqNlF0Yk8rcCs3b1kwMitTMGw4T01vUkRmSmpRZ2FxdWUy?=
- =?utf-8?B?NUVyMjU5b3djeVZlWjNIMDMzUXpPbndDcTBnZGpEM1cydG5jWHFUZFpOQlFo?=
- =?utf-8?B?cFNvWlpCUGg5c01LRk0xUzFQQmp3d1pZUXEycVZsc0FWMCtJQXBYWkt3QnZk?=
- =?utf-8?B?MFh0QTBqNGRXUlZmQ3ZFeGlFdlBGK1ZHcklINjlZck9RWnZibEgvcFN5N3Ft?=
- =?utf-8?B?b2RJVWU5dXJwYTN2T2tCbFd6ZmdNNTB3TzJDMGlBM0lLY1A0cVhGRjJLRFp5?=
- =?utf-8?B?WEhPZExuMGMyeG4xOW9MRW9kSERkSitpRHlLOFRtV2NZZGFEZkpCVktudFNO?=
- =?utf-8?B?ZXVmQjFlMzFTYkNmV3BoUTVkc0tzcG9oZVlpQ09MVUJaTDZwM1B3eE4rdTQx?=
- =?utf-8?B?RUY2TkJVZ3RUUXJ4alh1dHp3OUVXdVA3bjQ2b0NwZU5WR3ZxbGhKbnBYM1Vo?=
- =?utf-8?B?NXpaOFJZekN4UE9iaEgrRFFHMHBrYUtHMGNaZ0hsdGFOcW5jQ3ZHSVRXTVp1?=
- =?utf-8?B?Unp6ZlY0bzVYS2V3dkg1Tk96d3dlVmpaeU03Mm5ORXp1U25lR2U1ZUpTSUFJ?=
- =?utf-8?B?QXN5NUdHQnM3dnpNRTFCNWN6WnQvbEFNcUYvSXBva0x5aldWSXNML2xxWmVL?=
- =?utf-8?B?a3p1U3Q4K2hUdHM3VGJrajIxSS9rbTA5b3lSWE80bUJBaDFtS3BZQ1FpTTNB?=
- =?utf-8?B?aGNxNWZqTWhNS2RENmhhMGFuR2EvN0l4SXBoSklQZXNHSFpvZHZFSytDWVdh?=
- =?utf-8?B?S2JhenZhOXVqWTJ3MmdiN202TFJESmVad21OWmt0K0UxK05VV0EyZktucDlo?=
- =?utf-8?B?UWVydXRJQ1NvS0h0UGk1VUtpa1lIUCtKRDc4VnhST0hjY0lnSHk5MUxGUXFO?=
- =?utf-8?B?Y0pkaTBSLzhqS1dQL2p3ZzRFaGkvTU9ha3crdU1TVDJqaHJmdVFJN1cwUldD?=
- =?utf-8?B?SWVXdGRnSDM3ZFpaemNYd3d2SGJwSFJncVMydmVscUE3WC8wZXlNVGpNQmMy?=
- =?utf-8?B?azgwdlNFc1lJSkdPa1pWSjVwaGFtMTVDVC82MmJaV1h5NVlDczJ0N0t3MUd0?=
- =?utf-8?B?Mlh3Y20wT3g2dU5YR2JUVU5obG40K3pjVDJTY3poRWxLN2hJVFVEMk1QRjIw?=
- =?utf-8?B?SDBkL0FIUStSQWJWNmFRN3Bld3QrYVdIbkhiRXRXVFk1cjRxMXFiU1loOTIz?=
- =?utf-8?B?ZFIvcGlodEF6RVBWS3laKzhuZlp6WG16M0E5RE1rT2p0eXhwL0doRVRySnBu?=
- =?utf-8?Q?bqvdZt0wjoE=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?WjZwelpidUoxNE5URVBKZDJYZnhCU2JtbU5Vc091azAyOUtkYUVvNUJBalFj?=
- =?utf-8?B?R1FVSmVvNkNpbXRXUXk4NGttVzJJa0NaQ1ZIOTFnRWtUTFVCV003TU9BVGp0?=
- =?utf-8?B?bnN4UzljWDVROUZXaDdKY2RhR3NpTWF2WFdmRUNKZmpsZldnemczdjVaSXl1?=
- =?utf-8?B?Q0ZxQ0RZSGxGVGJzUTk2ZEF6ZnZlS1ZPMy9RekpKYVJIeE5LTmNuaXB3Qkk2?=
- =?utf-8?B?MlZJdVd0dEp5SWp0TlFmb0d4VmZSakYxa3pSTzhXTVpaYzBuY3hKaDhGR1J1?=
- =?utf-8?B?TTk1bmFqd3F4cms0dTNQY3l6aXc4eXNndy9MbHAyVktqUmFKc3ZKMWpOaXkr?=
- =?utf-8?B?V3BBbjJxS24xeVRTZXpyZDZ1VTJPQnV3aDJQSWo5RjZtYlc2eExZN3dCWjhF?=
- =?utf-8?B?bHEwVCtWeE9VWHgzd0pLUDduSFM3SVQzNXdsVVFWd2JVMGNNdTM3ZEJtSkE5?=
- =?utf-8?B?ZDJKVllLUlZvV01VVVE2aGhYb0xHZmdFL3BmVm5iUFFVNVJyMkRScWhUaHBH?=
- =?utf-8?B?Q2RMWDk5T1BqSE00Tjg3MURUeWhvV3p4WEM0STRxUkErTm1vTGI5VXJsbmd2?=
- =?utf-8?B?TlFGdjFIVUlSc3c5Zk9jTHoxZFdRc3RFdExDaTl3RnRWU1BsNThrK0xyc3p0?=
- =?utf-8?B?ZzNMdXNNaHFtTTJEUS9yK1djZytQQnVGVitudElrZTQ2MTdvT1VKMmlKYzFK?=
- =?utf-8?B?RXBXNTdZZU03OWR4dUVncnFYakZNSXBwVVhiUzRPVmJJeVBsYTFDSlQ0ckRN?=
- =?utf-8?B?bGNlVmJXTHV4d0V1ejQ5UU1uMUdmYk1ueWFsdFRMQjRKWUo3T1I5WThBdDBZ?=
- =?utf-8?B?bFVOM0Q3YVJFVWhXalBpQUFOT3lqMk1jelNNUC9xM3NueERMcnVTTkdxbjl5?=
- =?utf-8?B?UVVyS1NLa1J3MVVNTS9FOUMzUDd6djJabjd1bUtQZklackQ2YmdMeHlTRjhO?=
- =?utf-8?B?a01vMFVIVGtKZlpSVSt5cjlUdGZQNEZkdmhvU3lURFdCdVR0a1hEdmJPWFkz?=
- =?utf-8?B?QldNNFNad3hrOUcwaDNHRDZrS29MTDdpZ3RDUXVYTjFmUUoxMDhnV1p4b2Ny?=
- =?utf-8?B?VlpaTHh0bHRoMW5EUjYrbWxJZ09vOEtQQXVLaEFCZUplRWhGUy9vYklVTWRO?=
- =?utf-8?B?SWpRQVZGNlo3WmNqQndpSHUvMnlZSHNhVGNFa3BBeE0zb1ErUzJGeGc4Qnhm?=
- =?utf-8?B?NXRVWTZXWUJHS0orN1k0M2MvRWgrOEJJVHp5RENreDlhc1lSVVUzYnkrVFVJ?=
- =?utf-8?B?dHN6SDJ5Z255c0JMK2p5V1BQMFhuZlpSOHJTQ0NLL0JUanM2dXB0SXZJZ3lh?=
- =?utf-8?B?ZnpTWC91NWtaejczV2UrT2NVYjFkeitERHNDNGZKdXU0S3hrNGdvVGhYWDRl?=
- =?utf-8?B?Mng1bU9MbzFpclJEMFhqUzBLbzJlMEZFS1g5TmpKekY3Sml5dmFEcXdmcktH?=
- =?utf-8?B?WXJSMGhNdzFFQ3h6aUdFQ0FXY21xeTFMUm5rRUxGWFgwR1YrTHc3ZXZsdkNo?=
- =?utf-8?B?ZTZTU2I4ZHlCK2tIUjlCeUIyT1JIZVk1MjlFc2tYWDZ6am83eEl6N0VPbFVJ?=
- =?utf-8?B?WndJN3c0MzkyNThyL3lMd0JBV2luWERPcER4VGdkUGNwNTRrc2JlUE5kdDJB?=
- =?utf-8?B?MUF1LzltOUZUUVFkMkZkeWVZQUpzTmxVeHprdlJLU29pNlMyc1hzczdxdktz?=
- =?utf-8?B?TU1XWUNIQ0xReWRQWENaRlZqOVpXTy9CRVpIbzFqQ0JzVVVpTmdld1kyZzdU?=
- =?utf-8?B?alJ1MEV1a1o1ekhpUDVyTEliU25KL1FvSmJ3MmdSN1MwaE8wUlE2OFJPMVhT?=
- =?utf-8?B?YkVOeXZtWmU0Mnk2OC83dmNzVHpMbDh4UUhIWDdlTUxpd1RhYitLWnBRNGx3?=
- =?utf-8?B?UStvYWo4MHJ4d3RheXBQTEpGNElqQmpZd0hyd1BDTmV6MDZkVkhsZW5yR3lN?=
- =?utf-8?B?UGRLbEd4Q0NNMDE4elpxdXFVSkE2dDVxajlYczUvd0ZYVm1JbmIrTllPeWpD?=
- =?utf-8?B?Rmk2UG1UTGdCaUJ3anpncVEvb1M5YVZDVkRLOVpob0U0MVh1bjg4Qzc0MTZ4?=
- =?utf-8?B?bFpDbkxVeENqR0psWmlmNWJBN1REdEZxbXQ3OFZheElSQTdkMVA4Y0VCNnJj?=
- =?utf-8?B?dFA1RXFkYUp4blJkdXM2NzFPK0Q0Qzk0bWlOYWRnV3BUK3BYMWYzaEJ5OU12?=
- =?utf-8?B?SkE9PQ==?=
-X-OriginatorOrg: allegrodvt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0bc174d-43dd-486a-4d45-08dd9c50a241
-X-MS-Exchange-CrossTenant-AuthSource: MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 12:27:09.4098
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tr984dTGtRGU4WvR81Itl3hNsopuzfV0Wkqi38jIpEKvhAimMR9Dno5gtCt9cmq4FIsmKUuLbZSNIhoVuohlczBZtbro1UNyGeHrjaaDbjk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PATP264MB5094
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 05/45] drm/msm/dp: add a helper to read mst caps for
+ dp_panel
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "Chandan
+ Uddaraju" <chandanu@codeaurora.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Vara Reddy <quic_varar@quicinc.com>,
+        Rob Clark
+	<robdclark@chromium.org>,
+        Tanmay Shah <tanmay@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20241205-dp_mst-v1-0-f8618d42a99a@quicinc.com>
+ <20241205-dp_mst-v1-5-f8618d42a99a@quicinc.com>
+ <aksnudxy2oyojjzwm73i4mulftcxccdsnddcdamypmscn6skpq@ijtp7x76m3pt>
+Content-Language: en-US
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+In-Reply-To: <aksnudxy2oyojjzwm73i4mulftcxccdsnddcdamypmscn6skpq@ijtp7x76m3pt>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDEwNSBTYWx0ZWRfX/FIVSfANFpKM
+ TbLw24WJE/GtaexIp1kafrznpEDG8pRDs7YHXmtlRy1blgavVxP9ZrhTI/3PGRa58Dcn/NJRKeO
+ IH+0cSmmxXkH3ktp07WdBFzwD1jjvwnkTdxw/Ynh/nDhSBxj1dkG2bksXzOTqPZlEvP8B0eOmEC
+ htEHaPvb6Mi+A5W8DMRKDfpauHZZp5H7ToG6Gegjh7DmyGFWpyn1mXvCfQm9f6hiTBVhm+ZZAVq
+ KZBs9E+cTNKbUaD5PEmGVLcbJk/t/iLZYQDCXg3rLt503eg4YSI8e1v0w3Y0gMtWopER0D4BdT9
+ rSKAHjD6tyaHNXKQZQaizbSf1J9TqZfgSbqIZCW891qfiLQyLnRcIZEJbU5jF3DIJU0NcSoqsfi
+ 3PpV68qlapg7ptUuGMcThsVReWmiEioGN229ViB1Gy1Lt+5YArmSKwO12etUlgDluR2PQxeG
+X-Authority-Analysis: v=2.4 cv=MsdS63ae c=1 sm=1 tr=0 ts=68345e12 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=BYOfdb0HyH0VPR54-rAA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: q9peK1PaMGx0hbNCpzFdIcaJELhBfI3W
+X-Proofpoint-ORIG-GUID: q9peK1PaMGx0hbNCpzFdIcaJELhBfI3W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_06,2025-05-26_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505260105
 
-On 26.05.2025 12:57, Krzysztof Kozlowski wrote:
->On 26/05/2025 09:25, Yassine Ouaissa wrote:
->> On 23.05.2025 19:13, Krzysztof Kozlowski wrote:
->>> On 23/05/2025 19:11, Krzysztof Kozlowski wrote:
->>>> On 23/05/2025 15:41, Yassine Ouaissa wrote:
->>>>> Add compatible for video decoder on allegrodvt Gen 3 IP.
->>>>>
->>>>> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
->>>> Please do not send the same patches over and over again. You got review
->>>> which you need to address.
->>>>
->>>> Once address you send NEXT version with proper CHANGELOG for each patch
->>>> or top of cover letter. See submitting patches... or just use b4. This
->>>> should be actually requirement for this work.
->>>>
->>>> Anyway, I see all of previous review ignored so let's be explicit:
->>>>
->>>> NAK
->>>>
->> Hi Krzysztof,
+
+
+On 2024/12/6 16:52, Dmitry Baryshkov wrote:
+> On Thu, Dec 05, 2024 at 08:31:36PM -0800, Abhinav Kumar wrote:
+>> Add a helper to check whether a dp_panel is mst capable.
 >>
->> Make sure that i'm not ignoring anyone reviews, i sent a new set of
->> patches to start cleanly, and i have sent you an email about this.
->
->It is still v1 - the same? - while you already sent three patchsets before.
-
-As i mentioned, this patch is sent to start cleanly, so it still v1.
-And the previous patchsets should be ignored.
-
->
+>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>> ---
+>>   drivers/gpu/drm/msm/dp/dp_aux.h   |  1 +
+>>   drivers/gpu/drm/msm/dp/dp_panel.c | 14 ++++++++++++++
+>>   drivers/gpu/drm/msm/dp/dp_panel.h |  1 +
+>>   3 files changed, 16 insertions(+)
 >>
->> Also, for this patch (dt-bindings), i respected your previous reviews.
->I did not check every previous comment, since this is v1, but at least
->subject did not improve which with lack of changelog and versioning
->suggests nothing else changed either.
->
->OK, if you implemented the reviews, please point me to the changelog
->listing all the changes you done from each previous version?
->
-I'll make the v2 patches that should point all changes.
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_aux.h b/drivers/gpu/drm/msm/dp/dp_aux.h
+>> index 39c5b4c8596ab28d822493a6b4d479f5f786cdee..cb97a73cdd6ea74b612053bec578247a42214f23 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_aux.h
+>> +++ b/drivers/gpu/drm/msm/dp/dp_aux.h
+>> @@ -8,6 +8,7 @@
+>>   
+>>   #include "dp_catalog.h"
+>>   #include <drm/display/drm_dp_helper.h>
+>> +#include <drm/display/drm_dp_mst_helper.h>
+>>   
+>>   int msm_dp_aux_register(struct drm_dp_aux *msm_dp_aux);
+>>   void msm_dp_aux_unregister(struct drm_dp_aux *msm_dp_aux);
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+>> index d277e9b2cbc03688976b6aa481ee724b186bab51..172de804dec445cb08ad8e3f058407f483cd6684 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_panel.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+>> @@ -108,6 +108,20 @@ static u32 msm_dp_panel_get_supported_bpp(struct msm_dp_panel *msm_dp_panel,
+>>   	return min_supported_bpp;
+>>   }
+>>   
+>> +bool msm_dp_panel_read_mst_cap(struct msm_dp_panel *msm_dp_panel)
+>> +{
+>> +	struct msm_dp_panel_private *panel;
+>> +
+>> +	if (!msm_dp_panel) {
+>> +		DRM_ERROR("invalid input\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>> +
+>> +	return drm_dp_read_mst_cap(panel->aux, msm_dp_panel->dpcd);
+> 
+> So, it's a one-line wrapper. Do we actually need it?
+It beacuse the point of aux is in msm_dp_panel_private, so if we want to 
+call drm_dp_read_mst_cap in other file, we need this wrapper.
+> 
+>> +}
+>> +
+>>   int msm_dp_panel_read_link_caps(struct msm_dp_panel *msm_dp_panel,
+>>   				struct drm_connector *connector)
+>>   {
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
+>> index 7a38655c443af597c84fb78c6702b2a3ef9822ed..363b416e4cbe290f9c0e6171d6c0c5170f9fea62 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_panel.h
+>> +++ b/drivers/gpu/drm/msm/dp/dp_panel.h
+>> @@ -67,6 +67,7 @@ int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
+>>   		struct drm_connector *connector);
+>>   void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel);
+>>   void msm_dp_panel_tpg_config(struct msm_dp_panel *msm_dp_panel, bool enable);
+>> +bool msm_dp_panel_read_mst_cap(struct msm_dp_panel *dp_panel);
+>>   
+>>   /**
+>>    * is_link_rate_valid() - validates the link rate
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
 
->Best regards,
->Krzysztof
-
-Best regards,
-Yassine OUAISSA
