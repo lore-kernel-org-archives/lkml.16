@@ -1,46 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7033D76;
-	Mon, 26 May 2025 18:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAEFD23E354;
+	Mon, 26 May 2025 18:35:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748284519; cv=none; b=n+rsxpRF/m/NsBE441rSww2NMPGgG7QS4pZv4ruC5r7u2Q7BxfO7a5Jc6HyoXNxrKrOePr7LhfR5r05j8YwlmkFZsMUL1SA9KF48hQYoK4daGr+esRnVyCIQ7vcg5uFZ+cYhnbYdnyLgNz/ZGCIplm5/LlaSMqNjGYEU3CkC4nc=
+	t=1748284520; cv=none; b=bCbbggQnVHLmDp/iW30s8KRtaWhhxKYP271zD2qXM2yfld28R65P7tyrJgIOLg+LahuZ6Re2vanSXSLPZj/QTtIHk8ZnY8aer0STgBwRsKWmTog5JFkG7g3gZup50eiKsy/6gD9/2tme0DpIRruKhbqfI3QsPYrBHmkuWj+rrFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748284519; c=relaxed/simple;
-	bh=YzNfgpd3EdD0yiLC9jRg3B5BXGnhs/pwmsa7imwrXrA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=gfmpa9WwlFeDigbncHzpHvGiX+ET0gXR8z6rLt8AlWIFjAURrITRHhS4eu3Ig7lCeXtfon9AvjyFYSC72pse1MZV1kWADosWE5RDH1xjt6k/834Jg5COuMBFKj8YtMBp5L//j/YpXtflH1Sb2OV+IPPrVYdbK8yY9STC10XlXwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=atEDWYMN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748284520; c=relaxed/simple;
+	bh=DpDsx2uBDNaKeE3BL/EQ+cuuTivWz5SCUNq1T0wqkLU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ULmfkcJFkXhDbyrSsU1R/TwJu9VpGQZJeP2/3xCfgnDq2qSrBWF/Lz7ggwrezAJtQIzaL4HJCNhIBVHl4Pz9AllKEsWC9nOatfaxx6qz9Erc6TI0AyRffNbGLu/W95nAwT+Na+BwOMmQI4X9OquhJ1r5J8ZxBcgjxStCZF2Ofi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUOWFS8B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="atEDWYMN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E650C4CEE7;
-	Mon, 26 May 2025 18:35:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUOWFS8B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCCDEC4CEED;
+	Mon, 26 May 2025 18:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748284519;
-	bh=YzNfgpd3EdD0yiLC9jRg3B5BXGnhs/pwmsa7imwrXrA=;
+	s=k20201202; t=1748284520;
+	bh=DpDsx2uBDNaKeE3BL/EQ+cuuTivWz5SCUNq1T0wqkLU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=atEDWYMNShUWJnwmbwaesVx2ifKlm3WQlZxm4xiHvDUswI2DSwbxjF54+O9iskJEl
-	 F/UHEkGQkP1Fxur74bCt+8ZAGTV3W+FfNhWIrAUKM/QpVvI6g6w2+ZJZF3LRCGZqtA
-	 /XNti+2gu/k8vCY/+/bqUoEME9ADquBRWG8e1iiQyRu0mI4bGL1rcU1uZ++dFbKUCu
-	 9WFCVsKnxPa43tVC2Y3pjlrAQC+Ec/plypVHfXwAiGc0X6iHugL7O7zoOYhdmNtYaP
-	 MNj7ouqghKSeoZ5oX4tjLSpg4e0BQ2lUJt+GR37ztSe0aBxwx5Oz8pT6vxUj3bu491
-	 4zcHw8XBtZEPQ==
+	b=oUOWFS8B1Xu/hndh61WKobjae3MYfN6CN2knnQoAEhgTwpUSafUfQ+69glkBshs7h
+	 iAeYLYjKU3H4rv2kA7gezMOHNuYB3AZcy0UhlT/dN+ot6uf9urGrjt7J2BRIRqqnWM
+	 /ZTBqy+u7E/lFoS5EoNd/IrOAFDwoQh+fcGwpPT5XBdZnX6ZI3WXzCPz5nqKAk0HBR
+	 p51zbu3pD3Ps5r7eN4QGptseLuXR+N/vFyZvXsm9VUdjT+0JB/NPMxQPHhP0fhFnRk
+	 H0119ElDmz/cJUMh9JTFB0SxGZj0I8Iaqaji3ldw/wA05wiGvV/1Tviq2fzrXubP+O
+	 88EIEPOiMrHEQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2BA3805D8E;
-	Mon, 26 May 2025 18:35:54 +0000 (UTC)
-Subject: Re: [GIT PULL for v6.16] vfs lookup_{noperm,one}() cleanup
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C473805D8E;
+	Mon, 26 May 2025 18:35:56 +0000 (UTC)
+Subject: Re: [GIT PULL for v6.16] vfs mount api
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250523-vfs-cleanups-f29f2bd1fce7@brauner>
-References: <20250523-vfs-cleanups-f29f2bd1fce7@brauner>
+In-Reply-To: <20250523-vfs-mount-api-7c425ef2eee6@brauner>
+References: <20250523-vfs-mount-api-7c425ef2eee6@brauner>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250523-vfs-cleanups-f29f2bd1fce7@brauner>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.async.dir
-X-PR-Tracked-Commit-Id: 4e5c53e03806359e68dde5e951e50cd1f4908405
+X-PR-Tracked-Message-Id: <20250523-vfs-mount-api-7c425ef2eee6@brauner>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.mount.api
+X-PR-Tracked-Commit-Id: 759cfedc5ee7e5a34fd53a4412a4645204bf7f8d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6d5b940e1e14fcc20b5a3536647fe3c41b07d4f5
-Message-Id: <174828455349.1005018.5284210430654494662.pr-tracker-bot@kernel.org>
-Date: Mon, 26 May 2025 18:35:53 +0000
+X-PR-Merge-Commit-Id: a1ae8ce78bb2600490d49a8f1ee88767b0e64381
+Message-Id: <174828455510.1005018.6054696352566227101.pr-tracker-bot@kernel.org>
+Date: Mon, 26 May 2025 18:35:55 +0000
 To: Christian Brauner <brauner@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
@@ -49,12 +49,12 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 23 May 2025 14:36:59 +0200:
+The pull request you sent on Fri, 23 May 2025 14:39:17 +0200:
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.async.dir
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.16-rc1.mount.api
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6d5b940e1e14fcc20b5a3536647fe3c41b07d4f5
+https://git.kernel.org/torvalds/c/a1ae8ce78bb2600490d49a8f1ee88767b0e64381
 
 Thank you!
 
