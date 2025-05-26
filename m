@@ -1,176 +1,105 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F871C27
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9A93594B;
+	Mon, 26 May 2025 01:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748223964; cv=none; b=jrURJfxREYC4ulLGF06IhkC+XQXJavN3Jojoo7RarX7xiqrG42r9D9MTbXsBhYeAHklG4tq2IDTzcH2w3GU2w6oZIeHoIBFf8DyZOyBteG/FY1eAXFgGdqyykHVAc1So1z88JUG9n0yCEup8w83oaDn2PXZsr3ElC/LTJTaTAh4=
+	t=1748224082; cv=none; b=ur/osDXSR85SD/mIfxumObEF022WN1AW9Q+D+jwHbbrwM8dORwC7X0UcLEUdCxxc9C6i5jkS5cJVJwLkEOPOIb6h7vUQ08l0ecbeJSU2DjyduM/YVqjv4yQkyCRpJ4LGdMAfcR/MW7eHjdHi7inv1jltIG2cqApv1iP4EZbFxBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748223964; c=relaxed/simple;
-	bh=avQT8PyI3lebe+jvDhFejRbfs5/P6o/qFy8DbdNBJ7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OtDzLBYJNi8eDaMT1hsf2pqgpbaq2cl9cdM7xkKy52ko+l+Galf0Drvz9H+QZOVOptxruf3g2lKYRPpLLyr2UyYy00WiBae1Fgxt4TvviUikc1FdKwaQyjoboQpjFZ4eU2W7Teu2i1uQ0jaeiodVX/SgHthJV2Ex3k8DOAxYmoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D1NqYsc5; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D1NqYsc5"
-Message-ID: <2b8810d1-b312-4ee6-928c-e078b8c52000@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748223959;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E9kj9b7G03RkcCUZzfbgk5ZYXL85YjieEBuLF4BZ1dk=;
-	b=D1NqYsc5sCvF5UWehhuKAxPft2KqmSx1u9333NBHR0p0MPpgRd9vUurqLc4wYmU7IaiNuz
-	PG3PwwZpIS4yjHEB0A30yrRAwn5QwFscTvrBlPTnPkYopNAPGNQcyyYW8wvHGMhequnDMM
-	zQw2QCEKTkfOBSLrX9nn5sJlFmPqb2k=
-Date: Mon, 26 May 2025 09:45:47 +0800
+	s=arc-20240116; t=1748224082; c=relaxed/simple;
+	bh=EK5+g2KRPgs09M5g0IkpysmjiVXyuNapUrxE2vvMBss=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uJeRcOIk+JWdq9SX5yinTa7Nxjh/M8ygOJ4glLJpk2GWxyugAs3kkNE1zzTX+ttt63QAjjuObWbaCXnUkeZlWm5KChhm2k/Lg1e6KpmyHX8n6hsRfGVR2m0/0Iez8m/Z3aNwBShDeXcaSHDGhuhpzXsu16nrjCOkUxQZsIm1J28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5JYG1LtYz4f3kvp;
+	Mon, 26 May 2025 09:47:30 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id E3E801A07BD;
+	Mon, 26 May 2025 09:47:56 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.95])
+	by APP2 (Coremail) with SMTP id Syh0CgC3c2ZLyDNo8e+uNQ--.34254S2;
+	Mon, 26 May 2025 09:47:56 +0800 (CST)
+From: Pan Taixi <pantaixi@huaweicloud.com>
+To: pantaixi1@huawei.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	aha310510@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: yeweihua4@huawei.com
+Subject: [PATCH] tracing: Fix compilation warning on arm32
+Date: Mon, 26 May 2025 09:37:31 +0800
+Message-Id: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/2] Docs/LoongArch: Add Advanced Extended-Redirect IRQ
- model description
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, tglx@linutronix.de,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250523101833.17940-1-zhangtianyang@loongson.cn>
- <20250523101833.17940-2-zhangtianyang@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250523101833.17940-2-zhangtianyang@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:Syh0CgC3c2ZLyDNo8e+uNQ--.34254S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZryDKFyUCr4fXr13Zr4fZrb_yoW8XrW8pF
+	1xGrnrG3yUGr42ka4xWF10934xGwnrG347Gan3Gw1fX34DtFyagrZ2gFy2qa1FgrZIk342
+	kr129398Kw4UuaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyKb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6r106r1rM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
+X-CM-SenderInfo: xsdq3thl0lqx5xdzvxpfor3voofrz/
 
+On arm32, size_t is defined to be unsigned int, while PAGE_SIZE is
+unsigned long. This hence triggers a compilation warning as min()
+asserts the type of two operands to be equal. Casting PAGE_SIZE to size_t
+solves this issue and works on other target architectures as well.
 
-在 5/23/25 6:18 PM, Tianyang Zhang 写道:
-> Introduce the redirect interrupt controllers.When the redirect interrupt
-> controller is enabled, the routing target of MSI interrupts is no longer a
-> specific CPU and vector number, but a specific redirect entry. The actual
-> CPU and vector number used are described by the redirect entry.
->
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+Compilation warning details:
 
-Only for Chinese:
+kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
+./include/linux/minmax.h:20:28: warning: comparison of distinct pointer types lacks a cast
+  (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+                            ^
+./include/linux/minmax.h:26:4: note: in expansion of macro '__typecheck'
+   (__typecheck(x, y) && __no_side_effects(x, y))
+    ^~~~~~~~~~~
 
+...
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+kernel/trace/trace.c:6771:8: note: in expansion of macro 'min'
+        min((size_t)trace_seq_used(&iter->seq),
+        ^~~
 
+Fixes: f5178c41bb43 ("tracing: Fix oob write in trace_seq_to_buffer()")
+Signed-off-by: Pan Taixi <pantaixi@huaweicloud.com>
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5b8db27fb6ef..766cb3cd254e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6824,7 +6824,7 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
+ 		ret = trace_seq_to_buffer(&iter->seq,
+ 					  page_address(spd.pages[i]),
+ 					  min((size_t)trace_seq_used(&iter->seq),
+-						  PAGE_SIZE));
++						  (size_t)PAGE_SIZE));
+ 		if (ret < 0) {
+ 			__free_page(spd.pages[i]);
+ 			break;
+-- 
+2.34.1
 
-Yanteng
-
-> ---
->   .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
->   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
->   2 files changed, 75 insertions(+)
->
-> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
-> index a7ecce11e445..d9a2e8d7f70e 100644
-> --- a/Documentation/arch/loongarch/irq-chip-model.rst
-> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
-> @@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then go to CPUINTC directly::
->                | Devices |
->                +---------+
->   
-> +Advanced Extended IRQ model (with redirection)
-> +==============================================
-> +
-> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
-> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, PCH-MSI interrupts go
-> +to REDIRECT for remapping it to AVEC, and then go to CPUINTC directly, while all
-> +other devices interrupts go to PCH-PIC/PCH-LPC and gathered by EIOINTC, and then
-> +go to CPUINTC directly::
-> +
-> + +-----+     +-----------------------+     +-------+
-> + | IPI | --> |        CPUINTC        | <-- | Timer |
-> + +-----+     +-----------------------+     +-------+
-> +              ^          ^          ^
-> +              |          |          |
-> +       +---------+ +----------+ +---------+     +-------+
-> +       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
-> +       +---------+ +----------+ +---------+     +-------+
-> +            ^            ^
-> +            |            |
-> +            |      +----------+
-> +            |      | REDIRECT |
-> +            |      +----------+
-> +            |            ^
-> +            |            |
-> +       +---------+  +---------+
-> +       | PCH-PIC |  | PCH-MSI |
-> +       +---------+  +---------+
-> +         ^     ^           ^
-> +         |     |           |
-> + +---------+ +---------+ +---------+
-> + | Devices | | PCH-LPC | | Devices |
-> + +---------+ +---------+ +---------+
-> +                  ^
-> +                  |
-> +             +---------+
-> +             | Devices |
-> +             +---------+
-> +
->   ACPI-related definitions
->   ========================
->   
-> diff --git a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-> index d4ff80de47b6..7e4e3e55c7ad 100644
-> --- a/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-> +++ b/Documentation/translations/zh_CN/arch/loongarch/irq-chip-model.rst
-> @@ -174,6 +174,43 @@ CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断发送到AVECINTC，
->                | Devices |
->                +---------+
->   
-> +高级扩展IRQ模型 (带重定向)
-> +==========================
-> +
-> +在这种模型里面，IPI（Inter-Processor Interrupt）和CPU本地时钟中断直接发送到CPUINTC，
-> +CPU串口（UARTs）中断发送到LIOINTC，PCH-MSI中断首先发送到REDIRECT模块,完成重定向后发
-> +送到AVECINTC，而后通过AVECINTC直接送达CPUINTC，而其他所有设备的中断则分别发送到所连
-> +接的PCH-PIC/PCH-LPC，然后由EIOINTC统一收集，再直接到达CPUINTC::
-> +
-> + +-----+     +-----------------------+     +-------+
-> + | IPI | --> |        CPUINTC        | <-- | Timer |
-> + +-----+     +-----------------------+     +-------+
-> +              ^          ^          ^
-> +              |          |          |
-> +       +---------+ +----------+ +---------+     +-------+
-> +       | EIOINTC | | AVECINTC | | LIOINTC | <-- | UARTs |
-> +       +---------+ +----------+ +---------+     +-------+
-> +            ^            ^
-> +            |            |
-> +            |      +----------+
-> +            |      | REDIRECT |
-> +            |      +----------+
-> +            |            ^
-> +            |            |
-> +       +---------+  +---------+
-> +       | PCH-PIC |  | PCH-MSI |
-> +       +---------+  +---------+
-> +         ^     ^           ^
-> +         |     |           |
-> + +---------+ +---------+ +---------+
-> + | Devices | | PCH-LPC | | Devices |
-> + +---------+ +---------+ +---------+
-> +                  ^
-> +                  |
-> +             +---------+
-> +             | Devices |
-> +             +---------+
-> +
->   ACPI相关的定义
->   ==============
->   
