@@ -1,99 +1,101 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39752136349;
-	Mon, 26 May 2025 07:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0381DED70;
+	Mon, 26 May 2025 07:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748244532; cv=none; b=D95PjL/S/YAeXKExyn8DNgmmk5MWLmwH7RPbqKuAP0cLWhhPBG+VifQ/84k2pp81gNyYlKArphi6vByS/QnPQaZ9HEGTpb6JdH51U3+igw6zDbIWAMesxDkcyEtgT3s9cDsi1lNie9w+B6/Y5MsEjsW4nqJgKfjUEtO7aLvrn88=
+	t=1748244567; cv=none; b=UE6Hh1JihmcpDwqxS98jbkjJH8yBUYXCnDo8yS962yG9wNh6y+pcOHTJWoFmcD7KQue2/rYLPygcWFV5WDTmiRrfkmT5f8ue5ImgGExWPGy/exNIxDiK5y1BCI8D5e22UjuZI5+bXRo+P1OQ0bE/1IVBKN2TUdQWV2kq1u7B+Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748244532; c=relaxed/simple;
-	bh=1Xp4cd5s2O6SqWi4xlQf0/9NNfx7uvU2mHKZG/rrOo8=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=TmWHDoD+gY4H/EnYGU8JLn/OYCooYNgCSlfI56fqpk3s2m9DDcbULjTQfO8M6filpFxT44LhmfoEulqT/XrJ7OMXqGt8PMMj8+50nkcV/3CAyBcwignJCi3lDtgZCKaLICPElKCMax9VFXM9iQV5zEsVQgLY3RPbKXu5IoavEWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5S6f4wYnz4f3jt0;
-	Mon, 26 May 2025 15:28:26 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BBD5B1A1CF6;
-	Mon, 26 May 2025 15:28:46 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDHK2AsGDRootk0Ng--.16762S3;
-	Mon, 26 May 2025 15:28:46 +0800 (CST)
-Subject: Re: [PATCH 01/23] md: add a new parameter 'offset' to
- md_super_write()
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-2-yukuai1@huaweicloud.com>
- <20250526062820.GA12730@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <a5c43105-a864-910d-94c3-bf815e2fc596@huaweicloud.com>
-Date: Mon, 26 May 2025 15:28:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748244567; c=relaxed/simple;
+	bh=Je1BUTAfAJfyt/23jMozzcm9hrIkBVEtPRP5MXr66YE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rV7wYgs0rCJc52SQ1IsiyoyjhC1QX1pfENfTQhCEBuK9NFkzbrVzf8L2F7nuqxNOYj5JCrW/KcF98N06yy4susL32UJcE31KM2YOa82LboGfY1Lvl5Wdv8GSZA21axY7r1VA9aoXAuF64d8VmYKm2BOhBJIAIB81jXBM1VpAQNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=aSAlUf7t; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="aSAlUf7t"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 660DC43A5B;
+	Mon, 26 May 2025 07:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748244557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zb65VUFaC3xu3xLyC+q/Y9QOfFVKsDX4tlUv2crmwV4=;
+	b=aSAlUf7tUiqHJzsn2lhfPhYcFFkRTUFbo52Dzwpirmygk7yx5FN1GVXM+mtTsyXon7Hw59
+	UhADCs4R8i5USXcp3P9cicdaSkNxGVnviZuHEEptLEPU2Yf1o/XTXUbdayMB7gwWnXJHc/
+	Mi/bPmlTXYsIjwLDHW/28NPYlY7jGkM6B1uzzRWk0nh5empIZx4bY9tBtamH/PhY0xBYL1
+	zOScoSD9Nj61yNkJnybofqFa8Om4iv0jExy2kTwQCnd/YjHiSgxqimbdyLMY4gssdniLnP
+	bJ/+aOO/p+dQyK/lGM5d/q2Ao9FNdsJgnT+03SgDIVYioh4dchkjwjNxjylGsg==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,  Daniel Lezcano
+ <daniel.lezcano@linaro.org>,  Zhang Rui <rui.zhang@intel.com>,  Lukasz
+ Luba <lukasz.luba@arm.com>,  Support Opensource
+ <support.opensource@diasemi.com>,  Shawn Guo <shawnguo@kernel.org>,
+  Sascha Hauer <s.hauer@pengutronix.de>,  Pengutronix Kernel Team
+ <kernel@pengutronix.de>,  Fabio Estevam <festevam@gmail.com>,  Niklas
+ =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,  Geert
+ Uytterhoeven
+ <geert+renesas@glider.be>,  Magnus Damm <magnus.damm@gmail.com>,  Matthias
+ Brugger <matthias.bgg@gmail.com>,  AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>,  linux-kernel@vger.kernel.org,
+  kernel-janitors@vger.kernel.org,  linux-pm@vger.kernel.org,
+  imx@lists.linux.dev,  linux-arm-kernel@lists.infradead.org,
+  linux-renesas-soc@vger.kernel.org,  linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] thermal: Constify struct thermal_zone_device_ops
+In-Reply-To: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
+	(Christophe JAILLET's message of "Sun, 25 May 2025 11:40:04 +0200")
+References: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Mon, 26 May 2025 09:29:16 +0200
+Message-ID: <87v7pn3k4z.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250526062820.GA12730@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHK2AsGDRootk0Ng--.16762S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw4kZw48Xw4DKF4DGFWktFb_yoW3GFbE93
-	Z2yF48WF1DWrn5tr17Cw1IvFWDX3WUG3WDXFWFqFWkJrWkJ397Ary5Wr95Z34jvryxJ3WY
-	v3Z3WFyfta1jgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduieelvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheptghhrhhishhtohhphhgvrdhjrghilhhlvghtseifrghnrgguohhordhfrhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehruhhirdiihhgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtoheplhhukhgrshiirdhlu
+ hgsrgesrghrmhdrtghomhdprhgtphhtthhopehsuhhpphhorhhtrdhophgvnhhsohhurhgtvgesughirghsvghmihdrtghomhdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggv
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi,
+Hello,
 
-ÔÚ 2025/05/26 14:28, Christoph Hellwig Ð´µÀ:
-> On Sat, May 24, 2025 at 02:12:58PM +0800, Yu Kuai wrote:
->> -void md_super_write(struct mddev *mddev, struct md_rdev *rdev,
->> -		   sector_t sector, int size, struct page *page)
->> +void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
->> +		       sector_t sector, int size, struct page *page,
->> +		       unsigned int offset)
-> 
-> Maybe add a little command explaining what it does?
+On 25/05/2025 at 11:40:04 +02, Christophe JAILLET <christophe.jaillet@wanad=
+oo.fr> wrote:
 
-OK.
-> 
->> +extern void md_write_metadata(struct mddev *mddev, struct md_rdev *rdev,
->> +			      sector_t sector, int size, struct page *page,
->> +			      unsigned int offset);
-> 
-> No need for the extern.  Otherwise looks good:
+> 'struct thermal_zone_device_ops' are not modified in these drivers.
+>
+> Constifying these structures moves some data to a read-only section, so
+> increases overall security, especially when the structure holds some
+> function pointers.
+>
+> On a x86_64, with allmodconfig, as an example:
+> Before:
+> =3D=3D=3D=3D=3D=3D
+>    text	   data	    bss	    dec	    hex	filename
+>   28116	   5168	    128	  33412	   8284	drivers/thermal/armada_thermal.o
+>
+> After:
+> =3D=3D=3D=3D=3D
+>    text	   data	    bss	    dec	    hex	filename
+>   28244	   5040	    128	  33412	   8284	drivers/thermal/armada_thermal.o
+>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested only
+> ---
+>  drivers/thermal/armada_thermal.c                        | 2 +-
 
-Got it.
-Thanks for the review!
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com> # For Armada
 
-Kuai
-
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
-> .
-> 
-
+Thanks,
+Miqu=C3=A8l
