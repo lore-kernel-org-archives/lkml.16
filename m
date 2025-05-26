@@ -1,108 +1,192 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1961E500C
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0383B1E47A8
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748249431; cv=none; b=opAu8Et7tscj5dmzqbxCcN3sbfMOAZ2HisoCUqV2wY0uR/O3CGFkii4aWtapSESMdc01eFZhhKkOeVxuaTKkpRHobg+ztpZVy/DE4fL8uCQh1yXuG9YrF+Fl+ytq+VXF+bXJUrtDuEzU4bX5jfyj8WQunhg8FcEPbX0T+Ie0rB4=
+	t=1748249431; cv=none; b=mYl0CgqejagAEs435dapvB8MbhUKZiF4l3MvUI2iSE+itIXElUxWpr9tImDoWOxaTrIowWnZD5yFMqk+Dq/9gAfoxVQCn7w9wwSxSNNV2HGxXNn9RAfZs+u2jYhQjRJHC0gJFHV0IPN97EVNGlMaFliQVwu1fESO3mWyaUqb3ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748249431; c=relaxed/simple;
-	bh=j3LtMtju26Q7ZyUO5+IEsDtEOmbWNVYY1y3nj7v1w/4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=XTztgees057SoEAUGbpsx9fvjzmxvB86k3K+qwrDJOy4hFP6kdfzIYYvH4wCnUCVewmCtREgxqUSs72PNOZ5wdVxy08mWuQ7jdS8qBayDOIhnjHVLrA89+pc31D053LKQQNBbXpL1ZbEe7FKhg8W6DucGXzNZn6Y0gVxSDvKZHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+	bh=ES/5VMJTP0/Z8pCLa0ZMn49fZz2+QHoH8ccAMIZSAvM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HwBWz/vWSM8/rsbGE9wodgRNY0BsyT45CtH4CYFRBb7ivjvIn3CVrlQfBK1YEWiBSE+P+RP6fFvIJ35X+FF5iLQGQUX8LLvKl7OQwBlfvJCY3OvyDx3sf1nEiLL5MXGPVcRwy+FdTvq/cucig6pHatbjdDsqfcEIJgHu5o/46VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-86cab385db7so662511239f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:50:30 -0700 (PDT)
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86cab385db7so662509439f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:50:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748249429; x=1748854229;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=sTO5C53Lmd93U7NPZ4SLBFhzHibR0ihOHCl0ZMwbCwQ=;
-        b=aXBh9AkV2AQj9/EIYdI6UZTfN0RByu1pxDdOBrqkykUJ2Jf+OvwMKOdlgclpSanR7v
-         ybZI5AAZRfNtNjOoqB/Odsk9Me+Or2RV3RnnC+urfN7fZsxVXDXfdo7reSwIo0a4d0sC
-         aRLaW5uCc//IpgVVG3+0bZUlYwIBdzujN3RiyZEkBLI2PPPkMFFLr5H1cvJbXHjlLt9g
-         H4VyM3QThI9X1JA7WuqNBKKyhzzmQIY7RqmTYTznPsBR40Q7N17F8tTmQVLsXzgnhs2Y
-         vxU9H6YOoMwfELQIcZW32p7vFPRVW58CfM01bEhHLA7tcEwHIYF/WLIh6TuSaxMO3r7f
-         sFjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXFjdNcWwUcfPnaVvPC52uzSZdIyh8/LhYNES5r8Zfg9hOmMmGyqfxXCcLmBDKP41r7DQqk/6DlhVKTkA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa808eQeJ3T3uZk7+GwcBrN3gwNQ4FMnKnmTauw+I8Tb/dCeLP
-	5nFXxxCDIKrkZ2Nk+u1NILBA+ELTAa0VjTF6KnYjPIbmbMIW9LscyJ9cnsFJGMmcyWgYbSepIW2
-	no3+AyPfHRk8tx3Kse+B5LLtZDvmm/iUPRLAfDNhRD887QE+zPprRxKFfd8w=
-X-Google-Smtp-Source: AGHT+IESN2vogO8FUPtWwAie9BKDAhBT+JvZIPb7syOHYs4J2/xkRaCtWXNMZJhkWv9Qdu2zGuxFQTTGeQvwQloCKYnyJb0jmEyd
+        bh=w9c7v6E+/GQRM3UlZ2T/jgFX7EYWeznAGMdtx6v4y64=;
+        b=G6mScXNr6D73dCuEtQ0QVaBRx+cCoAofuEuEIF36oh61lAplhCW7ORb4V9SH/9FXBC
+         rPI8od/6RvpqJEJ74Ubqeed8bAsN+h+UUlevHkUXNhs3LtBtOwty5I/Z1twutAAIfKso
+         9B5Vq4MDCfIPYC5ND6AU3JXUf3G+gF9il8Xua3O/0h08bj98LubVHwCAjbqgvDX0ebrm
+         pNckrYxN3xHFXVefpO8JD49bk94dUcrudp+f2KuFMm0hfFCpNdOFCiU/IJR62VFjuYpA
+         NMy8kvxmbDuCrLtlX9S2wreCPb3ZYyYuflVzSbA5ngj8MOPIYL6P2KtAtY6GTj9MwXQ4
+         WCBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtUsFxLtBrZ8L0yYAYXIG7QUoO5ddkXUVjvb3usr3dzb5tcx7guJDgMl1ilod8NM07eKREThjBLveX9/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUln5DlqHyhThPl9x7uR+zGRA7VoZdEitZCSvsazt7km2mPI70
+	DSwKpZa8Exz+J++11ZFfqgoQfuacFTLtkRsAW+c3w/UHG43TJkxtq/CwrwPdgDX59RhuZZ4HJNh
+	kOPb+IbepgikAmeyi1b9efJsh1CK7nT7VWiQlaW4kFl1EwSAf1VDh9S7xafw=
+X-Google-Smtp-Source: AGHT+IGvIUT1xTNpT2S4TzLOsjICT6VfN3kGiDfl4z4bFL9GGjdt2D0AnhMoDSq8jPM5Zp0BG/b77PAQqHdAho7pF93TUN66OS1n
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3e85:b0:869:d4de:f7 with SMTP id
- ca18e2360f4ac-86cbb905927mr880291039f.12.1748249429441; Mon, 26 May 2025
+X-Received: by 2002:a05:6602:3817:b0:85d:f316:fabc with SMTP id
+ ca18e2360f4ac-86cbb8a2d4amr767738939f.8.1748249429183; Mon, 26 May 2025
  01:50:29 -0700 (PDT)
 Date: Mon, 26 May 2025 01:50:29 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68342b55.a70a0220.253bc2.0092.GAE@google.com>
-Subject: [syzbot] [bcachefs?] WARNING in rhashtable_init_noprof
-From: syzbot <syzbot+bcc38a9556d0324c2ec2@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <68342b55.a70a0220.253bc2.0091.GAE@google.com>
+Subject: [syzbot] [tipc?] WARNING: refcount bug in tipc_crypto_xmit
+From: syzbot <syzbot+f0c4a4aba757549ae26c@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jmaloy@redhat.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com, 
+	tipc-discussion@lists.sourceforge.net, wangliang74@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    176e917e010c Add linux-next specific files for 20250523
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13d555f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
-dashboard link: https://syzkaller.appspot.com/bug?extid=bcc38a9556d0324c2ec2
+HEAD commit:    b1427432d3b6 Merge tag 'iommu-fixes-v6.15-rc7' of git://gi..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=17ba35f4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
+dashboard link: https://syzkaller.appspot.com/bug?extid=f0c4a4aba757549ae26c
 compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145948e8580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d6a170580000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=161ee170580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164328e8580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5f7692c642fa/disk-176e917e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/057a442d42d0/vmlinux-176e917e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f8ebdb4dd96/bzImage-176e917e.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/d3d310848021/mount_0.gz
+disk image: https://storage.googleapis.com/syzbot-assets/48a582dac9f0/disk-b1427432.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/94ad5463a7f5/vmlinux-b1427432.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4d0af31b0b08/bzImage-b1427432.xz
+
+The issue was bisected to:
+
+commit e279024617134c94fd3e37470156534d5f2b3472
+Author: Wang Liang <wangliang74@huawei.com>
+Date:   Tue May 20 10:14:04 2025 +0000
+
+    net/tipc: fix slab-use-after-free Read in tipc_aead_encrypt_done
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10018df4580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=12018df4580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14018df4580000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+bcc38a9556d0324c2ec2@syzkaller.appspotmail.com
+Reported-by: syzbot+f0c4a4aba757549ae26c@syzkaller.appspotmail.com
+Fixes: e27902461713 ("net/tipc: fix slab-use-after-free Read in tipc_aead_encrypt_done")
 
-ODEBUG: object ffffc9000469fb90 is on stack ffffc90004698000, but NOT annotated.
 ------------[ cut here ]------------
-WARNING: CPU: 1 PID: 5924 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:655 [inline]
-WARNING: CPU: 1 PID: 5924 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-WARNING: CPU: 1 PID: 5924 at lib/debugobjects.c:655 __debug_object_init+0x2c9/0x3c0 lib/debugobjects.c:743
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 1 PID: 36 at lib/refcount.c:25 refcount_warn_saturate+0xfa/0x1d0 lib/refcount.c:25
 Modules linked in:
-CPU: 1 UID: 0 PID: 5924 Comm: bch-copygc/loop Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full) 
+CPU: 1 UID: 0 PID: 36 Comm: kworker/u8:2 Not tainted 6.15.0-rc7-syzkaller-00144-gb1427432d3b6 #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:debug_object_is_on_stack lib/debugobjects.c:655 [inline]
-RIP: 0010:lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-RIP: 0010:__debug_object_init+0x2c9/0x3c0 lib/debugobjects.c:743
-Code: cc cc cc 41 ff c7 44 89 3d a4 18 14 15 48 c7 c1 80 9b e2 8b 48 c7 c7 e0 9b e2 8b 84 c0 48 0f 45 f9 48 89 de e8 48 2b 61 fc 90 <0f> 0b 90 e9 c0 fe ff ff e8 3a 1c 00 00 8b 05 1c 9c c6 09 3b 05 1a
-RSP: 0018:ffffc9000469f6e0 EFLAGS: 00010046
-RAX: 0000000000000050 RBX: ffffc9000469fb90 RCX: 0aa01120dfd08500
-RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
-RBP: ffff88802f5c9e20 R08: ffffc9000469f3c7 R09: 1ffff920008d3e78
-R10: dffffc0000000000 R11: fffff520008d3e79 R12: 0000000000000040
-R13: ffff8880771e5d20 R14: dffffc0000000000 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff888125d56000(0000) knlGS:0000000000000000
+Workqueue: netns cleanup_net
+RIP: 0010:refcount_warn_saturate+0xfa/0x1d0 lib/refcount.c:25
+Code: 00 00 e8 79 f6 06 fd 5b 41 5e e9 81 6c a0 06 cc e8 6b f6 06 fd c6 05 06 3c b0 0a 01 90 48 c7 c7 80 aa c1 8b e8 e7 52 cb fc 90 <0f> 0b 90 90 eb d7 e8 4b f6 06 fd c6 05 e7 3b b0 0a 01 90 48 c7 c7
+RSP: 0018:ffffc90000a08668 EFLAGS: 00010246
+RAX: bb5b0788a28fc300 RBX: 0000000000000002 RCX: ffff888142681e00
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000002
+RBP: ffffc90000a087e8 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bba984 R12: ffff88807df80000
+R13: dffffc0000000000 R14: ffff88807df8016c R15: ffff888033397800
+FS:  0000000000000000(0000) GS:ffff8881261c2000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f1c5ee80000 CR3: 0000000077540000 CR4: 00000000003526f0
+CR2: 0000555569a1e878 CR3: 000000007b8fc000 CR4: 00000000003526f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
+ <IRQ>
+ __refcount_add include/linux/refcount.h:-1 [inline]
+ __refcount_inc include/linux/refcount.h:366 [inline]
+ refcount_inc include/linux/refcount.h:383 [inline]
+ get_net include/net/net_namespace.h:268 [inline]
+ tipc_aead_encrypt net/tipc/crypto.c:821 [inline]
+ tipc_crypto_xmit+0x1820/0x22c0 net/tipc/crypto.c:1761
+ tipc_crypto_clone_msg+0x90/0x170 net/tipc/crypto.c:1656
+ tipc_crypto_xmit+0x1998/0x22c0 net/tipc/crypto.c:1717
+ tipc_bearer_xmit_skb+0x245/0x400 net/tipc/bearer.c:572
+ tipc_disc_timeout+0x580/0x6d0 net/tipc/discover.c:338
+ call_timer_fn+0x17b/0x5f0 kernel/time/timer.c:1789
+ expire_timers kernel/time/timer.c:1840 [inline]
+ __run_timers kernel/time/timer.c:2414 [inline]
+ __run_timer_base+0x61a/0x860 kernel/time/timer.c:2426
+ run_timer_base kernel/time/timer.c:2435 [inline]
+ run_timer_softirq+0xb7/0x180 kernel/time/timer.c:2445
+ handle_softirqs+0x286/0x870 kernel/softirq.c:579
+ __do_softirq kernel/softirq.c:613 [inline]
+ invoke_softirq kernel/softirq.c:453 [inline]
+ __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
+ </IRQ>
  <TASK>
- rhashtable_init_noprof+0x7c0/0xbb0 lib/rhashtable.c:1085
- bch2_copygc_thread+0x116/0xdc0 fs/bcachefs/movinggc.c:355
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:lock_acquire+0x175/0x360 kernel/locking/lockdep.c:5870
+Code: 00 00 00 00 9c 8f 44 24 30 f7 44 24 30 00 02 00 00 0f 85 cd 00 00 00 f7 44 24 08 00 02 00 00 74 01 fb 65 48 8b 05 8b 9f d7 10 <48> 3b 44 24 58 0f 85 f2 00 00 00 48 83 c4 60 5b 41 5c 41 5d 41 5e
+RSP: 0018:ffffc90000ad7378 EFLAGS: 00000206
+RAX: bb5b0788a28fc300 RBX: 0000000000000000 RCX: bb5b0788a28fc300
+RDX: 0000000000000000 RSI: ffffffff8d939072 RDI: ffffffff8bc1f600
+RBP: ffffffff8171ca05 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: ffffffff8171ca05 R12: 0000000000000002
+R13: ffffffff8df3dee0 R14: 0000000000000000 R15: 0000000000000246
+ rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ class_rcu_constructor include/linux/rcupdate.h:1155 [inline]
+ unwind_next_frame+0xc2/0x2390 arch/x86/kernel/unwind_orc.c:479
+ arch_stack_walk+0x11c/0x150 arch/x86/kernel/stacktrace.c:25
+ stack_trace_save+0x9c/0xe0 kernel/stacktrace.c:122
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
+ kasan_record_aux_stack+0xbc/0xd0 mm/kasan/generic.c:548
+ __call_rcu_common kernel/rcu/tree.c:3082 [inline]
+ call_rcu+0x142/0x990 kernel/rcu/tree.c:3202
+ inet_release+0x187/0x210 net/ipv4/af_inet.c:435
+ __sock_release net/socket.c:647 [inline]
+ sock_release+0x85/0x150 net/socket.c:675
+ wg_netns_pre_exit+0xd6/0x1d0 drivers/net/wireguard/device.c:423
+ ops_pre_exit_list net/core/net_namespace.c:162 [inline]
+ cleanup_net+0x594/0xbd0 net/core/net_namespace.c:634
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
  </TASK>
+----------------
+Code disassembly (best guess):
+   0:	00 00                	add    %al,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	9c                   	pushf
+   5:	8f 44 24 30          	pop    0x30(%rsp)
+   9:	f7 44 24 30 00 02 00 	testl  $0x200,0x30(%rsp)
+  10:	00
+  11:	0f 85 cd 00 00 00    	jne    0xe4
+  17:	f7 44 24 08 00 02 00 	testl  $0x200,0x8(%rsp)
+  1e:	00
+  1f:	74 01                	je     0x22
+  21:	fb                   	sti
+  22:	65 48 8b 05 8b 9f d7 	mov    %gs:0x10d79f8b(%rip),%rax        # 0x10d79fb5
+  29:	10
+* 2a:	48 3b 44 24 58       	cmp    0x58(%rsp),%rax <-- trapping instruction
+  2f:	0f 85 f2 00 00 00    	jne    0x127
+  35:	48 83 c4 60          	add    $0x60,%rsp
+  39:	5b                   	pop    %rbx
+  3a:	41 5c                	pop    %r12
+  3c:	41 5d                	pop    %r13
+  3e:	41 5e                	pop    %r14
 
 
 ---
@@ -112,6 +196,7 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
