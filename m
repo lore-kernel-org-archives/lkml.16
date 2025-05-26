@@ -1,25 +1,26 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF606213236;
-	Mon, 26 May 2025 14:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7A42101BD;
+	Mon, 26 May 2025 14:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270448; cv=none; b=UIZtJSV0XOwn7nIt91Y3MqspqeOSqW6QFuT4CGzrfi/t8pF9JUIdFpimw4dpAcQfQwxY6rIcOC2ArGspY62tmKEuKLjEJ3Ng900yGux3lY24td85K6nkhYI0fmOwPdOZ2Oju8t+3Pdh4aahbaw1iVsRySqM3rPzP5i+6qWE9mF0=
+	t=1748270455; cv=none; b=t9dhsyUXvjg0PfzKGxBrkYw/Gk7wbOYEoWWxsgeUv0x/w2pvGY4RINK5vKaQD2lD6z/N2ETnr30O4X6DoOq3odr0KQLYQot9gb/PYcA/MrYoyFPzty2pBHHeNwsiCMrJuk609mLK+HzEejxqR1tQ6XlpJZ2Z9t45p4R4TYevfZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270448; c=relaxed/simple;
-	bh=BH+M8S+LdjO6vILGDAHjXkmrs1lq+W5Vv7MqYlwP/g0=;
+	s=arc-20240116; t=1748270455; c=relaxed/simple;
+	bh=Z5+l2LS4FLiuHcGP6xncYtlXScMGvhd7SS6ZusY5OmI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=beyCD0Zx2FjAUpvAYS/kSX/li/XKSeFlRGOP28Bfb0trr6I4/atu5e4jt8s78HLmZXFwWBzZkpVc46AUiP5tyscV5YzCYABzoezxDoCk4NLZju5stcKWU4qwQDTx123o/v72S106q5193ZUJv0r5cF8ksx2HpqjzPYplpK99rxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+	 In-Reply-To:To:Cc; b=a2puORKoDEC9yhY9G+T+VbZVGOgRRjdp/IaRm7NUMBYgFm+iFrtgB1z53DG3uOQ7pVHKfl93GeAk9IWKJdPhziuRBVJm4sEThSfSv9JTm7BuAdkY/hngUa20+mYVDjjmzAqQ+mLmw0M0QBYf5ZEdWmPUaK2e9Onil8pAnulI+Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
 Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.37])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16709a332;
-	Mon, 26 May 2025 22:40:37 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 16709a338;
+	Mon, 26 May 2025 22:40:43 +0800 (GMT+08:00)
 From: Ze Huang <huangze@whut.edu.cn>
-Date: Mon, 26 May 2025 22:40:18 +0800
-Subject: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add K1 MBUS controller
+Date: Mon, 26 May 2025 22:40:19 +0800
+Subject: [PATCH v4 3/4] usb: dwc3: add generic driver to support flattened
+ DT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -28,7 +29,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@whut.edu.cn>
+Message-Id: <20250526-b4-k1-dwc3-v3-v4-3-63e4e525e5cb@whut.edu.cn>
 References: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
 In-Reply-To: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -43,96 +44,257 @@ Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
  linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
  linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748270423; l=2263;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748270423; l=6956;
  i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
- bh=BH+M8S+LdjO6vILGDAHjXkmrs1lq+W5Vv7MqYlwP/g0=;
- b=mXuYbUjZP4VNczBinGSiUwmr+XM0tW9D6UVDvHbEPTMKTZBGwhdUEo3ZZ/ONnqaX0EurDsGm1
- wL44DC+/un2BQ90TeHQNgj2x3DP1Zf6cDPfd/hyKI4H9ZyJFd1Zp/vl
+ bh=Z5+l2LS4FLiuHcGP6xncYtlXScMGvhd7SS6ZusY5OmI=;
+ b=8HN+deS9nwPP6UlNOEjqQZgejc+uNCtsoQU9+B/TWhqMOZSF4hhXe5IqzxA89JzLxFBcZKuQv
+ KkjWqwuCfs6BJb2x1fPghnU9aWZkTK4SdNBSXK7ebxdyPRBw0Rw5D8M
 X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
  pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGk9OVhlJSk4fGB9LTU9ITlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktJSEJLQ1VKS0tVSkJZBg
-	++
-X-HM-Tid: 0a970d09d31703a1kunm5f56ec4c12e60
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ0lIVk5DSE1IHh1NSU9IS1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktJQk1KSlVKS0tVS1kG
+X-HM-Tid: 0a970d09ec2803a1kunm5f56ec4c12ea5
 X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PDY6OQw*CTErLgwNTzVJFDhR
-	ME8aFAJVSlVKTE9DSUxLT09ISENLVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VCQlVITFlXWQgBWUFITENNNwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mk06PRw*LDE2TQxNMDQuFDEq
+	LxkKFCpVSlVKTE9DSUxLT05LSkJNVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVITFlXWQgBWUFDT0NPNwY+
 
-Some devices on the SpacemiT K1 SoC perform DMA through a memory bus
-(MBUS) that is not their immediate parent in the device tree. This bus
-uses a different address mapping than the CPU.
-
-To express this topology properly, devices are expected to use the
-interconnects with name "dma-mem" to reference the MBUS controller.
+To support flattened dwc3 dt model and drop the glue layer, introduce the
+`dwc3-generic` driver. This enables direct binding of the DWC3 core driver
+and offers an alternative to the existing glue driver `dwc3-of-simple`.
 
 Signed-off-by: Ze Huang <huangze@whut.edu.cn>
 ---
- .../bindings/soc/spacemit/spacemit,k1-mbus.yaml    | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ drivers/usb/dwc3/Kconfig             |   9 ++
+ drivers/usb/dwc3/Makefile            |   1 +
+ drivers/usb/dwc3/dwc3-generic-plat.c | 189 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 199 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-mbus.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-mbus.yaml
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 310d182e10b50b253d7e5a51674806e6ec442a2a..082627f39c9726ee4e0c5f966c5bc454f5541c9a 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -118,6 +118,15 @@ config USB_DWC3_OF_SIMPLE
+ 	  Currently supports Xilinx and Qualcomm DWC USB3 IP.
+ 	  Say 'Y' or 'M' if you have one such device.
+ 
++config USB_DWC3_GENERIC_PLAT
++       tristate "DWC3 Generic Platform Driver"
++       depends on OF && COMMON_CLK
++       default USB_DWC3
++       help
++         Support USB3 functionality in simple SoC integrations.
++         Currently supports SpacemiT DWC USB3 IP.
++         Say 'Y' or 'M' if you have one such device.
++
+ config USB_DWC3_ST
+ 	tristate "STMicroelectronics Platforms"
+ 	depends on (ARCH_STI || COMPILE_TEST) && OF
+diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+index 830e6c9e5fe073c1f662ce34b6a4a2da34c407a2..96469e48ff9d189cc8d0b65e65424eae2158bcfe 100644
+--- a/drivers/usb/dwc3/Makefile
++++ b/drivers/usb/dwc3/Makefile
+@@ -57,3 +57,4 @@ obj-$(CONFIG_USB_DWC3_IMX8MP)		+= dwc3-imx8mp.o
+ obj-$(CONFIG_USB_DWC3_XILINX)		+= dwc3-xilinx.o
+ obj-$(CONFIG_USB_DWC3_OCTEON)		+= dwc3-octeon.o
+ obj-$(CONFIG_USB_DWC3_RTK)		+= dwc3-rtk.o
++obj-$(CONFIG_USB_DWC3_GENERIC_PLAT)	+= dwc3-generic-plat.o
+diff --git a/drivers/usb/dwc3/dwc3-generic-plat.c b/drivers/usb/dwc3/dwc3-generic-plat.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..533cf99dff689cf55a159118c32a676054294ffa
+index 0000000000000000000000000000000000000000..8ff4626d324c40ecb52e115832c803fed7d38354
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-mbus.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/spacemit/spacemit,k1-mbus.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/usb/dwc3/dwc3-generic-plat.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * dwc3-generic-plat.c - DesignWare USB3 generic platform driver
++ *
++ * Copyright (C) 2025 Ze Huang <huangze9015@gmail.com>
++ *
++ * Inspired by dwc3-qcom.c and dwc3-of-simple.c
++ */
 +
-+title: SpacemiT Memory Bus controller
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
++#include "glue.h"
 +
-+maintainers:
-+  - Ze Huang <huangze9015@gmail.com>
++struct dwc3_generic {
++	struct device		*dev;
++	struct dwc3		dwc;
++	struct clk_bulk_data	*clks;
++	int			num_clocks;
++	struct reset_control	*resets;
++};
 +
-+description: |
-+  On the SpacemiT K1 SoC, some devices do not perform DMA through their
-+  immediate parent node in the device tree. Instead, they access memory
-+  through a separate memory bus (MBUS) that uses a different address
-+  mapping from the CPU.
++static int dwc3_generic_probe(struct platform_device *pdev)
++{
++	struct dwc3_probe_data probe_data = {};
++	struct device *dev = &pdev->dev;
++	struct dwc3_generic *dwc3;
++	struct resource *res;
++	int ret;
 +
-+  To correctly describe the DMA path, such devices must reference the MBUS
-+  controller through an interconnect with the reserved name "dma-mem".
++	dwc3 = devm_kzalloc(dev, sizeof(*dwc3), GFP_KERNEL);
++	if (!dwc3)
++		return -ENOMEM;
 +
-+properties:
-+  compatible:
-+    const: spacemit,k1-mbus
++	dwc3->dev = dev;
 +
-+  reg:
-+    maxItems: 1
++	platform_set_drvdata(pdev, dwc3);
 +
-+  dma-ranges:
-+    maxItems: 1
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "missing memory resource\n");
++		return -ENODEV;
++	}
 +
-+  "#address-cells": true
++	dwc3->resets = of_reset_control_array_get_optional_exclusive(dev->of_node);
++	if (IS_ERR(dwc3->resets))
++		return dev_err_probe(dev, PTR_ERR(dwc3->resets), "failed to get reset\n");
 +
-+  "#size-cells": true
++	ret = reset_control_assert(dwc3->resets);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to assert reset\n");
 +
-+  "#interconnect-cells":
-+    const: 0
++	usleep_range(10, 1000);
 +
-+required:
-+  - compatible
-+  - reg
-+  - dma-ranges
-+  - "#interconnect-cells"
++	ret = reset_control_deassert(dwc3->resets);
++	if (ret) {
++		dev_err(dev, "failed to deassert reset\n");
++		goto reset_assert;
++	}
 +
-+additionalProperties: false
++	ret = clk_bulk_get_all(dwc3->dev, &dwc3->clks);
++	if (ret < 0) {
++		dev_err(dev, "failed to get clocks\n");
++		goto reset_assert;
++	}
 +
-+examples:
-+  - |
-+    dram-controller@0 {
-+        compatible = "spacemit,k1-mbus";
-+        reg = <0x00000000 0x80000000>;
-+        dma-ranges = <0x00000000 0x00000000 0x80000000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        #interconnect-cells = <0>;
-+    };
++	dwc3->num_clocks = ret;
++
++	ret = clk_bulk_prepare_enable(dwc3->num_clocks, dwc3->clks);
++	if (ret) {
++		dev_err(dev, "failed to enable clocks\n");
++		goto reset_assert;
++	}
++
++	dwc3->dwc.dev = dev;
++	probe_data.dwc = &dwc3->dwc;
++	probe_data.res = res;
++	probe_data.ignore_clocks_and_resets = true;
++	ret = dwc3_core_probe(&probe_data);
++	if (ret)  {
++		dev_err(dev, "failed to register DWC3 Core\n");
++		goto clk_disable;
++	}
++
++	return 0;
++
++clk_disable:
++	clk_bulk_disable_unprepare(dwc3->num_clocks, dwc3->clks);
++	clk_bulk_put_all(dwc3->num_clocks, dwc3->clks);
++
++reset_assert:
++	reset_control_assert(dwc3->resets);
++
++	return ret;
++}
++
++static void dwc3_generic_remove(struct platform_device *pdev)
++{
++	struct dwc3_generic *dwc3 = platform_get_drvdata(pdev);
++
++	dwc3_core_remove(&dwc3->dwc);
++
++	clk_bulk_disable_unprepare(dwc3->num_clocks, dwc3->clks);
++	clk_bulk_put_all(dwc3->num_clocks, dwc3->clks);
++
++	reset_control_assert(dwc3->resets);
++}
++
++static int __maybe_unused dwc3_generic_suspend(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++	int ret;
++
++	ret = dwc3_pm_suspend(&dwc3->dwc);
++	if (ret)
++		return ret;
++
++	clk_bulk_disable_unprepare(dwc3->num_clocks, dwc3->clks);
++
++	return 0;
++}
++
++static int __maybe_unused dwc3_generic_resume(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++	int ret;
++
++	ret = clk_bulk_prepare_enable(dwc3->num_clocks, dwc3->clks);
++	if (ret)
++		return ret;
++
++	ret = dwc3_pm_resume(&dwc3->dwc);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int __maybe_unused dwc3_generic_runtime_suspend(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++
++	return dwc3_runtime_suspend(&dwc3->dwc);
++}
++
++static int __maybe_unused dwc3_generic_runtime_resume(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++
++	return dwc3_runtime_resume(&dwc3->dwc);
++}
++
++static int __maybe_unused dwc3_generic_runtime_idle(struct device *dev)
++{
++	struct dwc3_generic *dwc3 = dev_get_drvdata(dev);
++
++	return dwc3_runtime_idle(&dwc3->dwc);
++}
++
++static const struct dev_pm_ops dwc3_generic_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(dwc3_generic_suspend, dwc3_generic_resume)
++	SET_RUNTIME_PM_OPS(dwc3_generic_runtime_suspend, dwc3_generic_runtime_resume,
++			   dwc3_generic_runtime_idle)
++};
++
++static const struct of_device_id dwc3_generic_of_match[] = {
++	{ .compatible = "spacemit,k1-dwc3", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dwc3_generic_of_match);
++
++static struct platform_driver dwc3_generic_driver = {
++	.probe		= dwc3_generic_probe,
++	.remove		= dwc3_generic_remove,
++	.driver		= {
++		.name	= "dwc3-generic-plat",
++		.of_match_table = dwc3_generic_of_match,
++#ifdef CONFIG_PM_SLEEP
++		.pm	= &dwc3_generic_dev_pm_ops,
++#endif /* CONFIG_PM_SLEEP */
++	},
++};
++module_platform_driver(dwc3_generic_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("DesignWare USB3 generic platform driver");
 
 -- 
 2.49.0
