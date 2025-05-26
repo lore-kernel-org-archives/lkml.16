@@ -1,150 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18044A32;
-	Mon, 26 May 2025 15:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93955A32;
+	Mon, 26 May 2025 15:34:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748273613; cv=none; b=bHz0abN5Ghx3AWgcrkLygHef7Q6FJYi03xmjXNlTDNd9V1w2NuS7j+jnYMhufCHFlBkag40qdKX6LaeKYQdFSpagNFDZyj8c879YZ5+/ZUIhmXyUlzjm3J3J+ifZA1ygHPhwIl7btnCBi9E+/8JcRUFsEMg7Z/duxrQkW4B8nys=
+	t=1748273687; cv=none; b=KArOcAM8//I9o81QE/oVuY40Q40iIDIQEs0yeFB/wmC8NzPZSeePI6f5uuZv4Jst1KlLhLwL9wot1+GE4iHsMH1gX9SPL9peEeQfNr/e5meF0P9TTryJUrban7m/+RXl5cNC8lIvlBKulONE4JS13HSssuzJn/73UOt9e62WlhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748273613; c=relaxed/simple;
-	bh=bTIiweD03lr1R1e1Y1cpiVQxuDlSy72r7CfXuZpCyb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W2zr6HPam9FH4VReq4qcIpiQD58YKEVRmXBcqtu6h8kO/ThzEKarmmjTpCtfbp24+9Iqb9NWdbDbZNW2UMVKyQLXsS9BacOjLHs1yXJC724DptFtIZT11rlKiRgMAQV1xZybcq/1ESFkAmUFaPGcet1NFwnKIElR+sEyiVIT144=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XpgzDHq8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748273687; c=relaxed/simple;
+	bh=Sf1Ajwui2Dwzb4U6DKhlIcmYiYln0AEK2yXJtcYjkOE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MFdYNZ5VcwusKvw+gelmvv9LHGN1oA64hMX5Sh7KC+K19pUVVRXr89YEDogy3jBL/7XoEw/+5Jz/JiZaUtitf8j3jSrQtvyE4a9TBdybw67eFjdnj18sQBBOwk+AwdZzGyG3/CExJ87XAGfzsz78uJ632i/CojgUD2vO2fVJ3TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBepj8pS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XpgzDHq8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F724C4CEE7;
-	Mon, 26 May 2025 15:33:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBepj8pS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6048AC4CEE7;
+	Mon, 26 May 2025 15:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748273613;
-	bh=bTIiweD03lr1R1e1Y1cpiVQxuDlSy72r7CfXuZpCyb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XpgzDHq8IAUfoS6wq7qPPTet5n4dB+fg6N5zLp0bkDtKEbqKiCKvQmdUge6ThtwS4
-	 g+C5MVkQ+pGzfoPXP0o/Tkn6rBSAOWOoA2UWKgq6Dki7MlIoOxqno7gU81qtidKQsV
-	 Lu0eNkLAYn1V+4WYuZn/XdbMRUONGgzhXJetBx6RAXmjfjMik14xR/A4VdqqXxLiZv
-	 IULYHBNxYnMoXQv+BLfk96/Sc0DmNGpIaQOtYQksJDLUiV7j1aViQS3np3cpBZ70za
-	 Nsb1bW5Fn4uvMFahzAwGKyJO/go310X6uYZ/fxNxj8Fe18s8P/ibtg6AYuCjvW55Zp
-	 Va4NqQE45lWzA==
-Date: Mon, 26 May 2025 16:33:28 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"open list:FREESCALE SOC DRIVERS" <linuxppc-dev@lists.ozlabs.org>,
-	"moderated list:FREESCALE SOC DRIVERS" <linux-arm-kernel@lists.infradead.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] dt-bindings: soc: Add fsl,imx23-digctl.yaml for
- i.MX23 and i.MX28
-Message-ID: <20250526-corset-villain-8b72aefeba75@spud>
-References: <20250523204524.573028-1-Frank.Li@nxp.com>
+	s=k20201202; t=1748273687;
+	bh=Sf1Ajwui2Dwzb4U6DKhlIcmYiYln0AEK2yXJtcYjkOE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SBepj8pSA9w3ds2oi3FgZ80kBOK84asklxynYBQFZjZDViPdOVIUNPqFuD2Cc5YFc
+	 j0g9YcJpjnnCTknk9CQAsbGM/DyvftVJcF8YFA+qFgH2iG6aVXEXwuUqer6HQbEN6o
+	 OGsKLFVpHkqQRXo+2i8Xu+S2+349wXzx2yBwS/eTNp4oh58K/7H9fAG9QvKIzWJEib
+	 o1KvLQ0ySITQ4L9DgqDfMLBtgoPc4xBX2djwv6MrYtDlkRHlmIOkMLDHpcV0YShgFj
+	 YfXkfSMyz6vE6qAZhUT8f6unI2VwV0Ymx6QPy1Yxhx+uzy3nLk4VMItzK7zGm0wMIo
+	 rxLNeqGjHIiog==
+Message-ID: <128e3853-7192-4e90-bbb6-cb0b6e1aec3b@kernel.org>
+Date: Mon, 26 May 2025 17:34:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0HV2Ae0Z+B5ulyZ6"
-Content-Disposition: inline
-In-Reply-To: <20250523204524.573028-1-Frank.Li@nxp.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 2/2] dt-bindings: leds: lp50xx: Document child reg,
+ fix example
+To: Johan Adolfsson <johan.adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+ Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kernel@axis.com
+References: <20250526-led-fix-v4-0-33345f6c4a78@axis.com>
+ <20250526-led-fix-v4-2-33345f6c4a78@axis.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250526-led-fix-v4-2-33345f6c4a78@axis.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
---0HV2Ae0Z+B5ulyZ6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 23, 2025 at 04:45:23PM -0400, Frank Li wrote:
-> Add fsl,imx23-digctl.yaml for i.MX23 and i.MX28 to fix below CHECK_DTB
-> warning:
->=20
-> arch/arm/boot/dts/nxp/mxs/imx23-sansa.dtb: /apb@80000000/apbh-bus@8000000=
-0/digctl@8001c000:
->     failed to match any schema with compatible: ['fsl,imx23-digctl']
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+On 26/05/2025 16:54, Johan Adolfsson wrote:
+> The led child reg node is the index within the bank, document that
+> and update the example accordingly.
+> 
+> Signed-off-by: Johan Adolfsson <johan.adolfsson@axis.com>
 > ---
->  .../bindings/soc/fsl/fsl,imx23-digctl.yaml    | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/fsl/fsl,imx23-d=
-igctl.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.y=
-aml b/Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.yaml
-> new file mode 100644
-> index 0000000000000..47f92f763bfa3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/fsl/fsl,imx23-digctl.yaml
-> @@ -0,0 +1,41 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas//soc/fsl/fsl,imx23-digctl.yaml#
-                                     ^^ I assume it makes no difference,
-but you got a double / here.
+>  .../devicetree/bindings/leds/leds-lp50xx.yaml         | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+> index 402c25424525..a7b2d87cc39d 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+> @@ -81,7 +81,12 @@ patternProperties:
+>  
+>          properties:
+>            reg:
+> -            maxItems: 1
+> +            minimum: 0
+> +            maximum: 2
+"not compatible with minimum
+  and maximum."
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale mxs digctrl for i.MX23/i.MX28
+No, it is compatible. Just do:
 
-I have no idea reading this what a "digctrl" is. I think you should add
-a description briefly mentioning what it does.
+items:
+  - minimum: 0
+    maximum: 2
 
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx28-digctl
-> +          - const: fsl,imx23-digctl
-> +      - const: fsl,imx23-digctl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    digctl@8001c000 {
-> +        compatible =3D "fsl,imx28-digctl", "fsl,imx23-digctl";
-> +        reg =3D <0x8001c000 0x2000>;
-> +        interrupts =3D <89>;
-> +    };
-> +
-> --=20
-> 2.34.1
->=20
+You call this patchset still an RFC, which usually means - do not
+review, not ready. Usually when I review RFC I received negative
+response that why do I review it... Therefore I tend to don't care about
+RFC. Some maintainers completely ignore RFC.
 
---0HV2Ae0Z+B5ulyZ6
-Content-Type: application/pgp-signature; name="signature.asc"
+Please EXPLICITLY document in cover letter why this is RFC and what you
+expect from us (IOW, why this is not ready for review).
 
------BEGIN PGP SIGNATURE-----
+If dropping RFC, keep versioning (people also tend to do it wrong
+completely messing up the tools), although I see you use b4, so this
+should be without problem.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDSJxwAKCRB4tDGHoIJi
-0gCyAP9LAdE1TGf4om1fs4XgX2jkfTuBjGIU5v+EiwczA9egZwD+L6HUreQw17x+
-C0TNwI+EWaCw4LyMxszPbEdFd9lA1g4=
-=cgID
------END PGP SIGNATURE-----
-
---0HV2Ae0Z+B5ulyZ6--
+Best regards,
+Krzysztof
