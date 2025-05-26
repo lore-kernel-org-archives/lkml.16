@@ -1,228 +1,149 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2015.outbound.protection.outlook.com [40.92.42.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B0C1DE3CA;
-	Mon, 26 May 2025 06:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748241825; cv=fail; b=j6lUOWj3ZDWxmds3XyI5rkH0IACpAXF9HOtwrwxjdA8sC/5DNGpCHLBiONDdFSnYEGyAfNkcm8r6/GB4GP7b4orxygZZCyikgCeQ7VmWKw5Urt7YpA9LMbYna9fLoR/n2NUHbK0NcVCbFDvbjPYBWVyk3yLY5exGc4sZttOzk/s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748241825; c=relaxed/simple;
-	bh=+NW8t3CC5uft5b56Fjc38KR6VqSUkvJJ18a97PJUP18=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NvDYmY9IaC9RppIA3abGZMG+a5lux1rEvuBW5yXlFAoWxF/OBNfdT2gojZ4wteIokl1JIbOCEiRTruzn0SEnXRSs5I2lQyxbDWnhZWOx2lh+a2fNE9yLEucI1SAyserj0qha2rKNOuwz/7jDSBtSHcEa3BDy1JrcALar+I3M2Ko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=u+ioteaV; arc=fail smtp.client-ip=40.92.42.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B02B1624F7
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748241848; cv=none; b=CYwnQSeI7hwp1inlY0n+6hvU4iqjpOEKCHsZ+URyFupDv8F5+1mmROed1YVRvpy2iW9FuYGERwdMEnstLWf7ai27xV+rSIKyLCaUXKmNmvTDQcGp0LPqXvLn878kWX6zj90wpZMs7V/EGDsJPHxmhe6m66/fOIU7fK1fQpK1jMk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748241848; c=relaxed/simple;
+	bh=hVpxBRkHdn9LWbevrRY7cTwGyqnEoh9xSW6K+/UdL3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gw6hWjUbxoi0GLOmBRxIBmbtVqwNdR17JkFajLu2M6+bUxC7p/14kqmfA7H6jFAvjgJJ9nkVoG7Fbv8R1BZ3svTMot5443YDea7c634qd6/IyxGYmse2S7451T1EpI4Jigds92/sR0+R4U6fPZz4oeZSm3B9iOEob+bBESm6JY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9i3RBdK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="u+ioteaV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I75XiKGsmeK12wpwlWa7VjXeQp/B/Ie8SqoTrJIEuTT0qWa+Wew5hc5Zn9FidlkSEeBrrQy43z32wtTj3//bvTTIsDVDzUq0ZrDEzv6sS+cvqgYQtlBuwbNYsRJcUq3y6qjnpoTuS1PQfLNRpxRBiY+t3KjRqTAolcPjoQFHd89eXNw+pdJCxuEGcwu4ayHBpaTS8LlqonokhSZ7QL2CP86R8Bwla4mgSszPt1/usrhj6/jdwjH30XwsPLEy7V823WcVxAOxPNESPh8x8mbKJ798uYmVWjf3QeSXZWF497RfA2C+9hg2Z3LKjrUewvFsxj9NSonvq9IGiEdyjcwnKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P41zjMhTMAsCzm5acKLAITZ0khZkuCSVukPhgYOCtJY=;
- b=CJcQ8Jnk9GHNSVsE/TM7aaoKUE47FdOGH3eB0BX5mSxGzud+vO3IPBxuMBMBgm+Z2vuyg8UuLOVygUFI1ibxKGsvksqG8exN0QQaFGkWJZhWP8Pnp6sFN95H0t7HZ5vul3pIHGDJ5c8b4PF3NSw5VeShyNEjt6j7gyf1w0XSnYEEzSM0oaWmfPU3AKgJ1Nv6iNl77wEfSHG/DH34+MetZ+faLVJQTK8OQs9kufLD6l55NWTfPcVNQWKacHc5pxm/O+S4R21FBci5VF092LhWuy4gZP5JSAJsHJz8NmBCxIzeBHYJv1rMlxGVrIJdPxdV3TfW8cevrVCL3UcnGHUDDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P41zjMhTMAsCzm5acKLAITZ0khZkuCSVukPhgYOCtJY=;
- b=u+ioteaV1JhSHoyPXPrNSG3XZQwURroPSbzKPpezEK5CjV+WGnv1lhmbdcRMwd+gHaL1lCFZhWF+G4BcY39XcVk6tVZGjzKFAUYIAkVVNO54kOLTJ+RiO2c2to1/vUgqMH/Gj7E4weeXzSPpx/rml4rUeLPGfhZDOMLyqSp88IUpAwFGvI5ihNWfcGo1HM5GWFFde1U90jTZ1II4qBd1B3ggXB1rOR3UZB5RZS0Yny3qR23Oy6szcPctAvN3llULfVETpVZL1gQeGO0SczFGtCHscEn74cNBYAM1dMg927IYzYXJjqYyHKDyt+qEp/lZXCNMqRQg2BfMk5RAtEDOOQ==
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
- by IA1PR19MB8866.namprd19.prod.outlook.com (2603:10b6:208:59b::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Mon, 26 May
- 2025 06:43:39 +0000
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::e0c2:5b31:534:4305%4]) with mapi id 15.20.8769.025; Mon, 26 May 2025
- 06:43:39 +0000
-Message-ID:
- <DS7PR19MB888328937A1954DF856C150B9D65A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Date: Mon, 26 May 2025 10:43:27 +0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal GE
- PHY support
-To: Krzysztof Kozlowski <krzk@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
- <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
- <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
-Content-Language: en-US
-From: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MR1P264CA0199.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:57::10) To DS7PR19MB8883.namprd19.prod.outlook.com
- (2603:10b6:8:253::16)
-X-Microsoft-Original-Message-ID:
- <66fd4642-6415-4d2a-b6e0-de405d34b22a@outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9i3RBdK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 164B8C4CEE7;
+	Mon, 26 May 2025 06:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748241847;
+	bh=hVpxBRkHdn9LWbevrRY7cTwGyqnEoh9xSW6K+/UdL3I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n9i3RBdKOZouDq5Vu7nuEx+uNgKGM+jZIbRoIsaak74rop4f3tecnEhVEtq6V2QhA
+	 iNbRu18t+BuN3E+LjtqY7bBm+iuFN8Cjde4V/h5jklCDblgJHnucfOHoGEFu7pisfU
+	 lsRkGO4phNemm50WYWlkjIZLCsVg21rtkvUHxxF+TIQRw6a4Ih/+pNiikR8iVQvvFg
+	 4vEVRSQoE0XkSM7gQvI+QjIhGakYEXW7B0xpfFZMH7nt/4L+6TibNGyqbO1XukiBZN
+	 EYjLR+Br0HjWtGGO2VAQ+QEGFlQ8Kn17V+gf3Q9hGYgf+6Ky84UOcDRoQLXFgTJyI0
+	 6MdmKVF63Hn2g==
+Date: Mon, 26 May 2025 08:44:04 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 14/23] drm/tests: hdmi: Add macro to support EDEADLK
+ handling
+Message-ID: <20250526-brawny-determined-lizard-aeef92@houat>
+References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
+ <20250425-hdmi-conn-yuv-v4-14-5e55e2aaa3fa@collabora.com>
+ <20250519-sturdy-cyan-mouse-6bd0f1@houat>
+ <7ce1a2d1-f4cb-4975-be24-b47e184ce1a8@collabora.com>
+ <20250522-fearless-muskrat-of-ampleness-1ccd49@houat>
+ <88e1fed3-47eb-4925-b11a-71557af9add5@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|IA1PR19MB8866:EE_
-X-MS-Office365-Filtering-Correlation-Id: 318f5510-596e-4fee-3dc1-08dd9c20a58a
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|6090799003|15080799009|19110799006|461199028|7092599006|8060799009|3412199025|440099028;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aURsL3phQjhTYncwSitvbDlQVEJDVWFMSDRabWljdXg5OGtJVmJoUGcyUzRZ?=
- =?utf-8?B?QTl4bmdyRkdac3FsQ0haeC9WTnZTaVB3NWE0M1Jkclk1YXNybFpGb1B1Ums3?=
- =?utf-8?B?MFd0Y0NkZGJMSXlSanNidjhScU5FbVFuSzluUUhKaG1qRURncXloNnJwYmcx?=
- =?utf-8?B?amhyOUpyYzhxcEZaUm9Nblc2c1AzeXBWSG9FZWdvS3ZKNm5BMmF2M2xLZjZ1?=
- =?utf-8?B?NmZucWU4VXdJdlRtOVE1UTdPOUFwSEJWVjBxUjdJOCtBK0xXTjdGbEIvZzE0?=
- =?utf-8?B?OEc2YkcwS2tYL250OVZCSE4wM3Zqa0t1NGVyT2dYd1k5Y28vcnpUSTA3SFFJ?=
- =?utf-8?B?azFhcDl4WkFIYUllUHQySnl1cHVWcHpUd3ZkZ3JTajgvYUdPcm1xYmgrUXpM?=
- =?utf-8?B?a3AzWE1JZGJNTm1lQ1RsN2VnTlFUeXlmb1JVMjhzY2JCRjdKWnk5anZFeENk?=
- =?utf-8?B?ZzNhWlJXZWZvYzF4L0lMZ20rc0ZmUUlyOW5BZ0hSYW5wQmlyMHJtN3J4N2dY?=
- =?utf-8?B?M3JaTGx2a3VXbCsyTXNhY3AzZzF3cTVxVGVEWUJoOVE3RWZ6RnJIZTJDbGtt?=
- =?utf-8?B?L0txVWRMbytzckQweVNzZ04xOWRuMktOL3dnYWorSGhoTUJaTSt1aHRzSWFi?=
- =?utf-8?B?VUUzRTlHUmtGN0Y2b2xXd3RIWjJJUTVCMVc1YU5iUUpueUhKRXdXenhMREZH?=
- =?utf-8?B?bWc0Wk1reE5KZG9MVzRNQzZKc2FUdVEyVDc1T2pzbWkwUGk2UkZubWlRSGwz?=
- =?utf-8?B?M1FLaWtxK2t3SU1lbXloYk9uZjE0UGRJWlV0cWk4OWRySWQyTmRneXZwZ1Bw?=
- =?utf-8?B?bnpjUlRLMWFIQ2ZhOGExQXRjU0Fuc3BsbjJUdUNaL2xOMG1QekY5aUNiNDFT?=
- =?utf-8?B?S2xmeHZIa2lqeG5KcHpDMWs0dUJpcXN2bzB5QUJLdjFtb1lyT2hBdm1Wdlho?=
- =?utf-8?B?azV0SmtRQmpmbFE1UFk4YmNoQStpTUEyeUVDV1hGaW02V0NmM2NRZjFvUTRj?=
- =?utf-8?B?MW9SbVRmNEdocVNaaGU4blVGaDFkOWZtcEo5RVdxU3VOUDA2bGhYa2FjQ2x0?=
- =?utf-8?B?cVJKVXA2VTdsNE1tOGFIU2Nld1JWdVlZNlFqbkY3cEgzRzhnUmpXNEdNRUJ1?=
- =?utf-8?B?RXhKODJrU0dIOUhaTzBzL2c5Nzh5TUhHeCtVZXQySGthdlJHYmZmL25QRVNr?=
- =?utf-8?B?ZGZiNDZqNml0UlN3UHNlTzRyUkFNYll1aUtrNzhmNWJTcFcyVGxYVmxhZSth?=
- =?utf-8?B?a0N5UElmZ0lJU3dDV0NKdlgzMFdFQ1YrQlJCU2xiN2c1bFZCV3hmb0dXTE1V?=
- =?utf-8?B?Kyt5ZDd6a3pHRnpiaXZFS291N05uY3dISXYzMWhVSUQzSkFOV0tIZnlud05t?=
- =?utf-8?B?Q0QrR1p4OUUwMk9XWlNGZVFRdkFJZFZ1TWFEVXplNm96Q2xJOFZaWEVtSnlM?=
- =?utf-8?B?cmJldmhNTVNHWG5nTU1UV0lQUys5bzc2cFZXUG16emNYYmxIMzNkbzFGaE41?=
- =?utf-8?B?QWdKSThCY2QzbEcvMDBJVTZtNVc1OVJhZHpTMVFxVEdHbzBoT0szYkJ5TFMy?=
- =?utf-8?B?dkd6QT09?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dG00YjA5UGJMN1kyRjM2WUNlQkVPMllaQjMwUzBYSlM3L29xMUJOdGpQajNl?=
- =?utf-8?B?eUxOQ3gxMmxJL1JzUW9QUVY0VGFJNjd2UkhmWGZkcWk1ZDhsWVptWlRRTDFL?=
- =?utf-8?B?WVVPZVU2eGN2SkhkT2hJZzE2L0s2ZmVrd1owWmcwTk8xN2pLT1kxVWpiNElV?=
- =?utf-8?B?NVJJaHkrUkRVS2o3T1E5NVBYYTlrTUQ3N2UrZ2JsM2ZpL2U1YjF3UG1vK1RT?=
- =?utf-8?B?ZEl0M1hzcVpQVUxzeXI0RS9zNDdjUmVNSkx4ditMUjF2SG9aSHIzRk5aZ0hY?=
- =?utf-8?B?TnRCRnJJSWRtUTErN0tYK2p5UTZ0eWtzZGZwM1RBbm1rRjJTLzhVWUxRY1JQ?=
- =?utf-8?B?TFo0L29KcGNqVG1JamVOa0JmNTJtN0R3RWpwalROc0c5TzBHUVJoSlc2Q1p3?=
- =?utf-8?B?bDdmNS8yVGZKbktpcklscmFzMHczR0tFZnpEZ3lCZnRsMzF1WmdIOHBoK252?=
- =?utf-8?B?NUxzYkhGbTRNamN0TGpYalp1bVE5bmxvdVM1VzFjSGdCSUREdXlXcXNsaldr?=
- =?utf-8?B?OG8rOEx4cjh1aEcyRnpNQlNTcnNwdDZ5QUh1dkVOMEdXa094THlQeUFWWDk3?=
- =?utf-8?B?a3hpdVRLOWtHaWhtTmp3aDc3MnhFeGcxWkRxTFRuS0MwYmNYSThBbHZTdzdi?=
- =?utf-8?B?b3M4aVo0dkh1eDlTcFBveGQ3MVkrMEpSdkNQcGdROWI1dytsanpnNFpYalZB?=
- =?utf-8?B?cGRRQWVJYUpBN09WRC8vdmpaYjlTYi9kZ0lZN3p3cDV6ZFd5TCt1QVNQSis1?=
- =?utf-8?B?VzJlMGo2enNNZkxFQURPZmx2SzhGSjFBZmplRVFwSkJubUdxQTdDWGtkLzU5?=
- =?utf-8?B?bFI3Y3FnTmQ5RlN1RGhTaXh6MmozdU5JK2VIMklVUEJZMGtwMVZpdXdZdFdp?=
- =?utf-8?B?TGtmTElpR1JuaFVHZ05RcE92M08xSkl6alNCYTF2NnNGT2NiM2k1K3VBVDJP?=
- =?utf-8?B?emNZWU02S0N0aUprYWxPQ2ZlNm5FVkJIZ0ZSRkE2N3UyRWtkVExFdnpFUDZJ?=
- =?utf-8?B?aXFTaXUzemgveUtLc25UTjJ4Z3VSdUJBaXVzaHRyMG81cmx0VFhCQStDOTQx?=
- =?utf-8?B?dUlJcHVRV28zckp2SHlCclN4RC9KcEdTRGZhdUxRRW15RjdacENWc0J5eklw?=
- =?utf-8?B?RlVEVUo2SmZkNDdhZjNrTW1acCtEam0xYVROYkxaNytSaXUxajlNa2c1Q2VK?=
- =?utf-8?B?OFJqTXhpMW5wekprYXRtM0Q1eFNLUTlnQStkQVFycnpvSmxXZHZhR012VlB6?=
- =?utf-8?B?MXZZK014VUZzMnBDbG56cnE0TFFYK3NIMitablltVVVZTG1WK1llNjJrWEly?=
- =?utf-8?B?bEd0VGdHV0dva1R1TkFmYVN4ajlxaHFSak0vNDBlK053eFllUjhjN2VOVkEw?=
- =?utf-8?B?NEh0RkQrS0xVdUJSUlI4WUhnUEt4Q0JKQ1A1Q1FjYm85NTVTY3IyYVFHZUxo?=
- =?utf-8?B?SlByemQ2WktvYlFBSFNTSWRzQzczYWxka1RQaldhaVlJaHVlSGRaNmN4WGNT?=
- =?utf-8?B?dFQ5MDEwdk5Xd2dGMFJNQ0orZ09rTmdOL3h5dVR5dnIvR3hmVmswcnZXL2Iv?=
- =?utf-8?B?NFYzMkYrR0UzKzNvVkVsdFBmdkx2aDcxVE1EUzdMbGc3eUl0czFSSlpaV0lD?=
- =?utf-8?B?bWFZYVJ6eE5SclpkU3l1czhaY3dKMjdJZ3NXN3hFanI3bnh5YkpMSUx0dXN0?=
- =?utf-8?Q?1ReMnTH0e79d7S1z0noM?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 318f5510-596e-4fee-3dc1-08dd9c20a58a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 06:43:39.4143
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR19MB8866
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="zxkukyinj66w3cmw"
+Content-Disposition: inline
+In-Reply-To: <88e1fed3-47eb-4925-b11a-71557af9add5@collabora.com>
 
 
+--zxkukyinj66w3cmw
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 14/23] drm/tests: hdmi: Add macro to support EDEADLK
+ handling
+MIME-Version: 1.0
 
-On 5/26/25 08:17, Krzysztof Kozlowski wrote:
-> On 25/05/2025 19:56, George Moussalem via B4 Relay wrote:
->> diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
->> index 3acd09f0da863137f8a05e435a1fd28a536c2acd..a9e94666ff0af107db4f358b144bf8644c6597e8 100644
->> --- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
->> +++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
->> @@ -60,6 +60,29 @@ properties:
->>       minimum: 1
->>       maximum: 255
->>   
->> +  qca,dac:
->> +    description:
->> +      Values for MDAC and EDAC to adjust amplitude, bias current settings,
->> +      and error detection and correction algorithm. Only set in a PHY to PHY
->> +      link architecture to accommodate for short cable length.
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    items:
->> +      - items:
->> +          - description: value for MDAC. Expected 0x10, if set
->> +          - description: value for EDAC. Expected 0x10, if set
-> 
-> If this is fixed to 0x10, then this is fully deducible from compatible.
-> Drop entire property.
+On Thu, May 22, 2025 at 07:47:00PM +0300, Cristian Ciocaltea wrote:
+> On 5/22/25 7:06 PM, Maxime Ripard wrote:
+> > On Mon, May 19, 2025 at 01:35:46PM +0300, Cristian Ciocaltea wrote:
+> >> On 5/19/25 10:22 AM, Maxime Ripard wrote:
+> >>> Hi,
+> >>>
+> >>> On Fri, Apr 25, 2025 at 01:27:05PM +0300, Cristian Ciocaltea wrote:
+> >>>> In preparation to improve error handling throughout all test cases,
+> >>>> introduce a macro to check for EDEADLK and automate the restart of t=
+he
+> >>>> atomic sequence.
+> >>>>
+> >>>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> >>>> ---
+> >>>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 10 ++++++++++
+> >>>>  1 file changed, 10 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/dr=
+ivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> >>>> index c8969ee6518954ab4496d3a4398f428bf4104a36..c8bb131d63ea6d0c9e16=
+6c8d9ba5e403118cd9f1 100644
+> >>>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> >>>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> >>>> @@ -224,6 +224,16 @@ drm_kunit_helper_connector_hdmi_init(struct kun=
+it *test,
+> >>>>  				test_edid_hdmi_1080p_rgb_max_200mhz);
+> >>>>  }
+> >>>> =20
+> >>>> +#define drm_kunit_atomic_restart_on_deadlock(ret, state, ctx, start=
+) do {	\
+> >>>> +	if (ret =3D=3D -EDEADLK) {							\
+> >>>> +		if (state)							\
+> >>>> +			drm_atomic_state_clear(state);				\
+> >>>> +		ret =3D drm_modeset_backoff(ctx);					\
+> >>>> +		if (!ret)							\
+> >>>> +			goto start;						\
+> >>>> +	}									\
+> >>>> +} while (0)
+> >>>> +
+> >>>
+> >>> I'm not sure here either, for pretty much the same reason. As far as
+> >>> locking goes, I really think we should prefer something explicit even=
+ if
+> >>> it means a bit more boilerplate.
+> >>>
+> >>> If you still want to push this forward though, this has nothing to do
+> >>> with kunit so it should be made a common helper.=20
+> >>
+> >> Ack.
+> >>
+> >>> I do think it should be
+> >>> done in a separate series though. Ever-expanding series are a nightma=
+re,
+> >>> both to contribute and to review :)
+> >>
+> >> Indeed, let me take this separately.
+> >>
+> >> If you agree, I'd prefer to drop EDEADLK handling from the new tests as
+> >> well, to allow sorting this out for all in a consistent manner.
+> >=20
+> > We can't unfortunately. Most CI runners now run with WW_DEBUG that will
+> > test for EDEADBLK handling.
+>=20
+> Ok, in that case I'll proceed with the explicit error handling for the
+> new tests only.  And as soon as the series gets merged, I'll come up
+> with a common helper and apply it for all tests.
 
-as mentioned to Andrew, I can move the required values to the driver 
-itself, but a property would still be required to indicate that this PHY 
-is connected to an external PHY (ex. qca8337 switch). In that case, the 
-values need to be set. Otherwise, not..
+Sounds like a good plan :)
 
-Would qcom,phy-to-phy-dac (boolean) do?
+Maxime
 
-> 
->> +      - maxItems: 1
->> +
->> +  qca,eth-ldo-enable:
-> 
-> qcom,tcsr-syscon to match property already used.
+--zxkukyinj66w3cmw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-to make sure I understand correctly, rename it to qcom,tcsr-syscon?
+-----BEGIN PGP SIGNATURE-----
 
-> 
->> +    description:
->> +      Register in TCSR to enable the LDO controller to supply
->> +      low voltages to the common ethernet block (CMN BLK).
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->> +    items:
->> +      - items:
->> +          - description: phandle of TCSR syscon
->> +          - description: offset of TCSR register to enable the LDO controller
->> +      - maxItems: 1
-> You listed two items, but second is just one item? Drop.
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDQNrwAKCRAnX84Zoj2+
+dkb6AX9DojgehpO2uMfUajX5D5kQjQI1O7fI/s2oGtaLk3c9NeB4WtyK6hWz4kpG
+Mx0+6m8BgPJEwLrr2nXe501YcBIqai1vPQc2BJ26AlLTZR/PhfS405mfZVUnc2S0
+098thcySYg==
+=aDTM
+-----END PGP SIGNATURE-----
 
-What is expected is one item that has two values, in this case: <&tcsr 
-0x019475c4>
-
-I could move the offset to the driver itself as it's a fixed offset, so 
-ultimately the property would become:
-
-qcom,tcsr-syscon = <&tscr>;
-
-agreed?
-
-> 
-> Best regards,
-> Krzysztof
-> 
-
-Best regards,
-George
+--zxkukyinj66w3cmw--
