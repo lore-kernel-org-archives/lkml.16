@@ -1,83 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A984A171C9;
-	Mon, 26 May 2025 15:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDC71C28E;
+	Mon, 26 May 2025 15:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748272799; cv=none; b=CSBxlzHI9lFwVwRPWezftmA73WF7/CkoNj712oaZxZA7OxbeABqLszVU0uUOT5ztjUhzhCiq8B7fWmGtl/z8/j7dZTWIUEi+ETHdSYJmeja9abDK7f2prYi9jQs9aaT9syyblnkNCpyIQceiEVKZbyz2Bh0VsPKCWj5mICfxUHg=
+	t=1748272960; cv=none; b=lK2yjZglXcEE6f1TM/sIHyNt8aGJb42vCTKLGHD+srVZBwPnKbZQhyChCFWDHInUNOTaJDl9pQTdM4OYNxUHKTIzcqPoz6A7i4I+CMAYaAc1bkNugL3yPFAeu+fazZ0r/+OXbDYddP5RO8VWlhXE/ObyB3DunnI3TTLVz7MJE0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748272799; c=relaxed/simple;
-	bh=/ApZuRMAuJoeBKWeY4aIkvjGzzqTlwlgmSqzbWSOhIU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=nsNNxvmcan5P9jt7hA0MoCcXYKp+n2Yy+zCQq1HBBbtz4fX8bKX9oeyZgaFkE2gNiG5tvQi6u3o7We/LplP9G8VA9e6Bg86fYVCB8xHkq2x4ruJYBa5fM1hji7cw8yPTlctVOnca7oGAn/vKd4eQHgvfDVtQYan2SGSiYJmPStk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVQl08AH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748272960; c=relaxed/simple;
+	bh=M1N4V+Fwx+IL5CSJk2Y0BFwILOwBXrEPkVrxkzfT1Xo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkNicyWudczct4A7rl7cgLhyfJDqNMLBRek4MBMDv3v6Q5zxEyrDp+xh4B4dwqr8jzZGfC/LX22v1GV4QRPYxKyP3FyUHtbaQf2AtWpYxb8C4TDvRJScVknGaexlKBOXclZb/Av2NlsQizEs5FrTSHJdFyewM7PV+2vKUAb0CBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lw0PwEY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVQl08AH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78423C4CEE7;
-	Mon, 26 May 2025 15:19:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lw0PwEY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9723C4CEE7;
+	Mon, 26 May 2025 15:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748272799;
-	bh=/ApZuRMAuJoeBKWeY4aIkvjGzzqTlwlgmSqzbWSOhIU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pVQl08AHV4JLrQcra0QNJqjG2MWCkdZo8Gp3XSZE7EV9K4XfvKJWweMpJAiNjxejG
-	 UFLM3avHp7jqWASCoaW409E3+C0ZMiE5wzLoYWwZNME0Y6ndHs0T+3VqUNehEg1Aq6
-	 p0EXp9+0p9Ui1CnHENEjZ2UjOp/m+pv6YdbFaT1iEGZZMaD5yWcTtxw5s9X46352Kk
-	 UAEXgCK0Xbdt0UnF/aVgsR31A00AmAfOi9jzGu0xUq+x6B1h0NJILJ4tnbavJ93GZ+
-	 7xUXe4I8aS2fBHrOZG5u4dNdn/XGPXA0x0ZASs/mxts2uHd0a7+5ZTxqBzXC+jvzkP
-	 P5iYJ0BVa4I9Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B6639F1DE4;
-	Mon, 26 May 2025 15:20:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1748272959;
+	bh=M1N4V+Fwx+IL5CSJk2Y0BFwILOwBXrEPkVrxkzfT1Xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lw0PwEY/lhbo4YaQFtpGh4Se4Xhq96mS+TclBA8SejedO29AiALBU5IDFoDAvxWNc
+	 yywkDtyRpw7g/5UCJA1/fDkyX6HeqvMVr2IDmQWwTULxwXnggvuOukS9WSbaIZ6Vla
+	 n6Kdju9jlPPD5F4YLvVcPUHwbKy/+K6mKnD7maGweAQMtBdKWJbXU9cOjEWg/7k32I
+	 +iXlaimqDryrTRv3rNfF9h++eUkMpesgmzw7Q7qxi0dkub1Wf0993MtOEVVGe2T6Im
+	 SZtRE+tR0UcPTlAhubATakkETx+vfAnMOSVAsMX/nVAOkJd7qOfw/6O7iAPVBH9f1d
+	 NgBN5PN0z9U+A==
+Date: Mon, 26 May 2025 16:22:35 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Robin Gong <yibin.gong@nxp.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: regulator: add pca9450: Add
+ regulator-allowed-modes
+Message-ID: <20250526-stardust-thread-7e7b01207c42@spud>
+References: <20250525071823.819342-1-martijn.de.gouw@prodrive-technologies.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v5] net: dsa: microchip: Add SGMII port support to
- KSZ9477 switch
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174827283401.956475.11720035173876833008.git-patchwork-notify@kernel.org>
-Date: Mon, 26 May 2025 15:20:34 +0000
-References: <20250520230720.23425-1-Tristram.Ha@microchip.com>
-In-Reply-To: <20250520230720.23425-1-Tristram.Ha@microchip.com>
-To:  <Tristram.Ha@microchip.com>
-Cc: andrew@lunn.ch, woojung.huh@microchip.com, linux@armlinux.org.uk,
- olteanv@gmail.com, alok.a.tiwari@oracle.com, hkallweit1@gmail.com,
- maxime.chevallier@bootlin.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, UNGLinuxDriver@microchip.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- tristram.ha@microchip.com
-
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Tue, 20 May 2025 16:07:20 -0700 you wrote:
-> From: Tristram Ha <tristram.ha@microchip.com>
-> 
-> The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
-> port.  However there are some hardware bugs in the KSZ9477 SGMII
-> module so workarounds are needed.  There was a proposal to update the
-> XPCS driver to accommodate KSZ9477, but the new code is not generic
-> enough to be used by other vendors.  It is better to do all these
-> workarounds inside the KSZ9477 driver instead of modifying the XPCS
-> driver.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v5] net: dsa: microchip: Add SGMII port support to KSZ9477 switch
-    https://git.kernel.org/netdev/net-next/c/e8c35bfce4c1
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xLBWFn4PwdP4NJNT"
+Content-Disposition: inline
+In-Reply-To: <20250525071823.819342-1-martijn.de.gouw@prodrive-technologies.com>
 
 
+--xLBWFn4PwdP4NJNT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, May 25, 2025 at 09:18:20AM +0200, Martijn de Gouw wrote:
+> Make the PWM mode on the buck controllers configurable from devicetree.
+> Some boards require forced PWM mode to keep the supply ripple within
+> acceptable limits under light load conditions.
+>=20
+> Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+--xLBWFn4PwdP4NJNT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDSHOwAKCRB4tDGHoIJi
+0kqrAP9P27Up9bcaa3+2hLLmZ5yxCEzS4xRHKgr068SqyWIdfQD9E1FV9+rSmlu5
+DN6kyFXEVUwHOzxfQLYNZUKuivM32QA=
+=+flX
+-----END PGP SIGNATURE-----
+
+--xLBWFn4PwdP4NJNT--
