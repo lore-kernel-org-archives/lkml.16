@@ -1,109 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490971DB34B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC861DE4C3
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748241553; cv=none; b=W2l+es8us5gDYYb2XBaBVFOnWnAy/FYAdMqXR98XU5mbx5XuJWJBcXgolUfJoSGu8uDybUeVAtb+mg/Xh8nBJJpsTVvWyyZqL5xrfJHoeo9SodcZ3NX9UVUqvy76RJQkYzupMVM1eyOKmcr5J4ZRTB0vGUXlyCbjvxkF7u5dmXI=
+	t=1748241559; cv=none; b=bfaHiv8nxcHmAeCBbH4olfFjdhwlKn0mosPcgCeW6s966UESDNQyeg96N8MfWmarrMep1rOpADoFnGuA/simzrDE+Xkz+EkXZK0zF2n6/QZizXL86xVDenf6EaJzmzDFckwCzpnuJZ29NxyPfnU+tGjAkoofXG4TIFCnJ2tMsuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748241553; c=relaxed/simple;
-	bh=Ae4tSg4kmOccm2miOn6Vld2T7LyPE4HZAwLWC/VQ3jI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XMtrnSWxdUtP15pE9EikTprvTx+HC7V3NA16VioByPXsHp9iXKpQfdNqJ0xd1qw0v7wshlZuuF3to4sb5B6xx4VM5B6zE4tJwFzSjzoL2wAPKceP0DmOM/5R2QaSVnVxktD1ZzcJFFxmx/fTiUMejd9SLr+XKTnSEGnr4Stbo3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A+6+tyP0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748241559; c=relaxed/simple;
+	bh=dzPA0wCJq6nCRh4A0bzOMqEcZWel0GiR+aFE6GArilk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XhZg6XVcKC2lmUjhQrxB+SRLW0T0fX5GoYJMf41x+Tj3T5AFM4rIHeMOZxjHpZmxEFNB7SqaG7G8iWpZLk/wWcQhhe1v+p0NyXDZKmQ3Dz0FcE1X6BEYx8FrbzNbU8RDuwU0KkBWjyWQBrxytNW3WsGcCGAHZ4PHaYrvUKcPFw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=QOHdLoa+; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+6+tyP0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748241551;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nm4c9M80Q1z8j97S6rw42ru1/YFOaWVgzS3+rocsC18=;
-	b=A+6+tyP0bSve7J177ap6d8vT6Yq+VIio1AO/s/l58Rbx4TvDSgog1PRb9kjxgJhOtFLFfu
-	42L6mGoGKJC5kTtXGMa8IQQ//cmU1ldRq6l8+VXj0eJrpYat8yqxaLMQ6v/G4ZofLiPwm7
-	vOZQvTv0v2P8RhoNR5V2ALqUhrACk/s=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-MAPfDlzHO92_1QR2PQf6qw-1; Mon, 26 May 2025 02:39:09 -0400
-X-MC-Unique: MAPfDlzHO92_1QR2PQf6qw-1
-X-Mimecast-MFC-AGG-ID: MAPfDlzHO92_1QR2PQf6qw_1748241548
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so999012f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 25 May 2025 23:39:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748241548; x=1748846348;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nm4c9M80Q1z8j97S6rw42ru1/YFOaWVgzS3+rocsC18=;
-        b=sPGw+9g6J22uNUGCnRuPiF9JDWLe5mrGTyDPx5jWoEuhUez3SOl8AcQc8S2p6yvUmg
-         zrG2isU8oqIQC+MzobiaA7IUt9OI1rx6xbLsw2XNfUu/juhy/NgoI/+bF+PWrNxjtU7J
-         puBSTiUWK8DLLkB1gfaARJNBDFcsmTKeCwKDSmBS/ZcspRfC23mDHCp9Z80qMtmh0zJM
-         PQvg6XdK2jgLU4N4U20qLFNDYPBFjx8eXbjXbh+/hu2F3qTU+vW2+tElWDzsQoiJzHby
-         1I2PSA8AB/ge8AikhrfcEMl1zSXEQ41lfZcCJ8pJVidaDtakqdqoxEG9NtZ0Vuxa899U
-         PIpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOjiyS2dOFTpqkObNj9hK2wN+ZYyjUG1PLkD8fZzq9dGortpc5XDC6W9/A3a0MGITwihXp5YbhkYi6mg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnUUG6bPZmPG8kshOHtMAJWzlAJhPeLbTISEjjeO2AMkBH5unz
-	rhqswqTmqVR28M3M0BdtIXlfprmj59Q86SA3l131Dlmrx2yO6BgU0ftqUJPZfGPGiqiNQwWfG9L
-	fomK8E063bMEQGEa4t+nybIDlg3/2JkJTTj7niHlJrTbZrj7Q1UNoHmXoaQofZYqErQ==
-X-Gm-Gg: ASbGncvNmAxhBv8cyqPDhbEoij1vXKYmQ4MoVVRi2b7xN5tk+eLUuaBpVgfvgBIbaqY
-	Ce3gFYDeYNyKOJOvJtLEqfLq2gf9nYRLzMhFEVI4LBheIOVAIO/D0zRZINofS33WASx5Yxaw16q
-	yx0A0t0vMsF/K/dERHft5rd8JUsEv/mnZWQnSoxhIdwMCZwgLuatUJn02umD10z71ZpeTlrr0Ia
-	T4Sq7HaapglROjZ2diQUDTDxWwsTiGv1Z23knVmpxUV2w4xuzcZY1zi/l4uTlOaBGzgcJMC3i8n
-	6ULy/oBaiqTFc7Yy8yc=
-X-Received: by 2002:a05:6000:2507:b0:3a4:dc32:6cba with SMTP id ffacd0b85a97d-3a4dc326effmr712394f8f.4.1748241547630;
-        Sun, 25 May 2025 23:39:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHndZUEepyKYMwEo5a/tkf0IiFhlmHejT7ojvDBOeg+h7FMmR/yDqdIddZzGS2LYqvecgN7Sw==
-X-Received: by 2002:a05:6000:2507:b0:3a4:dc32:6cba with SMTP id ffacd0b85a97d-3a4dc326effmr712375f8f.4.1748241547256;
-        Sun, 25 May 2025 23:39:07 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2728:e810::f39? ([2a0d:3344:2728:e810::f39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f0552esm223589205e9.11.2025.05.25.23.39.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 May 2025 23:39:06 -0700 (PDT)
-Message-ID: <be4c5d3d-f2c9-4a09-96ec-0b25470ef9f7@redhat.com>
-Date: Mon, 26 May 2025 08:39:04 +0200
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="QOHdLoa+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=dzPA0wCJq6nCRh4A0bzOMqEcZWel0GiR+aFE6GArilk=; b=QOHdLoa+cMuzjijaD4C2Un/WJA
+	Zy7G8no7Gw6z7waXbmUsbiI5Aqb8+oWMCrrpLs7njYvL2VZSkyBCE6yesW12DYF/7YYENJOfkOc0z
+	7CUBMRIWngFXb28oQs7zSOYlrADyTp6zysCjHolIuvjd7x4+hL2yIzRPRVDRnVDmtWJ98mqcqA7uO
+	J9sgTj0RNp3h0rdvaOyTVl/5tv4R9SlA2azbZ0zqO0+9oFnduXFTBUQMP9Hr5R9zMpg52VJ59Wehw
+	5NE1vt+EaP/cVIhWVH4wapifII/PM2BcrItX6CHeB/qBmKzlY9I2mC6jQ4LKdA2gADJR4Bzly6DS8
+	bRQAbHgw==;
+Received: from 53.red-81-38-30.dynamicip.rima-tde.net ([81.38.30.53] helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uJRUA-00DCdJ-5m; Mon, 26 May 2025 08:38:58 +0200
+From: Ricardo =?utf-8?Q?Ca=C3=B1uelo?= Navarro <rcn@igalia.com>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, revest@google.com,
+ kernel-dev@igalia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2] mm: fix copy_vma() error handling for hugetlb mappings
+In-Reply-To: <fs2zd6syrdpyrsqkfmzjjz3y3rricscyr3bnx5trnr6p5nbhmy@l6zyiaccoknt>
+References: <20250523-warning_in_page_counter_cancel-v2-1-b6df1a8cfefd@igalia.com>
+ <fs2zd6syrdpyrsqkfmzjjz3y3rricscyr3bnx5trnr6p5nbhmy@l6zyiaccoknt>
+Date: Mon, 26 May 2025 08:38:57 +0200
+Message-ID: <87frgrc1vi.fsf@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 2/4] net/mlx5: HWS, make sure the uplink is the
- last destination
-To: Tariq Toukan <tariqt@nvidia.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>, Vlad Dogaru <vdogaru@nvidia.com>,
- Yevgeny Kliteynik <kliteyn@nvidia.com>, Gal Pressman <gal@nvidia.com>
-References: <1748171710-1375837-1-git-send-email-tariqt@nvidia.com>
- <1748171710-1375837-3-git-send-email-tariqt@nvidia.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <1748171710-1375837-3-git-send-email-tariqt@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 5/25/25 1:15 PM, Tariq Toukan wrote:
-> @@ -1429,6 +1426,14 @@ mlx5hws_action_create_dest_array(struct mlx5hws_context *ctx,
->  		}
->  	}
->  
-> +	if (last_dest_idx != -1) {
-> +		struct mlx5hws_cmd_set_fte_dest tmp;
-> +
-> +		tmp = dest_list[last_dest_idx];
-> +		dest_list[last_dest_idx] = dest_list[num_dest - 1];
-> +		dest_list[num_dest - 1] = tmp;
+Hi Liam, thanks for reviewing:
 
-Here you can use swap()
+On Fri, May 23 2025 at 13:45:47, "Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
 
-/P
+> nit: mremap(), do you need the ()? (is it literally this function or the
+> call path?)
 
+The mremap call path. This function isn't called directly by mremap()
+but it may be called by some of the helper functions in the mremap path,
+and I suppose the specific callers are prone to change in the future.
+
+Cheers,
+Ricardo
