@@ -1,114 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A32342A87
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1C42A87;
+	Mon, 26 May 2025 04:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748234995; cv=none; b=Vta4R964XdM9gOiQ64TKFPRj7mNaFX/+gBGkWf2vP8aFt2b/BIVM0naaJ5ZzqCDA/kN+YXGTTHK1MFM8tiHQ3bva5z5rDvCDOQnykJzSt3PXkSl+Pw5ri4BqWXDfmLVjIQaHVIhnCveaVbTuFja3Rcq/ZciFHGn9qRRePkIsdqY=
+	t=1748235022; cv=none; b=bT3Bt2G7Smkv4Op4TTNxDscModZSFIXPK1h+zw1fv6f/xuw3JUnPlUQnxaJltzSoW6SfxIFgCSiA6QgZnRcNwL5dxLRDhW3Ca0DKkiseXyDGQE0ayT8ZV2FrNRjeO2GthU82QqOO9LwSwzvDD6Sfwwe3SU3J3CvuovhRXDalNRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748234995; c=relaxed/simple;
-	bh=w0TWMSCDauYIcpJKBkHdjolMi+Jf1VbAxv9pGoz7wIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DIl6xlzMn+im8hKiODHlikPmcC9ZrsYVMVaz3ZzqCs0jxUqT1aeHS47MIMkbx0vkgop/AS5thwaQvr3xyyc1ul2xDcL3GRsoms0HwMhRzMNXVAKHxpXdD496YA4maPia5DgmaYOwXarD4GMgxB8/C/pm4ZJRMQTFEJarGyqmnIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ely3pplg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748235022; c=relaxed/simple;
+	bh=35xWmzgiV6a9hZvqdrzmOnx4+bq7Pqypd8xbegsWmdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eOZjFtlMdBDdF++15MNsl+8kmNm0ayvz4cD8XOq2IUJkdBS+YnPWv7pgUYkhaSeIr01kd+oA9N5e+fTSRxzTtAPZOlKJOe3CsEAAOyCgX96ZOL5+cbhKeaRaeSmP1T0yhaMtfDkPXudDxYEyzyWAYqnQStswcA7k7g8QT07yqGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IAuZPcGg; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ely3pplg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0734C4CEED;
-	Mon, 26 May 2025 04:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748234993;
-	bh=w0TWMSCDauYIcpJKBkHdjolMi+Jf1VbAxv9pGoz7wIM=;
-	h=Date:From:To:Cc:Subject:Reply-To:From;
-	b=Ely3pplgsd3lyfVOnrZRGGCAR4LlPtY3UPnYfbRrkVsH/9+BQfgy4mSKlLEeKwf3b
-	 VGb7BZ7Ces08rHDWUt/x0issbtqXeKrJ9MQBtMW/CsJxMdxuncKx9cEnP0HA1n+oF6
-	 23LIRcOu7N/oxiH8emZMLzlERx470FtYkPNM5I/+1iUk8KunVMr43Io0khVrmXxjbq
-	 Yvn/oCTZA6wUxBXJH2s35X7oEOF/A715TLEaDfjJLzoI71vXZNpmGsdYbf4wGx7TNw
-	 AA9WAbjKgg12djq13bgyXBhtQY8hmIViuaGqPww/sEMUIOPclNPJ+tYsJckz/Gj+Y0
-	 8Lzs9QRliA1wg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6E86CCE0854; Sun, 25 May 2025 21:49:53 -0700 (PDT)
-Date: Sun, 25 May 2025 21:49:53 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, pmladek@suse.com,
-	akpm@linux-foundation.org, john.ogness@linutronix.de
-Subject: [GIT PULL] Rate-limit changes for v6.16
-Message-ID: <c4547cbd-d38b-4b50-92b1-0f3f717a7979@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IAuZPcGg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748235017;
+	bh=QaaZoajFRj1TH4MvoV1VPQggh13J0LDJ7iPrV7mUjkc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IAuZPcGgBue4ZMwn1yl/Ayr/3M+Ua2szHE5S9DEOamd28fzxI6h/2pPSjRE1/Rgv8
+	 Oyf6WHtR35eHR1PmQvZ9P28tJyHjiRxBc4Pm9Nf345srNfdDc2Z2cazNKY6OdJ7y5U
+	 D+4Xodcnw90t1N9R4tu19M015owQSud6b3vyqwUDw3PTjYQy5dTJi8ojI+78Llk5R/
+	 ChCLvH83/+f7IcmEN7ZNQRw5I6uuzqWGVhcjMd2WIv0JC+pHRiQnJ1t6lTtyUqGiZ3
+	 +rHo+nFCXZ0HNcE3VGEohbLkKVhuJhMm9kbThEDISLyOVRyZZB5Jz48v8R5R0CioBl
+	 I5V+tHs5RT7Sw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b5Nc82gMVz4wbv;
+	Mon, 26 May 2025 14:50:16 +1000 (AEST)
+Date: Mon, 26 May 2025 14:50:15 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
+ <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, "Borislav Petkov (AMD)"
+ <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>, "Xin Li (Intel)"
+ <xin@zytor.com>
+Subject: linux-next: manual merge of the tip tree with the perf tree
+Message-ID: <20250526145015.615882b0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/cib8ZWXY5nrsoorTL=do+O2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello, Linus,
+--Sig_/cib8ZWXY5nrsoorTL=do+O2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-When the v6.15 merge window opens, please pull this rate-limit update from:
+Hi all,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/ratelimit.2025.05.25a
-  # HEAD: ba575cea29fd82a0e6836fefcd51db36f1ff8a92: ratelimit: Drop redundant accesses to burst (2025-05-08 16:13:27 -0700)
+Today's linux-next merge of the tip tree got a conflict in:
 
-These have been subject to -next testing for more than a month, have had
-five LKML postings, have been featured on LWN, and with one exception
-have a full set of acks.  That exception is this:
+  tools/arch/x86/include/asm/cpufeatures.h
 
-48e864ae8657 ("random: Avoid open-coded use of ratelimit_state structure's ->missed field")
+between commit:
 
-The change from this series is function-preserving and is incidental to
-the random subsystem, but is necessary to the series, which is in turn
-needed to avoid silent and false-positive drops of rate-limited printk()s.
+  444f03645f14 ("tools headers x86 cpufeatures: Sync with the kernel source=
+s to pick ZEN6 and Indirect Target Selection (ITS) bits")
 
-----------------------------------------------------------------
-lib/ratelimit: Reduce false-positive and silent misses
+from the perf tree and commits:
 
-Changes
--------
+  282cc5b67623 ("x86/cpufeatures: Clean up formatting")
+  13327fada7ff ("x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_VME=
+XIT")
+  3aba0b40cacd ("x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_COR=
+ES")
 
-* Reduce open-coded use of ratelimit_state structure fields.
-* Convert the ->missed field to atomic_t.
-* Count misses that are due to lock contention.
-* Eliminate jiffies=0 special case.
-* Reduce ___ratelimit() false-positive rate limiting (Petr Mladek).
-* Allow zero ->burst to hard-disable rate limiting.
-* Optimize away atomic operations when a miss is guaranteed.
-* Warn if ->interval or ->burst are negative (Petr Mladek).
-* Simplify the resulting code.
+from the tip tree.
 
-A smoke test and stress test have been created, but they are not yet ready
-for mainline.  With luck, we will offer them for the v6.17 merge window.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-----------------------------------------------------------------
-Paul E. McKenney (17):
-      ratelimit: Create functions to handle ratelimit_state internals
-      random: Avoid open-coded use of ratelimit_state structure's ->missed field
-      drm/i915: Avoid open-coded use of ratelimit_state structure's ->missed field
-      drm/amd/pm: Avoid open-coded use of ratelimit_state structure's internals
-      ratelimit: Convert the ->missed field to atomic_t
-      ratelimit: Count misses due to lock contention
-      ratelimit: Avoid jiffies=0 special case
-      ratelimit: Allow zero ->burst to disable ratelimiting
-      ratelimit: Force re-initialization when rate-limiting re-enabled
-      ratelimit: Don't flush misses counter if RATELIMIT_MSG_ON_RELEASE
-      ratelimit: Avoid atomic decrement if already rate-limited
-      ratelimit: Avoid atomic decrement under lock if already rate-limited
-      ratelimit: Simplify common-case exit path
-      ratelimit: Use nolock_ret label to save a couple of lines of code
-      ratelimit: Use nolock_ret label to collapse lock-failure code
-      ratelimit: Use nolock_ret restructuring to collapse common case code
-      ratelimit: Drop redundant accesses to burst
+--=20
+Cheers,
+Stephen Rothwell
 
-Petr Mladek (2):
-      ratelimit: Reduce ___ratelimit() false-positive rate limiting
-      ratelimit: Warn if ->interval or ->burst are negative
+diff --cc tools/arch/x86/include/asm/cpufeatures.h
+index 30144ef9ef02,bc81b9d1aeca..000000000000
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@@ -476,12 -476,11 +476,12 @@@
+  #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history at =
+syscall entry using SW loop */
+  #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control availabl=
+e */
+  #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabl=
+ed */
+- #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch h=
+istory at vmexit using SW loop */
+- #define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
+- #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous =
+Core Topology */
+- #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classifica=
+tion */
+- #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due to=
+ downclocking */
+- #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32 + 9) /* Use thunk for indir=
+ect branches in lower half of cacheline */
++ #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history a=
+t vmexit using SW loop */
++ #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
++ #define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topolo=
+gy */
++ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classificat=
+ion */
++ #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to =
+downclocking */
+++#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+ 9) /* Use thunk for indire=
+ct branches in lower half of cacheline */
+ =20
+  /*
+   * BUG word(s)
+@@@ -528,12 -527,10 +528,12 @@@
+  #define X86_BUG_TDX_PW_MCE		X86_BUG(31) /* "tdx_pw_mce" CPU may incur #MC=
+ if non-TD software does partial write to TDX private memory */
+ =20
+  /* BUG word 2 */
+- #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* "srso" AMD SRSO bug */
+- #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* "div0" AMD DIV0 speculation b=
+ug */
+- #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable to R=
+egister File Data Sampling */
+- #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Branc=
+h History Injection */
+- #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB o=
+mits return target predictions */
+- #define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user" C=
+PU is affected by Spectre variant 2 attack between user processes */
+- #define X86_BUG_ITS			X86_BUG(1*32 + 6) /* "its" CPU is affected by Indir=
+ect Target Selection */
+- #define X86_BUG_ITS_NATIVE_ONLY		X86_BUG(1*32 + 7) /* "its_native_only" C=
+PU is affected by ITS, VMX is not affected */
++ #define X86_BUG_SRSO			X86_BUG( 1*32+ 0) /* "srso" AMD SRSO bug */
++ #define X86_BUG_DIV0			X86_BUG( 1*32+ 1) /* "div0" AMD DIV0 speculation b=
+ug */
++ #define X86_BUG_RFDS			X86_BUG( 1*32+ 2) /* "rfds" CPU is vulnerable to R=
+egister File Data Sampling */
++ #define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by Branc=
+h History Injection */
++ #define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB omit=
+s return target predictions */
++ #define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_user" C=
+PU is affected by Spectre variant 2 attack between user processes */
+++#define X86_BUG_ITS			X86_BUG( 1*32+ 6) /* "its" CPU is affected by Indir=
+ect Target Selection */
+++#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 7) /* "its_native_only" C=
+PU is affected by ITS, VMX is not affected */
+  #endif /* _ASM_X86_CPUFEATURES_H */
 
- drivers/char/random.c              |  9 +++--
- drivers/gpu/drm/amd/pm/amdgpu_pm.c | 11 +-----
- drivers/gpu/drm/i915/i915_perf.c   |  8 ++--
- include/linux/ratelimit.h          | 37 ++++++++++++++++---
- include/linux/ratelimit_types.h    |  5 ++-
- lib/ratelimit.c                    | 75 ++++++++++++++++++++++++++------------
- 6 files changed, 98 insertions(+), 47 deletions(-)
+--Sig_/cib8ZWXY5nrsoorTL=do+O2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgz8wcACgkQAVBC80lX
+0Gwkjwf/X6w2K+lAgtQI+TYE2vNpgBUCJHxQSFR1s+2nIuIcq//PuqOeYLSMqJDI
+jKeIwRDBwf8ZJQgXvxMZuvuvTzO11GNmlzFBt7a9wDT0RxWSc4MzLMcrL71/wb0u
+sMUaHjAvLC1ygTMpzmyMjqehBNMH7M97AS7qE7ytRWzmeZsfwf/X32M1p7akx5BP
+AtVGZmhD5BjKHf1NKbb0rcBdJPAWy8xVETS0Sba1MLEON+P2Xmi/k1bJH2Nm1S14
+XTFTmrayFEVzY9R9iukNnxw73JVfLmvJSMl63yjesUkLvxklY9NA1jxaqQGkHtEg
+E8lIqUGlM8jrCkQtffLFNUBwa8c03Q==
+=S+Vm
+-----END PGP SIGNATURE-----
+
+--Sig_/cib8ZWXY5nrsoorTL=do+O2--
