@@ -1,127 +1,134 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B22B27454
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333327454;
+	Mon, 26 May 2025 11:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258046; cv=none; b=NmQaDKtDtqnfBHlHg0xFKLZJ4KveVLIcgFqCNAn1h5YaJ53RZ8tQ7rat/lujSaEWByRL/bZ5iNTi4SMo1MoFmGSjt/0ngeBI2DyBlqrQo1Jiul5P6nsJ3YLZXQyUvt5aQrwrep0bGqQNMSTg0v/wRtdjVLLTKzKu2VB/rXkK+Ow=
+	t=1748258054; cv=none; b=KtJEebJo7U5LmGe0ioPq9grMxeJjFfrgbi8b5RYqpvqyD9i4NG3LmAn/xAcOt2FBs9tq6J+uaxvMfQFb9/CfMXyjxDVOHrMTOLiaUUWIm6BarDMHHb/vGXyUqfOGDW7bKWBMF+84KXWcYwXlNS1rddfQ56k0wle3d4NosrN2+bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258046; c=relaxed/simple;
-	bh=VnAgd0ZQRivApTR3Ldr5WYwHCJLxJNgqjBaNl5DS1Ws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOcbnQKzV9eOQymKC2VEZCcQZWwvn0qucl33C/7x2kW8Su5uHM8qct8Mm0pm6CgDo3kAvUIRLDMuevNx5SDQ+7hIaTpWJfYvjv66Uef7kzlaRlF+ryo9kwB/4sC7ewDSmrTYwD3NxDeKu4wIvqpX5Oevrj8s38LBHFhlL5vPB0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Jfhx1B3P; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1748258054; c=relaxed/simple;
+	bh=hVGhZucvzX5ojlygkfesTT5oBv5VBt6Jo24Z6T3XFmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUhqbOMVN6Ia0uLYWqdAbkF2yDtR1wm0BoUDAoweigvw6oeF/TlcqPYwVAK1abtaixLuQx7u5Oglv+v0IxTF+iHUYCg17REJxwXJlcdIob8Jb8JZTe8e5iYwOea3SouNixi8LK33tzy/2SU1XmxAiA835acCCKZG0Uqw3XMnvK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dOgOkcgW; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Jfhx1B3P"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a365a6804eso1246769f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1748258042; x=1748862842; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1qGPkkOzz/AvcHXID85KRR2dfTKt6dbyAQOGmEwhnXA=;
-        b=Jfhx1B3Pvz7gQ9A4b1+ihmbbCLVcUEkJPx5tG1uy9QiKB5QDFmZDLkAi19eUTuLlfx
-         9Rd5+1lkrMHCL4xe9d7xVaF3oXL31FMnONihOSqEMm9WDGA08cj5XoZkFDbzW+/jTk8S
-         Fvtkt0uh1kj8u9ZVDgjY/NRgC+k4KGoZrKDyFW22ILBY/8GJClANav3y9U6ZVBE+OLZ+
-         zcPrH/QjG31aEirRja5RLoxdupCqTa+zcuGU25JmCmu7pZbDAVgXm0EptTSpr5tg9/o6
-         Hx+GUu1iI/mIfMJpMxpctROQCAzEdWGrUoOqV9CFQ+R+EWgRQmCLVysZrzXOBo5OTRde
-         3FqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748258042; x=1748862842;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1qGPkkOzz/AvcHXID85KRR2dfTKt6dbyAQOGmEwhnXA=;
-        b=v9PKDn1Cs1HfCN+QEea19rAu9x7L+cfNpM0COQyYZqw8BCWXfbgCdiLSY9hUOdZM10
-         gBYLqRH7seGLRt5IFcTQ+OXBpDdIV+7RYE6tP8YiI8mp8pDYoHnS3zXLLvRSUiKfM1oU
-         fKOBWDJXnNedwDBg9SUCF/SfMW8dfLaII+i6wZ7B5FEaY2dv0eOMasKRsmfIMuTN/565
-         yEcHBWLwy5jQp2IDQdLn6gcSguPKKqSqzJ7FaViR2h2Df8Gjl9eJLk3GI5aqC2CAdTpA
-         Tse87TPBJSvHiGlNOe/1MFC7FOAeBI61uzlruvVi6IcMBZqOM9HWBzTfFJBK8jEBSX/z
-         Iw4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUrHcl/l8g5RLZ7j1hIhuM1FWvdy9CSu8w6yp3cyMzfDXPtAcA+et0hiKNJ0yDIfFTBdIjUpFcgR1HZzZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzN+5DgapxODL7hnU+IR13lO+WyP4xSl+1/7NS797k4OJrqFD3x
-	gww0twyVzAKehUqIgSTI21YEH117o36DEW7B5PIVKJtFvuRehOGVlpx+0iF6jnANY6c=
-X-Gm-Gg: ASbGnctSkZKdUakiG7JQgb/RkgIrBOZNXq5cSUyPwsRYy9XLL8PMbf+67aJdoe33kep
-	i0VnvLEyoJ3NhNo+fExz5kwa9AG5Jh9WEyCgZQfPahDUS40wz9/UCjmD2YiTqsFX9/Mgg7dADYB
-	pf2b7wLVpxSqSkm33n23N0rYY2/wuwWRVm0+wd6IltzaYo2BZCm0eAP0SAIWHHb6E6ehsprPwi5
-	gzY+M4DEQpe3WE4FQC/I+hDk6evoAVvzpXkeQh7KinBzvy8Buho5UpHPTnSm0+u+YEw5yz/3Fkb
-	1lc420i+Mea1C/Q7GVdT5n+Xnl2J5tVpwWdS8EcjpPqUhdEfLvtmw0jwtHeEP2zm5CveP1H4A8S
-	XsYSD
-X-Google-Smtp-Source: AGHT+IEohXUMBSqO1qFUGi+04cLdFeL8i/QAY/ZQ64aMi3jtMK4s6/6493H521FOcUTuehMxIQIXpg==
-X-Received: by 2002:a05:6000:40d9:b0:3a4:c2e4:11b with SMTP id ffacd0b85a97d-3a4cb4a962amr7086907f8f.51.1748258041562;
-        Mon, 26 May 2025 04:14:01 -0700 (PDT)
-Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cc932836sm7397037f8f.39.2025.05.26.04.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 04:14:01 -0700 (PDT)
-Date: Mon, 26 May 2025 13:13:59 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Atish Patra <atish.patra@linux.dev>, Anup Patel <anup@brainfault.org>, 
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Mayuresh Chitale <mchitale@ventanamicro.com>, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Palmer Dabbelt <palmer@rivosinc.com>, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH v3 9/9] RISC-V: KVM: Upgrade the supported SBI version to
- 3.0
-Message-ID: <20250526-224478e15ee50987124a47ac@orel>
-References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
- <20250522-pmu_event_info-v3-9-f7bba7fd9cfe@rivosinc.com>
- <DA3KSSN3MJW5.2CM40VEWBWDHQ@ventanamicro.com>
- <61627296-6f94-45ea-9410-ed0ea2251870@linux.dev>
- <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dOgOkcgW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sRNyPwXExErBy/8kJGAzUEFc8FCKqjhWu+hUzGskcX8=; b=dOgOkcgW3891K46lC3h/P8Giqy
+	j5wpFWLFbNsIvtu/CSMhuFpyXc2GMmf/qW7htsdUuVeQHy4WDIcUcklGJ/ViGPPunnUieV9Q4IDtY
+	70vmdgOjsG/48WsDWWmRsgX30TeD25TnjOsUCjtkWJ8k3jGqeGKxRcEtaaR8bnvQ6O//TGBBuqxEm
+	T9eJVseaQnlwEULmm3DUUsYFcCO4JUm3QzyGMhJ7MbX7DRjfIxy6Nuz+t721q3JL8uYv2FRdti1TE
+	iXAOOvdxAotvmC56UVFnZM0j6AKJPYx3gSPt4AVRPNX7xCbTzeO3zT+lJmLdb3I0e/ttaelmWVQne
+	f2AjMJBg==;
+Received: from [223.233.79.88] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uJVmL-00DHZz-KJ; Mon, 26 May 2025 13:14:01 +0200
+Message-ID: <1bc43d6c-2650-0670-8c2a-25e8d36cfb7c@igalia.com>
+Date: Mon, 26 May 2025 16:43:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org
+References: <20250521062337.53262-1-bhupesh@igalia.com>
+ <20250521062337.53262-4-bhupesh@igalia.com>
+ <202505222041.B639D482FB@keescook>
+ <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
+ <202505231346.52F291C54@keescook>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202505231346.52F291C54@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DA5YWWPPVCQW.22VHONAQHOCHE@ventanamicro.com>
 
-On Mon, May 26, 2025 at 11:00:30AM +0200, Radim Krčmář wrote:
-> 2025-05-23T10:16:11-07:00, Atish Patra <atish.patra@linux.dev>:
-> > On 5/23/25 6:31 AM, Radim Krčmář wrote:
-> >> 2025-05-22T12:03:43-07:00, Atish Patra <atishp@rivosinc.com>:
-> >>> Upgrade the SBI version to v3.0 so that corresponding features
-> >>> can be enabled in the guest.
-> >>>
-> >>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> >>> ---
-> >>> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> >>> -#define KVM_SBI_VERSION_MAJOR 2
-> >>> +#define KVM_SBI_VERSION_MAJOR 3
-> >> I think it's time to add versioning to KVM SBI implementation.
-> >> Userspace should be able to select the desired SBI version and KVM would
-> >> tell the guest that newer features are not supported.
+Hi Kees,
 
-We need new code for this, but it's a good idea.
+On 5/24/25 2:25 AM, Kees Cook wrote:
+> On Fri, May 23, 2025 at 06:01:41PM +0530, Bhupesh Sharma wrote:
+>> 2. %s usage: I checked this at multiple places and can confirm that %s usage
+>> to print out 'tsk->comm' (as a string), get the longer
+>>      new "extended comm".
+> As an example of why I don't like this union is that this is now lying
+> to the compiler. e.g. a %s of an object with a known size (sizeof(comm))
+> may now run off the end of comm without finding a %NUL character... this
+> is "safe" in the sense that the "extended comm" is %NUL terminated, but
+> it makes the string length ambiguous for the compiler (and any
+> associated security hardening).
 
-> >
-> > We can achieve that through onereg interface by disabling individual SBI 
-> > extensions.
-> > We can extend the existing onereg interface to disable a specific SBI 
-> > version directly
-> > instead of individual ones to save those IOCTL as well.
-> 
-> Yes, I am all in favor of letting userspace provide all values in the
-> BASE extension.
+Right.
 
-This is covered by your recent patch that provides userspace_sbi.
-With that, userspace can disable all extensions that aren't
-supported by a given spec version, disable BASE and then provide
-a BASE that advertises the version it wants. The new code is needed
-for extensions that userspace still wants KVM to accelerate, but then
-KVM needs to be informed it should deny all functions not included in
-the selected spec version.
+>
+>> 3. users who do 'sizeof(->comm)' will continue to get the old value because
+>> of the union.
+> Right -- this is exactly where I think it can get very very wrong,
+> leaving things unterminated.
+>
+>> The problem with having two separate comms: tsk->comm and tsk->ext_comm,
+>> instead of a union is two fold:
+>> (a). If we keep two separate statically allocated comms: tsk->comm and
+>> tsk->ext_comm in struct task_struct, we need to basically keep supporting
+>> backward compatibility / ABI via tsk->comm and ask new user-land users to
+>> move to tsk->ext_comm.
+>>
+>> (b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
+>>
+>> I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
+>>
+>> Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
+> Right -- I agree we need them statically allocated. But I think a union
+> is going to be really error-prone.
+>
+> How about this: rename task->comm to something else (task->comm_str?),
+> increase its size and then add ABI-keeping wrappers for everything that
+> _must_ have the old length.
+>
+> Doing this guarantees we won't miss anything (since "comm" got renamed),
+> and during the refactoring all the places where the old length is required
+> will be glaringly obvious. (i.e. it will be harder to make mistakes
+> about leaving things unterminated.)
+>
+
+Ok, I got your point. Let me explore then how best a ABI-keeping wrapper 
+can be introduced.
+I am thinking of something like:
+
+abi_wrapper_get_task_comm {
+
+     if (requested_comm_length <= 16)
+         return 16byte comm with NUL terminator; // old comm (16-bytes)
+     else
+         return 64byte comm with NUL terminator; // extended comm (64-bytes)
+     ....
+}
+
+Please let me know if this looks better. Accordingly I will start with 
+v5 changes.
 
 Thanks,
-drew
+Bhupesh
