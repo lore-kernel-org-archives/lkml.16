@@ -1,70 +1,82 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2056.outbound.protection.outlook.com [40.107.102.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492541C84D7
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 18:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748284208; cv=fail; b=V9bdXqHPWFKVvhPUH6eql721uMIgmL2AZS53jgJUUHEVj/DAffph2tFhzceiXfJQDCKyrRwPGO2cIZrU5+0JCEQZfmP/7AUR9ypclscu2gYtSAvUpURg5YkLVEC+5mafV1B3upHzz6KE3OxNPTBq/rOrazNU8ABrcvl8UvJ8Ulc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748284208; c=relaxed/simple;
-	bh=l+K7RWusXzvGPxbOgQcy+uPjW1otPQ2V5uuEH1AkTyQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mRq9ws8K3taMoewQXG2vhNnMtam6D1oH7AwvrrE2l3yRBpBnnGO7EK7hqAtODnM7jRWd0MahpH4ELHGgv3DKC8KnBjJXinzpH+hOWdxk8HlhCbITNHRNpV5/MELB1FPyDpKFufJotFe9DfebPvrMP0+feAwphYqmZOASHyW02Hc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OjJN15vm; arc=fail smtp.client-ip=40.107.102.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4C823F413;
+	Mon, 26 May 2025 18:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748284214; cv=none; b=Biy8X5IgOjtOCAs+evmyLlsg4oDpzTP8iIcsHD9/+zG4c6AqOYNQ17eJgpOkwGlPhP++aa9UrQPe1eqKcVo6eG84dThWd7Jd6vjL0//BtzKKk88Hf0P45ZSEVZYTjQyYZZQOOP/9BxNqXAAkslEUjUUUeFY3Ooc5W1YjM9kMuig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748284214; c=relaxed/simple;
+	bh=ocL9xN3l5CZIkJMP4iIsK/bvcDmu7NvmAZRKme5JHYE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WityYzORCdFDyDMnUmtz1VmYRzCv9elWBSeqCpECM7RpAhWHCBfkCXhG2VuyXmXBrIrdLIVvAnjukvY0/E/zun+JvprrP3yILlmzyY/LH/iiUOnnP1eBVRrc5j2YeVgi4W0P2GRz12l7k4xBH96uuqQc/kRgTmuXW5Lldba4FsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=csqnXtbD; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OjJN15vm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l+3g//8+jmMw/LzSiskqISs7g8uH1nBZ2X/BL2WGqAco97xcb2VoozL4M5s7xFgRBIhs0DFYdVfsfyRvVLBvaKhkOM0rJUrSFhLMolXW/sXzqZ8Jo8dmRiKB5a32JLwHjxTvG0lG/PNgrkRCjGCb7yP/ApK27/TQxo2vGNbsEBZ7rEQlToDlyWZxdVOy3c7f1urOVKSgjyqaDEmmupDmwyRTSeELqbCXm34TuB+cNilNKmjf0JUt5XwmHdttX2SGNogLfxhdaXbiQw4rBDpzqyxk5ou2CIDPvrcweV2gOp8wgPZyMN23FqdtkepQENmrBQY9LMJnQVqOWYRsXVNVNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qKfzagy9Qb9nAWw5WDzckkFJ6iOqDu7Ot/K5put5WVs=;
- b=guFfyDDV1RG2Trqo82hFdznQyZ8yN8vk2lrgmAuSYLDNTYsHoW0aU/ivQ4MDITIFMpVpxr6E9tgNUYR3HlV6dPc31lznQmpSuqCRsNkgbat/UxT3NMLzwssmlIU77OplQJy7MDbbFIzSq8BVppOGcQ1lKobYNNAC7KSV9oowUhIxR5f2k7klyK0ruPg3rQgWlkYEdW8ZBb9XdiO5CXy1ykZpadwCi13+AMGaD2ZsqlKn6wc8qRl8Y4TkHb6tR0W8SmZozm2k+lTdTHcHJM9mkCpA3PaizXYnNgY62AJNl3p1bDRLVBGeyhemGKRUtolfXbVS7Bna9Xo8S0fzTgjC+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qKfzagy9Qb9nAWw5WDzckkFJ6iOqDu7Ot/K5put5WVs=;
- b=OjJN15vmZcKATsO6n+AAwX5jD7DyrMbhX341owLYq03g8hrGFgN0dE69YjMqvg4esBuxBqr7yZpzT6psZQK9d+/Toh0uvZ1OnD+xX0pgdEGJcsrf0Q4NDHt9Kqlkmlb6r0jIVRPOKlkruN1sX4QT6d4IXADtzammFJDe/LNshXI=
-Received: from CH2PR11CA0008.namprd11.prod.outlook.com (2603:10b6:610:54::18)
- by DS7PR12MB8346.namprd12.prod.outlook.com (2603:10b6:8:e5::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Mon, 26 May
- 2025 18:30:02 +0000
-Received: from CH1PEPF0000AD7D.namprd04.prod.outlook.com
- (2603:10b6:610:54:cafe::2c) by CH2PR11CA0008.outlook.office365.com
- (2603:10b6:610:54::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.19 via Frontend Transport; Mon,
- 26 May 2025 18:30:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD7D.mail.protection.outlook.com (10.167.244.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Mon, 26 May 2025 18:30:01 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 26 May
- 2025 13:29:57 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <akpm@linux-foundation.org>, <david@redhat.com>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <ziy@nvidia.com>, <baolin.wang@linux.alibaba.com>,
-	<lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>, <npache@redhat.com>,
-	<ryan.roberts@arm.com>, <dev.jain@arm.com>, <fengwei.yin@intel.com>,
-	<shivankg@amd.com>, <bharata@amd.com>,
-	<syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com>
-Subject: [PATCH V3 1/2] mm/khugepaged: fix race with folio split/free using temporary reference
-Date: Mon, 26 May 2025 18:28:18 +0000
-Message-ID: <20250526182818.37978-1-shivankg@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csqnXtbD"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-86a55400913so47269639f.1;
+        Mon, 26 May 2025 11:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748284211; x=1748889011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QlxuW8EiAaobylr07WlFl9Wc9Vavh5mNNDPDEO1zHCA=;
+        b=csqnXtbD7h1vC5Uvc+/kZF3Ieeo+8bH+doq0OC8LW+t5BaJtcMBDJZAwfvzbUC6kvi
+         3MHGSz0nDRT0kSqeKP32mtAsNtqQr5i9EA5ZmBQOg/rV3R4ed8QMIWFfxFuFxzme2q3V
+         X2NuW2p0wnm5kebjw3KAOq8ZAUPvmSAFXAMkerMZghsyrbsFy/APx74M4Op0GjHCyPVV
+         CyRhZBvO6zIRUYbrEISMftKsgucFcjN34yk4+fdl0OLIYQANTUeaiXXLAKTBWu9lfQut
+         WGr6Xfnj9fPAG6BynFdOmZkPhJg60JAdsEnjiafDTXDiYw4t+JfGsMHv/O+FJ7HtC/By
+         h1Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748284211; x=1748889011;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QlxuW8EiAaobylr07WlFl9Wc9Vavh5mNNDPDEO1zHCA=;
+        b=A5mwPp5IwDIFK3OaOxFwm5asM2OIjZ5l9FlG8otdxnrWZauZM/z2KnDcliPF/Si9GF
+         9XcnjdckSPbNgFjmMluiMhrui2YZ1OA2A6T3464fmWfO1yx062Pxh0C+ZCt3uY7V+DmD
+         +Y9LDO20VNongtDax9yxQQ9Pu4Kpw3/yxVIdldsa9iWcejfSgi2lMZHYLJQqSXwo2p3e
+         gXJEdKpXgM3Q4GRbI6c42mOYtlZUiofXKD6mz0li065nIe2rBtzbBrmhV0GTtpxv3R1g
+         eqCl/JE9rbH8snxIAngzP4Yao+L4DZz7FCIQaF105C1Bom3dYCPr6Xgwru9YCekYeNW+
+         Ojgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZrzVZtjyUC5AECYLGuadJKMrKfwNcE22hR9NmzMPpOYWbmbR3EQM2jpsukN0Bo/BKsefe3TP1QhHTCd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwE4wKiN3FW+gcAYD28BPogPn9l+XRP7Y3qfU3N3gspgahmVQg2
+	VRh2x/stIztwUpjPJk0s309fdjk5WMRyIg54KztBtt36DtrjOY5v/OszQbl1n9YlEv8=
+X-Gm-Gg: ASbGncvM+S6xueoupyGqhoHVR3jYtvq4UT0kGVdhJEhL6IO7ScjXezFFv+aVaR8Avpk
+	+O9EDoyjg3Lp8sht+5EzSO979PS6IJFBogLMNxUDFKWvweJIq4zRO2Do4zwQpwJ6ZjWMbcKo8L+
+	W28RnEGjptR3K5pTSARPC8g95t2DRfrohQj1ym4w4ctV+LS8ZFKYg5VBomfvbK0RAwbXbttLZYX
+	IINvivQ1CQP7TBSSw5hAHDUmblH0EQb9e9chjQEcVepapuL5x3ez6H79g+oW6CR3tKr1e7VoULQ
+	cFyPHHhHR2eD3UHNzILs2/upyYDZ7dsQBfmISBwYoQkX/ByRgZhABhnN0S8I1NgT3vVb8jaGCLK
+	NCz72iRR93VsVsWhUeUS1w24YbKa9cA==
+X-Google-Smtp-Source: AGHT+IF1vt1ugwCJCcgD8FLb9pLv6neLoJcOaXY12NIdGkKI+c6RUDeQIjiCz+L7fEf4ThkwNMlUxA==
+X-Received: by 2002:a05:6602:474b:b0:864:48ec:c312 with SMTP id ca18e2360f4ac-86cbb7b86c3mr1087224339f.3.1748284211399;
+        Mon, 26 May 2025 11:30:11 -0700 (PDT)
+Received: from james-x399.localdomain (97-118-146-220.hlrn.qwest.net. [97.118.146.220])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86a235bff69sm477028639f.8.2025.05.26.11.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 11:30:10 -0700 (PDT)
+From: James Hilliard <james.hilliard1@gmail.com>
+To: netdev@vger.kernel.org
+Cc: linux-sunxi@lists.linux.dev,
+	James Hilliard <james.hilliard1@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Furong Xu <0x1207@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/3] net: stmmac: allow drivers to explicitly select PHY device
+Date: Mon, 26 May 2025 12:29:34 -0600
+Message-Id: <20250526182939.2593553-1-james.hilliard1@gmail.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -73,143 +85,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7D:EE_|DS7PR12MB8346:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a337434-dbca-4611-4f20-08dd9c8353e8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|36860700013|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hHmMcYFO8Wk7+CJHYb1IZ3a9e5we7WBaHh3DoNiFErcbyMRPuRHxEiQKvvOb?=
- =?us-ascii?Q?kLJqlVfmG3d+Q858O602DaNvVfQltzxhuTK6FI9utjSoty5+6sEZ0X5nsmfi?=
- =?us-ascii?Q?Pd48u5Uwl1I5tqAEm1iVPfkr15o0OltJIpy2FL4/xSZkdBcKQnj9iK9EJuoO?=
- =?us-ascii?Q?BxyGWZUHoe3LHPXeWsjUB6j7flZB3TIU9W42F1NPTbqwK9zgUGBAAryCA8/V?=
- =?us-ascii?Q?MYq5TR9r0yXVnOWMCfFf4aa7CXS3Jwx8IqOOaH5QhGNJ0ny6CP2rnBzdzSJU?=
- =?us-ascii?Q?rkh1DZ2UJZjYMOBslbLi6rfnp0dCqgidYjX5Fr7R8Tf1GENUFbB/Qi2Xeecp?=
- =?us-ascii?Q?9bqdyw+3sveykSOvNamwRqsWdCBkytGOo202s0s0CcW3PLq7AVWQ/luNbJ4Y?=
- =?us-ascii?Q?eqj7iunPBc1atm7sYLlL6cpMPtXpIqoyMxQZ0cjeq38Pd3ge7/XP6BsefV3e?=
- =?us-ascii?Q?8bPpLI/+qkiC1UrCYa8TiV7QpfAPyRM38Ds4Ui7wcpYR3FcFtE11Zq+yD8ZE?=
- =?us-ascii?Q?IQrrt0Xq/CoQ2FBGdUtdZw0T5wfuHUfMx6hj2JQh0VqwEXHvIx1tXLr7n3PC?=
- =?us-ascii?Q?qXSjN0+mOp2TmRuDkoKBFoi8U9/hz+W8HgG6Tnuv0nudisyXOgBgoNuFUlTY?=
- =?us-ascii?Q?1P6a/UdgFdIwkimXaXVHmNp1pzrJMpOR+iKM8BJHqx4ykt16GFvzYwW4EtkG?=
- =?us-ascii?Q?7p0w7RbRbuxi9VN512sZwG2ElZ9HYHAPFDfwY7VJDaUwWDajzZdx7iFdyG77?=
- =?us-ascii?Q?dIHMqWOBk/5pVrC0YkSzCO7nyauYc+oyLS4VZ5HjQiDb194wJA4uQuJXdqI9?=
- =?us-ascii?Q?1n0XeAhBF6K7YBshpS4Rz3ZZM4eQn0W+2c7EP/llz7pa5V7D/xi7sl0X+LXs?=
- =?us-ascii?Q?bdvtH+nb4jvT1fpjyquF/OhFBqdmfH7/Zt8yL4n81ketRa4d26hruII/1rM+?=
- =?us-ascii?Q?P5+F5jDmjWKyJO1IDBb/p8BnImaheTZW0TL6O+OeLOVqTLn82SDFvjimhVAL?=
- =?us-ascii?Q?v+PiN8A6gYk6P6CX59OD6o+kZTJoTgA2eu8wwKWS7Q5bOEJ06YnHbRLlfVrV?=
- =?us-ascii?Q?Myv88NDkmH4j3sk0uQS0zV+tdCn52makjqEbsMirYxWK602IizWeRETATWVo?=
- =?us-ascii?Q?RE5S1htR7JWCoy6/oqJHmeA71Rt9oEKD8qP/eiR4ZtbcsqEtccgqSishBlqU?=
- =?us-ascii?Q?q+hguUVz03VwmybWAWep0K+h/yoIX4oZ91F+ZkfbVd+1kSXXZ5JXLERm47hP?=
- =?us-ascii?Q?/GrqfdV9gTLJ4Z2HLaSIikHUHB2vOVxKZ0ffaOU6dPY7tcWcepeJKqQv6zXT?=
- =?us-ascii?Q?C88a/B6C7laxgI9Vkm2SgWkXY5/5R03pjxVLYBW4qgieCNSFCZA0Ri7VhvIT?=
- =?us-ascii?Q?Unk1cUUHK5MsZKQclxJk24Qw/ujyHvoh3KtlfnViSrCY6E58Te1bLc7EW6Wy?=
- =?us-ascii?Q?XFFzHCfuWL5vopG/5GhoE3TJU62RLq4kB194fERS6VRqOz+UJW4TdQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(36860700013)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 18:30:01.8289
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a337434-dbca-4611-4f20-08dd9c8353e8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD7D.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8346
 
-hpage_collapse_scan_file() calls is_refcount_suitable(), which in turn
-calls folio_mapcount(). folio_mapcount() checks folio_test_large() before
-proceeding to folio_large_mapcount(), but there is a race window where the
-folio may get split/freed between these checks, triggering:
+Some devices like the Allwinner H616 need the ability to select a phy
+in cases where multiple PHY's may be present in a device tree due to
+needing the ability to support multiple SoC variants with runtime
+PHY selection.
 
-  VM_WARN_ON_FOLIO(!folio_test_large(folio), folio)
-
-Take a temporary reference to the folio in hpage_collapse_scan_file().
-This stabilizes the folio during refcount check and prevents incorrect
-large folio detection due to concurrent split/free. Use helper
-folio_expected_ref_count() + 1 to compare with folio_ref_count()
-instead of using is_refcount_suitable().
-
-Fixes: 05c5323b2a34 ("mm: track mapcount of large folios in single value")
-Reported-by: syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/6828470d.a70a0220.38f255.000c.GAE@google.com
-Suggested-by: David Hildenbrand <david@redhat.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Shivank Garg <shivankg@amd.com>
+Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
 ---
-Changes since V2:
-- https://lore.kernel.org/linux-mm/20250523091432.17588-1-shivankg@amd.com
-- Reorder the patches to bring the fix in first patch and clean-up in second.
----
- mm/khugepaged.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 22 +++++++++++++------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index cc945c6ab3bd..fe1fe7eace54 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -2295,6 +2295,17 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 			continue;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 59d07d0d3369..949c4a8a1456 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1210,17 +1210,25 @@ static int stmmac_init_phy(struct net_device *dev)
+ 	 */
+ 	if (!phy_fwnode || IS_ERR(phy_fwnode)) {
+ 		int addr = priv->plat->phy_addr;
+-		struct phy_device *phydev;
++		struct phy_device *phydev = NULL;
+ 
+-		if (addr < 0) {
+-			netdev_err(priv->dev, "no phy found\n");
+-			return -ENODEV;
++		if (priv->plat->phy_node) {
++			phy_fwnode = of_fwnode_handle(priv->plat->phy_node);
++			phydev = fwnode_phy_find_device(phy_fwnode);
++			fwnode_handle_put(phy_fwnode);
  		}
  
-+		if (!folio_try_get(folio)) {
-+			xas_reset(&xas);
-+			continue;
-+		}
+-		phydev = mdiobus_get_phy(priv->mii, addr);
+ 		if (!phydev) {
+-			netdev_err(priv->dev, "no phy at addr %d\n", addr);
+-			return -ENODEV;
++			if (addr < 0) {
++				netdev_err(priv->dev, "no phy found\n");
++				return -ENODEV;
++			}
 +
-+		if (unlikely(folio != xas_reload(&xas))) {
-+			folio_put(folio);
-+			xas_reset(&xas);
-+			continue;
-+		}
-+
- 		if (folio_order(folio) == HPAGE_PMD_ORDER &&
- 		    folio->index == start) {
- 			/* Maybe PMD-mapped */
-@@ -2305,23 +2316,27 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 			 * it's safe to skip LRU and refcount checks before
- 			 * returning.
- 			 */
-+			folio_put(folio);
- 			break;
++			phydev = mdiobus_get_phy(priv->mii, addr);
++			if (!phydev) {
++				netdev_err(priv->dev, "no phy at addr %d\n", addr);
++				return -ENODEV;
++			}
  		}
  
- 		node = folio_nid(folio);
- 		if (hpage_collapse_scan_abort(node, cc)) {
- 			result = SCAN_SCAN_ABORT;
-+			folio_put(folio);
- 			break;
- 		}
- 		cc->node_load[node]++;
- 
- 		if (!folio_test_lru(folio)) {
- 			result = SCAN_PAGE_LRU;
-+			folio_put(folio);
- 			break;
- 		}
- 
--		if (!is_refcount_suitable(folio)) {
-+		if (folio_expected_ref_count(folio) + 1 != folio_ref_count(folio)) {
- 			result = SCAN_PAGE_COUNT;
-+			folio_put(folio);
- 			break;
- 		}
- 
-@@ -2333,6 +2348,7 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
- 		 */
- 
- 		present += folio_nr_pages(folio);
-+		folio_put(folio);
- 
- 		if (need_resched()) {
- 			xas_pause(&xas);
+ 		ret = phylink_connect_phy(priv->phylink, phydev);
 -- 
 2.34.1
 
