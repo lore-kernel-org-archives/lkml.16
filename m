@@ -1,136 +1,79 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F6E8146A72;
-	Mon, 26 May 2025 02:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B072324B26;
+	Mon, 26 May 2025 02:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748226200; cv=none; b=JzB+kelxaq8PL+CZNMKiiJzBBzV4CaUhR6SY4iSIIAVA5zVXWFKYJZpO3OBh7LJxusmuaWu8mShVdMaK8GigK0MUsB1WdjR/p1XkkCYEeAyUtIvviuwx9qEB82dspebV/JwmH/ri5LSEa8uOHV1IvAxjDKiN7I2k278quRBFCDQ=
+	t=1748226301; cv=none; b=CNIir1bCljiATN7uBpY56Mg2BPVav93p0gkqMi6+daW45CUnQFJcb5gFP2Z6IoaU+h0uxrVKe59UREb9QI+ilauqLf5VS41fjZQZJnAVWi7k7xU51+71OrjNkBVS++RYlypABhz8ADqksjkweVigm8wNZfOoDAhvwsNqYX2M0Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748226200; c=relaxed/simple;
-	bh=NmqXIV/7Pk3eDXAP9hueFGbWPTqhHGafye3KtB68iuE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvcfKqZJkhRpiOCTJzDtcAdhKUOsSfE5Hi51L2lmOHPDx4ynIAEZPTlInBxMtPrBhgHQUxtq06Rbffxl2UwB+0UPYyzRChENybcTF8lghvbXHHjQvDvrGDCvy/8+Z7FgE10X/iEF262iOxm+no570RWVr1K0BYZk1AYbJjPl4/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-27-6833d0903008
-Date: Mon, 26 May 2025 11:23:07 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH 12/18] page_pool: use netmem APIs to access
- page->pp_magic in page_pool_page_is_pp()
-Message-ID: <20250526022307.GA27145@system.software.com>
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-13-byungchul@sk.com>
- <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
+	s=arc-20240116; t=1748226301; c=relaxed/simple;
+	bh=8oFnaDx8yWVXgMM76SE9vU05ZBgM/KqyVMU9quvFQu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CzTwPZkGtf+7e4JWmtoJKSgh6gl8gytUb/viyoAoeZ3E96eiQPfP2WTbz6tESA6zyw1IOgopaaf9yyQAZi+3wjWlUwlahEYIwtV05nh56No7XmnUHuTQOUZ3iLMBdR+Ix/jaHVP2eGzFfRGKvFPSsmnlelQMxUeVGEVmtbjnIKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=IWQRHBlF; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IWQRHBlF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=We
+	qACTZgfJCdNsvenNHl/KCtlQOAdLai2F3zW9rTuY4=; b=IWQRHBlFjkcYxj57iH
+	uOdjLmFcSgibNF0j54QslfKu1lyUkDRHK2ud9XrqQNYp8s16EZ54zDcupUXQiDm/
+	1xbJRdt3v4L6K/bU/5risITnj96Z7FgnM3rx11xT+K36HyRHVVHlLD9bhUi4WslW
+	opvgPXvxeATs4z50q2z7X57bw=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wCH3tPA0DNoKCDCDw--.56100S4;
+	Mon, 26 May 2025 10:24:02 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	haoxiang_li2024@163.com,
+	dan.j.williams@intel.com
+Cc: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] x86/pmem: Fix a null pointer dereference in register_e820_pmem()
+Date: Mon, 26 May 2025 10:23:58 +0800
+Message-Id: <20250526022358.3657209-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izN6QAcAr-qkFSYAy0JaTU+hdM56r-ug-AWDGGqLvHkNuQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHefZe9rpcPU6rJ62khUiC5SXoFBV+qvdDkVFBFKEjX9rMqUwz
-	VxSWg0jU7lFzyUzLeYnR8jJDJJeZVqZo6uzm0mmhVqa1vGW1SeS3H/9zDr//h8NRMiPjz6kS
-	UwVNoiJBzkpoyWfvgtCLbZHKsLy6VWAwl7NQNpEOxQ4rA4bSKgTfJ9+IYbzhKQuFBS4KDK06
-	Gn6YpygYaOwTQ+/dQRpqz1VT0HehiYUc3TQFZ60mEbRV5TJwdeoOBdUZDjF0PDSw8L78NwOD
-	thwamvUlNPTmRkGjcQm4no8gaDBXi8CVfYuFK+1GFvp1vQjaH/fRkHcmF4G5zs7A9ISBjVrF
-	V5T0iPga/Tsxb7Qc4x+YQvgsezvFW0rPs7xl7LKYf9tVy/JNN6ZpvsY6LuJzMr+w/LeB1zT/
-	ta6T5c0VnTT/wtgg5sctK6PxAcnmOCFBlSZo1m2NlSgv3zCiZAdOnxjuYTNQmTQLcRzB68l0
-	fkAW8vLg8PXbjJtpHERM91soN7M4mNjtkx72w2tIUd0lzw6Fexny0hDvZl8cT7Jff2TdLMVA
-	usvOe1iGSxB53hoyl/uQ5ptOeu42mMzkt1PuChQOIMWz3FwcSDIr8zyxF95NWiq2uePFeDV5
-	VPVUlIUkf1ve40jHaKForvIyUm+y0xeRj36eQT/PoP9v0M8zGBFdimSqxDS1QpWwfq1Sm6hK
-	X3s4SW1Bf//m7qmZg1Y01rbHhjCH5N7SWHmkUsYo0lK0ahsiHCX3ky43hCll0jiF9oSgSYrR
-	HEsQUmwogKPlS6URruNxMnxEkSocFYRkQfNvKuK8/DPQisFN2WFPtD4xRbVDs/qNXW9nna/U
-	Q90bRq+H2gsKDzRi54KzURGj9mf++3aZTpX7ftihXKQ1WKMdLmvN15CM8AjHSfOvQ2Nbir9p
-	Qv1atuzfuDNGcNYX/PSejWSSggqdV9do0nSVI5+G2fvGwNPqE7ZuSb9ueyguX7jXqz76Wp6c
-	TlEqwkMoTYriD+mmdEMzAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRSA+e0+dh3euC6tWwbCoqShZalwolCDsFvQC6I3uFEXt+WmbWoa
-	GZoT6aG5ih5rxtIyXzFa5raQVSraSJ1MzPWcWVlklKaJj6jcJPK/j++c8/11KEysJxZTSk0m
-	r9XI0ySkCBdtW1cYXdYdq4ipsNFgstSTUDeRA3f67QSYahsRjE2+EsJoazsJlTfHMTC59Tj8
-	tExh8LFtQAi+qkEcmoptGAycf0pCiX4ag1P2agG0lLsI6G4sJeDS1G0MbPn9Quh5aCLhbf0f
-	AgabS3BwGWtw8JUmQZt5AYw/+4qg1WITwPi5chIueswkvNf7EHhaBnC4XlCKwOL0EjA9YSKT
-	JFxDzQsB5zC+EXJmaxZ3v1rKnfF6MM5ae5rkrD8uCLnXz5tI7unVaZxz2EcFXEnhN5Ib+fgS
-	5747e0mu8vOwgLM09OJch7lVuCNkv2j9YT5Nmc1rVyXIRIoLV80oo5/JmRh6QeajOvoMCqJY
-	Jo4dulxB+BlnlrHV9zoxP5NMJOv1TgY4lFnB3nIaAjsY4yPYLpPKz/MZFXvu5SfSzzQDbF/d
-	6QCLmRrEPnNLZ30I67r2AZ+9jWR/3fDMNKkZDmfv/KZmdQRb+OB6QAcxO9nOhmS/DmOWso8b
-	2wVlaJ5xTsg4J2T8HzLOCZkRXotClZpstVyZFr9Sd0SRq1HmrDyUrraimd+oyvtlsKOxnk3N
-	iKGQJJiWSWIVYkKerctVNyOWwiSh9BJTjEJMH5bnHue16SnarDRe14zCKVyykN6yh5eJmVR5
-	Jn+E5zN47b+pgApanI9OdhSE9emKH9+NoA2JVdFR2gix2HW0hTok3bx3u6YgLjOl2zWiyiu6
-	khzl2Bf5Y4Es9lGC+ljf8JBzdHDXtXfB7o1xX7pePfHlG07ELNqqVG44ICw6TwsTjqcuL2s7
-	EUxMFVkd0U8Si0OHUtZ+O9jRtS883n3WHbLGk6wq3+0tr5TgOoV8tRTT6uR/Aallo/wXAwAA
-X-CFilter-Loop: Reflected
+X-CM-TRANSID:_____wCH3tPA0DNoKCDCDw--.56100S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWruw48urWkAr1Dur1DWrWkXrb_yoW3Awb_Kr
+	17K3yDurWFvr929F13Aw4fZr1fJwn7tFWF9r1UKFnavr90gr45X3yjqFWFyr43XrZ7KrWU
+	XasxCrZxGFy7CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNg4S7UUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqAhZbmgzzXaLUQAAst
 
-On Fri, May 23, 2025 at 10:21:17AM -0700, Mina Almasry wrote:
-> On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
-> >
-> > To simplify struct page, the effort to seperate its own descriptor from
-> > struct page is required and the work for page pool is on going.
-> >
-> > To achieve that, all the code should avoid accessing page pool members
-> > of struct page directly, but use safe APIs for the purpose.
-> >
-> > Use netmem_is_pp() instead of directly accessing page->pp_magic in
-> > page_pool_page_is_pp().
-> >
-> > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > ---
-> >  include/linux/mm.h   | 5 +----
-> >  net/core/page_pool.c | 5 +++++
-> >  2 files changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 8dc012e84033..3f7c80fb73ce 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -4312,10 +4312,7 @@ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
-> >  #define PP_MAGIC_MASK ~(PP_DMA_INDEX_MASK | 0x3UL)
-> >
-> >  #ifdef CONFIG_PAGE_POOL
-> > -static inline bool page_pool_page_is_pp(struct page *page)
-> > -{
-> > -       return (page->pp_magic & PP_MAGIC_MASK) == PP_SIGNATURE;
-> > -}
-> 
-> I vote for keeping this function as-is (do not convert it to netmem),
-> and instead modify it to access page->netmem_desc->pp_magic.
+Add check for the return value of platform_device_alloc()
+to prevent null pointer dereference.
 
-Once the page pool fields are removed from struct page, struct page will
-have neither struct netmem_desc nor the fields..
+Fixes: 7a67832c7e44 ("libnvdimm, e820: make CONFIG_X86_PMEM_LEGACY a tristate option")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+ arch/x86/kernel/pmem.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-So it's unevitable to cast it to netmem_desc in order to refer to
-pp_magic.  Again, pp_magic is no longer associated to struct page.
+diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
+index 23154d24b117..04fb221716ff 100644
+--- a/arch/x86/kernel/pmem.c
++++ b/arch/x86/kernel/pmem.c
+@@ -27,6 +27,8 @@ static __init int register_e820_pmem(void)
+ 	 * simply here to trigger the module to load on demand.
+ 	 */
+ 	pdev = platform_device_alloc("e820_pmem", -1);
++	if (!pdev)
++		return -ENOMEM;
+ 
+ 	rc = platform_device_add(pdev);
+ 	if (rc)
+-- 
+2.25.1
 
-Thoughts?
-
-	Byungchul
-
-> The reason is that page_pool_is_pp() is today only called from code
-> paths we have a page and not a netmem. Casting the page to a netmem
-> which will cast it back to a page pretty much is a waste of cpu
-> cycles. The page_pool is a place where we count cycles and we have
-> benchmarks to verify performance (I pointed you to
-> page_pool_bench_simple on the RFC).
-> 
-> So lets avoid the cpu cycles if possible.
-> 
-> -- 
-> Thanks,
-> Mina
