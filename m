@@ -1,142 +1,120 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181F919E971;
-	Mon, 26 May 2025 18:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A3023741
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 18:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748284588; cv=none; b=IVkhtid/gar+Bo77QVFStabla/hYnnX+38j9v1Eov9vZDAtFvdS7E6O6kAvekvQLoBrvd652CejLcZWpo8pBRh99pNP2K+RGP5/qC3MPSHFNHdnpQWvTYtxoX/KdpLvXtOy0dsaiIe5B+xPJHBmkfj0q2sg9vxDp6svy/EKEb3Y=
+	t=1748284786; cv=none; b=PDEV9znctI57zt8H1fbDchKATPQj58VJ7+x4JlyNRSILTy50a3EuxjctQu4inOsTeoXLQuJQMRt/xcx/+El+coLgAT7DB6sEylsiy3hWQX2d87bwNAAWFaoh5tbB45wVD6r+qQZrQ8Y68bdb67x5iRBYZWNOJpP9czkS0akJk04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748284588; c=relaxed/simple;
-	bh=q10F3cETSwxHPo+W25Xi3CXG0HKkYq2iJA0XWQp5co4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E8cDh2na+/Lh684e3K5BMKngDxzzZk5wPeVMLZ9OTA/yjZGIS8ICcrNnSwfx5kiREjUFvGk+OpegYTVl7voXptmJoLN4tK71zYy8AQdB3YrJj2D7u5yzFOXpwRvigqMHcPfSrCb5auIoPXW/htlnEnkhJZS26iu5dG8VIwfFYTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8k3OiDN; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748284786; c=relaxed/simple;
+	bh=vQM+dbOsVNtnD6l723Z1cplax/h0AmSZd+7H89VyNRQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFFzQDljUmG25IeImp2ps/H3aabuZZOHwBYFs1ZIFXiAL4GD408SLebHWN6WEXvLg8bonnB0t5Bqmwd5SaMbsgUx1hU++zMLG9I21dInHfQb60bB8jBtpRGFWflU6rOF95YbUXSrq5Ua7dkWpy5GTKuljqTp+zuCtLLCz3Q7r50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=B/sG5P6u; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8k3OiDN"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acae7e7587dso322553366b.2;
-        Mon, 26 May 2025 11:36:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="B/sG5P6u"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c58974ed57so241035085a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 11:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748284585; x=1748889385; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9muOFUpKTfactT/mG7l0xE7US6PC03AM4GydaczuLhQ=;
-        b=F8k3OiDNoA7CCzf9MvOqOuh9ewaEIjvTjyWR5oVk1ZX/n8zeN4OxDYxFj7YF0w7Vaz
-         yaRnHTvEksEdNsfzWj7wtmo0V5xz+yT8FWcWzMNl31hFFtprNQoMc6CKNBaML8qDYU1X
-         l2gwBLtXaQhLPd3CzkUC7tlS2Rb6ivb/eiFD+lUSEJ4zjRfRpXMuc0Cz5nyU1yCpMhSD
-         HxTvPmIBErdSlMeU2NsR/lPC0LAeASdf6NGVYYyYWuJ66uPQmqNTg1TTzGKx/scQosFP
-         x2paDBhDK+STtj58Zr5N/wH6a2eC9BJWMwFxk+4FqetzooBlJQtMI6qW/n0cq5U2P5Pr
-         4/Og==
+        d=ziepe.ca; s=google; t=1748284782; x=1748889582; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c86jKa309c3+QcTsQwLNlEeQh4J3Qa5o3Yi92C1rAmE=;
+        b=B/sG5P6uUxIrjwgYGz04MktsXZYu2xBOJn2X97W9z50w+lupSDCrQFpCEpafwAjFzt
+         AjY7Sp5YaXlT+5EYFLFsDBRYZAO7ZKp2RVGXxTb9YHaff+ElkQM3ai26VURdWOd+0QCV
+         SZW12ilCVVzFUSKxe68gnCcsuIhYAfN/pR5KBY9dY8ATvujl2VNftnFMC10q6wf2adra
+         UKHQiHA/kOaA9FFv2WVbjmQOqISjRJ7QkSrZ6fYTVXzOaVjCaVHMwLRU6Y/lG18gq/VA
+         hawz6dgmMOKQH5I1btbJ2qPczZovEH7oiAUn3cOBCZXQzcU+HUR5yZED4t7eobhJX1I1
+         Hmfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748284585; x=1748889385;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9muOFUpKTfactT/mG7l0xE7US6PC03AM4GydaczuLhQ=;
-        b=HlSJCJXrCKFbHWqhfyEym+pXud3kJ7/MuVt6YC2ifjjfAGz0wnsZQ8UEA4caJdnPnN
-         sTssmc6D4ZXhyJEEq+Bah33hyDQHI4JuuX3M2tyQe7rh2d8+/4UyNeIH66Bh+gRaInun
-         V18ff6z8w+bTdR8tAbEV/77KIS/Dx5xPkKB53em2yytT5ZEvihbmDvJR37u5DLCbNrvc
-         8L3tfzSE7Qqa8tRYRBOLp5dz+FkuHVLVv3gT8soI8RnLdA7QUrBYjKHctDnaX00I6Or6
-         f8guwujwMVXfbH0bV7QUZPWigTXbHdgJirDtItY/Q8yCRbCrhA34s/m/FbXMTVUNTIJT
-         A82Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUPFoavBWeS3FgyU5EisGWOq79SW8uW+Up1QEBnUHgWZOE/gG53oBKSh1GfDL6FBg9geE/AC4Gfmv4m4sI=@vger.kernel.org, AJvYcCVKfBZkousOxdv41PwOBn4aAR8/s0/BUJdcUSU+8GCyavEnset0oipncTGTm+4NlYNIhny2Qgez@vger.kernel.org, AJvYcCVzdtJYC+Td0qyIvY7SFzXi1WGpQHoBQDpjhAKIIxGE3ZY4rjuXFflqBrShwyp1ZXPMxnF3Jwq6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYBVY2pUdPJ7Li7fwk9KQr2aHmXOSVEFviGpT7H0gsLwQQmyMx
-	70EZiKH13B8Z3h4vrBcbkroSTjnwFPrrNsDkkc4OO/HSep+CIkiINEAj
-X-Gm-Gg: ASbGncvcEXJAxlSpuzYWDL0p5zbe9P3ktwBTkCmA7bgee2bzzH78MCAIiXoQgQWqTkM
-	RctzjXdg04hbq56mouy5fNHlj1n9kYS0n40KpGx8WPoIA2jJoaqNbLgsQROYk239NZsfMMWZmGM
-	fCdqS8vjyQ2jpdyuCRAWnJdqnrMJVxa4L/vpLKG79toDhVXvqTkAJ58Vg0TKf1hqvyKe9mSzqjZ
-	6lpX85cTopUl9TPSPgTHs/qlkLoJlocs0SGe1p7LRCa4M/3iAyogQ3IgrcQ2O1ju4U7RvqeZ/+V
-	B8SXz1zxUsDBiCm8GgcR4+lKFctk9ZvpvqLmzx9JOeI6I53yBtOB
-X-Google-Smtp-Source: AGHT+IEOKVdrt+VcdboFlylKhffAnkFRPdnnoYVuUBHMRj1bIdOtygbWy7OQqXFYlZN0q4NyUQf+Mw==
-X-Received: by 2002:a17:907:7e93:b0:ad5:520a:8e02 with SMTP id a640c23a62f3a-ad85b1de69bmr818638466b.39.1748284585097;
-        Mon, 26 May 2025 11:36:25 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:8814:6671:65ae:f9dd])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad889738174sm25419066b.140.2025.05.26.11.36.24
+        d=1e100.net; s=20230601; t=1748284782; x=1748889582;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c86jKa309c3+QcTsQwLNlEeQh4J3Qa5o3Yi92C1rAmE=;
+        b=PKjg/hqPpGesAKQLvHGZavTIrhL3LuoyTO/meEHt3CVTiNCdcpXjfnZ/tg7XICMEs1
+         iAo5WqOTLgbWWDk40zE/hcH6ur9L6BVvNG764DxllRvdblHWc9p5q+lRlBpE9TV5M9h7
+         3OcjKnn+Csf7zP1EhTmmK8HrnBlYWhlUCaEGRIgFDqxLlzqON/educPmh5pL8rQaTb1D
+         ek4VsU61Qmr4GkZAVnwXdJN87n+wj7ZBHrrerVo0oZVLM2+1b/g66DicJnwCDj3QG4e4
+         OG6PcId8ThT1AasNbtg4pOyifyzJyQgWeyqjKeGyna76e3LqZ+Ctz0KNrYAmWk7D6QQF
+         DznQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIfW4fD+oxnceU/Z3N26cxIlbUH0ccGUeVgGQatLnGUOt1c/7i47Vu2AE9pKxQNjQq1z2znLB7z5je9us=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD/ZBu3kNyR2kShOObqJpUDP0aP8tIIZOsbhsmHqQUoaDxOLj0
+	zv7iupCbouQG1oHu3j8838pmwDtruGSQVZBv2K2wM+ocB+o8/x85TqrEQrDjVwDRztI=
+X-Gm-Gg: ASbGncumWJ1DvKX18qjc4maFKI/K2jx2oL9GZGv4B6WvE1h3BA6zll0FoOko5sP2cwi
+	RpNhx/CpcOHQtBn1HOOSOnBRfzKaegYDoooh8apInwAHOChskcFWhv8PGelfnCViMSzxXOTBVZj
+	IzZZoGRZI9jYZmljHq7+JlGLJdMsrBUuDODsJukkgch0to5St0FBQagySPENp3V3b1YA+Yuula/
+	gVnWPXSGFx5KkPNxMrgG0r3y5Hs5Bkz8RtvuAO087SeWDtv9dqRfSlnIn40QnpfwtdA2ljrvokK
+	nOQ2i/Ljk3as0Xcb5E+uyqT1h+rARyG7bCJk0hKnTY3nJpdOsuAkWKE/IjyCCY3giZuSdu9nI5a
+	Mkki/GuVZcL0VALi5yGgNb7AngcA=
+X-Google-Smtp-Source: AGHT+IGL7te5fpMbZe9HXdt3D5MGVGH/Bdpvl2UHGaBVcVqu8HICiF43E0e5svsb0e6OdO9BbM2sDg==
+X-Received: by 2002:a05:620a:269b:b0:7cd:4b5b:a202 with SMTP id af79cd13be357-7ceecbad0cbmr1427354485a.20.1748284782328;
+        Mon, 26 May 2025 11:39:42 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468b844bsm1592181385a.87.2025.05.26.11.39.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 11:36:24 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] net: ch9200: fix uninitialised access during mii_nway_restart
-Date: Mon, 26 May 2025 19:36:07 +0100
-Message-Id: <20250526183607.66527-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        Mon, 26 May 2025 11:39:41 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uJcjd-00000000Ts1-0aL8;
+	Mon, 26 May 2025 15:39:41 -0300
+Date: Mon, 26 May 2025 15:39:41 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Rolf Eike Beer <eb@emlix.com>,
+	Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	Nate Watterson <nwatterson@nvidia.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu: arm: fix building smmuv3 as loadable module
+Message-ID: <20250526183941.GE12328@ziepe.ca>
+References: <20250523121257.2340274-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523121257.2340274-1-arnd@kernel.org>
 
-In mii_nway_restart() the code attempts to call
-mii->mdio_read which is ch9200_mdio_read(). ch9200_mdio_read()
-utilises a local buffer called "buff", which is initialised
-with control_read(). However "buff" is conditionally
-initialised inside control_read():
+On Fri, May 23, 2025 at 02:12:53PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The smmu-v3 kunit test fail to link when the SMMU driver is configured
+> as a loadable mdoule:
+> 
+> ERROR: modpost: "arm_smmu_make_cdtable_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_make_s2_domain_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_make_s1_cd" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_make_bypass_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_make_abort_ste" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_make_sva_cd" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_get_ste_used" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_write_entry" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> ERROR: modpost: "arm_smmu_get_cd_used" [drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-test.ko] undefined!
+> 
+> The problem is that the drivers/iommu/arm/arm-smmu-v3/Makefile only gets
+> parsed while building modules, but the driver itself is accidentally marked
+> as built-in unconditionally, so not only does the kunit test fail, but the
+> entire driver is missing.
+> 
+> Change the driver configuration back to $(CONFIG_ARM_SMMU_V3) so it
+> actually gets build here.
+> 
+> Fixes: e436576b0231 ("iommu: make inclusion of arm/arm-smmu-v3 directory conditional")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-        if (err == size) {
-                memcpy(data, buf, size);
-        }
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-If the condition of "err == size" is not met, then
-"buff" remains uninitialised. Once this happens the
-uninitialised "buff" is accessed and returned during
-ch9200_mdio_read():
-
-        return (buff[0] | buff[1] << 8);
-
-The problem stems from the fact that ch9200_mdio_read()
-ignores the return value of control_read(), leading to
-uinit-access of "buff".
-
-To fix this we should check the return value of
-control_read() and return early on error.
-
-Reported-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=3361c2d6f78a3e0892f9
-Tested-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
-Fixes: 4a476bd6d1d9 ("usbnet: New driver for QinHeng CH9200 devices")
-Cc: stable@vger.kernel.org
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/net/usb/ch9200.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/usb/ch9200.c b/drivers/net/usb/ch9200.c
-index f69d9b902da0..a206ffa76f1b 100644
---- a/drivers/net/usb/ch9200.c
-+++ b/drivers/net/usb/ch9200.c
-@@ -178,6 +178,7 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
- {
- 	struct usbnet *dev = netdev_priv(netdev);
- 	unsigned char buff[2];
-+	int ret;
- 
- 	netdev_dbg(netdev, "%s phy_id:%02x loc:%02x\n",
- 		   __func__, phy_id, loc);
-@@ -185,8 +186,10 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
- 	if (phy_id != 0)
- 		return -ENODEV;
- 
--	control_read(dev, REQUEST_READ, 0, loc * 2, buff, 0x02,
--		     CONTROL_TIMEOUT_MS);
-+	ret = control_read(dev, REQUEST_READ, 0, loc * 2, buff, 0x02,
-+			   CONTROL_TIMEOUT_MS);
-+	if (ret < 0)
-+		return ret;
- 
- 	return (buff[0] | buff[1] << 8);
- }
--- 
-2.39.5
-
+Jason
