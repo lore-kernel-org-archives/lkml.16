@@ -1,107 +1,97 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511C82147FB;
-	Mon, 26 May 2025 18:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3182E1DF27D;
+	Mon, 26 May 2025 18:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748285064; cv=none; b=jjmDfXqULJ1cpqXSLLaCNzRVRbAm+Ez6vBsLeEaEl9VxMvrCDJMU7fbMmY0p9UknfiYtvi07ceDi1jpsJwGrEfUPowTS+vr9Dk678MdHx23h9W5Cw2MOXpD/ZVoa9EK+c/hUhzCACaaEbk510g98PO40TEGfZIsUWYIkSqiuhxk=
+	t=1748285109; cv=none; b=gR8jsyhgsjQ9wncFLGELLXMjCv0hC6ZDf07nU3sdAr/yd4mtTMmj+Fa8MjmxLsk1R+HpeP/ZPPa/SyKaGu5rR6a8p/tNQ7m5FZbi+8jLZeGRWdX+3L03zvg0RRAJPgSEnWlp84DT6sunvDRY2KdbMQePAVaFxGzMK3C/BGoB9Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748285064; c=relaxed/simple;
-	bh=F0nXqeztZjLXSCez38dqnwS/rbBaPXXvjEwZG3KufIE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CuTZnQ5Eaatrxzomerg5Q+zUYLUTZEV5o2SnmizKL98VBaxB8jbLjRSQWUgJg6/TNMyDJbRx3OR3EhgqouxzLmRfs5MHJy6nP1hIwJKLeNqz0nTA5BfF+lYwfgAk7oUzFZ5nsPTqojj+7tARCsb+Ac35Y219PFvp67O4c/B2F3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHE4jY96; arc=none smtp.client-ip=209.85.221.52
+	s=arc-20240116; t=1748285109; c=relaxed/simple;
+	bh=Nvsng1M3VEP0/P+Y/nOKi3hfEhFVzGQcGw7mSdit6FY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DJ9JM8UQy7pL1syuaZot9JHStJs4qwJgS3icFow16U5cYsThtKTPc4vTg3sfW1+svsfl4vubXO+P1tfh79GAn+cpNIOLsmd4HVxUq79e6t9U6Y+kBUr0Zyi7mt7ZjxMk/Rrbq7kcAjS5rxF7LIkM725248pJdDbIiUcctErpacM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FfbWMpNV; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHE4jY96"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a4d152cb44so2099330f8f.2;
-        Mon, 26 May 2025 11:44:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfbWMpNV"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30eccc61fc0so467268a91.0;
+        Mon, 26 May 2025 11:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748285061; x=1748889861; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hMCJtECyYLnVFjpZvyBd+ub3nNwjuB4xZOaytzPNUxg=;
-        b=EHE4jY96j1Z7xqd8cGojRsI6Arz3LFgCYrqUUVzJJv26a1DcHKGS1lhjySxoCoRipP
-         q38rU7C1IrnaWc7Pm9w/lDl8uL5IOHEe8J3yN5VaemyP/Gr1F6vLS2SVnhALtC1kL07X
-         mlmyFuJ8rqYznv29+zBAJ7CRfaLi6KTmcI4/QYnQo/E6neC47Ab9dPivSZ0Ol2IWh5WX
-         qsyZ0UO6wR6hbJYdknjWCbWZDvdWLKmG3MeazvHCl/HvWmidEi5yYUyKyvJAUQuukUh+
-         EINvEQFsiyrdVvJPmz57IuOFz9K+GEYQ5BsRUUShql+lp8bdwHe3U+kMIGG5sqtiFiyM
-         +wCw==
+        d=gmail.com; s=20230601; t=1748285107; x=1748889907; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4L/7CKyfl0ysj1y3zLGYsOxDTTbgS+vRVJUMoyIlbNo=;
+        b=FfbWMpNVTgDJ+8HGoMcdOGihLEauZSQGv/ppLRkBHlblej5ZgaaURKhrpNGfIbu94W
+         ZDeja/ByO+5oFlPHqbomr0x1SbdCy8fJpxYC2aVxdrDJsGE0gFrKej8uR1s8XzeYwOCS
+         owXRXUqQOdwHcXrBzwYc/aXCRUH/wfIwqVJwns2R8cFB1Pe742hboxZ3VzN+zdO1cU5G
+         ZmOAe+g3FqSVZcyGMVWwJGnY3soYGOxQKjEfUoMQFdQF/0JzDCHWLTU0gvpipafzfqnj
+         zBK/iO+V/ny20iYj5FMNh+5GLyqvFQRWoqn1KOxDOEjQvQfE7UYOYmRB4UIKtbpWIJ7H
+         CDUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748285061; x=1748889861;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hMCJtECyYLnVFjpZvyBd+ub3nNwjuB4xZOaytzPNUxg=;
-        b=QqFK4b94O1OiqmLmbC7EUqWOL5tmcNsqpz3PGbYrxPGP8emzHqeLaNRY3lwe965+uA
-         Sbp4Y3i5/3nKBItjn8n9ZWHALcNXh7DHnfIfmzsMFcwqYy4H/fAXU/aEY8+15G21qcJl
-         uVCpl3OXIsKV75u+y+PDc0WPeAQD8pLD4r57OC2t56JzMZMWWftwTgSa8gyRxeVpCkxF
-         MRGe+2iV0/VrEBtjul0cWSzssxiPvAcGZYKPz0H9n9iOmmKEef0khFrNhyvGahxa7E5v
-         e2xCcvYcAQZYdawntTvvrq/AhLtPDM7QVlWKFshxpK5JBSXEpW0QKhzBfd2XPReCsGH0
-         MuOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkPr20LqYO1D+c8bkO57rI6jtsDq8p+Swk1j2CdLX15L7AGxjJ20+5a45UyuVkUTw5F0T9xW5IF7SBA4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw86cfuW5CpVeYmGLs5zFDe3dtq3OAjzUXKzJ9qRNAQEB0lGBrb
-	ZYgW1HxgKb3tmZ7BtzsEv47Weik27W2GVRIXjcv90xIcfAR7PYEOT47cDRLR1Q==
-X-Gm-Gg: ASbGnct/+GdXLs78LlIiwWdog0j9QVf8AghhoSKlWhHouMiaL5BFmkNoqn6IOwWFCT2
-	mZ22JuHyKWo7nPu13Qcu9raLLVgvxWQ94CMEtGK1d3kIz3Pg2aZ9wt/0NzCv/Km4YunfkxwSUpy
-	FOk1MFLiWnbHm6kcIwWacY2a2Ka9gNrXNhqCblLNkY6J07ddkoM0grdZbTrFL5I434Jp4yxrBRR
-	EtZuM1IeckyzW11JT8CVRBrmpYBZpjHo/XOei/3l+qkesICIL78ap+9a6r6NgubrQ4A/4e7lI/k
-	WvZ21HvDjF3T7moVCHBT7lUWYzg/PDZhPW87/ELHtKl3o9WX5pR3glJKk4ZKoGQ6twHde5ek7U/
-	3/Q==
-X-Google-Smtp-Source: AGHT+IGTZSfVQ6dWElB0XLcV+e9gDpFNN4ZT+p1+bxpoMl8MrW/ZmACvkZFbP6thwQgK6HZ2PAqRXg==
-X-Received: by 2002:a05:6000:2503:b0:3a4:d048:124d with SMTP id ffacd0b85a97d-3a4d04812ddmr7668024f8f.26.1748285060991;
-        Mon, 26 May 2025 11:44:20 -0700 (PDT)
-Received: from localhost.localdomain ([154.183.23.207])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62b5dsm36455664f8f.55.2025.05.26.11.44.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 11:44:20 -0700 (PDT)
-From: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
-To: linux-doc@vger.kernel.org
-Cc: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>,
-	linux-kernel-mentees@lists.linux.dev,
-	shuah@kernel.org,
-	corbet@lwn.net,
-	masahiroy@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] docs: escape literal asterisk to fix reST emphasis warning
-Date: Mon, 26 May 2025 21:43:59 +0300
-Message-ID: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
-X-Mailer: git-send-email 2.47.2
+        d=1e100.net; s=20230601; t=1748285107; x=1748889907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4L/7CKyfl0ysj1y3zLGYsOxDTTbgS+vRVJUMoyIlbNo=;
+        b=ROVlNh1SZLGy9G15YxKGxTJEthZPV3PF6E6hW/MBVyzRG2yhpeb+I5xJenoBcmdJEj
+         qlyrL+Z7uocVNHf0hkxw8rl3t4xd9Igwk3vJAq3w99TaVxJBlCAgtP2MEnmUsbM+0EPR
+         RoyOb7vF0MV/0DQBpEBAbCbwMeOyL5IgLj5l9UEdrrXqTmzLwt2urWcHZCpcr49P2KQq
+         gaE/xdO1p3kovXY/5bfAulLahPdcIqudrIgEe6xf9FIWtIyJM+npLMDNJM0JhFQR+WQ6
+         gftozhKe87lMdwjxK0FsyLzw1MqxZOQH6yagvNH5VFizLgeUHx5PEs7fHMrnxoqmNjmf
+         WOdA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3BDZJIx9ecYQBPTbRMMLAO9ReeQrXIrcEVaz3xy/qWc392YMfZg8m5+iqRtHEIh5RyEzelbAz4UGpRSw=@vger.kernel.org, AJvYcCXtxvXsgSaXtPBsY1gxMUISBAxhOY+cYZNkXfoiCU+TXFzC3kTdxojZFxMIxU74/7fm/5xKP+UGUk9K+n4TN5o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPbS2YlkMTy1Qh6/F1XApHIHZpvjDojEK+v9VAny/KnSQH72NA
+	6QEiP45O7mQKxjscgfd7VvgOZd5c2RTe34qZ+1wQYDskSy8eNvy3G/pD2RBrOa/Xk1JujMj8YqW
+	F4dyMbks875lNThQ8MEJ+hLFa2agePA8=
+X-Gm-Gg: ASbGncumCxQqCjh+oUqo0BxM1pjjXLxhVSYzpZfbb70tknAlWbDbwDeFLJDWFa2/zeo
+	M5DSUaO0SOuMiGC9qkXVodvIRm6B2zoobAa5f8lrvtW9+TmTzNDIvIfQ7Fyb51cdeBlcdjJ2pn+
+	8Jo3Np6XY1rYlikPAO2tRuuIhj81XqrMIC
+X-Google-Smtp-Source: AGHT+IFsdQI45HGMaN7TbR/Sv2yYFsqF7rIMKdM8IGGfresEX9wYWE6zOJCWEgcwF+HhDAuUtLOa7547KGDPsscLXpY=
+X-Received: by 2002:a17:90b:1b51:b0:2ff:7b41:c3cf with SMTP id
+ 98e67ed59e1d1-311108a4f4amr6107720a91.4.1748285107267; Mon, 26 May 2025
+ 11:45:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20241002022749.390836-1-paddymills@proton.me>
+In-Reply-To: <20241002022749.390836-1-paddymills@proton.me>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 26 May 2025 20:44:54 +0200
+X-Gm-Features: AX0GCFsCgxo8_JvRsRuuodr_OGfVZfsiTqMzzl7-BHPkKy3dBMnOSoYqjHiy7hU
+Message-ID: <CANiq72nwwQdzgiC4QLX6BkJ_bDUS-qTCfe0UKrPCiAF5k_P=SQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] docs: rust: make section names plural
+To: Patrick Miller <paddymills@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Escaped a literal '*' character in symbol-namespaces.rst to prevent
-a Docutils warning about unmatched emphasis markers during documentation build.
+On Wed, Oct 2, 2024 at 4:28=E2=80=AFAM Patrick Miller <paddymills@proton.me=
+> wrote:
+>
+> Fixes existing rust documentation section headers to be use plural names.
+>
+> Signed-off-by: Patrick Miller <paddymills@proton.me>
+> Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1110
 
-Signed-off-by: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
----
+Applied to `rust-next` -- thanks!
 
-Hello, this is probably too trivial to have its own patch, but I found
-it while building today's tag, so I thought I would send a patch.
+    [ Removed the `init` one that doesn't apply anymore and
+      reworded slightly. - Miguel ]
 
----
- Documentation/core-api/symbol-namespaces.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For context: https://lore.kernel.org/rust-for-linux/CANiq72nhNmLMdFTzpSQSxx=
+MLanFA7Od6tBZ+3CrVERv9Spou5Q@mail.gmail.com/
 
-diff --git a/Documentation/core-api/symbol-namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
-index f7cfa7b73e97..008b34fe6629 100644
---- a/Documentation/core-api/symbol-namespaces.rst
-+++ b/Documentation/core-api/symbol-namespaces.rst
-@@ -87,7 +87,7 @@ modules to access this symbol. Simple tail-globs are supported.
-
- For example:
-
--  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
-+  EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-\*")
-
- will limit usage of this symbol to modules whoes name matches the given
- patterns.
---
-2.47.2
-
+Cheers,
+Miguel
