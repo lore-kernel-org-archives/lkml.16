@@ -1,128 +1,149 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A7F1420DD
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E9A14830A
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 17:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748280849; cv=none; b=XiqCd8jdTQkctEUNtloJK1iQGG5s3BORwJJZ2EOM3oqiHD6bFQh362qqqPH67ozujIyLvo+oqKCwWpqiLNw5N3A9yQZNWKVEJ0v/yt/oedJQ6tDC1UvojhiHquWWRyirnSsTXARwZMOhKyKi8YFSXkQttCc+gn1l4x0LdvxiN88=
+	t=1748281188; cv=none; b=CBy2Q1gPEjKekvm+H06QX7lXmNKc/Av/LPQG5Nrjww1qgFcI+mh5s5KQLaeK1xBTM3DmECKaxNNadkqGlvOE0MC6diPh9nFFfBEI4tx2blt3f08bziPh3eDTZiyYohhimUQpfYLNGE03lrPH+NoUijFQSmqABPSN9xSEIiE6904=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748280849; c=relaxed/simple;
-	bh=iLUd1Atl7F2XhGCO4Taa7I7wq59LVRkty/S6nhFd6J8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uC5iOBjoQJNieOdaP6icsqIyiV6Tm8fyGYzG6tRTJNAdtSXctvX6/SgYiRx9bNOb6QY5C6IBWowH0NrJ7QxkMNQN6kOLI6AR8nVEJSz2teFOfuk+L06vXBnCU5jYC2X86NmBHjgskMJGj87P35l7rId+ckrbaa0/dCUH6fBON90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j5+6Fx9T; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748281188; c=relaxed/simple;
+	bh=7POWGV++9EvQDYKwRA1Pn/xogWRtxu53Mc+LarYBpB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tk/OVH2LLXwT0Q/sJD5lRnDoX87jFl9ioUvoGJzmAuaK+bbrjT2qd1QYUvV7AD89nVZA258WeCv7O+WFnZTwj2/jgWSzB7m7m+IEuAeHJvE8jqIr1I3dgzvH5RDIy6WAVGV6xT7lk1etw38T9nrvtu2osWbXMYe1tTq3F1B6rd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G2Lukzd8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j5+6Fx9T"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2349068ebc7so45225ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 10:34:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748280847; x=1748885647; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hgxk+Us9mQiW48CfwTTJ3SbvDd6vhg6S6WT+88w+Zks=;
-        b=j5+6Fx9T1x0ZI0mXrTN9DCk2lDY6v3exbploQnxTq4Shoum7qJArG4mv+L6xSe5myG
-         AI/Wq7eKLYlnP5ytjU4YIc/w3WNgmuHFCaY5LxW+59rVsApSrLm2CahADnCID+dY9Vm+
-         icVSo5zTkg9tQqifdNdi4hDrf8oLEkZFDsyLjuXWhYTDaHQQgkqywbUer9uE6LUrddrd
-         T0wJa8R/TFW+Gx3b1m2dc9Qmc1+LRrwllg5MFkYUqmShzhMglH0McTDwoXgwwg+qX+aw
-         FewAQt1YS6C8krImANDYY465dELMaqwB4CYYC4g+/e2gH5iKfGsrN2YtSvcesa8LRZ/b
-         ELHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748280847; x=1748885647;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hgxk+Us9mQiW48CfwTTJ3SbvDd6vhg6S6WT+88w+Zks=;
-        b=N6pQPgICElDgqXRkCMyqm9towjAGbN/l03mkE7wZgFDTjzMRFi+02rPAf5YeoVvCpp
-         btSpHTl88LAG0ZeYg3hyr2rttqaJ3H9HWPSQrBUZs1dQDh0YN0b7pIxQJ9BMwr5Qow6V
-         19QwhN6dqFheUstESbOav3djSOjJ4fT63cHKFGM3RC+R6JIYZwagYhBZvRJi+VAoxvYP
-         Ul+uYRoyse76OB7MTn5TLBi/7lMJzqUgErXpxiiABsBHDL1omHQ3X/OUzLX8zO9HHCsy
-         G0YlX1ktmcYG79f41gVpLO4e4SW2gGjjADhlVhbgot+oCmp8i2ylor6zUa99kOFVz72j
-         cE3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUtjl/alZ5HfegdCQZ7QpOdmZN3/RUUvH/f8nDAkB1W8J9SsrtMpgGccX21iZRYxE1bHWT7i9s4WhlpGog=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLN5tIZNOlVtIdBmiILrPHTrMFWnalzF/ZFuFOp2CIczTwbeBJ
-	iGxMC6poXy+L4NElbz0Vv+WWuDX2sMFjfJv7e5D1er2qnCOcp4mZpba8wvWJes5HZHEJBQvznep
-	8qPnTliSZEoNBvIxgHFpE/HuOIbxRZWqyFSBkWhct
-X-Gm-Gg: ASbGncsSG8eK2ojr7Se6KaSw3UxV5HsYOZEIGhorH9m0wk+sqCPlDJeES+6o3WJxaYt
-	j23upA1JiKym0J66AHhoqDyZ5K65zlg3/f8Hz2/pHZJ6b4y7GOPG8KEoyfAnvNGHGXLT5q9k70m
-	t3sjvF3S5ATAn2xZEjxuU0mUhFuBz+7xTqvbVJdDse7Xxe
-X-Google-Smtp-Source: AGHT+IFQ3dUetNFfbOk0QYXpICwB0ij6uIvhORtrNLO5srstLqnDueoHgPjQ8gqgOvQXudMrOUcM53NL7t+iY+hfgmI=
-X-Received: by 2002:a17:903:234e:b0:22c:3cda:df11 with SMTP id
- d9443c01a7336-2341807dc84mr4471365ad.10.1748280846532; Mon, 26 May 2025
- 10:34:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2Lukzd8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748281185;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMgqe2XovQKgQ8qxgf6Yojc0GW4kdSAJmFAdT4pMliU=;
+	b=G2Lukzd8f5z3e7uYkPP1sYIrVc6I08/LeYvq3xABLy95642+pclXyXH6TIxZWwZwDdyAN2
+	scj28oW2nCeEUeGFUJfCnEYOFE1110ItqAJ597Be0RVwerTapxFwXNkAApD29lKmgkVadE
+	4/uqi3aUVzx7Rr1lsjins0V98Pb5rJA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-260-LFLqTxjvMDm3jWJ0F0FKEQ-1; Mon,
+ 26 May 2025 13:39:41 -0400
+X-MC-Unique: LFLqTxjvMDm3jWJ0F0FKEQ-1
+X-Mimecast-MFC-AGG-ID: LFLqTxjvMDm3jWJ0F0FKEQ_1748281179
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A5F9C195608E;
+	Mon, 26 May 2025 17:39:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.4])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 6469A195608D;
+	Mon, 26 May 2025 17:39:27 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 26 May 2025 19:38:58 +0200 (CEST)
+Date: Mon, 26 May 2025 19:38:45 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Pu Lehui <pulehui@huaweicloud.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, mhiramat@kernel.org,
+	peterz@infradead.org, akpm@linux-foundation.org,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+	pfalcato@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	pulehui@huawei.com, Andrii Nakryiko <andrii@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+Message-ID: <20250526173845.GC4156@redhat.com>
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+ <20250524164516.GA11642@redhat.com>
+ <e8a679eb-e40c-481d-b65a-d16f9e66c19a@redhat.com>
+ <20250525095926.GA5391@redhat.com>
+ <e6b657c6-98b9-4690-9a26-27db0fa7c794@redhat.com>
+ <20250526162940.GB4156@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523032609.16334-1-byungchul@sk.com> <20250523032609.16334-19-byungchul@sk.com>
- <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
- <20250526013744.GD74632@system.software.com> <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
-In-Reply-To: <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Mon, 26 May 2025 10:33:52 -0700
-X-Gm-Features: AX0GCFvbcQEfDXG3A2E85eQ0suvZ9QGF79i6mkSHWdI2UWVhJN8XZ-nz6-kdVFg
-Message-ID: <CAHS8izM5xd=cBRuUpAUNtcFzZ3hMwmseyh6rsV+WPRAvdzv4cA@mail.gmail.com>
-Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct page
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Byungchul Park <byungchul@sk.com>, willy@infradead.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com, 
-	kuba@kernel.org, ilias.apalodimas@linaro.org, harry.yoo@oracle.com, 
-	hawk@kernel.org, akpm@linux-foundation.org, davem@davemloft.net, 
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com, 
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com, 
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net, david@redhat.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, horms@kernel.org, 
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org, vishal.moola@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526162940.GB4156@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Mon, May 26, 2025 at 9:57=E2=80=AFAM Pavel Begunkov <asml.silence@gmail.=
-com> wrote:
-> >> Removing these asserts is actually a bit dangerous. Functions like
-> >> netmem_or_pp_magic() rely on the fact that the offsets are the same
-> >> between struct page and struct net_iov to access these fields without
+On 05/26, Oleg Nesterov wrote:
+>
+> On 05/25, David Hildenbrand wrote:
 > >
-> > Worth noting this patch removes the page pool fields from struct page.
+> > On 25.05.25 11:59, Oleg Nesterov wrote:
+> > >
+> > >OK. But do you see any reason why uprobe_mmap() should be ever called during
+> > >mremap() ?
+> >
+> > Only when growing a VMA: we might now cover a part with a uprobe, which we
+> > have take care of.
 >
-> static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-> {
->         return (struct net_iov *)((__force unsigned long)netmem & ~NET_IO=
-V);
-> }
+> Ah, indeed, thank you...
 >
-> static inline atomic_long_t *netmem_get_pp_ref_count_ref(netmem_ref netme=
-m)
-> {
->         return &__netmem_clear_lsb(netmem)->pp_ref_count;
-> }
->
-> That's a snippet of code after applying the series. So, let's say we
-> take a page, it's casted to netmem, then the netmem (as it was before)
-> is casted to net_iov. Before it relied on net_iov and the pp's part of
-> the page having the same layout, which was checked by static asserts,
-> but now, unless I'm mistaken, it's aligned in the exactly same way but
-> points to a seemingly random offset of the page. We should not be doing
-> that.
->
+> But. What if mremap() expands and moves a VMA? it seems to me that in
+> this case uprobe_mmap() won't be called? I'll try to make the test-case
+> to check...
 
-Agreed.
+It seems that I was right...
 
-> Just to be clear, I think casting pages to struct net_iov *, as it
-> currently is, is quite ugly, but that's something netmem_desc and this
-> effort can help with.
->
+	#define _GNU_SOURCE
+	#include <sys/mman.h>
+	#include <linux/perf_event.h>
+	#include <fcntl.h>
+	#include <syscall.h>
+	#include <unistd.h>
+	#include <assert.h>
 
-Agreed it's quite ugly. It was done in the name of optimizing the page
-pool benchmark to the extreme as far as I can remember. We could use
-page pool benchmark numbers on this series to make sure these new
-changes aren't regressing the fast path.
+	#define FNAME	"FILE"
+	#define ADDR (4096*16)
 
---=20
-Thanks,
-Mina
+	int main(int argc, char *argv[])
+	{
+		int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
+		ftruncate(fd, 2*4096);
+
+		struct perf_event_attr attr = {
+			.type = 9,
+			.size = 72,		// PERF_ATTR_SIZE_VER1 to include config2
+			.config1 = (long)FNAME,	// uprobe_path
+			.config2 = 4096,	// probe_offset
+		};
+
+		assert(syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0) >= 0);
+
+		assert(mmap((void*)ADDR, 4096, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED, fd,0) == (void*)ADDR);
+
+		int flags = 0;
+		flags = MREMAP_MAYMOVE|MREMAP_FIXED;
+
+		assert(mremap((void*)ADDR, 4096, 2*4096, flags, 2*ADDR) == (void*)(2*ADDR));
+
+		pause();
+		return 0;
+	}
+
+and
+	/tmp/D# ./test &
+	[1] 102
+	/tmp/D# grep FILE /proc/$!/maps
+	00020000-00022000 r-xp 00000000 00:15 2060                               /tmp/D/FILE
+
+this test-case doesn't call uprobe_mmap/install_breakpoint during mremap().
+I added a couple of printk's to ensure.
+
+If I remove the
+
+	flags = MREMAP_MAYMOVE|MREMAP_FIXED;
+
+line above, everything works "as expected".
+
+Oleg.
+
