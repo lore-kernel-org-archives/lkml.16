@@ -1,351 +1,87 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863521C3BFC;
-	Mon, 26 May 2025 13:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21C520CCE3;
+	Mon, 26 May 2025 13:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748266449; cv=none; b=SjYostWmPXM/PnqIsz/9DZgDizo8//RyTVR7zfhnXKz4vHUGfbubAmgqCFBN6LUm6lnUymFz1QZs+tN0ihWcAVDeomdA8MYj6QfaIlqIku21CRb4tVksYNI/LydbpzExwUFpX2KAos1KMpms70UncHKPcWksh34tJrZ4J5OWSro=
+	t=1748266454; cv=none; b=CMQhuIA9I6M2R37/iJTX1oob8gqpx4f7qdirQth5jUueJ4lMh1zXZptU5BTRAyF0oKsZk0zH6qNR+QDkcP3TjuiF1690HQXYOYDksAzWUxXlvxzpFQksAaS/SI1oOmAswkEoUzfT2M1JIPcOyfKMmg8ygucI0ReYkd2e7Ycl0XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748266449; c=relaxed/simple;
-	bh=6hmKd3YbqDndGofig6i8NJQVyX8FYJ1rQnx3zzciYic=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SRxyrjz8rBytmrZtA8Ibp+3GPRu7k/bsRuDgLjzyOCulwY5WZ2Zxtghnv2oebvKU+qEo+ldHZaMMWUGPRmDP7xqTvCpzfUKIQGqkX5V7DfaRLqrzrAQsI4B0yzMrhqlPkosQTmRh0fEnxVKHMIAEE4jtEmSKMMvoBeMWBbcXBzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-310e1f4627aso2094314a91.2;
-        Mon, 26 May 2025 06:34:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748266446; x=1748871246;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6jwh1Zy+MsJCh19j+SWz20DYAgvM75B+gk2n149YvaA=;
-        b=lbvF49jdSSsJ6LEe21dLFKc+YPvDtZYmdhwDsr2wVMVxQkftmQ1jAtCzeHanpjUfKY
-         kWhNNv/FuiEi4HVR0nC+fWizX8j3g0qNBkA3MjX6CTCKalwI/qVsnY5XSYzLGWlaqh5R
-         XfSf0v4hdspdT5/cALg0IIefMdS9RlgHyeMgyi6Rf3b+1LxUTdNEOxfhUXeFaFGycTG4
-         ReKWLN7+DpATzrpUsamW3zXhtMK/ZLSvVbMhLUYO7Tw+Qw4dqH4js1UvPFha6RJu0r8n
-         qIgsvVhofZHUn3KuMGejVEZa1ReKq5UrSCgngG/QVi1cGUXIqA9ba1lK6OE58CKqUC1S
-         YYXg==
-X-Forwarded-Encrypted: i=1; AJvYcCULMmwSUOG1+2tV3DPneraKRqK/StXptpn0HKE1iyGBWX8byFeRYnwOOufuseoefXU9UbJ74P5i46AZ@vger.kernel.org, AJvYcCUOgl01gDxj6eoGbY5AsiFP4k5uou9R0zmGRhLkvpT5ax1pymxR03h16m8x9NF3TXVUJlhGuNZceUgP@vger.kernel.org, AJvYcCVMWO76GXr1E77q+g4tSeZpKw7rQoxUD1UqONZVr5gVT+QsDWSgdWz30tRgYAQIpka2D58vzDTsw7U5hTkHLEEWdkY=@vger.kernel.org, AJvYcCWv1MJPTAcl1yqT1I+e3r24imXVqyeAxmrW8BBVpA/nbAyWDOHP5UnQUjxvuGGMOoVcDhZo/+yUVZzNG7cu@vger.kernel.org
-X-Gm-Message-State: AOJu0YywuGToC7on0B1B3ypi1lalnPtOgOd74OuxVfanZrUcmPImFmeP
-	hiIM4hA0aUM7oK7ah90RoHokRRR7gtO3eW985c5RH3y9OgjE08C0ufuuVsZ57rED
-X-Gm-Gg: ASbGncuSb/VnPtW5OBL4EHZSp0FTqOxkg6LDhmtJkTyyI3+CwmNn2bl2xIgHCXXVytR
-	A2tXzoOO+6fOP8RANvzTjVMobJO7RU3xngLDP9OstGg50GAt5weQajIlLfZV/YlPKMFqBL2CcA+
-	zwph+O+bhaPu5yY9tdiTjQMeNy+hbGPYL4ulCxvQaUUKW/kYq+4/F9aCtk2isM0EB/mQJm36tmx
-	Oq4C3tw/yrg23r8uwWG1aIBsqFnb7Hjv71vSw4ZEBYZsnE0+KY5Ow+jFapVyJoXlUdl/1vtXIfW
-	E5BYdSDbcrQ7ITCJXsfJbtFi09OpcdN6t9zqqsOlmEL4I344WuQQjA2KhoJS+XeW+L69EN0as+H
-	P5+6PafJKLfsY9HqKYQuBYJijJTu5
-X-Google-Smtp-Source: AGHT+IHboUGgCOBGmHEG/M2D0uVP154ouxkzRhc5Fsd6KYvOzXHRxkZb58NUu50vX7Bvo7VFJqRsIQ==
-X-Received: by 2002:a05:620a:838b:b0:7cd:4c58:758f with SMTP id af79cd13be357-7ceecbbea52mr1310519785a.1.1748266436060;
-        Mon, 26 May 2025 06:33:56 -0700 (PDT)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com. [209.85.222.179])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467eced4sm1564612185a.57.2025.05.26.06.33.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 06:33:55 -0700 (PDT)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c5ba363f1aso301756785a.0;
-        Mon, 26 May 2025 06:33:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU6kiu5tDYJG88+UaqeSdlOXJtQOa55cGdiTQSb4WGsQhejPnn7x0XOeWC3fc/LsAKJbmfqGLvCyQbQ@vger.kernel.org, AJvYcCUUoZ6IUcjBSmYfvWm+35gy3+AKuOau9kKZSJa3ns9JEmduGI/6FBSE6sUSI6GxIRVA9jLZmSuvfsIF@vger.kernel.org, AJvYcCVfyoxV987iO5mlRjL32wvVO0YX+lfG12CG39We2PTyQrvyvfWl77+GpeDgxs2XU/6tuw2IX/rPHRAcICe1Urdjrck=@vger.kernel.org, AJvYcCVkeFj/vbSKk7IsHnlDrTzAZNgfSKcmDtyDfCfBguQZB4W3W7085vjHVOLohT57lCDfSFGvg2LFvWmCXoKV@vger.kernel.org
-X-Received: by 2002:a05:6102:5126:b0:4e4:5e11:6848 with SMTP id
- ada2fe7eead31-4e45e116d65mr1068839137.23.1748266425380; Mon, 26 May 2025
- 06:33:45 -0700 (PDT)
+	s=arc-20240116; t=1748266454; c=relaxed/simple;
+	bh=FRBuviFhvwRiqro8X8chmfWguThYA9CbrHVfEKsY1Qw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cqQozdQooMXi2Jy5aMxjcuLAl9XcCh30PRm4dl8ex6qyFHIACtNHeJapG57slee8diCFMAkS+DY/cB6J6eXd+MTpB7XloEAY5v/014+R1l/4nFXhrpZrxy2tS820ZgsU9IYy4tg7rWnpO1c81QDI7eHXCzvsGDShGjXhsqYvZic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=FHgAgwE7; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FHgAgwE7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=IZAn8xJlkBn0BeuCUV7NjDGcKQINtg4KUlNlcZZtIkU=; b=FHgAgwE7+cikHDPIChRxA1XoNl
+	s/u1wQA0799Q8L6uMR8FSiEsNxcOYW7TWXC3UCZ+xCz0XyxovWF3G7slW41+3Cjks/Kn/Z916GOV9
+	Ofr99MnqQnls8QFDChASchsHYgmaHo77Hlipq1zA9vv7B4YLuj/22rV0XCcG8eeI7wKg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uJXxq-00E0DO-IG; Mon, 26 May 2025 15:34:02 +0200
+Date: Mon, 26 May 2025 15:34:02 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal
+ GE PHY support
+Message-ID: <1a6caebd-251f-4929-a7cf-af7c38ca30ed@lunn.ch>
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+ <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
+ <579b0db7-523c-46fd-897b-58fa0af2a613@lunn.ch>
+ <DS7PR19MB888348A90F59D8FEEBB0A9509D65A@DS7PR19MB8883.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514090415.4098534-1-claudiu.beznea.uj@bp.renesas.com>
- <20250514090415.4098534-5-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWNrU=XOZr3dKKXQikzCzJ1oUPGQofWFdRX9x6rhYn3XA@mail.gmail.com> <b0d15a62-e164-4a8a-b4c7-77d9c3b2e7b2@tuxon.dev>
-In-Reply-To: <b0d15a62-e164-4a8a-b4c7-77d9c3b2e7b2@tuxon.dev>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 26 May 2025 15:33:33 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUT57QfwfeoFfp-rL0yX_32QQNU3-c3MnPgdbSWi182Hw@mail.gmail.com>
-X-Gm-Features: AX0GCFt1bgXc0iItuWPGJZfTOPLZj3fZ_xqUi9PCfefdoA1Cook8qNKaBvfop3s
-Message-ID: <CAMuHMdUT57QfwfeoFfp-rL0yX_32QQNU3-c3MnPgdbSWi182Hw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] clk: renesas: rzg2l-cpg: Add support for MSTOP in
- clock enable/disable API
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DS7PR19MB888348A90F59D8FEEBB0A9509D65A@DS7PR19MB8883.namprd19.prod.outlook.com>
 
-Hi Claudiu,
+> I couldn't agree more but I just don't know what these values are exactly as
+> they aren't documented anywhere. I'm working off the downstream QCA-SSDK
+> codelinaro repo. My *best guess* for the MDAC value is that it halves the
+> amplitude and current for short cable length, but I don't know what
+> algorithm is used for error detection and correction.
+> 
+> What I do know is that values must be written in a phy to phy link
+> architecture as the 'cable length' is short, a few cm at most. Without
+> setting these values, the link doesn't work.
+> 
+> With the lack of proper documentation, I could move the values to the driver
+> itself and convert it to a boolean property such as qca,phy-to-phy-dac or
+> something..
 
-On Fri, 23 May 2025 at 09:41, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> On 22.05.2025 17:46, Geert Uytterhoeven wrote:
-> > On Wed, 14 May 2025 at 11:04, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>
-> >> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
-> >> module has one or more MSTOP bits associated with it, and these bits need
-> >> to be configured along with the module clocks. Setting the MSTOP bits
-> >> switches the module between normal and standby states.
-> >>
-> >> Previously, MSTOP support was abstracted through power domains
-> >> (struct generic_pm_domain::{power_on, power_off} APIs). With this
-> >> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
-> >>
-> >> Previous Order:
-> >> A/ Switching to Normal State (e.g., during probe):
-> >> 1/ Clear module MSTOP bit
-> >> 2/ Set module CLKON bit
-> >>
-> >> B/ Switching to Standby State (e.g., during remove):
-> >> 1/ Clear CLKON bit
-> >> 2/ Set MSTOP bit
-> >>
-> >> However, in some cases (when the clock is disabled through devres), the
-> >> order may have been (due to the issue described in link section):
-> >>
-> >> 1/ Set MSTOP bit
-> >> 2/ Clear CLKON bit
-> >>
-> >> Recently, the hardware team has suggested that the correct order to set
-> >> the MSTOP and CLKON bits is:
-> >>
-> >> Updated Order:
-> >> A/ Switching to Normal State (e.g., during probe):
-> >> 1/ Set CLKON bit
-> >> 2/ Clear MSTOP bit
-> >>
-> >> B/ Switching to Standby State (e.g., during remove):
-> >> 1/ Set MSTOP bit
-> >> 2/ Clear CLKON bit
-> >>
-> >> To prevent future issues due to incorrect ordering, the MSTOP setup has
-> >> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
-> >> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
-> >> from the RZ/G3S HW manual, Rev1.10.
-> >>
-> >> Additionally, since multiple clocks of a single module may be mapped to a
-> >> single MSTOP bit, MSTOP setup is reference-counted.
-> >>
-> >> Furthermore, as all modules start in the normal state after reset, if the
-> >> module clocks are disabled, the module state is switched to standby. This
-> >> prevents keeping the module in an invalid state, as recommended by the
-> >> hardware team.
-> >>
-> >> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >> ---
-> >>
-> >> Changes in v2:
-> >> - udpated patch description to avoid plural in the configuration
-> >>   sequence description b/w MSTOP and CLK_ON
-> >> - use atomic type to store the usage counter; s/refcnt/usecnt/g
-> >> - moved MSTOP_OFF(), MSTOP_MASK() macros to rzg2l-cpg.c
-> >> - dropped struct mstp_clock::critical and use clk_hw_get_flags()
-> >>   instead to get the clock flags
-> >> - used unsigned int iterators in for loops
-> >> - keep memory allocated for a single list for clocks sharing the
-> >>   same MSTOP by updating the rzg2l_mod_clock_add_shared_mstop_clk();
-> >> - s/rzg2l_cpg_mstop_show/rzg2l_mod_clock_mstop_show/g,
-> >>   s/rzg2l_cpg_mstop/rzg2l_mod_clock_mstop/g,
-> >>   s/rzg2l_cpg_update_shared_mstop_clocks/rzg2l_mod_clock_update_shared_mstop_clks/g
-> >>    to keep the same naming conventions for functions handling mod clock MSTOP
-> >> - use the newly added for_each_mstp_clk() macro all over the code
-> >
-> > Thanks for the update!
-> >
-> >> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> >> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> >
-> >> @@ -1209,6 +1232,94 @@ struct mstp_clock {
-> >>                 else if (((hw) = __clk_get_hw((priv)->clks[(priv)->num_core_clks + i])) && \
-> >>                          ((mstp_clk) = to_mod_clock(hw)))
-> >>
-> >> +/* Need to be called with a lock held to avoid concurrent access to mstop->usecnt. */
-> >> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
-> >> +                                            bool standby)
-> >> +{
-> >> +       struct rzg2l_cpg_priv *priv = clock->priv;
-> >> +       struct mstop *mstop = clock->mstop;
-> >> +       bool update = false;
-> >> +       u32 value;
-> >> +
-> >> +       if (!mstop)
-> >> +               return;
-> >> +
-> >> +       value = MSTOP_MASK(mstop->conf) << 16;
-> >> +
-> >> +       if (standby) {
-> >> +               unsigned int criticals = 0;
-> >> +
-> >> +               for (unsigned int i = 0; i < clock->num_shared_mstop_clks; i++) {
-> >> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
-> >> +
-> >> +                       if (clk_hw_get_flags(&clk->hw) & CLK_IS_CRITICAL)
-> >> +                               criticals++;
-> >> +               }
-> >> +
-> >> +               /*
-> >> +                * If this is a shared MSTOP and it is shared with critical clocks,
-> >> +                * and the system boots up with this clock enabled but no driver
-> >> +                * uses it the CCF will disable it (as it is unused). As we don't
-> >> +                * increment reference counter for it at registration (to avoid
-> >> +                * messing with clocks enabled at probe but later used by drivers)
-> >> +                * do not set the MSTOP here too if it is shared with critical
-> >> +                * clocks and ref counted only by those critical clocks.
-> >> +                */
-> >> +               if (criticals && criticals == atomic_read(&mstop->usecnt))
-> >> +                       return;
-> >> +
-> >> +               value |= MSTOP_MASK(mstop->conf);
-> >> +
-> >> +               /* Allow updates on probe when usecnt = 0. */
-> >> +               if (!atomic_read(&mstop->usecnt))
-> >> +                       update = true;
-> >> +               else
-> >> +                       update = atomic_dec_and_test(&mstop->usecnt);
-> >> +       } else {
-> >> +               atomic_inc(&mstop->usecnt);
-> >> +               update = true;
-> >
-> > Shouldn't the update be conditional, i.e.:
-> >
-> >     if (!atomic_read(&mstop->usecnt))
-> >             update = true;
-> >     atomic_inc(&mstop->usecnt);
-> >
-> > ?
->
-> Indeed, it should be conditional as you suggested.
->
-> >
-> >> +       }
-> >> +
-> >> +       if (update)
-> >> +               writel(value, priv->base + MSTOP_OFF(mstop->conf));
-> >> +}
-> >
-> >> +static int rzg2l_mod_clock_update_shared_mstop_clks(struct rzg2l_cpg_priv *priv,
-> >> +                                                   struct mstp_clock *clock)
-> >> +{
-> >> +       struct mstp_clock *clk;
-> >> +       struct clk_hw *hw;
-> >> +
-> >> +       if (!clock->mstop)
-> >> +               return 0;
-> >> +
-> >> +       for_each_mstp_clk(clk, hw, priv) {
-> >> +               struct mstp_clock **new_clks;
-> >> +               int num_shared_mstop_clks;
-> >> +               bool found = false;
-> >> +
-> >> +               if (clk->mstop != clock->mstop)
-> >> +                       continue;
-> >> +
-> >> +               num_shared_mstop_clks = clk->num_shared_mstop_clks;
-> >> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
-> >> +                       if (clk->shared_mstop_clks[i] == clock) {
-> >> +                               found = true;
-> >> +                               break;
-> >> +                       }
-> >> +               }
-> >> +               if (found)
-> >> +                       continue;
-> >
-> > Can this happen? With your current code, the answer is yes.
-> > But I think this loop and check can be removed...
-> >
-> >> +
-> >> +               if (!num_shared_mstop_clks)
-> >> +                       new_clks = devm_kmalloc_array(priv->dev, 2, sizeof(*new_clks), GFP_KERNEL);
-> >> +               else
-> >> +                       new_clks = devm_krealloc(priv->dev, clk->shared_mstop_clks,
-> >> +                                                (num_shared_mstop_clks + 1) * sizeof(*new_clks),
-> >> +                                                GFP_KERNEL);
-> >> +
-> >> +               if (!new_clks)
-> >> +                       return -ENOMEM;
-> >> +
-> >> +               if (!num_shared_mstop_clks)
-> >> +                       new_clks[num_shared_mstop_clks++] = clk;
-> >> +               if (clk != clock)
-> >
-> > This check is always true
->
-> If I'm not wrong now, when adding the clock to it's own list, and the list
-> is empty (!num_shared_mstop_clks check above is true), if this condition is
-> missing the clock it will be added twice in its own list.
+Making it a boolean property is good. Please include in the binding
+the behaviour when the bool is not present.
 
-Sorry, I missed that this function is called _after_ the clock is
-added to priv->clks[].  So one question and comment here:
-  1. Do you need a one-entry array (actual allocation is two entries)
-     for module clocks with an mstop entry that is not shared?
-     Perhaps for critical clocks? That could be handled in
-     rzg2l_mod_clock_module_set_state(), by explicitly checking
-     the clock's own critical flag if num_shared_mstop_clks is zero.
+What you are really describing here is a sort cable, not phy-to-phy,
+since a PHY is always connected to another PHY. So i think the
+property name should be about the sort cable/distance.
 
-  2. If rzg2l_mod_clock_update_shared_mstop_clks() would be called
-     _before_ the clock is added to priv->clks[], the clk != clock
-     check would not be needed.
-
-> >> +                       new_clks[num_shared_mstop_clks++] = clock;
-> >> +
-> >> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
-> >> +                       new_clks[i]->shared_mstop_clks = new_clks;
-> >> +                       new_clks[i]->num_shared_mstop_clks = num_shared_mstop_clks;
-> >> +               }
-> >
-> > ... by adding a "break" here.  The loop above has already updated the
-> > shared_mstop_clks[] arrays for all clocks sharing the same mstop value.
->
-> It may happen that the entries in the module clock array provided by the
-> SoC specific drivers to not be sorted by module clock ID. That's the case
-> with RZ/G2L IA55 clocks (from r9a07g044-cpg.c):
->
-> static const struct {
->         struct rzg2l_mod_clk common[79];
-> #ifdef CONFIG_CLK_R9A07G054
->         struct rzg2l_mod_clk drp[5];
-> #endif
-> } mod_clks = {
->   .common = {
->     // ...
->
->     DEF_MOD("ia55_pclk", R9A07G044_IA55_PCLK, R9A07G044_CLK_P2,
->                          0x518, 0, MSTOP(BUS_PERI_CPU, BIT(13))),
->     DEF_MOD("ia55_clk", R9A07G044_IA55_CLK, R9A07G044_CLK_P1,
->                          0x518, 1, MSTOP(BUS_PERI_CPU, BIT(13))),
->
->     // ...
-> };
->
-> Where IDs are defined as:
->
-> #define R9A07G044_IA55_CLK     8
-> #define R9A07G044_IA55_PCLK    9
->
-> These clocks share the same MSTOP bit.
->
-> Because the ia55_pclk is the 1st clock registered (index 9) it will be
-> added to priv->clks[base + 9].
->
-> Next registered clock will be for ia55_clk, with index 8, it will be added
-> to priv->clks[base + 8].
->
-> for_each_mstp_clk() loops on clocks from priv->clks[] array. If a break
-> will be done at the end of the for_each_mstp_clk() loop, at the end of the
-> registration each of these clocks will have on it's shared_mstop_clks[]
-> only references to itself.
-
-If rzg2l_mod_clock_update_shared_mstop_clks() would be called _before_
-the clock is added to priv->clks[], this issue could not happen, right?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Andrew
