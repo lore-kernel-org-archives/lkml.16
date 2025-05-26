@@ -1,166 +1,207 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E310C202998
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF2D433AC;
+	Mon, 26 May 2025 14:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748269207; cv=none; b=buAD9BPce2gLZpz0uFWTG0Lp7V/hveUmyERjxkq2rKvyfeP4qrTOerxEKWBv0u1mF8C9xp24pSHsKycD5ahttqMd9sF/kdGH+cZJCBTbxj3/td1H7u/ImMGqJ7c34iWuW9+13YWReUVk7pPyAAM8Wlj3a8J73ywv1VRmDTOmYfo=
+	t=1748269234; cv=none; b=TXqDjTMlBTOOsXty6Z/ZINjaFNWWgk+/OVczhdyveoFyB8uwUOfAfSE2Zeb6kLrZBjGCQQBRGs/ug32YNMO3uMXT2cB8H3PwYaRK4R1QRXCST4d0a5A8JeehP4n3x6Jq9xgNzPq84WUy9cvl8Uv52eypKo9bhYEKsgWc8/m83N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748269207; c=relaxed/simple;
-	bh=teIdTvA6agQ3URnPoSAFhH+20mVDDaCR0mFd7vn8Bn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U8CjPruvy2cbtGqOfFbW5z763OJHE4JSuD18PjQCIptPQp7dM7u5W8tjqmtIhwVwh9PCgJ6BD1qEBe3yvJmNAnBdaqLHEgEBdVTdAJwpF3UGW9WxFWs0NPU//74ln+opLqMBlsYZGox8F/Lmh9Ixx1RxJX7TvYgfx2Q8Mn6S7zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dhZ+8xVh; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748269234; c=relaxed/simple;
+	bh=qSaTf9Fr1HTYg81JOV4N33GkdogpSxZkoVMlHOO3o4g=;
+	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ucaOz0BtJ4iKA1fwt/UGbM3sHEVG/2xq+L6iNHjeY3SSvkCR5j5Dy30ETq9Y2LUnhpEJT6fis9cx3TwLGErrhA8hpx48uQy0EK5ZmjVIeHvpNQkzQNIMsuzL4Me5xrm5FVxxFhwG4kv85dMn8rB1ctkkiHgmtnMbPHmuLZZF2c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=Zeq77+Ui; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dhZ+8xVh"
-Date: Mon, 26 May 2025 16:19:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748269201;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c3lctXpPr3gCedY2X7J7a/9DwfzkqXCtm6oTaRoym/A=;
-	b=dhZ+8xVhGACOPmI0apdxpLkrKWfJVUimjl3u8iOk0pxKsnlMN7U1+1TqOn2026+snma+cq
-	G2+KZRj4qgxjsVivfZ83jYtITl1/pPLAcKFoqVrKser38XLJttOEoqm1ImsY9aiSacUJ9j
-	luswcG1wYpiD7TeLQaDht4ZRX3LT+6s=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 01/11] kbuild: userprogs: add nolibc support
-Message-ID: <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
-References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
- <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="Zeq77+Ui"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1748269215; x=1748874015; i=frank-w@public-files.de;
+	bh=4f9ppK/Fd1kNyoiyUjqXMTXUiPAGCVkCczNjqtT5OaI=;
+	h=X-UI-Sender-Class:Date:From:To:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Zeq77+Ui8Kjqbg/i3xWB5bdnKbVE1cJtiuu5uVpwPF0vZ91/bmbdcYHKJJtRGe4l
+	 wAc+GBYVEjEFGrCENKgV0yVCtWCaf8M6t++/JPO962W/150g/gbMMkx07UzMiHiY/
+	 Cfr9U2Snk/+JoQOSHUStxNHLmUs54JCcnugZ58QymGgkS36DiITMsz9emlvI6tzCk
+	 ILN8WyXR6NPDUkwEVECeUNWBq/qPFvEmqfAVieaPU1GpJFsroEtVO5HVyLAAOjuA8
+	 dmfZ8fa5/X7Qr77bl35v25VzmAJN0ceWq4JW5REYY464QDLHpwKvrtaQkvN91HhUo
+	 1v6Ig1Maj9Ez03MLnQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [IPv6:::1] ([80.187.70.213]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M4axq-1uJ0zB1FSA-008YxW; Mon, 26
+ May 2025 16:20:15 +0200
+Date: Mon, 26 May 2025 16:20:13 +0200
+From: Frank Wunderlich <frank-w@public-files.de>
+To: Mikhail Kshevetskiy <mikhail.kshevetskiy@iopsys.eu>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3=5D_arm64=3A_dts=3A_mediatek=3A_mt7986?=
+ =?US-ASCII?Q?-bpi-r3=3A_Change_fan_PWM_value_for_mid_speed?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <20250526123123.2515967-1-mikhail.kshevetskiy@iopsys.eu>
+References: <20250526123123.2515967-1-mikhail.kshevetskiy@iopsys.eu>
+Message-ID: <B06376CB-BE3F-4645-8A4D-A9C67CDCA3EC@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:bxCOo6NnwP4696xdiATBJVUcyR19Efttn+RMrCvL3t5yCIPvHWj
+ 73AE7T2bI4nXG+51gFZF2YGDQSNvQX/iekaX1HmLMXb06fb9fd1YfOCHCPjPsQCdbl71raj
+ BfGhknkUJMIPUHwCS5bJCJZkFzw3j2QGcp9lxdb1xiY6TjPzU+7BBgCRjGxxXSZhtrpTGjH
+ lhpp2A3arlGCBDXiNXNzw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:QJUlpfucOPo=;BMBnJean3iHrUgGqZjLIR5Nn9I9
+ 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
+ g2Mk=
 
-On Mon, Apr 07, 2025 at 09:42:38AM +0200, Thomas Weißschuh wrote:
-> Userprogs are built with the regular kernel compiler $CC.
-> A kernel compiler does not necessarily contain a libc which is required
-> for a normal userspace application.
-> However the kernel tree does contain a minimal libc implementation
-> "nolibc" which can be used to build userspace applications.
-> 
-> Introduce support to build userprogs against nolibc instead of the
-> default libc of the compiler, which may not exist.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> 
-> ---
-> This could probably be moved out of the generic kbuild makefiles.
-> I think the ergonimics would suffer and this functionality could be
-> used by other users of userprogs.
-> 
-> Also this does currently not support out-of-tree builds.
+Am 26=2E Mai 2025 14:31:23 MESZ schrieb Mikhail Kshevetskiy <mikhail=2Ekshe=
+vetskiy@iopsys=2Eeu>:
+>Popular cheap PWM fans for this machine, like the ones coming in
+>heatsink+fan combos will not work properly at the currently defined
+>medium speed=2E Trying different pwm setting using a command
+>
+>  echo $value > /sys/devices/platform/pwm-fan/hwmon/hwmon1/pwm1
+>
+>I found:
+>
+>  pwm1 value     fan rotation speed   cpu temperature     notes
+>  -----------------------------------------------------------------
+>    0            maximal              31=2E5 Celsius        too noisy
+>   40            optimal              35=2E2 Celsius        no noise hear=
+able
+>   95            minimal
+>   above 95      does not rotate      55=2E5 Celsius
+>  -----------------------------------------------------------------
+>
+>Thus only cpu-active-high and cpu-active-low modes are usable=2E
+>I think this is wrong=2E
+>
+>This patch fixes cpu-active-medium settings for bpi-r3 board=2E
+>
+>I know, the patch is not ideal as it can break pwm fan for some users=2E
+>Likely this is the only official mt7986-bpi-r3 heatsink+fan solution
+>available on the market=2E
+>
+>This patch may not be enough=2E Users may wants to tweak their thermal_zo=
+ne0
+>trip points, thus tuning fan rotation speed depending on cpu temperature=
+=2E
+>That can be done on the base of the following example:
+>
+>  =3D=3D=3D example =3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  # cpu temperature below 25 Celsius degrees, no rotation
+>  echo 25000 > /sys/class/thermal/thermal_zone0/trip_point_4_temp
+>  # cpu temperature in [25=2E=2E32] Celsius degrees, normal rotation spee=
+d
+>  echo 32000 > /sys/class/thermal/thermal_zone0/trip_point_3_temp
+>  # cpu temperature above 50 Celsius degrees, max rotation speed
+>  echo 50000 > /sys/class/thermal/thermal_zone0/trip_point_2_temp
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>Signed-off-by: Mikhail Kshevetskiy <mikhail=2Ekshevetskiy@iopsys=2Eeu>
+>
+>---
+>From Frank Wunderlich <frank-w@public-files=2Ede>
+>Date: 04=2E03=2E2025
+>>
+>> sorry for delay
+>>
+>> i have the fan from sinovoip and that was working for me, but if your f=
+an only works with new values, i have no point against this change=2E
+>
+>Frank, does it means that you are signed off this patch?
 
-(out-of-tree == external kmods;  out-of-source == build-dir != source-dir)
+Let it count as
 
-you probably meant out-of-source.
+Acked-by: Frank Wunderlich <frank-w@public-files=2Ede>
 
-> For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-> installed into the build directory.
+Because i cannot test these values,as i only have 1 pwm fan for r3 in my m=
+ain router :p
+Maybe R4 fan works too,but not yet tested=2E
 
-Out-of-source builds could be achieved by adding 'headers' as 
-dependency, see below.
+Not sure if the complete testcase has to be in the commit description,but =
+this is maintainers decision=2E
 
-> ---
->  Documentation/kbuild/makefiles.rst | 12 ++++++++++++
->  scripts/Makefile.userprogs         | 16 +++++++++++++---
->  2 files changed, 25 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> index 3b9a8bc671e2e92126857059e985d6e5b2c43fd4..f905a6f77c965311c491cfd7ab3103185af7e82e 100644
-> --- a/Documentation/kbuild/makefiles.rst
-> +++ b/Documentation/kbuild/makefiles.rst
-> @@ -970,6 +970,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
->  
->  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
->  
-> +Bulding userprogs against nolibc
+>Changes from v1 to v2:
+> * improve patch description
+>
+>Changes from v2 to v3:
+> * added question to Frank Wunderlich
+>---
+> arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3=2Edts | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3=2Edts b=
+/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3=2Edts
+>index ed79ad1ae871=2E=2Eb0cc0cbdff0f 100644
+>--- a/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3=2Edts
+>+++ b/arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3=2Edts
+>@@ -42,7 +42,7 @@ fan: pwm-fan {
+> 		compatible =3D "pwm-fan";
+> 		#cooling-cells =3D <2>;
+> 		/* cooling level (0, 1, 2) - pwm inverted */
+>-		cooling-levels =3D <255 96 0>;
+>+		cooling-levels =3D <255 40 0>;
+> 		pwms =3D <&pwm 0 10000>;
+> 		status =3D "okay";
+> 	};
 
-Bulding -> Building
 
-> +--------------------------------
-> +
-> +Not all kernel toolchains provide a libc.
-> +Simple userprogs can be built against a very simple libc call "nolibc" provided
-> +by the kernel source tree.
-> +
-> +Example::
-> +
-> +  # lib/kunit/Makefile
-> +  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
-> +
->  When userspace programs are actually built
->  ------------------------------------------
->  
-> diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-> index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..a1447c02b948901631098b585f5cf4d3ea383a57 100644
-> --- a/scripts/Makefile.userprogs
-> +++ b/scripts/Makefile.userprogs
-> @@ -16,10 +16,20 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
->  user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
->  user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
->  
-> +user-libgcc     := $(call try-run,$(CC) -Werror $(KBUILD_USERCFLAGS) -lgcc -x c -shared /dev/null -o "$$TMP",-lgcc)
-> +
-> +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
-> +		      -ffreestanding -fno-stack-protector \
-> +		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
-> +user_nolibc_ldflags := -nostdlib -nostdinc -static
-> +user_nolibc_ldlibs  := $(user-libgcc)
-> +
->  user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
-> -			$($(target-stem)-userccflags)
-> -user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
-> -user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
-> +			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
-> +user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
-> +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
-> +user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
-> +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
->  
->  # Create an executable from a single .c file
->  quiet_cmd_user_cc_c = CC [U]  $@
-
-Adding another hunk for scripts/Makefile.userprogs would allow to build
-out-of-source:
-
-@@ -39,5 +49,5 @@ $(call multi_depend, $(user-cmulti), , -objs)
- # Create .o file from a .c file
- quiet_cmd_user_cc_o_c = CC [U]  $@
-       cmd_user_cc_o_c = $(CC) $(user_ccflags) -c -o $@ $<
--$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
-+$(user-cobjs): $(obj)/%.o: $(src)/%.c headers FORCE
-        $(call if_changed_dep,user_cc_o_c)
-
-But I am unsure if it is ok to add 'headers' as a build dependency for 
-userprogs.  For me, it feels a bit odd, but I think it really makes 
-sense here.
-
--- 
-Nicolas Schier
+regards Frank
