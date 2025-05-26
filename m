@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658C61F4725;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 659251F5430;
 	Mon, 26 May 2025 11:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260104; cv=none; b=TE3BKmp5OnIR9hjwSCMHNTRrVaLPq8ZjBNv28sSgRHWAUsPJmvXKIy7YJNxwo1xjDqka5H+20sSqVDVsXhvgQTbzzegU0iywOb/WMRoCRXWJ5rzNZSS0XJtHgADIhYay1XrSIDCLnssR+N/HoTD2cpvxlfvMWlm+S6QYBkYnG5c=
+	t=1748260104; cv=none; b=X9qxUbmXXBtn4fKR+hjWcN5B7VVKTKnhMYiWwds4rjb0KV1cAnIhpHNwEpSEZjm3bRKSDm9NKl8cOELMJh8HTuWmDamkOmL5fLG8LWFmwZ+P22Zkrh+M1W88eg0Mv4OTFuS7/Dyz+0tCP2Gc0B/yMGv/FSfx1pq5RvOcR23W4pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748260104; c=relaxed/simple;
-	bh=Z5e7LYUJWrN8Oqgcyb4aHiiFK/LIDVnO1Tn4lc/8a7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rx6TqHVwv4UYf6SlhFP1wyvvsDvML7uEvhioVD48EzzX7YVzlUszFrzwRQjfMpnoSB4bQFCqOjwlwrcJxcvWerfKdy7m3Ht9sd3atSXK5eyHMhWP0Yzzuf/sgNZuga2RBuxGG4aOyc3ob3g0tW+ubWtbGj6Wq5vESTJgZM5f3A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ye30ttZA; arc=none smtp.client-ip=10.30.226.201
+	bh=mjvrQsWSO1J2H28FWM14OXB9euTqINfAytRW7cgyZ0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=riEbCNATnH44wShEnvZEvnwHoOfx9lTPCEZnntJ1gyLUwDFIZkFLsFa6QBuZKcpsa5CFS/igGUAJly2hsSx7+Nj4Tuwhko8IcgIhzTk0kk9g7/GjUWCUsejrtwAf98O7jrBwklYS6xw9Wd75/Saj8a1jGQweXBUhrkmhUkj9blY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6Zpfet+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ye30ttZA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD50FC4CEF3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6Zpfet+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C73C4CEF4;
 	Mon, 26 May 2025 11:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1748260103;
-	bh=Z5e7LYUJWrN8Oqgcyb4aHiiFK/LIDVnO1Tn4lc/8a7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ye30ttZAMlNo34zgpSRrajqfBM4RbPOWOy6A87yyedXcwhwZ7mpVd59AFImhQJhTo
-	 UBmLp43z0ow17lrUxBqfGK4Cf6/rm13cDeWu9wWfUncSU6ZzmP77EaI24KIM1Rzhx4
-	 1f/io6bV48+6kFYvZsueZPywJLRLP+gva1yW+oQS0TuvcXxL5sXU2qSxJDrRnp94v5
-	 eCQZCWGuV/txZb8XSueafxQx5FK9yRaEofsu8tbwX8p87I80dvcFCBOwZV2PfNlX/5
-	 4PugJNjgKi2RueB0IA8QjcVcAcK5oXnqY5hOL1ftnXetSrw0a3YupEDAJgCth2FBzQ
-	 xepCCq71VjhQA==
+	bh=mjvrQsWSO1J2H28FWM14OXB9euTqINfAytRW7cgyZ0U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=V6Zpfet+GvE0ZyXQlCnLklLek4ilDIFtwmdSki7VZ5P2Gh29oZSXOEA7A2zs4/0wR
+	 k9VBpfTDBAz+7ZGBdVCqDH3ZKrSZbiAz9yuNkhNP15OssKm2/1gdZpLdQnKRiZYe1r
+	 fgxVTiuLB1TbEUgX677owKsxTwmdCjx3xRqhDmoTF/vcenvci8FKoAe5PN8vbLHlCC
+	 OzId22sIJflgJvJ3rIf43OcZdH/nayhJNDCqT9CK/jEdBB2q+EG4zn7503ebeKVu94
+	 7O021o5Eg0yQn9tPlxborkENhqo40ktOgdL7hZpBSAH80cMMARsDwTjeJEsjA+/VjS
+	 HN4bf2Z9iLGlw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1uJWJd-000000000Yu-1hee;
+	id 1uJWJc-000000000Yq-29Dy;
 	Mon, 26 May 2025 13:48:25 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jeff Johnson <jjohnson@kernel.org>
@@ -37,12 +36,10 @@ Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
 	ath11k@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 2/3] wifi: ath11k: use plain access for descriptor length
-Date: Mon, 26 May 2025 13:48:02 +0200
-Message-ID: <20250526114803.2122-3-johan+linaro@kernel.org>
+Subject: [PATCH 0/3] wifi: ath11k: fix dest ring-buffer corruption
+Date: Mon, 26 May 2025 13:48:00 +0200
+Message-ID: <20250526114803.2122-1-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250526114803.2122-1-johan+linaro@kernel.org>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,29 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The read memory barrier added by commit 6d037a372f81 ("wifi: ath11k: fix
-ring-buffer corruption") is enough to guarantee ordering also for plain
-descriptor accesses if the length helper is ever inlined so drop the
-unnecessary READ_ONCE().
+As a follow up to commits:
 
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/net/wireless/ath/ath11k/hal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	6d037a372f81 ("wifi: ath11k: fix ring-buffer corruption") 
+	ab52e3e44fe9 ("wifi: ath11k: fix rx completion meta data corruption")
 
-diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
-index 8cb1505a5a0c..1ea7c494f387 100644
---- a/drivers/net/wireless/ath/ath11k/hal.c
-+++ b/drivers/net/wireless/ath/ath11k/hal.c
-@@ -599,7 +599,7 @@ u32 ath11k_hal_ce_dst_status_get_length(void *buf)
- 	struct hal_ce_srng_dst_status_desc *desc = buf;
- 	u32 len;
- 
--	len = FIELD_GET(HAL_CE_DST_STATUS_DESC_FLAGS_LEN, READ_ONCE(desc->flags));
-+	len = FIELD_GET(HAL_CE_DST_STATUS_DESC_FLAGS_LEN, desc->flags);
- 	desc->flags &= ~HAL_CE_DST_STATUS_DESC_FLAGS_LEN;
- 
- 	return len;
+add the remaining missing memory barriers to make sure that destination
+ring descriptors are read after the head pointers to avoid using stale
+data on weakly ordered architectures like aarch64.
+
+Also switch back to plain accesses for the descriptor fields which is
+sufficient after the memory barrier.
+
+Johan
+	
+
+Johan Hovold (3):
+  wifi: ath11k: fix dest ring-buffer corruption
+  wifi: ath11k: use plain access for descriptor length
+  wifi: ath11k: use plain accesses for monitor descriptor
+
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 41 +++++++++++++++++--------
+ drivers/net/wireless/ath/ath11k/dp_tx.c |  3 ++
+ drivers/net/wireless/ath/ath11k/hal.c   |  2 +-
+ 3 files changed, 32 insertions(+), 14 deletions(-)
+
 -- 
 2.49.0
 
