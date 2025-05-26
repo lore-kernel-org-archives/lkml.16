@@ -1,213 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2077.outbound.protection.outlook.com [40.107.236.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4336121421C;
-	Mon, 26 May 2025 15:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748273965; cv=none; b=aHPzCEoRqCSMwjGp8edX90JKGIX1vZtdWwnU51PrW/Wf6ZJGTDxa4cFppJEPH6L2EwrW/Dzfx1CdIMIraqTf1tSPyxBhEWl8yZQrtRyaubH6+c/Kaqdd6feyoFt82iV993//hnUcM1mhAIzBF0VQxIJ9Te9x8xBxPoJoFAAdwLw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748273965; c=relaxed/simple;
-	bh=ch4UlhSRcLszMAM+USq4g6GagJ4v1ZQSXAIVyxnYpP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pN+BY/l+UmxRIpgvtxVnbl+9p0c7sHO/B36y6dwwjJOy2wwsEgPPztzlJtIzYZAO6yK6hsBWhAz1wdpYjIpNaaJTBbk+pbvXs2bK5AFScEM3efMifF5wqaK/R9zaJcn5Ayjj2Lh5uaIZ5Fj/iTH4MYAEcNjZPqbY0OZf8DH0OfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxwMzAve; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F092101B7;
+	Mon, 26 May 2025 15:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748274101; cv=fail; b=OKSi4oXROINmyJqvX1nj1iCXO5+apRYf1y+WGlbpKFptHmelcbfCVMtPEl91q69KGNoz6u2E1pJFU1BjSKoScf7im4v620MbNHj0dvnL7aU8NPbgKIlg7jgAZWNA5PrV6izYh3psXG6izw1ENagkVNq2EsSiGxXxKz0M5ZJb9bU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748274101; c=relaxed/simple;
+	bh=L025/Volje0xq5OibniD0CNa2bgUGkxjE2n6JgXflZw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dtnd9lu9bVymsKlK2qaa0oGWWwp4DmjTBARYKN9PGn20I91Onx/3k1fG2XwigvDP0TpLQE9hShedpEr4A4cbb2K7nigKczmOJHFF4zaSw/FA6a3ev78fdJPdcRLio3tEaZrxn7LpJmDLAaPYG+ICJdNx98TeriMGDSDywGoo7Lc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fn6Ytk2j; arc=fail smtp.client-ip=40.107.236.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxwMzAve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE02C4CEE7;
-	Mon, 26 May 2025 15:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748273964;
-	bh=ch4UlhSRcLszMAM+USq4g6GagJ4v1ZQSXAIVyxnYpP4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JxwMzAve0DnXzhNrTgDy2B7VSabV9Vr1C04z2hpBcDGcKwxFjzrAWYbCMlXVsJspD
-	 8JOSehSedd7mLgP760iizCeeU6/POxykJBQu9lGounJK9c0UdaNTmSHHNvbLP0j6Oi
-	 JmaZowh5N6bKqZAoJVoji7RVu7+jBdBWiXrwyU/CFUyU17yvKozEjFZx6Ape8wNXnx
-	 kQdKZuJy2VozzXV9ZT23mMyXoMFhE8K0M3D3A0EF/JorevESI5x2RE4bQKmgNI/CVG
-	 Nz+VZ/MfsEQJv5wlU9XHR9O2eGL244MGAFXl/5sZ87iKA+Ff7XcTA0lpPeZbpxjcfx
-	 Ue6nRwhqoApyQ==
-Date: Mon, 26 May 2025 16:39:19 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"moderated list:ARM/Microchip (AT91) SoC support" <linux-arm-kernel@lists.infradead.org>,
-	imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: ieee802154: Convert at86rf230.txt yaml
- format
-Message-ID: <20250526-laborer-repackage-0dd6f7730b2c@spud>
-References: <20250523154743.545245-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fn6Ytk2j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BMaMEfk2dFdgZgEJcca0FdVyxO02BmD/KrsPkKvlCCsck+VAG8RQcUz1BRNetQ6i5DzZTWmE/uzkxyYOIl7P6LOH3ykw5NHnu3IwAjOVZY3vi1eBDAee3g3NGx2YBrqetLoBIUtdW4AUyz8X0PwaCGRu165yEzcsg24zARe1tw/rCJlYWsSEOd6wHCq44GCmImfVhmcWy1gVS4XvJDUxeUleh7LEnZSe6In/yH/kBg4c/7u06r+O2tzYymE6spugL5WCnaqC3POMZQdB1BvV25i76LqdfVgzzNhDs/0kpldqTIz/gSyRzAxMMaaF5IlNSj7Dh7uSRRGvo7LAnek1nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UBriJYn4hgSOwZM3wQZYHmuMzfJmD0FUd/WWghOVJvk=;
+ b=b9OVBb0UaAuHFNwzM49E1OKyvkLHtYf8XTFtLdM03Si5yHZs5CBPgkIsokAFsSrQdCk9bpPSDJ7HyvpdMbqHHtHEnlfkjbQOQEqq64wgdWOB9yVWIDmO7TNnKeCR8PlZZP1AdIiIx19pXMu4siEmunIXtC3XjIfZdPo4XaqfRCen0uOjO2pwCebUicwu7YOupjdhDxHlOkFyu+rjCY80H9nI6rjZxiZD/OJEWuG+ESpHPyW+Dj7hx4MCc8RSg7zbfUeMpxwRgnFapRBnvK9JqVexahJ2LCYza3u+AYM23ZBczV7w0Mt/VJ/yIrA+9CZls0/iHVfT4D9fGPB0hQDI0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UBriJYn4hgSOwZM3wQZYHmuMzfJmD0FUd/WWghOVJvk=;
+ b=fn6Ytk2j2c7Gv4MQNGsPJP85rXtzPmlA3EezVNpHD1iNtTxZANZSAwgU9Ph+HXPTdoaXcIO7XOU6M+JEnAArJVaBSSYMLnis809P0ymf0cRK0tJrPN6XobCLb+aE4lAjGXPxxYzlkw5eET54h7oMVsbDgrapAPIIqtNPnC3prpcXhicK3rxrfz/X7AlJd2LT+Uv0Jg4Vdw9AAgHTC+d1XQy8XkRB8BC3FhkouiLPA0bX/yBzxqySK2GrySlwNMOpljlBdFcjYxj1qLPtDt1jkB1PDiSIf3e8OD7F6oz9TUdTxPneRUtPBL1RNv5y+ywjUgOXABEtym4Ucn+bh8sWOw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by MW4PR12MB7384.namprd12.prod.outlook.com (2603:10b6:303:22b::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Mon, 26 May
+ 2025 15:41:35 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8769.022; Mon, 26 May 2025
+ 15:41:34 +0000
+Date: Mon, 26 May 2025 12:41:33 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Abhijit Gangurde <abhijit.gangurde@amd.com>
+Cc: shannon.nelson@amd.com, brett.creeley@amd.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	corbet@lwn.net, leon@kernel.org, andrew+netdev@lunn.ch,
+	allen.hubbe@amd.com, nikhil.agarwal@amd.com,
+	linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/14] Introduce AMD Pensando RDMA driver
+Message-ID: <20250526154133.GF9786@nvidia.com>
+References: <20250508045957.2823318-1-abhijit.gangurde@amd.com>
+ <aCuywoNni6M+i07r@nvidia.com>
+ <6bc6fb63-2a31-808d-91f3-eb07a681e631@amd.com>
+ <20250526131938.GB9786@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526131938.GB9786@nvidia.com>
+X-ClientProxiedBy: MN0PR02CA0009.namprd02.prod.outlook.com
+ (2603:10b6:208:530::12) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AX1uLCkW5kwIJMO8"
-Content-Disposition: inline
-In-Reply-To: <20250523154743.545245-1-Frank.Li@nxp.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MW4PR12MB7384:EE_
+X-MS-Office365-Filtering-Correlation-Id: 30fed64b-9289-4c3f-cf76-08dd9c6bcb88
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vzaE4NJyeOOCDLaUOKE0doWf+pP4X0yojBhByehcYXt2AZtQCbHeLf/FHd8o?=
+ =?us-ascii?Q?UWJ/zzX6JveaXg07ZTB4cSIbls4/IkLvCHacQtOlnmlhpBUSJhjwWUT6a4xf?=
+ =?us-ascii?Q?j0GHm0CEi6Gqc88hr5MYTyJpDF9oO0XDr0oWn3KMPtJVhP8uRegmAynTOpsK?=
+ =?us-ascii?Q?coufvAgFOmC28buvVOFNSuwYBjrueZqkjyFJBAevnz89f1GByiYgg5QTw5rC?=
+ =?us-ascii?Q?Wvil7/FyiG0sE/iyh07/Mz2Fiq6YzbGpeVEjcjxu4cmfMCUvnxGsRdVDoY28?=
+ =?us-ascii?Q?BRhU7cXZFyxfsdJBULCaM3idKRefAHCMe5XHDYcRhfaaKUIAZpNB99CQg9GT?=
+ =?us-ascii?Q?4tG38pEo7343qtG3I2UvuYIFerLkk+M8CT3bytetuA+YC5D7zLmytC5pIY+j?=
+ =?us-ascii?Q?/9Cc0A6V5CcPzc061XtrzbkG+kwNiPpK+zuBr+S2tSpssuWbsOJJZenSb0lP?=
+ =?us-ascii?Q?ZtTSMFNJPzNLRpTJNcUQ69c/kYa8pbmuTlwhVFhDlXRXgVl38hh4XnaIPZCw?=
+ =?us-ascii?Q?oeS0UvzcMRXYsn6gU2HUMHCApbJjEmYiSTE/QGgOlhiFpseehd2MMr+xn8Xx?=
+ =?us-ascii?Q?NguRM4O+kse7asuQvn91QNn7hi75RsJBvEoMFJihW+3PNlrEx7BI8hXD1GmB?=
+ =?us-ascii?Q?dCJdlZ1KS+k3dGunORUYu3wsVQBDKNZQrlJWQ4WdSemwzBfcKPXzN49/GZur?=
+ =?us-ascii?Q?Qv9yGO8Qlw+k4d73IKkQv5/Sd2RTSLf5omtRc6edTEWSAwhcXULOasPN9SRz?=
+ =?us-ascii?Q?gmWX08DE5yoCHVMT7bNNrB7Y9Baea4aD6zhrIDYzWzrhEOF5nQMH+4Xd2CYr?=
+ =?us-ascii?Q?I/2Mjw0vnzBA81sYOl0k9MxKJ7wHi29H+V9BuXrgeN3W5mRoLcp/mP92eRqz?=
+ =?us-ascii?Q?DZfIdkf1uswj3Gqe2k2QiCgbQGEw7oP8yc82jPwVsZEkzn2VrrViQvpW5tY9?=
+ =?us-ascii?Q?Vnz5a8WisyLBSnStLrSI8ob4R/kuhqTlT/D5qm82SHOo+pfr0jElVuRrRu+4?=
+ =?us-ascii?Q?gX4qBGB4g+4q0wRoIO47xcYpud46U+PY5TPtEmSglAw438WujZpKGNLiq+w6?=
+ =?us-ascii?Q?8evl0APx/ixNCaAFmwTyEna0cvz4prgnL99yH9U5zDxOZ6BaqtUEVlFSUXI0?=
+ =?us-ascii?Q?1N9g5g/z6EkAz6EW1pU2FxQBiMWSfNt2/ryEnEPrrXgDMX+52b18xwf/vZlc?=
+ =?us-ascii?Q?E2oR2AwIpjMdYkBXnSZgF4Rx0oOHsx0PcFR4s94J4MStKrFp4QdfRGDo1gjz?=
+ =?us-ascii?Q?1hnwg/Vx5CwfVEmvf1YJ9UqYftqIzTG1QUT2AVmZQ9RkB977SscLfPYzOp3D?=
+ =?us-ascii?Q?kBW+MPClGQY3xxVgkND/ahZ7Lc7U4sVCCckXrqmbI7A3Ii6NOZnjqz1qHU/Z?=
+ =?us-ascii?Q?bAoR8oO/cLVaaL3+US8vEB0MRTErN/X3Ih6jYA5BE7RWVeCCDeb00gsTAJnq?=
+ =?us-ascii?Q?9Z1XuuGXJIQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mikpjYfdlRR7mXUfugJ+kUGu3v1OPDgzHqG+3q8m4lC7CseYdzqoqMDNHRht?=
+ =?us-ascii?Q?M9IfHc+RUd8o0SmlCwK7TFN2ywa46LZpZ8kgRJT4PvNu2UsUQIFHjKH7I+oN?=
+ =?us-ascii?Q?8m4WlrTAvJkB94Hon4iulnv15/54km5jfvGt7BScvkzAZE9xs4Cqx4eusHBW?=
+ =?us-ascii?Q?LF1iYF/no+B4NAX4iqJLGmQAgN1YUK4DrAG6LYiXhemnjSM0WOqcXzhXOJV9?=
+ =?us-ascii?Q?sbWy+ooBLsvVvrOJXI0H+bkC228Xa4vWjysIMZg1mmATI+BZmhRaxpf96O6s?=
+ =?us-ascii?Q?FiRGiytDi/yVNhqpGPNhJ2Sxgyngj39zt6ZBjMx+BNsPYrokU5IlhLBlP6Do?=
+ =?us-ascii?Q?gH/yyCoiXIrSJhy+dLQFFV/3Fc33JZnmcu2HOJW7Jzea+lZa1QisOwv4bqiY?=
+ =?us-ascii?Q?DawrAYfgoU7EVLDui0CZynA26POcLyH9lYw2l1rwF61NZMtUzSnqKooFVWM5?=
+ =?us-ascii?Q?0DOYCjq/Qg2vivGXXS68dEnsCf7RZhIN3vYEjw5SbyMf+6wVnswnXIWOvK3W?=
+ =?us-ascii?Q?7t2gpzp1x4FQrjxvWGvIFINRQeDtD053MiSWHjvEZ+gIiMXLhP3FjofegttL?=
+ =?us-ascii?Q?kPSc/6FaPF92RR7pGov70LZceq6qjaKm7s+SW03ptQwymdc/yB8e1cAtto21?=
+ =?us-ascii?Q?3cEB8QQz3rK2e32zoEI8jxo66yzqlaXal7OwzjSLVnRsY186zsnlmYM7woSA?=
+ =?us-ascii?Q?T3P62ggOdiblRo/IfL2Qlg49RSlcXYAyY22AU5MpGTtOoL4XnEDRripdcaUG?=
+ =?us-ascii?Q?lSJDPGAKEA+qDX5IL3zf4S6cqFbTDNDFj9wKqQiU2T3iXFPkrZThUlFqeuK2?=
+ =?us-ascii?Q?ZmAmjDotE2oWoQAKhaCLHa+MHcZakW6ZMq2g6TfnnEcd/ktoG/cGy8PsaNFl?=
+ =?us-ascii?Q?YCOk9zuR/G+yZWok5SuYwdYp0ylpN8QS8LGpwf6VyD50mF8tdnJjFrSikj8y?=
+ =?us-ascii?Q?AFUqmHdKoshHn8OVCouLSmUz6l3s211WHTDIrvNR4Sm8UniHa6+uGqyy5Uq4?=
+ =?us-ascii?Q?w7lGumhO4QFpOutITPguLfoGmqayegvEYFz3mDZPLhFiRoPzseojdEqO2/WR?=
+ =?us-ascii?Q?cpNXpCfjhRTaf6hUCSlyO6o9eKfxGCgnU7oLCnCFeYY9sgTFCGVnqKMbLPix?=
+ =?us-ascii?Q?EBc3gFvpzdJ71BTBZahvDq6kDzRz+pL/0phtGISZCH0XExuKsmRY4IZyF5iu?=
+ =?us-ascii?Q?46IdXh6I/V1wBOQIEbtkwW4u0v+k7PYix7FsC0t5SBjCxChCB5FoANdHfoLU?=
+ =?us-ascii?Q?3rvMIQ8wrbc07GSFDCWfIXUclOkBNxZmCKISt2+DwSIlojlFCbJ9dFyk+qTb?=
+ =?us-ascii?Q?tsu6imRhh183s9kgNbhcUkFkvGpUDT/8wGCtomu/ONExFqfFdzr8aNXyHvav?=
+ =?us-ascii?Q?yQjnLHQ+AhfNChq1FdP4KTniRADpZmyR75/17uuZiZzWz/gNSIcKwTRqQsvm?=
+ =?us-ascii?Q?yTzp8p3AbASo0I6CGfWLBGkdL1Fc1t4N1B7ecWFs03sBzj1g7j9vuEb6zqFB?=
+ =?us-ascii?Q?BXU2dgTchMsHSuz4alF+jD8UEn7+pDRvxjItYY9pgj0qpneyfPWnp0Sa0Dnl?=
+ =?us-ascii?Q?V+ivkLwTFPeX1R3Gm6UwewytndCKt1nYAVfQrtUU?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30fed64b-9289-4c3f-cf76-08dd9c6bcb88
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 15:41:34.8524
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nKJ6gwYIKjFNTJEcOwKnTAHBNYDJ6zjsqMgLz0n0I4+BxEBOPVcM7BkL4T/cX7Ev
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7384
 
+On Mon, May 26, 2025 at 10:19:38AM -0300, Jason Gunthorpe wrote:
+> > > @@ -1454,11 +1466,15 @@ static int ionic_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata)
+> > >   static bool pd_local_privileged(struct ib_pd *pd)
+> > >   {
+> > > +	/* That isn't how it works, only the lkey get_dma_mr() returns is
+> > > +	special and must be used on any WRs that require it. WRs refering to any
+> > > +	other lkeys must behave normally. */
+> > >   	return !pd->uobject;
+> > >   }
 
---AX1uLCkW5kwIJMO8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was thinking about this some more, probably the call to get_dma_mr()
+should set a flag in the pd struct (you need a pds_pd struct) which
+indicates that the IONIC_DMA_LKEY is enabled on that PD. Then all
+QPs/etc created against the PD should allow using it.
 
-On Fri, May 23, 2025 at 11:47:39AM -0400, Frank Li wrote:
-> Convert at86rf230.txt yaml format.
->=20
-> Additional changes:
-> - Add ref to spi-peripheral-props.yaml.
-> - Add parent spi node in examples.
->=20
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../bindings/net/ieee802154/at86rf230.txt     | 27 --------
->  .../net/ieee802154/atmel,at86rf233.yaml       | 65 +++++++++++++++++++
->  2 files changed, 65 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/ieee802154/at86=
-rf230.txt
->  create mode 100644 Documentation/devicetree/bindings/net/ieee802154/atme=
-l,at86rf233.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/net/ieee802154/at86rf230.t=
-xt b/Documentation/devicetree/bindings/net/ieee802154/at86rf230.txt
-> deleted file mode 100644
-> index 168f1be509126..0000000000000
-> --- a/Documentation/devicetree/bindings/net/ieee802154/at86rf230.txt
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -* AT86RF230 IEEE 802.15.4 *
-> -
-> -Required properties:
-> -  - compatible:		should be "atmel,at86rf230", "atmel,at86rf231",
-> -			"atmel,at86rf233" or "atmel,at86rf212"
-> -  - spi-max-frequency:	maximal bus speed, should be set to 7500000 depen=
-ds
-> -			sync or async operation mode
-> -  - reg:		the chipselect index
-> -  - interrupts:		the interrupt generated by the device. Non high-level
-> -			can occur deadlocks while handling isr.
-> -
-> -Optional properties:
-> -  - reset-gpio:		GPIO spec for the rstn pin
-> -  - sleep-gpio:		GPIO spec for the slp_tr pin
-> -  - xtal-trim:		u8 value for fine tuning the internal capacitance
-> -			arrays of xtal pins: 0 =3D +0 pF, 0xf =3D +4.5 pF
-> -
-> -Example:
-> -
-> -	at86rf231@0 {
-> -		compatible =3D "atmel,at86rf231";
-> -		spi-max-frequency =3D <7500000>;
-> -		reg =3D <0>;
-> -		interrupts =3D <19 4>;
-> -		interrupt-parent =3D <&gpio3>;
-> -		xtal-trim =3D /bits/ 8 <0x06>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/ieee802154/atmel,at86r=
-f233.yaml b/Documentation/devicetree/bindings/net/ieee802154/atmel,at86rf23=
-3.yaml
-> new file mode 100644
-> index 0000000000000..275e5e4677a46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ieee802154/atmel,at86rf233.ya=
-ml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/ieee802154/atmel,at86rf233.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: AT86RF230 IEEE 802.15.4
-> +
-> +maintainers:
-> +  - Frank Li <Frank.Li@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,at86rf212
-> +      - atmel,at86rf230
-> +      - atmel,at86rf231
-> +      - atmel,at86rf233
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpio:
-> +    maxItems: 1
-> +
-> +  sleep-gpio:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 7500000
-> +
-> +  xtal-trim:
-> +    $ref: /schemas/types.yaml#/definitions/uint8-array
+Checking a uobject here is just a little weird.
 
-I think this is just uint8, not an array of uint8s (in which case you'd
-be missing constraints on how many?)
-
-> +    description: |
-> +      u8 value for fine tuning the internal capacitance
-> +      arrays of xtal pins: 0 =3D +0 pF, 0xf =3D +4.5 pF
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        zigbee@0 {
-> +            compatible =3D "atmel,at86rf231";
-> +            reg =3D <0>;
-> +            spi-max-frequency =3D <7500000>;
-> +            interrupts =3D <19 4>;
-> +            interrupt-parent =3D <&gpio3>;
-> +            xtal-trim =3D /bits/ 8 <0x06>;
-> +        };
-> +    };
-> --=20
-> 2.34.1
->=20
-
---AX1uLCkW5kwIJMO8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDSLJwAKCRB4tDGHoIJi
-0qV3AQDwD/JHyyrPfgpUbSBTgf1HnrVPkzCoveSe40iVlVWiuQEAhXl0mGpT4VHu
-F9AtcPvAsCTjG2v1kpvXN1AAKaU/bAw=
-=siVm
------END PGP SIGNATURE-----
-
---AX1uLCkW5kwIJMO8--
+Jason
