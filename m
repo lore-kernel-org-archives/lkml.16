@@ -1,112 +1,179 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9611F9413;
-	Mon, 26 May 2025 11:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7172A1FBCAD;
+	Mon, 26 May 2025 11:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258263; cv=none; b=Q1bJH+bLALlZmoLPmlA/88hzphNR/cWtU9Ht6mR/bhDax2v6xrDFLs+h+IbGqJ79fIaaUWc7L7wCPl4D1NUTPyawSxLNfwvMZbgk9jdH62l8PJr5KreVm4QwbflMAl40ZXWr3I/Vskgw65UpTbBBV+KCqNuFyaw7Gf5X4hnmpaM=
+	t=1748258265; cv=none; b=Yfy6uosTTll3rvywzDRW9sHJGl8JsFAhPSqq3ZmgkxakjgG5LK7OUO3Ykg0AdLaeRfNgYqSpX1zFmzdzGMxXGbxV/ja6ksLE9reARc9rRRbf4STSIpu+UlKBKZnK18JUUBIXMqL2nDqh/Bs6nBCdarD5rU5xffLzqSc2slZq18o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258263; c=relaxed/simple;
-	bh=SFHPQkB/Mt4aGlD1gas9fY5CYz3PxckINfIH0EnFEI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B1xNukO/NU6Oy5UAMihgTXonCAV8k+5qeVb0TFC2muCON2wt0TihjiLP9OecoaAQykzZQHJOWCyNj6swZIT4pZyXgLF5s9PLp74lMreZcLUeBzDDxyoGADtlSYLPgEYF2KMwGMfBHqntBxHk/g9IJJvRXwL4Nh/E9wh0VOfis2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VrvX8wJ9; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748258265; c=relaxed/simple;
+	bh=PBPe90EmkeTzv0pAq+9nTuqelIMcNfbKV9AJIMc6EMo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MCq2HUSJ3PtkD/KPH23RcrjiTg2Yj+sjD5CkwUq+L0ovZb7t9BiR+ADImqK6Cpr0ywWmbAOgbt6QPL7ty7TLheHM0gP//cCHpAYiJWG03DNDRSJkpMNIxynNeQtqkkU66q3PzU5iakNVmqgzLpqefA0bLTNfkFshukS+YwyU0jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DWuEAwQ3; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VrvX8wJ9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748258262; x=1779794262;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SFHPQkB/Mt4aGlD1gas9fY5CYz3PxckINfIH0EnFEI0=;
-  b=VrvX8wJ9/AyFiVrKEAyxDgKTPNarZc/lqMTDP7HsfXqZ86ofvWGrTcGP
-   mNKqTnOok1b+uWMWv+QERvcofISBANniht9hGjQHqWwQA9HaAJCTmldPz
-   BQJAwJqKdX+oyQ7PS4K/igajLVa3YvoQ8cw2je1xk3U4OaCeK67KDtv0n
-   TOJbfH8ILK1wb6u9Ig428fIUx64QhltSt7VQw58THNVjbKL6NC+y79B7Q
-   X92umFvreeQE/CQ1GsOcrvIBcSw6VmYVOMtazrQnwlZTY3ilMOcyDfFHI
-   zQ65p8nfV25L7gurQg/Cj1oC7ZubOMHTrWMjdrPBXW7Ski+1TxVyHIHRs
-   g==;
-X-CSE-ConnectionGUID: FR2qtRvQRsqPPrtmX7BTnA==
-X-CSE-MsgGUID: S9eMi6ljRd2EYKKQnNGzJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="49935355"
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="49935355"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 04:17:39 -0700
-X-CSE-ConnectionGUID: V8Ku9zXnSOq9uaCER7WLfA==
-X-CSE-MsgGUID: qvMUM5vPSKOEGkJYjRLqEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,315,1739865600"; 
-   d="scan'208";a="142273287"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.125])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 04:17:35 -0700
-Received: from punajuuri.localdomain (unknown [192.168.240.130])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id C293511F7E3;
-	Mon, 26 May 2025 14:17:32 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.96)
-	(envelope-from <sakari.ailus@linux.intel.com>)
-	id 1uJVpk-0022kq-2J;
-	Mon, 26 May 2025 14:17:32 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-doc@vger.kernel.org
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Akshay Gupta <akshay.gupta@amd.com>,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	hans@jjverkuil.nl,
-	laurent.pinchart@ideasonboard.com,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Lee Jones <lee@kernel.org>
-Subject: [PATCH 1/2] Documentation: Bump media IOCTL reserved numbers
-Date: Mon, 26 May 2025 14:17:31 +0300
-Message-Id: <20250526111732.487229-2-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
-References: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DWuEAwQ3"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PMe8Ue012996;
+	Mon, 26 May 2025 11:17:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=8YfDLK
+	zQGN/y5mMx1mM3EDrBqLWVSTCoOmF/0Sv11cU=; b=DWuEAwQ3he8M4ZUYkhaZS2
+	PBNdwjvwpsql1KIPpvAvC09SQNfe9JMhInjQDcNWfYEj3Q35l4jUo2QY/vGVki5L
+	dgbZianAFc9q4rBPT1iX+30FHJmH30By/nGGRu9HN5Z7BB8+HaZahMGCYXbgk9Z7
+	uqLNlhXh5EfbwHPcYPQCfnA6VSXaONq22IYyp28Jq6c/GBF+SxBwahkrfT/XHzu3
+	5M6UagNfXYljfFh32zCY/5XsxZkI7S8OIBbmXXtjwECq8uaWK5+pwv5OUN+Ma2Dg
+	1p8Rq5DpdNy0HDVNdsPSpB5to59N62qZRRwOpV8PDfdUIurGdf5gfkGYvmBPdbsA
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46v0p2ckm2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 11:17:40 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q7575H016644;
+	Mon, 26 May 2025 11:17:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46ureu62tc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 11:17:40 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54QBHaNg54133004
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 11:17:36 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6598520043;
+	Mon, 26 May 2025 11:17:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C740220040;
+	Mon, 26 May 2025 11:17:35 +0000 (GMT)
+Received: from [9.111.82.242] (unknown [9.111.82.242])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 26 May 2025 11:17:35 +0000 (GMT)
+Message-ID: <5e058fd1-ccee-43c3-92eb-ad72d2dbc1f3@linux.ibm.com>
+Date: Mon, 26 May 2025 13:17:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] KVM: s390: refactor and split some gmap helpers
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        seiden@linux.ibm.com, nsg@linux.ibm.com, nrb@linux.ibm.com,
+        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
+References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
+ <20250520182639.80013-5-imbrenda@linux.ibm.com>
+Content-Language: en-US
+From: Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; keydata=
+ xsFNBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
+ qLqYr+qrG3buymJJRD9xkp4mqgasHdB5WR9MhXWKH08EvtvAMkEJLnqxgbqf8td3pCQ2cEpv
+ 15mH49iKSmlTcJ+PvJpGZcq/jE42u9/0YFHhozm8GfQdb9SOI/wBSsOqcXcLTUeAvbdqSBZe
+ zuMRBivJQQI1esD9HuADmxdE7c4AeMlap9MvxvUtWk4ZJ/1Z3swMVCGzZb2Xg/9jZpLsyQzb
+ lDbbTlEeyBACeED7DYLZI3d0SFKeJZ1SUyMmSOcr9zeSh4S4h4w8xgDDGmeDVygBQZa1HaoL
+ Esb8Y4avOYIgYDhgkCh0nol7XQ5i/yKLtnNThubAcxNyryw1xSstnKlxPRoxtqTsxMAiSekk
+ 0m3WJwvwd1s878HrQNK0orWd8BzzlSswzjNfQYLF466JOjHPWFOok9pzRs+ucrs6MUwDJj0S
+ cITWU9Rxb04XyigY4XmZ8dywaxwi2ZVTEg+MD+sPmRrTw+5F+sU83cUstuymF3w1GmyofgsU
+ Z+/ldjToHnq21MNa1wx0lCEipCCyE/8K9B9bg9pUwy5lfx7yORP3JuAUfCYb8DVSHWBPHKNj
+ HTOLb2g2UT65AjZEQE95U2AY9iYm5usMqaWD39pAHfhC09/7NQARAQABzSVKYW5vc2NoIEZy
+ YW5rIDxmcmFua2phQGxpbnV4LmlibS5jb20+wsF3BBMBCAAhBQJbm6Q+AhsjBQsJCAcCBhUI
+ CQoLAgQWAgMBAh4BAheAAAoJEONU5rjiOLn4p9gQALjkdj5euJVI2nNT3/IAxAhQSmRhPEt0
+ AmnCYnuTcHRWPujNr5kqgtyER9+EMQ0ZkX44JU2q7OWxTdSNSAN/5Z7qmOR9JySvDOf4d3mS
+ bMB5zxL9d8SbnSs1uW96H9ZBTlTQnmLfsiM9TetAjSrR8nUmjGhe2YUhJLR1v1LguME+YseT
+ eXnLzIzqqpu311/eYiiIGcmaOjPCE+vFjcXL5oLnGUE73qSYiujwhfPCCUK0850o1fUAYq5p
+ CNBCoKT4OddZR+0itKc/cT6NwEDwdokeg0+rAhxb4Rv5oFO70lziBplEjOxu3dqgIKbHbjza
+ EXTb+mr7VI9O4tTdqrwJo2q9zLqqOfDBi7NDvZFLzaCewhbdEpDYVu6/WxprAY94hY3F4trT
+ rQMHJKQENtF6ZTQc9fcT5I3gAmP+OEvDE5hcTALpWm6Z6SzxO7gEYCnF+qGXqp8sJVrweMub
+ UscyLqHoqdZC2UG4LQ1OJ97nzDpIRe0g6oJ9ZIYHKmfw5jjwH6rASTld5MFWajWdNsqK15k/
+ RZnHAGICKVIBOBsq26m4EsBlfCdt3b/6emuBjUXR1pyjHMz2awWzCq6/6OWs5eANZ0sdosNq
+ dq2v0ULYTazJz2rlCXV89qRa7ukkNwdBSZNEwsD4eEMicj1LSrqWDZMAALw50L4jxaMD7lPL
+ jJbazsFNBFubpD4BEADAcUTRqXF/aY53OSH7IwIK9lFKxIm0IoFkOEh7LMfp7FGzaP7ANrZd
+ cIzhZi38xyOkcaFY+npGEWvko7rlIAn0JpBO4x3hfhmhBD/WSY8LQIFQNNjEm3vzrMo7b9Jb
+ JAqQxfbURY3Dql3GUzeWTG9uaJ00u+EEPlY8zcVShDltIl5PLih20e8xgTnNzx5c110lQSu0
+ iZv2lAE6DM+2bJQTsMSYiwKlwTuv9LI9Chnoo6+tsN55NqyMxYqJgElk3VzlTXSr3+rtSCwf
+ tq2cinETbzxc1XuhIX6pu/aCGnNfuEkM34b7G1D6CPzDMqokNFbyoO6DQ1+fW6c5gctXg/lZ
+ 602iEl4C4rgcr3+EpfoPUWzKeM8JXv5Kpq4YDxhvbitr8Dm8gr38+UKFZKlWLlwhQ56r/zAU
+ v6LIsm11GmFs2/cmgD1bqBTNHHcTWwWtRTLgmnqJbVisMJuYJt4KNPqphTWsPY8SEtbufIlY
+ HXOJ2lqUzOReTrie2u0qcSvGAbSfec9apTFl2Xko/ddqPcZMpKhBiXmY8tJzSPk3+G4tqur4
+ 6TYAm5ouitJsgAR61Cu7s+PNuq/pTLDhK+6/Njmc94NGBcRA4qTuysEGE79vYWP2oIAU4Fv6
+ gqaWHZ4MEI2XTqH8wiwzPdCQPYsSE0fXWiYu7ObeErT6iLSTZGx4rQARAQABwsFfBBgBCAAJ
+ BQJbm6Q+AhsMAAoJEONU5rjiOLn4DDEP/RuyckW65SZcPG4cMfNgWxZF8rVjeVl/9PBfy01K
+ 8R0hajU40bWtXSMiby7j0/dMjz99jN6L+AJHJvrLz4qYRzn2Ys843W+RfXj62Zde4YNBE5SL
+ jJweRCbMWKaJLj6499fctxTyeb9+AMLQS4yRSwHuAZLmAb5AyCW1gBcTWZb8ON5BmWnRqeGm
+ IgC1EvCnHy++aBnHTn0m+zV89BhTLTUal35tcjUFwluBY39R2ux/HNlBO1GY3Z+WYXhBvq7q
+ katThLjaQSmnOrMhzqYmdShP1leFTVbzXUUIYv/GbynO/YrL2gaQpaP1bEUEi8lUAfXJbEWG
+ dnHFkciryi092E8/9j89DJg4mmZqOau7TtUxjRMlBcIliXkzSLUk+QvD4LK1kWievJse4mte
+ FBdkWHfP4BH/+8DxapRcG1UAheSnSRQ5LiO50annOB7oXF+vgKIaie2TBfZxQNGAs3RQ+bga
+ DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
+ Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
+ phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
+In-Reply-To: <20250520182639.80013-5-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 80i3LwlsFgS_mw19Qo2Yo2Nj2ZOgv3os
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA5NCBTYWx0ZWRfXxT8kfM7mmxrj sFy1TgzVHZPTCebkYMoERdPQiZPrFEQ/rgpnhyqHEIoZl4Pxe+GCP3Gc7qXRAibrZn3nMk9EWiD hdsfleiQrW11O16+bnuoF66EpgJLs8/n8leE2nh/UVXLjI065/QlZ0DUSE164XmrqJu8//ebTf4
+ uRzIhv9tq6tZN3s1zY0p9Vf2LpmaI8fsHoAcC4iyQmKgPYZGzHHwZ6W3teD9J+TcGibqyGq+rnQ i1oOTnxTWVKLarOqh8R+JPV7JV8CB18aedSE9E7Czx+kqcj8HaY/LdDqZ6Fth7rc67gQK82Zyim RHO7jAgMgItuQ5zTMY9aSBoHA9UIzEBMGurOQADIoJzM1mkDnnvBcC6yzs7q4SGV5HrRkglWDmH
+ YN4nccYfcrOveqm6PiJCS+K79QLccSGah2cFZ+ptHoMR0811pek5SCzYI3nKhbOoJUHAvQBc
+X-Authority-Analysis: v=2.4 cv=Q7TS452a c=1 sm=1 tr=0 ts=68344dd5 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=fDxGR4FE8qlWS1JHXvMA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 80i3LwlsFgS_mw19Qo2Yo2Nj2ZOgv3os
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_05,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 clxscore=1015
+ malwarescore=0 adultscore=0 mlxscore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505260094
 
-The Media Controller uses IOCTL numbers up to 0x81. Given that nothing
-appears to be using them for other purposes, even in the samples
-allocation (checked with $ git grep "#define.*_IO.*'|'"), just reassign
-the numbers up to 0x8f to linux/media.h and bump the samples allocation by
-0x10.
+On 5/20/25 8:26 PM, Claudio Imbrenda wrote:
+> Refactor some gmap functions; move the implementation into a separate
+> file with only helper functions. The new helper functions work on vm
+> addresses, leaving all gmap logic in the gmap functions, which mostly
+> become just wrappers.
+> 
+> The whole gmap handling is going to be moved inside KVM soon, but the
+> helper functions need to touch core mm functions, and thus need to
+> stay in the core of kernel.
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>   MAINTAINERS                          |   2 +
+>   arch/s390/include/asm/gmap_helpers.h |  18 ++
+>   arch/s390/kvm/diag.c                 |  11 +-
+>   arch/s390/kvm/kvm-s390.c             |   5 +-
+>   arch/s390/mm/Makefile                |   2 +
+>   arch/s390/mm/gmap.c                  |  46 ++---
+>   arch/s390/mm/gmap_helpers.c          | 259 +++++++++++++++++++++++++++
+>   7 files changed, 302 insertions(+), 41 deletions(-)
+>   create mode 100644 arch/s390/include/asm/gmap_helpers.h
+>   create mode 100644 arch/s390/mm/gmap_helpers.c
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- Documentation/userspace-api/ioctl/ioctl-number.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index bc91756bde73..6b3be3fb0b15 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -312,8 +312,8 @@ Code  Seq#    Include File                                           Comments
- 'z'   40-7F                                                          CAN bus card conflict!
-                                                                      <mailto:oe@port.de>
- 'z'   10-4F  drivers/s390/crypto/zcrypt_api.h                        conflict!
--'|'   00-7F  linux/media.h
--'|'   80-9F  samples/                                                Any sample and example drivers
-+'|'   00-8F  linux/media.h
-+'|'   90-AF  samples/                                                Any sample and example drivers
- 0x80  00-1F  linux/fb.h
- 0x81  00-1F  linux/vduse.h
- 0x89  00-06  arch/x86/include/asm/sockios.h
--- 
-2.39.5
+> diff --git a/arch/s390/mm/Makefile b/arch/s390/mm/Makefile
+> index 9726b91fe7e4..bd0401cc7ca5 100644
+> --- a/arch/s390/mm/Makefile
+> +++ b/arch/s390/mm/Makefile
+> @@ -12,3 +12,5 @@ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+>   obj-$(CONFIG_PTDUMP)		+= dump_pagetables.o
+>   obj-$(CONFIG_PGSTE)		+= gmap.o
+>   obj-$(CONFIG_PFAULT)		+= pfault.o
+> +
+> +obj-$(subst m,y,$(CONFIG_KVM))	+= gmap_helpers.o
 
+So gmap.o depends on PGSTE but gmap_helpers.o depends on KVM.
+Yes, PGSTE is Y if KVM is set, but this looks really strange.
+
+
+@Heiko:
+Can we move away from CONFIG_PGSTE and start using CONFIG_KVM instead?
+Well, maybe this goes away with Claudio's rework anyway.
