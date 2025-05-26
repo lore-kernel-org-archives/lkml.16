@@ -1,363 +1,136 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263CC1DE882
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0571D86F2;
+	Mon, 26 May 2025 07:57:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748246185; cv=none; b=pTqqZZh8iIbEjgArxKASmb2vVbO5mlCrc2gjqlfQLVxhs9X7e9+yI0rNM8Oma7Mga6jX9r5GPhH99NohICUzn0jWah0Li+cb0Bf0FVF1xM/GcB+HoEYHZ6bkc2rqzIoZHA2ga7WzrytyMsyGsDgbNvTZDyk8AtcZ5OxMFnWbFfY=
+	t=1748246265; cv=none; b=ZvWc0u4dBe6qSLiNCK0I6qab2W/j9i/J87a2OQSEzFsrcaxd3QeXR/MDMB07DqK7TqD0TSqj+eaxUB4uRugo+Lo6Mb24PcCcxX57dcoIINaLhPFOYi6OKAL9VmQ5075jFOFb6lDF+9M89WtM4157pWXfMBfGgVWwEVmggxXrdmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748246185; c=relaxed/simple;
-	bh=rT96umT3UJo4od70CROtSfigxcGHz0gDRlhvpyiLUos=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=K/3VSC76oOhoKXMePNA11YH5xMXDJSHtCh+MRBMyt39hHa76GMWiAF6GHbAS8zCU0NfQMgls+dewspK9mbbRUu6xjqcY9QnEjDqNS7koxzYIwkzvlFIXA7oiHIMvlP6mCfFFnUalzpwIPVXZUGBVNsnQW8lNQWUEG/rgQff+oLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XI2kXR7t; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XI2kXR7t"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so26226025e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 00:56:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748246181; x=1748850981; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dduT01owytSsr5asNudJ/teBGGdc9J5ofCYmeklonuM=;
-        b=XI2kXR7thgJUBTuf8StZJGjQKxQsZu/gVl1IC8iYR+alXs439fT6HnqdR0p+xN4IQP
-         IGjNXQS5VDOlaeSNBq3iTA3dXMCSDksRSiIfX42VgdckzCHi9iHz62MYor4fRek+G1uo
-         e9HzTPssKPdp6ZpCVnIf4VG3AMS5+wnEyCV1BN7wododgg98LzwfCmFiKiHzFFnUMR0M
-         FzN0caGJ/srTheX7VbXenBslSp/RbRA5SdXdnFZ8jRfAzBgcSEKcTkk67BhMP0reX3NK
-         XE8JIEod4EyyGfChRgvqOOZhU6dDS9RF96YdPOf6xCw5YS1bXPZ3GHhBH5eS+AvIbXLl
-         z59w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748246181; x=1748850981;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dduT01owytSsr5asNudJ/teBGGdc9J5ofCYmeklonuM=;
-        b=iiHHDSWJ+RmOa+goaqz+pXTJGzX1/m2RKJzRDlgcSIbWv3Hz5fKG+M07KMR7OqBq85
-         R8u5+QPsYW07IrwMV9hkPkuceJBvqDnZrI85duxIp/dP5bb8W9rbDDsiHaAUK1wOtw7U
-         lfyPuGH8J+0CzN5R4XxAXGdk0dXFjBBvm2hitFHhNWVYBzhDCX++1WilKM+9q4K3ITvH
-         j8/yOYaFarjV6cSN12mTq35OGun+3r7zNh9yadKGBZhIgV7VGPzN7Ivb89claaEyYvfj
-         gomduaGQh53asEN5GwCHqTSMT5A1aoe84+0ZiUENQ6S97GwoSDCduSG+XkUFvi4MUFfz
-         Z+Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVH3ocCQ489jEXUPvCJStliTuWixukAdYW6ioH0p8taew73Rk4mOhIz2ecc9iuZ4yNRF8fiX+zsm90vcoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRsahWg0nRWjRCzYQ96bcKe8ckfDbt9QZQeIcIavbMFVE04h45
-	AdAKG4gBY6KRDu3uZcuIj21Xl6m5LpQ2jam9oAI73amVufV0IbKbVoqykDG5ytHvf54=
-X-Gm-Gg: ASbGncvi/vJXHZpCuNtflFboXf2rIRrcmBbDvAS6TYaVyithob1pgsg0skEfhUOnwdT
-	+9LUIMj4j8V9Ak1QtEv3ZFY0RgFPdP2OeTinkk0EuqV1lVDXxKsc1emWf5VugPcuFMBCOw+75Rr
-	6WV8dCQVasfNa+kODtqOSsbIrZ/YnM6Lqv+u4sCgTu+ZD+4xGqHxyJGGgts4jkFCxIEtpU8Lw5S
-	AiOUknea2UcRVW+GCayMTQcoaElD81OyXt/eVL8aWWqENJbjE5VJiY6lWusTamW5D/sJmgw08/N
-	wxmJTf05a1mNio03Dbn7iskoPy2/nDUw04Nh//eoj4VlIZldwbaa0YLTOH9u4uHydtveg4H95mJ
-	Et+SbT5+nUxdDP96hS0s2lQGTYYh+
-X-Google-Smtp-Source: AGHT+IGie9E2mDHqhXLLVf8m3fc94zPihdmNh7y738oAz9CJSBp+23Ok6ePY58BDaNgOF19enHZEbg==
-X-Received: by 2002:a05:600c:3ca6:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-44c9465c97cmr70098395e9.17.1748246181376;
-        Mon, 26 May 2025 00:56:21 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4? ([2a01:e0a:3d9:2080:485c:38a6:3d01:f4a4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f38142aasm224596595e9.27.2025.05.26.00.56.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 00:56:21 -0700 (PDT)
-Message-ID: <80df7074-c5b8-4d3b-8265-51bb71e6e1c3@linaro.org>
-Date: Mon, 26 May 2025 09:56:20 +0200
+	s=arc-20240116; t=1748246265; c=relaxed/simple;
+	bh=8jpIJ/PJOv+VNNNCz7eR5MMkKhKD87N05X6jSuQtMjY=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=L3bAK8VK2wpkyjkl8k6aSDKrBEZz8/J4y28kVmOxbvkzR+QUpv+sLgXEcqGaM+kMoa3F+tjMUJak1VcsI4RADTRHhxfNc66lCWhtlJ3ki3mz3JxcqNTVYmvmz0ZNV8yzVP83/Rdd55i1HZvtHXbt8ge1JaZoQ5XDyL+ATjF9lI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b5SmN576HzKHMm3;
+	Mon, 26 May 2025 15:57:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 2B1461A109A;
+	Mon, 26 May 2025 15:57:39 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAni1_xHjRoDfE2Ng--.33568S3;
+	Mon, 26 May 2025 15:57:38 +0800 (CST)
+Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
+ until creating bitmap
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-8-yukuai1@huaweicloud.com>
+ <CALTww2_03_fVt+KMcmtbGw-kcRsLLpAG7W62e3y0W9SpvhUVtg@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <12a61dcf-ad39-48e8-132f-c49979b9012b@huaweicloud.com>
+Date: Mon, 26 May 2025 15:57:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad
- Pro (caihong)
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- konradybcio@kernel.org, krzk+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, robh@kernel.org
-References: <11329f37-e410-4912-84cc-d5bcc01e6715@linaro.org>
- <20250522100605.914443-1-mitltlatltl@gmail.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250522100605.914443-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <CALTww2_03_fVt+KMcmtbGw-kcRsLLpAG7W62e3y0W9SpvhUVtg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAni1_xHjRoDfE2Ng--.33568S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZryUArWxuF1UtF1fKr15urg_yoW8tF45p3
+	yfJ3W3CF4fXrWIqw13Xa4DuF9Ygw4kJrZFvryIqw1rGrnrCrnxAFWFg3WFyry8A3WS9F1q
+	vr15Jr18G34j9FJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 22/05/2025 12:05, Pengyu Luo wrote:
-> On Wed, May 21, 2025 at 8:49 PM <neil.armstrong@linaro.org> wrote:
->>
->> Hi,
->>
->> On 20/05/2025 18:42, Pengyu Luo wrote:
->>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
->>> platform. Its device codename is "caihong". This patch adds an initial
->>> devicetree for basic functionality.
->>>
->>> Currently working components include:
->>> - Backlight
->>> - Bluetooth
->>> - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
->>> are many unknown notifications)
->>> - Display panel ([1])
->>> - Keyboard (via BT)
->>> - Power key & volume keys
->>> - Touchscreen & stylus ([2])
->>> - USB Type-c port
->>> - UFS storage
->>> - Wi-Fi
->>>
->>> The following components are currently non-functional:
->>> - Audio
->>> - Cameras
->>> - Charging pump (dual sc8547)
->>> - Keyboard (via pogo pin)
->>> - Stylus wireless charger (cps8601)
->>> - UCSI over GLINK (PPM init fails)
->>
->> Are you sure the QMP PHY and the dwc3 probes ? if one is missing, UCSI PPM init will timeout because it doesn't find the connectors muxes & otg devices.
->>
-> 
-> I am pretty sure.
-> ucsi_glink.pmic_glink_ucsi pmic_glink.ucsi.0: PPM init failed, stop trying
-> 
->>>
->>> [1]: The panel is a dual-DSI, dual-DSC display that requires setting
->>>        'slice_per_pkt = 2' in the DPU configuration. The panel driver
->>>        will be submitted separately later.
->>> [2]: Touchscreen/stylus driver available at:
->>>        https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
->>>        The downstream driver has been ported and tested locally, but
->>>        requires cleanup, it may be submitted separately later.
->>>
->>> To test this device tree, follow these minimal steps:
->>>
->>> 1. Build the kernel. Ensure that all `compatible` strings used in
->>> this device tree (or any included dtsi files) have corresponding
->>> drivers enabled in the kernel configuration.
->>>
->>> 2. Creating boot image
->>>
->>> Merge the kernel and device tree blob:
->>>
->>> cat arch/arm64/boot/Image.gz arch/arm64/boot/dts/qcom/sm8650-oneplus-\
->>> caihong.dtb > kernel-dtb
->>>
->>> Then create a boot.img:
->>>
->>> mkbootimg \
->>> --base 0x00000000 \
->>> --kernel_offset 0x00008000 \
->>> --ramdisk_offset 0x01000000 \
->>> --second_offset 0x00f00000 \
->>> --tags_offset 0x00000100 \
->>> --pagesize 4096 \
->>> --header_version 4 \
->>> --kernel kernel-dtb \
->>> --ramdisk some_ramdisk \
->>> --cmdline "some comeline" \
->>> -o mainline-boot.img
->>
->> Isn't image version 2 working ?
->>
-> 
-> Yes, '--header_version 2' works, I followed the version of stock boot
-> image. If there is a rule to follow?
-> 
->>>
->>> 3. Flashing the boot image
->>>
->>> fastboot --disable-verity --disable-verification flash vbmeta vbmeta.img
->>> fastboot erase dtbo
->>> fastboot flash boot mainline-boot.img
->>>
->>> See also https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=39c5963
->>>
->>> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
->>> ---
->>>    .../boot/dts/qcom/sm8650-oneplus-caihong.dts  | 960 ++++++++++++++++++
->>>    1 file changed, 960 insertions(+)
->>>    create mode 100644 arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts b/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
->>> new file mode 100644
->>> index 0000000000..93aed47e10
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/qcom/sm8650-oneplus-caihong.dts
->>> @@ -0,0 +1,960 @@
->>> +// SPDX-License-Identifier: BSD-3-Clause
->>> +/*
->>> + * Based on Qualcomm Reference Device DeviceTree
->>> + *
->>> + * Copyright (c) 2023, Linaro Limited
->>> + * Copyright (c) 2025, Pengyu Luo <mitltlatltl@gmail.com>
->>> + */
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->>> +#include "sm8650.dtsi"
->>> +#include "pm8550.dtsi"
->>> +#include "pm8550b.dtsi"
->>> +#define PMK8550VE_SID 8
->>> +#include "pm8550ve.dtsi"
->>> +#include "pm8550vs.dtsi"
->>> +#include "pmk8550.dtsi"
->>> +
->>> +/delete-node/ &adspslpi_mem;
->>> +/delete-node/ &hwfence_shbuf;
->>> +
->>> +/* No Modem */
->>> +/delete-node/ &mpss_mem;
->>> +/delete-node/ &q6_mpss_dtb_mem;
->>> +/delete-node/ &mpss_dsm_mem;
->>> +/delete-node/ &mpss_dsm_mem_2;
->>> +/delete-node/ &qlink_logging_mem;
->>> +/delete-node/ &remoteproc_mpss;
->>> +
->>> +/* Unused now, and reusable, taking 144 MiB back */
->>> +/delete-node/ &trust_ui_vm_mem;
->>> +/delete-node/ &oem_vm_mem;
->>> +/delete-node/ &qdss_mem;
->>
->> Are you sure QTEE won't use this ?
->>
-> 
-> I am not sure, but these two VM nodes are never referred by any device
-> in the downstream DT. QDSS and coresight things are unnecessary on the
-> retail devices.
-> 
->>> +
->>> +/ {
->>> +     model = "Oneplus Pad Pro";
->>> +     compatible = "oneplus,caihong", "qcom,sm8650";
->>> +     chassis-type = "tablet";
->>> +
->>> +     aliases {
->>> +             serial0 = &uart14;
->>> +     };
->>> +
->>> +     bl_avdd_5p9: bl-avdd-regulator {
->>> +             compatible = "regulator-fixed";
->>> +             regulator-name = "bl_avdd_5p9";
->>> +             regulator-min-microvolt = <5900000>;
->>> +             regulator-max-microvolt = <5900000>;
->>> +             gpio = <&tlmm 90 GPIO_ACTIVE_HIGH>;
->>> +             enable-active-high;
->>> +     };
->>> +
->>> +     bl_avee_5p9: bl-avee-regulator {
->>> +             compatible = "regulator-fixed";
->>> +             regulator-name = "bl_avee_5p9";
->>> +             regulator-min-microvolt = <5900000>;
->>> +             regulator-max-microvolt = <5900000>;
->>> +             gpio = <&tlmm 91 GPIO_ACTIVE_HIGH>;
->>> +             enable-active-high;
->>> +     };
->>> +
->>> +     gpio-keys {
->>> +             compatible = "gpio-keys";
->>> +
->>> +             pinctrl-0 = <&volume_up_n>;
->>> +             pinctrl-names = "default";
->>> +
->>> +             key-volume-up {
->>> +                     label = "Volume Up";
->>> +                     linux,code = <KEY_VOLUMEDOWN>;
->>> +                     gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
->>> +                     debounce-interval = <15>;
->>> +                     linux,can-disable;
->>> +                     wakeup-source;
->>> +             };
->>> +     };
->>> +
->>> +     pmic-glink {
->>> +             compatible = "qcom,sm8650-pmic-glink",
->>> +                          "qcom,sm8550-pmic-glink",
->>> +                          "qcom,pmic-glink";
->>> +             #address-cells = <1>;
->>> +             #size-cells = <0>;
->>> +             orientation-gpios = <&tlmm 29 GPIO_ACTIVE_HIGH>;
->>> +
->>> +             connector@0 {
->>> +                     compatible = "usb-c-connector";
->>> +                     reg = <0>;
->>> +
->>> +                     power-role = "dual";
->>> +                     data-role = "dual";
->>> +
->>> +                     ports {
->>> +                             #address-cells = <1>;
->>> +                             #size-cells = <0>;
->>> +
->>> +                             port@0 {
->>> +                                     reg = <0>;
->>> +
->>> +                                     pmic_glink_hs_in: endpoint {
->>> +                                             remote-endpoint = <&usb_1_dwc3_hs>;
->>> +                                     };
->>> +                             };
->>> +
->>> +                             port@1 {
->>> +                                     reg = <1>;
->>> +
->>> +                                     pmic_glink_ss_in: endpoint {
->>> +                                             remote-endpoint = <&usb_dp_qmpphy_out>;
->>> +                                     };
->>> +                             };
->>
->> No Altmode display ? no SBU mux nor redrivers ?
->>
-> 
-> There should be a wcd939x_i2c@e, it will be added after I figure out
-> sound things. Actually, I added it locally, it does not work. Since
-> its name is wcd939x, it made me feel it is for usb dac handling only.
-> I never checked it carefully. But you mentioned this, I just checked
-> downstream bindings, it says
-> 
-> QTI WCD9395 Device
-> 
-> This device is used for switching orientation of USB-C analog
-> and for display. It uses I2C communication to set the registers
-> to configure the switches inside the WCD9395 chip to change
-> orientation and also to set SBU1/SBU2 connections of USB-C.
+Hi,
 
-The WCD9395 has 2 independent functions on the same die, one
-as a codec and the other one as an SBU mux for Altmode and audio
-headset. They are representd as 2 devices since they have 2
-separate communication ports (one is i2c, and the other is via soundwire)
+在 2025/05/26 14:52, Xiao Ni 写道:
+> On Sat, May 24, 2025 at 2:18 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Currently bitmap_ops is registered while allocating mddev, this is fine
+>> when there is only one bitmap_ops, however, after introduing a new
+>> bitmap_ops, user space need a time window to choose which bitmap_ops to
+>> use while creating new array.
+> 
+> Could you give more explanation about what the time window is? Is it
+> between setting llbitmap by bitmap_type and md_bitmap_create?
 
-Neil
+The window after this patch is that user can write the new sysfs after
+allocating mddev, and before running the array.
+> 
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>   drivers/md/md.c | 86 +++++++++++++++++++++++++++++++------------------
+>>   1 file changed, 55 insertions(+), 31 deletions(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 4eb0c6effd5b..dc4b85f30e13 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -674,39 +674,50 @@ static void no_op(struct percpu_ref *r) {}
+>>
+>>   static bool mddev_set_bitmap_ops(struct mddev *mddev)
+>>   {
+>> +       struct bitmap_operations *old = mddev->bitmap_ops;
+>> +       struct md_submodule_head *head;
+>> +
+>> +       if (mddev->bitmap_id == ID_BITMAP_NONE ||
+>> +           (old && old->head.id == mddev->bitmap_id))
+>> +               return true;
+>> +
+>>          xa_lock(&md_submodule);
+>> -       mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
+>> +       head = xa_load(&md_submodule, mddev->bitmap_id);
+>>          xa_unlock(&md_submodule);
+>>
+>> -       if (!mddev->bitmap_ops) {
+>> -               pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
+>> +       if (WARN_ON_ONCE(!head || head->type != MD_BITMAP)) {
+>> +               pr_err("md: can't find bitmap id %d\n", mddev->bitmap_id);
+>>                  return false;
+>>          }
+>>
+>> +       if (old && old->group)
+>> +               sysfs_remove_group(&mddev->kobj, old->group);
+> 
+> I think you're handling a competition problem here. But I don't know
+> how the old/old->group is already created when creating an array.
+> Could you explain this?
+
+It's not possible now, this is because I think we want to be able to
+switch existing array with old bitmap to new bitmap.
+
+Thanks,
+Kuai
 
 > 
-> Thanks. I will check it again.
-> 
-> Best wishes,
-> Pengyu
-> 
+> Regards
+> Xiao
 
