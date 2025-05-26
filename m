@@ -1,131 +1,190 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9BA3FE7;
-	Mon, 26 May 2025 20:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE8D190057;
+	Mon, 26 May 2025 20:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748289693; cv=none; b=IWuE11thGtWWPvbNM2vDhNlndrf1AdECewTts2OV59Rp46BPhMtNwrvwpxnFTVYNHbIPPJbSfB97sdjrZRA+BMDd/5RKpZ2iQmo5DltanJM1RgW11xvHZvPM6d22sL1eT16BxsfKh64zncY9pCuIVqrc+n35CqFA/ObN4/CNH6U=
+	t=1748290039; cv=none; b=CFOWwtn9M/Lz8ah93AGKceB7ZUucZXTG4NZhaz+oAgG49ZdcAxojnCBG4vw85+wUMaCo2JD1bdgsTXGODjJ/z8DXJ9U5DVS/F3FiuvS2EuHPKQ12VoRpkMzFpDqo4UhNT3g7CQ1W+pRTol/UKRPPlmLhNsFypKOquS6Fmul4cFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748289693; c=relaxed/simple;
-	bh=ZLJgam4FvhrtKoLyXGYOdu9eZXdCTgwzaZdbzfRj6+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NgJ1IfXzCsFVqnLaZZh/5zdDYZ68aiT2hghtzAVICWgH24pme3oj1Cew8XWsKPg5vfTUertg99Bv0WjrTm/2S9e59ac2wK1MhbdkupFgGYimTYdJc80dkFsR9kWVC4AN9FOYnTmCtuYOyQ6IJDs/GijCGTlYGpXNzr5haBwgHE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0NXfKpH; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748290039; c=relaxed/simple;
+	bh=2h8mPg8pHJTB2digswKPZ+FpqDcEtfuqo2Mv5MAMbP0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=TkOx+0Ru2HpnnXDJFEHP+gSzuaVRv/A920bfBut8T2HqwvVWobST0OxmzFMQMZhE7mDNy+DzJFt3XnPDZNATn7V3qahL8CUq/qjQ24r47XumIppV6nd/lILO48rcH9Lt/ZO6pJvKsXxBp9Y2UHgMT9B8kSGMgLWA81Vwc1z7p7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s8ytLS72; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0NXfKpH"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-602039559d8so5244824a12.1;
-        Mon, 26 May 2025 13:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748289690; x=1748894490; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b5UZXlK7jyoyEbPjk1xDvrCMNiZh+VKlzRkBAGqXQcY=;
-        b=A0NXfKpHBYuLum04lw10aor0FgzaCVv2p5+MCS5d3uhZUTm6Vrd/2oDtxX/7Fk5qGy
-         H9vMg1/PTYGASi379LQa571bxVsdi0o6KYpXzVWngRqqsutsRkHYsvMyCBahObSs4XhM
-         PUyHL+wj/g5Ky0Pm+F0KTquEHRS2vPwRII+d5NGuJ9qmJzwbYozyFpPCzFY8Q75RvoZU
-         XT/OSKN44QxeKsaTSixj41u4C/HPJkNk8oB/b9fVWWc4IxfjjNrin8PAaxVKNkuQk9YL
-         u+/sVgEAdNcUd/kPT4/TisPi4dYgfFzmFXFD7bKkk7kkgT1qICcZ6ZvEwd9PGiK03ma1
-         6gaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748289690; x=1748894490;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b5UZXlK7jyoyEbPjk1xDvrCMNiZh+VKlzRkBAGqXQcY=;
-        b=OU2bTqNG7+2A4nkB0h3+mZ9cRA9hD8RjAvc4zJYU/TCkBC5EZvTHw6BKsIlrolMEZd
-         9UqtBmiFPjy/VbS4uXeEM8jg7WdV1JchYJsD6+mXKo3ktJ8IcOrJNTh8M8eNGv/tZSBx
-         J/j3jD6PObFPw9MtpYmVPEx3i6Z5cHK5f5PPDoPudonPifx6gPw89itHKPeopkzY32Lb
-         pFvQv+upThjX/7iBFEOLxyHtWj8A/w47T53RfMuN5QoopqG4rDzYl2PzbrQRCDXkv0lg
-         9PQVQTTd2a86UsbT7ha5n9ppUbjbhAkM+mmrOWi4m1UpUjAEuKCQ1L54c32B4hfPr8zR
-         bXmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeXnjwtp9YBofFpUZ73K7VX2nJB0mba6cTbdBBp+p9tCiA9Xv7LM3ZePgtg8t/sVSiy0Akm6nS3GuwHoj8@vger.kernel.org, AJvYcCWnFXpjGpM5YJe5gZPF7fAwP6QfYr4lHXPk05sffH40a3r/tg6sTq2kgAXX3w7SEQHDkx4337CNYwXjXT86@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5PCdNJ/XThlpBONd1X4gHj/fL3l+fAZ5/vB62hWttOijT9A8Y
-	3AqKh8Dc2y1+3L5aKedSVHRH4+VjmTW3i4Ibq44PaQ88/rRxXBBi7VRt
-X-Gm-Gg: ASbGncthhRsZmrY3ByaHraPjCZRhcJW0/R9wrMtGoUrdN//fyjRUhAyUnPzYbTIf3of
-	VImjs7zw8bR9oSfBkyhovbwh/m7YHcJ4kUMCVxfxxz8iKGterCy3FCouq4fECjvPNmM0JsdbSG6
-	R3POSEt8w2ZRjdtpgMdKW3M6EvC2E1RbnrKxgS2U9GyhXzmfzu+JoMcJqCsajr1gWOTYbID+udb
-	frfrKo9rdLZCZgAxYKp5SQJT8BPvRNbCHc/WZbeYqRp0dBYk9VFz5vCDFdQF3PfDgdX52Up9LzY
-	RX8dAVEYeLo5cXxWZVDK+cYarZrx6N4Pi09rMPlUiuijoJzG61KuW0ckgmxlBTL12jfFO/xzP+m
-	W1D2EnTQX7VXDbMV0
-X-Google-Smtp-Source: AGHT+IG11zehgCzBXjbnF2eT+TAQneLA6ATYCudw9kas/3Q4I6BaiJNJpShUkGjOy5/EEURb6r1AaA==
-X-Received: by 2002:a17:907:6d0c:b0:acf:c:22ca with SMTP id a640c23a62f3a-ad85b00b7d1mr884949166b.1.1748289689706;
-        Mon, 26 May 2025 13:01:29 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e821sm1743988166b.17.2025.05.26.13.01.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 13:01:29 -0700 (PDT)
-Message-ID: <b9134a1d-3dbc-4cd9-b22a-90b1c8934ce9@gmail.com>
-Date: Mon, 26 May 2025 22:01:29 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s8ytLS72"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A141FC4CEE7;
+	Mon, 26 May 2025 20:07:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748290038;
+	bh=2h8mPg8pHJTB2digswKPZ+FpqDcEtfuqo2Mv5MAMbP0=;
+	h=From:Date:Subject:To:Cc:From;
+	b=s8ytLS729MfLjxIuCS+/LBhRH10Oiyy9bQoo14u41Sp9VExdp2h/Utn1p+9qpYNV0
+	 gJheQ6BWQ0MUtqZVZcI3Cc+jOe7dB9Cm8boVglKEOZ2uQ9SrIgcAB8/DuUaESvLmbd
+	 kSQrXjm6rt3y+tA80vhzYiTCUuFXBxQvW24bEszmlDyng7NgLG/uyOM8GRfJ2G3Qos
+	 IEO7bQV7fSC/gAvz5M4fEIBTFOd/bfAm5zZwAGselIrFCZmAbgz36gsiJEmtOudKGT
+	 46vo39qaOPEb3vVMlqkn8+zvTD3k9ivr2y2/OvXFlZ5ZKg8OjQZIoYse8mEP+oeVtW
+	 RXI8UD5RKUTYw==
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72c13802133so661519a34.3;
+        Mon, 26 May 2025 13:07:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWWBB04AaaRsVEPSn7bq35rLD9G40PPk8JkDeng5l3LgY8uDN8L+HEPHYesQlJX49NUUGWr2IcsoN3ix0AL@vger.kernel.org, AJvYcCXblxSyerq0IHom/e8g7VjDAzTuRAEZ+8pl6JeOk6ExWbK8weTOhpsYun3rfcvvWHgLfCdn4KkBv83L@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGgiyKD8Fj1lJpy0dSsVpwOM64l7TYqX0cGRIv8gtmwkdwBTwK
+	/GumdUyiLOl/jfmSEOV+II0p0lHArOAEeHP8S4neEiQ5ithDz4pEefDM+lwzVFeuaOLeDVPpW6G
+	lyrnGaFBDQ09VifmwbIlv1DYjY9uG1lQ=
+X-Google-Smtp-Source: AGHT+IHad05Czm30ecZhI1PmmIVVV3vLG5n5Oyv3ZSa+MpbPBktoK355NfbVfvqVevxCk0gwirMXcP87p8qC6gUgMEc=
+X-Received: by 2002:a05:6808:3191:b0:404:b5c6:46f3 with SMTP id
+ 5614622812f47-406467fff88mr6662350b6e.21.1748290037958; Mon, 26 May 2025
+ 13:07:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mtd: nand: qpic_common: prevent out of bounds access
- of BAM arrays
-Content-Language: hu
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, Mark Brown <broonie@kernel.org>,
- Varadarajan Narayanan <quic_varada@quicinc.com>,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-References: <20250525-qpic-snand-avoid-mem-corruption-v1-0-5fe528def7fb@gmail.com>
- <20250525-qpic-snand-avoid-mem-corruption-v1-2-5fe528def7fb@gmail.com>
- <8ab1e48a-f698-9859-3992-6a26f63d62f1@quicinc.com>
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <8ab1e48a-f698-9859-3992-6a26f63d62f1@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 26 May 2025 22:07:06 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jtbcDUaMcTrnG7ewHmuMG2YUwe4ho1LUg-v9TrwLybLA@mail.gmail.com>
+X-Gm-Features: AX0GCFvmqkqGvP8_niqkJH1vWH5nPYbxY_IgeaKZL4rcdf03WXjM3sKvqq3y2cs
+Message-ID: <CAJZ5v0jtbcDUaMcTrnG7ewHmuMG2YUwe4ho1LUg-v9TrwLybLA@mail.gmail.com>
+Subject: [GIT PULL] Thermal control updates for v6.16-rc1
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-2025. 05. 26. 8:53 keltezéssel, Md Sadre Alam írta:
-> Hi,
-> 
-> On 5/25/2025 10:35 PM, Gabor Juhos wrote:
->> The common QPIC code does not do any boundary checking when it handles
->> the command elements and scatter gater list arrays of a BAM transaction,
->> thus it allows to access out of bounds elements in those.
->>
->> Although it is the responsibility of the given driver to allocate enough
->> space for all possible BAM transaction variations, however there can be
->> mistakes in the driver code which can lead to hidden memory corruption
->> issues which are hard to debug.
->>
->> This kind of problem has been observed during testing the 'spi-qpic-snand'
->> driver. Although the driver has been fixed with a preceding patch, but it
->> still makes sense to reduce the chance of having such errors again later.
->>
->> In order to prevent such errors, change the qcom_alloc_bam_transaction()
->> function to store the number of elements of the arrays in the
->> 'bam_transaction' strucutre during allocation. Also, add sanity checks to
->> the qcom_prep_bam_dma_desc_{cmd,data}() functions to avoid using out of
->> bounds indices for the arrays.
->>
->> Tested with the 'spi-qpic-snand' driver only.
-> I recommend testing this patch on both the IPQ and SDX platforms,
-> as the QPIC raw NAND driver are utilized across both.
-> 
-> If you have access to IPQ and SDX devices with raw NAND, please proceed
-> with testing on both.
+Hi Linus,
 
-Sorry, I have no SDX devices at all, and unfortunately I can't access my older
-IPQ boards before next week.
+Please pull from the tag
 
-> 
-> Otherwise, I can handle testing on the IPQ raw NAND device and coordinate with
-> Lakshmi Sowjanya D (quic_laksd@quicinc.com)
-> for testing on the SDX platform.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ thermal-6.16-rc1
 
-If you could do some testing in the meantime, that would be superb.
-Thanks for that in advance!
+with top-most commit 01daf71a4f57062055f68f8163ed1ad88fb47990
 
-Regards,
-Gabor
+ thermal: qcom: ipq5018: make ops_ipq5018 struct static
+
+on top of commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+
+ Linux 6.15-rc6
+
+to receive thermal control updates for 6.16-rc1.
+
+These add support for a new feature, Platform Temperature Control (PTC),
+to the Intel int340x thermal driver, add support for the Airoha EN7581
+thermal sensor and the IPQ5018 platform, fix up the ACPI thermal zones
+handling, fix other assorted issues and clean up code.
+
+Specifics:
+
+ - Add Platform Temperature Control (PTC) support to the Intel int340x
+   thermal driver (Srinivas Pandruvada).
+
+ - Make the Hisilicon thermal driver compile by default when ARCH_HISI
+   is set (Krzysztof Kozlowski).
+
+ - Clean up printk() format by using %pC instead of %pCn in the bcm2835
+   thermal driver (Luca Ceresoli).
+
+ - Fix variable name coding style in the AmLogic thermal driver (Enrique
+   Isidoro Vazquez Ramos).
+
+ - Fix missing debugfs entry removal on failure by using the devm_
+   variant in the LVTS thermal driver (AngeloGioacchino Del Regno).
+
+ - Remove the unused lvts_debugfs_exit() function as the devm_ variant
+   introduced before takes care of removing the debugfs entry in the
+   LVTS driver (Arnd Bergmann).
+
+ - Add the Airoha EN7581 thermal sensor support along with its DT
+   bindings (Christian Marangi).
+
+ - Add ipq5018 compatible string DT binding, cleanup and add its support
+   to the QCom Tsens thermal driver (Sricharan Ramabadhran, George
+   Moussalem).
+
+ - Fix comments typos in the Airoha driver (Christian Marangi, Colin Ian
+   King).
+
+ - Address a sparse warning by making a local variable static in the
+   QCom thermal driver (George Moussalem).
+
+ - Fix the usage of the _SCP control method in the driver for ACPI
+   thermal zones (Armin Wolf).
+
+Thanks!
+
+
+---------------
+
+AngeloGioacchino Del Regno (1):
+      thermal/drivers/mediatek/lvts: Fix debugfs unregister on failure
+
+Armin Wolf (2):
+      ACPI: OSI: Stop advertising support for "3.0 _SCP Extensions"
+      ACPI: thermal: Execute _SCP before reading trip points
+
+Arnd Bergmann (1):
+      thermal/drivers/mediatek/lvts: Remove unused lvts_debugfs_exit
+
+Christian Marangi (3):
+      dt-bindings: thermal: Add support for Airoha EN7581 thermal sensor
+      thermal/drivers: Add support for Airoha EN7581 thermal sensor
+      thermal/drivers/airoha: Fix spelling mistake
+
+Colin Ian King (1):
+      thermal/drivers/airoha: Fix spelling mistake "calibrarion" ->
+"calibration"
+
+Enrique Isidoro Vazquez Ramos (1):
+      thermal/drivers/amlogic: Rename Uptat to uptat to follow kernel
+coding style
+
+George Moussalem (3):
+      thermal/drivers/qcom/tsens: Update conditions to strictly
+evaluate for IP v2+
+      thermal/drivers/qcom/tsens: Add support for tsens v1 without RPM
+      thermal: qcom: ipq5018: make ops_ipq5018 struct static
+
+Krzysztof Kozlowski (1):
+      thermal/drivers/hisi: Do not enable by default during compile testing
+
+Luca Ceresoli (2):
+      thermal/drivers/bcm2835: Use %pC instead of %pCn
+      vsprintf: remove redundant and unused %pCn format specifier
+
+Sricharan Ramabadhran (2):
+      dt-bindings: thermal: qcom-tsens: Add ipq5018 compatible
+      thermal/drivers/qcom/tsens: Add support for IPQ5018 tsens
+
+Srinivas Pandruvada (3):
+      thermal: intel: int340x: Add platform temperature control interface
+      thermal: intel: int340x: Enable platform temperature control
+      thermal: int340x: processor_thermal: Platform temperature
+control documentation
+
+---------------
+
+ Documentation/core-api/printk-formats.rst          |   3 +-
+ .../bindings/thermal/airoha,en7581-thermal.yaml    |  48 ++
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |   2 +
+ Documentation/driver-api/thermal/intel_dptf.rst    |  21 +
+ .../translations/zh_CN/core-api/printk-formats.rst |   3 +-
+ drivers/acpi/osi.c                                 |   1 -
+ drivers/acpi/thermal.c                             |  10 +-
+ drivers/thermal/Kconfig                            |  11 +-
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/airoha_thermal.c                   | 489 +++++++++++++++++++++
+ drivers/thermal/amlogic_thermal.c                  |  16 +-
+ drivers/thermal/broadcom/bcm2835_thermal.c         |   2 +-
+ drivers/thermal/intel/int340x_thermal/Makefile     |   1 +
+ .../int340x_thermal/platform_temperature_control.c | 243 ++++++++++
+ .../int340x_thermal/processor_thermal_device.c     |  15 +-
+ .../int340x_thermal/processor_thermal_device.h     |   3 +
+ .../int340x_thermal/processor_thermal_device_pci.c |   5 +-
+ drivers/thermal/mediatek/lvts_thermal.c            |  18 +-
+ drivers/thermal/qcom/tsens-v1.c                    |  62 +++
+ drivers/thermal/qcom/tsens.c                       |  27 +-
+ drivers/thermal/qcom/tsens.h                       |   4 +
+ lib/vsprintf.c                                     |  10 +-
+ 22 files changed, 946 insertions(+), 49 deletions(-)
