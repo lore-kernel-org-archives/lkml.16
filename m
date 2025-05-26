@@ -1,108 +1,190 @@
-Received: from cantor.telenet-ops.be (cantor.telenet-ops.be [195.130.132.48])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2048.outbound.protection.outlook.com [40.107.94.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D7420A5DD
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748264147; cv=none; b=OvwSTaPICtqEbVBk/Tl00puEPY0iY/DZalYYWCpFXYSkjwXJ76P5mc5i7UWs0r8lEEApWGcPxSjRsi7GQYmfJsYvSYGJV1//iFf2IOZ3+bImOQObxfXNkqNB2fmfS+7MoF3yUCn8wnMYIAw4HYlvPqVEVprD5eqDdiCih66vbDQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748264147; c=relaxed/simple;
-	bh=KkQwgXHw8yl2iRNVVytw7enFpOc2PlsBaF7EKHxMBZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GtdsTVUG0qie29xl1q4kTWhgJqdC7OUeoeYoFZRYu7YTtrDFIf6T3ol3OVFzZsgku7F2gYgBCqyeUOTs1qfMJOUfuNfcqwy1O6vtGhK0rbVO4Mg/PMIQPUB9RTwLrIszQSeLZMFW3cc7570yPE73mlmgmeHBOmnvuSgjPA+98KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-	by cantor.telenet-ops.be (Postfix) with ESMTPS id 4b5b9r3YZYz4x1b5
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:46:40 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9962:836e:244b:c4d7])
-	by xavier.telenet-ops.be with cmsmtp
-	id tomY2E00e0Y7Yez01omYtE; Mon, 26 May 2025 14:46:33 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1uJXDc-00000003Rpo-2huh;
-	Mon, 26 May 2025 14:46:32 +0200
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1uJXDs-0000000Beit-2cTP;
-	Mon, 26 May 2025 14:46:32 +0200
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Greg Ungerer <gerg@linux-m68k.org>,
-	linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [GIT PULL] m68k updates for v6.16
-Date: Mon, 26 May 2025 14:46:24 +0200
-Message-ID: <20250526124624.2778122-1-geert@linux-m68k.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2CE2040B2
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 12:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748264161; cv=fail; b=kLFJAwZV1/PuOOoQGfw3o2uXK+HhdHdcP1D8MXqzFQbDYVODZ/wb+QTVI7f0lDqB3dJLv8HRDUNI+jgGzFe+vJeTZdZdhAdjgIJ+MdIRKVXd0wjTK7vZEQ4zBmHoZDNKqTC0fFDuom2OjMfgweqWo+6xmcHe3QIFI7Sw12/26Xk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748264161; c=relaxed/simple;
+	bh=lCCXy60KwtKZ+v4z0Jj+v1jX++nUlG7Cr4/rJdJQkn8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RvF4+07LE9AStkwcMiEm0CESEvlyextfZE7UsP0NH0vB/pr6RZVIIPlD2BYi8+HTKPm+RZGvN40R9y4Rq/FAVGjQF4NjYQCdOFDOu53np1pPAJjmD7Rr4LLGbY7ILhVY3GcUWk9qx6RG1CcTxyJ3QyxpGZc+h4vUS7xbXo0UsaU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LSOlF70S; arc=fail smtp.client-ip=40.107.94.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LSOlF70S"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nGWmXQPZKGcwGwM5b7YCqaItW0PybG/EA3nZtPA2tnS6lFpXG4G2Z536h3eEFF/gKU5DWI1IuYGpI1DCw25so69E4HBvm/Vt5MD/ZlrnF1F0yFX2BHgxJ5lmKsoYEw5a40DDvIX2WoTEbPtAm3m+n3HoxAQ5QMRJUD9iVo8vzuZPUBJU9U09Sn8K3Oqthy+KU4vUk5bsmMEmuETCEX4+VLu2nDb7zGkGqk1Ir4BTK1ffU02jb8k+a5Wgh+WFGpZFOcvoO6Cuavd/68huiW8QWz6j26XorqY7FilgzmYzcDJIINfXnXUkRAPUM6m96ol6Z1WsorcVuJIb+gT127AUOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BRHfJWdBNDdbJgIotWKTW+P1jKDophQih4cbrUQesh4=;
+ b=gWkyaZ1oAI1rffjf7yQOU2YD7hMDNotUZYPhGioY/FDrSRLSPa1lEu6cCiL4LLVQPBO5xZ9rtoVlzD+VTKiXwy0aa/Al+9J7u1Xie3SGphjs2fosQLJn3zWhIwsT99DiXCLHpFipRHamT+gYt08/+5d9GNKxyHwI86DiZg2MTzeLWPhtpxmLkhPbcZgIDVvlv8XuTHinPR08iytGHpsfLBY4LfQsEc//j6nTjrmQpilRZSbjnfMM0rRomD650z2rS/XIZhsKwWl6ISTIAb4Yi5nb6+zJxs8krVJIPHypMJ8CtgKVEIi0eNz7zragZM4icpwOk7TpTl4BPr/8o3++wQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BRHfJWdBNDdbJgIotWKTW+P1jKDophQih4cbrUQesh4=;
+ b=LSOlF70SQP4SDbn6xOGQfUd725HtxdAqBFw84vsMwIRIbccl+PjXXufwjmD/wig13xe+y0hDC/3xX/8BK6TROw7mlN+rYKRiIj4JpvkTnrNSs/Mt6gwcbCcd45bKSLw2lZaScdvlDs/CXU0NP8XwL5w2zJuI02okqLgEUxuQvcY=
+Received: from BYAPR01CA0058.prod.exchangelabs.com (2603:10b6:a03:94::35) by
+ CH3PR12MB7713.namprd12.prod.outlook.com (2603:10b6:610:14d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Mon, 26 May
+ 2025 12:55:52 +0000
+Received: from SJ1PEPF00001CE6.namprd03.prod.outlook.com
+ (2603:10b6:a03:94:cafe::f8) by BYAPR01CA0058.outlook.office365.com
+ (2603:10b6:a03:94::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Mon,
+ 26 May 2025 12:56:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE6.mail.protection.outlook.com (10.167.242.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8769.18 via Frontend Transport; Mon, 26 May 2025 12:55:52 +0000
+Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 26 May
+ 2025 07:55:49 -0500
+From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+To: Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich
+	<dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 03/10] drm/sched: Add device name to the drm_sched_process_job event
+Date: Mon, 26 May 2025 14:54:45 +0200
+Message-ID: <20250526125505.2360-4-pierre-eric.pelloux-prayer@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
+References: <20250526125505.2360-1-pierre-eric.pelloux-prayer@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE6:EE_|CH3PR12MB7713:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76cc60e5-b84d-400d-7846-08dd9c54a58d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Q2Q3WG9kaitjRFZQZVZrUmxPMVgyckFSSEFrejJ6S245U2ZjclpNTEF4WTdX?=
+ =?utf-8?B?L0FpQThhSStDS1d1a3kvaE9rbitHNjdxSEJ1MVhrU3p6clE2dldVdTg0SGhh?=
+ =?utf-8?B?bEh2bEZyaWFIYmc0REJLdnpRNVdOVE5GcHVNRzR4MHU0RGUxazlJdDBjTXJO?=
+ =?utf-8?B?aHhaM2YxR0ZoUlRvdTZuYlNzTCttdmE3U3NvdWMvRmFxVWp3RUp2d2gvQ0ww?=
+ =?utf-8?B?cXJJa2ZaQjZUeDB5cWRrVkhNb3Y1SUgwaVNiRGtndE56Tjc3bUt2c05kL1lZ?=
+ =?utf-8?B?Tmp0bVFWenEvMU5SUDh2cTIyYzZzc2ZNc3B2dE1ZVXZmeEhtYW84ZXpHYUVX?=
+ =?utf-8?B?UUtMU0pCZFRkcmdSZXI2Q1BtUUFMSlU5dUI3UUMvcllMM3pISVc1VnVUTGxs?=
+ =?utf-8?B?WU43NTVlV1Y4dlZCWm42ZCsrdVBETkh2VEl3UDdpS1ZWSWVBcTFVU0hKL2Zr?=
+ =?utf-8?B?ZGhaRkIwakdMcFRDZnlYYW95K2J4Vi9uc05ucjkwbEtMZFpnME5zangvSFgw?=
+ =?utf-8?B?aXdoZ0JnNktLZndoODBXbEV1Vk1zVTN3YjJoYXl6VDRQS3BFYmVnNnkzWHdD?=
+ =?utf-8?B?UUh0T3AycWhHWGhTcDZkRkxzbldqaC9VbXpFYXdLY29qb0J3b3ZOWDZrVlBy?=
+ =?utf-8?B?QkhqY013TENBRzJrQ3ZadG1iUzNXZzZzNVZMc2U1bmwvQ05OY2Mrc2hSOUht?=
+ =?utf-8?B?TWhpa3Y3eFpodVZoY2w0aU0rZEFCc2tRQklQcEo2MkwyekdIS1dQSW1DNzVJ?=
+ =?utf-8?B?cG11bU5TaHo4Q2oybVYzRG13ZTFxVHRnVGNGTzJrMjNFTHl1Y1lSeEx3UWNl?=
+ =?utf-8?B?YVdHbHRHV2pGcGpZcytxYWF2dmxjTzBub3BpcExtbDdvT2tZVVErc2RyYUg2?=
+ =?utf-8?B?ejhBQWJFd2pZNUtEOTlzYVNJVnZDbm42RmxhS3M4a01iZ0o0REpLUkxsWEhk?=
+ =?utf-8?B?Y0F3UGpVNFBld2J3dm5XZ0NEU3diOXBacTZOUTFCUEFlQXhQeXkwL0VGNkJR?=
+ =?utf-8?B?dG9rd1owdTRmUm5VM1p3anRONTRSYXFVTUh6dTlCeHQyQlJ4UkhQUHgvZnpZ?=
+ =?utf-8?B?UnJlRyswN3M2Mm1sd1c4T3NlQTAwaXpyaXRtVnlIN0EyNGtubmNzRmJyZk1s?=
+ =?utf-8?B?ZDlMYkxiVTV3amFuYlE3TWhVSFV2NnBDQ3hyOTl4MmFOcFN4VjFaMlM1WUhX?=
+ =?utf-8?B?Z2ZnK1NQdUxxU3l6MXJidmIxdWVNdFdhWnF2Szh2ZVFyNFhIUnpYMXovaG1z?=
+ =?utf-8?B?bUswcnVmSTJKYkZpRVh0OThZdFBCcFpUbWY5NWJqUjdOUldMZUZBT3ozeHB2?=
+ =?utf-8?B?a2JBMmRXSUFkLzUzdjd4Y2k0aWlMcjB0KzVsZUs4emZ1dFdDdEdaOStsUTBI?=
+ =?utf-8?B?NDAveFByeVNYcVlOUkJDRnBKNHJtOUZRczVVUDUyZERtcldrOXlZbmJTZ3V5?=
+ =?utf-8?B?VWlSbGRxcUdrQTlGTEpiR0pnL3VaZWJjZS9GMThGL1JnbGtJUTVwWjlGVnI3?=
+ =?utf-8?B?dWRDYXlFMXZ4TTdydWdHMkUrRUtKNHh2cWc3ek04OHFkeHplcTJ1RlBSdUww?=
+ =?utf-8?B?cm5aS3BjSVVMN0NMVkhNZ3gwN01BVnJ5WWxJREdlbjRVclh1SUE3cVNXSE42?=
+ =?utf-8?B?RjQzQ3BITUZrcXFDYmhyMXVBMHB0S0o4cXBCNW5JMVcwQjNGSGFuU2dzUUhs?=
+ =?utf-8?B?T05xY2dhTWRuVHBTMjd1cHB5Tzg0cVJNUldaMnlrL1czN2JUNzE2TFpJRGkv?=
+ =?utf-8?B?aFVsdGJmRWdEV2pNeG1iZ2g0dmNTVEN5QjFLZnVPY0EzZUUrbUl1TUNmVzNV?=
+ =?utf-8?B?Nzg1cEFxems5dnl1N3k1UThzNExESHQ2bHE5dHhGUG9WMTVLSVhwTUloTi9s?=
+ =?utf-8?B?eHBMSmxKYXZXK2gycjNQd2tOaGJjWXlwSEhVVHlsWFFDMnFnVWFNWWNqRnpX?=
+ =?utf-8?B?b3kwYTc3ZHZ5dVhGMEpQL3kveEtEZTRmYUpRazA2UlNsQjQwMkFtdXZyS2xy?=
+ =?utf-8?B?T29Pck1rcTdsVURHdnpBV3M2OWwzdWMvTFJ4UHFxVUhMcEhYRW1CMm1YVG1O?=
+ =?utf-8?Q?2+p05N?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2025 12:55:52.3905
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76cc60e5-b84d-400d-7846-08dd9c54a58d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE6.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7713
 
-	Hi Linus,
+Since switching the scheduler from using kthreads to workqueues in
+commit a6149f039369 ("drm/sched: Convert drm scheduler to use a work
+queue rather than kthread") userspace applications cannot determine
+the device from the PID of the threads sending the trace events
+anymore.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+Each queue had its own kthread which had a given PID for the whole
+time. So, at least for amdgpu, it was possible to associate a PID
+to the hardware queues of each GPU in the system. Then, when a
+drm_run_job trace event was received by userspace, the source PID
+allowed to associate it back to the correct GPU.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+With workqueues this is not possible anymore, so the event needs to
+contain the dev_name() to identify the device.
 
-are available in the Git repository at:
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+---
+ drivers/gpu/drm/scheduler/gpu_scheduler_trace.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git tags/m68k-for-v6.16-tag1
+diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+index f56e77e7f6d0..713df3516a17 100644
+--- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
++++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+@@ -42,6 +42,7 @@ DECLARE_EVENT_CLASS(drm_sched_job,
+ 			     __field(uint64_t, id)
+ 			     __field(u32, job_count)
+ 			     __field(int, hw_job_count)
++			     __string(dev, dev_name(sched_job->sched->dev))
+ 			     ),
+ 
+ 	    TP_fast_assign(
+@@ -52,9 +53,10 @@ DECLARE_EVENT_CLASS(drm_sched_job,
+ 			   __entry->job_count = spsc_queue_count(&entity->job_queue);
+ 			   __entry->hw_job_count = atomic_read(
+ 				   &sched_job->sched->credit_count);
++			   __assign_str(dev);
+ 			   ),
+-	    TP_printk("entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
+-		      __entry->entity, __entry->id,
++	    TP_printk("dev=%s, entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
++		      __get_str(dev), __entry->entity, __entry->id,
+ 		      __entry->fence, __get_str(name),
+ 		      __entry->job_count, __entry->hw_job_count)
+ );
+-- 
+2.43.0
 
-for you to fetch changes up to f440518f379d22c95329e9e0e0fb6caaafa0f8b0:
-
-  m68k: defconfig: Update defconfigs for v6.15-rc1 (2025-05-19 13:37:36 +0200)
-
-----------------------------------------------------------------
-m68k updates for v6.16
-
-  - One more strscpy() conversion,
-  - Fix detection of real Mac II,
-  - Defconfig updates.
-
-Thanks for pulling!
-
-----------------------------------------------------------------
-Finn Thain (1):
-      m68k: mac: Fix macintosh_config for Mac II
-
-Geert Uytterhoeven (1):
-      m68k: defconfig: Update defconfigs for v6.15-rc1
-
-Thorsten Blum (1):
-      m68k: Replace strcpy() with strscpy() in hardware_proc_show()
-
- arch/m68k/configs/amiga_defconfig    | 4 ----
- arch/m68k/configs/apollo_defconfig   | 4 ----
- arch/m68k/configs/atari_defconfig    | 4 ----
- arch/m68k/configs/bvme6000_defconfig | 4 ----
- arch/m68k/configs/hp300_defconfig    | 4 ----
- arch/m68k/configs/mac_defconfig      | 4 ----
- arch/m68k/configs/multi_defconfig    | 4 ----
- arch/m68k/configs/mvme147_defconfig  | 4 ----
- arch/m68k/configs/mvme16x_defconfig  | 4 ----
- arch/m68k/configs/q40_defconfig      | 4 ----
- arch/m68k/configs/sun3_defconfig     | 4 ----
- arch/m68k/configs/sun3x_defconfig    | 4 ----
- arch/m68k/kernel/setup_mm.c          | 2 +-
- arch/m68k/mac/config.c               | 2 +-
- 14 files changed, 2 insertions(+), 50 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
