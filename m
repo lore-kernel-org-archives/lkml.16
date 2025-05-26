@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729B31F7580;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6586D1F429C;
 	Mon, 26 May 2025 11:48:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260104; cv=none; b=J2MUx9iExj774LZjP1PLfI3uuBLnS4SSQKaVufJb7DETqjN5yRBdYs0LYijPbJeMgIjhHT4e9pxe3ofRKgo9oXT1Asy2gubUs8zCiTLazQN7OBMcQJn/FO0uaKKbhBR4h2oj9/4lxBHI9gcf1eHJzcinnqWsTA/it7ttO2xVweY=
+	t=1748260104; cv=none; b=HGHIaz5NYcPA0u/S7Zx83EBQlHFTxnZoJwzs1OXFnl9CjWAC96oL9xDmRJhJf1pHGEt2Zl0XEnljHZ5Mbrf3xbYa/lnZeghUWO5EYfF92302PirQPYE263PrPYyfdWb998pTkIyTq6PU7iUJtUVT4rcgt3jD2q0JUIkozNL3nog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748260104; c=relaxed/simple;
-	bh=GjZfpYND9lP/NheppZ2lHvUCIf1VyizdpRiD68UpiOI=;
+	bh=QrLLMqTyR7YAQGK5tv4IbrNqrw7xUDpHrWfnkyxz8Jk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e228Wl/wyY+CLpRcAY50TYbo9sDKpeNADyE8FAoPUo71OscX1Cl1GfF8ZYRVEOAmxeYIjjKgE4k3TFbIqVh02uGDa9Chduofz/imHQbPpjH5zhyNqoSNWzJPPxdhPDgVTjlyS7ppCzT0GkSxAP9A7f5/HWYd6pbWspRN2zgFjCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XR4tx5/2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=s/ANxR8o6bXB1LpiWpBdMULT8q6f7XDiw3ObPpr5uSI8PuadK3DmwXx72ZvbJv5772h9XBr1bDXWD58HHVCinYhiJLC7z/0z8ZJOKNZAYd74aA/bIrnL9v5FnFDISdd0GSVW1EfXVYxS6EG7GbwG1HllDX10FmbXTnm6P8r9oIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q0Yv09b1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XR4tx5/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16835C4CEFE;
-	Mon, 26 May 2025 11:48:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q0Yv09b1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A2BC4CEF2;
+	Mon, 26 May 2025 11:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748260104;
-	bh=GjZfpYND9lP/NheppZ2lHvUCIf1VyizdpRiD68UpiOI=;
+	s=k20201202; t=1748260103;
+	bh=QrLLMqTyR7YAQGK5tv4IbrNqrw7xUDpHrWfnkyxz8Jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XR4tx5/2x0yVOR3cjvylsRGD7k6Q8GxVxFExDUx+6osaICv6NL6PoaEEw9QeCmUqi
-	 31dOHd1Q2vN0P8Wz1NaGGeu3JxBpAqaEyeHMVu+ueQ/dJK+Qm1CkKDWpyC+ZL8gxQX
-	 HauUfCoxha2Q4FRxfrhwoS3gLN/I6ID65pibWoJK35I7hc8WKrrCkrM6FhF7/IzcTO
-	 tqHm7+11nM1hVb+M9Nf6Blj+Ce2OrTm2CepLIaoOi93hWKgjekKCLnC2ZtuYRpg2/u
-	 VE1ALIbicFD6M2IOK3hYeV496k+it1TbgK4Zw1sOFOqLKEi1mhMNJeuzWUydCsSkHZ
-	 t0TjOOsIp5NHQ==
+	b=q0Yv09b1t3/ZqYFbSGFyWxqb4yX1hzYNHC6UhOKAH0c8RoDKbXWE88Rx5pbWmGjWf
+	 WhvmkZCFNUsyr6AjaVxxi/SmlASjcdk/Zog4xv2na2waXB6kMHGcrISziYu1xvdC2x
+	 nu/PtKEJ7sAXCAREZSWoQoQBzS+Ea2dExfKJdxJNOBIYb8KzRdC0Oz+5H6Lwo5NN/V
+	 3shvvaiJ0eZmGhFVbw/T4KmlqjZr6EboW+ouyVzDGoqKWLa9P/vzEX73MHRDl8Wu+4
+	 scIvfvLn+duOjrB/beWDW7I1mkDn+GGsESp4adlsjzCfW80OAQTA+Nd916TUW7VTuL
+	 Mld4ZEL+Axdnw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1uJWJd-000000000Yx-252S;
+	id 1uJWJd-000000000Ys-1KI0;
 	Mon, 26 May 2025 13:48:25 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jeff Johnson <jjohnson@kernel.org>
@@ -36,10 +36,11 @@ Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
 	linux-wireless@vger.kernel.org,
 	ath11k@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 3/3] wifi: ath11k: use plain accesses for monitor descriptor
-Date: Mon, 26 May 2025 13:48:03 +0200
-Message-ID: <20250526114803.2122-4-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
+Date: Mon, 26 May 2025 13:48:01 +0200
+Message-ID: <20250526114803.2122-2-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250526114803.2122-1-johan+linaro@kernel.org>
 References: <20250526114803.2122-1-johan+linaro@kernel.org>
@@ -51,76 +52,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The read memory barrier added by commit ab52e3e44fe9 ("wifi: ath11k: fix
-rx completion meta data corruption") is enough to guarantee ordering
-also for plain descriptor accesses so drop the unnecessary READ_ONCE().
+Add the missing memory barriers to make sure that destination ring
+descriptors are read after the head pointers to avoid using stale data
+on weakly ordered architectures like aarch64.
 
+Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
+
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Cc: stable@vger.kernel.org	# 5.6
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/net/wireless/ath/ath11k/dp_rx.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ drivers/net/wireless/ath/ath11k/dp_rx.c | 19 +++++++++++++++++++
+ drivers/net/wireless/ath/ath11k/dp_tx.c |  3 +++
+ 2 files changed, 22 insertions(+)
 
 diff --git a/drivers/net/wireless/ath/ath11k/dp_rx.c b/drivers/net/wireless/ath/ath11k/dp_rx.c
-index dfe2d889c20f..37deb78044c8 100644
+index ea2959305dec..dfe2d889c20f 100644
 --- a/drivers/net/wireless/ath/ath11k/dp_rx.c
 +++ b/drivers/net/wireless/ath/ath11k/dp_rx.c
-@@ -2637,7 +2637,7 @@ int ath11k_dp_process_rx(struct ath11k_base *ab, int ring_id,
- 	struct ath11k *ar;
- 	struct hal_reo_dest_ring *desc;
- 	enum hal_reo_dest_ring_push_reason push_reason;
--	u32 cookie, info0, rx_msdu_info0, rx_mpdu_info0;
-+	u32 cookie;
- 	int i;
+@@ -3851,6 +3851,9 @@ int ath11k_dp_process_rx_err(struct ath11k_base *ab, struct napi_struct *napi,
  
- 	for (i = 0; i < MAX_RADIOS; i++)
-@@ -2657,7 +2657,7 @@ int ath11k_dp_process_rx(struct ath11k_base *ab, int ring_id,
- 	      (struct hal_reo_dest_ring *)ath11k_hal_srng_dst_get_next_entry(ab,
- 									     srng))) {
- 		cookie = FIELD_GET(BUFFER_ADDR_INFO1_SW_COOKIE,
--				   READ_ONCE(desc->buf_addr_info.info1));
-+				   desc->buf_addr_info.info1);
- 		buf_id = FIELD_GET(DP_RXDMA_BUF_COOKIE_BUF_ID,
- 				   cookie);
- 		mac_id = FIELD_GET(DP_RXDMA_BUF_COOKIE_PDEV_ID, cookie);
-@@ -2686,9 +2686,8 @@ int ath11k_dp_process_rx(struct ath11k_base *ab, int ring_id,
+ 	ath11k_hal_srng_access_begin(ab, srng);
  
- 		num_buffs_reaped[mac_id]++;
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while (budget &&
+ 	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, srng))) {
+ 		struct hal_reo_dest_ring *reo_desc = (struct hal_reo_dest_ring *)desc;
+@@ -4154,6 +4157,9 @@ int ath11k_dp_rx_process_wbm_err(struct ath11k_base *ab,
  
--		info0 = READ_ONCE(desc->info0);
- 		push_reason = FIELD_GET(HAL_REO_DEST_RING_INFO0_PUSH_REASON,
--					info0);
-+					desc->info0);
- 		if (unlikely(push_reason !=
- 			     HAL_REO_DEST_RING_PUSH_REASON_ROUTING_INSTRUCTION)) {
- 			dev_kfree_skb_any(msdu);
-@@ -2696,21 +2695,18 @@ int ath11k_dp_process_rx(struct ath11k_base *ab, int ring_id,
- 			continue;
- 		}
+ 	ath11k_hal_srng_access_begin(ab, srng);
  
--		rx_msdu_info0 = READ_ONCE(desc->rx_msdu_info.info0);
--		rx_mpdu_info0 = READ_ONCE(desc->rx_mpdu_info.info0);
--
--		rxcb->is_first_msdu = !!(rx_msdu_info0 &
-+		rxcb->is_first_msdu = !!(desc->rx_msdu_info.info0 &
- 					 RX_MSDU_DESC_INFO0_FIRST_MSDU_IN_MPDU);
--		rxcb->is_last_msdu = !!(rx_msdu_info0 &
-+		rxcb->is_last_msdu = !!(desc->rx_msdu_info.info0 &
- 					RX_MSDU_DESC_INFO0_LAST_MSDU_IN_MPDU);
--		rxcb->is_continuation = !!(rx_msdu_info0 &
-+		rxcb->is_continuation = !!(desc->rx_msdu_info.info0 &
- 					   RX_MSDU_DESC_INFO0_MSDU_CONTINUATION);
- 		rxcb->peer_id = FIELD_GET(RX_MPDU_DESC_META_DATA_PEER_ID,
--					  READ_ONCE(desc->rx_mpdu_info.meta_data));
-+					  desc->rx_mpdu_info.meta_data);
- 		rxcb->seq_no = FIELD_GET(RX_MPDU_DESC_INFO0_SEQ_NUM,
--					 rx_mpdu_info0);
-+					 desc->rx_mpdu_info.info0);
- 		rxcb->tid = FIELD_GET(HAL_REO_DEST_RING_INFO0_RX_QUEUE_NUM,
--				      info0);
-+				      desc->info0);
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while (budget) {
+ 		rx_desc = ath11k_hal_srng_dst_get_next_entry(ab, srng);
+ 		if (!rx_desc)
+@@ -4280,6 +4286,9 @@ int ath11k_dp_process_rxdma_err(struct ath11k_base *ab, int mac_id, int budget)
  
- 		rxcb->mac_id = mac_id;
- 		__skb_queue_tail(&msdu_list[mac_id], msdu);
+ 	ath11k_hal_srng_access_begin(ab, srng);
+ 
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while (quota-- &&
+ 	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, srng))) {
+ 		ath11k_hal_rx_reo_ent_paddr_get(ab, desc, &paddr, &desc_bank);
+@@ -4353,6 +4362,9 @@ void ath11k_dp_process_reo_status(struct ath11k_base *ab)
+ 
+ 	ath11k_hal_srng_access_begin(ab, srng);
+ 
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while ((reo_desc = ath11k_hal_srng_dst_get_next_entry(ab, srng))) {
+ 		tag = FIELD_GET(HAL_SRNG_TLV_HDR_TAG, *reo_desc);
+ 
+@@ -5168,6 +5180,9 @@ static void ath11k_dp_rx_mon_dest_process(struct ath11k *ar, int mac_id,
+ 	rx_bufs_used = 0;
+ 	rx_mon_stats = &pmon->rx_mon_stats;
+ 
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while ((ring_entry = ath11k_hal_srng_dst_peek(ar->ab, mon_dst_srng))) {
+ 		struct sk_buff *head_msdu, *tail_msdu;
+ 
+@@ -5630,6 +5645,10 @@ static int ath11k_dp_full_mon_process_rx(struct ath11k_base *ab, int mac_id,
+ 	spin_lock_bh(&mon_dst_srng->lock);
+ 
+ 	ath11k_hal_srng_access_begin(ar->ab, mon_dst_srng);
++
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while ((ring_entry = ath11k_hal_srng_dst_peek(ar->ab, mon_dst_srng))) {
+ 		head_msdu = NULL;
+ 		tail_msdu = NULL;
+diff --git a/drivers/net/wireless/ath/ath11k/dp_tx.c b/drivers/net/wireless/ath/ath11k/dp_tx.c
+index 8522c67baabf..549d17d90503 100644
+--- a/drivers/net/wireless/ath/ath11k/dp_tx.c
++++ b/drivers/net/wireless/ath/ath11k/dp_tx.c
+@@ -700,6 +700,9 @@ void ath11k_dp_tx_completion_handler(struct ath11k_base *ab, int ring_id)
+ 
+ 	ath11k_hal_srng_access_begin(ab, status_ring);
+ 
++	/* Make sure descriptor is read after the head pointer. */
++	dma_rmb();
++
+ 	while ((ATH11K_TX_COMPL_NEXT(tx_ring->tx_status_head) !=
+ 		tx_ring->tx_status_tail) &&
+ 	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, status_ring))) {
 -- 
 2.49.0
 
