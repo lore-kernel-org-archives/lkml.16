@@ -1,140 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAA4111BF;
-	Mon, 26 May 2025 04:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A6C81A254C;
+	Mon, 26 May 2025 04:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748233820; cv=none; b=NRBg1leLK3yFMgp4jxXD2EMibyhtQO9VlTBLKV0h5jmtgM0uRLZzNamtNaA2qPhfbbc23s4HFUrVNEOOe0QneWACBE4MSIbhcBYhZBbfDhIRWGA9JCzzcAyIfb/TGPtAbqwgNn/3XrbEcSV29nbAKY182jAOpwQcDXZvzjwsy5k=
+	t=1748233973; cv=none; b=RLALh6hv7Cy9fc56ZQzyVMnwzPXUvdjzmlqfoL50tcItTNaL/NHjO7wqN1ThrXoEze9mu8XoSxVR+WUrPUbtHFrjKzeBu9QDhNDQu2ZqMhs/mws622SSdxMtzFJ9dCh/J3S3kBT8UEL7YMvErpezQ0PJTfJoMQ7mxgsURm0IsMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748233820; c=relaxed/simple;
-	bh=P18tVqjGnsSNB5iPrYnSOiQxnPKaRmMkux9SnOLis+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rb7l7VPv2cLo0f04YqZiU9YfJ3i4yMEG1zjSQM8jt2pyV5KMg6zuV7q7gXDSo79gX3NrKLgeE66JZ8tzyR6RO9wGOeZLHNw5VIUTRQIizdFXHG+yC+Xo6vYRyIkP1t4Rh4wcApwP8x0nFWT6Hx78X/BcdFAN80tAAca0MsY2txE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMJvEHGa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748233973; c=relaxed/simple;
+	bh=mn8ba3UTDa4URrSa/YaCqXTzQBlqqLMeOBmtg4InUXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lS/GVFBEvqAJ/kQaul+c8KakwYl9cqNQKbzILECZXLcPsreAA8BfXJYddZtAAxXMmpUx+ctMj/ybL+36XZSrpxW6qmfYHboWf8GQVNzfSHXYs8a3xBFt2kfnpI2jcZhnuCkDXAA/Q2IPtI8asv1QCpojtSkOZOszF6H0NTJ7QKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OoXew1jd; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMJvEHGa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBA2C4CEE7;
-	Mon, 26 May 2025 04:30:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748233818;
-	bh=P18tVqjGnsSNB5iPrYnSOiQxnPKaRmMkux9SnOLis+Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IMJvEHGacshGL1Ppb8/TSR+GOi8AVd8zJ4TWGqEH428ZfLn32OVi027R91FlFCY5h
-	 pzeXeYEadCFVa0IGijxRGKShFraqk10dyjiNIxGPnP7nDYHBBXTuuf7Hn3H9DqrE3w
-	 ZdgkSpSc5ITziZuunqVv8xtKXdDcA58Ou9LBC8seFoGqU+P26DYRz3Gf1znaIuGmD6
-	 E6oVnc69Y8z8E9LwmgbpRFk3hCHCC0RnsV35oYP4hcEhuoQRRhf6QxMQp+5BuMHrac
-	 zmkDiDCXPsU5lEas3tGDoT+0rQvxmqnxTFPXUuet9e8/gq75r+Yt2C+GDB23SL/F8B
-	 A7hVnU6akctEw==
-Message-ID: <297d936b-7ce2-4d9a-baff-e4b0503e6000@kernel.org>
-Date: Mon, 26 May 2025 06:30:13 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OoXew1jd"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54PKe6cS001698;
+	Mon, 26 May 2025 04:32:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=A/2Y9sujCohNMkIn/XEj5QKAxZbDlEiFLj/Bbpg1/
+	Ko=; b=OoXew1jdL3xZ7eMIt2UAVW2XlBkhJdm3DeTka3nnqxBs0QdagSuVT04D2
+	CKOG0CN7S4NHpzDSEXE9WhVaRGZaK6IJ/szAp2Q8a3ugrcx/GPqbdstxEXd5XUaw
+	fthYbkeBjHvvCKmrGtM6uZprex8EtjpyJ+0HIw+MabvWuMuHZFAYh4KWl6jg2LUF
+	raVNsY3tUJIVg/6kxeuThb3OMoEfJmDnVhHpiqPsG2MfwF1C4WcDE/cwqXzpO+95
+	deQwYvmmQ6CtBb7O7MuxjTbjYY11Lws7xueuycJhkVgrM7eVHoDb80jfIEH2MQQ1
+	hUGJ5jx6ZY5IKYochHJD0jfMD1MyQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5mby608-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 04:32:45 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q1vueF016644;
+	Mon, 26 May 2025 04:32:44 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46ureu4t1v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 04:32:44 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54Q4WglU27198140
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 04:32:42 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C5EE358059;
+	Mon, 26 May 2025 04:32:42 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5533E58043;
+	Mon, 26 May 2025 04:32:42 +0000 (GMT)
+Received: from WIN-DU0DFC9G5VV.ibm.com (unknown [9.61.243.103])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 26 May 2025 04:32:42 +0000 (GMT)
+From: Konstantin Shkolnyy <kshk@linux.ibm.com>
+To: sgarzare@redhat.com
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mjrosato@linux.ibm.com,
+        Konstantin Shkolnyy <kshk@linux.ibm.com>
+Subject: [PATCH net] vsock/test: Fix occasional failure in SOCK_STREAM SHUT_RD test
+Date: Sun, 25 May 2025 23:32:20 -0500
+Message-Id: <20250526043220.897565-1-kshk@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv4 4/5] wifi: ath9k: ahb: replace id_table with of
-To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
-Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
- nbd@nbd.name, Johannes Berg <johannes@sipsolutions.net>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20250525214256.8637-1-rosenp@gmail.com>
- <20250525214256.8637-5-rosenp@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250525214256.8637-5-rosenp@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=E9bNpbdl c=1 sm=1 tr=0 ts=6833eeed cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=HT24iyfb7oJRp2wcDU8A:9
+X-Proofpoint-GUID: -d6ii3Z_t74ZB3IEDtDn0pcimtKEABzh
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDAzNSBTYWx0ZWRfX8iLOaLeU+aoC zCzZUz1xaXrsPsXaH9RIfrsYGVqDnqKdW99RAdo8h1uAROKUvvca57wBSCMF4A5Cp/mluyK37ds RjoqKrU53aC4F1wjMCS+RcfsmXxNuR34f5VKsCNrr6mmr9i6xV3y/xF70qv+Zufze0BjvabK71k
+ GPIVGXId1MgrmnxwGQ/6TxOLRDXrvMPi5ywELZqKegF923OKQ09ng5ro/tNcOlSZjm3s2+rBN9S yg3HGbROjESG0GRRV18Tv1osvonYaCrnOW+TnDRThyNemw5T1ESVYK4GoaWqHJCMOyZd59nCL6B zWvuMPWvbKaU/7hUkBSrx36sIhS/s9WXrbR5BPEhyLQotoVABMgtGyIdSVKci0yAlunmRnX5R7w
+ k4/FkzWrgt+sQeYll6M4A6vbGyHoPMmDn1ksMPtA/X+TloRCmeO0P7GI59qXXvMKBDI+HlIE
+X-Proofpoint-ORIG-GUID: -d6ii3Z_t74ZB3IEDtDn0pcimtKEABzh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_02,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505260035
 
-On 25/05/2025 23:42, Rosen Penev wrote:
-> @@ -72,20 +55,15 @@ static const struct ath_bus_ops ath_ahb_bus_ops  = {
->  
->  static int ath_ahb_probe(struct platform_device *pdev)
->  {
-> -	const struct platform_device_id *id = platform_get_device_id(pdev);
->  	struct ieee80211_hw *hw;
->  	struct ath_softc *sc;
->  	struct ath_hw *ah;
->  	void __iomem *mem;
->  	char hw_name[64];
-> +	u16 dev_id;
+The test outputs:
+"SOCK_STREAM SHUT_RD...expected send(2) failure, got 1".
 
-I don't think these are u16 in the headers, but unsigned int.
+It tests that shutdown(fd, SHUT_RD) on one side causes send() to fail on
+the other side. However, sometimes there is a delay in delivery of the
+SHUT_RD command, send() succeeds and the test fails, even though the
+command is properly delivered and send() starts failing several
+milliseconds later.
 
->  	int irq;
->  	int ret;
->  
-> -	if (!dev_get_platdata(&pdev->dev)) {
-> -		dev_err(&pdev->dev, "no platform data specified\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	mem = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(mem)) {
->  		dev_err(&pdev->dev, "ioremap failed\n");
-> @@ -118,7 +96,8 @@ static int ath_ahb_probe(struct platform_device *pdev)
->  		goto err_free_hw;
->  	}
->  
-> -	ret = ath9k_init_device(id->driver_data, sc, &ath_ahb_bus_ops);
-> +	dev_id = (u16)(kernel_ulong_t)of_device_get_match_data(&pdev->dev);
+The delay occurs in the kernel because the used buffer notification
+callback virtio_vsock_rx_done(), called upon receipt of the SHUT_RD
+command, doesn't immediately disable send(). It delegates that to
+a kernel thread (via vsock->rx_work). Sometimes that thread is delayed
+more than the test expects.
 
-u16 cast looks not needed.
+Change the test to keep calling send() until it fails or a timeout occurs.
 
+Fixes: b698bd97c5711 ("test/vsock: shutdowned socket test")
+Signed-off-by: Konstantin Shkolnyy <kshk@linux.ibm.com>
+---
+ tools/testing/vsock/vsock_test.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-> +	ret = ath9k_init_device(dev_id, sc, &ath_ahb_bus_ops);
->  	if (ret) {
->  		dev_err(&pdev->dev, "failed to initialize device\n");
->  		goto err_irq;
-Best regards,
-Krzysztof
+diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+index 613551132a96..c3b90a94a281 100644
+--- a/tools/testing/vsock/vsock_test.c
++++ b/tools/testing/vsock/vsock_test.c
+@@ -1058,17 +1058,22 @@ static void sigpipe(int signo)
+ 	have_sigpipe = 1;
+ }
+ 
+-static void test_stream_check_sigpipe(int fd)
++static void test_for_send_failure(int fd, int send_flags)
+ {
+-	ssize_t res;
++	timeout_begin(TIMEOUT);
++	while (true) {
++		if (send(fd, "A", 1, send_flags) == -1)
++			return;
++		timeout_check("expected send(2) failure");
++	}
++	timeout_end();
++}
+ 
++static void test_stream_check_sigpipe(int fd)
++{
+ 	have_sigpipe = 0;
+ 
+-	res = send(fd, "A", 1, 0);
+-	if (res != -1) {
+-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+-		exit(EXIT_FAILURE);
+-	}
++	test_for_send_failure(fd, 0);
+ 
+ 	if (!have_sigpipe) {
+ 		fprintf(stderr, "SIGPIPE expected\n");
+@@ -1077,11 +1082,7 @@ static void test_stream_check_sigpipe(int fd)
+ 
+ 	have_sigpipe = 0;
+ 
+-	res = send(fd, "A", 1, MSG_NOSIGNAL);
+-	if (res != -1) {
+-		fprintf(stderr, "expected send(2) failure, got %zi\n", res);
+-		exit(EXIT_FAILURE);
+-	}
++	test_for_send_failure(fd, MSG_NOSIGNAL);
+ 
+ 	if (have_sigpipe) {
+ 		fprintf(stderr, "SIGPIPE not expected\n");
+-- 
+2.34.1
+
