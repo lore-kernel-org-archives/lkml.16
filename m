@@ -1,244 +1,94 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F65EEEBA;
-	Mon, 26 May 2025 02:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8EBEEBA;
+	Mon, 26 May 2025 02:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748227982; cv=none; b=U+SlBwLZYROUGdwZDp9ArdU8xWGgHjHaKNyu+8LQtRCuO8B9UrvRL6O4AQpsIF6iSGCQH/cs7cWPXh2ef75hy2N4aLlD8SCFQJTkFMp+S390VFktjajoti0PoKehMKr0sAzFaBNjDZxIJGWvG6oO34gDHFlXcM18u078z5BrylI=
+	t=1748228174; cv=none; b=pJ3UzbDytI4Slxxx4MryZ4kF8lcWYp8591dR+rwJ5rCDCmsizmIPWPCzXMwElMrX1/YcOJHuJ69RYEiCm9HAcjCGB7Y5FM07M8ja6ykeb/8EC1d434ukG13ulUA/kRyr/WFBkNC5xSp6sCm5bV710pHtodzacO4TbzZEEEozyQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748227982; c=relaxed/simple;
-	bh=Ic3rldhFd7J/0KTpMZOiNrtnmtzUni0MW27IMQUHTm0=;
+	s=arc-20240116; t=1748228174; c=relaxed/simple;
+	bh=bV5+HFFetyXc8aCsy2tWkN9nsNC/vR/wBEC6I9tj56A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UP2ceDDPIWT+BhLZpoqu2dZZ6M2ZkKShn1J5ERJ9H3e9EeBmlR8Du02qAtLcIjT+rUsWQW8tLKyYcmk7ICduvhwzSgpB8o3X0FDE8b2WhpHyg7Aml1Ar2M3nVz6Do4RJQ9kFYOEyWHDahWdriItvdKi2UW6AGPF1AFxjIhLIPmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HxwNn8cY; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UxKXeviua/az0vOZxwluAT0uYQMpE76DLdI+V8b8qkfAwrQhUJlSMsfpUv2p84/Tm0vpceUvKB+OUdqZmpF0X49R1CwI74PjnghDBXeMCD7N5Mn89a/0AoSiVy5hnwNraejqec2dGgZF/Q+7x144QosHQg/STaHoAtaE/dhCKZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ZYIarfKN; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxwNn8cY"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234488c2ea6so6644355ad.3;
-        Sun, 25 May 2025 19:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748227980; x=1748832780; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ic3rldhFd7J/0KTpMZOiNrtnmtzUni0MW27IMQUHTm0=;
-        b=HxwNn8cYTu75b2Eo4dePgJBhyJLjGTsbZuQ3qtui8bEPMFcL4aR7ruuG0hrzZ33TxW
-         WeokqgkTctUNVd9DYrbxrqOCP8iKS9e4jDX6yZu5mHAp4XarFmQXLjL1NaxZE+o/KkhK
-         xJ7EG1tgxXbsJfykb4Cmg9aYXm/TvGt8v0Uv4oYWTTzfeSrRsRlHSX0eT5rxdl0H/wtb
-         c6CEgG+jZyzkrJJzIntrNtTm+MZEXLMNZPuO8yrrf1H8hPtZfy0d7WWNQjtrCmoi9fRO
-         WlPXcrKUE3ghx5FYeG+PE3eh96gIYPrKb6ojw4LGlIKPQx8RCYI6S98a1lNOHV7zyGpB
-         PQ9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748227980; x=1748832780;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ic3rldhFd7J/0KTpMZOiNrtnmtzUni0MW27IMQUHTm0=;
-        b=my341+NaDmXwO7Bg1o2ZITiCXRg3Uj4YTxfFKw36MYbr8BwCLwAQFo2B/93VKsZvYV
-         ZJtSKCXq+/fBYitLbY7xiEtFSh4RnZA20dmhXBObkcoi3JuQuFdBNzlDM/BKlfb2wmWQ
-         hitGtYiXmRZod6t53tcnUGfbUaJGIDGOYINo6Pt5UT/qTu1rfXVtRlnjO0sgX1piZ+cn
-         quT2+1xahla/NIBSZUQ+tq69lafTw2dqGG1vfophGsNmeEIz7JhxiIQmQxPS2oXYqVOS
-         +gOXDp0ZwM65Baso6S/q+xXdlNJe/0V6XD/bY0wbW4GzFuMHy4ngpo6z12AHF3ChYAa2
-         XIvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTr6+rg8m88PAYPDhN2z7SOP04lrp0sbIjQDDxfZ9oWE4GDGza7vpTwnCWCnLYU3Oy+S2UoIAkuTgc@vger.kernel.org, AJvYcCWmrqs4ptY7tqnwnK/eAYn2PdZ+b6Q4uIQURRhUplAApLQB8jDnDU/stP1MVEVhWEctYlSo803V5qF4sRg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM6vnjSJUihxG/YdGUxjyBeTX4DrnSnkWFcJq6nciAhVr4buC5
-	AF1aSpy5mY7LXkBQFDFBaq4vjEjOIcQmDWIC2b4RHyKEFY0Hg9d3AAzaeJTgzQ==
-X-Gm-Gg: ASbGnctz5uHid3wq3q7oI2D2CVvL8RMWOTS7763mCH8gdemt1B88V3y23XL/dfqfk9X
-	bwt/XjeFdvgRqE5WBNTFBca+Es1VRUpVZxDFJamcMaQ9Z1QleOqmggAt82V211m13m1Wt9FMR+G
-	94GI8GCTIKBp11c+b9ubqxwNNGl0Nx3c00R4A59PkWTR4TcUyjYU/1vkO6KM1Hv4k7Jg4DN8pVz
-	CEBM0Appv/rPMoSDwtjO1feaUzdci6ie7NtSdFXPCOWww/ouDAu840wJxsVKsgHTeD+DFHkKjTd
-	GLha7pTEIjBdxaTNH5kYcIvHO+AUBSH8BPPFDeES6rOZS6Jn5S8=
-X-Google-Smtp-Source: AGHT+IFVqieLEMKMolbdEk2hFuaJxR+SVCi4ml94UHnzMDO+wHx4vUPHJjf5BqVxIrT2nDpGebPf3w==
-X-Received: by 2002:a17:903:4b30:b0:231:d16c:7f55 with SMTP id d9443c01a7336-23414ea1745mr116001445ad.0.1748227979506;
-        Sun, 25 May 2025 19:52:59 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4eedb92sm158201015ad.258.2025.05.25.19.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 May 2025 19:52:58 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D0A084209E8A; Mon, 26 May 2025 09:52:56 +0700 (WIB)
-Date: Mon, 26 May 2025 09:52:56 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Hanne-Lotta =?utf-8?B?TcOkZW5ww6TDpA==?= <hannelotta@gmail.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, shuah@kernel.org,
-	alexandre.belloni@bootlin.com
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2] selftests: Improve test output grammar, code style
-Message-ID: <aDPXiE4z1_fejuy3@archie.me>
-References: <20250516084233.66594-1-hannelotta@gmail.com>
- <9d502cef-b2cb-4309-b268-7c75f8451833@linuxfoundation.org>
- <ff076589-4a93-4e4c-8e85-77499e27898c@gmail.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ZYIarfKN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=RNlDjUKV8vb9lss0kDBUHO59CbXa+yGWQS2V6xmXcG4=; b=ZYIarfKNWgc+b7y8gbavlX+aTd
+	1iSQ7zlVLXh1yifi97DL8KQ25pApUmzat969sEwBe8d9y4oW8zBjVTzbZXwML6dSM4LOre4APxbpW
+	Ov/ZHnCMZwVrMu3L+iPKadnHzZABQ+vzx9Njz3aM0eChCNPMZv29RPE1fRvnWW+v6pP5r2lKZmiie
+	NTkurBPvfltvttpxwYhm+D9gnrPPudDfUYgLuunJyALHikEou2OA44MYbMn/URFWviFpKlD2Gy/vQ
+	IaCupKlswlSwm+RrJKBTVctoK8IkHgJsts8W4bcWjVGsOqWNhXcPmA85gh6u3TK5vCTF7SsRh/+Ip
+	FkXKjJkg==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uJO0T-008wzR-0q;
+	Mon, 26 May 2025 10:56:06 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 26 May 2025 10:56:05 +0800
+Date: Mon, 26 May 2025 10:56:05 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] x86/fpu: Fix irq_fpu_usable() to return false during CPU
+ onlining
+Message-ID: <aDPYRUTYVGii2NYd@gondor.apana.org.au>
+References: <20250518193212.1822-1-ebiggers@kernel.org>
+ <87v7puq8g2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="IsOyzGd2L+s1ut4R"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff076589-4a93-4e4c-8e85-77499e27898c@gmail.com>
+In-Reply-To: <87v7puq8g2.ffs@tglx>
 
+On Wed, May 21, 2025 at 05:39:41PM +0200, Thomas Gleixner wrote:
+> On Sun, May 18 2025 at 12:32, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> >
+> > irq_fpu_usable() incorrectly returned true before the FPU is
+> > initialized.  The x86 CPU onlining code can call sha256() to checksum
+> > AMD microcode images, before the FPU is initialized.  Since sha256()
+> > recently gained a kernel-mode FPU optimized code path, a crash occurred
+> > in kernel_fpu_begin_mask() during hotplug CPU onlining.
+> >
+> > (The crash did not occur during boot-time CPU onlining, since the
+> > optimized sha256() code is not enabled until subsys_initcalls run.)
+> >
+> > Fix this by making irq_fpu_usable() return false before fpu__init_cpu()
+> > has run.  To do this without adding any additional overhead to
+> > irq_fpu_usable(), replace the existing per-CPU bool in_kernel_fpu with
+> > kernel_fpu_allowed which tracks both initialization and usage rather
+> > than just usage.  The initial state is false; FPU initialization sets it
+> > to true; kernel-mode FPU sections toggle it to false and then back to
+> > true; and CPU offlining restores it to the initial state of false.
+> >
+> > Fixes: 11d7956d526f ("crypto: x86/sha256 - implement library instead of shash")
+> > Reported-by: Ayush Jain <Ayush.Jain3@amd.com>
+> > Closes: https://lore.kernel.org/r/20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
---IsOyzGd2L+s1ut4R
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since this patch is holding up my pull request, I will be applying
+it to cryptodev.
 
-On Sun, May 25, 2025 at 09:27:31PM +0300, Hanne-Lotta M=C3=A4enp=C3=A4=C3=
-=A4 wrote:
-> Hello,
->=20
-> On 5/23/25 01:14, Shuah Khan wrote:
-> > On 5/16/25 02:42, Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 wrote:
-> > > Add small grammar fixes in perf events and Real Time Clock tests'
-> > > output messages.
-> > >=20
-> > > Include braces around a single if statement, when there are multiple
-> > > statements in the else branch, to align with the kernel coding style.
-> >=20
-> > This patch combines several changes in one including combining changes
-> > to two tests.
-> >=20
-> > >=20
-> > > Signed-off-by: Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.c=
-om>
-> > > ---
-> > >=20
-> > > Notes:
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 v1 -> v2: Improved wording in RTC tests base=
-d on feedback from
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 Alexandre Belloni <alexandre.belloni@bootlin=
-=2Ecom>
-> > >=20
-> > > =C2=A0 tools/testing/selftests/perf_events/watermark_signal.c |=C2=A0=
- 7 ++++---
-> > > =C2=A0 tools/testing/selftests/rtc/rtctest.c=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 10 +++++-----
-> > > =C2=A0 2 files changed, 9 insertions(+), 8 deletions(-)
-> > >=20
-> >=20
-> > Send separate patches for selftests/perf_events and selftests/rtc/rtcte=
-st.c
->=20
-> Sure, I can do that. If I split this patch into two, is it OK to send the
-> other patch as a new one (without version history)? Or should I send both
-> patches converted to a patch series (v3)?
-
-Send both patches as a series.
-
-> >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto cleanup;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> > > diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/
-> > > selftests/rtc/rtctest.c
-> > > index be175c0e6ae3..930bf0ce4fa6 100644
-> > > --- a/tools/testing/selftests/rtc/rtctest.c
-> > > +++ b/tools/testing/selftests/rtc/rtctest.c
-> > > @@ -138,10 +138,10 @@ TEST_F_TIMEOUT(rtc, date_read_loop,
-> > > READ_LOOP_DURATION_SEC + 2) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rtc_read =3D r=
-tc_time_to_timestamp(&rtc_tm);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Time should=
- not go backwards */
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ASSERT_LE(prev=
-_rtc_read, rtc_read);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Time should not increa=
-se more then 1s at a time */
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Time should not increa=
-se more than 1s per read */
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ASSERT_GE(prev=
-_rtc_read + 1, rtc_read);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Sleep 11ms to avoid ki=
-lling / overheating the RTC */
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Sleep 11ms to avoid ov=
-erheating the RTC */
-> >=20
-> > This change removes important information. What is the reason for this
-> > change?
->=20
-> Well, it is less verbose and still informative (avoiding overheating). I =
-can
-> leave out this change, though.
-
-s/then/than/ typofix should be kept.
-
->=20
-> >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nanosleep_with=
-_retries(READ_LOOP_SLEEP_MS * 1000000);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prev_rtc_read =
-=3D rtc_read;
-> > > @@ -236,7 +236,7 @@ TEST_F(rtc, alarm_alm_set) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (alarm_state =3D=3D RTC_ALARM_DISAB=
-LED)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SKIP(return, "=
-Skipping test since alarms are not supported.");
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (alarm_state =3D=3D RTC_ALARM_RES_M=
-INUTE)
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SKIP(return, "Skipping te=
-st since alarms has only minute
-> > > granularity.");
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SKIP(return, "Skipping te=
-st since alarm has only minute
-> > > granularity.");
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D ioctl(self->fd, RTC_RD_TIME, &t=
-m);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ASSERT_NE(-1, rc);
-> > > @@ -306,7 +306,7 @@ TEST_F(rtc, alarm_wkalm_set) {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (alarm_state =3D=3D RTC_ALARM_DISAB=
-LED)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SKIP(return, "=
-Skipping test since alarms are not supported.");
-> >=20
-> > This one still says "alarms"
->=20
-> Yes, because "alarms are not supported" refers to alarms as a feature.
-
-Disambiguate (like "alarms feature is not supported")?
-
->=20
-> >=20
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (alarm_state =3D=3D RTC_ALARM_RES_M=
-INUTE)
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SKIP(return, "Skipping te=
-st since alarms has only minute
-> > > granularity.");
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SKIP(return, "Skipping te=
-st since alarm has only minute
-> > > granularity.");
-> >=20
-> > Isn't "alarms" consistent with other messages?
->=20
-> Yes, plural "alarms" would be consistent with other messages, and when
-> referring to them as a feature. The verb form should then change, either:
->=20
-> - alarm has ... OR
-> - alarms have ...
->=20
-> In the test, only one alarm is set - it makes sense to refer to it as
-> singular. I received feedback regarding this from Alexandre, because I had
-> plural form in the first version of this patch.
-
-I would rather write the message as "Skipping test since the alarm has ..."
-
-Thanks.=20
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---IsOyzGd2L+s1ut4R
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDPXiAAKCRD2uYlJVVFO
-o8rkAP9VqUjGfIEBUq/vNPbcUN3yntOSa1bmt36Z/68JmexfNwD/eqj+VVhucR13
-q03PPGj6Ewtp0eenY+3VDF/9xIaKigc=
-=oeJ+
------END PGP SIGNATURE-----
-
---IsOyzGd2L+s1ut4R--
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
