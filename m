@@ -1,89 +1,118 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3371E2852;
-	Mon, 26 May 2025 08:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28ED03595E;
+	Mon, 26 May 2025 08:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247158; cv=none; b=Xu6B3zxJCBlHAoTEP2NDdsRhfKtMLFxY+d31P2ZNZMU7dSPpvX1uvXxCk6S76d+1PVATzl2dEZ41cFOZOVe5qkVItkPDNn/4DUncocPVD49SH6qXtcrsU9VOA3Sk/Dga4cUvF6YENkaI4iRZ/12A9X0Bm64buwm4i2MrF69zYaw=
+	t=1748247181; cv=none; b=dmXK3s0juWMx5/Qmu2aQ1aIG8g7RM3oxZfcmxksUqblCjNJYgE0jpoo3IOCkA4BKubUL5QcA6xk5XmS9tPoPLX3ABgD6S49VeyvFHk23iiXmsvxe2JL+YE0VpdwE/THV89+fVLZFnEChcYKAbv/K27OPqogW/j2RTo0KfvrjqUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247158; c=relaxed/simple;
-	bh=MAENNmNwrH3W/QEGRqPR4bnA+t7nJWBfnxxjoyBBWks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GozPpLOmdl4AGynmvd0Na15+ZoptRNszhjGNq/RgrzlSBJchY849dicCltx8TDcfN9ut85zw/hascEKcJ1Pase4Ys4FWoIgDmA5iR1jd+beXTXNV++wRbvFYrEiIABSA0iL01/NpyE7KEOe5ckki2wUIh0guX7wpzWUiHpdrqm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 28f646603a0911f0b29709d653e92f7d-20250526
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:429e306a-3d2a-428c-8e5d-381513c7b4c8,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:7
-X-CID-INFO: VERSION:1.1.45,REQID:429e306a-3d2a-428c-8e5d-381513c7b4c8,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:7
-X-CID-META: VersionHash:6493067,CLOUDID:556e8e9b46a75800489301288524277b,BulkI
-	D:250522180435BN613KC0,BulkQuantity:3,Recheck:0,SF:19|24|38|45|64|66|72|78
-	|80|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:ni
-	l,Bulk:40,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,B
-	RR:0,BRE:0,ARC:0
-X-CID-BVR: 1,FCT
-X-CID-BAS: 1,FCT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 28f646603a0911f0b29709d653e92f7d-20250526
-X-User: aichao@kylinos.cn
-Received: from [172.25.120.86] [(112.64.161.44)] by mailgw.kylinos.cn
-	(envelope-from <aichao@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 2080723570; Mon, 26 May 2025 16:12:26 +0800
-Message-ID: <eb1ddeb3-06b6-4ac5-b20a-06b92c7f1363@kylinos.cn>
-Date: Mon, 26 May 2025 16:12:22 +0800
+	s=arc-20240116; t=1748247181; c=relaxed/simple;
+	bh=oIu84pilcqVfrxlqB16Lsl++65M0QoEeHgcBWV9nGgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aqWPtL4qhNpHRklQNBAFsP1secfzd09etjjIVRBASoROhpf++f8Gt2OeufEq8S6gwFsR/qYaXCS/jIceIOQLdMWezj7XQ/dWl78OmnYkG8Ig6ZRrdJHXqdaUqkaWsbueiw1pa06zDD7/j6QdVfRNQZCUnEOXkESCeFXkvFzeQQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-61-683422858314
+Date: Mon, 26 May 2025 17:12:47 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: willy@infradead.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH 13/18] mlx5: use netmem descriptor and APIs for page pool
+Message-ID: <20250526081247.GA47983@system.software.com>
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-14-byungchul@sk.com>
+ <CAHS8izOX0j04=KB-=_kpyR+_HZHk+4hKK-xTEtsGNNHzZFvhKQ@mail.gmail.com>
+ <20250526030858.GA56990@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] ASoC: aoa: Use helper function
- for_each_child_of_node_scoped()
-To: Johannes Berg <johannes@sipsolutions.net>, perex <perex@perex.cz>,
- tiwai <tiwai@suse.com>,
- "kuninori.morimoto.gx" <kuninori.morimoto.gx@renesas.com>,
- lgirdwood <lgirdwood@gmail.com>, broonie <broonie@kernel.org>,
- jbrunet <jbrunet@baylibre.com>, "neil.armstrong"
- <neil.armstrong@linaro.org>, khilman <khilman@baylibre.com>,
- "martin.blumenstingl" <martin.blumenstingl@googlemail.com>,
- "shengjiu.wang" <shengjiu.wang@gmail.com>, "Xiubo.Lee"
- <Xiubo.Lee@gmail.com>, festevam <festevam@gmail.com>,
- nicoleotsuka <nicoleotsuka@gmail.com>, shawnguo <shawnguo@kernel.org>,
- "s.hauer" <s.hauer@pengutronix.de>,
- "srinivas.kandagatla" <srinivas.kandagatla@linaro.org>
-Cc: linux-sound <linux-sound@vger.kernel.org>,
- linux-kernel <linux-kernel@vger.kernel.org>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- linux-renesas-soc <linux-renesas-soc@vger.kernel.org>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
- linux-amlogic <linux-amlogic@lists.infradead.org>, imx
- <imx@lists.linux.dev>, kernel <kernel@pengutronix.de>,
- linux-arm-msm <linux-arm-msm@vger.kernel.org>
-References: <2aq0nyvyf7t-2aq4hsc7kp6@nsmail7.0.0--kylin--1>
- <7e708dcc98c6f0f615b1b87d190464cfe78be668.camel@sipsolutions.net>
-Content-Language: en-US
-From: Ai Chao <aichao@kylinos.cn>
-In-Reply-To: <7e708dcc98c6f0f615b1b87d190464cfe78be668.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250526030858.GA56990@system.software.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXfOzo7TwXFavZkVzkwSNUvDJ+j6Jd6oyPBDoR9q5amt5rRZ
+	poFgzagktTRT50lmmvcaLHMzQmx5iy7apFqlzbwhZUZpkhe6TIn89uO5/f4fHpaSl4p9WLX2
+	FK/TKjUKRkpLv3jcCrmgiFCFteq9QDDVMVD7MwUq+6xiEGoaEExMvZfAeEs7A2WlkxQInRk0
+	/DBNUzDU1i8BZ8UwDQ8vWijoz+lgICtjhoLz1ioRdDVki+H69G0KLOl9Euh+IDDwoe63GIZt
+	WTQ8MVTT4MzeBm3GxTD5dBRBi8kigskrNxnIsxsZGMhwIrA/7qeh+Fw2AlOTQwwzPwVmmx+p
+	r34rIo2GXgkxmk+Te1VBJNNhp4i55jJDzN9zJaTn9UOGdBTO0KTROi4iWfoxhnwbekeTr02v
+	GGKqf0WTZ8YWCRk3r4jiYqSb4niNOpnXrd1ySKoayxuhEu+6p4x8DkxHo2wmYlnMRWBDmzYT
+	uc1hWV4G42KaC8B953LmmOECscMxRbnYm1uDy5uuiV1McU4xfiEcd7EXtwdbckZFLpZxgJ3V
+	BX9npKyccyDc22yTzDc88ZOiQXp+ORDPltgpVwaKW4Yrf7Hz5ZVYf794zuXGbcTZE/o51yLO
+	Hzc3tItcNzFXz+LO/FxmPvRS/KjKQV9FnoYFCsMCheG/wrBAYUR0DZKrtcnxSrUmIlSVqlWn
+	hB5JiDejv49TkTYba0Xfu6JtiGORwkN2SBGukouVyUmp8TaEWUrhLfMVwlRyWZwy9SyvSzio
+	O63hk2xoGUsrlsjWT56Jk3PHlKf4EzyfyOv+dUWsm086yqkMDvCtGui4F3xwC8cOkonlhVub
+	Wt+9uRO68xLsW3WDzi0/7IBNQ/c7Nfnba93KE/yMJW/X1OPN0Zb8/oZE7/zdkWkwE2jf8TFZ
+	7/tyOrbYXYiMiovv3pBSEDNxV1HXc9Ta7rVXMIfsejp9snv/p9Xh/iKtx4Min7qYA0s6Ep4r
+	6CSVcl0QpUtS/gHQPK7/NAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHe97b3i0Xr0vtTYNgIZKQFl040QUpqKcoCewC9aGNfGnLOceW
+	NiVL2ySynJZd16yVprnE0bRthojMlUpRoRnrOtMUoWU3k0qxnBL57cf5n/P7fzksKSuiY1m1
+	9rCg1yo1ckZCSVLXmJYUyVeolnaPI7A56xi489MINb1eGmwON4KRX69F8N3fzkDljVESbE/N
+	FPxw/iZh4GGfCILVgxQ0n/SQ0FfawUCJeYyEE97bBLRVdNLwzG2h4fzvWyR4CnpF0H3fxsC7
+	uj80DPpKKOi01lIQtKTAQ3sMjD4KIfA7PQSMnqlgoLzLzkC/OYigq62PgquFFgTOlgANYz9t
+	TIocN9a+JHCT9a0I213ZuOF2Ii4OdJHY5TjFYNe3cyL85kUzgzsuj1G4yfudwCWmYQZ/HXhF
+	4c8tPQyuHPpCYGdjD4Uf2/2iHZF7JWvTBY06R9Anr1dIVMPlQ6SufrZx6GNCAQqxxUjM8twK
+	vrLczISZ4uL53sLSKWa4BD4Q+EWGOYpbzFe1nKXDTHJBmn9iOxTmudx23lMaIsIs5YAP1l6a
+	3JGwMi6A+LetPtF0EMl3XvlATR8n8OPXuial7CTH8TUT7PR4IW+6d3WqS8yt5i0jpqmuaG4R
+	3+puJ8rQHOsMk3WGyfrfZJ1hsiPKgaLU2pxMpVqzMsmQocrVqo1JB7IyXWjyOarzx8960Uj3
+	Zh/iWCSPkCrky1UyWpljyM30IZ4l5VHSBbalKpk0XZmbJ+iz9uuzNYLBh+JYSj5PunWPoJBx
+	B5WHhQxB0An6fynBimMLUNbstu4N7iPR7k951y84zHcmds4dOG43pl00tTxa0Fxd5b25JfX5
+	6YOrlkVsG+8sTpxv9CelvNreHkG8MG40iDVHd+2eo6uKb3+ALbHa/h42dCHeoduXJpJ6oxdZ
+	6vNxdtvCjNS03PvHNlUkNCg+v1+/LnlW5LHjvdSlmCGizH93nZwyqJTLEkm9QfkXuwxA+xgD
+	AAA=
+X-CFilter-Loop: Reflected
 
-Hi Johannes:
+On Mon, May 26, 2025 at 12:08:58PM +0900, Byungchul Park wrote:
+> On Fri, May 23, 2025 at 10:13:27AM -0700, Mina Almasry wrote:
+> > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
+> > >
+> > > To simplify struct page, the effort to seperate its own descriptor from
+> > > struct page is required and the work for page pool is on going.
+> > >
+> > > Use netmem descriptor and APIs for page pool in mlx5 code.
+> > >
+> > > Signed-off-by: Byungchul Park <byungchul@sk.com>
+> > 
+> > Just FYI, you're racing with Nvidia adding netmem support to mlx5 as
+> > well. Probably they prefer to take their patch. So try to rebase on
+> > top of that maybe? Up to you.
+> > 
+> > https://lore.kernel.org/netdev/1747950086-1246773-9-git-send-email-tariqt@nvidia.com/
+> > 
+> > I also wonder if you should send this through the net-next tree, since
+> > it seem to race with changes that are going to land in net-next soon.
+> > Up to you, I don't have any strong preference. But if you do send to
+> > net-next, there are a bunch of extra rules to keep in mind:
+> > 
+> > https://docs.kernel.org/process/maintainer-netdev.html
 
->> "simplifies the code" is no need to callof_node_put() .
-> Fair. Except that's not what you _actually_ changed here. Like I said,
-> either it's buggy before or after.
->
-In the function i2sbus_probe, it not return a struct device_node, so , I 
-think function for_each_child_of_node_scoped is better than 
-for_each_child_of_node.
+It looks like I have to wait for net-next to reopen, maybe until the
+next -rc1 released..  Right?  However, I can see some patches posted now.
+Hm..
 
-Best regards,
-Ai Chao
+	Byungchul
+> 
+> I can send to net-next, but is it okay even if it's more than 15 patches?
+> 
+> 	Byungchul
+> > 
+> > -- 
+> > Thanks,
+> > Mina
