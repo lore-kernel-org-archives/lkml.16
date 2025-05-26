@@ -1,195 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FECC20DD40
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7EB20DD4E;
+	Mon, 26 May 2025 14:40:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270406; cv=none; b=jje8jXwNRRTXTH30fGpntUv4YI7B2W5bJy1+ypQAjAw9+WUGiF5UIBtGJhvaOzp9ie1Hslek5rVDkBdPfXgbT777rmz6W1TDSFNerC0/QLnsy8SHIkZEJ0l0aqGRi/WnbPA9WyVuo49AS9k2JrVNKN4sH/n3SOjnDL7pHakIotA=
+	t=1748270425; cv=none; b=exAO8XpEANKFqXc4IFVsE6/aZVc4ao+TP5mJCx4Nj9EjBgP4OY0smbLKcw6FOgSvDxXSTnLllLO7UCR93i5WvkdW4fkD8gR8veOqC0fb8DGPZyHlxdisibuangCT2aA/MWpz8gYA5ISd94rtLeUHHFlNLrG+KGHihO6blnHGSUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270406; c=relaxed/simple;
-	bh=/e+vyLtK0CFZ4t4mAapQB9b2M2hDkw8sV9L58+jnCMc=;
+	s=arc-20240116; t=1748270425; c=relaxed/simple;
+	bh=ep1DMStgP4KLh6kjdF/WowDeKpc6b4Jr1zjb7jz95KE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QatrFEC4fmBY77RCPPrv7UayMgqWurdtLjd84/iPTvj2GERjxg7TOnNawI1ySLlKShmlgqDNfbhwiWcyb4ZEpvduPjuaVXliiw0bIEen2YrknAOk9i5iNpM3v++OFdVl9rC6PxcYV556iPtRLdBb3/s+PFW8FkE13Inls8SAUmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aheNg0PD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bg4PtCZnG6qTAFDlN4JVwuVI0A/Ap9B7p0eTcQ95eTcNHsylhiG9clWB+OiN1hMw8m5pVx0R2Bo4aYXrVDvgZ5UXB5o4pWy9PGf9m+o9h8KcHKNvX5MFtAIE0uGZMUngxOO6Pdr/FwdNiTUvfsmFgkZPhiDP5lB0r29o6VodOhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YaqPh+cT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4UI7GP3j; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aheNg0PD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748270404;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YaqPh+cT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4UI7GP3j"
+Date: Mon, 26 May 2025 16:40:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748270421;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RF6pS1ObcOVvDlmvm5nj8NiMFIwIn9dVx82Hog1fdnE=;
-	b=aheNg0PDayRvTiYWH9J5Rzn8LqIl1mXaB87ao6Bknxra7nDMmg0cg+9Q1Gn7tBvTgtR9jC
-	cJuOLPWYNOKI1WjmbLwo9O0y9zzbMjobymRjlnSWcIWOqYiQJL+feNth+VE+BEUbdgBl0o
-	mzhwq88/7wqMoG+f7vz09suj6KEf9Ho=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-psltW5aSOrKXQyl1PyGUVQ-1; Mon, 26 May 2025 10:40:02 -0400
-X-MC-Unique: psltW5aSOrKXQyl1PyGUVQ-1
-X-Mimecast-MFC-AGG-ID: psltW5aSOrKXQyl1PyGUVQ_1748270401
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eed325461so15730455e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:40:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748270401; x=1748875201;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RF6pS1ObcOVvDlmvm5nj8NiMFIwIn9dVx82Hog1fdnE=;
-        b=dvfqzSPOws2oLZ6DrHn62bily17Mhrq+BzaljzDU8dLV8UUHZsRGwhvtxUeCakJ/61
-         gasTpFYAL6gfYNuth27jMDfz2xUSffeRN27cbEtUDp6+6l1g0DbOoCv9JhXNmXUR1JDH
-         SUcNcEw/+W0yQUfzpM9HKHcdowpTXh2ATDgNYZU/nKaS8HVy0srPAhPLxZqsvxoMn9pu
-         Hbu7BUgz/80o2hvHJWRiqGfdDEVy7AveqTTOA4Zna0TaVx/YnkrTGp6TpHliG69qb6rY
-         3hUCq5H310btB3nuzJfuBYMkj8FQ+SwVc9CdsGtaDINegqOTpNZLv1Mx6aFKl+fPFG6f
-         KbCA==
-X-Forwarded-Encrypted: i=1; AJvYcCViVEPcT0WhBvr1SUs9b9FcUPnJvwY8uwr7OWrLGeceO+vzM2sqRJZeQf389eFfm983KDC7nJLhqtwazzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWjVtY6C3zHF6TZCkfSUZFKY3b3NLdOfbbCIS8U7+ABhqcOSdP
-	k163UJRLY0z4ZrWeqm9bK0h6emcRzSiZIqYFgPtOkxTeBHqVnYYfe1Y53yLpcFPWo8R8SnrR2I3
-	vxY6h2wpAs7hTqmZ9hjD4/EfDzjkhWyzUlPdehCZ91SDf8Mzv0RsXCOBMu7WJruL3pA==
-X-Gm-Gg: ASbGncuHYVrdQcZ61W6NpbcOMIs2R+s1JI4/e5mMga/wINT8WQkSvxViTCfeaD2PNuu
-	O/DCa6cfeRLYSlh/qg7peTkNVpTDSUxHOKUnWeCjvw9V5g5+O1zZ+4eXbP13/EFeTpFV0venNxd
-	Bo9I8ZKg/JB28QkMThztI46TklmFKKfBV6OHp8nhfhXp7InziO8vkTQoioO1cJOhsPGSyXSLtY8
-	IQglF9QUKElp7xpVRUNVIw0wZfUO4qU5pcTbsI11kUShkVFJIvh9i+rMNx1QZbcWaf4R08lhAiS
-	3mp0Ejx4EVCwHm5AOCt1B6o7nOM/FCktpX6LPlfYy2Xl1nVZ+81/RMNzsvNc
-X-Received: by 2002:a05:600c:511b:b0:442:dc6f:2f11 with SMTP id 5b1f17b1804b1-44c9493e671mr77932095e9.25.1748270401477;
-        Mon, 26 May 2025 07:40:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWo+GvCwfq/rkNxHnvWQwirh+1VtVO+LjjW3fAOxqDotyizM//UqyOYsGby8MQArjXhlSeww==
-X-Received: by 2002:a05:600c:511b:b0:442:dc6f:2f11 with SMTP id 5b1f17b1804b1-44c9493e671mr77931885e9.25.1748270400947;
-        Mon, 26 May 2025 07:40:00 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aef8asm247808255e9.29.2025.05.26.07.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 07:40:00 -0700 (PDT)
-Date: Mon, 26 May 2025 16:39:55 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] vsock/test: Cover more CIDs in transport_uaf
- test
-Message-ID: <gfmoupl72tjyymhwxcstwpgaabbfaz6f4v6vj4lwwzwssg577c@urkmgn7rapnj>
-References: <20250523-vsock-test-inc-cov-v1-1-fa3507941bbd@rbox.co>
- <limbmrszio42lvkmalapooflj5miedlszkmnnm4ckmy2upfghw@24vxuhgdji2z>
- <1f5cc46a-de4c-4361-a706-fc7fe06a7068@rbox.co>
+	bh=5TV7kVDxmFuWEFaBNT2bTxAWVnJUcrUxNAcskziBBPw=;
+	b=YaqPh+cTVv5lTI5hx6r+wn4iVxIXWsXlZq9NNG9ZJrowba5y96FUCXn4V9S9OtEmvsAnE1
+	BZeIXFupqA3oxM2jR+7gypjG7pLtOzQLmaA6NfHfW6w7EpLaJUJM9K/OsNu0TAav/1ZZyp
+	p3XHSmTeyQ3PdTEbF5TvaCGHyjh08ALd/czrLMDTCxgYW/1OgEV6phLi1zUBCHv4rfStV8
+	XYdUId9gJEhaL98yD0Wneh6LjOuLO29r/gJ51BWJlPkOck3+g0j8JBUNFketul+PQ8I24Q
+	OkzkjQYdCWQYkWo9BcEdzJwc6x+0pL71A9xM0ALChTPNFde0V3eekKclAcHhTg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748270421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5TV7kVDxmFuWEFaBNT2bTxAWVnJUcrUxNAcskziBBPw=;
+	b=4UI7GP3jRqpneYJ72JmNnXXUSJd4HUvvqHF+iKuexX3Mz+vq6IbmremQ77q1N5HxM7CFlp
+	31goQIRm4O7oynCQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 01/11] kbuild: userprogs: add nolibc support
+Message-ID: <20250526163610-88b7aae6-7be4-4a02-be20-ec7fe74cbf31@linutronix.de>
+References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+ <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
+ <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1f5cc46a-de4c-4361-a706-fc7fe06a7068@rbox.co>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
 
-On Mon, May 26, 2025 at 02:51:18PM +0200, Michal Luczaj wrote:
->On 5/26/25 10:25, Stefano Garzarella wrote:
->> On Fri, May 23, 2025 at 12:31:16AM +0200, Michal Luczaj wrote:
->>> Increase the coverage of test for UAF due to socket unbinding, and losing
->>> transport in general. It's a follow up to commit 301a62dfb0d0 ("vsock/test:
->>> Add test for UAF due to socket unbinding") and discussion in [1].
->>>
->>> The idea remains the same: take an unconnected stream socket with a
->>> transport assigned and then attempt to switch the transport by trying (and
->>> failing) to connect to some other CID. Now do this iterating over all the
->>> well known CIDs (plus one).
->>>
->>> Note that having only a virtio transport loaded (without vhost_vsock) is
->>> unsupported; test will always pass. Depending on transports available, a
->>
->> Do you think it might make sense to print a warning if we are in this
->> case, perhaps by parsing /proc/modules and looking at vsock
->> dependencies?
->
->That'd nice, but would parsing /proc/modules work if a transport is
->compiled-in (not a module)?
+On Mon, May 26, 2025 at 04:19:53PM +0200, Nicolas Schier wrote:
+> On Mon, Apr 07, 2025 at 09:42:38AM +0200, Thomas Weiﬂschuh wrote:
+> > Userprogs are built with the regular kernel compiler $CC.
+> > A kernel compiler does not necessarily contain a libc which is required
+> > for a normal userspace application.
+> > However the kernel tree does contain a minimal libc implementation
+> > "nolibc" which can be used to build userspace applications.
+> > 
+> > Introduce support to build userprogs against nolibc instead of the
+> > default libc of the compiler, which may not exist.
+> > 
+> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > 
+> > ---
+> > This could probably be moved out of the generic kbuild makefiles.
+> > I think the ergonimics would suffer and this functionality could be
+> > used by other users of userprogs.
+> > 
+> > Also this does currently not support out-of-tree builds.
+> 
+> (out-of-tree == external kmods;  out-of-source == build-dir != source-dir)
+> 
+> you probably meant out-of-source.
 
-Good point, I think not, maybe we can see something under /sys/module,
-though, I would say let's do best effort without going crazy ;-)
+I *did* mean out-of-tree.
 
->
->>> +static bool test_stream_transport_uaf(int cid)
->>> {
->>> +	struct sockaddr_vm addr = {
->>> +		.svm_family = AF_VSOCK,
->>> +		.svm_cid = cid,
->>> +		.svm_port = VMADDR_PORT_ANY
->>> +	};
->>> 	int sockets[MAX_PORT_RETRIES];
->>> -	struct sockaddr_vm addr;
->>> -	int fd, i, alen;
->>> +	socklen_t alen;
->>> +	int fd, i, c;
->>>
->>> -	fd = vsock_bind(VMADDR_CID_ANY, VMADDR_PORT_ANY, SOCK_STREAM);
->>> +	fd = socket(AF_VSOCK, SOCK_STREAM, 0);
->>> +	if (fd < 0) {
->>> +		perror("socket");
->>> +		exit(EXIT_FAILURE);
->>> +	}
->>> +
->>> +	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr))) {
->>> +		if (errno != EADDRNOTAVAIL) {
->>> +			perror("Unexpected bind() errno");
->>> +			exit(EXIT_FAILURE);
->>> +		}
->>> +
->>> +		close(fd);
->>> +		return false;
->>
->> Perhaps we should mention in the commit or in a comment above this
->> function, what we return and why we can expect EADDRNOTAVAIL.
->
->Something like
->
->/* Probe for a transport by attempting a local CID bind. Unavailable
-> * transport (or more specifically: an unsupported transport/CID
-> * combination) results in EADDRNOTAVAIL, other errnos are fatal.
-> */
->
->?
+Out-of-source already works with the current patchset. It is the default setup of kunit.py.
 
-LGTM!
+> > For that tools/include/nolibc/*.h and usr/include/*.h would need to be
+> > installed into the build directory.
+> 
+> Out-of-source builds could be achieved by adding 'headers' as 
+> dependency, see below.
+> 
+> > ---
+> >  Documentation/kbuild/makefiles.rst | 12 ++++++++++++
+> >  scripts/Makefile.userprogs         | 16 +++++++++++++---
+> >  2 files changed, 25 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> > index 3b9a8bc671e2e92126857059e985d6e5b2c43fd4..f905a6f77c965311c491cfd7ab3103185af7e82e 100644
+> > --- a/Documentation/kbuild/makefiles.rst
+> > +++ b/Documentation/kbuild/makefiles.rst
+> > @@ -970,6 +970,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
+> >  
+> >  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
+> >  
+> > +Bulding userprogs against nolibc
+> 
+> Bulding -> Building
 
->
->And I've just realized feeding VMADDR_CID_HYPERVISOR to bind() doesn't make
->sense at all. Will fix.
+Ack.
 
-Yeah, we don't support it for now and maybe it makes sense only in the 
-VMM code (e.g. QEMU), but it's a test, so if you want to leave to stress 
-it more, I don't think it's a big issue.
+> > +--------------------------------
+> > +
+> > +Not all kernel toolchains provide a libc.
+> > +Simple userprogs can be built against a very simple libc call "nolibc" provided
+> > +by the kernel source tree.
+> > +
+> > +Example::
+> > +
+> > +  # lib/kunit/Makefile
+> > +  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
+> > +
+> >  When userspace programs are actually built
+> >  ------------------------------------------
+> >  
+> > diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
+> > index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..a1447c02b948901631098b585f5cf4d3ea383a57 100644
+> > --- a/scripts/Makefile.userprogs
+> > +++ b/scripts/Makefile.userprogs
+> > @@ -16,10 +16,20 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
+> >  user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
+> >  user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
+> >  
+> > +user-libgcc     := $(call try-run,$(CC) -Werror $(KBUILD_USERCFLAGS) -lgcc -x c -shared /dev/null -o "$$TMP",-lgcc)
+> > +
+> > +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
+> > +		      -ffreestanding -fno-stack-protector \
+> > +		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
+> > +user_nolibc_ldflags := -nostdlib -nostdinc -static
+> > +user_nolibc_ldlibs  := $(user-libgcc)
+> > +
+> >  user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
+> > -			$($(target-stem)-userccflags)
+> > -user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
+> > -user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
+> > +			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
+> > +user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
+> > +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
+> > +user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
+> > +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
+> >  
+> >  # Create an executable from a single .c file
+> >  quiet_cmd_user_cc_c = CC [U]  $@
+> 
+> Adding another hunk for scripts/Makefile.userprogs would allow to build
+> out-of-source:
+> 
+> @@ -39,5 +49,5 @@ $(call multi_depend, $(user-cmulti), , -objs)
+>  # Create .o file from a .c file
+>  quiet_cmd_user_cc_o_c = CC [U]  $@
+>        cmd_user_cc_o_c = $(CC) $(user_ccflags) -c -o $@ $<
+> -$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
+> +$(user-cobjs): $(obj)/%.o: $(src)/%.c headers FORCE
+>         $(call if_changed_dep,user_cc_o_c)
+> 
+> But I am unsure if it is ok to add 'headers' as a build dependency for 
+> userprogs.  For me, it feels a bit odd, but I think it really makes 
+> sense here.
 
->
->> What about adding a vsock_bind_try() in util.c that can fail returning
->> errno, so we can share most of the code with vsock_bind()?
->
->Ah, yes, good idea.
->
->>> +static void test_stream_transport_uaf_client(const struct test_opts *opts)
->>> +{
->>> +	bool tested = false;
->>> +	int cid;
->>> +
->>> +	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
->>
->>> +		tested |= test_stream_transport_uaf(cid);
->>> +
->>> +	if (!tested)
->>> +		fprintf(stderr, "No transport tested\n");
->>> +
->>> 	control_writeln("DONE");
->>
->> While we're at it, I think we can remove this message, looking at
->> run_tests() in util.c, we already have a barrier.
->
->Ok, sure. Note that console output gets slightly de-synchronised: server
->will immediately print next test's prompt and wait there.
-
-I see, however I don't have a strong opinion, you can leave it that way 
-if you prefer.
-
-Thanks,
-Stefano
-
+Currently this dependency is encoded in Kconfig.
+If CONFIG_HEADERS_INSTALL=y then the headers are installed in the 'prepare'
+phase and already available when building any userprog.
+To me this seems like the easier and nicer implementation.
