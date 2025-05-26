@@ -1,111 +1,111 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB263596A;
-	Mon, 26 May 2025 09:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7634ABA2D;
+	Mon, 26 May 2025 09:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748250850; cv=none; b=iE0OkNDg2cJL2xkMdyeHCABSjNpnMrDezOzDgzOchfSWFKi8HprzDPvF1OXqsoOE+hmEfsotHaE596HN7XhSqXuYKhqvZEh3neV5CCo8qZBVK5QaGbDjzfBnD6DvjGDlMGX6Z+patlW0jE4DyvJRY/0qIs3iMLVUVh2MiSA0Wo0=
+	t=1748250933; cv=none; b=r97M7P/KYrjjIps6UQWdumjPhJ77ZqeIOSYroIKNA4QVb17eLH93QZFxHdl9gjNc/Md6nDISvXIFrqIWC4bn6NGYjsxZFnnuAQSFqWR2Fd7j9cTo1keWPQ6jF+0/wncS6p4IFhot9VD4hx1DDWKEek9TOoaHrda5XaS/2o+vlyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748250850; c=relaxed/simple;
-	bh=2/SVAaHCAZFysnEgfwG3OLk5mEvVV8sfktksjtDC8ls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QSjLFNCQLTFg7eLS5O6HkF2Bl7FQ0vtlYWa5LbRsChwKY7CNl0PwuqbzAIPtw8u9RqUvtBpACBSslVXgILS1FdBwuC16H76KjO5oLZ6r/OBbyaIbCUZdPJKUrYVssSSCrFmhNx/KnnzmcVECy9532Nnj/EG7D6DPw3LLwD4+7lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5240a432462so1328462e0c.1;
-        Mon, 26 May 2025 02:14:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748250847; x=1748855647;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OHHl3kxB/rKMhdmAcTI6YIxxCctpYm2ZTkKcUrpPxy8=;
-        b=Zt4oWaQDDlVW72TT6C+je0ZEV34H9qrJ3sMygHs7yWOgnRUn4l02b7KgQur0c3nx7z
-         0JhHU5Us4ZnAT4qF1RDih1QsDDYbYzKPBoYY/jiVbEB4XHYTsBS4sfFdvQskeDjuZTxq
-         wMib0LIg5+s8uRBvUCdDCQ79GFj6m7il3rygKhF8p2mNKMPL2OL5qDPxYiQHBCgmyutR
-         cRGGKKTEYaHfwEYX626XfYPcj4ndtrG8aq1ja7ftKS12G14AYJ+jIC09Q1AiO/fS9j+q
-         BIbId/AguW2iKM88lC/RqDHWiUWKcyp7BPdyeARlnGOxnf5l3O14NCAdk0UKbOv9TbRM
-         cJvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtghdiYf9c2twEKNG4AH85rnzOXDn9wf1XCIwxk/VSkTnEXy1wiYxSrhKuCaRTEarCYgmuqJ1KvNiY9Urt/wY3Kqo=@vger.kernel.org, AJvYcCWg9NO6HncbdY9eVobottXWfWVj2Sd3a81sFcunawrZ7O3f2aGEcKQVVs7HLuj18whu/+q5hNlhGdgO6dA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlInqaA3XMQ/p2fXv6W563aecBbfvQSOzIGPgWozOW/lvRj106
-	W7aEi62wQHxw52clv+QpIi1qezcq/NLFqpYG00FI9/aBYOZ3MP3lduN7Z0SiUMQd
-X-Gm-Gg: ASbGncu1I/1n/Sid9nOna083pmDLoa9b/XJkcbr0Eu8rkySLt/x+wBnB7OLPHo7fKxS
-	IByDmkHWF1m5PIbpS2A6qPmFadAzSngzstO82dUJz029ECxRueiKdF+I0CIX4IUKPp+cM/S4ANZ
-	/dMGJZKm041HAhPD6nDKaincqVhFoLIiWLDakh/QJSc7A0AcWuMjQnRF2XrFoczTlI1Ih3fSoYu
-	kLrwSsMN7Lk44V+tFG8yfNE2SyxRPx3RgH/2cmTTfZ1w3bSdRfzVDU6mlaSEdDJdcbPvuK4heeG
-	+8OOgzh5EIhVfn6ZT8eqmMReNhh3fWDiXQ3Yju63rfCYTT4MXMI5PN2zeCsUDZ2XCcZPMd1qnXw
-	fctPdLKRVlQmevQ==
-X-Google-Smtp-Source: AGHT+IG6p0ULGqSIY6DiRzvQueeZzisJweOXW/aUNs+Y+HvFyS3mTxYtOQ2uck51XYZ+kPWo90OLgQ==
-X-Received: by 2002:a05:6122:3547:b0:52e:630b:166f with SMTP id 71dfb90a1353d-52f1eec45a4mr9548283e0c.3.1748250846838;
-        Mon, 26 May 2025 02:14:06 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87de8b6b864sm3980161241.25.2025.05.26.02.14.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 02:14:06 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so1279928241.1;
-        Mon, 26 May 2025 02:14:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUrngsCdMal8XIg58Jq4nrFP3Ia7NDrNEl5LJSFUmwSt5Q2goFXyHZu1QLTvBpC4KLda2bLwlt9Cml8dgM=@vger.kernel.org, AJvYcCXuMJPpuXToAlNZ9XAAUM18QhdUx7KChWr8ge2yOdff/LkoqziCbKYMNF3W4wm8BjCepA6bODFDYCnEqyR84DMm6gg=@vger.kernel.org
-X-Received: by 2002:a67:e446:0:b0:4e4:3c3a:f163 with SMTP id
- ada2fe7eead31-4e43c3af25bmr2968298137.7.1748250846395; Mon, 26 May 2025
- 02:14:06 -0700 (PDT)
+	s=arc-20240116; t=1748250933; c=relaxed/simple;
+	bh=RcV0qtMVDeWuRTQZCyCWKIuHoaHolysHZXhbzn702yk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qacSzr1X93sGqAWC6aJdxDe16fghGcTxtbQEjiMH8sUPgEIS9R2FPQVi9D6nD4AlNAmhb/Byk+9FJNZikLxD/3PEQOahomn5cPp9IDTaqAlenPGybOBh9jwwDn7BeOtaReK9aTZ0AdYx7a5wQw6tFtEKxnHZ/pYJUcKwI73occY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=FzCA+JDg; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FzCA+JDg"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q1D5PU028926;
+	Mon, 26 May 2025 02:15:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=77kYee0Z5IdZcMXbAYyH3uUjY
+	FG8JhyjDjN8zCwtD1Y=; b=FzCA+JDgKQj2rBQeRhpjpbcSOXdr2I1s/Hf9acqHr
+	SQRhfCPzZQ7LGjgZaRCdDJ0iT2iCZFDzW6At4pGaEHL5Tc3K27LgD5cYhYSJLSMa
+	kGn1CBPoGxKugPVRISmW6cVxh+uGkryZ9keOr0ISVtODwyeGuXC9bwfJap/AAqZ3
+	w2EL8WKK6dQM7NYzQpkMXAmgi3PZkT2oNmiTDXoAIJ1bNM32xRmzqzPYgUB0WPK6
+	F5xWF1aBukcY+Q9qQiuS2KbErxVxTlIEygDoYVOfoemld8ZldWFyDAQZC0gBTr4h
+	6R5BNh61vXaNC7wCbLF/subf9hAI017eTpY+yizhB3s4w==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46veebgr00-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 02:15:14 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 26 May 2025 02:15:12 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 26 May 2025 02:15:12 -0700
+Received: from 928cf0ec7572 (HY-LT91368.marvell.com [10.29.24.116])
+	by maili.marvell.com (Postfix) with SMTP id 68F3E3F7063;
+	Mon, 26 May 2025 02:15:06 -0700 (PDT)
+Date: Mon, 26 May 2025 09:15:04 +0000
+From: Subbaraya Sundeep <sbhatta@marvell.com>
+To: Andrew Lunn <andrew@lunn.ch>
+CC: Sai Krishna <saikrishnag@marvell.com>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sgoutham@marvell.com>, <gakula@marvell.com>, <lcherian@marvell.com>,
+        <jerinj@marvell.com>, <hkelam@marvell.com>, <andrew+netdev@lunn.ch>,
+        <bbhushan2@marvell.com>, <nathan@kernel.org>,
+        <ndesaulniers@google.com>, <morbo@google.com>,
+        <justinstitt@google.com>, <llvm@lists.linux.dev>, <horms@kernel.org>
+Subject: Re: [net-next PATCH v3 2/2] octeontx2-af: fix compiler warnings
+ flagged by Sparse
+Message-ID: <aDQxGAxAMRrYHk2-@928cf0ec7572>
+References: <20250311182631.3224812-1-saikrishnag@marvell.com>
+ <20250311182631.3224812-3-saikrishnag@marvell.com>
+ <3bc07f4f-73b4-4d34-98cb-79e84d9f1493@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 26 May 2025 11:13:54 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVMDd2abFFzMY_Rbm=7pnX5C2qHBsa68tF_c=bRnp3zkg@mail.gmail.com>
-X-Gm-Features: AX0GCFs0iTAPJyn3o_dQ93Zo1B5zmQvHXVBeKOyo9bKkSBZ5LaEVKWOqRf2Nfi4
-Message-ID: <CAMuHMdVMDd2abFFzMY_Rbm=7pnX5C2qHBsa68tF_c=bRnp3zkg@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set() with atomic_enable()
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	biju.das.jz@bp.renesas.com, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Douglas Anderson <dianders@chromium.org>, Adam Ford <aford173@gmail.com>, 
-	Jesse Van Gavere <jesseevg@gmail.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <3bc07f4f-73b4-4d34-98cb-79e84d9f1493@lunn.ch>
+X-Proofpoint-ORIG-GUID: -waQTk1gsQhSsnxd1mu0NI2cXCZZEcZP
+X-Authority-Analysis: v=2.4 cv=TJ9FS0la c=1 sm=1 tr=0 ts=68343122 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=jtlm59152YgxJQHRqcEA:9 a=CjuIK1q_8ugA:10 a=quENcT-jsP8hFS3YNsuE:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDA3OCBTYWx0ZWRfX+uLKSgjLSQhW xoiiOdMvntTlrX7H/j3S24IFPf+9jOlxCXqYt9JN+6/rKGpKcPYnlv3uK1SC8pj+4yBBAvoOqwE 6Eb6asdmCqo6xuQRIbtq5tfUCLChk/F/aTaO3ZVYVNk1GYOZS8A3X9MjcrkFtwyC3J6tEU0kuT6
+ gdzzRQ3yG94gDbQeoYkcA2oUuHLfd78QYLUftzykcdo32aEfyuSMVqg+DohXvvCXFN4L23EnEXC XIYtfo7M+2YSH/tF5/+v6qPT+hLBkg6ZoBazwP0f4L0VIZO5toEjv0F3Kcw45uWqFvQkcSUk0QL 5qzBRfsO4B8Gi1XmGuj8NLIh6m9FU8k6Vy5atqx5yvYRwfAiFJyvqmM+uQiw2VIhVUloNDwmcXn
+ xtYIt71PW5Y2gFVmruy6WwJaLivtdohQa3Xkx1JLBSrIJBVPPDgLrBLWFp1fCGoWXpmn6h2L
+X-Proofpoint-GUID: -waQTk1gsQhSsnxd1mu0NI2cXCZZEcZP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_05,2025-05-22_01,2025-03-28_01
 
-Hi Tommaso,
+On 2025-03-11 at 21:32:12, Andrew Lunn (andrew@lunn.ch) wrote:
+> On Tue, Mar 11, 2025 at 11:56:31PM +0530, Sai Krishna wrote:
+> > Sparse flagged a number of warnings while typecasting iomem
+> > type to required data type.
+>  
+> > For example, fwdata is just a shared memory data structure used
+> > between firmware and kernel, thus remapping and typecasting
+> > to required data type may not cause issue.
+> 
+> This is generally wrong. __iomem is there for a reason. If you are
+> removing it, it suggests what you do next with the pointer is wrong.
+> 
+>     Andrew
+Hi Andrew,
 
-On Mon, 26 May 2025 at 10:55, Tommaso Merciai
-<tommaso.merciai.xr@bp.renesas.com> wrote:
-> After adv7511_mode_set() was merged into .atomic_enable(), only the
-> native resolution is working when using modetest.
->
-> This is caused by incorrect timings: adv7511_mode_set() must not be
-> merged into .atomic_enable().
->
-> Move adv7511_mode_set() back to the .mode_set() callback in
-> drm_bridge_funcs to restore correct behavior.
+Sorry for delay in response. To provide some information, firmware sets
+aside some DDR memory region for firmware and kernel communication.
+Kernel ioremaps that space and typecasts to fwdata structure and uses it.
+Agree that ioremap is for io device's csr space but since we know that it
+is not really a register space but DDR we are ioremapping, typecasting
+and using it. We assumed __force is there for these kind of exceptions.
+Please suggest how to proceed with this. memcpy_fromio can done for fwdata
+but this fwdata is NOT read only once structure, firmware keeps updating it in
+cases like link speed changes and ethtool eeprom info changes. So everytime
+we have to ioremap, memcpy_fromio and iounmap which we want to avoid.
 
-Thanks for your patch!
-
-> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI connector helpers")
-
-I can't find that commit? I guess you mean:
-Fixes: ae01d3183d2763ed ("drm/bridge: adv7511: switch to the HDMI
-connector helpers")
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks.
+Sundeep
+> 
+> ---
+> pw-bot: cr
