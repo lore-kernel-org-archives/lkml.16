@@ -1,101 +1,141 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1355EC5;
-	Mon, 26 May 2025 12:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5ED1BC5C;
+	Mon, 26 May 2025 12:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260843; cv=none; b=Q0WvyBCSvOfjt6Tk2rZ2ExR/K0vnWnsP/MkofZ3X7grr7PhOg3MKdZtZBiDp21qYujVnr/E9sW+ZTwolbtxyGFf8FQIw3grxETjCKp6PylgFIi8jxc8RJNNmTgWgQuK7Qrs3uxh6dCUocmoj3ZtDiyjozgwrM5UEcfbd9v2AdQc=
+	t=1748260998; cv=none; b=ntZ5A7+Z5DuZ+x2xmyofKhmogVoPfKN1FC0pt3yzQDHYXvtTe08cjWYBvQNNlKGgeYZ+XdwHeEdKcXlijcKp6n0ytBWBV14FOLqaJ95M1hSe1Q6r2JZLPoQSVb3KE5B+yqmef9HYPdU0RAR0eiAvbXt9AmHzTQikawxGgh/YeQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260843; c=relaxed/simple;
-	bh=woS/yA+itLAIwyHAFbvuZKdAWdF9RD1dHk/05nYoQWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gQ7VoI9azp5vvE8RfSZmBkwu3lEHYX/tdS6OTL+QezQ4rjbMXs6Updf3uxxuy/HHOKhSu+PLkn/LchwrkWsEe1/xghseVdkb8nDVVOZ2KLU8VxgIG7NumPCFyVEPlq8gPiQTpXUU61tAFvi6SL2bL/e7uRoxhYp55YX7rk1j9Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A1q2KIjI; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748260998; c=relaxed/simple;
+	bh=7RcKKcyw/mz1JEdzFQBQPEG8HmMMGUkhsGa4P9iWHbk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=EHFAw3GkzTX83M3qO368Qp2iNHVHRB9NbDmVGzcKjcRLfra3F7gAc1SzolBBPmmeC7//sfhCsjXdBNcRa+V8HwWdUEN35NiS3F3HQIPmPKue/c7BvQHkuYWYwmNhqeufO4ulnFoSMhy08e4EQrCsF/uMwReirT8wmIaIEjPYDlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bM8bhV4z; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A1q2KIjI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=30u2355utitA+JCnJu/Rhs866Jt2Gg9qvXCkeS+ZXFQ=; b=A1q2KIjI0Cxp+Lo+JqGI6U+Jyv
-	hk9eDFo10o9KPOLh42VY+ath6P7QlhYq/N7Q0vovXVbr5ADfRHxWA6tF/R5VbCG+fHrORIKTqVUG3
-	pxS0H77lAWPfJFYalqjtbpnSqYezPQF0Y/9OqRXXs/c31f/2ySCCq/dY5EeXuByAMaCafLeZfndIM
-	KpSoPLIm7j32W4OQN09DmnZ5LmPfzB0hzGklq5EDntOjUej+8hDUQv0C6695le1VJ0Kx/v7njsq/n
-	VWrdWxOkrzggMndHqwDx+2bRXkTp4zkfMIocaB/6T2Tf5FVdzjp+tpwCwuTdeVSp/3t3M0BoKZYfJ
-	mzXR92rQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJWVK-00000001t7G-0hVA;
-	Mon, 26 May 2025 12:00:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9AC5C300472; Mon, 26 May 2025 14:00:29 +0200 (CEST)
-Date: Mon, 26 May 2025 14:00:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Khalid Ali <khaliidcaliy@gmail.com>
-Cc: rafael@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
-	x86@kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/ACPI: invalidate all cache lines on ACPI C-state
- transitions
-Message-ID: <20250526120029.GR39944@noisy.programming.kicks-ass.net>
-References: <20250525180052.1004-1-khaliidcaliy@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bM8bhV4z"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1942F43B29;
+	Mon, 26 May 2025 12:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748260994;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zxMH5k+dYKIilp2PKuzRPktv59J5PhIs3BBDtjszt0o=;
+	b=bM8bhV4zj/W2OP6qfF9wkW4EcChAuml0Pbcmn56RpgKhJrhogQK20f443bC4+ZMVr8yigP
+	WoilBnTSYNUQIk5pWtir7Jpd5TIOqEfk2j5dutyxhoppi4XzXiCnsKGaNwzaYxzFKsY+jP
+	qseUip5kW54H/5G10A3mVWaNgr7tsRgDcvumQjKbQfN2+BQ9aHnKdVXydK+coAvYLNyYf4
+	Q9pjo/qe5pIzBsniojLrnxkGpoR3MC8y89GI/K4elRnN5kLWlsW1m8Vanvdh4YyoBmNvfw
+	oOA72ORaBD89bYWOZryRc54hcWTsAhNiijZlrn1Drx2ZjuaKgwZVvgGfqLiTtA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250525180052.1004-1-khaliidcaliy@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 26 May 2025 14:03:12 +0200
+Message-Id: <DA62SSMI7C52.V2QD509S95QW@bootlin.com>
+Subject: Re: [PATCH v9 06/11] gpio: regmap: Allow to allocate regmap-irq
+ device
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Bartosz Golaszewski" <brgl@bgdev.pl>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250522-mdb-max7360-support-v9-0-74fc03517e41@bootlin.com>
+ <20250522-mdb-max7360-support-v9-6-74fc03517e41@bootlin.com>
+ <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MeT+b5dBOWyf6-BpTjk70nwVhLOpCY-JHNizBo5H1-AnQ@mail.gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujeegjeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefhkeeifeethfejteevfeduheduvddvuedvvddugfffhfevkefftefhuefftddunecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdpr
+ hgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepughmihhtrhihrdhtohhrohhkhhhovhesghhmrghilhdrtghomh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Sun, May 25, 2025 at 06:00:42PM +0000, Khalid Ali wrote:
-> From: Khalid Ali <khaliidcaliy@gmail.com>
-> 
-> According to ACPI spec 2.4 and 2.5, upon C-state
-> transitions(specifically C2 and C3) it is required and explicitly
-> mentioned to invalidate and writeback all modified cache line using
-> WBINVD.
-> 
-> However the current ACPI C-state entry using monitor/mwait instructions
-> it have been used CLFLUSH by flushing the cache line associated by
-> monitored address. That what all about this patch addresses,
-> invalidating all cache lines instead of single cache line.
-> 
-> Let me know if there any reason and decisions behind the current
-> implementation.
-> 
-> Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
-> ---
->  arch/x86/kernel/acpi/cstate.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-> index d5ac34186555..eb3d435e08ad 100644
-> --- a/arch/x86/kernel/acpi/cstate.c
-> +++ b/arch/x86/kernel/acpi/cstate.c
-> @@ -222,6 +222,9 @@ void __cpuidle acpi_processor_ffh_cstate_enter(struct acpi_processor_cx *cx)
->  	struct cstate_entry *percpu_entry;
->  
->  	percpu_entry = per_cpu_ptr(cpu_cstate_entry, cpu);
-> +	/* flush and invalidate all modified cache line on C3 and C2 state entry*/
-> +	if (cx->type == ACPI_STATE_C3 || cx->type == ACPI_STATE_C2)
-> +		wbinvd();
+On Thu May 22, 2025 at 3:01 PM CEST, Bartosz Golaszewski wrote:
+> On Thu, May 22, 2025 at 2:06=E2=80=AFPM Mathieu Dubois-Briand
+> <mathieu.dubois-briand@bootlin.com> wrote:
+>>
+>> GPIO controller often have support for IRQ: allow to easily allocate
+>> both gpio-regmap and regmap-irq in one operation.
+>>
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> ---
+>>  drivers/gpio/gpio-regmap.c  | 21 +++++++++++++++++++--
+>>  include/linux/gpio/regmap.h | 11 +++++++++++
+>>  2 files changed, 30 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+>> index 87c4225784cf..9cbbbaf82609 100644
+>> --- a/drivers/gpio/gpio-regmap.c
+>> +++ b/drivers/gpio/gpio-regmap.c
+>> @@ -215,6 +215,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
+>>   */
+>>  struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_confi=
+g *config)
+>>  {
+>> +       struct irq_domain *irq_domain;
+>>         struct gpio_regmap *gpio;
+>>         struct gpio_chip *chip;
+>>         int ret;
+>> @@ -295,8 +296,24 @@ struct gpio_regmap *gpio_regmap_register(const stru=
+ct gpio_regmap_config *config
+>>         if (ret < 0)
+>>                 goto err_free_gpio;
+>>
+>> -       if (config->irq_domain) {
+>> -               ret =3D gpiochip_irqchip_add_domain(chip, config->irq_do=
+main);
+>> +#ifdef CONFIG_REGMAP_IRQ
+>> +       if (config->regmap_irq_chip) {
+>> +               struct regmap_irq_chip_data *irq_chip_data;
+>> +
+>> +               ret =3D devm_regmap_add_irq_chip_fwnode(config->parent, =
+dev_fwnode(config->parent),
+>> +                                                     config->regmap, co=
+nfig->regmap_irq_line,
+>> +                                                     config->regmap_irq=
+_flags, 0,
+>> +                                                     config->regmap_irq=
+_chip, &irq_chip_data);
+>
+> I don't think using devres here is a good idea. There's no guarantee
+> that gpio_regmap_register() will be called on device attach so you
+> must not make the release of the resource depend on an associated
+> detach which may never happen. Please use the non-managed variant
+> here.
 
-This is absolutely insane. This day and age, nobody should use WBINVD
-ever. We've managed to not do this for decades, and I'm thinking that
-either the SPEC is 'mistaken' or otherwise out of line with reality.
+Right, I will make sure to use
+regmap_add_irq_chip_fwnode()/regmap_del_irq_chip() here.
 
-If you hate performance, and you want to break things like CAT, feel
-free to put this in your own kernel.
+I should be able to send a new version in the coming days.
 
->  	mwait_idle_with_hints(percpu_entry->states[cx->index].eax,
->  	                      percpu_entry->states[cx->index].ecx);
->  }
-> -- 
-> 2.49.0
-> 
+>
+> Bart
+>
+
+Thanks for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
