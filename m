@@ -1,180 +1,211 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1C42A87;
-	Mon, 26 May 2025 04:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59750258A;
+	Mon, 26 May 2025 04:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748235022; cv=none; b=bT3Bt2G7Smkv4Op4TTNxDscModZSFIXPK1h+zw1fv6f/xuw3JUnPlUQnxaJltzSoW6SfxIFgCSiA6QgZnRcNwL5dxLRDhW3Ca0DKkiseXyDGQE0ayT8ZV2FrNRjeO2GthU82QqOO9LwSwzvDD6Sfwwe3SU3J3CvuovhRXDalNRI=
+	t=1748235200; cv=none; b=tEVRnqCjSQcSwrEsB6l+YXeDTklCvVZZAtRooMRCIHh3uXgE5Mto329aGz66zWkpK6tKYXuG7jPWAafrM+JJeZM58dLL/Hs54cPiSeNU4tB/7QtT5rlmX8BlrHFb11F4Dv1z0/2jzmgkZ9AuewkPUhynlKqWF55POje5w+8IZw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748235022; c=relaxed/simple;
-	bh=35xWmzgiV6a9hZvqdrzmOnx4+bq7Pqypd8xbegsWmdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=eOZjFtlMdBDdF++15MNsl+8kmNm0ayvz4cD8XOq2IUJkdBS+YnPWv7pgUYkhaSeIr01kd+oA9N5e+fTSRxzTtAPZOlKJOe3CsEAAOyCgX96ZOL5+cbhKeaRaeSmP1T0yhaMtfDkPXudDxYEyzyWAYqnQStswcA7k7g8QT07yqGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IAuZPcGg; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748235200; c=relaxed/simple;
+	bh=zCPwO9I7YUx7bwOI98YWqW1MpDXUaLKfCoxxSMQKZAY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PjK9cMu281onqehoOtL6ZeRQ1NWpZ7P4kyEPhkYr9kTyMQ3+Wk9966xQdKP1L5ikeJCZU4/zaJlYT+YMEvHO94cwVXo9VLLa64ezI0D1GpYnwC/jmnmHPJkYuMSc/XPdzX/9pvOF3zdhAAMojyDbumkB1gjADkS+v0dYZakPsjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6e0y2an; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IAuZPcGg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748235017;
-	bh=QaaZoajFRj1TH4MvoV1VPQggh13J0LDJ7iPrV7mUjkc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=IAuZPcGgBue4ZMwn1yl/Ayr/3M+Ua2szHE5S9DEOamd28fzxI6h/2pPSjRE1/Rgv8
-	 Oyf6WHtR35eHR1PmQvZ9P28tJyHjiRxBc4Pm9Nf345srNfdDc2Z2cazNKY6OdJ7y5U
-	 D+4Xodcnw90t1N9R4tu19M015owQSud6b3vyqwUDw3PTjYQy5dTJi8ojI+78Llk5R/
-	 ChCLvH83/+f7IcmEN7ZNQRw5I6uuzqWGVhcjMd2WIv0JC+pHRiQnJ1t6lTtyUqGiZ3
-	 +rHo+nFCXZ0HNcE3VGEohbLkKVhuJhMm9kbThEDISLyOVRyZZB5Jz48v8R5R0CioBl
-	 I5V+tHs5RT7Sw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b5Nc82gMVz4wbv;
-	Mon, 26 May 2025 14:50:16 +1000 (AEST)
-Date: Mon, 26 May 2025 14:50:15 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
- <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, "Borislav Petkov (AMD)"
- <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>, "Xin Li (Intel)"
- <xin@zytor.com>
-Subject: linux-next: manual merge of the tip tree with the perf tree
-Message-ID: <20250526145015.615882b0@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6e0y2an"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FB94C4CEE7;
+	Mon, 26 May 2025 04:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748235198;
+	bh=zCPwO9I7YUx7bwOI98YWqW1MpDXUaLKfCoxxSMQKZAY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=X6e0y2anCZAsDGYggzY2Cuw9VJficZa8yxj3FB0+d/dPWTZQhT85WC2Ch+xeOufpI
+	 eb9Tsy+Lb/JGyMSax8BAxijBwajHmn4siDMzSccx4OA8ZIl1vQVJgY20LXatWG55mr
+	 dQZkZEB1zBY233UFASOdd3sQLaCLYL1p7MPWzF3/zNf/Cu4DNQQhzu2fxM3wm5y81l
+	 wY/s35GnaYznc0X/vqtIdRHF1cz3BJa/1rXMBXCHezVJPRGm+rm9epuz/C37qOyyOp
+	 8z000cJcMto1T/E7wPHOouPhHHygOP3lBGzdMozaBao6KaqZLeYxpncyaVT8QYFcGM
+	 27/1bQpJU54CQ==
+Message-ID: <e7efac3d-8dbf-4370-8f36-ffa9351593c0@kernel.org>
+Date: Mon, 26 May 2025 06:53:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cib8ZWXY5nrsoorTL=do+O2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: clk: fixed-mmio-clock: Add optional
+ ready reg
+To: "Edgar E. Iglesias" <edgar.iglesias@gmail.com>, mturquette@baylibre.com,
+ sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ jank@cadence.com
+Cc: edgar.iglesias@amd.com, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250525190806.1204531-1-edgar.iglesias@gmail.com>
+ <20250525190806.1204531-2-edgar.iglesias@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250525190806.1204531-2-edgar.iglesias@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/cib8ZWXY5nrsoorTL=do+O2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 25/05/2025 21:08, Edgar E. Iglesias wrote:
+> From: "Edgar E. Iglesias" <edgar.iglesias@amd.com>
+> 
+> Add an optional ready register and properties describing bitfields
+> that signal when the clock is ready. This can for example be useful
+> to describe PLL lock bits.
+> 
+> Signed-off-by: Edgar E. Iglesias <edgar.iglesias@amd.com>
+> ---
+>  .../bindings/clock/fixed-mmio-clock.yaml      | 38 ++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml b/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
+> index e22fc272d023..90033ba389e8 100644
+> --- a/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
+> +++ b/Documentation/devicetree/bindings/clock/fixed-mmio-clock.yaml
+> @@ -10,6 +10,11 @@ description:
+>    This binding describes a fixed-rate clock for which the frequency can
+>    be read from a single 32-bit memory mapped I/O register.
+>  
+> +  An optional ready register can be specified in a second reg entry.
+> +  The ready register will be polled until it signals ready prior to reading
+> +  the fixed rate. This is useful for example to optionally wait for a PLL
+> +  to lock.
+> +
+>    It was designed for test systems, like FPGA, not for complete,
+>    finished SoCs.
+>  
+> @@ -21,7 +26,10 @@ properties:
+>      const: fixed-mmio-clock
+>  
+>    reg:
+> -    maxItems: 1
+> +    minItems: 1
+> +    items:
+> +      - description: Fixed rate register
+> +      - description: Optional clock ready register
+>  
 
-Hi all,
+I am not convinced we actually want this. If you have more complicated
+clocks which need more than one register, then maybe this is too complex
+for generic device and you should just make this part of clock controller.
 
-Today's linux-next merge of the tip tree got a conflict in:
+Also I wonder how a clock, which is not controllable, cannot be gated,
+can be ready or not. Issue is easily visible in your driver:
+1. Probe the driver
+2. Clock is not ready - you wait...
+3. and wait and entire probe is waiting and busy-looping
+4. Probed.
+5. Unbind device
+6. Rebind and again we check if clock is ready? Why? Nothing changed in
+the hardware, clock was not disabled.
 
-  tools/arch/x86/include/asm/cpufeatures.h
+Although above is maybe better question for driver design, but it still
+makes me wonder whether you are just putting driver complexity into DT.
 
-between commit:
+>    "#clock-cells":
+>      const: 0
+> @@ -29,6 +37,25 @@ properties:
+>    clock-output-names:
+>      maxItems: 1
+>  
+> +  ready-timeout:
+> +    description:
+> +      Optional timeout in micro-seconds when polling for clock readiness.
+> +      0 means no timeout.
 
-  444f03645f14 ("tools headers x86 cpufeatures: Sync with the kernel source=
-s to pick ZEN6 and Indirect Target Selection (ITS) bits")
+Use a proper unit suffix.
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/property-units.yaml
 
-from the perf tree and commits:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-  282cc5b67623 ("x86/cpufeatures: Clean up formatting")
-  13327fada7ff ("x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_VME=
-XIT")
-  3aba0b40cacd ("x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_COR=
-ES")
+Drop
 
-from the tip tree.
+> +    default: 0
+> +
+> +  ready-mask:
+> +    description:
+> +      Optional mask to apply when reading the ready register.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 0xffffffff
+> +
+> +  ready-value:
+> +    description:
+> +      When a ready register is specified in reg, poll the ready reg until
+> +      ready-reg & ready-mask == ready-value.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -44,4 +71,13 @@ examples:
+>        reg = <0xfd020004 0x4>;
+>        clock-output-names = "sysclk";
+>      };
+> +  - |
+> +    pclk: pclk@fd040000 {
 
-diff --cc tools/arch/x86/include/asm/cpufeatures.h
-index 30144ef9ef02,bc81b9d1aeca..000000000000
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@@ -476,12 -476,11 +476,12 @@@
-  #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history at =
-syscall entry using SW loop */
-  #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control availabl=
-e */
-  #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabl=
-ed */
-- #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch h=
-istory at vmexit using SW loop */
-- #define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
-- #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous =
-Core Topology */
-- #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classifica=
-tion */
-- #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due to=
- downclocking */
-- #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32 + 9) /* Use thunk for indir=
-ect branches in lower half of cacheline */
-+ #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history a=
-t vmexit using SW loop */
-+ #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
-+ #define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topolo=
-gy */
-+ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classificat=
-ion */
-+ #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to =
-downclocking */
-++#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+ 9) /* Use thunk for indire=
-ct branches in lower half of cacheline */
- =20
-  /*
-   * BUG word(s)
-@@@ -528,12 -527,10 +528,12 @@@
-  #define X86_BUG_TDX_PW_MCE		X86_BUG(31) /* "tdx_pw_mce" CPU may incur #MC=
- if non-TD software does partial write to TDX private memory */
- =20
-  /* BUG word 2 */
-- #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* "srso" AMD SRSO bug */
-- #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* "div0" AMD DIV0 speculation b=
-ug */
-- #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable to R=
-egister File Data Sampling */
-- #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Branc=
-h History Injection */
-- #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB o=
-mits return target predictions */
-- #define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user" C=
-PU is affected by Spectre variant 2 attack between user processes */
-- #define X86_BUG_ITS			X86_BUG(1*32 + 6) /* "its" CPU is affected by Indir=
-ect Target Selection */
-- #define X86_BUG_ITS_NATIVE_ONLY		X86_BUG(1*32 + 7) /* "its_native_only" C=
-PU is affected by ITS, VMX is not affected */
-+ #define X86_BUG_SRSO			X86_BUG( 1*32+ 0) /* "srso" AMD SRSO bug */
-+ #define X86_BUG_DIV0			X86_BUG( 1*32+ 1) /* "div0" AMD DIV0 speculation b=
-ug */
-+ #define X86_BUG_RFDS			X86_BUG( 1*32+ 2) /* "rfds" CPU is vulnerable to R=
-egister File Data Sampling */
-+ #define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by Branc=
-h History Injection */
-+ #define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB omit=
-s return target predictions */
-+ #define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_user" C=
-PU is affected by Spectre variant 2 attack between user processes */
-++#define X86_BUG_ITS			X86_BUG( 1*32+ 6) /* "its" CPU is affected by Indir=
-ect Target Selection */
-++#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 7) /* "its_native_only" C=
-PU is affected by ITS, VMX is not affected */
-  #endif /* _ASM_X86_CPUFEATURES_H */
+clock@
 
---Sig_/cib8ZWXY5nrsoorTL=do+O2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+And drop unused label
 
------BEGIN PGP SIGNATURE-----
+> +      compatible = "fixed-mmio-clock";
+> +      #clock-cells = <0>;
+> +      reg = <0xfd040000 0x4 0xfd040004 0x4>;
+> +      ready-mask = <1>;
+> +      ready-value = <1>;
+> +      clock-output-names = "pclk";
+> +    };
+>  ...
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgz8wcACgkQAVBC80lX
-0Gwkjwf/X6w2K+lAgtQI+TYE2vNpgBUCJHxQSFR1s+2nIuIcq//PuqOeYLSMqJDI
-jKeIwRDBwf8ZJQgXvxMZuvuvTzO11GNmlzFBt7a9wDT0RxWSc4MzLMcrL71/wb0u
-sMUaHjAvLC1ygTMpzmyMjqehBNMH7M97AS7qE7ytRWzmeZsfwf/X32M1p7akx5BP
-AtVGZmhD5BjKHf1NKbb0rcBdJPAWy8xVETS0Sba1MLEON+P2Xmi/k1bJH2Nm1S14
-XTFTmrayFEVzY9R9iukNnxw73JVfLmvJSMl63yjesUkLvxklY9NA1jxaqQGkHtEg
-E8lIqUGlM8jrCkQtffLFNUBwa8c03Q==
-=S+Vm
------END PGP SIGNATURE-----
 
---Sig_/cib8ZWXY5nrsoorTL=do+O2--
+Best regards,
+Krzysztof
