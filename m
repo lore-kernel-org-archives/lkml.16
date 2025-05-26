@@ -1,105 +1,96 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB377241679;
-	Mon, 26 May 2025 19:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E8816419
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748287109; cv=none; b=pj3ewIxtSJC5l2vqfoPIzyGdPE7hv0eRfC9FRuALAxuaMK3vODXG/bvFo2Rj5a1P07wabfilinxx60PxRGHZTNPBTKVSFoLmF5BWEk8RnpVDXSXkRExSE+/RdDbeqA1+8BGCgbPSho58JCk4oXrOfv+IyYhpuartDLjCfdqDUik=
+	t=1748287227; cv=none; b=PZcKFk34XjSUJHaezo3VoBmJ21JrLlPs1ky2RQ+eNvzjbZgwMYWtosHblPMRfYtxtjZ/PQwApGVfMU8lFGrEoS9dgidHYKqF2xy77Xn3sRanwXCPnydFe6oKiQ8edudmt7dCSjZ40cG0lEFU/kbyb0ctm5IPiSXD4Oavq+8vfaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748287109; c=relaxed/simple;
-	bh=/XXt3U0JMu1raRhyrF9oJQA2clBB5QTdJ540lDkDHdg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hR5xvhW0/Gsty6hKNGP6nWzecl3s2d0a6YIfPhHcSS7l+9SxsJyGmpln14oTmTOT52T6Idw56JhWAGozNHem8xijGMcySlX4oi8N64HlYoJJirpp/icYiUyC4SJ6uNIkB4m31Kg4kjJKSQP6on95rQJ+MuVKDHCsrF0BvE3kH/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hC7gO/eb; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748287227; c=relaxed/simple;
+	bh=mj+YOtG9RKyY5FyiIyBurmUulpwxvT7M/OYIKBk3R9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SmsaOMPiVyX/bVqZcL3I184NozjhlPCdgr3gqT6zdDL0FOgaUDRGbztussMxEFh2fUz/tUhx4CvAIfMCTwo5vZLEdvweBzqSabza8nqVQyEu+/OAUKEcc5pLqgH0eDKKTrqN8pk+xXT5XOkSNDSIeZI7ZuiLzVjLGiPiJD2k/Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mWuKe3fM; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hC7gO/eb"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac3eb3fdd2eso433471966b.0;
-        Mon, 26 May 2025 12:18:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748287106; x=1748891906; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ldNbYW3XI/Vm+PviMJj/fPRWUCWil11gviiTBdOEyR4=;
-        b=hC7gO/eb/IGC5oGe93RsN7ohh/opgoK+SjQpBsDncwBOW/mSvOfVwmaBcEa8F4gitA
-         npKwvK5K37RLIsUshl4TOR5PDdajyZU9ff64PH6TylE4fgO8SPjR8fWncgvOPabAEaf9
-         iUEGtQJ7Liy7MVMcXJEGIHDW20/JcFHlNLXovnBdcXDXHvtSoVLapHj68svDArV8vpMR
-         3u5BtJg6ccjnTfcqJXnRym2h3X4eDcAh5zL+zJ29f3AvDmHRwp4owhNb17fSKoagQiof
-         LHE8HlE7gIE3gH6qm79mk4ZahtO1RNor+3xPcedfQPf0Kcl40lvyk/p0XoXpboOsa5SO
-         zg9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748287106; x=1748891906;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ldNbYW3XI/Vm+PviMJj/fPRWUCWil11gviiTBdOEyR4=;
-        b=Ztur+FcCxoaDFCg440XW74OiNRYrZaYIMSMuCK0UqqM4qFja8TBsLYO1VVYKqXv7Y8
-         tBLOmrniGnKGfzeFtn1/ZKvXBgkkJrxTCltuzXOQuLQYMx8mQpiBFtREcVhLKJhw9mG3
-         DjCpZMFHhMMjzGn+/2g2iHfm1cSD8WMs2I9U39RFJi7xBCNTR6fYQcm/mLOAPEpoxqdf
-         AlYOW7gHhIDgkwgHG3QBReNiQB+h3OE6T6vFuYEc7GrmnFy+Ac/Lex7HcxAgLfmLiUS6
-         Kk3JyyMJ8PnyZUWaDOXYawqKBCw3Rec1bLFbxPuuJhJQeyuWC9I/d9uA/YjQ3982mANZ
-         181g==
-X-Forwarded-Encrypted: i=1; AJvYcCV6DJY+REEXFR9aKe4iCDUQrKUjlGklKVu5VZEVcRq0ajVH/DwUMnSNHFVYjAvxRK+KgeCTnUikycZlqJo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf/GMgXfQ8E91sMAcrYFlOR2ULi9YgQoIHZ5C9ZU2bSUhdQAxA
-	THQCW5iNCj+gj00AAZ+cAsPa9f/mzFMEyKpnxnoDekeEI3y0W4wRQR7M
-X-Gm-Gg: ASbGnct3Drg2HOx7/BLFVeuf/c9RDMmbonVt4MnhKowWW9c1DqK0anX/417iemWIO4a
-	cDZI5ZspBgzeVQHkRAEnaZoMRX4mpw4qPf0Er+JSPJwFENJSpeAlJ16HrOTz9zJbxlK1frcC1Vv
-	QacrSLj0bblRmYdxh4xD1CgGVEC2ouzuX/v6k7scXa9IfN8Bj2RbGobbpzbAf4wbIw3A0uk7OJ7
-	1HAkhJA26HpcETB8pArOSg02RSniCAP9jFrVkYt/M3HLAamjN1QwmMuAZVPI0pp0eWbun6b2cLh
-	/Kte/adfsDOEbN7taO3pT2ZKm4p9p/AHQz0n4/rI36Iw+yAcmEKM
-X-Google-Smtp-Source: AGHT+IHCJg5ZbArAQQ1B1ZAf6mmdeVbfxQzWWDOqn3djiY7YnQ4NyesnvHqfXqjpa/yDvJmfCA7dFQ==
-X-Received: by 2002:a17:907:7f8a:b0:ad4:d069:324b with SMTP id a640c23a62f3a-ad85b0b28e7mr932702866b.10.1748287105815;
-        Mon, 26 May 2025 12:18:25 -0700 (PDT)
-Received: from qasdev.Home ([2a02:c7c:6696:8300:8814:6671:65ae:f9dd])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5572f6402sm1491097666b.178.2025.05.26.12.18.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 12:18:25 -0700 (PDT)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	zhangyi@everest-semi.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: codecs: fix out-of-bounds access on invalid clock config
-Date: Mon, 26 May 2025 20:18:20 +0100
-Message-Id: <20250526191820.72577-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mWuKe3fM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/NV95irI55Pn1dIUahTxJbOhFuCF2L936tCyrHrEDOw=; b=mWuKe3fMkNYKRWGZTn06GzCwN3
+	c5T6RoXqWCwAiaZgUGe+oeBPGkveBahHBRpq4j6S5lYN0oqQmJA+0AoxXbTNuts07VNQpkUSFtr4E
+	MWyYN2kg+Ti/16X88hmrTqnH7y2YR8+f0VfHEn+IVtMpMizG0WMYOgP47U0w+MG5Z60BjCLzM60kW
+	j9woTWwVisxlzOR/ppM2pzIU6TwR05hzpZLXmVL7YJBTZ/KvcrVXoOuKjbrUvYZcG8U/c/vErGKe3
+	ak83Ewy7gog65JpqXdbRueRrUy0dACvWCZp1N2jTxC7M5D7NMh/E0dbAm6TbHeSy/k0Owud3QFtKx
+	tSxDN0OA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJdMv-0000000BiV3-36jl;
+	Mon, 26 May 2025 19:20:17 +0000
+Date: Mon, 26 May 2025 20:20:17 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dev Jain <dev.jain@arm.com>, ziy@nvidia.com, dhowells@redhat.com,
+	hughd@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	ryan.roberts@arm.com, aneesh.kumar@kernel.org
+Subject: Re: [QUESTION] xas_reload() in iter_xarray_populate_pages()
+Message-ID: <aDS-8RigFM-ii2mz@casper.infradead.org>
+References: <20250526063524.22597-1-dev.jain@arm.com>
+ <8da60934-0670-4f8a-8bde-fa4de320cdbb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=n
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8da60934-0670-4f8a-8bde-fa4de320cdbb@redhat.com>
 
-get_coeff() returns –EINVAL when no table entry matches. 
-The driver then uses that value as an index into coeff_div[],
-causing an OOB access.
+On Mon, May 26, 2025 at 09:40:06AM +0200, David Hildenbrand wrote:
+> On 26.05.25 08:35, Dev Jain wrote:
+> > Hello all,
+> > 
+> > After doing an xas_load() and xas_retry(), we take neither a reference nor a lock
+> > on the folio, and we do an xas_reload(). Is this just to reduce the time window
+> > for a race?
+> > 
+> > If the above is true, then, there is a negligible window between xas_load() and
+> > xas_reload(), because only xas_retry() exists between them, so why to even reload()?
+> 
+> The usual sequence for the pagecache is (see filemap_get_entry())
+> 
+> 1) xas_load(): Load the entry
+> 
+> 2) xas_retry(): Test if we have to retry immediately
+> 
+> 3) folio || xa_is_value(folio): check if the entry stores a folio
+> 
+> 4) folio_try_get(): try getting a folio reference, might get freed
+>    concurrently, so a folio_get() is not safe
+> 
+> 5) folio != xas_reload(&xas): recheck whether the entry was changed
+>    concurrently
+> 
+> iter_xarray_get_pages()->iter_xarray_populate_pages() works on whatever
+> xarray was provided to iov_iter_xarray().
+> 
+> erofs/netfs/orangefs seem to pass the pagecache ... so I would also assume
+> that we have to use the same sequence as above.
+> 
+> Willy and me had a look ad that code in b57f4f4f186d ("iov_iter: convert
+> iter_xarray_populate_pages() to use folios").
+> 
+> But looking at it now, I think that code is incorrect. At least the
+> folio_get() and reload-before-folio-get is weird.
 
-To fix lets abort the hw_params call instead.
+Well, I just converted it; I didn't think hard about what it was doing
+was right.  I think I may have mentioned to dhowells that I thought the
+xas_reload() was unnecessary as the folios are required to be referenced
+by the caller.  So if you can look them up, they're guaranteed to not
+be replaced [1].
 
-Fixes: de2b3119f9f7 ("ASoC: codecs: add support for ES8375")
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- sound/soc/codecs/es8375.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/codecs/es8375.c b/sound/soc/codecs/es8375.c
-index decc86c92427..009259632107 100644
---- a/sound/soc/codecs/es8375.c
-+++ b/sound/soc/codecs/es8375.c
-@@ -319,6 +319,7 @@ static int es8375_hw_params(struct snd_pcm_substream *substream,
- 	coeff = get_coeff(es8375->vddd, dmic_enable, es8375->mclk_freq, params_rate(params));
- 	if (coeff < 0) {
- 		dev_warn(component->dev, "Clock coefficients do not match");
-+		return coeff;
- 	}
- 	regmap_write(es8375->regmap, ES8375_CLK_MGR4,
- 			coeff_div[coeff].Reg0x04);
--- 
-2.39.5
-
+[1] the xas_retry() cannot be skipped as it guards against a rearrangement
+of the tree which can happen even with the folio pinned.
