@@ -1,73 +1,48 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9271B87D9;
-	Mon, 26 May 2025 13:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686C6BA2D;
+	Mon, 26 May 2025 13:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748266930; cv=none; b=OnRygGG8Hz7RiqRhfE935YsFbGJJR3Dk/QhUTsjrZNx4Pe7WYlgdGY/Nd2YaMLRxLY/Wv1EAWKQScl1v3gY4AtSZog5ZrResORPmpX984cz+BvdgBiABeWRuIWmrnlUNV1wreFu2vswVUC9PmX0vP3e73SMUlZGI9zSa5zA4g38=
+	t=1748266931; cv=none; b=XpjId334tupsJFktYmPxp61JEyuSjQrBdZRt/ApMXfdxmReMRjjRjVllMB+8aEgNQN6EAaK/S6VxiuV2uIn37KWITUhTIN58NryTrZwnNdX+EJzCKdci9/VHvv+nVcZ2/s7NBFWjlpjBKSeC4v77lpdDcZvj0P5MAoUhm8hIubU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748266930; c=relaxed/simple;
-	bh=N3jCi3khROE9TVxPRzpAHw/qGx3uAUp6MOKY3QNCs4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVTC6gmCYN1PDkwaYWdNh0IDXHOx6MZr+nwmcHkC0+P7dI0RHllXFpOQW85/XOphMxNmI/FfNhXPepyVi/W/nY8hzn2oWIXNV0ZrYT+/i8vC+oHvJGI0InpTggC/lisMmQzZkbSVEeHiW3pyeWb9iw4zzxS3A7POhGkn9RFd/v4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mN2HstQS; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748266931; c=relaxed/simple;
+	bh=XEmNFkIUnC+00NuAw7FuMw1RAsrFOrO1LnNcY9qaIGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EVC8eE44FOB+dOK1L9eBhQ/W/yl6iKKcb7+YbI3r9bc2fubUMo2X8yQynJHzubDyzohmTDQ89sZRlthvE/8JtHceuFd9zKMM8pqJmnjdAUoGXL5Fo+PI5SjCvuoJlV/xN5+dMKxELHCNiz5SnxTveN8xEImgoWqXzSC9utVAwJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=markus.stockhausen@gmx.de header.b=cWcWiC9E; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN2HstQS"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c9563fafso1463295b3a.0;
-        Mon, 26 May 2025 06:42:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748266929; x=1748871729; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=frQ0f0BJwDjiH9T/6GPovLUqHWLGL0+6wkcrVa4bH0k=;
-        b=mN2HstQSR2AhpcSfn4fg3YSHDDSLzbQJJAK29f/IWKhQg2DrctltXPsNeJe+y6qZ6A
-         y3O0lUaJzdes87oK+x7apoA3vHjaRGTjJhswsmCXO74Dtjsu8jGQCZ+iIfKCvoZPHzia
-         IeFbTSzGwkuCgRA2qX8awdzJ+m/7FXL/GdGXGChi0GdwKId+lZr6lVrVD7q7NUvTmVmJ
-         P953UWiE02L4Rk6+nmNBn6BbejpJpD14fRdVw0okOrr46ecsbioO2y3D13+EHIcXSLc7
-         9E/VBwczEXrPQPXrKa5c2UWF0xC/mz6tDB+NUtM+8eSnjjZHGccgauV7ZPxEkf4Oev5i
-         +l8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748266929; x=1748871729;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=frQ0f0BJwDjiH9T/6GPovLUqHWLGL0+6wkcrVa4bH0k=;
-        b=gHIM1JqHj07HBZioHPGTUDJqsvcy/uj158Lce1t/inDnpzEs5Ecgw6kBDEHng57JV+
-         TNyo8YO/XFfApO7q5sTu/+6JMh9Ez6Ri9QVPqyG6SNhPvzzRMJiZG4ffxRejapIr02ch
-         EaeQiJRR1xM/X2vf2abx3SKqbSsbnuwyE/Fngp/oBGK9oLBJDhPQyGyaRceu3IoeQIN2
-         cc0S8er6IjEKBdljjzf1Nuc+lG3fGCIp5FcnPgyXAXXgsj5M1ruBIdXsQXVCDdlK4nch
-         7z2aoknXqeHJRF/w5YTvE2Yz/vtgStK+vinTQ/zdXOAjABDvWozMtAz/TyjzJNlAYNvj
-         DRLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnGBNj0beZGCs5Eh8J+Y0Z0HMKF3eZprCat2JDwAK3cyL3X9o9AYSNH6Hzp2PPm0FGa2dqMt/ZtCaN4OThN7nvXji9@vger.kernel.org, AJvYcCXzjW8EtSvbdIqGmwHo04XuAQIGl3XypqOtP0+MhsyrNDClXmj8UKL4uE+pn0Lam1pthIZkp5LX5Hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTECNIXHAqhBFRcUWbrKJeVfw61dqz28kxUSEIFO9WxkF/ImE7
-	fwgLhfLxeODW/KAsW1VpKxoCKY2ghUjnjOLIcK5L7opEWdxB5qeGHj/c
-X-Gm-Gg: ASbGncu7sTalR1P3pxI+zMzACo30x1Ji5zT+cQ7xx2ditVQ6kc0VnXVnwVlhLC7NEDO
-	KFGF5YBuw9kpTaM4/AkSZ0RHAHkH0uHdz1yyWjZygKcDYB/PJY3UyemmzkWKwmnn170fg304qBi
-	vqvAeReZGXqf1AC+FVP56cPHoASNlHTTKFSo5JhCJ5lVqvMyrPGjpvITThx07C/Eid0I49BDIg/
-	WWfs1cI0anItFIxp59mBCSXpJMKcUiwp7FMugxgJD/vjHoKv2jRChxuMvz6WtTk2N54F4quXcTA
-	JwQEWbY2mA50QhfrZBQm+JyMDYz2TNIkBax5qLSof6lBCdWMWj+dndLl5oe73BCDmj8MQoKUfvh
-	Qf4JA5/9AHCZZxclh3Fs=
-X-Google-Smtp-Source: AGHT+IEQyBevUUoLQg/Z4I8nbFN8HgNhcgvl1vZj+oKXKoJFa4vLR50xWZEaVrPbo0btIVShWkj6yw==
-X-Received: by 2002:a05:6a21:38d:b0:209:ca8b:91f2 with SMTP id adf61e73a8af0-2188c2992cdmr13559656637.19.1748266928668;
-        Mon, 26 May 2025 06:42:08 -0700 (PDT)
-Received: from localhost.localdomain (183178125027.ctinets.com. [183.178.125.27])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084936sm16872453a12.56.2025.05.26.06.42.02
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 26 May 2025 06:42:08 -0700 (PDT)
-From: Runji Liu <runjiliu.tech@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Runji Liu <runjiliu.tech@gmail.com>
-Subject: [PATCH] docs: trace: boottime-trace.rst: fix typo
-Date: Mon, 26 May 2025 21:40:46 +0800
-Message-ID: <20250526134046.1042-1-runjiliu.tech@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=markus.stockhausen@gmx.de header.b="cWcWiC9E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1748266917; x=1748871717;
+	i=markus.stockhausen@gmx.de;
+	bh=QT9xMJPKD0qzDG3KxS6qE4Kj6L988zZ4YfHF3Bgvm8g=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=cWcWiC9EMWHf4zc9ArhZCATg1RcQ2Hy+gnNkeuD0GZU/eIIMPrfLdgv5TnwDVyR0
+	 kxxRtBjy8xkLjFAm57UmYI74yFtKCLAGxRuQN+gHPlD1bUL6k7ekLpehRshhzza4b
+	 h+tNBgXLg5bkGzKVtp29/cJj/t76DCpeQf8lEJc5CeV2OU+i9lpL4ZaV+t0gqCYXf
+	 ZRwYui4IUIKKKhkL9+mzFAglKxT6Z9Gm4l5Yw2rJnlvNZ0gK3l6Dw5wLCH6/LYjdE
+	 ulw+fyVMf4hmDz/bs0oGEsbgDJPrUSwtQPoMvWEC6XRp1GvehEnbv6xiTpkp3+5s5
+	 tDe98fjuoxYim9+61w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from openwrt.willemsstb.de ([94.31.70.55]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MQ5vW-1uWhG90QC0-00P4H2; Mon, 26
+ May 2025 15:41:57 +0200
+From: Markus Stockhausen <markus.stockhausen@gmx.de>
+To: tsbogend@alpha.franken.de,
+	tglx@linutronix.de,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	s.gottschall@dd-wrt.com
+Cc: Markus Stockhausen <markus.stockhausen@gmx.de>
+Subject: [PATCH v2] irqchip/mips-gic: allow forced affinity
+Date: Mon, 26 May 2025 09:41:49 -0400
+Message-ID: <20250526134149.3239623-1-markus.stockhausen@gmx.de>
 X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -75,31 +50,105 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:W7LmLjxY4pwBJWzlx0/TMxgq6SqDgvc9W7jeL/i1X0nJ9DjiSdE
+ kJ6P+UuH7ZNxCmsBf5gA1fQ5pFWBe0JtVV4SoJ2solsREtOeH7mVbNJMUf1cL6bylhZhHCt
+ VZuF4Vm/bQq00fJGfQ2wiftKTYz6pgMjRu+5uxkfE6yS/nWzxq6a1ZOGU2jIaRUl8Pbo4wI
+ ucdVc6qgJSHlIoJVoKbxw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:RIG9vDBTQGw=;WedP2ko1P4IeE88cknLCrBdGcOB
+ 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
+ IqjFGtLmNKZkVZcPFyq0Zf8kdfHB8ptu4x
 
-Replace misspelled "eariler" with "earlier" and drop the stray period
-after "example".
+Devices of the Realtek MIPS Otto platform use the official rtl-otto-timer
+as clock event generator and cpu clocksource. It is registered for cpu
+startup via cpuhp_setup_state() and forces the affinity of the clockevent
+interrupts to the appropriate cpu via irq_force_affinity().
 
-Signed-off-by: Runji Liu <runjiliu.tech@gmail.com>
----
- Documentation/trace/boottime-trace.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On the "smaller" devices with a vendor specific interrupt controller
+(supported by irq-realtek-rtl) the registration works fine. The "larger"
+RTL931x series is based on a MIPS interAptiv dual core with a MIPS GIC
+controller. Interrupt routing setup is cancelled because gic_set_affinity(=
+)
+does not accept the current (not yet online) cpu as a target.
 
-diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-index d594597201fd..3efac10adb36 100644
---- a/Documentation/trace/boottime-trace.rst
-+++ b/Documentation/trace/boottime-trace.rst
-@@ -198,8 +198,8 @@ Most of the subsystems and architecture dependent drivers will be initialized
- after that (arch_initcall or subsys_initcall). Thus, you can trace those with
- boot-time tracing.
- If you want to trace events before core_initcall, you can use the options
--starting with ``kernel``. Some of them will be enabled eariler than the initcall
--processing (for example,. ``kernel.ftrace=function`` and ``kernel.trace_event``
-+starting with ``kernel``. Some of them will be enabled earlier than the initcall
-+processing (for example, ``kernel.ftrace=function`` and ``kernel.trace_event``
- will start before the initcall.)
- 
- 
--- 
-2.43.0
+Relax the checks by evaluating the force parameter that is provided for
+exactly this purpose like in other drivers. With this patch affinity can
+be set as follows:
+
+- force =3D false: allow to set affinity to any online cpu
+- force =3D true: allow to set affinity to any cpu
+
+Signed-off-by: Markus Stockhausen <markus.stockhausen@gmx.de>
+Signed-off-by: Sebastian Gottschall <s.gottschall@dd-wrt.com>
+=2D--
+ drivers/irqchip/irq-mips-gic.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic=
+.c
+index bca8053864b2..1c2284297354 100644
+=2D-- a/drivers/irqchip/irq-mips-gic.c
++++ b/drivers/irqchip/irq-mips-gic.c
+@@ -375,9 +375,13 @@ static int gic_set_affinity(struct irq_data *d, const=
+ struct cpumask *cpumask,
+ 	/*
+ 	 * The GIC specifies that we can only route an interrupt to one VP(E),
+ 	 * ie. CPU in Linux parlance, at a time. Therefore we always route to
+-	 * the first online CPU in the mask.
++	 * the first forced or online CPU in the mask.
+ 	 */
+-	cpu =3D cpumask_first_and(cpumask, cpu_online_mask);
++	if (force)
++		cpu =3D cpumask_first(cpumask);
++	else
++		cpu =3D cpumask_first_and(cpumask, cpu_online_mask);
++
+ 	if (cpu >=3D NR_CPUS)
+ 		return -EINVAL;
+=20
+=2D-=20
+2.47.0
 
