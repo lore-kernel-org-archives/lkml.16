@@ -1,247 +1,271 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B2A212FB0;
-	Mon, 26 May 2025 14:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4D7210F5A;
+	Mon, 26 May 2025 14:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270463; cv=none; b=fNEdMaJTx1f8tPxFyT/rUeFHFXg4FpoML8ohbfQgB7MPQjgCd67pKViGJ0j3YQve14ZShQWu8Of10cwqkYub0lik1NHhlaxV+K0ifdT3Vsd0wj1xCyicgzI1AohL2ZM1Dyfef2+CxoBudhUcv6wBoTFIvHO5BncrH2hw6VrZIVA=
+	t=1748270519; cv=none; b=C55ezwMMzJTObUpRdMV5AgCdzNFgtCm1Dvcqu13z61joLj2wABWb7F3TA4OL4IbKn+a5dexqKQ0J/C3a1t9EIXuqCTtiYkjHykb2VSnHn8VyJRpOuW5bQ9kUbVaTGctkUQSXX9E7ClVcXQpWUfDanwEE+7DyFDhZxPpBnW/kyNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270463; c=relaxed/simple;
-	bh=cGVbOqpUYlVjPJ9sdnL9JMn3K7BgmO8hSIFFZcC21rQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fn2M1uhhvRKSQIaFGwtpd63L4vd4/t4fCgdh9ISDdOdoc+Gm0Qcqna3UhsQnARjvXBY88AcBrl0pqxdePJhj3iDFabdXphBkMkWYQw2Vc1pI+XfKydf+0al4n+fSy2Aq87uuSnVxLC0/oujhDoWtantaoPcXRSAOVdgFZ7RUyjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.37])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16709a33f;
-	Mon, 26 May 2025 22:40:50 +0800 (GMT+08:00)
-From: Ze Huang <huangze@whut.edu.cn>
-Date: Mon, 26 May 2025 22:40:20 +0800
-Subject: [PATCH v4 4/4] riscv: dts: spacemit: add usb3.0 support for K1
+	s=arc-20240116; t=1748270519; c=relaxed/simple;
+	bh=xRH5cJQC0BxojTkJ0c2qP/M631Inr5m2Uc9jQRhRE6A=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=iOMF98XQmq5owT9aDeuuEuPx7JK/dR/oj/IvjaVhBVRHsVs4kdXhgvnx9CvK0yw5j9zv+L97AY4JD1DcEAxkXEMY5S/0aZlN1f1m1iKiMX16qHdpafyvV4rM0niWedhhU/NbAfGI7Wcw0gloNW9isWmtzD0PnFdHjen0laeoHnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIataHlC; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIataHlC"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c59e7039eeso304162785a.2;
+        Mon, 26 May 2025 07:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748270517; x=1748875317; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s6huNXGJCACa92UVvHf3qC3hkVPFS+g7gKSrPhimVrE=;
+        b=QIataHlCJVReC5dvfCqcANHcIEq/LW44GFxCvBNbSG+UD8+vLCthIgR6bhUw1LVU52
+         43bSWfr1Na6WJgY50DKXjAYLRqlbxqXmAf686l5wc66TLDHgqkX4KXIHqDgEjc6Usawg
+         6UUMuzdIn23U68WKOIC7W22mkPQ6YnEuDQWicH+VLhbP+oVSQSR44cSXJnXgKEjmPSFR
+         G3ZJRet4avc8G9orvjkPYjMN97ywEjBUvDiAM4avPAeDKvA2itreGtOSaQKb6hmK8TDI
+         lq23AvBucgGATj5tmewa0E4he6DCm0w8NSn95q5caoNffUf1nvuPvjZ0i7IftF9221Pp
+         C0Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748270517; x=1748875317;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=s6huNXGJCACa92UVvHf3qC3hkVPFS+g7gKSrPhimVrE=;
+        b=GQH5eKnDIKLDNMecGvRcCVBmZ0e/YlczLdkA5oS/ZzNK3cjuRJbFSZZXUz8UkVZ+G0
+         N4JiZcIrfk2iCN/7xW//n04OgwlNZpI95+eKE5a3RFh3Dgogy7vv7jatp327+cNMlNSh
+         K25aHvJeyhMJ39DD8nsfTzo6hTU+PyDGApT+xW6Rv6OONC2krMjwr3ZPQNzUDOKaX2kr
+         Wf5LFKHw9M45S2RVjyCIHFMIkebBoU6Ag0giuvvU33QuMXMmnQbV5FH9Mm07TaTqQbGy
+         bHILHuUiLCkRh6xzA9tevpAjOthDVQmeMVrUXzBihCC3ywPNxq1tuEz7V9/yVnr+0wXh
+         GNLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLi/GvFcWw3+b9bLyusCwX3OzwgBFrlUtwbbbxYB/Jr39tJdJdIIZR38+wmY0Aq3chnkBIrO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr8s4ijRKxXtBljEUZPpWd+RhnZxEf5VJn38RpMzzW8TkB2/WF
+	0gOYIgAd9oi8+xbej4ThXzmu2lhWa4U5SGIBGkxYv3/DpO8Rrhje5ORz
+X-Gm-Gg: ASbGnct9nkqk9ijafwjzgVZmP7bFuaZDqsDgiOuDek8MGQVcRAEUuMDWQCpKxanZdaf
+	r3bKaeaGwlCeBFu4F+/OKyEuWYLo27WjkR7coxun3P7I0CqQYm4vr9nBRfg7zZwCiIFajc8S0Aq
+	InyhX0AZWpVilLUuoFBcFY5iS/UubpSEs3vYxAGJy7bqFJNgjANv2tNSsLWKj+3PbuB+UMRLSlD
+	otVheIlMJHhQRYFIS1XgsD/2dm6m8porILMvNN4Nds4lP5jZCMFlE86zt83ij/xSBTQNBUubojc
+	/ZYt6vm1Q0k4w+KKRbhvsY0lS0taDGRyr0gY6flhd9R6aRQysnJrAyolAPFDj9Xe/TGYeuOKuWd
+	qva+fqyeQmYZjwmcIBeQ/euM=
+X-Google-Smtp-Source: AGHT+IHTW7Q1kaM21zc7kq0hywZYrnLWu+scqiNqNrhx6gk3UC71vn1S6SqidpsLv5nA7y23BX09eA==
+X-Received: by 2002:a05:620a:6013:b0:7c5:674c:eecc with SMTP id af79cd13be357-7ceecbe8957mr1359044685a.32.1748270516715;
+        Mon, 26 May 2025 07:41:56 -0700 (PDT)
+Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd467eedbfsm1563096585a.58.2025.05.26.07.41.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 07:41:55 -0700 (PDT)
+Date: Mon, 26 May 2025 10:41:55 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Shiming Cheng <shiming.cheng@mediatek.com>, 
+ willemdebruijn.kernel@gmail.com, 
+ willemb@google.com, 
+ edumazet@google.com, 
+ davem@davemloft.net, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ matthias.bgg@gmail.com
+Cc: linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ shiming.cheng@mediatek.com, 
+ lena.wang@mediatek.com
+Message-ID: <68347db362e10_28cacc29479@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250526062638.20539-1-shiming.cheng@mediatek.com>
+References: <20250526062638.20539-1-shiming.cheng@mediatek.com>
+Subject: Re: [PATCH v2] t: fix udp gso skb_segment after pull from frag_list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-b4-k1-dwc3-v3-v4-4-63e4e525e5cb@whut.edu.cn>
-References: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
-In-Reply-To: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748270423; l=5426;
- i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
- bh=cGVbOqpUYlVjPJ9sdnL9JMn3K7BgmO8hSIFFZcC21rQ=;
- b=dvUL5idzS2fqYMvI0gmi9yeE8UN14gsHQUVnnAR5LvJGp5WR/4J8RqMrM/PWSx01FX6z+kN2K
- qehbIV1k72sAULbGHhGZM40nRnWqpDmugEUNRdZDvuBNm1VZGoKSshL
-X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
- pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSBhIVkNPS00YSEMeGB9NGlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktJQk1KSlVKS0tVS1kG
-X-HM-Tid: 0a970d0a072803a1kunm5f56ec4c12f04
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pz46FAw6QjEyOgw4CjYBFDcy
-	EgMaCQ1VSlVKTE9DSUxLT05MTElPVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VCQlVITFlXWQgBWUFNQk9NNwY+
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add USB 3.0 support for the SpacemiT K1 SoC, including the
-following components:
+s/t/net
 
-- USB 2.0 PHY nodes
-- USB 3.0 combo PHY node
-- USB 3.0 host controller
-- USB 3.0 hub and vbus regulator (usb3_vhub, usb3_vbus)
-- DRAM interconnect node for USB DMA ("dma-mem")
+s/[PATCH vX]/[PATCH net vX]
 
-The `usb3_vbus` and `usb3_vhub` regulator node provides a fixed 5V
-supply to power the onboard USB 3.0 hub and usb vbus.
+Shiming Cheng wrote:
+> Detect invalid geometry due to pull from frag_list, and pass to
+> regular skb_segment. if only part of the fraglist payload is pulled
+> into head_skb, When splitting packets in the skb_segment function,
 
-On K1, some DMA transfers from devices to memory use separate buses with
-different DMA address translation rules from the parent node. We express
-this relationship through the interconnects node "dma-mem", similar to [1].
+Punctuation is off
 
-Link: https://lore.kernel.org/all/09e5e29a4c54ec7337e4e62e5d6001b69d92b103.1554108995.git-series.maxime.ripard@bootlin.com [1]
+> it will always cause exception as below.
+> =
 
-Signed-off-by: Ze Huang <huangze@whut.edu.cn>
----
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 51 +++++++++++++++++++
- arch/riscv/boot/dts/spacemit/k1.dtsi            | 67 +++++++++++++++++++++++++
- 2 files changed, 118 insertions(+)
+> Valid SKB_GSO_FRAGLIST skbs
+> - consist of two or more segments
+> - the head_skb holds the protocol headers plus first gso_size
+> - one or more frag_list skbs hold exactly one segment
+> - all but the last must be gso_size
+> =
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 816ef1bc358ec490aff184d5915d680dbd9f00cb..1f4585fe30b64a63ee643ed9596a3a97db8c0f0d 100644
---- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-+++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -28,6 +28,25 @@ led1 {
- 			default-state = "on";
- 		};
- 	};
-+
-+	usb3_vhub: regulator-vhub-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB30_VHUB";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio K1_GPIO(123) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	usb3_vbus: regulator-vbus-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "USB30_VBUS";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		gpio = <&gpio K1_GPIO(97) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
- 
- &uart0 {
-@@ -35,3 +54,35 @@ &uart0 {
- 	pinctrl-0 = <&uart0_2_cfg>;
- 	status = "okay";
- };
-+
-+&usbphy2 {
-+	status = "okay";
-+};
-+
-+&combphy {
-+	status = "okay";
-+};
-+
-+&usb_dwc3 {
-+	dr_mode = "host";
-+	vbus-supply = <&usb3_vbus>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	hub_2_0: hub@1 {
-+		compatible = "usb2109,2817";
-+		reg = <0x1>;
-+		vdd-supply = <&usb3_vhub>;
-+		peer-hub = <&hub_3_0>;
-+		reset-gpios = <&gpio K1_GPIO(124) GPIO_ACTIVE_LOW>;
-+	};
-+
-+	hub_3_0: hub@2 {
-+		compatible = "usb2109,817";
-+		reg = <0x2>;
-+		vdd-supply = <&usb3_vhub>;
-+		peer-hub = <&hub_2_0>;
-+		reset-gpios = <&gpio K1_GPIO(124) GPIO_ACTIVE_LOW>;
-+	};
-+};
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 61f5ca250ded0da7b91cd4bbd55a5574a89c6ab0..e57b39bba877f90d52227349c983ce638559e601 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -4,6 +4,8 @@
-  */
- 
- #include <dt-bindings/clock/spacemit,k1-syscon.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/phy/phy.h>
- 
- /dts-v1/;
- / {
-@@ -346,6 +348,15 @@ soc {
- 		dma-noncoherent;
- 		ranges;
- 
-+		mbus0: dram-controller@0 {
-+			compatible = "spacemit,k1-mbus";
-+			reg = <0x0 0x00000000 0x0 0x80000000>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			#interconnect-cells = <0>;
-+		};
-+
- 		syscon_rcpu: system-controller@c0880000 {
- 			compatible = "spacemit,k1-syscon-rcpu";
- 			reg = <0x0 0xc0880000 0x0 0x2048>;
-@@ -358,6 +369,62 @@ syscon_rcpu2: system-controller@c0888000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		usb_dwc3: usb@c0a00000 {
-+			compatible = "spacemit,k1-dwc3";
-+			reg = <0x0 0xc0a00000 0x0 0x10000>;
-+			clocks = <&syscon_apmu CLK_USB30>;
-+			clock-names = "usbdrd30";
-+			interconnects = <&mbus0>;
-+			interconnect-names = "dma-mem";
-+			interrupts = <125>;
-+			phys = <&usbphy2>, <&combphy PHY_TYPE_USB3>;
-+			phy-names = "usb2-phy", "usb3-phy";
-+			phy_type = "utmi";
-+			resets = <&syscon_apmu RESET_USB3_0>;
-+			snps,hsphy_interface = "utmi";
-+			snps,dis_enblslpm_quirk;
-+			snps,dis-u2-freeclk-exists-quirk;
-+			snps,dis-del-phy-power-chg-quirk;
-+			snps,dis_u2_susphy_quirk;
-+			snps,dis_u3_susphy_quirk;
-+			snps,dis_rxdet_inp3_quirk;
-+			status = "disabled";
-+		};
-+
-+		usbphy0: phy@c0940000 {
-+			compatible = "spacemit,k1-usb2-phy";
-+			reg = <0x0 0xc0940000 0x0 0x200>;
-+			clocks = <&syscon_apmu CLK_USB_AXI>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		usbphy1: phy@c09c0000 {
-+			compatible = "spacemit,k1-usb2-phy";
-+			reg = <0x0 0xc09c0000 0x0 0x200>;
-+			clocks = <&syscon_apmu CLK_USB_P1>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		usbphy2: phy@c0a30000 {
-+			compatible = "spacemit,k1-usb2-phy";
-+			reg = <0x0 0xc0a30000 0x0 0x200>;
-+			clocks = <&syscon_apmu CLK_USB30>;
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		combphy: phy@c0b10000 {
-+			compatible = "spacemit,k1-combphy";
-+			reg = <0x0 0xc0b10000 0x0 0x800>,
-+			      <0x0 0xd4282910 0x0 0x400>;
-+			reg-names = "ctrl", "sel";
-+			resets = <&syscon_apmu RESET_PCIE0>;
-+			#phy-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		syscon_apbc: system-control@d4015000 {
- 			compatible = "spacemit,k1-syscon-apbc";
- 			reg = <0x0 0xd4015000 0x0 0x1000>;
+> Optional datapath hooks such as NAT and BPF (bpf_skb_pull_data) can
+> modify fraglist skbs, breaking these invariants.
+> =
 
--- 
-2.49.0
+> In extreme cases they pull one part of data into skb linear. For UDP,
+> this  causes three payloads with lengths of (11,11,10) bytes were
+> pulled tail to become (12,10,10) bytes.
+> =
+
+> When splitting packets in the skb_segment function, the first two
+> packets of (11,11) bytes are split using skb_copy_bits. But when
+> the last packet of 10 bytes is split, because hsize becomes nagative,
+> it enters the skb_clone process instead of continuing to use
+> skb_copy_bits. In fact, the data for skb_clone has already been
+> copied into the second packet.
+> =
+
+> when hsize < 0,  the payload of the fraglist has already been copied
+> (with skb_copy_bits), so there is no need to enter skb_clone to
+> process this packet. Instead, continue using skb_copy_bits to process
+> the next packet.
+
+No longer matches the current patch
+
+> BUG_ON here=EF=BC=9A
+> pos +=3D skb_headlen(list_skb);
+> while (pos < offset + len) {
+>     BUG_ON(i >=3D nfrags);
+>     size =3D skb_frag_size(frag);
+> =
+
+>     el1h_64_sync_handler+0x3c/0x90
+>     el1h_64_sync+0x68/0x6c
+>     skb_segment+0xcd0/0xd14
+>     __udp_gso_segment+0x334/0x5f4
+>     udp4_ufo_fragment+0x118/0x15c
+>     inet_gso_segment+0x164/0x338
+>     skb_mac_gso_segment+0xc4/0x13c
+>     __skb_gso_segment+0xc4/0x124
+>     validate_xmit_skb+0x9c/0x2c0
+>     validate_xmit_skb_list+0x4c/0x80
+>     sch_direct_xmit+0x70/0x404
+>     __dev_queue_xmit+0x64c/0xe5c
+>     neigh_resolve_output+0x178/0x1c4
+>     ip_finish_output2+0x37c/0x47c
+>     __ip_finish_output+0x194/0x240
+>     ip_finish_output+0x20/0xf4
+>     ip_output+0x100/0x1a0
+>     NF_HOOK+0xc4/0x16c
+>     ip_forward+0x314/0x32c
+>     ip_rcv+0x90/0x118
+>     __netif_receive_skb+0x74/0x124
+>     process_backlog+0xe8/0x1a4
+>     __napi_poll+0x5c/0x1f8
+>     net_rx_action+0x154/0x314
+>     handle_softirqs+0x154/0x4b8
+>     __do_softirq+0x14/0x20
+> =
+
+>     [  118.376811] [C201134] dpmaif_rxq0_pus: [name:bug&]kernel BUG at =
+net/core/skbuff.c:4278!
+>     [  118.376829] [C201134] dpmaif_rxq0_pus: [name:traps&]Internal err=
+or: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>     [  118.376858] [C201134] dpmaif_rxq0_pus: [name:mediatek_cpufreq_hw=
+&]cpufreq stop DVFS log done
+>     [  118.470774] [C201134] dpmaif_rxq0_pus: [name:mrdump&]Kernel Offs=
+et: 0x178cc00000 from 0xffffffc008000000
+>     [  118.470810] [C201134] dpmaif_rxq0_pus: [name:mrdump&]PHYS_OFFSET=
+: 0x40000000
+>     [  118.470827] [C201134] dpmaif_rxq0_pus: [name:mrdump&]pstate: 604=
+00005 (nZCv daif +PAN -UAO)
+>     [  118.470848] [C201134] dpmaif_rxq0_pus: [name:mrdump&]pc : [0xfff=
+fffd79598aefc] skb_segment+0xcd0/0xd14
+>     [  118.470900] [C201134] dpmaif_rxq0_pus: [name:mrdump&]lr : [0xfff=
+fffd79598a5e8] skb_segment+0x3bc/0xd14
+>     [  118.470928] [C201134] dpmaif_rxq0_pus: [name:mrdump&]sp : ffffff=
+c008013770
+>     [  118.470941] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x29: ffffff=
+c008013810 x28: 0000000000000040
+>     [  118.470961] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x27: 000000=
+000000002a x26: faffff81338f5500
+>     [  118.470976] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x25: f9ffff=
+800c87e000 x24: 0000000000000000
+>     [  118.470991] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x23: 000000=
+000000004b x22: f4ffff81338f4c00
+>     [  118.471005] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x21: 000000=
+000000000b x20: 0000000000000000
+>     [  118.471019] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x19: fdffff=
+8077db5dc8 x18: 0000000000000000
+>     [  118.471033] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x17: 000000=
+00ad6b63b6 x16: 00000000ad6b63b6
+>     [  118.471047] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x15: ffffff=
+d795aa59d4 x14: ffffffd795aa7bc4
+>     [  118.471061] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x13: f4ffff=
+806d40bc00 x12: 0000000100000000
+>     [  118.471075] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x11: 005400=
+0800000000 x10: 0000000000000040
+>     [  118.471089] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x9 : 000000=
+0000000040 x8 : 0000000000000055
+>     [  118.471104] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x7 : ffffff=
+d7959b0868 x6 : ffffffd7959aeebc
+>     [  118.471118] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x5 : f8ffff=
+8132ac5720 x4 : ffffffc0080134a8
+>     [  118.471131] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x3 : 000000=
+0000000a20 x2 : 0000000000000001
+>     [  118.471145] [C201134] dpmaif_rxq0_pus: [name:mrdump&]x1 : 000000=
+000000000a x0 : faffff81338f5500
+
+Please truncate to the most relevant information.
+
+That [name:..] stuff looks odd too? Is this normal dmesg? If so, what
+is the platform.
+
+In this case, the (possibly somewhat truncated) stack trace and explicit
+kernel BUG at statement probably suffice.
+
+> Fixes: a1e40ac5b5e9 ("net: gso: fix udp gso fraglist segmentation after=
+ pull from frag_list")
+> Signed-off-by: Shiming Cheng <shiming.cheng@mediatek.com>
+> ---
+>  net/ipv4/udp_offload.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> =
+
+> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+> index a5be6e4ed326..ec05bb7d1e22 100644
+> --- a/net/ipv4/udp_offload.c
+> +++ b/net/ipv4/udp_offload.c
+> @@ -273,6 +273,7 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *g=
+so_skb,
+>  	bool copy_dtor;
+>  	__sum16 check;
+>  	__be16 newlen;
+> +	int ret =3D 0;
+>  =
+
+>  	mss =3D skb_shinfo(gso_skb)->gso_size;
+>  	if (gso_skb->len <=3D sizeof(*uh) + mss)
+> @@ -301,6 +302,9 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *g=
+so_skb,
+>  		if (skb_pagelen(gso_skb) - sizeof(*uh) =3D=3D skb_shinfo(gso_skb)->g=
+so_size)
+>  			return __udp_gso_segment_list(gso_skb, features, is_ipv6);
+>  =
+
+> +		ret =3D __skb_linearize(gso_skb);
+> +		if (ret)
+> +			return ERR_PTR(ret);
+
+code LGTM, thanks.
+
+>  		 /* Setup csum, as fraglist skips this in udp4_gro_receive. */
+>  		gso_skb->csum_start =3D skb_transport_header(gso_skb) - gso_skb->hea=
+d;
+>  		gso_skb->csum_offset =3D offsetof(struct udphdr, check);
+> -- =
+
+> 2.45.2
+> =
+
+
 
