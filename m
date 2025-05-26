@@ -1,220 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012004.outbound.protection.outlook.com [52.101.71.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAC41A3BC0;
-	Mon, 26 May 2025 07:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748244178; cv=none; b=UfT03IS7X7eKq3Wcu/Xx3DVOXN49XFPkQX9lI9Vct9hS4hp7I+AKpMzHrs6BFSKPkP/KUDq3OsPootSsWG+OrALio3bFt2zfAw2TK8QMya0gbzFtJH04lq5WDr2BCqAIh6OdAS81xjFIYfPtPYuPSOEwNxnX+rCeGrCGOEb+TYc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748244178; c=relaxed/simple;
-	bh=kQ4k7Xphh54QIxwt6vGLShRpXDSSLCxTPN7vVeaFxCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QlRY2zDfIAe9988m0vEIoKraCCzV5zKT8gsuHJeqSEbxjJxzsyR5vQ63oBPXJ/CzHbnj1+OYzk6e6p0y/3q6+HeL+cOzWjDCnrNWwRxI8vDC6VbxvloG1rJbnxjiiVyCW8DbCbKshua0H6D0z9qeuFvHM/UJ5Y5Far0dmapHPPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F91OMDK0; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D894218DB0D;
+	Mon, 26 May 2025 07:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748244210; cv=fail; b=D+UW08TfdJ3QZYvuOAjwOUa5QbnZ8/1cHMzNaQi3YRpQNQuqQdRlHIqcoTDAARIvDmR06dP2gItnYwaZnP51Ip+dHsEWjWI/hsmNOPW7+GXWNGT9lCbdW2PyaEpmpIqOFqxZBfGL7DKgPJVpJL7cdVfSz/oOOynHsaJcqTIuOxA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748244210; c=relaxed/simple;
+	bh=83GYs0V94PfcXmtdsz+JYy1JVzIxxC7Q80UeDQdvVRQ=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=jXl2vESzTszjIWjAOyeF6TRLoUfvndLWC/8PQNEj7glfcws6GUoLx2YO7h5ZIzX6+0FM4yToBN/W24lVbX2tufYcA2NE3SkKwZGWen2M/hPSj0fOkXQeJHuFLVlHY+znHZGYCFh9aIxCNGNBPGPpYTURj/e3BpVmZf9z2Z93a7M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cREq7Kzm; arc=fail smtp.client-ip=52.101.71.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F91OMDK0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6AB2C4CEE7;
-	Mon, 26 May 2025 07:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748244177;
-	bh=kQ4k7Xphh54QIxwt6vGLShRpXDSSLCxTPN7vVeaFxCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F91OMDK0O7gcmEkQdrzt+uf0tyyU4HiriJmD9GpcHrKJn/LBWuyEb5ZEiLnzhj/C+
-	 HjKPEXah8xYaU7LdJdZGRc/0B34awR6Ys0ms9HsBhesD6c+O4tNhdI2bVBfWIsw2ve
-	 04Ld4ebrsSMAEK6y3stNWnsKgiyw9r7T2RFhW35tCtH/UI7T76lmh45L+D+t7ClP5R
-	 OQdsiyQBiVm5XYV9OUFlppofAeY7Z0sjfytGvqPhNw8zNOIxRHl2BVaoB1xTksmkNT
-	 uXQPy8s6Dw9Ybb5FAYXr7SYBlWEyzgg4RhfAFbQcLHLF892hiKVpcjnVijA3AqReCQ
-	 l5/Pag91EsJoQ==
-Date: Mon, 26 May 2025 12:52:31 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Subject: Re: [PATCH v9 6/9] tee: add tee_shm_alloc_dma_mem()
-Message-ID: <aDQWt5Ck1Bo01Z_4@sumit-X1>
-References: <20250520152436.474778-1-jens.wiklander@linaro.org>
- <20250520152436.474778-7-jens.wiklander@linaro.org>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cREq7Kzm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=j0qq1J7pDt8WScp9X1N2PH2v86UNcJRKfwpZAq66iz2/AVjr3HXK3a4T0pmDa18f516MXNRdPQmEjYirGcdzhrVVVoSmYE+J9CIW+OWWC4FjtLsmecZor5QE7i60TO9FCEtMyLSJJPBxRCHzIZwVcr2BBUqTe+KEje4PHQIpXzWwrnQrhT1vYRtsL+0sqdv2gW3xAQTR1mXb0/4uDLVbrXZLbEIayGmGavzNwqMF66Z+as6UeNny/1DzxYbBsJiJD3vw02CZ18KrbLBqfagafcN5c+T7EwKSpQs8uth4BYLHqsSNyrtZo+NvNMtCidUB47yRBIQiFDGS1xE7YORFEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QWT4aEa4OxAdYyDm/0Mky3d4+Z4ScVum9U8W1Z1a8oo=;
+ b=o0N5rDFnTmoCSWioBwIO6pctQOLPJZ4SrXcAizv+SYZrdeRvYatKqJDUSkFQyUcaHZ6Pfm3+I1gxbZSuO7YeE9WPKxgqBRmbwdLaprPO2rJm237l0gtY7GnBikVWh/IkfQYujmRaeSentHLfVKWJL+AZmeu4gje0dEvp9dj0fc2/f4Qo6tTxBG7Wr/TNO4ixn9T+hdA40vp1T/JNJBIUuBu1dF5h6QaATX9bKstGXEK9AVOMkjC/cNo02JuME5Wf406cYr/SJe4GjA5LxqRvkp6VuCvCwIUuKi3b9TyEiBwgmi2uNDCAlaby7d1KUL04P6HP8TUgUIGzmSyJR6vOZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QWT4aEa4OxAdYyDm/0Mky3d4+Z4ScVum9U8W1Z1a8oo=;
+ b=cREq7KzmDZoyaoYSxVVgmJpxMP6TilsdLfF4iux84c3qf4pPwqcPU9viLf+UAKBvKLGe4zPznIsleRlDdbxTi8lQA7rTv5g7XaCVNwFptjIiqZoQVmUAcHhKR1BHgMuV091eEQkI1QexfDhq7Me/Y53/y7lLT3XymCXLzVfge6S7eCFaPQEC+3gQyCcl+FbQwrrb3EFV/cApplpd4bHVbnA5mrJSIDb/wcUpL2WHcMKsGrqXHVSgoDZoqnoaSiKRjqLmBjZlz4VBTQHUY3XjnVdV6mvRMwFOZjtsd0Wib85tL3ff1lxy22lBX8bDZxbt+BVeYRxoUpoJpNcXLrrVCQ==
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
+ by AM9PR04MB8569.eurprd04.prod.outlook.com (2603:10a6:20b:434::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Mon, 26 May
+ 2025 07:23:25 +0000
+Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
+ ([fe80::a2bf:4199:6415:f299%4]) with mapi id 15.20.8769.022; Mon, 26 May 2025
+ 07:23:24 +0000
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Amitkumar Karwar
+	<amitkumar.karwar@nxp.com>, Marcel Holtmann <marcel@holtmann.org>, Luiz
+ Augusto von Dentz <luiz.dentz@gmail.com>, Nathan Chancellor
+	<nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
+Subject: [PATCH] Bluetooth: btnxpuart: Fix missing devm_request_irq() return
+ value check
+Thread-Topic: [PATCH] Bluetooth: btnxpuart: Fix missing devm_request_irq()
+ return value check
+Thread-Index: AQHbzg8Q5rIUOptd1UaUPum0zBbuBw==
+Date: Mon, 26 May 2025 07:23:24 +0000
+Message-ID:
+ <AS4PR04MB96927A45E8D179F69853F48FE765A@AS4PR04MB9692.eurprd04.prod.outlook.com>
+References: <20250525190020.27286-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250525190020.27286-2-krzysztof.kozlowski@linaro.org>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS4PR04MB9692:EE_|AM9PR04MB8569:EE_
+x-ms-office365-filtering-correlation-id: 25cd8538-2441-43bf-f711-08dd9c263383
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?dzKoqfmw8K3LP+eyqg+9kFazVsZwCJnvTh06lP9l50jBBAlCCP+Q70LJCZeN?=
+ =?us-ascii?Q?tVTb44gEm7azOc54Jt9q+coS56WLKqcaf/fwee/y4Fy58zmvILaVEhpYJjdD?=
+ =?us-ascii?Q?XvSS75gjT9KW2xywTJ/wOVS+kHYiCp5/azW4ZF3D9O2R3accA4nhhCWz3vUF?=
+ =?us-ascii?Q?dpA5boMElltR5x2sHTBdB6L+45jHSvrDBnFXtnnpwI45UkOO5QRg+6LZI4xB?=
+ =?us-ascii?Q?28ZNsntba//crC6x89+nYCI99ReZriZKwC4NCQ9uRh/pwy/9563LuHFnKuTA?=
+ =?us-ascii?Q?3C2x/zklIiZ3GvSiB3CfvK5umw3Bqt36vBB8fEAnXzNDMwwUlzCDHTP8Cspb?=
+ =?us-ascii?Q?3V/Vimt0JhvbbJBgUEcfnmN1bhVJWGM3ITD/kCkl8PCFB7ElM6a2HY6kWI1g?=
+ =?us-ascii?Q?1GsvkZ8p0YAZC+AMidUUzbfWf7QYZA2NEtLK5oscC8xO6tA0wFIekMbflAwJ?=
+ =?us-ascii?Q?D6j+aTr7hzVClrcn41F611XVRxpQ1Ybp/W/RAgvZmqjV1hP3S2atNw8bhpJg?=
+ =?us-ascii?Q?2YfV54xjEQqjM09Go9uhpCgnpDw9cCmEBAm6n/KLITftoUurvyXkVCyArfkH?=
+ =?us-ascii?Q?nWUTdtvbXPLFvQEBbJdSQowHz3uyLG59tS2TYeTTCfix1xovsHugnndyd3ys?=
+ =?us-ascii?Q?wpQjVb1ra9Mlxb+qGgMFvIRRDxIitQa4R8Ch39e1pHkOLB3aVA8cxIX9D9KH?=
+ =?us-ascii?Q?UcOHAsbVnThDNxxvvhlHUzh+M2HP7F0SeNyr+pErLXZoJsfGclrvZXqnzyA7?=
+ =?us-ascii?Q?6FuQ2sT1QYiMFQQb5uk1jKpSA97dTmdfQncFhyLyfW5/zUN3VuQIxeUc8XQt?=
+ =?us-ascii?Q?BNostGyyAZsJq44OT1wnlWq5AuUiPj0FEHnZIRyjcedWblY8D7+2XuN7BOYI?=
+ =?us-ascii?Q?mas/wksASd0qBmHiv6u0+cEBdXGTaJD8iu2ZYLRaL8Qxg5MNPMZdGwYchyQ1?=
+ =?us-ascii?Q?lSICwmPsW/S9yjCk6Nqn3DGsIiiBziI2x1RWc74GbPbkF67+xdABb9JIJGU9?=
+ =?us-ascii?Q?qCCXPFmlaGtFLuLa+N0dGRT6dz5Ne7iAVS6LvGTDVzeQpoeS48KmNnIc76ZR?=
+ =?us-ascii?Q?VIqNP6bACZDcvV6FaiztnRG0QQZ7TMy6PwJIbkv3dY2FVSS1PWnG3X/FN2Az?=
+ =?us-ascii?Q?L/im2omfOVoAAAr7+WadNtIuqIoIBp3FXWRtVN3hjza7sHR4L3uhXfsvv47c?=
+ =?us-ascii?Q?kOtTmIS2sFzI5eoxQYhhAV5uQF+xtLFGVUu+j7HXxeR5k85J2mCwZHjFX30G?=
+ =?us-ascii?Q?0adqxQWQdXpCPGuYdP96dRzDMBKmt1oJ/q9v+urguYMobufMqf0NUeE+fs+5?=
+ =?us-ascii?Q?h89bPqt8mH8zMEotXO/5tBlKaaRubkOH0udX/NbpTo0rRV7f7PmpeN92JuSg?=
+ =?us-ascii?Q?C1Z1POrW2NPmUVuWUSVUPG+jFAhJoxcqFDHImhTteqrshyThYlAEy46GNNw7?=
+ =?us-ascii?Q?tZNQPebgtv5gQ/QKDu3cyTD9TC3j6WJFyjv31ewx3V7vkW8obM5igpU20pA+?=
+ =?us-ascii?Q?R8MbKmbE3R7fsUM=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?eCuoiVO+ntNWKyB2FRLJhRwp+H01zfXwVVT7szkb2OrjsbSTpITAnZaO0WLE?=
+ =?us-ascii?Q?3/PW7ptoKbc8axJpxAG5Tro227wl4y2xVmnxxgJLJ/8mLjMTBUvynNQ8MPh7?=
+ =?us-ascii?Q?rvJKvtcLjzOgi951sArc10a73b5clFyz9ozvxCOgPAXGz6AqBotybts/ZFod?=
+ =?us-ascii?Q?/96t9O45Gb6PacOILB4bEiE1z2ChJCb2XTerITeXEpGnxF7V5aoL3RUv8lGq?=
+ =?us-ascii?Q?+qEvL5JP78FL/XJesyNsb+ipoaSjWYFyIk6sh+eDdLc40hSauCje8cepBojO?=
+ =?us-ascii?Q?uOjkIeARp50xIgS952WUQ3kbafifsORDncpcZkTwwxjrxEAYuc04QvxPM6c8?=
+ =?us-ascii?Q?DZBisTDUzyS4uCS0BHUMA8xSnk0YCsUbcqWxgWU7pbK/t7ToC0gWQ0od5qFg?=
+ =?us-ascii?Q?uO4oCAvZiUmjzIgaO98D1hDfJNShuK6mdGvnw5TjoNnVWE4P08YhE5LCpoSp?=
+ =?us-ascii?Q?fI/bLoafMJB8li7WOmCrR9rWqq+zdBwhK8S2xXee//OubW44hbATHs4NkQ8w?=
+ =?us-ascii?Q?U5PSuTglMHFD884i4oIAi8wdi1VqHqRv2vPBoEme9Wf4RUYJFLCh7tTx0lnb?=
+ =?us-ascii?Q?QZGV3+8Cr5uaTXgSrnsyfNsXdgVuQ+6QlkogdaWyUx6ICd/8EBnrkfJXF1w1?=
+ =?us-ascii?Q?t53Va2tVkKdK9Cjv0kVFdHhWn6h41aMzhcA2ED+YRkBujXuflJ1nUXfuo7NZ?=
+ =?us-ascii?Q?STb+gRiolHgC1167PYgoI6KuiwOsHDpKP+OdYOdcg4sxwRoK+xubXgCf6FS0?=
+ =?us-ascii?Q?Br94j53lKKLzNBePYDl2dlUM4Ppg1smlW+QF+1BpjSZ50DC2DNcevZIAV9yP?=
+ =?us-ascii?Q?Zzj+assKBOedNkN8nS+Kj71/WzwYedDIllzrW0evSryYFYo+pmaOKAyMUWOb?=
+ =?us-ascii?Q?0qJwLWT6fbhRBf9COQSnrBnIxFDxJ/RWiKKVEmRFYjoZp3L9jzzftwvJcfLL?=
+ =?us-ascii?Q?2pEBb8n7D/1MDV65X7LWhxHB2tnBFUEbsAMw4ocu5lu3i6NKN+Tac4ffDY2T?=
+ =?us-ascii?Q?8dfzm9e0wU1g5R+cytFQ1xLLjF7OCi6OsFO/vj/ofzqkD+i5BHlre6qU82uF?=
+ =?us-ascii?Q?R6Lkckul51CDXXRHaM9XdRmoqnAk2DRECxUTtOiCp8S5ub/dPha+yrC3TsLf?=
+ =?us-ascii?Q?5gcpoddL0qpcSq1ZM0ACEIeqvZhioVrzU63BylwXZl51m6PMtGtX4NIIrbXh?=
+ =?us-ascii?Q?PeU9D51Y5kH2F9mC6KO5wJ+5POtU01pkZp7Zs7Cx1xSKKdl9tnRtUC2eXo7F?=
+ =?us-ascii?Q?M0DOPTbAIBXP7mWTo4YK6Bfvv7aulM6r9KOCfFR5EIOKriosaMQYDouFoyOI?=
+ =?us-ascii?Q?qJ0ahtONCkjlsW5esL+t/49M8BazhJwEB/VpzbniZgCUwdxvWfQqu6NvCiyA?=
+ =?us-ascii?Q?iR2ije69O6dvLdSPTm3m2eB5yUNAXPsLthM5lFL2XIIhWiHqO3gpBSPv9LPC?=
+ =?us-ascii?Q?+uDnwIiPVK6Y2nIEBiYiw8QRJ3716PA4CNZZtA8V0JmVKDfLnR8GD61Q1n/o?=
+ =?us-ascii?Q?ftPAxyBbReuM0ne+VGNThG8nMvKmrlqfrIfxK6mAWjF+FGzOjegmulHwp4lZ?=
+ =?us-ascii?Q?8CJUaYIHuSE5gO2AA+Eob+W7yJh9gT4/Q5Uq7O8R?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520152436.474778-7-jens.wiklander@linaro.org>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25cd8538-2441-43bf-f711-08dd9c263383
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 May 2025 07:23:24.2856
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SYyUaR88/WKCR0bnhRqRmTJMXxNirvfDFY/8z0x4V5YdgjQoK2u9il3dzl1jWd0pVcrQ9QJrI9XvnvXJSgdHwFQ7HzgI+KBE1tAX4NqJiFc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8569
 
-On Tue, May 20, 2025 at 05:16:49PM +0200, Jens Wiklander wrote:
-> Add tee_shm_alloc_dma_mem() to allocate DMA memory. The memory is
-> represented by a tee_shm object using the new flag TEE_SHM_DMA_MEM to
-> identify it as DMA memory. The allocated memory will later be lent to
-> the TEE to be used as protected memory.
-> 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+ Hi Krzysztof,
+
+Thank you for the fix.
+
+Reviewed-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+
+Thanks,
+Neeraj
+
+> Return value of devm_request_irq() must be checked (function is even
+> annotated) and without it clang W=3D1 complains:
+>=20
+>   btnxpuart.c:494:6: error: unused variable 'ret' [-Werror,-Wunused-varia=
+ble]
+>=20
+> Setting up wakeup IRQ handler is not really critical, because the handler=
+ is
+> empty, so just log the informational message so user could submit proper =
+bug
+> report and silences the clang warning.
+>=20
+> Fixes: c50b56664e48 ("Bluetooth: btnxpuart: Implement host-wakeup
+> feature")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  drivers/tee/tee_shm.c    | 74 ++++++++++++++++++++++++++++++++++++++--
->  include/linux/tee_core.h |  5 +++
->  2 files changed, 77 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> index e1ed52ee0a16..92a6a35e1a1e 100644
-> --- a/drivers/tee/tee_shm.c
-> +++ b/drivers/tee/tee_shm.c
-> @@ -5,6 +5,8 @@
->  #include <linux/anon_inodes.h>
->  #include <linux/device.h>
->  #include <linux/dma-buf.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/highmem.h>
->  #include <linux/idr.h>
->  #include <linux/io.h>
->  #include <linux/mm.h>
-> @@ -13,9 +15,14 @@
->  #include <linux/tee_core.h>
->  #include <linux/uaccess.h>
->  #include <linux/uio.h>
-> -#include <linux/highmem.h>
->  #include "tee_private.h"
->  
-> +struct tee_shm_dma_mem {
-> +	struct tee_shm shm;
-> +	dma_addr_t dma_addr;
-> +	struct page *page;
-> +};
-> +
->  static void shm_put_kernel_pages(struct page **pages, size_t page_count)
->  {
->  	size_t n;
-> @@ -49,7 +56,14 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
->  	struct tee_shm *parent_shm = NULL;
->  	void *p = shm;
->  
-> -	if (shm->flags & TEE_SHM_DMA_BUF) {
-> +	if (shm->flags & TEE_SHM_DMA_MEM) {
-> +		struct tee_shm_dma_mem *dma_mem;
-> +
-> +		dma_mem = container_of(shm, struct tee_shm_dma_mem, shm);
-> +		p = dma_mem;
-> +		dma_free_pages(&teedev->dev, shm->size, dma_mem->page,
-> +			       dma_mem->dma_addr, DMA_BIDIRECTIONAL);
+>  drivers/bluetooth/btnxpuart.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.=
+c
+> index b34623a69b8a..6b13feed06df 100644
+> --- a/drivers/bluetooth/btnxpuart.c
+> +++ b/drivers/bluetooth/btnxpuart.c
+> @@ -533,6 +533,8 @@ static int ps_setup(struct hci_dev *hdev)
+>                                         ps_host_wakeup_irq_handler,
+>                                         IRQF_ONESHOT | IRQF_TRIGGER_FALLI=
+NG,
+>                                         dev_name(&serdev->dev), nxpdev);
+> +               if (ret)
+> +                       bt_dev_info(hdev, "error setting wakeup IRQ
+> + handler, ignoring\n");
+>                 disable_irq(psdata->irq_handler);
+>                 device_init_wakeup(&serdev->dev, true);
+>         }
+> --
+> 2.45.2
 
-Although the kernel bot already found a randconfig issue, it looks like
-we need to add Kconfig dependencies like HAS_DMA, DMA_CMA etc.
-
-Also, I was thinking if we should rather add a new TEE subsystem
-specific Kconfig option like: TEE_DMABUF_HEAPS which can then be used to
-select whatever dependency is needed as well as act as a gating Kconfig
-for relevant features.
-
--Sumit
-
-> +	} else if (shm->flags & TEE_SHM_DMA_BUF) {
->  		struct tee_shm_dmabuf_ref *ref;
->  
->  		ref = container_of(shm, struct tee_shm_dmabuf_ref, shm);
-> @@ -306,6 +320,62 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
->  }
->  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
->  
-> +/**
-> + * tee_shm_alloc_dma_mem() - Allocate DMA memory as shared memory object
-> + * @ctx:	Context that allocates the shared memory
-> + * @page_count:	Number of pages
-> + *
-> + * The allocated memory is expected to be lent (made inaccessible to the
-> + * kernel) to the TEE while it's used and returned (accessible to the
-> + * kernel again) before it's freed.
-> + *
-> + * This function should normally only be used internally in the TEE
-> + * drivers.
-> + *
-> + * @returns a pointer to 'struct tee_shm'
-> + */
-> +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> +				      size_t page_count)
-> +{
-> +	struct tee_device *teedev = ctx->teedev;
-> +	struct tee_shm_dma_mem *dma_mem;
-> +	dma_addr_t dma_addr;
-> +	struct page *page;
-> +
-> +	if (!tee_device_get(teedev))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	page = dma_alloc_pages(&teedev->dev, page_count * PAGE_SIZE,
-> +			       &dma_addr, DMA_BIDIRECTIONAL, GFP_KERNEL);
-> +	if (!page)
-> +		goto err_put_teedev;
-> +
-> +	dma_mem = kzalloc(sizeof(*dma_mem), GFP_KERNEL);
-> +	if (!dma_mem)
-> +		goto err_free_pages;
-> +
-> +	refcount_set(&dma_mem->shm.refcount, 1);
-> +	dma_mem->shm.ctx = ctx;
-> +	dma_mem->shm.paddr = page_to_phys(page);
-> +	dma_mem->dma_addr = dma_addr;
-> +	dma_mem->page = page;
-> +	dma_mem->shm.size = page_count * PAGE_SIZE;
-> +	dma_mem->shm.flags = TEE_SHM_DMA_MEM;
-> +
-> +	teedev_ctx_get(ctx);
-> +
-> +	return &dma_mem->shm;
-> +
-> +err_free_pages:
-> +	dma_free_pages(&teedev->dev, page_count * PAGE_SIZE, page, dma_addr,
-> +		       DMA_BIDIRECTIONAL);
-> +err_put_teedev:
-> +	tee_device_put(teedev);
-> +
-> +	return ERR_PTR(-ENOMEM);
-> +}
-> +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
-> +
->  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
->  			     int (*shm_register)(struct tee_context *ctx,
->  						 struct tee_shm *shm,
-> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
-> index 02c07f661349..925690e1020b 100644
-> --- a/include/linux/tee_core.h
-> +++ b/include/linux/tee_core.h
-> @@ -29,6 +29,8 @@
->  #define TEE_SHM_POOL		BIT(2)  /* Memory allocated from pool */
->  #define TEE_SHM_PRIV		BIT(3)  /* Memory private to TEE driver */
->  #define TEE_SHM_DMA_BUF		BIT(4)	/* Memory with dma-buf handle */
-> +#define TEE_SHM_DMA_MEM		BIT(5)	/* Memory allocated with */
-> +					/* dma_alloc_pages() */
->  
->  #define TEE_DEVICE_FLAG_REGISTERED	0x1
->  #define TEE_MAX_DEV_NAME_LEN		32
-> @@ -310,6 +312,9 @@ void *tee_get_drvdata(struct tee_device *teedev);
->   */
->  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
->  
-> +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
-> +				      size_t page_count);
-> +
->  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
->  			     int (*shm_register)(struct tee_context *ctx,
->  						 struct tee_shm *shm,
-> -- 
-> 2.43.0
-> 
