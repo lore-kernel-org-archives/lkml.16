@@ -1,136 +1,400 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4674E202F83;
-	Mon, 26 May 2025 14:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA64B7E110
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748271024; cv=none; b=NsobHpoFdE4P6bOYYoAs+wm8MZ75NM4hf1ZTy3VF/SJddYJgJMHoPYMdL1C8o+4g7A8ntOQd1XvwyyxrPFu+CLmWzCSZMJPqAebVTU+VIUfu+mFMEZCFl3hWEnTlxj+tzv/VlgeMFsKQD51obIB8M7iOKXO/J0G6IRQtXCd9A4k=
+	t=1748271057; cv=none; b=AQnkHmrytndcqNWEJFTPcjaDgp7sLAEn87YSGmdOvFkk1z61gZr+OdAzHtQNSLrTH4mW385HyO49gJkQ/SJva7l5j+O85aTPd2otJ3pgyaNh+I/RMDWzOMwpzhSYjqL7KnjDSnu7bjypprYA3+gLgdL2AMbCc4dlHlNGiUhra20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748271024; c=relaxed/simple;
-	bh=6aKzDgGB/ZUmFcoUldyOCp1+E10okRiX8GJYWNpjka0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PWmCzNoqBwN02WSz6hgmJHG0s/9dA4EU499/UJj2MxoWghB4HhxsSPED3e8swXS/dZVYObRnL277Kia7M32KzwHcu1hpFbd/8u+jDNEam164alH3fLew8jgXZqNfReXy/6Xt866mQJ9JJNUgkf3vgb/lvKg8AUdBxLRWu39EEyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lDnKj95H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zm8REmFi; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748271057; c=relaxed/simple;
+	bh=SR1VL8zItxi33n62dveHT8YdvSEGVx4qCBL60aK1xYQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CW7d/79HftmX/N2vDQi+snF2NycuyKzpuYvehphRYQrydEmzjayEDZxJhfS1N2afISd9rCUDX1pdZpHT2z/mrc98uXKZNMW96Ior0W0NLb4B7sVU7P3H8dZ+oHWeH9dq5KsqYBEulbe9hsdN5ctVVL5mlaLt9cedzRSzJJW+KEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GnEQcSAv; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lDnKj95H";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zm8REmFi"
-Date: Mon, 26 May 2025 16:50:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748271020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNlsAOL7ZgwI2HEsBSEBPxt6J5Za4EdYqqyFjUCPx+s=;
-	b=lDnKj95HzNnLs+kNUe+FsdhY6xmb8zMvOyt3YglhAP4AMP1McZ0Q0WRq30XvZ1dD8AHl96
-	EKaEYdE7+Ref10HJ7RgivJBYUoIUsl2/HFxLcm/jABo+S75ibkApABSHxCIJbFfnVBjWDY
-	+w1UuaI2jAV8MB58wsgr0q+Mz7ZsylyNpQx2A9VtnD3ifETfyqdJ2GaMyyH+bddcsTmG/R
-	tudzmruX3Dvk2rH3i+WuyqbrckCRdcT6XcuilC50BwB3QudmW8NcyzbMoEPnrTKXwyajek
-	8yUA+jn8dg70ny23F9a/XWbZYGT0vfmdXtz6XoTRslHHkwyOniU90HnYGL5o8g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748271020;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LNlsAOL7ZgwI2HEsBSEBPxt6J5Za4EdYqqyFjUCPx+s=;
-	b=zm8REmFiKPwOTZ24+PZoOb7jWmzgaIsmL406pqgMB9q9a/Alo73hYSk10LJpi6Wb0fJKVA
-	9XxmVxesYvMMHIAQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 09/11] kunit: uapi: Add example for UAPI tests
-Message-ID: <20250526164038-12259c68-586f-4a24-a814-8ffed5778742@linutronix.de>
-References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
- <20250407-kunit-kselftests-v2-9-454114e287fd@linutronix.de>
- <20250526-marvellous-abstract-koala-317cb4@l-nschier-aarch64>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GnEQcSAv"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q9xEQ9005911;
+	Mon, 26 May 2025 14:50:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=5JrTdx+ljPMAG0Y5WbWvSy5ZVhhf
+	pc6ReH9JOWW9VxQ=; b=GnEQcSAvik8781yEbqaNZR6q0YoJQ7uryWPQI9AzUAh4
+	WT78FN7rrCnNqnM07pPRaL0jP7LBIgLrKWRdB+YB9Bsl4J0ho9w1KaPT7s+RYUai
+	pgxPCK6NLotDLOMQIvxmko8xG3cK1LCYGpJbj0YDOLT0uCIwD/XRHuffJBLAD2Uw
+	RGA9Po5dhxK6BpQjHfht53qD4YS8PGQBGMEiZCUpzDVO3ETaDA9R60bZ6YuzWXpz
+	niJtG/d9ksmBJBQBV3ZSHK2pPFtzpkKWtYHZbIIX4VTHa/FnEFX37VWFcdxknZ7M
+	M6aXT9peYhEWlxK5uP/qtH6FM0kAZTwZX1ik5lfuaA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46v0p2dgkm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 14:50:29 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54QEoTnS031317;
+	Mon, 26 May 2025 14:50:29 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46v0p2dgkk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 14:50:29 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54QDxlM6007944;
+	Mon, 26 May 2025 14:50:28 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu52x92f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 26 May 2025 14:50:28 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54QEoOZY39452932
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 26 May 2025 14:50:24 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8E0FF2004B;
+	Mon, 26 May 2025 14:50:24 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 920D920040;
+	Mon, 26 May 2025 14:50:21 +0000 (GMT)
+Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 26 May 2025 14:50:21 +0000 (GMT)
+From: Donet Tom <donettom@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+        Zi Yan <ziy@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Nilay Shroff <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: [PATCH v6 1/5] drivers/base/node: Optimize memory block registration to reduce boot time
+Date: Mon, 26 May 2025 09:50:09 -0500
+Message-ID: <bc754a238aa91fa36be463985ccde66aac7055e7.1748270306.git.donettom@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250526-marvellous-abstract-koala-317cb4@l-nschier-aarch64>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9m5wHoaXNkHJTuqSw01lPpyfD2GpJKV9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDEyNCBTYWx0ZWRfXyJxD7Qy6E7vi 3GkPOIvF6XyFhrboyIFn/IVEYAo3Z6ae7qYFh1+3KWneBXT7WPRqSsmKxQA0D95jrAy4v9ggwjb AFpP3/cJnd3SgCUtvxBeNFYXZqVLZtYMlVoiJGxjog0nBMrXOth/OhPSkzEJ+bRkzZb/t+9Smgf
+ kGiKz+ypM9lVBpb03RMxb46eSpNimH7uQDE+c+9lXu86bXdqbJKqd+y0nIMpItrVTCoDYCqXujh +7VxBbu5UNd51wn84A+lxNlYnyUqIODgzx07TEHGO/ffFWtrNMmLtYfZyqqolUl5KDp4hWh4pbz HAiFkxJ3MQDj0C7gUIXOwXeayQw4buNDFFekYBmEgN5W3rXS2vg6Cnm2DF/QeJCgmieFShVYeS9
+ cyUHV062YL+Z5MI27KKvuEX+BGn099W0+1o0Go/yfduTM+0/TAO8Ys1UbnGdIac7Y1IhEm8Z
+X-Authority-Analysis: v=2.4 cv=Q7TS452a c=1 sm=1 tr=0 ts=68347fb5 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=Ikd4Dj_1AAAA:8 a=EyhWesA9RUnP0l8RRygA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: HFrxyEeSbPIE2STio0VbNFeiUntGRFKB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-26_07,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 clxscore=1015
+ malwarescore=0 adultscore=0 mlxscore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505260124
 
-On Mon, May 26, 2025 at 04:22:02PM +0200, Nicolas Schier wrote:
-> On Mon, Apr 07, 2025 at 09:42:46AM +0200, Thomas Weiﬂschuh wrote:
-> > Extend the example to show how to run a userspace executable.
-> > 
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > ---
-> >  lib/kunit/.kunitconfig         |  2 ++
-> >  lib/kunit/Makefile             |  9 ++++++++-
-> >  lib/kunit/kunit-example-test.c | 15 +++++++++++++++
-> >  lib/kunit/kunit-example-uapi.c | 22 ++++++++++++++++++++++
-> >  4 files changed, 47 insertions(+), 1 deletion(-)
-> 
-> 
-> Adding this diff allows 'make clean' to clean up the UAPI test binary:
-> 
-> 
-> diff --git a/lib/Makefile b/lib/Makefile
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -112,8 +112,6 @@ CFLAGS_REMOVE_test_fpu_impl.o += $(CC_FLAGS_NO_FPU)
->  # Some KUnit files (hooks.o) need to be built-in even when KUnit is a module,
->  # so we can't just use obj-$(CONFIG_KUNIT).
-> -ifdef CONFIG_KUNIT
-> -obj-y += kunit/
-> -endif
-> +obj-$(if $(CONFIG_KUNIT),y) += kunit/
+During node device initialization, `memory blocks` are registered under
+each NUMA node. The `memory blocks` to be registered are identified using
+the node‚Äôs start and end PFNs, which are obtained from the node's pg_data
 
-Wouldn't the following be sufficient?
+However, not all PFNs within this range necessarily belong to the same
+node‚Äîsome may belong to other nodes. Additionally, due to the
+discontiguous nature of physical memory, certain sections within a
+`memory block` may be absent.
 
-obj-y += kunit/
+As a result, `memory blocks` that fall between a node‚Äôs start and end
+PFNs may span across multiple nodes, and some sections within those blocks
+may be missing. `Memory blocks` have a fixed size, which is architecture
+dependent.
 
-The the kunit Makefile doesn't do anything if CONFIG_KUNIT=y and AFAIK for
-directories obj-m and obj-y should do the same.
+Due to these considerations, the memory block registration is currently
+performed as follows:
 
->  
->  ifeq ($(CONFIG_DEBUG_KOBJECT),y)
->  CFLAGS_kobject.o += -DDEBUG
-> 
-> 
-> 
-> plus the 'clean-files' addition below.
+for_each_online_node(nid):
+    start_pfn = pgdat->node_start_pfn;
+    end_pfn = pgdat->node_start_pfn + node_spanned_pages;
+    for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
+        mem_blk = memory_block_id(pfn_to_section_nr(pfn));
+        pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
+        pfn_mb_end = pfn_start + memory_block_pfns - 1
+        for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
+            if (get_nid_for_pfn(pfn) != nid):
+                continue;
+            else
+                do_register_memory_block_under_node(nid, mem_blk,
+                                                        MEMINIT_EARLY);
 
-<snip>
+Here, we derive the start and end PFNs from the node's pg_data, then
+determine the memory blocks that may belong to the node. For each
+`memory block` in this range, we inspect all PFNs it contains and check
+their associated NUMA node ID. If a PFN within the block matches the
+current node, the memory block is registered under that node.
 
-> > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-> > index 989933dab9ad2267f376db470b876ce2a88711b4..1b6be12676f89cafa34f0093d8136b36f4cf5532 100644
-> > --- a/lib/kunit/Makefile
-> > +++ b/lib/kunit/Makefile
-> > @@ -30,4 +30,11 @@ obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
-> >  obj-$(CONFIG_KUNIT_TEST) +=		assert_test.o
-> >  endif
-> >  
-> > -obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-test.o
-> > +userprogs +=				kunit-example-uapi
-> 
-> clean-files +=				kunit-example-uapi
+If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
+a binary search in the `memblock regions` to determine the NUMA node ID
+for a given PFN. If it is not enabled, the node ID is retrieved directly
+from the struct page.
 
-This shouldn't be necessary as $(userprogs) is automatically added to
-__clean-files in scripts/Makefile.clean.
+On large systems, this process can become time-consuming, especially since
+we iterate over each `memory block` and all PFNs within it until a match is
+found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
+overhead of the binary search increases the execution time significantly,
+potentially leading to soft lockups during boot.
 
-> > +kunit-example-uapi-userccflags :=	-static
-> > +kunit-example-uapi-nolibc :=		$(CONFIG_ARCH_HAS_NOLIBC)
-> > +blobs +=				kunit-example-uapi.blob.o
-> > +
-> > +obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-mod.o
-> > +kunit-example-mod-y +=			kunit-example-test.o
-> > +kunit-example-mod-$(CONFIG_KUNIT_UAPI) += kunit-example-uapi.blob.o
-> 
-> -- 
-> Nicolas Schier
+In this patch, we iterate over `memblock region` to identify the
+`memory blocks` that belong to the current NUMA node. `memblock regions`
+are contiguous memory ranges, each associated with a single NUMA node, and
+they do not span across multiple nodes.
+
+for_each_memory_region(r): // r => region
+  if (!node_online(r->nid)):
+    continue;
+  else
+    for_each_memory_block_between(r->base, r->base + r->size - 1):
+      do_register_memory_block_under_node(r->nid, mem_blk, MEMINIT_EARLY);
+
+We iterate over all memblock regions, and if the node associated with the
+region is online, we calculate the start and end memory blocks based on the
+region's start and end PFNs. We then register all the memory blocks within
+that range under the region node.
+
+Test Results on My system with 32TB RAM
+=======================================
+1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+
+Without this patch
+------------------
+Startup finished in 1min 16.528s (kernel)
+
+With this patch
+---------------
+Startup finished in 17.236s (kernel) - 78% Improvement
+
+2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
+
+Without this patch
+------------------
+Startup finished in 28.320s (kernel)
+
+With this patch
+---------------
+Startup finished in 15.621s (kernel) - 46% Improvement
+
+Acked-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Acked-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+
+---
+
+v5 -> v6
+
+1. Changed function name register_memory_blocks_under_node_early() to register_memory_blocks_under_nodes()
+2. Added memblock_get_region_node() to get the region node.
+
+v5 - https://lore.kernel.org/all/d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com/
+v4 - https://lore.kernel.org/all/f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com/
+v3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
+v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
+v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
+---
+---
+ drivers/base/memory.c  | 21 ++++-------------
+ drivers/base/node.c    | 51 ++++++++++++++++++++++++++++++++++++++++--
+ include/linux/memory.h | 19 +++++++++++++++-
+ include/linux/node.h   |  3 +++
+ 4 files changed, 74 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 19469e7f88c2..39fcc075a36f 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -22,6 +22,7 @@
+ #include <linux/stat.h>
+ #include <linux/slab.h>
+ #include <linux/xarray.h>
++#include <linux/export.h>
+ 
+ #include <linux/atomic.h>
+ #include <linux/uaccess.h>
+@@ -48,22 +49,8 @@ int mhp_online_type_from_str(const char *str)
+ 
+ #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+ 
+-static int sections_per_block;
+-
+-static inline unsigned long memory_block_id(unsigned long section_nr)
+-{
+-	return section_nr / sections_per_block;
+-}
+-
+-static inline unsigned long pfn_to_block_id(unsigned long pfn)
+-{
+-	return memory_block_id(pfn_to_section_nr(pfn));
+-}
+-
+-static inline unsigned long phys_to_block_id(unsigned long phys)
+-{
+-	return pfn_to_block_id(PFN_DOWN(phys));
+-}
++int sections_per_block;
++EXPORT_SYMBOL(sections_per_block);
+ 
+ static int memory_subsys_online(struct device *dev);
+ static int memory_subsys_offline(struct device *dev);
+@@ -632,7 +619,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+  *
+  * Called under device_hotplug_lock.
+  */
+-static struct memory_block *find_memory_block_by_id(unsigned long block_id)
++struct memory_block *find_memory_block_by_id(unsigned long block_id)
+ {
+ 	struct memory_block *mem;
+ 
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index cd13ef287011..20b6f4496e1b 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -20,6 +20,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/swap.h>
+ #include <linux/slab.h>
++#include <linux/memblock.h>
+ 
+ static const struct bus_type node_subsys = {
+ 	.name = "node",
+@@ -850,6 +851,47 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+ 			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
+ }
+ 
++/*
++ * register_memory_blocks_under_nodes : Register the memory blocks
++ *                 under the nodes.
++ *
++ * This function registers all memory blocks to their corresponding nodes
++ * based on the associated memory regions. Each memory region is tied to
++ * a specific node and does not span multiple nodes. Therefore, all memory
++ * blocks within a given region are considered to belong to that node. The
++ * function iterates through each memory region and registers the memory
++ * blocks contained within that region to the respective node. Since memory
++ * blocks can span across multiple regions (and hence multiple nodes), a
++ * single memory block may be registered under more than one node if it
++ * overlaps with regions belonging to different nodes.
++ */
++static void register_memory_blocks_under_nodes(void)
++{
++	struct memblock_region *r;
++
++	for_each_mem_region(r) {
++		const unsigned long start_block_id = phys_to_block_id(r->base);
++		const unsigned long end_block_id = phys_to_block_id(r->base + r->size - 1);
++		unsigned long block_id;
++		int nid = memblock_get_region_node(r);
++
++		if (!node_online(nid))
++			continue;
++
++		for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
++			struct memory_block *mem;
++
++			mem = find_memory_block_by_id(block_id);
++			if (!mem)
++				continue;
++
++			do_register_memory_block_under_node(nid, mem, MEMINIT_EARLY);
++			put_device(&mem->dev);
++		}
++
++	}
++}
++
+ void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+ 				       unsigned long end_pfn,
+ 				       enum meminit_context context)
+@@ -971,11 +1013,16 @@ void __init node_dev_init(void)
+ 
+ 	/*
+ 	 * Create all node devices, which will properly link the node
+-	 * to applicable memory block devices and already created cpu devices.
++	 * to already created cpu devices.
+ 	 */
+ 	for_each_online_node(i) {
+-		ret = register_one_node(i);
++		ret =  __register_one_node(i);
+ 		if (ret)
+ 			panic("%s() failed to add node: %d\n", __func__, ret);
+ 	}
++
++	/*
++	 * Link the node to memory block devices
++	 */
++	register_memory_blocks_under_nodes();
+ }
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index 12daa6ec7d09..2a61088e17ad 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -171,12 +171,30 @@ struct memory_group *memory_group_find_by_id(int mgid);
+ typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
+ int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
+ 			       struct memory_group *excluded, void *arg);
++struct memory_block *find_memory_block_by_id(unsigned long block_id);
+ #define hotplug_memory_notifier(fn, pri) ({		\
+ 	static __meminitdata struct notifier_block fn##_mem_nb =\
+ 		{ .notifier_call = fn, .priority = pri };\
+ 	register_memory_notifier(&fn##_mem_nb);			\
+ })
+ 
++extern int sections_per_block;
++
++static inline unsigned long memory_block_id(unsigned long section_nr)
++{
++	return section_nr / sections_per_block;
++}
++
++static inline unsigned long pfn_to_block_id(unsigned long pfn)
++{
++	return memory_block_id(pfn_to_section_nr(pfn));
++}
++
++static inline unsigned long phys_to_block_id(unsigned long phys)
++{
++	return pfn_to_block_id(PFN_DOWN(phys));
++}
++
+ #ifdef CONFIG_NUMA
+ void memory_block_add_nid(struct memory_block *mem, int nid,
+ 			  enum meminit_context context);
+@@ -188,5 +206,4 @@ void memory_block_add_nid(struct memory_block *mem, int nid,
+  * can sleep.
+  */
+ extern struct mutex text_mutex;
+-
+ #endif /* _LINUX_MEMORY_H_ */
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 2b7517892230..485370f3bc17 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -120,6 +120,9 @@ static inline void register_memory_blocks_under_node(int nid, unsigned long star
+ 						     enum meminit_context context)
+ {
+ }
++static inline void register_memory_blocks_under_nodes(void)
++{
++}
+ #endif
+ 
+ extern void unregister_node(struct node *node);
+-- 
+2.43.5
+
