@@ -1,75 +1,144 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DFA13B298
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 01:14:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE251B661;
+	Mon, 26 May 2025 01:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748222093; cv=none; b=fni91PGrv46y6MNIHs9658nAIImA91G3HBP5Q1QZnVJW6p/l91eIoRQnORC63EX8jGeIe1e+mjKpvAN9u+OXNrCrLOX31+hXBXiJYdvM4Y+rPQccDZvS/2ck5DFkmmArfNxXVfAebteyequfRyLkgmcE1OoV9cT5x7Jey6CZkYE=
+	t=1748222146; cv=none; b=dcdeVdk+cIZjlAZnQ044a0Spks+Ae8CYcATiydwgcMPDxqXgBkMEfgJKMmemAuoGcFf5XKmyfWEGM1hLvEcF3kO7ldl+QJGKPAOjh1NK43/EBtumkouVwbq4kfOD/s0O0Abwm5XMeTe5P2VmHVvuBiQzXEgOTSdC2UQSsB3/CiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748222093; c=relaxed/simple;
-	bh=wK8iotMm7YuIyvWzMfRLm+zMPkx9dIkY5oQlX+KyoAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m/AzjBFmdUywCBCtEKjgAuX2R6Zo+WCsh/L9VxIDhthVx1WPkjEuWtxwYTZj1vg4j0n+JKDH0Qmv21zDMGkjrJQxjyY9T/uTCHHF3OxK3Ye2yIIu5I81vRw5MWBLAEoYXQiU/rrG6/a4cCMNtQvyaSRsqpqXWXHdk8vFy+dEUXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gvernon.com; spf=pass smtp.mailfrom=gvernon.com; dkim=pass (2048-bit key) header.d=gvernon.com header.i=@gvernon.com header.b=J9QcUn8B; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gvernon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gvernon.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gvernon.com header.i=@gvernon.com header.b="J9QcUn8B"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gvernon.com; s=key1;
-	t=1748222079;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aYqvaegJpg9+7eYaLc+ma0QkJLUvpDi0F26E0i+3CRU=;
-	b=J9QcUn8BTAzqe3Dpls4aaGGyrnjVBbjaY0Y6Ex7yp92AV2HLbDxUqRVuT9/6jvV88NQRnh
-	eO1crmCU8OQltDm7Vk0+RbW9unKWPFfucz4lWjAN7880esFK/w/q84hW5oIXITcJM3+Veh
-	bSUPaPXeAin3hnVkApRxm92+jQlyKStwgn3+0CKH33+sZCGYznHauW1LgTam51jS3K9oBB
-	iC39JcInZsSKYwCfCoA+AYEOaPKwABjq7F9u4SLpqPRAcK6zY6ja6NjcCyNSk+J02S6210
-	N8xnuUBPS0Mmxonkkl2qWtYTyn/BQUiPxcTPZG+u9VjKI+3o3kwi+zKSlAJYIg==
-From: George Anthony Vernon <contact@gvernon.com>
-To: dmitry.torokhov@gmail.com,
-	corbet@lwn.net,
-	skhan@kernel.org
-Cc: linux-input@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	George Anthony Vernon <contact@gvernon.com>
-Subject: [PATCH 0/3] Multiple fixes to Amiga joystick documentation
-Date: Mon, 26 May 2025 02:14:40 +0100
-Message-ID: <20250526011443.136804-1-contact@gvernon.com>
+	s=arc-20240116; t=1748222146; c=relaxed/simple;
+	bh=kLgHflASkk+AOoCMgwo9BpScIU/wjvk0wobHRl8/3gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BHn9/8LfSio/yGBIDEta+Diu8jMALnaRN83rMTt8QyUBioxP+AqVEOhGdc+CcaD5GY6znDOq0scl0N072/rubE94fG+sSlLWNi+NW8qpUnicllxDikRYUTQ8yAivP22HNexibCmt0KlWXGKrfpzrjn9NOa4KkFOQLhDnt77x6uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b5HrZ2CCYzYQtG9;
+	Mon, 26 May 2025 09:15:42 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 71C3B1A018D;
+	Mon, 26 May 2025 09:15:41 +0800 (CST)
+Received: from [10.67.109.79] (unknown [10.67.109.79])
+	by APP3 (Coremail) with SMTP id _Ch0CgDHG8a6wDNooAxJNQ--.29873S2;
+	Mon, 26 May 2025 09:15:39 +0800 (CST)
+Message-ID: <faa23d11-4387-4952-bd29-034b4558668c@huaweicloud.com>
+Date: Mon, 26 May 2025 09:15:37 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] padata: avoid UAF for reorder_work
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
+ nstange@suse.de, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+ chenridong@huawei.com, wangweiyang2@huawei.com
+References: <20250110061639.1280907-1-chenridong@huaweicloud.com>
+ <20250110061639.1280907-4-chenridong@huaweicloud.com>
+ <aC_yoWXJcsLxfLR4@gondor.apana.org.au>
+Content-Language: en-US
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <aC_yoWXJcsLxfLR4@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgDHG8a6wDNooAxJNQ--.29873S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF4kCFWrJrWUtr4kAF1xuFg_yoW8tryxpr
+	WYkay7tF48trs7G3s2qryaq3W093yfZw13Krs7K34rC390qry0vr42vrWa9Fnrurn7Ar1j
+	kFs5ZrnIv3yqvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUylb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
+	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
+	67AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUwxhLUUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-Hi,
 
-I've made a few fixes to the Amiga joystick documentation. I discovered
-the unintentional spanning cell when experimenting with the Sphinx
-manpage builder which emits warnings for those.
 
-I've split these fixes up into logically separated commits which I hope
-make them easy to review. Please do let me know if I've done so in poor
-taste.
+On 2025/5/23 11:59, Herbert Xu wrote:
+> On Fri, Jan 10, 2025 at 06:16:39AM +0000, Chen Ridong wrote:
+>> From: Chen Ridong <chenridong@huawei.com>
+>>
+>> Although the previous patch can avoid ps and ps UAF for _do_serial, it
+>> can not avoid potential UAF issue for reorder_work. This issue can
+>> happen just as below:
+>>
+>> crypto_request			crypto_request		crypto_del_alg
+>> padata_do_serial
+>>   ...
+>>   padata_reorder
+>>     // processes all remaining
+>>     // requests then breaks
+>>     while (1) {
+>>       if (!padata)
+>>         break;
+>>       ...
+>>     }
+>>
+>> 				padata_do_serial
+>> 				  // new request added
+>> 				  list_add
+>>     // sees the new request
+>>     queue_work(reorder_work)
+>> 				  padata_reorder
+>> 				    queue_work_on(squeue->work)
+>> ...
+>>
+>> 				<kworker context>
+>> 				padata_serial_worker
+>> 				// completes new request,
+>> 				// no more outstanding
+>> 				// requests
+>>
+>> 							crypto_del_alg
+>> 							  // free pd
+>>
+>> <kworker context>
+>> invoke_padata_reorder
+>>   // UAF of pd
+> 
+> Looking back this explanation is actually broken.  The call
+> crypto_del_alg does not free anything immediately.  It can only
+> start freeing things once the final tfm user goes away.  Any crypto
+> request of that tfm must have completed before that happens.
+> 
+> If not there is a serious bug in the Crypto API.
+> 
+> So if crypto_del_alg is leading to a freeing of the pd while there
+> are still outstanding users of that tfm, then this points to a bug
+> in the Crypto API and not padata.
+> 
+> Can you still reproduce this bug easily if you revert the patches
+> in this series? If so we should be able to track down the real bug.
+> 
+
+Unfortunately, I did not reproduce this bug, It was mentioned:
+https://lore.kernel.org/all/20221019083708.27138-6-nstange@suse.de/
+
+We through that the kworker is asynchronous, and this scenarios may happen.
 
 Thanks,
+Ridong
 
-George
-
-George Anthony Vernon (3):
-  input: docs: Fix broken table formatting
-  input: docs: Correct Amiga 4-jstick adapter pinout
-  input: docs: Fix Amiga joysticks grammar & formatting
-
- Documentation/input/devices/amijoy.rst | 126 +++++++++++++------------
- 1 file changed, 68 insertions(+), 58 deletions(-)
-
--- 
-2.49.0
+> To recap, every tfm holds a ref count on the underlying crypto_alg.
+> All crypto requests must complete before a tfm can be freed, which
+> then leads to a drop of the refcount on crypto_alg.
+> 
+> A crypto_alg can only be freed when its ref count hits zero.  Only
+> then will the associated pd be freed.
+> 
+> So what's missing in the above picture is the entity that is freeing
+> the tfm, thus leading to the actual freeing of the alg and pd.
+> 
+> Thanks,
 
