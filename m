@@ -1,46 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256FA243968;
-	Mon, 26 May 2025 21:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEFB84D13;
+	Mon, 26 May 2025 21:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748293787; cv=none; b=RCRA0xgURJwIWkJESsiKNnTl4ZzgKRYu5C/StMMxNgkQvq4N4feo7CATXb9djkqN66PeqhykUGMfi6X7QbvrLoc5258zvptd5vjJUhBxHAlVy5bn95iLlKhsNpy94TXKoIdjTVoZAtTDCXM8+ZmvivrcwJAJLzM7GgX0uXe+7HM=
+	t=1748293855; cv=none; b=UK66nae/HypmxHPKynbWjpXRQmaoIWSYIqssIoyMqYkKUnhw7Cfd/rNXHLCu8vF3QGoCHOBWH4jRgUBIHNSv2yeTrYjcnxzvThaNoaFsPRgSp9/ozXTd8V6awwGW6Gydz3ZKjdCVRxpc8xooi+LwzJsk6Jaf4bmbWqALgs9FOBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748293787; c=relaxed/simple;
-	bh=gYQU/YXDeNgT1BMcNObhy08nWBlr86fWpjeWwTbkqzA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=K6wIhFGxOxeO2b+/Sau8CUy/22IWCci6kviEBsnNAwt/yh80NUv2IlE2+JqWFPZzblF55bcOBSjjKF67ZlBrP7s7xefCMvFam4OD37FN9ThqSVmTsFpaKaEg49PWneRf+u/M3rMvr7dYt1HgxgnIM0BMDMcTCp4kWPW5xUDE3vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpCfB67s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748293855; c=relaxed/simple;
+	bh=NQv95qdsZDm7Shp0KvjsvOQwl+iLO5pD5VPSgd0VJI4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NcGfWEx0ubZ2X0udMiYAC9uUUFXa6tHuEXdQv++6m0dt0djYD15TSMZRmEtkHCGjxkm1brhl0pTKpAwtGnC2OeCOS1N9gb439MLBg8Uk/qX+CcgHHoL6QF/xP7wBRkpiOyiGpiRXWn6WlxDaELqYYAcesIMzCTI6hMchasphjaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EeYVi+AE; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpCfB67s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66F4FC4CEE7;
-	Mon, 26 May 2025 21:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748293785;
-	bh=gYQU/YXDeNgT1BMcNObhy08nWBlr86fWpjeWwTbkqzA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dpCfB67sFVtj6tSQK8gZ8Aehs7F/HI3g5XG60XKlTbv5T3TPIglcuhMt88s/CgFzK
-	 rkO+iZxgtRgEHYpweQqMcSJtg0ovk7eoI+r7ssVXIa9HsmboXMIfqPxeHBWO/ZSH30
-	 lx8p/RXSHVW1ILjdbjsjR84gyeg61J5t/9tK4YEgayYw5Nhu3nm6QJv0yfxZSY/7W5
-	 7UxjOTJ2+fVJNFbuvvei1hr4DQT165rZkB3HhmZM0v640wCu/cZZbxfFpHkKo6Lnqn
-	 WealLXRjgDZboUkA+sdvr63MwjSqsLgs1iuqT6CUNRJR5NFYdMnWZG0xbrtLqfbKRZ
-	 rr8IhXr/U62FQ==
-From: SeongJae Park <sj@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeYVi+AE"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso28122005e9.2;
+        Mon, 26 May 2025 14:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748293852; x=1748898652; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GBGIx7uWt3EonOMrx30eCVRGWzbw2WhynVite24Hqeg=;
+        b=EeYVi+AE0qH0ZCjzKQ8iHvXv7cprRcTow33nbdlthJVxHzW66fdJTu2GkRFpuDmuvs
+         CMidSdttr21i7B7+pBjf6DYxJJEwE5DJKeREcxpUd2ijO7Ipo/6DGs7F3OLmJ3CDKijS
+         ekEtVZTbdIQd9svWleMMuPgcCRPHf5RaG0c+Ptb/Tz+RnEC3Ecg3GE95xJiSfeMYAdFG
+         qhyVLs3NGNw29jON17WIA+Om58yzxJ2X3cNgOiY228QvTnEysfD4hcxVRygiCX1kzvbb
+         Azfw85rFkrKPQFKeZgcA1/hjWSFrKzBbWz+++S/2JlSIs/1B03jYybJlZvE69LNX4Avk
+         +6+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748293852; x=1748898652;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GBGIx7uWt3EonOMrx30eCVRGWzbw2WhynVite24Hqeg=;
+        b=XM4GUE1wZrSr7CJY3luIClYpE0WBCcJ3thgoHSMATnROOED2+g5lbWlvxbJBnZ3+4P
+         0sllMMy6aBCMf/67aigg0z4xFzaFFhncn/Qf07V+XED2P6vA9yS4XruKFA2hIB6pIYLm
+         D+/DIsGcrC+KS6ZqLi4+K+Alov2FU8XUZyhQuasiDEc7NaYhBSvqHIqaObpqT8nxgPhI
+         8G7QmxhGNBUwQsjkXNxL8LxW69LTgF9xC5Fn2oNsbOaLpt9xH3zP72pXAQ+sudYsfEvA
+         0MvurAckOXusfNUBt8vTFMhK9qHVALtgvBZOlnJv4LVE79Yh9gIHW1l/2g9cxO9xN030
+         lgVg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5h3+SuQJ0PLo+Y3/bG9kCHcm8tykktfj+XYO8zMZ8JyIS/X18e6o1fUOvhrLqogHx8eYbJOdFOWew+2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbZwc4pwFzqvwNRJLxbNMX97FxXwdkWwC4hl4SDA7fE5xz4gIG
+	k6AilndlzX40KuBQBLeijqKAvczrA16LUS+3FjuungFBorEZefsa0I6yrPNRig==
+X-Gm-Gg: ASbGnctk7JxYVHy1uqpgaZbIaGePAzp6eCB7tSBfD44zh9b3N2CNCRAXBAeOJXx7IV7
+	F5cOI27KwcbFivJIt3LnEBTNql+dFKEtSVRvwjdQU03vSkDInuJTEVxTHAd8pMYNJ3dInWH0KKC
+	BDW2mwOXnlqXkMyEVQ2Q8yy2dBJ0sloJYW+20wizS4AHj9elvySd1O3JikCzP9gF/R6AqhvnJGG
+	E3YfRmYhQLxoWBW6/ZpI4HUZHdUdlEuQRue0E9qd9FF9h/CB+TXV1TNlB5zS05c0vP2eOyqQF/A
+	oz6GFd2dZN9SNNQ5nI9Z/akP1K/aV0EtqSjtFbTrnJhS84fpTJPHQ8cgNvduWG8+qF2MK0iyx/B
+	W+UPbkqH9mCY4
+X-Google-Smtp-Source: AGHT+IF+FFqC1DQtqV1gqOYkFWdXPnoibRiEGnuA8xYE/v2oRafxLw8d58e0YatLVI8WyHR3jm9EBQ==
+X-Received: by 2002:a05:600c:5618:b0:441:a715:664a with SMTP id 5b1f17b1804b1-44f840b38bcmr16410075e9.20.1748293851445;
+        Mon, 26 May 2025 14:10:51 -0700 (PDT)
+Received: from localhost.localdomain ([154.183.23.207])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4cc932836sm8728503f8f.39.2025.05.26.14.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 14:10:51 -0700 (PDT)
+From: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+To: linux-doc@vger.kernel.org
+Cc: willy@infradead.org,
+	linux-kernel-mentees@lists.linux.dev,
+	shuah@kernel.org,
+	corbet@lwn.net,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 4/4] Docs/admin-guide/mm/damon: add DAMON_STAT usage document
-Date: Mon, 26 May 2025 14:09:36 -0700
-Message-Id: <20250526210936.2744-5-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250526210936.2744-1-sj@kernel.org>
-References: <20250526210936.2744-1-sj@kernel.org>
+	masahiroy@kernel.org,
+	Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
+Subject: [PATCH v2] docs: symbol-namespaces: fix reST warning with literal block
+Date: Tue, 27 May 2025 00:10:39 +0300
+Message-ID: <20250526211039.163449-1-khaledelnaggarlinux@gmail.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
+References: <20250526184401.33417-1-khaledelnaggarlinux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,99 +81,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document DAMON_STAT usage and add a link to it on DAMON admin-guide
-page.
+Use a literal block for the EXPORT_SYMBOL_GPL_FOR_MODULES() example to
+avoid a Docutils warning about unmatched '*'. This ensures correct rendering
+and keeps the source readable.
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
+Warning:
+Documentation/core-api/symbol-namespaces.rst:90: WARNING: Inline emphasis start-string without end-string. [docutils]
+
+Signed-off-by: Khaled Elnaggar <khaledelnaggarlinux@gmail.com>
 ---
- Documentation/admin-guide/mm/damon/index.rst |  1 +
- Documentation/admin-guide/mm/damon/stat.rst  | 69 ++++++++++++++++++++
- 2 files changed, 70 insertions(+)
- create mode 100644 Documentation/admin-guide/mm/damon/stat.rst
 
-diff --git a/Documentation/admin-guide/mm/damon/index.rst b/Documentation/admin-guide/mm/damon/index.rst
-index bc7e976120e0..3ce3164480c7 100644
---- a/Documentation/admin-guide/mm/damon/index.rst
-+++ b/Documentation/admin-guide/mm/damon/index.rst
-@@ -14,3 +14,4 @@ access monitoring and access-aware system operations.
-    usage
-    reclaim
-    lru_sort
-+   stat
-diff --git a/Documentation/admin-guide/mm/damon/stat.rst b/Documentation/admin-guide/mm/damon/stat.rst
-new file mode 100644
-index 000000000000..4c517c2c219a
---- /dev/null
-+++ b/Documentation/admin-guide/mm/damon/stat.rst
-@@ -0,0 +1,69 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+Data Access Monitoring Results Stat
-+===================================
-+
-+Data Access Monitoring Results Stat (DAMON_STAT) is a static kernel module that
-+is aimed to be used for simple access pattern monitoring.  It monitors accesses
-+on the system's entire physical memory using DAMON, and provides simplified
-+access monitoring results statistics, namely idle time percentiles and
-+estimated memory bandwidth.
-+
-+Monitoring Accuracy and Overhead
-+================================
-+
-+DAMON_STAT uses monitoring intervals :ref:`auto-tuning
-+<damon_design_monitoring_intervals_autotuning>` to make its accuracy high and
-+overhead minimum.  It auto-tunes the intervals aiming 4 % of observable access
-+events to be captured in each snapshot, while limiting the resulting sampling
-+events to be 5 milliseconds in minimum and 10 seconds in maximum.  On a few
-+production server systems, it resulted in consuming only 0.x % single CPU time,
-+while capturing reasonable quality of access patterns.
-+
-+Interface: Module Parameters
-+============================
-+
-+To use this feature, you should first ensure your system is running on a kernel
-+that is built with ``CONFIG_DAMON_STAT=y``.  The feature can be enabled by
-+default at build time, by setting ``CONFIG_DAMON_STAT_ENABLED_DEFAULT`` true.
-+
-+To let sysadmins enable or disable it at boot and/or runtime, and read the
-+monitoring results, DAMON_STAT provides module parameters.  Following
-+sections are descriptions of the parameters.
-+
-+enabled
-+-------
-+
-+Enable or disable DAMON_STAT.
-+
-+You can enable DAMON_STAT by setting the value of this parameter as ``Y``.
-+Setting it as ``N`` disables DAMON_STAT.  The default value is set by
-+``CONFIG_DAMON_STAT_ENABLED_DEFAULT`` build config option.
-+
-+estimated_memory_bandwidth
-+--------------------------
-+
-+Estimated memory bandwidth consumption (bytes per second) of the system.
-+
-+DAMON_STAT reads observed access events on the current DAMON results snapshot
-+and converts it to memory bandwidth consumption estimation in bytes per second.
-+The resulting metric is exposed to user via this read-only parameter.  Because
-+DAMON uses sampling, this is only an estimation of the access intensity rather
-+than accurate memory bandwidth.
-+
-+memory_idle_ms_percentiles
-+--------------------------
-+
-+Per-byte idle time (milliseconds) percentiles of the system.
-+
-+DAMON_STAT calculates how long each byte of the memory was not accessed until
-+now (idle time), based on the current DAMON results snapshot.  If DAMON found a
-+region of access frequency (nr_accesses) larger than zero, every byte of the
-+region gets zero idle time.  If a region has zero access frequency
-+(nr_accesses), how long the region was keeping the zero access frequency (age)
-+becomes the idle time of every byte of the region.  Then, DAMON_STAT exposes
-+the percentiles of the idle time values via this read-only parameter.  Reading
-+the parameter returns 101 idle time values in milliseconds, separated by comma.
-+Each value represents 0-th, 1st, 2nd, 3rd, ..., 99th and 100th percentile idle
-+times.
--- 
-2.39.5
+Changes in v2:
+- Use 'For example::' to create a literal block, suggested by Matthew Wilcox.
+
+---
+ Documentation/core-api/symbol-namespaces.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/core-api/symbol-namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
+index f7cfa7b73e97..32fc73dc5529 100644
+--- a/Documentation/core-api/symbol-namespaces.rst
++++ b/Documentation/core-api/symbol-namespaces.rst
+@@ -85,7 +85,7 @@ namespace cannot be imported.
+ The macro takes a comma separated list of module names, allowing only those
+ modules to access this symbol. Simple tail-globs are supported.
+
+-For example:
++For example::
+
+   EXPORT_SYMBOL_GPL_FOR_MODULES(preempt_notifier_inc, "kvm,kvm-*")
+
+--
+2.47.2
+
