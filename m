@@ -1,132 +1,71 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498F13595E
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 08:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D001DF97C;
+	Mon, 26 May 2025 08:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748247088; cv=none; b=cBrzK3zXwH+9iuDnQ2dEyMaZbyA2GUwNLZb6XoANMeUR0eZtm/Z59iM1jhIPXwaq2KxIRlYWftS5M+F7ifojgBnANhH23YT7J6RmTtjt7Y+SV0+VqPYlhHZSpQVGBAff4W5yuIc1Z92xnYzANavHtOshyQPK42fD0C9VGYsm0P8=
+	t=1748247096; cv=none; b=oCNASIfS3+Jksj+oTS4QLhkxqJvtCa0R7O4IC9XWRZGwtqGncCdgNffQuFxInCzRndLIP1dYnOob7r6p0i0A9VxhmFyhjzKUh7zrVk+5+02te5FZx6q1qcohZDDNW6nZ2AijKmMVKFJJ1ewI1RKkJYcWvZq7Hlxo+xnziJ0K20Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748247088; c=relaxed/simple;
-	bh=SMANpNFuTSfNaRqYgZhkf6SopH9aDDfivDb5cru5GU4=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=h0H7fXyvwaE1lpyrBmPvUrA+Ap690aljUc23opL87VsSDdupAIHB9gwLSyu/7NcrCVkuLQ3wPzTWiMtSJdKCGtsyXaqX1+P83uTkBqo0Ww2SCcBw8KCpQqnYve5JlptPvNeXv/jiHBKh4koxlPti0htJ/JyeOmi2cC3P3vVW67c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NwymsCZ4; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748247096; c=relaxed/simple;
+	bh=NxBQi95Sd6kLf8zT6L+TAoUucgvACen/25JQI/ufpi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNG4cxVLLvjMa6lSnlUjqCtNtiK0/a9IVzrx48ZQVRS5a4eFThT5ABkFpZqfmbnA7XXKVTcQMe3hGi0meqXpVel0/x8rAyaDu3Y2lg5lrXixBcy4Hyc8InlKMwgYvzUqRLOej/b4XGYSkxTponbl+DwqNMeIjIhJUiEZHJMi6gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XN1LAtxl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NwymsCZ4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XN1LAtxl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4BD3C4CEE7;
+	Mon, 26 May 2025 08:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748247095;
+	bh=NxBQi95Sd6kLf8zT6L+TAoUucgvACen/25JQI/ufpi0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XN1LAtxlNzPEyPUsavTAO9GL3aVrZHQ6B58N9Z7nq8RYw/SAzgbHpzv7v7qn2q1LO
+	 eouE2oZ9d+I8xaowss4ryXorN2rla0dRYMzKPaE87rC9FZp0A6BwomIcPL7u3KB220
+	 ajHUC8lC020YzWKCLhz5DDjcGRfI2ptjTl0Yrt6LRV3vppxS9lUNKTu5HkiwMSJKwI
+	 8Dxxa9rEN7NDxpv7ZA4SZ9sKKyQLsoHuNRY7AmWvhxe6fHzDtXZTMWbOCXHbFHLCeJ
+	 deWgCikZkUAnxEraxuwF+bLF+sLUfYqHlPsbtn7gE5MXWsWVwZB0q1jM0i6GrwCBFv
+	 3mAjUxWl1vdzw==
+Date: Mon, 26 May 2025 10:11:32 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Damien Le Moal <dlemoal@kernel.org>,
+	Alexander Roman <monderasdor@gmail.com>, linux-ide@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] ahci: enhance error handling in ahci_init_one
+Message-ID: <aDQiNEfh2i-XTAxs@ryzen>
+References: <f2db43ab-97d0-4731-9b51-18876f342b42@kernel.org>
+ <20250522102653.1169-1-monderasdor@gmail.com>
+ <7533f274-dcc9-42a5-9e5a-74019255fd3c@kernel.org>
+ <C819CAA3-3F8B-44A3-BD65-82B06378839E@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748247082;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J2R13Ebv4F2pxOEGG5K0h8rA8GFvT2XDnU+7l2xRuSo=;
-	b=NwymsCZ4pbPB1sXcEso4ZFoqU2vQF7drBm1N0vl/NxTIxRYq6naoHD3V6WHQbOzVpBej38
-	9mvghyT1zleU9+VNnyUq17QlnFqmruMvXc5LcNzFcw/jMm1iW90FJ9396/z90tFUysU2Ya
-	d6LWwP0uORCfyVCOV++iVnp8SnJZmEQ=
-Date: Mon, 26 May 2025 08:11:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Yajun Deng" <yajun.deng@linux.dev>
-Message-ID: <fad26dc95cbe08a87b30d98a55b7e3d987683589@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH net-next] net: phy: Add c45_phy_ids sysfs entry
-To: "Andrew Lunn" <andrew@lunn.ch>
-Cc: hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <2eec1d17-a6d1-4859-9cc9-43eeac23edbd@lunn.ch>
-References: <20250523132606.2814-1-yajun.deng@linux.dev>
- <2eec1d17-a6d1-4859-9cc9-43eeac23edbd@lunn.ch>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C819CAA3-3F8B-44A3-BD65-82B06378839E@kernel.org>
 
-May 23, 2025 at 9:55 PM, "Andrew Lunn" <andrew@lunn.ch> wrote:
+Hello Alexander,
+
+On Sun, May 25, 2025 at 12:10:07AM +0200, Niklas Cassel wrote:
+> >> @@ -1619,60 +1619,72 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >>  	VPRINTK("ahci_init_one enter\n");
+> 
+> There is no VPRINTK() here since a long time ago.
+> 
+> So this must be based on some ancient kernel version.
+> 
+> Please base your patches on:
+> https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=for-next
+
+Sorry, but I forgot to mention, please don't use the In-Reply-To: header
+to reference older versions of your patch.
+
+To quote Submitting Patches, it creates an 'unmanageable forest':
+https://docs.kernel.org/process/submitting-patches.html#explicit-in-reply-to-headers
 
 
-
->=20
->=20>=20
->=20> +What: /sys/class/mdio_bus/<bus>/<device>/c45_phy_ids
-> >=20
->=20>  +Date: May 2025
-> >=20
->=20>  +KernelVersion: 6.16
-> >=20
->=20>  +Contact: netdev@vger.kernel.org
-> >=20
->=20>  +Description:
-> >=20
->=20>  + This attribute contains the 32-bit PHY Identifier as reported
-> >=20
->=20>  + by the device during bus enumeration, encoded in hexadecimal.
-> >=20
->=20>  + These C45 IDs are used to match the device with the appropriate
-> >=20
->=20>  + driver.
-> >=20
->=20
-> https://docs.kernel.org/filesystems/sysfs.html#attributes
->=20
->=20 Attributes should be ASCII text files, preferably with only one
->=20
->=20 value per file. It is noted that it may not be efficient to contain
->=20
->=20 only one value per file, so it is socially acceptable to express an
->=20
->=20 array of values of the same type.
->=20
->=20These are static values, so efficiency is not an issue.
->=20
->=20It might be better to have a directory
->=20
->=20/sys/class/mdio_bus/<bus>/<device>/c45_phy_ids and then for each MMD
->=20
->=20create a file. I would also suggest using is_visible() =3D=3D 0 for t=
-hose
->=20
->=20with an ID =3D=3D 0.
->=20
-
-is_visible=20only hide files, not directory. It will look like this:
-
-c45 device:
-$ ls /sys/class/net/eth0/phydev/
-attached_dev  driver  of_node         phy_id         power       subsyste=
-m
-c45_phy_ids   hwmon   phy_has_fixups  phy_interface  statistics  uevent
-
-$ ls /sys/class/net/eth0/phydev/c45_phy_ids
-mmd10_device_id  mmd17_device_id  mmd23_device_id  mmd2_device_id   mmd7_=
-device_id
-mmd11_device_id  mmd18_device_id  mmd24_device_id  mmd30_device_id  mmd8_=
-device_id
-mmd12_device_id  mmd19_device_id  mmd25_device_id  mmd31_device_id  mmd9_=
-device_id
-mmd13_device_id  mmd1_device_id   mmd26_device_id  mmd3_device_id
-mmd14_device_id  mmd20_device_id  mmd27_device_id  mmd4_device_id
-mmd15_device_id  mmd21_device_id  mmd28_device_id  mmd5_device_id
-mmd16_device_id  mmd22_device_id  mmd29_device_id  mmd6_device_id
-
-
-c22 device:
-$ ls /sys/class/net/eth0/phydev/
-attached_dev  driver  of_node         phy_id         power       subsyste=
-m
-c45_phy_ids   hwmon   phy_has_fixups  phy_interface  statistics  uevent
-
-$ ls /sys/class/net/eth0/phydev/c45_phy_ids
-
-
-So is that fine?=20
-
->=20 Andrew
->
+Kind regards,
+Niklas
