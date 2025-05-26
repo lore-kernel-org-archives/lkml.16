@@ -1,73 +1,71 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFF82566
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51844207F
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748265520; cv=none; b=sNhs3A+m5WiRhaOzwpwDhSHr4jpbvhKKv2XhyxFfn9Lhxj+qu3QbpqHCn9hO7UQTHY6P162+xzXVkMlhtnd2Jmn9ZHd80co3mAMPvozJwMSArSEgz2GFwqyfqbqe7FtyjuVNAQcdq/6YOCjQB0agIHc/HSdASV7yWSNaJed7eww=
+	t=1748265563; cv=none; b=FAIi6nTuiVOiOZLdZ4nnUF2RDDIAVQ1oSGjzeQAI8AV4Vbjx0Y36LeZWHhvj6ovXqzOdWxFUW1YkXqBf6z7ANW6Lbf1aDCjufHMmXpPyN770zpgifRjfo5hyLZpVURZVBS1++gk9PNXSp2qrUFovhUBtpjirCZ5bDM689jvgHz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748265520; c=relaxed/simple;
-	bh=U2gFH1cjHXMN7FMnD/sxfp2UV4q1Y4u0wJRcj/antT0=;
+	s=arc-20240116; t=1748265563; c=relaxed/simple;
+	bh=TnHMtSIQdfgTrSYZfOIn+bJceWWCtXySHQoZZwR3tJc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UpCOPDZBqPJZPfazhrQIKvboRHE7fO65gb5p7YJOxA3IeRYeiAEHHIk22OH6rbF6mdSaCeL/B3klIENe2OEx/3IkElXA1Sx2ORSDm/pn9JLrTARYsNwjon1SI2gUBIyY0pzqQHCI9CPsXgpGSp12zyXLDSywXLb3f/Ro77h3kXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fK0u3bzU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=XfbfIWkVqf+f+fFq2+0ouErFIICMiiWMxTcKE+X7UltWImks/E/tJSQBnUUInZnSiZl7KGD9bH5/4llTJZv+SK0jxxxUTCM9vDOBdEz4aKTZqUefK3flfEnVCq3KNDxiqNtoufss+QgwQEQPniAOj4edJVPa7mL8Q4Ety0yCUJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DKqssMFa; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fK0u3bzU"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54Q8fOjr009517
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:18:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UtBoSI5pkOcGmROG/Wt4XFAAzw62w6oZmZMH++AO5Mw=; b=fK0u3bzUfir4NpTr
-	OJpBdrB/blRwpVLOZO2pvBlf5seBmmJy7LR0vl+9ukiZ5QGitcb/lWBH+GrqTtrE
-	42ri0uqUovGPmoJ+0AAyZECiLycUt8ItBxuM0a6yUikQD/rPuReyW11vxTKuIawH
-	e+xPcB/5x9w6tWbdzkNYIe6yFJ1JDJTHApRlQXMcO35SLLsGP5vZCqoXkMdYKuXG
-	CwhC1CUBMYcRoQW+Jo5I9MgQUGdB/CfpR9cfftN7sCKEShm1ESAEKfVKLxk9TfIz
-	ELYD7/lSeWZJlj4dv5dIkEF3hhF0l+wBPIzfn/mR4x6ITXKkQny/KKDbPMjlmqDg
-	v4CGgg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46vmyugpkb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:18:37 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c95556f824so181804585a.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:18:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DKqssMFa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748265560;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2/tBZmmo1EqsgCeZ8q0clS1poQRevKNeOHcK0UlnsVk=;
+	b=DKqssMFaywngTvHAzKoNo8E3Oab342JwLHPqAOAeCcCkEAp851ZDAxAI5qQj7QP6fjgqAE
+	SCe8fJlmqajvUsXRnP9Oxg/RgXKE2U/LIJFA2Zhnlnoh9T2wuWAk+vA2Cr8oW4G3117hrW
+	ZfTj3EYkfGDbVfY5zWeERLrpRsNleFs=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-554-Z--LIX2LObmUaCd-6Pjx3w-1; Mon, 26 May 2025 09:19:19 -0400
+X-MC-Unique: Z--LIX2LObmUaCd-6Pjx3w-1
+X-Mimecast-MFC-AGG-ID: Z--LIX2LObmUaCd-6Pjx3w_1748265558
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac79e4764e5so237036466b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 06:19:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748265516; x=1748870316;
+        d=1e100.net; s=20230601; t=1748265558; x=1748870358;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UtBoSI5pkOcGmROG/Wt4XFAAzw62w6oZmZMH++AO5Mw=;
-        b=U4qSyqfXz1C6K4KIbS7YEXc7vin0gi1fHDXIOLjC2gFuQevxEns44juQ+vkm45T5QE
-         SzQIyu9hlAnTNhwlLBVO1JsYNG5V2HZsuy9Xt8pikPRMhTUVrhKVeY1BhK27eJtNjWVJ
-         edydfkNKmi21ot3syWOchhsj+w/JFsnad9h1eP7hjRQt/a83HfaLuReB2QlcGA+6C59+
-         EIfzDR/EYYpAhpLsap7hMpIlJwNCj3f9sdru2vFyqfejk4FIed2a3ajugP0nPtLh+3VF
-         eJhONMqTfq2TQdZxJhdFRcCLpYQtzPmZYM/3lXL9hEfqKVNljnK4VkN+jrLznsKHzaJ/
-         xVwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXN6LC1YTI01Qwr0NsUMyeGi6Uqf68oLzOIlElJdwluxuK0CHQuKrzBBitWNuk3/z1JLevr12ux8n7ujxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDyUqHbbJ1IXvDevITo3pytwXIHhSnhzA93PF8RNaVE6s6dVfR
-	+F3GwPdhvsQ250fFo+/Sn6av8cq2S7CanwCLz3dvzGBi6SCuWoSkbQwPNk47U3naXCF6cgdU9Tp
-	RxVy2cpa21i3jvLZVYwRcbJooqjErJtpE44ocRDdHLNteSoni1VXHQLnWcX/dv4MiQEU=
-X-Gm-Gg: ASbGncs8vgk2fNTdY5tMc6bkMFafPD1CzR8l1x08Ix2+GWAlfNKkuSneO2MNSaMXp5j
-	vKE8CKZm+cNo5BPZ0pnJYMDDc90x0FmR/8fRihfrx4JsXYt9cnWKB+CohqaS9NUpDyYRyzxm4Hh
-	Djm4WjF8Rf5AwPHAd4oZys+UVVM8/pAPy1cwiXspZSlsyyRRPi6X6wEXZVD9KTKk3J8AKhZZJVl
-	AXD7fbWGnYj/u+oWu5La8EamI+UTi96fdY10eAnGChgz++MNoHQYQq9CFpzvn2leLzyrddgPm4e
-	8z4kr/gQj5quim92mppLfl2OsDw4+WtSdktAn3ES2kjMb87FCSmWukQ8vGXskybcQLN41qfest7
-	kjpMmuzni+UcKOVGcmiPDKUITIpkf7eBOy0ccec3YsKHFtEYOV+ij3JpeCL4U
-X-Received: by 2002:a05:620a:414b:b0:7c5:b909:fde1 with SMTP id af79cd13be357-7ceecb94895mr1451984785a.25.1748265516031;
-        Mon, 26 May 2025 06:18:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhkpGoxOecW8RkH7bD+ONxhtwTxMfGSExXlOq+Ta+frS4ub+TLyyZANQDA+8PdVAF4xujgBg==
-X-Received: by 2002:a05:620a:414b:b0:7c5:b909:fde1 with SMTP id af79cd13be357-7ceecb94895mr1451977285a.25.1748265515362;
-        Mon, 26 May 2025 06:18:35 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:670:af7:f46f:ffe7:e8d8:2aa? (2001-14bb-670-af7-f46f-ffe7-e8d8-2aa.rev.dnainternet.fi. [2001:14bb:670:af7:f46f:ffe7:e8d8:2aa])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f16243sm5114836e87.14.2025.05.26.06.18.33
+        bh=2/tBZmmo1EqsgCeZ8q0clS1poQRevKNeOHcK0UlnsVk=;
+        b=dlYEz4Y53fRV4o/AU4bIaEDC83SvuxcQXo/Jwl14gzxC/H12yHYzHm42f6BGMSZGnF
+         WdbI60pY/R9C7l+5hrfIWLqbDaFLrk7IVpg9ZE+J12dICvmVR5H5FXT87QCy7taKGAuv
+         HMQ5aBcWR3AgryRTaq/PmEMuqRkFLwEYGhgkL2xb61ksiJNAp+xFMSf3a1AuWflZCZ0Y
+         cqvZlnKgjkzE0fF03McqdNvm9CZn5ZrrTNo9C96r7R+98ZKabZXkz+wfjaMWFzrMmu+o
+         8OlWaCU+7Mao3i/7TYqILoVg5qrCNaqFET3sblLdcxunYBMqxVIg06UczomePhoGycfD
+         uGbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMgYHYQq600iqGhJoStqwDoio0e0l6LAjEpyR/KZwQyaBaFJPnEJ8h5ojO62qjM4WgSQfd5STAKA/JhE4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV6sX9AMqZ7HIJ8wXpmwZcHhuHw3dCKLApSWGpPy27nJNm/TCR
+	58g1+LD3DuUb+nDJHQGfzCN2Hoxnn6wYVdmwPPf3yw2LLPDl9jJVQfz/PKyiIXX8IFGyb5fiRpR
+	iM/EMs1fYYdlW/4MUhtQ+ukdyWezudFNky/zvCxzPVNbWo59qnNXIu9634yUfYsv4aw==
+X-Gm-Gg: ASbGnctZ/iNiTxQztvDuVd1D8L7I+8OO4HBHK6C0VfGcpXUeGR4mfbt3aXrUBuUL825
+	zpjZoyGdVh3CFNfGKN82EQ5YDQOVZhenZ6Xn2+8QQx/WCaxFYTT3mX4XgjkYe3OxQiJPoAxQ5ak
+	Q3jRbMqhlC5ZG1K0Y8HpeOB4eyoustEpVDrwiYVqbSgFVRife+TQYY/nVunUzmwFebUfmJPcyTs
+	fXp+hmwnTYhsnATP76UT2O7M/Z0qLuhGCboX74mwg4VmuwEmgILoddJBrKg6iPVhU9LERtkfHn8
+	nL2T2t2BROkKEgU=
+X-Received: by 2002:a17:907:7e93:b0:ad4:d135:cf68 with SMTP id a640c23a62f3a-ad85b1d7ce3mr797700866b.59.1748265557833;
+        Mon, 26 May 2025 06:19:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXuqTVhM5WgSsTu7DeZ7j8SWBqOpvYfIvtpCQyF5ulgJbeJfGnJEfO/Jqx5e0CG2jkVYd8zg==
+X-Received: by 2002:a17:907:7e93:b0:ad4:d135:cf68 with SMTP id a640c23a62f3a-ad85b1d7ce3mr797698066b.59.1748265557383;
+        Mon, 26 May 2025 06:19:17 -0700 (PDT)
+Received: from [10.40.98.122] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04f263sm1671863966b.1.2025.05.26.06.19.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 06:18:34 -0700 (PDT)
-Message-ID: <7603c3b1-edff-4c02-a4a5-1d5f72720cad@oss.qualcomm.com>
-Date: Mon, 26 May 2025 16:18:31 +0300
+        Mon, 26 May 2025 06:19:16 -0700 (PDT)
+Message-ID: <c8d83994-603d-4d25-aa25-e9a893692fea@redhat.com>
+Date: Mon, 26 May 2025 15:19:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,142 +73,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/bridge: adv7511: Do not merge adv7511_mode_set() with
- atomic_enable()
-To: Maxime Ripard <mripard@kernel.org>,
-        Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org,
-        biju.das.jz@bp.renesas.com, Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Douglas Anderson <dianders@chromium.org>,
-        Adam Ford <aford173@gmail.com>, Jesse Van Gavere <jesseevg@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250526085455.33371-1-tommaso.merciai.xr@bp.renesas.com>
- <20250526-cryptic-blue-mussel-ac57fe@houat>
- <91d8a288-1f2d-469c-a596-6265893584ae@bp.renesas.com>
- <20250526104902.GB17743@pendragon.ideasonboard.com>
- <209ddc02-01d2-4375-afcf-2c9a55fe8fc1@bp.renesas.com>
- <20250526-cherubic-ambitious-cobra-3c6a1e@houat>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250526-cherubic-ambitious-cobra-3c6a1e@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v5 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250404-uvc-meta-v5-0-f79974fc2d20@chromium.org>
+ <20250404-uvc-meta-v5-4-f79974fc2d20@chromium.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20250404-uvc-meta-v5-4-f79974fc2d20@chromium.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI2MDExMyBTYWx0ZWRfX9Dzcj8+jACx/
- uwsi0ltkAtxgA3cVpLooCwS6ebKDnlS9OSv4WnXhSZzdLRoEaZSCXVLUq6VejNXBCvl2Ffpyy1q
- 4abu+ApXeiFsnyO3ZAo71Acx3HRL1joNil7TJKvYINuqjm8dZXcoQshytzPclSE7s+cIT1nPYPh
- r/lcP5rFbm2HhU9/jpogJDCfogan/DTvE2QqZX7FbgquVOjwQX32CLBLNaJ6Yr/rNVRSzQ7Lc+U
- r2d+HSMEMbbNLt/1o+W4Ri8U9iCuhCjkUBKzoZwQrK3EK3KqQBtR41fIYK2MZvufWXW5og1vY1e
- hElEDii4FuNCPdnz65K6+xcEKt+h9tABFvSociuPHqI1kB3dmrlUHnwd0Ebaw6KKZV/lTCAR5jm
- O6GqotZbYo6LbyIV4eG73843u0xwHyUolyn5fQxCuVzE5SgvKuoEzuZiPu5uZhuKx6ZLc49w
-X-Authority-Analysis: v=2.4 cv=MsdS63ae c=1 sm=1 tr=0 ts=68346a2d cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=yC-0_ovQAAAA:8 a=6hqrR-QMLRjKKab7PtcA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: WSwJkj4NniG4rpHlwpxvQJUqGl7kcJk-
-X-Proofpoint-ORIG-GUID: WSwJkj4NniG4rpHlwpxvQJUqGl7kcJk-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-26_06,2025-05-26_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 malwarescore=0 impostorscore=0 priorityscore=1501 spamscore=0
- mlxscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505260113
 
-On 26/05/2025 14:40, Maxime Ripard wrote:
-> On Mon, May 26, 2025 at 01:19:23PM +0200, Tommaso Merciai wrote:
->> Hi Laurent,
->> Thanks for your comment.
->>
->> On 26/05/25 12:49, Laurent Pinchart wrote:
->>> On Mon, May 26, 2025 at 11:58:37AM +0200, Tommaso Merciai wrote:
->>>> Hi Maxime,
->>>> Thanks for your comment.
->>>>
->>>> On 26/05/25 11:26, Maxime Ripard wrote:
->>>>> Hi,
->>>>>
->>>>> On Mon, May 26, 2025 at 10:54:52AM +0200, Tommaso Merciai wrote:
->>>>>> After adv7511_mode_set() was merged into .atomic_enable(), only the
->>>>>> native resolution is working when using modetest.
->>>>>>
->>>>>> This is caused by incorrect timings: adv7511_mode_set() must not be
->>>>>> merged into .atomic_enable().
->>>>>>
->>>>>> Move adv7511_mode_set() back to the .mode_set() callback in
->>>>>> drm_bridge_funcs to restore correct behavior.
->>>>>>
->>>>>> Fixes: 0a9e2f0a6466 ("drm/bridge: adv7511: switch to the HDMI connector helpers")
->>>>>> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
->>>>>> Closes: https://lore.kernel.org/all/aDB8bD6cF7qiSpKd@tom-desktop/
->>>>>> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
->>>>>
->>>>> Explaining why, both in the commit log and the comments, would be nice.
->>>>> Because I can't think of any good reason it just can't work for that
->>>>> bridge.
->>>>
->>>> Sorry, let me clarify and share with you some details:
->>>>
->>>> adv7511_mode_set:
->>>>     - Is setting up timings registers for the DSI2HDMI bridge in our case
->>>>       we are using ADV7535 bridge.
->>>>
->>>> rzg2l_mipi_dsi_atomic_enable:
->>>>     - Is setting up the vclock for the DSI ip
->>>>
->>>> Testing new/old implementation a bit we found the following:
->>>>
->>>> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI-A-1:800x600-56.25@XR24
->>>> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
->>>> [   49.273134] adv7511_mode_set_old: drm_mode_vrefresh(mode) = 56
->>>> [   49.281006] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
->>>>
->>>> root@smarc-rzg3e:~# modetest -M rzg2l-du -d -s HDMI-A-1:800x600-56.25@XR24
->>>> setting mode 800x600-56.25Hz on connectors HDMI-A-1, crtc 62
->>>> [   74.076881] rzg2l_mipi_dsi_atomic_enable: mode->clock: 36000
->>>> [   74.092130] adv7511_mode_set: drm_mode_vrefresh(adj_mode) = 56
->>>>
->>>> Same result but different timing (in function call perspective):
->>>>
->>>>     - old: adv7511_mode_set() is call before rzg2l_mipi_dsi_atomic_enable()
->>>>     - new: adv7511_mode_set() is call after rzg2l_mipi_dsi_atomic_enable()
->>>
->>> What is "old" and "new" here ? Is it before and after Dmitry's patch, or
->>> before and after yours ? Please be precise when describing problems.
->>
->> Sorry, you are completely right:
->>
->>   - old --> before Dmitry's patch
->>   - new --> after Dmitry's patch
->>
->>>
->>>> What do you think? Thanks in advance.
->>>
->>> You're only explaining above what the "old" and "new" behaviours are,
->>> and claiming one of them is causing an issue, but you're not explaining
->>> *why* it causes an issue. That's what your commit message is expected to
->>> detail.
->>>
->>
->> Thanks for the clarification! :)
->> I will send v2 explaining better this.
+Hi,
+
+On 4-Apr-25 08:37, Ricardo Ribalda wrote:
+> If the camera supports the MSXU_CONTROL_METADATA control, auto set the
+> MSXU_META quirk.
 > 
-> In particular, if the driver needs to have mode_set called before
-> atomic_enable, you should say why moving the call to mode_set earlier in
-> the function wouldn't work.
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-It might be the same thing as we had on PS8640: it had to be brought up 
-before the host starts the DSI link, so that there is no clock input on 
-the DSI clock lane.
+Thanks, patch looks good to me:
 
--- 
-With best wishes
-Dmitry
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/media/usb/uvc/uvc_metadata.c | 54 ++++++++++++++++++++++++++++++++++++
+>  include/linux/usb/uvc.h              |  3 ++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
+> index fe2678fc795d7fd5a64e8113199012f34c419176..776d280f34afad515594a873acf075acf0438304 100644
+> --- a/drivers/media/usb/uvc/uvc_metadata.c
+> +++ b/drivers/media/usb/uvc/uvc_metadata.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/usb.h>
+> +#include <linux/usb/uvc.h>
+>  #include <linux/videodev2.h>
+>  
+>  #include <media/v4l2-ioctl.h>
+> @@ -187,11 +188,64 @@ static const struct v4l2_file_operations uvc_meta_fops = {
+>  	.mmap = vb2_fop_mmap,
+>  };
+>  
+> +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
+> +
+> +#define MSXU_CONTROL_METADATA 0x9
+> +static int uvc_enable_msxu(struct uvc_device *dev)
+> +{
+> +	u32 *data __free(kfree) = NULL;
+> +	struct uvc_entity *entity;
+> +
+> +	list_for_each_entry(entity, &dev->entities, list) {
+> +		int ret;
+> +
+> +		if (memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
+> +			continue;
+> +
+> +		if (!data)
+> +			data = kmalloc(sizeof(*data), GFP_KERNEL);
+> +		if (!data)
+> +			return -ENOMEM;
+> +
+> +		ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id,
+> +				     dev->intfnum, MSXU_CONTROL_METADATA,
+> +				     data, sizeof(*data));
+> +		if (ret)
+> +			continue;
+> +
+> +		if (*data) {
+> +			dev->quirks |= UVC_QUIRK_MSXU_META;
+> +			return 0;
+> +		}
+> +
+> +		ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id,
+> +				     dev->intfnum, MSXU_CONTROL_METADATA,
+> +				     data, sizeof(*data));
+> +		if (ret || !*data)
+> +			continue;
+> +
+> +		ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id,
+> +				     dev->intfnum, MSXU_CONTROL_METADATA,
+> +				     data, sizeof(*data));
+> +		if (!ret) {
+> +			dev->quirks |= UVC_QUIRK_MSXU_META;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int uvc_meta_register(struct uvc_streaming *stream)
+>  {
+>  	struct uvc_device *dev = stream->dev;
+>  	struct video_device *vdev = &stream->meta.vdev;
+>  	struct uvc_video_queue *queue = &stream->meta.queue;
+> +	int ret;
+> +
+> +	ret = uvc_enable_msxu(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	stream->meta.format = V4L2_META_FMT_UVC;
+>  
+> diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
+> index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
+> --- a/include/linux/usb/uvc.h
+> +++ b/include/linux/usb/uvc.h
+> @@ -29,6 +29,9 @@
+>  #define UVC_GUID_EXT_GPIO_CONTROLLER \
+>  	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+>  	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
+> +#define UVC_GUID_MSXU_1_5 \
+> +	{0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
+> +	 0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
+>  
+>  #define UVC_GUID_FORMAT_MJPEG \
+>  	{ 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
+> 
+
