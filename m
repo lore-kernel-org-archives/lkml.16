@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEFF23DE;
-	Mon, 26 May 2025 04:17:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85923DE;
+	Mon, 26 May 2025 04:26:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748233057; cv=none; b=JDHEjzexFVzYNfallE6w1CdGnQTYUgiO1G9cw2FRnae4KetBWilAK0kepkdfPIvUl//WSCrDkIBXs5QObeAJQXnvFrBE3LqYVkEP0/KHu7BtlUYFKkvEZFGdeBFQrCh3Br9Y+F/aSY09qMifqzTFTDbtZOrRoEegIuVwbJbMq9g=
+	t=1748233577; cv=none; b=ReTpPyi4kLiXYgllfrYMs6MacFdQoy20U6fd6JUY4m5CgMEmSgiEvxaAFIZywqpcdGFsHjx2tr+3BgKrTn85I2nQ0Rf92Qr43pDa0dvDCx/+bd+fm+2E9ov78bg9B/4Q36FHPRmKT0bfHDksRTB4/BDx7d+PKbdSgAyZhhx1d9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748233057; c=relaxed/simple;
-	bh=aqUOswUxr57O4DWG+gsk6e2Kr5wYGDmSgJBU8K+2NYk=;
+	s=arc-20240116; t=1748233577; c=relaxed/simple;
+	bh=cmpo8NMat2noHb78cxRlS/B5COntYke7J+yrFf3kKeU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bVXUgTezOovIVhtWEfTXVrIEI6cEvG+Tm2W05e0efGHky8KHlC5XMBXUYAI2Wz2BfJthIcnDc3uazWvt2obbI+NP5F7rvaV7BI5kvQTk7y/PPG3E6CU/5FsGhMOkGrGRGBKldbmM0/Zioeo/j+6G99xPBu5U5ofv6lS/eqG27tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDrTDkEL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Td+DY6REknk8P/AGHTOyXXgNIivKVLSpl3fPg0YrsdwV2JPYCiqGHVziVDpcIbCreWqeIbE9b0yuvE/m69oSO9tC1LxLdah75CZV5AVkFxW74jSIdR5oJO5gqI12J6mlaWDjvTYBfR5AQqC9orQySHg04fFGgY2zXXCdLmuXbkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaCcE+lf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDrTDkEL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39CA1C4CEE7;
-	Mon, 26 May 2025 04:17:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaCcE+lf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65B47C4CEE7;
+	Mon, 26 May 2025 04:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748233057;
-	bh=aqUOswUxr57O4DWG+gsk6e2Kr5wYGDmSgJBU8K+2NYk=;
+	s=k20201202; t=1748233575;
+	bh=cmpo8NMat2noHb78cxRlS/B5COntYke7J+yrFf3kKeU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pDrTDkEL9dQmxIZV5A/mQy9mfxvVwvkslRYZavFPCRAXuDC/ZGS9cEPcvO+7+YTIu
-	 SiRt+K7ZRyfjiZhIyIheiRfOkNgt9FuP19jyXJ5slG5oayVwNxovsKeGMP/rj9riW1
-	 ZcXf1hNxQWt5ymCABIa1NP1TbrNS9P+f9mTfckWEWrKoYhvi8Ox2EBNChGpaDJkeOx
-	 x16UrRa4kG1hpahTiHKH27O1LhYfiFOjOT5ubMBJjcdfc4i4lx087g0OqL7Yt+YjQT
-	 t8UqjHALdxeOV271pGHo7VIV/GIiBy/XP3cJ/T7OGaGbQ8WpI/CmBQaB8duKVaVh2+
-	 nP/MHu9FhaBuQ==
-Message-ID: <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
-Date: Mon, 26 May 2025 06:17:30 +0200
+	b=LaCcE+lfLb0/NhnstVIS1fkPkIBvDR1aDIV+xH39dxgQJDsOITTTxyAxREDzBiiTU
+	 qBht91i1vUdwJ1lnb+oxwFjJa17W3JTMkNCLFODCIOqKvKsropSvra+ZF0wCzU4FeZ
+	 fIrrKDNspgszjCSrwFWkH+zULgH1862wmSxir7pn1bRdtDnvPzQrAarNE4GPvBSO6E
+	 0iC9Nz+lShAKwJYF4zW76FNKm5hscl6eH5Pfe2jIWc6uFYhc95z9X1IsLAsuCzZg3B
+	 AElqxiDu+li8eGoAAmqwzhVbIg9VlpFGt2wIZnBpQP5hxnPJQ/9/l1ABvAMAF5D10t
+	 6lDOSO6JibO4w==
+Message-ID: <7145bfad-16d6-4445-bc19-261c5bdca8d9@kernel.org>
+Date: Mon, 26 May 2025 06:26:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,24 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal GE
- PHY support
-To: george.moussalem@outlook.com, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-clk@vger.kernel.org
-References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
- <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
+Subject: Re: [PATCHv4 3/5] dt-bindings: net: wireless: ath9k: add WIFI
+ bindings
+To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
+Cc: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
+ nbd@nbd.name, Johannes Berg <johannes@sipsolutions.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:MIPS" <linux-mips@vger.kernel.org>
+References: <20250525214256.8637-1-rosenp@gmail.com>
+ <20250525214256.8637-4-rosenp@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -98,49 +93,61 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
+In-Reply-To: <20250525214256.8637-4-rosenp@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 25/05/2025 19:56, George Moussalem via B4 Relay wrote:
-> diff --git a/Documentation/devicetree/bindings/net/qca,ar803x.yaml b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-> index 3acd09f0da863137f8a05e435a1fd28a536c2acd..a9e94666ff0af107db4f358b144bf8644c6597e8 100644
-> --- a/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-> +++ b/Documentation/devicetree/bindings/net/qca,ar803x.yaml
-> @@ -60,6 +60,29 @@ properties:
->      minimum: 1
->      maximum: 255
+On 25/05/2025 23:42, Rosen Penev wrote:
+> These are for the wireless chips that come built in with various
+> Atheros/QCA SoCs. dts wise, the difference between pcie and the wmac is
+> 
+> AHB > PCIE > WIFI
+> AHB > WIFI
+> 
+> These will be used to replace the platform_device code with OF in the
+> following patch.
+
+Drop the sentence. If we use auxiliary driver instead, should it
+invalidate this commit msg?
+
+> 
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  .../bindings/net/wireless/qca,ath9k.yaml       | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
+> index 0e5412cff2bc..68d56e5b8680 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
+> +++ b/Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
+> @@ -12,7 +12,7 @@ maintainers:
+>  description: |
+>    This node provides properties for configuring the ath9k wireless device.
+>    The node is expected to be specified as a child node of the PCI controller
+> -  to which the wireless chip is connected.
+> +  or AHB bus to which the wireless chip is connected.
 >  
-> +  qca,dac:
-> +    description:
-> +      Values for MDAC and EDAC to adjust amplitude, bias current settings,
-> +      and error detection and correction algorithm. Only set in a PHY to PHY
-> +      link architecture to accommodate for short cable length.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    items:
-> +      - items:
-> +          - description: value for MDAC. Expected 0x10, if set
-> +          - description: value for EDAC. Expected 0x10, if set
+>  allOf:
+>    - $ref: ieee80211.yaml#
+> @@ -35,6 +35,12 @@ properties:
+>        - pci168c,0034  # AR9462
+>        - pci168c,0036  # AR9565
+>        - pci168c,0037  # AR1111 and AR9485
+> +      - qcom,ar9130-wifi
+> +      - qcom,ar9330-wifi
+> +      - qcom,ar9340-wifi
 
-If this is fixed to 0x10, then this is fully deducible from compatible.
-Drop entire property.
+I assume all these qr9xxx are capable of running Linux, thus you
+document here other side - having them as part of other SoC.
 
-> +      - maxItems: 1
-> +
-> +  qca,eth-ldo-enable:
+> +      - qcom,qca9530-wifi
+> +      - qcom,qca9550-wifi
+> +      - qcom,qca9560-wifi
 
-qcom,tcsr-syscon to match property already used.
+But what about these? As well? Do they have other interfaces? IOW,
+suffix "-wifi" is added ONLY if there is "qcom,qca9530" or
+"qcom,qca9530-foo" somewhere or possible.
 
-> +    description:
-> +      Register in TCSR to enable the LDO controller to supply
-> +      low voltages to the common ethernet block (CMN BLK).
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: phandle of TCSR syscon
-> +          - description: offset of TCSR register to enable the LDO controller
-> +      - maxItems: 1
-You listed two items, but second is just one item? Drop.
 
 Best regards,
 Krzysztof
