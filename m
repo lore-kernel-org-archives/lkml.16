@@ -1,148 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2555423F422
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 20:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E577123ED75;
+	Mon, 26 May 2025 20:15:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748290399; cv=none; b=FP9bs0nAP8KBKPLU63PTiCscnOyJweHnZOfOK2PiqMUXKIn1KPFZbglmf4BtATtSFkc4KKzBQI35e6RTgldkSv467p3qbxAi59lKQTyNtgDo3q8AUEAvIf6W60fWOLpRkE/yVVKzAfWcIK2kI34sUjglmT1ZQT7PUYJtjTvMtx0=
+	t=1748290525; cv=none; b=jshFt4FrrqHkIj1N9wxkLc5SCsX8THSTV8aVJcCXN3Jek9f+g653uAhExbhndmhhwTe/DEtE8cC4vwH/JmMxulPZdomcrZNVF/pWhLye3YUDiyURGGF2ae1R4aA3YDxW6SGFYH0/9QAtGKbycRC6Zz9juYWgfOslg4YYFFzI+5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748290399; c=relaxed/simple;
-	bh=udre1uGBOac6motS58as4+M/iSTXL1UBy24ANEE9bs4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pqu+hFrUpLw4mhclJsluUmnr1SfODCw9fdOyFxjcdsj9y9L+Wt+uwU4iHomMrTTwNVuKBRSoWY+lETCsqzxDApAncs2hAVSuys4gDxfQ6Kc8W7Dt/iZooF6vCSKY/NMbD4qbZ639L9JBs7s4/6eApeojmMzkfBcwM2NjnGII86E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dVi6KoAo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748290525; c=relaxed/simple;
+	bh=ohtRGyK05Q4++k9YprJKtDiINTrJ38VxHWprFUmxbjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQ8zattVoaORx5stu95k3hvG1U2UbF/tOj0RQpIhGVe4Vk6Xu5p/y1Gneiu6fypvWK4MypheO62JUpBF/w37rdXe0zWna6CybbUyJBcsDwvb5zBrw4aTe439tIkutQ8b+T0Vl8Gpgm3rZpc+5M8zYVRe+I8rvHf570SXcH16Agg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a9DNDbVK; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dVi6KoAo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748290395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hM8pOHSOHM6og3y9wbI886KhOM4ZVpJTZ9nEg3CMFeQ=;
-	b=dVi6KoAoOjxGLNDjB2ZCQQ6R7j7mKqlY4WeXdc8uVMmTZcYom17EaixbS8yB9gijPdmeoi
-	ygUW/9D42prQm5N/paM3EtPMlWgJ/+Ovcfoa5P9IKxkt/bQ3m64lKWxkReea2u6WPeQKm/
-	f/z5iYVcE9IMyWLy5eb1w2iW3PCnpTA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-228-2TMwL713MpqP_ai1MLaIAg-1; Mon, 26 May 2025 16:13:14 -0400
-X-MC-Unique: 2TMwL713MpqP_ai1MLaIAg-1
-X-Mimecast-MFC-AGG-ID: 2TMwL713MpqP_ai1MLaIAg_1748290393
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-445135eb689so16302725e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 13:13:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a9DNDbVK"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10594812so3501928e87.1;
+        Mon, 26 May 2025 13:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748290522; x=1748895322; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iz3Z0SmA3CH68uW+s2njhq2Ak0+uNQJ+8t0g3Yz/k4k=;
+        b=a9DNDbVKGQBqdaEjKgtw9YCJBVzTBuU7djkQ4IVB6D3AxIVpmGDFReDJw//cik0/US
+         gkeAMRanuNX0cPpR6WYvMZVKrcV3SO+3U0Q/4aYSvJTqYx5kW+AbRPOCJeScvTygRw7j
+         NxyO2f/9u2CkH6KAmoxnLzd/kljAm+zyWPdZ7a7U/TfY3TJaCkZI40mMEZOUnuJ7vaKJ
+         0eFy7hhAnwje2gxLUDnU4/bQvPMfCd4VHPe3m9rl7rX4p4Fe6NhSbO8FSvx2vmGs/kYG
+         g5uDjBjMxKgDVc4uHZUAp0ovxOSDAZTF6ATTCV8rzWh/XoCwhd5ZDkweV63wyhpQyiDB
+         K1Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748290392; x=1748895192;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hM8pOHSOHM6og3y9wbI886KhOM4ZVpJTZ9nEg3CMFeQ=;
-        b=fDaMYDWf0I1F5rMJ2CH1021Q3DzsiXJrwngXH6bkSNcMLo/oqLMfIYNDk7SoodjjrD
-         ag+IbYAskBBWPbPpl2MQs/v1a/1S/ZYESUmBO7ZGIngefaDwfPn11UrVPO6IQwtRMLrh
-         s4VCvpu53J6iGDZI0sxvqzNLtwinjg+axfxvB0HAO3VknVgoT+3dONcynFkecZVguog9
-         u19V3+0JBbjWUQoqGx0AYMVcUtpRGrQbiRCS84/2cpSpAenvwMUPYW9NYLuL5RI74R5D
-         2GPBc6+i44jnfc26bk7jLPrSH9d9g0i3WmgsA31qZ4g1X1ExC/iE+cctaoqcC5ZxfLKM
-         4p6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXdWJSjpxgts5U9yhoCtVC66PQfiPtm/SsUD4RsCKEbLgBuyeQ8ubTXdK/+H/mzftH8NIqJR6r2CbIkQE4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUzaDHeYUe2YB9cZ/Nyp56uJ2k7kycLXuWPdvdZGPzwlEvctNh
-	2ajARD21dGOsOxC18gZnpWU0KsaBK65r81HwybjcN6VG2sKWkjmxJTte6ns0B4yM/MaNAVPE2Dg
-	jzTuaApswh9qyLXvPzv9uMBw3IvyS5TLuDJAXdNEP5S1gFZRDxjvj8+nmi+6EdQsAfiMfTvvfs+
-	fniu55KrrE64DkAFqUCPK+hVgLbcj80jemn3IQ2IKHiTg1o0xj
-X-Gm-Gg: ASbGnctcbt1K85C6BGgwfGR60VoCVeF2ZP3NCBFyVWEUcNk/nrfsLRuNSmR+68HVZ+E
-	dXSIQhyFmxb64AweOFcPhkhXNfScu698XIoLb90HY5EyzqpZc1z/u0TVwXqM3PE0e4Aw=
-X-Received: by 2002:a05:6000:40da:b0:3a3:698a:973 with SMTP id ffacd0b85a97d-3a4cb49fa3bmr8695105f8f.59.1748290392179;
-        Mon, 26 May 2025 13:13:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0+AxXJPizTpP9QoO5IXtFAO01qqghm8BjYyQ+skkTbjCSgR/3ySaxc11xbULNV7xS2YBFBlH2xIjzip8xtKo=
-X-Received: by 2002:a05:6000:40da:b0:3a3:698a:973 with SMTP id
- ffacd0b85a97d-3a4cb49fa3bmr8695090f8f.59.1748290391828; Mon, 26 May 2025
- 13:13:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748290522; x=1748895322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iz3Z0SmA3CH68uW+s2njhq2Ak0+uNQJ+8t0g3Yz/k4k=;
+        b=Y4hmwNrAa2/9DiK82PGmP049PBXeZ/PY7G0/l5mf9/ud41EhPPIEm/5rz90qJlE7O5
+         MgdpohQaCVIN2TvsDWRz6vU5fS7fmWZNYqn/IYVmcIw+HK9DmeBp+e4yo5LzuqAcbkLr
+         WcEWUsFg105fUJjBjIU5oKvsC/oYyUC7NhNr2O9udLAndx0ATZKUdSaSYMiamgOj0+TP
+         o4Q2p0lU3Ifh13sPnp9A3dfcgATzkkgJXvgNjbaTgTR/3ssaZxqaK6nMtMx0XqlwJop2
+         tcV/3flfw5QuKuebVDkKABPLfdof7n+MsK8eq9DnvmAiQdtpQCmjhQAYrxA2IHZjvR8E
+         K6Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCUisb2iFKypYmQz25ZW01AuDR9EmRC6qvs7IiLiom/S0oPvm+jnqSxNmzpPCTyXiRvD8HKQN7U7@vger.kernel.org, AJvYcCUnRZ2AeQgp3bSNwVshFZt73P8PSuDKXHRRn8YuzxLnvBD2TsAXcwVv9suy44mtLaOg1TjyV30E26zmeYk=@vger.kernel.org, AJvYcCWy5Nq5aiNUZbdWNaiSCJbnHoy3bFIuT2UWASG3OXD+m3+eM+4ka9P1Gclb7Vmtzon4WxSrAtgm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsXT6QbhM6ez3PAjR87Er9IlAIYOpMxUJQMAazqH+pxNyMfF7w
+	bYAqBfa0BGrLx6nRTWl+4IW5ipcUj9+ad4NaQSLymRd7MdXU4bXvxi3b
+X-Gm-Gg: ASbGncukH/b8XVoYXbafd6/HNRG6zhC8jRANoouqrXvBkP69ogHAgh9lgUj1hNifEn8
+	SueFimg3i1PQFV8iNqkuOsfbfr9eIC2FqqjnL1C5gIcLU9nvZA6X5MHiRk3aZI+jU6RxxtdzZ1K
+	Lpd2S0s2aR5lGUMgqfw1V8+JARdwRMkU/5+CntNcK+pfh+oSwtty9zkI7+CmPUT/bOeFR+axiSd
+	MRTKWsgyGKoX3sHrf/r0ZIHRryLCqHaVKl5XewuEAeiZ/3rxgfN1W9RZ4DAbIuib05BflbkpAOu
+	TSwrwGRcPO5ibvLHfj49KJGLvTgM7BLeFLtbpAdDWYnbcICLkRwCWpMpTRNuJnvlhg==
+X-Google-Smtp-Source: AGHT+IGycTsl0j5+lha/9zLWk2PFmXfqE+GNYPHs8FfhaZmKI2qkSFlQux6x1txIjajzO9kiHd4gIQ==
+X-Received: by 2002:a05:6512:b9a:b0:549:6759:3979 with SMTP id 2adb3069b0e04-5521c7ade8fmr3277731e87.18.1748290521529;
+        Mon, 26 May 2025 13:15:21 -0700 (PDT)
+Received: from home.paul.comp (paulfertser.info. [2001:470:26:54b:226:9eff:fe70:80c2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532642ee85sm163125e87.138.2025.05.26.13.15.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 13:15:21 -0700 (PDT)
+Received: from home.paul.comp (home.paul.comp [IPv6:0:0:0:0:0:0:0:1])
+	by home.paul.comp (8.15.2/8.15.2/Debian-22+deb11u3) with ESMTP id 54QKFHOQ030107;
+	Mon, 26 May 2025 23:15:18 +0300
+Received: (from paul@localhost)
+	by home.paul.comp (8.15.2/8.15.2/Submit) id 54QKFF40030106;
+	Mon, 26 May 2025 23:15:15 +0300
+Date: Mon, 26 May 2025 23:15:14 +0300
+From: Paul Fertser <fercerpav@gmail.com>
+To: Jerry C Chen/WYHQ/Wiwynn <Jerry_C_Chen@wiwynn.com>
+Cc: "patrick@stwcx.xyz" <patrick@stwcx.xyz>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v1] net/ncsi: fix buffer overflow in getting version id
+Message-ID: <aDTL0uWIgLRgyu6s@home.paul.comp>
+References: <20250515083448.3511588-1-Jerry_C_Chen@wiwynn.com>
+ <aCWuCPsm+G5EBOt/@home.paul.comp>
+ <SEZPR04MB685354203C242413D1EBE96CB098A@SEZPR04MB6853.apcprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522030628.1924833-1-chenhuacai@loongson.cn>
-In-Reply-To: <20250522030628.1924833-1-chenhuacai@loongson.cn>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Mon, 26 May 2025 22:13:00 +0200
-X-Gm-Features: AX0GCFvALzV40Zi8ewJWNPzDDkxsciCzCRalOrRxez99t8YObAZ1GdsLNkTkCX8
-Message-ID: <CABgObfadeF0Er+M7Lv0kB0O1bugDk+_3jbwKU38Ju63YO7NZhQ@mail.gmail.com>
-Subject: Re: [GIT PULL] LoongArch KVM changes for v6.16
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Xuerui Wang <kernel@xen0n.name>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEZPR04MB685354203C242413D1EBE96CB098A@SEZPR04MB6853.apcprd04.prod.outlook.com>
 
-On Thu, May 22, 2025 at 5:07=E2=80=AFAM Huacai Chen <chenhuacai@loongson.cn=
-> wrote:
->
-> The following changes since commit a5806cd506af5a7c19bcd596e4708b5c464bfd=
-21:
->
->   Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson=
-.git tags/loongarch-kvm-6.16
->
-> for you to fetch changes up to a867688c8cbb1b83667a6665362d89e8c762e820:
->
->   KVM: selftests: Add supported test cases for LoongArch (2025-05-20 20:2=
-0:26 +0800)
+Hi Jerry,
 
-Pulled, thanks.
+On Fri, May 23, 2025 at 07:32:26AM +0000, Jerry C Chen/WYHQ/Wiwynn wrote:
+> Sorry for late replay, it takes some effort to change company policy of the proprietary.
 
-Paolo
+I can imagine! However it's not necessary to send patches from
+corporate e-mail address via the corporate mail server, you can just
+send from your own personal account with the appropriate From:
+specification to attribute it to your corporate address[0].
 
-> ----------------------------------------------------------------
-> LoongArch KVM changes for v6.16
->
-> 1. Don't flush tlb if HW PTW supported.
-> 2. Add LoongArch KVM selftests support.
->
-> ----------------------------------------------------------------
-> Bibo Mao (7):
->       LoongArch: KVM: Add ecode parameter for exception handlers
->       LoongArch: KVM: Do not flush tlb if HW PTW supported
->       KVM: selftests: Add VM_MODE_P47V47_16K VM mode
->       KVM: selftests: Add KVM selftests header files for LoongArch
->       KVM: selftests: Add core KVM selftests support for LoongArch
->       KVM: selftests: Add ucall test support for LoongArch
->       KVM: selftests: Add supported test cases for LoongArch
->
->  MAINTAINERS                                        |   2 +
->  arch/loongarch/include/asm/kvm_host.h              |   2 +-
->  arch/loongarch/include/asm/kvm_vcpu.h              |   2 +-
->  arch/loongarch/kvm/exit.c                          |  37 +--
->  arch/loongarch/kvm/mmu.c                           |  15 +-
->  tools/testing/selftests/kvm/Makefile               |   2 +-
->  tools/testing/selftests/kvm/Makefile.kvm           |  17 +
->  tools/testing/selftests/kvm/include/kvm_util.h     |   6 +
->  .../kvm/include/loongarch/kvm_util_arch.h          |   7 +
->  .../selftests/kvm/include/loongarch/processor.h    | 141 +++++++++
->  .../selftests/kvm/include/loongarch/ucall.h        |  20 ++
->  tools/testing/selftests/kvm/lib/kvm_util.c         |   3 +
->  .../selftests/kvm/lib/loongarch/exception.S        |  59 ++++
->  .../selftests/kvm/lib/loongarch/processor.c        | 346 +++++++++++++++=
-++++++
->  tools/testing/selftests/kvm/lib/loongarch/ucall.c  |  38 +++
->  .../testing/selftests/kvm/set_memory_region_test.c |   2 +-
->  16 files changed, 674 insertions(+), 25 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/kvm_uti=
-l_arch.h
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/process=
-or.h
->  create mode 100644 tools/testing/selftests/kvm/include/loongarch/ucall.h
->  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
->  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
->  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
->
+> For the questions:
 
+Please consider just using standard inline method of replying in the
+future, letting your MUA quote the original message for context
+properly.
+
+> 1. What upstream tree did you intend it for and why?
+>  - Linux mainline
+>   We are developing openBMC with kernel-6.6.
+>   For submitting patch to kernel-6.6 stable tree, it should exist in mainline first.
+>   Reference: https://github.com/openbmc/linux/commits/dev-6.6/
+
+Indeed, and the process of submitting to mainline implies that for
+each subsystem there's a tree which subsystem maintainer(s) use for
+the integration and which is later offered as a the pull request for
+the upcoming version, usually it's called {subsystem}-next (also such
+trees get tested together being merged into linux-next regularly). I
+guess in this case you should make sure your patch applies to net-next
+(and makes sense there). Neither the current submission[1] nor the
+previous one[2] were applicable (see "netdev/tree_selection success
+Guessing tree name failed - patch did not apply" and indeed I tried to
+"git am" it manually to what was "net-next" back then and it failed.
+
+> 2. Have you seen such cards in the wild? It wouldn't harm mentioning
+> specific examples in the commit message to probably help people
+> searching for problems specific to them later. You can also consider
+> adding Fixes: and Cc: stable tags if this bugfix solves a real issue
+> and should be backported to stable kernels.
+>  - This NIC is developed by META terminus team and the problematic string is:
+>  The channel Version Str : 24.12.08-000
+>  I will update it to commit message later.
+
+I see, thank you. Sigh, this 12 characters limit doesn't seem to make
+much sense, too restrictive to fit a useful part of "git describe
+--tags" even, but it is what it is...
+
+[0] https://www.kernel.org/doc/html/latest/process/submitting-patches.html#from-line
+[1] https://patchwork.kernel.org/project/netdevbpf/patch/20250515083448.3511588-1-Jerry_C_Chen@wiwynn.com/
+[2] https://patchwork.kernel.org/project/netdevbpf/patch/20250227055044.3878374-1-Jerry_C_Chen@wiwynn.com/
