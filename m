@@ -1,62 +1,76 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D150A28EB;
-	Mon, 26 May 2025 14:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A257E20DD4E
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748270346; cv=none; b=PcskwOA3N7oHjniG1em/0/5kh7suSGeZAXkBTby4UYWLXUklipV7HRn6SkwBXXqhkoLCGV3C8oWOhkTWXYJkiJS68q7tIAbVffmPqdboZuqrVQymfHL6nvPApJhPxLRr5SaLq1F2ilJQoSBYQ6KeLCyBZR81GZsKfezMmF/OKls=
+	t=1748270371; cv=none; b=ZquvJAEhvhrIO/9hVlXFGgyTp+p2pWqp1NpVZJmdXWMHr6kcK/KMJClHl5Q8FQjp8hItSH5X+aBExORkXpfN08EC21PnEFAOFUn0tLtdxVvypVRuvqebA3YR+hB/GEzW3hEvxJfjzh0XMP/o80uK1ofviuZ4XY9hvco7BT8JNZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748270346; c=relaxed/simple;
-	bh=VWciSDZUuB5qMRfkwP1Gckbf/o3WDCHynGvwAs+Km/w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=n1CixRc93mY/Xw7AkwBCqBiOMpJvN4ur79MuS6XhizcuFOIu3wRIGDv4G/My8Rk1/QX2XikDAoKxE18jdfAnQPKRu5vhLf62+Q+FbRqNmUR8f/KnlCw9X9oh5zfLcaLdbPyoJ1oOfGek6MsTGxK4CpbaWVGFaDn1tfn4WuwuKaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KgP3tfqB; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748270371; c=relaxed/simple;
+	bh=Fl9KQ1T6tBblVjURuXxKb7sr5FSIRsfFPUEKx0YETUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PDu3Z3CvAQjg9+7pNzwWY02Zqe4XKi0ux98IsYvE3zHq80K1j+X/dbYAMCZembL3n/wX7JH5I8RaRFbodH+gDuxN7D5vl3H3mpm6s99QIQZ0Hpg8g9rg931skLvkqYC8Teb2H9JxynhglDPk9AUc+NRVZ8ePj/P4W7ZlWLuzS7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=i9j9Zj3a; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KgP3tfqB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 54382442B3;
-	Mon, 26 May 2025 14:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748270342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Urg+sqezh7vF8gKr14xmsaMNiNghGrMmO41OBVt6LD8=;
-	b=KgP3tfqBZ/iWYbHdKEFt7kVeOdg6D/q2LaBqD6vDZ61oy1GLoR+FiP2swbMSfGyMhzcliZ
-	7YyQiR6lpJ63NFRbqqgj9vNPsCzi5ko80V1R3mAbWChsVG7T70JW4/sqVkEArWop11Xzti
-	Jj+DoYhFR4Jv8pkzpuwjxx07y/NR9EbRI6dkmN+Lxe6t3t9zloCbeHQGfKrhM0MKNySb9F
-	NG+SgHTHuH4SaRX3UakT1E9SLbIbROWsyAofoDZ/F8W0XALXduTMyw46+QqdHotD3s6oOK
-	VMszTyabVYTf/fsLsFBjBIjMpa6F6QZohdR3sMO+fb5XUZAM1TeeeQ91f2FVWA==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: "Mahapatra, Amit Kumar" <amit.kumar-mahapatra@amd.com>
-Cc: "richard@nod.at" <richard@nod.at>,  "vigneshr@ti.com" <vigneshr@ti.com>,
-  "robh@kernel.org" <robh@kernel.org>,  "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>,  "conor+dt@kernel.org" <conor+dt@kernel.org>,
-  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-  "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  "git
- (AMD-Xilinx)" <git@amd.com>,  "amitrkcian2002@gmail.com"
- <amitrkcian2002@gmail.com>,  Bernhard Frauendienst
- <kernel@nospam.obeliks.de>
-Subject: Re: [PATCH v12 3/3] mtd: Add driver for concatenating devices
-In-Reply-To: <IA0PR12MB76996538D556ABC8E9C29624DC65A@IA0PR12MB7699.namprd12.prod.outlook.com>
-	(Amit Kumar Mahapatra's message of "Mon, 26 May 2025 14:27:37 +0000")
-References: <20250205133730.273985-1-amit.kumar-mahapatra@amd.com>
-	<20250205133730.273985-4-amit.kumar-mahapatra@amd.com>
-	<8734fa8hed.fsf@bootlin.com>
-	<IA0PR12MB76994BA493127004B569F2AEDC832@IA0PR12MB7699.namprd12.prod.outlook.com>
-	<87o6vyjgfl.fsf@bootlin.com>
-	<IA0PR12MB7699B60558C5211F8F80C471DC96A@IA0PR12MB7699.namprd12.prod.outlook.com>
-	<87o6vsejke.fsf@bootlin.com>
-	<IA0PR12MB7699044F76475546F31AAC26DC9EA@IA0PR12MB7699.namprd12.prod.outlook.com>
-	<87ecwb3i80.fsf@bootlin.com>
-	<IA0PR12MB76996538D556ABC8E9C29624DC65A@IA0PR12MB7699.namprd12.prod.outlook.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 26 May 2025 16:39:00 +0200
-Message-ID: <87msazv3ln.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="i9j9Zj3a"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edb40f357so19586185e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 07:39:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1748270368; x=1748875168; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O3LmbFPn9qPjwN79MzfZFvOK8wM7YaqRapvQ0Galz70=;
+        b=i9j9Zj3aWOyw5Qvhbln9oa/+tfQXgALMD0lvKpY0V+XXNtIIbCCEqZv8ybypCbScHQ
+         cwmUEaqjrM0PoiBW+lbT5oTemWy7AYC2MbcbvNDE0MEmKK5Mxo22mhR4YKlFddqwZs+Q
+         EXpVLUcHTIoc9JStbJGlZYvLKpXwZnHzn0jG4oRWaCDgGYzV0Fff4/cZKUs2IC+pFZ9w
+         AlfkZeHt17DR5m+Zi8BVfCDgNxTIqpJURiXlBrEAWcVrHnqaO0Zj6zGZM+L9F7FPmL74
+         IBJxg3lGUjKpl2vCPiu+o9eT9h5SUCgUN3Uj+TI95/oKqoWK4/vfYx6Xwlyq5XA0K3wT
+         IOYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748270368; x=1748875168;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O3LmbFPn9qPjwN79MzfZFvOK8wM7YaqRapvQ0Galz70=;
+        b=OxygOXdKtfXb3JscQ5ueDQGogMHuMRwQCWSMCrYBr6GnBHf02QiXryo5OHJFNdfK41
+         KjMyG/nO+gph2EYx5XEu8pcnn2WGf05G+a7gLV4pbALXHofHOcWToq9yXKal/y4B4q2u
+         kw/lKGp3SN8qqYEW14Rpux76EUqMv8KeV0GHUSjIgsH41LtpCcXbuYVgZdSJTy6Awn+A
+         nvCQ6iFwKlLMu13ZXta0syMjMo7cE95i2BrRQbt9JtA7wVKQzKm8xCWGBQHDwisMqNiK
+         LRRClq4eBAkTfYdDaPOMWS/p4AWmO416a1seyKj4Sh6ClZrIldgcPtnqnSIN9oQU9X5N
+         yqdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwObRoxhdL0Xn74oF2IeTKpbFx/NxB0+RNcG7nTKvYQD1vRFWbZKQc0NMILErQNwJ5E3RBs/iqrJ+0w7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxW1uC6FVEnRyecofrwBFNLyRfK81jEdv0a85FCwNEhcOf6Ccpw
+	x4tJTl0GkqXGUPhrpXue9Vg1oWF0E9Owx8HP7xNjhrL5+z/oUEAWn+tlictBgFHuFJk=
+X-Gm-Gg: ASbGnct2a+9qx8dkYfh3SE1BpQiVCfGOJINCMqxedHGwmLjFU2S5BtJ0NcBoOreIVoL
+	az/6IwPjS6Jp3a6tl9rEykEsTC5/xdpxuLKGQe4vDAvFe6vEVUisohcV+aqByZxPpmwHngiCQVH
+	sb8sp4vfcmcqEI9g/984MSZdP23QStPUk3DseTN/UHMFWpVcGrAFZnD5/11gZzB+IDiFADRZYM8
+	Jvk1bJ6esjEd1YOTADxrlwUwRfdsvpWttH3bmIOOZ5ZmuztMyFLRM6p0B05i948FWj8gM7dDNh5
+	2m8q//57noIswOf6NAHPaEGyxpwPI5LyyRit2OmfqcAa85CntyVquITzC+WzqcuqYDfh47mZ9oa
+	0555Y
+X-Google-Smtp-Source: AGHT+IHWNbZQQq2xcCkfOsBQFG5GydgJQzhsDWXXKGlPROTtXSpKM91qODNt5ftOiur4aJ0fCOTVuw==
+X-Received: by 2002:a05:6000:26cf:b0:3a4:bac3:2792 with SMTP id ffacd0b85a97d-3a4cb445487mr6436400f8f.4.1748270367721;
+        Mon, 26 May 2025 07:39:27 -0700 (PDT)
+Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4ccc2c88dsm7895838f8f.69.2025.05.26.07.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 07:39:27 -0700 (PDT)
+Date: Mon, 26 May 2025 16:39:26 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Anup Patel <anup@brainfault.org>
+Cc: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v4] RISC-V: KVM: add KVM_CAP_RISCV_USERSPACE_SBI
+Message-ID: <20250526-c5be5322d773143825948b8b@orel>
+References: <20250523113347.2898042-3-rkrcmar@ventanamicro.com>
+ <20250526-e67c64d52c84a8ad7cb519c4@orel>
+ <CAAhSdy1wtuLm2O7EwfVzCT7wgKf7-n9q9_DxfpA6kQA1oSoZoQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,117 +78,196 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddujeejkeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffeghfejtdefieeguddukedujeektdeihfelleeuieeuveehkedvleduheeivdefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghmihhtrdhkuhhmrghrqdhmrghhrghprghtrhgrsegrmhgurdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohept
- ghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhSdy1wtuLm2O7EwfVzCT7wgKf7-n9q9_DxfpA6kQA1oSoZoQ@mail.gmail.com>
 
-On 26/05/2025 at 14:27:37 GMT, "Mahapatra, Amit Kumar" <amit.kumar-mahapatr=
-a@amd.com> wrote:
+On Mon, May 26, 2025 at 06:12:19PM +0530, Anup Patel wrote:
+> On Mon, May 26, 2025 at 2:52 PM Andrew Jones <ajones@ventanamicro.com> wrote:
+> >
+> > On Fri, May 23, 2025 at 01:33:49PM +0200, Radim Krčmář wrote:
+> > > The new capability allows userspace to implement SBI extensions that KVM
+> > > does not handle.  This allows userspace to implement any SBI ecall as
+> > > userspace already has the ability to disable acceleration of selected
+> > > SBI extensions.
+> > > The base extension is made controllable as well, but only with the new
+> > > capability, because it was previously handled specially for some reason.
+> > > *** The related compatibility TODO in the code needs addressing. ***
+> > >
+> > > This is a VM capability, because userspace will most likely want to have
+> > > the same behavior for all VCPUs.  We can easily make it both a VCPU and
+> > > a VM capability if there is demand in the future.
+> > >
+> > > Signed-off-by: Radim Krčmář <rkrcmar@ventanamicro.com>
+> > > ---
+> > > v4:
+> > > * forward base extension as well
+> > > * change the id to 242, because 241 is already taken in linux-next
+> > > * QEMU example: https://github.com/radimkrcmar/qemu/tree/mp_state_reset
+> > > v3: new
+> > > ---
+> > >  Documentation/virt/kvm/api.rst    | 11 +++++++++++
+> > >  arch/riscv/include/asm/kvm_host.h |  3 +++
+> > >  arch/riscv/include/uapi/asm/kvm.h |  1 +
+> > >  arch/riscv/kvm/vcpu_sbi.c         | 17 ++++++++++++++---
+> > >  arch/riscv/kvm/vm.c               |  5 +++++
+> > >  include/uapi/linux/kvm.h          |  1 +
+> > >  6 files changed, 35 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> > > index e107694fb41f..c9d627d13a5e 100644
+> > > --- a/Documentation/virt/kvm/api.rst
+> > > +++ b/Documentation/virt/kvm/api.rst
+> > > @@ -8507,6 +8507,17 @@ given VM.
+> > >  When this capability is enabled, KVM resets the VCPU when setting
+> > >  MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preserved.
+> > >
+> > > +7.44 KVM_CAP_RISCV_USERSPACE_SBI
+> > > +--------------------------------
+> > > +
+> > > +:Architectures: riscv
+> > > +:Type: VM
+> > > +:Parameters: None
+> > > +:Returns: 0 on success, -EINVAL if arg[0] is not zero
+> > > +
+> > > +When this capability is enabled, KVM forwards ecalls from disabled or unknown
+> > > +SBI extensions to userspace.
+> > > +
+> > >  8. Other capabilities.
+> > >  ======================
+> > >
+> > > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> > > index 85cfebc32e4c..6f17cd923889 100644
+> > > --- a/arch/riscv/include/asm/kvm_host.h
+> > > +++ b/arch/riscv/include/asm/kvm_host.h
+> > > @@ -122,6 +122,9 @@ struct kvm_arch {
+> > >
+> > >       /* KVM_CAP_RISCV_MP_STATE_RESET */
+> > >       bool mp_state_reset;
+> > > +
+> > > +     /* KVM_CAP_RISCV_USERSPACE_SBI */
+> > > +     bool userspace_sbi;
+> > >  };
+> > >
+> > >  struct kvm_cpu_trap {
+> > > diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+> > > index 5f59fd226cc5..dd3a5dc53d34 100644
+> > > --- a/arch/riscv/include/uapi/asm/kvm.h
+> > > +++ b/arch/riscv/include/uapi/asm/kvm.h
+> > > @@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
+> > >       KVM_RISCV_SBI_EXT_DBCN,
+> > >       KVM_RISCV_SBI_EXT_STA,
+> > >       KVM_RISCV_SBI_EXT_SUSP,
+> > > +     KVM_RISCV_SBI_EXT_BASE,
+> > >       KVM_RISCV_SBI_EXT_MAX,
+> > >  };
+> > >
+> > > diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+> > > index 31fd3cc98d66..497d5b023153 100644
+> > > --- a/arch/riscv/kvm/vcpu_sbi.c
+> > > +++ b/arch/riscv/kvm/vcpu_sbi.c
+> > > @@ -39,7 +39,7 @@ static const struct kvm_riscv_sbi_extension_entry sbi_ext[] = {
+> > >               .ext_ptr = &vcpu_sbi_ext_v01,
+> > >       },
+> > >       {
+> > > -             .ext_idx = KVM_RISCV_SBI_EXT_MAX, /* Can't be disabled */
+> > > +             .ext_idx = KVM_RISCV_SBI_EXT_BASE,
+> > >               .ext_ptr = &vcpu_sbi_ext_base,
+> > >       },
+> > >       {
+> > > @@ -217,6 +217,11 @@ static int riscv_vcpu_set_sbi_ext_single(struct kvm_vcpu *vcpu,
+> > >       if (!sext || scontext->ext_status[sext->ext_idx] == KVM_RISCV_SBI_EXT_STATUS_UNAVAILABLE)
+> > >               return -ENOENT;
+> > >
+> > > +     // TODO: probably remove, the extension originally couldn't be
+> > > +     // disabled, but it doesn't seem necessary
+> > > +     if (!vcpu->kvm->arch.userspace_sbi && sext->ext_id == KVM_RISCV_SBI_EXT_BASE)
+> > > +             return -ENOENT;
+> > > +
+> >
+> > I agree that we don't need to babysit userspace and it's even conceivable
+> > to have guests that don't need SBI. KVM should only need checks in its
+> > UAPI to protect itself from userspace and to enforce proper use of the
+> > API. It's not KVM's place to ensure userspace doesn't violate the SBI spec
+> > or create broken guests (userspace is the boss, even if it's a boss that
+> > doesn't make sense)
+> >
+> > So, I vote we drop the check.
+> >
+> > >       scontext->ext_status[sext->ext_idx] = (reg_val) ?
+> > >                       KVM_RISCV_SBI_EXT_STATUS_ENABLED :
+> > >                       KVM_RISCV_SBI_EXT_STATUS_DISABLED;
+> > > @@ -471,8 +476,14 @@ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> > >  #endif
+> > >               ret = sbi_ext->handler(vcpu, run, &sbi_ret);
+> > >       } else {
+> > > -             /* Return error for unsupported SBI calls */
+> > > -             cp->a0 = SBI_ERR_NOT_SUPPORTED;
+> > > +             if (vcpu->kvm->arch.userspace_sbi) {
+> > > +                     next_sepc = false;
+> > > +                     ret = 0;
+> > > +                     kvm_riscv_vcpu_sbi_forward(vcpu, run);
+> > > +             } else {
+> > > +                     /* Return error for unsupported SBI calls */
+> > > +                     cp->a0 = SBI_ERR_NOT_SUPPORTED;
+> > > +             }
+> > >               goto ecall_done;
+> > >       }
+> > >
+> > > diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+> > > index b27ec8f96697..0b6378b83955 100644
+> > > --- a/arch/riscv/kvm/vm.c
+> > > +++ b/arch/riscv/kvm/vm.c
+> > > @@ -217,6 +217,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+> > >                       return -EINVAL;
+> > >               kvm->arch.mp_state_reset = true;
+> > >               return 0;
+> > > +     case KVM_CAP_RISCV_USERSPACE_SBI:
+> > > +             if (cap->flags)
+> > > +                     return -EINVAL;
+> > > +             kvm->arch.userspace_sbi = true;
+> > > +             return 0;
+> > >       default:
+> > >               return -EINVAL;
+> > >       }
+> > > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > > index 454b7d4a0448..bf23deb6679e 100644
+> > > --- a/include/uapi/linux/kvm.h
+> > > +++ b/include/uapi/linux/kvm.h
+> > > @@ -931,6 +931,7 @@ struct kvm_enable_cap {
+> > >  #define KVM_CAP_X86_GUEST_MODE 238
+> > >  #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
+> > >  #define KVM_CAP_RISCV_MP_STATE_RESET 240
+> > > +#define KVM_CAP_RISCV_USERSPACE_SBI 242
+> > >
+> > >  struct kvm_irq_routing_irqchip {
+> > >       __u32 irqchip;
+> > > --
+> > > 2.49.0
+> > >
+> >
+> > Otherwise,
+> >
+> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> 
+> We are not going ahead with this approach for the reasons
+> mentioned in v3 series [1].
 
-> [AMD Official Use Only - AMD Internal Distribution Only]
->
->> > [AMD Official Use Only - AMD Internal Distribution Only]
->> >
->> >> On 13/05/2025 at 14:45:39 GMT, "Mahapatra, Amit Kumar" <amit.kumar-
->> >> mahapatra@amd.com> wrote:
->> >>
->> >> > [AMD Official Use Only - AMD Internal Distribution Only]
->> >> >
->> >> > Hello Miquel,
->> >> >
->> >> >> >> > +           mtd->dev.parent =3D concat->subdev[0]->dev.parent;
->> >> >> >> > +           mtd->dev =3D concat->subdev[0]->dev;
->> >> >> >> > +
->> >> >> >> > +           /* Register the platform device */
->> >> >> >> > +           ret =3D mtd_device_register(mtd, NULL, 0);
->> >> >> >> > +           if (ret)
->> >> >> >> > +                   goto destroy_concat;
->> >> >> >> > +   }
->> >> >> >> > +
->> >> >> >> > +   return 0;
->> >> >> >> > +
->> >> >> >> > +destroy_concat:
->> >> >> >> > +   mtd_concat_destroy(mtd);
->> >> >> >> > +
->> >> >> >> > +   return ret;
->> >> >> >> > +}
->> >> >> >> > +
->> >> >> >> > +late_initcall(mtd_virt_concat_create_join);
->> >> >> >>
->> >> >> >> The current implementation does not support probe deferrals, I
->> >> >> >> believe it should be handled.
->> >> >> >
->> >> >> > I see that the parse_mtd_partitions() API can return
->> >> >> > -EPROBE_DEFER during MTD device registration, but this behavior
->> >> >> > is specific to the parse_qcomsmem_part parser. None of the other
->> >> >> > parsers appear to support probe deferral. As discussed in RFC
->> >> >> > [1], the virtual concat feature is purely a fixed-partition
->> >> >> > capability, and based on my understanding, the fixed-partition p=
-arser does
->> not support probe deferral.
->> >> >> > Please let me know if you can think of any other probe deferral
->> >> >> > scenarios that might impact the virtual concat driver.
->> >> >>
->> >> >> That's true, but I kind of dislike the late_initcall, I fear it
->> >> >> might break in creative
->> >> ways.
->> >> >
->> >> > I understand, but since we require the partition information to be
->> >> > available, late_initcall seems to be the most suitable choice among
->> >> > the initcall levels=E2=80=94if we decide to proceed with using an i=
-nitcall.
->> >> > Regarding potential failures, as far as I can tell, the operation
->> >> > would fail if, at the time of concatenation, one or more of the MTD
->> >> > devices involved in the concat are not yet available. In such a
->> >> > scenario, we can issue a kernel warning and exit gracefully. But,
->> >> > However, if you prefer to move away from using initcalls and have
->> >> > an alternative implementation approach in mind, please let us know.
->> >>
->> >> I am sorry but this does not work with modules, and we cannot ignore
->> >> this case I believe. More specifically, if a controller probe is
->> >> deferred (with EPROBE_DEFER or just prevented because some
->> >> dependencies are not yet satisfied), you'll get incorrectly defined m=
-td devices.
->> >
->> > Ok, an alternative solution could be to remove the initcall
->> > registration and instead invoke mtd_virt_concat_create_join()=E2=80=94=
-which
->> > was previously registered as a late_initcall=E2=80=94directly from
->> mtd_device_parse_register().
->> > I believe this approach would address both of your concerns regarding
->> > module support and probe deferral. Additionally, we could consider
->> > moving the entire code from mtd_virt_concat.c into mtdconcat.c.
->> > Please let us know your take on this.
->>
->> What would this bring?
->>
->> Maybe we should trigger some kind of notifier after registering an mtd d=
-evice and in
->> there attempt to gather all mtd devices required for the concatenation. =
-Can you
->> please propose something like that?
->
-> In the current patch, during MTD registration, if a device is
-> part of a concatenated (concat) device, it is not registered individually.
-> Instead, its information is stored in a concat-specific data structure, as
-> it is not meant to be exposed as a standalone MTD device. As per my
-> earlier proposal, once all individual MTD devices are registered,
-> mtd_virt_concat_create_join() is called from
-> mtd_device_parse_register() to scan this data structure and create the
-> corresponding concat devices. Just to confirm, are you suggesting that
-> mtd_virt_concat_create_join() should be triggered through a notifier
-> instead? At the point when all individual MTD devices are registered,
-> we already have the complete information required for concatenation.
-> So, rather than relying on a listener notification, we cac directly call =
-the
-> API. Please let me know if I am missing anything here.
-
-This approach does not stand because, afair, it relies on a single
-late_initcall() which is too early. We want concatenation to work
-regardless of the Kconfig selection =3Dy or =3Dm.
+IIUC, the main concern in that thread is that userspace won't know what to
+do with some of the exits it gets or that it'll try to take control of
+extensions that it can't emulate. I feel like not exiting to userspace in
+those cases is trying to second guess it, i.e. KVM is trying to enforce a
+policy on userspace. But, KVM shouldn't be doing that, as userspace should
+be the policy maker. If userspace uses this capability to opt into getting
+all the SBI exits (which it doesn't want KVM to handle), then it should be
+allowed to get them -- and, if userspace doesn't know what it's doing,
+then it can keep all the pieces.
 
 Thanks,
-Miqu=C3=A8l
+drew
+
+> 
+> Regards,
+> Anup
+> 
+> [1] https://patchwork.ozlabs.org/project/kvm-riscv/cover/20250515143723.2450630-4-rkrcmar@ventanamicro.com/
