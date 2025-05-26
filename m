@@ -1,135 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A3614D29B
-	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 04:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB3214D29B;
+	Mon, 26 May 2025 04:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748233994; cv=none; b=BewuiIxDAaECFP5WZabVUZLbKnzFFKofUTbBSffEMv0aBwL1Xxik6unEFM9DBzrdSF377DgF3pgfmuDD1tFsG3RfvswSnK6yRKETdP76en4Ru9DYcw/0Rsl2GknwPeUXYkLNx0zC8DbP/+iLDC87wPbpgmXuRn2GjhOSo22Zwyk=
+	t=1748234083; cv=none; b=meGy52UO+J/7wXrFXTL/9t6CAHbgHXBrwHgihJ8DjyvEeliADkhOpw+E9BBzo1A55lytp++OyV94DnZtON7kmRGYuvXP/rzhwztB0XN0Bv6lRUSXlLur2ZuCc5ATHUEDmBSWpxJmh0/gJvUPOnf/FNMZfYfHGv83qMNNmFhi/DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748233994; c=relaxed/simple;
-	bh=vfujHF/QZsbAY6fnZ8+jww7Il9C4bpQWXm3/AJDvH7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pjA45z+b0aaYbvtruSkaJIzEPOTBFq7MEZwskC/vkwW2DxTGq1IUSB8pWrUXSbOjKaXIoo8KiMzcBR0kHO+mfcF9dAqI/od04DKh+vY0o4zuxsa2wiHn1iVeebjc0eyUZmTtYc4en6aFJG7ojMeaiXd5unuLv4AxL50qO16/X7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+sUIg6o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748234083; c=relaxed/simple;
+	bh=8SORB+Gtjm+0iyAAYxHA2Reo+gdvTPRF6aFFxqcu7wg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S3cXFW8QXnBEJ+nmeGycVCmFL3l9uXWIYHlCDYESxl9gJTeQDbI5nr+DZ3bQA6M4HHt2wipdKzpjIj9ZH7gsciEv7+DkWRidQ6mPtW7r+InQR2GmXQ5AS1lzA9rAY8v+c8sCn/oPRG1aTQSzf/YGoS9YSDu+3edc9prahakCt6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W1zmuGmE; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+sUIg6o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38908C4CEE7;
-	Mon, 26 May 2025 04:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748233993;
-	bh=vfujHF/QZsbAY6fnZ8+jww7Il9C4bpQWXm3/AJDvH7A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=p+sUIg6oF6uoDy7lnoT7KDyVlp5gnf6WXQyIu+m5sAP4dK3wP7+K3fEplPRo7fom/
-	 MIYmS9usdK26pPu0yk5GeStBUnngVMh9GD10W0e1bB80Dnoo1DDnYr2RkylXgoqhBP
-	 qaENmp76urv48UHvBRKcj90TxrM5DqalAffKY+6KmMXRHB85uEh1CiofkPqT0aIf8S
-	 Sj1/zU1M3wGFwX2fgbXogpCsXXpg9bOEFkmZ4Iz1u0WhAuAk3DO40cBKtUTzFYN1Bb
-	 I71Sk2pcAzoZG3niSrkMNV6jPGj2LKQO0ZPaXeoCVOyVY/mL0kTb6NVQzP5DerqYq9
-	 j8dNYccKu2edA==
-Date: Mon, 26 May 2025 12:33:02 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Sheng Yong <shengyong1@xiaomi.com>,
-	Sandeep Dhavale <dhavale@google.com>, Bo Liu <liubo03@inspur.com>,
-	Chao Yu <chao@kernel.org>
-Subject: [GIT PULL] erofs updates for 6.16-rc1
-Message-ID: <aDPu/jffhb499L49@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Sheng Yong <shengyong1@xiaomi.com>,
-	Sandeep Dhavale <dhavale@google.com>, Bo Liu <liubo03@inspur.com>,
-	Chao Yu <chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1zmuGmE"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso1123675b3a.2;
+        Sun, 25 May 2025 21:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748234081; x=1748838881; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rpYj8itDK4L5wE/M7/hM6tOuRa6rFUXJoS7o5oXlxCw=;
+        b=W1zmuGmEz5RSrbgVcKzuRDNVPrqTxinMtsIbkHAUVV0ZlT/TQxfC8dxrr4Pzb9dm8e
+         vnm3JTgeRib1alsWuQh4rv2gy4+MGnF++O6Np4LigHK1Y/3OePPa/JQQbnIYG6MW3XTy
+         OgEH02Fr7qlNniCpVr+t+PoX4J97ncF6oZbADycRgiJfNKYjD42+omKpTZcdnPct4mDI
+         l/9KVUPN76DhYoFIpg9MLvXsAbMwpfHS39JxtHcI82YVDYS/hhNULt9aIB84fJcy8B+d
+         tzBK+FzMYHhaCZ2bXzscFRtV7loZl1IFGIpxIoxlIKNfSOwBw0QGCJiR+1dBY1mM2Kbz
+         zGhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748234081; x=1748838881;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rpYj8itDK4L5wE/M7/hM6tOuRa6rFUXJoS7o5oXlxCw=;
+        b=iyjAoE7aCpqWG13fNB9oYfd9AHimhdApSQWAoelEB6lGjsatW4WPxg7uK1Lf1xrjKV
+         7JmnzFWBIsP+r7mvwylWNYGNd3tcHSJ/NPwk+UpfbJ3IhXhAmAOsK6lPkzhu/oPWgv3i
+         o0/5fBMsgoUGCQVVeCKw919Hy3tyOMEUR2gt3MmehM8PCGhAoDMK5rSyc2K6lei6a8ec
+         3+RXRYYwzM5tEV8HPoQY7Z/SXjlTCPLapxcC5fgpnA3D7duR77DF3NoLGfN/KtuIeVp/
+         K7hzIGATSqAztmeDHpTG6yfglgzzeMAilaNciMa09LSzgSV3H4KUKigLUboB0HReh27e
+         WRFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXblqskTGf+66Leah5g4RkHOSrllA0JwPk63Sgpy9clKLKix13j09m6gN1NCnVHE5O+TUfKjjWJi2Ov1t0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHgAfBZsKeHov+nQaU71ShalGkNUuj7xHm97uJRSxYV6NOMoaP
+	CsvLEewQf2UomqQ3J6DvnzB7+vuGCffNm1WM2y1BXc1Y6Z78Nkh/xR9S
+X-Gm-Gg: ASbGnctxIrGpgI2LqipxMi7v5N+cw8+EQVKdU2hZ1hIcSeJhSvpbwEbqqGqyupuq6LS
+	Q4hG+sAuC03N6atnYgCCcF9FF+mu64mf3jJ3Lk7XxjEglXDLvWUBk8T1i3y9UG2+Kz+EHHLUR3e
+	9Qq9SREDpFutErXkYaECNftqv4Xt6XgR9+h+Wve5JnRuVFEDviGyNK3FS3flleK36KUUG92mk9g
+	uJtYrmf7IGgBoBtmZ/3PtSubAFrlYakvt0yOdQgbm2OoDZqpRiZ6OcOR0SN351L18tM/SndSU6Z
+	frVpP/EXis9uQKfBA+hCq1JI8GnTqYB/9Sa4vLNo2C6K3YgVNHri8ZI1JPt64Y5vKDOm2mBtJW9
+	zppa/1WE=
+X-Google-Smtp-Source: AGHT+IEhIpUrTY4pcMXHRLsWmSAvbbjH3A82MNSLEvp0ddvItt6vFgiIKuz1HatoYVkFE9eQo8gcEQ==
+X-Received: by 2002:a05:6a20:3ca6:b0:203:addb:5a29 with SMTP id adf61e73a8af0-2188c3c7982mr11822221637.40.1748234080874;
+        Sun, 25 May 2025 21:34:40 -0700 (PDT)
+Received: from giraffesnn.localdomain ([106.37.191.2])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2c3b85d967sm96722a12.61.2025.05.25.21.34.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 May 2025 21:34:40 -0700 (PDT)
+From: Yongbo Zhang <giraffesnn123@gmail.com>
+To: heikki.krogerus@linux.intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yongbo Zhang <giraffesnn123@gmail.com>
+Subject: [PATCH] usb: typec: fusb302: fix scheduling while atomic when using virtio-gpio
+Date: Mon, 26 May 2025 12:34:33 +0800
+Message-ID: <20250526043433.673097-1-giraffesnn123@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+When the gpio irqchip connected to a slow bus(e.g., i2c bus or virtio
+bus), calling disable_irq_nosync() in top-half ISR handler will trigger
+the following kernel BUG:
 
-Could you consider this pull request for 6.16-rc1?
+BUG: scheduling while atomic: RenderEngine/253/0x00010002
+...
+Call trace:
+ dump_backtrace+0x0/0x1c8
+ show_stack+0x1c/0x2c
+ dump_stack_lvl+0xdc/0x12c
+ dump_stack+0x1c/0x64
+ __schedule_bug+0x64/0x80
+ schedule_debug+0x98/0x118
+ __schedule+0x68/0x704
+ schedule+0xa0/0xe8
+ schedule_timeout+0x38/0x124
+ wait_for_common+0xa4/0x134
+ wait_for_completion+0x1c/0x2c
+ _virtio_gpio_req+0xf8/0x198
+ virtio_gpio_irq_bus_sync_unlock+0x94/0xf0
+ __irq_put_desc_unlock+0x50/0x54
+ disable_irq_nosync+0x64/0x94
+ fusb302_irq_intn+0x24/0x84
+ __handle_irq_event_percpu+0x84/0x278
+ handle_irq_event+0x64/0x14c
+ handle_level_irq+0x134/0x1d4
+ generic_handle_domain_irq+0x40/0x68
+ virtio_gpio_event_vq+0xb0/0x130
+ vring_interrupt+0x7c/0x90
+ vm_interrupt+0x88/0xd8
+ __handle_irq_event_percpu+0x84/0x278
+ handle_irq_event+0x64/0x14c
+ handle_fasteoi_irq+0x110/0x210
+ __handle_domain_irq+0x80/0xd0
+ gic_handle_irq+0x78/0x154
+ el0_irq_naked+0x60/0x6c
 
-In this cycle, Intel QAT hardware accelerators are supported to improve
-DEFLATE decompression performance.  I've also tested it with the enwik9
-dataset of 1 MiB pclusters on our Intel Sapphire Rapids bare-metal
-server and a PL0 ESSD, and the sequential read performance even
-surpasses LZ4 software decompression on this setup.
+This patch replaces request_irq() with devm_request_threaded_irq() to
+avoid the use of disable_irq_nosync().
 
-In addition, a `fsoffset` mount option is introduced for file-backed
-mounts to specify the filesystem offset in order to adapt customized
-container formats.
+Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
+---
+ drivers/usb/typec/tcpm/fusb302.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-There are other improvements and minor cleanups shown as below.  All
-commits have been in -next, and no potential merge conflicts are
-observed.
+diff --git a/drivers/usb/typec/tcpm/fusb302.c b/drivers/usb/typec/tcpm/fusb302.c
+index f15c63d3a8f4..f2801279c4b5 100644
+--- a/drivers/usb/typec/tcpm/fusb302.c
++++ b/drivers/usb/typec/tcpm/fusb302.c
+@@ -1477,9 +1477,6 @@ static irqreturn_t fusb302_irq_intn(int irq, void *dev_id)
+ 	struct fusb302_chip *chip = dev_id;
+ 	unsigned long flags;
 
-Thanks,
-Gao Xiang
+-	/* Disable our level triggered IRQ until our irq_work has cleared it */
+-	disable_irq_nosync(chip->gpio_int_n_irq);
+-
+ 	spin_lock_irqsave(&chip->irq_lock, flags);
+ 	if (chip->irq_suspended)
+ 		chip->irq_while_suspended = true;
+@@ -1622,7 +1619,6 @@ static void fusb302_irq_work(struct work_struct *work)
+ 	}
+ done:
+ 	mutex_unlock(&chip->lock);
+-	enable_irq(chip->gpio_int_n_irq);
+ }
 
+ static int init_gpio(struct fusb302_chip *chip)
+@@ -1747,9 +1743,10 @@ static int fusb302_probe(struct i2c_client *client)
+ 		goto destroy_workqueue;
+ 	}
 
-The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
+-	ret = request_irq(chip->gpio_int_n_irq, fusb302_irq_intn,
+-			  IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+-			  "fsc_interrupt_int_n", chip);
++	ret = devm_request_threaded_irq(dev, chip->gpio_int_n_irq,
++					NULL, fusb302_irq_intn,
++					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
++					"fsc_interrupt_int_n", chip);
+ 	if (ret < 0) {
+ 		dev_err(dev, "cannot request IRQ for GPIO Int_N, ret=%d", ret);
+ 		goto tcpm_unregister_port;
+@@ -1774,7 +1771,6 @@ static void fusb302_remove(struct i2c_client *client)
+ 	struct fusb302_chip *chip = i2c_get_clientdata(client);
 
-  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+ 	disable_irq_wake(chip->gpio_int_n_irq);
+-	free_irq(chip->gpio_int_n_irq, chip);
+ 	cancel_work_sync(&chip->irq_work);
+ 	cancel_delayed_work_sync(&chip->bc_lvl_handler);
+ 	tcpm_unregister_port(chip->tcpm_port);
+--
+2.49.0
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.16-rc1
-
-for you to fetch changes up to b4a29efc51461edf1a02e9da656d4480cabd24b0:
-
-  erofs: support DEFLATE decompression by using Intel QAT (2025-05-25 15:27:40 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Add a `fsoffset` mount option to specify the filesystem offset;
-
- - Support Intel QAT accelerators to boost up the DEFLATE algorithm;
-
- - Initialize per-CPU workers and CPU hotplug hooks lazily to avoid
-   unnecessary overhead when EROFS is not mounted;
-
- - Fix file handle encoding for 64-bit NIDs;
-
- - Minor cleanups.
-
-----------------------------------------------------------------
-Bo Liu (1):
-      erofs: support DEFLATE decompression by using Intel QAT
-
-Gao Xiang (2):
-      erofs: refine readahead tracepoint
-      erofs: clean up erofs_{init,exit}_sysfs()
-
-Hongbo Li (1):
-      erofs: fix file handle encoding for 64-bit NIDs
-
-Sandeep Dhavale (1):
-      erofs: lazily initialize per-CPU workers and CPU hotplug hooks
-
-Sheng Yong (2):
-      erofs: avoid using multiple devices with different type
-      erofs: add 'fsoffset' mount option to specify filesystem offset
-
- Documentation/ABI/testing/sysfs-fs-erofs |   8 ++
- Documentation/filesystems/erofs.rst      |   1 +
- fs/erofs/Kconfig                         |  14 +++
- fs/erofs/Makefile                        |   1 +
- fs/erofs/compress.h                      |  10 ++
- fs/erofs/data.c                          |   5 +-
- fs/erofs/decompressor_crypto.c           | 181 +++++++++++++++++++++++++++++++
- fs/erofs/decompressor_deflate.c          |  20 +++-
- fs/erofs/fileio.c                        |   5 +-
- fs/erofs/internal.h                      |   3 +-
- fs/erofs/super.c                         |  65 +++++++++--
- fs/erofs/sysfs.c                         |  67 ++++++++----
- fs/erofs/zdata.c                         |  79 ++++++++++----
- include/trace/events/erofs.h             |   2 +-
- 14 files changed, 397 insertions(+), 64 deletions(-)
- create mode 100644 fs/erofs/decompressor_crypto.c
