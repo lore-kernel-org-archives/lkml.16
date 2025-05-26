@@ -1,97 +1,79 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9351F429C;
-	Mon, 26 May 2025 11:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658C61F4725;
+	Mon, 26 May 2025 11:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260092; cv=none; b=XGwmZEjCEE3y5QCkNrYFhx1+5qdKjaCQss/pxT7Pl/rSU5BzepOdXu1a6nbX5NAdcBOq/lVa7TA0oxusYmNhDdp3gQa8TpCZMT911hINb1ftkz5v5SB0Xr0Tkd8zAv2nPH3WiVQ+eNQH1SRctaPHxaoiVzskOSDOnj0e2RBWozI=
+	t=1748260104; cv=none; b=TE3BKmp5OnIR9hjwSCMHNTRrVaLPq8ZjBNv28sSgRHWAUsPJmvXKIy7YJNxwo1xjDqka5H+20sSqVDVsXhvgQTbzzegU0iywOb/WMRoCRXWJ5rzNZSS0XJtHgADIhYay1XrSIDCLnssR+N/HoTD2cpvxlfvMWlm+S6QYBkYnG5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260092; c=relaxed/simple;
-	bh=XsGcsxhAbv7yMUleVyXys+nMUzETejwwA0tokuI4C0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYuOwQjoRzZhkC4EktM8ltM+Plrwn6pf1ECf53Ma/x339uA7NqAKO3pd5K4pp7cVbx+M4MFKySxoOj7RadT4HbBA/lz0CB5ZbdX7qSjGhlg4rhBb+do7uuvV3fjkNpYSxqeysSB/8JJ1Vv5qvzuEW4oKINGbwkqzgiX92XqRFf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mOsf/aiJ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748260104; c=relaxed/simple;
+	bh=Z5e7LYUJWrN8Oqgcyb4aHiiFK/LIDVnO1Tn4lc/8a7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rx6TqHVwv4UYf6SlhFP1wyvvsDvML7uEvhioVD48EzzX7YVzlUszFrzwRQjfMpnoSB4bQFCqOjwlwrcJxcvWerfKdy7m3Ht9sd3atSXK5eyHMhWP0Yzzuf/sgNZuga2RBuxGG4aOyc3ob3g0tW+ubWtbGj6Wq5vESTJgZM5f3A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ye30ttZA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mOsf/aiJ"
-Received: from pendragon.ideasonboard.com (237.69-130-109.adsl-dyn.isp.belgacom.be [109.130.69.237])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A49E1982;
-	Mon, 26 May 2025 13:47:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748260063;
-	bh=XsGcsxhAbv7yMUleVyXys+nMUzETejwwA0tokuI4C0M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mOsf/aiJ6oKCcvP88HehPE3/R0EvX/IOFlZzgPh/qS9Tj5XBJ78Ed+oyNRWYhBKnL
-	 peLogcjskIF9A0HadVG5TKc3sMbycGbXdN5bN4bn09z7jnhxPliZMuxketHTTVZZib
-	 RZXyGoaSt8y4vkcPb3O21ONztioi78u1hftALubk=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ye30ttZA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD50FC4CEF3;
+	Mon, 26 May 2025 11:48:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748260103;
+	bh=Z5e7LYUJWrN8Oqgcyb4aHiiFK/LIDVnO1Tn4lc/8a7Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ye30ttZAMlNo34zgpSRrajqfBM4RbPOWOy6A87yyedXcwhwZ7mpVd59AFImhQJhTo
+	 UBmLp43z0ow17lrUxBqfGK4Cf6/rm13cDeWu9wWfUncSU6ZzmP77EaI24KIM1Rzhx4
+	 1f/io6bV48+6kFYvZsueZPywJLRLP+gva1yW+oQS0TuvcXxL5sXU2qSxJDrRnp94v5
+	 eCQZCWGuV/txZb8XSueafxQx5FK9yRaEofsu8tbwX8p87I80dvcFCBOwZV2PfNlX/5
+	 4PugJNjgKi2RueB0IA8QjcVcAcK5oXnqY5hOL1ftnXetSrw0a3YupEDAJgCth2FBzQ
+	 xepCCq71VjhQA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1uJWJd-000000000Yu-1hee;
+	Mon, 26 May 2025 13:48:25 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 2/3] wifi: ath11k: use plain access for descriptor length
 Date: Mon, 26 May 2025 13:48:02 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Haren Myneni <haren@linux.ibm.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Andrew Donnellan <ajd@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Akshay Gupta <akshay.gupta@amd.com>, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, hans@jjverkuil.nl,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Lee Jones <lee@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: Bump media IOCTL reserved numbers
-Message-ID: <20250526114802.GD17743@pendragon.ideasonboard.com>
-References: <20250526111732.487229-1-sakari.ailus@linux.intel.com>
- <20250526111732.487229-2-sakari.ailus@linux.intel.com>
+Message-ID: <20250526114803.2122-3-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250526114803.2122-1-johan+linaro@kernel.org>
+References: <20250526114803.2122-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250526111732.487229-2-sakari.ailus@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Sakari,
+The read memory barrier added by commit 6d037a372f81 ("wifi: ath11k: fix
+ring-buffer corruption") is enough to guarantee ordering also for plain
+descriptor accesses if the length helper is ever inlined so drop the
+unnecessary READ_ONCE().
 
-Thank you for the patch.
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/net/wireless/ath/ath11k/hal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, May 26, 2025 at 02:17:31PM +0300, Sakari Ailus wrote:
-> The Media Controller uses IOCTL numbers up to 0x81. Given that nothing
-> appears to be using them for other purposes, even in the samples
-> allocation (checked with $ git grep "#define.*_IO.*'|'"), just reassign
-> the numbers up to 0x8f to linux/media.h and bump the samples allocation by
-> 0x10.
-
-The commit message should explain why. The explanation is in the cover
-letter, just move it to this patch. With that,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  Documentation/userspace-api/ioctl/ioctl-number.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index bc91756bde73..6b3be3fb0b15 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -312,8 +312,8 @@ Code  Seq#    Include File                                           Comments
->  'z'   40-7F                                                          CAN bus card conflict!
->                                                                       <mailto:oe@port.de>
->  'z'   10-4F  drivers/s390/crypto/zcrypt_api.h                        conflict!
-> -'|'   00-7F  linux/media.h
-> -'|'   80-9F  samples/                                                Any sample and example drivers
-> +'|'   00-8F  linux/media.h
-> +'|'   90-AF  samples/                                                Any sample and example drivers
->  0x80  00-1F  linux/fb.h
->  0x81  00-1F  linux/vduse.h
->  0x89  00-06  arch/x86/include/asm/sockios.h
-
+diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
+index 8cb1505a5a0c..1ea7c494f387 100644
+--- a/drivers/net/wireless/ath/ath11k/hal.c
++++ b/drivers/net/wireless/ath/ath11k/hal.c
+@@ -599,7 +599,7 @@ u32 ath11k_hal_ce_dst_status_get_length(void *buf)
+ 	struct hal_ce_srng_dst_status_desc *desc = buf;
+ 	u32 len;
+ 
+-	len = FIELD_GET(HAL_CE_DST_STATUS_DESC_FLAGS_LEN, READ_ONCE(desc->flags));
++	len = FIELD_GET(HAL_CE_DST_STATUS_DESC_FLAGS_LEN, desc->flags);
+ 	desc->flags &= ~HAL_CE_DST_STATUS_DESC_FLAGS_LEN;
+ 
+ 	return len;
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
