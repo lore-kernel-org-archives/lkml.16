@@ -1,87 +1,100 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE432AF0E;
-	Mon, 26 May 2025 07:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB331C84CD;
+	Mon, 26 May 2025 07:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748245932; cv=none; b=jCf/sQ0yK4WvMhSK9WsjL2OqU8QsEJSVieTQvTm4vrZ8Gw/+B/Y2t5QE7My0+o3RaxBQ9BHPvUCp/QeVFhyBUeUraZImqhnrTZF5By/Wtpe/0keHfARzWF63VB/YmpGmDasumzyIGGHQKM4ir1Ot5N+c4Z5siielXJ83+cQ4p4o=
+	t=1748245987; cv=none; b=tSxE3THfYaEj58sUWZWWiW9Kw2pJz6a5kkORsos2ydKG7qJRc97KIVkmODp6meOAjegctvms/zuVIXaSe6Lm3JWyFTKxnC4m7kAvgEzU8ArVWiB+IOO1IYLEtC9t6ZpYsX2CXCKtPFHkf8OFYo7C8oeICtzXKH+oGcaCfFW9f7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748245932; c=relaxed/simple;
-	bh=hYSD3PlF9L+v9qfDL2Kg4V0Xzph3OIvTrB7L2EivZCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sPDsBSIZhPHvstmIHpnM/uP75eeDEDGh9rPryFwb1NEHcC6d2wcGi9mnMkeK91FmLiFNMxonbBoOWt5JkfNzNgSaUc7E7pDeUL9TgK65wEqcMyRIolYxP9HXUdE1zJxLKgLRca9XKbbvbf+hEy0XsSJgzEcjH0w5XM0MAJSxWBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=GuSIrM3e; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748245987; c=relaxed/simple;
+	bh=BbYGMsfcLHp+/GVsG438+tTvy3Zkb+vofZ3c+RLfKYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hz7J9pL3D9k1hI94JGzWLGfSxtb9Twzk7xtdFwATGmgSiGxcAhTsPy0XCFwGiy14lQfQMF/0Zx0K+jYGqNP6tPtONxAzBO9U09yIK2DKSUIpbnHWkq1C1DvqnjPx2QrRRXosRr9nsWDdmueehmkT8o7JJLe4Q+rLX52RS/2sLxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LzTJvrdC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GuSIrM3e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748245927;
-	bh=NNanZOm7YG80Od8y51VaKCs3A96aFr3Rb6FDLU5HGoM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GuSIrM3eccbSUiPu2KL15wnC7qKLKRc72RM1YGjXlj0ywcvcRyqnyn7yTQVkO8I5M
-	 cI4u2vaWGRejuvVp5DQhnqeWyoVLPAs8rV+XcAJrAoFe7TkKehOLo8Xg6Sj7nkEmFH
-	 EMS60cObxzPNlRY24ZZ080EET91wQcYT17dRBu1VG0nULw5m4CWAfdwEVRZMnu0ZNj
-	 PjE9enBXNNF1/o93j3k9VaC6/BxQjdC1dWTXeSQEYs1KtWNXG8/x0SmXk2Y5kKgr8O
-	 w7tOnB4HfVxPep4mWJx2mOQH45pBH4rto6r0BgoJt8QRW2JREJKlS+jBa8Pu+zSFnV
-	 0Ime6H3MBfgiw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b5Sdz1T16z4wbW;
-	Mon, 26 May 2025 17:52:07 +1000 (AEST)
-Date: Mon, 26 May 2025 17:52:06 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kees Cook <kees@kernel.org>, Wim Van Sebroeck <wim@iguana.be>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the kspp tree
-Message-ID: <20250526175206.42307d8d@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LzTJvrdC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A1D8C4CEE7;
+	Mon, 26 May 2025 07:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748245987;
+	bh=BbYGMsfcLHp+/GVsG438+tTvy3Zkb+vofZ3c+RLfKYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LzTJvrdCv3nCLYhYIyEeMGq+fLpz1CGeMaWzTofOe+2rmzvRlodufbGuN+/2f/w4G
+	 KBXhQ55ORwcVVU92jYoabGLkCqfcCbu/Gz64FYjnA3kC4n2lXAUvePfc2IaRHyla4G
+	 Ns+hSFLf2rSCV8sINX63yJrk1TRm8jqBh5E0hcb4anV7JnDZgm9Gvrq+OYFzNQbVg6
+	 pLWkpdIOjUZoamrP4CODlUBJHpD8owQmUlbsTAhXZX78ufwuuEYqQH8JvPFkC41PqF
+	 yws+zgWoe3a3BUJlJI8MCWycG58EOYJDeLk1DiLLNyvalOc7drqO6BbjLwasHGacyy
+	 4bq16Cx6N3Y1Q==
+Date: Mon, 26 May 2025 09:53:04 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, 
+	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 1/6] rust: Add basic PWM abstractions
+Message-ID: <enxctdseecqz765nmd24vziiaksmyhltqfwycdszmfq3s7orjm@lnpc7czuluis>
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <CGME20250524211520eucas1p1378fbab27f4b1ae8808706c074fa217c@eucas1p1.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aISM_FPhuyRXvrM8YMCJTQT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ojsy757ta3qba3or"
+Content-Disposition: inline
+In-Reply-To: <20250524-rust-next-pwm-working-fan-for-sending-v1-1-bdd2d5094ff7@samsung.com>
 
---Sig_/aISM_FPhuyRXvrM8YMCJTQT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+--ojsy757ta3qba3or
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH RFC 1/6] rust: Add basic PWM abstractions
+MIME-Version: 1.0
 
-The following commit is also in the watchdog tree as a different commit
-(but the same patch):
+Hello Michal,
 
-  8e28276a569a ("watchdog: exar: Shorten identity name to fit correctly")
+On Sat, May 24, 2025 at 11:14:55PM +0200, Michal Wilczynski wrote:
+> Introduce initial Rust abstractions for the Linux PWM subsystem. These
+> abstractions provide safe wrappers around the core C data structures and
+> functions, enabling the development of PWM chip drivers in Rust.
 
-this is commit
+Oh wow, thanks for rustifying PWM. That might be my chance to actually
+learn Rust.
 
-  f2019c0c8b7c ("watchdog: exar: Shorten identity name to fit correctly")
+I don't know when I will find the time to look into that in detail but
+one thing I'd like to have for Rust support is that the drivers use the
+new abstraction (i.e. .round_waveform_tohw() + .round_waveform_fromhw()
++ .read_waveform() + .write_waveform()) instead of the older .apply()
+callback.
 
-in the watchdog tree.
+Best regards
+Uwe
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aISM_FPhuyRXvrM8YMCJTQT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--ojsy757ta3qba3or
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg0HaYACgkQAVBC80lX
-0GyM3wgAml2fHuuTLTuTNLJ+5MN9nNJ+lBg1cFu6KE0byLMRwC1YipKzUNnoSIi6
-RxyzOzFol3gPS80ieD29TSKMynJFmkHOJgn/PZd9aoZi2gBIN91jj8erx7yuBcZ+
-spt6RYiQwDV1S6ktmwpCLI5GEfE8zaSFcb0OwWgproWNPy91YeCOWYHyqsQPsTzA
-bh9u4PUCnpn/lDbdGRGU0b4TNQvkA1Vw0PB1AZEAnZZ+76GCHgh7ratQn9sSXGiO
-TjyT4HrtEeo5HTKVVrcO7zM5HfS6NgRCBNxed7YWPIHagqz8lMJ4FRAzE5Ak8t7f
-c0N15MCtjGa4PBweAmejge2q1IdNEw==
-=WhlG
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg0Hd0ACgkQj4D7WH0S
+/k59QQf/Zie657XEyEobiX+YRFby/LT3J0PihO7GXdaQaMVGvLXBOvDxjG8OeNu0
++ZLs+pGuXMJEBtLuBgN35D8f0MRvrzhYkHLoG4OEMCUXYl8F5PandUtiVaW9YRjQ
+Qd5ty0G46BqM2IA20QvxKKkF3AVsirwbNjANp5TvaQTyesJcg/vh++5W0Lt0q7mb
+YI8daLWPWRRYwCk8pHmPIMtsjHVTVG6MxvPH+Gg4u3Yd7d5NBb0CyHs4VMtITtFl
+XNtNmS8hfXx3VYXyOo5UNFXezymWT31Uu+zPeNRRUIr2wmCiXajJu8m7SmFlk8B1
+3LKMk6AoAK7O/+PlI1FfS3OTse1tsg==
+=SkCA
 -----END PGP SIGNATURE-----
 
---Sig_/aISM_FPhuyRXvrM8YMCJTQT--
+--ojsy757ta3qba3or--
