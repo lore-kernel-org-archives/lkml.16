@@ -1,83 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D3620CCCC;
-	Mon, 26 May 2025 14:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E310C202998
+	for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 14:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748269194; cv=none; b=oYsNILOgFTXlEeFedKQQYFSeRAaVhXVrs8F8IZPal3Vk126aSUVDL4s28nOaBVH9MqNnmSHt9FZpGXraE41o+juaKprlfwlgQtyorQxMGvTmv/2S0WRFBbJ0tREmiE0m64LIXwNvp5dmO1zT+4WuxKld5/vSl3xp9uNoRQ6Db48=
+	t=1748269207; cv=none; b=buAD9BPce2gLZpz0uFWTG0Lp7V/hveUmyERjxkq2rKvyfeP4qrTOerxEKWBv0u1mF8C9xp24pSHsKycD5ahttqMd9sF/kdGH+cZJCBTbxj3/td1H7u/ImMGqJ7c34iWuW9+13YWReUVk7pPyAAM8Wlj3a8J73ywv1VRmDTOmYfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748269194; c=relaxed/simple;
-	bh=xeJSnqHA0JVNhysIqhxWNknATT0guijmTw8rMyR29DY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=L+58AbxRKvKWNIKvEGFLbEL83YEGOyynyPkovbXe+RPh9qqS5vU9Fh/kkTq1z4va0GATEghaC4oNBpyPXCx7pC+SPyKFDx6WSMSrJuZ59qCk76447Lq+VyS2s3lmmu/igzEaThRoOh/uhDC4ams1VGcvoa1QTPbJlWjujlXzYj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3zgUI6n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748269207; c=relaxed/simple;
+	bh=teIdTvA6agQ3URnPoSAFhH+20mVDDaCR0mFd7vn8Bn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U8CjPruvy2cbtGqOfFbW5z763OJHE4JSuD18PjQCIptPQp7dM7u5W8tjqmtIhwVwh9PCgJ6BD1qEBe3yvJmNAnBdaqLHEgEBdVTdAJwpF3UGW9WxFWs0NPU//74ln+opLqMBlsYZGox8F/Lmh9Ixx1RxJX7TvYgfx2Q8Mn6S7zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dhZ+8xVh; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3zgUI6n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCCC2C4CEE9;
-	Mon, 26 May 2025 14:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748269193;
-	bh=xeJSnqHA0JVNhysIqhxWNknATT0guijmTw8rMyR29DY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=G3zgUI6n3NwRmIAVvm8ZHf7np6UTirqaICARVa6YnI+03m8Vk9+MMMAbl5LVsT/oA
-	 tiNxRFdQb6w5a05rJ/YwGt3mfVl3yMspBNyNIfroh5bbdOo1u7DTf0GEvvkqfsRqZn
-	 jr1nvVXWBopiK2tkT8wiPbRzc9at5zQkw+UT/Pyf7L2YtFf2DQLMQkLuUdXoAvUXQz
-	 uRjkdwX7dCsmATU0bktFFOch+R6kep2NXifX17lPpqDZkLB3aYWbixAlx4vlbhzALG
-	 hC4bFgfZe37ZlJTt5JBmT3Wkx6qWv7zsHDxD7ZQnbhZigYK4siiiKwZAQe6TIXPXSZ
-	 KmqvZ32X2rOqQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D8B3805D8E;
-	Mon, 26 May 2025 14:20:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dhZ+8xVh"
+Date: Mon, 26 May 2025 16:19:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748269201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c3lctXpPr3gCedY2X7J7a/9DwfzkqXCtm6oTaRoym/A=;
+	b=dhZ+8xVhGACOPmI0apdxpLkrKWfJVUimjl3u8iOk0pxKsnlMN7U1+1TqOn2026+snma+cq
+	G2+KZRj4qgxjsVivfZ83jYtITl1/pPLAcKFoqVrKser38XLJttOEoqm1ImsY9aiSacUJ9j
+	luswcG1wYpiD7TeLQaDht4ZRX3LT+6s=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Nicolas Schier <nicolas.schier@linux.dev>
+To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 01/11] kbuild: userprogs: add nolibc support
+Message-ID: <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
+References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+ <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: usb: aqc111: fix error handling of usbnet read
- calls
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174826922825.939427.1321439383834289633.git-patchwork-notify@kernel.org>
-Date: Mon, 26 May 2025 14:20:28 +0000
-References: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
-In-Reply-To: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-usb@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com,
- lvc-project@linuxtesting.org
+In-Reply-To: <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
+Organization: AVM GmbH
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Tue, 20 May 2025 14:32:39 +0300 you wrote:
-> Syzkaller, courtesy of syzbot, identified an error (see report [1]) in
-> aqc111 driver, caused by incomplete sanitation of usb read calls'
-> results. This problem is quite similar to the one fixed in commit
-> 920a9fa27e78 ("net: asix: add proper error handling of usb read errors").
+On Mon, Apr 07, 2025 at 09:42:38AM +0200, Thomas Weißschuh wrote:
+> Userprogs are built with the regular kernel compiler $CC.
+> A kernel compiler does not necessarily contain a libc which is required
+> for a normal userspace application.
+> However the kernel tree does contain a minimal libc implementation
+> "nolibc" which can be used to build userspace applications.
 > 
-> For instance, usbnet_read_cmd() may read fewer than 'size' bytes,
-> even if the caller expected the full amount, and aqc111_read_cmd()
-> will not check its result properly. As [1] shows, this may lead
-> to MAC address in aqc111_bind() being only partly initialized,
-> triggering KMSAN warnings.
+> Introduce support to build userprogs against nolibc instead of the
+> default libc of the compiler, which may not exist.
 > 
-> [...]
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> 
+> ---
+> This could probably be moved out of the generic kbuild makefiles.
+> I think the ergonimics would suffer and this functionality could be
+> used by other users of userprogs.
+> 
+> Also this does currently not support out-of-tree builds.
 
-Here is the summary with links:
-  - [net-next] net: usb: aqc111: fix error handling of usbnet read calls
-    https://git.kernel.org/netdev/net-next/c/405b0d610745
+(out-of-tree == external kmods;  out-of-source == build-dir != source-dir)
 
-You are awesome, thank you!
+you probably meant out-of-source.
+
+> For that tools/include/nolibc/*.h and usr/include/*.h would need to be
+> installed into the build directory.
+
+Out-of-source builds could be achieved by adding 'headers' as 
+dependency, see below.
+
+> ---
+>  Documentation/kbuild/makefiles.rst | 12 ++++++++++++
+>  scripts/Makefile.userprogs         | 16 +++++++++++++---
+>  2 files changed, 25 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+> index 3b9a8bc671e2e92126857059e985d6e5b2c43fd4..f905a6f77c965311c491cfd7ab3103185af7e82e 100644
+> --- a/Documentation/kbuild/makefiles.rst
+> +++ b/Documentation/kbuild/makefiles.rst
+> @@ -970,6 +970,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
+>  
+>  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
+>  
+> +Bulding userprogs against nolibc
+
+Bulding -> Building
+
+> +--------------------------------
+> +
+> +Not all kernel toolchains provide a libc.
+> +Simple userprogs can be built against a very simple libc call "nolibc" provided
+> +by the kernel source tree.
+> +
+> +Example::
+> +
+> +  # lib/kunit/Makefile
+> +  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
+> +
+>  When userspace programs are actually built
+>  ------------------------------------------
+>  
+> diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
+> index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..a1447c02b948901631098b585f5cf4d3ea383a57 100644
+> --- a/scripts/Makefile.userprogs
+> +++ b/scripts/Makefile.userprogs
+> @@ -16,10 +16,20 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
+>  user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
+>  user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
+>  
+> +user-libgcc     := $(call try-run,$(CC) -Werror $(KBUILD_USERCFLAGS) -lgcc -x c -shared /dev/null -o "$$TMP",-lgcc)
+> +
+> +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
+> +		      -ffreestanding -fno-stack-protector \
+> +		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
+> +user_nolibc_ldflags := -nostdlib -nostdinc -static
+> +user_nolibc_ldlibs  := $(user-libgcc)
+> +
+>  user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
+> -			$($(target-stem)-userccflags)
+> -user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
+> -user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
+> +			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
+> +user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
+> +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
+> +user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
+> +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
+>  
+>  # Create an executable from a single .c file
+>  quiet_cmd_user_cc_c = CC [U]  $@
+
+Adding another hunk for scripts/Makefile.userprogs would allow to build
+out-of-source:
+
+@@ -39,5 +49,5 @@ $(call multi_depend, $(user-cmulti), , -objs)
+ # Create .o file from a .c file
+ quiet_cmd_user_cc_o_c = CC [U]  $@
+       cmd_user_cc_o_c = $(CC) $(user_ccflags) -c -o $@ $<
+-$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
++$(user-cobjs): $(obj)/%.o: $(src)/%.c headers FORCE
+        $(call if_changed_dep,user_cc_o_c)
+
+But I am unsure if it is ok to add 'headers' as a build dependency for 
+userprogs.  For me, it feels a bit odd, but I think it really makes 
+sense here.
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Nicolas Schier
