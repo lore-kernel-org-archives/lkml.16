@@ -1,59 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A578269B07
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9B426A0F4
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351403; cv=none; b=sGtBBgBe2DYugCSqum4LefEt74tDJKLnJxZgNcBALHwyZPYZBJFz/jwZySwbF3jXKKJDbAtOliyu5B5jqRSwv/o9fS2JwmN0JKvRgvDn9X+YGqk6Semx8C3FaOzghmDUgHVIhw6RQHmNw7dajlipYWdX32A19FnfyOLbKH6FAv4=
+	t=1748351513; cv=none; b=nr9eYoaDXWy13HDoJUvmYSPUJVCR2SHYIqH9/GNIhz23eENkXEgRoy0a7knOaRbdgEZAFItCpiQzOQIc7dv/VEDFpYwSErfkUDRe5IE4pkbPnGKraU9tEaf4lCW2usaYjSPV3kG04aothFMo/0yW+4EPBK0UyhXahiNR4NQnMn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351403; c=relaxed/simple;
-	bh=PGClDXKS+mM//o82pMKGcF/voIpuJytcmv+gL+wng68=;
+	s=arc-20240116; t=1748351513; c=relaxed/simple;
+	bh=SiMzsb1VfHm5J4WodUT7EnpYMmNCsCwdyj3bk/ztlDo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N5XicQ7vw1csi+SVRFTFN0WIZbww8R3pq6kxjIEg4MDzCIMx3Cgcd3W1eyf1ESYOyx86G0DdG9V5ihEQoFRA/ZGys/xvgl22W/nxPZ840Mhe8EmMsnpDQAtvRwBHO0UZUMfdkWKDF8co932PSFTKq9B6S5ojfsOdR6LQet7+fgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fxaFttBW; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=BjL4SiJau6/gQO6O/yhyL2sLJ3l+qdHYljl4NeooG/WuVq+ZRuzz1WyjD35kmipdAUVhi9J7qpcs5OZDrQ+GZdP7lIG4bW4FHMmGZzBiT6hL4biGjZsKoCBE54m9Jso8BAZte2NOOVB4LlsGJayjGj7eXBnjNw0dnekHu71Nzxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MVviRJxl; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxaFttBW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MVviRJxl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748351400;
+	s=mimecast20190719; t=1748351510;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nd+q10cEIqH15mNq0pVlnhYbQLzcGmo26JmqeljKTxM=;
-	b=fxaFttBWT0U3XCGj/8ZVoc648pwxTizESEo4b01e5IszXhxg+Rjx4rUsByQcm7wOid9Oxo
-	isJRUdy3mmu1hkdGgONQea+PuhuzdDSBJdJY4ckA90ImIhO91AJCxRSbUzz+qy7B7n9Liw
-	/Sr0TcWNOf3KMyfo3KUgCmM7/5Qpsmo=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-56-kdOODp4hPOWyIRLC1lSXXw-1; Tue,
- 27 May 2025 09:09:54 -0400
-X-MC-Unique: kdOODp4hPOWyIRLC1lSXXw-1
-X-Mimecast-MFC-AGG-ID: kdOODp4hPOWyIRLC1lSXXw_1748351392
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 62F321956088;
-	Tue, 27 May 2025 13:09:51 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.22.74.2])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 54EF118004A7;
-	Tue, 27 May 2025 13:09:47 +0000 (UTC)
-Date: Tue, 27 May 2025 09:09:44 -0400
-From: Richard Guy Briggs <rgb@redhat.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: Linux-Audit Mailing List <linux-audit@lists.linux-audit.osci.io>,
-	LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-	Linux Kernel Audit Mailing List <audit@vger.kernel.org>,
-	Eric Paris <eparis@parisplace.org>, Steve Grubb <sgrubb@redhat.com>,
-	Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>
-Subject: Re: [PATCH v1 1/2] audit: record fanotify event regardless of
- presence  of rules
-Message-ID: <aDW5mI2dE7xOMMni@madcap2.tricolour.ca>
-References: <3c2679cb9df8a110e1e21b7f387b77ddfaacc289.1741210251.git.rgb@redhat.com>
- <fb8db86ae7208a08277ddc0fb949419b@paul-moore.com>
+	bh=BzTHRlzQzEXlYnuCuknzHPGDh3G3DQ1P973u+hYfSqw=;
+	b=MVviRJxlKVS+z3YV31BTK+fXcvZSHxRhGo8uzWYB8O/9h73x9kjqJEjQHO2Wy5e8M8gJCT
+	IWme3GFgogS1/V7RjNAGQ9OyHZHDES8qtATOKbTNnYn5SNdBnLfRU4g9u9DIPBBsdTl4rQ
+	MPTGFAKXhzDswtNRq6laHoGeiryhhUs=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-471-eB8TPnLyNLGZCybrafh7dQ-1; Tue, 27 May 2025 09:11:49 -0400
+X-MC-Unique: eB8TPnLyNLGZCybrafh7dQ-1
+X-Mimecast-MFC-AGG-ID: eB8TPnLyNLGZCybrafh7dQ_1748351508
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4d81f7adeso1487339f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:11:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748351508; x=1748956308;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BzTHRlzQzEXlYnuCuknzHPGDh3G3DQ1P973u+hYfSqw=;
+        b=fs0TqFOrwtFYbObZGRRvsE4ey5QBP2MngCSqqSg/6TR7PaStQN3wu3bvYh84dIZqgS
+         F3YSFSvf9XPZngP8DIZd3oT2kxDj0AgtMIauYnl19C9B5cJu6Mqa8ZEQOPEC3KTp3QNs
+         D4dUG4ZgZX47Qzr02g2Jcf+TOJPEfq9qcBctsBsBsrHVvTAML3TOvDp0LYT5JNhl9FrG
+         03DiJTw9gVFBuQMVHJmmS9eYHLNcfRXhlrSa3UFAel+MlgOrbABl/5xffSEri25Ox8Uk
+         wlgOb8lfTmgOro9iJXztlT3JjSkKLdpP4IxT5QTcYYBIgaAVWq2rvKLJ1Y1k+8kzcKrc
+         16+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVsvpsMNabuR02wmglybDR01pn4z3kusaucRekaip7BFExriw89Ia5jY4Wnch0lRddcLGBdnt2zExGsUDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBx7dEKjChA9qVdWGF2QrbcMwq/4xHkf9kQlKmhRniVDnP3Ao8
+	3aUiTOklU/TWjhNPxy2vbt7L45iKBVFKaNQavoQx5OG2KsVR2m2I0rIsuoosjnMGZvC/0DeEOin
+	Sam3XrJUjAbZ1wjq1Rwbc1/vqRxfXw4aL2dlfXoRhRGJcfFxaFhnX0p3dsEsl7p5brA==
+X-Gm-Gg: ASbGncv7gOdU6I7475ZhTws18JR7FNr8JQkL3opiJoMksg3c9BrevD4jwox3iad8X0I
+	eJqgfKQBdeuQqOH/FXzmZLxuFJ/yoiQTNV0Ox6TGYYbw5xZLP1WA7GnUHWlsWWaXRQf15gNckuT
+	jQK/mmQfVOHyOAhtGww7acrDRyw0w95F3ZXvmE5TuCYydVFvzVgj5F8d4laWR1f0uDYIWDd76dX
+	UDJlu6CmRFgH5MrIe29T8OXNhAgKxyYOOByODdF6y2NJ+082HCFDk1+CXO/uQSIIBCpLm8ukMcI
+	Sn4K5i/Grp0glbhNaoXmBMDDEDf3n4O4qvvK8V1vFA==
+X-Received: by 2002:a5d:5846:0:b0:3a4:dd63:4ad8 with SMTP id ffacd0b85a97d-3a4dd634d63mr5309801f8f.20.1748351508248;
+        Tue, 27 May 2025 06:11:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGwzfscWQod+IIooOxsiygxTezSJ1KyM1UcawxlKgs8fMFxR+Ub74ZW0DStChnY332ZRPPxQ==
+X-Received: by 2002:a5d:5846:0:b0:3a4:dd63:4ad8 with SMTP id ffacd0b85a97d-3a4dd634d63mr5309755f8f.20.1748351507735;
+        Tue, 27 May 2025 06:11:47 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.57.104])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4e57da10csm507739f8f.22.2025.05.27.06.11.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 06:11:46 -0700 (PDT)
+Date: Tue, 27 May 2025 15:11:45 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH] sched_deadline, docs: add affinity setting with cgroup2
+ cpuset controller
+Message-ID: <aDW6EckuCFTZfPZ8@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250522-sched-deadline-cpu-affinity-v1-1-2172c683acac@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,100 +81,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fb8db86ae7208a08277ddc0fb949419b@paul-moore.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250522-sched-deadline-cpu-affinity-v1-1-2172c683acac@sony.com>
 
-On 2025-04-11 14:14, Paul Moore wrote:
-> On Mar  5, 2025 Richard Guy Briggs <rgb@redhat.com> wrote:
-> > 
-> > When no audit rules are in place, fanotify event results are
-> > unconditionally dropped due to an explicit check for the existence of
-> > any audit rules.  Given this is a report from another security
-> > sub-system, allow it to be recorded regardless of the existence of any
-> > audit rules.
-> > 
-> > To test, install and run the fapolicyd daemon with default config.  Then
-> > as an unprivileged user, create and run a very simple binary that should
-> > be denied.  Then check for an event with
-> > 	ausearch -m FANOTIFY -ts recent
-> > 
-> > Link: https://issues.redhat.com/browse/RHEL-1367
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > Acked-by: Jan Kara <jack@suse.cz>
-> > ---
-> >  include/linux/audit.h | 8 +-------
-> >  kernel/auditsc.c      | 2 +-
-> >  2 files changed, 2 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/include/linux/audit.h b/include/linux/audit.h
-> > index 0050ef288ab3..d0c6f23503a1 100644
-> > --- a/include/linux/audit.h
-> > +++ b/include/linux/audit.h
-> > @@ -418,7 +418,7 @@ extern void __audit_log_capset(const struct cred *new, const struct cred *old);
-> >  extern void __audit_mmap_fd(int fd, int flags);
-> >  extern void __audit_openat2_how(struct open_how *how);
-> >  extern void __audit_log_kern_module(char *name);
-> > -extern void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
-> > +extern void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar);
-> >  extern void __audit_tk_injoffset(struct timespec64 offset);
-> >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
-> >  extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> > @@ -525,12 +525,6 @@ static inline void audit_log_kern_module(char *name)
-> >  		__audit_log_kern_module(name);
-> >  }
-> >  
-> > -static inline void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-> > -{
-> > -	if (!audit_dummy_context())
-> > -		__audit_fanotify(response, friar);
-> > -}
+Hello!
+
+On 22/05/25 17:06, Shashank Balaji wrote:
+> Setting the cpu affinity mask of a SCHED_DEADLINE process using the cgroup v1
+> cpuset controller is already detailed. Add similar information for cgroup v2's
+> cpuset controller.
+
+Thanks a lot for working on this. Really appreaciated.
+
+> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+> ---
+>  Documentation/scheduler/sched-deadline.rst | 29 +++++++++++++++++++++++------
+>  1 file changed, 23 insertions(+), 6 deletions(-)
 > 
-> It seems like we should at least have an audit_enabled() check, yes?
-> We've had people complain about audit events being generated when audit
-> is disabled, any while we don't currently have such a check in place
-> here, I believe the dummy context check is doing that for us.
-> 
->   static inline void audit_fanotify(...)
->   {
->     if (!audit_enabled)
->       return;
->     __audit_fanotify(...);
->   }
+> diff --git a/Documentation/scheduler/sched-deadline.rst b/Documentation/scheduler/sched-deadline.rst
+> index a727827b8dd52710f880c2b92d3a8224c259873c..e3d7968ff6c3c43f87e249dbcb309619dbd616bf 100644
+> --- a/Documentation/scheduler/sched-deadline.rst
+> +++ b/Documentation/scheduler/sched-deadline.rst
+> @@ -20,7 +20,8 @@ Deadline Task Scheduling
+>        4.3 Default behavior
+>        4.4 Behavior of sched_yield()
+>      5. Tasks CPU affinity
+> -      5.1 SCHED_DEADLINE and cpusets HOWTO
+> +      5.1 Using cgroup v1 cpuset controller
+> +      5.2 Using cgroup v2 cpuset controller
+>      6. Future plans
+>      A. Test suite
+>      B. Minimal main()
+> @@ -671,12 +672,15 @@ Deadline Task Scheduling
+>  5. Tasks CPU affinity
+>  =====================
+>  
+> - -deadline tasks cannot have an affinity mask smaller that the entire
+> - root_domain they are created on. However, affinities can be specified
+> - through the cpuset facility (Documentation/admin-guide/cgroup-v1/cpusets.rst).
+> + Deadline tasks cannot have a cpu affinity mask smaller than the root domain they
+> + are created on. So, using ``sched_setaffinity(2)`` won't work. Instead, the
+> + the deadline task should be created in a restricted root domain. This can be
+> + done using the cpuset controller of either cgroup v1 (deprecated) or cgroup v2.
+> + See :ref:`Documentation/admin-guide/cgroup-v1/cpusets.rst <cpusets>` and
+> + :ref:`Documentation/admin-guide/cgroup-v2.rst <cgroup-v2>` for more information.
+>  
+> -5.1 SCHED_DEADLINE and cpusets HOWTO
+> -------------------------------------
+> +5.1 Using cgroup v1 cpuset controller
+> +-------------------------------------
+>  
+>   An example of a simple configuration (pin a -deadline task to CPU0)
+>   follows (rt-app is used to create a -deadline task)::
+> @@ -695,6 +699,19 @@ Deadline Task Scheduling
+>     rt-app -t 100000:10000:d:0 -D5 # it is now actually superfluous to specify
+>  				  # task affinity
+>  
+> +5.2 Using cgroup v2 cpuset controller
+> +-------------------------------------
+> +
+> + Assuming the cgroup v2 root is mounted at ``/sys/fs/cgroup``.
+> +
+> +   cd /sys/fs/cgroup
+> +   echo '+cpuset' > cgroup.subtree_control
+> +   mkdir deadline_group
+> +   echo 0 > deadline_group/cpuset.cpus
+> +   echo 'root' > deadline_group/cpuset.cpus.partition
+> +   echo $$ > deadline_group/cgroup.procs
+> +   rt-app -t 100000:10000:d:0 -D5
 
-That would be consistent with other security events messages.  I was
-going through the selinux code to see what it does and I am missing it
-if selinux checks with audit_enabled().  Are selinux messages somehow
-exempt from audit_enabled()?
+Sadly, the example with cgroup v1 was made at a time when rt-app still
+supported command line parameters like the above. I believe nowadays
+that is not the case anymore and one needs to create a json file
+describing the task to run it with rt-app.
 
-> >  static inline void audit_tk_injoffset(struct timespec64 offset)
-> >  {
-> >  	/* ignore no-op events */
-> > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> > index 0627e74585ce..936825114bae 100644
-> > --- a/kernel/auditsc.c
-> > +++ b/kernel/auditsc.c
-> > @@ -2880,7 +2880,7 @@ void __audit_log_kern_module(char *name)
-> >  	context->type = AUDIT_KERN_MODULE;
-> >  }
-> >  
-> > -void __audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-> > +void audit_fanotify(u32 response, struct fanotify_response_info_audit_rule *friar)
-> >  {
-> >  	/* {subj,obj}_trust values are {0,1,2}: no,yes,unknown */
-> >  	switch (friar->hdr.type) {
-> > -- 
-> > 2.43.5
-> 
-> --
-> paul-moore.com
-> 
+I would say we should update both examples to use something a little
+more generic, e.g.,
 
-- RGB
+# chrt --deadline --sched-runtime 10000000 --sched-period 100000000 0 yes >/dev/null &
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-Upstream IRC: SunRaycer
-Voice: +1.613.860 2354 SMS: +1.613.518.6570
+What do you think?
+
+Best,
+Juri
 
