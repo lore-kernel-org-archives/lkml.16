@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD88B248871
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:51:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60394248F48
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:51:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748332273; cv=none; b=gGAWioCh8j2CB2a+XHRJNW9ZSnqXxvv8Y9K+HG8P2aUjZFXE0hUsFcxp3wX8QIpfShEyp+HuKFlz1saiiTjuJM4kUVt9LCRFnc9pgmRpPwu0P+lzi7yi2MZikSec7sjuYs6ivETRspQLBEcse+ZDhsXen0wY+kUowUSbr0Ff+mA=
+	t=1748332273; cv=none; b=JkDb6TAEILp/GqyAOVqc33Rdyv7z0fy3PPnpV232DoJ/HX6JWJXzSlCAqfIawEpbdpSaHw3hjA8sM96c/REwKl5jQsyTfRX3KNwxnSZI8xu+sej5P406eHdqM64xojbvFVeSuwYUgs7JhnOubUjZma9q+oKXytcPLFcb2qeGokY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748332273; c=relaxed/simple;
-	bh=Oo6rn8lSxlID+JZvbDRcGmmxzajXWJseF8cDXIt78bE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=J4YtWAtvVuAVU4oCipoA/WHe+/+a0m2/fT0ejck4CPLsH2LCP93m/UkTxLpdqSsjg8N+m+drWzTDR+X5/HbAD9kdJBis2zjyqLvOxqDt9Yc9jnfDH2hPzrRbrB08pDQbz9+TAGZouKf2BbUFNijx6pbzLnbDiDPHZKDIskb/U7c=
+	bh=ThUTx49ZOF/iAG3udI5kz7yIgv+0bAFOvYbE+pg1/Dk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fQCj1iXCUJxX63qOv+GxhTLhAsSxO9KtcPE5TBcWUdlGFBTOc65j95xm/D0HvcuoCHqrhpePvaKze8t7XykK5wt5P2U2yrFQSXyZrA54WoCqMs6npQhdx5z0sNJX6tzXRB783NkEMgzTwEaF6qvz638g6bw6MHKN3FNMKHkuJVE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EA4614BF;
-	Tue, 27 May 2025 00:50:47 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2AA4150C;
+	Tue, 27 May 2025 00:50:54 -0700 (PDT)
 Received: from localhost.localdomain (unknown [10.163.85.29])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E66073F694;
-	Tue, 27 May 2025 00:50:55 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8829E3F694;
+	Tue, 27 May 2025 00:51:03 -0700 (PDT)
 From: Dev Jain <dev.jain@arm.com>
 To: akpm@linux-foundation.org
 Cc: Liam.Howlett@oracle.com,
@@ -42,10 +43,12 @@ Cc: Liam.Howlett@oracle.com,
 	ziy@nvidia.com,
 	hughd@google.com,
 	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v3 0/2] Optimize mremap() for large folios
-Date: Tue, 27 May 2025 13:20:47 +0530
-Message-Id: <20250527075049.60215-1-dev.jain@arm.com>
+Subject: [PATCH v3 1/2] mm: Call pointers to ptes as ptep
+Date: Tue, 27 May 2025 13:20:48 +0530
+Message-Id: <20250527075049.60215-2-dev.jain@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250527075049.60215-1-dev.jain@arm.com>
+References: <20250527075049.60215-1-dev.jain@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,73 +57,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently move_ptes() iterates through ptes one by one. If the underlying
-folio mapped by the ptes is large, we can process those ptes in a batch
-using folio_pte_batch(), thus clearing and setting the PTEs in one go.
-For arm64 specifically, this results in a 16x reduction in the number of
-ptep_get() calls (since on a contig block, ptep_get() on arm64 will iterate
-through all 16 entries to collect a/d bits), and we also elide extra TLBIs
-through get_and_clear_full_ptes, replacing ptep_get_and_clear.
+Avoid confusion between pte_t* and pte_t data types by suffixing pointer
+type variables with p. No functional change.
 
-Mapping 1M of memory with 64K folios, memsetting it, remapping it to
-src + 1M, and munmapping it 10,000 times, the average execution time
-reduces from 1.9 to 1.2 seconds, giving a 37% performance optimization,
-on Apple M3 (arm64). No regression is observed for small folios.
+Reviewed-by: Barry Song <baohua@kernel.org>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ mm/mremap.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-The patchset is based on mm-unstable (6ebffe676fcf).
-
-Test program for reference:
-
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <string.h>
-#include <errno.h>
-
-#define SIZE (1UL << 20) // 1M
-
-int main(void) {
-    void *new_addr, *addr;
-
-    for (int i = 0; i < 10000; ++i) {
-        addr = mmap((void *)(1UL << 30), SIZE, PROT_READ | PROT_WRITE,
-                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        if (addr == MAP_FAILED) {
-                perror("mmap");
-                return 1;
-        }
-        memset(addr, 0xAA, SIZE);
-
-        new_addr = mremap(addr, SIZE, SIZE, MREMAP_MAYMOVE | MREMAP_FIXED, addr + SIZE);
-        if (new_addr != (addr + SIZE)) {
-                perror("mremap");
-                return 1;
-        }
-        munmap(new_addr, SIZE);
-    }
-
-}
-
-v2->v3:
- - Refactor mremap_folio_pte_batch, drop maybe_contiguous_pte_pfns, fix
-   indentation (Lorenzo), fix cover letter description (512K -> 1M)
-
-v1->v2:
- - Expand patch descriptions, move pte declarations to a new line,
-   reduce indentation in patch 2 by introducing mremap_folio_pte_batch(),
-   fix loop iteration (Lorenzo)
- - Merge patch 2 and 3 (Anshuman, Lorenzo)
- - Fix maybe_contiguous_pte_pfns (Willy)
-
-Dev Jain (2):
-  mm: Call pointers to ptes as ptep
-  mm: Optimize mremap() by PTE batching
-
- mm/mremap.c | 57 +++++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 42 insertions(+), 15 deletions(-)
-
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 7db9da609c84..0163e02e5aa8 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -176,7 +176,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	struct vm_area_struct *vma = pmc->old;
+ 	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
+ 	struct mm_struct *mm = vma->vm_mm;
+-	pte_t *old_pte, *new_pte, pte;
++	pte_t *old_ptep, *new_ptep;
++	pte_t pte;
+ 	pmd_t dummy_pmdval;
+ 	spinlock_t *old_ptl, *new_ptl;
+ 	bool force_flush = false;
+@@ -211,8 +212,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	 * We don't have to worry about the ordering of src and dst
+ 	 * pte locks because exclusive mmap_lock prevents deadlock.
+ 	 */
+-	old_pte = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
+-	if (!old_pte) {
++	old_ptep = pte_offset_map_lock(mm, old_pmd, old_addr, &old_ptl);
++	if (!old_ptep) {
+ 		err = -EAGAIN;
+ 		goto out;
+ 	}
+@@ -223,10 +224,10 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	 * mmap_lock, so this new_pte page is stable, so there is no need to get
+ 	 * pmdval and do pmd_same() check.
+ 	 */
+-	new_pte = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
++	new_ptep = pte_offset_map_rw_nolock(mm, new_pmd, new_addr, &dummy_pmdval,
+ 					   &new_ptl);
+-	if (!new_pte) {
+-		pte_unmap_unlock(old_pte, old_ptl);
++	if (!new_ptep) {
++		pte_unmap_unlock(old_ptep, old_ptl);
+ 		err = -EAGAIN;
+ 		goto out;
+ 	}
+@@ -235,12 +236,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 	flush_tlb_batched_pending(vma->vm_mm);
+ 	arch_enter_lazy_mmu_mode();
+ 
+-	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
+-				   new_pte++, new_addr += PAGE_SIZE) {
+-		if (pte_none(ptep_get(old_pte)))
++	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
++				   new_ptep++, new_addr += PAGE_SIZE) {
++		if (pte_none(ptep_get(old_ptep)))
+ 			continue;
+ 
+-		pte = ptep_get_and_clear(mm, old_addr, old_pte);
++		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
+ 		/*
+ 		 * If we are remapping a valid PTE, make sure
+ 		 * to flush TLB before we drop the PTL for the
+@@ -258,7 +259,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 		pte = move_soft_dirty_pte(pte);
+ 
+ 		if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
+-			pte_clear(mm, new_addr, new_pte);
++			pte_clear(mm, new_addr, new_ptep);
+ 		else {
+ 			if (need_clear_uffd_wp) {
+ 				if (pte_present(pte))
+@@ -266,7 +267,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 				else if (is_swap_pte(pte))
+ 					pte = pte_swp_clear_uffd_wp(pte);
+ 			}
+-			set_pte_at(mm, new_addr, new_pte, pte);
++			set_pte_at(mm, new_addr, new_ptep, pte);
+ 		}
+ 	}
+ 
+@@ -275,8 +276,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
+ 		flush_tlb_range(vma, old_end - len, old_end);
+ 	if (new_ptl != old_ptl)
+ 		spin_unlock(new_ptl);
+-	pte_unmap(new_pte - 1);
+-	pte_unmap_unlock(old_pte - 1, old_ptl);
++	pte_unmap(new_ptep - 1);
++	pte_unmap_unlock(old_ptep - 1, old_ptl);
+ out:
+ 	if (pmc->need_rmap_locks)
+ 		drop_rmap_locks(vma);
 -- 
 2.30.2
 
