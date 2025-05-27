@@ -1,128 +1,140 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4F4280CDC;
-	Tue, 27 May 2025 18:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B596B17588
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369296; cv=none; b=B5bXi88qJEVaqA8qRpkjXlOidka/wibgeZTYRqyku7er4GzLoUWKTPneloyoBUF71g7CbOn8OZ/2URCXmvLeHDo2SOXWcNd4jwolVr4OI5CPU6pNeruECPqJPgxyGkGoh8iokJXVpryyIOQTcpyKnQ4/5rkSur60yt7W/Ca2kMk=
+	t=1748369614; cv=none; b=tNZBEvJeX5HfhSxEOMiCHTUztM/EBGBSwaCnUgeC5Rzy/vYBCORJUqQFogBc/akDVmXEDScT68lMzp6MdjJQLVZlCClCMohJLLxNUktw0FuzV8/WKQU6vnYLiksJCpOoPW1faD0UOmcqs2zygxYv8g4qbHiqTiyHxuj+7f8pM1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369296; c=relaxed/simple;
-	bh=HbElYLoFkFt3bgE5hxTKRqIyGxalzkZDf2uQCmjqIEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGQJM+d7gpzIYh812g9hnnyvCbc2aFiYBl64YwUtpPfLJyyh3oCJUGErrSLgFiAjcBtBXLroJdzR0NaFiroQlpjADG9bm0Rb/a4u0HrTZnK9AHMi3S/PrWkCAp9sgv3a6+3G2dDooc3UxByD+7GDUQZraLOmOrG8EhhmNIIMHi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sYKdcmr0; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748369614; c=relaxed/simple;
+	bh=+dNHJsRHE/JZChzL4jtoYzFUWpe+5i/Vh+Y/tynOtRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kgjt6C8FpZxlvdoq5cyRQ6jRFzueu9Nt4XfK636I6QV9xqbkU9Ss4ofTTTMYufSA3CvZE/F//5DRdPpEZyyUiU4Jtk8tKDwvb0qHWhR54AsEDtQcYo0WZa3OWkZjr5Jeb+JPDb1RGf03rDdOOHgLsIKq9V69njBaRNYMlBdKBH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KkjIvfmE; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sYKdcmr0"
-Date: Tue, 27 May 2025 14:07:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748369281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8HeOozcGNaa2tPH1dR1aA8qPPlh+Dn6iJT+v2aaUGXs=;
-	b=sYKdcmr0J3kp5BJBtqgzeTLg3Y8X5DulTvO/F2r6k+DESUh4YX0sTFJbA6W+nwoOmfEpi8
-	QY1gMq3OPsFampzDZxzn1XfkxteHIhtPHzPnrLOhC18aXYctBQX8oT1a2yqqiqY2E/K/zW
-	e8OYyW2enKmeom0IfpirEeWm7oRcZDA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-Message-ID: <oa6rl677vm3x4gl3jym4bh6ul56d5d6olrkylqpjnsnjbjxf5p@4pxem7egakqe>
-References: <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
- <q6o6jrgwpdt67xsztsqjmewt66kjv6btyayazk7zlk4zjoww4n@2zzowgibx5ka>
- <CAOQ4uxisCFNuHtSJoP19525BDdfeN2ukehj_-7PxepSTDOte9w@mail.gmail.com>
- <CAOQ4uxhnOMPTBd+k4UVPvAWYLhJWOdV4FbyKa_+a=cqK9Chr2A@mail.gmail.com>
- <ltzdzvmycohkgvmr3bd6f2ve4a4faxuvkav3d7wt2zoo5gkote@47o5yfse2mzn>
- <CAOQ4uxjHb4B1YL2hSMHxd2Y0mMmfpHMzgbHO5wLF3=rMVxsHyQ@mail.gmail.com>
- <yp4whk37id7s4za6fv3ifvqjupo6ikylu34wvgd3ytbyu3uz2c@t7h3ncg6pwtz>
- <CAOQ4uxg0-ZJYDMfMLNVm=YfA9CdjY2WaaXYdv+i8nWNgqPgpuw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KkjIvfmE"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0ac853894so3881489f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748369610; x=1748974410; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dpxuBRogWor3q4lMth7t3PBdJyoOLprduS4IK1yfNYE=;
+        b=KkjIvfmEwEJtYEJtA/urhqgtYCyp2uVJJY8wEYEGwV423u58nqxuINyLhFUrlbuGSy
+         LOkcPvZw3B8zp/6jX73h75qzCvO9A8T7lY6nvgqmtiw3HVUx/OrON3PC1oC1i9HXtVUG
+         C8Z+TQRLCV5c6Rhm9UT739PVZRwemjCeZVHgvNK+8zCgKuNxnk1lSH4UXv0GuHbzMRCD
+         d6jnj9aPXWyqKVtvc1dWVQY0ANgKLp1OFjjj+9owAvJZC/Ab4jAplAua2bCVG9XhxLj8
+         tM+Hcsrf8cYMhhbr28F/qcg6VYLvGq2nV7FbTmtx6f6rtdJBlGVStds+b99+gPqPkyiW
+         M1TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748369610; x=1748974410;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dpxuBRogWor3q4lMth7t3PBdJyoOLprduS4IK1yfNYE=;
+        b=DShTFl/ousacsZWY201ajCmxZPyxmwiWBgAdszLQfjb2b2OrdNUSb1K0QzciCv3diT
+         mezvaqPB8rNntvEuHKj9oX1VyuilIOkHwm2D2gFXBy2y25Ay4K0xUB9WnqjOZGAY7lfI
+         ZRvrnbIM3lECIs92NOcDRCYtRosu4tCROGY3r88xlluKuYQZBznx+M3qDdddH9uiazuq
+         iuvJgbKoPOAPf3FbhopZcJ9ooUPpj+1DkYHo92vl3we2auQ+lqD7ZsprmdGqy/NrBWUt
+         1Sb+6+PjvmBmC2qoO2tIUMpyaCL2Lo9oyGRZqTs2+O/kfP1JGvPK9VjAPXpZaPI331C4
+         +meg==
+X-Forwarded-Encrypted: i=1; AJvYcCXq/CX1n/UVlUJTh4ulM16VozdIjL7w+V5Y+PX5rcInTC4bRi4AafbpPIPIOkFSMqGGd79RynkJZUVSrus=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCXGYu5DqboQczy+kYJmUVEVAouiSL3SMQvPBwKbQmlBVitUUz
+	BAYqSJ1Ufhsg6y8fJ9Vs01uiXcP3ClVk8Z1xKZtY912csNZ7ieyPqGNE78/oSCMKkrA=
+X-Gm-Gg: ASbGncuJKMr52IxcTUcHUTccy4t7CdBK0df5eOvSxxrqVDlnNnqGWJ/B3yJujv2D45k
+	+gdkG7dToznBlSsZrdNgKBDYpi1sLbr2naMDvdocNvLRARZ5fuXfzwlGmZIDzfXobRGGWSAo+al
+	b3wlbLPirsl7idh9Uzg1MDbYTsJ3i8g/g/0AKFKFjwTMoFjZYTwVno5RhBJgI/y4P5bcPAK48Wm
+	f/9IHBuzXh5jLkmkA5y0L2XcNLzkBpCcKp63XVcPAuquNwnZN1VM9G+jNFcm2HwXv2MJpFd22Sp
+	Qq87fS21CvyhjCpZq1z8WcSboziIuxZ3B+90HyYIRFg+cKUSyVBoCNNMy+23fU6/88xoxHCdcxA
+	PmZtqFV8x4tnByQE0eFQJsv/iY6nW
+X-Google-Smtp-Source: AGHT+IGyU3zHzfNm3yCtX8SfqxXihbtdFZqypQaZRfy+BYQa0ZaAr3pKhSRnVElWiW/7T7dSNF3VAQ==
+X-Received: by 2002:a05:6000:288b:b0:3a4:e65d:b6d5 with SMTP id ffacd0b85a97d-3a4e65db6demr1273634f8f.1.1748369609987;
+        Tue, 27 May 2025 11:13:29 -0700 (PDT)
+Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4e658f96bsm902113f8f.38.2025.05.27.11.13.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 11:13:29 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	=?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: bcm958625-meraki-mx6x: Use #pwm-cells = <3>
+Date: Tue, 27 May 2025 20:13:18 +0200
+Message-ID: <20250527181320.373572-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1668; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=+dNHJsRHE/JZChzL4jtoYzFUWpe+5i/Vh+Y/tynOtRQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoNgDAW5dubIg6+TqZHBRIzyah2FApIaAYRtXTf pqGRfowoMaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaDYAwAAKCRCPgPtYfRL+ TkZGB/9L3cCZEK+NJYPysI9UUNFEL3UFLYkm0pC5Pc6rhtCooUd7UHPjpFwpnSERFbvwzqjhIir 8ok3PXRe5Vr9IZiZGJEA3jCFTl8fJnG9kaL9NJeFS1di59xHVkQpGJHNUdV3jDe80F/z175+Yi5 31wqH+aUr81mLJdgGkUfANvYr4jAlI6ieCUOKHIiTDUaRrx8sD962dl0NJbcZ1xgUFfExXwq2X0 NiNvFdTnxy2pzSe0g9dDSypBrpdxQgMc9ErQg31gHtRXJz1hdT6h6+E8U3/SAEjKiClfvJerdhC akYjIzxbITlzegy8qZBD4jL9EVhn8tZGs0XaN+nJfCFobCKy
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxg0-ZJYDMfMLNVm=YfA9CdjY2WaaXYdv+i8nWNgqPgpuw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 27, 2025 at 10:57:05AM +0200, Amir Goldstein wrote:
-> On Sun, May 25, 2025 at 8:27 PM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > On Sat, May 24, 2025 at 03:01:44PM +0200, Amir Goldstein wrote:
-> > > On Fri, May 23, 2025 at 11:10 PM Kent Overstreet
-> > > <kent.overstreet@linux.dev> wrote:
-> > > >
-> > > > On Fri, May 23, 2025 at 10:30:16PM +0200, Amir Goldstein wrote:
-> > > >
-> > > > That makes fstests generic/631 pass.
-> > >
-> > > Yes, that is not very surprising.
-> > > I meant if you could help test that:
-> > >
-> > > 1. mounting case folder upperdir/lowerdir fails
-> > > 2. lookup a case folder subdir fails
-> > > 3. lookup in a dir that was empty and became case folder while ovl was
-> > > mounted fails
-> > >
-> > > For me, I do not have any setup with case folding subtrees
-> > > so testing those use cases would take me time and
-> > > I think that you must have tested all those scenarios with your patch set?
-> > > and maybe already have some fstests for them?
-> >
-> > Unmount fauls after I test an overlayfs with a casefold subdir:
-> >
-> > Testing an overlayfs on a casefold fs with non-casefolded dirs
-> > Test using casefolded dir - should fail
-> > overlayfs: failed to resolve '/mnt/casefold': -2
-> > mount: /mnt/merged: special device overlay does not exist.
-> >        dmesg(1) may have more information after failed mount system call.
-> 
-> Test is using the wrong path:
-> 
-> 
-> +    echo "Test using casefolded dir - should fail"
-> +    ! mount -t overlay -o
-> lowerdir=/mnt/lower,upperdir=/mnt/upper,workdir=/mnt/work overlay
-> /mnt/merged
-> +    ! mount -t overlay -o
-> lowerdir=/mnt/casefold,upperdir=/mnt/casefold,workdir=/mnt/work
-> overlay /mnt/merged
-> 
-> There is no "/mnt/casefold"
+bcm-nsp.dtsi has #pwm-cells = <3> as is specified in the binding. So to
+also use that correct value for bcm958625-meraki-mx6x the property
+overriding that value just has to be dropped. This fixes a few warnings
+like:
 
-*nod*
+	arch/arm/boot/dts/broadcom/bcm958625-meraki-mx65.dtb: pwm@31000: #pwm-cells: 3 was expected
+		from schema $id: http://devicetree.org/schemas/pwm/brcm,iproc-pwm.yaml#
 
-> > Test using a dir with a casefold subdir - should mount
-> > overlayfs: upperdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
-> > overlayfs: workdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
-> 
-> Those warnings are because you have a stray mount command above:
-> +    echo "Test using casefolded dir - should fail"
-> +    ! mount -t overlay -o
-> lowerdir=/mnt/lower,upperdir=/mnt/upper,workdir=/mnt/work overlay
-> /mnt/merged
-> 
-> So a mount already exists. leftover?
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ .../boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi    | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-*snort* - -ENOCAFFEINE, I presume.
+diff --git a/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi b/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi
+index 71a8b77b46f4..7e71aecb7251 100644
+--- a/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi
+@@ -17,21 +17,21 @@ pwm-leds {
+ 		led-1 {
+ 			function = LED_FUNCTION_INDICATOR;
+ 			color = <LED_COLOR_ID_RED>;
+-			pwms = <&pwm 1 50000>;
++			pwms = <&pwm 1 50000 0>;
+ 			max-brightness = <255>;
+ 		};
+ 
+ 		led-2 {
+ 			function = LED_FUNCTION_POWER;
+ 			color = <LED_COLOR_ID_GREEN>;
+-			pwms = <&pwm 2 50000>;
++			pwms = <&pwm 2 50000 0>;
+ 			max-brightness = <255>;
+ 		};
+ 
+ 		led-3 {
+ 			function = LED_FUNCTION_INDICATOR;
+ 			color = <LED_COLOR_ID_BLUE>;
+-			pwms = <&pwm 3 50000>;
++			pwms = <&pwm 3 50000 0>;
+ 			max-brightness = <255>;
+ 		};
+ 	};
+@@ -132,7 +132,6 @@ pwm_leds: pwm_leds {
+ 
+ &pwm {
+ 	status = "okay";
+-	#pwm-cells = <2>;
+ };
+ 
+ &uart0 {
 
-The new warning doesn't fire after the last mount.
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+-- 
+2.47.2
 
-ls: cannot access '/mnt/merged/casefold': Object is remote
-
-But nothing in dmesg. Adding a printk to ovl_mount_dir_check() shows
-that it's never called for the 'ls /mnt/merged/casefold' call.
