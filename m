@@ -1,137 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E001CD2C;
-	Tue, 27 May 2025 03:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27262367
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748315753; cv=none; b=P8xJViwraa79YR8aFCQdYbpI/OrRVix9HXqhnNSIvNk7OwCo+BMUuQWt/XQoa5zsC+E3K74ZqZXub95N0iHzFnIW8fztMRJzyBbRBd3xINDE3YWG5nJIQlk2JGypaCcxk+lpwqpPRIZo6AS+MRZCYqiKZ+lekrvs4gpMjqSAgck=
+	t=1748315854; cv=none; b=Hfu2vfpTf+S/lctuGRIjVz2A3Q8AU1s9N1NZwGaQGPop09Kw97TkPDf0hoWvO7O8eDrX0nIOZxnU7OyQJkUBFz1WKIekJAPC9biddRCukI/DWG3G/I0DV+mLd+TTZGpJGiIdjgEdKuxF3mihdSPpufMIuSyiw7Gxmy3fRsfamho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748315753; c=relaxed/simple;
-	bh=IVG8hcaS0HMjvnDTtNlgb60z2Nuvm9LQjKKz3uFlBkU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=J2bNTq6u9HRbktAnJjyUlCC+tZRyG8vGQ+EIdnI3Xx5LcJ4SDQNUTiIeppn2Ui7s1p3RmQoZlNpO6/HNrS6hGvL6IqVfkkuP43J1c5oVuguQGAogRymFsdE9SxPqCtWIvSJoDwWuQXWf+U86k9SwAc0uCu5vpXIQx7j6eZIBdVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQf6w47o; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQf6w47o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60697C4CEE7;
-	Tue, 27 May 2025 03:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748315752;
-	bh=IVG8hcaS0HMjvnDTtNlgb60z2Nuvm9LQjKKz3uFlBkU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rQf6w47oz1XGQ4g2lZld5xAtoZrVqHMKIB/c0G55sj//106lgfmYQFEiqhdG1QCDV
-	 WidOU8l5ESm8ZbLNR5teOBg+x7WFJXb1KAj3536jtFQeqzppg3jb9dNMZXSCnKd2V1
-	 sLxPJ3nvKgxZALMjOsWE4qXMjsAuONA14K1CzbxSGMnNnRH3i8zYGLw9dP/ncL9hRR
-	 EuchWUy8QKZuVKNLzhJI6RsHipCT8c32SibXEis/iksUMgjKIYQsX4M/GUatYTXh9C
-	 V9QXYxff2alHwq0wq53hZGuEr04ckZfbKvGek0boR055n8/yqUnCGpPh5MhEqdjGg4
-	 EFn32kFhxGFCA==
-Date: Tue, 27 May 2025 12:15:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-Id: <20250527121549.2d40608e9463199d85bf9ba4@kernel.org>
-In-Reply-To: <20250527091743.d036018195b7668aea0753c0@kernel.org>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-	<20250523172857.02ab4a75@gandalf.local.home>
-	<20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
-	<20250527091743.d036018195b7668aea0753c0@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748315854; c=relaxed/simple;
+	bh=NZivm+ic3pknzIE+nWe+45uB4StQ36IKCGpSYcxRnIw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=TKnTQq9GAVCLi5UTD1gWubjTYvv4up195gAUWLVXneERhA1T1VXHqcCMnUKUWUj+ARBcXyprgu2YuMBjVMpsgkokyNPmG3g7Zf0Eo8gGofl0s5RZkWS/cKgl/MJgJM8tB040NSpFAG+QMnOd7KWe9IdK9ob6+Bd0nk7EqomOFf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxlmnCLjVoEMT9AA--.15541S3;
+	Tue, 27 May 2025 11:17:22 +0800 (CST)
+Received: from [10.130.10.66] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMBxn8W_LjVoyFD0AA--.40079S3;
+	Tue, 27 May 2025 11:17:20 +0800 (CST)
+Subject: Re: [RFC PATCH] LoongArch: Do not include larchintrin.h
+To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250520064936.32291-1-yangtiezhu@loongson.cn>
+ <e005dd551aec8bea185b3d37295876bd75d7b3e4.camel@xry111.site>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn>
+Date: Tue, 27 May 2025 11:17:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+In-Reply-To: <e005dd551aec8bea185b3d37295876bd75d7b3e4.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxn8W_LjVoyFD0AA--.40079S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Kr45Kw47ZFy7Aw18WrWfWFX_yoW8tr48pr
+	WDCwnIyrWkXr1fArnFk343Wr90yw47Ww12qFyYg34Ikr17WryIqw4rKrZxWF1Uta1FyF10
+	qr17Ja4YvF1UArcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07
+	AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-
+	e5UUUUU==
 
-On Tue, 27 May 2025 09:17:43 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> On Mon, 26 May 2025 12:03:42 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On 2025/5/21 下午1:41, Xi Ruoyao wrote:
+> On Tue, 2025-05-20 at 14:49 +0800, Tiezhu Yang wrote:
+>> larchintrin.h is a system header of compiler, include it in the
+>> kernel header may lead to the fatal error "'larchintrin.h' file
+>> not found".
+>>
+>> There are two related cases so far:
+>>
+>> (1) When compiling samples/bpf, it has been fixed in the latest
+>> kernel [1].
+>>
+>> (2) When running bcc script, it has been fixed in the latest
+>> bcc [2] [3], like this:
+>>
+>> $ /usr/share/bcc/tools/filetop
+>> In file included from <built-in>:4:
+>> In file included from /virtual/include/bcc/helpers.h:54:
+>> In file included from arch/loongarch/include/asm/page.h:7:
+>> In file included from arch/loongarch/include/asm/addrspace.h:9:
+>> arch/loongarch/include/asm/loongarch.h:11:10: fatal error: 'larchintrin.h' file not found
+>>     11 | #include <larchintrin.h>
+>>        |          ^~~~~~~~~~~~~~~
+>> 1 error generated.
+>>
+>> Maybe there are same errors for the other unknown projects, it is
+>> annoyance to add the include path each time. In order to avoid such
+>> errors once and for all, do not include larchintrin.h, just use the
+>> builtin functions directly.
 > 
-> > On Fri, 23 May 2025 17:28:57 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Fri, 23 May 2025 16:54:25 -0400
-> > > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > 
-> > > > I think we also need this:
-> > > > 
-> > > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > > index 7d837963dd1e..456efebc396a 100644
-> > > > --- a/kernel/trace/ring_buffer.c
-> > > > +++ b/kernel/trace/ring_buffer.c
-> > > > @@ -3638,6 +3638,9 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
-> > > >  
-> > > >  	rb_reset_tail(cpu_buffer, tail, info);
-> > > >  
-> > > > +	/* The new page should have zero committed */
-> > > > +	rb_init_page(next_page->page);
-> > > > +
-> > > >  	/* Commit what we have for now. */
-> > > >  	rb_end_commit(cpu_buffer);
-> > > >  	/* rb_end_commit() decs committing */
-> > > 
-> > > No we don't need it ;-)
-> > > 
-> > > I'm looking deeper into the code and we have this:
-> > > 
-> > > 		/*
-> > > 		 * No need to worry about races with clearing out the commit.
-> > > 		 * it only can increment when a commit takes place. But that
-> > > 		 * only happens in the outer most nested commit.
-> > > 		 */
-> > > 		local_set(&next_page->page->commit, 0);
-> > > 
-> > > When the tail page gets moved.
-> > 
-> > Yeah, when the page gets written, it is cleared.
-> 
-> What about this? It seems if we keep the reader->page->commit, when we
-> catch up the tail page, rb_get_reader_page() returns new reader (== tail)
-> because reader->read(==0) < reader->page->commit. But we should not return
-> new reader.
-> 
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 5034bae02f08..179142db9586 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -5522,6 +5522,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
->                 cpu_buffer->last_overrun = overwrite;
->         }
->  
-> +       /* But if we catch up to the tail, do not return reader page. */
-> +       if (cpu_buffer->commit_page == cpu_buffer->reader_page) {
+> Sorry, but in GCC those builtin functions are not documented and may
+> subject to change in the future.  Only the larchintrin.h interface is
+> documented.
 
+AFAICT, the LoongArch Base Built-in Functions are listed in the GCC
+documentation [1], they will not be changed easily and frequently in
+my opinion.
 
-Hmm, I found this might not work if it is called twice.
-Maybe rb_get_reader_page() can check the reader_page->ts > head_page->ts
-and return NULL (or reader_page if read < commit) at first.
+__builtin_loongarch_cpucfg()
+__builtin_loongarch_csrrd_w()
+__builtin_loongarch_csrrd_d()
+__builtin_loongarch_csrwr_w()
+__builtin_loongarch_csrwr_d()
+__builtin_loongarch_csrxchg_w()
+__builtin_loongarch_csrxchg_d()
+__builtin_loongarch_iocsrrd_w()
+__builtin_loongarch_iocsrrd_d()
+__builtin_loongarch_iocsrwr_w()
+__builtin_loongarch_iocsrwr_d()
 
-Thank you,
+> Thus if you don't want to rely on GCC for those operations, you may need
+> to write inline asm...
 
-> +               reader = NULL;
-> +               goto out;
-> +       }
-> +
->         goto again;
->  
->   out:
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+so these builtin functions can be used directly and safely.
 
+[1] 
+https://gcc.gnu.org/onlinedocs/gcc/LoongArch-Base-Built-in-Functions.html
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Tiezhu
+
