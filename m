@@ -1,63 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B762194A45;
-	Tue, 27 May 2025 17:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96098194A45
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748366734; cv=none; b=KTZSajSLBJMN+hP1vw3qMCjhvsqdKixx84vxXaKDvz9xiAfz1k5yIcnvYDBA1XsTSuDzR4B2WJbxxiLMIMuLgGcLzFsuQ8OU66slcIYLiibLiqYQJxJL2IvpqEQFK6F6FXOHrRrjSaXXy82603kq4ezY/XuM7/g3CIzhArbIJYo=
+	t=1748366739; cv=none; b=MANy7q5rNPo5kilBKOsdyRx5VR78pUxSjKwP/w9NP7GFlXVIwoCWKO8HZNeMmI3Kg7darKTNzqopQn8lW+G9pFqJIAgVGNEGpeBKyoo6Q8b1L4AwHr51hVo6QCqBj4vh5ZmXkcd3KbbA9XUbdkDBQ5CESQaK8VfeYHTjwQlqq/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748366734; c=relaxed/simple;
-	bh=WZ/piAzxvKWrt9UMwl10bjtG/mGr4Hp11iVOTQaEUrg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=P3EHPavigHYvqLSaVV8aDkrl6SZF1Py2sKRmg6nlH/uNbfkTojPprkBQbPNIBtQ4mJyasO5Oo+ztm3WP1OL/WnjqErBa7Qbjf2wDjWszq7RV8Ivn3beNWD1TdTK0gUrjgWIa3DC4OMX1pkVN6NZkV8X9TEv3MsSwVCcJJPhedPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ctqBo6Im; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748366739; c=relaxed/simple;
+	bh=uQ5IjdC0/0sr4uvZq6rqWPRVZFyaXSCMGVyJXZdpc34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WBPIxB67yywP1XCCNkd/+dKwvRBl+fo+yFXO+EZf6zZO4m4gi1uQl+s6fZqYUpfzXKSwB55/msDPAIvt9yBZddebVwZoevCkp/vTGYoJ0lH7W18F9Lm/m8D6ben+zEiTAbbV/P2h8LVcxidVjm4OFXgYaS6DeGMgoL9QjOEJlRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=d2hNPtot; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ctqBo6Im"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DB22C4CEE9;
-	Tue, 27 May 2025 17:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748366734;
-	bh=WZ/piAzxvKWrt9UMwl10bjtG/mGr4Hp11iVOTQaEUrg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=ctqBo6ImTgepsUu2Ht/pwv2+o5MQsm6HAmQ0y7++GtycD0fiRpFaumZ67GHZshH92
-	 tck0O+K5iWTZPEdEtwvUu/xWmmRa0pGWVLPHb9ydfGmdBcGhmVPlQdr9Fb+l/IwLlM
-	 2e3nNgSPd8vE2lowY2xnwOHQ3rjNb8JREBd72uC2XE2hCbjEbC1qumL0OVih8U7dl7
-	 yIcjJvDHtjZsopYVNefIz4jbEGBagaGPShgVmT5iZVem9WJAoHCfmPTtjbIYlP+CPf
-	 cz7HfkUBegGij40Q0pstBNiV1C/iVQHrvi6cX6oPUTlBZQCZzS6NSDqz4KRg4Vhmsq
-	 7hfvKlddmyW5Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE77B380AAE2;
-	Tue, 27 May 2025 17:26:09 +0000 (UTC)
-Subject: Re: [GIT PULL] EDAC updates for v6.16
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250525211618.GAaDOIolEntC03ernr@fat_crate.local>
-References: <20250525211618.GAaDOIolEntC03ernr@fat_crate.local>
-X-PR-Tracked-List-Id: <linux-edac.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250525211618.GAaDOIolEntC03ernr@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_v6.16
-X-PR-Tracked-Commit-Id: ea3b0b7f541b9511abe2b89547c95458804f38e2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ada1b0436b5a290923b072b2eb0368a7869bf680
-Message-Id: <174836676815.1718433.12041593528813667127.pr-tracker-bot@kernel.org>
-Date: Tue, 27 May 2025 17:26:08 +0000
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-edac <linux-edac@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="d2hNPtot"
+Message-ID: <39d9de6e-7d22-4a55-b27d-559a86dd5f7c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748366725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PAjoxEsRlDCDlqlmFJoAdt5aERhkKmPId4/7QntiMMw=;
+	b=d2hNPtotSrIoBjaeVENNwvflmoh+rZf7uPzuH/0tBb4zDiEDCvn32+40F1+b+yu+64SnY4
+	G9IWLPLm+EqSeql+q5bRtlsePFxb5HRMn8pR0WfUowGzLmZGAha/7dhqIAgeqyLWCzGDkY
+	m2A+yL/wm0XNAqT5/a6p45Hy4GAHZKU=
+Date: Tue, 27 May 2025 13:25:21 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH] dt-bindings: timer: xlnx,xps-timer: Make PWM in example
+ usable
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-The pull request you sent on Sun, 25 May 2025 23:16:18 +0200:
+On 5/27/25 13:15, Uwe Kleine-König wrote:
+> With #pwm-cells = <0> no usable reference to that PWM can be created.
+> Even though a xlnx,xps-timer device only provides a single PWM line, Linux
+> would fail to determine the right (pwmchip, pwmnumber) combination.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_updates_for_v6.16
+Well, it's OK if you are programming the PWM from userspace.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ada1b0436b5a290923b072b2eb0368a7869bf680
+> Fix the example to use the recommended value 3 for #pwm-cells.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> index b1597db04263..d36cbf0efbd6 100644
+> --- a/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> +++ b/Documentation/devicetree/bindings/timer/xlnx,xps-timer.yaml
+> @@ -82,7 +82,7 @@ examples:
+>      };
+>  
+>      timer@800f0000 {
+> -        #pwm-cells = <0>;
+> +        #pwm-cells = <3>;
+>          clock-names = "s_axi_aclk";
+>          clocks = <&zynqmp_clk 71>;
+>          compatible = "xlnx,xps-timer-1.00.a";
+> 
+> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Reviewed-by: Sean Anderson <sean.anderson@linux.dev>
