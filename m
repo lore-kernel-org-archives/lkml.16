@@ -1,33 +1,72 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCB62CCC1
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E531F26A1DE
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748349244; cv=none; b=iz0hoDUpVEyTMSK5Fkym43Y7+PVdodaPVOEgAqZyfP/ZBb+vRANcSMGaRoOtuA0xEN8XIHI1hlXVOkYNLxI9XmP/4HNNrIrGvO0KJVzSzSqSLiChDTE/2ItylHkC9vq3eOqRT7eAL81nVMJwa/hf3l+LddoCmYFO1d4BA6QJ6Ms=
+	t=1748349248; cv=none; b=ol90Bgb4moLAftYQeGIU/zV0ESI4Tw5L/mR55tu26v27zXyp+4aw8+Td6ol17WmL7nJWI55jeAdz26ZOBlMet0RQJXiO0mKGSzMF28ARrGF7joSXQxSq+R4H3bNTTfqYos3wjvZApHuUKKwNYbnYdf8+m5DvkNyyVmiUI/LT05o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748349244; c=relaxed/simple;
-	bh=n/7tgbnh1HYj1q4YPqzXdhqksDqU4MF2zBC9n53t8vE=;
+	s=arc-20240116; t=1748349248; c=relaxed/simple;
+	bh=GLQStpasjWjcjHZcmyqLKGTR//tmYDzkkLnTWed5tk0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aC6bvIEKGctTKEfmC+JsjKy15rslNWIVfN1SpywS7TmvC2uMEQewGjATqfQ+2uAc34EjBA1P2r7ixpToaEf40Qr9gP+VHYpueHjvZohbsbwQi7HO5cbLE0ep6gHedelsDnlnn8/p63EgeKP4f+WraDfBwYXlb8xitenRQOI7NK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JSEP8Qb/; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=EDHemQOd5AZEmvRIqwElqjC3X+cmdvcnh89C2vM6VjYnStXml4dpQguO0ODt2lmzqNpQnqEDNwrGbILbhZh6SIbjjUfTrVbYyCHkdwCm9zlXAdtka5sPsntOICyAY2CnY3nHBowgExUeOfU/MDNzJB8N+EQaty6mocSal+zlmDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UtXAC0Od; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JSEP8Qb/"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B51C12B3;
-	Tue, 27 May 2025 14:33:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748349214;
-	bh=n/7tgbnh1HYj1q4YPqzXdhqksDqU4MF2zBC9n53t8vE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JSEP8Qb/el8lj2iXAckQZs2X51X9/XhmOUt9ADvIRfZXqlu9QdpZbZZPE5K/VilK6
-	 Np8eZjDei/IfUayQ/aL/ESVFrUl5ACU3ZsXPjBsgKoShfwX7zMp3qYohp/yMbfhYBt
-	 F3Lx47cyq2QA9Hy4tB9V33wxNuzBqECiq/R6+i90=
-Message-ID: <8fc0c880-0809-43d6-b03a-1a5728f5d0d4@ideasonboard.com>
-Date: Tue, 27 May 2025 15:33:55 +0300
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UtXAC0Od"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748349244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fmrg7Mz/N3KeXGspKAhAFZUUGtopHb5QnF04/Cn8Fgo=;
+	b=UtXAC0OdkiW0UgjPf92Ng/IAXf4aTrLiDvZt15G2l2A4BDi5yLPoBNYa0Z2V8um4kEHRrF
+	tG9EwhGvY3yi6nQ2hSDJYm8ynlh/j8cUDjCrkvNkQHDr3GcMrNPfD6yPp5IWZPc7SOETyo
+	S8uYTAzhKuYgDYcoDwgCaUxk/sMLvIk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-297-AC9b6AHaOFeFB0fGVbLPDA-1; Tue, 27 May 2025 08:34:03 -0400
+X-MC-Unique: AC9b6AHaOFeFB0fGVbLPDA-1
+X-Mimecast-MFC-AGG-ID: AC9b6AHaOFeFB0fGVbLPDA_1748349242
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4d5e1af1fso993770f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:34:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748349242; x=1748954042;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fmrg7Mz/N3KeXGspKAhAFZUUGtopHb5QnF04/Cn8Fgo=;
+        b=BECbXhXH0Dkb6pmtqF2kJFOY2x3qY4S8Bfcg5tkCBZcNhSD4JWJtez0Ze2JTauhpa+
+         gEiWKqlrzajy37j2M+W2/hATpe0sZdle15WXSd5C2E0l1D1kgwRORbJIrF+8VlMhDA0z
+         bsKQlxBp0M0VniZH8B3M61A8jsLoVDGLx8FGONOAiGVcvrEU/h6h2tHqrh1yx3ENPExS
+         E1V9/+2QqYeztN3LNnNCGkx3+e8dadcW9dxf+Zt4OIUj2SPLF8GQiSYD5foQ1mZKpOtX
+         YjsKPtas1iAdXojQosprga8VD2O1KWR3+EoGLaWuWNyoH9VrmHAceXvzAl3EDq5uIamo
+         YxrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSgxAMlwHKEGSfJvdwJVcB31bBBCsK36j2UYQzBCHDey2lDclYgKn2DTGLKiyaVNYc7BaHTE0sksmE4b4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwejHDhST5Y43BNoleArwCXGjnNLI24yUfoHyzPqDpcsUnwHbZi
+	eVxnel+bgb632ZrC3zmA/ywOPJr0vwyaNjxcT6JDXIJcrxBbj9IHbnG04EOfB2DLHAh1FkegnXF
+	yumZB3T2dvyMcSSvFgcLGKAM8xFMSsqatlS5CS4Tg1QScR0JQwzxYtmtV+6JEh+BXUQ==
+X-Gm-Gg: ASbGncu31czilyjbV2ZgePDaUz+SpB9Ss0obPnZ3SkAUt7x2pBIeRJ6+oBsmM3Wr7O3
+	iL78WzFHzBtfetxILFF7lES0kGrlgshhXq0QvJwWPH6jYtBXE26DGJ9A6fEutiXbV0orRcUnd43
+	69B3J+aBEddzxRKUO+mpaMX3Jkt9RMF6GMwWACXszcppb/PcGT7LH/h4FkPpjUtQ2gUXBxF8w43
+	N1GBXBSRcpn408IrnlWkJk+k29vm7dOXN76ik9Xx4a7HNgguzGchYDFt3T9ZDdVloAIuSE2khr4
+	gNDJquJWtqKwbobWw7S8gmhEqZv8T1MhSWEuLBlbn+4f
+X-Received: by 2002:a05:6000:420f:b0:3a4:de01:ff2b with SMTP id ffacd0b85a97d-3a4e5e6a7b5mr458470f8f.14.1748349242380;
+        Tue, 27 May 2025 05:34:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHr+vEguSUIbqkCO4UypZwqDkKUDtCMMZ7AuyroOQyF+VP5SsKVEWUO8txTvaZseEvvbOBaGQ==
+X-Received: by 2002:a05:6000:420f:b0:3a4:de01:ff2b with SMTP id ffacd0b85a97d-3a4e5e6a7b5mr458439f8f.14.1748349241987;
+        Tue, 27 May 2025 05:34:01 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d2a7a317sm8125988f8f.24.2025.05.27.05.34.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 05:34:01 -0700 (PDT)
+Message-ID: <0f09b648-bf0e-4b7a-99ef-a7a42cb20054@redhat.com>
+Date: Tue, 27 May 2025 14:34:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,209 +74,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
- capabilities
-To: Michael Walle <mwalle@kernel.org>, Devarsh Thakkar <devarsht@ti.com>,
- Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
- <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
- <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
+Subject: Re: [PATCH 1/4] selftests/mm: Use standard ksft_finished() in cow and
+ gup_longterm
+To: Mark Brown <broonie@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250522-selftests-mm-cow-dedupe-v1-0-713cee2fdd6d@kernel.org>
+ <20250522-selftests-mm-cow-dedupe-v1-1-713cee2fdd6d@kernel.org>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250522-selftests-mm-cow-dedupe-v1-1-713cee2fdd6d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Michael (and Aradhya, Devarsh),
+On 22.05.25 19:38, Mark Brown wrote:
+> The cow and gup_longterm test programs open code something that looks a
+> lot like the standard ksft_finished() helper to summarise the test
+> results and provide an exit code, convert to use ksft_finished().
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
 
-On 27/05/2025 12:13, Michael Walle wrote:
-> Hi Tomi,
-> 
-> While testing Aardhya's OLDI support patches [1], I've noticed that
-> the resulting LVDS clock is wrong if this patch is applied.
-> 
->> In practice, with the current K3 SoCs, the display PLL is capable of
->> producing very exact clocks, so most likely the rounded rate is the same
->> as the original one.
-> 
-> This is now what I'm seeing. Most SoCs have that fixed clock thingy
-> for (some?) VPs, e.g. [2]. And clk_round_rate() will return the
-> fixed clock rate for this clock, which will then result in an LVDS
-> clock which is way off.
-> 
-> I'm testing on an AM67A (J722S) and I've backported some of the
-> patches as well as dtsi fragmets from downstream. Thus, it might be
-> as well the case that the fixed-factor-clock node is wrong here.
-> OTOH other K3 SoCs do this in mainline as well.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Thanks for findings this (It's not a fixed clock, but a (fixed)
-divider). I can reproduce on my AM62 SK's OLDI output.
+-- 
+Cheers,
 
-I didn't see AM625 TRM explaining the DSS + OLDI clocking. I remember it
-was a bit "interesting". Afaics from testing, the VP clock is derived
-from the OLDI serial clock divided by 7. To change the VP clock, we need
-to set the OLDI clock's rate. But the code we have at the moment is
-using clk_round_rate/set_rate to the VP clock.
-
-And we get the crtc atomic_check called before setting the OLDI clock
-rate, so it doesn't even work by luck (i.e. if the OLDI clock was set
-earlier, the VP clock would already have the right rate, and it would
-seem that everything is ok). In the atomic_check we see the OLDI bypass
-clock (25 MHz), which results in 3571428 Hz VP clock.
-
-And with this patch, the code then decides that 3571428 Hz is what the
-HW can do, and uses it as the pixel clock.
-
-Aradhya, Devarsh, do you remember how the clocking goes here? Or if it's
-in the TRM, please point me to it...
-
- Tomi
-
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->> ---
->>  drivers/gpu/drm/tidss/tidss_crtc.c  | 23 +++++++++++++++++++----
->>  drivers/gpu/drm/tidss/tidss_dispc.c |  6 ++++++
->>  drivers/gpu/drm/tidss/tidss_dispc.h |  2 ++
->>  3 files changed, 27 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
->> index 1604eca265ef..6c3967f70510 100644
->> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
->> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
->> @@ -91,7 +91,7 @@ static int tidss_crtc_atomic_check(struct drm_crtc *crtc,
->>  	struct dispc_device *dispc = tidss->dispc;
->>  	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
->>  	u32 hw_videoport = tcrtc->hw_videoport;
->> -	const struct drm_display_mode *mode;
->> +	struct drm_display_mode *adjusted_mode;
->>  	enum drm_mode_status ok;
->>  
->>  	dev_dbg(ddev->dev, "%s\n", __func__);
->> @@ -99,12 +99,27 @@ static int tidss_crtc_atomic_check(struct drm_crtc *crtc,
->>  	if (!crtc_state->enable)
->>  		return 0;
->>  
->> -	mode = &crtc_state->adjusted_mode;
->> +	adjusted_mode = &crtc_state->adjusted_mode;
-> 
-> Here, adjusted_mode->clock is still the correct pixel clock.
-> 
->> -	ok = dispc_vp_mode_valid(dispc, hw_videoport, mode);
->> +	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
->> +		long rate;
->> +
->> +		rate = dispc_vp_round_clk_rate(tidss->dispc,
->> +					       tcrtc->hw_videoport,
->> +					       adjusted_mode->clock * 1000);
->> +		if (rate < 0)
->> +			return -EINVAL;
->> +
->> +		adjusted_mode->clock = rate / 1000;
-> 
-> While after this statement, adjusted_mode->clock is 300MHz in my
-> case (the VP1 clock seems to be 2.1GHz, divided by 7).
-> 
-> -michael
-> 
-> [1] https://lore.kernel.org/all/20250525151721.567042-1-aradhya.bhatia@linux.dev/
-> [2] https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/ti/k3-am62.dtsi#L110
-> 
->> +
->> +		drm_mode_set_crtcinfo(adjusted_mode, 0);
->> +	}
->> +
->> +	ok = dispc_vp_mode_valid(dispc, hw_videoport, adjusted_mode);
->>  	if (ok != MODE_OK) {
->>  		dev_dbg(ddev->dev, "%s: bad mode: %ux%u pclk %u kHz\n",
->> -			__func__, mode->hdisplay, mode->vdisplay, mode->clock);
->> +			__func__, adjusted_mode->hdisplay,
->> +			adjusted_mode->vdisplay, adjusted_mode->clock); >  		return -EINVAL;
->>  	}
->>  
->> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
->> index a5107f2732b1..3930fb7f03c2 100644
->> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
->> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
->> @@ -1318,6 +1318,12 @@ unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
->>  	return (unsigned int)(abs(((rr - r) * 100) / r));
->>  }
->>  
->> +long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->> +			     unsigned long rate)
->> +{
->> +	return clk_round_rate(dispc->vp_clk[hw_videoport], rate);
->> +}
->> +
->>  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->>  			  unsigned long rate)
->>  {
->> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
->> index c31b477a18b0..d4c335e918fb 100644
->> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
->> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
->> @@ -120,6 +120,8 @@ enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
->>  					 const struct drm_display_mode *mode);
->>  int dispc_vp_enable_clk(struct dispc_device *dispc, u32 hw_videoport);
->>  void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport);
->> +long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->> +			     unsigned long rate);
->>  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
->>  			  unsigned long rate);
->>  void dispc_vp_setup(struct dispc_device *dispc, u32 hw_videoport,
-> 
+David / dhildenb
 
