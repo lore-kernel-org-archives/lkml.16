@@ -1,222 +1,349 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825D1F03C7;
-	Tue, 27 May 2025 21:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748382491; cv=fail; b=W8XRCb7QEWql1PL3tM4NFV9ar8v97HCmFXNzUeMkKXP2srl9Zdlw5NX15S4AgtlYxR78a96gykc70X92Q9QQRyChSpb4LWwFbbE+DYj3Wio/Z1ojuTocr7OX5xUygqZPAIDIxmFw9Aeic1Udv3a3+Z1bGh+SGRSseXBksQLXQa4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748382491; c=relaxed/simple;
-	bh=bbsLk0egeW+T6SBL2cbN3yw6YAY2ncsqBrG3CTD/PXc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ISNhUTjydU/pq3TtxBuoNZY26bCO0m5HbHiMp++/ghMJbzq3jBrNWGcWGSJ3GYHe/pbINbq9+GqbAwpVAtl39G3XbzsdOC/L+KnLl1jkT2aQNqqZ6Us6vNqn+p+lXvZvlOIWd5SIVMycL66QFZDam+P+gpYTBO4duF2F0K7NXtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d2g0F6Go; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BD11DE3AB
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:49:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748382575; cv=none; b=rf3vHcpbTUNfRooU/DnZQZW70dvR+3orokuTbEKO+XsXl/Wi+53Z6VkHcE79FfWb8jSxl5nkbYReCc5fqtvgWyk5dRt7Cb5BISVhhJrpVMbaxlvsTTx3G1FLzqzaC5GQ5S2aRUQO3OVT9WZqsT7f71ZpQsfhiwID0JlyRnzmJsc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748382575; c=relaxed/simple;
+	bh=HfPftjVcgI42dalYCg1FEsml86xfHZjOH0et0lZpTfA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JhfwyOlsGhxITR84fDmMnEFhdZNb+kJtMXhP8oZ4sCgRdfr+ZcwsYHKLTECsk9a1J1KGpaAxv5uTRBgKd2+K/JRRG92zMZBdTj+ATor0VdEeo7MiNlWgSybw/M7jahl2xMOwULgUbAKtgOMxDREHLuNE4z6p0PmZkUwfqH0u9kE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=uo+1sIR7; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d2g0F6Go"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748382491; x=1779918491;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=bbsLk0egeW+T6SBL2cbN3yw6YAY2ncsqBrG3CTD/PXc=;
-  b=d2g0F6Go/Cl6uoW+hD1TbagxxJWtXHuIcII6F3ecFMfeNFFB1sHyrwZq
-   xv96mQcwFJWF965gQ8eo6w0iKYKMMYk1TcRl8yxxjKTF/dpQbvoz7nJUa
-   RJA9a37/JJ4toYa6Jft2ZV+ZR4SPWO5h1TITYNvQ9uVCYMZDElNbtRRj4
-   T2Npd79BptnDOWO99X/nNA8RvBLW7cIduRNHWfZMgd8lSqDV975UdxJ3D
-   KeogeBofK/73VbfZPdym6CWuZdZJeEAWIIOtLN4cbn+KPb7TlpvzWLcCB
-   AXqR7mijcdrCs+l0Z65MuKCo+if36H4i8+Cf4YPZWuCyeAhJjgaLoLSFs
-   g==;
-X-CSE-ConnectionGUID: huzMaQIkT3KowC3OuZ7pFQ==
-X-CSE-MsgGUID: gV2IRyKcTRGQhbQLMNr5PQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50091389"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="50091389"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 14:48:10 -0700
-X-CSE-ConnectionGUID: GRKhRETtQru7iZZo5jztWg==
-X-CSE-MsgGUID: aKR+2Z57Q6i6kurwpefclg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="142966641"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 14:48:09 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 27 May 2025 14:48:08 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 27 May 2025 14:48:08 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.66)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Tue, 27 May 2025 14:48:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iGs+zgFZ5ej5z3Z4rKyJy+uycZHyrRvAfZxpnSotdezNjkLpgL3vMlotCd7jwgcEJLfTHIsSoaiIxU+Yu4Oq3TfUkSV4crSlT3ZyuF3FDZGdIq58CB8rqm9fekXKKqQaw9Nz0HNkS6LL629z947y66R6zBobvRj83rG6w+e7f5kfGCjiWfk7QRfphfdUz0O2dRjlUym6wHCGPUDMuqmRIytuTi+rdzzssVXgyRBkOLBDCGAkLt4g/ndiGpI/zuQMHxOBYbUbxhh3g928UItoRvcNHe+2PWVigPY1MbpDZLi9yKuiyiRK812/NKGPyMAZg1Xu1nxuD6VJIWX1JtwLdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bbsLk0egeW+T6SBL2cbN3yw6YAY2ncsqBrG3CTD/PXc=;
- b=puaKKb8PtmvQw2TvthxrJoINY8o/r1yaO4xikPe0PjEog+5CJZl9F3LGxZivohVKUJS3bzHPEXvge+4vs01PwR3I4T4iED3uKKvHBLokmAAhzFN8s7jUsy67wcZEaFsogDMMTFr+f6XXzOAf2Yya0lnuiJZKZ80FWR1GMnwhUyw3gCV+Z9fROg/jpDrttXSmGV+5klFLmn7eD+rNMb9wr7cMv8cZb468f34N/rvv/JST0r664uihH4nMej5H2bksd305639u4r9qhmZ0LM/lD0LYqqrdCJGpCyiVUAITWb5BAvVydAVhWeFZZnVwH64DHCm2+zl7AjiVzt18sTo7/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com (2603:10b6:208:31f::10)
- by IA4PR11MB9201.namprd11.prod.outlook.com (2603:10b6:208:561::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 21:48:06 +0000
-Received: from BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66]) by BL1PR11MB5525.namprd11.prod.outlook.com
- ([fe80::1a2f:c489:24a5:da66%5]) with mapi id 15.20.8769.025; Tue, 27 May 2025
- 21:48:06 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Edgecombe, Rick
- P" <rick.p.edgecombe@intel.com>, "eadavis@qq.com" <eadavis@qq.com>
-CC: "seanjc@google.com" <seanjc@google.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com"
-	<hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "x86@kernel.org" <x86@kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH next V2] KVM: VMX: use __always_inline for is_td_vcpu and
- is_td
-Thread-Topic: [PATCH next V2] KVM: VMX: use __always_inline for is_td_vcpu and
- is_td
-Thread-Index: AQHbzuSWB445QzrMV0+LSRpU93DRp7PmwtEAgABBcIA=
-Date: Tue, 27 May 2025 21:48:06 +0000
-Message-ID: <18b805fbe1de59f45b0d61667933f5301cea4f86.camel@intel.com>
-References: <58339ba1-d7ac-45dd-9d62-1a023d528f50@linux.intel.com>
-		 <tencent_1A767567C83C1137829622362E4A72756F09@qq.com>
-	 <c281170eeeda8974eb0e0f755b55c998ba01b7a2.camel@intel.com>
-In-Reply-To: <c281170eeeda8974eb0e0f755b55c998ba01b7a2.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.56.1 (3.56.1-1.fc42) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5525:EE_|IA4PR11MB9201:EE_
-x-ms-office365-filtering-correlation-id: 032feac3-02ff-4409-5b3d-08dd9d682a47
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?SlFUS3VDa0hBL3Z4Mi9UR2FQbml4WXN0TFo5bXdmYm9BUVZKVUVxWHJKVndF?=
- =?utf-8?B?aEpPSThsWFBSL1MzT0NWdzZDcFFNb2MxM2tCd2QrdkpJUFVLVmFaSFJ3b2Jq?=
- =?utf-8?B?UmZCc2dlWE80dXEwVHRqbGxKM2RlSjFqUkJVdnZKaXlpY3kwa3JWLzQycUdR?=
- =?utf-8?B?N0YrcVl0YVdvdmR4NTBYQzJMd21ZNE5oRHJLR21EWmN2eURtNDNOK2FwdDBm?=
- =?utf-8?B?L3FNOG5tRzhGcDFRNCsxUmNXV1BwcmlycFNTKzAvMFgrR2dUcEkrVFdhUVpO?=
- =?utf-8?B?VmNUeXhjUG14RjNtYzVCdnlpUVZPQnRPKytPdmFLWTJtS1laeTQrNU5XeUVV?=
- =?utf-8?B?NXRMcXp0VXZnemlqQVhiS1pYTnplc05rNHNrZklQamNaODFjZDY3enVCMjNn?=
- =?utf-8?B?N1czRDQ3WEFLMUtYTkNJN2pNRXE4SkM5aklRSlh1MWJxN24vZkt4djViZEZF?=
- =?utf-8?B?VFVhbmt3SzFzMFN0YjBYWVFLN3pVWE02cnJtUWt4RzQ2WEk4UnRLTWFUdGFG?=
- =?utf-8?B?SU1mNS9rS0Z1U256UEFkMXFuYmsxZVBKMlBDNWx5ekwwT1hJcE80VG5SLzdJ?=
- =?utf-8?B?RGhoTUt5TEFPeXd5QlQzcFhKY0lXdlpPZHZrNlZ3U1l0MWVvQ3ZFUTJzdExy?=
- =?utf-8?B?QmpSQlNQbnZncUJVY25Rd0pjRXhVYUk2cGZjTVVTaDRZQW5lOEQwUjRZdWdN?=
- =?utf-8?B?djVXTExMdU1CZkhJckpudERKczYzajVJQll3UlBIYnZRa0VqSDJ0ckRXUWlt?=
- =?utf-8?B?S3d0VFpoMUk1cDNEK1l1OGhlZ2hSZFJkZFY0V0gvVVNtemE2ZU5tOE12SHNF?=
- =?utf-8?B?Y3hVbnpaTGU4UWc0NzJvcE9jMEkxWEs3dHJiV3lHMXUzeHhpSWJERXBaOFlu?=
- =?utf-8?B?MW9ud0dONVR1VEdEOEpwUzg4N0E0a2NoK2dvSHF6SnRZRXZwR09WOVRxMVlF?=
- =?utf-8?B?amNWTm94Ukdabzdsai9aRWZINEIzeEdzZjgvUXRCWWVvSG1IR2RNUU9lOEdY?=
- =?utf-8?B?VVVNMVl3YWdnYlZwL2xzR1FFSWF5cUlISHFKWnIwbTBZSVIvMmxJZ2lQK1V2?=
- =?utf-8?B?cnQrZ3ptczNQMFB3cVlINGpFekJnTktldVFkTW9qcGxnMHRST2ZZK2gvNFFK?=
- =?utf-8?B?OEVKdC9DdVI2V2h4OGQwV0tLOGoxbXlKS1JHaXk5aXN5ayswaFlRcUFYUVJC?=
- =?utf-8?B?RWtwSkluOWlFYTZsNVJmVmExZE1lVFFTVkFuWENuSVZKdUxEcEJ6ZjNLdVhP?=
- =?utf-8?B?cmZYLzUzREZvaTRsZmozVHVUdmtmTStHOTY3STJDMTlkamN1U3RScGg2YmFE?=
- =?utf-8?B?YUdCU1k4T2plaWxldkZPYjBkalJXTmFLbzNsN25RZDQ3KzNRaG5iM1pYdVFa?=
- =?utf-8?B?eDNsRDFoL09FbzN1eW1Db3owdUlkZllvdmpoUzBkTGlGUVRFdzBCVGZ5QnVi?=
- =?utf-8?B?TG5wVXNWZWwzcWFYM2RGVXQybzRuY2w2SzJHVk91TmdRQ1NrdWV0RzcyUHpz?=
- =?utf-8?B?UkRMR3k4UDZ5dDBNMlAzQ0ZZc3YxQUZORS9tRCs5OXFvN3BRR29GV3JlYVk1?=
- =?utf-8?B?cEFmWTNCTjduWVBTMXJnelI3cGpUajlUY20yYVlRSE9NVFU3MVp5cTRnS3FL?=
- =?utf-8?B?cHJjeFNRcmh1alhRNmlSTTFEWDcxVk9LQXI1eXV0UWNta08zUUtwWEx5VmpY?=
- =?utf-8?B?b1ZrM2FkRlJsS2VhYk96Rk5HMmZjb0J0U3dGc3MyYVAyczRYQWF1YS9aeTR5?=
- =?utf-8?B?N2kweXF4Y0JQcGFiTHdvQ3lGa3V3L05hWWJESVI2akpwMnREd05TakVlZWNF?=
- =?utf-8?B?aTVRQkVCSTBaMkhhYU8zMlJBN28vSzdOQXEwTXp1STlreE9idWFUZ1d3Zlg1?=
- =?utf-8?B?VWtmdW5vUUlmeVVtdU9lbDl1dlhPd3ZXYkRjT2pYNmhhS3g1eVFvSU9jMlpD?=
- =?utf-8?B?T3hVbkVtYlE0ZFFDNG9pR2p6U0Qzc3dUcFhwUkxuR2NCM2lpM2haRGtrOVBG?=
- =?utf-8?Q?JzrSKU3Jq57WvEE5eBm01DYriftWg0=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5525.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NHpRamdlL3JvY1lkQUQ3aDNtaFEwUGdod0d5YVNTRzdGZVF5M2UxVjhTMkk3?=
- =?utf-8?B?Q1UwNjIzaWtiRVVRa2hXWEJHWkpNNTB1VjNZcm1sYXhFLzQrK1oxUmpkL2dp?=
- =?utf-8?B?aUFaZUFWanl2a1QyNExzWSsvZUhodXVNWUZadlg2QTAyb0N4TWdCWXMrS2Vu?=
- =?utf-8?B?dkRlL0REMDVMbXJWREFEa0xvWlJFMVo5RWJBUWIyZ25nTWh0dnVRcS9ReEhO?=
- =?utf-8?B?cFk4bFZWc1hxY1R0eGtwYng3UzJlNW9ORndMeXFYU0tac3FacFRjalN6RTJ1?=
- =?utf-8?B?VXBYNm5kYkNKUTFJaFh2dWZtODBJUVZ2aDhOVGVVU0FqMjNtc0NoaWdoUkpI?=
- =?utf-8?B?SXF4VGYrWVovbkE0czdXb25LZ0N2ajI1aFZXWkx0SkRjRWxzZG9rMCtPb2tL?=
- =?utf-8?B?MUtNWEZuZDNrNFl0bHZoYlk1VW8rTVZQUlpmb3ZVOVQ2c2JtOU5XTW9Ea3h4?=
- =?utf-8?B?amM3Vmt6VkxHdTh5WEVRenhMaTFqV0NhZ0NFZVBsckk4ZzJnQ29GK29wenpZ?=
- =?utf-8?B?RmhjWVZlczdrT09mTytMb0UwS1RWeUdRSGRGUDU2bDRZQWo0b3Vtc3p6M0pj?=
- =?utf-8?B?OUZ3MWFuV3NROG4xN2hKeXQrcjZUL0xxSStyTFNIekhYZlo2VVlXWFEvSG00?=
- =?utf-8?B?SXJCTnZZTGs1Nk1kVTY0S21xTTEvZEZEanJuMFAxQTFxTWZENUJxTkMrVjl4?=
- =?utf-8?B?UzA0d3BGMVVVRThINDNacTVmZmsxNXpseURpOHoyUnR5NGN4V1NtaWlaTWpj?=
- =?utf-8?B?bEh3aXNXVjRmNXVoTXNiVG16UFU4UnpGY1dOZ3FreHBXM3RxUGY5RmZrTCs4?=
- =?utf-8?B?SGhVNm1FTFluNTdpc0xFL2pWaEdIU3IxZXBWLytMa2N6ZWMxcExsSGk5clpG?=
- =?utf-8?B?bzk5TTZNeU1ESUU3ZFlYQkVnRDUrUmdOQy9pRzR4NmxtOE1OcTI3Z1g4Zllk?=
- =?utf-8?B?TFBJc3RvLzl5dHA0TU1Wb3VtZllIcnoyazRjL2M3Y2FYOVB4RnpSQXBXdHJZ?=
- =?utf-8?B?QXNpeEQyTjJMN2lFV25RWTRMcldJVURCWUlyN0VZKy8vNit0THhNeldMTXht?=
- =?utf-8?B?Rk9VZitsd0xkWFJyT0MwRkVqbHhRdXdDSEk3THR1a1MrRW5sZEFNZWZDeGFC?=
- =?utf-8?B?bXI4aXFBQUFtbFhveXZndW5pSHJ3ZlhSTWVMcUVUS2hSa1V0cFhoekNuODFa?=
- =?utf-8?B?eGladGh0SERDczdWQTZQbGs0TVZJT1JNVW5XQ2hFYVdvNUlhUmRmZEppd25B?=
- =?utf-8?B?MjJQTEQvS3Vra2FLdUdsYzVmd2dRUXd4cVhYRWJENHA1RXoxeVB3OEhnS2NV?=
- =?utf-8?B?Y2thR0drQTJ0T1I4S2tHcnpSKzF3RjN0R0NUV3RhQ3hUUElWRGN5cm51czJC?=
- =?utf-8?B?UnpjbDIwUzNFMTladjdOQnh1c0J4dzBUaGI2RnRwaDFxWG51U2tRMHQ3VUdh?=
- =?utf-8?B?NlBjbG1ONTJLOUkwM3BPTWprTWt3UWp3eDdSUVhsM3V0ckZ2bmFTa2FOOHZq?=
- =?utf-8?B?T1hSY3F3NzZGR1IxVmxmcmlPdllzdFJwZkVsYUxxNEo3bkUvZjc3NkRLM2FS?=
- =?utf-8?B?anhNTWNJUG5MRGRmSlgvQnRRcUlET204RXZpdkx2eGkvcFNBVDRnVitheFdx?=
- =?utf-8?B?Q0F0NWx0T01mNm5jdVcyd1lUS0hER2JnWXFYZ2dTS3F5TzdRK3YxODBlZDdr?=
- =?utf-8?B?K3gyRnEyaUZvdXAyK29qc3gxUUZMV1dDRnUxY1Y3WXVMOXFmUUZndmZybXpD?=
- =?utf-8?B?OGhQRy84RTFNKzB6ZXNWVXZvVEQwSnd5Y0gycE5lRzMyMUkyTE50bWtNcFEx?=
- =?utf-8?B?VDBIR1ZBUFptR0JKdzhKQ01lc0JCaFVuaWk1MkdTRldKN0pPamVWMDlUWS9W?=
- =?utf-8?B?ck16MzJLSWNnQXBRdGZBbHZuMmhOQkVYREVFbHp2eWN6cEtJSWdNQm1XWisy?=
- =?utf-8?B?MTlhSHRndVlsV3NtbVNGV3FoR1lTeHFSNGVWV09PQmZ6dUozVlUwbEphbGhs?=
- =?utf-8?B?TGFHRlVBaHBRYjRURzFLTUVXVnJqalNMR0htajBYT0VhcDNZWWYwWjBnRnk4?=
- =?utf-8?B?dWtQTkU1aExlTGNoMEJQWHp0SlNIN0d2STYxU2c2V2p0Z2R3VG9kSVRMemx4?=
- =?utf-8?Q?cYqm2PfP5trqt0Sej1i2/0y/2?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1D77B0BED20A294781A6D9EDC76C85D7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="uo+1sIR7"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234c5b57557so2113055ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:49:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1748382572; x=1748987372; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HfPftjVcgI42dalYCg1FEsml86xfHZjOH0et0lZpTfA=;
+        b=uo+1sIR7rpy8JR/eYpfCJljCCAxjooygTjp2wPiY0lzPipWc+D1Rghrxb6FGqtvOqO
+         KVmgyAB60aHI47NXttFkF3+VPQpbNH3yO6NXoDIAnoBx197zfvGIcf8fjvn70GTHzMuy
+         v5PXjlp3QiK0Qd/MW6BZ9qXpybwZZVnroyHCsScWADH4D2xUOCdYUrW5A69+EIVSoSB7
+         77Bc6QKhnLsZfG10anFfyUtg1r7c92oZ3XIN3Pu3wLp9nmjNoQuzqpBy8NNJL/v4C4OP
+         WH35ep9akTDSNkQSn1OYkKYkXlvKaVl+bIOeU9YE8CuROQlZcZ4nX90zyV3dyXFGfrSA
+         qcIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748382572; x=1748987372;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HfPftjVcgI42dalYCg1FEsml86xfHZjOH0et0lZpTfA=;
+        b=lOJmMN5zlZ9eviKy0WReFBgF48VQJKaf2Zsp6f46Towx+poMOTtlGk4tKCgcB53c5b
+         ZFPU6DhpnyVMwEKp1r2F/mMPZ+yEzeZkBJwsg+NC7H+oK0id33MrhD6eNhlsstCi83O5
+         nWWFjRySXULLpTfH5GXGsX/wmZN6EbKtKkczzQfNym+FpTUUcs+mxhxnajQ5hJlIFDsr
+         TRLUnDnZyqFp+JZylDBDPvIhPHuT4fq0Iq49i1mxniZSHNT+v/9hfIVP0VT9m1AQ0THW
+         lgP6o2o6Uqz+wYkYrvpTuBBcu4BqCYQ06rKWV+Q1ygXtHajLsVewauhculqjwbLG2bZO
+         xudw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9+OYYrB27UgPtwb8BsotXy9NTGZvgxiQVSlV2pe+Qh0Ah6Fct0pZgvyjqzmJXWhoh/ZC3EU82TMvKNpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpZ5/ty65gbonQLbj8uajL76tM/DRiyS6UgeH2bone9MpX0ZxO
+	VIVIBMbxOdswAsFSbpcSKTORPn4s7K1reEKPAL9WnD0BuWengpAG8ytzOoZ13jYc57QzKFpz35p
+	VTxP8NGxpBQ==
+X-Gm-Gg: ASbGncscwaGnaUm14FWLPjLcmhFBrkcNspvvzT9QdWuevdZWqUapy6rYX6x+YgwT1r9
+	Gy40pg0NVWIixFTpGuy2zO00BFnyc7TE0wFEe/XWSToBNGBMjc/5cq4VhrDtDKcHn18QkhzT1p3
+	my+QKLzNWyZhx4aSo61xgWgJL2xnGqItJhStZ9nD2hlPhKi06KHytyqf7KDnHv7IWktRSwS8i5j
+	RB1VknwJJ3rUrwWa4MSsMqd3EFXQxFe211fp/WMqASBsB8ANnndhT1w8kKYQt6N8zehS5T8+333
+	SfmNTHuHy0TBqxBnFfKvryZFVnlWfZml+/YqYCNegwPGgFB8lsfbRSoDXCflHW6zUnENOco9a3c
+	KDF8txJgDBI4Mv6yDdLbsSUY=
+X-Google-Smtp-Source: AGHT+IEI57uhxgiCsGn/cvwidX55zKyJNXlN3YwwHOsfL874zvLVP+ews9urZpq8pgsnQu36X5v3nQ==
+X-Received: by 2002:a17:902:da8b:b0:234:c8f6:1b05 with SMTP id d9443c01a7336-234c8f61f13mr5853135ad.52.1748382572139;
+        Tue, 27 May 2025 14:49:32 -0700 (PDT)
+Received: from ?IPv6:2600:1700:6476:1430:dc04:52d5:a995:1c97? ([2600:1700:6476:1430:dc04:52d5:a995:1c97])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234cc24e8e6sm529285ad.217.2025.05.27.14.49.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 14:49:31 -0700 (PDT)
+Message-ID: <13f85ee0265f7a41ef99f151c9a4185f9d9ab0a0.camel@dubeyko.com>
+Subject: Re: =?UTF-8?Q?=E5=9B=9E=E5=A4=8D=3A?= [PATCH] hfsplus: remove
+ mutex_lock check in hfsplus_free_extents
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+To: =?UTF-8?Q?=E6=9D=8E=E6=89=AC=E9=9F=AC?= <frank.li@vivo.com>, 
+ "glaubitz@physik.fu-berlin.de"	 <glaubitz@physik.fu-berlin.de>, Andrew
+ Morton <akpm@linux-foundation.org>,  "Ernesto A."
+ =?ISO-8859-1?Q?Fern=E1ndez?=	 <ernesto.mnd.fernandez@gmail.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, 
+ "syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com"
+	 <syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com>, 
+	Slava.Dubeyko@ibm.com
+Date: Tue, 27 May 2025 14:49:30 -0700
+In-Reply-To: <SEZPR06MB5269FA31FE21CD9799DA17ABE89AA@SEZPR06MB5269.apcprd06.prod.outlook.com>
+References: <20250511110856.543944-1-frank.li@vivo.com>
+	 <58e07322349210ea1c7bf0a23278087724e95dfd.camel@dubeyko.com>
+	 <SEZPR06MB5269FA31FE21CD9799DA17ABE89AA@SEZPR06MB5269.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5525.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 032feac3-02ff-4409-5b3d-08dd9d682a47
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2025 21:48:06.7792
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r1ZmgH6QT4AV8OxFa4ev+cuv33Xn3+xHVH/yDz9H80FcreCDtbSYQF/KmqzgoFSC2N5geczUHBYJ14QoVvfJxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9201
-X-OriginatorOrg: intel.com
 
-T24gVHVlLCAyMDI1LTA1LTI3IGF0IDE3OjUzICswMDAwLCBFZGdlY29tYmUsIFJpY2sgUCB3cm90
-ZToNCj4gT24gVHVlLCAyMDI1LTA1LTI3IGF0IDE2OjQ0ICswODAwLCBFZHdhcmQgQWRhbSBEYXZp
-cyB3cm90ZToNCj4gPiBpc190ZCgpIGFuZCBpc190ZF92Y3B1KCkgcnVuIGluIG5vIGluc3RydW1l
-bnRhdGlvbiwgc28gdXNlIF9fYWx3YXlzX2lubGluZQ0KPiA+IHRvIHJlcGxhY2UgaW5saW5lLg0K
-PiA+IA0KPiA+IFsxXQ0KPiA+IHZtbGludXgubzogZXJyb3I6IG9ianRvb2w6IHZteF9oYW5kbGVf
-bm1pKzB4NDc6DQo+ID4gwqDCoMKgwqDCoMKgwqAgY2FsbCB0byBpc190ZF92Y3B1LmlzcmEuMCgp
-IGxlYXZlcyAubm9pbnN0ci50ZXh0IHNlY3Rpb24NCj4gPiANCj4gPiBGaXhlczogNzE3MmM3NTNj
-MjZhICgiS1ZNOiBWTVg6IE1vdmUgY29tbW9uIGZpZWxkcyBvZiBzdHJ1Y3QgdmNwdV97dm14LHRk
-eH0gdG8gYSBzdHJ1Y3QiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEVkd2FyZCBBZGFtIERhdmlzIDxl
-YWRhdmlzQHFxLmNvbT4NCj4gPiAtLS0NCj4gPiBWMSAtPiBWMjogdXNpbmcgX19hbHdheXNfaW5s
-aW5lIHRvIHJlcGxhY2Ugbm9pbnN0cg0KPiANCj4gQXJnaCwgZm9yIHNvbWUgcmVhc29uIHRoZSBv
-cmlnaW5hbCByZXBvcnQgd2FzIHNlbnQganVzdCB0byBQYW9sbyBhbmQgc28gSSBkaWRuJ3QNCj4g
-c2VlIHRoaXMgdW50aWwgbm93Og0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9vZS1rYnVpbGQt
-YWxsLzIwMjUwNTA3MTY0MC5mVWd6VDZTRi1sa3BAaW50ZWwuY29tLw0KPiANCj4gWW91IChvciBQ
-YW9sbykgbWlnaHQgd2FudCB0byBhZGQgdGhhdCBsaW5rIGZvciBbMV0uIEZpeCBsb29rcyBnb29k
-Lg0KPiANCj4gVGVzdGVkLWJ5OiBSaWNrIEVkZ2Vjb21iZSA8cmljay5wLmVkZ2Vjb21iZUBpbnRl
-bC5jb20+DQoNCkFsc28sDQoNClJldmlld2VkLWJ5OiBLYWkgSHVhbmcgPGthaS5odWFuZ0BpbnRl
-bC5jb20+DQo=
+On Sun, 2025-05-25 at 15:03 +0000, =E6=9D=8E=E6=89=AC=E9=9F=AC wrote:
+> Hi Slava,
+>=20
+> > Which particular xfstests' test-case(s) triggers the issue? Do we
+> > have the easy reproducing path of it? How can I check the fix,
+> > finally?
+>=20
+> generic/013 triggers the issue. Here is the reproducing path.
+>=20
+
+Great! Could you please add generic/013 issues analysis in the patch
+comment? I mean the dmesg output here.=20
+
+> [Origin]
+>=20
+> We got fsck error, reason is the same as [1].
+>=20
+> [1]
+> https://lore.kernel.org/all/20250430001211.1912533-1-slava@dubeyko.com/
+>=20
+
+Mentioning [1] could be confusing because it was HFS related fix. But
+we are discussion HFS+ here.
+
+> root@ubuntu:/home/ubuntu/xfstests-dev# ./check generic/013
+> FSTYP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- hfsplus
+> PLATFORM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- Linux/x86_64 ubuntu 6.15.0-rc4-=
+00055-g71bfd66b8583-
+> dirty #421 SMP PREEMPT_DYNAMIC Fri May 23 18:30:10 CST 2025
+> MKFS_OPTIONS=C2=A0 -- /dev/nvme1n1
+> MOUNT_OPTIONS -- /dev/nvme1n1 /mnt/scratch
+>=20
+> generic/013 35s ... [=C2=A0 380.286618] hfsplus: xattr exists yet
+> [=C2=A0 382.410297] hfsplus: xattr exists yet
+> [=C2=A0 383.872844] hfsplus: cannot replace xattr
+> [=C2=A0 385.802529] hfsplus: cannot replace xattr
+> [=C2=A0 393.125897] hfsplus: xattr exists yet
+> [=C2=A0 396.222921] hfsplus: cannot replace xattr
+> [=C2=A0 399.084012] hfsplus: cannot replace xattr
+> [=C2=A0 403.233816] hfsplus: cannot replace xattr
+> _check_generic_filesystem: filesystem on /dev/nvme0n1 is inconsistent
+> (see /home/ubuntu/xfstests-dev/results//generic/013.full for details)
+> _check_dmesg: something found in dmesg (see /home/ubuntu/xfstests-
+> dev/results//generic/013.dmesg)
+>=20
+> Ran: generic/013
+> Failures: generic/013
+> Failed 1 of 1 tests
+>=20
+> [w/ bnode patch]
+>=20
+> The fsck error is related to the node not being cleared, which may be
+> related to the implementation of the fsck tool.=20
+> We can continue to discuss this in the previous email. For this, we
+> can ignore it and continue the analysis based on the bnode patch.
+
+Let's discuss this issue in independent thread. I assume you would like
+to share the patch with the fix. Do you mean that
+hfs_bnode_need_zeroout() works not completely correct? Because, I had
+impression that HFS+ makes clearing of deleted nodes.
+
+>=20
+> diff --git a/fs/hfsplus/bnode.c b/fs/hfsplus/bnode.c
+> index 079ea80534f7..f2424acd3636 100644
+> --- a/fs/hfsplus/bnode.c
+> +++ b/fs/hfsplus/bnode.c
+> @@ -633,7 +633,7 @@ void hfs_bnode_put(struct hfs_bnode *node)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 if (test_bit(HFS_BNODE_DELETED, &node->flags)) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bnod=
+e_unhash(node);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unl=
+ock(&tree->hash_lock);
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (hfs_bnode_=
+need_zeroout(tree))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 //=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (hfs_bnode_need_zeroout(tr=
+ee))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bnode_clear(node, 0, tree-
+> >node_size);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bmap=
+_free(node);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bnod=
+e_free(node);
+>=20
+> After apply bnode patch. We got error from dmesg, which warn at
+> fs/hfsplus/extents.c:346.
+>=20
+> root@ubuntu:/home/ubuntu/xfstests-dev# ./check generic/013
+> FSTYP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- hfsplus
+> PLATFORM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- Linux/x86_64 ubuntu 6.15.0-rc4-=
+00055-g71bfd66b8583-
+> dirty #422 SMP PREEMPT_DYNAMIC Sun May 25 22:37:55 CST 2025
+> MKFS_OPTIONS=C2=A0 -- /dev/nvme1n1
+> MOUNT_OPTIONS -- /dev/nvme1n1 /mnt/scratch
+>=20
+> generic/013 35s ... [=C2=A0 236.356697] hfsplus: xattr exists yet
+> [=C2=A0 238.288269] hfsplus: xattr exists yet
+> [=C2=A0 240.673488] hfsplus: cannot replace xattr
+> [=C2=A0 242.133163] hfsplus: xattr exists yet
+> [=C2=A0 242.172538] hfsplus: xattr exists yet
+> [=C2=A0 243.702797] hfsplus: xattr exists yet
+> [=C2=A0 245.943067] hfsplus: xattr exists yet
+> [=C2=A0 249.502186] hfsplus: cannot replace xattr
+> [=C2=A0 252.544517] hfsplus: xattr exists yet
+> [=C2=A0 253.538462] hfsplus: cannot replace xattr
+> [=C2=A0 263.456784] hfsplus: cannot replace xattr
+> _check_dmesg: something found in dmesg (see /home/ubuntu/xfstests-
+> dev/results//generic/013.dmesg)
+>=20
+> Ran: generic/013
+> Failures: generic/013
+> Failed 1 of 1 tests
+>=20
+> # demsg
+> [=C2=A0 225.975852] run fstests generic/013 at 2025-05-25 14:42:11
+> [=C2=A0 231.718234] ------------[ cut here ]------------
+> [=C2=A0 231.718677] WARNING: CPU: 3 PID: 1091 at fs/hfsplus/extents.c:346
+> hfsplus_free_extents+0xfc/0x110
+> [=C2=A0 231.719117] Modules linked in:
+> [=C2=A0 231.719895] CPU: 3 UID: 0 PID: 1091 Comm: fsstress Not tainted
+> 6.15.0-rc4-00055-g71bfd66b8583-dirty #422 PREEMPT(voluntary)
+> [=C2=A0 231.719996] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)=
+,
+> BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+> [=C2=A0 231.720170] RIP: 0010:hfsplus_free_extents+0xfc/0x110
+> [=C2=A0 231.720383] Code: 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 48 c7 c7
+> 4d 62 46 b2 e8 b5 58 cf ff eb 95 48 c7 c7 4d 62 46 b2 e8 a7 58 cf ff
+> eb cd 90 <0f> 0b 90 e9 30 ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00
+> 90 90 90
+> [=C2=A0 231.720492] RSP: 0018:ffffaaa9813bbd28 EFLAGS: 00000202
+> [=C2=A0 231.720563] RAX: ffff995582666701 RBX: 00000000000000ed RCX:
+> 00000000000001b5
+> [=C2=A0 231.720592] RDX: 00000000000000ed RSI: ffff9955818e8ad8 RDI:
+> ffff995588c80048
+> [=C2=A0 231.720617] RBP: ffff9955818e8ad8 R08: 0000000000000002 R09:
+> ffffaaa9813bbcda
+> [=C2=A0 231.720641] R10: ffff995585cfdb90 R11: 0000000000000002 R12:
+> 0000000000000000
+> [=C2=A0 231.720672] R13: 00000000000001b5 R14: 00000000000000c8 R15:
+> ffff995587f40800
+> [=C2=A0 231.720778] FS:=C2=A0 00007f81e3bd8740(0000) GS:ffff99564ac46000(=
+0000)
+> knlGS:0000000000000000
+> [=C2=A0 231.720813] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 000000008005003=
+3
+> [=C2=A0 231.720838] CR2: 00005634430a6108 CR3: 00000000147d5000 CR4:
+> 00000000000006f0
+> [=C2=A0 231.720960] Call Trace:
+> [=C2=A0 231.721831]=C2=A0 <TASK>
+> [=C2=A0 231.722111]=C2=A0 hfsplus_file_truncate+0x2b6/0x3e0
+> [=C2=A0 231.722222]=C2=A0 hfsplus_delete_inode+0x54/0x70
+> [=C2=A0 231.722325]=C2=A0 hfsplus_unlink+0x17f/0x1c0
+> [=C2=A0 231.722384]=C2=A0 ? security_inode_permission+0x23/0x40
+> [=C2=A0 231.722415]=C2=A0 vfs_unlink+0x110/0x2b0
+> [=C2=A0 231.722442]=C2=A0 do_unlinkat+0x251/0x2c0
+> [=C2=A0 231.722471]=C2=A0 __x64_sys_unlink+0x1c/0x30
+> [=C2=A0 231.722491]=C2=A0 do_syscall_64+0x9e/0x190
+> [=C2=A0 231.722551]=C2=A0 entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> [=C2=A0 231.722726] RIP: 0033:0x7f81e3cf740b
+> [=C2=A0 231.723023] Code: 30 ff ff ff e9 74 fd ff ff e8 a1 ba 01 00 90 f3
+> 0f 1e fa b8 5f 00 00 00 0f 05 c3 0f 1f 40 00 f3 0f 1e fa b8 57 00 00
+> 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 d9 69 0e
+> 00 f7 d8
+> [=C2=A0 231.723047] RSP: 002b:00007ffe97ed66b8 EFLAGS: 00000246 ORIG_RAX:
+> 0000000000000057
+> [=C2=A0 231.723089] RAX: ffffffffffffffda RBX: 0000000000000035 RCX:
+> 00007f81e3cf740b
+> [=C2=A0 231.723104] RDX: 0000000000000000 RSI: 00007ffe97ed6690 RDI:
+> 00005634430875c0
+> [=C2=A0 231.723116] RBP: 00007ffe97ed6830 R08: 000000000000ffff R09:
+> 0000000000000000
+> [=C2=A0 231.723128] R10: 0000000000000000 R11: 0000000000000246 R12:
+> 00007ffe97ed66d0
+> [=C2=A0 231.723141] R13: 8f5c28f5c28f5c29 R14: 00007ffe97ed68a0 R15:
+> 000056341fe3c7c0
+> [=C2=A0 231.723219]=C2=A0 </TASK>
+> [=C2=A0 231.723427] ---[ end trace 0000000000000000 ]---
+> [=C2=A0 233.296305] ------------[ cut here ]------------
+>=20
+> [w/ bnode &this patch]
+>=20
+> Test pass without any error.
+>=20
+> root@ubuntu:/home/ubuntu/xfstests-dev# ./check generic/013
+> FSTYP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- hfsplus
+> PLATFORM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- Linux/x86_64 ubuntu 6.15.0-rc4-=
+00055-g71bfd66b8583-
+> dirty #423 SMP PREEMPT_DYNAMIC Sun May 25 22:54:51 CST 2025
+> MKFS_OPTIONS=C2=A0 -- /dev/nvme1n1
+> MOUNT_OPTIONS -- /dev/nvme1n1 /mnt/scratch
+>=20
+> generic/013 35s ... [=C2=A0 106.018643] hfsplus: xattr exists yet
+> [=C2=A0 110.155138] hfsplus: cannot replace xattr
+> [=C2=A0 112.061738] hfsplus: cannot replace xattr
+> [=C2=A0 113.215120] hfsplus: cannot replace xattr
+> [=C2=A0 118.308974] hfsplus: xattr exists yet
+> [=C2=A0 133.279630] hfsplus: cannot replace xattr
+> [=C2=A0 134.581764] hfsplus: cannot replace xattr
+> [=C2=A0 135.557120] hfsplus: xattr exists yet
+> =C2=A046s
+> Ran: generic/013
+> Passed all 1 tests
+>=20
+> > I don't think that I follow the point. The two mutexes are namely
+> > the basis for potential deadlocks. Currently, I am not sure that we
+> > are fixing the issue. Probably, we are trying to hide the symptoms
+> > of the real issue without the clear understanding what is going
+> > wrong. I would like to hear the explanation how the issue is
+> > happening and why the warning removal can help here.
+>=20
+> I don't know if the above description is clear enough. Actually, this
+> warning is not helpful at all.=20
+> The comment above this warning also describes one of the easy
+> triggering situations, which can easily trigger and cause
+> xfstest&syzbot to report errors.
+>=20
+
+I see your point. We need accurately explain here that several threads
+could try to lock the shared extents tree. And warning can be triggered
+in one thread when another thread has locked the tree. This is the
+wrong behavior of the code and we need to remove the warning.
+
+Could you please rework the patch comment by means of adding precise
+explanation of this? =20
+
+> > I am not sure that it's the good idea to remove any warning
+> > because, probably, we could not understand the real reason of the
+> > issue and we simply trying to hind the symptoms of something more
+> > serious.
+> >=20
+> > Current explanation doesn't sound reasonably well to me. I am not
+> > convinced yet that it is proper fix and we see the reason of the
+> > issue.
+> > I would like to hear more clear justification that we have to
+> > remove this check.
+>=20
+> If there is indeed an exception or you can point out the problem,
+> then we should fix it. Otherwise, in my opinion, this warning has no
+> purpose and should be removed.
+
+We have a lot of problems in the code and good warnings make sense. The
+intentions of this warning was to prevent wrong using of locks. But it
+was missed that multiple threads can try to lock the shared extents
+tree. So, yes, it makes sense to remove this particular warning but,
+potentially, we still could have issues in the code. However, we need
+to explain why this warning works in wrong way in really precise
+manner. :)
+
+Thanks,
+Slava.
+
