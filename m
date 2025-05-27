@@ -1,100 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BAA27A131;
-	Tue, 27 May 2025 17:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8B427FB09
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368196; cv=none; b=RO5Vf2GqdhhgDPLrvk0LOzLogfkeWWrvNRi/MTMARY7D6oMnTISDNLK5RJobZ2j/XLS689NmI2s8yekUR2LamHK8Mp4MCFqZJwfX1qBQe5Vv8PSrAraD12IKoyt3sOl//2K3Yl0R9RG8j8jMpAsMrtaYHBSO3CkzwjpDq5p3ccY=
+	t=1748368314; cv=none; b=CURzdba+282Qr1eU6gLumtrJ8qPWFXVmgURKhgRGGi35yjw5hNE/IOmI0GDc42lquYidPQBdx8B2AnlpilK0aYh3Ce2Ss7297sjB6CiS/aXwwREApwrWsvK/ooQKPwO+JBjpPTwsTZANBxoZ8dwhzp/tpB01SR6kJ9wNU1xUz6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368196; c=relaxed/simple;
-	bh=u6RlqQsVwqhdS3Om0f8q0tySfymkFYitRgLj80KCa5o=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Bn/WWlYCA1e1zEXbTJhx5vH3PhF5TjnFSQ0X17ILrpWMiENNi6OLCeIfz2WYTUQ6L6VyhwgJ3Za7aJAjNMHv3LCvyZrHMmnLLUzk2oJSedJOk3932Mgjes86HEvOga6+NI7FfoxFSHdGms6PuZPcode/i57mlN7wRD3ZpIdYLGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEDTCtuF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748368314; c=relaxed/simple;
+	bh=ir+58+LRW1q60psMCkCd3a0Qj6GN01bFJMeXsTypjRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sZnvNO9Kh5+K389cO0P6PYq459u9YghCZMy/TWJdxGAGyI+g2RrOCfUuqjaYsNCTh5u75SLMPrl0HwVPNlnuCv6YpipL8nFc7dO3sMbmjSG/DvIY51g6bqvOY0I6TCP81tcZY7n8hvlh1eRLY3MlaDJ9mtNpynpiA7JIJyMK8Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=U9AzbCJA; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEDTCtuF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C1F7C4CEEA;
-	Tue, 27 May 2025 17:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748368196;
-	bh=u6RlqQsVwqhdS3Om0f8q0tySfymkFYitRgLj80KCa5o=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=CEDTCtuFw1ooDIYX4sfCUSahGH7C3UVddOKVbjxZOdSkEU1ycpbBvQhvzUUW+v7NZ
-	 bCWDQKSnC3wS5rBsZhgzSHjIlWt6PfKI471dZjG6xvqstPi5nw7mzUmKjVdBG/edl4
-	 udcAWIyvXPW0XEP2UVMO1IYPEUNxvo29eSDip5QETOV5abfhMC+0czdU9vq4CKskhW
-	 5C3uzOL7/TdTtc0BiufK3ibbHlLm2p+CgHvb1+TeT54QdlLMynqprs88FgGeOS9IXz
-	 Ug1/TRlD+2oZKn/fK0QCnuR0O5lDMnXc53qDwr9t4cym7kVHm3ZZRIzgXNLMG10vre
-	 STH1WwJ4ldKsA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD30380AAE2;
-	Tue, 27 May 2025 17:50:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="U9AzbCJA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1748368305;
+ bh=NxuLAslpzoOd596xivdPI/5y/Es3Nx0sBx/hh0IoOiQ=;
+ b=U9AzbCJABG0cp4H9+u4Xts1SjnJZeGQ4o0+n+r+HJgVEDIlk9eGWpuhO2BZzlGDYE8NpfL/8w
+ /jYCHGRLp/njaM3B9fS9q9SJWnJykXwHLuyCclPcSlrM0SEQSRHw05ejcUDkTsMecaDJzb/8R6n
+ BPyvfOckCMV04aScZr5pSA82w6n//Ln1L+fcj/0RkB9oVkMS+AKP+NaHuY6N72/VabHxZTauI8k
+ zPvnyAh/2O1wJ3sat0C0kLYPAgfV0KONPdHQswMrWFgcFltdlhfh3DU5IJZ1DaxBNHF7a6/Wp98
+ JvfzqcQqfvtj3eoMDNG7ksfDlTNfMmjTr8xhXIfnNofg==
+X-Forward-Email-ID: 6835fba8127b2e865ab3d1d9
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <a787e6e0-d4ce-45e3-8263-2489585d3ec0@kwiboo.se>
+Date: Tue, 27 May 2025 19:51:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next 1/1] bpf: fix WARNING in __bpf_prog_ret0_warn when
- jit failed
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174836823075.1725298.17816488514505670750.git-patchwork-notify@kernel.org>
-Date: Tue, 27 May 2025 17:50:30 +0000
-References: <20250526133358.2594176-1-mannkafai@gmail.com>
-In-Reply-To: <20250526133358.2594176-1-mannkafai@gmail.com>
-To: KaFai Wan <mannkafai@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- syzbot+0903f6d7f285e41cdf10@syzkaller.appspotmail.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: rkvdec: Switch to using structs instead of writel
+To: Detlev Casanova <detlev.casanova@collabora.com>
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
+ "linux-staging@lists.linux.dev" <linux-staging@lists.linux.dev>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250527150043.174415-1-detlev.casanova@collabora.com>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250527150043.174415-1-detlev.casanova@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Detlev,
 
-This patch was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+On 2025-05-27 17:00, Detlev Casanova wrote:
+> In an effort to merge the rkvdec2 driver [1] with this one, switch from
+> writel() calls to using structs to represent the register mappings.
 
-On Mon, 26 May 2025 21:33:58 +0800 you wrote:
-> syzkaller reported an issue:
+Please wait with this until HEVC support has landed, now that H264
+4:2:2/Hi10 finally have been merged I was hoping to be able to send a v2
+of the old HEVC series [3]. I was waiting on v6.16-rc1 before sending
+the series but can send it sooner if needed, [4] has current state of v2.
+
+H264 4:2:2/Hi10 and HEVC have been in the works for a few years now,
+would be nice to have it fully land before refactoring starts ;-)
+
+[3] https://lore.kernel.org/linux-media/20231105233630.3927502-1-jonas@kwiboo.se
+[4] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-hevc-v2b/
+
+> This is done in order to have all supported decoders use the same format
+> in the future and ease reading of the code.
+
+Do you have any work-in-progress patches for this?
+
+> Using structs also improves stability as the hardware is tested and
+> validated downstream using a similar method.
+> It was noticed, on decoders, that:
+>  - Some registers require to be writen in increasing order [2]
+>  - Some registers, even if unrelated, need to be written to their reset
+>    values (it was the case here for axi_ddr_[rw]data).
 > 
-> WARNING: CPU: 3 PID: 217 at kernel/bpf/core.c:2357 __bpf_prog_ret0_warn+0xa/0x20 kernel/bpf/core.c:2357
-> Modules linked in:
-> CPU: 3 UID: 0 PID: 217 Comm: kworker/u32:6 Not tainted 6.15.0-rc4-syzkaller-00040-g8bac8898fe39 #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> Workqueue: ipv6_addrconf addrconf_dad_work
-> RIP: 0010:__bpf_prog_ret0_warn+0xa/0x20 kernel/bpf/core.c:2357
-> RSP: 0018:ffffc900031f6c18 EFLAGS: 00010293
-> RAX: 0000000000000000 RBX: ffffc9000006e000 RCX: 1ffff9200000dc06
-> RDX: ffff8880234ba440 RSI: ffffffff81ca6979 RDI: ffff888031e93040
-> RBP: ffffc900031f6cb8 R08: 0000000000000001 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffff88802b61e010
-> R13: ffff888031e93040 R14: 00000000000000a0 R15: ffff88802c3d4800
-> FS:  0000000000000000(0000) GS:ffff8880d6ce2000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055557b6d2ca8 CR3: 000000002473e000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
->  __bpf_prog_run include/linux/filter.h:718 [inline]
->  bpf_prog_run include/linux/filter.h:725 [inline]
->  cls_bpf_classify+0x74a/0x1110 net/sched/cls_bpf.c:105
->  ...
+> Using structs can also help improving performance later when, e.g.
+> multicore support is added on RK3588.
+
+Are your referring to the linked-list feature (also present in e.g.
+RK3328) or just for multi-core purpose?
+
+Regards,
+Jonas
+
+> Performance seems to be slightly improved, but at least, not made worse.
+> Running fluster's JVT-AVC_V1 test suite with GStreamer on the Radxa ROCK
+> PI 4 SE gives the following times:
 > 
-> [...]
+> Before this patch:
+> 
+> - --jobs 1: Ran 129/135 tests successfully               in 77.167 secs
+> - --jobs 6: Ran 129/135 tests successfully               in 23.046 secs
+> 
+> With this patch:
+> - --jobs 1: Ran 129/135 tests successfully               in 70.698 secs
+> - --jobs 6: Ran 129/135 tests successfully               in 22.917 secs
+> 
+> This also shows that the fluster score hasn't changed.
+> 
+> [1]: https://lore.kernel.org/all/20250325213303.826925-1-detlev.casanova@collabora.com/
+> [2]: https://lore.kernel.org/all/20200127143009.15677-5-andrzej.p@collabora.com/
+> 
+> Signed-off-by: Detlev Casanova <detlev.casanova@collabora.com>
+> ---
+>  drivers/staging/media/rkvdec/rkvdec-h264.c | 168 +++---
+>  drivers/staging/media/rkvdec/rkvdec-regs.h | 567 ++++++++++++++-------
+>  drivers/staging/media/rkvdec/rkvdec-vp9.c  | 239 ++++-----
+>  drivers/staging/media/rkvdec/rkvdec.c      |   1 -
+>  4 files changed, 559 insertions(+), 416 deletions(-)
 
-Here is the summary with links:
-  - [bpf-next,1/1] bpf: fix WARNING in __bpf_prog_ret0_warn when jit failed
-    https://git.kernel.org/bpf/bpf-next/c/86bc9c742426
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+[snip]
