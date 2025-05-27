@@ -1,187 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from cantor.telenet-ops.be (cantor.telenet-ops.be [195.130.132.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA873288509;
-	Tue, 27 May 2025 19:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345981922F4
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374211; cv=none; b=i1ULprJ4NGvTdogMWfGQGZoOmjl6eTJDeF1Dm/QbgDzAPLwcX62UaoTVQfS36hvtgp8is7BqKKNHLbWdKHbgmkwETofQqbxfx+D5L4fSTtQ7lUwEuMB46soNr2AtzSKT+bszLrd+4Zc9qFlwdJ+rkolHA6prm+YJ1ZS6Et1Dr54=
+	t=1748374241; cv=none; b=o1+wQ3nPmtgk1ieCja6LaypTRgjgDItAye7t35W29K9oE4YTe8BIfRVnPn9f3XRfczpUyUn8uOSHHb/7UcJnl5hRdRXzh2icFPPUPSRrwy6gvXGpUonnc2Z2RDwczIqugnii2lRqZci9v5Jpu6oKUyWcAP2tor+didFzgAH09Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374211; c=relaxed/simple;
-	bh=Vdfstct6hVRyw6WWOWyiBNMF1lwa3qrocEjN3fPYDhc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JL/rlMg68RvxfWliwveIrGMVPiTJidOEUxTBfRNIHn+YhljTYBdpP6ZVduqzcW9HPPaPcCctSEqawTngnR/PMhs7BX+7I5QNXwQw4Z9OwKCtc5z8Cgw4gE/4PLhkxNk+gx0ddqLqPvusgZcUOoAyzMEThhP4OdV4LaLQx+r7o0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdZ5T188; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdZ5T188"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748374210; x=1779910210;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Vdfstct6hVRyw6WWOWyiBNMF1lwa3qrocEjN3fPYDhc=;
-  b=EdZ5T188TwDVDCMvBTz93/Xcn1V5nZr363yEhG1FScEItHQvi5dvCxft
-   rXxTD55OEYy7nYE2WBfWTjjAtaBZ5yPRrFRJ2LFTICe7igAOQ/38xxMuM
-   0pE1WI5U344806l7Ii9IkpJ6vKPbhaz5ocS7VjrLksI5k/jL+JdLQPZQY
-   /QCJKXS8XUVmV7t4g2TuxOglHPLz+fttHdp03IeD9UzWNppmGYCJvywB8
-   bFRKwjxbyduwcmvxVcL9aYgWwsHaZyg0CvbEsNOoY15TAqqRp2GFHVZ5l
-   nQ+rlcuAK5SsDBgGkev/4mnJVmjacQ07yCve1Sk374H9I6aFoTghUcgfr
-   Q==;
-X-CSE-ConnectionGUID: CrY570NPThi82nVTacn5RA==
-X-CSE-MsgGUID: PNFSCfnJTdq+QELgHI1xng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="49492388"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="49492388"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:30:09 -0700
-X-CSE-ConnectionGUID: xPvRFW1MQxCT7gpiGyeZdA==
-X-CSE-MsgGUID: 3nJhJjrYRTmUv1PmE2EYpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="147709756"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:30:09 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 8797220B5736;
-	Tue, 27 May 2025 12:30:07 -0700 (PDT)
-Message-ID: <44e1c864-a6e1-41a8-9f11-0ea25999131c@linux.intel.com>
-Date: Tue, 27 May 2025 15:30:06 -0400
+	s=arc-20240116; t=1748374241; c=relaxed/simple;
+	bh=QpNV285BTS/KBng6Vcq4utezeQCjGo6G6reZO+F6LiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uqyz2+jUhCSH+JM9yoDvSySgsxg+a8m+ymWrMwkB+nNxBuxfC81UWwigooMScgtf1tQWz9LNU7uyLY9xh+QJP9+CKxcSlODiZT8gaUAeFUgEP8pd9RTVGz/6TYInEJjfCc6erL91Rttmk6YsenuCGy0H5hyfFlOFZHkzIQ365oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+	by cantor.telenet-ops.be (Postfix) with ESMTPS id 4b6N5L3FrFz4x2YN
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:30:30 +0200 (CEST)
+Received: from ramsan2 ([IPv6:2a02:1810:ac12:ed80:9962:836e:244b:c4d7])
+	by albert.telenet-ops.be with cmsmtp
+	id uKWM2E0050Y7Yez06KWM4k; Tue, 27 May 2025 21:30:23 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan2 with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uK00C-00000003oHh-1fbh;
+	Tue, 27 May 2025 21:30:20 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uK00C-00000003Wf4-1DCX;
+	Tue, 27 May 2025 21:30:20 +0200
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+To: Jian Shen <shenjian15@huawei.com>,
+	Salil Mehta <salil.mehta@huawei.com>,
+	Jijie Shao <shaojijie@huawei.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] [net-next] hns3: Demote load and progress messages to debug level
+Date: Tue, 27 May 2025 21:30:15 +0200
+Message-ID: <0df556d6b5208e4e5f0597c66e196775b45dac60.1748357693.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 01/16] perf: Fix the throttle logic for a group
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, Aishwarya.TCV@arm.com
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-2-kan.liang@linux.intel.com>
- <20250527161656.GJ2566836@e132581.arm.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250527161656.GJ2566836@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
+No driver should spam the kernel log when merely being loaded.
+The message in hclge_init() is clearly a debug message.
 
-On 2025-05-27 12:16 p.m., Leo Yan wrote:
-> Hi Kan,
-> 
-> [ + Aishwarya ]
-> 
-> On Tue, May 20, 2025 at 11:16:29AM -0700, kan.liang@linux.intel.com wrote:
-> 
-> [...]
-> 
->> @@ -10331,8 +10358,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
->>  		__this_cpu_inc(perf_throttled_count);
->>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->> -		hwc->interrupts = MAX_INTERRUPTS;
->> -		perf_log_throttle(event, 0);
->> +		perf_event_throttle_group(event);
->>  		ret = 1;
->>  	}
-> 
-> Our (Arm) CI reports RCU stall that caused by this patch.  I can use a
-> simple command to trigger system stuck with cpu-clock:
-> 
->   perf record -a -e cpu-clock -- sleep 2
-> 
-> I confirmed that if removing throttling code for cpu-clock event, then
-> the issue can be dimissed.  Based on reading code, the flow below:
-> 
->   hrtimer interrupt:
->    `> __perf_event_account_interrupt()
->        `> perf_event_throttle_group()
->            `> perf_event_throttle()
->                `> cpu_clock_event_stop()
->                    `> perf_swevent_cancel_hrtimer()
->                        `> hrtimer_cancel()  -> Inifite loop.
-> 
-> In the hrtimer interrupt handler, it tries to cancel itself and causes
-> inifite loop.  Please consider to fix the issue.
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Alternatively, the printing in hns3_init_module() could be removed
+completely, but that would make hns3_driver_string[] and
+hns3_copyright[] unused, which HiSilicon legal may object against?
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c         | 4 ++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-The cpu-clock and task_clock are two special SW events, which rely on
-the hrtimer. I missed them when checking the SW events. :(
-
-For the two events, instead of invoking the stop(), the
-HRTIMER_NORESTART is returned to stop the timer. Invoking the stop()
-cause the issue.
-
-There may be two ways to fix it.
-- Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
-the stop is invoked by the throttle.
-- Introduce a PMU flag to track the case. Avoid the event_stop in
-perf_event_throttle() if the flag is detected.
-
-The latter looks more generic. It may be used if there are other cases
-that want to avoid the stop. So the latter is implemented as below.
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 947ad12dfdbe..66f02f46595c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -303,6 +303,7 @@ struct perf_event_pmu_context;
- #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
- #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-+#define PERF_PMU_CAP_NO_THROTTLE_STOP		0x0400
-
- /**
-  * pmu::scope
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8327ab0ee641..596597886d96 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2655,7 +2655,8 @@ static void perf_event_unthrottle(struct
-perf_event *event, bool start)
-
- static void perf_event_throttle(struct perf_event *event)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index b03b8758c7774ec2..5c8c62ea6ac0429f 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -5961,8 +5961,8 @@ static int __init hns3_init_module(void)
  {
--	event->pmu->stop(event, 0);
-+	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
-+		event->pmu->stop(event, 0);
- 	event->hw.interrupts = MAX_INTERRUPTS;
- 	perf_log_throttle(event, 0);
- }
-@@ -11846,7 +11847,8 @@ static int cpu_clock_event_init(struct
-perf_event *event)
- static struct pmu perf_cpu_clock = {
- 	.task_ctx_nr	= perf_sw_context,
-
--	.capabilities	= PERF_PMU_CAP_NO_NMI,
-+	.capabilities	= PERF_PMU_CAP_NO_NMI |
-+			  PERF_PMU_CAP_NO_THROTTLE_STOP,
- 	.dev		= PMU_NULL_DEV,
-
- 	.event_init	= cpu_clock_event_init,
-@@ -11928,7 +11930,8 @@ static int task_clock_event_init(struct
-perf_event *event)
- static struct pmu perf_task_clock = {
- 	.task_ctx_nr	= perf_sw_context,
-
--	.capabilities	= PERF_PMU_CAP_NO_NMI,
-+	.capabilities	= PERF_PMU_CAP_NO_NMI |
-+			  PERF_PMU_CAP_NO_THROTTLE_STOP,
- 	.dev		= PMU_NULL_DEV,
-
- 	.event_init	= task_clock_event_init,
-
-
-Thanks,
-Kan
-
+ 	int ret;
+ 
+-	pr_info("%s: %s - version\n", hns3_driver_name, hns3_driver_string);
+-	pr_info("%s: %s\n", hns3_driver_name, hns3_copyright);
++	pr_debug("%s: %s - version\n", hns3_driver_name, hns3_driver_string);
++	pr_debug("%s: %s\n", hns3_driver_name, hns3_copyright);
+ 
+ 	client.type = HNAE3_CLIENT_KNIC;
+ 	snprintf(client.name, HNAE3_CLIENT_NAME_LENGTH, "%s",
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 3e28a08934abd2e1..6bfff77ea7e67e8d 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -12904,7 +12904,7 @@ static struct hnae3_ae_algo ae_algo = {
+ 
+ static int __init hclge_init(void)
+ {
+-	pr_info("%s is initializing\n", HCLGE_NAME);
++	pr_debug("%s is initializing\n", HCLGE_NAME);
+ 
+ 	hclge_wq = alloc_workqueue("%s", WQ_UNBOUND, 0, HCLGE_NAME);
+ 	if (!hclge_wq) {
+-- 
+2.43.0
 
