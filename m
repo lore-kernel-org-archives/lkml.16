@@ -1,85 +1,204 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A285727F756
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC09367
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362438; cv=none; b=jHjU+NCYosgD9UPhjRnWJvRhVsyR7TM45b+eufKvvi26dn0KpDNcMYAtw5Xd8w/D1eX6XTsIdqCgURnzFzJE06cRw2EWMoz8rha6l2yG3Hrc7Py1cwrtEWWt8kL6I1sgdE1Jvdw3C3b+rUD9aNYhbkx8mHyCtQH0ti95M78PD+A=
+	t=1748362612; cv=none; b=aVQyEPcGAPWXA3jDLGeUbzJB0feDCCFKQxGGl3IRmn8uuVqXgTCf9NpQZKgAT/YyjKDOnn72NQeeNNmVtR1HGOwVKPGsJ8wjVSMQXTq2UbfKsIVfXm52Vtf4Ev3PF73oRRVr3pRFpP6LDyMiw9RUjsOVEJTMT9+DDPNJI4JxaBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362438; c=relaxed/simple;
-	bh=iqiXA6Rbb03tF/HCDxpk+ZKgjSzt6H2Xax2VkzI4ddM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qLjyla2BntuJNBt9TrOcx7Rw0MvT7z5e25/qkvWs8gv3grxyV0li49SIOhAY6DUCs6qCqidEua0n+OPC/109SO8S17TWaviWk3QSxZxGWJUgSJRFIdkzdicLkd9n8rzhand4yVqRztY7K4seJ+1DinQ1e/++P81ymbmXv3Xhti8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RMH3hmLy; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748362612; c=relaxed/simple;
+	bh=LKZzSd4b8vDI3Z6hVkBihe5JHNwscioW3xfjEEQDhuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZZomJncMd3RYCkmBLM9yupXsGfFebgHcbrYxQYlSqJhrWasQByeAbvhFyBnaPv/na1FTtNlTh0iQGN831tBfSQLhyiLY2CkfW4sawN4JNfccl1gzApgZZfYwzKPC5RRgiYPe3CjqLM1lJQPAlbGONhRHlijP5MkBufVjswhlYQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lJ76ReqC; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RMH3hmLy"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30e5430ed0bso3366678a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:13:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748362436; x=1748967236; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CyI6lRGaIfXB7jxaPrJKSQO0H+oxISfyvnAekkvYBnI=;
-        b=RMH3hmLyHISH5G40SFaCFagFLlD/u+x0m/nughYU6Yb/2VD0SwjvTl737SYtgjfBJL
-         swt2IN5HaAZIhiXJCf/2PTdwWKdi/S5hMZ9wwqf8oIwu4s9mjHBQosaixGjEbyxsmJA1
-         B1LD4SahbsWCw1CydOmIO9r+fBQD/cdMXdsOAt+HhF553+wEnmjUPlFoMkGsi4a04N5H
-         Vs7I//EBoKNFSDuRabYMtl50ozP2uImtEn25ENMAgtCthpl9PEgUd7M+lf2K5tbncA/f
-         qk/dKMax1F9fd7oFfNihRO9k/n9liX7b9vnnrcKvurBxGaditzFTjWTEIFoW7ABohRcc
-         X/fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748362436; x=1748967236;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CyI6lRGaIfXB7jxaPrJKSQO0H+oxISfyvnAekkvYBnI=;
-        b=I/PaGLuPwDXu2RWLEl5ypJMGIfLAGkWac7vcRr9zfDsJ4/75j0AbsRVZQC7pUOGGuq
-         zZWiZsZPeE3/zBhDx9zdt0ZEqWwXJ3yF2Aj56MDPSdO/3mW3r6536OsQ26H2zDS/OHp6
-         BcFJPkylByaDDtP1AyDbDLmS8GRQSPV+B0cHLzaNvtukwuJ88eeTd550ekqSqHZ46Ru6
-         ly60sDWNkHnLb158XfIklfvvWsutrzoPn0oEpFqDptgng0XSxm/2gkTb0f7qUvO+jUFu
-         Hpqb+q6QJHH7ZkQD4Sp1OVCmxTE6LCHpbKFuDDhYMugMJypg05BBK/qJgnBH/HtEpGL3
-         +8Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ0hvZmFaZdeIm7QRaqYB9UuTGioA4Xxi4JZnPo6OtkhqnU2M4aOIdvBE1xIxwFIXM5ig4fI2bYkbWGlU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdt/SeFBWVkmVWtuaRFgRaIqDGypnTRjvLFWjjQbemuuYrYla+
-	u555KY1E75gwr/EM/BQZyRgy0uruYswHGL1mbRdrpV60bfAPv/sfmoZIrGLZiH6gY/1Ymv62qXo
-	L0mQpZayWtNy2GHB3C2GHOZZVTYV2+J/hd5xwCEHo
-X-Gm-Gg: ASbGncsBK8vN9xTjGDYJRIQo93oCHlbtiE98WnV2vxGBy528ySRqgPwqNpgrTzsDMo1
-	epN3BqTpnGJJynHVgQI8p9kIegJGHSzCV8wCQ35yI6zZ6+yKGsqb1y5Uf+BL9RxwV9K9G/bbZ7r
-	29z+UcJMb0Spa5TFwhrrfIUngt9PJEvj6PkhEACC8JIZJ8
-X-Google-Smtp-Source: AGHT+IEFXnUmQcAwZf0IdnuZbXNQFTMc5YTTUzgjQQa6keoKBAojGNaeiYVFV4H1X8znHWDrSoSoOeOR7BiDVmVBRMw=
-X-Received: by 2002:a17:90b:574c:b0:30e:3718:e9d with SMTP id
- 98e67ed59e1d1-31110d99815mr22155423a91.35.1748362435541; Tue, 27 May 2025
- 09:13:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lJ76ReqC"
+Message-ID: <679d6810-9e76-425c-9d4e-d4b372928cc3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748362598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j3LFQ0ieKQpaqxJLyJ9iyNsYYxmUvLgA8cPK/4ZnBaA=;
+	b=lJ76ReqCndDsN2ac38Fwh/jWjcCo2hpONkdcTz62+a+81d9l4G453nftIx12FEoP1sN/3h
+	jcdKYutfgp+F/fQLwpRhQULLtaCY0bF39U1clrBcTwRBngWggAwVjiVkUeLjdY15PUm/0v
+	ny5lqbRvcqcxSHnoT9BeHyefrJImKFw=
+Date: Tue, 27 May 2025 12:16:33 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428195113.392303-1-michael.roth@amd.com> <20250428195113.392303-2-michael.roth@amd.com>
- <aC3m1uMmp28gSm3r@google.com>
-In-Reply-To: <aC3m1uMmp28gSm3r@google.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
-Date: Tue, 27 May 2025 09:13:42 -0700
-X-Gm-Features: AX0GCFuVQ3lRhOu8bBMkwtNkd8VOCPOAbdPGDH93Xwsy8_b3o-5N_Qdrv4KHUx8
-Message-ID: <CAAH4kHbcLkGQ4yLKOzRzW=JP5QouonneYnAMU3eqZtPKVVF_jA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] KVM: Introduce KVM_EXIT_SNP_REQ_CERTS for SNP certificate-fetching
-To: Sean Christopherson <seanjc@google.com>
-Cc: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, pbonzini@redhat.com, jroedel@suse.de, 
-	thomas.lendacky@amd.com, liam.merwick@oracle.com, huibo.wang@amd.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report
+ coalesce parameters in DMAengine flow
+To: Suraj Gupta <suraj.gupta2@amd.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, vkoul@kernel.org, michal.simek@amd.com,
+ radhey.shyam.pandey@amd.com, horms@kernel.org
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, git@amd.com, harini.katakam@amd.com
+References: <20250525102217.1181104-1-suraj.gupta2@amd.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20250525102217.1181104-1-suraj.gupta2@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-> Side topic, what sadist wrote the GHCB?  The "documentation" for MSG_REPORT_REQ
-> is garbage like this:
->
+On 5/25/25 06:22, Suraj Gupta wrote:
+> Add support to configure / report interrupt coalesce count and delay via
+> ethtool in DMAEngine flow.
+> Netperf numbers are not good when using non-dmaengine default values,
+> so tuned coalesce count and delay and defined separate default
+> values in dmaengine flow.
+> 
+> Netperf numbers and CPU utilisation change in DMAengine flow after
+> introducing coalescing with default parameters:
+> coalesce parameters:
+>    Transfer type	  Before(w/o coalescing)  After(with coalescing)
+> TCP Tx, CPU utilisation%	925, 27			941, 22
+> TCP Rx, CPU utilisation%	607, 32			741, 36
+> UDP Tx, CPU utilisation%	857, 31			960, 28
+> UDP Rx, CPU utilisation%	762, 26			783, 18
+> 
+> Above numbers are observed with 4x Cortex-a53.
 
-Dude, please leave this kind of feedback in your head and treat your
-collaborators with respect.
+How does this affect latency? I would expect these RX settings to
+increase latency around 5-10x. I only use these settings with DIM since
+it will disable coalescing during periods of light load for better
+latency.
 
+(of course the way to fix this in general is RSS or some other method
+involving multiple queues).
 
+> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
+> ---
+> This patch depend on following AXI DMA dmengine driver changes sent to
+> dmaengine mailing list as pre-requisit series:
+> https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.com/ 
+> ---
+>  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  6 +++
+>  .../net/ethernet/xilinx/xilinx_axienet_main.c | 53 +++++++++++++++++++
+>  2 files changed, 59 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> index 5ff742103beb..cdf6cbb6f2fd 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+> @@ -126,6 +126,12 @@
+>  #define XAXIDMA_DFT_TX_USEC		50
+>  #define XAXIDMA_DFT_RX_USEC		16
+>  
+> +/* Default TX/RX Threshold and delay timer values for SGDMA mode with DMAEngine */
+> +#define XAXIDMAENGINE_DFT_TX_THRESHOLD	16
+> +#define XAXIDMAENGINE_DFT_TX_USEC	5
+> +#define XAXIDMAENGINE_DFT_RX_THRESHOLD	24
+> +#define XAXIDMAENGINE_DFT_RX_USEC	16
+> +
+>  #define XAXIDMA_BD_CTRL_TXSOF_MASK	0x08000000 /* First tx packet */
+>  #define XAXIDMA_BD_CTRL_TXEOF_MASK	0x04000000 /* Last tx packet */
+>  #define XAXIDMA_BD_CTRL_ALL_MASK	0x0C000000 /* All control bits */
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> index 1b7a653c1f4e..f9c7d90d4ecb 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> @@ -1505,6 +1505,7 @@ static int axienet_init_dmaengine(struct net_device *ndev)
+>  {
+>  	struct axienet_local *lp = netdev_priv(ndev);
+>  	struct skbuf_dma_descriptor *skbuf_dma;
+> +	struct dma_slave_config tx_config, rx_config;
+>  	int i, ret;
+>  
+>  	lp->tx_chan = dma_request_chan(lp->dev, "tx_chan0");
+> @@ -1520,6 +1521,22 @@ static int axienet_init_dmaengine(struct net_device *ndev)
+>  		goto err_dma_release_tx;
+>  	}
+>  
+> +	tx_config.coalesce_cnt = XAXIDMAENGINE_DFT_TX_THRESHOLD;
+> +	tx_config.coalesce_usecs = XAXIDMAENGINE_DFT_TX_USEC;
+> +	rx_config.coalesce_cnt = XAXIDMAENGINE_DFT_RX_THRESHOLD;
+> +	rx_config.coalesce_usecs =  XAXIDMAENGINE_DFT_RX_USEC;
 
--- 
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+I think it would be clearer to just do something like
+
+	struct dma_slave_config tx_config = {
+		.coalesce_cnt = 16,
+		.coalesce_usecs = 5,
+	};
+
+since these are only used once. And this ensures that you initialize the
+whole struct.
+
+But what tree are you using? I don't see these members on net-next or
+dmaengine.
+
+> +	ret = dmaengine_slave_config(lp->tx_chan, &tx_config);
+> +	if (ret) {
+> +		dev_err(lp->dev, "Failed to configure Tx coalesce parameters\n");
+> +		goto err_dma_release_tx;
+> +	}
+> +	ret = dmaengine_slave_config(lp->rx_chan, &rx_config);
+> +	if (ret) {
+> +		dev_err(lp->dev, "Failed to configure Rx coalesce parameters\n");
+> +		goto err_dma_release_tx;
+> +	}
+> +
+>  	lp->tx_ring_tail = 0;
+>  	lp->tx_ring_head = 0;
+>  	lp->rx_ring_tail = 0;
+> @@ -2170,6 +2187,19 @@ axienet_ethtools_get_coalesce(struct net_device *ndev,
+>  	struct axienet_local *lp = netdev_priv(ndev);
+>  	u32 cr;
+>  
+> +	if (lp->use_dmaengine) {
+> +		struct dma_slave_caps tx_caps, rx_caps;
+> +
+> +		dma_get_slave_caps(lp->tx_chan, &tx_caps);
+> +		dma_get_slave_caps(lp->rx_chan, &rx_caps);
+> +
+> +		ecoalesce->tx_max_coalesced_frames = tx_caps.coalesce_cnt;
+> +		ecoalesce->tx_coalesce_usecs = tx_caps.coalesce_usecs;
+> +		ecoalesce->rx_max_coalesced_frames = rx_caps.coalesce_cnt;
+> +		ecoalesce->rx_coalesce_usecs = rx_caps.coalesce_usecs;
+> +		return 0;
+> +	}
+> +
+>  	ecoalesce->use_adaptive_rx_coalesce = lp->rx_dim_enabled;
+>  
+>  	spin_lock_irq(&lp->rx_cr_lock);
+> @@ -2233,6 +2263,29 @@ axienet_ethtools_set_coalesce(struct net_device *ndev,
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (lp->use_dmaengine)	{
+> +		struct dma_slave_config tx_cfg, rx_cfg;
+> +		int ret;
+> +
+> +		tx_cfg.coalesce_cnt = ecoalesce->tx_max_coalesced_frames;
+> +		tx_cfg.coalesce_usecs = ecoalesce->tx_coalesce_usecs;
+> +		rx_cfg.coalesce_cnt = ecoalesce->rx_max_coalesced_frames;
+> +		rx_cfg.coalesce_usecs = ecoalesce->rx_coalesce_usecs;
+> +
+> +		ret = dmaengine_slave_config(lp->tx_chan, &tx_cfg);
+> +		if (ret) {
+> +			NL_SET_ERR_MSG(extack, "failed to set tx coalesce parameters");
+> +			return ret;
+> +		}
+> +
+> +		ret = dmaengine_slave_config(lp->rx_chan, &rx_cfg);
+> +		if (ret) {
+> +			NL_SET_ERR_MSG(extack, "failed to set rx coalesce parameters");
+> +			return ret;
+> +		}
+> +		return 0;
+> +	}
+> +
+>  	if (new_dim && !old_dim) {
+>  		cr = axienet_calc_cr(lp, axienet_dim_coalesce_count_rx(lp),
+>  				     ecoalesce->rx_coalesce_usecs);
