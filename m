@@ -1,100 +1,105 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F63026983B;
-	Tue, 27 May 2025 12:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9C01DF254;
+	Tue, 27 May 2025 12:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748348031; cv=none; b=rRr5EMZY0N5wLAIl+NsPd88Tox1HkUqxPQURlSitffHoJoy9G98tThv/3CaF3C0pKYoH+NxTy7gqXRVtXoY9MJKCjLf7LgeNN+yX9RMGQlIZMFUpfqcQ6vqKjO96I1R6zxY/uQh84rBu6ATMRuhvH3IMXXgZK/VivQjxuSe424w=
+	t=1748348131; cv=none; b=TE2aODfXTHIVF+g6yRJvWk22fkv5pVQAs4fhPqd8CNG2rgQbVOYHa99DGohmQbIEvUG4+/vUkg+Ww2VIspy62AscJWpehUrCNRNmF60mxdCNajdicz75YpooxsJxmnVd9XvkX7kcKbuHFCCMCx0o0lQ38NhvjhbyiD03Ck/LE04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748348031; c=relaxed/simple;
-	bh=QaLbeXBPflKCWtj6t7OTS4ckObOJsis6ob4F9IJ2vYM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tRbd8s4fJyCFQ0Ow8m4iNTnRVs1oH6tyTOFv1d2gFL1Nb99GFZuLhin0PYgJQyK1VoXBcSdpyJMzq00FcJkpI+1wT4z/361o0NlCDTiUztWrsWAuiV7el3SN/Gfo88cniLeBd461Pvk+ZaxUHf4eciif16NUBa2rk7ftwZceJB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xobZlwPX; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748348131; c=relaxed/simple;
+	bh=Uyg/JPpzodrTtnK0p+gK6gukgXtp5qciPTkzfWFyzh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RHoluzsQtUYaYrTKEBsrdGSCYLbxshJkQrHChMyZ3cL7z9mqnmrDrznqhz2InJXXLvX31/aWZhba6pAwdS7cuRVP3JsP+ikQ9WEx/62Opa2EUNsL3QuVC9R67sL46PF0ZjMPc5K0JWOwGVaFhwpgiYNsdU7uKx+4uB6L7uewLZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=BhtFY4o5; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xobZlwPX"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54RCDVTr1817415;
-	Tue, 27 May 2025 07:13:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748348011;
-	bh=RwoB/vlUsHP1ZLM3IDcLtLPVLnnKHq3/34iyg4x96t0=;
-	h=From:To:CC:Subject:Date;
-	b=xobZlwPXiyqJzvN0BooFv9JGwCl9JkSKVob0a0KopxHTELra3rC+b4klVKkUyOVHG
-	 GVmBA7hLyBzQ1WNU82DKk92b23uHU8P+6jIGh3H6EgM5AIr2pIhnNO9Pa37cluywc2
-	 EUGqkjqWVmqfNZLrTfz+Suw79QFfcQdj9JiJayT0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54RCDUjm2853093
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 27 May 2025 07:13:30 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- May 2025 07:13:30 -0500
-Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 May 2025 07:13:30 -0500
-Received: from fllv0122.itg.ti.com (fllv0122.itg.ti.com [10.247.120.72])
-	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54RCDUtW046812;
-	Tue, 27 May 2025 07:13:30 -0500
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by fllv0122.itg.ti.com (8.14.7/8.14.7) with ESMTP id 54RCDSsB020084;
-	Tue, 27 May 2025 07:13:29 -0500
-From: Meghana Malladi <m-malladi@ti.com>
-To: <m-malladi@ti.com>, <saikrishnag@marvell.com>, <pabeni@redhat.com>,
-        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
-        <andrew+netdev@lunn.ch>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>
-Subject: [PATCH net] net: ti: icssg-prueth: Fix swapped TX stats for MII interfaces.
-Date: Tue, 27 May 2025 17:43:25 +0530
-Message-ID: <20250527121325.479334-1-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="BhtFY4o5"
+Received: from pendragon.ideasonboard.com (unknown [145.15.244.208])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A507D2B3;
+	Tue, 27 May 2025 14:15:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748348101;
+	bh=Uyg/JPpzodrTtnK0p+gK6gukgXtp5qciPTkzfWFyzh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BhtFY4o5xKFll9hHm5rvN2HNJvHpk9PzNaslqGQ0jvJWehiGQMi44dPybUqo6t7kJ
+	 1wAiP04iIxOc8vsto4/kk/ekdcgrAMgIQdKIwYkyVUj3SaWaPOFSHLdz2M4NR9OkXr
+	 UOKPsbXR2X+IwC2f7NGVLBBYOX1UaZBpkYU80PbI=
+Date: Tue, 27 May 2025 14:15:22 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Cosmin Tanislav <demonsingur@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] regulator: max20086: Fix refcount leak in
+ max20086_parse_regulators_dt()
+Message-ID: <20250527121522.GN12492@pendragon.ideasonboard.com>
+References: <aDVRLqgJWMxYU03G@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aDVRLqgJWMxYU03G@stanley.mountain>
 
-In MII mode, Tx lines are swapped for port0 and port1, which means
-Tx port0 receives data from PRU1 and the Tx port1 receives data from
-PRU0. This is an expected hardware behavior and reading the Tx stats
-needs to be handled accordingly in the driver. Update the driver to
-read Tx stats from the PRU1 for port0 and PRU0 for port1.
+Hi Dan,
 
-Fixes: c1e10d5dc7a1 ("net: ti: icssg-prueth: Add ICSSG Stats")
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
----
- drivers/net/ethernet/ti/icssg/icssg_stats.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Thank you for the patch.
 
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_stats.c b/drivers/net/ethernet/ti/icssg/icssg_stats.c
-index 6f0edae38ea2..0b77930b2f08 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_stats.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_stats.c
-@@ -29,6 +29,10 @@ void emac_update_hardware_stats(struct prueth_emac *emac)
- 	spin_lock(&prueth->stats_lock);
- 
- 	for (i = 0; i < ARRAY_SIZE(icssg_all_miig_stats); i++) {
-+		if (emac->phy_if == PHY_INTERFACE_MODE_MII &&
-+		    icssg_all_miig_stats[i].offset >= ICSSG_TX_PACKET_OFFSET &&
-+		    icssg_all_miig_stats[i].offset <= ICSSG_TX_BYTE_OFFSET)
-+			base = stats_base[slice ^ 1];
- 		regmap_read(prueth->miig_rt,
- 			    base + icssg_all_miig_stats[i].offset,
- 			    &val);
+On Tue, May 27, 2025 at 08:44:14AM +0300, Dan Carpenter wrote:
+> There is a missing call to of_node_put() if devm_kcalloc() fails.
+> Fix this by changing the code to use cleanup.h magic to drop the
+> refcount.
+> 
+> Fixes: 6b0cd72757c6 ("regulator: max20086: fix invalid memory access")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-base-commit: 32374234ab0101881e7d0c6a8ef7ebce566c46c9
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  drivers/regulator/max20086-regulator.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/regulator/max20086-regulator.c b/drivers/regulator/max20086-regulator.c
+> index b4fe76e33ff2..fcdd2d0317a5 100644
+> --- a/drivers/regulator/max20086-regulator.c
+> +++ b/drivers/regulator/max20086-regulator.c
+> @@ -5,6 +5,7 @@
+>  // Copyright (C) 2022 Laurent Pinchart <laurent.pinchart@idesonboard.com>
+>  // Copyright (C) 2018 Avnet, Inc.
+>  
+> +#include <linux/cleanup.h>
+>  #include <linux/err.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+> @@ -133,11 +134,11 @@ static int max20086_regulators_register(struct max20086 *chip)
+>  static int max20086_parse_regulators_dt(struct max20086 *chip, bool *boot_on)
+>  {
+>  	struct of_regulator_match *matches;
+> -	struct device_node *node;
+>  	unsigned int i;
+>  	int ret;
+>  
+> -	node = of_get_child_by_name(chip->dev->of_node, "regulators");
+> +	struct device_node *node __free(device_node) =
+> +		of_get_child_by_name(chip->dev->of_node, "regulators");
+>  	if (!node) {
+>  		dev_err(chip->dev, "regulators node not found\n");
+>  		return -ENODEV;
+> @@ -153,7 +154,6 @@ static int max20086_parse_regulators_dt(struct max20086 *chip, bool *boot_on)
+>  
+>  	ret = of_regulator_match(chip->dev, node, matches,
+>  				 chip->info->num_outputs);
+> -	of_node_put(node);
+>  	if (ret < 0) {
+>  		dev_err(chip->dev, "Failed to match regulators\n");
+>  		return -EINVAL;
 -- 
-2.43.0
+Regards,
 
+Laurent Pinchart
