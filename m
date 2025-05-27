@@ -1,119 +1,128 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307D822A4D8
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCB81A0BD6;
+	Tue, 27 May 2025 07:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748332550; cv=none; b=onVX1vctr0CxzX7NhePPyJellF6hUj/Q50Qxrays7DZhY2CppiJJNWJmMR6ZwAt1/y+xhj7TxfkBK6lT/TV1gWKgdO/VH/8yDBadVnQfAeE78PP7nPDP5gmffcQW3GWJBgPpnBAVGS4bqjs3m4L0B/WM6EM545HXVxlwsdwK8uc=
+	t=1748332703; cv=none; b=AU93OrM2HEhpc6ie8CerI+2GrsXovuO9GomDk9Yu6dcTw4zPKFACOtPGFtrUF9YyXmM6a11gB9v0HK6g9cc8N+aS8JAd885vVR0XJvP4GQAOVf2NiyzJxufjZdRKDLjnmiIAycSLcWstsnvKaJX4HTevJeNTkJQGcRNdmwXKh+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748332550; c=relaxed/simple;
-	bh=DSqmTgfY7dHzFTdbczYIQKSSfxjU6gLpEJ4Vcv0tVlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jKCE1SosE86qL8TUqlOG+DhFThBYEc5IKtdqCWAs871I3QrFP4qMpSUReKiQHMx0MyQrMuiqLri4OaeK7bpo5pHvqzB7PnGZLtVxyxhyhMlOY5hXlsY+kIUGKg+5tVhLEt7FfYUL08gi4fVPhYXjX/xFYRiedz+KzFA3IWKqWFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Gp55y0tg; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748332703; c=relaxed/simple;
+	bh=9SFvgeOwKrobD4cRTqiopVNcOl4N2zjHLcRSyk72nmw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JVmsEhB4SHupxzqFo2yUwrxDTHDtA5a/WcFuVc9ll2jz6MNOi3Dd72zubiobx66zDjmH0O1DKMGHDCP/JTdZr0StCV9QOGPBnM7rAvHCmBLVtu83jO9U0qElHlR3qVpDGrGAjM9ix2TiW1OvHrSb3HGTovikjlr+iUAT4avwKQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=dBp0x28I; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Gp55y0tg"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a365a6804eso1848666f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748332546; x=1748937346; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H4V1pVAjxvwYLOelIoYLXWbI8rf88pC3QzgaJmIacw0=;
-        b=Gp55y0tgzlodcl+PCJ2VbvUuQbYKR4cb4OzFCMyLmasyu0nm2xAx54OwvaEYdoLVAI
-         xboCyqEigH85EDbMN8tVBdkuKzhKErdNW8UAk3eLJFNZ/ixi9uGbDWRWUMWa95aQ0evv
-         KBAXd4v79YlVQxXQGGwH6Zel2zIboVDb5yc9TJQYHZR0mCkvgjThJeIT8pJlLbqrpAPK
-         esNDyYJRGRSTYuiM8EOeD9G3EdFhqTwGoOyEF2WycYyQTBsKaMuqw1+VWkzGMRHJLJae
-         isDWlQB5zjnDwIjjnD7T+7Kat6R9TvLvi+Zfi2RU4h+1ROLcS+nvqxaI/759YyVU+NEn
-         u01A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748332546; x=1748937346;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H4V1pVAjxvwYLOelIoYLXWbI8rf88pC3QzgaJmIacw0=;
-        b=rRJm+fIkXD1iS1SAjoYLEoAwpobmf9jyjzi4HzGOLnoWuog4Mwd+3AaRd311XMTcvZ
-         UQN3ACbIzc5YEj8lnhgF6gyZ55tLUf30EKV2/L52XZybfU+CP1b9vQnCH8IKrdNuwk6+
-         IgPDT+8LPOSPxKel2jAzfPXuqBh1rpTGuAPXa/2rUd8Ai614Wefttoh0ocNlWWuXiNOy
-         nbyskzqRkXMgF3HPMdABYfie7vPGkKU9hff9GaBYufJvYkDd1hzHVeOCoJLTi64U53XE
-         Rhf7fbJVOZBuQ0GiXkJL0usKpfPkdIsi84TdV/GnVOc1+A3gY1UdbDBuQEeBQlaRFa5W
-         grHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWndL4i3RyaTqIHeZD6znFG/YpS9V9AqtqCkU520ST8dIQyI7j7LkmLuk62e752U1GZDNkNtokUtQPtXs0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdU/zUdJOh/niUIwOToESND4fhK7IkJ4XuPU/hHjEzbVm+I8or
-	eDDkYkBHJvJkl6FklASH7hHJh9QbxRiWjAHQfFb265ov7D3pvBPZCX9NvI6fmvVkl1Y=
-X-Gm-Gg: ASbGncvnLxYZPlPK66vwI5h0DZ7WE5aA4lkZKXrpuvanDp3OlFYgdz6+PBal+/KjmgN
-	ryAerg3Xu2mEIxQxh3z+gwmNl/GfOLF9NvugVUQGfcxsNchV7nHLPRjw4VDtpFJSt9wCvJBLQGu
-	RefdT3cjtuaQFyUz9meQY1bthE1U/j886D0Z+ebe4VHfgj8bsS+kKp/rt0hguNrtObJkuTEgaK0
-	LKX4XQ90ETClSHfr3fybgwesDfqhH54gnz/mMNkYeEkBHrUDPcQtRgEKWn02zGHL9bEhZn81hOM
-	9L68xp3bOaGMjQCf7BGFXumD5JxsnIVgR0sa7S5eli0XKiQrZHFw3w==
-X-Google-Smtp-Source: AGHT+IFUx0JRQGioBEzkta845pUECy34/zcY7WGKeuIMwmVfEbYP2vIkm10xwit2X/PhsJzPp3ehjw==
-X-Received: by 2002:a05:6000:1785:b0:3a3:63d3:369a with SMTP id ffacd0b85a97d-3a4cb4602a6mr8243909f8f.25.1748332546433;
-        Tue, 27 May 2025 00:55:46 -0700 (PDT)
-Received: from [10.100.51.48] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d4a24429sm6974875f8f.36.2025.05.27.00.55.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 00:55:46 -0700 (PDT)
-Message-ID: <e31cd61f-cd64-41ff-8111-95b871534b2b@suse.com>
-Date: Tue, 27 May 2025 09:55:45 +0200
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="dBp0x28I"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54R7wE9611481514, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1748332694; bh=F3p54VaksFXXr0qjBndcI+PrSvsXrHVobFyMgUaaFIg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=dBp0x28I/UrGGDId/+nVBYwqKGd2VJW/WO5B04+lm8WP/6yhhKOuR0Uy5r5kzqdhH
+	 MhcWP+rdJ3oedmETjL5vmlsT/IyWC7V/0KARlHuWTGnW7RoEY+eYjE+y+8+O8E+9Ds
+	 eV0jyub97ppKhhFLYQtvpUzs6dkw+Puv0Q3zWQo+RUo+pfqX5fxAlnWGRkZ/Dob6bB
+	 JU6+idzrIBqCn5xYkOOMF3IubFCZHRpEXaWVrqJRnTQVeWskJgUwELtbHmrBTvnnwJ
+	 tUtpnFqAmynPHSelzNbZiymslkqz5+84RpaNyRpBKIqZPBbQAnl2b28l1iwoJuDHee
+	 HdCsn1HbhyEOw==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54R7wE9611481514
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 15:58:14 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 27 May 2025 15:58:14 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 27 May 2025 15:58:13 +0800
+Received: from RTEXMBS03.realtek.com.tw ([fe80::dd06:104c:e04d:a488]) by
+ RTEXMBS03.realtek.com.tw ([fe80::dd06:104c:e04d:a488%2]) with mapi id
+ 15.01.2507.035; Tue, 27 May 2025 15:58:13 +0800
+From: Zong-Zhe Yang <kevin_yang@realtek.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Ping-Ke Shih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org"
+	<kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH next] wifi: rtw89: mcc: prevent shift wrapping in rtw89_core_mlsr_switch()
+Thread-Topic: [PATCH next] wifi: rtw89: mcc: prevent shift wrapping in
+ rtw89_core_mlsr_switch()
+Thread-Index: AQHbzswfjeN9r26I10eoAov9FdTI97PmBnfw//+Mn4CAAIgNsA==
+Date: Tue, 27 May 2025 07:58:13 +0000
+Message-ID: <c70e23c6e9134f7e8b8791b5ece6baa3@realtek.com>
+References: <aDVUEHfa9q2zBD6i@stanley.mountain>
+ <582b5bc4c4434934838ae28d77b7f73a@realtek.com>
+ <aDVtu6dpKfWOyBn6@stanley.mountain>
+In-Reply-To: <aDVtu6dpKfWOyBn6@stanley.mountain>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] modpost: allow "make nsdeps" to skip module-specific
- symbol namespace
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain <mcgrof@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>,
- Peter Zijlstra <peterz@infradead.org>,
- Sami Tolvanen <samitolvanen@google.com>, linux-modules@vger.kernel.org
-References: <20250522071744.2362563-1-masahiroy@kernel.org>
- <20250522071744.2362563-2-masahiroy@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250522071744.2362563-2-masahiroy@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 5/22/25 09:17, Masahiro Yamada wrote:
-> When MODULE_IMPORT_NS() is missing, "make nsdeps" runs the Coccinelle
-> script to automatically add MODULE_IMPORT_NS() to each module.
-> 
-> This should not occur for users of EXPORT_SYMBOL_GPL_FOR_MODULES(), which
-> is intended to export a symbol to a specific module only. In such cases,
-> explicitly adding MODULE_IMPORT_NS("module:...") is disallowed.
-> 
-> This commit handles the latter case separately in order not to trigger
-> the Coccinelle, and displays the error message:
-> 
->   ERROR: modpost: module "foo" uses symbol "bar", which is exported only for module "baz"
-> 
-> Apply the same logic for kernel space as well.
-> 
-> Fixes: 092a4f5985f2 ("module: Add module specific symbol namespace support")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>=20
+> On Tue, May 27, 2025 at 07:38:17AM +0000, Zong-Zhe Yang wrote:
+> > Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > >
+> > > The "link_id" value comes from the user via debugfs.  If it's larger
+> > > than BITS_PER_LONG then that would result in shift wrapping and
+> > > potentially an out of bounds access later.  Fortunately, only root ca=
+n write to debugfs files
+> so the security impact is minimal.
+> > >
+> >
+> > Thank you for catching this problem.
+> >
+> > >
+> > > [...]
+> > >
+> > > @@ -5239,6 +5239,9 @@ int rtw89_core_mlsr_switch(struct rtw89_dev
+> > > *rtwdev, struct rtw89_vif *rtwvif,
+> > >         if (unlikely(!ieee80211_vif_is_mld(vif)))
+> > >                 return -EOPNOTSUPP;
+> > >
+> > > +       if (unlikely(link_id >=3D BITS_PER_LONG))
+> > > +               return -EINVAL;
+> > > +
+> >
+> > Since I think this problem only comes from dbgfs path, would you like t=
+o just add a check in
+> debug.c ?
+> >
+> > For example,
+> > (based on 0 <=3D valid link id < IEEE80211_MLD_MAX_NUM_LINKS <
+> > BITS_PER_LONG)
+> >
+> > rtw89_debug_priv_mlo_mode_set(...)
+> > {
+> >         ...
+> >         switch (mlo_mode) {
+> >         case RTW89_MLO_MODE_MLSR:
+> >                if (argv >=3D IEEE80211_MLD_MAX_NUM_LINKS)
+> >                        return -EINVAL;
+> >                 ...
+> >
+>=20
+> I'd prefer to add the check in one place instead of all the callers.
 
-Looks ok to me.
+Understandable.
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+> We could check IEEE80211_MLD_MAX_NUM_LINKS instead of bits per long if th=
+at's more
+> readable?
 
-Does this patch make the following note about nsdeps in
-Documentation/core-api/symbol-namespaces.rst (currently only in
-linux-next) obsolete and can it now be removed?
+Sound good to me.
 
-"""
-Note: it will happily generate an import statement for the module namespace;
-which will not work and generates build and runtime failures.
-"""
-
--- 
-Thanks,
-Petr
