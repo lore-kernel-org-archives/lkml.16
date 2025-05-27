@@ -1,74 +1,89 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A802CCC0
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AC72CCC0
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748358382; cv=none; b=YcpBK19Dq1wFzaFjfsslOazn5oDaWMnlmxMYdw2ZNUO8T1/aJbRMtZsv9euZ6MNY7UHdXdJlCc3z/MVi2tII4So5M60fJ1Q7JY4G2PHkRRemFOzsmV05blHQQOXsC56ANoPGoyRIPRBCMPL0uwToIhH7tLdSJmjDN5EsvWI8Xe4=
+	t=1748358393; cv=none; b=hB0VN8VlIK8iRyWusv2aWm7ueB1FYvPjAJ+5AsSsvmLTbMJz3ILja//4dbKkamofRanLN7q0cOyJYWgp2vbDaj5YMWIta50NTmif/abrTACWKidsyXQPO1UwYiz5xJJo0MWcJfUgbsOTijCk2heOHaiDhP4lSQis2cB4tsa5c+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748358382; c=relaxed/simple;
-	bh=yLFEz3isGxDdDlSUT7TZPVDwaKdBEy3alc679K+IW3M=;
+	s=arc-20240116; t=1748358393; c=relaxed/simple;
+	bh=OeMg/n4s+XUyV+zOygmzjEvKMcK4qz4amGuZH9Z+N+M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N+8lIi8sM7spKnaYTUF3fcJODoxfgp4zql/K1tIIafJCW3uSbhlhc90erSshgyQOy6JKUbxMElHn4fapO/8BkUpfcm/InkSAfPUv5bWROPIYcnNmYUNKS7ATlxqjgox9nw4YulnaCByoWYdUAJsq1gbPhek1MumY5BFyeMma0sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PIELTl9C; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8POQacDXNfcBVyEtXqHxOLItPJnu5Ula5zrkItuuEAb5MHFqB6UjHUk6zcw0+sS/oOR6x/az4Rka3QGRJKbGLCX/kjEw7IgXR2MQ8ZInMnYQno6WtDl116YUvLcAdHVvlNBsr3pDJ3LkP5tIvMCx2XIHZhdVke+4wY9nqTUqt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=erkcgR94; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIELTl9C"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30e8feb1886so3239628a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:06:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748358379; x=1748963179; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LSvOqeZMchgdQOgzsXx3GXNhfS4N4OUcWNZspeGG6m0=;
-        b=PIELTl9CHmg+TnymEnK06uFdQkOKcQse0NChjDPHtzHbc7XbPk56j6BWC2Gm3n5QC6
-         JeKtZydyZ3e/GL+pz0MPxdj9x87fbyZ5WzG6vt/dmPFKMZkOBxt6T7EIc3DKNgWlxzVW
-         LUQYFiirCwctPVx2eQ6eL43y0ytbyyXe1DepvBeOyT825TulkbSMEBkmMtg3g3PRrYjq
-         SZjZkN8mBwfhBzb1xdic8BmpCTDUo21ZoksvmLYjRxfxVuwANWwZnxpr4Ib6vQtdo7FI
-         RsgRxEKnRS6a8yJK9TbQ6scSgIrTAIQyzAPSx9QK9/PPC71S44IdLsRAfupgByNR/1F0
-         N5kQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="erkcgR94"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748358390;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XZ29RQMR69m4K9xLY43phEvDycHRnJ7kzp42BGznxp0=;
+	b=erkcgR94j+n1GRaGfxd+TrzE6ucnxJrRKb1FH2wHFIAfmOFJQEZ+TKp8vdjTTOt31NLUts
+	ChS5GAIyG8LvnyIsd+nl5RyvAVtkA3cdSHjYYh/UkMF3aVBDSlqRzDMhCURMxfRVf315WC
+	NRipkKCh45TDidgioHQIM2h1hjkLmcg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-423-HO_dkJLSOfmSUuG2iHwc2A-1; Tue, 27 May 2025 11:06:29 -0400
+X-MC-Unique: HO_dkJLSOfmSUuG2iHwc2A-1
+X-Mimecast-MFC-AGG-ID: HO_dkJLSOfmSUuG2iHwc2A_1748358388
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4d6453521so1267968f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:06:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748358379; x=1748963179;
+        d=1e100.net; s=20230601; t=1748358388; x=1748963188;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LSvOqeZMchgdQOgzsXx3GXNhfS4N4OUcWNZspeGG6m0=;
-        b=fP2iT74xnUTPz/NBFNbqGO878HMTKRRjSxXdb06fR00TDU477aCTqDbBEHitvpZnXQ
-         Lw+KDpbV2rD1nbxHYSFsexL/tCzMbJx3l5qf8ZwTA6bYz7KIlYr0d1FM3pKRUGRgMo+p
-         TaNrcqNg5Gv0CRzhyqFCvZDvoaGnr4BjhsxVvvdGH2eu6MHF9grXVREYQWM8wOI2ySaj
-         zwhTBwXyoKsgyX0dNmpdO/G079a1RMXRDk6EI9ZhBb18VtvlXXzW6+LJlHISwQ28TRol
-         /A9CkSsYwZRZplzlb8wVNX06A6Mh/hfiuBeC3ImNsSsdrFG1chp/hHN5nx38vit50l1c
-         EHDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyEZc/1WmUAL1F31X2oXu+Oce6E/iEZRFkYPDJOYsjVoFGr1AOBmyxKREPBaj6LVbaBrHrxk7HsIbCxOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYWoh/Ppz+veE4ejtyWpF4/vpTNb/8fs5kst19v1FvkadG8EgV
-	ouBHwxWtwddvrLZs8vrFPb0CLByWEcmIyW1Ydx22LE+fXPCdvZ6ZIsfx
-X-Gm-Gg: ASbGnctp2pNpQtjAybDgFDBULVh0sdti4OCXEqmhrSgWsdTLOFpHcaqrvVu9DgSfKS1
-	fNIacjNGhogBFvT0I8xRT5Tm71wsH/M4oDR4Z7Q+ZmavPhjBdG57NhZo3g3W8w+D7mUIB/3imzA
-	WikWcp2SlKPIKue4wmbFrs6QfsmYvKiQelFfYZMaG0WdbQLxPdTXVgbic8M1eIGyQaVui055K+h
-	s3KWCB6GaqQtrjFlVJGiIZvs516NfclxK72AALdJab0GmWoH5qiAN4h7ETF3v1KpsR8r1mohbnb
-	e+ZEz0+AKN1TS7NXYWNmtVwoXNQGo52rARU/WbMyMEIHoyHwtDeLLnjbS0lVXg==
-X-Google-Smtp-Source: AGHT+IENRKfOpKeDaMuKYKCJrumQsZsYkryV005OlAkY/9d4/fo7G7RYytv32nCL77XHTRKmxBejig==
-X-Received: by 2002:a17:90b:3f0d:b0:309:f407:5ad1 with SMTP id 98e67ed59e1d1-311108a1d6amr24913841a91.14.1748358378843;
-        Tue, 27 May 2025 08:06:18 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b158fsm14336896a91.8.2025.05.27.08.06.17
+        bh=XZ29RQMR69m4K9xLY43phEvDycHRnJ7kzp42BGznxp0=;
+        b=MvRCzxIltuqMjW++ZwK/nNRTvnAitjV4vqTRIvumf6LnY16U102/sugfSre+SoA1Er
+         m7iGKjNhZAXTJBdDgVIxT6ekeIMcNAaQRh5WoLRd+CJ9kO2avO5i5XRTTaeGYq0e0+Ta
+         PXEmpMCVDf/QKGZf6lmj0lB2wM2/UXy0m77TkQb4wO9oCJ61j5i4/rMb30moJRakfNNx
+         pawGTNHMXOY6ox5kxeSA3N1vlM+DcOz8y5iu5tIuq8rok/JR3vlnu13Ef2sBE0Ltjh0y
+         3fUjPUSsyogZHqhKsGoHz6w1o7ZLVNZDAZGcrnl+CvX2jYqCix/VkkJXwsaQiPyhehcO
+         gQQw==
+X-Forwarded-Encrypted: i=1; AJvYcCX10dXGwLBCtKeJuuqHrBq67dHi9TQF3oQucH5A85p9FM+TvkhUe5Mlq8Fupf54g+tqLqXoZeorvpezeoA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrbaVH0BqsMDEPqevPAz40Bi+GIn1rTIwJKANrxfBbydlOlnsq
+	6FYIV0uKe+pZ8D0FP9qf4N8IZ2rGULjKkXOq2AU1O+Fqn9D7FmUTMjH2pykMLnX7LlVkNjpnYtk
+	VCQ4yuD7lgVLpe4b9EfW/uw80ywbrKNQp66o7YI7K57/+x/Kq0AOsuxXPy6U2g+HMsw==
+X-Gm-Gg: ASbGnctylhRw8NqUOOJGbHzjyL7zmpLImWtUOac4IIhPQrZgRWAmQWCLKo5Bar4XDSy
+	mVZJElLQ7kIhBV98EThQ+zwls/zdBtK5Kgna3VkZE8GrBfs8uszTc6LIa8p8L3QA3C4wScQmOgT
+	msqynXpXv7YnFbpKd4HH89t3vjFxJDGsK8cZibnr69Gt1dnkJVwzB7mCYH2mX3nf01sOzQu8Bvf
+	HIy08cYnC3Ho6/dUwg8AGeVtrB1l48+GyeSov2jTJPUAIgZZ9hyMLfeqiyxG13JNnyxEBvaMt97
+	OpgamA==
+X-Received: by 2002:a05:6000:2890:b0:3a4:d7ba:940f with SMTP id ffacd0b85a97d-3a4d7ba9678mr6493705f8f.8.1748358387887;
+        Tue, 27 May 2025 08:06:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHnxRACmfRB0RLkxdi7utBGmJ2uHTW6WSbB3UldnlI9CQBfujtwCkHpHjFnwqjC0VngKmP3KQ==
+X-Received: by 2002:a05:6000:2890:b0:3a4:d7ba:940f with SMTP id ffacd0b85a97d-3a4d7ba9678mr6493637f8f.8.1748358387264;
+        Tue, 27 May 2025 08:06:27 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4e1632825sm2396185f8f.43.2025.05.27.08.06.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 08:06:18 -0700 (PDT)
-Date: Tue, 27 May 2025 11:06:16 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, tglx@linutronix.de, maddy@linux.ibm.com,
-	vschneid@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
-	jstultz@google.com, kprateek.nayak@amd.com, huschle@linux.ibm.com,
-	srikar@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux@rasmusvillemoes.dk
-Subject: Re: [RFC PATCH 1/5] cpumask: Introduce cpu parked mask
-Message-ID: <aDXU6LUlrmBLL3ak@yury>
-References: <20250523181448.3777233-1-sshegde@linux.ibm.com>
- <20250523181448.3777233-2-sshegde@linux.ibm.com>
+        Tue, 27 May 2025 08:06:26 -0700 (PDT)
+Date: Tue, 27 May 2025 11:06:23 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Albert Esteve <aesteve@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	gurchetansingh@google.com, daniel.almeida@collabora.com,
+	adelva@google.com, changyeon@google.com,
+	nicolas.dufresne@collabora.com, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, virtualization@lists.linux.dev,
+	Alexandre Courbot <acourbot@google.com>
+Subject: Re: [PATCH v3] media: add virtio-media driver
+Message-ID: <20250527110444-mutt-send-email-mst@kernel.org>
+References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
+ <20250526141316.7e907032@foz.lan>
+ <20250527102111-mutt-send-email-mst@kernel.org>
+ <20250527163927.02924adc@sal.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,106 +92,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523181448.3777233-2-sshegde@linux.ibm.com>
+In-Reply-To: <20250527163927.02924adc@sal.lan>
 
-On Fri, May 23, 2025 at 11:44:44PM +0530, Shrikanth Hegde wrote:
-> CPU is said to be parked, when underlying physical CPU is not 
-> available. This happens when there is contention for CPU resource in
-> para-virtualized case. One should avoid using these CPUs. 
+On Tue, May 27, 2025 at 04:39:27PM +0200, Mauro Carvalho Chehab wrote:
+> > It's up to you though.
+> > I can keep it in next for now, so it gets some coverage by
+> > tools scanning that tree.
 > 
-> Build and maintain this state of parked CPUs. Scheduler will use this
-> information and push the tasks out as soon as it can. 
+> Sure, feel free to keep it on next if you prefer so. Just
+> please don't submit it upstream while we don't review and
+> properly test it.
 
-This 'parked' term sounds pretty obscured. Maybe name it in
-a positive sense, and more explicit, like cpu_paravirt_mask.
+No prob. I just want to see it get reviewed and merged.
+My understanding is, it wasn't because maintainers were
+not Cc'd so that should be all ironed out now.
+Alexandre, do you want this in next for now or just drop it?
 
-Also, shouldn't this be conditional on CONFIG_PARAVIRT?
+-- 
+MST
 
-Thanks,
-Yury
- 
-> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-> ---
-> - Not sure if __read_mostly attribute suits for cpu_parked 
-> since it can change often. Since often means a few mins, it is long time
-> from scheduler perspective, hence kept it. 
-> 
->  include/linux/cpumask.h | 14 ++++++++++++++
->  kernel/cpu.c            |  3 +++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-> index 6a569c7534db..501848303800 100644
-> --- a/include/linux/cpumask.h
-> +++ b/include/linux/cpumask.h
-> @@ -84,6 +84,7 @@ static __always_inline void set_nr_cpu_ids(unsigned int nr)
->   *     cpu_enabled_mask - has bit 'cpu' set iff cpu can be brought online
->   *     cpu_online_mask  - has bit 'cpu' set iff cpu available to scheduler
->   *     cpu_active_mask  - has bit 'cpu' set iff cpu available to migration
-> + *     cpu_parked_mask  - has bit 'cpu' set iff cpu is parked
->   *
->   *  If !CONFIG_HOTPLUG_CPU, present == possible, and active == online.
->   *
-> @@ -93,6 +94,11 @@ static __always_inline void set_nr_cpu_ids(unsigned int nr)
->   *  representing which CPUs are currently plugged in.  And
->   *  cpu_online_mask is the dynamic subset of cpu_present_mask,
->   *  indicating those CPUs available for scheduling.
-> + *
-> + *  A CPU is said to be parked when underlying physical CPU(pCPU) is not
-> + *  available at the moment. It is recommended not to run any workload on
-> + *  that CPU.
-> +
->   *
->   *  If HOTPLUG is enabled, then cpu_present_mask varies dynamically,
->   *  depending on what ACPI reports as currently plugged in, otherwise
-> @@ -118,12 +124,14 @@ extern struct cpumask __cpu_enabled_mask;
->  extern struct cpumask __cpu_present_mask;
->  extern struct cpumask __cpu_active_mask;
->  extern struct cpumask __cpu_dying_mask;
-> +extern struct cpumask __cpu_parked_mask;
->  #define cpu_possible_mask ((const struct cpumask *)&__cpu_possible_mask)
->  #define cpu_online_mask   ((const struct cpumask *)&__cpu_online_mask)
->  #define cpu_enabled_mask   ((const struct cpumask *)&__cpu_enabled_mask)
->  #define cpu_present_mask  ((const struct cpumask *)&__cpu_present_mask)
->  #define cpu_active_mask   ((const struct cpumask *)&__cpu_active_mask)
->  #define cpu_dying_mask    ((const struct cpumask *)&__cpu_dying_mask)
-> +#define cpu_parked_mask    ((const struct cpumask *)&__cpu_parked_mask)
->  
->  extern atomic_t __num_online_cpus;
->  
-> @@ -1146,6 +1154,7 @@ void init_cpu_possible(const struct cpumask *src);
->  #define set_cpu_present(cpu, present)	assign_cpu((cpu), &__cpu_present_mask, (present))
->  #define set_cpu_active(cpu, active)	assign_cpu((cpu), &__cpu_active_mask, (active))
->  #define set_cpu_dying(cpu, dying)	assign_cpu((cpu), &__cpu_dying_mask, (dying))
-> +#define set_cpu_parked(cpu, parked)    assign_cpu((cpu), &__cpu_parked_mask, (parked))
->  
->  void set_cpu_online(unsigned int cpu, bool online);
->  
-> @@ -1235,6 +1244,11 @@ static __always_inline bool cpu_dying(unsigned int cpu)
->  	return cpumask_test_cpu(cpu, cpu_dying_mask);
->  }
->  
-> +static __always_inline bool cpu_parked(unsigned int cpu)
-> +{
-> +	return cpumask_test_cpu(cpu, cpu_parked_mask);
-> +}
-> +
->  #else
->  
->  #define num_online_cpus()	1U
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index a59e009e0be4..532fbfbe3226 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -3110,6 +3110,9 @@ EXPORT_SYMBOL(__cpu_dying_mask);
->  atomic_t __num_online_cpus __read_mostly;
->  EXPORT_SYMBOL(__num_online_cpus);
->  
-> +struct cpumask __cpu_parked_mask __read_mostly;
-> +EXPORT_SYMBOL(__cpu_parked_mask);
-> +
->  void init_cpu_present(const struct cpumask *src)
->  {
->  	cpumask_copy(&__cpu_present_mask, src);
-> -- 
-> 2.39.3
