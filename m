@@ -1,384 +1,149 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC2E248886
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40851FE46D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748337475; cv=none; b=Ij0sB40BD3SakzrJmTvVvPY+K8aYcvo0Y5RH0qNl6N0GDsf80/VYBmXvKuQqYTbOC9bXSF2MRFueMklbQAiYaFH+prfYq6o8PiFFesEP9T2mLJdiLU7m0cIH3ulvqXUGU9HLbta/6L6nhNc7UflGgaFvxULgPpaao4fdW+8zeAc=
+	t=1748337542; cv=none; b=DwZLLK2ToYHhthqOroMZH0g/X2ItM84imeAHyp2eKF7wYGhgVRyg5jkGjboQPeEwUy22blA0YUInBfn3QGEf4U8tISrer8vU6Ebdr/e6GK6qdwe0fnMTu/caJ6TnVVwm7Ln6RP+Tag5h83qms/2JsnNRDOfIzpnzsfuhp3Mj3YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748337475; c=relaxed/simple;
-	bh=h+4+lCjZ+bQUdFM05LjrHW6SQggDaZiOMpiR8EyzJ2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nMuylGK09BjvylZP3Ol6CKscx/0RHPUAXnnKIsmXGqwsV2j5JCE8BbU0PczULaJ49uUKL5phRvEdJOtof54NFvKAVR7gTGn3dtI5bWfDCVKnR46kWSpjeUeF/9Jn+ZQlhg6GygPHrgbcgEbDjex9HE3gW017MBDQtCyGPfu2W+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=T2RbGV2v; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748337542; c=relaxed/simple;
+	bh=ZcsiE8VsJGY/SJgauAXul2G1y5iuid8pqouGSPzQaOM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=t04nCchBgXlWicXj7fX4LWgj4ycM5tKjj21t8pLpzUWx4CFDXriHBKcfYzw8BDUMQhrYEFG1lsoqw5Y+4QN2lwUbz8uSzsxzYRJv6tbfonMfuZ/AMmbrSO12jd9ybmvSH8eifURRNi/ju44mlr8lX3jNWwVNQWAhM/BpA5NZT2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y75tqTOl; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T2RbGV2v"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DB743725;
-	Tue, 27 May 2025 11:17:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748337443;
-	bh=h+4+lCjZ+bQUdFM05LjrHW6SQggDaZiOMpiR8EyzJ2c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T2RbGV2vr/zrSax5Z8nM0FOFdh6QwndrjfBwOAJo9aR0seeij/XFtNqx+NywZuKxX
-	 DrNne+SDHEv26UKGYn5gqFVcGv12iQ9OZViXW+v9fiS2/bvghIWU/dzbi15NtFKU7S
-	 p1yRzOR+m0TnmspySwoPD7dxH775GdpzkN9YibQ8=
-Message-ID: <c888a352-a243-4555-9ab5-99614974afdd@ideasonboard.com>
-Date: Tue, 27 May 2025 12:17:43 +0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y75tqTOl"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31147652b36so2218972a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:19:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748337540; x=1748942340; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+6sb9vR4ahmHqnY0N3Qi6sQkZ9rrv10CM4PGUMbiSo=;
+        b=y75tqTOl3L7sMt7z8IJAZ8pl8dQMAAgt92wXANWZt3h2cA2dWqb3d1h9jT40Yv/8zw
+         HcPVrrNvuBDosv0ZWFYt1eke2wcaWoJAewwmz8d/0dv3//bUQWVm4z4rNM3IyeKTLr4W
+         2khLrZoSH8rYtJeVHxMHjR7rPeZ39tGDXN0rig34fEvMavirvjAgoVCNUBect0UIBvcw
+         ryhNdTz3yB6r7xoZtoPa+ic0vnq5N31HYeb73i77GS6owlXbiIXwe9EUDkbOy8k/H3uW
+         Iq6SGZhUkRNdqcE6uUI0XWQbB316x1viI0dzpl17RAVsukawduwvHfG7xZ8+etTJKowA
+         Q53w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748337540; x=1748942340;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5+6sb9vR4ahmHqnY0N3Qi6sQkZ9rrv10CM4PGUMbiSo=;
+        b=NSHHuo0xEjvtWNNomLh4wX2T30r0WjRBg3BjSwMENW+GgCgP8z8ox6kwW2wirkxICv
+         tef+QTmIeZXuTgP0dGNpCC7G2KqjVfkhFKCitIgPPu+v/oRg6zzkQOqaxcaztgiZzvOD
+         wd8598n2qLa6iuvO4QgmHkhSvkgAR+Y9ybo07p9tHFtRcMl1XSWphZlxXMNJPE3viWCg
+         sUVx6gBYT3Q83XFzVqeZ17s16LghJ5vWlAYxYVStmrQ3zNzPzssbKMBbPja5Db94UvvB
+         0rVLgDWU9lob/LOLGW6O55Z+ivXn0eKRET9qfadX7/L2FiaFPM/dRX3+3dzBi5yAvSyZ
+         ounQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH1FXpRoNN1Y5xl2uowctq+WX23c7eQfwOitvAr2eDkRGuvOPyVCpQVsi2PyPGinyHLkoa8Mh8AXqGcVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxPzc9iLPsX3elMpvkfC0INqPwLQgOHvc+XYVNfYT5HdKshX0z
+	ehuz19mav7zZSRywpPuZIZfT9FcFk6Rs3y5/6RAv6LEBrSQemuzcpiYhLBjb7D/0Ffp8q5pqxnY
+	SKndSeLJO93+w679t9HMmMNZXrg==
+X-Google-Smtp-Source: AGHT+IEKkHTv4glwErR8dVXArbvKUI6+TJ+cA7jQ653G2DWqcR73lUfYneMuq9cYAAq8g6aexkFnA+JWaq+2vaSkJA==
+X-Received: from pjqq6.prod.google.com ([2002:a17:90b:5846:b0:311:4c94:2910])
+ (user=yuyanghuang job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:3f0d:b0:2f5:88bb:118 with SMTP id 98e67ed59e1d1-31111657d33mr16592647a91.22.1748337540290;
+ Tue, 27 May 2025 02:19:00 -0700 (PDT)
+Date: Tue, 27 May 2025 18:18:55 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/3] drm/bridge: cadence: cdns-mhdp8546-core:
- Remove legacy support for connector initialisation in bridge
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: jonas@kwiboo.se, jernej.skrabec@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, lumag@kernel.org, jani.nikula@intel.com,
- andy.yan@rock-chips.com, mordan@ispras.ru, linux@treblig.org,
- viro@zeniv.linux.org.uk, yamonkar@cadence.com, sjakhade@cadence.com,
- quentin.schulz@free-electrons.com, jsarha@ti.com,
- linux-kernel@vger.kernel.org, devarsht@ti.com, dianders@chromium.org,
- andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
- alexander.stein@ew.tq-group.com
-References: <20250521073237.366463-1-j-choudhary@ti.com>
- <20250521073237.366463-2-j-choudhary@ti.com>
- <ea92f925-7778-477b-aeab-604407260de8@ideasonboard.com>
- <dedc889f-ffa2-420b-8b23-c6fff11cdf30@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <dedc889f-ffa2-420b-8b23-c6fff11cdf30@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250527091855.340837-1-yuyanghuang@google.com>
+Subject: [PATCH net-next] selftest: Add selftest for multicast address notifications
+From: Yuyang Huang <yuyanghuang@google.com>
+To: Yuyang Huang <yuyanghuang@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"=?UTF-8?q?Maciej=20=C5=BBenczykowski?=" <maze@google.com>, Lorenzo Colitti <lorenzo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+This commit adds a new kernel selftest to verify RTNLGRP_IPV4_MCADDR
+and RTNLGRP_IPV6_MCADDR notifications. The test works by adding and
+removing a dummy interface and then confirming that the system
+correctly receives join and removal notifications for the 224.0.0.1
+and ff02::1 multicast addresses.
 
-On 27/05/2025 11:41, Jayesh Choudhary wrote:
-> Hello Tomi,
-> 
-> On 27/05/25 13:08, Tomi Valkeinen wrote:
->> Hi,
->>
->> On 21/05/2025 10:32, Jayesh Choudhary wrote:
->>> Now that we have DBANC framework, remove the connector initialisation
->>> code
->>> as that piece of code is not called if DRM_BRIDGE_ATTACH_NO_CONNECTOR
->>> flag
->>> is used. Only TI K3 platforms consume this driver and tidss (their
->>> display
->>> controller) has this flag set. So this legacy support can be dropped.
->>>
->>
->> Why is the series RFC? Does it not work? Is there something here you're
->> not comfortable with?
-> 
-> These changes work without any issue.
-> 
-> I was a little doubtful about the second patch so kept it as RFC.
+The test relies on the iproute2 version to be 6.13+.
 
-You should explain why the series/patch is RFC, unless it's somehow
-obvious. In this series I didn't see any TODOs or open questions or
-anything.
+Tested by the following command:
+$ vng -v --user root --cpus 16 -- \
+make -C tools/testing/selftests TARGETS=3Dnet TEST_PROGS=3Drtnetlink.sh \
+TEST_GEN_PROGS=3D"" run_tests
 
->>
->>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>> ---
->>>   .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 186 +++---------------
->>>   1 file changed, 25 insertions(+), 161 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/
->>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>> index b431e7efd1f0..66bd916c2fe9 100644
->>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>> @@ -1444,56 +1444,6 @@ static const struct drm_edid
->>> *cdns_mhdp_edid_read(struct cdns_mhdp_device *mhdp,
->>>       return drm_edid_read_custom(connector,
->>> cdns_mhdp_get_edid_block, mhdp);
->>>   }
->>>   -static int cdns_mhdp_get_modes(struct drm_connector *connector)
->>> -{
->>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(connector);
->>> -    const struct drm_edid *drm_edid;
->>> -    int num_modes;
->>> -
->>> -    if (!mhdp->plugged)
->>> -        return 0;
->>> -
->>> -    drm_edid = cdns_mhdp_edid_read(mhdp, connector);
->>> -
->>> -    drm_edid_connector_update(connector, drm_edid);
->>> -
->>> -    if (!drm_edid) {
->>> -        dev_err(mhdp->dev, "Failed to read EDID\n");
->>> -        return 0;
->>> -    }
->>> -
->>> -    num_modes = drm_edid_connector_add_modes(connector);
->>> -    drm_edid_free(drm_edid);
->>> -
->>> -    /*
->>> -     * HACK: Warn about unsupported display formats until we deal
->>> -     *       with them correctly.
->>> -     */
->>> -    if (connector->display_info.color_formats &&
->>> -        !(connector->display_info.color_formats &
->>> -          mhdp->display_fmt.color_format))
->>> -        dev_warn(mhdp->dev,
->>> -             "%s: No supported color_format found (0x%08x)\n",
->>> -            __func__, connector->display_info.color_formats);
->>> -
->>> -    if (connector->display_info.bpc &&
->>> -        connector->display_info.bpc < mhdp->display_fmt.bpc)
->>> -        dev_warn(mhdp->dev, "%s: Display bpc only %d < %d\n",
->>> -             __func__, connector->display_info.bpc,
->>> -             mhdp->display_fmt.bpc);
->>> -
->>> -    return num_modes;
->>> -}
->>> -
->>> -static int cdns_mhdp_connector_detect(struct drm_connector *conn,
->>> -                      struct drm_modeset_acquire_ctx *ctx,
->>> -                      bool force)
->>> -{
->>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
->>> -
->>> -    return cdns_mhdp_detect(mhdp);
->>> -}
->>> -
->>>   static u32 cdns_mhdp_get_bpp(struct cdns_mhdp_display_fmt *fmt)
->>>   {
->>>       u32 bpp;
->>> @@ -1547,114 +1497,6 @@ bool cdns_mhdp_bandwidth_ok(struct
->>> cdns_mhdp_device *mhdp,
->>>       return true;
->>>   }
->>>   -static
->>> -enum drm_mode_status cdns_mhdp_mode_valid(struct drm_connector *conn,
->>> -                      const struct drm_display_mode *mode)
->>> -{
->>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
->>> -
->>> -    mutex_lock(&mhdp->link_mutex);
->>> -
->>> -    if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
->>> -                    mhdp->link.rate)) {
->>> -        mutex_unlock(&mhdp->link_mutex);
->>> -        return MODE_CLOCK_HIGH;
->>> -    }
->>> -
->>> -    mutex_unlock(&mhdp->link_mutex);
->>> -    return MODE_OK;
->>> -}
->>> -
->>> -static int cdns_mhdp_connector_atomic_check(struct drm_connector *conn,
->>> -                        struct drm_atomic_state *state)
->>> -{
->>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
->>> -    struct drm_connector_state *old_state, *new_state;
->>> -    struct drm_crtc_state *crtc_state;
->>> -    u64 old_cp, new_cp;
->>> -
->>> -    if (!mhdp->hdcp_supported)
->>> -        return 0;
->>> -
->>> -    old_state = drm_atomic_get_old_connector_state(state, conn);
->>> -    new_state = drm_atomic_get_new_connector_state(state, conn);
->>> -    old_cp = old_state->content_protection;
->>> -    new_cp = new_state->content_protection;
->>> -
->>> -    if (old_state->hdcp_content_type != new_state->hdcp_content_type &&
->>> -        new_cp != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
->>> -        new_state->content_protection =
->>> DRM_MODE_CONTENT_PROTECTION_DESIRED;
->>> -        goto mode_changed;
->>> -    }
->>> -
->>> -    if (!new_state->crtc) {
->>> -        if (old_cp == DRM_MODE_CONTENT_PROTECTION_ENABLED)
->>> -            new_state->content_protection =
->>> DRM_MODE_CONTENT_PROTECTION_DESIRED;
->>> -        return 0;
->>> -    }
->>> -
->>> -    if (old_cp == new_cp ||
->>> -        (old_cp == DRM_MODE_CONTENT_PROTECTION_DESIRED &&
->>> -         new_cp == DRM_MODE_CONTENT_PROTECTION_ENABLED))
->>> -        return 0;
->>> -
->>> -mode_changed:
->>> -    crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
->>> -    crtc_state->mode_changed = true;
->>> -
->>> -    return 0;
->>> -}
->>> -
->>> -static const struct drm_connector_helper_funcs
->>> cdns_mhdp_conn_helper_funcs = {
->>> -    .detect_ctx = cdns_mhdp_connector_detect,
->>> -    .get_modes = cdns_mhdp_get_modes,
->>> -    .mode_valid = cdns_mhdp_mode_valid,
->>> -    .atomic_check = cdns_mhdp_connector_atomic_check,
->>> -};
->>> -
->>> -static const struct drm_connector_funcs cdns_mhdp_conn_funcs = {
->>> -    .fill_modes = drm_helper_probe_single_connector_modes,
->>> -    .atomic_duplicate_state =
->>> drm_atomic_helper_connector_duplicate_state,
->>> -    .atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->>> -    .reset = drm_atomic_helper_connector_reset,
->>> -    .destroy = drm_connector_cleanup,
->>> -};
->>> -
->>> -static int cdns_mhdp_connector_init(struct cdns_mhdp_device *mhdp)
->>> -{
->>> -    u32 bus_format = MEDIA_BUS_FMT_RGB121212_1X36;
->>> -    struct drm_connector *conn = &mhdp->connector;
->>> -    struct drm_bridge *bridge = &mhdp->bridge;
->>> -    int ret;
->>> -
->>> -    conn->polled = DRM_CONNECTOR_POLL_HPD;
->>> -
->>> -    ret = drm_connector_init(bridge->dev, conn, &cdns_mhdp_conn_funcs,
->>> -                 DRM_MODE_CONNECTOR_DisplayPort);
->>> -    if (ret) {
->>> -        dev_err(mhdp->dev, "Failed to initialize connector with
->>> drm\n");
->>> -        return ret;
->>> -    }
->>> -
->>> -    drm_connector_helper_add(conn, &cdns_mhdp_conn_helper_funcs);
->>> -
->>> -    ret = drm_display_info_set_bus_formats(&conn->display_info,
->>> -                           &bus_format, 1);
->>> -    if (ret)
->>> -        return ret;
->>> -
->>> -    ret = drm_connector_attach_encoder(conn, bridge->encoder);
->>> -    if (ret) {
->>> -        dev_err(mhdp->dev, "Failed to attach connector to encoder\n");
->>> -        return ret;
->>> -    }
->>> -
->>> -    if (mhdp->hdcp_supported)
->>> -        ret = drm_connector_attach_content_protection_property(conn,
->>> true);
->>> -
->>> -    return ret;
->>> -}
->>> -
->>>   static int cdns_mhdp_attach(struct drm_bridge *bridge,
->>>                   struct drm_encoder *encoder,
->>>                   enum drm_bridge_attach_flags flags)
->>> @@ -1671,9 +1513,11 @@ static int cdns_mhdp_attach(struct drm_bridge
->>> *bridge,
->>>           return ret;
->>>         if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
->>> -        ret = cdns_mhdp_connector_init(mhdp);
->>> -        if (ret)
->>> -            goto aux_unregister;
->>> +        ret = -EINVAL;
->>> +        dev_err(mhdp->dev,
->>> +            "Connector initialisation not supported in bridge_attach
->>> %d\n",
->>> +            ret);
->>> +        goto aux_unregister;
->>>       }
->>>         spin_lock(&mhdp->start_lock);
->>> @@ -2158,6 +2002,25 @@ static const struct drm_edid
->>> *cdns_mhdp_bridge_edid_read(struct drm_bridge *brid
->>>       return cdns_mhdp_edid_read(mhdp, connector);
->>>   }
->>>   +static enum drm_mode_status
->>> +cdns_mhdp_bridge_mode_valid(struct drm_bridge *bridge,
->>> +                const struct drm_display_info *info,
->>> +                const struct drm_display_mode *mode)
->>> +{
->>> +    struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
->>> +
->>> +    mutex_lock(&mhdp->link_mutex);
->>> +
->>> +    if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
->>> +                    mhdp->link.rate)) {
->>> +        mutex_unlock(&mhdp->link_mutex);
->>> +        return MODE_CLOCK_HIGH;
->>> +    }
->>> +
->>> +    mutex_unlock(&mhdp->link_mutex);
->>> +    return MODE_OK;
->>> +}
->>> +
->>>   static const struct drm_bridge_funcs cdns_mhdp_bridge_funcs = {
->>>       .atomic_enable = cdns_mhdp_atomic_enable,
->>>       .atomic_disable = cdns_mhdp_atomic_disable,
->>> @@ -2172,6 +2035,7 @@ static const struct drm_bridge_funcs
->>> cdns_mhdp_bridge_funcs = {
->>>       .edid_read = cdns_mhdp_bridge_edid_read,
->>>       .hpd_enable = cdns_mhdp_bridge_hpd_enable,
->>>       .hpd_disable = cdns_mhdp_bridge_hpd_disable,
->>> +    .mode_valid = cdns_mhdp_bridge_mode_valid,
->>>   };
->>>     static bool cdns_mhdp_detect_hpd(struct cdns_mhdp_device *mhdp,
->>> bool *hpd_pulse)
->>
->> Why do you need to add bridge mode_valid() when removing the legacy
->> non-DRM_BRIDGE_ATTACH_NO_CONNECTOR code?
-> 
-> Okay. Then I will add the bridge mode_valid as a separate patch.
+Cc: Maciej =C5=BBenczykowski <maze@google.com>
+Cc: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: Yuyang Huang <yuyanghuang@google.com>
+---
+ tools/testing/selftests/net/rtnetlink.sh | 34 ++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-Well, it was a question =). But indeed my thought was that it sounded
-like material for a separate patch. Is it more of a fix for the
-DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
-
- Tomi
+diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selft=
+ests/net/rtnetlink.sh
+index 2e8243a65b50..9dbcaaeaf8cd 100755
+--- a/tools/testing/selftests/net/rtnetlink.sh
++++ b/tools/testing/selftests/net/rtnetlink.sh
+@@ -21,6 +21,7 @@ ALL_TESTS=3D"
+ 	kci_test_vrf
+ 	kci_test_encap
+ 	kci_test_macsec
++	kci_test_mcast_addr_notification
+ 	kci_test_ipsec
+ 	kci_test_ipsec_offload
+ 	kci_test_fdb_get
+@@ -1334,6 +1335,39 @@ kci_test_mngtmpaddr()
+ 	return $ret
+ }
+=20
++kci_test_mcast_addr_notification()
++{
++	local tmpfile
++	local monitor_pid
++	local match_result
++
++	tmpfile=3D$(mktemp)
++
++	ip monitor maddr > $tmpfile &
++	monitor_pid=3D$!
++	sleep 1
++
++	run_cmd ip link add name test-dummy1 type dummy
++	run_cmd ip link set test-dummy1 up
++	run_cmd ip link del dev test-dummy1
++	sleep 1
++
++	match_result=3D$(grep -cE "test-dummy1.*(224.0.0.1|ff02::1)" $tmpfile)
++
++	kill $monitor_pid
++	rm $tmpfile
++	# There should be 4 line matches as follows.
++	# 13: test-dummy1=C2=A0 =C2=A0 inet6 mcast ff02::1 scope global=C2=A0
++	# 13: test-dummy1=C2=A0 =C2=A0 inet mcast 224.0.0.1 scope global=C2=A0
++	# Deleted 13: test-dummy1=C2=A0 =C2=A0 inet mcast 224.0.0.1 scope global=
+=C2=A0
++	# Deleted 13: test-dummy1=C2=A0 =C2=A0 inet6 mcast ff02::1 scope global=
+=C2=A0
++	if [ $match_result -ne 4 ];then
++		end_test "FAIL: mcast addr notification"
++		return 1
++	fi
++	end_test "PASS: mcast addr notification"
++}
++
+ kci_test_rtnl()
+ {
+ 	local current_test
+--=20
+2.49.0.1204.g71687c7c1d-goog
 
