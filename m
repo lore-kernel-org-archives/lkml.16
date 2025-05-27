@@ -1,117 +1,133 @@
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90ECC1CDFAC;
-	Tue, 27 May 2025 08:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0EA24A05D;
+	Tue, 27 May 2025 08:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748334114; cv=none; b=S6vytd/wLm0FoS0csL1iUG0Xy/bXzj5OfXIyq5K4RByHAu1r2IK9AXb+GXpNR/fk+fKB5mIeVF9jtOibIJHu5S1GJ8fOPFfpNxNq0q5sE5v2/q7VHCOxYu9NlAv73GJIGGfual/ZbLJPkRORcjnLm+tGfn+INbXgCejw01ogMes=
+	t=1748334122; cv=none; b=n8DuOtYecT7i5JDpUQKH/Icl/kdgzSJ3KKM4c3M2TJNjrfaNlwrvZ/XttpiwAYDrLlkTGC6iRpKC79iG2R7nmL9XKh5WiGTKJ69sPXS/Fek1rlMDg/SiqlHmJHisPIsLW8VkgQf0qO6tHGL//MDp9lqey9eKrc+vyfgE3j0DFqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748334114; c=relaxed/simple;
-	bh=fGRUxXig1OkiQ7I+4LubHO556XNr6dsULyaQcEpiz+s=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mE69Eln730cwaDjudVedKgRQVcnl6WLNdb/5K/9TWocWStEmOlglqhoAy54IfXB9fkxri6ZwutD02zjdLO6B+uv9GWd6HBHALnpxi656TdT3qp3NaZLZa4iV7CfS3tc76Oj4AiQvWQ1CHyr5QLabw+ukPPO0z9e6aMw8EyjjGGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JdmPRYW0; arc=none smtp.client-ip=209.85.217.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748334122; c=relaxed/simple;
+	bh=bP3dyqOcdjmeMKsrJgqUZ/tHl2pKyc9vebW0MO1p2XU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JnglORna58TQlJA8zozGCx9FC18b8u82P/emt2EBjX/U/em1gCiYYLmZI9J4LPRdPVcGakOfc+a49YZrzxJ8A5qew3v55LAUyNbURQQTdUIm+WFz2IJZKI2+OBvk9e0jpFDA6nf54hyNQCv/kpsktQS4PhS06uPawRbNR7hRJbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=stlnoo5u; arc=none smtp.client-ip=211.125.140.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdmPRYW0"
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e59012c7eeso231008137.1;
-        Tue, 27 May 2025 01:21:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="stlnoo5u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748334111; x=1748938911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fGRUxXig1OkiQ7I+4LubHO556XNr6dsULyaQcEpiz+s=;
-        b=JdmPRYW0x7lxODzq+SZaRv37d46xtnlJpCSE/TvKb0+oAtt217TOPpN/MydsIopQnI
-         sgMEKR+Ns62PoRGVMZSZfmwsewBSgOrTg1elGd+66J5kVynLrBbFEc2/3SFzrI2b9ppP
-         sW1NgkqyE8V1CqXgYV40wOYb49o2B7emhMDs3z2ydTvECmCJQ7hZxMhyjEf4VFRxf/YS
-         bBV7N2jkctqsf6eHhpZk4biwMqefMz9PPmJkdQJk7Q0r4fNLHDW+gRw8hmPKM711jSZp
-         gXEc3g6Bh5L9vmvUsD83l6mlESrZFSE5jfyz7bjb/o45RMuyHUjGpJHbXhqbziuaKQBm
-         2Gzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748334111; x=1748938911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fGRUxXig1OkiQ7I+4LubHO556XNr6dsULyaQcEpiz+s=;
-        b=uZ8LC1/lL7z+rvbHc3r99E7jFGl1qixe5iefN3G2Td+Cl5tLvOUx2wszdPIUf2NEjB
-         ikF5kcKuG4NbHWR/QC04T+e5TCyKbGqqBem1tn5T/j+KDMpuQRMDgUvEut5IoKzthgqO
-         h44oIYr8lTvgh80UXfLq/qeFhQ4qvI/9AARVINIdT4ZAWsMVaIjYoyv55gSkSvbLk7sZ
-         vnl55y1igPJZpjBHcHB1Q2CZwPkLV/UaPhOnb1ItfIZCkVHFoo/kJ3qB93NL4yM2fqez
-         4Dh5vEl1Bua9a+q3W2cgpWDm/dV6wWvTFlhs832dOhqYvwOSuEDCaNZOaNpQWho7I6i7
-         oBXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXWYHTEDJQA+NtzO1dnMisrQOwK7OoqtEP0WsYyqeIiOIBuqkv2/vl3RNA/0zFaCyCn4VNzti1OUXtd1ZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyTZvY2SI3tG2pXCFIYLGFIxzejeIt98bOeCvxJWWEHQqkU3VE
-	vOEPz55uvHSXjfvEUYPINHD3jUcSAKMqBGvPZ/TWGurQccHsmbTWWHBp6x4UZzb9wsu0MBt/A67
-	kTuv8OEgPTGu9R7TaJ9eJpFHYA0sHphc=
-X-Gm-Gg: ASbGncsdt7to0jqn44BYOGOxAK2j46I9nQFPHapxYHbXxmDcS+XitmAd4I553aehAlt
-	DzEbpzQXUsch0c0aLn8lcpOA0kOCuoBFDxVDMzkEa3GJ9GJ5Ztt+A381XCxINoboLNJjUIFrcT9
-	iVksTUwB4ozlxc8WzZRDTwEolrTnNc9LuwLTpXG1ktpYvU
-X-Google-Smtp-Source: AGHT+IEs/o92+7R6+zrngxif1aKf/Fww1tnED3/RogPqRSeFa6rQKP2MBBm4jueDAA1tL7nG4z3LVm893iITW/OCpgM=
-X-Received: by 2002:a05:6102:2c05:b0:4e5:9380:9c20 with SMTP id
- ada2fe7eead31-4e59380a3c0mr305232137.2.1748334111328; Tue, 27 May 2025
- 01:21:51 -0700 (PDT)
+  d=sony.com; s=s1jp; t=1748334120; x=1779870120;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=9M+aGmHypwA8Qm6h86CMR5EaNs6NIldl3+8PV51EqcA=;
+  b=stlnoo5uuK0XzPZUwyTV450Kw73uW69bqDF9IuiQmPxYdeSC2tETbmP6
+   tpH7M1ODe2/wiBRfemWWeJ/LEGpbcD5V4xeGWM2JP08fnNWTl8bAFQzG5
+   VXQmcDNpL2gdMm5DLfpUr/uol/pYZ52BF/1+cxaBStlofM7Jh8YMl63nj
+   M1pcv6+ZCcJoM3cEvWvFSbyKvz+k03G63eYxzE2HjclPD+q7vdxY7QdU4
+   8y9TsI7G2UKWLutQ7Q3w2euJN3c/G8pDN2lGO7vS1U3iS4GPDiNdpM6aA
+   9yBJ6H36rfBYjdmjGr3tQPud+BEBbJGbfUodmbx42FAZ60Z33cwxLZMwz
+   Q==;
+Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
+  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:21:53 +0900
+X-IronPort-AV: E=Sophos;i="6.15,317,1739804400"; 
+   d="scan'208";a="534528132"
+Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
+  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:21:52 +0900
+Date: Tue, 27 May 2025 17:21:48 +0900
+From: Shashank Balaji <shashank.mahadasyam@sony.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Russell Haley <yumpusamongus@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+Message-ID: <aDV2HPfybqnbzJ9N@JPC00244420>
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+ <15871c67-0d18-430f-935e-261b2cda855b@gmail.com>
+ <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
+ <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com>
+ <aC_4yLsFVVszI_FA@JPC00244420>
+ <CAJZ5v0g1o03La9aWJF1rheC9CM8SU2iC52auEAnaBpUCMunpJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Xianying Wang <wangxianying546@gmail.com>
-Date: Tue, 27 May 2025 16:21:40 +0800
-X-Gm-Features: AX0GCFvCVEmdiiVEQ2MZR8kWACRujl1p-_x9MbhRGO-okrzQsqo9bWPBeCgg8Mo
-Message-ID: <CAOU40uDDL9-ivR=8nx67T9_j+1+2dCXNyBUqFvOPyv0cpPr5Yg@mail.gmail.com>
-Subject: [BUG] general protection fault in input_unregister_device
-To: dmitry.torokhov@gmail.com
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0g1o03La9aWJF1rheC9CM8SU2iC52auEAnaBpUCMunpJA@mail.gmail.com>
 
-Hi,
+Hi Rafael,
 
-I discovered a kernel crash described as "general protection fault in
-input_unregister_device." The crash occurs in the input subsystem,
-specifically in the function input_unregister_device
-(drivers/input/input.c:2500), due to dereferencing a non-canonical
-address, resulting in a general protection fault.
+On Fri, May 23, 2025 at 09:06:04PM +0200, Rafael J. Wysocki wrote:
+> On Fri, May 23, 2025 at 6:25 AM Shashank Balaji
+> <shashank.mahadasyam@sony.com> wrote:
+> > ...
+> > Consider the following on a Raptor Lake machine:
+> > ...
+> >
+> > 3. Same as above, except with strictuserspace governor, which is a
+> > custom kernel module which is exactly the same as the userspace
+> > governor, except it has the CPUFREQ_GOV_STRICT_TARGET flag set:
+> >
+> >         # echo strictuserspace > cpufreq/policy0/scaling_governor
+> >         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+> >         cpu0: HWP_REQ: min 26 max 26 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+> >         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+> >         # echo 3000000 > cpufreq/policy0/scaling_setspeed
+> >         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
+> >         cpu0: HWP_REQ: min 39 max 39 des 0 epp 128 window 0x0 (0*10^0us) use_pkg 0
+> >         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*10^0us)
+> >
+> >         With the strict flag set, intel_pstate honours this by setting
+> >         the min and max freq same.
+> >
+> > desired_perf is always 0 in the above cases. The strict flag check is done in
+> > intel_cpufreq_update_pstate, which sets max_pstate to target_pstate if policy
+> > has strict target, and cpu->max_perf_ratio otherwise.
+> >
+> > As Russell and Rafael have noted, CPU frequency is subject to hardware
+> > coordination and optimizations. While I get that, shouldn't software try
+> > its best with whatever interface it has available? If a user sets the
+> > userspace governor, that's because they want to have manual control over
+> > CPU frequency, for whatever reason. The kernel should honor this by
+> > setting the min and max freq in HWP_REQUEST equal. The current behaviour
+> > explicitly lets the hardware choose higher frequencies.
+> 
+> Well, the userspace governor ends up calling the same function,
+> intel_cpufreq_target(), as other cpufreq governors except for
+> schedutil.  This function needs to work for all of them and for some
+> of them setting HWP_MIN_PERF to the same value as HWP_MAX_PERF would
+> be too strict.  HWP_DESIRED_PERF can be set to the same value as
+> HWP_MIN_PERF, though (please see the attached patch).
+> 
+> > Since Russell pointed out that the "actual freq >= target freq" can be
+> > achieved by leaving intel_pstate active and setting scaling_{min,max}_freq
+> > instead (for some reason this slipped my mind), I now think the strict target
+> > flag should be added to the userspace governor, leaving the documentation as
+> > is. Maybe a warning like "you may want to set this exact frequency, but it's
+> > subject to hardware coordination, so beware" can be added.
+> 
+> If you expect the userspace governor to set the frequency exactly
+> (module HW coordination), that's the only way to make it do so without
+> potentially affecting the other governors.
 
-According to the crash report, the faulting address is
-0xdffffc00000000a4, which corresponds to a KASAN shadow memory region.
-The crash is triggered when mac_hid_toggle_emumouse calls
-mac_hid_stop_emulation, which in turn invokes
-mac_hid_destroy_emumouse, eventually leading to a call to
-input_unregister_device with an invalid or uninitialized input_dev
-pointer.
+I don't mean to say that intel_cpufreq_target() should be modified. I'm
+suggesting that the CPUFREQ_GOV_STRICT_TARGET flag be added to the
+userspace governor. That'll ensure that HWP_MIN_PERF and
+HWP_MAX_PERF are set to the target frequency. intel_cpufreq_target()
+already correctly deals with the strict target flag. To test this, I
+registered a custom governor, same as the userspace governor, except
+with the strict target flag set. Please see case 3 above.
 
-The report indicates that a corrupted or NULL input_dev structure was
-passed into input_unregister_device, possibly due to a use-after-free,
-double unregister, or incomplete initialization in the emumouse path
-in mac_hid.
+If this flag is added to the userspace governor, then whatever the
+documentation says right now will actually be true. No need to modify
+the documentation then.
 
-This can be reproduced on:
-
-HEAD commit:
-
-commit adc218676eef25575469234709c2d87185ca223a
-
-report: https://pastebin.com/raw/4TeX6E8M
-
-console output : https://pastebin.com/raw/ZE2AZ1Gq
-
-kernel config : https://pastebin.com/raw/BpCtvUt2
-
-C reproducer :
-
-part1=EF=BC=9Ahttps://pastebin.com/raw/jhU9v99k
-
-part2=EF=BC=9Ahttps://pastebin.com/raw/dcaKCHZ1
-
-part3=EF=BC=9Ahttps://pastebin.com/raw/CzgGBb7C
-
-part4=EF=BC=9Ahttps://pastebin.com/raw/MnwtYcjd
-
-part5=EF=BC=9Ahttps://pastebin.com/raw/VE8xNmHT
-
-Best regards,
-
-Xianying
+Regards,
+Shashank
