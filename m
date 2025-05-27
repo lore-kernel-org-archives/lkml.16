@@ -1,146 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB611E261F;
-	Tue, 27 May 2025 18:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 460C41F561D;
+	Tue, 27 May 2025 18:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748371880; cv=none; b=gFKC+Uj5Tnc8ZQ7/PRpyVIfsEUgbh5BjkUTqyolafeWBv9pg+sIzPndaWTxIqnlSz2cO9cCbSCtwAp2mMFn9yBQ2tyrFLmvGSn9b+CdDVpXkwu7Jgc16PiwSzyB/c3QCFuLIBh2fd8pRUHjUMV5ZfNwdIQZpI5C6i58vmEGDWe4=
+	t=1748371895; cv=none; b=NNNrQjs2fJLr1GlM+yhLbhY517F3fGconXXPbzVEC743Zy6yqX1D1xz+pz4x0du8n/fTiinP00t4dE4zcX4S5uwm7SvnugO9upNIIUelvt4d6DcpCcFEDQGBUtBT1tOWlAld5HLIFGHRqz6YE1Jncejzq4YcqusECYjN4nAKQVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748371880; c=relaxed/simple;
-	bh=8VZ7/Xn+9sR8KFVasT/gNOAEm+NveTB+cVvhv3Bcz4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fI3N3+wKQBZMnGjlnsiAtjv9cNEd8zHA0ugu7AFQRfnzibTpz0NPk55qhIK3J/Zb+uSlqQ/5Y+hTFHhp+cuiJ6+dDQkSA44co78PqVLwCtxygPuOUjjJCKXVvMEnlRoPpAJfpDt6bjwUMIi+5kZbI5OC8KVfLJS4eEfH4MDr3Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9B4C4CEE9;
-	Tue, 27 May 2025 18:51:18 +0000 (UTC)
-Date: Tue, 27 May 2025 14:52:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ring-buffer: Simplify ring_buffer_read_page() with guard()
-Message-ID: <20250527145216.0187cf36@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748371895; c=relaxed/simple;
+	bh=DorkWvyQFhqHg576mXMVfLHslqa0f+WRYlVMyLIbaPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AvG1gfXrMki3oOYR1fY+JH+1iINwQZ+hBbllySapDeIj2DWDblS3JOHP3sw2++XRIFPsuGumYEwesQ1by+YA4ZxGzweNPYODz5LdZS6Zaijh6FyD9FaKkMRIYOPFx0I/I/u0JBDw3v4CIqodDjWtha2ozayzsyJhwM5AeX6bvHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HzfGkpsk; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HzfGkpsk"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso4046004b3a.3;
+        Tue, 27 May 2025 11:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748371892; x=1748976692; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=/lDH/3PwgjT3x6eE2j8PwCN44/PwlqgIbgZX0zmflFg=;
+        b=HzfGkpskdiAyltV2CpXj9js1f5FGjAHdPNKJszJ2aU+S5gsZd4prZBaGZO4H/diva7
+         ZzlFoz5XPHzOlbmMTJDC9TJgGdqN9KHCes1ez0Du4vBJjkov2bfGSb21652enEXbE+tr
+         dJCkGW/XfiTrm3gl6H5cfZO8kSBMcsyiNmsP/4+jAB3YMZelPQtTtyP88be5WqkueZhD
+         /kf8nd3wa816766aKD1b73K3uI5OuSYMgrgM3ki0mO/PRiwaZEvfROe4phcv3q+xQDvV
+         dHx0jAv/aKXXE2hp+9Jch1yjdprSFeYH/OxEanjuU8+tgZZe1gAgnHti3785A2YwiQKX
+         tW1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748371892; x=1748976692;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/lDH/3PwgjT3x6eE2j8PwCN44/PwlqgIbgZX0zmflFg=;
+        b=K2d/uQ+dM+FaSvrOF4E/8hEUBvwfaL/Sdz33BvVQ3sEAwYXtE1FLk71OGjE0bp0v4R
+         SUxkxg6vPDd/XILpSGo+o7ZVzVhgXTRiU/aMTvH9Vnw6lm2PridGpNWpB5P907vDeauM
+         xDiR4/YWKwL+VHHs7PPnWTHKp7PfCVJxFvPDPrAhmxI2nxpU7P7/8hCmbQEbI/as+1x2
+         1OP4BmloBDG8+vIko1KAXAFI+zabtBNZHtOE/0AudhaeH9YBIg/UV3N164RpU65utW/J
+         nqg2yKEjEhb7/ffmT9cXaAsCQBPxVv0sZhKc8rtAIpCxrPIhISfnWN0UrzyzPlt8sp4T
+         kOrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2/SPuvTjK/xIWFPfXt+3cOLULUjwXIXrPOiRh12yOEjgGMeGLsjQnMWTOkhoBrYfe8uCkGOoU@vger.kernel.org, AJvYcCXeEpXpxDSYUSiJPjdQp6Cv8zpMwEo+GyMg2SE4rB96lvxzGObeCMinU8Xe16h8qp8I3HrcVLyfZ9yUe4U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX5UWY/Zq9d77XR7lmNF8PUNI9gINowWRvLA4OAT3BDHj0Qa56
+	S8qhNVRCI7jo3fk/odZYYz/ywDH9GlOPIdGt/pMuwOUk98vsuu6DPwie
+X-Gm-Gg: ASbGncvyGq0+1JthKzdQh7qGDNvLaW2JGqMaiSw5uoKb4CW4V+cIGCOhZ8ONOhHq1MT
+	0TKr6y8OHCuxqlidq/cS7HzXCVx+7xCYieV5LK8f7Sm+Z8726pjZ4syZesgLhzziAbJBuKwC63b
+	fOByEgL54+4Nnf2agw1QKJr+9+bT4xXe6Z3QXaGxUnmBcZ2LYCwu43ocC/kTj0uLvKtfr1kijXg
+	BJjTRA1Ri6eAobx1xWomo+EVILYhjz5AsvFekF+4BsVp83hrawYiXnrhu48iSjwzbMyC4r0PdyR
+	ahqZ+a94rkQypv0ziGAs8MGPLcuxkIDYXLjC53bMkLOd/S+3zUW+H4kdG1RIH+0JYimZ5RVP+Ri
+	2ibs=
+X-Google-Smtp-Source: AGHT+IHW/7KgqhIztkSadBJ7OGmMIVFY4IapTEGDwtHiO71g3kGv7EzLqGkXWRBbN8FENeoIkZa21g==
+X-Received: by 2002:a05:6a00:240e:b0:740:595a:f9bf with SMTP id d2e1a72fcca58-745fde9d5e0mr20545357b3a.3.1748371892418;
+        Tue, 27 May 2025 11:51:32 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74628cc6b99sm1526133b3a.124.2025.05.27.11.51.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 11:51:31 -0700 (PDT)
+Message-ID: <55df493e-7862-4847-b5ca-60d90e4bbc62@gmail.com>
+Date: Tue, 27 May 2025 11:51:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/783] 6.14.9-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250527162513.035720581@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250527162513.035720581@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 5/27/25 09:16, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.9 release.
+> There are 783 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 29 May 2025 16:22:51 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.9-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-The function ring_buffer_read_page() had two gotos. One was simply
-returning "ret" and the other was unlocking the reader_lock.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-There's no reason to use goto to simply return the "ret" variable. Instead
-just return the value.
-
-The jump to the unlocking of the reader_lock can be replaced by
-guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock).
-
-With these two changes the "ret" variable is no longer used and can be
-removed. The return value on non-error is what was read and is stored in
-the "read" variable.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0b21d64e90c8..897ce51d3bbf 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6535,38 +6535,37 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	struct buffer_data_page *bpage;
- 	struct buffer_page *reader;
- 	unsigned long missed_events;
--	unsigned long flags;
- 	unsigned int commit;
- 	unsigned int read;
- 	u64 save_timestamp;
--	int ret = -1;
- 
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
--		goto out;
-+		return -1;
- 
- 	/*
- 	 * If len is not big enough to hold the page header, then
- 	 * we can not copy anything.
- 	 */
- 	if (len <= BUF_PAGE_HDR_SIZE)
--		goto out;
-+		return -1;
- 
- 	len -= BUF_PAGE_HDR_SIZE;
- 
- 	if (!data_page || !data_page->data)
--		goto out;
-+		return -1;
-+
- 	if (data_page->order != buffer->subbuf_order)
--		goto out;
-+		return -1;
- 
- 	bpage = data_page->data;
- 	if (!bpage)
--		goto out;
-+		return -1;
- 
--	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
- 
- 	reader = rb_get_reader_page(cpu_buffer);
- 	if (!reader)
--		goto out_unlock;
-+		return -1;
- 
- 	event = rb_reader_event(cpu_buffer);
- 
-@@ -6600,7 +6599,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		if (full &&
- 		    (!read || (len < (commit - read)) ||
- 		     cpu_buffer->reader_page == cpu_buffer->commit_page))
--			goto out_unlock;
-+			return -1;
- 
- 		if (len > (commit - read))
- 			len = (commit - read);
-@@ -6609,7 +6608,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		size = rb_event_ts_length(event);
- 
- 		if (len < size)
--			goto out_unlock;
-+			return -1;
- 
- 		/* save the current timestamp, since the user will need it */
- 		save_timestamp = cpu_buffer->read_stamp;
-@@ -6667,7 +6666,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		if (reader->real_end)
- 			local_set(&bpage->commit, reader->real_end);
- 	}
--	ret = read;
- 
- 	cpu_buffer->lost_events = 0;
- 
-@@ -6694,11 +6692,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	if (commit < buffer->subbuf_size)
- 		memset(&bpage->data[commit], 0, buffer->subbuf_size - commit);
- 
-- out_unlock:
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--
-- out:
--	return ret;
-+	return read;
- }
- EXPORT_SYMBOL_GPL(ring_buffer_read_page);
- 
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.47.2
-
+Florian
