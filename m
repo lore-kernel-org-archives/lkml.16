@@ -1,179 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276FD156CA
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D3538FA3
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373298; cv=none; b=DUAMul2Vk1kOspDbNLOwLpLaTn5OqcXQDkvM7wsgCevlddw8wxPzIw6+DcsPobmt1PeA9WtWg73WoupIxaAqeP/5rhPbY8LiZYp1rcaMHegBUBz3qIYXV88Q8UdcxHTuUoQDEbQR2/KW/Lq/e+MQinNqPm7e+LSX6to68Rbb5oo=
+	t=1748373348; cv=none; b=ap9r+ysOHsbWoOkpsfMSxbRLbJomuswKK5wMpCR8WCu+0sqbyE8YWXwzy0LneC6n1Y5B7bIf9CLFQ6lYfr5EsspfKU0e66rni3u4Grhstw8nqlDxV98mkazmd5WaHGl8j0avtwl1uuly64RkxueoLzgHrc7JP9vwoby2+7nn/Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373298; c=relaxed/simple;
-	bh=vvXw0E7KhYiCUrAKJzQstQee/UQMK4ldfgHCUC6DWPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ofU5I8Anrn3ZOvBtN/H31NTrT6UxoNSylJS+tp1+oxIJYSsw3j7M/f4+V2/46ZUe0igJXfcwp2ijHcWecpcunoDLSWiYqudTBB16huSvrgQXhbfnTySuQjGsjGK1pQgI60gapS3EEpcg/XIfXl+WkLeqiDpTn7HTkEk7z59u0qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bex4zGhn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748373348; c=relaxed/simple;
+	bh=SpVIqG0mFa2jfTzzNyCYGdB1l6HNNt3btuEg0gV3Fy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rX75QeNV4HsSPwczGDXpd2oZOpDl/J6E93mzglaJw9Yv/WG1x3pKd8xxf4f7h0IvyNUk7bnzL+x7VZOsiHASDNH7w+y7qZ8x3U698yOL77weocPIotoa4H9LUZrXcBhsl+bvhpbtocEmAp7IB5SLOtFHcwrxqmyC530Z8EThMp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jU612YZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bex4zGhn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748373295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+A61WYnWj5Uj0Eyu8/R7/WVTiW1jNq3R30BLWtPJ5MI=;
-	b=Bex4zGhnacPfl/D4Kvqr27cNet/miwARwu30DeWaQxyYCQSAAEW3QPvRtPpDdCxY9sbdhC
-	jrQEqtcwST1F3GXAbis/txPj1MrkcudHUeDwlfMvRv8/PI+ldaWz5r9GZ84P5aEMD8Buw2
-	CN7O3/jvBOheSZXyQ4kvgXbmkdTu444=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-mu-0TJjWOHaYXF_oJsx-og-1; Tue, 27 May 2025 15:14:54 -0400
-X-MC-Unique: mu-0TJjWOHaYXF_oJsx-og-1
-X-Mimecast-MFC-AGG-ID: mu-0TJjWOHaYXF_oJsx-og_1748373294
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3da7648c031so4361865ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:14:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748373294; x=1748978094;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+A61WYnWj5Uj0Eyu8/R7/WVTiW1jNq3R30BLWtPJ5MI=;
-        b=G5Bk6HzzW+o/bKITS0IW82RSjxHN3KRRPjm8sr9EYxYcxUZwSD9lLLuCs5imNrwXP7
-         8+4m3o7kTT6RD20VfKBpjOqKEDMrsMQyu9vU6aKEKGBZ9rThMSSg88wTKIMpgVnZh7go
-         GsWhPTDop0iFiklv+t+sh+uMDJ6RwC2KCjcOBsPYiyydsWGAmiD0in/EdLynpkOQFXok
-         00O0HcALsmOul6yJsFuVkbDFGhHEWM3uNZi+ojRJwGUX2K3hToo9vu5+y/VVMM4dAT4T
-         dxUreiVvjDXKU1BKcWNZSDEcWBuFEtQvPsVOgGra3JraiQ5MR0iDRqs0LMQ9ai6kR9tm
-         Y/Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCWD4DEYHK1KuQCorf5Q/ZtDxWvN1UHu1VsQ6bzo34o5ebtU8mRCcbIPj1PliFqcSlJGcLoJ/rCX7Vh7dng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmA/VfK69d9rDm2QcdvgEP2lkjye41GmodPuANKeT5376E7Dee
-	84/FuYLsOA2lOspSLpHhI8+nDSriycBVlKjWxss9MHSYTouEk/beDXJb48R4SHne4M76IYOKu9r
-	2ob7qI7KeDjNEhjtsnbeTaxvPVXJAZxW2j3yVBYTmW498HzmxhodHD6VYBfKY0zR4ag==
-X-Gm-Gg: ASbGnctwB26clZZ4JpslBtbPgdLu0hdgM0Xrtyvft3rJm8e/oBJ6I4LDGxfbjvdtCuj
-	wQqpymWn5RHRHCQN3t9WfbXhU5NjfPKq3a5D5e39YnxHFIHcS8zw52yrvxaL1sxD2u2Q2Ztmv7I
-	GFw0AZTTozfveZOGncTuTVOpTNWXVynzSJqUVUf7MSC4z0+smq+XST7egAwvu7VWJeDN/qJciZ9
-	5YPtfyTeT4LKBC15I4oSy9Vd4vs+wpyg+B4iA7Y2Jr6GmNJvjttWYvib6d7g08VamIoGJIYshJ9
-	zRJeGe6U0LwGXF4=
-X-Received: by 2002:a05:6602:6c01:b0:86a:24c0:8829 with SMTP id ca18e2360f4ac-86cbb6c098dmr427828839f.0.1748373293779;
-        Tue, 27 May 2025 12:14:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFU8GmOksxajcZcAXCgxVMvMRhbIvCl6cNfPryCupK0n+LI5zGmRgcGkxfHgird94ZbXntg4g==
-X-Received: by 2002:a05:6602:6c01:b0:86a:24c0:8829 with SMTP id ca18e2360f4ac-86cbb6c098dmr427827439f.0.1748373293260;
-        Tue, 27 May 2025 12:14:53 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86a50664b8bsm349552439f.2.2025.05.27.12.14.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 12:14:52 -0700 (PDT)
-Date: Tue, 27 May 2025 13:14:50 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: lizhe.67@bytedance.com
-Cc: david@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- muchun.song@linux.dev, peterx@redhat.com
-Subject: Re: [PATCH v4] vfio/type1: optimize vfio_pin_pages_remote() for
- large folio
-Message-ID: <20250527131450.7e961373.alex.williamson@redhat.com>
-In-Reply-To: <20250526033737.7657-1-lizhe.67@bytedance.com>
-References: <20250523085415.6f316c84.alex.williamson@redhat.com>
-	<20250526033737.7657-1-lizhe.67@bytedance.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jU612YZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B0DC4CEED;
+	Tue, 27 May 2025 19:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748373347;
+	bh=SpVIqG0mFa2jfTzzNyCYGdB1l6HNNt3btuEg0gV3Fy4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=jU612YZ+ljNv09Q9R4tVgTFBDSCkpt9fBp1S/3C/GfpZ5BhPbd4iLT7xzn/jM//3D
+	 Je5uSDgmtjVyvXSG4/t1Com+gkybmoZJv0/qIEgU2HttAxig6chy9foTr8cWNnVGbF
+	 2EIlm+eDWC8y14ePfs1t6dFeZCviS5HGBRYB04L3Mjxbx4Fa6mcb2IOMEdf41980Eo
+	 WZFmNtAY3SNllj1qTfAr+eh8sUYe+vz0hNBgZFezIc5fJDJSp9KkBUU8ZfX4qwCelv
+	 BUnh8W1G+YDCUurQeG7gCuEmAZiktGhF5kR+Uk5JJYSyJWtZo5wUj4Pk+55onP3SBi
+	 91x57chXELuug==
+Date: Tue, 27 May 2025 09:15:46 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [GIT PULL] workqueue: Changes for v6.16
+Message-ID: <aDYPYnzk3zsrCFYn@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 26 May 2025 11:37:37 +0800
-lizhe.67@bytedance.com wrote:
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
-> On Fri, 23 May 2025 08:54:15 -0600, alex.williamson@redhat.com wrote: 
-> 
-> > > > +static long vpfn_pages(struct vfio_dma *dma,
-> > > > +		       dma_addr_t iova_start, long nr_pages)
-> > > > +{
-> > > > +	dma_addr_t iova_end = iova_start + (nr_pages << PAGE_SHIFT);
-> > > > +	struct vfio_pfn *vpfn;
-> > > > +	long count = 0;
-> > > > +
-> > > > +	do {
-> > > > +		vpfn = vfio_find_vpfn_range(dma, iova_start, iova_end);  
-> > > 
-> > > I am somehow confused here. Function vfio_find_vpfn_range()is designed
-> > > to find, through the rbtree, the node that is closest to the root node
-> > > and satisfies the condition within the range [iova_start, iova_end),
-> > > rather than the node closest to iova_start? Or perhaps I have
-> > > misunderstood something?  
-> > 
-> > Sorry, that's an oversight on my part.  We might forego the _range
-> > version and just do an inline walk of the tree counting the number of
-> > already accounted pfns within the range.  Thanks,
-> > 
-> > Alex
-> >   
-> > > > +		if (likely(!vpfn))
-> > > > +			break;
-> > > > +
-> > > > +		count++;
-> > > > +		iova_start = vpfn->iova + PAGE_SIZE;
-> > > > +	} while (iova_start < iova_end);
-> > > > +
-> > > > +	return count;
-> > > > +}  
-> 
-> The utilization of the function vpfn_pages() is undoubtedly a
-> good idea. It can swiftly determine the num of vpfn pages
-> within a specified range, which will evidently expedite the
-> process of vfio_pin_pages_remote(). Given that the function
-> vfio_find_vpfn_range() returns the "top" node in the rb tree
-> that satisfies the condition within the range
-> [iova_start, iova_end), might we consider implementing the
-> functionality of vpfn_pages() using the following approach?
-> 
-> +static long _vpfn_pages(struct vfio_pfn *vpfn,
-> +               dma_addr_t iova_start, dma_addr_t iova_end)
-> +{
-> +       struct vfio_pfn *left;
-> +       struct vfio_pfn *right;
-> +
-> +       if (!vpfn)
-> +               return 0;
-> +
-> +       left = vpfn->node.rb_left ?
-> +               rb_entry(vpfn->node.rb_left, struct vfio_pfn, node) : NULL;
-> +       right = vpfn->node.rb_right ?
-> +               rb_entry(vpfn->node.rb_right, struct vfio_pfn, node) : NULL;
-> +
-> +       if ((vpfn->iova >= iova_start) && (vpfn->iova < iova_end))
-> +               return 1 + _vpfn_pages(left, iova_start, iova_end) +
-> +                               _vpfn_pages(right, iova_start, iova_end);
-> +
-> +       if (vpfn->iova >= iova_end)
-> +               return _vpfn_pages(left, iova_start, iova_end);
-> +
-> +       return _vpfn_pages(right, iova_start, iova_end);
-> +}
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
 
-Recursion doesn't seem like a good fit here, the depth is practically
-unbounded.  Why not just use the new range function to find the highest
-point in the tree that intersects, then search each direction in
-separate loops (rb_next/rb_prev), counting additional entries within
-the range?  Thanks,
+are available in the Git repository at:
 
-Alex
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git/ tags/wq-for-6.16
 
-> +
-> +static long vpfn_pages(struct vfio_dma *dma,
-> +               dma_addr_t iova_start, long nr_pages)
-> +{
-> +       dma_addr_t iova_end = iova_start + (nr_pages << PAGE_SHIFT);
-> +       struct vfio_pfn *top = vfio_find_vpfn_range(dma, iova_start, iova_end);
-> +
-> +       return _vpfn_pages(top, iova_start, iova_end);
-> +}
-> 
-> Thanks,
-> Zhe
-> 
+for you to fetch changes up to 23227e71b69af95e421e263302d13f426c548155:
 
+  workqueue: fix typo in comment (2025-05-05 13:43:16 -1000)
+
+----------------------------------------------------------------
+workqueue: Changes for v6.16
+
+Fix statistic update race condition and a couple documentation updates.
+
+----------------------------------------------------------------
+Guan-Chun Wu (1):
+      workqueue: fix typo in comment
+
+Jiayuan Chen (1):
+      workqueue: Fix race condition in wq->stats incrementation
+
+Philipp Stanner (1):
+      workqueue: Better document teardown for delayed_work
+
+ include/linux/workqueue.h |  2 +-
+ kernel/workqueue.c        | 15 ++++++++++++++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+-- 
+tejun
