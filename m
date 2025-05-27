@@ -1,137 +1,115 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14E4275864
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:22:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468D326A08C
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748355731; cv=none; b=J+DfVfd/GRoTNji87RBCmuzdUe6FYbLK1sQtTsVm5D5T1C0prcU1Ewlcl9O7M8O7v5TmYS/T5BS26R7SyxtkQdkjqOdBfqipOJIWmhSe4UEArYi0LizVRrxYMrDYU9hZxQAQcbUk+Fo6U15g5ZleRrXseU0Wum+GvRgUND6q+Mg=
+	t=1748355749; cv=none; b=h2+0pddTZPx/es7J1ycgt0X1q+NcfSUx8hD7pm5PDN5fL0DonGOffRRxRC75Gc3+XPP9LoU0ypHBypJwIJDbX1QNTa42tIwh5rlr45mZPTM42UFIbZSUsj2qFsiQlxZsD/mJ9tPvU7gBcZPxCr43/A02O7cORN/bZJK8hYB0cdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748355731; c=relaxed/simple;
-	bh=Spt9rmFVuUSVrZwGg2CbBOduRTvfvOdyEp+fTnns0Mw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=imtFE+NbfqYagp5GqD5yItfT2TmlD6NXPILXNbNN+hGN4RoIuADPmCvWwirX3/GmU0iqfuR6Fcdw0aa3rhwySeMug+e4r7MLE73YR4O4DHSJFDhVyl8jUPKnCYAx1hqNKN4AmAV95smiohD4EShrbfVeAPwBtc8n/+aUX0ls+Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uJvBp-00048s-5N; Tue, 27 May 2025 16:22:01 +0200
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Date: Tue, 27 May 2025 16:21:47 +0200
-Subject: [PATCH 1/2] drm/bridge: samsung-dsim: use while loop in
- samsung_dsim_transfer_start
+	s=arc-20240116; t=1748355749; c=relaxed/simple;
+	bh=fz1BwwKnJX7bc80mYPOCVnFSqDej/v92nKTSRfGdeUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mXdOxZcUW/xpPLiVByhZ1Rw+KUsZ+pgqWrm0EoaBp9j8GPMBL+LWyIzXh0c8bp6D9n22ZACeftwFxv+sfXnj4BXP6B48TyuEpSVH9amriRzCw0r4JP3CSALDSPZt4tCWae7OEIgHoJojMX8y8seudidW0YZNzkXKFjJMtwtETQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JMwuimLT; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMwuimLT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=BWHwqSSCz3w9Vxwmz8RCUy0hTjpLsuKSzcXgAbqJdVo=; b=JMwuimLT/CfUWl4n3oGdiVOPYQ
+	r2DtkjsunGds9f0jvdoBMF2nU+J+T91n6eIF/PK1gdzJ8IsEQJMZ9FfIjpXsHwgXl9ca0FKDPWjSS
+	X2ds2RNjSfsknVefwtX+HYEjDC0m5MJWli+SJofI5C2/rOVgxijuuf3ARVQAWAQCUbs0i4bILx09t
+	Q6C29n2mj7OWZDcP2fkiNtodbU85zRr8ShcqGTsejvXnWFFECj3DACpRhUtjVZ/C4SlYKLIgaMUCC
+	ylU0CbhIYGDeaL1QGOf+HfCqzAmJ8FkAI2opRiZN2OlMsiAnPfFCAW3e1GzyJ+CdAGMmF+AE241Jp
+	UqozQOfA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uJvC6-0000000CUrG-2bbZ;
+	Tue, 27 May 2025 14:22:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1BF6B3002CE; Tue, 27 May 2025 16:22:18 +0200 (CEST)
+Date: Tue, 27 May 2025 16:22:17 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: syzbot <syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com>
+Cc: andrealmeid@igalia.com, dave@stgolabs.net, dvhart@infradead.org,
+	linux-kernel@vger.kernel.org, mingo@redhat.com,
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [syzbot] [kernel?] KASAN: wild-memory-access Read in
+ get_futex_key
+Message-ID: <20250527142217.GA7747@noisy.programming.kicks-ass.net>
+References: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-samsung-dsim-v1-1-5be520d84fbb@pengutronix.de>
-References: <20250527-samsung-dsim-v1-0-5be520d84fbb@pengutronix.de>
-In-Reply-To: <20250527-samsung-dsim-v1-0-5be520d84fbb@pengutronix.de>
-To: Inki Dae <inki.dae@samsung.com>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
-X-Mailer: b4 0.14.2
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::54
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
 
-Turn the open-coded goto-again construct into a while loop, to make
-samsung_dsim_transfer_start() a bit shorter and easier to read.
+On Tue, May 27, 2025 at 06:36:35AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    785cdec46e92 Merge tag 'x86-core-2025-05-25' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13e47df4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d7ed3189f3c3d3f3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9afaf6749e3a7aa1bdf3
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ad26d4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=157f3170580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/af5446d375b0/disk-785cdec4.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/eb59d48f91fb/vmlinux-785cdec4.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/188617605a08/bzImage-785cdec4.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com
+> 
+> ==================================================================
+> BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+> BUG: KASAN: wild-memory-access in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+> BUG: KASAN: wild-memory-access in node_state include/linux/nodemask.h:429 [inline]
+> BUG: KASAN: wild-memory-access in get_futex_key+0x595/0x1540 kernel/futex/core.c:587
+> Read of size 8 at addr 1fffffff818b9088 by task syz-executor931/5831
+> 
+> CPU: 0 UID: 0 PID: 5831 Comm: syz-executor931 Not tainted 6.15.0-syzkaller-01958-g785cdec46e92 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+>  kasan_report+0xe0/0x110 mm/kasan/report.c:634
+>  check_region_inline mm/kasan/generic.c:183 [inline]
+>  kasan_check_range+0x100/0x1b0 mm/kasan/generic.c:189
+>  instrument_atomic_read include/linux/instrumented.h:68 [inline]
+>  _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+>  node_state include/linux/nodemask.h:429 [inline]
+>  get_futex_key+0x595/0x1540 kernel/futex/core.c:587
 
-Hold the spinlock when looping back around and avoid the duplicated
-list_empty() check.
+Does the this help?
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/gpu/drm/bridge/samsung-dsim.c | 51 +++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
-index 0014c497e3fe7d8349a119dbdda30d65d816cccf..1dfc9710bee5134e0e0114ce52f673c21564b11b 100644
---- a/drivers/gpu/drm/bridge/samsung-dsim.c
-+++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-@@ -1235,43 +1235,34 @@ static void samsung_dsim_transfer_start(struct samsung_dsim *dsi)
- {
- 	unsigned long flags;
- 	struct samsung_dsim_transfer *xfer;
--	bool start = false;
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index 19a2c65f3d37..e9e46293c0c1 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -583,8 +583,7 @@ int get_futex_key(u32 __user *uaddr, unsigned int flags, union futex_key *key,
+ 		if (futex_get_value(&node, naddr))
+ 			return -EFAULT;
  
--again:
- 	spin_lock_irqsave(&dsi->transfer_lock, flags);
- 
--	if (list_empty(&dsi->transfer_list)) {
-+	while (!list_empty(&dsi->transfer_list)) {
-+		xfer = list_first_entry(&dsi->transfer_list,
-+					struct samsung_dsim_transfer, list);
-+
- 		spin_unlock_irqrestore(&dsi->transfer_lock, flags);
--		return;
-+
-+		if (xfer->packet.payload_length &&
-+		    xfer->tx_done == xfer->packet.payload_length)
-+			/* waiting for RX */
-+			return;
-+
-+		samsung_dsim_send_to_fifo(dsi, xfer);
-+
-+		if (xfer->packet.payload_length || xfer->rx_len)
-+			return;
-+
-+		xfer->result = 0;
-+		complete(&xfer->completed);
-+
-+		spin_lock_irqsave(&dsi->transfer_lock, flags);
-+
-+		list_del_init(&xfer->list);
+-		if (node != FUTEX_NO_NODE &&
+-		    (node >= MAX_NUMNODES || !node_possible(node)))
++		if ((unsigned)node >= nr_node_ids || !node_possible(node))
+ 			return -EINVAL;
  	}
  
--	xfer = list_first_entry(&dsi->transfer_list,
--				struct samsung_dsim_transfer, list);
--
- 	spin_unlock_irqrestore(&dsi->transfer_lock, flags);
--
--	if (xfer->packet.payload_length &&
--	    xfer->tx_done == xfer->packet.payload_length)
--		/* waiting for RX */
--		return;
--
--	samsung_dsim_send_to_fifo(dsi, xfer);
--
--	if (xfer->packet.payload_length || xfer->rx_len)
--		return;
--
--	xfer->result = 0;
--	complete(&xfer->completed);
--
--	spin_lock_irqsave(&dsi->transfer_lock, flags);
--
--	list_del_init(&xfer->list);
--	start = !list_empty(&dsi->transfer_list);
--
--	spin_unlock_irqrestore(&dsi->transfer_lock, flags);
--
--	if (start)
--		goto again;
- }
- 
- static bool samsung_dsim_transfer_finish(struct samsung_dsim *dsi)
-
--- 
-2.39.5
-
