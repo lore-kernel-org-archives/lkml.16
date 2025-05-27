@@ -1,107 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5E11DE89B
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AFA1CAA6C
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748371037; cv=none; b=MwvI/nA1JOof0mDhiIN7MXd7+YYRcWco9WqGPd4iZHEb24o3Q4/SjPmlWVzBkHvlUhWVz9f0XuwUKw+MmLBlxoeeVKFAZi72Oi7EIds4s0IAJKY46RGCu+0acVbTOm7px7CnVvEhT2s6PVfYeSaI9pVreNW6L5g6mT5fzgCKtpM=
+	t=1748371054; cv=none; b=ujHYoocKThN/RjSpmiLrx7n39QZxzD/VW0FwTrsjKxzPMgdEYkIGCh3a7/ZptD4bg89bWw65UCFc4txu0j2VHmGJ0AtFV1ACP8+BBv515nFnW2A8QHSx0fdv6udRS4ByXtDl43t46Fc0bXWHV7dFUhPXomeblrHsceu4AukdsAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748371037; c=relaxed/simple;
-	bh=n1Hvv26+Zpv8SzTuLKYLJ1yZzLAggmKAgUbIT3iJPeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oGfINqb/bWNZqUm2/LYZC3Ddrj1HMjcaX5j31rMRF3+deun6JDShS1A8t4nJqPdq7ck2DaE7M0LZk4OHsGMcqbQ2VP+tMzpNIHcxnj7QF9bYivdnmuDialmUF2I4u0dOiS1YJZ+eTh/1YPfVHCOOGZ6WY9yrLzMEXaIzBo0ebHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lwGmTrVx; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748371054; c=relaxed/simple;
+	bh=TuQk566s+Q0ln3wP7QoM1+7HbVXdvrykoGXS+3NTsHo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YllIVUofxhGAfCuCyL3SzSUcN2TWUqFvDrZgycqP1fAXNj7cHDh1dpDV7ejZXxysrRC1X0qlGKJ/vOP/cs55nj734MskVeNrb3bCboeTm1kK3nrqJRnUreSb4PvF+qi/wCcMqAr8gVksbbfWwdtF6Zc6T3OyqzGj9OirEXEKy0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=G/lLt5+P; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lwGmTrVx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748371036; x=1779907036;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n1Hvv26+Zpv8SzTuLKYLJ1yZzLAggmKAgUbIT3iJPeU=;
-  b=lwGmTrVx8NfqBzCd61wVc23TEzorNyKmbB/uHJLZMvREWCFw6jwQfVJM
-   ITmJL3HP54Gi5tZew8/JDrUNbr8bAmF9cgYCBGa1yDo81Vg2qYb6Yw9Z/
-   z4YD7rC/sM7T3WEwWdyeDpwT1agY34mMhAFGrz6LEvz5PLJvA3c2ruxMp
-   bYiC4ghK5KiX7OyYlnoRbby7Mx7kkE54YShv01c/Qk8tAuYB90wIWvmua
-   zeT4Fv/61C15uMlXA251j1YVBnuE2dXyGpjHfInEGipvZtefuA/grgMwG
-   XOIM5jgpVJ8NSHTf7PJBdJ28O6FnzZruyrBFJQA1IWy+5mIy4VdnirOqo
-   w==;
-X-CSE-ConnectionGUID: NkGUNeGTTHShxP9epDpD9w==
-X-CSE-MsgGUID: ncbOz6mMS8mCuvTQ+BP0Hg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="49488059"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="49488059"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 11:37:15 -0700
-X-CSE-ConnectionGUID: QP7Y5iKzQTiQfK4EH1nU1A==
-X-CSE-MsgGUID: 5qVzn4b9QGOkky5MxopYcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="142896602"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 11:37:10 -0700
-Date: Tue, 27 May 2025 21:37:07 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	"De Marchi, Lucas" <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	"Poosa, Karthik" <karthik.poosa@intel.com>,
-	"Abliyev, Reuven" <reuven.abliyev@intel.com>,
-	"Weil, Oren jer" <oren.jer.weil@intel.com>,
-	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 08/10] drm/xe/nvm: add on-die non-volatile memory
- device
-Message-ID: <aDYGUzSWLdeyzpQ_@black.fi.intel.com>
-References: <20250515133345.2805031-1-alexander.usyskin@intel.com>
- <20250515133345.2805031-9-alexander.usyskin@intel.com>
- <aDGfgubuFfa3e0K_@black.fi.intel.com>
- <CY5PR11MB63666722F7C02E4D776CE601ED64A@CY5PR11MB6366.namprd11.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="G/lLt5+P"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso664027266b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1748371050; x=1748975850; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hj2+lcjOXOZv7KiFPOZxmuP+mffssHA7pqR7imIqepY=;
+        b=G/lLt5+Pl+fuwo/hbvETbnCPz6ws3/LhSJtKRAHzXXxMluJ5PV+7WnSHfdEC6nB2rf
+         +TYhTxe5Sy1F5v9LFFl7hBj3zgosTrxelQSA9bvsgt+P7LPr7vejVpTNbqs6yHtWZPi1
+         2Oc6jWlylmETEIRjt/obJfFIHHIcCxNMW8DJE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748371050; x=1748975850;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hj2+lcjOXOZv7KiFPOZxmuP+mffssHA7pqR7imIqepY=;
+        b=qHnAxywvdoiVvfx1zkj+hRGyZCyXkNU5qYtkjvMSXVmtNMJ3gV38q3jy/dLW7eQ4VA
+         E0RKN1W4xwScWAFpXXYB0I2HSvFTEguK7MELQ4clYvR/vmlQFgeTIRgiSR9uks162PD4
+         EPsKn/gTN2u5TMC1VzRr7UVE33Ozee9BxRtVhVZHN/tBI66SW3GMkiyZwhONINbZMK2L
+         dqzGv/D3n7+Pm4H7j2VhwtutSh3oRJ//oRsyZ8EaRVahPqyaFs8noA7IY0fhir1PlNsk
+         DoYbqWJ6tT3XTxPElbxTmKCs5NJRQgEx64oka/OSo0lBpOkqGi9FzyTGXhm/ec2jhIJ4
+         ksOA==
+X-Gm-Message-State: AOJu0YwE3CRm5PsXFQLCDX6QWFE5mHA2nAZKWrdKSXvqzfvtPkZQSN6z
+	pZCMU2zTpVAja0XAS8En9CfwZucpLiwa+ySBP0SCpbUioS28zEPX93PVPbqm9v/kxPOPMgxNq7f
+	tFiLxd6Y=
+X-Gm-Gg: ASbGncvM7DNFKsem5/JYJdSzrNhhvL3phfyEe5bmK3wsJ7S1nGCMrGggvH98Mlo999/
+	85J6AuJEiZIoM/theHJUwh3M/XpTMLllD/vRoF55bQwHuCZPxYq5QiJCg2x5ZYM784n29GrrIT7
+	zc74bejUNjiXAOyquIPfxNIo77s6wO12DRMEzveK8L/s3D6PILPRTOlByTgPWxaI5zTO912KMcQ
+	N20S805v4pP1B4Bzl3PMbOxgkGigYn0viDEzy49N5SbWzPvLhNOOwztN6Q7gvxxaURe1439Deoa
+	yotgp2x0SvujjMeGcYoqHgP2xMLatCKOpEuwiIFXua7JI0l6U/WrKvhP69TFXRMf33EjnuILwxL
+	x6RaSQZZkEEHr6bVH8i/FDi4Bc5pQ1Ef031M=
+X-Google-Smtp-Source: AGHT+IGhJmhsYp+lKQmFVFCQxXmTKG0EkBBaY4kZ7tYo/qsXpmUIStdb70QE5RPn9bADsQSa1C8ATg==
+X-Received: by 2002:a17:906:f118:b0:ad8:7656:4d75 with SMTP id a640c23a62f3a-ad876564fcamr713785666b.12.1748371050099;
+        Tue, 27 May 2025 11:37:30 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad892d4754esm117671166b.13.2025.05.27.11.37.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 11:37:29 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso664021366b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:37:29 -0700 (PDT)
+X-Received: by 2002:a17:906:c144:b0:ad5:c312:513a with SMTP id
+ a640c23a62f3a-ad85b2c17a2mr1022204066b.56.1748371048991; Tue, 27 May 2025
+ 11:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY5PR11MB63666722F7C02E4D776CE601ED64A@CY5PR11MB6366.namprd11.prod.outlook.com>
+References: <87bjrekpp6.fsf@trenco.lwn.net>
+In-Reply-To: <87bjrekpp6.fsf@trenco.lwn.net>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Tue, 27 May 2025 11:37:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi6U90ddnUvh5A0AxBecSPczswRj4hsd2rvKeMv4pUNgQ@mail.gmail.com>
+X-Gm-Features: AX0GCFsyyQo8w_POWyPRKioQ18WfcIChszVMUzK-DjTlXF1qv-KGOOC-nNCgKe4
+Message-ID: <CAHk-=wi6U90ddnUvh5A0AxBecSPczswRj4hsd2rvKeMv4pUNgQ@mail.gmail.com>
+Subject: Re: [GIT PULL] Documentation for 6.16
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 27, 2025 at 11:55:13AM +0530, Usyskin, Alexander wrote:
-> > Subject: Re: [PATCH v10 08/10] drm/xe/nvm: add on-die non-volatile
-> > memory device
-> > 
-> > On Thu, May 15, 2025 at 04:33:43PM +0300, Alexander Usyskin wrote:
-> > > Enable access to internal non-volatile memory on DGFX
-> > > with GSC/CSC devices via a child device.
-> > > The nvm child device is exposed via auxiliary bus.
-> > 
-> > ...
-> > 
-> > > +void xe_nvm_init(struct xe_device *xe)
-> > > +{
-> > 
-> > Same as patch 6, please handle errors.
-> This device failure is non-fatal for Xe, caller will ignore
-> the failure anyway.
+On Tue, 27 May 2025 at 09:01, Jonathan Corbet <corbet@lwn.net> wrote:
+>
+>  scripts/kernel-doc                                 | 2440 +-------------------
+>  scripts/kernel-doc.pl                              | 2439 +++++++++++++++++++
+>  [...]
+>  54 files changed, 7336 insertions(+), 2815 deletions(-)
+>  [...]
+> mode change 100755 => 120000 scripts/kernel-doc
+> create mode 100755 scripts/kernel-doc.pl
+> create mode 100755 scripts/kernel-doc.py
 
-Same as patch 6, let's atleast have the readiness.
+Bah, I was unhappy about git creating this horribly diffstat, but it
+turns out that it's because the pull-request scripts by default don't
+use the fancier 'git diff' options.
 
-Raag
+In particular, with the '-B' option, git will give much better results:
+
+ scripts/kernel-doc                                 | 2440 +-------------------
+ scripts/{kernel-doc => kernel-doc.pl}              |    2 +-
+ [...]
+ 54 files changed, 4903 insertions(+), 2821 deletions(-)
+ [...]
+ rewrite scripts/kernel-doc (100%)
+ mode change 100755 => 120000
+ copy scripts/{kernel-doc => kernel-doc.pl} (99%)
+
+but I think we never enabled the 'break rewrites' option by default
+because it generates diffs that I am not convinced non-git sources
+understand.
+
+Oh well. I just wanted to point out that git *can* do better than what
+the default settings make it do.
+
+          Linus
