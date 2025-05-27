@@ -1,208 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97A22DCC0C;
-	Tue, 27 May 2025 14:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7365258CF5
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748355428; cv=none; b=Jzo5YEhcyWjFpomVHC6UHrdn7QTckH4Jhy8KckU/FjV+lkQFEaGrPQeq2pIb+MbuVhe8CX5B0axsCHRHgLbnh+C9DO3hKYT8cciZuqA4Va5LKNqUCx5hyJ3TCbUS7OyBzDgmQhx4JQyIhzb8stf3clYEUz3piHPylmP1KkHw21M=
+	t=1748355452; cv=none; b=Uz4bGDN6VcRSrchA4z2FlTcG+f9unsbwli/XerhqtphQVlw0R95SAP1pfglSnDvFoA3z7opS1sNkrmqN4T+vKp0DMWSEtBRMh6UAL9DRquiCWLgXBWdyadPs5KkJhImVltF7RX0mR6JsfUIMMjoHWJSob92lcQIXLVEyeem7jew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748355428; c=relaxed/simple;
-	bh=QSI9xpdPjt2cu7QbFv5alW6FAXC6hJzKmw9uIJmaT0w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rH3qTDl6H4C3MQ9NguDO5Uwo9PH01XMZKSvfKEZTDiqXlb3iNj4Hx448Gku2/Nhpg5gGoT7gcqVkpXFZcyYr+X/SeI5d2lC5OIYbnj4ItnB695IzX4fRf/jEm6g5xynPHkGaEeqr8LSWJJVvOsbAxrr1WjEILUNkM6dgcJ2y2Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LURkryTu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748355452; c=relaxed/simple;
+	bh=qzCxInDBL5zoEuqaKs+Cq/1I3KI9pngcneQ2CyA3Ujw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=S0NbBnYZ9+qJe80pBAphp/lLjk9/QL0m+yG2gFVGq5OFbO5eFMcNmG5npnC+pX/Abo3EbEwNBB9ZKTNUzxZeT7IEc/iBpd/5VELKtcHRdO5hPIw+aD89ndJ1NSF69JuUWHrMOlGt5I0qwNvGuP9Q5bitRfyNFnmgWe2C75ZpFEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PWoXrTj5; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LURkryTu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFBCC4CEE9;
-	Tue, 27 May 2025 14:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748355428;
-	bh=QSI9xpdPjt2cu7QbFv5alW6FAXC6hJzKmw9uIJmaT0w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LURkryTu0jC8GKWUlAOskqna2q1eIsXw2Fs0CzO3fihwnnlvGIIH4a/1glUyv1vYb
-	 tMIQ4fWQX5vLOF3iszLF7EoyBLGB8Dz+0MXYAEEdPJP9R/3LVFwXMtlTmOEv4AvKgv
-	 mp9G99dfrotMsxYTr9x5szoI2YF4focKIZcrNRaWg1JpsaadlRQ0/Ap92bBwSJkYJh
-	 Z11rYMJQnuzMgTbu3m4eNBIZUk6qKcmIurmAqSKyFXbxIEkjY9Dy274R/saefGoteD
-	 JpAqRY96ulh8vg2VLCKy0TohfEN2ZQowneeTucyXYxO7jHidYdrM5WLcEpaAvPLDwh
-	 WRVgI4mvqyVKA==
-From: cel@kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] NFSD changes for v6.16
-Date: Tue, 27 May 2025 10:17:06 -0400
-Message-ID: <20250527141706.388993-1-cel@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PWoXrTj5"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-440685d6afcso42767155e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748355449; x=1748960249; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qzCxInDBL5zoEuqaKs+Cq/1I3KI9pngcneQ2CyA3Ujw=;
+        b=PWoXrTj5c0wrG0Y6Jv8+00M6uhEEK7DhE36StAOFiZjUSCyW/eWIQn12d7nMnaZ138
+         DiAd7KJDg49x7dkOkeK3TDjE5S4gGSLFpioteWAyQnw7gnsmHHPxo4WC4COBWM4mFQzc
+         oX8nTtYncuXaiCNKex3BZGNMPbsIBp+jmAi8LbUkq8fZY3x1S+snE+zBQ246zwrrg1+l
+         d7eOPRCNZNTfK+EiySop4Hb15WQriDh9wHVIKrqV7LzmYFKaTEAmkj23Pan4sDkQ6eDs
+         YeRUFCn/B/n7Add3qeNupatooyaoDQd8mDu6AmkpQ06yqy+YgL9PNSzf+CuNMMC8tejx
+         4Blw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748355449; x=1748960249;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qzCxInDBL5zoEuqaKs+Cq/1I3KI9pngcneQ2CyA3Ujw=;
+        b=DkSejNDVE4EuQvVAdmzJfvI2wk2t2YaSaMZCWoalGtVVDsQAgVixX5xR7SQNtesv/J
+         xeoKQ2tFarA4B5sGtIFlHyFGVSRJOmpw/DxgzOjlERmHVtuDFAMeoS0RLSN+eVCUO0Ce
+         Hw8cgT1HOmlH0lh04R+soN/7U0K/Q4z+LCNbqA/sIJ3ir3rjqWJ+bxPnr7ZAC1Irf5YR
+         PvWEkHCxn2BoXN+Y+vwn5lDZAsxKcCNFGCtZ6OSGoS0qVMp9R/1h4dkSSJK6r1B6e3ua
+         F+xndFM627gg27AVEgAqixeZQNCjbqDPkYl7NcdNKVMYtK8nGlthlBhLewMJ7ZpUTvys
+         edTA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+oyvVxVkKe4xupPjYYxfPsKZaFamj7LADCTUz/ESaLSvKdNmoQ4Dw0rS1XFpVg00wvKFYOyWADL/H/xc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy37bnsFgO0caxqn3XyBVjXiKuqQREuG8MEE8DrwhPeGQNHaT6y
+	YlzqPi8r1om1BfdhDvGiKv2HNCICgX2RB+5TT8pBL62985kfK4KXcnF2p8ZJkWoyyl8=
+X-Gm-Gg: ASbGncuJylNMzCewolfEwmcNm3kzIEra9T/QX2WF1wEwLCI6gKEA9+q1a9jbfNAMP0G
+	Ru3ubFaisDWHDBynVCH2MOqN81K3qUMDHllJtxboS3UuU2HWl4SCpY6HCl7lgVV24w3zr3QoELJ
+	xmMIC4K740rSRiGS8MP84fmRPXKYzBK1kgOsBTj4NsZryzMMf60aPlaTgFdbODR2VK1sHN5nVC9
+	M8/DSKRsEK7r2fJitv7lU2DoF+R+NRSu51dInnN2QElcK5uRa6mZDDm/AEMG73MVRXfVACkwCop
+	93UzrH0Tmry6EdbhXHFC/b3R74ALbB7qDWGyybtk7+Jgu9e+KCwH+E18aQ==
+X-Google-Smtp-Source: AGHT+IEhc9SSryCY2JDYzu6BuvIZwbGB1eIwIJMculZ/SWsJAs6OkosbQI944ev/3eMu/PMW8z+Bgg==
+X-Received: by 2002:a05:600c:5103:b0:43c:ea36:9840 with SMTP id 5b1f17b1804b1-44c955da49fmr100008385e9.22.1748355448879;
+        Tue, 27 May 2025 07:17:28 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3dd99absm266645615e9.37.2025.05.27.07.17.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 07:17:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 15:17:27 +0100
+Message-Id: <DA70A4LOJ57L.1RTX2K0Z6PU0L@linaro.org>
+To: "Prasad Kumpatla" <quic_pkumpatl@quicinc.com>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Linus Walleij" <linus.walleij@linaro.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Srinivas Kandagatla"
+ <srini@kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark Brown"
+ <broonie@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>
+Cc: <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-sound@vger.kernel.org>,
+ <kernel@oss.qualcomm.com>, "Mohammad Rafi Shaik" <quic_mohs@quicinc.com>
+Subject: Re: [PATCH v4 0/8] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp
+ boards
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+X-Mailer: aerc 0.20.0
+References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+In-Reply-To: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
 
-The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
+On Tue May 27, 2025 at 12:12 PM BST, Prasad Kumpatla wrote:
+> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>
+> Audio support is now enabled on the qcs6490-RB3Gen2 and qcm6490-idp board=
+s.
+> The updates include adding the necessary audio device tree support and th=
+e required
+> dependencies.
 
-  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
+Do you have topology file and mixers commands (or UCM profile) to test this=
+?
 
-are available in the Git repository at:
+I already asked but I don't see any replies. How this can be tested?
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.16
-
-for you to fetch changes up to 425364dc49f050b6008b43408aa96d42105a9c1d:
-
-  xdrgen: Fix code generated for counted arrays (2025-05-16 10:58:48 -0400)
-
-----------------------------------------------------------------
-NFSD 6.16 Release Notes
-
-The marquee feature for this release is that the limit on the
-maximum rsize and wsize has been raised to 4MB. The default remains
-at 1MB, but risk-seeking administrators now have the ability to try
-larger I/O sizes with NFS clients that support them. Eventually the
-default setting will be increased when we have confidence that this
-change will not have negative impact.
-
-With v6.16, NFSD now has its own debugfs file system where we can
-add experimental features and make them available outside of our
-development community without impacting production deployments. The
-first experimental setting added is one that makes all NFS READ
-operations use vfs_iter_read() instead of the NFSD splice actor. The
-plan is to eventually retire the splice actor, as that will enable a
-number of new capabilities such as the use of struct bio_vec from the
-top to the bottom of the NFSD stack.
-
-Jeff Layton contributed a number of observability improvements. The
-use of dprintk() in a number of high-traffic code paths has been
-replaced with static trace points.
-
-This release sees the continuation of efforts to harden the NFSv4.2
-COPY operation. Soon, the restriction on async COPY operations can
-be lifted.
-
-Many thanks to the contributors, reviewers, testers, and bug
-reporters who participated during the v6.16 development cycle.
-
-----------------------------------------------------------------
-Chuck Lever (32):
-      NFSD: OFFLOAD_CANCEL should mark an async COPY as completed
-      NFSD: Shorten CB_OFFLOAD response to NFS4ERR_DELAY
-      NFSD: Implement CB_SEQUENCE referring call lists
-      NFSD: Implement CB_SEQUENCE referring call lists
-      NFSD: Record each NFSv4 call's session slot index
-      NFSD: Add /sys/kernel/debug/nfsd
-      NFSD: Add experimental setting to disable the use of splice read
-      MAINTAINERS: Update Neil Brown's email address
-      svcrdma: Unregister the device if svc_rdma_accept() fails
-      NFSD: Implement FATTR4_CLONE_BLKSIZE attribute
-      NFSD: Use sockaddr instead of a generic array
-      NFSD: Add a Call equivalent to the NFSD_TRACE_PROC_RES macros
-      svcrdma: Reduce the number of rdma_rw contexts per-QP
-      sunrpc: Add a helper to derive maxpages from sv_max_mesg
-      sunrpc: Remove backchannel check in svc_init_buffer()
-      sunrpc: Replace the rq_pages array with dynamically-allocated memory
-      sunrpc: Replace the rq_bvec array with dynamically-allocated memory
-      NFSD: Use rqstp->rq_bvec in nfsd_iter_read()
-      NFSD: De-duplicate the svc_fill_write_vector() call sites
-      SUNRPC: Export xdr_buf_to_bvec()
-      NFSD: Use rqstp->rq_bvec in nfsd_iter_write()
-      SUNRPC: Remove svc_fill_write_vector()
-      SUNRPC: Remove svc_rqst :: rq_vec
-      sunrpc: Adjust size of socket's receive page array dynamically
-      svcrdma: Adjust the number of entries in svc_rdma_recv_ctxt::rc_pages
-      svcrdma: Adjust the number of entries in svc_rdma_send_ctxt::sc_pages
-      sunrpc: Remove the RPCSVC_MAXPAGES macro
-      NFSD: Remove NFSD_BUFSIZE
-      NFSD: Remove NFSSVC_MAXBLKSIZE_V2 macro
-      NFSD: Add a "default" block size
-      SUNRPC: Bump the maximum payload size for the server
-      xdrgen: Fix code generated for counted arrays
-
-Eric Biggers (1):
-      nfsd: use SHA-256 library API instead of crypto_shash API
-
-Guoqing Jiang (1):
-      nfsd: remove redundant WARN_ON_ONCE in nfsd4_write
-
-Jeff Layton (19):
-      nfsd: add commit start/done tracepoints around nfsd_commit()
-      sunrpc: add info about xprt queue times to svc_xprt_dequeue tracepoint
-      sunrpc: allow SOMAXCONN backlogged TCP connections
-      nfsd: add a tracepoint for nfsd_setattr
-      nfsd: add a tracepoint to nfsd_lookup_dentry
-      nfsd: add nfsd_vfs_create tracepoints
-      nfsd: add tracepoint to nfsd_symlink
-      nfsd: add tracepoint to nfsd_link()
-      nfsd: add tracepoints for unlink events
-      nfsd: add tracepoint to nfsd_rename
-      nfsd: add tracepoint to nfsd_readdir
-      nfsd: add tracepoint for getattr and statfs events
-      nfsd: remove old v2/3 create path dprintks
-      nfsd: remove old v2/3 SYMLINK dprintks
-      nfsd: remove old LINK dprintks
-      nfsd: remove REMOVE/RMDIR dprintks
-      nfsd: remove dprintks for v2/3 RENAME events
-      nfsd: remove legacy READDIR dprintks
-      nfsd: remove legacy dprintks from GETATTR and STATFS codepaths
-
-Li Lingfeng (1):
-      nfsd: Initialize ssc before laundromat_work to prevent NULL dereference
-
-Long Li (2):
-      sunrpc: update nextcheck time when adding new cache entries
-      sunrpc: fix race in cache cleanup causing stale nextcheck time
-
-Maninder Singh (2):
-      NFSD: unregister filesystem in case genl_register_family() fails
-      NFSD: fix race between nfsd registration and exports_proc
-
-NeilBrown (1):
-      nfsd: nfsd4_spo_must_allow() must check this is a v4 compound request
-
-Olga Kornievskaia (1):
-      nfsd: fix access checking for NLM under XPRTSEC policies
-
- .mailmap                                           |   2 +
- MAINTAINERS                                        |   2 +-
- fs/nfsd/Kconfig                                    |   2 +-
- fs/nfsd/Makefile                                   |   1 +
- fs/nfsd/debugfs.c                                  |  47 ++++
- fs/nfsd/export.c                                   |   3 +-
- fs/nfsd/nfs3proc.c                                 |  68 +----
- fs/nfsd/nfs4callback.c                             | 132 ++++++++-
- fs/nfsd/nfs4proc.c                                 |  35 ++-
- fs/nfsd/nfs4recover.c                              |  61 +----
- fs/nfsd/nfs4state.c                                |  40 +--
- fs/nfsd/nfs4xdr.c                                  |  21 +-
- fs/nfsd/nfsctl.c                                   |  25 +-
- fs/nfsd/nfsd.h                                     |  34 +--
- fs/nfsd/nfsproc.c                                  |  48 +---
- fs/nfsd/nfssvc.c                                   |   8 +-
- fs/nfsd/nfsxdr.c                                   |   4 +-
- fs/nfsd/state.h                                    |  23 ++
- fs/nfsd/trace.h                                    | 302 ++++++++++++++++++++-
- fs/nfsd/vfs.c                                      |  90 ++++--
- fs/nfsd/vfs.h                                      |  10 +-
- fs/nfsd/xdr4.h                                     |   4 +
- fs/nfsd/xdr4cb.h                                   |   5 +-
- include/linux/sunrpc/svc.h                         |  46 ++--
- include/linux/sunrpc/svc_rdma.h                    |   6 +-
- include/linux/sunrpc/svc_xprt.h                    |   1 +
- include/linux/sunrpc/svcsock.h                     |   4 +-
- include/trace/events/sunrpc.h                      |  13 +-
- include/trace/misc/fs.h                            |  21 ++
- net/sunrpc/cache.c                                 |  17 +-
- net/sunrpc/svc.c                                   |  80 ++----
- net/sunrpc/svc_xprt.c                              |  11 +-
- net/sunrpc/svcsock.c                               |  17 +-
- net/sunrpc/xdr.c                                   |   1 +
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c            |   8 +-
- net/sunrpc/xprtrdma/svc_rdma_rw.c                  |   2 +-
- net/sunrpc/xprtrdma/svc_rdma_sendto.c              |  16 +-
- net/sunrpc/xprtrdma/svc_rdma_transport.c           |  15 +-
- .../C/pointer/encoder/variable_length_array.j2     |   2 +
- .../C/struct/encoder/variable_length_array.j2      |   2 +
- .../C/union/decoder/variable_length_array.j2       |   2 +
- 41 files changed, 849 insertions(+), 382 deletions(-)
- create mode 100644 fs/nfsd/debugfs.c
+Thanks,
+Alexey
