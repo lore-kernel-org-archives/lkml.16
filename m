@@ -1,349 +1,100 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BD11DE3AB
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937771FB3
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748382575; cv=none; b=rf3vHcpbTUNfRooU/DnZQZW70dvR+3orokuTbEKO+XsXl/Wi+53Z6VkHcE79FfWb8jSxl5nkbYReCc5fqtvgWyk5dRt7Cb5BISVhhJrpVMbaxlvsTTx3G1FLzqzaC5GQ5S2aRUQO3OVT9WZqsT7f71ZpQsfhiwID0JlyRnzmJsc=
+	t=1748382641; cv=none; b=kYgKf5eYec4CQl/er48MCQ9SdrIwnqPjPRVtMwBThwGp6tEPRBVXoOtkyrBqq+If7fms0UAX0pmcTUf+hs0fSqJG8cpM1A6JkYMdtyYq3xWL63oRiJM2iew/Qyyp8iW6i31ubc2MMjySYENdZK6LgmG7ooFrKiep4CD2q4Ehxu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748382575; c=relaxed/simple;
-	bh=HfPftjVcgI42dalYCg1FEsml86xfHZjOH0et0lZpTfA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JhfwyOlsGhxITR84fDmMnEFhdZNb+kJtMXhP8oZ4sCgRdfr+ZcwsYHKLTECsk9a1J1KGpaAxv5uTRBgKd2+K/JRRG92zMZBdTj+ATor0VdEeo7MiNlWgSybw/M7jahl2xMOwULgUbAKtgOMxDREHLuNE4z6p0PmZkUwfqH0u9kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=uo+1sIR7; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
+	s=arc-20240116; t=1748382641; c=relaxed/simple;
+	bh=gStf4rc+PfmUoSWbPTo2dWtfe1mdr6RBm/W15XNCQ5A=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=M/+oL1jteOGTIGwFbbE54efQsz8ZciaQKwSle0f/uxnE7Y/km4OnsezOfFEqvn/Jd9T3hE+5i/3lpgI0F6twNItgcziTNZ3q6wCg+ZwhCIMKrTOQsBLO0W3cB09K6tTQ1n6Gh+trzlxiEAXXWNqm4yUMcEkHpZRlfdPO9LylZwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g/LjN2E2; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="uo+1sIR7"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234c5b57557so2113055ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:49:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g/LjN2E2"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2349fe5be47so8700055ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1748382572; x=1748987372; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+        d=google.com; s=20230601; t=1748382639; x=1748987439; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=HfPftjVcgI42dalYCg1FEsml86xfHZjOH0et0lZpTfA=;
-        b=uo+1sIR7rpy8JR/eYpfCJljCCAxjooygTjp2wPiY0lzPipWc+D1Rghrxb6FGqtvOqO
-         KVmgyAB60aHI47NXttFkF3+VPQpbNH3yO6NXoDIAnoBx197zfvGIcf8fjvn70GTHzMuy
-         v5PXjlp3QiK0Qd/MW6BZ9qXpybwZZVnroyHCsScWADH4D2xUOCdYUrW5A69+EIVSoSB7
-         77Bc6QKhnLsZfG10anFfyUtg1r7c92oZ3XIN3Pu3wLp9nmjNoQuzqpBy8NNJL/v4C4OP
-         WH35ep9akTDSNkQSn1OYkKYkXlvKaVl+bIOeU9YE8CuROQlZcZ4nX90zyV3dyXFGfrSA
-         qcIA==
+        bh=dtvDg2edXjwGmFOOqP4AgS1P4/Y9z8Fg7Ga55758bwE=;
+        b=g/LjN2E2aMh3IpPFkNmJWD1aU3RJV6gavJPlehTYsLTFIptgu2pLFyBpgClgXBw312
+         9gIar/LFSI7+Ib57kcTTLyiSMgS4R6y+v9bPo2r22upXjn4vi6HsjZx2OSeX8qWuW4Vr
+         BlbmcfnjiM8n1hsi2fXgZoZP4DJVw3AvMKoBSZe9r7+5784+zqvY+OmG6Kh7a4S3oi4A
+         0LY2Mn882vYDhHl6CrJ8Qa9LyiZUEqLwrD/cv5IiuCprtdUNJuaMLxa6scoubzPMwG9z
+         7qVAOUTBhSoHrzZ+89nzJfD7jS/W8Q1WK11PziLnZ4JezIisYQbJhGZUoCHcc4B6XfOr
+         A4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748382572; x=1748987372;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=1e100.net; s=20230601; t=1748382639; x=1748987439;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HfPftjVcgI42dalYCg1FEsml86xfHZjOH0et0lZpTfA=;
-        b=lOJmMN5zlZ9eviKy0WReFBgF48VQJKaf2Zsp6f46Towx+poMOTtlGk4tKCgcB53c5b
-         ZFPU6DhpnyVMwEKp1r2F/mMPZ+yEzeZkBJwsg+NC7H+oK0id33MrhD6eNhlsstCi83O5
-         nWWFjRySXULLpTfH5GXGsX/wmZN6EbKtKkczzQfNym+FpTUUcs+mxhxnajQ5hJlIFDsr
-         TRLUnDnZyqFp+JZylDBDPvIhPHuT4fq0Iq49i1mxniZSHNT+v/9hfIVP0VT9m1AQ0THW
-         lgP6o2o6Uqz+wYkYrvpTuBBcu4BqCYQ06rKWV+Q1ygXtHajLsVewauhculqjwbLG2bZO
-         xudw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9+OYYrB27UgPtwb8BsotXy9NTGZvgxiQVSlV2pe+Qh0Ah6Fct0pZgvyjqzmJXWhoh/ZC3EU82TMvKNpI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpZ5/ty65gbonQLbj8uajL76tM/DRiyS6UgeH2bone9MpX0ZxO
-	VIVIBMbxOdswAsFSbpcSKTORPn4s7K1reEKPAL9WnD0BuWengpAG8ytzOoZ13jYc57QzKFpz35p
-	VTxP8NGxpBQ==
-X-Gm-Gg: ASbGncscwaGnaUm14FWLPjLcmhFBrkcNspvvzT9QdWuevdZWqUapy6rYX6x+YgwT1r9
-	Gy40pg0NVWIixFTpGuy2zO00BFnyc7TE0wFEe/XWSToBNGBMjc/5cq4VhrDtDKcHn18QkhzT1p3
-	my+QKLzNWyZhx4aSo61xgWgJL2xnGqItJhStZ9nD2hlPhKi06KHytyqf7KDnHv7IWktRSwS8i5j
-	RB1VknwJJ3rUrwWa4MSsMqd3EFXQxFe211fp/WMqASBsB8ANnndhT1w8kKYQt6N8zehS5T8+333
-	SfmNTHuHy0TBqxBnFfKvryZFVnlWfZml+/YqYCNegwPGgFB8lsfbRSoDXCflHW6zUnENOco9a3c
-	KDF8txJgDBI4Mv6yDdLbsSUY=
-X-Google-Smtp-Source: AGHT+IEI57uhxgiCsGn/cvwidX55zKyJNXlN3YwwHOsfL874zvLVP+ews9urZpq8pgsnQu36X5v3nQ==
-X-Received: by 2002:a17:902:da8b:b0:234:c8f6:1b05 with SMTP id d9443c01a7336-234c8f61f13mr5853135ad.52.1748382572139;
-        Tue, 27 May 2025 14:49:32 -0700 (PDT)
-Received: from ?IPv6:2600:1700:6476:1430:dc04:52d5:a995:1c97? ([2600:1700:6476:1430:dc04:52d5:a995:1c97])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234cc24e8e6sm529285ad.217.2025.05.27.14.49.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 14:49:31 -0700 (PDT)
-Message-ID: <13f85ee0265f7a41ef99f151c9a4185f9d9ab0a0.camel@dubeyko.com>
-Subject: Re: =?UTF-8?Q?=E5=9B=9E=E5=A4=8D=3A?= [PATCH] hfsplus: remove
- mutex_lock check in hfsplus_free_extents
-From: Viacheslav Dubeyko <slava@dubeyko.com>
-To: =?UTF-8?Q?=E6=9D=8E=E6=89=AC=E9=9F=AC?= <frank.li@vivo.com>, 
- "glaubitz@physik.fu-berlin.de"	 <glaubitz@physik.fu-berlin.de>, Andrew
- Morton <akpm@linux-foundation.org>,  "Ernesto A."
- =?ISO-8859-1?Q?Fern=E1ndez?=	 <ernesto.mnd.fernandez@gmail.com>
-Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>, 
- "syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com"
-	 <syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com>, 
-	Slava.Dubeyko@ibm.com
-Date: Tue, 27 May 2025 14:49:30 -0700
-In-Reply-To: <SEZPR06MB5269FA31FE21CD9799DA17ABE89AA@SEZPR06MB5269.apcprd06.prod.outlook.com>
-References: <20250511110856.543944-1-frank.li@vivo.com>
-	 <58e07322349210ea1c7bf0a23278087724e95dfd.camel@dubeyko.com>
-	 <SEZPR06MB5269FA31FE21CD9799DA17ABE89AA@SEZPR06MB5269.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+        bh=dtvDg2edXjwGmFOOqP4AgS1P4/Y9z8Fg7Ga55758bwE=;
+        b=kA8LDwEcNVfRYCmHsgaBw8oc6fbC3t0V6Xm6RLF3YKKX26v7l3YuYc0zZL2Bu1dUtG
+         oFd37VBXo9uagDop4BURivTkBq5g5AzmyA2e/mRLwu5KtwBR68/fJnx3NNLVhB6RFGdf
+         yvXgUYMRb5yw9mtV9ENfrtd1fmlXOcG6/I8H/O9qZsfWlCLL32c5fArtHYmW2ZRZj/LY
+         Jx7ERCNrN/Uz0W0+o7RzT/72sXtqoJWq/NXWoq65vhQJ6gdDME2w/T7ZQQrTxDRMQqYe
+         n5So4ZuJONVDEKkF78t0g2dgFuud+T43jCs/cYQffzMFWZI2I2fnxdipeC7FVEvzXRNu
+         T5+w==
+X-Forwarded-Encrypted: i=1; AJvYcCX02Kb3JP9MUCcy24xuVB2N4r+MOdxxsLTa2Jjp1Psx2hKPWCS0A7ROW7zuQ0pJeGIXKeLxwjMHrd21q0M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6GxFxhaXtJnYHZY6TEPdDBNGQiANzrnxx5Kruy9u+Lg4akTLR
+	zNxgPxGg7oqkqsfGMRo6ayzch06WMRaSrVEjnEZXhzYW10fAr8KOY+c0dfKgEKXRKkv9q3y2g0H
+	KKYtkSos6Vg==
+X-Google-Smtp-Source: AGHT+IGNVsuVSkksPsxQ9leFjTvon2JgsNPkZicJCwyJLA7I5bE+HPYfDlveY3Drm+zlsKabaZYyMJGUDsrs
+X-Received: from plbp4.prod.google.com ([2002:a17:903:1744:b0:223:225b:3d83])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ed8b:b0:234:b41e:37a2
+ with SMTP id d9443c01a7336-234b41e388dmr28095045ad.11.1748382638788; Tue, 27
+ May 2025 14:50:38 -0700 (PDT)
+Date: Tue, 27 May 2025 14:50:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250527215035.187992-1-irogers@google.com>
+Subject: [PATCH v2] perf pmu: Avoid segv for missing name/alias_name in wildcarding
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 2025-05-25 at 15:03 +0000, =E6=9D=8E=E6=89=AC=E9=9F=AC wrote:
-> Hi Slava,
->=20
-> > Which particular xfstests' test-case(s) triggers the issue? Do we
-> > have the easy reproducing path of it? How can I check the fix,
-> > finally?
->=20
-> generic/013 triggers the issue. Here is the reproducing path.
->=20
+The pmu name or alias_name fields may be NULL and should be skipped if
+so. This is done in all loops of perf_pmu___name_match except the
+final wildcard loop which was an oversight.
 
-Great! Could you please add generic/013 issues analysis in the patch
-comment? I mean the dmesg output here.=20
+Fixes: c786468a3585 ("perf pmu: Rename name matching for no suffix or wildcard variants")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2. Rebase resolving merge conflicts, add Namhyung's Acked-by.
+---
+ tools/perf/util/pmu.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> [Origin]
->=20
-> We got fsck error, reason is the same as [1].
->=20
-> [1]
-> https://lore.kernel.org/all/20250430001211.1912533-1-slava@dubeyko.com/
->=20
-
-Mentioning [1] could be confusing because it was HFS related fix. But
-we are discussion HFS+ here.
-
-> root@ubuntu:/home/ubuntu/xfstests-dev# ./check generic/013
-> FSTYP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- hfsplus
-> PLATFORM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- Linux/x86_64 ubuntu 6.15.0-rc4-=
-00055-g71bfd66b8583-
-> dirty #421 SMP PREEMPT_DYNAMIC Fri May 23 18:30:10 CST 2025
-> MKFS_OPTIONS=C2=A0 -- /dev/nvme1n1
-> MOUNT_OPTIONS -- /dev/nvme1n1 /mnt/scratch
->=20
-> generic/013 35s ... [=C2=A0 380.286618] hfsplus: xattr exists yet
-> [=C2=A0 382.410297] hfsplus: xattr exists yet
-> [=C2=A0 383.872844] hfsplus: cannot replace xattr
-> [=C2=A0 385.802529] hfsplus: cannot replace xattr
-> [=C2=A0 393.125897] hfsplus: xattr exists yet
-> [=C2=A0 396.222921] hfsplus: cannot replace xattr
-> [=C2=A0 399.084012] hfsplus: cannot replace xattr
-> [=C2=A0 403.233816] hfsplus: cannot replace xattr
-> _check_generic_filesystem: filesystem on /dev/nvme0n1 is inconsistent
-> (see /home/ubuntu/xfstests-dev/results//generic/013.full for details)
-> _check_dmesg: something found in dmesg (see /home/ubuntu/xfstests-
-> dev/results//generic/013.dmesg)
->=20
-> Ran: generic/013
-> Failures: generic/013
-> Failed 1 of 1 tests
->=20
-> [w/ bnode patch]
->=20
-> The fsck error is related to the node not being cleared, which may be
-> related to the implementation of the fsck tool.=20
-> We can continue to discuss this in the previous email. For this, we
-> can ignore it and continue the analysis based on the bnode patch.
-
-Let's discuss this issue in independent thread. I assume you would like
-to share the patch with the fix. Do you mean that
-hfs_bnode_need_zeroout() works not completely correct? Because, I had
-impression that HFS+ makes clearing of deleted nodes.
-
->=20
-> diff --git a/fs/hfsplus/bnode.c b/fs/hfsplus/bnode.c
-> index 079ea80534f7..f2424acd3636 100644
-> --- a/fs/hfsplus/bnode.c
-> +++ b/fs/hfsplus/bnode.c
-> @@ -633,7 +633,7 @@ void hfs_bnode_put(struct hfs_bnode *node)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 if (test_bit(HFS_BNODE_DELETED, &node->flags)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bnod=
-e_unhash(node);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unl=
-ock(&tree->hash_lock);
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (hfs_bnode_=
-need_zeroout(tree))
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 //=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (hfs_bnode_need_zeroout(tr=
-ee))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bnode_clear(node, 0, tree-
-> >node_size);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bmap=
-_free(node);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 hfs_bnod=
-e_free(node);
->=20
-> After apply bnode patch. We got error from dmesg, which warn at
-> fs/hfsplus/extents.c:346.
->=20
-> root@ubuntu:/home/ubuntu/xfstests-dev# ./check generic/013
-> FSTYP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- hfsplus
-> PLATFORM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- Linux/x86_64 ubuntu 6.15.0-rc4-=
-00055-g71bfd66b8583-
-> dirty #422 SMP PREEMPT_DYNAMIC Sun May 25 22:37:55 CST 2025
-> MKFS_OPTIONS=C2=A0 -- /dev/nvme1n1
-> MOUNT_OPTIONS -- /dev/nvme1n1 /mnt/scratch
->=20
-> generic/013 35s ... [=C2=A0 236.356697] hfsplus: xattr exists yet
-> [=C2=A0 238.288269] hfsplus: xattr exists yet
-> [=C2=A0 240.673488] hfsplus: cannot replace xattr
-> [=C2=A0 242.133163] hfsplus: xattr exists yet
-> [=C2=A0 242.172538] hfsplus: xattr exists yet
-> [=C2=A0 243.702797] hfsplus: xattr exists yet
-> [=C2=A0 245.943067] hfsplus: xattr exists yet
-> [=C2=A0 249.502186] hfsplus: cannot replace xattr
-> [=C2=A0 252.544517] hfsplus: xattr exists yet
-> [=C2=A0 253.538462] hfsplus: cannot replace xattr
-> [=C2=A0 263.456784] hfsplus: cannot replace xattr
-> _check_dmesg: something found in dmesg (see /home/ubuntu/xfstests-
-> dev/results//generic/013.dmesg)
->=20
-> Ran: generic/013
-> Failures: generic/013
-> Failed 1 of 1 tests
->=20
-> # demsg
-> [=C2=A0 225.975852] run fstests generic/013 at 2025-05-25 14:42:11
-> [=C2=A0 231.718234] ------------[ cut here ]------------
-> [=C2=A0 231.718677] WARNING: CPU: 3 PID: 1091 at fs/hfsplus/extents.c:346
-> hfsplus_free_extents+0xfc/0x110
-> [=C2=A0 231.719117] Modules linked in:
-> [=C2=A0 231.719895] CPU: 3 UID: 0 PID: 1091 Comm: fsstress Not tainted
-> 6.15.0-rc4-00055-g71bfd66b8583-dirty #422 PREEMPT(voluntary)
-> [=C2=A0 231.719996] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)=
-,
-> BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [=C2=A0 231.720170] RIP: 0010:hfsplus_free_extents+0xfc/0x110
-> [=C2=A0 231.720383] Code: 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 48 c7 c7
-> 4d 62 46 b2 e8 b5 58 cf ff eb 95 48 c7 c7 4d 62 46 b2 e8 a7 58 cf ff
-> eb cd 90 <0f> 0b 90 e9 30 ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00
-> 90 90 90
-> [=C2=A0 231.720492] RSP: 0018:ffffaaa9813bbd28 EFLAGS: 00000202
-> [=C2=A0 231.720563] RAX: ffff995582666701 RBX: 00000000000000ed RCX:
-> 00000000000001b5
-> [=C2=A0 231.720592] RDX: 00000000000000ed RSI: ffff9955818e8ad8 RDI:
-> ffff995588c80048
-> [=C2=A0 231.720617] RBP: ffff9955818e8ad8 R08: 0000000000000002 R09:
-> ffffaaa9813bbcda
-> [=C2=A0 231.720641] R10: ffff995585cfdb90 R11: 0000000000000002 R12:
-> 0000000000000000
-> [=C2=A0 231.720672] R13: 00000000000001b5 R14: 00000000000000c8 R15:
-> ffff995587f40800
-> [=C2=A0 231.720778] FS:=C2=A0 00007f81e3bd8740(0000) GS:ffff99564ac46000(=
-0000)
-> knlGS:0000000000000000
-> [=C2=A0 231.720813] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 000000008005003=
-3
-> [=C2=A0 231.720838] CR2: 00005634430a6108 CR3: 00000000147d5000 CR4:
-> 00000000000006f0
-> [=C2=A0 231.720960] Call Trace:
-> [=C2=A0 231.721831]=C2=A0 <TASK>
-> [=C2=A0 231.722111]=C2=A0 hfsplus_file_truncate+0x2b6/0x3e0
-> [=C2=A0 231.722222]=C2=A0 hfsplus_delete_inode+0x54/0x70
-> [=C2=A0 231.722325]=C2=A0 hfsplus_unlink+0x17f/0x1c0
-> [=C2=A0 231.722384]=C2=A0 ? security_inode_permission+0x23/0x40
-> [=C2=A0 231.722415]=C2=A0 vfs_unlink+0x110/0x2b0
-> [=C2=A0 231.722442]=C2=A0 do_unlinkat+0x251/0x2c0
-> [=C2=A0 231.722471]=C2=A0 __x64_sys_unlink+0x1c/0x30
-> [=C2=A0 231.722491]=C2=A0 do_syscall_64+0x9e/0x190
-> [=C2=A0 231.722551]=C2=A0 entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> [=C2=A0 231.722726] RIP: 0033:0x7f81e3cf740b
-> [=C2=A0 231.723023] Code: 30 ff ff ff e9 74 fd ff ff e8 a1 ba 01 00 90 f3
-> 0f 1e fa b8 5f 00 00 00 0f 05 c3 0f 1f 40 00 f3 0f 1e fa b8 57 00 00
-> 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 d9 69 0e
-> 00 f7 d8
-> [=C2=A0 231.723047] RSP: 002b:00007ffe97ed66b8 EFLAGS: 00000246 ORIG_RAX:
-> 0000000000000057
-> [=C2=A0 231.723089] RAX: ffffffffffffffda RBX: 0000000000000035 RCX:
-> 00007f81e3cf740b
-> [=C2=A0 231.723104] RDX: 0000000000000000 RSI: 00007ffe97ed6690 RDI:
-> 00005634430875c0
-> [=C2=A0 231.723116] RBP: 00007ffe97ed6830 R08: 000000000000ffff R09:
-> 0000000000000000
-> [=C2=A0 231.723128] R10: 0000000000000000 R11: 0000000000000246 R12:
-> 00007ffe97ed66d0
-> [=C2=A0 231.723141] R13: 8f5c28f5c28f5c29 R14: 00007ffe97ed68a0 R15:
-> 000056341fe3c7c0
-> [=C2=A0 231.723219]=C2=A0 </TASK>
-> [=C2=A0 231.723427] ---[ end trace 0000000000000000 ]---
-> [=C2=A0 233.296305] ------------[ cut here ]------------
->=20
-> [w/ bnode &this patch]
->=20
-> Test pass without any error.
->=20
-> root@ubuntu:/home/ubuntu/xfstests-dev# ./check generic/013
-> FSTYP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- hfsplus
-> PLATFORM=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -- Linux/x86_64 ubuntu 6.15.0-rc4-=
-00055-g71bfd66b8583-
-> dirty #423 SMP PREEMPT_DYNAMIC Sun May 25 22:54:51 CST 2025
-> MKFS_OPTIONS=C2=A0 -- /dev/nvme1n1
-> MOUNT_OPTIONS -- /dev/nvme1n1 /mnt/scratch
->=20
-> generic/013 35s ... [=C2=A0 106.018643] hfsplus: xattr exists yet
-> [=C2=A0 110.155138] hfsplus: cannot replace xattr
-> [=C2=A0 112.061738] hfsplus: cannot replace xattr
-> [=C2=A0 113.215120] hfsplus: cannot replace xattr
-> [=C2=A0 118.308974] hfsplus: xattr exists yet
-> [=C2=A0 133.279630] hfsplus: cannot replace xattr
-> [=C2=A0 134.581764] hfsplus: cannot replace xattr
-> [=C2=A0 135.557120] hfsplus: xattr exists yet
-> =C2=A046s
-> Ran: generic/013
-> Passed all 1 tests
->=20
-> > I don't think that I follow the point. The two mutexes are namely
-> > the basis for potential deadlocks. Currently, I am not sure that we
-> > are fixing the issue. Probably, we are trying to hide the symptoms
-> > of the real issue without the clear understanding what is going
-> > wrong. I would like to hear the explanation how the issue is
-> > happening and why the warning removal can help here.
->=20
-> I don't know if the above description is clear enough. Actually, this
-> warning is not helpful at all.=20
-> The comment above this warning also describes one of the easy
-> triggering situations, which can easily trigger and cause
-> xfstest&syzbot to report errors.
->=20
-
-I see your point. We need accurately explain here that several threads
-could try to lock the shared extents tree. And warning can be triggered
-in one thread when another thread has locked the tree. This is the
-wrong behavior of the code and we need to remove the warning.
-
-Could you please rework the patch comment by means of adding precise
-explanation of this? =20
-
-> > I am not sure that it's the good idea to remove any warning
-> > because, probably, we could not understand the real reason of the
-> > issue and we simply trying to hind the symptoms of something more
-> > serious.
-> >=20
-> > Current explanation doesn't sound reasonably well to me. I am not
-> > convinced yet that it is proper fix and we see the reason of the
-> > issue.
-> > I would like to hear more clear justification that we have to
-> > remove this check.
->=20
-> If there is indeed an exception or you can point out the problem,
-> then we should fix it. Otherwise, in my opinion, this warning has no
-> purpose and should be removed.
-
-We have a lot of problems in the code and good warnings make sense. The
-intentions of this warning was to prevent wrong using of locks. But it
-was missed that multiple threads can try to lock the shared extents
-tree. So, yes, it makes sense to remove this particular warning but,
-potentially, we still could have issues in the code. However, we need
-to explain why this warning works in wrong way in really precise
-manner. :)
-
-Thanks,
-Slava.
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index bc1178234d3b..609828513f6c 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -2143,6 +2143,9 @@ static bool perf_pmu___name_match(const struct perf_pmu *pmu, const char *to_mat
+ 	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
+ 		const char *name = names[i];
+ 
++		if (!name)
++			continue;
++
+ 		if (wildcard && perf_pmu__match_wildcard_uncore(name, to_match))
+ 			return true;
+ 		if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(name, to_match))
+-- 
+2.49.0.1204.g71687c7c1d-goog
 
