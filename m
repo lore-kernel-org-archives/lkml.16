@@ -1,156 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910827260E;
-	Tue, 27 May 2025 12:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B597260E;
+	Tue, 27 May 2025 12:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748347213; cv=none; b=ICrKCnezZ8kjWDmIrzORE3qqxuf2n/iE5+CJLi1oG2oYplCrSf/K1hVqUM8ppRbKAb/ZCTdiQ61b5IlLVmdRacJku0dF95nI2h4G1chvDJGI5a3T2UAjAEJQSFUcxJp6cHRCX/3TgoMROgD/pBORgAzNFHo5PV6KVHiCp+6sfoM=
+	t=1748347236; cv=none; b=T1SJaAwYEhH4dccWi3FLYJ1zwVfN3g331svOoCt+RU5Pzy8LplBh1GMf9IuOOpZcBsOF+JlZBPFuiCEgZ7WC5SEDC4EVTUYGvbiXiJMUTnDduyCtao2rRiVsoDEGpTIwOiDIcvKUwKk4DK2bt8uJcd0xj6hevEaeTDV03oGxzEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748347213; c=relaxed/simple;
-	bh=qLapHneOi+oKFJ5y90jzyILYX7eOBr5+CBwaFdeeheA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EH3cUiwfJ1VJTCagAGY5tULGGK16YKROLZub69BnRwyfdSV5H37KNyZFiVV2zedvYw09DbSX0FsS6VCwiLp0pK1KRQfyaOIo9e6tE0fbIh6HbdOkr7LkZaygM3diVpyN/kZEZwNqagen+fnuoEh+oqKh+a5UW1k2BF+nAkDbHwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSI+l+Gz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748347236; c=relaxed/simple;
+	bh=lMMy4g/MYXQ+b9gPcrJlEgyzSKdjqC5ncOGH/dfQoVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QjJHsQXBsk05fVBXqb1V4Zjge5uy0hMX14B2L8xVZIcnIpzKV65IidHwpVOJ2kNHDgnawwfp3/UgsJiLb//SVTjCoAjxjhhOrXw7Ia7X29cSzLu60dk1dK1oZWsgnYQaoqLWQi+POVzcwAQo6DakOVqlumXSLW/P/0NxuiWLqL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PH6Fdlz6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSI+l+Gz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08819C4CEEE;
-	Tue, 27 May 2025 12:00:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PH6Fdlz6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791EAC4CEE9;
+	Tue, 27 May 2025 12:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748347213;
-	bh=qLapHneOi+oKFJ5y90jzyILYX7eOBr5+CBwaFdeeheA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kSI+l+GzqCel77prqLwS7xz2muMHOSoXwb9KNu8Wi5eT+xMmcs3VsmvVuiAYgT9aO
-	 8Yt+IU5DdO3uGV6KTeKCA1Y5BehvCavUfEdn1X1+eXIii2h88KgOjV/3ep8hqNT/is
-	 emXWe5UbgFGLO98FK5JeWSYsGXzp5v7qWJGWlGlXGCuc+hnhQOXH0O8ZaqnQtFFY7T
-	 MC03kD61+/i7r9Yd9URlGLON6NPjYHpQcTHstWaY0aPFjfbfzherwUrKdBRdup1jEq
-	 mISnjmxyyPmN89tD2edgBRqQhp/NYYDyOUZ/idCBJEeSydNnmBdR4+m6fUKLajGupu
-	 imnXQBLNPjngA==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60638c07cabso1411905eaf.3;
-        Tue, 27 May 2025 05:00:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV5yDUabpcZzpK0qchngo/zFo5y/bQZ4082f1ntjMGv/GCx0yI10t5mWyyCXddcmFRIbNK52XQpQBk=@vger.kernel.org, AJvYcCVtMLbR45Orkd3mT//9ydhqG+1fK1X4W+r3Tk5+duhM537eD9xLnrmHTz/lfQqp57fhHXCIeujP/RSXTDZP@vger.kernel.org, AJvYcCXFXlgYCygK30Jc7MJgmqJjn25qOcKuWyRkpU57SkDEPm0HsdGhEInz1QZMeKptvspluQzbhNXTsww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIa6SNMAFgB5Bvc6je1kzqFg4EctE6n38Jw+suAjCnY/CuqcH3
-	VMYHn6ijzcf/YYaVs8Zs5rSYbHw8bbiJa29RWYm/DIbiVzbJIOPJHE9rFD8zZv1U1kR0ZthhXDU
-	kDBPdUgnbygfCYld8pB2b1LC9GP5XcOY=
-X-Google-Smtp-Source: AGHT+IH1H/K9aIlXXOO/y7HLOTl7zAEeo6HfQFr7ujuFdt4n8dLkaY+8mKMTorG3P80nKepGALTJbXBe04FTHAZXQ4I=
-X-Received: by 2002:a05:6820:818d:b0:609:f2f3:5f60 with SMTP id
- 006d021491bc7-60b9f8a9766mr6494225eaf.0.1748347212322; Tue, 27 May 2025
- 05:00:12 -0700 (PDT)
+	s=k20201202; t=1748347236;
+	bh=lMMy4g/MYXQ+b9gPcrJlEgyzSKdjqC5ncOGH/dfQoVo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PH6Fdlz681kpS84Jq83UnDedxxrKP0uYjlKEG6OTOmdUnaMGcABZ3Bu63oF0uVuol
+	 DbCoZcg5805u3rPwka/ONPeiULqgKvgzgAhZljBpLxxZ45ADkZMkXkaeYdbx/ZUdzA
+	 Mn9yG0pYcKqpgPaqBMId2F/PElTUt0kU08EplZJG+OCbx8aAlDIp9Wj44Ediey0KRZ
+	 7PtKD2nbz0MGWEyqlGuqYtDITOMrZjNI53VMp+ZM/uT9JwSDxWHQa4dr3bh4aX2vqt
+	 Co4f/e0aj4k02w1+AClJGZiEa9pja2I+GEJZuSMbgPszzjLdGF6viQInCmw4E8jeRX
+	 jzD+mpEYAdzaA==
+Message-ID: <0f70110d-4861-487b-834d-f217c9a77384@kernel.org>
+Date: Tue, 27 May 2025 14:00:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
- <15871c67-0d18-430f-935e-261b2cda855b@gmail.com> <CAJZ5v0gz3Y+RGqBf9E1hzq9rwfrryd98Xpk51DtLd-uck5y-rw@mail.gmail.com>
- <b62c0462-8185-4eb8-8ac6-7f2abc387768@gmail.com> <aC_4yLsFVVszI_FA@JPC00244420>
- <CAJZ5v0g1o03La9aWJF1rheC9CM8SU2iC52auEAnaBpUCMunpJA@mail.gmail.com> <aDV2HPfybqnbzJ9N@JPC00244420>
-In-Reply-To: <aDV2HPfybqnbzJ9N@JPC00244420>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 27 May 2025 14:00:00 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h9d6XESiiZV+A2GNUcefSunV-D=3d-TU412mwW0vjYGA@mail.gmail.com>
-X-Gm-Features: AX0GCFsknwzCCPo2oM2FuYiPgANRZkiiVNyCLYZm3KZKQoxjkqI9Z52D-sR3j0k
-Message-ID: <CAJZ5v0h9d6XESiiZV+A2GNUcefSunV-D=3d-TU412mwW0vjYGA@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
- is >= scaling_setspeed
-To: Shashank Balaji <shashank.mahadasyam@sony.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Russell Haley <yumpusamongus@gmail.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Shinya Takumi <shinya.takumi@sony.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/8] arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+ kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+ <20250527111227.2318021-7-quic_pkumpatl@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250527111227.2318021-7-quic_pkumpatl@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 27/05/2025 13:12, Prasad Kumpatla wrote:
+> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> 
+> Add the sound card node with tested playback over WSA8835 speakers
+> and digital on-board mics.
+> 
+> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 45 ++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 
-On Tue, May 27, 2025 at 10:22=E2=80=AFAM Shashank Balaji
-<shashank.mahadasyam@sony.com> wrote:
->
-> Hi Rafael,
->
-> On Fri, May 23, 2025 at 09:06:04PM +0200, Rafael J. Wysocki wrote:
-> > On Fri, May 23, 2025 at 6:25=E2=80=AFAM Shashank Balaji
-> > <shashank.mahadasyam@sony.com> wrote:
-> > > ...
-> > > Consider the following on a Raptor Lake machine:
-> > > ...
-> > >
-> > > 3. Same as above, except with strictuserspace governor, which is a
-> > > custom kernel module which is exactly the same as the userspace
-> > > governor, except it has the CPUFREQ_GOV_STRICT_TARGET flag set:
-> > >
-> > >         # echo strictuserspace > cpufreq/policy0/scaling_governor
-> > >         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
-> > >         cpu0: HWP_REQ: min 26 max 26 des 0 epp 128 window 0x0 (0*10^0=
-us) use_pkg 0
-> > >         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*=
-10^0us)
-> > >         # echo 3000000 > cpufreq/policy0/scaling_setspeed
-> > >         # x86_energy_perf_policy -c 0 2>&1 | grep REQ
-> > >         cpu0: HWP_REQ: min 39 max 39 des 0 epp 128 window 0x0 (0*10^0=
-us) use_pkg 0
-> > >         pkg0: HWP_REQ_PKG: min 1 max 255 des 0 epp 128 window 0x0 (0*=
-10^0us)
-> > >
-> > >         With the strict flag set, intel_pstate honours this by settin=
-g
-> > >         the min and max freq same.
-> > >
-> > > desired_perf is always 0 in the above cases. The strict flag check is=
- done in
-> > > intel_cpufreq_update_pstate, which sets max_pstate to target_pstate i=
-f policy
-> > > has strict target, and cpu->max_perf_ratio otherwise.
-> > >
-> > > As Russell and Rafael have noted, CPU frequency is subject to hardwar=
-e
-> > > coordination and optimizations. While I get that, shouldn't software =
-try
-> > > its best with whatever interface it has available? If a user sets the
-> > > userspace governor, that's because they want to have manual control o=
-ver
-> > > CPU frequency, for whatever reason. The kernel should honor this by
-> > > setting the min and max freq in HWP_REQUEST equal. The current behavi=
-our
-> > > explicitly lets the hardware choose higher frequencies.
-> >
-> > Well, the userspace governor ends up calling the same function,
-> > intel_cpufreq_target(), as other cpufreq governors except for
-> > schedutil.  This function needs to work for all of them and for some
-> > of them setting HWP_MIN_PERF to the same value as HWP_MAX_PERF would
-> > be too strict.  HWP_DESIRED_PERF can be set to the same value as
-> > HWP_MIN_PERF, though (please see the attached patch).
-> >
-> > > Since Russell pointed out that the "actual freq >=3D target freq" can=
- be
-> > > achieved by leaving intel_pstate active and setting scaling_{min,max}=
-_freq
-> > > instead (for some reason this slipped my mind), I now think the stric=
-t target
-> > > flag should be added to the userspace governor, leaving the documenta=
-tion as
-> > > is. Maybe a warning like "you may want to set this exact frequency, b=
-ut it's
-> > > subject to hardware coordination, so beware" can be added.
-> >
-> > If you expect the userspace governor to set the frequency exactly
-> > (module HW coordination), that's the only way to make it do so without
-> > potentially affecting the other governors.
->
-> I don't mean to say that intel_cpufreq_target() should be modified. I'm
-> suggesting that the CPUFREQ_GOV_STRICT_TARGET flag be added to the
-> userspace governor. That'll ensure that HWP_MIN_PERF and
-> HWP_MAX_PERF are set to the target frequency. intel_cpufreq_target()
-> already correctly deals with the strict target flag. To test this, I
-> registered a custom governor, same as the userspace governor, except
-> with the strict target flag set. Please see case 3 above.
->
-> If this flag is added to the userspace governor, then whatever the
-> documentation says right now will actually be true. No need to modify
-> the documentation then.
 
-So please submit a patch to set CPUFREQ_GOV_STRICT_TARGET in the
-userspace governor.
+Don't add one-node per patch. Add entire sound for this board.
 
-Thanks!
+Best regards,
+Krzysztof
