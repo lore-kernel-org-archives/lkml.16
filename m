@@ -1,124 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234312110;
-	Tue, 27 May 2025 22:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0037139D0A;
+	Tue, 27 May 2025 22:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748384203; cv=none; b=bH9P/Rc8h0eFNZ2q5SzKlCQ4vneAfJKc4ESUsAkicaYVQP3drDaihUhU9PHBELcBHzJL38b1xfdmrTzrv2Fe2Vikuix4MUmEaMQMT1yxFSFx2O+zt5H3X9PvoOqGgORcRfJEm6sh3ikLGb25eQw2I0WsO3Qb1LAln70JiHb+aeg=
+	t=1748384469; cv=none; b=PF6hYVY+YhEgtpldFhRU1ogIwq2fEgXvEHNPqwmqb2YO7V/mj+cQ/7HLfuJjXPkSoLYXUNYxKRZ5ddhKkEn6ZI0rsLBsdO4jNA0MbByBEreEZGNs0HzbN/6RVlTrkMrOu5rl7Xr0ASxoSJPSKEH+oQjWioHCNNaCC/qp5cfz23o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748384203; c=relaxed/simple;
-	bh=MzFRMlqO3bl/CtN3ADTjN4rXHrsrNZHFSUgEmNofhAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VmYZLMhgu90oHWq8kQtVtLGEj6qpigl7xM73x8eNZN+cLhLPFnZdU1C/KKav1rLMZSuJhvXajxLj6XqCr5vDXoSzQ94rgJwepRwDGHgvFMe0XKc8kadGIXNFTFjHeyfH/6vrtP4X2uRGXeSuDE4QWgo8bKplSKXja2/aXnVVVzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RviyFI+o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748384469; c=relaxed/simple;
+	bh=pRHpfU+iErScwmho/6sCiZoQBXbVnuz2OWGlnIWI8fA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o3y+nXJk6mcOtP7iW1LKKGdlmpi3GL0Fy9wqk2txwlOx7Ko7eFMSJYQCo9fXcebcSh0Gnrn1u7V3A36T357nOBYlveySDDVUebhAvLsUKbKVqxrPe3eA319pU35/b4CnLYL14lfvt6vl7op6xZfNWmWZlOBelksiiPxzHx5GzCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YekCHHPj; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RviyFI+o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A05C4CEE9;
-	Tue, 27 May 2025 22:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748384202;
-	bh=MzFRMlqO3bl/CtN3ADTjN4rXHrsrNZHFSUgEmNofhAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RviyFI+o6Q/1ibO24VNOFDSIyv+MDUsANixhWsTmUx8c0Xm0ngCc7Ch4sinavHrNy
-	 RoF+pYsVzzIw0BdqxK1/VjnlMYhGLJhPLvwXloAlBopwutkFfp4kHOyuMaRCDOjO4b
-	 bzbwbDbURjpCKRxdLxrwZYn/r6z9Ofg0ujkK9s8aj3Do+0sjeGMROsW9JRtqXgPaFv
-	 GKy1k0ufePZpxYGT68+vN2S5JHdY8tWCVFGm7zS0QDeFzBdIarQi5AL3SOTpUVJ6Yr
-	 Leb0DXvp3zCea6AUrMBzlYKrK3xxv1eq/Ac+hn+v1ou43dgsMxMJqk4GKBLP6qrESQ
-	 cHviQmcqkWoEg==
-Date: Tue, 27 May 2025 15:16:37 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>, llvm@lists.linux.dev
-Subject: Re: [PATCH] kbuild: replace deprecated T option with --thin for $(AR)
-Message-ID: <20250527221637.GA2566504@ax162>
-References: <20250525112833.3808220-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YekCHHPj"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so51033475e9.2;
+        Tue, 27 May 2025 15:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748384466; x=1748989266; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7XytmjT0QYoYbr62wTzvh2jLYboBuJySkJ1IHPxAlMk=;
+        b=YekCHHPjA3ayuO/5LAvuBrzLWusYcCC+qsXrzPhIjChGxO4jnmhaaHmzIINQaajleA
+         w9aGftbK+xVskbMKHB0JNB+pqro86MIKZ/wvzSnCxQA96viQhmTK+V2ObNZ1s97BgxAL
+         xG+MGBdXuIufhoK9EnZOxkFOhPaPLkQTJd9Xs/3PlFmwfej32r5v3sZBRu04BWgwAT6J
+         7ymqtjoOD1ld0uXIvV9yeYiG2hP59hvKdyPxYBKWw9t7aMGbHh85pV7MBqiZ4SuBY7c3
+         NyN4C1PnTneKBqG8d/5ROHoZyfMkm/lj0XZTQFLsf/SgT+pV1I+yYdmqAYL1scuREHZr
+         EFtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748384466; x=1748989266;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7XytmjT0QYoYbr62wTzvh2jLYboBuJySkJ1IHPxAlMk=;
+        b=KzxfROLv8pM7PBWVTebKLq0CoHL1wfx7kmQblvfSZ6xIE75UE9O7Fq6agRGLe/5cxO
+         j2q1633V925yFktCgvmPCZqgBRF7zdT5O8XMPPVGcWj8ShIywNXtSHdmBQ7ndq94VsMA
+         PMhaw2pFMeypMb5NM/FlBoKveO8Tx0ohxkTFid48/Gxx0U2SHmQTjeACl15BCcUVLPIT
+         67dvAi6RvBXDeNaQTUGUMjTVg9KatD1N4KeoSmX1NjJcgFSyc0GJL2h7d4IroBEqU2yb
+         pHALhRw3b9tHzlsflzifYW8tqQHOJc7+Dl1S1FCnRuhCjVq2/HZAXc8XVK4yYW3btU00
+         NuCg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/es0zN8CYyqfpQpauwqFKQkc1vrSwGVoxqP5vRRpKRlHOIqCF4UjsDPnm5XUNZ26J9JRhddqUPug6@vger.kernel.org, AJvYcCWi5PGwdRQnYg+qClifqIRezDfFMjjC77ikKUW60+EPoFXkTLjWkQXDtmd1+PbXyS0MrPyo9mxlpfiNJQ==@vger.kernel.org, AJvYcCWzWt0D1vkb9C6crXBtuL5W/i9zOUDaqlsFjcrkA3mQ55+jdLRQ4DEPRCxN9agzpGrSeEHZajqGLFAupT47@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4EE8DkTJ/KSYqk5lhU0TfJtGn9/g0HGALLsYVP2J74wx95K5z
+	mDk2EKwHAUwsBLe4JhlKgIg5eNpt9v0w42yZatyWOilKDBqwv1KLtiss
+X-Gm-Gg: ASbGnctCaK4rubRTWAmvewurEwnXqkKdRWVcBmtwD2p9buuWnDPqbIVyvuSxoQwAFFq
+	xxjtSl31TrfKdqiV3HhFvM2bRPJjRhOgjm6bxRnfx25s9yNd4Z68pQoQ/TTm85pXUPUZVbLAWaF
+	5pvmT9neCyU0vdID8EyvPw7yxfoJf6C73pGFT9e2r1aUDnaIA6ik/MQNjFKb74hwwTQ7awhjPwl
+	FGDBIjLmQuciDAakB0KmDHBYTOXtJXy22//J58FTRcdcP0s2MuP2Rj7DqcI5ReU4o+ohQuWfSaV
+	rKh3jj5p8WbM1rXXvIGZNXQNKLlzAZptsxXsaNvVtC/6T9Y7Dx5s8gb1ALEkb9RsnDWUZlpKg1q
+	5fEogb3ib+wnZ0zJVgXbdWbxb2muupKA=
+X-Google-Smtp-Source: AGHT+IFdKWU8GcSeLjuTkimcHYGLyMLF9mUe1qrsMqtPgGlIFwLTef1kQexYipsKO1mCIPUpGPKSqA==
+X-Received: by 2002:a05:600c:1e02:b0:443:48:66d2 with SMTP id 5b1f17b1804b1-44c91dd0981mr170619255e9.16.1748384465884;
+        Tue, 27 May 2025 15:21:05 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4e8bc377asm233366f8f.72.2025.05.27.15.21.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 15:21:05 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Christian Marangi <ansuelsmth@gmail.com>
+Subject: [PATCH 0/6] pinctrl: Add Airoha AN7583 support
+Date: Wed, 28 May 2025 00:20:32 +0200
+Message-ID: <20250527222040.32000-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250525112833.3808220-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 25, 2025 at 08:28:31PM +0900, Masahiro Yamada wrote:
-> According to 'man ar':
-> 
->     T   Deprecated alias for --thin.  T is not recommended because in
->         many ar implementations T has a different meaning, as specified
->         by X/Open System Interface.
-> 
-> 'man llvm-ar' also states:
-> 
->     T   Alias for --thin. In many ar implementations T has a different
->         meaning, as specified by X/Open System interface.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+This small series introduce support for Airoha AN7583 pinctrl
+support.
 
-Yeah, seems reasonable to get ahead of the curve in case either
-implementation decides to drop it.
+Most of the changes are generalization and cleanup of the Airoha
+pinctrl driver. These are needed as all the array in the inner
+function were hardcoded to EN7581 and didn't reference stuff
+from the priv groups.
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Everything is changed to match_data and priv struct so
+adding AN7583 is just a matter of adding the structs.
 
-> 
->  Makefile               | 6 +++---
->  scripts/Makefile.build | 2 +-
->  scripts/Makefile.lib   | 2 +-
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index efbc0966b82a..682a8002b7a1 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1201,12 +1201,12 @@ ifdef CONFIG_TRIM_UNUSED_KSYMS
->  KBUILD_MODULES := 1
->  endif
->  
-> -# '$(AR) mPi' needs 'T' to workaround the bug of llvm-ar <= 14
-> +# '$(AR) mPi' needs --thin to workaround the bug of llvm-ar <= 14
->  quiet_cmd_ar_vmlinux.a = AR      $@
->        cmd_ar_vmlinux.a = \
->  	rm -f $@; \
-> -	$(AR) cDPrST $@ $(KBUILD_VMLINUX_OBJS); \
-> -	$(AR) mPiT $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F -f $(srctree)/scripts/head-object-list.txt)
-> +	$(AR) cDPrS --thin $@ $(KBUILD_VMLINUX_OBJS); \
-> +	$(AR) mPi --thin $$($(AR) t $@ | sed -n 1p) $@ $$($(AR) t $@ | grep -F -f $(srctree)/scripts/head-object-list.txt)
->  
->  targets += vmlinux.a
->  vmlinux.a: $(KBUILD_VMLINUX_OBJS) scripts/head-object-list.txt FORCE
-> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
-> index 8d8252229895..284931f2a9a2 100644
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -456,7 +456,7 @@ $(subdir-modorder): $(obj)/%/modules.order: $(obj)/% ;
->  quiet_cmd_ar_builtin = AR      $@
->        cmd_ar_builtin = rm -f $@; \
->  	$(if $(real-prereqs), printf "$(obj)/%s " $(patsubst $(obj)/%,%,$(real-prereqs)) | xargs) \
-> -	$(AR) cDPrST $@
-> +	$(AR) cDPrS --thin $@
->  
->  $(obj)/built-in.a: $(real-obj-y) FORCE
->  	$(call if_changed,ar_builtin)
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index d858a3223bcd..e37e2db5f528 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -280,7 +280,7 @@ quiet_cmd_ld = LD      $@
->  # ---------------------------------------------------------------------------
->  
->  quiet_cmd_ar = AR      $@
-> -      cmd_ar = rm -f $@; $(AR) cDPrsT $@ $(real-prereqs)
-> +      cmd_ar = rm -f $@; $(AR) cDPrs --thin $@ $(real-prereqs)
->  
->  # Objcopy
->  # ---------------------------------------------------------------------------
-> -- 
-> 2.43.0
-> 
+Also the schema is generalized where needed to address
+for the small difference between AN7583 and EN7581.
+
+While converting it, it was also found an additional copy-paste
+error for the PHY LEDs pins.
+
+Christian Marangi (6):
+  pinctrl: airoha: fix wrong PHY LED mux value for LED1 GPIO46
+  pinctrl: mediatek: airoha: generalize pins/group/function/confs
+    handling
+  pinctrl: airoha: convert PHY LED GPIO to macro
+  pinctrl: airoha: convert PWM GPIO to macro
+  dt-bindings: pinctrl: airoha: Document AN7583 Pin Controller
+  pinctrl: airoha: add support for Airoha AN7583 PINs
+
+ .../pinctrl/airoha,en7581-pinctrl.yaml        |  297 +-
+ drivers/pinctrl/mediatek/pinctrl-airoha.c     | 2497 +++++++++--------
+ 2 files changed, 1489 insertions(+), 1305 deletions(-)
+
+-- 
+2.48.1
+
