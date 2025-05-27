@@ -1,55 +1,55 @@
 Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38E6280CD6
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8550281375
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369251; cv=none; b=mYUw0FNm8eKLTaEConHcGe+5qUzusCHFjccBptKincwtdnLOMnTrua1sANfEB2WEyPVh+SHs+zV5Yz6uN2sl24UdODdZuSorhZ2I+wwoiAYQaVliI/pxOrslUl5v+j9H0yi0TbeL5Xw9/vtNJHSNCmGeYZ53y1NrBDiawVjd9Kc=
+	t=1748369253; cv=none; b=TVz8UCQQxk2YSIdhMOcoPvepZAMt0ky4/tce4/ovleML/+euLUKPNfxNvBTeVBMRFuXgRJArH3sCbLy363BxMBVipFzd7AuRz5HumQgXLNAkNJu5oG18WYWnGMDkaKk10PhXlIe1hLCtyvwspgyGTNGs/3DxQNgXZTav0HmCBD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369251; c=relaxed/simple;
-	bh=gnsE73TCHXacfNt+jnheidFzg4YPcJ5undugQ3z2NwQ=;
+	s=arc-20240116; t=1748369253; c=relaxed/simple;
+	bh=CBWXDqwmWst2ZqdY/0uSvasMfgfkKz/Uh3ju60ADh2M=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=f1BU1L9+I5DCyDi4+GPQ2O7GweqPL00lQaP2Bx7ZIyvjxfGdllFJpGCAFJASlWU9GK7IVypoyrL69SkB7oiX0PaBnVvWMZO3t+No3HVuoPJBhkQnDnQhQmTYY8vdDdqxhzCryTaXJx8xtzzx2pT/w0XzSS1wTtO/HrQeg8LnipI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IagMytWp; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=i98/e/ByrOT7gBwn6P8U9NmrG8xXPEha2GVdzoPpsOaGPoM7SIvjehwOzHiUeC2Scf/Q6b2OsEtG9TrestJneX6KwgjzmbL+SlIdhXeN84WWW+Qxbg9BNb6F10keieEZRgpqyWLCJTWo803E1asopfpB4Cz7Au/XVnKaYUX3WKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zL0jlFJX; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IagMytWp"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2340c08b412so40727075ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zL0jlFJX"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2323bd7f873so36157475ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748369249; x=1748974049; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748369251; x=1748974051; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5wXMXlAyZvUvXf8QP1+5WxcJsJtq5NumQSWOq2OgGFg=;
-        b=IagMytWpsKN45fhzxWepSUd+CRqhDzs2pxtfp2UUtYhdqBxshxZIUvoqxZbMQTzamS
-         zHi/7jnJ7fOgLAQSXzbgFvbESTMjxpjKVA8c4GsisElAG7Zp3v/GGKoZdBnXfMAPhJxU
-         WXvrD7rCav0+IyGoD26ZiIB8Mptp5szMiLrQMHvi+Afj7U6IV+Yv95kkuXDQAhmW78+8
-         C9L6olmg59yAA1Qc4suMH49TNz/xTx1501f4Fmt4YwSxFsjFVOR1t884R2rijZAAqWI4
-         RctNC5r8EsrsgaLNr2+NBIUOYkMWDZkA6eyGgQ7mHrcfKEG/2vZmKuF1nIuGrDJFD0El
-         bLUQ==
+        bh=MX8V9w5FVeExaYuyetA8waEgh5LNED363u7Lxm8ca88=;
+        b=zL0jlFJXGyxlsUD21aqW0bFet2sLNYLeKMK1o4Ro8srPJOIgc4bW4qZXvdryrk4iKP
+         B6ras8VwRLUKNQM6yBNgHclzhv99bF6PEjiL4ZSNye6yK4g54jjITLEnf9qkfUr68BwE
+         zR1v1zedIpqR4OlQ3hzlWF91OCLFwf1cevvV+TEgTynRrIM/M4nFirUR9lW0tSueze4s
+         1UjKRrhM5JvQ8LMM+jOAv2U1+Jo/ctj1BoZJauFehmBtyiImppp/PYB/oZfin6ZDTFeS
+         v29YPd0glAJM4xMWMT7EJTYcAIR0mkuI+Ax6+xyOHmvXTF09cxss1D2zoVKUGyl86j9q
+         aOaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748369249; x=1748974049;
+        d=1e100.net; s=20230601; t=1748369251; x=1748974051;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5wXMXlAyZvUvXf8QP1+5WxcJsJtq5NumQSWOq2OgGFg=;
-        b=Odbpejnx/ZIfVUHPDmS2xljc1sFrarWV/eGv5Ai0aMCkrMwZgSHtJj9OzBLRWqnSqZ
-         E8TczKumsLPAbhV2pf5vRU5KlA+5o8kSxxL0omIuMC8MsC4CElY+MtUj7NXlkofNXd7u
-         h360mTPGNRDvy0dPyTgJc6sd/xicE27Bz0AQJebLneovFcmc0r8mGjJ6z9Qpo+FTMBE1
-         tyukjfBVOG7wbx8C5FlVapqGBNNiYggCdDBYSJ4R+9wE2AdM3u932aKghK8//tua1mm/
-         TIEw+5FPLzEoigwBwUGhqAAeO48rgxCpz7ZbRF1wtBWFZbkVG6VUwXoGOwS8GugaCfuL
-         IJkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxKvICgT10mt2jP81ht59iqxZyxI1nmZ8VCKfcbUKYEerFaSAYTqamRj1LSgAKJcIs5E0NBDagyRPu6xc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqJv5OArxh/80VLcWV+ciluqrJunIGJ6T+ND+x12g9oMPE/ViW
-	5KARbYqGQnrzgxqRBnX0Mdi+CuzyPbXck7cSKUzVEFiQBVpDILQpWRDQy80hO4AfBccKoDEPz5x
-	AqtZTwZ8JUw==
-X-Google-Smtp-Source: AGHT+IEvPoU4s2ajTl/FjlJUl0arj/O3MM195pyQFg60cA88dWs1gj7e6UdnPf1MO/hOFWdqepM+jxUI6G+V
-X-Received: from plkb13.prod.google.com ([2002:a17:903:fad:b0:231:6301:a4a3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2347:b0:234:a063:e2aa
- with SMTP id d9443c01a7336-234a063e55bmr40374805ad.52.1748369248985; Tue, 27
- May 2025 11:07:28 -0700 (PDT)
-Date: Tue, 27 May 2025 11:07:01 -0700
+        bh=MX8V9w5FVeExaYuyetA8waEgh5LNED363u7Lxm8ca88=;
+        b=mdwK6I66HnaNZs0hwFEBV7htSsjqMzGo/AV10Sfh68qRCIBfWh6PB9kNaXhCtAxm+7
+         Yu2Z8u0dQz5sTkBSKRnlPp5cz7sVsVE3dflr7DV2okTzBW/y5127UKIDRyKyvnkKVLDj
+         YqThlq+b4WQfUXfr6LRDecoKm1bOvI8bRceu+3s8ZXu5vPmWuXgi8y3XEVmb1Bu/cSWk
+         mvq0kydREMJ59foOYHJOHDCGN9Ex69iutnX3b+7ysGrzm9JaoYchEHtmfXpsNwlX/rRt
+         YqIlDT49MfmTl7Gs5VPGof9u2b+ozuSgEjC0MDprYCo72rV+OJorkNwNNQ91dqnhMSYF
+         wWVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV429k75d5N9djzqNMBnROY60WbhC09UTjWGYILcbW1hNIHBVJhuTFg9hx6+9t4zrn1pdDTHjjcUHIQNY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo5386p3B2Oqq3tD9X6Fmh25E1ML8gSBWsjW2HWO6kw9PRWRVr
+	VuQduo59BV7TPkZ51SpjS6tBQX66ab2csQPNHXZ1MaJurr66Lb1GcAER7znNYjYZGd3f1duRHrH
+	nQHlRHvwRRA==
+X-Google-Smtp-Source: AGHT+IGNqZt8gE2AinHrs5u59vtVCFuseQxQglwLlKwXoQLPdUfefW6JEtTDFuscAHg/KyKTb9DfJ3w8oY6h
+X-Received: from plll21.prod.google.com ([2002:a17:902:d055:b0:234:949d:4a5c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41c8:b0:234:a063:e2ac
+ with SMTP id d9443c01a7336-234a063e540mr48300615ad.2.1748369250955; Tue, 27
+ May 2025 11:07:30 -0700 (PDT)
+Date: Tue, 27 May 2025 11:07:02 -0700
 In-Reply-To: <20250527180703.129336-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250527180703.129336-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250527180703.129336-5-irogers@google.com>
-Subject: [PATCH v1 4/6] perf intel-tpebs: Avoid race when evlist is being deleted
+Message-ID: <20250527180703.129336-6-irogers@google.com>
+Subject: [PATCH v1 5/6] perf test intel-pt: Skip jitdump test if no libelf
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,40 +80,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Reading through the evsel->evlist may seg fault if a sample arrives
-when the evlist is being deleted. Detect this case and ignore samples
-arriving when the evlist is being deleted.
+jitdump support is only present if building with libelf. Skip the
+intel-pt jitdump test if perf isn't compiled with libelf support.
 
-Fixes: bcfab08db7fb ("perf intel-tpebs: Filter non-workload samples")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/intel-tpebs.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/test_intel_pt.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index 4ad4bc118ea5..3b92ebf5c112 100644
---- a/tools/perf/util/intel-tpebs.c
-+++ b/tools/perf/util/intel-tpebs.c
-@@ -162,9 +162,17 @@ static bool is_child_pid(pid_t parent, pid_t child)
+diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+index f3a9a040bacc..32a9b8dcb200 100755
+--- a/tools/perf/tests/shell/test_intel_pt.sh
++++ b/tools/perf/tests/shell/test_intel_pt.sh
+@@ -288,6 +288,11 @@ test_jitdump()
+ 	jitdump_incl_dir="${script_dir}/../../util"
+ 	jitdump_h="${jitdump_incl_dir}/jitdump.h"
  
- static bool should_ignore_sample(const struct perf_sample *sample, const struct tpebs_retire_lat *t)
- {
--	pid_t workload_pid = t->evsel->evlist->workload.pid;
--	pid_t sample_pid = sample->pid;
-+	pid_t workload_pid, sample_pid = sample->pid;
- 
-+	/*
-+	 * During evlist__purge the evlist will be removed prior to the
-+	 * evsel__exit calling evsel__tpebs_close and taking the
-+	 * tpebs_mtx. Avoid a segfault by ignoring samples in this case.
-+	 */
-+	if (t->evsel->evlist == NULL)
-+		return true;
++        if ! perf check feature -q libelf ; then
++		echo "SKIP: libelf is needed for jitdump"
++		return 2
++	fi
 +
-+	workload_pid = t->evsel->evlist->workload.pid;
- 	if (workload_pid < 0 || workload_pid == sample_pid)
- 		return false;
- 
+ 	if [ ! -e "${jitdump_h}" ] ; then
+ 		echo "SKIP: Include file jitdump.h not found"
+ 		return 2
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
