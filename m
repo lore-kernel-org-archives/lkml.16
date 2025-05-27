@@ -1,111 +1,121 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A603F8460
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE83219ED
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748317545; cv=none; b=GJkri5zSa6XQHQyw/dABpr66eWrsxx54cS2qV/OUBt7mSz6lOH6qMeKrk8LT39RaeU31Z68Zo0k0FMahPAHo8I58+3qKGvNmc4ra+kYxeQi7rvpajjRFXRwLPYQtt34aXJHrfbHrY1t9gEwoFaPSmqFzNwrnavI+69ML0/SFR8U=
+	t=1748317651; cv=none; b=hcU8pjphoSp0a2srLEPS+8BBgzPySuQm7lNTxixj/UwkTgAW/ZFNYqbACtWzBcJBh0DsHUBeilrlzQTeyr5nnIbbC9XxO24GvwrRi01H7tHS78PD4dvS01i/XAUX/08qj08zVNrlivnR1J3nIOwhExERWROokR9BETsGtXT31gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748317545; c=relaxed/simple;
-	bh=iIhYXxZiXzP1nOmODNSrHuhwjAVawSq7mltuOEeOpLI=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=kX+hdEsyGTyGaxs/mEF9tLoRqNRAca66CTf98ffVHcEgeFUOyTYkibs7X8LE5jmgnwAMYYIu+URfzLlRod79ga44alFGJiOF/G1MJSoOn2ppatSF2XagHGDfeomkZSq/gTy6YQTgZOTeW9643DeXQiR44ZmyAdChcgynwJ9MLro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=abMzPC8u; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1748317651; c=relaxed/simple;
+	bh=i8fK/UC7IwSbdmIBJIreMCZdiD3Bh2aW1zCYzj4Y994=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=CjGFTNGl3qPBcNxwa574Pzp5t+iB65EpoXOMl2WhluYF6xj+ncHNXgpAUckm9b1uAbDMBZsxHxc5dp+Rwn+P2VsrgFkR3t4tWKsQfIWJ/nvVfclx0kRzg2UKKdeTYjB43fk2ARbU5N+RZNVqyfo+igNRfXko7ZbDd8MXtC8Yokc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=ZBflUHSv; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="abMzPC8u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1748317532; bh=HEP8M2++02Q2nGa/KrIRO1wnBG+GhLuBDildhfq5FJ8=;
-	h=From:To:Cc:Subject:Date;
-	b=abMzPC8uq56dmpSaB67tu6Q/EiSdeV4RkWZHCfQDWCAjBqYYKO2X0wXTj3GFbgbib
-	 05qyKXsLU2ixS9h7v5O2NyTY478Tdcu1pk62tsAJ0pFCBx1XQglbPAJUaXiR8PljnF
-	 P9JWM8uVP8hFp9LQSRRqJCb7aZwC4Vw56VC1FckI=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id B5D2FA08; Tue, 27 May 2025 11:45:29 +0800
-X-QQ-mid: xmsmtpt1748317529tcvff8lxm
-Message-ID: <tencent_27A451976AF76E66DF1379C3604976A3A505@qq.com>
-X-QQ-XMAILINFO: M3vv73qU6a4uejIKGc9BXxeApuz7c/+QvRfcumYJyl+UYV7/OWQkZ+N1K7rnJE
-	 IMb3bxs0SYYtEEtlJVuZZtCuMOHB2fY4tbMAB6brpaysGwS1n178ja3qMOB6/dYbAntTIQxhyApR
-	 DfdZfWF/hb7UgL2kqhLuW4oeBdUgsR9/wgrLIxHukiBYDrvvLFgxFitIN5aTm84XySybcwnaEoOC
-	 r5N4szUYp9vhGrTbINdh94ZGYt2eaRGAEmeDAUcUiyqu6GH+605vnnjxNrvd5k4Wo2Of/yPxX5IH
-	 YQao9JY2yQHM5XwqOxmwHiie7xuNqzY1aX2NK/za05icVhfjRtMIk/sRNHZZydJMH4qZjIu74FKo
-	 MhxNbDeP80E0k2MJJVDY3EjXsLTfKDKyUEAJtTR7B5YgjW0GSbLcdqsfuebU8Z7B3GKMr9st1QSY
-	 25RcUP7leAT9M5/WOlV7/1T/CvQMbJULCwiS2som+ccSNcCrVZopKhEn6buHML8JPZHGdB/YA6CB
-	 9D8ss5s7YiSEwTLx/9Zvi9dVNqTHzvuDg3Wv/SQgQmfUK6GVqmxV0J9kFNl0s12xfnQG+8D0nyZN
-	 eOA6azqfbCpRCtksOhqHaKMT7YggejLBR9Gf4gfgGo8WQ59A3sD3wwbxS70ZCucUpCLfGUdFgtSj
-	 NAipMmThc2+ya6JXEFSd/40sGtfwhjS4kvfUIBK1CbRfx8T019dS9OEO3pRUQ7kmzhA2J805fV4Q
-	 t0CT1nLYXTn+JiHazHx1f8wMWC9l5cpFi7AzNyEp1XJoMPAEoCBYSjPqfUvp3aS6G0AASXyTRdGK
-	 +ac+MGSc9ZgUX0STx4UAuy1XxrBCLz8LoEt2HzwcJ9WMVZqwhbLpqh3mX4l2OGoAP/MvNNqd/n4W
-	 rLyqI/v16tafQPnHyTDRoAlZ60+oLSlX6NQE+cr2nU9hj4YY3UOvAt7iJVam8r+Q==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: seanjc@google.com
-Cc: pbonzini@redhat.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	binbin.wu@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH next] KVM: VMX: add noinstr for is_td_vcpu and is_td
-Date: Tue, 27 May 2025 11:45:16 +0800
-X-OQ-MSGID: <20250527034515.1569758-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="ZBflUHSv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1748317642;
+	bh=i8fK/UC7IwSbdmIBJIreMCZdiD3Bh2aW1zCYzj4Y994=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ZBflUHSvUt5M6O2sV4BqFvg07K3qf5H19DTMmwSHOCb+eAQrURkBBq+z/ye+Zk+6G
+	 o8y/EqMMUYBkxL/AaUXo6j1pOAhJ70UbIBxcXgHmG39dGXx3QpP79fG7heafYwqDYv
+	 E2iGL2K9AvHhmFRgK9QTyV4PhJfV+9a0VWl5T/BM=
+Received: from [192.168.124.38] (unknown [113.200.174.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 2B27F65F62;
+	Mon, 26 May 2025 23:47:21 -0400 (EDT)
+Message-ID: <19f4722d5cdb90a207129ee675c7278423cd328c.camel@xry111.site>
+Subject: Re: [RFC PATCH] LoongArch: Do not include larchintrin.h
+From: Xi Ruoyao <xry111@xry111.site>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Tue, 27 May 2025 11:47:19 +0800
+In-Reply-To: <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn>
+References: <20250520064936.32291-1-yangtiezhu@loongson.cn>
+	 <e005dd551aec8bea185b3d37295876bd75d7b3e4.camel@xry111.site>
+	 <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-is_td() and is_td_vcpu() run in no instrumentation, so they are need
-noinstr.
+On Tue, 2025-05-27 at 11:17 +0800, Tiezhu Yang wrote:
+> On 2025/5/21 =E4=B8=8B=E5=8D=881:41, Xi Ruoyao wrote:
+> > On Tue, 2025-05-20 at 14:49 +0800, Tiezhu Yang wrote:
+> > > larchintrin.h is a system header of compiler, include it in the
+> > > kernel header may lead to the fatal error "'larchintrin.h' file
+> > > not found".
+> > >=20
+> > > There are two related cases so far:
+> > >=20
+> > > (1) When compiling samples/bpf, it has been fixed in the latest
+> > > kernel [1].
+> > >=20
+> > > (2) When running bcc script, it has been fixed in the latest
+> > > bcc [2] [3], like this:
+> > >=20
+> > > $ /usr/share/bcc/tools/filetop
+> > > In file included from <built-in>:4:
+> > > In file included from /virtual/include/bcc/helpers.h:54:
+> > > In file included from arch/loongarch/include/asm/page.h:7:
+> > > In file included from arch/loongarch/include/asm/addrspace.h:9:
+> > > arch/loongarch/include/asm/loongarch.h:11:10: fatal error:
+> > > 'larchintrin.h' file not found
+> > > =C2=A0=C2=A0=C2=A0 11 | #include <larchintrin.h>
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~
+> > > 1 error generated.
+> > >=20
+> > > Maybe there are same errors for the other unknown projects, it is
+> > > annoyance to add the include path each time. In order to avoid
+> > > such
+> > > errors once and for all, do not include larchintrin.h, just use
+> > > the
+> > > builtin functions directly.
+> >=20
+> > Sorry, but in GCC those builtin functions are not documented and may
+> > subject to change in the future.=C2=A0 Only the larchintrin.h interface
+> > is
+> > documented.
+>=20
+> AFAICT, the LoongArch Base Built-in Functions are listed in the GCC
+> documentation [1], they will not be changed easily and frequently in
+> my opinion.
+>=20
+> __builtin_loongarch_cpucfg()
+> __builtin_loongarch_csrrd_w()
+> __builtin_loongarch_csrrd_d()
+> __builtin_loongarch_csrwr_w()
+> __builtin_loongarch_csrwr_d()
+> __builtin_loongarch_csrxchg_w()
+> __builtin_loongarch_csrxchg_d()
+> __builtin_loongarch_iocsrrd_w()
+> __builtin_loongarch_iocsrrd_d()
+> __builtin_loongarch_iocsrwr_w()
+> __builtin_loongarch_iocsrwr_d()
+>=20
+> > Thus if you don't want to rely on GCC for those operations, you may
+> > need
+> > to write inline asm...
+>=20
+> so these builtin functions can be used directly and safely.
 
-[1]
-vmlinux.o: error: objtool: vmx_handle_nmi+0x47:
-        call to is_td_vcpu.isra.0() leaves .noinstr.text section
+Oops, I mistakenly believed they were like __builtin_lsx_* which are not
+documented.
 
-Fixes: 7172c753c26a ("KVM: VMX: Move common fields of struct vcpu_{vmx,tdx} to a struct")
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- arch/x86/kvm/vmx/common.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+So yes they can be used directly.
 
-diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
-index 8f46a06e2c44..70e0879c58f6 100644
---- a/arch/x86/kvm/vmx/common.h
-+++ b/arch/x86/kvm/vmx/common.h
-@@ -59,20 +59,20 @@ struct vcpu_vt {
- 
- #ifdef CONFIG_KVM_INTEL_TDX
- 
--static __always_inline bool is_td(struct kvm *kvm)
-+static noinstr __always_inline bool is_td(struct kvm *kvm)
- {
- 	return kvm->arch.vm_type == KVM_X86_TDX_VM;
- }
- 
--static __always_inline bool is_td_vcpu(struct kvm_vcpu *vcpu)
-+static noinstr __always_inline bool is_td_vcpu(struct kvm_vcpu *vcpu)
- {
- 	return is_td(vcpu->kvm);
- }
- 
- #else
- 
--static inline bool is_td(struct kvm *kvm) { return false; }
--static inline bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
-+static noinstr bool is_td(struct kvm *kvm) { return false; }
-+static noinstr bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
- 
- #endif
- 
--- 
-2.43.0
-
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
