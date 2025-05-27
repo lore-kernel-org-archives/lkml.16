@@ -1,98 +1,155 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E77C24DD10
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 908C5225D7;
+	Tue, 27 May 2025 09:06:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336729; cv=none; b=GeUKOnpUJQ/mhG2N70B3hoYBFLMM6kjeQFeVk7QIFbedcSG44Sjv3rnUypDlAGY6Z3pnqb54JeDGi2Qxkqt02kfvMmIXezWJp3xxK4QcPnQvj7gJqFCYkjOEEbDMfCjPVEDS06JA4Vuge54ujyvYJix45adSAI9JGYWhPTiLr9Y=
+	t=1748336762; cv=none; b=mS/IO8CRzDdRCrzMfoVxt4IB1CSOb5Jkzz+1NJR0fCStJZmTz3CEkTXYgmI1TylF8jATwqkqOIrqHMMEQkLHMyuSIaEqxFCeedmpdvHK1P3J+8AldmfAr0ivLEieGpiVwC0vTTzjdxaT1LlQ03j2TddwJxoKXOoa0vc7R+m5TIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336729; c=relaxed/simple;
-	bh=CeqyVjYJXY5gNLnSFK8rGhR6vDYi3IcREM2wPzYC82k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Zw4jfhlLovNMYYU+3s2OP5lu43WcgNmcul3d0Z8arRXLZqCw+VUFkESdt6P7nZQAAP+vl2U9HLvCTNFhGDcEt/EZmafftMcKtbKnt2Y0ugYQkcXB4j+sB9f7rGlmuz7badK3BCQJfsmVb4k0Mp67Nra1Gis4kbCnnqfviDFbOrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CZvtfoAE; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748336762; c=relaxed/simple;
+	bh=FAJqpmb+BoZ0AVDf80FVLHbg+9NVumyxtrdo2DmNzdE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afal+2+7j85o+8lw1JgKPWPEM52+e2b1CDibL8byMabrWdl/ziKXc2sAy7cxjcOPgmJ/RKJWET91zy0KUY+Gh0VO/WW9pZjClbcHusiotTyE7ZWcCFLx0LG/dJXfPXSA+2p2WufOVEGNPKDvHH5PSPxKSkTXdzROIkIzNXgMZIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DiReI8th; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CZvtfoAE"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748336724; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=g3UmXVOxJL0IKWUMXDh3p6MkUMRqvLMyZGb15DpuS6c=;
-	b=CZvtfoAEwbUdC+ftJvS5UKsY+pPrkwZ4XUvZ9Ai01M+b2bbeUMR4UH09dE0wepRWwjPY8PPNFF1olTxFC6JgZiTU/YSnNlRHoX9f2SrCGmOkIGUy75Du/QL6g9+YgdKA95u6IF8oa16QpTAMKBb4nY9fXmtrhjoNgvyq4a/iP/Q=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WbzeqpI_1748336721 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 27 May 2025 17:05:22 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
-  Jonathan.Cameron@huawei.com,  dave.hansen@intel.com,  gourry@gourry.net,
-  hannes@cmpxchg.org,  mgorman@techsingularity.net,  mingo@redhat.com,
-  peterz@infradead.org,  raghavendra.kt@amd.com,  riel@surriel.com,
-  rientjes@google.com,  sj@kernel.org,  weixugc@google.com,
-  willy@infradead.org,  ziy@nvidia.com,  dave@stgolabs.net,
-  nifan.cxl@gmail.com,  joshua.hahnjy@gmail.com,  xuezhengchu@huawei.com,
-  yiannis@zptcorp.com,  akpm@linux-foundation.org,  david@redhat.com
-Subject: Re: [RFC PATCH v0 0/2] Batch migration for NUMA balancing
-In-Reply-To: <55c51f34-b41d-49b2-96a2-dcc5f425f966@amd.com> (Bharata B. Rao's
-	message of "Tue, 27 May 2025 14:23:27 +0530")
-References: <20250521080238.209678-1-bharata@amd.com>
-	<87sekrbvyr.fsf@DESKTOP-5N7EMDA>
-	<55c51f34-b41d-49b2-96a2-dcc5f425f966@amd.com>
-Date: Tue, 27 May 2025 17:05:21 +0800
-Message-ID: <87cybua0fi.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DiReI8th"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54QNbpQa007658;
+	Tue, 27 May 2025 09:05:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=kKsxNrrRq+ObuNzyEdrrMJwLMVpQZb+We6ceTAbpB
+	RE=; b=DiReI8thcZFJ8udBC/aooI/f6lbe+NnXRIj4YEXe2IXbOnINbWclU3jHr
+	Yvood8t4HjVD84IJf5PulW19NDW5uMCESziz5M184yKgY+od9hoU951MDFtnxI4/
+	baSThkMZPDdtdflNhH3OA9xKQHh6GttkicpQmYWJfSfMQmgrkAmBbI8yqJVhkEVn
+	RvSDVVvK73mSf/qozxpHM17Ha89Khga7eWCLFheob/5acW50eARwahZqZP5AIMHs
+	ws+//BwP8VpYpV304R64C7Yxf3lWzlG8v68aCKoLLgzUYudIg6FawHdPDK2nzKa5
+	BHaG0fp8Fc8Bw9xu1ZTewa1YVYZoA==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5ucn9w7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 09:05:55 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54R7DHYr016700;
+	Tue, 27 May 2025 09:05:54 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46ureua4tt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 09:05:54 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54R95rci28508770
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 09:05:53 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E139420043;
+	Tue, 27 May 2025 09:05:52 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3FEAF20040;
+	Tue, 27 May 2025 09:05:51 +0000 (GMT)
+Received: from vishalc-ibm.in.ibm.com (unknown [9.109.245.223])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 27 May 2025 09:05:51 +0000 (GMT)
+From: Vishal Chourasia <vishalc@linux.ibm.com>
+To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Vishal Chourasia <vishalc@linux.ibm.com>
+Subject: [PATCH] Documentation: cgroup: clarify controller enabling semantics
+Date: Tue, 27 May 2025 14:23:36 +0530
+Message-ID: <20250527085335.256045-2-vishalc@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: XAUiHN1XPtjLl4fF0KJuMAJtifm6UvN7
+X-Proofpoint-GUID: XAUiHN1XPtjLl4fF0KJuMAJtifm6UvN7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA3MyBTYWx0ZWRfX8Ss8AJaVoXnE wAssbYWwVmyXrn9j0/D9t5hquiuwJlDqlJkA65m2DxfH6S92hh809trgSjlIFbcfhCmgTQZu9gU 3rZ/+icwA3/Nd++GcUtGCSOisnuUYXxmoXw0JV8Uy5FNdrlIerj5GcIHPZr984brDbxaZmZ4/ZN
+ 2yqWas1jzMfXvPdtrBiCOmindH2DZzDb/74/UZFU3Nh9XcaB2ELb5JmCoJx3nWom+6qpkYVPp9x QZ3Z6nmKOXy/nrNhOPnlq8HMdCh3B/xH04lFipioVNTOu91vrn81z5i25/q92A7/9u7rPtFCxf3 5e+DkWsTPq/fSd57ByBzq3NwQZMZ8jyvCgdvCht8pirIwq9pKz84MpYEaBHtTbZYbhIP2aYidwQ
+ 0CICP9T2UquAXETtcIm284Pzwy34RFusA4xcnhUEXK1ccL/6yf2YuE2yyk31gjJcQ00eXje4
+X-Authority-Analysis: v=2.4 cv=fJM53Yae c=1 sm=1 tr=0 ts=68358073 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=a_b_lNqkOoIFiPTXujYA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_04,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=847 suspectscore=0
+ phishscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270073
 
-Bharata B Rao <bharata@amd.com> writes:
+The documentation for cgroup controller management has been updated to
+be more consistent regarding following concepts:
 
-> On 26-May-25 2:16 PM, Huang, Ying wrote:
->> Hi, Bharata,
->> Bharata B Rao <bharata@amd.com> writes:
->> 
->>> Hi,
->>>
->>> This is an attempt to convert the NUMA balancing to do batched
->>> migration instead of migrating one folio at a time. The basic
->>> idea is to collect (from hint fault handler) the folios to be
->>> migrated in a list and batch-migrate them from task_work context.
->>> More details about the specifics are present in patch 2/2.
->>>
->>> During LSFMM[1] and subsequent discussions in MM alignment calls[2],
->>> it was suggested that separate migration threads to handle migration
->>> or promotion request may be desirable. Existing NUMA balancing, hot
->>> page promotion and other future promotion techniques could off-load
->>> migration part to these threads.
->> What is the expected benefit of the change?
->
-> Initially it is about cleanliness and separation of migration into its
-> own thread/sub-system.
->
->> For code reuse, we can use migrate_misplaced_folio() or
->> migrate_misplaced_folio_batch() in various promotion path.
->
-> That's what I have done in this patchset at least. We thought we could
-> go full length and off-load migration to its own thread.
+What does it mean to have controllers
+1) available in a cgroup, vs.
+2) enabled in a cgroup
 
-Even if we migrate pages in another thread, the migrated pages will be
-unmapped, copied, remapped during migrating.  That is, the workload
-threads may be stalled to wait for migrating.  So, we need to measure
-the real benefit firstly.
+Which has been clearly defined below in the documentation.
 
->> For workload latency influence, per my understanding, PTE scanning
->> is
->> much more serious than migration.  Why not start from that?
->
-> Raghu's PTE A bit scanning is one effort towards that (Removing PTE
-> scanning from task context.
+"Enabling a controller in a cgroup indicates that the distribution of
+the target resource across its immediate children will be controlled.
+Consider the following sub-hierarchy"
 
+As an example, consider
+
+/sys/fs/cgroup # cat cgroup.controllers
+cpuset cpu io memory hugetlb pids misc
+/sys/fs/cgroup # cat cgroup.subtree_control # No controllers by default
+/sys/fs/cgroup # echo +cpu +memory > cgroup.subtree_control
+/sys/fs/cgroup # cat cgroup.subtree_control
+cpu memory                   # cpu and memory enabled in /sys/fs/cgroup
+/sys/fs/cgroup # mkdir foo_cgrp
+/sys/fs/cgroup # cd foo_cgrp/
+/sys/fs/cgroup/foo_cgrp # cat cgroup.controllers
+cpu memory                   # cpu and memory available in 'foo_cgrp'
+/sys/fs/cgroup/foo_cgrp # cat cgroup.subtree_control  # empty by default
+/sys/fs/cgroup/foo_cgrp # ls
+cgroup.controllers      cpu.max.burst           memory.numa_stat
+cgroup.events           cpu.pressure            memory.oom.group
+cgroup.freeze           cpu.stat                memory.peak
+cgroup.kill             cpu.stat.local          memory.pressure
+cgroup.max.depth        cpu.weight              memory.reclaim
+cgroup.max.descendants  cpu.weight.nice         memory.stat
+cgroup.pressure         io.pressure             memory.swap.current
+cgroup.procs            memory.current          memory.swap.events
+cgroup.stat             memory.events           memory.swap.high
+cgroup.subtree_control  memory.events.local     memory.swap.max
+cgroup.threads          memory.high             memory.swap.peak
+cgroup.type             memory.low              memory.zswap.current
+cpu.idle                memory.max              memory.zswap.max
+cpu.max                 memory.min              memory.zswap.writeback
+
+Once a controller is available in a cgroup it can be used to resource
+control processes of the cgroup.
+
+Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
 ---
-Best Regards,
-Huang, Ying
+ Documentation/admin-guide/cgroup-v2.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 1a16ce68a4d7..0e1686511c45 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -438,8 +438,8 @@ Controlling Controllers
+ Enabling and Disabling
+ ~~~~~~~~~~~~~~~~~~~~~~
+ 
+-Each cgroup has a "cgroup.controllers" file which lists all
+-controllers available for the cgroup to enable::
++Each cgroup has a cgroup.controllers file, which lists all the controllers
++available for that cgroup and which can be enabled for its children.
+ 
+   # cat cgroup.controllers
+   cpu io memory
+-- 
+2.49.0
+
