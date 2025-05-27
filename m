@@ -1,117 +1,145 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790CD2701A4;
-	Tue, 27 May 2025 13:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A337B134CB;
+	Tue, 27 May 2025 13:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748354107; cv=none; b=uLVHfutd5Fb6/hkf5G3Ps++Q3QUNbARvn1dFqu42wYeS6B1/vq7Eqwr+30nlFqfmWxyLAzEqLbxK8tfWgvBhJcv0eAjVfidqbIaOHFAD2LWkUiTiMuWctQQe27pBo1TIFvvpq4mkh5eesyXQWFX0qxBxc8sERIK+nxQSwwu8kKI=
+	t=1748354183; cv=none; b=KW+MSicXPJKVHn4QZL/GCx4F63nJywRU13sS1Hc8Yc1VvpStV9CyQf26Ju0Uv4pbAH9C/RCH9Zr42UZIGoutgQDDv4XrvjMHnzjuIoNjCvPyBtKgvYN7QCLnmS0Z1T4NgjS1icDI6y85kkEYasJT6bOm6lQ46Hz4AZ69gT2edWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748354107; c=relaxed/simple;
-	bh=4/SGG2Bk0JiQCCOE/gDVKw4qap5CovIpn4iXb2SrN8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vAKofP4IucW4YyRTAyJ/IIDUDGN3Hnx4Yf6RObFNTd/O/+Sz+THgoeT4LCJgp90cKrHe2L9mwazg2/a0W6YXfsifbr6QJHcCNpr5l0dMF9CHdbuplfrtbugvL3HatYbnxc50PQ28c6ah6O/6bb3oVg69RwPZVyxPO18e/lk8Nsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1748354183; c=relaxed/simple;
+	bh=wMlcAUTr2JWpW/Jw3FrSvD4HubPhNV5PvBq4p8YRk00=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ReEu3iL0NL76zjnGqMDGnsFm3KU1VifpxBNHIGqAbk3xXt+t+UFxGSlGm+LONiJ9CfedBzdHmA7qiTtd8DLupS0B7kWrRWt8BAsW4yHQoXJaGluBpJAq95ol3HqgAFR5C2iJpFlZUhL85aegFTA6dNrDcmNT+gtuo6owdbf8wFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CCUiOMhd; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87df3dffe63so735261241.3;
-        Tue, 27 May 2025 06:55:05 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCUiOMhd"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2346765d5b0so19345465ad.2;
+        Tue, 27 May 2025 06:56:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748354177; x=1748958977; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XnktFiXJXJodN0pB61aJG59CK1E9b68p2VWpKi9y8vw=;
+        b=CCUiOMhddQUodpu/cXeo/oyESSX+rawGMqih2vlfV9uFyENsCdq0hQS28+nm1VLoYY
+         /z5WKuzaU+KQWjt8i1ULG5ZXtt3ao42iz8/p6K9rqCv9WFkWfYHRaZpTzlxldxJgqgp9
+         GbsB+d2x5w/GV1aqgTc22c8Mk6QIPv6GmMn+glQMYtFSyLfgeb6MPWereggmtK95cNvO
+         a03+HMvKiHB3w/ltOUKH4fLX4BxvbeJTvogsBqlCXR9oCbeGNPB7U6YRQiQp0ivepV8X
+         1LSKFQ7vjtVZccWcBMkW9gOeSSu8X/DIef67ybN8U8B+VeivBHwvA6o+bHjdGexkKwC/
+         Rzeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748354104; x=1748958904;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0/Vdr1VTrt5GYAjmcNgZJxbWiv4qDWgZ9ZhfhAkHC1Y=;
-        b=B2nblaN7g/yptyo1npxQwfNICWlXIAtPZwz4kZTxux2TAbtQSdaZ/9hF2dbWBWmSyd
-         wqEu5KDTL4t/X7MFi68vkESUEVmxqG0w9UnEmjXR2zQcPZQzF2qc89ReB8EB+RcApJVS
-         vfVCTfL79+izCbgbciJG5S03R3Dp1DXNCDU4IlnnhiAxRcVwLp3rH3rQA1RwO/Gk0fZF
-         9Wzy1K/pcBq0DuFwcaodvwyCvLgwEVKOFH5PFgm52W/8p1pPEQRZW4xmgMg3T4wdRHWT
-         BL75nYMHQlkh+achtlxhtfd7L1jf4J944bMhbop/Dp8I2atVB/J9fXDrvvskp5wpVU0+
-         IstQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBJj7mKxd1VDZpxbqAXIwcxA5n8gYxP4iHdFqG1dm88KuWaYfBxkAfFcWDfWJDWL+rqLvHbfyfNkNSntU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxTz/ObKSXym9jjp2mmgElsLMJ4EsrBsNjOnhYjnu6ISavZycy
-	bw/kpKni3ebJdAinFLazcX0HYzJFZ5zWUbdumKvRCCLLkqK/NR5m+rJX6gTP4dOa
-X-Gm-Gg: ASbGnctktTTzNRr+xpr3RMCNg1SKmGUM70ThrHupbLkZEj00FhB6hk1q7SN7L1BPhVc
-	A429umD2imgAR2nkCW/DuwuM2qUKM/6LMQn+SEDW+3/taPhdngM/WZvX6vQ57BxLvSPvju7XnRP
-	tnr23vPW6YYWpk7JFWkugZHkltKOtbzYpscFO27fLKpA7DL8iJyOITuT2IFwxjSB5T6ZfL6mNDM
-	mWSvwQFIrj5nBxkfteg2ZSHhWnJT1Dn6SFl0vgw0/pxzZ/Is7sT4Lf8EhvIaaPSaYQmm3a5iCJp
-	44v73QOc0tY9QQqthrdE+xA6wyPvMr+6eOnCpsWbL0CFgg1UE5wo+X/eFmv4f4H2lCiq9KsXFqq
-	eS56iJDSMoQIMfgsRba859PM/
-X-Google-Smtp-Source: AGHT+IEur0XS+glvvRe2RAFGHFB4R/j50UQGtdYP0Lx0mKcLnCVH/UpkTVcgLBC8/vfygWvtgAcdsA==
-X-Received: by 2002:a05:6102:32ca:b0:4db:154f:46c2 with SMTP id ada2fe7eead31-4e424069c04mr9785834137.1.1748354103868;
-        Tue, 27 May 2025 06:55:03 -0700 (PDT)
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87def1c1f2esm5041046241.34.2025.05.27.06.55.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 06:55:03 -0700 (PDT)
-Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e2534c08a5so913248137.1;
-        Tue, 27 May 2025 06:55:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW4984DcZYQn5ToA7rRbA4sMnqWIO206atR+ulvIZCL8MaEVhMJDEQVyGr5nln/roBfHqE1mNZCfpsdshc=@vger.kernel.org
-X-Received: by 2002:a05:6102:418c:b0:4e5:9380:9c25 with SMTP id
- ada2fe7eead31-4e59380a399mr1083782137.3.1748354096301; Tue, 27 May 2025
- 06:54:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748354177; x=1748958977;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XnktFiXJXJodN0pB61aJG59CK1E9b68p2VWpKi9y8vw=;
+        b=tUdanh0ViSWPONtK6KSZ0ij3U8wx7TW0ZRXgLWRXvhvDhDdbuRnH7eGqSo2z8bMDGD
+         tsmmaHd9IzzFF1Nuf9uOcoV8dcKmGkhV++4P2fRqw1/qMDSx1QJv1/pNEUX6Fabo61fw
+         atAypINBzG1uGwXCk7wFExiZuN2ttAi8XvO1/g3Ou8tcUZasvUV2kyKFMtVZvaXuiXBQ
+         oFiqIsFRWIjlQqmvCMuNhlBTutDxqW1Qr9b7fUB48ynuV0jvd6QJ/hdDTmlTYhDCUsa2
+         QpxKfCKaXIMICaUYwvF1VCDZ2asKl8x9pqQZKTolAWz5AISj6nRW/T5wtvV0KzGIUkDo
+         wyNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAlOTXZRThKu5jjMyYpdCnC3x8XFSz1HwmEdjr3U7rjx2PSd9V0mTapNoHFiHIwHpK2/vnwzoag+lkKoE=@vger.kernel.org, AJvYcCWeEG4wkXa0Ah9DgjqjhhL6q+fKO8888B9cCQp4RpOn6NJb7IxeXpDmjkbG4qEzWXOsVv+GPGwwSLnadYfq7vM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXuDaV30UuZgBccmG6+lePjxOD2HKWXnmyM6+gI9QeMNpNo3UW
+	jhHHS5fiIbMyI+7Kx9KSo1QbsawOKbx7WCYnwmq2QC3J/p6kbg8Ga/cp
+X-Gm-Gg: ASbGnctgtUIqxVjiIfoL/TRbWjQgjznJAL8APQzU7zNUTXgTgDwC1OXsSQTBlspbylg
+	yv7DnmDNQwVBVNILmvIParjuHXvLUl0k13OglS2Y7RaBGMh9er2Q9ur7+IYOWja4lZ8uvXjPt55
+	XR+V+LUy78dlqo7GlGoYHGWBx3v9rqum1diDAoWzsrSqFSOWtSLMSCVcbEX2YUPqYtQoU9fQxTB
+	mLYZUtgbV0pv173vZbeB+htBaWoDy+rdiFxMO9MYp74vS2QCTIJ+lyM+ZuZwlmhyobe5aOHogNI
+	isjTz9Pj/oLcwKueUcqQ98jexKDBQ0m6fUurj7eSP2znAQSiR55K8zLTxDcRqyI=
+X-Google-Smtp-Source: AGHT+IFNNoxF29EfkZcUJGXn/ohVeLl/OG6M5rRHNblzkgPj16tTYH/KioWbWzao9437hQv8KtCczg==
+X-Received: by 2002:a17:902:f54c:b0:22c:35c5:e30a with SMTP id d9443c01a7336-23414f4a6b9mr166280325ad.16.1748354176742;
+        Tue, 27 May 2025 06:56:16 -0700 (PDT)
+Received: from localhost.localdomain ([104.28.249.218])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234018ac5desm67801475ad.158.2025.05.27.06.56.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 06:56:16 -0700 (PDT)
+From: Jesung Yang <y.j3ms.n@gmail.com>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jesung Yang <y.j3ms.n@gmail.com>
+Subject: Re: [PATCH] rust: kunit: use crate-level mapping for `c_void`
+Date: Tue, 27 May 2025 13:55:49 +0000
+Message-Id: <20250527135549.1982244-1-y.j3ms.n@gmail.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <DA6XI37GNRHE.1FN5893KE2OIG@kernel.org>
+References: <DA6XI37GNRHE.1FN5893KE2OIG@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-kanufahren-besten-02ac00e6becd@brauner>
-In-Reply-To: <20250415-kanufahren-besten-02ac00e6becd@brauner>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 27 May 2025 15:54:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWG5WRf2iP7UABCXMfdy67QHnwPbTEiqt47_7L3=T6jEQ@mail.gmail.com>
-X-Gm-Features: AX0GCFv80_VToSfGTvb_hzSwaPcwWfiShLhbpKQer9N8hFIm4Nc_itXj0xnmNpA
-Message-ID: <CAMuHMdWG5WRf2iP7UABCXMfdy67QHnwPbTEiqt47_7L3=T6jEQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] fs: remove uselib() system call
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Christian,
+Hi,
 
-On Tue, 15 Apr 2025 at 10:31, Christian Brauner <brauner@kernel.org> wrote:
-> This system call has been deprecated for quite a while now.
-> Let's try and remove it from the kernel completely.
+On Tue, May 27, 2025 at 9:06 PM Benno Lossin <lossin@kernel.org> wrote:
 >
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> We don't need to explicitly import it, as `c_void` is present in the
+> prelude since 3d5bef5d47c3 ("rust: add C FFI types to the prelude").
 
-Thanks for your patch, which is now commit 79beea2db0431536 ("fs:
-remove uselib() system call") upstream.
+The base commit of my patch is f4daa80d6be7 ("rust: compile libcore with
+edition 2024 for 1.87+"), which unfortunately predates the addition of
+`use crate::prelude::*`. As a result, removing `use kernel::ffi::c_void`
+causes the build to fail with the following error:
 
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -479,16 +479,6 @@ config CROSS_MEMORY_ATTACH
->           to directly read from or write to another process' address space.
->           See the man page for more details.
->
-> -config USELIB
-> -       bool "uselib syscall (for libc5 and earlier)"
-> -       default ALPHA || M68K || SPARC
-> -       help
-> -         This option enables the uselib syscall, a system call used in the
-> -         dynamic linker from libc5 and earlier.  glibc does not use this
-> -         system call.  If you intend to run programs built on libc5 or
-> -         earlier, you may need to enable this syscall.  Current systems
-> -         running glibc can safely disable this.
-> -
->  config AUDIT
->         bool "Auditing support"
->         depends on NET
+```
+error[E0412]: cannot find type `c_void` in this scope
+  --> rust/kernel/kunit.rs:22:41
+   |
+22 |             &args as *const _ as *const c_void,
+   |                                         ^^^^^^ not found in this scope
+   |
+help: consider importing one of these enums
+   |
+9  + use crate::prelude::c_void;
+   |
+9  + use core::ffi::c_void;
+   |
+9  + use ffi::c_void;
+   |
 
-FTR, after this m68k machines can still boot the good old
-filesys-ELF-2.0.x-1400K-2.gz ramdisk (containing libc5 and these new
-kind of binaries called "ELF" ;-) from 1996 fine.
+error[E0412]: cannot find type `c_void` in this scope
+  --> rust/kernel/kunit.rs:38:41
+   |
+38 |             &args as *const _ as *const c_void,
+   |                                         ^^^^^^ not found in this scope
+   |
+help: consider importing one of these enums
+   |
+9  + use crate::prelude::c_void;
+   |
+9  + use core::ffi::c_void;
+   |
+9  + use ffi::c_void;
+   |
 
-Gr{oetje,eeting}s,
+error: aborting due to 2 previous errors
+```
 
-                        Geert
+Starting from commit c4c0574ee33b ("rust: add `kunit_tests` to the
+prelude"), we do have `use crate::prelude::*;`, so the explicit import
+is no longer necessary in that context.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks for pointing this out!
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Jesung
