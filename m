@@ -1,117 +1,125 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C696527FB0C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D9D27FB02
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748364108; cv=none; b=q9eh4+GOAhs8BkfRPCLLzU/vObfe3deqVZLsrPHgB43WuDPTFYwrvfMvBy+aFtNbzWEnlUUn2MRJEN9Yoi9F2eP1KU+QGATjPbLrS4AduXKmtyCqmhUKFHwHDwsmRG7b/dmSs/3kdtH7HTmF++Sw6mBoV6eS24uu72c2inlnbIE=
+	t=1748364127; cv=none; b=IA7/Og6BPqheeffMkZwDrM6RZ0J6PdDMLTJLAmzFxtWBBz5H+MbkgB89Nqp5SUk5J2WeQifTRDh5Vk13QF/Wo1WX2wXeVvBw8hCdbgvrZ1TMMdF1beUEQLWhlkNjYiMnnhmRhZzTPo4YoOFm03koxR0uvoWX5JfHOtbKxm2a/e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748364108; c=relaxed/simple;
-	bh=4tnOYGjqks8PWbRfbKPEZttiQM5neLtKjOpQESFmv4E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UjlQ6N6SQ6x9AVtJ89mw2Z+zs3tGvMl/fMjdbpyGLRRloStIwfrJYyvzHsykXzxoD3u+dvcRu3S74YEBjZK6JSwADXTpkwmT/eC1KqQYIUUvg1Lx9sJRWGpCeoC2F3g2psvAubJlGQ1TIlHdNO7WyOTK1DpEpQDeVpZ27CjBDUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b6JLc4LPXzYQv3Q
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:41:44 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id B50701A018D
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:41:43 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP2 (Coremail) with SMTP id Syh0CgDXk2ZG6zVo+FlUNg--.42217S2;
-	Wed, 28 May 2025 00:41:43 +0800 (CST)
-Message-ID: <82692c51-a599-49ee-8830-f5c7afbd6b14@huaweicloud.com>
-Date: Wed, 28 May 2025 00:41:42 +0800
+	s=arc-20240116; t=1748364127; c=relaxed/simple;
+	bh=o6IP1ZSE7iTj86N6LUhJhtCOx5zFOGbL5Y2ity8VNvs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=TcqiqCx1e1MH9jGKJnybdKlVz5OyPS7AMaWN8OLE9E2kU232X9Vuxk3kxPAffFF6vvvQJDXpnfbG5veO05WJurIuwUolHc4RxiTEKRshladCrWZR3PY+pjENfQjBVb1HfPN4qgBB5Q2GxSHRZoOVbQ09MM6snKJlFV6VmMijuSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OxlXVsy4; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OxlXVsy4"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a3673e12c4so2346401f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748364124; x=1748968924; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gC+Kv6MDihqVMIw1+edFXcpQJgi1ehuY/J0XFAu4/hg=;
+        b=OxlXVsy44edlq64sSEGc7JA5szCVGkXupCPcjVt31kSjcrlxI6SwejpaKj0FX3DvWY
+         p6roNhIdp6a4y3nqerCKTex/4g8ZiV/btLkd9FcgPxjVtIzKzD0n9l5uVRDVHBpxc5t/
+         vBqC4MRniSHRyQpN7Rezxj/wbA0x1/NKv2Atzr7ZpgqvpFsHUD01vsTL8W44I4VTtkLQ
+         VITZ2jGWAFnQfStzEA4OACBCnAE4CZQz6CPsmQDD7gnsV6dapMOPSe/Gne1NeaT4TP5u
+         /psdeAD/MZZIgWMZtaqsVtrTxOBKXolyGcb4582iitadLeyz6omHAgVtxYiwVwXUhvFL
+         Wcgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748364124; x=1748968924;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=gC+Kv6MDihqVMIw1+edFXcpQJgi1ehuY/J0XFAu4/hg=;
+        b=XFe5KgQnpBhIh6iN6bOqbV/1LjsSw1HXom/ThR07kUmuMEN5xVD4Sgu+33EM+rfa42
+         n59CxUPr64Mrm6EDn09wIlm++d04kXpEq5uZxy9oznP3jX2s3sMsMo95dt8L9h9ppJvt
+         tlrKa+0yTXtGJ7pkoCS2uaKmduOLXJdVXiuU1uTLiE0KkrcUGMN+5WZ97RPxjFpnixLX
+         i+0DBXm/kApS3Zj3GsNhT6cB1r//osNccIpUpFoIha7sjlDGZxp//n/dQGbUjFxVv3vD
+         oKHBHLVMtOptJDI3OP8JFETGoO+27CHmLsP92XaSo8hcbogYHsgZMRVve9bQBsLgV0Kt
+         lRZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5IV4d0BKe/kzj6/wWlsx027z5TSr76UIhx/go5KoyGNNAA8BfNpvujn7FnuKGecy+boY5jyEAf33It7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm2vW+LaiAPzb7PF3JmDO6Ntr04jwMW+cJZgLHxm7g5wdQHL1k
+	0Q2sRnfYYmewxObh745FNaO4BOYe7OkXeqycHhWGru9gqq3AKWPauIzFhOWPtj0F/bM=
+X-Gm-Gg: ASbGncvPUrVJW+Vv/ivpqJYIF34x8q8tLOqNfIaas7M5K3k1en5CwYgPT7aokksa33h
+	8vfbN4He5tgPDxNpZzCuQg9HP/tOhQn0vVH7UMliEseSvaPaeopl1gxG8/AUTYW4jtzHOEviyHX
+	zEWPrTJU1Z/COoj9Ev0lsRNzkrcFCuaUe1cHM/WljNvHg5Zd3ag9hMYqZlqD/d0u2hADlAbz5RA
+	yJIez5QG2jv+NvjOj3eqcmCU+zMlyq52wGpQFZEpFGxTccXNP9WHB3gyJ3iGVSKnDbGYVnz9S2C
+	i0rblc04fFDGTa0B21P3BHa510RYSPnaW9TxJW2olPcZNGGJnGD5xRH++w==
+X-Google-Smtp-Source: AGHT+IHOCmeAAiPle45FazpuCrAts2+QCHvGJ68DgsGkOFH6AJFdSzOvGZC9JM9TNpY3pT25HAXqLA==
+X-Received: by 2002:a05:6000:2282:b0:3a3:621a:d3c5 with SMTP id ffacd0b85a97d-3a4cb44f91dmr11350352f8f.19.1748364124005;
+        Tue, 27 May 2025 09:42:04 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4e1fe9430sm2346073f8f.75.2025.05.27.09.42.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 09:42:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/2] mm/mremap: Fix uprobe anon page be overwritten
- when expanding vma during mremap
-Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Oleg Nesterov <oleg@redhat.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com, pfalcato@suse.de,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, pulehui@huawei.com
-References: <20250527132351.2050820-1-pulehui@huaweicloud.com>
- <20250527132351.2050820-2-pulehui@huaweicloud.com>
- <20250527153007.GD8333@redhat.com>
- <b16e6120-9f02-4a3a-8f85-394ea55bf516@lucifer.local>
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <b16e6120-9f02-4a3a-8f85-394ea55bf516@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDXk2ZG6zVo+FlUNg--.42217S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uryrCrWfArWDuFy5tFyfXrb_yoW8Jw1kpF
-	Wqya15KFs5trWUJwn2y34Ut3Wrt393Jr43XF90q34UAFZ0qFnagFW8JFWY9F1q9rs7K3WY
-	va98Gr93XFy2vaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Sb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x02
-	62kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7
-	km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-	6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-	WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-	6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-	1UYxBIdaVFxhVjvjDU0xZFpf9x07UG-eOUUUUU=
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 17:42:02 +0100
+Message-Id: <DA73CTVYS10G.1O0RVVAHTCEGX@linaro.org>
+Cc: "Liam Girdwood" <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Bjorn Andersson" <andersson@kernel.org>, "Dmitry
+ Baryshkov" <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>,
+ "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Jaroslav Kysela"
+ <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 04/12] ASoC: codecs: lpass-rx-macro: add sm6115
+ compatible
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Srinivas
+ Kandagatla" <srini@kernel.org>, "Mark Brown" <broonie@kernel.org>,
+ <linux-sound@vger.kernel.org>
+X-Mailer: aerc 0.20.0
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-4-9eeb08cab9dc@linaro.org>
+ <45124768-c10f-42ff-a899-6dd6e988b21c@linaro.org>
+In-Reply-To: <45124768-c10f-42ff-a899-6dd6e988b21c@linaro.org>
 
+On Thu May 22, 2025 at 6:49 PM BST, Krzysztof Kozlowski wrote:
+> On 22/05/2025 19:40, Alexey Klimov wrote:
+>> Add rxmacro compatible for sm6115.
+>>=20
+>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>> ---
+>>  sound/soc/codecs/lpass-rx-macro.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/sound/soc/codecs/lpass-rx-macro.c b/sound/soc/codecs/lpass-=
+rx-macro.c
+>> index 45a6b83808b277344f17d35a70cd1e3bb89cbaea..3ce7ad758df9fb0b7845a1df=
+ef46cdf0ecf3b8c8 100644
+>> --- a/sound/soc/codecs/lpass-rx-macro.c
+>> +++ b/sound/soc/codecs/lpass-rx-macro.c
+>> @@ -3946,7 +3946,9 @@ static const struct of_device_id rx_macro_dt_match=
+[] =3D {
+>>  	{
+>>  		.compatible =3D "qcom,sc7280-lpass-rx-macro",
+>>  		.data =3D (void *)LPASS_MACRO_FLAG_HAS_NPL_CLOCK,
+>> -
+>> +	}, {
+>> +		.compatible =3D "qcom,sm6115-lpass-rx-macro",
+>> +		.data =3D (void *)LPASS_MACRO_FLAG_HAS_NPL_CLOCK,
+>>  	}, {
+>>  		.compatible =3D "qcom,sm8250-lpass-rx-macro",
+>>  		.data =3D (void *)LPASS_MACRO_FLAG_HAS_NPL_CLOCK,
+>
+> So devices are compatible, thus why do we need this change?
 
+Ok, I'll link it to sm8250-lpass-rx-macro I guess.
+Thanks.
 
-On 2025/5/27 23:33, Lorenzo Stoakes wrote:
-> On Tue, May 27, 2025 at 05:30:08PM +0200, Oleg Nesterov wrote:
->> Not that this is really important, but the test-case looks broken,
->>
->> On 05/27, Pu Lehui wrote:
->>>
->>> #define _GNU_SOURCE
->>> #include <fcntl.h>
->>> #include <unistd.h>
->>> #include <syscall.h>
->>> #include <sys/mman.h>
->>> #include <linux/perf_event.h>
->>>
->>> int main(int argc, char *argv[])
->>> {
->>>      int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
->>
->> FNAME is not defined
->>
->>>      struct perf_event_attr attr = {
->>>          .type = 9,
->>
->> Cough ;) Yes I too used perf_event_attr.type == 9 when I wrote another
->> test-case. Because I am lazy and this is what I see in
->> /sys/bus/event_source/devices/uprobe/type on my machine.
->>
->> But me should not assume that perf_pmu_register(&perf_uprobe) -> idr_alloc()
->> will return 9.
->>
->>>      write(fd, "x", 1);
->>
->> looks unnecessary.
->>
->> Oleg.
->>
-> 
-> While I agree we should probably try to do this nicely, in defence of Pu I think
-> this is adapted from the syzkaller horror show :P and that code does tend to
-> just insert random integers etc.
-> 
-> It would be good to refine this into something more robust if possible and
-> ideally add as a self-test, however!
-
-Yeah, just trying to make the commit message more compact, but miss a 
-lot. Will do better next.
-
+Best regards,
+Alexey
