@@ -1,229 +1,124 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AAA253350
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CDC43ABC;
+	Tue, 27 May 2025 11:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346125; cv=none; b=MwAkhKgrO1unidPaC6Jz6IBsOPFcRV+6ZQmwsgZep5ng0cU9V65ZkTBsX+2xsbSaPaArjFyVhOO99OnzsL3wZnqt0YtTRPWCdFSuuOg4CU9zxEzOQJGMFoC0ijGirHTe8EkIVJ2QEF4ERJr9vwb8fxLh/m98nmbZv1hofrCGWgc=
+	t=1748346166; cv=none; b=necHHcEpGxIrlshXJqeQYib5qi+Osft41QOqAmF2DAq7vNb/focYDYKu2oJyKRdeCfyGFBpoRcklXNHzBPfXSUR5d4kjZG301SgubOooZ0QIwxvSxfZFHf74vd7/mBFmWvYsv6xYL1I+7BWOW4B6WvV+0M+hsYtc10aWnJsp2RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346125; c=relaxed/simple;
-	bh=9nRL265B5MO/sKcagw/DxpI7o+kerMTNwxI2AamJ1ls=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ua22jSd9KN8bzEZEAna4QLdPOSAnwzfg7MHrQFnq+dFwcg9rnHMX+JXtLoh6KFMBKw79grgLzRXsZqENVpdaXoczFTyJ16xfqbbwxBG4f4ARjVRcSVivCywiPY2qtznmHiQK+psUqYKXhKvdXXwBiQgMktlXrAOWdPT6mS6ADIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so618637739f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:42:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748346123; x=1748950923;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6ykmBg9S8w4Biu6msKSUlC0yua99wElNsL3lrFEPPVs=;
-        b=WTcRQPIu/g1Ns46Ty2MQxbL1uFdH3X+4pdvV5gQ42fRp5ldwrkaAGiO+c7uStHyPyH
-         NvnwFChcByMyUKXob2ItHxdDaCd7goHpqJ1Du9CN4SeI8ZOpsSE1mn1hGOUyzPJb6JAb
-         A7x/YVbzmAFUqz+TD4w8ABMJi3MT+dgAvXsMaO5vD+V+4qXuCsISIRl7IZkucW5JTXY1
-         E0f6CKTiTsgTvuniGkJmcPO/W14pU8va4+fzDInTEAUEk7l39E7iFqG6SdON90Tqo+rV
-         h4ii2bg2uzv5gR/qh9wgPs2G4T4KlwqVJHTXpmXAFULpH/49b3dgPuuIUZj2O1fR5GsQ
-         2oyg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7nl2I/ziVOgHrpZM7zTnkxmRs0o+OqKppfL6ntvtfPWrEdSFRbQ6191CVCJL4+GSuL9Sruyx5etJ/660=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuKJHVoJP9XDWf371kb/Z/94uKCEHItVB2QPo+HPgqecbURKvK
-	K677hQunPFQ7e3f2x1NlVv1WGnPRyg+xLl/dl45VzmrmBwYZslr4S34VVKxebziZJHh3WH2KISS
-	HflBRJ0xrM3jnBLuNSMwA85DEJz5yvJIIV17nBDaTxy/vtu+0o9i1bP9klGE=
-X-Google-Smtp-Source: AGHT+IHiMEXHUsBCtqOETsblbvnspeBVmdyGlXk6fjhq2EiVsRKLof9BESSPdnMkkv6FioY0s/Cvn3zrzwczMtZPfi+d0nNRtB30
+	s=arc-20240116; t=1748346166; c=relaxed/simple;
+	bh=q60qwEKMe7/wQLGL9kC9Bj3hkX6Z4eOFSeITH3PpQ6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mq2pExO3QUgCMv5XwpBfCdzx0XyPysyFZWoEJR6/RaXVrFeTDnnrtkfgambSiDUCSF5jgp29LqbH+DbfycWlY24FL0mOPga1VCqsRv+nrMIjcRA48Yf2Q4agG9CdFrOgPPPKNW9jPwPkVP5DzbmvySajzgcnYECcIy7hq4x5Icc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VhiuYcYa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VhiuYcYa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9FF9C4CEE9;
+	Tue, 27 May 2025 11:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748346166;
+	bh=q60qwEKMe7/wQLGL9kC9Bj3hkX6Z4eOFSeITH3PpQ6o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VhiuYcYaFwviisjUX+ANGSZ4mQcgkPL+L21Ww9hlHS1gfl5EekdV87wKnVcWiIvfj
+	 1UICPjjmR+VN/heyASEAqGUIiNUEKAEem2R9KwdUP7V/m6W6gb2i8RfaGPU9vVekAw
+	 TwzMd4aBfysus6Yz7BMay4Hfvt5mwSEL2YQ30kcwe+XSXCRwhCVi8yXnoBmA3hUMvH
+	 0zMLAImwcVgfcdrkQd+fntvnj43Ztqo51NyB7gKylWhawsjXeliDf+CoPyB+kMTxa0
+	 +mz2aPNBUIWQiVSDebxVH8FuYc9bBp1tlzqq6LwbBCpTQeR2lar+4mq1dTNdKi9Swh
+	 Pz/ykjMlKmdzw==
+Message-ID: <68622599-02d0-45ca-82f5-cf321c153cde@kernel.org>
+Date: Tue, 27 May 2025 13:42:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3a02:b0:85c:96a5:dc2c with SMTP id
- ca18e2360f4ac-86cbb8bee7emr1327095039f.14.1748346123092; Tue, 27 May 2025
- 04:42:03 -0700 (PDT)
-Date: Tue, 27 May 2025 04:42:03 -0700
-In-Reply-To: <20250527112459.2370-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6835a50b.a70a0220.253bc2.00af.GAE@google.com>
-Subject: Re: [syzbot] [block?] possible deadlock in __del_gendisk
-From: syzbot <syzbot+2e9e529ac0b319316453@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 1/3] dt-bindings: sram: qcom,imem: Allow
+ modem-tables
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alex Elder <elder@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ Alex Elder <elder@riscstar.com>
+References: <20250527-topic-ipa_imem-v2-0-6d1aad91b841@oss.qualcomm.com>
+ <20250527-topic-ipa_imem-v2-1-6d1aad91b841@oss.qualcomm.com>
+ <97724a4d-fad5-4e98-b415-985e5f19f911@kernel.org>
+ <e7ee4653-194c-417a-9eda-2666e9f5244d@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <e7ee4653-194c-417a-9eda-2666e9f5244d@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 27/05/2025 13:36, Konrad Dybcio wrote:
+>>> diff --git a/Documentation/devicetree/bindings/sram/qcom,imem.yaml b/Documentation/devicetree/bindings/sram/qcom,imem.yaml
+>>> index 2711f90d9664b70fcd1e2f7e2dfd3386ed5c1952..7c882819222dc04190db357ac6f9a3a35137cc9e 100644
+>>> --- a/Documentation/devicetree/bindings/sram/qcom,imem.yaml
+>>> +++ b/Documentation/devicetree/bindings/sram/qcom,imem.yaml
+>>> @@ -51,6 +51,9 @@ properties:
+>>>      $ref: /schemas/power/reset/syscon-reboot-mode.yaml#
+>>>  
+>>>  patternProperties:
+>>> +  "^modem-tables@[0-9a-f]+$":
+>>> +    description: Region reserved for the IP Accelerator
+>>
+>> Missing additionalProperties: false, which would point you that this is
+>> incomplete (or useless because empty).
+> 
+> How do I describe a 'stupid' node that is just a reg?
+With "reg" - similarly to many syscon bindings.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-possible deadlock in __del_gendisk
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-syzkaller-g914873bc7df9-dirty #0 Not tainted
-------------------------------------------------------
-kworker/u4:1/13 is trying to acquire lock:
-ffff888059e20358 (&disk->open_mutex){+.+.}-{4:4}, at: __del_gendisk+0x129/0x9e0 block/genhd.c:706
-
-but task is already holding lock:
-ffff888053877188 (&set->update_nr_hwq_lock){++++}-{4:4}, at: del_gendisk+0xe0/0x160 block/genhd.c:818
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #3 (&set->update_nr_hwq_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       blk_mq_update_nr_hw_queues+0x3b/0x14c0 block/blk-mq.c:5041
-       nbd_start_device+0x16c/0xac0 drivers/block/nbd.c:1476
-       nbd_genl_connect+0x1250/0x1930 drivers/block/nbd.c:2201
-       genl_family_rcv_msg_doit+0x212/0x300 net/netlink/genetlink.c:1115
-       genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-       genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
-       netlink_rcv_skb+0x21c/0x490 net/netlink/af_netlink.c:2534
-       genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
-       netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
-       netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-       sock_sendmsg_nosec net/socket.c:712 [inline]
-       __sock_sendmsg+0x21c/0x270 net/socket.c:727
-       ____sys_sendmsg+0x505/0x830 net/socket.c:2566
-       ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
-       __sys_sendmsg net/socket.c:2652 [inline]
-       __do_sys_sendmsg net/socket.c:2657 [inline]
-       __se_sys_sendmsg net/socket.c:2655 [inline]
-       __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x220 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #2 (&nbd->config_lock){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       nbd_open+0x2b7/0x5d0 drivers/block/nbd.c:1703
-       blkdev_get_whole+0x98/0x510 block/bdev.c:730
-       bdev_open+0x31e/0xd30 block/bdev.c:957
-       blkdev_open+0x3a8/0x510 block/fops.c:676
-       do_dentry_open+0xdf3/0x1970 fs/open.c:964
-       vfs_open+0x3b/0x340 fs/open.c:1094
-       do_open fs/namei.c:3887 [inline]
-       path_openat+0x2ee5/0x3830 fs/namei.c:4046
-       do_filp_open+0x1fa/0x410 fs/namei.c:4073
-       do_sys_openat2+0x121/0x1c0 fs/open.c:1437
-       do_sys_open fs/open.c:1452 [inline]
-       __do_sys_openat fs/open.c:1468 [inline]
-       __se_sys_openat fs/open.c:1463 [inline]
-       __x64_sys_openat+0x138/0x170 fs/open.c:1463
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x220 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (nbd_index_mutex){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       nbd_open+0x7b/0x5d0 drivers/block/nbd.c:1690
-       blkdev_get_whole+0x98/0x510 block/bdev.c:730
-       bdev_open+0x31e/0xd30 block/bdev.c:957
-       blkdev_open+0x3a8/0x510 block/fops.c:676
-       do_dentry_open+0xdf3/0x1970 fs/open.c:964
-       vfs_open+0x3b/0x340 fs/open.c:1094
-       do_open fs/namei.c:3887 [inline]
-       path_openat+0x2ee5/0x3830 fs/namei.c:4046
-       do_filp_open+0x1fa/0x410 fs/namei.c:4073
-       do_sys_openat2+0x121/0x1c0 fs/open.c:1437
-       do_sys_open fs/open.c:1452 [inline]
-       __do_sys_openat fs/open.c:1468 [inline]
-       __se_sys_openat fs/open.c:1463 [inline]
-       __x64_sys_openat+0x138/0x170 fs/open.c:1463
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x220 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&disk->open_mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
-       __del_gendisk+0x129/0x9e0 block/genhd.c:706
-       del_gendisk+0xe8/0x160 block/genhd.c:819
-       nbd_dev_remove drivers/block/nbd.c:268 [inline]
-       nbd_dev_remove_work+0x47/0xe0 drivers/block/nbd.c:284
-       process_one_work kernel/workqueue.c:3238 [inline]
-       process_scheduled_works+0xade/0x17a0 kernel/workqueue.c:3319
-       worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
-       kthread+0x70e/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x4e/0x80 arch/x86/kernel/process.c:148
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-other info that might help us debug this:
-
-Chain exists of:
-  &disk->open_mutex --> &nbd->config_lock --> &set->update_nr_hwq_lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  rlock(&set->update_nr_hwq_lock);
-                               lock(&nbd->config_lock);
-                               lock(&set->update_nr_hwq_lock);
-  lock(&disk->open_mutex);
-
- *** DEADLOCK ***
-
-3 locks held by kworker/u4:1/13:
- #0: ffff888000b13148 ((wq_completion)nbd-del){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff888000b13148 ((wq_completion)nbd-del){+.+.}-{0:0}, at: process_scheduled_works+0x9b1/0x17a0 kernel/workqueue.c:3319
- #1: ffffc900001f7c60 ((work_completion)(&nbd->remove_work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc900001f7c60 ((work_completion)(&nbd->remove_work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ec/0x17a0 kernel/workqueue.c:3319
- #2: ffff888053877188 (&set->update_nr_hwq_lock){++++}-{4:4}, at: del_gendisk+0xe0/0x160 block/genhd.c:818
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 13 Comm: kworker/u4:1 Not tainted 6.15.0-syzkaller-g914873bc7df9-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: nbd-del nbd_dev_remove_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
- check_prev_add kernel/locking/lockdep.c:3168 [inline]
- check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
- __mutex_lock_common kernel/locking/mutex.c:601 [inline]
- __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:746
- __del_gendisk+0x129/0x9e0 block/genhd.c:706
- del_gendisk+0xe8/0x160 block/genhd.c:819
- nbd_dev_remove drivers/block/nbd.c:268 [inline]
- nbd_dev_remove_work+0x47/0xe0 drivers/block/nbd.c:284
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xade/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4e/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-wlan0: Created IBSS using preconfigured BSSID 50:50:50:50:50:50
-wlan0: Creating new IBSS network, BSSID 50:50:50:50:50:50
-wlan1: Created IBSS using preconfigured BSSID 50:50:50:50:50:50
-wlan1: Creating new IBSS network, BSSID 50:50:50:50:50:50
-
-
-Tested on:
-
-commit:         914873bc Merge tag 'x86-build-2025-05-25' of git://git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=141fbdf4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eeb82b5d1d67d535
-dashboard link: https://syzkaller.appspot.com/bug?extid=2e9e529ac0b319316453
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13f7bdf4580000
-
+Best regards,
+Krzysztof
