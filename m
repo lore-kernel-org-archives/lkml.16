@@ -1,233 +1,201 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C50F27A463
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67084279910
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357204; cv=none; b=HXCtJn/oeZPlKn6RqU84RECDSg58mBzbXOQafK6ejPLLY14IeeTxwAD3DJkGHD01zbmt9JL0ifK7oU2bKHtdjFkQK4OCWWaatIylgL5NsxL637Op6TmAVR3HYgHrhgHChf9qiyBE/oPdphYd339LUjiympZvbMiApgD5ewNeEKo=
+	t=1748357222; cv=none; b=K4tptDxj9zf3wSprudkPVlba1ep5qvI4+ckqcvj82sRgRs5XamMj2BhxAA6RJpJxLs764BAC73Ji2pIaYYWi5I75l1raY7cnbvlmYxJhyKyj9gNFuXbbJRIuJJ0fNeon05KoYy2gk1p+d5i2MjOeQ4IAkEK3ui2QBZ/SPzDYqg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357204; c=relaxed/simple;
-	bh=GiznE2HO0ZN0HoeBqp2hkR9BZn/IaPGpQJ2s7JpQC0U=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uhMLY0Rjq/YuMlNFuzkU0pTuyb9qZbtJOQFLA6V0QR1Dceu3+3AYEJVYSPn8slBIYTGKDT+GgCy/Zlp4u5UWxzeCCY2fpxeQqm9uvd0mV2Sbkuu75jgHmel7Tnyw+6UxO700EweSBrhUgu3xXkEg2OwGfKMp1Jr7L9YYVwbClDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BNwJwpQl; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748357222; c=relaxed/simple;
+	bh=l5+jdrZUeY+xY/QoP3upiVatd7/akKxXdgz78QF8vwA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bmxDCMlJH6TBrp76nHxtAF4Bu94t03foKbAjMSsfzwYPvaH9tviRwNEDHOVbaMp3Aq+yyPnXyAg5FK7G3kaqBhl46id06AAiIyabR9nToTV4zgi3RG6CXebXIdhmUBsBApdUrdR4Fyj45X0F5+PPU3U51RMTqn7fXwsQINqzuCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fXkCWeqk; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BNwJwpQl"
-Message-ID: <fc77a1e2-be50-43b1-9863-f8ca70445428@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748357190;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ik2RLMnsfWwLYke1BTsOZXwbZAxm0Sryd75+X2yF3Rs=;
-	b=BNwJwpQlZxDUBnE9qtHM+Hg9qM/nS4N7/TdRps1gfAhHWGXfyqe4ImWQRshStisyPcniHx
-	iS0HExzaiEczPvIBf4P8LD6GU7XvRhmM61/TYR30V3dlILRWpsrVWDLWgLT+UKev1LH+oY
-	zemSODHL0YUdaTbGE26aW94lJPdsqsU=
-Date: Tue, 27 May 2025 20:15:29 +0530
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fXkCWeqk"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a375888297so2340897f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748357219; x=1748962019; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+7HDHtV9GJMKJoI+hQUJREBqkbUAnxxzKnn5VFH1x3c=;
+        b=fXkCWeqkS6/UPA3SqnqeBuWUcIUX8WWCy2+mmOxE68HIaivQmWpKM+VMnFDJdoF4P/
+         zg+yR+4Tu8tQYGZYC5FgSfi74gFeSAQvE2vstg7LpGCBPs8dd2sHgcV5kvI+MUU13WUc
+         LmsyLEKFPU9Hd/37sAA/Nl2ejpcJIBaZapjpT5lEEskSJ6ldopUYWw682peJ507vWOJb
+         AkjSOS3IKpdt2sb51xhXTNPpZDgQ8Un63tYB4ngJ2s1bXujE5csMQX8NO4D86x13DGW5
+         WA+kLGSh5RHSfl8iBzIbcrBUHSWsWcqv/ps+0Sz+LXcJ6j1g1g5emDqLyG18c4tqDUdp
+         6RxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748357219; x=1748962019;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+7HDHtV9GJMKJoI+hQUJREBqkbUAnxxzKnn5VFH1x3c=;
+        b=Qb143zAfLAA1tG0kaR8lob92Kqag7YR74Z/CypTFYOF8uZqmIdp588KovZOiLJB2dZ
+         /crOR1LzJMhy6gDYfM2E6D//7xdotzmtjmwqMW4205aaoEC1J9Gkl8O0CAbayDq8+8kQ
+         Yxilffe8W2wTF4s+34ulhlM+U1a9St7wsT4oUo2kAcWglR1v6TU5aFJSmycTeQ0L4gJY
+         kQ4xMEKws9Vtt0n5mhUxtnAFfik750chjth5S+1Z4J9AsTsvOnY6p+Nx+M0RDsSQkyxu
+         Kw1ZHiqkYtCha6jMjsEKyel6S2dgeQ6leVaGucW6wuVNHVbtkEy1mzP+m/LSKKnP4trD
+         l9TA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNayRjSgijXyS3NJMbA7DTPFSgjS4UnxHOX8K7cXZMw+hbTBRfdV/5hauuYUmHW5m95PGEY0kE7N74E3M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwECg3FF1Jb+doHxq/G8K/s70u/ENQrcM4DIrahWPE2C+I8hY57
+	LOoQZbij8fg5WYaA4Ei1U43SpMiq4meN1xVfBrT4dWYIIhLbI+6Ygv7EKxMT/Jyl+3zqG1ifGzw
+	NSA4s
+X-Gm-Gg: ASbGncsABsgBeoRihImNBFryXkb2IaLt3rXnKRiB9Wri/7OIIcjDwsoXxMR4AW5dl8o
+	zjF9urkhsEDVg1YCWoTTILZTzg0VN2zHg+fS2Tuj1qVHyhNty9jyJeodth3MaREzEm13VzMGHIJ
+	xfqlYDThdrboiESEQ7sRYP8yqjS/v0/ogbZeHtk4HQ0rREPj32ko3JIwWdDe6WduFkUMzwAoMA6
+	LumhSsB/daVuPKFReBiZzhxXnT4P7IYwN4BY/ASPJdG85F6o6sD8kzpCFGGxQH06TU2uuX9kxaU
+	CnQ6bIRVjvsr7nWfMe+afOZmL+OkEqPWgzcb8CYNChnfBNr1od3/ZQxPC4Fl0w==
+X-Google-Smtp-Source: AGHT+IH9rVBPyPZ2QD6bs1zmU6dNDHxpXwVBL+LkBhYI6uyPT74PmbS5+6ZQOEHAkczC1XbfLMJQEw==
+X-Received: by 2002:a05:6000:1a8e:b0:3a3:7ba5:9a68 with SMTP id ffacd0b85a97d-3a4e5ebba5fmr781465f8f.18.1748357218605;
+        Tue, 27 May 2025 07:46:58 -0700 (PDT)
+Received: from pathway.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d3332c01sm8385493f8f.92.2025.05.27.07.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 07:46:58 -0700 (PDT)
+Date: Tue, 27 May 2025 16:46:56 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+	Joe Lawrence <joe.lawrence@redhat.com>, Song Liu <song@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	live-patching@vger.kernel.org,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Toshiyuki Sato <fj6611ie@aa.jp.fujitsu.com>
+Subject: Re: [PATCH v4 1/2] livepatch, x86/module: Generalize late module
+ relocation locking.
+Message-ID: <aDXQYMcLle2E_b2d@pathway.suse.cz>
+References: <20250522205205.3408764-1-dylanbhatch@google.com>
+ <20250522205205.3408764-2-dylanbhatch@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: Re: [PATCH v8 4/4] drm/tidss: Add OLDI bridge support
-To: Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Jyri Sarha <jyri.sarha@iki.fi>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Simona Vetter <simona@ffwll.ch>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
- Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
- Jayesh Choudhary <j-choudhary@ti.com>,
- Francesco Dolcini <francesco@dolcini.it>,
- Alexander Sverdlin <alexander.sverdlin@siemens.com>,
- DRI Development List <dri-devel@lists.freedesktop.org>,
- Devicetree List <devicetree@vger.kernel.org>,
- Linux Kernel List <linux-kernel@vger.kernel.org>
-References: <20250525151721.567042-1-aradhya.bhatia@linux.dev>
- <20250525151721.567042-5-aradhya.bhatia@linux.dev>
- <DA5ZNDCHXC6M.1CDYDG6KKMAP0@kernel.org>
- <a98ad2e7-50de-4d04-8d99-2cf77354b1d6@linux.dev>
- <DA6PRDARLY70.1CILNJ8YLIOA1@kernel.org>
-Content-Language: en-US
-In-Reply-To: <DA6PRDARLY70.1CILNJ8YLIOA1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522205205.3408764-2-dylanbhatch@google.com>
 
-Hi Michael,
+On Thu 2025-05-22 20:52:04, Dylan Hatch wrote:
+> Late module relocations are an issue on any arch that supports
+> livepatch, so move the text_mutex locking to the livepatch core code.
+> 
+> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
+> Acked-by: Song Liu <song@kernel.org>
+> ---
+>  arch/x86/kernel/module.c |  8 ++------
+>  kernel/livepatch/core.c  | 18 +++++++++++++-----
+>  2 files changed, 15 insertions(+), 11 deletions(-)
+> 
+> --- a/arch/x86/kernel/module.c
+> +++ b/arch/x86/kernel/module.c
+> @@ -197,18 +197,14 @@ static int write_relocate_add(Elf64_Shdr *sechdrs,
+>  	bool early = me->state == MODULE_STATE_UNFORMED;
+>  	void *(*write)(void *, const void *, size_t) = memcpy;
+>  
+> -	if (!early) {
+> +	if (!early)
+>  		write = text_poke;
+> -		mutex_lock(&text_mutex);
+> -	}
+>  
+>  	ret = __write_relocate_add(sechdrs, strtab, symindex, relsec, me,
+>  				   write, apply);
+>  
+> -	if (!early) {
+> +	if (!early)
+>  		text_poke_sync();
+> -		mutex_unlock(&text_mutex);
+> -	}
+>  
+>  	return ret;
+>  }
+> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
+> index 0e73fac55f8eb..9968441f73510 100644
+> --- a/kernel/livepatch/core.c
+> +++ b/kernel/livepatch/core.c
+> @@ -319,12 +320,19 @@ static int klp_write_section_relocs(struct module *pmod, Elf_Shdr *sechdrs,
+>  					  sec, sec_objname);
+>  		if (ret)
+>  			return ret;
+> -
+> -		return apply_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
+>  	}
+>  
+> -	clear_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
+> -	return 0;
+> +	if (!early)
+> +		mutex_lock(&text_mutex);
 
-On 27/05/25 11:32, Michael Walle wrote:
-> Hi Aradhya,
-> 
-> On Mon May 26, 2025 at 4:17 PM CEST, Aradhya Bhatia wrote:
->> Thank you for reviewing and testing the patches! =)
-> 
-> Thank you for your dedication to bring this feature upstream :)
-> 
->> On 26/05/25 15:05, Michael Walle wrote:
->>>
->>>> +static int get_oldi_mode(struct device_node *oldi_tx, int *companion_instance)
->>>> +{
->>>> +	struct device_node *companion;
->>>> +	struct device_node *port0, *port1;
->>>> +	u32 companion_reg;
->>>> +	bool secondary_oldi = false;
->>>> +	int pixel_order;
->>>> +
->>>> +	/*
->>>> +	 * Find if the OLDI is paired with another OLDI for combined OLDI
->>>> +	 * operation (dual-link or clone).
->>>> +	 */
->>>> +	companion = of_parse_phandle(oldi_tx, "ti,companion-oldi", 0);
->>>> +	if (!companion)
->>>> +		/*
->>>> +		 * The OLDI TX does not have a companion, nor is it a
->>>> +		 * secondary OLDI. It will operate independently.
->>>> +		 */
->>>> +		return OLDI_MODE_SINGLE_LINK;
->>>
->>> How is this supposed to work? If I read this code correctly, the
->>> second (companion) port is always reported as SINGLE_LINK if its
->>> device tree node doesn't have a ti,companion-oldi property. But
->>> reading the device tree binding, the companion-old property is only
->>> for the first OLDI port.
->>
->> With this series, the dt-schema for oldi changes a bit as well. Both the
->> OLDIs, primary or secondary, need to pass each other's phandles now.
->> The "ti,companion-oldi" and "ti,secondary-oldi" properties are not
->> mutually exclusive anymore.
-> 
-> Ok, I thought so. But then you'll have to update the binding doc and
-> example (Patch 2/3) ;)
-> 
+I understand why you do this but it opens some questions.
 
-Ah, that's right. The example wasn't updated there. Thank you! =)
+As this patch suggests, the "text_mutex" has been used to
+sychronize apply_relocate_add() only on x86_64 so far.
 
->> Something like this.
->>
->> &oldi0 {
->> 	// primary oldi
->> 	ti,companion-oldi = <&oldi1>;
->> };
->>
->>
->> &oldi1 {
->> 	// secondary oldi
->> 	ti,secondary-oldi = true;
->> 	ti,companion-oldi = <&oldi0>;
->> };
->>
->>
->> If there is no companion for any OLDI dt node, then the OLDI TX will be
->> deemed as acting by itself, and in a single-link mode.
-> 
-> And it's possible to still have these properties and treat them as
-> two distinct transmitters? I'm wondering if it's possible to have
-> the companion-oldi and secondary-oldi property inside the generic
-> SoC dtsi, so you don't have to repeat it in every board dts.
-> 
-> If I read the code correctly, the panel has to have the even and odd
-> pixel properties to be detected as dual-link. Correct? Thus it would
-> be possible to have
-> 
-> oldi0: oldi@0 {
->  	ti,companion-oldi = <&oldi1>;
-> };
-> 
-> oldi1: oldi@1 {
->  	ti,secondary-oldi;
->  	ti,companion-oldi = <&oldi0>;
-> };
-> 
-> in the soc.dtsi and in a board dts:
-> 
-> panel {
-> 	port {
-> 		remote-endpoint = <&oldi0>;
-> 	};
-> };
+s390x seems to rely on "s390_kernel_write_lock" taken by:
 
-In this case, the secondary OLDI (oldi1) would remain disabled from
-soc.dtsi.
+  + apply_relocate_add()
+    + s390_kernel_write()
+      + __s390_kernel_write()
 
-I gave this a quick try. Turns out, of_parse_phandle() is not able to
-return an error when primary OLDI tries to find a companion -- which is
-important for the driver to detect an absence of any secondary OLDI.
+And powerpc seems to rely on "pte" locking taken by
 
-Since the driver code registers a companion for primary OLDI, and
-further does not find the "dual-lvds-{odd,even}-pixels" properties,
-the driver ends up trying for a Clone Mode.
+  + apply_relocate_add()
+    + patch_instruction()
+      + patch_mem()
+	+ __do_patch_mem_mm()
+	  + get_locked_pte()
 
-So, for single-link , we'd have to actively delete the "companion-oldi"
-property, in the board.dts/panel.dtso.
+I see two possibilities:
+
+  1. Either this change makes a false feeling that "text_mutex"
+     sychronizes apply_relocate_add() on all architextures.
+
+     This does not seems to be the case on, for example, s390
+     and powerpc.
+
+     => The code is misleading and could lead to troubles.
 
 
-But, say, the disabled-node's phandle parse is circumvented, somehow,
-and we don't need to delete the property explicitly.
+   2. Or it actually provides some sychronization on all
+      architectures, for example, against kprobe code.
 
-There would still be one concern, I am afraid.
-
-In AM67A DSS (future scope at the moment), the 2 OLDIs can act
-independently. Like a 2x Independent Single-Link. Both the OLDI dt nodes
-will be enabled.
-
-So, if the soc.dtsi has them already connected, then the
-board.dts/panel.dtso would still need to explicitly delete those
-properties to get the 2 OLDI TXes to work independently.
-
--- 
-Regards
-Aradhya
+      In this case, it might actually fix an existing race.
+      It should be described in the commit message
+      and nominated for backporting to stable.
 
 
-> 
-> Or with a dual link panel:
-> 
-> dualpanel {
-> 	ports {
-> 		port@0 {
-> 			dual-lvds-odd-pixels;
-> 			remote-endpoint = <&oldi0>;
-> 		};
-> 
-> 		port@1 {
-> 			dual-lvds-even-pixels;
-> 			remote-endpoint = <&oldi1>;
-> 		};
-> 	};
-> };
-> 
->>>
->>> FWIW, I've tested this series and I get twice the clock rate as
->>> expected and the second link is reported as "OLDI_MODE_SINGLE_LINK".
->>> I'll dig deeper into this tomorrow.
->>>
->>
->> I was able to reproduce this behavior as you mention when the second
->> oldi dt does not have a companion-oldi property.
->>
->> However, upon analysis, I realize that even having the correct dt as I
->> mention above, will fall into another bug in the code and fail during
->> the OLDI init.
->>
->> Unfortunately, two wrongs in my setup yesterday caused my testing to
->> pass!
->>
->> I will post another revision, if you want to hold out on debugging
->> further!
-> 
-> Sure!
-> 
-> -michael
+I am sorry if this has already been discussed. But I have been
+in Cc only for v3 and v4. And there is no changelog in
+the cover letter.
 
+> +
+> +	if (apply)
+> +		ret = apply_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
+> +	else
+> +		clear_relocate_add(sechdrs, strtab, symndx, secndx, pmod);
+> +
+> +	if (!early)
+> +		mutex_unlock(&text_mutex);
+> +	return ret;
+>  }
+
+Best Regards,
+Petr
