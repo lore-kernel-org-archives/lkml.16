@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1373C465;
-	Tue, 27 May 2025 15:47:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3074F18A6AE;
+	Tue, 27 May 2025 15:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748360870; cv=none; b=DcOAg4qG4VSaeD3N5U0ugcu5p5ahqQAA4JlZrkZ9D05+L1GyqIch0uh+ZVTEGMQsqZ1x3oZsDCxPFlXcnl2aFWGN8tAefJzBaOP81XPBJEUP5zzQelxiem4VRyJ4VoLBw+26z7K5gczbYVYb6i/8+7e4dgvbP7VjBzcswCpx0uc=
+	t=1748361029; cv=none; b=liEXKlrEW3hiEiF8tnLeUT+pdmR9sddvm9+L2+oaKMWOr0+S0pU9psFIall27kZfAxrplxeS/UyrnmJRfc8yZokt1RDXN04X6Jtshs1doKDwB2zDiIN5MKGo3B6cKJ3bSBv1Nvp3N1ktK1mwh/KVm0YpnFLVHyKXcEb1g545PCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748360870; c=relaxed/simple;
-	bh=SXB/W5YGNq6LI6cMa8qdCfbwi61BqnQv3hX2p2dEEaA=;
+	s=arc-20240116; t=1748361029; c=relaxed/simple;
+	bh=DTawVXuGIStToPmMPbM4GIwtFCSgGRsiVFrlYK7qASY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iOqjvFqM2kgEBrFtT7llLUz3Omy4nclXV3JXBzOxoN5xZEnH2ExRQukdEe7f6b/gudi6SMiC3QEyivEBlEUV91ZP+iNwER5uTDvJMy5M6EHBcDRiiN8DFbL9aIpC2BZ88/TIgygP2x6rFf3QB2pr/ZfvsWJ/FOIVvYoNMnSaLlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N89J5Ogf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nQYf035+Jy4h2jokNZkhaA5c72f0rDFgSx5U7Ubbluw2bM7q/IUvyUR7JB7CkeTVhegyWwI6MtSi9YfToC7ZdMT8YBCRr8Qy3SAQZT5Aaw9O9LimmzrVw29/9WQzFjqAr+hNUTN0F3M+SGAezdzcqFmfR7UkJoKxD9ZYbWkUS7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F9hSKi1s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N89J5Ogf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D95C4CEE9;
-	Tue, 27 May 2025 15:47:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F9hSKi1s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D94C4CEE9;
+	Tue, 27 May 2025 15:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748360870;
-	bh=SXB/W5YGNq6LI6cMa8qdCfbwi61BqnQv3hX2p2dEEaA=;
+	s=k20201202; t=1748361028;
+	bh=DTawVXuGIStToPmMPbM4GIwtFCSgGRsiVFrlYK7qASY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N89J5Ogf61kkviEXYSEru1lFMfWmBaDCr3850ZewH/QlCOnLhZYGcUGMt7qY6ZDMT
-	 oFO7wik1FJ9+YT9T4cpQi+aaWKc09PiA+40HXWsssxaZIcNoudic/3QkT5jajkcKnw
-	 y5MbqK1W17jxGwOXApecyKtE09bVt8+fLIkoNXmnTss4aTkR571BJqP26vt0ZrfBOn
-	 Lx76dbKMykRXZJd41txdC41Z4gDnQ8Mc0THiQzT7GjGKoCgbHQydmF+veyG1UHawE3
-	 qrj79aiJuqknL1+mDF6ef/rELc33h3fefrsyvC1AsjDFYXz/+J0AeLkwRYoqezXGzo
-	 7OBkjmnn9r1Lw==
-Date: Tue, 27 May 2025 16:47:46 +0100
+	b=F9hSKi1shD+l4DCmMfv8Ijq/+2UomjDsRmMYD4ezDFulXkcF1CfTrpSguob0Lb/5K
+	 kMkSVDrPseLI3zibGRYWx/cjfKCm4SP+5D9Ao/2UQzXIOB/sPNroXvQ96t63snJihA
+	 ThyAam45KCNGsIruZ8+uxCEoNMAmjX4qCHZFpS+cD9Z0UwJogw4ZNxNyfPfgz9XOo7
+	 h93sjZuViM8QrM41N4YKxZMJF9GezM5ycx/1XITHER7G7bbmF6fsI5lRXqKr14jvsw
+	 SZpPFQqCPseeDJ/XvS8EtQRnt+dDN0VGx2IcdtNUL+DQ9CooKmAdNxa1XIojpXe3Ox
+	 B0QNrTb37iNvQ==
+Date: Tue, 27 May 2025 16:50:24 +0100
 From: Conor Dooley <conor@kernel.org>
 To: Frank Li <Frank.Li@nxp.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	"open list:IRQCHIP DRIVERS" <linux-kernel@vger.kernel.org>,
+	"open list:CLOCKSOURCE, CLOCKEVENT DRIVERS" <linux-kernel@vger.kernel.org>,
 	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
 	imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: interrupt-controller: Add fsl,icoll.yaml
-Message-ID: <20250527-ancient-monstrous-2b867b95524b@spud>
-References: <20250523192016.563540-1-Frank.Li@nxp.com>
+Subject: Re: [PATCH 1/1] dt-bindings: timer: Add fsl,timrot.yaml
+Message-ID: <20250527-shawl-stencil-8987d27dd658@spud>
+References: <20250523191928.563368-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,101 +46,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="NabpYVU0Es9zW1+Z"
+	protocol="application/pgp-signature"; boundary="WAHoCtr1g0GQMFYU"
 Content-Disposition: inline
-In-Reply-To: <20250523192016.563540-1-Frank.Li@nxp.com>
+In-Reply-To: <20250523191928.563368-1-Frank.Li@nxp.com>
 
 
---NabpYVU0Es9zW1+Z
+--WAHoCtr1g0GQMFYU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 23, 2025 at 03:20:15PM -0400, Frank Li wrote:
-> Add fsl,icoll.yaml for i.MX23 and i.MX28.
+On Fri, May 23, 2025 at 03:19:28PM -0400, Frank Li wrote:
+> Add fsl,timrot.yaml for i.MX23/i.MX28 timer.
+
+Same here as the icoll.
+
 >=20
 > Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->  .../interrupt-controller/fsl,icoll.yaml       | 45 +++++++++++++++++++
+>  .../devicetree/bindings/timer/fsl,timrot.yaml | 45 +++++++++++++++++++
 >  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controlle=
-r/fsl,icoll.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,i=
-coll.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,icol=
-l.yaml
-> new file mode 100644
-> index 0000000000000..7b09fd7d588f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,icoll.ya=
+>  create mode 100644 Documentation/devicetree/bindings/timer/fsl,timrot.ya=
 ml
+>=20
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,timrot.yaml b/Do=
+cumentation/devicetree/bindings/timer/fsl,timrot.yaml
+> new file mode 100644
+> index 0000000000000..3c9aacc356a57
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/fsl,timrot.yaml
 > @@ -0,0 +1,45 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/fsl,icoll.yaml#
+> +$id: http://devicetree.org/schemas/timer/fsl,timrot.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Freescale MXS icoll Interrupt controller
+> +title: Freescale MXS Timer
 > +
 > +maintainers:
 > +  - Frank Li <Frank.Li@nxp.com>
 > +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx23-icoll
-> +              - fsl,imx28-icoll
-> +          - const: fsl,icoll
-
-Given this generic fallback, that would likely not be approved if this
-were actually what it is presented as (a binding for some new device),
-is only acceptable because it is already in use and this is some 15 year
-old device, you should state pretty clearly in your commit message.
-With it pointed out,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
+> +    items:
+> +      - enum:
+> +          - fsl,imx23-timrot
+> +          - fsl,imx28-timrot
+> +      - const: fsl,timrot
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  interrupt-controller: true
+> +  interrupts:
+> +    maxItems: 4
+
+You should mention what the items are I think in an items list, even if
+that's just timer 0 through 3.
+
 > +
-> +  '#interrupt-cells':
-> +    const: 1
+> +  clocks:
+> +    maxItems: 1
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
+> +  - interrupts
+> +  - clocks
 > +
 > +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    interrupt-controller@80000000 {
-> +        compatible =3D "fsl,imx28-icoll", "fsl,icoll";
-> +        reg =3D <0x80000000 0x2000>;
-> +        interrupt-controller;
-> +        #interrupt-cells =3D <1>;
+> +    timer: timer@80068000 {
+> +        compatible =3D "fsl,imx28-timrot", "fsl,timrot";
+> +        reg =3D <0x80068000 0x2000>;
+> +        interrupts =3D <48>, <49>, <50>, <51>;
+> +        clocks =3D <&clks 26>;
 > +    };
 > +
 > --=20
 > 2.34.1
 >=20
 
---NabpYVU0Es9zW1+Z
+--WAHoCtr1g0GQMFYU
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDXeogAKCRB4tDGHoIJi
-0hOBAPkBv8JYkIsYT13rVU0cUw9lky7j2QGQn086JoDm4uo3aAD9FFXCMfefltTB
-ZwSKCZ6t5+SXVbpCLff58xih4e+JUg4=
-=9mIs
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDXfQAAKCRB4tDGHoIJi
+0ghCAPwKEj3eE/KVOWlCmqiVlAuF+lEXbPXaeHo+dI+WEVoCfQEAkYk5dJiHJsao
+NTicNhOOLpnx6Om7S8dgVHJzwaVxXgs=
+=orA+
 -----END PGP SIGNATURE-----
 
---NabpYVU0Es9zW1+Z--
+--WAHoCtr1g0GQMFYU--
