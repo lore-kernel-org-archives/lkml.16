@@ -1,97 +1,123 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DF310A1E;
-	Tue, 27 May 2025 02:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD702139579
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748314114; cv=none; b=L5S1QzogXtNrQp1vWbq0LJ3bPcZELR+8pNohHYuuwZAyeNLNKC2GT44dAhiF+KpWWf4p3rLEWSL2gBWIsdws4Rhb41eixXG5w3BeeAuM7zQhU/q8UEBjt4elhZrlVPLqC1XLj8+ncBx3tlq4s7GY1LOVasm6UuzTq9coD/K5xgw=
+	t=1748314114; cv=none; b=KuqpiOfi4ezf3optAYWkqX7uAqhoPQgUaxh4iWzboLd93ZJB6XEFPrqXLPgJZTpvQ5sIfxwvX1xqn+BOM/M9C/OlebPQIUTSCTtcJ+DGdGELjponolkPJsJCdKT2KIcZj7Wpr9oMomcLbxUNDsq8S0MZ0XaBpI5bfEleiuTOr0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748314114; c=relaxed/simple;
-	bh=TYr+3U6fOV83c7+gV8TJqOEfjngi1bb4/1WmymZOfNM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=KZEKxJVzaSgG73xI4zY3e5fr+KcRd2tRxQgw6hxysP2vxBd4zj3tN6433+Y9vbAJgFGF5AFM4LA0jRAEfzax61ZS1GvqXlpxKgDG3iluEO9foMG21IOZreW4GCxIWfp5ttszyQ/bLckLkep1Tqyuo1rIh5bjkIDmBnM/z7JY0sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b5xs905wqzYQvCL;
-	Tue, 27 May 2025 10:48:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 275FF1A150C;
-	Tue, 27 May 2025 10:48:28 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgDXOl_6JzVoLkKHNg--.26116S3;
-	Tue, 27 May 2025 10:48:28 +0800 (CST)
-Subject: Re: [PATCH 09/23] md/md-bitmap: add a new method blocks_synced() in
- bitmap_operations
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-10-yukuai1@huaweicloud.com>
- <CALTww2_SUyLUFzQgLe+z0UFmcS72o1JDEkPfR5FEsOmj8CDsXw@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <150960a5-376d-61ca-2996-6ce0e553e956@huaweicloud.com>
-Date: Tue, 27 May 2025 10:48:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	bh=1sIkGvLRc4q9F0wAGlww0AgdOxuNbiq/W5VJZQg3ebE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ANzjniqIsUe7a1pnNz+RyxiUbirMaN8yTICaSok23gkoZa6VhwIy9CeKSoKGCsBW8AnX4RyqSxSSKmUexycRAfld8lKwE42MbKDmJ5Juyfpk0ssyrxbNY4quozUEffF9l//Dnyyp50JbfDoebjPEeBmJlgHdo4LA/aVt/m4ANhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=cBaG4EKJ; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="cBaG4EKJ"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad1f6aa2f84so566647666b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1748314110; x=1748918910; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vxISWGK2XQPkm4Hhr1US0gvD1FZ3zYyiGOuHAQJE5eo=;
+        b=cBaG4EKJNl3cuWB6pIdbTLbU184LMPx1S8Le/UTPlp9DXIT30STkIaS18O1u3dGVlH
+         OzQYiG6Lxb7QkaC4Ss6xiXLamwysKiCmv5hTntRJY4/oFKT3VoRV2TMRukOA8BZYe1gk
+         tXRxLO3X/i+dvdzQ0DsjlzPcoODAdIbATiDjchNRO5f1BA0tyF1h3V9HNyvwZ2d23av8
+         PgUWib1fFQ8MxDAXmJjWUyoAx3XMeT7Kqw1kPDoe+wenMN3M0K0ZfdZvY2rZKJ6QDoAv
+         DeN6fKLGUu1bw35d5DoaqDhx4DAGNsUwAbqYs8v9K1f7MEINOliAyJ/l5H1LxJOG/9vq
+         LNcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748314110; x=1748918910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vxISWGK2XQPkm4Hhr1US0gvD1FZ3zYyiGOuHAQJE5eo=;
+        b=ny6R0CT0MByxpvS8bEGobY813ZFVdr1eVQSdUWWy60rLAQwzv+dQObzDMpSy6gZV8I
+         aOW9C4yBsNt8Io6Q8TRfAITE0Dy5Jtr7DbbjCK8YdhwwJ/320UL9wdB+vztlWmngLELB
+         SJKFRN+s4z7mYg3Tpic6kkKT46pjyxbqnp1HnYuTCsC+8mWP1aUD9aR3PdTJK0mhi5rg
+         f7jeJkSAcH/4k4ShsTptiVNODOy7OdSSQiZzNUHZa5tiMqMu6/PspGxL5Ef/ZGtNoXaE
+         B1CHKjnHWmJRxtkOLb+pQQE6EstWylDjjWOMWDnerHqERG2oCgjtj8ZTdtbQTJSJLF9M
+         SUzg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPhrcwsHSBEMHTHDFliGOcer1NMiiuCbJi4wBzn2dFHr0ONlR/e7bqv4IAMnL07b/IYrzo/OqVE55bqfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaX2d8KQVrRxSyiv/AEo8Fb+2QRqLvMTHi37Rx5BGYugYdGo11
+	c0OjQbmYN6ZXQSCQS4GM8XS5/z9r8pqO6Aysvll1fct0u71ef2bbLdwUpSoTJ8WTqsxFW3a9LRP
+	zSXcdh4aMkcLiquOh4k26EINrIjRHR/4V8ME6J43Zow==
+X-Gm-Gg: ASbGncsckGMoLKxclNiNpFpT9gBGW/bHfViTrpa4ORJ6Y7EbGmULLyznAX/4uRiAZyY
+	4IUcup1oS2yuP9Nkm/bjWBhFLL1EipjIpQWeTgairdCqPsT4WFuaNvC81JKW9ymiHD4DB15Nzee
+	J7zn9bhH32p2Wuc/UDatvAxHE2985Lk92teQ==
+X-Google-Smtp-Source: AGHT+IGlQnBA51IfLDQtlV4Tsj0DcivukafO3WpRjoRYo7aZ2XNkgT/ISpHO9OKoKdboUS/Oi+TdrQgc1gVBGNRrhUg=
+X-Received: by 2002:a17:907:9303:b0:ad1:d0e7:a698 with SMTP id
+ a640c23a62f3a-ad8596d8c4emr1099084466b.2.1748314109982; Mon, 26 May 2025
+ 19:48:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALTww2_SUyLUFzQgLe+z0UFmcS72o1JDEkPfR5FEsOmj8CDsXw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXOl_6JzVoLkKHNg--.26116S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFyrXF45Ar17XFyxAF18Xwb_yoWDCrgEgF
-	15C3WUWw1kGr42y3sxKr1DWrWvg345Wr4UX343Jr45XFW8Ja90g3WkCrWkWrs7Xa90yrn5
-	C3yFqr47t395ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20250429085048.1310409-1-guodong@riscstar.com>
+ <20250429085048.1310409-5-guodong@riscstar.com> <paasmwjel652r25nxobidydtpxfjy7emerilmwqhvhtgrrtg6v@gowpzqdzvlfz>
+ <20250526215243-GYA53128@gentoo>
+In-Reply-To: <20250526215243-GYA53128@gentoo>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Tue, 27 May 2025 10:48:18 +0800
+X-Gm-Features: AX0GCFvI_6k3vBVjk-TWBpWmMUcHskFmulTKZz7Kxcz7kFRTgK5PHEc_K-e3F1M
+Message-ID: <CAH1PCMZhS4_u3nTdAQDfTTRVJ_61n-OYjmMuv2m4DHYDzGE0XA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] riscv: dts: spacemit: add pwm14_1 pinctrl setting
+To: Yixun Lan <dlan@gentoo.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, 
+	hal.feng@starfivetech.com, unicorn_wang@outlook.com, duje.mihanovic@skole.hr, 
+	heikki.krogerus@linux.intel.com, elder@riscstar.com, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, May 27, 2025 at 5:52=E2=80=AFAM Yixun Lan <dlan@gentoo.org> wrote:
+>
+> Hi Guodong, Uwe,
+>
+> On 18:54 Mon 26 May     , Uwe Kleine-K=C3=B6nig wrote:
+> > On Tue, Apr 29, 2025 at 04:50:46PM +0800, Guodong Xu wrote:
+> > > diff --git a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi b/arch/risc=
+v/boot/dts/spacemit/k1-pinctrl.dtsi
+> > > index 283663647a86..195eb8874f3c 100644
+> > > --- a/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+> > > +++ b/arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi
+> > > @@ -20,4 +20,11 @@ uart0-2-pins {
+> > >                     drive-strength =3D <32>;
+> > >             };
+> > >     };
+> > > +   pwm14_1_cfg: pwm14-1-cfg {
+> > > +           pwm14-1-pins {
+> > > +                   pinmux =3D <K1_PADCONF(44, 4)>;
+> > > +                   bias-pull-up =3D <0>;
+> > > +                   drive-strength =3D <32>;
+> > > +           };
+> > > +   };
+> >
+> > There is a newline expected before the pwm14-1-cfg node, isn't there?
+> >
+> Right, I could amend this and fix it while applying this patch
+> (so if there is no other serious issue, no need to resend)
+>
 
-在 2025/05/27 10:35, Xiao Ni 写道:
-> On Sat, May 24, 2025 at 2:18 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> Currently, raid456 must perform a whole array initial recovery to build
->> initail xor data, then IO to the array won't have to read all the blocks
->> in underlying disks.
->>
->> This behavior will affect IO performance a lot, and nowadays there are
->> huge disks and the initial recovery can take a long time. Hence llbitmap
->> will support lazy initial recovery in following patches. This method is
->> used to check if data blocks is synced or not, if not then IO will still
->> have to read all blocks for raid456.
-> 
-> Hi Kuai
-> 
-> In function handle_stripe_dirtying, if the io is behind resync, it
-> will force rcw. Does this interface have the same function？
+Thanks, Yixun.
 
-This api is not the same, this api is used by lazy initial recovery
-for the raid5, means initial recovery is skipped and resync is not
-in progress, handle_stripe_dirtying can't handle this case.
+By the way, do you plan to take patches 3 and 4 of this series into
+your tree? They only apply if the SpacemiT reset patchset is applied
+first.
 
-Thanks,
-Kuai
+BR,
+Guodong
 
+> --
+> Yixun Lan (dlan)
