@@ -1,263 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723662749CB;
-	Tue, 27 May 2025 11:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E59A1DF270;
+	Tue, 27 May 2025 11:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748345643; cv=none; b=A9EGI09CeiiGUlziCHKfCqDc1lzPtl6uD4IytqvUFzEKwBP9u48+uUIJoKi+mUBAP869VWEM/OifWkng0prvuK1vTZCs0fjc9reYozGQIRGYdbydNLXWAMYvOUvwy8ok4/gjUTnNQAbCocVlyYF4NEQPlLdcneZ47+lq2os7oVs=
+	t=1748345696; cv=none; b=CijOmObQyE9obPiKQvzCoJSvf4ZMVunecMytygAzVh/LODQ9V25Kqii4UmqP8AEZwe0HO7v52jeHdEyF3BHpO9Rwx845QUHiAWJHc6iySdggF7A0rX6ZLkwZ1tH+qPCoG+6uVeIuuz2DEzzJT2DwYlfPUP2sKAJyFlTyIKbSBR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748345643; c=relaxed/simple;
-	bh=YTLYU9LWSJhsBRbF0nwekUco3urr9nhUJqZ1xPPWD6I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gUVoY+zbCfau2kBjSFnEWEIONUWYCUJa7FKH419TkFIH76MpzRLPIKMKZfOtr5qHlF+L4DLb6uvsvpxUSNSaaixe+1dzNfdNQL4AYhltyrVOeaZlj2pxSeTDSmC11CCNorbKAS3lykXpPZ2/eiHhRrbELxyAdsDBlEfTeE3QItA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPsvpfSD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748345696; c=relaxed/simple;
+	bh=+PPbfF2SmSiQIvjQ2MW3Yk65tF46e7YUm4vQNjVdxUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CTQtDxaSSa9RUKcT3Zaa2m+Rta1LFDF9hnw4Cbvzhpw4zJCk6mTbiX9JSl9nXQochkW4VWKW57QVqqQFw8UQLk4TyuzrBQ6XaeGkWMFL+psdRn/4G18UGNP6N/jF8yFSganENy09UFvDCrnc4vR6jfuYI0KuBsY6Q1OcGa0G3AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hrDs2PGz; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPsvpfSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9480DC4CEEB;
-	Tue, 27 May 2025 11:34:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748345643;
-	bh=YTLYU9LWSJhsBRbF0nwekUco3urr9nhUJqZ1xPPWD6I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=OPsvpfSDXqVNMHu6O72FeusLJj/fe/bJsamEvSE117gXDT+bqkiXRWfandboGlnnX
-	 OAEwVtmCXHq6aZL790iu1Ek31lvbZFvlzDM2DTgRyrbpEq9QzuDQv9jaTi2SVm6oZO
-	 GJXV/sCT/xPM+lInvjKiOZpjSFb0kwk1D3pn6HcdDJWejzsH+jmquukuhn7ksJkKnK
-	 /YmTRxe7fhajBK6EynaFK+imu0U3K/xkZd+1pWe1zxXxMI79KsAHUvfWxb4lF1KZRf
-	 XEYVD1A4wACGg2gQNI9t8pAeuXGGCc1efWUhX7leW/fCUBCHwaQTln2qTBdhrLfu8M
-	 Qiag53s0Be5LQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 27 May 2025 07:33:40 -0400
-Subject: [PATCH v10 9/9] ref_tracker: eliminate the ref_tracker_dir name
- field
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrDs2PGz"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441ab63a415so38644615e9.3;
+        Tue, 27 May 2025 04:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748345692; x=1748950492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZY6+6p1ISLjuPJ6dhFMtDrf4Z9wnk7v30MNc5rqXJJE=;
+        b=hrDs2PGz0l6MfCxRcMUmCTnMLQAZF6+5ypQJGUrCtmOZFzYcEjYRkxHu1UCNnr7HWE
+         YZti3gLNEKWWQ3O0yudARfcr5w9OjB6xwbTj3g2BkkjHXtrYZBAG57+m/oGdnJPnoXpl
+         iNoWjn3CcpXuRtYRP9qFEPEp42b3SBYWuvQEZ/75lYrN7mp6UF3a0jGsj8F4SLsMINRA
+         cKHT4+F/J+e4qkRF1sNTA0VS+QeMJUpRDeC/8cP9TZo6ehJjIhpLmCl5VUFZmpyGe9df
+         SfkiMmin2x8sCu2frjLTTLECABVzMNFzH3L1NQYpj1rDjso3VzwOMVIRh9MamdoTzsaN
+         JnNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748345692; x=1748950492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZY6+6p1ISLjuPJ6dhFMtDrf4Z9wnk7v30MNc5rqXJJE=;
+        b=O47xKgR/lSI/ybBW0CRpeu4oXTxvOULjSMgpkeLzMw/vt7YtE1QBqXwudoqR1wPCt3
+         S4/vKhjX0pN4wcZMpbbqiIRpHRmkGXFbjdIFLnLHO4XwBJg/ct6iY1k5+tBBvY0r+ixV
+         ykHaDLY7D860RT37XTQalYKoE8B8GnPxxVQMDJOpkj3Lmh4SE9Q5IVZ8cVOIxYKFozr6
+         769uPWa6zhteLowTGElyLJY3715GREq66uEgzqI4FYMZJO68u6rNkg3qBZgoYbAT6PmD
+         SoX/eBaJ8XjEL/bM4/1QSn8ZqH0uW6rLr5u9MbK7ZGAK5pc3+fc/JkTqdWP1BMr2qgPk
+         IPNw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1PFUFS74VJXP449ozPuxaLvQRgq0d3FhBxY0e25ql3Q1nXlqrquQCXwKIl9JaNFbIZ8Eb1fVQPNyr@vger.kernel.org, AJvYcCUjLjik9qbfWDRa60y+WXXSCZzhbw0Ok2fhP102NUNtBSD+Vdrks7dBclit2yTNqROVaIBe0AcGnFy/bc4S@vger.kernel.org, AJvYcCXH4Z/uvusU+4BXYzlvObBRDEBu0CH8tCiU4seaYaZkIA9VB2VU0wj3cYLbegj706rfaZsHzOn3AuHAIXbSBTSieEI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOg7qvmuWYwIxmyNgKfg0m3qzBS85KQUcE+sc/SuHN/7XfFyL6
+	L05nNfOu7242uiK1yEK7AI5n9ZRwV2Uby+11CWTViEQzrHcRvFReiumIECPMNKbaaQzmkYEbM0z
+	O90Dz57b4fIqltUa4qF4AffDMKZpK09FqhpMN
+X-Gm-Gg: ASbGncsUK4fzfhhRD6Ev7WtPhqJasE9T12qedlJkxyVWev2iyDgQa3baAeBj7g5tm7L
+	nAOOcIR9+HkQ3gVnH4GZfmOLvCIw4g0tSTxDZRYjSR9G0TC+0C/skJP9zQx8xNGk+upAwJ2UuUs
+	0qsrMMTLRhryLyyB4lxNdkTOidELePkBROEo9FVX0QUMEoIg==
+X-Google-Smtp-Source: AGHT+IGIEBNXzYbY9tpl/7hzwAfE29eN0MO6dp5pYK4g1FEm7pOZesiGxfUqL+aJmDXst1z45qSr3DaCn+pNQiposp0=
+X-Received: by 2002:a05:6000:2301:b0:3a4:d53d:be23 with SMTP id
+ ffacd0b85a97d-3a4d53dc01cmr6499259f8f.30.1748345691523; Tue, 27 May 2025
+ 04:34:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-reftrack-dbgfs-v10-9-dc55f7705691@kernel.org>
-References: <20250527-reftrack-dbgfs-v10-0-dc55f7705691@kernel.org>
-In-Reply-To: <20250527-reftrack-dbgfs-v10-0-dc55f7705691@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Tvrtko Ursulin <tursulin@ursulin.net>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
- Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7499; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=YTLYU9LWSJhsBRbF0nwekUco3urr9nhUJqZ1xPPWD6I=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoNaMX37lKKv9qM6qZoSFnMypTHz5HKkasSkcfe
- 6vmfAFXGX2JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaDWjFwAKCRAADmhBGVaC
- FQBDEACwwKWpXOrarJH08FEBs3PI31pyaNaGC834qIenHT3CSwcg9OyQ/26xJZBHeMVaI3YOwB4
- W5satPonKqkZi9rLGOHlMEnSYvxoHqSHFv16PZaLZztxu+Pt5iuvDxrnd8/oRMlhyjsYMR07Q+Q
- Jk9S2uZIflWaIkdtre0sAm/ImHVrYJSD4hoxKx5/vZMTfqo4BHDY5nUd8XaRt8e/oXkxjMAoUqC
- 40oUr6gTBFUF5GXMaJZxO3eTj2DhREdWB4fgJY7RdH5JemF1cJcBidBfgQhD0EQyGBX/adeD1+3
- ZKYyIYUo/Ek8JCxjxXPol5puEC+TUlOZWkNefAB/eptzr+0p/W8p97cg13X9zb4B0PXTC2pcz3Q
- GVcpCV0qfYMSfbH7F1/3KPSKcFQIsmZsXgyPTOji2lDI9z7ASsSYRd1QDr9DeS3M8j6rcy2kGpy
- U7GfxOr8Fiwba1ekQsyCgHzopDbOrJ1HebmVLKG2FuYWUzp3h4XQy923o4N7xPNjqVBTrWkueAt
- tW7XiIOCI9AKto/byQI/cSqN25Z4aJ2zfZnEBv4m54vsjZYnGkwzn5pmEZoEHgknd/Z76g/zU8c
- 7cOLpEEZ6LTGRAF4bF7hb19+gAF3UPPtfWbljLPs7axNcNqp7uL3N3yVUGO8UcUHlvtDcvk2VNc
- SXR/qw3S6HRW3kA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <20250515183104.330964-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250515183104.330964-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVv3abCx-FXMZFhfmc=5tk5-OA0mnxpcT=QYQGzaVZPjw@mail.gmail.com>
+In-Reply-To: <CAMuHMdVv3abCx-FXMZFhfmc=5tk5-OA0mnxpcT=QYQGzaVZPjw@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 27 May 2025 12:34:25 +0100
+X-Gm-Features: AX0GCFuawmIBP_0UgEC3uycVa4QO5o3QQMygKDcTaJmzsnkJu7SUeaGdb6G3MIQ
+Message-ID: <CA+V-a8vsXdEHDHWmk=5gp5hU7egmEuwcJx1vaoPWrv5EXEb=jA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: renesas: r9a09g057: Add USB2.0 support
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now that we have dentries and the ability to create meaningful symlinks
-to them, don't keep a name string in each tracker. Switch the output
-format to print "class@address", and drop the name field.
+Hi Geert,
 
-Also, add a kerneldoc header for ref_tracker_dir_init().
+Thank you for the review.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- drivers/gpu/drm/display/drm_dp_tunnel.c |  2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
- drivers/gpu/drm/i915/intel_wakeref.c    |  2 +-
- include/linux/ref_tracker.h             | 20 ++++++++++++++------
- lib/ref_tracker.c                       |  6 +++---
- lib/test_ref_tracker.c                  |  2 +-
- net/core/dev.c                          |  2 +-
- net/core/net_namespace.c                |  4 ++--
- 8 files changed, 24 insertions(+), 16 deletions(-)
+On Fri, May 23, 2025 at 9:03=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, 15 May 2025 at 20:31, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The Renesas RZ/V2H(P) ("R9A09G057") SoC supports 1x channel with OTG/DR=
+D
+> > and 1x channel with host interface.
+> >
+> > Add the ECHI, OHCI, USB2.0 PHY and reset control nodes for USB2.0 chann=
+els
+> > in R9A09G057 SoC DTSI.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+> > @@ -662,6 +662,119 @@ sdhi0_vqmmc: vqmmc-regulator {
+> >                         };
+> >                 };
+> >
+> > +               ohci0: usb@15800000 {
+>
+> Moving above mmc@15c00000 to preserve sort order.
+>
+Thank you for taking care of this.
 
-diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-index b9c12b8bf2a3e400b6d8e9d184145834c603b9e1..1205a4432eb4142344fb6eed1cb5ba5b21ec6953 100644
---- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-+++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-@@ -1920,7 +1920,7 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
- 	}
- 
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
--	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun", "dptun");
-+	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
- #endif
- 
- 	for (i = 0; i < max_group_count; i++) {
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 3fdab3b44c08cea16ac2f73aafc2bea2ffbb19e7..c12b5d0e16fa363f3caede372e7a2031676aa7b5 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -60,7 +60,7 @@ static struct drm_i915_private *rpm_to_i915(struct intel_runtime_pm *rpm)
- static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
- {
- 	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
--			     "intel_runtime_pm", dev_name(rpm->kdev));
-+			     "intel_runtime_pm");
- }
- 
- static intel_wakeref_t
-diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
-index 5269e64c58a49884f5d712557546272bfdeb8417..615fb77809291be34d94600fdd4d919461a22720 100644
---- a/drivers/gpu/drm/i915/intel_wakeref.c
-+++ b/drivers/gpu/drm/i915/intel_wakeref.c
-@@ -114,7 +114,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
- 			 "wakeref.work", &key->work, 0);
- 
- #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
--	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
-+	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref");
- #endif
- }
- 
-diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
-index ddc5a7b2bd84692bbc1e1ae67674ec2c6857e1ec..5878e7fce712930700054033ff5f21547e75224f 100644
---- a/include/linux/ref_tracker.h
-+++ b/include/linux/ref_tracker.h
-@@ -24,7 +24,6 @@ struct ref_tracker_dir {
- 	struct dentry		*dentry;
- 	struct dentry		*symlink;
- #endif
--	char			name[32];
- #endif
- };
- 
-@@ -48,10 +47,21 @@ void ref_tracker_dir_symlink(struct ref_tracker_dir *dir, const char *fmt, ...)
- 
- #endif /* CONFIG_DEBUG_FS */
- 
-+/**
-+ * ref_tracker_dir_init - initialize a ref_tracker dir
-+ * @dir: ref_tracker_dir to be initialized
-+ * @quarantine_count: max number of entries to be tracked
-+ * @class: pointer to static string that describes object type
-+ *
-+ * Initialize a ref_tracker_dir. If debugfs is configured, then a file
-+ * will also be created for it under the top-level ref_tracker debugfs
-+ * directory.
-+ *
-+ * Note that @class must point to a static string.
-+ */
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- 	INIT_LIST_HEAD(&dir->list);
- 	INIT_LIST_HEAD(&dir->quarantine);
-@@ -65,7 +75,6 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 	dir->dentry = NULL;
- 	dir->symlink = NULL;
- #endif
--	strscpy(dir->name, name, sizeof(dir->name));
- 	ref_tracker_dir_debugfs(dir);
- 	stack_depot_init();
- }
-@@ -90,8 +99,7 @@ int ref_tracker_free(struct ref_tracker_dir *dir,
- 
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
--					const char *class,
--					const char *name)
-+					const char *class)
- {
- }
- 
-diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-index 5e84e5fd78e147a036d4adb511e657da07866a55..5fb384dd919e1f1ad632eaf595b954118bcfddab 100644
---- a/lib/ref_tracker.c
-+++ b/lib/ref_tracker.c
-@@ -123,7 +123,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 	stats = ref_tracker_get_stats(dir, display_limit);
- 	if (IS_ERR(stats)) {
- 		pr_ostream(s, "%s%s@%p: couldn't get stats, error %pe\n",
--			   s->prefix, dir->name, dir, stats);
-+			   s->prefix, dir->class, dir, stats);
- 		return;
- 	}
- 
-@@ -134,14 +134,14 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *dir,
- 		if (sbuf && !stack_depot_snprint(stack, sbuf, STACK_BUF_SIZE, 4))
- 			sbuf[0] = 0;
- 		pr_ostream(s, "%s%s@%p has %d/%d users at\n%s\n", s->prefix,
--			   dir->name, dir, stats->stacks[i].count,
-+			   dir->class, dir, stats->stacks[i].count,
- 			   stats->total, sbuf);
- 		skipped -= stats->stacks[i].count;
- 	}
- 
- 	if (skipped)
- 		pr_ostream(s, "%s%s@%p skipped reports about %d/%d users.\n",
--			   s->prefix, dir->name, dir, skipped, stats->total);
-+			   s->prefix, dir->class, dir, skipped, stats->total);
- 
- 	kfree(sbuf);
- 
-diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
-index d263502a4c1db248f64a66a468e96c8e4cffab25..b983ceb12afcb84ad60360a1e6fec0072e78ef79 100644
---- a/lib/test_ref_tracker.c
-+++ b/lib/test_ref_tracker.c
-@@ -64,7 +64,7 @@ static int __init test_ref_tracker_init(void)
- {
- 	int i;
- 
--	ref_tracker_dir_init(&ref_dir, 100, "selftest", "selftest");
-+	ref_tracker_dir_init(&ref_dir, 100, "selftest");
- 
- 	timer_setup(&test_ref_tracker_timer, test_ref_tracker_timer_func, 0);
- 	mod_timer(&test_ref_tracker_timer, jiffies + 1);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index bac9d29486556023cd99f5101b96b052acb9ba70..a062912525ee573504a9cc252f71aed22693d24f 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -11713,7 +11713,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 
- 	dev->priv_len = sizeof_priv;
- 
--	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev", name);
-+	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev");
- #ifdef CONFIG_PCPU_DEV_REFCNT
- 	dev->pcpu_refcnt = alloc_percpu(int);
- 	if (!dev->pcpu_refcnt)
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index 39b01af90d240df48827e5c3159c3e2253e0a44d..c03757e39c8a334d307fa1b5cc8f03ad3a8df0e0 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -403,8 +403,8 @@ static __net_init void preinit_net(struct net *net, struct user_namespace *user_
- {
- 	refcount_set(&net->passive, 1);
- 	refcount_set(&net->ns.count, 1);
--	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt", "net_refcnt");
--	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt", "net_notrefcnt");
-+	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt");
-+	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt");
- 
- 	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
+Cheers,
+Prabhakar
 
--- 
-2.49.0
-
+> [...]
+>
+> > +
+> >                 sdhi1: mmc@15c10000 {
+> >                         compatible =3D "renesas,sdhi-r9a09g057";
+> >                         reg =3D <0x0 0x15c10000 0 0x10000>;
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-devel for v6.17 with the above fixed.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
