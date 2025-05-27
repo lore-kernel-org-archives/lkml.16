@@ -1,179 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1647212B3B;
-	Tue, 27 May 2025 21:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C63C12B93;
+	Tue, 27 May 2025 21:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748381320; cv=none; b=X/S4vhDZCulqgwr+9v8SE7v+zLfE+++q6tMS/Gsw7Se2ubpA74B28bF/WQk7SKIuxYGzGfCjFgJdmRACmB0rZTFWvYtQpYGuxEyPaig+fxEUUyeKT0is0CThaBfqosyxaO55hlFOO6kYkcBOjUf96T2HMNNQPgfF3JQD5sNDT3w=
+	t=1748381734; cv=none; b=d3kdR0YSJq0qsNZFP/OExhz2Mn/sr0oAN1PtEUHgECK5Bt9TwuR27Sl7vIHWYldrD1bFjJ8PqOCULjdsRM9SNL/hz6G82xV88wMvnEl+CYKfDWpQf5ZAHdH3EdqnuB1FwYdtwz3Ust/7gSAeTuEB28lHzSPZ1UQAMd0bwV3cPO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748381320; c=relaxed/simple;
-	bh=pvfxwe5X86PEZiMzFXgJ3ebwhN+gbHIPHFzJHUdFvdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=poSX/22DlBtyLVL680wnEFcXW1Exzc4zbioR8uwBqA/F1tAdnun3qWonpgtfIPn4CNcZuD1R7QZG+txroHOjw43eRnjydLSZfiYgd2619p9sLvocrXfHTVaYGA1f4uFkfJzXWNTg9qbAfxbTFg2fvmi71sVyvneJ+OrsU5p97cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dnSfeSmr; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748381734; c=relaxed/simple;
+	bh=Z7Bl/YNaGSfvAgSx3PTLMkr8IM9olOBYAL6p1ul+YOs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=HeIDx9+w+cyHt0bXLY/7PP6wnuHDEdkOjLUPsjb7qPupsUy63VLx74pE8okvnLQrbm0DVWNPZlgF3PDkmzK+P7QOa1XZMICoSTnIrib+DIc34pm1ipxO/26rNtKoq1izW3zedCHdmoMBygC8xfBAhQDlMxuAkfedF8dyjCDWdos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JLNDKE9u; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dnSfeSmr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748381319; x=1779917319;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pvfxwe5X86PEZiMzFXgJ3ebwhN+gbHIPHFzJHUdFvdU=;
-  b=dnSfeSmrFVBleqKy+QQ4QUHjlBfj4lfhLBtTSp2AIo4h1M5S1Ga6rEkH
-   zzUB0lQZvgFM70JjKar+XlJBNH7xOJYwXWw0rgEROyBQP+rjkABLk6kzZ
-   /ZM+c9/eECrU+CzA/S9+R8bKOgc8/dwsE9e89H0AgdoGENWAwmuhSNL13
-   S2XVm+TYCuJtv2GlfEwHElslOFXpGVE4J+SdW3Y7qXPjkYA591rckNv42
-   kWbUcidKSFNto8tzfBS49vo+/MugHDFoktcqKM6bV8BrlDBI1hh9Ow402
-   M8Sl4vxzbDXuj9U/PpZWKAzHzN7RnofobmXMf/PQIRUgfxAIwSlDzhpo6
-   A==;
-X-CSE-ConnectionGUID: X9awjNpYQ8GxekHGbVfxPw==
-X-CSE-MsgGUID: Fhbgp9jVSF6kvPYKRsPtVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50390359"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="50390359"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 14:28:38 -0700
-X-CSE-ConnectionGUID: hfdT22DnS6m7rAqHRMUh6Q==
-X-CSE-MsgGUID: dv0lT3O0QW2I1eH/5eXZTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="143953217"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 27 May 2025 14:28:33 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uK1qZ-000V1c-1Y;
-	Tue, 27 May 2025 21:28:31 +0000
-Date: Wed, 28 May 2025 05:28:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: oe-kbuild-all@lists.linux.dev, Harshal Dev <quic_hdev@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org,
-	Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v5 09/12] tee: add Qualcomm TEE driver
-Message-ID: <202505280538.DVSrdWK7-lkp@intel.com>
-References: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JLNDKE9u"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a4c95fc276so2135557f8f.3;
+        Tue, 27 May 2025 14:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748381731; x=1748986531; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Arg/9Cw6SGE8N326LAp3C57EtyZUmN4Wr4OqxUcOTAg=;
+        b=JLNDKE9udHm8toTvfrXJJpblmOzK0QSWcyDziizs6XLwFbM2fGed018dm/fA9GVtbz
+         /JApxcbVFw2XSpbUv7Dxa3+byn1dA/5UcqNTt5I5lfF3hyejJiuh/KhfPXb3L5JMkVJk
+         c8w1Lm7ds15nDZvqwr1e9rKGjx00wrG3ziI20zrEGJwXZoSv9xil5Qtpf2Ea4oKzvE8a
+         LaXLqkyo0TZxQX3DbM5IKVytRGtSYL3EAG5cC/QkuDnTsvSNZM14wRD9l2LoGpp8aBIR
+         oWEneJ50FTXGEHywJDHQ7KJPd3dI1bP5JoDddTT9Rs89HGQ1exboH4gQ8ask9U2+K5r+
+         5WyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748381731; x=1748986531;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Arg/9Cw6SGE8N326LAp3C57EtyZUmN4Wr4OqxUcOTAg=;
+        b=FKkH3MWmPfDi4E3oAXJfofAX+CmX3tX5qs+o3f7VWQmFLI56g4A/bzve4enlUZqum+
+         GGpzsmcwkWGf2p4ui5kOXb3OMYz6Lqa5l3AMiLGwlIHf7nQlqdbcY+thozZWWTOWRepX
+         bkq01yHXy0LKcbV8uQZvIjCw5SLup9fNih5T3zcItTNX9YzOFe0yRExEl7BvJ0zn3Xno
+         BAw7l83M1uh3WUy3zyru6R2r8PnixOtzKPvcTyGlOot0DRSqDNML9rwhS1PbpQzi/VRS
+         wMbK6BKKtPpU1urKJR+msT3YwlC4Vz2u+AtpKrhJKI9GKsR2Px6Nmgilnhc7Q9sXOco5
+         ZS9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU8fkspd+W4Q0XQ6k4pkKqBm2wQLTV3GQYjYpV3SH05OqcI3wKv80y8BYjaIuTBUGKTosl0kvI4@vger.kernel.org, AJvYcCUOW5JIK/rSYpbms3xUXhB9feIUhnNINQYB23XDaEeIhiQbhNG2dmgX1VQeEGAtgjGndXj82xj2DhYr@vger.kernel.org, AJvYcCUn/9gXjpBHGHTRHS6wrwmNPrsfxDktKrWhZcXXqhcRQYPTFcJHISjzlKxh7Zp1MDWjFVQCoNJdKjDOwURP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0xUVdA71bwruN7YO7WC1ZR99vzCimnbvYL2o1FzeP2UQUHifS
+	ZIt4JKIuimhtKhaBI7htqgTmtzByDle/0ONf4SNT8LINuqly29vgBZGgegioxg==
+X-Gm-Gg: ASbGncurZA0+JxbvyM8XptxB/aZZSEkYlD2fERWQ6YNVjhEsNvJc7VbVTruikZgOu94
+	+P3rzIa3vBEXTEKpdOd46B5olS4yoA6tnBdzYSPK/iTxonx7s8l2wSTXtaCAcSRTycRc1ntk2qF
+	4v7orEPf/NRnA+LNl4O7Lv/adVDQ9cjpvJrYiWLmZZWjc82vWh8WRYhQTBuFcm6lVbbzdBQhWgT
+	pMl6pBW1kWo1qIuZjQhQy/ez+493gKUJQY8qjr9tx+ZTY7yS1oCb9Z8WgzTtRJPlZ1nlL3rrrKy
+	1+oNIB/Z8K4pz3SfbcGBpVD9NkCf2y5GbtNziMpxu8VJkEefilFVTwSLDZeuT7mwIn6WCNF10Sp
+	3gfiKIiaCw1i5zAenCgRL
+X-Google-Smtp-Source: AGHT+IGhQHQqaj95E6fuBpFOajcotVNDs1UVszp9NIpRNs8lvcg7mtrkmIkOtdwGtHQUX4n9xF3rpw==
+X-Received: by 2002:a05:6000:2888:b0:3a4:dff9:e6aa with SMTP id ffacd0b85a97d-3a4dff9e824mr4175946f8f.55.1748381730491;
+        Tue, 27 May 2025 14:35:30 -0700 (PDT)
+Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4e8b9a7adsm165671f8f.57.2025.05.27.14.35.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 14:35:29 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next RFC PATCH 1/2] dt-bindings: net: Document support for Airoha AN7583 MDIO Controller
+Date: Tue, 27 May 2025 23:34:42 +0200
+Message-ID: <20250527213503.12010-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Amirreza,
+Airoha AN7583 SoC have 3 different MDIO Controller. One comes from
+the intergated Switch based on MT7530. The other 2 live under the SCU
+register and expose 2 dedicated MDIO controller.
 
-kernel test robot noticed the following build warnings:
+Document the schema that expose the 2 dedicated MDIO controller.
+Each MDIO controller can be independently reset with the SoC reset line.
 
-[auto build test WARNING on 3be1a7a31fbda82f3604b6c31e4f390110de1b46]
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+ .../bindings/net/airoha,an7583-mdio.yaml      | 78 +++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/airoha,an7583-mdio.yaml
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Amirreza-Zarrabi/tee-allow-a-driver-to-allocate-a-tee_device-without-a-pool/20250527-151020
-base:   3be1a7a31fbda82f3604b6c31e4f390110de1b46
-patch link:    https://lore.kernel.org/r/20250526-qcom-tee-using-tee-ss-without-mem-obj-v5-9-024e3221b0b9%40oss.qualcomm.com
-patch subject: [PATCH v5 09/12] tee: add Qualcomm TEE driver
-config: i386-randconfig-062-20250528 (https://download.01.org/0day-ci/archive/20250528/202505280538.DVSrdWK7-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505280538.DVSrdWK7-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505280538.DVSrdWK7-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/tee/qcomtee/call.c:227:38: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __user *uaddr @@     got void *[noderef] uaddr @@
-   drivers/tee/qcomtee/call.c:227:38: sparse:     expected void [noderef] __user *uaddr
-   drivers/tee/qcomtee/call.c:227:38: sparse:     got void *[noderef] uaddr
-
-vim +227 drivers/tee/qcomtee/call.c
-
-   203	
-   204	/**
-   205	 * qcomtee_params_to_args() - Convert TEE parameters to QTEE arguments.
-   206	 * @u: QTEE arguments.
-   207	 * @params: TEE parameters.
-   208	 * @num_params: number of elements in the parameter array.
-   209	 * @ctx: context in which the conversion should happen.
-   210	 *
-   211	 * It assumes @u has at least @num_params + 1 entries and has been initialized
-   212	 * with %QCOMTEE_ARG_TYPE_INV as &struct qcomtee_arg.type.
-   213	 *
-   214	 * Return: On success, returns 0; on failure, returns < 0.
-   215	 */
-   216	static int qcomtee_params_to_args(struct qcomtee_arg *u,
-   217					  struct tee_param *params, int num_params,
-   218					  struct tee_context *ctx)
-   219	{
-   220		int i;
-   221	
-   222		for (i = 0; i < num_params; i++) {
-   223			switch (params[i].attr) {
-   224			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
-   225			case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-   226				u[i].flags = QCOMTEE_ARG_FLAGS_UADDR;
- > 227				u[i].b.uaddr = params[i].u.ubuf.uaddr;
-   228				u[i].b.size = params[i].u.ubuf.size;
-   229	
-   230				if (params[i].attr ==
-   231				    TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT)
-   232					u[i].type = QCOMTEE_ARG_TYPE_IB;
-   233				else /* TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT */
-   234					u[i].type = QCOMTEE_ARG_TYPE_OB;
-   235	
-   236				break;
-   237			case TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_INPUT:
-   238				u[i].type = QCOMTEE_ARG_TYPE_IO;
-   239				if (qcomtee_objref_to_arg(&u[i], &params[i], ctx))
-   240					goto out_failed;
-   241	
-   242				break;
-   243			case TEE_IOCTL_PARAM_ATTR_TYPE_OBJREF_OUTPUT:
-   244				u[i].type = QCOMTEE_ARG_TYPE_OO;
-   245				u[i].o = NULL_QCOMTEE_OBJECT;
-   246				break;
-   247			default:
-   248				goto out_failed;
-   249			}
-   250		}
-   251	
-   252		return 0;
-   253	
-   254	out_failed:
-   255		/* Undo qcomtee_objref_to_arg(). */
-   256		for (i--; i >= 0; i--) {
-   257			if (u[i].type != QCOMTEE_ARG_TYPE_IO)
-   258				continue;
-   259	
-   260			qcomtee_user_object_set_notify(u[i].o, false);
-   261			if (typeof_qcomtee_object(u[i].o) == QCOMTEE_OBJECT_TYPE_CB)
-   262				qcomtee_object_put(u[i].o);
-   263	
-   264			qcomtee_object_put(u[i].o);
-   265		}
-   266	
-   267		return -EINVAL;
-   268	}
-   269	
-
+diff --git a/Documentation/devicetree/bindings/net/airoha,an7583-mdio.yaml b/Documentation/devicetree/bindings/net/airoha,an7583-mdio.yaml
+new file mode 100644
+index 000000000000..2375f1bf85a2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/airoha,an7583-mdio.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/airoha,an7583-mdio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Airoha AN7583 Dedicated MDIO Controller
++
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++
++description:
++  Airoha AN7583 SoC have 3 different MDIO Controller.
++
++  One comes from the intergated Switch based on MT7530.
++
++  The other 2 (that this schema describe) live under the SCU
++  register supporting both C22 and C45 PHYs.
++
++properties:
++  compatible:
++    const: airoha,an7583-mdio
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  '^mdio(-(bus|external))@[0-1]$':
++    type: object
++
++    $ref: mdio.yaml#
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 1
++
++      resets:
++        maxItems: 1
++
++    required:
++      - reg
++
++    unevaluatedProperties: false
++
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    mdio-controller {
++        compatible = "airoha,an7583-mdio";
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        mdio-bus@0 {
++            reg = <0>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            ethernet-phy@1f {
++                reg = <31>;
++            };
++        };
++
++        mdio-bus@1 {
++            reg = <1>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++        };
++    };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
