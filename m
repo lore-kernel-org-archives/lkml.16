@@ -1,62 +1,75 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f65.google.com (mail-pj1-f65.google.com [209.85.216.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F291F582A;
-	Tue, 27 May 2025 05:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17531D86F2
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748322328; cv=none; b=WIo9jLGOQaIFc3Wa+dS8EgkncejK1l0ZMOzkz8tUYFiTbcmqrJ0/zHq0/TsksNG5GW8STGeGOnUgDaX0YPTq2DtRoCU58hf51HxprDs0nv+Ztx7jqcorYchPhc0x1P/XglI9AFRGSquVCTH8ZHiuciwnO9i/8F4/bdeyInHsneE=
+	t=1748322427; cv=none; b=S9jQ2gW0OvlT5vMXIgjv/8N/2ZaqM7Pj2NbqjxDOFrBMZ//25jlxLjL2xazA5gseEeI0oS7kqQ65RW5zYalDe0vIzDxjKEMnJ7GUqKPYo4i8UuOVFJyomsrl2CRWknMU/KsE4EaxomrT+FiPgV2x85Q2STMbo8qnHZ4nyax1crk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748322328; c=relaxed/simple;
-	bh=ZfJzFdHvBVoVt9yihJ6HO+m02MTs9dzOAIW953o6f9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WoIyUPObVPcKww13Q8twbDGvHDlJXkElaACm3UCBQlDEYRUyhz7xOwY2OIb/mXMkRu/On6zQTzLT/hU/EQ3uWdx4o/PYPHpxMbKFA3A1VQJxnvVh0eB0jXAxR1z32dAVmXw9XKD07I5oWmBCoLZwKJTjn4klQbtPdq+XB/JgpAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b60v75Kq0z9tPW;
-	Tue, 27 May 2025 07:05:23 +0200 (CEST)
-From: Pankaj Raghav <p.raghav@samsung.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Michal Hocko <mhocko@suse.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-block@vger.kernel.org,
-	willy@infradead.org,
-	x86@kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	mcgrof@kernel.org,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [RFC 3/3] block: use mm_huge_zero_folio in __blkdev_issue_zero_pages()
-Date: Tue, 27 May 2025 07:04:52 +0200
-Message-ID: <20250527050452.817674-4-p.raghav@samsung.com>
-In-Reply-To: <20250527050452.817674-1-p.raghav@samsung.com>
-References: <20250527050452.817674-1-p.raghav@samsung.com>
+	s=arc-20240116; t=1748322427; c=relaxed/simple;
+	bh=665C0A0ywPp7IQwAfzFBpxxX8o89OwjurlTcLpd1Ovw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=icXI1nl51lKyM8UOmu91ZJihGdYEKibc+C5JH0sk033M4G3Fzu5PN4Bq3DytgNulrRDaIG3A7Mcz714o/9euoWNxK7+xg90WsPM1e0EAslbvKZnNVapl9xtMSwO2WlNIs3DSB1K4dE9c1+owvDP4aju+D26XQTCsJ+0MroukA1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enPntvTG; arc=none smtp.client-ip=209.85.216.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enPntvTG"
+Received: by mail-pj1-f65.google.com with SMTP id 98e67ed59e1d1-308218fed40so160312a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:07:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748322425; x=1748927225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bq5EwIkXOrraR/5nVIEtjR45/z8eeDLu8nm16aEaZ24=;
+        b=enPntvTGVDaJa1FM8qq5EwapyLiFIH6nl1N7r+BXG7ZmpNk8c5lWb5+4icehGUg01s
+         cO92HDtW92ngc+iT0AIaMxDnpFVgLZv6BA4H5Hk1FoSCv6+zE4SdSmD7DYTFMJwc7tjQ
+         09Hb7VxIyOsXuNPHBnE/23bEyDVmr1LCdUjGUlLji3QYL4cJBiee/L0anRrSB5W6r6U3
+         wneU0q+Ajq8778s69Editsr5BG3jnVy2KP5SNSv0ocULBYhpQx2Xevw47zJz+m34PvGz
+         9wwE9bDcGfFOWPJ0/Edn/u6jTbeFChmjeyTkDjdUx9gpIxHpazfkbafAxxtPAMVb/BuO
+         gzVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748322425; x=1748927225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bq5EwIkXOrraR/5nVIEtjR45/z8eeDLu8nm16aEaZ24=;
+        b=L/IazvCHarNnBrDDGQRvPnPK3XxOYxT1MSDI3Y7gWx2TZe9paY8+ZS3JB20621xAL5
+         bTOTEnmGK7Xjmw5hVxjOeB5FK5DUhmWoOy6NURrmAr7DGZhPuvCdqPkQVTN3dti7sc3u
+         9rbtEjnFOp4KLlQBj5FX4fikgwWZN+n3axcP9rDrLLHfYUYL+aDP0SOURsII1Vek7de/
+         pEQpOvj83dxey86Ts0eYkRjBdTeVv44t5BM/nz8Flup2T2VgrCFcolgo0F1j+GefPCrj
+         ga/HiH3mC6IDq1RxLFHIeEEjJcvlijtYPWw39sSaceb/YZ2a9oyzcbU/Scnyo4JLqSi3
+         3JDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOD5dKXXDFpvJqIAYWRYXzQsx7Gz88HDDn/oKXt+bwaRY1tTD48BIX326nKeg2Mel54ltHPsgkBrxj/Wg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdcXe6zzz9T0tL9lzL0X74nM27YIvnueWd6vWXgRwtkFYkUTcy
+	X0luZHxlpKxbvGPJ3tb2BoaoRwoIqTOo4JwFuM05qa79/im+YkWrIFj2F6zn6EEQciOjzqgGCP4
+	=
+X-Gm-Gg: ASbGncveIXRIGIfm//l9aTyOR57iWptsDkJEhtbeCg93YaAFjnu/K1ecFr8RdRJn7PD
+	rTMPRptJ2PoWeZcsMT8odXNjdYN6inpDPDKAYar6UqBhIUMRk9TIMumVZWshf78NxTfhl2atYH4
+	5osPvSHxIA7wiE9B2BEuW4F9XB+BSIxSmX8sdANdo6GAe13WTdN8UKLGTx+UuvIC/7UhlmrDMF0
+	hfkxFwYKee9/K5/hlFV/wLGw1VFoZEm4jzM7UhJPLmJOQEydMetaSTN1PIt79DrwTAyhV915Vn3
+	VL59iVCC+PCm8gem2K1t6m9xh180JXDq1r/psSYpTG0=
+X-Google-Smtp-Source: AGHT+IG1ZpXlBdEq/GjPYtl6pc9EcGGLHPouogdxKALQB+704gWvgLlSpt5eYSZDLGVS4PrHfg2rcg==
+X-Received: by 2002:a05:6a20:438f:b0:1ee:d6a7:e333 with SMTP id adf61e73a8af0-2188c3a285bmr6988282637.8.1748322424767;
+        Mon, 26 May 2025 22:07:04 -0700 (PDT)
+Received: from user.. ([58.206.232.74])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a0ca7sm17883937b3a.158.2025.05.26.22.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 22:07:04 -0700 (PDT)
+From: clingfei <clf700383@gmail.com>
+To: elder@kernel.org
+Cc: keescook@chromium.org,
+	johan@kernel.org,
+	vireshk@kernel.org,
+	gregkh@linuxfoundation.org,
+	greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	clf700383@gmail.com
+Subject: [PATCH v2] greybus: Avoid fake flexible array for response data
+Date: Tue, 27 May 2025 13:06:35 +0800
+Message-Id: <20250527050635.946553-1-clf700383@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,65 +77,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4b60v75Kq0z9tPW
 
-Use mm_huge_zero_folio in __blkdev_issue_zero_pages(). Fallback to
-ZERO_PAGE if mm_huge_zero_folio is not available.
+We want to get rid of zero size arrays and use flexible arrays instead.
+However, in this case the struct is just one flexible array of u8 which
+adds no value. Just use a pointer instead.
 
-On systems that allocates mm_huge_zero_folio, we will end up sending larger
-bvecs instead of multiple small ones.
+v1: https://lore.kernel.org/all/202505262032.507AD8E0DC@keescook/
 
-Noticed a 4% increase in performance on a commercial NVMe SSD which does
-not support OP_WRITE_ZEROES. The device's MDTS was 128K. The performance
-gains might be bigger if the device supports bigger MDTS.
-
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+Signed-off-by: clingfei <clf700383@gmail.com>
 ---
- block/blk-lib.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/staging/greybus/i2c.c             | 12 ++++--------
+ include/linux/greybus/greybus_protocols.h |  3 ---
+ 2 files changed, 4 insertions(+), 11 deletions(-)
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 4c9f20a689f7..0fd55e028170 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -4,6 +4,7 @@
-  */
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/mm.h>
- #include <linux/bio.h>
- #include <linux/blkdev.h>
- #include <linux/scatterlist.h>
-@@ -196,6 +197,12 @@ static void __blkdev_issue_zero_pages(struct block_device *bdev,
- 		sector_t sector, sector_t nr_sects, gfp_t gfp_mask,
- 		struct bio **biop, unsigned int flags)
+diff --git a/drivers/staging/greybus/i2c.c b/drivers/staging/greybus/i2c.c
+index 14f1ff6d448c..b248d6717b71 100644
+--- a/drivers/staging/greybus/i2c.c
++++ b/drivers/staging/greybus/i2c.c
+@@ -144,15 +144,14 @@ gb_i2c_operation_create(struct gb_connection *connection,
+ }
+ 
+ static void gb_i2c_decode_response(struct i2c_msg *msgs, u32 msg_count,
+-				   struct gb_i2c_transfer_response *response)
++				   u8 *data)
  {
-+	struct folio *zero_folio;
-+
-+	zero_folio = mm_get_huge_zero_folio(NULL);
-+	if (!zero_folio)
-+		zero_folio = page_folio(ZERO_PAGE(0));
-+
- 	while (nr_sects) {
- 		unsigned int nr_vecs = __blkdev_sectors_to_bio_pages(nr_sects);
- 		struct bio *bio;
-@@ -208,11 +215,12 @@ static void __blkdev_issue_zero_pages(struct block_device *bdev,
- 			break;
+ 	struct i2c_msg *msg = msgs;
+-	u8 *data;
+ 	u32 i;
  
- 		do {
--			unsigned int len, added;
-+			unsigned int len, added = 0;
+-	if (!response)
++	if (!data)
+ 		return;
+-	data = response->data;
++
+ 	for (i = 0; i < msg_count; i++) {
+ 		if (msg->flags & I2C_M_RD) {
+ 			memcpy(msg->buf, data, msg->len);
+@@ -188,10 +187,7 @@ static int gb_i2c_transfer_operation(struct gb_i2c_device *gb_i2c_dev,
  
--			len = min_t(sector_t,
--				PAGE_SIZE, nr_sects << SECTOR_SHIFT);
--			added = bio_add_page(bio, ZERO_PAGE(0), len, 0);
-+			len = min_t(sector_t, folio_size(zero_folio),
-+				    nr_sects << SECTOR_SHIFT);
-+			if (bio_add_folio(bio, zero_folio, len, 0))
-+				added = len;
- 			if (added < len)
- 				break;
- 			nr_sects -= added >> SECTOR_SHIFT;
+ 	ret = gb_operation_request_send_sync(operation);
+ 	if (!ret) {
+-		struct gb_i2c_transfer_response *response;
+-
+-		response = operation->response->payload;
+-		gb_i2c_decode_response(msgs, msg_count, response);
++		gb_i2c_decode_response(msgs, msg_count, operation->response->payload);
+ 		ret = msg_count;
+ 	} else if (!gb_i2c_expected_transfer_error(ret)) {
+ 		dev_err(dev, "transfer operation failed (%d)\n", ret);
+diff --git a/include/linux/greybus/greybus_protocols.h b/include/linux/greybus/greybus_protocols.h
+index 820134b0105c..6a35c78b967b 100644
+--- a/include/linux/greybus/greybus_protocols.h
++++ b/include/linux/greybus/greybus_protocols.h
+@@ -678,9 +678,6 @@ struct gb_i2c_transfer_request {
+ 	__le16				op_count;
+ 	struct gb_i2c_transfer_op	ops[];		/* op_count of these */
+ } __packed;
+-struct gb_i2c_transfer_response {
+-	__u8				data[0];	/* inbound data */
+-} __packed;
+ 
+ 
+ /* GPIO */
 -- 
-2.47.2
+2.34.1
 
