@@ -1,149 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A63125B1E0;
-	Tue, 27 May 2025 11:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CEC258CF6
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748345234; cv=none; b=HmPGZqZvxCdL+eey99UMUvB4pMDTUaXKXMgXUcZ0bhIh6Kva+UMuaNsdIqZ5CAOWiG1Uj+wgRRTekHKDgLdy0cWAWRzMdWUvTewHTKufFYf2FFKkjUl03GLqeFnxPqwZdhmrfzVYNnyxi4pxgdjtPnxnQusZtIuZEjyXlROYNMg=
+	t=1748345285; cv=none; b=PHReyMphp6aYC0Vd5BqrWgNgqpzinwHV8UV64vEEhpPwH3l6mJIitE8aw+MWs9Apac1zk0zJPc+6ebeF8epxwGCcTWx51Tfb2dXZre4NBrdU3zu8QkGwsa0/GZzPluQeAOzJyOl3d9QKi9UWbynSMOieo+N+dFIHC2YSaDp7enk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748345234; c=relaxed/simple;
-	bh=HyRoDIFjZLiBuV7jZmhL+NtIFIxLS/o4IEbMZrsgwhA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Set8NGJ4pm9WcY8q65p5E46UNNUzei5lGJdoGXxk7jR1BkhQWkoRbjFMkhxclUpjbdCmQ8jXR+FV8OEXzyrYp3Qz0LRslc9EmzpdzKxOy3PvUFTTJzaFbWM94J37LzL0d+BK5K3HdVF10uwX5oMTCr18uQlijsQnLpZt2zKMPoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVVEsxFv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748345285; c=relaxed/simple;
+	bh=e8ddUAcAhPV3l5dBkgY/xuvDDZopdmpnqpS9KtVRxVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWkFmOyRGkyufGDConMTt5BS4+t8QbqnpmwlsGxOnM4sh2yUhGIoumMRZGlOfA/aix+fK3LFzcz0ve2YvBoPV/Mj6yU6EgqPDHl/Id9nHkmf77H8P9D1Pn4eOP7SCDtw1yJO0mNpQqXe/kO9E8JmG4/Ya8VqrSy27lpef5dolc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvkjMVNq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVVEsxFv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0ACFC4CEE9;
-	Tue, 27 May 2025 11:27:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvkjMVNq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F63C4CEE9;
+	Tue, 27 May 2025 11:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748345233;
-	bh=HyRoDIFjZLiBuV7jZmhL+NtIFIxLS/o4IEbMZrsgwhA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mVVEsxFv3lpIAsGsV35ZMyPhwR5mVeSwURQKTZB1/FwcqOWrImA0HW7ySyvoCZn1i
-	 Ap7zhqrJONi1koQpAu/71jNmt42XjSF9xcEWcvQvjNIYDHrIia1KQWAunWW+KoXxkX
-	 j1L2HvxKsZEKmHHCGJ8mxwYz8VPDCdAev901e4AuGcB7hawTrtRSxseYoAFTDU4X1W
-	 ThhBwGjvmnYEwo9MXJ2uUFw0wp53S9hxjrHCr+/Fw+uwIYwa9hSOSJ2vauGFWvCqoO
-	 RkFvOC5pflm8XPQzxtGPI/TQaELE7u0H9slteBSWlo60Rd1c3p9/6k2Vf72S6T7Wwy
-	 +CZI/l0QzGZWg==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 27 May 2025 13:26:43 +0200
-Subject: [PATCH net-next v2 3/3] net: ipa: Grab IMEM slice base/size from
- DTS
+	s=k20201202; t=1748345285;
+	bh=e8ddUAcAhPV3l5dBkgY/xuvDDZopdmpnqpS9KtVRxVo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tvkjMVNqS7XC52fNlKRybn1OoCtgS8x8R/GBAiGz+G9cX6/TNKD7vWmTgo3W9FnD9
+	 nU3HZSxEo57YIOzK88YDXac0w4UpgCqXLg+C5JY2v6fTk0ETvjTCkqC44iAgzAHFXF
+	 gCzsLeQnANMW+3R30XZwusRynCQDz5YGDpcfH2FVbv7GxztOPD3KYGDr8IXOTRGo8A
+	 Efg471bhtviU6JmKWMKyFayvP/xcjeB5KSHnhKR4i4x6cN9u2/0bzYucHZ0M0jc7eX
+	 U0RkNbeXpJwX8Law7lsscUs208K/D4yAe+5MqsFAfzt7Tqbofbi/W8aFmRiI2qOPkL
+	 2r1Mx6jrE/0LA==
+Date: Tue, 27 May 2025 12:28:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v12 20/21] selftests/futex: Add futex_priv_hash
+Message-ID: <31869a69-063f-44a3-a079-ba71b2506cce@sirena.org.uk>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-21-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-topic-ipa_imem-v2-3-6d1aad91b841@oss.qualcomm.com>
-References: <20250527-topic-ipa_imem-v2-0-6d1aad91b841@oss.qualcomm.com>
-In-Reply-To: <20250527-topic-ipa_imem-v2-0-6d1aad91b841@oss.qualcomm.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Alex Elder <elder@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Alex Elder <elder@riscstar.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748345210; l=2684;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=mmMv6ZRnNf9Nx8r4lZ6LgLAQHBQcffBMRruQc6avbDA=;
- b=poYXHiV44NdrDaTbxg//ajdjBysbeWzJkVqq2mKTsEU3/AiFijShDMNG7kj4lPzoLMeu/YvYs
- kn7JJQfIBArAii9MHBmr6OswIBI6cmCJBdYvVM/ysY1KPQwAlTNux8c
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9UDHV7Y4OQ1VHzv1"
+Content-Disposition: inline
+In-Reply-To: <20250416162921.513656-21-bigeasy@linutronix.de>
+X-Cookie: Identify your visitor.
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-This is a detail that differ per chip, and not per IPA version (and
-there are cases of the same IPA versions being implemented across very
-very very different SoCs).
+--9UDHV7Y4OQ1VHzv1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This region isn't actually used by the driver, but we most definitely
-want to iommu-map it, so that IPA can poke at the data within.
+On Wed, Apr 16, 2025 at 06:29:20PM +0200, Sebastian Andrzej Siewior wrote:
+> Test the basic functionality of the private hash:
+> - Upon start, with no threads there is no private hash.
+> - The first thread initializes the private hash.
+> - More than four threads will increase the size of the private hash if
+>   the system has more than 16 CPUs online.
 
-Reviewed-by: Alex Elder <elder@riscstar.com>
-Acked-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/net/ipa/ipa_data.h |  4 ++++
- drivers/net/ipa/ipa_mem.c  | 21 ++++++++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
+This newly added test is not running successfully on arm64, it looks
+like it's just a straightforward integration issue:
 
-diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
-index 2fd03f0799b207833f9f2b421ce043534720d718..5fe164981083674a08ba0b69e18140bbcb46053d 100644
---- a/drivers/net/ipa/ipa_data.h
-+++ b/drivers/net/ipa/ipa_data.h
-@@ -185,8 +185,12 @@ struct ipa_resource_data {
- struct ipa_mem_data {
- 	u32 local_count;
- 	const struct ipa_mem *local;
-+
-+	/* DEPRECATED (now passed via DT) fallback data,
-+	 * varies per chip and not per IPA version */
- 	u32 imem_addr;
- 	u32 imem_size;
-+
- 	u32 smem_size;
- };
- 
-diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-index 835a3c9c1fd47167da3396424a1653ebcae81d40..583aea6257096b73aa60ff6cada1f0be478846a4 100644
---- a/drivers/net/ipa/ipa_mem.c
-+++ b/drivers/net/ipa/ipa_mem.c
-@@ -7,6 +7,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
- #include <linux/iommu.h>
-+#include <linux/of_address.h>
- #include <linux/platform_device.h>
- #include <linux/types.h>
- 
-@@ -617,7 +618,9 @@ static void ipa_smem_exit(struct ipa *ipa)
- int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
- 		 const struct ipa_mem_data *mem_data)
- {
-+	struct device_node *ipa_slice_np;
- 	struct device *dev = &pdev->dev;
-+	u32 imem_base, imem_size;
- 	struct resource *res;
- 	int ret;
- 
-@@ -656,7 +659,23 @@ int ipa_mem_init(struct ipa *ipa, struct platform_device *pdev,
- 	ipa->mem_addr = res->start;
- 	ipa->mem_size = resource_size(res);
- 
--	ret = ipa_imem_init(ipa, mem_data->imem_addr, mem_data->imem_size);
-+	ipa_slice_np = of_parse_phandle(dev->of_node, "sram", 0);
-+	if (ipa_slice_np) {
-+		ret = of_address_to_resource(ipa_slice_np, 0, res);
-+		of_node_put(ipa_slice_np);
-+		if (ret)
-+			return ret;
-+
-+		imem_base = res->start;
-+		imem_size = resource_size(res);
-+	} else {
-+		/* Backwards compatibility for DTs lacking
-+		 * an explicit reference */
-+		imem_base = mem_data->imem_addr;
-+		imem_size = mem_data->imem_size;
-+	}
-+
-+	ret = ipa_imem_init(ipa, imem_base, imem_size);
- 	if (ret)
- 		goto err_unmap;
- 
+# Usage: futex_priv_hash
+#   -c    Use color
+#   -g    Test global hash instead intead local immutable=20
+#   -h    Display this help message
+#   -v L  Verbosity level: 0=3DQUIET 1=3DCRITICAL 2=3DINFO
+# Usage: futex_priv_hash
+#   -c    Use color
+#   -g    Test global hash instead intead local immutable=20
+#   -h    Display this help message
+#   -v L  Verbosity level: 0=3DQUIET 1=3DCRITICAL 2=3DINFO
+not ok 1 selftests: futex: run.sh # exit=3D1
 
--- 
-2.49.0
+Full log:
 
+   https://lava.sirena.org.uk/scheduler/job/1414260#L9910
+
+--9UDHV7Y4OQ1VHzv1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg1ob8ACgkQJNaLcl1U
+h9AXbwf/Rvs4s6D2yura4n5NtMsqS8XdGRcsRw9+O7vrDeMUhWoP5W6i29FaFBm+
+W4IIHtHlU7b3oaNn8PQMe3BvSkW3qjQxUdh2NgVzGDFCXs/2nrYJDHzXO3grT749
+W6kA7iMImvrGcUbREervQ15EpGL+BHJD4clVZlwMPOCI4ndtemQV/7guvi5R1wRF
+hIqQBKvX/rwAJyGIAtPkJXZynUuunUWpHiPUneBLk6e8Yuuki6BD5N/FW4LDOSK2
+pi0UOeEjq1lA3tKHQuPf35kWluUr/JsJZKT7aLoj4P7fI6WP+wNzkP88XxsCTUbh
+rpcvF8Zbm70Si8x+ZtAMMBypXMPb0Q==
+=lJBf
+-----END PGP SIGNATURE-----
+
+--9UDHV7Y4OQ1VHzv1--
