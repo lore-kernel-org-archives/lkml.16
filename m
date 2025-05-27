@@ -1,184 +1,202 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538A027B505;
-	Tue, 27 May 2025 19:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5352820D8
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373020; cv=none; b=ofMx14tUGX4aJB3YYbWiUDu1+t66aFJVba/eIRq6I5tSkp5K8Cii7JbPGPSR7fH3D688q7PHn+Yt6UZEt955iZ3d2yYignvbVVMQjSshBaeD/SZt60obls9Gx+A2XupLVvfVZ0WIT9lX8MMt0aPnILcX1wMZXAI1KXXDauMyQys=
+	t=1748373026; cv=none; b=hQaU2RuSO6hsfE9pG1PJqHqLj/fiGDrVZpGQ4eF3iLGk2V6NH9YH92dV+xBATvXO0wQ02s0CttqxlN5vCWADWjCd0Du3uBrCTR6xYlIZNtrzwoASySlbOTnO5T3MZxS4wXOAioZlqxNvcPtxghsGZMpEGXA81vWkHQPo9H3idOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373020; c=relaxed/simple;
-	bh=jvIursIm7xirFrAF6+nx9NHgILyAFssbM2BZDvh0Xjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WYuUvwldZ/46zBbCNVtEEwQ5XKvrjeeubd01sjbyCwT84XFu1nDFZcI5eAHHtmJx5xk4MC830iDfhGOC0WtMM7jxr/QQIw23i+p4QxXd2zP+CjffuPMj+S0iqCWZuE2f/D4VItwejZEOsQIio3Uv4H972cltN5YVy9B8xjuxYgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWdgfvR5; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748373026; c=relaxed/simple;
+	bh=9ZjEEkSo7oamxUV8/kkmOW4raxYWt+MpkVs4/JaB+Fs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pnG3jyL9Q3rMlyHgVgFPNbXe222tOzr49I54x2GgFRNQMkqhnYjKrDjdsQaqz5O5sqMIgpIZ3TkfU0/TjI6DijSGupBFtlFo7G5N1gKCHYAb/a3ZjOtawIAOeRolPSVt3AuS8ffqJEfEhSOJreXPXH8j8ieQ7y3doZiCY4JR8wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kqad6loZ; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWdgfvR5"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2301ac32320so31379325ad.1;
-        Tue, 27 May 2025 12:10:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kqad6loZ"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fabb948e5aso2039476d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748373018; x=1748977818; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hQ4L0D20ndsCdzFmLfAE6nfeaO8SPFx82dBJgoFLkBI=;
-        b=jWdgfvR5bDIKMrvCDma9xTvwfEcYD1nrh/b298vgoOKEaIORbI99Blx36EqxziHRho
-         A6cFzeNFDKQ50eQO98d0aO/z3mvJRBC2VMy3NOmkK3prkdnpfoP0RfNmmn6LAGwKMrBj
-         yJCAX1kysRZ6HpZHs8nKP0OyZ6OTWtwH8RkNpoH0x30MsfNaAgr5SG+a+vnLsnmK5si6
-         L6BtNppYBJgA+4yATkf/orU3jgr4w6PqXTPmUBMUUlnfDcYvBiLtWseyM/Nx+WVnNtL/
-         vSu3R27a3Bk9sITlh0H5YOP/hfm3H9+aRU1MpDxEHjGgiMsCEWkYZm7hKYn3jItkYmlp
-         6+eQ==
+        d=linaro.org; s=google; t=1748373022; x=1748977822; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fzh5gGj0L9x9hiYqVH28xNFh+kP5yncVy/q4QDCe6rE=;
+        b=Kqad6loZoVZUMdee+yHvI7swoH1LtUCIUq4Osh/JKsuC4DSauoABCwnlodt6wFFrcS
+         JexI7Iua/JVWfqtQv4z3YTugWvAklWDI4g427VY/R7wv9LF5fQElG+W0TnxIcpKUYZc8
+         QDPPkKLfmoDo++t5cxgP1sk12pjxdU0Qdi/nUAWrMzv6VvyhnDu2Llw5ABRbFJRxj+HK
+         X38MwTHrDMosI87V4aFgyW/kAcP4a2q6KinxU5m4kNMhcUkqaBFy3y3p04e6Qmc66yfV
+         05KLdb7KAVX7MZj8MhgE0mUYZm5a+M1ZxiBwSlk6NeAiMH1lL4kZke0DkqUn/8cOLQOk
+         KKcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748373018; x=1748977818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hQ4L0D20ndsCdzFmLfAE6nfeaO8SPFx82dBJgoFLkBI=;
-        b=VnHEe0UD/wPkyrwnGdjLNxID+EFazgM9VziTZAo6NsTmKnVxBfxFu1nkG1QOV4v0qN
-         XPk5XFnjBBDdUhMHLpy0KhxXIrODr6cJ2r8FydNF0ra85pPIRoIMwiX+pKG5krrIKPYY
-         d1BtHWrO7H29FqER9YpPgoM4OuQwTu2wopO+QA6tj8qcssInH9TmCEJczvJYLmadEr0x
-         uwCdVgYtzJfBNuoDz1XEHn5QXMC/n83vDfuJnPVcBMUOUD4h+X9fjiHEwri2GL1icJCT
-         oqniQb+NLLcqXsPA8lA3VaJdu9sAf0E8KCDFpVXts/TMRN6EbGKzHownGKIOgSaV7SIe
-         VgYw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1TUDJSSO2YaHkLf2jBW9dNJWa50sv1ESloOpfwP3pIPo5scsJuF13EOFR/pLt1c4yyGlx2HIam6Xo8Q==@vger.kernel.org, AJvYcCUOO/NFLfoA8sMwOj1jLhDfN/lDhyw2v3h0cXzD2vDxNHYi+qF0qk2DxHX7RLpOT9Q34cuX1QggMF20XiE=@vger.kernel.org, AJvYcCVQucvKsZOOL2rEIIxqzdu+cOInP+HwHLN9dMTdfgUwerObUGXiGbdcuuwSIx19HF1MLLr0KnzaEM+9TnXX@vger.kernel.org, AJvYcCWeG9qj4IuL592mcZ7kdXB7r+lrb+bSA+OLr37rGUhYZgFxy84lMqTBEtUDXVXG7J0dKW3e94ke@vger.kernel.org, AJvYcCXAw8On3T9KO4aYHm7sLFcGE75dAzsKZX9QLgaSKcdHz5sKrG8XHulKA2roqyKZbgDTRGtNeEFTge4O@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL1e8TtYXBRgHGlQ+tfzyMsKxGvfI0y9SW49ago5V6oFuZ+gtA
-	O71gAlQ4VmGpQLf7mZFzt+SKaYEdRseMblh1hTBjRaMIloelgY2EpMb/DvlGXw==
-X-Gm-Gg: ASbGncsE7ZZqmFnV2puCCa7t7ejJ4RJq9zzk/iuzhlIqSf/2/60f4CwUtWHJk+vJQcN
-	EPuv3q/aZ5bgDRIyrqlikQ80v3JRkUFxPh4VUJ9PeNR/DNnONDKd9fHcfQ+E/OoMJx2Qw9Hvqcc
-	lJ9sDhySUT+VJEZlu4FBGBGOLMkW/KCWaBs6VpE3zYwjXIhzsttPHmKxMPZCJEp/W8cAHAjYlzU
-	qbhrhexAoO4cO1T62XAMWyajjZHrA/zbeFAU0sIqHI2tf1p9bwyMa46GF1KY4/WU3hqCApOSE9f
-	8a/Aqd50LTwkjNsZko+CHhDhOjM5hbYhIzMv2W5UdPi8ONNaWcA=
-X-Google-Smtp-Source: AGHT+IE4iGM8B7MNpxVPekqnTow+ybSs+QzOfae2nsSVmSU48C6P19U5szUtP3FoDqyqAr63lEfoCg==
-X-Received: by 2002:a17:903:2593:b0:234:9374:cfae with SMTP id d9443c01a7336-2349374d00dmr57470505ad.19.1748373018305;
-        Tue, 27 May 2025 12:10:18 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234a1681ca4sm14031415ad.46.2025.05.27.12.10.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 12:10:17 -0700 (PDT)
-Date: Tue, 27 May 2025 15:10:15 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Cc: Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Michael Kelley <mhklinux@outlook.com>, linux-hyperv@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof =?utf-8?Q?Wilczy=EF=BF=BD~Dski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v4 3/5] net: mana: explain irq_setup() algorithm
-Message-ID: <aDYOFzQrfDFcti-u@yury>
-References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
+        d=1e100.net; s=20230601; t=1748373022; x=1748977822;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fzh5gGj0L9x9hiYqVH28xNFh+kP5yncVy/q4QDCe6rE=;
+        b=mOOzNCCooJMq/9OuX5ZFN2NJqAGSm94OHtu6YouMyyV8VykBPd/U7oWGp7dqHvekr7
+         4h9P580Ss2IhWuS0odHQ2fxRTtU0EfeC3TBOiybiXfu5YAhKliSOLfzGRd3S1JqnLsIY
+         C/DH9Xd+TjPe13IJ2KdqMSBA5vAAGS8JSmzVPYRR8Cx0vMTi4go/Y525XAs13LKcH6jo
+         jxPFEhx3vCLC+K7SDKNGviEsyUUOo9QQQEFsvxd3YPtCOXs4eiHXKvzVwNV8hPbRqvUF
+         wONIkoTBcvGgT/6LTSYuxMuLtDXuQpPvDs9hUNhpQS9rcg6PAVEBm+zsJU+0enZRnELS
+         13Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYbjv2lsS078syL4GcjuqMU7EsxUDkTNdeMbWhtpeeyRsqZceMdRTRvsfVKT2kXCPgDjPXpogxJA5uoWQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy72hQTASyKjRV/Y3om13jtcYtWdKXqnJfQltwMxFEMKYRzzHWd
+	JhMxZiwsO+YPZri5hDry5tnWaZQE7KlbpJkyEKqnAmlwSAyLccyUg3eNfduYxwio7iks/SFY0X1
+	FEE1RIgmYSSPQU0H3PyuJJuybLkLelTD/fedh+r60MA==
+X-Gm-Gg: ASbGncsDehip/CFPFaAiqdpi1oww3uc0kEUpirhZnropyIfftrX/6mpEVgkTOoOczrR
+	rViUVXUtqfCG9tq4uhMNOB1K1NbIPJ5839RHSlWAAC3lYluDvzpcRmW2wi5/hQw2QeCmKbB43tN
+	F1nd/IKVvvGStE+mFuqBX2jbO7P75VJi8bm/xuUZ08hd9Fi8grvwUCUkc2kwcqT0dc
+X-Google-Smtp-Source: AGHT+IEAyP4bFrFlByFxZhysJxt3eVrGqB4zTaztj4w2bAbFwdvJbJSP992jlIyDkWtuLoC/HK0y4GpyUTMG9dvXd2I=
+X-Received: by 2002:a05:6214:c6f:b0:6f5:426c:1d1 with SMTP id
+ 6a1803df08f44-6fa9d2a2b0emr258744886d6.34.1748373022639; Tue, 27 May 2025
+ 12:10:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1748361505-25513-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <20250527162513.035720581@linuxfoundation.org>
+In-Reply-To: <20250527162513.035720581@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 28 May 2025 00:40:10 +0530
+X-Gm-Features: AX0GCFs3iqXVh76ekgUOxxAimf4DD0DS3mAuvBBQhLP26ciRAJB0Gnl0rEdKb8U
+Message-ID: <CA+G9fYsvuqySTdV0Yqi3i-cyBh6j4Rw2_ze46RSUPrz0sbA2Xg@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/783] 6.14.9-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-s390@vger.kernel.org, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Akihiko Odaki <akihiko.odaki@daynix.com>
+Content-Type: text/plain; charset="UTF-8"
 
-So now git will think that you're the author of the patch.
+On Tue, 27 May 2025 at 22:48, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.9 release.
+> There are 783 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 29 May 2025 16:22:51 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.9-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-If author and sender are different people, the first line in commit
-message body should state that. In this case, it should be:
+Regressions on S390 defconfig builds failing with gcc-13, gcc-8 and
+clang-20 and clang-nightly tool chains on 6.14.9-rc1.
 
-From: Yury Norov <yury.norov@gmail.com>
+Regression Analysis:
+ - New regression? Yes
+ - Reproducible? Yes
 
-Please consider this one example
+Build regression: S390 defconfig crash_dump.c use of undeclared
+identifier 'NN_PRSTATUS'
 
-https://patchew.org/linux/20250326-fixed-type-genmasks-v8-0-24afed16ca00@wanadoo.fr/20250326-fixed-type-genmasks-v8-6-24afed16ca00@wanadoo.fr/
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Thanks,
-Yury
 
-On Tue, May 27, 2025 at 08:58:25AM -0700, Shradha Gupta wrote:
-> Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
-> added the irq_setup() function that distributes IRQs on CPUs according
-> to a tricky heuristic. The corresponding commit message explains the
-> heuristic.
-> 
-> Duplicate it in the source code to make available for readers without
-> digging git in history. Also, add more detailed explanation about how
-> the heuristics is implemented.
-> 
-> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 4ffaf7588885..f9e8d4d1ba3a 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
->  	r->size = 0;
->  }
->  
-> +/*
-> + * Spread on CPUs with the following heuristics:
-> + *
-> + * 1. No more than one IRQ per CPU, if possible;
-> + * 2. NUMA locality is the second priority;
-> + * 3. Sibling dislocality is the last priority.
-> + *
-> + * Let's consider this topology:
-> + *
-> + * Node            0               1
-> + * Core        0       1       2       3
-> + * CPU       0   1   2   3   4   5   6   7
-> + *
-> + * The most performant IRQ distribution based on the above topology
-> + * and heuristics may look like this:
-> + *
-> + * IRQ     Nodes   Cores   CPUs
-> + * 0       1       0       0-1
-> + * 1       1       1       2-3
-> + * 2       1       0       0-1
-> + * 3       1       1       2-3
-> + * 4       2       2       4-5
-> + * 5       2       3       6-7
-> + * 6       2       2       4-5
-> + * 7       2       3       6-7
-> + *
-> + * The heuristics is implemented as follows.
-> + *
-> + * The outer for_each() loop resets the 'weight' to the actual number
-> + * of CPUs in the hop. Then inner for_each() loop decrements it by the
-> + * number of sibling groups (cores) while assigning first set of IRQs
-> + * to each group. IRQs 0 and 1 above are distributed this way.
-> + *
-> + * Now, because NUMA locality is more important, we should walk the
-> + * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
-> + * implemented by the medium while() loop. We do like this unless the
-> + * number of IRQs assigned on this hop will not become equal to number
-> + * of CPUs in the hop (weight == 0). Then we switch to the next hop and
-> + * do the same thing.
-> + */
-> +
->  static int irq_setup(unsigned int *irqs, unsigned int len, int node)
->  {
->  	const struct cpumask *next, *prev = cpu_none_mask;
-> -- 
-> 2.34.1
+Build log:
+---------
+arch/s390/kernel/crash_dump.c:312:8: error: use of undeclared
+identifier 'NN_PRFPREG'
+  312 |         ptr = nt_init(ptr, PRFPREG, nt_fpregset);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:274:56: note: expanded from macro 'nt_init'
+  274 |         nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc),
+NN_ ## type)
+      |
+^~~~~~~~~~~
+<scratch space>:85:1: note: expanded from here
+   85 | NN_PRFPREG
+      | ^~~~~~~~~~
+arch/s390/kernel/crash_dump.c:313:8: error: use of undeclared
+identifier 'NN_S390_TIMER'
+  313 |         ptr = nt_init(ptr, S390_TIMER, sa->timer);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:274:56: note: expanded from macro 'nt_init'
+  274 |         nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc),
+NN_ ## type)
+      |
+^~~~~~~~~~~
+<scratch space>:87:1: note: expanded from here
+   87 | NN_S390_TIMER
+      | ^~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:314:8: error: use of undeclared
+identifier 'NN_S390_TODCMP'
+  314 |         ptr = nt_init(ptr, S390_TODCMP, sa->todcmp);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:274:56: note: expanded from macro 'nt_init'
+  274 |         nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc),
+NN_ ## type)
+      |
+^~~~~~~~~~~
+<scratch space>:89:1: note: expanded from here
+   89 | NN_S390_TODCMP
+      | ^~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:315:8: error: use of undeclared
+identifier 'NN_S390_TODPREG'
+  315 |         ptr = nt_init(ptr, S390_TODPREG, sa->todpreg);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:274:56: note: expanded from macro 'nt_init'
+  274 |         nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc),
+NN_ ## type)
+      |
+^~~~~~~~~~~
+<scratch space>:91:1: note: expanded from here
+   91 | NN_S390_TODPREG
+      | ^~~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:316:8: error: use of undeclared
+identifier 'NN_S390_CTRS'
+  316 |         ptr = nt_init(ptr, S390_CTRS, sa->ctrs);
+      |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/s390/kernel/crash_dump.c:274:56: note: expanded from macro 'nt_init'
+  274 |         nt_init_name(buf, NT_ ## type, &(desc), sizeof(desc),
+NN_ ## type)
+      |
+^~~~~~~~~~~
+
+## Source
+* kernel version: 6.14.9-rc1
+* git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* git sha: 10804dbee7fa8cfb895bbffcc7be97d8221748b6
+* git describe: v6.14.8-784-g10804dbee7fa
+* project details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.8-784-g10804dbee7fa/
+* architecture: S390
+* toolchain: gcc-8, gcc-13, clang-20, clang-nightly
+* config : defconfig
+* Build config:
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2xgl51jcJfVGQZw8dKSuEJNFtd4/config
+* Build: https://storage.tuxsuite.com/public/linaro/lkft/builds/2xgl51jcJfVGQZw8dKSuEJNFtd4/
+
+## Boot log
+* Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.8-784-g10804dbee7fa/testrun/28574235/suite/build/test/gcc-13-defconfig/log
+* Build details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.8-784-g10804dbee7fa/testrun/28574235/suite/build/test/gcc-13-defconfig/details/
+* Build history:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.8-784-g10804dbee7fa/testrun/28574235/suite/build/test/gcc-13-defconfig/history/
+
+## Steps to reproduce
+ - tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
+--kconfig defconfig
+
+--
+Linaro LKFT
+https://lkft.linaro.org
