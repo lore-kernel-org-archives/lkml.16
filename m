@@ -1,86 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFBAA24A061;
-	Tue, 27 May 2025 08:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AE9442C;
+	Tue, 27 May 2025 08:27:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748334404; cv=none; b=OJjbgsI1CtBL9SUR5TMIqpodI/mFfEE6HMGMW7Tm+fLw3i2pQUPkuGENs8niJSTMreA0Da9/mcPUhaQQnQBHK/8JfGuCn263Rdrw83Xgt1ZnkuEtfolC1M/0mEoYgVihv7mz+3J5QM01+wMFsIHc7QJpOZjbnkYRdzFy+F3f1SI=
+	t=1748334436; cv=none; b=lXjgt6oc47LdEkob+PQGgoyFj+qaNZkepHls1gorS8k3L5SPDy7FXGFJHXrHby4BBH1OntwpzymqTkrtKd70iovkXs1fGOQMO6KReGUS18RcKbEZFVM1SIkavumu3aznx6RNoqPT0mFUBau4LgqrUMf8H7vyChXrDJ/Dyiuxq2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748334404; c=relaxed/simple;
-	bh=0CwsYvYwjgFsF9z8hdBk+pow10ksQ9pwAjMtH5KEl3U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R8DOj5dojP53yRtc43KEsepzLoAwoy8L+PD6YVLVqEEwCS2CpHMPzyNUbN5WPb4TMCoMMOpGU3TpY5LRW6Mn0BVzslcX6DlTSzUAsJ19W7A+nnTOM/cZg74GD6SQ7g0vUcxXsWBPBhN8rltGhtALqwF0DSji8mYIQdCSSrvtl34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C34E14BF;
-	Tue, 27 May 2025 01:26:25 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.163.85.29])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0C2C23F5A1;
-	Tue, 27 May 2025 01:26:37 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org
-Cc: david@redhat.com,
-	ryan.roberts@arm.com,
-	anshuman.khandual@arm.com,
-	mark.rutland@arm.com,
-	yang@os.amperecomputing.com,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Dev Jain <dev.jain@arm.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] arm64: Restrict pagetable teardown to avoid false warning
-Date: Tue, 27 May 2025 13:56:33 +0530
-Message-Id: <20250527082633.61073-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1748334436; c=relaxed/simple;
+	bh=hJ/yvw4xKCM5g2rBvzuVOE4sVh19EftCd2yLyIE2AK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IHQU95mFTcptYINIeIEup07wFNbqgRmVmmp4U3T3JukdtEeetgL+Z30QkAnIn6SfKbHr3dLtOmG5YEC9mWUkH28sZb554qJrgkGH5jjW0fB0PsBfKTWpGsXftjmb2DfOi5UFyGf53Asmg2BE8gr2SkgFM/HWTvm8ybEB+TOVeEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 1BDE967373; Tue, 27 May 2025 10:27:10 +0200 (CEST)
+Date: Tue, 27 May 2025 10:27:09 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: hch@lst.de, xni@redhat.com, colyli@kernel.org, song@kernel.org,
+	yukuai3@huawei.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com, johnny.chenyi@huawei.com
+Subject: Re: [PATCH 15/23] md/md-llbitmap: implement llbitmap IO
+Message-ID: <20250527082709.GA32108@lst.de>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com> <20250524061320.370630-16-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250524061320.370630-16-yukuai1@huaweicloud.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Commit 9c006972c3fe removes the pxd_present() checks because the caller
-checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
-checks pud_present(); pud_free_pmd_page() recurses on each pmd through
-pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
-hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
-a pmd_present() check in pud_free_pmd_page().
+FYI, I still find splitting the additioon of the new md-llbitmap.c into
+multiple patches not helpful for reviewing it.  I'm mostly reviewing
+the applied code and hope I didn't forget to place anything into the
+right mail.
 
-This problem was found by code inspection.
+> diff --git a/drivers/md/md-llbitmap.c b/drivers/md/md-llbitmap.c
+> new file mode 100644
+> index 000000000000..1a01b6777527
+> --- /dev/null
+> +++ b/drivers/md/md-llbitmap.c
+> @@ -0,0 +1,571 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +#ifdef CONFIG_MD_LLBITMAP
 
-Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table())
-Cc: <stable@vger.kernel.org>
-Reported-by: Ryan Roberts <ryan.roberts@arm.com> 
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
-This patch is based on 6.15-rc6.
+Please don't ifdef the entire code in a sourc file, instead just compile
+it conditionally:
 
-v2->v3:
- - Use pmdp_get()
 
-v1->v2:
- - Enforce check in caller
+md-mod-y        += md.o md-bitmap.o 
+md-mod-$(CONFIG_MD_LLBITMAP) += md-llbitmap.o
 
- arch/arm64/mm/mmu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> +	BitNeedSync,
+> +	/* data is synchronizing */
+> +	BitSyncing,
+> +	nr_llbitmap_state,
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index ea6695d53fb9..5a9bf291c649 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
- 	next = addr;
- 	end = addr + PUD_SIZE;
- 	do {
--		pmd_free_pte_page(pmdp, next);
-+		if (pmd_present(pmdp_get(pmdp)))
-+			pmd_free_pte_page(pmdp, next);
- 	} while (pmdp++, next += PMD_SIZE, next != end);
- 
- 	pud_clear(pudp);
--- 
-2.30.2
+Any reason nr_llbitmap_state, doesn't follow the naming scheme of the other
+bits,?
 
+> +	BitmapActionStale,
+> +	nr_llbitmap_action,
+
+Same here?
+
+> +			if (rdev->raid_disk < 0 || test_bit(Faulty, &rdev->flags))
+
+Overly long line.
