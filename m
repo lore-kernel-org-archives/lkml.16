@@ -1,137 +1,123 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4640F242D79
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E287C242D79;
+	Tue, 27 May 2025 13:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352998; cv=none; b=d+Ddkn5PbNdATQ8RdhAlLTgxoDPFLHGE0osJ2KObdJu5zJQfOmW5FHwKJ4aVstxgBtciypl+64j4vhmnOdb4l4ZZnO5LWLFyfRvmfcXEQuzVQ8J4G/eeln9Pt0Kj1SzRX7pzEiWbb3xKJoGDLYScjuvheRJ6SIG5h2MKMv3VTAQ=
+	t=1748353001; cv=none; b=jOUA37/wOwcRW/mfgmnKogQ4srZrVyoUOCmjf2QJFYDESzLjqS8BPZdQtVW3B3sT0yY2Orwxk/t1IRXMvcZgjd43kPXpWO5LeapltGzNMQLJCCNwN//HSu+n9NFkK6Lf1WQLjCq1P1TdhJybrj6nmArglDJUkASfiONn+Y5ZvLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352998; c=relaxed/simple;
-	bh=CPzMYssuE5oU5WBMY3Splhw4su2FI1EFw9TIxBJhq2A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kEe4Tgv0IBc/jEnXnAfoey7CQqLV2mUJ3bT+/ayMc53XqrfUY6gNbbxsa17CCLdpLIdWhUTtiLhTjh8pz11In5GHV6BbQjwAKsd1Ydb08E85oPuI/VL9Ggbc+qLlIhRDGC1kjJTdYrtQlDTyXIOzS4fN8+UaxjtA/mPp27HEAuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85e7551197bso299718739f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:36:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748352995; x=1748957795;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7tTCjCPNRlyF+ItvRwJElsfocKRD+X7mEdB0iK26mvM=;
-        b=SG9mkmJeTD/HYhsjQZJbeqZ93Thl5DaKksO1W/KRasZqC64m3En9dI9u2paP+zaA2F
-         t+VvnYy6I2XD/4YTDP9yl84XktbHDieF7ijasTmlaWkfdRAchZreXlQo5sY15LbQB5A2
-         qDqSop+Cm0RpspbAKUqaIO7rptLE+xzn5+ltzBU9X8e5ZdMNYPVUTGESdRz6X6L27OLU
-         8XnFk0FSfSiRFturxN9OCGIrWwb181i2F5xnKx0j2FvyeqgXK0mPmm336xIxLiVUwbD8
-         zcehGufYxQX2W+Y9Zy/JD1wOHBE7PWQiGK9xo3V+bXDIII8nwLcg1IGs178aYOPxot9H
-         KD/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXPuDnnPGaWgLuLNgCf9GBt2IfXZmKBhshwowZq5nthyEudRr6yqH+zwmqvJYMCtTV3TBNbjSbAouwwAMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQwdHwVfjKH2ivns5aBUO2VAJhWbze/YyTEvHtTBr6a1KRH6Pr
-	QYBRvxhxmM92QevpJ/BI60rO4eCZw0JlDlEJJaOdmf+Kkfj51d+h5bBNYjZiASF6n5D018fJ25e
-	2GCxlIZ9O3aNIOV7eBEIpBnYXp2KxEDSWVvRDuM+qSQ9VNZ4nXbotqKxAGZI=
-X-Google-Smtp-Source: AGHT+IH3P1i9wcQlGPx8x6EYDDDcYKu0b5GmvwfIadxJdICfNBDHKbFvlf3rLQ7pWdfb4V2l59h5tVazza42jB4hWlkRS128UJRL
+	s=arc-20240116; t=1748353001; c=relaxed/simple;
+	bh=geY5fLpTYU79OaR23hgE0Sr748gZPN+XjHAQh5QGQKk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nJTXdxH0vNXR9cWvEQ2Lusr0VeU+1kjEL7IPsugkQKQp9lqYpm0/gqwSF+31OxxaioFjyXEpIAqn7W8Amn8208iTKaljpKa6pXOXNxGuIevfqgDyiFu++YiWXwsoji+igJ2gMb7t0/FYdnxpDivFVXLFe2W8oQxfwFONoZqdFwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0KAE/fl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0KAE/fl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F79BC4CEEF;
+	Tue, 27 May 2025 13:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748353000;
+	bh=geY5fLpTYU79OaR23hgE0Sr748gZPN+XjHAQh5QGQKk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=l0KAE/flPvp6tOi5ekvXJWTp//6dkUtqPYQJ9XWDgSQ9M8t3IA6Gm6LwvSAX8v2s2
+	 sno6z3hA7Tlp28zGYh3FSxZzA5Ilg5jPdbqFj0s1+JUNNNzeYVQ8VDALP+/Z9TrCU0
+	 D6/goHyqMgRsswOxH0WoOMf5KmTi0+iM70ZXLO21z0+Lkekrd1d2PygnNb2XUjGn+u
+	 hrbmGw5K8RWBHIc4f8agbndljbhmrrstOSxribHVnPtyZBP/S40WCpBTfylD5LETHJ
+	 fAw54HVkfXS2RZTGzeTrAynQPzYJSrLTaUNWnZ2mHdL6sY5B0uJDZVQ07AyVk20mvM
+	 /X92I1EWxm9pw==
+Message-ID: <5e2eb2c8-b12a-45a1-9e30-1dd88f18a501@kernel.org>
+Date: Tue, 27 May 2025 15:36:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6e83:b0:85b:3ae9:da01 with SMTP id
- ca18e2360f4ac-86ce42582d0mr47624639f.4.1748352995337; Tue, 27 May 2025
- 06:36:35 -0700 (PDT)
-Date: Tue, 27 May 2025 06:36:35 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
-Subject: [syzbot] [kernel?] KASAN: wild-memory-access Read in get_futex_key
-From: syzbot <syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com>
-To: andrealmeid@igalia.com, dave@stgolabs.net, dvhart@infradead.org, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: sm8750-mtp: Add sound (speakers,
+ headset codec, dmics)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250526-sm8750-audio-part-2-v3-0-74429c686bb1@linaro.org>
+ <20250526-sm8750-audio-part-2-v3-2-74429c686bb1@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250526-sm8750-audio-part-2-v3-2-74429c686bb1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 26/05/2025 13:46, Krzysztof Kozlowski wrote:
+> +		qcom,micbias1-microvolt = <1800000>;
+> +		qcom,micbias2-microvolt = <1800000>;
+> +		qcom,micbias3-microvolt = <1800000>;
+> +		qcom,micbias4-microvolt = <1800000>;
+> +		qcom,mbhc-buttons-vthreshold-microvolt = <75000 150000 237000 500000 500000 500000 500000 500000>;
+> +		qcom,mbhc-headset-vthreshold-microvolt = <1700000>;
+> +		qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
+> +		qcom,rx-device = <&wcd_rx>;
+> +		qcom,tx-device = <&wcd_tx>;
+> +
+> +		reset-gpios = <&tlmm 101 GPIO_ACTIVE_LOW>;
+> +
+> +		vdd-buck-supply = <&vreg_l15b_1p8>;
+> +		vdd-rxtx-supply = <&vreg_l15b_1p8>;
+> +		vdd-io-supply = <&vreg_l15b_1p8>;
+> +		vdd-mic-bias-supply = <&vreg_bob1>;
+> +		vdd-px-supply = <&vreg_l2i_1p2>;
 
-syzbot found the following issue on:
+I forgot to mention: vdd-px is new and documented in binding change:
+https://lore.kernel.org/linux-devicetree/20250526-b4-asoc-wcd9395-vdd-px-v1-5-64d3cb60313b@linaro.org/
 
-HEAD commit:    785cdec46e92 Merge tag 'x86-core-2025-05-25' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13e47df4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d7ed3189f3c3d3f3
-dashboard link: https://syzkaller.appspot.com/bug?extid=9afaf6749e3a7aa1bdf3
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ad26d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=157f3170580000
+No dependencies, but till binding hits mainline this will be flagged by
+dtbs_check.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/af5446d375b0/disk-785cdec4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/eb59d48f91fb/vmlinux-785cdec4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/188617605a08/bzImage-785cdec4.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: wild-memory-access in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
-BUG: KASAN: wild-memory-access in node_state include/linux/nodemask.h:429 [inline]
-BUG: KASAN: wild-memory-access in get_futex_key+0x595/0x1540 kernel/futex/core.c:587
-Read of size 8 at addr 1fffffff818b9088 by task syz-executor931/5831
-
-CPU: 0 UID: 0 PID: 5831 Comm: syz-executor931 Not tainted 6.15.0-syzkaller-01958-g785cdec46e92 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:183 [inline]
- kasan_check_range+0x100/0x1b0 mm/kasan/generic.c:189
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
- node_state include/linux/nodemask.h:429 [inline]
- get_futex_key+0x595/0x1540 kernel/futex/core.c:587
- futex_wake+0xea/0x530 kernel/futex/waitwake.c:165
- __do_sys_futex_wake kernel/futex/syscalls.c:354 [inline]
- __se_sys_futex_wake kernel/futex/syscalls.c:338 [inline]
- __x64_sys_futex_wake+0x23d/0x2b0 kernel/futex/syscalls.c:338
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fec9a512429
-Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe390e0498 EFLAGS: 00000246 ORIG_RAX: 00000000000001c6
-RAX: ffffffffffffffda RBX: 00007ffe390e0678 RCX: 00007fec9a512429
-RDX: 0000000000000006 RSI: 0000000000000008 RDI: 0000200000000140
-RBP: 00007fec9a585610 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000006 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007ffe390e0668 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Best regards,
+Krzysztof
