@@ -1,106 +1,277 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665C73C01;
-	Tue, 27 May 2025 09:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4D11EF080
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748338196; cv=none; b=uq/d3QJEaDgkx6dw/MTh3gGHDzjpFpvqGLsBLgectLbhF0bYlsmmSx6M3F7BSYR1pbtFN8+RfJORfeWl0bDebx6ymyD9TgMKQ5Vo2NIVSeBhBPdZR+C5pSp8ajoBPDIz3bWl5NZFXGCGwthGYxqZGqtWlj/Fph+iYxqoZ49VB2c=
+	t=1748338223; cv=none; b=QgyNYO2+cHmcNl53I5fLikVYdjOl9YqG6CwwnQLAE365WKhM7bbpIGbV5TArvuDjFi2nvBUbqDqzh1ar5RVWRiY6H4rSUeK4K8vXXdziqUpMVnVgCC1k6tsUAawmJ8Huo+vsy5Iw0LNghpckJI5Tcqb7XpDY49SpzT0up+3Ytdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748338196; c=relaxed/simple;
-	bh=yx44wKhyWSIIz+gEiInWp3kNE5EdMe0ABsYt3dl6KlE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=ENmcsxdHIk7TNBAW1Sc9MtW3wh26/L2W+NmP8AUYFIGR62dOFQd0R/JcZKiGVPodnaYjGOofjgKW5I7pmeSvPZ2wQUxGkv79zem2LM4CuWp7RsJcOZThZmEZpw1ryghheagqiL61yet8/HqDbHPC+BRCqwlrclRw+UltzzqR2KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZMy6YLI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748338223; c=relaxed/simple;
+	bh=sB9xR3cKKWn4f7IDdazNBd8ovkMqjRc0juOL1gZ3NyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jwwbaQvC4pwGwheqLmLWfzs3yLiImTdPpmyi6lvYM0UF+r/ywXXjqqUlzguTeMoI1szX/AwUFWR6rLNyHX57zqOWlP4Vf/anfM36xr5XOVYKdiA9evdm3sELPuPzitiw08jTa+zTZdpLD2Bm3JbFO6eAvaqwymhXNww6Pf30ceg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WL9qwxY3; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZMy6YLI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92A10C4CEE9;
-	Tue, 27 May 2025 09:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748338195;
-	bh=yx44wKhyWSIIz+gEiInWp3kNE5EdMe0ABsYt3dl6KlE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=VZMy6YLIzi0E+tQikW/k2S3coZ3itQpR7Mk9hxf6fnCc54gCAzsqhOtNJTvFe5vgM
-	 xjfF2OO8kayX4YwTLScTKkK22fQ5iwCT6WFL8J+JophziiQltlMzyUjrzwRhiUCP/f
-	 p1JIKY91iLQM9mCIjkhqRMMOV9t00vnyLx8qYoR5/RbZoWYQSYQIbjop79M4nTsomU
-	 VJzUGOkR97aRojNaoV3l6mmkxQvRTnC5POowQxwOsSyj5n42D4dZbu4tzsSUYPtnSv
-	 l+d8XYzaiCn6VNQQcm0xNiLMbIa7vcCRY/VDVtce7NSsHJ32cFMH/JJj8jpRxR5emG
-	 3jN9vw6i843fA==
-Date: Tue, 27 May 2025 04:29:53 -0500
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WL9qwxY3"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54R9TnLi1777039;
+	Tue, 27 May 2025 04:29:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748338189;
+	bh=ieQsVkqgTPNVC6qcp5sh7wlGb2uHgPAdxT9ELF8P2rs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=WL9qwxY3VunOl8MypxEGbPG5qUanOgcsrPzumT4DzdwwV2pJmCTaFr88XmmLq4wdK
+	 68n0YSQPvA+idOYRMEsjaObP5Y3IFO2KNtYBwoQT+dcgm1biiYeZGen22S15Jjde+m
+	 XZMbh0ZlSsFF/P658av5rYe2gnA86Q5xLTppkvNs=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54R9TmMi2773008
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 27 May 2025 04:29:48 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
+ May 2025 04:29:47 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 27 May 2025 04:29:47 -0500
+Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54R9Tdg83274135;
+	Tue, 27 May 2025 04:29:40 -0500
+Message-ID: <493afc6c-59a0-4f6b-9a9e-568dd2eff873@ti.com>
+Date: Tue, 27 May 2025 14:59:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Thomas Richard <thomas.richard@bootlin.com>, linux-crypto@vger.kernel.org, 
- Frank Li <Frank.li@nxp.com>, imx@lists.linux.dev, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, 
- Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, 
- Gaurav Jain <gaurav.jain@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
- linux-kernel@vger.kernel.org, Pankaj Gupta <pankaj.gupta@nxp.com>
-To: John Ernberg <john.ernberg@actia.se>
-In-Reply-To: <20250527071552.1424997-4-john.ernberg@actia.se>
-References: <20250527071552.1424997-1-john.ernberg@actia.se>
- <20250527071552.1424997-4-john.ernberg@actia.se>
-Message-Id: <174833819381.3537254.5508047100817417003.robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: crypto: fsl,sec-v4.0: Add power
- domains for iMX8QM and iMX8QXP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 2/3] drm/bridge: cadence: cdns-mhdp8546*: Change
+ drm_connector from pointer to structure
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <lumag@kernel.org>, <jani.nikula@intel.com>, <andy.yan@rock-chips.com>,
+        <mordan@ispras.ru>, <linux@treblig.org>, <viro@zeniv.linux.org.uk>,
+        <yamonkar@cadence.com>, <sjakhade@cadence.com>,
+        <quentin.schulz@free-electrons.com>, <jsarha@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>,
+        <dianders@chromium.org>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
+        <alexander.stein@ew.tq-group.com>
+References: <20250521073237.366463-1-j-choudhary@ti.com>
+ <20250521073237.366463-3-j-choudhary@ti.com>
+ <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hello Tomi,
 
-On Tue, 27 May 2025 07:16:03 +0000, John Ernberg wrote:
-> NXP SoCs like the iMX8QM, iMX8QXP or iMX8DXP use power domains for
-> resource management.
+On 27/05/25 13:28, Tomi Valkeinen wrote:
+> Hi,
 > 
-> Allow specifying them for such SoCs.
+> On 21/05/2025 10:32, Jayesh Choudhary wrote:
+>> After adding DBANC framework, mhdp->connector is not initialised during
+>> bridge calls. But the asyncronous work scheduled depends on the connector.
+>> We cannot get to drm_atomic_state in these asyncronous calls running on
+>> worker threads. So we need to store the data that we need in mhdp bridge
+>> structure.
+>> Like other bridge drivers, use drm_connector pointer instead of structure
+>> and make appropriate changes to the conditionals and assignments related
+>> to mhdp->connector.
+>> Also, in the atomic enable call, move the connector  and connector state
+>> calls above, so that we do have a connector before we can retry the
+>> asyncronous work in case of any failure.
+>>
 > 
-> Signed-off-by: John Ernberg <john.ernberg@actia.se>
+> I don't quite understand this patch. You change the mhdp->connector to a
+> pointer, which is set at bridge_enable and cleared at bridge_disable.
+> Then you change the "mhdp->connector.dev" checks to "mhdp->connector".
 > 
-> ---
+> So, now in e.g. cdns_mhdp_fw_cb(), we check for mhdp->connector, which
+> is set at bridge_enable(). Can we ever have the bridge enabled before
+> the fb has been loaded? What is the check even supposed to do there?
 > 
-> v2:
->  - Adjust commit message (Frank Li)
->  - Only allow power-domains when compatible with imx8qm (Frank Li)
-> ---
->  .../bindings/crypto/fsl,sec-v4.0.yaml         | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
+> Another in cdns_mhdp_hpd_work(), it checks for mhdp->connector. So...
+> HPD code behaves differently based on if the bridge has been enabled or
+> not? What is it supposed to do?
 > 
+> Isn't the whole "if (mhdp->connector.dev)" code for the legacy
+> non-DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
+> 
+>   Tomi
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I misinterpreted your comment in v1[0] regarding finding the connector
+from the current state in cdns_mhdp_modeset_retry_fn() and I missed
+this. I was more focused on finding a connector for that function.
 
-yamllint warnings/errors:
+For the current code, in all the conditionals involving mhdp->connector,
+we are entering else statements as connector is not initialised.
+So I will just drop if statements in cdns_mhdp_fw_cb() and
+cdns_mhdp_hpd_work() (like you said, its legacy case) while still having
+mhdp->connector as pointer as we need it for
+cdns_mhdp_modeset_retry_fn() and in cdns-mhdp8546-hdcp driver.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml: patternProperties:^jr@[0-9a-f]+$: 'if' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'not', 'allOf', 'anyOf', 'oneOf', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/nodes.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml: patternProperties:^jr@[0-9a-f]+$: 'then' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'not', 'allOf', 'anyOf', 'oneOf', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/nodes.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/crypto/fsl,sec-v4.0.yaml: patternProperties:^jr@[0-9a-f]+$: 'else' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'not', 'allOf', 'anyOf', 'oneOf', '$ref']
-	from schema $id: http://devicetree.org/meta-schemas/nodes.yaml#
+That should be okay?
 
-doc reference errors (make refcheckdocs):
+[0]: 
+https://lore.kernel.org/all/e76f94b9-b138-46e7-bb18-b33dd98c9abb@ideasonboard.com/
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250527071552.1424997-4-john.ernberg@actia.se
+Warm Regards,
+Jayesh
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+> 
+>> Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546 DPI/DP bridge")
+>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+>> ---
+>>   .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 28 +++++++++----------
+>>   .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  2 +-
+>>   .../drm/bridge/cadence/cdns-mhdp8546-hdcp.c   |  8 +++---
+>>   3 files changed, 19 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+>> index 66bd916c2fe9..5388e62f230b 100644
+>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+>> @@ -740,7 +740,7 @@ static void cdns_mhdp_fw_cb(const struct firmware *fw, void *context)
+>>   	bridge_attached = mhdp->bridge_attached;
+>>   	spin_unlock(&mhdp->start_lock);
+>>   	if (bridge_attached) {
+>> -		if (mhdp->connector.dev)
+>> +		if (mhdp->connector)
+>>   			drm_kms_helper_hotplug_event(mhdp->bridge.dev);
+>>   		else
+>>   			drm_bridge_hpd_notify(&mhdp->bridge, cdns_mhdp_detect(mhdp));
+>> @@ -1759,17 +1759,25 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
+>>   	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
+>>   	struct cdns_mhdp_bridge_state *mhdp_state;
+>>   	struct drm_crtc_state *crtc_state;
+>> -	struct drm_connector *connector;
+>>   	struct drm_connector_state *conn_state;
+>>   	struct drm_bridge_state *new_state;
+>>   	const struct drm_display_mode *mode;
+>>   	u32 resp;
+>> -	int ret;
+>> +	int ret = 0;
+>>   
+>>   	dev_dbg(mhdp->dev, "bridge enable\n");
+>>   
+>>   	mutex_lock(&mhdp->link_mutex);
+>>   
+>> +	mhdp->connector = drm_atomic_get_new_connector_for_encoder(state,
+>> +								   bridge->encoder);
+>> +	if (WARN_ON(!mhdp->connector))
+>> +		goto out;
+>> +
+>> +	conn_state = drm_atomic_get_new_connector_state(state, mhdp->connector);
+>> +	if (WARN_ON(!conn_state))
+>> +		goto out;
+>> +
+>>   	if (mhdp->plugged && !mhdp->link_up) {
+>>   		ret = cdns_mhdp_link_up(mhdp);
+>>   		if (ret < 0)
+>> @@ -1789,15 +1797,6 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
+>>   	cdns_mhdp_reg_write(mhdp, CDNS_DPTX_CAR,
+>>   			    resp | CDNS_VIF_CLK_EN | CDNS_VIF_CLK_RSTN);
+>>   
+>> -	connector = drm_atomic_get_new_connector_for_encoder(state,
+>> -							     bridge->encoder);
+>> -	if (WARN_ON(!connector))
+>> -		goto out;
+>> -
+>> -	conn_state = drm_atomic_get_new_connector_state(state, connector);
+>> -	if (WARN_ON(!conn_state))
+>> -		goto out;
+>> -
+>>   	if (mhdp->hdcp_supported &&
+>>   	    mhdp->hw_state == MHDP_HW_READY &&
+>>   	    conn_state->content_protection ==
+>> @@ -1857,6 +1856,7 @@ static void cdns_mhdp_atomic_disable(struct drm_bridge *bridge,
+>>   		cdns_mhdp_hdcp_disable(mhdp);
+>>   
+>>   	mhdp->bridge_enabled = false;
+>> +	mhdp->connector = NULL;
+>>   	cdns_mhdp_reg_read(mhdp, CDNS_DP_FRAMER_GLOBAL_CONFIG, &resp);
+>>   	resp &= ~CDNS_DP_FRAMER_EN;
+>>   	resp |= CDNS_DP_NO_VIDEO_MODE;
+>> @@ -2157,7 +2157,7 @@ static void cdns_mhdp_modeset_retry_fn(struct work_struct *work)
+>>   
+>>   	mhdp = container_of(work, typeof(*mhdp), modeset_retry_work);
+>>   
+>> -	conn = &mhdp->connector;
+>> +	conn = mhdp->connector;
+>>   
+>>   	/* Grab the locks before changing connector property */
+>>   	mutex_lock(&conn->dev->mode_config.mutex);
+>> @@ -2234,7 +2234,7 @@ static void cdns_mhdp_hpd_work(struct work_struct *work)
+>>   	int ret;
+>>   
+>>   	ret = cdns_mhdp_update_link_status(mhdp);
+>> -	if (mhdp->connector.dev) {
+>> +	if (mhdp->connector) {
+>>   		if (ret < 0)
+>>   			schedule_work(&mhdp->modeset_retry_work);
+>>   		else
+>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
+>> index bad2fc0c7306..b297db53ba28 100644
+>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
+>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
+>> @@ -375,7 +375,7 @@ struct cdns_mhdp_device {
+>>   	 */
+>>   	struct mutex link_mutex;
+>>   
+>> -	struct drm_connector connector;
+>> +	struct drm_connector *connector;
+>>   	struct drm_bridge bridge;
+>>   
+>>   	struct cdns_mhdp_link link;
+>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
+>> index 42248f179b69..59f18c3281ef 100644
+>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
+>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
+>> @@ -394,7 +394,7 @@ static int _cdns_mhdp_hdcp_disable(struct cdns_mhdp_device *mhdp)
+>>   	int ret;
+>>   
+>>   	dev_dbg(mhdp->dev, "[%s:%d] HDCP is being disabled...\n",
+>> -		mhdp->connector.name, mhdp->connector.base.id);
+>> +		mhdp->connector->name, mhdp->connector->base.id);
+>>   
+>>   	ret = cdns_mhdp_hdcp_set_config(mhdp, 0, false);
+>>   
+>> @@ -445,7 +445,7 @@ static int cdns_mhdp_hdcp_check_link(struct cdns_mhdp_device *mhdp)
+>>   
+>>   	dev_err(mhdp->dev,
+>>   		"[%s:%d] HDCP link failed, retrying authentication\n",
+>> -		mhdp->connector.name, mhdp->connector.base.id);
+>> +		mhdp->connector->name, mhdp->connector->base.id);
+>>   
+>>   	ret = _cdns_mhdp_hdcp_disable(mhdp);
+>>   	if (ret) {
+>> @@ -487,13 +487,13 @@ static void cdns_mhdp_hdcp_prop_work(struct work_struct *work)
+>>   	struct cdns_mhdp_device *mhdp = container_of(hdcp,
+>>   						     struct cdns_mhdp_device,
+>>   						     hdcp);
+>> -	struct drm_device *dev = mhdp->connector.dev;
+>> +	struct drm_device *dev = mhdp->connector->dev;
+>>   	struct drm_connector_state *state;
+>>   
+>>   	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
+>>   	mutex_lock(&mhdp->hdcp.mutex);
+>>   	if (mhdp->hdcp.value != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
+>> -		state = mhdp->connector.state;
+>> +		state = mhdp->connector->state;
+>>   		state->content_protection = mhdp->hdcp.value;
+>>   	}
+>>   	mutex_unlock(&mhdp->hdcp.mutex);
+> 
