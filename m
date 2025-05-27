@@ -1,153 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52761EF09D;
-	Tue, 27 May 2025 09:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D54B2517B9;
+	Tue, 27 May 2025 09:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748337201; cv=none; b=OOdKqciwtSg18zXq8JquhzV49ZoQiZM0lMAzT59474yGyBFJslLyVeeq8LxZfoTnVzXwZKYcgAAOXEu3S1a77NVhwGpwz6Rap7XxTXRkvMRxkte5e33N1++UMX9EDfVoIZhZIpRiO+k++q1fsfCa17qquvZ8y0zUUd4PvKf/Vy8=
+	t=1748337208; cv=none; b=hb/p28DMJMAlLA37fjD9RNAVKptRGp7IQBOM8xozFBKX1S36065McwvSThlt/Vtmb/n6/tjW2egspVtxJPCL0Hrf22F3ZIMzY76S3u97RtcngMBRdkAaDpbKBcLQqT6BW0ccLacqwq3M37QgREPzB41uR5yyGNmM39UrWiNKSmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748337201; c=relaxed/simple;
-	bh=GHEa/3EewNxTfyve9NOUlR4JsutG0Ky+D56r4P9yjYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JWPZK1zZI4PDAQ5c3YMqmszCEUvB3ICmD+O5ogCOEGsKu4dLTKP9qc/JyK7WjDq1DfrWYkX7IrcRlwJa+o4FcIaSDUJfp+wfPw0ukupgXucMm2EN61C0j+aB9AZ52tTHNI3YZYiiIHSR/PrN4AzTkeaKVtWOzUqzXcqLjhBe/WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdxIgbYz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748337208; c=relaxed/simple;
+	bh=zAuOrHemnpeLyMupl1/xQld0ci1rYZ5ezTxSN+CP3lU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=TQgLeFllz6dSDLCa1l0pRfSvVMsg2R1ps4Kjf3B3y/HotJaQQxLJ/WqocNJvHyLeSlcNu5/QoX8X98uzOyWDPrCtLA0DPkEpoiDTwGzZytwwCZte9rCrnwzzB3/GQmESDdOxBcWhJWVC0lw/yVQAdDhJ8KAY7arJsWCZw6e0yEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xb2vwIHV; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdxIgbYz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE208C4CEEA;
-	Tue, 27 May 2025 09:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748337200;
-	bh=GHEa/3EewNxTfyve9NOUlR4JsutG0Ky+D56r4P9yjYE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RdxIgbYzJHmH0ve1BcXCbISj1dNK0UDFufvdbIYgU1SQi6LGqIZ/ZyJFzijubqOys
-	 a07UZyb74bFBKpkD8SL94NrbT9rVprYDZktxc/N2o3JsZkBECKk6KQ+nAUDoFZngyM
-	 d+E1q7nT0IFn2UTq5qPK698LdEgeKQYDk3j9extgk5h5tExDHkBKAQE/Ti9jt41OTs
-	 tr+SSjqZMG+rPP+ncbVtF/LMIABHTaR/u1ZlDSefVsMllLkixQalm4uNbP1rk66E9u
-	 AZt206y0isVn0T66pQpwbTNBxg2jHF1sG/WW+XW4sPdnPmD318EIFLou03SUd21BTT
-	 HM6VbLpZ3c8qA==
-Date: Tue, 27 May 2025 11:13:11 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: "Alexandre Courbot" <gnurou@gmail.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, "Mauro Carvalho Chehab"
- <mchehab@kernel.org>, "Hans Verkuil" <hverkuil@xs4all.nl>, "Albert Esteve"
- <aesteve@redhat.com>, "Jason Wang" <jasowang@redhat.com>, "Xuan Zhuo"
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, <gurchetansingh@google.com>,
- <daniel.almeida@collabora.com>, <adelva@google.com>,
- <changyeon@google.com>, <nicolas.dufresne@collabora.com>,
- <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
- <virtualization@lists.linux.dev>, "Alexandre Courbot" <acourbot@google.com>
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Message-ID: <20250527111311.105246f2@sal.lan>
-In-Reply-To: <DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-	<20250526141316.7e907032@foz.lan>
-	<DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xb2vwIHV"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 72BCA43289;
+	Tue, 27 May 2025 09:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748337203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pg9vGp1YHkXIBdUOEtw6pvaguTK4l9KgzQWa/jWZ448=;
+	b=Xb2vwIHVkxdOdtkzTqahMB8Ob0dPQkUA3ReoZGJM1L+qUX1Vj82fd4mZq3PzhNP32O1Jkx
+	rxSGUArUiUNECAYK3qxLtiRJm5PaVkldh1ripu3EGGANBnyTGQYq5Z+wUniIQZpG3OSQyk
+	fxy6iFkZ1zsno/GpVwOBAXOScSRK5Mgsp+pYsnop4MUJoH89/jvP3BX3j5OL2l62j7QPHZ
+	TRfxyJo+oz1CBl0pusuylCCBt1fFB0hODm+XfsGwexCOGnNlrkkNuQndIhVhgWYEdQAkkB
+	hu1CaDW+KPMGWdK7cB6wT/wJ4KKgUCIsA72wVLDaMj7d8mqzcV15qqamYMzVfw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 11:13:21 +0200
+Message-Id: <DA6TTA76AU5Z.32W0O8EORBCQC@bootlin.com>
+To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Alexei Starovoitov"
+ <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
+ Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon"
+ <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
+ <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+ "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
+ <revest@chromium.org>
+Cc: "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
+ <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>, "Xu Kuohai"
+ <xukuohai@huawei.com>
+Subject: Re: [PATCH bpf-next v2 1/2] bpf, arm64: Support up to 12 function
+ arguments
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
+ <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
+ <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
+ <DA6T7OEF94IG.2BH2PWTCVEOTA@bootlin.com>
+ <5535f49f-8903-4055-b99a-cf8b2d4666e1@huaweicloud.com>
+In-Reply-To: <5535f49f-8903-4055-b99a-cf8b2d4666e1@huaweicloud.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduleelleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffvvefuhffofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefgfffhhefhfeegkefhffduhfehkeevffeluefhlefgfeeuveehvdekudfhheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeihedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopeiguhhkuhhohhgriheshhhurgifvghitghlohhuugdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhnhdrf
+ hgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-Em Tue, 27 May 2025 15:14:50 +0900
-"Alexandre Courbot" <gnurou@gmail.com> escreveu:
+On Tue May 27, 2025 at 11:09 AM CEST, Xu Kuohai wrote:
+> On 5/27/2025 4:45 PM, Alexis Lothor=C3=A9 wrote:
+>
+> [...]
+>
+>>>> +		/* We can not know for sure about exact alignment needs for
+>>>> +		 * struct passed on stack, so deny those
+>>>> +		 */
+>>>> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
+>>>> +			return -EOPNOTSUPP;
+>>> leave the error code as is, namely, return -ENOTSUPP?
+>> Actually this change follows a complaint from checkpatch:
+>>=20
+>> "WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP"
+>
+> Seems we can just ignore this warning, as ENOTSUPP is already used
+> throughout bpf, and the actual value -524 is well recognized.
 
-> Hi Mauro,
-> 
-> On Mon May 26, 2025 at 9:13 PM JST, Mauro Carvalho Chehab wrote:
-> > Hi Michael,
-> >
-> > Em Sat, 12 Apr 2025 13:08:01 +0900
-> > Alexandre Courbot <gnurou@gmail.com> escreveu:
-> >  
-> >> Add the first version of the virtio-media driver.
-> >>
-> >> This driver acts roughly as a V4L2 relay between user-space and the
-> >> virtio virtual device on the host, so it is relatively simple, yet
-> >> unconventional. It doesn't use VB2 or other frameworks typically used in
-> >> a V4L2 driver, and most of its complexity resides in correctly and
-> >> efficiently building the virtio descriptor chain to pass to the host,
-> >> avoiding copies whenever possible. This is done by
-> >> scatterlist_builder.[ch].
-> >>
-> >> virtio_media_ioctls.c proxies each supported ioctl to the host, using
-> >> code generated through macros for ioctls that can be forwarded directly,
-> >> which is most of them.
-> >>
-> >> virtio_media_driver.c provides the expected driver hooks, and support
-> >> for mmapping and polling.
-> >>
-> >>  This version supports MMAP buffers, while USERPTR buffers can also be
-> >>  enabled through a driver option. DMABUF support is still pending.  
-> >
-> > It sounds that you applied this one at the virtio tree, but it hasn't
-> > being reviewed or acked by media maintainers.
-> >
-> > Please drop it.
-> >
-> > Alexandre,
-> >
-> > Please send media patches to media maintainers, c/c other subsystem
-> > maintainers, as otherwise they might end being merged without a
-> > proper review.  
-> 
-> Sorry about that, I put everyone in "To:" without giving it a second
-> thought.
-> 
-> >
-> > In this particular case, we need to double-check if this won't cause
-> > any issues, in special with regards to media locks and mutexes.  
-> 
-> Agreed, I am not 100% confident about that part myself.
-> 
-> >
-> > I'll try to look on it after this merge window, as it is too late
-> > for it to be applied during this one.  
-> 
-> Appreciate that - given the high traffic on the list I was worried that
-> this patch would eventually be overlooked. Not making it for this merge
-> window should not be a problem, so please take the time you need.
+Ok, then I'll switch it back to ENOTSUPP
 
-Provided that your patch was caught by patchwork, it won't be lost:
-	https://patchwork.linuxtv.org/project/linux-media/patch/20250412-virtio-media-v3-1-97dc94c18398@gmail.com/
 
-Please notice that our CI got a number of checkpatch issues there. 
-Please check and fix the non-false-positive ones.
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Btw, I was looking at:
-
-	https://github.com/chromeos/virtio-media
-
-(I'm assuming that this is the QEMU counterpart, right?)
-
-And I noticed something weird there:
-
-	"Unsupported ioctls
-
-	 A few ioctls are replaced by other, more suitable mechanisms. If being requested these ioctls, the device must return the same response as it would for an unknown ioctl, i.e. ENOTTY.
-
-	    VIDIOC_QUERYCAP is replaced by reading the configuration area.
-	    VIDIOC_DQBUF is replaced by a dedicated event.
-	    VIDIOC_DQEVENT is replaced by a dedicated event."
-
-While this could be ok for cromeOS, this will be broken for guests with 
-Linux, as all Linux applications rely on VIDIOC_QUERYCAP and VIDIOC_DQBUF
-to work. Please implement support for it, as otherwise we won't even be
-able to test the driver with the v4l2-compliance tool (*).
-
-(*) Passing at v4l2-compliance is a requirement for any media driver
-    to be merged.
-
-With regards to testing, what's the expected testing scenario?
-My guess is that, as a virtio device, a possible test scenario would be
-to have the UVC camera from the host OS mapped using virtio-camera into 
-the guest OS, allowing a V4L2 application running at the guest to map the 
-camera from the host, right?
-
-Regards,
-Mauro
