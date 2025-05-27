@@ -1,311 +1,365 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2083.outbound.protection.outlook.com [40.107.93.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02FE27FB0C;
-	Tue, 27 May 2025 17:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748366628; cv=fail; b=d8W9SzOedapmWpx+K8K4vuEZCvAud6DBAy+1fwgzqHd37URb0N31F6AVa99IzckxIrkdZmdt1LK5UfS2+1XJgWlZnLaJ/KKcW4eV1UTMc1Zm1pqoJUJHwD9u7Qru6P0wigvj+3W1n5TqdTZoRZDfqf4f/nl5zkICRY0jjjhl2gk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748366628; c=relaxed/simple;
-	bh=/6mWXqoRcLYeG9xdhNCXcyTMVB6ewFybGaiI/KOAdsw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Lm9yqAw+YHO1098PSsy+ZO6pF8VKZAZWq1OxoztHxmM0l229e66/NgpDgie+ttqsa3cCoDc0hD/X3qjcalwRbrs7hdY68oSfLix9oxkf2pcf/7XG0e3c7pvB61ngxfhrUvJ0/YpjJ1TdsI62vBCvMLyV1CmW7qj7TQeXwOWGwOQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MWE4kewe; arc=fail smtp.client-ip=40.107.93.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983DE27EC73;
+	Tue, 27 May 2025 17:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748366659; cv=none; b=NpVWU0LMHjh0NIkadd1CHZ70PmJSxQ17AeTZrjfrHj8vH+lKAv+R4ZmVRt0k33eey6HsCeFuEw7gcF/XO6KQpA2mjLY5bnpybM+4O6hTKLcBwLnY7/8Z02EcuON4/Fi5IRDf2du7cc3IpnG1XA4vRFdpUCahOS06oWTkDWscmKU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748366659; c=relaxed/simple;
+	bh=LPpmYGHaeuXbmsjn+skQ/1ouICPGUsFjyAV7RQufhw4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mE2NMMXVd2BYcbtQBemSkm4VC2QgSGa+ltPFCYwush+sORs1jfzgJzAdX1RrL4HNI4gmVH0MG/uDO614Xq63GUd7HlkO4qMljB4OeY8vtSGuL6sFC0XKRcqsVc+R+OH0a+jYfUkCk0ejIZBncOWSDwBeaAqX37lH2yynHY/QjsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbuRwfHQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MWE4kewe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B2YgJgmG0t0cf06ovPOn0Mu7F+ulBe+ZFE6FLGaSEe0pjuBdpQbl8zBLHe9HfEjm3TGRxAEj0oSKUQ3wdBID/nUu/Wbb7s5ungRF95+ArRf7v7ksNofAyfx5hMkxHbH/jEz8JY+G1Ew0pSr938OjgsuDJ9OloKPQcwlXQnqRDr9ZN+5qjQaImquh37cp8ByvtJ80e/NKvh+5wIwz29GRinGqu8NkQm2Il/XJEkOn+DhYAZ2sGjzYo5tSGXX9XSZYZktSQPh73ktz149xZjLLth0GaBV9cR/QQuevvqQtm5U1zviMHAds1itIhRMj7kPpssdQtPlu3ayEjxcm2+LAbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IQtt3O7Zb5Y2d05lSVMERmWvXwqJ3vpNrBXWVn7fRnI=;
- b=uLkzrYhzx4Zz87QuYiT0uK7KWLRlhY7OCr7MGGjX7N93a30GTpyZTb6dcQY092LdEjbuVHMMNQ+6fw7KVWdj2J3OfihqEBmq5xT5m/4NPZR8y7e7x35mE5oqQjTl+amuvbgKQePk45ITzfrdGXqwtZIIxWmFXP1wrYHHgp72c1/3TbST+MpeJ2r+OOqgJJnIaBzyQxVZ5Qps3pOk2+i08/vHtNoTVc/1cjZVxzWSZPiHKX0J07l1xhl7rC7MRo4u+Wf2gxxQBMneLHS6Xp4XzouRcbYbRc1IqbM+R8l4pmxkuTZrRGwWGlbeRd55WTLfNu0l4EcZevnTrD4DvSvrmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IQtt3O7Zb5Y2d05lSVMERmWvXwqJ3vpNrBXWVn7fRnI=;
- b=MWE4keweUtTEth0ewA3xD5xJTylbOnd0SCHlY532oedIjyOTn/2qXgISVPhw0XNq9TXJAUHmddUUEJk1+0+MrcKKuwp81AKnxUSL3/zduQeg2ozc0PXLVx1IBjflOxRPY0zPFKhKZyf+HTBnPZWGIUPoLdWW6+FLzcQG3KJGzD0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DS7PR12MB8417.namprd12.prod.outlook.com (2603:10b6:8:eb::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 17:23:42 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.8722.031; Tue, 27 May 2025
- 17:23:42 +0000
-Message-ID: <6cd9873c-1add-4d19-8d08-a7c3a514bfea@amd.com>
-Date: Tue, 27 May 2025 12:23:34 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v13 01/27] x86/cpufeatures: Add support for Assignable
- Bandwidth Monitoring Counters (ABMC)
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: james.morse@arm.com, dave.martin@arm.com, fenghuay@nvidia.com,
- x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
- akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
- ardb@kernel.org, gregkh@linuxfoundation.org, daniel.sneddon@linux.intel.com,
- jpoimboe@kernel.org, alexandre.chartre@oracle.com,
- pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com,
- perry.yuan@amd.com, seanjc@google.com, kai.huang@intel.com,
- xiaoyao.li@intel.com, kan.liang@linux.intel.com, xin3.li@intel.com,
- ebiggers@google.com, xin@zytor.com, sohil.mehta@intel.com,
- andrew.cooper3@citrix.com, mario.limonciello@amd.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- peternewman@google.com, maciej.wieczor-retman@intel.com, eranian@google.com,
- Xiaojian.Du@amd.com, gautham.shenoy@amd.com
-References: <cover.1747349530.git.babu.moger@amd.com>
- <aef9947e5ed68feb0d33a2c882c140e2e472276f.1747349530.git.babu.moger@amd.com>
- <505f530c-810a-41a4-b3cf-7eb326bb6990@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <505f530c-810a-41a4-b3cf-7eb326bb6990@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN0PR10CA0024.namprd10.prod.outlook.com
- (2603:10b6:408:143::15) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbuRwfHQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46626C4CEEA;
+	Tue, 27 May 2025 17:24:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748366657;
+	bh=LPpmYGHaeuXbmsjn+skQ/1ouICPGUsFjyAV7RQufhw4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=CbuRwfHQ65UqdoUTnRUqLPuPGKZEKFEA/4cGSXnuH85yvKmVQcs/9UOUYFB6Ft84C
+	 VwST7OgiXd3MDEUT0UHgoXZzqZdczEKLcCqxHhXTipjcJzL1jBP+U4ztp9bEe1t3Hx
+	 gi2gQV934nNNh08zAPuaqPpE6bguTGnHFAZxHsmRsbvzfRD2751xDImVWLRymePRCX
+	 PkBdVBIKgCCMRDGAPU7MpQQvP7jYOSAhhAfeo8tCST52Vk0vs/TZEgqP5Xw2EXQE+v
+	 BCXsPlULmCEy4tpAPoHCdDnBcWcEbR1UnNLCN9ORzBHF9haBZdfVyivsfUVmhUsoo7
+	 Zk0DsYzr8f+Gw==
+Message-ID: <40891c67a9243d673fa2143006dcfa60c20dac2f.camel@kernel.org>
+Subject: Re: [PATCH v10 9/9] ref_tracker: eliminate the ref_tracker_dir name
+ field
+From: Jeff Layton <jlayton@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"	
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski	
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
+ <horms@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,  Simona Vetter
+ <simona@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas
+ Lahtinen	 <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>,  Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
+ Nathan Chancellor	 <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ linux-kernel@vger.kernel.org, 	netdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, 	intel-gfx@lists.freedesktop.org
+Date: Tue, 27 May 2025 13:24:14 -0400
+In-Reply-To: <20250527-reftrack-dbgfs-v10-9-dc55f7705691@kernel.org>
+References: <20250527-reftrack-dbgfs-v10-0-dc55f7705691@kernel.org>
+	 <20250527-reftrack-dbgfs-v10-9-dc55f7705691@kernel.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DS7PR12MB8417:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3e633d0-ee09-4997-760f-08dd9d433a44
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VDd6Y21JL1ViVmZJL2k4Vjh2Mm1BaUpIS3VXWXNmRkx5anYwUjBpZjJ6NjNO?=
- =?utf-8?B?dnFzZlNreEZ0d01rQ1ZhZnZMZUU1YUhxOTZud0wyTkVDUnVjRVdaYUtHUjRI?=
- =?utf-8?B?MUpJWFNncThDbTlnVm54SEZZN3M2Qm9yWE1FM1JYWVVlNU9lUHNnZytrU0RV?=
- =?utf-8?B?cC9vOE5PbGwremFYQ05HOC9Ua2dUTWpITzFUR0FnVEtHekpqZ25ZazBCV2pO?=
- =?utf-8?B?UjVOSzduSkJXZDBCMXdLUEsrQzJMd0tKdjdFWDlhc0pLaEtMV0dDMlJ1OTJB?=
- =?utf-8?B?M0RtSVIxQldIbGhEdzhkMFF1SitqUjV6ZXN1M3J3NUdyTGRFS0svR3BvSzFz?=
- =?utf-8?B?bGJqNnVBUGdoTmdhMDhiNTQyZzZRUHRxcXBMeXMxZjJ2aWxMbWZRODA2U3Fi?=
- =?utf-8?B?QitRWFRrU2tnTmJ5bGN2T2tEaGp0YnVDTHNyRFBRWWRvMmtjSnFpL1IxdVNa?=
- =?utf-8?B?SkpPYkoraFh4MHUrWTRMOURieWZxWmJmWE9ZYzlZekhyTjNhdHU3ODYwWmFM?=
- =?utf-8?B?VXNCTDYzRWxGZ0dPb3VqZ2FXTHByRC9TZE01TG1wMXk1b0ZXempIc29qeTFV?=
- =?utf-8?B?cFBQZUIwZHQ1TE5hRUJlWVhhYWxzNHFGZkhkc1hDMGZuQXE0WXVuWTFpM1hU?=
- =?utf-8?B?VVZCVXdZS0c1dWJjZnY1dkc1eDg0VUx2c21jYkpwa1BTSEd0bXRPeUZNa0ly?=
- =?utf-8?B?VWdkR3VobEVHTGRIMjBxVW1XRTVFWW9VMVltUmt1UUplWVkyTENQbTBjMW93?=
- =?utf-8?B?Vk5sSTNPcVZVOVRIRWptS3NleHFTeDM2bUhNQ0d3VGFJVDBXclU5WG5YTHFz?=
- =?utf-8?B?MXlCM0FGNWZxY3p4Ym55K1RaTi9Sc2xzTUllL1Z2ODVHVUVnRTJUTWpzYmk1?=
- =?utf-8?B?NkkzejdHUXFwNm9Gd0c4eE83cEMrMldobkNoWUE0RWI0bEFyZ2Q4dmJ4Rjc5?=
- =?utf-8?B?bTlEd2hHcngxZ0xpTVQ5Rzdpc0dycGx1cWdoYzBYeWNWeTJvTUZuY1V5REZj?=
- =?utf-8?B?Q0I1aFFCTHRpVjFkeGlvWitsY3I1dVpqRk9Wc2Z4bWpUcENEcjNzSDh3MUVS?=
- =?utf-8?B?RTZjc2JtVnpZQnFleUk5aEhncjNacUw0dCtSaHd2ZjZrN1V0WU85aTQzUE4z?=
- =?utf-8?B?L1orT3ZZT20wTUI5QlNIaGFMSjQ0V09OeHpZNysvNWNmbUhwaHFhVXZ1MXZH?=
- =?utf-8?B?VVdSTGdydm9icjhKMWs2Um1lcm1nWWJsa3lHdnV6TVdZOXlxR1liaUptRG5R?=
- =?utf-8?B?RGdYR3IzMktpWnVBdnNHN2tjbjdJc3BWU2NGL3RYWUFycGlnUXhBVENSVmNV?=
- =?utf-8?B?dlZJMkoxVFlEcGk0bWk0NVMyeTFZK1FMekRDdWc4ZXNwUkFNTWhTZzFDS3VH?=
- =?utf-8?B?aExzdmZOYi8vaDlHRlhLOXNKYkkwL0ZkeHJiSVl1VHcwVFlFN3RQeUE1YVdI?=
- =?utf-8?B?dVZkR0pmUThZamdtYWVuMDJGUWo4dFQyalVSS1dVV3J5cDFFUEdBMlRaQk1U?=
- =?utf-8?B?QWVnWFJVclJtTytySnpZRnhPM0MzMlBDRER4d3JudEgybTF3dzFaN2VmTWc5?=
- =?utf-8?B?VFo4UzV4Yk9BZjgyUmZYVitsUW16SjRFMlNPaXJ5VlB5TXpNSWFxaTZyVlBY?=
- =?utf-8?B?UGZiMG50TVh1WE1EbkFwY1JSUmNpUnZQR283c29odjVFZDE5d25RZ3hhWnZm?=
- =?utf-8?B?aDVQODRjUlNyOE5RK0gyUjJ0NlhmT2JEUnVPMUtQTnMzRzgxeGFHYkNkVFA5?=
- =?utf-8?B?eWxSOStoVkZLMXZmVEFPTWZHeXVZSktERDNVZHhJMXFGcm5IUHpTY1FzYmFh?=
- =?utf-8?B?S3hHaGQzcG1tNWlJanJBUWtOcTB1Ry9HblhBQnlIVEFseFFIYUJUWHJwaFI1?=
- =?utf-8?B?L1ZRT2NKV2FzMFNJK01IYnZsSVI3M3hBZXUwdllzYjdsaDk1S3B3SDBTWkxT?=
- =?utf-8?Q?Ak15up7InnQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NzJLNnlKT3Z5K3E4ZEl3SnQ1ZWU5TjQrdGsrdGxrRFIxMEltU3d3QlB2dXVN?=
- =?utf-8?B?Z21VWVZ3L2M2K1U5UU5RakRDSHlzb1h6NmdJVjhnSEViWEsrVjl5SjdFREJz?=
- =?utf-8?B?ZG1nY3Jwenc5WE5JTktOVHEyK1JyNU80V2plNG03UHpFNDZoNmRZVmJHdkVS?=
- =?utf-8?B?U1lyRXJVQUZKd0xuLytNWUI2WnpOZTUzVnptZWlQVVdLUXJpcHgzbUY5bWtD?=
- =?utf-8?B?OHp3Rk5IN0g1dmwyWnlZOVBWdnNQZk5GdmE1NENZMUpXa0JqcEk5Q2FITC9Y?=
- =?utf-8?B?SUUzdzdJT2RiVjZIZHIzdGU1RHVEQkdmNkQyVVM5ZFBMY09YLzJTd0xZQm9o?=
- =?utf-8?B?elJpYys2YnFRRmRuMHhjMzh5R3lBMVk1ZUZaeElna3diMmpCS0ZKM2RITDA5?=
- =?utf-8?B?bC9ySWNLZGVDU29Kd3BXSGxLeG1GT28wdFlPaU9zQVo5cldpYTRDYjh3VUJn?=
- =?utf-8?B?TmhVc2FBQ2d0OCtMcUxMT2VMUEJWZlpINC9KK1dPdzY5WmJOclhWNVRLaGY1?=
- =?utf-8?B?Ly82TmxHTFRMRjR0YjRmT0tEdldpQWFOa2t1M3FFcmkzcTJBVmJhU3JNazFo?=
- =?utf-8?B?UDZ5amxPR3BCVEdwTmNUVTlnbHR4NldPRHFuUmlzUEp5YUVlaHp1OUpYaXhX?=
- =?utf-8?B?VXNFR1gwTUNXV1FoS3FsbllFamk2QmpCOVV0RFRuOEZJeGZ2QVAweXNlM0Rq?=
- =?utf-8?B?R2hibmtmbXhzVndjTkd2ZzI4ZDdoWXFwQTRZZ3ZSeDZCOUlmZWFJekNxbWVJ?=
- =?utf-8?B?SnhManpXYytuSHRKM1JqTFd4VnFMb24rUks4dnBEamQ1alJvN1MwYTFpZ3dt?=
- =?utf-8?B?NklXU1M0UTlFclh2UE9SZFY2VEhNa3ZTRlJodURDWmcvamZsZUtRZVJlclB2?=
- =?utf-8?B?aUpXZTArUVRaeExxZC9IaEN4MlVxZWpTUTZUdEJLQzdQeDExYThpTEM1eFRu?=
- =?utf-8?B?ZUpoR0R2K2JjZ1BVUHMxUDAvSnlQOWdIdDgrK01reVoxbEtxYU02eDdaSHps?=
- =?utf-8?B?a1htTkZKZVlqNEVzR1ZGdXhTZTRUdmhpRHFPTFF3K1Rkb1pUeXJ4RnhhUTlM?=
- =?utf-8?B?aVBLK2ZXNE01Q0V1aktSWG1aTVNTem1uNlRMREdiTDJVbURZN0llc2I4RmhN?=
- =?utf-8?B?b0trOW5EVW5QTHZuNU01Q1FPNGlRcUVFTjR3anBTOUUxWGxOQVBSQlRNamx0?=
- =?utf-8?B?ZEhvcUdjTVBEcVB1MGJGN3RFMkx4TmlidjNVcW5GVUk5bXZOcWtyK2tqZjVE?=
- =?utf-8?B?ZmJNZWhQRHNSd1Z3M2xRbGp5cStBODdxbkR4TVU2SU84VmRPc3kxNzNBMDZx?=
- =?utf-8?B?ckdsY002NXVFV1psR1BlN3luMytoSEV0QmFMY0ViTXdtSjhPYVVaMEpSTDlm?=
- =?utf-8?B?b09Rd3ZMQVU2NnZ3ZENEUkZERldQMjYrRWxNd2xxSXFyTitpbVd6bFZRNkFY?=
- =?utf-8?B?bzlqU2s2R09lbGdaVG5IVzdjUjhBbFRCTzA2aExoNElYVEVnbHhsYVBxVWtj?=
- =?utf-8?B?UFJNVEl3aFVFTXpFbUFkcEV4WThZM2JhRk9SRlRuTnR2bWlJbnJSRnlKN2Fh?=
- =?utf-8?B?YnpqUWZxVXMrbzRqcnhVNUdtUDNMUldGdTVhUEJJM0plVTlhS3N0OGdSdmdr?=
- =?utf-8?B?ZzQ4NXYxVS9ub2tseUhKZmIvNGxkbDhaV2FnN0hhcmZBMDVIQUlraHZLSndW?=
- =?utf-8?B?T2htN1IrQXpJQUEzeTdSYXVQc3JKZjJXSHo4VExqS0ZRWTIwQ0xEVk5sN0xk?=
- =?utf-8?B?M05RVFdTUVhzNmEvWDVwWGVhSENreVVrVUFqRGtXMi9pRWoveEVBeHdOYWgw?=
- =?utf-8?B?ZzFKNjhjaGxQWjM4aHNHTjhGU3VqN3NleEdzZ01iSGZZaHU2bUlPK1Q1TGFW?=
- =?utf-8?B?OEdHbStRaGpjb09UMGw1Vys1bVRyTUcyY2lCZWhiRmZraCtIWmdCd3k2N2Q3?=
- =?utf-8?B?TjRDQkhmbFNnZVIzeHdYSXJON0hoWlp1V05nZjk2MnUyTTFSUDVoa3o4UVZx?=
- =?utf-8?B?SVR0Tk0wd1QwVm1janFCOTQwN2haUytKeWh2VGdVZFF0dnVLRExwNm1BcVIz?=
- =?utf-8?B?MkYwVDFLd2RTZWtIU3dEc01jcmQ3dU5vK1pFZm5sWkowZzZtYWxMUXhsOHNU?=
- =?utf-8?Q?66rU=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3e633d0-ee09-4997-760f-08dd9d433a44
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 17:23:42.4611
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X8TnBPCXnBGN2hl31MVzxhNEU8pkDI/IM4BI9i32HIVFquB8TIv3MLI9ssOmwrzc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8417
 
-Hi Reinette,
+On Tue, 2025-05-27 at 07:33 -0400, Jeff Layton wrote:
+> Now that we have dentries and the ability to create meaningful symlinks
+> to them, don't keep a name string in each tracker. Switch the output
+> format to print "class@address", and drop the name field.
+>=20
+> Also, add a kerneldoc header for ref_tracker_dir_init().
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  drivers/gpu/drm/display/drm_dp_tunnel.c |  2 +-
+>  drivers/gpu/drm/i915/intel_runtime_pm.c |  2 +-
+>  drivers/gpu/drm/i915/intel_wakeref.c    |  2 +-
+>  include/linux/ref_tracker.h             | 20 ++++++++++++++------
+>  lib/ref_tracker.c                       |  6 +++---
+>  lib/test_ref_tracker.c                  |  2 +-
+>  net/core/dev.c                          |  2 +-
+>  net/core/net_namespace.c                |  4 ++--
+>  8 files changed, 24 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/di=
+splay/drm_dp_tunnel.c
+> index b9c12b8bf2a3e400b6d8e9d184145834c603b9e1..1205a4432eb4142344fb6eed1=
+cb5ba5b21ec6953 100644
+> --- a/drivers/gpu/drm/display/drm_dp_tunnel.c
+> +++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
+> @@ -1920,7 +1920,7 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, in=
+t max_group_count)
+>  	}
+> =20
+>  #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
+> -	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun", "dptun");
+> +	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun");
+>  #endif
+> =20
+>  	for (i =3D 0; i < max_group_count; i++) {
+> diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i9=
+15/intel_runtime_pm.c
+> index 3fdab3b44c08cea16ac2f73aafc2bea2ffbb19e7..c12b5d0e16fa363f3caede372=
+e7a2031676aa7b5 100644
+> --- a/drivers/gpu/drm/i915/intel_runtime_pm.c
+> +++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
+> @@ -60,7 +60,7 @@ static struct drm_i915_private *rpm_to_i915(struct inte=
+l_runtime_pm *rpm)
+>  static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
+>  {
+>  	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
+> -			     "intel_runtime_pm", dev_name(rpm->kdev));
+> +			     "intel_runtime_pm");
+>  }
+> =20
 
-On 5/22/25 15:51, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 5/15/25 3:51 PM, Babu Moger wrote:
->> Users can create as many monitor groups as RMIDs supported by the hardware.
->> However, bandwidth monitoring feature on AMD system only guarantees that
->> RMIDs currently assigned to a processor will be tracked by hardware. The
->> counters of any other RMIDs which are no longer being tracked will be reset
->> to zero. The MBM event counters return "Unavailable" for the RMIDs that are
->> not tracked by hardware. So, there can be only limited number of groups
->> that can give guaranteed monitoring numbers. With ever changing
->> configurations there is no way to definitely know which of these groups are
->> being tracked for certain point of time. Users do not have the option to
->> monitor a group or set of groups for certain period of time without
->> worrying about RMID being reset in between.
->>
->> The ABMC feature provides an option to the user to assign a hardware
->> counter to an RMID, event pair and monitor the bandwidth as long as it is
->> assigned. The assigned RMID will be tracked by the hardware until the user
->> unassigns it manually. There is no need to worry about counters being reset
->> during this period. Additionally, the user can specify a bitmask
->> identifying the specific bandwidth types from the given source to track
->> with the counter.
->>
->> Without ABMC enabled, monitoring will work in current mode without
->> assignment option.
->>
->> The Linux resctrl subsystem provides an interface that allows monitoring of
->> up to two memory bandwidth events per group, selected from a combination of
->> available total and local events. When ABMC is enabled, two events will be
->> assigned to each group by default, in line with the current interface
->> design. Users will also have the option to configure which types of memory
->> transactions are counted by these events.
->>
->> Due to the limited number of available counters (32), users may quickly
->> exhaust the available counters. If the system runs out of assignable ABMC
->> counters, the kernel will report an error. In such cases, users will nee
->> dto unassign one or more active counters to free up countes for new
-> 
-> "nee dto" -> "need to"
-> "countes" -> "counters"
+I got a warning from the intel graphics CI that this was causing these
+warnings:
 
-Sure.
+<3> [513.235988] debugfs: File 'intel_runtime_pm@ff110001461f98a8' in direc=
+tory 'ref_tracker' already present!
+<4> [513.236073] ref_tracker: ref_tracker: unable to create debugfs file fo=
+r intel_runtime_pm@ff110001461f98a8: -EEXIST
+<3> [513.242646] debugfs: File 'intel_wakeref@ff1100016ee7d790' in director=
+y 'ref_tracker' already present!
+<4> [513.242724] ref_tracker: ref_tracker: unable to create debugfs file fo=
+r intel_wakeref@ff1100016ee7d790: -EEXIST
 
-> 
->> assignments. The interface will provide options to assign or unassign
-> 
-> "The interface will" -> "resctrl will"?
-> 
+I suspect these are existing bugs which are causing these ref_trackers
+to be initialized more than once. If there were references taken
+between these two initializations, then that could leak memory (or
+worse). I think we need to ensure that these ref_trackers are only
+initialized once.
 
-Sure.
-
->> events through the group-specific interface file.
->>
->> The feature can be detected via CPUID_Fn80000020_EBX_x00 bit 5.
-> 
-> "The feature can be detected" -> "The feature is detected"
-> 
-
-Sure.
-
->> Bits Description
->> 5    ABMC (Assignable Bandwidth Monitoring Counters)
->>
->> The feature details are documented in APM listed below [1].
->> [1] AMD64 Architecture Programmer's Manual Volume 2: System Programming
->> Publication # 24593 Revision 3.41 section 19.3.3.3 Assignable Bandwidth
->> Monitoring (ABMC).
->>
->> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> ---
-> 
-> ...
->>  arch/x86/include/asm/cpufeatures.h | 1 +
->>  arch/x86/kernel/cpu/cpuid-deps.c   | 2 ++
->>  arch/x86/kernel/cpu/scattered.c    | 1 +
->>  3 files changed, 4 insertions(+)
->>
->> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
->> index 6c2c152d8a67..d5c14dc678df 100644
->> --- a/arch/x86/include/asm/cpufeatures.h
->> +++ b/arch/x86/include/asm/cpufeatures.h
->> @@ -481,6 +481,7 @@
->>  #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneous Core Topology */
->>  #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classification */
->>  #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due to downclocking */
->> +#define X86_FEATURE_ABMC		(21*32 + 9) /* Assignable Bandwidth Monitoring Counters */
->>  
->>  /*
->>   * BUG word(s)
->> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
->> index a2fbea0be535..2f54831e04e5 100644
->> --- a/arch/x86/kernel/cpu/cpuid-deps.c
->> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
->> @@ -71,6 +71,8 @@ static const struct cpuid_dep cpuid_deps[] = {
->>  	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
->>  	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_TOTAL   },
->>  	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_LOCAL   },
->> +	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_TOTAL   },
->> +	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_LOCAL   },
-> 
-> Is this dependency still accurate now that the implementation switched to the 
-> "extended event ID" variant of ABMC that no longer uses the event IDs associated
-> with X86_FEATURE_CQM_MBM_TOTAL and X86_FEATURE_CQM_MBM_LOCAL?
-
-That's a good question. Unfortunately, we may need to retain this
-dependency for now, as a significant portion of the code relies on
-functions like resctrl_is_mbm_event(), resctrl_is_mbm_enabled(),
-resctrl_arch_is_mbm_total_enabled(), and others.
+I'll see if I can make a patch that does that, but if the i915 devs
+want to do fix this up instead, I won't complain.
 
 
-> 
->>  	{ X86_FEATURE_AVX512_BF16,		X86_FEATURE_AVX512VL  },
->>  	{ X86_FEATURE_AVX512_FP16,		X86_FEATURE_AVX512BW  },
->>  	{ X86_FEATURE_ENQCMD,			X86_FEATURE_XSAVES    },
->> diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
->> index 16f3ca30626a..3b72b72270f1 100644
->> --- a/arch/x86/kernel/cpu/scattered.c
->> +++ b/arch/x86/kernel/cpu/scattered.c
->> @@ -49,6 +49,7 @@ static const struct cpuid_bit cpuid_bits[] = {
->>  	{ X86_FEATURE_MBA,			CPUID_EBX,  6, 0x80000008, 0 },
->>  	{ X86_FEATURE_SMBA,			CPUID_EBX,  2, 0x80000020, 0 },
->>  	{ X86_FEATURE_BMEC,			CPUID_EBX,  3, 0x80000020, 0 },
->> +	{ X86_FEATURE_ABMC,			CPUID_EBX,  5, 0x80000020, 0 },
->>  	{ X86_FEATURE_AMD_WORKLOAD_CLASS,	CPUID_EAX, 22, 0x80000021, 0 },
->>  	{ X86_FEATURE_PERFMON_V2,		CPUID_EAX,  0, 0x80000022, 0 },
->>  	{ X86_FEATURE_AMD_LBR_V2,		CPUID_EAX,  1, 0x80000022, 0 },
-> 
-> Reinette
-> 
+>  static intel_wakeref_t
+> diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/=
+intel_wakeref.c
+> index 5269e64c58a49884f5d712557546272bfdeb8417..615fb77809291be34d94600fd=
+d4d919461a22720 100644
+> --- a/drivers/gpu/drm/i915/intel_wakeref.c
+> +++ b/drivers/gpu/drm/i915/intel_wakeref.c
+> @@ -114,7 +114,7 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
+>  			 "wakeref.work", &key->work, 0);
+> =20
+>  #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
+> -	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wake=
+ref", name);
+> +	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wake=
+ref");
+>  #endif
+>  }
+> =20
+> diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
+> index ddc5a7b2bd84692bbc1e1ae67674ec2c6857e1ec..5878e7fce712930700054033f=
+f5f21547e75224f 100644
+> --- a/include/linux/ref_tracker.h
+> +++ b/include/linux/ref_tracker.h
+> @@ -24,7 +24,6 @@ struct ref_tracker_dir {
+>  	struct dentry		*dentry;
+>  	struct dentry		*symlink;
+>  #endif
+> -	char			name[32];
+>  #endif
+>  };
+> =20
+> @@ -48,10 +47,21 @@ void ref_tracker_dir_symlink(struct ref_tracker_dir *=
+dir, const char *fmt, ...)
+> =20
+>  #endif /* CONFIG_DEBUG_FS */
+> =20
+> +/**
+> + * ref_tracker_dir_init - initialize a ref_tracker dir
+> + * @dir: ref_tracker_dir to be initialized
+> + * @quarantine_count: max number of entries to be tracked
+> + * @class: pointer to static string that describes object type
+> + *
+> + * Initialize a ref_tracker_dir. If debugfs is configured, then a file
+> + * will also be created for it under the top-level ref_tracker debugfs
+> + * directory.
+> + *
+> + * Note that @class must point to a static string.
+> + */
+>  static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
+>  					unsigned int quarantine_count,
+> -					const char *class,
+> -					const char *name)
+> +					const char *class)
+>  {
+>  	INIT_LIST_HEAD(&dir->list);
+>  	INIT_LIST_HEAD(&dir->quarantine);
+> @@ -65,7 +75,6 @@ static inline void ref_tracker_dir_init(struct ref_trac=
+ker_dir *dir,
+>  	dir->dentry =3D NULL;
+>  	dir->symlink =3D NULL;
+>  #endif
+> -	strscpy(dir->name, name, sizeof(dir->name));
+>  	ref_tracker_dir_debugfs(dir);
+>  	stack_depot_init();
+>  }
+> @@ -90,8 +99,7 @@ int ref_tracker_free(struct ref_tracker_dir *dir,
+> =20
+>  static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
+>  					unsigned int quarantine_count,
+> -					const char *class,
+> -					const char *name)
+> +					const char *class)
+>  {
+>  }
+> =20
+> diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
+> index 5e84e5fd78e147a036d4adb511e657da07866a55..5fb384dd919e1f1ad632eaf59=
+5b954118bcfddab 100644
+> --- a/lib/ref_tracker.c
+> +++ b/lib/ref_tracker.c
+> @@ -123,7 +123,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir *=
+dir,
+>  	stats =3D ref_tracker_get_stats(dir, display_limit);
+>  	if (IS_ERR(stats)) {
+>  		pr_ostream(s, "%s%s@%p: couldn't get stats, error %pe\n",
+> -			   s->prefix, dir->name, dir, stats);
+> +			   s->prefix, dir->class, dir, stats);
+>  		return;
+>  	}
+> =20
+> @@ -134,14 +134,14 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir=
+ *dir,
+>  		if (sbuf && !stack_depot_snprint(stack, sbuf, STACK_BUF_SIZE, 4))
+>  			sbuf[0] =3D 0;
+>  		pr_ostream(s, "%s%s@%p has %d/%d users at\n%s\n", s->prefix,
+> -			   dir->name, dir, stats->stacks[i].count,
+> +			   dir->class, dir, stats->stacks[i].count,
+>  			   stats->total, sbuf);
+>  		skipped -=3D stats->stacks[i].count;
+>  	}
+> =20
+>  	if (skipped)
+>  		pr_ostream(s, "%s%s@%p skipped reports about %d/%d users.\n",
+> -			   s->prefix, dir->name, dir, skipped, stats->total);
+> +			   s->prefix, dir->class, dir, skipped, stats->total);
+> =20
+>  	kfree(sbuf);
+> =20
+> diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
+> index d263502a4c1db248f64a66a468e96c8e4cffab25..b983ceb12afcb84ad60360a1e=
+6fec0072e78ef79 100644
+> --- a/lib/test_ref_tracker.c
+> +++ b/lib/test_ref_tracker.c
+> @@ -64,7 +64,7 @@ static int __init test_ref_tracker_init(void)
+>  {
+>  	int i;
+> =20
+> -	ref_tracker_dir_init(&ref_dir, 100, "selftest", "selftest");
+> +	ref_tracker_dir_init(&ref_dir, 100, "selftest");
+> =20
+>  	timer_setup(&test_ref_tracker_timer, test_ref_tracker_timer_func, 0);
+>  	mod_timer(&test_ref_tracker_timer, jiffies + 1);
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index bac9d29486556023cd99f5101b96b052acb9ba70..a062912525ee573504a9cc252=
+f71aed22693d24f 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -11713,7 +11713,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_pr=
+iv, const char *name,
+> =20
+>  	dev->priv_len =3D sizeof_priv;
+> =20
+> -	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev", name);
+> +	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev");
+>  #ifdef CONFIG_PCPU_DEV_REFCNT
+>  	dev->pcpu_refcnt =3D alloc_percpu(int);
+>  	if (!dev->pcpu_refcnt)
+> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> index 39b01af90d240df48827e5c3159c3e2253e0a44d..c03757e39c8a334d307fa1b5c=
+c8f03ad3a8df0e0 100644
+> --- a/net/core/net_namespace.c
+> +++ b/net/core/net_namespace.c
+> @@ -403,8 +403,8 @@ static __net_init void preinit_net(struct net *net, s=
+truct user_namespace *user_
+>  {
+>  	refcount_set(&net->passive, 1);
+>  	refcount_set(&net->ns.count, 1);
+> -	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt", "net_refc=
+nt");
+> -	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt", "ne=
+t_notrefcnt");
+> +	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt");
+> +	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt");
+> =20
+>  	get_random_bytes(&net->hash_mix, sizeof(u32));
+>  	net->dev_base_seq =3D 1;
 
--- 
-Thanks
-Babu Moger
+--=20
+Jeff Layton <jlayton@kernel.org>
