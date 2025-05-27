@@ -1,138 +1,105 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BFE277808;
-	Tue, 27 May 2025 18:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B52255E26
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368884; cv=none; b=c7eblK3a0CTQFAwG4rV5snPjWngampR2Xjq4nJ1UUQVQ2Csb+C57t7UTYMKxUZF5ccydbAU0RSpBrVjwcXbrlNvj5I9zHUKYPWydhv8OBnxMW43GFGHTabz/eKjMA3XMw0jbMSNoWUACgJ9YAfNXT0ZX4F3DDo52gRpoEmMcj3Y=
+	t=1748369244; cv=none; b=bCGFApabpa5gu3ZFLq9hpw3Kml/9uH9JlOwkZTmm3pposW0qJAQHGsigsjv5PC439S2fnvVLOn8M55YmTQPwSuxLSzlninGMRCVPuylFmomcvrkDrPfGcWt4NYI5yq1CCmB8La1lTyrfrkzBv/r5sfDeH+K6X4+fmXl4ZSgHeUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368884; c=relaxed/simple;
-	bh=rq45Wd9fN1m/TyZMt5EXiDwB96qCaumIAkssFgFE2Lw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lQmZOgbikKO9Qgr9Pdcmu5i2uSlf+vnGLW5o/yd9RbPxtb/OUIM6TvQov5m7eS0IA93qmM2I79xYww3SZIj7wzgvYi7T6SNVpxenOvsQwaikZWqAyxqV1FywUyks25xTmGly8r78o4aSdUGs7+ZkjpzgE5ZbRI1AqhN7NytA2nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=JAx2E2LP; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1748369244; c=relaxed/simple;
+	bh=UKJYZ6cmRfc4HcZtUDu8cdSyp3ZTcwZXFnyTUcRgO9g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=kulmz3stj8i9F84u5SGmhowUACMuwtXSxyxMFkP230B5PPNRas6N/IVvSp+GZZA98z4T/Cy94D+cyIMpLU3UBF+qo+qC2TdnIGGPhxTqEaZu+O3ThcxxaCK/LqWTt1NDnBvrOwssTXDU03mcAu9OCzq+0FeRSmuhoXpir1YjafM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1O6tAq7p; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="JAx2E2LP"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b6L6G48htz9sRk;
-	Tue, 27 May 2025 20:01:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1748368870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WDYlu01ERbR/ASESDCpdVLMfWx7Sul+gusj5BFguHbc=;
-	b=JAx2E2LPxX/GiBDVDJWYxbga4OGfdUGa6ljxiOeDxJIaivADn5M8vIIkuB4R6ksdfzLQdy
-	thbZ9KqY9mRXC2nxJPzkD2p6tcE3lLz/plUI0av79uByUYqWdwU3yuDhCPnZ2zie1HrCFP
-	1qwFWtj0HaEzJ3T800KRKKPmTewtI17BfxkFi2fMq4TsfFjsBV/anLEKYpLAlTCCkEM3Jq
-	Ek3UoE7/zHNN4RnOUwGsRUiIcvpUSvVQtXcWw5i7HkcwbcAMMLNCnkjGj9bt9PGEalbbKU
-	jBCbnODDEpfDdHlYSPaKmeRz1Wyceextp9oSaAODxjdccPtcBgFUCkoJz89+xw==
-Date: Tue, 27 May 2025 20:00:50 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>, 
-	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-block@vger.kernel.org, willy@infradead.org, x86@kernel.org, 
-	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
-	gost.dev@samsung.com, hch@lst.de
-Subject: Re: [RFC 2/3] mm: add STATIC_PMD_ZERO_PAGE config option
-Message-ID: <5dv5hsfvbdwyjlkxaeo2g43v6n4xe6ut7pjf6igrv7b25y2m5a@blllpcht5euu>
-References: <20250527050452.817674-1-p.raghav@samsung.com>
- <20250527050452.817674-3-p.raghav@samsung.com>
- <626be90e-fa54-4ae9-8cad-d3b7eb3e59f7@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1O6tAq7p"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742a969a4d0so2893322b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748369242; x=1748974042; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D2EQVFnLCdguVRIPsu3XiE+bWSQOprE3/LWQz5iARng=;
+        b=1O6tAq7p+JQnujbe+Z1hyowc6gbrCnLPUo+W/DfKQfgYKixRceAcVF3Jylx6o3JGaY
+         jN0A0quXv+hsHAX6aV/NsymGvqAAkxKUqXZajvu6Z++yIfAjsAhYzR91d/T/AQJJ1Gfk
+         vO8fvA6dLXfjtt8mfNkYE0tCvggcLHpAusbtOEylHjrXiwv0NIkFRbG1ARHy/oVov2qw
+         oL8TyMqzic5RRqdKTB6JYO8OR0w/GKwrGOUCYsp8qYJygZFMug5K6S8v4LaFtTkri7H7
+         KXLBsAdmB9EVGOAxun3+dvoz/YVb8v/37CQcjBFCRIeCK07j4twQFGTbeuMtKF4yJ5Hb
+         mwtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748369242; x=1748974042;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D2EQVFnLCdguVRIPsu3XiE+bWSQOprE3/LWQz5iARng=;
+        b=GfWxHABtr79sAbZcEeTMhMcMy+8IfitiUXVMdUde604w2rC6EWX3T4WyPj7ScmAWqC
+         2E8gc1i6Feeege4FS4tTQO5i+dfZnF4bHRlCo9DnunPCm1xLP/5e2G4ESiDR3A1zZzqa
+         IdSF/L+spKMTA8+czPlzmHPqang80HzH6/wjVDrV6rXtVlDuN3Wry/n6XWLML8lOM73v
+         FeO3Kor48KpBdzRIXkuElLH06ps/t1Dsadw1MN2UOMQ2xy6G13B+NuUCspkWmV/dny55
+         M/mzzqV7DM52LNQRZ7gCq8ErlY0rcCsXzFgNAyrJznl7xAF99YqzKOrd9Ie20+hQDjIE
+         /XhA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2PjZoaZFBmYJs8SF8qq0pnnaNQCcdjMZUlwUGhbuR29WwTKoIjiS9k7qJMTeiCIAkLnH6WWJkNraKtkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDyDrG8rvntrOMna4Yq8NyJVPUgQBFY3RYrQFw2kiVZg9z/WIB
+	0w9K+PNsR4pK0DBUKCp4BwTDcpN9sRTavTx+1AoUNiMpW0NPr6O5bKy9mSWQNh+ZW10cS5yhk/1
+	aiShnGjZvxg==
+X-Google-Smtp-Source: AGHT+IHmu0uWq1DhUhYZoSb1xLAzjCxuKAMOLpQEojTlSNXl2HZz+xJz+qapdhW4NW4CJmop/Wsycl1Xx6HG
+X-Received: from pftb15.prod.google.com ([2002:a05:6a00:2cf:b0:746:2897:67f3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:c88a:b0:206:ad2b:aa9a
+ with SMTP id adf61e73a8af0-2188c3b2f3fmr24135257637.36.1748369241557; Tue, 27
+ May 2025 11:07:21 -0700 (PDT)
+Date: Tue, 27 May 2025 11:06:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <626be90e-fa54-4ae9-8cad-d3b7eb3e59f7@intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250527180703.129336-1-irogers@google.com>
+Subject: [PATCH v1 0/6] Various asan and test fixes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 27, 2025 at 09:37:50AM -0700, Dave Hansen wrote:
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 055204dc211d..96f99b4f96ea 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -152,6 +152,7 @@ config X86
-> >  	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP	if X86_64
-> >  	select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
-> >  	select ARCH_WANTS_THP_SWAP		if X86_64
-> > +	select ARCH_WANTS_STATIC_PMD_ZERO_PAGE if X86_64
-> 
-> I don't think this should be the default. There are lots of little
-> x86_64 VMs sitting around and 2MB might be significant to them.
+When testing removing perf_env with asan I noticed a number of test
+failures either because of asan issues or because of building with
+NO_LIBELF=1 and NO_LIBBPF=1 to avoid false memory leaks. Address these
+issues so that real test failures stand out.
 
-This is the feedback I wanted. I will make it optional.
+Ian Rogers (6):
+  perf symbol: Fix use-after-free in filename__read_build_id
+  perf test demangle-java: Don't segv if demangling fails
+  perf symbol: Move demangling code out of symbol-elf.c
+  perf intel-tpebs: Avoid race when evlist is being deleted
+  perf test intel-pt: Skip jitdump test if no libelf
+  perf test trace_summary: Skip --bpf-summary tests if no libbpf
 
-> > +config ARCH_WANTS_STATIC_PMD_ZERO_PAGE
-> > +	bool
-> > +
-> > +config STATIC_PMD_ZERO_PAGE
-> > +	def_bool y
-> > +	depends on ARCH_WANTS_STATIC_PMD_ZERO_PAGE
-> > +	help
-> > +	  Typically huge_zero_folio, which is a PMD page of zeroes, is allocated
-> > +	  on demand and deallocated when not in use. This option will always
-> > +	  allocate huge_zero_folio for zeroing and it is never deallocated.
-> > +	  Not suitable for memory constrained systems.
-> 
-> "Static" seems like a weird term to use for this. I was really expecting
-> to see a 2MB object that gets allocated in .bss or something rather than
-> a dynamically allocated page that's just never freed.
+ tools/perf/tests/demangle-java-test.c   |   5 +
+ tools/perf/tests/shell/test_intel_pt.sh |   5 +
+ tools/perf/tests/shell/trace_summary.sh |   6 +
+ tools/perf/util/demangle-cxx.h          |   2 +
+ tools/perf/util/intel-tpebs.c           |  12 +-
+ tools/perf/util/symbol-elf.c            |  86 ------------
+ tools/perf/util/symbol-minimal.c        | 175 ++++++++++--------------
+ tools/perf/util/symbol.c                |  87 ++++++++++++
+ 8 files changed, 185 insertions(+), 193 deletions(-)
 
-My first proposal was along those lines[0] (sorry I messed up version
-while sending the patches). David Hilderbrand suggested to leverage the
-infrastructure we already have in huge_memory.
+-- 
+2.49.0.1204.g71687c7c1d-goog
 
-> 
-> >  menuconfig TRANSPARENT_HUGEPAGE
-> >  	bool "Transparent Hugepage Support"
-> >  	depends on HAVE_ARCH_TRANSPARENT_HUGEPAGE && !PREEMPT_RT
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 11edc4d66e74..ab8c16d04307 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -203,9 +203,17 @@ static void put_huge_zero_page(void)
-> >  	BUG_ON(atomic_dec_and_test(&huge_zero_refcount));
-> >  }
-> >  
-> > +/*
-> > + * If STATIC_PMD_ZERO_PAGE is enabled, @mm can be NULL, i.e, the huge_zero_folio
-> > + * is not associated with any mm_struct.
-> > +*/
-> 
-> I get that callers have to handle failure. But isn't this pretty nasty
-> for mm==NULL callers to be *guaranteed* to fail? They'll generate code
-> for the success case that will never even run.
-> 
-
-The idea was to still have dynamic allocation possible even if this
-config was disabled.
-
-You are right that if this config is disabled, the callers with NULL mm
-struct are guaranteed to fail, but we are not generating extra code
-because there are still users who want dynamic allocation.
-
-Do you think it is better to have the code with inside an #ifdef instead
-of using the IS_ENABLED primitive?
-
-[1] https://lore.kernel.org/linux-fsdevel/20250516101054.676046-2-p.raghav@samsung.com/
-
---
-Pankaj
