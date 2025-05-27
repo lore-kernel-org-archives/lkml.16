@@ -1,57 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB890262FF5;
-	Tue, 27 May 2025 13:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8F134AB;
+	Tue, 27 May 2025 13:49:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353672; cv=none; b=C4qT2lfo6PbgaA9IGtVLcgM7ajA8DbtoFa5LWpszKnMiY/nAOr8TEOUH5ZgPCVyc5YfnhbtoAj9NV2NTPNw51LHwHek+Jblq6jpAJ+njKbP3BalnkMGEcVX+LR6kQlNdEsVjc8XvQn831TOyx/eHrhQVJ/wjfyt5pDJGrnGpm/A=
+	t=1748353794; cv=none; b=g3cyv6H9GbUr1CWYLTK28dLH/WhlQ80/Re2MrXaJpFVwkf7vqWaoo9UFdZPgokRHGkYFaVbaduJxOaK+vni4Jkdafw+ULKEMp4zxP0qzjCmTgZIXi6bZU8991aMaXGPRyRVo04HExUYPsCS/zIVB7wQoGo5/vCF1GgLMLup5288=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353672; c=relaxed/simple;
-	bh=Sjm8Kp0xGaQd/X+6jC8orqiUg+fXnCLx1tvsGr8dkxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YGjBsFMJvjehIZ1E2MibmBH//jD+x2X6uaTL6zZ9inEEB3iT5zqNaP7kl8vFhYf5X+7Nilr1uSDZF4lAHB31oBNFiEO0qWQ7Jdlq6se2tQa4azNCLhkPNbUIkp9pOFoHPL3gBIa50W7JPxNB0holSWgImkJSixdanlud44y1nak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99509C4CEE9;
-	Tue, 27 May 2025 13:47:51 +0000 (UTC)
-Date: Tue, 27 May 2025 09:48:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-ID: <20250527094849.49e56eaa@gandalf.local.home>
-In-Reply-To: <20250526124403.3bf41a0634733b640620ad8a@kernel.org>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-	<20250523192053.47054e6e@gandalf.local.home>
-	<20250526124403.3bf41a0634733b640620ad8a@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748353794; c=relaxed/simple;
+	bh=uH0uz40juE5V9Ge8tLOFlAbLYizJ/RQQk47dwWh3YnU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=X3P0xmhNR+ae/5zvq2GAqUxok1U/Ft5aGU9W6KpGQzyiQB2LBLcIr1k/h95kaQxA2UKKfBfu10uiYsoQ2uSby9WAnlhRqhdetMzVmMyam0sfkhbI8RjGoaA474j0XmgxBYjZJ0Rc8W60rC+/G4Ct8rrjmgM2WK7nEdnCxjGFmQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtyhFOCL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtyhFOCL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDC2C4CEEB;
+	Tue, 27 May 2025 13:49:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748353794;
+	bh=uH0uz40juE5V9Ge8tLOFlAbLYizJ/RQQk47dwWh3YnU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=UtyhFOCLtHlywTIBuiFUEFbfO2zf/CcQ2oFV41vd9SA0Y1LlnFiCYqZlqJsOYYiC0
+	 pykplu2fUtvFv7K7j1wM8ADjaW5op0w26j0VC9RPuV6stfCkukrYGme9lLkPrRffYx
+	 Bj56pjYrMCMQHOLp98cYT7bHf6gyFK5kJ3mIN7/sBu5Nw2Hhqkp1WM6KChl+cFnPw5
+	 I0Uc6GcG8r6qdMw+/pGJq3wdp612k9ffbJNGWhVJ8+3MraGPZOSHhi+aLsFnSQt2m1
+	 IMEzoIhf3LaOjMKkttIGnc+agl+6dC4ON47vozAJY1MlisPxNIYVbCuMyeuFmxceTu
+	 Tlqix/J64upyA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE9C380AAE2;
+	Tue, 27 May 2025 13:50:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] af_packet: move notifier's packet_dev_mc out of rcu
+ critical section
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174835382850.1645024.12860246850484744014.git-patchwork-notify@kernel.org>
+Date: Tue, 27 May 2025 13:50:28 +0000
+References: <20250522031129.3247266-1-stfomichev@gmail.com>
+In-Reply-To: <20250522031129.3247266-1-stfomichev@gmail.com>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, willemdebruijn.kernel@gmail.com,
+ horms@kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
 
-On Mon, 26 May 2025 12:44:03 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hello:
 
-> > 
-> > Now the question is, can this affect the persistent ring buffer too? I'll
-> > memory map the buffer and see if it causes the same issue.  
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Wed, 21 May 2025 20:11:28 -0700 you wrote:
+> Syzkaller reports the following issue:
 > 
-> Yeah, it can happen, but I didn't hit that.
-> Let me test it too.
+>  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
+>  __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
+>  team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
+>  dev_change_rx_flags net/core/dev.c:9145 [inline]
+>  __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
+>  netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
+>  dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286 packet_dev_mc net/packet/af_packet.c:3698 [inline]
+>  packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
+>  packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
+>  notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
+>  call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2228 [inline]
+>  unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
+>  rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
+>  rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
+>  rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
+>  netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
 > 
-> Hmm, BTW, is there any possible solution? records the consumed
-> bytes in meta data?
+> [...]
 
-After memory mapping the main buffer, I found a couple of bugs. I'll have
-the fixes out shortly.
+Here is the summary with links:
+  - [net,v2] af_packet: move notifier's packet_dev_mc out of rcu critical section
+    https://git.kernel.org/netdev/net/c/d8d85ef0a631
 
--- Steve
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
