@@ -1,141 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E2F15853B;
-	Tue, 27 May 2025 14:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6263519005E;
+	Tue, 27 May 2025 14:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748356777; cv=none; b=Omr8LiVxt+CzYQNHHsX18cHAeHSXEEQ+c12/eULud8rfS/xLjpXtAAFblOCLQMQyplfoDnAv6f/p95DSqhtOgndJy4++hbN16GOq74kh4/rugbakVFZ6aOHLPyE1uQv/KBz7MPdbTAjEpTkgGVPqun+A5pQPBBtEV2byq5ysiCM=
+	t=1748356929; cv=none; b=GNUPZ8fUY47RzWalwiGLObDRfc/u4FxSYhGW672CwKj7VVcBVH1/q8kYEE6vIh66jOrlOBqEHwby6NmgmNtdOybGzSYgEqQw3bLvfDbVmOwFkzB2pa3e75Zrh+CBbPtIXrCLVtnk4pAxaEehIwLnHW4vy3jpQsNMDlP6jZf0pSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748356777; c=relaxed/simple;
-	bh=SIHiBuhpjPK/1AtoijPPLN7AI4IqXBz7Iaq9I7uU1FU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bz5o7p1BrTjel2yBWkAMf28VqfbR8gNQrVuQP81uNOJGwL6iy5Zr7tir8JWRHfp8kd8L0NCpWyE1V6HomybOGfFsIOfFNZ7EsyaNKfiR1ThEriRb8qHbToeNTlECvgLlxYcDavRM6Ezo4tpy03CARB5SWOVBrOa0ibV9lK3/g8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZDpTc8I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748356929; c=relaxed/simple;
+	bh=MOQTquOiYjtW1e5l0oNNoSU16XwMR2fQ9/z9D7F3yvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnxkPX8lMHa6N3MshswX73ADTxYujOaMM7+hFonYHrPMZ3IRLctPKa2p8GnJzYkGkYy4BbNF9m8YYo/DFLHkaexjG48ZuJjO1eGyM0fd1zxirwkhXQywgXKKyINPo3GjNnUqe765j+qnYTXR6DHV0Z3xXPcaWN0hU+p8Df45FYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YMu/X2AH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=idX/Bz5g; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZDpTc8I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6750FC4CEE9;
-	Tue, 27 May 2025 14:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748356776;
-	bh=SIHiBuhpjPK/1AtoijPPLN7AI4IqXBz7Iaq9I7uU1FU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IZDpTc8IzRgKdv1zX5MrPbKN19+wzSY+NBMXsU73mRn/C3V3Rg33h1YJ+L7GLtJoj
-	 sz/9XpbV2MrHGQhXcJLpoWsfafqcPlFqBE0/25wKCOpbyKizkz/3YgO1MPsMV1kEEN
-	 WoAS2CAybUcKcs7GL6W9+UU6rQvemC+c01OdJecEX1hXlbNTpGU2MZ2rU3BHgJIls5
-	 QvtGWeypR86j+6BvWwF3fwf/yAtA4PDbWsomHw0KNrRaoB9UfP2b5RGgH6isafP6x5
-	 u4Y/f1asnKlT5GYOA7PVKZITQDCkDRGuJXTjizyqaFuiQaXGn7KZQPl2gHt95nGRw7
-	 Jcz54BgLU9ttw==
-Date: Tue, 27 May 2025 16:39:27 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Albert Esteve
- <aesteve@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, gurchetansingh@google.com,
- daniel.almeida@collabora.com, adelva@google.com, changyeon@google.com,
- nicolas.dufresne@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, virtualization@lists.linux.dev, Alexandre
- Courbot <acourbot@google.com>
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Message-ID: <20250527163927.02924adc@sal.lan>
-In-Reply-To: <20250527102111-mutt-send-email-mst@kernel.org>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-	<20250526141316.7e907032@foz.lan>
-	<20250527102111-mutt-send-email-mst@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YMu/X2AH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="idX/Bz5g"
+Date: Tue, 27 May 2025 16:41:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748356921;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vh0GtLb/Ro7bDE/Iu+FS0sqb8Nr1hUL02cjCHkGR5g0=;
+	b=YMu/X2AHwCq8GaB+oFHkv2LrN5ufD3osVAKu0cG1NEqe24amEjMIXVFkGvUqzSlVSu2k0B
+	FtefRaXF54fQj7AZba0tCqSP9BwqP2tMz/QJY9F65XXJenLdsetbyFT7aAUY/0F34klng6
+	LXspOd6A02gxBeo21QQqgcEuP4R+sTY3RP/xul/hi+c/7MLJWiU4oT06bGMcBb88ms4lwJ
+	IpMkQo8EM3Jiptyk2Mowoo/LIbCBnVmzJzxuajXBeuQ0WWCKhCJsKl+bO/ADxx/c/+XO77
+	zS1n9NfZQyhEl4V13RAz48ydU6xzRoIELkS/ItLjRUeAPiM5+vtLIDgNw0Sj+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748356921;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Vh0GtLb/Ro7bDE/Iu+FS0sqb8Nr1hUL02cjCHkGR5g0=;
+	b=idX/Bz5g9vlEwoGrjguSpkjCSW9yPyhtB/23GwA3bVwvKweikbbjEtaBzdciETa8c9Q5n7
+	YXAFeY/utojEwxDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Paul Cercueil <paul@crapouillou.net>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Subject: Re: [PATCH] Input: gpio-keys - fix a sleep while atomic with
+ PREEMPT_RT
+Message-ID: <20250527144159.Dcstk83c@linutronix.de>
+References: <20250526-gpio_keys_preempt_rt-v1-1-09ddadf8e19d@foss.st.com>
+ <20250526141321.FcXEgnV4@linutronix.de>
+ <661af124-3072-4dcf-b613-ec3e48549626@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <661af124-3072-4dcf-b613-ec3e48549626@foss.st.com>
 
-Em Tue, 27 May 2025 10:23:32 -0400
-"Michael S. Tsirkin" <mst@redhat.com> escreveu:
+On 2025-05-27 15:36:37 [+0200], Gatien CHEVALLIER wrote:
+> Hello Sebastian,
+Hello Gatien,
 
-> On Mon, May 26, 2025 at 02:13:16PM +0200, Mauro Carvalho Chehab wrote:
-> > Hi Michael,
-> > 
-> > Em Sat, 12 Apr 2025 13:08:01 +0900
-> > Alexandre Courbot <gnurou@gmail.com> escreveu:
-> >   
-> > > Add the first version of the virtio-media driver.
-> > > 
-> > > This driver acts roughly as a V4L2 relay between user-space and the
-> > > virtio virtual device on the host, so it is relatively simple, yet
-> > > unconventional. It doesn't use VB2 or other frameworks typically used in
-> > > a V4L2 driver, and most of its complexity resides in correctly and
-> > > efficiently building the virtio descriptor chain to pass to the host,
-> > > avoiding copies whenever possible. This is done by
-> > > scatterlist_builder.[ch].
-> > > 
-> > > virtio_media_ioctls.c proxies each supported ioctl to the host, using
-> > > code generated through macros for ioctls that can be forwarded directly,
-> > > which is most of them.
-> > > 
-> > > virtio_media_driver.c provides the expected driver hooks, and support
-> > > for mmapping and polling.
-> > > 
-> > >  This version supports MMAP buffers, while USERPTR buffers can also be
-> > >  enabled through a driver option. DMABUF support is still pending.  
-> > 
-> > It sounds that you applied this one at the virtio tree, but it hasn't
-> > being reviewed or acked by media maintainers.
-> > 
-> > Please drop it.
-> > 
-> > Alexandre,
-> > 
-> > Please send media patches to media maintainers, c/c other subsystem
-> > maintainers, as otherwise they might end being merged without a
-> > proper review.
-> > 
-> > In this particular case, we need to double-check if this won't cause
-> > any issues, in special with regards to media locks and mutexes.
-> > 
-> > I'll try to look on it after this merge window, as it is too late
-> > for it to be applied during this one.
-> > 
-> > Regards,
-> > Mauro  
-> 
-> New drivers generally can be merged during the merge window,
-> especially early. 
+> Can you elaborate on "This flag change makes not difference on
+> !PREEMPT_RT" please? IIUC,this makes the callback not run in hard IRQ
+> context, even in !PREEMPT_RT, no?
 
-Sure, but this one was not reviewed or tested yet by media maintainers,
-nor its submission came with the tests from the regression tool
-we use (v4l2-compliance). In particular, we need to double-check
-if it won't cause any issues with the complex set of mutexes and
-spinlocks that we have within the core.
+If you set
+- HRTIMER_MODE_REL_HARD
+  then the callback runs in
+  - hardirq context on !PREEMPT_RT
+  - hardirq context on PREEMPT_RT.
 
-There is an additional concern related to V4L2: on media, only one
-process is allowed to have exclusive streaming access to the
-device: all other opens on the same device get permission denied
-(by default - there is an optional ioctl that allows a process
-to "abdicate" its streaming rights). We need to double-check how this
-is implemented and how this would behavior when multiple VMs have
-the driver installed and might try to use (or not), and how this
-would affect the host access to the device.
+- HRTIMER_MODE_REL
+  then the callback runs in
+  - hardirq context on !PREEMPT_RT
+  - preemptible softirq on PREEMPT_RT.
 
-There are also some coding style issues that cause our CI to
-complain. Those are minor and could be fixed by a separate patch,
-but better to have them placed altogether as otherwise our CI
-will keep complaining about until the fix is merged.
+- HRTIMER_MODE_REL_SOFT
+  then the callback runs in
+  - softirq context on !PREEMPT_RT
+  - preemptible softirq on PREEMPT_RT.
 
-On other words, this driver is not ready for merge yet.
-We need some time to test and review it properly.
+Therefore if you switch HRTIMER_MODE_REL_HARD -> HRTIMER_MODE_REL then
+it is a nop on !PREEMPT_RT.
 
-> It's up to you though.
-> I can keep it in next for now, so it gets some coverage by
-> tools scanning that tree.
+> Regarding the need of the spin_lock: gpio_keys_irq_timer() and
+> gpio_keys_irq_isr() appear to access the same resources. Can't we
+> have a concurrent access on it from:
+> HR timer interrupt // GPIO interrupt?
 
-Sure, feel free to keep it on next if you prefer so. Just
-please don't submit it upstream while we don't review and
-properly test it.
+Yes, it could.
 
-Thanks!
-Mauro
+> But looking back at the patch, this situation does not depend on
+> the HRTIMER_MODE_REL_HARD flag. So maybe it should be addressed
+> separately.
+
+Yes, please.
+
+> On the other hand, I should use the new
+> guard(spinlock_irqsave)(&bdata->lock);
+
+Yes, please. The other instance already does so.
+
+Sebastian
