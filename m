@@ -1,83 +1,63 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825E27C854
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A924B280A29;
+	Tue, 27 May 2025 18:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748370011; cv=none; b=c+TPNzBuxNNa4hf+RMl2VUh7l4iFimNsNZeG2z0x1TxOwW/DfmOv58gfpuK27gd6ZgDeluSRYXuBaurbjkcoVF5lCel0/cKnePrLSDdIzh2qm4h+6ZfSc0fA9sXrb+OUZfWEyYsfqGTSxblbh/w6WQHHz3mTkSCOsXNKnz7oltg=
+	t=1748370604; cv=none; b=CCsFTzUMpmHQps2TcXOC6QLE2WONyQaO8y3axrHvsrSa95P/VJufa8zlG/F3hafIWSlerNDxN1+sFBXLe1KPQfACQ3XwEwd3qeZ4SQmFTYBER3LdbnuZ0W0wSNyzHOKQDQe6yoEXX2k9IMTIwj15T0/MH0jIdW9ImsndDyFFAE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748370011; c=relaxed/simple;
-	bh=sEVi5xn73Yeh8Ap0foTsEMNSOsy1XzgbIiNqMSAIwJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CqALyC5YHasBCtPKP6xDBoVEF1Xnl+rLjVTdXEfjhLzrC9FUw3SUUwHbjihl2l9VHh4KQfmpruzLo5pKw8w4sD30ZYkafRfX/KhAQg2Q4GbPqCN84rAjl6AeSu7Hf8WXYSfBNro/goLOxip6fFOgVqHTGel8i3rv4wFBFhOFLBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TmluuGYR; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748370604; c=relaxed/simple;
+	bh=x8nohniNrv53iKOKTJFFfJIzJ6uEbtiV0a4buh0VcwI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NRy1QGu2rM149KXrwmeVuwWTu+dfN8luNAKjZOaxNoLSUiNgoH29snDsKb5eSKE17IkJEC5mYDNka4kXsZPraoG9Y+3RU6nf5Y3RhBgFqCldQgd9PoE38Rd6eC+gSaXjwArYiwbtGubKDAVphMQClXs6B4DZsigqtr/AgFxcsSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4GgRw+T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TmluuGYR"
-Date: Tue, 27 May 2025 14:20:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748370007;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sEVi5xn73Yeh8Ap0foTsEMNSOsy1XzgbIiNqMSAIwJs=;
-	b=TmluuGYR+8ufeptzGamzCM6BbJrYwElWoCgkbSVRJ2on/KIiqARqnAGc2G1361RJbWJt4i
-	980JOAAEuLjQQfoK9+/jiee7IAfBmpFbuyK9nI82ie00emWY9rGJZT50UppCLNaI6yiZqc
-	ddV9CDv05P2Nh7u1B5yIu9UMpvHxbvc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-Cc: linux-bcachefs@vger.kernel.org, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH bcachefs-testing] bcachefs: fix goto jumping over guard
- initializers
-Message-ID: <62qt435bsvvhstxhn2utpio7owmk6ddjuyzkjv3tvbnh2f5xoz@56kd22dgyjqg>
-References: <20250527173116.368912-2-bharadwaj.raju777@gmail.com>
- <CAPZ5DTE1z=PPm+v718ZfgYg0oJkEKHJ-pxrSjSGTmxQVqzaP7A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4GgRw+T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803F8C4CEEB;
+	Tue, 27 May 2025 18:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748370604;
+	bh=x8nohniNrv53iKOKTJFFfJIzJ6uEbtiV0a4buh0VcwI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=S4GgRw+TXJYSiGcxDODjjgLMz0F8ke6o7FQ9iSyXfDcQkNTw5WEgTFxcds/RKlskz
+	 cdDod5JvdB3RgtimpiKCGhK/5dWUL0PIXCKMT61DW6R+7ERJPcJPGxTVN8CVu8mb9g
+	 xrNsOni/KHA8Hpz0Wdqvus3b8nauBOvKCOisifEIod/XqL63/DUKCo9BsHNCNMOjh7
+	 9y4dDqC8HhTy/vb5WXw6ziYCUJQDUY1SD9oG0ZUh3gfqGlMk5GPWSnFu+WBWCln3ub
+	 tkJsi9mXFYQZ8RwQyUx0UZU1csU3wgZd8nj6sOpy9WKG1cmpCe56h4f/ChlVtUYzc7
+	 ytXSfL2iMTBdA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB07F380AAE2;
+	Tue, 27 May 2025 18:30:39 +0000 (UTC)
+Subject: Re: [GIT PULL] LKMM changes for v6.16
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <737fd7ca-57d8-47cc-b6d4-e3e701ffc733@paulmck-laptop>
+References: <737fd7ca-57d8-47cc-b6d4-e3e701ffc733@paulmck-laptop>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <737fd7ca-57d8-47cc-b6d4-e3e701ffc733@paulmck-laptop>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/lkmm.2025.05.25a
+X-PR-Tracked-Commit-Id: 5c9e0062989e5d2bd77b75c432b54e8ec7689bc7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 95bf3760eb9ceeb93febdc280695347b1e0a89c1
+Message-Id: <174837063859.1737688.403829334979452106.pr-tracker-bot@kernel.org>
+Date: Tue, 27 May 2025 18:30:38 +0000
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, lkmm@lists.linux.dev, kernel-team@meta.com, akiyks@gmail.com, urezki@gmail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPZ5DTE1z=PPm+v718ZfgYg0oJkEKHJ-pxrSjSGTmxQVqzaP7A@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 27, 2025 at 11:09:00PM +0530, Bharadwaj Raju wrote:
-> Now I'm actually not sure this is the best solution -- the comments in
-> include/linux/cleanup.h say that gotos and cleanup helpers should never be
-> mixed in the same function in the first place. So ideally we should not use
-> these guard helpers until we develop helpers for everything that
-> we want to clean up using gotos, like printbuf_exit, bch2_trans_put,
-> and so on, and then switch over everything at once.
+The pull request you sent on Sun, 25 May 2025 21:41:36 -0700:
 
-I believe that's too strict; a goto that jumps after a CLASS()
-initialized object in the same scope clearly doesn't work, and probably
-the same is true for a goto that jumps backwards over a CLASS()
-initialization in the same scope (doesn't come up as much, haven't
-checked).
+> git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/lkmm.2025.05.25a
 
-But a goto that works like a break statement - jumping forwards out of a
-scope with a CLASS() object should be fine, and likewise for gotos that
-stay in the same scope and don't jump over CLASS() object initializers.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/95bf3760eb9ceeb93febdc280695347b1e0a89c1
 
-(gotos that jump backwards out of scopes, or forwards into scopes, are
-really problematic for compilers to model; 'break' style gotos are much
-easier for them).
+Thank you!
 
-So we should be ok with those rare cases fixed, and I'm running the full
-test suite on this series with lockdep/kasan/leak checking enabled.
-
-Agreed that it would be good to get everything converted. I've already
-done printbufs and btree_trans objects, but we still need darrays,
-wrappers for various device/filesystem refcounts (and the
-for_aach_device() macros might be tricky to convert, but worthwhile),
-and btree iterators.
-
-Btree iterators have an exit function that takes a pointer to
-btree_trans as well, and it didn't look like DEFINE_CLASS() could handle
-that directly - will have to look at how the lock/unlock guards work.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
