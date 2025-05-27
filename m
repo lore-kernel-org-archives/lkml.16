@@ -1,1050 +1,360 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF1C27FB37;
-	Tue, 27 May 2025 16:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362404; cv=none; b=stTGrxDfdF5C6iVqm8s8VJow4UXH+S54v0tdqtDJamYAmbvm4qBLnLX+b9eBunMCNr3YyPCA8pqrI6xL3JoLh2mSKtw/VkaunBf0DdQr5tJOGSb48+sQxGDgFOyKIKN1p7izOxxQV1XbcrL+2KOlDueLpm52fAy/cjQXkQnXkHM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362404; c=relaxed/simple;
-	bh=kmMX+GkGR9axqSbAjID1j8vCBlR6hD5FW6lEQImX2LI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZaRWwvMMRxdSyN1qZmeX4bPEecCu1OuIJ9K7lTflpPqbkbDTqAsOa1Amqu9l7BTcYfma+2+JvQavYmCfU/oNmseYTzgI5cQGEf7aLqyGJGXWYq37PFyLMvcJxv4TpUOIdTwjfjl10wHx1GcUcjUH2s+Hi/N2dpCqR7I19OnWtvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEz8u2QX; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE776280317;
+	Tue, 27 May 2025 16:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748362411; cv=pass; b=NLZUpbwENiJ7Q77OOX79jx0RKJE3HEsDR+W2cOEMR0qij17N5+1BdyDSGTDUJJ4KNOwBTD/5jRq4fC64Oio7ECmdeKFh1oCekUosAdGALBgK7+IGwjwCkAGwzxRntD4HG2YOQJb3+zN0xQ4x8N0t4COCKCCVt3VG6eGgsEpXbbc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748362411; c=relaxed/simple;
+	bh=MtovqB07mekIUVxK+TTED/RWWoatLRpS90zs2V73pnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gYKlPsg0A8VBMpNyuPnSnbiKc8t4HRpqfEU2POPHzMSDvEPsjMZTlm4aNzkh/aazCxW9D3X0OxWxL6G+/LiQjoVMpz1Rdu0snOHzAdEyuIE9LrOATBmI4gLUK5V+NTpVNh/HYqTBhQa9CiiGQtKPa3nHs97oljA60dZ+rc1EM/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=C/vAoEXa; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEz8u2QX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E30C6C4CEEF;
-	Tue, 27 May 2025 16:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748362403;
-	bh=kmMX+GkGR9axqSbAjID1j8vCBlR6hD5FW6lEQImX2LI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KEz8u2QX8M2o1iUWabR/qZOxKeAzaSlxQPtjl1Cu4Xlx9b0uKwB3Ivvv8ZJD1+Db2
-	 AnSMrjMjjXya+vmy308Bff1DrvIFLyhcYNjRAgFTK8ope/Tn/F3p4ZV3MyI3CGTicc
-	 iMe0P5vZI2lefXVdKyJZpzQOrhyApciIyiysTLRhX/3lOFMwwO4G+PB23CIqujGVxt
-	 47bTFi4pLxLdzsUqVItQ6ufIndnOE7Ki/UtcPUU8e8QUVVqNZzAXJ9OpuTCjXmssbX
-	 0qq82VZp1uKBbryyguAmpgw72GGxaSz2tjeASxto2aZ0gjDnlgvZNKbS6hE6qowN8y
-	 xEhVsdGaOAChA==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 27 May 2025 17:04:47 +0100
-Subject: [PATCH v2 3/4] selftests/mm: Report unique test names for each cow
- test
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="C/vAoEXa"
+ARC-Seal: i=1; a=rsa-sha256; t=1748362373; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NtLpvLpQ2cD63d250UpW91ucrcTkFj1f268fArWsk1u0o/kHwWNsaYZSuleG296zWy3w8a7PG18svX8qDwOhyaemO3eVLgjRsbTCn7KxRn+0a1DbBvUefz7VfffP1yqe6c3uCcTLXJOrpypVF4vIhjd7k9h/QU29ZgelazuHqGg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748362373; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=MvbyqxXVQNHC5mh6gd7gRMge22HJjHVERWcwOyMawoE=; 
+	b=Vyox1T7l5q/yil934iO+YkaxMAvKkeRaD7cqrreD9GitZ7Mr16O2LXJ3Fm3Oo4aJefi/slTn11y52TYxRAe4Qw618h3J13rWiZV1/GHJX47qF/yDC0Q3vQQmfLIiLpzYhG1YcIcZlxwgM22ZhV/s/0UnB69YG9hs6iILScA1rTU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748362373;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=MvbyqxXVQNHC5mh6gd7gRMge22HJjHVERWcwOyMawoE=;
+	b=C/vAoEXaySIIVAT1HZQUZly5ajYDs7+nr4uXNyc2cQLvEjQVIZ/hOUJeJGWaKZYe
+	srPw5HghmqrPUS3MWNv8STkH6nrwjVcUyOwF8rPGPMR/UX5/jXHjl2c8YROE7yoXIrA
+	Cl1W+kaVJNWEPDecgKuNg6i12tqaN9SEDEH5cFtk=
+Received: by mx.zohomail.com with SMTPS id 1748362370680719.5901778529433;
+	Tue, 27 May 2025 09:12:50 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: dmitry.baryshkov@oss.qualcomm.com, heiko@sntech.de,
+ linux-rockchip@lists.infradead.org, Andy Yan <andyshrk@163.com>
+Cc: neil.armstrong@linaro.org, sebastian.reichel@collabora.com,
+ Dmitry Baryshkov <lumag@kernel.org>, stephen@radxa.com,
+ dri-devel@lists.freedesktop.org, hjc@rock-chips.com, mripard@kernel.org,
+ linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ devicetree@vger.kernel.org, yubing.zhang@rock-chips.com, naoki@radxa.com,
+ Laurent.pinchart@ideasonboard.com, Andy Yan <andy.yan@rock-chips.com>,
+ krzk+dt@kernel.org, robh@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/9] drm/rockchip: Add RK3588 DPTX output support
+Date: Tue, 27 May 2025 18:12:43 +0200
+Message-ID: <2278911.CQOukoFCf9@workhorse>
+In-Reply-To: <20250403033748.245007-4-andyshrk@163.com>
+References:
+ <20250403033748.245007-1-andyshrk@163.com>
+ <20250403033748.245007-4-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-selftests-mm-cow-dedupe-v2-3-ff198df8e38e@kernel.org>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
-In-Reply-To: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=32876; i=broonie@kernel.org;
- h=from:subject:message-id; bh=kmMX+GkGR9axqSbAjID1j8vCBlR6hD5FW6lEQImX2LI=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoNeSahnSgpwV12iycNAqs4/qhYr9hwpdFrrqLq8rX
- GGxPMgKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaDXkmgAKCRAk1otyXVSH0PYgB/
- 95lywtfJ5O5RxvwUJBPuHi8Q0vKIFr8B/QQRsePC/hftvm7w7xadcKYNhvPX5nnkyZIHoq3FUHiN7/
- TaP27SeMg33uKsTa7aeU1V5mf2FUgU/HAsA+C0EyRnldDB/JySLkP7Yx40DSazV5uKhvb8BANbBayk
- 446I8LiZVsUdBD2+yLdNxeX6fwzcRqImObNg3eUoYtLkaMnEfjabRpJZzP3WOy+G4GpwcFeGz1E02j
- CWpGOZ/vE+Fisx5X56lZcFawRTYoKyN0jz84DITnEARpFKLx5FwBqbidvRErgSGA1XDExOAzN+dmB+
- 3/BfS3N31poNwZUSY/EemYEzvXqtYx
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The kselftest framework uses the string logged when a test result is
-reported as the unique identifier for a test, using it to track test
-results between runs. The cow test completely fails to follow this pattern,
-it runs test functions repeatedly with various parameters with each result
-report from those functions being a string logging an error message which
-is fixed between runs.
+Hi Andy,
 
-Since the code already logs each test uniquely before it starts refactor
-to also print this to a buffer, then use that name as the test result.
-This isn't especially pretty but is relatively straightforward and is a
-great help to tooling.
+thank you for the driver. I'll leave some review comments inline. I don't
+have specific knowledge on the DRM subsystem so my comments will be of more
+general nature.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/mm/cow.c | 333 +++++++++++++++++++++++++--------------
- 1 file changed, 217 insertions(+), 116 deletions(-)
+On Thursday, 3 April 2025 05:37:31 Central European Summer Time Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
+> 
+> Add driver extension for Synopsys DesignWare DPTX IP used
+> on Rockchip RK3588 SoC.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> Acked-by: Dmitry Baryshkov <lumag@kernel.org>
+> 
+> ---
+> 
+> (no changes since v2)
+> 
+> Changes in v2:
+> - no include uapi path
+> - switch to drmm_encoder_init
+> 
+>  drivers/gpu/drm/rockchip/Kconfig            |   9 ++
+>  drivers/gpu/drm/rockchip/Makefile           |   1 +
+>  drivers/gpu/drm/rockchip/dw_dp-rockchip.c   | 154 ++++++++++++++++++++
+>  drivers/gpu/drm/rockchip/rockchip_drm_drv.c |   1 +
+>  drivers/gpu/drm/rockchip/rockchip_drm_drv.h |   1 +
+>  5 files changed, 166 insertions(+)
+>  create mode 100644 drivers/gpu/drm/rockchip/dw_dp-rockchip.c
+> 
+> diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+> index 26c4410b2407c..00315cc6be5a8 100644
+> --- a/drivers/gpu/drm/rockchip/Kconfig
+> +++ b/drivers/gpu/drm/rockchip/Kconfig
+> @@ -8,6 +8,7 @@ config DRM_ROCKCHIP
+>  	select DRM_PANEL
+>  	select VIDEOMODE_HELPERS
+>  	select DRM_ANALOGIX_DP if ROCKCHIP_ANALOGIX_DP
+> +	select DRM_DW_DP if ROCKCHIP_DW_DP
+>  	select DRM_DW_HDMI if ROCKCHIP_DW_HDMI
+>  	select DRM_DW_HDMI_QP if ROCKCHIP_DW_HDMI_QP
+>  	select DRM_DW_MIPI_DSI if ROCKCHIP_DW_MIPI_DSI
+> @@ -58,6 +59,14 @@ config ROCKCHIP_CDN_DP
+>  	  RK3399 based SoC, you should select this
+>  	  option.
+>  
+> +config ROCKCHIP_DW_DP
+> +	bool "Rockchip specific extensions for Synopsys DW DP"
+> +	help
+> +	  This selects support for Rockchip SoC specific extensions
+> +	  to enable Synopsys DesignWare Cores based DisplayPort transmit
+> +	  controller support on Rockchip SoC, If you want to enable DP on
+> +	  rk3588 based SoC, you should select this option.
+> +
+>  config ROCKCHIP_DW_HDMI
+>  	bool "Rockchip specific extensions for Synopsys DW HDMI"
+>  	help
+> diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/rockchip/Makefile
+> index 2b867cebbc121..097f062399c7a 100644
+> --- a/drivers/gpu/drm/rockchip/Makefile
+> +++ b/drivers/gpu/drm/rockchip/Makefile
+> @@ -14,6 +14,7 @@ rockchipdrm-$(CONFIG_ROCKCHIP_DW_HDMI) += dw_hdmi-rockchip.o
+>  rockchipdrm-$(CONFIG_ROCKCHIP_DW_HDMI_QP) += dw_hdmi_qp-rockchip.o
+>  rockchipdrm-$(CONFIG_ROCKCHIP_DW_MIPI_DSI) += dw-mipi-dsi-rockchip.o
+>  rockchipdrm-$(CONFIG_ROCKCHIP_DW_MIPI_DSI2) += dw-mipi-dsi2-rockchip.o
+> +rockchipdrm-$(CONFIG_ROCKCHIP_DW_DP) += dw_dp-rockchip.o
+>  rockchipdrm-$(CONFIG_ROCKCHIP_INNO_HDMI) += inno_hdmi.o
+>  rockchipdrm-$(CONFIG_ROCKCHIP_LVDS) += rockchip_lvds.o
+>  rockchipdrm-$(CONFIG_ROCKCHIP_RGB) += rockchip_rgb.o
+> diff --git a/drivers/gpu/drm/rockchip/dw_dp-rockchip.c b/drivers/gpu/drm/rockchip/dw_dp-rockchip.c
+> new file mode 100644
+> index 0000000000000..5ff8a6a54997e
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rockchip/dw_dp-rockchip.c
+> @@ -0,0 +1,154 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020 Rockchip Electronics Co., Ltd.
+> + *
+> + * Author: Zhang Yubing <yubing.zhang@rock-chips.com>
+> + * Author: Andy Yan <andy.yan@rock-chips.com>
+> + */
+> +
+> +#include <linux/component.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <drm/bridge/dw_dp.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_bridge_connector.h>
 
-diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
-index e70cd3d900cc..dbbcc5eb3dce 100644
---- a/tools/testing/selftests/mm/cow.c
-+++ b/tools/testing/selftests/mm/cow.c
-@@ -112,9 +112,12 @@ struct comm_pipes {
- 
- static int setup_comm_pipes(struct comm_pipes *comm_pipes)
- {
--	if (pipe(comm_pipes->child_ready) < 0)
-+	if (pipe(comm_pipes->child_ready) < 0) {
-+		ksft_perror("pipe()");
- 		return -errno;
-+	}
- 	if (pipe(comm_pipes->parent_ready) < 0) {
-+		ksft_perror("pipe()");
- 		close(comm_pipes->child_ready[0]);
- 		close(comm_pipes->child_ready[1]);
- 		return -errno;
-@@ -207,13 +210,14 @@ static void do_test_cow_in_parent(char *mem, size_t size, bool do_mprotect,
- 
- 	ret = setup_comm_pipes(&comm_pipes);
- 	if (ret) {
--		ksft_test_result_fail("pipe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	ret = fork();
- 	if (ret < 0) {
--		ksft_test_result_fail("fork() failed\n");
-+		ksft_perror("fork() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_comm_pipes;
- 	} else if (!ret) {
- 		exit(fn(mem, size, &comm_pipes));
-@@ -228,9 +232,18 @@ static void do_test_cow_in_parent(char *mem, size_t size, bool do_mprotect,
- 		 * write-faults by directly mapping pages writable.
- 		 */
- 		ret = mprotect(mem, size, PROT_READ);
--		ret |= mprotect(mem, size, PROT_READ|PROT_WRITE);
- 		if (ret) {
--			ksft_test_result_fail("mprotect() failed\n");
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
-+			write(comm_pipes.parent_ready[1], "0", 1);
-+			wait(&ret);
-+			goto close_comm_pipes;
-+		}
-+
-+		ret = mprotect(mem, size, PROT_READ|PROT_WRITE);
-+		if (ret) {
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
- 			write(comm_pipes.parent_ready[1], "0", 1);
- 			wait(&ret);
- 			goto close_comm_pipes;
-@@ -248,16 +261,16 @@ static void do_test_cow_in_parent(char *mem, size_t size, bool do_mprotect,
- 		ret = -EINVAL;
- 
- 	if (!ret) {
--		ksft_test_result_pass("No leak from parent into child\n");
-+		log_test_result(KSFT_PASS);
- 	} else if (xfail) {
- 		/*
- 		 * With hugetlb, some vmsplice() tests are currently expected to
- 		 * fail because (a) harder to fix and (b) nobody really cares.
- 		 * Flag them as expected failure for now.
- 		 */
--		ksft_test_result_xfail("Leak from parent into child\n");
-+		log_test_result(KSFT_XFAIL);
- 	} else {
--		ksft_test_result_fail("Leak from parent into child\n");
-+		log_test_result(KSFT_FAIL);
- 	}
- close_comm_pipes:
- 	close_comm_pipes(&comm_pipes);
-@@ -306,26 +319,29 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
- 
- 	ret = setup_comm_pipes(&comm_pipes);
- 	if (ret) {
--		ksft_test_result_fail("pipe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto free;
- 	}
- 
- 	if (pipe(fds) < 0) {
--		ksft_test_result_fail("pipe() failed\n");
-+		ksft_perror("pipe() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_comm_pipes;
- 	}
- 
- 	if (before_fork) {
- 		transferred = vmsplice(fds[1], &iov, 1, 0);
- 		if (transferred <= 0) {
--			ksft_test_result_fail("vmsplice() failed\n");
-+			ksft_print_msg("vmsplice() failed\n");
-+			log_test_result(KSFT_FAIL);
- 			goto close_pipe;
- 		}
- 	}
- 
- 	ret = fork();
- 	if (ret < 0) {
--		ksft_test_result_fail("fork() failed\n");
-+		ksft_perror("fork() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto close_pipe;
- 	} else if (!ret) {
- 		write(comm_pipes.child_ready[1], "0", 1);
-@@ -339,7 +355,8 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
- 	if (!before_fork) {
- 		transferred = vmsplice(fds[1], &iov, 1, 0);
- 		if (transferred <= 0) {
--			ksft_test_result_fail("vmsplice() failed\n");
-+			ksft_perror("vmsplice() failed");
-+			log_test_result(KSFT_FAIL);
- 			wait(&ret);
- 			goto close_pipe;
- 		}
-@@ -348,7 +365,8 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
- 	while (read(comm_pipes.child_ready[0], &buf, 1) != 1)
- 		;
- 	if (munmap(mem, size) < 0) {
--		ksft_test_result_fail("munmap() failed\n");
-+		ksft_perror("munmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_pipe;
- 	}
- 	write(comm_pipes.parent_ready[1], "0", 1);
-@@ -356,7 +374,8 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
- 	/* Wait until the child is done writing. */
- 	wait(&ret);
- 	if (!WIFEXITED(ret)) {
--		ksft_test_result_fail("wait() failed\n");
-+		ksft_perror("wait() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_pipe;
- 	}
- 
-@@ -364,22 +383,23 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
- 	for (total = 0; total < transferred; total += cur) {
- 		cur = read(fds[0], new + total, transferred - total);
- 		if (cur < 0) {
--			ksft_test_result_fail("read() failed\n");
-+			ksft_perror("read() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto close_pipe;
- 		}
- 	}
- 
- 	if (!memcmp(old, new, transferred)) {
--		ksft_test_result_pass("No leak from child into parent\n");
-+		log_test_result(KSFT_PASS);
- 	} else if (xfail) {
- 		/*
- 		 * With hugetlb, some vmsplice() tests are currently expected to
- 		 * fail because (a) harder to fix and (b) nobody really cares.
- 		 * Flag them as expected failure for now.
- 		 */
--		ksft_test_result_xfail("Leak from child into parent\n");
-+		log_test_result(KSFT_XFAIL);
- 	} else {
--		ksft_test_result_fail("Leak from child into parent\n");
-+		log_test_result(KSFT_FAIL);
- 	}
- close_pipe:
- 	close(fds[0]);
-@@ -416,13 +436,14 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 
- 	ret = setup_comm_pipes(&comm_pipes);
- 	if (ret) {
--		ksft_test_result_fail("pipe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	file = tmpfile();
- 	if (!file) {
--		ksft_test_result_fail("tmpfile() failed\n");
-+		ksft_perror("tmpfile() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_comm_pipes;
- 	}
- 	fd = fileno(file);
-@@ -430,14 +451,16 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 
- 	tmp = malloc(size);
- 	if (!tmp) {
--		ksft_test_result_fail("malloc() failed\n");
-+		ksft_print_msg("malloc() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto close_file;
- 	}
- 
- 	/* Skip on errors, as we might just lack kernel support. */
- 	ret = io_uring_queue_init(1, &ring, 0);
- 	if (ret < 0) {
--		ksft_test_result_skip("io_uring_queue_init() failed\n");
-+		ksft_print_msg("io_uring_queue_init() failed\n");
-+		log_test_result(KSFT_SKIP);
- 		goto free_tmp;
- 	}
- 
-@@ -452,7 +475,8 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 	iov.iov_len = size;
- 	ret = io_uring_register_buffers(&ring, &iov, 1);
- 	if (ret) {
--		ksft_test_result_skip("io_uring_register_buffers() failed\n");
-+		ksft_print_msg("io_uring_register_buffers() failed\n");
-+		log_test_result(KSFT_SKIP);
- 		goto queue_exit;
- 	}
- 
-@@ -463,7 +487,8 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 		 */
- 		ret = fork();
- 		if (ret < 0) {
--			ksft_test_result_fail("fork() failed\n");
-+			ksft_perror("fork() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto unregister_buffers;
- 		} else if (!ret) {
- 			write(comm_pipes.child_ready[1], "0", 1);
-@@ -483,10 +508,17 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 		 * if the page is mapped R/O vs. R/W).
- 		 */
- 		ret = mprotect(mem, size, PROT_READ);
-+		if (ret) {
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
-+			goto unregister_buffers;
-+		}
-+
- 		clear_softdirty();
--		ret |= mprotect(mem, size, PROT_READ | PROT_WRITE);
-+		ret = mprotect(mem, size, PROT_READ | PROT_WRITE);
- 		if (ret) {
--			ksft_test_result_fail("mprotect() failed\n");
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto unregister_buffers;
- 		}
- 	}
-@@ -498,25 +530,29 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 	memset(mem, 0xff, size);
- 	sqe = io_uring_get_sqe(&ring);
- 	if (!sqe) {
--		ksft_test_result_fail("io_uring_get_sqe() failed\n");
-+		ksft_print_msg("io_uring_get_sqe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto quit_child;
- 	}
- 	io_uring_prep_write_fixed(sqe, fd, mem, size, 0, 0);
- 
- 	ret = io_uring_submit(&ring);
- 	if (ret < 0) {
--		ksft_test_result_fail("io_uring_submit() failed\n");
-+		ksft_print_msg("io_uring_submit() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto quit_child;
- 	}
- 
- 	ret = io_uring_wait_cqe(&ring, &cqe);
- 	if (ret < 0) {
--		ksft_test_result_fail("io_uring_wait_cqe() failed\n");
-+		ksft_print_msg("io_uring_wait_cqe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto quit_child;
- 	}
- 
- 	if (cqe->res != size) {
--		ksft_test_result_fail("write_fixed failed\n");
-+		ksft_print_msg("write_fixed failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto quit_child;
- 	}
- 	io_uring_cqe_seen(&ring, cqe);
-@@ -526,15 +562,18 @@ static void do_test_iouring(char *mem, size_t size, bool use_fork)
- 	while (total < size) {
- 		cur = pread(fd, tmp + total, size - total, total);
- 		if (cur < 0) {
--			ksft_test_result_fail("pread() failed\n");
-+			ksft_print_msg("pread() failed\n");
-+			log_test_result(KSFT_FAIL);
- 			goto quit_child;
- 		}
- 		total += cur;
- 	}
- 
- 	/* Finally, check if we read what we expected. */
--	ksft_test_result(!memcmp(mem, tmp, size),
--			 "Longterm R/W pin is reliable\n");
-+	if (!memcmp(mem, tmp, size))
-+		log_test_result(KSFT_PASS);
-+	else
-+		log_test_result(KSFT_FAIL);
- 
- quit_child:
- 	if (use_fork) {
-@@ -582,19 +621,21 @@ static void do_test_ro_pin(char *mem, size_t size, enum ro_pin_test test,
- 	int ret;
- 
- 	if (gup_fd < 0) {
--		ksft_test_result_skip("gup_test not available\n");
-+		ksft_print_msg("gup_test not available\n");
-+		log_test_result(KSFT_SKIP);
- 		return;
- 	}
- 
- 	tmp = malloc(size);
- 	if (!tmp) {
--		ksft_test_result_fail("malloc() failed\n");
-+		ksft_print_msg("malloc() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	ret = setup_comm_pipes(&comm_pipes);
- 	if (ret) {
--		ksft_test_result_fail("pipe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		goto free_tmp;
- 	}
- 
-@@ -609,7 +650,8 @@ static void do_test_ro_pin(char *mem, size_t size, enum ro_pin_test test,
- 		 */
- 		ret = fork();
- 		if (ret < 0) {
--			ksft_test_result_fail("fork() failed\n");
-+			ksft_perror("fork() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto close_comm_pipes;
- 		} else if (!ret) {
- 			write(comm_pipes.child_ready[1], "0", 1);
-@@ -646,7 +688,8 @@ static void do_test_ro_pin(char *mem, size_t size, enum ro_pin_test test,
- 		clear_softdirty();
- 		ret |= mprotect(mem, size, PROT_READ | PROT_WRITE);
- 		if (ret) {
--			ksft_test_result_fail("mprotect() failed\n");
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto close_comm_pipes;
- 		}
- 		break;
-@@ -661,9 +704,11 @@ static void do_test_ro_pin(char *mem, size_t size, enum ro_pin_test test,
- 	ret = ioctl(gup_fd, PIN_LONGTERM_TEST_START, &args);
- 	if (ret) {
- 		if (errno == EINVAL)
--			ksft_test_result_skip("PIN_LONGTERM_TEST_START failed\n");
-+			ret = KSFT_SKIP;
- 		else
--			ksft_test_result_fail("PIN_LONGTERM_TEST_START failed\n");
-+			ret = KSFT_FAIL;
-+		ksft_perror("PIN_LONGTERM_TEST_START failed");
-+		log_test_result(ret);
- 		goto wait;
- 	}
- 
-@@ -676,22 +721,26 @@ static void do_test_ro_pin(char *mem, size_t size, enum ro_pin_test test,
- 	 */
- 	tmp_val = (__u64)(uintptr_t)tmp;
- 	ret = ioctl(gup_fd, PIN_LONGTERM_TEST_READ, &tmp_val);
--	if (ret)
--		ksft_test_result_fail("PIN_LONGTERM_TEST_READ failed\n");
--	else
--		ksft_test_result(!memcmp(mem, tmp, size),
--				 "Longterm R/O pin is reliable\n");
-+	if (ret) {
-+		ksft_perror("PIN_LONGTERM_TEST_READ failed");
-+		log_test_result(KSFT_FAIL);
-+	} else {
-+		if (!memcmp(mem, tmp, size))
-+			log_test_result(KSFT_PASS);
-+		else
-+			log_test_result(KSFT_FAIL);
-+	}
- 
- 	ret = ioctl(gup_fd, PIN_LONGTERM_TEST_STOP);
- 	if (ret)
--		ksft_print_msg("[INFO] PIN_LONGTERM_TEST_STOP failed\n");
-+		ksft_perror("PIN_LONGTERM_TEST_STOP failed");
- wait:
- 	switch (test) {
- 	case RO_PIN_TEST_SHARED:
- 		write(comm_pipes.parent_ready[1], "0", 1);
- 		wait(&ret);
- 		if (!WIFEXITED(ret))
--			ksft_print_msg("[INFO] wait() failed\n");
-+			ksft_perror("wait() failed");
- 		break;
- 	default:
- 		break;
-@@ -746,14 +795,16 @@ static void do_run_with_base_page(test_fn fn, bool swapout)
- 	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE,
- 		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
- 	if (mem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	ret = madvise(mem, pagesize, MADV_NOHUGEPAGE);
- 	/* Ignore if not around on a kernel. */
- 	if (ret && errno != EINVAL) {
--		ksft_test_result_fail("MADV_NOHUGEPAGE failed\n");
-+		ksft_perror("MADV_NOHUGEPAGE failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -763,7 +814,8 @@ static void do_run_with_base_page(test_fn fn, bool swapout)
- 	if (swapout) {
- 		madvise(mem, pagesize, MADV_PAGEOUT);
- 		if (!pagemap_is_swapped(pagemap_fd, mem)) {
--			ksft_test_result_skip("MADV_PAGEOUT did not work, is swap enabled?\n");
-+			ksft_print_msg("MADV_PAGEOUT did not work, is swap enabled?\n");
-+			log_test_result(KSFT_SKIP);
- 			goto munmap;
- 		}
- 	}
-@@ -775,13 +827,13 @@ static void do_run_with_base_page(test_fn fn, bool swapout)
- 
- static void run_with_base_page(test_fn fn, const char *desc)
- {
--	ksft_print_msg("[RUN] %s ... with base page\n", desc);
-+	log_test_start("%s ... with base page", desc);
- 	do_run_with_base_page(fn, false);
- }
- 
- static void run_with_base_page_swap(test_fn fn, const char *desc)
- {
--	ksft_print_msg("[RUN] %s ... with swapped out base page\n", desc);
-+	log_test_start("%s ... with swapped out base page", desc);
- 	do_run_with_base_page(fn, true);
- }
- 
-@@ -807,7 +859,8 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 	mmap_mem = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
- 	if (mmap_mem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
-@@ -816,7 +869,8 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 
- 	ret = madvise(mem, thpsize, MADV_HUGEPAGE);
- 	if (ret) {
--		ksft_test_result_fail("MADV_HUGEPAGE failed\n");
-+		ksft_perror("MADV_HUGEPAGE failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -826,7 +880,8 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 	 */
- 	mem[0] = 1;
- 	if (!pagemap_is_populated(pagemap_fd, mem + thpsize - pagesize)) {
--		ksft_test_result_skip("Did not get a THP populated\n");
-+		ksft_print_msg("Did not get a THP populated\n");
-+		log_test_result(KSFT_SKIP);
- 		goto munmap;
- 	}
- 	memset(mem, 1, thpsize);
-@@ -846,12 +901,14 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		 */
- 		ret = mprotect(mem + pagesize, pagesize, PROT_READ);
- 		if (ret) {
--			ksft_test_result_fail("mprotect() failed\n");
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		ret = mprotect(mem + pagesize, pagesize, PROT_READ | PROT_WRITE);
- 		if (ret) {
--			ksft_test_result_fail("mprotect() failed\n");
-+			ksft_perror("mprotect() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		break;
-@@ -863,7 +920,8 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		 */
- 		ret = madvise(mem + pagesize, thpsize - pagesize, MADV_DONTNEED);
- 		if (ret) {
--			ksft_test_result_fail("MADV_DONTNEED failed\n");
-+			ksft_perror("MADV_DONTNEED failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		size = pagesize;
-@@ -877,13 +935,15 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		mremap_mem = mmap(NULL, mremap_size, PROT_NONE,
- 				  MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
- 		if (mremap_mem == MAP_FAILED) {
--			ksft_test_result_fail("mmap() failed\n");
-+			ksft_perror("mmap() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		tmp = mremap(mem + mremap_size, mremap_size, mremap_size,
- 			     MREMAP_MAYMOVE | MREMAP_FIXED, mremap_mem);
- 		if (tmp != mremap_mem) {
--			ksft_test_result_fail("mremap() failed\n");
-+			ksft_perror("mremap() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		size = mremap_size;
-@@ -896,12 +956,14 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		 */
- 		ret = madvise(mem + pagesize, thpsize - pagesize, MADV_DONTFORK);
- 		if (ret) {
--			ksft_test_result_fail("MADV_DONTFORK failed\n");
-+			ksft_perror("MADV_DONTFORK failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		ret = fork();
- 		if (ret < 0) {
--			ksft_test_result_fail("fork() failed\n");
-+			ksft_perror("fork() failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		} else if (!ret) {
- 			exit(0);
-@@ -910,7 +972,8 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 		/* Allow for sharing all pages again. */
- 		ret = madvise(mem + pagesize, thpsize - pagesize, MADV_DOFORK);
- 		if (ret) {
--			ksft_test_result_fail("MADV_DOFORK failed\n");
-+			ksft_perror("MADV_DOFORK failed");
-+			log_test_result(KSFT_FAIL);
- 			goto munmap;
- 		}
- 		break;
-@@ -924,7 +987,8 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 	case THP_RUN_SINGLE_PTE_SWAPOUT:
- 		madvise(mem, size, MADV_PAGEOUT);
- 		if (!range_is_swapped(mem, size)) {
--			ksft_test_result_skip("MADV_PAGEOUT did not work, is swap enabled?\n");
-+			ksft_print_msg("MADV_PAGEOUT did not work, is swap enabled?\n");
-+			log_test_result(KSFT_SKIP);
- 			goto munmap;
- 		}
- 		break;
-@@ -941,56 +1005,56 @@ static void do_run_with_thp(test_fn fn, enum thp_run thp_run, size_t thpsize)
- 
- static void run_with_thp(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with THP (%zu kB)\n",
-+	log_test_start("%s ... with THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_PMD, size);
- }
- 
- static void run_with_thp_swap(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with swapped-out THP (%zu kB)\n",
-+	log_test_start("%s ... with swapped-out THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_PMD_SWAPOUT, size);
- }
- 
- static void run_with_pte_mapped_thp(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with PTE-mapped THP (%zu kB)\n",
-+	log_test_start("%s ... with PTE-mapped THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_PTE, size);
- }
- 
- static void run_with_pte_mapped_thp_swap(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with swapped-out, PTE-mapped THP (%zu kB)\n",
-+	log_test_start("%s ... with swapped-out, PTE-mapped THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_PTE_SWAPOUT, size);
- }
- 
- static void run_with_single_pte_of_thp(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with single PTE of THP (%zu kB)\n",
-+	log_test_start("%s ... with single PTE of THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_SINGLE_PTE, size);
- }
- 
- static void run_with_single_pte_of_thp_swap(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with single PTE of swapped-out THP (%zu kB)\n",
-+	log_test_start("%s ... with single PTE of swapped-out THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_SINGLE_PTE_SWAPOUT, size);
- }
- 
- static void run_with_partial_mremap_thp(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with partially mremap()'ed THP (%zu kB)\n",
-+	log_test_start("%s ... with partially mremap()'ed THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_PARTIAL_MREMAP, size);
- }
- 
- static void run_with_partial_shared_thp(test_fn fn, const char *desc, size_t size)
- {
--	ksft_print_msg("[RUN] %s ... with partially shared THP (%zu kB)\n",
-+	log_test_start("%s ... with partially shared THP (%zu kB)",
- 		desc, size / 1024);
- 	do_run_with_thp(fn, THP_RUN_PARTIAL_SHARED, size);
- }
-@@ -1000,14 +1064,15 @@ static void run_with_hugetlb(test_fn fn, const char *desc, size_t hugetlbsize)
- 	int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB;
- 	char *mem, *dummy;
- 
--	ksft_print_msg("[RUN] %s ... with hugetlb (%zu kB)\n", desc,
-+	log_test_start("%s ... with hugetlb (%zu kB)", desc,
- 		       hugetlbsize / 1024);
- 
- 	flags |= __builtin_ctzll(hugetlbsize) << MAP_HUGE_SHIFT;
- 
- 	mem = mmap(NULL, hugetlbsize, PROT_READ | PROT_WRITE, flags, -1, 0);
- 	if (mem == MAP_FAILED) {
--		ksft_test_result_skip("need more free huge pages\n");
-+		ksft_perror("need more free huge pages");
-+		log_test_result(KSFT_SKIP);
- 		return;
- 	}
- 
-@@ -1020,7 +1085,8 @@ static void run_with_hugetlb(test_fn fn, const char *desc, size_t hugetlbsize)
- 	 */
- 	dummy = mmap(NULL, hugetlbsize, PROT_READ | PROT_WRITE, flags, -1, 0);
- 	if (dummy == MAP_FAILED) {
--		ksft_test_result_skip("need more free huge pages\n");
-+		ksft_perror("need more free huge pages");
-+		log_test_result(KSFT_SKIP);
- 		goto munmap;
- 	}
- 	munmap(dummy, hugetlbsize);
-@@ -1226,7 +1292,7 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 
- 	ret = setup_comm_pipes(&comm_pipes);
- 	if (ret) {
--		ksft_test_result_fail("pipe() failed\n");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
-@@ -1236,12 +1302,14 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 	 */
- 	ret = mprotect(mem + pagesize, pagesize, PROT_READ);
- 	if (ret) {
--		ksft_test_result_fail("mprotect() failed\n");
-+		ksft_perror("mprotect() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_comm_pipes;
- 	}
- 	ret = mprotect(mem + pagesize, pagesize, PROT_READ | PROT_WRITE);
- 	if (ret) {
--		ksft_test_result_fail("mprotect() failed\n");
-+		ksft_perror("mprotect() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_comm_pipes;
- 	}
- 
-@@ -1250,8 +1318,8 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 		/* Collapse before actually COW-sharing the page. */
- 		ret = madvise(mem, size, MADV_COLLAPSE);
- 		if (ret) {
--			ksft_test_result_skip("MADV_COLLAPSE failed: %s\n",
--					      strerror(errno));
-+			ksft_perror("MADV_COLLAPSE failed");
-+			log_test_result(KSFT_SKIP);
- 			goto close_comm_pipes;
- 		}
- 		break;
-@@ -1262,7 +1330,8 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 		/* Don't COW-share the upper part of the THP. */
- 		ret = madvise(mem + size / 2, size / 2, MADV_DONTFORK);
- 		if (ret) {
--			ksft_test_result_fail("MADV_DONTFORK failed\n");
-+			ksft_perror("MADV_DONTFORK failed");
-+			log_test_result(KSFT_FAIL);
- 			goto close_comm_pipes;
- 		}
- 		break;
-@@ -1270,7 +1339,8 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 		/* Don't COW-share the lower part of the THP. */
- 		ret = madvise(mem, size / 2, MADV_DONTFORK);
- 		if (ret) {
--			ksft_test_result_fail("MADV_DONTFORK failed\n");
-+			ksft_perror("MADV_DONTFORK failed");
-+			log_test_result(KSFT_FAIL);
- 			goto close_comm_pipes;
- 		}
- 		break;
-@@ -1280,7 +1350,8 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 
- 	ret = fork();
- 	if (ret < 0) {
--		ksft_test_result_fail("fork() failed\n");
-+		ksft_perror("fork() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close_comm_pipes;
- 	} else if (!ret) {
- 		switch (test) {
-@@ -1314,7 +1385,8 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 		 */
- 		ret = madvise(mem, size, MADV_DOFORK);
- 		if (ret) {
--			ksft_test_result_fail("MADV_DOFORK failed\n");
-+			ksft_perror("MADV_DOFORK failed");
-+			log_test_result(KSFT_FAIL);
- 			write(comm_pipes.parent_ready[1], "0", 1);
- 			wait(&ret);
- 			goto close_comm_pipes;
-@@ -1324,8 +1396,8 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 		/* Collapse before anyone modified the COW-shared page. */
- 		ret = madvise(mem, size, MADV_COLLAPSE);
- 		if (ret) {
--			ksft_test_result_skip("MADV_COLLAPSE failed: %s\n",
--					      strerror(errno));
-+			ksft_perror("MADV_COLLAPSE failed");
-+			log_test_result(KSFT_SKIP);
- 			write(comm_pipes.parent_ready[1], "0", 1);
- 			wait(&ret);
- 			goto close_comm_pipes;
-@@ -1345,7 +1417,10 @@ static void do_test_anon_thp_collapse(char *mem, size_t size,
- 	else
- 		ret = -EINVAL;
- 
--	ksft_test_result(!ret, "No leak from parent into child\n");
-+	if (!ret)
-+		log_test_result(KSFT_PASS);
-+	else
-+		log_test_result(KSFT_FAIL);
- close_comm_pipes:
- 	close_comm_pipes(&comm_pipes);
- }
-@@ -1430,7 +1505,7 @@ static void run_anon_thp_test_cases(void)
- 	for (i = 0; i < ARRAY_SIZE(anon_thp_test_cases); i++) {
- 		struct test_case const *test_case = &anon_thp_test_cases[i];
- 
--		ksft_print_msg("[RUN] %s\n", test_case->desc);
-+		log_test_start("%s", test_case->desc);
- 		do_run_with_thp(test_case->fn, THP_RUN_PMD, pmdsize);
- 	}
- }
-@@ -1453,8 +1528,10 @@ static void test_cow(char *mem, const char *smem, size_t size)
- 	memset(mem, 0xff, size);
- 
- 	/* See if we still read the old values via the other mapping. */
--	ksft_test_result(!memcmp(smem, old, size),
--			 "Other mapping not modified\n");
-+	if (!memcmp(smem, old, size))
-+		log_test_result(KSFT_PASS);
-+	else
-+		log_test_result(KSFT_FAIL);
- 	free(old);
- }
- 
-@@ -1472,18 +1549,20 @@ static void run_with_zeropage(non_anon_test_fn fn, const char *desc)
- {
- 	char *mem, *smem, tmp;
- 
--	ksft_print_msg("[RUN] %s ... with shared zeropage\n", desc);
-+	log_test_start("%s ... with shared zeropage", desc);
- 
- 	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE,
- 		   MAP_PRIVATE | MAP_ANON, -1, 0);
- 	if (mem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	smem = mmap(NULL, pagesize, PROT_READ, MAP_PRIVATE | MAP_ANON, -1, 0);
- 	if (smem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -1504,10 +1583,11 @@ static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
- 	size_t mmap_size;
- 	int ret;
- 
--	ksft_print_msg("[RUN] %s ... with huge zeropage\n", desc);
-+	log_test_start("%s ... with huge zeropage", desc);
- 
- 	if (!has_huge_zeropage) {
--		ksft_test_result_skip("Huge zeropage not enabled\n");
-+		ksft_print_msg("Huge zeropage not enabled\n");
-+		log_test_result(KSFT_SKIP);
- 		return;
- 	}
- 
-@@ -1516,13 +1596,15 @@ static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
- 	mmap_mem = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
- 			MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
- 	if (mmap_mem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 	mmap_smem = mmap(NULL, mmap_size, PROT_READ,
- 			 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
- 	if (mmap_smem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -1531,9 +1613,15 @@ static void run_with_huge_zeropage(non_anon_test_fn fn, const char *desc)
- 	smem = (char *)(((uintptr_t)mmap_smem + pmdsize) & ~(pmdsize - 1));
- 
- 	ret = madvise(mem, pmdsize, MADV_HUGEPAGE);
-+	if (ret != 0) {
-+		ksft_perror("madvise()");
-+		log_test_result(KSFT_FAIL);
-+		goto munmap;
-+	}
- 	ret |= madvise(smem, pmdsize, MADV_HUGEPAGE);
--	if (ret) {
--		ksft_test_result_fail("MADV_HUGEPAGE failed\n");
-+	if (ret != 0) {
-+		ksft_perror("madvise()");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -1562,29 +1650,33 @@ static void run_with_memfd(non_anon_test_fn fn, const char *desc)
- 	char *mem, *smem, tmp;
- 	int fd;
- 
--	ksft_print_msg("[RUN] %s ... with memfd\n", desc);
-+	log_test_start("%s ... with memfd", desc);
- 
- 	fd = memfd_create("test", 0);
- 	if (fd < 0) {
--		ksft_test_result_fail("memfd_create() failed\n");
-+		ksft_perror("memfd_create() failed");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	/* File consists of a single page filled with zeroes. */
- 	if (fallocate(fd, 0, 0, pagesize)) {
--		ksft_test_result_fail("fallocate() failed\n");
-+		ksft_perror("fallocate() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close;
- 	}
- 
- 	/* Create a private mapping of the memfd. */
- 	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
- 	if (mem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close;
- 	}
- 	smem = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0);
- 	if (smem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -1607,35 +1699,40 @@ static void run_with_tmpfile(non_anon_test_fn fn, const char *desc)
- 	FILE *file;
- 	int fd;
- 
--	ksft_print_msg("[RUN] %s ... with tmpfile\n", desc);
-+	log_test_start("%s ... with tmpfile", desc);
- 
- 	file = tmpfile();
- 	if (!file) {
--		ksft_test_result_fail("tmpfile() failed\n");
-+		ksft_perror("tmpfile() failed");
-+		log_test_result(KSFT_FAIL);
- 		return;
- 	}
- 
- 	fd = fileno(file);
- 	if (fd < 0) {
--		ksft_test_result_skip("fileno() failed\n");
-+		ksft_perror("fileno() failed");
-+		log_test_result(KSFT_SKIP);
- 		return;
- 	}
- 
- 	/* File consists of a single page filled with zeroes. */
- 	if (fallocate(fd, 0, 0, pagesize)) {
--		ksft_test_result_fail("fallocate() failed\n");
-+		ksft_perror("fallocate() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close;
- 	}
- 
- 	/* Create a private mapping of the memfd. */
- 	mem = mmap(NULL, pagesize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
- 	if (mem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto close;
- 	}
- 	smem = mmap(NULL, pagesize, PROT_READ, MAP_SHARED, fd, 0);
- 	if (smem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
-@@ -1659,20 +1756,22 @@ static void run_with_memfd_hugetlb(non_anon_test_fn fn, const char *desc,
- 	char *mem, *smem, tmp;
- 	int fd;
- 
--	ksft_print_msg("[RUN] %s ... with memfd hugetlb (%zu kB)\n", desc,
-+	log_test_start("%s ... with memfd hugetlb (%zu kB)", desc,
- 		       hugetlbsize / 1024);
- 
- 	flags |= __builtin_ctzll(hugetlbsize) << MFD_HUGE_SHIFT;
- 
- 	fd = memfd_create("test", flags);
- 	if (fd < 0) {
--		ksft_test_result_skip("memfd_create() failed\n");
-+		ksft_perror("memfd_create() failed");
-+		log_test_result(KSFT_SKIP);
- 		return;
- 	}
- 
- 	/* File consists of a single page filled with zeroes. */
- 	if (fallocate(fd, 0, 0, hugetlbsize)) {
--		ksft_test_result_skip("need more free huge pages\n");
-+		ksft_perror("need more free huge pages");
-+		log_test_result(KSFT_SKIP);
- 		goto close;
- 	}
- 
-@@ -1680,12 +1779,14 @@ static void run_with_memfd_hugetlb(non_anon_test_fn fn, const char *desc,
- 	mem = mmap(NULL, hugetlbsize, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd,
- 		   0);
- 	if (mem == MAP_FAILED) {
--		ksft_test_result_skip("need more free huge pages\n");
-+		ksft_perror("need more free huge pages");
-+		log_test_result(KSFT_SKIP);
- 		goto close;
- 	}
- 	smem = mmap(NULL, hugetlbsize, PROT_READ, MAP_SHARED, fd, 0);
- 	if (smem == MAP_FAILED) {
--		ksft_test_result_fail("mmap() failed\n");
-+		ksft_perror("mmap() failed");
-+		log_test_result(KSFT_FAIL);
- 		goto munmap;
- 	}
- 
+I think there's a missing #include <drm/display/drm_dp_helper.h> here. It
+gets pulled in implicitly in most configurations, but I think this is what
+the s390 build failure from the kernel test robot report is about.
 
--- 
-2.39.5
+> +#include <drm/drm_of.h>
+> +#include <drm/drm_print.h>
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/drm_simple_kms_helper.h>
+> +
+> +#include <linux/media-bus-format.h>
+> +#include <linux/videodev2.h>
+> +
+> +#include "rockchip_drm_drv.h"
+> +#include "rockchip_drm_vop.h"
+> +
+> +struct rockchip_dw_dp {
+> +	struct dw_dp *base;
+> +	struct device *dev;
+> +	struct rockchip_encoder encoder;
+> +};
+> +
+> +static inline struct rockchip_dw_dp *encoder_to_dp(struct drm_encoder *encoder)
+> +{
+> +	struct rockchip_encoder *rkencoder = to_rockchip_encoder(encoder);
+> +
+> +	return container_of(rkencoder, struct rockchip_dw_dp, encoder);
+> +}
+
+This function appears to be unused, and will generate a warning:
+
+  linux/drivers/gpu/drm/rockchip/dw_dp-rockchip.c:33:38: warning: unused
+  function 'encoder_to_dp' [-Wunused-function]
+
+I assume it may be used in a follow-up series. I think it's fine to add it
+there when it's needed and avoid the warning for now by removing it.
+
+> +
+> +static int dw_dp_encoder_atomic_check(struct drm_encoder *encoder,
+> +				      struct drm_crtc_state *crtc_state,
+> +				      struct drm_connector_state *conn_state)
+> +{
+> +	struct rockchip_crtc_state *s = to_rockchip_crtc_state(crtc_state);
+> +	struct drm_atomic_state *state = conn_state->state;
+> +	struct drm_display_info *di = &conn_state->connector->display_info;
+> +	struct drm_bridge *bridge  = drm_bridge_chain_get_first_bridge(encoder);
+> +	struct drm_bridge_state *bridge_state = drm_atomic_get_new_bridge_state(state, bridge);
+> +	u32 bus_format = bridge_state->input_bus_cfg.format;
+> +
+> +	switch (bus_format) {
+> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> +		s->output_mode = ROCKCHIP_OUT_MODE_YUV420;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUYV10_1X20:
+> +	case MEDIA_BUS_FMT_YUYV8_1X16:
+> +		s->output_mode = ROCKCHIP_OUT_MODE_S888_DUMMY;
+> +		break;
+> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> +	case MEDIA_BUS_FMT_RGB888_1X24:
+> +	case MEDIA_BUS_FMT_RGB666_1X24_CPADHI:
+> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> +	default:
+> +		s->output_mode = ROCKCHIP_OUT_MODE_AAAA;
+> +		break;
+> +	}
+> +
+> +	s->output_type = DRM_MODE_CONNECTOR_DisplayPort;
+> +	s->bus_format = bus_format;
+> +	s->bus_flags = di->bus_flags;
+> +	s->color_space = V4L2_COLORSPACE_DEFAULT;
+
+Reading the VOP2 code s->color_space gets read by, it seems this results
+in the output always using BT.709 as the colour space in YUV output mode.
+Is my understanding of the code correct?
+
+I don't know if DP 1.4 is limited with regards to HDR or if this is just
+left for later to implement, but BT.709 in the case of an HDR RGB VOP
+input seems wrong, unless VOP2 sets the output color_space to something like
+BT.2020 or similar in the case of output_mode == ROCKCHIP_OUT_MODE_AAAA and
+I'm not seeing it.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_encoder_helper_funcs dw_dp_encoder_helper_funcs = {
+> +	.atomic_check		= dw_dp_encoder_atomic_check,
+> +};
+> +
+> +static int dw_dp_rockchip_bind(struct device *dev, struct device *master, void *data)
+> +{
+> +	struct dw_dp_plat_data plat_data;
+> +	struct drm_device *drm_dev = data;
+> +	struct rockchip_dw_dp *dp;
+> +	struct drm_encoder *encoder;
+> +	struct drm_connector *connector;
+> +	int ret;
+> +
+> +	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
+> +	if (!dp)
+> +		return -ENOMEM;
+> +
+> +	dp->dev = dev;
+> +	plat_data.max_link_rate = 810000;
+> +	encoder = &dp->encoder.encoder;
+> +	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm_dev, dev->of_node);
+> +	rockchip_drm_encoder_set_crtc_endpoint_id(&dp->encoder, dev->of_node, 0, 0);
+> +
+> +	ret = drmm_encoder_init(drm_dev, encoder, NULL, DRM_MODE_ENCODER_TMDS, NULL);
+> +	if (ret)
+> +		return ret;
+> +	drm_encoder_helper_add(encoder, &dw_dp_encoder_helper_funcs);
+> +
+> +	dp->base = dw_dp_bind(dev, encoder, &plat_data);
+> +	if (IS_ERR(dp->base)) {
+> +		ret = PTR_ERR(dp->base);
+> +		return ret;
+> +	}
+> +
+> +	connector = drm_bridge_connector_init(drm_dev, encoder);
+> +	if (IS_ERR(connector)) {
+> +		ret = PTR_ERR(connector);
+> +		return dev_err_probe(dev, ret, "Failed to init bridge connector");
+> +	}
+> +
+> +	drm_connector_attach_encoder(connector, encoder);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct component_ops dw_dp_rockchip_component_ops = {
+> +	.bind = dw_dp_rockchip_bind,
+> +};
+> +
+> +static int dw_dp_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +
+> +	return component_add(dev, &dw_dp_rockchip_component_ops);
+> +}
+> +
+> +static void dw_dp_remove(struct platform_device *pdev)
+> +{
+> +	struct rockchip_dw_dp *dp = platform_get_drvdata(pdev);
+
+Does one of the helper functions or something else set drvdata? Otherwise
+I don't see how this is ever non-null.
+
+> +
+> +	component_del(dp->dev, &dw_dp_rockchip_component_ops);
+> +}
+> +
+> +static const struct of_device_id dw_dp_of_match[] = {
+> +	{ .compatible = "rockchip,rk3588-dp", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_dp_of_match);
+> +
+> +struct platform_driver dw_dp_driver = {
+> +	.probe	= dw_dp_probe,
+> +	.remove = dw_dp_remove,
+> +	.driver = {
+> +		.name = "dw-dp",
+> +		.of_match_table = dw_dp_of_match,
+> +	},
+> +};
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> index ed88788e04dd2..687bb7b252e8e 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
+> @@ -531,6 +531,7 @@ static int __init rockchip_drm_init(void)
+>  	ADD_ROCKCHIP_SUB_DRIVER(rockchip_dp_driver,
+>  				CONFIG_ROCKCHIP_ANALOGIX_DP);
+>  	ADD_ROCKCHIP_SUB_DRIVER(cdn_dp_driver, CONFIG_ROCKCHIP_CDN_DP);
+> +	ADD_ROCKCHIP_SUB_DRIVER(dw_dp_driver, CONFIG_ROCKCHIP_DW_DP);
+>  	ADD_ROCKCHIP_SUB_DRIVER(dw_hdmi_rockchip_pltfm_driver,
+>  				CONFIG_ROCKCHIP_DW_HDMI);
+>  	ADD_ROCKCHIP_SUB_DRIVER(dw_hdmi_qp_rockchip_pltfm_driver,
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
+> index c183e82a42a51..2e86ad00979c4 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
+> @@ -87,6 +87,7 @@ int rockchip_drm_encoder_set_crtc_endpoint_id(struct rockchip_encoder *rencoder,
+>  					      struct device_node *np, int port, int reg);
+>  int rockchip_drm_endpoint_is_subdriver(struct device_node *ep);
+>  extern struct platform_driver cdn_dp_driver;
+> +extern struct platform_driver dw_dp_driver;
+>  extern struct platform_driver dw_hdmi_rockchip_pltfm_driver;
+>  extern struct platform_driver dw_hdmi_qp_rockchip_pltfm_driver;
+>  extern struct platform_driver dw_mipi_dsi_rockchip_driver;
+> 
+
+Other than that, the driver looks great, thank you! I've tested it on my
+ROCK 5T over DP altmode, where it correctly interfaces with a DP monitor
+I have through an alt-mode adapter. So feel free to add a
+
+Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
+Kind regards,
+Nicolas Frattaroli
+
+
 
