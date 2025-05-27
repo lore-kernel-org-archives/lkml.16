@@ -1,156 +1,137 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C7A1FFC55
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2D44685;
+	Tue, 27 May 2025 20:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748378376; cv=none; b=WTld7NtAG2q4+B0N9QH1Ze0XMVZshgpuKzXMaqfZTe7Yl8wWH2+XihPpGtBCe6Dvbh9GItvxs9vEYtTpdbrgLA2JsBzDQxVd0OQtHkLqxoXsjPzxflMQHQuvwrK+XN6THQW0CnD/LYQ6tEr7mxEf9I457rtxZEjyH/hx5TzDpO4=
+	t=1748378420; cv=none; b=Wy6moEJ4OAiDHAYNiPvuR5maEfwMjD61YIiOh0MR7GF7Qlss238l/ks1/NZ8W7CUZS53HEn+oQq77Kw3SmMJ7axK/oDkfT+jxmu9HYvqb0cUZw0J55xZmAXvqyIjhBgADM9zK6/IrE0PT3+I4buXjyuxZWkexuOlnCYDjs8Rpwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748378376; c=relaxed/simple;
-	bh=9K1qlOPi3Awpjhz2tRNBvB20u2JUlbfEpuK12EzVwtw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=FoJdzBrM3TaZgnRnF4As0J3xddSBvradvzjl7nq9Og4iTfOM9D8WwlXr7gzi2ati4MByOO7xutjGrEaM6/AQq1KqK6fqBQUv4Zbo5xE7fjW9Nd/+oo6IzeKrrtfI6Ycz0qgahRnl58PJEVJJ/OrITWxBHPAhVZITfApvGrRm6WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tOxnQWeC; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748378420; c=relaxed/simple;
+	bh=o6RTu/fe8SVeQMQKwuTVVvMbJ9Q/EvXIvy75U5TFuUE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oHXz7TGjbhpuZ/khGIVBitRyYJaK1d3rmTVomumiOTr5WFQc+h7VnSDlrATrrewzgBtW+LUirnwNWeTVjcAUyehsQmB/j9Darj420JFTpnAkzUxu3FXUYF+ryhfXyJIajTlTTvjAhKBZUvy1L8ME1uxSM0iABbEGoHdQwe479/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HXMPLCjw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tOxnQWeC"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso15055ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:39:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748378374; x=1748983174; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zxGFDwqRyg2W5WWt9JDFqQi7bJLxV0e0m6+5lkNnCUY=;
-        b=tOxnQWeCCmb/9bEsZUP05MnZMLeNYM9Ok2N+QAhTxHPVviQN50ATJ5Lt5WaUEpty9H
-         Gv/ZI5ZNjGLf/N4LPswky3ykKoRzrONV7p0TjjUtaUwu/9q6ZVKsoI5MVpLVSjIHeCDO
-         6yNRW1SaTmPiGPM5KbQKl1YhV42CAsbDcsUHZykc6YNsubZFJWjXS6F0AcpZeNFWm3aC
-         XA6ZZ/63S56zvb17aeTQar2+53Azl5ChBoW0lcHcT2zbG8Tewcm/1ksoUg6qUmMzrr6c
-         N02lGG5J4rincUKY3VsMldjuAwoAKeX4y9L0nbltGwQDGmNyCcExYs/4yAp/wIKFEpZC
-         +8DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748378374; x=1748983174;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zxGFDwqRyg2W5WWt9JDFqQi7bJLxV0e0m6+5lkNnCUY=;
-        b=EsFrH3Ynmp8t99a/5VYFqmThBtQDTK7G7Wc/wF4+nvV0I2o0KEvhXCMLJ3WJZSf3/J
-         zN5FP7O8lL3FKyaLkKdkw+gjm5N+nzwOeyOfE7sM12jCfXkkqo0mIT83vASHqHzaPzlR
-         SSGiWSmyq8aWhe47cT94ntd3HxLVSoIfByWFLK5a245j2W/JA6a/nrgH338JM0bvo3nm
-         GYEPVR0HAXTtdiaFeiQ/LAIkpFNYVEQMQvibQ4jMRopjbYEYImCa5rDnZLm9MLvp7Vqt
-         I6wGFnvxZjQsE3hADc9xaFC9waNE0DJn+KttaR5n/4xZCj40Ja37/QmQiRRyuHwX7Txe
-         V/dA==
-X-Forwarded-Encrypted: i=1; AJvYcCW00jvhHrjQEVONEi2sfE/dW/2c6n0HTBEabZ292NJAk5FrEa2KQWNy4EE2hdKXO9eTRyNzNd8qmpUjPgI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzSqHOKyYC9LPLrZ8hND8VLla8jVli0rpiO/3KYsS1vZmg4Gs6
-	CBXxdCUXVJO5Y93OTTLLZ32lXSALKQWS+yQWexlRapQPUAjMB67lyzsKZ6GYcBlAPCy8xLyk+pp
-	Ig2RLatFrZOIOEL0Fr7SIchZQ5HCC7j+LX9ZZElIq
-X-Gm-Gg: ASbGncsP6g+uyvDBYc86ENA7kPAujwyZqqtZ1sD2ymx2y6oQq62R74fI1KyrMTCTo1p
-	FZobwv8OE6KlR7SB0cwYRSOUA9iXr2GYtkOXGW3gXFL47X71l3R+RP7mwFxi1WefAtROWUV1cb6
-	PuMt4FyDHBGVf4UDikF7bgZVPbCSf1RnzcJFb/JDyDBn8FSvNikE1Z8/C5XyHhtaRQ7GAVrKzd
-X-Google-Smtp-Source: AGHT+IG2icH2Y/FDLmWBOJMI54v0jKh22yxG1sb2LsUiO/EZg2xwKxpSIbO/FXeBFPngtSOnKjNsvL6ErGsQKy9C7Zo=
-X-Received: by 2002:a05:6e02:1a8d:b0:3da:7c33:5099 with SMTP id
- e9e14a558f8ab-3dd89c5208dmr132745ab.13.1748378373491; Tue, 27 May 2025
- 13:39:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HXMPLCjw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3919BC4CEE9;
+	Tue, 27 May 2025 20:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748378420;
+	bh=o6RTu/fe8SVeQMQKwuTVVvMbJ9Q/EvXIvy75U5TFuUE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=HXMPLCjw8C1sN3tCCQJuezNOcsNvNvemhyUI3VRk0aEZ2zMEphroYIA8xwR/TKWvJ
+	 CyROHQz8jvb3ByIljJPbiClM3VhfOlhHNZ2WLb2SKiO/9riVzu015TpQ1XvVyi2IQB
+	 /FFw9E+mOJGh5pucz156BqAPFet8Js4jTQJEZzSOKjUTO3RHSOQn3TK3BESaEtJykF
+	 kez+yi850ACR072K2Dx284FrpUtoI6ITnFfzGhb+CDJFom8OZm3PBIA9dH+Fobhbia
+	 gJwC+UWOwVJVfikhwcgy4nir/XJq0ctI+Ggq+LLX+YjEATxLtT/9LRBxCkS7dfo9rG
+	 OkG7OgLGMBK+A==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH v3 0/6] arm64: qcom: allow up to 4 lanes for the Type-C
+ DisplayPort Altmode
+Date: Tue, 27 May 2025 22:40:02 +0200
+Message-Id: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425214008.176100-1-irogers@google.com>
-In-Reply-To: <20250425214008.176100-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 May 2025 13:39:21 -0700
-X-Gm-Features: AX0GCFu0vMV0uYp2KCfFVMxr8EIjrtS4vYgJCyG4a9k0iDeW-4w_Y8OZKcn1IOE
-Message-ID: <CAP-5=fXiYHbe9gd_TNyy=txzrd+ONxecnpZr+uPeOnF5XxunGw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] Move uid filtering to BPF filters
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
-	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACMjNmgC/x3MTQqAIBBA4avErBNi0v6uEiFiUw2EiUYE4t2Tl
+ t/ivQSRAlOEqUoQ6OHIlyto6wrsYdxOgtdiwAZVo7AX9+XZCnk6vXodKHp2wnYjSjMMqCxBKX2
+ gjd//Oi85f56ffJRlAAAA
+X-Change-ID: 20250527-topic-4ln_dp_respin-c6924a8825ce
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748378414; l=2944;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=o6RTu/fe8SVeQMQKwuTVVvMbJ9Q/EvXIvy75U5TFuUE=;
+ b=3o/7D6VeHfd7PE53Qk34RBYI/8t5seA6Wr6yKb3I6ZxMwU117qb440IPDvwf0Mdkb4DLoIcsa
+ V0Xn/6kLhwGDJJ70ug3t2U9P8EjRjNrA3Y2YUDNGIgktoLvnDCFP/SC
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-On Fri, Apr 25, 2025 at 2:40=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Rather than scanning /proc and skipping PIDs based on their UIDs, use
-> BPF filters for uid filtering. The /proc scanning in thread_map is
-> racy as the PID may exit before the perf_event_open causing perf to
-> abort. BPF UID filters are more robust as they avoid the race. The
-> /proc scanning also misses processes starting after the perf
-> command. Add a helper for commands that support UID filtering and wire
-> up. Remove the non-BPF UID filtering support given it doesn't work.
->
-> v3: Add lengthier commit messages as requested by Arnaldo. Rebase on
->     tmp.perf-tools-next.
->
-> v2: Add a perf record uid test (Namhyung) and force setting
->     system-wide for perf trace and perf record (Namhyung). Ensure the
->     uid filter isn't set on tracepoint evsels.
->
-> v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.=
-com/
+Register a typec mux in order to change the PHY mode on the Type-C
+mux events depending on the mode and the svid when in Altmode setup.
 
-Ping. Thanks,
-Ian
+The DisplayPort phy should be left enabled if is still powered on
+by the DRM DisplayPort controller, so bail out until the DisplayPort
+PHY is not powered off.
 
-> Ian Rogers (10):
->   perf parse-events filter: Use evsel__find_pmu
->   perf target: Separate parse_uid into its own function
->   perf parse-events: Add parse_uid_filter helper
->   perf record: Switch user option to use BPF filter
->   perf tests record: Add basic uid filtering test
->   perf top: Switch user option to use BPF filter
->   perf trace: Switch user option to use BPF filter
->   perf bench evlist-open-close: Switch user option to use BPF filter
->   perf target: Remove uid from target
->   perf thread_map: Remove uid options
->
->  tools/perf/bench/evlist-open-close.c        | 36 ++++++++------
->  tools/perf/builtin-ftrace.c                 |  1 -
->  tools/perf/builtin-kvm.c                    |  2 -
->  tools/perf/builtin-record.c                 | 27 ++++++-----
->  tools/perf/builtin-stat.c                   |  4 +-
->  tools/perf/builtin-top.c                    | 22 +++++----
->  tools/perf/builtin-trace.c                  | 27 +++++++----
->  tools/perf/tests/backward-ring-buffer.c     |  1 -
->  tools/perf/tests/event-times.c              |  8 ++-
->  tools/perf/tests/keep-tracking.c            |  2 +-
->  tools/perf/tests/mmap-basic.c               |  2 +-
->  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
->  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
->  tools/perf/tests/openat-syscall.c           |  2 +-
->  tools/perf/tests/perf-record.c              |  1 -
->  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
->  tools/perf/tests/shell/record.sh            | 26 ++++++++++
->  tools/perf/tests/switch-tracking.c          |  2 +-
->  tools/perf/tests/task-exit.c                |  1 -
->  tools/perf/tests/thread-map.c               |  2 +-
->  tools/perf/util/bpf-filter.c                |  2 +-
->  tools/perf/util/evlist.c                    |  3 +-
->  tools/perf/util/parse-events.c              | 33 ++++++++-----
->  tools/perf/util/parse-events.h              |  1 +
->  tools/perf/util/python.c                    | 10 ++--
->  tools/perf/util/target.c                    | 54 +++------------------
->  tools/perf/util/target.h                    | 15 ++----
->  tools/perf/util/thread_map.c                | 32 ++----------
->  tools/perf/util/thread_map.h                |  6 +--
->  tools/perf/util/top.c                       |  4 +-
->  tools/perf/util/top.h                       |  1 +
->  31 files changed, 150 insertions(+), 182 deletions(-)
->
-> --
-> 2.49.0.850.g28803427d3-goog
->
+The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
+will be set in between of USB-Only, Combo and DisplayPort Only so
+this will leave enough time to the DRM DisplayPort controller to
+turn of the DisplayPort PHY.
+
+The patchset also includes bindings changes and DT changes.
+
+This has been successfully tested on an SM8550 board, but the
+Thinkpad X13s deserved testing between non-PD USB, non-PD DisplayPort,
+PD USB Hubs and PD Altmode Dongles to make sure the switch works
+as expected.
+
+The DisplayPort 4 lanes setup can be check with:
+$ cat /sys/kernel/debug/dri/ae01000.display-controller/DP-1/dp_debug
+	name = msm_dp
+	drm_dp_link
+		rate = 540000
+		num_lanes = 4
+...
+
+This patchset depends on [1] to allow broadcasting the type-c mode
+to the PHY, otherwise the PHY will keep the combo state while the
+retimer would setup the 4 lanes in DP mode.
+
+[1] https://lore.kernel.org/all/20240527-topic-sm8x50-upstream-retimer-broadcast-mode-v1-0-79ec91381aba@linaro.org/
+Changes in v3:
+- Take the series from Neil
+- Rebase
+- Rename many variables
+- Test on X1E & X13s
+- Apply a number of small cosmetic/codestyle changes
+- Remove some unused variables
+- Some smaller bugfixes
+- Link to v2: https://lore.kernel.org/lkml/20240527-topic-sm8x50-upstream-phy-combo-typec-mux-v2-0-a03e68d7b8fc@linaro.org/
+Changes in v2:
+- Reference usb-switch.yaml in bindings patch
+- Fix switch/case indenting
+- Check svid for USB_TYPEC_DP_SID
+- Fix X13s patch subject
+- Update SM8650 patch to enable 4 lanes on HDK aswell
+- Link to v1: https://lore.kernel.org/r/20240229-topic-sm8x50-upstream-phy-combo-typec-mux-v1-0-07e24a231840@linaro.org
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+Konrad Dybcio (1):
+      phy: qcom: qmp-combo: Rename 'mode' to 'phy_mode'
+
+Neil Armstrong (5):
+      dt-bindings: phy: qcom,sc8280xp-qmp-usb43dp: Reference usb-switch.yaml to allow mode-switch
+      phy: qcom: qmp-combo: store DP phy power state
+      phy: qcom: qmp-combo: introduce QMPPHY_MODE
+      phy: qcom: qmp-combo: register a typec mux to change the QMPPHY_MODE
+      arm64: dts: qcom: sc8280xp-lenovo-thinkpad-x13: Set up 4-lane DP
+
+ .../phy/qcom,sc8280xp-qmp-usb43dp-phy.yaml         |   7 +-
+ .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     |   6 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-combo.c          | 182 +++++++++++++++++++--
+ 3 files changed, 173 insertions(+), 22 deletions(-)
+---
+base-commit: 460178e842c7a1e48a06df684c66eb5fd630bcf7
+change-id: 20250527-topic-4ln_dp_respin-c6924a8825ce
+
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
