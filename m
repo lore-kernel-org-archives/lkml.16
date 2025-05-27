@@ -1,127 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF1472614;
-	Tue, 27 May 2025 07:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778DB1F582A;
+	Tue, 27 May 2025 07:10:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748329782; cv=none; b=dMCgiR/60C/TaZ6yFtUKrDczyOvn50SZJCCkl7CTu+SGH38ntwgEta32G5cJ8Dbe3BCqCYS5XR8VovVzbwhPsBbEf7Y1H4uknkpC2Ulsi6hjve139sxcNxL/cCwokQbf9cnQmxw+G5iq1toeyW+/OFl3RP3MPdOQ/5j3ic3hWkQ=
+	t=1748329802; cv=none; b=I7ZraOQPgK/6ZrkTYCDFZQh+j16WLFHrIjDcSlWT0jagLx1EZQ223qDviulneK/1rcChj3UbU4YC3RYx3FHkfnfFVFmztF2F07LyEogJFAElW9MwqSoh7als3gPD0drlzShhg6gcSZiKkaY9BbpfEbp6x9uvRy32PnFiXAnbcn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748329782; c=relaxed/simple;
-	bh=2kl6mZ8cHvpAb73D3F/4DvVrjl1/RRlL4LaE/e1S4FA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OYpas981bgCwfiAUARiO7J9kVXgaPEf8Ck9xFuFD9EfujJLCdz8oLlnb8UNMulOIlp3hlKzOJKd8FKRA/Jz2dog8Q/IOOX2zXCwXYR3ymdpX/1+rdB3RUyi1cj5BFnfyMwSczhbkAPImzS4EREorh0PY267pkphiT1eXBBGQI2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYFeAfEC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748329802; c=relaxed/simple;
+	bh=xzocwWaxsjqNHkYeqf5FJ8YRMOeK+a1p789rrCvbcaI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=a5b7USDQk5JlzMOoAKyo2MlPbOaD4RqQzJ5PzHtS7KOYu0L0yUaBrZg+AaA+vorsECI0OLepHkR/N7ougQOqm2+JMen3B3NrnI3ym4kmKr9TT78+SWUE+07ychReITS2gfKrWfpAyOBjx555DPzxxVrG90S7WruaSjqVREd3FAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrgbPE5q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYFeAfEC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F637C4CEEA;
-	Tue, 27 May 2025 07:09:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrgbPE5q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C58C4CEEA;
+	Tue, 27 May 2025 07:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748329781;
-	bh=2kl6mZ8cHvpAb73D3F/4DvVrjl1/RRlL4LaE/e1S4FA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TYFeAfECVkICnTDcOgCfhzMZ29ALQmjrjRTTsWrpq01JDFCyZVZ6pvptYGUwV8pS7
-	 9APSZljthBK39hGBNGK/FDWkMmeK8P7tMfzn9BjdOdiuBsHlilz6J9lDL4VtGiIH8W
-	 COY+wkKgZOs1oEj5ws2rqPhaWPgljkvKaA8lRgBxsW6bpZ/hE8oVHTbMZU65OQUO1o
-	 FgwtXV/ibURPygPZdzauMIjOoDUyBwWYv3WYPOp4l72XD8rCSpDRu5MIvrYrMGo7A6
-	 LE4S6WCOVxoVlvnpTLoeeapY/KZc0kFMBZlgAxpI60RQ319+Mxi2SsGCDvBT7sXzEr
-	 yMXJD0Y+U7vOQ==
-Date: Tue, 27 May 2025 09:09:02 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Wen Yang <wen.yang@linux.dev>
-Subject: Re: [PATCH] kernel/sysctl-test: Unregister sysctl table after test
- completion
-Message-ID: <b4jjhqsjnen4ifcccd4qu4tqq2wtqdglouslx26jbwhydgz7qn@lgeb7jltrt4d>
-References: <20250522013211.3341273-1-linux@roeck-us.net>
- <ce50a353-e501-4a22-9742-188edfa2a7b2@roeck-us.net>
- <yaadrvxr76up6j2cixi5hhrxrb4yd6rfus7n3pvh3fv42ahk32@vwiphrfdvj57>
- <d2c93db4-6406-47ec-9096-479aa7d7fd23@roeck-us.net>
+	s=k20201202; t=1748329801;
+	bh=xzocwWaxsjqNHkYeqf5FJ8YRMOeK+a1p789rrCvbcaI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=UrgbPE5q4jkBMJPBz0vBsgfEVAEjT8rQtASyZM66x7/l2vsgjoMEDe4YFAyOw2/Fp
+	 MYFicSzJNkJQPk13KM7yMcj34YPqaP9hbPhluW66y0Q7O17srHfP2Tun7T5CVpbYve
+	 C7RK0i5ryfbfDxL4v2+e/lvDC3x1SVtXtlAbOQit4jH/c5Hj8R+cE0cUWFR28YwGUN
+	 IidlV185WTMCyWB2ReejMkcYX05KWvxhPJvpL2VH73QkrMNvRFtsM2aADgK2g9Y01J
+	 N+hsNnfYc4LXpAhl/NnN01iegKwJzty3MQVJGETldQvNIRcTj350ps34FPuwKVTiS/
+	 3WU2iphe/13Iw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D18380AAE2;
+	Tue, 27 May 2025 07:10:37 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e3wot27uafm4acze"
-Content-Disposition: inline
-In-Reply-To: <d2c93db4-6406-47ec-9096-479aa7d7fd23@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/8] net: Convert dev_set_mac_address() to struct
+ sockaddr_storage
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174832983626.1188942.1099978775563244121.git-patchwork-notify@kernel.org>
+Date: Tue, 27 May 2025 07:10:36 +0000
+References: <20250521204310.it.500-kees@kernel.org>
+In-Reply-To: <20250521204310.it.500-kees@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: kuniyu@amazon.com, willemdebruijn.kernel@gmail.com,
+ martin.petersen@oracle.com, hch@lst.de, sagi@grimberg.me, kch@nvidia.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ michael.christie@oracle.com, mgurtovoy@nvidia.com, mlombard@redhat.com,
+ d.bogdanov@yadro.com, mingzhe.zou@easystack.cn, christophe.leroy@csgroup.eu,
+ horms@kernel.org, linux@treblig.org, gustavoars@kernel.org,
+ andrew+netdev@lunn.ch, sdf@fomichev.me, cratiu@nvidia.com,
+ leiyang@redhat.com, idosch@nvidia.com, sam@mendozajonas.com,
+ fercerpav@gmail.com, alex.aring@gmail.com, stefan@datenfreihafen.org,
+ miquel.raynal@bootlin.com, hayeswang@realtek.com, dianders@chromium.org,
+ grundler@chromium.org, jv@jvosburgh.net, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ jiri@resnulli.us, jasowang@redhat.com, vladimir.oltean@nxp.com,
+ florian.fainelli@broadcom.com, kory.maincent@bootlin.com, glipus@gmail.com,
+ olek2@wp.pl, phahn-oss@avm.de, ebiggers@google.com, ardb@kernel.org,
+ viro@zeniv.linux.org.uk, ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
+ shaw.leon@gmail.com, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-wpan@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-hardening@vger.kernel.org
+
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Wed, 21 May 2025 13:46:08 -0700 you wrote:
+> v2:
+>   - add conversion of dev_set_mac_address_user() (kuniyu)
+>   - fix missed sockaddr/sockaddr_storage conversion (kuba)
+>  v1: https://lore.kernel.org/all/20250520222452.work.063-kees@kernel.org/
+> 
+> Hi,
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2,1/8] net: core: Convert inet_addr_is_any() to sockaddr_storage
+    (no matching commit)
+  - [net-next,v2,2/8] net: core: Switch netif_set_mac_address() to struct sockaddr_storage
+    https://git.kernel.org/netdev/net-next/c/161972650d67
+  - [net-next,v2,3/8] net/ncsi: Use struct sockaddr_storage for pending_mac
+    https://git.kernel.org/netdev/net-next/c/db586cad6f45
+  - [net-next,v2,4/8] ieee802154: Use struct sockaddr_storage with dev_set_mac_address()
+    https://git.kernel.org/netdev/net-next/c/7da6117ea144
+  - [net-next,v2,5/8] net: usb: r8152: Convert to use struct sockaddr_storage internally
+    https://git.kernel.org/netdev/net-next/c/79deac8d538d
+  - [net-next,v2,6/8] net: core: Convert dev_set_mac_address() to struct sockaddr_storage
+    (no matching commit)
+  - [net-next,v2,7/8] rtnetlink: do_setlink: Use struct sockaddr_storage
+    https://git.kernel.org/netdev/net-next/c/6b12e0a3c3c9
+  - [net-next,v2,8/8] net: core: Convert dev_set_mac_address_user() to use struct sockaddr_storage
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---e3wot27uafm4acze
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, May 23, 2025 at 08:54:44AM -0700, Guenter Roeck wrote:
-> On 5/23/25 08:01, Joel Granados wrote:
-> > On Thu, May 22, 2025 at 11:53:15AM -0700, Guenter Roeck wrote:
-> > > On Wed, May 21, 2025 at 06:32:11PM -0700, Guenter Roeck wrote:
-> > > > One of the sysctl tests registers a valid sysctl table. This operat=
-ion
-> > > > is expected to succeed. However, it does not unregister the table a=
-fter
-> > > > executing the test. If the code is built as module and the module is
-> > > > unloaded after the test, the next operation trying to access the ta=
-ble
-> > > > (such as 'sysctl -a') will trigger a crash.
-> > > >=20
-> > > > Unregister the registered table after test completiion to solve the
-> > > > problem.
-> > > >=20
-> > >=20
-> > > Never mind, I just learned that a very similar patch has been submitt=
-ed
-> > > last December or so but was rejected, and that the acceptable (?) fix=
- seems
-> > > to be stalled.
-> > >=20
-> > > Sorry for the noise.
-> > >=20
-> > > Guenter
-> >=20
-> > Hey Guenter
-> >=20
-> > It is part of what is getting sent for 6.16 [1]
-> > That test will move out of kunit into self-test.
-> >=20
->=20
-> Yes, I was pointed to that. The version I have seen seems to assume that
-> the test is running as module, because the created sysctl entry is removed
-> in the module exit function. If built into the kernel, it would leave
-> the debug entry in place after the test is complete. Also, it moves
-> the affected set of tests out of the kunit infrastructure. Is that accura=
-te
-> or a misunderstanding on my side ?
-You have understood correctly. That is what the sysctl selftest does at lea=
-st.
-It all runs together with tools/testing/sefltests/sysctl/*. The idea is
-to use CONFIG_TEST_SYSCTL only for testing purposes.
-
-Best
-
---=20
-
-Joel Granados
-
---e3wot27uafm4acze
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmg1ZQQACgkQupfNUreW
-QU+OAQv/V1ZJFq0pVYdYgiAa0W/hjXiIh9ws1bAGjfLJAlSJ40RWutdMZmyOEQ7K
-BKqU30gCRrHONClpGVDRi4CTCtz1cOHp4eiUNEih0DwIP12Zn9AF+l99prjoZT3J
-P6adglM/p5LwebgVHgBXqZtv494zpAfaqJH/0hbOCi2UydOSVq6r69HXtfyvJHuA
-5/i00EyPwaCuisH1EGF6Qo2B/nVtVsHMG2AMJn0xrgKsNsTFPVkk2DG1XnxVHooq
-y/agzjdtFenY1VPj4cHtLfqWsLbHEaoGED1885fj1SgLQGigJXRBiUDS0Cgaw+tl
-il+pfeahaKjYvDSMtlH8WDeuqcB2uYQDxmx/fi8ksCsWw/fdvC9oaGssPis7/oHp
-ma3yTjV4cGK7q9JE2jHyNbH+hZwPUstYhb/1SVUIv6m/Oe1vnKpTtMnhcJdSde36
-K/9I3RFQn9IijeU7UzkPzIj6KoN/p3kTPtrBMO1UOV/BMQ+fEWI9uO3PpHgRFT4O
-E50WrQYa
-=Wz1u
------END PGP SIGNATURE-----
-
---e3wot27uafm4acze--
