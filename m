@@ -1,153 +1,153 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C231C5D61
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:11:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D1823E35E;
+	Tue, 27 May 2025 11:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748344278; cv=none; b=kuvJIHFrHJBC+Swei2MekFoJPlMzb6bdD7pVTGlCCTO+3eyh8hY/7xNDvrisMSyP9lV/r9u18Yx/Z/5CFyqEPET4x4+OUTimuwwpSAL+/73W0da5xMYE+++8dTgem++kQNlyrOHZw8+mU5QtTq+JX4g/uWo/h+osWFhJfKS3H9U=
+	t=1748344368; cv=none; b=aBQDb69IXff/0c5zrXDPYVBLmQRjhePs5fho6WyQNnE4f/i9JAWddloUjNqmqe1L/GawhYDp7JSkIImEziU/aKkBg8f17XvcRoys80VKDYamd+z0yW112xXsLOekKXByPO3u2w00VwBABkmgCA0WPh7V4jHgaslaPW8zH8ctUkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748344278; c=relaxed/simple;
-	bh=FpczGp8RbMHvucMtA6eVbMd4JpRzTIshwjXMkvAmexc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ptcLGtoYmswUwg011osxIyIWMWQOfkav35oAlkdpgAhAWw2w53ilN5sYVz6xbMFsCgoKXYmYq9DBhf5y9EAltL0b/nrFGK0r+UjDgm+dZZcf5/LVloI0eQMi0XKBA6ZNlrVHHRTTGxSs6m9bTwLS625hW9i2vFHg7bvDOs+HxmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Xhac2tSD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748344368; c=relaxed/simple;
+	bh=+9vIz8RPmIiRf0C4dtd1KKpx/hVy47Wgk7T3FPC2ZZg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GCnB1LpslfMUlqgYY7VCgElLrhEFZXnpd6y99yCGLOI5462WMIU2fhugFWxjAOyFsqFZnPqjfn4k+rxMq96G9SERSGlBaxpon1QV0QRLBvZtutDBbrddsdwiEkqTKzxHiQKZcnGL/8UyIz8ZsJkLc+4bFT/4vlPKBCYQy7mMIXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=VmMxHqyB; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Xhac2tSD"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VmMxHqyB"
 Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RAET3O005773
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:11:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Wxu/TiS7w60udZYPhI7bm5MyIilaLqI8XYTNdOjf2qs=; b=Xhac2tSDdUdKr0PB
-	qZnQYKuWSW0x5pQQGDnKPX38EFLIJWCECi/SbSe/GtCbdbpp9NC3PfHkWfefklDs
-	6E5igb2dP6NqLhswcfL3wflGyA7koo0wgbm+4rcTSOGLKwMaf5Y2N3nH524LM6MJ
-	oV2+wl6clU6CRkPtHhnfNKbu9ikl0M170r0yPaBpHwQfLdEjyi9d169uYhZuL70q
-	hgyegrcFwvectaLJJ92n5rFfZJ+UvZ+Rdi6uDTfkdT/62Es3L+N6tVIiBCslVYe4
-	7oNYqUhnor4NTcAjPI6XfpZKNe7gab4GqmnaQMfl9TnIC5inxv7QPnXrjAA6orBV
-	j8iu4Q==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u79p6m10-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:11:14 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6faaa088820so4869956d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:11:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748344273; x=1748949073;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wxu/TiS7w60udZYPhI7bm5MyIilaLqI8XYTNdOjf2qs=;
-        b=Vzs4IeAbL3rvqL89qYH5m6UKbzuBo8HzUa8Ag6DhIxBnVf+2KY56PJPEQE7wxf3jpD
-         WusREWDhrBQhwbKSQFulHMkIc8bZspddCENQ+1TjIF8TUvRCc4ekDG06zdUpPMWtBDvl
-         lxpNoGplh8ofoMwOXBgrgsiae3nim6xNS/pRBlFICEB/21DrDsRl2gROdG9/ipwlxwOB
-         En3SyVzrzZcJfK8coFv1+Ze6xiTj/1M8YUbaeUefw4R/K0hiUWU9X2tzXtI7V6ANCAbk
-         eYEiCT0PsE7hrIf2p8VP/Rj1MDcvwMhDFLMEQ1JpHCI8kT2h7QXNUdLI+GzzHOgQ/UNy
-         CpQg==
-X-Forwarded-Encrypted: i=1; AJvYcCXcPZtI4dyPjh82xBAAm6d99NmGEYOjRzulAqgTSvtP+P5adnaLICl7xpYbuIUm6oaQV85F6YUKF4y+sfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7Yec7U8AJb9iCwbgDrdaAufW/pk2o5g6eeJ0qP2n3h1kMPFAE
-	/AwAiBDWzKR89U/3DXA8XCYpRbPZ6vVXdfn7WDm4zY6qlUC0XCSooMoJVl+XZ36jz5z3sTEgwNC
-	Ig2zarhqZyCYFE5S2Le+at+3lZkGFDN6yLoicIvO4C/YPdE3jxIN2M9mDx927n9IHFbM=
-X-Gm-Gg: ASbGncstkIIrU3euLEdF+EU7QvQ7mQK4KWi1vcWUqiE1aDZ7fs6okTjTXHCiLeHeeFe
-	oUBxZ9BWGtFlofLRsFnL4g8i5QKz+lKFyU4FAjj006xA9DmrDma8cYUCP4nYdAmbuWF/hOE6h0T
-	dwaqOpFcjCxOqooTvAUG4oUIRSQ8ct+DVb1fO7+SPgnwYc4G1sXUVEmMOtDbnPkHpdOMBdG9mVp
-	2rEpRT3poLvalQapW9Wel+fviEcsMl8MPglXorn6kr94jzrV0HDugVpRyWy4r4owSHbDtXHuaQq
-	zQLSZjt3mjqFJTPymvQAvS5Ib69lMGoCm74yKVCA98fausYgUhO7CCr76TEo6wmpdQ==
-X-Received: by 2002:a05:6214:529d:b0:6f8:471a:9fd8 with SMTP id 6a1803df08f44-6fa9d28fd01mr73647706d6.8.1748344273492;
-        Tue, 27 May 2025 04:11:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFm0tLT/ILRYm9vnaH4+VaVshgcILjv9/Iad9lY7Qmlvc5zr6pF2bh9UDD8e2ltnacri2Wluw==
-X-Received: by 2002:a05:6214:529d:b0:6f8:471a:9fd8 with SMTP id 6a1803df08f44-6fa9d28fd01mr73647486d6.8.1748344273142;
-        Tue, 27 May 2025 04:11:13 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6048f06d915sm3382500a12.70.2025.05.27.04.11.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 04:11:12 -0700 (PDT)
-Message-ID: <2e052c11-f22c-4d95-841e-cb4665d02451@oss.qualcomm.com>
-Date: Tue, 27 May 2025 13:11:10 +0200
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R9l5jf015869;
+	Tue, 27 May 2025 11:12:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=NiQ8r7m1fImqQ96assEtTys1ZULVRCidbg5
+	E2QC9s2U=; b=VmMxHqyBq0QsXDh36Wq9fRU6mWn8NLlKiU1qtsRiYRGr2pIo0sD
+	8wCKMZ5GfkemmpwekRCNxdwj/2czWqJx39JpI4BZN1zVW5fmQkPEUKcK+yFLldkP
+	f5I9dfwwrauH9mKkJNMuEmIuIWR0BNQgyvzVendPG7JX0gpkpJy6sQE1jNVgpkJB
+	TUwMhrPiEhcUsSETOWRm8KwNruCLkfaijLmxGpK4OIj4NDsLtmU6daX4gNY0geiw
+	maHU4Idf3XGe3f15+crSnFVwv5UaY7rKqw/6tQCmc3IuSdL9Tz08Wp8se6wbQUl9
+	n/N/3SMDmbueRlfNZIGADBjO26YzNyBX02Q==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u79p6m4u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 11:12:41 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RBCbD5028074;
+	Tue, 27 May 2025 11:12:37 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 46u76kscbb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 11:12:37 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54RBCath028006;
+	Tue, 27 May 2025 11:12:36 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 54RBCaVg027868
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 11:12:36 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
+	id 474825C2; Tue, 27 May 2025 16:42:35 +0530 (+0530)
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com,
+        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Subject: [PATCH v4 0/8] Enable audio on qcs6490-RB3Gen2 and qcm6490-idp boards
+Date: Tue, 27 May 2025 16:42:19 +0530
+Message-Id: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad
- Pro (caihong)
-To: Pengyu Luo <mitltlatltl@gmail.com>, konrad.dybcio@oss.qualcomm.com
-Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
-        konradybcio@kernel.org, krzk+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org
-References: <53e1127d-77fb-4bb7-a125-18d7afc0d843@oss.qualcomm.com>
- <20250525105144.1328104-1-mitltlatltl@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250525105144.1328104-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 5Pore5ICrsnSGhZzftZtK9kwOmlmiGBg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA5MiBTYWx0ZWRfX1+X/qJqauVpT
- hfDbLbAsJOoiYLhX2fC9rQ0p7PmMS4OUaE22izHkLdpXJ30D5JZ6R2cmevs1lgruMXWCczNZRer
- dIJAbve0PRxYjr9zLiYhiquEBQxqm5Pk3r3fsB/5fdRDNv6xTOySJWudJZm86j7DRkOttBnv7FS
- ua72OTYSu7HtytHFEZ3DaG5cvWHV6OXabsIqDcscyuFEF9iKl0AZSJhFErMxTzH/KyZhPB/o/6F
- VkFtDzT+tzl4kRtpqFpKyGCpfWw75aaVzTRd5xsCzZOzfvvKr+EKe2s5aSC7M15zM6ph0VA+rql
- Ee+ygBVM7QwspQctaiIanZO+U+Xcv0PigAahwuPECmhTjGKtj+yRmxraMlqDNj/AdDQpmnMaXyw
- n4jgMOG5IZSXevbH14Mns4dveKrOGzoRsxOhv76U4hrd9+UPMdSPoQWelYe9ON8H/ajwYkYI
-X-Authority-Analysis: v=2.4 cv=HNnDFptv c=1 sm=1 tr=0 ts=68359dd2 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
- a=EUspDBNiAAAA:8 a=jYZJvsQXSSxwn8BSTVsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-ORIG-GUID: 5Pore5ICrsnSGhZzftZtK9kwOmlmiGBg
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: AnpWjkQdGj2IVN-3opCWtR3eDLzETS4Z
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA5MiBTYWx0ZWRfXwjCceqau7Z2Q
+ JUt2SViSRD9gIMCKnsMmSO6Sa46mX0GIw6ImV50aHPgsaSss8BGYafBoA639xhaF7IF4LEpqk+D
+ IrFHhgskwLOCHvn7l06R0IbV5YltHH09F26P9AmJ3wtnMSQhoGrki8LA1AmX+lQ3/TBUht/gjui
+ 10+EpZ+J5Taf9YxK0yl5MsNpjas9mFevH9h5NXZ8FGGA/eWjKqXjcV9mK3RpZJ0Syx7skqqwEak
+ wwSSdTBjVClb86F9zdBn0Rh/xE+ZL/ZrbQsd+IR2FYZ3hFF+p+vPMW3nRQfw24RdBazgRyOS/Dv
+ na00LabWEilBpXW7Vgtgj4xtA4h5WMoMP30I610mclGQ27KI8zBTweSl9ulfly8bYuIs9GD2cAP
+ sXbf5oaCux5l5zVaKZR9yg/+aKu4txQNjmnjxM8CHKV02ri+4F8Ee1+FSzg1Yxy+NJhyafuI
+X-Authority-Analysis: v=2.4 cv=HNnDFptv c=1 sm=1 tr=0 ts=68359e2a cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=3ZyjhVE0i7BfmCAa4gMA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: AnpWjkQdGj2IVN-3opCWtR3eDLzETS4Z
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-27_05,2025-05-27_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0
+ clxscore=1011 suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=916 phishscore=0 mlxscore=0 spamscore=0
  bulkscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
  definitions=main-2505270092
 
-On 5/25/25 12:51 PM, Pengyu Luo wrote:
-> On Thu, May 22, 2025 at 11:05 PM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
->> On 5/21/25 10:37 AM, Pengyu Luo wrote:
->>> On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
->>>> On 5/20/25 6:42 PM, Pengyu Luo wrote:
->>>>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
->>>>> platform. Its device codename is "caihong". This patch adds an initial
->>>>> devicetree for basic functionality.
->>
->> [...]
->>
->>>>> +&i2c2 {
->>>>> +     status = "okay";
->>>>> +
->>>>> +     /* secondary kinetic,ktz8866@11 */
->>>>
->>>> You can describe it, the driver sets some nonzero default brightness
->>>>
->>>
->>> But the backlight framework won't index them, which causes sysfs
->>> collision when the second instance is registering.
->>
->> Have you talked to the backlight maintainers? This shouldn't be too
->> complex to figure out
-> 
-> Last time I tried to touch ktz8866 source, the reviewer advised me to
-> add an backlight API to register the secondary devie. Since I am still
-> working on the other parts when I am free, it remains unresolved. Now
-> that you reminded me, then I tried to do it.
-> 
-> https://lore.kernel.org/linux-fbdev/20250525104022.1326997-1-mitltlatltl@gmail.com/
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 
-I think this should be made more generic, so that devices with e.g.
-quad backlight can be easily accommodated for too.. Perhaps you could
-do something like PLATFORM_DEVID_AUTO with incrementing suffixes and
-make `backlight = <&foo>;` on the panel accept an array of devices
-that would be controlled together
+Audio support is now enabled on the qcs6490-RB3Gen2 and qcm6490-idp boards.
+The updates include adding the necessary audio device tree support and the required
+dependencies.
 
-Konrad
+Both the qcs6490-RB3Gen2 and qcm6490-idp boards are derived from the same SoC 
+platform. Therefore, the audio support changes are included in a single patch 
+set for consistency and ease of maintenance.
+
+Changes in [v4]:
+	- Fix DT binding errors by adding dt-binding clock changes for ADSP base platform.
+	- Link to V3 : https://lore.kernel.org/linux-arm-msm/20250520062618.2765109-1-quic_pkumpatl@quicinc.com/
+
+Changes in [v3]:
+	- Added protection-domain in gpr services.
+	- Addressed the review commnets from Konrad Dybcio.
+	- Fix DT binding errors reported by Rob Herring.
+	- Link to V2 : https://lore.kernel.org/linux-arm-msm/20250429092430.21477-1-quic_pkumpatl@quicinc.com/
+
+Changes in [v2]:
+	- Created dtsi file to handle common audio nodes to support Audioreach.
+	- Addressed the review comments.
+	- Link to V1 : https://lore.kernel.org/linux-arm-msm/20250317054151.6095-2-quic_pkumpatl@quicinc.com/
+
+Mohammad Rafi Shaik (8):
+  arm64: dts: qcom: qcs6490-audioreach: Add gpr node
+  ASoC: dt-bindings: qcom: Manage clock settings for ADSP solution
+  arm64: dts: qcom: sc7280: Add WSA SoundWire and LPASS support
+  arm64: dts: qcom: qcs6490-audioreach: Modify LPASS macros clock
+    settings for audioreach
+  arm64: dts: qcom: qcs6490-rb3gen2: Add WSA8830 speakers amplifier
+  arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
+  arm64: dts: qcom: qcm6490-idp: Add WSA8830 speakers and WCD9370
+    headset codec
+  arm64: dts: qcom: qcm6490-idp: Add sound card
+
+ .../qcom,sc7280-lpass-lpi-pinctrl.yaml        |  10 +
+ .../bindings/sound/qcom,lpass-va-macro.yaml   |  12 +-
+ .../bindings/sound/qcom,lpass-wsa-macro.yaml  |  24 ++-
+ arch/arm64/boot/dts/qcom/qcm6490-idp.dts      | 180 ++++++++++++++++++
+ .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 158 +++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts  |  80 ++++++++
+ arch/arm64/boot/dts/qcom/sc7280.dtsi          |  78 +++++++-
+ 7 files changed, 535 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
+
+
+base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
+-- 
+2.34.1
+
