@@ -1,96 +1,188 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5E5282F5;
-	Tue, 27 May 2025 18:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC2F12B93;
+	Tue, 27 May 2025 18:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369799; cv=none; b=TBrnc+6L2/cIiWwBcEcurtW96YrnGSW/U/wg4OKc1YiU/tNLRsFeJAVxbTrTevnOhpXI6ssydDBakgrzk0adFhDfifYZtMIzYPUqzzTgtelZa2PR+kg00lNqLOeT6W6YWzJcxqHthi8aN3+wsvnW1x98sEuUrgtVR8TUZ4bVP4o=
+	t=1748369887; cv=none; b=i8f1Kl76JPP4c4z1DdG8Zqt7wVEQPJZpoPOYgzKCh2blqbFMxFPkPVCURGLHr0mU9Qztsm3E9g8tb3mU78C8YQkugTaEozs7I0KyIo88cjj9/zsoodT3yOb1A/k8tPU6KbUStSTjQ97BeN01viNdfzrlhYjd5SDmqlfwHtr/o9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369799; c=relaxed/simple;
-	bh=z/1nierZUFrBDz8dXNTKygJZRWilTfTDCz5cVzuxn+c=;
+	s=arc-20240116; t=1748369887; c=relaxed/simple;
+	bh=u2Q2XMni/0JmEMXMetOaDQk6KPODTqKODiQyRO8bX4I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HO+FmQy7AJGo9sVQ2+9713i8QZ9P8fFORlciPN3BNn+A34d1McITo+ZQ/MNaBiFJYkvFfUQW4QO7/Uk2mHR/JdeAOUSsAwjG5/oPtmva32/KeD5ZJDD/4adn9I8LMUrzZsjlOJWz88pa2ZQ4xfGTwsEvnNkXOhznTsXFAXs9TKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=H/ZsJ7qW; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFvjrEV2mz6syPCTPq/65gKuEaA4t0lX5d+7iwWleVEaYru+YflM8d+UkxjlDL9oC4R70wgN+hjejo/xIujdS6CqKFLujE26VG9LQ4Qmir8FsNeGf6aNQr5WMklt9HxyusjHEP44h5fpL23Ts/J0Yo+fGxC4kkFaVTbnl1k9Nv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bW1PwfHa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="H/ZsJ7qW"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id AA0291C01D9; Tue, 27 May 2025 20:16:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1748369793;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=caktQKPVz8v/q+eBzEBEoCG4CufONU3ehSaGJ6uLTNk=;
-	b=H/ZsJ7qWYsIVUdOCNlNd2FcqrmWpv4P1vP5+4DGzksP+ZdynCq6rEU5jOuGI1SUPy5K0JI
-	IrDJXXX55W7PJRgHHVWuKKh+2mQyuI2Rhl5VV+W20/kYBwSAdQInFXR0JdrrTp/lYCCuHe
-	B+PYPLByXtQQPOeXi7/AORBBz0jua2s=
-Date: Tue, 27 May 2025 20:16:33 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	PDx86 <platform-driver-x86@vger.kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Guenter Roeck <linux@roeck-us.net>, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-1
-Message-ID: <aDYBgcSbVQriCyhO@duo.ucw.cz>
-References: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
- <aDWq/U57DO7fMu4K@duo.ucw.cz>
- <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bW1PwfHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972CAC4CEEB;
+	Tue, 27 May 2025 18:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748369885;
+	bh=u2Q2XMni/0JmEMXMetOaDQk6KPODTqKODiQyRO8bX4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bW1PwfHaYmYSR7STkMPVjnVHcc/CIOquE5UXw42KaVlkKFGa4BDM2RgY139NhHr+k
+	 CN+59yCKhEyVqDMl5VuxGK/CGr+kfILSwlFaCe7UCovsFg0o7AzrG6ajZrt942K4JQ
+	 ivtLd6lxuPd+52rHCsrHuW7NY0LTCEQatXo/AtN6BdMbnkhhbzFK5cPDI5vKEdZdQx
+	 gHxZ/gy2TgkYrfiNGFIWf5dY/WTshP3WZ6VD4V6f1ZYOKjTJJ3UjfSun+Q9WPvkZk0
+	 tLKq2TzKR7yF0n47fyEuRAsnvZp3fRq5qXNydeBoc8ERIEPmz+6ARmH//zFXhJkO0n
+	 0HDNUqWRSyU0g==
+Date: Tue, 27 May 2025 13:18:03 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: gpio: Move fsl,mxs-pinctrl.txt into
+ gpio-mxs.yaml
+Message-ID: <20250527181803.GA877374-robh@kernel.org>
+References: <20250523203159.570982-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SAhQsDNdRiRNEyv5"
-Content-Disposition: inline
-In-Reply-To: <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
-
-
---SAhQsDNdRiRNEyv5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250523203159.570982-1-Frank.Li@nxp.com>
 
-Hi!
+On Fri, May 23, 2025 at 04:31:57PM -0400, Frank Li wrote:
+> Move mxs-pinctrl part into gpio-mxs.yaml and add pinctrl examples to fix
+> below CHECK_DTB warning:
+> 
+> arch/arm/boot/dts/nxp/mxs/imx28-xea.dtb: pinctrl@80018000 (fsl,imx28-pinctrl):
+>    'auart0-2pins@0', 'auart0@0',  ... 'usb1@1' do not match any of the regexes: 'gpio@[0-9]+$', 'pinctrl-[0-9]+'
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-mxs.yaml    |  73 +++++++++-
+>  .../bindings/pinctrl/fsl,mxs-pinctrl.txt      | 127 ------------------
+>  2 files changed, 69 insertions(+), 131 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> index b58e08c8ecd8a..b3cf4682be3fd 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+> @@ -18,9 +18,11 @@ description: |
+>  
+>  properties:
+>    compatible:
+> -    enum:
+> -      - fsl,imx23-pinctrl
+> -      - fsl,imx28-pinctrl
+> +    items:
+> +      - enum:
+> +          - fsl,imx23-pinctrl
+> +          - fsl,imx28-pinctrl
+> +      - const: simple-bus
 
-> > 4) We don't have reasonable support for the new API in the userland.
->=20
-> This is simply not true. Openrgb's next release is planning to
-> include HID lamparray support.
+I don't think the use of simple-bus is correct here. The addresses are 
+not MMIO (there's no size), and I would guess the child nodes are 
+dependent on the parent.
 
-I said "reasonable", and openrgb is not reasonable. It is the same
-mess "gpm" was. Remember gpm for mouse handling? Except that... it is
-bigger mess. Few megabytes bigger, IIRC, links against QT.
+>  
+>    '#address-cells':
+>      const: 1
+> @@ -31,6 +33,61 @@ properties:
+>      maxItems: 1
+>  
+>  patternProperties:
+> +  "^(?!gpio).*@[0-9]+$":
 
-I have debian 11 here. That does not even have openrgb.
+Unit-address should be hex? If not, then another reason this is not a 
+simple-bus.
 
-Device drivers in userland ... never worked too well. Openrgb is a
-hardware driver that happens to link QT gui into the binary. That's
-=2E.. not reasonable.
+> +    type: object
+> +    properties:
+> +      fsl,pinmux-ids:
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        description: |
+> +          An integer array.  Each integer in the array specify a pin
+> +          with given mux function, with bank, pin and mux packed as below.
+> +
+> +          [15..12] : bank number
+> +          [11..4]  : pin number
+> +          [3..0]   : mux selection
+> +
+> +          This integer with mux selection packed is used as an entity by both group
+> +          and config nodes to identify a pin.  The mux selection in the integer takes
+> +          effects only on group node, and will get ignored by driver with config node,
+> +          since config node is only meant to set up pin configurations.
+> +
+> +          Valid values for these integers are listed below.
+> +
+> +      reg:
+> +        maxItems: 1
 
-Best regards,
-							Pavel
---=20
-I don't work for Nazis and criminals, and neither should you.
-Boycott Putin, Trump, and Musk!
+Would be good to say what 'reg' represents here.
 
---SAhQsDNdRiRNEyv5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaDYBgQAKCRAw5/Bqldv6
-8pxlAJ0bkaJARLOFiPmEOPRe8wQQujjj1QCdEy5czXdwfz9hDDnYtSid78sAw20=
-=vODu
------END PGP SIGNATURE-----
-
---SAhQsDNdRiRNEyv5--
+> +
+> +      fsl,drive-strength:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1, 2, 3]
+> +        description: |
+> +          0: MXS_DRIVE_4mA
+> +          1: MXS_DRIVE_8mA
+> +          2: MXS_DRIVE_12mA
+> +          3: MXS_DRIVE_16mA
+> +
+> +      fsl,voltage:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+> +        description: |
+> +          0: MXS_VOLTAGE_LOW  - 1.8 V
+> +          1: MXS_VOLTAGE_HIGH - 3.3 V
+> +
+> +      fsl,pull-up:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+> +        description: |
+> +          0: MXS_PULL_DISABLE - Disable the internal pull-up
+> +          1: MXS_PULL_ENABLE  - Enable the internal pull-up
+> +
+> +          Note that when enabling the pull-up, the internal pad keeper gets disabled.
+> +          Also, some pins doesn't have a pull up, in that case, setting the fsl,pull-up
+> +          will only disable the internal pad keeper.
+> +
+> +    required:
+> +      - fsl,pinmux-ids
+> +
+> +    additionalProperties: false
+> +
+>    "gpio@[0-9]+$":
+>      type: object
+>      properties:
+> @@ -80,7 +137,7 @@ examples:
+>      pinctrl@80018000 {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+> -        compatible = "fsl,imx28-pinctrl";
+> +        compatible = "fsl,imx28-pinctrl", "simple-bus";
+>          reg = <0x80018000 0x2000>;
+>  
+>          gpio@0 {
+> @@ -132,4 +189,12 @@ examples:
+>              interrupt-controller;
+>              #interrupt-cells = <2>;
+>          };
+> +
+> +        lcdif-apx4@5 {
+> +            reg = <5>;
+> +            fsl,pinmux-ids = <0x1181 0x1191>;
+> +            fsl,drive-strength = <0>;
+> +            fsl,voltage = <0>;
+> +            fsl,pull-up = <0>;
+> +        };
+>      };
