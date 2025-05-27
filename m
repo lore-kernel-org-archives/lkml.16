@@ -1,112 +1,81 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2F41F03C7;
-	Tue, 27 May 2025 22:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE2D20299B;
+	Tue, 27 May 2025 22:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748385592; cv=none; b=su5KojykXZh10QmqWNGijtCQfKoYq9HXb/cHEZ6+uwfQvmopl9rtoURZfkeINj6532x/P189nMvhzJpcaILPNkeuyz2T1gZTI+dDsFUavhvS5omEiHnfGPXLF4gR3+8wMdzprOERNeM1QrHTHZxX1M3nAG1UbkHxWON+EPj6Hrg=
+	t=1748385622; cv=none; b=CpVCzyJh0SBG3/ZhHSQOZl4ZOUAENBFw6QN87ClACAXP9o4yZCTZLceBXBe0V3Y3LjifCmDhM4JLhj1Aoytnl5CV994C1KC6FsesEQTMjKaZf9lt6pL15ITio85fsLlHXG5Y4GfORiPAPRHucCZoGKL0b40fuOrdAiCZXm5Ee0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748385592; c=relaxed/simple;
-	bh=ZWUPQWYwOzwCLHEKBB/FWs/qMTaNwaZDoUZrhNBZrs4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lZqi9LG0UmWA8FTHQOXR96QUM3IS+cht/Di4FIlMZo0PvoOwDM0qHCDwcz971lgnFWWhTwciUTuk+09wdc25Ok8YogWcEnZu538kZytOhExy15FD1emW6y1Fx0XKpInTS+pQerqyt/2g3BWFUkNZ0G0b7Gy7HoCKf7fNcKkQYsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WEW0Muka; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748385622; c=relaxed/simple;
+	bh=NSo57GFDK3pRjZbqeVf45lXVa0GyJ02lg0snu8/nMzo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YzhRSX1uznhPsy6N5s+10TXCeYz64g2Ka1TqCHAhDchpF7BqXdTf1aXY2MQsgsU/PhkL8fqOFrAm1ZLoPfh85LAhhQC7NMiLzILf/qik1AJFe1f7btqZhivxygsJMwGExnLq/Y5r66iLaoLNACGNS9O4ahnec/Z+o+2uQKwDFjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Jorezx+v; arc=none smtp.client-ip=192.19.144.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEW0Muka"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-445b11306abso24088405e9.3;
-        Tue, 27 May 2025 15:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748385589; x=1748990389; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rXlkOLWu/sGGOm7ZnW+mm1CcZhJX8uCPhkdivdDeQSU=;
-        b=WEW0MukatXf/gaLwxJF0fYQxy29YnMQZEGu7bUGH4fMwm+2nzWuYfyabFn/WW9Cnkf
-         dQduplC+tX6vE1b5OIVBFie04Rfd66dSnaNdbXy1/lTOvBJsVuYQUiwKBeHCj8QV2OPZ
-         0q8sfMsOJsvg7U0f7+Kh0XsJuYYziKv9WXq+sr0ovbF/T3YUa8A0vpsPO6YSMKW6nPfv
-         tdbmQhx3SYW8p6+MT+PlhZrUdaa4cQolgRVb0SVricczsgqNYpvq69OXjGLq0f4VaMPV
-         6WNGQ6/K4CgsXERNtIjHa+54ZCvXFFa0w6gpZYD16j4/3duHDh9c0Bk/IvFsKKM48gah
-         DW2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748385589; x=1748990389;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rXlkOLWu/sGGOm7ZnW+mm1CcZhJX8uCPhkdivdDeQSU=;
-        b=syRDaTnfOwKeTt+6HwQbaiuzxhzmOQaO/joUIeR7NcvIVI54a2YZhj6Xca1CjQsv/U
-         6IH+hj3isYC923df0SM8tV/m4d8tq3NS2Y7/4Zf14e2Kc6nhkOOnhZ2S4TdhmdzyOJsl
-         tkruLVLay4Gc3YXfVE5zmUmnAkl6IWPVwa4TkJgdlm3Q0gwVZmNKRRgCVsC03L07YhfP
-         /ZGPhd/AfmkuN+U9AkFs1wxHnVAEYewvzlIMlEQ7RS0xh2HPsHV4sV/jYq4dvv+zFJtF
-         UL9tMGp31XOlx5wSSiT0IbdDDDYWelb3YG0uuVEGZ5JGb+DhvgBrNBMHr6rJM4xmJ4UE
-         /Q0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUpTNSR+tXu3mSKIDUPAm2RW26L4KAYw7yew3qEd0oqylB8uT2tz62zOLSg6GB7A3+4QVRE4mVkh1Q5xP3P@vger.kernel.org, AJvYcCWj7JzxTYwQTLVIzDq/tocE8xOn/FUTe5nevNzhiW7z2BTZRnHlm9HWf2emfrUszchbyx/VCoXd@vger.kernel.org, AJvYcCWn1vORayYyHGLkeVuhQ5kHU9BYl3Vg1iratKEabgViHidjS2BtIWg/ifW8cN3+8flwAnCZFvEpZ/ku@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkVf4ddVXjJknmhRiVvVuKtcgeSqRMgltrd+5S+6+mu22169T2
-	ohNN9Mg4ei7FXOx8Bt1dllqSZkpiK6CwzhItSOPbOnydVUlZZ8jSf9/2/rCMig==
-X-Gm-Gg: ASbGnctdoKvEEGEWMVdR0lkxqPXAbdtMtbq0TM9nWz6Uf575zndTyea4dsHQ3dqBBFI
-	XZK2rTTL/MdsxlZGWmWWP3dN0Sfhe8hxCgkvEgNPHfoWapTEttYAZXrctkApkoVC1z87fZyvTzi
-	Y+4ocvPOr9Hrw4emsy+vioFV6LxLnZw3WmvT8xm8MbS7P0a6aAcRdxgMOfUCn/afTPRQdZClvvz
-	DMeUelqKU3QcJXUI79UeYMFhLCcjJDCCz9esrzBj2DCORfU5p2CJNWKk8WL8c6risb5jQUAQldz
-	iGaue3NCWylcic63jdbFP6VcPO9eWIkm5uMkF4A64NbDMalle04ahh3VEtdmTVGVjQQcFuypYlq
-	GsZvUc5M=
-X-Google-Smtp-Source: AGHT+IGMU3ZZNmMTsQBRTaisRadDq5tWfFTWYpn4y/0cYXJzWFz+DLuX+iFQKWNj2oCsMtuZDLpImw==
-X-Received: by 2002:a05:600c:3caa:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-44c937d1443mr138218135e9.14.1748385589055;
-        Tue, 27 May 2025 15:39:49 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4500649ced5sm2154595e9.15.2025.05.27.15.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 15:39:48 -0700 (PDT)
-Message-ID: <68363f34.050a0220.351f97.06f7@mx.google.com>
-X-Google-Original-Message-ID: <aDY_MbMi84LbQtyD@Ansuel-XPS.>
-Date: Wed, 28 May 2025 00:39:45 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Jorezx+v"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id A2E46C00282F;
+	Tue, 27 May 2025 15:40:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com A2E46C00282F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1748385613;
+	bh=NSo57GFDK3pRjZbqeVf45lXVa0GyJ02lg0snu8/nMzo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Jorezx+vksGQPRa+DdurWwy2CZjWiPqn2YFUQ/NEJ2B3F+YmO/8/Wg0i/1vnz2LZz
+	 ZsPwx2mK04Ck6Q/uuUA3n48UsDX9Qxw78Xp3PB9Ad5rvG/KOdCj8w8zXYvMTt9SkmE
+	 2JwGYNLjJEXDQnAsKP0UBxLUPP4xY+OjLnLqbUhE=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 36CCA18000530;
+	Tue, 27 May 2025 15:40:13 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Philipp Zabel <p.zabel@pengutronix.de>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH 2/2] net: mdio: Add MDIO bus controller for
- Airoha AN7583
-References: <20250527213503.12010-1-ansuelsmth@gmail.com>
- <20250527213503.12010-2-ansuelsmth@gmail.com>
- <e289d26e-9453-45f5-bfa6-f53f9e4647af@lunn.ch>
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	=?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: bcm958625-meraki-mx6x: Use #pwm-cells = <3>
+Date: Tue, 27 May 2025 15:40:12 -0700
+Message-ID: <20250527224012.232638-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250527181320.373572-2-u.kleine-koenig@baylibre.com>
+References: <20250527181320.373572-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e289d26e-9453-45f5-bfa6-f53f9e4647af@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 12:36:46AM +0200, Andrew Lunn wrote:
-> > +#define AN7583_MDIO_PHY				0xd4
-> > +#define   AN7583_MDIO1_SPEED_MODE		BIT(11)
-> > +#define   AN7583_MDIO0_SPEED_MODE		BIT(10)
+From: Florian Fainelli <f.fainelli@gmail.com>
+
+On Tue, 27 May 2025 20:13:18 +0200, Uwe Kleine-König <u.kleine-koenig@baylibre.com> wrote:
+> bcm-nsp.dtsi has #pwm-cells = <3> as is specified in the binding. So to
+> also use that correct value for bcm958625-meraki-mx6x the property
+> overriding that value just has to be dropped. This fixes a few warnings
+> like:
 > 
-> Is there any documentation about what these bits do? The bus should
-> default to 2.5Mhz.
->
+> 	arch/arm/boot/dts/broadcom/bcm958625-meraki-mx65.dtb: pwm@31000: #pwm-cells: 3 was expected
+> 		from schema $id: http://devicetree.org/schemas/pwm/brcm,iproc-pwm.yaml#
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> ---
 
-No but I can ask. In theory tho these MDIO controller are used for 10g
-or 2.5g PHY that all require a firmware to load so 2.5MHz makes the boot
-time of 2+ minute.
-
-The documentation say...
-
-1: fast mode
-0: normal mode
-
-Very useful I guess :D
-
--- 
-	Ansuel
+Applied to https://github.com/Broadcom/stblinux/commits/devicetree/next, thanks!
+--
+Florian
