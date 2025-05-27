@@ -1,145 +1,146 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADD23FC7;
-	Tue, 27 May 2025 06:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C331F5619
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326497; cv=none; b=aMy9kx+3nOOuLxiRnpWarABq703A6J6enPbAEYWHrZmwdMRyhKIS4v7+YvhdJxuTFUmR9aMXCUtA5X+ssjX0iIaND3h4WhK1uiY+KfdQ2WPHNeiZb69+EEynkYH+pw6EHF4ZQy4Z4UAH3+AX1DEBIlnQV8fF/L+TrkW7EsnpdEc=
+	t=1748326505; cv=none; b=tXQas0iFiVzalDQGXqV0SLfpe2QXrqUB/A6RTmDKFTqDHaTIAPh3YqgZo/8OH3jWd2Av4F9qxbB5Ziw2d0FXYwYGLgvztFnjuO2i/nz2eMiFLgv3RXTRGJ4bM0sevvWg7tzQV1PqgPSciPOiM2Dgw04WAHv3UI8G8qcj411h0AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326497; c=relaxed/simple;
-	bh=bPZlBi/TrOB7P9Rl1Y3T5ifdw7rwhtu0psVkBPl9Cy0=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:Mime-Version:
-	 References:In-Reply-To; b=Guazwvbn0wNhmEFnYrs37zonJowb2b56IcjgfEsSgoFlIc4q5W3NXizE+tIDRpFitGY2Gj0tsOFCT7o9vwwPoZT3VvmPBX1H46nNrjHP4upkjwt2wexV5IGTw7BBOp6GjW5HV7MzeXyWqjoccpptvFF+e2eFuaxBZ9YMwR8XSV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WrB0SoUz; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748326505; c=relaxed/simple;
+	bh=7cqRvWmsjLpLwLP6G4YoQhs0bVKffM2fN7biKpXdZnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bTStzPnIdUbc6hkRubDRTaHuO774ZQS2LTEi4550e5VcPCC59lFaxG2eSRE6SsqVQ8f0JdG3SiMNua3XO3nofIqSLjRwt3LTnLOagVebAtJpxHiuO6AjShM9FQFS2jGKX60MVaH5/diRX5IGyXmS3E+5JoBhtSCqhri/7OnwtSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=esFvNxFx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DtQS3xDs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=esFvNxFx; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DtQS3xDs; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrB0SoUz"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1601836a12.2;
-        Mon, 26 May 2025 23:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748326495; x=1748931295; darn=vger.kernel.org;
-        h=in-reply-to:references:content-transfer-encoding:mime-version:to
-         :from:subject:cc:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eBBkE8s/YVneLq+9AwE4ItbtcJd3DVQnda+tTZ0Bolk=;
-        b=WrB0SoUzCwPKtDZE74SKv+fw7OEisPVYv6y8qDTv8CiBvf6zvQPPxknDnN9CM0pkju
-         j4LH/lC/xCu2jYFBigp7DKD4iq27ztNEVVvJK5H5Mv7TE9p38mwxd2n7izHQ5r1O3bUM
-         0GAF74wIDybJ1qdKJZAJfD7AomRM64u4dUYM49V86WuOQh3hgk9yEW8lgWfFVnWdcmka
-         9UJ4U42HDWmKkxLt9D9AtwJ2tPgDqFREzhIr8hlVQLjPxyQhCPabP63KiFMaLoFJur7H
-         /pbS56tYrnfGsFVUpAZAVjRFg30RdAH21DMMHsxK5KvJuncHmtLpEjyBVNcHRCuqioEg
-         +Oag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748326495; x=1748931295;
-        h=in-reply-to:references:content-transfer-encoding:mime-version:to
-         :from:subject:cc:message-id:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eBBkE8s/YVneLq+9AwE4ItbtcJd3DVQnda+tTZ0Bolk=;
-        b=YDz7Up50ffIlOYg+LGs2JkBuzB1Ug7uePXxBw4spbThV4Gkj8Daa/5Yg4HR/kqBtpX
-         p5358CgNMu/LY8oChAv3udxn+YxlS0lZ7BrQJa53gmHm1J7tSkN3tJ5kokLu3SIuE1UA
-         w+Fygs7QMd+MoS+S4RzhBCO5VJbEv7p+e+v36imgvH80mwSmsEBTxRgRa13JTH/BbT1U
-         59BDtujr5MnC5LIuchjpohXNEtYifnQ5C7AZS0ck5PmqUOSzjFh3BaWVEabO1ncwIph9
-         vHGVBhErk0J5/UB0FJIo454Zo1UvmkZ0qdB7fZoJxJaXcWmKN3+9V97Mbs9lElXEhPdW
-         RTzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeucTpthVNM2NP2Oz2b5hCeXp2H8OpR8hFbFCdqsQNqxuhK1Rau2Jmz1ihpKcBl7nw5zOhLexMr6ATJFc=@vger.kernel.org, AJvYcCWMbPhXHTaBuzNOzcpWP4zvI0sdSWgcef0ls6WzaCmkuuCxcHuCcgpWQVe9fQo8KvyNaTHINbeS2ifPVZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvRSOh9E3oqVPHXIOxSLFAQZRDdrSFLhczPAVdLOYbXIJejMUl
-	3AiZQxY8btTraTzuyVqmv+5M7J39Nkov4+UEkLeS6wYt9O74FCSGt+Vr
-X-Gm-Gg: ASbGncukGsW5765eQNSVKv+JPQ6Id++baZtOz8vOX6x0b+RhhM70e4uouMZlLMzsT9B
-	CJ1qSbvFYbgmsN1W1cPPWZkaVxSkLUxNHfb/JWgRL2JrQ+Q/ncq9A3RIwXHEuakdLh+PFNTQT1w
-	D8VBQ/TpSD5m2pleQJd6GLvgz7cSvwCzBOJ142rxDx/iX0eXEuJGMJGyr3NBYS+xWmjD+G2v1jT
-	ldySYpAJWR6Awl9NzKK+WPJqwhlw7/cgXwHySR2n/ufPesTqIxnNgn83/VBRXjbQORecZUgEdrD
-	gvTi4yJ/nXhs6heLkqM0dOK70wV4r75JuDTu/0J0644=
-X-Google-Smtp-Source: AGHT+IH4ynIKhX0Q/W63W+KiOzYy2HiXf351MI+w2/z045fkfOry3JXmUePfhPVwSC7VlMVwFg7M1A==
-X-Received: by 2002:a17:90a:c2c3:b0:30e:8f60:b4c with SMTP id 98e67ed59e1d1-3110f30d933mr19804287a91.16.1748326494695;
-        Mon, 26 May 2025 23:14:54 -0700 (PDT)
-Received: from localhost ([240d:1a:f76:b500:4431:46e3:c76b:79bc])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5bd3sm13413809a91.37.2025.05.26.23.14.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 23:14:53 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 15:14:50 +0900
-Message-Id: <DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-Cc: "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Hans Verkuil"
- <hverkuil@xs4all.nl>, "Albert Esteve" <aesteve@redhat.com>, "Jason Wang"
- <jasowang@redhat.com>, "Xuan Zhuo" <xuanzhuo@linux.alibaba.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- <gurchetansingh@google.com>, <daniel.almeida@collabora.com>,
- <adelva@google.com>, <changyeon@google.com>,
- <nicolas.dufresne@collabora.com>, <linux-kernel@vger.kernel.org>,
- <linux-media@vger.kernel.org>, <virtualization@lists.linux.dev>, "Alexandre
- Courbot" <acourbot@google.com>
-Subject: Re: [PATCH v3] media: add virtio-media driver
-From: "Alexandre Courbot" <gnurou@gmail.com>
-To: "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>, "Michael S.
- Tsirkin" <mst@redhat.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="esFvNxFx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DtQS3xDs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="esFvNxFx";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DtQS3xDs"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BEFD11F387;
+	Tue, 27 May 2025 06:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748326500; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ylwDSgJrNNL5Pa/DSxqo6KU+2lsVPVESW17ju/vi8A=;
+	b=esFvNxFxLolycRCGGpM6qpxlZevMLkQngMWufknmy7kt1+QACyriuNGf2kZctTAHwXJ9Dg
+	4njQsYBgdn5FQk1Sy7DxFpmsaTswiIZuY1wK8idN8rPqtCDw5IbzuvRtswHvEeWEJrx/Ev
+	wTUoHz5g9rg+uUrreSM1sc3PS/0adBM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748326500;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ylwDSgJrNNL5Pa/DSxqo6KU+2lsVPVESW17ju/vi8A=;
+	b=DtQS3xDsfkvz3+ZZX4KVgvJobgsNRgXqZcuU6N6gQkBlycKF//Szo4fltwyvWrgxFV/JtJ
+	RaKVVvesJi5vudCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748326500; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ylwDSgJrNNL5Pa/DSxqo6KU+2lsVPVESW17ju/vi8A=;
+	b=esFvNxFxLolycRCGGpM6qpxlZevMLkQngMWufknmy7kt1+QACyriuNGf2kZctTAHwXJ9Dg
+	4njQsYBgdn5FQk1Sy7DxFpmsaTswiIZuY1wK8idN8rPqtCDw5IbzuvRtswHvEeWEJrx/Ev
+	wTUoHz5g9rg+uUrreSM1sc3PS/0adBM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748326500;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ylwDSgJrNNL5Pa/DSxqo6KU+2lsVPVESW17ju/vi8A=;
+	b=DtQS3xDsfkvz3+ZZX4KVgvJobgsNRgXqZcuU6N6gQkBlycKF//Szo4fltwyvWrgxFV/JtJ
+	RaKVVvesJi5vudCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5A102136E0;
+	Tue, 27 May 2025 06:15:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7GI5FGRYNWjsGAAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 27 May 2025 06:15:00 +0000
+Message-ID: <1fafc497-1ed7-4016-9fa2-ae82d48aa778@suse.de>
+Date: Tue, 27 May 2025 08:14:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
- <20250526141316.7e907032@foz.lan>
-In-Reply-To: <20250526141316.7e907032@foz.lan>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/23] md/md-bitmap: add a new method skip_sync_blocks()
+ in bitmap_operations
+To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, xni@redhat.com,
+ colyli@kernel.org, song@kernel.org, yukuai3@huawei.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-9-yukuai1@huaweicloud.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250524061320.370630-9-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.19)[-0.969];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,huawei.com:email,suse.de:email,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spam-Level: 
 
-Hi Mauro,
-
-On Mon May 26, 2025 at 9:13 PM JST, Mauro Carvalho Chehab wrote:
-> Hi Michael,
->
-> Em Sat, 12 Apr 2025 13:08:01 +0900
-> Alexandre Courbot <gnurou@gmail.com> escreveu:
->
->> Add the first version of the virtio-media driver.
->>
->> This driver acts roughly as a V4L2 relay between user-space and the
->> virtio virtual device on the host, so it is relatively simple, yet
->> unconventional. It doesn't use VB2 or other frameworks typically used in
->> a V4L2 driver, and most of its complexity resides in correctly and
->> efficiently building the virtio descriptor chain to pass to the host,
->> avoiding copies whenever possible. This is done by
->> scatterlist_builder.[ch].
->>
->> virtio_media_ioctls.c proxies each supported ioctl to the host, using
->> code generated through macros for ioctls that can be forwarded directly,
->> which is most of them.
->>
->> virtio_media_driver.c provides the expected driver hooks, and support
->> for mmapping and polling.
->>
->>  This version supports MMAP buffers, while USERPTR buffers can also be
->>  enabled through a driver option. DMABUF support is still pending.
->
-> It sounds that you applied this one at the virtio tree, but it hasn't
-> being reviewed or acked by media maintainers.
->
-> Please drop it.
->
-> Alexandre,
->
-> Please send media patches to media maintainers, c/c other subsystem
-> maintainers, as otherwise they might end being merged without a
-> proper review.
-
-Sorry about that, I put everyone in "To:" without giving it a second
-thought.
-
->
-> In this particular case, we need to double-check if this won't cause
-> any issues, in special with regards to media locks and mutexes.
-
-Agreed, I am not 100% confident about that part myself.
-
->
-> I'll try to look on it after this merge window, as it is too late
-> for it to be applied during this one.
-
-Appreciate that - given the high traffic on the list I was worried that
-this patch would eventually be overlooked. Not making it for this merge
-window should not be a problem, so please take the time you need.
+On 5/24/25 08:13, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> This method is used to check if blocks can be skipped before calling
+> into pers->sync_request(), llbiltmap will use this method to skip
+> resync for unwritten/clean data blocks, and recovery/check/repair for
+> unwritten data blocks;
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/md/md-bitmap.h | 1 +
+>   drivers/md/md.c        | 7 +++++++
+>   2 files changed, 8 insertions(+)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
-Alex.
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
