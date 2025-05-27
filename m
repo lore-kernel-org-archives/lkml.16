@@ -1,332 +1,404 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE711F03C7
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDC41DE3CA
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748382909; cv=none; b=q/sm7VvGqDC7AcSlijleaatQbdInoXAOSpNAiHilPvndgiOpdKFCwecnxrA9HJ1RDKdh6HTKfv1JXKXcDYO6oPHNbb+i2tpgb1Z6HjC2Qgk4Oo7HNbMmGtGfZAhk/F9EhrecDrzZ/Mr7+hdl2fYGr7+awb2kfW/rkMq+nXyXR90=
+	t=1748382954; cv=none; b=XVrljQbpiaorSqgoBMMtBW9/gjVtGRVX8slLMOtQKQLiCIa4BSc5mJecfK1rZIHXwWZ6AzEwUxyKKq5/q828mgRbqsQTCHYCBb1txs0dKU8HTB+zgF3UswUvsn0L0StWaxCgGAqIxDM0MCqp4s9KXbqKWDp3K7qzneUjC4lf1Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748382909; c=relaxed/simple;
-	bh=nXe1Icil4NeLuKAWL16jSsRo21UwSmmjNwPMHL3MN2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MdSMBsxtKXBW8GqXKPuDs940mUIvBogsPtTY1qPXMaZEdsL3uzCAUGnXopZ9p+PDM+BrnV5P1Ti71K0tM5RutEiECCLg1z8ZgC0hSWfE8OIzS5beq6ce8E0ShyNL1FODCKZKg5i4Pe7KVh63h1XBUodmgbCwPA7M9Nn4k2f+Cto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NiN1Q+zx; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748382954; c=relaxed/simple;
+	bh=bad1qvyasee/qjsnPyhujssg6fQyYoyoImcyzL4OdTo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TPlnf7hYAGlgEVpGLsw0PSRXvFe3PUUglkBcMRMUfkh+feNfS0HrkLlAoE89nhXLUVI0+P4ASulGW12JK74b5S2/et3yNWmHmSwW8dXsy6okqjv7pgEbrCWuGcjQWxDXwaTMgOHWjAkmxd1LAkfRd/EpbvH5IsUevWuFluSj/x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dugarreau.fr; spf=pass smtp.mailfrom=dugarreau.fr; dkim=pass (2048-bit key) header.d=dugarreau.fr header.i=@dugarreau.fr header.b=K8yXeP9x; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=qDeriehw; arc=none smtp.client-ip=34.202.193.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dugarreau.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dugarreau.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NiN1Q+zx"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHTYvi028888
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=ne0gIQPeeXA6jgzWvpGK1bbR
-	cxhFrzGXDtK9BlZZ+0M=; b=NiN1Q+zxSFX1HVMJWUPBbHM1fj+PQogE32B9s9rh
-	fZGbO7tmuoSg1WWTh+X/wNeIxzv0byXz2o5MpeZ5EJEYngFXnJmyuxsj+pZaqL+x
-	OwjeiHW4Osj5N2T807P3WR+ThjkQXlskCiqSrb6Ft4NU/hgNelJnFnDEVmh+YUUd
-	XLdVQ2Dr/jbokc+ZoGPJquor1Dv2Utws+QGCAAmbn3qdrWrTXFxlM1fW0ffpjDCF
-	KHS/QV+HAvQa74q+uDrL55uZmLw4WGB011gvLeLYAH6SG1XT9/k2a1nMdG9gbliK
-	NPMXo7u3nSwd7VKo7XkLPp7n2FOhS9PFLPr3mPr6Okajhw==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf0nct-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:06 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fab07aa5e1so43615626d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:55:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748382905; x=1748987705;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ne0gIQPeeXA6jgzWvpGK1bbRcxhFrzGXDtK9BlZZ+0M=;
-        b=Hz1xuqKlAI17yuooBXLtBvOvzeiZlI474XsXkxXcHbr6sx346c5rxeyYqRCEbzIcCw
-         kLC8RYWiaNv2hc5t/ErmNvCr3WXCm7XRWEz2e5/F6fYmwISpHrQCgKqbQoKpWY8jDu48
-         UZ7iYp5zhHVgpTGq/Cw5rstXdZwyzxpnuOxCFspplfhJ0WI9Fg2ZdWyF0uu6YebFlsjK
-         a3V8CqcHblGS2VMT0JVKBt1I+mDkr7qIL75hgwnh2JIul7zNMP0rtoBRwcZROK0pid5G
-         q2KWFSm09Lp3zQ9+U8zhphp2hELiaU1L9vmyMbumt4C+5HHNsmljKnAW6ud1vm5k5v5U
-         /u1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUzid5+CiC4K1ZadC972favGyNdt5bEVplbKtY80shIq+Tm3XRUhtSGqRJ697ujftEPsP7W+4D8+VtHK48=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2yUY4bUsWpVWdz0pa9/cyGYAwFUDWZPHPWHFfq92gw5+LETHQ
-	TKuPFChv9npxlYcvkWt+fTJsvl2DzF4JOi2nHuufXJp4IzG3gMqQoTPkZRWmtZCf10OChgFHyDW
-	Q50g0cusZ/b6HXEyFw1IpjUiyVYJHy2kF2c9zz+QMfiJLIDVoKllmnNAmqz1yJt7AXg8=
-X-Gm-Gg: ASbGncv3Q36xvjZgHT0+Ky/ACAPm4wUw9jbA3HeLdZemqaw0kuLMy6e4WxXguSq8jLo
-	B5QoOYxW9RNxEBAWH8n08SreG28AZmJxZi0J6CLIKzTSDhkJxjBij0L8HjWVfoDOopOU0L4HZZw
-	07FnVgi1OuzofEQg4xxuxxsd/9OWu8A9+F8zAtXgNDyINPDBoCgqgCVqLtnHAn7kmJOQ9xH7Int
-	lsQfJQLW5XpMsrQJLDZtD8wQA3Ml0cfpoxkKQzmNDlzs5qWUfFszX8ZlfnNRQDT5Fx9fjgq5i7U
-	tdoiZ0CgQ1jasrGuT47IsQdqSyIAmjzz4w2aufDgT2MhnsOi1tFbxY+SoYQHASI8jNr06mgQA64
-	=
-X-Received: by 2002:a05:6214:5095:b0:6f2:d25e:8f60 with SMTP id 6a1803df08f44-6fa9d2aea48mr243069896d6.22.1748382905545;
-        Tue, 27 May 2025 14:55:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFcBAog/0QNelbBSobBObHpDOHFG6hBJ6xtUMTJD3tXlDyIcI+Swq6mULnQ7WDRT6XsVldWdA==
-X-Received: by 2002:a05:6214:5095:b0:6f2:d25e:8f60 with SMTP id 6a1803df08f44-6fa9d2aea48mr243069596d6.22.1748382905125;
-        Tue, 27 May 2025 14:55:05 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532edde019sm45678e87.49.2025.05.27.14.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 14:55:03 -0700 (PDT)
-Date: Wed, 28 May 2025 00:55:01 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v3 5/6] phy: qcom: qmp-combo: register a typec mux to
- change the QMPPHY_MODE
-Message-ID: <itmvwhcf37bmnpadcyc7kdt7wx3eljyjwyv64s24zwhbr2e45g@76uzcpjqzx22>
-References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
- <20250527-topic-4ln_dp_respin-v3-5-f9a0763ec289@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=dugarreau.fr header.i=@dugarreau.fr header.b="K8yXeP9x";
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="qDeriehw"
+Authentication-Results: purelymail.com; auth=pass
+DKIM-Signature: a=rsa-sha256; b=K8yXeP9x6jdT6oWnF6OzK7XTw4nmFaYvxs7pNmjGy8AwdFukD4dWiWxvZlchtjT93IyT0fqxiJRMU1kmWztj7ravDnUOhOyns/miNWFswAGUJLhc6X2uQTtD9zYkNQXjggiZrRVAk2jW68R806r+T13Jkjbbj56ZWl/J3jpXVow+l+yXIxLBl13bqeJVuAMXwleN9O83IA6e5i6MS3uZZWVo2X/vKHW1HPb4WyBPbtjUNeDbeAuzefLyH4sd7WrY/l4RhR0XhIW2qP7EQRfMgAY2JYmnGMrdm9giZ02J+7tn09dvJ9ycI1C5lEuDcdcOEz7VlptNNFExn/w2ic6Y7w==; s=purelymail3; d=dugarreau.fr; v=1; bh=bad1qvyasee/qjsnPyhujssg6fQyYoyoImcyzL4OdTo=; h=Received:From:To:Subject:Date;
+DKIM-Signature: a=rsa-sha256; b=qDeriehwxoC0ac1vEYbl5RejoAaprdnkd2lwMeYXEQy3V5u91EKVmhyAys28/ePLOXt4ZcO/rsSHEJcb+1y8xtni4TZzldgmUVBVxcNO7mOPTF7q+ev21+6X+2wI7c+pPJ8ia25LvzxEGAb3s5Hb4cWod6+D+8QzcxiKSEGcMi+RglpCgVuyjJwT5YTXD9W9FG76PwQjwba0agpwrUrtX1wzyl2OgpAGFgaU25t1pzpJ5RID2sbXrc22JI6RuwmX7dM0zOvFzE0G500nPqmX8NgOy5c4iB6VWbhLsdfbuaSPm6KzCOLx58d2mpb8b/xcB/igK98BJ9SIxNDL6eEzVQ==; s=purelymail3; d=purelymail.com; v=1; bh=bad1qvyasee/qjsnPyhujssg6fQyYoyoImcyzL4OdTo=; h=Feedback-ID:Received:From:To:Subject:Date;
+Feedback-ID: 78338:10797:null:purelymail
+X-Pm-Original-To: linux-kernel@vger.kernel.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id 1701894474;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Tue, 27 May 2025 21:55:03 +0000 (UTC)
+From: =?UTF-8?q?Beno=C3=AEt=20du=20Garreau?= <benoit@dugarreau.fr>
+To: Benno Lossin <lossin@kernel.org>
+Cc: =?UTF-8?q?Beno=C3=AEt=20du=20Garreau?= <benoit@dugarreau.fr>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Fiona Behrens <me@kloenk.dev>,
+	Christian Schrefl <chrisi.schrefl@gmail.com>,
+	Alban Kurti <kurti@invicto.ai>,
+	Michael Vetter <jubalh@iodoru.org>,
+	Lyude Paul <lyude@redhat.com>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/13] rust: pin-init: rename `zeroed` to `init_zeroed`
+Date: Tue, 27 May 2025 23:54:09 +0200
+Message-ID: <20250527215424.26374-1-benoit@dugarreau.fr>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250523145125.523275-2-lossin@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527-topic-4ln_dp_respin-v3-5-f9a0763ec289@oss.qualcomm.com>
-X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=683634bb cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=RX03QJoVYHKw4zbBXYoA:9
- a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: cn4L5kZ1UAWZYvCrDy_DUIVsINjwln2x
-X-Proofpoint-GUID: cn4L5kZ1UAWZYvCrDy_DUIVsINjwln2x
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE4NCBTYWx0ZWRfX+SZfhsRAL6JC
- /tyB8rsMVkYjQ2sLa7T1WjMP0k52sRNfqscboS/zUMhO/S5BJRTkqKJimbr8hOsE0+mmL24Rmum
- s9T8/2yYt+l2lgOEGO2r9ySBivbE7EKrFJD/dYCwZyT00Y+FS085l7mbiOfUumUDqLmBaRC8cw3
- i4BVWsaslqmOV3ASf252i82p7CmmVAZVHAVDqMusAmTggCIgLjVP/p9mDuHTk1vjsMrNnrQYkfm
- UPQBL8S7nw6ecrBPo0pmTKI1L0rNR5Jjq2p0McXQovXdrH8+z+5vd+8OxEcRl5R23X0D6jOHBh7
- bFz7hUDo0jQjKfMlioHgSZKvci6q49fVF8+s0BZty56FunRRDjsju5NovMX1jmH4CEI2bn6uuK8
- ycLBPg4ocm9WKf0AItdwNu267V4/yPJ1n97NE80bcwqRxJ5rqrQONid7CnS6QPquHJ3DkdHW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_10,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505270184
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by Purelymail
 
-On Tue, May 27, 2025 at 10:40:07PM +0200, Konrad Dybcio wrote:
-> From: Neil Armstrong <neil.armstrong@linaro.org>
-> 
-> Register a typec mux in order to change the PHY mode on the Type-C
-> mux events depending on the mode and the svid when in Altmode setup.
-> 
-> The DisplayPort phy should be left enabled if is still powered on
-> by the DRM DisplayPort controller, so bail out until the DisplayPort
-> PHY is not powered off.
-> 
-> The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
-> will be set in between of USB-Only, Combo and DisplayPort Only so
-> this will leave enough time to the DRM DisplayPort controller to
-> turn of the DisplayPort PHY.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> [konrad: renaming, rewording, bug fixes]
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Fri, 23 May 2025 16:50:57 +0200 Benno Lossin <lossin@kernel.org> wrote:
+
+> The name `zeroed` is a much better fit for a function that returns the
+> type by-value.
+>=20
+> Link: https://github.com/Rust-for-Linux/pin-init/pull/56/commits/7dbe3868=
+2c9725405bab91dcabe9c4d8893d2f5e
+> [ also rename uses in `rust/kernel/init.rs` - Benno]
+> Signed-off-by: Benno Lossin <lossin@kernel.org>
 > ---
->  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 121 ++++++++++++++++++++++++++++--
->  1 file changed, 116 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> index b34ad92021a656b39562e2685a1e7a0a93660a35..4c9d92d6e0b8508191d052bd85dd135e4b8d7cc7 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-> @@ -19,6 +19,7 @@
->  #include <linux/reset.h>
->  #include <linux/slab.h>
->  #include <linux/usb/typec.h>
-> +#include <linux/usb/typec_dp.h>
->  #include <linux/usb/typec_mux.h>
->  
->  #include <drm/bridge/aux-bridge.h>
-> @@ -1709,6 +1710,8 @@ struct qmp_combo {
->  
->  	struct typec_switch_dev *sw;
->  	enum typec_orientation orientation;
-> +
-> +	struct typec_mux_dev *mux;
->  };
->  
->  static void qmp_v3_dp_aux_init(struct qmp_combo *qmp);
-> @@ -3582,17 +3585,112 @@ static int qmp_combo_typec_switch_set(struct typec_switch_dev *sw,
->  	return 0;
+>  rust/kernel/init.rs                           |  8 +++---
+>  rust/pin-init/README.md                       |  2 +-
+>  rust/pin-init/examples/big_struct_in_place.rs |  4 +--
+>  rust/pin-init/src/lib.rs                      | 28 +++++++++----------
+>  rust/pin-init/src/macros.rs                   | 16 +++++------
+>  5 files changed, 29 insertions(+), 29 deletions(-)
+>=20
+> diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+> index 8d228c237954..15a1c5e397d8 100644
+> --- a/rust/kernel/init.rs
+> +++ b/rust/kernel/init.rs
+> @@ -206,7 +206,7 @@ fn init<E>(init: impl Init<T, E>, flags: Flags) -> er=
+ror::Result<Self>
+>  ///
+>  /// ```rust
+>  /// use kernel::error::Error;
+> -/// use pin_init::zeroed;
+> +/// use pin_init::init_zeroed;
+>  /// struct BigBuf {
+>  ///     big: KBox<[u8; 1024 * 1024 * 1024]>,
+>  ///     small: [u8; 1024 * 1024],
+> @@ -215,7 +215,7 @@ fn init<E>(init: impl Init<T, E>, flags: Flags) -> er=
+ror::Result<Self>
+>  /// impl BigBuf {
+>  ///     fn new() -> impl Init<Self, Error> {
+>  ///         try_init!(Self {
+> -///             big: KBox::init(zeroed(), GFP_KERNEL)?,
+> +///             big: KBox::init(init_zeroed(), GFP_KERNEL)?,
+>  ///             small: [0; 1024 * 1024],
+>  ///         }? Error)
+>  ///     }
+> @@ -264,7 +264,7 @@ macro_rules! try_init {
+>  /// ```rust
+>  /// # #![feature(new_uninit)]
+>  /// use kernel::error::Error;
+> -/// use pin_init::zeroed;
+> +/// use pin_init::init_zeroed;
+>  /// #[pin_data]
+>  /// struct BigBuf {
+>  ///     big: KBox<[u8; 1024 * 1024 * 1024]>,
+> @@ -275,7 +275,7 @@ macro_rules! try_init {
+>  /// impl BigBuf {
+>  ///     fn new() -> impl PinInit<Self, Error> {
+>  ///         try_pin_init!(Self {
+> -///             big: KBox::init(zeroed(), GFP_KERNEL)?,
+> +///             big: KBox::init(init_zeroed(), GFP_KERNEL)?,
+>  ///             small: [0; 1024 * 1024],
+>  ///             ptr: core::ptr::null_mut(),
+>  ///         }? Error)
+> diff --git a/rust/pin-init/README.md b/rust/pin-init/README.md
+> index 2d0cda961d45..a4c01a8d78b2 100644
+> --- a/rust/pin-init/README.md
+> +++ b/rust/pin-init/README.md
+> @@ -125,7 +125,7 @@ impl DriverData {
+>      fn new() -> impl PinInit<Self, Error> {
+>          try_pin_init!(Self {
+>              status <- CMutex::new(0),
+> -            buffer: Box::init(pin_init::zeroed())?,
+> +            buffer: Box::init(pin_init::init_zeroed())?,
+>          }? Error)
+>      }
 >  }
->  
-> -static void qmp_combo_typec_unregister(void *data)
-> +static int qmp_combo_typec_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
-> +{
-> +	struct qmp_combo *qmp = typec_mux_get_drvdata(mux);
-> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
-> +	enum qmpphy_mode new_mode;
-> +	unsigned int svid;
-> +
-> +	guard(mutex)(&qmp->phy_mutex);
-> +
-> +	if (state->alt)
-> +		svid = state->alt->svid;
-> +	else
-> +		svid = 0;
-> +
-> +	if (svid == USB_TYPEC_DP_SID) {
-> +		switch (state->mode) {
-> +		/* DP Only */
-> +		case TYPEC_DP_STATE_C:
-> +		case TYPEC_DP_STATE_E:
-> +			new_mode = QMPPHY_MODE_DP_ONLY;
-> +			break;
-> +
-> +		/* DP + USB */
-> +		case TYPEC_DP_STATE_D:
-> +		case TYPEC_DP_STATE_F:
-> +
-> +		/* Safe fallback...*/
-> +		default:
-> +			new_mode = QMPPHY_MODE_USB3DP;
-> +			break;
-> +		}
-> +	} else {
-> +		/* Fall back to USB3+DP mode if we're not sure it's strictly USB3-only */
-
-Why? if the SID is not DP, then there can't be a DP stream.
-
-> +		if (state->mode == TYPEC_MODE_USB3 || state->mode == TYPEC_STATE_USB)
-> +			new_mode = QMPPHY_MODE_USB3_ONLY;
-> +		else
-> +			new_mode = QMPPHY_MODE_USB3DP;
-> +	}
-> +
-> +	if (new_mode == qmp->qmpphy_mode) {
-> +		dev_dbg(qmp->dev, "typec_mux_set: same qmpphy mode, bail out\n");
-> +		return 0;
-> +	}
-> +
-> +	if (qmp->qmpphy_mode != QMPPHY_MODE_USB3_ONLY && qmp->dp_powered_on) {
-> +		dev_dbg(qmp->dev, "typec_mux_set: DP PHY is still in use, delaying switch\n");
-> +		return 0;
-> +	}
-
-Consider the following scenario: connect DP dongle, use modetest to
-setup DP stream, disconnect dongle, connect USB3 device. What would be
-the actual state of the PHY? Modetest is still running, so DP stream is
-not going to be shut down from the driver.
-
-I think we might need a generic notifier from the PHY to the user,
-telling that the PHY is going away (or just that the PHY is changing the
-state). Then it would be usable by both the DP and USB drivers to let
-them know that they should toggle the state.
-
-> +
-> +	dev_dbg(qmp->dev, "typec_mux_set: switching from qmpphy mode %d to %d\n",
-> +		qmp->qmpphy_mode, new_mode);
-> +
-> +	qmp->qmpphy_mode = new_mode;
-> +
-> +	if (qmp->init_count) {
-> +		if (qmp->usb_init_count)
-> +			qmp_combo_usb_power_off(qmp->usb_phy);
-> +
-> +		if (qmp->dp_init_count)
-> +			writel(DP_PHY_PD_CTL_PSR_PWRDN, qmp->dp_dp_phy + QSERDES_DP_PHY_PD_CTL);
-> +
-> +		qmp_combo_com_exit(qmp, true);
-> +
-> +		/* Now everything's powered down, power up the right PHYs */
-> +		qmp_combo_com_init(qmp, true);
-> +
-> +		if (new_mode == QMPPHY_MODE_DP_ONLY) {
-> +			if (qmp->usb_init_count)
-> +				qmp->usb_init_count--;
-> +		}
-> +
-> +		if (new_mode == QMPPHY_MODE_USB3DP || new_mode == QMPPHY_MODE_USB3_ONLY) {
-> +			qmp_combo_usb_power_on(qmp->usb_phy);
-> +			if (!qmp->usb_init_count)
-> +				qmp->usb_init_count++;
-> +		}
-> +
-> +		if (new_mode == QMPPHY_MODE_DP_ONLY || new_mode == QMPPHY_MODE_USB3DP) {
-> +			if (qmp->dp_init_count)
-> +				cfg->dp_aux_init(qmp);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void qmp_combo_typec_switch_unregister(void *data)
->  {
->  	struct qmp_combo *qmp = data;
->  
->  	typec_switch_unregister(qmp->sw);
+> diff --git a/rust/pin-init/examples/big_struct_in_place.rs b/rust/pin-ini=
+t/examples/big_struct_in_place.rs
+> index b0ee793a0a0c..c05139927486 100644
+> --- a/rust/pin-init/examples/big_struct_in_place.rs
+> +++ b/rust/pin-init/examples/big_struct_in_place.rs
+> @@ -21,7 +21,7 @@ pub struct ManagedBuf {
+> =20
+>  impl ManagedBuf {
+>      pub fn new() -> impl Init<Self> {
+> -        init!(ManagedBuf { buf <- zeroed() })
+> +        init!(ManagedBuf { buf <- init_zeroed() })
+>      }
 >  }
->  
-> -static int qmp_combo_typec_switch_register(struct qmp_combo *qmp)
-> +static void qmp_combo_typec_mux_unregister(void *data)
-> +{
-> +	struct qmp_combo *qmp = data;
-> +
-> +	typec_mux_unregister(qmp->mux);
-> +}
-> +
-> +static int qmp_combo_typec_register(struct qmp_combo *qmp)
->  {
->  	struct typec_switch_desc sw_desc = {};
-> +	struct typec_mux_desc mux_desc = { };
->  	struct device *dev = qmp->dev;
-> +	int ret;
->  
->  	sw_desc.drvdata = qmp;
->  	sw_desc.fwnode = dev->fwnode;
-> @@ -3603,10 +3701,23 @@ static int qmp_combo_typec_switch_register(struct qmp_combo *qmp)
->  		return PTR_ERR(qmp->sw);
->  	}
->  
-> -	return devm_add_action_or_reset(dev, qmp_combo_typec_unregister, qmp);
-> +	ret = devm_add_action_or_reset(dev, qmp_combo_typec_switch_unregister, qmp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mux_desc.drvdata = qmp;
-> +	mux_desc.fwnode = dev->fwnode;
-> +	mux_desc.set = qmp_combo_typec_mux_set;
-> +	qmp->mux = typec_mux_register(dev, &mux_desc);
-> +	if (IS_ERR(qmp->mux)) {
-> +		dev_err(dev, "Unable to register typec mux: %pe\n", qmp->mux);
-> +		return PTR_ERR(qmp->mux);
-> +	}
-> +
-> +	return devm_add_action_or_reset(dev, qmp_combo_typec_mux_unregister, qmp);
->  }
->  #else
-> -static int qmp_combo_typec_switch_register(struct qmp_combo *qmp)
-> +static int qmp_combo_typec_register(struct qmp_combo *qmp)
->  {
->  	return 0;
->  }
-> @@ -3839,7 +3950,7 @@ static int qmp_combo_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_node_put;
->  
-> -	ret = qmp_combo_typec_switch_register(qmp);
-> +	ret = qmp_combo_typec_register(qmp);
->  	if (ret)
->  		goto err_node_put;
->  
-> 
-> -- 
+> =20
+> @@ -30,7 +30,7 @@ fn main() {
+>      {
+>          // we want to initialize the struct in-place, otherwise we would=
+ get a stackoverflow
+>          let buf: Box<BigStruct> =3D Box::init(init!(BigStruct {
+> -            buf <- zeroed(),
+> +            buf <- init_zeroed(),
+>              a: 7,
+>              b: 186,
+>              c: 7789,
+> diff --git a/rust/pin-init/src/lib.rs b/rust/pin-init/src/lib.rs
+> index 9ab34036e6bc..3bb0700355df 100644
+> --- a/rust/pin-init/src/lib.rs
+> +++ b/rust/pin-init/src/lib.rs
+> @@ -148,7 +148,7 @@
+>  //!     fn new() -> impl PinInit<Self, Error> {
+>  //!         try_pin_init!(Self {
+>  //!             status <- CMutex::new(0),
+> -//!             buffer: Box::init(pin_init::zeroed())?,
+> +//!             buffer: Box::init(pin_init::init_zeroed())?,
+>  //!         }? Error)
+>  //!     }
+>  //! }
+> @@ -742,7 +742,7 @@ macro_rules! stack_try_pin_init {
+>  /// - Fields that you want to initialize in-place have to use `<-` inste=
+ad of `:`.
+>  /// - In front of the initializer you can write `&this in` to have acces=
+s to a [`NonNull<Self>`]
+>  ///   pointer named `this` inside of the initializer.
+> -/// - Using struct update syntax one can place `..Zeroable::zeroed()` at=
+ the very end of the
+> +/// - Using struct update syntax one can place `..Zeroable::init_zeroed(=
+)` at the very end of the
+>  ///   struct, this initializes every field with 0 and then runs all init=
+ializers specified in the
+>  ///   body. This can only be done if [`Zeroable`] is implemented for the=
+ struct.
+>  ///
+> @@ -769,7 +769,7 @@ macro_rules! stack_try_pin_init {
+>  /// });
+>  /// let init =3D pin_init!(Buf {
+>  ///     buf: [1; 64],
+> -///     ..Zeroable::zeroed()
+> +///     ..Zeroable::init_zeroed()
+>  /// });
+>  /// ```
+>  ///
+> @@ -805,7 +805,7 @@ macro_rules! pin_init {
+>  /// ```rust
+>  /// # #![feature(allocator_api)]
+>  /// # #[path =3D "../examples/error.rs"] mod error; use error::Error;
+> -/// use pin_init::{pin_data, try_pin_init, PinInit, InPlaceInit, zeroed}=
+;
+> +/// use pin_init::{pin_data, try_pin_init, PinInit, InPlaceInit, init_ze=
+roed};
+>  ///
+>  /// #[pin_data]
+>  /// struct BigBuf {
+> @@ -817,7 +817,7 @@ macro_rules! pin_init {
+>  /// impl BigBuf {
+>  ///     fn new() -> impl PinInit<Self, Error> {
+>  ///         try_pin_init!(Self {
+> -///             big: Box::init(zeroed())?,
+> +///             big: Box::init(init_zeroed())?,
+>  ///             small: [0; 1024 * 1024],
+>  ///             ptr: core::ptr::null_mut(),
+>  ///         }? Error)
+> @@ -866,7 +866,7 @@ macro_rules! try_pin_init {
+>  /// # #[path =3D "../examples/error.rs"] mod error; use error::Error;
+>  /// # #[path =3D "../examples/mutex.rs"] mod mutex; use mutex::*;
+>  /// # use pin_init::InPlaceInit;
+> -/// use pin_init::{init, Init, zeroed};
+> +/// use pin_init::{init, Init, init_zeroed};
+>  ///
+>  /// struct BigBuf {
+>  ///     small: [u8; 1024 * 1024],
+> @@ -875,7 +875,7 @@ macro_rules! try_pin_init {
+>  /// impl BigBuf {
+>  ///     fn new() -> impl Init<Self> {
+>  ///         init!(Self {
+> -///             small <- zeroed(),
+> +///             small <- init_zeroed(),
+>  ///         })
+>  ///     }
+>  /// }
+> @@ -913,7 +913,7 @@ macro_rules! init {
+>  /// # #![feature(allocator_api)]
+>  /// # use core::alloc::AllocError;
+>  /// # use pin_init::InPlaceInit;
+> -/// use pin_init::{try_init, Init, zeroed};
+> +/// use pin_init::{try_init, Init, init_zeroed};
+>  ///
+>  /// struct BigBuf {
+>  ///     big: Box<[u8; 1024 * 1024 * 1024]>,
+> @@ -923,7 +923,7 @@ macro_rules! init {
+>  /// impl BigBuf {
+>  ///     fn new() -> impl Init<Self, AllocError> {
+>  ///         try_init!(Self {
+> -///             big: Box::init(zeroed())?,
+> +///             big: Box::init(init_zeroed())?,
+>  ///             small: [0; 1024 * 1024],
+>  ///         }? AllocError)
+>  ///     }
+> @@ -1170,7 +1170,7 @@ pub unsafe trait Init<T: ?Sized, E =3D Infallible>:=
+ PinInit<T, E> {
+>      ///
+>      /// ```rust
+>      /// # #![expect(clippy::disallowed_names)]
+> -    /// use pin_init::{init, zeroed, Init};
+> +    /// use pin_init::{init, init_zeroed, Init};
+>      ///
+>      /// struct Foo {
+>      ///     buf: [u8; 1_000_000],
+> @@ -1183,7 +1183,7 @@ pub unsafe trait Init<T: ?Sized, E =3D Infallible>:=
+ PinInit<T, E> {
+>      /// }
+>      ///
+>      /// let foo =3D init!(Foo {
+> -    ///     buf <- zeroed()
+> +    ///     buf <- init_zeroed()
+>      /// }).chain(|foo| {
+>      ///     foo.setup();
+>      ///     Ok(())
+> @@ -1469,7 +1469,7 @@ pub unsafe trait PinnedDrop: __internal::HasPinData=
+ {
+>  /// this is not UB:
+>  ///
+>  /// ```rust,ignore
+> -/// let val: Self =3D unsafe { core::mem::zeroed() };
+> +/// let val: Self =3D unsafe { core::mem::init_zeroed() };
+
+This looks like a find/replace that was a bit too eager :)
+
+>  /// ```
+>  pub unsafe trait Zeroable {}
+> =20
+> @@ -1484,11 +1484,11 @@ pub unsafe trait ZeroableOption {}
+>  // SAFETY: by the safety requirement of `ZeroableOption`, this is valid.
+>  unsafe impl<T: ZeroableOption> Zeroable for Option<T> {}
+> =20
+> -/// Create a new zeroed T.
+> +/// Create an initializer for a zeroed `T`.
+>  ///
+>  /// The returned initializer will write `0x00` to every byte of the give=
+n `slot`.
+>  #[inline]
+> -pub fn zeroed<T: Zeroable>() -> impl Init<T> {
+> +pub fn init_zeroed<T: Zeroable>() -> impl Init<T> {
+>      // SAFETY: Because `T: Zeroable`, all bytes zero is a valid bit patt=
+ern for `T`
+>      // and because we write all zeroes, the memory is initialized.
+>      unsafe {
+> diff --git a/rust/pin-init/src/macros.rs b/rust/pin-init/src/macros.rs
+> index 935d77745d1d..9ced630737b8 100644
+> --- a/rust/pin-init/src/macros.rs
+> +++ b/rust/pin-init/src/macros.rs
+> @@ -1030,7 +1030,7 @@ impl<$($impl_generics)*> $pin_data<$($ty_generics)*=
+>
+>  ///
+>  /// This macro has multiple internal call configurations, these are alwa=
+ys the very first ident:
+>  /// - nothing: this is the base case and called by the `{try_}{pin_}init=
+!` macros.
+> -/// - `with_update_parsed`: when the `..Zeroable::zeroed()` syntax has b=
+een handled.
+> +/// - `with_update_parsed`: when the `..Zeroable::init_zeroed()` syntax =
+has been handled.
+>  /// - `init_slot`: recursively creates the code that initializes all fie=
+lds in `slot`.
+>  /// - `make_initializer`: recursively create the struct initializer that=
+ guarantees that every
+>  ///   field has been initialized exactly once.
+> @@ -1059,7 +1059,7 @@ macro_rules! __init_internal {
+>              @data($data, $($use_data)?),
+>              @has_data($has_data, $get_data),
+>              @construct_closure($construct_closure),
+> -            @zeroed(), // Nothing means default behavior.
+> +            @init_zeroed(), // Nothing means default behavior.
+>          )
+>      };
+>      (
+> @@ -1074,7 +1074,7 @@ macro_rules! __init_internal {
+>          @has_data($has_data:ident, $get_data:ident),
+>          // `pin_init_from_closure` or `init_from_closure`.
+>          @construct_closure($construct_closure:ident),
+> -        @munch_fields(..Zeroable::zeroed()),
+> +        @munch_fields(..Zeroable::init_zeroed()),
+>      ) =3D> {
+>          $crate::__init_internal!(with_update_parsed:
+>              @this($($this)?),
+> @@ -1084,7 +1084,7 @@ macro_rules! __init_internal {
+>              @data($data, $($use_data)?),
+>              @has_data($has_data, $get_data),
+>              @construct_closure($construct_closure),
+> -            @zeroed(()), // `()` means zero all fields not mentioned.
+> +            @init_zeroed(()), // `()` means zero all fields not mentione=
+d.
+>          )
+>      };
+>      (
+> @@ -1124,7 +1124,7 @@ macro_rules! __init_internal {
+>          @has_data($has_data:ident, $get_data:ident),
+>          // `pin_init_from_closure` or `init_from_closure`.
+>          @construct_closure($construct_closure:ident),
+> -        @zeroed($($init_zeroed:expr)?),
+> +        @init_zeroed($($init_zeroed:expr)?),
+>      ) =3D> {{
+>          // We do not want to allow arbitrary returns, so we declare this=
+ type as the `Ok` return
+>          // type and shadow it later when we insert the arbitrary user co=
+de. That way there will be
+> @@ -1196,7 +1196,7 @@ fn assert_zeroable<T: $crate::Zeroable>(_: *mut T) =
+{}
+>          @data($data:ident),
+>          @slot($slot:ident),
+>          @guards($($guards:ident,)*),
+> -        @munch_fields($(..Zeroable::zeroed())? $(,)?),
+> +        @munch_fields($(..Zeroable::init_zeroed())? $(,)?),
+>      ) =3D> {
+>          // Endpoint of munching, no fields are left. If execution reache=
+s this point, all fields
+>          // have been initialized. Therefore we can now dismiss the guard=
+s by forgetting them.
+> @@ -1300,11 +1300,11 @@ fn assert_zeroable<T: $crate::Zeroable>(_: *mut T=
+) {}
+>      (make_initializer:
+>          @slot($slot:ident),
+>          @type_name($t:path),
+> -        @munch_fields(..Zeroable::zeroed() $(,)?),
+> +        @munch_fields(..Zeroable::init_zeroed() $(,)?),
+>          @acc($($acc:tt)*),
+>      ) =3D> {
+>          // Endpoint, nothing more to munch, create the initializer. Sinc=
+e the users specified
+> -        // `..Zeroable::zeroed()`, the slot will already have been zeroe=
+d and all field that have
+> +        // `..Zeroable::init_zeroed()`, the slot will already have been =
+zeroed and all field that have
+>          // not been overwritten are thus zero and initialized. We still =
+check that all fields are
+>          // actually accessible by using the struct update syntax ourselv=
+es.
+>          // We are inside of a closure that is never executed and thus we=
+ can abuse `slot` to
+>=20
+> base-commit: ae8b3a83fb9de394f609035041cd7a668fda2ab3
+> prerequisite-patch-id: https://lore.kernel.org/all/20250523125424.192843-=
+2-lossin@kernel.org
+> prerequisite-patch-id: https://lore.kernel.org/all/20250523125424.192843-=
+3-lossin@kernel.org
+> prerequisite-patch-id: https://lore.kernel.org/all/20250523125424.192843-=
+4-lossin@kernel.org
+> --=20
 > 2.49.0
-> 
 
--- 
-With best wishes
-Dmitry
+Beno=C3=AEt du Garreau
