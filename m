@@ -1,87 +1,116 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C61A272E44;
-	Tue, 27 May 2025 15:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD2D278E40;
+	Tue, 27 May 2025 15:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748358586; cv=none; b=uANOT7AnljpNUJqA+ckj+mbfQe7Z2di83V0mjoscyF+WvoFBHrWb9gzLfgQUbVbZPQQcdgG3/c/rRnysKCNHyHP3emIOe6Fy9l791kGYi3qMmyvucDseboRjgSFbnDln3ZknK1hS6/G3YppTbFJmrBKlygpsyZivEKbym+tiVeA=
+	t=1748358614; cv=none; b=Bb5gyGQc5rxuvYUPcz9VG6T//Y+T68HJlMKtoqi9xo1a3/R8q3xByqBtbRqht0k1SE9Ns9KIMDXk75D7c8pNE1mh3N35PNGRFZMC8V0JYBazP1i04DsvH4hudr4KEyamq/k/L/o7QCPNT+ZrqkxNxrpla8t/Tu0eLTM8B+/C6fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748358586; c=relaxed/simple;
-	bh=nsO9cYZYOEgibWuYBKwUuC4t8IIr1eOXLL2A0MiTgIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BzazPnc3oqiXe6XJ2Viyt2AIYN0exrd21/f0JSj5D97s3g8pwYu+/xSk5SacaKv7Eoz9RmUemRE7ykFWFktTueeufRYM2H0TdZcE9wUWqiffBH0kAodqNwkbRu604hHciDKmcElDoCa3DuSBxRrGU6iZUhF7XHcHmtHdop/hwtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=QwfAqKoj; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1748358614; c=relaxed/simple;
+	bh=H5ma2vOk/zc4ruJ7aeeKCwuDqBKYCA3ttipvxTMf80U=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=GxXuD9mywMArVbsF8pFnEByTaGSIl1lGypPUVNGmBHhnzBC2COFZKXeSc9+gs35fbyM1yfGq/bbLn6oROdVTCmVyev9DzPxvI8sSRqK/RLsr43rNEwm1iPcJwtvjjRI+Tze+i2cMnVWxswmBfBWIk+GZedTHy+SQx/Xe0/jwI2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YwxEAXvg; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="QwfAqKoj"
-Received: from [192.168.42.116] (p5de45227.dip0.t-ipconnect.de [93.228.82.39])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id B2C0D2FC0055;
-	Tue, 27 May 2025 17:02:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1748358178;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qZ9WkBCJJaU9Gi5utnNrrLjpOjPwylwZcl5TUZRb86I=;
-	b=QwfAqKoj1i3miFKYIZfs53TEmdWOybu0DLiiBAWQQehGIGkV49OZ43vb3LdVJGDoyrR69C
-	5+XDriHfQlygS5w8uL4wYOgQrD+FLfHfD1WRLKgu4Vcq0x6nnlXWVGjrqh7OBhxkw/soIi
-	e8EDsJwQklsur17o6TE36/6X92Ljx7I=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <2c8504d2-7b17-4ce2-b75b-76b73c5fddda@tuxedocomputers.com>
-Date: Tue, 27 May 2025 17:02:57 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwxEAXvg"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742c9563fd9so2357541b3a.3;
+        Tue, 27 May 2025 08:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748358612; x=1748963412; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gqD0/od9qaSOr72rB1opXGkuaDPzcvzJRRaU7EuNDzw=;
+        b=YwxEAXvgTa9WPFR602Y5x+0W2579xaRWVc8JQ6VJJ2cYSlmYHq9Ke5B6tK13TdJ0eo
+         rnMJAlgAuSSapFmkHN6/sQGBqpgCOk5pX/kpmbBEPdH18v9TL6e92UyZpzWZBd26A1DE
+         F3FIcImeqYYtO/HElB/hn72MsQr0DJqJ6FhxA/C0pCO8f5s3PiD2Iq5HaSElpQtchPlM
+         kIgePhDmfLe3MsmSQX0XzD1JOvr5gXhLnq7+j6iDq6ifq72VR6AYoLfbCLTeKsBwO51/
+         C3qUAMvgdvOc/mu8wOP88dkqLWwxECz4aDx7JmWB9XgBXpPVCaAbCZaAH6dYTGij9HyX
+         /2tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748358612; x=1748963412;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gqD0/od9qaSOr72rB1opXGkuaDPzcvzJRRaU7EuNDzw=;
+        b=ZlLJ71JgezX40YnESx5T99977cZD+CSEoHp35oaZ4fWWNbf/GwW67IF6zq2Ljl1Uw6
+         A4/1CRToDf7qXaw3+qinI5CvylmTW+as38h9DpfWM0X8vCjW6ZdnyDtyH/49ZikCYUlk
+         uxKVDWxKOtHeRlr6XXnn3i9hALDTF1j/xz6HbKKRWuyH4QRNJd44XzuTEbumpHJWHecu
+         AZ2x9TpE8eLwXEZN2uNO2aSBgVvnz2iLccuT6RJLfeFVO1OhXcAY0JUKZeZAT1GgK9r+
+         wiW1RNLS/NU/vys3WsXO6JsyOcaaFcy9UwMs8Rp3KAI9Ak8k0ri9RJWY6H4n3MMp9qQ6
+         qKWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWBua3Oy0FcY8iN8d/XZtZYQUePJTti8IvXRtYAq+EqBKk1LYmrm0DQX8bSMPVTSVQqqJHjd1IqDpzVw8I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDMNqQ6zQ99t3IXjgaEGB5E6AkaPf43NcW7JynK/XeHUwhWJpJ
+	R53yOgYhyhHB5TbWlVlAqm5SAoQs3cRHDatO3RKQsS2x31orLe0VVjAIzreUBQ==
+X-Gm-Gg: ASbGncsFtq8iwC6imWtJwqGD0+TFZLfG71ngZSCowBRkRx3imWQLFI2Eu/CfSX4qepn
+	OlsIUcO6k+lZjTz9+wju2M1d8q97BZXYEqvYqlBl6n+oha3UsiltlATTf7pgd0MkD5Ti979Pqxb
+	Esqi4osTDvR/6oHgmzNQMCEpAVNgTvEOKhDnCLSyzHAKNjPxJ6Kbl9eBUzOITzVuiflQk+UFTVu
+	pW/5NyKSBmom8Egxgty1d+jGc9HLpd4WcqtS1KlsKRoiApxjwuk5v03+8FyjvFfpCB9fiGSaHHA
+	YNfT7PyAROjv0Y9QeWRRgSz10OAimWQQTpW0gqrTq8ju/KshUn93aM7ct8ZYqLiCF1rZQ22/
+X-Google-Smtp-Source: AGHT+IHKy3vWfh1PGy1ku+o9RNhskr/quenhtttfB2tDE91aGVAU8V526XbxdfEk89gY9R6EfOonTw==
+X-Received: by 2002:a05:6a00:14c6:b0:736:5438:ccc with SMTP id d2e1a72fcca58-745fde87a75mr18828988b3a.9.1748358612384;
+        Tue, 27 May 2025 08:10:12 -0700 (PDT)
+Received: from dea88b1475bb.. (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96de11csm18869987b3a.31.2025.05.27.08.10.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 08:10:12 -0700 (PDT)
+Message-ID: <6835d5d4.050a0220.14ffd7.0e10@mx.google.com>
+X-Google-Original-Message-ID: <20250527150946.2815348-1-LeoWang>
+From: leo.jt.wang@gmail.com
+X-Google-Original-From: LeoWang
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	george.kw.lee@fii-foxconn.com,
+	leo.jt.wang@fii-foxconn.com
+Subject: [PATCH v4 0/2] Add Meta(Facebook) Clemente BMC(AST2600)
+Date: Tue, 27 May 2025 23:08:47 +0800
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <f168126c-e0e2-40d3-9b9b-2a5002a75474@kernel.org>
+References: <f168126c-e0e2-40d3-9b9b-2a5002a75474@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-1
-To: Hans de Goede <hansg@kernel.org>, Pavel Machek <pavel@ucw.cz>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>,
- PDx86 <platform-driver-x86@vger.kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Guenter Roeck <linux@roeck-us.net>,
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Sebastian Reichel <sre@kernel.org>
-References: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
- <aDWq/U57DO7fMu4K@duo.ucw.cz>
- <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 
-Am 27.05.25 um 14:47 schrieb Hans de Goede:
-> The HID subsystem has no intention to provide a separate
-> API for HID lamp array devices instead userspace is expected
-> to use /dev/hidraw# and openrgb, the defacto standard for userspace
-> RGB LED control, has been working on supporting this for over
-> a year already:
->
-> https://gitlab.com/CalcProgrammer1/OpenRGB/-/merge_requests/2348
->
-> and this support is scheduled to get merged before the next
-> oprnrgb release. Also note that openrgb will need to support this
-> regardless of the patches we are discussing now, since other
-> hw is using this natively.
+Add Linux device tree entry related to Meta(Facebook) Clemente specific
+devices connected to BMC(AST2600) SoC.
 
-Hardly anything to add to what Hans wrote, just that now that the kernel side is 
-done, I started working on the userspace side to push that forward: 
-https://gitlab.com/tuxedocomputers/development/OpenRGB/-/tree/tux_lamparray 
-(based on the MR by CalcProgrammer1 linked above)
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+---
+Changes in v3:
+- Dropped blank line as requested by reviewer.
 
-Best regards,
+Changes in v2:
+- Fixed all dt-schema warnings/errors reported by checkpatch.
 
-Werner
+Changes in v2:
+- Added 'Acked-by: Conor Dooley <conor.dooley@microchip.com>' tag.
 
+Leo Wang (2):
+  dt-bindings: arm: aspeed: add Meta Clemente board
+  ARM: dts: aspeed: clemente: add Meta Clemente BMC
+
+ .../bindings/arm/aspeed/aspeed.yaml           |    1 +
+ arch/arm/boot/dts/aspeed/Makefile             |    1 +
+ .../aspeed/aspeed-bmc-facebook-clemente.dts   | 1195 +++++++++++++++++
+ 3 files changed, 1197 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+
+-- 
+2.43.0
 
