@@ -1,200 +1,239 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC0422A4D8;
-	Tue, 27 May 2025 07:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3E322655B
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748332394; cv=none; b=M8ZKQuLsPyS0C5KRmT3bUV34y4iDLnVREkjwi1c3MFY82PnuPnDKy7D0sCtDZ/hqzOtSzKt5A4Z+6mdRKfM/HyFY5/pqKPE9Osp+lNE6SsobGVEhFl7C4EW4gURpbOcKQLrMVDMiPa698Zv3qJIv3BDfXHWWYcYj2jI+u0fc8t0=
+	t=1748332549; cv=none; b=qMoo866KNR19w8yI3W+6Vv3q0S1ewI2YhzmyP43YUju/pK8db6MTrWcFwywCk4foYWVlKLsXFF0CakefB9RDcNVP0YNXr35NMP+4xCGOfwa1Hm3aaFJFb8YtOIHDKcol7KMyUW7R1g+0Z64CrFfgx6IMKmV1ulGfM1BmIyRDh1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748332394; c=relaxed/simple;
-	bh=mIYmdNiseXJCzoKhPH9jmbDI1kSmDLkOHQwElgcM5kc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RwNXycnyKcFziklo7lReEpz5/P0527w9rVVrz69MjI3cUeu+ixcZ789ZHQuhl8c33rOzej0N6GCpuhPpj4fNZEuv8A/VTSob+smYCUTA8gBSj1giJGfLYRi2CRrPC2xneMFQLJFw1Ma+LZoOlAcykqn0hg67W+QYz/54o7Anm0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b64cj5074zKHMqc;
-	Tue, 27 May 2025 15:53:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 245741A094F;
-	Tue, 27 May 2025 15:53:08 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgD3W2BjbzVodFOdNg--.25410S3;
-	Tue, 27 May 2025 15:53:07 +0800 (CST)
-Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
- until creating bitmap
-To: Hannes Reinecke <hare@suse.de>, Yu Kuai <yukuai1@huaweicloud.com>,
- hch@lst.de, xni@redhat.com, colyli@kernel.org, song@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-8-yukuai1@huaweicloud.com>
- <d2fabdfd-229d-4043-ad27-61bac1e1f6d2@suse.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d95b41a0-c1aa-8b8b-d959-05e41eee3a7f@huaweicloud.com>
-Date: Tue, 27 May 2025 15:53:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748332549; c=relaxed/simple;
+	bh=YkQQddHb8jlPo3SKLo59UpwD65Y7ZPEUTHo35ozEy+g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2329yrw7RqJGpjortiLlENfSN12K92X3Ru4Lncj14/nyQW9tXybFZdE8DKdLLHb7he1ZivvFbWF/k5qbhhC37asAut6egmoaiuQEQ8lB0Fkp3SZSDxZtTyZGQqExv9YEC3uHb66wKJvbwfTEcvFfkKAmtvudvPTu1geL3jLYik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nmfN5Zls; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nmfN5Zls"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R00Ksj016904
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:55:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sSQWEBsBEF9PnfN+71Hx0sgWBcdAij9SMJAFGtN0t2E=; b=nmfN5ZlsYQ54EIHM
+	Oj8+vRsULwUXZ8hmAVEjFTWJqg3oaemHWt+g/JKEP88oDLn6hVrdVcf6fqGo46JQ
+	3QbDR/IWqQa2SJS/FfK6iS+MzHGz5fuOpAPqdtkcMnm9lYrkF9jEJvsnrPeQqNef
+	HzohpjcG4t6S7O7rVKfK77q7IxxOX7ZexW++VoeFDF5w6LCeY+2ED/uUVZFTXTDW
+	c7gQwEuti+Gguwl8ohhA7dB6uAwdF02GH6F27JDpfbK1+PLs57W67i75yL1+rDaQ
+	C/tBPuOmlia4h+Tn+9jWwBQk6/VuQ5L6naJys9FwLGtAxgQ5t4kr1/91C7Y0d7kP
+	4lWIGA==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46vmgctjmg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:55:46 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2343bf73872so19821075ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:55:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748332545; x=1748937345;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sSQWEBsBEF9PnfN+71Hx0sgWBcdAij9SMJAFGtN0t2E=;
+        b=pW8MQv0Z3kMO0tmHpxrt3uFkiIFT7KQIwvPaKPONyyoA3wTvUT8gVJp9dAg+Srrnwu
+         8XzJ5QPtybgpxcKRzLJWNUKyQo52c9oQCV42xqb0P9c8/0SUJ0VehFKiYUMtjxR9+077
+         PM46Z/b6P5x1VjOL4JCSc1HcFQuaj3RIVr2XGzhapFe1zX//28QcGGF333x6rta4BStn
+         xf0BMouBsy14oQszeItIWjNDyXmIxHQIIB29nIVBgr2uq44AhmPGUHiwB8eLPoaDWaMs
+         y5I0ZnmJUaMqESK1V49ZIH41cxQjvyeZOtwPZbRIrpTXGZCws/hgxj/aJbqyeXYv62hM
+         G8xg==
+X-Forwarded-Encrypted: i=1; AJvYcCWaaCZJmcsLIa109+2sqWqEh9WLnPJZAhfX6UrQfldPm+BtXYi/U9qrQYY12Pzq0MxP0VHlzcJLQuYaNSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw06Eon/z4COjy9qTcL1r6W8hUGJIe+LoQtrXerc5mG3CvCXp+N
+	n2ehqvalhePun25loUq6smXvJjtEjby+z/SSsjqli4eNRxodUeIPjzDLpoeHRpYGoUPpt4Fi1/E
+	WNdGl20tjyv22MBMetNdqpxPSFEaW6JpiwZu7AxRozPtAF/jz0RgbHdmSVEDZPx5AfWs=
+X-Gm-Gg: ASbGncuHoRTfoxwxZwq+2lk9Wob2HyfbDd6IYwKu0ZaFaqlzDOQndGTwCNPwL5OrGL+
+	+4LzJptTqdXP+24qNS3CjLhnH9i3ytX7pM2ByD8+v9hOZasGdw0NRyi7U1HvMlJtp+tv4dxmXBA
+	bKHkYfwMdGk/8bMaxr5reysy9Xw7SYO7OKdjgUNybGHNjWZ7kdb0BOg3prse7xj7T5YN4ZNfSAU
+	JfB4Z6nBiL9RM3vqy13EVQSLK7sit8d/EgJCHUQMuRMR/ZY7b4YLqmDPXEj2NzMPUqQhgbQNJnt
+	e9O30KP3Eq+p7J2wbiFMEjVaL5bDNFar7hdCdD+Y3+Wqd0RS1A==
+X-Received: by 2002:a17:902:fc84:b0:22e:566f:bca7 with SMTP id d9443c01a7336-23414f6e2a2mr178065375ad.17.1748332544961;
+        Tue, 27 May 2025 00:55:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqcJUwDQW18Rp+AmlPMd2GnC8aI6d9TNf36XirBj5sKw3tRyXu3GPUgfP+hb+ogtTPpdBA1A==
+X-Received: by 2002:a17:902:fc84:b0:22e:566f:bca7 with SMTP id d9443c01a7336-23414f6e2a2mr178065165ad.17.1748332544573;
+        Tue, 27 May 2025 00:55:44 -0700 (PDT)
+Received: from [10.218.21.68] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23452e810basm33558115ad.40.2025.05.27.00.55.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 00:55:44 -0700 (PDT)
+Message-ID: <04a93057-c67b-4042-9ff9-fec4183a85ab@oss.qualcomm.com>
+Date: Tue, 27 May 2025 13:25:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <d2fabdfd-229d-4043-ad27-61bac1e1f6d2@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: qcs9075-evk: Add sound card
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
+        kernel@oss.qualcomm.com
+References: <20250525155356.2081362-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250525155356.2081362-3-mohammad.rafi.shaik@oss.qualcomm.com>
+ <cfd4f557-7f97-4da9-8eff-fe3749e336db@oss.qualcomm.com>
+Content-Language: en-US
+From: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+In-Reply-To: <cfd4f557-7f97-4da9-8eff-fe3749e336db@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3W2BjbzVodFOdNg--.25410S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jr4DGr47Ar17uF1kGr45Wrg_yoW7Zr48p3
-	97JF98GrW5JrZ5Xw17JFyDuFyrXr1kJa4qqryxX3WUArnrJrn0qF45WF1vgr1UAw4xAr1U
-	Aw15Jrsrur1UWF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+X-Proofpoint-ORIG-GUID: XXWyrhbMcBgAEByKKpnXAhqAIUWnbHLU
+X-Proofpoint-GUID: XXWyrhbMcBgAEByKKpnXAhqAIUWnbHLU
+X-Authority-Analysis: v=2.4 cv=Ws4rMcfv c=1 sm=1 tr=0 ts=68357002 cx=c_pps
+ a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=YJSMDzQey5MvNt0fXBwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=GvdueXVYPmCkWapjIL-Q:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA2MyBTYWx0ZWRfX5NO9OYngdpPh
+ saDwW7E3fODq5Lv9V8PCm9fiCAqz6BQHmGePR48kpZD9NiPC/6D7NzwT1bFYPF+NKntu8rw8J94
+ bN1a0nfzQrIMqQLI37oxP1tyjezektZ7qumQsKkGHS7LID83ktkC+LlSA2779fBgsb/5L/L5jEv
+ 7b3dffSqeVBPxT1/1BqhcZGUIVbzZH6zLURm46ucZbg7EZ9Eyd8olhcgiZ/qT/4dYF5yaiAdzuL
+ XDQ1rUjw2Gofeix3rlHy60Fn18VB6W2/QAsdrZGU34NgzPRroNagLv5kUxNyo5FP0ctZIjOVnVk
+ +/8AsRYET7ak/u0pXQpPNr+s9gA58qtgtvRSRx3CLPz3CAcNK4OS18NUaMyoTzSdKyN/MAxfOAV
+ qi803s1v0WaF3ixLv0p40ZZrgdUsQjHfbUv08SFuRZxItDwNAMdvK1qi9S8rwXCH4u0IfaQn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_04,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505270063
 
-Hi,
 
-在 2025/05/27 14:13, Hannes Reinecke 写道:
-> On 5/24/25 08:13, Yu Kuai wrote:
->> From: Yu Kuai <yukuai3@huawei.com>
+
+On 5/25/2025 10:43 PM, Dmitry Baryshkov wrote:
+> On 25/05/2025 18:53, Mohammad Rafi Shaik wrote:
+>> Add the sound card node with tested playback over max98357a
+>> i2s speakers and i2s mic.
+> 
+> I2S
+> 
+> speaker amplifier
+
+Ack, will update in next patch version
+> 
 >>
->> Currently bitmap_ops is registered while allocating mddev, this is fine
->> when there is only one bitmap_ops, however, after introduing a new
->> bitmap_ops, user space need a time window to choose which bitmap_ops to
->> use while creating new array.
+>> Introduce HS (High-Speed) MI2S pin control support.
+>> The I2S max98357a speaker is connected via HS0 and I2S
+> 
+> speaker amplifier
+
+Ack
+
+> 
+>> microphones utilize the HS2 interface.
 >>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
 >> ---
->>   drivers/md/md.c | 86 +++++++++++++++++++++++++++++++------------------
->>   1 file changed, 55 insertions(+), 31 deletions(-)
+>>   .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 52 +++++++++++++++++++
+>>   arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 14 +++++
+>>   2 files changed, 66 insertions(+)
 >>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index 4eb0c6effd5b..dc4b85f30e13 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -674,39 +674,50 @@ static void no_op(struct percpu_ref *r) {}
->>   static bool mddev_set_bitmap_ops(struct mddev *mddev)
->>   {
->> +    struct bitmap_operations *old = mddev->bitmap_ops;
->> +    struct md_submodule_head *head;
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/ 
+>> arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+>> index 0e44e0e6dbd4..1ebf42b0b10e 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
+>> @@ -6,6 +6,7 @@
+>>   #include <dt-bindings/gpio/gpio.h>
+>>   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>> +#include <dt-bindings/sound/qcom,q6afe.h>
+>>   #include "qcs9075-som.dtsi"
+>> @@ -20,6 +21,57 @@ aliases {
+>>       chosen {
+>>           stdout-path = "serial0:115200n8";
+>>       };
 >> +
->> +    if (mddev->bitmap_id == ID_BITMAP_NONE ||
->> +        (old && old->head.id == mddev->bitmap_id))
->> +        return true;
+>> +    max98357a: audio-codec-0 {
+>> +        compatible = "maxim,max98357a";
+>> +        #sound-dai-cells = <0>;
+>> +    };
 >> +
->>       xa_lock(&md_submodule);
->> -    mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
->> +    head = xa_load(&md_submodule, mddev->bitmap_id);
->>       xa_unlock(&md_submodule);
->> -    if (!mddev->bitmap_ops) {
->> -        pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
->> +    if (WARN_ON_ONCE(!head || head->type != MD_BITMAP)) {
->> +        pr_err("md: can't find bitmap id %d\n", mddev->bitmap_id);
->>           return false;
->>       }
->> +    if (old && old->group)
->> +        sysfs_remove_group(&mddev->kobj, old->group);
->> +
->> +    mddev->bitmap_ops = (void *)head;
->> +    if (mddev->bitmap_ops && mddev->bitmap_ops->group &&
->> +        sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
->> +        pr_warn("md: cannot register extra bitmap attributes for %s\n",
->> +            mdname(mddev));
->> +
->>       return true;
->>   }
->>   static void mddev_clear_bitmap_ops(struct mddev *mddev)
->>   {
->> +    if (mddev->bitmap_ops && mddev->bitmap_ops->group)
->> +        sysfs_remove_group(&mddev->kobj, mddev->bitmap_ops->group);
->> +
->>       mddev->bitmap_ops = NULL;
->>   }
->>   int mddev_init(struct mddev *mddev)
->>   {
->> -    mddev->bitmap_id = ID_BITMAP;
->> -
->> -    if (!mddev_set_bitmap_ops(mddev))
->> -        return -EINVAL;
->> -
->>       if (percpu_ref_init(&mddev->active_io, active_io_release,
->> -                PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
->> -        mddev_clear_bitmap_ops(mddev);
->> +                PERCPU_REF_ALLOW_REINIT, GFP_KERNEL))
->>           return -ENOMEM;
->> -    }
->>       if (percpu_ref_init(&mddev->writes_pending, no_op,
->>                   PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
->> -        mddev_clear_bitmap_ops(mddev);
->>           percpu_ref_exit(&mddev->active_io);
->>           return -ENOMEM;
->>       }
->> @@ -734,6 +745,7 @@ int mddev_init(struct mddev *mddev)
->>       mddev->resync_min = 0;
->>       mddev->resync_max = MaxSector;
->>       mddev->level = LEVEL_NONE;
->> +    mddev->bitmap_id = ID_BITMAP;
->>       INIT_WORK(&mddev->sync_work, md_start_sync);
->>       INIT_WORK(&mddev->del_work, mddev_delayed_delete);
->> @@ -744,7 +756,6 @@ EXPORT_SYMBOL_GPL(mddev_init);
->>   void mddev_destroy(struct mddev *mddev)
->>   {
->> -    mddev_clear_bitmap_ops(mddev);
->>       percpu_ref_exit(&mddev->active_io);
->>       percpu_ref_exit(&mddev->writes_pending);
->>   }
->> @@ -6093,11 +6104,6 @@ struct mddev *md_alloc(dev_t dev, char *name)
->>           return ERR_PTR(error);
->>       }
->> -    if (md_bitmap_registered(mddev) && mddev->bitmap_ops->group)
->> -        if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
->> -            pr_warn("md: cannot register extra bitmap attributes for 
->> %s\n",
->> -                mdname(mddev));
->> -
->>       kobject_uevent(&mddev->kobj, KOBJ_ADD);
->>       mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, 
->> "array_state");
->>       mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, 
->> "level");
+>> +    dmic_codec: dmic-codec {
 > 
-> But now you've killed udev event processing.
-> Once the 'add' event is sent _all_ sysfs attributes must be present,
-> otherwise you'll have a race condition where udev is checking for
-> attributes which are present only later.
-> 
-> So when moving things around ensure to move the kobject_uevent() call, too.
+> Just dmic or audio-codec-1
 
-I do not expect the bitmap entries are checked by udev, otherwise this
-set can introduce regressions since the bitmap entries are no longer
-existed after using the new biltmap.
+Ack,
 
-And the above KOBJ_ADD uevent is used for mddev->kobj, right? In this
-case, we're creating new entries under mddev->kobj, should this be
-KOBJ_CHANGE?
+Yes right, should be audio-codec-1
 
-Thanks,
-Kuai
+will update in next version.
+> 
+>> +        compatible = "dmic-codec";
+>> +        #sound-dai-cells = <0>;
+>> +        num-channels = <1>;
+>> +    };
+>> +
+>> +    sound {
+>> +        compatible = "qcom,qcs9075-sndcard";
+>> +        model = "qcs9075-rb8-snd-card";
+> 
+> Were the bindings and the driver sent? Cover letter doesn't mention 
+> them. It is better to send them as a single patch series (this is the 
+> case for all subsys except net-next and trees maintained by Greg, e.g. 
+> USB).
+>
 
+https://lore.kernel.org/linux-sound/174773911882.44858.10139663344496764867.b4-ty@kernel.org/
+
+The Bindings and driver compatible change is already merged, Will add 
+patch link in next version cover-letter.
+
+Thanks & Regards,
+Mohammad Rafi Shaik
+
+> +
+>> +        pinctrl-0 = <&hs0_mi2s_active>, <&hs2_mi2s_active>;
+>> +        pinctrl-names = "default";
+>> +
+>> +        hs0-mi2s-playback-dai-link {
+>> +            link-name = "HS0 mi2s playback";
+>> +
+>> +            codec {
+>> +                sound-dai = <&max98357a>;
+>> +            };
+>> +
+>> +            cpu {
+>> +                sound-dai = <&q6apmbedai PRIMARY_MI2S_RX>;
+>> +            };
+>> +
+>> +            platform {
+>> +                sound-dai = <&q6apm>;
+>> +            };
+>> +        };
+>> +
+>> +        hs2-mi2s-capture-dai-link {
+>> +            link-name = "HS2 mi2s capture";
+>> +
+>> +            codec {
+>> +                sound-dai = <&dmic_codec>;
+>> +            };
+>> +
+>> +            cpu {
+>> +                sound-dai = <&q6apmbedai TERTIARY_MI2S_TX>;
+>> +            };
+>> +
+>> +            platform {
+>> +                sound-dai = <&q6apm>;
+>> +            };
+>> +        };
+>> +    };
+>>   };
 > 
-> (ideally you would set the sysfs attributes when calling 'add_device()',
-> but not sure if that's possible here.)
-> 
-> Cheers,
-> 
-> Hannes
 
