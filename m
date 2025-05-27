@@ -1,106 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0C32153D2;
-	Tue, 27 May 2025 02:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1208870800
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748313503; cv=none; b=NcYFZr6y/lkx1cVosp9H6VapvqcC35n1cB3MMrHY9JxSDHVGllzeAOC+ZTE9v92dbXN4JMr8OxpPH5+5d9wNwh3knJfaxuL+CupWdmv7i+YSyFJT8jcHnVG02q6hzTJnUNSN6+geXWdqgNNkYsZ8DuYbqr6elb2wOO/4gZnAqLk=
+	t=1748313704; cv=none; b=a8Wu9090HKAAKOO0YfOh6OWUIgLL0WzI9gTb3u92ZpWXgdvB0gTOkoHB+XoKxf6tGhIUsrIr39SQYd7hRH2J3K2pbdhQ3KknPTO/PuKQ19i4nlXz6MPHCKiUFWd1YWR3aOs1QcFqxBse4jywxIU+SkzoORFvDJjTxUYQ56HG1Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748313503; c=relaxed/simple;
-	bh=var/d0IhqLFfAjZssX2YAOkC1cM3al52Me5O9n9LXUY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MKKG+cnjNgRN1FsYT0hWclRtplCWrA/Hu5X7UqpoLNtmu0HUjqCFkPkj4128HyGT68tapRAFVbsqDJNy+dqXc2jfdpu2wnjoM2E3EDfU/pp8DNVoGqktW9SrkSmR2TSNuT4N41CIoHrY+SGsDncpbFh00MUptG+a/4q8TXrDcjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jn1b+H16; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748313704; c=relaxed/simple;
+	bh=hFopwnwGuxFX70zetyJsWh8D7vCNnSwoCh/cnSFt3tk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SVBlHqkXgZepiPiEoOIgf0G8ebjHiYn4lKeiZG17u9s+zbsaE2vvilAL+6/P6UR9PQbE2bDf6+fGjzkVWoEe5STGYIXLtXLmZad+NGSLX/seQjC06RTjcbQjz1ppoG1K/0+bPYnT1toMNLprf9VbMWnzJxB/z7GpF6itS36RA8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=i6DW77x6; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jn1b+H16"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8C7C4CEED;
-	Tue, 27 May 2025 02:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748313502;
-	bh=var/d0IhqLFfAjZssX2YAOkC1cM3al52Me5O9n9LXUY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jn1b+H16w/skAqucSnzcPUvGJsN+t9G1DZxbel3sy3Zau+tRlsOhW3l/gHvmBC5lN
-	 75iOZ9yEx/JMACB/TrSf4nOo0s+5DsJcMdUODvsHsyHZOT1/Wc4E3iQrvqoVbjFavv
-	 s4kj/FQJojp0YflRRhvn1sZYjWnay4Sy604rmgoaV1LUfRKdAcJl1TAUFguE3BWA+J
-	 +n9RtKoH/PUEXsPGWNh3QpM6Dz3SPd1apw9ZvB2OX3ieEdp4WpjgV1FCa/ntBYP6Ij
-	 L+rfayn41oxNVlw9XrC80W2/eETRTpVUAXLYS2rOWyXD2y021pCcODoPoajxKxn9As
-	 /qrqckn4aKoIg==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
-	Derek Barbosa <debarbos@redhat.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Armin Wolf <W_Armin@gmx.de>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sasha Levin <sashal@kernel.org>,
-	hmh@hmh.eng.br,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 2/2] platform/x86: thinkpad_acpi: Ignore battery threshold change event notification
-Date: Mon, 26 May 2025 22:38:19 -0400
-Message-Id: <20250527023819.1017446-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250527023819.1017446-1-sashal@kernel.org>
-References: <20250527023819.1017446-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="i6DW77x6"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad1f6aa2f84so565974066b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1748313699; x=1748918499; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ZERauyRIXerSc9GUNUPNmoyTTV2jjjUNrho3ew4khU=;
+        b=i6DW77x643dHtWcW0iGqI6lBSw3s5K1bVS3jrbeIRFObkslIJAIbw5HmmgfvMCwVq2
+         IRvJp26LMTKpBxXsjq2JLIJc6NSJEtcPMh/FISrKSlDNthvgOfVqf5660i/rblMP6ZUv
+         YbNopFGbOXtQpoFJE3R3ta6V35RM4cAVxG1JbYOHGFZTJk+W99Dd0sukMmivTw9g+ajQ
+         00Fwzx0l+M6k4Xf7hnEqqAlk60PA4yKyzq/D6KQQRFQcmL/YtcsyEpXlelVaXhUWimSp
+         CnEfHwum4B7SYCFP+P9nPkNfOVT0Jd5ENnEWuKFfXHuOY/VIl2O1O662+QG6uiD85NeC
+         m/Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748313699; x=1748918499;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6ZERauyRIXerSc9GUNUPNmoyTTV2jjjUNrho3ew4khU=;
+        b=cnsToYKg2zmx+/XBLAdlrJu+kdCDDlaHGEyJrIDxLtBcqyZZt4WBHeco7VqDtQ2IDD
+         wTxeR1A7U+H7NyHsVds7PFFciJrVcTfRgzm1lhObZucRB+G4N0Q7ow4VpwhDKyRGgjT7
+         gvtXBV1hzUoNtACh1RJxo02iHO3CcXuEXrhViOECXulciPwRiF1CpBNEVMIpkm2Y1kJ1
+         +4/gyi6YK8ZcOD7yhhXcpJtyifxhsmmvupuEOvu6TRkmCR985zOTnM4Poi90G0yPffqH
+         iAclWG5jVaYNfsIB3qvLBN5rytfE40M/qQiPKpgTR54d5gwNgaRDC9E2pVHhZTGOVSnv
+         f9TA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUJfGoh2a98t/mN4yofpByZ67rU7sw+ADvFK1bZZt1ZifuWe+pXo003btMnIG68zjw7pR5NQWnTqbUw7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhqS7ZPAeXyR1H7c43hGDFTziCkxWYwl0hvj1Hga6obwB5dy38
+	NxY8igdAgDH9jTgYJD/sxWxUkgUyD7GFQTuPBEKwq/FLT6qfbfu+LAUENpCDWyu4PXm3XWPqPT+
+	PLuUCXr2RcVhdMdDAsoJe/6WGz3F0IZhHK3rmIpjB4w==
+X-Gm-Gg: ASbGncvyUkxWW4XPRG0v5k4Zu2FB32fOOwQWtWb7ijgO5zigwlD0JPGRooVhv0Hep4X
+	rDUOFQoTxIoxynm+VMkFgMsGNMi9VxgT8bkjgElqLiCZbhWxVdlCpKO0M66TcqqSohF1b/fRCvr
+	EZr01359LDkCv7+2vCP1wBfqZeITZnnW14eg==
+X-Google-Smtp-Source: AGHT+IEwDBoO6fPNQbhz18OXkU1emYXVf9ol8i2RRW8+CYwMWPShuzxk64vRiGzkPz9segng6DJBOqMGPdvXU6MevTk=
+X-Received: by 2002:a17:907:3ea9:b0:ad2:2fdb:b0ab with SMTP id
+ a640c23a62f3a-ad859b5436emr1083211866b.29.1748313699251; Mon, 26 May 2025
+ 19:41:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.293
-Content-Transfer-Encoding: 8bit
+References: <20250429085048.1310409-1-guodong@riscstar.com> <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
+In-Reply-To: <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
+From: Guodong Xu <guodong@riscstar.com>
+Date: Tue, 27 May 2025 10:41:20 +0800
+X-Gm-Features: AX0GCFtJk0m16OgxkbmqVbr299LwditdBcOLPf3TQyBjUg1Ado6GD-l3Ru51kO0
+Message-ID: <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	alex@ghiti.fr, dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, 
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, 
+	tglx@linutronix.de, hal.feng@starfivetech.com, unicorn_wang@outlook.com, 
+	duje.mihanovic@skole.hr, heikki.krogerus@linux.intel.com, elder@riscstar.com, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Mark Pearson <mpearson-lenovo@squebb.ca>
+On Tue, May 27, 2025 at 1:22=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
+nel.org> wrote:
+>
+> Hello,
+>
+> On Tue, Apr 29, 2025 at 04:50:42PM +0800, Guodong Xu wrote:
+> > This patchset adds support for the SpacemiT K1 SoC in the PWM_PXA drive=
+r
+> > and updates related device tree bindings. The changes enable PWM
+> > functionality on the K1 platform through driver enhancements,
+> > configuration updates, and device tree additions.
+> >
+> > Functionality has been verified on the Banana Pi BPI-F3 board using PWM=
+14,
+> > configured as a pwm-backlight. Per community feedback, the actual
+> > pwm-backlight node is not included in this patchset but can be found in
+> > patch 7 of the v1 series, with modification of pwms property to 4-cell
+> > format to match updated binding (#pwm-cells =3D <3>) since v3.
+> >
+> > +             pwms =3D <&pwm14 0 2000 0>;
+> >
+> > This patchset is based on [spacemit/for-next]
+> >   base: https://github.com/spacemit-com/linux for-next
+> >
+> > Plus the following dependencies:
+> > 1. Clock controller driver, posted by Heylen Chu (v8), with most of it =
+has
+> >    been accepted:
+> > https://lore.kernel.org/all/20250416135406.16284-1-heylenay@4d2.org/
+> > 2. Reset controller driver, posted by Alex Elder (v5):
+> > https://lore.kernel.org/all/20250418145401.2603648-1-elder@riscstar.com=
+/
+>
+> It's not clear to me if I have to look into this github tree and the
+> listed dependencies. My impression is that it can go in on without these
+> changes. Maybe it only starts working when these are also applied, but
+> that shouldn't stop me applying this series, right?
+>
 
-[ Upstream commit 29e4e6b4235fefa5930affb531fe449cac330a72 ]
+Thanks Uwe for the review.
 
-If user modifies the battery charge threshold an ACPI event is generated.
-Confirmed with Lenovo FW team this is only generated on user event. As no
-action is needed, ignore the event and prevent spurious kernel logs.
+The dependency is in patch 3, where I added the PWM nodes (pwm0-pwm19) to
+k1.dtsi. These nodes reference RESET_PWM0 to RESET_PWM19, which are only
+defined after applying the spacemit reset patchset (Patch 1/6),
+available here:
 
-Reported-by: Derek Barbosa <debarbos@redhat.com>
-Closes: https://lore.kernel.org/platform-driver-x86/7e9a1c47-5d9c-4978-af20-3949d53fb5dc@app.fastmail.com/T/#m5f5b9ae31d3fbf30d7d9a9d76c15fb3502dfd903
-Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Link: https://lore.kernel.org/r/20250517023348.2962591-1-mpearson-lenovo@squebb.ca
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+https://lore.kernel.org/all/20250513215345.3631593-2-elder@riscstar.com/
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index fbb9a5c7f8b82..f05b604892d32 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -195,6 +195,7 @@ enum tpacpi_hkey_event_t {
- 	/* Thermal events */
- 	TP_HKEY_EV_ALARM_BAT_HOT	= 0x6011, /* battery too hot */
- 	TP_HKEY_EV_ALARM_BAT_XHOT	= 0x6012, /* battery critically hot */
-+	TP_HKEY_EV_ALARM_BAT_LIM_CHANGE	= 0x6013, /* battery charge limit changed*/
- 	TP_HKEY_EV_ALARM_SENSOR_HOT	= 0x6021, /* sensor too hot */
- 	TP_HKEY_EV_ALARM_SENSOR_XHOT	= 0x6022, /* sensor critically hot */
- 	TP_HKEY_EV_THM_TABLE_CHANGED	= 0x6030, /* windows; thermal table changed */
-@@ -4059,6 +4060,10 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 		pr_alert("THERMAL EMERGENCY: battery is extremely hot!\n");
- 		/* recommended action: immediate sleep/hibernate */
- 		break;
-+	case TP_HKEY_EV_ALARM_BAT_LIM_CHANGE:
-+		pr_debug("Battery Info: battery charge threshold changed\n");
-+		/* User changed charging threshold. No action needed */
-+		return true;
- 	case TP_HKEY_EV_ALARM_SENSOR_HOT:
- 		pr_crit("THERMAL ALARM: a sensor reports something is too hot!\n");
- 		/* recommended action: warn user through gui, that */
--- 
-2.39.5
+You're right that patches 1, 2, and 5 do not depend on that reset series
+and can be applied independently.
 
+> There is a patch in pwm/for-6.16-rc1 (namely commit df08fff8add2 ("pwm:
+> pxa: Improve using dev_err_probe()")) that conflicts with this series.
+> I applied patches 1, 2 and 5 on top of my pwm/for-nexxt branch resolving
+> that conflict and rewording the commit log of patch 5. The result was
+> pushed to
+>
+>         https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.gi=
+t pwm/pxa-spacemit
+>
+
+I've reviewed the three patches in pwm/pxa-spacemit, and they look good
+to me.
+
+Thanks again for handling the conflict and rewording the commit log.
+
+> . If you confirm that you're happy with my modifications and it's
+> correct to apply them without the listed dependencies I will add the
+> patches to my queue for 6.17-rc1.
+>
+
+Yeah. And I confirm that they can be applied without the reset
+dependencies.
+
+Thanks.
+
+BR,
+Guodong
+
+> Best regards
+> Uwe
