@@ -1,1101 +1,378 @@
-Received: from PAUP264CU001.outbound.protection.outlook.com (mail-francecentralazon11021108.outbound.protection.outlook.com [40.107.160.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBC5192D87;
-	Tue, 27 May 2025 14:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.160.108
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748356205; cv=fail; b=FGLGkdpMFNWQ3qz6qM2jRVIhGBTWmB7+KpWEMycAyMUWRZ/6Epm/f4oymWzHbOY+uEJ81WhM5d/IDNh4pOnUeTrOi4K0gfaH1iakBwww0ypKLZUeIQB/wK/v3zvrA1RVHqFM+GhpcZvaFr0MO6zWVDiIpvYqKGCkH5/4xYk1CTg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748356205; c=relaxed/simple;
-	bh=4XlI4nhmKVmq7S3oe3PwHKc38jCgNOpZfysRGV/mMaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=iLtcoOzxxavCIq2K/C0dcWKgjEz6OoHQ+72Jki2pYdrwX+ljQAaCYgDSsNA8f11xvXTTIKl2Wa4gkW1y7iXyiO5nyLDTlI77lXenJy9nI369afHdzamy/31LkloZmJyMWGl/+v8Zkckp1isyguzKVD2X3FlXSY2CnIBQb9/B0zI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com; spf=pass smtp.mailfrom=allegrodvt.com; dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b=eQeSMpar; arc=fail smtp.client-ip=40.107.160.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allegrodvt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3A315746F;
+	Tue, 27 May 2025 14:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748356240; cv=none; b=tCksGLWulRlrLxaQIf0Pq+x58DiHAylIysJHkMoOlQzXK5Eqpzp5ZIUPD8RnZKrl8lb8NfYCYWoTxLnkMUSNEQoEOQ0zMP/1kGNhbuL9g6FvGphziqrTi++pG/vM8tsqFN1JyAf0HrHCAe/dmgiRJhhDrS8LBatTz58nDVfQ0zg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748356240; c=relaxed/simple;
+	bh=IcpPfnidxaG2mH++08tRi3pwklaJVqooNOuSYP3pAZg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uUZ9k/h5IbjtCYdyhe8tdzAbEio37TUKOXXBBxrYWXUZwLY4Z117sF8NCOBW5LTViqNEhtPUb04tuWXlYLKSLUl98x2CSm+owE1L/Keh7qBl/bAnzuyrvThK0vjn/wKLLusfteS5bOCjaJcG1mkyl9lxdfKmZvSDonpKCk9POh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMxsionj; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b="eQeSMpar"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YA7tgSJ+w9r2xSo4OWoLatfVZQeF67M8TXflMUdpoNzBv9RAKZvVMRG4nyo1W4UovKtCx9mdxOmIupk4oEftlboAuz/eDi+OvR+lc8cQxqBLxnhfTB6FIOK2nVqWPB5AkbGm67nHo0K191KQFytjBClq8ADE8QbeOQEvT1ldwbV2DM4m7TimhhGXkrta2jFg20u/SajqFTv6kQJvs+/kjBJPrcIeoikBLUBW1BLtMQrr18pj4HqlIPDKiYU6mp7FszVjQ4MZ0kj3o1HalD0tPV1SZL1FXC+8XcH4gkGwbg5GhgBmSJhg4BfcI66xuXwgOUkPUKAZRKcr6Xd2M/Bd4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4XlI4nhmKVmq7S3oe3PwHKc38jCgNOpZfysRGV/mMaE=;
- b=DTET8C57GZcRmwW6DY6YaM+U9eTL9WlT5ph8fa4CAhec8YLoopo0aDQ6uBVy4c/VSvK9BEi2ZS7wshFPxWViVlxOM+Oo57oWlGkmCzClqaNz8n0EQgzNTaM9ZZI5jcExsfrDoFXh4Dct46sp+JC1BYOtNXl0Lo+hWBcfFqmJThAynYjOcl6belbdRu8SuzFWWFEEtTyUIH0AXiXR/F5a2QuS3qiVm0Ay0jhDSMQriN0I17Naar0S8LEuUF0ZwkFdRHges+/Fmbc0ryKVince4h92k7dskD83W8KLTRsngQHdIib7sjQHSl3aMJGaPJ2BiDQ1YcYvvLfbMKpJDbtWAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=allegrodvt.com; dmarc=pass action=none
- header.from=allegrodvt.com; dkim=pass header.d=allegrodvt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=allegrodvt.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4XlI4nhmKVmq7S3oe3PwHKc38jCgNOpZfysRGV/mMaE=;
- b=eQeSMparYCcJqFMLEcChAOpMAb0RI8ofXQPj1WjlT7c2ymetZGI7UzUJj5J8SOhDI1YQ7cgZQ3c7QXOxn/Ra7qC1hBML9fkG2+cGzQMY6FiCTtSlFPopUXHYH00BDPPxqxdX+b0H6EAOkJde/a7oICdUSwgWXRCcBNH8CmRfjmUGVWYqOSSBjLS5CpwJ0Y5ZALE1p0OsrQaC5LuI26Xd2ON/Br0mnPanlrgXj0WSDIFppKwUFd6XvxAIG+bfPGLfiGP4exXi5xosU8P/+kcTikvvriZU0xj26L3gyvAfp9Ykd/+/2mH2wFUYnwZbiNNB4/sVP6RkWcNJIxqO7EPZuA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=allegrodvt.com;
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3d::18)
- by PR0P264MB1723.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:16e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Tue, 27 May
- 2025 14:29:53 +0000
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5]) by MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5%2]) with mapi id 15.20.8769.019; Tue, 27 May 2025
- 14:29:53 +0000
-Date: Tue, 27 May 2025 14:29:51 +0000
-From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Michael Tretter <m.tretter@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Michal Simek <michal.simek@amd.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Rafa?? Mi??ecki <rafal@milecki.pl>, Junhao Xie <bigfoot@classfun.cn>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Kever Yang <kever.yang@rock-chips.com>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>, 
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Uwe Kleine-K??nig <u.kleine-koenig@baylibre.com>, 
-	Gaosheng Cui <cuigaosheng1@huawei.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>, Ricardo Ribalda <ribalda@chromium.org>, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/5] media: Add Gen 3 IP stateful decoder driver
-Message-ID: <httdxwps63bj4bsfd7bmtlqepym4fgk6q7v2yo5xkug6fpl3nc@6d3t4ak5qwqs>
-References: <20250523134207.68481-1-yassine.ouaissa@allegrodvt.com>
- <01224e75f52cafdf51035df386af88c30a3a46e0.camel@ndufresne.ca>
- <q2mvw5iuhul7uyt7oefuptlqsj3wi6nmv22jsjqxq7mbeudldu@64nfbngabhep>
- <548745f64a17f8cd6470d2b3699f3dc52291a9ac.camel@ndufresne.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <548745f64a17f8cd6470d2b3699f3dc52291a9ac.camel@ndufresne.ca>
-X-ClientProxiedBy: PA7P264CA0480.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:3dc::19) To MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:3d::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMxsionj"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23035b3edf1so25106965ad.3;
+        Tue, 27 May 2025 07:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748356238; x=1748961038; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X9tKwO8Wx7rf36hHJX1eRThFLvMDogIpHiZO7Aibmao=;
+        b=nMxsionjChSb6OgfnhLwVTqGwdupDb2idxRo1nvQjCeFHQPwvRel+mzc7iIV/50hmk
+         e4JxHq8DcPI1M4jBVTWYM5MBDGd3rK56zaTF3bYAj++K+aUIQ+1U+XzCPi9XBUcoagqL
+         uvx37m3c7pf/3xUZdPab2+CQRQNyHJIXp3flXpKAgdL/3maaYPCBYJFB050Rw568eHX9
+         PqSr5FvaT00a3sqBWUR5M+y6Z0otvSN9oI1L83in3Km89eFrUwNtoySTV5nkQsqSrcLs
+         FfLbn+iXOvaGNSrrZN3BageN031ozmwJ0b5mCX5+ManLqnWAa9IC5CQFMRAtupFUhE4S
+         xdOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748356238; x=1748961038;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X9tKwO8Wx7rf36hHJX1eRThFLvMDogIpHiZO7Aibmao=;
+        b=rmh0JXts3zq769Niizy2tUFII+fOkNffwPEtp3jdns1yFwlbrmcvTWa11hE6E4OBos
+         QXJje699cexWWr3ltCPY+8OABPcxBZK3Tq5jRARGz6/jtp5pJLerIrYeqrOAJUeMEm8I
+         Mi/E8MEcYwOAUSYMu3azv3vFHTLJAQEDgqBcJ1kppnfdeF3WzmxMNQTcSc4l+ZrfC64D
+         wyudEBBLCX2Kdn1pCL0s1nMeLTKuEQMbyhxRva8jAGY66qPBOl0glts6uRx64C8EkG8P
+         DxJ3EcIO3nSbZ2yOLnXlCyXtYSi7Uyq5LQ1JpD51TAifR8Djc+T9z83ttQXlJVseQh8d
+         AiPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTqHhgx2S19EhxaFykyt3jC4MoTm4/HkRgn5rxa7fiY2z0i1CvwQh53T59f0A8h3B4x8zYt7n2JV5++x37@vger.kernel.org, AJvYcCVWVO8y7UINzpPsXBIweRT8cwX+NRX5jqNo7im63D0oYgH8AX3dN6vtoIB3t2LZwREsxkLjb4ba@vger.kernel.org, AJvYcCXD6XkvYaBq9/Pi9h3KJy9U+1b188uuJQ8Lzw1s3SyjlgpoXmDZ/IFCYjEuBBVJacev+zc=@vger.kernel.org, AJvYcCXhvTZbaSioUBf+duhEDgKL2KrXYLDzSKnYh/l3AAj5bb3nyBuQbabOQts/q4a6vNTH5Q567tLGq7Q8aN/f2m+F@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqYxnN7W65ShBwU7E3A0ga+Kd6m1M+XHIb0HpwtwnXmDTLd7Xx
+	LmW5X+axzghfx2eRABMhPoRQV+F8TkcR9XsAcYNxGt+KdFJXYeXsApgu
+X-Gm-Gg: ASbGnctJPuErs2+M3Hznv3q1g9Voz51KrQMMu64FsjaAZH7YKtUln8mazZkLObbkINp
+	LSqHRlmXnPuQqh8WN+5ZlpjGIqnPQaWcbi83Fp6sFXv4Lraq3YiT9BWDAZRM86GUjt9uFhPi7Yh
+	1f6mfIMNwG3fl+UbeZ1g4YRNXQcTG6JqvFweLlvFdwvkPIhBjUnhy0mqqDMctF850YHKFK2V0jb
+	fu25Tk+1Uv55CIHxgmyCiM+gE+KM91l7Y+8klwunm3oW79cVZq/+qqt9IozhHbrBgG231EI+LQk
+	2A6MyUq4kvc9laqgnJl4pxq0PgZ96nMaYTFShYOPgtnDUfa9Cqg+p6nO+mT9AK9sARY0zQzV
+X-Google-Smtp-Source: AGHT+IGrlxlAxBUf2B6+HHJ2snDBUtgWgFpLWtKgcDP1nxRdNKyBVxUaPtDr9m/Y5ifGrVhBtCfQvA==
+X-Received: by 2002:a17:903:4b30:b0:224:1af1:87f4 with SMTP id d9443c01a7336-23414f70222mr231740775ad.22.1748356237389;
+        Tue, 27 May 2025 07:30:37 -0700 (PDT)
+Received: from devbig793.prn5.facebook.com ([2a03:2880:ff:55::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-233fa48a669sm70501725ad.257.2025.05.27.07.30.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 07:30:36 -0700 (PDT)
+Date: Tue, 27 May 2025 07:30:29 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>, Shuah Khan <shuah@kernel.org>,
+	kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net-next v8] selftests/vsock: add initial vmtest.sh for
+ vsock
+Message-ID: <aDXMhbqhhUAMe0Oz@devbig793.prn5.facebook.com>
+References: <20250522-vsock-vmtest-v8-1-367619bef134@gmail.com>
+ <ta2ub5v7txhobccgvpnwsz7cyzcnx6aw74cjlcviosjetuwfhh@7gdahptdpbnd>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MR1P264MB3140:EE_|PR0P264MB1723:EE_
-X-MS-Office365-Filtering-Correlation-Id: ce328871-a119-4423-165b-08dd9d2af1d6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UThZNS9WdytWYTZRa1hvU0ZIdU56UCt5SzBuMzl6UTE0MTBReS9aVUg5UHpm?=
- =?utf-8?B?YW1jUHdQRE5HT1lZUnlmY0ZjTWZVbG82MFFRSWxRUndHOXUwMWNoMjVFV3Bi?=
- =?utf-8?B?MFFTd0ZkVmlLOExOeWRsdzFIOGJkQW5CcHBNS1NaS2dRZXcwbEpmdzJTS0pi?=
- =?utf-8?B?T1lKU3JmWlF2YzdzQ3dWNWZyWGwwSUc5TUlhSE5Qd1liT3FlL0ZGM212Ukln?=
- =?utf-8?B?dk1CdWc4dDBLTVJPZDZCK0cybm1ZNFZVODVOSm9WWi9peFcyOGJtbVBFM0ZJ?=
- =?utf-8?B?Qit3ekFQYXBVSU12U3pJN1VtdGg4YmFscGNWQVdHMk5HVzlBeEN5NUMvYTgy?=
- =?utf-8?B?VzFEYk9sdGs1N0Vkd0NFdlBxa0Z3RmxRbTlZRUZ4SHpsOXlIam9vZkZjNEFs?=
- =?utf-8?B?S2dnb1JSa3FHUE9TVXFQcld4aHJ0cEgrMlE0YjRja2p4alVCdjkzbVBXeWVK?=
- =?utf-8?B?bDAzOUthYzRqWVdnVmNVMHZCRjM3TGpuelRvc1F0RFhXWklWbWRTbVZ5dlIx?=
- =?utf-8?B?bDdXSmxBRUdCOHo2UnFFR29nbG1PYXlGWnhDdWQvczdEWEwvdllQQ29iQWJB?=
- =?utf-8?B?RW9BclQ1RzhZQklQVFFLSHUybnBOS0hDeDRQZDRIWENqS1l1NWFDWWdUVno5?=
- =?utf-8?B?SHU1SWpQQ3BjTFlKTW5laDBpaWxpNWxlaURDRTdwQnlYYTkyYUZDbDdwTHJB?=
- =?utf-8?B?WXMxb0lZRFlXbStIRnhNY1lHOGRCMnpTMEg5ZVVpZXdURmZ5NC9UK05FNGF4?=
- =?utf-8?B?Uk1YUGRMeVVVSWJYMk8vSzFJOThPTTBmUnZWMnZMa2t5SzNtc0F1eU00UlpF?=
- =?utf-8?B?OWZ1bERVSnZvUjBVWEVNRFlIOUlsbmdGZmJwSmI2YXhkVEdHRWRUTGk2OCtZ?=
- =?utf-8?B?c3ZzREhPNVNIb3UzbDRuaVFzK09rUkpsRUsxV1ZVcG04MWQvdHdIakJTUVVz?=
- =?utf-8?B?VFN6cmwxS2tVdkp6by9jOXlnRnJLRHZTMGJiR0Q1MUQxNEdpYk9xTFh1L0hT?=
- =?utf-8?B?TWhtcUdCOXAwU0JVaHlicFpkZFFBdWN6TEhqTEZRcmpCTXNyYjZaZ3c5QzVu?=
- =?utf-8?B?S0ZsbFduZ2NVRmphVGtGYk84UlFWRUV4OTFyQ2hEemN5UDhFZnZFRURVWTFH?=
- =?utf-8?B?TTRFM0pYc21COGsrekdGbVQzMDhBUVF5R0t0UEkrK2xrT3N1SUI4ZFZodWp2?=
- =?utf-8?B?OHpkVE5QT1l0dmJGTUZTSWp0NVc0cDZKalhYZkNoSjJ4STV4K1dNS2NOZW9V?=
- =?utf-8?B?OGJmeEVpRmZjcUlIOFVDMjV3bGtxMHU1aDNLOGczYUtVQXF1KzR2TE1Sd0pT?=
- =?utf-8?B?SEJyaWhHRGZPVmVZSzNxSUJnaWxncUFXc3hOeUpYNExzZmxPZTd3WGY2REdO?=
- =?utf-8?B?a1haQ3NaYytFVnlLZ0ovWndxS0E4YnBrb2N4eGhJV1dtUFdwMExOQ3hlZlBx?=
- =?utf-8?B?Z2N2S0oxZE1jWXo5ei91UysvYWFFSEY0NGNDaEZVRFlJRm9paGVTSytSY0Qx?=
- =?utf-8?B?K0I4djVpSGtOVU9yR3dMdUMwWk1SV1NNSmZqRkNqOWJhbXQvaGdxOXBtdE1W?=
- =?utf-8?B?eEtSc1A5clhqdHhVdThmOGZRQVJsQkNudWJIR3FaWU4rdE9pazhnSHl1Qkdi?=
- =?utf-8?B?YzdWbVJGLzNNc2ZncXZ4SGJSb2RZVTZOUTBRb3FJWTE3TDJ3UkdzSlFPaDBL?=
- =?utf-8?B?RjV0bjkydmFxNU5iaHRqcEFUcS9LaXk0aklWNEpWNDZ0ZGpycXQwSmxPb2Y3?=
- =?utf-8?B?S2dVTHdYL1RrL05xVFNxVFpJdzU5aWViR3FaUE8vNnB2b1Y5SGEzdlRUTXM4?=
- =?utf-8?B?eTZRbkVacklTUEpFcFJ4OXJSSUxPa0NHeTByQ1gyaHBsUG5hcVM5UGtoL0RY?=
- =?utf-8?B?d3JpbWQ0WXVOQVBqTVNZZXFPZTZ2N1ZOZU8zRTAwUFd1UHNIWHEzdDhwYXJG?=
- =?utf-8?Q?ix5fOYBwUyI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UkJrbHJ6U2xrS2RETWgvRWpYcUF1RTI3NmFWYWlHSk4ycTZsYUx2QnlOQmFy?=
- =?utf-8?B?am10N3c0bm5aeVVnUSs3WUU3ajFpbzlXN0RNNXdydklycDJ5aXJVc05BZW5r?=
- =?utf-8?B?RDBUSEhuTVg5Ym4yZW12b29vbTY3K2Z1M2pGa3EvRkZ3Y2FQeHVzOUhYdnNy?=
- =?utf-8?B?NWRWSFRFUGZLVUJmQUhuaGhNSnV2bEMzZy83UXUwMnJpbDdRcFZDN3JxVERB?=
- =?utf-8?B?RE4xODlRRUQ1ZUpaa0VySlp6SnVWRWhTbG1za0d3bEV5cjNDR0tvU01xcUkx?=
- =?utf-8?B?TkEzaGgzZE8vSExqVTJYaXpIZ3Jmdm9pMGNIVUpBR2hjcUh6bE93d0VNbVJz?=
- =?utf-8?B?Q2lCdTZQb3lsdEVvRVpGTTB6MDhhdXZmV0RJNXd6ZlNCMUM1djhCR1U2QTN3?=
- =?utf-8?B?eVV5amIwdnZOWmQySUVrL01aWHpadjIzZDBqbDRnV25JNlV2VEEvYVpUa0I2?=
- =?utf-8?B?R05KM2VxZzJ3M0d1T0JmK1JtUjF6MXZCbFRxRmRsK1M0emx2SWVFVVd6UHh3?=
- =?utf-8?B?bjR4ZUJpZzdzLyt3c01uTHhtS0lTTDE4WmY1enF4RzA3RzlMNkVuSUQrVWNV?=
- =?utf-8?B?QlpoZnVhOGZONUlxZGhDQ2NtL1I1V0NVTkllaDRlVXBmMklndGlyRzh4WW0y?=
- =?utf-8?B?aWFnQU9aUUduQ2VDOGdGMnBtb2pnVXB2WjNpQTUzb3lqaUk5Vk9NWGQxbUhp?=
- =?utf-8?B?OW0yQTVsUWwyd0pSQXNneFpiM2w4UlNieWJoVWRvNmV5ekFwdzl6aTdPaGQ1?=
- =?utf-8?B?L3BUQ25GZU0zbTR1WDFBWWNTSGZQZ0Z1TXA3ZEcrclJoSEQvZWNDeVhOcXBn?=
- =?utf-8?B?OVpFV1JNdWh0QUtpKzRMT3hLbzZHWEg4VGFRWkkvMnQwbUFncU1CUjV4YUF4?=
- =?utf-8?B?aW1OR1R4Zi9Fd0tJeUNJZWQrSU90NlQyOGNoUVlGYkJucldrVjJ6V2M5UjM1?=
- =?utf-8?B?MFlqeVhReWRpeENpMFhNdWN0Q2lzTmY1bGRrbllxdjlrMXdjckJHZmlEdDR2?=
- =?utf-8?B?dXNxQmxyaGl5QTc0dnIvTWVwMlJYOGdzWFA0MVRtVW5JUGUyU3RSS25YaUkx?=
- =?utf-8?B?VVhUQ2pZYWxud2gyMHA3cjB3VTNWNmN6aFFwMmR6WUt5UVV1WjBPQXNsWG8r?=
- =?utf-8?B?UkVGY1dPNGVFVFBPOWoyK0FqTW10WmJkRHJoelNUOUl1UldxQ0N6MGI3NUx3?=
- =?utf-8?B?UU5iTGdqRjdwS1kvQUEzVTg1U2V3dHIyV0EvS3NSb2JuTm82Mng5QlpzMWZ5?=
- =?utf-8?B?Y1Bka1JUR0ZUUStKRFcxRmtLQkluTk5iRzkzYTFxU0ErcThmUUoxQkJ6bExR?=
- =?utf-8?B?N1VpSndwbG9QcFJRQ29kaXhCY1NPY1oyUEdta2lOb2dsYmFUZjBlU2ROb2Vx?=
- =?utf-8?B?NzFZS1ZkRHFmZnFPM2trblBMVjk1bTJjMG1qNUk5dDBPOGUrK2JhcTZ5Rkps?=
- =?utf-8?B?cmdiL1p4MmY2UnhDcDNrNmlWVVBDaTZ3K1EvQmZwcys1a0h1bjI3WGlyeEdl?=
- =?utf-8?B?VXBVZDAyMmRFSTM1alZoeFAvdzgwamJybWV5b0tWdVNIb3c5OEV3NU1hOUhQ?=
- =?utf-8?B?T1pXM25sNXh1RjJIUzRQb0grdkc0c080ajZNUW4raTYvemhoOVlRc0dPS0Z4?=
- =?utf-8?B?clZjV1pzRXpQbGlLcXZzYjl6WHJ1TFRta1RrQnpxWWxlRlhCMWY0Rjl1VEJq?=
- =?utf-8?B?YlM4Z21Jb1VnLzNwb2RjNWNVVHBqWDYvK2lHWnlJVnZaOFNKN0Z4WUJYdlVa?=
- =?utf-8?B?dXByckdxcVExVHdPOWF6Uy9pZGdZT1ZhZTQxMlcxQU56YXFKYXAyS2k3V2Vp?=
- =?utf-8?B?c2pjSlg5bWl6VmlJcFJkUjBza3pza3oweXJmRUVpbjZERDdpOVg0ampETGZ0?=
- =?utf-8?B?bWptdS9iSGQrdkdQd1ZlZDhDS0JnSmlJREl2TzdCU0lDMlZZNkthZVdmTFdL?=
- =?utf-8?B?U3ZTbkJaYTZhWDFFL1hMQStoSlQwL2hHclBKdldQUThnOWVLZzU5NDVIbWM2?=
- =?utf-8?B?TTkyNjZ2VG1uK09mVFcrY3NRYUxPZi9NK2lXb3dmdnA1MDFpMTJiZ2RJZ2hZ?=
- =?utf-8?B?WHNMR2ZjUDlpS3JHVVROZ3JrTWM1MUE0d2ZnNWZvd1J1SmRkRjNhOHFLZ3hm?=
- =?utf-8?B?Q0cwZWRON01KSGVXZnVoVzZRLzJOMjNRb2RjeWtmMk5TRkN1ZzhnNnpseS9H?=
- =?utf-8?B?aUE9PQ==?=
-X-OriginatorOrg: allegrodvt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce328871-a119-4423-165b-08dd9d2af1d6
-X-MS-Exchange-CrossTenant-AuthSource: MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 14:29:53.0620
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0VS4zkJW80I6kg3byEpF6wPYqibLkuMCLx5e6o3lUNWFHM6JD+QrxWt7krl4KFHiilLAaSrJeT2Vle1KXVrIz77uSleHN/8MAhgsWZSS6qE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB1723
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ta2ub5v7txhobccgvpnwsz7cyzcnx6aw74cjlcviosjetuwfhh@7gdahptdpbnd>
 
-On 27.05.2025 09:26, Nicolas Dufresne wrote:
-Hi Nicolas,
->Hi,
->
->Le lundi 26 mai 2025 à 13:16 +0000, Yassine Ouaissa a écrit :
->> On 23.05.2025 15:01, Nicolas Dufresne wrote:
->> > Hi Yassine,
->> >
->> > Le vendredi 23 mai 2025 à 15:41 +0200, Yassine Ouaissa a écrit :
->> > > ---> NOTE <---- : PLEASE Ignore the old patches.
->> > >       These new patches will replace all previous submissions.
->> Hi Nicolas,
->> >
->> > Our tools will take care of that normally, but for that to work, you need
->> > to version your patch. My best advised is to use "b4" to prepare and
->> > submit, it will assist you in doing it right.
->> >
->> I started using this tool, Cool. Thanks.
->> > This should have been a v2 here. Make sure you next submission is set
->>
->> You have all your time, i really dont want reviews get confused ( with my
->> mistake ).
->> > to v3, but prior to that, give us time to review again.
->> >
->>
->> The next submission will be v2, considering this patch is a v1.
->>
->> The changelog will be set on the next version as well, to identify the
->> changes that i have made sins the first patchsets.
->
->Thanks. One last hint, when you do a new version, over time some patches
->will become stable and will have people comment with possibly Tested-by:
->Reviewed-by: or Acked-by:, please make sure to edit your commit message
->and include these in the the patch. If you endup rewriting a patch that had
->some of these tags, please make sure to drop them and be clear in the cover
->that this patch needs renewed attention.
+On Mon, May 26, 2025 at 01:18:18PM +0200, Stefano Garzarella wrote:
+> On Thu, May 22, 2025 at 09:59:07PM -0700, Bobby Eshleman wrote:
+> > This commit introduces a new vmtest.sh runner for vsock.
+> > 
+> > It uses virtme-ng/qemu to run tests in a VM. The tests validate G2H,
+> > H2G, and loopback. The testing tools from tools/testing/vsock/ are
+> > reused. Currently, only vsock_test is used.
+> > 
+> > VMCI and hyperv support is included in the config file to be built with
+> > the -b option, though not used in the tests.
+> > 
+> > Only tested on x86.
+> > 
+> > To run:
+> > 
+> >  $ make -C tools/testing/selftests TARGETS=vsock
+> >  $ tools/testing/selftests/vsock/vmtest.sh
+> > 
+> > or
+> > 
+> >  $ make -C tools/testing/selftests TARGETS=vsock run_tests
+> > 
+> > Example runs (after make -C tools/testing/selftests TARGETS=vsock):
+> > 
+> > $ ./tools/testing/selftests/vsock/vmtest.sh
+> > 1..3
+> > ok 0 vm_server_host_client
+> > ok 1 vm_client_host_server
+> > ok 2 vm_loopback
+> > SUMMARY: PASS=3 SKIP=0 FAIL=0
+> > Log: /tmp/vsock_vmtest_m7DI.log
+> > 
+> > $ ./tools/testing/selftests/vsock/vmtest.sh vm_loopback
+> > 1..1
+> > ok 0 vm_loopback
+> > SUMMARY: PASS=1 SKIP=0 FAIL=0
+> > Log: /tmp/vsock_vmtest_a1IO.log
+> > 
+> > $ mkdir -p ~/scratch
+> > $ make -C tools/testing/selftests install TARGETS=vsock INSTALL_PATH=~/scratch
+> > [... omitted ...]
+> > $ cd ~/scratch
+> > $ ./run_kselftest.sh
+> > TAP version 13
+> > 1..1
+> > # timeout set to 300
+> > # selftests: vsock: vmtest.sh
+> > # 1..3
+> > # ok 0 vm_server_host_client
+> > # ok 1 vm_client_host_server
+> > # ok 2 vm_loopback
+> > # SUMMARY: PASS=3 SKIP=0 FAIL=0
+> > # Log: /tmp/vsock_vmtest_svEl.log
+> > ok 1 selftests: vsock: vmtest.sh
+> > 
+> > Future work can include vsock_diag_test.
+> > 
+> > Because vsock requires a VM to test anything other than loopback, this
+> > patch adds vmtest.sh as a kselftest itself. This is different than other
+> > systems that have a "vmtest.sh", where it is used as a utility script to
+> > spin up a VM to run the selftests as a guest (but isn't hooked into
+> > kselftest).
+> > 
+> > Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+> > ---
+> > Changes in v8:
+> > - remove NIPA comment from commit msg
+> > - remove tap_* functions and TAP_PREFIX
+> > - add -b for building kernel
+> > - Link to v7: https://lore.kernel.org/r/20250515-vsock-vmtest-v7-1-ba6fa86d6c2c@gmail.com
+> > 
+> > Changes in v7:
+> > - fix exit code bug when ran is kselftest: use cnt_total instead of KSFT_NUM_TESTS
+> > - updated commit message with updated output
+> > - updated commit message with commands for installing/running as
+> >  kselftest
+> > - Link to v6: https://lore.kernel.org/r/20250515-vsock-vmtest-v6-1-9af1cc023900@gmail.com
+> > 
+> > Changes in v6:
+> > - add make cmd in commit message in vmtest.sh example (Stefano)
+> > - check nonzero size of QEMU_PIDFILE using -s conditional (Stefano)
+> > - display log file path after tests so it is easier to find amongst other random names
+> > - cleanup qemu pidfile if qemu is unable to remove it
+> > - make oops/warning failures more obvious with 'FAIL' prefix in log
+> >  (simply saying 'detected' wasn't clear enough to identify failing
+> >  condition)
+> > - Link to v5: https://lore.kernel.org/r/20250513-vsock-vmtest-v5-1-4e75c4a45ceb@gmail.com
+> > 
+> > Changes in v5:
+> > - make log file a tmpfile (Paolo)
+> > - make sure both default and user defined QEMU gets handled by the dependency check (Paolo)
+> > - increased VM boot up timeout from 1m to 3m for slow hosts (Paolo)
+> > - rename vm_setup -> vm_start (Paolo)
+> > - derive wait_for_listener from selftests/net/net_helper.sh to removes ss usage
+> > - Remove unused 'unset IFS' line (Paolo)
+> > - leave space after variable declarations (Paolo)
+> > - make QEMU_PIDFILE a tmp file (Paolo)
+> > - make everything readonly that is only read (Paolo)
+> > - source ktap_helpers.sh for KSFT_PASS and friends (Paolo)
+> > - don't check for timeout util (Paolo)
+> > - add missing usage string for -q qemu arg
+> > - add tap prefix to SUMMARY line since it isn't part of TAP protocol
+> > - exit with the correct status code based on failure/pass counts
+> > - Link to v4: https://lore.kernel.org/r/20250507-vsock-vmtest-v4-1-6e2a97262cd6@gmail.com
+> > 
+> > Changes in v4:
+> > - do not use special tab delimiter for help string parsing (Stefano + Paolo)
+> > - fix paths for when installing kselftest and running out-of-tree (Paolo)
+> > - change vng to using running kernel instead of compiled kernel (Paolo)
+> > - use multi-line string for QEMU_OPTS (Stefano)
+> > - change timeout to 300s (Paolo)
+> > - skip if tools are not found and use kselftests status codes (Paolo)
+> > - remove build from vmtest.sh (Paolo)
+> > - change 2222 -> SSH_HOST_PORT (Stefano)
+> > - add tap-format output
+> > - add vmtest.log to gitignore
+> > - check for vsock_test binary and remind user to build it if missing
+> > - create a proper build in makefile
+> > - style fixes
+> > - add ssh, timeout, and pkill to dependency check, just in case
+> > - fix numerical comparison in conditionals
+> > - check qemu pidfile exists before proceeding (avoid wasting time waiting for ssh)
+> > - fix tracking of pass/fail bug
+> > - fix stderr redirection bug
+> > - Link to v3: https://lore.kernel.org/r/20250428-vsock-vmtest-v3-1-181af6163f3e@gmail.com
+> > 
+> > Changes in v3:
+> > - use common conditional syntax for checking variables
+> > - use return value instead of global rc
+> > - fix typo TEST_HOST_LISTENER_PORT -> TEST_HOST_PORT_LISTENER
+> > - use SIGTERM instead of SIGKILL on cleanup
+> > - use peer-cid=1 for loopback
+> > - change sleep delay times into globals
+> > - fix test_vm_loopback logging
+> > - add test selection in arguments
+> > - make QEMU an argument
+> > - check that vng binary is on path
+> > - use QEMU variable
+> > - change <tab><backslash> to <space><backslash>
+> > - fix hardcoded file paths
+> > - add comment in commit msg about script that vmtest.sh was based off of
+> > - Add tools/testing/selftest/vsock/Makefile for kselftest
+> > - Link to v2: https://lore.kernel.org/r/20250417-vsock-vmtest-v2-1-3901a27331e8@gmail.com
+> > 
+> > Changes in v2:
+> > - add kernel oops and warnings checker
+> > - change testname variable to use FUNCNAME
+> > - fix spacing in test_vm_server_host_client
+> > - add -s skip build option to vmtest.sh
+> > - add test_vm_loopback
+> > - pass port to vm_wait_for_listener
+> > - fix indentation in vmtest.sh
+> > - add vmci and hyperv to config
+> > - changed whitespace from tabs to spaces in help string
+> > - Link to v1: https://lore.kernel.org/r/20250410-vsock-vmtest-v1-1-f35a81dab98c@gmail.com
+> > ---
+> > MAINTAINERS                              |   1 +
+> > tools/testing/selftests/vsock/.gitignore |   2 +
+> > tools/testing/selftests/vsock/Makefile   |  16 ++
+> > tools/testing/selftests/vsock/config     | 114 ++++++++
+> > tools/testing/selftests/vsock/settings   |   1 +
+> > tools/testing/selftests/vsock/vmtest.sh  | 460 +++++++++++++++++++++++++++++++
+> > 6 files changed, 594 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 657a67f9031ef7798c19ac63e6383d4cb18a9e1f..3fbdd7bbfce7196a3cc7db70203317c6bd0e51fd 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -25751,6 +25751,7 @@ F:	include/uapi/linux/vm_sockets.h
+> > F:	include/uapi/linux/vm_sockets_diag.h
+> > F:	include/uapi/linux/vsockmon.h
+> > F:	net/vmw_vsock/
+> > +F:	tools/testing/selftests/vsock/
+> > F:	tools/testing/vsock/
+> > 
+> > VMALLOC
+> > diff --git a/tools/testing/selftests/vsock/.gitignore b/tools/testing/selftests/vsock/.gitignore
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..9c5bf379480f829a14713d5f5dc7d525bc272e84
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/vsock/.gitignore
+> > @@ -0,0 +1,2 @@
+> > +vmtest.log
+> > +vsock_test
+> > diff --git a/tools/testing/selftests/vsock/Makefile b/tools/testing/selftests/vsock/Makefile
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..7ab4970e5e8a019be33f96a36f95c00573d7bfcf
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/vsock/Makefile
+> > @@ -0,0 +1,16 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +
+> > +CURDIR := $(abspath .)
+> > +TOOLSDIR := $(abspath ../../..)
+> > +
+> > +$(OUTPUT)/vsock_test: $(TOOLSDIR)/testing/vsock/vsock_test
+> > +	install -m 755 $< $@
+> > +
+> > +$(TOOLSDIR)/testing/vsock/vsock_test:
+> > +	$(MAKE) -C $(TOOLSDIR)/testing/vsock vsock_test
+> > +
+> > +TEST_PROGS += vmtest.sh
+> > +TEST_GEN_FILES := vsock_test
+> > +
+> > +include ../lib.mk
+> > +
+> 
+> I had modified the tests, but I noticed that they were not copied,
+> in fact we have no dependencies on the test sources.
+> 
+> This may not be a problem in the selftest environment, but locally I
+> think it is.
+> 
+> We can either use .PHONY and call `$(MAKE) -C ...` each time, or do
+> something like this (which solved my problem):
+> 
+> diff --git a/tools/testing/selftests/vsock/Makefile b/tools/testing/selftests/vsock/Makefile
+> index 7ab4970e5e8a..d1bb1f63a9d1 100644
+> --- a/tools/testing/selftests/vsock/Makefile
+> +++ b/tools/testing/selftests/vsock/Makefile
+> @@ -3,11 +3,14 @@
+>  CURDIR := $(abspath .)
+>  TOOLSDIR := $(abspath ../../..)
+> -$(OUTPUT)/vsock_test: $(TOOLSDIR)/testing/vsock/vsock_test
+> +VSOCK_TEST_DIR := $(TOOLSDIR)/testing/vsock
+> +VSOCK_TEST_SRCS := $(wildcard $(VSOCK_TEST_DIR)/*.c $(VSOCK_TEST_DIR)/*.h)
+> +
+> +$(OUTPUT)/vsock_test: $(VSOCK_TEST_DIR)/vsock_test
+>         install -m 755 $< $@
+> -$(TOOLSDIR)/testing/vsock/vsock_test:
+> -       $(MAKE) -C $(TOOLSDIR)/testing/vsock vsock_test
+> +$(VSOCK_TEST_DIR)/vsock_test: $(VSOCK_TEST_SRCS)
+> +       $(MAKE) -C $(VSOCK_TEST_DIR) vsock_test
+>  TEST_PROGS += vmtest.sh
+>  TEST_GEN_FILES := vsock_test
+> 
+> 
 
-Thanks for the help.
-It clear, and make sense.
+Makes sense!
 
->
->I do review the comments against the code by the end of the process, but
->while iterating, we work forward trusting what is documented.
->
->Nicolas
->
-Best regards,
-Yassine OUAISSA
+> > +
+> > +# virtme-ng offers a netdev for ssh when using "--ssh", but we also need a
+> > +# control port forwarded for vsock_test.  Because virtme-ng doesn't support
+> > +# adding an additional port to forward to the device created from "--ssh" and
+> > +# virtme-init mistakenly sets identical IPs to the ssh device and additional
+> > +# devices, we instead opt out of using --ssh, add the device manually, and also
+> > +# add the kernel cmdline options that virtme-init uses to setup the interface.
+> 
+> This version of the script doesn't work for me, the VM starts, but I
+> can't connect in ssh. After spending some time debugging, I saw that
+> `sshd` was not being launched inside the VM.
+> 
+> I think it depends on the version of vng (maybe recently updated on my
+> Fedora 41); here I have:
+> $ vng --version
+> virtme-ng 1.36
+> 
+> Playing around with `vng`, I found that it now also supports ssh on
+> vsock (I think it is now default). By forcing it to use tcp
+> (`vng ... --ssh --ssh-tcp`), it adds another parameter to my cmdline:
+> `virtme_ssh_channel=tcp`.
+> 
+> And indeed this change fixed my issues:
+> --- a/tools/testing/selftests/vsock/vmtest.sh
+> +++ b/tools/testing/selftests/vsock/vmtest.sh
+> @@ -39,7 +39,7 @@ readonly QEMU_OPTS="\
+>          -device vhost-vsock-pci,guest-cid=${VSOCK_CID} \
+>          --pidfile ${QEMU_PIDFILE} \
+>  "
+> -readonly KERNEL_CMDLINE="virtme.dhcp net.ifnames=0 biosdevname=0 virtme.ssh virtme_ssh_user=$USER"
+> +readonly KERNEL_CMDLINE="virtme.dhcp net.ifnames=0 biosdevname=0 virtme.ssh virtme_ssh_channel=tcp virtme_ssh_user=$USER"
+>  readonly LOG=$(mktemp /tmp/vsock_vmtest_XXXX.log)
+>  readonly TEST_NAMES=(vm_server_host_client vm_client_host_server vm_loopback)
+>  readonly TEST_DESCS=(
+> 
+> That said, I'm concerned about the weakness of assuming the cmdlines
+> supported by vng (which do not seem stable to me at this point).
+> 
+> Should we check the version of vng and at least print a warning to say
+> that this script is not tested on that version?
+> 
+> Thanks,
+> Stefano
+> 
 
->> > Nicolas
->> >
->> Best regards,
->> Yassine OUAISSA
->>
->> > >
->> > > # V4L2 Video Decoder Driver System Description
->> > >
->> > > ** Hardware Architecture **
->> > >
->> > > The system implements a heterogeneous computing architecture with two primary components:
->> > >
->> > > - **Host Subsystem**: Linux-based CPU running the V4L2 framework and associated drivers
->> > > - **IP Subsystem**: Dedicated hardware containing an MCU and a hardware video CODEC
->> > >
->> > > The communication between the two subsystems uses a shared DDR shared memory with bidirectional interrupt
->> > > mechanism
->> > > for synchronization.
->> > >
->> > > The architecture is represented in the following diagram:
->> > >
->> > > ```
->> > > +---------------------+                  +----------------------+
->> > > >       Host          |                  |        IP            |
->> > > >                     |                  |                      |
->> > > >  +---------------+  |                  |  +----------------+  |
->> > > >  |               |  |   DDR Shared     |  |                |  |
->> > > >  | Linux Kernel  |<-|----------------->|->|     MCU        |  |
->> > > >  | (CPU)         |  |    Memory        |  |                |  |
->> > > >  |   +--------+  |  |                  |  +----------------+  |
->> > > >  |   |        |  |  |    IRQ when      |           ^          |
->> > > >  |   | V4L2   |  |<-|----new message-->|           |          |
->> > > >  |   | Drivers|  |  |                  |           |          |
->> > > >  |   |        |  |  |                  |           | APB      |
->> > > >  |   +--------+  |  |                  |           |          |
->> > > >  |               |  |                  |           v          |
->> > > >  +---------------+  |                  |  +----------------+  |
->> > > >                     |                  |  |                |  |
->> > > >                     |                  |  |     CODEC      |  |
->> > > >                     |                  |  |                |  |
->> > > >                     |                  |  |                |  |
->> > > +---------------------+                  +----------------------+
->> > > ```
->> > >
->> > > ** Communication Protocol **
->> > >
->> > > -- Current Implementation - Custom Mailbox --
->> > >
->> > > The host CPU and MCU currently communicate through a custom mailbox protocol implemented over shared memory. The
->> > > protocol operates as follows:
->> > >
->> > > 1. When the host has a new message for the MCU:
->> > >    - The host writes data to a dedicated shared memory region
->> > >    - The host triggers an interrupt to the MCU
->> > >    - The MCU reads the shared memory to obtain the message type and data
->> > >
->> > > 2. Similarly, when the MCU has a message for the host:
->> > >    - The MCU writes to the shared memory
->> > >    - The MCU triggers an interrupt to the host
->> > >    - The host reads the shared memory to process the message
->> > >
->> > > -- Migration to RPMSG --
->> > >
->> > > The custom mailbox implementation will be replaced by the standard Linux RPMSG framework.
->> > >
->> > > ** Driver Implementation **
->> > >
->> > > This driver implements a V4L2-compliant stateful video decoder with the following characteristics:
->> > >
->> > > -- Technical Specifications --
->> > >
->> > > - **Codec Support**: AVC (H.264), HEVC (H.265), and JPEG
->> > > - **Resolution Support**: Up to 4K
->> > > - **Pixel Formats**:
->> > >   - Currently supported: V4L2_PIX_FMT_NV12, V4L2_PIX_FMT_NV16, V4L2_PIX_FMT_P010
->> > >   - Additional formats planned for future releases
->> > > - **Buffer Configuration**: Currently supports semi-planar format only; multiplanar support forthcoming
->> > >
->> > > -- Initialization Sequence --
->> > >
->> > > During probe, the driver performs the following operations:
->> > >
->> > > 1. Allocates memory for the MCU firmware
->> > > 2. Loads the firmware into the allocated memory
->> > > 3. Initializes the MCU by configuring internal registers (e.g BOOT_ADDR)
->> > > 4. Establishes the shared memory communication interface (to be replaced by RPMSG)
->> > > 5. Sets up interrupt handlers for MCU communication
->> > >
->> > > -- Processing Model --
->> > >
->> > > The driver implements a stateful decoding model with the following workflow:
->> > >
->> > > -- Stream Initialization --
->> > >
->> > > 1. Upon `VIDIOC_STREAMON` on the OUTPUT queue:
->> > >    - The driver sends a context creation request to the MCU
->> > >    - This operation is blocking; the driver waits until the MCU responds with a context handler
->> > >    - The context handler is stored in a driver-maintained list for subsequent operations
->> > >    - Each context has its own unique handler to support multiple simultaneous streams
->> > >
->> > > 2. Initial stream analysis:
->> > >    - The driver submits the first compressed buffer (OUTPUT queue)
->> > >    - The MCU analyzes the stream and reports capability via:
->> > >      - `resolution_found_event`: Stream is supported, includes stream parameters
->> > >      - `error_event`: Stream format is unsupported or invalid
->> > >
->> > > -- Decoding Pipeline --
->> > >
->> > > 1. After successful stream initialization and receiving the resolution_found_evt:
->> > >    - The driver can begin normal decoding operations
->> > >    - V4L2 framework can be informed of format requirements
->> > >
->> > > 2. For each compressed buffer (OUTPUT queue):
->> > >    - The driver submits buffer to MCU with the appropriate context handler
->> > >    - The MCU processes the buffer and sends `release_bitstream_evt` when complete
->> > >    - This event signals that the input buffer can be returned to the application
->> > >
->> > > 3. For each decoded buffer (CAPTURE queue):
->> > >    - The MCU fills the buffer with decoded frame data
->> > >    - The MCU sends `frame_buffer_decode_evt` with important metadata including:
->> > >      - Original source buffer timestamp
->> > >      - Flags
->> > >      - Timecode
->> > >      - Actual payload size (bytes used in the decoded frame)
->> > >    - This enables the driver to properly queue the filled buffer to the application
->> > >
->> > > 4. End-of-stream handling:
->> > >    - The MCU sends an event with `eos_evt` when reaching the end of stream
->> > >    - This allows proper handling of end-of-stream conditions
->> > >
->> > > -- Multi-stream Support --
->> > >
->> > > The driver architecture supports multiple simultaneous decoding contexts with the following characteristics:
->> > >
->> > > 1. Each context maintains separate state information
->> > > 2. The driver manages multiple context handlers returned by the MCU
->> > > 3. Buffer submissions include the appropriate context handler for routing
->> > > 4. The system can decode multiple independent streams concurrently
->> > >
->> > > -- Stream Termination --
->> > >
->> > > When `VIDIOC_STREAMOFF` is called:
->> > >
->> > > 1. The driver sends a flush command to the MCU for the specific context
->> > > 2. The driver issues a non-blocking destroy context message
->> > > 3. All associated resources are released
->> > > 4. The context handler is removed from the driver's context list
->> > >
->> > > ** Error Handling **
->> > >
->> > > The driver implements comprehensive error handling including:
->> > >
->> > > 1. Firmware loading failures
->> > > 2. MCU initialization errors
->> > > 3. Context creation failures
->> > > 4. Unsupported stream formats
->> > > 5. Decoding errors reported by the MCU
->> > > 6. Timeout handling for unresponsive hardware
->> > >
->> > > ** Memory Management **
->> > >
->> > > The system uses the following memory management strategy:
->> > >
->> > > 1. Firmware memory is allocated during probe
->> > > 2. Buffer memory is managed through the V4L2 buffer management interfaces
->> > > 3. DMA-capable memory is used for buffer transfers between host and MCU
->> > > 4. The driver properly synchronizes memory access to avoid coherency issues
->> > >
->> > > ** Future Enhancements **
->> > >
->> > > Planned future enhancements include:
->> > >
->> > > 1. Migration from custom mailbox to RPMSG (in progress)
->> > > 2. Support for additional pixel formats
->> > > 3. Implementation of multiplanar buffer support
->> > >
->> > > This comprehensive architecture enables efficient hardware-accelerated video decoding while adhering to standard
->> > > V4L2
->> > > interfaces, making it suitable for upstream inclusion in the Linux kernel.
->> > >
->> > > ** Decoder Compliance Testing **
->> > >
->> > > -- AVC and HEVC Fluster Report --
->> > >
->> > > This section contains the compliance test results from Fluster framework for both AVC and HEVC decoders.
->> > > The reports validate the decoder's conformance to relevant standards and demonstrate compatibility with a wide
->> > > range
->> > > of video streams.
->> > >
->> > > [FLUSTER REPORT FOR THE H.264]
->> > >  -- JVT-AVC_V1
->> > >
->> > > > Test                     | FFmpeg-H.264-v4l2m2m |
->> > > > ------------------------ | -------------------- |
->> > > > TOTAL                    | 79/135               |
->> > > > TOTAL TIME               | 437.031s             |
->> > > > -                        | -                    |
->> > > > AUD_MW_E                 | OK                   |
->> > > > BA1_FT_C                 | OK                   |
->> > > > BA1_Sony_D               | OK                   |
->> > > > BA2_Sony_F               | OK                   |
->> > > > BA3_SVA_C                | OK                   |
->> > > > BA_MW_D                  | OK                   |
->> > > > BAMQ1_JVC_C              | OK                   |
->> > > > BAMQ2_JVC_C              | OK                   |
->> > > > BANM_MW_D                | OK                   |
->> > > > BASQP1_Sony_C            | OK                   |
->> > > > CABA1_Sony_D             | OK                   |
->> > > > CABA1_SVA_B              | OK                   |
->> > > > CABA2_Sony_E             | OK                   |
->> > > > CABA2_SVA_B              | OK                   |
->> > > > CABA3_Sony_C             | OK                   |
->> > > > CABA3_SVA_B              | OK                   |
->> > > > CABA3_TOSHIBA_E          | OK                   |
->> > > > cabac_mot_fld0_full      | ER                   |
->> > > > cabac_mot_frm0_full      | OK                   |
->> > > > cabac_mot_mbaff0_full    | ER                   |
->> > > > cabac_mot_picaff0_full   | KO                   |
->> > > > CABACI3_Sony_B           | OK                   |
->> > > > CABAST3_Sony_E           | OK                   |
->> > > > CABASTBR3_Sony_B         | OK                   |
->> > > > CABREF3_Sand_D           | ER                   |
->> > > > CACQP3_Sony_D            | OK                   |
->> > > > CAFI1_SVA_C              | ER                   |
->> > > > CAMA1_Sony_C             | ER                   |
->> > > > CAMA1_TOSHIBA_B          | ER                   |
->> > > > cama1_vtc_c              | ER                   |
->> > > > cama2_vtc_b              | ER                   |
->> > > > CAMA3_Sand_E             | ER                   |
->> > > > cama3_vtc_b              | ER                   |
->> > > > CAMACI3_Sony_C           | ER                   |
->> > > > CAMANL1_TOSHIBA_B        | ER                   |
->> > > > CAMANL2_TOSHIBA_B        | ER                   |
->> > > > CAMANL3_Sand_E           | ER                   |
->> > > > CAMASL3_Sony_B           | ER                   |
->> > > > CAMP_MOT_MBAFF_L30       | ER                   |
->> > > > CAMP_MOT_MBAFF_L31       | ER                   |
->> > > > CANL1_Sony_E             | OK                   |
->> > > > CANL1_SVA_B              | OK                   |
->> > > > CANL1_TOSHIBA_G          | OK                   |
->> > > > CANL2_Sony_E             | OK                   |
->> > > > CANL2_SVA_B              | OK                   |
->> > > > CANL3_Sony_C             | OK                   |
->> > > > CANL3_SVA_B              | OK                   |
->> > > > CANL4_SVA_B              | OK                   |
->> > > > CANLMA2_Sony_C           | ER                   |
->> > > > CANLMA3_Sony_C           | ER                   |
->> > > > CAPA1_TOSHIBA_B          | ER                   |
->> > > > CAPAMA3_Sand_F           | ER                   |
->> > > > CAPCM1_Sand_E            | OK                   |
->> > > > CAPCMNL1_Sand_E          | OK                   |
->> > > > CAPM3_Sony_D             | OK                   |
->> > > > CAQP1_Sony_B             | OK                   |
->> > > > cavlc_mot_fld0_full_B    | ER                   |
->> > > > cavlc_mot_frm0_full_B    | OK                   |
->> > > > cavlc_mot_mbaff0_full_B  | ER                   |
->> > > > cavlc_mot_picaff0_full_B | KO                   |
->> > > > CAWP1_TOSHIBA_E          | OK                   |
->> > > > CAWP5_TOSHIBA_E          | OK                   |
->> > > > CI1_FT_B                 | OK                   |
->> > > > CI_MW_D                  | OK                   |
->> > > > CVBS3_Sony_C             | OK                   |
->> > > > CVCANLMA2_Sony_C         | ER                   |
->> > > > CVFC1_Sony_C             | OK                   |
->> > > > CVFI1_Sony_D             | ER                   |
->> > > > CVFI1_SVA_C              | ER                   |
->> > > > CVFI2_Sony_H             | ER                   |
->> > > > CVFI2_SVA_C              | ER                   |
->> > > > CVMA1_Sony_D             | ER                   |
->> > > > CVMA1_TOSHIBA_B          | ER                   |
->> > > > CVMANL1_TOSHIBA_B        | ER                   |
->> > > > CVMANL2_TOSHIBA_B        | ER                   |
->> > > > CVMAPAQP3_Sony_E         | ER                   |
->> > > > CVMAQP2_Sony_G           | ER                   |
->> > > > CVMAQP3_Sony_D           | ER                   |
->> > > > CVMP_MOT_FLD_L30_B       | ER                   |
->> > > > CVMP_MOT_FRM_L31_B       | ER                   |
->> > > > CVNLFI1_Sony_C           | ER                   |
->> > > > CVNLFI2_Sony_H           | ER                   |
->> > > > CVPA1_TOSHIBA_B          | ER                   |
->> > > > CVPCMNL1_SVA_C           | OK                   |
->> > > > CVPCMNL2_SVA_C           | OK                   |
->> > > > CVSE2_Sony_B             | OK                   |
->> > > > CVSE3_Sony_H             | OK                   |
->> > > > CVSEFDFT3_Sony_E         | OK                   |
->> > > > CVWP1_TOSHIBA_E          | OK                   |
->> > > > CVWP2_TOSHIBA_E          | OK                   |
->> > > > CVWP3_TOSHIBA_E          | OK                   |
->> > > > CVWP5_TOSHIBA_E          | OK                   |
->> > > > FI1_Sony_E               | ER                   |
->> > > > FM1_BT_B                 | ER                   |
->> > > > FM1_FT_E                 | KO                   |
->> > > > FM2_SVA_C                | ER                   |
->> > > > HCBP1_HHI_A              | OK                   |
->> > > > HCBP2_HHI_A              | OK                   |
->> > > > HCMP1_HHI_A              | OK                   |
->> > > > LS_SVA_D                 | OK                   |
->> > > > MIDR_MW_D                | OK                   |
->> > > > MPS_MW_A                 | OK                   |
->> > > > MR1_BT_A                 | OK                   |
->> > > > MR1_MW_A                 | OK                   |
->> > > > MR2_MW_A                 | OK                   |
->> > > > MR2_TANDBERG_E           | OK                   |
->> > > > MR3_TANDBERG_B           | OK                   |
->> > > > MR4_TANDBERG_C           | OK                   |
->> > > > MR5_TANDBERG_C           | OK                   |
->> > > > MR6_BT_B                 | ER                   |
->> > > > MR7_BT_B                 | OK                   |
->> > > > MR8_BT_B                 | ER                   |
->> > > > MR9_BT_B                 | ER                   |
->> > > > MV1_BRCM_D               | OK                   |
->> > > > NL1_Sony_D               | OK                   |
->> > > > NL2_Sony_H               | OK                   |
->> > > > NL3_SVA_E                | OK                   |
->> > > > NLMQ1_JVC_C              | OK                   |
->> > > > NLMQ2_JVC_C              | OK                   |
->> > > > NRF_MW_E                 | OK                   |
->> > > > Sharp_MP_Field_1_B       | ER                   |
->> > > > Sharp_MP_Field_2_B       | ER                   |
->> > > > Sharp_MP_Field_3_B       | ER                   |
->> > > > Sharp_MP_PAFF_1r2        | ER                   |
->> > > > Sharp_MP_PAFF_2r         | ER                   |
->> > > > SL1_SVA_B                | OK                   |
->> > > > SP1_BT_A                 | ER                   |
->> > > > sp2_bt_b                 | ER                   |
->> > > > SVA_BA1_B                | OK                   |
->> > > > SVA_BA2_D                | OK                   |
->> > > > SVA_Base_B               | OK                   |
->> > > > SVA_CL1_E                | OK                   |
->> > > > SVA_FM1_E                | OK                   |
->> > > > SVA_NL1_B                | OK                   |
->> > > > SVA_NL2_E                | OK                   |
->> > > > -                        | -                    |
->> > > > Test                     | FFmpeg-H.264-v4l2m2m |
->> > > > TOTAL                    | 79/135               |
->> > > > TOTAL TIME               | 439.031s             |
->> > >
->> > > NOTE: The ER (ERROR) streams are not supported by the decoder.
->> > >       The driver print error message "Unsupported stream"
->> > >
->> > > - JVT-FR-EXT
->> > >
->> > > > Test                | FFmpeg-H.264-v4l2m2m |
->> > > > ------------------- | -------------------- |
->> > > > TOTAL               | 23/69                |
->> > > > TOTAL TIME          | 182.362s             |
->> > > > -                   | -                    |
->> > > > alphaconformanceG   | OK                   |
->> > > > brcm_freh10         | ER                   |
->> > > > brcm_freh11         | ER                   |
->> > > > brcm_freh3          | OK                   |
->> > > > brcm_freh4          | ER                   |
->> > > > brcm_freh5          | ER                   |
->> > > > brcm_freh6          | ER                   |
->> > > > brcm_freh8          | OK                   |
->> > > > brcm_freh9          | OK                   |
->> > > > FREH10-1            | ER                   |
->> > > > FREH10-2            | ER                   |
->> > > > freh12_b            | OK                   |
->> > > > freh1_b             | OK                   |
->> > > > freh2_b             | OK                   |
->> > > > freh7_b             | ER                   |
->> > > > FREXT01_JVC_D       | ER                   |
->> > > > FREXT02_JVC_C       | ER                   |
->> > > > FRExt1_Panasonic_D  | OK                   |
->> > > > FREXT1_TANDBERG_A   | ER                   |
->> > > > FRExt2_Panasonic_C  | ER                   |
->> > > > FREXT2_TANDBERG_A   | ER                   |
->> > > > FRExt3_Panasonic_E  | OK                   |
->> > > > FREXT3_TANDBERG_A   | ER                   |
->> > > > FRExt4_Panasonic_B  | ER                   |
->> > > > FRExt_MMCO4_Sony_B  | OK                   |
->> > > > HCAFF1_HHI_B        | ER                   |
->> > > > HCAFR1_HHI_C        | OK                   |
->> > > > HCAFR2_HHI_A        | OK                   |
->> > > > HCAFR3_HHI_A        | OK                   |
->> > > > HCAFR4_HHI_A        | OK                   |
->> > > > HCAMFF1_HHI_B       | ER                   |
->> > > > HCHP1_HHI_B         | OK                   |
->> > > > HCHP2_HHI_A         | OK                   |
->> > > > HCHP3_HHI_A         | ER                   |
->> > > > Hi422FR10_SONY_A    | ER                   |
->> > > > Hi422FR11_SONY_A    | ER                   |
->> > > > Hi422FR12_SONY_A    | ER                   |
->> > > > Hi422FR13_SONY_A    | ER                   |
->> > > > Hi422FR14_SONY_A    | ER                   |
->> > > > Hi422FR15_SONY_A    | ER                   |
->> > > > Hi422FR1_SONY_A     | ER                   |
->> > > > Hi422FR2_SONY_A     | ER                   |
->> > > > Hi422FR3_SONY_A     | ER                   |
->> > > > Hi422FR4_SONY_A     | ER                   |
->> > > > Hi422FR6_SONY_A     | ER                   |
->> > > > Hi422FR7_SONY_A     | ER                   |
->> > > > Hi422FR8_SONY_A     | ER                   |
->> > > > Hi422FR9_SONY_A     | ER                   |
->> > > > Hi422FREXT16_SONY_A | ER                   |
->> > > > Hi422FREXT17_SONY_A | ER                   |
->> > > > Hi422FREXT18_SONY_A | ER                   |
->> > > > Hi422FREXT19_SONY_A | ER                   |
->> > > > HPCA_BRCM_C         | OK                   |
->> > > > HPCADQ_BRCM_B       | OK                   |
->> > > > HPCAFL_BRCM_C       | ER                   |
->> > > > HPCAFLNL_BRCM_C     | ER                   |
->> > > > HPCALQ_BRCM_B       | OK                   |
->> > > > HPCAMAPALQ_BRCM_B   | ER                   |
->> > > > HPCAMOLQ_BRCM_B     | ER                   |
->> > > > HPCANL_BRCM_C       | OK                   |
->> > > > HPCAQ2LQ_BRCM_B     | OK                   |
->> > > > HPCV_BRCM_A         | OK                   |
->> > > > HPCVFL_BRCM_A       | ER                   |
->> > > > HPCVFLNL_BRCM_A     | ER                   |
->> > > > HPCVMOLQ_BRCM_B     | ER                   |
->> > > > HPCVNL_BRCM_A       | OK                   |
->> > > > HVLCFI0_Sony_B      | ER                   |
->> > > > HVLCMFF0_Sony_B     | ER                   |
->> > > > HVLCPFF0_Sony_B     | ER                   |
->> > > > -                   | -                    |
->> > > > Test                | FFmpeg-H.264-v4l2m2m |
->> > > > TOTAL               | 23/69                |
->> > > > TOTAL TIME          | 182.362s             |
->> > >
->> > > NOTE: The ER (ERROR) streams are not supported by the decoder.
->> > >       The driver print error message "Unsupported stream"
->> > >
->> > > - JVT-MVC
->> > >
->> > > > Test       | FFmpeg-H.264-v4l2m2m |
->> > > > ---------- | -------------------- |
->> > > > TOTAL      | 18/20                |
->> > > > TOTAL TIME | 147.076s             |
->> > > > -          | -                    |
->> > > > MVCDS-4    | OK                   |
->> > > > MVCDS-5    | OK                   |
->> > > > MVCDS-6    | OK                   |
->> > > > MVCDS1     | OK                   |
->> > > > MVCDS2     | OK                   |
->> > > > MVCDS3     | OK                   |
->> > > > MVCICT-1   | ER                   |
->> > > > MVCICT-2   | ER                   |
->> > > > MVCNV-2    | OK                   |
->> > > > MVCNV-3    | OK                   |
->> > > > MVCNV1     | OK                   |
->> > > > MVCNV4     | OK                   |
->> > > > MVCRP_1    | OK                   |
->> > > > MVCRP_2    | OK                   |
->> > > > MVCRP_3    | OK                   |
->> > > > MVCRP_4    | OK                   |
->> > > > MVCRP_5    | OK                   |
->> > > > MVCRP_6    | OK                   |
->> > > > MVCSPS-1   | OK                   |
->> > > > MVCSPS-2   | OK                   |
->> > > > -          | -                    |
->> > > > Test       | FFmpeg-H.264-v4l2m2m |
->> > > > TOTAL      | 18/20                |
->> > > > TOTAL TIME | 147.076s             |
->> > >
->> > > - JVT-SVC
->> > >
->> > >
->> > > > Test            | FFmpeg-H.264-v4l2m2m |
->> > > > --------------- | -------------------- |
->> > > > TOTAL           | 75/185               |
->> > > > TOTAL TIME      | 727.240s             |
->> > > > -               | -                    |
->> > > > SVCBC-1-L0      | OK                   |
->> > > > SVCBC-1-L1      | KO                   |
->> > > > SVCBCT-1-L0     | OK                   |
->> > > > SVCBCT-1-L1     | KO                   |
->> > > > SVCBCTS-1-r1-L0 | OK                   |
->> > > > SVCBCTS-1-r1-L1 | KO                   |
->> > > > SVCBCTS-1-r1-L2 | KO                   |
->> > > > SVCBCTS-2-r1-L0 | OK                   |
->> > > > SVCBCTS-2-r1-L1 | KO                   |
->> > > > SVCBCTS-2-r1-L2 | KO                   |
->> > > > SVCBCTS-3-L0    | OK                   |
->> > > > SVCBCTS-3-L1    | KO                   |
->> > > > SVCBCTS-3-L2    | KO                   |
->> > > > SVCBM-1-L0      | OK                   |
->> > > > SVCBM-1-L1      | KO                   |
->> > > > SVCBM-2-L0      | OK                   |
->> > > > SVCBM-2-L1      | KO                   |
->> > > > SVCBM-3-L0      | OK                   |
->> > > > SVCBM-3-L1      | KO                   |
->> > > > SVCBM-4-r1-L0   | OK                   |
->> > > > SVCBM-4-r1-L1   | KO                   |
->> > > > SVCBM-4-r1-L2   | KO                   |
->> > > > SVCBM-5-L0      | OK                   |
->> > > > SVCBM-5-L1      | KO                   |
->> > > > SVCBM-5-L2      | KO                   |
->> > > > SVCBM-5-L3      | KO                   |
->> > > > SVCBMST-1-L0    | OK                   |
->> > > > SVCBMST-1-L1    | KO                   |
->> > > > SVCBMST-1-L2    | KO                   |
->> > > > SVCBMST-2-L0    | OK                   |
->> > > > SVCBMST-2-L1    | KO                   |
->> > > > SVCBMST-2-L2    | KO                   |
->> > > > SVCBMST-3-L0    | OK                   |
->> > > > SVCBMST-3-L1    | KO                   |
->> > > > SVCBMST-3-L2    | KO                   |
->> > > > SVCBMT-1-L0     | OK                   |
->> > > > SVCBMT-1-L1     | KO                   |
->> > > > SVCBMT-10-L0    | OK                   |
->> > > > SVCBMT-10-L1    | KO                   |
->> > > > SVCBMT-11-L0    | OK                   |
->> > > > SVCBMT-11-L1    | KO                   |
->> > > > SVCBMT-12-L0    | OK                   |
->> > > > SVCBMT-12-L1    | KO                   |
->> > > > SVCBMT-13-L0    | OK                   |
->> > > > SVCBMT-13-L1    | KO                   |
->> > > > SVCBMT-13-L2    | KO                   |
->> > > > SVCBMT-2-L0     | OK                   |
->> > > > SVCBMT-2-L1     | KO                   |
->> > > > SVCBMT-3-L0     | OK                   |
->> > > > SVCBMT-3-L1     | KO                   |
->> > > > SVCBMT-4-L0     | OK                   |
->> > > > SVCBMT-4-L1     | KO                   |
->> > > > SVCBMT-5-L0     | OK                   |
->> > > > SVCBMT-5-L1     | KO                   |
->> > > > SVCBMT-6-L0     | OK                   |
->> > > > SVCBMT-6-L1     | KO                   |
->> > > > SVCBMT-7-L0     | OK                   |
->> > > > SVCBMT-7-L1     | KO                   |
->> > > > SVCBMT-8-L0     | OK                   |
->> > > > SVCBMT-8-L1     | KO                   |
->> > > > SVCBMT-9-L0     | OK                   |
->> > > > SVCBMT-9-L1     | KO                   |
->> > > > SVCBS-1-L0      | OK                   |
->> > > > SVCBS-1-L1      | KO                   |
->> > > > SVCBS-2-L0      | OK                   |
->> > > > SVCBS-2-L1      | KO                   |
->> > > > SVCBS-3-r1-L0   | OK                   |
->> > > > SVCBS-3-r1-L1   | KO                   |
->> > > > SVCBS-4-r1-L0   | OK                   |
->> > > > SVCBS-4-r1-L1   | KO                   |
->> > > > SVCBS-5-r1-L0   | OK                   |
->> > > > SVCBS-5-r1-L1   | KO                   |
->> > > > SVCBS-6-r1-L0   | OK                   |
->> > > > SVCBS-6-r1-L1   | KO                   |
->> > > > SVCBS-6-r1-L2   | KO                   |
->> > > > SVCBS-7-L0      | OK                   |
->> > > > SVCBS-7-L1      | KO                   |
->> > > > SVCBS-8-L0      | OK                   |
->> > > > SVCBS-8-L1      | KO                   |
->> > > > SVCBST-1-L0     | OK                   |
->> > > > SVCBST-1-L1     | KO                   |
->> > > > SVCBST-10-r1-L0 | OK                   |
->> > > > SVCBST-10-r1-L1 | KO                   |
->> > > > SVCBST-11-r1-L0 | OK                   |
->> > > > SVCBST-11-r1-L1 | KO                   |
->> > > > SVCBST-12-r1-L0 | OK                   |
->> > > > SVCBST-12-r1-L1 | KO                   |
->> > > > SVCBST-13-L0    | OK                   |
->> > > > SVCBST-13-L1    | KO                   |
->> > > > SVCBST-14-L0    | OK                   |
->> > > > SVCBST-14-L1    | KO                   |
->> > > > SVCBST-14-L2    | KO                   |
->> > > > SVCBST-15-L0    | OK                   |
->> > > > SVCBST-15-L1    | KO                   |
->> > > > SVCBST-15-L2    | KO                   |
->> > > > SVCBST-16-r1-L0 | OK                   |
->> > > > SVCBST-16-r1-L1 | KO                   |
->> > > > SVCBST-16-r1-L2 | KO                   |
->> > > > SVCBST-17-r1-L0 | OK                   |
->> > > > SVCBST-17-r1-L1 | KO                   |
->> > > > SVCBST-17-r1-L2 | KO                   |
->> > > > SVCBST-18-r1-L0 | OK                   |
->> > > > SVCBST-18-r1-L1 | KO                   |
->> > > > SVCBST-18-r1-L2 | KO                   |
->> > > > SVCBST-19-L0    | OK                   |
->> > > > SVCBST-19-L1    | KO                   |
->> > > > SVCBST-2-L0     | OK                   |
->> > > > SVCBST-2-L1     | KO                   |
->> > > > SVCBST-20-L0    | OK                   |
->> > > > SVCBST-20-L1    | KO                   |
->> > > > SVCBST-3-L0     | OK                   |
->> > > > SVCBST-3-L1     | KO                   |
->> > > > SVCBST-4-L0     | OK                   |
->> > > > SVCBST-4-L1     | KO                   |
->> > > > SVCBST-5-L0     | OK                   |
->> > > > SVCBST-5-L1     | KO                   |
->> > > > SVCBST-6-r1-L0  | OK                   |
->> > > > SVCBST-6-r1-L1  | KO                   |
->> > > > SVCBST-7-r1-L0  | OK                   |
->> > > > SVCBST-7-r1-L1  | KO                   |
->> > > > SVCBST-8-r1-L0  | OK                   |
->> > > > SVCBST-8-r1-L1  | KO                   |
->> > > > SVCBST-9-r1-L0  | OK                   |
->> > > > SVCBST-9-r1-L1  | KO                   |
->> > > > SVCBSTC-1-L0    | OK                   |
->> > > > SVCBSTC-1-L1    | KO                   |
->> > > > SVCBSTC-1-L2    | KO                   |
->> > > > SVCHCTS-1-r1-L0 | OK                   |
->> > > > SVCHCTS-1-r1-L1 | KO                   |
->> > > > SVCHCTS-1-r1-L2 | KO                   |
->> > > > SVCHCTS-1-r1-L3 | KO                   |
->> > > > SVCHCTS-1-r1-L4 | KO                   |
->> > > > SVCHCTS-1-r1-L5 | KO                   |
->> > > > SVCHCTS-1-r1-L6 | KO                   |
->> > > > SVCHCTS-1-r1-L7 | KO                   |
->> > > > SVCHICS-1-L0    | OK                   |
->> > > > SVCHICS-1-L1    | KO                   |
->> > > > SVCHICS-1-L2    | KO                   |
->> > > > SVCHICS-1-L3    | KO                   |
->> > > > SVCHIS-1-L0     | OK                   |
->> > > > SVCHIS-1-L1     | KO                   |
->> > > > SVCHIS-1-L2     | KO                   |
->> > > > SVCHIS-2-L0     | OK                   |
->> > > > SVCHIS-2-L1     | KO                   |
->> > > > SVCHIS-2-L2     | KO                   |
->> > > > SVCHIS-3-L0     | OK                   |
->> > > > SVCHIS-3-L1     | KO                   |
->> > > > SVCHIS-3-L2     | KO                   |
->> > > > SVCHM-1-L0      | OK                   |
->> > > > SVCHM-1-L1      | KO                   |
->> > > > SVCHM-1-L2      | KO                   |
->> > > > SVCHM-1-L3      | KO                   |
->> > > > SVCHM-2-L0      | OK                   |
->> > > > SVCHM-2-L1      | OK                   |
->> > > > SVCHM-3-L0      | OK                   |
->> > > > SVCHM-3-L1      | OK                   |
->> > > > SVCHM-4-L0      | OK                   |
->> > > > SVCHM-4-L1      | OK                   |
->> > > > SVCHM-4-L2      | OK                   |
->> > > > SVCHMTS-1-r1-L0 | OK                   |
->> > > > SVCHMTS-1-r1-L1 | KO                   |
->> > > > SVCHMTS-1-r1-L2 | KO                   |
->> > > > SVCHMTS-1-r1-L3 | KO                   |
->> > > > SVCHMTS-1-r1-L4 | KO                   |
->> > > > SVCHMTS-1-r1-L5 | KO                   |
->> > > > SVCHMTS-2-r1-L0 | OK                   |
->> > > > SVCHMTS-2-r1-L1 | KO                   |
->> > > > SVCHMTS-2-r1-L2 | KO                   |
->> > > > SVCHS-1-r1-L0   | OK                   |
->> > > > SVCHS-1-r1-L1   | KO                   |
->> > > > SVCHS-2-r1-L0   | OK                   |
->> > > > SVCHS-2-r1-L1   | KO                   |
->> > > > SVCHST-1-r1-L0  | OK                   |
->> > > > SVCHST-1-r1-L1  | KO                   |
->> > > > SVCHST-1-r1-L2  | KO                   |
->> > > > SVCHST-2-r1-L0  | OK                   |
->> > > > SVCHST-2-r1-L1  | KO                   |
->> > > > SVCHST-2-r1-L2  | KO                   |
->> > > > SVCHST-3-r1-L0  | ER                   |
->> > > > SVCHST-3-r1-L1  | ER                   |
->> > > > SVCHST-4-r1-L0  | ER                   |
->> > > > SVCHST-4-r1-L1  | ER                   |
->> > > > SVCHSTC-1-r1-L0 | OK                   |
->> > > > SVCHSTC-1-r1-L1 | KO                   |
->> > > > SVCHSTC-1-r1-L2 | KO                   |
->> > > > -               | -                    |
->> > > > Test            | FFmpeg-H.264-v4l2m2m |
->> > > > TOTAL           | 75/185               |
->> > > > TOTAL TIME      | 727.240s             |
->> > >
->> > > NOTE: The current implementation of the decoder only supports Layer 0 (base layer) processing.
->> > > When attempting to decode streams that contain multiple layers (such as scalable or multi-view content), the
->> > > decoding
->> > > operation fails.
->> > > This limitation means that enhanced features requiring layer-based processing beyond the base layer cannot be
->> > > properly
->> > > handled by the current decoder.
->> > > For successful decoding, input streams must be limited to single-layer content only.
->> > >
->> > > [FLUSTER REPORT FOR THE H.265]
->> > >
->> > > > -                               | -                    |
->> > > > AMP_A_Samsung_7                 | OK                   |
->> > > > AMP_B_Samsung_7                 | OK                   |
->> > > > AMP_D_Hisilicon_3               | OK                   |
->> > > > AMP_E_Hisilicon_3               | OK                   |
->> > > > AMP_F_Hisilicon_3               | ER                   |
->> > > > AMVP_A_MTK_4                    | ER                   |
->> > > > AMVP_B_MTK_4                    | OK                   |
->> > > > AMVP_C_Samsung_7                | ER                   |
->> > > > BUMPING_A_ericsson_1            | OK                   |
->> > > > CAINIT_A_SHARP_4                | OK                   |
->> > > > CAINIT_B_SHARP_4                | OK                   |
->> > > > CAINIT_C_SHARP_3                | OK                   |
->> > > > CAINIT_D_SHARP_3                | OK                   |
->> > > > CAINIT_E_SHARP_3                | OK                   |
->> > > > CAINIT_F_SHARP_3                | OK                   |
->> > > > CAINIT_G_SHARP_3                | OK                   |
->> > > > CAINIT_H_SHARP_3                | OK                   |
->> > > > CIP_A_Panasonic_3               | OK                   |
->> > > > cip_B_NEC_3                     | OK                   |
->> > > > CIP_C_Panasonic_2               | OK                   |
->> > > > CONFWIN_A_Sony_1                | OK                   |
->> > > > DBLK_A_MAIN10_VIXS_4            | ER                   |
->> > > > DBLK_A_SONY_3                   | OK                   |
->> > > > DBLK_B_SONY_3                   | OK                   |
->> > > > DBLK_C_SONY_3                   | OK                   |
->> > > > DBLK_D_VIXS_2                   | OK                   |
->> > > > DBLK_E_VIXS_2                   | OK                   |
->> > > > DBLK_F_VIXS_2                   | OK                   |
->> > > > DBLK_G_VIXS_2                   | OK                   |
->> > > > DELTAQP_A_BRCM_4                | OK                   |
->> > > > DELTAQP_B_SONY_3                | OK                   |
->> > > > DELTAQP_C_SONY_3                | OK                   |
->> > > > DSLICE_A_HHI_5                  | OK                   |
->> > > > DSLICE_B_HHI_5                  | OK                   |
->> > > > DSLICE_C_HHI_5                  | OK                   |
->> > > > ENTP_A_QUALCOMM_1               | OK                   |
->> > > > ENTP_B_Qualcomm_1               | OK                   |
->> > > > ENTP_C_Qualcomm_1               | OK                   |
->> > > > EXT_A_ericsson_4                | OK                   |
->> > > > FILLER_A_Sony_1                 | OK                   |
->> > > > HRD_A_Fujitsu_3                 | OK                   |
->> > > > INITQP_A_Sony_1                 | OK                   |
->> > > > INITQP_B_Main10_Sony_1          | ER                   |
->> > > > ipcm_A_NEC_3                    | OK                   |
->> > > > ipcm_B_NEC_3                    | OK                   |
->> > > > ipcm_C_NEC_3                    | OK                   |
->> > > > ipcm_D_NEC_3                    | OK                   |
->> > > > ipcm_E_NEC_2                    | OK                   |
->> > > > IPRED_A_docomo_2                | OK                   |
->> > > > IPRED_B_Nokia_3                 | OK                   |
->> > > > IPRED_C_Mitsubishi_3            | OK                   |
->> > > > LS_A_Orange_2                   | OK                   |
->> > > > LS_B_Orange_4                   | OK                   |
->> > > > LTRPSPS_A_Qualcomm_1            | KO                   |
->> > > > MAXBINS_A_TI_5                  | OK                   |
->> > > > MAXBINS_B_TI_5                  | OK                   |
->> > > > MAXBINS_C_TI_5                  | OK                   |
->> > > > MERGE_A_TI_3                    | OK                   |
->> > > > MERGE_B_TI_3                    | OK                   |
->> > > > MERGE_C_TI_3                    | OK                   |
->> > > > MERGE_D_TI_3                    | OK                   |
->> > > > MERGE_E_TI_3                    | OK                   |
->> > > > MERGE_F_MTK_4                   | OK                   |
->> > > > MERGE_G_HHI_4                   | OK                   |
->> > > > MVCLIP_A_qualcomm_3             | OK                   |
->> > > > MVDL1ZERO_A_docomo_4            | OK                   |
->> > > > MVEDGE_A_qualcomm_3             | OK                   |
->> > > > NoOutPrior_A_Qualcomm_1         | OK                   |
->> > > > NoOutPrior_B_Qualcomm_1         | OK                   |
->> > > > NUT_A_ericsson_5                | OK                   |
->> > > > OPFLAG_A_Qualcomm_1             | OK                   |
->> > > > OPFLAG_B_Qualcomm_1             | OK                   |
->> > > > OPFLAG_C_Qualcomm_1             | OK                   |
->> > > > PICSIZE_A_Bossen_1              | OK                   |
->> > > > PICSIZE_B_Bossen_1              | ER                   |
->> > > > PICSIZE_C_Bossen_1              | OK                   |
->> > > > PICSIZE_D_Bossen_1              | ER                   |
->> > > > PMERGE_A_TI_3                   | OK                   |
->> > > > PMERGE_B_TI_3                   | OK                   |
->> > > > PMERGE_C_TI_3                   | OK                   |
->> > > > PMERGE_D_TI_3                   | OK                   |
->> > > > PMERGE_E_TI_3                   | OK                   |
->> > > > POC_A_Bossen_3                  | OK                   |
->> > > > PPS_A_qualcomm_7                | OK                   |
->> > > > PS_B_VIDYO_3                    | ER                   |
->> > > > RAP_A_docomo_6                  | OK                   |
->> > > > RAP_B_Bossen_2                  | OK                   |
->> > > > RPLM_A_qualcomm_4               | OK                   |
->> > > > RPLM_B_qualcomm_4               | OK                   |
->> > > > RPS_A_docomo_5                  | OK                   |
->> > > > RPS_B_qualcomm_5                | OK                   |
->> > > > RPS_C_ericsson_5                | OK                   |
->> > > > RPS_D_ericsson_6                | OK                   |
->> > > > RPS_E_qualcomm_5                | OK                   |
->> > > > RPS_F_docomo_2                  | OK                   |
->> > > > RQT_A_HHI_4                     | OK                   |
->> > > > RQT_B_HHI_4                     | OK                   |
->> > > > RQT_C_HHI_4                     | OK                   |
->> > > > RQT_D_HHI_4                     | OK                   |
->> > > > RQT_E_HHI_4                     | OK                   |
->> > > > RQT_F_HHI_4                     | OK                   |
->> > > > RQT_G_HHI_4                     | OK                   |
->> > > > SAO_A_MediaTek_4                | OK                   |
->> > > > SAO_B_MediaTek_5                | OK                   |
->> > > > SAO_C_Samsung_5                 | OK                   |
->> > > > SAO_D_Samsung_5                 | OK                   |
->> > > > SAO_E_Canon_4                   | OK                   |
->> > > > SAO_F_Canon_3                   | OK                   |
->> > > > SAO_G_Canon_3                   | OK                   |
->> > > > SAO_H_Parabola_1                | OK                   |
->> > > > SAODBLK_A_MainConcept_4         | OK                   |
->> > > > SAODBLK_B_MainConcept_4         | OK                   |
->> > > > SDH_A_Orange_4                  | OK                   |
->> > > > SLICES_A_Rovi_3                 | OK                   |
->> > > > SLIST_A_Sony_5                  | OK                   |
->> > > > SLIST_B_Sony_9                  | OK                   |
->> > > > SLIST_C_Sony_4                  | OK                   |
->> > > > SLIST_D_Sony_9                  | OK                   |
->> > > > SLPPLP_A_VIDYO_2                | ER                   |
->> > > > STRUCT_A_Samsung_7              | ER                   |
->> > > > STRUCT_B_Samsung_7              | ER                   |
->> > > > TILES_A_Cisco_2                 | ER                   |
->> > > > TILES_B_Cisco_1                 | ER                   |
->> > > > TMVP_A_MS_3                     | OK                   |
->> > > > TSCL_A_VIDYO_5                  | OK                   |
->> > > > TSCL_B_VIDYO_4                  | ER                   |
->> > > > TSKIP_A_MS_3                    | OK                   |
->> > > > TSUNEQBD_A_MAIN10_Technicolor_2 | ER                   |
->> > > > TUSIZE_A_Samsung_1              | OK                   |
->> > > > VPSID_A_VIDYO_2                 | ER                   |
->> > > > VPSSPSPPS_A_MainConcept_1       | KO                   |
->> > > > WP_A_MAIN10_Toshiba_3           | ER                   |
->> > > > WP_A_Toshiba_3                  | ER                   |
->> > > > WP_B_Toshiba_3                  | OK                   |
->> > > > WP_MAIN10_B_Toshiba_3           | ER                   |
->> > > > WPP_A_ericsson_MAIN10_2         | ER                   |
->> > > > WPP_A_ericsson_MAIN_2           | OK                   |
->> > > > WPP_B_ericsson_MAIN10_2         | ER                   |
->> > > > WPP_B_ericsson_MAIN_2           | OK                   |
->> > > > WPP_C_ericsson_MAIN10_2         | ER                   |
->> > > > WPP_C_ericsson_MAIN_2           | OK                   |
->> > > > WPP_D_ericsson_MAIN10_2         | ER                   |
->> > > > WPP_D_ericsson_MAIN_2           | OK                   |
->> > > > WPP_E_ericsson_MAIN10_2         | ER                   |
->> > > > WPP_E_ericsson_MAIN_2           | OK                   |
->> > > > WPP_F_ericsson_MAIN10_2         | ER                   |
->> > > > WPP_F_ericsson_MAIN_2           | OK                   |
->> > > > -                               | -                    |
->> > > > Test                            | FFmpeg-H.265-v4l2m2m |
->> > > > TOTAL                           | 120/147              |
->> > > > TOTAL TIME                      | 12669.641s           |
->> > >
->> > >
->> > > Failed streams :
->> > >  - VPSSPSPPS_A_MainConcept_1 : Failed due to evolutive dynamic resolution increases. The decoder cannot properly
->> > > handle upward resolution changes within the same stream.
->> > >  - LTRPSPS_A_Qualcomm_1
->> > >
->> > > This patch series introduces a new stateful decoder driver for the
->> > > allegrodvt GEN 3 IPs.
->> > >
->> > >
->> > > Yassine Ouaissa (5):
->> > >   media: allegro-dvt: Move the current driver to a subdirectory
->> > >   dt-bindings: media: allegro-dvt: add decoder dt-bindings for Gen3 IP
->> > >   MAINTAINERS: Add entry for allegrodvt Gen 3 drivers
->> > >   dt-bindings: vendor-prefixes: Update the description of allegro prefix
->> > >   media: allegro-dvt: Add Gen 3 IP stateful decoder driver
->> > >
->> > >  .../bindings/media/allegro,al300-vdec.yaml    |   75 +
->> > >  .../devicetree/bindings/vendor-prefixes.yaml  |    2 +-
->> > >  MAINTAINERS                                   |    5 +-
->> > >  drivers/media/platform/allegro-dvt/Kconfig    |   17 +-
->> > >  drivers/media/platform/allegro-dvt/Makefile   |    6 +-
->> > >  .../media/platform/allegro-dvt/al300/Kconfig  |   23 +
->> > >  .../media/platform/allegro-dvt/al300/Makefile |    6 +
->> > >  .../allegro-dvt/al300/al_codec_common.c       |  754 ++++++++
->> > >  .../allegro-dvt/al300/al_codec_common.h       |  247 +++
->> > >  .../allegro-dvt/al300/al_codec_util.c         |  177 ++
->> > >  .../allegro-dvt/al300/al_codec_util.h         |  185 ++
->> > >  .../platform/allegro-dvt/al300/al_vdec_drv.c  | 1530 +++++++++++++++++
->> > >  .../platform/allegro-dvt/al300/al_vdec_drv.h  |   94 +
->> > >  .../media/platform/allegro-dvt/zynqmp/Kconfig |   17 +
->> > >  .../platform/allegro-dvt/zynqmp/Makefile      |    6 +
->> > >  .../allegro-dvt/{ => zynqmp}/allegro-core.c   |    0
->> > >  .../allegro-dvt/{ => zynqmp}/allegro-mail.c   |    0
->> > >  .../allegro-dvt/{ => zynqmp}/allegro-mail.h   |    0
->> > >  .../allegro-dvt/{ => zynqmp}/nal-h264.c       |    0
->> > >  .../allegro-dvt/{ => zynqmp}/nal-h264.h       |    0
->> > >  .../allegro-dvt/{ => zynqmp}/nal-hevc.c       |    0
->> > >  .../allegro-dvt/{ => zynqmp}/nal-hevc.h       |    0
->> > >  .../allegro-dvt/{ => zynqmp}/nal-rbsp.c       |    0
->> > >  .../allegro-dvt/{ => zynqmp}/nal-rbsp.h       |    0
->> > >  24 files changed, 3123 insertions(+), 21 deletions(-)
->> > >  create mode 100644 Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/Kconfig
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/Makefile
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/al_codec_common.c
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/al_codec_common.h
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/al_codec_util.c
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/al_codec_util.h
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/al_vdec_drv.c
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/al300/al_vdec_drv.h
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/zynqmp/Kconfig
->> > >  create mode 100644 drivers/media/platform/allegro-dvt/zynqmp/Makefile
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/allegro-core.c (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/allegro-mail.c (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/allegro-mail.h (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/nal-h264.c (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/nal-h264.h (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/nal-hevc.c (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/nal-hevc.h (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/nal-rbsp.c (100%)
->> > >  rename drivers/media/platform/allegro-dvt/{ => zynqmp}/nal-rbsp.h (100%)
+I'm also not a big fan of assuming cmdlines and I think adding the
+version warning sounds good. I have been using 1.33. One thought I'm
+having is that I should probably submit a PR to vng to either fix the
+multi-NIC setup in virtme-ng or add a hostfwd option... then restrict
+our assumptions here to only prior versions.
+
+Thanks!
+
+Best,
+Bobby
