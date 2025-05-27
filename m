@@ -1,126 +1,117 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00A420E00C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8833234;
+	Tue, 27 May 2025 21:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748383014; cv=none; b=VAMD+aEulMGPJ4qEcIBMvyyEjOTRbLchns+k9fPL98ZWHMrrSDoijpPQZu53HMyK6ZbKtJqUbkqp0irPXnYhEBjoWIfXrNgD28FW0boTgOJ64ltQEeQybTHJdcNS1vI0/KRR8klJnmO5o0ACh1QDTBzm4gzSJUabaqLgQ6B4HCE=
+	t=1748383109; cv=none; b=W/fJsCBO/EPib1Hmb/IxL4Fb1EGgbijQLbE2nOXOxIRe2I3mGfYO6krWy9/V+1dFHSr/mYuXdsze1JXtg7efOr7xxftA96zCB3iiwSPX45VH5dPzv6i9jwWoNiY05lAIrVrbTpVNCba23qYkSKxsxl1Dt69rInLT1zbaQrk4HV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748383014; c=relaxed/simple;
-	bh=H6RdSfdrrWnEqfuvZ74jCpn12+bkjOdAgwdgoViDX0c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=irRWPQWr357SOpdlK3Og5Uhsr7CAK3XKzLtPandV5oSWr18RNEoBI6an6eCyWz8bdeZMl0hHl4cMXuHi4/tYGocoU6vKGZZmB3LrbHm0PfDfNZfpQpFCxVoFXh/7sZU8LV5wdzor+0dHNizxEitF53Wgr5zrVd7fCj97LpAmynI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ONsPtj/9; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748383109; c=relaxed/simple;
+	bh=yzfflLE/CmnA0fRHKQPauFe7qCO5bTFV4mVrTc8BWnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jTAi7AjSt/hNG0Xj58cAZ/oifNTloVkGwZJanpl/owJ8AbbZW7WU9a/TwpKgSXTTk67s75QSgrhciDavxzrBZViD8GeG+JTDM8auLpgs4HTjltzEmlLYoP4+KCgPQ1e/QrWM/xSqilt2zDb/Kjq/DxtFfNon8EVDPqrOOVql+OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QWJyAZ7G; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ONsPtj/9"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-442f97af707so20875e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:56:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QWJyAZ7G"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e59012c7eeso688711137.1;
+        Tue, 27 May 2025 14:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748383011; x=1748987811; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SgGQJnneg6KUhe9rF0gnPBXorTfQGxnTid6H5S2Xibw=;
-        b=ONsPtj/9xvVDlgMSe1pDwakYRjZ8Yt+LWYitdjPCqosifL9gELVhqOe1HHI//v8gki
-         8GLDtZzY0ogKiG+ckZiYL2DAs3yH36x+HsRnedf8oxY3rTSUdfftEa4APuyHcvXax9rB
-         HekX0+C20pOW0z6c3TRtfcKzpElkJUKDfvvacZ1091MjeVs0iPIbl9XEk101nMOZJ0Ea
-         ofdSLs4/kF6ntjD6Dv5tJA/9NrLVZlrziUs7EP+doYg3eDkVlfrr6W4lqE1P1e+yIiQq
-         pJiheR7cBuBzGBo30F6bIPGonPK6kR4Tm9O4JOXzt1Sw1W9LVL+DznAIfhGIhBSKfSXO
-         GaEQ==
+        d=gmail.com; s=20230601; t=1748383107; x=1748987907; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AQ5vYBrKMWZaH1zuLD/k819VIENAAJhaHIcSxKwZrOA=;
+        b=QWJyAZ7GHvOpPkEsnrEsIuA+nyutvWvjXl8THRfOcSzO7L+Rcj+hyidRIL8fFyBvbm
+         a88j5Ofm+oJKXdW5j+Q9cT7KlBfj0YleQGtTHShRq3lBTSRmFLlVZZ0SPnlWGAy7lRNP
+         JYhbQa4L5UdD49wxrJ5Gpdowq7+oH2A62742be2xjtv7aYYKeEAhDs9U2s3uf4HFSJA2
+         5vxFmf0TMI/KYoRlbmJ/DRsvcPKb5leFN5NkydKJ+veK9u3XBeDH9Tkhk5xxsijvcGJp
+         RRDYXvM6MyHlqxmMBMYXf6nXMlUq+PUJg5Ou60UJLaYEBTK/P9bgZ3Q17NLVpT0yenvf
+         QczQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748383011; x=1748987811;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1748383107; x=1748987907;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SgGQJnneg6KUhe9rF0gnPBXorTfQGxnTid6H5S2Xibw=;
-        b=cTONirswLnoQc4SOEpppfGcI5LIff1WcHgtpFTouIOscEEumAtA5ZHiA5Ar9WaDfTU
-         Q3YoLEAvoHbKEley3qMHtKaQ3AedHuVsJQqZwI59eveO0gsIJFZ+xv2W2H/ey4l+sBHn
-         KU6TRtyHHyZTl6d89ZdTgH583gLhtBNI/fM2R/AfwwPphPtAI5css0SB0mMkKNQQc63G
-         avRUke6jr7GicUzKI3iV1TpNgapVJPn8vrLivKfLGMF0ynzAyrEyaIlL+RiHXFLoFlUV
-         XDYmsp8kjmkhkjjGu3DE7zvILlAAy+oH8KKKFX+qggX1Evd455wqthLcEMo9qX+CFVul
-         T8qA==
-X-Gm-Message-State: AOJu0YwhsEViK5UcGzgRcGivgX/i2s6AxofSBBGAueDMo2zNYLU7TOxI
-	dSH/fq07F3Av615zxYvqqI+U3M9X/Sz0pHjmRhBw/q3P5rkjk2xa+j8oDr1yhlA0Ow==
-X-Gm-Gg: ASbGncvMchzyCX52k47HKJe8fmxX47KsBv5JQENc6X+LdhtKKcrbCO+uzMxRdzNu6pw
-	NEqjJIU3WsE3EQTNc3miBc3oIuTHTsS1Pp0JDq3h/qSa68u4bXokSsVixY9ru2bedetvdyDD1y9
-	+e4O7PUnAmbt+VZgCewXi02NIxe5CXckdLS1HbbdBsEynIN6PMpi1sAOsb9VRXI4KbdxDyjIwDz
-	7WqRj6MxCD9jUnVzjFP4TPBUtMqOaCGJrWmM/FFzytaIT737YRsox0BSyXt9wutMTgxVxi+JR1C
-	+CZRR2ryaEees4hqcCNY6xac/YIFz4OqFeS6hitgre3Q72bcPg==
-X-Google-Smtp-Source: AGHT+IFc5zVbxRie7OQxz5PhnK1JAeCame84zsTiWiDmjtg1n8m7Q8BRoeHguQ3XnLsuaip8xI/4ow==
-X-Received: by 2002:a05:600c:45ce:b0:43d:409c:6142 with SMTP id 5b1f17b1804b1-44fd30e21b1mr510345e9.0.1748383010568;
-        Tue, 27 May 2025 14:56:50 -0700 (PDT)
-Received: from localhost ([2a00:79e0:9d:4:8e02:75c1:e352:cd00])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-450064a1ac4sm1241745e9.12.2025.05.27.14.56.49
+        bh=AQ5vYBrKMWZaH1zuLD/k819VIENAAJhaHIcSxKwZrOA=;
+        b=DC9YpFQGI4ZdYjhrebEF2vpo8Lkw3Le3bSz+oWwz02hnYhTltgbHejFHDG9IIAJQEY
+         0j/hrvaR6ID4AmS9oZFnruAnZ679/8LW3Bdaw2+IojvY2QHJ6b2lqaW0FwfZGJ2TrYY4
+         KYjL2vBFPEIpjQNY+UFcHo17sHjV6qgO0RYTPmhFPEHBBccKkkE7m3sdhnbQ9TlKsPo0
+         7XEGog9wPc4iRGFco4xtmEUy3VC6Z/bTx1EPGtVXjh6+62ahn7x8x+l4iNtXDVzq/7U+
+         gEpyuNW99OmbUQ4xWaZPCxauXv34YjfzXVmGIE7FIBcXAPdNDSFnVPgv8X9DT5EU1G03
+         exrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ6l4+NNVj0NuSACqEByAAaI/teNMbhRbGqU9K/txDJPYDVldPgpyNqFjGWDq+UGKTiKrdJ4yOUdzMddSd@vger.kernel.org, AJvYcCVSI9jCUl7+GZvGuVkC0l943GlSZO/djx2UbmPu7QBuVuRvndZl0Z232PcQHKOJci+yIu3taokRZGoN@vger.kernel.org, AJvYcCVa4GpTOld52DLKPDvnN8uf9UKgrCynR5teY9cOzLDk0JzI+WDRHjdu+P9mvGvwHO+xHgvt0mgJkVc8@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1X9WyFM1eBIvlos5KVBhXtrH2dl4f/6/Hx3dcIQNlwIHjIYa+
+	+I6k6KeLUR9YjcA+iZw77yL/W63xrnn6K8BMpXAhp68KVO3eP6r+rw86
+X-Gm-Gg: ASbGncvNr3WyQkupWu3ny5on5SDlazPd+4kfrSB5uCEKO1mItlJbHj9ppwIRxKl2lrK
+	8o0OgALGOHhvCCHwUXuL5JUCK7wrLRsLyIix1daYeLy4H7BS+ehDzIW7If4NBT7PWUWepxhyxjO
+	15y0hocE2sGv3B7RhTlpOyIQt8Eh62ijuFMHRIw2L9d/YVjOoSHRnupZiXeSYepvZsyW6for3rT
+	pXmouWNLzhWyaP+EC6vA5j1dhixUnY0K0ED3ZjWJi0YYl7NzC3T1W7qoRmtWkc9NWcwQapDk7TI
+	GApt8XZ8+1U0p6CAyZkuF3LI9OSDlMRoSG6qPf7eEFpWwAyMv35+4z7PSaIk0q5uK04bAchy5zw
+	=
+X-Google-Smtp-Source: AGHT+IEUoevBi6RywQWfsw+8GwAh49pHKNT9kloFDyB7k7GecnRthNhrCsW3FQk5GcsSNa/c2UUrnA==
+X-Received: by 2002:a05:6102:3e89:b0:4df:4a04:8d5e with SMTP id ada2fe7eead31-4e42409c5d8mr12103923137.8.1748383107157;
+        Tue, 27 May 2025 14:58:27 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87e1d5abbc3sm170203241.25.2025.05.27.14.58.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 14:56:50 -0700 (PDT)
-From: Jann Horn <jannh@google.com>
-Date: Tue, 27 May 2025 23:56:42 +0200
-Subject: [PATCH] x86/mm: Limit INVLPGB to VA in invlpgb_flush_addr_nosync()
+        Tue, 27 May 2025 14:58:26 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: linus.walleij@linaro.org,
+	jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: gyro: invensense,mpu3050: change irq maxItems
+Date: Tue, 27 May 2025 18:51:06 -0300
+Message-ID: <20250527215818.13000-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-x86-overbroad-invlpgb-v1-1-64ca98aa2a3a@google.com>
-X-B4-Tracking: v=1; b=H4sIABk1NmgC/x3MTQqAIBBA4avErBsw7f8q0SJrqoHQGEGE6O5Jy
- 2/x3gOBhCnAWDwgFDmwdxlVWcB6Lu4g5C0btNKNanSHqW/RRxIrftmQXbzuw6Kp90GZdSBtDeT
- 2Fto5/d9pft8Po7i4j2cAAAA=
-X-Change-ID: 20250527-x86-overbroad-invlpgb-34f903c9e2b3
-To: Rik van Riel <riel@surriel.com>, Borislav Petkov <bp@alien8.de>, 
- Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748383006; l=1544;
- i=jannh@google.com; s=20240730; h=from:subject:message-id;
- bh=H6RdSfdrrWnEqfuvZ74jCpn12+bkjOdAgwdgoViDX0c=;
- b=LlUTfSF9TgfmJn97RSUv3H9eY1zpnykhquCEBz3jgZngzgmAQSk49U/P0fkCjicp83AA7aVwn
- B+TwVhAZt7wDhoAmzDQlgDHXF9Iut3tRFQ6DlYM2mRU6bYj0mgOSl0K
-X-Developer-Key: i=jannh@google.com; a=ed25519;
- pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
+Content-Transfer-Encoding: 8bit
 
-The intent of invlpgb_flush_addr_nosync() is to flush a specific virtual
-address range, but INVLPGB_FLAG_VA is not set.
-If I understand AMD's documentation correctly, this means this will flush
-the entire TLB (except entries for guest ASIDs).
-That's safe, but seems like an unintentionally broad flush.
-Fix it by setting INVLPGB_FLAG_VA.
+The mpu3050 datasheet describes that this IC only supports one INT pin,
+which means one item with two cells inside binding.
+Change max to match this description.
 
-Fixes: b7aa05cbdc52 ("x86/mm: Add INVLPGB support code")
-Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
 ---
-I am not entirely sure about this; Rik, can you confirm if this was an
-oversight, or if there's actually a reason for not passing
-INVLPGB_FLAG_VA here?
-I feel a bit uncomfortable touching TLB flushing and narrowing a flush
-there...
----
- arch/x86/include/asm/tlb.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The mpu3050 supports only one INT pin as described at [1] at
+"Pin Out and Signal Description" (pg 14), so maxItems could be 1 at max (one item with two cells).
+Validated with dtbs_check/dt_binding_check and looks fine. There is a different case at [2],
+which is using interrupts-extended but as far as I understand, it`s still max=1.
+Tks and regards.
 
-diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
-index 866ea78ba156..e257201a141a 100644
---- a/arch/x86/include/asm/tlb.h
-+++ b/arch/x86/include/asm/tlb.h
-@@ -153,7 +153,8 @@ static inline void invlpgb_flush_all(void)
- /* Flush addr, including globals, for all PCIDs. */
- static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
- {
--	__invlpgb(0, 0, addr, nr, PTE_STRIDE, INVLPGB_FLAG_INCLUDE_GLOBAL);
-+	__invlpgb(0, 0, addr, nr, PTE_STRIDE,
-+			INVLPGB_FLAG_VA | INVLPGB_FLAG_INCLUDE_GLOBAL);
- }
+[1] https://invensense.tdk.com/wp-content/uploads/2015/02/PS-MPU-3050A-00-v2-7.pdf
+[2] https://github.com/torvalds/linux/blob/015a99fa76650e7d6efa3e36f20c0f5b346fe9ce/arch/arm/boot/dts/qcom/qcom-apq8060-dragonboard.dts#L248
+---
+ .../devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml   | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml
+index d1a6103fc37a..f3242dc0e7e6 100644
+--- a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml
++++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.yaml
+@@ -21,7 +21,7 @@ properties:
+   vlogic-supply: true
  
- /* Flush all mappings for all PCIDs except globals. */
-
----
-base-commit: b1456f6dc167f7f101746e495bede2bac3d0e19f
-change-id: 20250527-x86-overbroad-invlpgb-34f903c9e2b3
-
+   interrupts:
+-    minItems: 1
++    maxItems: 1
+     description:
+       Interrupt mapping for the trigger interrupt from the internal oscillator.
+ 
 -- 
-Jann Horn <jannh@google.com>
+2.49.0
 
