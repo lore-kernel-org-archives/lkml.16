@@ -1,248 +1,153 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE5523E35E
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C231C5D61
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748344166; cv=none; b=O78V2PklTXUBWVILYyscPL0ZSTDmZ1MtBNJFDPQIzgDDU3i8+LLieJgNIXo3qPFulHFupfd3/qOISTKvXUJzztxP443Wh7B2LnuqyyDawiALzFeqmnT+PyEGH/VqIT6SdKRzBbn9IJWHfU7b2ARyE3iRJbXFj0t+x4WPZGqrphc=
+	t=1748344278; cv=none; b=kuvJIHFrHJBC+Swei2MekFoJPlMzb6bdD7pVTGlCCTO+3eyh8hY/7xNDvrisMSyP9lV/r9u18Yx/Z/5CFyqEPET4x4+OUTimuwwpSAL+/73W0da5xMYE+++8dTgem++kQNlyrOHZw8+mU5QtTq+JX4g/uWo/h+osWFhJfKS3H9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748344166; c=relaxed/simple;
-	bh=4fBzg0IECeatk98Un140p9pZO2EoxDTUIPqXK4PDwEw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=A55QA76qJ9OlE7po/7fgNIeIX//3VdFf4jml1kC2vq2eZIjVa09ctFv6h92e7oLYdjF22ZlfCS/3D3bfs9MVyxQmduBRo8MQoojzBcZHCmTG3TNzd0/MN1q/3CvTGH/hDA6uvWGq265meZaI6IPh/CydUDPfPhzAvXxhm8Jv9cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openpixelsystems.org; spf=fail smtp.mailfrom=openpixelsystems.org; dkim=pass (2048-bit key) header.d=openpixelsystems-org.20230601.gappssmtp.com header.i=@openpixelsystems-org.20230601.gappssmtp.com header.b=bwB6wZW2; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openpixelsystems.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=openpixelsystems.org
+	s=arc-20240116; t=1748344278; c=relaxed/simple;
+	bh=FpczGp8RbMHvucMtA6eVbMd4JpRzTIshwjXMkvAmexc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ptcLGtoYmswUwg011osxIyIWMWQOfkav35oAlkdpgAhAWw2w53ilN5sYVz6xbMFsCgoKXYmYq9DBhf5y9EAltL0b/nrFGK0r+UjDgm+dZZcf5/LVloI0eQMi0XKBA6ZNlrVHHRTTGxSs6m9bTwLS625hW9i2vFHg7bvDOs+HxmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Xhac2tSD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openpixelsystems-org.20230601.gappssmtp.com header.i=@openpixelsystems-org.20230601.gappssmtp.com header.b="bwB6wZW2"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-440685d6afcso40259855e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openpixelsystems-org.20230601.gappssmtp.com; s=20230601; t=1748344161; x=1748948961; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iSn8HwNeIB4B6ODebFHk5PWqwMtncqzsIsvepp5c0us=;
-        b=bwB6wZW2cqVhztAWwrNbx7pvDvIJZx0P503aLg/WjxTJRViE0tmxp89SHQhqJwmyzF
-         a0nzMaolNfqEOoDJxqlYMEVyuIxYDeHq7jqgpPvkCcg131DN5PAjnUFvoolpV1BDn1Bj
-         RXvwFglcdZbemPUQ00wGpcfLDwE7Cr39t3wH1ojaZLM3CrjPH9gvQxcGdDTccZZzcvcY
-         EUrfjrNoui0CDWiVBY2qtScVsm97GsuOPEOS4/AnkrjEUNagbJjPdcY39e2s4cTAnLT0
-         So47fyeLlG1psFRSopjLP2jVwUYGb/RAE23G3kbJ7sT5ZThqRWEfs8mHJtqgdOfyueOn
-         engw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Xhac2tSD"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RAET3O005773
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:11:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Wxu/TiS7w60udZYPhI7bm5MyIilaLqI8XYTNdOjf2qs=; b=Xhac2tSDdUdKr0PB
+	qZnQYKuWSW0x5pQQGDnKPX38EFLIJWCECi/SbSe/GtCbdbpp9NC3PfHkWfefklDs
+	6E5igb2dP6NqLhswcfL3wflGyA7koo0wgbm+4rcTSOGLKwMaf5Y2N3nH524LM6MJ
+	oV2+wl6clU6CRkPtHhnfNKbu9ikl0M170r0yPaBpHwQfLdEjyi9d169uYhZuL70q
+	hgyegrcFwvectaLJJ92n5rFfZJ+UvZ+Rdi6uDTfkdT/62Es3L+N6tVIiBCslVYe4
+	7oNYqUhnor4NTcAjPI6XfpZKNe7gab4GqmnaQMfl9TnIC5inxv7QPnXrjAA6orBV
+	j8iu4Q==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u79p6m10-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:11:14 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6faaa088820so4869956d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:11:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748344161; x=1748948961;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iSn8HwNeIB4B6ODebFHk5PWqwMtncqzsIsvepp5c0us=;
-        b=LmQBzn0pnLn8ljHuV5IcXvQQZqorFvOvCQne8b9hGIQRa8Wsrd5SYIAu+7wjWU2q4b
-         aNI4vO3ugHYKx/9n5KSmFzSe+z26iMS2spN3EDimYX4pQ5qD8dRFO9WLj8Q9XpQ2dzK/
-         pT/BCnr2EQHKg7Wus6gmWly4TRjWM/1gXa1j7v6uAhE76kBE3yhcYZYo4KKJ3pouaN41
-         Ytn+HmujXRkfQNMZknn5x6k8Wujple8oJS678tRZ0edsw7kBtzvSsi51kI58NlKVhMqm
-         KCTTZHM4Itab2Mm2gwn/CZJYdjpLr8SN6oFHYIy9NpN6gN/ZCngMicitlKv8torAPCuS
-         hBiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXtg+87hYjI5lZO+FmPBRHmKw7ioVatZQoS86HTNfgSl1NvD0id4zn1V3AN+bV2JhGvFCes6CmAE+ONe0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjOgSICsadlpujLQu9morQCZKuyQ7rFe560Zv7/4qTmLCL7Y1N
-	20WdgRgRoxmFodoR4bGD4Mtu1nKQ0YPM3PJL73QSmiV3lQED82pXlRD3/E7VSkDfl58=
-X-Gm-Gg: ASbGncudj4UUrp4ItoShuWEJqzc1hpzKPI/FRUtb9V+61z6zeYCnL/dwNDu0Dd1vQk9
-	KfWQmv4GdrT0rekI5t4hYDtHcamIuHYIPDAHYZ71IDNPI8muyxgslei6BRYpYi01gRPJgoWz+OZ
-	iD0vFxajvSUOx73LXCrzTprrMB3W0Fe04qL4CdKfJhexCUsxt+9VIlhGYZT0Qm9lpEnHS5Cjqej
-	gsBZZahRIkAl5iDYyFPY5E6l0FAdewjWzAG6LCveBiBI6a5PfLHltroX0+abyUW9Pfo51Dh3To8
-	ZZ/2mvhHJMsQztcAEKMdMDzk/m4PB4C7PCSM/5ntkflZCHDjesQnb9WSO5qwXLRLqq2PXPnUeDt
-	fytFMrWXyXj0ZMqdiZPCm8fHqjOO139BWE/rMtwX/Yt8=
-X-Google-Smtp-Source: AGHT+IH4onwpn19mRvTfN2dRUOSQu6PABo0ta6MzwHwqf013Fr01WgZBUk8t5KUHN/34+a552MAetg==
-X-Received: by 2002:a05:600c:3d8e:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-44c95aada01mr121881555e9.30.1748344161332;
-        Tue, 27 May 2025 04:09:21 -0700 (PDT)
-Received: from [10.0.12.41] (253.124-78-194.adsl-static.isp.belgacom.be. [194.78.124.253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29672sm277655525e9.3.2025.05.27.04.09.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 04:09:20 -0700 (PDT)
-From: Bram Vlerick <bram.vlerick@openpixelsystems.org>
-Date: Tue, 27 May 2025 13:08:49 +0200
-Subject: [PATCH] ASoC: tas571x: add separate tas5733 controls
+        d=1e100.net; s=20230601; t=1748344273; x=1748949073;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wxu/TiS7w60udZYPhI7bm5MyIilaLqI8XYTNdOjf2qs=;
+        b=Vzs4IeAbL3rvqL89qYH5m6UKbzuBo8HzUa8Ag6DhIxBnVf+2KY56PJPEQE7wxf3jpD
+         WusREWDhrBQhwbKSQFulHMkIc8bZspddCENQ+1TjIF8TUvRCc4ekDG06zdUpPMWtBDvl
+         lxpNoGplh8ofoMwOXBgrgsiae3nim6xNS/pRBlFICEB/21DrDsRl2gROdG9/ipwlxwOB
+         En3SyVzrzZcJfK8coFv1+Ze6xiTj/1M8YUbaeUefw4R/K0hiUWU9X2tzXtI7V6ANCAbk
+         eYEiCT0PsE7hrIf2p8VP/Rj1MDcvwMhDFLMEQ1JpHCI8kT2h7QXNUdLI+GzzHOgQ/UNy
+         CpQg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcPZtI4dyPjh82xBAAm6d99NmGEYOjRzulAqgTSvtP+P5adnaLICl7xpYbuIUm6oaQV85F6YUKF4y+sfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Yec7U8AJb9iCwbgDrdaAufW/pk2o5g6eeJ0qP2n3h1kMPFAE
+	/AwAiBDWzKR89U/3DXA8XCYpRbPZ6vVXdfn7WDm4zY6qlUC0XCSooMoJVl+XZ36jz5z3sTEgwNC
+	Ig2zarhqZyCYFE5S2Le+at+3lZkGFDN6yLoicIvO4C/YPdE3jxIN2M9mDx927n9IHFbM=
+X-Gm-Gg: ASbGncstkIIrU3euLEdF+EU7QvQ7mQK4KWi1vcWUqiE1aDZ7fs6okTjTXHCiLeHeeFe
+	oUBxZ9BWGtFlofLRsFnL4g8i5QKz+lKFyU4FAjj006xA9DmrDma8cYUCP4nYdAmbuWF/hOE6h0T
+	dwaqOpFcjCxOqooTvAUG4oUIRSQ8ct+DVb1fO7+SPgnwYc4G1sXUVEmMOtDbnPkHpdOMBdG9mVp
+	2rEpRT3poLvalQapW9Wel+fviEcsMl8MPglXorn6kr94jzrV0HDugVpRyWy4r4owSHbDtXHuaQq
+	zQLSZjt3mjqFJTPymvQAvS5Ib69lMGoCm74yKVCA98fausYgUhO7CCr76TEo6wmpdQ==
+X-Received: by 2002:a05:6214:529d:b0:6f8:471a:9fd8 with SMTP id 6a1803df08f44-6fa9d28fd01mr73647706d6.8.1748344273492;
+        Tue, 27 May 2025 04:11:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFm0tLT/ILRYm9vnaH4+VaVshgcILjv9/Iad9lY7Qmlvc5zr6pF2bh9UDD8e2ltnacri2Wluw==
+X-Received: by 2002:a05:6214:529d:b0:6f8:471a:9fd8 with SMTP id 6a1803df08f44-6fa9d28fd01mr73647486d6.8.1748344273142;
+        Tue, 27 May 2025 04:11:13 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6048f06d915sm3382500a12.70.2025.05.27.04.11.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 04:11:12 -0700 (PDT)
+Message-ID: <2e052c11-f22c-4d95-841e-cb4665d02451@oss.qualcomm.com>
+Date: Tue, 27 May 2025 13:11:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
-X-B4-Tracking: v=1; b=H4sIAECdNWgC/x2MywqAIBAAfyX23IIpovUr0WHLrfbSQyuC6N+Tj
- jMw80DiKJygKR6IfEmSdclQlQUMMy0To4TMoJW2ymqHByXrjMFe9pMCjnKj0z3X3gdiGiGHW+S
- s/2nbve8HMUwID2QAAAA=
-X-Change-ID: 20250527-tas5733-biquad-fix-72be988daeaf
-To: Kevin Cernekee <cernekee@chromium.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- peter@korsgaard.com, Bram Vlerick <bram.vlerick@openpixelsystems.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6027;
- i=bram.vlerick@openpixelsystems.org; h=from:subject:message-id;
- bh=4fBzg0IECeatk98Un140p9pZO2EoxDTUIPqXK4PDwEw=;
- b=owEBbQKS/ZANAwAIAblauka9BQbwAcsmYgBoNZ1gv3LNjvsi39NE/rtK4BAMRI8THp67U75G/
- LmVlji8zIiJAjMEAAEIAB0WIQQO7PtG7b77XLxuay25WrpGvQUG8AUCaDWdYAAKCRC5WrpGvQUG
- 8FooEAC2ysQve1IJBwRGNg2Py7gGSOEHzber4GrE2TVB3tJ8KbeSchO+C9tMTQ9gryz3cFaJ2/n
- B2J59oMlTVaG7rBUlZRf2oX2I+nnCHzkIKH86auXLs+cp1OABznjyEibKC6ZQCi1khTapUBrWbF
- caLOTiRf98Qh1MGn4UezuEevDi/Yc3OW4bPEpYvsM18Xkml1zgHsbfVs6CijJB3/OmIRLLHLsz9
- f0oB8ZiZYcKDG0PqjvK3qm/S1JdF+UAs9bwBnCSJszvb+9umD5JSgzb/Yz8nvKQIiOS2HOfkj1E
- QN+GmGHusiEiXuHcacYPX5u6dLVJy6IlZSZeY0M3RJ8rhHOOoCgq/K/3siNZA/ZlKzPwwV2KumM
- Qgph+o5A3GJMJnHw/9QakgJ/GMAtclhsmDdSnM7iBamfwlagsY7dFTYQ4EhwJywVI7DowMDPZRN
- 8sWV1JPzGjTjBD48VgdPkp9/00FCyQvtRrayFjpX6TkfjJrMWr/JRFGgmoKYAQL/uebzxpz3jC3
- 1cJ4eiWJk1OpzzW/coQPvYGflH2cI9u7clezZsyTFMZghu7/FZHL9FkMw162ffR20RJWs+xogXU
- XZd/cZvIVE0nA1nOd3xyHplg2LyxHUNVGjigOXcO1SWW7Sl0yKbLY65JVRLvsa2w7VjpLFwR+6E
- 5jvIGl3lw6eCOKw==
-X-Developer-Key: i=bram.vlerick@openpixelsystems.org; a=openpgp;
- fpr=0EECFB46EDBEFB5CBC6E6B2DB95ABA46BD0506F0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad
+ Pro (caihong)
+To: Pengyu Luo <mitltlatltl@gmail.com>, konrad.dybcio@oss.qualcomm.com
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+        konradybcio@kernel.org, krzk+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org
+References: <53e1127d-77fb-4bb7-a125-18d7afc0d843@oss.qualcomm.com>
+ <20250525105144.1328104-1-mitltlatltl@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250525105144.1328104-1-mitltlatltl@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 5Pore5ICrsnSGhZzftZtK9kwOmlmiGBg
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA5MiBTYWx0ZWRfX1+X/qJqauVpT
+ hfDbLbAsJOoiYLhX2fC9rQ0p7PmMS4OUaE22izHkLdpXJ30D5JZ6R2cmevs1lgruMXWCczNZRer
+ dIJAbve0PRxYjr9zLiYhiquEBQxqm5Pk3r3fsB/5fdRDNv6xTOySJWudJZm86j7DRkOttBnv7FS
+ ua72OTYSu7HtytHFEZ3DaG5cvWHV6OXabsIqDcscyuFEF9iKl0AZSJhFErMxTzH/KyZhPB/o/6F
+ VkFtDzT+tzl4kRtpqFpKyGCpfWw75aaVzTRd5xsCzZOzfvvKr+EKe2s5aSC7M15zM6ph0VA+rql
+ Ee+ygBVM7QwspQctaiIanZO+U+Xcv0PigAahwuPECmhTjGKtj+yRmxraMlqDNj/AdDQpmnMaXyw
+ n4jgMOG5IZSXevbH14Mns4dveKrOGzoRsxOhv76U4hrd9+UPMdSPoQWelYe9ON8H/ajwYkYI
+X-Authority-Analysis: v=2.4 cv=HNnDFptv c=1 sm=1 tr=0 ts=68359dd2 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+ a=EUspDBNiAAAA:8 a=jYZJvsQXSSxwn8BSTVsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-ORIG-GUID: 5Pore5ICrsnSGhZzftZtK9kwOmlmiGBg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_05,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 suspectscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270092
 
-The controls between the tas5717 and tas5733 should not be shared since
-the biquad and register setup is not identical. For example, writing to
-0x5c on the tas5717 modifies ch2_bq[10] while on the tas5733 this is
-ch1_cross_bq[3].
+On 5/25/25 12:51 PM, Pengyu Luo wrote:
+> On Thu, May 22, 2025 at 11:05 PM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+>> On 5/21/25 10:37 AM, Pengyu Luo wrote:
+>>> On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+>>>> On 5/20/25 6:42 PM, Pengyu Luo wrote:
+>>>>> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
+>>>>> platform. Its device codename is "caihong". This patch adds an initial
+>>>>> devicetree for basic functionality.
+>>
+>> [...]
+>>
+>>>>> +&i2c2 {
+>>>>> +     status = "okay";
+>>>>> +
+>>>>> +     /* secondary kinetic,ktz8866@11 */
+>>>>
+>>>> You can describe it, the driver sets some nonzero default brightness
+>>>>
+>>>
+>>> But the backlight framework won't index them, which causes sysfs
+>>> collision when the second instance is registering.
+>>
+>> Have you talked to the backlight maintainers? This shouldn't be too
+>> complex to figure out
+> 
+> Last time I tried to touch ktz8866 source, the reviewer advised me to
+> add an backlight API to register the secondary devie. Since I am still
+> working on the other parts when I am free, it remains unresolved. Now
+> that you reminded me, then I tried to do it.
+> 
+> https://lore.kernel.org/linux-fbdev/20250525104022.1326997-1-mitltlatltl@gmail.com/
 
-see https://www.ti.com/lit/ds/symlink/tas5733l.pdf and
-https://www.ti.com/lit/ds/symlink/tas5717.pdf for more details on the
-register maps.
+I think this should be made more generic, so that devices with e.g.
+quad backlight can be easily accommodated for too.. Perhaps you could
+do something like PLATFORM_DEVID_AUTO with incrementing suffixes and
+make `backlight = <&foo>;` on the panel accept an array of devices
+that would be controlled together
 
-Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
----
- sound/soc/codecs/tas571x.c | 65 +++++++++++++++++++++++++++++++++++++++++++++-
- sound/soc/codecs/tas571x.h | 34 ++++++++++++++++++++++++
- 2 files changed, 98 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/tas571x.c b/sound/soc/codecs/tas571x.c
-index 6c6e7ae07d80eeeefd0fdf713e09ec097ccda6a0..00b131294547812f1406056d17e6c42ddf92003f 100644
---- a/sound/soc/codecs/tas571x.c
-+++ b/sound/soc/codecs/tas571x.c
-@@ -718,6 +718,69 @@ static const struct regmap_config tas5721_regmap_config = {
- 	.volatile_table			= &tas571x_volatile_regs,
- };
- 
-+static const struct snd_kcontrol_new tas5733_controls[] = {
-+	/* MVOL LSB is ignored - see comments in tas571x_i2c_probe() */
-+	SOC_SINGLE_TLV("Master Volume",
-+		       TAS571X_MVOL_REG, 1, 0x1ff, 1,
-+		       tas5717_volume_tlv),
-+	SOC_DOUBLE_R_TLV("Speaker Volume",
-+			 TAS571X_CH1_VOL_REG, TAS571X_CH2_VOL_REG,
-+			 1, 0x1ff, 1, tas5717_volume_tlv),
-+	SOC_DOUBLE("Speaker Switch",
-+		   TAS571X_SOFT_MUTE_REG,
-+		   TAS571X_SOFT_MUTE_CH1_SHIFT, TAS571X_SOFT_MUTE_CH2_SHIFT,
-+		   1, 1),
-+
-+	SOC_DOUBLE_R_RANGE("CH1 Mixer Volume",
-+			   TAS5717_CH1_LEFT_CH_MIX_REG,
-+			   TAS5717_CH1_RIGHT_CH_MIX_REG,
-+			   16, 0, 0x80, 0),
-+
-+	SOC_DOUBLE_R_RANGE("CH2 Mixer Volume",
-+			   TAS5717_CH2_LEFT_CH_MIX_REG,
-+			   TAS5717_CH2_RIGHT_CH_MIX_REG,
-+			   16, 0, 0x80, 0),
-+
-+	/*
-+	 * The biquads are named according to the register names.
-+	 * Please note that TI's TAS57xx Graphical Development Environment
-+	 * tool names them different.
-+	 */
-+	BIQUAD_COEFS("CH1 - Biquad 0", TAS5733_CH1_BQ0_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 1", TAS5733_CH1_BQ1_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 2", TAS5733_CH1_BQ2_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 3", TAS5733_CH1_BQ3_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 4", TAS5733_CH1_BQ4_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 5", TAS5733_CH1_BQ5_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 6", TAS5733_CH1_BQ6_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 7", TAS5733_CH1_BQ7_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 8", TAS5733_CH1_BQ8_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 9", TAS5733_CH1_BQ9_REG),
-+	BIQUAD_COEFS("CH1 - Biquad 10", TAS5733_CH1_BQ10_REG),
-+
-+	BIQUAD_COEFS("CH2 - Biquad 0", TAS5733_CH2_BQ0_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 1", TAS5733_CH2_BQ1_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 2", TAS5733_CH2_BQ2_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 3", TAS5733_CH2_BQ3_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 4", TAS5733_CH2_BQ4_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 5", TAS5733_CH2_BQ5_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 6", TAS5733_CH2_BQ6_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 7", TAS5733_CH2_BQ7_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 8", TAS5733_CH2_BQ8_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 9", TAS5733_CH2_BQ9_REG),
-+	BIQUAD_COEFS("CH2 - Biquad 10", TAS5733_CH2_BQ10_REG),
-+
-+	BIQUAD_COEFS("CH1 - Cross Biquad 0", TAS5733_CH1_CBQ0_REG),
-+	BIQUAD_COEFS("CH1 - Cross Biquad 1", TAS5733_CH1_CBQ1_REG),
-+	BIQUAD_COEFS("CH1 - Cross Biquad 2", TAS5733_CH1_CBQ2_REG),
-+	BIQUAD_COEFS("CH1 - Cross Biquad 3", TAS5733_CH1_CBQ3_REG),
-+
-+	BIQUAD_COEFS("CH2 - Cross Biquad 0", TAS5733_CH2_CBQ0_REG),
-+	BIQUAD_COEFS("CH2 - Cross Biquad 1", TAS5733_CH2_CBQ1_REG),
-+	BIQUAD_COEFS("CH2 - Cross Biquad 2", TAS5733_CH2_CBQ2_REG),
-+	BIQUAD_COEFS("CH2 - Cross Biquad 3", TAS5733_CH2_CBQ3_REG),
-+};
-+
- static const char *const tas5733_supply_names[] = {
- 	"AVDD",
- 	"DVDD",
-@@ -770,7 +833,7 @@ static const struct regmap_config tas5733_regmap_config = {
- static const struct tas571x_chip tas5733_chip = {
- 	.supply_names                   = tas5733_supply_names,
- 	.num_supply_names               = ARRAY_SIZE(tas5733_supply_names),
--	.controls                       = tas5717_controls,
-+	.controls                       = tas5733_controls,
- 	.num_controls                   = ARRAY_SIZE(tas5717_controls),
- 	.regmap_config                  = &tas5733_regmap_config,
- 	.vol_reg_size                   = 2,
-diff --git a/sound/soc/codecs/tas571x.h b/sound/soc/codecs/tas571x.h
-index 5340d3bec31dfdee0be234aa80dab27b44037304..2b3eff4023b9fb3193e55c0c970b3f71b7b7620b 100644
---- a/sound/soc/codecs/tas571x.h
-+++ b/sound/soc/codecs/tas571x.h
-@@ -104,4 +104,38 @@
- #define TAS5717_CH2_LEFT_CH_MIX_REG	0x76
- #define TAS5717_CH2_RIGHT_CH_MIX_REG	0x77
- 
-+#define TAS5733_CH1_BQ0_REG		0x26
-+#define TAS5733_CH1_BQ1_REG		0x27
-+#define TAS5733_CH1_BQ2_REG		0x28
-+#define TAS5733_CH1_BQ3_REG		0x29
-+#define TAS5733_CH1_BQ4_REG		0x2a
-+#define TAS5733_CH1_BQ5_REG		0x2b
-+#define TAS5733_CH1_BQ6_REG		0x2c
-+#define TAS5733_CH1_BQ7_REG		0x2d
-+#define TAS5733_CH1_BQ8_REG		0x2e
-+#define TAS5733_CH1_BQ9_REG		0x2f
-+
-+#define TAS5733_CH2_BQ0_REG		0x30
-+#define TAS5733_CH2_BQ1_REG		0x31
-+#define TAS5733_CH2_BQ2_REG		0x32
-+#define TAS5733_CH2_BQ3_REG		0x33
-+#define TAS5733_CH2_BQ4_REG		0x34
-+#define TAS5733_CH2_BQ5_REG		0x35
-+#define TAS5733_CH2_BQ6_REG		0x36
-+#define TAS5733_CH2_BQ7_REG		0x37
-+#define TAS5733_CH2_BQ8_REG		0x38
-+#define TAS5733_CH2_BQ9_REG		0x39
-+
-+#define TAS5733_CH1_BQ10_REG		0x58
-+#define TAS5733_CH1_CBQ0_REG		0x59
-+#define TAS5733_CH1_CBQ1_REG		0x5a
-+#define TAS5733_CH1_CBQ2_REG		0x5b
-+#define TAS5733_CH1_CBQ3_REG		0x5c
-+
-+#define TAS5733_CH2_BQ10_REG		0x5d
-+#define TAS5733_CH2_CBQ0_REG		0x5e
-+#define TAS5733_CH2_CBQ1_REG		0x5f
-+#define TAS5733_CH2_CBQ2_REG		0x60
-+#define TAS5733_CH2_CBQ3_REG		0x61
-+
- #endif /* _TAS571X_H */
-
----
-base-commit: 914873bc7df913db988284876c16257e6ab772c6
-change-id: 20250527-tas5733-biquad-fix-72be988daeaf
-
-Best regards,
--- 
-Bram Vlerick <bram.vlerick@openpixelsystems.org>
-
+Konrad
