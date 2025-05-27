@@ -1,93 +1,171 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6BA14A4C7;
-	Tue, 27 May 2025 20:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BF220469E
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748376115; cv=none; b=CudwZhsCmxu8M/zf661a0dBiMox8XWm/iq0NCqjNAdHjwPztoE51eJfxdQ7zPhUW/4S8sTzJCNjgAkzE/dxG58WcF8TpWoZ9bveFP1aLKkXrjMEQz1Dtv1nJZ9T/fmuQQ/V6bTpig+U/pdUSWRN+Xq8vyxi+jKcgmOr/XATGlBc=
+	t=1748376143; cv=none; b=hQExuAPAf8CzmE8Ml0DpPiGHDG8z2FZlxYbaMFvCtb4btTRVuKhYmgWzgeHtzABh9v0Y+btz+XP1ZeM8qFlGJfpZkH32YTDlTRbniKOAeNN3Ep+6D3DvooIOTAGIoY+srOLKvpOvF9Y2ar/mGdYzL+yP9gYmtq6vD1HhOqn4Z1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748376115; c=relaxed/simple;
-	bh=6adduam8eeRGiOQH0BqLl8J4q9WZUyz7ANkZDXOrmOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fLs7XGiUSy9NjBIlMt3FoMMD7KUTvSZ1gpX0v5NDNFLr2eNQka+Bg31VCWxhuB8sxuAZa+egdJPYCPvPr6ZvZam51ccc45saoKrb1S5bk9HX22BSVCyQRVfFNyw8nysELc8YT9fsrsS9CQF9GPOHUdCktQUu5fh34yU0B7gw9Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qIpw6vAw; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qIpw6vAw"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=G67EhjQhCo6cu8Kcg5RL64M1kKXW79lnaj18VFl/IXk=; b=qI
-	pw6vAwpdkVXq5357XLKpGLZl9skBIztPQAM/kmaCnqh49jHwfLSizkZyZ1lEy4q4Mogd5x9oubtOt
-	DN0haeRWyI0l3POGdVls78aniiNBgadsB7gE4RpxO8LfKmE9C9yvpkudf4amM5l8OmDcjRnyOynNT
-	ETwUMYgF6UBShq8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uK0Ue-00E6bZ-Kq; Tue, 27 May 2025 22:01:48 +0200
-Date: Tue, 27 May 2025 22:01:48 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Furong Xu <0x1207@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-Message-ID: <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch>
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
- <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
+	s=arc-20240116; t=1748376143; c=relaxed/simple;
+	bh=1c1UK76FZs7bbUsEiX7pLhBXdXdmxSY7U+L/bMoCjFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jGvve6vGXFkzz5Fb3Nh1TG4iTISDz0QxGYmOMQuYIPem/oM+WrJWQSsKNR1YmH20Z9MGdZdTx5NYjTLwXbfe+TSh3rbyFNR38/3Pk5i9YphzOgNSiwSuXF/Ru2CJYbiKrYNx6vEeIq4gEgW1ORv+PM/cPJygTBuqMZQFvDE0JjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-82-219.bstnma.fios.verizon.net [173.48.82.219])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54RK26q5026851
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 16:02:06 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 237DC2E00DD; Tue, 27 May 2025 16:02:06 -0400 (EDT)
+Date: Tue, 27 May 2025 16:02:06 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux Kernel Developers List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] ext4 changes for v6.16-rc1
+Message-ID: <20250527200206.GA2433735@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
 
-On Tue, May 27, 2025 at 01:21:21PM -0600, James Hilliard wrote:
-> On Tue, May 27, 2025 at 1:14 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
-> > > Some devices like the Allwinner H616 need the ability to select a phy
-> > > in cases where multiple PHY's may be present in a device tree due to
-> > > needing the ability to support multiple SoC variants with runtime
-> > > PHY selection.
-> >
-> > I'm not convinced about this yet. As far as i see, it is different
-> > variants of the H616. They should have different compatibles, since
-> > they are not actually compatible, and you should have different DT
-> > descriptions. So you don't need runtime PHY selection.
-> 
-> Different compatibles for what specifically? I mean the PHY compatibles
-> are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
 
-You at least have a different MTD devices, exporting different
-clocks/PWM/Reset controllers. That should have different compatibles,
-since they are not compatible. You then need phandles to these
-different clocks/PWM/Reset controllers, and for one of the PHYs you
-need a phandle to the I2C bus, so the PHY driver can do the
-initialisation. So i think in the end you know what PHY you have on
-the board, so there is no need to do runtime detection.
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
 
-What you might want however is to validate the MTD device compatible
-against the fuse and return -ENODEV if the compatible is wrong for the
-fuse.
+are available in the Git repository at:
 
-	Andrew
+  https://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus-6.16-rc1
+
+for you to fetch changes up to 7acd1b315cdcc03b11a3aa1f9c9c85d99ddb4f0e:
+
+  ext4: Add a WARN_ON_ONCE for querying LAST_IN_LEAF instead (2025-05-20 14:21:00 -0400)
+
+----------------------------------------------------------------
+New ext4 features and performance improvements:
+   * Fast commit performance improvements
+   * Multi-fsblock atomic write support for bigalloc file systems
+   * Large folio support for regular files
+
+This last can result in really stupendous performance for the right
+workloads.  For example, see [1] where the Kernel Test Robot reported
+over 37% improvement on a large sequential I/O workload.
+
+[1] https://lore.kernel.org/all/202505161418.ec0d753f-lkp@intel.com/
+
+There are also the usual bug fixes and cleanups.  Of note are cleanups
+of the extent status tree to fix potential races that could result in
+the extent status tree getting corrupted under heavy siulatneous
+allocation and deallocation to a single file.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      ext4: avoid -Wformat-security warning
+
+Brian Foster (1):
+      ext4: only dirty folios when data journaling regular files
+
+Christoph Hellwig (1):
+      ext4: use writeback_iter in ext4_journalled_submit_inode_data_buffers
+
+Eric Biggers (4):
+      ext4: remove sbi argument from ext4_chksum()
+      ext4: remove sb argument from ext4_superblock_csum()
+      jbd2: remove journal_t argument from jbd2_chksum()
+      jbd2: remove journal_t argument from jbd2_superblock_csum()
+
+Harshad Shirwadkar (9):
+      ext4: convert i_fc_lock to spinlock
+      ext4: for committing inode, make ext4_fc_track_inode wait
+      ext4: mark inode dirty before grabbing i_data_sem in ext4_setattr
+      ext4: rework fast commit commit path
+      ext4: drop i_fc_updates from inode fc info
+      ext4: update code documentation
+      ext4: temporarily elevate commit thread priority
+      ext4: convert s_fc_lock to mutex type
+      ext4: hold s_fc_lock while during fast commit
+
+Jan Kara (1):
+      ext4: fix calculation of credits for extent tree modification
+
+Jeongjun Park (1):
+      jbd2: fix data-race and null-ptr-deref in jbd2_journal_dirty_metadata()
+
+Ritesh Harjani (IBM) (12):
+      ext4: Document an edge case for overwrites
+      ext4: Check if inode uses extents in ext4_inode_can_atomic_write()
+      ext4: Make ext4_meta_trans_blocks() non-static for later use
+      ext4: Add support for EXT4_GET_BLOCKS_QUERY_LEAF_BLOCKS
+      ext4: Add multi-fsblock atomic write support with bigalloc
+      ext4: Enable support for ext4 multi-fsblock atomic write using bigalloc
+      ext4: Add atomic block write documentation
+      ext4: Unwritten to written conversion requires EXT4_EX_NOCACHE
+      ext4: Simplify last in leaf check in ext4_map_query_blocks
+      ext4: Rename and document EXT4_EX_FILTER to EXT4_EX_QUERY_FILTER
+      ext4: Simplify flags in ext4_map_query_blocks()
+      ext4: Add a WARN_ON_ONCE for querying LAST_IN_LEAF instead
+
+Thadeu Lima de Souza Cascardo (1):
+      ext4: inline: fix len overflow in ext4_prepare_inline_data
+
+Zhang Yi (21):
+      ext4: ext4: unify EXT4_EX_NOCACHE|NOFAIL flags in ext4_ext_remove_space()
+      ext4: generalize EXT4_GET_BLOCKS_IO_SUBMIT flag usage
+      ext4: prevent stale extent cache entries caused by concurrent I/O writeback
+      ext4: prevent stale extent cache entries caused by concurrent fiemap
+      ext4: prevent stale extent cache entries caused by concurrent get es_cache
+      ext4: factor out is_special_ino()
+      ext4: introduce ext4_check_map_extents_env() debug helper
+      ext4: check env when mapping and modifying extents
+      ext4: clairfy the rules for modifying extents
+      ext4: fix out of bounds punch offset
+      ext4: fix incorrect punch max_end
+      ext4: factor out ext4_get_maxbytes()
+      ext4: ensure i_size is smaller than maxbytes
+      ext4: make ext4_mpage_readpages() support large folios
+      ext4: make regular file's buffered write path support large folios
+      ext4: make __ext4_block_zero_page_range() support large folio
+      ext4/jbd2: convert jbd2_journal_blocks_per_page() to support large folio
+      ext4: correct the journal credits calculations of allocating blocks
+      ext4: make the writeback path support large folios
+      ext4: make online defragmentation support large folios
+      ext4: enable large folio for regular file
+
+ Documentation/filesystems/ext4/atomic_writes.rst | 225 ++++++++
+ Documentation/filesystems/ext4/overview.rst      |   1 +
+ fs/ext4/bitmap.c                                 |   8 +-
+ fs/ext4/ext4.h                                   |  91 +++-
+ fs/ext4/ext4_jbd2.c                              |   3 +-
+ fs/ext4/ext4_jbd2.h                              |   4 +-
+ fs/ext4/extents.c                                | 177 +++++--
+ fs/ext4/extents_status.c                         |  35 +-
+ fs/ext4/fast_commit.c                            | 460 +++++++++--------
+ fs/ext4/file.c                                   |  14 +-
+ fs/ext4/ialloc.c                                 |   8 +-
+ fs/ext4/inline.c                                 |   3 +-
+ fs/ext4/inode.c                                  | 510 ++++++++++++++++---
+ fs/ext4/ioctl.c                                  |  16 +-
+ fs/ext4/mmp.c                                    |   2 +-
+ fs/ext4/move_extent.c                            |  11 +-
+ fs/ext4/namei.c                                  |  10 +-
+ fs/ext4/orphan.c                                 |  13 +-
+ fs/ext4/readpage.c                               |  28 +-
+ fs/ext4/resize.c                                 |   2 +-
+ fs/ext4/super.c                                  |  84 ++-
+ fs/ext4/xattr.c                                  |  10 +-
+ fs/jbd2/commit.c                                 |   6 +-
+ fs/jbd2/journal.c                                |  23 +-
+ fs/jbd2/recovery.c                               |  10 +-
+ fs/jbd2/transaction.c                            |   5 +-
+ include/linux/jbd2.h                             |   5 +-
+ 27 files changed, 1290 insertions(+), 474 deletions(-)
+ create mode 100644 Documentation/filesystems/ext4/atomic_writes.rst
