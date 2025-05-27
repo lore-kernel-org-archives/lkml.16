@@ -1,111 +1,113 @@
-Received: from dispatch1-eu1.ppe-hosted.com (dispatch1-eu1.ppe-hosted.com [185.132.181.7])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6FD7260B;
-	Tue, 27 May 2025 21:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.181.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C576220CCDC
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748380422; cv=none; b=Bzx++KSL3SLhiH9MIwM9r3YRTjmPdryYE5qtNYj/IAjs94wf5UxpHZ+GvjZsiuPnv0PqYDlEC62WHv0W4nOnbKLfhNJCIj9t8t62BPlNxS21wKEk3H6Fbs/gpV3/9dlbAiC4iHfQ0+Txz66hobBgmNIU1UUde8G7WZ3/y7fHyxs=
+	t=1748380674; cv=none; b=hYWMDBCcgC+fHU9NNWnlvtOtbQ/aLhhSyb4tvTmWJw2kIS+jH/tFwpG/8Zzr+lmQDWfg3Q1L3NjeBgtZ9UAtauwYjKRaZJquhq0PoLilbwSzzxllxcHayZbtrOnMEZl6B0aGEt2aXYOCo8qzZ6HjVGs8PRO85IKyOKknAvPFNWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748380422; c=relaxed/simple;
-	bh=Nl3slm3ORyXM24Jp136yutmN0T+7Y9mG0+TrxTs37VM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=itggiVpe94oXhWsbTHut9FDT9TY7QQrRCtS5BOqhKd3RQ7oAPdhuI7yE/R7gADa2L8nk60aBtODTzG/8vaQGq2uRHw3ANfNIzkc7G/G8yXlAAJkxoUoFR4aspsCj7XpmeTBa8TP25dxvVt6bFSowm+qxkhTUleFkoaVlP2akTdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mikaelkw.online; spf=pass smtp.mailfrom=mikaelkw.online; dkim=pass (2048-bit key) header.d=mikaelkw.online header.i=@mikaelkw.online header.b=FqgwUhoh; arc=none smtp.client-ip=185.132.181.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mikaelkw.online
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikaelkw.online
+	s=arc-20240116; t=1748380674; c=relaxed/simple;
+	bh=B+99Rf+2I0jJZmtcZn+WFPEjXE9UraGmIhuRA3//flg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mf3hOSlxhOtqMZyo3nD0qfs7EcurKGu6vJkaxKR68xFcrHZdU1j9GA3df/+lgEg/k5Kr6lG7hxrSXcNrv+jC22JfgvtttTFFdCP5bGa2OZ5Fztc59WYv2DIDUgONyeLZSIpsCtEM1LzvwkmcMCUr53gLBmyjmpETQU75/9DhMF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s4piLsp0; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mikaelkw.online header.i=@mikaelkw.online header.b="FqgwUhoh"
-Received: from engine.ppe-hosted.com (unknown [10.70.45.172])
-	by dispatch1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 2B536200A3;
-	Tue, 27 May 2025 21:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mikaelkw.online;
- h=cc:cc:content-transfer-encoding:content-transfer-encoding:date:date:from:from:message-id:message-id:mime-version:mime-version:subject:subject:to:to;
- s=pp-selector; bh=lwjcejsgwEmNYg9nHk4XBk4Rx/Y1yysKSIvGN1YC2j4=;
- b=FqgwUhohgsOkn4WR3lqS0LrQ7GIsqQrMYaREKDemPQ8N7Zsmds+g0D8VI19XEjK+MZtD96LFPcBYOGF2dHecLUIKsiQtU8NXTBaJW29U8qwY5xCC28kEKdadKhIboZxQm4wZYOFGQV0Y66dIirfp4lCjc4l2lAwFSDn7l6ER8r6d5RZapoiXkz9DEerO5cXufTlVedPjuZ1JJI+CR6lNm1CSwxU+rF8Kq+BCbTtcptfFYmsqPwP/aPt0C9hQQnJAnfF9NXS1KycPc4kBQppWLOjVlDXjqcoszlCV7Ilt/ao2yCZuI8fI+LIrpjC82AuS8OnWr3T25rgXOp6ZhXeF9Q==
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from test-ubuntu-rev3.. (78-26-16-15.network.trollfjord.no [78.26.16.15])
-	by mx1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 2FD35B0005D;
-	Tue, 27 May 2025 21:13:35 +0000 (UTC)
-From: Mikael Wessel <post@mikaelkw.online>
-To: netdev@vger.kernel.org
-Cc: intel-wired-lan@lists.osuosl.org,
-	torvalds@linuxfoundation.org,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew@lunn.ch,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	security@kernel.org,
-	stable@vger.kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	linux-kernel@vger.kernel.org,
-	Mikael Wessel <post@mikaelkw.online>
-Subject: [PATCH] e1000e: fix heap overflow in e1000_set_eeprom()
-Date: Tue, 27 May 2025 23:13:32 +0200
-Message-ID: <20250527211332.50455-1-post@mikaelkw.online>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s4piLsp0"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso23315ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:17:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748380672; x=1748985472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B+99Rf+2I0jJZmtcZn+WFPEjXE9UraGmIhuRA3//flg=;
+        b=s4piLsp0ZE/jWrVrd0JEBdXJUC4lAI/1ER/WDxrDVCdNtc578gEcubwkh/R/ls/Rum
+         XDwgQo2vP6eD9Z/gmXsVXJwsPTbcI2Cv8krgZZk55m7B31TS5orPIJoEn/Sm6KJuHx94
+         eE2tfqJ9fTW4n47g3yjnM01OQh3FHrd5EHWGRftcsJvTTAEmq+W/pty0wr3tsC5r/3Dr
+         mX9mu89/zLYUGJQIeEmMR9pjxFi2s2+zqiN0WER4q2E5LNnQVEPVsUGyWET+ilBJzybT
+         +iw82jg1ZJh0syVIk/Xt5+sNw7Ng00Zz+WeYKSiauxlJ1mmmSbew2LssZJ+nLUSDZrlv
+         NI2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748380672; x=1748985472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B+99Rf+2I0jJZmtcZn+WFPEjXE9UraGmIhuRA3//flg=;
+        b=sjxVxDqDc8O7PhE9SlO2+uCl/j3RVkJigZrXUkDRt1l9OS9L77ScTo+768Rs+lKs0m
+         3g0f771J4wXWtdS8Ils8eNQj8C4eXbknF+Hct4YYyiDfdiUjEfO5JUC1q4Bdq6kBFKTS
+         x/qfARreo6XX9ySOkVZbvgvWxQZFJ6KwMdFMfh5CmW1u4y0xUXOQqvajzRXIVxGctCWt
+         +qWJlPT2RW4H6X0/MRz6Oboiqz9OhGbnmoEV/LnUtDe37GAHrYDtVjRAEJf6KBJL7+qW
+         chZ41PZ3et149D/zhj1BbEQB3oaMp1KIywV94CrIMQi/9CRjrA8tk0RCXttWDh6aVwT6
+         zQ+A==
+X-Forwarded-Encrypted: i=1; AJvYcCXVIPEWPEtkgdqULAee8aIlpTOwc5kFav7GSF7ZscqfZhNIV0jWUu59FyKEKYBjmdj/a1+vQ1gtx1HofLU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7xDou5aVkM9wU/q2jfhK12m1d0oZYSsm7D6NkBpUg0N4q2UV4
+	wYv0ZdopOsrl0sU2uFprfDy88Dm4TdNcHxSBay13oEDYBx5G7iX7dtbNZOiY7GOznF7EB/O7KDO
+	porQlbs11D51WJkssDWwcvRGFF1veuJX/X8HBzqCf
+X-Gm-Gg: ASbGncuRHQy/79BIjjSn7g+2Sf3kAgi3kSN5rZhHn9VKG+naU0q1mQ5CVwFFQ/PJpQz
+	XfH8sPYhLTJdXITaECj3PPPR0UOeqU5NctRA0hfuP+caLea/wfLHFogjDlfELYcIqqdPUgODFDi
+	HFrmE5vlcEu5p48qPto0XrD6bhQ0wZLm+83T9FGWAxfdnqeAq0rHUWUPu4YDCUffoBUeOPSWXT
+X-Google-Smtp-Source: AGHT+IHAuT/+L6BfBHpTYTb+SvZlo2rWXr6bkvbj/lWrD9rlW9tNhusiOjmF5tsFCXH8qEfKNkAYuNJ3s9Zd++Z2CWk=
+X-Received: by 2002:a05:6e02:178f:b0:3db:854b:9f52 with SMTP id
+ e9e14a558f8ab-3dd89c52111mr361775ab.7.1748380671633; Tue, 27 May 2025
+ 14:17:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MDID: 1748380417-IY5a2VRwpn3R
-X-PPE-STACK: {"stack":"eu1"}
-X-MDID-O:
- eu1;fra;1748380417;IY5a2VRwpn3R;<post@mikaelkw.online>;7544ea0f74a3697a45f5192d6efff48c
-X-PPE-TRUSTED: V=1;DIR=OUT;
+References: <20250313052952.871958-1-irogers@google.com> <Z9Rk-YdoK-fK_62d@x1>
+ <Z9SK96s4PAp680k6@x1> <Z9SLL50yuiLOGGYI@x1> <Z9oGI8G3cOoluIKf@google.com>
+In-Reply-To: <Z9oGI8G3cOoluIKf@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 27 May 2025 14:17:40 -0700
+X-Gm-Features: AX0GCFvPUNGmSlZUOtr_MrctXEr7ggvsEHiXnYCnz1_Q4SqywMc8Qv_Y61_aDuA
+Message-ID: <CAP-5=fWaTU7Ouj6ZnF2jaoiQbT_Niavx-JA=_bMdYRsr7T-P8w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf machine: Factor creating a "live" machine out
+ of dwarf-unwind
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Howard Chu <howardchu95@gmail.com>, Andi Kleen <ak@linux.intel.com>, 
+	Michael Petlan <mpetlan@redhat.com>, Anne Macedo <retpolanne@posteo.net>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The ETHTOOL_SETEEPROM ioctl copies user data into a kmalloc'ed buffer
-without validating eeprom->len and eeprom->offset. A CAP_NET_ADMIN
-user can overflow the heap and crash the kernel or gain code execution.
+On Tue, Mar 18, 2025 at 4:47=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Fri, Mar 14, 2025 at 05:01:51PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Fri, Mar 14, 2025 at 05:00:58PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Fri, Mar 14, 2025 at 02:18:49PM -0300, Arnaldo Carvalho de Melo wr=
+ote:
+> > > > On Wed, Mar 12, 2025 at 10:29:51PM -0700, Ian Rogers wrote:
+> > > > > Factor out for use in places other than the dwarf unwinding tests=
+ for
+> > > > > libunwind.
+> > > >
+> > > > Testing with another patchset being reviewed/tested, seems to work,=
+ if
+> > > > it showed the line number would be even better!
+> > >
+> > > But it gets the lines, at least in this secoond attempt, after applyi=
+ng
+> > > Namhyungs fix for the previous problem (int16_t):
+> >
+> > Nevermind, this time I built with DEBUG=3D1, so DWARF, probably.
+>
+> Can I get your Tested-by?
 
-Validate length and offset before kmalloc() to avoid leaking eeprom_buff.
+Ping. Thanks,
+Ian
 
-Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver (currently for ICH9 devices only)")
-Reported-by: Mikael Wessel <post@mikaelkw.online>
-Signed-off-by: Mikael Wessel <post@mikaelkw.online>
-Cc: stable@vger.kernel.org
----
- drivers/net/ethernet/intel/e1000e/ethtool.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
-index 98e541e39730..d04e59528619 100644
---- a/drivers/net/ethernet/intel/e1000e/ethtool.c
-+++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
-@@ -561,7 +561,7 @@ static int e1000_set_eeprom(struct net_device *netdev,
- 		return -EOPNOTSUPP;
- 
- 	if (eeprom->magic !=
--	    (adapter->pdev->vendor | (adapter->pdev->device << 16)))
-+		(adapter->pdev->vendor | (adapter->pdev->device << 16)))
- 		return -EFAULT;
- 
- 	if (adapter->flags & FLAG_READ_ONLY_NVM)
-@@ -569,6 +569,10 @@ static int e1000_set_eeprom(struct net_device *netdev,
- 
- 	max_len = hw->nvm.word_size * 2;
- 
-+	/* bounds check: offset + len must not exceed EEPROM size */
-+	if (eeprom->offset + eeprom->len > max_len)
-+		return -EINVAL;
-+
- 	first_word = eeprom->offset >> 1;
- 	last_word = (eeprom->offset + eeprom->len - 1) >> 1;
- 	eeprom_buff = kmalloc(max_len, GFP_KERNEL);
-@@ -596,9 +600,6 @@ static int e1000_set_eeprom(struct net_device *netdev,
- 	for (i = 0; i < last_word - first_word + 1; i++)
- 		le16_to_cpus(&eeprom_buff[i]);
- 
--        if (eeprom->len > max_len ||
--            eeprom->offset > max_len - eeprom->len)
--                return -EINVAL;
- 	memcpy(ptr, bytes, eeprom->len);
- 
- 	for (i = 0; i < last_word - first_word + 1; i++)
--- 
-2.48.1
-
+> Thanks,
+> Namhyung
