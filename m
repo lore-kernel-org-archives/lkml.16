@@ -1,102 +1,78 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79F6728E0F;
-	Tue, 27 May 2025 10:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1362494F8;
+	Tue, 27 May 2025 10:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748341168; cv=none; b=Cc7AYVam4Gpo5XNkXvC1uCKBbykwfXc9SbzNxkSM1nGLGkmOtwGZqqtbZUCUJpIMuajTCLjcftaBQgKdLUqCw+Z2iFcmCOXCQyDSXQpU9Ui0Ioyn5gOFk6I7jN7JsYcnaWfx1p9fhGZ2rrHVUaoGxF3SOxfC1TzFtsd1RSAjPxs=
+	t=1748341195; cv=none; b=KiQ//rxfm15HytAmvcLJ6o17Fy5TU0v4HluCmX+AtNlpH8tDY6/Aeh3eEMQPoknXRcNORXATbhCF+lFXRtK6LFCgGieU+1J3mnNW48c+rsTNI3NJJsAf5hPd1V0WhURH9qS/9p7IZjjMhQTGeVViDKtDqkP1c7ePUSCzMsp+UIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748341168; c=relaxed/simple;
-	bh=+uTkxRwUDOSNmznElaxhvN1iqbqNmStXvWtDR98aiXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V1odD9tfLrvzPJCJeLyylH1iQuLTTMizzpNLJuDrw0lJJZqesBUbieNKO1/Qm0v4+ElUqBL/6Asq6z3vvE74I0gP91sN7HVjBUYq0pidzhT7+r8471t0BDtwt6yzU6PakodUqylDWvAeflBIiDWRobbOZFK2oi67sjLc38vQXAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4FE114BF;
-	Tue, 27 May 2025 03:19:09 -0700 (PDT)
-Received: from [10.57.46.233] (unknown [10.57.46.233])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E2653F5A1;
-	Tue, 27 May 2025 03:19:23 -0700 (PDT)
-Message-ID: <4d54e620-abb9-4a36-bab0-3970c7e30a5f@arm.com>
-Date: Tue, 27 May 2025 11:19:22 +0100
+	s=arc-20240116; t=1748341195; c=relaxed/simple;
+	bh=mzdV6abXGkhQHPLAkMDEWY6imQH6XIgmzpS5HTP5o0U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=kklQ0JEOdXzGCpqh/8NoGu7sLycqPlSYxVnd20u2Mr1PHwPQmpQK7Gh7oUk/hFkqy3977dqID6p+qgCQJURQs++psWc5UQcwaItIiMH4dNzscIVnzTPSMeAPjJuNJOC2p6fllaf6gw7wgeeEK27ZMdSC7SxcT8Xaboahgd2FVLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXWo4TJJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXWo4TJJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7750C4CEE9;
+	Tue, 27 May 2025 10:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748341195;
+	bh=mzdV6abXGkhQHPLAkMDEWY6imQH6XIgmzpS5HTP5o0U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=SXWo4TJJ7zq3+M8PaDa04tuymzIthKx3m6fXMQc2ETdEsaAyJh/trOaqKpIN3sTpG
+	 sgwdZhDDJyJA3+Vja4RrUM5o1uA/4UyhR58XOQFEsBMT6wEea00yjiFKdSawwPHX4H
+	 37hs+qHLRqvW+dCAwuQpOh92fZgPWo/gwZQP44n9ZpqbVAdFFKU3P6gFMjroCIJDVd
+	 wmfuJx2pS9roP+hMse9U/dYDSuiWpbC7KTaP2d4LOm0GjPdPP6xMr3vIv3UV8NkxQh
+	 v2N7RY71//AmffuZ2nYS/vKaY6lSnyEW7XiGj39jmH16uq4IXbKlZVI+W5fa8Qyf1h
+	 2c7GwdlZjhOTw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DD8380AAE2;
+	Tue, 27 May 2025 10:20:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/2] coresight: add coresight Trace Network On Chip
- driver
-Content-Language: en-GB
-To: Leo Yan <leo.yan@arm.com>, Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Cc: Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250522-trace-noc-v6-0-f5a9bcae90ee@quicinc.com>
- <20250522-trace-noc-v6-2-f5a9bcae90ee@quicinc.com>
- <3a19197d-b534-458c-b4d7-51fd9d2c954d@arm.com>
- <40599afc-4342-467c-87d8-3f53cbcfd242@quicinc.com>
- <20250523085655.GD2566836@e132581.arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250523085655.GD2566836@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] Doc: networking: Fix various typos in rds.rst
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174834122925.1243040.10154337643543327123.git-patchwork-notify@kernel.org>
+Date: Tue, 27 May 2025 10:20:29 +0000
+References: <20250522074413.3634446-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <20250522074413.3634446-1-alok.a.tiwari@oracle.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+Cc: allison.henderson@oracle.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ darren.kenny@oracle.com
 
-On 23/05/2025 09:56, Leo Yan wrote:
-> On Fri, May 23, 2025 at 04:08:58PM +0800, Yuanfang Zhang wrote:
+Hello:
+
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Thu, 22 May 2025 00:43:55 -0700 you wrote:
+> Corrected "sages" to "messages" in the bitmap allocation description.
+> Fixed "competed" to "completed" in the recv path datagram handling section.
+> Corrected "privatee" to "private" in the multipath RDS section.
+> Fixed "mutlipath" to "multipath" in the transport capabilities description.
+> 
+> These changes improve documentation clarity and maintain consistency.
 > 
 > [...]
-> 
->>>> +static int trace_noc_init_default_data(struct trace_noc_drvdata *drvdata)
->>>> +{
->>>> +    int atid;
->>>> +
->>>> +    atid = coresight_trace_id_get_system_id();
->>>> +    if (atid < 0)
->>>> +        return atid;
->>>> +
->>>> +    drvdata->atid = atid;
->>>
->>> Do you need to expose this via sysfs ? Otherwise, how can you map
->>> a trace to a TNOC at decoding ?
->>
->> yes, need to expose the atid via sysfs, but it better to expose it on source driver which connect with
->> this TNOC. so dont expose it on this driver.
 
-But why ? How does that work ? The packets that come via TNOC 
-(irrespective of the source(s)) will have the same ATID as that of the 
-TNOC. So :
+Here is the summary with links:
+  - Doc: networking: Fix various typos in rds.rst
+    https://git.kernel.org/netdev/net-next/c/6682bfc1b227
 
-1) How does it help if the source exports the ID that was allocated in 
-the TNOC driver ?
-
-2) How does the source driver know the TraceID for exposing via sysfs ?
-Does it expose its own traceid ?
-
-> 
-> If so, why the ID is not maintained in coresight_path::trace_id?
-> 
-> A source device allocates ID and maintains in coresight path, then
-> this ID is passed (when enabling the link) to TNOC driver to consume it.
-
-Good question, since we have the "path" maintaining the TraceID, we
-should use that here for the TNOC. But the other question is, can there 
-be multiple sources connected to a single TNOC ? (I am guessing, yes!. 
-And thus it may not work with what you are proposing.
-
-Cheers
-Suzuki
-
-
-> 
-> Thanks,
-> Leo
-
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
