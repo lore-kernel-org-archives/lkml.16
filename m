@@ -1,112 +1,100 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D16342A9B
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BAA27A131;
+	Tue, 27 May 2025 17:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368128; cv=none; b=p9//2eqllNAXBxJwe5z7LxIR6gTB0dtoM5LOMAq94pHW4vPlrVcdK5Yzm8xHrz1Gd6KLDlFBkuNUgVq5Cpwr0b7s42mErqNCVQeJeowCWZYZNc4Nqk/jofPd8i88Bo7L8aBZ8MhifSE0YMIUUKrHIv+BNvBD9n9kT5WIIhXJwaA=
+	t=1748368196; cv=none; b=RO5Vf2GqdhhgDPLrvk0LOzLogfkeWWrvNRi/MTMARY7D6oMnTISDNLK5RJobZ2j/XLS689NmI2s8yekUR2LamHK8Mp4MCFqZJwfX1qBQe5Vv8PSrAraD12IKoyt3sOl//2K3Yl0R9RG8j8jMpAsMrtaYHBSO3CkzwjpDq5p3ccY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368128; c=relaxed/simple;
-	bh=zacgsMYOqWILDnDHjYRXe7knHpcE0yjWJV54mpR//9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cGAbRV2ETLptoO62ED3fo8Acd2ZDoyAgXsxjYpCi3xHQpzonIpd3c5TbuF3OYzPv+GZQcMrQzwEFswqAZ5s0OW0KYI1GqxISfGCc7kFvh69ovPJxV7RU/dHrKyORbKzFFQ+7gWyxME6G5muNx6xkfSS+RR0VUVNk1f/FoQRjKC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZHBAysI3; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748368196; c=relaxed/simple;
+	bh=u6RlqQsVwqhdS3Om0f8q0tySfymkFYitRgLj80KCa5o=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Bn/WWlYCA1e1zEXbTJhx5vH3PhF5TjnFSQ0X17ILrpWMiENNi6OLCeIfz2WYTUQ6L6VyhwgJ3Za7aJAjNMHv3LCvyZrHMmnLLUzk2oJSedJOk3932Mgjes86HEvOga6+NI7FfoxFSHdGms6PuZPcode/i57mlN7wRD3ZpIdYLGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEDTCtuF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZHBAysI3"
-Date: Tue, 27 May 2025 10:48:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748368112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eTgeKip1dFEF8TN491NA/pilIthAMBoQOcmCRidVyX8=;
-	b=ZHBAysI3TGX9PbZFh2Ha984UVBpYhYZH9MEejkZiWAWahrYeFnFSeHrnCLyH4p4/7871H8
-	68ehRduLxEcj1NthLGOgi80gP6he0VYxbHYjSK95djwgQKhAN6n08wz7dXCxq2XqF58WVK
-	/0uKxEJuzz7+hqp7z79Kggd6trMieEw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: "Chen, Yu C" <yu.c.chen@intel.com>
-Cc: peterz@infradead.org, akpm@linux-foundation.org, mkoutny@suse.com, 
-	mingo@redhat.com, tj@kernel.org, hannes@cmpxchg.org, corbet@lwn.net, 
-	mgorman@suse.de, mhocko@kernel.org, muchun.song@linux.dev, 
-	roman.gushchin@linux.dev, tim.c.chen@intel.com, aubrey.li@intel.com, libo.chen@oracle.com, 
-	kprateek.nayak@amd.com, vineethr@linux.ibm.com, venkat88@linux.ibm.com, ayushjai@amd.com, 
-	cgroups@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, yu.chen.surf@foxmail.com
-Subject: Re: [PATCH v5 2/2] sched/numa: add statistics of numa balance task
-Message-ID: <qcasnjdjet57uxhwavfiaxepq7anf2zvmi4rzkp5lxysovqwme@wwcyh4nvlxiv>
-References: <cover.1748002400.git.yu.c.chen@intel.com>
- <7ef90a88602ed536be46eba7152ed0d33bad5790.1748002400.git.yu.c.chen@intel.com>
- <cx4s4pnw5ymr4bxxmvrkhc457krq46eh6zamlr4ikp7tn3jsno@xzchjlnnawe5>
- <ad9f8af5-6bac-48c0-924b-498863370079@intel.com>
- <CAGj-7pX9yFFEFuMPgXBL_gsWevX8MtUZix5qyUQxOqWGKcbFzA@mail.gmail.com>
- <52a1b56b-9598-499d-ac9c-de99479d5166@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEDTCtuF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C1F7C4CEEA;
+	Tue, 27 May 2025 17:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748368196;
+	bh=u6RlqQsVwqhdS3Om0f8q0tySfymkFYitRgLj80KCa5o=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=CEDTCtuFw1ooDIYX4sfCUSahGH7C3UVddOKVbjxZOdSkEU1ycpbBvQhvzUUW+v7NZ
+	 bCWDQKSnC3wS5rBsZhgzSHjIlWt6PfKI471dZjG6xvqstPi5nw7mzUmKjVdBG/edl4
+	 udcAWIyvXPW0XEP2UVMO1IYPEUNxvo29eSDip5QETOV5abfhMC+0czdU9vq4CKskhW
+	 5C3uzOL7/TdTtc0BiufK3ibbHlLm2p+CgHvb1+TeT54QdlLMynqprs88FgGeOS9IXz
+	 Ug1/TRlD+2oZKn/fK0QCnuR0O5lDMnXc53qDwr9t4cym7kVHm3ZZRIzgXNLMG10vre
+	 STH1WwJ4ldKsA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD30380AAE2;
+	Tue, 27 May 2025 17:50:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <52a1b56b-9598-499d-ac9c-de99479d5166@intel.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next 1/1] bpf: fix WARNING in __bpf_prog_ret0_warn when
+ jit failed
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174836823075.1725298.17816488514505670750.git-patchwork-notify@kernel.org>
+Date: Tue, 27 May 2025 17:50:30 +0000
+References: <20250526133358.2594176-1-mannkafai@gmail.com>
+In-Reply-To: <20250526133358.2594176-1-mannkafai@gmail.com>
+To: KaFai Wan <mannkafai@gmail.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ syzbot+0903f6d7f285e41cdf10@syzkaller.appspotmail.com
 
-On Sun, May 25, 2025 at 08:35:24PM +0800, Chen, Yu C wrote:
-> On 5/25/2025 1:32 AM, Shakeel Butt wrote:
-[...]
-> > can you please give an end-to-end> flow/story of all these events
-> happening on a timeline.
-> > 
-> 
-> Yes, sure, let me have a try.
-> 
-> The goal of NUMA balancing is to co-locate a task and its
-> memory pages on the same NUMA node. There are two strategies:
-> migrate the pages to the task's node, or migrate the task to
-> the node where its pages reside.
-> 
-> Suppose a task p1 is running on Node 0, but its pages are
-> located on Node 1. NUMA page fault statistics for p1 reveal
-> its "page footprint" across nodes. If NUMA balancing detects
-> that most of p1's pages are on Node 1:
-> 
-> 1.Page Migration Attempt:
-> The Numa balance first tries to migrate p1's pages to Node 0.
-> The numa_page_migrate counter increments.
-> 
-> 2.Task Migration Strategies:
-> After the page migration finishes, Numa balance checks every
-> 1 second to see if p1 can be migrated to Node 1.
-> 
-> Case 2.1: Idle CPU Available
-> If Node 1 has an idle CPU, p1 is directly scheduled there. This event is
-> logged as numa_task_migrated.
-> Case 2.2: No Idle CPU (Task Swap)
-> If all CPUs on Node1 are busy, direct migration could cause CPU contention
-> or load imbalance. Instead:
-> The Numa balance selects a candidate task p2 on Node 1 that prefers
-> Node 0 (e.g., due to its own page footprint).
-> p1 and p2 are swapped. This cross-node swap is recorded as
-> numa_task_swapped.
-> 
+Hello:
 
-Thanks for the explanation, this is really helpful and I would like this
-to be included in the commit message.
+This patch was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-> > Beside that, do you think there might be some other scheduling events
-> > (maybe unrelated to numa balancing) which might be suitable for
-> > memory.stat? Basically I am trying to find if having sched events in
-> > memory.stat be an exception for numa balancing or more general.
+On Mon, 26 May 2025 21:33:58 +0800 you wrote:
+> syzkaller reported an issue:
 > 
-> If the criterion is a combination of task scheduling strategy and
-> page-based operations, I cannot find any other existing scheduling
-> events. For now, NUMA balancing seems to be the only case.
+> WARNING: CPU: 3 PID: 217 at kernel/bpf/core.c:2357 __bpf_prog_ret0_warn+0xa/0x20 kernel/bpf/core.c:2357
+> Modules linked in:
+> CPU: 3 UID: 0 PID: 217 Comm: kworker/u32:6 Not tainted 6.15.0-rc4-syzkaller-00040-g8bac8898fe39 #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> Workqueue: ipv6_addrconf addrconf_dad_work
+> RIP: 0010:__bpf_prog_ret0_warn+0xa/0x20 kernel/bpf/core.c:2357
+> RSP: 0018:ffffc900031f6c18 EFLAGS: 00010293
+> RAX: 0000000000000000 RBX: ffffc9000006e000 RCX: 1ffff9200000dc06
+> RDX: ffff8880234ba440 RSI: ffffffff81ca6979 RDI: ffff888031e93040
+> RBP: ffffc900031f6cb8 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: ffff88802b61e010
+> R13: ffff888031e93040 R14: 00000000000000a0 R15: ffff88802c3d4800
+> FS:  0000000000000000(0000) GS:ffff8880d6ce2000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055557b6d2ca8 CR3: 000000002473e000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
+>  __bpf_prog_run include/linux/filter.h:718 [inline]
+>  bpf_prog_run include/linux/filter.h:725 [inline]
+>  cls_bpf_classify+0x74a/0x1110 net/sched/cls_bpf.c:105
+>  ...
+> 
+> [...]
 
-Mainly I was looking if in future we need to add more sched events to
-memory.stat file.
+Here is the summary with links:
+  - [bpf-next,1/1] bpf: fix WARNING in __bpf_prog_ret0_warn when jit failed
+    https://git.kernel.org/bpf/bpf-next/c/86bc9c742426
 
-Let me reply on the other email chain on what should we do next.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
