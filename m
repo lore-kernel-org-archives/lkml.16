@@ -1,124 +1,100 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.smtpout.orange.fr (smtp-19.smtpout.orange.fr [80.12.242.19])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1851922F4
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E718D3594A;
+	Tue, 27 May 2025 05:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748324662; cv=none; b=Lc/bPRf1qIuJZEk/Zt/C0RT6SPlevMF4ldxiJ8WyuIIpXLKbc5J4pa4cA1nBNlOmCLvlgLqYTBbdZy33AVRjLMC+PKO8UkPb9FYt5+QC2cJ9mE6z2kRoAFuTqPupc13M35MHxMS+MwRFt5ZN2gVBBtZJKgcqD7REzPX3PkGvRH8=
+	t=1748324722; cv=none; b=qBVgI2p4dBExH4qbAn7EbA3jpdRrhECD7RygUMHnB+mkmZMu5ZF4hW4wbVnGrTttaewK3R508Ho2Fftx0YIe9kFiPgxjDr8J4xKPqAEvYd+0nzhyz6C/ClFRzzKh0HiUpiwz/8An9gi7P1tJe0TuxZ9muVHHFgDwQ9C4HjuGCgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748324662; c=relaxed/simple;
-	bh=kyCBYxH7qeEldqqPRBTiasx1ddRJHWTby1mXwGA30Ck=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kHJAJQ0D5INnjUhFdXfB74VR+y9CV3ecrTZvwam63dfarGrKhsAJVeDPqmiBDgJfOiej/w0dhsg+9MFzAvzgwLqCccDUyloMdBxVsvK2ZyD1tcfcSSXjgAU1xt97nrGY8iJQ4RUkryDXyq6HxKPt5+velJFPBJnkzswc0ZX1TwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FRJdog+i; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748324722; c=relaxed/simple;
+	bh=UwirAYtlq4PYk8TsYpItR7qKlQL3pnxC3ACBwNJOxXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iBwqh9UUkqMerWQgisLqeSbxJaU8lkiCFOqAMgNw9LYn7W1js4IoNoUWhVYfHKfGoRA9sNGx0z7YyXlSssdVreBLojJ5kRV+N5UWyD9Q/j1ZgjmUusPer2kMGKtW+R6uc/oBUPJFGpxwU6SnrTC/Ff0EJNUxCKxIjdZwvb5LqDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=RuqfKSZE; arc=none smtp.client-ip=80.12.242.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FRJdog+i"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-602346b1997so4447960a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748324658; x=1748929458; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eUL8lDW22vLb7RElzsLP3i8M2Oe2Xcske9JV5C/6kUQ=;
-        b=FRJdog+i5C9rTNFQQRXx1XIPcPhMCarQH045+DXvxAW54Kux5KP8mfk/0JyGrtMkBO
-         9/bZmw+FlznDOpdOCCFmp4HuWZ+B9NDtg5FkA/hV4F9gR3sZt5PTI7PlPhKU4Y9aEnfx
-         ZJTk/YURVKQ1rrd4/QU4pMwZ9ztNTQEs4BEQGbT11bUo1xS/qod57XCxAG6WwOOR06uM
-         nzHrbbXvYeGAkAcJtrgYN1cILl40RuPYuD6JTZPnMYOZzT76KAXCJjnA/6xL9LAWFfip
-         SfoeJ+VAJMy0DQAqd/yT7l4k+aJhnuqmHiCuLEANOVdxnB4P834CRLNtXubawAWBEgEo
-         bshQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748324658; x=1748929458;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eUL8lDW22vLb7RElzsLP3i8M2Oe2Xcske9JV5C/6kUQ=;
-        b=Mdif5KoSQI8QmE3rElfdh1ZT1Hu0zZu+hX+lX8y1abdIL3zn+GCseRpZDttBUHuJBw
-         hdJj/A8rqzar8jGcwAe+DzbKNswZoVzMnWupsGQMqhU3qZQrx8MFE5tHweOstkWa7KQ6
-         LGne8YbAKd2nS/kTpuw3K45aMqZHdUliLf1tFubhVH7XWrThE+8KwZTLn8jJsqBA0FjP
-         ckjKhZqhQYEB+Pb2hzUwMQaMY432uo2QFbNT48GAo92czPIwuGN6aY3+/8do3fiaS7Hr
-         4APbCDAWen50F06qUzKaY6Hv+76Snl0VQAIqcfMcgycnBTSCv6tHBJ58JYmgAokhWxEj
-         Meuw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9VBudecuLAXau6LGi7yrNmntEM/sUlhHt+HAR2QprSg7k97gxgovjQ66TspC/u9yWgvnjlYgr9FJmuhs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXLNhPZJvXcxKwTQPURCAojqf+YX5uTZInNoxstejd5NtPKKHA
-	+skMBVevLmWKDGKklsa6JV+Vc5homO1zVksuYpn4VlqvspTeBTmBaxSHPjcOCOh5uV4=
-X-Gm-Gg: ASbGncvbZrhN88gtBPdFNU0nHYYlAc2u8vBlP+6bV658ManlR3394ciHIvP7tPYUxg0
-	sSdoVt4G65AP2fcOH+EZAcOy98phJdcz7ONxBMLlk6cl4784Evet4i39orrY30FjT8t08GjbaNs
-	xaK6vSSR/pVlcfVA/ohUPhAqbewY5CVWniOkbo5s47klz6oAAbPfBwo16VExGy7Ya1FyawASzlI
-	RxgToZdp0Gwsbgju8cMm+9USM66A10GDnm1MP1Wu+tLz2yHl/lbOVpSsWHytdo/mBtxEHpV7wzM
-	v2EyZQVDxteB+P9kgemJKp4XPwPIJd+7uiJCgoMBM6xtJAyBpCdpFuomClnZnvMVfn6OejVK+O+
-	AIxHpoOeQdA==
-X-Google-Smtp-Source: AGHT+IE46/UjJ5dKUXhWdkEtnSF7wnOr5rN4gbE3tyVKEXYOZCsNu8RVbstqI21IkhEz384O/W1Jhw==
-X-Received: by 2002:a17:907:7207:b0:ad8:9428:6a32 with SMTP id a640c23a62f3a-ad894286ce1mr15686366b.26.1748324658434;
-        Mon, 26 May 2025 22:44:18 -0700 (PDT)
-Received: from localhost (hf94.n1.ips.mtn.co.ug. [41.210.143.148])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad88d0556a4sm62772266b.34.2025.05.26.22.44.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 22:44:18 -0700 (PDT)
-Date: Tue, 27 May 2025 08:44:14 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] regulator: max20086: Fix refcount leak in
- max20086_parse_regulators_dt()
-Message-ID: <aDVRLqgJWMxYU03G@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="RuqfKSZE"
+Received: from [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+ ([IPv6:2a01:cb10:785:b00:8347:f260:7456:7662])
+	by smtp.orange.fr with ESMTPA
+	id Jn6TuvW38K8x9Jn6TuJ1uT; Tue, 27 May 2025 07:44:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1748324645;
+	bh=XaSDramaQ4ealF19zsjhv/7XrCvZ3oUf+OpS7nGNI+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=RuqfKSZEr3CG4BWdedgN5eVB3GxhSwHwxSTbYH9h7RUR5j4mU7wXvS51e1Eh7spnr
+	 VZEt6ixH2w73IfHBCz5gbF34YZwiMMuv7x1QVLLUUCUT+p7r4eF18zjdglLAoJjfde
+	 DueN8tNY+/fcyYDpvtdPpXgf5+K7jCKExyhWjWb1DJe+Zn0X2ljOpOrEXOib0oNTwO
+	 ssnhI8HZFd+1ocoiNCg7SDPLh4//RcuYV9+AUWMlULPgxE8SC60zHwDLXa0DJMeCDe
+	 ZT6vkRllvZ0LUWkTBi4kM1dsd1X72xNeKq97GF7SJ1LGiThP56Rytoh3UjKmXv3Ycd
+	 LAW+0luDsoOxQ==
+X-ME-Helo: [IPV6:2a01:cb10:785:b00:8347:f260:7456:7662]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Tue, 27 May 2025 07:44:05 +0200
+X-ME-IP: 2a01:cb10:785:b00:8347:f260:7456:7662
+Message-ID: <be687d2d-4c16-46d6-8828-b0e4866d91de@wanadoo.fr>
+Date: Tue, 27 May 2025 07:43:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: dwmac-rk: No need to check the return value of the
+ phy_power_on()
+To: =?UTF-8?B?5p2O5ZOy?= <sensor1010@163.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ jonas@kwiboo.se, rmk+kernel@armlinux.org.uk, david.wu@rock-chips.com,
+ wens@csie.org, jan.petrous@oss.nxp.com
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250526161621.3549-1-sensor1010@163.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250526161621.3549-1-sensor1010@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-There is a missing call to of_node_put() if devm_kcalloc() fails.
-Fix this by changing the code to use cleanup.h magic to drop the
-refcount.
+Le 26/05/2025 à 18:16, 李哲 a écrit :
+> since the return value of the phy_power_on() function is always 0,
+> checking its return value is redundant.
 
-Fixes: 6b0cd72757c6 ("regulator: max20086: fix invalid memory access")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/regulator/max20086-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Can you elaborate why?
 
-diff --git a/drivers/regulator/max20086-regulator.c b/drivers/regulator/max20086-regulator.c
-index b4fe76e33ff2..fcdd2d0317a5 100644
---- a/drivers/regulator/max20086-regulator.c
-+++ b/drivers/regulator/max20086-regulator.c
-@@ -5,6 +5,7 @@
- // Copyright (C) 2022 Laurent Pinchart <laurent.pinchart@idesonboard.com>
- // Copyright (C) 2018 Avnet, Inc.
- 
-+#include <linux/cleanup.h>
- #include <linux/err.h>
- #include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
-@@ -133,11 +134,11 @@ static int max20086_regulators_register(struct max20086 *chip)
- static int max20086_parse_regulators_dt(struct max20086 *chip, bool *boot_on)
- {
- 	struct of_regulator_match *matches;
--	struct device_node *node;
- 	unsigned int i;
- 	int ret;
- 
--	node = of_get_child_by_name(chip->dev->of_node, "regulators");
-+	struct device_node *node __free(device_node) =
-+		of_get_child_by_name(chip->dev->of_node, "regulators");
- 	if (!node) {
- 		dev_err(chip->dev, "regulators node not found\n");
- 		return -ENODEV;
-@@ -153,7 +154,6 @@ static int max20086_parse_regulators_dt(struct max20086 *chip, bool *boot_on)
- 
- 	ret = of_regulator_match(chip->dev, node, matches,
- 				 chip->info->num_outputs);
--	of_node_put(node);
- 	if (ret < 0) {
- 		dev_err(chip->dev, "Failed to match regulators\n");
- 		return -EINVAL;
--- 
-2.47.2
+Looking at  (1], I think that it is obvious that non-0 values can be 
+returned.
+
+
+CJ
+
+[1]: 
+https://elixir.bootlin.com/linux/v6.15/source/drivers/phy/phy-core.c#L305
+
+> 
+> Signed-off-by: 李哲 <sensor1010@163.com>
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 6 +-----
+>   1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> index 700858ff6f7c..6e8b10fda24d 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> @@ -1839,11 +1839,7 @@ static int rk_gmac_powerup(struct rk_priv_data *bsp_priv)
+>   		dev_err(dev, "NO interface defined!\n");
+>   	}
+>   
+> -	ret = phy_power_on(bsp_priv, true);
+> -	if (ret) {
+> -		gmac_clk_enable(bsp_priv, false);
+> -		return ret;
+> -	}
+> +	phy_power_on(bsp_priv, true);
+>   
+>   	pm_runtime_get_sync(dev);
+>   
+
