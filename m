@@ -1,81 +1,50 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52E6C248F7B
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E19B24DCF4;
+	Tue, 27 May 2025 08:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336045; cv=none; b=lHWwI8xFFBTpkve9ZSJYLr293nFPvBP26UyghVlR/h+Mk4Q1bTKJonWyI6ZfJpS6fPv6cigpKXQi4nG+bvkLfw9tWyt22PC9EuxS6LAVZVrZSxCAxBvAh/3wFY36afR2bwSXpFu2DpzAbf1P5WSFo3ISjMEtJO1ZmBt73YXSPG8=
+	t=1748336049; cv=none; b=iRpE3bM9WF4cUU10rnDNIHW+XP7Ae/10SodeBXbcaV8We8iQihAEuvHUTVz8AyskHD9C3kf1dmQ4fyEs6Tj9cLBjx4wYAtUPgcYjjMCRjnYc4b9DH/i7WvUercHckbrgb9Y1eY+y2/CSrF4hesZvuLhf9PdAaWzft5bpnqPOg4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336045; c=relaxed/simple;
-	bh=XF5VzNvpeKGlQPwfHqmEm5o0Bq1rCBURjliIbksP/e8=;
+	s=arc-20240116; t=1748336049; c=relaxed/simple;
+	bh=ahN1juhOBybAptIvDNG/Uw4hA0zokWa6fSCXBMIa8ZQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OFQeNQXYn7jzCO7W/v7x9tSAqBDkwD9f/ISYDwSLgwxiqZV+bTaWUiENMznpy9Jvc+mb6wcCPpxyXqy+O4QuBfhfsMxOEzABKL8OYgZ5gIucN429VaGJJuTRCx/rG7iLl2DjWejpl2rC9Hp0RUpHT4ZG9lLsyhVPFago6MkSf74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kUS6EvQK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=77nFOA09; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kUS6EvQK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=77nFOA09; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=n2UQcxTjO5gmaZAE3lXE29S1vBUxD/UgurErAVj18m4n552fcTGuJNzeLmzbyb/MEIZOHSfeEaTOzPfCQNdTm7HUdbxlQg/2r3sm985Nte2aLsN923sK16L/9LVTLC6W81JXvK7KyuVUOE0I1nKKFppKj2katJRI9ijJlc/U/Bg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AokIbjWD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kUS6EvQK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="77nFOA09";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kUS6EvQK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="77nFOA09"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 49B8421A21;
-	Tue, 27 May 2025 08:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748336041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uFQ6WQesoTLzcyfD02l0QPHNSPhDb59xUd8IZZfyQM=;
-	b=kUS6EvQK08gjvUAwJMu9nzib34qgXcyY+Ek6VIZ10FYCSgapJPAcrUhQQQ9jVX4A5LEK/M
-	XctTJxELBEHjkXAXuuKKMtZC1vkFMeNHNxaxcyC79falwqjUwnjukXcisaHJichpiiWCjr
-	Fz7xQHbR8iex+h0YH59ap4/IsoOmoeg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748336041;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uFQ6WQesoTLzcyfD02l0QPHNSPhDb59xUd8IZZfyQM=;
-	b=77nFOA09xZOr8vwKXTWIgx4RlVM9tLjb2RMwNQq4zXUps3bfJIQn8Y3AmMCtO0yIoedoon
-	oGC1Hw8Af3Fk6aCw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=kUS6EvQK;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=77nFOA09
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748336041; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uFQ6WQesoTLzcyfD02l0QPHNSPhDb59xUd8IZZfyQM=;
-	b=kUS6EvQK08gjvUAwJMu9nzib34qgXcyY+Ek6VIZ10FYCSgapJPAcrUhQQQ9jVX4A5LEK/M
-	XctTJxELBEHjkXAXuuKKMtZC1vkFMeNHNxaxcyC79falwqjUwnjukXcisaHJichpiiWCjr
-	Fz7xQHbR8iex+h0YH59ap4/IsoOmoeg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748336041;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1uFQ6WQesoTLzcyfD02l0QPHNSPhDb59xUd8IZZfyQM=;
-	b=77nFOA09xZOr8vwKXTWIgx4RlVM9tLjb2RMwNQq4zXUps3bfJIQn8Y3AmMCtO0yIoedoon
-	oGC1Hw8Af3Fk6aCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C177B1388B;
-	Tue, 27 May 2025 08:54:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Q1XCLqh9NWiPTAAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 27 May 2025 08:54:00 +0000
-Message-ID: <25c23f9d-4fa0-4cad-9c96-43c25e018113@suse.de>
-Date: Tue, 27 May 2025 10:54:00 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AokIbjWD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748336047; x=1779872047;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ahN1juhOBybAptIvDNG/Uw4hA0zokWa6fSCXBMIa8ZQ=;
+  b=AokIbjWDa8jXkKJLrR+vqWqvCXmdQ8Ljn1+SvjcvlToZoa0G927Y2kQO
+   1EN9fHb79Pj1AjGmvaICX+1To1nfyiUOS8/X+auVsfb6hin+vtFjTBY6X
+   iLsa90ehVtJfqpP0O21a+HdA/yw+gkmWjaOMphHZygw6u+OkLpwqyVEQh
+   +yGLoEQXXaEN7krJiyrq5BACuGs5pgGkeyx8BMQzn+Ny3v3iIndsJbDyO
+   yWQk+12NBdZ+AGMzU+AACpPderNS3xEm8KohEJhNXCi+vvZAuFLHig0Qw
+   10HY3oL3Dw0o/9U7m5kZmG2pFkaSo8jKtI4+Tyv6v/Fi8h77mwcMAneGj
+   g==;
+X-CSE-ConnectionGUID: Wncp+vI/RNGk+GoE0mwgfg==
+X-CSE-MsgGUID: L/L0pOddRHinkE2tPM0zaw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50473919"
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="50473919"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:54:06 -0700
+X-CSE-ConnectionGUID: DJWU2wIBQVGR2iHz4Ab5dQ==
+X-CSE-MsgGUID: mwknysU4Q3qMo9InnvRemg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="142717170"
+Received: from unknown (HELO [10.238.11.3]) ([10.238.11.3])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:53:47 -0700
+Message-ID: <1c5cfc23-3f63-404d-a4bf-030c24412b20@linux.intel.com>
+Date: Tue, 27 May 2025 16:53:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,106 +52,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
- until creating bitmap
-To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, xni@redhat.com,
- colyli@kernel.org, song@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-8-yukuai1@huaweicloud.com>
- <d2fabdfd-229d-4043-ad27-61bac1e1f6d2@suse.de>
- <d95b41a0-c1aa-8b8b-d959-05e41eee3a7f@huaweicloud.com>
+Subject: Re: [RFC PATCH v2 03/51] KVM: selftests: Update guest_memfd_test for
+ INIT_PRIVATE flag
+To: Ackerley Tng <ackerleytng@google.com>, Ira Weiny <ira.weiny@intel.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
+ ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
+ anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
+ bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
+ chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
+ david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
+ erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+ haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+ isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com,
+ jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com,
+ jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com,
+ kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev,
+ kirill.shutemov@intel.com, liam.merwick@oracle.com,
+ maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org,
+ mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au,
+ muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es,
+ oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com,
+ paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk,
+ peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+ quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+ quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+ quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
+ richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
+ roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
+ steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
+ tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
+ vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
+ vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
+ willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
+ yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <65afac3b13851c442c72652904db6d5755299615.1747264138.git.ackerleytng@google.com>
+ <6825f0f3ac8a7_337c392942d@iweiny-mobl.notmuch>
+ <diqzmsbcfo4o.fsf@ackerleytng-ctop.c.googlers.com>
 Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <d95b41a0-c1aa-8b8b-d959-05e41eee3a7f@huaweicloud.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <diqzmsbcfo4o.fsf@ackerleytng-ctop.c.googlers.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 49B8421A21
-X-Spam-Flag: NO
-X-Spam-Level: 
-X-Spam-Score: -4.51
+Content-Transfer-Encoding: 7bit
 
-On 5/27/25 09:53, Yu Kuai wrote:
-> Hi,
-> 
-> 在 2025/05/27 14:13, Hannes Reinecke 写道:
->> On 5/24/25 08:13, Yu Kuai wrote:
->>> From: Yu Kuai <yukuai3@huawei.com>
+
+
+On 5/17/2025 1:42 AM, Ackerley Tng wrote:
+> Ira Weiny <ira.weiny@intel.com> writes:
+>
+>> Ackerley Tng wrote:
+>>> Test that GUEST_MEMFD_FLAG_INIT_PRIVATE is only valid when
+>>> GUEST_MEMFD_FLAG_SUPPORT_SHARED is set.
 >>>
->>> Currently bitmap_ops is registered while allocating mddev, this is fine
->>> when there is only one bitmap_ops, however, after introduing a new
->>> bitmap_ops, user space need a time window to choose which bitmap_ops to
->>> use while creating new array.
+>>> Change-Id: I506e236a232047cfaee17bcaed02ee14c8d25bbb
+>>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>>> ---
+>>>   .../testing/selftests/kvm/guest_memfd_test.c  | 36 ++++++++++++-------
+>>>   1 file changed, 24 insertions(+), 12 deletions(-)
 >>>
-[ .. ]
->>> @@ -6093,11 +6104,6 @@ struct mddev *md_alloc(dev_t dev, char *name)
->>>           return ERR_PTR(error);
->>>       }
->>> -    if (md_bitmap_registered(mddev) && mddev->bitmap_ops->group)
->>> -        if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
->>> -            pr_warn("md: cannot register extra bitmap attributes for 
->>> %s\n",
->>> -                mdname(mddev));
->>> -
->>>       kobject_uevent(&mddev->kobj, KOBJ_ADD);
->>>       mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, 
->>> "array_state");
->>>       mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, 
->>> "level");
+>>> diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
+>>> index 60aaba5808a5..bf2876cbd711 100644
+>>> --- a/tools/testing/selftests/kvm/guest_memfd_test.c
+>>> +++ b/tools/testing/selftests/kvm/guest_memfd_test.c
+>>> @@ -401,13 +401,31 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
+>>>   	kvm_vm_release(vm);
+>>>   }
+>>>   
+>>> +static void test_vm_with_gmem_flag(struct kvm_vm *vm, uint64_t flag,
+>>> +				   bool expect_valid)
+>>> +{
+>>> +	size_t page_size = getpagesize();
+>>> +	int fd;
+>>> +
+>>> +	fd = __vm_create_guest_memfd(vm, page_size, flag);
+>>> +
+>>> +	if (expect_valid) {
+>>> +		TEST_ASSERT(fd > 0,
+>>> +			    "guest_memfd() with flag '0x%lx' should be valid",
+>>> +			    flag);
+>>> +		close(fd);
+>>> +	} else {
+>>> +		TEST_ASSERT(fd == -1 && errno == EINVAL,
+>>> +			    "guest_memfd() with flag '0x%lx' should fail with EINVAL",
+>>> +			    flag);
+>>> +	}
+>>> +}
+>>> +
+>>>   static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
+>>>   					    uint64_t expected_valid_flags)
+>>>   {
+>>> -	size_t page_size = getpagesize();
+>>>   	struct kvm_vm *vm;
+>>>   	uint64_t flag = 0;
+>>> -	int fd;
+>>>   
+>>>   	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
+>>>   		return;
+>>> @@ -415,17 +433,11 @@ static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
+>>>   	vm = vm_create_barebones_type(vm_type);
+>>>   
+>>>   	for (flag = BIT(0); flag; flag <<= 1) {
+>>> -		fd = __vm_create_guest_memfd(vm, page_size, flag);
+>>> +		test_vm_with_gmem_flag(vm, flag, flag & expected_valid_flags);
+>>>   
+>>> -		if (flag & expected_valid_flags) {
+>>> -			TEST_ASSERT(fd > 0,
+>>> -				    "guest_memfd() with flag '0x%lx' should be valid",
+>>> -				    flag);
+>>> -			close(fd);
+>>> -		} else {
+>>> -			TEST_ASSERT(fd == -1 && errno == EINVAL,
+>>> -				    "guest_memfd() with flag '0x%lx' should fail with EINVAL",
+>>> -				    flag);
+>>> +		if (flag == GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
+>>> +			test_vm_with_gmem_flag(
+>>> +				vm, flag | GUEST_MEMFD_FLAG_INIT_PRIVATE, true);
+>> I don't understand the point of this check.  In 2/51 we set
+>> GUEST_MEMFD_FLAG_INIT_PRIVATE when GUEST_MEMFD_FLAG_SUPPORT_SHARED is set.
 >>
->> But now you've killed udev event processing.
->> Once the 'add' event is sent _all_ sysfs attributes must be present,
->> otherwise you'll have a race condition where udev is checking for
->> attributes which are present only later.
+>> When can this check ever fail?
 >>
->> So when moving things around ensure to move the kobject_uevent() call, 
->> too.
-> 
-> I do not expect the bitmap entries are checked by udev, otherwise this
-> set can introduce regressions since the bitmap entries are no longer
-> existed after using the new biltmap.
-> 
-> And the above KOBJ_ADD uevent is used for mddev->kobj, right? In this
-> case, we're creating new entries under mddev->kobj, should this be
-> KOBJ_CHANGE?
-> 
-Yes, please.
+>> Ira
+> In 02/51, GUEST_MEMFD_FLAG_INIT_PRIVATE is not set by default,
+> GUEST_MEMFD_FLAG_INIT_PRIVATE is set as one of the valid_flags.
+>
+> The intention is that GUEST_MEMFD_FLAG_INIT_PRIVATE is only valid if
+> GUEST_MEMFD_FLAG_SUPPORT_SHARED is requested by userspace.
+>
+> In this test, the earlier part before the if block calls
+> test_vm_with_gmem_flag() all valid flags, and that already tests
+> GUEST_MEMFD_FLAG_SUPPORT_SHARED individually.
+>
+> Specifically if GUEST_MEMFD_FLAG_SUPPORT_SHARED is set, this if block
+> adds a test for when both GUEST_MEMFD_FLAG_SUPPORT_SHARED and
+> GUEST_MEMFD_FLAG_INIT_PRIVATE are set, and sets that expect_valid is
+> true.
+Maybe it's more clear to move this case out of the loop?
 
-Cheers,
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+>
+> This second test doesn't fail, it is meant to check that the kernel
+> allows the pair of flags to be set. Hope that makes sense.
+
