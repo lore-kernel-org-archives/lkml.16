@@ -1,85 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A3271468
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:51:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3435D274FD9;
+	Tue, 27 May 2025 13:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353876; cv=none; b=PFmtZsv1nrw/8zAPHFR0uBaGiaWLj+dEKKsD3tf33fK5J6ILwnPg4qCxT/5yBZMM9L0nZJqMxah0zXpyaapIXb3O4vZAsMFHmFjUi4ejwolpZ8+8+q/a/2qOgX0L1wpEIdqeEJzg4QdEq50TNKU6nlDKbqtKHdMauHlZDBix58E=
+	t=1748353897; cv=none; b=ClguTCSov6jEzU6h8L0UcndsEegDRBE2HYBUiKLuyn+r/KlIVcECAxfxjCEckZOEcQzqxO8rKVk3V0HrMCOTe6WG21ITIupv96wO6c1vOxjfcO/m/NpnVN20QpIle1wiscuIV0iJqSMTkmYMlIjlEgvIUvNa+mzi7bwf4xMb6JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353876; c=relaxed/simple;
-	bh=Xjm1UOsIF4B3Ar2Lun4M/5FKyHNeXHHMjLqO5gqdvxg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SOjgYCGudq/e8+zlgUoy5mtBqOg2GtrEKUd+euqbIdbQW4WNTcwi6zF1g/pp4iOpY8cIJzAd7fnU91qV8n/7BkKu2T7czFitiDCAKiroCu8c18TEY9MICUI1RIOVd/UFHHUJB2+gcEGJWXqYPbKunfl73sA7BjEcXxpOcMyLvr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wEP++0Lo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SAHv6+tz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748353897; c=relaxed/simple;
+	bh=7F1ee+yy/Njni7Dw2zSyIXqtdK6yXJhzoen+bfGcQ68=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ezqWbBTNPUmuOTgOUNZMPjpNWqbISrWk3PYMwOF7+uUjDX+Lm7DoEqohUB4IXBnzSEUus1uYWC3e+sZQ8dWv96eRWAoJ8sogzwxEa0dbXNgNdJ796jaX8skH5ys260eI+WPaefzDnqqrWSLwGqn608Sw/UoVlEb/BnG0x4KeuaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsA3NYur; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wEP++0Lo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SAHv6+tz"
-Date: Tue, 27 May 2025 15:51:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748353872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ds/AnRw/jhbjzyOWkUzO65tFmw9WcAGz+APKGjnNuuk=;
-	b=wEP++0LoI9x2DikxJHRC2V4nqusNd0UlMxHe0D8XmTeP5XPp0NTO+wrwDta36RvayRwKHS
-	y80pbLZeAcUtYg7lBwTpvHQQZFkr2xA+MLGTdqphu9ygVyRfzF4nttyO6uQNIuKPOCgUy7
-	fqxpVw4/FC9tZUYhKzVtf4gPyqlYUL3o4JBqdFryMLLu7LJ4ABGHx1/3pyPL8q4p5pmf4U
-	EgrKz8eSLgcvPm0Lpvv51YHnIlVkb351KDsZ66jLhMhHXsRbjY9l4eqfkR+vYz4WJV7x4V
-	GKgLRNJcrexaGjMtBEVLXKp+DwzIHP0a+4v7hrcvj3FGUxF6tUIqdPNknQPxlQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748353872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ds/AnRw/jhbjzyOWkUzO65tFmw9WcAGz+APKGjnNuuk=;
-	b=SAHv6+tzRb4kodTCP2PWZVPvaUQ+sN11E2V4Vueqn6oQgnS7thkjR2f1LV2Uaytt71j6Ek
-	Dcou20PbDW87f/BQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 00/12] rv: Add monitors to validate task switch
-Message-ID: <20250527135111.NFCeqkvT@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250521071544.1adrW9ry@linutronix.de>
- <719b183dbf2dadac8d5359cd68ff4b51769752de.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsA3NYur"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b26ed340399so355760a12.2;
+        Tue, 27 May 2025 06:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748353895; x=1748958695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7F1ee+yy/Njni7Dw2zSyIXqtdK6yXJhzoen+bfGcQ68=;
+        b=PsA3NYur8KJIrZv559PYgIeX2mhFNpgo7c3xZTqtCsr+bjIjuNQACrPMOzgjTAldaJ
+         0jC2+Vv5y1AKDxlAXt3K4HpYOgaXOGqIt/kJRYsEl7xKRak4i/dnFkMc5Mo/AbGMsxhs
+         KjGINLQAsYlm3mHxVrGG4JYfKyC0xOGd0Os6ARUvzZgTAP/G5xldz7TUikzrbHLDyONR
+         yvGFUm2H6LosBk2mXhRhDeuy6hpgTE6zR2ZBgZXYp6cNXDPYRh9WES/+Ggk8LHQbeyMu
+         N7y0DFUULJTLxR/+UhKdTFRHKw6cTNCZE+KIBlplBjMgOWDSyd7nkBiBrbwtXIeam8cB
+         TqGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748353895; x=1748958695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7F1ee+yy/Njni7Dw2zSyIXqtdK6yXJhzoen+bfGcQ68=;
+        b=g9E+hg+c+ho8G9LDYFqWtu8mAkyzyT40OvPBEwfF3wKdprALe9GVd49/jdtMQpeFVM
+         oBxES3+IHpYpyFyKvEvEeuQWSi+t3nLduXhQCXjAgrT/VgKMSiiw2GkgAy6qpKyxd2tX
+         EEaZSOZM9E4MdYRaUFQUJn4mWvdEYJIrY4EOQzFP++xIJtmFFWobf6MchqKfi+Mh9RKz
+         b42VOlmk/pGrbxAHuM7uhgolw5Xy5MxNr/ghyrsEI1P3fxPaPrRKfeKInlxvSAffPOBJ
+         ullMfzwxZe6PEUb7iqtqftBoFukLR9U0IrIt3H6uy7k2CbPcuQ8FzmOTzc3UlA0DkW9o
+         SO6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVET4+Pn34GeonO/HRDWVZBLtK3SYS3Dh8V1UhU9HfG2P6LRk3jLwtySkt7u6ORH1MWSXtFLI0fxLwniz40CP8=@vger.kernel.org, AJvYcCX5S/zamVEwk2HWT7LA6y5eL4Blug/dSVl8CO87yEqRFY06BP47rjEudqyp6kzVF4eLxmuHypEM3V1FVG6Xt2tO@vger.kernel.org, AJvYcCXvJSVQteSAwXD51Ws+o7oy06553DXV6ylxMOFgjrng8vTg1khY8DynMi3SnKHyNxlbAQ/FzHU4NhUmAiM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYIG6ctxoTfq5yZT7qvUQqAlt9s7yXkChPzpbcLyKmu6PN7VNH
+	l/yTxkpLMWB1r5eF/4nKZ2Mf50Pz1ahaHnOxTDmUn1o/l9SJ+ItUftdAMZnxUikmgeaTPzdiNOY
+	OTbdSgd621mq/qTnTBZrRf88t//41I+k=
+X-Gm-Gg: ASbGncumfSFYQv6I67olSQvYpwZNhOba0lVC4WgbA25WLrThIkSKFr9RUSi7zZnI8Uw
+	VsuNjCJZ87EXtAotrCQaud5v5YcNK1jPpO2S+2ztK3ZibXUPdwo1SZcXgW6kb2GmMv8ceeUeayH
+	xepNgVNSUHCXiUTE10XBPueZo+Oe7AnwDBY3hOIgyBCNM=
+X-Google-Smtp-Source: AGHT+IEtIQ1z32zAY2NEFKsK2DZNLLbwjhnGL64WMVavBityRy9+1/bAxBjuVOOV9i2JKI6LmOxTYNC0DZF59fX+M1Y=
+X-Received: by 2002:a17:90b:17cb:b0:305:5f20:b28c with SMTP id
+ 98e67ed59e1d1-3110f33ecacmr7596771a91.5.1748353895332; Tue, 27 May 2025
+ 06:51:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <719b183dbf2dadac8d5359cd68ff4b51769752de.camel@redhat.com>
+References: <20250526162429.1114862-1-y.j3ms.n@gmail.com> <DA6XI37GNRHE.1FN5893KE2OIG@kernel.org>
+In-Reply-To: <DA6XI37GNRHE.1FN5893KE2OIG@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 27 May 2025 15:51:22 +0200
+X-Gm-Features: AX0GCFsfs3QdZvA4icfA5wPLKbrCfW_02pE3_eM6-6sXiZ7RxS8FT94BATqtVvY
+Message-ID: <CANiq72=ue5Fw+7TPPpRcK+0Zk4KTRhH+5YnAY8BQQVX_4YUWqA@mail.gmail.com>
+Subject: Re: [PATCH] rust: kunit: use crate-level mapping for `c_void`
+To: Benno Lossin <lossin@kernel.org>
+Cc: Jesung Yang <y.j3ms.n@gmail.com>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 09:31:38AM +0200, Gabriele Monaco wrote:
-> On Wed, 2025-05-21 at 09:15 +0200, Nam Cao wrote:
-> > On Wed, May 14, 2025 at 10:43:02AM +0200, Gabriele Monaco wrote:
-> > > I'm keeping this as RFC as I'm planning to make it ready after
-> > > merging
-> > > the LTL series [1]
-> > > 
-> > > This series adds three monitors to the sched collection, extends
-> > > and
-> > > replaces previously existing monitors:
-> > 
-> > What is your base? I cannot apply the series (maybe because I'm
-> > illiterate
-> > on git...)
-> 
-> Mmh, it /was/ linux-next, I'm not sure if that gets rebased and breaks
-> stuff, but it shouldn't.
+On Tue, May 27, 2025 at 2:06=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> We don't need to explicitly import it, as `c_void` is present in the
+> prelude since 3d5bef5d47c3 ("rust: add C FFI types to the prelude").
 
-Turned out it was because this series conflicts with ac01fa73f530
-("tracepoint: Have tracepoints created with DECLARE_TRACE() have _tp
-suffix")
+Hmm... But the prelude isn't there yet in this patch, no? i.e. our
+prelude is (so far) not a "real prelude" that gets injected
+automatically. So I guess you mean importing the prelude instead.
 
-I resolved the conflict while applying, and all is good.
+(It is imported in the KUnit series anyway, so it will llikely be
+there either way)
 
-Nam
+Thanks!
+
+Cheers,
+Miguel
