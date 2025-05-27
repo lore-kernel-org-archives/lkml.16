@@ -1,92 +1,123 @@
-Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB8B27144E;
-	Tue, 27 May 2025 13:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA90B26FA4F;
+	Tue, 27 May 2025 13:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748350824; cv=none; b=FfaLS6cPoEKmbIejWTZCpR+IZZwLbk0bxf0p6ZqCo5yw0XWioa9vdJbDOUWp0+30OR/kwYo9ovcbYNTlognySqRfRvpvQ/QT1FsasGteRUOpeCctsW9yOnPlRDqYBf0AQR9np2BRCRUB8VD2Tel3DNifKl5FTXvZxrokPBDjQ8Y=
+	t=1748350835; cv=none; b=DpFE5lofZ+wRPvsyKYUpVdYUN6ZEZ1YVAS/BzhcTXlX4x63hV59Vzaav4hp4ySs9Z+ao+jYVrGUXh4IOBRDm8uQ4cwZ1mxB7yvnfR71W8vsg4ofWEGWsxKQT5qhq6nJi9jEUfbQEIbFypYjfMUlhWChA7gXgiJk4EUYo3V/cLNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748350824; c=relaxed/simple;
-	bh=MEqM4vWFkkhwqxSh+gqQSgVUNNIX+HgRMV/7LAhpF48=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p6aqrcWCBJDP3DRcm5bH2LOQGNGNLf8gQVsOVaQigUvL5E5uYR5PbLMpBzU5hyn7RZGG2loaGVGUZV+xCoInu7qxyAPD52zp1nMhdJTuRBKawOWGbt1I8W5ZP58HFnC3l8weNtoiUwRTQ7IxNj/MINcC4LKK4VEyCzRl+if4nnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=IVNUtryi; arc=none smtp.client-ip=211.125.140.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1748350835; c=relaxed/simple;
+	bh=rH0fS1EkuuKxnjq68htChxno+6ZqIneRHLz2oaYXSAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LTF8XOYCCWyyzc/o5vFREOdo3r02nO2JOalOZTHIU76pQYJC7h1u3LA9R2aTu4FpejXj2CUNpgDExIm6s9QwioFTZchsbOGe8CFys4dARwXsU6H/NpWlXkSAru24RSTK+p7vkZGuBpxIZ/UFXXmx96IcxLrzFnY9jIrRxi9fUCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCyiXWXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="IVNUtryi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1748350822; x=1779886822;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=+Lxgs3He9IdDt6ifvL+tC57fCEzAPriv444VErqusZI=;
-  b=IVNUtryiJWuouNq1l0dQWIl/runxMaBydXiYlrJSEXphR3/1hD1B7sF6
-   zN6VeF+lC7dPgt2LRM3dd/iD8jxFZXFiQ59ghmfzEcN8i/RCAdId6TXuE
-   dzEaJHe40b2Atwv/saw2RCvF5YdCJppegipAoES58vWdJSb3kNVG6CSN7
-   zvHYiL64XzsGFkknEGckoaabfdm4CstWBP9tK6Y3HlIcjZsVc3VC6m7Cb
-   9vgH12h7NgtHA4MoU+uK5/0L0qiMjh+at3iDKwnCuY3lEr6mMUsHbhPiG
-   /pvxP9IKK7qGgtorUsIZ0CgZZFnNI3fsh9bkrNU/oYekU8Li2w0YHAI5H
-   g==;
-Received: from unknown (HELO jpmta-ob1.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::6])
-  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:00:14 +0900
-X-IronPort-AV: E=Sophos;i="6.15,318,1739804400"; 
-   d="scan'208";a="564893580"
-Received: from unknown (HELO [127.0.1.1]) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob1.noc.sony.co.jp with ESMTP; 27 May 2025 22:00:14 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-Date: Tue, 27 May 2025 21:59:10 +0900
-Subject: [PATCH v2 2/2] cpufreq, docs: userspace: mention variation in freq
- due to hw coordination
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCyiXWXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92C6C4CEE9;
+	Tue, 27 May 2025 13:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748350835;
+	bh=rH0fS1EkuuKxnjq68htChxno+6ZqIneRHLz2oaYXSAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SCyiXWXF4GD5OzmsDdQm2QCmHs7Xi1pg9wMxuwnVVw/8vkuYASFSMMHdip77oyxSj
+	 tG5te1IK4mq50ciNIrEYi85zEql1zCDdnDDVCGPt1CbiJ9Rs6eW8JrIErnzB21A8E+
+	 q3uNIMmCP+OaD/aBHdF70fX0jjuiilWmXwyIK0MFA6Kt618+D5QeN/cAztiUxPldF1
+	 I8rnRBcwKcXHPPD5xL2q9zLQ5KVR3eqODR82grqgqX2zRz9ZEyFGW9dLjjhOVvtaAo
+	 IKypfo7BvCathejm9qT0X/ls7XOmb6/+Z2jz0gwXOb0ShLBLhgxULyVnX7LEIFYrop
+	 h4+pKxO03RMJA==
+Date: Tue, 27 May 2025 15:00:27 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: "Michal Wilczynski/Kernel (PLT) /SRPOL/Engineer/Samsung Electronics" <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH RFC 2/6] pwm: Add Rust driver for T-HEAD TH1520 SoC
+Message-ID: <aDW3a1sjeWWfwaq8@cassiopeiae>
+References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
+ <CGME20250524211521eucas1p1929a51901c91d1a37e9f4c2da86ff7b0@eucas1p1.samsung.com>
+ <20250524-rust-next-pwm-working-fan-for-sending-v1-2-bdd2d5094ff7@samsung.com>
+ <aDMHEcpJn8nyJHFV@pollux.localdomain>
+ <db8e34c9-daff-43d9-b79b-8ec1bc98a00f@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-userspace-governor-doc-v2-2-0e22c69920f2@sony.com>
-References: <20250527-userspace-governor-doc-v2-0-0e22c69920f2@sony.com>
-In-Reply-To: <20250527-userspace-governor-doc-v2-0-0e22c69920f2@sony.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>, 
- 20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com, 
- Shashank Balaji <shashank.mahadasyam@sony.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1009;
- i=shashank.mahadasyam@sony.com; h=from:subject:message-id;
- bh=MEqM4vWFkkhwqxSh+gqQSgVUNNIX+HgRMV/7LAhpF48=;
- b=owGbwMvMwCV2mPH4Ij++H1mMp9WSGDJMt8d+ezrz5p8Zc4++XMZS2b/l46ZnVzqZFF0tTO+7p
- Ggu3qPZ31HKwiDGxSArpsjyTmbdhYNWlk1fjzN8g5nDygQyhIGLUwAm0u/N8Fcwk+PKRIbawypr
- JXyvf/0qVhKaJFW0UlZkhxjz9YjF7dGMDOuEvr7/d2yVp/uUvpwjCbdsHwcuu+NSv2j1mwkVM1g
- /7WcDAA==
-X-Developer-Key: i=shashank.mahadasyam@sony.com; a=openpgp;
- fpr=EE1CAED0C13A3982F5C700F6C301C7A24E0EF86A
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db8e34c9-daff-43d9-b79b-8ec1bc98a00f@samsung.com>
 
-Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
----
- Documentation/admin-guide/pm/cpufreq.rst | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On Tue, May 27, 2025 at 02:44:57PM +0200, Michal Wilczynski/Kernel (PLT) /SRPOL/Engineer/Samsung Electronics wrote:
+> W dniu 25.05.2025 o 14:03, Danilo Krummrich pisze:
+> > On Sat, May 24, 2025 at 11:14:56PM +0200, Michal Wilczynski wrote:
+> >> diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
+> >> new file mode 100644
+> >> index 0000000000000000000000000000000000000000..4665e293e8d0bdc1a62a4e295cdaf4d47b3dd134
+> >> --- /dev/null
+> >> +++ b/drivers/pwm/pwm_th1520.rs
+> >> @@ -0,0 +1,272 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+> >> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+> >> +
+> >> +//! Rust T-HEAD TH1520 PWM driver
+> >> +use kernel::{c_st
+> >> +
+> >> +struct Th1520PwmChipData {
+> >> +    clk: Clk,
+> >> +    iomem: kernel::devres::Devres<IoMem<0>>,
+> > Why IoMem<0>? If you put the expected memory region size for this chip instead
+> > all your subsequent accesses can be iomem.write() / iomem.read() rather than the
+> > fallible try_{read,write}() variants.
+> The size of the memory region is not known at the compile time. Instead 
+> it's configured
+> via Device Tree. I'm not sure why it should work differently in Rust ?
 
-diff --git a/Documentation/admin-guide/pm/cpufreq.rst b/Documentation/admin-guide/pm/cpufreq.rst
-index 3950583f2b1549b27f568632547e22e9ef8bc167..30799f734ca5568002d790c1db0ced7454bbbc8d 100644
---- a/Documentation/admin-guide/pm/cpufreq.rst
-+++ b/Documentation/admin-guide/pm/cpufreq.rst
-@@ -398,7 +398,9 @@ policy limits change after that.
- 
- This governor does not do anything by itself.  Instead, it allows user space
- to set the CPU frequency for the policy it is attached to by writing to the
--``scaling_setspeed`` attribute of that policy.
-+``scaling_setspeed`` attribute of that policy. Though the intention may be to
-+set an exact frequency for the policy, the actual frequency may vary depending
-+on hardware coordination, thermal and power limits, and other factors.
- 
- ``schedutil``
- -------------
+There are two sizes:
 
--- 
-2.43.0
+  (1) The size of the actual MMIO region, which comes from the device-tree.
+  (2) The size of the MMIO region that the driver knows it requires to work.
 
+Let's say your driver uses registers with the following offsets.
+
+REG0_OFFSET = 0x0
+REG1_OFFSET = 0x4
+REG2_OFFSET = 0x100
+
+This means that the size of (2) is 0x100 + width of REG2 (let's say 0x4), which
+means that you can safely define your MMIO memory type as IoMem<0x104>.
+
+If you subsequently call pdev.ioremap_resource_sized() it will fail on runtime
+if the MMIO region defined in the device-tree does not have a size of at least
+0x104, i.e. (1) < (2). That's not a problem because if (1) < (2) your driver
+can't work anyways.
+
+In return, you can call the non-try variant of the read / write methods of
+IoMem, which do boundary checks on compile time and hence are infallible.
+
+Note that this does not prevent you to still call the try variants of read /
+write in case you also have to deal with dynamic offsets that are not known at
+compile time.
+
+I hope this helps.
+
+- Danilo
