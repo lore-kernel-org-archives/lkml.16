@@ -1,247 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C1E2F852;
-	Tue, 27 May 2025 01:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8DE249F9
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 01:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748308336; cv=none; b=k4rHWjpKh09SkNzjIR8JDwRCnFGe32S199F3kibay0WSBhUj6gtNNo/O9HQKdHs+mh30RhHRBvK7m22FCp12xLa+BDB8ZvMFHDB3wteCzpEYDwJlLr7vP7oh6GACbHZ9bJbzJivsGNPuhAd8S06QGGD2o1e6CLXIf5J0/QVRkkQ=
+	t=1748308700; cv=none; b=mqSrjHGU9EyWzoa9ZJAVQWRDjwy0Z7nAJiSkTik65ePJsiI7NhgS4HKTd7WvTJb/Y2cXQ4nOsQ8BOhgpgHITxgU4XRQqRuLPZj4k+r1/4Uk9xFPj49WC2JpVwamRly8O7BTNIpKJsfm1SVU04WpV9939mruC4K3YNrh1WgXHKk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748308336; c=relaxed/simple;
-	bh=NaabEAXMenskDJ3R96u3GW/+2mPpv4nvngHgm8i51Lc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VdWLb6ozmhg9PuD69DZg9Njdp/oDvicA6e07ol2BlvrGenVKkkykcRKuSypILc1FO75dj07UXpoI19pyasdPNvT3yQKGJ6hSZXVjFNHFhEscNqwTdw18FtX7N0rv21caOeLCpusNLou4PVnxW6+yKl+51+XUYCfFJsWVGF3Iz2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NqX+eQ4S; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748308700; c=relaxed/simple;
+	bh=xu3s7LH523naF5xkkfOiaQ9+Sz+N88qCwSYADD3keiU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XgZp2X3FntbjjzYLql6DDBr3PPHgvHwCkj45+fv9pN1Q788RPeW+Cwn3KXtm2DmJWKTixBhvLrm8AEA/wuQ125YLIng7FkHm9vf0K2HYhmst88eGNtSbftXZk8purBiYP9bY7p3q/Tg2Vp43gAXc8fHGLhhb1pxck9ummoXPD/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=P5+itliU; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NqX+eQ4S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748308335; x=1779844335;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NaabEAXMenskDJ3R96u3GW/+2mPpv4nvngHgm8i51Lc=;
-  b=NqX+eQ4Sn2Qk07pOzA1lxC+OlxBxdWFxDM7Krz0xyWi5SIA+648IRq5u
-   0b3ZX4x5RuI/AgxcU0IMh20HBulr0Fh6vHSeXAMj63jUoKkHxeaOkec/e
-   dJtxxeD23O9zH69TtK3Q1a0X7TUbHQks5G7znvwSgiPkzDmKErFOl7rOa
-   ATwSn4i9B/l3BzxFuSsK2+YhaM9WI8qhTCqfD9QEHXiz1ILZwY/isBGtN
-   h5D3iouKalJ0j98XHOKNgChHiM4OAGQyE71e8WRb1KIncTTbCpimgf3Ez
-   uFsdVSwMG6sP+jSD/xY0Gr8YPI34moPEEGlT7koBlHIkUQqcSPLuxN23s
-   A==;
-X-CSE-ConnectionGUID: f76kAKRRTfGmTCmieAmVXw==
-X-CSE-MsgGUID: ZOO3WVprTXm2baSuUoN6CQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50441038"
-X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="50441038"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 18:12:08 -0700
-X-CSE-ConnectionGUID: +Fgy8SvXTX6Hb8gi2pMf3A==
-X-CSE-MsgGUID: F+DAm4N9SnyoR6cqrBXwUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="143026312"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 26 May 2025 18:12:04 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uJirK-000Sme-1i;
-	Tue, 27 May 2025 01:12:02 +0000
-Date: Tue, 27 May 2025 09:11:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Quentin Schulz <foss+kernel@0leil.net>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
-	Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH 2/4] mfd: rk8xx-core: allow to customize RK806 reset
- method
-Message-ID: <202505270807.tc7zzrMf-lkp@intel.com>
-References: <20250526-rk8xx-rst-fun-v1-2-ea894d9474e0@cherry.de>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="P5+itliU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748308695; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=JcqVq5H72s7TakAUQdq3XZtzg5uRXBK5cREK+OnCK9A=;
+	b=P5+itliU09diCEvQlI2Zopz+0YoSzWj5IQpJ7j3L8XoW19uJ8sYrWsmgcOKJiJXsvJmdtYEAGUNqLQsqHEmW/BNL06DnhG/p4WawgtnbRiUC5IBu86jyyiIbXSoNEdM1qeu+5KfM0IzBAfFF86dLTpLZDXXeaEX371TP3pMSXLM=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WbveRtX_1748308692 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 27 May 2025 09:18:13 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>,  Bharata B Rao <bharata@amd.com>,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,
+  Jonathan.Cameron@huawei.com,  dave.hansen@intel.com,  gourry@gourry.net,
+  hannes@cmpxchg.org,  mgorman@techsingularity.net,  mingo@redhat.com,
+  peterz@infradead.org,  raghavendra.kt@amd.com,  riel@surriel.com,
+  rientjes@google.com,  sj@kernel.org,  weixugc@google.com,
+  willy@infradead.org,  dave@stgolabs.net,  nifan.cxl@gmail.com,
+  joshua.hahnjy@gmail.com,  xuezhengchu@huawei.com,  yiannis@zptcorp.com,
+  akpm@linux-foundation.org
+Subject: Re: [RFC PATCH v0 2/2] mm: sched: Batch-migrate misplaced pages
+In-Reply-To: <94BF4806-ABCD-4D01-8577-9E138A634815@nvidia.com> (Zi Yan's
+	message of "Mon, 26 May 2025 10:20:39 -0400")
+References: <20250521080238.209678-1-bharata@amd.com>
+	<20250521080238.209678-3-bharata@amd.com>
+	<62cef618-123c-4ffa-b45a-c38b65d2a5a3@redhat.com>
+	<AE28D27C-58C2-41A4-B553-50049E963745@nvidia.com>
+	<5d6b92d8-251f-463b-adde-724ea25b2d89@redhat.com>
+	<996B013E-4143-4182-959F-356241BE609A@nvidia.com>
+	<382839fc-ea63-421a-8397-72cb35dd8052@redhat.com>
+	<FF2F9A08-9BD8-4207-901D-AC9B21443BF6@nvidia.com>
+	<dbc7c66b-24c9-49f4-8988-a7eec1280ca8@redhat.com>
+	<94BF4806-ABCD-4D01-8577-9E138A634815@nvidia.com>
+Date: Tue, 27 May 2025 09:18:12 +0800
+Message-ID: <87a56yc0mj.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526-rk8xx-rst-fun-v1-2-ea894d9474e0@cherry.de>
+Content-Type: text/plain; charset=ascii
 
-Hi Quentin,
+Zi Yan <ziy@nvidia.com> writes:
 
-kernel test robot noticed the following build warnings:
+> On 26 May 2025, at 5:29, David Hildenbrand wrote:
+>
+>> On 22.05.25 19:30, Zi Yan wrote:
+>>> On 22 May 2025, at 13:21, David Hildenbrand wrote:
+>>>
+>>>> On 22.05.25 18:38, Zi Yan wrote:
+>>>>> On 22 May 2025, at 12:26, David Hildenbrand wrote:
+>>>>>
+>>>>>> On 22.05.25 18:24, Zi Yan wrote:
+>>>>>>> On 22 May 2025, at 12:11, David Hildenbrand wrote:
+>>>>>>>
+>>>>>>>> On 21.05.25 10:02, Bharata B Rao wrote:
+>>>>>>>>> Currently the folios identified as misplaced by the NUMA
+>>>>>>>>> balancing sub-system are migrated one by one from the NUMA
+>>>>>>>>> hint fault handler as and when they are identified as
+>>>>>>>>> misplaced.
+>>>>>>>>>
+>>>>>>>>> Instead of such singe folio migrations, batch them and
+>>>>>>>>> migrate them at once.
+>>>>>>>>>
+>>>>>>>>> Identified misplaced folios are isolated and stored in
+>>>>>>>>> a per-task list. A new task_work is queued from task tick
+>>>>>>>>> handler to migrate them in batches. Migration is done
+>>>>>>>>> periodically or if pending number of isolated foios exceeds
+>>>>>>>>> a threshold.
+>>>>>>>>
+>>>>>>>> That means that these pages are effectively unmovable for
+>>>>>>>> other purposes (CMA, compaction, long-term pinning, whatever)
+>>>>>>>> until that list was drained.
+>>>>>>>>
+>>>>>>>> Bad.
+>>>>>>>
+>>>>>>> Probably we can mark these pages and when others want to migrate the page,
+>>>>>>> get_new_page() just looks at the page's target node and get a new page from
+>>>>>>> the target node.
+>>>>>>
+>>>>>> How do you envision that working when CMA needs to migrate this exact page to a different location?
+>>>>>>
+>>>>>> It cannot isolate it for migration because ... it's already isolated ... so it will give up.
+>>>>>>
+>>>>>> Marking might not be easy I assume ...
+>>>>>
+>>>>> I guess you mean we do not have any extra bit to indicate this page is isolated,
+>>>>> but it can be migrated. My point is that if this page is going to be migrated
+>>>>> due to other reasons, like CMA, compaction, why not migrate it to the target
+>>>>> node instead of moving it around within the same node.
+>>>>
+>>>> I think we'd have to identify that
+>>>>
+>>>> a) This page is isolate for migration (could be isolated for other
+>>>>     reasons)
+>>>>
+>>>> b) The one responsible for the isolation is numa code (could be someone
+>>>>     else)
+>>>>
+>>>> c) We're allowed to grab that page from that list (IOW sync against
+>>>>     others, and especially also against), to essentially "steal" the
+>>>>     isolated page.
+>>>
+>>> Right. c) sounds like adding more contention to the candidate list.
+>>> I wonder if we can just mark the page as migration candidate (using
+>>> a page flag or something else), then migrate it whenever CMA,
+>>> compaction, long-term pinning and more look at the page.
+>>
+>> I mean, all these will migrate the page either way, no need to add another flag for that.
+>>
+>> I guess what you mean, indicating that the migration destination
+>> should be on a different node than the current one.
+>
+> Yes.
+>
+>>
+>> Well, and for the NUMA scanner (below) to find which pages to migrate.
+>>
+>> ... to be this raises some questions: like, if we don't migrate
+>> immediately, could that information ("migrate this page") actually
+>> now be wrong? I guess a way to
+>
+> Could be. So it is better to evaluate the page before the actual migration, in
+> case the page is no longer needed in a remote node.
+>
+>> obtain the destination node would suffice: if the destination node
+>> matches, no need to migrate from that NUMA scanner.
+>
+> Right. The destination node could be calculated by certain metric like most recent
+> accesses or last remote node access time.
 
-[auto build test WARNING on 0ff41df1cb268fc69e703a08a57ee14ae967d0ca]
+Do we have the necessary information available?  last_cpupid have either
+last accessing CPU or last scanning timestamp, not both.  Any other
+information source?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Quentin-Schulz/dt-bindings-mfd-rk806-allow-to-customize-PMIC-reset-method/20250527-011711
-base:   0ff41df1cb268fc69e703a08a57ee14ae967d0ca
-patch link:    https://lore.kernel.org/r/20250526-rk8xx-rst-fun-v1-2-ea894d9474e0%40cherry.de
-patch subject: [PATCH 2/4] mfd: rk8xx-core: allow to customize RK806 reset method
-config: arm-randconfig-001-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270807.tc7zzrMf-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270807.tc7zzrMf-lkp@intel.com/reproduce)
+---
+Best Regards,
+Huang, Ying
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505270807.tc7zzrMf-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/mfd/rk8xx-core.c:723:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
-     723 |                 u32 rst_fun;
-         |                 ^
-   1 warning generated.
-
-
-vim +723 drivers/mfd/rk8xx-core.c
-
-   694	
-   695	int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap *regmap)
-   696	{
-   697		struct rk808 *rk808;
-   698		const struct rk808_reg_data *pre_init_reg;
-   699		const struct mfd_cell *cells;
-   700		int dual_support = 0;
-   701		int nr_pre_init_regs;
-   702		int nr_cells;
-   703		int ret;
-   704		int i;
-   705	
-   706		rk808 = devm_kzalloc(dev, sizeof(*rk808), GFP_KERNEL);
-   707		if (!rk808)
-   708			return -ENOMEM;
-   709		rk808->dev = dev;
-   710		rk808->variant = variant;
-   711		rk808->regmap = regmap;
-   712		dev_set_drvdata(dev, rk808);
-   713	
-   714		switch (rk808->variant) {
-   715		case RK805_ID:
-   716			rk808->regmap_irq_chip = &rk805_irq_chip;
-   717			pre_init_reg = rk805_pre_init_reg;
-   718			nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
-   719			cells = rk805s;
-   720			nr_cells = ARRAY_SIZE(rk805s);
-   721			break;
-   722		case RK806_ID:
- > 723			u32 rst_fun;
-   724	
-   725			rk808->regmap_irq_chip = &rk806_irq_chip;
-   726			pre_init_reg = rk806_pre_init_reg;
-   727			nr_pre_init_regs = ARRAY_SIZE(rk806_pre_init_reg);
-   728			cells = rk806s;
-   729			nr_cells = ARRAY_SIZE(rk806s);
-   730			dual_support = IRQF_SHARED;
-   731	
-   732			ret = device_property_read_u32(dev, "rockchip,rst-fun", &rst_fun);
-   733			if (ret) {
-   734				dev_dbg(dev,
-   735					"rockchip,rst-fun property missing, not setting RST_FUN\n");
-   736				break;
-   737			}
-   738	
-   739			ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
-   740						 RK806_RST_FUN_MSK,
-   741						 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
-   742			if (ret)
-   743				return dev_err_probe(dev, ret, "RST_FUN write err\n");
-   744			break;
-   745		case RK808_ID:
-   746			rk808->regmap_irq_chip = &rk808_irq_chip;
-   747			pre_init_reg = rk808_pre_init_reg;
-   748			nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
-   749			cells = rk808s;
-   750			nr_cells = ARRAY_SIZE(rk808s);
-   751			break;
-   752		case RK816_ID:
-   753			rk808->regmap_irq_chip = &rk816_irq_chip;
-   754			pre_init_reg = rk816_pre_init_reg;
-   755			nr_pre_init_regs = ARRAY_SIZE(rk816_pre_init_reg);
-   756			cells = rk816s;
-   757			nr_cells = ARRAY_SIZE(rk816s);
-   758			break;
-   759		case RK818_ID:
-   760			rk808->regmap_irq_chip = &rk818_irq_chip;
-   761			pre_init_reg = rk818_pre_init_reg;
-   762			nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
-   763			cells = rk818s;
-   764			nr_cells = ARRAY_SIZE(rk818s);
-   765			break;
-   766		case RK809_ID:
-   767		case RK817_ID:
-   768			rk808->regmap_irq_chip = &rk817_irq_chip;
-   769			pre_init_reg = rk817_pre_init_reg;
-   770			nr_pre_init_regs = ARRAY_SIZE(rk817_pre_init_reg);
-   771			cells = rk817s;
-   772			nr_cells = ARRAY_SIZE(rk817s);
-   773			break;
-   774		default:
-   775			dev_err(dev, "Unsupported RK8XX ID %lu\n", rk808->variant);
-   776			return -EINVAL;
-   777		}
-   778	
-   779		if (!irq)
-   780			return dev_err_probe(dev, -EINVAL, "No interrupt support, no core IRQ\n");
-   781	
-   782		ret = devm_regmap_add_irq_chip(dev, rk808->regmap, irq,
-   783					       IRQF_ONESHOT | dual_support, -1,
-   784					       rk808->regmap_irq_chip, &rk808->irq_data);
-   785		if (ret)
-   786			return dev_err_probe(dev, ret, "Failed to add irq_chip\n");
-   787	
-   788		for (i = 0; i < nr_pre_init_regs; i++) {
-   789			ret = regmap_update_bits(rk808->regmap,
-   790						pre_init_reg[i].addr,
-   791						pre_init_reg[i].mask,
-   792						pre_init_reg[i].value);
-   793			if (ret)
-   794				return dev_err_probe(dev, ret, "0x%x write err\n",
-   795						     pre_init_reg[i].addr);
-   796		}
-   797	
-   798		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cells, nr_cells, NULL, 0,
-   799				      regmap_irq_get_domain(rk808->irq_data));
-   800		if (ret)
-   801			return dev_err_probe(dev, ret, "failed to add MFD devices\n");
-   802	
-   803		if (device_property_read_bool(dev, "system-power-controller") ||
-   804		    device_property_read_bool(dev, "rockchip,system-power-controller")) {
-   805			ret = devm_register_sys_off_handler(dev,
-   806					    SYS_OFF_MODE_POWER_OFF_PREPARE, SYS_OFF_PRIO_HIGH,
-   807					    &rk808_power_off, rk808);
-   808			if (ret)
-   809				return dev_err_probe(dev, ret,
-   810						     "failed to register poweroff handler\n");
-   811	
-   812			switch (rk808->variant) {
-   813			case RK809_ID:
-   814			case RK817_ID:
-   815				ret = devm_register_sys_off_handler(dev,
-   816								    SYS_OFF_MODE_RESTART, SYS_OFF_PRIO_HIGH,
-   817								    &rk808_restart, rk808);
-   818				if (ret)
-   819					dev_warn(dev, "failed to register rst handler, %d\n", ret);
-   820				break;
-   821			default:
-   822				dev_dbg(dev, "pmic controlled board reset not supported\n");
-   823				break;
-   824			}
-   825		}
-   826	
-   827		return 0;
-   828	}
-   829	EXPORT_SYMBOL_GPL(rk8xx_probe);
-   830	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> If most recent accesses are still coming
+> from a remote node and/or last remote node access time is within a short time frame,
+> the page should be migrated. Since it is possible that the page is frequently accessed
+> by a remote node but when it comes to migration, it is no longer needed by a remote
+> node and the access pattern would look like 1) a lot of remote node accesses, but
+> 2) the last remote node access is long time ago.
+>
+>>
+>> In addition,
+>>> periodically, the migration task would do a PFN scanning and migrate
+>>> any migration candidate. I remember Willy did some experiments showing
+>>> that PFN scanning is very fast.
+>>
+>> PFN scanning can be faster than walking lists, but I suspect it
+>> depends on how many pages there really are to be migrated ... and
+>> some other factors :)
+>
+> Yes. LRU list is good since it restricts the scanning range, but PFN scanning
+> itself does not have it. PFN scanning with some filter mechanism might work
+> and that filter mechanism is a way of marking to-be-migrated pages. Of course,
+> a quick re-evaluation of the to-be-migrated pages right before a migration
+> would avoid unnecessary work like we discussed above.
+>
+> --
+> Best Regards,
+> Yan, Zi
