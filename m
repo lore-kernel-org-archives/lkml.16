@@ -1,233 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAF4270572;
-	Tue, 27 May 2025 13:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF0E27146A;
+	Tue, 27 May 2025 13:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352956; cv=none; b=tHMw1Ziae/kp34BPUb6c3/X0RxIyGMMxGV1iUyW+YgKs8fU0q4KwdJ0mGsiORexQuMrHgR26p9+tE7XqQys3ETaEcL6hnOnN3mbp4+Ar7XgZQPxh9gmb9mYQXGJujtHTkUFIG4OaXEyvnD0WdeRDI0TMypDzMIsInDQaAKbOzSA=
+	t=1748352986; cv=none; b=sQoosNexywgZqHtwJn5T2Blb8QJr3TMq95CjOT0stRzVGxVUyEJr3tqGpwLO9H4rdfSQ8ELBZhMY3WQRZOWWszFTbosBZDm7wo7HhlJlIKTsjJRxYot0Xns9Sp1JOj9AiK1/7ZTLlgWEh04rvjecWryHo6+PNCZMeBAJPlJ8Wqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352956; c=relaxed/simple;
-	bh=8lfh6bvcEFYdSzOgfOnnU+yhKsW3ISNP3ikpxpfHbCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IGzDxbVQXL74WwVNro0S8M4sy7KBQ1/EfJ+K5PE8tsL+7qI31tA52c+N6lXkQMN2mVA06IY0wvKX6ZGtlQq1+kSuacxZUPkZKUQ9DtyCQR4sA5BHHLLQAKbJtFtMVgwOgtY9x2n/bLY26RmguGToW3RbwOt4Sd98B0+yIJvnpaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NnLBVP8q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748352986; c=relaxed/simple;
+	bh=xRMG6RCbtbBW3KEjvVItveq5FpHXTpnV8h1mqcEkJCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QsPLkBIXFiVQPMu+RXDM/rTtxkD7IvPJulQal0BXxmLGR3G8H8QfubdSWG0AvnX2byBopJpIb8bgewLz/jNVz+1cuewrZQFFiNqceAEu/xQ3DV0Xcn7s5xAWyQricenlKSLrjF7BeoUiBPYOBshGAq8dVbveCbxmN+DsGDs1vt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XT/0ARsP; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NnLBVP8q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30EBC4CEE9;
-	Tue, 27 May 2025 13:35:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748352956;
-	bh=8lfh6bvcEFYdSzOgfOnnU+yhKsW3ISNP3ikpxpfHbCI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NnLBVP8qDQHfegA+pmu+8JlZiD4Su8VU3PPKiE+ubOZ7I0L0QwRZsjPxq0wBVd/v0
-	 NLs9oYdYLVr/AYwGFRIF0N1a2ASguKEf8J2l9QZt+yQgBm8yMPVzGDQqYky0OFoWd7
-	 MRUJnxoSQq/8iUixwLqnh86vuDSlCwW7Ndra+64yVv1fqMfXXEAmNdghiACN7ILknZ
-	 etoKTATaDfHAQiFEqIJRqdtCQ+6PyaNN2C5Iu8ruQ7k+lmkMNjTId1jrAnCr8Rxyvv
-	 Ip+AR9GMfOL3invz+sTrTdtUoTmxQLHubTzJnM9gAi/jXHUVP26UWAkWUZWAThLcWO
-	 d9PPo9QxOn7TQ==
-Date: Tue, 27 May 2025 15:35:47 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Albert Esteve
- <aesteve@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, gurchetansingh@google.com,
- daniel.almeida@collabora.com, adelva@google.com, changyeon@google.com,
- nicolas.dufresne@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Message-ID: <20250527153547.6603eaf4@sal.lan>
-In-Reply-To: <CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-	<20250526141316.7e907032@foz.lan>
-	<DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-	<20250527111311.105246f2@sal.lan>
-	<CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XT/0ARsP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C28791FD79;
+	Tue, 27 May 2025 13:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748352981;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6tLEZHMDqW/lKKXa3cesKVRCb31vt0EkT9v84QXASfY=;
+	b=XT/0ARsP17rGcD6kDRxEvcZpx4PNurwIVPxBlMvhCHJG9OzHN/aUx4aipW6/KlHWMXZhoP
+	yUacwv4IqABvMRcUr8QaU+gi6UXPeBVX4b0akPEMpKNL1Ay0aS25IRcPNpB4E3To/Ydpm5
+	IQwn3Fo7rX+tltwIQf6jPh2xOC0PhBw8YZxA1jA+1UVXomHx344X567kjn6JpcCMP3IjvH
+	7MTM+QHqxTOWO4atuToYIjbSZXtqI5OXeL3MxkVyXU/BabPTOhNFnX6TFhOVtEZClHzJGg
+	m8s52Mj+pXHcAvcm8lrHBzSIiictBMC4GoijBnCekIKSkTdI2znnw901PCpWUg==
+Message-ID: <ef78f01a-b996-4e44-bb93-b71c6d7526a3@bootlin.com>
+Date: Tue, 27 May 2025 15:36:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 6/8] drm/vkms: Create KUnit tests for YUV conversions
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Melissa Wen <melissa.srw@gmail.com>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ rdunlap@infradead.org, arthurgrillo@riseup.net,
+ Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi,
+ Simona Vetter <simona@ffwll.ch>, Rodrigo Siqueira <siqueira@igalia.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+ miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+ seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com,
+ linux-doc@vger.kernel.org, Pekka Paalanen <pekka.paalanen@collabora.com>
+References: <20250415-yuv-v18-0-f2918f71ec4b@bootlin.com>
+ <20250415-yuv-v18-6-f2918f71ec4b@bootlin.com>
+ <adcd3356-5aae-42a8-8b55-9761c95d2e52@bootlin.com>
+ <20250522-skilled-brawny-parakeet-e5cccf@houat>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <20250522-skilled-brawny-parakeet-e5cccf@houat>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvtdehudculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeegjeeguddtkefhfffggeduuedttefgueevgeetfedttdefveeufffgvefgveeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgvlhhishhsrgdrshhrfiesghhmrghilhdrtghomhdprhgtphhtthhopehmrghirhgrtggrnhgrlhesrhhishgvuhhprdhnvghtpdhrtghpthhtohephhgrmhhohhgrmhhmvggur
+ dhsrgesghhmrghilhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhguuhhnlhgrphesihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Em Tue, 27 May 2025 22:21:42 +0900
-Alexandre Courbot <gnurou@gmail.com> escreveu:
 
-> On Tue, May 27, 2025 at 6:13=E2=80=AFPM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > Em Tue, 27 May 2025 15:14:50 +0900
-> > "Alexandre Courbot" <gnurou@gmail.com> escreveu:
-> > =20
-> > > Hi Mauro,
-> > >
-> > > On Mon May 26, 2025 at 9:13 PM JST, Mauro Carvalho Chehab wrote: =20
-> > > > Hi Michael,
-> > > >
-> > > > Em Sat, 12 Apr 2025 13:08:01 +0900
-> > > > Alexandre Courbot <gnurou@gmail.com> escreveu:
-> > > > =20
-> > > >> Add the first version of the virtio-media driver.
-> > > >>
-> > > >> This driver acts roughly as a V4L2 relay between user-space and the
-> > > >> virtio virtual device on the host, so it is relatively simple, yet
-> > > >> unconventional. It doesn't use VB2 or other frameworks typically u=
-sed in
-> > > >> a V4L2 driver, and most of its complexity resides in correctly and
-> > > >> efficiently building the virtio descriptor chain to pass to the ho=
-st,
-> > > >> avoiding copies whenever possible. This is done by
-> > > >> scatterlist_builder.[ch].
-> > > >>
-> > > >> virtio_media_ioctls.c proxies each supported ioctl to the host, us=
-ing
-> > > >> code generated through macros for ioctls that can be forwarded dir=
-ectly,
-> > > >> which is most of them.
-> > > >>
-> > > >> virtio_media_driver.c provides the expected driver hooks, and supp=
-ort
-> > > >> for mmapping and polling.
-> > > >>
-> > > >>  This version supports MMAP buffers, while USERPTR buffers can als=
-o be
-> > > >>  enabled through a driver option. DMABUF support is still pending.=
- =20
-> > > >
-> > > > It sounds that you applied this one at the virtio tree, but it hasn=
-'t
-> > > > being reviewed or acked by media maintainers.
-> > > >
-> > > > Please drop it.
-> > > >
-> > > > Alexandre,
-> > > >
-> > > > Please send media patches to media maintainers, c/c other subsystem
-> > > > maintainers, as otherwise they might end being merged without a
-> > > > proper review. =20
-> > >
-> > > Sorry about that, I put everyone in "To:" without giving it a second
-> > > thought.
-> > > =20
-> > > >
-> > > > In this particular case, we need to double-check if this won't cause
-> > > > any issues, in special with regards to media locks and mutexes. =20
-> > >
-> > > Agreed, I am not 100% confident about that part myself.
-> > > =20
-> > > >
-> > > > I'll try to look on it after this merge window, as it is too late
-> > > > for it to be applied during this one. =20
-> > >
-> > > Appreciate that - given the high traffic on the list I was worried th=
-at
-> > > this patch would eventually be overlooked. Not making it for this mer=
-ge
-> > > window should not be a problem, so please take the time you need. =20
-> >
-> > Provided that your patch was caught by patchwork, it won't be lost:
-> >         https://patchwork.linuxtv.org/project/linux-media/patch/2025041=
-2-virtio-media-v3-1-97dc94c18398@gmail.com/
-> >
-> > Please notice that our CI got a number of checkpatch issues there.
-> > Please check and fix the non-false-positive ones. =20
->=20
-> Will do. The macro-related ones are false-positives AFAICT. Some of
-> the "lines should not end with a '('" are actually the result of
-> applying clang-format with the kernel-provided style...
 
-I don't know any lint tool that honors kernel style. The best one
-is checkpatch with the auto-correcting parameter in pedantic mode,
-but still one needs to manually review its output.
+Le 22/05/2025 à 17:39, Maxime Ripard a écrit :
+> On Mon, May 12, 2025 at 03:07:55PM +0200, Louis Chauvet wrote:
+>> Hi Maxime,
+>>
+>> Did you have the time to look at this patch?
+>>
+>> Pekka added his Acked-by, but as you made some remarks about this patch, I
+>> would like to have your validation before applying it.
+> 
+> Yep, thank you
+> 
+> Acked-by: Maxime Ripard <mripard@kernel.org>
+> 
 
->=20
-> >
-> > Btw, I was looking at:
-> >
-> >         https://github.com/chromeos/virtio-media
-> >
-> > (I'm assuming that this is the QEMU counterpart, right?) =20
->=20
-> crosvm actually, but QEMU support is also being worked on.
+Hi Maxime,
 
-Do you have already QEMU patches? The best is to have the Kernel driver
-submitted altogether with QEMU, as Kernel developers need it to do the
-tests. In my case, I never use crosvm, and I don't have any Chromebook
-anymore.
+Some time ago you told me "The rest looked good to me the last time I 
+looked." [1]
 
-> > And I noticed something weird there:
-> >
-> >         "Unsupported ioctls
-> >
-> >          A few ioctls are replaced by other, more suitable mechanisms. =
-If being requested these ioctls, the device must return the same response a=
-s it would for an unknown ioctl, i.e. ENOTTY.
-> >
-> >             VIDIOC_QUERYCAP is replaced by reading the configuration ar=
-ea.
-> >             VIDIOC_DQBUF is replaced by a dedicated event.
-> >             VIDIOC_DQEVENT is replaced by a dedicated event."
-> >
-> > While this could be ok for cromeOS, this will be broken for guests with
-> > Linux, as all Linux applications rely on VIDIOC_QUERYCAP and VIDIOC_DQB=
-UF
-> > to work. Please implement support for it, as otherwise we won't even be
-> > able to test the driver with the v4l2-compliance tool (*). =20
->=20
-> The phrasing was a bit confusing. The guest driver does support these
-> ioctls, and passes v4l2-compliance. So there is no problem here.
+Does it mean that I can add your ack on the rest of the series?
 
-Please add v4l2-compliance output on the next patch series.
+Thanks a lot for your reviews,
+Louis Chauvet
 
-> Where these ioctls are not supported is between the guest and the
-> host, i.e. as ioctls encapsulated into a virtio request. For QUERYCAP,
-> that's because the virtio configuration area already provides the same
-> information. For DQBUF and DQEVENT, that's because we want to serve
-> these asynchronously for performance reasons (hence the dedicated
-> events).
->=20
-> But these differences don't affect guest user applications which will
-> be able to perform these ioctls exactly as they expect.
+[1]:https://lore.kernel.org/all/20250205-pristine-perch-of-abundance-7abac1@houat/
 
-OK. Better to let it clear then at the documentation.
+> Maxime
 
-> >
-> > (*) Passing at v4l2-compliance is a requirement for any media driver
-> >     to be merged.
-> >
-> > With regards to testing, what's the expected testing scenario?
-> > My guess is that, as a virtio device, a possible test scenario would be
-> > to have the UVC camera from the host OS mapped using virtio-camera into
-> > the guest OS, allowing a V4L2 application running at the guest to map t=
-he
-> > camera from the host, right? =20
->=20
-> That's one of the scenarios, yes.=20
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Ok, this is the easiest test scenario for media developers.
-
-> Another one is to expose an accelerated decoder on the host to the guest.=
-=20
-
-> One can also create
-> "fake" devices backed by software on the host for testing purposes.
-
-That sounds interesting. It probably makes sense to have some test
-scenario using such fake devices plus v4l2-compliance test to check
-for regressions running on some CI engine.
-
-> That's actually the benefit of using V4L2 as a guest/host protocol:
-> the same guest and the same software stack on the host can be used to
-> virtualize multiple kinds of media devices, removing the need to have
-> e.g. virtio-camera and virtio-codec. This removes a ton of work (and
-> code).
-
-Makes sense.
-
-Regards,
-Mauro
