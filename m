@@ -1,194 +1,185 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE46D1990A7
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825591990A7;
+	Tue, 27 May 2025 19:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748372570; cv=none; b=EkcR5Dlyc1I2GNBfQqetknrYPJ+3eGyU/w2gyhweG6OcNzbHIGb/SxsutW1xe8ue08637ciT6NSin9085Zim8TyEQ7bbtfRxDfoWtbxVNRTBqmOKmTVlbbuXjEFwCW9UCjQaE4b5BYdILsJIFb5SvOFddPpmlztz3qV7VeS8b58=
+	t=1748372597; cv=none; b=fBd063U0q+9uKc8BIgHGYxb+S+cA1OmkoxGu62Ka9nSrm+uDmCCjb58XvFK3KXAkyn0Tqo5JRUa8lt1obrHL/SjT9dbkPyf9C8DGKtc5sSKvFfhsybaI03iWTdy2qh20b7By/yGRRkzvSvCrZzpPlRhKneVNBcyHBttDAH+qo4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748372570; c=relaxed/simple;
-	bh=qc9K1487mDId4n8hDI2Zz9cGxZ+yStXtUqmOpy/e/Yo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JKecaIh7tWuPl/xfrxXefgjBdvxWHm6mh709u3beoJWjeCP8UUnxtfiNpolgAHKkxfAf5J6ol51Lwmf/luvvcaAq/VJwMl82kBuya092ctcTmtUi+5j9JtaAqch2PDE7FUwPdiwjWymcf63w0KlB21si5dW3aRmouKCbztS43JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gboex4u2; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748372597; c=relaxed/simple;
+	bh=doMS0trNlP/kwdokYAMx2s7mxwnpc0nNhX83X3QDP4E=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=pjbOshe7qPalx/7c4Zq61dkXf+I9kUAmYSyErDWtTn8LYfMYGUPmMDd5zWYdTZ2/yZkPZY8NAa6n8P1rpImj5H4Ij0cMQQ9VOUbfRl3Y8f8dp6rHiHua7iBjQMa+s6W04/ALPg9PwzTm78qAJlcJ0+kZyeAv7jXTBTdM9NVmLZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T7vJdhhU; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gboex4u2"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5f720c717so19021885a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748372568; x=1748977368; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ZyIDN9dRHZ7H2gbq+aiFHzFC56nerxuUqfJsbZggCk=;
-        b=gboex4u2JK2gCcaF6fAQ71Chv2dEq1yCO+I4/ddHd6LpVpnUN1jkVcxKJOK8cPw8Qu
-         /KNuV8QyGoSF6EkXyBGKepskAKLVgEnfmS/GDnhwyMlJUSNEWNbRWGNpxTymRXOYs/dy
-         uhpyk9XDh6ZKnzgfXIKH02gJoAdhKHhDHuIZysU0CVN4iyTFYueczoo4LuDmaDWYqpVB
-         4j4Av9kfScxyrZIB6SufhN8EmPf0Nmtx9pVM+anITFTl1YIHDAGNloyPs6ckbgLktFLy
-         PI9hz0RR9SasmQNW27xYP72tBBt6PqJb1wg+QwthEoro2Bmr+oeLAw0zqKiU1t8cZMeT
-         rw1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748372568; x=1748977368;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/ZyIDN9dRHZ7H2gbq+aiFHzFC56nerxuUqfJsbZggCk=;
-        b=mYDwGjY49odSBAfcYZ4jCE8wKtE6hYwrl3glI5iX1XaOPchl39i6hgljeC3lmkyETB
-         ewCpMvv1Np48iVp3QBdScBv8IvA1HtFiFD4EeBI9Pbh8zXa20Xn6hPAR8DsmdURo3m+8
-         7jlYJVkue4t1e8MT6P9HfHrrq+drCO5qCGQe6wX15bViPTcz1p4mPiaoRaZrAnQD4bC5
-         IkLEtn50hvEq6476yBmSTGg39kQfxETEt16P8eGp1MTNkHj+QmnsOFqnVf42vhKRnNu5
-         zGNsTjdpzJx2D8yeZfsrhzXovJREQjMD1aRVQX8PPzVntj3vD0Ir5TZaK+6UB7/wxKF9
-         eI6w==
-X-Gm-Message-State: AOJu0YwTWrRBowDgb+qlmQq6s9weJrJAMdqgaomAYCAm9R7tQ/KfgJjs
-	bbIapr/Lp0b5EIT6fL31od3PIjPwh8gIvzHG7fZsl7ZmTi4ulF9xy91Xdd5G2cAb
-X-Gm-Gg: ASbGnctxE41/vs+0B+bqTMFjs522irO5qM6PQoHEej9Xs0F+4zqsnuyTnwoK0VrXuHH
-	f5iP3I69kGFZisKkuOUBi1poW7fSCDSXlW4SGRNazR/maBcTaLyl2m49Cd9+aEH/zprL6/bgLCS
-	I9l0Ece8K08VaRCDpR1q+WR/PwJI089O1D9FQEop1Q6q4XQDUASFydn4AhJAnGvdIBiQxUVdorr
-	fd4JwAWRQ8unJxR8VRhx/s043a3Qa/TDeEOwWqUuUoKVAfpzjFsft5+c9EAMVPnm+lWcc+BbSs6
-	e5Bk6E0J+W6b/WVNK3dpRHVKq5d/ZM0FcxgIVJyh1c+C4+625zY=
-X-Google-Smtp-Source: AGHT+IHd53OqY0ivtZJePj8KxPCjbVj4oc4Ce9pQyaHwdEAUKC4TpVIZh9DF4Bmxm4VaAAzFNVDRNA==
-X-Received: by 2002:a05:620a:2723:b0:7c7:c1f8:34eb with SMTP id af79cd13be357-7cf06d88bf9mr238055485a.23.1748372567697;
-        Tue, 27 May 2025 12:02:47 -0700 (PDT)
-Received: from pop-os.. ([201.49.69.163])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e59cee6cf8sm12909137.13.2025.05.27.12.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 12:02:47 -0700 (PDT)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: apw@canonical.com,
-	joe@perches.com,
-	dwaipayanray1@gmail.com,
-	lukas.bulwahn@gmail.com
-Cc: linux-kernel@vger.kernel.org,
-	Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-Subject: [RESEND PATCH] checkpatch: check format of Vec<String> in modules
-Date: Tue, 27 May 2025 16:02:39 -0300
-Message-Id: <20250527190239.143112-1-trintaeoitogc@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T7vJdhhU"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RGHNHx004950;
+	Tue, 27 May 2025 19:02:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Us8SyY
+	ruv+FTdPUtNEtd3t+r94/trKQpiChagfVzK9Y=; b=T7vJdhhUvXPR0mc9VYwrPI
+	b0/u45ypLmm30hLwQSa+fEa0GmlyeZtYo2zK2R4kk5Rdjs963LSpkxt7nVhK3bHw
+	4i708vj7HC5zCMapQ/MnFLj+g+as8Kx+Ctqn7W6G28LWhGq7eK0opFOGGbRbMxOs
+	dDowdTY7mO7RE7Ul5qLi12c2uCUyGCzqpd3ui1VRn11WSyYz+kXNrwgdjw7LnEUq
+	+HsCGr1CjRULRGJID8hAx29dXFlsdjmWtJ8h54UlHMl4HBxxcaN4G30+CN+l4isa
+	7+cGAF3KoxIg4ilH7iveKKSzl5YElE53l3GuskCSEO23dWXuJhbcb/Nag318p0HA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsj0tbf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 19:02:45 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54RJ2iXG025065;
+	Tue, 27 May 2025 19:02:44 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsj0tbb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 19:02:44 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHOl9r028925;
+	Tue, 27 May 2025 19:02:43 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepv0n8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 19:02:43 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54RJ2g2D31261292
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 19:02:42 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B11E058057;
+	Tue, 27 May 2025 19:02:42 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 05D5C5805D;
+	Tue, 27 May 2025 19:02:42 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 27 May 2025 19:02:41 +0000 (GMT)
+Message-ID: <f04a8c07d7da1df2cd5b74f04d253611bab9f1ad.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: prevent concurrent list operations in
+ ima_lsm_update_rules
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Zhao Yipeng <zhaoyipeng5@huawei.com>, roberto.sassu@huawei.com,
+        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        janne.karhunen@gmail.com
+Cc: morgan@kernel.org, lujialin4@huawei.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250527125103.751077-1-zhaoyipeng5@huawei.com>
+References: <20250527125103.751077-1-zhaoyipeng5@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 27 May 2025 15:02:41 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=IcmHWXqa c=1 sm=1 tr=0 ts=68360c55 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=i0EeH86SAAAA:8 a=RwKbe1zy0JAV_bTXriMA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE1OSBTYWx0ZWRfX/6shcxoJEONO gYcVKbllMdMawPpJ3afG3OzQfw2liWwHHYVMY6GnEppEzyiiuIqEVIBvxN+9lO8x0z46RlR+W2U TUmIEGeF1lc6fdySL28lqfd9CSFvL/8iRLcals9RkBft7IxcahZvD8RntLNL/GQAG8WQgLFjKTh
+ RyzlbyFdBnW4XZxdmFEGsAB4X8tUH5T8du+a5XpBaCWWshpOxZchjXMz94UUK0Ji0uTzIZ1XtZz IaNh//hbenDd/vDBoBkJAdzvxb/5lFxc4KROkNEn/aWeNw0kN/Qj18G0U+UDKWRQtFtYkaAv8qE vVMiTyNeSv3E/dszGT3yST+pQzrRoxBvp0dLWiU8lydNiVUcYOXOofaXG29hvPAJfcEz9nCL776
+ 3DAnhngmQuF/NWjfMBIyFAjfuTIbyLnzHT5gbBPXK+n5xaHOcKBUu4cPhXBs4zoOQc6lerrN
+X-Proofpoint-ORIG-GUID: xI2bhaKHgDBJDtf61pJ-5YsBPSzD1fSV
+X-Proofpoint-GUID: k8z10pVxgJ3YBUWhTOvC1EEXI1_ELafR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_09,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 phishscore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=996 adultscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505270159
 
-Implement a check to ensure that the author, firmware, and alias fields
-of the module! macro are properly formatted.
+On Tue, 2025-05-27 at 20:51 +0800, Zhao Yipeng wrote:
+> The current implementation of IMA policy list replacement via
+> list_replace_rcu may trigger general protection faults under concurrent
+> load policy operations. This occurs when a process replaces a node in
+> ima_policy_rules list and sets old->prev =3D LIST_POISON2, while another
+> parallel process still holds references to the old node. Subsequent list
+> operations on the poisoned pointer result in kernel panic due to invalid
+> memory access.
+>=20
+> To resolve this, introduce a mutex lock (ima_rules_mutex) in
+> ima_lsm_update_rules() to protect. ima_update_policy() also use the
+> ima_policy_rules. Introduce a mutex lock in it.
 
-* If the array contains more than one value, enforce vertical
-  formatting.
-* If the array contains only one value, it may be formatted on a single
-  line
-* If the array is not indentation aligned, enforce indentation alignment
+A new IMA policy may replace the existing builtin policy rules with a custo=
+m
+policy. In all other cases, the IMA policy rules may only be extended.  Wri=
+ting
+or extending the IMA policy rules requires taking the ima_write_mutex.
 
-Signed-off-by: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
----
- scripts/checkpatch.pl | 77 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+There's no need for a new mutex.
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index b3b1939ccd19..5fe90fba29b6 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2778,6 +2778,12 @@ sub process {
- 	$realcnt = 0;
- 	$linenr = 0;
- 	$fixlinenr = -1;
-+
-+	my %array_parse_module;
-+	my $expected_spaces;
-+	my $spaces;
-+	my $herevet_space_add;
-+
- 	foreach my $line (@lines) {
- 		$linenr++;
- 		$fixlinenr++;
-@@ -2854,6 +2860,11 @@ sub process {
- 			$realfile =~ s@^([^/]*)/@@ if (!$file);
- 			$in_commit_log = 0;
- 			$found_file = 1;
-+
-+			%array_parse_module = ();
-+			$expected_spaces = undef;
-+			$spaces = undef;
-+
- 		} elsif ($line =~ /^\+\+\+\s+(\S+)/) {
- 			$realfile = $1;
- 			$realfile =~ s@^([^/]*)/@@ if (!$file);
-@@ -3570,6 +3581,72 @@ sub process {
- # ignore non-hunk lines and lines being removed
- 		next if (!$hunk_line || $line =~ /^-/);
- 
-+# check if the field is about author, firmware or alias from module! macro and find malformed arrays
-+		my $inline = 0;
-+		my $key = "";
-+		my $add_line = $line =~ /^\+/;
-+
-+		if ($line =~ /\b(authors|alias|firmware)\s*:\s*\[/) {
-+			$inline = 1;
-+			$array_parse_module{$1} = 1;
-+		}
-+
-+		my @keys = keys %array_parse_module;
-+		if (@keys) {
-+			$key = $keys[0];
-+		}
-+
-+		if (!$expected_spaces && !$add_line && $key && !$inline) {
-+			if ($line =~ /^([\t ]+)(\s)/) {
-+				$expected_spaces = $1;
-+			}
-+		}
-+
-+		if ($add_line && $key) {
-+			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
-+
-+			my $counter = () = $line =~ /"/g;
-+			my $more_than_one = $counter > 2;
-+			if ($more_than_one) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer each array element on a separate line\n". $herevet);
-+			} elsif ($inline && $line !~ /\]/ && $line !~ /,/ && $line =~ /"/) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer to declare ] on the same line\n" . $herevet);
-+			} elsif (!$inline && $line =~ /\]/ && $line =~ /\"/) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer a new line after the last value and before ]\n" . $herevet);
-+			} elsif ($inline && $line =~ /,/ && $line !~ /\]/) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer a new line after [\n" . $herevet);
-+			}
-+
-+			my $line_cmp = $line;
-+			$line_cmp =~ s/\+/ /;
-+			$spaces = -1;
-+			if ($line_cmp =~ /^([\t ]+)(\s)/) {
-+				$spaces = $1;
-+			}
-+
-+			$herevet_space_add = $herevet;
-+		}
-+
-+		if ($expected_spaces && $spaces) {
-+			if ($spaces ne $expected_spaces) {
-+				WARN("ARRAY_MODULE_MACRO",
-+				     "Prefer aligned parameters\n" . $herevet_space_add);
-+			}
-+
-+			$spaces = undef;
-+		}
-+
-+		#END OF ANALYZE FIELD
-+		if ($line =~ /\]/) {
-+			delete $array_parse_module{$key};
-+			$expected_spaces = undef;
-+			$spaces = undef;
-+		}
-+
- #trailing whitespace
- 		if ($line =~ /^\+.*\015/) {
- 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
--- 
-2.34.1
+Mimi
+
+>=20
+> Fixes: b16942455193 ("ima: use the lsm policy update notifier")
+> Signed-off-by: Zhao Yipeng <zhaoyipeng5@huawei.com>
+> ---
+> =C2=A0security/integrity/ima/ima_policy.c | 10 +++++++++-
+> =C2=A01 file changed, 9 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/security/integrity/ima/ima_policy.c
+> b/security/integrity/ima/ima_policy.c
+> index 128fab897930..d27e615e97d5 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -471,6 +471,8 @@ static bool ima_rule_contains_lsm_cond(struct
+> ima_rule_entry *entry)
+> =C2=A0	return false;
+> =C2=A0}
+> =C2=A0
+> +static DEFINE_MUTEX(ima_rules_mutex);
+> +
+> =C2=A0/*
+> =C2=A0 * The LSM policy can be reloaded, leaving the IMA LSM based rules =
+referring
+> =C2=A0 * to the old, stale LSM policy.=C2=A0 Update the IMA LSM based rul=
+es to reflect
+> @@ -481,16 +483,19 @@ static void ima_lsm_update_rules(void)
+> =C2=A0	struct ima_rule_entry *entry, *e;
+> =C2=A0	int result;
+> =C2=A0
+> +	mutex_lock(&ima_rules_mutex);
+> =C2=A0	list_for_each_entry_safe(entry, e, &ima_policy_rules, list) {
+> =C2=A0		if (!ima_rule_contains_lsm_cond(entry))
+> =C2=A0			continue;
+> =C2=A0
+> =C2=A0		result =3D ima_lsm_update_rule(entry);
+> =C2=A0		if (result) {
+> +			mutex_unlock(&ima_rules_mutex);
+> =C2=A0			pr_err("lsm rule update error %d\n", result);
+> =C2=A0			return;
+> =C2=A0		}
+> =C2=A0	}
+> +	mutex_unlock(&ima_rules_mutex);
+> =C2=A0}
+> =C2=A0
+> =C2=A0int ima_lsm_policy_change(struct notifier_block *nb, unsigned long =
+event,
+> @@ -1038,9 +1043,12 @@ int ima_check_policy(void)
+> =C2=A0 */
+> =C2=A0void ima_update_policy(void)
+> =C2=A0{
+> -	struct list_head *policy =3D &ima_policy_rules;
+> +	struct list_head *policy;
+> =C2=A0
+> +	mutex_lock(&ima_rules_mutex);
+> +	policy =3D &ima_policy_rules;
+> =C2=A0	list_splice_tail_init_rcu(&ima_temp_rules, policy, synchronize_rcu=
+);
+> +	mutex_unlock(&ima_rules_mutex);
+> =C2=A0
+> =C2=A0	if (ima_rules !=3D (struct list_head __rcu *)policy) {
+> =C2=A0		ima_policy_flag =3D 0;
 
