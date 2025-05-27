@@ -1,454 +1,1206 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05F31F582A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CB81F582A;
+	Tue, 27 May 2025 09:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748338483; cv=none; b=mHyy9Ui5u6/XwHjK7kLqvIF1AvBZZV1ukWytEJX3qFAq5TH+F6oemtg+CUfbAEK4oh7olxG3+wihqJdSU+D6taqIN2unYAsdkweP+hOzf0H18ivQxpqPsDLhtiyz8OR/4ey1m7ZFUQN3S0i3p65XKYEJZgvVe7AQlXQHo0r45fM=
+	t=1748338512; cv=none; b=Y2o3JxYUQMCIoGLMvSPmfldO/hesUlOg+r2X0QN4+bGkKqLstKetFjrDyK4JFWxr6tZ6/6B6C+SI0IyalTRgHEUpccWAIB56pJO1jo9sYs2C2qct1lPmw7zxKIuN90Bgi7eUifFPVeCH6J+mbPczPUtvzlBs1b0l9sedsmiULk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748338483; c=relaxed/simple;
-	bh=POVU09RRorUzDphhZzX5iBIkP1p1HjruuE6wRTen/2M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=COjkJ2LPGwWhajcI9nAyd+LE0aUce0NIx12lBdiQWIV9GrfMG2KVGkAuGDq5pwcigap/iD6XZjZ0H6Mp37Mk9Ii0tf3ZQZtOhmSmqvUbratOhfBcHrLpK6OV11MEOS4F3FoWIzLUv8Npt1e1HpaagJ+my9PWgwTTPotYMc998BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=NyCOlfN3; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1748338512; c=relaxed/simple;
+	bh=N7pY83q9rnQubxrwnmdg+dqYTvCEERie86WZ4cfC5FQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dmj9L+A/A354ZSxB2TCuXPxNqG4KoyA9fy8L0WnM0NkodOqG6UOzJhVajU7Oj4ZNHAqwWt3Vq9jmnBqGuXY81/HUZYf1q34ZJ4lhJ+Z9olT3jV3wXcxTV7uLjphns7W11Xi6kyaCQ/fhpEuXdu0iT1GgTUSVjdV3tZrsa7J5BTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VA7j1yv+; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NyCOlfN3"
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250527093432epoutp040d248b67b047b13e87f24b07bb16f039~DWJPK3RYv2516225162epoutp04l
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:34:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250527093432epoutp040d248b67b047b13e87f24b07bb16f039~DWJPK3RYv2516225162epoutp04l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748338472;
-	bh=xYGelAVB0voM2HyQARDHZF9wpiRDObiAfkkhC+Tsj5U=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=NyCOlfN3MKEhZSIL8DE/HKkmY6O8FhN2kPXTWgDSwvJYmpH7Vre/Bnl1gd4jBed96
-	 x9EetfFMRufsf6QpTNG/JzmF1nJirqUqquacuXs4NtH34dMB3Bib0PHNSAypAFRol6
-	 Zg2iQr6MKIKOJqnsDRw4WBHS+eFLn3XpXc9+vijc=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250527093431epcas2p13084371dc859a06ecebebcbc6c7be011~DWJOhfuH33037130371epcas2p1J;
-	Tue, 27 May 2025 09:34:31 +0000 (GMT)
-Received: from epcas2p4.samsung.com (unknown [182.195.36.70]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4b66sf5XCNz3hhTB; Tue, 27 May
-	2025 09:34:30 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250527093429epcas2p1ae70ad7304305bf547ce34a70f9badc6~DWJNIHHF10452004520epcas2p1X;
-	Tue, 27 May 2025 09:34:29 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250527093429epsmtrp10b4a4667deec0bfde670f082054e1392~DWJNHXDmR1031210312epsmtrp1y;
-	Tue, 27 May 2025 09:34:29 +0000 (GMT)
-X-AuditID: b6c32a29-55afd7000000223e-5a-683587253150
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	33.AA.08766.52785386; Tue, 27 May 2025 18:34:29 +0900 (KST)
-Received: from KORCO187997 (unknown [12.36.150.128]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250527093429epsmtip229ed4625164472fc703cc7263b4c5a3f~DWJM52XKv2264022640epsmtip2S;
-	Tue, 27 May 2025 09:34:29 +0000 (GMT)
-From: <hyunki00.koo@samsung.com>
-To: <john.garry@huawei.com>, <joro@8bytes.org>, <will@kernel.org>,
-	<mst@redhat.com>, <jasowang@redhat.com>, <robin.murphy@arm.com>
-Cc: <xieyongji@bytedance.com>, <iommu@lists.linux-foundation.org>,
-	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux-foundation.org>,
-	<linuxarm@huawei.com>, <taeyang.choi@samsung.com>, <bumyong.lee@samsung.com>
-Subject: Please backport 32e92d9f6f87
- ("iommu/iova: Separate out rcache init") to linux-5.15.y
-Date: Tue, 27 May 2025 18:34:30 +0900
-Message-ID: <000d01dbceea$8bfec3c0$a3fc4b40$@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VA7j1yv+"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-87de47585acso2133129241.3;
+        Tue, 27 May 2025 02:35:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748338509; x=1748943309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=leAckNCxDWGVozR/lIbBLi4Bf2/AACubbREaaD4gLT4=;
+        b=VA7j1yv+USjFGglBLgamg/N0f6WmTpKTC4lgLOk4gfv1A/pLp33l9PaPPlEYhySD5o
+         s9CU4myQCqtjPmfiFD1U/mmXSuP98nVkM3Y0G6mzdBpMAH7sr+YSiGUrcWFkOlixtXcq
+         KW+n9K0jHsSPgm3MV0a/sqQgKzEOtmn68fGPk1O3+Llz7fV6EkoJ8ktS6h08fIEX7DWk
+         m39uxuQ5XX/lBRXBkoQNW30Awmh3g6kAtZtxE/RByiu5dPZvrAgSPnuUbeu4mz9EyJQi
+         bgZdICY1ZUWRjb5BBOnyuJ54QRESb/W4SQrgXYVRyPLgrBYb1eNzfJ36k8MEHygfqQ39
+         xQjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748338509; x=1748943309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=leAckNCxDWGVozR/lIbBLi4Bf2/AACubbREaaD4gLT4=;
+        b=psznSJv4BQp4zm/rcOSPjZMgt0VaeBmDEmf+JdKrstaWgS9CTq75CHXSngQLN8xilN
+         T20iNuFmL65bNxUwTUeUzZGN85tlQ+XA4kfVnZq8F5gzTBNIKIW/5i+YpsnepsMW4Qi1
+         PnuM59ApESiZKEIbNZFW64uf7ILKaCGNekwdpNiz9dMd55cQvKhKkSfE9RP3GfQjJPq4
+         k0m5Tkl6nabXhxPCDWckyau+nsK4v4LPPzWNlAifr+Nr9YZbp3ZU1G33Tns53jHmMUq0
+         dijeSo5p7hnVFCjXsmePQPIUva5kdkoclevAhlEty+ezB871Yvo5arMSgW05bcvzB4qk
+         Qhsg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1m9/qO3LmeLpa/8B9OQq33FAn6eMtSXq8Mndctx0NMfI7rdtF6xft+kLJAZ5X8Z2dfIK9K09ZPESiONQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2CmLdmZbu5RcdL65CnVasuUlPSkNnTrEOFmpJ0qfVOrce2Uhh
+	PA6K2dbADO3VSl1paOJt07Hx/UEyHYNm8YMHi0a31QriXcN2yhozILzCMfg5tYR1ff/cbGav1rS
+	WxMR7Yf32qoW6j1URo0c9ASjVH53J0F4=
+X-Gm-Gg: ASbGncv7WnBcJmtADgvJ0bUjQFoO8UZ4bkRuvz8RHC09KyHTYWypsZmm0b6M9SF/0Nt
+	hZfK1INtDKwNP8NmYLoUqAlM83gfmx6kY0hNLt/UgwKbpN399r+7lF8Ebec28sFvkOI/oexYavs
+	HdyimaqM+7dnXq6gjlyEEEiCUeOReP9rwdWBFdOZM4dg==
+X-Google-Smtp-Source: AGHT+IGD5Xbz1ju/qh/VMCqNuyS7RBYzYJPMJta7S6j8X/31mMheqx7zkcCi8kBQ9OeTOUYi871F3Rl/kFlMErgeZ5o=
+X-Received: by 2002:a05:6102:6c5:b0:4dd:b86a:dac1 with SMTP id
+ ada2fe7eead31-4e424063ea5mr10088524137.3.1748338508408; Tue, 27 May 2025
+ 02:35:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdvO6aZq9ptLQRizSkqjLQ4e8EdQ3w==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsWy7bCSvK5qu2mGwZxOY4u9py0sFuy3tlh2
-	6TOTxab9TawWnbM3sFtc3jWHzeLwxjNMFv9/vWK1OPjhCavFwnlGFsvPzmOzaLljajH5oIID
-	r8eTg/OYPNbMW8Po8e/EGjaPliNvWT02repk85h8Yzmjx/t9V9k8+rasYvT4vEkugDOKyyYl
-	NSezLLVI3y6BK2PPzAcsBXujKr48f83cwHjSq4uRk0NCwETi78TzLF2MXBxCArsZJb5/2s8G
-	kZCRmPBiCTOELSxxv+UIK0TRc0aJP/sWAhVxcLAJKEjc7U4DqRER6GGUmHszGqSGWeAFo8Sc
-	f7PAmoUF4iQOzl/NCmKzCKhKXF6xiBHE5hWwlNh8+iwbhC0ocXLmExaQmcwCehJtG8FKmAXk
-	Jba/nQN1g4LEz6fLWCF26Umsav7KDlEjIjG7s415AqPgLCSTZiFMmoVk0iwkHQsYWVYxSqYW
-	FOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgRHnZbmDsbtqz7oHWJk4mA8xCjBwawkwrttgkmG
-	EG9KYmVValF+fFFpTmrxIUZpDhYlcV7xF70pQgLpiSWp2ampBalFMFkmDk6pBqZou5D5G8Qj
-	73a8Ctt1oeR2xEShiYc3fNgVoel10zUzd/HZPoW44JCgvPrZW7+uXK227oTHy08lzzhjTp2S
-	Ov8mTbBU23fCb6uXGbtNJGq/+bwwdr8+UZXz13eBG6cKTA43vFyimNx2oUx630GWvcIejBX9
-	imZ7Lk+4ci/q4W8Gi2MuS+f2LAnZ8a874Tbb3Wrbk/tvxXClW51IF9qs+1eNZS1nHn9+iRz3
-	SYn/sRfnfmot5ZGI1zlZXdGiYhzdVFwqfbfumsvVe67Mh7vTWw4yb405dI/v7Z3V988WSn4p
-	vGLqvcrwmJNZ7oeohG7N37fWzTl01Oix8cGIjRf288xceMeuUOJBxGW3uxuvhQkpsRRnJBpq
-	MRcVJwIAUSdLxikDAAA=
-X-CMS-MailID: 20250527093429epcas2p1ae70ad7304305bf547ce34a70f9badc6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250527093429epcas2p1ae70ad7304305bf547ce34a70f9badc6
-References: <CGME20250527093429epcas2p1ae70ad7304305bf547ce34a70f9badc6@epcas2p1.samsung.com>
+References: <cover.1747235487.git.rabenda.cn@gmail.com> <104dde6002c268a39fab6fcf469adc26d49ba364.1747235487.git.rabenda.cn@gmail.com>
+ <MA0P287MB226290B908D3209E5C890BFAFE90A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+In-Reply-To: <MA0P287MB226290B908D3209E5C890BFAFE90A@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Tue, 27 May 2025 17:34:56 +0800
+X-Gm-Features: AX0GCFuowRLKLbDTYK4Z7Pi5wA1H2Ky2TfavFanA4B7GN3nAlA0UXSRSiBZpEYY
+Message-ID: <CAAT7Ki-33DcA7xeBzzv1hm0wR_ebcVdux5fQxGVrLs45RbGM9A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Inochi Amaoto <inochiama@gmail.com>, linux-riscv@lists.infradead.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please backport 32e92d9f6f87 ("iommu/iova: Separate out rcache init") to
-linux-5.15.y
-
-Commit de53fd7aedb1 32e92d9f6f87 ("iommu/iova: Separate out rcache init")
-fixes below issue.
-This should be applied to all stable kernels that applied commit.
-
-Issue
-=====
-
-As you metioned in commit message, fails in init_iova_rcaches() are not
-handled safely, 
-and a problem actually occurs.
-
-By the context of the 2 lines below in linux-5.15.y, 
-callback of cpuhp may be called before the percpu variable is allocated.
-
-cpuhp_state_add_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD, &iovad->cpuhp_dead);
-init_iova_rcaches(iovad);    
-
-The problem occurred in the Linux kernel version 5.15.144, if
-remove_cpu(cpu) is called between 2 line. 
-The following is the panic log:
-[    2.097125][    T1] Unable to handle kernel paging request at virtual
-address ffffffcb74a6b004
-...
-[    2.097226][    T1] Call trace:
-[    2.097323][    T1]  do_raw_spin_lock+0x1c/0x12c
-[    2.098469][    T1]  _raw_spin_lock_irqsave+0x30/0x60
-[    2.118152][    T1]  free_cpu_cached_iovas+0x50/0xb0
-[    2.118307][    T1]  iova_cpuhp_dead+0x1c/0x30
-[    2.119447][    T1]  cpuhp_invoke_callback+0x2d8/0x5b0
-[    2.119608][    T1]  _cpu_down+0x17c/0x4a0
-[    2.139216][    T1]  cpu_device_down+0x44/0x70
-[    2.139353][    T1]  cpu_subsys_offline+0x10/0x20
-[    2.140503][    T1]  device_offline+0xf4/0x130
-[    2.140640][    T1]  remove_cpu+0x24/0x40
-[    2.160305][    T1]  init_iova_domain+0xec/0x1f0
-
-Here is my modification based on the top of the tree of linux-5.15.y
-
-From 8fc78c5bc321b1183a1edb9331250799e897c911 Mon Sep 17 00:00:00 2001
-From: John Garry <john.garry@huawei.com>
-Date: Thu, 3 Feb 2022 17:59:20 +0800
-Subject: [PATCH] iommu/iova: Separate out rcache init
-
-Currently the rcache structures are allocated for all IOVA domains, even if
-they do not use "fast" alloc+free interface. This is wasteful of memory.
-
-In addition, fails in init_iova_rcaches() are not handled safely, which is
-less than ideal.
-
-Make "fast" users call a separate rcache init explicitly, which includes
-error checking.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Link:
-https://lore.kernel.org/r/1643882360-241739-1-git-send-email-john.garry@huaw
-ei.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Change-Id: Ic2e71b82d66f94cd9a4661e593c03c851ef1b91f
----
- drivers/iommu/dma-iommu.c            |  4 ++
- drivers/iommu/iova.c                 | 73 ++++++++++++++++++++++------
- drivers/vdpa/vdpa_user/iova_domain.c | 11 +++++
- include/linux/iova.h                 | 15 ++----
- 4 files changed, 76 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 48c6f7ff4aef..f9f65ac9b3c0 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -364,6 +364,7 @@ static int iommu_dma_init_domain(struct iommu_domain
-*domain, dma_addr_t base,
- 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
- 	unsigned long order, base_pfn;
- 	struct iova_domain *iovad;
-+	int ret;
- 
- 	if (!cookie || cookie->type != IOMMU_DMA_IOVA_COOKIE)
- 		return -EINVAL;
-@@ -398,6 +399,9 @@ static int iommu_dma_init_domain(struct iommu_domain
-*domain, dma_addr_t base,
- 	}
- 
- 	init_iova_domain(iovad, 1UL << order, base_pfn);
-+	ret = iova_domain_init_rcaches(iovad);
-+	if (ret)
-+		return ret;
- 
- 	/* If the FQ fails we can simply fall back to strict mode */
- 	if (domain->type == IOMMU_DOMAIN_DMA_FQ &&
-iommu_dma_init_fq(domain))
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 0835f32e040a..ce79c840b9ed 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -21,7 +21,6 @@ static bool iova_rcache_insert(struct iova_domain *iovad,
- static unsigned long iova_rcache_get(struct iova_domain *iovad,
- 				     unsigned long size,
- 				     unsigned long limit_pfn);
--static void init_iova_rcaches(struct iova_domain *iovad);
- static void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain
-*iovad);
- static void free_iova_rcaches(struct iova_domain *iovad);
- static void fq_destroy_all_entries(struct iova_domain *iovad);
-@@ -68,8 +67,6 @@ init_iova_domain(struct iova_domain *iovad, unsigned long
-granule,
- 	iovad->anchor.pfn_lo = iovad->anchor.pfn_hi = IOVA_ANCHOR;
- 	rb_link_node(&iovad->anchor.node, NULL, &iovad->rbroot.rb_node);
- 	rb_insert_color(&iovad->anchor.node, &iovad->rbroot);
--	cpuhp_state_add_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD,
-&iovad->cpuhp_dead);
--	init_iova_rcaches(iovad);
- }
- EXPORT_SYMBOL_GPL(init_iova_domain);
- 
-@@ -539,6 +536,13 @@ free_iova_fast(struct iova_domain *iovad, unsigned long
-pfn, unsigned long size)
- }
- EXPORT_SYMBOL_GPL(free_iova_fast);
- 
-+static void iova_domain_free_rcaches(struct iova_domain *iovad)
-+{
-+	cpuhp_state_remove_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD,
-+					    &iovad->cpuhp_dead);
-+	free_iova_rcaches(iovad);
-+}
-+
- #define fq_ring_for_each(i, fq) \
- 	for ((i) = (fq)->head; (i) != (fq)->tail; (i) = ((i) + 1) %
-IOVA_FQ_SIZE)
- 
-@@ -686,11 +690,11 @@ void put_iova_domain(struct iova_domain *iovad)
- {
- 	struct iova *iova, *tmp;
- 
--	cpuhp_state_remove_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD,
--					    &iovad->cpuhp_dead);
+On Thu, May 15, 2025 at 9:33=E2=80=AFAM Chen Wang <unicorn_wang@outlook.com=
+> wrote:
+>
+>
+> On 2025/5/14 23:15, Han Gao wrote:
+> > sg2042 support Zfh ISA extension [1].
+> >
+> > Link: https://occ-oss-prod.oss-cn-hangzhou.aliyuncs.com/resource//17377=
+21869472/%E7%8E%84%E9%93%81C910%E4%B8%8EC920R1S6%E7%94%A8%E6%88%B7%E6%89%8B=
+%E5%86%8C%28xrvm%29_20250124.pdf [1]
+> >
+> > Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> > ---
+> >   arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi | 256 ++++++++++---------=
 -
- 	free_iova_flush_queue(iovad);
--	free_iova_rcaches(iovad);
-+
-+	if (iovad->rcaches)
-+		iova_domain_free_rcaches(iovad);
-+
- 	rbtree_postorder_for_each_entry_safe(iova, tmp, &iovad->rbroot,
-node)
- 		free_iova_mem(iova);
- }
-@@ -799,6 +803,7 @@ EXPORT_SYMBOL_GPL(reserve_iova);
-  */
- 
- #define IOVA_MAG_SIZE 128
-+#define MAX_GLOBAL_MAGS 32	/* magazines per bin */
- 
- struct iova_magazine {
- 	unsigned long size;
-@@ -811,6 +816,13 @@ struct iova_cpu_rcache {
- 	struct iova_magazine *prev;
- };
- 
-+struct iova_rcache {
-+	spinlock_t lock;
-+	unsigned long depot_size;
-+	struct iova_magazine *depot[MAX_GLOBAL_MAGS];
-+	struct iova_cpu_rcache __percpu *cpu_rcaches;
-+};
-+
- static struct iova_magazine *iova_magazine_alloc(gfp_t flags)
- {
- 	return kzalloc(sizeof(struct iova_magazine), flags);
-@@ -884,28 +896,54 @@ static void iova_magazine_push(struct iova_magazine
-*mag, unsigned long pfn)
- 	mag->pfns[mag->size++] = pfn;
- }
- 
--static void init_iova_rcaches(struct iova_domain *iovad)
-+int iova_domain_init_rcaches(struct iova_domain *iovad)
- {
--	struct iova_cpu_rcache *cpu_rcache;
--	struct iova_rcache *rcache;
- 	unsigned int cpu;
--	int i;
-+	int i, ret;
-+
-+	iovad->rcaches = kcalloc(IOVA_RANGE_CACHE_MAX_SIZE,
-+				 sizeof(struct iova_rcache),
-+				 GFP_KERNEL);
-+	if (!iovad->rcaches)
-+		return -ENOMEM;
- 
- 	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
-+		struct iova_cpu_rcache *cpu_rcache;
-+		struct iova_rcache *rcache;
-+
- 		rcache = &iovad->rcaches[i];
- 		spin_lock_init(&rcache->lock);
- 		rcache->depot_size = 0;
--		rcache->cpu_rcaches = __alloc_percpu(sizeof(*cpu_rcache),
-cache_line_size());
--		if (WARN_ON(!rcache->cpu_rcaches))
--			continue;
-+		rcache->cpu_rcaches = __alloc_percpu(sizeof(*cpu_rcache),
-+						     cache_line_size());
-+		if (!rcache->cpu_rcaches) {
-+			ret = -ENOMEM;
-+			goto out_err;
-+		}
- 		for_each_possible_cpu(cpu) {
- 			cpu_rcache = per_cpu_ptr(rcache->cpu_rcaches, cpu);
-+
- 			spin_lock_init(&cpu_rcache->lock);
- 			cpu_rcache->loaded =
-iova_magazine_alloc(GFP_KERNEL);
- 			cpu_rcache->prev = iova_magazine_alloc(GFP_KERNEL);
-+			if (!cpu_rcache->loaded || !cpu_rcache->prev) {
-+				ret = -ENOMEM;
-+				goto out_err;
-+			}
- 		}
- 	}
-+
-+	ret = cpuhp_state_add_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD,
-+					       &iovad->cpuhp_dead);
-+	if (ret)
-+		goto out_err;
-+	return 0;
-+
-+out_err:
-+	free_iova_rcaches(iovad);
-+	return ret;
- }
-+EXPORT_SYMBOL_GPL(iova_domain_init_rcaches);
- 
- /*
-  * Try inserting IOVA range starting with 'iova_pfn' into 'rcache', and
-@@ -1022,7 +1060,7 @@ static unsigned long iova_rcache_get(struct
-iova_domain *iovad,
- {
- 	unsigned int log_size = order_base_2(size);
- 
--	if (log_size >= IOVA_RANGE_CACHE_MAX_SIZE)
-+	if (log_size >= IOVA_RANGE_CACHE_MAX_SIZE || !iovad->rcaches)
- 		return 0;
- 
- 	return __iova_rcache_get(&iovad->rcaches[log_size], limit_pfn -
-size);
-@@ -1040,6 +1078,8 @@ static void free_iova_rcaches(struct iova_domain
-*iovad)
- 
- 	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
- 		rcache = &iovad->rcaches[i];
-+		if (!rcache->cpu_rcaches)
-+			break;
- 		for_each_possible_cpu(cpu) {
- 			cpu_rcache = per_cpu_ptr(rcache->cpu_rcaches, cpu);
- 			iova_magazine_free(cpu_rcache->loaded);
-@@ -1049,6 +1089,9 @@ static void free_iova_rcaches(struct iova_domain
-*iovad)
- 		for (j = 0; j < rcache->depot_size; ++j)
- 			iova_magazine_free(rcache->depot[j]);
- 	}
-+
-+	kfree(iovad->rcaches);
-+	iovad->rcaches = NULL;
- }
- 
- /*
-diff --git a/drivers/vdpa/vdpa_user/iova_domain.c
-b/drivers/vdpa/vdpa_user/iova_domain.c
-index 0678c2514197..42122d11cbf3 100644
---- a/drivers/vdpa/vdpa_user/iova_domain.c
-+++ b/drivers/vdpa/vdpa_user/iova_domain.c
-@@ -488,6 +488,7 @@ vduse_domain_create(unsigned long iova_limit, size_t
-bounce_size)
- 	struct file *file;
- 	struct vduse_bounce_map *map;
- 	unsigned long pfn, bounce_pfns;
-+	int ret;
- 
- 	bounce_pfns = PAGE_ALIGN(bounce_size) >> PAGE_SHIFT;
- 	if (iova_limit <= bounce_size)
-@@ -521,10 +522,20 @@ vduse_domain_create(unsigned long iova_limit, size_t
-bounce_size)
- 	spin_lock_init(&domain->iotlb_lock);
- 	init_iova_domain(&domain->stream_iovad,
- 			PAGE_SIZE, IOVA_START_PFN);
-+	ret = iova_domain_init_rcaches(&domain->stream_iovad);
-+	if (ret)
-+		goto err_iovad_stream;
- 	init_iova_domain(&domain->consistent_iovad,
- 			PAGE_SIZE, bounce_pfns);
-+	ret = iova_domain_init_rcaches(&domain->consistent_iovad);
-+	if (ret)
-+		goto err_iovad_consistent;
- 
- 	return domain;
-+err_iovad_consistent:
-+	put_iova_domain(&domain->stream_iovad);
-+err_iovad_stream:
-+	fput(file);
- err_file:
- 	vfree(domain->bounce_maps);
- err_map:
-diff --git a/include/linux/iova.h b/include/linux/iova.h
-index 6b6cc104e300..8616489b97c1 100644
---- a/include/linux/iova.h
-+++ b/include/linux/iova.h
-@@ -22,20 +22,10 @@ struct iova {
- 	unsigned long	pfn_lo; /* Lowest allocated pfn */
- };
- 
--struct iova_magazine;
--struct iova_cpu_rcache;
--
- #define IOVA_RANGE_CACHE_MAX_SIZE 6	/* log of max cached IOVA range size
-(in pages) */
--#define MAX_GLOBAL_MAGS 32	/* magazines per bin */
--
--struct iova_rcache {
--	spinlock_t lock;
--	unsigned long depot_size;
--	struct iova_magazine *depot[MAX_GLOBAL_MAGS];
--	struct iova_cpu_rcache __percpu *cpu_rcaches;
--};
- 
- struct iova_domain;
-+struct iova_rcache;
- 
- /* Call-Back from IOVA code into IOMMU drivers */
- typedef void (* iova_flush_cb)(struct iova_domain *domain);
-@@ -83,7 +73,7 @@ struct iova_domain {
- 						   have been finished */
- 
- 	struct iova	anchor;		/* rbtree lookup anchor */
--	struct iova_rcache rcaches[IOVA_RANGE_CACHE_MAX_SIZE];	/* IOVA
-range caches */
-+	struct iova_rcache	*rcaches;
- 
- 	iova_flush_cb	flush_cb;	/* Call-Back function to flush IOMMU
- 					   TLBs */
-@@ -155,6 +145,7 @@ void init_iova_domain(struct iova_domain *iovad,
-unsigned long granule,
- 	unsigned long start_pfn);
- int init_iova_flush_queue(struct iova_domain *iovad,
- 			  iova_flush_cb flush_cb, iova_entry_dtor
-entry_dtor);
-+int iova_domain_init_rcaches(struct iova_domain *iovad);
- struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn);
- void put_iova_domain(struct iova_domain *iovad);
- #else
--- 
-2.25.1
+> >   1 file changed, 128 insertions(+), 128 deletions(-)
+> >
+> > diff --git a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi b/arch/riscv/b=
+oot/dts/sophgo/sg2042-cpus.dtsi
+> > index f483f62ab0c4..8dd1a3c60bc4 100644
+> > --- a/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
+> > +++ b/arch/riscv/boot/dts/sophgo/sg2042-cpus.dtsi
+> > @@ -256,11 +256,11 @@ core3 {
+> >               cpu0: cpu@0 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+>
+> Need not touch this. "riscv,isa" is deprecated and replaced by
+> "riscv,isa-base" & "riscv,isa-extensions".
+>
+> And only adding zfh for this looks a bit werid.
+>
+> Actually, I plan to remove "riscv,isa" later, so please don't touch this
+> from now on.
 
+I think that since the linux kernel is the upstream for devicetree, it
+cannot yet remove riscv, isa needs to maintain compatibility.
+
+>
+> Thanks,
+>
+> Chen
+>
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <0>;
+> > @@ -283,11 +283,11 @@ cpu0_intc: interrupt-controller {
+> >               cpu1: cpu@1 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <1>;
+> > @@ -310,11 +310,11 @@ cpu1_intc: interrupt-controller {
+> >               cpu2: cpu@2 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <2>;
+> > @@ -337,11 +337,11 @@ cpu2_intc: interrupt-controller {
+> >               cpu3: cpu@3 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <3>;
+> > @@ -364,11 +364,11 @@ cpu3_intc: interrupt-controller {
+> >               cpu4: cpu@4 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <4>;
+> > @@ -391,11 +391,11 @@ cpu4_intc: interrupt-controller {
+> >               cpu5: cpu@5 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <5>;
+> > @@ -418,11 +418,11 @@ cpu5_intc: interrupt-controller {
+> >               cpu6: cpu@6 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <6>;
+> > @@ -445,11 +445,11 @@ cpu6_intc: interrupt-controller {
+> >               cpu7: cpu@7 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <7>;
+> > @@ -472,11 +472,11 @@ cpu7_intc: interrupt-controller {
+> >               cpu8: cpu@8 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <8>;
+> > @@ -499,11 +499,11 @@ cpu8_intc: interrupt-controller {
+> >               cpu9: cpu@9 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <9>;
+> > @@ -526,11 +526,11 @@ cpu9_intc: interrupt-controller {
+> >               cpu10: cpu@10 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <10>;
+> > @@ -553,11 +553,11 @@ cpu10_intc: interrupt-controller {
+> >               cpu11: cpu@11 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <11>;
+> > @@ -580,11 +580,11 @@ cpu11_intc: interrupt-controller {
+> >               cpu12: cpu@12 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <12>;
+> > @@ -607,11 +607,11 @@ cpu12_intc: interrupt-controller {
+> >               cpu13: cpu@13 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <13>;
+> > @@ -634,11 +634,11 @@ cpu13_intc: interrupt-controller {
+> >               cpu14: cpu@14 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <14>;
+> > @@ -661,11 +661,11 @@ cpu14_intc: interrupt-controller {
+> >               cpu15: cpu@15 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <15>;
+> > @@ -688,11 +688,11 @@ cpu15_intc: interrupt-controller {
+> >               cpu16: cpu@16 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <16>;
+> > @@ -715,11 +715,11 @@ cpu16_intc: interrupt-controller {
+> >               cpu17: cpu@17 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <17>;
+> > @@ -742,11 +742,11 @@ cpu17_intc: interrupt-controller {
+> >               cpu18: cpu@18 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <18>;
+> > @@ -769,11 +769,11 @@ cpu18_intc: interrupt-controller {
+> >               cpu19: cpu@19 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <19>;
+> > @@ -796,11 +796,11 @@ cpu19_intc: interrupt-controller {
+> >               cpu20: cpu@20 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <20>;
+> > @@ -823,11 +823,11 @@ cpu20_intc: interrupt-controller {
+> >               cpu21: cpu@21 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <21>;
+> > @@ -850,11 +850,11 @@ cpu21_intc: interrupt-controller {
+> >               cpu22: cpu@22 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <22>;
+> > @@ -877,11 +877,11 @@ cpu22_intc: interrupt-controller {
+> >               cpu23: cpu@23 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <23>;
+> > @@ -904,11 +904,11 @@ cpu23_intc: interrupt-controller {
+> >               cpu24: cpu@24 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <24>;
+> > @@ -931,11 +931,11 @@ cpu24_intc: interrupt-controller {
+> >               cpu25: cpu@25 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <25>;
+> > @@ -958,11 +958,11 @@ cpu25_intc: interrupt-controller {
+> >               cpu26: cpu@26 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <26>;
+> > @@ -985,11 +985,11 @@ cpu26_intc: interrupt-controller {
+> >               cpu27: cpu@27 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <27>;
+> > @@ -1012,11 +1012,11 @@ cpu27_intc: interrupt-controller {
+> >               cpu28: cpu@28 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <28>;
+> > @@ -1039,11 +1039,11 @@ cpu28_intc: interrupt-controller {
+> >               cpu29: cpu@29 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <29>;
+> > @@ -1066,11 +1066,11 @@ cpu29_intc: interrupt-controller {
+> >               cpu30: cpu@30 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <30>;
+> > @@ -1093,11 +1093,11 @@ cpu30_intc: interrupt-controller {
+> >               cpu31: cpu@31 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <31>;
+> > @@ -1120,11 +1120,11 @@ cpu31_intc: interrupt-controller {
+> >               cpu32: cpu@32 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <32>;
+> > @@ -1147,11 +1147,11 @@ cpu32_intc: interrupt-controller {
+> >               cpu33: cpu@33 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <33>;
+> > @@ -1174,11 +1174,11 @@ cpu33_intc: interrupt-controller {
+> >               cpu34: cpu@34 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <34>;
+> > @@ -1201,11 +1201,11 @@ cpu34_intc: interrupt-controller {
+> >               cpu35: cpu@35 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <35>;
+> > @@ -1228,11 +1228,11 @@ cpu35_intc: interrupt-controller {
+> >               cpu36: cpu@36 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <36>;
+> > @@ -1255,11 +1255,11 @@ cpu36_intc: interrupt-controller {
+> >               cpu37: cpu@37 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <37>;
+> > @@ -1282,11 +1282,11 @@ cpu37_intc: interrupt-controller {
+> >               cpu38: cpu@38 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <38>;
+> > @@ -1309,11 +1309,11 @@ cpu38_intc: interrupt-controller {
+> >               cpu39: cpu@39 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <39>;
+> > @@ -1336,11 +1336,11 @@ cpu39_intc: interrupt-controller {
+> >               cpu40: cpu@40 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <40>;
+> > @@ -1363,11 +1363,11 @@ cpu40_intc: interrupt-controller {
+> >               cpu41: cpu@41 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <41>;
+> > @@ -1390,11 +1390,11 @@ cpu41_intc: interrupt-controller {
+> >               cpu42: cpu@42 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <42>;
+> > @@ -1417,11 +1417,11 @@ cpu42_intc: interrupt-controller {
+> >               cpu43: cpu@43 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <43>;
+> > @@ -1444,11 +1444,11 @@ cpu43_intc: interrupt-controller {
+> >               cpu44: cpu@44 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <44>;
+> > @@ -1471,11 +1471,11 @@ cpu44_intc: interrupt-controller {
+> >               cpu45: cpu@45 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <45>;
+> > @@ -1498,11 +1498,11 @@ cpu45_intc: interrupt-controller {
+> >               cpu46: cpu@46 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <46>;
+> > @@ -1525,11 +1525,11 @@ cpu46_intc: interrupt-controller {
+> >               cpu47: cpu@47 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <47>;
+> > @@ -1552,11 +1552,11 @@ cpu47_intc: interrupt-controller {
+> >               cpu48: cpu@48 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <48>;
+> > @@ -1579,11 +1579,11 @@ cpu48_intc: interrupt-controller {
+> >               cpu49: cpu@49 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <49>;
+> > @@ -1606,11 +1606,11 @@ cpu49_intc: interrupt-controller {
+> >               cpu50: cpu@50 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <50>;
+> > @@ -1633,11 +1633,11 @@ cpu50_intc: interrupt-controller {
+> >               cpu51: cpu@51 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <51>;
+> > @@ -1660,11 +1660,11 @@ cpu51_intc: interrupt-controller {
+> >               cpu52: cpu@52 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <52>;
+> > @@ -1687,11 +1687,11 @@ cpu52_intc: interrupt-controller {
+> >               cpu53: cpu@53 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <53>;
+> > @@ -1714,11 +1714,11 @@ cpu53_intc: interrupt-controller {
+> >               cpu54: cpu@54 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <54>;
+> > @@ -1741,11 +1741,11 @@ cpu54_intc: interrupt-controller {
+> >               cpu55: cpu@55 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <55>;
+> > @@ -1768,11 +1768,11 @@ cpu55_intc: interrupt-controller {
+> >               cpu56: cpu@56 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <56>;
+> > @@ -1795,11 +1795,11 @@ cpu56_intc: interrupt-controller {
+> >               cpu57: cpu@57 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <57>;
+> > @@ -1822,11 +1822,11 @@ cpu57_intc: interrupt-controller {
+> >               cpu58: cpu@58 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <58>;
+> > @@ -1849,11 +1849,11 @@ cpu58_intc: interrupt-controller {
+> >               cpu59: cpu@59 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <59>;
+> > @@ -1876,11 +1876,11 @@ cpu59_intc: interrupt-controller {
+> >               cpu60: cpu@60 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <60>;
+> > @@ -1903,11 +1903,11 @@ cpu60_intc: interrupt-controller {
+> >               cpu61: cpu@61 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <61>;
+> > @@ -1930,11 +1930,11 @@ cpu61_intc: interrupt-controller {
+> >               cpu62: cpu@62 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <62>;
+> > @@ -1957,11 +1957,11 @@ cpu62_intc: interrupt-controller {
+> >               cpu63: cpu@63 {
+> >                       compatible =3D "thead,c920", "riscv";
+> >                       device_type =3D "cpu";
+> > -                     riscv,isa =3D "rv64imafdc";
+> > +                     riscv,isa =3D "rv64imafdc_zfh";
+> >                       riscv,isa-base =3D "rv64i";
+> >                       riscv,isa-extensions =3D "i", "m", "a", "f", "d",=
+ "c",
+> >                                              "ziccrse", "zicntr", "zics=
+r",
+> > -                                            "zifencei", "zihpm",
+> > +                                            "zifencei", "zihpm", "zfh"=
+,
+> >                                              "xtheadvector";
+> >                       thead,vlenb =3D <16>;
+> >                       reg =3D <63>;
