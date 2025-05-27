@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6AA1CEAD6;
-	Tue, 27 May 2025 08:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98181CEAD6;
+	Tue, 27 May 2025 08:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335471; cv=none; b=nsz3Fsv2gccKYqpgbu2qNMLKG3pb9qvUeJdkcv9vnyVvjQdWrEzwhNSieYGkgGpjStRqfsVwCTGtucRkY6PotTgtPQBjFTXHU5AgdV6o9dub/sTiDlcWD5n5PHTF8p1l4Vy0j47M87dOcAhJWfWdosAYcXPYWun41+zj2xr2XzE=
+	t=1748335475; cv=none; b=Uylvwnkgxipy6Ki4/wFQtDJ2U1SQm/3yFeVGiRvhZFtLlohnIN43J3Oi9wJ8DKEu5qUMpHTlFT5foEgKxx3gD8EWiSLq2FV4feiLLfLtUYJV4YilUGs53v9kcN9+wIlj4ZC/90+ky6DzuzVUnLTCCflcISQw5lEaqDXz92UTXj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335471; c=relaxed/simple;
-	bh=LDUja/soH89gEGH4sh7r6gwl6Kbwv9oCc2U3NgLy3do=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LV3rxkolS29/EqnY6u6LvET0mCsZ7riTfc+ZF//pJjLpYlVyGcUvhJgt+bcqF1ztepDLdycihi3A0cDmBHaJRK4ygi1BNQcjeNKFxP8/2AsBi4Bz+MUNiDjdFCPpi6u0EBiXnxAyWSSHKVeaVAMXEzdeA28g9tAny3jgSh/jPBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jhsbScrG; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748335475; c=relaxed/simple;
+	bh=tu/Ta76Ml0gQqGnmCdVOydN9lwxl9NE68BkygeaRWyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YstKM4SV+zlAamG6DTYGLtMuybljAIXQIBtNvLZ2kUFeTrJuF8UMjuKwnfY3pXQI7bccs2j5cwMDgP7FwolP+boB/ZHM1dSLAE5u3F14JmiHSli/WPM/N/M7h54kIhB3mGCs0/aWQQJwLZpL+OBgSV+6dPC5d+LYEezBDdWjAYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMBLk28+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jhsbScrG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748335470; x=1779871470;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=LDUja/soH89gEGH4sh7r6gwl6Kbwv9oCc2U3NgLy3do=;
-  b=jhsbScrGTEcoulm7Yi6lwJCuSG1V14hQnwMza4AShf7VBfFiAlSjszLV
-   LQ0V2byjq30WEdzSSRe0bW33+GiWCozSTo5oxzN+0A4B4TyjbgA0Tr4Lx
-   ES8Hx5ARzpeU9go9lTXmoyk5/8FFAjMGR8f77CzzXUbi4RLzRswkb8zcf
-   jxdJFkgZzhpRT+K2HcZglZoY9NmevMYKYUB2RePXGYof39StBsqp+3o8L
-   tTNSiLWkhx32Wn0qhQ8mz8Wo6M+eRc0VwRkJJO3JZ3oKuZFycUxafhR1b
-   +QNvVDTSHTW1y8obBfF19rHsHl9+jbs25NYIZTIlvNPqv5yLCjWrtIbOw
-   A==;
-X-CSE-ConnectionGUID: H3JVI5mvReW55Bvhm+yX1g==
-X-CSE-MsgGUID: vYRgGU9YRcmdBtFPXvZxbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="67732379"
-X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="67732379"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:44:28 -0700
-X-CSE-ConnectionGUID: JMWUB66JSwiPLT/caKW45g==
-X-CSE-MsgGUID: 6r760WWXS2u+N35uVyKcmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="173670439"
-Received: from unknown (HELO [10.238.11.3]) ([10.238.11.3])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:44:01 -0700
-Message-ID: <9157f2d4-62f0-41c2-a755-80233b534b42@linux.intel.com>
-Date: Tue, 27 May 2025 16:43:57 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMBLk28+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578A9C4CEEE;
+	Tue, 27 May 2025 08:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748335475;
+	bh=tu/Ta76Ml0gQqGnmCdVOydN9lwxl9NE68BkygeaRWyM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bMBLk28+3Bza/oHd1Lf8FtKmDw7v1BsxxwOIxLo5BsGr/eXz1hY5hVFlkPrTpQWBz
+	 AZzvVzNYBqUJeABtTiV8yEiNBte8RSX9AsMFciqkh16ufXIwIROJuIj9drctvK1RPD
+	 jx7TGAXutfPAxJQKqUkI0ZTfc85DKV+JFaa2jP5jbjSEgwGyLvNdwxtcikEjgp8CCv
+	 zSIVmlKKbZBMgr5+MZqrKcXK8O7RyTyWExVcaUXiDE6KHlXJdO5spV9WYT/g++A6wx
+	 o6ghMsEIJMqJTs8OTg54uxeie2/CQ3Gm7xEU76JkWSpzzbX23Qo6mM0uaPL6G8zqVQ
+	 GlRgJ2nZDc21Q==
+Message-ID: <3a76c7b1-ce02-41eb-a4c0-ae065e9b99f3@kernel.org>
+Date: Tue, 27 May 2025 10:44:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,150 +35,204 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
- chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
- david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
- erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
- haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
- yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
- <9483e9e3-9b29-49c6-adcc-04fe45ac28fd@linux.intel.com>
+Subject: Re: [PATCH v3 3/4] firmware: stratix10-svc: Add initial support for
+ asynchronous communication with Stratix10 service channel
+To: mahesh.rao@altera.com, Dinh Nguyen <dinguyen@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Matthew Gerlach <matthew.gerlach@altera.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com>
+ <20250526-sip_svc_upstream-v3-3-6a08a4502de3@altera.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-In-Reply-To: <9483e9e3-9b29-49c6-adcc-04fe45ac28fd@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250526-sip_svc_upstream-v3-3-6a08a4502de3@altera.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 26/05/2025 08:25, Mahesh Rao via B4 Relay wrote:
+> From: Mahesh Rao <mahesh.rao@altera.com>
+> 
+> This commit adds support for asynchronous communication
+
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+
+
+> with the Stratix10 service channel. It introduces
+> new definitions to enable asynchronous messaging to
+> the Secure Device Manager (SDM). The changes include
+> the adding/removing of asynchronous support to existing
+> channels, initializing/exit-cleanup of the new asynchronous
+> framework and sending/polling of messages to SDM.
+
+Please wrap commit message according to Linux coding style / submission
+process (neither too early nor over the limit):
+https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+
+
+...
+
+> +	args.a0 = INTEL_SIP_SMC_ASYNC_POLL;
+> +	args.a1 =
+> +		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
+> +
+> +	actrl->invoke_fn(actrl, &args, &handle->res);
+> +
+> +	data->status = 0;
+> +	if (handle->res.a0 == INTEL_SIP_SMC_STATUS_OK) {
+> +		return 0;
+> +	} else if (handle->res.a0 == INTEL_SIP_SMC_STATUS_BUSY) {
+> +		dev_dbg(ctrl->dev, "async message is still in progress\n");
+> +		return -EAGAIN;
+> +	}
+> +
+> +	dev_err(ctrl->dev,
+> +		"Failed to poll async message ,got status as %ld\n",
+> +		handle->res.a0);
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL_GPL(stratix10_svc_async_poll);
+
+No, drop entire function. There is no user of it. You cannot add exports
+for dead code.
+
+> +
+> +/**
+> + * stratix10_svc_async_done - Completes an asynchronous transaction.
+> + * @chan: Pointer to the service channel structure.
+> + * @tx_handle: Handle to the transaction being completed.
+> + *
+> + * This function completes an asynchronous transaction identified by the given
+> + * transaction handle. It ensures that the necessary structures are initialized
+> + * and valid before proceeding with the completion operation. The function
+> + * deallocates the transaction ID, frees the memory allocated for the handler,
+> + * and removes the handler from the transaction list.
+> + *
+> + * Return: 0 on success, -EINVAL if any input parameter is invalid, or other
+> + *         negative error codes on failure.
+> + */
+> +int stratix10_svc_async_done(struct stratix10_svc_chan *chan, void *tx_handle)
+> +{
+> +	if (!chan || !tx_handle)
+> +		return -EINVAL;
+> +
+> +	struct stratix10_svc_controller *ctrl = chan->ctrl;
+> +	struct stratix10_async_chan *achan = chan->async_chan;
+> +
+> +	if (!achan) {
+> +		dev_err(ctrl->dev, "async channel not allocated\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	struct stratix10_svc_async_handler *handle =
+> +		(struct stratix10_svc_async_handler *)tx_handle;
+> +	if (!hash_hashed(&handle->next)) {
+> +		dev_err(ctrl->dev, "Invalid transaction handle\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
+> +
+> +	spin_lock(&actrl->trx_list_wr_lock);
+> +	hash_del_rcu(&handle->next);
+> +	spin_unlock(&actrl->trx_list_wr_lock);
+> +	synchronize_rcu();
+> +	stratix10_deallocate_id(achan->job_id_pool,
+> +				STRATIX10_GET_JOBID(handle->transaction_id));
+> +	kfree(handle);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(stratix10_svc_async_done);
+
+No, drop entire function. There is no user of it. You cannot add exports
+for dead code.
+
+> +
+> +static inline void stratix10_smc_1_2(struct stratix10_async_ctrl *actrl,
+> +				     const struct arm_smccc_1_2_regs *args,
+> +				     struct arm_smccc_1_2_regs *res)
+> +{
+> +	arm_smccc_1_2_smc(args, res);
+> +}
+> +
+> +/**
+> + * stratix10_svc_async_init - Initialize the Stratix10 service controller
+> + *                            for asynchronous operations.
+> + * @controller: Pointer to the Stratix10 service controller structure.
+> + *
+> + * This function initializes the asynchronous service controller by setting up
+> + * the necessary data structures, initializing the transaction list.
+> + *
+> + * Return: 0 on success, -EINVAL if the controller is NULL or already initialized,
+> + *         -ENOMEM if memory allocation fails, -EADDRINUSE if the client ID is already
+> + *         reserved, or other negative error codes on failure.
+> + */
+> +static int stratix10_svc_async_init(struct stratix10_svc_controller *controller)
+> +{
+> +	int ret;
+> +	struct arm_smccc_res res;
+> +
+> +	if (!controller)
+> +		return -EINVAL;
+> +
+> +	struct stratix10_async_ctrl *actrl = &controller->actrl;
+
+Do not declare variables in the middle of the code. See coding style.
+
+> +
+> +	if (actrl->initialized)
+> +		return -EINVAL;
+> +
+> +	struct device *dev = controller->dev;
+
+Same here.
 
 
 
-On 5/27/2025 4:25 PM, Binbin Wu wrote:
->
->
-> On 5/15/2025 7:41 AM, Ackerley Tng wrote:
->> Track guest_memfd memory's shareability status within the inode as
->> opposed to the file, since it is property of the guest_memfd's memory
->> contents.
->>
->> Shareability is a property of the memory and is indexed using the
->> page's index in the inode. Because shareability is the memory's
->> property, it is stored within guest_memfd instead of within KVM, like
->> in kvm->mem_attr_array.
->>
->> KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
->> retained to allow VMs to only use guest_memfd for private memory and
->> some other memory for shared memory.
->>
->> Not all use cases require guest_memfd() to be shared with the host
->> when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
->> which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
->> private to the guest, and therefore not mappable by the
->> host. Otherwise, memory is shared until explicitly converted to
->> private.
->>
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
->> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
->> Co-developed-by: Fuad Tabba <tabba@google.com>
->> Signed-off-by: Fuad Tabba <tabba@google.com>
->> Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
->> ---
->>   Documentation/virt/kvm/api.rst |   5 ++
->>   include/uapi/linux/kvm.h       |   2 +
->>   virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
->>   3 files changed, 129 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
->> index 86f74ce7f12a..f609337ae1c2 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
->>   The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
->>   This is validated when the guest_memfd instance is bound to the VM.
->>   +If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
->> +supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
->
-> It seems that the sentence is stale?
-> Didn't find the definition of KVM_CAP_GMEM_CONVERSIONS.
-Aha! It's a typo, should be KVM_CAP_GMEM_CONVERSION.
-
-
-
->
->> Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
->> +will initialize the memory for the guest_memfd as guest-only and not faultable
->> +by the host.
->> +
-> [...]
->>     static int kvm_gmem_init_fs_context(struct fs_context *fc)
->> @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
->>   static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>                                 loff_t size, u64 flags)
->>   {
->> +    struct kvm_gmem_inode_private *private;
->>       struct inode *inode;
->> +    int err;
->>         inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
->>       if (IS_ERR(inode))
->>           return inode;
->>   +    err = -ENOMEM;
->> +    private = kzalloc(sizeof(*private), GFP_KERNEL);
->> +    if (!private)
->> +        goto out;
->> +
->> +    mt_init(&private->shareability);
->
-> shareability is defined only when CONFIG_KVM_GMEM_SHARED_MEM enabled, should be done within CONFIG_KVM_GMEM_SHARED_MEM .
->
->
->> + inode->i_mapping->i_private_data = private;
->> +
->> +    err = kvm_gmem_shareability_setup(private, size, flags);
->> +    if (err)
->> +        goto out;
->> +
->>       inode->i_private = (void *)(unsigned long)flags;
->>       inode->i_op = &kvm_gmem_iops;
->>       inode->i_mapping->a_ops = &kvm_gmem_aops;
->> @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>       WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
->>         return inode;
->> +
->> +out:
->> +    iput(inode);
->> +
->> +    return ERR_PTR(err);
->>   }
->>
-> [...]
->
-
+Best regards,
+Krzysztof
