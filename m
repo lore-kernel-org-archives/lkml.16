@@ -1,186 +1,90 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22422797A1
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F450248886;
+	Tue, 27 May 2025 16:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748363544; cv=none; b=DhRewHyURvU4ETOT00YGWfJNsz2P/xv6khQcHCn11lYcOKvGbbMCgfO7MdmJ5LcNgojPanbz67EmYofYAvpgbq8lazbD58Bpi/safj6lTBfObU0JXy7sEpd9HDbip/0bHhxmp7CjHS3u6wxIj/DxjPJy7BDitXdk5JTRUT5Qhho=
+	t=1748363568; cv=none; b=HkepIb2bBitZ4jomAm1lDGtV1pXHjdXB603TNm4lFJK7Ci3MVQG02VZxbCwqlC3ArTE5RtJgUR9DKiL6Ka77kV8NJm0WBV6porLz250ncq/xXpPN2ijNa2euEZTsXPmlBZkJzCzReLAsF9EAPpjyyh9UElLjx3Iual+JxGQ56yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748363544; c=relaxed/simple;
-	bh=2sIt4equTxMf7zNksQU/+IeDziUhiC69Jled1PWpUQE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=OJcyKA5vVuF80ml++I6iP6Az6Y1Th42Hy70aLhwBz3nWZw1h0OpffYHOCWclaPlNno2N1rELqKMt46uWketNQOHfTVzIsBRhrzhMC06gjL3P3QkBv2hoCcdjM04Jm28gQQWsKCUF+UmN1pUm17eKKu5q0f7tfMBLEyK41/c8i0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sslJajJC; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748363568; c=relaxed/simple;
+	bh=ZVXm/cQRgPmvtNwv7BIjBbyhxwseApmwFg3oUawaEz8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=tV2rY5wjxqDwlXHc4CakMkE6qusCad68PwfFPfuxZqpeUfwhM/giD0N2kcdsvcmzXN1mKUWya5Ofy58Ka+K1zBejtOvQgqjhPvshY8M8xPSKcQM0mIsAjmdjkifL05zKSr5nNqXtnptf7wNO9VuLdHlmECwJqBJXvUCMzMWl3Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jg90TGWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sslJajJC"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so42379155e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748363540; x=1748968340; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j4ceyXfpbHOb26b8XCYLDg0Adii9j8clPXP8isRHjuk=;
-        b=sslJajJCJsXGH1OU5imgef6CxF90BaOM9UBxOexziU1MFTfXryj133Ryw0898TK/oq
-         K6wy9zhUouFdvmTDuvYVs3NJx/QJS7ZfQI0IdEaaDZeScpKGI1bM84j5ooCO2Vgpy4jr
-         gqJQxDmUG/Ew2SszVOzFv+Y5pChEJxCbqj3YazYSgwpuJLjJlcjiaw++ZChkCRgFKXUR
-         HPpa4mxRLNRqm7jZNSaAZnXfAhDMmbPy5wkLniRNPyoYRDx7XBq+tX3e1HpOpn2vfUCh
-         RqjrTWNAJN6m70K8L5dKlHE3WbPgJknZJXL5/5RjI3Tmq4jXm+b4e5vqVVogvGQeGVcW
-         ppvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748363540; x=1748968340;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j4ceyXfpbHOb26b8XCYLDg0Adii9j8clPXP8isRHjuk=;
-        b=s5LPHIvfhw2SpEbsNQOGBs1Wc0Fj4tKLieiI/GZhrBxAHiscyJ1UN4rhM9C7NSOf51
-         tYbQlZqaPIGzoSh1a2kBgW575GhRO+92U2OYrwpx9vqES7AnA12500gA9yTKStZCf2mf
-         8XDhVT6QKKmmEz2vmcIqxbzvTDNknz42O0RYqC9OFwOuMRiY5uXEp7bnKSF2iEfc3NVG
-         vbhyLm1ZxL/yOmIEFxRApi+fru0tQj322vemT46eATrzXjKTQdYzMOo8B8fvm0qJnqrs
-         22+rcBlWaFdjfsH+vnidpqnuxo3LbfmpDiMHto5iqdqq/tS701kopR89vn87LAbzaCTG
-         6kNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXGwS+uBk1V8GpFtVcDS3ludVcejy4UW5Wt0lO/eanV/Yq2ROUPoDg+e4V/CBPfYLIcSJNJXfHp6tAqzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwefeoUUd3NfW0I1QxY9O3budqpPXB503FrBaz2G6RbDvUbtZbo
-	sFbklfIEP6Cm7SIKoFFmocQdtS0BTJNCCSUB00vFDNH+1g1Y5l5cdyG+f74m07xO7xc=
-X-Gm-Gg: ASbGnculQDUzKaWqODPQgOQRa78u41B8eW7lSfZ5fbYW4eVXoRfIIcbpUxmiBckOXAS
-	3b0MI1Psq2/Qz9FheS6mBU/t2Fob6xncHZpedPvQ53Zm/NXIRKfR6EjXACHqw3K8+/soOUdLOjn
-	a3Q2HXjVfbgEwmR3IT1FY4kuDtai5zxTpABN0KowIcffkuWDcxhmAEHE9YU+LvqpVhUnX+vO44u
-	987z+76mc2T7XjY0RGTyi3ql9U7GvKcsXXC4r5oG76oo+PSt8ZkG09fifVZkVDVJ2S+zhVOJ0X3
-	F9+/SQAzA05nfE/auaII5S3DaYwXYor1JkMwbL48NI7Td8+98XppprUL9g==
-X-Google-Smtp-Source: AGHT+IEmErbjqw+229GOiiiNp1gk2yeXCVD0vFAogvu/2yFKvfiLTxs0BLJ5USyClF4cC7YxbXHYeQ==
-X-Received: by 2002:a05:600c:6286:b0:442:d9f2:c74e with SMTP id 5b1f17b1804b1-44c932f9428mr116536725e9.23.1748363540016;
-        Tue, 27 May 2025 09:32:20 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3dd94d1sm270586605e9.34.2025.05.27.09.32.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 09:32:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jg90TGWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1209AC4CEE9;
+	Tue, 27 May 2025 16:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748363567;
+	bh=ZVXm/cQRgPmvtNwv7BIjBbyhxwseApmwFg3oUawaEz8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Jg90TGWrPXQA8joQ1m4c7eR3VScy3tirvEQY2rWELL9r8hamJ7h2fJfuFFwfl+fgX
+	 zP15pVpwjtM9YyskMPQReQ4k/0YcflXAOylnXnZNjtFi+vF1prhL0F55HOcWetHy7b
+	 OsXxRDgEDpx2DMlNwF1S/7lpczzZ6ATi/ypm9rne0Oh3oLmcSrwEajftl0P3q0IJ3s
+	 uxgMA+TT3IuKjJK4AyGHcO+M9j8Sxq5A42GKfWIz4lALjdNlq3snybKu97+40L9xNw
+	 9NVe2eezBqHA4AisZu5GntVyHQOb5juDFSvHE5Z+LjSktNwNaWEnG3zt6+1a7U7eVG
+	 qYom8HKfDZBoA==
+From: Mark Brown <broonie@kernel.org>
+To: Kevin Cernekee <cernekee@chromium.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Bram Vlerick <bram.vlerick@openpixelsystems.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ peter@korsgaard.com
+In-Reply-To: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
+References: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
+Subject: Re: [PATCH] ASoC: tas571x: add separate tas5733 controls
+Message-Id: <174836356579.104699.8312897041646074055.b4-ty@kernel.org>
+Date: Tue, 27 May 2025 17:32:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 17:32:18 +0100
-Message-Id: <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Konrad Dybcio"
- <konradybcio@kernel.org>, "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>
-Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, <linux-sound@vger.kernel.org>, "Liam Girdwood"
- <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
- <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Konrad
- Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Jaroslav Kysela"
- <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-X-Mailer: aerc 0.20.0
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
- <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
-In-Reply-To: <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
-> On 22/05/2025 19:40, Alexey Klimov wrote:
->> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
->> are required to support audio playback and audio capture on sm6115 and
->> its derivatives.
->>=20
->> Cc: Konrad Dybcio <konradybcio@kernel.org>
->> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->
-> Just keep one CC.
+On Tue, 27 May 2025 13:08:49 +0200, Bram Vlerick wrote:
+> The controls between the tas5717 and tas5733 should not be shared since
+> the biquad and register setup is not identical. For example, writing to
+> 0x5c on the tas5717 modifies ch2_bq[10] while on the tas5733 this is
+> ch1_cross_bq[3].
+> 
+> see https://www.ti.com/lit/ds/symlink/tas5733l.pdf and
+> https://www.ti.com/lit/ds/symlink/tas5717.pdf for more details on the
+> register maps.
+> 
+> [...]
 
-Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
-email here?
+Applied to
 
->> Cc: Srinivas Kandagatla <srini@kernel.org>
->> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->
-> Missing SoB.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-IIRC I took Konrad's changes but at this point I don't remember how much wa=
-s changed.
-So I need to switch to Konrad's owned completely or somehow indicate using =
-tags
-that it is initial Konrad's work.
+Thanks!
 
-Konrad, what's your preference here?
+[1/1] ASoC: tas571x: add separate tas5733 controls
+      commit: e3de7984e45155888eebbca5a32c1cc5f29fa859
 
->> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sm6115.dtsi | 132 ++++++++++++++++++++++++++++=
-+++++++
->>  1 file changed, 132 insertions(+)
->>=20
->> diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/=
-qcom/sm6115.dtsi
->> index c8865779173eca65f9e94535b5339f590d4b1410..045887ae215b0965ffc098fd=
-31fd18ac1ad90b7b 100644
->> --- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
->> @@ -2689,6 +2689,138 @@ funnel_apss1_in: endpoint {
->>  			};
->>  		};
->
->
->
-> ...
->
->> +		swr0: soundwire@a740000 {
->> +			compatible =3D "qcom,soundwire-v1.6.0";
->> +			reg =3D <0x0 0x0a740000 0x0 0x2000>;
->> +			interrupts =3D <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks =3D <&txmacro>;
->> +			clock-names =3D "iface";
->> +
->> +			resets =3D <&lpasscc 0>;
->> +			reset-names =3D "swr_audio_cgcr";
->> +
->> +			label =3D "VA_TX";
->> +			qcom,din-ports =3D <3>;
->> +			qcom,dout-ports =3D <0>;
->> +
->> +			qcom,ports-sinterval-low =3D	/bits/ 8 <0x03 0x03 0x03>;
->> +			qcom,ports-offset1 =3D		/bits/ 8 <0x01 0x02 0x01>;
->> +			qcom,ports-offset2 =3D		/bits/ 8 <0x00 0x00 0x00>;
->> +			qcom,ports-hstart =3D		/bits/ 8 <0xff 0xff 0xff>;
->> +			qcom,ports-hstop =3D		/bits/ 8 <0xff 0xff 0xff>;
->> +			qcom,ports-word-length =3D	/bits/ 8 <0xff 0xff 0xff>;
->> +			qcom,ports-block-pack-mode =3D	/bits/ 8 <0xff 0xff 0xff>;
->> +			qcom,ports-block-group-count =3D	/bits/ 8 <0xff 0xff 0xff>;
->> +			qcom,ports-lane-control =3D	/bits/ 8 <0x00 0x00 0x00>;
->> +
->> +			#sound-dai-cells =3D <1>;
->> +			#address-cells =3D <2>;
->> +			#size-cells =3D <0>;
->
-> Why this not is not disabled? That's a bus. Each bus node makes no sense
-> on its own without the actual devices, thus it is always disabled in the
-> SoC file. Just take a look at other DTSI.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Because I didn't know that. Ok, I'll add disable status to these.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
->> +		};
->> +
->> +		lpasscc: clock-controller@a7ec000 {
->> +			compatible =3D "qcom,sm6115-lpasscc";
->> +			reg =3D <0x0 0x0a7ec000 0x0 0x1000>;
->> +			#reset-cells =3D <1>;
->> +		};
->> +
->>  		remoteproc_adsp: remoteproc@a400000 {
->
-> Looks like not ordered by unit address.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Ok, I need to sort it then and check other parts to see if they are sorted =
-or not.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
