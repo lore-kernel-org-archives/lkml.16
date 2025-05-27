@@ -1,311 +1,453 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012040.outbound.protection.outlook.com [52.101.66.40])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A8F278E7A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.40
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748363244; cv=fail; b=cFwE77BcuEogWQHOQgdWOBfvMWWITyn5dsfZEMF3TzQHHbusQg2H72nOotdaCJeuhn0Ziaz3hRvey5Cs87m2gtCoY85oeQe6QEscbqfoTqcibss4IpJnMZGN17XjdBTY+21H1qoeSXTVHzHwdR9Pq8m3TEORfdgvRtWXLfL8SfY=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748363244; c=relaxed/simple;
-	bh=d3xgb86OvGS7gGyMpsgWCUre5NZZzM4gTiubaL6qefU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FTU2R+rxDtUpuChw2i4N/BfTDqGhSGBDJlGlwKiAyAk4LShVOG1SD5rb6gFQXg/T56ow0csUzjNQHaa8Q3lKOdvPUSk/TPUNAFFtXODTKpvWabP8TA/C3wqAuqns80lBrmpMRRDH0UMs0G24cQFu3gqAX3jEhjjzytZMrw4sbpI=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=rC3Cl2ra; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=rC3Cl2ra; arc=fail smtp.client-ip=52.101.66.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="rC3Cl2ra";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="rC3Cl2ra"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=cOtdxD+XPC9iJl9SXZqnPuQh7Su39QZMakaQTZnJk5zjPIQX5EZRz1Qgs+EFBI1//058tg3rFe4HdZq1Zvln3AGdM67NGhuHOT0oQ95bDyl/Oc6P9w/PknwpIpbzK5kKBtqIYAJjMesX0fE5iYpFLVLptAHJanlSyvh8Kzebh0FA7Th3cgeA9yQWODmRuiwoY3BTojm7c3UBHJz31jjdJvNIZkQbl4eAoWkFk8LYMup6lkT9K//V+FdsGSh6uOXiDBLfopbmADe0wb+Hh29CN0c5tFJm3+nUQSrym6Ws9YrK9PbUbZuPB4A9WiJHIWob4xXOHS43ZUqboqCN5M0mhA==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3c4xli48AA1eYklHj2sWN8psYDIzJNOFfQPHRL5opv4=;
- b=Q0j9rj5i+cLj1Iz7ktr6lgHDlFxF1wB4KMo8drmMd6wZrxWZjMeZpyJBA6jeKb9yvzUWv4b6eWGXrBnFtiLIWr+OR069BiDhchcgUVZ7AvNzT+fhnaTdJAWZfm1XbFMhXHYPb6bBH0w1KB3+hPPm/SNdAOhYytxg9W8B8pNN/qjHnLuYT7pU4e+8kYb8IpVHHd1bUIQ72El4GddErfzGGZBiIMpx6uNZG5zs5I83qQoN0yg2NYLLx4p88A+33xONyd/vLGFn7hqNy4ch7A+tzDGWFZ7nzcolrK1ZGYNQH/BJp2gaPSo3wCdY1/AALHV7FGLBQP9sOvfJaQYo7kSAFA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=oracle.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3c4xli48AA1eYklHj2sWN8psYDIzJNOFfQPHRL5opv4=;
- b=rC3Cl2radRhninvMXwkepLqP3bkMIPmU9fQ9omUPUz+2ykrHzhoJE/VdxLD4kpXgvi5g6gBS/oqV4VEyy/VZ2OBDGS2DZvXBRn8wH6+ZLOB/sDB3zCdfjJtDL1ySELbApHnbYP1QTK64mhhiwCJbbBjvjwvjHP1C1R6O4avuzvQ=
-Received: from CWLP265CA0530.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:18d::22)
- by DBBPR08MB5979.eurprd08.prod.outlook.com (2603:10a6:10:205::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 16:27:18 +0000
-Received: from AM4PEPF00027A6B.eurprd04.prod.outlook.com
- (2603:10a6:400:18d:cafe::36) by CWLP265CA0530.outlook.office365.com
- (2603:10a6:400:18d::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.29 via Frontend Transport; Tue,
- 27 May 2025 16:27:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- AM4PEPF00027A6B.mail.protection.outlook.com (10.167.16.89) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18
- via Frontend Transport; Tue, 27 May 2025 16:27:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yypFKYpHvGVOxwdVSf5sBir7/J/QaBU5BS8brNLFy5R3HHkbrWEFP9wl+/5qlXSj4y6qKWED6BLKEhfV3vBaokhV9jswm8YKJC9NVmssjlRSYYC0FHIJDVNbfrbTA7c5TNwLoz+u3WfGzG/edxp86E9LNDO72RvtbIqfbM+l/xnfO6j0lp3alkFWksWjzTmomBoH1LvggR6Cw5mXdM/pA96Hz8b6A1LoAIijVmruPugwIObC0fH5Z9zzc/UHwC34YGx58MXKECAubOJfRVJsqnG4xXg6+/Qj5IDZaRVs1HVs4SSIxWHfZRE5xNXRpcZjqMSc5TbQusTJ5OoOgsp/QQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3c4xli48AA1eYklHj2sWN8psYDIzJNOFfQPHRL5opv4=;
- b=MIjmnRd2Hyv5NSLImDK2Kr0JROZyBADe/z8MDIg/8IyukSWSRpLQ62En39DAxfPg8wK8BwmJfMn3Qrryi8dlJIftFNOpqUEoZ/luvUBHd+O9mb2PNNNfpivfdEvgIF2E/Dc2ZG2ZB6YthoRrphw+iBBcVSbR4oVQ1Ih0SlwL4lw1T3PjrBxraZ7GzCmWCMOdxP5PDb2cx1j8Lghm3cLjPVZEOp1IMmszXeupDWGdGGihsJXut/PKSsM65eJgzkv0yDwnAhj7gtTCDG4UtbmtRGrdpfhBx8nl2XKte9YHFfQwOONix2y5xwbYKoLNy8WoATFGSc93KLSrFHa9yBuIow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3c4xli48AA1eYklHj2sWN8psYDIzJNOFfQPHRL5opv4=;
- b=rC3Cl2radRhninvMXwkepLqP3bkMIPmU9fQ9omUPUz+2ykrHzhoJE/VdxLD4kpXgvi5g6gBS/oqV4VEyy/VZ2OBDGS2DZvXBRn8wH6+ZLOB/sDB3zCdfjJtDL1ySELbApHnbYP1QTK64mhhiwCJbbBjvjwvjHP1C1R6O4avuzvQ=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by PAWPR08MB9544.eurprd08.prod.outlook.com (2603:10a6:102:2f2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 16:26:45 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 16:26:44 +0000
-Message-ID: <1d1c80fb-3012-49ce-b974-4f9445825e0b@arm.com>
-Date: Tue, 27 May 2025 21:56:37 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Optimize mremap() for large folios
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
- yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
- hughd@google.com
-References: <20250527075049.60215-1-dev.jain@arm.com>
- <8df598a2-4147-4f96-b683-23e0957fc769@lucifer.local>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <8df598a2-4147-4f96-b683-23e0957fc769@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0P287CA0012.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:d9::11) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FE727F166
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748363403; cv=none; b=W0irPAGrAptjhLUmbPZTlCvAPwQaE+ScgkL1pj3g55Ij+IwQNhcqXcRwWZyRSoWPce9jNO+p9DDqlg+DpRYDXiVZf9SJ19ITbf2iXB3Ui/guAnIr8bvRzIvkfhMUqwXaCU38mOM6qCyk50cOMraZWoyP296rct8uZXnmIA04gCc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748363403; c=relaxed/simple;
+	bh=Nk1Pfis4XQUSsaSsaXCgWf45iZhvKxj8qs/TvL8cVWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X8xJ8ARrBOjaDaxK/vDxhZ0TlCK6wUAWeRcUvxZupYg+ppSjFZsAko3T96KAMEAYYGbjBPYrPqVDKbtX35GkXaCSzvY0Y7zBnyM9IHbPSBcsz1TBtRrgPc/dGK0s1DRnZz579jNZvtzN9nsKzDqMz46oM77oeBFEP7M+UDwW2fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b6J4T0rWHz4f3jQZ
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:29:29 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id DCD261A0359
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:29:55 +0800 (CST)
+Received: from [10.67.109.184] (unknown [10.67.109.184])
+	by APP1 (Coremail) with SMTP id cCh0CgAn13eA6DVoVrXhNQ--.36023S2;
+	Wed, 28 May 2025 00:29:53 +0800 (CST)
+Message-ID: <0c205e8a-9c7e-4500-8ede-00fae2d97d2f@huaweicloud.com>
+Date: Wed, 28 May 2025 00:29:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|PAWPR08MB9544:EE_|AM4PEPF00027A6B:EE_|DBBPR08MB5979:EE_
-X-MS-Office365-Filtering-Correlation-Id: c27efd19-76d6-4f64-8249-08dd9d3b58b9
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?NFVPQ2RvbGhOVnV0eVNodHlyWksrM3lOcmxhakF1cm1uVVJJNzZaTjZVR1BR?=
- =?utf-8?B?RXRNNnNkRTVlUlhpZURWUWkzOTJ3azNydDRnNEZaK0dsZDJSc3VmMUpIRE92?=
- =?utf-8?B?U095d2MvKzNaVGdrK0FXQkprRjRzWVhndGNtOHY4WnNKRzFUaHdxamxxSTNG?=
- =?utf-8?B?bEtnMXdUWW1oRDB6ZzNSQ0VlZy8xQ3ZGczdVYUV2L1NaZWxmT0pLU1pRTFpD?=
- =?utf-8?B?Tmt0ZEMyMGFVOXNrUTZaM0dLWWR2V2ZoeDRWKytVZGd4OVhHMWl3RGRBRi9X?=
- =?utf-8?B?dks1c2pWRU8wYklUN0R1QVZ2M25OVHR1WWo3OWJtVzFDN2VucGtKTnVxRmNu?=
- =?utf-8?B?OGp3VGJpbDFrRnRtMWIzeUFlelhUS0dxczVhZnY0ZXgzSThNYXB4cCt1TWZS?=
- =?utf-8?B?Q1BHK1N5SmRTSFJTMXlnOFV4L2d2ZXU0YjRWMDAwRER6MHNZdzIvOWl1d2hL?=
- =?utf-8?B?MHhTSWlIb3UySGxBNFFSdXRiOFZvUjEvK3FKSVpsSUxsRnhpWENoUlBZRUJu?=
- =?utf-8?B?RENUVnVQaVJDM1YvOHlVYy9uUWs0aFR6WTUrN29BdWtLN29hUTQ5ZURra1Z0?=
- =?utf-8?B?ZGU2U24zS0hOaVI5MGlwV28vRVRUMGN0bEtkbldnODRCcEo0ZmMvbjYyd3Z1?=
- =?utf-8?B?KzNNUXlQckNLblBZelBCdGx5TmQxUXNjZ0pSbmtiRU1FdDU1QVdCaWlTRlBH?=
- =?utf-8?B?ZFpmYXkxV1FhQmdWallMS0FyMVQvWHY1VnRGY2hrVVV2MU9nN05PMC9abmtB?=
- =?utf-8?B?Q3lvR1FqNldZMkg1d0ZjLzNVQVcyakx5RjI3YTRlaWw0cmUvVWttTWZqQjda?=
- =?utf-8?B?YW1rdHhRWE55b0p2SWJKYzgwSE5tTWw0bWtRcW0xMFhmVVZhOGpvZEh0YTBS?=
- =?utf-8?B?WmtDOFZqSXV1RlJHc3dISWgxc0JaQWFYUHB4RzFoeWU3dFJYSEtLdE9XbzNV?=
- =?utf-8?B?dmY1RDlML2VuMXQ2ZVkrV0FnUUgzTk8xU3V4YUV5elppdWN4VmZMbFkvc0hX?=
- =?utf-8?B?d0UwNFVSNW5QVFN6UE5JRjE0RGxpMlk3SnFxL2JhRDVDUzN5WklRRlJUcUN0?=
- =?utf-8?B?ZmRwWFNNODUvQ3ZNYXZVZ3RwOGl3aTdFVmdmd2M2UnZrcmNtZ1BzTWova0tX?=
- =?utf-8?B?RkNVYm40UDFGUWhXVlRZZ0JONnpGZzNINUYvaXJ3dXgvTVpGeTRZUExyTGc2?=
- =?utf-8?B?eFh1ZitBWmVjNlhqNk81YVk2MDQzVU4rcGx6dERIOFo4RlJIaGpEaXh5N0Vw?=
- =?utf-8?B?UjcrTkMxdW5VSUdXOE53YVp3OFdTYkJSVnNaSU0xSFZzVG13REdqTWtveWJF?=
- =?utf-8?B?aks0bjVka3JxdHNFN2pQaWxsMjlMVzRSNlo5REh3b0dyTHFjNjVKOUVMQndK?=
- =?utf-8?B?bVNyODB1VEVZdWNQS3ovVVErN1RqTkErelNBaVdHbDVzenNORGVmNzUvRGwz?=
- =?utf-8?B?azlyQU5icVZFOHNYanJHZ1JZTUR6RlA0U1VJaFl6R1VkdW9HNE9BTExwMkNB?=
- =?utf-8?B?NWJnVUlLMkpGVWZmRkt6NzdRZ1R0WE9XVkU1TjM5YmY5Yi9YeWsyVU1xeHRC?=
- =?utf-8?B?aGtPUUh4MUpQU2xCSlVSUnhIL0dkTXNIM3U2NDZGYXl5MklQV1NwYzBRdXZS?=
- =?utf-8?B?eFEwVWZLcEY2ejFJT2NNQmRYNTBOcFJyNUVWUkpsbUFEUE01bWF2QWFqMG43?=
- =?utf-8?B?K0JCMHhzSThvY2dOQ0FZazFXdlo5M1VjWE9GQThBR1ZiUk9xY2xnU3JRQ3pH?=
- =?utf-8?B?Z2w4S21JTEJhaFpwL0xjLzR4NUZLbHYxcUZJT3NqdnpXclRLL0Npd2xVM0pB?=
- =?utf-8?B?RHA5SmdkSmRpWko5Y0EwaElFUXQyWTFuYm44Q2czS25YdThiejE0cDVEVDNp?=
- =?utf-8?B?SjB6eERNUC9ydmo4KzdTQU1ra1lRZ2hzaERUdXFFcXVtalZvZHJZdTRRTkl4?=
- =?utf-8?Q?gUs8a/wWYgA=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR08MB9544
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- AM4PEPF00027A6B.eurprd04.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	965f0862-9fab-46e0-1ee7-08dd9d3b44ed
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|82310400026|14060799003|1800799024|35042699022;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?KzBUTGNqNmVHUXBGUEhGbTY0dXVkNkJmaXRkeU9KbUYwYTVKMlVPV0FmYkFo?=
- =?utf-8?B?UnRMWmc0eHc1TXhQVG15bytSK21RWUY0SUJHRDlzdDVKdFhrNzAvbUlJOXVz?=
- =?utf-8?B?amhkZWU5dE5wYytuM21zRG9FaTlPTXI1Y1hPa2E3YTIzYkU2Z3cvVHpIRVpQ?=
- =?utf-8?B?TDFUR0FPdEZId0ljaWtsN2tpdEZJaTkwR1R2Um9lMkxvSTEvbFRCOWZuOVhV?=
- =?utf-8?B?dm5CcEpXc2lMNDhpVFVpZktHYk9sSDk3bmVNSlFDc3gyRGw5QzhKQkd4QlBI?=
- =?utf-8?B?U3hYZmVKcVF2QXJmaldtSFI1ejhZdkUwODB6M3prYVdldmxyejUrSW1YbWhM?=
- =?utf-8?B?MG0xVTk0aGRRdWhaNTlVVTFOZG1HalJ5RGJoRUpWRGFCc1p4czVkcDduclpu?=
- =?utf-8?B?eE9SNG5KdzdXNFJFNGdZVUR2U1J0aVRDRFZWaGlpRTlubitkaDl3dzRkOEN3?=
- =?utf-8?B?STFad0s5Y2hPMXVtQlpwTXVZUUhESHRnYWVHMU9aRUhwc0ZseTNzUHgwTGhD?=
- =?utf-8?B?Y0ZudWN1TFdTNGJReVU0V2FScmQ1RjdWSUJaYVBIdnVZdTJQazB3QlBYMmo1?=
- =?utf-8?B?L096RUhnbExOTjVlVTlLZm5RWk1Dcnh3N1JZbHhoMVFDMVJ1bmZ1ZEVzczhv?=
- =?utf-8?B?bkdWcGNzTHdjdEpyQjFCcnBPNWdJcUoxdUpiVlpoNjBpOHhlMjdHR0U4UEhV?=
- =?utf-8?B?QzIvZjBEY1NuV21ERllnMDBKbW1GSDJ3VXR1Mk10V2tSVUtMVjE3WWdzeVR0?=
- =?utf-8?B?R1dCd1VmVEx1cmFNbXUyYTd5Z2JnYlpqYU9Jd2JSMlNtM3JqcTNySVd1Y2R0?=
- =?utf-8?B?TVlnYWFZVmYwRVlVcFJ4L2tEK1dPekRoMXpaWWJIS3NsNk1HY3hIRGwrQ1pD?=
- =?utf-8?B?eFhjUG5NdVNYRmZwQUgwaC8vd0ludVBqS0ZEYlZ6aEFSTUlNdldtYnRTa3NR?=
- =?utf-8?B?ZERvUWxLdktOOEFzQ3FTTHMvNkJZRzZ2c2FmeFJZQ2xHK0o1RTB1SE5UaVpQ?=
- =?utf-8?B?bDJWQ0crbWZma2habmIrSnQ2cW9qZnpSdXZwOHhDdEJSTXNqUWhGZjZCUXZK?=
- =?utf-8?B?bHpnb0Z3Y2JkWWNaMWRLTW5yYnluYVJ5c0VpSHBLZG5ZTjlTSFc1MHprMEhq?=
- =?utf-8?B?dEZYWmtUZXlrNFFHR3AwV2dsSUc5NlMwLzBmOHNQK1RTV0tVdzFNWS9OYkJl?=
- =?utf-8?B?R0NNaWIyK2ZUSzA0WFYvQkFnZTlRZTZqdnpIQTZOV002RUFNditXbGQxZGRv?=
- =?utf-8?B?WWRzQTJlbTlaaVVESkdrRlFVMDVULzByWFExcW45UVpoMkFod3NYRjBVWlpK?=
- =?utf-8?B?dG51SmZzZWVCaUJSbUVIaFRXdnNjaUx1UEplU203UDRXNVhCVDVKU1FrVExX?=
- =?utf-8?B?WTlxd2tNTnZmMEt5bHFWWjVibFRTdlFmM1doWmJXVDkycXNPaGc2M0dKVGdR?=
- =?utf-8?B?cjhMWWV2eU1zdytjNENuenE2d2Nta2FNd0N4TVJEdHdMVXZLZ0tzakhwOU9F?=
- =?utf-8?B?SERjb0tsQkhrSTE1Tk9NZWpEMXNaNHdNekQramxaaUhzY2VlcElJWkRCRkh3?=
- =?utf-8?B?U2w3c0YyUEdaM1ZnSTA4S1RKRnVXdUpyemFOUWYwemlscDVBQVlsTHd2d3pL?=
- =?utf-8?B?YjZMbytCZ1lJZXpjbUlTMnVKdHRIejBFQXZxMVZIWTdYZXNWOTE3bGlJNURR?=
- =?utf-8?B?ZEY5SDhsKzlPVUp2OTZlbzRESFFIZW9jS2czRWh5aEF6V1FDQmI1d25HZm9I?=
- =?utf-8?B?a29YSjhmN29tNWo3Q0tON0FjNDdNbitNSnFvQk90U3FQMG03eTh1SnNPeXhk?=
- =?utf-8?B?N2NESHE3SHFvTVV6S09sdncwRkFxeUxqai83ekp0cmloZjhRYTlOb2UwRG1D?=
- =?utf-8?B?cVN3YlQyZjl1dXNvSnp6dDBqMjFzbml2MzFPYnRwZnQ1RTVqR0R2U3d2cUQy?=
- =?utf-8?B?OENIekRvVExUVU1naW1HR01qRVJYSHpwNnl1V3NZbmE1eGl2eExoeGJEcm9t?=
- =?utf-8?B?ei8rQnc3SERId01PQjZaZW1jMmQwNG9FUGlxVjVSMUxwNkZuaWFyTFIwdGpQ?=
- =?utf-8?Q?B4PF8J?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(82310400026)(14060799003)(1800799024)(35042699022);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 16:27:17.2696
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c27efd19-76d6-4f64-8249-08dd9d3b58b9
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A6B.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB5979
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/2] mm/mremap: Fix uprobe anon page be overwritten
+ when expanding vma during mremap
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+ akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, pulehui@huawei.com
+References: <20250527132351.2050820-1-pulehui@huaweicloud.com>
+ <20250527132351.2050820-2-pulehui@huaweicloud.com>
+ <cd02ea34-0675-4324-aa84-2696e834d922@lucifer.local>
+From: Pu Lehui <pulehui@huaweicloud.com>
+In-Reply-To: <cd02ea34-0675-4324-aa84-2696e834d922@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn13eA6DVoVrXhNQ--.36023S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3ur15CF4UKF43WrWDur4Durg_yoWkCFWkpF
+	Wktan8KF4UJFZ3K347Zr1jq34fKws7KryUCr13X34YkryYgr1aqF4SkF45Cry5XrZ293WS
+	qr4UtryfCay2vaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
+	kF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x02
+	62kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+	026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+	Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+	vEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UAwIDUUUUU=
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
 
-On 27/05/25 4:20 pm, Lorenzo Stoakes wrote:
-> I seem to recall we agreed you'd hold off on this until the mprotect work
-> was done :>) I see a lot of review there and was expecting a respin, unless
 
+On 2025/5/27 21:34, Lorenzo Stoakes wrote:
+> Hi Pu,
+> 
+> Just as you were sending this I was about to send you my suggestion :) That
+> is hilarious haha. Maybe some cosmic connection? :P
+Hi Lorenzo,
 
-Oh, my interpretation was that you requested to hold this off for a bit to get
-some review on the mprotect series first, apologies if you meant otherwise! I
-posted that one or so week before so I thought enough time has passed : )
+haha, so coincidental.😁
 
+> 
+> Anyway I don't know whether your approach is _quite_ correct here, you are
+> generally disabling the uprobe behaviour on all VMA expansion (that is -
+> new VMA merge, relocate_vma_down() (unlikely to be relevant ;), it seems
+> sensible to only do so in the circumstances we know to be problematic.
 
-> I'm mistaken?
->
-> At any rate we're in the merge window now so it's maybe not quite as
-> important now :)
->
-> We're pretty close to this being done anyway, just need some feedback on
-> points raised (obviously David et al. may have further comments).
->
-> Thanks, Lorenzo
->
-> On Tue, May 27, 2025 at 01:20:47PM +0530, Dev Jain wrote:
->> Currently move_ptes() iterates through ptes one by one. If the underlying
->> folio mapped by the ptes is large, we can process those ptes in a batch
->> using folio_pte_batch(), thus clearing and setting the PTEs in one go.
->> For arm64 specifically, this results in a 16x reduction in the number of
->> ptep_get() calls (since on a contig block, ptep_get() on arm64 will iterate
->> through all 16 entries to collect a/d bits), and we also elide extra TLBIs
->> through get_and_clear_full_ptes, replacing ptep_get_and_clear.
-> OK this is more general than the stuff in 2/2, so you are doing this work
-> for page-table split large folios also.
->
-> I do think this _should_ be fine for that unless I've missed something. At
-> any rate I've commented on this in 2/2.
->
->> Mapping 1M of memory with 64K folios, memsetting it, remapping it to
->> src + 1M, and munmapping it 10,000 times, the average execution time
->> reduces from 1.9 to 1.2 seconds, giving a 37% performance optimization,
->> on Apple M3 (arm64). No regression is observed for small folios.
+agree, we should limit that on copy_vma.
+
+> 
+> I really do not want mremap-specific stuff in general merge code, it's the
+> move page tables bit that makes this broken.
+> 
+> So... :P let me attach my suggestion as a fix-patch below.
+> 
+> TO BE CLEAR - I present this in this form purely to make it easy for you to
+> grab, PLEASE take this patch and rework it (if it makes sense), I don't
+> need any attribution other than a Suggested-by, maybe.
+
+This is truly appreciate! In fact, this is my first patch related to 
+memory and uprobe. My original intention was to spark discussion and 
+attract experts to help handle this matter. I don't place much 
+importance on the attribution of this patch. Like you, my focus is on 
+contributing to the resolution of the issue.😁
+
+> 
+> They are rather close other than where this flag is set :)
+> 
+> I am by the way assuming that uprobes work by installing a special PTE at
+> page offset 0 and only in the case where there is something installed here
+> do we need to worry.
+
+As Oleg later mentioned, we do not need this restriction, and I just 
+verified this using the following test case:
+
+#define _GNU_SOURCE
+#include <fcntl.h>
+#include <unistd.h>
+#include <syscall.h>
+#include <sys/mman.h>
+#include <linux/perf_event.h>
+
+#define FNAME   "./foo"
+int main(int argc, char *argv[])
+{
+     int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
+     struct perf_event_attr attr = {
+         .type = 9,
+         .size = 72,
+         .config1 = (long) FNAME,
+         .config2 = 8192,
+     };
+     void *addr1, *addr2;
+
+     ftruncate(fd, 4 * 4096);
+     mmap(NULL, 4096, PROT_EXEC, MAP_PRIVATE, fd, 4096);
+
+     syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0);
+     addr1 = mmap(NULL, 3 * 4096, PROT_NONE, MAP_PRIVATE, fd, 4096);
+     addr2 = mremap(addr1, 2 * 4096, 3 * 4096, MREMAP_MAYMOVE);
+     mremap(addr2 + 4096, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, 
+addr1 + 4096);
+
+     return 0;
+}
+
+But one thing confuses me—if mmap is used with zero_offset, it will not 
+reproduce. Perhaps I need to verify this tomorrow.
+
+#define _GNU_SOURCE
+#include <fcntl.h>
+#include <unistd.h>
+#include <syscall.h>
+#include <sys/mman.h>
+#include <linux/perf_event.h>
+
+#define FNAME   "./foo"
+int main(int argc, char *argv[])
+{
+     int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
+     struct perf_event_attr attr = {
+         .type = 9,
+         .size = 72,
+         .config1 = (long) FNAME,
+         .config2 = 8192,
+     };
+     void *addr1, *addr2;
+
+     ftruncate(fd, 4 * 4096);
+     mmap(NULL, 4096, PROT_EXEC, MAP_PRIVATE, fd, 0);
+
+     syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0);
+     addr1 = mmap(NULL, 4 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
+     addr2 = mremap(addr1, 3 * 4096, 4 * 4096, MREMAP_MAYMOVE);
+     mremap(addr2 + 2 * 4096, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, 
+addr1 + 2 * 4096);
+
+     return 0;
+}
+
+> 
+> Please correct me if I'm misunderstanding here, I am not an expert on
+> uprobes.
+> 
+> Thanks! This is a great find overall.
+> 
+> I'd also quite like us to make your repro a self test if possible? Not sure
+> where we'd put it... could be in tools/testing/selftests/mm/merge.c
+> actually, new one I created explicitly for VMA merge scenarios.
+
+I will have a try!
+
+> 
+> Cheers, Lorenzo
+> 
+> On Tue, May 27, 2025 at 01:23:50PM +0000, Pu Lehui wrote:
+>> From: Pu Lehui <pulehui@huawei.com>
 >>
->> The patchset is based on mm-unstable (6ebffe676fcf).
+>> We encountered a BUG alert triggered by Syzkaller as follows:
+>>     BUG: Bad rss-counter state mm:00000000b4a60fca type:MM_ANONPAGES val:1
 >>
->> Test program for reference:
+>> And we can reproduce it with the following steps:
+>> 1. register uprobe on file at zero offset
+>> 2. mmap the file at zero offset:
+>>     addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
+>> 3. mremap part of vma1 to new vma2:
+>>     addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
+>> 4. mremap back to orig addr1:
+>>     mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
+>>
+>> In the step 3, the vma1 range [addr1, addr1 + 4096] will be remap to new
+>> vma2 with range [addr2, addr2 + 8192], and remap uprobe anon page from
+>> the vma1 to vma2, then unmap the vma1 range [addr1, addr1 + 4096].
+>> In tht step 4, the vma2 range [addr2, addr2 + 4096] will be remap back
+>> to the addr range [addr1, addr1 + 4096]. Since the addr range [addr1 +
+>> 4096, addr1 + 8192] still maps the file, it will take
+>> vma_merge_new_range to merge these two addr ranges, and then do
+>> uprobe_mmap in vma_complete. Since the merged vma pgoff is also zero
+>> offset, it will install uprobe anon page to the merged vma. However, the
+>> upcomming move_page_tables step, which use set_pte_at to remap the vma2
+>> uprobe anon page to the merged vma, will over map the old uprobe anon
+>> page in the merged vma, and lead the old uprobe anon page to be orphan.
+>>
+>> Since the uprobe anon page will be remapped to the merged vma, we can
+>> remove the unnecessary uprobe_mmap on merged vma, that is, do not
+>> perform uprobe_mmap on expanded vma.
+>>
+>> This problem was first find in linux-6.6.y and also exists in the
+>> community syzkaller:
+>> https://lore.kernel.org/all/000000000000ada39605a5e71711@google.com/T/
+>>
+>> The complete Syzkaller C reproduction program is as follows:
 >>
 >> #define _GNU_SOURCE
->> #include <stdio.h>
->> #include <stdlib.h>
+>> #include <fcntl.h>
 >> #include <unistd.h>
+>> #include <syscall.h>
 >> #include <sys/mman.h>
->> #include <string.h>
->> #include <errno.h>
+>> #include <linux/perf_event.h>
 >>
->> #define SIZE (1UL << 20) // 1M
+>> int main(int argc, char *argv[])
+>> {
+>>      int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
+>>      struct perf_event_attr attr = {
+>>          .type = 9,
+>>          .uprobe_path = (long) FNAME,
+>>          .probe_offset = 0x0,
+>>      };
+>>      void *addr1, *addr2;
 >>
->> int main(void) {
->>      void *new_addr, *addr;
+>>      write(fd, "x", 1);
+>>      mmap(NULL, 4096, PROT_EXEC, MAP_PRIVATE, fd, 0);
 >>
->>      for (int i = 0; i < 10000; ++i) {
->>          addr = mmap((void *)(1UL << 30), SIZE, PROT_READ | PROT_WRITE,
->>                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->>          if (addr == MAP_FAILED) {
->>                  perror("mmap");
->>                  return 1;
->>          }
->>          memset(addr, 0xAA, SIZE);
+>>      syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0);
+>>      addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
+>>      addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
+>>      mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
 >>
->>          new_addr = mremap(addr, SIZE, SIZE, MREMAP_MAYMOVE | MREMAP_FIXED, addr + SIZE);
->>          if (new_addr != (addr + SIZE)) {
->>                  perror("mremap");
->>                  return 1;
->>          }
->>          munmap(new_addr, SIZE);
->>      }
->>
+>>      return 0;
 >> }
 >>
->> v2->v3:
->>   - Refactor mremap_folio_pte_batch, drop maybe_contiguous_pte_pfns, fix
->>     indentation (Lorenzo), fix cover letter description (512K -> 1M)
+>> Fixes: 78a320542e6c ("uprobes: Change valid_vma() to demand VM_MAYEXEC rather than VM_EXEC")
+> 
+> Nit, but we'll want to cc: stable once we agree on a solution too.
+
+add `Cc: stable@vger.kernel.org` above Fixes tag?
+
+> 
+>> Signed-off-by: Pu Lehui <pulehui@huawei.com>
+>> ---
+>>   mm/vma.c | 7 ++++++-
+>>   mm/vma.h | 7 +++++++
+>>   2 files changed, 13 insertions(+), 1 deletion(-)
 >>
->> v1->v2:
->>   - Expand patch descriptions, move pte declarations to a new line,
->>     reduce indentation in patch 2 by introducing mremap_folio_pte_batch(),
->>     fix loop iteration (Lorenzo)
->>   - Merge patch 2 and 3 (Anshuman, Lorenzo)
->>   - Fix maybe_contiguous_pte_pfns (Willy)
+>> diff --git a/mm/vma.c b/mm/vma.c
+>> index 1c6595f282e5..6445f515c7f2 100644
+>> --- a/mm/vma.c
+>> +++ b/mm/vma.c
+>> @@ -358,7 +358,8 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
 >>
->> Dev Jain (2):
->>    mm: Call pointers to ptes as ptep
->>    mm: Optimize mremap() by PTE batching
+>>   	if (vp->file) {
+>>   		i_mmap_unlock_write(vp->mapping);
+>> -		uprobe_mmap(vp->vma);
+>> +		if (!vp->skip_vma_uprobe)
+>> +			uprobe_mmap(vp->vma);
 >>
->>   mm/mremap.c | 57 +++++++++++++++++++++++++++++++++++++++--------------
->>   1 file changed, 42 insertions(+), 15 deletions(-)
+>>   		if (vp->adj_next)
+>>   			uprobe_mmap(vp->adj_next);
+> 
+> I think we need to cover off the adj_next case too, strictly. See the
+> attached patch :P
+> 
+> To be honest the adj_next case won't be relevant, as this is not set for a
+> new VMA, but it'd be odd to have a 'skip' or 'no' uprobe option and to not
+> obey it in both cases.
+
+alright, I haven't thought of any possible situations yet. If there are 
+any problems later, we can add it back.
+
+> 
+>> @@ -737,6 +738,7 @@ static int commit_merge(struct vma_merge_struct *vmg)
+>>   	if (vma_iter_prealloc(vmg->vmi, vma))
+>>   		return -ENOMEM;
 >>
+>> +	vp.skip_vma_uprobe = vmg->skip_vma_uprobe;
+>>   	vma_prepare(&vp);
+>>   	/*
+>>   	 * THP pages may need to do additional splits if we increase
+>> @@ -1151,6 +1153,9 @@ int vma_expand(struct vma_merge_struct *vmg)
+>>   	if (remove_next)
+>>   		vmg->__remove_next = true;
+>>
+>> +	/* skip uprobe_mmap on expanded vma */
+>> +	vmg->skip_vma_uprobe = true;
+>> +
+> 
+> Yeah this doesn't feel right, this will make this happen for all
+> vma_expand() cases (including new VMA merge) and that's surely not correct
+> for non-mremap cases?
+
+agree!
+
+> 
+> Again see the attached patch :P
+> 
+>>   	if (commit_merge(vmg))
+>>   		goto nomem;
+>>
+>> diff --git a/mm/vma.h b/mm/vma.h
+>> index 9a8af9be29a8..56cc0364d239 100644
+>> --- a/mm/vma.h
+>> +++ b/mm/vma.h
+>> @@ -19,6 +19,8 @@ struct vma_prepare {
+>>   	struct vm_area_struct *insert;
+>>   	struct vm_area_struct *remove;
+>>   	struct vm_area_struct *remove2;
+>> +	/* Whether to skip uprobe_mmap on vma */
+>> +	bool skip_vma_uprobe;
+>>   };
+>>
+>>   struct unlink_vma_file_batch {
+>> @@ -120,6 +122,11 @@ struct vma_merge_struct {
+>>   	 */
+>>   	bool give_up_on_oom :1;
+>>
+>> +	/*
+>> +	 * Whether to skip uprobe_mmap on merged vma.
+>> +	 */
+>> +	bool skip_vma_uprobe :1;
+>> +
+>>   	/* Internal flags set during merge process: */
+>>
+>>   	/*
 >> --
->> 2.30.2
+>> 2.34.1
 >>
+> 
+> ----8<----
+>>From 30e39d0f223ae4ab5669584593071f5f7266beeb Mon Sep 17 00:00:00 2001
+> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Date: Tue, 27 May 2025 14:11:26 +0100
+> Subject: [PATCH] mm: avoid orphaned uprobe
+> 
+> If, on mremap, me move a file-backed VMA mapped at offset 0 that possess a
+> uprobe and it merges with an adjacent VMA, we will then invoke
+> uprobe_mmap() once again to install a uprobe into this newly established
+> VMA.
+> 
+> This is problematic, as when we then move the page tables back into place,
+> we overwrite the uprobe entry and thus orphan the merge-established uprobe.
+> 
+> Avoid this by threading state to explicitly disallow the establishment of a
+> new uprobe upon merge under these circumstances.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>   mm/vma.c | 21 ++++++++++++++++++---
+>   mm/vma.h |  5 +++++
+>   2 files changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 1c6595f282e5..cc18d1dcdc57 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -169,6 +169,9 @@ static void init_multi_vma_prep(struct vma_prepare *vp,
+>   	vp->file = vma->vm_file;
+>   	if (vp->file)
+>   		vp->mapping = vma->vm_file->f_mapping;
+> +
+> +	if (vmg && vmg->no_uprobe)
+> +		vp->no_uprobe = true;
+>   }
+> 
+>   /*
+> @@ -358,10 +361,13 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
+> 
+>   	if (vp->file) {
+>   		i_mmap_unlock_write(vp->mapping);
+> -		uprobe_mmap(vp->vma);
+> 
+> -		if (vp->adj_next)
+> -			uprobe_mmap(vp->adj_next);
+> +		if (!vp->no_uprobe) {
+> +			uprobe_mmap(vp->vma);
+> +
+> +			if (vp->adj_next)
+> +				uprobe_mmap(vp->adj_next);
+> +		}
+>   	}
+> 
+>   	if (vp->remove) {
+> @@ -1830,6 +1836,15 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+>   	vmg.middle = NULL; /* New VMA range. */
+>   	vmg.pgoff = pgoff;
+>   	vmg.next = vma_iter_next_rewind(&vmi, NULL);
+> +
+> +	/*
+> +	 * If the VMA we are copying might contain a uprobe PTE, ensure that we
+> +	 * do not establish one upon merge. otherwise, when mremap() moves page
+> +	 * tables into place, we'll orphan the one just created.
+> +	 */
+> +	if (vma->vm_file && vma->vm_pgoff == 0)
+> +		vmg.no_uprobe = true;
+> +
+>   	new_vma = vma_merge_new_range(&vmg);
+> 
+>   	if (new_vma) {
+> diff --git a/mm/vma.h b/mm/vma.h
+> index 9a8af9be29a8..4c35c5ab1aa2 100644
+> --- a/mm/vma.h
+> +++ b/mm/vma.h
+> @@ -19,6 +19,8 @@ struct vma_prepare {
+>   	struct vm_area_struct *insert;
+>   	struct vm_area_struct *remove;
+>   	struct vm_area_struct *remove2;
+> +
+> +	bool no_uprobe :1;
+>   };
+> 
+>   struct unlink_vma_file_batch {
+> @@ -120,6 +122,9 @@ struct vma_merge_struct {
+>   	 */
+>   	bool give_up_on_oom :1;
+> 
+> +	/* If set, do not install a uprobe upon merge. */
+> +	bool no_uprobe :1;
+> +
+>   	/* Internal flags set during merge process: */
+> 
+>   	/*
+> --
+> 2.49.0
+
+nice, thanks Lorenzo!
+
