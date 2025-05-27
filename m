@@ -1,115 +1,169 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468D326A08C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B018F19CD16
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748355749; cv=none; b=h2+0pddTZPx/es7J1ycgt0X1q+NcfSUx8hD7pm5PDN5fL0DonGOffRRxRC75Gc3+XPP9LoU0ypHBypJwIJDbX1QNTa42tIwh5rlr45mZPTM42UFIbZSUsj2qFsiQlxZsD/mJ9tPvU7gBcZPxCr43/A02O7cORN/bZJK8hYB0cdU=
+	t=1748355825; cv=none; b=bfDd+jy55ls316ckuhq7smv6ve6vF09SxyUoEHSuFIplgVSlW+Ze6IH8tdGf9PebXLdwwg0boPRnDBm2Da4EoBvtQg5qR/6Ff7adMp8iDnWe9LlaJNeCZlGImC3K+BeyqkIONTcVtX4rKOJEzXKU6bsuAgHC0bpZq74+wBNZjgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748355749; c=relaxed/simple;
-	bh=fz1BwwKnJX7bc80mYPOCVnFSqDej/v92nKTSRfGdeUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mXdOxZcUW/xpPLiVByhZ1Rw+KUsZ+pgqWrm0EoaBp9j8GPMBL+LWyIzXh0c8bp6D9n22ZACeftwFxv+sfXnj4BXP6B48TyuEpSVH9amriRzCw0r4JP3CSALDSPZt4tCWae7OEIgHoJojMX8y8seudidW0YZNzkXKFjJMtwtETQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JMwuimLT; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1748355825; c=relaxed/simple;
+	bh=1b2v/c0DKM/AjXvU+XYHFgHzNKVCeFNe8WzHm7DLXTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PgP62ifQK8naFNfPb4hQGWEknH9n5+Wi9xKZN5aqlNN7AXfDyYZwf3oNoNs76n9fPw8H4Kj7TlewN3WtDBiyz+cSyjEKxrkmvBcTxFvCqryulKYvU3a+sSJzGXQDWSpT5MV82bnVKel72dASRQAHgDhkzX/BmGLQeCq4PX+0lFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=bI9fyVba; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JMwuimLT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BWHwqSSCz3w9Vxwmz8RCUy0hTjpLsuKSzcXgAbqJdVo=; b=JMwuimLT/CfUWl4n3oGdiVOPYQ
-	r2DtkjsunGds9f0jvdoBMF2nU+J+T91n6eIF/PK1gdzJ8IsEQJMZ9FfIjpXsHwgXl9ca0FKDPWjSS
-	X2ds2RNjSfsknVefwtX+HYEjDC0m5MJWli+SJofI5C2/rOVgxijuuf3ARVQAWAQCUbs0i4bILx09t
-	Q6C29n2mj7OWZDcP2fkiNtodbU85zRr8ShcqGTsejvXnWFFECj3DACpRhUtjVZ/C4SlYKLIgaMUCC
-	ylU0CbhIYGDeaL1QGOf+HfCqzAmJ8FkAI2opRiZN2OlMsiAnPfFCAW3e1GzyJ+CdAGMmF+AE241Jp
-	UqozQOfA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uJvC6-0000000CUrG-2bbZ;
-	Tue, 27 May 2025 14:22:18 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1BF6B3002CE; Tue, 27 May 2025 16:22:18 +0200 (CEST)
-Date: Tue, 27 May 2025 16:22:17 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: syzbot <syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com>
-Cc: andrealmeid@igalia.com, dave@stgolabs.net, dvhart@infradead.org,
-	linux-kernel@vger.kernel.org, mingo@redhat.com,
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [syzbot] [kernel?] KASAN: wild-memory-access Read in
- get_futex_key
-Message-ID: <20250527142217.GA7747@noisy.programming.kicks-ass.net>
-References: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="bI9fyVba"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4c4e6a0ccso2620341f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:23:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1748355821; x=1748960621; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6n1uaYpmB1kOr6JIFMyXy+K3N7piDSdguvD1FRtdHTo=;
+        b=bI9fyVbaB8ZfsKj2gRTdDuSX7t/6BLWjPsHS8ScCaBJn0sGxVWN0tR5Bu+2Vbfh3py
+         Domz8EA7qqN4PmVHQ7QD9T9Ibb1/cm/Wy4hYI18zgfNoSX2uDtkmKDslv0km33QKwU53
+         sAPhyktjvtroSOcS2oklRdNfsfDTVHVHSo8BVix4QDYQQXCzOG5pcTJ+46qXlxxXSGx4
+         1b/D6nI9q39iyzoAFG5fGb9HFbqWUs2Zs63X3l2kSDXxFoSDLb6xISpGfvFDvSY6Jczq
+         9LIaSqqNHVRV7p/3LWToot+jEU8QlWnV9M+PkqYPMqYZw8gcUpryxPCPegw5ujcZkowd
+         qajw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748355821; x=1748960621;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6n1uaYpmB1kOr6JIFMyXy+K3N7piDSdguvD1FRtdHTo=;
+        b=DfIJ9Po/wD8a7pvLo5o4Zc2eWT5sH7Xo13Ft6iwQOXQRlBa9lYrLyuRdiqsg+A2NxJ
+         bvWw44zs3qZdLMeuoBiMpunNP+UwYj3tv6QT7Q5hAvNpnMtBkkcGMdcNBz5H2grVayvo
+         Wd3ONTyNlb8N+qFKSX/nOUBszagTk7g9GrgaemByvgwCfFXwqMJ7tde17Ieq1Ukyv4r9
+         DzQ6E1jPYmpQLJPXLWmY547qn3uxxJkAefvoE2b4GWya8thRL87hNRNRN7rXxGsuYler
+         Ea7WArA6IvdeW67ttna/AL8wLV7xus2HtrVAAim7MMr5pNucfxPX8HzeXfGXSSCLhixI
+         kRig==
+X-Forwarded-Encrypted: i=1; AJvYcCWBkDapZkLzCRUPurjPQvXc9MWcYONueE2XtoHtetg2+mrpTtI5eb2kOBgwvqQEckIed1TIYdzxo6F5Bx0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2JzCJO0Ulm38rIen2m8wupGViK25i3DTfIAL6fDRoGoPJ0H5M
+	AqjwNQE9OPcmt5dwq+QE18B72g+K6AlkchnzJD1F8WWiouVGIfTxAzyq+EgjASLgS3E=
+X-Gm-Gg: ASbGncsySf21W1liJpRo7I/FwX6SQlTpUIFAPRq3lbdYoBuvydfeaxKOjksDzJU1gAU
+	DtnsyjijVNqy03OCukcyFmgDM/BkR6u8JeIyHfsVbrKzjE4/ps5N/pmhZgdCKPrqnoKwXT7o7PX
+	S6xZ/t2eUFNTf3EzR8/zB1hELzLcAyb1gAqL57vtMwB7kVhtxqYqzOdEPKb14isFe8W7vxoov9Y
+	3dtX3GwWF421Y6JYzXmkPrI/Nl910L/HgkLK6UiuOmjuY5u+FJpYV7Qn+5j002enbx3Am8/uMkj
+	rwB0oR15dKLyOlDP04v4YQJGywsIxN/+ucRquya4XBeY1F44uTJ+cg==
+X-Google-Smtp-Source: AGHT+IELC1IttHHKpQxPobF04n1BxV0zFn5416xOB8lAZHST6vgiJpJWp1f8e/ECPlHN8aFnCXiRFw==
+X-Received: by 2002:a05:6000:250f:b0:3a4:cfbf:51c3 with SMTP id ffacd0b85a97d-3a4cfbf5539mr11042240f8f.10.1748355820879;
+        Tue, 27 May 2025 07:23:40 -0700 (PDT)
+Received: from dhcp48.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4c73a4284sm12100719f8f.85.2025.05.27.07.23.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 07:23:40 -0700 (PDT)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH] genksyms: Fix enum consts from a reference affecting new values
+Date: Tue, 27 May 2025 16:22:11 +0200
+Message-ID: <20250527142318.14175-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 27, 2025 at 06:36:35AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    785cdec46e92 Merge tag 'x86-core-2025-05-25' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13e47df4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d7ed3189f3c3d3f3
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9afaf6749e3a7aa1bdf3
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ad26d4580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=157f3170580000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/af5446d375b0/disk-785cdec4.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/eb59d48f91fb/vmlinux-785cdec4.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/188617605a08/bzImage-785cdec4.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-> BUG: KASAN: wild-memory-access in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
-> BUG: KASAN: wild-memory-access in node_state include/linux/nodemask.h:429 [inline]
-> BUG: KASAN: wild-memory-access in get_futex_key+0x595/0x1540 kernel/futex/core.c:587
-> Read of size 8 at addr 1fffffff818b9088 by task syz-executor931/5831
-> 
-> CPU: 0 UID: 0 PID: 5831 Comm: syz-executor931 Not tainted 6.15.0-syzkaller-01958-g785cdec46e92 #0 PREEMPT(full) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->  kasan_report+0xe0/0x110 mm/kasan/report.c:634
->  check_region_inline mm/kasan/generic.c:183 [inline]
->  kasan_check_range+0x100/0x1b0 mm/kasan/generic.c:189
->  instrument_atomic_read include/linux/instrumented.h:68 [inline]
->  _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
->  node_state include/linux/nodemask.h:429 [inline]
->  get_futex_key+0x595/0x1540 kernel/futex/core.c:587
+Enumeration constants read from a symbol reference file can incorrectly
+affect new enumeration constants parsed from an actual input file.
 
-Does the this help?
+Example:
 
+ $ cat test.c
+ enum { E_A, E_B, E_MAX };
+ struct bar { int mem[E_MAX]; };
+ int foo(struct bar *a) {}
+ __GENKSYMS_EXPORT_SYMBOL(foo);
+
+ $ cat test.c | ./scripts/genksyms/genksyms -T test.0.symtypes
+ #SYMVER foo 0x070d854d
+
+ $ cat test.0.symtypes
+ E#E_MAX 2
+ s#bar struct bar { int mem [ E#E_MAX ] ; }
+ foo int foo ( s#bar * )
+
+ $ cat test.c | ./scripts/genksyms/genksyms -T test.1.symtypes -r test.0.symtypes
+ <stdin>:4: warning: foo: modversion changed because of changes in enum constant E_MAX
+ #SYMVER foo 0x9c9dfd81
+
+ $ cat test.1.symtypes
+ E#E_MAX ( 2 ) + 3
+ s#bar struct bar { int mem [ E#E_MAX ] ; }
+ foo int foo ( s#bar * )
+
+The __add_symbol() function includes logic to handle the incrementation of
+enumeration values, but this code is also invoked when reading a reference
+file. As a result, the variables last_enum_expr and enum_counter might be
+incorrectly set after reading the reference file, which later affects
+parsing of the actual input.
+
+Fix the problem by splitting the logic for the incrementation of
+enumeration values into a separate function process_enum() and call it from
+__add_symbol() only when processing non-reference data.
+
+Fixes: e37ddb825003 ("genksyms: Track changes to enum constants")
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
 ---
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 19a2c65f3d37..e9e46293c0c1 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -583,8 +583,7 @@ int get_futex_key(u32 __user *uaddr, unsigned int flags, union futex_key *key,
- 		if (futex_get_value(&node, naddr))
- 			return -EFAULT;
+ scripts/genksyms/genksyms.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/scripts/genksyms/genksyms.c b/scripts/genksyms/genksyms.c
+index 8b0d7ac73dbb..d05c01eb721b 100644
+--- a/scripts/genksyms/genksyms.c
++++ b/scripts/genksyms/genksyms.c
+@@ -181,13 +181,9 @@ static int is_unknown_symbol(struct symbol *sym)
+ 			strcmp(defn->string, "{") == 0);
+ }
  
--		if (node != FUTEX_NO_NODE &&
--		    (node >= MAX_NUMNODES || !node_possible(node)))
-+		if ((unsigned)node >= nr_node_ids || !node_possible(node))
- 			return -EINVAL;
+-static struct symbol *__add_symbol(const char *name, enum symbol_type type,
+-			    struct string_list *defn, int is_extern,
+-			    int is_reference)
++static struct string_list *process_enum(const char *name, enum symbol_type type,
++					struct string_list *defn)
+ {
+-	unsigned long h;
+-	struct symbol *sym;
+-	enum symbol_status status = STATUS_UNCHANGED;
+ 	/* The parser adds symbols in the order their declaration completes,
+ 	 * so it is safe to store the value of the previous enum constant in
+ 	 * a static variable.
+@@ -225,6 +221,23 @@ static struct symbol *__add_symbol(const char *name, enum symbol_type type,
+ 			return NULL;
  	}
  
++	return defn;
++}
++
++static struct symbol *__add_symbol(const char *name, enum symbol_type type,
++			    struct string_list *defn, int is_extern,
++			    int is_reference)
++{
++	unsigned long h;
++	struct symbol *sym;
++	enum symbol_status status = STATUS_UNCHANGED;
++
++	if ((type == SYM_ENUM_CONST || type == SYM_ENUM) && !is_reference) {
++		defn = process_enum(name, type, defn);
++		if (defn == NULL)
++			return NULL;
++	}
++
+ 	h = crc32(name);
+ 	hash_for_each_possible(symbol_hashtable, sym, hnode, h) {
+ 		if (map_to_ns(sym->type) != map_to_ns(type) ||
+
+base-commit: 914873bc7df913db988284876c16257e6ab772c6
+-- 
+2.43.0
+
