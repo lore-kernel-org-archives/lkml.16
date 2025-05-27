@@ -1,48 +1,72 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD1D3C30
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A457E1E5710
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748342988; cv=none; b=GRPRFCmaluBD7QKPxeINd0bitWwP7mIRFewpbC0SAYMqlqpaSjrxPkqgptisFrakta+s1oKta7N0NCBgSugTK48LJ75rIN+NSV+0XC9M+E6CTISjGUM5AxF+imuHrOMDXXowvnkmoGZSG1ykEbkCE3Zwf5mJwB0f+wTSEWg0u0E=
+	t=1748343030; cv=none; b=uFJW5pWarq09JtDuxn8Sjk2xK7h2nGNAhZDIBJxmqwUctlv8d65XltsL/Efbr4lRJutVtcMdotHern8V9lmSdkXthZQcX2dNemuseFMb/703/Jem7PQbf2PUu/umVvAxBNURY+Q78nU6/3HjSMg+BK8DBHojkCh3TXpsEqcP2uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748342988; c=relaxed/simple;
-	bh=87bMWFw5fW7cmVTCnZjZOok36lX00VtOoZVeAovCiwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tH334CCaVM7xpOV55sYk3DKRgvkoRUt2X7M/ImaiuP7cZl+p6VY7ZxxGRZh6fd6isLDw6ZQnVqgh8/x40/Jre+z47nAsjdPdbXq2DusWKqp9LGDtTNgbttY94LSA5H2G7rlz1plxagEm9i3j9WmSTFdXTIVnDbmHdNO1bVxI+f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uva1W8If; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748343030; c=relaxed/simple;
+	bh=Sr2kjoe9CHUb8wBN17DkAoRrIuXe/6ngTnlp+O6o0nc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mSplA6rsmACeemzgMwHoY2FmNwAcPo0YA/JDs+UdG0I0YDweER3l+eJAXFGL3YqfJMr/I8uib7pvmGeRC0oA9uXBtx8Z/OCM5XCPIjZBeakTEhMz0v7nNUAsA6EHbFCAddNG+24n5mzr/k5DTz6GUbiGOBwJg/XfLlx6TFARJeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LLwVmvyl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uva1W8If"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54RAnIlc1727564;
-	Tue, 27 May 2025 05:49:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748342958;
-	bh=7bl5VdywnS3i96TmdOmRzwUwd4apUGYUmvI14ouERyg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=uva1W8Ifvj8YiVQELyYOB5r+FBMziJVPZFRq3QpMOReZA9VEvWB+dy94c59II2aPE
-	 mzYHHKxZnwGl0VCmdYT/jF7cixhnBQtehCQp2Gk2c9+/pJxMLw4E9nNvuX28ejDSm2
-	 EDOmAa93AfIDEsvAHC/xQGItCNSwzeEhbFQcYqjU=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54RAnIRP2774315
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 27 May 2025 05:49:18 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- May 2025 05:49:17 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 May 2025 05:49:17 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54RAnA73061377;
-	Tue, 27 May 2025 05:49:11 -0500
-Message-ID: <05948e1c-fa08-4aca-b705-b2e3a228f758@ti.com>
-Date: Tue, 27 May 2025 16:19:10 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LLwVmvyl"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R4KrIb013744
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:50:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qRBqOzOrv28UUdHO/wXjqy1ptt8k/i+66lCaL24WiV4=; b=LLwVmvylktZaxbAL
+	uY5c3TpJQTil6NocAMmhUskKEkl6TdqPZ1GuvtZROG9KAY4fnA3oT1B7zn8BdJAY
+	Xvgh638EFk3D5WX100J0Jb6c1+OYXdPIPFD6Pc7tzQLaGATmjblCKtudbWy2aPHp
+	nYHNrHfmha5+qjXdHREnXQ6qqMuYJKNIfXkUK+hW3+524wPzYf0zu3qSmQbf0JGB
+	JkpmzYm6ErmZZpMw+eXjrlrYmgP1VUTmzhbmKmGpMfUodVtf44dHYofQSt9r+/zv
+	NyhLY+4TGJQzZyjjKig1i60m4fyzfE0JmBGfg3wVKnAzvHCNRY8W1n7VFtQTYplK
+	t8rHSw==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w6918ymq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:50:27 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4775bdbcdc3so8510651cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:50:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748343026; x=1748947826;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qRBqOzOrv28UUdHO/wXjqy1ptt8k/i+66lCaL24WiV4=;
+        b=S//MpjcLNfxNLbBHx+r886zk6ijsBASFkkw8H2mQXuvBTQXCJ2fxqQxHOIPnpvVI0C
+         nkPOX7zKdSnnJlejaFK9K5epb0EfGF4NPoRJ31/8kAUewkbhGQLz1KwEgPvEyjvaiY1Y
+         vcufF4gfDao8bwCBgCbPKNuFpKkK6UTVHFvATXEM5ESyCgC1gKCTq/LznN6ER1rA7v2Z
+         c3JaL0jMKN1nX31BxCq/+O+CCaESQE5PDnqXggpXZuhqtsl+M3lwRU8kRO7qWf7wdMlE
+         YBqImP6sYKY2tIIVHQMZ0uw00z5SpAuQzidGDbkPZeynAMvPZDCPBqv3orDic02Ko/1N
+         Y6qA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUirQG2PXz5hdmRHOqCGwu70G7grXSr/Qi2X4JmNr2GInpZJTPGYUsMkoKt+oaytZKxlHKL8uQMT0pe1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrjotXL0wnvTLcO6IGneRGIjxI/qMDemccG2dMFAv4DnNsue0J
+	kc2PqofBASOJ0IxA8sODl03DHlrIIY54syt2u9IoCdfn9+szOMj1w+6YH3J/hZuBdFHaaotRK1i
+	by7KwCv/pLNQDk0x20lYz/S7Cm8JkJeQmxEYCNWxXtkuxVrw8xbiNzx5ZmC70TZsF9D8=
+X-Gm-Gg: ASbGncsnFJfrFMRcNYkVgWMnKVA6y63fS+dSctVeUQ/2uIUF/nY/OuPSdpnOoqHzQQ5
+	a38x84nyPD5XH2yiHJMwThRaWwyF82TV7d7SnQREMsYnW6/Q//dtgciqaMZc0yVU1znfQpx9L6e
+	LOw8UmWvCDIxPx6K/lJx9H5DlIUnNjTnGkm8Vh9fcOluZG3cRiTsPEaZfuUnRPh/5JDdwpzzp7g
+	R66PgmziWbTtige8pVmSJJc7kYOUjRTxfnrCmDNYxif+sgNiRT1JPyE6gUCHyW78xVEk7W9ngLy
+	KvRrtpObee7TjSiA6TG1eJCP13X8fXSeBLXY2DZ8X/wnyOB9m9L15Yg8BoZMet55fQ==
+X-Received: by 2002:a05:622a:204:b0:47a:ecc3:296c with SMTP id d75a77b69052e-49f437e5af0mr68353121cf.0.1748343026515;
+        Tue, 27 May 2025 03:50:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6WSrw2nabesb+cdYzp0oNZGTkIWjS90wW23jZaW3xkQFZgwFkrJkpnTlVmdSvDu2G4AMqLw==
+X-Received: by 2002:a05:622a:204:b0:47a:ecc3:296c with SMTP id d75a77b69052e-49f437e5af0mr68352701cf.0.1748343025468;
+        Tue, 27 May 2025 03:50:25 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04af2asm1832533966b.4.2025.05.27.03.50.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 03:50:24 -0700 (PDT)
+Message-ID: <7f525932-570e-4c81-a3f2-6d2e26b02233@oss.qualcomm.com>
+Date: Tue, 27 May 2025 12:50:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,324 +74,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/3] drm/bridge: cadence: cdns-mhdp8546-core:
- Remove legacy support for connector initialisation in bridge
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <lumag@kernel.org>, <jani.nikula@intel.com>, <andy.yan@rock-chips.com>,
-        <linux@treblig.org>, <viro@zeniv.linux.org.uk>, <yamonkar@cadence.com>,
-        <sjakhade@cadence.com>, <linux-kernel@vger.kernel.org>,
-        <devarsht@ti.com>, <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <alexander.stein@ew.tq-group.com>
-References: <20250521073237.366463-1-j-choudhary@ti.com>
- <20250521073237.366463-2-j-choudhary@ti.com>
- <ea92f925-7778-477b-aeab-604407260de8@ideasonboard.com>
- <dedc889f-ffa2-420b-8b23-c6fff11cdf30@ti.com>
- <c888a352-a243-4555-9ab5-99614974afdd@ideasonboard.com>
+Subject: Re: [PATCH v3 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
+To: Johan Hovold <johan@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Qiang Yu <quic_qianyu@quicinc.com>, Wenbin Yao
+ <quic_wenbyao@quicinc.com>,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, andersson@kernel.org,
+        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, kishon@kernel.org, sfr@canb.auug.org.au,
+        linux-phy@lists.infradead.org, krishna.chundru@oss.qualcomm.com,
+        quic_vbadigan@quicinc.com, quic_mrana@quicinc.com,
+        quic_cang@quicinc.com, Johan Hovold <johan+linaro@kernel.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+References: <20250508081514.3227956-1-quic_wenbyao@quicinc.com>
+ <20250508081514.3227956-6-quic_wenbyao@quicinc.com>
+ <aBxpMuFGKgWrw1TV@hovoldconsulting.com>
+ <5fd4abe7-3621-4119-9482-de823b247b0d@quicinc.com>
+ <aBx9LB_qQIvA0bj8@hovoldconsulting.com>
+ <55a85622-fe33-4b5f-81b2-4a4270fab680@oss.qualcomm.com>
+ <aDRw2rJ39t9W10YG@hovoldconsulting.com>
 Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <c888a352-a243-4555-9ab5-99614974afdd@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <aDRw2rJ39t9W10YG@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=WfoMa1hX c=1 sm=1 tr=0 ts=683598f3 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=zitRP-D0AAAA:8
+ a=4PHQb4W1jccdVsicM3wA:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+ a=xwnAI6pc5liRhupp6brZ:22
+X-Proofpoint-GUID: pO0kNSvT6_tHGShKnVq-2QrJ7Gf5-Zxt
+X-Proofpoint-ORIG-GUID: pO0kNSvT6_tHGShKnVq-2QrJ7Gf5-Zxt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA4OSBTYWx0ZWRfX69WFxaHH2fMd
+ xe/ATvzGD4FYkEkCjIQdl4JlD7QA4lG5KGnBLy6MbSnFKx9CdQtJfXJ8Wt41VfnRagPLr+lkqDE
+ 4X2K3gaTUkyrctBb0QSCrxTNmbBq7u+F16M/GEq91xUqj2SI3uKVgBPaz1ZI/qpCFj0xJuHL+Ao
+ ZuO68LS8yHuY6Fz5aK7zhjjwfrQuAXqH9G4TRDNqxiyUqsG1hcuo/Ua7I4ArhYtRyOTWkKsP15r
+ iIFI9vl8NvDSxzOqnvOgsNH4r6xSjJ1aIsHkuj3vJRskSkOSH2QBezdXbXIftJtYD13kL9IF1wA
+ aVc85pdRoROvDol8eqij4xx4DJy1FU+Nmdma1/0WTV15bvWXTNC3gGXZWNuxoJsHy6WsDlUdO6q
+ eiSk04RPU1jjypDdPBh6X9OXsicr0rjostSOmJj4eivQbc0DjfCBMeD1C5k6SRyt5TGc+px5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_05,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270089
 
-
-
-On 27/05/25 14:47, Tomi Valkeinen wrote:
-> Hi,
+On 5/26/25 3:47 PM, Johan Hovold wrote:
+> On Thu, May 22, 2025 at 10:03:18PM +0200, Konrad Dybcio wrote:
+>> On 5/8/25 11:45 AM, Johan Hovold wrote:
+>>> On Thu, May 08, 2025 at 04:50:30PM +0800, Qiang Yu wrote:
+>>>> On 5/8/2025 4:20 PM, Johan Hovold wrote:
 > 
-> On 27/05/2025 11:41, Jayesh Choudhary wrote:
->> Hello Tomi,
->>
->> On 27/05/25 13:08, Tomi Valkeinen wrote:
->>> Hi,
+>>>>> This still looks wrong and you never replied to why these supplies
+>>>>> shouldn't be handled by the tcsr clock driver that supplies these
+>>>>> clocks:
+>>>>>
+>>>>> 	https://lore.kernel.org/lkml/aBHUmXx6N72_sCH9@hovoldconsulting.com/
 >>>
->>> On 21/05/2025 10:32, Jayesh Choudhary wrote:
->>>> Now that we have DBANC framework, remove the connector initialisation
->>>> code
->>>> as that piece of code is not called if DRM_BRIDGE_ATTACH_NO_CONNECTOR
->>>> flag
->>>> is used. Only TI K3 platforms consume this driver and tidss (their
->>>> display
->>>> controller) has this flag set. So this legacy support can be dropped.
->>>>
+>>>> Sorry, I thought Konrad had convinced you.
 >>>
->>> Why is the series RFC? Does it not work? Is there something here you're
->>> not comfortable with?
->>
->> These changes work without any issue.
->>
->> I was a little doubtful about the second patch so kept it as RFC.
-> 
-> You should explain why the series/patch is RFC, unless it's somehow
-> obvious. In this series I didn't see any TODOs or open questions or
-> anything.
-> 
-
-Oh okay. Got it. Will drop RFC prefix in v3.
-
+>>> IIRC, he just said you guys were told to add the QREF supply to the PHY.
+>>> That's not an argument.
 >>>
->>>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>>> ---
->>>>    .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 186 +++---------------
->>>>    1 file changed, 25 insertions(+), 161 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/
->>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>> index b431e7efd1f0..66bd916c2fe9 100644
->>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>> @@ -1444,56 +1444,6 @@ static const struct drm_edid
->>>> *cdns_mhdp_edid_read(struct cdns_mhdp_device *mhdp,
->>>>        return drm_edid_read_custom(connector,
->>>> cdns_mhdp_get_edid_block, mhdp);
->>>>    }
->>>>    -static int cdns_mhdp_get_modes(struct drm_connector *connector)
->>>> -{
->>>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(connector);
->>>> -    const struct drm_edid *drm_edid;
->>>> -    int num_modes;
->>>> -
->>>> -    if (!mhdp->plugged)
->>>> -        return 0;
->>>> -
->>>> -    drm_edid = cdns_mhdp_edid_read(mhdp, connector);
->>>> -
->>>> -    drm_edid_connector_update(connector, drm_edid);
->>>> -
->>>> -    if (!drm_edid) {
->>>> -        dev_err(mhdp->dev, "Failed to read EDID\n");
->>>> -        return 0;
->>>> -    }
->>>> -
->>>> -    num_modes = drm_edid_connector_add_modes(connector);
->>>> -    drm_edid_free(drm_edid);
->>>> -
->>>> -    /*
->>>> -     * HACK: Warn about unsupported display formats until we deal
->>>> -     *       with them correctly.
->>>> -     */
->>>> -    if (connector->display_info.color_formats &&
->>>> -        !(connector->display_info.color_formats &
->>>> -          mhdp->display_fmt.color_format))
->>>> -        dev_warn(mhdp->dev,
->>>> -             "%s: No supported color_format found (0x%08x)\n",
->>>> -            __func__, connector->display_info.color_formats);
->>>> -
->>>> -    if (connector->display_info.bpc &&
->>>> -        connector->display_info.bpc < mhdp->display_fmt.bpc)
->>>> -        dev_warn(mhdp->dev, "%s: Display bpc only %d < %d\n",
->>>> -             __func__, connector->display_info.bpc,
->>>> -             mhdp->display_fmt.bpc);
->>>> -
->>>> -    return num_modes;
->>>> -}
->>>> -
->>>> -static int cdns_mhdp_connector_detect(struct drm_connector *conn,
->>>> -                      struct drm_modeset_acquire_ctx *ctx,
->>>> -                      bool force)
->>>> -{
->>>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
->>>> -
->>>> -    return cdns_mhdp_detect(mhdp);
->>>> -}
->>>> -
->>>>    static u32 cdns_mhdp_get_bpp(struct cdns_mhdp_display_fmt *fmt)
->>>>    {
->>>>        u32 bpp;
->>>> @@ -1547,114 +1497,6 @@ bool cdns_mhdp_bandwidth_ok(struct
->>>> cdns_mhdp_device *mhdp,
->>>>        return true;
->>>>    }
->>>>    -static
->>>> -enum drm_mode_status cdns_mhdp_mode_valid(struct drm_connector *conn,
->>>> -                      const struct drm_display_mode *mode)
->>>> -{
->>>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
->>>> -
->>>> -    mutex_lock(&mhdp->link_mutex);
->>>> -
->>>> -    if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
->>>> -                    mhdp->link.rate)) {
->>>> -        mutex_unlock(&mhdp->link_mutex);
->>>> -        return MODE_CLOCK_HIGH;
->>>> -    }
->>>> -
->>>> -    mutex_unlock(&mhdp->link_mutex);
->>>> -    return MODE_OK;
->>>> -}
->>>> -
->>>> -static int cdns_mhdp_connector_atomic_check(struct drm_connector *conn,
->>>> -                        struct drm_atomic_state *state)
->>>> -{
->>>> -    struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
->>>> -    struct drm_connector_state *old_state, *new_state;
->>>> -    struct drm_crtc_state *crtc_state;
->>>> -    u64 old_cp, new_cp;
->>>> -
->>>> -    if (!mhdp->hdcp_supported)
->>>> -        return 0;
->>>> -
->>>> -    old_state = drm_atomic_get_old_connector_state(state, conn);
->>>> -    new_state = drm_atomic_get_new_connector_state(state, conn);
->>>> -    old_cp = old_state->content_protection;
->>>> -    new_cp = new_state->content_protection;
->>>> -
->>>> -    if (old_state->hdcp_content_type != new_state->hdcp_content_type &&
->>>> -        new_cp != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
->>>> -        new_state->content_protection =
->>>> DRM_MODE_CONTENT_PROTECTION_DESIRED;
->>>> -        goto mode_changed;
->>>> -    }
->>>> -
->>>> -    if (!new_state->crtc) {
->>>> -        if (old_cp == DRM_MODE_CONTENT_PROTECTION_ENABLED)
->>>> -            new_state->content_protection =
->>>> DRM_MODE_CONTENT_PROTECTION_DESIRED;
->>>> -        return 0;
->>>> -    }
->>>> -
->>>> -    if (old_cp == new_cp ||
->>>> -        (old_cp == DRM_MODE_CONTENT_PROTECTION_DESIRED &&
->>>> -         new_cp == DRM_MODE_CONTENT_PROTECTION_ENABLED))
->>>> -        return 0;
->>>> -
->>>> -mode_changed:
->>>> -    crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
->>>> -    crtc_state->mode_changed = true;
->>>> -
->>>> -    return 0;
->>>> -}
->>>> -
->>>> -static const struct drm_connector_helper_funcs
->>>> cdns_mhdp_conn_helper_funcs = {
->>>> -    .detect_ctx = cdns_mhdp_connector_detect,
->>>> -    .get_modes = cdns_mhdp_get_modes,
->>>> -    .mode_valid = cdns_mhdp_mode_valid,
->>>> -    .atomic_check = cdns_mhdp_connector_atomic_check,
->>>> -};
->>>> -
->>>> -static const struct drm_connector_funcs cdns_mhdp_conn_funcs = {
->>>> -    .fill_modes = drm_helper_probe_single_connector_modes,
->>>> -    .atomic_duplicate_state =
->>>> drm_atomic_helper_connector_duplicate_state,
->>>> -    .atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->>>> -    .reset = drm_atomic_helper_connector_reset,
->>>> -    .destroy = drm_connector_cleanup,
->>>> -};
->>>> -
->>>> -static int cdns_mhdp_connector_init(struct cdns_mhdp_device *mhdp)
->>>> -{
->>>> -    u32 bus_format = MEDIA_BUS_FMT_RGB121212_1X36;
->>>> -    struct drm_connector *conn = &mhdp->connector;
->>>> -    struct drm_bridge *bridge = &mhdp->bridge;
->>>> -    int ret;
->>>> -
->>>> -    conn->polled = DRM_CONNECTOR_POLL_HPD;
->>>> -
->>>> -    ret = drm_connector_init(bridge->dev, conn, &cdns_mhdp_conn_funcs,
->>>> -                 DRM_MODE_CONNECTOR_DisplayPort);
->>>> -    if (ret) {
->>>> -        dev_err(mhdp->dev, "Failed to initialize connector with
->>>> drm\n");
->>>> -        return ret;
->>>> -    }
->>>> -
->>>> -    drm_connector_helper_add(conn, &cdns_mhdp_conn_helper_funcs);
->>>> -
->>>> -    ret = drm_display_info_set_bus_formats(&conn->display_info,
->>>> -                           &bus_format, 1);
->>>> -    if (ret)
->>>> -        return ret;
->>>> -
->>>> -    ret = drm_connector_attach_encoder(conn, bridge->encoder);
->>>> -    if (ret) {
->>>> -        dev_err(mhdp->dev, "Failed to attach connector to encoder\n");
->>>> -        return ret;
->>>> -    }
->>>> -
->>>> -    if (mhdp->hdcp_supported)
->>>> -        ret = drm_connector_attach_content_protection_property(conn,
->>>> true);
->>>> -
->>>> -    return ret;
->>>> -}
->>>> -
->>>>    static int cdns_mhdp_attach(struct drm_bridge *bridge,
->>>>                    struct drm_encoder *encoder,
->>>>                    enum drm_bridge_attach_flags flags)
->>>> @@ -1671,9 +1513,11 @@ static int cdns_mhdp_attach(struct drm_bridge
->>>> *bridge,
->>>>            return ret;
->>>>          if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
->>>> -        ret = cdns_mhdp_connector_init(mhdp);
->>>> -        if (ret)
->>>> -            goto aux_unregister;
->>>> +        ret = -EINVAL;
->>>> +        dev_err(mhdp->dev,
->>>> +            "Connector initialisation not supported in bridge_attach
->>>> %d\n",
->>>> +            ret);
->>>> +        goto aux_unregister;
->>>>        }
->>>>          spin_lock(&mhdp->start_lock);
->>>> @@ -2158,6 +2002,25 @@ static const struct drm_edid
->>>> *cdns_mhdp_bridge_edid_read(struct drm_bridge *brid
->>>>        return cdns_mhdp_edid_read(mhdp, connector);
->>>>    }
->>>>    +static enum drm_mode_status
->>>> +cdns_mhdp_bridge_mode_valid(struct drm_bridge *bridge,
->>>> +                const struct drm_display_info *info,
->>>> +                const struct drm_display_mode *mode)
->>>> +{
->>>> +    struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
->>>> +
->>>> +    mutex_lock(&mhdp->link_mutex);
->>>> +
->>>> +    if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
->>>> +                    mhdp->link.rate)) {
->>>> +        mutex_unlock(&mhdp->link_mutex);
->>>> +        return MODE_CLOCK_HIGH;
->>>> +    }
->>>> +
->>>> +    mutex_unlock(&mhdp->link_mutex);
->>>> +    return MODE_OK;
->>>> +}
->>>> +
->>>>    static const struct drm_bridge_funcs cdns_mhdp_bridge_funcs = {
->>>>        .atomic_enable = cdns_mhdp_atomic_enable,
->>>>        .atomic_disable = cdns_mhdp_atomic_disable,
->>>> @@ -2172,6 +2035,7 @@ static const struct drm_bridge_funcs
->>>> cdns_mhdp_bridge_funcs = {
->>>>        .edid_read = cdns_mhdp_bridge_edid_read,
->>>>        .hpd_enable = cdns_mhdp_bridge_hpd_enable,
->>>>        .hpd_disable = cdns_mhdp_bridge_hpd_disable,
->>>> +    .mode_valid = cdns_mhdp_bridge_mode_valid,
->>>>    };
->>>>      static bool cdns_mhdp_detect_hpd(struct cdns_mhdp_device *mhdp,
->>>> bool *hpd_pulse)
+>>>> If the TCSR driver manages these supplies, would it be possible for tscr
+>>>> driver to recognize when it needs to turn vdda-qref on or off for a
+>>>> specific PCIe port?
 >>>
->>> Why do you need to add bridge mode_valid() when removing the legacy
->>> non-DRM_BRIDGE_ATTACH_NO_CONNECTOR code?
+>>> Sure, just add a lookup table to the driver and enable the required
+>>> supplies when a ref clock is enabled.
+>>>
+>>> As I mentioned in the other thread, the T14s has the following QREF
+>>> supplies:
+>>>
+>>> 	
+>>> 	VDD_A_QREFS_1P2_A
+>>> 	VDD_A_QREFS_1P2_B
+>>>
+>>> 	VDD_A_QREFS_0P875_A
+>>> 	VDD_A_QREFS_0P875_B
+>>> 	VDD_A_QREFS_0P875_0
+>>> 	VDD_A_QREFS_0P875_2
+>>> 	VDD_A_QREFS_0P875_3
+>>>
+>>> and it's not clear how these maps to the various consumer ref clocks,
+>>> including the PCIe ones:
+>>>
+>>> 	#define TCSR_PCIE_2L_4_CLKREF_EN
+>>> 	#define TCSR_PCIE_2L_5_CLKREF_EN
+>>> 	#define TCSR_PCIE_8L_CLKREF_EN
+>>> 	#define TCSR_PCIE_4L_CLKREF_EN
+>>>
+>>> That mapping can be done by the TCSR clock driver (which would also take
+>>> care of the 1.2 V supplies).
 >>
->> Okay. Then I will add the bridge mode_valid as a separate patch.
+>> So we had an internal discussion about this and while it may work, it
+>> would only do so for some SoCs, and maybe only on the surface, as the
+>> wiring behind it is rather peculiar..
 > 
-> Well, it was a question =). But indeed my thought was that it sounded
-> like material for a separate patch. Is it more of a fix for the
-> DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
-> 
->   Tomi
-> 
+> Care to expand on why it cannot be made to work generally?
 
-Yes this is a fix for DBANC case.
-Without mode_valid, I can see a lot of modes getting propagated which
-are not even supported by display monitor.
-Since mode_valid was added to connector_funcs in the initial commit, I
-will use that commit for "Fixes:" tag
+"-ENODATA".. many connections are difficult to unambiguously decipher
 
-Warm Regards,
-Jayesh
+> 
+> Also, what would the mapping of the above QREF supplies to PCIe PHYs
+> even look like?
+
+I'm not sure I have a clear answer..
+
+> 
+>> Plus, not all QREF consumers have a clock expressed in TCSR as of
+>> right now.
+> 
+> Is that because there is no corresponding bit in the TCSR or simply
+> because it has not been described yet?
+
+Unfortunately, the former.. Some IPs have a non-TCSR ref clock and
+some are presumably implicitly fed by BI_TCXO
+
+Konrad
