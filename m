@@ -1,164 +1,161 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6EF269827;
-	Tue, 27 May 2025 16:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F38279329;
+	Tue, 27 May 2025 16:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748363475; cv=none; b=QXm51u8NzmVevEiMEsIHib59hWg7w75dGNdfyOr+wa0kRucjKUERFitFnZ8/M0NhRambP9GM4WLisyOFBC55wTP+CxGAM6anGzUz1LGDBDIkJ7BLckXKxw4HFCu6JvRZHuoiOt3vbyhuGnZLp/NVGotaVhIi7x0yV0TbdtxprzI=
+	t=1748363542; cv=none; b=oMHHL29FQoRkLjyNfsRiYGghnYTfO4qrADMQkTkPlWrHzwZZJRw2A+gIR56hFGckIXf1iEsfG1DM2VYTCkXUIHvHsgNE4D5HIZuM3lgcbC1meUos7ktq3cvU7U0zkCbFlf/kyc0dVjUburLYLIU6r18luNS4/98khie97r/lhDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748363475; c=relaxed/simple;
-	bh=JKIBHO1WBEk2DpCG4CViKibfgUWTWKWdTlFL7XeRaf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U7n59ICQRr/t0oJBj8ur8DOgOXGNEIz8dszxDaSkF2fB98KcZjE1+oLnouZf+/AmNsInnVkmOwxFFdTCmiPIZwYsNopz/oZ9DDPTx4AwPxN9MBiWo4BYDJVo1BpbuXTKQOD3nQRewyjlvrGs0syr98tJcldd6ie095IB5GdxTe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IhRDeJrS; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748363542; c=relaxed/simple;
+	bh=kFbKuKSn0OZ9knzwWvd7+06HGMPMlb3adA3RbCTnMKc=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qadfdRSQEMaNILWxMt9v5UpXvabVrBSVVBxS+p2j02NfwweVDTxvQn6zenzKY0382ga/qlq2gIyeNtytUNXwEFTIe2povDnF9xV5WVZS7e6tHcQKmMEtkrvTBe+jwubZeGV9fdTTSJfN9EMynI+eQA9HLwyAIu5QDJdPqgQLK5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=clIfl1/b; arc=none smtp.client-ip=109.224.244.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IhRDeJrS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 538A81FCF2;
-	Tue, 27 May 2025 16:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748363469;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZYLROFC13QWr0WtIHITpKv2k/IYMUKl/Ik95XSzStc=;
-	b=IhRDeJrS9jEMuIKBecnBJriiCigzhovdLdAo8PcxOnxSCbLHAg2pE5zE5zYVmw1R4+039U
-	CK8W6lC0U0n5puU297QfUE5VkxhETbk9T+KybDCrRlalPEUgCI6a0740UOxd5Sbwd3cSL2
-	mYH8HJ8au6B/lR5hCQcIYrJhJye69OOHxk3cD3dKL0RXz7SNYbNHAEaaoAxe5DOl+XHiNp
-	hu2gde3xzMIE+FeM8/T8HK4PBLAbR+2FWXws0XHzYk8mKOP1L7b/Qv0aa9Dm4dU5Z6Me3B
-	0gtdejge1087acIokX/hgKqRFBJKeJRrdTYh4v+2O5SPx6Mj07/+3K8M5YqlMg==
-Date: Tue, 27 May 2025 18:31:05 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Alexis =?UTF-8?B?TG90aG9yw6k=?= <alexis.lothore@bootlin.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu
- <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, Phil Reid <preid@electromag.com.au>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: stmmac: add explicit check and error on invalid
- PTP clock rate
-Message-ID: <20250527183105.7c4bad49@device-24.home>
-In-Reply-To: <20250527-stmmac_tstamp_div-v2-1-663251b3b542@bootlin.com>
-References: <20250527-stmmac_tstamp_div-v2-1-663251b3b542@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="clIfl1/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1748363536; x=1748622736;
+	bh=xcKUc/kOE+to0tTeVZ2ljp2J0YIa+my4ALpGiSB6LPU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=clIfl1/bQ7zs4Az7MPQsdpU5KOXabISlUXrfRN3ZRHbUgGdLxiYdckv08Kqnp8fud
+	 raRNYi2HSkRcYqEcyniwEmgp/x/MJIUh+N2AIuV4eM7Y66e+64sONQ3hgP20JT+/4V
+	 gD7JKGkQnoCtqZhpEhj9nPYeePGn7IarFjHDxJV5jcNhNDW3izpUUL/TcZbrUtUl+7
+	 nVrN1ZLCYvG9EP02rAExwmP/FR8wDXK/MPDN1faaFEWizSChsj2gNj8FbesKnqcCnm
+	 0REv2G3lLBinMCXOZ4yf6rkHFY+F0WcMw/A1vgXjX9W/2MfbEr5HRmzrRyMZ1SAEEv
+	 JAs/TzWsowKMg==
+Date: Tue, 27 May 2025 16:32:11 +0000
+To: Srinivas Kandagatla <srini@kernel.org>
+From: "Michael C. Pratt" <mcpratt@pm.me>
+Cc: Christian Lamparter <chunkeey@gmail.com>, =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, linux-kernel@vger.kernel.org, "Michael C . Pratt" <mcpratt@pm.me>, INAGAKI Hiroshi <musashino.open@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH v1 RESEND stable tags] nvmem: layouts: u-boot-env: remove crc32 endianness conversion
+Message-ID: <20250527163123.9201-1-mcpratt@pm.me>
+Feedback-ID: 27397442:user:proton
+X-Pm-Message-ID: 031be010564a882665cc183088ff5591c6526fd8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvtdekieculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekheegieejkeetfffhleehteffgefhfffhueefieefffejfeethfevudetudeuueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrjeeirdeivddrudejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrjeeirdeivddrudejuddphhgvlhhopeguvghvihgtvgdqvdegrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomhdprhgtphhtthhopehjohgrsghrvghusehshihnohhpshihshdrtghomhdprhgtphhtt
- hhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hi Alexis,
+On 11 Oct 2022, it was reported that the crc32 verification
+of the u-boot environment failed only on big-endian systems
+for the u-boot-env nvmem layout driver with the following error.
 
-On Tue, 27 May 2025 08:33:44 +0200
-Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com> wrote:
+  Invalid calculated CRC32: 0x88cd6f09 (expected: 0x096fcd88)
 
-> The stmmac platform drivers that do not open-code the clk_ptp_rate value
-> after having retrieved the default one from the device-tree can end up
-> with 0 in clk_ptp_rate (as clk_get_rate can return 0). It will
-> eventually propagate up to PTP initialization when bringing up the
-> interface, leading to a divide by 0:
->=20
->  Division by zero in kernel.
->  CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.12.30-00001-g48313bd5=
-768a #22
->  Hardware name: STM32 (Device Tree Support)
->  Call trace:
->   unwind_backtrace from show_stack+0x18/0x1c
->   show_stack from dump_stack_lvl+0x6c/0x8c
->   dump_stack_lvl from Ldiv0_64+0x8/0x18
->   Ldiv0_64 from stmmac_init_tstamp_counter+0x190/0x1a4
->   stmmac_init_tstamp_counter from stmmac_hw_setup+0xc1c/0x111c
->   stmmac_hw_setup from __stmmac_open+0x18c/0x434
->   __stmmac_open from stmmac_open+0x3c/0xbc
->   stmmac_open from __dev_open+0xf4/0x1ac
->   __dev_open from __dev_change_flags+0x1cc/0x224
->   __dev_change_flags from dev_change_flags+0x24/0x60
->   dev_change_flags from ip_auto_config+0x2e8/0x11a0
->   ip_auto_config from do_one_initcall+0x84/0x33c
->   do_one_initcall from kernel_init_freeable+0x1b8/0x214
->   kernel_init_freeable from kernel_init+0x24/0x140
->   kernel_init from ret_from_fork+0x14/0x28
->  Exception stack(0xe0815fb0 to 0xe0815ff8)
->=20
-> Prevent this division by 0 by adding an explicit check and error log
-> about the actual issue.
->=20
-> Fixes: 19d857c9038e ("stmmac: Fix calculations for ptp counters when cloc=
-k input =3D 50Mhz.")
-> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
-> ---
-> Changes in v2:
-> - Add Fixes tag
-> - Reword commit message to clarify the triggering cause of the issue
-> - Link to v1: https://lore.kernel.org/r/20250523-stmmac_tstamp_div-v1-1-b=
-ca8a5a3a477@bootlin.com
-> ---
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/=
-net/ethernet/stmicro/stmmac/stmmac_main.c
-> index 918d7f2e8ba992208d7d6521a1e9dba01086058f..f68e3ece919cc88d0bf199a39=
-4bc7e44b5dee095 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-> @@ -835,6 +835,11 @@ int stmmac_init_tstamp_counter(struct stmmac_priv *p=
-riv, u32 systime_flags)
->  	if (!(priv->dma_cap.time_stamp || priv->dma_cap.atime_stamp))
->  		return -EOPNOTSUPP;
-> =20
-> +	if (!priv->plat->clk_ptp_rate) {
-> +		netdev_err(priv->dev, "Invalid PTP clock rate");
-> +		return -EINVAL;
-> +	}
-> +
->  	stmmac_config_hw_tstamping(priv, priv->ptpaddr, systime_flags);
->  	priv->systime_flags =3D systime_flags;
+This problem has been present since the driver was introduced,
+and before it was made into a layout driver.
 
-This may be some nitpick that can be addressed at a later point, but we
-now have a guarantee that when stmmac_ptp_register() gets called,
-priv->ptp_clk_rate is non-zero, right ? If so, we can drop the test in
-said function :
+The suggested fix at the time was to use further endianness
+conversion macros in order to have both the stored and calculated
+crc32 values to compare always represented in the system's endianness.
+This was not accepted due to sparse warnings
+and some disagreement on how to handle the situation.
+Later on in a newer revision of the patch, it was proposed to use
+cpu_to_le32() for both values to compare instead of le32_to_cpu()
+and store the values as __le32 type to remove compilation errors.
 
-	if (priv->plat->has_gmac4 && priv->plat->clk_ptp_rate)
-		priv->plat->cdc_error_adj =3D (2 * NSEC_PER_SEC) / priv->plat->clk_ptp_ra=
-te;
+The necessity of this is based on the assumption that the use of crc32()
+requires endianness conversion because the algorithm uses little-endian,
+however, this does not prove to be the case and the issue is unrelated.
 
-There is another spot in the code, like in the EST handling, where we
-divide by priv->plat->ptp_clk_rate :
+Upon inspecting the current kernel code,
+there already is an existing use of le32_to_cpu() in this driver,
+which suggests there already is special handling for big-endian systems,
+however, it is big-endian systems that have the problem.
 
-stmmac_adjust_time(...)
-	stmmac_est_configure(priv, priv, priv->est,
-			     priv->plat->clk_ptp_rate)
-		.est_configure()
-			ctrl |=3D ((NSEC_PER_SEC / ptp_rate) [...]
+This, being the only functional difference between architectures
+in the driver combined with the fact that the suggested fix
+was to use the exact same endianness conversion for the values
+brings up the possibility that it was not necessary to begin with,
+as the same endianness conversion for two values expected to be the same
+is expected to be equivalent to no conversion at all.
 
-Maybe we should fail EST configuration as well if ptp_clk_rate is 0
-(probably in stmmac_tc.c's tc_taprio_configure or in the
-.est_configure). That can be a step for later as well, as I don't know
-if the setup you found this bug on even supports taprio/EST, and setups
-that do didn't seem to encounter the bug yet.
+After inspecting the u-boot environment of devices of both endianness
+and trying to remove the existing endianness conversion,
+the problem is resolved in an equivalent way as the other suggested fixes.
 
-Besides all that,
+Ultimately, it seems that u-boot is agnostic to endianness
+at least for the purpose of environment variables.
+In other words, u-boot reads and writes the stored crc32 value
+with the same endianness that the crc32 value is calculated with
+in whichever endianness a certain architecture runs on.
 
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Therefore, the u-boot-env driver does not need to convert endianness.
+Remove the usage of endianness macros in the u-boot-env driver,
+and change the type of local variables to maintain the same return type.
 
-Thanks,
+If there is a special situation in the case of endianness,
+it would be a corner case and should be handled by a unique "compatible".
 
-Maxime
+Even though it is not necessary to use endianness conversion macros here,
+it may be useful to use them in the future for consistent error printing.
+
+Fixes: d5542923f200 ("nvmem: add driver handling U-Boot environment variabl=
+es")
+Reported-by: INAGAKI Hiroshi <musashino.open@gmail.com>
+Link: https://lore.kernel.org/all/20221011024928.1807-1-musashino.open@gmai=
+l.com
+Cc: <stable@vger.kernel.org> # 6.12.x
+Cc: <stable@vger.kernel.org> # 6.6.x: f4cf4e5: Revert "nvmem: add new confi=
+g option"
+Cc: <stable@vger.kernel.org> # 6.6.x: 7f38b70: of: device: Export of_device=
+_make_bus_id()
+Cc: <stable@vger.kernel.org> # 6.6.x: 4a1a402: nvmem: Move of_nvmem_layout_=
+get_container() in another header
+Cc: <stable@vger.kernel.org> # 6.6.x: fc29fd8: nvmem: core: Rework layouts =
+to become regular devices
+Cc: <stable@vger.kernel.org> # 6.6.x: 0331c61: nvmem: core: Expose cells th=
+rough sysfs
+Cc: <stable@vger.kernel.org> # 6.6.x: 401df0d: nvmem: layouts: refactor .ad=
+d_cells() callback arguments
+Cc: <stable@vger.kernel.org> # 6.6.x: 6d0ca4a: nvmem: layouts: store owner =
+from modules with nvmem_layout_driver_register()
+Cc: <stable@vger.kernel.org> # 6.6.x: 5f15811: nvmem: layouts: add U-Boot e=
+nv layout
+Cc: <stable@vger.kernel.org> # 6.6.x
+Signed-off-by: Michael C. Pratt <mcpratt@pm.me>
+---
+ drivers/nvmem/layouts/u-boot-env.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-b=
+oot-env.c
+index 731e6f4f12b2..21f6dcf905dd 100644
+--- a/drivers/nvmem/layouts/u-boot-env.c
++++ b/drivers/nvmem/layouts/u-boot-env.c
+@@ -92,7 +92,7 @@ int u_boot_env_parse(struct device *dev, struct nvmem_dev=
+ice *nvmem,
+ =09size_t crc32_data_offset;
+ =09size_t crc32_data_len;
+ =09size_t crc32_offset;
+-=09__le32 *crc32_addr;
++=09uint32_t *crc32_addr;
+ =09size_t data_offset;
+ =09size_t data_len;
+ =09size_t dev_size;
+@@ -143,8 +143,8 @@ int u_boot_env_parse(struct device *dev, struct nvmem_d=
+evice *nvmem,
+ =09=09goto err_kfree;
+ =09}
+=20
+-=09crc32_addr =3D (__le32 *)(buf + crc32_offset);
+-=09crc32 =3D le32_to_cpu(*crc32_addr);
++=09crc32_addr =3D (uint32_t *)(buf + crc32_offset);
++=09crc32 =3D *crc32_addr;
+ =09crc32_data_len =3D dev_size - crc32_data_offset;
+ =09data_len =3D dev_size - data_offset;
+=20
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+--=20
+2.30.2
+
+
