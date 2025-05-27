@@ -1,226 +1,182 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48267188006
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88B8F50F;
+	Tue, 27 May 2025 08:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335052; cv=none; b=dSDq4PdKcK1h4M70rmKGfAsDo4dDj8zeq9A7w7rSLILfEkaNB76SiJk/Bb3/KxMPkVDfnwkJ3AhI1XUXe9fe336j3PcI5V/xZfNGMoSIJTaFPiaAVk1YhctpmPmociCYcR4y5TuFVcoJ1czAWEKRmNGpqzdtv9hNT2/CZhMOrms=
+	t=1748335085; cv=none; b=Av4EKeWmmGTcjYZBW813EVVC19S8mXFnIPIJ/Pg1fI7ER+00pLmSKNT4sJH8Hy77TRCj30zQbNKwzzp3DiIwck4I6C4Dx29yqgzY7EQazToGJ1qgyqglPcOOdYQ91g/jWT0AAi2ccDtxnmei3KylNvubek9O5+8ZQPXzxdCLhtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335052; c=relaxed/simple;
-	bh=ram9moRRwUzMJ0SM4AzxNo3JFJgNSzxqrUbfk018MjE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UuRWOEmAZBlP9VfDShp3USQvNSPJmRWJSdTvifhLplfC5H6cgusDGbXPsPhCjtOiavsDy7bj0mwETY8TE2TZ0WFaLS/WdcbijvEjpoRFMt6+A4w7y8S2tNyAlkr0kQujnOnk0nlQ9dDt713z9zag8O/bXlqhhP+HBhFt9czzkiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JlgJ5OUy; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748335085; c=relaxed/simple;
+	bh=fYlFSLt2vWp0kd5ClMXYMsn4v04SxfbL1CjlQ6KQMfQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O0tMqF8QX5hev8FcLfsaRxR9JyR91Hg1LJj6wiuQu5zhr5psGP0ToA1Vsiw9zRKNVIyUrxjdIPY1l7POylXjoODTCBXKzz5GdRajozSbhe+BioYtens60B7q1xV87uPlldJ/PL9PZ23lylYsyqZx/dyZhmGwtHfJc3GkZi9N6vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L/Wu17Ru; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlgJ5OUy"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b074d908e56so1545099a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 01:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748335050; x=1748939850; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vG068GBhBEM6vEx1ff4IYRmbQ2abHAH9u0tmgVxbbpY=;
-        b=JlgJ5OUy7B96lZROMNvdaY9Qv4BdaVkZwo++yXMWXSh6ev4j4jkjUjFAej0OK0lW+q
-         2ZqjkHHV9mLb503gB7YZg8eMz1Oli+zh5FPf+YGwGZheBD1hvcPrfc6VHiPbNEQdpgHK
-         EjNNwQsPFTi9Zygf7Ksv66JyqSQHscY4pGzO0DRXCkcsVIwRlD4YQV8H42UlZvCuSUEK
-         uH5yufJh/mKspabupTrZRuDzg+3yEIvVLxOXwTWlt3Jt/jNJ7kRRG6rE3GBkUHO0qFnG
-         +N7fLiP12v3zWcS6WJOhzWsxzMf9l6kgIZP1G/kcbgUSxWdDRowJ7tCbQko3lP2zHBdR
-         qzIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748335050; x=1748939850;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vG068GBhBEM6vEx1ff4IYRmbQ2abHAH9u0tmgVxbbpY=;
-        b=Z+rWN5dhPQMXOPwEOZrzGqZ/aPFT3Ib7cpHg1Fzqg8e6ZKgz/aQjBROTJi+Rfpezo7
-         k8EKSdOh8PwijHyhuJ2xFOltKUNyqX4Z/54RsMI9fPSj5wucNadQ5Z0eOHzHO+KGMbAC
-         cgH0EQmIlNUucZz+0bCJeLeA9fRvLafa7VCSGQQuZHOIRAra5wa4g/C4ZvWVVpaS2brU
-         FBOwFB+lSPIQgNq758t29kxkGsTUYs6oma6+RT6VKA5WU+MPU6nr5QdmcEOueJN+kYvB
-         XSLZE+IkMvln9Vz51cBA49LAlhd+mZnDg8yLQCbRRw6y/Xo0MRDeX6lJoGQaqrBRSnK5
-         ZfbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUS1MJQyxIN0vIHQCpMa5dn2KxssAldEooLM9uduCi2S7wIaxYqCkyTpGHfH8IL/2xoy/EfXTE/9DH3nLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV6gC73x+xpxKBCKz93VmjP9ZT+ueM5vDzAwNmZl6gJVwjxckN
-	XddZRa/x42DTaT73v4MVaHbSV4+nh9Q6J3Xg+oJyNe6rl/2v2a94aTXTK50f/Q==
-X-Gm-Gg: ASbGnct54ixNd0pJqH6HJk/bCVOWt0PKCV7EdrmuLXybwj2EGpv7Ye/GQXCEliug79v
-	7Ikq5lPb3bFjF+7SAEbKeEgwgEEhmjCupRfeVeU0bnhXBTET2V2aPEnqyq6cmJuLAPN6ag2PRrO
-	hyq/NHjpi2txVx6Hrxv03jmcDGmPJHH956cz+Tkc277xYs0ChsM64yYN4iJ125jIA8gjYjGoIZj
-	ya7ck9KUVxKJGDkFtXDbYtkxiWjWikX/EPryDWHmOJ/DrLowzdSf72vYStWEb17Ze43Xvr02c8l
-	d/SdKp7uhnGexLbrnXxViwcrOachDnRMNWPp4WQBK2742tfiy/mwVzY2FkLQnK0sVUUi
-X-Google-Smtp-Source: AGHT+IGgUOniQeowny4ikpFfBKzAvvOgmt8e+sabsiZxvOnXLLrj+o/hCy59jr5nmXu1emXHWTzEGQ==
-X-Received: by 2002:a17:90b:35cc:b0:306:b6f7:58ba with SMTP id 98e67ed59e1d1-3110f31c313mr16749250a91.6.1748335050418;
-        Tue, 27 May 2025 01:37:30 -0700 (PDT)
-Received: from Barrys-MBP.hub ([118.92.145.159])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d0d44sm13680014a91.21.2025.05.27.01.37.26
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 May 2025 01:37:29 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: david@redhat.com
-Cc: 21cnbao@gmail.com,
-	aarcange@redhat.com,
-	akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lokeshgidra@google.com,
-	peterx@redhat.com,
-	ryncsn@gmail.com,
-	surenb@google.com
-Subject: Re: [BUG]userfaultfd_move fails to move a folio when swap-in occurs concurrently with swap-out
-Date: Tue, 27 May 2025 20:37:22 +1200
-Message-Id: <20250527083722.27309-1-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <CAGsJ_4zOhNBe9b1m1LYaJbFur3TdLma+2EXbc=BhAToDeLfvAg@mail.gmail.com>
-References: <CAGsJ_4zOhNBe9b1m1LYaJbFur3TdLma+2EXbc=BhAToDeLfvAg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L/Wu17Ru"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 02F214396A;
+	Tue, 27 May 2025 08:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748335075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OpM/KDvQBRopReoEwTUtRipcq4oHwuOqxwS8jNYE+N4=;
+	b=L/Wu17RuqmXs2iCJTa6K4FkUaFxFVCNWTU0ikfQjdsDA5jeQUShmeA+w007rzYIrlWOxer
+	B7k/TE5akU9QTTeEFmPF+gSxCb9h4kH7lioU6oZJVYVaWm12xTPyhHFlfxPIlxhEiAO++e
+	crltFxBXlCoiOODANBDPV/gcGUZFlpu5U3j92Ku4cg8zq8LmiONFVy256H9HRXRqlhuJKL
+	8CEJ8x8XA5dsLBZaf3tzQtk//pYU9pARY8KJsU+bL6KZoQl4GUDbckkpqPpH8rEaT1J6X4
+	koyzY6gP6IcGAo41o9xB9uVq65nCx7bqisT4i1BXiH4K1LgsTteJJwCoYW9iRQ==
+Date: Tue, 27 May 2025 10:37:49 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: <UNGLinuxDriver@microchip.com>, <andrew+netdev@lunn.ch>,
+ <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+ <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net] net: lan966x: Make sure to insert the vlan tags
+ also in host mode
+Message-ID: <20250527103749.66505756@2a02-8440-d111-2026-8d50-1f4f-0da2-e170.rev.sfr.net>
+In-Reply-To: <20250527070850.3504582-1-horatiu.vultur@microchip.com>
+References: <20250527070850.3504582-1-horatiu.vultur@microchip.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduleelvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejfedtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehteevfeeivdekjeefkeekffefgfdtudetjeehkeegieelheekgfefgfevveffhfenucfkphepledvrdekkedrudejtddriedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrdekkedrudejtddriedtpdhhvghlohepvdgrtddvqdekgeegtddqugduudduqddvtddviedqkeguhedtqddufhegfhdqtdgurgdvqdgvudejtddrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohephhhorhgrthhiuhdrvhhulhhtuhhrsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepfgfpiffnihhnuhigffhrihhvvghrsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheprghnughrvgifo
+ dhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, May 27, 2025 at 4:17 PM Barry Song <21cnbao@gmail.com> wrote:
->
-> On Tue, May 27, 2025 at 12:39 AM David Hildenbrand <david@redhat.com> wrote:
-> >
-> > On 23.05.25 01:23, Barry Song wrote:
-> > > Hi All,
-> >
-> > Hi!
-> >
-> > >
-> > > I'm encountering another bug that can be easily reproduced using the small
-> > > program below[1], which performs swap-out and swap-in in parallel.
-> > >
-> > > The issue occurs when a folio is being swapped out while it is accessed
-> > > concurrently. In this case, do_swap_page() handles the access. However,
-> > > because the folio is under writeback, do_swap_page() completely removes
-> > > its exclusive attribute.
-> > >
-> > > do_swap_page:
-> > >                 } else if (exclusive && folio_test_writeback(folio) &&
-> > >                            data_race(si->flags & SWP_STABLE_WRITES)) {
-> > >                          ...
-> > >                          exclusive = false;
-> > >
-> > > As a result, userfaultfd_move() will return -EBUSY, even though the
-> > > folio is not shared and is in fact exclusively owned.
-> > >
-> > >                          folio = vm_normal_folio(src_vma, src_addr,
-> > > orig_src_pte);
-> > >                          if (!folio || !PageAnonExclusive(&folio->page)) {
-> > >                                  spin_unlock(src_ptl);
-> > > +                               pr_err("%s %d folio:%lx exclusive:%d
-> > > swapcache:%d\n",
-> > > +                                       __func__, __LINE__, folio,
-> > > PageAnonExclusive(&folio->page),
-> > > +                                       folio_test_swapcache(folio));
-> > >                                  err = -EBUSY;
-> > >                                  goto out;
-> > >                          }
-> > >
-> > > I understand that shared folios should not be moved. However, in this
-> > > case, the folio is not shared, yet its exclusive flag is not set.
-> > >
-> > > Therefore, I believe PageAnonExclusive is not a reliable indicator of
-> > > whether a folio is truly exclusive to a process.
-> >
-> > It is. The flag *not* being set is not a reliable indicator whether it
-> > is really shared. ;)
-> >
-> > The reason why we have this PAE workaround (dropping the flag) in place
-> > is because the page must not be written to (SWP_STABLE_WRITES). CoW
-> > reuse is not possible.
-> >
-> > uffd moving that page -- and in that same process setting it writable,
-> > see move_present_pte()->pte_mkwrite() -- would be very bad.
->
-> An alternative approach is to make the folio writable only when we are
-> reasonably certain it is exclusive; otherwise, it remains read-only. If the
-> destination is later written to and the folio has become exclusive, it can
-> be reused directly. If not, a copy-on-write will occur on the destination
-> address, transparently to userspace. This avoids Lokesh’s userspace-based
-> strategy, which requires forcing a write to the source address.
+Hello Horatiu,
 
-Conceptually, I mean something like this:
+On Tue, 27 May 2025 09:08:50 +0200
+Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index bc473ad21202..70eaabf4f1a3 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -1047,7 +1047,8 @@ static int move_present_pte(struct mm_struct *mm,
- 	}
- 	if (folio_test_large(src_folio) ||
- 	    folio_maybe_dma_pinned(src_folio) ||
--	    !PageAnonExclusive(&src_folio->page)) {
-+	    (!PageAnonExclusive(&src_folio->page) &&
-+	    folio_mapcount(src_folio) != 1)) {
- 		err = -EBUSY;
- 		goto out;
- 	}
-@@ -1070,7 +1071,8 @@ static int move_present_pte(struct mm_struct *mm,
- #endif
- 	if (pte_dirty(orig_src_pte))
- 		orig_dst_pte = pte_mkdirty(orig_dst_pte);
--	orig_dst_pte = pte_mkwrite(orig_dst_pte, dst_vma);
-+	if (PageAnonExclusive(&src_folio->page))
-+		orig_dst_pte = pte_mkwrite(orig_dst_pte, dst_vma);
- 
- 	set_pte_at(mm, dst_addr, dst_pte, orig_dst_pte);
- out:
-@@ -1268,7 +1270,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 			}
- 
- 			folio = vm_normal_folio(src_vma, src_addr, orig_src_pte);
--			if (!folio || !PageAnonExclusive(&folio->page)) {
-+			if (!folio || (!PageAnonExclusive(&folio->page) &&
-+					folio_mapcount(folio) != 1)) {
- 				spin_unlock(src_ptl);
- 				err = -EBUSY;
- 				goto out;
+> When running these commands on DUT (and similar at the other end)
+> ip link set dev eth0 up
+> ip link add link eth0 name eth0.10 type vlan id 10
+> ip addr add 10.0.0.1/24 dev eth0.10
+> ip link set dev eth0.10 up
+> ping 10.0.0.2/24
+> 
+> The ping will fail.
+> 
+> The reason why is failing is because, the network interfaces for lan966x
+> have a flag saying that the HW can insert the vlan tags into the
+> frames(NETIF_F_HW_VLAN_CTAG_TX). Meaning that the frames that are
+> transmitted don't have the vlan tag inside the skb data, but they have
+> it inside the skb. We already get that vlan tag and put it in the IFH
+> but the problem is that we don't configure the HW to rewrite the frame
+> when the interface is in host mode.
+> The fix consists in actually configuring the HW to insert the vlan tag
+> if it is different than 0.
+> 
+> Fixes: 6d2c186afa5d ("net: lan966x: Add vlan support.")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  .../ethernet/microchip/lan966x/lan966x_main.c |  1 +
+>  .../ethernet/microchip/lan966x/lan966x_main.h |  1 +
+>  .../microchip/lan966x/lan966x_switchdev.c     |  1 +
+>  .../ethernet/microchip/lan966x/lan966x_vlan.c | 21 +++++++++++++++++++
+>  4 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+> index 427bdc0e4908c..7001584f1b7a6 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+> @@ -879,6 +879,7 @@ static int lan966x_probe_port(struct lan966x *lan966x, u32 p,
+>  	lan966x_vlan_port_set_vlan_aware(port, 0);
+>  	lan966x_vlan_port_set_vid(port, HOST_PVID, false, false);
+>  	lan966x_vlan_port_apply(port);
+> +	lan966x_vlan_port_rew_host(port);
+>  
+>  	return 0;
+>  }
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+> index 1f9df67f05044..4f75f06883693 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+> @@ -497,6 +497,7 @@ void lan966x_vlan_port_apply(struct lan966x_port *port);
+>  bool lan966x_vlan_cpu_member_cpu_vlan_mask(struct lan966x *lan966x, u16 vid);
+>  void lan966x_vlan_port_set_vlan_aware(struct lan966x_port *port,
+>  				      bool vlan_aware);
+> +void lan966x_vlan_port_rew_host(struct lan966x_port *port);
+>  int lan966x_vlan_port_set_vid(struct lan966x_port *port,
+>  			      u16 vid,
+>  			      bool pvid,
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c b/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
+> index 1c88120eb291a..bcb4db76b75cd 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
+> @@ -297,6 +297,7 @@ static void lan966x_port_bridge_leave(struct lan966x_port *port,
+>  	lan966x_vlan_port_set_vlan_aware(port, false);
+>  	lan966x_vlan_port_set_vid(port, HOST_PVID, false, false);
+>  	lan966x_vlan_port_apply(port);
+> +	lan966x_vlan_port_rew_host(port);
+>  }
+>  
+>  int lan966x_port_changeupper(struct net_device *dev,
+> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c b/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
+> index fa34a739c748e..f158ec6ab10cc 100644
+> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
+> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
+> @@ -149,6 +149,27 @@ void lan966x_vlan_port_set_vlan_aware(struct lan966x_port *port,
+>  	port->vlan_aware = vlan_aware;
+>  }
+>  
+> +/* When the interface is in host mode, the interface should not be vlan aware
+> + * but it should insert all the tags that it gets from the network stack.
+> + * The tags are no in the data of the frame but actually in the skb and the ifh
+                   not
+> + * is confiured already to get this tag. So what we need to do is to update the
+         configured
+> + * rewriter to insert the vlan tag for all frames which have a vlan tag
+> + * different than 0.
 
-I'm not trying to push this approach—unless Lokesh clearly sees that it  
-could reduce userspace noise. I'm mainly just curious how we might make  
-the fixup transparent to userspace. :-)
+Just to be extra clear, the doc seems to say that
 
+	REW_TAG_CFG_TAG_CFG_SET(1);
 
->
-> >
-> > >
-> > > The kernel log output is shown below:
-> > > [   23.009516] move_pages_pte 1285 folio:fffffdffc01bba40 exclusive:0
-> > > swapcache:1
-> > >
-> > > I'm still struggling to find a real fix; it seems quite challenging.
-> >
-> > PAE tells you that you can immediately write to that page without going
-> > through CoW. However, here, CoW is required.
-> >
-> > > Please let me know if you have any ideas. In any case It seems
-> > > userspace should fall back to userfaultfd_copy.
-> >
-> > We could try detecting whether the page is now exclusive, to reset PAE.
-> > That will only be possible after writeback completed, so it adds
-> > complexity without being able to move the page in all cases (during
-> > writeback).
-> >
-> > Letting userspace deal with that in these rate scenarios is
-> > significantly easier.
->
-> Right, this appears to introduce the least change—essentially none—to the
-> kernel, while shifting more noise to userspace :-)
->
-> >
-> > --
-> > Cheers,
-> >
-> > David / dhildenb
-> >
->
+means "Tag all frames, except when VID=PORT_VLAN_CFG.PORT_VID or
+VID=0."
 
-Thanks
-Barry
+Another setting for these bits are "Tag all frames except when VID=0",
+which is what you document in the above comment.
+
+In this case, is there any chance that it would make a difference ?
+
+> + */
+> +void lan966x_vlan_port_rew_host(struct lan966x_port *port)
+> +{
+> +	struct lan966x *lan966x = port->lan966x;
+> +	u32 val;
+> +
+> +	/* Tag all frames except when VID == DEFAULT_VLAN */
+> +	val = REW_TAG_CFG_TAG_CFG_SET(1);
+> +
+> +	/* Update only some bits in the register */
+> +	lan_rmw(val,
+> +		REW_TAG_CFG_TAG_CFG,
+> +		lan966x, REW_TAG_CFG(port->chip_port));
+> +}
+> +
+>  void lan966x_vlan_port_apply(struct lan966x_port *port)
+>  {
+>  	struct lan966x *lan966x = port->lan966x;
+
+Sorry for the typo nitpicking, but with that :
+
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+
+Maxime
