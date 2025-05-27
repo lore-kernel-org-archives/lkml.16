@@ -1,366 +1,904 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D89B41F78F2;
-	Tue, 27 May 2025 09:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2012F23F296;
+	Tue, 27 May 2025 09:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748337053; cv=none; b=jOdOC8/IeGQQpPf0+lwoIbhEAcgWouABl2C1pSBtvTN5zVRDuufcVCREiiPcDMiJxSF1+CQjfxIgyWWnFFFY72lJCLt6eiLmJMkS1Z9o0qJlliWBV6JDgspyE57BLS/Aw5A1UKYuba7oMrdPASTJqY638FTuPS5slrUtZ18RWbg=
+	t=1748337081; cv=none; b=pWXt4CdhOmAKmVbGBb0NZSRT0Ovol5hDd+yo6rc/pPRcysBOZ1aWOe7AvypejhKHmmXyW1IS7XHWzx435YY2gm1jGCTdLRzCyJDgkh1E3DZ/o/dkt5FP6QI0E/7x+DDHpuHjiOpOV/sXYKiHYj5oe7E/dCnBrzMC4C5R50KY+Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748337053; c=relaxed/simple;
-	bh=B/Wx22myN9t9W1nCFl2Qf/W3eMXStDV+9t2QZS4ibns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MC2kvc37f4Uv5l2NmEwm+XBPU33gIEMkMXHaJ4afxMw61A411lmoxWSEjYOaccDcWHMxca6THNOzQkQhZI04CCwCze6s0SyKMDwMMtFjjEh3jPrqMFF+PTE1LOQ2/Dd6ArA6SrkNB6SiGV1KKcsHZlyik7YyNaeJ/3Q+5yj/n2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-52b2290e28eso537767e0c.3;
-        Tue, 27 May 2025 02:10:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748337049; x=1748941849;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0XqENSKLuOF2zrMfrOr5CmcVoSO19vNQHmzVty4UvCI=;
-        b=l1BcyiBlB2n8I7Pj5Sb55cr8J5K2k7vhafl7mdH0GbCRAq8dVoMswL/ocbHLq5Gtgv
-         qKa612K0gKKpFJ2mpE4Fw1kfG3HgvTR2fO48nvOJSKbA6bo0lQCqb9t397y0gv1qOavX
-         TxvaPyE+BqR/LGSe3LSomVbMxzTUIiaW+0So5Bu7drqBgcEVtDSN1emTm+gKU0zY2Fa8
-         1VipUGVTWhdPnHokTqwkau0E92FMfyAi8pMuQnC2fYYuLlZ1DOeoA2cbZd8bsbKCdm6p
-         5ayKJsiYEDmfNdu6nsk+8f/vNHP8ccP5Ppi5bJNqPmulmnUH7renn2CVgRS7eeD7tNsx
-         4sbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPKWwxubOXmR7w0SIOsruP4Hy4PWQWRl8hI0DyuX6mxrtZinG0gYIKm4WLwTzR9HvbryzW9ekyh/QZ@vger.kernel.org, AJvYcCV5e+z5XtK3ahBH7SzOyilUqD209Yfk/er2evEN9kgmyAE6j2frKYJcL4NA03U45YZK4BnRrV5iQSC2Rh965IO7s4M=@vger.kernel.org, AJvYcCXr8p7CjPWmpd17OPlTn5c3WcxVUsNYkWxJz2nwX33ewCDq331KEU93kgZJ32s0BIxbvyW2M/iARVOXbs0P@vger.kernel.org, AJvYcCXxiQDUnkmsOJ9h1UC9aHQrE8TmL5/P5/uoNKRj6jvwuZKap4GQEpjvUSHgJvFzk6SMwN73FypBZwcy@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKlOC2JrZTyyqarH7ywLnC6MG1AyCO4QrI9PKKI/bZiQeq4MFg
-	xAbuLjfoWuvt8TTXEjP1zc9511PtX3A296tEl3vccbXvj7Z2UEQgPTdSUKsg20B7
-X-Gm-Gg: ASbGncu5ly/VzxTr1JwBkFnJXgq0WZKSUQrjBAFoiG85soIMpf2BGm+lLY5x7cse2eT
-	FQjn9ptjpRT69Kbk28enqrzmF0l89U52VAHne1mi7mpNpjq/tEbK+fKUKYFHU4wa9bZxuGeouES
-	xKxBxcbUfPEFSKnasZDLKi4Yo8Nnp+kQL8UCPaIRWzyTIFZNR/qCgI9U2scIZ4aPrCrb8bzOl3b
-	I46DZovpsy53nhJHJ8SUjC+t88wCIYH1txWd8dp7K66t26EBXVxqrCZQ9YAF6mSZws/XGeBfDmc
-	axDHDNHhUHA2C+KW7w301/EUyyP7QYjdZDpf7dYruBELH/z7geBLzwy9PesZyaFpeoXHEesERnl
-	muv1NT9CXa9mLvw==
-X-Google-Smtp-Source: AGHT+IH865uZABhm/PprJEcIwAVehlE6cZBeEZIfaZIQtnzLlrLiEE19Q2jBvwlcWuQgSX175I7aGA==
-X-Received: by 2002:a05:6122:a18:b0:530:5a43:db61 with SMTP id 71dfb90a1353d-5305a43dc63mr375766e0c.2.1748337048777;
-        Tue, 27 May 2025 02:10:48 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-53050aadc5asm1725446e0c.16.2025.05.27.02.10.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 02:10:48 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e58a9bb8fcso211709137.2;
-        Tue, 27 May 2025 02:10:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVxTe/t7TI9mUkjG2AAIVFPHC/mFp46oktYfKZLvUQqylnEVQ4nDwq1hZjgklhi3lVWU2JyKeJ6EA7q7WHo3NtAVXE=@vger.kernel.org, AJvYcCWiplPh8633ZClqhSOnrmf+gIwBo86zEs0u4bTupyH46iWbVZdmGDuobXSTMseH/RkwgMViPmQYPMtk@vger.kernel.org, AJvYcCXCm8jKt80bIjlQJ1B480mmvPjYYKa0H6jJIaMn/tabVzCcRyY+q8YqKGqD5yAvVuRwMx/N0y9F1SK8@vger.kernel.org, AJvYcCXeMzbtZMpjwSuk3bJIAfaolrAYjWSE2nfqm0uXCkZDp5A4SRuZkt6+XBDx+iYmbBjUwlyWTqvkspqIQ7B1@vger.kernel.org
-X-Received: by 2002:a05:6102:3754:b0:4e5:9426:f9e6 with SMTP id
- ada2fe7eead31-4e59426fafdmr239937137.23.1748337048376; Tue, 27 May 2025
- 02:10:48 -0700 (PDT)
+	s=arc-20240116; t=1748337081; c=relaxed/simple;
+	bh=LPO70cw9XZmy7/lEjiU5KRskrrBL64GQLLqmsMVqWa0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YQFYHEO+u0TWpaR73uyD459JRrPNQqGjcn5BIME1NGVvwyj2bgO5I0PG+V5Zf95sLWk0iq46pCVdYthbwq4LHUf19oGt1sULq3YQiOEc5TG8O1KNIgs4RBqUY/8Lz0acvgKTrmly9IVw6gMWpDqSTJhQdDOTSc5bkoe3XiMcuBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O4qjtmGK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z7xYhTC+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O4qjtmGK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z7xYhTC+"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748337076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QH41EbZoIXm89ZVOEnEkRhWrE+76hA82JcjyqRjCRnY=;
+	b=O4qjtmGKX/5faV5gxvB0BGKuU9+CmDD4tRwV7e1VdmFzeOFYa/QIoXTQm2CZNmCG75Cwdr
+	KCgz0/RHUo3wPgeCea57JWJBaMM19v33Z6lYp1RReQK4YJTeqbWPJwcgs5DB+H/NQ1QR/e
+	p7YixLHn261gc5W4A7wVs9djaPCUHyL4py0qtHK35Lv1fXfM22nU2ySZRHjBDrzNODDZMH
+	V2hWRMq004XIW0ALi0rZIOEzRnnxTdERluc/OwjrbHrQWSvYDVAAvuRwCC/BiZHDwGl+1A
+	Phg1Wec1qvNpbhRkpn+xZYiYeo034tpTooZotcxyTfsUVDyfdKz7JJN8IhbXKA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748337076;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QH41EbZoIXm89ZVOEnEkRhWrE+76hA82JcjyqRjCRnY=;
+	b=Z7xYhTC+nusNF7SHmB1rWG/+37HH6qyFSxKXc0LS3sG2t0/TrnsFZgF6EFA4y1l7oRVmnj
+	2R78JZWn+01VB/DA==
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org,
+	Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: Nam Cao <namcao@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: [PATCH v3] eventpoll: Fix priority inversion problem
+Date: Tue, 27 May 2025 11:08:36 +0200
+Message-Id: <20250527090836.1290532-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514090415.4098534-1-claudiu.beznea.uj@bp.renesas.com>
- <20250514090415.4098534-5-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWNrU=XOZr3dKKXQikzCzJ1oUPGQofWFdRX9x6rhYn3XA@mail.gmail.com>
- <b0d15a62-e164-4a8a-b4c7-77d9c3b2e7b2@tuxon.dev> <CAMuHMdUT57QfwfeoFfp-rL0yX_32QQNU3-c3MnPgdbSWi182Hw@mail.gmail.com>
- <87a923c1-c996-4769-86bd-b28b42574c3a@tuxon.dev> <CAMuHMdWr=ZHiMQ4bREu_crpuE_M3Wp4JLNEKMqd_4NT1tcTfZg@mail.gmail.com>
- <d318550c-25cb-4305-8a39-4e4ff51728d8@tuxon.dev>
-In-Reply-To: <d318550c-25cb-4305-8a39-4e4ff51728d8@tuxon.dev>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 27 May 2025 11:10:36 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXufBWPawkSMsvEdq66EPKi2SrB2REJjaLqu1RkSO8CWg@mail.gmail.com>
-X-Gm-Features: AX0GCFtJOPYqEe9TXq6Ms9B981Y5GsMG_D_HKMu4fvaYa98sdPBbEAVY79OUdTU
-Message-ID: <CAMuHMdXufBWPawkSMsvEdq66EPKi2SrB2REJjaLqu1RkSO8CWg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/8] clk: renesas: rzg2l-cpg: Add support for MSTOP in
- clock enable/disable API
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Claudiu,
+The ready event list of an epoll object is protected by read-write
+semaphore:
 
-On Tue, 27 May 2025 at 10:58, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> On 26.05.2025 20:09, Geert Uytterhoeven wrote:
-> > On Mon, 26 May 2025 at 17:55, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> >> On 26.05.2025 16:33, Geert Uytterhoeven wrote:
-> >>> On Fri, 23 May 2025 at 09:41, Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-> >>>> On 22.05.2025 17:46, Geert Uytterhoeven wrote:
-> >>>>> On Wed, 14 May 2025 at 11:04, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> >>>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>>
-> >>>>>> The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
-> >>>>>> module has one or more MSTOP bits associated with it, and these bits need
-> >>>>>> to be configured along with the module clocks. Setting the MSTOP bits
-> >>>>>> switches the module between normal and standby states.
-> >>>>>>
-> >>>>>> Previously, MSTOP support was abstracted through power domains
-> >>>>>> (struct generic_pm_domain::{power_on, power_off} APIs). With this
-> >>>>>> abstraction, the order of setting the MSTOP and CLKON bits was as follows:
-> >>>>>>
-> >>>>>> Previous Order:
-> >>>>>> A/ Switching to Normal State (e.g., during probe):
-> >>>>>> 1/ Clear module MSTOP bit
-> >>>>>> 2/ Set module CLKON bit
-> >>>>>>
-> >>>>>> B/ Switching to Standby State (e.g., during remove):
-> >>>>>> 1/ Clear CLKON bit
-> >>>>>> 2/ Set MSTOP bit
-> >>>>>>
-> >>>>>> However, in some cases (when the clock is disabled through devres), the
-> >>>>>> order may have been (due to the issue described in link section):
-> >>>>>>
-> >>>>>> 1/ Set MSTOP bit
-> >>>>>> 2/ Clear CLKON bit
-> >>>>>>
-> >>>>>> Recently, the hardware team has suggested that the correct order to set
-> >>>>>> the MSTOP and CLKON bits is:
-> >>>>>>
-> >>>>>> Updated Order:
-> >>>>>> A/ Switching to Normal State (e.g., during probe):
-> >>>>>> 1/ Set CLKON bit
-> >>>>>> 2/ Clear MSTOP bit
-> >>>>>>
-> >>>>>> B/ Switching to Standby State (e.g., during remove):
-> >>>>>> 1/ Set MSTOP bit
-> >>>>>> 2/ Clear CLKON bit
-> >>>>>>
-> >>>>>> To prevent future issues due to incorrect ordering, the MSTOP setup has
-> >>>>>> now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
-> >>>>>> with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
-> >>>>>> from the RZ/G3S HW manual, Rev1.10.
-> >>>>>>
-> >>>>>> Additionally, since multiple clocks of a single module may be mapped to a
-> >>>>>> single MSTOP bit, MSTOP setup is reference-counted.
-> >>>>>>
-> >>>>>> Furthermore, as all modules start in the normal state after reset, if the
-> >>>>>> module clocks are disabled, the module state is switched to standby. This
-> >>>>>> prevents keeping the module in an invalid state, as recommended by the
-> >>>>>> hardware team.
-> >>>>>>
-> >>>>>> Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
-> >>>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>> ---
-> >>>>>>
-> >>>>>> Changes in v2:
-> >>>>>> - udpated patch description to avoid plural in the configuration
-> >>>>>>   sequence description b/w MSTOP and CLK_ON
-> >>>>>> - use atomic type to store the usage counter; s/refcnt/usecnt/g
-> >>>>>> - moved MSTOP_OFF(), MSTOP_MASK() macros to rzg2l-cpg.c
-> >>>>>> - dropped struct mstp_clock::critical and use clk_hw_get_flags()
-> >>>>>>   instead to get the clock flags
-> >>>>>> - used unsigned int iterators in for loops
-> >>>>>> - keep memory allocated for a single list for clocks sharing the
-> >>>>>>   same MSTOP by updating the rzg2l_mod_clock_add_shared_mstop_clk();
-> >>>>>> - s/rzg2l_cpg_mstop_show/rzg2l_mod_clock_mstop_show/g,
-> >>>>>>   s/rzg2l_cpg_mstop/rzg2l_mod_clock_mstop/g,
-> >>>>>>   s/rzg2l_cpg_update_shared_mstop_clocks/rzg2l_mod_clock_update_shared_mstop_clks/g
-> >>>>>>    to keep the same naming conventions for functions handling mod clock MSTOP
-> >>>>>> - use the newly added for_each_mstp_clk() macro all over the code
-> >>>>>
-> >>>>> Thanks for the update!
-> >>>>>
-> >>>>>> --- a/drivers/clk/renesas/rzg2l-cpg.c
-> >>>>>> +++ b/drivers/clk/renesas/rzg2l-cpg.c
-> >>>>>
-> >>>>>> @@ -1209,6 +1232,94 @@ struct mstp_clock {
-> >>>>>>                 else if (((hw) = __clk_get_hw((priv)->clks[(priv)->num_core_clks + i])) && \
-> >>>>>>                          ((mstp_clk) = to_mod_clock(hw)))
-> >>>>>>
-> >>>>>> +/* Need to be called with a lock held to avoid concurrent access to mstop->usecnt. */
-> >>>>>> +static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
-> >>>>>> +                                            bool standby)
-> >>>>>> +{
-> >>>>>> +       struct rzg2l_cpg_priv *priv = clock->priv;
-> >>>>>> +       struct mstop *mstop = clock->mstop;
-> >>>>>> +       bool update = false;
-> >>>>>> +       u32 value;
-> >>>>>> +
-> >>>>>> +       if (!mstop)
-> >>>>>> +               return;
-> >>>>>> +
-> >>>>>> +       value = MSTOP_MASK(mstop->conf) << 16;
-> >>>>>> +
-> >>>>>> +       if (standby) {
-> >>>>>> +               unsigned int criticals = 0;
-> >>>>>> +
-> >>>>>> +               for (unsigned int i = 0; i < clock->num_shared_mstop_clks; i++) {
-> >>>>>> +                       struct mstp_clock *clk = clock->shared_mstop_clks[i];
-> >>>>>> +
-> >>>>>> +                       if (clk_hw_get_flags(&clk->hw) & CLK_IS_CRITICAL)
-> >>>>>> +                               criticals++;
-> >>>>>> +               }
-> >>>>>> +
-> >>>>>> +               /*
-> >>>>>> +                * If this is a shared MSTOP and it is shared with critical clocks,
-> >>>>>> +                * and the system boots up with this clock enabled but no driver
-> >>>>>> +                * uses it the CCF will disable it (as it is unused). As we don't
-> >>>>>> +                * increment reference counter for it at registration (to avoid
-> >>>>>> +                * messing with clocks enabled at probe but later used by drivers)
-> >>>>>> +                * do not set the MSTOP here too if it is shared with critical
-> >>>>>> +                * clocks and ref counted only by those critical clocks.
-> >>>>>> +                */
-> >>>>>> +               if (criticals && criticals == atomic_read(&mstop->usecnt))
-> >>>>>> +                       return;
-> >>>>>> +
-> >>>>>> +               value |= MSTOP_MASK(mstop->conf);
-> >>>>>> +
-> >>>>>> +               /* Allow updates on probe when usecnt = 0. */
-> >>>>>> +               if (!atomic_read(&mstop->usecnt))
-> >>>>>> +                       update = true;
-> >>>>>> +               else
-> >>>>>> +                       update = atomic_dec_and_test(&mstop->usecnt);
-> >>>>>> +       } else {
-> >>>>>> +               atomic_inc(&mstop->usecnt);
-> >>>>>> +               update = true;
-> >>>>>
-> >>>>> Shouldn't the update be conditional, i.e.:
-> >>>>>
-> >>>>>     if (!atomic_read(&mstop->usecnt))
-> >>>>>             update = true;
-> >>>>>     atomic_inc(&mstop->usecnt);
-> >>>>>
-> >>>>> ?
-> >>>>
-> >>>> Indeed, it should be conditional as you suggested.
-> >>>>
-> >>>>>
-> >>>>>> +       }
-> >>>>>> +
-> >>>>>> +       if (update)
-> >>>>>> +               writel(value, priv->base + MSTOP_OFF(mstop->conf));
-> >>>>>> +}
-> >>>>>
-> >>>>>> +static int rzg2l_mod_clock_update_shared_mstop_clks(struct rzg2l_cpg_priv *priv,
-> >>>>>> +                                                   struct mstp_clock *clock)
-> >>>>>> +{
-> >>>>>> +       struct mstp_clock *clk;
-> >>>>>> +       struct clk_hw *hw;
-> >>>>>> +
-> >>>>>> +       if (!clock->mstop)
-> >>>>>> +               return 0;
-> >>>>>> +
-> >>>>>> +       for_each_mstp_clk(clk, hw, priv) {
-> >>>>>> +               struct mstp_clock **new_clks;
-> >>>>>> +               int num_shared_mstop_clks;
-> >>>>>> +               bool found = false;
-> >>>>>> +
-> >>>>>> +               if (clk->mstop != clock->mstop)
-> >>>>>> +                       continue;
-> >>>>>> +
-> >>>>>> +               num_shared_mstop_clks = clk->num_shared_mstop_clks;
-> >>>>>> +               for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
-> >>>>>> +                       if (clk->shared_mstop_clks[i] == clock) {
-> >>>>>> +                               found = true;
-> >>>>>> +                               break;
-> >>>>>> +                       }
-> >>>>>> +               }
-> >>>>>> +               if (found)
-> >>>>>> +                       continue;
-> >>>>>
-> >>>>> Can this happen? With your current code, the answer is yes.
-> >>>>> But I think this loop and check can be removed...
-> >>>>>
-> >>>>>> +
-> >>>>>> +               if (!num_shared_mstop_clks)
-> >>>>>> +                       new_clks = devm_kmalloc_array(priv->dev, 2, sizeof(*new_clks), GFP_KERNEL);
-> >>>>>> +               else
-> >>>>>> +                       new_clks = devm_krealloc(priv->dev, clk->shared_mstop_clks,
-> >>>>>> +                                                (num_shared_mstop_clks + 1) * sizeof(*new_clks),
-> >>>>>> +                                                GFP_KERNEL);
-> >>>>>> +
-> >>>>>> +               if (!new_clks)
-> >>>>>> +                       return -ENOMEM;
-> >>>>>> +
-> >>>>>> +               if (!num_shared_mstop_clks)
-> >>>>>> +                       new_clks[num_shared_mstop_clks++] = clk;
-> >>>>>> +               if (clk != clock)
-> >>>>>
-> >>>>> This check is always true
-> >>>>
-> >>>> If I'm not wrong now, when adding the clock to it's own list, and the list
-> >>>> is empty (!num_shared_mstop_clks check above is true), if this condition is
-> >>>> missing the clock it will be added twice in its own list.
-> >>>
-> >>> Sorry, I missed that this function is called _after_ the clock is
-> >>> added to priv->clks[].  So one question and comment here:
-> >>>   1. Do you need a one-entry array (actual allocation is two entries)
-> >>>      for module clocks with an mstop entry that is not shared?
-> >>
-> >> That extra entry should not be needed. It should not happen to have an
-> >> mstop clock in the priv->clks[] array w/o at least a clock in its shared
-> >> list. I was wrong in both the initial code and the reply I sent to your
-> >> initial comment. Appologies for that.
-> >
-> > So no single-entry arrays...
->
-> Oh, I missread it yesterday everning. Sorry for confusion. Let me try again:
->
-> >
-> >>>      Perhaps for critical clocks? That could be handled in
->
-> The clock is added to its own shared_mstop_clk[] array to avoid extra
-> conditions when all the clocks sharing the same mstop need to be checked
-> for an action. One example is code at [A] (for critical clocks) that was
-> available in v1.
->
->
-> >>>      rzg2l_mod_clock_module_set_state(), by explicitly checking
-> >>>      the clock's own critical flag if num_shared_mstop_clks is zero.
->
-> The clock was added to its own shared_mstop_clk[] array as a result of this
-> comment I got from you on v1 (with regards to checking the clock's critical
-> flag):
->
-> "If clock->shared_mstop_clks[] would include the current clock, then
-> (a) this test would not be needed, and
-> (b) all clocks sharing the same mstop could share a single
->     clock->shared_mstop_clks[] array."
->
-> If I understood correctly, in [1] it has been proposed to have something
-> like what is proposed here to avoid extra conditional check (like [A]), in
-> rzg2l_mod_clock_module_set_state():
->
-> for (u8 i = 0; i < clock->num_shared_mstop_clks; i++) {
->     unsigned int
->     struct mstp_clock *clk = clock->shared_mstop_clks[i];
->
->     if (clk->critical)
->         criticals++;
-> }
->
-> /* Increment if clock is critical, too. */
-> if (clock->critical) // <<< [A]
->     criticals++;
->
-> Please let me know if I misunderstood your initial request?
+  - The consumer (waiter) acquires the write lock and takes items.
+  - the producer (waker) takes the read lock and adds items.
 
-You did not misunderstand my initial request.  Until recently, I just
-hadn't realized that you still need to check for a critical clock if
-the mstop is not shared, sorry for that.
+The point of this design is enabling epoll to scale well with large number
+of producers, as multiple producers can hold the read lock at the same
+time.
 
-However, I think it is better to just add an extra check
+Unfortunately, this implementation may cause scheduling priority inversion
+problem. Suppose the consumer has higher scheduling priority than the
+producer. The consumer needs to acquire the write lock, but may be blocked
+by the producer holding the read lock. Since read-write semaphore does not
+support priority-boosting for the readers (even with CONFIG_PREEMPT_RT=3Dy),
+we have a case of priority inversion: a higher priority consumer is blocked
+by a lower priority producer. This problem was reported in [1].
 
-    if (!clock->num_shared_mstop_clks &&
-        (clk_hw_get_flags(&clock->hw) & CLK_IS_CRITICAL))
-            criticals++;
+Furthermore, this could also cause stall problem, as described in [2].
 
-to rzg2l_mod_clock_module_set_state(), than to allocate single-entry
-arrays for each and every clock that does not share the mstop.
-Do you agree?
+To fix this problem, make the event list half-lockless:
 
-Thanks!
+  - The consumer acquires a mutex (ep->mtx) and takes items.
+  - The producer locklessly adds items to the list.
 
-> [1]
-> https://lore.kernel.org/all/CAMuHMdXFtBmjDu=1RS2MLNYzhZ0fmpT7+1QbA9p4LvoLHitOuw@mail.gmail.com/
+Performance is not the main goal of this patch, but as the producer now can
+add items without waiting for consumer to release the lock, performance
+improvement is observed using the stress test from
+https://github.com/rouming/test-tools/blob/master/stress-epoll.c. This is
+the same test that justified using read-write semaphore in the past.
 
-Gr{oetje,eeting}s,
+Testing using 12 x86_64 CPUs:
 
-                        Geert
+          Before     After        Diff
+threads  events/ms  events/ms
+      8       6932      19753    +185%
+     16       7820      27923    +257%
+     32       7648      35164    +360%
+     64       9677      37780    +290%
+    128      11166      38174    +242%
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Testing using 1 riscv64 CPU (averaged over 10 runs, as the numbers are
+noisy):
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+          Before     After        Diff
+threads  events/ms  events/ms
+      1         73        129     +77%
+      2        151        216     +43%
+      4        216        364     +69%
+      8        234        382     +63%
+     16        251        392     +56%
+
+Reported-by: Frederic Weisbecker <frederic@kernel.org>
+Closes: https://lore.kernel.org/linux-rt-users/20210825132754.GA895675@loth=
+ringen/ [1]
+Reported-by: Valentin Schneider <vschneid@redhat.com>
+Closes: https://lore.kernel.org/linux-rt-users/xhsmhttqvnall.mognet@vschnei=
+d.remote.csb/ [2]
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+v3:
+  - get rid of the "link_used" and "ready" flags. They are hard to
+    understand and unnecessary
+  - get rid of the obsolete lockdep_assert_irqs_enabled()
+  - Add lockdep_assert_held(&ep->mtx)
+  - rewrite some comments
+v2:
+  - rename link_locked -> link_used
+  - replace xchg() with smp_store_release() when applicable
+  - make sure llist_node is in clean state when not on a list
+  - remove now-unused list_add_tail_lockless()
+---
+ fs/eventpoll.c | 458 +++++++++++++++----------------------------------
+ 1 file changed, 134 insertions(+), 324 deletions(-)
+
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d4dbffdedd08e..a97a771a459c9 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -137,13 +137,7 @@ struct epitem {
+ 	};
+=20
+ 	/* List header used to link this structure to the eventpoll ready list */
+-	struct list_head rdllink;
+-
+-	/*
+-	 * Works together "struct eventpoll"->ovflist in keeping the
+-	 * single linked chain of items.
+-	 */
+-	struct epitem *next;
++	struct llist_node rdllink;
+=20
+ 	/* The file descriptor information this item refers to */
+ 	struct epoll_filefd ffd;
+@@ -191,22 +185,15 @@ struct eventpoll {
+ 	/* Wait queue used by file->poll() */
+ 	wait_queue_head_t poll_wait;
+=20
+-	/* List of ready file descriptors */
+-	struct list_head rdllist;
+-
+-	/* Lock which protects rdllist and ovflist */
+-	rwlock_t lock;
++	/*
++	 * List of ready file descriptors. Adding to this list is lockless. Items=
+ can be removed
++	 * only with eventpoll::mtx
++	 */
++	struct llist_head rdllist;
+=20
+ 	/* RB tree root used to store monitored fd structs */
+ 	struct rb_root_cached rbr;
+=20
+-	/*
+-	 * This is a single linked list that chains all the "struct epitem" that
+-	 * happened while transferring ready events to userspace w/out
+-	 * holding ->lock.
+-	 */
+-	struct epitem *ovflist;
+-
+ 	/* wakeup_source used when ep_send_events or __ep_eventpoll_poll is runni=
+ng */
+ 	struct wakeup_source *ws;
+=20
+@@ -361,10 +348,14 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+ 	        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+ }
+=20
+-/* Tells us if the item is currently linked */
+-static inline int ep_is_linked(struct epitem *epi)
++/*
++ * Add the item to its container eventpoll's rdllist; do nothing if the it=
+em is already on rdllist.
++ */
++static void epitem_ready(struct epitem *epi)
+ {
+-	return !list_empty(&epi->rdllink);
++	if (&epi->rdllink =3D=3D cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
++		llist_add(&epi->rdllink, &epi->ep->rdllist);
++
+ }
+=20
+ static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
+@@ -383,13 +374,26 @@ static inline struct epitem *ep_item_from_wait(wait_q=
+ueue_entry_t *p)
+  *
+  * @ep: Pointer to the eventpoll context.
+  *
+- * Return: a value different than %zero if ready events are available,
+- *          or %zero otherwise.
++ * Return: true if ready events might be available, false otherwise.
+  */
+-static inline int ep_events_available(struct eventpoll *ep)
++static inline bool ep_events_available(struct eventpoll *ep)
+ {
+-	return !list_empty_careful(&ep->rdllist) ||
+-		READ_ONCE(ep->ovflist) !=3D EP_UNACTIVE_PTR;
++	bool available;
++	int locked;
++
++	locked =3D mutex_trylock(&ep->mtx);
++	if (!locked) {
++		/*
++		 * The lock held and someone might have removed all items while inspecti=
+ng it. The
++		 * llist_empty() check in this case is futile. Assume that something is =
+enqueued and
++		 * let ep_try_send_events() figure it out.
++		 */
++		return true;
++	}
++
++	available =3D !llist_empty(&ep->rdllist);
++	mutex_unlock(&ep->mtx);
++	return available;
+ }
+=20
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+@@ -724,77 +728,6 @@ static inline void ep_pm_stay_awake_rcu(struct epitem =
+*epi)
+ 	rcu_read_unlock();
+ }
+=20
+-
+-/*
+- * ep->mutex needs to be held because we could be hit by
+- * eventpoll_release_file() and epoll_ctl().
+- */
+-static void ep_start_scan(struct eventpoll *ep, struct list_head *txlist)
+-{
+-	/*
+-	 * Steal the ready list, and re-init the original one to the
+-	 * empty list. Also, set ep->ovflist to NULL so that events
+-	 * happening while looping w/out locks, are not lost. We cannot
+-	 * have the poll callback to queue directly on ep->rdllist,
+-	 * because we want the "sproc" callback to be able to do it
+-	 * in a lockless way.
+-	 */
+-	lockdep_assert_irqs_enabled();
+-	write_lock_irq(&ep->lock);
+-	list_splice_init(&ep->rdllist, txlist);
+-	WRITE_ONCE(ep->ovflist, NULL);
+-	write_unlock_irq(&ep->lock);
+-}
+-
+-static void ep_done_scan(struct eventpoll *ep,
+-			 struct list_head *txlist)
+-{
+-	struct epitem *epi, *nepi;
+-
+-	write_lock_irq(&ep->lock);
+-	/*
+-	 * During the time we spent inside the "sproc" callback, some
+-	 * other events might have been queued by the poll callback.
+-	 * We re-insert them inside the main ready-list here.
+-	 */
+-	for (nepi =3D READ_ONCE(ep->ovflist); (epi =3D nepi) !=3D NULL;
+-	     nepi =3D epi->next, epi->next =3D EP_UNACTIVE_PTR) {
+-		/*
+-		 * We need to check if the item is already in the list.
+-		 * During the "sproc" callback execution time, items are
+-		 * queued into ->ovflist but the "txlist" might already
+-		 * contain them, and the list_splice() below takes care of them.
+-		 */
+-		if (!ep_is_linked(epi)) {
+-			/*
+-			 * ->ovflist is LIFO, so we have to reverse it in order
+-			 * to keep in FIFO.
+-			 */
+-			list_add(&epi->rdllink, &ep->rdllist);
+-			ep_pm_stay_awake(epi);
+-		}
+-	}
+-	/*
+-	 * We need to set back ep->ovflist to EP_UNACTIVE_PTR, so that after
+-	 * releasing the lock, events will be queued in the normal way inside
+-	 * ep->rdllist.
+-	 */
+-	WRITE_ONCE(ep->ovflist, EP_UNACTIVE_PTR);
+-
+-	/*
+-	 * Quickly re-inject items left on "txlist".
+-	 */
+-	list_splice(txlist, &ep->rdllist);
+-	__pm_relax(ep->ws);
+-
+-	if (!list_empty(&ep->rdllist)) {
+-		if (waitqueue_active(&ep->wq))
+-			wake_up(&ep->wq);
+-	}
+-
+-	write_unlock_irq(&ep->lock);
+-}
+-
+ static void ep_get(struct eventpoll *ep)
+ {
+ 	refcount_inc(&ep->refcount);
+@@ -832,10 +765,12 @@ static void ep_free(struct eventpoll *ep)
+ static bool __ep_remove(struct eventpoll *ep, struct epitem *epi, bool for=
+ce)
+ {
+ 	struct file *file =3D epi->ffd.file;
++	struct llist_node *put_back_last;
+ 	struct epitems_head *to_free;
+ 	struct hlist_head *head;
++	LLIST_HEAD(put_back);
+=20
+-	lockdep_assert_irqs_enabled();
++	lockdep_assert_held(&ep->mtx);
+=20
+ 	/*
+ 	 * Removes poll wait queue hooks.
+@@ -867,10 +802,20 @@ static bool __ep_remove(struct eventpoll *ep, struct =
+epitem *epi, bool force)
+=20
+ 	rb_erase_cached(&epi->rbn, &ep->rbr);
+=20
+-	write_lock_irq(&ep->lock);
+-	if (ep_is_linked(epi))
+-		list_del_init(&epi->rdllink);
+-	write_unlock_irq(&ep->lock);
++	if (llist_on_list(&epi->rdllink)) {
++		put_back_last =3D NULL;
++		while (true) {
++			struct llist_node *n =3D llist_del_first(&ep->rdllist);
++
++			if (&epi->rdllink =3D=3D n || WARN_ON(!n))
++				break;
++			if (!put_back_last)
++				put_back_last =3D n;
++			__llist_add(n, &put_back);
++		}
++		if (put_back_last)
++			llist_add_batch(put_back.first, put_back_last, &ep->rdllist);
++	}
+=20
+ 	wakeup_source_unregister(ep_wakeup_source(epi));
+ 	/*
+@@ -974,8 +919,9 @@ static __poll_t ep_item_poll(const struct epitem *epi, =
+poll_table *pt, int depth
+ static __poll_t __ep_eventpoll_poll(struct file *file, poll_table *wait, i=
+nt depth)
+ {
+ 	struct eventpoll *ep =3D file->private_data;
+-	LIST_HEAD(txlist);
+-	struct epitem *epi, *tmp;
++	struct wakeup_source *ws;
++	struct llist_node *n;
++	struct epitem *epi;
+ 	poll_table pt;
+ 	__poll_t res =3D 0;
+=20
+@@ -989,22 +935,39 @@ static __poll_t __ep_eventpoll_poll(struct file *file=
+, poll_table *wait, int dep
+ 	 * the ready list.
+ 	 */
+ 	mutex_lock_nested(&ep->mtx, depth);
+-	ep_start_scan(ep, &txlist);
+-	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
++	while (true) {
++		n =3D llist_del_first_init(&ep->rdllist);
++		if (!n)
++			break;
++
++		epi =3D llist_entry(n, struct epitem, rdllink);
++
+ 		if (ep_item_poll(epi, &pt, depth + 1)) {
+ 			res =3D EPOLLIN | EPOLLRDNORM;
++			epitem_ready(epi);
+ 			break;
+ 		} else {
+ 			/*
+-			 * Item has been dropped into the ready list by the poll
+-			 * callback, but it's not actually ready, as far as
+-			 * caller requested events goes. We can remove it here.
++			 * We need to activate ep before deactivating epi, to prevent autosuspe=
+nd
++			 * just in case epi becomes active after ep_item_poll() above.
++			 *
++			 * This is similar to ep_send_events().
+ 			 */
++			ws =3D ep_wakeup_source(epi);
++			if (ws) {
++				if (ws->active)
++					__pm_stay_awake(ep->ws);
++				__pm_relax(ws);
++			}
+ 			__pm_relax(ep_wakeup_source(epi));
+-			list_del_init(&epi->rdllink);
++
++			/* Just in case epi becomes active right before __pm_relax() */
++			if (unlikely(ep_item_poll(epi, &pt, depth + 1)))
++				ep_pm_stay_awake(epi);
++
++			__pm_relax(ep->ws);
+ 		}
+ 	}
+-	ep_done_scan(ep, &txlist);
+ 	mutex_unlock(&ep->mtx);
+ 	return res;
+ }
+@@ -1153,12 +1116,10 @@ static int ep_alloc(struct eventpoll **pep)
+ 		return -ENOMEM;
+=20
+ 	mutex_init(&ep->mtx);
+-	rwlock_init(&ep->lock);
+ 	init_waitqueue_head(&ep->wq);
+ 	init_waitqueue_head(&ep->poll_wait);
+-	INIT_LIST_HEAD(&ep->rdllist);
++	init_llist_head(&ep->rdllist);
+ 	ep->rbr =3D RB_ROOT_CACHED;
+-	ep->ovflist =3D EP_UNACTIVE_PTR;
+ 	ep->user =3D get_current_user();
+ 	refcount_set(&ep->refcount, 1);
+=20
+@@ -1240,94 +1201,11 @@ struct file *get_epoll_tfile_raw_ptr(struct file *f=
+ile, int tfd,
+ }
+ #endif /* CONFIG_KCMP */
+=20
+-/*
+- * Adds a new entry to the tail of the list in a lockless way, i.e.
+- * multiple CPUs are allowed to call this function concurrently.
+- *
+- * Beware: it is necessary to prevent any other modifications of the
+- *         existing list until all changes are completed, in other words
+- *         concurrent list_add_tail_lockless() calls should be protected
+- *         with a read lock, where write lock acts as a barrier which
+- *         makes sure all list_add_tail_lockless() calls are fully
+- *         completed.
+- *
+- *        Also an element can be locklessly added to the list only in one
+- *        direction i.e. either to the tail or to the head, otherwise
+- *        concurrent access will corrupt the list.
+- *
+- * Return: %false if element has been already added to the list, %true
+- * otherwise.
+- */
+-static inline bool list_add_tail_lockless(struct list_head *new,
+-					  struct list_head *head)
+-{
+-	struct list_head *prev;
+-
+-	/*
+-	 * This is simple 'new->next =3D head' operation, but cmpxchg()
+-	 * is used in order to detect that same element has been just
+-	 * added to the list from another CPU: the winner observes
+-	 * new->next =3D=3D new.
+-	 */
+-	if (!try_cmpxchg(&new->next, &new, head))
+-		return false;
+-
+-	/*
+-	 * Initially ->next of a new element must be updated with the head
+-	 * (we are inserting to the tail) and only then pointers are atomically
+-	 * exchanged.  XCHG guarantees memory ordering, thus ->next should be
+-	 * updated before pointers are actually swapped and pointers are
+-	 * swapped before prev->next is updated.
+-	 */
+-
+-	prev =3D xchg(&head->prev, new);
+-
+-	/*
+-	 * It is safe to modify prev->next and new->prev, because a new element
+-	 * is added only to the tail and new->next is updated before XCHG.
+-	 */
+-
+-	prev->next =3D new;
+-	new->prev =3D prev;
+-
+-	return true;
+-}
+-
+-/*
+- * Chains a new epi entry to the tail of the ep->ovflist in a lockless way,
+- * i.e. multiple CPUs are allowed to call this function concurrently.
+- *
+- * Return: %false if epi element has been already chained, %true otherwise.
+- */
+-static inline bool chain_epi_lockless(struct epitem *epi)
+-{
+-	struct eventpoll *ep =3D epi->ep;
+-
+-	/* Fast preliminary check */
+-	if (epi->next !=3D EP_UNACTIVE_PTR)
+-		return false;
+-
+-	/* Check that the same epi has not been just chained from another CPU */
+-	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) !=3D EP_UNACTIVE_PTR)
+-		return false;
+-
+-	/* Atomically exchange tail */
+-	epi->next =3D xchg(&ep->ovflist, epi);
+-
+-	return true;
+-}
+-
+ /*
+  * This is the callback that is passed to the wait queue wakeup
+  * mechanism. It is called by the stored file descriptors when they
+  * have events to report.
+  *
+- * This callback takes a read lock in order not to contend with concurrent
+- * events from another file descriptor, thus all modifications to ->rdllist
+- * or ->ovflist are lockless.  Read lock is paired with the write lock from
+- * ep_start/done_scan(), which stops all list modifications and guarantees
+- * that lists state is seen correctly.
+- *
+  * Another thing worth to mention is that ep_poll_callback() can be called
+  * concurrently for the same @epi from different CPUs if poll table was in=
+ited
+  * with several wait queues entries.  Plural wakeup from different CPUs of=
+ a
+@@ -1337,15 +1215,11 @@ static inline bool chain_epi_lockless(struct epitem=
+ *epi)
+  */
+ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int s=
+ync, void *key)
+ {
+-	int pwake =3D 0;
+ 	struct epitem *epi =3D ep_item_from_wait(wait);
+ 	struct eventpoll *ep =3D epi->ep;
+ 	__poll_t pollflags =3D key_to_poll(key);
+-	unsigned long flags;
+ 	int ewake =3D 0;
+=20
+-	read_lock_irqsave(&ep->lock, flags);
+-
+ 	ep_set_busy_poll_napi_id(epi);
+=20
+ 	/*
+@@ -1355,7 +1229,7 @@ static int ep_poll_callback(wait_queue_entry_t *wait,=
+ unsigned mode, int sync, v
+ 	 * until the next EPOLL_CTL_MOD will be issued.
+ 	 */
+ 	if (!(epi->event.events & ~EP_PRIVATE_BITS))
+-		goto out_unlock;
++		goto out;
+=20
+ 	/*
+ 	 * Check the events coming with the callback. At this stage, not
+@@ -1364,22 +1238,10 @@ static int ep_poll_callback(wait_queue_entry_t *wai=
+t, unsigned mode, int sync, v
+ 	 * test for "key" !=3D NULL before the event match test.
+ 	 */
+ 	if (pollflags && !(pollflags & epi->event.events))
+-		goto out_unlock;
++		goto out;
+=20
+-	/*
+-	 * If we are transferring events to userspace, we can hold no locks
+-	 * (because we're accessing user memory, and because of linux f_op->poll()
+-	 * semantics). All the events that happen during that period of time are
+-	 * chained in ep->ovflist and requeued later on.
+-	 */
+-	if (READ_ONCE(ep->ovflist) !=3D EP_UNACTIVE_PTR) {
+-		if (chain_epi_lockless(epi))
+-			ep_pm_stay_awake_rcu(epi);
+-	} else if (!ep_is_linked(epi)) {
+-		/* In the usual case, add event to ready list. */
+-		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
+-			ep_pm_stay_awake_rcu(epi);
+-	}
++	ep_pm_stay_awake_rcu(epi);
++	epitem_ready(epi);
+=20
+ 	/*
+ 	 * Wake up ( if active ) both the eventpoll wait list and the ->poll()
+@@ -1408,15 +1270,9 @@ static int ep_poll_callback(wait_queue_entry_t *wait=
+, unsigned mode, int sync, v
+ 			wake_up(&ep->wq);
+ 	}
+ 	if (waitqueue_active(&ep->poll_wait))
+-		pwake++;
+-
+-out_unlock:
+-	read_unlock_irqrestore(&ep->lock, flags);
+-
+-	/* We have to call this outside the lock */
+-	if (pwake)
+ 		ep_poll_safewake(ep, epi, pollflags & EPOLL_URING_WAKE);
+=20
++out:
+ 	if (!(epi->event.events & EPOLLEXCLUSIVE))
+ 		ewake =3D 1;
+=20
+@@ -1661,8 +1517,6 @@ static int ep_insert(struct eventpoll *ep, const stru=
+ct epoll_event *event,
+ 	if (is_file_epoll(tfile))
+ 		tep =3D tfile->private_data;
+=20
+-	lockdep_assert_irqs_enabled();
+-
+ 	if (unlikely(percpu_counter_compare(&ep->user->epoll_watches,
+ 					    max_user_watches) >=3D 0))
+ 		return -ENOSPC;
+@@ -1674,11 +1528,10 @@ static int ep_insert(struct eventpoll *ep, const st=
+ruct epoll_event *event,
+ 	}
+=20
+ 	/* Item initialization follow here ... */
+-	INIT_LIST_HEAD(&epi->rdllink);
++	init_llist_node(&epi->rdllink);
+ 	epi->ep =3D ep;
+ 	ep_set_ffd(&epi->ffd, tfile, fd);
+ 	epi->event =3D *event;
+-	epi->next =3D EP_UNACTIVE_PTR;
+=20
+ 	if (tep)
+ 		mutex_lock_nested(&tep->mtx, 1);
+@@ -1745,16 +1598,13 @@ static int ep_insert(struct eventpoll *ep, const st=
+ruct epoll_event *event,
+ 		return -ENOMEM;
+ 	}
+=20
+-	/* We have to drop the new item inside our item list to keep track of it =
+*/
+-	write_lock_irq(&ep->lock);
+-
+ 	/* record NAPI ID of new item if present */
+ 	ep_set_busy_poll_napi_id(epi);
+=20
+ 	/* If the file is already "ready" we drop it inside the ready list */
+-	if (revents && !ep_is_linked(epi)) {
+-		list_add_tail(&epi->rdllink, &ep->rdllist);
++	if (revents) {
+ 		ep_pm_stay_awake(epi);
++		epitem_ready(epi);
+=20
+ 		/* Notify waiting tasks that events are available */
+ 		if (waitqueue_active(&ep->wq))
+@@ -1763,8 +1613,6 @@ static int ep_insert(struct eventpoll *ep, const stru=
+ct epoll_event *event,
+ 			pwake++;
+ 	}
+=20
+-	write_unlock_irq(&ep->lock);
+-
+ 	/* We have to call this outside the lock */
+ 	if (pwake)
+ 		ep_poll_safewake(ep, NULL, 0);
+@@ -1779,11 +1627,8 @@ static int ep_insert(struct eventpoll *ep, const str=
+uct epoll_event *event,
+ static int ep_modify(struct eventpoll *ep, struct epitem *epi,
+ 		     const struct epoll_event *event)
+ {
+-	int pwake =3D 0;
+ 	poll_table pt;
+=20
+-	lockdep_assert_irqs_enabled();
+-
+ 	init_poll_funcptr(&pt, NULL);
+=20
+ 	/*
+@@ -1827,24 +1672,16 @@ static int ep_modify(struct eventpoll *ep, struct e=
+pitem *epi,
+ 	 * list, push it inside.
+ 	 */
+ 	if (ep_item_poll(epi, &pt, 1)) {
+-		write_lock_irq(&ep->lock);
+-		if (!ep_is_linked(epi)) {
+-			list_add_tail(&epi->rdllink, &ep->rdllist);
+-			ep_pm_stay_awake(epi);
++		ep_pm_stay_awake(epi);
++		epitem_ready(epi);
+=20
+-			/* Notify waiting tasks that events are available */
+-			if (waitqueue_active(&ep->wq))
+-				wake_up(&ep->wq);
+-			if (waitqueue_active(&ep->poll_wait))
+-				pwake++;
+-		}
+-		write_unlock_irq(&ep->lock);
++		/* Notify waiting tasks that events are available */
++		if (waitqueue_active(&ep->wq))
++			wake_up(&ep->wq);
++		if (waitqueue_active(&ep->poll_wait))
++			ep_poll_safewake(ep, NULL, 0);
+ 	}
+=20
+-	/* We have to call this outside the lock */
+-	if (pwake)
+-		ep_poll_safewake(ep, NULL, 0);
+-
+ 	return 0;
+ }
+=20
+@@ -1852,7 +1689,7 @@ static int ep_send_events(struct eventpoll *ep,
+ 			  struct epoll_event __user *events, int maxevents)
+ {
+ 	struct epitem *epi, *tmp;
+-	LIST_HEAD(txlist);
++	LLIST_HEAD(txlist);
+ 	poll_table pt;
+ 	int res =3D 0;
+=20
+@@ -1867,19 +1704,18 @@ static int ep_send_events(struct eventpoll *ep,
+ 	init_poll_funcptr(&pt, NULL);
+=20
+ 	mutex_lock(&ep->mtx);
+-	ep_start_scan(ep, &txlist);
+=20
+-	/*
+-	 * We can loop without lock because we are passed a task private list.
+-	 * Items cannot vanish during the loop we are holding ep->mtx.
+-	 */
+-	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
++	while (res < maxevents) {
+ 		struct wakeup_source *ws;
++		struct llist_node *n;
+ 		__poll_t revents;
+=20
+-		if (res >=3D maxevents)
++		n =3D llist_del_first(&ep->rdllist);
++		if (!n)
+ 			break;
+=20
++		epi =3D llist_entry(n, struct epitem, rdllink);
++
+ 		/*
+ 		 * Activate ep->ws before deactivating epi->ws to prevent
+ 		 * triggering auto-suspend here (in case we reactive epi->ws
+@@ -1896,21 +1732,30 @@ static int ep_send_events(struct eventpoll *ep,
+ 			__pm_relax(ws);
+ 		}
+=20
+-		list_del_init(&epi->rdllink);
+-
+ 		/*
+ 		 * If the event mask intersect the caller-requested one,
+ 		 * deliver the event to userspace. Again, we are holding ep->mtx,
+ 		 * so no operations coming from userspace can change the item.
+ 		 */
+ 		revents =3D ep_item_poll(epi, &pt, 1);
+-		if (!revents)
++		if (!revents) {
++			init_llist_node(n);
++
++			/*
++			 * Just in case epi becomes ready after ep_item_poll() above, but before
++			 * init_llist_node(). Make sure to add it to the ready list, otherwise =
+an
++			 * event may be lost.
++			 */
++			if (unlikely(ep_item_poll(epi, &pt, 1))) {
++				ep_pm_stay_awake(epi);
++				epitem_ready(epi);
++			}
+ 			continue;
++		}
+=20
+ 		events =3D epoll_put_uevent(revents, epi->event.data, events);
+ 		if (!events) {
+-			list_add(&epi->rdllink, &txlist);
+-			ep_pm_stay_awake(epi);
++			llist_add(&epi->rdllink, &ep->rdllist);
+ 			if (!res)
+ 				res =3D -EFAULT;
+ 			break;
+@@ -1918,25 +1763,31 @@ static int ep_send_events(struct eventpoll *ep,
+ 		res++;
+ 		if (epi->event.events & EPOLLONESHOT)
+ 			epi->event.events &=3D EP_PRIVATE_BITS;
+-		else if (!(epi->event.events & EPOLLET)) {
++		__llist_add(n, &txlist);
++	}
++
++	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
++		init_llist_node(&epi->rdllink);
++
++		if (!(epi->event.events & EPOLLET)) {
+ 			/*
+-			 * If this file has been added with Level
+-			 * Trigger mode, we need to insert back inside
+-			 * the ready list, so that the next call to
+-			 * epoll_wait() will check again the events
+-			 * availability. At this point, no one can insert
+-			 * into ep->rdllist besides us. The epoll_ctl()
+-			 * callers are locked out by
+-			 * ep_send_events() holding "mtx" and the
+-			 * poll callback will queue them in ep->ovflist.
++			 * If this file has been added with Level Trigger mode, we need to inse=
+rt
++			 * back inside the ready list, so that the next call to epoll_wait() wi=
+ll
++			 * check again the events availability.
+ 			 */
+-			list_add_tail(&epi->rdllink, &ep->rdllist);
+ 			ep_pm_stay_awake(epi);
++			epitem_ready(epi);
+ 		}
+ 	}
+-	ep_done_scan(ep, &txlist);
++
++	__pm_relax(ep->ws);
+ 	mutex_unlock(&ep->mtx);
+=20
++	if (!llist_empty(&ep->rdllist)) {
++		if (waitqueue_active(&ep->wq))
++			wake_up(&ep->wq);
++	}
++
+ 	return res;
+ }
+=20
+@@ -2029,8 +1880,6 @@ static int ep_poll(struct eventpoll *ep, struct epoll=
+_event __user *events,
+ 	wait_queue_entry_t wait;
+ 	ktime_t expires, *to =3D NULL;
+=20
+-	lockdep_assert_irqs_enabled();
+-
+ 	if (timeout && (timeout->tv_sec | timeout->tv_nsec)) {
+ 		slack =3D select_estimate_accuracy(timeout);
+ 		to =3D &expires;
+@@ -2090,54 +1939,15 @@ static int ep_poll(struct eventpoll *ep, struct epo=
+ll_event __user *events,
+ 		init_wait(&wait);
+ 		wait.func =3D ep_autoremove_wake_function;
+=20
+-		write_lock_irq(&ep->lock);
+-		/*
+-		 * Barrierless variant, waitqueue_active() is called under
+-		 * the same lock on wakeup ep_poll_callback() side, so it
+-		 * is safe to avoid an explicit barrier.
+-		 */
+-		__set_current_state(TASK_INTERRUPTIBLE);
++		prepare_to_wait_exclusive(&ep->wq, &wait, TASK_INTERRUPTIBLE);
+=20
+-		/*
+-		 * Do the final check under the lock. ep_start/done_scan()
+-		 * plays with two lists (->rdllist and ->ovflist) and there
+-		 * is always a race when both lists are empty for short
+-		 * period of time although events are pending, so lock is
+-		 * important.
+-		 */
+-		eavail =3D ep_events_available(ep);
+-		if (!eavail)
+-			__add_wait_queue_exclusive(&ep->wq, &wait);
+-
+-		write_unlock_irq(&ep->lock);
+-
+-		if (!eavail)
++		if (!ep_events_available(ep))
+ 			timed_out =3D !ep_schedule_timeout(to) ||
+ 				!schedule_hrtimeout_range(to, slack,
+ 							  HRTIMER_MODE_ABS);
+-		__set_current_state(TASK_RUNNING);
+-
+-		/*
+-		 * We were woken up, thus go and try to harvest some events.
+-		 * If timed out and still on the wait queue, recheck eavail
+-		 * carefully under lock, below.
+-		 */
+-		eavail =3D 1;
+=20
+-		if (!list_empty_careful(&wait.entry)) {
+-			write_lock_irq(&ep->lock);
+-			/*
+-			 * If the thread timed out and is not on the wait queue,
+-			 * it means that the thread was woken up after its
+-			 * timeout expired before it could reacquire the lock.
+-			 * Thus, when wait.entry is empty, it needs to harvest
+-			 * events.
+-			 */
+-			if (timed_out)
+-				eavail =3D list_empty(&wait.entry);
+-			__remove_wait_queue(&ep->wq, &wait);
+-			write_unlock_irq(&ep->lock);
+-		}
++		finish_wait(&ep->wq, &wait);
++		eavail =3D ep_events_available(ep);
+ 	}
+ }
+=20
+--=20
+2.39.5
+
