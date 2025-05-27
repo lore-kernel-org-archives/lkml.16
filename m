@@ -1,221 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EA019D07A;
-	Tue, 27 May 2025 11:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8100119D07A
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748347131; cv=none; b=JdDQMjS37XcBHx9xkvUKHL37+dsBBgK7DmQmpIGx/duQ7NvXEI51vKtTtMQdZq4EkbqQS0BGiObJstpPOfVPyytzBfthAYLN1+ohobMlEXUZqOitTsqTx4dFoqaoUVQP0hUjFo1GK62C14CSsh2A8Sn5RM4h/iPrPr6kSeo1d3w=
+	t=1748347166; cv=none; b=erBqCATrUWpAhlOJEiQZ7C0sd6Xng+ed+2ZKU38JF0DPU5WuUTFApesQQ68dtIFPDBtIx0MWfz5qmVHMXa5JD3RoSkL9Kt/AT4b/Qcoc3ddKZhqa9w3lPsuvgQneUmK7LSy5kxnZJeSkxuzT0LJ//jbFL7T4DOie8ktlRfjNrc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748347131; c=relaxed/simple;
-	bh=YWJSryJrQdHjv1Ca60lx+CUPrssSuwMmF117snckU4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hIhG487QkeztsCzsEBycaYEbHIjXDdmTtkNsLDVa1HHqmLqZVyvmRqYIN6jbI9FSYLWN+U5zwiCOe9hiHyzO2oM0wxJr9rstkEGfNKQAYxRh9l/P32qfGvkz4XUpDmoHXRqOndv+OJFpMnb2Kf6DtA1cr0plORxkbx2UHKorVY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CIn/Pteu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748347166; c=relaxed/simple;
+	bh=U4dckQjpQfIhR/F8/iVTttXAf3SkdZoJAUKOCKjQq68=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hy+906hvrongTdp+5wn5vP71qCGKxuaSi40rrw/ZnnXQaFBPFYHVeGl5DuVUy0g4F3TGCpZQYkdnjV+P29L+LOPGSoETwsxiGeeFEqAqdIThMh5vI/GPXuGobc76BPweU5PRMgCpykC1oZGXXuAI54oEU+crwQmXnFfv+JuxRbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rBaFXeJU; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CIn/Pteu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBAEBC4CEE9;
-	Tue, 27 May 2025 11:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748347131;
-	bh=YWJSryJrQdHjv1Ca60lx+CUPrssSuwMmF117snckU4s=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CIn/PteuSjg9sRCPwiTXigvdG2ytCRBU145dRFQS8Jbs5hS2Ial1rrryFJnLd1Cd9
-	 k3qWGzCYQ7NxN+jM19BBPrjKZ5WMvJ69sYwkD/rwax2flFBjwlRmyv5K1FwhSkzG1v
-	 jBg4YkHl7nUQ64sgazda5825IZ7+u2EXu9h0dc/B6uTZf0/I3nNwo0AnFNOu7HjbYZ
-	 8lLPFhu4iMBel1BVL7n0oX/g2LUQe8ONa4kkuNj1H7op+Y+FaaNs/Ne+0yE683b7k5
-	 a0oDQhNuj+N/4xZZEzhyd0XPYejuVOaT/zWgoGxAulaFoEZPj6c40fGT7j5ZOjHTMa
-	 1TUJEWXPcXhqw==
-Message-ID: <171b980d-9c50-4891-86dc-e30d712f5384@kernel.org>
-Date: Tue, 27 May 2025 13:58:44 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rBaFXeJU"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7db5c13088so1255977276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748347163; x=1748951963; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=f4szaLzc/F2h1MlyYwOny8uUmi1IH+zWJep2HTDgXGs=;
+        b=rBaFXeJU+Csua0IA1lHvyXm1MdMEk9oHNBfuyauIP6YHrRhFw0Dx61ivSomX+CVV4b
+         Z+E4JuvKDXagIo9HJN5WkY0ZoUeNgfhiohB+2MIUyaKrarc8rXUNPh/xJeSMsK/wQCHb
+         A4FHAAgyrMIaWpqW2Dt/Xufq81SlxRUpI5CwdxZks+zq+LCb/orVxmUvS90V8PiiFuYp
+         2L7DYraJj212AhE+5rsYkVHTwu8OHEsT2c3l9IA7Qljw7Wv0aMk0W9SY7xNRQo94R1cg
+         bFn5pdWTMVWcr+icVuxQGCu8jfOmhXtBcTp1hCTaYD27Qzkldgz79pk5OstFswXmKAMU
+         l/nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748347163; x=1748951963;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f4szaLzc/F2h1MlyYwOny8uUmi1IH+zWJep2HTDgXGs=;
+        b=mUY8KeZT8OuCCpdQsRo0cWMM8RZhmxY1PUJ0ZGerfJIUi83S9CZRBHyDYb859e/dcw
+         gt19aeGQ3Gesf83+fM7uWQEFzcA5hI+ci8/w4XsGIw1vLWEYhgARJgnm16n+w/YehWLS
+         +LL8MbAl3DilK45WkPvge8UHkDvWhyWaHleR2YoVSjOT3j5JUFJsIzKng61WsBiT6P0T
+         SBjlYp/eZow/Y5r1+pbdCxmUc9sdk92xFT4d1la/c/6bz1tqvNLLvSWOnx0HTBbCaTOH
+         eFmX1SV/Mbu5pPTmnsB2rqLKRlVAq/gnQhEY2Ludrf7zyklEUVp4TM9rPR73a1tFJChM
+         wvaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOPZzwqsuv9/gcm4RXkbUtdPEOOW2wf9SSWKcD6e3/e7KpvrOlw1Cd6X2tIBFt+6Emjs/iNGzeok7JFoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGo5D6MHVFv0nDRfI4riXzsCvWTMFcpTOa0U6GRK6VhNRfZv3I
+	BoaAxzr4y52HBskYDYATOh5I56h5NzcSkUm9421ufvQEx0+bsbLc2TtTx3fXwJ077y9hLKhAupp
+	+9q2YCReHT5ZSirwrxCp4RTN6dQeYGUE9xQeB+TpR9Q==
+X-Gm-Gg: ASbGncsQTK2go3wvMT4O2WthYRfuoWEXnWYxT9r2tYHjbosZ1mcahB2s5w9Jf4L8X0j
+	E7FFCAI6CmeRPS6DY6WDsx+y1PQjJ6/IYkPuu5BBV0Zbytdcg8Ueu5Rz17Q7IdeKWd+Q7ZWsg63
+	RiUVvcJS4fJMXx4+CWoP1na/eWSEJchNs82Q==
+X-Google-Smtp-Source: AGHT+IGKfe3vNrVmk4UJNSrzHf1HzxY3z+PLvn7rrFkkGWoEaq5BirzXQytDxVB9kstnSznqWcVD3oPaUzvTQgaFbac=
+X-Received: by 2002:a05:6902:722:b0:e7d:c4e4:3295 with SMTP id
+ 3f1490d57ef6-e7dd031e2c1mr376900276.1.1748347163229; Tue, 27 May 2025
+ 04:59:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/8] ASoC: dt-bindings: qcom: Manage clock settings for
- ADSP solution
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
- kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-3-quic_pkumpatl@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250527111227.2318021-3-quic_pkumpatl@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250509191308.6i3ydftzork3sv5c@hiago-nb> <CAPDyKFpnLzk5YR3piksGhdB8ZoGNCzmweBTxm_rDX5=vjLFxqQ@mail.gmail.com>
+ <20250519172357.vfnwehrbkk24vkge@hiago-nb> <CAPDyKFpGcgMzOUHf-JTRTLBviFdLdbjZKrMm8yd37ZqJ1nfkHw@mail.gmail.com>
+ <20250521041306.GA28017@nxa18884-linux> <20250521041840.GB28017@nxa18884-linux>
+ <CAPDyKFpSb+KsfDr1-=uk4TF4Op1dUQ9rDwPP5sSpMfxDRDhnZA@mail.gmail.com>
+ <20250523191713.nylhi74jq6z4hqmr@hiago-nb> <CAPDyKFq6HG6iTZRnBSN25vhCU8Zj1c+r_ufGbiBsJ16N+1bJVg@mail.gmail.com>
+ <20250527000510.fofehmsdhifcwlys@hiago-nb> <20250527023921.GA14252@nxa18884-linux>
+In-Reply-To: <20250527023921.GA14252@nxa18884-linux>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 27 May 2025 13:58:46 +0200
+X-Gm-Features: AX0GCFsGQsZvMPYEw23_m2_PwaUZ98TXNs_OMa1x3DVp8g7JgD3e4NzGOr3Ljfk
+Message-ID: <CAPDyKFqZkcaGfss=Oi+H9UERFU29jY2t5uTPnGVGQgSAJSeCoA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
+ remote core attachment
+To: Hiago De Franco <hiagofranco@gmail.com>, Peng Fan <peng.fan@oss.nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, linux-pm@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com, 
+	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 27/05/2025 13:12, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> 
-> Manage clock settings for ADSP solution and document the clock properties
-> on sc7280 lpass pincontrol node which is required for ADSP based
-> solution.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> ---
+On Tue, 27 May 2025 at 03:29, Peng Fan <peng.fan@oss.nxp.com> wrote:
+>
+> On Mon, May 26, 2025 at 09:05:10PM -0300, Hiago De Franco wrote:
+> >On Mon, May 26, 2025 at 12:07:49PM +0200, Ulf Hansson wrote:
+> >> On Fri, 23 May 2025 at 21:17, Hiago De Franco <hiagofranco@gmail.com> wrote:
+> >> >
+> >> > Hi Ulf,
+> >> >
+> >> > On Wed, May 21, 2025 at 02:11:02PM +0200, Ulf Hansson wrote:
+> >> > > You should not provide any flag (or attach_data to
+> >> > > dev_pm_domain_attach_list()) at all. In other words just call
+> >> > > dev_pm_domain_attach_list(dev, NULL, &priv->pd_list), similar to how
+> >> > > drivers/remoteproc/imx_dsp_rproc.c does it.
+> >> > >
+> >> > > In this way, the device_link is created by making the platform->dev
+> >> > > the consumer and by keeping the supplier-devices (corresponding to the
+> >> > > genpds) in RPM_SUSPENDED state.
+> >> > >
+> >> > > The PM domains (genpds) are then left in their current state, which
+> >> > > should allow us to call dev_pm_genpd_is_on() for the corresponding
+> >> > > supplier-devices, to figure out whether the bootloader turned them on
+> >> > > or not, I think.
+> >> > >
+> >> > > Moreover, to make sure the genpds are turned on when needed, we also
+> >> > > need to call pm_runtime_enable(platform->dev) and
+> >> > > pm_runtime_get_sync(platform->dev). The easiest approach is probably
+> >> > > to do that during ->probe() - and then as an improvement on top you
+> >> > > may want to implement more fine-grained support for runtime PM.
+> >> > >
+> >> > > [...]
+> >> > >
+> >> > > Kind regards
+> >> > > Uffe
+> >> >
+> >> > I did some tests here and I might be missing something. I used the
+> >> > dev_pm_genpd_is_on() inside imx_rproc.c with the following changes:
+> >> >
+> >> > @@ -902,7 +902,12 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
+> >> >         if (dev->pm_domain)
+> >> >                 return 0;
+> >> >
+> >> >         ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
+> >> > +       printk("hfranco: returned pd devs is %d", ret);
+> >> > +       for (int i = 0; i < ret; i++) {
+> >> > +               test = dev_pm_genpd_is_on(priv->pd_list->pd_devs[i]);
+> >> > +               printk("hfranco: returned value is %d", test);
+> >> > +       }
+> >> >         return ret < 0 ? ret : 0;
+> >> >  }
+> >> >
+> >> > This was a quick test to check the returned value, and it always return
+> >> > 1 for both pds, even if I did not boot the remote core.
+> >> >
+> >> > So I was wondering if it was because of PD_FLAG_DEV_LINK_ON, I removed
+> >> > it and passed NULL to dev_pm_domain_attach_list().
+> >>
+> >> Right, that's exactly what we should be doing.
+> >>
+> >> > Booting the kernel
+> >> > now it correctly reports 0 for both pds, however when I start the
+> >> > remote core with a hello world firmware and boot the kernel, the CPU
+> >> > resets with a fault reset ("Reset cause: SCFW fault reset").
+> >> >
+> >> > I added both pm functions to probe, just to test:
+> >> >
+> >> > @@ -1152,6 +1158,9 @@ static int imx_rproc_probe(struct platform_device *pdev)
+> >> >                 goto err_put_clk;
+> >> >         }
+> >> >
+> >> > +       pm_runtime_enable(dev);
+> >> > +       pm_runtime_get_sync(dev);
+> >> > +
+> >>
+> >> Indeed, calling pm_runtime_enable() and then pm_runtime_get_sync()
+> >> should turn on the PM domains for the device, which I assume is needed
+> >> at some point.
+> >>
+> >> Although, I wonder if this may be a bit too late, I would expect that
+> >> you at least need to call these *before* the call to rproc_add(), as I
+> >> assume the rproc-core may start using the device/driver beyond that
+> >> point.
+> >>
+> >> >         return 0
+> >> >
+> >> > Now the kernel boot with the remote core running, but it still returns
+> >> > 0 from dev_pm_genpd_is_on(). So basically now it always returns 0, with
+> >> > or without the remote core running.
+> >>
+> >> dev_pm_genpd_is_on() is returning the current status of the PM domain
+> >> (genpd) for the device.
+> >>
+> >> Could it be that the genpd provider doesn't register its PM domains
+> >> with the state that the HW is really in? pm_genpd_init() is the call
+> >> that allows the genpd provider to specify the initial state.
+> >>
+> >> I think we need Peng's help here to understand what goes on.
+> >>
+> >> >
+> >> > I tried to move pm_runtime_get_sync() to .prepare function but it make
+> >> > the kernel not boot anymore (with the SCU fault reset).
+> >>
+> >> Try move pm_runtime_enable() before rproc_add().
+> >
+> >Thanks Ulf, that indeed made it work, at least now the kernel does not
+> >reset anymore with the SCU fault reset. However I am still only getting
+> >0 from dev_pm_genpd_is_on(), no matter what the state of the remote
+> >core. Maybe I am missing something in between?
+> >
+> >Peng, do you know what could be the issue here?
+>
+> imx_rproc_attach_pd
+>  ->dev_pm_domain_attach_list
+>       ->genpd_dev_pm_attach_by_id
+>               ->genpd_queue_power_off_work
+>                  ->cm40_pid0 is powered off because the genpd is set with is_off=false
+>
+> So dev_pm_genpd_is_on will return false after attach.
+>
+> This means that with U-Boot kick M4, cm40 might be powered off when
+> attaching the pd even with LINK_ON set, because genpd is set with is_off=false.
+>
+> The reason we set genpd to match real hardware status is to avoid RPC call
+> and to save power. But seems it could not work well with U-boot kicking M4.
+>
+> I not have good idea on how to address this issue. The current driver
+> could work with linux kick M4, M4 packed in flash.bin and M4 in a standalone
+> partition.
 
-Nothing in cover letter explained what was happening with this patch.
-Provide changelog under --- in such case.
+Thanks for the detailed analysis!
 
->  .../qcom,sc7280-lpass-lpi-pinctrl.yaml        | 10 ++++++++
->  .../bindings/sound/qcom,lpass-va-macro.yaml   | 12 +++++++---
->  .../bindings/sound/qcom,lpass-wsa-macro.yaml  | 24 ++++++++++++++++---
+This is a very similar issue as many other genpd providers are
+suffering from - and something that I have been working on recently to
+fix.
 
-Split patches per subsystem. Pinctrl is not ASoC.
+A few days ago I posted a new version of a series [1], which is based
+upon using the fw_devlink and ->sync_state() support. In principle, we
+need to prevent genpd from power-off a PM domain if it was powered-on
+during boot , until all the consumer-drivers of a PM domain have been
+probed.
 
->  3 files changed, 40 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
-> index 08801cc4e476..b1270124bfe3 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
-> @@ -20,6 +20,16 @@ properties:
->    reg:
->      maxItems: 2
->  
-> +  clocks:
-> +    items:
-> +      - description: LPASS Core voting clock
-> +      - description: LPASS Audio voting clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: audio
-> +
->  patternProperties:
->    "-state$":
->      oneOf:
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> index f41deaa6f4df..92b97c214060 100644
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
-> @@ -78,10 +78,16 @@ allOf:
->      then:
->        properties:
->          clocks:
-> -          maxItems: 1
-> +          minItems: 1
-> +          maxItems: 3
->          clock-names:
-> -          items:
-> -            - const: mclk
-> +          oneOf:
-> +            - items:   # for ADSP based platforms
-> +                - const: mclk
-> +                - const: macro
-> +                - const: dcodec
-> +            - items:   # for ADSP bypass based platforms
-> +                - const: mclk
+I had a look at the DT description of how imx describes power-domain
+providers/consumers, along with the corresponding genpd provider
+implementation in drivers/pmdomain/imx/scu-pd.c. Unless I missed
+something, I think [1] should do the trick for you, without any
+further changes. Can you please give it a try and see if that solves
+this problem?
 
-This device always receives same amount of clocks. Hardware is not
-different if you decide to not use ADSP.
+[...]
 
->  
->    - if:
->        properties:
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-wsa-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-wsa-macro.yaml
-> index 9082e363c709..6a999ed484e7 100644
-> --- a/Documentation/devicetree/bindings/sound/qcom,lpass-wsa-macro.yaml
-> +++ b/Documentation/devicetree/bindings/sound/qcom,lpass-wsa-macro.yaml
-> @@ -35,11 +35,11 @@ properties:
->      const: 0
->  
->    clocks:
-> -    minItems: 4
-> +    minItems: 3
->      maxItems: 6
->  
->    clock-names:
-> -    minItems: 4
-> +    minItems: 3
->      maxItems: 6
->  
->    clock-output-names:
-> @@ -59,12 +59,30 @@ required:
->  
->  allOf:
->    - $ref: dai-common.yaml#
-> -
->    - if:
->        properties:
->          compatible:
->            enum:
->              - qcom,sc7280-lpass-wsa-macro
-> +    then:
-> +      properties:
-> +        clock-names:
-> +          oneOf:
-> +            - items:   # for ADSP based platforms
-> +                - const: mclk
-> +                - const: npl
-> +                - const: macro
-> +                - const: dcodec
-> +                - const: fsgen
-> +            - items:   # for ADSP bypass based platforms
-> +                - const: mclk
-> +                - const: npl
-> +                - const: fsgen
+Kind regards
+Uffe
 
-This silently breaks ABI. Third clock is macro.
-
-
-Best regards,
-Krzysztof
+[1]
+https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
