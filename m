@@ -1,130 +1,140 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADB61D63C0;
-	Tue, 27 May 2025 10:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CE235973;
+	Tue, 27 May 2025 10:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748340279; cv=none; b=l3ehNClpy73cpqsPBOekepuH0gHcOhGitbwxCQEi1MuCQRFKaK/T7tS92Zpksf4uPrVU3WOYZZRrKSxgK6/g77Vw17VX/1oYU8qOOXCrEJJ8PHUIHNKnomHU1+CxVT4DWVEpUdekLiCA5wEgjNU5OKnhhMHxodhcaGNf92sB+b8=
+	t=1748340377; cv=none; b=tXKS7lRCYSrEGMZLy8WyAB9ogW87dhnYCUpdZIVN2j2fGwIX1Dh83iqRJ1v15nGiTKTU56mliW1404MgcGX4YlpbO7fFH/oiClqmil5UdfOxW6/vnYJtL2KfimDhHujGg1Jm6nI6XcgBGbTU/hD4iOqiArRztIEA1YbGK24YEGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748340279; c=relaxed/simple;
-	bh=atB4q9mfxkHYBz4CND/eGCnJPFD3h6p5A9WsgN1NOJo=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppYI8ydFeceMpeKmKSVqCwt6N995tkm1xhLBlaHLL2hXXl9oGtzu96VKR/KflLXm32dpu8DHXWW15jykwT/aEU1ByIIv6yXrlCjduZa8NvSNuTneqM+N6hu43v1vpbSzlCdtwSlaS3Elz0P1IOxT7hM6NHHq+a7HZeG3xX8KcK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZA4B6jv/; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748340377; c=relaxed/simple;
+	bh=7WSLUxaUDgCs2WPIV7adNYFOswKb/YdjK8z3bsFWn0s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YektHPG2XO3FMNJgsdOVWH3bqZHAJWhK5U2RgnfJ3hirtzu+M2T8+iMHkXJt3tQQqdA+04Z2SkPEo8BnRIj2+OLRQu+cRJy53Ov9lrYm3cUBUebrakiGRtH39pp0tUfipHNqbV3Y+L97DE5PI1nGVNlawCYztWW2lXagSIkwBTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Bx7+1hAC; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZA4B6jv/"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-306bf444ba2so2411527a91.1;
-        Tue, 27 May 2025 03:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748340277; x=1748945077; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7aqc8T49oslh+HPpplQG3216rFUwciiw4eqysXyXUF4=;
-        b=ZA4B6jv/eiq4StU6AIyDAzjqZn3REuoZ8P/1+AJzZq3TplLmPJ2HtBQgOophflscjl
-         KDaEwQivZnC/l7ep2UgrzQhqR5AS1bV8kOXSSRamsc4PEHVGlcYlcXOhr6gdfRttltti
-         eE6ejjvCLngFgu0wuCVcRdh8pFs84jvERKVjU5RuLJ58UIzXzNgT1kju4l1nWni5sQGv
-         DxKpg+dMKCfYgUGG4pyTYffW2Ch64WrMyFaXmp3M0Nw8LQe/WAeWPggAgQibJd3d4fQz
-         SqVWbvvZwBR/+F/0GBCi3/vBdTW75vTuVDoaWrsuqNEBxOz2G8pY9mEP3urGfgn4yL6v
-         op9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748340277; x=1748945077;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7aqc8T49oslh+HPpplQG3216rFUwciiw4eqysXyXUF4=;
-        b=Vw7WHLRrMRjDXcAl+uFH8RKtsdFaMJRKx9T5gjonnKcWgSgrLkViNSpHYmVpT1oNaF
-         Xrq1WUZXn/Ww3PJFtI+XGJSI1ekrsUEZg6yQDHDnG+9nUopjve/ttLCianI6JPeyM6Hr
-         C9uGeP/u8W54sm7zXRZFJ9SU5/vS4IXwmlB+fK48eUTpgP3ZUILO3I3zYJM4guheTRHK
-         xNDBpeqmUrdn+54ayT1MzhPQ6mgucGWVhVS8AMedjC5VWGLPKry+Mvr4hbOoH/Fwhffy
-         VXBeyBCtbAGQ0YtHw4dqe2Bk3cKBYWEj0hVZh9HwHyjywZpr8U8CNv7GtC9dUOdCSQGk
-         NndA==
-X-Forwarded-Encrypted: i=1; AJvYcCWo/znNWk3U95SVnCVLe2QiC6j4YsMlhjuaz+ntfx85Ha+3Jv2kd2+GCbjbP4X2ffOuWvv/5xfTmAUX@vger.kernel.org, AJvYcCX0ksSVKoWv2bvmPTO6JKuDsvaQWLyhqNATi/aGD/dOM0tPXaJDZy5MHQXcmHrtSL9zar+Dllq/@vger.kernel.org, AJvYcCXVHT2SFI/AwZOF8+zyoioGXlBNmLIqI95kFuR28fhPV3n+0mKE+VwAU+8zZkFIce8ZFxo0JCRleQx9ory7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJwC7y9fmK+H5FydCBzC48ov0Sy/tByXNRIw7NxJrOXRviRU6V
-	Va5kePo+kMc1M6qu23K0YJtpQnbIdKrtv7XdApee1RegM96S8uGnpr8M
-X-Gm-Gg: ASbGncugN1ajk27v344ucNiT2/8CglnwG/bO8K8KLEXJTjAQxcO0j7nhuqxC/BlFhZ9
-	f6elNHF5vCYviWecWA7Ifapex/pYzpYWh+bVxWVPZ64CL9gJfoXsU6xDTZGAtSQod7xwjwRs+X4
-	xnO6aEbjMz6ain74D2gFfy5+dRExqiaZn9WTE4R9CAuypnziP3nJO2DNF+MtCOBGNIv0PqOh7h8
-	4IVa6E/YkiMUC13Va9RZrRIy1Szw7IvsAi0uL7KMPnSZhmREnoEhIbjDZeLCVs9oaA9Fi/X1ozZ
-	Akrni/DTCBqrJ4XLyUac9auLDE5KMxf2g34ah8jfJ43QE/ufZxDjGM+N3sg0TA==
-X-Google-Smtp-Source: AGHT+IECP57koT4p5ndKxxShdOfs6I12HDw/1fLrYCQVGhBzGFisqQ2/wQcyX+ce9G/xHQIv8GOhkg==
-X-Received: by 2002:a17:90b:3f0d:b0:2ee:d63f:d8f with SMTP id 98e67ed59e1d1-3110f304457mr18525052a91.13.1748340277360;
-        Tue, 27 May 2025 03:04:37 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31127b886b5sm5464742a91.19.2025.05.27.03.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 03:04:36 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 3ABCD423BF34; Tue, 27 May 2025 17:04:29 +0700 (WIB)
-Date: Tue, 27 May 2025 17:04:29 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Vishal Chourasia <vishalc@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
- semantics
-Message-ID: <aDWOLU4qjhl0ds0U@archie.me>
-References: <20250527085335.256045-2-vishalc@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Bx7+1hAC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 547541F4F3;
+	Tue, 27 May 2025 10:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748340372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=g9PY5sgRf+wMjq44Tp5gP3wPRWLLrFsYXl9Qe4W89/8=;
+	b=Bx7+1hACUM/l0dpn7ADyoDeEiJgnyCojm2ckjd2rLGz4sHPgSV+8BOqtujc6ZSOmauoltf
+	wPDRDKIltW+UxzHoS4vCbrDiK0BnTIwuOTDoDdyZ9KW4HvXQykXMx8I8b/rBW2H0gi2mNi
+	/6hytZKephHFIGTaHc6lp1NL/ZyW3vZLPWOTWsJvH6fHB4p1ah9LgCw+OWUfzTQ0qd52SY
+	SSz/58CjswdgrlIkAVtUCbW7eKKuv6/05ykABOLaaTt1PR0qxuXqMd5J66RF0WnPnRVTyy
+	pPgH4rplsyn4BHirsCmeLE1YF/esr153Zte7Ddn1D2HGshb31UToOaqmZ/ZeyA==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Subject: [PATCH bpf-next v3 0/2] bpf, arm64: support up to 12 arguments
+Date: Tue, 27 May 2025 12:06:02 +0200
+Message-Id: <20250527-many_args_arm64-v3-0-3faf7bb8e4a2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rvrOZ3B0jJT6C2Z5"
-Content-Disposition: inline
-In-Reply-To: <20250527085335.256045-2-vishalc@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAIqONWgC/2XNTQrDIBAF4KsU17XoaP666j1KKSaOidBo0BASQ
+ u5ecVNKNgOPx/tmJxGDxUjul50EXGy03qUgrhfSDcr1SK1OmQCDggEwOiq3vVXoYzpjKWndalH
+ JCstG1iStpoDGrll8knYy1OE6k1dqBhtnH7b8auG5z6rk/KQunDLKlACDFQjR4KP1fv5Yd+v8m
+ LUFfkIBcBYgCbpURrdNZ2re/AvHcXwBRufAvfwAAAA=
+X-Change-ID: 20250220-many_args_arm64-8bd3747e6948
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+ Xu Kuohai <xukuohai@huaweicloud.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Florent Revest <revest@chromium.org>
+Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>, 
+ ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>, 
+ Xu Kuohai <xukuohai@huawei.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvtddtleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffefvdelledtfeekudelvdekvdeuffduieevkedviedtgeefueehgfdvuedthfeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeiheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehpdhhvghloheplgduledvrdduieekrddurdduleejngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrgholhhuohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnr
+ dgtohhmpdhrtghpthhtohepshgufhesfhhomhhitghhvghvrdhmvgdprhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhholhhsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphhurhgrnhhjrgihsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
+Hello,
 
---rvrOZ3B0jJT6C2Z5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+this is the v2 of the many args series for arm64, being itself a revival
+of Xu Kuhoai's work to enable larger arguments count for BPF programs on
+ARM64 ([1]).
 
-On Tue, May 27, 2025 at 02:23:36PM +0530, Vishal Chourasia wrote:
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admi=
-n-guide/cgroup-v2.rst
-> index 1a16ce68a4d7..0e1686511c45 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -438,8 +438,8 @@ Controlling Controllers
->  Enabling and Disabling
->  ~~~~~~~~~~~~~~~~~~~~~~
-> =20
-> -Each cgroup has a "cgroup.controllers" file which lists all
-> -controllers available for the cgroup to enable::
-> +Each cgroup has a cgroup.controllers file, which lists all the controlle=
-rs
-> +available for that cgroup and which can be enabled for its children.
+The discussions in v1 shed some light on some issues around specific
+cases, for example with functions passing struct on stack with custom
+packing/alignment attributes: those cases can not be properly detected
+with the current BTF info. So this new revision aims to separate
+concerns with a simpler implementation, just accepting additional args
+on stack if we can make sure about the alignment constraints (and so,
+refusing attachment to functions passing structs on stacks). I then
+checked if the specific alignment constraints could be checked with
+larger scalar types rather than structs, but it appears that this use
+case is in fact rejected at the verifier level (see a9b59159d338 ("bpf:
+Do not allow btf_ctx_access with __int128 types")). So in the end the
+specific alignment corner cases raised in [1] can not really happen in
+the kernel in its current state. This new revision still brings support
+for the standard cases as a first step, it will then be possible to
+iterate on top of it to add the more specific cases like struct passed
+on stack and larger types.
 
-Keep the double colon (literal code block).
+[1] https://lore.kernel.org/all/20230917150752.69612-1-xukuohai@huaweicloud.com/#t
 
-> =20
->    # cat cgroup.controllers
->    cpu io memory
-> --=20
-> 2.49.0
->=20
+Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
+---
+Changes in v3:
+- switch back -EOPNOTSUPP to -ENOTSUPP
+- fix comment style
+- group intializations for arg_aux
+- remove some unneeded round_up
+- Link to v2: https://lore.kernel.org/r/20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com
 
-Thanks.
+Changes in v2:
+- remove alignment computation from btf.c
+- deduce alignment constraints directly in jit compiler for simple types
+- deny attachment to functions with "corner-cases" arguments (ie:
+  structs on stack)
+- remove custom tests, as the corresponding use cases are locked either
+  by the JIT comp or the verifier
+- drop RFC
+- Link to v1: https://lore.kernel.org/r/20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com
 
---=20
-An old man doll... just what I always wanted! - Clara
+---
+Alexis Lothoré (eBPF Foundation) (1):
+      selftests/bpf: enable many-args tests for arm64
 
---rvrOZ3B0jJT6C2Z5
-Content-Type: application/pgp-signature; name=signature.asc
+Xu Kuohai (1):
+      bpf, arm64: Support up to 12 function arguments
 
------BEGIN PGP SIGNATURE-----
+ arch/arm64/net/bpf_jit_comp.c                | 225 ++++++++++++++++++++-------
+ tools/testing/selftests/bpf/DENYLIST.aarch64 |   2 -
+ 2 files changed, 171 insertions(+), 56 deletions(-)
+---
+base-commit: 9435138c069117cd59a4912b5ea2ae44cc2c5ffa
+change-id: 20250220-many_args_arm64-8bd3747e6948
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaDWOIwAKCRD2uYlJVVFO
-ozIEAP4nNL3HcVZ1wrqZ8/JIS7zNxFUbM3PHe9sr0xsJhUe0SwEAtSFG0mRgwB4b
-lHzX/szn6UFuu1I3YPfQOAk4JaPYlwg=
-=FcOj
------END PGP SIGNATURE-----
+Best regards,
+-- 
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---rvrOZ3B0jJT6C2Z5--
