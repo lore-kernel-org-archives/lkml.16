@@ -1,95 +1,100 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA5E1C5D61;
-	Tue, 27 May 2025 09:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54D7F50F;
+	Tue, 27 May 2025 09:03:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336433; cv=none; b=f/gwbqF+LvTKYp5LpwDLiDmLz+6vnl5BDJ4e2xIY3aImPqYiKhvNOgTa2HjpU/tTTIdeiquRnHTVbNs0auoqiMVeleNmZgD/9341TnouOjbhiMR9Z0hyhS+c1WPwpcvF14t9yWroByKrNrHSTPpVmVjyZZ8ZBv0H3I+QbsfgvIE=
+	t=1748336607; cv=none; b=a8B15eCc2j08cP7zJq44Mch4dwSFOkVnCv4RevKeDtQQqHWPHSAuytFNUfjKqRjshmVDla7ZaM6uiEyZuSPXVkdS6k4+aJBgUdz3nkJUrSN3Jsv7Fk05D6MYMfCsNarSoQIP9OsEdohqKcLKKVR8SbfImjvIZdvXDM5rmAMmVlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336433; c=relaxed/simple;
-	bh=vTxtSLPHRSprqIwcwlQ7ULXrGnxhvtBnoPuE4aZbL4k=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Ly68Fh0T5a/ENcu7Phiwk55caXzB6Zndrx1l08RudLEciG6DjIeVmVFM1K5AtTGCyzT2+eTWDKIffADlDYfze+cQ04v8tR3OsQWOz8HNmJaEpGtFvMXdX5Kh8EyK2Z/6GfrjOqy7Fo90ILy12gkZgC1Snt+vZMLLN2FZtuZ9P2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4b665t4xHDz4f3jcm;
-	Tue, 27 May 2025 17:00:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id ED3571A07BB;
-	Tue, 27 May 2025 17:00:27 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgA3m18rfzVolkmiNg--.44075S3;
-	Tue, 27 May 2025 17:00:27 +0800 (CST)
-Subject: Re: [PATCH 23/23] md/md-llbitmap: add Kconfig
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-24-yukuai1@huaweicloud.com>
- <20250527082911.GB32108@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <cd0b3e69-40e1-62e9-4229-8fcf49b189ac@huaweicloud.com>
-Date: Tue, 27 May 2025 17:00:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1748336607; c=relaxed/simple;
+	bh=CepjyP+8Q0P8lM7xYgC7fRcPO5/D444YGpDm/oPFMSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GvEzRuIR6WqypzJDV3yG3DYLMD1cZqmZZTMYgwpxEMNb23D6G9Kf2f4cV4xLQjFT8+WbCMRH4w50LXNueziPjvuJMzfsCC+OXgo+OZtMd4z3R2bmc5AW86QuEQrANtkxd8shQZyPUAW58AQPcxpzHa9nMgycWLEsCIi0JCEfw1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsr3+FxZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsr3+FxZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD77C4CEE9;
+	Tue, 27 May 2025 09:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748336606;
+	bh=CepjyP+8Q0P8lM7xYgC7fRcPO5/D444YGpDm/oPFMSc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qsr3+FxZDJEeNzjVpWICNvLCrY2dAQ6fM+iHHjwd1LIfkdiIacQV2KvO7a0ud7U0c
+	 jUi8nOf1811mTewLQB1jrm4TbfRivKocjf91TNEBbmpv9nH7zAYFnTnrMT2KYQ0x6W
+	 brNuYokQS0qR6oF38Y+sfENS3vY5ppIGfsjfK9kfEXQg3ue9KlbfHhRBhx9bRAsDFq
+	 dvqPzC3It9Es2eUYtcOuuKoD5VvbtbuWfVdUtJfSR5nov2OjhuDwbEd80uIVjCShn/
+	 x4WkaUsCQtiOza4xi4S9+dieTwxB9ofpwIfXbdNakLQplD6zxHKqp3GnYqIpyx9Cqg
+	 xY+MiDA26ekiA==
+Date: Tue, 27 May 2025 11:03:23 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Guodong Xu <guodong@riscstar.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
+	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
+	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
+	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, heikki.krogerus@linux.intel.com, 
+	elder@riscstar.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+Message-ID: <e2erhnhqfeeb5b74x5aspowgdiqdnywmfswl7vhgr7wt3pacns@j2lbkcnjl7ne>
+References: <20250429085048.1310409-1-guodong@riscstar.com>
+ <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
+ <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250527082911.GB32108@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgA3m18rfzVolkmiNg--.44075S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYN7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
-	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
-	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
-	1l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	W8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7V
-	Ub7GYJUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="26g7v56eogwogiqd"
+Content-Disposition: inline
+In-Reply-To: <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
 
-Hi,
 
-ÔÚ 2025/05/27 16:29, Christoph Hellwig Ð´µÀ:
-> On Sat, May 24, 2025 at 02:13:20PM +0800, Yu Kuai wrote:
->>   	MD_PERSONALITY = 0,
->>   	MD_CLUSTER,
->> -	MD_BITMAP, /* TODO */
->> +	MD_BITMAP,
->>   };
->>   
->>   enum md_submodule_id {
->> @@ -39,7 +39,7 @@ enum md_submodule_id {
->>   	ID_RAID10	= 10,
->>   	ID_CLUSTER,
->>   	ID_BITMAP,
->> -	ID_LLBITMAP,	/* TODO */
->> +	ID_LLBITMAP,
-> 
-> Please just drop the TODO annotation from the initial patch.
-> 
+--26g7v56eogwogiqd
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
+MIME-Version: 1.0
 
-I guess this is no longer a problem with one single patch.
+Hello Guodong,
 
-Thanks,
-Kuai
+On Tue, May 27, 2025 at 10:41:20AM +0800, Guodong Xu wrote:
+> You're right that patches 1, 2, and 5 do not depend on that reset series
+> and can be applied independently.
+>=20
+> > [...]
+>=20
+> Yeah. And I confirm that they can be applied without the reset
+> dependencies.
 
-> .
-> 
+Thanks for the confirmation, pushed as is to
 
+	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
+-nexxt
+
+(i.e. as material for the 6.17-rc1 merge window as the PWM PR for
+6.16-rc1 is already sent).
+
+Best regards
+Uwe
+
+--26g7v56eogwogiqd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg1f9cACgkQj4D7WH0S
+/k6Dhgf/X9WuY7qFhMFlefMe19qBwAufGzkajhCdv+bnqB05R5v/Jt+kVwQmhzec
+6mBTGEvmeuNhKUA+kXqLyiTEs36yUqVI6LScD9LHe6QzBQaCmMqYelh8SgcfZ4iO
+kubD1Zz0uZdhiqzajOI7+z+foBW6rZ7qgNYuOlvjPaNP2YCUYRNd8ypUGCYVn9Zr
+mwZvDCDrnH2G+4Cchw+4quN/mGHULoyJawC9djxSfLhWPg72AxLlABSovzvIC+hh
+b/uI5FRi/EIzcate4L1hKTVHF9rFIipT3gUv9sFbINCtAUKLhvZ/MlBVLeGWGiiK
+40qWRrtpvZ859pNH+jYQzAHk2rmYYQ==
+=GMeA
+-----END PGP SIGNATURE-----
+
+--26g7v56eogwogiqd--
