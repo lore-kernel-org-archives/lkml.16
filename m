@@ -1,83 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7612741B6;
-	Tue, 27 May 2025 13:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0A7271459;
+	Tue, 27 May 2025 13:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351997; cv=none; b=sPvllsr+j7o/7ce1kAswDQsmv7y4acYeULtWhOz7WHwxQoZrcUZ5ETQbC37qdn/yPqDK8uW+yX3CugJgNl7nEL+Z7T/hSf+WQLiqLBudMi/IUiim6bfjvubTa7PYw7AXjxCRiRHwB/uMI9SgYWXsmado+VBbW1mfWCSLbaJtM/A=
+	t=1748352018; cv=none; b=cRzK2guo8kurJAoljtUa6jtc/p1nRuCb6I9QAX2nWA2thCYmpon4EUdqm/zPmq785qkfy73h9jTTOH3PmynY+QBcYqF8tO5aGhlt0nn8fNX9tuZ30evJXvG1E3sgB1rg6IbJqzkzT9QvSrISvLC4/W5neHQXsGlNfOtqptVlk+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351997; c=relaxed/simple;
-	bh=p0d+3bGE6JxCPUmnuQ1SY0iA51qNIt+mDfBJ/Fs+YzE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=AQgtD7ibIXoSNQNFogEikBH7pwzFCKvxS7IEzXd8K3BkXvsUyo/jUw2KqK39nUUpYdQPMcM7g8GmVfvazls9LQB639LfKfQNrwvyPCZhWfimje1pDLvqjN7AUte1LpHAshZSgwqX++8r+3FflBm3+kDGutFF9CMT1SEo+HwC2WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IqQ0+p/W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748352018; c=relaxed/simple;
+	bh=hhOKA2MHq5A/Sp9NZ4YTpYbodg83i2jR0nNDX5GCkEs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Iy8o6sQepvxRpYWWd3OSjsR4XCfqpvs/oEOHRXmDzTUXql/yCr+f1+jsU2i++/oPhVlzqD5bVG+DClkOO99w0OYIS7iC0fnltwFRaLHdmOXsMJEeufC4HZP1HmtahBAQ/roqbYgKkn/4fGfRRVGKwnWqs2xBKJ/8Ex8DKSGJPmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=psqZ4Sn+; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IqQ0+p/W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776D9C4CEE9;
-	Tue, 27 May 2025 13:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748351997;
-	bh=p0d+3bGE6JxCPUmnuQ1SY0iA51qNIt+mDfBJ/Fs+YzE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=IqQ0+p/WibI2sjdUcs4j9Cwgi26wOb3DcDT0o85cLvAaYp1VfV+52kY77Z+yqY4ZF
-	 HO6FP/xibAt5WlKled7j2ekmKINSFhNIaLGfKTO8L1+D8dwMhVqOkoyRoT6ItcsVOp
-	 TEb1GAQB9qbb+gk4BkpNCdElfmV5Um/45fKRO9YGtOYEowXLhl67U8ruOpyqLVV8TT
-	 zmiyL3md4y/B9JmB1zc8JNdRkvUVGtaEr3Q9CZCA27Z024h4Dnkb3SBQdjD0A6lgzt
-	 0jOMv+Vvjty37fB80/8H0ScnMIkk+w+ML3bjgz7lVVzwPW3lrsjpozg02qiqMqawzR
-	 914Rt17K14iGQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEED380AAE2;
-	Tue, 27 May 2025 13:20:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="psqZ4Sn+"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RAsMIT011814;
+	Tue, 27 May 2025 15:19:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	BFoE3HK0D28qwdUZStsXbkkPYfcQlaxFa0f8RDcbnCs=; b=psqZ4Sn+GcELhcem
+	mXF6fCpefDL4VWSOiNFZnJ1fhr7KtX4F1kZb416PE4LaACw3r9T5oZQx38jo71oM
+	IK1Tzl6EcIiCFK4mLYWNU7IsDkzORs8xyRhr7tYBK389R4sAp9Fq6Yl0lLcDJl1P
+	Pt6rartBtbNDZI9AE3Edvw8jyvxBhoTrQSIcttAX0pOHCi/DqJ9YzitHk2SYz1yH
+	MJzaN/5+mO4KEfrKhQXbVjM9tcj3szqckscmusjVmWKQnJqU7ZpQSMnV5kLRRQc3
+	Dkv/KL5B7ZsJz22yE8jHEwG/PCrJzeA4wFHO+4g9jZCqoh6P3b3lKmK4ZiHeMMzT
+	EUk0yQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u3hk4ghh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 15:19:59 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EF61840055;
+	Tue, 27 May 2025 15:18:48 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 45D52AE88C2;
+	Tue, 27 May 2025 15:18:01 +0200 (CEST)
+Received: from [10.48.86.139] (10.48.86.139) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 27 May
+ 2025 15:18:00 +0200
+Message-ID: <ca047799-6ec2-4386-a3aa-068766ea24d1@foss.st.com>
+Date: Tue, 27 May 2025 15:17:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Bluetooth: hci_qca: move the SoC type check to the right
- place
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <174835203174.1634553.14732152604532181599.git-patchwork-notify@kernel.org>
-Date: Tue, 27 May 2025 13:20:31 +0000
-References: <20250527074737.21641-1-brgl@bgdev.pl>
-In-Reply-To: <20250527074737.21641-1-brgl@bgdev.pl>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, krzysztof.kozlowski@linaro.org,
- chharry@google.com, bgodavar@qti.qualcomm.com, jiatingw@qti.qualcomm.com,
- vincentch@google.com, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, bartosz.golaszewski@linaro.org,
- stable@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] dt-bindings: arm: stm32: add STM32MP157F-DK2 board
+ compatible
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
+        Conor Dooley
+	<conor.dooley@microchip.com>
+References: <20250527-stm32mp157f-dk2-v1-0-8aef885a4928@foss.st.com>
+ <20250527-stm32mp157f-dk2-v1-4-8aef885a4928@foss.st.com>
+ <79fac1e2-c90f-49b0-9f9c-357c994b27ad@kernel.org>
+Content-Language: en-US
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <79fac1e2-c90f-49b0-9f9c-357c994b27ad@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_06,2025-05-27_01,2025-03-28_01
 
-Hello:
 
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-On Tue, 27 May 2025 09:47:37 +0200 you wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 5/27/25 15:09, Krzysztof Kozlowski wrote:
+> On 27/05/2025 15:03, Amelie Delaunay wrote:
+>> From: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
+>>
+>> Add the "st,stm32mp157f-dk2" compatible string to the STM32 SoC
+>> bindings. The MP157F is functionally similar to the MP157C.
+>>
+>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > 
-> Commit 3d05fc82237a ("Bluetooth: qca: set power_ctrl_enabled on NULL
-> returned by gpiod_get_optional()") accidentally changed the prevous
-> behavior where power control would be disabled without the BT_EN GPIO
-> only on QCA_WCN6750 and QCA_WCN6855 while also getting the error check
-> wrong. We should treat every IS_ERR() return value from
-> devm_gpiod_get_optional() as a reason to bail-out while we should only
-> set power_ctrl_enabled to false on the two models mentioned above. While
-> at it: use dev_err_probe() to save a LOC.
+> How did you get Ack on something which is v1? Cover letter does not
+> explain any history here.
+
+Hi,
+
+Instead of using my own patch, since Himanshu sent the same earlier than 
+me, I rerolled Himanshu's bindings patch from there 
+https://lore.kernel.org/linux-arm-kernel/20250524100319.22521-3-himanshu.bhavani@siliconsignals.io/.
+I should have mention that.
+
+Regards,
+Amelie
+
 > 
-> [...]
-
-Here is the summary with links:
-  - Bluetooth: hci_qca: move the SoC type check to the right place
-    https://git.kernel.org/bluetooth/bluetooth-next/c/8df2c74d466c
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> Best regards,
+> Krzysztof
