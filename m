@@ -1,125 +1,224 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D0617BCE
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193ED2DCC0C
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748311352; cv=none; b=dtoA3JWIvTErRAzn0rPYkN8sEauq2D4LQlPw+tvRr8NndKO/Nooodmlr0rj61Otr8KHV3H7tlzYRogcj41y1k050lR0aJa1nlPvNtGKMb/wyzB9xlpnhFamANHVIU73qR8ZTaioojtZmEHJPIbyUEXmRHodP4TjMuoAVQ4f5Sw8=
+	t=1748311383; cv=none; b=Xz0MHzJ/VUK/Qd0/7IbC9iJJ8G4e6A4Sz7XyBJODlC8exxiYe7oQ11jKWlb4a2GOzcRvrkZlC8WlkybER//sF0lzDYRbqi++3NVcFyna9SA4QfixZ6Vqbho8zonzYbFXU+PNJBPgmIWGfQHy/1/gOIAOoWOVdt9qJ0QdHjVOKDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748311352; c=relaxed/simple;
-	bh=8GHjWkUmMsrgO/7uifOHXKYwcIsRlSw3gCJYHms7gJ0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gWrb0iAoISNqhgxi+6TGZgkDfIsSbW8HUHxDV4vnnZfv5Aa49CaiKTbi11zQzDHpTMu9kQmg1mRIjDgGhL9NgiOq73nhhrBqkW9w7cysoDIxUMjFVTY1OvUlhoFWqOqdel1yRuhDl9kEu7/imjRywv5DdsWccItY3yUo+eABkg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85be9e7bf32so465194139f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:02:30 -0700 (PDT)
+	s=arc-20240116; t=1748311383; c=relaxed/simple;
+	bh=k0VlJouqpFg5AoS8DlI1Yy2aaJD4wzwFPEPkKT6KMrk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CD4G7OWcocMU8CAzMwU13Y96OH5Ew2X2nsupM2nHaDWHRuV49T1ffq7yt2pknMubDqYnteZq4JDDiL16Nl2CPBgYyTkxcB2wFDmZWrqANLGlqQslKUHd3wiHDsGdn+SrqFzcI3IQi+HPISeFCjPEoCLZXb2dNUYooJTSPbi6Hak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TYHqc9mV; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYHqc9mV"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso2917372b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:03:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748311381; x=1748916181; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VU3rcYrt9V7b3tuNavcz7mARYGV+yCHpl4BwvA8qfzQ=;
+        b=TYHqc9mVYoWmDWB/UAi7jUcTmGMxw2SN17CALD9VvWSgUVSB0b3EHI/43aQuOBIVZ3
+         bycyqC+l+ZVKCXC6MlvT2tPjf/X+kIWQ8jDTFEdg8ZNd0v5QcsFraVGVwjiYKC3dDuWN
+         Qw8Ip/0XyyPZalJbQM0lHzwM8UOcNlt9/OjedvNdZA3FQ/gSG9eA0XKUubcXZaMRCerz
+         i7BQpTgVEQccESu/LE72VB4QcWrFqSzG8BG83oqbV006y+2TsJsv4fY8Kkb2ZfJ8lQfj
+         B9vNfl+GdKy/DriyREMbxKH8bbVGd2vUM8tk6+QuL9vlpHaTYjaRIubFBqqfsKVPi9Hj
+         BN5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748311350; x=1748916150;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=diiR1thZm5NHrj8Dq0MJFMFDAReJQAV4nbpN2zbDz0E=;
-        b=jHcYh78iF+pJ7qDKR6Xwl89Qixz+IcFEz3PpqF0nMZlAbbjMIs0yOj4hyGrIqnWFDi
-         VIwxS6njDSLZCjbogGmyVlwIQlLeodRB0AN0iLhuPkdMSP/6wA6ep8R5CISSfvSIv82J
-         geVLU5MVY0R6z0sM9144LfT0vqsb4try+L7eHuEXluWKkZeqXiIE52K3ukZjq1PNSI/V
-         Erlq0xXfXIgp0MRgtiLVQ9lxke5skHtzrpQ+laqS8d106AJXEW8t+6mJCfBEplq0KRbU
-         /A/qPUFGc1QmAoYA5eQgs6WtTqZ1nRkn2xcgwxkO98Bm9bylvTodeGVv4mnVmsz5m6My
-         bnYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWMlNs95lwsEJHbem/9ysZvQsoskuLxbF+yC0mdRFBIkhOCqozopV/TtYqw/fBW/lZRs+b/aNKdV1/K3Xk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXlSuGJPzMYqtmps8IKFEgEiGMdbqr+fSf3VJatUnQbIHreQ+3
-	sE98N8NTTFDONxsoQ9SKFR9Mg0Xzo1wFedP6rTA+8ePf4AKOn9D6ldp3NoYU762rAurUJKDk62f
-	nafmccaEd0QeAjn2WKH+AprGPWEZ9YvOM7cblzFHO2ByC3SfnmO+7KiVuIPY=
-X-Google-Smtp-Source: AGHT+IHqZ3dIRE5aE+11Qm2cCPr9DihaND5gLXT/9TPrlYFnU0Qk0WQPu5UskDqd4PpT7mdqIBVKclEsLBEz4DXZjr7Tbp/KUd5o
+        d=1e100.net; s=20230601; t=1748311381; x=1748916181;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VU3rcYrt9V7b3tuNavcz7mARYGV+yCHpl4BwvA8qfzQ=;
+        b=C6ERzOXbhLv2LBseysj3+qhWy5Oy73pk+AtZdAOk0TyZfNZFXcNlYByLKcbXSE/Vwp
+         vW/V/sGJh27KVZTde6letOdGjXajhYIzQC4EXcadPukR6AE9WyESAHcChd2Zbde7UmvN
+         hRVaqYdjNk+IAMu3wStmug0qvyWnWJBO0BzygLwUx6A4UthkJ+l9QIhAJ272sZkacvoR
+         y6zNCPsqfBtak6RgXr3TEoHdcfzQqayQqhDlU1Tz4rdIPvt4ZaFzm7vZwXp4ypbVthF2
+         xPQFaZSu+cvSu4hiKt5HeWaRy5ytGltTotWnb8VqaWZ0gzkR4ys2ELb5H8XV0lhiLYGg
+         s+qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW963V3VzNTRgkeypdSYkVD87Opm9J4IDI1/N+RXgjJJdDHckYP40jfDrh55L8zDZXxaaTjZBzB1/PvQyo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyobi2xndHnnodS71JeFpvK9K/sZnhu/fPRFThFQylmRMZ9TyqB
+	4WYtCL2AkUGp6cFQLRqpiCtJxgMM4auixvfxO6AOHHbwsjLjKyuUD7sK
+X-Gm-Gg: ASbGncuqNNyk6tsnpjKwC9zQkei6kZ5qzIFkiWdsnxQqO8IVb5NsveCnSsoXq675YAI
+	BKGAMIurn1TqVF0E0eeIgQlrroJmgoCN4pwLtcr2xrUscHeVLXG+IrUial6L2dNSizhVSsx5/DL
+	69XaWz7+U/P7Vj3h+dTEm0ec7rqkvd5OG4VTiMdq2dr5zNHj4rVLaxtgPouUbRPWJEaGGyQ9hJ9
+	X6mp30rRh/4IBMQCYeZtDTxdHfVKzZvJtTsd+h7sS5Zs75KXCBRk03ka1Fhm4RQFhVvB+9hb0e4
+	oQzaTVfjxC7qKonyrZIMsi65g3S2PnS6zXcOyZ+vTH0HX+3TivydzXtKGuOu
+X-Google-Smtp-Source: AGHT+IEZceU3+9AxJ6n3g1AfDmvP8L3RN4h2wu4QWAqavRyO52oi1El9EVCUVuqXxiuKU8A2VdDTIA==
+X-Received: by 2002:a05:6a00:9154:b0:746:227c:a808 with SMTP id d2e1a72fcca58-746227ca91dmr3907055b3a.24.1748311381036;
+        Mon, 26 May 2025 19:03:01 -0700 (PDT)
+Received: from EBJ9932692.tcent.cn ([103.88.46.15])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7461c3e5892sm1703974b3a.40.2025.05.26.19.02.57
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 26 May 2025 19:03:00 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+X-Google-Original-From: Lance Yang <lance.yang@linux.dev>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	will@kernel.org,
+	boqun.feng@gmail.com,
+	longman@redhat.com,
+	linux-kernel@vger.kernel.org
+Subject: [WARN] LOCKDEP: MAX_LOCKDEP_CHAIN_HLOCKS too low
+Date: Tue, 27 May 2025 10:02:52 +0800
+Message-ID: <20250527020252.43684-1-lance.yang@linux.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3e85:b0:869:d4de:f7 with SMTP id
- ca18e2360f4ac-86cbb905927mr1234845239f.12.1748311350134; Mon, 26 May 2025
- 19:02:30 -0700 (PDT)
-Date: Mon, 26 May 2025 19:02:30 -0700
-In-Reply-To: <682ec5f4.a00a0220.2a3337.000e.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68351d36.a70a0220.253bc2.009d.GAE@google.com>
-Subject: Re: [syzbot] [usb?] WARNING in dtv5100_i2c_msg/usb_submit_urb
-From: syzbot <syzbot+0335df380edd9bd3ff70@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+From: Lance Yang <lance.yang@linux.dev>
 
-HEAD commit:    0ff41df1cb26 Linux 6.15
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15245df4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23c237720c19259f
-dashboard link: https://syzkaller.appspot.com/bug?extid=0335df380edd9bd3ff70
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e4cdf4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11e07882580000
+Hi all,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ddad0afe528e/disk-0ff41df1.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1e3cda1e4903/vmlinux-0ff41df1.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/65288d07516b/bzImage-0ff41df1.xz
+With CONFIG_LOCKDEP on, I got this warning during kernel builds:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0335df380edd9bd3ff70@syzkaller.appspotmail.com
+[Tue May 27 00:22:59 2025] BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
+[Tue May 27 00:22:59 2025] turning off the locking correctness validator.
+[Tue May 27 00:22:59 2025] CPU: 56 UID: 0 PID: 3362352 Comm: cc1 Kdump: loaded Tainted: G S                  6.15.0-rc6 #5 PREEMPT(voluntary)
+[Tue May 27 00:22:59 2025] Tainted: [S]=CPU_OUT_OF_SPEC
+[Tue May 27 00:22:59 2025] Hardware name: New H3C Technologies Co., Ltd. H3C UniServer R4900 G5/RS35M2C16SB, BIOS 5.69 10/18/2023
+[Tue May 27 00:22:59 2025] Call Trace:
+[Tue May 27 00:22:59 2025]  <TASK>
+[Tue May 27 00:22:59 2025]  show_stack+0x4d/0x60
+[Tue May 27 00:22:59 2025]  dump_stack_lvl+0x72/0xa0
+[Tue May 27 00:22:59 2025]  dump_stack+0x14/0x1a
+[Tue May 27 00:22:59 2025]  add_chain_cache+0x304/0x330
+[Tue May 27 00:22:59 2025]  __lock_acquire+0x7d3/0xfd0
+[Tue May 27 00:22:59 2025]  lock_acquire.part.0+0xb4/0x210
+[Tue May 27 00:22:59 2025]  ? bad_range+0xa6/0x320
+[Tue May 27 00:22:59 2025]  ? mark_usage+0x68/0x130
+[Tue May 27 00:22:59 2025]  lock_acquire+0x62/0x120
+[Tue May 27 00:22:59 2025]  ? bad_range+0xa6/0x320
+[Tue May 27 00:22:59 2025]  seqcount_lockdep_reader_access+0x3d/0xa0
+[Tue May 27 00:22:59 2025]  ? bad_range+0xa6/0x320
+[Tue May 27 00:22:59 2025]  bad_range+0xa6/0x320
+[Tue May 27 00:22:59 2025]  ? __kasan_check_write+0x18/0x20
+[Tue May 27 00:22:59 2025]  expand+0x91/0x3c0
+[Tue May 27 00:22:59 2025]  ? __del_page_from_free_list+0x82/0x4b0
+[Tue May 27 00:22:59 2025]  rmqueue_bulk+0x13a/0xc00
+[Tue May 27 00:22:59 2025]  ? lock_acquire.part.0+0xb4/0x210
+[Tue May 27 00:22:59 2025]  __rmqueue_pcplist+0x4a7/0x8f0
+[Tue May 27 00:22:59 2025]  rmqueue_pcplist+0xcc/0x2a0
+[Tue May 27 00:22:59 2025]  rmqueue.isra.0+0xd26/0x1470
+[Tue May 27 00:22:59 2025]  ? stack_trace_save+0x96/0xd0
+[Tue May 27 00:22:59 2025]  ? __pfx_stack_trace_save+0x10/0x10
+[Tue May 27 00:22:59 2025]  ? stack_depot_save_flags+0x41/0x6a0
+[Tue May 27 00:22:59 2025]  ? lock_acquire.part.0+0xb4/0x210
+[Tue May 27 00:22:59 2025]  get_page_from_freelist+0x262/0x11a0
+[Tue May 27 00:22:59 2025]  ? kasan_save_stack+0x3e/0x50
+[Tue May 27 00:22:59 2025]  ? kasan_save_stack+0x2f/0x50
+[Tue May 27 00:22:59 2025]  ? __call_rcu_common.constprop.0+0xc4/0x950
+[Tue May 27 00:22:59 2025]  ? commit_merge+0x634/0x1100
+[Tue May 27 00:22:59 2025]  __alloc_frozen_pages_noprof+0x30e/0x6c0
+[Tue May 27 00:22:59 2025]  ? __pfx___alloc_frozen_pages_noprof+0x10/0x10
+[Tue May 27 00:22:59 2025]  ? __lock_acquire+0x3dc/0xfd0
+[Tue May 27 00:22:59 2025]  ? mark_usage+0x68/0x130
+[Tue May 27 00:22:59 2025]  ? policy_nodemask+0x21d/0x350
+[Tue May 27 00:22:59 2025]  alloc_pages_mpol+0x163/0x460
+[Tue May 27 00:22:59 2025]  ? __pfx_alloc_pages_mpol+0x10/0x10
+[Tue May 27 00:22:59 2025]  ? ___slab_alloc+0xe3/0x10f0
+[Tue May 27 00:22:59 2025]  ? find_held_lock+0x31/0x90
+[Tue May 27 00:22:59 2025]  alloc_frozen_pages_noprof+0x4b/0x130
+[Tue May 27 00:22:59 2025]  allocate_slab+0x23a/0x380
+[Tue May 27 00:22:59 2025]  ___slab_alloc+0x985/0x10f0
+[Tue May 27 00:22:59 2025]  ? find_held_lock+0x31/0x90
+[Tue May 27 00:22:59 2025]  ? xfs_buf_item_init+0x7b/0x660 [xfs]
+[Tue May 27 00:22:59 2025]  ? xfs_buf_item_init+0x7b/0x660 [xfs]
+[Tue May 27 00:22:59 2025]  ? lock_release.part.0+0x20/0x60
+[Tue May 27 00:22:59 2025]  ? fs_reclaim_acquire+0x83/0x120
+[Tue May 27 00:22:59 2025]  ? xfs_buf_item_init+0x7b/0x660 [xfs]
+[Tue May 27 00:22:59 2025]  kmem_cache_alloc_noprof+0x1ed/0x430
+[Tue May 27 00:22:59 2025]  ? kmem_cache_alloc_noprof+0x1ed/0x430
+[Tue May 27 00:22:59 2025]  xfs_buf_item_init+0x7b/0x660 [xfs]
+[Tue May 27 00:22:59 2025]  ? xfs_imap_to_bp+0x10b/0x2b0 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_buf_read_map+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  ? xfs_file_buffered_write+0x14c/0xa50 [xfs]
+[Tue May 27 00:22:59 2025]  _xfs_trans_bjoin+0x45/0x130 [xfs]
+[Tue May 27 00:22:59 2025]  xfs_trans_read_buf_map+0x38c/0x840 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_trans_read_buf_map+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  ? lock_acquire.part.0+0xb4/0x210
+[Tue May 27 00:22:59 2025]  xfs_imap_to_bp+0x10b/0x2b0 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_imap_to_bp+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  ? __kasan_check_read+0x15/0x20
+[Tue May 27 00:22:59 2025]  ? do_raw_spin_unlock+0x5d/0x1f0
+[Tue May 27 00:22:59 2025]  xfs_inode_item_precommit+0x538/0xc10 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_inode_item_precommit+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  __xfs_trans_commit+0x2a3/0xba0 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx___xfs_trans_commit+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  ? ktime_get_coarse_real_ts64_mg+0x61/0x1d0
+[Tue May 27 00:22:59 2025]  ? __kasan_check_read+0x15/0x20
+[Tue May 27 00:22:59 2025]  xfs_trans_commit+0xce/0x150 [xfs]
+[Tue May 27 00:22:59 2025]  ? xfs_trans_ijoin+0xcf/0x170 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_trans_commit+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  xfs_vn_update_time+0x1fc/0x440 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_vn_update_time+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  ? __kasan_check_read+0x15/0x20
+[Tue May 27 00:22:59 2025]  kiocb_modified+0x1a6/0x240
+[Tue May 27 00:22:59 2025]  xfs_file_write_checks.constprop.0+0x451/0x860 [xfs]
+[Tue May 27 00:22:59 2025]  xfs_file_buffered_write+0x14c/0xa50 [xfs]
+[Tue May 27 00:22:59 2025]  ? __pfx_xfs_file_buffered_write+0x10/0x10 [xfs]
+[Tue May 27 00:22:59 2025]  ? ovl_other_xattr_get+0xee/0x160 [overlay]
+[Tue May 27 00:22:59 2025]  ? find_held_lock+0x31/0x90
+[Tue May 27 00:22:59 2025]  ? __pfx_ovl_other_xattr_get+0x10/0x10 [overlay]
+[Tue May 27 00:22:59 2025]  ? mark_usage+0x68/0x130
+[Tue May 27 00:22:59 2025]  xfs_file_write_iter+0x553/0x830 [xfs]
+[Tue May 27 00:22:59 2025]  do_iter_readv_writev+0x422/0x910
+[Tue May 27 00:22:59 2025]  ? lock_acquire.part.0+0xb4/0x210
+[Tue May 27 00:22:59 2025]  ? backing_file_write_iter.part.0+0x4ee/0x7e0
+[Tue May 27 00:22:59 2025]  ? __pfx_do_iter_readv_writev+0x10/0x10
+[Tue May 27 00:22:59 2025]  ? selinux_file_permission+0x389/0x470
+[Tue May 27 00:22:59 2025]  ? lock_is_held_type+0xa8/0x120
+[Tue May 27 00:22:59 2025]  vfs_iter_write+0x17b/0x7a0
+[Tue May 27 00:22:59 2025]  backing_file_write_iter.part.0+0x4ee/0x7e0
+[Tue May 27 00:22:59 2025]  ? ovl_real_file+0x16a/0x1b0 [overlay]
+[Tue May 27 00:22:59 2025]  backing_file_write_iter+0xc8/0x110
+[Tue May 27 00:22:59 2025]  ovl_write_iter+0x2cc/0x450 [overlay]
+[Tue May 27 00:22:59 2025]  ? __pfx_ovl_write_iter+0x10/0x10 [overlay]
+[Tue May 27 00:22:59 2025]  ? __pfx_ovl_file_end_write+0x10/0x10 [overlay]
+[Tue May 27 00:22:59 2025]  ? lock_is_held_type+0xa8/0x120
+[Tue May 27 00:22:59 2025]  vfs_write+0x5c1/0x1050
+[Tue May 27 00:22:59 2025]  ? __pfx_vfs_write+0x10/0x10
+[Tue May 27 00:22:59 2025]  ? ktime_get_coarse_real_ts64+0x44/0xd0
+[Tue May 27 00:22:59 2025]  ? lockdep_hardirqs_on_prepare.part.0+0xa3/0x140
+[Tue May 27 00:22:59 2025]  ksys_write+0x109/0x200
+[Tue May 27 00:22:59 2025]  ? __lock_release.isra.0+0x60/0x160
+[Tue May 27 00:22:59 2025]  ? __pfx_ksys_write+0x10/0x10
+[Tue May 27 00:22:59 2025]  ? __audit_syscall_entry+0x2ef/0x540
+[Tue May 27 00:22:59 2025]  ? irqentry_exit_to_user_mode+0x7d/0x290
+[Tue May 27 00:22:59 2025]  ? irqentry_exit+0x6f/0xa0
+[Tue May 27 00:22:59 2025]  __x64_sys_write+0x76/0xb0
+[Tue May 27 00:22:59 2025]  x64_sys_call+0x28a/0x1d70
+[Tue May 27 00:22:59 2025]  do_syscall_64+0x77/0x180
+[Tue May 27 00:22:59 2025]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[Tue May 27 00:22:59 2025] RIP: 0033:0x7f56cbac9687
+[Tue May 27 00:22:59 2025] Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+[Tue May 27 00:22:59 2025] RSP: 002b:00007ffe65c16880 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+[Tue May 27 00:22:59 2025] RAX: ffffffffffffffda RBX: 00007f56cba39440 RCX: 00007f56cbac9687
+[Tue May 27 00:22:59 2025] RDX: 0000000000001000 RSI: 0000000004735f60 RDI: 0000000000000003
+[Tue May 27 00:22:59 2025] RBP: 0000000004735f60 R08: 0000000000000000 R09: 0000000000000000
+[Tue May 27 00:22:59 2025] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000001000
+[Tue May 27 00:22:59 2025] R13: 00000000046ecad0 R14: 00007f56cbc1fe80 R15: 0000000000000028
+[Tue May 27 00:22:59 2025]  </TASK>
 
-------------[ cut here ]------------
-usb 1-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
-WARNING: CPU: 0 PID: 5833 at drivers/usb/core/urb.c:413 usb_submit_urb+0x1112/0x1870 drivers/usb/core/urb.c:411
-Modules linked in:
-CPU: 0 UID: 0 PID: 5833 Comm: syz-executor411 Not tainted 6.15.0-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:usb_submit_urb+0x1112/0x1870 drivers/usb/core/urb.c:411
-Code: 0f b6 44 05 00 84 c0 0f 85 38 06 00 00 45 0f b6 04 24 48 c7 c7 a0 87 12 8c 48 8b 74 24 18 4c 89 fa 44 89 f1 e8 df db 6e fa 90 <0f> 0b 90 90 49 bd 00 00 00 00 00 fc ff df e9 2b f4 ff ff 89 e9 80
-RSP: 0018:ffffc9000440f610 EFLAGS: 00010246
-RAX: eecd5c38d4424c00 RBX: ffff888021eac200 RCX: ffff888033e81e00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
-RBP: 1ffff1100435d80c R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bba984 R12: ffff888021aec060
-R13: dffffc0000000000 R14: 0000000080000280 R15: ffff888028cb5dc0
-FS:  000055555d4a6380(0000) GS:ffff8881260c2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd4d4ed1140 CR3: 00000000779d6000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- usb_start_wait_urb+0x114/0x4c0 drivers/usb/core/message.c:59
- usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
- usb_control_msg+0x232/0x3e0 drivers/usb/core/message.c:154
- dtv5100_i2c_msg+0x250/0x330 drivers/media/usb/dvb-usb/dtv5100.c:60
- dtv5100_i2c_xfer+0x1a4/0x3c0 drivers/media/usb/dvb-usb/dtv5100.c:86
- __i2c_transfer+0x871/0x2170 drivers/i2c/i2c-core-base.c:-1
- i2c_transfer+0x25b/0x3a0 drivers/i2c/i2c-core-base.c:2315
- i2c_transfer_buffer_flags+0x105/0x190 drivers/i2c/i2c-core-base.c:2343
- i2c_master_send include/linux/i2c.h:109 [inline]
- i2cdev_write+0x112/0x1b0 drivers/i2c/i2c-dev.c:183
- do_loop_readv_writev include/linux/uio.h:-1 [inline]
- vfs_writev+0x4a5/0x9a0 fs/read_write.c:1057
- do_writev+0x14d/0x2d0 fs/read_write.c:1101
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa54bca17b9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff3a510bc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fa54bca17b9
-RDX: 0000000000000001 RSI: 0000200000000680 RDI: 0000000000000004
-RBP: 00007fa54bd145f0 R08: 00232d6332692f76 R09: 0000000000000006
-R10: 000000000000000f R11: 0000000000000246 R12: 0000000000000001
-R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+$ cat .config|grep CONFIG_LOCKDEP
+CONFIG_LOCKDEP_SUPPORT=y
+CONFIG_LOCKDEP=y
+CONFIG_LOCKDEP_BITS=15
+CONFIG_LOCKDEP_CHAINS_BITS=16
+CONFIG_LOCKDEP_STACK_TRACE_BITS=19
+CONFIG_LOCKDEP_STACK_TRACE_HASH_BITS=14
+CONFIG_LOCKDEP_CIRCULAR_QUEUE_BITS=12
 
+Is it safe? Or could this be a real locking issue?
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Thanks,
+Lance
