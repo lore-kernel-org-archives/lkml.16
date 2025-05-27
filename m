@@ -1,191 +1,394 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2051.outbound.protection.outlook.com [40.107.243.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC531FCF41
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748344775; cv=none; b=L+LOHhEhtdhXBGAhL5dMrLZpiSIVMWOJXuTxG9OZmlwFe2jGrEPYSc0X3qBtVjMt2pDb9O0FId4o762/B+n4X93eWjDYb6TomcW/7URtUfyG6iwr73GTrUQPnEkQFLRQeX2ym5uq99c+0kr6K0N4tx0zzX9NS+q391ezEqqa8Hk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748344775; c=relaxed/simple;
-	bh=19feJZZTbb+km5oSmqKqxCaJrNvkXHMQEj7v3RsRCgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qla9eIH5sYkNWqdxjq9hd7o/NuTbUvfRvPHauby36Jq6fy/DdEjoGBsPK7fIxu+0jCpNh0W/0MT8SavCWThS7Dfs0fHUY3FrgRjAxBZaglAxanU0LtrlUtL0d+LePpDhaCFiyFSY5EJduBVwAZgfBONbwD0FLY8ag/PhKMEsuu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IJUp31k+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6101DF270
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748344789; cv=fail; b=We1OJHbjlQsUyA/7SzfPUjVAU5/nGxFHdkCffoef4hkVjCWDUL+ZL+OqAi0F1b4Ja/5G0b0tS82I35zPbdmBnEXq77wGTF+1lxRHRz2BnkQXpWmkPWO5oPW22NpRfVnzqyboYOQIUKHaw/RXXpGVKcL+Kbm1kzs975+xYcKdBgQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748344789; c=relaxed/simple;
+	bh=FkzmUvnjY5lT1LgQd/YOUIOUggx5XNXHboS4qkBBqYI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hlkzoYQz/dnyD5HwdEkQpCj/3EQdhshd3XTkyvk+HX/7oJO0f3PQ3sLGE9ecFa1iYXAzjxu90bKMqjTTELoSaKVh2GUYPnS0QFw4IUs07/DQhRMfbbVbMpkjUtIlVlfXBVt7tLpRI6GvpsRbGw2jGSON6p/EPaVDn2ILDN/bQA8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0TPcavIs; arc=fail smtp.client-ip=40.107.243.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IJUp31k+"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RA16kD003699
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:19:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sGGnr2Cf6uz/5zgl9H9llVxN13njxFiPARnslx3OyQY=; b=IJUp31k+8iZ8fZ75
-	0IwkgnNKcfWG8ZX6uBxvXyY1Pmba9MTgMyJ9hqR/1Gcp+7OmWHv9LA8JhHQdA7i3
-	0aP3cvkaobNyLO6lUXfZI/r5rOmMnNC/Kk4VIT7VLVcFNxBQNaWwqTUs1p6XoQXu
-	IkRafdp2EyegDVWCus8pQ8A/XQAfHuBaonnhptNyzYVipO5H13DaAsEqum0kSqCE
-	S9gCjy/EmPKtHuvimd1LZxt4GPWzAXaZ8NGenBMk9FQtlRDoAVv8iw9IKr4P63V0
-	0KwSVQQfRuSO+4HlfdQGBD5BkolkRSTbb8/iuv3xdX0bX/NX11e5MtPohfZTLmUE
-	AS6T4g==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u3fq6t17-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:19:31 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5466ca3e9so44636785a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:19:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748344771; x=1748949571;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGGnr2Cf6uz/5zgl9H9llVxN13njxFiPARnslx3OyQY=;
-        b=Ax6cyVBbHkkmChT5GPfuI9HcWp3vzQ5AlkfA0GIaZhyUnNJarUzus5KSW5TVdCuF/b
-         bjdbB34WAk/wxKoKz5hGq6YErxD040kz/VIqjbONTt+wtyIhwuacufhhTzRDcmul88ez
-         //Yglyz4g61ZC1eU3VgqJPnIybImnwj1Eoloo8H1/Nsn098qxjuJuOy3NmjEx0o6+rUn
-         lehyQtNCQ/EZxnPMEouKs2Zb9NrqbPJJuo+idfvFjgYdL4dnxZhjAvYnF81S8GYWSBc/
-         ZKIYxjAuNHVK/3aCP4pBeNrrOTikQAS2EvR36fPGUzy5omy9cF3TZdj68iPKyr7AK0jp
-         NMnA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPBnRbGfzqETinfuYij3CXWbf5IZzOq6dTD+nQv8wn5EbfDbBjGhTQU/CksXOVA37UQhaDIEQnAK2LYQ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfaJpRERRpq5Qy23pbhu2j0VrqZUP0QmdMCLs9kHTP37nZ3nHb
-	fqcH68r0H4Gu3IOwocqTD/YFY320h0o3IiIqa5uoSgOVAdiU6xhiGaG569JOVYOzyN6mm56eS1w
-	2Y68yA85Y+5e7oSblBayMEI505O31OQZt1ljdidaLg7R7ZW7/UcXZ044OvDt4g4gtW6M=
-X-Gm-Gg: ASbGncuWnof4VOE1m5ZwN7IRku3Pk3JxZ5DcOqwGMkBurq4zJslUnHgWruNwZmgO5X3
-	GqRodfT1tMWwlMdlCEOZnQjQoiGSBE2FpNQf5EM/TwEIZ1t6utYZoMaSZljk7ubUWb1kKQr3n62
-	jR97kL2G8XUuQ0IjFgKZdRBq6WHDVrvhVEFZfgaiLr3tiJi0sGm5rXqcDSrVrpi0W8+GIgckZoQ
-	NwikKrszcRpxQwto1j+s2LRqFop/0CjC2ntFcvfdkDZRLMeIunqgHLOUBl2bQ5taptu+wE3GD+D
-	ueu/TdT7wNhgv/DjPOUt8JdUIMD75dxi9JPx+MF3l69WZ7owWASDqhDKVmPs8fBrdg==
-X-Received: by 2002:a05:6214:2124:b0:6f8:e438:6a31 with SMTP id 6a1803df08f44-6fa9d38a281mr84868906d6.9.1748344770690;
-        Tue, 27 May 2025 04:19:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVX0YQa52wzPt5zotLH02+4Oq1iIQcnbNqEa0aCHbsQCwGP7XhMmeQ5L88JOR1OO1b3BhmMA==
-X-Received: by 2002:a05:6214:2124:b0:6f8:e438:6a31 with SMTP id 6a1803df08f44-6fa9d38a281mr84868616d6.9.1748344770315;
-        Tue, 27 May 2025 04:19:30 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6049fe0e94fsm3125097a12.26.2025.05.27.04.19.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 04:19:29 -0700 (PDT)
-Message-ID: <99fd4103-97e0-486d-9e6c-66c8adb70b3b@oss.qualcomm.com>
-Date: Tue, 27 May 2025 13:19:26 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0TPcavIs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=snsEAsNiio9KaFqiArN+7fvQPlTriLJKfTgYCO/aCFEZGF/agO2hAzs+DN3Eg75jo6ZXZPKJjcec8OXc5FqYij2yUAfT6FwqxMWc1GQv6MSxUzl8p4MzGpwm5ezV4b/AFUxSO4NrbT9liRPq/DOs2sPJ9JHJB9b8P1g4VDF8df7/+wj5BGrraaGuu5e4M18YoI4um3LXKcOnDo7ujB31IUqg18b3E/uQNirCtICyKiTTK5aC5L7+TsapFAWgYcc9F10CDYiCdw98pGmqeJMeRlr/APKYTpFx4PRa5EGVL8ux3RK7RNL4PSTPeDLYQWAXD+NwIk9FdhKWwAsnkZuDhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LX7lQ5lcs4E0QUNdZ6piUr4dJglNa//iGU4k1MXBZvs=;
+ b=IOHgP4deXOoLHA4nDdh0JPZgCej+j2FCHGratvuR7ow2CHwUcPU2QpbgQljY0Irb7Qig9p9IFsU9m1ycg8ZT3LkaTQSFgceNxUL9hGAzmxlwbhjLgcx7O3mI2U5wXKaZfJbUGsR7Qci8dut+4ddcsPGVIouGQfSqxvy5lj8BLni1Nzkjzy0b86z1CTqPuWQ2874C94HVwVtPbaNUVwiAP9WiuA9/9a/U4CF2dY59GHWgjcPh+c+DHMuvzcVDvnHcB208Y2YlBNMvhfQYUfN+RGd1+/H99fp+hMU8Y89AmlbjazoQNzBuHG2ejdGylgYRHXiFe+RIiU6+VwB0z9NHtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LX7lQ5lcs4E0QUNdZ6piUr4dJglNa//iGU4k1MXBZvs=;
+ b=0TPcavIsXK/nIv90EHviov+779uT0vVOI+MQiur/7UMbgkwi1NoKS/kqTVJodzkcRMQ5xmC5DA6Hp4+fI/7eOI5TK7Lh36yiuu4QMC+9nC4A6xS7IT7aq4ySRnJkqRGdUQoDTlJofobv2J7lTA5NkRiNMAADQGMgH0cWB/HyB6k=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
+ by MN0PR12MB6080.namprd12.prod.outlook.com (2603:10b6:208:3c8::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
+ 2025 11:19:45 +0000
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42%7]) with mapi id 15.20.8769.022; Tue, 27 May 2025
+ 11:19:44 +0000
+Message-ID: <8501f4a8-8480-477e-8ab1-1d7796b978f1@amd.com>
+Date: Tue, 27 May 2025 16:49:36 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
+ change for throttled task
+To: Aaron Lu <ziqianlu@bytedance.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
+ <bsegall@google.com>, Josh Don <joshdon@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>,
+ linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+ Chengming Zhou <chengming.zhou@linux.dev>,
+ Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-5-ziqianlu@bytedance.com>
+ <20250522120336.GI39944@noisy.programming.kicks-ass.net>
+ <20250522124840.GC672414@bytedance>
+ <20250523145942.GL39944@noisy.programming.kicks-ass.net>
+ <20250526113352.GA2993700@bytedance> <20250527065836.GA3373486@bytedance>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250527065836.GA3373486@bytedance>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:c8::8) To CH3PR12MB8658.namprd12.prod.outlook.com
+ (2603:10b6:610:175::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] clk: qcom: gcc-ipq5018: fix GE PHY reset
-To: George Moussalem <george.moussalem@outlook.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller"
- <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>,
-        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org
-References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
- <20250525-ipq5018-ge-phy-v1-2-ddab8854e253@outlook.com>
- <337068fa-adc2-478e-8f3f-ec93af0bb1c6@oss.qualcomm.com>
- <DS7PR19MB8883BE13166F7CD5DCA777DB9D64A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <DS7PR19MB8883BE13166F7CD5DCA777DB9D64A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 8bmNGzkiMaDJa6bw0nFsuw4m33J5vizq
-X-Proofpoint-ORIG-GUID: 8bmNGzkiMaDJa6bw0nFsuw4m33J5vizq
-X-Authority-Analysis: v=2.4 cv=X8FSKHTe c=1 sm=1 tr=0 ts=68359fc3 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=qC_FGOx9AAAA:8 a=UqCG9HQmAAAA:8
- a=2jJET5DcvFRXXXsR3agA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=fsdK_YakeE02zTmptMdW:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA5MyBTYWx0ZWRfX8BE5Iui96AbN
- b2viyRuRGy3BU2Bmmq0lfGEJzOem2mxmTFrGrHWjtShmhhNMtBCSuxQaHqrnj/1A/qkfBEWUrPi
- bO4iHwNemc7fwhVgRGrLwcbn+mVY+bwiqQ80AiwR+dESqO7EqrDCTbLY3VKzm8KlimtWmV9CDaA
- CITfCeP1fpJUSWOSLzek0elJ0qKJjdYBPCf3MfJ/iNLFEpKj+LUoFzk+KihlnUQ44xF51Z8r1Ve
- FkBvBmNj0W1pdvNgvhDazlxoeYAUGlAE31LnXJyVCV+v31Nd4yFfzWUbSAFFMU+MwwW4TtELX7E
- +TwsTMVufv/SX21/TMRJEyHpxmnS3Q6zdiAr2ZTgvD1EIi/4RjQMpJOOjl0iBIJoi/wzx6zs4YP
- OP3n8+M9BtwDINaJtk4Nz3jMr9LXaaxPZoh7uex5dtR9/oCtjuihD/a75mtz/ZTw6LDIkBMy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_05,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
- mlxscore=0 clxscore=1015 priorityscore=1501 spamscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505270093
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|MN0PR12MB6080:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76e30659-a775-4388-787c-08dd9d1061b5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OU9oc2tDSjFuZ08zMENtcFMrUXlNYjluMitsZ012TVhFTU1kQkZQaWN6bXZU?=
+ =?utf-8?B?L0ZhK0trZTJuUVZKbnZXL1c0Vk9zV0hIU0JmVFArcGVGS1UybXQ5VllIYXZt?=
+ =?utf-8?B?VnJsUDhyRDgxMldZa0JidVovWWkvb0lta01xYVlSUFBzdkdpY2ZsanBUOEM5?=
+ =?utf-8?B?VVBNN1I0bnVWQ2s5RDVycEZsNXRzeVNveEV3dUUyczJhNXdTZC9hSXpPRUxN?=
+ =?utf-8?B?SW9QK2lCWHZ2ejdGRHlnRWVXdWpoWVdTUG9Tdm15bEk5WWNMTGk5U1N5U2pQ?=
+ =?utf-8?B?OEEwMWl3UWJuR2ZtRFlFTzc1TkNXZ2EwVUdwZXNsaThGTFFZNGhYMWIwWjlX?=
+ =?utf-8?B?a0ZIY3IyeEt1UEtFK2R6UDd2ZzFsUjhkQ3FoOVMwRnFsOU9rY01vL1h4S3pn?=
+ =?utf-8?B?VFFBa2orWnVOWFpyelQwK3g0cE0xb1pmNnFqVFpkSnBvc3YrZmdCWCtTbm01?=
+ =?utf-8?B?aWlHRnpUalIrYXNjYTFlLzRYcnE0dHpUYlYxUkFvcHUvSEM0NFNKVEFVK3hE?=
+ =?utf-8?B?cEVyWWFuS2JvRVRvek5lSWNPOWdvZFVCSHJBVVhQanpyWE44UVpSc1JTZEZy?=
+ =?utf-8?B?Q1pKRXFVWHJMcHJDcXJwTFdxQ2NSV2hTbjl4MEtqWGlmSCtEajR3eE9yNWRO?=
+ =?utf-8?B?MEpnOHFZQm9KV2kvNmdnMWUxVnEvRzUzNC9WK2pKcFlkVHpwTTdzTzkxc2E0?=
+ =?utf-8?B?RlFDMG5OSnZ4Y0xFSkFEU2E1amVvOTFNaTZTbnpxTU5KUFQzeTFoTUlVUFFT?=
+ =?utf-8?B?dm9NcUNmTklrRW9tQ25lT1VIeStUSnUwdG5yTkwvM3FXN2Z3bm5FaTJ1NjlN?=
+ =?utf-8?B?a0J3NWVjbUtGc0liY3EyN2F0REVFL2NvQTJjYkRoRmMxQ1hyZDhtMVAwaFNR?=
+ =?utf-8?B?RGNlS2tLT0RNN0lHcWIwNEVuUUV1dUtXNmFseXhUWXRBbGgvMjRJRFRqdkVK?=
+ =?utf-8?B?NlczUDJYSi8rRitVZ1I1VUxFT01xYUFtb0FlQVdrN1BScFIyUjBDazRGSDhZ?=
+ =?utf-8?B?TEl6T3lOVmJRazZPYXFBSzBaalJqZC9lZHkxSExIL1NyMGtJbk1WV0dmbGx5?=
+ =?utf-8?B?RUgwcndpTVFCTmg1ZGhHeEtlNmJmQUI5WUJtVndKakhBMHhXNU5tQWlybHNC?=
+ =?utf-8?B?U1ZXWUNLQ0hZNzI2SVFtRWpTRi9iUUQza3M4SzZyTzNrQ0h4TnM0SStMZVZx?=
+ =?utf-8?B?TE9WQjd2ZlJJQ210KzhOOFhiS0dhYmwwUC94V0xLZER3cCtMeS9yQ3J5N1o5?=
+ =?utf-8?B?SEorTjczRmxQRzI3cGhkc1ZMMHhTeFl1YUhib1ZBRHpQbUlERDFXOG51RVpk?=
+ =?utf-8?B?akNJTXhiU2pxT1hzb3NmOWVPQ2pkRmJtQjN0b2pMYlRKSXF4aE9vUHZOOGVG?=
+ =?utf-8?B?a2VBOHdqb0lENEwrc1pmdWU0Q29tUWwxYVk2Q09XSE94NWkxMkZ6bGF1WU1z?=
+ =?utf-8?B?VEtWUHdTR2NYcXlJdmNneXVVUVdOQW9Dd29iRCtGMUhVbC80Wjg2OTh3MTRK?=
+ =?utf-8?B?dUE5RmozUTdveDMxdUUrN0NhMlphSHlJWGlvcnRiSVhGRGM4dFNlUnQrV09H?=
+ =?utf-8?B?ZTVQY2pHYXczWXoyQUsvVHFWV0pRZXF4R2pOZlVKNys0OWlsTjhOTUZlRW1l?=
+ =?utf-8?B?emlkYnExZ0l0b0FESkNxYnlSWDB2elpaT0Z6a1RrMkNFWVdtZkRzWFZVK3Bo?=
+ =?utf-8?B?cytpRVV5dlBSUThkaEkwbkQ3K0lBcDR0WTZESDhrZWg0S1JxMUFuUmNpb3Ew?=
+ =?utf-8?B?QXFPZkZ4dEd2c2g2VDFDOUJQSHhuNXU3UWZRMnZnMk5PZ2F2a2lOeHRpdUwz?=
+ =?utf-8?B?ZnJ1aTRsWG5vYlUyU3hnR0tJTS9kVWFVblpKU1hSSVVlZjFTUElRUXE0WHh4?=
+ =?utf-8?B?TVlQUThEcGFBY2g2d092cyt5MndGckxLTXJoc05WUm0vOE52emdpbWZSeHlU?=
+ =?utf-8?Q?9u1lgYL8U/s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NjRwL1Y3RG9nVVEzTXZVVHJjWGMyN0RIaHJLaFhTSDdiRnBORzBydGY1dW5F?=
+ =?utf-8?B?UmhsalFzRDRPTTg1ZnNTZnhPZDFMRGk5V2ZIT2FQblFJM2Y2OXppY3ozZ21D?=
+ =?utf-8?B?cWtQekhkaEI1RjJ1RHo4dWZrelVFdEtRSFl5d2pPNU9tSTZ5TmRqbWUwWlYv?=
+ =?utf-8?B?M216Q0ZkVFhGOFZweS9yRG1rYVlXdW1lN3BqdVBPYU1IRXM4YU9vTzhYdFlM?=
+ =?utf-8?B?ZURlckROSlRmVUppNE9NczFpc2NVV0FwU245L25XcWVUR1dTSkhyQlM2TDlU?=
+ =?utf-8?B?WEpVWTJoY0t5QWpXNS94TWw3dldJNkUwS1NRNDlRbHhnQmNoVUNMRUVIbGMv?=
+ =?utf-8?B?QTRWNG1rbTJFWnVwdmtRc3B4S3RyQ0p6OFVyRnFJMzJtZ3doU0wxVnBISzhw?=
+ =?utf-8?B?T21jK21Nc0xrSWh4MEZ0Y21jOTQvU3BwVEtLYkhzdzJnWERLSXh0WXNhM2xV?=
+ =?utf-8?B?V1Q5Wm9GRFYxLzNVZ2RWYStkT042M3dERUNTMmxzV1JGOTZ5aWZoQXFkZlNV?=
+ =?utf-8?B?OFNQNHgzNFpxVkJhYit3ZGhWdW5hR2FIcC9RcFZPZTB1bWxpN0dHZC83T2cv?=
+ =?utf-8?B?RkVKQTNBZGdDemcwLzJVc1dXU0w3aWdBSlF3U3V2YzFwZUhpTmFiUUlQZE9m?=
+ =?utf-8?B?VDd1SS80Rlpnc1l0R2F0TUJ0bjVVZVFnd3dwMnoxK09QcjY1QnVVcVl1OURB?=
+ =?utf-8?B?RUp5cXVEZEluakxrcTA2SW5mTkdDV0p6RG5qTmVYakU5NUlRNmJ4dzJxOEpm?=
+ =?utf-8?B?OExCYlVtcFRLUmZRWWlyalZ0VlFzbnZndWVVcTNNTHc0U0hrUDFNcXFqdWxH?=
+ =?utf-8?B?M3hRaHdPT2JtNHc5K2tPdFVpdTh1QnlBUzhZM1BKUGZ3WUJIU2J3UWZKcjNK?=
+ =?utf-8?B?RGVCREw2b3hpUDlLb3czdjZQaHlxaFhubG9HVyt5cXI3OEdaYU5Vd2NMU1Za?=
+ =?utf-8?B?cXJlRzNNbHkvQllxSU1zZVZqcUJ3d0F3Nk1qM2ZTWitWZzJnNVErc25wQnBy?=
+ =?utf-8?B?eEdwM01VTEtWOFZLOXdxMXBJd0ZmWkhXcE10K3h0Zm9MTGlsWTZueWREcWpX?=
+ =?utf-8?B?MVcvbGtCM1RqSWQycjJueEdibmJaRGpGNnRRelJJcEdJRmhiUmprM29uTDVK?=
+ =?utf-8?B?UjhsYW5lT3NjbU16NUs0M1E5aThmTXZtaVV3cllZNUJuakdHdys2WUhjcEJ1?=
+ =?utf-8?B?djJVb2pteDBSdDV1eVBUS1pnaXY4a0dGaFcvaWlveTlkK0lnckVTUXVpVEdw?=
+ =?utf-8?B?ays0RXhDZnFqL3FubWJHbkZYcC81dUFsZ0dTOHNiS3J1N0NTYXkweTRla203?=
+ =?utf-8?B?SHJaN1RETlFoSmR4UXdoWXVIV3grVjF0elh5VUFRblBZVkpBcXl4djk1bWhh?=
+ =?utf-8?B?d29TeFo3VnVHcEZCTEI5aVFnQ05GamZsRG5wdXIyS1ArTHRrbDZkRFBaYkts?=
+ =?utf-8?B?SmxTcTNrOWl2eGNSVGd4bjlMblhSajBGaU5MdzBadFFsV2wyYjA4cWx6V3Zq?=
+ =?utf-8?B?Q2U5cW0wVUpacDRYWUVyZlV4NEdwVzZhanRMQ0hHWVhIZldQMFd4Q3pPVWdS?=
+ =?utf-8?B?bUgrQVJvV3o4WmpLMVhyU0xNT3lPR0lGRGlReGEyNkhZeks1OHZ3OTRVYS9u?=
+ =?utf-8?B?c2JHSVFtOXVEaFphczNvWE1TSTRYaU9sL05ubTJkUWlqVGRocDc4RXNzOFFU?=
+ =?utf-8?B?THlIN09BTUFvd0R0Q2dGRUk1Y2owOGVCTGdtd2UwQjBBK3hlZWpoY1YxN0Jy?=
+ =?utf-8?B?VDl4UW9EUGpBMDFZRytucHp2alBpS25lMVJHcnNDMjkzVm9KUEo0eXoxUFE5?=
+ =?utf-8?B?a3N1TFViSlg5RVVHbG1IaTNJUm1LL0NCRExnSVVleGNhSzRLTHN5NXgrUFdx?=
+ =?utf-8?B?V2NIdnhQRVV4czlobkovZ09yT2hmdis4TmxEUTJpQTNyUFBGQ0lHMURONDJK?=
+ =?utf-8?B?cnBZVFFRb2QzVEl4YW1EUHhQdnprMXN4RlF5WVNFZXd1eHFmaTV3Tmsrc3pZ?=
+ =?utf-8?B?M2Z6RVVkUk1VMVZXdVU1WEprTU5tK0RIZUJVdXVPS2Z6ellMcWwzQzg0Zm9i?=
+ =?utf-8?B?MjJXTHhaQjlVTURyT28yamRpQ0JZVjJ6a0NrcXRzY3lOZU40K29GM2JSQ2pk?=
+ =?utf-8?Q?/khhsa7IHSH3fhuBjvro8BDij?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76e30659-a775-4388-787c-08dd9d1061b5
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 11:19:44.5033
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cJTXzBrT5GvPTe6CYDw//y64x5NR8blmXAAX1PBeOo8T7CNohO+XNrdMnvpe461VsoBnrPIVp4P7s4z9K0jVHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6080
 
-On 5/27/25 1:14 PM, George Moussalem wrote:
-> Hi Konrad,
-> 
-> On 5/27/25 15:00, Konrad Dybcio wrote:
->> On 5/25/25 7:56 PM, George Moussalem via B4 Relay wrote:
->>> From: George Moussalem <george.moussalem@outlook.com>
+Hello Aaron,
+
+On 5/27/2025 12:28 PM, Aaron Lu wrote:
+> On Mon, May 26, 2025 at 07:36:50PM +0800, Aaron Lu wrote:
+>> On Fri, May 23, 2025 at 04:59:42PM +0200, Peter Zijlstra wrote:
+>>> On Thu, May 22, 2025 at 08:49:43PM +0800, Aaron Lu wrote:
+>>>> On Thu, May 22, 2025 at 02:03:36PM +0200, Peter Zijlstra wrote:
 >>>
->>> The MISC reset is supposed to trigger a resets across the MDC, DSP, and
->>> RX & TX clocks of the IPQ5018 internal GE PHY. So let's set the bitmask
->>> of the reset definition accordingly in the GCC as per the downstream
->>> driver.
+>>>>> This is asymmetric -- dequeue removes it from that throttle list, but
+>>>>> the corresponding enqueue will not add it back, what gives?
+>>>>>
+>>>>> Because now we have:
+>>>>>
+>>>>>   p->on_rq=1
+>>>>>   p->throttle_node on list
+>>>>>
+>>>>> move_queued_task()
+>>>>>    deactivate_task()
+>>>>>      dequeue_task_fair()
+>>>>>        list_del_init(throttle_node)
+>>>>>      p->on_rq = 2
+>>>>>
+>>>>>    activate_task()
+>>>>>      enqueue_task_fair()
+>>>>>        // nothing special, makes the thing runnable
+>>>>>      p->on_rq = 1;
+>>>>>
+>>>>> and we exit with a task that is on-rq and not throttled ?!?
+>>>>>
+>>>>> Why is this? Are we relying on pick_task_fair() to dequeue it again and
+>>>>> fix up our inconsistencies? If so, that had better have a comment on.
+>>>>
+>>>> Correct.
 >>>
->>> Link: https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/commit/00743c3e82fa87cba4460e7a2ba32f473a9ce932
+>>> But would it not be better to have enqueue bail when we're trying to
+>>> enqueue an already throttled task into a throttled cfs_rq?
 >>>
->>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
->>> ---
->>>   drivers/clk/qcom/gcc-ipq5018.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>> It seems a waste to do the actual enqueue, pick, dequeue when we
+>>> could've just avoided all that.
 >>>
->>> diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
->>> index 70f5dcb96700f55da1fb19fc893d22350a7e63bf..02d6f08f389f24eccc961b9a4271288c6b635bbc 100644
->>> --- a/drivers/clk/qcom/gcc-ipq5018.c
->>> +++ b/drivers/clk/qcom/gcc-ipq5018.c
->>> @@ -3660,7 +3660,7 @@ static const struct qcom_reset_map gcc_ipq5018_resets[] = {
->>>       [GCC_WCSS_AXI_S_ARES] = { 0x59008, 6 },
->>>       [GCC_WCSS_Q6_BCR] = { 0x18004, 0 },
->>>       [GCC_WCSSAON_RESET] = { 0x59010, 0},
->>> -    [GCC_GEPHY_MISC_ARES] = { 0x56004, 0 },
->>> +    [GCC_GEPHY_MISC_ARES] = { 0x56004, .bitmask = 0xf },
 >>
->> The computer tells me there aren't any bits beyond this mask..
+>> The original idea is to keep code simple but surely this can be
+>> optimized. I'm working on it and will paste diff here once I get it
+>> work.
 >>
->> Does this actually fix anything?
 > 
-> The mask is documented in the referenced downstream driver and allows for consolidating:
+> I tried below diff on top of this series:
 > 
-> resets = <&gcc GCC_GEPHY_MDC_SW_ARES>,
->      <&gcc GCC_GEPHY_DSP_HW_ARES>,
->      <&gcc GCC_GEPHY_RX_ARES>,
->      <&gcc GCC_GEPHY_TX_ARES>;
-> to:
-> 
-> resets = <&gcc GCC_MISC_ARES>;
-> 
-> to conform to this bindings restriction in ethernet-phy.yaml
-> 
->   resets:
->     maxItems: 1
-> 
-> Effectively, there's no functional change. So we can also list all the resets in the device tree, whatever is preferred.
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 055f3782eeaee..1c5d7c4ff6652 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -882,6 +882,7 @@ struct task_struct {
+>   #ifdef CONFIG_CFS_BANDWIDTH
+>   	struct callback_head		sched_throttle_work;
+>   	struct list_head		throttle_node;
+> +	bool				throttled;
+>   #endif
+>   #endif
+>   
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 89afa472299b7..c585a12f2c753 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5798,7 +5798,7 @@ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
+>   
+>   static inline bool task_is_throttled(struct task_struct *p)
+>   {
+> -	return !list_empty(&p->throttle_node);
+> +	return p->throttled;
+>   }
+>   
+>   static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags);
+> @@ -5842,6 +5842,7 @@ static void throttle_cfs_rq_work(struct callback_head *work)
+>   		 * mistakenly regard this task as an already throttled one.
+>   		 */
+>   		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+> +		p->throttled = true;
+>   		resched_curr(rq);
+>   	}
 
-+ Kathiravan
+Since we now have an official per-task throttle indicator, what are your
+thoughts on reusing "p->se.group_node" for throttled_limbo_list?
 
-are there any recommendations from the hw team on which one to use?
-As far as I can tell, the _MISC one simply pulls all the aforementioned
-resets, like George described.. it seems weird that it would be designed
-like this
+Something like this lightly tested diff based on your suggestion:
 
-Konrad
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 11eb0612e22d..f9fdcf812e81 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -578,6 +578,9 @@ struct sched_entity {
+  	unsigned char			sched_delayed;
+  	unsigned char			rel_deadline;
+  	unsigned char			custom_slice;
++#ifdef CONFIG_CFS_BANDWIDTH
++	unsigned char			sched_throttled;
++#endif
+  					/* hole */
+  
+  	u64				exec_start;
+@@ -881,7 +884,6 @@ struct task_struct {
+  	struct task_group		*sched_task_group;
+  #ifdef CONFIG_CFS_BANDWIDTH
+  	struct callback_head		sched_throttle_work;
+-	struct list_head		throttle_node;
+  #endif
+  #endif
+  
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 25e794ea0283..b1cb05baf8d4 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5798,7 +5798,7 @@ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
+  
+  static inline bool task_is_throttled(struct task_struct *p)
+  {
+-	return !list_empty(&p->throttle_node);
++	return !!p->se.sched_throttled;
+  }
+  
+  static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags);
+@@ -5835,13 +5835,14 @@ static void throttle_cfs_rq_work(struct callback_head *work)
+  			return;
+  		rq = scope.rq;
+  		update_rq_clock(rq);
+-		WARN_ON_ONCE(!list_empty(&p->throttle_node));
++		WARN_ON_ONCE(p->se.sched_throttled);
+  		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_THROTTLE);
+  		/*
+-		 * Must not add it to limbo list before dequeue or dequeue will
++		 * Must not mark throttled before dequeue or dequeue will
+  		 * mistakenly regard this task as an already throttled one.
+  		 */
+-		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
++		p->se.sched_throttled = 1;
++		list_add(&p->se.group_node, &cfs_rq->throttled_limbo_list);
+  		resched_curr(rq);
+  	}
+  
+@@ -5853,7 +5854,6 @@ void init_cfs_throttle_work(struct task_struct *p)
+  	init_task_work(&p->sched_throttle_work, throttle_cfs_rq_work);
+  	/* Protect against double add, see throttle_cfs_rq() and throttle_cfs_rq_work() */
+  	p->sched_throttle_work.next = &p->sched_throttle_work;
+-	INIT_LIST_HEAD(&p->throttle_node);
+  }
+  
+  static void dequeue_throttled_task(struct task_struct *p, int flags)
+@@ -5864,10 +5864,26 @@ static void dequeue_throttled_task(struct task_struct *p, int flags)
+  	 * task affinity change, task group change, task sched class
+  	 * change etc.
+  	 */
+-	WARN_ON_ONCE(p->se.on_rq);
++	WARN_ON_ONCE(!p->se.sched_throttled);
+  	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
+  
+-	list_del_init(&p->throttle_node);
++	list_del_init(&p->se.group_node);
++}
++
++/* return true to skip actual enqueue */
++static bool enqueue_throttled_task(struct task_struct *p)
++{
++	struct cfs_rq *cfs_rq = cfs_rq_of(&p->se);
++
++	if (throttled_hierarchy(cfs_rq)) {
++		/* throttled task move across task groups/rqs. */
++		list_add(&p->se.group_node, &cfs_rq->throttled_limbo_list);
++		return true;
++	}
++
++	/* unthrottle */
++	p->se.sched_throttled = 0;
++	return false;
+  }
+  
+  static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
+@@ -5896,8 +5912,11 @@ static int tg_unthrottle_up(struct task_group *tg, void *data)
+  	}
+  
+  	/* Re-enqueue the tasks that have been throttled at this level. */
+-	list_for_each_entry_safe(p, tmp, &cfs_rq->throttled_limbo_list, throttle_node) {
+-		list_del_init(&p->throttle_node);
++	list_for_each_entry_safe(p, tmp, &cfs_rq->throttled_limbo_list, se.group_node) {
++		WARN_ON_ONCE(!p->se.sched_throttled);
++
++		p->se.sched_throttled = 0;
++		list_del_init(&p->se.group_node);
+  		enqueue_task_fair(rq_of(cfs_rq), p, ENQUEUE_WAKEUP);
+  	}
+  
+@@ -6714,6 +6733,7 @@ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
+  static void task_throttle_setup_work(struct task_struct *p) {}
+  static bool task_is_throttled(struct task_struct *p) { return false; }
+  static void dequeue_throttled_task(struct task_struct *p, int flags) {}
++static bool enqueue_throttled_task(struct task_struct *p) { return false; }
+  static void record_throttle_clock(struct cfs_rq *cfs_rq) {}
+  
+  static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+@@ -6907,6 +6927,9 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+  	int rq_h_nr_queued = rq->cfs.h_nr_queued;
+  	u64 slice = 0;
+  
++	if (unlikely(task_is_throttled(p) && enqueue_throttled_task(p)))
++		return;
++
+  	/*
+  	 * The code below (indirectly) updates schedutil which looks at
+  	 * the cfs_rq utilization to select a frequency.
+@@ -13244,7 +13267,7 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
+  	struct sched_entity *se = &p->se;
+  
+  #ifdef CONFIG_SMP
+-	if (task_on_rq_queued(p)) {
++	if (task_on_rq_queued(p) && !task_is_throttled(p)) {
+  		/*
+  		 * Move the next running task to the front of the list, so our
+  		 * cfs_tasks list becomes MRU one.
+
+
+-- 
+Thanks and Regards,
+Prateek
+
