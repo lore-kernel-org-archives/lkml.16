@@ -1,145 +1,243 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE12821ADB9
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B331421B182
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748384649; cv=none; b=Y0XZ7G1msP9fe/9f+IEfO9Oj3Wh5DK4sAeIPfGo3ZzUhbB6VYigqHZYg9G29uPiI/a7b8c/6QsTaabysCmYEhgTeR+d0djb0yRvExAV56Zn4VNm0NA1G4568xquc1UOilHfy78ewtZO5IWM09pRTTAFioH6VdYY8gZ144jmKEps=
+	t=1748384650; cv=none; b=abHsocoqT5TFS4DLTDPSK5noKaKHyfDFDoTv7wc0G9ZLp3F5BvuPa1R+DdBfaAEc6tcwGKMFCLgX/wkBFQ7rmfnzXidpwQP/XoS2APZUctxkXoDSLpqYbL1c3if5d6heVJRltVW1yI0kvAw3M+DQrruswyYPdY4KA+zC9GHzWd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748384649; c=relaxed/simple;
-	bh=oLsQiSHYDSEXKOI/hWh0KWHkpifEgA9Hba6qMZ6sQdw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U0loxhdxRLRBz5qDemkGzx+s7Lk1IrLt9KE9xFpW8n3jfBCGK2wbo0rTDGKyFuIXpPowsGwIxlO4zsTizJttVo+X2I1XYUEgyKxuFh5GQuPKvoUc/Uq624hmE2fjNiITn92Fknc4m/eYRlnfW6xwlsktjKrX2FlYa33ceTHTi9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PoezQ6Sv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748384650; c=relaxed/simple;
+	bh=AydgeMBxQmfRC50EYCC7u9zKePxoR7+R6ojZT1ByqY4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F1A3IBZOFwI1H2H3fMBpEx9zzqcodnhWyOHaV3kyzpKF49R0Gv09P46lG2pGz/0w/3OY/NAuWDVr1TKMmQuRlphoz/Lo4N1fmvtk2GUw87Dm48OuuZJdccXReqWWMBVzpesJ8suTmdjgwoZj4nV0tEwmil6Jb9x/orz8ubxaVqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MBv7Nelo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PoezQ6Sv"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RKUw2r022082
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:24:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mDtfEhpWbybo9BquJQGmwF8OkBC21Q1FwUr7PssREGs=; b=PoezQ6SvleqAFKe/
-	HG7F91sEH4xC2sZz86nDkcEccw9E0W+/oi2ClhYl4f5hYNiY156Mv3fbyBOLHExl
-	QbMxqLoRIuI0rDy1p4TpIolHI8dvUBN+uR9mJZRPBuacoJigEE0h6oNHuioGFo4w
-	odB5w94OgSgB00Xu1wmNlGjYs38Glogd9cnJif1WOMNr6AYpeje2yQ4kFzOb5PPF
-	LkTqY+1atrCuPttahzyF4H+GvncvGM4mh2A9MNe6N+V4StuVou92UABcAMj4N+fh
-	mD3Z/DdE2qW2iyGvErwsOcKwT9IVFAVS5ar2HvKOLysidVD/jmQJ+69Jzn/0lFjo
-	tuJM5w==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46vmgcvu9n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:24:06 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6faa0435aa8so9710176d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:24:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748384646; x=1748989446;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mDtfEhpWbybo9BquJQGmwF8OkBC21Q1FwUr7PssREGs=;
-        b=SRSY6T8HqVGyfZcpXuRMWNwFAA4GG6+E58KLeIhsI2cdG8Os+LvhVad2eKSHZQAMYO
-         o48zHhKCpTDAYW2XJxXLnUavPCOqqAhsWWw99rFC6r9HuX049jLPK2EgfCs+aRXLZ7qN
-         T2EL7Txv7iP5ZFM6ZRExXJShpIFv/QhmKkUuQedIX/b/L3cD6OgomfIeZar8oeaFNrID
-         c+a267MMfg0qqUWCMyiXPDvxKFTUy17pSCYMvZgLVMjT9iiWgDrjy3ij27zuZjNOmU1h
-         naA1oAO1PNX7O53J/l7zXBWED2D7U8QPm+CiL6L42U+d+kOpLXzWvoqzbBQY7Pi9woUZ
-         HaFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhJLyyG6P7mCoimbv4ZxhsLTy8LlWDulNj0nmhTUr19gZ5dicE0clOW6bcmwu/jLJEjNeW1jjLV6LNNqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwynBPFiUUIE67W3ssPFd06utoYb8qdYpSkQa0+RfYQhjKayapS
-	BCnuQl57cs5NptKiIFteYRQ8rSgdmEk4POdlpQ9DO64MRcBXPFO75nsm5jgTgk4pgAtXVSwRJW3
-	JGOQ61VAZiMdbdB1g+UdNspRqNHHlMXm+h32Mm7dfjeU0W5hQObxo3TfpTrthqGcrJm8=
-X-Gm-Gg: ASbGnct0qSdVNbcH6qxDco8YOlS6tXrj3cOxyWjoZpbuftv0qs5PL2EXh33LRGBXHty
-	iFC2sq/uFZbplPlqyo2dMv+ST7yUV5An1ZjMrThC2SXQU2UCAFJL0qYrQpQcN1BqDSDbFOMAwvn
-	xEE6xBx1xlw+DxLOTMOkl03a3g/1fw5sT5HcDcWQc/RQOmmitrFoPNJMXDXRy/P0UT3nR0nkv7F
-	yuux/MF/K1Bw5EAFjjNXlqDrIbIeUBJ1owj9vVcYhk7bVMO9386Qnx7yOtFe5WegF+bAUha7r4J
-	BSCOlSS9rw+gHMEJES8X08Ntvn2jIwGh1cMlzloMOv+C2+9ZZpa6YMHIeeUgGT8CQA==
-X-Received: by 2002:a05:6214:21a3:b0:6f2:c10b:db11 with SMTP id 6a1803df08f44-6fa9d170021mr102554326d6.6.1748384645764;
-        Tue, 27 May 2025 15:24:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHMlSQWfVn9UPC7s8D4zNhThUYbhMw2ulqS9fDQYheouJp2WdybF0aq560e5JWTH8TcYt0i7Q==
-X-Received: by 2002:a05:6214:21a3:b0:6f2:c10b:db11 with SMTP id 6a1803df08f44-6fa9d170021mr102554186d6.6.1748384645429;
-        Tue, 27 May 2025 15:24:05 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad89f288ee5sm19250366b.172.2025.05.27.15.24.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 15:24:04 -0700 (PDT)
-Message-ID: <447c3b13-8d6d-4bcb-83c1-9456b915a77e@oss.qualcomm.com>
-Date: Wed, 28 May 2025 00:24:02 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MBv7Nelo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748384647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pb6GJmOC89y5wwjfDdoygoI3FossLZXmvu5/ODyB7LU=;
+	b=MBv7Nelo+/SinjXWsIZlxSzz0jB0t5HhCJU7FUc2NRLMAML367SY1N/1mBM56pbkvaHRoG
+	ZyXI7tfqx62gqRSXvy2L8/Rq/o6ZhTh3Xw+TEfkhFVdIHnxy18uZiyy9jIJLbdYaH210Mi
+	Fyv9exkt2abtxqZJKWhSp+J5uMh5AA0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-126-0DOzfyj-Mu6ODQlyJtpc8A-1; Tue,
+ 27 May 2025 18:24:04 -0400
+X-MC-Unique: 0DOzfyj-Mu6ODQlyJtpc8A-1
+X-Mimecast-MFC-AGG-ID: 0DOzfyj-Mu6ODQlyJtpc8A_1748384642
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FB29180034E;
+	Tue, 27 May 2025 22:24:02 +0000 (UTC)
+Received: from chopper.redhat.com (unknown [10.22.88.105])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4F6EA19560AA;
+	Tue, 27 May 2025 22:23:58 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [RFC RESEND v10 10/14] rust: sync: lock/global: Rename B to G in trait bounds
+Date: Tue, 27 May 2025 18:21:51 -0400
+Message-ID: <20250527222254.565881-11-lyude@redhat.com>
+In-Reply-To: <20250527222254.565881-1-lyude@redhat.com>
+References: <20250527222254.565881-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] arm64: qcom: allow up to 4 lanes for the Type-C
- DisplayPort Altmode
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
- <styd5gjksbsqt7efylpfn6bgwgyvt6zexxiooihjsnmp25yigp@unq7dor6gso2>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <styd5gjksbsqt7efylpfn6bgwgyvt6zexxiooihjsnmp25yigp@unq7dor6gso2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 85ci0f536o4NIXKyqRW3Jpx3ycEwfgbe
-X-Proofpoint-GUID: 85ci0f536o4NIXKyqRW3Jpx3ycEwfgbe
-X-Authority-Analysis: v=2.4 cv=Ws4rMcfv c=1 sm=1 tr=0 ts=68363b86 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=BdTzBBq6q7eIxeKzuLcA:9
- a=QEXdDO2ut3YA:10 a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE4OCBTYWx0ZWRfX5U93rmiPigy+
- S8HOFxHbQ/isbgoIQUTyBRcHsJY33SrpU7yJ+sOSLW/TXKmNCkN4MS1UqfiqUmLPoXrFuwXDudv
- 9+eQURBqrYE8gk99GfKvZLi1yM1KpfH4IwcAhoqdfi+ncd7EJGNx7lhko0yZzadXXwfehZQAA57
- bFSMqXbzFHxdy/cdMT6wvIkxGRFSFDLnhHb0HOQeUhrfoqwUqDiTJ9vD7INul3c1vRyXi6eUXHU
- B2yZQPBid+LNzJEEVD13ibN6/NaCBPGcq0VIErBivbDDLq0R4EyDnvx/dNsoW0j/HhiGpfaeYOc
- EUHwQnANdxbxXrSRV57VFQGYZy7+Na0qUseJ1yuStnKdS+yu3b9aLFKTtpSjAVnw6iSBDOMKFdR
- vIEFU4R/bgHitggd/QBQV6jVtmr5IpMP9hu2dpyZa14D03gSeudkBiQBqjwaueGDzzkRFhFd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_11,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 clxscore=1015 impostorscore=0 spamscore=0 adultscore=0
- phishscore=0 mlxlogscore=558 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505270188
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 5/27/25 11:10 PM, Dmitry Baryshkov wrote:
-> On Tue, May 27, 2025 at 10:40:02PM +0200, Konrad Dybcio wrote:
->> Register a typec mux in order to change the PHY mode on the Type-C
->> mux events depending on the mode and the svid when in Altmode setup.
->>
->> The DisplayPort phy should be left enabled if is still powered on
->> by the DRM DisplayPort controller, so bail out until the DisplayPort
->> PHY is not powered off.
-> 
-> This series doesn't seem to solve the USB side of a problem. When the
-> PHY is being switch to the 4-lane mode, USB controller looses PIPE
-> clock, so it needs to be switched to the USB-2 mode.
+Due to the introduction of Backend::BackendInContext, if we want to be able
+support Lock types with a Context we need to be able to handle the fact
+that the Backend for a returned Guard may not exactly match the Backend for
+the lock. Before we add this though, rename B to G in all of our trait
+bounds to make sure things don't become more difficult to understand once
+we add a Backend bound.
 
-I didn't find issues with that on X13s.. Not sure if it's related, but
-on the SL7, after plugging in a 4ln DP connection, I need to plug in
-the USB thumb drive twice for the first time (only in that sequence)
+There should be no functional changes in this patch.
 
-But there's nothing interesting in dmesg and the phy seems to be
-programmed with the same values on both the initial and the subsequent
-working plug-in
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ rust/kernel/sync/lock/global.rs | 56 ++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
-Konrad
+diff --git a/rust/kernel/sync/lock/global.rs b/rust/kernel/sync/lock/global.rs
+index 45400824b0940..37209882e006b 100644
+--- a/rust/kernel/sync/lock/global.rs
++++ b/rust/kernel/sync/lock/global.rs
+@@ -33,18 +33,18 @@ pub trait GlobalLockBackend {
+ /// Type used for global locks.
+ ///
+ /// See [`global_lock!`] for examples.
+-pub struct GlobalLock<B: GlobalLockBackend> {
+-    inner: Lock<B::Item, B::Backend>,
++pub struct GlobalLock<G: GlobalLockBackend> {
++    inner: Lock<G::Item, G::Backend>,
+ }
+ 
+-impl<'a, B: GlobalLockBackend> GlobalLock<B> {
++impl<'a, G: GlobalLockBackend> GlobalLock<G> {
+     /// Creates a global lock.
+     ///
+     /// # Safety
+     ///
+     /// * Before any other method on this lock is called, [`Self::init`] must be called.
+-    /// * The type `B` must not be used with any other lock.
+-    pub const unsafe fn new(data: B::Item) -> Self {
++    /// * The type `G` must not be used with any other lock.
++    pub const unsafe fn new(data: G::Item) -> Self {
+         Self {
+             inner: Lock {
+                 state: Opaque::uninit(),
+@@ -68,23 +68,23 @@ pub unsafe fn init(&'static self) {
+         // `init` before using any other methods. As `init` can only be called once, all other
+         // uses of this lock must happen after this call.
+         unsafe {
+-            B::Backend::init(
++            G::Backend::init(
+                 self.inner.state.get(),
+-                B::NAME.as_char_ptr(),
+-                B::get_lock_class().as_ptr(),
++                G::NAME.as_char_ptr(),
++                G::get_lock_class().as_ptr(),
+             )
+         }
+     }
+ 
+     /// Lock this global lock.
+-    pub fn lock(&'static self) -> GlobalGuard<'static, B> {
++    pub fn lock(&'static self) -> GlobalGuard<'static, G> {
+         GlobalGuard {
+             inner: self.inner.lock(),
+         }
+     }
+ 
+     /// Try to lock this global lock.
+-    pub fn try_lock(&'static self) -> Option<GlobalGuard<'static, B>> {
++    pub fn try_lock(&'static self) -> Option<GlobalGuard<'static, G>> {
+         Some(GlobalGuard {
+             inner: self.inner.try_lock()?,
+         })
+@@ -94,19 +94,19 @@ pub fn try_lock(&'static self) -> Option<GlobalGuard<'static, B>> {
+ /// A guard for a [`GlobalLock`].
+ ///
+ /// See [`global_lock!`] for examples.
+-pub struct GlobalGuard<'a, B: GlobalLockBackend> {
+-    inner: Guard<'a, B::Item, B::Backend>,
++pub struct GlobalGuard<'a, G: GlobalLockBackend> {
++    inner: Guard<'a, G::Item, G::Backend>,
+ }
+ 
+-impl<'a, B: GlobalLockBackend> core::ops::Deref for GlobalGuard<'a, B> {
+-    type Target = B::Item;
++impl<'a, G: GlobalLockBackend> core::ops::Deref for GlobalGuard<'a, G> {
++    type Target = G::Item;
+ 
+     fn deref(&self) -> &Self::Target {
+         &self.inner
+     }
+ }
+ 
+-impl<'a, B: GlobalLockBackend> core::ops::DerefMut for GlobalGuard<'a, B> {
++impl<'a, G: GlobalLockBackend> core::ops::DerefMut for GlobalGuard<'a, G> {
+     fn deref_mut(&mut self) -> &mut Self::Target {
+         &mut self.inner
+     }
+@@ -115,33 +115,33 @@ fn deref_mut(&mut self) -> &mut Self::Target {
+ /// A version of [`LockedBy`] for a [`GlobalLock`].
+ ///
+ /// See [`global_lock!`] for examples.
+-pub struct GlobalLockedBy<T: ?Sized, B: GlobalLockBackend> {
+-    _backend: PhantomData<B>,
++pub struct GlobalLockedBy<T: ?Sized, G: GlobalLockBackend> {
++    _backend: PhantomData<G>,
+     value: UnsafeCell<T>,
+ }
+ 
+ // SAFETY: The same thread-safety rules as `LockedBy` apply to `GlobalLockedBy`.
+-unsafe impl<T, B> Send for GlobalLockedBy<T, B>
++unsafe impl<T, G> Send for GlobalLockedBy<T, G>
+ where
+     T: ?Sized,
+-    B: GlobalLockBackend,
+-    LockedBy<T, B::Item>: Send,
++    G: GlobalLockBackend,
++    LockedBy<T, G::Item>: Send,
+ {
+ }
+ 
+ // SAFETY: The same thread-safety rules as `LockedBy` apply to `GlobalLockedBy`.
+-unsafe impl<T, B> Sync for GlobalLockedBy<T, B>
++unsafe impl<T, G> Sync for GlobalLockedBy<T, G>
+ where
+     T: ?Sized,
+-    B: GlobalLockBackend,
+-    LockedBy<T, B::Item>: Sync,
++    G: GlobalLockBackend,
++    LockedBy<T, G::Item>: Sync,
+ {
+ }
+ 
+-impl<T, B: GlobalLockBackend> GlobalLockedBy<T, B> {
++impl<T, G: GlobalLockBackend> GlobalLockedBy<T, G> {
+     /// Create a new [`GlobalLockedBy`].
+     ///
+-    /// The provided value will be protected by the global lock indicated by `B`.
++    /// The provided value will be protected by the global lock indicated by `G`.
+     pub fn new(val: T) -> Self {
+         Self {
+             value: UnsafeCell::new(val),
+@@ -150,11 +150,11 @@ pub fn new(val: T) -> Self {
+     }
+ }
+ 
+-impl<T: ?Sized, B: GlobalLockBackend> GlobalLockedBy<T, B> {
++impl<T: ?Sized, G: GlobalLockBackend> GlobalLockedBy<T, G> {
+     /// Access the value immutably.
+     ///
+     /// The caller must prove shared access to the lock.
+-    pub fn as_ref<'a>(&'a self, _guard: &'a GlobalGuard<'_, B>) -> &'a T {
++    pub fn as_ref<'a>(&'a self, _guard: &'a GlobalGuard<'_, G>) -> &'a T {
+         // SAFETY: The lock is globally unique, so there can only be one guard.
+         unsafe { &*self.value.get() }
+     }
+@@ -162,7 +162,7 @@ pub fn as_ref<'a>(&'a self, _guard: &'a GlobalGuard<'_, B>) -> &'a T {
+     /// Access the value mutably.
+     ///
+     /// The caller must prove shared exclusive to the lock.
+-    pub fn as_mut<'a>(&'a self, _guard: &'a mut GlobalGuard<'_, B>) -> &'a mut T {
++    pub fn as_mut<'a>(&'a self, _guard: &'a mut GlobalGuard<'_, G>) -> &'a mut T {
+         // SAFETY: The lock is globally unique, so there can only be one guard.
+         unsafe { &mut *self.value.get() }
+     }
+-- 
+2.49.0
+
