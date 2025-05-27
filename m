@@ -1,96 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D916B271453;
-	Tue, 27 May 2025 13:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB75734CDD
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352253; cv=none; b=oBTCZTeInC5pNeCKXZ/+tEooDPM99r45x1taHPrzsBqEMHHmL2zJpWYfvKo/Hp60jL4XE5guhxWazFEjWtdt5tNd0N9usDx4yO7GXTsRJdskl32hWEFdZeAZSDknRPDPy141Em0fIUu/evo7G6y0+7eCo4yZjN7spsAHCPhasRo=
+	t=1748352338; cv=none; b=GlmCLM7uSgIvuAYu98S/um3zBcGI529oHNo3SM8zfnLZAho/uykAmfPyS7vEM26/JuPqIP7PsBxR3Ynjxh7km8QrpXGJ80MC/5jiEZmZiyvKXBzP/Zy2p2eg+WH8NIO5kLPZzFu1rEitb/4BoXI6fUVVOp2/BzZxux1YhOTPjHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352253; c=relaxed/simple;
-	bh=XsBlf7WXvfFgBBQgPmdHNCENHxGOBUYgPaG33bCFV2I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pff1wgtCeZ9hw5GvnVP6IhMMHiyr1qCRyaFEPktvGFFE4DB3Q4l6SczUVHO/5oMiINVusOmpSmR+ruTBmUQTEJpmRr2vPaAeJleupMCYWwz8Na/1ntv4E8cUOQP0m4CfvVPCkEgNbn189zBHG0ieJ9wMFh4r+1acVDjVTorVXCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fqtRhEH/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748352338; c=relaxed/simple;
+	bh=TvVroCeXMQ1E92k4QZDq/IbdzgpErCk/aa/SRYq7yOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d85/CQK4psfDxVgs5fPJzhJO5whEU1iXMJAYwYD6ytaszCtWMgUiUlZys2Y16jANgfByQQTolIMFJ8HYy06LThQLrVttBMO6LTvVBBXPey0Mj+Bll7+WZ1JJiiys+BukdD7+MokJWYaKh+HDcmvBxfKiwPZoJ4QXBrbH9JMmV24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L6rE3Svu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VXrNMJJA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fqtRhEH/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 475BCC4CEEB;
-	Tue, 27 May 2025 13:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748352252;
-	bh=XsBlf7WXvfFgBBQgPmdHNCENHxGOBUYgPaG33bCFV2I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fqtRhEH/KwDS7n/mqOOQVqEBY6MGx98uyAF8s7ki4VK5k0fuKT2DOPEh1Tq2NAKQ3
-	 gutNaa5VbFvu2bh/IeRbhcRlXUPgHmlmMKNF/iaRsgTsl+ah6EX2RpKiuRo7h/Vi+W
-	 159+0fblOSlCsaS/EBjVvQG0naZVAc0KQw8UHYT6gWI1kLC1sSS/xzGQ/6oyAybWyn
-	 eUCg+JZCzwODXqMVVoDzPN2PM8CEDYX8wh2DIEBLpM0pYep/i+zs2nCgdLCN9hu51+
-	 UnOYRyI3FWEtsAML1RJWQazkA7XGmZhQ8Bnr71LQyVEs4CP/v9MbTsm+kBJC4Ln5dZ
-	 evnWMvWd8K03w==
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60634f82d1aso609116eaf.3;
-        Tue, 27 May 2025 06:24:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGvOdQ72h6wEnZuux33cqKDHK/MmX7rBM6VBNMAgvjwytY830sKb38vhM/3hKaQ1HikI/LPvj1RZ7WMvf6go8=@vger.kernel.org, AJvYcCW/k7/LUlue9V9MJ7jXeWqg8ZbumbGGe37HbNxJmcd5WmZJtNAhBjDUAZ77F9aoM7w6LnRx9PM4fov2ew==@vger.kernel.org, AJvYcCX0TacuVU8nMUpRlO7cUUOH1SSX6pkIZxIK42mtyrsr4Be+iyGaforcGHt7YbgWb5wWu2FmxJip1wPHhMVq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSAra744b2eyH1PdTe8LpzDI2WnF5OsMLH9frNcj0WlM3UKJ40
-	0bJgLIGqHULs6aT0hmTGG4pDXso+1KZUNuAhAmSf3L/IcmGMQs1VNMmRREEJTlbTCMQXZUAtEji
-	yIiydhXqbLekbAc4bEg6i5BDWEVdwGJg=
-X-Google-Smtp-Source: AGHT+IELYeDaU2ll10Eg0xztB9NjW3N3H4cq+fFMup4Th1x9ZCLSD/Z6plyAOjeWBCbgiRXcA6Zzs0BAVs44XuW3ulE=
-X-Received: by 2002:a05:6808:3388:b0:404:dd07:9703 with SMTP id
- 5614622812f47-40646845720mr7583667b6e.26.1748352251633; Tue, 27 May 2025
- 06:24:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L6rE3Svu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VXrNMJJA"
+Date: Tue, 27 May 2025 15:25:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748352334;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XYqi3NCQ/fWAGKheVdTWlSvTDjl5Oax78MP1xbuGcDM=;
+	b=L6rE3SvugLFDTD6W0OUDGsWvov6TpZ1pXBVEkxiznI2xmgvgzAjFVdzrdNAy+d+mQcx+NJ
+	Ss1Av0Qd8f8lyJoNXfbgR9BSDRdeyopC4tM+cDrg6qxWZ5hnoGbARrttht2ewW5/pQpfi/
+	ZHtNDA/mJ2gwEuC+W1jT+dCAyt8eZ2DI/Zrdt3i6AZ+X1H1YBDQsIUNDmCIBueDnIXcdPy
+	vdaHYya675GwNLnUWHPfAoTMe9cJuAXtsjjqrWdUxz32r5u4WB/di3GwAzV8VPb91FAcRH
+	KJa8Z0GgCCTAkhVSW+NsdrT7pzGUM+eHqUlzu2prIzVjEpe7Y0fRv2Sydt6R/w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748352334;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XYqi3NCQ/fWAGKheVdTWlSvTDjl5Oax78MP1xbuGcDM=;
+	b=VXrNMJJAkIMEyx4PChnv/Lbs3eo5ZBcfUIZQ5ds5ebt/rGzVkrALRUGHNMrCe729Gjhix/
+	RoSz4P1/hMOU8pBw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v12 20/21] selftests/futex: Add futex_priv_hash
+Message-ID: <20250527132533.lqWBepWy@linutronix.de>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-21-bigeasy@linutronix.de>
+ <31869a69-063f-44a3-a079-ba71b2506cce@sirena.org.uk>
+ <20250527122332.M0ucxhwh@linutronix.de>
+ <231a9862-58ea-4a6d-8893-862776d9deca@sirena.org.uk>
+ <20250527124327.5UDnm-ho@linutronix.de>
+ <269b2f41-1405-4cab-9310-11df428e64c6@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aDVTfEm-Jch7FuHG@stanley.mountain>
-In-Reply-To: <aDVTfEm-Jch7FuHG@stanley.mountain>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 27 May 2025 15:24:00 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hWKbC2eEe-ce55PN0k4bYnPJ3D+AdPgxJNAcr8Q6rkGQ@mail.gmail.com>
-X-Gm-Features: AX0GCFujLpZi6ezYoap5dx0_78ckA3aKaC73qWQ4kqyXsu9mPW5BJV8is4VBcpA
-Message-ID: <CAJZ5v0hWKbC2eEe-ce55PN0k4bYnPJ3D+AdPgxJNAcr8Q6rkGQ@mail.gmail.com>
-Subject: Re: [PATCH next] ACPI: MRRM: Silence error code static checker warning
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <269b2f41-1405-4cab-9310-11df428e64c6@sirena.org.uk>
 
-On Tue, May 27, 2025 at 7:54=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> The error code is not set correctly on if kasprintf() fails.  On the
-> first iteration it would return -EINVAL and subsequent iterations
-> would return success.  Set it to -ENOMEM.
->
-> In real life, this allocation will not fail and if it did the system
-> will not boot so this change is mostly to silence static checker warnings
-> more than anything else.
->
-> Fixes: 04f53540f791 ("ACPI: MRRM: Add /sys files to describe memory range=
-s")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/acpi/acpi_mrrm.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/acpi/acpi_mrrm.c b/drivers/acpi/acpi_mrrm.c
-> index 2f22f013959a..70088cdfde13 100644
-> --- a/drivers/acpi/acpi_mrrm.c
-> +++ b/drivers/acpi/acpi_mrrm.c
-> @@ -156,8 +156,10 @@ static __init int add_boot_memory_ranges(void)
->
->         for (int i =3D 0; i < mrrm_mem_entry_num; i++) {
->                 name =3D kasprintf(GFP_KERNEL, "range%d", i);
-> -               if (!name)
-> +               if (!name) {
-> +                       ret =3D -ENOMEM;
->                         break;
-> +               }
->
->                 kobj =3D kobject_create_and_add(name, pkobj);
->
-> --
+On 2025-05-27 13:59:38 [+0100], Mark Brown wrote:
+> I'm not seeing that test being built or in the binary:
+> 
+>    https://builds.sirena.org.uk/cda95faef7bcf26ba3f54c3cddce66d50116d146/arm64/defconfig/build.log
+>    https://builds.sirena.org.uk/cda95faef7bcf26ba3f54c3cddce66d50116d146/arm64/defconfig/kselftest.tar.xz
+> 
+> (note that this is the specific commit that I'm replying to the patch
 
-Applied, thanks!
+Ach, okay. I assumed you had the master branch as of today. The whole
+KTAP/ machine readable output was added later.
+
+> for, not -next.)  It looks like it's something's getting mistbuilt or
+> there's some logic bug with the argument parsing, if I run the binary
+> with -h it exits with return code 0 rather than 1.
+
+I copied the logic from the other tests in that folder. If you set -h (a
+valid argument) then it exits with 0. If you an invalid argument it
+exits with 1.
+
+But now that I start the binary myself, it ends the same way. This
+cures it:
+
+diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/tools/testing/selftests/futex/functional/futex_priv_hash.c
+index 2dca18fefedcd..24a92dc94eb86 100644
+--- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
++++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
+@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
+ 	pthread_mutexattr_t mutex_attr_pi;
+ 	int use_global_hash = 0;
+ 	int ret;
+-	char c;
++	int c;
+ 
+ 	while ((c = getopt(argc, argv, "cghv:")) != -1) {
+ 		switch (c) {
+
+Sebastian
