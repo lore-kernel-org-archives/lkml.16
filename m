@@ -1,110 +1,94 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0A7271459;
-	Tue, 27 May 2025 13:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8036C139E;
+	Tue, 27 May 2025 13:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352018; cv=none; b=cRzK2guo8kurJAoljtUa6jtc/p1nRuCb6I9QAX2nWA2thCYmpon4EUdqm/zPmq785qkfy73h9jTTOH3PmynY+QBcYqF8tO5aGhlt0nn8fNX9tuZ30evJXvG1E3sgB1rg6IbJqzkzT9QvSrISvLC4/W5neHQXsGlNfOtqptVlk+U=
+	t=1748352079; cv=none; b=uSIGwVjgLhWjmsYhZn0CcvQx3y8lRTLGyMj7GVTEP2LzZ/tlzgnror8KrQT2DOS0T7GSCuKIVdVXKeu4HrX1INwjRc0V9rSSYDRUqP2RI/U5dk/leRt91XZBGrr9a0b2tV+1UFPczOChmnbuIlA6GNzzrLKEJBFWvpbvUooIofE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352018; c=relaxed/simple;
-	bh=hhOKA2MHq5A/Sp9NZ4YTpYbodg83i2jR0nNDX5GCkEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Iy8o6sQepvxRpYWWd3OSjsR4XCfqpvs/oEOHRXmDzTUXql/yCr+f1+jsU2i++/oPhVlzqD5bVG+DClkOO99w0OYIS7iC0fnltwFRaLHdmOXsMJEeufC4HZP1HmtahBAQ/roqbYgKkn/4fGfRRVGKwnWqs2xBKJ/8Ex8DKSGJPmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=psqZ4Sn+; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1748352079; c=relaxed/simple;
+	bh=fp9luBBetLAP0B/DgHuAdGyoO1Vry5JUr7H5DC4G4HI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iETVDwob/C286q9t3JpbjL7WMUKP/qdzhsUTnMIFwXMmySWJ9dORveMaTkYOkuxsWteh0Bgyp1y1huuJrBddmNsnG58ox1DQ6up+RO5w9LE4uPr9vA28uDwltV0eFgHIY0Snylj44W4k6jEJbubrvT70BwmwkCMVnylj/rSjQHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SvSYCtDq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="psqZ4Sn+"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RAsMIT011814;
-	Tue, 27 May 2025 15:19:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	BFoE3HK0D28qwdUZStsXbkkPYfcQlaxFa0f8RDcbnCs=; b=psqZ4Sn+GcELhcem
-	mXF6fCpefDL4VWSOiNFZnJ1fhr7KtX4F1kZb416PE4LaACw3r9T5oZQx38jo71oM
-	IK1Tzl6EcIiCFK4mLYWNU7IsDkzORs8xyRhr7tYBK389R4sAp9Fq6Yl0lLcDJl1P
-	Pt6rartBtbNDZI9AE3Edvw8jyvxBhoTrQSIcttAX0pOHCi/DqJ9YzitHk2SYz1yH
-	MJzaN/5+mO4KEfrKhQXbVjM9tcj3szqckscmusjVmWKQnJqU7ZpQSMnV5kLRRQc3
-	Dkv/KL5B7ZsJz22yE8jHEwG/PCrJzeA4wFHO+4g9jZCqoh6P3b3lKmK4ZiHeMMzT
-	EUk0yQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u3hk4ghh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 15:19:59 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EF61840055;
-	Tue, 27 May 2025 15:18:48 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 45D52AE88C2;
-	Tue, 27 May 2025 15:18:01 +0200 (CEST)
-Received: from [10.48.86.139] (10.48.86.139) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 27 May
- 2025 15:18:00 +0200
-Message-ID: <ca047799-6ec2-4386-a3aa-068766ea24d1@foss.st.com>
-Date: Tue, 27 May 2025 15:17:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SvSYCtDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFCEC4CEEB;
+	Tue, 27 May 2025 13:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748352079;
+	bh=fp9luBBetLAP0B/DgHuAdGyoO1Vry5JUr7H5DC4G4HI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SvSYCtDqgahkC+5NUsg3f9lwPIdRRKsBkCr3P1gUQUXmFcwUjDnv5FY6Uvm+RT+U0
+	 6eoYz1korr1a+9BwDMEdgCl3M2Du0/gMjzQIb/3NYwDVbsr5sz0OU/Fi5CWuLGwIKn
+	 tgtwE/oNTr85+y9RNhZeN6tfHCxGLRmfy1C45rFWj9BZ758wCuUe8u8vNmNLi90a56
+	 sBWJN1RuNFN1RoWn6DABasgaMqD092fY7BGgluR4sEGyQXuVG00u11dzRQ7fqF+WPB
+	 O70jGDftMLfGXFZ12OrFFEcvcHn0Yv1bBN4D5x41T81f/tYf64rof0/tpoG9xwnmkJ
+	 dCr+hSusFc3FQ==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-401be80368fso398453b6e.1;
+        Tue, 27 May 2025 06:21:19 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5IJjAQ752QasvZw13Su0JfPl4ukOrNohlwYgXmUAIpbyVeZsO6dLm2JE99Hc0JyHQBgRjbOVACEJSWIlt@vger.kernel.org, AJvYcCUB2ipMIIHfctMD3epx4VNAhQ5Izi8vSvPOWSsKJoNCIHfEa6GeSgL3eOv2EA9Z4KeynbN1p7kVMVJXCg==@vger.kernel.org, AJvYcCVKoCkdb0KbYsLLrDkGh5zbFAdOCE/k9NZNQWoe16wjknvdVUFlYgacfRUPYuAig1ukSfF+vO4o8yIyIEsYPpM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0SOUrjGU+SYEeZ9LkbxrJZGZAKkR54+HpyfcZXkYcGVrkUG8g
+	vOTkp/R2EO0wRSJ/givmwTvou0MCWRdNVg1Q330JQyKXtmMHnYZRZQvKT4NvgWR86ci2RET4jf4
+	CDACkTBldoSjkYdsOECFr3IKrcbnPyUQ=
+X-Google-Smtp-Source: AGHT+IGh97Bf/315jIDDLCVQau8WC5fWsBAGJ/xi73UpowPj2sPBAO+dga4Q2MnB2Vokwwb9oIyCR4/b7oelhXZX1dI=
+X-Received: by 2002:a05:6808:7006:b0:3fa:daa:dd8e with SMTP id
+ 5614622812f47-4064686c16bmr7438233b6e.35.1748352078738; Tue, 27 May 2025
+ 06:21:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] dt-bindings: arm: stm32: add STM32MP157F-DK2 board
- compatible
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark
- Brown <broonie@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
-        Conor Dooley
-	<conor.dooley@microchip.com>
-References: <20250527-stm32mp157f-dk2-v1-0-8aef885a4928@foss.st.com>
- <20250527-stm32mp157f-dk2-v1-4-8aef885a4928@foss.st.com>
- <79fac1e2-c90f-49b0-9f9c-357c994b27ad@kernel.org>
-Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <79fac1e2-c90f-49b0-9f9c-357c994b27ad@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_06,2025-05-27_01,2025-03-28_01
+References: <aDVRBok33LZhXcId@stanley.mountain>
+In-Reply-To: <aDVRBok33LZhXcId@stanley.mountain>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 27 May 2025 15:21:07 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0im_642kBUqryy=70-+JikM+dhg=w=Shc3Df4HKPhDCsA@mail.gmail.com>
+X-Gm-Features: AX0GCFtQtSn0J7mIK2LqJJVYnxD13WNcOWk7YSKyky1S9-K_McoA751MogP26pY
+Message-ID: <CAJZ5v0im_642kBUqryy=70-+JikM+dhg=w=Shc3Df4HKPhDCsA@mail.gmail.com>
+Subject: Re: [PATCH next] ACPI: APEI: EINJ: Clean up on error in einj_probe()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Zaid Alali <zaidal@os.amperecomputing.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, 
+	Borislav Petkov <bp@alien8.de>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Jon Hunter <jonathanh@nvidia.com>, Ira Weiny <ira.weiny@intel.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 27, 2025 at 7:43=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> Call acpi_put_table() before returning the error code.
+>
+> Fixes: e54b1dc1c4f0 ("ACPI: APEI: EINJ: Remove redundant calls to einj_ge=
+t_available_error_type()")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/acpi/apei/einj-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.=
+c
+> index ca3484dac5c4..fea11a35eea3 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -766,7 +766,7 @@ static int __init einj_probe(struct faux_device *fdev=
+)
+>
+>         rc =3D einj_get_available_error_type(&available_error_type);
+>         if (rc)
+> -               return rc;
+> +               goto err_put_table;
+>
+>         rc =3D -ENOMEM;
+>         einj_debug_dir =3D debugfs_create_dir("einj", apei_get_debugfs_di=
+r());
+> --
 
-
-On 5/27/25 15:09, Krzysztof Kozlowski wrote:
-> On 27/05/2025 15:03, Amelie Delaunay wrote:
->> From: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
->>
->> Add the "st,stm32mp157f-dk2" compatible string to the STM32 SoC
->> bindings. The MP157F is functionally similar to the MP157C.
->>
->> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> 
-> How did you get Ack on something which is v1? Cover letter does not
-> explain any history here.
-
-Hi,
-
-Instead of using my own patch, since Himanshu sent the same earlier than 
-me, I rerolled Himanshu's bindings patch from there 
-https://lore.kernel.org/linux-arm-kernel/20250524100319.22521-3-himanshu.bhavani@siliconsignals.io/.
-I should have mention that.
-
-Regards,
-Amelie
-
-> 
-> Best regards,
-> Krzysztof
+Applied, thanks!
