@@ -1,87 +1,127 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBED72614;
-	Tue, 27 May 2025 07:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF1472614;
+	Tue, 27 May 2025 07:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748329759; cv=none; b=jip/EsnpDHdGCiD6tiWZe3siw16LJhUMpZcPMd4p9L/a+1WgdVpcM3Q4dLkLMCaNxuUhYDho8uMHypep+4HvWQjNSWyhL0KldvE+t5zFYD3Ksvbq0ahfmBL2uWakvnqXY1kzw3NZVVY/yQawulF358tW8DyGfKacTUFGeIx3Lyo=
+	t=1748329782; cv=none; b=dMCgiR/60C/TaZ6yFtUKrDczyOvn50SZJCCkl7CTu+SGH38ntwgEta32G5cJ8Dbe3BCqCYS5XR8VovVzbwhPsBbEf7Y1H4uknkpC2Ulsi6hjve139sxcNxL/cCwokQbf9cnQmxw+G5iq1toeyW+/OFl3RP3MPdOQ/5j3ic3hWkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748329759; c=relaxed/simple;
-	bh=mwUc9fpakFITf3u5u5B+KtIIJZ8HBMz/j48CCZchD1c=;
+	s=arc-20240116; t=1748329782; c=relaxed/simple;
+	bh=2kl6mZ8cHvpAb73D3F/4DvVrjl1/RRlL4LaE/e1S4FA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fPpA3jtcA0SJ3osy6nTqGCupYRlPUsjwoMlylwtlpmhpWeFgqOfKS3Ja6swDTZhbUyd+uw+3UcQmmmdnvaM8Hx6q/T0Pp0lj8krom+zHc4qQWwiLccDZPJPvdtuYHBsKu87LyFMOKh9XNbxxNIlRrEsFbBGJVaelrhEfKMf3jyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=vZtNggNM; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=OYpas981bgCwfiAUARiO7J9kVXgaPEf8Ck9xFuFD9EfujJLCdz8oLlnb8UNMulOIlp3hlKzOJKd8FKRA/Jz2dog8Q/IOOX2zXCwXYR3ymdpX/1+rdB3RUyi1cj5BFnfyMwSczhbkAPImzS4EREorh0PY267pkphiT1eXBBGQI2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TYFeAfEC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vZtNggNM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=TM1ZXgxDnV1AOy6fTMiX6DNJTsvGab4tXjhYp/X1Q60=; b=vZtNggNM5ysO3ta5geJEq9GbkG
-	nUv8Y619M35gIcy/eoOftwMaKcbe/fXPe6mPy/LggdXEV46mrqRiGEGN3fHO0hdf7GNdhGAI7P7mv
-	eOpzwG8lEsgkEyLFehAQCrJ67L/jhiCJ56CiILCGG0VYv1H/uOAqPw9v5jBMfxt1cNasxsnaXqLev
-	MDL8q+jMYR8mOwsrID1rvveW8gQgjVdU1+vdiZJ37fMCfJoCcBhs1AqB2oNx+rZL8PyFLHc2PaRDw
-	KtH5eWNsQ8ga2fxU5liydXvM/pF8rD38xJnbYCN1u+LdgCikEcGZMZ8z22bBoOKt2Jt/mTeHg/5jA
-	+P0qZMyw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45038)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uJoQv-0007LH-2O;
-	Tue, 27 May 2025 08:09:09 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uJoQr-0001EZ-0x;
-	Tue, 27 May 2025 08:09:05 +0100
-Date: Tue, 27 May 2025 08:09:05 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] dt-bindings: net: sun8i-emac: Add AC300 EMAC1
- nvmem phy selection
-Message-ID: <aDVlEWZlprYpN3FE@shell.armlinux.org.uk>
-References: <20250526182939.2593553-1-james.hilliard1@gmail.com>
- <20250526182939.2593553-3-james.hilliard1@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TYFeAfEC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F637C4CEEA;
+	Tue, 27 May 2025 07:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748329781;
+	bh=2kl6mZ8cHvpAb73D3F/4DvVrjl1/RRlL4LaE/e1S4FA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TYFeAfECVkICnTDcOgCfhzMZ29ALQmjrjRTTsWrpq01JDFCyZVZ6pvptYGUwV8pS7
+	 9APSZljthBK39hGBNGK/FDWkMmeK8P7tMfzn9BjdOdiuBsHlilz6J9lDL4VtGiIH8W
+	 COY+wkKgZOs1oEj5ws2rqPhaWPgljkvKaA8lRgBxsW6bpZ/hE8oVHTbMZU65OQUO1o
+	 FgwtXV/ibURPygPZdzauMIjOoDUyBwWYv3WYPOp4l72XD8rCSpDRu5MIvrYrMGo7A6
+	 LE4S6WCOVxoVlvnpTLoeeapY/KZc0kFMBZlgAxpI60RQ319+Mxi2SsGCDvBT7sXzEr
+	 yMXJD0Y+U7vOQ==
+Date: Tue, 27 May 2025 09:09:02 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Kees Cook <kees@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Wen Yang <wen.yang@linux.dev>
+Subject: Re: [PATCH] kernel/sysctl-test: Unregister sysctl table after test
+ completion
+Message-ID: <b4jjhqsjnen4ifcccd4qu4tqq2wtqdglouslx26jbwhydgz7qn@lgeb7jltrt4d>
+References: <20250522013211.3341273-1-linux@roeck-us.net>
+ <ce50a353-e501-4a22-9742-188edfa2a7b2@roeck-us.net>
+ <yaadrvxr76up6j2cixi5hhrxrb4yd6rfus7n3pvh3fv42ahk32@vwiphrfdvj57>
+ <d2c93db4-6406-47ec-9096-479aa7d7fd23@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e3wot27uafm4acze"
+Content-Disposition: inline
+In-Reply-To: <d2c93db4-6406-47ec-9096-479aa7d7fd23@roeck-us.net>
+
+
+--e3wot27uafm4acze
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250526182939.2593553-3-james.hilliard1@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 26, 2025 at 12:29:36PM -0600, James Hilliard wrote:
-> The Allwinner H616 EMAC1 can be connected to an on-die AC200 or AC300
-> PHY depending upon the silicon variant.
-> 
-> Add a new allwinner,sun50i-h616-emac1 compatible and example, support
-> for the allwinner,sun50i-h616-emac1 will be added later on.
-> 
-> Add nvmem-cells and nvmem-cell-names properties for the ac300 efuse
-> based phy selection.
+On Fri, May 23, 2025 at 08:54:44AM -0700, Guenter Roeck wrote:
+> On 5/23/25 08:01, Joel Granados wrote:
+> > On Thu, May 22, 2025 at 11:53:15AM -0700, Guenter Roeck wrote:
+> > > On Wed, May 21, 2025 at 06:32:11PM -0700, Guenter Roeck wrote:
+> > > > One of the sysctl tests registers a valid sysctl table. This operat=
+ion
+> > > > is expected to succeed. However, it does not unregister the table a=
+fter
+> > > > executing the test. If the code is built as module and the module is
+> > > > unloaded after the test, the next operation trying to access the ta=
+ble
+> > > > (such as 'sysctl -a') will trigger a crash.
+> > > >=20
+> > > > Unregister the registered table after test completiion to solve the
+> > > > problem.
+> > > >=20
+> > >=20
+> > > Never mind, I just learned that a very similar patch has been submitt=
+ed
+> > > last December or so but was rejected, and that the acceptable (?) fix=
+ seems
+> > > to be stalled.
+> > >=20
+> > > Sorry for the noise.
+> > >=20
+> > > Guenter
+> >=20
+> > Hey Guenter
+> >=20
+> > It is part of what is getting sent for 6.16 [1]
+> > That test will move out of kunit into self-test.
+> >=20
+>=20
+> Yes, I was pointed to that. The version I have seen seems to assume that
+> the test is running as module, because the created sysctl entry is removed
+> in the module exit function. If built into the kernel, it would leave
+> the debug entry in place after the test is complete. Also, it moves
+> the affected set of tests out of the kunit infrastructure. Is that accura=
+te
+> or a misunderstanding on my side ?
+You have understood correctly. That is what the sysctl selftest does at lea=
+st.
+It all runs together with tools/testing/sefltests/sysctl/*. The idea is
+to use CONFIG_TEST_SYSCTL only for testing purposes.
 
-You also need to mention the non-standard usage of phys and phy-names,
-which is the whole reason I suggested you need to patch the binding.
+Best
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+--=20
+
+Joel Granados
+
+--e3wot27uafm4acze
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmg1ZQQACgkQupfNUreW
+QU+OAQv/V1ZJFq0pVYdYgiAa0W/hjXiIh9ws1bAGjfLJAlSJ40RWutdMZmyOEQ7K
+BKqU30gCRrHONClpGVDRi4CTCtz1cOHp4eiUNEih0DwIP12Zn9AF+l99prjoZT3J
+P6adglM/p5LwebgVHgBXqZtv494zpAfaqJH/0hbOCi2UydOSVq6r69HXtfyvJHuA
+5/i00EyPwaCuisH1EGF6Qo2B/nVtVsHMG2AMJn0xrgKsNsTFPVkk2DG1XnxVHooq
+y/agzjdtFenY1VPj4cHtLfqWsLbHEaoGED1885fj1SgLQGigJXRBiUDS0Cgaw+tl
+il+pfeahaKjYvDSMtlH8WDeuqcB2uYQDxmx/fi8ksCsWw/fdvC9oaGssPis7/oHp
+ma3yTjV4cGK7q9JE2jHyNbH+hZwPUstYhb/1SVUIv6m/Oe1vnKpTtMnhcJdSde36
+K/9I3RFQn9IijeU7UzkPzIj6KoN/p3kTPtrBMO1UOV/BMQ+fEWI9uO3PpHgRFT4O
+E50WrQYa
+=Wz1u
+-----END PGP SIGNATURE-----
+
+--e3wot27uafm4acze--
