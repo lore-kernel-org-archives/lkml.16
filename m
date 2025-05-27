@@ -1,88 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCC5C2ED
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174DDC2ED;
+	Tue, 27 May 2025 12:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748349505; cv=none; b=l5AlwSI3SQ2uAmsjS6VvdrkIj5/54cKRfpFDs/vAFN3XyUKyQ56LwCsH6incH0uqPxxMBRaJrSQw+PPEiiEl6LCiM3VMqOavpcDMkIB+UqzIb3AfkzsVKIa0zKpiPjq5qq8jMwCOOkkPF/HE6MjK0JV+vDbXKwwqSYH4u6OOt/A=
+	t=1748349627; cv=none; b=bTnCwfM/QTstw5nfgB4aodZ5jM3VG3ZsuAayMRsm8qlWIVgXyBnvoNVjgS6Hr3wR0mJBVYFX5jsxQjGQ2DRTYOo7MncEvJ5fnwFuq7wDMXJ+75DtrRUvW4Wj2FDT9r/RMNoZtfoYOXMcgA1vhVROzs3ceDsxb//+fTmBNL7y4Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748349505; c=relaxed/simple;
-	bh=yhtBO3wf7palizVt6znvkVnxx0yUDmqGPLTDw4mzg/Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=kG/1FJ5MdM+aIfgP3JF09eaYmNFnO6Gpxqj8nvunvNXoK1WnWNq3eIxAOnvQEC7PyGwzdALBrucqVQXrz5BAH4cXt9co62YNWqXpO7GCYf0m766I75S+Y4MM/yg5pTLzmhKNnyL6snuQZNCb6pZQSJ5jZ8/IgBJZFoG7c0XL24A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQA2piJc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748349627; c=relaxed/simple;
+	bh=UFYxLvLXnz2b6nESN++qfyBWIUKQClun0peTMmDwm4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CZbn5lnFD7kzkzsCqO15LQtulLIVVQk+7sjRE1VHRE8w1lJMZNYcyFUM5RTNtOciK8mNLnB640s1VmwyTNXUyiRTSC/NGXhGu69//+wd8sdIyT+uxrGWEkneyyEfwDMIUvZ9TMHSq8Ttyrz3Z1sIQ7MqexhHgT/HZUw6759y7vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nEfYdvd9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQA2piJc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C5B0C4CEEF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748349504;
-	bh=yhtBO3wf7palizVt6znvkVnxx0yUDmqGPLTDw4mzg/Y=;
-	h=From:Date:Subject:To:Cc:From;
-	b=oQA2piJcQc9SbUe+LzimA5pU/bq8kiYUJOdDS+qrAASyg82YxXinx1bdXjhlCWXG4
-	 ccQvLxG2b/9a6VYvTHiJtVB5PbkQmKgygVzOchfCz3h2LjjQoLShTNPTcCSJTI78wP
-	 h70RWflIv2zwfsWcnI5Dp7NnzdySv99E/SxCd3GDBz/EGBBX5m6oDghE37PwNpbUZV
-	 6vfREo1Wrd+3RFwwFs+pCtAhKhO5CgHYZboQrJyrUyyLmnz143a/NZpRU3Ak4oM01I
-	 /XuvBhB8aB3w594dVqlhsqRvhjjCc2GvkQoA325J5pLLvCRry9a34W7BUxBMyZ0TjU
-	 QRLSrezObfiDQ==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad89333d603so91093066b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:38:24 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzNUp/TImuu6YCa/3e1XyJU56GpxSmFpqVqG+MFfI9NPfSYgfTl
-	5eQ9IXzCbcNCBaMswni4Ck/MN63XvnKK0cr3dambV9ETfkP+1G7mf3OkADYQ0ErebeCu4BZ3Mf7
-	HqtJ0Csd0q0UTcw5/cpFWnkZdvJYRndI=
-X-Google-Smtp-Source: AGHT+IGIim51It5HRukuQmjH9d0SzzG8WmKIGLKlTziZyyIaOp5Qh33f/l67PWyNp08HchMbSr4SR2n1jRKlCFJb2Nc=
-X-Received: by 2002:a17:907:9492:b0:ad5:43eb:d927 with SMTP id
- a640c23a62f3a-ad85b14e1f2mr1137751066b.23.1748349503135; Tue, 27 May 2025
- 05:38:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nEfYdvd9"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RCErA0029147;
+	Tue, 27 May 2025 12:40:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=HPoY8V
+	vbbzKkHM55bPaoXsYcK2nwbz0DzoWdBYk8FiU=; b=nEfYdvd9y4fHCpqa/hYK5f
+	y84+euZcXJCUgpRNXUgIYP2U1VECSjAGNe/1XC3VSSqSD185subKufGT0Wn+PuQn
+	nOLxY2sJc9iw/LUraAg+ZmE7cayjdOTMrj3l5JRz84fdHTje7G1hzJkOxVUeDuAn
+	bjOY4TJaGK54js8rshP1XPuzhju9OTLmMCM7DbDkhRTY8sW03kWuA6opm978LW34
+	Ivl8QDyiaOab6f+7yIUHT6HbyU1wXap1tO/YU+EMUMM2hS8EyOgmdgjNbn2xUSrb
+	BfUgAiAStaFCAA/97p6WSNw6/q9mypZGpXP2v9CRFOtUFM1nvvR0AUhCNSMY8gtQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5t0p8tp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 12:40:20 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54R8u2GK007979;
+	Tue, 27 May 2025 12:40:19 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu532ade-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 12:40:19 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54RCeJVg27525720
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 12:40:19 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0828258058;
+	Tue, 27 May 2025 12:40:19 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A904C5805C;
+	Tue, 27 May 2025 12:40:18 +0000 (GMT)
+Received: from [9.61.246.68] (unknown [9.61.246.68])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 27 May 2025 12:40:18 +0000 (GMT)
+Message-ID: <4d23f536-bea1-49c9-98a9-b237e6aa0d9c@linux.ibm.com>
+Date: Tue, 27 May 2025 07:40:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Tue, 27 May 2025 21:38:11 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd_vDJU-iBpWVC_6VYKH0YOGpZ9m5-9sw-kzDzyTgBAADg@mail.gmail.com>
-X-Gm-Features: AX0GCFuyWIlzMbQB0Sn8A9fBVV04PxOblAWYJOT_MIsSrfixz13fUKlDo1hz20w
-Message-ID: <CAKYAXd_vDJU-iBpWVC_6VYKH0YOGpZ9m5-9sw-kzDzyTgBAADg@mail.gmail.com>
-Subject: [GIT PULL] exfat update for 6.16-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	"Yuezhang.Mo" <Yuezhang.Mo@sony.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2] vsock/test: Fix occasional failure in SOCK_STREAM
+ SHUT_RD test
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mjrosato@linux.ibm.com
+References: <20250526134949.907948-1-kshk@linux.ibm.com>
+ <CAGxU2F40O3xDSwA4m6r+O5bWoTJgRXqGfyMiLH_sMij+YmE5aw@mail.gmail.com>
+Content-Language: en-US
+From: Konstantin Shkolnyy <kshk@linux.ibm.com>
+In-Reply-To: <CAGxU2F40O3xDSwA4m6r+O5bWoTJgRXqGfyMiLH_sMij+YmE5aw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDEwMyBTYWx0ZWRfXxJq5a+Ieb7OR K1DPtGUmMnP5rw5omznXdrOJri1ZNXVLxbmB85jXmChD3kDIRJs/QOK3uSK2bpKGk6Q3ZtD1s25 ZMTUzvlx0mJi8XMmTt7w/F/if4TgfWcaiIXDHIszoixrKVcaTyyu5KCz5BuChiuqnOGaVK/PY7d
+ KyvBbp+66/RmAQWaII2x6UE0UtQX+MkUTuAw1MMfYjmGi3fRTYSJmDgA1U9wxIJZ9l8pXpDODqX 5coC1GPXElNyqKomtlvTcO1I5QzQcdjCargnuzrsh+yw2JonM/eDlXh3sw8bGVklmYgsxOFFdbd rKE0Re2BCMd5i1t2i6DoEeXT8PE1wMGGsRBExr2ceq9fKWyxDx1euaT0iEuwXp7lqYvziF8CP/W
+ VauKklbzPIzIP9diIHX3WxzB9i8p+BuHJKaDjPfwZtLwz+ee7IVlL13yj+92ynwvN3pwgird
+X-Authority-Analysis: v=2.4 cv=INACChvG c=1 sm=1 tr=0 ts=6835b2b4 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=4tGWxnr0_xZ9uz3X2MUA:9 a=QEXdDO2ut3YA:10
+ a=0TW8CM1oYAoA:10
+X-Proofpoint-ORIG-GUID: SQyfJiGMA-0kCPEk9ODezwVjLrGlcJ58
+X-Proofpoint-GUID: SQyfJiGMA-0kCPEk9ODezwVjLrGlcJ58
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_06,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ clxscore=1015 phishscore=0 mlxscore=0 malwarescore=0 impostorscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=555 priorityscore=1501
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270103
 
-Hi Linus,
+On 26-May-25 08:55, Stefano Garzarella wrote:
+> 
+> BTW I think I already fixed the same issue in this series:
+> https://lore.kernel.org/netdev/20250514141927.159456-1-sgarzare@redhat.com/
+> 
+> Can you check it?
 
-This is exfat update pull request for v6.16-rc1. I add a description of
-this pull request below. Please pull exfat with following ones.
+Yes, it looks like the same issue.
 
-Thanks!
-
-The following changes since commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca:
-
-  Linux 6.15 (2025-05-25 16:09:23 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
-tags/exfat-for-6.16-rc1
-
-for you to fetch changes up to 46a557694b464881b3c2c4a0ba389a6436419a37:
-
-  exfat: do not clear volume dirty flag during sync (2025-05-26 20:25:23 +0900)
-
-----------------------------------------------------------------
-Description for this pull request:
-- Fix xfstests generic/482 test failure.
-- Fix double free in delayed_free.
-
-----------------------------------------------------------------
-Namjae Jeon (1):
-      exfat: fix double free in delayed_free
-
-Yuezhang Mo (1):
-      exfat: do not clear volume dirty flag during sync
-
- fs/exfat/nls.c   |  1 +
- fs/exfat/super.c | 30 +++++++-----------------------
- 2 files changed, 8 insertions(+), 23 deletions(-)
