@@ -1,106 +1,109 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0108EC5
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CD0EC5;
+	Tue, 27 May 2025 05:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748325399; cv=none; b=nfocnJCdG/jk2lLDrWVuyxj4vy7Bh6Yws61fg8xJgsfeJUqCWP0+y/ubH8ofMasuiwja7/UDGCqznGlEBzZ6UnZUmUmFCV9pW4I9eo6GEiPKTXGdxRcOnHUaijNhB0EO2tT7hgWiLT80M9y0SZQtWD5GQi9YMypf+LnJhNL9zkE=
+	t=1748325406; cv=none; b=ZiGg3E0BUkA69MRCUIOg/y8g6gjAO7l6ZAFhIOgt+IeHZU4dQ9US0q6XVT7RD0JJOdLjmKAY0nzlzfXCylac0Pie4WVjCCci9MEXOiQb7cGU7MoUbCCdh7hwJyUfPKXmlxmibCv58SwtLhhBLHTohLE/5lKXqXWWiSpqkGGbUww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748325399; c=relaxed/simple;
-	bh=S6lrD0Op5pKlWL71e8qgzke0xa2+KfIHREDTWYi7JZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Igfo6tGJ+PIXPObAJRRmMmgDvQGQxByc+szPeRFZj4LdJHCsgt2wGAxV7mtlll+6oG3elYF+Jbj+wctoNyhzdO5RJ3lpm3svv+auFT0jxyYaOUiv6luEQGh/r2mpBKKXc5iiUeRbM7G4rLPU8uC2EPBdSAJsYf8Y8gDQWN0wk5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ooMo/78Q; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748325406; c=relaxed/simple;
+	bh=U9Yf5Qn+CWpgrecG5lo3yXM4ImFNhP5nzssC2XvTG3I=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gR0GkZna066KR2ZHBE+q11dovtlugT25y1/b1EQrRYfpzQgx8uX1P3JoOtAyOVYPKI6nZnurMk9bvwU2WbFvJX6aIykeBAULmQo0wkwpRVJE6DdyxoI6FIPotOVWxA6Eq78d5XtVkqvrZZWtSAZSO9jqCAPaiGwm1h8aLXgpY3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FN7MR3WA; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ooMo/78Q"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad574992fcaso560169266b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748325396; x=1748930196; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1sqY5GIDGTtXFbbXu39XJwDlCZ5xKeuav8V3AHR7Qzo=;
-        b=ooMo/78QLU2KQR5tjALqxSXjmfUPnGjeDyTRyMlydIWW18ESCT2AuXgG12tTr5aDKy
-         t39E3RiMPYphlhlBqdbaoWjAL2bAt64Txuj6YxNGT0gzrFVgG5+dX7hff9qpJ5aOoYUm
-         qV5A5Jag9FalQUl5I6hJlH2o02Kh3ceLNz3RLD5cRhO9Inux8yW9QTgGCIhIFFaE9Kcg
-         eJa+6R+LHRmgIFYy6scyzS8euox7NrSamuoHF0hXg1P5FidjMAiynSp4yhUPavzXRNGu
-         gQGmXsZKrphloC4IL9uhKUHrIzTjl+1kY6SR4tSLuM0RyYYSEH4yGoM1jboK6GtHNDSM
-         fMpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748325396; x=1748930196;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1sqY5GIDGTtXFbbXu39XJwDlCZ5xKeuav8V3AHR7Qzo=;
-        b=SBVkGYOBlmsRL8SEIEOudkuQbGdU6VKoakewlaCBPGZLf0/1Z8A2zgCC/vRTLNfI4D
-         MoRR1xl03PX+Uov/OXnqqG0egtFhaK+lxjGaOyQI36IKeYJrokjeVtHhGfv9CvJbYhKJ
-         9S1QJol28RoZ9YdXwZfD6eBUK8xGkE/3BoO+Gs06XFd5ZBDSFPQhrjR+ByAbluWks0xf
-         l3pc99R6s/eFpCvefXpPd0/Z49Me4zVmztWwQvd6tQ2qVnZgRY4lCXsUJhsQe8zA7aGu
-         J87VgUeS0pVF7oSUT8wvkruHcF4T/3tibQ2VY3Wiu3M4pN9XX4NMEy5n8gsVWBDH0cTT
-         LSig==
-X-Forwarded-Encrypted: i=1; AJvYcCUVHstZMcbYGFdkaRrlbimqPUcLXi7GFCF3FjtVTJGK3p5g04fmGXdyM1etM2foS42WJ+x805kM85qsxwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCJsFi7GUiJJ5au6Naih5Ef0iWTJ5pLI5QvkgopNU0Qag+4zeJ
-	BpqfZqmY7e4LhLvYQFbM6j1WZFrkQZQo1fUTcevygtm84u/pPy3V4mXDu+w9Ij1Wfs/+J/r0aUg
-	gT9uV
-X-Gm-Gg: ASbGncvqZVzYrq5nW4GdvDwIs6M3JfEymC5tADQ6AEjmaxwEks7Yd/NMrKZdVDZNaTI
-	VzntCzn/9RjjbriDpzWMULTEP2lmszQTceTCsk0uE2KIU3AHFIf7HhONqd4RDUUIGa+hZMbL1JU
-	1JIH7gS/efJe39IYSIlWpOUX3Ci46zUn38NRizuhEZ8xOOUlmlVu8TKPs8dnBCUpA997RnyAjIE
-	1bVXZEkt9HdDr5DiGLf1Fdi8+/LiWFTDeCdoQN/h2solLcwAuOrpT9ceQjKHNivdsKkhAtpkp7B
-	fn9KZd/Yzy3JT2KH5VjRY1pgXlkwCsqe2GMx3APzcLwuKK7+dlz0MGAG8kPn3WJGus34Zar9RlO
-	UxKNX/hhukg==
-X-Google-Smtp-Source: AGHT+IFTol4OTI7mtKP7rV/Mh6vlzvg43m7yooyV7FvKtcQVu98SoqAju8dLAhQhxa1PD6WLeSmTZg==
-X-Received: by 2002:a17:907:8dcb:b0:ad2:5499:7599 with SMTP id a640c23a62f3a-ad85b0d2777mr1008212766b.18.1748325396080;
-        Mon, 26 May 2025 22:56:36 -0700 (PDT)
-Received: from localhost (hf94.n1.ips.mtn.co.ug. [41.210.143.148])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-ad88973815asm94306066b.129.2025.05.26.22.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 22:56:35 -0700 (PDT)
-Date: Tue, 27 May 2025 08:56:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Zong-Zhe Yang <kevin_yang@realtek.com>
-Cc: Ping-Ke Shih <pkshih@realtek.com>, linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] wifi: rtw89: mcc: prevent shift wrapping in
- rtw89_core_mlsr_switch()
-Message-ID: <aDVUEHfa9q2zBD6i@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FN7MR3WA"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54R5ubQx1667523;
+	Tue, 27 May 2025 00:56:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748325397;
+	bh=TyQEMTJMjv/JXggHV0vUjGan81xX/UwqrqP/Y9Utr6I=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=FN7MR3WAYpjes24Ev46ZD8so0Hr6hLBuJIQfU2JVyEtFoFGniMrl6pL9PluakhLR7
+	 PacaaxoMrFCq/Ivrv+0f9jgFqe/4LAO+70YcfeL4yciHr09fQO6RsqyN5EcmcxPkpg
+	 9CasfXen/evUyG3Z+JXmzw8oM2LGFnQdkxaYk+EA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54R5ub012658494
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 27 May 2025 00:56:37 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
+ May 2025 00:56:36 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 27 May 2025 00:56:36 -0500
+Received: from localhost (lcpd911.dhcp.ti.com [172.24.227.226])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54R5uZpo3202397;
+	Tue, 27 May 2025 00:56:36 -0500
+Date: Tue, 27 May 2025 11:26:35 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: bhanuseshukumar <bhanuseshukumar@gmail.com>
+CC: <cw00.choi@samsung.com>, <myungjoo.ham@samsung.com>,
+        <kyungmin.park@samsung.com>, <skhan@linuxfoundation.org>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] docs: devfreq: Fix typo 'enabeld' to 'enabled' in
+ devfreq-event.c
+Message-ID: <20250527055635.qgpf2v7artictbf2@lcpd911>
+References: <20250526133839.64455-1-bhanuseshukumar@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <20250526133839.64455-1-bhanuseshukumar@gmail.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The "link_id" value comes from the user via debugfs.  If it's larger
-than BITS_PER_LONG then that would result in shift wrapping and
-potentially an out of bounds access later.  Fortunately, only root can
-write to debugfs files so the security impact is minimal.
+On May 26, 2025 at 19:08:39 +0530, bhanuseshukumar wrote:
+> Fixed a typo in  description of the function 
+> 
+> This is me trying my way into opensource linux kernel contribution
+> journey beginning with this  first patch of trivial spelling 
+> mistake fix. 
 
-Fixes: 9dd85e739ce0 ("wifi: rtw89: debug: add mlo_mode dbgfs")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
----
- drivers/net/wireless/realtek/rtw89/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+We appreciate your contribution, and welcome you to the community :)
 
-diff --git a/drivers/net/wireless/realtek/rtw89/core.c b/drivers/net/wireless/realtek/rtw89/core.c
-index 49447668cbf3..7e5f87700941 100644
---- a/drivers/net/wireless/realtek/rtw89/core.c
-+++ b/drivers/net/wireless/realtek/rtw89/core.c
-@@ -5239,6 +5239,9 @@ int rtw89_core_mlsr_switch(struct rtw89_dev *rtwdev, struct rtw89_vif *rtwvif,
- 	if (unlikely(!ieee80211_vif_is_mld(vif)))
- 		return -EOPNOTSUPP;
- 
-+	if (unlikely(link_id >= BITS_PER_LONG))
-+		return -EINVAL;
-+
- 	if (unlikely(!(usable_links & BIT(link_id)))) {
- 		rtw89_warn(rtwdev, "%s: link id %u is not usable\n", __func__,
- 			   link_id);
+However, this is not something that's meaningful to be part of a "git
+log". commit messages in the git log should convey explanation or
+reasoning behind purely the content of the patch itself.
+So it's fine in this case to write just "Fix a typo...."
+
+Read more about this here:
+https://docs.kernel.org/process/submitting-patches.html#explanation-body
+
+> 
+> Signed-off-by: bhanuseshukumar <bhanuseshukumar@gmail.com>
+> ---
+>  drivers/devfreq/devfreq-event.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+> index 70219099c604..020fe30ed5d9 100644
+> --- a/drivers/devfreq/devfreq-event.c
+> +++ b/drivers/devfreq/devfreq-event.c
+> @@ -100,7 +100,7 @@ EXPORT_SYMBOL_GPL(devfreq_event_disable_edev);
+>   * @edev	: the devfreq-event device
+>   *
+>   * Note that this function check whether devfreq-event dev is enabled or not.
+> - * If return true, the devfreq-event dev is enabeld. If return false, the
+> + * If return true, the devfreq-event dev is enabled. If return false, the
+>   * devfreq-event dev is disabled.
+>   */
+>  bool devfreq_event_is_enabled(struct devfreq_event_dev *edev)
+> -- 
+> 2.34.1
+> 
+> 
+
 -- 
-2.47.2
-
+Best regards,
+Dhruva Gole
+Texas Instruments Incorporated
