@@ -1,132 +1,137 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F049824BBFC;
-	Tue, 27 May 2025 11:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEAB1C5D61
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748344121; cv=none; b=sYmQyCt48CEj5oPvJiLCeU9RMrwY+yrNxDTli/j8Z0FPBctqijGw7Z2S1YFka6CG0kDrQczcHBeuT+QRdJVywZqUglYUnVYpjA2gny/WwTQEU6fwohnhPMBdXk0/p2nP7NSgtLEZLsQ7bEB+Rel739NcdNiPyUC3L0nv6ctJaKc=
+	t=1748344164; cv=none; b=EfnRTimMIhUMp7RxpFryuD9EkLq/IhLPgdEFq9807t0j/TnF+L+3MkYM8KKfYAHRLFEAXstpTJhKZwE/H+T6y9Hwu+/Wg+IP40sEd29N3r6iCvH17jIAjHV+8fMi5f5HBOHKoqxrrFUjqidlGoAAAPvQ1lSlkzau5JIsqEuK6NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748344121; c=relaxed/simple;
-	bh=lOqrk1vJHm4pg/GFV/rSBJzV0BYL5W2LQEo9bDARkj0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=aitSVMFAlRNa0hVlLTsWOxIDxSVxBHE2xszJwTBNuMNGSirDXkm9KyxhCgn2b3r9fswXurvqdfMSn+Oa+wzcv2MfT39R4b0IlMOdgNaQHQ6F/9xq+3EcXKFqpfKGCRfB6gbMx7BBy3TWqJjG1lQbC5y416DSnNceYMwWuyrZef4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZ5Spbjo; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748344164; c=relaxed/simple;
+	bh=XYksfjFD/3Q8ilajxL/0Ns8pjisWCTwfCtKGPtnUdAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rIU4SrAcdaPEGm5bpA3heWBQkt7XQO90sjVCILUhagimDLYEnyzFErqVZNqsme1oNg4NXo7hfwne6KtPYholjUt7wMFHrpMgR22mrolICVEI0AS/gzlYrTE97YpGWUppnefxGZPqnte+cMLkZNcVfjiXuefyyeAWZL4goFoEyVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P8RAtomU; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZ5Spbjo"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad564b7aea9so844751966b.1;
-        Tue, 27 May 2025 04:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748344118; x=1748948918; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VrzlUqZN0a5R+G7GF9tUab03ZGWFooFwFU0L4xjwtxM=;
-        b=OZ5SpbjouIm1pZKN3E2eah8Df8zTVyVn+zNNHyO4JL/9FvmfPJJ8SRnidFxa4Np10x
-         R0flgD5fBbBFMvdD59Hz9XN6zQKpChHP8bJC8X5m9vSlteccRfMfC3SN14rjkdTwmsPx
-         qy7zrOEJUGORrEHwSVR4o2Lo8TzWJlPnQJsPkpk2rgsmpn6Z88aKLvmL8fkDDorTx+fK
-         KuMPWgJU4ZwTwNUDqQAFi6d8OLg98fS68iF38A5RfZUsRO+07z2i/5vcY8ZxiMzyIxey
-         p/hT3/LcjBsCiUGMXG7IwC3y84uMwrSrM4urBVrpnQpzl+6oIkOc+Z8N4PFQz3Fbkjc5
-         L2mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748344118; x=1748948918;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VrzlUqZN0a5R+G7GF9tUab03ZGWFooFwFU0L4xjwtxM=;
-        b=ccXjg/FbTBQYBLhmMl8iDdlinTpXMZKZDy1VNDJm8XhqLUA12DqntMSK1n+UIim7BO
-         hXXTXF5XfLmzqhBt1MKI2R6Ep25xl9sTIg7ZAf4qgiqFllJc9qRzqyHWGRwKac6lhed8
-         CLArRXPkMTpYMBiU6nii40tf3XA/mvkQwr7r8LGEvLMhnJS08vbnpTTV4+uKM+jnYY5k
-         UdxpU+Nj7B0Xp9c7dqzPV5Ib5x55ZICoHfkJmmYO3t8yV+7F/vpqDUGtW2eeSddPzBcV
-         1XO5G9eeuPMDsjM0INE8zxgT9LYmBr25aBa1dq5dZpa2wQCJYLfTmC3TLWuhnsc6W7fj
-         iUvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXM0hFNbX6TEc9vcM1rp3FeA2O+YzoNZNDOz/oX7ypswFEKiro7n3/+oY8blc/KeHnyVrec5CHJnlM@vger.kernel.org, AJvYcCXKLfQw2dYZIlII9U9HfkyeQ/twt3C1IzARHsMSzHma1q2LXU9uq1Bhj9l/ou/1L/oekn2Y5MP8j4uNDWsJ@vger.kernel.org, AJvYcCXlODGlbbNFiQe5dRK4gjt73lrQYZw+t6GRbK0z+XRGZuqc9jQvUwcZBmAIcFLiAxNi1cQNaUgLwb7iizsR@vger.kernel.org
-X-Gm-Message-State: AOJu0YxezY/CM0fyCYPjYCb4e3NidxiYC0dtE73gHLYhQ3YSl7sQJlv5
-	MTIUeQMR7FVF8KgMv+6tXKfknnJB6nqv0yI19cOfYRB9vhLp210qXFE/
-X-Gm-Gg: ASbGnctip6eJW3aoO8Yhg41eJBuzyRKZIOYhk/7M38OsHpluDfhM8eXMGu4D+VFMlAd
-	DW2tGHB6Y+dH4p9EumBJZFROb41yn6aG6nlXbu9GsQIYwjpxcl/A3lqydvxCXdVoNRjXXvY8hvH
-	VrhdxK7atwPWPJ6wRABnid7THvx4V5Hn9532gIZ3AfCMfFfCBAOQyMFAPt+7mWf1smCNuYDGkmk
-	366iXgtxZ9ghwT5A7UD/ZdzjPJTfb7djGX3ACm/XTGYShcDr77EvkCtvmW4QwOo7DXzW5zBk7Yf
-	HRP90fw4hYZFUBf5sD5Lj/Mnwx3XI4KGGTBAAHGYnDyRXXUhlFhPxHgKZhCSuSqf8NiKl+MHtWM
-	3GU1p
-X-Google-Smtp-Source: AGHT+IGJFDt2RJQxu8Iu8q4jKRN0K1XcgwMH030e180iig8ad6QB0tPqnPyZqTiw7ph0nwENS67CkA==
-X-Received: by 2002:a17:907:9483:b0:ad8:6dae:11e6 with SMTP id a640c23a62f3a-ad8986f270emr21002766b.0.1748344116076;
-        Tue, 27 May 2025 04:08:36 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad52d4cbe90sm1819389666b.165.2025.05.27.04.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 04:08:35 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Tue, 27 May 2025 13:08:16 +0200
-Subject: [PATCH] spi: spi-qpic-snand: document the limited bit error
- reporting capability
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P8RAtomU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748344163; x=1779880163;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XYksfjFD/3Q8ilajxL/0Ns8pjisWCTwfCtKGPtnUdAg=;
+  b=P8RAtomUOrxgamBdim1uCercHzNMgoNR1CE7P86jfRgvgnyyEgowH2LR
+   0xGRFP86wmlSr7eO8ObeUVjlNKXtEe1S7Wjo6xnAKwAnLQALWqWTvVH+y
+   6R6IeUGL3cBVHhMZALeCuUtNA2yWzyBCUnqGeGXvhCIfPuNgnEByxf6tZ
+   NcAhZR3/cWdRpQlkDM9RX4wdHwSsWpjCPoJC3bAeGLUV1zifbYuJn0/K6
+   k2pFjnVm9/3shR6jOP6UynOLLp82ITiuIUglgWP06BIoSwM2521Z60sC0
+   6B8Zioo4gOoZgL0LTWJTHlHH6V79J3QCpnYMdoWbC10DxjvSCK2ZeM4UC
+   g==;
+X-CSE-ConnectionGUID: g49X/X5xTGOlJh/7j/tJEw==
+X-CSE-MsgGUID: Yz7QfKPgSpeghSo/dACrNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="49580448"
+X-IronPort-AV: E=Sophos;i="6.15,318,1739865600"; 
+   d="scan'208";a="49580448"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 04:09:22 -0700
+X-CSE-ConnectionGUID: KGCFgDpxS8+76GE+0IkH9g==
+X-CSE-MsgGUID: 1c6WFYHXSYGN5bQtpj7xTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,318,1739865600"; 
+   d="scan'208";a="142717775"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 04:09:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uJsBJ-000000019AT-2qwO;
+	Tue, 27 May 2025 14:09:17 +0300
+Date: Tue, 27 May 2025 14:09:17 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Pei Xiao <xiaopei01@kylinos.cn>
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org
+Subject: Re: [PATCH] devres: Move remaining devm_alloc_percpu and
+ devm_device_add_group to devres.h
+Message-ID: <aDWdXT36Ucxk0O63@smile.fi.intel.com>
+References: <5ac1e2a127c9df7233ca8ba0696ebb08960d0fc3.1747903894.git.xiaopei01@kylinos.cn>
+ <aC8en60QI0MwnXxM@smile.fi.intel.com>
+ <b71a4ff3-8013-47e0-b2ac-2c5b3d8f8afc@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-qpic-snand-limited-biterr-caps-v1-1-61f7cf87be1e@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAB+dNWgC/x2NQQqDMBAAvyJ7diEJiLZfEQ9rstqFNo27pQji3
- w1eBuYyc4CxChs8mwOU/2LyzVV820B8UV4ZJVWH4ELnutDjViSiZcoJ3/KRHyecK1UxUjEk/xh
- m56NfHEGNFOVF9nswTud5AUPqiVxwAAAA
-X-Change-ID: 20250527-qpic-snand-limited-biterr-caps-a198b01c1f0a
-To: Mark Brown <broonie@kernel.org>, 
- Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Md Sadre Alam <quic_mdalam@quicinc.com>, 
- Varadarajan Narayanan <quic_varada@quicinc.com>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b71a4ff3-8013-47e0-b2ac-2c5b3d8f8afc@kylinos.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The QPIC hardware is not capable of reporting the exact number of the
-corrected bit errors, it only reports the number of the corrected bytes.
+On Tue, May 27, 2025 at 05:41:21PM +0800, Pei Xiao wrote:
+> 在 2025/5/22 20:54, Andy Shevchenko 写道:
+> > On Thu, May 22, 2025 at 05:01:26PM +0800, Pei Xiao wrote:
 
-Document this behaviour in the code, and also issue a warning message
-to inform the user about it.
+...
 
-No functional changes.
+> >> -void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
+> >> -				   size_t align);
+> >> -void devm_free_percpu(struct device *dev, void __percpu *pdata);
+> > Don't you need to cleanup the header inclusions as well?
+> 
+> no, I think we don't need to cleanup .
+> 
+> #include <linux/lockdep.h> include #include <asm/percpu.h>
+> 
+> only move #include <asm/percpu.h> to linux/device/devres.h for
+> 
+> build error.
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
- drivers/spi/spi-qpic-snand.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+It's not needed for the build error fixing as far as I understood it. __percpu
+is defined in another header.
 
-diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
-index fd129650434f0129e24d3bdac7e7c4d5542627e6..c2f5ef899f6a60ad98b9d754b7cac1832d0500eb 100644
---- a/drivers/spi/spi-qpic-snand.c
-+++ b/drivers/spi/spi-qpic-snand.c
-@@ -639,6 +639,20 @@ static int qcom_spi_check_error(struct qcom_nand_controller *snandc)
- 			unsigned int stat;
- 
- 			stat = buffer & BS_CORRECTABLE_ERR_MSK;
-+
-+			/*
-+			 * The exact number of the corrected bits is
-+			 * unknown because the hardware only reports the
-+			 * number of the corrected bytes.
-+			 *
-+			 * Since we have no better solution at the moment,
-+			 * report that value as the number of bit errors
-+			 * despite that it is inaccurate in most cases.
-+			 */
-+			if (stat && stat != ecc_cfg->strength)
-+				dev_warn_once(snandc->dev,
-+					      "Warning: due to hw limitation, the reported number of the corrected bits may be inaccurate\n");
-+
- 			snandc->qspi->ecc_stats.corrected += stat;
- 			max_bitflips = max(max_bitflips, stat);
- 		}
+...
 
----
-base-commit: b00d6864a4c948529dc6ddd2df76bf175bf27c63
-change-id: 20250527-qpic-snand-limited-biterr-caps-a198b01c1f0a
+> >> -int __must_check devm_device_add_group(struct device *dev,
+> >> -				       const struct attribute_group *grp);
+> > I'm not sure about this. The percpu seems standalone piece, but this has
+> > relations with the other group related definitions just above.
+> 
+> I'm also not sure if this devm_device_add_group needs to be moved, 
+> 
+> which is why I haven't replied to you yet
 
-Best regards,
+Fair enough.
+
+...
+
+> >> +#include <linux/sysfs.h>
+> it's redundant.
+> >> +#include <asm/percpu.h>
+> > What for are these new inclusions, please?
+> for percpu.
+
+It does not define __percpu.
+
+> >> +void devm_free_percpu(struct device *dev, void __percpu *pdata);
+> > Please, take your time to understand what is behind the __percpu and
+> > why the asm/percpu.h is redundant here.
+> 
+> If this header file is missing, there will be a compilation error. 
+
+Right. But this is wrong header for the purpose.
+
+> Which header file should I include?
+
+The one that defines it, hint:
+https://elixir.bootlin.com/linux/v6.15/A/ident/__percpu
+
+> I've found that including <asm/percpu.h> does resolve my compilation issue.
+
 -- 
-Gabor Juhos <j4g8y7@gmail.com>
+With Best Regards,
+Andy Shevchenko
+
 
