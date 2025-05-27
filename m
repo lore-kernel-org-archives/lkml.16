@@ -1,101 +1,96 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22BF2356C4
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346856; cv=none; b=dEtvJXKSZiFoli1XOkiU0nyDctreAgnM7g4Dlecwx5+K4D/xz+wLjWI+aNa7uCJ5LFKpWLXA6arkzyuInkuUkvqPIkcpLS+A9hVGt/szhDU1p8XGVi+DMxD2WgGrRnVIt0+J+VFTp4ipjuy92QgD7Jw884DLV5MK4h0yT0hc1eA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346856; c=relaxed/simple;
-	bh=PJ6soXTmDT3YZ0f42M1DkP7vVxsdSiOpE2I2xmRdYq8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tgP5Tqxh4t5J4mik71AAUZQCS1ZVTZYhwMZz5KRKwjVfh1EKv/+BWe3uWa0Bd+zppmqMy+VmumYu0MO+emhcM3g+dKbtcmhhJH970LkQR1a2dxK2ZpCf5nnuv2LnT08Czv7DEs26y0YmrNGgQn6HFtikYU1LyhH3qmA9X3PERLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geotab.com; spf=pass smtp.mailfrom=geotab.com; dkim=pass (2048-bit key) header.d=geotab.com header.i=@geotab.com header.b=mylwXSrm; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geotab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geotab.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B42356C4;
+	Tue, 27 May 2025 11:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748346889; cv=pass; b=G6/lyGMuGFzw+MLfAY5BsGsObruNKPOwv4jH1lmCIUzGc06a4Swqn9ZTkBflVuWYle74gAdSoML0Y5KJiSBLH5QQOT/HvFxAjaxi2xQWz+Mm60XbTNIhF2T9cXINo/TH1VBFGf6mnDt38fakirUZq1DbgdSRoz3qdMk6oeQ28qM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748346889; c=relaxed/simple;
+	bh=NEwk7I7SHSJAjw5uUzDG2MT+rXVOnWpvGxj+6l66YSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S8NLt3fMNSoDMf879zLExz2ReisSDgboFceDryxHMYvr05igOI0JOmCmBuW7WIHd18U70aEUVNZpU/nNw3Q1Y8e0a/b+llKQvFI7pl8qdz+LfXsdPSYIDTftqx9G1UiJcJRPH2fZewesMcSo6TLo0nNMvD0X5HKV/iiTJG/hLdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=VoZxWQ2I; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geotab.com header.i=@geotab.com header.b="mylwXSrm"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85b38fb692fso42732339f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=geotab.com; s=google; t=1748346854; x=1748951654; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PJ6soXTmDT3YZ0f42M1DkP7vVxsdSiOpE2I2xmRdYq8=;
-        b=mylwXSrmvX1pNFbF7wpOm8fJnId6kGvzXC93/8ud+/fkidNhjXGPqXhRlm1kkavnaG
-         11EFnHTFkdwE2Y6c5djdTNWsDt0jBeP4lHE8B9fZUilx5ReeuNrCFYNOwloXUgrqJhhb
-         VFdWo8PfmejtkjpPnMRhfNIeZR2CfPEsrB3/fCsOsIVsiCHJD75+sQKjHb/KcVuj7el3
-         75SDrFnW+hgvlRE+7WyD1N7Apt6twkrTveIGqzC/Vu4b2T0S7UNBSsff8FxAO6WuaHrC
-         ED+y7AtnUf253wNOwene4ljdAfxOHb+qlZzj29wnLznliaORNg65MhU2tseCtCFxryq5
-         fY1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748346854; x=1748951654;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PJ6soXTmDT3YZ0f42M1DkP7vVxsdSiOpE2I2xmRdYq8=;
-        b=KssKvbGbrU8qp5NDhzHPz36OIoeibmPWKy/1nG5vgO3SBk/g6mQwsJFzMWhZVLaUJ0
-         VjTwD/dTKLvipMUZje55X8HJgMjoY6X3lAEqXWtbGmLy3ZccN67XsbU3+juC61TeQ2vt
-         9VFMJt3LY4K8kMMqepagV+uvRiadBqmlQMb+HTV3dvYUVjgpHmqojdlbzOTL6K6aWlBl
-         X+7Leud9AW4d/OpuVfxbpPeJpEYxF9zWUu8PDWN9gZOe8qnKG546aHGZRFaZq+0/X/7b
-         CdmIEm4HY3AK0Fr3ObNeBC4GsIDQzu2+OoFOF5yXyKX7ITELsWwlA49kuWm/P04MwMjO
-         W00w==
-X-Forwarded-Encrypted: i=1; AJvYcCWi1UFFgF7CMdtCosVhZ6P2FbWLXVZ0VRVHI2/j6HvX9akT2fX4ERXMzT7b4uYijfQmVOeRWVgpu8+/ToY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAt0kLNESzoMEZH5znQuvr1kxAemTY5exXScpCMPwVGZPhFZVK
-	+0Mxq9dHL1yBuBcc6lnkpb/4ttIG7zsoC3lSfhknGnKn9ETsiH8x21zVFxecDcWoEgJNn/9dHZ6
-	BVkvs3Cu6EPMIwh3N+sIOIfMWGwrfG1uAN4RRcQbh2w==
-X-Gm-Gg: ASbGncv92OF23UwTftBdJItaUf5PN6PI7vYF20QsFuxAQzHWcJOML7ASsUzucnCONnj
-	g1AqOBIVTmzD6mFguSQgdzhccSPGs1AGSZEj6L1wbWvN7IcN5OOj75zC/s1zICRPyX5lX8/tLOX
-	w4DQqDb1+n9pFi+4FKJTBkkQVQI6mw3qzG
-X-Google-Smtp-Source: AGHT+IHesfHStYNK+RKnXcpNq0TgXDBWVZ4JQF+Ro/XEGUcvOTT1IJlVJKYa4IT7lXXEAwmx8MsCDzRmQWcsqjvUR8E=
-X-Received: by 2002:a05:6e02:2513:b0:3dc:79fa:ed5b with SMTP id
- e9e14a558f8ab-3dc9b6884fbmr100866225ab.11.1748346853755; Tue, 27 May 2025
- 04:54:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="VoZxWQ2I"
+ARC-Seal: i=1; a=rsa-sha256; t=1748346843; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XV4cwb62i9jbfKhN5YxgyKOpblJwfCS4esxG/Hl5r6XTpy40Ks+5/1Wxsd4w8d21C6Dp62xx6je0WdS5MTyeykTxg67JcVSGikhCIm/O6cl1ZZ6JGkoiFOXR0Ep/5XhGo05KKyDkggAUIA7oMl05BMaHL1Te9iI7/u/Jf65ZzvE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748346843; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=9yF1OUbT1bqu1NB/QJlao6B5ghagW3BtXAYQCUIhaR8=; 
+	b=Gfkxm9jbtRrUfZKi7vd0MLCn17HN0fTuH0PE0T8to3nJrkG77bwnm6RboXX0cZzK6YF06ZMxxVs6n/I3rbrkvGBMFvQ3W8erU29SfjqnJnv4+MlS8+sF3NxBKox73Iaj213zsH2AOpiwN953faCyfT69hURKY81Qeyy/gjs3Om8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748346843;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=9yF1OUbT1bqu1NB/QJlao6B5ghagW3BtXAYQCUIhaR8=;
+	b=VoZxWQ2IeFTd9cH4jQs4r4SzlZGf39Y8YHF1/y1CWVxa5UISmlLhsyWOZ28/0xhH
+	2WMDvv4/ZWr0FFF6+E0hJrKdnOiiKDwITtJrPR87WtwuFTgJ5c3h48Yz34khg77dbv8
+	dJTwToJj2bygZxc3nM1BD6O9SErZnnyiv/vmezUU=
+Received: by mx.zohomail.com with SMTPS id 1748346840882568.0136270447825;
+	Tue, 27 May 2025 04:54:00 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: heiko@sntech.de, linux-rockchip@lists.infradead.org,
+ Andy Yan <andyshrk@163.com>
+Cc: simic@manjaro.org, krzk+dt@kernel.org, robh@kernel.org,
+ devicetree@vger.kernel.org, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, algea.cao@rock-chips.com,
+ Andy Yan <andy.yan@rock-chips.com>
+Subject:
+ Re: [PATCH v2] arm64: dts: rockchip: Adjust the HDMI DDC IO driver strength
+ for rk3588
+Date: Tue, 27 May 2025 13:53:56 +0200
+Message-ID: <3704844.aeNJFYEL58@workhorse>
+In-Reply-To: <20250522020537.1884771-1-andyshrk@163.com>
+References: <20250522020537.1884771-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523-ubx-m9-v3-1-6fa4ef5b7d4a@geotab.com> <dfd63c64-184e-4e48-9344-a3db0612036b@kernel.org>
- <20250527-ubiquitous-super-bison-babfac@kuoka>
-In-Reply-To: <20250527-ubiquitous-super-bison-babfac@kuoka>
-From: Alejandro Enrique <alejandroe1@geotab.com>
-Date: Tue, 27 May 2025 13:54:02 +0200
-X-Gm-Features: AX0GCFvruvCSIpHvq0-b0fqRI9Afm8E-s8eNbMN3vbyOYO0UHqm6wji_D6aB4HQ
-Message-ID: <CAN=L63qT6_kVrSJudv8iecmSit1CveZzFEU-2T7Tdpw_aiM4mQ@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: gnss: add u-blox,neo-9m compatible
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, May 27, 2025 at 8:27=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On Fri, May 23, 2025 at 01:52:06PM GMT, Krzysztof Kozlowski wrote:
-> > On 23/05/2025 13:19, Alejandro Enrique via B4 Relay wrote:
-> > > From: Alejandro Enrique <alejandroe1@geotab.com>
-> > >
-> > > Add compatible for u-blox NEO-9M GPS module.
-> > >
-> > > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> > > ---
-> > > This series just add the compatible string for u-blox NEO-9M module,
-> > > using neo-m8 as fallback. I have tested the driver with such a module
-> > > and it is working fine.
-> > > ---
-> >
-> > I assume there is a user somewhere?
->
-> This question is still valid.
->
-> Best regards,
-> Krzysztof
->
+On Thursday, 22 May 2025 04:05:24 Central European Summer Time Andy Yan wrote:
+> From: Andy Yan <andy.yan@rock-chips.com>
+> 
+> For the RK3588 HDMI controller, the falling edge of DDC SDA and SCL
+> almost coincide and cannot be adjusted by HDMI registrer, resulting
+> in poor compatibility of DDC communication.
+> 
+> An improvement of the compatibility of DDC can be done by increasing
+> the driver strength of SCL and decreasing the driver strength of SDA
+> to increase the slope of the falling edge.
+> 
+> It should be noted that the maximum driving strength of hdmim0_tx1_scl
+> is only 3, which is different from that of the other IOs.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - Correct the max drive level of hdmim0_tx1_scl.
+> 
+>  .../dts/rockchip/rk3588-base-pinctrl.dtsi     | 20 +++++------
+>  .../dts/rockchip/rk3588-extra-pinctrl.dtsi    |  5 +--
+>  .../boot/dts/rockchip/rockchip-pinconf.dtsi   | 35 +++++++++++++++++++
+>  3 files changed, 48 insertions(+), 12 deletions(-)
+> 
 
-Yes, I am using it in a board I am working on.
+Tested-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+
+Quickly tested this on both HDMI ports of a ROCK 5T with an HDMI capture
+card on the other end. While I didn't originally have any issues to begin
+with, this patch does not introduce any new ones, so seems good to me.
+
+
