@@ -1,131 +1,98 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EB425D8FA
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E745B25DCE0;
+	Tue, 27 May 2025 11:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346570; cv=none; b=KXUwVZxrZ0LlzDFBWcbOYoB5XJy80vWjzIq71Cj7d9Q7gYepvfNy1JbIBw4Z6PbH1ynGzCgQu/FvxN5qj0MfBHxhUWMkvNMVc1k4c1Pak74e1JC0Wc4uESPlBHcwRbFEkCotBnrO3NX9x6YEBgdCFSw8/U1W1VdEMGS/imSjGm8=
+	t=1748346602; cv=none; b=czgdDptlwc0GOMzzFNueENhLgfibNMp2GLiI7gX/CQeP5gj4dUoaadoUu9KvpY8LzN/HK6SaBprfBinE0wiqm+3PLBYS8DrI838niS6Vgr4fApXHE7sAI3Im8seLrXb2j1vflVYpgYFvGL5BPgkf6T1onxy7AvZ/3EgJ88U57/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346570; c=relaxed/simple;
-	bh=sYuK8ZW73WtREcRe3Wixl3SHRL4TOVZ3ohArwMovzZU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pPyjMiNhZtyJYHG6QtQ8BSRN/BwnU4Nrwv207gZpyL5y00J+8QHITMR66gCLmv4NSeB8ua6X2Trfy9PkRlNWGJEiWwjR1CVPosqcsKGsyEMPM1C/7gUa39+MxLsFjq+BTCT+yo0AZuQUvm5gIpK9RGSRtkASOaqTwn43NPj8rIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B95ynLYm; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B95ynLYm; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748346602; c=relaxed/simple;
+	bh=M+WartH7+lxMBGnU5uEQH938CX2L/uK297c839dwtaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=raX2yif6pBVz9NiKfCXPDv0SL/51m9V7CvTZft0Y/ae5J/Gsvuu/2vm8IiT4ukG1SW73xlgIFdFOLnx9ZKvgtaiRYBIEAQ6Up10awxEAxoqaItaaJCSiZtUAIoLAA63bw1r+82WyMedaMU2qtg9N+l3162t5Yn7LbeedNXc9eh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWmBvgqp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B95ynLYm";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B95ynLYm"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 459631F7E5;
-	Tue, 27 May 2025 11:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1748346566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=DKk+Nfm0Pb9igRgn4Q0sKMIabc0OAAHC/skA3hLHvUQ=;
-	b=B95ynLYmydgrlK/oVFVKqUQ3zLel9/cA0FIfPdalWOeaR7F5RUD8GxIT6Nzz9enaSw6ap8
-	wIANICnbKqatARY+Evz5rgZFbCvWC9h3sJtBT2xrc5gs4+Wq0g27E/1reKI3cPI7VpHTZC
-	862sK5VmdOjy8b9E0+m7PVbbbqhyg3c=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=B95ynLYm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1748346566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=DKk+Nfm0Pb9igRgn4Q0sKMIabc0OAAHC/skA3hLHvUQ=;
-	b=B95ynLYmydgrlK/oVFVKqUQ3zLel9/cA0FIfPdalWOeaR7F5RUD8GxIT6Nzz9enaSw6ap8
-	wIANICnbKqatARY+Evz5rgZFbCvWC9h3sJtBT2xrc5gs4+Wq0g27E/1reKI3cPI7VpHTZC
-	862sK5VmdOjy8b9E0+m7PVbbbqhyg3c=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 39D47136E0;
-	Tue, 27 May 2025 11:49:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yzbJDcamNWjtCgAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Tue, 27 May 2025 11:49:26 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWmBvgqp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BD2C4CEE9;
+	Tue, 27 May 2025 11:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748346601;
+	bh=M+WartH7+lxMBGnU5uEQH938CX2L/uK297c839dwtaQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nWmBvgqpD741w5lbJwmdDob+G907KJNDwMysIapfRuNAwDVA6tc1BBs4Y7S8NRwt0
+	 CMTz+n9j70pB3DFVZABIAphn6T79L2+v+OoD76JNijWi4Pv/FpMWzj8gfvjcCSwfAx
+	 E8zNR//SqmHfquaEJkT8BHiNAzjDZ4ZhaQYrKb4SPOhO/+pxRo7M1ooq9+r84/q49d
+	 QFknR0I4El8ZPEoyk95Xc6TW8vE3Rsbebo+w5DdzLh/pdkhgz6tmEq0bn+RDzyuMhc
+	 fM19wHKELv+XDXpOnNKSg4UUA3s5TEFQLzcM2G5uIc2f6oUxrS2qW3uI0QhYJlY5F4
+	 vMV+EFJjyug5w==
+Date: Tue, 27 May 2025 12:49:57 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixup for 6.16 pull request
-Date: Tue, 27 May 2025 13:49:22 +0200
-Message-ID: <cover.1748346039.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+Subject: Re: [PATCH 3/4] selftests/mm: Report unique test names for each cow
+ test
+Message-ID: <3729c741-fd02-41f9-9668-7575871e7acb@sirena.org.uk>
+References: <20250522-selftests-mm-cow-dedupe-v1-0-713cee2fdd6d@kernel.org>
+ <20250522-selftests-mm-cow-dedupe-v1-3-713cee2fdd6d@kernel.org>
+ <3745cced-199a-4c9f-a282-d9587f2edd41@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.01 / 50.00];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 459631F7E5
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Bar: /
-X-Spam-Level: 
-X-Spam-Score: -0.01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="OW/UBWju3qLilyOF"
+Content-Disposition: inline
+In-Reply-To: <3745cced-199a-4c9f-a282-d9587f2edd41@lucifer.local>
+X-Cookie: New customers only.
 
-Hi,
 
-please pull a fixup to the xarray conversion sent in the main 6.16
-batch. It was not included because it would cause rebase/refresh of like
-80 patches, right before sending the early pull request last week.
+--OW/UBWju3qLilyOF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's fixing a bug when zoned mode is enabled on btrfs so it's not
-affecting most people.
+On Tue, May 27, 2025 at 11:08:05AM +0100, Lorenzo Stoakes wrote:
+> On Thu, May 22, 2025 at 06:38:52PM +0100, Mark Brown wrote:
 
-The commit is fresh but the fix has been tested and verified, no reason
-to delay it.
+> >  	ret =3D setup_comm_pipes(&comm_pipes);
+> >  	if (ret) {
+> > -		ksft_test_result_fail("pipe() failed\n");
+> > +		log_test_result(KAFT_FAIL);
+>=20
+> Looks like a typo here :) Should be KSFT not KAFT.
+>=20
+> This is breaking the mm self test build for mm-new, could you fix-patch/r=
+espin?
+> Thanks!
 
-Thanks.
+Ugh, this was masked because it's part of a series and among the
+problems with the kselftest build system is the fact that it eats
+errors.
 
-----------------------------------------------------------------
-The following changes since commit eeb133a6341280a1315c12b5b24a42e1fbf35487:
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-  btrfs: move misplaced comment of btrfs_path::keep_locks (2025-05-17 21:15:08 +0200)
+--OW/UBWju3qLilyOF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-are available in the Git repository at:
+-----BEGIN PGP SIGNATURE-----
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.16-tag
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg1puQACgkQJNaLcl1U
+h9AqPwgAhfEK//IeybNjibTXbdt3qFtPzEf8yQJEj7kXBXQreZ53y6TcMhnCdfqH
+VsY8eXIv0QOEKssUYsxi29Dn4Tbn/mVbUOf2mFc45HTonnYf+ts7Gnsn427qAVsC
+qb/DX70AKJs15xjX91x2Vp60y1sc6ul7hUh1mIoZnOg7lIWowm9bfiKmcDoTDpSE
+KdiHZ5jIsfxDViZGYS1qbUfrJM6e0hhZU7oejRlO21TXtkmp+QTXcoH9YhSYweNb
+J2eMEHSoE4eaKb3eStreywZ8Fvx7gM4W2AZFkelGMoy9UmYyKHKnViqToSBPe20e
++HNgBCmtDJlZz4jOgL+6DgimUYmIaQ==
+=MENN
+-----END PGP SIGNATURE-----
 
-for you to fetch changes up to b83825a8f56a34e7352e424aae64ffe6b88247d1:
-
-  btrfs: don't drop a reference if btrfs_check_write_meta_pointer() fails (2025-05-27 13:39:15 +0200)
-
-----------------------------------------------------------------
-Josef Bacik (1):
-      btrfs: don't drop a reference if btrfs_check_write_meta_pointer() fails
-
- fs/btrfs/extent_io.c | 1 -
- 1 file changed, 1 deletion(-)
+--OW/UBWju3qLilyOF--
