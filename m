@@ -1,110 +1,86 @@
-Received: from jpms-ob01.noc.sony.co.jp (jpms-ob01.noc.sony.co.jp [211.125.140.164])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256551E5B7D;
-	Tue, 27 May 2025 13:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4761E5B7D;
+	Tue, 27 May 2025 13:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352413; cv=none; b=rtVV3Z+QzlbceVZna3+EZJ/a09CKnfvj3qgnPQrgK+MglHpR2vblLMPqEKzqtvmu2gy4VVOcQv4ccC0yrHUoDx4DbrUoURr+wfsUpWy6o5ubSDZSIo4CUevT3bNXcpjtaJvPgqBoAW0ACC/QCsNyxZfPH9GxspeDT4zMWP5SaNY=
+	t=1748352434; cv=none; b=XCTD8UMjDaRFOrThQEpfxppd2KmxrWBSdVUVxG0tiTmg5VnSOyrF9HdHNZBv0npMWZrnn6lkiLLwfJ08B/g0cSmFIy1J/tJR3rUVKozreuS6C+D3mQ6cA+ZGWuBnv6UAHswKyhimYv19Bu7G+YKaamAJ0hVSq8SlyMpFc/TKb1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352413; c=relaxed/simple;
-	bh=9Nju7W2tBpY6Umbm+ZlZ2RCV+w3L+6p695flvHencLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fw6mJCe5zfyc2fy4dqi1SCz9ua0OU8L3lK3VZV8NvN0KDEvs1FohAVHQkmgLNHQrPHhfQm+Wzgip8/4XbbQYbR6Wqu5XdSleK+uqRKyK52xo9KXBo6+GfbpG+UDdsBGjT+7m0mlpDdIBRfG/4PNSd9zqLPY4Pc9W/yyM6k7Qk58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=SIXORjoS; arc=none smtp.client-ip=211.125.140.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	s=arc-20240116; t=1748352434; c=relaxed/simple;
+	bh=WZLaUSVW1zTkLqqEDqdAyL85Ym7U6Tvej/VLIo/XULE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=HCfrQTCXQ0IP060Wl9hhMUIcU0hPyLJIGeYGZxIvvw1F5RevUjMzgLjsP25qcTM+JGowKLA9I5j5MZoDckID4vrL0pwFWC7FQjxk7U5MWSuqfs76op8ZHqYtaOOJZOe/FdggtNYV2AgWgDIuCDv+SqMdU99w0drdOK1CUxuG5BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jibTMKC+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="SIXORjoS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1748352411; x=1779888411;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q8veB2wF5n1DVr5z/lMeUWHv1/zn9z4Fuzg/6Q4u8q4=;
-  b=SIXORjoSHw7fkasSNlPOJYr+oEEQDOMam9g4mQPZ6uDeWsRJlK30CtFM
-   5GI7wOz2Q1rME7F5o3+suaElZoSwcYUropcMg75chkodQoZMj391h2gCV
-   6Lx0enmcSV8VnQk8a4F37Mwz67gdn+9rvlC2g5n+vIA7G9+BmygjMtYqb
-   A07y1kTzo99t8Ojo+IP1KoW1b3fvxBkD3BrARtO/MpSrOuwuqBwj7F8tG
-   DqIt2hBkZ5/N7pAz29xArqoBgI1Nopbpu8KcBeYRz4eVAHcoUqdsUqGgs
-   FJlAelxSLKXOuV2g5il9jrst1xcU6UkVNiSUwqKV+lLgwME5Kv60rPg2f
-   Q==;
-Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
-  by jpms-ob01.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:26:49 +0900
-X-IronPort-AV: E=Sophos;i="6.15,318,1739804400"; 
-   d="scan'208";a="534611313"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 22:26:49 +0900
-Date: Tue, 27 May 2025 22:26:46 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>
-Subject: Re: [PATCH] sched_deadline, docs: add affinity setting with cgroup2
- cpuset controller
-Message-ID: <aDW9lgkZaP9pI5Jk@JPC00244420>
-References: <20250522-sched-deadline-cpu-affinity-v1-1-2172c683acac@sony.com>
- <aDW6EckuCFTZfPZ8@jlelli-thinkpadt14gen4.remote.csb>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jibTMKC+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD576C4CEE9;
+	Tue, 27 May 2025 13:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748352433;
+	bh=WZLaUSVW1zTkLqqEDqdAyL85Ym7U6Tvej/VLIo/XULE=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=jibTMKC+BcPbNGo50bFhbpUoxQCvLqK1QmIli930KypQeRZZ6IwuRCslGY2RPz9vL
+	 gHvSRYxs/xthFKzTmstlLRCzQV3ULVoqVAqHXC+P7u8VVpG5eGD/3Mho9hnkigKwB3
+	 4KSotrfzoCNcSW7k46qtT1gYRNjihROEkVeGccpz7if7v5Q21kM24fsmt0S7EwF6uq
+	 7R3G2/6E2yBUwxQT7w1SYoWzacwMX0cUxdSFcn+sbIy4i/znJBcjdbcOupM8dC09g8
+	 gE3IXQ2a0q/gPLLjO1FbhT0s4eDDy0AxO+FO/pl+Su6AHVZKIuy+pTeHNEJPjg50Zz
+	 hAdLNvoXqm3Jw==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ zhangyi@everest-semi.com, Qasim Ijaz <qasdev00@gmail.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250526191820.72577-1-qasdev00@gmail.com>
+References: <20250526191820.72577-1-qasdev00@gmail.com>
+Subject: Re: [PATCH] ASoC: codecs: fix out-of-bounds access on invalid
+ clock config
+Message-Id: <174835243163.49001.6702458241020988740.b4-ty@kernel.org>
+Date: Tue, 27 May 2025 14:27:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDW6EckuCFTZfPZ8@jlelli-thinkpadt14gen4.remote.csb>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Hi Juri,
+On Mon, 26 May 2025 20:18:20 +0100, Qasim Ijaz wrote:
+> get_coeff() returns –EINVAL when no table entry matches.
+> The driver then uses that value as an index into coeff_div[],
+> causing an OOB access.
+> 
+> To fix lets abort the hw_params call instead.
+> 
+> 
+> [...]
 
-On Tue, May 27, 2025 at 03:11:45PM +0200, Juri Lelli wrote:
-> Hello!
-> 
-> On 22/05/25 17:06, Shashank Balaji wrote:
-> > Setting the cpu affinity mask of a SCHED_DEADLINE process using the cgroup v1
-> > cpuset controller is already detailed. Add similar information for cgroup v2's
-> > cpuset controller.
-> 
-> Thanks a lot for working on this. Really appreaciated.
+Applied to
 
-Thank you :)
-
-> > +5.2 Using cgroup v2 cpuset controller
-> > +-------------------------------------
-> > +
-> > + Assuming the cgroup v2 root is mounted at ``/sys/fs/cgroup``.
-> > +
-> > +   cd /sys/fs/cgroup
-> > +   echo '+cpuset' > cgroup.subtree_control
-> > +   mkdir deadline_group
-> > +   echo 0 > deadline_group/cpuset.cpus
-> > +   echo 'root' > deadline_group/cpuset.cpus.partition
-> > +   echo $$ > deadline_group/cgroup.procs
-> > +   rt-app -t 100000:10000:d:0 -D5
-> 
-> Sadly, the example with cgroup v1 was made at a time when rt-app still
-> supported command line parameters like the above. I believe nowadays
-> that is not the case anymore and one needs to create a json file
-> describing the task to run it with rt-app.
-> 
-> I would say we should update both examples to use something a little
-> more generic, e.g.,
-> 
-> # chrt --deadline --sched-runtime 10000000 --sched-period 100000000 0 yes >/dev/null &
-> 
-> What do you think?
-> 
-> Best,
-> Juri
-
-Haha, I was just about to send the patch with the chrt example, when I
-checked out the rt-app repo and saw that it's much more powerful. I
-thought, "they must have had a good reason for using rt-app instead of
-chrt for the example", and switched it to rt-app at the last second. I
-didn't know that rt-app doesn't support command line parameters anymore.
-I'll send out v2 with the chrt example.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
 Thanks!
 
-Regards,
-Shashank
+[1/1] ASoC: codecs: fix out-of-bounds access on invalid clock config
+      commit: 16719d48197bbd8cff121b32acec67d954335437
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
