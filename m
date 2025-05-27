@@ -1,196 +1,122 @@
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5959D19E7F9
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CBEF2750E7;
+	Tue, 27 May 2025 15:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748358455; cv=none; b=bEQO/L9izr4xfWe8EXfKj3+bGtwYIKG+t1RbSY39CjQA3t0bUktj7NUPELpqSFpkBVYujLQl+papL6NSnmr2FKxixgkg912GnhL1Qw0/liNZTkN8KX5GP9ukMFwzebLvzaFTzAoUbMBOzTqu7J2PiQcopcfiys6dtqIcvU7/sZ8=
+	t=1748358477; cv=none; b=tL/7+qpr2rYsaFtW+Zwmx2wkowDGN0vYQr/MqzprVqxYEG/URTgkfAZEWh2yyn8N36OmOxUANeJaNrwhbhKTXwU6xSceqyjpLiwkXi5Top6jM6tSmRMJtOvh+SBkNCi+pKmODc2z56YSs6fwkZRm02S0vgZ57g2WYi58oN85+z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748358455; c=relaxed/simple;
-	bh=pUaNeTHTCwKFPAoMIgJmb5zAeyUnC0gPJ5nIg5WMFEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y5RjyztUZ1RAcWxBHOehhcDXGCfBRqE9mF1SAFomeE7sgJv/v+pjYO9M3d9Ig6nr7a6PrSXQ1d7gCIusKdrfOauESgRvYuGMtlcxd75XF/x4DVGy5ZTZfKKtrbFXYvva2NLRN4CnPaZg6eUU536CHgBWIFDOyFyAKhHF4vQsejs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ITMeFhf7; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITMeFhf7"
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-6065803ef35so715835eaf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748358452; x=1748963252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4HvNpqBKFOVDi+Mx9KGaepBPynHnQJMRXklI5JhKtbg=;
-        b=ITMeFhf7EM7SPiwjbX3ys37gJh1R3yyljtbFwVkWbQzSFHKLzrwV8RFHeFQTUu5KHp
-         30TMmrTu6ooC5GLUBA3BV8pkUcHTdeV1vSap4BAtdnSL3IBB4D/jGzjx5WOFltnoeECB
-         YsfpEn3FGD+oFm4b4bwDeZHG0EmkNDfrPc7BkZHR4pdVy/WFMSHCgkkxuoh41887oQ9V
-         jBUcmQ86o7HQOZZbLWSs2t48OB16eO0lkL7+jCLO6q1t/LO63v4zEuwGuIlRxM+18BTr
-         X05yYFJs+08cd9t3MSM+KTH56Wr1K7x9IBBN+LG00SdPWBKR6wdntS5rK/0kEd1kImWx
-         uapQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748358452; x=1748963252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4HvNpqBKFOVDi+Mx9KGaepBPynHnQJMRXklI5JhKtbg=;
-        b=QDXf2i60AlgjyCKAAcgdqX39aYSKWP0zvN5USzDRMM/6O7XasBzgBw9RywlbyHh1dY
-         o+xFxx0QYDQ1b0Eu2FR31SuQlyuLA/H4kAnFe/8/e6ZygfHtsbDWWipxqBIISwoz2h53
-         +RAjGDmuGnaR9EOrLi+IfjlsoELlN0MXmqW74BJ3ElJtdnDy2jJK/TgKkFQDHRrnnrMW
-         cHL4Zj06xGAX2cYqiIQBLV9dANAPMJLtiEG3eS0C+IMkwIEqhX1eVxWFOqa8IxOEpt45
-         BfFczQTJZVMMo2u7T/e/5CIIFDzMHysQWoGHxYcL6X+eFjfigaJ61Ss/Q7PXDhnMjArj
-         YapA==
-X-Gm-Message-State: AOJu0Ywr2u6qlyeKMJb+IQobVIn5dsDPFZURs/MxwP7C1m1+5vD6Aa1v
-	5i6U88kCnwMZL2nvdN2iyA2abtf9MmgS+jJUhe2OMhiqER4rigO1RxBWGctWwl1Cy/sArC27+Y9
-	PyizsDQoIt0aNwk2wCQ06e3OuEFQhi/LSQIfuhKACUA==
-X-Gm-Gg: ASbGncvkUCsWk929p+zX/mwYlwCCkIUpKCYDaxjWPzsj9uy2GyyczGy/Yxni9Hbw2Ls
-	PthrvjqCtWB8I/19fxQLDi6Q8rgCJSMkkcuD1aLQfHxgbqxBeV1KE4rfdCRbNfFM5JSJP59L/3V
-	wGGO4haXh4aLqGjUgYH8XaQ0c//RYMcDd8ow==
-X-Google-Smtp-Source: AGHT+IHcnwyoLk78Sdyqna09vDLwno8N4DKtCoMRIDEgmxMn5EJ8+I+135oFuaEbt0jukPgDX+G63PqFO04gyL6xVSo=
-X-Received: by 2002:a05:6820:2610:b0:5fe:9edb:eafe with SMTP id
- 006d021491bc7-60b9fba1696mr6694046eaf.5.1748358452253; Tue, 27 May 2025
- 08:07:32 -0700 (PDT)
+	s=arc-20240116; t=1748358477; c=relaxed/simple;
+	bh=vqd5489V0avFdRMIy9tvgVQe9WcgN2RWYY5hv0QOid0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QKHt1UCw8hDkHRhYRitG5Hvgqwig/jsKeKGPxI6/g9U0mDzJ7yQhFl7sJQ0cF9NzEVH3WhNM4wksH3TKs66h36uVKtYHPactnZngiUgJ0U3z1EhK4pclBXbsKMwpxgJwrp/bc5cMpEtVRAEd5F/got1vNGtk6zi0TkWRwbaGFMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [198.18.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [113.57.237.88])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1696b4356;
+	Tue, 27 May 2025 23:07:40 +0800 (GMT+08:00)
+Message-ID: <0b16c5df-94e2-43b0-876f-a5070ac71ba0@whut.edu.cn>
+Date: Tue, 27 May 2025 23:07:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520152436.474778-1-jens.wiklander@linaro.org>
- <20250520152436.474778-9-jens.wiklander@linaro.org> <aDQhn9_fezC42GwS@sumit-X1>
-In-Reply-To: <aDQhn9_fezC42GwS@sumit-X1>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Tue, 27 May 2025 17:07:18 +0200
-X-Gm-Features: AX0GCFv4xwxS381XBNqHvZmFreXW7Y4SbgNJb3O8wPMOP2rKatTJj8xDdz14iuA
-Message-ID: <CAHUa44HFPu87JCHDxu6HWAp6YaXrHFwi55JHTb9X=JvTz30XpA@mail.gmail.com>
-Subject: Re: [PATCH v9 8/9] optee: FF-A: dynamic protected memory allocation
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH] dt-bindings: pinctrl: k230: fix child node name patterns
+To: Conor Dooley <conor@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>,
+ Inochi Amaoto <inochiama@gmail.com>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sophgo@lists.linux.dev
+References: <20250527-k230-binding-fix-v1-1-3c18ae5221ab@whut.edu.cn>
+ <20250527-activism-container-4a9da77a8da1@spud>
+Content-Language: en-US
+From: Ze Huang <huangze@whut.edu.cn>
+In-Reply-To: <20250527-activism-container-4a9da77a8da1@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUhXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSkgfVh5CQhodTx1CTB9IT1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlKSkhVTkxVSUhMVUNDWVdZFhoPEhUdFFlBWU9CTFVISUxNQlVPVUhLS0pZBg
+	++
+X-HM-Tid: 0a971248f54b03a1kunm41ef4b31c6cea
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6Kio*KjEyUVZRFBYMTS0d
+	NioaCwxVSlVKTE9DSE5DT01OSElMVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlK
+	SkhVTkxVSUhMVUNDWVdZCAFZQUhOTUo3Bg++
 
-On Mon, May 26, 2025 at 10:09=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org>=
- wrote:
->
-> On Tue, May 20, 2025 at 05:16:51PM +0200, Jens Wiklander wrote:
-> > Add support in the OP-TEE backend driver dynamic protected memory
-> > allocation with FF-A.
-> >
-> > The protected memory pools for dynamically allocated protected memory
-> > are instantiated when requested by user-space. This instantiation can
-> > fail if OP-TEE doesn't support the requested use-case of protected
-> > memory.
-> >
-> > Restricted memory pools based on a static carveout or dynamic allocatio=
-n
-> > can coexist for different use-cases. We use only dynamic allocation wit=
-h
-> > FF-A.
-> >
-> > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > ---
-[...]
-> > +static int optee_ffa_protmem_pool_init(struct optee *optee, u32 sec_ca=
-ps)
-> > +{
-> > +     enum tee_dma_heap_id id =3D TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
-> > +     struct tee_protmem_pool *pool;
-> > +     int rc =3D 0;
-> > +
-> > +     if (sec_caps & OPTEE_FFA_SEC_CAP_PROTMEM) {
-> > +             pool =3D optee_protmem_alloc_dyn_pool(optee, id);
-> > +             if (IS_ERR(pool))
-> > +                     return PTR_ERR(pool);
-> > +
-> > +             rc =3D tee_device_register_dma_heap(optee->teedev, id, po=
-ol);
-> > +             if (rc)
-> > +                     pool->ops->destroy_pool(pool);
-> > +     }
-> > +
-> > +     return rc;
-> > +}
-> > +
-> >  static int optee_ffa_probe(struct ffa_device *ffa_dev)
-> >  {
-> >       const struct ffa_notifier_ops *notif_ops;
-> > @@ -918,7 +1057,7 @@ static int optee_ffa_probe(struct ffa_device *ffa_=
-dev)
-> >                                 optee);
-> >       if (IS_ERR(teedev)) {
-> >               rc =3D PTR_ERR(teedev);
-> > -             goto err_free_pool;
-> > +             goto err_free_shm_pool;
-> >       }
-> >       optee->teedev =3D teedev;
-> >
-> > @@ -965,6 +1104,9 @@ static int optee_ffa_probe(struct ffa_device *ffa_=
-dev)
-> >                              rc);
-> >       }
-> >
-> > +     if (optee_ffa_protmem_pool_init(optee, sec_caps))
->
-> Let's add a Kconfig check for DMABUF heaps support here as well.
+On 5/27/25 10:36 PM, Conor Dooley wrote:
+> On Tue, May 27, 2025 at 12:23:35AM +0800, Ze Huang wrote:
+>> Rename child node name patterns to align with conventions.
+>>
+>>      uart0-pins      =>   uart0-cfg
+>>          uart0-cfg            uart0-pins
+>>
+>> This avoids potential confusion and improves consistency with existing
+>> bindings like sophgo,sg2042-pinctrl and starfive,jh7110-aon-pinctrl.
+>>
+>> Fixes: 561f3e9d21a1 ("dt-bindings: pinctrl: Add support for canaan,k230 SoC")
+> You're changing something merged in October of last year, which is an
+> ABI break, for what seems like a cosmetic change to me. What makes this
+> worth it? Consistency with some devices by other vendors isn't a strong
+> argument I don't think.
 
-I prefer complaining in the log if there's something wrong with the
-configuration.
+Thanks for the feedback.
 
->
-> > +             pr_info("Protected memory service not available\n");
-> > +
-[...]
-> > +static int init_dyn_protmem(struct optee_protmem_dyn_pool *rp)
-> > +{
-> > +     int rc;
-> > +
-> > +     rp->protmem =3D tee_shm_alloc_dma_mem(rp->optee->ctx, rp->page_co=
-unt);
-> > +     if (IS_ERR(rp->protmem)) {
-> > +             rc =3D PTR_ERR(rp->protmem);
-> > +             goto err_null_protmem;
-> > +     }
-> > +
-> > +     /*
-> > +      * TODO unmap the memory range since the physical memory will
-> > +      * become inaccesible after the lend_protmem() call.
->
-> Let's ellaborate this comment to also say that unmap isn't strictly
-> needed here in case a platform supports hypervisor in EL2 which can
-> perform unmapping as part for memory lending to secure world as that
-> will avoid any cache pre-fetch of memory lent to secure world.
->
-> With that I can live with this as a ToDo in kernel which can be
-> implemented once we see platforms requiring this change to happen.
+You're right - this change would introduce an ABI break just for naming
+consistency, there’s no strong functional benefit.
 
-OK, I'll add something.
+>> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+>> ---
+>>   .../devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml          | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
+>> index 0b462eb6dfe169a292bf716503c03d029f1ac7ee..f4e0da0bf7fa30af5132644109dbd371ddfc0228 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
+>> @@ -22,7 +22,7 @@ properties:
+>>       maxItems: 1
+>>   
+>>   patternProperties:
+>> -  '-pins$':
+>> +  '-cfg$':
+>>       type: object
+>>       additionalProperties: false
+>>       description:
+>> @@ -30,7 +30,7 @@ patternProperties:
+>>         pinctrl groups available on the machine.
+>>   
+>>       patternProperties:
+>> -      '-cfg$':
+>> +      '-pins$':
+>>           type: object
+>>           allOf:
+>>             - $ref: /schemas/pinctrl/pincfg-node.yaml
+>> @@ -112,8 +112,8 @@ examples:
+>>           compatible = "canaan,k230-pinctrl";
+>>           reg = <0x91105000 0x100>;
+>>   
+>> -        uart2-pins {
+>> -            uart2-pins-cfg {
+>> +        uart2-cfg {
+>> +            uart2-pins {
+>>                   pinmux = <0x503>, /* uart2 txd */
+>>                            <0x603>; /* uart2 rxd */
+>>                   slew-rate = <0>;
+>>
+>> ---
+>> base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
+>> change-id: 20250526-k230-binding-fix-3125ff43f930
+>>
+>> Best regards,
+>> -- 
+>> Ze Huang <huangze@whut.edu.cn>
+>>
 
-[...]
-> > +
-> > +struct tee_protmem_pool *optee_protmem_alloc_dyn_pool(struct optee *op=
-tee,
-> > +                                                   enum tee_dma_heap_i=
-d id)
-> > +{
-> > +     struct optee_protmem_dyn_pool *rp;
-> > +     u32 use_case =3D id;
->
-> Here we can get rid of redundant extra variable with s/id/use_case/.
-
-OK, I'll update.
-
-Cheers,
-Jens
