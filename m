@@ -1,155 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C7F280032
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18416280032;
+	Tue, 27 May 2025 19:26:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373958; cv=none; b=m3aQV+WJ89x+fDAfIR+Rs1elF9VAWVQ38h+LkTeLEq5cuVTnjyucGrmu8DXWbC84WhXvBkEtiHAjpjaLh3sl6lxsHLvv/7Ezv38qnNi/XXTFFW4TXsJTTDNw+yvgxdCu1QJbIHB4c7WDmCOPl56KkFNC2WhxVhfUv7PFqFT/0oQ=
+	t=1748373986; cv=none; b=kc5V1QmIVHVpKubYswFb+1e0jPNdoj6SbJnqXUmaBU67JAgXtAZWKd5TjQjPy2nebXZGvrcupQ/fTQuCMFzPZOIMKyunEDeNgeQpX9kx7XOGDkFBTKb3KLwVNcm2UOD4ycIO2hnGAA50o+yxReyPfoEOLBjKC3xMB3bWzT3oR4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373958; c=relaxed/simple;
-	bh=ERQGBxfREhehbTHn9S6ckLVE4roOGQySAqtM4e0+RwI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fLzzSl06rN/2n12ec5/fIXZlTX3EajhHJYbFxVKs2mBcnNFz6atOV8nmT34AD8Cwz9wLcPTJxLk07Go++pBQmMr5ZoypNQMKsbrejHSJpe5o08/VOVmuSGPX674ILPdcrNZSz4I0sWNzZ5eyoZzF6wrgpJBqaLC2MNO/QLeFyfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edYTmbc6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748373986; c=relaxed/simple;
+	bh=wxxzpr4oeQlm7FlnRlxfORGC3AGke6PKYA+rki93ZvM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GWRQq4B2s3zZMs/SA1cJab6O7IuiPpZRXd9bLiTimLkoolY5Ekc0gHC62Ku0YRy0E1pZlQCObhR0H4ipOFYLbkHGFj3CL/Kllh3x+7FHiNu/Gqg27o1x7pmxgLlJB3wLdHDayp3D3haRSXVIj/fZWOXLvVSS9c/HOjuyViB6CII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNPlRIDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edYTmbc6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EBB1C4CEE9;
-	Tue, 27 May 2025 19:25:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNPlRIDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373AAC4CEE9;
+	Tue, 27 May 2025 19:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748373957;
-	bh=ERQGBxfREhehbTHn9S6ckLVE4roOGQySAqtM4e0+RwI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=edYTmbc6yots7d1MpDd90TgP/YEipvQ1EZRV6+QhTPE9ReH1dTfzCqhS6hh0fSP4M
-	 H9j7wZfWxwtvBc+sCgw4jAEusxZrT5V0sPB1oxGeaTwbTi55VV+k3YbWs2wHxB6cMe
-	 qpz4VZGkqE36bFbPio6C7GYZM84jaBAPZ35HTnpYS4bPdazxcUh0Tnsvohi7XQvRJq
-	 j3hq+zfihH7GyOfjiyRx3UxG/9QgtA+ylU18Bx4OMG26HwuZNGYDGDxRipZe/5BQs9
-	 XOOk+UtWgfJtNQtosuyneNvvohr3ohy8dhDMCooyJT4iqcfkHgNBsXbd95HQg1HjJ4
-	 1Rvz3HFTnGgBg==
-From: SeongJae Park <sj@kernel.org>
-To: Kairui Song <ryncsn@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Chengming Zhou <zhouchengming@bytedance.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>,
-	kernel test robot <lkp@intel.com>,
-	Julia Lawall <julia.lawall@inria.fr>
-Subject: Re: [PATCH] mm, list_lru: refactor the locking code
-Date: Tue, 27 May 2025 12:25:55 -0700
-Message-Id: <20250527192555.12838-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250526180638.14609-1-ryncsn@gmail.com>
-References: 
+	s=k20201202; t=1748373985;
+	bh=wxxzpr4oeQlm7FlnRlxfORGC3AGke6PKYA+rki93ZvM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=iNPlRIDbdkd2UKfpSw+GAxr3qwiSGwxjCbsAkuvxznR1h60whX44jw2sMpNNmM4p1
+	 opZb7jzwzlIKVdS0n+iIS/p36n/hRt3JIVLB88XqdFNVgppPjjCavZ7xfLjv71i1iF
+	 by4Qmf8+M8aZuogFNVp+twATSbRBxBuLLl9mjiWhmZmpCy42kDvTB37mcS4GiY95nm
+	 G77YyfmEhk1d8gFjL3X8w1PHKD1ufOPXhH/M0/Uoxd4sWlfrMVYITEKPoLlF0qLMKa
+	 YtjB+bjrXUSXbjV36C9XxJEVDapd01TVbnghRtkek3JDrPBSVp28XMB196lLIn7u4C
+	 UrBh7axs0dn7w==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Tue, 27 May 2025 21:26:17 +0200
+Subject: [PATCH] arm64: dts: qcom: x1e80100: Add interconnect to primary
+ USB3 controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250527-topic-x1e_usb_icc-v1-1-43b604cb0609@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIANgRNmgC/x3MQQqAIBBA0avIrBNUirCrREhOY82mQisC8e5Jy
+ 7f4P0OiyJRgEBkiPZz42Ct0IwC3eV9J8lINRplOdaaX13EyyleTu5N3jCjnYLVtVe/RBqjdGSn
+ w+z/HqZQPb4HfqGMAAAA=
+X-Change-ID: 20250527-topic-x1e_usb_icc-af919407bc9f
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>, 
+ Rajendra Nayak <quic_rjendra@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748373981; l=1206;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=VPun6KAdJnS704Cwnd6sd6OzLPcRo2lwG8HdrSusiVo=;
+ b=7dEO54WUYtoPp0pW5G3wTqiCd2Wu+nmZ70jun5nQfSvZ3pMLAyWUDqnxeuV/whCBDN7huYUIk
+ yUZdh7WyzCLC29SBTlj6r/c+Xb0jJOsLRbT+KW5JZNfIMp53yTZwyda
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Hi Kairui,
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-On Tue, 27 May 2025 02:06:38 +0800 Kairui Song <ryncsn@gmail.com> wrote:
+This seems to have been omitted during the initial bringup.
 
-> From: Kairui Song <kasong@tencent.com>
-> 
-> Cocci is confused by the try lock then release RCU and return logic
-> here. So separate the try lock part out into a standalone helper. The
-> code is easier to follow too.
-> 
-> No feature change, fixes:
-> 
-> cocci warnings: (new ones prefixed by >>)
-> >> mm/list_lru.c:82:3-9: preceding lock on line 77
-> >> mm/list_lru.c:82:3-9: preceding lock on line 77
->    mm/list_lru.c:82:3-9: preceding lock on line 75
->    mm/list_lru.c:82:3-9: preceding lock on line 75
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@inria.fr>
-> Closes: https://lore.kernel.org/r/202505252043.pbT1tBHJ-lkp@intel.com/
-> Signed-off-by: Kairui Song <kasong@tencent.com>
+Fixes: 4af46b7bd66f ("arm64: dts: qcom: x1e80100: Add USB nodes")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Reviewed-by: SeongJae Park <sj@kernel.org>
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index a8eb4c5fe99fe6dd49af200a738b6476d87279b2..76aa966a16a5383e7252a19e7d52fde3a998b143 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -5014,6 +5014,13 @@ usb_1_ss0: usb@a6f8800 {
+ 
+ 			resets = <&gcc GCC_USB30_PRIM_BCR>;
+ 
++			interconnects = <&usb_south_anoc MASTER_USB3_0 QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
++					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_USB3_0 QCOM_ICC_TAG_ACTIVE_ONLY>;
++			interconnect-names = "usb-ddr",
++					     "apps-usb";
++
+ 			wakeup-source;
+ 
+ 			#address-cells = <2>;
 
-> ---
->  mm/list_lru.c | 34 +++++++++++++++++++---------------
->  1 file changed, 19 insertions(+), 15 deletions(-)
-> 
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 490473af3122..ec48b5dadf51 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -60,30 +60,34 @@ list_lru_from_memcg_idx(struct list_lru *lru, int nid, int idx)
->  	return &lru->node[nid].lru;
->  }
->  
-> +static inline bool lock_list_lru(struct list_lru_one *l, bool irq)
-> +{
-> +	if (irq)
-> +		spin_lock_irq(&l->lock);
-> +	else
-> +		spin_lock(&l->lock);
-> +	if (unlikely(READ_ONCE(l->nr_items) == LONG_MIN)) {
-> +		if (irq)
-> +			spin_unlock_irq(&l->lock);
-> +		else
-> +			spin_unlock(&l->lock);
-> +		return false;
-> +	}
+---
+base-commit: 460178e842c7a1e48a06df684c66eb5fd630bcf7
+change-id: 20250527-topic-x1e_usb_icc-af919407bc9f
 
-I'd prefer 'if (likely(...)) return true;' to reduce indentation and stop
-wondering what goes to the likely case earlier.  But that's my personal
-preferrence that shouldn't block this.
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-> +	return true;
-> +}
-> +
->  static inline struct list_lru_one *
->  lock_list_lru_of_memcg(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
->  		       bool irq, bool skip_empty)
->  {
->  	struct list_lru_one *l;
-> -	long nr_items;
->  
->  	rcu_read_lock();
->  again:
->  	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
-> -	if (likely(l)) {
-> -		if (irq)
-> -			spin_lock_irq(&l->lock);
-> -		else
-> -			spin_lock(&l->lock);
-> -		nr_items = READ_ONCE(l->nr_items);
-> -		if (likely(nr_items != LONG_MIN)) {
-> -			rcu_read_unlock();
-> -			return l;
-> -		}
-> -		if (irq)
-> -			spin_unlock_irq(&l->lock);
-> -		else
-> -			spin_unlock(&l->lock);
-> +	if (likely(l) && lock_list_lru(l, irq)) {
-> +		rcu_read_unlock();
-> +		return l;
->  	}
-
-Much easier to read, indeed :)
-
->  	/*
->  	 * Caller may simply bail out if raced with reparenting or
-> -- 
-> 2.49.0
-
-
-Thanks,
-SJ
-
-[...]
