@@ -1,136 +1,144 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665F225C71D
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EB7252900;
+	Tue, 27 May 2025 12:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748348339; cv=none; b=r0RJzXBlFFzwyvEL2raC8Lu3TMSko+IIQY5HFo4RL1INmuWC9ehw89Qagz0nzSt0gDSUl61Iu+yw6tu6FUKr/WO3kwKYXldTA57XGcBccMh4ovubrJ6aka3dzFDyIT+1jJ/GoW/OBIwF0lmZHD5OEDSlenOrdTxZMjDqteGxwqQ=
+	t=1748348367; cv=none; b=grJD73JxifuCwuwem1y/WA9L5Ti4cL1S2CQr5pZ/nVhcmhx82VLR+Q+dhBdKQG/DCuGldPd52ftqrbT9GvmTnARTZ0s+51ToIvY3OG1SBLnHk2Pr4K91jY7V0C87YJ9yLnb2uSgJSn/Cmqj042vXdUsJUFV9ymZxltP3nP9G/q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748348339; c=relaxed/simple;
-	bh=86zn2u46JYtNwZO5g1DsbWK8w+q5RR5pXL4APJoYNtE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=a/p+Ncxu27xqpoE4giBiV9zDZjWI1ImRIM0V5FAxXHGxT5xCN4QjvsfF22YYeGOlfX03BofhSRNRqmwDHJP46pxEOjSA2sAEzrMGAuUOfMRIDDxSlRZEYOKXK7dwGNJfdysi+qX5w5uz5KFapLz6xBrE2RfuGZ4jRuMT8x9MabQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--korneld.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xX7yzLVz; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--korneld.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xX7yzLVz"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4dcfb3bbcso810125f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748348335; x=1748953135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kVklkqDwNsJQ+fgi/kO5TdjSnCkSRE14ziGkMJqjasc=;
-        b=xX7yzLVzVtRJlK98hk6EN/EfSFIqWaGw2Z+VFBopCaC0DD/T4xcsn9dBIirfKAaL2S
-         Px21qQ34+hscOXUdGkS6L0nphE6CPgEcxwnh0Cd6azgblAJTBaVrorEBdKC91DFpl0iF
-         yMo81rRCbS7NmsEjj/9NwDtcvEDaRB8W/Q7oRf0VOwzpAle5dvB4VBsNWwu84884cWmZ
-         rmS2eeKgKHTbuyga4eoNHN5fLcxehcrG0vlRnvgbHh4MVntRtgC1AyOnSq5XT1Ffm8BS
-         e0Iek1X3Jf0YL8JpNLHa6dmWnx5/n1GzfYG+5LvmUz/DDiLCnJMUR8EplDKrL2ez78kx
-         70Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748348335; x=1748953135;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kVklkqDwNsJQ+fgi/kO5TdjSnCkSRE14ziGkMJqjasc=;
-        b=qS0+AIR3QXhdTpKvW1HkYGcDT5C5LZXOayfK9bD6nllk2BF7hA2pTOAxrOP1N28VD2
-         Y5dxDZkoxJC+3zKkPvCNpzGFnKdHzopErpSNQETJuBhqHWt+xeuXyu4z66nwoUyUij27
-         lA36X6wyJlygrA+1SldD+AlInMlc3maNPI5rzNNMnkx0zxXWKbMWFNQUH79p7aIN6Nie
-         ercSizzVfhrh4RwSxNQdddwNhxrfPvISVFuH7VdC9WS3bRG9btRK0TwDN3lR+C5PGAlL
-         peXR2mw4wkDIGdubgv8yw3S1L9ekkB6wMlwHXUbY7F08cPv3d/BTk9sAKupEO3R5iMPL
-         VL+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUL8781D5M7hOoitodsRClZR0uHEJz4AGNrVCp+pbH7CgzQ5mVoCD/W3Ra/KfEWPuGgXuf69TMMWgZzMzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIxFBckE2V5hEcF5C5reA+wGcz77iOz9stVPsvET2I3fNHYj6L
-	xsEWtSnr1K75YuGa4KIKAuyx2/74AlI+UxH2TvPbfkbQ8LyIcK5kwaNzSP1tciwRiGdmhBthQOQ
-	2it7JvDKkTQ==
-X-Google-Smtp-Source: AGHT+IF+4dI2W1Tz8PmaqeJX0XTKtsVBTKm0orDfRvn6Ll06nNvBREgJXKng13K8rbJ9Xc7pKINOeCL2o2e+
-X-Received: from wmbev15.prod.google.com ([2002:a05:600c:800f:b0:442:faba:ccec])
- (user=korneld job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1885:b0:3a4:e5bc:9892
- with SMTP id ffacd0b85a97d-3a4e5bc992fmr426611f8f.21.1748348334751; Tue, 27
- May 2025 05:18:54 -0700 (PDT)
-Date: Tue, 27 May 2025 12:18:07 +0000
+	s=arc-20240116; t=1748348367; c=relaxed/simple;
+	bh=yF/sygMf/EQ2ZHBqQawCfuDcwnMUnpyiExXLsfZaK6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XZpETI4kaCSI+3ReTwi9eRbSWCafXTcDE2yMpTyPssOV94cn6xy2OytbT24HWt1IgTAQ+kFboKOM6QHhUAQyQRHyMYnOIwKgDsInyQ1Bco0843MfqJrkb+Oc5zaefjfKhV84VcXp65ke14VGVi7wZAOObmpYXriP9dIQ0xLsUTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4b6BWM2sWPz4f3jJK;
+	Tue, 27 May 2025 20:18:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A43941A07BB;
+	Tue, 27 May 2025 20:19:20 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP4 (Coremail) with SMTP id gCh0CgB33GDFrTVoSsiwNg--.53275S2;
+	Tue, 27 May 2025 20:19:18 +0800 (CST)
+Message-ID: <69b24e21-13aa-42b6-bb42-6aad89284aee@huaweicloud.com>
+Date: Tue, 27 May 2025 20:19:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1151.ga128411c76-goog
-Message-ID: <20250527121807.3597061-1-korneld@google.com>
-Subject: [PATCH] power: supply: qcom_battmgr: Report battery capacity
-From: "=?UTF-8?q?Kornel=20Dul=C4=99ba?=" <korneld@google.com>
-To: Sebastian Reichel <sre@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, chromeos-krk-upstreaming@google.com, 
-	"=?UTF-8?q?Kornel=20Dul=C4=99ba?=" <korneld@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v3 0/2] bpf, arm64: support up to 12 arguments
+Content-Language: en-US
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Puranjay Mohan <puranjay@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Florent Revest <revest@chromium.org>
+Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, Xu Kuohai <xukuohai@huawei.com>
+References: <20250527-many_args_arm64-v3-0-3faf7bb8e4a2@bootlin.com>
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <20250527-many_args_arm64-v3-0-3faf7bb8e4a2@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB33GDFrTVoSsiwNg--.53275S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF47tr47Xw1UJF1kWw1fCrg_yoW5Wr1rpF
+	Wvga13Kas7Aw4xuFsavw12ga15Ka95ta1a9F1ay343ZFn0yFy8XF4SkFsI9ry5Xr93Wry2
+	vr429F13G3WUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	4xRDUUUUU==
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
-Battery charge can be reported in several different ways. One of them is
-is charge percentage referred to as POWER_SUPPLY_PROP_CAPACITY in the
-power supply API. Currently the driver reports the capacity in this way
-on SM8350, but not on the newer variants referred to as SC8280XP in the
-driver. Although this is not a bug in itself, not reporting the
-percentage can confuse some userspace consumers.
-Mimic what is done in the ACPI driver (drivers/acpi/battery.c) and
-calculate the percentage capacity by dividing the current charge value
-by the full charge. Both values are expressed in either uWh, or
-in uAh.
+On 5/27/2025 6:06 PM, Alexis Lothoré wrote:
+> Hello,
+> 
+> this is the v2 of the many args series for arm64, being itself a revival
+> of Xu Kuhoai's work to enable larger arguments count for BPF programs on
+> ARM64 ([1]).
+> 
+> The discussions in v1 shed some light on some issues around specific
+> cases, for example with functions passing struct on stack with custom
+> packing/alignment attributes: those cases can not be properly detected
+> with the current BTF info. So this new revision aims to separate
+> concerns with a simpler implementation, just accepting additional args
+> on stack if we can make sure about the alignment constraints (and so,
+> refusing attachment to functions passing structs on stacks). I then
+> checked if the specific alignment constraints could be checked with
+> larger scalar types rather than structs, but it appears that this use
+> case is in fact rejected at the verifier level (see a9b59159d338 ("bpf:
+> Do not allow btf_ctx_access with __int128 types")). So in the end the
+> specific alignment corner cases raised in [1] can not really happen in
+> the kernel in its current state. This new revision still brings support
+> for the standard cases as a first step, it will then be possible to
+> iterate on top of it to add the more specific cases like struct passed
+> on stack and larger types.
+> 
+> [1] https://lore.kernel.org/all/20230917150752.69612-1-xukuohai@huaweicloud.com/#t
+> 
+> Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
+> ---
+> Changes in v3:
+> - switch back -EOPNOTSUPP to -ENOTSUPP
+> - fix comment style
+> - group intializations for arg_aux
+> - remove some unneeded round_up
+> - Link to v2: https://lore.kernel.org/r/20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com
+> 
+> Changes in v2:
+> - remove alignment computation from btf.c
+> - deduce alignment constraints directly in jit compiler for simple types
+> - deny attachment to functions with "corner-cases" arguments (ie:
+>    structs on stack)
+> - remove custom tests, as the corresponding use cases are locked either
+>    by the JIT comp or the verifier
+> - drop RFC
+> - Link to v1: https://lore.kernel.org/r/20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com
+> 
+> ---
+> Alexis Lothoré (eBPF Foundation) (1):
+>        selftests/bpf: enable many-args tests for arm64
+> 
+> Xu Kuohai (1):
+>        bpf, arm64: Support up to 12 function arguments
+> 
+>   arch/arm64/net/bpf_jit_comp.c                | 225 ++++++++++++++++++++-------
+>   tools/testing/selftests/bpf/DENYLIST.aarch64 |   2 -
+>   2 files changed, 171 insertions(+), 56 deletions(-)
+> ---
+> base-commit: 9435138c069117cd59a4912b5ea2ae44cc2c5ffa
+> change-id: 20250220-many_args_arm64-8bd3747e6948
+> 
+> Best regards,
 
-Signed-off-by: Kornel Dul=C4=99ba <korneld@google.com>
----
- drivers/power/supply/qcom_battmgr.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+For the series:
 
-diff --git a/drivers/power/supply/qcom_battmgr.c b/drivers/power/supply/qco=
-m_battmgr.c
-index fe27676fbc7c..5ed5452ab51c 100644
---- a/drivers/power/supply/qcom_battmgr.c
-+++ b/drivers/power/supply/qcom_battmgr.c
-@@ -577,6 +577,8 @@ static int qcom_battmgr_bat_get_property(struct power_s=
-upply *psy,
- 		val->intval =3D battmgr->status.capacity;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
-+		if (battmgr->status.percent =3D=3D (unsigned int)-1)
-+			return -ENODATA;
- 		val->intval =3D battmgr->status.percent;
- 		break;
- 	case POWER_SUPPLY_PROP_TEMP:
-@@ -617,6 +619,7 @@ static const enum power_supply_property sc8280xp_bat_pr=
-ops[] =3D {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_PRESENT,
- 	POWER_SUPPLY_PROP_TECHNOLOGY,
-+	POWER_SUPPLY_PROP_CAPACITY,
- 	POWER_SUPPLY_PROP_CYCLE_COUNT,
- 	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-@@ -1063,6 +1066,21 @@ static void qcom_battmgr_sc8280xp_callback(struct qc=
-om_battmgr *battmgr,
- 		battmgr->ac.online =3D source =3D=3D BATTMGR_CHARGING_SOURCE_AC;
- 		battmgr->usb.online =3D source =3D=3D BATTMGR_CHARGING_SOURCE_USB;
- 		battmgr->wireless.online =3D source =3D=3D BATTMGR_CHARGING_SOURCE_WIREL=
-ESS;
-+		if (battmgr->info.last_full_capacity !=3D 0) {
-+			/*
-+			 * 100 * battmgr->status.capacity can overflow a 32bit
-+			 * unsigned integer. Do a temporary cast to avoid that.
-+			 */
-+			battmgr->status.percent =3D
-+				(uint64_t)100 * battmgr->status.capacity /
-+				battmgr->info.last_full_capacity;
-+		} else {
-+			/*
-+			 * Let the sysfs handler know no data is available at
-+			 * this time.
-+			 */
-+			battmgr->status.percent =3D (unsigned int)-1;
-+		}
- 		break;
- 	case BATTMGR_BAT_DISCHARGE_TIME:
- 		battmgr->status.discharge_time =3D le32_to_cpu(resp->time);
---=20
-2.49.0.1151.ga128411c76-goog
+Acked-by: Xu Kuohai <xukuohai@huawei.com>
 
