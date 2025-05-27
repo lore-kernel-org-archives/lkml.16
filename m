@@ -1,292 +1,207 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0C925B1DC;
-	Tue, 27 May 2025 11:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0A6C271459;
+	Tue, 27 May 2025 11:13:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748344372; cv=none; b=J1BJX+Kz/50j6RXO65Wi4HztehUoZ78wr1YyHlm5ud1Ofe/wkYFdmeQxdgeeHw1+KhJ5lT1f7ehsDV3xB5PW0WTLSVyVnHMbC0tD7yoOQowYX9wFFFgAg4Yu1hoGKNx7o7UihMiRNfQeWs8/jzDkGS11wWZMEvw11lnX6YbWo98=
+	t=1748344393; cv=none; b=OTp4eQiChxROXNsTdyW1wX9xkGaeMZx5leyikrbkGUmNSxcHWrwhSXHS8LjYvnm7jXTBdE9ajrfcXNI32NP52RP/M9AYOrtKVQ8OxW6SAdSabUHmYPzWrnX5CiTDI2sIjljRSkPeYNcy0quthLLNBkExNB1gWJNmfPO7X6FcMXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748344372; c=relaxed/simple;
-	bh=5r2HvjqiZUVGW/xahOQI+543HT0A/atJY7y6zBKeQBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Si9KxTX1DcYsjhQbv4O/M3vFQb1arvDMqdt4hGIqXe+LL8Jr1vZ6gDKatWMa0TQgxTiOXw78cnjjt+xFCzkxWNqsXJMsXyvvZYg/DSfq+oXfoNwUmUmHTfc5ttUToewXOxLntyl1EYELFsd4BJedZkYWNyVDbxNoSba04HfNt1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J5dxX0Hl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J5dxX0Hl"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RA2VCC022637;
-	Tue, 27 May 2025 11:12:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=cFPWKgVmNhH
-	t9vG6tJY5O1LEscQ+A4Qjw6u5Eha/gew=; b=J5dxX0HlYRt0H7gE6WaurFS1zQr
-	gG8ZsJEHsWfTWiiIHvoCSaCAZurPUFYBDkV2gdyEcVIa2Cj74d37cA2eH/qE8gcm
-	VuAVjW5QkqgV13f8ZXXAiLEDlZVIV6AxGdLdbOlb0ngVyAYEIsN60YtXlY+enPe7
-	Qgslo+cGKMMo/+6pmMvwQHdSom9K7HyvWeM4fGmcuP+Y0nUgXXhK1wu7iEMByruL
-	AqWBzmdiDj+R3KNFhDA2AqbGgdGht5hsev0lOIvOHXyG2YophIm9ZLbLD4QKsEeg
-	opuQHHQ9UW8AQITKYujC7I/KQbfXfuub1wmdmzVOhPsNcxai4vTtS+WakvA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6b5pq22-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 11:12:45 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RBCfJ7028182;
-	Tue, 27 May 2025 11:12:41 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 46u76ksccb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 11:12:41 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54RBCfOZ028167;
-	Tue, 27 May 2025 11:12:41 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 54RBCec0028164
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 11:12:41 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
-	id AEE565CD; Tue, 27 May 2025 16:42:38 +0530 (+0530)
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Srinivas Kandagatla <srini@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
-        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com,
-        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Subject: [PATCH v4 7/8] arm64: dts: qcom: qcm6490-idp: Add WSA8830 speakers and WCD9370 headset codec
-Date: Tue, 27 May 2025 16:42:26 +0530
-Message-Id: <20250527111227.2318021-8-quic_pkumpatl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
+	s=arc-20240116; t=1748344393; c=relaxed/simple;
+	bh=BRmYYMvaki8BNTEhpCWVyr4VVraTkLE+BoW8c4vBS88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHYPtTqSuA+FnB9Tq+z9BOynI+FA1iK6TiYRmhqYyIDj+lQVPgQpfzpE/HrotpxwlPMKmtChUY+w+ikzBNk0pjlN/5ZgpUomsoeaobeP0xMqQymcfeLbRinGTFjK7A+dLo+rjTRwuitYzRjHofSQfywHMYQ4DmdCrnmhV5Mzjtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from localhost (gy-adaptive-ssl-proxy-3-entmail-virt135.gy.ntes [27.18.99.37])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1691f3ea4;
+	Tue, 27 May 2025 19:13:05 +0800 (GMT+08:00)
+Date: Tue, 27 May 2025 19:13:05 +0800
+From: Ze Huang <huangze@whut.edu.cn>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Ze Huang <huangze@whut.edu.cn>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add K1 MBUS controller
+Message-ID: <aDWeQfqKfxrgTA__@jean.localdomain>
+References: <20250526-b4-k1-dwc3-v3-v4-0-63e4e525e5cb@whut.edu.cn>
+ <20250526-b4-k1-dwc3-v3-v4-2-63e4e525e5cb@whut.edu.cn>
+ <20250527-energetic-pink-cricket-a282fd@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=ZcodNtVA c=1 sm=1 tr=0 ts=68359e2d cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=ki5966V2wckrMalOmGkA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA5MiBTYWx0ZWRfX7hhptMI1/hiC
- x+zEkWxJ84MGWQK8RiQ31IkApkt+g4bHnHjX2tL3FfKZBjCo9BkxxsTXZGl0aVPJk15tjecJ+JO
- 25JzJ1bfWgI10QyBFMlfwpq3vp80A/MT7yCSWieyBln7IqfyIkqBo3Ao2MNHllULpG+dqxKimOx
- fS3EE3u0bw3sgOh+H4QRPslGB7OptHgMN1ZqjHn5RaC6RHEIqexLbBajlEXchopKZHUh52PlFoY
- WFXvGGJA/PbL6Rui/43bWrNXbWVfZsHfovqGbQORlkpNDjJLjBk1ohD3HlMncg0UDpYEKUVK5Of
- E9nUblnsoLdwQWoSAHMTAAJyb8251KLCuiRopEzFH43zjSpFWxhhGRgJuU9WUr4VGuwgY8n5Lid
- OyHLdF65ztJ1ysegsdKGVpKhL24uiKCkwwcEmXD69NO4BocotfXotHPFVrUj8G5t+oUP6lP2
-X-Proofpoint-GUID: x0hVfgBpUuCsUNvVOcdpIm3e63Jazqq_
-X-Proofpoint-ORIG-GUID: x0hVfgBpUuCsUNvVOcdpIm3e63Jazqq_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_05,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- spamscore=0 clxscore=1011 suspectscore=0 lowpriorityscore=0 phishscore=0
- impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505270092
+In-Reply-To: <20250527-energetic-pink-cricket-a282fd@kuoka>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHhkdVk9NHx8fTx4aGklLGlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktISk5MT1VKS0tVSkJLS1
+	kG
+X-HM-Tid: 0a971172311503a1kunm501ea4fda7052
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MDo6Cgw5CjE6PlY3ORchTzcP
+	MD8aFBVVSlVKTE9DSE9PSENNQkxIVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVITFlXWQgBWUFNSUJINwY+
 
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+On Tue, May 27, 2025 at 08:51:19AM +0200, Krzysztof Kozlowski wrote:
+> On Mon, May 26, 2025 at 10:40:18PM GMT, Ze Huang wrote:
+> > Some devices on the SpacemiT K1 SoC perform DMA through a memory bus
+> > (MBUS) that is not their immediate parent in the device tree. This bus
+> > uses a different address mapping than the CPU.
+> > 
+> > To express this topology properly, devices are expected to use the
+> > interconnects with name "dma-mem" to reference the MBUS controller.
+> 
+> I don't get it, sorry. Devices performing DMA through foo-bar should use
+> dmas property for foo-bar DMA controller. Interconnects is not for that.
+> 
 
-Add nodes for WSA8830 speakers and WCD9370 headset codec
-on qcm6490-idp board.
+Hi Krzysztof,
 
-Enable lpass macros along with audio support pin controls.
+Sorry for not clarifying this earlier - let me provide some context.
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts      | 96 +++++++++++++++++++
- .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 24 +++++
- 2 files changed, 120 insertions(+)
+The purpose of this node is to describe the address translation used for DMA
+device to memory transactions. I’m using the "interconnects" property with the
+reserved name "dma-mem" [1] in consumer devices to express this relationship.
+The actual translation is handled by the `of_translate_dma_address()` [2].
+This support was introduced in the series linked in [3].
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index 7a155ef6492e..884abbda74fd 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -18,6 +18,7 @@
- #include "pm7325.dtsi"
- #include "pm8350c.dtsi"
- #include "pmk8350.dtsi"
-+#include "qcs6490-audioreach.dtsi"
- 
- /delete-node/ &ipa_fw_mem;
- /delete-node/ &rmtfs_mem;
-@@ -169,6 +170,30 @@ vph_pwr: vph-pwr-regulator {
- 		regulator-min-microvolt = <3700000>;
- 		regulator-max-microvolt = <3700000>;
- 	};
-+
-+	wcd9370: audio-codec-0 {
-+		compatible = "qcom,wcd9370-codec";
-+
-+		pinctrl-0 = <&wcd_default>;
-+		pinctrl-names = "default";
-+
-+		reset-gpios = <&tlmm 83 GPIO_ACTIVE_HIGH>;
-+
-+		vdd-buck-supply = <&vreg_l17b_1p7>;
-+		vdd-rxtx-supply = <&vreg_l18b_1p8>;
-+		vdd-px-supply = <&vreg_l18b_1p8>;
-+		vdd-mic-bias-supply = <&vreg_bob_3p296>;
-+
-+		qcom,micbias1-microvolt = <1800000>;
-+		qcom,micbias2-microvolt = <1800000>;
-+		qcom,micbias3-microvolt = <1800000>;
-+		qcom,micbias4-microvolt = <1800000>;
-+
-+		qcom,rx-device = <&wcd937x_rx>;
-+		qcom,tx-device = <&wcd937x_tx>;
-+
-+		#sound-dai-cells = <1>;
-+	};
- };
- 
- &apps_rsc {
-@@ -536,6 +561,22 @@ &gpu_zap_shader {
- 	firmware-name = "qcom/qcm6490/a660_zap.mbn";
- };
- 
-+&lpass_rx_macro {
-+	status = "okay";
-+};
-+
-+&lpass_tx_macro {
-+	status = "okay";
-+};
-+
-+&lpass_va_macro {
-+	status = "okay";
-+};
-+
-+&lpass_wsa_macro {
-+	status = "okay";
-+};
-+
- &mdss {
- 	status = "okay";
- };
-@@ -716,6 +757,54 @@ &sdhc_2 {
- 	cd-gpios = <&tlmm 91 GPIO_ACTIVE_LOW>;
- };
- 
-+&swr0 {
-+	status = "okay";
-+
-+	wcd937x_rx: codec@0,4 {
-+		compatible = "sdw20217010a00";
-+		reg = <0 4>;
-+		qcom,rx-port-mapping = <1 2 3 4 5>;
-+		qcom,rx-channel-mapping = /bits/ 8 <1 2 1 1 2 1 1 2>;
-+	};
-+};
-+
-+&swr1 {
-+	status = "okay";
-+
-+	wcd937x_tx: codec@0,3 {
-+		compatible = "sdw20217010a00";
-+		reg = <0 3>;
-+		qcom,tx-port-mapping = <1 1 2 3>;
-+		qcom,tx-channel-mapping = /bits/ 8 <1 2 1 1 2 3 3 4 1 2 3 4>;
-+	};
-+};
-+
-+&swr2 {
-+	status = "okay";
-+
-+	left_spkr: speaker@0,1 {
-+		compatible = "sdw10217020200";
-+		reg = <0 1>;
-+		powerdown-gpios = <&tlmm 63 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "SpkrLeft";
-+		#thermal-sensor-cells = <0>;
-+		vdd-supply = <&vreg_l18b_1p8>;
-+		qcom,port-mapping = <1 2 3 7>;
-+	};
-+
-+	right_spkr: speaker@0,2 {
-+		compatible = "sdw10217020200";
-+		reg = <0 2>;
-+		powerdown-gpios = <&tlmm 62 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "SpkrRight";
-+		#thermal-sensor-cells = <0>;
-+		vdd-supply = <&vreg_l18b_1p8>;
-+		qcom,port-mapping = <4 5 6 8>;
-+	};
-+};
-+
- &tlmm {
- 	gpio-reserved-ranges = <32 2>, /* ADSP */
- 			       <48 4>; /* NFC */
-@@ -725,6 +814,13 @@ sd_cd: sd-cd-state {
- 		function = "gpio";
- 		bias-pull-up;
- 	};
-+
-+	wcd_default: wcd-reset-n-active-state {
-+		pins = "gpio83";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+	};
- };
- 
- &uart5 {
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-index 542a39ca72bb..2e75e7706fb4 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-@@ -29,6 +29,30 @@ &lpass_dmic23_data {
- 	bias-pull-down;
- };
- 
-+&lpass_rx_swr_clk {
-+	drive-strength = <2>;
-+	slew-rate = <1>;
-+	bias-disable;
-+};
-+
-+&lpass_rx_swr_data {
-+	drive-strength = <2>;
-+	slew-rate = <1>;
-+	bias-bus-hold;
-+};
-+
-+&lpass_tx_swr_clk {
-+	drive-strength = <2>;
-+	slew-rate = <1>;
-+	bias-disable;
-+};
-+
-+&lpass_tx_swr_data {
-+	drive-strength = <2>;
-+	slew-rate = <1>;
-+	bias-bus-hold;
-+};
-+
- &lpass_rx_macro {
- 	/delete-property/ power-domains;
- 	/delete-property/ power-domain-names;
--- 
-2.34.1
+This setup is similar to what we see on platforms like Allwinner sun5i,
+sun8i-r40, and NVIDIA Tegra. [4][5]
 
+I considered reusing the existing Allwinner MBUS driver and bindings.
+However, the Allwinner MBUS includes additional functionality such as
+bandwidth monitoring and frequency control - features that are either
+absent or undocumented on the SpacemiT K1 SoC.
+
+For this reason, I opted to introduce a minimal binding that only expresses
+the required DMA mapping relationship.
+
+Let me know if this makes sense or if you'd like me to adjust further.
+
+Thanks!
+
+Ze
+
+Link: https://elixir.bootlin.com/linux/v6.15/source/Documentation/devicetree/bindings/interconnect/interconnect.txt#L60 [1]
+Link: https://elixir.bootlin.com/linux/v6.15/source/drivers/of/address.c#L635 [2]
+Link: https://lore.kernel.org/all/cover.f8909884585996f28d97f4ef95efbcab19527dc4.1554108995.git-series.maxime.ripard@bootlin.com/ [3]
+Link: https://elixir.bootlin.com/linux/v6.15/source/arch/arm/boot/dts/allwinner/sun8i-r40.dtsi#L328 [4]
+Link: https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/nvidia/tegra234.dtsi#L3052 [5]
+
+> 
+> > 
+> > Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+> > ---
+> >  .../bindings/soc/spacemit/spacemit,k1-mbus.yaml    | 55 ++++++++++++++++++++++
+> >  1 file changed, 55 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-mbus.yaml b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-mbus.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..533cf99dff689cf55a159118c32a676054294ffa
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/spacemit/spacemit,k1-mbus.yaml
+> > @@ -0,0 +1,55 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soc/spacemit/spacemit,k1-mbus.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: SpacemiT Memory Bus controller
+> > +
+> > +maintainers:
+> > +  - Ze Huang <huangze9015@gmail.com>
+> > +
+> > +description: |
+> > +  On the SpacemiT K1 SoC, some devices do not perform DMA through their
+> > +  immediate parent node in the device tree. Instead, they access memory
+> > +  through a separate memory bus (MBUS) that uses a different address
+> > +  mapping from the CPU.
+> > +
+> > +  To correctly describe the DMA path, such devices must reference the MBUS
+> > +  controller through an interconnect with the reserved name "dma-mem".
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: spacemit,k1-mbus
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  dma-ranges:
+> > +    maxItems: 1
+> > +
+> > +  "#address-cells": true
+> > +
+> > +  "#size-cells": true
+> 
+> No improvements.
+> 
+> 
+> > +
+> > +  "#interconnect-cells":
+> > +    const: 0
+> 
+> This is not a interconnect provider, but DMA controller, according to
+> youro description.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - dma-ranges
+> > +  - "#interconnect-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    dram-controller@0 {
+> 
+> Either dma-controller or memory-controller, decide what is this.
+> 
+
+I think memory-controller is better.
+
+>
+> > +        compatible = "spacemit,k1-mbus";
+> > +        reg = <0x00000000 0x80000000>;
+> > +        dma-ranges = <0x00000000 0x00000000 0x80000000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> 
+> Nothing improved.
+> 
+
+The #address-cells and #size-cells properties are included here to satisfy
+`make dt_binding_check` and `make CHECK_DTBS`.
+
+Without them, warnings will be triggered during validation.
+
+    dram-controller@0: dma-ranges: [[0], [0], [0], [2147483648]] is too long
+
+>
+> > +        #interconnect-cells = <0>;
+> > +    };
+> > 
+> > -- 
+> > 2.49.0
+> > 
+> 
+> 
+> 
