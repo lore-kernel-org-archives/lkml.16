@@ -1,28 +1,28 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6003188715;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A60551DF247;
 	Tue, 27 May 2025 23:16:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748387792; cv=none; b=LoCVWbCGRmv5Ck/ZPmsO9RwnwL/+KSw18RnIpqqspSOeY1aN0vj5QZUCUhCZM1reEPEj5nYMSiPZUygNZLkxKxSJwn1SerhhxYnYDaxxA3ym4+6s5fPDEXUrkyJ370u7wBEiMMvi0YBSykStpEoXzTbRAybY9QmxWz37M6M5u2k=
+	t=1748387792; cv=none; b=NpHMIdPCw9jr5wnrYvGFsKA/9UKrRzNnPkxF183S3sn0j/EQnYm8YhS3gYsqlQlTbTXP/e5Fz9aHjoPOWphbCG8fymO2mk6mbieBS3trDiylx41sfExt3AYPeJnjddV06LzyQxUNswyHBPxAuzIifRkZi1UPPV6XrqOJ3e4H/YU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748387792; c=relaxed/simple;
-	bh=URVDoqoK1Lnss2W+aZ3GLczVpFnztrpNRWvzFXXm7l8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=B/cHPBmWrNnJZPjDpxPVV2DbWSZNhhBvcffLw22fVoEK39SwqW1/URtJJf9oyEJifD67JRMCc6IeOfejx8ITEBlMOc6Wf6dt1rS1GedDprfnPdsQCCcTMTcgQ2qOjgGxycjDKIzALDVNew3WUUOWYZyiNtRQwarMLOdQK2FjfrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bvWu25p6; arc=none smtp.client-ip=13.77.154.182
+	bh=X5AFdnIWsx2+RUolMNr/Xmqz1SSW2iDAiu7Kyf3pkG0=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=unsGs/oW1H3MrQm7xMmQ0lvvNOwensV+8cnZgC09AqP1yeQmeRy4p+jz4ERdbkUfHtJ58wEClGSSNQ0twgRZYU9qxFQ7kYF7H5EXk9siVi/U3CSRaUbHkaBMzio90UTb4rUZHuWXWt86AvTZxupxihWwuFzXMjlDV+9QeBzlNT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TBtbBp0L; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bvWu25p6"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TBtbBp0L"
 Received: by linux.microsoft.com (Postfix, from userid 1053)
-	id 553572113A56; Tue, 27 May 2025 16:16:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 553572113A56
+	id 39B512113A4B; Tue, 27 May 2025 16:16:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39B512113A4B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1748387790;
-	bh=Uw4aQdSp2oOTVYvmFhX9i9Ez0fzpo4DqVU3RltDQphc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bvWu25p694qGOtb5JPRr5Edo8AXLs9w7t7SRwxP5zBSdEXEmwdJlLtzSZ0ROH1ilk
-	 f565/ZxA+wt5kjidkiVipYK7daxyAXLdkT4WW80fnPLU5RODLrYTMgjE8j1ZN+SIxC
-	 iUIExCO84L7visV2xJx+r+UJLiNT8EiMx3xmT1bM=
+	bh=798mUMkP+OIsjW3EvEW1sjUxZsfR0T/qJQLOihAXBik=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TBtbBp0L2ISl4ICNRCKW6ppP3nPqdlgT1bj90mUW43FbFmdF5ZOlUwYK5Iy0j9uvA
+	 wLbg5hdy0KtNqtHkXR144W8zya+Pou+gXf2GA+stPW8/2yRgjMCYhwt2PrzIFqwd1s
+	 QVJFmK1M5HaD9Tcu40DCneEk8lQzuYHiRM9qTwNM=
 From: Vijay Balakrishna <vijayb@linux.microsoft.com>
 To: Borislav Petkov <bp@alien8.de>,
 	Tony Luck <tony.luck@intel.com>,
@@ -40,103 +40,116 @@ Cc: James Morse <james.morse@arm.com>,
 	Lorenzo Pieralisi <lpieralisi@kernel.org>,
 	devicetree@vger.kernel.org,
 	Vijay Balakrishna <vijayb@linux.microsoft.com>
-Subject: [v10 PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
-Date: Tue, 27 May 2025 16:16:30 -0700
-Message-Id: <1748387790-20838-3-git-send-email-vijayb@linux.microsoft.com>
+Subject: [v10 PATCH 0/2] Add L1 and L2 error detection for A72
+Date: Tue, 27 May 2025 16:16:28 -0700
+Message-Id: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
-References: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+This is an attempt to revive [v5] series. I have attempted to address comments
+and suggestions from Marc Zyngier since [v5]. Additionally, I have limited
+the support only for A72 processors per [v8] discussion. Testing the driver
+on a problematic A72 SoC has led to the detection of Correctable Errors (CEs).
+Below are logs captured from the problematic SoC during various boot instances.
 
-Some ARM Cortex CPUs including A72 have Error Detection And
-Correction (EDAC) support on their L1 and L2 caches. This is implemented
-in implementation defined registers, so usage of this functionality is
-not safe in virtualized environments or when EL3 already uses these
-registers. This patch adds a edac-enabled flag which can be explicitly
-set when EDAC can be used.
+[  876.896022] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-[vijayb: Added A72 to the commit message]
-Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
----
- .../devicetree/bindings/arm/cpus.yaml         | 51 +++++++++++++------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+[ 3700.978086] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index 2e666b2a4dcd..8f42c4fec59b 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -331,6 +331,13 @@ properties:
-       corresponding to the index of an SCMI performance domain provider, must be
-       "perf".
- 
-+  edac-enabled:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      A72 CPUs support Error Detection And Correction (EDAC) on their L1 and
-+      L2 caches. This flag marks this function as usable.
-+#    type: boolean
-+
-   qcom,saw:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description: |
-@@ -378,22 +385,34 @@ properties:
-       formed by encoding the target CPU id into the low bits of the
-       physical start address it should jump to.
- 
--if:
--  # If the enable-method property contains one of those values
--  properties:
--    enable-method:
--      contains:
--        enum:
--          - brcm,bcm11351-cpu-method
--          - brcm,bcm23550
--          - brcm,bcm-nsp-smp
--  # and if enable-method is present
--  required:
--    - enable-method
--
--then:
--  required:
--    - secondary-boot-reg
-+allOf:
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              const: arm,cortex-a72
-+    then:
-+      # Allow edac-enabled only for Cortex A72
-+      properties:
-+        edac-enabled: false
-+
-+  - if:
-+      # If the enable-method property contains one of those values
-+      properties:
-+        enable-method:
-+          contains:
-+            enum:
-+              - brcm,bcm11351-cpu-method
-+              - brcm,bcm23550
-+              - brcm,bcm-nsp-smp
-+      # and if enable-method is present
-+      required:
-+        - enable-method
-+
-+    then:
-+      required:
-+        - secondary-boot-reg
- 
- required:
-   - device_type
+[  976.956158] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+
+[ 1427.933606] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+
+[  192.959911] EDAC DEVICE0: CE: cortex-arm64-edac instance: cpu2 block: L1 count: 1 'L1-D Data RAM correctable error(s) on CPU 2'
+
+Testing our product kernel involved adding the 'edac-enabled' property to CPU
+nodes in the DTS. For mainline sanity checks, we tested under QEMU by
+extracting the default DTB and modifying the DTS to include the 'edac-enabled'
+property. We then verified the presence of /sysfs nodes for CE and UE counts
+for the emulated A72 CPUs.
+
+Our primary focus is on A72. We have a significant number of A72-based systems
+in our fleet, and timely replacements via monitoring CEs will be instrumental
+in managing them effectively.
+
+I am eager to hear your suggestions and feedback on this series.
+
+Thanks,
+Vijay
+
+[v5] https://lore.kernel.org/all/20210401110615.15326-1-s.hauer@pengutronix.de/#t
+[v6] https://lore.kernel.org/all/1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com/
+[v7] https://lore.kernel.org/all/1744409319-24912-1-git-send-email-vijayb@linux.microsoft.com/#t
+[v8] https://lore.kernel.org/all/1746404860-27069-1-git-send-email-vijayb@linux.microsoft.com/
+[v9] https://lore.kernel.org/all/1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com/
+
+Changes since v9: 
+- commit title, message and prefix update (Boris)
+- fix spelling in Kconfig help text (Boris)
+- prepared patches against edac-for-next (Boris)
+- struct naming update from "merrsr" to "mem_err_synd_reg" (Boris)
+- grouping of all defines (Boris)
+- function variable declarations in reverse fir tree order (Boris)
+- simplify naming of static functions (Boris)
+- "CPU" in visible string instead of "cpu" (Boris)
+- error message reflects "edac_a72" driver name (Boris)
+- fixed the issues with device_node release using scope exit (Jonathan)
+- of_cpu_device_node_get() instead of of_get_cpu_node() (Jonathan)
+- make dt-binding update applicable only for A72 using if/then schema (Rob)
+
+Changes since v8: 
+- removed support for A53 and A57
+- added entry to MAINTAINERS
+- added missing module exit point to enable unload
+
+Changes since v7: 
+- v5 was based on the internal product kernel, identified following upon review
+- correct format specifier to print CPUID/WAY
+- removal of unused dynamic attributes for edac_device_alloc_ctl_info() 
+- driver remove callback return type is void
+
+Changes since v6:
+- restore the change made in [v5] to clear CPU/L2 syndrome registers
+  back to read_errors()
+- upon detecting a valid error, clear syndrome registers immediately
+  to avoid clobbering between the read and write (Marc)
+- NULL return check for of_get_cpu_node() (Tyler)
+- of_node_put() to avoid refcount issue (Tyler)
+- quotes are dropped in yaml file (Krzysztof)
+
+Changes since v5:
+- rebase on v6.15-rc1
+- the syndrome registers for CPU/L2 memory errors are cleared only upon
+  detecting an error and an isb() after for synchronization (Marc)
+- "edac-enabled" hunk moved to initial patch to avoid breaking virtual
+  environments (Marc)
+- to ensure compatibility across all three families, we are not reporting
+  "L1 Dirty RAM," documented only in the A53 TRM
+- above prompted changing default CPU L1 error meesage from "unknown"
+  to "Unspecified"
+- capturing CPUID/WAY information in L2 memory error log (Marc)
+- module license from "GPL v2" to "GPL" (checkpatch.pl warning)
+- extend support for A72
+
+Sascha Hauer (2):
+  EDAC: Add EDAC driver for ARM Cortex A72 cores
+  dt-bindings: arm: cpus: Add edac-enabled property
+
+ .../devicetree/bindings/arm/cpus.yaml         |  51 ++--
+ MAINTAINERS                                   |   7 +
+ drivers/edac/Kconfig                          |   8 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/edac_a72.c                       | 229 ++++++++++++++++++
+ 5 files changed, 280 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/edac/edac_a72.c
+
+
+base-commit: 4521b86e4a6ef9efff329ef18120b1520059ae4e
+prerequisite-patch-id: 5b3c01c126f1fb9299fd56ffed251f99de787d34
 -- 
 2.49.0
 
