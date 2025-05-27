@@ -1,130 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9CF29A9
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61E629A9;
+	Tue, 27 May 2025 13:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352803; cv=none; b=obExEYiBVyN3nsTlD+3bxWuKcsBmTXMNvnYta4XFkiS2QuPkcHYF7+h/+sUuE0lqtYe/gENdzBEWlqXLodLFW6HjK65H+tY0P4HuhUqXnA3Osm49JmJGIciZ3LxVRu9zu3HGBFjjrF9RSY2V4QTAUm5pCQ24MYlEl33CcIvlbWw=
+	t=1748352817; cv=none; b=BADSl08PvhD216p449v+1M2A5Qjb6shN+eHi4n08DqCAiry0Gv3wuLB4qAh3kwHasAL5u9saSFDIFn2U71ZGfI13zmPEJoEzClKghNb624PzlkKlcTsGFAUAQObL/x/3i0h2ggIGaacmq+BOsqrxcwrmqC4I0NbuqNFY5z9ffP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352803; c=relaxed/simple;
-	bh=wR7Njg6dgwD8Ok8E4irPjOJteY0XUc6ZQZzhYXAYtZg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DlQQMk2tEoLxkLXtBiEw8iGlks4K0TGX2rRxt4AmGe2XeGwrytcGUDY/+ejwIQFkx4+dpVBECyBPM8EYjFdkeFWODurSwu5GEHWXJHDThRCKocSm8KgSxzQKk0z4iF65tiWiz8cReqCABWlgoP8TdaMViNbJvSeab3LFyODaS3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a6Fnt4ew; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748352817; c=relaxed/simple;
+	bh=Yreqtg9dXS+66jF3KiKpeR9AoTTlKwBiTIy4diGcyQY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HRgzrym6xjISj6jgdvGS6MNYPzwK/ZoGky6JK8Jf5S924UgV4uR8M0yLPMmZORwWcFTGW3OCgNMRiipPJ3XJEIYyMex7pAjuvLxqwMiipGA9uV3RiWjHC2WeFTj5VQzFYhF08Vh9Cr2C2Goyr6TIxVz990l/t9/yjrQDWJji/I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIMZ3+5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a6Fnt4ew"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RAFa7E010166
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:33:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sf3ZDOW7jLeRaHKCxewndBSZWU52iW5rDGhJ3dY4AS4=; b=a6Fnt4ewlwant/Y5
-	TrzK1myff8Ttll60bfCP5g5o2EC4TnGrqLVSBwC2HLHcyJHTQXEaY9trkukWkV0L
-	YDZfaNQz0tQPd42OKZ9OJJYFnT2PnRThYtMaWzv+wvOAaOSAMimLEGsnaeKuBDNt
-	9pJ97U8/JR2Wry29pN5nDQ2EFY1XAKavo3GfzXZEK+F4c1pR0CtFPuEwqFi3OA61
-	wMKuzAoShKtYlUmG+CRgNdd0FRYPEZt63wfN39FP/Eohw5k4FcbRtvVkG1Et78L2
-	HbiCBtFTxaErE9+geZDLVrtANhuW+akmvp/g7nIx8YqPXTaNkb0sYYlFZMVSiP+J
-	C71qZg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjq1we-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:33:20 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5af539464so108022485a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:33:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748352799; x=1748957599;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sf3ZDOW7jLeRaHKCxewndBSZWU52iW5rDGhJ3dY4AS4=;
-        b=KkoZZ3cCXxy74ZeP2GdcB320GtnhtfdHp6rH3frxnjRDodjFXsUi1lJxpoih1MB29t
-         OScDU7Yypk77FFyvMVaV0G4nWRpO8rwtnp1F+8QcPq+WDSGivSapp5UVTcshgmy7usHY
-         mevW7SsGvPqe0lH6RYab3n9sQo1gYoYQgki6XOxTvuTcb6CquLK1MFETv8wFI398maEf
-         ArTPmWHIjxklheJxeKpKs0sHieGi/mR7WOKdJ/GllLatko9azL0YBfS/3TUI+0jJyTNf
-         Q1yCg7nbRO/fPMU8BXIvQes4Mnq7g037q05gWQMrR6Xwn67nDpwFbWTMr88wSwLTCatg
-         jkmA==
-X-Forwarded-Encrypted: i=1; AJvYcCX/nwiorNtPlhMwrbfUbisbWupLEcDMCab9H4AXIbOmUdx9bSfieIZY3R3KYVfR2dyTxhV9ycZL1wy8Yu8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa6698KheuQJURbSBRVFEdob2u/5+w9lqj3+PGIryg0qN/7Zzd
-	BmYUZtl638tp3VWpJS+c5daiqh2FKDP9LJBiNlNiIdkRGeB/kgT6re8StrBBVc5sfC+dZQHxchZ
-	rUd3e/m8ZYnU1vdYJP3ZtWrKDyXTMgiW4xfz+kubCZ3ovmo7xFsV9B/LFS6jJU8VC+CU=
-X-Gm-Gg: ASbGncvQN78T1PJGMzChO82Hm4Ndcqp0h/hQwTPUNg0Rd3SiBFiiZyHGph/kczjUyNW
-	p6CCMnfsvdMk1VcOxwaAer6o35Zkr7/8dBz7Endf/bQclRT83URXv/NmOCjvw+C1hrVVcKB0u0/
-	P5Ttm5PucSdxP6QwJbqfSA+kKa5NSgwq3CDW7Og4aEG5OlYhWaL9uVGdN705d/7rph0R6i1Gt0a
-	l4N7RFCkA9BkQMgIuCyv6MfWEnXlY/nftmfQc7grhMfgYTsRdVJypcGDDe6YfvaW6gBddHUFWHb
-	3uhelKhOfKXYhWl3f/pr0FN9Rw/Hh7NPM0nGyxH0yC8i7vw1hrAufVFbEp8gb848Vw==
-X-Received: by 2002:a05:620a:1a85:b0:7c5:ac06:af8 with SMTP id af79cd13be357-7ceecb968afmr707844285a.9.1748352799520;
-        Tue, 27 May 2025 06:33:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxHp9Kq6xACUrOLZeAPK3xKbLCPdgK3Jt6UEMD1d7N5UrCW5O84Ipwm5LgeRSnuCUJQpgxIQ==
-X-Received: by 2002:a05:620a:1a85:b0:7c5:ac06:af8 with SMTP id af79cd13be357-7ceecb968afmr707841985a.9.1748352799038;
-        Tue, 27 May 2025 06:33:19 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-602f33182d8sm4940505a12.7.2025.05.27.06.33.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 06:33:18 -0700 (PDT)
-Message-ID: <fe4d2887-59bf-45fe-acce-604185aa4081@oss.qualcomm.com>
-Date: Tue, 27 May 2025 15:33:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIMZ3+5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207A0C4CEEB;
+	Tue, 27 May 2025 13:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748352817;
+	bh=Yreqtg9dXS+66jF3KiKpeR9AoTTlKwBiTIy4diGcyQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fIMZ3+5/0ZqRdXA3U2cwAYmSlVzYIb3hJEsVnFRsN7eOilKcfNioI1MQJQiN2E8WJ
+	 3Tm7PatE7f3l8xFMGR4SQPj7iEUjOnjtRS3tGiv5R3izTRT0rKZhO94eruptlTv+nR
+	 RaBfMs131bLmk0HCm4Z7gR7WL8PHvMGA9yk+kYv59rFJ4wDM4GOdhhfDfpVu9+Kd6r
+	 jCgI0cPIY0s3HqytDx4pLOzrzsglE7LDTCb5ShL6VLgDPn0JXllFZeYhbzplAJHG6V
+	 HRxvxCumTcO/1s2NOQBTwJSr6O9fCoqk/VsPC7wtUokAuhjmZ/tGM7CZvHsofll4y6
+	 ox5ZiV2hBovPA==
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-60634f82d1aso613472eaf.3;
+        Tue, 27 May 2025 06:33:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkyoSJ6jaaGV5LiJBqqPh7rw21icfqwhNHa7EuZsya7u9DdMwioOIPBQxsqY/GHbgL1gDHinkiS/k=@vger.kernel.org, AJvYcCUmI9bpKsU8gXRiSI/91pf9CzZMuZAglg9ArvL1dolQK48tQFo+JJQQW5F/Kc9WLjctC2suiilHunA3cCv6myo=@vger.kernel.org, AJvYcCVeRkZm4D7BtIRfZQLUhP/9rC54pWqrLnRlTYyIVMouVxz1XmRD+X4qKNi1AA6C7Fa8uwWrGkUkLn54mkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyouD4LQTii9BIviHcngA/Sj3XSjxgozRjyvD3UeZrRIyIvyipB
+	S3sHuHNJ/iotGhUHRsvBjyGFkeVPF0LiRgqgdn6wNpWcJlW+bVHG5VGIw46+6fk6Z/uVANFFcJc
+	rSBufk6gDThbshZzp/vwHW13aL0LEgLo=
+X-Google-Smtp-Source: AGHT+IFau92567au2cPuYAeAGw2urSGzecPQifSVDg7w8zBs1XpWLq+I5vuHek99lyWJrrswIdCtvq7ShRJx7g096Yc=
+X-Received: by 2002:a05:6808:6f97:b0:404:ee1a:2057 with SMTP id
+ 5614622812f47-40646845fc8mr6864503b6e.29.1748352816387; Tue, 27 May 2025
+ 06:33:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: sm8750-qrd: Add sound (speakers,
- headset codec, dmics)
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250526-sm8750-audio-part-2-v3-0-74429c686bb1@linaro.org>
- <20250526-sm8750-audio-part-2-v3-3-74429c686bb1@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250526-sm8750-audio-part-2-v3-3-74429c686bb1@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6835bf20 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
- a=er6kI1bek27KySCzKVEA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: g8tk7lhFba3eTAZAxCC_7EghmwNUyg5M
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDExMCBTYWx0ZWRfXwlXRBVqfWFT5
- WM/e91gkJNuOBZVwVQEOhdWDlk2byf3VmCEnhYH7yvEZmsTLSeHcB9PctRLzQu3O/t4/UQcRaYY
- I9bffw26C6okCoI3R2WOP0ingCjbn/5o6qib8BM9Ymj6Foz7fzeMdycAqndOHYGjOEiP5ZsTWT5
- yrpWoehTKFLkIsD4GxJj9v/CZ9VJZ3N7XCAhDy3RXT1/RxMP8LYqkdtgYFArix1wyXPpdFdhCZw
- SHQwPKbLrCAqWEJ14UgpOY0sLHBZFjbznRriMZWAvcsc/RO4VoHZ+c27DIur9huaDZ6Sw2R1pJ5
- ZSbS8X+eCkbaKHwE2xVkk9FahGAiLFJUQLHSkezr82qcPzfj8puCJ51aIcFuX0eiWTQ3XVV5B6e
- 6Pk9kQKc65I4S7yhVMaigTqHWuOXAu5ipNFZaFhcXFKgqELLRZET+QWnkzVRT4SVee1sQMLM
-X-Proofpoint-GUID: g8tk7lhFba3eTAZAxCC_7EghmwNUyg5M
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_06,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=911 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505270110
+References: <9d93c783cc4419f16dd8942a4359d74bc0149203.1748323971.git.viresh.kumar@linaro.org>
+In-Reply-To: <9d93c783cc4419f16dd8942a4359d74bc0149203.1748323971.git.viresh.kumar@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 27 May 2025 15:33:25 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iSnZkEOmmeVnLJ=f+EQB5Xsa8yZY5g-0kEZm+Rovdnag@mail.gmail.com>
+X-Gm-Features: AX0GCFvTqkJYSrSEu4gGBevBj1ylrAXBrfzJpN8JKF5VCANJ8k_C8tCnFZbj2o0
+Message-ID: <CAJZ5v0iSnZkEOmmeVnLJ=f+EQB5Xsa8yZY5g-0kEZm+Rovdnag@mail.gmail.com>
+Subject: Re: [PATCH] rust: opp: Move `cfg(CONFIG_OF)` attribute to the top of
+ doc test
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/26/25 1:46 PM, Krzysztof Kozlowski wrote:
-> Add device nodes for most of the sound support - WSA884x smart speakers,
-> WCD9395 audio codec (headset) and sound card - which allows sound
-> playback via speakers and recording via AMIC microphones.  Changes bring
-> necessary foundation for headset playback/recording via USB, but that
-> part is not yet ready.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
+On Tue, May 27, 2025 at 7:33=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> Move the `#[cfg(CONFIG_OF)]` attribute to the top of the documentation te=
+st
+> block and hide it. This applies the condition to the entire test and impr=
+oves
+> readability.
+>
+> Placing configuration flags like `CONFIG_OF` at the top serves as a clear
+> indicator of the conditions under which the example is valid, effectively
+> acting like configuration metadata for the example itself.
+>
+> Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
+> Rafael,
+>
+> Sorry for the trouble, one more patch to apply :(
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+No problem, applied.
 
-Konrad
+Thanks!
+
+>  rust/kernel/opp.rs | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+> index c2bdc11f3999..a566fc3e7dcb 100644
+> --- a/rust/kernel/opp.rs
+> +++ b/rust/kernel/opp.rs
+> @@ -575,6 +575,7 @@ extern "C" fn config_regulators(
+>  /// frequency.
+>  ///
+>  /// ```
+> +/// # #![cfg(CONFIG_OF)]
+>  /// use kernel::clk::Hertz;
+>  /// use kernel::cpumask::Cpumask;
+>  /// use kernel::device::Device;
+> @@ -582,7 +583,6 @@ extern "C" fn config_regulators(
+>  /// use kernel::opp::Table;
+>  /// use kernel::types::ARef;
+>  ///
+> -/// #[cfg(CONFIG_OF)]
+>  /// fn get_table(dev: &ARef<Device>, mask: &mut Cpumask, freq: Hertz) ->=
+ Result<Table> {
+>  ///     let mut opp_table =3D Table::from_of_cpumask(dev, mask)?;
+>  ///
+> --
+> 2.31.1.272.g89b43f80a514
+>
+>
