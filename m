@@ -1,187 +1,135 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC9574420;
-	Tue, 27 May 2025 21:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36E520B800
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748379801; cv=none; b=W+8cffkfza7hJUmyRtIAyx0am/4ruHYyyiJ4ib5uht6NxTpvAA6aDzLgCH2HsG4h/bg7fsFSeRssQVkPZ4VPharo4uET70znz4cBAbsJfJp3qt9BwwIDxks+4avnlGG3RLEjEZTP+G/JwvzY7V1DLJIzVdvM/RdOzNrdG13YN+8=
+	t=1748379807; cv=none; b=Pp76Pl8Ko3c3Al7U9M7Eg5DocPJKhpCh86fI6kSCn3Sc27XTC0i37AMCA/SJ1Xk6tYB5kGsWqDnNa9K7TcncWekAaQCBuEG4d9P1UCJAxK6ZBucHHUui6RagmQQAjI9AHh9oQYKrmJqlbY6kEazrwPf9eDBNzgkDd8FKQJ3JaTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748379801; c=relaxed/simple;
-	bh=nEZFWJNF43/IBAqa8ZBZ+u1owD13TSpA7O97SW6e3ck=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ecCBhwwdtiTfyNtgxGTrq8RgnXmpBRHojY7oEoT/ZgQ3qyCNCJ6vMiGoOQLVI2fXJNt9ZRR+AN8wbo9YAnO+WPf3RJQne65dXbvJWhGDUslNGA7LaQXnVfduvfAM1nvH8JU4L0VJs9r4o//jphyy2e9f93yOxAKvQhC72Z7/31g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EpxbUeO5; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748379807; c=relaxed/simple;
+	bh=+7lmrkFQHlFAXV0QQyrHiRbF0QoKbYG80oYbBKTNEzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GnHIhPTTODafBbbsjMlLC7iWeNEWpPzN2Qai68A5HKojHzYfCLEtExT5xjNQbQEIgyT5DR/XI/PYEp8TymDw4tMTLNzNGtKkXmF5lyLU/qWu0U9OUOeO7FBBPnY5MRlyF67kZAJ73kgNdIZk9PWxfzEMQREPXNUcT53l8qv5esQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PjMu0JTk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EpxbUeO5"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86dc3482b3dso159301241.0;
-        Tue, 27 May 2025 14:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748379798; x=1748984598; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=v+tfX241W26Uivk8mErspfbe2VUCMhSXcBryN6E4qnU=;
-        b=EpxbUeO5FVYAb7s99XgdqNuKUzwmaPK4Pn27V8/y+ORqoian/CtNBFFzVY+siKcUyd
-         1aOLnbLTB0SOE5kywd4+6h/NI9IUHBZAoRJYZjFxX4Z41nH3IjCGbR8jLcEDKEcJylJt
-         5JrSCpYycORsrUAKas+pacT9406cHhJ5pWxaY+pclQhf/sEmY/AM3N5LJimNY3X2a6/n
-         r04WV/OHT31ETg74FfkioTXrECuZk7SheGux2rRBkoW88D3An5zOa1xbSjgQHXhmcy3B
-         bNaiSy8pAClRW91+9Ep1JWM4j2EDM7qwkX7MvyMNFJEUtcA0DH97hNwFHTKWYl8fuPv2
-         xjvw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PjMu0JTk"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RJiQoX010166
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:03:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=VsOv4br7fd1T6CcMRlB4v7ct
+	hk2voXgCn0Av/3vO9Do=; b=PjMu0JTkWX93JZ3HTHCBYQzd1vRiwiscYkhKM6OA
+	vbA2zi8u+QIa9/JxmrbghIdXjk0X5tHm/K01LCekhYvfFKgBPseU7ikZxCmwr/uo
+	vTZX+IpPgzJ1/RvuDxkgfcDhgzDeL4J0vCzx9R0FQND8N06wlemN2Gz45A2g8SgQ
+	Yosbj58Yqfbp2tRuYzwPxFukE9dl95FCkN6jjCDnN13XnLMYgBEtTKuiXu1nS4I9
+	GzXsnzNpL0x+DEHs0k3jROXjl30nydYi8z0X/YK1QUwQAj9oPjBjMuG3e8ELFeS0
+	APPgu/EBZlgqQ3BNLAS/+2GE5fvG9lsM30neuc1DaqsTpw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjr8nw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:03:25 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7caee990721so941278185a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:03:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748379798; x=1748984598;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v+tfX241W26Uivk8mErspfbe2VUCMhSXcBryN6E4qnU=;
-        b=n7FyKEMUkBBi6iEcevtSxA8x0Raosd9CgN80CnsGwdYqzqho/5hHjQpGC15TyVyaYR
-         e7ihUFO3WvjmmkXRre2Put34JJ5a3o5WaF8scW8yzOh0uL9oJ8kwRkIqKR0hyNK3plmK
-         ALlpZz1YqfFS+uKbCsObyPn88Qwt1c8m232P/KSVLmgcHILG8txpuedDHl4kX3B5WSLu
-         7xStYjKAKjSHfAqd8zMFo4jegSmgBpXvSDtGYF1MVR5iu1Nc7/qsc+fRTQdhtdYm3Lbs
-         NvM5HwSqGDZ7dCucHqhwrAOV1gqLixjFnsXCEJeF+7b1s6vjODAJQHeBpuat/XIkZJfA
-         VSIA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0NRdt+BOl+7aWpXVpd/ZKM2gP66zh5e1Yf6w3nbG6m3886mTX25kAOYn6RbtaEYYtWvRZUjdpG1uS@vger.kernel.org, AJvYcCUr0uDSX/UprXID5pVpWsi5mcN7kBjiUZGAKx8ZDPRpykVfTm6HpfpCbgo7ZGpQ/kIiNeDJRh4wxLS54H9X@vger.kernel.org, AJvYcCVXRWEJIs1VtzzVhWUIinTvFXVzIPAs2v8/fPB0SWB69lkbR9aNwamPyU5gCBTbiITQXfosnfboRsk4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws4Uz9L5KZuiK75BW072koeqC5aeUYw+jZaGqVDCgRGr+opaEZ
-	qduRz6MTEPUcn4CYUNHyHK2KQjpi/+dDIP2Fk4jwTOJZZ3RgICP/Lr9l
-X-Gm-Gg: ASbGncuwsp8DR8ghL3L9yc8aOAl3i3RdCnLilQ+5C8Bcmy+TYmPFFCMNNtA/P9TIlko
-	XsM55Lt0ihO5Xf9J4JaaPLBYuuu1r3V+qcCbuwZJo0vWHjn9ieyOM2cPaJVQ+vzhCo9m6rOxHyA
-	4mJcHBhtYfjXUETKGJDn+uDao4KUzOROY+ERYI7jNLQxAitXR+ShMAobrlKPZswOwh4BBuQAuqe
-	wJYbYa4EjQEf9ICmOpalQW9fC0EtVXWHCTVtm6cLvWWdZBhzKOhyCFSJA1ZsMMeFzKU+PLRnesa
-	TMMezHaz7qq2XWXQLbKmVM9EUXNcBzCqDCIqpFJMU3zMj7dpjj52T2ZzrbzRdCkE79JGwhfOfp9
-	vdTSuisfdlA==
-X-Google-Smtp-Source: AGHT+IGahsV9cN1gLjmLmKKBxKssribhKdWt6xqIIDfYJ+6Xkj8fLEQKGmWCdlAv0G5Zzu0vS7jWrA==
-X-Received: by 2002:a05:6122:cd:b0:52d:beeb:c6a3 with SMTP id 71dfb90a1353d-5305fcdfe92mr1861095e0c.1.1748379798477;
-        Tue, 27 May 2025 14:03:18 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e59cea6ee0sm205800137.2.2025.05.27.14.03.14
+        d=1e100.net; s=20230601; t=1748379804; x=1748984604;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VsOv4br7fd1T6CcMRlB4v7cthk2voXgCn0Av/3vO9Do=;
+        b=w9L6tSa0ulwjsJAoYYRJGankbZXSXX+4iE3h8zkY3FCDxu64PX41aBYfHRk78lvIMg
+         A9WgLibsv8nLd5VMIjFR3iW83Laes+UpOuuQKlQQTdbmiihBd36i96z3DCOb28DmPqFs
+         XQSeukL/4fgmdJoAcCGFGP8O6Jr8Mt0Kfhcwsdlpbq8Dc/oqHoKJzKEF53gVZq2mwn0N
+         9UApcUR9++isXAmRNcEDMrtyDFGsARyvCVrVWynMcd9k8s+4iWYLV+YGDOzuA3/cb81F
+         dk3ub6jz6shm6kwZ+DaGEBI2U7nW+BJikX5d0FndaNyBX3i7kK9IuS/c5DSeJQwVL0Xn
+         k58A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeaHb/PfYKmCqCKiSg84SaGJs3iIX6DVgTVQ29LlAlJmuw3RDTlI/WAcVXZIJGstcTKPZaAtzkSd0r3hA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZsymESWYER4XMy8nJlvTdmJJSAaKe5UlIZnFOezTQhXZXAe7f
+	4FBbpMcGKJnoPc3ncNWtpZkp2HKzVM2CAgZ5PVMCP4OCIK8zW7uRlayy88H43FvSzPWtAaCunqG
+	pYL7apqE10I/Pi029pw1u7JRiBsG3P5o41d22W5SW5YOdHt8lQlNsxy1MYGHiiT/8xl4=
+X-Gm-Gg: ASbGncvDnWq4XeI20zHiqH/VQ/E38NcvNWEtDAR1/WKlANO5WuG/V5Nawu1Ij4HdBEe
+	r3QEnwXq69MQlEmqMsd8HhU8A8qbCvrbpfogYyqtpwt4AUqOEM6mzBt8dai0ZikpdPbEjC+Jx7E
+	Gg/8XbX7Tmxx6EYTuHj0xqS2eVwdTbfdnwkY/VSgDojbHpW/7+cExm4EeA612O14tXodE34UMs9
+	RuPuGceY82cB9cIx8+KQUtLkzK123k46STTrdG6NunL5J1nzMhSp4Oylec6QLF+vZj/NOjrid1J
+	kP2KqejMiCFqeI0kCcM6Oq2kL+gSgBgtgVqB+6Cn06vu2ccy+DigRVFR9ASGpNaQ89QggnGtzN0
+	=
+X-Received: by 2002:a05:620a:1794:b0:7c7:bac6:8b7f with SMTP id af79cd13be357-7ceecc2d5cemr1965854285a.45.1748379803805;
+        Tue, 27 May 2025 14:03:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHey2F+1GmRJLbhJPjMP4o/YRYtrCtiGE60Hp1Q7gbuk7nE2RxX+76V8r4hyZF/SGD9E8GdQw==
+X-Received: by 2002:a05:620a:1794:b0:7c7:bac6:8b7f with SMTP id af79cd13be357-7ceecc2d5cemr1965849185a.45.1748379803410;
+        Tue, 27 May 2025 14:03:23 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532ee738f9sm25865e87.237.2025.05.27.14.03.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 14:03:18 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	manuel.stahl@iis.fraunhofer.de
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: iio: gyroscope: invensense,itg3200: add binding
-Date: Tue, 27 May 2025 17:55:28 -0300
-Message-ID: <20250527210308.4693-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Tue, 27 May 2025 14:03:21 -0700 (PDT)
+Date: Wed, 28 May 2025 00:03:18 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v3 2/6] phy: qcom: qmp-combo: Rename 'mode' to 'phy_mode'
+Message-ID: <syuv7z7llocqzqsg7k4chd2lejnjsv3fzgif5eumxkp3bdtrrw@vheqjejlyxgi>
+References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
+ <20250527-topic-4ln_dp_respin-v3-2-f9a0763ec289@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527-topic-4ln_dp_respin-v3-2-f9a0763ec289@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6836289d cx=c_pps
+ a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=i4r9q8SyThEWzBBqjdIA:9 a=CjuIK1q_8ugA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-ORIG-GUID: RGrwfR0_l5k94b38P25hfOyTdeja9LOG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE3NyBTYWx0ZWRfX3tZXhMu8EDuq
+ f1urCdyAxe5cV4/ypSSyYeukCsMJrRXdVUEvZLYTbNtmW1l6v4RlQyaUo1xfNZSeyFDNrxicVFm
+ wIibX1UyTYFoC9Sbj3IpiP04u8b7l9hqQECsfrLKoOHSRHeEcjdhM4nrC/2Za+76F3+4NmHXYSQ
+ owo29dn1QnzEfj3chC4XbcLvMRc5JYLPv8PdaB1wTPzz5/K9opHv5TGOlxgwj3X7J9NIrJ69rWJ
+ auhlQjN6S/fW1joLwtz1xTd/cs7pe3RyTUhKrr05jOLzuvOO79kVEptee/gAE542uJBHmGgdWXd
+ NsihsuFQliNz/f/jGfZlze4cAfGuIb7ClcYr2LyfiDoK4CuhyApiRXee4KdGH1Scz4qVkF5lmc1
+ E4VnhCLmNA0Q+tARG5uRw6RoSTzMfH19eCwimmMtSpkf2YjcH4A6Y9gUwWWRCRWmrXMEzvDf
+X-Proofpoint-GUID: RGrwfR0_l5k94b38P25hfOyTdeja9LOG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_10,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=954 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505270177
 
-There is no txt file for it, add yaml for invensense,itg3200 gyroscope.
+On Tue, May 27, 2025 at 10:40:04PM +0200, Konrad Dybcio wrote:
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> 
+> There are a numbers of ""modes"" involved: USB mode, Type-C mode (with
+> its altmodes), phy_mode and QMP_PHY mode (DP/combo/USB/off).
+> 
+> Rename the generic sounding 'mode' to 'phy_mode' to hopefully make
+> the code easier to follow.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
----
-Originally I`ve added @Jonathan as the binding maintainer due another thread
-but @Krzysztof mentioned at v1: "...this should be someone interested in the hardware".
-I`m not sure who might be this person in this case, a reasonable choice would be
-the original author of the driver, but looks like his last patch is from a
-long time ago [2] but I`ll ping here.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Dear @Manuel Stahl, I`ve noticed that since the driver was added,
-there was no binding doc for it and this is what this patch is addressing.
-In this case, a maintainer ref is required inside the .yaml file and I would
-like to ask if I can add you in this case. 
-I would appreciate your comment or suggestion over this topic.
-
-Tks all and regards.
-
-Changelog:
-v2: 
-    - removed the register map link; there is no datasheet available at public ref. At [1],
-    it is just a product overview, so we can`t use it;
-    - add supplies and external clocks (I`ve used as ref iio/gyroscope/invensense,mpu3050.yaml);
-    - add the author of the driver as the maintainer of this file but I`m CC him in
-    order to get his opinion about it;
-    - adding some CC missing at v1;
-
-v1: https://lore.kernel.org/linux-devicetree/20250515002817.81863-1-rodrigo.gobbi.7@gmail.com/
-
-[1] https://invensense.tdk.com/products/motion-tracking/3-axis/itg-3200/
-[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=author&q=Manuel+Stahl
----
- .../iio/gyroscope/invensense,itg3200.yaml     | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
-new file mode 100644
-index 000000000000..4b2f9a57c6ea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/gyroscope/invensense,itg3200.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Invensense ITG-3200 Gyroscope
-+
-+maintainers:
-+  - Manuel Stahl <manuel.stahl@iis.fraunhofer.de>
-+
-+description: |
-+  Triple-axis, digital output gyroscope with a three 16-bit analog-to-digital
-+  converters (ADCs) for digitizing the gyro outputs, a user-selectable internal
-+  low-pass filter bandwidth, and a Fast-Mode I2C.
-+
-+properties:
-+  compatible:
-+    const: invensense,itg3200
-+
-+  reg:
-+    maxItems: 1
-+
-+  vdd-supply: true
-+
-+  vlogic-supply: true
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  mount-matrix:
-+    description: an optional 3x3 mounting rotation matrix.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: ext_clock
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        gyroscope@68 {
-+            compatible = "invensense,itg3200";
-+            reg = <0x68>;
-+            interrupt-parent = <&gpio2>;
-+            interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
-+        };
-+    };
 -- 
-2.49.0
-
+With best wishes
+Dmitry
