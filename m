@@ -1,145 +1,136 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50CB2DCC07
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2976016EB7C;
+	Tue, 27 May 2025 21:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748379683; cv=none; b=aUYjb4wJNkVypZ9woA3xS91vk7A00Gp5LmbhQRGbmT3vyirTHOpzQY4v5WjERziK5pxWGjYyF1xTPtUKApBLvt6pi4GVFhZoXtHT5ZL9sSeCbj2Bfy2kpBMdA5ZRDLH4VXBGXUGiKcr30x3H0/DMp3PMG8NiFdL8wUJrfYJx0bY=
+	t=1748379738; cv=none; b=MzY+7Cc6ZVXQF1o8FmZrRmGaGKmn3Fa01RDXuS6G9BSdddkazXK7Z7piOeaJrPDv584FomUZUd8BMu/JBMOrrl2INyBGUbAFP9JJgp0IyjkAyxgfyPfG79OWhOTrm3iCPcEE2TOdXHNiwHdrgkPrOXKpbd41bOuIIqVDBm6B7Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748379683; c=relaxed/simple;
-	bh=Q/my21LU81QWCNduAB8QYEpDktC2vzKK8+QiMKR3Ovc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=qMgcu7NR/2d11y+2eHl+8VZoy8tNZgQ0GEbWIhMLEgvJkXD5GRyhxJczILtiEa2uy5Tp8+akERmtOkfAcv2OplFzYMhJ3Xj6F/vp+LZRWQj6AMdhu3r762zGaC1YOJ/FycRP2UC8hWvNdgsvmoxc/esmD3va/C3vRH4JlHOoWG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tHYr9pzu; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748379738; c=relaxed/simple;
+	bh=V40s5P10aUCH3HIVC2HNHSexXdvIT3EiOCOMr2U6Xv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kK12huEWeKTfaTgtwvXGfnIYzui/lkopItADjmHND+2FbCLBxsog6xqCf63XmOmxQiaKJVIVcDq7S+BiJMe0B0xDt70Lb5XTU8Xgup8pXAO5+gO3T9t/PO1LxsYpdsrurC28X6Bh2i92pAtYh+tPXBnOpAG6ONeUPFRU7u3jfCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pp7NlkO4; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHYr9pzu"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso18885ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:01:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pp7NlkO4"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so2668839a12.2;
+        Tue, 27 May 2025 14:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748379681; x=1748984481; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=saRBnVAV9ald8ATB6pKTuzMNGlKbn7cHBliMBSEPoXM=;
-        b=tHYr9pzujXAH14Ia0e2mIIWYtThauQgJ0pR+Gw8ZoWmnjUoD5x3pUtjrCYLPnkNEK3
-         xBHJ2QJ2ktNPCmHlsLNRCrWlqhsSZ5kGv20jPVpZC1Vq7k4e985uFL/8u/FHDjdJ/NFr
-         dSiERyU4C8hqwNxSkqv8xKGMie/51kK9l3KXQhvPk3FMvup11OvKJwuDPs5XWZBiAPsw
-         781ir7HzVNpLsmMXgiwwVpfSK9zGqZ5FHilJnxp805u2i5BjeJJWJ6KlNEOC0o6Mrk8G
-         c5Xlyo6KIkfA3owsGOflOf4l6kuavsZYsR4wXgb7AIOip6SEqfrYWXRs7aEdWvOWVnM0
-         TA3w==
+        d=gmail.com; s=20230601; t=1748379736; x=1748984536; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Q/8gJTs/s39iJKQwcXQ04Ed64htlV0Xkd23Q2UgmZ5o=;
+        b=Pp7NlkO4MRKoAQWnZgn8W8ITAH2YEEeVatLTlgC/21vTk1TdQYExHv+fUtPmhPdbUk
+         2ywWV5xpoNgek4jdH8sf3PKof93GzTWeTmE5AtGMIEROysVoF0QVvYIfzSNqmW1nswh2
+         MHH7piDPDTDuBb+HW40ZiM4BR432bcsj7jKB/F4qhHCO7V27GhTJiAC+XRpIbepjRFmn
+         TGK8Wxh/OGfUG3lLdLaYz333Wreu0v/5yyk0Q8ExJEhvsBGhsXQQtW2T5CgY2L4W2/gT
+         M2nEJ7VxQOmjdu2F6/nBGE3UQRCXq6Ul4plhFxm3J6+IqKqcKTNcxyBwIopJ9rN8b/u/
+         Vifw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748379681; x=1748984481;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=saRBnVAV9ald8ATB6pKTuzMNGlKbn7cHBliMBSEPoXM=;
-        b=qQ1zvhmVHGjp/+ZgAmQmQwNvkMmEF3B0mI9Hrsbmw4N3IthZRgOVeSYQglemwF1YL+
-         1gNBzAQvqLvyLyutfIVwzpJhzTRyE/UKYf+qgSleLoVHPGjwPBUwRWizAfSc3jkR5my1
-         cQ5PGzSbXhmIYgMr2K+cBjJDyjLu1QbneFMNNSruYCL3lqK5Qla/hzh/0jdVnH1J6cxe
-         aBsaK3B8qz5XjMLSAJVOvd5B7NjWpEgH1w3/96VB3DlCEd8SReIqjCvhwsWVKHSKvVky
-         ipP2SHOhl8IHSq0SQWMPXwaREYGpVOECupFyXC/YoiMeIJ5gNTbxv1BTLc7E5+SfSSpA
-         xSPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtJ1iPSXSa+Mv7VaRY3Yp1cRyKtoMxfxOUphrQ34tPKTp50iYdXEHVxp1dSgsVSYyMDpXKufMgaQ2+fe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwkgLYVFoHEMn56PwBcUfEtG1u2bd2XCWkLXhaT7F/uKqGWs0O
-	+Iop5jUIXph2/aIcBtWPiVs1CsyXCYYWcw/LrvV3vfTIwKqo3hGAnst+9zoSG3iAhkwwcdmLPdH
-	ap2J65cjym1zVIj81dVBdqtEgF232OBtwnKTFxL/Y
-X-Gm-Gg: ASbGncu+8e9Wgk/JRv7jmxdMukVzPzEtEyYgeM1QJpT0H+2vYWIS4w5wdltf8IdBTz7
-	crIaSpmV/BXCkhlQgDmulN01ogJh1yhdw/Ch9sMIxRt/fWZZGFca/t6XQpIjtnpm+hHOpJmW7AE
-	+aa7p169+4RtXEMua1Kv1oYFxwuPoxmXKnvGoDm/jdgE2+Gnm2k3MR4JnsBWa6xUMsoleRLJkbH
-	/liwyvjMDE=
-X-Google-Smtp-Source: AGHT+IFGZy7sSmrUQDGt3B2pKCl4y7opyz0UYxFa5xUtmavk1LEzMR4Am76fNdf7KXmigSozBwZsxx9bF5jL7gv53+A=
-X-Received: by 2002:a05:6e02:1c26:b0:3dc:8116:44a8 with SMTP id
- e9e14a558f8ab-3dd88fc27f3mr815995ab.26.1748379680474; Tue, 27 May 2025
- 14:01:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748379736; x=1748984536;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q/8gJTs/s39iJKQwcXQ04Ed64htlV0Xkd23Q2UgmZ5o=;
+        b=oLWDC1kEXpI/0PyFTVFzs1AlBlMTYoXGsWFIKJnIEpUt4K92q+j1cQHxud1++16ZVD
+         7TpvfPix1HsNsdxpE6+HQTzf9MOEMJ4BKrRXTAD3bSlb8jx+XZSdT6cQYyuJ2acDgWS3
+         j4JJHkYTuMFSjljYa9+SuaJ/gShbZZ4v48yQ3S2Uxukb/UAvEvQIMuPS5qXPAlqBKArX
+         TJMa/lFrvWIby5mhL7djmi4w5+1F8RLa4IgTaDHp9M7CPlpmpJ06EbuyWZOejma/TfuH
+         eYbKDZoXS08iEqzX4EMVxlmPR/WlYQKRoBZvbgxqeXtgBDkPcgWEEXTdMs5/XfltM5/b
+         GWeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUalwWhpWsZW2LnCyJREpKWqEM+u+dGeD6roGq0b0Uo1eyfeG7dC9kHmmELPhK+FlYI08V1Q4Ly9ddeZmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdDZW+aS7Coo6WfzDAmBIZQGeGFUaer7cldGnyVepGOPi9DtZv
+	yXggGMKK8VcTCUTqkCo3c84jzASvgSrRq4q0AYObfs5YEksB1K4MMVo/Kp+0Jw==
+X-Gm-Gg: ASbGncuySaOgI8JmPalOgZOwlIXoIkV8ZDUtBGPK2Iljg60kBfwxRgg8uIghzmhSLeV
+	cu4Vd0FMPFIPmI2AMBfmAX2XdICOE/ktwyIqcBS90MIp7gYT5pW+LFYjQUL9lvWXHGXb4OaMwEQ
+	zuvSCACiTxVlOjTWpNMhdHHaRjpUyCfdmhHHic+PDoZrMmEjCWY6tk8aZBgP5f1pjKrH7UmK0Es
+	cWT7gYXDG1FOGvaPSiPOHeUuvjokn8BsAHov62WuvcoyR+rHJZCXG4tYW/rA5yAT2wO0zbozHHx
+	TLh97K+0TLndVRNRfeMs8q7iQZx4F1+1UFWpFPFJ8FG8mPHjrU+D
+X-Google-Smtp-Source: AGHT+IHjAifkKP8ETl6g3EX99KwuqWzfU6ZwlnmFkjLT5UAfcHuHyF27eoGiNt5JcJ5jGSETKmeGUg==
+X-Received: by 2002:a17:90b:1d51:b0:30e:9aa2:6d34 with SMTP id 98e67ed59e1d1-3110efce72fmr26906299a91.0.1748379736054;
+        Tue, 27 May 2025 14:02:16 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:234b:b801:3ed0:528a])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-311e3da62d2sm5411a91.27.2025.05.27.14.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 14:02:15 -0700 (PDT)
+Date: Tue, 27 May 2025 14:02:13 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Xianying Wang <wangxianying546@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] general protection fault in input_unregister_device
+Message-ID: <j3gqh3iv7hsanemh3ctsrzcd3hljhsmdwe65vrnsjrygsz5dzx@7wvtrimqooim>
+References: <CAOU40uDDL9-ivR=8nx67T9_j+1+2dCXNyBUqFvOPyv0cpPr5Yg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521165317.713463-1-irogers@google.com>
-In-Reply-To: <20250521165317.713463-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 May 2025 14:01:08 -0700
-X-Gm-Features: AX0GCFtlnVS6B_OGSV0n49shLWA_6YYzfymGUo6EP9yC_fUFq12D5mhe5n9VNOM
-Message-ID: <CAP-5=fWWjx+SxwEHRY2Xju_0Bin3AypkpYz+8vnwuCd08Q1awA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Generic weight struct, use env for sort key and header
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOU40uDDL9-ivR=8nx67T9_j+1+2dCXNyBUqFvOPyv0cpPr5Yg@mail.gmail.com>
 
-On Wed, May 21, 2025 at 9:53=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> The arch directory is a barrier to cross-platform development as files
-> and behaviors within it are inherently platform specific. Sample
-> parsing should be generic but the PERF_SAMPLE_WEIGHT_STRUCT handling
-> was only present if building for x86 or powerpc. The sort key and
-> headers should be specific to the session that is being executed and
-> not to the machine perf is being run upon. These patches clean this
-> and associated code up.
->
-> v3: Code reorganizations suggested by Kan Liang.
-> v2: Avoid changes to include/perf/perf_dlfilter.h as suggested by
->     Adrian Hunter.
+Hi Xianying,
 
-Ping. Thanks,
-Ian
+On Tue, May 27, 2025 at 04:21:40PM +0800, Xianying Wang wrote:
+> Hi,
+> 
+> I discovered a kernel crash described as "general protection fault in
+> input_unregister_device." The crash occurs in the input subsystem,
+> specifically in the function input_unregister_device
+> (drivers/input/input.c:2500), due to dereferencing a non-canonical
+> address, resulting in a general protection fault.
+> 
+> According to the crash report, the faulting address is
+> 0xdffffc00000000a4, which corresponds to a KASAN shadow memory region.
+> The crash is triggered when mac_hid_toggle_emumouse calls
+> mac_hid_stop_emulation, which in turn invokes
+> mac_hid_destroy_emumouse, eventually leading to a call to
+> input_unregister_device with an invalid or uninitialized input_dev
+> pointer.
+> 
+> The report indicates that a corrupted or NULL input_dev structure was
+> passed into input_unregister_device, possibly due to a use-after-free,
+> double unregister, or incomplete initialization in the emumouse path
+> in mac_hid.
+> 
+> This can be reproduced on:
+> 
+> HEAD commit:
+> 
+> commit adc218676eef25575469234709c2d87185ca223a
+> 
+> report: https://pastebin.com/raw/4TeX6E8M
+> 
+> console output : https://pastebin.com/raw/ZE2AZ1Gq
+> 
+> kernel config : https://pastebin.com/raw/BpCtvUt2
+> 
+> C reproducer :
+> 
+> part1：https://pastebin.com/raw/jhU9v99k
+> 
+> part2：https://pastebin.com/raw/dcaKCHZ1
+> 
+> part3：https://pastebin.com/raw/CzgGBb7C
+> 
+> part4：https://pastebin.com/raw/MnwtYcjd
+> 
+> part5：https://pastebin.com/raw/VE8xNmHT
 
-> Ian Rogers (3):
->   perf sample: Remove arch notion of sample parsing
->   perf test: Move PERF_SAMPLE_WEIGHT_STRUCT parsing to common test
->   perf sort: Use perf_env to set arch sort keys and header
->
->  tools/perf/arch/powerpc/util/Build         |   1 -
->  tools/perf/arch/powerpc/util/event.c       |  60 ----------
->  tools/perf/arch/x86/include/arch-tests.h   |   1 -
->  tools/perf/arch/x86/tests/Build            |   1 -
->  tools/perf/arch/x86/tests/arch-tests.c     |   2 -
->  tools/perf/arch/x86/tests/sample-parsing.c | 125 ---------------------
->  tools/perf/arch/x86/util/event.c           |  46 --------
->  tools/perf/builtin-annotate.c              |   2 +-
->  tools/perf/builtin-c2c.c                   |  53 +++++----
->  tools/perf/builtin-diff.c                  |   2 +-
->  tools/perf/builtin-report.c                |   2 +-
->  tools/perf/builtin-script.c                |   2 +-
->  tools/perf/builtin-top.c                   |  16 +--
->  tools/perf/tests/hists_cumulate.c          |   8 +-
->  tools/perf/tests/hists_filter.c            |   8 +-
->  tools/perf/tests/hists_link.c              |   8 +-
->  tools/perf/tests/hists_output.c            |  10 +-
->  tools/perf/tests/sample-parsing.c          |  14 +++
->  tools/perf/util/dlfilter.c                 |   2 +-
->  tools/perf/util/event.h                    |   5 -
->  tools/perf/util/evsel.c                    |  17 ++-
->  tools/perf/util/hist.c                     |   4 +-
->  tools/perf/util/hist.h                     |   2 +-
->  tools/perf/util/intel-tpebs.c              |   4 +-
->  tools/perf/util/sample.h                   |   5 +-
->  tools/perf/util/session.c                  |   2 +-
->  tools/perf/util/sort.c                     |  67 +++++++----
->  tools/perf/util/sort.h                     |   5 +-
->  tools/perf/util/synthetic-events.c         |  10 +-
->  29 files changed, 150 insertions(+), 334 deletions(-)
->  delete mode 100644 tools/perf/arch/powerpc/util/event.c
->  delete mode 100644 tools/perf/arch/x86/tests/sample-parsing.c
->
-> --
-> 2.49.0.1143.g0be31eac6b-goog
->
+Could you try to trim the reproducer to something more manageable? There
+are really too many things going on to make sense of it...
+
+I guess we are ending calling mac_hid_stop_emulation() with NULL input
+device, but I can;t see how this happens unless we manage to overwrite
+sysctl table memory with some garbae earlier....
+
+Thanks.
+
+-- 
+Dmitry
