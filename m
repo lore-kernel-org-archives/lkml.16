@@ -1,71 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4D58488
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF701E49F
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748312136; cv=none; b=JIRA8IffMaFn1+45eKwdyOzKPIwjTmH+jrDzUfkn1i5rJTMbhHtmxISxSfW3s1t0ppkNEHZ2oiNqGa0hKu1+aTXcMPk///fFt1CEpTdmxfuQXgZc22iWJCco88xS2F83BbjQ/i+zzzoCgNeBeHNGzXUcZZPPpo5wqdzx32WdBS4=
+	t=1748312224; cv=none; b=icYAB7RtrmUwXViDc/C0AG8mbdePVHPY5wkrQMRTg23RVSubZ5aNDttrGZ0kRS/URJEni7S8Ne4vfXyEtNMmFRG1AfTaB7IislTYpoPe6PSbHERQR9lqZL+Yy8v4kcBJdCKqTpyb/jZArtUj43HMLuWsZNCktyJclOtxJvIIZO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748312136; c=relaxed/simple;
-	bh=gy+iSnN6BujU+OyUD34gHbKI/Tlhhz3bicJScmZmV4w=;
+	s=arc-20240116; t=1748312224; c=relaxed/simple;
+	bh=BYUqYKU7Zb50udk1adRc49TsZfwdyy5RxDIFvL7Jf1Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pclq39K4hZXQu7GFqT8XbNn5YJrSYH1cfwZwOu8Vvp+zW/pggmvhgDS+Asbj/WOaLw8KMl7T1gGIgdsM7vzmeLtEKzI0E3tBRTn1HCmkbh9Wyydr4Thh7R0xB4p+AjO4iRxeVzE8/pitQYnbR1jie6AikWAGGip23K48FxO5XQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a+FoRMfv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=ArKF/B1ptmZP2VLa6xh95+6rkjY3QI/qOCIffYHmSS664p6nGBJQ8dfLszDJeWiEuTSZ7GMsrIHUj+CPHjsbo3TDeTdohZ7bs0o1URqUGd/dT88f8+0nsWppJ9vmLUfOaffESJAIQBDQJFNE3nJZ6fL+K7pbQMNT6Abxkgs0BkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GIKvtmEH; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a+FoRMfv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748312131;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AqRgYOufLjDdRZWStx7NgUNbciHlTK6MFqY+ZAN1g3w=;
-	b=a+FoRMfvWKfAw8P95KLsikvCDeRnbjEMT4IVCJt4aO4FYInBHCGHDL/p6s79682lAleeDz
-	i9TC1YXCxMvAH4YMpxlmurSLubmEje9tyHWwf8VSRtYdJlsK/aG9A/JDdtOhioS1HcOjm+
-	TqMr8YzoOd/BQYtzad4krgAQDOzfii4=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-256-3Pu9PFBZNRq-DEZMfTU6Mg-1; Mon, 26 May 2025 22:15:29 -0400
-X-MC-Unique: 3Pu9PFBZNRq-DEZMfTU6Mg-1
-X-Mimecast-MFC-AGG-ID: 3Pu9PFBZNRq-DEZMfTU6Mg_1748312128
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b26e120e300so2934897a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:15:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GIKvtmEH"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-309fac646adso2993932a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 19:17:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748312221; x=1748917021; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ACVoLlaU3ur0JkZbezUkrwCZbhnGFLL9/FLncuMO858=;
+        b=GIKvtmEHLm5Y2j9bWCu8Qva6MscPgCiRC5+sxRtS51MZj9taf0f5gkpeOMuQ+3geRy
+         gM+jb1b1iK4sMm5KuwvcEtUk5GRfw5IzF1oilSULtHzFmKVsA2m4mKvPZnqOS8lrlOlt
+         7r7lPIjcp3rcI+vWQW+zMC/iM4FN/QjOMk0+Fp7c1QS/ZFeBVbZTMC76LigKvMh3uQvi
+         u0J+z815EdiDmN2g8jt9OKAs+igKRb8o3UUHY0WbOW9J3q8dID14paPTaidtqUtSGBSl
+         ML9e3geN+ffFNR01FKbeWr+rihg5gauJDXju5sXV1naN8GC9YdGTBHORH27rRHyS1ria
+         oqyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748312128; x=1748916928;
+        d=1e100.net; s=20230601; t=1748312221; x=1748917021;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=AqRgYOufLjDdRZWStx7NgUNbciHlTK6MFqY+ZAN1g3w=;
-        b=k5vCDD/y5fY1/qsHwZK31rmeYdUF31qiAhSMAsRpYf4x46h66sFTWKHFIPi0pAKBBq
-         4nM/NSxj0dR0rxA+WfBTwhXZopxLlJZSsZy0b2GuUzKu5Pelr7ySvzk0K7PJ3ROmTbpC
-         3xvmb16HFU7Ly7wxxK0UVpPRnas8tdtGW+7QEdDKZTZDSmTLVd8iwUJ8FRbFXWUborXY
-         jrh7/uVoshI3NWOCZkLvPPWhOttyIOSv2CmA48uBQnc+GUFhbo2hfnoePMh1duuvk0aF
-         vYkqgHH0ugNew+8lds1w8mNeAifqTV/bgUmPO26hp5zRoM6yTC2x8uSQY+ZIPIQy6W+c
-         CEDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9UGdBa2UDX6yhEa4R6KLZ2lUBEj91aR4jEpHQ/2LICXnrwD+zpnZ9USIYhpIjYWdc04AYxVwLySRfcFc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjJso5qFuMgf8CQB4cv5UpDEO6lxv9BkB25nq4tkYp87qGw32s
-	vK6CXeyuvBN/Hqfo1fTYaTAjqnxP/S3BT9PNynnb/zmRaOcUkpOodAES7bp7wfCP0VvGY6Wf7pM
-	mWr8ec7dKuD2527h7X+yuMA5NvkeAZDFM6aEQ0KpH2AliyGkHW2jGu5ervijq6xLwRA==
-X-Gm-Gg: ASbGncvo6vuZvV/NIkj3CsJf8n1yG+4uXXBoaxPX2jE9MKpPZashVCBzg0cSnGgKBJq
-	KpKt1sppxzHlVnSujfPCvuKTuApiBJUeTMslDN3Jaej0Udh5fgWuX9Jw8P9thUlEDq6kanbKP2x
-	xUpfp1oPwhIzdflz2QpfJrkTtZ1Agxb9NBHK44HZnxhreEUf8VFLktMo0aJp1JjLvld7QSQHhCK
-	/5Tx1sdumbIqujVQy5O3/1UjK+SA3ZrVrj0rwbhWKrVez9ivdAo8ndJJZlgOOoZrfbScRJEqFAd
-	VkwCHlt2YisYZ7VtgQ==
-X-Received: by 2002:a05:6a20:6a27:b0:1f5:87dc:a315 with SMTP id adf61e73a8af0-2188c248679mr18075187637.12.1748312128438;
-        Mon, 26 May 2025 19:15:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZtFbzmoFlt/XhE3Pxh8zcJdcRCqZVAb26w0MA+nQY12h9skjxs6x3NA1DvJXIdMKSt04fMA==
-X-Received: by 2002:a05:6a20:6a27:b0:1f5:87dc:a315 with SMTP id adf61e73a8af0-2188c248679mr18075153637.12.1748312128057;
-        Mon, 26 May 2025 19:15:28 -0700 (PDT)
-Received: from [10.72.120.5] ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8db5csm17773423a12.34.2025.05.26.19.15.23
+        bh=ACVoLlaU3ur0JkZbezUkrwCZbhnGFLL9/FLncuMO858=;
+        b=M/+BqnHmDHZXAZDCSAqedBDAO3DsIcgj7PwNb4aqJGEoTPT+p0wxMAKN05EPyIGQNP
+         +6MVDY2LUmWHiB+OgCrO9UgUZbp+CPq5RK/U3I8Lg7S10ryEaC5bL7v2PtKuTd5dqIXX
+         rk/N8aXGSCH384RtWGaE2s+ZQvq4+zkblEvBE4acCXgjeHpniOxe8O8Z05elds3DEkFz
+         XOgRA+pg0i8rrvhF2qBpFdXcp7fJNUT3kF8DJNGtWzl2Bwzm8E23idJOvRuOIyoXxxYd
+         62xI2pd7Q9drvPlKHaUh2zOMm8yTMyMHZ1F3zUtTR1IrvxPvnNyuQh9LsqRcOZqpgv2B
+         A9VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVGvrw3mCQvHDTe1aqq2k7Wo8cioNDm8hZjqmlFjnt+DDjKpURCZOtJRA9z+KZX+IYpNV34OFeEjl5/X7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcIajk1XA3aHnnCqsVeA94CZeze0JxV6Tr7Salfm9i1wsMJhhG
+	zfSRMznH8T+SNUV+FgWOX5xe30HIf6wqBrGeE84z7GQcUGCRI5UssO+af8rxABMBfI0=
+X-Gm-Gg: ASbGncsCedcfb4fCKtbTcWBqf39rjPKrgpQ7sKEl3p1XZlx7uqASzhQ8FwPcfQjhjgw
+	Xn3TplQeqEvGvrfDBRig1NLuUnytW4Rlcb9kwSFOoXiXItP82YmVQB44QHDA3LXsrLfeMfhbQA6
+	LxtVhzdhbvFmOYab8TBj/yNYElsyLtPEfrZrIsm8KZaPx9b6Z55FRPiNnKVTvWuSVuEtz4RO6Sl
+	z8t32Skrgjc/ATZR3d2tTJB0EQM9jd83nvMdmhn0QCoAj3wrGQQKSqjO4AEBm4wcVA1+le5ezcs
+	RS0bGDtHa4jwEiCt9FrwApO7IYYCxpy/tGjKotIxkMEasvREZTaxX+SIfVH1cjk9z8/OHadLDps
+	rxppKniJwSg==
+X-Google-Smtp-Source: AGHT+IHWBMMotqfr4nsNp8lecmYtympKIxi+YGDbxrUsOSHbOUbLc2e8psMU4hZPvStlhj++SdmhTg==
+X-Received: by 2002:a17:90b:3851:b0:311:9cdf:a8a4 with SMTP id 98e67ed59e1d1-3119cdfabb5mr3964084a91.8.1748312220844;
+        Mon, 26 May 2025 19:17:00 -0700 (PDT)
+Received: from [10.68.122.90] ([63.216.146.178])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3111934af89sm5187730a91.28.2025.05.26.19.16.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 19:15:27 -0700 (PDT)
-Message-ID: <560ae765-3fa1-42b7-a71c-e078e52e64fd@redhat.com>
-Date: Tue, 27 May 2025 10:15:20 +0800
+        Mon, 26 May 2025 19:17:00 -0700 (PDT)
+Message-ID: <1c734a50-1ada-40a1-833d-4b94b9849c96@bytedance.com>
+Date: Tue, 27 May 2025 10:16:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,105 +67,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
- until creating bitmap
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: hch@lst.de, colyli@kernel.org, song@kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-8-yukuai1@huaweicloud.com>
- <CALTww2_03_fVt+KMcmtbGw-kcRsLLpAG7W62e3y0W9SpvhUVtg@mail.gmail.com>
- <12a61dcf-ad39-48e8-132f-c49979b9012b@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-In-Reply-To: <12a61dcf-ad39-48e8-132f-c49979b9012b@huaweicloud.com>
+Subject: Re: [PATCH] mm, list_lru: refactor the locking code
+To: Kairui Song <kasong@tencent.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Chengming Zhou <zhouchengming@bytedance.com>,
+ Muchun Song <muchun.song@linux.dev>, linux-kernel@vger.kernel.org,
+ kernel test robot <lkp@intel.com>, Julia Lawall <julia.lawall@inria.fr>,
+ linux-mm@kvack.org
+References: <20250526180638.14609-1-ryncsn@gmail.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <20250526180638.14609-1-ryncsn@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-在 2025/5/26 下午3:57, Yu Kuai 写道:
-> Hi,
->
-> 在 2025/05/26 14:52, Xiao Ni 写道:
->> On Sat, May 24, 2025 at 2:18 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>>
->>> From: Yu Kuai <yukuai3@huawei.com>
->>>
->>> Currently bitmap_ops is registered while allocating mddev, this is fine
->>> when there is only one bitmap_ops, however, after introduing a new
->>> bitmap_ops, user space need a time window to choose which bitmap_ops to
->>> use while creating new array.
->>
->> Could you give more explanation about what the time window is? Is it
->> between setting llbitmap by bitmap_type and md_bitmap_create?
->
-> The window after this patch is that user can write the new sysfs after
-> allocating mddev, and before running the array.
+
+On 5/27/25 2:06 AM, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> Cocci is confused by the try lock then release RCU and return logic
+> here. So separate the try lock part out into a standalone helper. The
+> code is easier to follow too.
+> 
+> No feature change, fixes:
+> 
+> cocci warnings: (new ones prefixed by >>)
+>>> mm/list_lru.c:82:3-9: preceding lock on line 77
+>>> mm/list_lru.c:82:3-9: preceding lock on line 77
+>     mm/list_lru.c:82:3-9: preceding lock on line 75
+>     mm/list_lru.c:82:3-9: preceding lock on line 75
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@inria.fr>
+> Closes: https://lore.kernel.org/r/202505252043.pbT1tBHJ-lkp@intel.com/
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>   mm/list_lru.c | 34 +++++++++++++++++++---------------
+>   1 file changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index 490473af3122..ec48b5dadf51 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -60,30 +60,34 @@ list_lru_from_memcg_idx(struct list_lru *lru, int nid, int idx)
+>   	return &lru->node[nid].lru;
+>   }
+>   
+> +static inline bool lock_list_lru(struct list_lru_one *l, bool irq)
+> +{
+> +	if (irq)
+> +		spin_lock_irq(&l->lock);
+> +	else
+> +		spin_lock(&l->lock);
+> +	if (unlikely(READ_ONCE(l->nr_items) == LONG_MIN)) {
+> +		if (irq)
+> +			spin_unlock_irq(&l->lock);
+> +		else
+> +			spin_unlock(&l->lock);
+> +		return false;
+> +	}
+> +	return true;
+> +}
+> +
+>   static inline struct list_lru_one *
+>   lock_list_lru_of_memcg(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
+>   		       bool irq, bool skip_empty)
+>   {
+>   	struct list_lru_one *l;
+> -	long nr_items;
+>   
+>   	rcu_read_lock();
+>   again:
+>   	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
+> -	if (likely(l)) {
+> -		if (irq)
+> -			spin_lock_irq(&l->lock);
+> -		else
+> -			spin_lock(&l->lock);
+> -		nr_items = READ_ONCE(l->nr_items);
+> -		if (likely(nr_items != LONG_MIN)) {
+> -			rcu_read_unlock();
+> -			return l;
+> -		}
+> -		if (irq)
+> -			spin_unlock_irq(&l->lock);
+> -		else
+> -			spin_unlock(&l->lock);
+> +	if (likely(l) && lock_list_lru(l, irq)) {
+> +		rcu_read_unlock();
+> +		return l;
+>   	}
+>   	/*
+>   	 * Caller may simply bail out if raced with reparenting or
+
+And the code readability has also been improved.
+
+Reviewed-by: Qi Zheng <zhengqi.arch@bytedance.com>
+
+Thanks!
 
 
-Thanks for the explanation. Is it ok to add it in the commit log message?
-
->>
->>>
->>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>> ---
->>>   drivers/md/md.c | 86 
->>> +++++++++++++++++++++++++++++++------------------
->>>   1 file changed, 55 insertions(+), 31 deletions(-)
->>>
->>> diff --git a/drivers/md/md.c b/drivers/md/md.c
->>> index 4eb0c6effd5b..dc4b85f30e13 100644
->>> --- a/drivers/md/md.c
->>> +++ b/drivers/md/md.c
->>> @@ -674,39 +674,50 @@ static void no_op(struct percpu_ref *r) {}
->>>
->>>   static bool mddev_set_bitmap_ops(struct mddev *mddev)
->>>   {
->>> +       struct bitmap_operations *old = mddev->bitmap_ops;
->>> +       struct md_submodule_head *head;
->>> +
->>> +       if (mddev->bitmap_id == ID_BITMAP_NONE ||
->>> +           (old && old->head.id == mddev->bitmap_id))
->>> +               return true;
->>> +
->>>          xa_lock(&md_submodule);
->>> -       mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
->>> +       head = xa_load(&md_submodule, mddev->bitmap_id);
->>>          xa_unlock(&md_submodule);
->>>
->>> -       if (!mddev->bitmap_ops) {
->>> -               pr_warn_once("md: can't find bitmap id %d\n", 
->>> mddev->bitmap_id);
->>> +       if (WARN_ON_ONCE(!head || head->type != MD_BITMAP)) {
->>> +               pr_err("md: can't find bitmap id %d\n", 
->>> mddev->bitmap_id);
->>>                  return false;
->>>          }
->>>
->>> +       if (old && old->group)
->>> +               sysfs_remove_group(&mddev->kobj, old->group);
->>
->> I think you're handling a competition problem here. But I don't know
->> how the old/old->group is already created when creating an array.
->> Could you explain this?
->
-> It's not possible now, this is because I think we want to be able to
-> switch existing array with old bitmap to new bitmap.
-
-
-Can we add the check of old when we really want it?
-
-Regards
-
-Xiao
-
->
-> Thanks,
-> Kuai
->
->>
->> Regards
->> Xiao
->
 
