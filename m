@@ -1,334 +1,381 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F431F790F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC46425D91B
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748345849; cv=none; b=RdqPNYxlYFG4kgritcLuL4jip5BSmra8u6ObV/In+hEdcjipolsFxfaZP2Kku9qj3mCUZmFR5V80ypkm5J25SyW6QwPt3+GI2gev0YM+BNvjoS23oOASQ0yp0FNaLGDcFmtcplU+eljJ/pAHCa3j7t4yeO+/8Nb4Lonc81UEyac=
+	t=1748345854; cv=none; b=Y1sqV65MBqQ3DA91mUHtAHSoUxlSzON2ZyOk2dYEUs1mprx5bWZSaNPETOcoTL83GUb1OKCgrZdayJ0cQkKwQuxdgKXNRcKhYfjqj0NtM/s1OxHi2lQtWwl085ntCD2adV0B0wXj2aeoRvJjYF/wlOTleNYP9DVzhzz/kJdWCUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748345849; c=relaxed/simple;
-	bh=3xVSu3LAO8ejto8P4HUOR3VlVYE832vsZyyvQ9W40bw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hyM+HIwIT4lfB1wdS1BOWFlvyskcVdTHrprOD05f4N7IaJs4QdR0TNBZIHe6hjbO1OxcUMtHOPAndvxuWwZ/XdP74mZnxW+PC7w1aNNUMPaKufBPplHKxttNeZjyIitku39QlVdA2A8dlp7BX/TpvnLV0zhYWCtdSlO5bFSW+8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SWrBKLk2; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SWrBKLk2"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 110432B3;
-	Tue, 27 May 2025 13:36:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748345819;
-	bh=3xVSu3LAO8ejto8P4HUOR3VlVYE832vsZyyvQ9W40bw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SWrBKLk2Cvg0dEp2NbVCGdD9HP4Dwtn3kMimBL1ZPYfb8dKGyffKKm14NRKrR46u7
-	 SDnwvhSBGycZ8qPMGJApcgHxdta7aHvqcBdezKGuKg2HrpCevIJlgsfHFvb3yiGUdP
-	 7EBDdVgJxsafr7m1QFpfcaax+gH1jt9oRNXaX7n4=
-Message-ID: <027ad6e9-5070-43f2-a082-fd498cc6d31d@ideasonboard.com>
-Date: Tue, 27 May 2025 14:37:20 +0300
+	s=arc-20240116; t=1748345854; c=relaxed/simple;
+	bh=lFkT+5/G0QzkQCrHD/MZR2cgD5qBXMfmgDOLXrIwqpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eZjZFEloI6ROPTX8/sYrUro6KKisz/ZCXavdYK9dsgOKT+wVrgMb+0I9WG/nwy9Bneyc2tKjF07H1ZcJdo9l9dIiY81uuY7SLGgvLBtSX6Ta2NSLQiaS6Bq2IjoT+aCrAs22CPF53ockFPw7ngHPMg0/58ZvF4X2HVOb9vsOUnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uJscK-0006US-6f; Tue, 27 May 2025 13:37:12 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uJscI-000PZg-1p;
+	Tue, 27 May 2025 13:37:10 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 3364C41A77F;
+	Tue, 27 May 2025 11:37:10 +0000 (UTC)
+Date: Tue, 27 May 2025 13:37:09 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
+	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 3/4] net: can: rockchip: add can for RK3576 Soc
+Message-ID: <20250527-sage-python-of-variation-1c7759-mkl@pengutronix.de>
+References: <20250526062559.2061311-1-zhangqing@rock-chips.com>
+ <20250526062559.2061311-4-zhangqing@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/3] drm/bridge: cadence: cdns-mhdp8546*: Change
- drm_connector from pointer to structure
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: jonas@kwiboo.se, jernej.skrabec@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, lumag@kernel.org, jani.nikula@intel.com,
- andy.yan@rock-chips.com, mordan@ispras.ru, linux@treblig.org,
- viro@zeniv.linux.org.uk, yamonkar@cadence.com, sjakhade@cadence.com,
- quentin.schulz@free-electrons.com, jsarha@ti.com,
- linux-kernel@vger.kernel.org, devarsht@ti.com, dianders@chromium.org,
- andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
- alexander.stein@ew.tq-group.com
-References: <20250521073237.366463-1-j-choudhary@ti.com>
- <20250521073237.366463-3-j-choudhary@ti.com>
- <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
- <493afc6c-59a0-4f6b-9a9e-568dd2eff873@ti.com>
- <2a15263b-2d36-4c46-be0f-4145069d134f@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <2a15263b-2d36-4c46-be0f-4145069d134f@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi,
-
-On 27/05/2025 13:39, Jayesh Choudhary wrote:
-> 
-> 
-> On 27/05/25 14:59, Jayesh Choudhary wrote:
->> Hello Tomi,
->>
->> On 27/05/25 13:28, Tomi Valkeinen wrote:
->>> Hi,
->>>
->>> On 21/05/2025 10:32, Jayesh Choudhary wrote:
->>>> After adding DBANC framework, mhdp->connector is not initialised during
->>>> bridge calls. But the asyncronous work scheduled depends on the
->>>> connector.
->>>> We cannot get to drm_atomic_state in these asyncronous calls running on
->>>> worker threads. So we need to store the data that we need in mhdp
->>>> bridge
->>>> structure.
->>>> Like other bridge drivers, use drm_connector pointer instead of
->>>> structure
->>>> and make appropriate changes to the conditionals and assignments
->>>> related
->>>> to mhdp->connector.
->>>> Also, in the atomic enable call, move the connector  and connector
->>>> state
->>>> calls above, so that we do have a connector before we can retry the
->>>> asyncronous work in case of any failure.
->>>>
->>>
->>> I don't quite understand this patch. You change the mhdp->connector to a
->>> pointer, which is set at bridge_enable and cleared at bridge_disable.
->>> Then you change the "mhdp->connector.dev" checks to "mhdp->connector".
->>>
->>> So, now in e.g. cdns_mhdp_fw_cb(), we check for mhdp->connector, which
->>> is set at bridge_enable(). Can we ever have the bridge enabled before
->>> the fb has been loaded? What is the check even supposed to do there?
->>>
->>> Another in cdns_mhdp_hpd_work(), it checks for mhdp->connector. So...
->>> HPD code behaves differently based on if the bridge has been enabled or
->>> not? What is it supposed to do?
->>>
->>> Isn't the whole "if (mhdp->connector.dev)" code for the legacy
->>> non-DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
->>>
->>>   Tomi
->>
->> I misinterpreted your comment in v1[0] regarding finding the connector
->> from the current state in cdns_mhdp_modeset_retry_fn() and I missed
->> this. I was more focused on finding a connector for that function.
->>
->> For the current code, in all the conditionals involving mhdp->connector,
->> we are entering else statements as connector is not initialised.
->> So I will just drop if statements in cdns_mhdp_fw_cb() and
->> cdns_mhdp_hpd_work() (like you said, its legacy case) while still having
->> mhdp->connector as pointer as we need it for
->> cdns_mhdp_modeset_retry_fn() and in cdns-mhdp8546-hdcp driver.
->>
->> That should be okay?
->>
->> [0]: https://lore.kernel.org/all/e76f94b9-b138-46e7-bb18-
->> b33dd98c9abb@ideasonboard.com/
->>
->> Warm Regards,
->> Jayesh
->>
->>
-> 
-> Tomi,
-> 
-> One more thing here. Should this be squashed with the first patch as
-> this is sort of removing !(DRM_BRIDGE_ATTACH_NO_CONNECTOR) case and
-> associated changes?
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wm5rma25slqeowsj"
+Content-Disposition: inline
+In-Reply-To: <20250526062559.2061311-4-zhangqing@rock-chips.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 
-All the legacy code should be removed in the previous patch, yes. But
-it's not quite clear to me what's going on here. At least parts of this
-patch seem to be... fixing some previous code? You move the
-drm_atomic_get_new_connector_for_encoder() call to be earlier in the
-bridge_enable. That doesn't sound like removing the legacy code. But
-it's not quite clear to me why that's done (or why it wasn't needed
-earlier. or was it?).
+--wm5rma25slqeowsj
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 3/4] net: can: rockchip: add can for RK3576 Soc
+MIME-Version: 1.0
 
- Tomi
+Hey,
 
-> 
->>>
->>>> Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546
->>>> DPI/DP bridge")
->>>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>>> ---
->>>>   .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 28 ++++++++
->>>> +----------
->>>>   .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  2 +-
->>>>   .../drm/bridge/cadence/cdns-mhdp8546-hdcp.c   |  8 +++---
->>>>   3 files changed, 19 insertions(+), 19 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/
->>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>> index 66bd916c2fe9..5388e62f230b 100644
->>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>> @@ -740,7 +740,7 @@ static void cdns_mhdp_fw_cb(const struct
->>>> firmware *fw, void *context)
->>>>       bridge_attached = mhdp->bridge_attached;
->>>>       spin_unlock(&mhdp->start_lock);
->>>>       if (bridge_attached) {
->>>> -        if (mhdp->connector.dev)
->>>> +        if (mhdp->connector)
->>>>               drm_kms_helper_hotplug_event(mhdp->bridge.dev);
->>>>           else
->>>>               drm_bridge_hpd_notify(&mhdp->bridge,
->>>> cdns_mhdp_detect(mhdp));
->>>> @@ -1759,17 +1759,25 @@ static void cdns_mhdp_atomic_enable(struct
->>>> drm_bridge *bridge,
->>>>       struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
->>>>       struct cdns_mhdp_bridge_state *mhdp_state;
->>>>       struct drm_crtc_state *crtc_state;
->>>> -    struct drm_connector *connector;
->>>>       struct drm_connector_state *conn_state;
->>>>       struct drm_bridge_state *new_state;
->>>>       const struct drm_display_mode *mode;
->>>>       u32 resp;
->>>> -    int ret;
->>>> +    int ret = 0;
->>>>       dev_dbg(mhdp->dev, "bridge enable\n");
->>>>       mutex_lock(&mhdp->link_mutex);
->>>> +    mhdp->connector = drm_atomic_get_new_connector_for_encoder(state,
->>>> +                                   bridge->encoder);
->>>> +    if (WARN_ON(!mhdp->connector))
->>>> +        goto out;
->>>> +
->>>> +    conn_state = drm_atomic_get_new_connector_state(state, mhdp-
->>>> >connector);
->>>> +    if (WARN_ON(!conn_state))
->>>> +        goto out;
->>>> +
->>>>       if (mhdp->plugged && !mhdp->link_up) {
->>>>           ret = cdns_mhdp_link_up(mhdp);
->>>>           if (ret < 0)
->>>> @@ -1789,15 +1797,6 @@ static void cdns_mhdp_atomic_enable(struct
->>>> drm_bridge *bridge,
->>>>       cdns_mhdp_reg_write(mhdp, CDNS_DPTX_CAR,
->>>>                   resp | CDNS_VIF_CLK_EN | CDNS_VIF_CLK_RSTN);
->>>> -    connector = drm_atomic_get_new_connector_for_encoder(state,
->>>> -                                 bridge->encoder);
->>>> -    if (WARN_ON(!connector))
->>>> -        goto out;
->>>> -
->>>> -    conn_state = drm_atomic_get_new_connector_state(state, connector);
->>>> -    if (WARN_ON(!conn_state))
->>>> -        goto out;
->>>> -
->>>>       if (mhdp->hdcp_supported &&
->>>>           mhdp->hw_state == MHDP_HW_READY &&
->>>>           conn_state->content_protection ==
->>>> @@ -1857,6 +1856,7 @@ static void cdns_mhdp_atomic_disable(struct
->>>> drm_bridge *bridge,
->>>>           cdns_mhdp_hdcp_disable(mhdp);
->>>>       mhdp->bridge_enabled = false;
->>>> +    mhdp->connector = NULL;
->>>>       cdns_mhdp_reg_read(mhdp, CDNS_DP_FRAMER_GLOBAL_CONFIG, &resp);
->>>>       resp &= ~CDNS_DP_FRAMER_EN;
->>>>       resp |= CDNS_DP_NO_VIDEO_MODE;
->>>> @@ -2157,7 +2157,7 @@ static void cdns_mhdp_modeset_retry_fn(struct
->>>> work_struct *work)
->>>>       mhdp = container_of(work, typeof(*mhdp), modeset_retry_work);
->>>> -    conn = &mhdp->connector;
->>>> +    conn = mhdp->connector;
->>>>       /* Grab the locks before changing connector property */
->>>>       mutex_lock(&conn->dev->mode_config.mutex);
->>>> @@ -2234,7 +2234,7 @@ static void cdns_mhdp_hpd_work(struct
->>>> work_struct *work)
->>>>       int ret;
->>>>       ret = cdns_mhdp_update_link_status(mhdp);
->>>> -    if (mhdp->connector.dev) {
->>>> +    if (mhdp->connector) {
->>>>           if (ret < 0)
->>>>               schedule_work(&mhdp->modeset_retry_work);
->>>>           else
->>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h b/
->>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->>>> index bad2fc0c7306..b297db53ba28 100644
->>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->>>> @@ -375,7 +375,7 @@ struct cdns_mhdp_device {
->>>>        */
->>>>       struct mutex link_mutex;
->>>> -    struct drm_connector connector;
->>>> +    struct drm_connector *connector;
->>>>       struct drm_bridge bridge;
->>>>       struct cdns_mhdp_link link;
->>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c b/
->>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->>>> index 42248f179b69..59f18c3281ef 100644
->>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->>>> @@ -394,7 +394,7 @@ static int _cdns_mhdp_hdcp_disable(struct
->>>> cdns_mhdp_device *mhdp)
->>>>       int ret;
->>>>       dev_dbg(mhdp->dev, "[%s:%d] HDCP is being disabled...\n",
->>>> -        mhdp->connector.name, mhdp->connector.base.id);
->>>> +        mhdp->connector->name, mhdp->connector->base.id);
->>>>       ret = cdns_mhdp_hdcp_set_config(mhdp, 0, false);
->>>> @@ -445,7 +445,7 @@ static int cdns_mhdp_hdcp_check_link(struct
->>>> cdns_mhdp_device *mhdp)
->>>>       dev_err(mhdp->dev,
->>>>           "[%s:%d] HDCP link failed, retrying authentication\n",
->>>> -        mhdp->connector.name, mhdp->connector.base.id);
->>>> +        mhdp->connector->name, mhdp->connector->base.id);
->>>>       ret = _cdns_mhdp_hdcp_disable(mhdp);
->>>>       if (ret) {
->>>> @@ -487,13 +487,13 @@ static void cdns_mhdp_hdcp_prop_work(struct
->>>> work_struct *work)
->>>>       struct cdns_mhdp_device *mhdp = container_of(hdcp,
->>>>                                struct cdns_mhdp_device,
->>>>                                hdcp);
->>>> -    struct drm_device *dev = mhdp->connector.dev;
->>>> +    struct drm_device *dev = mhdp->connector->dev;
->>>>       struct drm_connector_state *state;
->>>>       drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
->>>>       mutex_lock(&mhdp->hdcp.mutex);
->>>>       if (mhdp->hdcp.value != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
->>>> -        state = mhdp->connector.state;
->>>> +        state = mhdp->connector->state;
->>>>           state->content_protection = mhdp->hdcp.value;
->>>>       }
->>>>       mutex_unlock(&mhdp->hdcp.mutex);
->>>
+here's a partial review.
 
+On 26.05.2025 14:25:58, Elaine Zhang wrote:
+> Is new controller, new register layout and Bit position definition:
+> Support CAN and CANFD protocol, ISO 11898-1
+> Support transmit or receive error count
+> Support acceptance filter, more functional
+> Support interrupt and all interrupt can be masked
+> Support error code check
+> Support self test\silent\loop-back mode
+> Support auto retransmission mode
+> Support auto bus on after bus-off state
+> Support 2 transmit buffers
+> Support Internal Storage Mode
+> Support DMA
+>=20
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> ---
+>  .../net/can/rockchip/rockchip_canfd-core.c    | 453 ++++++++++++++++++
+>  drivers/net/can/rockchip/rockchip_canfd-rx.c  | 111 +++++
+>  drivers/net/can/rockchip/rockchip_canfd-tx.c  |  27 ++
+>  drivers/net/can/rockchip/rockchip_canfd.h     | 267 +++++++++++
+>  4 files changed, 858 insertions(+)
+>=20
+> diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net=
+/can/rockchip/rockchip_canfd-core.c
+> index c21ca4c1fb9a..92e260cb2527 100644
+> --- a/drivers/net/can/rockchip/rockchip_canfd-core.c
+> +++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
+> @@ -31,6 +31,8 @@ static const char *__rkcanfd_get_model_str(enum rkcanfd=
+_model model)
+>  		return "rk3568v2";
+>  	case RKCANFD_MODEL_RK3568V3:
+>  		return "rk3568v3";
+> +	case RKCANFD_MODEL_RK3576:
+> +		return "rk3576";
+>  	}
+> =20
+>  	return "<unknown>";
+> @@ -176,6 +178,30 @@ static void rkcanfd_get_berr_counter_corrected(struc=
+t rkcanfd_priv *priv,
+>  		    !!(reg_state & RKCANFD_REG_STATE_ERROR_WARNING_STATE));
+>  }
+> =20
+> +static void rk3576canfd_get_berr_counter_corrected(struct rkcanfd_priv *=
+priv,
+> +						   struct can_berr_counter *bec)
+> +{
+
+Is the rk3576 affected by this problem?
+
+> +	struct can_berr_counter bec_raw;
+> +	u32 reg_state;
+> +
+> +	bec->rxerr =3D rkcanfd_read(priv, RK3576CANFD_REG_RXERRORCNT);
+> +	bec->txerr =3D rkcanfd_read(priv, RK3576CANFD_REG_TXERRORCNT);
+> +	bec_raw =3D *bec;
+> +
+> +	if (!bec->rxerr && !bec->txerr)
+> +		*bec =3D priv->bec;
+> +	else
+> +		priv->bec =3D *bec;
+> +
+> +	reg_state =3D rkcanfd_read(priv, RKCANFD_REG_STATE);
+> +	netdev_vdbg(priv->ndev,
+> +		    "%s: Raw/Cor: txerr=3D%3u/%3u rxerr=3D%3u/%3u Bus Off=3D%u Warning=
+=3D%u\n",
+> +		    __func__,
+> +		    bec_raw.txerr, bec->txerr, bec_raw.rxerr, bec->rxerr,
+> +		    !!(reg_state & RK3576CANFD_REG_STATE_BUS_OFF_STATE),
+> +		    !!(reg_state & RK3576CANFD_REG_STATE_ERROR_WARNING_STATE));
+> +}
+> +
+>  static int rkcanfd_get_berr_counter(const struct net_device *ndev,
+>  				    struct can_berr_counter *bec)
+>  {
+> @@ -206,6 +232,11 @@ static void rkcanfd_chip_interrupts_disable(const st=
+ruct rkcanfd_priv *priv)
+>  	rkcanfd_write(priv, RKCANFD_REG_INT_MASK, RKCANFD_REG_INT_ALL);
+>  }
+> =20
+> +static void rk3576canfd_chip_interrupts_disable(const struct rkcanfd_pri=
+v *priv)
+> +{
+> +	rkcanfd_write(priv, RK3576CANFD_REG_INT_MASK, RK3576CANFD_REG_INT_ALL);
+> +}
+> +
+>  static void rkcanfd_chip_fifo_setup(struct rkcanfd_priv *priv)
+>  {
+>  	u32 reg;
+> @@ -220,6 +251,72 @@ static void rkcanfd_chip_fifo_setup(struct rkcanfd_p=
+riv *priv)
+>  	netdev_reset_queue(priv->ndev);
+>  }
+> =20
+> +static void rk3576canfd_chip_fifo_setup(struct rkcanfd_priv *priv)
+> +{
+> +	u32 ism =3D 0, water =3D 0;
+
+no need to init as 0
+
+> +
+> +	ism =3D RK3576CANFD_REG_STR_CTL_ISM_SEL_CANFD_FIXED;
+> +	water =3D RK3576CANFD_ISM_WATERMASK_CANFD;
+> +
+> +	/* internal sram mode */
+
+personally I would prefer:
+
+reg_ism =3D FIELD_PREP(RK3576CANFD_REG_STR_CTL_ISM_SEL,
+                    RK3576CANFD_REG_STR_CTL_ISM_SEL_CANFD_FIXED) |
+          RK3576CANFD_REG_STR_CTL_STORAGE_TIMEOUT_MODE;
+
+> +	rkcanfd_write(priv, RK3576CANFD_REG_STR_CTL,
+> +		      (FIELD_PREP(RK3576CANFD_REG_STR_CTL_ISM_SEL, ism) |
+> +		      RK3576CANFD_REG_STR_CTL_STORAGE_TIMEOUT_MODE));
+
+reg_water =3D RK3576CANFD_ISM_WATERMASK_CANFD;
+
+> +	rkcanfd_write(priv, RK3576CANFD_REG_STR_WTM, water);
+> +	WRITE_ONCE(priv->tx_head, 0);
+> +	WRITE_ONCE(priv->tx_tail, 0);
+> +	netdev_reset_queue(priv->ndev);
+> +}
+> +
+> +static int rk3576canfd_atf_config(struct rkcanfd_priv *priv, int mode)
+
+With the proposed cleanup, this will become a void function.
+
+> +{
+> +	u32 id[10] =3D {0};
+
+What's the use of this array?
+
+> +	u32 dlc =3D 0, dlc_over =3D 0;
+> +
+> +	switch (mode) {
+
+It's called with RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE only...
+
+> +	case RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE:
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF0, id[0]);
+
+why not call it with 0x0?
+
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF1, id[1]);
+
+create:
+
+#define RK3576CANFD_REG_ATF(n) (0x700 + (n) << 2)
+
+and use a for loop
+
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF2, id[2]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF3, id[3]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF4, id[4]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM0, RK3576CANFD_REG_ATFM_ID);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM1, RK3576CANFD_REG_ATFM_ID);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM2, RK3576CANFD_REG_ATFM_ID);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM3, RK3576CANFD_REG_ATFM_ID);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM4, RK3576CANFD_REG_ATFM_ID);
+> +		break;
+> +	case RK3576CANFD_REG_ATFM_MASK_SEL_LIST_MODE:
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF0, id[0]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF1, id[1]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF2, id[2]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF3, id[3]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF4, id[4]);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM0, id[5] | RK3576CANFD_REG_ATF=
+M_MASK_SEL);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM1, id[6] | RK3576CANFD_REG_ATF=
+M_MASK_SEL);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM2, id[7] | RK3576CANFD_REG_ATF=
+M_MASK_SEL);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM3, id[8] | RK3576CANFD_REG_ATF=
+M_MASK_SEL);
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM4, id[9] | RK3576CANFD_REG_ATF=
+M_MASK_SEL);
+> +		break;
+> +	default:
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF_CTL, RK3576CANFD_REG_ATF_CTL_A=
+TF_DIS_ALL);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (dlc) {
+> +		if (dlc_over)
+
+both are 0, please remove the dead code
+
+> +			rkcanfd_write(priv, RK3576CANFD_REG_ATF_DLC,
+> +				      dlc | RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN);
+> +		else
+> +			rkcanfd_write(priv, RK3576CANFD_REG_ATF_DLC,
+> +				      dlc | RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN |
+> +				      RK3576CANFD_REG_ATF_DLC_ATF_DLC_MODE);
+> +	}
+> +	rkcanfd_write(priv, RK3576CANFD_REG_ATF_CTL, 0);
+> +
+> +	return 0;
+> +}
+> +
+>  static void rkcanfd_chip_start(struct rkcanfd_priv *priv)
+>  {
+>  	u32 reg;
+> @@ -285,6 +382,68 @@ static void rkcanfd_chip_start(struct rkcanfd_priv *=
+priv)
+>  		   rkcanfd_read(priv, RKCANFD_REG_MODE));
+>  }
+> =20
+> +static void rk3576canfd_chip_start(struct rkcanfd_priv *priv)
+> +
+> +{
+> +	u32 reg;
+> +
+> +	rkcanfd_chip_set_reset_mode(priv);
+> +
+> +	/* Receiving Filter: accept all */
+> +	rk3576canfd_atf_config(priv, RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE);
+> +
+> +	/* enable:
+> +	 * - CAN_FD: enable CAN-FD
+> +	 * - AUTO_RETX_MODE: auto retransmission on TX error
+> +	 * - COVER_MODE: RX-FIFO overwrite mode, do not send OVERLOAD frames
+> +	 * - RXSTX_MODE: Receive Self Transmit data mode
+> +	 * - WORK_MODE: transition from reset to working mode
+> +	 */
+
+please adjust the comments
+
+> +	reg =3D rkcanfd_read(priv, RKCANFD_REG_MODE);
+> +	priv->reg_mode_default =3D reg | RKCANFD_REG_MODE_WORK_MODE;
+> +
+> +	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
+> +		priv->reg_mode_default |=3D RKCANFD_REG_MODE_LBACK_MODE;
+> +		rkcanfd_write(priv, RK3576CANFD_REG_ERROR_MASK,
+> +			      RK3576CANFD_REG_ERROR_MASK_ACK_ERROR);
+> +	}
+> +
+> +	/* mask, i.e. ignore:
+> +	 * - TIMESTAMP_COUNTER_OVERFLOW_INT - timestamp counter overflow interr=
+upt
+> +	 * - TX_ARBIT_FAIL_INT - TX arbitration fail interrupt
+> +	 * - OVERLOAD_INT - CAN bus overload interrupt
+> +	 * - TX_FINISH_INT - Transmit finish interrupt
+> +	 */
+> +	priv->reg_int_mask_default =3D RK3576CANFD_REG_INT_RX_FINISH_INT;
+
+please adjust the comments
+
+> +
+> +	/* Do not mask the bus error interrupt if the bus error
+> +	 * reporting is requested.
+> +	 */
+> +	if (!(priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING))
+> +		priv->reg_int_mask_default |=3D RKCANFD_REG_INT_ERROR_INT;
+> +
+> +	memset(&priv->bec, 0x0, sizeof(priv->bec));
+> +
+> +	priv->devtype_data.fifo_setup(priv);
+
+Why do you need a callback here? You're already know you're a
+rk3576canfd, here.
+
+> +
+> +	rkcanfd_write(priv, RK3576CANFD_REG_AUTO_RETX_CFG,
+> +		      RK3576CANFD_REG_AUTO_RETX_CFG_AUTO_RETX_EN);
+> +
+> +	rkcanfd_write(priv, RK3576CANFD_REG_BRS_CFG,
+> +		      RK3576CANFD_REG_BRS_CFG_BRS_NEGSYNC_EN |
+> +		      RK3576CANFD_REG_BRS_CFG_BRS_POSSYNC_EN);
+> +
+> +	rkcanfd_set_bittiming(priv);
+> +
+> +	priv->devtype_data.interrupts_disable(priv);
+> +	rkcanfd_chip_set_work_mode(priv);
+> +
+> +	priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
+> +
+> +	netdev_dbg(priv->ndev, "%s: reg_mode=3D0x%08x\n", __func__,
+> +		   rkcanfd_read(priv, RKCANFD_REG_MODE));
+> +}
+> +
+
+more later...
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--wm5rma25slqeowsj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmg1o+IACgkQDHRl3/mQ
+kZwlcAgAp0JdNemXDYJQP2NtGDnnNFQoPnjeNpkF+YvkXizqgIxjzLfewpIZf3Be
+MA2WfFN/ewOwBAX7TrBfWAoCiRqc4mdHlupNO5VrKflNq4cQXRkbSoB9Q2xl3SQX
+VFTUeyJDd5i/N1kGYa8iXDVQ5I3T9eNjlCmKqP9PwrXkQHAyKlfu17u1nW7Uf4GS
+h8ebrFhb5FlTtanZY5+GL7Qlngg0lEaYdqcvOx0JyepgNugewSmTcWf1QSUnwx7h
+bQF4IoVm12zELwQRPalBgC2qX/nwXeZKOi1i4GTzVMZvqqPSba7JOMYgnCNZagK3
+AHtBIhG91hPtC0ykR3IYV3LbR3SWcg==
+=wAW9
+-----END PGP SIGNATURE-----
+
+--wm5rma25slqeowsj--
