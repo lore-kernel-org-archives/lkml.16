@@ -1,190 +1,429 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D0125A627
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339CE2110E;
+	Tue, 27 May 2025 17:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748367055; cv=none; b=dOvOJOYgJkVH6F4VKBiWwtA4H6KYphLVBdWoO9DcEc1/X8rhUVDEBGCiHmiwX8E4MJeDbHLCbkgfdV+gzd4ZJyh5lVVinJrKUongZ9iVAVPBDm+b98/t5ifLuV0MXyHm+H8PMF5io4CNh8DP0AVwnSqAdmvtVxEHSCGcNITfbbw=
+	t=1748367125; cv=none; b=gvIjv056hv9RExqIiVg1yVajQ3kOLUjL32+YO7X1iIU8mxYHImURBHOck6u23mWK/C8LXD2zA5OaQ0Puuh1+MjrBe5RVIkSCweeweu1dxSgVIkoPe87DrGdLFyK3+r6ZRxQk145gJH/tliGIrhcNEKSkaMVoDoxeaw3Ohq1snmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748367055; c=relaxed/simple;
-	bh=FmJSeMciCQW5ZhJ88Z+1Y9gZB9p8Rlx7z0Oi17eXULw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MOen4ZXl1yqhT7sf2kqr3Eayx5UN73RnSmA8Jl0kzl5W5Tkaw3o0FHE9d+o3XKzZDn8+VehjdOMySzG7zh+ROcErn4g+TAtn/fxgfHKYcaev8TTUeLUbjwEsbUVwN4SmbrwpWhnKPygGrYmdRBngOseCOlz3nSxNax/xlmEHgC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kj9TUiMd; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748367125; c=relaxed/simple;
+	bh=z1y4lIBXx8sqGSstcVy0uVM+jGntez/sgqXCJmRGMJU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CqPukR+SoC2I8lJ+3wPiG+gv6BiT7PeH7Cl7iBxMiJph5z/EBUiMROUqgE/usNebknwt/29+bpFDf0I1flfcOomksD3ax30r1Mbhhf97kMA1tyZZ2Njs88KNrGgvP9jB7TNQE7Tbe4hToosMPBGVcCYog7kXtWrP1wZZ74rQKE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJtobHcc; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kj9TUiMd"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RGHUX5012554;
-	Tue, 27 May 2025 17:30:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=qbUi1u
-	1EKD9pUQa6VidP1b4nnc26rVpwBE8SlMorMxo=; b=Kj9TUiMdDQcdNZjsh7dUy7
-	WSfh4RkW60a/0YxqhMzX0ZJe5aODREO5B9cBMUQ0UtfPKA4w1C/hBXnrKo9PmvZg
-	wkVFDb0udgUu+h+xrPLIBu7x8QkQcvxBAv8gO1D7jYIZ4qckhd/5SB4XHJy57U/F
-	0c3sjHPgYeGiL0A4CYESPm/V0qSL1nhax0Et41OeL1ZJIIcXdxUszSl8EQ/wmu6F
-	datAzn4RzaypQ0XjuaNQcRYWwpxEQbl6WNDod/woZEwDzQJ16ABWgam6l72Q1eXP
-	AJ+HPVvuE6gH4EqM17nJ/yOHEXRSvAWOMg2YnWBMRUw5jv/Odkyy6TbFJQwRhNfA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsg8b99-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 17:30:31 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54RH8nDh023156;
-	Tue, 27 May 2025 17:30:30 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsg8b91-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 17:30:30 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHOlhK028925;
-	Tue, 27 May 2025 17:30:29 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepump3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 17:30:29 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54RHUPsu35127724
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 17:30:25 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0776120043;
-	Tue, 27 May 2025 17:30:25 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 39A1520040;
-	Tue, 27 May 2025 17:30:22 +0000 (GMT)
-Received: from [9.124.208.37] (unknown [9.124.208.37])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 May 2025 17:30:22 +0000 (GMT)
-Message-ID: <f6f122cf-daf4-4e31-af42-4f12761aa1da@linux.ibm.com>
-Date: Tue, 27 May 2025 23:00:21 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJtobHcc"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7424ccbef4eso2774419b3a.2;
+        Tue, 27 May 2025 10:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748367123; x=1748971923; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lbbm3hUoPFwMLsGg9lAlj1TA3litAzcTcIwN+ScTr2U=;
+        b=WJtobHccYYhZ2MhOSe0MTHmYwwxJllfnDS+c8/RcGD7RkIDmtqlQCi1DgBdqIe5wKg
+         4FP8SdSWZw7LElu4ORt6JAcc9ewW4BDchxcYW+J7SMZY5PluL7CrEYQofJiiwsWfnMup
+         7CFPGIDRCcTCHExdOZKQBU7/LjybzQ0oyltes6yjzfToih4YkIN1V81g65V5OtK7t+xL
+         vO9LXS7WeMo/gsLSNJd+2cXy6Cr6RzTNW0VmwNV88nIx6MJiv5+KHZ5fPZluPYFctBDB
+         eVftnrbKty303HI6YDQWoKLVhleb4NfOeF25utGPwRiUTLtYQ7DB3RvbsdPjHvr7gDa+
+         98BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748367123; x=1748971923;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Lbbm3hUoPFwMLsGg9lAlj1TA3litAzcTcIwN+ScTr2U=;
+        b=N2Clv6secU/09TDzDj1pvoGS6zFbQlOSd1HRAQbVuDPEBKF5r7bjofYqdoyTXJmMym
+         QPW2ypiqClSSZUB9uwlak4hxhklJo+C/as07zG4R7GZ0q9V8MRoDqVmX6DQgMxvyUd/x
+         tHqWV8bTgjdlpjT199rrFl/3bPmJ5zSpeynt1f8PZWfxo1IWbwBsQakC1pEZFqCp+Y1I
+         +85IjdSn6iBktBbqL65EeTevLFPjQ3DNLxhTLVzeD0ZeJJm96qIF3nK/9iBmIqtYRA9/
+         6BF8hlM2TM4Db64KZFCdNu3kIIviqNy5/rBqIoYh7v8mHOccj8U9IQgDrgUQP7tmntHG
+         83Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUA2RwWKkVCCFfagh/R4LnSGwRqYC0ucL+KSFKDoIVk49M3UKxJx/4sTMfpIB1mtSGpmGYI8wQjJ+Ngws0@vger.kernel.org, AJvYcCWh4nW/PdAZBctEm37d56MCwBAyzw9AzGsetZWwEn7lMF5BUyk4+BFJPm9D6Z4hKaOgy65N8K32vp79R7fbyw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGuJe1aAgx9aaoHYMYOFsH9XKcnuEzjvwnegrMA4ec0AZSrz4p
+	tyeizYLzhnHOTJS38avTyGMLcCI433W0u665vVwaQosKBvYaZlMm8SvI
+X-Gm-Gg: ASbGncudWQJBKIUJAg7Mq0Lm8um0SMjyADmM1rWaysr7okkWz7By7WeU1s+c34mBVj1
+	W52DEeOuwv/0sQl+0zX0DjUc1bEG/aoiKcabCej2hux8UN+8wgFrZ12BHXiX0tKydgHvePjm12g
+	ReGvlPL18RKfZ+ZCPqhuYQgn7dVTLkfYcNbU0ROKg0gfM1Bo45b22GoRCEgYUjro7tb52lJlv2D
+	nbGgd+uObO4aLVvgtxXSLBEX7GJ5U4kHC645uPbKFzzg8uBSzEv580oXCXA9IRW/qohwdmcscaa
+	EsdNSQ43zPHCXNiF6K8ZxgGgFDl+Ujy3orqFqHj0e3TVnMxD+lGw8rFXKPB7ZgCzGbwfo0LJ4TQ
+	=
+X-Google-Smtp-Source: AGHT+IEXm+GMlYUdlqJ6d0RVxfKqYZ6ihxDP7IUEo8woY1E1vhr/3NhmnuTA7AcTEtmQ6Dg13wF4MQ==
+X-Received: by 2002:a05:6a20:c78f:b0:1f5:51d5:9ef3 with SMTP id adf61e73a8af0-2188c285486mr19738313637.20.1748367123205;
+        Tue, 27 May 2025 10:32:03 -0700 (PDT)
+Received: from localhost.localdomain ([122.164.224.51])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0844d3sm18878298a12.51.2025.05.27.10.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 10:32:02 -0700 (PDT)
+From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+To: kent.overstreet@linux.dev
+Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
+	linux-bcachefs@vger.kernel.org,
+	shuah@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH bcachefs-testing] bcachefs: fix goto jumping over guard initializers
+Date: Tue, 27 May 2025 23:01:09 +0530
+Message-ID: <20250527173116.368912-2-bharadwaj.raju777@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] sched: cpu parked and push current task mechanism
-To: Yury Norov <yury.norov@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        tglx@linutronix.de, maddy@linux.ibm.com, vschneid@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, jstultz@google.com,
-        kprateek.nayak@amd.com, huschle@linux.ibm.com, srikar@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
-References: <20250523181448.3777233-1-sshegde@linux.ibm.com>
- <20250527151020.GV24938@noisy.programming.kicks-ass.net>
- <aDXelhCbIvKjZyqG@yury>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <aDXelhCbIvKjZyqG@yury>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=OIIn3TaB c=1 sm=1 tr=0 ts=6835f6b7 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=eopaWqG3cE2iixywgS8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: pi22yjOaZh5s4LjOUKHGWJmqI21ylnM8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE0MCBTYWx0ZWRfX+7bTa87zBXor AYhtW3eqCHP2nllkP9cDHUvlYU55X63z1XQFk3Bq+MEuC5DY7R4Lnw93lki6N49mazWn0+owdDU gWXqfJT4cE/CaUdpbKcqvfCRJpHO9i7lUxmcPKijBOu5zLAgenlO1FwiyJs2BdqPG/N1Xc+wCa5
- RBX0RqQwra8RvhpxI7ErkoFxdAfAmQspSXCiS9gl9JW1z4NT2JP3pVmCiEYRKfaGoWz93nZrI/3 DHonpg2oUGSfkLZQM2p5/tcRcGXvXIN98GU3Yp2TfgZQsgxr49cifYpgYYecRBWDa8Qo2yde2Od 3JFC5D0JgULJ0eYEd23U16tS2C8OZOnr+hGkEZTSyQB7oZyd5+QzfX9OGDVc8loKdAm+H3MCdCR
- LNfKL9FNk6nFOrOzEsUGbDRN/te4Y4rkpH1Cwczo9N6d1bWEvGL3V9yPZLvmW1mUb6Qtbcq7
-X-Proofpoint-ORIG-GUID: FkrexHL_KhPSW13ok5gZYu_UmK2Ms77T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_08,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- mlxlogscore=927 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505270140
+Content-Transfer-Encoding: 8bit
 
+Add scope to guard mutexes in bch2_accounting_read
+and __bch2_fsck_err to prevent the unlock func
+from running on an uninitialized value when
+goto skips over the guard macro. This also makes
+it compile on Clang 19.
 
-Hi Peter, Yury.
+Fixes: 96aae449b7083 ("bcachefs: convert percpu rwsems to guards")
+Fixes: 5582ffabeae15 ("bcachefs: Replace mutex_lock() with guards")
 
-Thanks for taking a look at this series.
+Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+---
+ fs/bcachefs/disk_accounting.c |  63 +++++-----
+ fs/bcachefs/error.c           | 230 +++++++++++++++++-----------------
+ 2 files changed, 149 insertions(+), 144 deletions(-)
 
-
-On 5/27/25 21:17, Yury Norov wrote:
-> On Tue, May 27, 2025 at 05:10:20PM +0200, Peter Zijlstra wrote:
->> On Fri, May 23, 2025 at 11:44:43PM +0530, Shrikanth Hegde wrote:
->>> In a para-virtualised environment, there could be multiple
->>> overcommitted VMs. i.e sum of virtual CPUs(vCPU) > physical CPU(pCPU).
->>> When all such VMs request for cpu cycles at the same, it is not possible
->>> to serve all of them. This leads to VM level preemptions and hence the
->>> steal time.
->>>
->>> Bring the notion of CPU parked state which implies underlying pCPU may
->>> not be available for use at this time. This means it is better to avoid
->>> this vCPU. So when a CPU is marked as parked, one should vacate it as
->>> soon as it can. So it is going to dynamic at runtime and can change
->>> often.
->>
->> You've lost me here already. Why would pCPU not be available? Simply
->> because it is running another vCPU? I would say this means the pCPU is
->> available, its just doing something else.
->>
->> Not available to me means it is going offline or something like that.
->>
->>> In general, task level preemption(driven by VM) is less expensive than VM
->>> level preemption(driven by hypervisor). So pack to less CPUs helps to
->>> improve the overall workload throughput/latency.
->>
->> This seems to suggest you're 'parking' vCPUs, while above you seemed to
->> suggest pCPU. More confusion.
-
-Yes. I meant parking of vCPUs only. pCPU is running one of those vCPU at any point in time.
-
->>
->>> cpu parking and need for cpu parking has been explained here as well [1]. Much
->>> of the context explained in the cover letter there applies to this
->>> problem context as well.
->>> [1]: https://lore.kernel.org/all/20250512115325.30022-1-huschle@linux.ibm.com/
->>
->> Yeah, totally not following any of that either :/
->>
->>
->> Mostly I have only confusion and no idea what you're actually wanting to
->> do.
-> 
-> My wild guess is that the idea is to not preempt the pCPU while running
-> a particular vCPU workload. But I agree, this should all be reworded and
-> explained better. I didn't understand this, either.
-> 
-> Thanks,
-> YUry
-
-Sorry, Apologies for not explaining it clearly. My bad.
-Let me take a shot at it again:
-
-----------------------------
-
-vCPU - Virtual CPUs - CPU in VM world.
-pCPU - Physical CPUs - CPU in baremetal world.
-
-A hypervisor is managing these vCPUs from different VMs. When a vCPU requests for CPU, hypervisor does the job
-of scheduling them on a pCPU.
-
-So this issue occurs when there are more vCPUs(combined across all VMs) than the pCPU. So when *all* vCPUs are
-requesting for CPUs, hypervisor can only run a few of them and remaining will be preempted(waiting for pCPU).
-
-
-If we take two VM's, When hypervisor preempts vCPU from VM1 to run vCPU from VM2, it has to do
-save/restore VM context.Instead if VM's can co-ordinate among each other and request for *limited*  vCPUs,
-it avoids the above overhead and there is context switching within vCPU(less expensive). Even if hypervisor
-is preempting one vCPU to run another withing the same VM, it is still more expensive than the task preemption within
-the vCPU. So *basic* aim to avoid vCPU preemption.
-
-
-So to achieve this, use this parking(we need better name for sure) concept, where it is better
-if workloads avoid some vCPUs at this moment. (vCPUs stays online, we don't want the overhead of sched domain rebuild).
-
-
-contention is dynamic in nature. When there is contention for pCPU is to be detected and determined
-by architecture. Archs needs to update the mask regularly.
-
-When there is contention, use limited vCPUs as indicated by arch.
-When there is no contention, use all vCPUs.
+diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
+index 825420845cb8..3650b28ad48f 100644
+--- a/fs/bcachefs/disk_accounting.c
++++ b/fs/bcachefs/disk_accounting.c
+@@ -832,44 +832,47 @@ int bch2_accounting_read(struct bch_fs *c)
+ 	}
+ 	keys->gap = keys->nr = dst - keys->data;
+ 
+-	guard(percpu_write)(&c->mark_lock);
++	{
++		guard(percpu_write)(&c->mark_lock);
+ 
+-	darray_for_each_reverse(acc->k, i) {
+-		struct disk_accounting_pos acc_k;
+-		bpos_to_disk_accounting_pos(&acc_k, i->pos);
++		darray_for_each_reverse(acc->k, i) {
++			struct disk_accounting_pos acc_k;
++			bpos_to_disk_accounting_pos(&acc_k, i->pos);
+ 
+-		u64 v[BCH_ACCOUNTING_MAX_COUNTERS];
+-		memset(v, 0, sizeof(v));
++			u64 v[BCH_ACCOUNTING_MAX_COUNTERS];
++			memset(v, 0, sizeof(v));
+ 
+-		for (unsigned j = 0; j < i->nr_counters; j++)
+-			v[j] = percpu_u64_get(i->v[0] + j);
++			for (unsigned j = 0; j < i->nr_counters; j++)
++				v[j] = percpu_u64_get(i->v[0] + j);
+ 
+-		/*
+-		 * If the entry counters are zeroed, it should be treated as
+-		 * nonexistent - it might point to an invalid device.
+-		 *
+-		 * Remove it, so that if it's re-added it gets re-marked in the
+-		 * superblock:
+-		 */
+-		ret = bch2_is_zero(v, sizeof(v[0]) * i->nr_counters)
+-			? -BCH_ERR_remove_disk_accounting_entry
+-			: bch2_disk_accounting_validate_late(trans, &acc_k, v, i->nr_counters);
+-
+-		if (ret == -BCH_ERR_remove_disk_accounting_entry) {
+-			free_percpu(i->v[0]);
+-			free_percpu(i->v[1]);
+-			darray_remove_item(&acc->k, i);
+-			ret = 0;
+-			continue;
++			/*
++			 * If the entry counters are zeroed, it should be treated as
++			 * nonexistent - it might point to an invalid device.
++			 *
++			 * Remove it, so that if it's re-added it gets re-marked in the
++			 * superblock:
++			 */
++			ret = bch2_is_zero(v, sizeof(v[0]) * i->nr_counters) ?
++							      -BCH_ERR_remove_disk_accounting_entry :
++							      bch2_disk_accounting_validate_late(
++								      trans, &acc_k, v, i->nr_counters);
++
++			if (ret == -BCH_ERR_remove_disk_accounting_entry) {
++				free_percpu(i->v[0]);
++				free_percpu(i->v[1]);
++				darray_remove_item(&acc->k, i);
++				ret = 0;
++				continue;
++			}
++
++			if (ret)
++				goto fsck_err;
+ 		}
+ 
+-		if (ret)
+-			goto fsck_err;
++		eytzinger0_sort(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]),
++				accounting_pos_cmp, NULL);
+ 	}
+ 
+-	eytzinger0_sort(acc->k.data, acc->k.nr, sizeof(acc->k.data[0]),
+-			accounting_pos_cmp, NULL);
+-
+ 	scoped_guard(preempt) {
+ 		struct bch_fs_usage_base *usage = this_cpu_ptr(c->usage);
+ 
+diff --git a/fs/bcachefs/error.c b/fs/bcachefs/error.c
+index dc0fbc97a0e5..be16a4b56a15 100644
+--- a/fs/bcachefs/error.c
++++ b/fs/bcachefs/error.c
+@@ -497,131 +497,133 @@ int __bch2_fsck_err(struct bch_fs *c,
+ 			}
+ 		}
+ 	}
+-
+-	guard(mutex)(&c->fsck_error_msgs_lock);
+-	bool repeat = false, print = true, suppress = false;
+-	bool inconsistent = false, exiting = false;
+-	struct fsck_err_state *s =
+-		count_fsck_err_locked(c, err, buf.buf, &repeat, &print, &suppress);
+-	if (repeat) {
+-		ret = s->ret;
+-		goto err;
+-	}
+-
+-	if ((flags & FSCK_AUTOFIX) &&
+-	    (c->opts.errors == BCH_ON_ERROR_continue ||
+-	     c->opts.errors == BCH_ON_ERROR_fix_safe)) {
+-		prt_str(out, ", ");
+-		if (flags & FSCK_CAN_FIX) {
+-			prt_actioning(out, action);
+-			ret = -BCH_ERR_fsck_fix;
+-		} else {
+-			prt_str(out, ", continuing");
+-			ret = -BCH_ERR_fsck_ignore;
++	{
++		guard(mutex)(&c->fsck_error_msgs_lock);
++		bool repeat = false, print = true, suppress = false;
++		bool inconsistent = false, exiting = false;
++		struct fsck_err_state *s =
++			count_fsck_err_locked(c, err, buf.buf, &repeat, &print, &suppress);
++		if (repeat) {
++			ret = s->ret;
++			goto err;
+ 		}
+ 
+-		goto print;
+-	} else if (!test_bit(BCH_FS_in_fsck, &c->flags)) {
+-		if (c->opts.errors != BCH_ON_ERROR_continue ||
+-		    !(flags & (FSCK_CAN_FIX|FSCK_CAN_IGNORE))) {
+-			prt_str_indented(out, ", shutting down\n"
+-					 "error not marked as autofix and not in fsck\n"
+-					 "run fsck, and forward to devs so error can be marked for self-healing");
+-			inconsistent = true;
+-			print = true;
++		if ((flags & FSCK_AUTOFIX) &&
++		    (c->opts.errors == BCH_ON_ERROR_continue ||
++		     c->opts.errors == BCH_ON_ERROR_fix_safe)) {
++			prt_str(out, ", ");
++			if (flags & FSCK_CAN_FIX) {
++				prt_actioning(out, action);
++				ret = -BCH_ERR_fsck_fix;
++			} else {
++				prt_str(out, ", continuing");
++				ret = -BCH_ERR_fsck_ignore;
++			}
++
++			goto print;
++		} else if (!test_bit(BCH_FS_in_fsck, &c->flags)) {
++			if (c->opts.errors != BCH_ON_ERROR_continue ||
++			    !(flags & (FSCK_CAN_FIX|FSCK_CAN_IGNORE))) {
++				prt_str_indented(out, ", shutting down\n"
++						 "error not marked as autofix and not in fsck\n"
++						 "run fsck, and forward to devs so error can be marked for self-healing");
++				inconsistent = true;
++				print = true;
++				ret = -BCH_ERR_fsck_errors_not_fixed;
++			} else if (flags & FSCK_CAN_FIX) {
++				prt_str(out, ", ");
++				prt_actioning(out, action);
++				ret = -BCH_ERR_fsck_fix;
++			} else {
++				prt_str(out, ", continuing");
++				ret = -BCH_ERR_fsck_ignore;
++			}
++		} else if (c->opts.fix_errors == FSCK_FIX_exit) {
++			prt_str(out, ", exiting");
+ 			ret = -BCH_ERR_fsck_errors_not_fixed;
+ 		} else if (flags & FSCK_CAN_FIX) {
+-			prt_str(out, ", ");
+-			prt_actioning(out, action);
+-			ret = -BCH_ERR_fsck_fix;
+-		} else {
+-			prt_str(out, ", continuing");
+-			ret = -BCH_ERR_fsck_ignore;
++			int fix = s && s->fix
++				? s->fix
++				: c->opts.fix_errors;
++
++			if (fix == FSCK_FIX_ask) {
++				print = false;
++
++				ret = do_fsck_ask_yn(c, trans, out, action);
++				if (ret < 0)
++					goto err;
++
++				if (ret >= YN_ALLNO && s)
++					s->fix = ret == YN_ALLNO
++						? FSCK_FIX_no
++						: FSCK_FIX_yes;
++
++				ret = ret & 1
++					? -BCH_ERR_fsck_fix
++					: -BCH_ERR_fsck_ignore;
++			} else if (fix == FSCK_FIX_yes ||
++				   (c->opts.nochanges &&
++				    !(flags & FSCK_CAN_IGNORE))) {
++				prt_str(out, ", ");
++				prt_actioning(out, action);
++				ret = -BCH_ERR_fsck_fix;
++			} else {
++				prt_str(out, ", not ");
++				prt_actioning(out, action);
++			}
++		} else if (!(flags & FSCK_CAN_IGNORE)) {
++			prt_str(out, " (repair unimplemented)");
+ 		}
+-	} else if (c->opts.fix_errors == FSCK_FIX_exit) {
+-		prt_str(out, ", exiting");
+-		ret = -BCH_ERR_fsck_errors_not_fixed;
+-	} else if (flags & FSCK_CAN_FIX) {
+-		int fix = s && s->fix
+-			? s->fix
+-			: c->opts.fix_errors;
+-
+-		if (fix == FSCK_FIX_ask) {
+-			print = false;
+-
+-			ret = do_fsck_ask_yn(c, trans, out, action);
+-			if (ret < 0)
+-				goto err;
+ 
+-			if (ret >= YN_ALLNO && s)
+-				s->fix = ret == YN_ALLNO
+-					? FSCK_FIX_no
+-					: FSCK_FIX_yes;
+-
+-			ret = ret & 1
+-				? -BCH_ERR_fsck_fix
+-				: -BCH_ERR_fsck_ignore;
+-		} else if (fix == FSCK_FIX_yes ||
+-			   (c->opts.nochanges &&
+-			    !(flags & FSCK_CAN_IGNORE))) {
+-			prt_str(out, ", ");
+-			prt_actioning(out, action);
+-			ret = -BCH_ERR_fsck_fix;
+-		} else {
+-			prt_str(out, ", not ");
+-			prt_actioning(out, action);
+-		}
+-	} else if (!(flags & FSCK_CAN_IGNORE)) {
+-		prt_str(out, " (repair unimplemented)");
+-	}
++		if (ret == -BCH_ERR_fsck_ignore &&
++		    (c->opts.fix_errors == FSCK_FIX_exit ||
++		     !(flags & FSCK_CAN_IGNORE)))
++			ret = -BCH_ERR_fsck_errors_not_fixed;
+ 
+-	if (ret == -BCH_ERR_fsck_ignore &&
+-	    (c->opts.fix_errors == FSCK_FIX_exit ||
+-	     !(flags & FSCK_CAN_IGNORE)))
+-		ret = -BCH_ERR_fsck_errors_not_fixed;
++		if (test_bit(BCH_FS_in_fsck, &c->flags) &&
++		    (ret != -BCH_ERR_fsck_fix &&
++		     ret != -BCH_ERR_fsck_ignore)) {
++			exiting = true;
++			print = true;
++		}
+ 
+-	if (test_bit(BCH_FS_in_fsck, &c->flags) &&
+-	    (ret != -BCH_ERR_fsck_fix &&
+-	     ret != -BCH_ERR_fsck_ignore)) {
+-		exiting = true;
+-		print = true;
+-	}
+ print:
+-	prt_newline(out);
+-
+-	if (inconsistent)
+-		__bch2_inconsistent_error(c, out);
+-	else if (exiting)
+-		prt_printf(out, "Unable to continue, halting\n");
+-	else if (suppress)
+-		prt_printf(out, "Ratelimiting new instances of previous error\n");
+-
+-	if (print) {
+-		/* possibly strip an empty line, from printbuf_indent_add */
+-		while (out->pos && out->buf[out->pos - 1] == ' ')
+-			--out->pos;
+-		printbuf_nul_terminate(out);
+-
+-		if (bch2_fs_stdio_redirect(c))
+-			bch2_print(c, "%s", out->buf);
+-		else
+-			bch2_print_str(c, KERN_ERR, out->buf);
+-	}
++		prt_newline(out);
++
++		if (inconsistent)
++			__bch2_inconsistent_error(c, out);
++		else if (exiting)
++			prt_printf(out, "Unable to continue, halting\n");
++		else if (suppress)
++			prt_printf(out, "Ratelimiting new instances of previous error\n");
++
++		if (print) {
++			/* possibly strip an empty line, from printbuf_indent_add */
++			while (out->pos && out->buf[out->pos - 1] == ' ')
++				--out->pos;
++			printbuf_nul_terminate(out);
++
++			if (bch2_fs_stdio_redirect(c))
++				bch2_print(c, "%s", out->buf);
++			else
++				bch2_print_str(c, KERN_ERR, out->buf);
++		}
+ 
+-	if (s)
+-		s->ret = ret;
++		if (s)
++			s->ret = ret;
+ 
+-	/*
+-	 * We don't yet track whether the filesystem currently has errors, for
+-	 * log_fsck_err()s: that would require us to track for every error type
+-	 * which recovery pass corrects it, to get the fsck exit status correct:
+-	 */
+-	if (flags & FSCK_CAN_FIX) {
+-		if (ret == -BCH_ERR_fsck_fix) {
+-			set_bit(BCH_FS_errors_fixed, &c->flags);
+-		} else {
+-			set_bit(BCH_FS_errors_not_fixed, &c->flags);
+-			set_bit(BCH_FS_error, &c->flags);
++		/*
++		 * We don't yet track whether the filesystem currently has errors, for
++		 * log_fsck_err()s: that would require us to track for every error type
++		 * which recovery pass corrects it, to get the fsck exit status correct:
++		 */
++		if (flags & FSCK_CAN_FIX) {
++			if (ret == -BCH_ERR_fsck_fix) {
++				set_bit(BCH_FS_errors_fixed, &c->flags);
++			} else {
++				set_bit(BCH_FS_errors_not_fixed, &c->flags);
++				set_bit(BCH_FS_error, &c->flags);
++			}
+ 		}
+ 	}
+ err:
+-- 
+2.49.0
 
