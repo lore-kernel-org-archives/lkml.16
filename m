@@ -1,125 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE6C2882C0
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C7F280032
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373879; cv=none; b=V4c3D98mwkFEdn6WxvOmECjFIh78xwWwLF254lqlfrPne7WiTzlGcTIt+s9SVAsmWRfUHjjnuG/5A9kZ7iJ3fDymwHMgiaLHOUHCaO2ZshnDME0YKepvuZ6/nUms5Y9+vwvYHA+vCRF7pZCTm+k8GwejEFTc3tyQ/MKG1rrP8XM=
+	t=1748373958; cv=none; b=m3aQV+WJ89x+fDAfIR+Rs1elF9VAWVQ38h+LkTeLEq5cuVTnjyucGrmu8DXWbC84WhXvBkEtiHAjpjaLh3sl6lxsHLvv/7Ezv38qnNi/XXTFFW4TXsJTTDNw+yvgxdCu1QJbIHB4c7WDmCOPl56KkFNC2WhxVhfUv7PFqFT/0oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373879; c=relaxed/simple;
-	bh=ntw/8psZ7bfxneDfhhEexKAZ6oulFJnYo89SZiJwBzs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=V/KVmqCJKipkVTovTbdDVqDh5qQB+lm8+x84R1xLYc30tATdYNk35KCEox4Bsfb8D01tdVPrgfWoh0Pp0rZvBmehnPCgBSA8KCq9chSa01V59Jj3tEbw5C8H5/1uoQaDCCL/AtAsF+Kj3l/uEQ8OjAl2jNCjtX+D1dtdG7/gAWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YGRxpqux; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748373958; c=relaxed/simple;
+	bh=ERQGBxfREhehbTHn9S6ckLVE4roOGQySAqtM4e0+RwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fLzzSl06rN/2n12ec5/fIXZlTX3EajhHJYbFxVKs2mBcnNFz6atOV8nmT34AD8Cwz9wLcPTJxLk07Go++pBQmMr5ZoypNQMKsbrejHSJpe5o08/VOVmuSGPX674ILPdcrNZSz4I0sWNzZ5eyoZzF6wrgpJBqaLC2MNO/QLeFyfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edYTmbc6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YGRxpqux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748373878; x=1779909878;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=ntw/8psZ7bfxneDfhhEexKAZ6oulFJnYo89SZiJwBzs=;
-  b=YGRxpquxxOruR0fE+TfgoSk7ka5YcRjaFvBNNd2iiJTgeynkYg7X1Mj4
-   L6tX0kkENo6rhm3eLCKANfxA6exURXAgHcdnN+r2BRIbcFQg8O9qmb7o/
-   OGaW/Fa4ZCIuMDUwd1QldpcyW1+lvgTTrJIJqfguz+kUjF4mH6oS95EQo
-   paiHhOTqs6Kfn/5HslroYx/W2Xwufy/qi+lZLkXX/2H6Ez8gCUQnNXpHM
-   U/+he/mJx40vQN+jZVwqTBCz6NCbm5zhBsuwfi/GmlhEIMUDT70/J4KpE
-   YQcpWJ3XCS7itTVUNmPqg/tcf1f7GxA/vuGQp7Xfl6z0ugNhRdf+cHyhy
-   g==;
-X-CSE-ConnectionGUID: k2fAjVYdQoiu3GWGQbzKOQ==
-X-CSE-MsgGUID: SJQ7mBTNTUqjxiaaExYMMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50269201"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="50269201"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:24:38 -0700
-X-CSE-ConnectionGUID: NeuleRm5T/qKTWvmmtRRLw==
-X-CSE-MsgGUID: 4eoINnEhQqaFaWdoQpz9Pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="142905777"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.23])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:24:34 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-In-Reply-To: <20250527-origami-mayfly-of-superiority-2a1cf1@houat>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250505-slim-bizarre-marten-a674ac@houat>
- <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
- <874ixvtbxy.fsf@intel.com>
- <20250509-rapid-flounder-of-devotion-6b26bb@houat>
- <87r00yj6kv.fsf@intel.com>
- <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
- <875xi3im1r.fsf@intel.com> <20250519-singing-silent-stingray-fe5c9b@houat>
- <87sekztwyc.fsf@intel.com>
- <8210f7fc0dbcfc5b1eea47ccb762c7e53b45236a@intel.com>
- <20250527-origami-mayfly-of-superiority-2a1cf1@houat>
-Date: Tue, 27 May 2025 22:24:30 +0300
-Message-ID: <d1218b60108894832ce4ac3aedfa11988e985e98@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edYTmbc6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EBB1C4CEE9;
+	Tue, 27 May 2025 19:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748373957;
+	bh=ERQGBxfREhehbTHn9S6ckLVE4roOGQySAqtM4e0+RwI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=edYTmbc6yots7d1MpDd90TgP/YEipvQ1EZRV6+QhTPE9ReH1dTfzCqhS6hh0fSP4M
+	 H9j7wZfWxwtvBc+sCgw4jAEusxZrT5V0sPB1oxGeaTwbTi55VV+k3YbWs2wHxB6cMe
+	 qpz4VZGkqE36bFbPio6C7GYZM84jaBAPZ35HTnpYS4bPdazxcUh0Tnsvohi7XQvRJq
+	 j3hq+zfihH7GyOfjiyRx3UxG/9QgtA+ylU18Bx4OMG26HwuZNGYDGDxRipZe/5BQs9
+	 XOOk+UtWgfJtNQtosuyneNvvohr3ohy8dhDMCooyJT4iqcfkHgNBsXbd95HQg1HjJ4
+	 1Rvz3HFTnGgBg==
+From: SeongJae Park <sj@kernel.org>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Chengming Zhou <zhouchengming@bytedance.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>,
+	kernel test robot <lkp@intel.com>,
+	Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH] mm, list_lru: refactor the locking code
+Date: Tue, 27 May 2025 12:25:55 -0700
+Message-Id: <20250527192555.12838-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250526180638.14609-1-ryncsn@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, 27 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
-> Hi,
->
-> On Fri, May 23, 2025 at 02:34:05PM +0300, Jani Nikula wrote:
->> On Tue, 20 May 2025, Jani Nikula <jani.nikula@linux.intel.com> wrote:
->> > Maxime -
->> >
->> > I'm cutting a lot of context here. Not because I don't think it deserves
->> > an answer, but because I seem to be failing at communication.
->> >
->> > On Mon, 19 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
->> >> You still haven't explained why it would take anything more than
->> >> registering a dumb device at probe time though.
->> >
->> > With that, do you mean a dumb struct device, or any struct device with a
->> > suitable lifetime, that we'd pass to devm_drm_panel_alloc()?
->> 
->> I'm no expert in ACPI, but I think it needs to be a struct device
->> embedded inside struct acpi_device to implement the
->> drm_panel_add_follower() lookup for ACPI.
->
-> What data do you have in the ACPI tables to associate the HID
-> touchscreen to the panel?
->
-> drm_panel_add_follower use the DT to lookup the panel, so the panel must
-> have a device->of_node pointer, so that obviously won't work, but it
-> might with ACPI, or we might need to split that function into several
-> parts to accomodate ACPI.
+Hi Kairui,
 
-Personally, I'm pretty clueless about ACPI, but apparently it's possible
-to add a _DSD to reference the panel.
+On Tue, 27 May 2025 02:06:38 +0800 Kairui Song <ryncsn@gmail.com> wrote:
 
-And something like [1] could work to make drm_panel lookup agnostic to
-DT/ACPI, but it's completely untested and unreviewed as of today. We'll
-also need to find someone to help ensure that doesn't break DT systems.
+> From: Kairui Song <kasong@tencent.com>
+> 
+> Cocci is confused by the try lock then release RCU and return logic
+> here. So separate the try lock part out into a standalone helper. The
+> code is easier to follow too.
+> 
+> No feature change, fixes:
+> 
+> cocci warnings: (new ones prefixed by >>)
+> >> mm/list_lru.c:82:3-9: preceding lock on line 77
+> >> mm/list_lru.c:82:3-9: preceding lock on line 77
+>    mm/list_lru.c:82:3-9: preceding lock on line 75
+>    mm/list_lru.c:82:3-9: preceding lock on line 75
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reported-by: Julia Lawall <julia.lawall@inria.fr>
+> Closes: https://lore.kernel.org/r/202505252043.pbT1tBHJ-lkp@intel.com/
+> Signed-off-by: Kairui Song <kasong@tencent.com>
 
-Feedback is welcome, but please bear in mind I'm not even confident
-enough to post it on dri-devel yet.
+Reviewed-by: SeongJae Park <sj@kernel.org>
+
+> ---
+>  mm/list_lru.c | 34 +++++++++++++++++++---------------
+>  1 file changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index 490473af3122..ec48b5dadf51 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -60,30 +60,34 @@ list_lru_from_memcg_idx(struct list_lru *lru, int nid, int idx)
+>  	return &lru->node[nid].lru;
+>  }
+>  
+> +static inline bool lock_list_lru(struct list_lru_one *l, bool irq)
+> +{
+> +	if (irq)
+> +		spin_lock_irq(&l->lock);
+> +	else
+> +		spin_lock(&l->lock);
+> +	if (unlikely(READ_ONCE(l->nr_items) == LONG_MIN)) {
+> +		if (irq)
+> +			spin_unlock_irq(&l->lock);
+> +		else
+> +			spin_unlock(&l->lock);
+> +		return false;
+> +	}
+
+I'd prefer 'if (likely(...)) return true;' to reduce indentation and stop
+wondering what goes to the likely case earlier.  But that's my personal
+preferrence that shouldn't block this.
+
+> +	return true;
+> +}
+> +
+>  static inline struct list_lru_one *
+>  lock_list_lru_of_memcg(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
+>  		       bool irq, bool skip_empty)
+>  {
+>  	struct list_lru_one *l;
+> -	long nr_items;
+>  
+>  	rcu_read_lock();
+>  again:
+>  	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
+> -	if (likely(l)) {
+> -		if (irq)
+> -			spin_lock_irq(&l->lock);
+> -		else
+> -			spin_lock(&l->lock);
+> -		nr_items = READ_ONCE(l->nr_items);
+> -		if (likely(nr_items != LONG_MIN)) {
+> -			rcu_read_unlock();
+> -			return l;
+> -		}
+> -		if (irq)
+> -			spin_unlock_irq(&l->lock);
+> -		else
+> -			spin_unlock(&l->lock);
+> +	if (likely(l) && lock_list_lru(l, irq)) {
+> +		rcu_read_unlock();
+> +		return l;
+>  	}
+
+Much easier to read, indeed :)
+
+>  	/*
+>  	 * Caller may simply bail out if raced with reparenting or
+> -- 
+> 2.49.0
 
 
-BR,
-Jani.
+Thanks,
+SJ
 
-
-[1] https://gitlab.freedesktop.org/jani/linux/-/commit/8ca2e1f25ca94c4ee094915a26781f9d9ace37af
-
-
--- 
-Jani Nikula, Intel
+[...]
