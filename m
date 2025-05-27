@@ -1,197 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E106724DD1A;
-	Tue, 27 May 2025 08:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB34253346;
+	Tue, 27 May 2025 08:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748334327; cv=none; b=RJVKKDFkqg28glR2PEl9v3f4ihsffc463UUdwRmmmRVa6jU5b4MbFWqKWKKMmGXtt3UMkx/onP3itnz7HHiDr8Cur1mwzQLzU8RmtbC2KZ+nL0CTlwwD4mjg8qiKOGmsoKskZupHYEN7NoyA2TBHfNij1hvpJ2FxFLBhB0bQgAI=
+	t=1748334330; cv=none; b=K15cGTlJunCRSP6rO0Ff/Mhwao0iS15j7fgrG7MMU94GqAbHt8fdXlpoOk2HeCAlowts5pCyFx9dFsq0We1FcAOSrgvQpGLkraQy4mCK/IkG1JgwpftqD4V0j5yPrlq+IkHS57UyTIyybrVyyxlhukXBH+Bgr5sFiormZpWILKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748334327; c=relaxed/simple;
-	bh=7+tp4GAq7YcVLgb/nQO83VDp/Ph/4sBIBC7Fet0/G4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YtS8KMF/+4iKA8yMIPG0g1C8JPRrwp/eHheB3aQuV5v72jwrbFHgbyHONr8ts80i4KraWKuwwI54OCX1qs4SPiwEn7EFmLgRJmBFw5n5BA6EPHJAHlFF9tvMqIeRb2VPJlJaf0D8yVlfG4OGAoPfyO5jSvvP2gCHWFqTK1hyhEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R+g+c6WW; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R+g+c6WW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748334326; x=1779870326;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7+tp4GAq7YcVLgb/nQO83VDp/Ph/4sBIBC7Fet0/G4Y=;
-  b=R+g+c6WWeINMYvifGEjiogVsodnC3Cwj1lZjiqSgRPxCdd+iGtwFBMfl
-   vE8ktwM7PwdfFSeG7j0jR+zIjIumCjrGPo9oZcLR67TqjWygBsLhZrUdU
-   AArTtJ/ld429HbZv4xQKqNqLU+PAXS28/b/X/95vQgpGXpsUxaM32Nxwm
-   HhkvjKCpRX6K7/Or/HR0uYVxHa1LWdZz+e5MMjiuYjAaD/OXK2ex9QAfa
-   sg3nxKm+U/4+WATDTPUhkUBAy3Ao2vCIV2ElSPpFiKOMKpLBt6Z2NScq+
-   /F5JhyopuY1d/i8P4kcUptFxcsS08CVl2Ld/a/eOhVJyXt99wHVSJLtdU
-   A==;
-X-CSE-ConnectionGUID: FUyDjo0hRje9mdlb4z3vEA==
-X-CSE-MsgGUID: Agt1fEfcTgehgOR7bZ8gSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="37936934"
-X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="37936934"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:25:25 -0700
-X-CSE-ConnectionGUID: mRqJkLNKQwGmhGK/5+3FxQ==
-X-CSE-MsgGUID: 7rh8kbY3Qla2LSYp38kAgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
-   d="scan'208";a="179901149"
-Received: from unknown (HELO [10.238.11.3]) ([10.238.11.3])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:25:05 -0700
-Message-ID: <9483e9e3-9b29-49c6-adcc-04fe45ac28fd@linux.intel.com>
-Date: Tue, 27 May 2025 16:25:01 +0800
+	s=arc-20240116; t=1748334330; c=relaxed/simple;
+	bh=0VrJdg8Nl5BguTH061Cxa1EObjkDnYtLyk2yNfaEpxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=be40S1A1Ogc6MN047TVYrt2SLLj8i17qxl9T8cSow3T79gSmgdG2nh4G/znp6l3EeNLD1uzeT7bM6FqYlfZswpyrVl50q3RyRUuRDdy7sdGKuudzWWcGb98n0VoNz/ptHFhBgoqkIID4Zg5hKXtjVFDET77vUgrwE3S4aSlUxJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 223956f23ad411f0b29709d653e92f7d-20250527
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:d5db8501-0ce9-4cde-b853-aec134198ab3,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:960212652df79bafbda8332d2bf24c97,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
+	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 223956f23ad411f0b29709d653e92f7d-20250527
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1451708132; Tue, 27 May 2025 16:25:23 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id B1BA616001F52;
+	Tue, 27 May 2025 16:25:22 +0800 (CST)
+X-ns-mid: postfix-683576F1-9270232691
+Received: from kylin-pc.. (unknown [172.25.130.133])
+	by node4.com.cn (NSMail) with ESMTPA id D775C16001F49;
+	Tue, 27 May 2025 08:25:19 +0000 (UTC)
+From: Ai Chao <aichao@kylinos.cn>
+To: perex@perex.cz,
+	tiwai@suse.com,
+	johannes@sipsolutions.net,
+	kuninori.morimoto.gx@renesas.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	jbrunet@baylibre.com,
+	neil.armstrong@linaro.org,
+	khilman@baylibre.com,
+	martin.blumenstingl@googlemail.com,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	srinivas.kandagatla@linaro.org
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	imx@lists.linux.dev,
+	kernel@pengutronix.de,
+	linux-arm-msm@vger.kernel.org,
+	Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH v3 5/6] ASoC: imx-card: Use helper function for_each_child_of_node_scoped()
+Date: Tue, 27 May 2025 16:24:45 +0800
+Message-ID: <20250527082446.2265500-6-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250527082446.2265500-1-aichao@kylinos.cn>
+References: <20250527082446.2265500-1-aichao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 02/51] KVM: guest_memfd: Introduce and use
- shareability to guard faulting
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com,
- ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com,
- anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu,
- bfoster@redhat.com, brauner@kernel.org, catalin.marinas@arm.com,
- chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com,
- david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk,
- erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com,
- haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
- ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
- james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com,
- jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
- jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
- kent.overstreet@linux.dev, kirill.shutemov@intel.com,
- liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
- mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
- michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
- nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
- palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
- pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
- pgonda@google.com, pvorel@suse.cz, qperret@google.com,
- quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
- quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
- quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com,
- richard.weiyang@gmail.com, rick.p.edgecombe@intel.com, rientjes@google.com,
- roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com, shuah@kernel.org,
- steven.price@arm.com, steven.sistare@oracle.com, suzuki.poulose@arm.com,
- tabba@google.com, thomas.lendacky@amd.com, usama.arif@bytedance.com,
- vannapurve@google.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
- vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
- willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
- yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-References: <cover.1747264138.git.ackerleytng@google.com>
- <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <b784326e9ccae6a08388f1bf39db70a2204bdc51.1747264138.git.ackerleytng@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+The for_each_child_of_node_scoped() helper provides a scope-based
+clean-up functionality to put the device_node automatically, and
+as such, there is no need to call of_node_put() directly.
 
+Signed-off-by: Ai Chao <aichao@kylinos.cn>
+---
+ sound/soc/fsl/imx-card.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-On 5/15/2025 7:41 AM, Ackerley Tng wrote:
-> Track guest_memfd memory's shareability status within the inode as
-> opposed to the file, since it is property of the guest_memfd's memory
-> contents.
->
-> Shareability is a property of the memory and is indexed using the
-> page's index in the inode. Because shareability is the memory's
-> property, it is stored within guest_memfd instead of within KVM, like
-> in kvm->mem_attr_array.
->
-> KVM_MEMORY_ATTRIBUTE_PRIVATE in kvm->mem_attr_array must still be
-> retained to allow VMs to only use guest_memfd for private memory and
-> some other memory for shared memory.
->
-> Not all use cases require guest_memfd() to be shared with the host
-> when first created. Add a new flag, GUEST_MEMFD_FLAG_INIT_PRIVATE,
-> which when set on KVM_CREATE_GUEST_MEMFD, initializes the memory as
-> private to the guest, and therefore not mappable by the
-> host. Otherwise, memory is shared until explicitly converted to
-> private.
->
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-> Co-developed-by: Vishal Annapurve <vannapurve@google.com>
-> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
-> Co-developed-by: Fuad Tabba <tabba@google.com>
-> Signed-off-by: Fuad Tabba <tabba@google.com>
-> Change-Id: If03609cbab3ad1564685c85bdba6dcbb6b240c0f
-> ---
->   Documentation/virt/kvm/api.rst |   5 ++
->   include/uapi/linux/kvm.h       |   2 +
->   virt/kvm/guest_memfd.c         | 124 ++++++++++++++++++++++++++++++++-
->   3 files changed, 129 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 86f74ce7f12a..f609337ae1c2 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -6408,6 +6408,11 @@ belonging to the slot via its userspace_addr.
->   The use of GUEST_MEMFD_FLAG_SUPPORT_SHARED will not be allowed for CoCo VMs.
->   This is validated when the guest_memfd instance is bound to the VM.
->   
-> +If the capability KVM_CAP_GMEM_CONVERSIONS is supported, then the 'flags' field
-> +supports GUEST_MEMFD_FLAG_INIT_PRIVATE.
+diff --git a/sound/soc/fsl/imx-card.c b/sound/soc/fsl/imx-card.c
+index 45e000f61ecc..f0bf4eb05329 100644
+--- a/sound/soc/fsl/imx-card.c
++++ b/sound/soc/fsl/imx-card.c
+@@ -513,7 +513,6 @@ static int imx_card_parse_of(struct imx_card_data *da=
+ta)
+ 	struct device_node *platform =3D NULL;
+ 	struct device_node *codec =3D NULL;
+ 	struct device_node *cpu =3D NULL;
+-	struct device_node *np;
+ 	struct device *dev =3D card->dev;
+ 	struct snd_soc_dai_link *link;
+ 	struct dai_link_data *link_data;
+@@ -552,11 +551,10 @@ static int imx_card_parse_of(struct imx_card_data *=
+data)
+ 	link =3D card->dai_link;
+ 	link_data =3D data->link_data;
+=20
+-	for_each_child_of_node(dev->of_node, np) {
++	for_each_child_of_node_scoped(dev->of_node, np) {
+ 		dlc =3D devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
+ 		if (!dlc) {
+-			ret =3D -ENOMEM;
+-			goto err_put_np;
++			return -ENOMEM;
+ 		}
+=20
+ 		link->cpus	=3D &dlc[0];
+@@ -567,8 +565,8 @@ static int imx_card_parse_of(struct imx_card_data *da=
+ta)
+=20
+ 		ret =3D of_property_read_string(np, "link-name", &link->name);
+ 		if (ret) {
+-			dev_err(card->dev, "error getting codec dai_link name\n");
+-			goto err_put_np;
++			return dev_err_probe(card->dev, ret,
++					     "error getting codec dai_link name\n");
+ 		}
+=20
+ 		cpu =3D of_get_child_by_name(np, "cpu");
+@@ -722,8 +720,7 @@ static int imx_card_parse_of(struct imx_card_data *da=
+ta)
+ 	of_node_put(cpu);
+ 	of_node_put(codec);
+ 	of_node_put(platform);
+-err_put_np:
+-	of_node_put(np);
++
+ 	return ret;
+ }
+=20
+--=20
+2.47.1
 
-It seems that the sentence is stale?
-Didn't find the definition of KVM_CAP_GMEM_CONVERSIONS.
-
-> Setting GUEST_MEMFD_FLAG_INIT_PRIVATE
-> +will initialize the memory for the guest_memfd as guest-only and not faultable
-> +by the host.
-> +
-[...]
->   
->   static int kvm_gmem_init_fs_context(struct fs_context *fc)
-> @@ -549,12 +645,26 @@ static const struct inode_operations kvm_gmem_iops = {
->   static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->   						      loff_t size, u64 flags)
->   {
-> +	struct kvm_gmem_inode_private *private;
->   	struct inode *inode;
-> +	int err;
->   
->   	inode = alloc_anon_secure_inode(kvm_gmem_mnt->mnt_sb, name);
->   	if (IS_ERR(inode))
->   		return inode;
->   
-> +	err = -ENOMEM;
-> +	private = kzalloc(sizeof(*private), GFP_KERNEL);
-> +	if (!private)
-> +		goto out;
-> +
-> +	mt_init(&private->shareability);
-
-shareability is defined only when CONFIG_KVM_GMEM_SHARED_MEM enabled, should be done within CONFIG_KVM_GMEM_SHARED_MEM .
-
-
-> +	inode->i_mapping->i_private_data = private;
-> +
-> +	err = kvm_gmem_shareability_setup(private, size, flags);
-> +	if (err)
-> +		goto out;
-> +
->   	inode->i_private = (void *)(unsigned long)flags;
->   	inode->i_op = &kvm_gmem_iops;
->   	inode->i_mapping->a_ops = &kvm_gmem_aops;
-> @@ -566,6 +676,11 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->   	WARN_ON_ONCE(!mapping_unevictable(inode->i_mapping));
->   
->   	return inode;
-> +
-> +out:
-> +	iput(inode);
-> +
-> +	return ERR_PTR(err);
->   }
->   
->
-[...]
