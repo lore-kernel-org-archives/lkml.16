@@ -1,185 +1,186 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2087.outbound.protection.outlook.com [40.107.94.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB565D2FB
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748305617; cv=fail; b=SRf8j8WWwx5mLrsMALa3AsE0NWWPXtim7/DmsmpqeSTTkN+BUKU/JSfCkvHPEqAPkOI2dGULqWkZk70ZNJjPS4S9O8odSQhL1e4GCLOcQWiuL4y6rAJf5OnZpdD0vrQBxjCkjv7Pbq3G6uEOTXc0uHnmfhu53hiZ86jNls+xPX4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748305617; c=relaxed/simple;
-	bh=VbApvsYX6X8aPMEqHChw1c893I63MXW5MOn454NHWFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IwBdxhzhSn1LVHexNl6UUGvPliIAGPzvDLNNkQIkUM+771ZJXsNJpCFTYhcjMn+KcVZDf34UrCluwtTC4ZTOo8+85CuuzCBYHluJiP/c3JzB6eCvrt+6ST6vKsEirZ63UESKryi9r3jsrolFGi1aZlAK8/rM/xITTV1/5LIeHMo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bdB7fzk6; arc=fail smtp.client-ip=40.107.94.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99982F43;
+	Tue, 27 May 2025 00:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748306526; cv=none; b=nobMTip0zL4rKa0n+OGHTPOImYAidyEDB01ARMRA8MYkLsIKeYdm+wRgc9m2lIFOcxlcZ/abj1bsipTa3uDAK17BoYxAh406YfxDJ3ufCOySYZoQKSLRNmA9cfLbLFdwULl9hF5udLRAoJLOu3W9iNg3NZpvsFq+IwDVINZXEKg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748306526; c=relaxed/simple;
+	bh=b7WCTdDzsY3ib50iL9lMmkLXGXoRC2TsAT18weiNeMI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iVqaUvf/muFDaNOvlBBseF2ZbSrQ211NjMKMuZUi1fWOBju+kav0dKA3Jlq08YnWV+qSdksewGtOrNm6VGuuU2xKOPlEywLWY/zH47FK3INJPn3PvFplFr+/T8J9XEmk/JyRL2P4x9axbzfIzgJ3tCUwrZfg3emFVj6cOHm9sU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aOuAdOtS; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bdB7fzk6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MmrdC1MoexWj/DJ74NLsr7438pgTHrNyE2iC37agFh8tdc0QNMbo/bKfUg7BHmNEos/hArYlos/zBRN9Wkz4Uhrw2x8QEmgeUNgQitp/BVB/JZdmtTohq61yfsULVaRWbQ3uSZKIT4PO749SIFQaNluH/cIIQabW496FxXrKZGEy6jKHBPH6DX6QJ4H2UHQ02dOiHzAy9jkTqNNHufWYdhfgtxzeRUYFf/Fd8ih3aa1hCwfIYm4JrNY3okHAq1r/LJqU5a+bdQwk97zv6lwW31sgldDnu23ipoZVA5d0XxUfwnu92rGcmy8gbQv4nE6rLXV2RthpelFCYjkeZYN4Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ShDM+clk9upwE1ueL8ra8iP2EoLjVi6f+vUqU3Cdw3I=;
- b=E+vnrmxr3HI3E93Bs3oFLryzXJad7mLa+YmdP4lxP3ZgdBYctZ64VPBqeXgly0XI19a9ug3p0DNJyJbncBk0tIxGAJH30E34/ew1lbog0ZVvzgwwxHQVlRffRaVDHOW7MjhXhZGZ6zY+5BRh9Fjiex5Q9d8H55c4MzRNJFjnoKMYYjaZIuDKUAE5QXuOVdDfM5WCfqJKb1HzEQFWJZ51zpwkTZ/ClzhRmBkoPlEUVwS72MIZlQ59O9pXmFLm3NvpJV1UcLGiFNZ9hVygnMxFs1Dyxd37yeKnLizM/uSV6TG8MvQHLRSPnqEjdMDWQgiSue2pkRg1aMyiHnIBelTsLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ShDM+clk9upwE1ueL8ra8iP2EoLjVi6f+vUqU3Cdw3I=;
- b=bdB7fzk65roXFattWEHSHNNFyV3+qfFCgoq12cBcpXfLiNOTIinWk+ORwEt07y5OGvnmshrRrj1Xp5dZYNS5yJD/IN4W0dbuBsiARJFufNHt1gzt6koqxJziFXMuk9s0LHf1GttqUwZr7iY6ZfDFQIrCPq0JMl91UwP+J6iqHoFjCqTaHWeIs9VhB3wXpQGlAFcStpLaSRHV5de1ejOqWvDxTz7Z3UUXhAMkBO90mJx86gEySrczAGhCOXBxIpM3xhCG2yJ9kepR7IGQITICjShqOMyExBSpgMvCglGpoPogH3/dFkKZ2Rr+x/9qIgNvUFehMeoW9Y3xIiJzqCzNRQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CY3PR12MB9629.namprd12.prod.outlook.com (2603:10b6:930:101::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 00:26:53 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 00:26:53 +0000
-Date: Mon, 26 May 2025 21:26:52 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: ankita@nvidia.com
-Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
-	suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	catalin.marinas@arm.com, will@kernel.org, ryan.roberts@arm.com,
-	shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com,
-	aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com,
-	kjaju@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com,
-	acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com,
-	danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com,
-	udhoke@nvidia.com, dnigam@nvidia.com, alex.williamson@redhat.com,
-	sebastianene@google.com, coltonlewis@google.com,
-	kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org,
-	akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org,
-	ddutile@redhat.com, tabba@google.com, qperret@google.com,
-	seanjc@google.com, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	maobibo@loongson.cn
-Subject: Re: [PATCH v6 3/5] kvm: arm64: New memslot flag to indicate
- cacheable mapping
-Message-ID: <20250527002652.GM61950@nvidia.com>
-References: <20250524013943.2832-1-ankita@nvidia.com>
- <20250524013943.2832-4-ankita@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250524013943.2832-4-ankita@nvidia.com>
-X-ClientProxiedBy: BL6PEPF0001641F.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1004:0:f) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aOuAdOtS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748306525; x=1779842525;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=b7WCTdDzsY3ib50iL9lMmkLXGXoRC2TsAT18weiNeMI=;
+  b=aOuAdOtSg0GlpjXGXelG/tzC6x/hDbIn9s4rnfquLaZHLDSbtbRUwn3W
+   wOArn8qLHkiecnYwxg6dLVTxt9t4nqSiqOqhw/DEQnTVX48OYr6wQxkUD
+   zoXgZuS0KW6sQcnLTzUj8QJLl+XtfM9ttKDOrTZ36VeA8CuNHUqXXC5KG
+   iIA3IHcrBJ13JAeDp2lAjeztW7Nlg7gR1PUq0mm7aOX9vKhsgojwc/ita
+   PxhGkH1l2hewI9pzVI+GuKWwfPRPJQMpg4RzDqNF966sDdX3NkqupmAlY
+   FkzMLYqlQWkLg6klk5i+zsKeev+HopS3ZpT6G8eNOWN6s2yCoI3HciOxN
+   Q==;
+X-CSE-ConnectionGUID: nLM45KmCSMSoJ/oHsR/CXw==
+X-CSE-MsgGUID: fhrEauUzQQqWjcrej5WuKg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50163171"
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="50163171"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 17:42:04 -0700
+X-CSE-ConnectionGUID: eTTSD+LqToKvDzQ0EUascQ==
+X-CSE-MsgGUID: 0VpP+OZISlmWiR6xJdGwjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="147454221"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 26 May 2025 17:42:00 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uJiOE-000Slo-0w;
+	Tue, 27 May 2025 00:41:58 +0000
+Date: Tue, 27 May 2025 08:41:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>,
+	linux-pci@vger.kernel.org, intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Michal Wajdeczko <michal.wajdeczko@intel.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matt Roper <matthew.d.roper@intel.com>,
+	=?utf-8?Q?Micha=C5=82?= Winiarski <michal.winiarski@intel.com>
+Subject: Re: [PATCH v8 5/6] PCI: Allow drivers to control VF BAR size
+Message-ID: <202505270842.rZMzTQh6-lkp@intel.com>
+References: <20250526214257.3481760-6-michal.winiarski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY3PR12MB9629:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9270a877-42ed-45a0-a213-08dd9cb52dc3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1/VkNG4iFjsItvnXKnm4PcqW2SBOXpPVoHgZ7lp7dAjApRwlIy4ZMt9E8znz?=
- =?us-ascii?Q?USTfJBAG1MrQcOkQ/4TGALfUqB5Gu1R12bj7RoNFjo3LML1bnN/niwVbuXPx?=
- =?us-ascii?Q?+qBfwu4XzMthYvqQXzYTCxSbat61eaioE0spxuP3uZVQADL1Me8ia83d0S1U?=
- =?us-ascii?Q?T8x2M61qCVt3aT38GMKHP6+EQRNOE6+RuNFAq6MEXWbFqNhtqbhx+/C6/aYq?=
- =?us-ascii?Q?us7okptJ5dVJSMmCkWoKu/nUrDlmekUSx31a0Ikg9EAWMTT4PNrTU5uyGvNJ?=
- =?us-ascii?Q?jnjnUyLKbnoos6zLTapPO/RCt1xhfZFKQ2M0ptQ20bQ8Lm9rLK0M5wX0wPeL?=
- =?us-ascii?Q?/AqQWr7GScjPzCAlW7kQX9t0IhZsRvVZEWOEnOSspC12bHfluwmr2fjARxpN?=
- =?us-ascii?Q?gHCDRLlBAsWSsvE9e7zrFOWUj5+LouMGKxLYRzZrRIkDe+oqoV6q/Di0VX90?=
- =?us-ascii?Q?uiQwHWSuY5th28GB5d6e91hljbEulux3sZH7XEeoh7a96a/uXgiB0Fsj0FEr?=
- =?us-ascii?Q?oOia5mP9PeAwqk+BgzQSPuea4LGo/s94ILeKIRqhp+1OHBcS0VkXX4WVyfBD?=
- =?us-ascii?Q?wao4FCj5VJQqOrYI+W0Ozn2Lt+nc03stghFMLlzZC1yO1zflcOaoPlKUArPZ?=
- =?us-ascii?Q?N94MX/oUCL8iqDxIuncwwfdc+QDUzICAqyA5AnV9BDViOIshRje6g5AkqvuT?=
- =?us-ascii?Q?0pTcrZCtvaxasysNGNTyPLzkO6TLkEWV5Si+j6tLUyqWqCTHFZYB4ClSVhWP?=
- =?us-ascii?Q?+f38xHHne5mAovr7sD9cjzRZY0TiWmVGeqtsyqdBPyvcBYRuRpWkjeFJCkpf?=
- =?us-ascii?Q?x5mK4MAoLxexwKswFp3NM1YQKEL3m2RXtcHz4YbKUJpIARogspIunsBGoxX2?=
- =?us-ascii?Q?d9MFy7iRm0GPbxH97e3S5i+JbuIQyBDy9wwOxYSPUga8V2eFFNm99hRMo9iu?=
- =?us-ascii?Q?H52zivh7ubDZpnkysyVIBLstlZGQ5vW6NmJ+i9clAcb/Pya3/yy3DNmXRE37?=
- =?us-ascii?Q?ricqfzKc6dxqB1T9D4iKaKScB9TyH3/QsHgYS5ovFN/v2LtpQUaeeDNlE4j5?=
- =?us-ascii?Q?YIoGTplt2odOrjIMw4m0HpjFm9hGi+lRd49XNvL8elzF4F0cHO5F6qGtuGr8?=
- =?us-ascii?Q?3/VHGTuddGrKLscPPMMNwH1aB+6SodBiViAK/ArBKqxjJ4UCh4Lkco65En4V?=
- =?us-ascii?Q?vKLduKThDPzrGdLAZ1nhsKBUvIh0gihuunXCEQ5ebGk25V2mFcuvIrnJyaeN?=
- =?us-ascii?Q?zZ7H3FkZKJhdx35qAyirZEBdhEZSMFWf9ZVxqDP9Q8N/2On28SHpcxSx1qMd?=
- =?us-ascii?Q?udPCv1cQ5jdJ0IZwgBG2LDVgYSsjmUeQFvW+bXQx7qaSefByJBNqULx5OU5G?=
- =?us-ascii?Q?SgnUWbLzIxYt09dRWlotFpPT4AbUun8DZljr6kR3TcYp3csEzv5dyehyKGk3?=
- =?us-ascii?Q?G1aPCz4Jm/E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?lcdSp3MQmWThgsc8SivHHvJUld7NJHGTHFZFPIqF/GVtXtIe72k65l/hzaVo?=
- =?us-ascii?Q?rnmTldKhSvr9OPp0bn1TPd+cBfXdRVnCZU+xW9teVFWVPEe4ciwUDgvpg1/I?=
- =?us-ascii?Q?PqEkfhZpNZCMjmBbEaNUzG8nFx2l+/CJQP/v8obj4yWRtsV0F4jaFM74e+BZ?=
- =?us-ascii?Q?+4p//FBRAIDp6dVshsCIbe5ZgsG63thyFVOL91PAPA72Dmcc9mMVZRSie02K?=
- =?us-ascii?Q?TtYVZ3l0RKwTKPb3OsffAbc5sKKiYRE0bmSNU/0iYVATZYCw7KrN8kTVaGO/?=
- =?us-ascii?Q?7Jt2Hq07lFHuySadxXTP2PDAtkZgO/xIqXadmgBUpdXfaL8kOWcnEtss7tC6?=
- =?us-ascii?Q?KjRX5kafxjX+dDB/KgvALuUau9aqYYtG3zcfOMTeJajiMJvMQiQkwNun3346?=
- =?us-ascii?Q?ArPq2A2GcmlK1fxh67FeHRYszEt70uCHVMYB3EyrFnD7jF40hGPgMM75EV1B?=
- =?us-ascii?Q?dVEf1VgWPWDto1O+jXOpkXXQuTB2i52Xi+5rrSOzubADScrUuqSw08fU1IQc?=
- =?us-ascii?Q?EIK2snqofrrYyv3LXfvFBDhtzc5KMgZqBNr2p4w9ouxPp8to4Iz1eUgTAMTz?=
- =?us-ascii?Q?8CF4f9jeTCUlB6XA0cWEARzbn/DiMtvH8fIgFD7EY3kknGpREl+dEXxs6kPR?=
- =?us-ascii?Q?z9k6sb0yiB72Eg2RJR3KUkWUHTJqoFRbtXkH5/PQgckpUQK7RFmjhmm/ES2h?=
- =?us-ascii?Q?SfbC2Ab7LsPH15Yb9/KtwijCQylITM/Cfk05SFnqNEeyOhWpOVPA/lSoaV2e?=
- =?us-ascii?Q?NCEDorQq1BLk3hlwqmCBgOcEC7ipRbDcXZsQklhr8mHjFNRLtTwA8QtObF9b?=
- =?us-ascii?Q?KqHOp8MrSD+WjOog1TtodJY2NP2LBs651UjFSeIhFNFGKquvLZSgh0Mc3f4Y?=
- =?us-ascii?Q?OkrBV1wxFdtYdHvlD3+6GvsXeaf6YBRLjqM3kZrmqCCSqG9CsrDWQgOFa0Ru?=
- =?us-ascii?Q?xIUkQgxwBoA6Be+XKElT/L2iTstmGjB2OSl3aMqpXXJ0988xiCK7HyRU3hST?=
- =?us-ascii?Q?obIBG01FLzf/v93ONjaoJpoVeYzi8dboDE9NFKroU0vasGpbzUxt+bdUYmv3?=
- =?us-ascii?Q?0djivywKYHQtrN5loiZlIt9Fc52gMHT9bOjakwK7tX4rkj1MX3sku5pyFP/I?=
- =?us-ascii?Q?KCeZhDC394pawbcbbyaPoG7VS2WP2d14/qGRZxM1aH6zuDJjTPYS7ybMqjSd?=
- =?us-ascii?Q?HMlZcSYoL2KpWNSlLDWfq8wq1/jxd3ieNTtAgsUgqRX8t5zO9WdDfz6jnadI?=
- =?us-ascii?Q?wCCCKiSo3MaJ5FEHu41GYkhIIqrKtX8jd/SiNR6aAk3gK5RFPppDBbJp6zTV?=
- =?us-ascii?Q?1gkDfO8Omdoa5SQ79SgRiSIn4iCEjtd8b2P9wp4gr+QYfaUBGRjHUYnIrEc3?=
- =?us-ascii?Q?rodfuVY0dRUWc5VEyf8lIHgTHWMnSO+PjDd6UmQ0WBdgRcLSP72J2pCNlUmM?=
- =?us-ascii?Q?hteikAooTl03lj0u+V8Y+MWgjOEPNI6HGsh3ZCWxMr4qyF2D7J4Xumhvvfh/?=
- =?us-ascii?Q?SQIjqxZG5WYNlIUXV4NBF1tgila/OS4Xp7RpwVUpgbYCMfWiyXRv8DaR4HVa?=
- =?us-ascii?Q?4WAfA6pRotlsq8h9VRpAzr1ZzQa6BxKGx6FeoUeO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9270a877-42ed-45a0-a213-08dd9cb52dc3
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 00:26:53.0928
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: USznFtW/E5icdPHB8CP8syRDYGy/I8mMIZtLb01lJ9MTj56bQtPGFSHqedGhYMPT
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9629
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250526214257.3481760-6-michal.winiarski@intel.com>
 
-On Sat, May 24, 2025 at 01:39:41AM +0000, ankita@nvidia.com wrote:
-> From: Ankit Agrawal <ankita@nvidia.com>
-> 
-> Introduce a new memslot flag KVM_MEM_ENABLE_CACHEABLE_PFNMAP
-> as a tool for userspace to indicate that it expects a particular
-> PFN range to be mapped cacheable.
-> 
-> This will serve as a guide for the KVM to activate the code that
-> allows cacheable PFNMAP.
-> 
-> CC: Oliver Upton <oliver.upton@linux.dev>
-> CC: Catalin Marinas <catalin.marinas@arm.com>
-> CC: Jason Gunthorpe <jgg@nvidia.com>
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
-> ---
->  include/uapi/linux/kvm.h | 1 +
->  virt/kvm/kvm_main.c      | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+Hi Michał,
 
-I thought we agreed not to do this? Sean was strongly against it
-right?
+kernel test robot noticed the following build errors:
 
-There is no easy way for VFIO to know to set it, and the kernel will
-not allow switching a cachable VMA to non-cachable anyhow.
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus drm-xe/drm-xe-next drm-exynos/exynos-drm-next linus/master v6.15 next-20250526]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So all it does is make it harder to create a memslot.
+url:    https://github.com/intel-lab-lkp/linux/commits/Micha-Winiarski/PCI-IOV-Restore-VF-resizable-BAR-state-after-reset/20250527-054652
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250526214257.3481760-6-michal.winiarski%40intel.com
+patch subject: [PATCH v8 5/6] PCI: Allow drivers to control VF BAR size
+config: csky-randconfig-002-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270842.rZMzTQh6-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270842.rZMzTQh6-lkp@intel.com/reproduce)
 
-Jason
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505270842.rZMzTQh6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from ./arch/csky/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/kernel.h:27,
+                    from include/linux/cpumask.h:11,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/mutex.h:17,
+                    from include/linux/kernfs.h:11,
+                    from include/linux/sysfs.h:16,
+                    from include/linux/kobject.h:20,
+                    from include/linux/pci.h:35,
+                    from drivers/pci/iov.c:13:
+   drivers/pci/iov.c: In function 'pci_iov_vf_bar_get_sizes':
+   include/asm-generic/div64.h:183:35: warning: comparison of distinct pointer types lacks a cast
+     183 |         (void)(((typeof((n)) *)0) == ((uint64_t *)0));  \
+         |                                   ^~
+   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
+    1383 |         do_div(vf_len, num_vfs);
+         |         ^~~~~~
+   In file included from include/linux/build_bug.h:5,
+                    from include/linux/bitfield.h:10,
+                    from drivers/pci/iov.c:10:
+   include/asm-generic/div64.h:195:32: warning: right shift count >= width of type [-Wshift-count-overflow]
+     195 |         } else if (likely(((n) >> 32) == 0)) {          \
+         |                                ^~
+   include/linux/compiler.h:76:45: note: in definition of macro 'likely'
+      76 | # define likely(x)      __builtin_expect(!!(x), 1)
+         |                                             ^
+   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
+    1383 |         do_div(vf_len, num_vfs);
+         |         ^~~~~~
+>> include/asm-generic/div64.h:199:36: error: passing argument 1 of '__div64_32' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     199 |                 __rem = __div64_32(&(n), __base);       \
+         |                                    ^~~~
+         |                                    |
+         |                                    resource_size_t * {aka unsigned int *}
+   drivers/pci/iov.c:1383:9: note: in expansion of macro 'do_div'
+    1383 |         do_div(vf_len, num_vfs);
+         |         ^~~~~~
+   include/asm-generic/div64.h:174:38: note: expected 'uint64_t *' {aka 'long long unsigned int *'} but argument is of type 'resource_size_t *' {aka 'unsigned int *'}
+     174 | extern uint32_t __div64_32(uint64_t *dividend, uint32_t divisor);
+         |                            ~~~~~~~~~~^~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/__div64_32 +199 include/asm-generic/div64.h
+
+^1da177e4c3f41 Linus Torvalds     2005-04-16  176  
+^1da177e4c3f41 Linus Torvalds     2005-04-16  177  /* The unnecessary pointer compare is there
+^1da177e4c3f41 Linus Torvalds     2005-04-16  178   * to check for type safety (n must be 64bit)
+^1da177e4c3f41 Linus Torvalds     2005-04-16  179   */
+^1da177e4c3f41 Linus Torvalds     2005-04-16  180  # define do_div(n,base) ({				\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  181  	uint32_t __base = (base);			\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  182  	uint32_t __rem;					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  183  	(void)(((typeof((n)) *)0) == ((uint64_t *)0));	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  184  	if (__builtin_constant_p(__base) &&		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  185  	    is_power_of_2(__base)) {			\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  186  		__rem = (n) & (__base - 1);		\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  187  		(n) >>= ilog2(__base);			\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  188  	} else if (__builtin_constant_p(__base) &&	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  189  		   __base != 0) {			\
+461a5e51060c93 Nicolas Pitre      2015-10-30  190  		uint32_t __res_lo, __n_lo = (n);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  191  		(n) = __div64_const32(n, __base);	\
+461a5e51060c93 Nicolas Pitre      2015-10-30  192  		/* the remainder can be computed with 32-bit regs */ \
+461a5e51060c93 Nicolas Pitre      2015-10-30  193  		__res_lo = (n);				\
+461a5e51060c93 Nicolas Pitre      2015-10-30  194  		__rem = __n_lo - __res_lo * __base;	\
+911918aa7ef6f8 Nicolas Pitre      2015-11-02  195  	} else if (likely(((n) >> 32) == 0)) {		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  196  		__rem = (uint32_t)(n) % __base;		\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  197  		(n) = (uint32_t)(n) / __base;		\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  198  	} else {					\
+^1da177e4c3f41 Linus Torvalds     2005-04-16 @199  		__rem = __div64_32(&(n), __base);	\
+c747ce4706190e Geert Uytterhoeven 2021-08-11  200  	}						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  201  	__rem;						\
+^1da177e4c3f41 Linus Torvalds     2005-04-16  202   })
+^1da177e4c3f41 Linus Torvalds     2005-04-16  203  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
