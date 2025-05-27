@@ -1,127 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3272CCC0;
-	Tue, 27 May 2025 16:13:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D932CCC0;
+	Tue, 27 May 2025 16:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362402; cv=none; b=RBqxFr/0vsyHHGMsEt62/T0kPv2ZuLeck0hxG0fxv2F8gLl9nYjzTZEzWxO5rKbt3UpDhdl2kLmqtVZyhD+PPG+N2IwngqcgXxcV9fuBpuJjuaFeUtCpQicYqSYaEnY12EXFqXmt7IlCOlp49WVqbnPKdpWT3gKu7tEBXbACP4g=
+	t=1748362405; cv=none; b=CS31QJOov/fLASMvV5LsOYaHqBxOzltQe22dctI1SBS2aKPChn1wj8Zh5Kgt/P1bsEHn6LzcFwGKhaZK/Gj0oTBHqnhyJ6Tt9EQPNpMUGsI9Uxsv8xINjqwd74ndxqkaW3uSJr0jZHqArl7fhwWBd4XE9cnK0Eygsl07DM6pSC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362402; c=relaxed/simple;
-	bh=BfV3xzhjunrMLDK9cWHpUfmqXZar03TrfugoHRogF2k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eOEoEtbTCvYLCvOn/BLH9JfVUKVHMgFeDRKfhuOY70+c2BeswCjnQg3SUHS+JKqFJdbKM9TukziD35zfLvG0k7f3Omvsq0O3PyGVBJR9f6U6wV5D47uk+Tu+K4aiyGqHqcRJHIKWHWOmHhu2WIm+PHFDIAl3iAVwsVGygoJ5zVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lcFiSLrc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748362405; c=relaxed/simple;
+	bh=+rOhBA3MDB0wclaiXc132kW6TF3NIYNXXbvmM/76Yu4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=na2BdyytHK58hGbC0UwoPtYPKj1Jv7L6qlZm4ZEvrFFWJr0PBEE/cCiLxYF1GWsYC2aXccydVJsgVVnExjBiWHETvonPf+4uXTWG8ZDLKlcuq+V7Cqk0JnraEXOA0Xs9tmi3fjJyVv9B1VXMmbng+tGH8q84C64XqRIrQcoMnSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCM4Afd7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lcFiSLrc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EFEFC4CEF1;
-	Tue, 27 May 2025 16:13:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCM4Afd7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D2DEC4CEEB;
+	Tue, 27 May 2025 16:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748362401;
-	bh=BfV3xzhjunrMLDK9cWHpUfmqXZar03TrfugoHRogF2k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lcFiSLrcmPbrIwfvaoSotL1hnrEWYr1MiGfv33PRH6r72Jkw0Xm3Yl3WcqEnbCrZs
-	 WiLu0mbK93sTfCaXPfGu5dvL4kPlXBVNAU9jEVC+Cjbex9TIofzC6EV3lz1Fi4++/S
-	 BW8ClajFzBbsAiuze4FNoijNLNvAV4yU0i7VEtiUYcIGOy7TkPlv8uS3DMBRhHlVb+
-	 sJoiW/kAxJitsWDQJhE6vD+ESGyjrizJUK1EYAWyaMUH1R9ZRtxpU7QU39g48wM07O
-	 GMsJxgEniYwY+gdLy3M4t4cgtIVymFqrav8SNDrgL167IYbHobVhpdW2BzQjjXvUUb
-	 8zoRha2bsReQA==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 27 May 2025 17:04:46 +0100
-Subject: [PATCH v2 2/4] selftests/mm: Add helper for logging test start and
- results
+	s=k20201202; t=1748362405;
+	bh=+rOhBA3MDB0wclaiXc132kW6TF3NIYNXXbvmM/76Yu4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=gCM4Afd7hOao43lcgZKa5wIrqBtufzW6FH4r94YSR+xFhMj2+EW0AERgnc5R8R5DE
+	 r9KH2tPwU8ZeIJ6I0/UxA9R1Z0FsmJA0R77pWJk8FZ333XU+SJkQDFMZW4WRp3fWa4
+	 /e0rpZxTsYxRQlBRE6+B2CLzgB9+1io/WelunIbc+kNl+e+GiQuRdkqIhzYuTTIO3i
+	 P5mjSBjLKovKN/OU1uVQDt9r+DRyHlM89pSXCc+gCyCiYMBEBkwLCrMaVtqVoYgYLC
+	 Z+R8UVtFkBkxV6o4Z3pKq1jqWt9/JtAWvayCUjGzOSGMHMmYpUT2umT/Vhmmvbz4ks
+	 1R1G5eZulcb2A==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,  Miquel Raynal
+ <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  Rob Herring <robh@kernel.org>,
+  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+ <conor+dt@kernel.org>,  linux-mtd@lists.infradead.org (open list:SPI NOR
+ SUBSYSTEM),  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND
+ FLATTENED DEVICE TREE BINDINGS),  linux-kernel@vger.kernel.org (open
+ list),  imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: mtd: jedec,spi-nor: Add atmel,at26*
+ compatible string
+In-Reply-To: <20250523155258.546003-1-Frank.Li@nxp.com>
+References: <20250523155258.546003-1-Frank.Li@nxp.com>
+Date: Tue, 27 May 2025 18:13:22 +0200
+Message-ID: <mafs0r00arpzx.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-selftests-mm-cow-dedupe-v2-2-ff198df8e38e@kernel.org>
-References: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
-In-Reply-To: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org, 
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2420; i=broonie@kernel.org;
- h=from:subject:message-id; bh=BfV3xzhjunrMLDK9cWHpUfmqXZar03TrfugoHRogF2k=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoNeSZFGgUGRjh/JzAf2Wi1QwwiU+M7NmFk0ydozbq
- UIbQ8AqJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaDXkmQAKCRAk1otyXVSH0FXSB/
- 4lYjWbEISd9ZPjMuF+WeRSYIecmGrqlKUONbk4Kp3kf/KPFd+xUbfklb7NL5mol/5IlkyBKR5nsp2U
- wdZIrsBsg4SXtnLLt9TmNJBfHnxArL0wiAiff9CGm13MqC/di3oKB65M3wbcoOarE5rmPLe77ahziI
- 3MRHxI2xvQ04PX9PbFs//2fR9Y5SuEv6+rH9Dswy1cyKv6f4HTSqxrtdsSPLH/+H0LP/zO5bHF5Gkt
- 83oa9LH1Jme9Ym9ymO6KGpTbp3bvnkMsE0ufC+H8S3X7qn+VbrAiov0KvkndM2uLXAojdWd0s5hck9
- dT4NfJC0a5TC0yHu2Lk5JTSIF8fize
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain
 
-Several of the MM tests have a pattern of printing a description of the
-test to be run then reporting the actual TAP result using a generic string
-not connected to the specific test, often in a shared function used by many
-tests. The name reported typically varies depending on the specific result
-rather than the test too. This causes problems for tooling that works with
-test results, the names reported with the results are used to deduplicate
-tests and track them between runs so both duplicated names and changing
-names cause trouble for things like UIs and automated bisection.
+On Fri, May 23 2025, Frank Li wrote:
 
-As a first step towards matching these tests better with the expectations
-of kselftest provide helpers which record the test name as part of the
-initial print and then use that as part of reporting a result.
+> Add atmel,at26* compatible string to fix below CHECK_DTB warning:
+>
+> arch/arm/boot/dts/nxp/vf/vf610-twr.dtb: /soc/bus@40000000/spi@4002c000/at26df081a@0:
+>     failed to match any schema with compatible: ['atmel,at26df081a']
 
-This is not added as a generic kselftest helper partly because the use of
-a variable to store the test name doesn't fit well with the header only
-implementation of kselftest.h and partly because it's not really an
-intended pattern. Ideally at some point the mm tests that use it will be
-updated to not need it.
+Is there any problem with setting the compatible to "jedec,spi-nor" in
+the DTS instead? If not, it would better to do that instead.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/mm/vm_util.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/tools/testing/selftests/mm/vm_util.h b/tools/testing/selftests/mm/vm_util.h
-index 6effafdc4d8a..4944e4c79051 100644
---- a/tools/testing/selftests/mm/vm_util.h
-+++ b/tools/testing/selftests/mm/vm_util.h
-@@ -3,6 +3,7 @@
- #include <stdbool.h>
- #include <sys/mman.h>
- #include <err.h>
-+#include <stdarg.h>
- #include <strings.h> /* ffsl() */
- #include <unistd.h> /* _SC_PAGESIZE */
- #include "../kselftest.h"
-@@ -74,6 +75,25 @@ int uffd_register_with_ioctls(int uffd, void *addr, uint64_t len,
- unsigned long get_free_hugepages(void);
- bool check_vmflag_io(void *addr);
- 
-+/* These helpers need to be inline to match the kselftest.h idiom. */
-+static char test_name[1024];
-+
-+static inline void log_test_start(const char *name, ...)
-+{
-+	va_list args;
-+	va_start(args, name);
-+
-+	vsnprintf(test_name, sizeof(test_name), name, args);
-+	ksft_print_msg("[RUN] %s\n", test_name);
-+
-+	va_end(args);
-+}
-+
-+static inline void log_test_result(int result)
-+{
-+	ksft_test_result_report(result, "%s\n", test_name);
-+}
-+
- /*
-  * On ppc64 this will only work with radix 2M hugepage size
-  */
+[...]
 
 -- 
-2.39.5
-
+Regards,
+Pratyush Yadav
