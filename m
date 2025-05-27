@@ -1,188 +1,292 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DDF1A256B
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:02:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6001C3F02;
+	Tue, 27 May 2025 14:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748354530; cv=none; b=LIBhDzX2KOFm7BZheqWCcbAU95I55rZ7RW9bZ6Pf6QYzAVymK6MYX/tODLo7uC/By/JtVRW1reHqck2LqRw3IbZryMRcTbk8tyC1Pcy9Pksx/cQ5FO76QZldtNoMdJiPKIltFLHwJosr+jnQTLEwUbQ3qhmyus+bvrbbK9Cjp5w=
+	t=1748354637; cv=none; b=l9mV4ppC5bd42cT5YQfuXv4L11q6EkiLyuCtGBDv3YXMd8dm7NqhE744Y432WAtuYQ6IClhnVKGMsuMBo7GHaA0NNMs7K0dg6w0038g7ezfNIJyWNkI+xjFow6olcAyHtpyNJqU8RyjM1bOBbG0nvazVq5SvjxCnzAB3833HueI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748354530; c=relaxed/simple;
-	bh=yo0oZBlfMtOYp40SB2fAqqqKfsg0rNIT7m84sU2j4s4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RkbRwVBXEwoQVjTTDHkl/jrI/3hz2Y8eo0Q/NWWVKIsK3hVXEiXTIhRB2854o+j7rE2zqb0XaSDPCG4KWirsjvBKUkPi7EAkzAPywMFYcOqLMmjGsZfp7PQOO1/1CCrClCbrrNwoEtbtkUU8qAGU9LPyev+lSmmTxxHmGdQwKs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BAk2Pbd/; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748354637; c=relaxed/simple;
+	bh=PfYHN7ZvbjqF1SZrJiDI+N31npoIF2JXnH9nV3P+NF4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mnIDKo5x/+lulZR6S/tX8q9S83HNXDKKiAfztJkr2Rad/GLDHD7PYbMoewv534ZnfHXQJM/BqGI/iZ4kiNObosoljWKGFKqlrQ7j+kBGyQeoZyxs2d8PvPS6KuOJeXLY9UA4p4tvT4HN2QXWRQoAZgEIF5hFK6qskpYyhl9BIOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THm8f57x; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BAk2Pbd/"
-Date: Tue, 27 May 2025 16:01:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748354526;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1RLjeN+B9ynhfLIpwmZXtdB5HF0huSI0hOjSO/VoOEo=;
-	b=BAk2Pbd/JJPysmSNfFdWpiFzw1ZbscmqwYi0OO5P4uUbbl/cxRm+cE67R9CUmG77lSWEKN
-	OIVxcR42DttYY+yGY3ybCgCJFgSCcRgI8cMZvgho5su03pe8ri6GZRqnaWb6SeVn/uRWGy
-	JEB9XIELPgnKUhyf/iGlS86pm8X460E=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Nicolas Schier <nicolas.schier@linux.dev>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>,
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
-	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 01/11] kbuild: userprogs: add nolibc support
-Message-ID: <20250527-fearless-impala-of-poetry-8acc3a@l-nschier-aarch64>
-References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
- <20250407-kunit-kselftests-v2-1-454114e287fd@linutronix.de>
- <20250522-fluorescent-liberal-pigeon-0404ed@l-nschier-aarch64>
- <20250526163610-88b7aae6-7be4-4a02-be20-ec7fe74cbf31@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THm8f57x"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e7967cf67so4151248e87.0;
+        Tue, 27 May 2025 07:03:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748354631; x=1748959431; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xsFURRaAVAF5NyqQux52FKE+IWC38BqGr/pMMame8ds=;
+        b=THm8f57xi8E9vNggMn5YenWYpSbnT/7nnofbS0LdBHgpkZ8aSqnXbSy799JVHTg8Sv
+         6j0QBP3iUnO+cLetBFeAAXqVQ3aH7twi7fQ+m8XCNeZ+dCXMhkETE2JDNcJJkhir9F0F
+         93zZ1bMOIhJijkDG3NWW+qXspI1HLTw+B5suOdJC63XbRTp+YPrK69fZkoldiu24XgQY
+         EhiEoeoQffVukXeSup/zB5pjA18Zmy7V+wG4mA12SDsxA2WpRlLrOPAU0L7OQ8oSrKPI
+         fUEpYoKVZZUNAkg7/CF79d4omzQlMwkwMkwTn2jcKx8jN1cYlFn/LYGdavh4skF09p/8
+         yy0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748354631; x=1748959431;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xsFURRaAVAF5NyqQux52FKE+IWC38BqGr/pMMame8ds=;
+        b=IcwCp1cGQifek75TNE+WMYUndf041J5/5RN4c+HeeL5YsOiNUrOr8pVXuMDeIffx44
+         RaE4blSK4Kp3aeTUd9rFEyaXlmUo1aR3H+aamsyCIobSPeaI1wfmRuQ0ATPWQ4Kb8YnH
+         kTUFD+mub9UVUIrYHAhP988XP4Mu47yd08TSGmq8eR/uKwXJpVyZgXkqLO1DPf+GLJ71
+         0XzeqOkIxmigBpbOaKmfO+P0VBdytkClovOotltl+2Mjp0TN5bqEG12qX9fJj5Ovb2Wz
+         JzFOTrUytrMxyiRhZyOgrsp6vESsGNvC+8YUFZqoBzO9s1Js3vJ61sx8Ih2OQ74OnmeU
+         PRUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWe6zgdg3YxuC6aC4fFtG0aND121H2f/C8o2NQccZYt1VRCoQhCq8qUL+9ZZr38IMYp0qoMmIpJdbb85ws=@vger.kernel.org, AJvYcCX49V/agAhvy8yqKKRISwc4bTDNG4FcrIKxgemy6ZLVojP+VUJoThDZCgXuOtDX30Z1/b7bk0Ho75mDVCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJuVmZ1r4d+pd82ug9+S/UFPqLruqQkjTE9Irj6teSCTL7muum
+	6p/wT0lopfBVk5f4IGxlugUNL0M32LHY+PpotlMKwK97OMNHZT5NLzGWctgfOHEISUaBXnonHJP
+	sHcwu5xyFs2f8R/GjVJWo62RPVWg9SGRL/NIdgY4=
+X-Gm-Gg: ASbGncvKeSjX0+cHYpEY8kITOIwmIRAeB8XnSGQ8R0SrJ3BBgC7DjCx95kiZvIep+TX
+	BMQpssbALkdZNsUNgYVQC6DddGjONn7hLJk8ThNWqQme1YhW8zRP9sOtmxGKNWCxOiHZ0pMxaD6
+	ODr3qlqBHrCLfV42z8yRWENzEC1ErS2MxjX3FVzC/dFIXvodr/7TiWJl3fhK9Wj/ZBvJThbX5+U
+	Q==
+X-Google-Smtp-Source: AGHT+IE3sOdVMBPm6Ph+lDBvdIisLgXQVbeEI/OwtwfoXYAZvm9V6hdGhNRWj6AmrFGMfg3LNZwv9XRpjINn0fwcvBE=
+X-Received: by 2002:a05:651c:f01:b0:32a:664e:a932 with SMTP id
+ 38308e7fff4ca-32a664eaa5bmr18000161fa.37.1748354631031; Tue, 27 May 2025
+ 07:03:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250526163610-88b7aae6-7be4-4a02-be20-ec7fe74cbf31@linutronix.de>
-Organization: AVM GmbH
-X-Migadu-Flow: FLOW_OUT
+References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
+ <20250526141316.7e907032@foz.lan> <DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
+ <20250527111311.105246f2@sal.lan> <CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
+ <20250527153547.6603eaf4@sal.lan>
+In-Reply-To: <20250527153547.6603eaf4@sal.lan>
+From: Alexandre Courbot <gnurou@gmail.com>
+Date: Tue, 27 May 2025 23:03:39 +0900
+X-Gm-Features: AX0GCFsjbpsQ1gE__bp7WHcbUJ9r5cDGiNxMBHIwTxLbUSGCpF8_YZBzNIeqr7k
+Message-ID: <CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
+Subject: Re: [PATCH v3] media: add virtio-media driver
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Albert Esteve <aesteve@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	gurchetansingh@google.com, daniel.almeida@collabora.com, adelva@google.com, 
+	changyeon@google.com, nicolas.dufresne@collabora.com, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	virtualization@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 26, 2025 at 04:40:17PM +0200, Thomas Weißschuh wrote:
-> On Mon, May 26, 2025 at 04:19:53PM +0200, Nicolas Schier wrote:
-> > On Mon, Apr 07, 2025 at 09:42:38AM +0200, Thomas Weißschuh wrote:
-> > > Userprogs are built with the regular kernel compiler $CC.
-> > > A kernel compiler does not necessarily contain a libc which is required
-> > > for a normal userspace application.
-> > > However the kernel tree does contain a minimal libc implementation
-> > > "nolibc" which can be used to build userspace applications.
-> > > 
-> > > Introduce support to build userprogs against nolibc instead of the
-> > > default libc of the compiler, which may not exist.
-> > > 
-> > > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> > > 
-> > > ---
-> > > This could probably be moved out of the generic kbuild makefiles.
-> > > I think the ergonimics would suffer and this functionality could be
-> > > used by other users of userprogs.
-> > > 
-> > > Also this does currently not support out-of-tree builds.
-> > 
-> > (out-of-tree == external kmods;  out-of-source == build-dir != source-dir)
-> > 
-> > you probably meant out-of-source.
-> 
-> I *did* mean out-of-tree.
-> 
-> Out-of-source already works with the current patchset. It is the default setup of kunit.py.
-> 
-> > > For that tools/include/nolibc/*.h and usr/include/*.h would need to be
-> > > installed into the build directory.
-> > 
-> > Out-of-source builds could be achieved by adding 'headers' as 
-> > dependency, see below.
-> > 
-> > > ---
-> > >  Documentation/kbuild/makefiles.rst | 12 ++++++++++++
-> > >  scripts/Makefile.userprogs         | 16 +++++++++++++---
-> > >  2 files changed, 25 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
-> > > index 3b9a8bc671e2e92126857059e985d6e5b2c43fd4..f905a6f77c965311c491cfd7ab3103185af7e82e 100644
-> > > --- a/Documentation/kbuild/makefiles.rst
-> > > +++ b/Documentation/kbuild/makefiles.rst
-> > > @@ -970,6 +970,18 @@ When linking bpfilter_umh, it will be passed the extra option -static.
-> > >  
-> > >  From command line, :ref:`USERCFLAGS and USERLDFLAGS <userkbuildflags>` will also be used.
-> > >  
-> > > +Bulding userprogs against nolibc
-> > 
-> > Bulding -> Building
-> 
-> Ack.
-> 
-> > > +--------------------------------
-> > > +
-> > > +Not all kernel toolchains provide a libc.
-> > > +Simple userprogs can be built against a very simple libc call "nolibc" provided
-> > > +by the kernel source tree.
-> > > +
-> > > +Example::
-> > > +
-> > > +  # lib/kunit/Makefile
-> > > +  uapi-preinit-nolibc := $(CONFIG_ARCH_HAS_NOLIBC)
-> > > +
-> > >  When userspace programs are actually built
-> > >  ------------------------------------------
-> > >  
-> > > diff --git a/scripts/Makefile.userprogs b/scripts/Makefile.userprogs
-> > > index f3a7e1ef3753b54303718fae97f4b3c9d4eac07c..a1447c02b948901631098b585f5cf4d3ea383a57 100644
-> > > --- a/scripts/Makefile.userprogs
-> > > +++ b/scripts/Makefile.userprogs
-> > > @@ -16,10 +16,20 @@ user-csingle	:= $(addprefix $(obj)/, $(user-csingle))
-> > >  user-cmulti	:= $(addprefix $(obj)/, $(user-cmulti))
-> > >  user-cobjs	:= $(addprefix $(obj)/, $(user-cobjs))
-> > >  
-> > > +user-libgcc     := $(call try-run,$(CC) -Werror $(KBUILD_USERCFLAGS) -lgcc -x c -shared /dev/null -o "$$TMP",-lgcc)
-> > > +
-> > > +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
-> > > +		      -ffreestanding -fno-stack-protector \
-> > > +		      -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
-> > > +user_nolibc_ldflags := -nostdlib -nostdinc -static
-> > > +user_nolibc_ldlibs  := $(user-libgcc)
-> > > +
-> > >  user_ccflags	= -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
-> > > -			$($(target-stem)-userccflags)
-> > > -user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
-> > > -user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs)
-> > > +			$($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
-> > > +user_ldflags	= $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
-> > > +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
-> > > +user_ldlibs	= $(userldlibs) $($(target-stem)-userldlibs) \
-> > > +			$(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
-> > >  
-> > >  # Create an executable from a single .c file
-> > >  quiet_cmd_user_cc_c = CC [U]  $@
-> > 
-> > Adding another hunk for scripts/Makefile.userprogs would allow to build
-> > out-of-source:
-> > 
-> > @@ -39,5 +49,5 @@ $(call multi_depend, $(user-cmulti), , -objs)
-> >  # Create .o file from a .c file
-> >  quiet_cmd_user_cc_o_c = CC [U]  $@
-> >        cmd_user_cc_o_c = $(CC) $(user_ccflags) -c -o $@ $<
-> > -$(user-cobjs): $(obj)/%.o: $(src)/%.c FORCE
-> > +$(user-cobjs): $(obj)/%.o: $(src)/%.c headers FORCE
-> >         $(call if_changed_dep,user_cc_o_c)
-> > 
-> > But I am unsure if it is ok to add 'headers' as a build dependency for 
-> > userprogs.  For me, it feels a bit odd, but I think it really makes 
-> > sense here.
-> 
-> Currently this dependency is encoded in Kconfig.
-> If CONFIG_HEADERS_INSTALL=y then the headers are installed in the 'prepare'
-> phase and already available when building any userprog.
-> To me this seems like the easier and nicer implementation.
+On Tue, May 27, 2025 at 10:35=E2=80=AFPM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> Em Tue, 27 May 2025 22:21:42 +0900
+> Alexandre Courbot <gnurou@gmail.com> escreveu:
+>
+> > On Tue, May 27, 2025 at 6:13=E2=80=AFPM Mauro Carvalho Chehab
+> > <mchehab+huawei@kernel.org> wrote:
+> > >
+> > > Em Tue, 27 May 2025 15:14:50 +0900
+> > > "Alexandre Courbot" <gnurou@gmail.com> escreveu:
+> > >
+> > > > Hi Mauro,
+> > > >
+> > > > On Mon May 26, 2025 at 9:13 PM JST, Mauro Carvalho Chehab wrote:
+> > > > > Hi Michael,
+> > > > >
+> > > > > Em Sat, 12 Apr 2025 13:08:01 +0900
+> > > > > Alexandre Courbot <gnurou@gmail.com> escreveu:
+> > > > >
+> > > > >> Add the first version of the virtio-media driver.
+> > > > >>
+> > > > >> This driver acts roughly as a V4L2 relay between user-space and =
+the
+> > > > >> virtio virtual device on the host, so it is relatively simple, y=
+et
+> > > > >> unconventional. It doesn't use VB2 or other frameworks typically=
+ used in
+> > > > >> a V4L2 driver, and most of its complexity resides in correctly a=
+nd
+> > > > >> efficiently building the virtio descriptor chain to pass to the =
+host,
+> > > > >> avoiding copies whenever possible. This is done by
+> > > > >> scatterlist_builder.[ch].
+> > > > >>
+> > > > >> virtio_media_ioctls.c proxies each supported ioctl to the host, =
+using
+> > > > >> code generated through macros for ioctls that can be forwarded d=
+irectly,
+> > > > >> which is most of them.
+> > > > >>
+> > > > >> virtio_media_driver.c provides the expected driver hooks, and su=
+pport
+> > > > >> for mmapping and polling.
+> > > > >>
+> > > > >>  This version supports MMAP buffers, while USERPTR buffers can a=
+lso be
+> > > > >>  enabled through a driver option. DMABUF support is still pendin=
+g.
+> > > > >
+> > > > > It sounds that you applied this one at the virtio tree, but it ha=
+sn't
+> > > > > being reviewed or acked by media maintainers.
+> > > > >
+> > > > > Please drop it.
+> > > > >
+> > > > > Alexandre,
+> > > > >
+> > > > > Please send media patches to media maintainers, c/c other subsyst=
+em
+> > > > > maintainers, as otherwise they might end being merged without a
+> > > > > proper review.
+> > > >
+> > > > Sorry about that, I put everyone in "To:" without giving it a secon=
+d
+> > > > thought.
+> > > >
+> > > > >
+> > > > > In this particular case, we need to double-check if this won't ca=
+use
+> > > > > any issues, in special with regards to media locks and mutexes.
+> > > >
+> > > > Agreed, I am not 100% confident about that part myself.
+> > > >
+> > > > >
+> > > > > I'll try to look on it after this merge window, as it is too late
+> > > > > for it to be applied during this one.
+> > > >
+> > > > Appreciate that - given the high traffic on the list I was worried =
+that
+> > > > this patch would eventually be overlooked. Not making it for this m=
+erge
+> > > > window should not be a problem, so please take the time you need.
+> > >
+> > > Provided that your patch was caught by patchwork, it won't be lost:
+> > >         https://patchwork.linuxtv.org/project/linux-media/patch/20250=
+412-virtio-media-v3-1-97dc94c18398@gmail.com/
+> > >
+> > > Please notice that our CI got a number of checkpatch issues there.
+> > > Please check and fix the non-false-positive ones.
+> >
+> > Will do. The macro-related ones are false-positives AFAICT. Some of
+> > the "lines should not end with a '('" are actually the result of
+> > applying clang-format with the kernel-provided style...
+>
+> I don't know any lint tool that honors kernel style. The best one
+> is checkpatch with the auto-correcting parameter in pedantic mode,
+> but still one needs to manually review its output.
+>
+> >
+> > >
+> > > Btw, I was looking at:
+> > >
+> > >         https://github.com/chromeos/virtio-media
+> > >
+> > > (I'm assuming that this is the QEMU counterpart, right?)
+> >
+> > crosvm actually, but QEMU support is also being worked on.
+>
+> Do you have already QEMU patches? The best is to have the Kernel driver
+> submitted altogether with QEMU, as Kernel developers need it to do the
+> tests. In my case, I never use crosvm, and I don't have any Chromebook
+> anymore.
 
-I am sure, I had an out-of-source test build that failed due to missing 
-header files -- but I can't reproduce it any more and yes, 
-CONFIG_HEADERS_INSTALL should really be enough and better in several 
-ways.
+IIRC Albert Esteve was working on this, maybe he can share the current stat=
+us.
 
-Sorry for the noice.
+Note that crosvm does not require a Chromebook, you can build and run
+it pretty easily on a regular PC. I have put together a document to
+help with that:
 
-Kind regards,
-Nicolas
+https://github.com/chromeos/virtio-media/blob/main/TRY_IT_OUT.md
+
+It also shows how to proxy a host UVC camera into the guest and use
+some of the "fake" devices I talked about earlier. If following these
+steps is too much friction, just reading through the document should
+give you a decent idea of what virtio-media can do.
+
+>
+> > > And I noticed something weird there:
+> > >
+> > >         "Unsupported ioctls
+> > >
+> > >          A few ioctls are replaced by other, more suitable mechanisms=
+. If being requested these ioctls, the device must return the same response=
+ as it would for an unknown ioctl, i.e. ENOTTY.
+> > >
+> > >             VIDIOC_QUERYCAP is replaced by reading the configuration =
+area.
+> > >             VIDIOC_DQBUF is replaced by a dedicated event.
+> > >             VIDIOC_DQEVENT is replaced by a dedicated event."
+> > >
+> > > While this could be ok for cromeOS, this will be broken for guests wi=
+th
+> > > Linux, as all Linux applications rely on VIDIOC_QUERYCAP and VIDIOC_D=
+QBUF
+> > > to work. Please implement support for it, as otherwise we won't even =
+be
+> > > able to test the driver with the v4l2-compliance tool (*).
+> >
+> > The phrasing was a bit confusing. The guest driver does support these
+> > ioctls, and passes v4l2-compliance. So there is no problem here.
+>
+> Please add v4l2-compliance output on the next patch series.
+
+Certainly. Note that the output is dependent on what the host provides
+for a device. If it e.g. proxies something that is not fully
+compliant, the guest will reflect the same errors.
+
+>
+> > Where these ioctls are not supported is between the guest and the
+> > host, i.e. as ioctls encapsulated into a virtio request. For QUERYCAP,
+> > that's because the virtio configuration area already provides the same
+> > information. For DQBUF and DQEVENT, that's because we want to serve
+> > these asynchronously for performance reasons (hence the dedicated
+> > events).
+> >
+> > But these differences don't affect guest user applications which will
+> > be able to perform these ioctls exactly as they expect.
+>
+> OK. Better to let it clear then at the documentation.
+>
+> > >
+> > > (*) Passing at v4l2-compliance is a requirement for any media driver
+> > >     to be merged.
+> > >
+> > > With regards to testing, what's the expected testing scenario?
+> > > My guess is that, as a virtio device, a possible test scenario would =
+be
+> > > to have the UVC camera from the host OS mapped using virtio-camera in=
+to
+> > > the guest OS, allowing a V4L2 application running at the guest to map=
+ the
+> > > camera from the host, right?
+> >
+> > That's one of the scenarios, yes.
+>
+> Ok, this is the easiest test scenario for media developers.
+>
+> > Another one is to expose an accelerated decoder on the host to the gues=
+t.
+>
+> > One can also create
+> > "fake" devices backed by software on the host for testing purposes.
+>
+> That sounds interesting. It probably makes sense to have some test
+> scenario using such fake devices plus v4l2-compliance test to check
+> for regressions running on some CI engine.
+
+Yes, regression catching in a CI is one of the use-cases we thought about.
+
+>
+> > That's actually the benefit of using V4L2 as a guest/host protocol:
+> > the same guest and the same software stack on the host can be used to
+
+I made a typo here: "the same guest DRIVER". That's an important point. :)
+
+Cheers,
+Alex.
