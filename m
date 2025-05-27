@@ -1,99 +1,293 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244F32CA9;
-	Tue, 27 May 2025 01:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291872CA9;
+	Tue, 27 May 2025 01:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748308950; cv=none; b=ZGau69zlLwSI7+eIiIlRIR8GO68/CYnPplIu8pP4XHvARtlVHRLlVs0OjHeMHLU6WN4YPw828NTqCipGgvPshaiklVKnIoY+Q8Eyse3Q/G726yFAgQ+QCRG4rCNid86H1hLwlf+ZWnfY8hMnPTn5Xz9ja7W7q+xe1O36ekf9QaE=
+	t=1748309008; cv=none; b=BqaTKFKE3WGcEacxJkDyj+RfhutbJdTvb+jUnvKOcTSx5SwhWvzrU6WMsE6CWKnmRw7XPVvn5sObc/T2FDuXpxg0Ig5Fl4+PXvH87grzCvOwXzq/dZfsv7uPqoiLb/qtBxbyFBzCCNDK38DI4gL2+YatRGIUBh/t/7g9VQECRw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748308950; c=relaxed/simple;
-	bh=RKJkT7w5zj/yTul3lSLeJxEILSOWFiAtG3GxY6fv928=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kssNAe32Sl2sv3QKiCuR1+Xc/N/rULZ+2eRx3a7lrFBOvWeFG8qizrmMyEF/CEqcsOaQPSsUs4ZGJOuWucGAohm2TeY+AHK7vFY8r/Vg01KhIRsfkmlBesQd7l9KnKnUazmJyu4eMHpK3GBM02ky26JrHy8IuNjDG7rCiCJ0Ifg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eNDElprQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eNDElprQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E55EC4CEE7;
-	Tue, 27 May 2025 01:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748308949;
-	bh=RKJkT7w5zj/yTul3lSLeJxEILSOWFiAtG3GxY6fv928=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=eNDElprQMbWjnJR71ETh7ED1rqnOPy1ngdIoaG2rn7ZBaLs/27UXo/fSaBo1Nimjd
-	 yjySRHpO/r7sL+2fRVj5cxstcHrwZQH2ENSMaNkHlVJw3SS7W2zfdYRD2n8XsaDLWr
-	 8WSD304J8HZ/bNdNLaiRznilK9W8aD1oUsiu3LVqJhOqtJUR06IWcIMli3Kn90e5LW
-	 sOFpqc/23MNtxFwr0IAGd9IWtfHG9hMZmEv2SlfHR/zuUKbwjdvT6OB0mNIhDdjV52
-	 NWLvkwbhOWQdvTD6br7RTpDYpCt4WlkMdQPzHirLYxsg12AKJBRdKD0XD7blfw77vc
-	 a9RkgnT3l6+yQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C24C54FB3;
-	Tue, 27 May 2025 01:22:29 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Mon, 26 May 2025 20:22:26 -0500
-Subject: [PATCH] arm64: tegra: Set usb micro-b port to otg mode on P3450
+	s=arc-20240116; t=1748309008; c=relaxed/simple;
+	bh=RCTS5Q8jZ+oF/3rMbSOpe3KLs7/BzUkxofZQFAlY7ts=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=A3dn+CZoH5An+f2ytl5Ez+jIkcMNe1TBvxHXqhW2liy76vESdXzy9emaCBs0ZLod9dTppN2D13JRRCkSQS8pStxrKWIgKcTBVc/wTekLoWySjgoTWJVN/16V1XShZ2LTtbU/ioxJmOBvvOtIJd+JKCasCyDHmQN2xRyXX4QBKDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8AxGHEKFDVoJqb9AA--.17694S3;
+	Tue, 27 May 2025 09:23:22 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMBxLscEFDVorBn0AA--.43652S3;
+	Tue, 27 May 2025 09:23:18 +0800 (CST)
+Subject: Re: [PATCH v3 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250523101833.17940-1-zhangtianyang@loongson.cn>
+ <20250523101833.17940-3-zhangtianyang@loongson.cn> <87ecwdqct9.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <3de9bbc8-9ef0-f187-dae0-659958e21db3@loongson.cn>
+Date: Tue, 27 May 2025 09:22:37 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250526-p3450-otg-v1-1-acb80ca2dc63@gmail.com>
-X-B4-Tracking: v=1; b=H4sIANETNWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDU0Nj3QJjE1MD3fySdN0kSxPzNGNDCxPjFAsloPqCotS0zAqwWdGxtbU
- Awu937VsAAAA=
-X-Change-ID: 20250513-p3450-otg-b947f31843d8
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748308948; l=1025;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=1JUbkjCUHsRo77ibOj1eVsP3iKgmrocVJ93H88m4fC0=;
- b=1B6zbjxZikNUuRqKQI3D6EJGN/aUM7kbA1Qip2nE4pcdfC923tP0mgJaqiq5sRK2mtEL1XTvK
- nY0YsXz6I3pAgCQgN3Gy/cWNxJFqlP3aqDLdK//zfVEScAXCHCuL6jP
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+In-Reply-To: <87ecwdqct9.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMBxLscEFDVorBn0AA--.43652S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3ArW7AF4rKrykCw13Jr4xuFX_yoWxXFy5pF
+	WUJa12gFWFqrWxWr1Iqr4DZFySvrZ3GrsrJrW8K3Zayas09r1IkF1rWFya9FyrCr15CF1j
+	vr4jqrZrur1DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jnEfOUUU
+	UU=
 
-From: Aaron Kling <webgeek1234@gmail.com>
+Hi , Thomas
 
-The usb micro-b port on p3450 is capable of otg and doesn't need
-hardcoded to peripheral. No other supported tegra device is set up like
-this, so align for consistency.
+在 2025/5/25 下午5:06, Thomas Gleixner 写道:
+> On Fri, May 23 2025 at 18:18, Tianyang Zhang wrote:
+>>   
+>> -static void avecintc_sync(struct avecintc_data *adata)
+>> +void avecintc_sync(struct avecintc_data *adata)
+>>   {
+>>   	struct pending_list *plist;
+>>   
+>> @@ -109,7 +99,7 @@ static int avecintc_set_affinity(struct irq_data *data, const struct cpumask *de
+>>   			return -EBUSY;
+>>   
+>>   		if (cpu_online(adata->cpu) && cpumask_test_cpu(adata->cpu, dest))
+>> -			return 0;
+>> +			return IRQ_SET_MASK_OK_DONE;
+> This change really wants to be seperate with a proper explanation and
+> not burried inside of this pile of changes.
+Ok, I got it , I will add some annotation info
+>
+>> +static inline bool invalid_queue_is_full(int node, u32 *tail)
+>> +{
+>> +	u32 head;
+>> +
+>> +	head = read_queue_head(node);
+> Please move the initialization into the declaration line:
+>
+>         u32 head = read_queue...();
+>
+> All over the place, where it's the first operation in the code. That
+> makes the code more dense and easier to follow.
+OK I got it , thanks
+>
+>> +	*tail = read_queue_tail(node);
+>> +
+>> +	return !!(head == ((*tail + 1) % INVALID_QUEUE_SIZE));
+> What's the !! for? A == B is a boolean expression already.
+Emmm....This is actually a rookie mistake, thanks
+>
+>> +}
+>> +
+>> +static void invalid_enqueue(struct redirect_queue *rqueue, struct irde_inv_cmd *cmd)
+>> +{
+>> +	struct irde_inv_cmd *inv_addr;
+>> +	u32 tail;
+>> +
+>> +	guard(raw_spinlock_irqsave)(&rqueue->lock);
+>> +
+>> +	while (invalid_queue_is_full(rqueue->node, &tail))
+>> +		cpu_relax();
+>> +
+>> +	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+>> +	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+>> +	tail = (tail + 1) % INVALID_QUEUE_SIZE;
+>> +
+>> +	/*
+>> +	 * The uncache-memory access may have an out of order problem cache-memory access,
+>> +	 * so a barrier is needed to ensure tail is valid
+>> +	 */
+> This comment does not make sense at all.
+>
+> What's the actual uncached vs. cached access problem here? AFAICT it's
+> all about the ordering of the writes:
+>
+>      You need to ensure that the memcpy() data is visible _before_ the
+>      tail is updated, no?
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, the fundamental purpose is to ensure that all data is valid when 
+updating registers.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-index 0ecdd7243b2eb1abba9adbe9a404b226c29b85ef..019484a271c396edc30200e8592c713455a8e1a4 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts
-@@ -514,7 +514,7 @@ pcie-6 {
- 		ports {
- 			usb2-0 {
- 				status = "okay";
--				mode = "peripheral";
-+				mode = "otg";
- 				usb-role-switch;
- 
- 				vbus-supply = <&vdd_5v0_usb>;
+I will modify the annotation information here. Thank you
 
----
-base-commit: 405e6c37c89ef0df2bfc7a988820a3df22dacb1b
-change-id: 20250513-p3450-otg-b947f31843d8
+>> +	wmb();
+>> +
+>> +	write_queue_tail(rqueue->node, tail);
+>> +}
+>> +static int redirect_table_free(struct redirect_item *item)
+> That return value is there to be ignored by the only caller, right?
+Let's re evaluate the significance of the return value here, thanks
+>
+>> +{
+>> +	struct redirect_table *ird_table;
+>> +	struct redirect_entry *entry;
+>> +
+>> +	ird_table = item->table;
+>> +
+>> +	entry = item->entry;
+>> +	memset(entry, 0, sizeof(struct redirect_entry));
+>> +
+>> +	scoped_guard(raw_spinlock_irqsave, &ird_table->lock)
+>> +		bitmap_release_region(ird_table->bitmap, item->index, 0);
+>> +
+>> +	kfree(item->gpid);
+>> +
+>> +	irde_invlid_entry_node(item);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static inline void redirect_domain_prepare_entry(struct redirect_item *item,
+>> +					struct avecintc_data *adata)
+> Please align the argument in the second line properly:
+>
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#line-breaks
+Ok, I got it , thanks
+>
+>> +
+>> +static inline void redirect_ack_irq(struct irq_data *d)
+>> +{
+>> +}
+>> +
+>> +static inline void redirect_unmask_irq(struct irq_data *d)
+>> +{
+>> +}
+>> +
+>> +static inline void redirect_mask_irq(struct irq_data *d)
+>> +{
+>> +}
+> These want some explanation why they are empty.
+Ok, I got it , thanks
+>
+>> +
+>> +static struct irq_chip loongarch_redirect_chip = {
+>> +	.name			= "REDIRECT",
+>> +	.irq_ack		= redirect_ack_irq,
+>> +	.irq_mask		= redirect_mask_irq,
+>> +	.irq_unmask		= redirect_unmask_irq,
+>> +	.irq_set_affinity	= redirect_set_affinity,
+>> +	.irq_compose_msi_msg	= redirect_compose_msi_msg,
+>> +};
+>> +out_free_resources:
+>> +	redirect_free_resources(domain, virq, nr_irqs);
+>> +	irq_domain_free_irqs_common(domain, virq, nr_irqs);
+>> +
+>> +	return -EINVAL;
+> -ENOMEM?
+Ok, I got it , thanks
+>> +}
+>> +
+>> +	bitmap = bitmap_zalloc(IRD_ENTRIES, GFP_KERNEL);
+>> +	if (!bitmap) {
+>> +		pr_err("Node [%d] redirect table bitmap alloc pages failed!\n", node);
+>> +		return -ENOMEM;
+> Leaks pages.
+Ok, I got it , thanks
+>
+>> +	}
+>> +
+>> +	ird_table->bitmap = bitmap;
+>> +	ird_table->nr_ird = IRD_ENTRIES;
+>> +	ird_table->node = node;
+>> +
+>> +	raw_spin_lock_init(&ird_table->lock);
+>> +
+>> +	if (redirect_queue_init(node))
+>> +		return -EINVAL;
+> Leaks pages and bitmap.
+Ok, I got it , thanks
+>
+>> +
+>> +	iocsr_write64(CFG_DISABLE_IDLE, LOONGARCH_IOCSR_REDIRECT_CFG);
+>> +	iocsr_write64(__pa(ird_table->table), LOONGARCH_IOCSR_REDIRECT_TBR);
+>> +
+>> +	return 0;
+>> +}
+>> +#if defined(CONFIG_ACPI)
+> #ifdef CONFIG_ACPI
+Ok, I got it , thanks
+>
+>> +static int __init redirect_reg_base_init(void)
+>> +{
+>> +	acpi_status status;
+>> +	uint64_t addr = 0;
+> What's this initialization for?
 
-Best regards,
--- 
-Aaron Kling <webgeek1234@gmail.com>
+The initial purpose here was to confirm the validity of the data 
+returned by acpi_evaluate_integer,
 
+but perhaps this is not necessary.
+
+I will confirm again here, thanks
+
+>
+>> +int __init redirect_acpi_init(struct irq_domain *parent)
+>> +{
+>> +	struct fwnode_handle *fwnode;
+>> +	struct irq_domain *domain;
+>> +	int ret;
+>> +
+>> +	fwnode = irq_domain_alloc_named_fwnode("redirect");
+>> +	if (!fwnode) {
+>> +		pr_err("Unable to alloc redirect domain handle\n");
+>> +		goto fail;
+>> +	}
+>> +
+>> +	domain = irq_domain_create_hierarchy(parent, 0, IRD_ENTRIES, fwnode,
+>> +			&redirect_domain_ops, irde_descs);
+> Please align the arguments in the second line properly.
+Ok, I got it , thanks
+>> +static int redirect_cpu_online(unsigned int cpu)
+>> +{
+>> +	int ret, node = cpu_to_node(cpu);
+>> +
+>> +	if (cpu != cpumask_first(cpumask_of_node(node)))
+>> +		return 0;
+>> +
+>> +	ret = redirect_table_init(node);
+>> +	if (ret) {
+>> +		redirect_table_fini(node);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> So if you unplug all CPUs of a node and then replug the first CPU in the
+> node, then this invokes redirect_table_init() unconditionally, which
+> will unconditionally allocate pages and bitmap again ....
+We need to reconsider here, thank you
+>
+> Thanks,
+>
+>          tglx
+
+Thanks again
+
+     Tianyang
 
