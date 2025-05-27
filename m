@@ -1,48 +1,81 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069C9B652;
-	Tue, 27 May 2025 06:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1301EF0B9
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326194; cv=none; b=K1spMwtuV4oHhZ69lVtXhRoHaI6uvqUKH3M1n3o/S6Cssf/9L60Vj+mk6lgXonIV9DshKs46IX4k2EFRt1GmWpCkPnPOPMRDEN1iWxHi6qZimOSxbVo1eOz87uwbf9OzxFX08fKhTLt2dQst+E7BPEU48mOt1+/mmGy1h0zxw+k=
+	t=1748326215; cv=none; b=i18DBKOg+GFhr7niGNkNY4SY7JkJgZXkx5EXacfOiBpOeD0u6F3j/LcwT+EYqJsG91oxMDcwnFEoyxdED9hlVmef0F92zaORDAgQi786OqmmUcOuW/CDxWeoHbouy9wwWB+817lkD7GSk8Ig05csx+ZBmmWdb4kCkVDiasje5C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326194; c=relaxed/simple;
-	bh=+QJhA4xZZrqZF76UlW4CpQg8WuRWDKQtHoBgV3ZAdkk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nFLr0UxDrm0rss/aq7NRKIAfJQVZVufOxYsNfY5mvv5OhCy/kx8wi0ntbk+4PHHx4/QARQEeA763XZPRRzqKiJPq3uhW1tYSHdofCj7xEQOdnSd0pndk/AJ6+on1FMMrO+SVJDpgE3t1V595Rjjb8nCqvmuRAkUWyEJKbrn6ee8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=l7PdZEVJ; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748326215; c=relaxed/simple;
+	bh=eI4C9G5xJzpBpNASfpC2+tN2SrDq2IXni/3Kbzv9u7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rUXC5FUEeF4G6XpBz6u1I3aTepMsDs81ILLpkz1BJ5NE4wK5xMmUXR+WzFjA3viw2qq1fAfNl5+vnoFj+Ik4b9scvuiS09UCb3WM7et2RCgCDt+/NQPo+2w9o7gDbbLMnIgYUVzeq/PE07nyU08CgOK8pMa/r60/LzTGEiXu+wA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Buo/oC0y; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3AMFIqmR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Buo/oC0y; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=3AMFIqmR; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l7PdZEVJ"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54R69TvK1727754;
-	Tue, 27 May 2025 01:09:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748326169;
-	bh=K4ItIPSJUGERVzjcCNVhaNRtlv0U16ButxZn5MruJDA=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=l7PdZEVJKM8tLGoqqv9QMyLm4efTu7Y9eivAvafzJtpeapmVWfLdRGVVSx+AB3p7r
-	 SFSIgrQ7jYxq0/KhI9Ozoe3glTq2te7xt+4g4nCPa/qv7lNAKUytjCro9+WHHyzuQx
-	 JCAXpl1l0qvEJYIj7MHz43jmYziWFBGqlnvNCvQw=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54R69TSK2426125
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 27 May 2025 01:09:29 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- May 2025 01:09:29 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 May 2025 01:09:28 -0500
-Received: from [172.24.27.188] (ltpw0bk3z4.dhcp.ti.com [172.24.27.188])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54R69N4m3173133;
-	Tue, 27 May 2025 01:09:24 -0500
-Message-ID: <15b5d4c8-17fc-46b7-9d2c-d32f944fa47b@ti.com>
-Date: Tue, 27 May 2025 11:39:22 +0530
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Buo/oC0y";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3AMFIqmR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Buo/oC0y";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="3AMFIqmR"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 84FE121E79;
+	Tue, 27 May 2025 06:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748326211; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LzbgYeMiACS2U3RQ6hcLbsfyT0tPPC71RPXXgfPSUik=;
+	b=Buo/oC0yeazYNNpmu1E/rP62D5tdOEXSEbL0Rc/4oO8utdY3mpjE9tTAJfOsd8KwXCk1eC
+	iDnqaAe9gjjNVPeNN+XpdAfA3vFo6hNSz3ZvEDEZjdOXi6g2EqujjLGkBL79ZUQAE/HtVb
+	bEeE9Kj/FP9mJsvTj3CpTk8jMelNqZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748326211;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LzbgYeMiACS2U3RQ6hcLbsfyT0tPPC71RPXXgfPSUik=;
+	b=3AMFIqmR2GrtSlhTTSn9edGSb6pJKOLw3FM+ygxMdfNRIJ11xzruPKCPnWVrReuGc/AljY
+	tvXizJiiyZytQeAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="Buo/oC0y";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=3AMFIqmR
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748326211; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LzbgYeMiACS2U3RQ6hcLbsfyT0tPPC71RPXXgfPSUik=;
+	b=Buo/oC0yeazYNNpmu1E/rP62D5tdOEXSEbL0Rc/4oO8utdY3mpjE9tTAJfOsd8KwXCk1eC
+	iDnqaAe9gjjNVPeNN+XpdAfA3vFo6hNSz3ZvEDEZjdOXi6g2EqujjLGkBL79ZUQAE/HtVb
+	bEeE9Kj/FP9mJsvTj3CpTk8jMelNqZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748326211;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LzbgYeMiACS2U3RQ6hcLbsfyT0tPPC71RPXXgfPSUik=;
+	b=3AMFIqmR2GrtSlhTTSn9edGSb6pJKOLw3FM+ygxMdfNRIJ11xzruPKCPnWVrReuGc/AljY
+	tvXizJiiyZytQeAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BE7A0136E0;
+	Tue, 27 May 2025 06:10:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xLnHLEJXNWinFwAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 27 May 2025 06:10:10 +0000
+Message-ID: <23b75e25-fa2f-4d12-8d96-6de01e43ad49@suse.de>
+Date: Tue, 27 May 2025 08:10:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,216 +83,236 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] TI: K3: Switch MCU R5F cluster into Split mode
-To: Nishanth Menon <nm@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <afd@ti.com>,
-        <u-kumar1@ti.com>, <hnagalla@ti.com>, <jm@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250522073426.329344-1-b-padhi@ti.com>
- <20250522155338.gpbcubkvygtju3qc@bagpipe>
- <5cfaed26-28ec-42dc-b9f6-836869ad3fa3@ti.com>
- <20250523114822.jrv73frz2wbzdd6d@falsify>
+Subject: Re: [PATCH 06/23] md/md-bitmap: add a new sysfs api bitmap_type
+To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, xni@redhat.com,
+ colyli@kernel.org, song@kernel.org, yukuai3@huawei.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-7-yukuai1@huaweicloud.com>
 Content-Language: en-US
-From: Beleswar Prasad Padhi <b-padhi@ti.com>
-In-Reply-To: <20250523114822.jrv73frz2wbzdd6d@falsify>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250524061320.370630-7-yukuai1@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLf34csc5ba3ztc71of6h9nuns)];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,huawei.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 84FE121E79
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -1.51
 
-Hi Nishanth,
+On 5/24/25 08:13, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> The api will be used by mdadm to set bitmap_ops while creating new array
+> or assemble array, prepare to add a new bitmap.
+> 
+> Currently available options are:
+> 
+> cat /sys/block/md0/md/bitmap_type
+> none [bitmap]
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   Documentation/admin-guide/md.rst | 73 ++++++++++++++----------
+>   drivers/md/md.c                  | 96 ++++++++++++++++++++++++++++++--
+>   drivers/md/md.h                  |  2 +
+>   3 files changed, 135 insertions(+), 36 deletions(-)
+> 
+[ .. ]
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 311e52d5173d..4eb0c6effd5b 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -672,13 +672,18 @@ static void active_io_release(struct percpu_ref *ref)
+>   
+>   static void no_op(struct percpu_ref *r) {}
+>   
+> -static void mddev_set_bitmap_ops(struct mddev *mddev, enum md_submodule_id id)
+> +static bool mddev_set_bitmap_ops(struct mddev *mddev)
+>   {
+>   	xa_lock(&md_submodule);
+> -	mddev->bitmap_ops = xa_load(&md_submodule, id);
+> +	mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
+>   	xa_unlock(&md_submodule);
+> -	if (!mddev->bitmap_ops)
+> -		pr_warn_once("md: can't find bitmap id %d\n", id);
+> +
+> +	if (!mddev->bitmap_ops) {
+> +		pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
+> +		return false;
+> +	}
+> +
+> +	return true;
+>   }
+>   
+>   static void mddev_clear_bitmap_ops(struct mddev *mddev)
+> @@ -688,8 +693,10 @@ static void mddev_clear_bitmap_ops(struct mddev *mddev)
+>   
+>   int mddev_init(struct mddev *mddev)
+>   {
+> -	/* TODO: support more versions */
+> -	mddev_set_bitmap_ops(mddev, ID_BITMAP);
+> +	mddev->bitmap_id = ID_BITMAP;
+> +
+> +	if (!mddev_set_bitmap_ops(mddev))
+> +		return -EINVAL;
+>   
+>   	if (percpu_ref_init(&mddev->active_io, active_io_release,
+>   			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+> @@ -4155,6 +4162,82 @@ new_level_store(struct mddev *mddev, const char *buf, size_t len)
+>   static struct md_sysfs_entry md_new_level =
+>   __ATTR(new_level, 0664, new_level_show, new_level_store);
+>   
+> +static ssize_t
+> +bitmap_type_show(struct mddev *mddev, char *page)
+> +{
+> +	struct md_submodule_head *head;
+> +	unsigned long i;
+> +	ssize_t len = 0;
+> +
+> +	if (mddev->bitmap_id == ID_BITMAP_NONE)
+> +		len += sprintf(page + len, "[none] ");
+> +	else
+> +		len += sprintf(page + len, "none ");
+> +
+> +	xa_lock(&md_submodule);
+> +	xa_for_each(&md_submodule, i, head) {
+> +		if (head->type != MD_BITMAP)
+> +			continue;
+> +
+> +		if (mddev->bitmap_id == head->id)
+> +			len += sprintf(page + len, "[%s] ", head->name);
+> +		else
+> +			len += sprintf(page + len, "%s ", head->name);
+> +	}
+> +	xa_unlock(&md_submodule);
+> +
+> +	len += sprintf(page + len, "\n");
+> +	return len;
+> +}
+> +
+> +static ssize_t
+> +bitmap_type_store(struct mddev *mddev, const char *buf, size_t len)
+> +{
+> +	struct md_submodule_head *head;
+> +	enum md_submodule_id id;
+> +	unsigned long i;
+> +	int err;
+> +
+> +	if (mddev->bitmap_ops)
+> +		return -EBUSY;
+> +
+Why isn't this protected by md_submodule lock?
+The lock is taken when updating ->bitmap_ops, so I would
+have expected it to be taken when checking it ...
 
-On 5/23/2025 5:18 PM, Nishanth Menon wrote:
-> On 14:27-20250523, Beleswar Prasad Padhi wrote:
->> Hi Nishanth,
->>
->> On 5/22/2025 9:23 PM, Nishanth Menon wrote:
->>> On 13:04-20250522, Beleswar Padhi wrote:
->>>> Several TI K3 SoCs like J7200, J721E, J721S2, J784S4 and J742S2 have a
->>>> R5F cluster in the MCU domain which is configured for LockStep mode at
->>>> the moment. Switch this R5F cluster to Split mode by default in all
->>>> corresponding board level DTs to maximize the number of R5F cores.
->>> Why? I can read the patch to understand what you are trying to do, but
->>> the rationale needs to be explained.
->>
->> Sure, rationale is lot of users of our SoCs want to control the R5 core in
->> the MCU domain as a general purpose remote processor to increase
->> performance. That means able to load applications from
-> This follows the board, then?
->
->> bootloader/kernel/userspace, poweroff/poweron core at runtime etc. The
->> challenge with this is the MCU R5F cluster is reserved to run the central
->> Device Manager (DM) Firmware.
->>
->> However, since the MCU R5F cluster is lockstep enabled, it supports both
->> lockstep mode and split mode of booting. So here we decide to boot the
->> cluster in split mode by which we can reserve the primary core to run DM and
->> use the secondary core as a general purpose remote processor.
->>
->> Now why didn't we do this split mode booting since the inception? Well
->> because MCU R5F Cluster is booted by ROM code, and when ROM boots it in
->> split mode, it powers on the secondary core and puts it in WFI (as there is
->> nothing to do for it yet). But the standard remoteproc drivers in Linux and
->> other bootloaders can only load firmware on a core if it is powered off/held
->> in reset. So there was some plumbing needed to be done at the bootloader
->> stage to actually poweroff the secondary core in split mode; so that
->> remoteproc drivers can then load & control the core as expected. Now that
->> the plumbing[0] is posted for U-Boot, we can switch to split mode booting
->> here in DT.
->>
->> [0]: https://lore.kernel.org/all/20250522071828.285462-1-b-padhi@ti.com/
-> In effect, you are saying there are two set of usage models: one in
-> split and other in lock-step mode. U-Boot support for split mode was
-> missing and hence was not done yet. The benefit for users is the option
-> to get an extra processor to do what ever extra stuff they want to do.
+> +	err = kstrtoint(buf, 10, &id);
+> +	if (!err) {
+> +		if (id == ID_BITMAP_NONE) {
+> +			mddev->bitmap_id = id;
+> +			return len;
+> +		}
+> +
+> +		xa_lock(&md_submodule);
+> +		head = xa_load(&md_submodule, id);
+> +		xa_unlock(&md_submodule);
+> +
+> +		if (head && head->type == MD_BITMAP) {
+> +			mddev->bitmap_id = id;
+> +			return len;
+> +		}
+> +	}
+> +
+> +	if (cmd_match(buf, "none")) {
+> +		mddev->bitmap_id = ID_BITMAP_NONE;
+> +		return len;
+> +	}
+> +
+That is odd coding. The 'if (!err)' condition above might
+fall through to here, but then we already now that it cannot
+match 'none'.
+Please invert the logic, first check for 'none', and only
+call kstroint if the match failed.
 
+> +	xa_lock(&md_submodule);
+> +	xa_for_each(&md_submodule, i, head) {
+> +		if (head->type == MD_BITMAP && cmd_match(buf, head->name)) {
+> +			mddev->bitmap_id = head->id;
+> +			xa_unlock(&md_submodule);
+> +			return len;
+> +		}
+> +	}
+> +	xa_unlock(&md_submodule);
+> +	return -ENOENT;
+> +}
+> +
+> +static struct md_sysfs_entry md_bitmap_type =
+> +__ATTR(bitmap_type, 0664, bitmap_type_show, bitmap_type_store);
+> +
+>   static ssize_t
+>   layout_show(struct mddev *mddev, char *page)
+>   {
+> @@ -5719,6 +5802,7 @@ __ATTR(serialize_policy, S_IRUGO | S_IWUSR, serialize_policy_show,
+>   static struct attribute *md_default_attrs[] = {
+>   	&md_level.attr,
+>   	&md_new_level.attr,
+> +	&md_bitmap_type.attr,
+>   	&md_layout.attr,
+>   	&md_raid_disks.attr,
+>   	&md_uuid.attr,
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 13e3f9ce1b79..bf34c0a36551 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -40,6 +40,7 @@ enum md_submodule_id {
+>   	ID_CLUSTER,
+>   	ID_BITMAP,
+>   	ID_LLBITMAP,	/* TODO */
+> +	ID_BITMAP_NONE,
+>   };
+>   
+>   struct md_submodule_head {
+> @@ -565,6 +566,7 @@ struct mddev {
+>   	struct percpu_ref		writes_pending;
+>   	int				sync_checkers;	/* # of threads checking writes_pending */
+>   
+> +	enum md_submodule_id		bitmap_id;
+>   	void				*bitmap; /* the bitmap for the device */
+>   	struct bitmap_operations	*bitmap_ops;
+>   	struct {
 
-Yes...
+Cheers,
 
->
->>>> Corresponding support to shutdown MCU R5F core 1 on SoC power on have
->>>> been posted in U-Boot:
->>>> https://lore.kernel.org/all/20250522071828.285462-1-b-padhi@ti.com/
->>>>
->>>> While at it, correct the firmware-name property for MCU R5F cores of
->>>> J742S2 SoC in [PATCH 1/2].
->>>>
->>>> Testing Done:
->>>> 1. Tested that each patch does not generate any new warnings/errors.
->>>> 2. Build test on all existing TI K3 platforms.
->>>> 3. Tested U-Boot and Linux load of MCU R5F core in split mode on all
->>>> applicable boards (AM68-SK, AM69-SK, J7200-EVM, J721E-EVM, J721S2-EVM,
->>>> J784S4-evm, J742S2-EVM)
->>>>
->>>> Test logs:
->>>> https://gist.github.com/3V3RYONE/ee8e3cb9aa5f4c5c00b059b9c14bfa98
->>>>
->>>> Thanks,
->>>> Beleswar
->>>>
->>>> Beleswar Padhi (2):
->>>>     arm64: dts: ti: k3-j742s2-mcu-wakeup: Override firmware-name for MCU
->>>>       R5F cores
->>>>     arm64: dts: ti: k3: Switch MCU R5F cluster to Split-mode
->>> NAK! We are once again churning downstream users again and for what
->>> reason - coverletter and the patch is vague on that!
->>>
->>> I would prefer the entire remote proc dts stuff cleaned up once for all
->>> in a comprehensive series.
->>>
->>> Let me be clear (once again): We DO NOT break backward compatibility.
->>> We do not break downstream users without a clear cut rationale. We do
->>> not break all other ecosystems depending on device tree without a very
->>> very solid reason.
->>
->> I don't understand how this is breaking any backward compatibility. We are
->> not removing the lockstep boot support entirely here. We are just switching
->> to Split boot by default because of the usecases. If not today, someday we
->> have to go with split mode booting by default.
->>
->> That's exactly what we did for the MAIN domain R5F clusters: 1. First we did
->> the plumbing to have power synchronization between the cores of a cluster:
->> https://lore.kernel.org/all/20240430105307.1190615-1-b-padhi@ti.com/ 2. Then
->> we switched the Cluster to boot in split mode by default:
->> https://lore.kernel.org/all/20240826093024.1183540-1-b-padhi@ti.com/
->>
->> Now, for users who prefer to use the fault-tolerant lockstep mode, they can
->> still do that by setting `ti,cluster-mode` property to 1. However, I agree
->> that we should not be doing 'hardware configuration' (split vs lockstep) in
->> Device Tree which is supposed to be 'hardware description'. We have started
->> to explore solutions where we can dictate this lockstep vs split core
->> configuration from the firmware itself during runtime. Once that is done
->> (long way to go thinking of upstream), we can get rid of this configuration
->> from the DT entirely.
-> Please add this explanation to your patch. In addition, when you say
-> arm64: dts: ti: k3*: in subject line (implies you are touch soc dtsi)
-> and when co-related to the U-boot patch[1], it is confusing to know if
-> you have the same SoC dtsi change yet to be posted where you switch
-> from ti,cluster-mode = <1> to <0> - I am concerned if downstream board
-> dts files will have to consume the firmware names differently.
-
-
-firmware names should not be a problem. If downstream users decide to 
-boot with lockstep as default, in effect there will be only one 
-processor, and the primary firmware will be loaded into the CPU.
-
-> This is
-> the reason to ask for a comprehensive list of patches for the remote
-> proc. If a downstream device board dts can continue to move to newer
-> kernel revisions with no mods, you should state so in your commit
-> message.
-
-
-Other than ti,cluster-mode, no mods...
-
-> There is all kinds of side implications with memory carveouts
-> etc for a new processor that has to be factored in as well.
->
-> Btw, [2] sounds like a bug fix.. So follow the stable kernel rules.
-
-
-It is a fix, but not so critical that it should be backported to stable 
-Kernels. That's because:
-
-a. The primary core's firmware-name/path does not matter in DT here, as 
-it is packed in the bootloader images and that core can not be loaded 
-from anywhere else (DM core).
-b. The support to boot this cluster in Split mode has just been posted 
-now. So users might not be able to load/boot the secondary core before 
-this support.
-
-So I think fixing it in mainline is good enough as the support is also 
-added now. Do you think we should add Fixes tag here?
-
->
-> I suggest the following:
-> * SoC dts files - use a common standard for remote proc - lockstep makes
->    sense as it is right now
-> * Modification to board specific dts files - call them out as board
->    files specific patches to flip over to split mode - while considering
->    the possibilities that users may NOT upgrade kernel and bootloader at
->    the same time and the existence of EFI based dtb handover from
->    bootloader to kernel - which means, kernel should be able to handle the
->    same combinations correctly.
-
-
-The Kernel remoteproc driver handles that correctly by checking the CPU 
-registers to see if it is in split mode[3]. If the bootloader was not 
-able to boot this cluster in split mode, but the Kernel/bootloader DT 
-says "ti,cluster-mode = 0", the driver forces it to boot in lockstep mode.
-
->   Also handle the carveouts correctly for
->    the new processors - at least state the strategy - overlays etc.. Come
->    to think of it, I think we should fix up the carveout strategy for
->    user programmable remote cores first before attempting all this new
->    processor additions.
-
-
-This is not really a new processor, its just a split CPU. As such we 
-already have the carveouts for this split CPU upstreamed[4].
-
-Do you want to see new overlays (containing mailbox configuration, timer 
-configuration, mem carveouts) for each of the board? Because each board 
-has a separate set of configuration for IPC.
-
-> * Split out the fixes patches separately out - no reason to mix it up
->    with the rest of the refactoring.
-
-
-This was a minor fix, and it essentially was only needed when we added 
-split support for all SoCs, so I clubbed them together...
-
-> * Fix your commit messages and subject lines to indicate clearly what is
->    impacted, rationale, backward compatibility status
->
-> [1] https://lore.kernel.org/all/20250522071828.285462-7-b-padhi@ti.com/#Z31dts:upstream:src:arm64:ti:k3-j7200-mcu-wakeup.dtsi
-> [2] https://lore.kernel.org/all/20250522073426.329344-2-b-padhi@ti.com/
-
-[3]: 
-https://github.com/torvalds/linux/blob/master/drivers/remoteproc/ti_k3_r5_remoteproc.c#L1153 
-[4]: 
-https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi#L47-L57
-
-Thanks, Beleswar
-
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
