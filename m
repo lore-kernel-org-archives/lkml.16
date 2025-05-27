@@ -1,62 +1,47 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB75734CDD
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B755D1ACED9;
+	Tue, 27 May 2025 13:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352338; cv=none; b=GlmCLM7uSgIvuAYu98S/um3zBcGI529oHNo3SM8zfnLZAho/uykAmfPyS7vEM26/JuPqIP7PsBxR3Ynjxh7km8QrpXGJ80MC/5jiEZmZiyvKXBzP/Zy2p2eg+WH8NIO5kLPZzFu1rEitb/4BoXI6fUVVOp2/BzZxux1YhOTPjHY=
+	t=1748352360; cv=none; b=GFiibJ5mRt7TznuVHMhPRjHha+GCio423Xs0XKVcDn7dzg2X26SKEPi13tcgqTvzz4tDA3Lcjif1Z+0q6IOr6cKtZuxWkDqLmfjow5gcfCFtv2JMUOCBNQHVi4jvTi1NYXiNm8qiOwbi7+VLnxKmYtWaf9CPUfQTPXa3Z1ERzQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352338; c=relaxed/simple;
-	bh=TvVroCeXMQ1E92k4QZDq/IbdzgpErCk/aa/SRYq7yOs=;
+	s=arc-20240116; t=1748352360; c=relaxed/simple;
+	bh=RJZrjlZXyF2IEyk45tZVLBAEfHaJeaF88xrgOYA4D9A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d85/CQK4psfDxVgs5fPJzhJO5whEU1iXMJAYwYD6ytaszCtWMgUiUlZys2Y16jANgfByQQTolIMFJ8HYy06LThQLrVttBMO6LTvVBBXPey0Mj+Bll7+WZ1JJiiys+BukdD7+MokJWYaKh+HDcmvBxfKiwPZoJ4QXBrbH9JMmV24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L6rE3Svu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VXrNMJJA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwLsthoAyiX+WL15WbpElulBR/Qt8O7iS8kcuiYsqnDCQdx8DeD3rSEPBjeSQYkGJIogPwltrLXQIbrXTuFKxNxnlRpvKiOGhshpvDDNbxsoHSi8hc29cOTCiH3b7l497xaGvZYjpfIw3/pIwWqaQn5lSEOE/x+ID2dgXuzM9+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fXuaWA2T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L6rE3Svu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VXrNMJJA"
-Date: Tue, 27 May 2025 15:25:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748352334;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XYqi3NCQ/fWAGKheVdTWlSvTDjl5Oax78MP1xbuGcDM=;
-	b=L6rE3SvugLFDTD6W0OUDGsWvov6TpZ1pXBVEkxiznI2xmgvgzAjFVdzrdNAy+d+mQcx+NJ
-	Ss1Av0Qd8f8lyJoNXfbgR9BSDRdeyopC4tM+cDrg6qxWZ5hnoGbARrttht2ewW5/pQpfi/
-	ZHtNDA/mJ2gwEuC+W1jT+dCAyt8eZ2DI/Zrdt3i6AZ+X1H1YBDQsIUNDmCIBueDnIXcdPy
-	vdaHYya675GwNLnUWHPfAoTMe9cJuAXtsjjqrWdUxz32r5u4WB/di3GwAzV8VPb91FAcRH
-	KJa8Z0GgCCTAkhVSW+NsdrT7pzGUM+eHqUlzu2prIzVjEpe7Y0fRv2Sydt6R/w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748352334;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XYqi3NCQ/fWAGKheVdTWlSvTDjl5Oax78MP1xbuGcDM=;
-	b=VXrNMJJAkIMEyx4PChnv/Lbs3eo5ZBcfUIZQ5ds5ebt/rGzVkrALRUGHNMrCe729Gjhix/
-	RoSz4P1/hMOU8pBw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v12 20/21] selftests/futex: Add futex_priv_hash
-Message-ID: <20250527132533.lqWBepWy@linutronix.de>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-21-bigeasy@linutronix.de>
- <31869a69-063f-44a3-a079-ba71b2506cce@sirena.org.uk>
- <20250527122332.M0ucxhwh@linutronix.de>
- <231a9862-58ea-4a6d-8893-862776d9deca@sirena.org.uk>
- <20250527124327.5UDnm-ho@linutronix.de>
- <269b2f41-1405-4cab-9310-11df428e64c6@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fXuaWA2T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF88C4CEE9;
+	Tue, 27 May 2025 13:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748352360;
+	bh=RJZrjlZXyF2IEyk45tZVLBAEfHaJeaF88xrgOYA4D9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fXuaWA2TjqMjpqvK8uJbUl1dUHB8Dq7WIOcO4O8pSnnhGpYuXPQaQcs8SzLFZoh5Z
+	 97P9pFajTEqwuagTGvgdRuKBDpbU7axVuFJA2CI36xHsGwRY877Ywstr6AwtLUT3Za
+	 PTF1mE2BUyUJHV+ihfNBVv5lPsPdsuLJfhNUcUNPsbK3FR8/V5ZzxYfEYfNlO8ZwPY
+	 +P7Obe+q5od1kiRvY8lBN6Jf4zVF9UwUe9hj7dj8mrXFa9bBmThgOPpb8rw+Jg1/ir
+	 MIDjN2mf0c9WyYVZENEbUU+Xr+dloN1i6diuYiQkopPpKAFCnxdPF+6DV1Khjili9Q
+	 2+kgyLidpun3g==
+Date: Tue, 27 May 2025 16:25:53 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Ira Weiny <ira.weiny@intel.com>,
+	Michal Clapinski <mclapinski@google.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+	nvdimm@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] libnvdimm/e820: Add a new parameter to configure
+ many regions per e820 entry
+Message-ID: <aDW9YRpTmI66gK_G@kernel.org>
+References: <20250417142525.78088-1-mclapinski@google.com>
+ <6805a8382627f_18b6012946a@iweiny-mobl.notmuch>
+ <CA+CK2bD8t+s7gFGDCdqA8ZaoS3exM-_9N01mYY3OB4ryBGSCEQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,42 +50,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <269b2f41-1405-4cab-9310-11df428e64c6@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+CK2bD8t+s7gFGDCdqA8ZaoS3exM-_9N01mYY3OB4ryBGSCEQ@mail.gmail.com>
 
-On 2025-05-27 13:59:38 [+0100], Mark Brown wrote:
-> I'm not seeing that test being built or in the binary:
+On Mon, Apr 21, 2025 at 10:55:25AM -0400, Pasha Tatashin wrote:
+> On Sun, Apr 20, 2025 at 10:06 PM Ira Weiny <ira.weiny@intel.com> wrote:
+> >
+> > Michal Clapinski wrote:
+> > > Currently, the user has to specify each memory region to be used with
+> > > nvdimm via the memmap parameter. Due to the character limit of the
+> > > command line, this makes it impossible to have a lot of pmem devices.
+> > > This new parameter solves this issue by allowing users to divide
+> > > one e820 entry into many nvdimm regions.
+> > >
+> > > This change is needed for the hypervisor live update. VMs' memory will
+> > > be backed by those emulated pmem devices. To support various VM shapes
+> > > I want to create devdax devices at 1GB granularity similar to hugetlb.
+> >
+> > Why is it not sufficient to create a region out of a single memmap range
+> > and create multiple 1G dax devices within that single range?
 > 
->    https://builds.sirena.org.uk/cda95faef7bcf26ba3f54c3cddce66d50116d146/arm64/defconfig/build.log
->    https://builds.sirena.org.uk/cda95faef7bcf26ba3f54c3cddce66d50116d146/arm64/defconfig/kselftest.tar.xz
+> This method implies using the ndctl tool to create regions and convert
+> them to dax devices from userspace. This does not work for our use
+> case. We must have these 1 GB regions available during boot because we
+> do not want to lose memory for a devdax label. I.e., if fsdax is
+> created during boot (i.e. default pmem format), it does not have a
+> label. However, if it is created from userspace, we create a label
+> with partition properties, UUID, etc. Here, we need to use kernel
+
+Doesn't ndctl refuse to alter namespaces on "legacy" (i.e. memmap=)
+regions?
+
+> parameters to specify the properties of the pmem devices during boot
+> so they can persist across reboots without losing any memory to
+> labels.
 > 
-> (note that this is the specific commit that I'm replying to the patch
+> Pasha
 
-Ach, okay. I assumed you had the master branch as of today. The whole
-KTAP/ machine readable output was added later.
-
-> for, not -next.)  It looks like it's something's getting mistbuilt or
-> there's some logic bug with the argument parsing, if I run the binary
-> with -h it exits with return code 0 rather than 1.
-
-I copied the logic from the other tests in that folder. If you set -h (a
-valid argument) then it exits with 0. If you an invalid argument it
-exits with 1.
-
-But now that I start the binary myself, it ends the same way. This
-cures it:
-
-diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-index 2dca18fefedcd..24a92dc94eb86 100644
---- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
-+++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
-@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
- 	pthread_mutexattr_t mutex_attr_pi;
- 	int use_global_hash = 0;
- 	int ret;
--	char c;
-+	int c;
- 
- 	while ((c = getopt(argc, argv, "cghv:")) != -1) {
- 		switch (c) {
-
-Sebastian
+-- 
+Sincerely yours,
+Mike.
