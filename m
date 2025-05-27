@@ -1,31 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643421E4BE;
-	Tue, 27 May 2025 13:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBBF1BF33F;
+	Tue, 27 May 2025 13:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351219; cv=none; b=ES0bJw4C50abG9OEirDhCgrgUkqwuFCTb0Uufbn55gbvAeLNgjawnlxn9O/fcg8Pe7UgO7ykL8/Pl/LKT3g7JNtgNnUFpNFTn0bAXa86bARrcsXDJvmsFACipa8UlFWL1UxhgHBv1/5oaGtSnCoLm2mfLYMYCWwyKZ2dzb0fgzo=
+	t=1748351314; cv=none; b=rJtfk94jRbhMCT2ZjPnasKayYekG4EYzTwrRKMwmg+g3NmjHq5S5aFzJcBd8725NKyq5L42L61MPRHX00lNLNQk+DXdd/KOxHUrPZHSi+JqoHJOFVNDXHx4jkzxYQv3w51oEXeaD03Lqp0BjSR1/o3MOo9nsI0kdhbDRXgS4CsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351219; c=relaxed/simple;
-	bh=J/kzqgFZuQJnCLBIhfO4WyhTv+nsnJm0UqFIpedFc6c=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YahzAA/UWPzpoZMGIWc8zI/IJ5qhx6lEbbFzvkx0ej776LULhf+8pr5TiJLIEbiXwsT+J5KekrW8bSSu2wIw1qJ9nUsfK4yqqPgz5KmVTWoLKXv6wSjGDIlNAWJWS8kQWcgbAFg2d4teTaWLWjo4+tVjcyPO6tw9AalGRsvtvs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81FDA14BF;
-	Tue, 27 May 2025 06:06:39 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AD593F673;
-	Tue, 27 May 2025 06:06:54 -0700 (PDT)
-Date: Tue, 27 May 2025 14:06:50 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_spe: Relax period restriction
-Message-ID: <20250527130650.GH2566836@e132581.arm.com>
-References: <20250527121827.3919495-1-leo.yan@arm.com>
+	s=arc-20240116; t=1748351314; c=relaxed/simple;
+	bh=GyqnFA67vNMTN7nBS4yxcioiT5LHr0wB3N3vtXA1fCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kACdCE9Mcyd/VbTFrHXx+aXrTFbKUq8YOAodviUu4x85JEjurpIZDsHfxY2dEX1E166OilnWw3qRJ233TV0PKYVPS58kuy0PRJqgrpdveM1ZooTMz4wUwn2MU4jzbHQb/16rAQYjsuTS06L+JM/A7Yzk2bKeKsjetOe01PNUaec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=gy7K2xp2; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gy7K2xp2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=4bN0OqR1WicbAsGpg+98F6Jxk6N5NYo/HvpHfvT3B+Y=; b=gy7K2xp2EulUgSavLtvFA+S4En
+	PmyS+rHoXBivo3sZDakMNfe0jgxPTbD1PO7rEmmi8dvZ2cjCk5YBFZ9WJRiweg+8REBWi7AyI7TvY
+	+DOro/bwZ30pjC4J3opv35bvs6p9t/p3sOJbYwHmgG6W1merhzgWmJ1r4QsM8Urt47uk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uJu2V-00E4qc-Uh; Tue, 27 May 2025 15:08:19 +0200
+Date: Tue, 27 May 2025 15:08:19 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH 1/5] dt-bindings: net: qca,ar803x: Add IPQ5018 Internal
+ GE PHY support
+Message-ID: <0c57cff8-c730-49cd-b056-ce8fd17c5253@lunn.ch>
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+ <20250525-ipq5018-ge-phy-v1-1-ddab8854e253@outlook.com>
+ <aa3b2d08-f2aa-4349-9d22-905bbe12f673@kernel.org>
+ <DS7PR19MB888328937A1954DF856C150B9D65A@DS7PR19MB8883.namprd19.prod.outlook.com>
+ <9e00f85e-c000-40c8-b1b3-4ac085e5b9d1@kernel.org>
+ <df414979-bdd2-41dc-b78b-b76395d5aa35@oss.qualcomm.com>
+ <DS7PR19MB88834D9D5ADB9351E40EBE5A9D64A@DS7PR19MB8883.namprd19.prod.outlook.com>
+ <82484d59-df1c-4d0a-b626-2320d4f63c7e@oss.qualcomm.com>
+ <DS7PR19MB88838F05ADDD3BDF9B08076C9D64A@DS7PR19MB8883.namprd19.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,50 +68,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527121827.3919495-1-leo.yan@arm.com>
+In-Reply-To: <DS7PR19MB88838F05ADDD3BDF9B08076C9D64A@DS7PR19MB8883.namprd19.prod.outlook.com>
 
-Hi all,
+> > > > > > Would qcom,phy-to-phy-dac (boolean) do?
+> > > > > 
+> > > > > Seems fine to me.
+> > > > 
+> > > > Can the driver instead check for a phy reference?
+> > > 
+> > > Do you mean using the existing phy-handle DT property or create a new DT property called 'qcom,phy-reference'? Either way, can add it for v2.
+> > 
+> > I'm not sure how this is all wired up. Do you have an example of a DT
+> > with both configurations you described in your reply to Andrew?
 
-On Tue, May 27, 2025 at 01:18:27PM +0100, Leo Yan wrote:
+When a SoC interface is connected to a switch, the SoC interface has
+no real knowledge it is actually connected to a switch. All it knows
+is it has a link peer, and it does not know if that peer is 1cm away
+or 100m. It does nothing different.
 
-[...]
+The switch has a phandle to the SoC interface, so it knows a bit more,
+but it would be a bit around about for the SoC interface to search the
+whole device tree to see if there is a switch with a phandle pointing
+to it. So for me, a bool property indicating a short 'cable' is the
+better solution.
 
-> @@ -309,15 +309,22 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
->  static void arm_spe_event_sanitise_period(struct perf_event *event)
->  {
->  	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
-> +	struct device *dev = &spe_pmu->pdev->dev;
->  	u64 period = event->hw.sample_period;
->  	u64 max_period = PMSIRR_EL1_INTERVAL_MASK;
->  
-> -	if (period < spe_pmu->min_period)
-> -		period = spe_pmu->min_period;
-> -	else if (period > max_period)
-> +	if (period < spe_pmu->min_period) {
-> +		/* Period must set to a non-zero value */
-> +		if (!period)
-> +			period = 1;
-
-I read the document again and found the interval granluarity is 256
-(8-bit).  So the change above is incorrect.
-
-I will send a new patch.  Sorry for inconvenience.
-
-Thanks,
-Leo
-
-> +
-> +		dev_warn_ratelimited(dev, "Period %llu < %u (recommended minimum interval).\n",
-> +				     period, spe_pmu->min_period);
-> +	} else if (period > max_period) {
->  		period = max_period;
-> -	else
-> +	} else {
->  		period &= max_period;
-> +	}
->  
->  	event->hw.sample_period = period;
->  }
-> -- 
-> 2.34.1
-> 
+	Andrew
