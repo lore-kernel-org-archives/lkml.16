@@ -1,149 +1,163 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CE13FFD;
-	Tue, 27 May 2025 18:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C072798F8
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369728; cv=none; b=exuLhr5qr8QuxDpsGWNI8CfiHT2OdwdcuoPeigFcxMpyjpFl9xfnQ6KsYNRiObssYG27xGE8M6BRfacDdYA6gaYLzMOueHdkeRco4XUnKpdfJQflJk2eqL+jdZQgzlKktDCC5+tcsZTBxBf/+fiQ2CSwTbqXuVV7gwU8Y3a5p7Q=
+	t=1748369730; cv=none; b=LeVbXcdp+1AiqmRw0+mPIenNWckxOZPH8U59VV2IQUyGr7zE6QODl3A0/hHyOJN7h4szQ7vsLVFNd+5bBHxF3Ux7D5+kAXjN6ojmjoHwLmWkiIG8cxQbDKIBRVagj9L4G1vvuWSgiU0ZJ8UiMxZbA/jQlOw53f/YfJi1ozqFvjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369728; c=relaxed/simple;
-	bh=wyTPtsz4+3ra1RyixrCWgDLsRgUjFiTm2oJtL9t5Qhw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=maGpZtsaqsiWNmRNKFFZtMMpZvMtZMgvZA7Ej5gS5Zu0WqUOK33Oat+Kj6mEXDfUZdVEzKL2OXlTtLwdIX9Q7ZjGMdm2/P7qJN5SmLljRzKMLJR/etJPNNw6MQVMuAO1l5tYmmdarHP0CWel67CwIQMbVsYafQKqv1R90+9BTrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LgsIiN8i; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748369730; c=relaxed/simple;
+	bh=zxQjR+nrUWNNLX+WQ5kgnXyHQ2cMKdlioEaSfwbXPMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t+DMZG36n1DKOUp7KXOo/qPBrwRfVp6RKzNvfEd6CsB8v2YGx7fi0FYreHbqEXH/tiShMy2GjIhkPlv9evmNTVq5AN3X3UcWjDa48d7O5iicdMh8+JGFDknNaHMRu1upV4j8vnLi3+o74lr89M5cJuNgGOXXne1m1fdzxgfSN08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=p78TEFY2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LgsIiN8i"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54RIF4qZ3029528;
-	Tue, 27 May 2025 13:15:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748369704;
-	bh=ZcqNJR+8VtW41JbCbTfke1fL6148OIWbmIsZ4Ld5R8Q=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=LgsIiN8ivuotwzi99cArhQCpWe5Zzmmm4px+h2fS/yv38NvM22Rae7Q3nSC8Ok47I
-	 pOe7poeaZYVZF2YSA4LeBzY8WigkzVTZTHiQnc1w1rqGYfDn2EP3+q7DpKmoF/y3M6
-	 MXziNOUsVl6dfmhXregThLQFGcllGI5UOefCBylk=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54RIF4vD2831127
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 27 May 2025 13:15:04 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- May 2025 13:15:04 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 May 2025 13:15:04 -0500
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54RIExut3555206;
-	Tue, 27 May 2025 13:15:00 -0500
-Message-ID: <0fe3f172-5a88-4f1d-9eb2-7b748f9f6743@ti.com>
-Date: Tue, 27 May 2025 23:44:59 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="p78TEFY2"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RBBmnq023081
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:15:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=5FrToTgKpEpyWJyX95g1VDxp
+	8dgYn5P0X/JsOpxJh/o=; b=p78TEFY2jsQtyhhi+hAXNn3jFQlqxg6hW44xxEHY
+	dJxX8sPwnGrkdkOsaA+hMZ9MlouECNtEyrEPOv0WlVxGQqtrEl0/vHnOQ4SgJrcC
+	zI1L7YFNoWb0LHiUKEIx+mON0ZtgsBoy38hpY1PNfBCDQ3SHXXUdGCV5ojzm3+ea
+	Ha/lB94wG72keMuPeXa5QLqNFU2d/OaSn2wQLc+Lu+B33WRW8ihtM9SO48XU+F4F
+	3Wbk1sPj7W+V2XGDPLUfGiVMtjIF7pdCtQSuz+qOtcVN9NMGPitdKxsH/i4gicm3
+	z9MVA7MKHqWKlullz0JluK294yjLp2WSLGnF95krjnHhfA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjqthw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:15:28 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6faa443fb86so31002266d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:15:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748369727; x=1748974527;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5FrToTgKpEpyWJyX95g1VDxp8dgYn5P0X/JsOpxJh/o=;
+        b=ERxZ+KR/5ocoOtpS9bowIu1kPBIjkHCtOuPBewHE+GeTP5f/apk/MxyUKYT+75czWU
+         0WTVDAWclOBTE5uMEownP7dvYHFKAQvN3BiFotPKKcyCpSwqec2C+hFoS5m/CSGSq4U0
+         7xkvfsokyfDSsjaxI5cjReLdwF+7Nf3Ma0LC/hQ6D1BvEhQzVzskbaPWRSqAlMNLC5S0
+         Tz/RkszY2pwiHBGxMh+qp++ZMlapg2gf72wxufQq4qOQxP3tIa13Mp/5d9X7wn0GYq2w
+         vnmXXg2X2lx6xYpgz1c54D1dec9r5tcaduRW9o118elMYwYNwNm5IB1zOQktf6mabAhJ
+         iDcw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxfdhpWyluE4s72jGANITXPOymuFmZ3r52hRFW2mMGbml3m4S/z1YKfw9qwa12EJADwD0g8Zo7xjwp4fM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8iiVyQXh9KLkt+XCsl+qzQKUPjLZJk6FU50PMHkQPce3aE913
+	6aDjQYUDT9ih/yGgcW7pvyVeCmfpFA09mdA4HnF11h8r1VSDqNohaU5YsWaumQqQrg8/Z/dgq69
+	bm9pcBqWVA96So5qRSMOaQdXUQRjOB744jpRGwVmHHmLKu2hdBP0FPJQWrWfC6NQPRFI=
+X-Gm-Gg: ASbGncubaIK56uavgSvsrJXx4egcIAQ3z6Q3CX4bX4G0KH7d5N2bUROVOsHlDnQvuPK
+	ajtzU4K/dpg6/bDNpATzy0SvPHb1ZEL89wOAQryQ9pI5tSxU1hJrG2t7mdcqr8GQhHCKIxjheQn
+	0ETYYzjDGpIyHj+ePE7decWAYWT/1vjHy4dvcheJeKdck77vIEYwHcfl/lwsSuDaRJFW3a1eFdT
+	9CorcKdq8ev/nXq8EpXu0oEI/NaaxzwcrIusKjjBE48sS5bPySgyfg7F1rY8GC3qA0MOGnmrfWS
+	7wA2uJ3gYFP3VGSzqQk9udcwSg/1fMIh++JoAqoRT3LUWM5mCBRGKOzOdvmYuk5BHE7r4YmEeyo
+	=
+X-Received: by 2002:a05:6214:401b:b0:6fa:99e5:3282 with SMTP id 6a1803df08f44-6fa9d2b15edmr237865296d6.39.1748369727123;
+        Tue, 27 May 2025 11:15:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXA/YzgkL1inn42Tt4wzjgLoOU4auPxjkwT8XZ9UwiD7dtmlkR653zVXKnH6yCJzQBikHEPQ==
+X-Received: by 2002:a05:6214:401b:b0:6fa:99e5:3282 with SMTP id 6a1803df08f44-6fa9d2b15edmr237864726d6.39.1748369726743;
+        Tue, 27 May 2025 11:15:26 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5521d86fe3dsm1720727e87.29.2025.05.27.11.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 11:15:25 -0700 (PDT)
+Date: Tue, 27 May 2025 21:15:23 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Cheng Jiang <quic_chejiang@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_jiaymao@quicinc.com, quic_zijuhu@quicinc.com,
+        quic_mohamull@quicinc.com
+Subject: Re: [PATCH v1] arm64: dts: qcom: Add Bluetooth support for qcs9075
+ IQ-9075-EVK
+Message-ID: <ecn6rv7ase2h2q3qjseunu5unftgicynvvrshd23j6ctxzd43p@bge5fhiq3cps>
+References: <20250526054228.221095-1-quic_chejiang@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] TI: K3: Switch MCU R5F cluster into Split mode
-To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
-        Beleswar Prasad
- Padhi <b-padhi@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <hnagalla@ti.com>,
-        <jm@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <u-kumar1@ti.com>
-References: <20250522073426.329344-1-b-padhi@ti.com>
- <20250522155338.gpbcubkvygtju3qc@bagpipe>
- <5cfaed26-28ec-42dc-b9f6-836869ad3fa3@ti.com>
- <20250523114822.jrv73frz2wbzdd6d@falsify>
- <6f4b2271-7249-4285-9fee-1851135e1207@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <6f4b2271-7249-4285-9fee-1851135e1207@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526054228.221095-1-quic_chejiang@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=68360140 cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=rGHGw5yESEm4sh0OadwA:9 a=CjuIK1q_8ugA:10
+ a=1HOtulTD9v-eNWfpl4qZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: iIG7654q2oyGQE7pg7trRLbyLqsEiCCd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE1MSBTYWx0ZWRfX5haUmC14hVMT
+ DWKFg5Y9CvIgEiA39MZ/dRQpEw1pNUIhKYaHHlTeZwYoYQJFgtHqXk3v5fsTIuaJCC9a1kMnJI8
+ C1QFIxOUaaAUww5O/J6afbGTAyxATs8TV1v8wI2Pie6hiHel8yOLCOem3AUS1tek22e8zspKV9t
+ QFEJDfamWPz7o7iPnc1rMkNXsq65Mbz6hdtZNR1tzVprH1GajLeq4lSrHOj7bw9/RYjct3lzccF
+ tyzcwrXT8f/SBsSEM6V377xkXwawE4dpURwdCxRjFYPKCq9sVTI8rNFNhGV64YUlPL+uGTHtmxj
+ rodAmYt9MjuAmpeK4G57ANHzBFLYTgRXFF4vvD1NhiDRP477ZdwsEpfqD9m2//jrItTdSwClytD
+ /Wqjr00IWpQMuQtX1srdwviqntHLMXWUXG2B5Bf70Es8TRoSFRJlwSZuZmJ3ap4MxFmk5oqO
+X-Proofpoint-GUID: iIG7654q2oyGQE7pg7trRLbyLqsEiCCd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_09,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505270151
 
+On Mon, May 26, 2025 at 01:42:28PM +0800, Cheng Jiang wrote:
+> Add Bluetooth support for qcs9075 IQ-9075-EVK
+> 
+> Signed-off-by: Cheng Jiang <quic_chejiang@quicinc.com>
+> ---
+>  .../boot/dts/qcom/qcs9075-iq-9075-evk.dts     | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> @@ -273,6 +300,21 @@ &uart10 {
+>  	status = "okay";
+>  };
+>  
+> +&uart17 {
+> +	pinctrl-0 = <&qup_uart17_default>;
+> +	pinctrl-names = "default";
+> +	qcom,load-firmware;
+> +	qcom,xfer-mode = <1>;
+> +	status = "okay";
+> +
+> +	/* HS UART Instance */
+> +	bluetooth: bluetooth {
+> +		compatible = "qcom,wcn6855-bt";
 
-On 5/23/2025 6:46 PM, Andrew Davis wrote:
-> On 5/23/25 6:48 AM, Nishanth Menon wrote:
->> On 14:27-20250523, Beleswar Prasad Padhi wrote:
->>> Hi Nishanth,
->>>
->>> On 5/22/2025 9:23 PM, Nishanth Menon wrote:
->>>> On 13:04-20250522, Beleswar Padhi wrote:
->>>>> Several TI K3 SoCs like J7200, J721E, J721S2, J784S4 and J742S2 
->>>>> have a
->>>>> R5F cluster in the MCU domain which is configured for LockStep 
->>>>> mode at
->>>>> the moment. Switch this R5F cluster to Split mode by default in all
->>>>> corresponding board level DTs to maximize the number of R5F cores.
->>>> Why? I can read the patch to understand what you are trying to do, but
->>>> the rationale needs to be explained.
->>>
->>>
->>> [..]
->> I suggest the following:
->> * SoC dts files - use a common standard for remote proc - lockstep makes
->>    sense as it is right now
->> * Modification to board specific dts files - call them out as board
->>    files specific patches to flip over to split mode - while considering
->>    the possibilities that users may NOT upgrade kernel and bootloader at
->>    the same time and the existence of EFI based dtb handover from
->>    bootloader to kernel - which means, kernel should be able to 
->> handle the
->>    same combinations correctly. Also handle the carveouts correctly for
->>    the new processors - at least state the strategy - overlays etc.. 
->> Come
->>    to think of it, I think we should fix up the carveout strategy for
->>    user programmable remote cores first before attempting all this new
->>    processor additions.
->
-> +1
->
-> The core issue here is that split vs lockstep is a *configuration*, which
-> means it doesn't belong in DT in the first place. This is the reason 
-> to keep
-> config out of DT, why should what mode my R5 core starts in be based 
-> on what
-> board I'm using? It hard-codes what should be configurable decisions.
+NAK, missing PMU supplies. This wasn't tested against schema. Please
+read internal docs on sending kernel patches before sending the next
+iteration.
 
-configurable decisions is bootloader build .
+> +		pinctrl-names = "default";
+> +		max-speed = <3200000>;
+> +	};
+> +};
+> +
+>  &xo_board_clk {
+>  	clock-frequency = <38400000>;
+>  };
+> 
+> base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
+> prerequisite-patch-id: 853eaf437b81f6fa9bd6d36e6ed5350acaf73017
+> prerequisite-patch-id: 6d9fd3e0257f120cff342c287774454aad2be2e8
+> prerequisite-patch-id: 736cbcd47d5e7cfcc53fcaa7da920eac757ce487
+> prerequisite-patch-id: 4eddce6daeaa125f14380586c759f8cb8997c601
+> prerequisite-patch-id: baac180e8715b5cf2922f79346440d92569704f6
+> prerequisite-patch-id: 65730290d31f18e66e2ba0dfdeb1844d7442c272
+> -- 
+> 2.34.1
+> 
 
-and you know what you are building then change DT as well.
-
-
->
-> Same issue with carveouts, so IMHO all of the: carveouts, mailbox 
-> selection,
-> timer reserved status, and mode selection belong in an overlay. It 
-> doesn't
-> fix the issues, but at least it isolates it.
->
-Its usage model, and split mode is enabled at board level.
-
-as default, split mode is used, in case lock-step is needed then change 
-DT in custom build too.
-
-
-Also, Patch 1/2 should be posted as different patch.
-
-
-> Andrew
->
->> * Split out the fixes patches separately out - no reason to mix it up
->>    with the rest of the refactoring.
->> * Fix your commit messages and subject lines to indicate clearly what is
->>    impacted, rationale, backward compatibility status
->>
->> [1] 
->> https://lore.kernel.org/all/20250522071828.285462-7-b-padhi@ti.com/#Z31dts:upstream:src:arm64:ti:k3-j7200-mcu-wakeup.dtsi
->> [2] https://lore.kernel.org/all/20250522073426.329344-2-b-padhi@ti.com/
->>
+-- 
+With best wishes
+Dmitry
