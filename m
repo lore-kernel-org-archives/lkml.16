@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E0D280CCF;
-	Tue, 27 May 2025 17:56:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE142820B1;
+	Tue, 27 May 2025 17:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368584; cv=none; b=VAcLJejJ/SR8XL+CIWl//JtvcaJmIgm+9v4BuI7pU0mViqNkiuSzOKelXp0RzInX0qvrNEcrVAXgwbGFMlsIBV1OjlRBk+xi7cOYcacZ2NCO+9HcFXdLoFO0I7tWvX5tE9q91+Cs2xISzRV3TXEn/pGGkTkuoZnsyGsyy5+OARA=
+	t=1748368586; cv=none; b=iQDTVMMfDVMClg8ifiL6VoBTAd/glVb7uyZC0qSjrHInf1QeC0tp0/mIfXymiN1qYPqt9BaBPKKdKr1dHHPW6ykOscaWkBAQiHM7beBIaIYHdiE08sYWgxt1qY53vJ5qZURiq/puiPxuZ5gijVidhhW2XcDI6edjXk+OijHlzEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368584; c=relaxed/simple;
-	bh=sV+VhsTFkVG+PDShstWZZdPvkV2+Hq/qwiK6U/6fXX4=;
+	s=arc-20240116; t=1748368586; c=relaxed/simple;
+	bh=qj/NFUs6Q4cvExcqis4HSxY/ptX9HKobaFds0gNh0KI=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=RuwtecUHYp1fwM8WX/XJE/9amD43axnjSv3f6WkbLY0rMJJN8eMGopa4m8SQRzQArWGuCork8PoT5734p3cEYBmQLFYwN8lj5glHiT6OTK07m19ZgAqK3qzy29lQ4abqsN91rHUHpdJlnMRglJhdD9yosJEgXt0K9t9FJUeII84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMlTMlYA; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=mnfTuY2kHtLCixU0ej8zuEYS7TpVxUE1M4I2ccH8n/BS7g0yn62Du9yB5i3to0cKDpwNhj++4IuWknHtQlSt4W8oqnTV01vuxALP63FRGlWfShVOE/QtAKt2jTnRs5/wzT84vUfUGfxpbL1b2uhV0oR/WjDPcvxvkqbpU9soWfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tp1BX57i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMlTMlYA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FCD1C4CEED;
-	Tue, 27 May 2025 17:56:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tp1BX57i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0F34C4CEE9;
+	Tue, 27 May 2025 17:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748368584;
-	bh=sV+VhsTFkVG+PDShstWZZdPvkV2+Hq/qwiK6U/6fXX4=;
+	s=k20201202; t=1748368586;
+	bh=qj/NFUs6Q4cvExcqis4HSxY/ptX9HKobaFds0gNh0KI=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=pMlTMlYA7liTZY9OykGRA3FaijfG6V9VIWY5Ld8zatBhpjG4hSogpxyr9bSf5UqJh
-	 8iWA5Y3nICnvHva2hPy7O96VjfGDSNFWmL5vshJtgbPvkmOtjOro6W0NRN7bNmqkgP
-	 TUnr1VfvE0b524sw5rYpAz3q7jrhDu5MdQhZMqHnjr6lUkMa8GzkHSUJ6CNtJiO9sL
-	 tkhSiGusHHXmAaOOJPsduatEs16UfTxqF08vbAeGVBlKRMoQIXMxyMYf8X2sD268Hx
-	 dyYrjIx7QcHfw0WKB6BPHDgjMkOTpGFXOBikATkXZv6+yEDCYanjnGnutVk/HGntOR
-	 mqo12813VnD0w==
-Date: Tue, 27 May 2025 12:56:22 -0500
+	b=tp1BX57iWRjfC47HV0pta+DAwEpBKFNV+PiY892vqqjRlJ7lqok4gRsc6j6MkQaSS
+	 eM4mX4ropUMSkPMsBXYX4EpEeSlucrZ+n0p0/P2nytQzGT2tElKrpa0WTPN7+qRbyR
+	 S3uQgeQKnvLlOlbrnI5dSQwYO2wx1EmZigk/pfIkCKHDBUerrnbM8Wm02sca5LDnOx
+	 61GA6HDpMQ6ImPdZ9FS89Oe2+Uda0tQmXxd9qVs4QvDC5rc5B9tkIeWEcOtH9InYgN
+	 UvpWM4pSYAXzB+naEfrkIdkXD/I2hdheXj520ZHqcvIEqdH0rBXHObALo/NdiKQ7DV
+	 v1g4CAOVTLcHA==
+Date: Tue, 27 May 2025 12:56:24 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,45 +36,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, Ed Tanous <etanous@nvidia.com>, 
- linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
- devicetree@vger.kernel.org, Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Joel Stanley <joel@jms.id.au>, Leo Huang <leohu@nvidia.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Deepak Kodihalli <dkodihalli@nvidia.com>
-To: Willie Thai <wthai@nvidia.com>
-In-Reply-To: <20250525-dts-v1-0-9ac63ad3bf15@nvidia.com>
-References: <20250525-dts-v1-0-9ac63ad3bf15@nvidia.com>
-Message-Id: <174836830738.840800.7951224308265522325.robh@kernel.org>
-Subject: Re: [PATCH 0/3] ARM: dts: aspeed: nvidia: Update DTS to support
- GB200NVL hardware
+Cc: Florian Fainelli <f.fainelli@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, devicetree@vger.kernel.org, 
+ Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ "David S. Miller" <davem@davemloft.net>, linux-clk@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Paolo Abeni <pabeni@redhat.com>, linux-arm-msm@vger.kernel.org, 
+ Eric Dumazet <edumazet@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+Message-Id: <174836830808.840816.13708187494007888255.robh@kernel.org>
+Subject: Re: [PATCH 0/5] Add support for the IPQ5018 Internal GE PHY
 
 
-On Sun, 25 May 2025 18:20:16 +0000, Willie Thai wrote:
-> Update the DTS file for the GB200NVL hardware change.
+On Sun, 25 May 2025 21:56:03 +0400, George Moussalem wrote:
+> The IPQ5018 SoC contains an internal Gigabit Ethernet PHY with its
+> output pins that provide an MDI interface to either an external switch
+> in a PHY to PHY link architecture or directly to an attached RJ45
+> connector.
 > 
-> Signed-off-by: Deepak Kodihalli <dkodihalli@nvidia.com>
-> Signed-off-by: Ed Tanous <etanous@nvidia.com>
-> Signed-off-by: Leo Huang <leohu@nvidia.com>
-> Signed-off-by: Willie Thai <wthai@nvidia.com>
+> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+> 802.3az EEE.
 > 
-> Signed-off-by: Willie Thai <wthai@nvidia.com>
+> The LDO controller found in the IPQ5018 SoC needs to be enabled to drive
+> power to the CMN Ethernet Block (CMN BLK) which the GE PHY depends on.
+> The LDO must be enabled in TCSR by writing to a specific register.
+> 
+> In a phy to phy architecture, DAC values need to be set to accommodate
+> for the short cable length.
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 > ---
-> Willie Thai (3):
->       ARM: dts: aspeed: nvidia: gb200nvl: Add VCC Supply
->       ARM: dts: aspeed: nvidia: gb200nvl: Enable i2c3 bus
->       ARM: dts: aspeed: nvidia: gb200nvl: Repurpose the HMC gpio pin
+> George Moussalem (5):
+>       dt-bindings: net: qca,ar803x: Add IPQ5018 Internal GE PHY support
+>       clk: qcom: gcc-ipq5018: fix GE PHY reset
+>       net: phy: qcom: at803x: Add Qualcomm IPQ5018 Internal PHY support
+>       arm64: dts: qcom: ipq5018: add MDIO buses
+>       arm64: dts: qcom: ipq5018: Add GE PHY to internal mdio bus
 > 
->  .../dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts  | 39 ++++++++++++++++++++--
->  1 file changed, 37 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/net/qca,ar803x.yaml        |  23 +++
+>  arch/arm64/boot/dts/qcom/ipq5018.dtsi              |  51 ++++-
+>  drivers/clk/qcom/gcc-ipq5018.c                     |   2 +-
+>  drivers/net/phy/qcom/Kconfig                       |   2 +-
+>  drivers/net/phy/qcom/at803x.c                      | 221 ++++++++++++++++++++-
+>  5 files changed, 287 insertions(+), 12 deletions(-)
 > ---
-> base-commit: 13c9c6eabf033ed4f369ad4d29bdc58ed4a411e3
-> change-id: 20250525-dts-8eca0cb6dfae
+> base-commit: ebfff09f63e3efb6b75b0328b3536d3ce0e26565
+> change-id: 20250430-ipq5018-ge-phy-db654afa4ced
 > 
 > Best regards,
 > --
-> Willie Thai <wthai@nvidia.com>
+> George Moussalem <george.moussalem@outlook.com>
 > 
 > 
 > 
@@ -95,33 +116,19 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: using specified base-commit 13c9c6eabf033ed4f369ad4d29bdc58ed4a411e3
+ Base: base-commit ebfff09f63e3efb6b75b0328b3536d3ce0e26565 not known, ignoring
+ Base: attempting to guess base-commit...
+ Base: remotes/arm-soc/qcom/dt64-11-g43fefd6c7129 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250525-dts-v1-0-9ac63ad3bf15@nvidia.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com:
 
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@200 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@280 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@300 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c-mux@74 (nxp,pca9546): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/i2c-mux-pca954x.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c-mux@74 (nxp,pca9546): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/i2c-mux-pca954x.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@380 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@480 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@500 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@780 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dtb: i2c@800 (aspeed,ast2600-i2c-bus): Unevaluated properties are not allowed ('vcc-supply' was unexpected)
-	from schema $id: http://devicetree.org/schemas/i2c/aspeed,i2c.yaml#
+arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dtb: ethernet-phy@7: clocks: [[7, 36], [7, 37]] is too long
+	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: ethernet-phy@7: clocks: [[7, 36], [7, 37]] is too long
+	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
 
 
 
