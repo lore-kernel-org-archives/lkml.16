@@ -1,277 +1,291 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4D11EF080
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAACC120
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748338223; cv=none; b=QgyNYO2+cHmcNl53I5fLikVYdjOl9YqG6CwwnQLAE365WKhM7bbpIGbV5TArvuDjFi2nvBUbqDqzh1ar5RVWRiY6H4rSUeK4K8vXXdziqUpMVnVgCC1k6tsUAawmJ8Huo+vsy5Iw0LNghpckJI5Tcqb7XpDY49SpzT0up+3Ytdc=
+	t=1748338281; cv=none; b=qzjpcBWgzwOFvxMD8V6ZHZEQxdW3tgkxBEBiKzpKzALEdV9WXq+V43IF1/Y3x32UsHIvFaiBLEIIBzEf+eDAId7yK8YGwrVobqo69T4ydMIgLnN7bYDzXy3KfVXGca4+jk9H3jQ/kFse3793IdPNgCO7L3qyLgve8EvjnbN8pkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748338223; c=relaxed/simple;
-	bh=sB9xR3cKKWn4f7IDdazNBd8ovkMqjRc0juOL1gZ3NyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jwwbaQvC4pwGwheqLmLWfzs3yLiImTdPpmyi6lvYM0UF+r/ywXXjqqUlzguTeMoI1szX/AwUFWR6rLNyHX57zqOWlP4Vf/anfM36xr5XOVYKdiA9evdm3sELPuPzitiw08jTa+zTZdpLD2Bm3JbFO6eAvaqwymhXNww6Pf30ceg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WL9qwxY3; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748338281; c=relaxed/simple;
+	bh=mpK1CrRH8Iaqa/Ff0mAx6cLKBU+OYet/+uo3FaCNQoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B8/Sk/ZrzLX4t+WiK6200sLLA32PMz/vnRTKPTMSPBdTJ9K8dxV08jg8/Y8rLNEER4JjRc0WKp/NLfBrLOxYQDS0KUy28QUq6QXLVv5ij9owZ9+FzgMJy1QqDVsmX/W9asaw1KHqKxPrbjmMYCg6quqUCO9F/EQWY6sWtY25O94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMM3jiit; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WL9qwxY3"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54R9TnLi1777039;
-	Tue, 27 May 2025 04:29:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748338189;
-	bh=ieQsVkqgTPNVC6qcp5sh7wlGb2uHgPAdxT9ELF8P2rs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=WL9qwxY3VunOl8MypxEGbPG5qUanOgcsrPzumT4DzdwwV2pJmCTaFr88XmmLq4wdK
-	 68n0YSQPvA+idOYRMEsjaObP5Y3IFO2KNtYBwoQT+dcgm1biiYeZGen22S15Jjde+m
-	 XZMbh0ZlSsFF/P658av5rYe2gnA86Q5xLTppkvNs=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54R9TmMi2773008
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 27 May 2025 04:29:48 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
- May 2025 04:29:47 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 27 May 2025 04:29:47 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54R9Tdg83274135;
-	Tue, 27 May 2025 04:29:40 -0500
-Message-ID: <493afc6c-59a0-4f6b-9a9e-568dd2eff873@ti.com>
-Date: Tue, 27 May 2025 14:59:39 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMM3jiit"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52dbcd398f9so2036294e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:31:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748338277; x=1748943077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=97+T8oC1dJwTDjXMcPA6pmXDbFR9V/YrjWwp0CCMtPs=;
+        b=jMM3jiitHRbg8Ly6pMy1oYEO28FvhJ7hCfK/siEhiN8CDfYr6IrsHHkNbJx4bCJyKw
+         31ryi4YVgcDxKZQbbxV9TCGi0nwg8hITZf6H5ZZiSSa2q9nTaQERDmgsfPz8ffT09oJO
+         Hy+lL5PGfj++gDdJ/PoNnweJ4DeJTG8sxRFkmzddc9qbLUIjZAhLXIuiAn+CZvRcJxd4
+         7N5WS6OkVnq/WkgxaG9DM2fGR4lOvukioPt2pX7RAFedWPsgraJ3ncZ9OJtr06Bp/Its
+         DB7t/NXzauiy46fb16JbN5Gnd+lq/YPaY1LLWV/MVCIrfvZaAQ5C3/9savT75O837tPI
+         djxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748338277; x=1748943077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=97+T8oC1dJwTDjXMcPA6pmXDbFR9V/YrjWwp0CCMtPs=;
+        b=Tgg1HvN4gfborp+iR+loSDoyJGPzEyD9UMR9CaeWbet8+rc+Q8jOeFJfJ6nwV8Vj52
+         9ua9y9ziipFpJvVR0KF/a8Crv90AGOopVl7z6VwZcB0rq+BTxJfEVEGzra7HLgbKB3Wl
+         vReVM5YdEj2lpNEMpRs8EfgQ4+BgExfBBxBHcOKfL1G98ByaSxbp79vDbSyBevhjWTKz
+         /11sgs/niOcRgXyly1+LovAlIgSpWSCxSO57X185nenGhLzut7vDZ8LhZkyQPPXN9BG5
+         zcc+26Ii1Y1yr0R7t8qhNsHKelKEITQXSP/m+25X/tB59Mn4HDjdNBmp5LicrwdkhbeX
+         Lpsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwpOAiUfITtVPeZaj9tRnR4GXatDvszmIQE822mZSo0K792opgGTrpyxuJpPiXAi/NovozyGznBcllJk4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsOcwimjXGdJWpgUujzuOqr+cQqCk5/Qe01jUzia01sDigq807
+	yLNBkPqI33YbKCTIWGh7rHXKBb1nXwhoNBGNeJ90LdAnEkdDJOfatUIlsyFulOvXXtChKlp9mIt
+	3zPL4ysEYdWTYC/15dQBwJfzf9S3qJso=
+X-Gm-Gg: ASbGnct6JHaRcamkHwCMUQKbA1+b8s1glB+lXn0fAkLNxK92jGaj4yQ73DfcLijpi8c
+	s0shR079/0ATGz7GR/ki+RSJLkd6UXExyYQP+HGvwAhHqYKHtzaZn3oMuTbHu7zoSAr1wHLABZS
+	I8v3WaA473zcwdMxR+KdKlNhL4EWgqvfWR9Q==
+X-Google-Smtp-Source: AGHT+IEC6n+Jh7ll5RCcHL45yLJ31qkJq1Ed59X8Pjk9iz0BDBVctTKK8vDXycYmqs2PwBOWNrsQClc91os9m+niJt0=
+X-Received: by 2002:a05:6122:2223:b0:526:23d2:6ecd with SMTP id
+ 71dfb90a1353d-52f2c025fe4mr8566706e0c.6.1748338277002; Tue, 27 May 2025
+ 02:31:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/3] drm/bridge: cadence: cdns-mhdp8546*: Change
- drm_connector from pointer to structure
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <lumag@kernel.org>, <jani.nikula@intel.com>, <andy.yan@rock-chips.com>,
-        <mordan@ispras.ru>, <linux@treblig.org>, <viro@zeniv.linux.org.uk>,
-        <yamonkar@cadence.com>, <sjakhade@cadence.com>,
-        <quentin.schulz@free-electrons.com>, <jsarha@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>,
-        <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <alexander.stein@ew.tq-group.com>
-References: <20250521073237.366463-1-j-choudhary@ti.com>
- <20250521073237.366463-3-j-choudhary@ti.com>
- <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <CAGsJ_4zOhNBe9b1m1LYaJbFur3TdLma+2EXbc=BhAToDeLfvAg@mail.gmail.com>
+ <20250527083722.27309-1-21cnbao@gmail.com> <bcc5cbb6-4ce6-4c01-8b5b-f6e01b306b2d@redhat.com>
+In-Reply-To: <bcc5cbb6-4ce6-4c01-8b5b-f6e01b306b2d@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 27 May 2025 17:31:05 +0800
+X-Gm-Features: AX0GCFu2pfGa-TJu0at63iJrzVFoQlxp_JxZP5wS7HpNUnTLtTCvgDB2o3KhtmA
+Message-ID: <CAGsJ_4xQ4-bszHNi=0QDCqsap+0WdfU9_u8ftaMuKCuNcn8RYA@mail.gmail.com>
+Subject: Re: [BUG]userfaultfd_move fails to move a folio when swap-in occurs
+ concurrently with swap-out
+To: David Hildenbrand <david@redhat.com>
+Cc: aarcange@redhat.com, akpm@linux-foundation.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lokeshgidra@google.com, 
+	peterx@redhat.com, ryncsn@gmail.com, surenb@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Tomi,
+On Tue, May 27, 2025 at 5:00=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 27.05.25 10:37, Barry Song wrote:
+> > On Tue, May 27, 2025 at 4:17=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
+wrote:
+> >>
+> >> On Tue, May 27, 2025 at 12:39=E2=80=AFAM David Hildenbrand <david@redh=
+at.com> wrote:
+> >>>
+> >>> On 23.05.25 01:23, Barry Song wrote:
+> >>>> Hi All,
+> >>>
+> >>> Hi!
+> >>>
+> >>>>
+> >>>> I'm encountering another bug that can be easily reproduced using the=
+ small
+> >>>> program below[1], which performs swap-out and swap-in in parallel.
+> >>>>
+> >>>> The issue occurs when a folio is being swapped out while it is acces=
+sed
+> >>>> concurrently. In this case, do_swap_page() handles the access. Howev=
+er,
+> >>>> because the folio is under writeback, do_swap_page() completely remo=
+ves
+> >>>> its exclusive attribute.
+> >>>>
+> >>>> do_swap_page:
+> >>>>                  } else if (exclusive && folio_test_writeback(folio)=
+ &&
+> >>>>                             data_race(si->flags & SWP_STABLE_WRITES)=
+) {
+> >>>>                           ...
+> >>>>                           exclusive =3D false;
+> >>>>
+> >>>> As a result, userfaultfd_move() will return -EBUSY, even though the
+> >>>> folio is not shared and is in fact exclusively owned.
+> >>>>
+> >>>>                           folio =3D vm_normal_folio(src_vma, src_add=
+r,
+> >>>> orig_src_pte);
+> >>>>                           if (!folio || !PageAnonExclusive(&folio->p=
+age)) {
+> >>>>                                   spin_unlock(src_ptl);
+> >>>> +                               pr_err("%s %d folio:%lx exclusive:%d
+> >>>> swapcache:%d\n",
+> >>>> +                                       __func__, __LINE__, folio,
+> >>>> PageAnonExclusive(&folio->page),
+> >>>> +                                       folio_test_swapcache(folio))=
+;
+> >>>>                                   err =3D -EBUSY;
+> >>>>                                   goto out;
+> >>>>                           }
+> >>>>
+> >>>> I understand that shared folios should not be moved. However, in thi=
+s
+> >>>> case, the folio is not shared, yet its exclusive flag is not set.
+> >>>>
+> >>>> Therefore, I believe PageAnonExclusive is not a reliable indicator o=
+f
+> >>>> whether a folio is truly exclusive to a process.
+> >>>
+> >>> It is. The flag *not* being set is not a reliable indicator whether i=
+t
+> >>> is really shared. ;)
+> >>>
+> >>> The reason why we have this PAE workaround (dropping the flag) in pla=
+ce
+> >>> is because the page must not be written to (SWP_STABLE_WRITES). CoW
+> >>> reuse is not possible.
+> >>>
+> >>> uffd moving that page -- and in that same process setting it writable=
+,
+> >>> see move_present_pte()->pte_mkwrite() -- would be very bad.
+> >>
+> >> An alternative approach is to make the folio writable only when we are
+> >> reasonably certain it is exclusive; otherwise, it remains read-only. I=
+f the
+> >> destination is later written to and the folio has become exclusive, it=
+ can
+> >> be reused directly. If not, a copy-on-write will occur on the destinat=
+ion
+> >> address, transparently to userspace. This avoids Lokesh=E2=80=99s user=
+space-based
+> >> strategy, which requires forcing a write to the source address.
+> >
+> > Conceptually, I mean something like this:
+> >
+> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > index bc473ad21202..70eaabf4f1a3 100644
+> > --- a/mm/userfaultfd.c
+> > +++ b/mm/userfaultfd.c
+> > @@ -1047,7 +1047,8 @@ static int move_present_pte(struct mm_struct *mm,
+> >       }
+> >       if (folio_test_large(src_folio) ||
+> >           folio_maybe_dma_pinned(src_folio) ||
+> > -         !PageAnonExclusive(&src_folio->page)) {
+> > +         (!PageAnonExclusive(&src_folio->page) &&
+> > +         folio_mapcount(src_folio) !=3D 1)) {
+> >               err =3D -EBUSY;
+> >               goto out;
+> >       }
+> > @@ -1070,7 +1071,8 @@ static int move_present_pte(struct mm_struct *mm,
+> >   #endif
+> >       if (pte_dirty(orig_src_pte))
+> >               orig_dst_pte =3D pte_mkdirty(orig_dst_pte);
+> > -     orig_dst_pte =3D pte_mkwrite(orig_dst_pte, dst_vma);
+> > +     if (PageAnonExclusive(&src_folio->page))
+> > +             orig_dst_pte =3D pte_mkwrite(orig_dst_pte, dst_vma);
+> >
+> >       set_pte_at(mm, dst_addr, dst_pte, orig_dst_pte);
+> >   out:
+> > @@ -1268,7 +1270,8 @@ static int move_pages_pte(struct mm_struct *mm, p=
+md_t *dst_pmd, pmd_t *src_pmd,
+> >                       }
+> >
+> >                       folio =3D vm_normal_folio(src_vma, src_addr, orig=
+_src_pte);
+> > -                     if (!folio || !PageAnonExclusive(&folio->page)) {
+> > +                     if (!folio || (!PageAnonExclusive(&folio->page) &=
+&
+> > +                                     folio_mapcount(folio) !=3D 1)) {
+> >                               spin_unlock(src_ptl);
+> >                               err =3D -EBUSY;
+> >                               goto out;
+> >
+> > I'm not trying to push this approach=E2=80=94unless Lokesh clearly sees=
+ that it
+> > could reduce userspace noise. I'm mainly just curious how we might make
+> > the fixup transparent to userspace. :-)
+>
+> And that reveals the exact problem: it's all *very* complicated. :)
+>
+> ... and dangerous when we use the mapcount without having a complete
+> understanding how it all works.
+>
+>
+> What we would have to do for a small folio is
+>
+> 1) Take the folio lock
+>
+> 2) Make sure there is only this present page table mapping:
+>         folio_mapcount(folio) !=3D 1
+>
+>         of better
+>
+>         !folio_maybe_mapped_shared(folio);
+>
+> 3) Make sure that there are no swap references
+>
+>         If in the swapcache, check the actual swapcount
+>
+> 3) Make sure it is not a KSM folio
+>
+>
+> THPs are way, way, way more complicated to get right that way. Likely,
+> the scenario described above cannot happen with a PMD-mapped THP for now
+> at least (we don't have PMD swap entries).
 
-On 27/05/25 13:28, Tomi Valkeinen wrote:
-> Hi,
-> 
-> On 21/05/2025 10:32, Jayesh Choudhary wrote:
->> After adding DBANC framework, mhdp->connector is not initialised during
->> bridge calls. But the asyncronous work scheduled depends on the connector.
->> We cannot get to drm_atomic_state in these asyncronous calls running on
->> worker threads. So we need to store the data that we need in mhdp bridge
->> structure.
->> Like other bridge drivers, use drm_connector pointer instead of structure
->> and make appropriate changes to the conditionals and assignments related
->> to mhdp->connector.
->> Also, in the atomic enable call, move the connector  and connector state
->> calls above, so that we do have a connector before we can retry the
->> asyncronous work in case of any failure.
->>
-> 
-> I don't quite understand this patch. You change the mhdp->connector to a
-> pointer, which is set at bridge_enable and cleared at bridge_disable.
-> Then you change the "mhdp->connector.dev" checks to "mhdp->connector".
-> 
-> So, now in e.g. cdns_mhdp_fw_cb(), we check for mhdp->connector, which
-> is set at bridge_enable(). Can we ever have the bridge enabled before
-> the fb has been loaded? What is the check even supposed to do there?
-> 
-> Another in cdns_mhdp_hpd_work(), it checks for mhdp->connector. So...
-> HPD code behaves differently based on if the bridge has been enabled or
-> not? What is it supposed to do?
-> 
-> Isn't the whole "if (mhdp->connector.dev)" code for the legacy
-> non-DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
-> 
->   Tomi
+Yeah, this can get really complicated.
 
-I misinterpreted your comment in v1[0] regarding finding the connector
-from the current state in cdns_mhdp_modeset_retry_fn() and I missed
-this. I was more focused on finding a connector for that function.
+>
+>
+> Of course, we'd then also have to handle the case when we have a swap
+> pte where the marker is not set (e.g., because of swapout after the
+> described swapin where we dropped the marker).
+>
+>
+> What could be easier is triggering a FAULT_FLAG_UNSHARE fault. It's
+> arguably less optimal in case the core will decide to swapin / CoW, but
+> it leaves the magic to get all this right to the core -- and mimics the
+> approach Lokesh uses.
+>
+> But then, maybe letting userspace just do a uffdio_copy would be even
+> faster (only a single TLB shootdown?).
+>
+>
+> I am also skeptical of calling this a BUG here. It's described to behave
+> exactly like that [1]:
+>
+>         EBUSY
+>                The pages in the source virtual memory range are either
+>                pinned or not exclusive to the process. The kernel might
+>                only perform lightweight checks for detecting whether the
+>                pages are exclusive. To make the operation more likely to
+>                succeed, KSM should be disabled, fork() should be avoided
+>                or MADV_DONTFORK should be configured for the source
+>               virtual memory area before fork().
+>
+> Note the "lightweight" and "more likely to succeed".
+>
 
-For the current code, in all the conditionals involving mhdp->connector,
-we are entering else statements as connector is not initialised.
-So I will just drop if statements in cdns_mhdp_fw_cb() and
-cdns_mhdp_hpd_work() (like you said, its legacy case) while still having
-mhdp->connector as pointer as we need it for
-cdns_mhdp_modeset_retry_fn() and in cdns-mhdp8546-hdcp driver.
+Initially, my point was that an exclusive folio (single-process case)
+should be movable.
+Now I understand this isn=E2=80=99t a bug, but rather a compromise made due
+to implementation constraints.
+Perhaps the remaining value of this report is that it helped better
+understand scenarios beyond fork where a move might also fail.
 
-That should be okay?
+I truly appreciate your time and your clear analysis.
 
-[0]: 
-https://lore.kernel.org/all/e76f94b9-b138-46e7-bb18-b33dd98c9abb@ideasonboard.com/
+>
+> [1] https://lore.kernel.org/lkml/20231206103702.3873743-3-surenb@google.c=
+om/
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
 
-Warm Regards,
-Jayesh
-
-
-> 
->> Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546 DPI/DP bridge")
->> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->> ---
->>   .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 28 +++++++++----------
->>   .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  2 +-
->>   .../drm/bridge/cadence/cdns-mhdp8546-hdcp.c   |  8 +++---
->>   3 files changed, 19 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->> index 66bd916c2fe9..5388e62f230b 100644
->> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->> @@ -740,7 +740,7 @@ static void cdns_mhdp_fw_cb(const struct firmware *fw, void *context)
->>   	bridge_attached = mhdp->bridge_attached;
->>   	spin_unlock(&mhdp->start_lock);
->>   	if (bridge_attached) {
->> -		if (mhdp->connector.dev)
->> +		if (mhdp->connector)
->>   			drm_kms_helper_hotplug_event(mhdp->bridge.dev);
->>   		else
->>   			drm_bridge_hpd_notify(&mhdp->bridge, cdns_mhdp_detect(mhdp));
->> @@ -1759,17 +1759,25 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
->>   	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
->>   	struct cdns_mhdp_bridge_state *mhdp_state;
->>   	struct drm_crtc_state *crtc_state;
->> -	struct drm_connector *connector;
->>   	struct drm_connector_state *conn_state;
->>   	struct drm_bridge_state *new_state;
->>   	const struct drm_display_mode *mode;
->>   	u32 resp;
->> -	int ret;
->> +	int ret = 0;
->>   
->>   	dev_dbg(mhdp->dev, "bridge enable\n");
->>   
->>   	mutex_lock(&mhdp->link_mutex);
->>   
->> +	mhdp->connector = drm_atomic_get_new_connector_for_encoder(state,
->> +								   bridge->encoder);
->> +	if (WARN_ON(!mhdp->connector))
->> +		goto out;
->> +
->> +	conn_state = drm_atomic_get_new_connector_state(state, mhdp->connector);
->> +	if (WARN_ON(!conn_state))
->> +		goto out;
->> +
->>   	if (mhdp->plugged && !mhdp->link_up) {
->>   		ret = cdns_mhdp_link_up(mhdp);
->>   		if (ret < 0)
->> @@ -1789,15 +1797,6 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
->>   	cdns_mhdp_reg_write(mhdp, CDNS_DPTX_CAR,
->>   			    resp | CDNS_VIF_CLK_EN | CDNS_VIF_CLK_RSTN);
->>   
->> -	connector = drm_atomic_get_new_connector_for_encoder(state,
->> -							     bridge->encoder);
->> -	if (WARN_ON(!connector))
->> -		goto out;
->> -
->> -	conn_state = drm_atomic_get_new_connector_state(state, connector);
->> -	if (WARN_ON(!conn_state))
->> -		goto out;
->> -
->>   	if (mhdp->hdcp_supported &&
->>   	    mhdp->hw_state == MHDP_HW_READY &&
->>   	    conn_state->content_protection ==
->> @@ -1857,6 +1856,7 @@ static void cdns_mhdp_atomic_disable(struct drm_bridge *bridge,
->>   		cdns_mhdp_hdcp_disable(mhdp);
->>   
->>   	mhdp->bridge_enabled = false;
->> +	mhdp->connector = NULL;
->>   	cdns_mhdp_reg_read(mhdp, CDNS_DP_FRAMER_GLOBAL_CONFIG, &resp);
->>   	resp &= ~CDNS_DP_FRAMER_EN;
->>   	resp |= CDNS_DP_NO_VIDEO_MODE;
->> @@ -2157,7 +2157,7 @@ static void cdns_mhdp_modeset_retry_fn(struct work_struct *work)
->>   
->>   	mhdp = container_of(work, typeof(*mhdp), modeset_retry_work);
->>   
->> -	conn = &mhdp->connector;
->> +	conn = mhdp->connector;
->>   
->>   	/* Grab the locks before changing connector property */
->>   	mutex_lock(&conn->dev->mode_config.mutex);
->> @@ -2234,7 +2234,7 @@ static void cdns_mhdp_hpd_work(struct work_struct *work)
->>   	int ret;
->>   
->>   	ret = cdns_mhdp_update_link_status(mhdp);
->> -	if (mhdp->connector.dev) {
->> +	if (mhdp->connector) {
->>   		if (ret < 0)
->>   			schedule_work(&mhdp->modeset_retry_work);
->>   		else
->> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->> index bad2fc0c7306..b297db53ba28 100644
->> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->> @@ -375,7 +375,7 @@ struct cdns_mhdp_device {
->>   	 */
->>   	struct mutex link_mutex;
->>   
->> -	struct drm_connector connector;
->> +	struct drm_connector *connector;
->>   	struct drm_bridge bridge;
->>   
->>   	struct cdns_mhdp_link link;
->> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->> index 42248f179b69..59f18c3281ef 100644
->> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->> @@ -394,7 +394,7 @@ static int _cdns_mhdp_hdcp_disable(struct cdns_mhdp_device *mhdp)
->>   	int ret;
->>   
->>   	dev_dbg(mhdp->dev, "[%s:%d] HDCP is being disabled...\n",
->> -		mhdp->connector.name, mhdp->connector.base.id);
->> +		mhdp->connector->name, mhdp->connector->base.id);
->>   
->>   	ret = cdns_mhdp_hdcp_set_config(mhdp, 0, false);
->>   
->> @@ -445,7 +445,7 @@ static int cdns_mhdp_hdcp_check_link(struct cdns_mhdp_device *mhdp)
->>   
->>   	dev_err(mhdp->dev,
->>   		"[%s:%d] HDCP link failed, retrying authentication\n",
->> -		mhdp->connector.name, mhdp->connector.base.id);
->> +		mhdp->connector->name, mhdp->connector->base.id);
->>   
->>   	ret = _cdns_mhdp_hdcp_disable(mhdp);
->>   	if (ret) {
->> @@ -487,13 +487,13 @@ static void cdns_mhdp_hdcp_prop_work(struct work_struct *work)
->>   	struct cdns_mhdp_device *mhdp = container_of(hdcp,
->>   						     struct cdns_mhdp_device,
->>   						     hdcp);
->> -	struct drm_device *dev = mhdp->connector.dev;
->> +	struct drm_device *dev = mhdp->connector->dev;
->>   	struct drm_connector_state *state;
->>   
->>   	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
->>   	mutex_lock(&mhdp->hdcp.mutex);
->>   	if (mhdp->hdcp.value != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
->> -		state = mhdp->connector.state;
->> +		state = mhdp->connector->state;
->>   		state->content_protection = mhdp->hdcp.value;
->>   	}
->>   	mutex_unlock(&mhdp->hdcp.mutex);
-> 
+Thanks
+Barry
