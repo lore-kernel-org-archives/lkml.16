@@ -1,362 +1,1316 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B652A27A115
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B68E2CCC0;
+	Tue, 27 May 2025 15:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748358709; cv=none; b=IxzTa59/ZFixFk9QehkgjfA5yZujp+yfa5eO5JxOBmrs3gAkTx2wD5RoRUz1D9hvnIVbnXq6mYMAA2WmBq7oKLZI8R4Z0JbhbMiT0tiXStnvJIkdvg7Cwz4GrI1ObDE9tfpS3drulvGnm2bhrOQrOfuLYxsy0RbtW2nk1xLxLfU=
+	t=1748358708; cv=none; b=Xe3XKnFm6bMK2H/n2TM3ms9+gt9w3Yd4ZpI5qQ0HM89iom/p0LctVA6f2oregd4B8wt4jLbdpQ0sPSoFQE6VHbPxQKvKe2dctSUAH4pC9ZjqOwlBNJ47u+FjSe3nRPB9j/Lmc8p6+uhIyyEuAeq5I6sPPq7ZnDO+VAtWPhRuLmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748358709; c=relaxed/simple;
-	bh=oiiiRFNxb+7JpAk7E7jgwreuGk5SzlvfHw0WkaPkBAQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X+nCcHPC4PP8Jw5C9FqaTGmxrXybGA8KonFg4Y3sp1D6/W/N+n7aBlMah3RcNFqoNgCf34DUgALPQjoTWoLkP/6y+dHE5JJWb/acA9hyW2QgHXj1jfGPuZvizh5uv2UX+XkxcXKYJsLA9jmE5kHIm7cs9ZW5I6uIjKgvh+WVAkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TpqdAmvD; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1748358708; c=relaxed/simple;
+	bh=Y5wlsoSBQunTnFC85obaJQSrdY6/Xkr1RdkKh7V62xQ=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=CprN/oWBCNVOi70hRECtkXb18YGuUcrEPd2lmGbfPwrs4eGGNALBNPFy1tNWJx+AK3ViGcDlj5sp+qO+Et1iINKuaxk/zJYKXKq0Nlyx9xgBrQhJyDe2AG4D9fUGR4O0L131E6glzChMq+vd5R0TfDiQVnJMTwK6rAtxdRyOw24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QacmPm2a; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TpqdAmvD"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553245cad29so2089931e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:11:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QacmPm2a"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-74264d1832eso3749678b3a.0;
+        Tue, 27 May 2025 08:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748358706; x=1748963506; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h56XKNtyXyta3lZZ70PXL6/fM382B+6dMGx8vne5QvA=;
-        b=TpqdAmvDNS59zcvPpso6mbF7wLOTc8IIwwiC8Nqqmv0pYmHOXSs73mtQTKpCI66El/
-         YaAaRdU89JEoxPoOmdXq/mSjChhkVkhUDPebV/HvFZvrV2o8R5QhXf4Pqs8oobg4Clmc
-         mv9SeDR20uyRi9V0So1ATKlC6lyDOf3x/yvElIQ0wD9pxRe/pb7aICyISQGM9BMrZ6Lv
-         L3VwkfcZjtisJZXufExi25R/FBmijp1o3Lp9HftUpbN737ZtjIQfWo3mnFwB7P6gdeKv
-         ekfqt00E2HnUFuAjPzBcG0Qzn+Uhz7WTwZnage2WNRsMWoL9VKqVRm7Qe9IHhOBsXuln
-         gwFA==
+        d=gmail.com; s=20230601; t=1748358705; x=1748963505; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=s/zZxhUMAhRzEM6++0tybHHtC+aZmo0QSBVuMgAtDQ0=;
+        b=QacmPm2alwx4jzxteUIPdg7WMUwiZYPo1E+nXg67Ymrx9fptxJd2ygUXrEq2ZEpcJf
+         tN6owvfXPubimZkM2o5P/gSy8DLQ8qZlyMbImlcu6zul0+cf8LaCg5jm3AjPRic0n7ch
+         xQXKyFyE1GEl7t3s2rS0O0sexkNYaDMlB5LHaf2yaibvO5/Bh63RGpOamm5WVDcv5DcN
+         nNB5vU1JkfJmx9mDdh9+3fJ+1DH+X8NagBfDHKwUurzikiqprIESwUHnJSoUC/BeOoB+
+         3w0Up984QiF17Lf6vAxrhrq/CWSFUmoQ5CYMAP1GWi/x7y+78H1T44JH305i/+xt/7gh
+         uGQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748358706; x=1748963506;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h56XKNtyXyta3lZZ70PXL6/fM382B+6dMGx8vne5QvA=;
-        b=TFncFQ4apOYzzgpxaq7iiDMahvRi7J4l2giqr/Xh2swsLTyKc8zNZLtUvn6Z62BtW1
-         FZK1LpYvL34k7WQSy4oWduKEBD98CjX0FSeCr3hJ/MwlHXwMFQ9eClbDNPRbj1+KIJ9Z
-         PKi5mJvi84OE454yynqVXyhpA7hRI7PgE099id+9zgtNrwFnr6KcjPogsIeXmyvxmwyf
-         oGJzSZf126qbUzO7zp9kWgdjjlP03ARco7yp3sJq4Hni6Pl2y7JBIVmzxY9fM01ueLLt
-         SKST9Qd0z1GpMr7SkRJJjzIAgKjkAuUAecjLkOoD5BMaduyqKPX+Cogbn/1+G0yY5Vu6
-         d75A==
-X-Forwarded-Encrypted: i=1; AJvYcCVZR12zwUJDVUKZj8PgnRzWIcEZTb40IWh44GLMP52rZ/4+kwTmV3+auUMR94nbG3JA1X9amGmwVkuKRBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfKJAyjs790i2/Knr9PQ1bkshs/Lb0CKQuOTcEM1ATmNVAQPCC
-	P6rx0QzQe9pOQoX1QKLAgeK/6XXBDgkZYred2C06PHCXp2zYRDRp864WvAwFaLaLfhx0fEu0r3l
-	171WT3FLwOa4+vEFswaa2g35ezskXgqk=
-X-Gm-Gg: ASbGncufj5Fqn/wOZse+2H1VtBqCJ87pnlvDdmcTZ1VZLPIVNj4tZ5ODSYa9qQI/O8p
-	Ih+ddK30pacc0MU0zuNe/qq+2uUZaxc1CvnvB195qWCHCyWsg815RWHvQdKp8HtooeSwJnNpCYS
-	4455b9HK4VXCpWpfbuC77iYDzhgzt/0z2b
-X-Google-Smtp-Source: AGHT+IFj/rnJCQCIWxhAi6iORfvdK9JLWNWyS0gII8ApwLnDzqbhGsh597o2ylDtcd0y3t4VEbA/04I+0x+ATzvuuRw=
-X-Received: by 2002:a05:6512:318e:b0:553:202e:a405 with SMTP id
- 2adb3069b0e04-553202ea4a3mr2714050e87.0.1748358705329; Tue, 27 May 2025
- 08:11:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748358705; x=1748963505;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:date
+         :subject:cc:to:from:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s/zZxhUMAhRzEM6++0tybHHtC+aZmo0QSBVuMgAtDQ0=;
+        b=arbayDAPIAFFnv/CUKig+sjN2BnZfGR6sOQd3budE93clY+S+Zwd/rY9+m4U7Ujnnd
+         y3nFCs8GKINwFxtIuAXToKP3PLLi9xb+s3QOYv6VK3IbIj9IagVMpHnfuBhTAguPB5ca
+         1p5HFpGA127Tkv3slD4CD3Y16HVTXv1SW7Qn/0OJZTP+IPkTazoMrnFOz36Hkh3L0f7O
+         bAV2wT4+pahaTrISF223xOWk32S5W0cJX+XX443abqQ4/4yRS4+7mkpA0aKxZ9GJoPDY
+         NI1aumqsmXDivmwvDFMQdt+VRbJBI/t9m25pyO141mQMOCubWom+65zIG2YGeT1KbMBx
+         k1Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCVg0ibPt7fwwYlpbpVxIy1FSfXzPX5O9Pxm9RlzWVbyBvjXairsKUxbJXAk/T4KkYFB7utKbNuo6ZB2JUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4vqfXI7H2PDFqdZe45MMkGu42ia3P5pzehaLIGg9Qas4uJRc4
+	fx+khaZdaxliDYoYxlt1o5qp2sbmJE/2dUhei82H6yozkbw9fZadS6MD
+X-Gm-Gg: ASbGncvEjrK/a2asM9ul45ScnDLnSzxIzAIjBZp2Vba2LMQFcD9IkJS8rrTIkseh2qC
+	V5Jubjly967JFbgQdhpmKClftJasMGp939bCHeOeEPJxVPPhwaMRSNY/MPY0TPZXWaxFlastqV/
+	z25GIDYYZ7zdA7K3CE2Syq9kzn6Q6UYRg7tBgdoumZzDiZjGup/59sK786U4TR4ABncDWrjLK1c
+	I9txbChqvT335VJ6pROvnMrCjkvyzEp9N/2bmCuJh3oW38ksbXEtnKwMvNS0jBSOC8py184KRVy
+	YN+sbK574OInq8XwZYj5n59AX9yaAv7O6/Hr+s0sEKcQ+LlyapJVcvDD++3I1VZbEVj/CrAmLcR
+	NuhxiPfs=
+X-Google-Smtp-Source: AGHT+IEB5lBt+vtM1U0NyGhzXTHDf3hJKfmsAuwOcmYnhWVXUf7G9KyqycmScDRASJBntEw+iw1kgQ==
+X-Received: by 2002:a05:6a00:3910:b0:736:5e6f:295b with SMTP id d2e1a72fcca58-745fdf4b8bbmr19863394b3a.12.1748358705189;
+        Tue, 27 May 2025 08:11:45 -0700 (PDT)
+Received: from dea88b1475bb.. (125-227-29-20.hinet-ip.hinet.net. [125.227.29.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74629861739sm1235583b3a.150.2025.05.27.08.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 08:11:44 -0700 (PDT)
+Message-ID: <6835d630.a70a0220.20aa5f.8f87@mx.google.com>
+X-Google-Original-Message-ID: <20250527151121.2815373-1-LeoWang>
+From: leo.jt.wang@gmail.com
+X-Google-Original-From: LeoWang
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	george.kw.lee@fii-foxconn.com,
+	leo.jt.wang@fii-foxconn.com
+Subject: [PATCH v4 2/2] ARM: dts: aspeed: clemente: add Meta Clemente BMC
+Date: Tue, 27 May 2025 23:11:11 +0800
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <c5e16072-e6de-4256-b0e2-3b45e420f0c4@kernel.org>
+References: <c5e16072-e6de-4256-b0e2-3b45e420f0c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
- <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
- <CAGsJ_4wC5_YSMLNoY5q4hUsZTpD+YPHSBtzCAdWRFH65EJA_iw@mail.gmail.com>
- <CAMgjq7AO__8TFE8ibwQswWmmf4tTGg2NBEJp0aEn32vN+Dy8uw@mail.gmail.com>
- <CAGsJ_4z1cJfOCcpZDt4EuHK7+SON1r0ptRJNv1h=cDv+eOcdSQ@mail.gmail.com>
- <CAMgjq7CJ4_9bB=46TVzByFRuOwxNs4da=sN==x8cc++YsV+ETQ@mail.gmail.com>
- <CAGsJ_4wo6u1WSXdzj8RUUDNdk5_YCfLV_mcJtvhiv2UonXw+nw@mail.gmail.com>
- <CAMgjq7Bc0-eXZ8G=bN8bo2NG1ndtPmCUvxCi0bdM+HdqmOjaPQ@mail.gmail.com> <CAGsJ_4ymRwXhQdzabstHhkK0OM0JEWtvR3tjeyQppm7sKZ8FUw@mail.gmail.com>
-In-Reply-To: <CAGsJ_4ymRwXhQdzabstHhkK0OM0JEWtvR3tjeyQppm7sKZ8FUw@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 27 May 2025 23:11:28 +0800
-X-Gm-Features: AX0GCFsywKHdweAQpsq3ezsHZo1lW50RhNthF4TuGvSdOh8qQZEIpIMulnqV3qg
-Message-ID: <CAMgjq7B1K=6OOrK2OUZ0-tqCzi+EJt+2_K97TPGoSt=9+JwP7Q@mail.gmail.com>
-Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Baoquan He <bhe@redhat.com>, Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Hugh Dickins <hughd@google.com>, 
-	Kalesh Singh <kaleshsingh@google.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-mm <linux-mm@kvack.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Tim Chen <tim.c.chen@linux.intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	"Huang, Ying" <ying.huang@linux.alibaba.com>, Yosry Ahmed <yosryahmed@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 27, 2025 at 3:59=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrot=
-e:
->
-> On Sat, May 24, 2025 at 8:01=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wr=
-ote:
-> >
-> > On Fri, May 23, 2025 at 10:30=E2=80=AFAM Barry Song <21cnbao@gmail.com>=
- wrote:
-> > >
-> > > On Wed, May 21, 2025 at 2:45=E2=80=AFPM Kairui Song <ryncsn@gmail.com=
-> wrote:
-> > > >
-> > > > Barry Song <21cnbao@gmail.com> =E4=BA=8E 2025=E5=B9=B45=E6=9C=8821=
-=E6=97=A5=E5=91=A8=E4=B8=89 06:33=E5=86=99=E9=81=93=EF=BC=9A
-> > > > > Let me run test case [1] to check whether this ever happens. I gu=
-ess I need to
-> > > > > hack kernel a bit to always add folio to swapcache even for SYNC =
-IO.
-> > > >
-> > > > That will cause quite a performance regression I think. Good thing =
-is,
-> > > > that's exactly the problem this series is solving by dropping the S=
-YNC
-> > > > IO swapin path and never bypassing the swap cache, while improving =
-the
-> > > > performance, eliminating things like this. One more reason to justi=
-fy
-> > > > the approach :)
-> >
-> > Hi Barry,
-> >
-> > >
-> > > I attempted to reproduce the scenario where a folio is added to the s=
-wapcache
-> > > after filemap_get_folio() returns NULL but before move_swap_pte()
-> > > moves the swap PTE
-> > > using non-synchronized I/O. Technically, this seems possible; however=
-,
-> > > I was unable
-> > > to reproduce it, likely because the time window between swapin_readah=
-ead and
-> > > taking the page table lock within do_swap_page() is too short.
-> >
-> > Thank you so much for trying this!
-> >
-> > I have been trying to reproduce it too, and so far I didn't observe
-> > any crash or warn. I added following debug code:
-> >
-> >  static __always_inline
-> >  bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long ds=
-t_end)
-> > @@ -1163,6 +1167,7 @@ static int move_pages_pte(struct mm_struct *mm,
-> > pmd_t *dst_pmd, pmd_t *src_pmd,
-> >         pmd_t dummy_pmdval;
-> >         pmd_t dst_pmdval;
-> >         struct folio *src_folio =3D NULL;
-> > +       struct folio *tmp_folio =3D NULL;
-> >         struct anon_vma *src_anon_vma =3D NULL;
-> >         struct mmu_notifier_range range;
-> >         int err =3D 0;
-> > @@ -1391,6 +1396,15 @@ static int move_pages_pte(struct mm_struct *mm,
-> > pmd_t *dst_pmd, pmd_t *src_pmd,
-> >                 if (!src_folio)
-> >                         folio =3D filemap_get_folio(swap_address_space(=
-entry),
-> >                                         swap_cache_index(entry));
-> > +               udelay(get_random_u32_below(1000));
-> > +               tmp_folio =3D filemap_get_folio(swap_address_space(entr=
-y),
-> > +                                       swap_cache_index(entry));
-> > +               if (!IS_ERR_OR_NULL(tmp_folio)) {
-> > +                       if (!IS_ERR_OR_NULL(folio) && tmp_folio !=3D fo=
-lio) {
-> > +                               pr_err("UFFDIO_MOVE: UNSTABLE folio
-> > %lx (%lx) -> %lx (%lx)\n", folio, folio->swap.val, tmp_folio,
-> > tmp_folio->swap.val);
-> > +                       }
-> > +                       folio_put(tmp_folio);
-> > +               }
-> >                 if (!IS_ERR_OR_NULL(folio)) {
-> >                         if (folio_test_large(folio)) {
-> >                                 err =3D -EBUSY;
-> > @@ -1413,6 +1427,8 @@ static int move_pages_pte(struct mm_struct *mm,
-> > pmd_t *dst_pmd, pmd_t *src_pmd,
-> >                 err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr,
-> > dst_pte, src_pte,
-> >                                 orig_dst_pte, orig_src_pte, dst_pmd, ds=
-t_pmdval,
-> >                                 dst_ptl, src_ptl, src_folio);
-> > +               if (tmp_folio !=3D folio && !err)
-> > +                       pr_err("UFFDIO_MOVE: UNSTABLE folio passed
-> > check: %lx -> %lx\n", folio, tmp_folio);
-> >         }
-> >
-> > And I saw these two prints are getting triggered like this (not a real
-> > issue though, just help to understand the problem)
-> > ...
-> > [ 3127.632791] UFFDIO_MOVE: UNSTABLE folio fffffdffc334cd00 (0) ->
-> > fffffdffc7ccac80 (51)
-> > [ 3172.033269] UFFDIO_MOVE: UNSTABLE folio fffffdffc343bb40 (0) ->
-> > fffffdffc3435e00 (3b)
-> > [ 3194.425213] UFFDIO_MOVE: UNSTABLE folio fffffdffc7d481c0 (0) ->
-> > fffffdffc34ab8c0 (76)
-> > [ 3194.991318] UFFDIO_MOVE: UNSTABLE folio fffffdffc34f95c0 (0) ->
-> > fffffdffc34ab8c0 (6d)
-> > [ 3203.467212] UFFDIO_MOVE: UNSTABLE folio fffffdffc34b13c0 (0) ->
-> > fffffdffc34eda80 (32)
-> > [ 3206.217820] UFFDIO_MOVE: UNSTABLE folio fffffdffc7d297c0 (0) ->
-> > fffffdffc38cedc0 (b)
-> > [ 3214.913039] UFFDIO_MOVE: UNSTABLE folio passed check: 0 -> fffffdffc=
-34db140
-> > [ 3217.066972] UFFDIO_MOVE: UNSTABLE folio fffffdffc342b5c0 (0) ->
-> > fffffdffc3465cc0 (21)
-> > ...
-> >
-> > The "UFFDIO_MOVE: UNSTABLE folio fffffdffc3435180 (0) ->
-> > fffffdffc3853540 (53)" worries me at first. On first look it seems the
-> > folio is indeed freed completely from the swap cache after the first
-> > lookup, so another swapout can reuse the entry. But as you mentioned
-> > __remove_mapping won't release a folio if the refcount check fails, so
-> > they must be freed by folio_free_swap or __try_to_reclaim_swap, there
-> > are many places that can happen. But these two helpers won't free a
-> > folio from swap cache if its swap count is not zero. And the folio
-> > will either be swapped out (swap count non zero), or mapped (freeing
-> > it is fine, PTE is non_swap, and another swapout will still use the
-> > same folio).
-> >
-> > So after more investigation and dumping the pages, it's actually the
-> > second lookup (tmp_folio) seeing the entry being reused by another
-> > page table entry, after the first folio is swapped back and released.
-> > So the page table check below will always fail just fine.
-> >
-> > But this also proves the first look up can see a completely irrelevant
-> > folio too: If the src folio is swapped out, but got swapped back and
-> > freed, then another folio B shortly got added to swap cache reuse the
-> > src folio's old swap entry, then the folio B got seen by the look up
-> > here and get freed from swap cache, then src folio got swapped out
-> > again also reusing the same entry, then we have a problem as PTE seems
-> > untouched indeed but we grabbed a wrong folio. Seems possible if I'm
-> > not wrong:
-> >
-> > Something like this:
-> > CPU1                             CPU2
-> > move_pages_pte
-> >   entry =3D pte_to_swp_entry(orig_src_pte);
-> >     | Got Swap Entry S1 from src_pte
-> >   ...
-> >                                  <swapin src_pte, using folio A>
->
-> I=E2=80=99m assuming you mean `<swapin src_pte, using folio B>`, since I=
-=E2=80=99m not
-> sure where folio B comes from in the statement `<someone else tried to
-> swap out folio B>`.
->
-> If that assumption is correct, and folio A is still in the swapcache,
-> how could someone swap in folio B without hitting folio A? That would
-> suggest folio A must have been removed from the swapcache earlier=E2=80=
-=94right?
->
-> >                                  <free folio A from swap cache freeing =
-S1>
-> >                                  <someone else try swap out folio B >
+From: Leo Wang <leo.jt.wang@fii-foxconn.com>
 
-Sorry my bad, I think I made people think folio B is related to
-src_pte at this point. What I actually mean is that: Another random
-folio B, unrelated to src_pte, could got swapped out, and using the
-swap entry S1.
+Add linux device tree entry for Meta Clemente compute-tray
+BMC using AST2600 SoC.
 
-> >                                  <put folio B to swap cache using S1 >
-> >                                 ...
-> >   folio =3D swap_cache_get_folio(S1)
-> >     | Got folio B here !!!
-> >   move_swap_pte
-> >                                  <free folio B from swap cache>
-> >                                    | Holding a reference doesn't pin th=
-e cache
-> >                                    | as we have demonstrated
-> >                                  <Swapout folio A also using S1>
-> >     double_pt_lock
-> >     is_pte_pages_stable
-> >       | Passed because of S1 is reused
-> >     folio_move_anon_rmap(...)
-> >       | Moved invalid folio B here !!!
-> >
-> > But this is extremely hard to reproduce though, even if doing it
-> > deliberately...
-> >
-> > So I think a "folio_swap_contains" or equivalent check here is a good
-> > thing to have, to make it more robust and easier to understand. The
-> > checking after locking a folio has very tiny overhead and can
-> > definitely ensure the folio's swap entry is valid and stable.
-> >
-> > The "UFFDIO_MOVE: UNSTABLE folio passed check: 0 -> fffffdffc385fb00"
-> > here might seem problematic, but it's still not a real problem. That's
-> > the case where the swapin in src region happens after the lookup, and
-> > before the PTE lock. It will pass the PTE check without moving the
-> > folio. But the folio is guaranteed to be a completely new folio here
-> > because the folio can't be added back to the page table without
-> > holding the PTE lock, and if that happens the following PTE check here
-> > will fail.
-> >
-> > So I think we should patch the current kernel only adding a
-> > "folio_swap_contains" equivalent check here, and maybe more comments,
-> > how do you think?
->
-> The description appears to have some inconsistencies.
-> Would you mind rephrasing it?
+Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+---
+ arch/arm/boot/dts/aspeed/Makefile             |    1 +
+ .../aspeed/aspeed-bmc-facebook-clemente.dts   | 1195 +++++++++++++++++
+ 2 files changed, 1196 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
 
-Yeah, let's ignore the "UFFDIO_MOVE: UNSTABLE folio passed check: 0 ->
-fffffdffc385fb00" part first, as both you and me have come into a
-conclusion that "filemap_get_folio() returns NULL before
-move_swap_pte, but a folio was added to swap cache" is OK, and this
-output only proves that happens.
+diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+index b3170fdd3096..9d0a465cbb36 100644
+--- a/arch/arm/boot/dts/aspeed/Makefile
++++ b/arch/arm/boot/dts/aspeed/Makefile
+@@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-delta-ahe50dc.dtb \
+ 	aspeed-bmc-facebook-bletchley.dtb \
+ 	aspeed-bmc-facebook-catalina.dtb \
++	aspeed-bmc-facebook-clemente.dtb \
+ 	aspeed-bmc-facebook-cmm.dtb \
+ 	aspeed-bmc-facebook-elbert.dtb \
+ 	aspeed-bmc-facebook-fuji.dtb \
+diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+new file mode 100644
+index 000000000000..63b5a13214f1
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+@@ -0,0 +1,1195 @@
++// SPDX-License-Identifier: GPL-2.0+
++// Copyright (c) 2021 Facebook Inc.
++/dts-v1/;
++
++#include "aspeed-g6.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++#include <dt-bindings/usb/pd.h>
++#include <dt-bindings/leds/leds-pca955x.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/i2c/i2c.h>
++
++/ {
++	model = "Facebook Clemente BMC";
++	compatible = "facebook,clemente-bmc", "aspeed,ast2600";
++
++	aliases {
++		serial0 = &uart1;
++		serial2 = &uart3;
++		serial3 = &uart4;
++		serial4 = &uart5;
++		i2c16 = &i2c1mux0ch0;
++		i2c17 = &i2c1mux0ch1;
++		i2c18 = &i2c1mux0ch2;
++		i2c19 = &i2c1mux0ch3;
++		i2c20 = &i2c1mux0ch4;
++		i2c21 = &i2c1mux0ch5;
++		i2c22 = &i2c1mux0ch6;
++		i2c23 = &i2c1mux0ch7;
++		i2c24 = &i2c0mux0ch0;
++		i2c25 = &i2c0mux0ch1;
++		i2c26 = &i2c0mux0ch2;
++		i2c27 = &i2c0mux0ch3;
++		i2c28 = &i2c0mux1ch0;
++		i2c29 = &i2c0mux1ch1;
++		i2c30 = &i2c0mux1ch2;
++		i2c31 = &i2c0mux1ch3;
++		i2c32 = &i2c0mux2ch0;
++		i2c33 = &i2c0mux2ch1;
++		i2c34 = &i2c0mux2ch2;
++		i2c35 = &i2c0mux2ch3;
++		i2c36 = &i2c0mux3ch0;
++		i2c37 = &i2c0mux3ch1;
++		i2c38 = &i2c0mux3ch2;
++		i2c39 = &i2c0mux3ch3;
++		i2c40 = &i2c0mux4ch0;
++		i2c41 = &i2c0mux4ch1;
++		i2c42 = &i2c0mux4ch2;
++		i2c43 = &i2c0mux4ch3;
++		i2c44 = &i2c0mux5ch0;
++		i2c45 = &i2c0mux5ch1;
++		i2c46 = &i2c0mux5ch2;
++		i2c47 = &i2c0mux5ch3;
++		i2c48 = &i2c12mux0ch0;
++		i2c49 = &i2c12mux0ch1;
++		i2c50 = &i2c12mux0ch2;
++		i2c51 = &i2c12mux0ch3;
++		i2c52 = &i2c12mux0ch4;
++		i2c53 = &i2c12mux0ch5;
++		i2c54 = &i2c12mux0ch6;
++		i2c55 = &i2c12mux0ch7;
++	};
++
++	chosen {
++		stdout-path = "serial4:57600n8";
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x80000000>;
++	};
++
++	iio-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc0 0>, <&adc0 1>, <&adc0 2>, <&adc0 3>,
++			      <&adc0 4>, <&adc0 5>, <&adc0 6>, <&adc0 7>,
++			      <&adc1 2>;
++	};
++
++	spi1_gpio: spi {
++		compatible = "spi-gpio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		sck-gpios = <&gpio0 ASPEED_GPIO(Z, 3) GPIO_ACTIVE_HIGH>;
++		mosi-gpios = <&gpio0 ASPEED_GPIO(Z, 4) GPIO_ACTIVE_HIGH>;
++		miso-gpios = <&gpio0 ASPEED_GPIO(Z, 5) GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&gpio0 ASPEED_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
++		num-chipselects = <1>;
++
++		tpm@0 {
++			compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
++			spi-max-frequency = <33000000>;
++			reg = <0>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led-0 {
++			label = "bmc_heartbeat_amber";
++			gpios = <&gpio0 ASPEED_GPIO(P, 7) GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++		};
++
++		led-1 {
++			label = "fp_id_amber";
++			default-state = "off";
++			gpios = <&gpio0 ASPEED_GPIO(B, 5) GPIO_ACTIVE_HIGH>;
++		};
++
++		led-2 {
++			label = "bmc_ready_noled";
++			gpios = <&gpio0 ASPEED_GPIO(B, 3) (GPIO_ACTIVE_HIGH|GPIO_TRANSITORY)>;
++		};
++
++		led-3 {
++			label = "bmc_ready_cpld_noled";
++			gpios = <&gpio0 ASPEED_GPIO(P, 5) (GPIO_ACTIVE_HIGH|GPIO_TRANSITORY)>;
++		};
++	};
++
++	p1v8_bmc_aux: regulator-p1v8-bmc-aux {
++		compatible = "regulator-fixed";
++		regulator-name = "p1v8_bmc_aux";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	p2v5_bmc_aux: regulator-p2v5-bmc-aux {
++		compatible = "regulator-fixed";
++		regulator-name = "p2v5_bmc_aux";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		regulator-always-on;
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@b3e00000 {
++			compatible = "ramoops";
++			reg = <0xbb000000 0x200000>; /* 16 * (4 * 0x8000) */
++			record-size = <0x8000>;
++			console-size = <0x8000>;
++			ftrace-size = <0x8000>;
++			pmsg-size = <0x8000>;
++			max-reason = <3>;
++		};
++	};
++
++};
++
++&udma {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&uart4 {
++	status = "okay";
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&mac2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ncsi3_default>;
++	use-ncsi;
++};
++
++&mac3 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ncsi4_default>;
++	use-ncsi;
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "bmc";
++		spi-max-frequency = <50000000>;
++#include "openbmc-flash-layout-128.dtsi"
++	};
++	flash@1 {
++		status = "okay";
++		m25p,fast-read;
++		label = "alt-bmc";
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&i2c0 {
++	status = "okay";
++
++	i2c-mux@71 {
++		compatible = "nxp,pca9546";
++		reg = <0x71>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c0mux0ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			// IOB0 NIC0 TEMP
++			temperature-sensor@1f {
++				compatible = "ti,tmp421";
++				reg = <0x1f>;
++			};
++		};
++		i2c0mux0ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++		i2c0mux0ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++
++			// IOB0 NIC1 TEMP
++			temperature-sensor@1f {
++				compatible = "ti,tmp421";
++				reg = <0x1f>;
++			};
++		};
++		i2c0mux0ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++
++	i2c-mux@72 {
++		compatible = "nxp,pca9546";
++		reg = <0x72>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c0mux1ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++		i2c0mux1ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			// IO Mezz 0 IOEXP
++			io_expander7: gpio@21 {
++				compatible = "nxp,pca9535";
++				reg = <0x21>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++
++			// IO Mezz 0 FRU EEPROM
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++		};
++		i2c0mux1ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++		i2c0mux1ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++
++	i2c-mux@73 {
++		compatible = "nxp,pca9546";
++		reg = <0x73>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c0mux2ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++		i2c0mux2ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++		i2c0mux2ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++		i2c0mux2ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++
++	i2c-mux@75 {
++		compatible = "nxp,pca9546";
++		reg = <0x75>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c0mux3ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			// IOB1 NIC0 TEMP
++			temperature-sensor@1f {
++				compatible = "ti,tmp421";
++				reg = <0x1f>;
++			};
++		};
++		i2c0mux3ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++		i2c0mux3ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++
++			// IOB1 NIC1 TEMP
++			temperature-sensor@1f {
++				compatible = "ti,tmp421";
++				reg = <0x1f>;
++			};
++		};
++		i2c0mux3ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++
++	i2c-mux@76 {
++		compatible = "nxp,pca9546";
++		reg = <0x76>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c0mux4ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++		i2c0mux4ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			// IO Mezz 1 IOEXP
++			io_expander8: gpio@21 {
++				compatible = "nxp,pca9535";
++				reg = <0x21>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++
++			// IO Mezz 1 FRU EEPROM
++			eeprom@50 {
++				compatible = "atmel,24c64";
++				reg = <0x50>;
++			};
++		};
++		i2c0mux4ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++		i2c0mux4ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++
++	i2c-mux@77 {
++		compatible = "nxp,pca9546";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c0mux5ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++		i2c0mux5ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++		i2c0mux5ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++		i2c0mux5ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++	};
++};
++
++&i2c1 {
++	status = "okay";
++
++	// HSC
++	power-monitor@12 {
++		compatible = "ti,lm5066i";
++		reg = <0x12>;
++	};
++
++	// HSC
++	power-monitor@14 {
++		compatible = "ti,lm5066i";
++		reg = <0x14>;
++	};
++
++	// HSC TEMP SENSOR
++	temperature-sensor@4a {
++		compatible = "ti,tmp461";
++		reg = <0x4a>;
++	};
++
++	// HSC FRU EEPROM
++	eeprom@53 {
++		compatible = "atmel,24c02";
++		reg = <0x53>;
++	};
++
++	// CPU0 Leak sensor MAX1363
++	Leak-sensor@34 {
++		compatible = "maxim,max1363";
++		reg = <0x34>;
++	};
++
++	// CPU1 Leak sensor MAX1363
++	Leak-sensor@35 {
++		compatible = "maxim,max1363";
++		reg = <0x35>;
++	};
++
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9548";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x70>;
++		i2c-mux-idle-disconnect;
++
++		i2c1mux0ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0>;
++
++			power-sensor@22 {
++				compatible = "mps,mp5990";
++				reg = <0x22>;
++			};
++		};
++		i2c1mux0ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x1>;
++		};
++		i2c1mux0ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x2>;
++
++			fanctl0: fan-controller@21{
++				compatible = "maxim,max31790";
++				reg = <0x21>;
++			};
++			fanctl1: fan-controller@27{
++				compatible = "maxim,max31790";
++				reg = <0x27>;
++			};
++		};
++		i2c1mux0ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++		};
++		i2c1mux0ch4: i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x4>;
++		};
++		i2c1mux0ch5: i2c@5 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x5>;
++
++			// PDB FRU EEPROM
++			eeprom@54 {
++				compatible = "atmel,24c64";
++				reg = <0x54>;
++			};
++
++			// PDB TEMP SENSOR
++			temperature-sensor@4f {
++				compatible = "ti,tmp75";
++				reg = <0x4f>;
++			};
++		};
++		i2c1mux0ch6: i2c@6 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x6>;
++
++			// PDB IOEXP
++			io_expander5: gpio@27 {
++				compatible = "nxp,pca9554";
++				reg = <0x27>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++
++			// OSFP IOEXP
++			io_expander6: gpio@25 {
++				compatible = "nxp,pca9555";
++				reg = <0x25>;
++				gpio-controller;
++				#gpio-cells = <2>;
++			};
++
++			// OSFP FRU EEPROM
++			eeprom@51 {
++				compatible = "atmel,24c64";
++				reg = <0x51>;
++			};
++		};
++		i2c1mux0ch7: i2c@7 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x7>;
++
++			// FIO FRU EEPROM
++			eeprom@51 {
++				compatible = "atmel,24c64";
++				reg = <0x51>;
++			};
++
++			// FIO TEMP SENSOR
++			temperature-sensor@4b {
++				compatible = "ti,tmp75";
++				reg = <0x4b>;
++			};
++		};
++	};
++};
++
++&i2c2 {
++	status = "okay";
++
++	// Module 0, Expander @0x20
++	io_expander0: gpio@20 {
++		compatible = "nxp,pca9555";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// Module 1, Expander @0x21
++	io_expander1: gpio@21 {
++		compatible = "nxp,pca9555";
++		reg = <0x21>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// HMC Expander @0x27
++	io_expander2: gpio@27 {
++		compatible = "nxp,pca9555";
++		reg = <0x27>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// HMC Expander @0x74
++	io_expander3: gpio@74 {
++		compatible = "nxp,pca9555";
++		reg = <0x74>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// Module 0 Aux EEPROM
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	// Module 1 Aux EEPROM
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++	};
++};
++
++&i2c3 {
++	status = "okay";
++
++};
++
++&i2c4 {
++	status = "okay";
++};
++
++&i2c5 {
++	status = "okay";
++};
++
++&i2c6 {
++	status = "okay";
++
++	rtc@6f {
++		compatible = "nuvoton,nct3018y";
++		reg = <0x6f>;
++	};
++
++	// Interposer board EEPROM
++	eeprom@51 {
++		compatible = "atmel,24c64";
++		reg = <0x51>;
++	};
++};
++
++&i2c7 {
++	status = "okay";
++};
++
++&i2c8 {
++	status = "okay";
++};
++
++&i2c9 {
++	status = "okay";
++
++	// SCM CPLD IOEXP
++	io_expander4: gpio@4f {
++		compatible = "nxp,pca9555";
++		reg = <0x4f>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// SCM TEMP SENSOR BOARD
++	temperature-sensor@4b {
++		compatible = "national,lm75b";
++		reg = <0x4b>;
++	};
++
++	// SCM FRU EEPROM
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++
++	// BSM FRU EEPROM
++	eeprom@56 {
++		compatible = "atmel,24c64";
++		reg = <0x56>;
++	};
++};
++
++&i2c10 {
++	status = "okay";
++
++	// OCP NIC0 TEMP
++	temperature-sensor@1f {
++		compatible = "ti,tmp421";
++		reg = <0x1f>;
++	};
++
++	// OCP NIC0 FRU EEPROM
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++};
++
++&i2c11 {
++	status = "okay";
++
++	ssif-bmc@10 {
++		compatible = "ssif-bmc";
++		reg = <0x10>;
++	};
++};
++
++&i2c12 {
++	status = "okay";
++	multi-master;
++
++	i2c-mux@70 {
++		compatible = "nxp,pca9548";
++		reg = <0x70>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
++
++		i2c12mux0ch0: i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++		};
++		i2c12mux0ch1: i2c@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++		};
++		i2c12mux0ch2: i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <2>;
++		};
++		i2c12mux0ch3: i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <3>;
++		};
++		i2c12mux0ch4: i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <4>;
++		};
++		i2c12mux0ch5: i2c@5 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <5>;
++		};
++		i2c12mux0ch6: i2c@6 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <6>;
++			// HDD FRU EEPROM
++			eeprom@56 {
++				compatible = "atmel,24c64";
++				reg = <0x56>;
++			};
++		};
++		i2c12mux0ch7: i2c@7 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <7>;
++		};
++	};
++};
++
++&i2c13 {
++	status = "okay";
++	multi-master;
++
++	// HPM FRU EEPROM
++	eeprom@50 {
++		compatible = "atmel,24c64";
++		reg = <0x50>;
++	};
++	// CBC 0 FRU
++	eeprom@54 {
++		compatible = "atmel,24c02";
++		reg = <0x54>;
++	};
++	// CBC 1 FRU
++	eeprom@55 {
++		compatible = "atmel,24c02";
++		reg = <0x55>;
++	};
++	// CBC 2 FRU
++	eeprom@56 {
++		compatible = "atmel,24c02";
++		reg = <0x56>;
++	};
++	// CBC 3 FRU
++	eeprom@58 {
++		compatible = "atmel,24c02";
++		reg = <0x58>;
++	};
++	// HMC FRU EEPROM
++	eeprom@57 {
++		compatible = "atmel,24c02";
++		reg = <0x57>;
++	};
++};
++
++&i2c14 {
++	status = "okay";
++
++	// PDB CPLD IOEXP 0x10
++	io_expander9: gpio@10 {
++		compatible = "nxp,pca9555";
++		interrupt-parent = <&gpio0>;
++		interrupts = <ASPEED_GPIO(I, 6) IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x10>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// PDB CPLD IOEXP 0x11
++	io_expander10: gpio@11 {
++		compatible = "nxp,pca9555";
++		interrupt-parent = <&gpio0>;
++		interrupts = <ASPEED_GPIO(I, 6) IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x11>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// PDB CPLD IOEXP 0x12
++	io_expander11: gpio@12 {
++		compatible = "nxp,pca9555";
++		interrupt-parent = <&gpio0>;
++		interrupts = <ASPEED_GPIO(I, 6) IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x12>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// PDB CPLD IOEXP 0x13
++	io_expander12: gpio@13 {
++		compatible = "nxp,pca9555";
++		interrupt-parent = <&gpio0>;
++		interrupts = <ASPEED_GPIO(I, 6) IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x13>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	// PDB CPLD IOEXP 0x14
++	io_expander13: gpio@14 {
++		compatible = "nxp,pca9555";
++		reg = <0x14>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++};
++
++&i2c15 {
++	status = "okay";
++
++	// OCP NIC1 TEMP
++	temperature-sensor@1f {
++		compatible = "ti,tmp421";
++		reg = <0x1f>;
++	};
++
++	// OCP NIC1 FRU EEPROM
++	eeprom@52 {
++		compatible = "atmel,24c64";
++		reg = <0x52>;
++	};
++};
++
++&adc0 {
++	vref-supply = <&p1v8_bmc_aux>;
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc0_default &pinctrl_adc1_default
++		&pinctrl_adc2_default &pinctrl_adc3_default
++		&pinctrl_adc4_default &pinctrl_adc5_default
++		&pinctrl_adc6_default &pinctrl_adc7_default>;
++};
++
++&adc1 {
++	vref-supply = <&p2v5_bmc_aux>;
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_adc10_default>;
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&wdt1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdtrst1_default>;
++	aspeed,reset-type = "soc";
++	aspeed,external-signal;
++	aspeed,ext-push-pull;
++	aspeed,ext-active-high;
++	aspeed,ext-pulse-duration = <256>;
++};
++
++&pinctrl {
++	pinctrl_ncsi3_default: ncsi3_default {
++		function = "RMII3";
++		groups = "NCSI3";
++	};
++
++	pinctrl_ncsi4_default: ncsi4_default {
++		function = "RMII4";
++		groups = "NCSI4";
++	};
++};
++
++&gpio0 {
++	gpio-line-names =
++	/*A0-A7*/	"","","","","","","","",
++	/*B0-B7*/	"BATTERY_DETECT","PRSNT1_HPM_SCM_N",
++			"BMC_I2C1_FPGA_ALERT_L","BMC_READY",
++			"IOEXP_INT_L","FM_ID_LED",
++			"","",
++	/*C0-C7*/	"BMC_GPIOC0","","","",
++			"PMBUS_REQ_N","PSU_FW_UPDATE_REQ_N",
++			"","BMC_I2C_SSIF_ALERT_L",
++	/*D0-D7*/	"","","","","BMC_GPIOD4","","","",
++	/*E0-E7*/	"BMC_GPIOE0","BMC_GPIOE1","","","","","","",
++	/*F0-F7*/	"","","","","","","","",
++	/*G0-G7*/	"","","","","","",
++			"FM_DEBUG_PORT_PRSNT_N","FM_BMC_DBP_PRESENT_N",
++	/*H0-H7*/	"PWR_BRAKE_L","RUN_POWER_EN",
++			"SHDN_FORCE_L","SHDN_REQ_L",
++			"","","","",
++	/*I0-I7*/	"","","","",
++			"","FLASH_WP_STATUS",
++			"FM_PDB_HEALTH_N","RUN_POWER_PG",
++	/*J0-J7*/	"","","","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"PCIE_EP_RST_EN","BMC_FRU_WP",
++			"SCM_HPM_STBY_RST_N","SCM_HPM_STBY_EN",
++			"STBY_POWER_PG_3V3","TH500_SHDN_OK_L","","",
++	/*N0-N7*/	"LED_POSTCODE_0","LED_POSTCODE_1",
++			"LED_POSTCODE_2","LED_POSTCODE_3",
++			"LED_POSTCODE_4","LED_POSTCODE_5",
++			"LED_POSTCODE_6","LED_POSTCODE_7",
++	/*O0-O7*/	"HMC_I2C3_FPGA_ALERT_L","FPGA_READY_HMC",
++			"CHASSIS_AC_LOSS_L","BSM_PRSNT_R_N",
++			"PSU_SMB_ALERT_L","FM_TPM_PRSNT_0_N",
++			"","USBDBG_IPMI_EN_L",
++	/*P0-P7*/	"PWR_BTN_BMC_N","IPEX_CABLE_PRSNT_L",
++			"ID_RST_BTN_BMC_N","RST_BMC_RSTBTN_OUT_N",
++			"host0-ready","BMC_READY_CPLD","BMC_GPIOP6","BMC_HEARTBEAT_N",
++	/*Q0-Q7*/	"IRQ_PCH_TPM_SPI_N","USB_OC0_REAR_R_N",
++			"UART_MUX_SEL","I2C_MUX_RESET_L",
++			"RSVD_NV_PLT_DETECT","SPI_TPM_INT_L",
++			"CPU_JTAG_MUX_SELECT","THERM_BB_OVERT_L",
++	/*R0-R7*/	"THERM_BB_WARN_L","SPI_BMC_FPGA_INT_L",
++			"CPU_BOOT_DONE","PMBUS_GNT_L",
++			"CHASSIS_PWR_BRK_L","PCIE_WAKE_L",
++			"PDB_THERM_OVERT_L","HMC_I2C2_FPGA_ALERT_L",
++	/*S0-S7*/	"","","SYS_BMC_PWRBTN_R_N","FM_TPM_PRSNT_1_N",
++			"FM_BMC_DEBUG_SW_N","UID_LED_N",
++			"SYS_FAULT_LED_N","RUN_POWER_FAULT_L",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"L2_RST_REQ_OUT_L","L0L1_RST_REQ_OUT_L",
++			"BMC_ID_BEEP_SEL","BMC_I2C0_FPGA_ALERT_L",
++			"SMB_BMC_TMP_ALERT","PWR_LED_N",
++			"SYS_RST_OUT_L","IRQ_TPM_SPI_N",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","RST_BMC_SELF_HW",
++			"FM_FLASH_LATCH_N","BMC_EMMC_RST_N",
++			"BMC_GPIOY4","BMC_GPIOY5","","",
++	/*Z0-Z7*/	"","","","","","","BMC_GPIOZ6","BMC_GPIOZ7";
++};
++
++&gpio1 {
++	gpio-line-names =
++	/*18A0-18A7*/	"","","","","","","","",
++	/*18B0-18B3*/	"","","","",
++	/*18B4-18B7*/	"FM_BOARD_BMC_REV_ID0","FM_BOARD_BMC_REV_ID1","FM_BOARD_BMC_REV_ID2","",
++	/*18C0-18C7*/	"","","PI_BMC_BIOS_ROM_IRQ0_N","","","","","",
++	/*18D0-18D7*/	"","","","","","","","",
++	/*18E0-18E3*/	"","","","AC_PWR_BMC_BTN_N","","","","";
++};
++
++&io_expander0 {
++	gpio-line-names =
++		"FPGA_THERM_OVERT_L-I",
++		"FPGA_READY_BMC-I",
++		"HMC_BMC_DETECT-O",
++		"HMC_PGOOD-O",
++		"",
++		"BMC_STBY_CYCLE-O",
++		"FPGA_EROT_FATAL_ERROR_L-I",
++		"WP_HW_EXT_CTRL_L-O",
++		"EROT_FPGA_RST_L-O",
++		"FPGA_EROT_RECOVERY_L-O",
++		"BMC_EROT_FPGA_SPI_MUX_SEL-O",
++		"USB2_HUB_RST_L-O",
++		"",
++		"SGPIO_EN_L-O",
++		"B2B_IOEXP_INT_L-I",
++		"I2C_BUS_MUX_RESET_L-O";
++};
++
++&io_expander1 {
++	gpio-line-names =
++		"USB_MUX_SEL_N-O",
++		"",
++		"MCIO_PCIE_DISABLE_L-O",
++		"USB_PCIE_DISABLE_L-O",
++		"PEX_SW_PCIE_DISABLE_L-O",
++		"HSC_CARD_PRSNT_N-I",
++		"TPM_MUX_3V3_SEL_OUT_N-O",
++		"USB2_HUB4_RST_L-O",
++		"PCI_MUX_SEL-O",
++		"TPM_MUX_SEL-O",
++		"IOEXP_BMC_PHY_RST_N-O",
++		"IOEXP_RTC_CLR_L-O",
++		"BMC_12V_CTRL-O",
++		"PS_RUN_IO0_PG-I",
++		"",
++		"";
++};
++
++&io_expander2 {
++	gpio-line-names =
++		"HMC_PRSNT_L-I",
++		"HMC_READY-I",
++		"HMC_EROT_FATAL_ERROR_L-I",
++		"I2C_MUX_SEL-O",
++		"HMC_EROT_SPI_MUX_SEL-O",
++		"HMC_EROT_RECOVERY_L-O",
++		"HMC_EROT_RST_L-O",
++		"GLOBAL_WP_HMC-O",
++		"FPGA_RST_L-O",
++		"USB2_HUB_RST-O",
++		"CPU_UART_MUX_SEL-O",
++		"",
++		"",
++		"",
++		"",
++		"";
++};
++
++&io_expander3 {
++	gpio-line-names =
++		"IOB_PRSNT_L",
++		"IOB_DP_HPD",
++		"IOX_BMC_RESET",
++		"IOB_IOEXP_INT_L",
++		"IOB_UID_LED_L",
++		"IOB_UID_BTN_L",
++		"IOB_SYS_RST_BTN_L",
++		"IOB_PWR_LED_L",
++		"IOB_PWR_BTN_L",
++		"IOB_PHY_RST",
++		"CPLD_JTAG_MUX_SEL",
++		"",
++		"",
++		"",
++		"",
++		"";
++};
++
++&io_expander4 {
++	gpio-line-names =
++		"stby_power_en_cpld","stby_power_gd_cpld","","",
++		"","","","",
++		"","","","",
++		"","","","";
++};
++
++&io_expander5 {
++	gpio-line-names =
++		"JTAG_MUX_SEL","IOX_BMC_RESET","RTC_CLR_L","RTC_U77_ALRT_N",
++		"","PSU_ALERT_N","","RST_P12V_STBY_N";
++};
++
++&io_expander6 {
++	gpio-line-names =
++		"OSFP_PHASE_ID0","OSFP_PHASE_ID1",
++		"OSFP_PHASE_ID2","OSFP_PHASE_ID3",
++		"","","","",
++		"OSFP_BOARD_ID0","OSFP_BOARD_ID1",
++		"OSFP_BOARD_ID2","PWRGD_P3V3_N1",
++		"PWRGD_P3V3_N2","","","";
++};
++
++&io_expander7 {
++	gpio-line-names =
++		"RST_CX7_0","RST_CX7_1",
++		"CX0_SSD0_PRSNT_L","CX1_SSD1_PRSNT_L",
++		"CX_BOOT_CMPLT_CX0","CX_BOOT_CMPLT_CX1",
++		"CX_TWARN_CX0_L","CX_TWARN_CX1_L",
++		"CX_OVT_SHDN_CX0","CX_OVT_SHDN_CX1",
++		"FNP_L_CX0","FNP_L_CX1",
++		"","MCU_GPIO","MCU_RST_N","MCU_RECOVERY_N";
++};
++
++&io_expander8 {
++	gpio-line-names =
++		"SEC_RST_CX7_0","SEC_RST_CX7_1",
++		"SEC_CX0_SSD0_PRSNT_L","SEC_CX1_SSD1_PRSNT_L",
++		"SEC_CX_BOOT_CMPLT_CX0","SEC_CX_BOOT_CMPLT_CX1",
++		"SEC_CX_TWARN_CX0_L","SEC_CX_TWARN_CX1_L",
++		"SEC_CX_OVT_SHDN_CX0","SEC_CX_OVT_SHDN_CX1",
++		"SEC_FNP_L_CX0","SEC_FNP_L_CX1",
++		"","SEC_MCU_GPIO","SEC_MCU_RST_N","SEC_MCU_RECOVERY_N";
++};
++
++&io_expander9 {
++	gpio-line-names =
++		"wSequence_Latch_State_N","wP12V_N1N2_RUNTIME_FLT_N",
++		"wP12V_FAN_RUNTIME_FLT_N","wP12V_AUX_RUNTIME_FLT_N",
++		"wHost_PERST_SEQPWR_FLT_N","wP12V_N1N2_SEQPWR_FLT_N",
++		"wP12V_FAN_SEQPWR_FLT_N","wP12V_AUX_SEQPWR_FLT_N",
++		"wP12V_RUNTIME_FLT_NIC1_N","wAUX_RUNTIME_FLT_NIC1_N",
++		"wP12V_SEQPWR_FLT_NIC1_N","wAUX_SEQPWR_FLT_NIC1_N",
++		"wP12V_RUNTIME_FLT_NIC0_N","wAUX_RUNTIME_FLT_NIC0_N",
++		"wP12V_SEQPWR_FLT_NIC0_N","wAUX_SEQPWR_FLT_NIC0_N";
++};
++
++&io_expander10 {
++	gpio-line-names =
++		"FM_P12V_NIC1_FLTB_R_N","FM_P3V3_NIC1_FAULT_R_N",
++		"FM_P12V_NIC0_FLTB_R_N","FM_P3V3_NIC0_FAULT_R_N",
++		"P48V_HS2_FAULT_N_PLD","P48V_HS1_FAULT_N_PLD",
++		"P12V_AUX_FAN_OC_PLD_N","P12V_AUX_FAN_FAULT_PLD_N",
++		"","",
++		"","",
++		"","FM_SYS_THROTTLE_N",
++		"OCP_V3_2_PWRBRK_FROM_HOST_ISO_PLD_N",
++		"OCP_SFF_PWRBRK_FROM_HOST_ISO_PLD_N";
++};
++
++&io_expander11 {
++	gpio-line-names =
++		"P12V_AUX_PSU_SMB_ALERT_R_L","P12V_SCM_SENSE_ALERT_R_N",
++		"P12V_AUX_NIC1_SENSE_ALERT_R_N","P12V_AUX_NIC0_SENSE_ALERT_R_N",
++		"NODEB_PSU_SMB_ALERT_R_L","NODEA_PSU_SMB_ALERT_R_L",
++		"P12V_AUX_FAN_ALERT_PLD_N","P52V_SENSE_ALERT_PLD_N",
++		"PRSNT_RJ45_FIO_N_R","FM_MAIN_PWREN_RMC_EN_ISO_R",
++		"CHASSIS3_LEAK_Q_N_PLD","CHASSIS2_LEAK_Q_N_PLD",
++		"CHASSIS1_LEAK_Q_N_PLD","CHASSIS0_LEAK_Q_N_PLD",
++		"","SMB_RJ45_FIO_TMP_ALERT";
++};
++
++&io_expander12 {
++	gpio-line-names =
++		"FAN_7_PRESENT_N","FAN_6_PRESENT_N",
++		"FAN_5_PRESENT_N","FAN_4_PRESENT_N",
++		"FAN_3_PRESENT_N","FAN_2_PRESENT_N",
++		"FAN_1_PRESENT_N","FAN_0_PRESENT_N",
++		"HP_LVC3_OCP_V3_2_PRSNT2_PLD_N","HP_LVC3_OCP_V3_1_PRSNT2_PLD_N",
++		"PRSNT_HDDBD_POWER_CABLE_N","PRSNT_OSFP0_POWER_CABLE_N",
++		"PRSNT_CHASSIS3_LEAK_CABLE_R_N","PRSNT_CHASSIS2_LEAK_CABLE_R_N",
++		"PRSNT_CHASSIS1_LEAK_CABLE_R_N","PRSNT_CHASSIS0_LEAK_CABLE_R_N";
++};
++
++&io_expander13 {
++	gpio-line-names =
++		"rmc_en_dc_pwr_on","",
++		"","",
++		"","",
++		"","",
++		"leak_config_0","leak_config_1",
++		"leak_config_2","leak_config_3",
++		"mfg_led_test_mode_l","small_leak_err_inj",
++		"large_leak_err_inj","";
++};
++
+-- 
+2.43.0
 
-So the problematic race is:
-
-Here move_pages_pte is moving src_pte to dst_pte, and it begins with
-src_pte =3D=3D swap entry S1, and S1 isn't cached.
-
-CPU1                             CPU2
-move_pages_pte()
-  entry =3D pte_to_swp_entry(orig_src_pte);
-    | src_pte is absent, and got entry =3D=3D S1
-  ... < Somehow interrupted> ...
-                                 <swapin src_pte, using folio A>
-                                   | folio A is just a new allocated folio
-                                   | for resolving the swap in fault.
-                                 <free folio A from swap cache freeing S1>
-                                   | swap in fault is resolved, src_pte
-                                   | now points to folio A, so folio A
-                                   | can get freed just fine.
-                                   | And now S1 is free to be used
-                                   | by anyone.
-                                 <someone else try swap out another folio B=
- >
-                                   | Folio B is a completely unrelated
-                                   | folio swapped out by random process.
-                                   | (has nothing to do with src_pte)
-                                   | But S1 is freed so it may use S1
-                                   | as its swap entry.
-                                 <put folio B to swap cache with index S1 >
-                                 ...
-  folio =3D filemap_get_folio(S1)
-    | The lookup is using S1, so it
-    | got folio B here !!!
-  ... < Somehow interrupted> ...
-                                 <free folio B from swap cache>
-                                   | Folio B could fail to be swapped out
-                                   | or got swapped in again, so it can
-                                   | be freed by folio_free_swap or
-                                   | swap cache reclaim.
-                                   | CPU1 is holding a reference but it
-                                   | doesn't pin the swap cache folio
-                                   | as I have demonstrated with the
-                                   | test C program previously.
-                                   | New S1 is free to be used again.
-                                 <Swapout src_pte again using S1>
-                                   | No thing blocks this from happening
-                                   | The swapout is still using folio A,
-                                   | and src_pte =3D=3D S1.
-  folio_trylock(folio)
-  move_swap_pte
-    double_pt_lock
-    is_pte_pages_stable
-      | Passed because of S1 is reused so src_pte =3D=3D S1.
-    folio_move_anon_rmap(...)
-      | Moved invalid folio B here !!!
-
-It's a long and complex one, I don't think it's practically possible
-to happen in reality but in theory doable, once in a million maybe...
-Still we have to fix it, or did I got anything wrong here?
-
->
-> Thanks
-> barry
