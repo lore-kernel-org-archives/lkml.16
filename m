@@ -1,362 +1,95 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5FB34685;
-	Tue, 27 May 2025 23:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE491D5145;
+	Tue, 27 May 2025 23:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748387793; cv=none; b=oaphIK4cPxgiaWxHbxzEFh7FAAMACaBPtFDMcWqQGpPnE432uhlJh8kRfY3mR+iLpNjqXWm9Wab6lOpFqo6j0ZPu6DaUY6haf4ADTINnAfcU/DOVzo0rMJF6JfB7k6jlx9ZrpEhLAAc6S1wloeb4ECjoAGCOteQtbb4i4MHH2aU=
+	t=1748387923; cv=none; b=nFqaLsQ7EOQ5dWha3mBGLjy7LbYKzhWn0SmFjf697LtL5diYugkIzLIYd30ajtf6CdpJknZnHPNoaXNaTo6Eom7z5NclzE74Z9i06vpraZ6DstJAU1cQPACK0COig9kD6FUGHLTe8YPaWwbFyNtsYnNCA0wfgqgHNuEwx0D3iG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748387793; c=relaxed/simple;
-	bh=bYv5bBnXe5jq3sCKCHXolk9ckEOf+qbxKazq/LNd/so=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=iy2oKWfvPFcoly3OgtD25zcTe+rdRHs9rbY+YXZVUPv94qyC4vblTEa4Dc0wMdsws4B053buXxjX9sLPv1ym88IFTtu9ujkqrrvo9y66DHQ7gWPEtg9J2pBRPFDIfZXXdwxRmelBehSRzpSmzndWXxOaJ0jb7kri9JHTO8CgE58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BvGIywBo; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748387923; c=relaxed/simple;
+	bh=6SsMt8kv8bB9+DxdMnJRB0CnbK4lJ2b+4OehbD0omzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBmCyrLu1lmqT788+Hbxgg5ewCGLbxN2kZHGTR4YBropZ356/cIHQFyWQuAAykCclsXt32/ICxHW7iCOBhSZO+T3xrRqGyeZJsfJ+tnbadZVdLZXdWggMc6vDiSoBswDYIWuWRgfYML8kRTXCrFrdo+b2nSMkemt3qzxg0YFHOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OIEzCcHs; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BvGIywBo"
-Received: by linux.microsoft.com (Postfix, from userid 1053)
-	id 47F692113A52; Tue, 27 May 2025 16:16:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 47F692113A52
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748387790;
-	bh=n8M9qIHJNQ3RxkQl0nP9VgtMED8e5NeLUSK+mZEwKug=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BvGIywBoCRgcCrUVBXQOBDuH3ue8vchpXWLVSh2CUEd+7L/77mqcGmHZBdHGtnd2o
-	 PJvTkTZ/nOQ7zNHpmQjzwHoGGQfEPcjyEBZWs/luUN0pO92eyMGSuXczKyvi4BhS3x
-	 MpLIN51meUjk+rHjRqnlJAZRDhmK1KjutRnRYk6k=
-From: Vijay Balakrishna <vijayb@linux.microsoft.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OIEzCcHs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=7uNa+E5E1Fz2rSYeLmBtivbWjxVm5r8CjbbWJNdovR8=; b=OIEzCcHshhevfPGrJRPuYwDYYn
+	8iXyQC76t4Wfu/2IX3lgZKMRkiDoqAs/Z1tBPRvonm6i8VnqjeaiLgkGQ1wc7ADu0v3YQLM7kOyv1
+	csS2sXr2Eeo/LDU/fGxaScGrLkt7OGh0RY0Ht5Ytipc70Je1ODGslRrGZ9OHqFjNsYY0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uK3Yz-00E7FI-Iu; Wed, 28 May 2025 01:18:29 +0200
+Date: Wed, 28 May 2025 01:18:29 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tyler Hicks <code@tyhicks.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>
-Subject: [v10 PATCH 1/2] EDAC: Add EDAC driver for ARM Cortex A72 cores
-Date: Tue, 27 May 2025 16:16:29 -0700
-Message-Id: <1748387790-20838-2-git-send-email-vijayb@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
-References: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next RFC PATCH 2/2] net: mdio: Add MDIO bus controller for
+ Airoha AN7583
+Message-ID: <922a7c99-8acf-4b88-8e1a-b7c952e50811@lunn.ch>
+References: <20250527213503.12010-1-ansuelsmth@gmail.com>
+ <20250527213503.12010-2-ansuelsmth@gmail.com>
+ <e289d26e-9453-45f5-bfa6-f53f9e4647af@lunn.ch>
+ <68363f34.050a0220.351f97.06f7@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68363f34.050a0220.351f97.06f7@mx.google.com>
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On Wed, May 28, 2025 at 12:39:45AM +0200, Christian Marangi wrote:
+> On Wed, May 28, 2025 at 12:36:46AM +0200, Andrew Lunn wrote:
+> > > +#define AN7583_MDIO_PHY				0xd4
+> > > +#define   AN7583_MDIO1_SPEED_MODE		BIT(11)
+> > > +#define   AN7583_MDIO0_SPEED_MODE		BIT(10)
+> > 
+> > Is there any documentation about what these bits do? The bus should
+> > default to 2.5Mhz.
+> >
+> 
+> No but I can ask. In theory tho these MDIO controller are used for 10g
+> or 2.5g PHY that all require a firmware to load so 2.5MHz makes the boot
+> time of 2+ minute.
+> 
+> The documentation say...
+> 
+> 1: fast mode
+> 0: normal mode
+> 
+> Very useful I guess :D
 
-The driver is designed to support error detection and reporting for
-Cortex A72 cores, specifically within their L1 and L2 cache systems.
-The errors are detected by reading CPU/L2 memory error syndrome
-registers.
+Can you put an oscilloscope on the clock line and measure it?
 
-Unfortunately there is no robust way to inject errors into the caches,
-so this driver doesn't contain any code to actually test it. It has
-been tested though with code taken from an older version [1] of this
-driver. For reasons stated in thread [1], the error injection code is
-not suitable for mainline, so it is removed from the driver.
+We have the DT property:
 
-[1] https://lore.kernel.org/all/1521073067-24348-1-git-send-email-york.sun@nxp.com/#t
+  clock-frequency:
+    description:
+      Desired MDIO bus clock frequency in Hz. Values greater than IEEE 802.3
+      defined 2.5MHz should only be used when all devices on the bus support
+      the given clock speed.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Co-developed-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
----
- MAINTAINERS             |   7 ++
- drivers/edac/Kconfig    |   8 ++
- drivers/edac/Makefile   |   1 +
- drivers/edac/edac_a72.c | 229 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 245 insertions(+)
- create mode 100644 drivers/edac/edac_a72.c
+It would be good to default to normal mode, but allow fast to be
+selected, once we know what it actually is.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..dac4692c10c8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8429,6 +8429,13 @@ F:	Documentation/driver-api/edac.rst
- F:	drivers/edac/
- F:	include/linux/edac.h
- 
-+EDAC-A72
-+M:	Vijay Balakrishna <vijayb@linux.microsoft.com>
-+M:	Tyler Hicks <code@tyhicks.com>
-+L:	linux-edac@vger.kernel.org
-+S:	Supported
-+F:	drivers/edac/edac_a72.c
-+
- EDAC-DMC520
- M:	Lei Wang <lewan@microsoft.com>
- L:	linux-edac@vger.kernel.org
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 19ad3c3b675d..b824472208c4 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -576,4 +576,12 @@ config EDAC_LOONGSON
- 	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
- 	  are compatible.
- 
-+config EDAC_CORTEX_A72
-+	tristate "ARM Cortex A72"
-+	depends on ARM64
-+	help
-+	  Support for L1/L2 cache error detection for ARM Cortex A72 processor.
-+	  The detected and reported errors are from reading CPU/L2 memory error
-+	  syndrome registers.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index a8f2d8f6c894..136416f43b44 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
- obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
-+obj-$(CONFIG_EDAC_CORTEX_A72)		+= edac_a72.o
-diff --git a/drivers/edac/edac_a72.c b/drivers/edac/edac_a72.c
-new file mode 100644
-index 000000000000..f23c28fba354
---- /dev/null
-+++ b/drivers/edac/edac_a72.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cortex A72 EDAC L1 and L2 cache error detection
-+ *
-+ * Copyright (c) 2020 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
-+ *
-+ * Based on Code from:
-+ * Copyright (c) 2018, NXP Semiconductor
-+ * Author: York Sun <york.sun@nxp.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/bitfield.h>
-+#include <asm/smp_plat.h>
-+
-+#include "edac_module.h"
-+
-+#define DRVNAME		"edac-a72"
-+
-+#define SYS_CPUMERRSR_EL1	sys_reg(3, 1, 15, 2, 2)
-+#define SYS_L2MERRSR_EL1	sys_reg(3, 1, 15, 2, 3)
-+
-+#define CPUMERRSR_EL1_RAMID		GENMASK(30, 24)
-+#define L2MERRSR_EL1_CPUID_WAY	GENMASK(21, 18)
-+
-+#define CPUMERRSR_EL1_VALID		BIT(31)
-+#define CPUMERRSR_EL1_FATAL		BIT(63)
-+#define L2MERRSR_EL1_VALID		BIT(31)
-+#define L2MERRSR_EL1_FATAL		BIT(63)
-+
-+#define L1_I_TAG_RAM	0x00
-+#define L1_I_DATA_RAM	0x01
-+#define L1_D_TAG_RAM	0x08
-+#define L1_D_DATA_RAM	0x09
-+#define TLB_RAM			0x18
-+
-+#define MESSAGE_SIZE	64
-+
-+struct mem_err_synd_reg {
-+	u64 cpu_mesr;
-+	u64 l2_mesr;
-+};
-+
-+static struct cpumask compat_mask;
-+
-+static void report_errors(struct edac_device_ctl_info *edac_ctl, int cpu,
-+			  struct mem_err_synd_reg *mesr)
-+{
-+	u64 cpu_mesr = mesr->cpu_mesr;
-+	u64 l2_mesr = mesr->l2_mesr;
-+	char msg[MESSAGE_SIZE];
-+
-+	if (cpu_mesr & CPUMERRSR_EL1_VALID) {
-+		const char *str;
-+		bool fatal = cpu_mesr & CPUMERRSR_EL1_FATAL;
-+
-+		switch (FIELD_GET(CPUMERRSR_EL1_RAMID, cpu_mesr)) {
-+		case L1_I_TAG_RAM:
-+			str = "L1-I Tag RAM";
-+			break;
-+		case L1_I_DATA_RAM:
-+			str = "L1-I Data RAM";
-+			break;
-+		case L1_D_TAG_RAM:
-+			str = "L1-D Tag RAM";
-+			break;
-+		case L1_D_DATA_RAM:
-+			str = "L1-D Data RAM";
-+			break;
-+		case TLB_RAM:
-+			str = "TLB RAM";
-+			break;
-+		default:
-+			str = "Unspecified";
-+			break;
-+		}
-+
-+		snprintf(msg, MESSAGE_SIZE, "%s %s error(s) on CPU %d",
-+			 str, fatal ? "fatal" : "correctable", cpu);
-+
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 0, msg);
-+	}
-+
-+	if (l2_mesr & L2MERRSR_EL1_VALID) {
-+		bool fatal = l2_mesr & L2MERRSR_EL1_FATAL;
-+
-+		snprintf(msg, MESSAGE_SIZE, "L2 %s error(s) on CPU %d CPUID/WAY 0x%lx",
-+			 fatal ? "fatal" : "correctable", cpu,
-+			 FIELD_GET(L2MERRSR_EL1_CPUID_WAY, l2_mesr));
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 1, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 1, msg);
-+	}
-+}
-+
-+static void read_errors(void *data)
-+{
-+	struct mem_err_synd_reg *mesr = data;
-+
-+	mesr->cpu_mesr = read_sysreg_s(SYS_CPUMERRSR_EL1);
-+	if (mesr->cpu_mesr & CPUMERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_CPUMERRSR_EL1);
-+		isb();
-+	}
-+	mesr->l2_mesr = read_sysreg_s(SYS_L2MERRSR_EL1);
-+	if (mesr->l2_mesr & L2MERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_L2MERRSR_EL1);
-+		isb();
-+	}
-+}
-+
-+static void a72_edac_check(struct edac_device_ctl_info *edac_ctl)
-+{
-+	struct mem_err_synd_reg mesr;
-+	int cpu;
-+
-+	cpus_read_lock();
-+	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-+		smp_call_function_single(cpu, read_errors, &mesr, true);
-+		report_errors(edac_ctl, cpu, &mesr);
-+	}
-+	cpus_read_unlock();
-+}
-+
-+static int a72_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl;
-+	struct device *dev = &pdev->dev;
-+	int rc;
-+
-+	edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-+					      num_possible_cpus(), "L", 2, 1,
-+					      edac_device_alloc_index());
-+	if (!edac_ctl)
-+		return -ENOMEM;
-+
-+	edac_ctl->edac_check = a72_edac_check;
-+	edac_ctl->dev = dev;
-+	edac_ctl->mod_name = dev_name(dev);
-+	edac_ctl->dev_name = dev_name(dev);
-+	edac_ctl->ctl_name = DRVNAME;
-+	dev_set_drvdata(dev, edac_ctl);
-+
-+	rc = edac_device_add_device(edac_ctl);
-+	if (rc)
-+		goto out_dev;
-+
-+	return 0;
-+
-+out_dev:
-+	edac_device_free_ctl_info(edac_ctl);
-+
-+	return rc;
-+}
-+
-+static void a72_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl = dev_get_drvdata(&pdev->dev);
-+
-+	edac_device_del_device(edac_ctl->dev);
-+	edac_device_free_ctl_info(edac_ctl);
-+}
-+
-+static const struct of_device_id cortex_arm64_edac_of_match[] = {
-+	{ .compatible = "arm,cortex-a72" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-+
-+static struct platform_driver a72_edac_driver = {
-+	.probe = a72_edac_probe,
-+	.remove = a72_edac_remove,
-+	.driver = {
-+		.name = DRVNAME,
-+	},
-+};
-+
-+static int __init a72_edac_driver_init(void)
-+{
-+	struct platform_device *pdev;
-+	int cpu, err;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct device_node *np __free(device_node) =
-+				of_cpu_device_node_get(cpu);
-+
-+		if (np) {
-+			if (of_match_node(cortex_arm64_edac_of_match, np) &&
-+			    of_property_read_bool(np, "edac-enabled")) {
-+				cpumask_set_cpu(cpu, &compat_mask);
-+			}
-+		} else {
-+			pr_warn("failed to find device node for CPU %d\n", cpu);
-+		}
-+	}
-+
-+	if (cpumask_empty(&compat_mask))
-+		return 0;
-+
-+	err = platform_driver_register(&a72_edac_driver);
-+	if (err)
-+		return err;
-+
-+	pdev = platform_device_register_simple(DRVNAME, -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		pr_err("failed to register a72 edac device\n");
-+		platform_driver_unregister(&a72_edac_driver);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit a72_edac_driver_exit(void)
-+{
-+	platform_driver_unregister(&a72_edac_driver);
-+}
-+
-+module_init(a72_edac_driver_init);
-+module_exit(a72_edac_driver_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");
-+MODULE_DESCRIPTION("Cortex A72 L1 and L2 cache EDAC driver");
--- 
-2.49.0
-
+	Andrew
