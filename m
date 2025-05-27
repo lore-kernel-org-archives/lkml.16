@@ -1,284 +1,234 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2079.outbound.protection.outlook.com [40.107.247.79])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8C11E2307
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.79
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748333233; cv=fail; b=DIjD0CbYWHQjIK+SIaHzsCn5f0ee5Yn4mUZgE5rwZ/agHuUwk7E1HkjGD6CUnT7hhwaSfyAmgurve6VCOJ+PQ6AA9ztdPk6Tywd9FzxQBCz6+2TQ+7rVxx8UkFhRdiDTYp8kz6TE38FlNvE6fLRqZLzy/hp5VgyrLJoCFNfgAkQ=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748333233; c=relaxed/simple;
-	bh=Rwx0m5L6arboSb0ZKgmD1PzK515Nxi150+bvuuB5d1k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=EaWxAelHh7Kr9DidgIr/ziWZh3mrEYPNvGGm92Xjk4WFdVNIkHf3EJ5mi4z38/6Bb3GZtLDSyZU5B1oOpBrVCFK27u6TjgoWc6uMn4WCdeK1tqabRytw+dvgClDtoePjdyTG2DBj1T84pq2UrENSHpdgwP/UuCgMsTzDsjM1gBk=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Y1effmOp; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Y1effmOp; arc=fail smtp.client-ip=40.107.247.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Y1effmOp";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Y1effmOp"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=iD6IRMkNMisP3zRbTmNXLA7iwBZSMgYd7F/3+8XoLJ8i5ABTfGn0klehtwleYlPXikASRZ58+GClOAAWHO8zQ1F3ruFnHyjr72JaCZAxTVTt+gPGbM17fMrpAJjf+QoLNhmoDTF1qT5Qm2etacwINm192FXDhd+XbsGIMcAbE9tWqw0bvDzHS1NZxEWx6wFGRcbPldKCJcWGyGOus65im3osZn3KCzDUWMLAwMzOKbNmQkuX8L++pxGkB0otELF9EH/B1BO5lpHmFjeXxn8Y2DjbG86GWtZ4eJfASpO75miLUtXdbvHGVdbw6lXnJpYshppSHYbbhAqr5N5iyKi7Eg==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8SFk0Vk7Y2RjOnXgbEpYCymfh+pxK4XuQ7X0CBbhW2Q=;
- b=W8ZxWKTw3asfHrjRXB6jGK8sLCBvr3cgpYY/VXisL6vCqytRxkm/ZMItQXRR22PbM9nUwt5bHn75XXyuivkBdHm3NHCr8ah9ws/U23+TfAU+Rt+znQYoBN+ot3Mp6m/xCz5G32DeVFT5lLT14LIq3fO3uP78RTToN82JjO2W+j24SBRosKpL+ECF8yfj8JoQl1BuwRGQ8C1U4grM4EMCDHtBOU1G8wp/upFRdEGYu/nRJN3xma0wTiLbJHvScmVhSIDzUcjCeElC+Z0YYewYMP2Y25ECxjfhhKOFGD7zfxy0laPYSKFjSxT4Bd94pjXwQ/2EMJk2aubhm1a8Kwnl8g==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=redhat.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8SFk0Vk7Y2RjOnXgbEpYCymfh+pxK4XuQ7X0CBbhW2Q=;
- b=Y1effmOpO/6a0B0APAye/onacwIdoTD2EotEH8sTEdf9xKK4yNriMpQOiqYIxcGbnJqFV1XtpKOPm8QiMZGHEwUwpMVUAP6wb3uO5IhiRL1XIUP27DwamcpRw9Ni7i7jzFliV7H4q8JWnh9II43WFM4xa8jMLY09BVDjIn1OPlI=
-Received: from DUZPR01CA0275.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b9::6) by PAXPR08MB6367.eurprd08.prod.outlook.com
- (2603:10a6:102:15b::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Tue, 27 May
- 2025 08:07:04 +0000
-Received: from DB1PEPF000509F2.eurprd02.prod.outlook.com
- (2603:10a6:10:4b9:cafe::25) by DUZPR01CA0275.outlook.office365.com
- (2603:10a6:10:4b9::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.26 via Frontend Transport; Tue,
- 27 May 2025 08:07:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB1PEPF000509F2.mail.protection.outlook.com (10.167.242.148) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18
- via Frontend Transport; Tue, 27 May 2025 08:07:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mTlFZKZ5YB7ilK/wPCQTxlNZD1BKzbAmH4TU6plG6lkODLxOfgmiXAjuNRlTWnuCH0pdQT3fipQ02ep7sHv3jR6ke6KD1nO3Abfi72xi9BwYXDNrEG2rZpoXn5M28DzHPPC0U+BaFpBdnqhpAqZhjt+b1hVt3COgA2jo0Ad8IVWr5efjYS4uzzqixeQYOSuWUU15iVP2J09JUEVZuh57k6gdxkZNFFZ4eH7oGuOaVjOUWzh70F8GLSvhJXNpS/USLay5FPmjDVut4mi235p5iR0GrKi5+fgf9f/HSGpArdCLwJqCWxzR8CeyFQ0C+MqFkewjtsgk6CiSnMwL7Erf8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8SFk0Vk7Y2RjOnXgbEpYCymfh+pxK4XuQ7X0CBbhW2Q=;
- b=ySij97GerKQB6DMEM8miEwvH2EWtdNm555deNpO1YwG8HYkefTnj2rFacubTWjTgrTlQoTVXdiMvh/1slW0JSS2H9gw0H1DJQq0an0qvzdMZyo42PlNYFWP0SBd1bgxEWRoN2bzHZGRVUTsfyMo8JnirQ/eBWB27lf8AeocKWCBu0x3NxF+Re00PCLjPR783bTp7rTUhzPAs/fUE+x+FZ1UwFGx/IRb4S+e+zMAg55zc8/7VViNGgEJ8pGj20DUWzgXibFyguqs5hi0Dgy6NpRCIOzeok2IJe/dKvFvYZ5c1bX0gV7otn1Ay9gzw0ciyMJQO+oGODhkL6gjIooTFKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8SFk0Vk7Y2RjOnXgbEpYCymfh+pxK4XuQ7X0CBbhW2Q=;
- b=Y1effmOpO/6a0B0APAye/onacwIdoTD2EotEH8sTEdf9xKK4yNriMpQOiqYIxcGbnJqFV1XtpKOPm8QiMZGHEwUwpMVUAP6wb3uO5IhiRL1XIUP27DwamcpRw9Ni7i7jzFliV7H4q8JWnh9II43WFM4xa8jMLY09BVDjIn1OPlI=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by PR3PR08MB5756.eurprd08.prod.outlook.com (2603:10a6:102:90::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Tue, 27 May
- 2025 08:06:31 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 08:06:30 +0000
-Message-ID: <cf22aeef-0160-46f8-b2e3-d308ccee0504@arm.com>
-Date: Tue, 27 May 2025 13:36:24 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] mm/khugepaged: fix race with folio split/free
- using temporary reference
-To: David Hildenbrand <david@redhat.com>, Shivank Garg <shivankg@amd.com>,
- akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, fengwei.yin@intel.com, bharata@amd.com,
- syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-References: <20250526182818.37978-1-shivankg@amd.com>
- <b19653ae-8c9a-46f1-af93-3d09c3b0759e@arm.com>
- <0dc0fef0-ec1d-4971-81e6-0add808a8551@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <0dc0fef0-ec1d-4971-81e6-0add808a8551@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MAXP287CA0008.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a00:49::18) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042A7154457;
+	Tue, 27 May 2025 08:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748333487; cv=none; b=Um90nfWcs7Y+8UFnlNQIH4t5goYgn1lRWrpLdJOwm5dcqGQaUDznyRPV88hmlehVV15ArJa+Y1SE/uGO5kyhjJE6KAbq0PdRtif6QkxfEYNysJVAN77W10CdB/n8WOthFfIKFNxzJmwlopPuaGTqmPl+xADNfbU6/iD7tzmY3Qg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748333487; c=relaxed/simple;
+	bh=wkEbYlUmL/0e/Oq4Kc62UXZiv8Icaa5HQS20G9Srl+o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MtejY/z44ULheguW0DREMGSkiwVuHAzN/mBHqtWdRQ/20XB/DyANNKjbSRFc2/JzvsBHAR6+02F0T+5ezsZMVFq1T13sH+s0ROk17Y2Ww4NkNprSPOgRNB/OnyDfx+A3N6w00qabrlua7tnRwiz5gd5psAzfFkZ0qPUk7ruMtCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b651k2LxrzYQv8L;
+	Tue, 27 May 2025 16:11:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 701BD1A252A;
+	Tue, 27 May 2025 16:11:21 +0800 (CST)
+Received: from [10.67.111.192] (unknown [10.67.111.192])
+	by APP4 (Coremail) with SMTP id gCh0CgCXRlunczVo2KyeNg--.19162S2;
+	Tue, 27 May 2025 16:11:21 +0800 (CST)
+Message-ID: <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
+Date: Tue, 27 May 2025 16:11:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|PR3PR08MB5756:EE_|DB1PEPF000509F2:EE_|PAXPR08MB6367:EE_
-X-MS-Office365-Filtering-Correlation-Id: 77b18c77-0559-4f11-1b00-08dd9cf576de
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?bXl1K0pVWFo5YU1SOGhKT0MyYlYzQ0J5aXA3SmVvbEw5OHNJMVAxQ01mMXh6?=
- =?utf-8?B?ZGVIbzUwT3F3QzNrOGNuYnZJZlpkRW5LN3IzelRRTUZLeW5idUlMVlFyT3pq?=
- =?utf-8?B?TDZNWVlwdmVyUWRmNUNkZnVHMTcrcElHTTZHbzF4cUtNUXREWlh0Wlh4NlYv?=
- =?utf-8?B?S0Q0eitkTDFkc2JpSzF0Q0VUQ1M3SS8wZnQzMXVveVlYWTcvVUVQa0ZYNHNP?=
- =?utf-8?B?cHcvcVZjMENXZ1puNnBBQ1hHWW5naXhSK0w0NDFYZkwweFZBWEk1bU93eklr?=
- =?utf-8?B?a0Q4U0xUcHk3M1BtS3c2a3MwcTJrSUczai9xWWl2eDFXT01ITkRFL2RhbFBj?=
- =?utf-8?B?bWRURDVtNkJPcXA0T1ZmWHBEVTNhUjk1QSt4SWFxbFZ2RE9XbWNpbzdweG9j?=
- =?utf-8?B?L2p5QVkxWDZFd0M5M0NHUWc4SGNDbkdkbmF4dHF4ejBrS2lZcDB5ZmJoWU1v?=
- =?utf-8?B?ckhzTEo5c3NqdE9uOHNlTGpVcWpWQjJBdlNXbldQRGc5TGtjYzZqRytuQ25U?=
- =?utf-8?B?R2lMZWJrUFQ1YytEcDhpTHBaMlRoUERPT3U5RXU4YnJKZXpBZVg2UXppNDhV?=
- =?utf-8?B?UGZkUzVPTFRoUFZtYmdlZW9tKzFEK0RtbExoQ01jRlJBRks3QUZDd0RBbTdL?=
- =?utf-8?B?eFIxM08xUU5pR2pzUkwzUStRb1ZSYnNBeXBFVUNmVTh0Y0poNWxKcjhHSHky?=
- =?utf-8?B?cGpaKzJvUEJXTm0wRXh4Vi94UUN3UWJIdE13SkpZYnF1blVFMHZ6RFJLODdZ?=
- =?utf-8?B?QStqYkFLSDdrdGF6SDNPaFBpYTRKUzkvWVFKUHIxclFFclp2ci9rL3d5U1BC?=
- =?utf-8?B?VDV1R25kYll0SThjaUU5QmY1V1B1dEhLb2VTWDAweUdpRG5qZitlb0tRemNH?=
- =?utf-8?B?K2REYUJJZXVtSkpmVVlyZ2NPU0FwTnd0SFNYTXAvamovOG9JZHJ0M2tSbU1x?=
- =?utf-8?B?RUpuNFhuWVdVb0NTWTJRVlVVcFFCT3k4bDl4Y1hOdUxJL2tsSFI5MW14VFFK?=
- =?utf-8?B?RUcyTnJvL3cyV2s5V1dFT1hqa0ZYZFRPeG8xdEVSWmlaVk8rQytGdXlyNEhk?=
- =?utf-8?B?UGpCdEFTQWtDb0VvaWEzTEdJM0lQeDNkQ0NiQXVCNGE3MHpIZmtoUHIvMWRE?=
- =?utf-8?B?eUQ1T3JUUG56MCtRMjBJUE8wMzFnaHpVTFJBcGpxa01DMlpLRXB1c3Q0ZUl5?=
- =?utf-8?B?L3RaalczeS9JSk9MN1pzdTc4SmxTcXB6OVZ3QVVwZmtSajFReUZ4V25vbUtt?=
- =?utf-8?B?YUplNHdSeGFXdWtxSnlUODhyNXVkKzErYUFCSlBmWjlrUWtMaTRnMDlZKzg4?=
- =?utf-8?B?WVdPSHdrM0w1N3U0RURBSzdiRHFWY1RyZ1I2VjBuUDBOekUzZFlmUXJSSzhC?=
- =?utf-8?B?T3Q1OXBYR29RbDFPRTBIeWJ0Y3Nyd0I0bkFvRXgzTURJNkMxUldNTW9Zak1v?=
- =?utf-8?B?YXlYRHFoenY4SERjZWVUTG43WDJrNDRIcUZkR2VJeGM3RkkwQzhYczlCVzNS?=
- =?utf-8?B?bEpvMm5lMVpTTDlJT0IyMzNSWXpEY2FXUUM4cVlmaU9LdnFjSUlXeCtacjFO?=
- =?utf-8?B?QzJJN2NOaklMaEdSdGhuTHVaMHN3ZTg2Zk5RY1pHaDlleWRMWngyb0JsczNS?=
- =?utf-8?B?cmprdy8yL2t6ZEtrNzNkMTN4WDdEZDR0UjBmNUxYU0lOWWc5amd6VmExeXhh?=
- =?utf-8?B?NlB1ZXZKYTExcWE4ZnJRUTIvbFh6YW42ZVdHbzJQS1Foc0F2OTIxdWdnVGdG?=
- =?utf-8?B?WDJwbTcxV3hkWTFieUpqQkk3TEYxWGUxZUpjN1F1RTFKb2lyVk1zbjdTbzZH?=
- =?utf-8?B?WEJUZ2NhZnFCOUNRdTU4R0haaVFFbFhvVGduU2xEQUprUEIzWVhhMlNmcTFR?=
- =?utf-8?Q?m+G5SIcx6TFb5?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR08MB5756
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF000509F2.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	3baae6dd-a254-4e45-b41e-08dd9cf56351
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|1800799024|82310400026|35042699022|36860700013|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?T1JlL1Jkc2FGSnAybzRmOWlQS0VWT1lhU203VDZYM3lZVTZMbjFyelYzbWlG?=
- =?utf-8?B?cGVZUnNWeXFoc0t3WmpoT3l2dldxQld3M1l5d3E0SzV3V2FrOUVRTG1FUEMv?=
- =?utf-8?B?Uy9Vd1lDRHBCTzNPWTFoQlpZL1ZET0ltSVZXQ3dLVDNTdW0wbGp1TWtCeHJz?=
- =?utf-8?B?K0xmdUl5WVJvY1VYcVpXUGo4UVphSk1lNXBVOGZWblVaVytWblR6T0hWRlRl?=
- =?utf-8?B?RmUyZUpJZHRabHBybUpwT09SWHJ4NUE4T0lkRkNvZ3RZNVFXUm56SUZpbGZy?=
- =?utf-8?B?VXZaWmxUdHQ0d0YwWnJrNktpMERubUlJbjY5Q1BwMkZoTGRuU2t2RWtkd0RX?=
- =?utf-8?B?S05NdUEwUkRLYXVDZWZaekhlUDFINzlKRkxFMG9Qby9VUUZIR1JVZkNmUW5W?=
- =?utf-8?B?SUk1NjJNaDArTEl4ZWhpVjVYLzlPaVU3NVRjaWZ4YXlDQ1NoVGlVd1ZvN3J4?=
- =?utf-8?B?YVZody9WM0lZMjg1aHZuNFlkNllQQSs3UEhILzM0S1kzZytUZENlSHhhL2N2?=
- =?utf-8?B?c3RDdU51aWZjeUZGZy9IR3BrRDBYUklQYUl0K2Y1VlZ3RjNKV25iUS8vQzM3?=
- =?utf-8?B?dDAyT0JJeDAzZ1E5OEFnRzUza3prR25kWTVyN0FCRzlHQ2FRMC9SSy9WZm5i?=
- =?utf-8?B?aS93ZmxzeHk2RkdKVHByRmhOSzhyenJqWGd3dWx1ZVRmRmRXaEV2aVdQWnFI?=
- =?utf-8?B?TFNBcnFhbEwxNm54Zm02VytjUURDbUtBRWpyajFoQXBVTFRCbFlGV1F2UUZH?=
- =?utf-8?B?cTR0bUxidE9LOTE0MEo4d2dEdjhBZWlBclNIMWl2RytpeXptS2pTaG1EbURP?=
- =?utf-8?B?Y2Q4MlZBbUJkcEFZWXNZNUNhNWVlUlJPVWFtNURSUnFGUS92OEd2WngrOS9G?=
- =?utf-8?B?TDc2VytNYU5SbHJuN1RhTlVHVUZqMUpHSW9rVFVEOHdYRnUrWjk1MEJtbGRN?=
- =?utf-8?B?NFduWmJBcEIxNUdpeUJvUkhXK2ZNall6UGdFclRQZlVGYmZ6eUJUbjhtN29i?=
- =?utf-8?B?SWxOMnpLZW5DSlJiMk5HeDJQVm52RUpvUXIxVlNXT0IyUjJCbHNNMFZDN01x?=
- =?utf-8?B?YmNPQVhQZmdWN1l3ZmV1YmlwTWl4WUwwMVBaQ1k5b0s5ZU1aL1NMclEwc3J1?=
- =?utf-8?B?d2NvenFCMmZBa0tmbzlYMk1UNDIvUnZqMkYvWVNVVzRMc3p0SFJKelpHRDRs?=
- =?utf-8?B?UnM3WEhpbHBTVmZheVNKRVh4aUc5UkQzTXJxSWZzOTlFQnhTZnhua2o5UmRR?=
- =?utf-8?B?UWIzVDREZXA1dlRnS2t4S25keUxhZGJURU95UTlQTGorSzhabTlYYkNpL0ll?=
- =?utf-8?B?M1ovaHRYc0RIWFQ0a2NxVGpUVGQ1eElTMWJjc2NjQ3Z0djBITC9ERmJjRGJo?=
- =?utf-8?B?eGhtYmZiQ0xmRjh1NG1zdFFxVjlwa1BmeUQyZEtlUDE2MHhKUG9PTmF2eXh2?=
- =?utf-8?B?VTJ1MFkwK0kzazNzMEVrNmZvR0ppeGlpTXBka2JGZVZKS3VqRjR0R1JCVVJx?=
- =?utf-8?B?RkhmTFBVd2FaTXdDOFpOb1Aya084Tk5FYjlST0RqM1BWUUF1K2pGSmxpYWts?=
- =?utf-8?B?aXcrYmhyTlRZWk9RQzNTWG9CWHhjL2dFcUZPbnFxQ0RpVWQ5Q3B0dU9Jek9a?=
- =?utf-8?B?M3NiMU4zRG4rcmRBMU4rb01hMlBvdDZKRjI5NmgybVhIMEVtNXRVSElIaVA5?=
- =?utf-8?B?RnNWYzYxeXhQVllmUzhmNndqRUs3cmJZZmtEMEpqZ3dFUHVNYVNPK0daVGNU?=
- =?utf-8?B?dS9lZUxvMUhKTVZDNVJkNUhjUzk1OWRLY2pVdnJKRmtyT0x4U1FCRmdVSlVx?=
- =?utf-8?B?WElUVEFmY3pyQUZLTlEwc1MwUVFZb01rekhLOEFmUXlsM1JIR3kzdkc3cFZJ?=
- =?utf-8?B?ckt3cmprN0J2NmNSYXNtb2R5NWdpQmNDVGFyTVcrR3ZYaW5rUnNUOVFjR2ov?=
- =?utf-8?B?dDNKb1JkQkR2eEoxd0s0elZkVTFpNElDZ1ZMbmh5Mi9wRzJCVGZGRkJTZDVt?=
- =?utf-8?Q?6W5RYi+6pQtJ8IT1rxIhqIXvjoS4Hc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(1800799024)(82310400026)(35042699022)(36860700013)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 08:07:03.0685
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77b18c77-0559-4f11-1b00-08dd9cf576de
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF000509F2.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB6367
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v2 1/2] bpf, arm64: Support up to 12 function
+ arguments
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Puranjay Mohan <puranjay@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Florent Revest <revest@chromium.org>
+Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, Xu Kuohai <xukuohai@huawei.com>
+References: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
+ <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
+Content-Language: en-US
+From: Xu Kuohai <xukuohai@huaweicloud.com>
+In-Reply-To: <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCXRlunczVo2KyeNg--.19162S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCFyxAw1DZr17tr1xKryrtFb_yoWrCrWxpr
+	nYk3ZxGFs3Zw40g3WrXw4UX34FkFs5tF4Y9r48A343AF4DKrykKFsYkayjkFyfCr1kAF4j
+	93s0vrsxAF45J3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	4xRDUUUUU==
+X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
 
+On 5/22/2025 6:14 PM, Alexis Lothoré wrote:
 
-On 27/05/25 1:18 pm, David Hildenbrand wrote:
-> On 27.05.25 05:20, Dev Jain wrote:
->>
->> On 26/05/25 11:58 pm, Shivank Garg wrote:
->>> hpage_collapse_scan_file() calls is_refcount_suitable(), which in turn
->>> calls folio_mapcount(). folio_mapcount() checks folio_test_large() 
->>> before
->>> proceeding to folio_large_mapcount(), but there is a race window 
->>> where the
->>> folio may get split/freed between these checks, triggering:
->>>
->>>     VM_WARN_ON_FOLIO(!folio_test_large(folio), folio)
->>>
->>> Take a temporary reference to the folio in hpage_collapse_scan_file().
->>> This stabilizes the folio during refcount check and prevents incorrect
->>> large folio detection due to concurrent split/free. Use helper
->>> folio_expected_ref_count() + 1 to compare with folio_ref_count()
->>> instead of using is_refcount_suitable().
->>>
->>> Fixes: 05c5323b2a34 ("mm: track mapcount of large folios in single 
->>> value")
->>> Reported-by: syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
->>> Closes: 
->>> https://lore.kernel.org/all/6828470d.a70a0220.38f255.000c.GAE@google.com 
->>>
->>> Suggested-by: David Hildenbrand <david@redhat.com>
->>> Acked-by: David Hildenbrand <david@redhat.com>
->>> Signed-off-by: Shivank Garg <shivankg@amd.com>
->>> ---
->>
->> The patch looks fine.
->>
->> I was just wondering about the implications of this on migration. 
->> Earlier
->> we had a refcount race between migration and shmem page fault via 
->> filemap_get_entry()
->> taking a reference and not releasing it till we take the folio lock, 
->> which was held
->> by the migration path. I would like to *think* that real workloads, 
->> when migrating
->> pages, will *not* be faulting on those pages simultaneously, just 
->> guessing. But now
->> we have a kernel thread (khugepaged) racing against migration. I may 
->> just be over-speculating.
->
-> I'm not quite sure I understand the concern you have. Any temporary 
-> reference can temporarily block migration, however, the retry logic 
-> should be able to handle that just fine -- and this code is not really 
-> special (see filemap_get_entry()).
+[...]
 
+> -static void save_args(struct jit_ctx *ctx, int args_off, int nregs)
+> +struct arg_aux {
+> +	/* how many args are passed through registers, the rest of the args are
+> +	 * passed through stack
+> +	 */
+> +	int args_in_regs;
+> +	/* how many registers are used to pass arguments */
+> +	int regs_for_args;
+> +	/* how much stack is used for additional args passed to bpf program
+> +	 * that did not fit in original function registers
+> +	 **/
 
-You are correct that any temp ref can block migration, however, that 
-reference has to come after the folios have been isolated in the 
-migration path.
+nit: "**/" should be "*/"
 
-So the probability of someone taking a reference on the folio is quite 
-low since it has been isolated. The problem with filemap_get_entry() is 
-that it finds
+> +	int bstack_for_args;
+> +	/* home much stack is used for additional args passed to the
+> +	 * original function when called from trampoline (this one needs
+> +	 * arguments to be properly aligned)
+> +	 */
+> +	int ostack_for_args;
+> +};
+> +
+> +static int calc_arg_aux(const struct btf_func_model *m,
+> +			 struct arg_aux *a)
+>   {
+> -	int i;
+> +	int stack_slots, nregs, slots, i;
+> +
+> +	/* verifier ensures m->nr_args <= MAX_BPF_FUNC_ARGS */
+> +	for (i = 0, nregs = 0; i < m->nr_args; i++) {
+> +		slots = (m->arg_size[i] + 7) / 8;
+> +		if (nregs + slots <= 8) /* passed through register ? */
+> +			nregs += slots;
+> +		else
+> +			break;
+> +	}
+> +
+> +	a->args_in_regs = i;
+> +	a->regs_for_args = nregs;
+> +	a->ostack_for_args = 0;
+> +
+> +	/* the rest arguments are passed through stack */
+> +	for (a->ostack_for_args = 0, a->bstack_for_args = 0;
+> +	     i < m->nr_args; i++) {
 
-the folio in the pagecache, so isolation is useless, then takes a 
-reference and then shmem_get_folio_gfp() does a folio_lock() instead of 
-folio_try_lock().
+a->ostack_for_args is initialized twice.
 
-This was the race which I talked about an year back at [1]. My concern 
-is that we are adding another candidate to that race; just wondering if 
-there is
+move all initializations before the loop?
 
-a better solution to fix the race mentioned in Shivank's patchset.
+> +		/* We can not know for sure about exact alignment needs for
+> +		 * struct passed on stack, so deny those
+> +		 */
+> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
+> +			return -EOPNOTSUPP;
 
+leave the error code as is, namely, return -ENOTSUPP?
 
-[1] https://lore.kernel.org/all/20240801081657.1386743-1-dev.jain@arm.com/
+> +		stack_slots = (m->arg_size[i] + 7) / 8;
+> +		/* AAPCS 64 C.14: arguments passed on stack must be aligned to
+> +		 * max(8, arg_natural_alignment)
+> +		 */
+> +		a->bstack_for_args += stack_slots * 8;
+> +		a->ostack_for_args = round_up(a->ostack_for_args + stack_slots * 8, 8);
+
+since a->ostack_for_args starts from 0 and is always incremented
+by multiples of 8, round_up() to 8 is not needed.
+
+> +	}
+>   
+> -	for (i = 0; i < nregs; i++) {
+> -		emit(A64_STR64I(i, A64_SP, args_off), ctx);
+> -		args_off += 8;
+> +	return 0;
+> +}
+> +
+> +static void clear_garbage(struct jit_ctx *ctx, int reg, int effective_bytes)
+> +{
+> +	if (effective_bytes) {
+> +		int garbage_bits = 64 - 8 * effective_bytes;
+> +#ifdef CONFIG_CPU_BIG_ENDIAN
+> +		/* garbage bits are at the right end */
+> +		emit(A64_LSR(1, reg, reg, garbage_bits), ctx);
+> +		emit(A64_LSL(1, reg, reg, garbage_bits), ctx);
+> +#else
+> +		/* garbage bits are at the left end */
+> +		emit(A64_LSL(1, reg, reg, garbage_bits), ctx);
+> +		emit(A64_LSR(1, reg, reg, garbage_bits), ctx);
+> +#endif
+>   	}
+>   }
+>   
+> -static void restore_args(struct jit_ctx *ctx, int args_off, int nregs)
+> +static void save_args(struct jit_ctx *ctx, int bargs_off, int oargs_off,
+> +		      const struct btf_func_model *m,
+> +		      const struct arg_aux *a,
+> +		      bool for_call_origin)
+>   {
+>   	int i;
+> +	int reg;
+> +	int doff;
+> +	int soff;
+> +	int slots;
+> +	u8 tmp = bpf2a64[TMP_REG_1];
+> +
+> +	/* store arguments to the stack for the bpf program, or restore
+> +	 * arguments from stack for the original function
+> +	 */
+> +	for (reg = 0; reg < a->regs_for_args; reg++) {
+> +		emit(for_call_origin ?
+> +		     A64_LDR64I(reg, A64_SP, bargs_off) :
+> +		     A64_STR64I(reg, A64_SP, bargs_off),
+> +		     ctx);
+> +		bargs_off += 8;
+> +	}
+> +
+> +	soff = 32; /* on stack arguments start from FP + 32 */
+> +	doff = (for_call_origin ? oargs_off : bargs_off);
+> +
+> +	/* save on stack arguments */
+> +	for (i = a->args_in_regs; i < m->nr_args; i++) {
+> +		slots = (m->arg_size[i] + 7) / 8;
+> +		/* AAPCS C.14: additional arguments on stack must be
+> +		 * aligned on max(8, arg_natural_alignment)
+> +		 */
+> +		soff = round_up(soff, 8);
+> +		if (for_call_origin)
+> +			doff =  round_up(doff, 8);
+
+since both soff and doff start from multiples of 8 and are
+incremented by 8 each time, the two round_up()s are also
+not needed.
+
+> +		/* verifier ensures arg_size <= 16, so slots equals 1 or 2 */
+> +		while (slots-- > 0) {
+> +			emit(A64_LDR64I(tmp, A64_FP, soff), ctx);
+> +			/* if there is unused space in the last slot, clear
+> +			 * the garbage contained in the space.
+> +			 */
+> +			if (slots == 0 && !for_call_origin)
+> +				clear_garbage(ctx, tmp, m->arg_size[i] % 8);
+> +			emit(A64_STR64I(tmp, A64_SP, doff), ctx);
+> +			soff += 8;
+> +			doff += 8;
+> +		}
+> +	}
+> +}
+
+[...]
 
