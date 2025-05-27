@@ -1,53 +1,46 @@
-Received: from dispatch1-eu1.ppe-hosted.com (dispatch1-eu1.ppe-hosted.com [185.132.181.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A455724A055;
-	Tue, 27 May 2025 09:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.181.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEE222688B;
+	Tue, 27 May 2025 09:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336763; cv=none; b=tr0eC2bf2YneYo/sMStQU96XhBwN43IR+qJ7m9oRvfiJiPvWkM76TOPX+XHpZZ3VOilhndU1kn/NT2jTHqE3UlGLlyvLHJvraZDLbnW3A0z2Mxk728rDTSdN94W0r4+XeEaG0YTXyejy2XElHHU9pmijHfdd8ij4RcJOmOBQM/Q=
+	t=1748336891; cv=none; b=DI+G9I1rNIEf30Gc8wqqFeEP5Id6c14IODMqS74Qgv/X+UdEwHGlj6F2M2LltNNxp5TSLxI1QeFujpjFAps9IvkHRTie4t2xmcEw6biDqdTwn7L6Y2JF9Wo3NqNQeCbZ/OgUHc1ahwDAyxXxhmad64BDnLW5I/NxD7QCdw0j1nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336763; c=relaxed/simple;
-	bh=YuauqPOASLhHRtpX+GMSrLmgXOwq9QAmqyQcVsESSz4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=buDiFnIhK0opZR6G1B8Sx4exsRwIUcbr8n1804vOigBwn+UwG494ZBgG1Ha7j76YHY4wHAMaUxlapaiZAm6U8CRAfLtRexaxS9P/BKnBCh1CFZe7cAPwqMQyZZ222pkLg7+YtXqdsJT4/nZnIhPyrrPtZ2tAjc8cAH5R3bAjPVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mikaelkw.online; spf=pass smtp.mailfrom=mikaelkw.online; dkim=pass (2048-bit key) header.d=mikaelkw.online header.i=@mikaelkw.online header.b=QipSeslw; arc=none smtp.client-ip=185.132.181.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mikaelkw.online
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikaelkw.online
+	s=arc-20240116; t=1748336891; c=relaxed/simple;
+	bh=1mVZilj0ei09PTF3v4no8nvYAaUQ6G6EroZGp/VBi4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oucbnrZK86ySbY5JBWmy2f1sUT2nj0vwfn3VIY7YKhUYaAZAgSyP55GkfCY9zWKOXVWawi/dvZV20pe+PBM3o0lMi6MP1M7LnG0yJLyU8Giq9aq2A9iDv92AfYGDGVwi/RUQZ1mbsnAd2jP7xdxgKfN/nJW5AW07UyxbXwXnyZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kM4G+zTH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mikaelkw.online header.i=@mikaelkw.online header.b="QipSeslw"
-Received: from dispatch1-eu1.ppe-hosted.com (ip6-localhost [127.0.0.1])
-	by dispatch1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id DDC803455F0;
-	Tue, 27 May 2025 08:56:57 +0000 (UTC)
-Received: from engine.ppe-hosted.com (unknown [10.70.45.140])
-	by dispatch1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 56B0D600B1;
-	Tue, 27 May 2025 08:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mikaelkw.online;
- h=cc:cc:content-transfer-encoding:content-transfer-encoding:date:date:from:from:message-id:message-id:mime-version:mime-version:subject:subject:to:to;
- s=pp-selector; bh=XVzcGbWpERYMml1uLAWk5RU7kc71sGLeR0bD1usT3/w=;
- b=QipSeslw/Ris0Qm4/HLYTGkoc/1pPRw5gLk8WoXClJZ8joMQFaeNuAzmdIuekbe0C5+sfZfb/s98b6n9TKvqq3jqp/NMMDkUts3mLOWFLoE3LVHfLv+GcHEUOgkz6OEge8ou1fGX2MLl/KzeHsItKD/cNHQh2j6P5sN+M4oNAdgIkiH0yubtGlige+ciKD7m8JePc7nN+5I/LOB5Dogd/MnwkwTNb2b2WKoG8R8Oor+tmBb5G8Q5wdRbQmXVBh6d8iI+Syo9az4KJsIJ8QX73ZqXBgR3eSdk6UHjTRYqcaq3Le0bwcvk5vOt9rQ8chzYThTZTJDZYe35NDkGdiBjeg==
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from test-ubuntu-rev3.. (78-26-16-15.network.trollfjord.no [78.26.16.15])
-	by mx1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id A2542B00069;
-	Tue, 27 May 2025 08:56:47 +0000 (UTC)
-From: Mikael Wessel <post@mikaelkw.online>
-To: netdev@vger.kernel.org
-Cc: intel-wired-lan@lists.osuosl.org,
-	torvalds@linuxfoundation.org,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew@lunn.ch,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	security@kernel.org,
-	stable@vger.kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	linux-kernel@vger.kernel.org,
-	Mikael Wessel <post@mikaelkw.online>
-Subject: [PATCH v2 net 0/1] e1000e: fix heap overflow in e1000_set_eeprom()
-Date: Tue, 27 May 2025 10:56:11 +0200
-Message-ID: <20250527085612.11354-1-post@mikaelkw.online>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kM4G+zTH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B039CC4CEEA;
+	Tue, 27 May 2025 09:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748336891;
+	bh=1mVZilj0ei09PTF3v4no8nvYAaUQ6G6EroZGp/VBi4U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kM4G+zTHgnMRgobV2rm5Je+BnrSfMeK1TIbWYQMXT552VrxR3TVMy2GN7OsJCBkTx
+	 42DUXlwJmh1x/Nd+g2jvOEp4fHW+DB/75W2PaHqf004DWCwha2hans8xfQh0TeEgmW
+	 R1xIvnDThs+MlTDuKSkDAvQ7nwjbP2wuRXq1RdbPbccVaLdLn9GaVf4ag07F3Api69
+	 uQ3p0ij+PtlCZZjFJjGglF47//ZNOFFClrknnFixRjd2QpmTQ+k5Jv9CV4ZRCa8Dyv
+	 CuBi7Jp6SDwafFvdD0EJzlD4ZTggay8KIC/1qxxEsnI9ZpA0z5+r4MFx83nadxYSO7
+	 wV7ikpCr41Gwg==
+From: Alexey Gladkov <legion@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Alexey Gladkov <legion@kernel.org>
+Subject: [PATCH v3 0/6] Add generated modalias to modules.builtin.modinfo
+Date: Tue, 27 May 2025 11:07:54 +0200
+Message-ID: <cover.1748335606.git.legion@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,22 +48,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MDID: 1748336210-GI2fiDH3N2w8
-X-PPE-STACK: {"stack":"eu1"}
-X-MDID-O:
- eu1;fra;1748336210;GI2fiDH3N2w8;<post@mikaelkw.online>;7544ea0f74a3697a45f5192d6efff48c
-X-PPE-TRUSTED: V=1;DIR=OUT;
 
-v2: patch the correct write helper and add bounds-checking; v1
-    mistakenly guarded e1000_get_eeprom() (read path).
+The modules.builtin.modinfo file is used by userspace (kmod to be specific) to
+get information about builtin modules. Among other information about the module,
+information about module aliases is stored. This is very important to determine
+that a particular modalias will be handled by a module that is inside the
+kernel.
 
----
+There are several mechanisms for creating modalias for modules:
 
-Mikael Wessel (1):
-  e1000e: fix heap overflow in e1000_set_eeprom()
+The first is to explicitly specify the MODULE_ALIAS of the macro. In this case,
+the aliases go into the '.modinfo' section of the module if it is compiled
+separately or into vmlinux.o if it is builtin into the kernel.
 
- drivers/net/ethernet/intel/e1000e/ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
+The second is the use of MODULE_DEVICE_TABLE followed by the use of the
+modpost utility. In this case, vmlinux.o no longer has this information and
+does not get it into modules.builtin.modinfo.
+
+For example:
+
+$ modinfo pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30
+modinfo: ERROR: Module pci:v00008086d0000A36Dsv00001043sd00008694bc0Csc03i30 not found.
+
+$ modinfo xhci_pci
+name:           xhci_pci
+filename:       (builtin)
+license:        GPL
+file:           drivers/usb/host/xhci-pci
+description:    xHCI PCI Host Controller Driver
+
+The builtin module is missing alias "pci:v*d*sv*sd*bc0Csc03i30*" which will be
+generated by modpost if the module is built separately.
+
+To fix this it is necessary to add the generated by modpost modalias to
+modules.builtin.modinfo.
+
+Fortunately modpost already generates .vmlinux.export.c for exported symbols. It
+is possible to use this file to create a '.modinfo' section for builtin modules.
+The modules.builtin.modinfo file becomes a composite file. One part is extracted
+from vmlinux.o, the other part from .vmlinux.export.o.
+
+Notes:
+- v3:
+  * Add `Reviewed-by` tag to patches from Petr Pavlu.
+  * Rebase to v6.15.
+  * v2: https://lore.kernel.org/all/20250509164237.2886508-1-legion@kernel.org/
+
+- v2:
+  * Drop patch for mfd because it was already applied and is in linux-next.
+  * The generation of aliases for builtin modules has been redone as
+    suggested by Masahiro Yamada.
+  * Rebase to v6.15-rc5-136-g9c69f8884904
+  * v1: https://lore.kernel.org/all/cover.1745591072.git.legion@kernel.org/
+
+Alexey Gladkov (6):
+  scsi: Define MODULE_DEVICE_TABLE only if necessary
+  modules: Add macros to specify modinfo prefix
+  modpost: Make mod_device_table aliases more unique
+  modpost: Create modalias for builtin modules
+  kbuild: Move modules.builtin.modinfo to another makefile
+  kbuild: Create modules.builtin.modinfo for modpost results
+
+ drivers/scsi/BusLogic.c     |  2 +-
+ include/linux/module.h      | 21 +++++++++++-----
+ include/linux/moduleparam.h |  7 ++++--
+ scripts/Makefile.vmlinux    | 48 +++++++++++++++++++++++++++++++++++++
+ scripts/Makefile.vmlinux_o  | 26 +-------------------
+ scripts/mod/file2alias.c    | 34 ++++++++++++++++++++++----
+ scripts/mod/modpost.c       | 13 +++++++++-
+ scripts/mod/modpost.h       |  2 ++
+ 8 files changed, 114 insertions(+), 39 deletions(-)
 
 -- 
-2.48.1
+2.49.0
+
