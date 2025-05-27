@@ -1,67 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.aaazen.com (99-33-87-210.lightspeed.sntcca.sbcglobal.net [99.33.87.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9752494D8;
-	Tue, 27 May 2025 19:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEFB2701D6;
+	Tue, 27 May 2025 19:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.33.87.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374587; cv=none; b=Gm9GwBJe2RfOgiiK5vYpxsv3as+q/kDesEgkXc8mxK0VuAN3Zxp6+6wgW+6xiZA2RJAjBeDTLg8FDmOXGskUcQ+2C2nVYVAjHkVJW8IJ076Gty82EhThxQmDx9hG+ZAOAcshq/13IsByKnZDdniYPsiehX4B2lS/WIDtGU91i/w=
+	t=1748374710; cv=none; b=Ai/OcACPVEC2E7DgBV7c4IYN6bnJc+ZIyT84r1qykpmbOJVyBJESYUIG33e+lozLAm/8eqV6qHJScUIlmAfT2bnn0ng1BeAt63wf3JRj+ksANYSBy2BAiUBJHrroSBVdYa9n0bVhShM+JOVZwMRrfdn8Fu02HRkJkmjaQHCobs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374587; c=relaxed/simple;
-	bh=K7DhF+cgr7QSuqJfpbPflo3ff+oOa+1XtFxnJVMoXIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BmzSNgVJwOM63HQKiwyT1DNsLF/LT1jMCxa6FwOV3xDGA86Vq+5hKGReN/E8joHy4YU5qmcNWI4niVArYvpYDjABdN6zK4CcHZcGHzPvsxhHuHbBPheFQg1eftVe9e7jKbRVzisRBA+OCCFulwUAcS4YGzHgPDetDwmSIuqeAtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpVL6ZsQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpVL6ZsQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9901C4CEE9;
-	Tue, 27 May 2025 19:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748374586;
-	bh=K7DhF+cgr7QSuqJfpbPflo3ff+oOa+1XtFxnJVMoXIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YpVL6ZsQaIBbdH7ezady5e1W6NIOBhqdbekqAAxG47r0xlGN4CoFAWQ68cRbp46nz
-	 9DCGxRqgbWohMM8QZEdxfqGrWqF8pnohFMs/hFdEhDtlc4aNR/9c2sEcIstonvhn30
-	 5Wa9dFoc81OxmW4/xY+ZYmStpJtPXDOySqt1cbxO7nqIAkt7ZwiYm5oim6ell1i/de
-	 f8SbL7+mJjJLWrYsETxaLfJiwfYCCHUkmUnRRscRPTwDxPO8ZQpTIS4Eeu3mx4ya8t
-	 DkWtToypVXYYDYoOM4hlZNgW25SI/v0pQbVtBhY0APWkXDqRGa3l7NfcCBQm+97net
-	 TF5Iq/1FyxpBg==
-Date: Tue, 27 May 2025 14:36:25 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: kw@linux.com, krzk+dt@kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lpieralisi@kernel.org,
-	bhelgaas@google.com, manivannan.sadhasivam@linaro.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: PCI: pci-ep: Extend max-link-speed to
- PCIe Gen5/Gen6
-Message-ID: <174837457636.1106584.5849030626221512750.robh@kernel.org>
-References: <20250519160448.209461-1-18255117159@163.com>
- <20250519160448.209461-3-18255117159@163.com>
+	s=arc-20240116; t=1748374710; c=relaxed/simple;
+	bh=KPnnEbEzDg1iO5SPzFnVAGmm/vw403K+t6jriv7b9v4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nYlwrkhsYmVtl4qJnckQE7V34SDwAYs4aKdEy436PSUUypCdwDYG1GEvxvSu/Ce9aJr+Zhd7sUoZ85+iUbS0PbA8F2jfKmSQWtKgIVb9U6SXDTe22WC2RsLIAcD4cNVzt8b9IiAJwXiMufykuWO5c/oWUq0lhm+8ZoeYMcISKow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aaazen.com; spf=pass smtp.mailfrom=aaazen.com; arc=none smtp.client-ip=99.33.87.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aaazen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aaazen.com
+Received: from localhost (localhost [127.0.0.1])
+	by thursday.test (OpenSMTPD) with ESMTP id a4d15d45;
+	Tue, 27 May 2025 12:31:47 -0700 (PDT)
+Date: Tue, 27 May 2025 12:31:47 -0700 (PDT)
+From: Richard Narron <richard@aaazen.com>
+X-X-Sender: richard@thursday.test
+To: Guenter Roeck <linux@roeck-us.net>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Linux stable <stable@vger.kernel.org>, 
+    Linux kernel <linux-kernel@vger.kernel.org>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+    Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 5.15 00/59] 5.15.184-rc1 review
+In-Reply-To: <0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net>
+Message-ID: <67f03e41-245e-202-f0df-687cc4d9a915@aaazen.com>
+References: <20250520125753.836407405@linuxfoundation.org> <0f597436-5da6-4319-b918-9f57bde5634a@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519160448.209461-3-18255117159@163.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Fri, 23 May 2025, Guenter Roeck wrote:
 
-On Tue, 20 May 2025 00:04:47 +0800, Hans Zhang wrote:
-> Update the PCI Endpoint (EP) device tree binding documentation to
-> include PCIe Gen5 and Gen6 support for the `max-link-speed` property.
-> Similar to the Host Controller binding, the original EP binding
-> limited this value to 1~4 (Gen1~Gen4). With current SOCs requiring
-> Gen5/Gen6 support (e.g., Synopsys/Cadence IP), this change aligns
-> the EP binding with the kernel's PCIe 6.0 capabilities.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  Documentation/devicetree/bindings/pci/pci-ep.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> On 5/20/25 06:49, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.15.184 release.
+> > There are 59 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> > Anything received after that time might be too late.
+> >
+>
+> Build reference: v5.15.184
+> Compiler version: x86_64-linux-gcc (GCC) 12.4.0
+> Assembler version: GNU assembler (GNU Binutils) 2.40
+>
+> Configuration file workarounds:
+>     "s/CONFIG_FRAME_WARN=.*/CONFIG_FRAME_WARN=0/"
+>
+> Building i386:defconfig ... passed
+> Building i386:allyesconfig ... failed
+> --------------
+> Error log:
+> x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
+> `__static_call_transform':
+> static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
+> --------------
+> Building i386:allmodconfig ... failed
+> --------------
+> Error log:
+> x86_64-linux-ld: arch/x86/kernel/static_call.o: in function
+> `__static_call_transform':
+> static_call.c:(.ref.text+0x46): undefined reference to `cpu_wants_rethunk_at'
+> make[1]: [Makefile:1234: vmlinux] Error 1 (ignored)
+> --------------
+>
+> In v5.15.y, cpu_wants_rethunk_at is only built if CONFIG_STACK_VALIDATION=y,
+> but that is not supported for i386 builds. The dummy function in
+> arch/x86/include/asm/alternative.h doesn't take that dependency into account.
+>
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+I found this bug too using the Slackware 15.0 32-bit kernel
+configuration.
 
+Here is a simple work around patch, but there may be a better solution...
+
+--- arch/x86/kernel/static_call.c.orig	2025-05-22 05:08:28.000000000 -0700
++++ arch/x86/kernel/static_call.c	2025-05-27 10:25:27.630496538 -0700
+@@ -81,9 +81,12 @@
+ 		break;
+
+ 	case RET:
++
++#ifdef CONFIG_64BIT
+ 		if (cpu_wants_rethunk_at(insn))
+ 			code = text_gen_insn(JMP32_INSN_OPCODE, insn, x86_return_thunk);
+ 		else
++#endif
+ 			code = &retinsn;
+ 		break;
+
+--------------
+Richard Narron
