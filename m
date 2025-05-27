@@ -1,41 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7473326F46F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620C3270572
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748347891; cv=none; b=h17gknZCLg2gQrIDqLwKzwBzgFYkqZwz7uCm+txvj1m9OXgMhQgdcs/XOsoH0Ih44YNHaBd+VIxM0nfub+kt+JdWkaztFxJvY1H4+PBxBAsIZ/N7hDziAv1zPxmmO3DCOfILx2amrPKE8pZXaXFHiXoEMImo5sf3q21CDgVx1+g=
+	t=1748347892; cv=none; b=Zk2HQbyiF57Sm1Gj/ZWH0/lHTH+avNUNwZYl1317yjLmF6gSlRf+cwiFle0znqzCrvYFkukQN4xId7K6CERlVQfeNPLNalPZdTvxoxKqr7xAhttnVyaTlJasqIv6sOKtVp/4cAVhsbJfAx/MHbmRU6okuNDKpvp+mi/Htk1gKjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748347891; c=relaxed/simple;
-	bh=NruFgDuKcybA47PQbjsX1kS5Pj95cphmU3z7U+LSFiQ=;
+	s=arc-20240116; t=1748347892; c=relaxed/simple;
+	bh=L/0iOYUvrFmB2bU6oHMPLyfBc1hpgRFdxe/rWnvnSRo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ClkY+QbYQv7+GTnhxMQlcmuyNVZc7bcfPSznNdZlRiKm1HUshbZGC0mFrnmYgeEp/DLt7HYIIMYzWQrJclGt99IEdh0W+E1R7IT6A1ymJACo4/z/FUIbast22n9A73QR/HNxN2UeXhXDmYbRXciCktR3m/hqs3EZPqKpbG95+lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=p4vMYG9R; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=dJA4tVmNVD/uAWp3lyTtSTk0NpCBa/L7iCsTjZ3xWQgTg+K32xulpVrbN2Y+524EEZn5KtzAua+A5XtrSqKrZEEqv+rCszoaPwFbLhyNC6ks/a1KYOSD/uqGWJTJbbKmzBbQFaWFvVvzTSJ2B+MYFtMVizxGa0itYUXfIEsXoUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KSunYObP; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="p4vMYG9R"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KSunYObP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1748347887;
-	bh=NruFgDuKcybA47PQbjsX1kS5Pj95cphmU3z7U+LSFiQ=;
+	s=mail; t=1748347888;
+	bh=L/0iOYUvrFmB2bU6oHMPLyfBc1hpgRFdxe/rWnvnSRo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=p4vMYG9Rh57T4duGrZ6KfXVGLOH4S6eZYLNFHtyMzg1zG3HoFPRcecPP1qpMYNv4/
-	 D8kY4QgYa2VL4FZQtS2fEo5/eDkp8UHFPA7a413V6Jh9W1ohxEiTPv5kwxnC1dtugA
-	 lW3GnOnjzoA8dzFr6jsPbEPkQ6VD7ryufue9GbAEqDWvSfGTg+b03B9QxAeVzEmSAb
-	 UDUCz1gFs7/8VVgQqAutTiGN3OwKOAJj6OCWebhBxvv5LXV6zIZPdcj9Z2oe5GJ8Cs
-	 Spx2RQBqHqROXyOFlkORJBAFmLS6kj4o99enm9p/EWsGsAxif5I5D5pntLfW6mbLrJ
-	 atI92u7ehEuEA==
+	b=KSunYObPflWL9GGUUmQrltwsBZFrF//8xb/ZwvnnwfnzXuee++51PPlosdDpZ5YCV
+	 kPnF/xDzGKO1sp6I+CmiYdgC/pM/Y7TPQQRsY+hR6CbJ7qgLJpMluoPbhhuvGpaAV6
+	 grXewBpOlYo3GNrr4au3qcYOL+exi6KNNqrwWJmt/FrFXEWoWZ0G5obO5eMh5/cEYl
+	 4mavZ3UrEeTBux8jWf3axT1mBA5zAPBnbzeg/PzeCiB/he7Z2D+24ROnD2lUS++kno
+	 o8mvFaISPy/l4JWHIT5Hoxyf2emFFcrw3sbjdyFlMrttErbIfZfxyUZg0uOr5H9kZG
+	 Qd/ns9o5wSJ7g==
 Received: from localhost (unknown [82.76.59.134])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 96D0717E3789;
-	Tue, 27 May 2025 14:11:27 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 6D3A017E37BE;
+	Tue, 27 May 2025 14:11:28 +0200 (CEST)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Tue, 27 May 2025 15:11:15 +0300
-Subject: [PATCH v5 07/19] drm/tests: hdmi: Replace '[_]MHz' with 'mhz'
+Date: Tue, 27 May 2025 15:11:16 +0300
+Subject: [PATCH v5 08/19] drm/tests: hdmi: Switch to 'void *' type for EDID
+ data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-hdmi-conn-yuv-v5-7-74c9c4a8ac0c@collabora.com>
+Message-Id: <20250527-hdmi-conn-yuv-v5-8-74c9c4a8ac0c@collabora.com>
 References: <20250527-hdmi-conn-yuv-v5-0-74c9c4a8ac0c@collabora.com>
 In-Reply-To: <20250527-hdmi-conn-yuv-v5-0-74c9c4a8ac0c@collabora.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -54,54 +55,41 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
  Dmitry Baryshkov <lumag@kernel.org>, Dmitry Baryshkov <lumag@kernel.org>
 Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org
+ linux-kernel@vger.kernel.org, Jani Nikula <jani.nikula@linux.intel.com>
 X-Mailer: b4 0.14.2
 
-Improve consistency throughout drm_hdmi_state_helper_test.c by replacing
-the two occurrences of '[_]MHz' substring with 'mhz'.
+Replace 'const char *' with 'const void *' type for current_edid member
+in struct drm_atomic_helper_connector_hdmi_priv, as well as for the edid
+parameter of set_connector_edid() function.
 
-As a bonus, this also helps getting rid of checkpatch.pl complaint:
-
-  CHECK: Avoid CamelCase: <reject_100_MHz_connector_hdmi_funcs>
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Suggested-by: Jani Nikula <jani.nikula@linux.intel.com>
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-index 7ffd666753b10bc991894e238206a3c5328d0e23..c8dc6fa0f925e35e9903a18bac7f78f9d8165960 100644
+index c8dc6fa0f925e35e9903a18bac7f78f9d8165960..00576f747f1f36a100e13b0316cb492f76474d45 100644
 --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
 +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-@@ -89,15 +89,15 @@ static const struct drm_connector_hdmi_funcs reject_connector_hdmi_funcs = {
+@@ -33,7 +33,7 @@ struct drm_atomic_helper_connector_hdmi_priv {
+ 	struct drm_encoder encoder;
+ 	struct drm_connector connector;
+ 
+-	const char *current_edid;
++	const void *current_edid;
+ 	size_t current_edid_len;
  };
  
- static enum drm_mode_status
--reject_100MHz_connector_tmds_char_rate_valid(const struct drm_connector *connector,
-+reject_100mhz_connector_tmds_char_rate_valid(const struct drm_connector *connector,
- 					     const struct drm_display_mode *mode,
- 					     unsigned long long tmds_rate)
- {
- 	return (tmds_rate > 100ULL * 1000 * 1000) ? MODE_BAD : MODE_OK;
+@@ -56,7 +56,7 @@ static struct drm_display_mode *find_preferred_mode(struct drm_connector *connec
  }
  
--static const struct drm_connector_hdmi_funcs reject_100_MHz_connector_hdmi_funcs = {
--	.tmds_char_rate_valid	= reject_100MHz_connector_tmds_char_rate_valid,
-+static const struct drm_connector_hdmi_funcs reject_100mhz_connector_hdmi_funcs = {
-+	.tmds_char_rate_valid	= reject_100mhz_connector_tmds_char_rate_valid,
- };
- 
- static int dummy_connector_get_modes(struct drm_connector *connector)
-@@ -1934,7 +1934,7 @@ static void drm_test_check_mode_valid_reject_rate(struct kunit *test)
- 	priv = drm_kunit_helper_connector_hdmi_init_funcs(test,
- 							  BIT(HDMI_COLORSPACE_RGB),
- 							  8,
--							  &reject_100_MHz_connector_hdmi_funcs);
-+							  &reject_100mhz_connector_hdmi_funcs);
- 	KUNIT_ASSERT_NOT_NULL(test, priv);
- 
- 	conn = &priv->connector;
+ static int set_connector_edid(struct kunit *test, struct drm_connector *connector,
+-			      const char *edid, size_t edid_len)
++			      const void *edid, size_t edid_len)
+ {
+ 	struct drm_atomic_helper_connector_hdmi_priv *priv =
+ 		connector_to_priv(connector);
 
 -- 
 2.49.0
