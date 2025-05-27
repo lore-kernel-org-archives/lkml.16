@@ -1,121 +1,116 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8875524BD1F;
-	Tue, 27 May 2025 09:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307B9227B83;
+	Tue, 27 May 2025 09:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748338065; cv=none; b=P0A8yxrEq/7fkv61NgoqKat7E33FVm1T6lUHWvExnFA+33ZpljyIjqT0PCmXfiNvzYQ4fAhAJdHDFPwC13ph5/z7rCMBnwJJCR0LRR2PGrZhHKFEHAixCK0QRq6re5n+DQ8RVl1CQDXFxbnlP0yZ1+I7COf35Xpj4qqMQxS+0BI=
+	t=1748338080; cv=none; b=NJRgPYRJXTIIoZAG5sFKorO6oXQaZKdWFL9Bz/l0edZfw+tea+2SHtMgpy+1Mxyyn53OeLU3jZ10aOGBDDMr+1W0mT6yk6iMSr7ELoPah+H13+3F7kZe2latVAUf70FTpRl4gQa571eORptJ9wAe67yMx0NTvUrYFHK2Cmnf5wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748338065; c=relaxed/simple;
-	bh=g8pq9wcZriOUJYhQGj4KOSFMK7K9XvrMl9Z746NyePk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lbP3CA+rRsuwSoLlda1OZwF90gUUjcaeknXIqett/8LaLOnoApfrvhE+L8SxQjJkc02AbDaxIJu2ZUQaq6Jwj1++vL4eTBLTAa6QurAEkGFPUbXywOcYkv9TqTnrgLdWHEh50Dlf6lnWBNiupI4tlmSJM8rkB4Y3Zk2vtAV4TbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F8TaetyG; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748338080; c=relaxed/simple;
+	bh=dyZxpvhwNjfJ9a7q3MDuTwQ7ipWcRs9o9x41dvRFHZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XU+xVm/9FSaLXFV7/fiFAecHggaAg6/BqfQsH2BysKih9GrHGfqLSH3bkQ9zh94OMnwDuigw0DCh7gTzx7Doszjs/FGn3u7mR5cpcu6e8ajCldvnZBAvSy3ozAMe3AL5yNhccJU7arNpDdoQZEzKfL0tXeNQMh13IQyfve/pZd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BFtaavXE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a3G6PHfN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F8TaetyG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 644551FD55;
-	Tue, 27 May 2025 09:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748338055;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BFtaavXE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a3G6PHfN"
+Date: Tue, 27 May 2025 11:27:48 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748338077;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ls+q14bBbKBSSH85R41btg1RBJN5OvsL+OQ1fnPsL30=;
-	b=F8TaetyG1KRkwdnwsGP+2qn6/oOFTSaXtxLSp1w6jLX2vUC+84mLp/SeHOXMt13CrWyC5W
-	5bpnUZ9ug8+YA0tkdAR6pVm2ZJU/Qfi3OLCF2F1polb7s1EuevM1diZZ7GTuzCUIXBf3pi
-	NvnhXgJbEHpgWp55tKzp2Am3UoGGp75fHqkQPN/Roi5uIDraDxq70Yk0LMC0+kYZ3wL7J9
-	yFyBZVyQKT9FIYeb9ztqRSDKGM4z1kkfgLjQjDx5Y0H8d3ViXjd/22DHx59KoB/kYDgZIy
-	rDw0mKraSYVVaJ3uwKF3DldpjbWcRDW9Cei3KMUad2AnCYmjoiJXRVDAw9X1DA==
-Date: Tue, 27 May 2025 11:27:25 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Adam Ford <aford173@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
- <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Douglas Anderson
- <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, Anusha Srivatsa <asrivats@redhat.com>, Paul
- Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui
- Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
- chrome-platform@lists.linux.dev, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
- platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
- linux-stm32@st-md-mailman.stormreply.com, Manikandan Muralidharan
- <manikandan.m@microchip.com>, Adrien Grassein <adrien.grassein@gmail.com>,
- Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>,
- Christoph Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
- <cristian.ciocaltea@collabora.com>, Detlev Casanova
- <detlev.casanova@collabora.com>, Dharma Balasubiramani
- <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
- Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
- Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
- Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
- Bingham <kieran.bingham+renesas@ideasonboard.com>, Liu Ying
- <victor.liu@nxp.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Matthias Brugger
- <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
- <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
- <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
- Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
- <mordan@ispras.ru>
-Subject: Re: [PATCH v3 02/22] drm: convert many bridge drivers from
- devm_kzalloc() to devm_drm_bridge_alloc() API
-Message-ID: <20250527112725.3736e415@booty>
-In-Reply-To: <CAHCN7xLPxmaZcOESvaU2W1gX4o1z-1A_atq4jZdrpAH5Wmht+g@mail.gmail.com>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
-	<20250509-drm-bridge-convert-to-alloc-api-v3-2-b8bc1f16d7aa@bootlin.com>
-	<CAHCN7xLPxmaZcOESvaU2W1gX4o1z-1A_atq4jZdrpAH5Wmht+g@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	bh=EKmfkKueWrSJHwdvFLhig05UKRQO/F1RPbe79/3ELEc=;
+	b=BFtaavXELI8AcdVRQWgcGs0FPj4KRN5qAqiGoC7UL9tOFJs1ajcIAgA3mzwjAjixHeTecL
+	CtnDItSK8zBQDu9eaMtFawa8z9aaUB+izKPyIi1YpxyIUglTegraojWBD59d46S+7Sk4Sa
+	QnwyWPpuYPIauTYHHl64tuxxEi0l7C8feYNPVlupN6oRLJKoFptt3u3so6Hgda5tpRXTPN
+	c0UxAirAblQUW80Ddn0i7UOShpEdL3T30xwespjS7kpMMZGTNaFMFGTjAjeDXiblGIuKLJ
+	4N55yRT1+Bq18r00TOzLoNBY0Xy/eJwzUuUNCmoxnG253c4pHeRBgHPTLaOWug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748338077;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EKmfkKueWrSJHwdvFLhig05UKRQO/F1RPbe79/3ELEc=;
+	b=a3G6PHfNJm077wOxIL5CZNo1u7m+lbi+pARY6Q4O434ukEYNse+sz1Hce88uVo/IXZRcif
+	lCDNcjtpDc0XOdAA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v9 12/22] verification/rvgen: Restructure the classes to
+ prepare for LTL inclusion
+Message-ID: <20250527092734.BgoHvn6n@linutronix.de>
+References: <cover.1747649899.git.namcao@linutronix.de>
+ <c1dd325f5f8f01dd7c29ff90be22164c17f073a0.1747649899.git.namcao@linutronix.de>
+ <1927d98817cd97a70d177e0a3001603ee3e34b35.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvtddtvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeikedprhgtphhtthhopegrfhhorhguudejfeesghhmrghilhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
- hepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1927d98817cd97a70d177e0a3001603ee3e34b35.camel@redhat.com>
 
-Hello Adam,
-
-On Sun, 25 May 2025 14:40:46 -0500
-Adam Ford <aford173@gmail.com> wrote:
-
-> For: imx8mp-hdmi-pvi.c and adv7511_drv.c
+On Tue, May 27, 2025 at 11:15:21AM +0200, Gabriele Monaco wrote:
 > 
-> Tested-by: Adam Ford <aford173@gmail.com> #imx8mp-beacon-kit
+> 
+> On Mon, 2025-05-19 at 12:27 +0200, Nam Cao wrote:
+> > Both container generation and DA monitor generation is implemented in
+> > the
+> > class dot2k. That requires some ugly "if is_container ... else ...".
+> > If
+> > linear temporal logic support is added at the current state, the "if
+> > else"
+> > chain is longer and uglier.
+> > 
+> > Furthermore, container generation is irrevelant to .dot files. It is
+> > therefore illogical to be implemented in class "dot2k".
+> > 
+> > Clean it up, restructure the dot2k class into the following class
+> > hierarchy:
+> > 
+> >          (RVGenerator)
+> >               /\
+> >              /  \
+> >             /    \
+> >            /      \
+> >           /        \
+> >     (Container)  (Monitor)
+> >                     /\
+> >                    /  \
+> >                   /    \
+> >                  /      \
+> >               (dot2k)  [ltl2k] <- intended
+> > 
+> > This allows a simple and clean integration of LTL.
+> > 
+> > Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> > Signed-off-by: Nam Cao <namcao@linutronix.de>
+> > ---
+> 
+> Steve,
+> 
+> since this series is quite /meaty/ and it seems the later parts require
+> a bit more discussion about tracepoints, could we start merging until
+> here (1-12/22)?
+> I'd be tempted merging also 13 (actual LTL introduction) but perhaps
+> keeping it together with the LTL monitors is cleaner.
 
-Thanks for your testing, on the v1 as well!
+The x86 patches have been merged through tip tree. My plan is sending the
+next version without the merged x86 patches, and without the arm64 patch -
+it can be sent separately. Then the whole series can be applied.
 
-Sadly your Tested-by tag won't be in the commit because the patch had
-already been applied, but it is useful per se, and in the records
-anyway.
+I will do it after the merge window.
 
-Kind regards,
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Best regards,
+Nam
