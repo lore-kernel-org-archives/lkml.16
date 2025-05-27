@@ -1,148 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA54027EC9C;
-	Tue, 27 May 2025 16:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E5B27EC78
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362243; cv=none; b=ecTjMDngI5ODF919f2DAxqOmvyrHz8w83L4whM5llfaZdJ8bQ1u3QBOZnvEaABlPsXltJlIQyRmJnNVHXdoLhQsBsITL+FHF8ssqDLRY83ZTMgrfCv+zqByQPr20FDJAv/HMshL8kyUOnO+cIjrOsN0pa6j/mTcwOAxdVHJ1aF8=
+	t=1748362249; cv=none; b=fRUVdIrSwAZCXC3CJ6/ANamIf+8Q3Oa4+K3/D2nMA/Tm34jTaxGSoSSOmmhWgbLiAj3X3/ujxntrxCog2m7yS3qiI3pzAyOVEeVpzqkBHkc9k8OzzLk0spfvFxIVhA+QIk67dUCwKhsuatpfasgNPsDaEA6k0ac3xe2nIuRfqxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362243; c=relaxed/simple;
-	bh=XSFL++ESIEqvfRkKiEhhrY3YfIYdGSwa4dT8wqHzbXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SE3l9Cx0CH5R1jChrWKqUnpfWWZZizPHErz3cPNkRLkyhST56BYyDo5WA+h6l2bcHw8TLTIAwfWEX0JUvrsAsBdEIBwGLzXpRJfUg01wGahKoVtX4EaHi0htlNKHMaeccv3ztiirWP2X67BACq1OKIgwNU62PEA67y9pWIDPzks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246A9C4CEEB;
-	Tue, 27 May 2025 16:10:43 +0000 (UTC)
-Date: Tue, 27 May 2025 12:11:40 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-ID: <20250527121140.0e7f0565@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748362249; c=relaxed/simple;
+	bh=C+jtZ6M73CB86PrCh9GgPsh2zWr6HUxw7D8YoYK3uw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=asCopckpEvCQSo39BHZHgx1jWQDAPWdgD6kkIkkWqyJwLo50enMjrJKkuCORw6cuAQiLCVmm4WR5vtRNQD13seCGpBgaNTcNNC7JnbQg9vS++PUIl0efxm/AdnJexVFP0JG3TD7ks5qxE/dGCudztgV/4BYD+VJ+eBU8mRjPJdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QhB0Z72r; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QhB0Z72r"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso39718381fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:10:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748362245; x=1748967045; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C+jtZ6M73CB86PrCh9GgPsh2zWr6HUxw7D8YoYK3uw4=;
+        b=QhB0Z72rpGSMmz4oezKHETPxEVn6IUmud14dt7OGQHEIG+E5GQR7EvlicXP0tU6srw
+         pDTXYLBO7pT6BRHt3b6Snv+5bW9T5HJu/b6qY3GAMwl/YmoAiVLyLQO6S64ZelDC31Fa
+         OMKa3BoGXX6Qiqbqg4aNJN91uz5TUDf1IJZtk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748362245; x=1748967045;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C+jtZ6M73CB86PrCh9GgPsh2zWr6HUxw7D8YoYK3uw4=;
+        b=Gr15vfM7RGY9vfmnIUKWzTJCXAcLLaVR0NVL172U18kmgnvklfXoEUtsj2HTMFlJIX
+         XUKyGyylL9jjlal+bVqxmDZ93fAeo5OjGF+bUQoiH6OTkRza8bVcK+KEAF00dDOXnT3C
+         Q3Me/cJq7LvkkofO6BNutAtHZcvw8pz1WffakboXolJCyOFI9fwuvt3Oj7pvL/8h9X/k
+         FsLcvc/3Xf7+feBieNOyiclzZ6rhwaoWuf0Id82KUphxN25hrwbOCQ9b6IU2B6umFHjh
+         jLog6XNVhxn0hV6Jo4SY4jVKmkikG1H+6US9z13h8nPndgjJq6tpfOGa86x80DVXCeY6
+         nB1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXs+W3VV9UaQlAKNmryQ6Wj2+NkohsRRSmJ3rB6eXExe1WSHzGMF3hCoCKgCuWbNEvUu3CqTOoz45OQH9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaYRqlfIAgHtcxAY3evMbFwvIPjVmZNB5WTW3kDW+rOnhxpqFT
+	lqpy7C8MK9Cy+3WGJDi+N2Cao4u4bw6OMtZUzYFQG3yKYILhN29rLvvb5tLfKpysilPSw8q4skF
+	jnU6dMq5Oh2i52MvNJ+zrF2Qz8t7/9Nqkb3iz5JRL
+X-Gm-Gg: ASbGncu1h3EuDCzThKQUHhHXfJd/c6CD6RWfZ61o8B5fN+r5F2hWf0MaPDpxyiTt2u/
+	7tlVG0v+LpHl4I7H0pDiagSPco7G5473Bsr+mwEEsbjqxDu0RjzwGVg0l9N1QmwLFVi+/lfOhh9
+	KkslZNSTXSgkslHN35OZD6EQvPyNVAounKKGMrrySPkRdj
+X-Google-Smtp-Source: AGHT+IHnxXSpwPQJnq00c7CWCY+PUWCLeRzCHONa/qE7pZ0tlcnlmLKnoWAnQH1ws4NnK/iqPjFX0jR0V3/BiQ03ZfA=
+X-Received: by 2002:a05:651c:3137:b0:30d:626e:d004 with SMTP id
+ 38308e7fff4ca-3295b9c6dc1mr42932431fa.20.1748362245432; Tue, 27 May 2025
+ 09:10:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250513210504.1866-1-ronak.doshi@broadcom.com>
+ <20250515070250.7c277988@kernel.org> <71d0fbf8-00f7-4e0b-819d-d0b6efb01f03@redhat.com>
+In-Reply-To: <71d0fbf8-00f7-4e0b-819d-d0b6efb01f03@redhat.com>
+From: Ronak Doshi <ronak.doshi@broadcom.com>
+Date: Tue, 27 May 2025 09:10:27 -0700
+X-Gm-Features: AX0GCFv-bntr7V3eITdVmyrlk7O4Ra37b0K8G5XqblYoHppcZ27xPhxwkEjCxzQ
+Message-ID: <CAP1Q3XTLbk0XgAJOUSGv03dXfPxcUR=VFt=mXiqP9rjc9yhVrw@mail.gmail.com>
+Subject: Re: [PATCH net] vmxnet3: correctly report gso type for UDP tunnels
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, 
+	Guolin Yang <guolin.yang@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, May 19, 2025 at 12:30=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wr=
+ote:
+>
+> If otherwise the traffic goes into the UDP tunnel rx path, such
+> processing will set the needed field correctly and no issue could/should
+> be observed AFAICS.
+>
+> @Ronak: I think the problem pre-exists this specific patch, but since
+> you are fixing the relevant offload, I think it should be better to
+> address the problem now.
+>
+Can we apply this fix which unblocks one of our customer case and address t=
+his
+concern as a separate patch as it has been there for a while and it
+has a workaround
+of enabling tnl segmentation on the redirected interface? I think it
+might require quite
+some change in vmxnet3 to address this concern and can be done as a
+different patch.
+Meanwhile, I will raise an internal (broadcom) PR for recreating this
+specific issue.
 
-When reading a memory mapped buffer the reader page is just swapped out
-with the last page written in the write buffer. If the reader page is the
-same as the commit buffer (the buffer that is currently being written to)
-it was assumed that it should never have missed events. If it does, it
-triggers a WARN_ON_ONCE().
-
-But there just happens to be one scenario where this can legitimately
-happen. That is on a commit_overrun. A commit overrun is when an interrupt
-preempts an event being written to the buffer and then the interrupt adds
-so many new events that it fills and wraps the buffer back to the commit.
-Any new events would then be dropped and be reported as "missed_events".
-
-In this case, the next page to read is the commit buffer and after the
-swap of the reader page, the reader page will be the commit buffer, but
-this time there will be missed events and this triggers the following
-warning:
-
- ------------[ cut here ]------------
- WARNING: CPU: 2 PID: 1127 at kernel/trace/ring_buffer.c:7357 ring_buffer_map_get_reader+0x49a/0x780
- Modules linked in: kvm_intel kvm irqbypass
- CPU: 2 UID: 0 PID: 1127 Comm: trace-cmd Not tainted 6.15.0-rc7-test-00004-g478bc2824b45-dirty #564 PREEMPT
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
- RIP: 0010:ring_buffer_map_get_reader+0x49a/0x780
- Code: 00 00 00 48 89 fe 48 c1 ee 03 80 3c 2e 00 0f 85 ec 01 00 00 4d 3b a6 a8 00 00 00 0f 85 8a fd ff ff 48 85 c0 0f 84 55 fe ff ff <0f> 0b e9 4e fe ff ff be 08 00 00 00 4c 89 54 24 58 48 89 54 24 50
- RSP: 0018:ffff888121787dc0 EFLAGS: 00010002
- RAX: 00000000000006a2 RBX: ffff888100062800 RCX: ffffffff8190cb49
- RDX: ffff888126934c00 RSI: 1ffff11020200a15 RDI: ffff8881010050a8
- RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffed1024d26982
- R10: ffff888126934c17 R11: ffff8881010050a8 R12: ffff888126934c00
- R13: ffff8881010050b8 R14: ffff888101005000 R15: ffff888126930008
- FS:  00007f95c8cd7540(0000) GS:ffff8882b576e000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f95c8de4dc0 CR3: 0000000128452002 CR4: 0000000000172ef0
- Call Trace:
-  <TASK>
-  ? __pfx_ring_buffer_map_get_reader+0x10/0x10
-  tracing_buffers_ioctl+0x283/0x370
-  __x64_sys_ioctl+0x134/0x190
-  do_syscall_64+0x79/0x1c0
-  entry_SYSCALL_64_after_hwframe+0x76/0x7e
- RIP: 0033:0x7f95c8de48db
- Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
- RSP: 002b:00007ffe037ba110 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
- RAX: ffffffffffffffda RBX: 00007ffe037bb2b0 RCX: 00007f95c8de48db
- RDX: 0000000000000000 RSI: 0000000000005220 RDI: 0000000000000006
- RBP: 00007ffe037ba180 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
- R13: 00007ffe037bb6f8 R14: 00007f95c9065000 R15: 00005575c7492c90
-  </TASK>
- irq event stamp: 5080
- hardirqs last  enabled at (5079): [<ffffffff83e0adb0>] _raw_spin_unlock_irqrestore+0x50/0x70
- hardirqs last disabled at (5080): [<ffffffff83e0aa83>] _raw_spin_lock_irqsave+0x63/0x70
- softirqs last  enabled at (4182): [<ffffffff81516122>] handle_softirqs+0x552/0x710
- softirqs last disabled at (4159): [<ffffffff815163f7>] __irq_exit_rcu+0x107/0x210
- ---[ end trace 0000000000000000 ]---
-
-The way to differentiate this case from the normal case of there only
-being one page written to where the swap of the reader page received that
-one page (which is the commit page), check if the tail page is on the
-reader page. The difference between the commit page and the tail page is
-that the tail page is where new writes go to, and the commit page holds
-the first write that hasn't been committed yet. In the case of an
-interrupt preempting the write of an event and filling the buffer, it
-would move the tail page but not the commit page.
-
-Have the warning only trigger if the tail page is also on the reader page,
-and also print out the number of events dropped by a commit overrun as
-that can not yet be safely added to the page so that the reader can see
-there were events dropped.
-
-Cc: stable@vger.kernel.org
-Fixes: fe832be05a8ee ("ring-buffer: Have mmapped ring buffer keep track of missed events")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 241acb470c42..508826886a87 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7351,10 +7351,25 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 		}
- 	} else {
- 		/*
--		 * There really shouldn't be any missed events if the commit
-+		 * There really shouldn't be any missed events if the tail_page
- 		 * is on the reader page.
- 		 */
--		WARN_ON_ONCE(missed_events);
-+		if (missed_events) {
-+			if (!WARN_ONCE(cpu_buffer->reader_page == cpu_buffer->tail_page,
-+				       "Reader on commit with %ld missed events",
-+				       missed_events)) {
-+				/*
-+				 * If the tail page is not on the reader page but
-+				 * the commit_page is, that would mean that there's
-+				 * a commit_overrun (an interrupt preempted an
-+				 * addition of an event and then filled the buffer
-+				 * with new events). In this case it's not an
-+				 * error, but it should still be reported.
-+				 */
-+				pr_info("Ring buffer commit overrun lost %ld events at timestamp:%lld\n",
-+					missed_events, cpu_buffer->reader_page->page->time_stamp);
-+			}
-+		}
- 	}
- 
- 	cpu_buffer->lost_events = 0;
--- 
-2.47.2
-
+Thanks,
+Ronak
