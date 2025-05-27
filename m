@@ -1,100 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54D7F50F;
-	Tue, 27 May 2025 09:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9302225D7
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336607; cv=none; b=a8B15eCc2j08cP7zJq44Mch4dwSFOkVnCv4RevKeDtQQqHWPHSAuytFNUfjKqRjshmVDla7ZaM6uiEyZuSPXVkdS6k4+aJBgUdz3nkJUrSN3Jsv7Fk05D6MYMfCsNarSoQIP9OsEdohqKcLKKVR8SbfImjvIZdvXDM5rmAMmVlM=
+	t=1748336723; cv=none; b=JW63Nn7QpKB+9HsJosgeXIj5G+pCu0o2MwpRamILp0N73qyH+PeZoiOgRCd7Mn7NZbDW6DVjEnQQaE2oqjpNFNlCBWmoIi6pjo81fxU26DAQsY/vQ29mtmA/ElGHi1TgEFGOgsUwdRX3tIWP3J15K9jz5TJQwGToamYvyaTRFHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336607; c=relaxed/simple;
-	bh=CepjyP+8Q0P8lM7xYgC7fRcPO5/D444YGpDm/oPFMSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GvEzRuIR6WqypzJDV3yG3DYLMD1cZqmZZTMYgwpxEMNb23D6G9Kf2f4cV4xLQjFT8+WbCMRH4w50LXNueziPjvuJMzfsCC+OXgo+OZtMd4z3R2bmc5AW86QuEQrANtkxd8shQZyPUAW58AQPcxpzHa9nMgycWLEsCIi0JCEfw1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qsr3+FxZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748336723; c=relaxed/simple;
+	bh=CRpfTBPGsU/+tqdI9xlMiEq0T70swRutbZRigIjFYyc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hs0ydnjCdTax8JqD6SFmtcfM2eVXnsrwq45eU5qJWE8kl8MV00xwgCM1GgrzkXSSq7LDhFfjvfe61UOKjWzDzMylPHsoXS/hrsL14GytM6xk6Owc6Cxiv0nAo4hvLtpqY+utfzuP78B+J0SQVIA4iR3Jqa/ryxTKiE9+qVyR89E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nLOg2s6X; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qsr3+FxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD77C4CEE9;
-	Tue, 27 May 2025 09:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748336606;
-	bh=CepjyP+8Q0P8lM7xYgC7fRcPO5/D444YGpDm/oPFMSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qsr3+FxZDJEeNzjVpWICNvLCrY2dAQ6fM+iHHjwd1LIfkdiIacQV2KvO7a0ud7U0c
-	 jUi8nOf1811mTewLQB1jrm4TbfRivKocjf91TNEBbmpv9nH7zAYFnTnrMT2KYQ0x6W
-	 brNuYokQS0qR6oF38Y+sfENS3vY5ppIGfsjfK9kfEXQg3ue9KlbfHhRBhx9bRAsDFq
-	 dvqPzC3It9Es2eUYtcOuuKoD5VvbtbuWfVdUtJfSR5nov2OjhuDwbEd80uIVjCShn/
-	 x4WkaUsCQtiOza4xi4S9+dieTwxB9ofpwIfXbdNakLQplD6zxHKqp3GnYqIpyx9Cqg
-	 xY+MiDA26ekiA==
-Date: Tue, 27 May 2025 11:03:23 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
-	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
-	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
-	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, heikki.krogerus@linux.intel.com, 
-	elder@riscstar.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
-Message-ID: <e2erhnhqfeeb5b74x5aspowgdiqdnywmfswl7vhgr7wt3pacns@j2lbkcnjl7ne>
-References: <20250429085048.1310409-1-guodong@riscstar.com>
- <lgjntm2v4qtp3uwccriodxdefdc4vqydzl4dmula4avhws4zfi@xevkgzfuhyhl>
- <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nLOg2s6X"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7dc89108bfso290306276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:05:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748336720; x=1748941520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LTZd01UwRRbxtjj6Iv0AjAyRW61W+KGsLF4BZOeCQNY=;
+        b=nLOg2s6XbZ+9gRzR1FyfkX+jn5Zwk+lbSOdqo2W3guvUk9F6dWNBPLJ+XcZU/FE6JA
+         f3bqa1dUHmANelb1y7Iu6k1dISLzsJwdVi82JX6A5bE9nuzXNjyxH0gh9e/kLazaTGvt
+         QeOEsqtE01frCgz7NROoVzevM+vQTuLc7AUYlu6+KQ7lftZQb+cZLaW1dywWEua6HgyK
+         TfM/Aaeqvk6zOUdM+8BDWVrb3eLjrz5czR7FCLX2kS/OPyHvhvCyWZm8/uOskc8PPUFN
+         XDrr95m13CZXYrex+TcUOSsxQ5vqqYOWl9HPYGfJX+pEQwOK9wmzYg/xEWqgbJ6GRBd5
+         SfLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748336720; x=1748941520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LTZd01UwRRbxtjj6Iv0AjAyRW61W+KGsLF4BZOeCQNY=;
+        b=pC+fInImGwq5aHzxWBhmjygecTPBnYz2r94LbDPlhPcQw0H8wvB64Z/F6Mm/uhjXfr
+         +HEpJEGFNJJ5DHacdIhgL89nJxRkWeSgdlGkme4LYZPXUce5EHgicdRla2MolVCqK40x
+         JnzW9hn2W0Ymho1ixsckhMIXIM2MIdC8AYr9ondGN6xOEZp8yx24UTlegdNVk8OShB1z
+         qk3K2lxwhkybUTV67KFreWTS8ooeM7p+70LSnVbuj/w2MJ4pqg7mDOc9pw9wHDUUgWcw
+         XewCnyr5fy+FoykSi92y39bBFe5Tus9dAlvoXI48dHD7/Cx9GtWDXqlzOzhhbjxfscdh
+         5ofQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFoXloWZjRHzHKnM0yqNFx9mJ+ttPURgmp7923eUZnnlQvuaZp5kPpo1LGn6SPaNhujqUGFiqkhYdBvRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1ewudOdRUybqHTf3ixZQ9guuU95lhi3uJhmM7jmlt2SjIneSX
+	zmOPdzGNmaHBq4xBp0E3hHkIhQUaqk3IOBxKXLugRsOjk19+b6qUKyRecWDJeJwdtgVEIdOtVBS
+	0SGKBwHzbCyEwMVyDR3VqS/t3OpV6+qYQlhLlTyKY
+X-Gm-Gg: ASbGncu34S4bqG+ECI2/mZ5POviDU78Jw0vWBtBN/b3BtWT1ZbNI+t7YcSAUREQQioX
+	Z1+3C98pEPAbYEUPUUY7QF+cDvChjhfqoskldIYn3hd/HznZ0/BmIAgCKkJrQMW4Hj238HdAp3C
+	6rHfVkyG2WgqUyuDAFQHDEdV3foILezrUfVsmhPKYOolOJ1R/zBv8E4hY=
+X-Google-Smtp-Source: AGHT+IFKMIHWgeFu3xBM1RWDE/WEs3TcahlWcU3GOovHQ5dAwRv/prvQiF+8ccGJ492KAiRXV4sznqZrP7KO0+OOKwU=
+X-Received: by 2002:a05:6902:6c09:b0:e7d:81c7:3291 with SMTP id
+ 3f1490d57ef6-e7d912e0c0fmr11236246276.0.1748336719732; Tue, 27 May 2025
+ 02:05:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="26g7v56eogwogiqd"
-Content-Disposition: inline
-In-Reply-To: <CAH1PCMZBBmDibwSLUAhDAyjAORgpS+D-U5_kfLJkbZ2r=XpFDA@mail.gmail.com>
-
-
---26g7v56eogwogiqd
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250527074737.21641-1-brgl@bgdev.pl>
+In-Reply-To: <20250527074737.21641-1-brgl@bgdev.pl>
+From: Hsin-chen Chuang <chharry@google.com>
+Date: Tue, 27 May 2025 17:04:42 +0800
+X-Gm-Features: AX0GCFt06KcqokYcO9FSO7kQTD9JduQQO9FBuLb_nJmBU7e9JKNOWhA7JnDhj40
+Message-ID: <CADg1FFdVu7BjLi+Jr4KaHnkQBJCShOCpc7veXmqKN0nYkdhAYg@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: hci_qca: move the SoC type check to the right place
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Balakrishna Godavarthi <bgodavar@qti.qualcomm.com>, Jiating Wang <jiatingw@qti.qualcomm.com>, 
+	Vincent Chuang <vincentch@google.com>, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 0/6] pwm: Update PWM_PXA driver for SpacemiT K1
-MIME-Version: 1.0
 
-Hello Guodong,
+On Tue, May 27, 2025 at 3:47=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Commit 3d05fc82237a ("Bluetooth: qca: set power_ctrl_enabled on NULL
+> returned by gpiod_get_optional()") accidentally changed the prevous
 
-On Tue, May 27, 2025 at 10:41:20AM +0800, Guodong Xu wrote:
-> You're right that patches 1, 2, and 5 do not depend on that reset series
-> and can be applied independently.
->=20
-> > [...]
->=20
-> Yeah. And I confirm that they can be applied without the reset
-> dependencies.
+typo: previous
 
-Thanks for the confirmation, pushed as is to
+> behavior where power control would be disabled without the BT_EN GPIO
+> only on QCA_WCN6750 and QCA_WCN6855 while also getting the error check
+> wrong. We should treat every IS_ERR() return value from
+> devm_gpiod_get_optional() as a reason to bail-out while we should only
+> set power_ctrl_enabled to false on the two models mentioned above. While
+> at it: use dev_err_probe() to save a LOC.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 3d05fc82237a ("Bluetooth: qca: set power_ctrl_enabled on NULL retu=
+rned by gpiod_get_optional()")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index e00590ba24fdb..a2dc39c005f4f 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -2415,14 +2415,14 @@ static int qca_serdev_probe(struct serdev_device =
+*serdev)
+>
+>                 qcadev->bt_en =3D devm_gpiod_get_optional(&serdev->dev, "=
+enable",
+>                                                GPIOD_OUT_LOW);
+> -               if (IS_ERR(qcadev->bt_en) &&
+> -                   (data->soc_type =3D=3D QCA_WCN6750 ||
+> -                    data->soc_type =3D=3D QCA_WCN6855)) {
+> -                       dev_err(&serdev->dev, "failed to acquire BT_EN gp=
+io\n");
+> -                       return PTR_ERR(qcadev->bt_en);
+> -               }
+> +               if (IS_ERR(qcadev->bt_en))
+> +                       return dev_err_probe(&serdev->dev,
+> +                                            PTR_ERR(qcadev->bt_en),
+> +                                            "failed to acquire BT_EN gpi=
+o\n");
+>
+> -               if (!qcadev->bt_en)
+> +               if (!qcadev->bt_en &&
+> +                   (data->soc_type =3D=3D QCA_WCN6750 ||
+> +                    data->soc_type =3D=3D QCA_WCN6855))
+>                         power_ctrl_enabled =3D false;
+>
+>                 qcadev->sw_ctrl =3D devm_gpiod_get_optional(&serdev->dev,=
+ "swctrl",
+> --
+> 2.48.1
+>
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--nexxt
+Thanks for the fix!
 
-(i.e. as material for the 6.17-rc1 merge window as the PWM PR for
-6.16-rc1 is already sent).
+Tested on a Chromebook device with WCN3991 chip.
+Without the patch the hdev->reset callback would make the HCI device
+unrecoverable, and with the patch the callback can reset the HCI
+device smoothly.
 
-Best regards
-Uwe
+Tested-by: Hsin-chen Chuang <chharry@chromium.org>
+Reviewed-by: Hsin-chen Chuang <chharry@chromium.org>
 
---26g7v56eogwogiqd
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg1f9cACgkQj4D7WH0S
-/k6Dhgf/X9WuY7qFhMFlefMe19qBwAufGzkajhCdv+bnqB05R5v/Jt+kVwQmhzec
-6mBTGEvmeuNhKUA+kXqLyiTEs36yUqVI6LScD9LHe6QzBQaCmMqYelh8SgcfZ4iO
-kubD1Zz0uZdhiqzajOI7+z+foBW6rZ7qgNYuOlvjPaNP2YCUYRNd8ypUGCYVn9Zr
-mwZvDCDrnH2G+4Cchw+4quN/mGHULoyJawC9djxSfLhWPg72AxLlABSovzvIC+hh
-b/uI5FRi/EIzcate4L1hKTVHF9rFIipT3gUv9sFbINCtAUKLhvZ/MlBVLeGWGiiK
-40qWRrtpvZ859pNH+jYQzAHk2rmYYQ==
-=GMeA
------END PGP SIGNATURE-----
-
---26g7v56eogwogiqd--
+Best Regards,
+Hsin-chen
