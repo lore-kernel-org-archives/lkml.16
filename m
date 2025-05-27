@@ -1,256 +1,145 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC68193402
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADD23FC7;
+	Tue, 27 May 2025 06:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326443; cv=none; b=bv7RkwR45GxgPERMnijfesZftSj2CzA3wH4wnzhRTAxmVGzUmzWKLGiDNobuxJKrDnPdLlB/RqnK7vnAsnZH6S2dWIAuhbaUq5La8cfxV0lldTZfCAvevrgN0Qc6nCQaHnZsAdFv4KlxDj0Ds5ja0JVbqXRovJGeFPbdPVXzHik=
+	t=1748326497; cv=none; b=aMy9kx+3nOOuLxiRnpWarABq703A6J6enPbAEYWHrZmwdMRyhKIS4v7+YvhdJxuTFUmR9aMXCUtA5X+ssjX0iIaND3h4WhK1uiY+KfdQ2WPHNeiZb69+EEynkYH+pw6EHF4ZQy4Z4UAH3+AX1DEBIlnQV8fF/L+TrkW7EsnpdEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326443; c=relaxed/simple;
-	bh=2eaNttKujiKGW1XShMkechFjiaDuppInGmPF27D6Ywc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b/6GCQ4HbzRagrgrfNwbfy4KrJpeFtJ6o8yo3ReJ1vuNps55xqjWvWCHKFHLnw+KMyN0vM5rmtJ56KwnAs9NOUG1Zrz1rAY516LPkJkvefBmAA3jYcKm+id7IQ7oLoDlB5NLLStN72lypX2ziFnVX6G+W1sFpdu5XqS6Z2yX3rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TQI94fB1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xyVtmZR4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TQI94fB1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xyVtmZR4; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1748326497; c=relaxed/simple;
+	bh=bPZlBi/TrOB7P9Rl1Y3T5ifdw7rwhtu0psVkBPl9Cy0=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:Mime-Version:
+	 References:In-Reply-To; b=Guazwvbn0wNhmEFnYrs37zonJowb2b56IcjgfEsSgoFlIc4q5W3NXizE+tIDRpFitGY2Gj0tsOFCT7o9vwwPoZT3VvmPBX1H46nNrjHP4upkjwt2wexV5IGTw7BBOp6GjW5HV7MzeXyWqjoccpptvFF+e2eFuaxBZ9YMwR8XSV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WrB0SoUz; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TQI94fB1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xyVtmZR4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TQI94fB1";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xyVtmZR4"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3849321ED7;
-	Tue, 27 May 2025 06:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748326437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hT6IVgx3sFelFM6RQIZn6bhZsyZyJ5oSi/3nCI6sDPI=;
-	b=TQI94fB1d7wCBjoqpteZlzowl3yHcMdGI5W2QKUbp/zpVGcfMyzWiTRfapGSHujM7c34vK
-	0gnlAyr6R0wttSUgCm3NxpEvblS3CV7vU+sHsblmsZB58BbC8aKP/ju3GXa4N6b57nJy8z
-	5E40JfnOXQISxerAXyZAFWwnIHE58gQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748326437;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hT6IVgx3sFelFM6RQIZn6bhZsyZyJ5oSi/3nCI6sDPI=;
-	b=xyVtmZR4qtj26xWbEceuKitNfwkB47ww9sHka2/MaYlXNKSy+75lOxTRYiuzj84EyygD5B
-	bJvnFVyj5GDHbUCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=TQI94fB1;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=xyVtmZR4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1748326437; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hT6IVgx3sFelFM6RQIZn6bhZsyZyJ5oSi/3nCI6sDPI=;
-	b=TQI94fB1d7wCBjoqpteZlzowl3yHcMdGI5W2QKUbp/zpVGcfMyzWiTRfapGSHujM7c34vK
-	0gnlAyr6R0wttSUgCm3NxpEvblS3CV7vU+sHsblmsZB58BbC8aKP/ju3GXa4N6b57nJy8z
-	5E40JfnOXQISxerAXyZAFWwnIHE58gQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1748326437;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hT6IVgx3sFelFM6RQIZn6bhZsyZyJ5oSi/3nCI6sDPI=;
-	b=xyVtmZR4qtj26xWbEceuKitNfwkB47ww9sHka2/MaYlXNKSy+75lOxTRYiuzj84EyygD5B
-	bJvnFVyj5GDHbUCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 85E95136E0;
-	Tue, 27 May 2025 06:13:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UaCrHiRYNWilGAAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 27 May 2025 06:13:56 +0000
-Message-ID: <d2fabdfd-229d-4043-ad27-61bac1e1f6d2@suse.de>
-Date: Tue, 27 May 2025 08:13:56 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrB0SoUz"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1601836a12.2;
+        Mon, 26 May 2025 23:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748326495; x=1748931295; darn=vger.kernel.org;
+        h=in-reply-to:references:content-transfer-encoding:mime-version:to
+         :from:subject:cc:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eBBkE8s/YVneLq+9AwE4ItbtcJd3DVQnda+tTZ0Bolk=;
+        b=WrB0SoUzCwPKtDZE74SKv+fw7OEisPVYv6y8qDTv8CiBvf6zvQPPxknDnN9CM0pkju
+         j4LH/lC/xCu2jYFBigp7DKD4iq27ztNEVVvJK5H5Mv7TE9p38mwxd2n7izHQ5r1O3bUM
+         0GAF74wIDybJ1qdKJZAJfD7AomRM64u4dUYM49V86WuOQh3hgk9yEW8lgWfFVnWdcmka
+         9UJ4U42HDWmKkxLt9D9AtwJ2tPgDqFREzhIr8hlVQLjPxyQhCPabP63KiFMaLoFJur7H
+         /pbS56tYrnfGsFVUpAZAVjRFg30RdAH21DMMHsxK5KvJuncHmtLpEjyBVNcHRCuqioEg
+         +Oag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748326495; x=1748931295;
+        h=in-reply-to:references:content-transfer-encoding:mime-version:to
+         :from:subject:cc:message-id:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eBBkE8s/YVneLq+9AwE4ItbtcJd3DVQnda+tTZ0Bolk=;
+        b=YDz7Up50ffIlOYg+LGs2JkBuzB1Ug7uePXxBw4spbThV4Gkj8Daa/5Yg4HR/kqBtpX
+         p5358CgNMu/LY8oChAv3udxn+YxlS0lZ7BrQJa53gmHm1J7tSkN3tJ5kokLu3SIuE1UA
+         w+Fygs7QMd+MoS+S4RzhBCO5VJbEv7p+e+v36imgvH80mwSmsEBTxRgRa13JTH/BbT1U
+         59BDtujr5MnC5LIuchjpohXNEtYifnQ5C7AZS0ck5PmqUOSzjFh3BaWVEabO1ncwIph9
+         vHGVBhErk0J5/UB0FJIo454Zo1UvmkZ0qdB7fZoJxJaXcWmKN3+9V97Mbs9lElXEhPdW
+         RTzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVeucTpthVNM2NP2Oz2b5hCeXp2H8OpR8hFbFCdqsQNqxuhK1Rau2Jmz1ihpKcBl7nw5zOhLexMr6ATJFc=@vger.kernel.org, AJvYcCWMbPhXHTaBuzNOzcpWP4zvI0sdSWgcef0ls6WzaCmkuuCxcHuCcgpWQVe9fQo8KvyNaTHINbeS2ifPVZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvRSOh9E3oqVPHXIOxSLFAQZRDdrSFLhczPAVdLOYbXIJejMUl
+	3AiZQxY8btTraTzuyVqmv+5M7J39Nkov4+UEkLeS6wYt9O74FCSGt+Vr
+X-Gm-Gg: ASbGncukGsW5765eQNSVKv+JPQ6Id++baZtOz8vOX6x0b+RhhM70e4uouMZlLMzsT9B
+	CJ1qSbvFYbgmsN1W1cPPWZkaVxSkLUxNHfb/JWgRL2JrQ+Q/ncq9A3RIwXHEuakdLh+PFNTQT1w
+	D8VBQ/TpSD5m2pleQJd6GLvgz7cSvwCzBOJ142rxDx/iX0eXEuJGMJGyr3NBYS+xWmjD+G2v1jT
+	ldySYpAJWR6Awl9NzKK+WPJqwhlw7/cgXwHySR2n/ufPesTqIxnNgn83/VBRXjbQORecZUgEdrD
+	gvTi4yJ/nXhs6heLkqM0dOK70wV4r75JuDTu/0J0644=
+X-Google-Smtp-Source: AGHT+IH4ynIKhX0Q/W63W+KiOzYy2HiXf351MI+w2/z045fkfOry3JXmUePfhPVwSC7VlMVwFg7M1A==
+X-Received: by 2002:a17:90a:c2c3:b0:30e:8f60:b4c with SMTP id 98e67ed59e1d1-3110f30d933mr19804287a91.16.1748326494695;
+        Mon, 26 May 2025 23:14:54 -0700 (PDT)
+Received: from localhost ([240d:1a:f76:b500:4431:46e3:c76b:79bc])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5bd3sm13413809a91.37.2025.05.26.23.14.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 23:14:53 -0700 (PDT)
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 15:14:50 +0900
+Message-Id: <DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
+Cc: "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Hans Verkuil"
+ <hverkuil@xs4all.nl>, "Albert Esteve" <aesteve@redhat.com>, "Jason Wang"
+ <jasowang@redhat.com>, "Xuan Zhuo" <xuanzhuo@linux.alibaba.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ <gurchetansingh@google.com>, <daniel.almeida@collabora.com>,
+ <adelva@google.com>, <changyeon@google.com>,
+ <nicolas.dufresne@collabora.com>, <linux-kernel@vger.kernel.org>,
+ <linux-media@vger.kernel.org>, <virtualization@lists.linux.dev>, "Alexandre
+ Courbot" <acourbot@google.com>
+Subject: Re: [PATCH v3] media: add virtio-media driver
+From: "Alexandre Courbot" <gnurou@gmail.com>
+To: "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>, "Michael S.
+ Tsirkin" <mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
- until creating bitmap
-To: Yu Kuai <yukuai1@huaweicloud.com>, hch@lst.de, xni@redhat.com,
- colyli@kernel.org, song@kernel.org, yukuai3@huawei.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com
-References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
- <20250524061320.370630-8-yukuai1@huaweicloud.com>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250524061320.370630-8-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.31 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.de:email,huawei.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Queue-Id: 3849321ED7
-X-Spam-Flag: NO
-X-Spam-Score: -3.31
-X-Spam-Level: 
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
+ <20250526141316.7e907032@foz.lan>
+In-Reply-To: <20250526141316.7e907032@foz.lan>
 
-On 5/24/25 08:13, Yu Kuai wrote:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Currently bitmap_ops is registered while allocating mddev, this is fine
-> when there is only one bitmap_ops, however, after introduing a new
-> bitmap_ops, user space need a time window to choose which bitmap_ops to
-> use while creating new array.
-> 
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->   drivers/md/md.c | 86 +++++++++++++++++++++++++++++++------------------
->   1 file changed, 55 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 4eb0c6effd5b..dc4b85f30e13 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -674,39 +674,50 @@ static void no_op(struct percpu_ref *r) {}
->   
->   static bool mddev_set_bitmap_ops(struct mddev *mddev)
->   {
-> +	struct bitmap_operations *old = mddev->bitmap_ops;
-> +	struct md_submodule_head *head;
-> +
-> +	if (mddev->bitmap_id == ID_BITMAP_NONE ||
-> +	    (old && old->head.id == mddev->bitmap_id))
-> +		return true;
-> +
->   	xa_lock(&md_submodule);
-> -	mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
-> +	head = xa_load(&md_submodule, mddev->bitmap_id);
->   	xa_unlock(&md_submodule);
->   
-> -	if (!mddev->bitmap_ops) {
-> -		pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
-> +	if (WARN_ON_ONCE(!head || head->type != MD_BITMAP)) {
-> +		pr_err("md: can't find bitmap id %d\n", mddev->bitmap_id);
->   		return false;
->   	}
->   
-> +	if (old && old->group)
-> +		sysfs_remove_group(&mddev->kobj, old->group);
-> +
-> +	mddev->bitmap_ops = (void *)head;
-> +	if (mddev->bitmap_ops && mddev->bitmap_ops->group &&
-> +	    sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
-> +		pr_warn("md: cannot register extra bitmap attributes for %s\n",
-> +			mdname(mddev));
-> +
->   	return true;
->   }
->   
->   static void mddev_clear_bitmap_ops(struct mddev *mddev)
->   {
-> +	if (mddev->bitmap_ops && mddev->bitmap_ops->group)
-> +		sysfs_remove_group(&mddev->kobj, mddev->bitmap_ops->group);
-> +
->   	mddev->bitmap_ops = NULL;
->   }
->   
->   int mddev_init(struct mddev *mddev)
->   {
-> -	mddev->bitmap_id = ID_BITMAP;
-> -
-> -	if (!mddev_set_bitmap_ops(mddev))
-> -		return -EINVAL;
-> -
->   	if (percpu_ref_init(&mddev->active_io, active_io_release,
-> -			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-> -		mddev_clear_bitmap_ops(mddev);
-> +			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL))
->   		return -ENOMEM;
-> -	}
->   
->   	if (percpu_ref_init(&mddev->writes_pending, no_op,
->   			    PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
-> -		mddev_clear_bitmap_ops(mddev);
->   		percpu_ref_exit(&mddev->active_io);
->   		return -ENOMEM;
->   	}
-> @@ -734,6 +745,7 @@ int mddev_init(struct mddev *mddev)
->   	mddev->resync_min = 0;
->   	mddev->resync_max = MaxSector;
->   	mddev->level = LEVEL_NONE;
-> +	mddev->bitmap_id = ID_BITMAP;
->   
->   	INIT_WORK(&mddev->sync_work, md_start_sync);
->   	INIT_WORK(&mddev->del_work, mddev_delayed_delete);
-> @@ -744,7 +756,6 @@ EXPORT_SYMBOL_GPL(mddev_init);
->   
->   void mddev_destroy(struct mddev *mddev)
->   {
-> -	mddev_clear_bitmap_ops(mddev);
->   	percpu_ref_exit(&mddev->active_io);
->   	percpu_ref_exit(&mddev->writes_pending);
->   }
-> @@ -6093,11 +6104,6 @@ struct mddev *md_alloc(dev_t dev, char *name)
->   		return ERR_PTR(error);
->   	}
->   
-> -	if (md_bitmap_registered(mddev) && mddev->bitmap_ops->group)
-> -		if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
-> -			pr_warn("md: cannot register extra bitmap attributes for %s\n",
-> -				mdname(mddev));
-> -
->   	kobject_uevent(&mddev->kobj, KOBJ_ADD);
->   	mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, "array_state");
->   	mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, "level");
+Hi Mauro,
 
-But now you've killed udev event processing.
-Once the 'add' event is sent _all_ sysfs attributes must be present,
-otherwise you'll have a race condition where udev is checking for
-attributes which are present only later.
+On Mon May 26, 2025 at 9:13 PM JST, Mauro Carvalho Chehab wrote:
+> Hi Michael,
+>
+> Em Sat, 12 Apr 2025 13:08:01 +0900
+> Alexandre Courbot <gnurou@gmail.com> escreveu:
+>
+>> Add the first version of the virtio-media driver.
+>>
+>> This driver acts roughly as a V4L2 relay between user-space and the
+>> virtio virtual device on the host, so it is relatively simple, yet
+>> unconventional. It doesn't use VB2 or other frameworks typically used in
+>> a V4L2 driver, and most of its complexity resides in correctly and
+>> efficiently building the virtio descriptor chain to pass to the host,
+>> avoiding copies whenever possible. This is done by
+>> scatterlist_builder.[ch].
+>>
+>> virtio_media_ioctls.c proxies each supported ioctl to the host, using
+>> code generated through macros for ioctls that can be forwarded directly,
+>> which is most of them.
+>>
+>> virtio_media_driver.c provides the expected driver hooks, and support
+>> for mmapping and polling.
+>>
+>>  This version supports MMAP buffers, while USERPTR buffers can also be
+>>  enabled through a driver option. DMABUF support is still pending.
+>
+> It sounds that you applied this one at the virtio tree, but it hasn't
+> being reviewed or acked by media maintainers.
+>
+> Please drop it.
+>
+> Alexandre,
+>
+> Please send media patches to media maintainers, c/c other subsystem
+> maintainers, as otherwise they might end being merged without a
+> proper review.
 
-So when moving things around ensure to move the kobject_uevent() call, too.
+Sorry about that, I put everyone in "To:" without giving it a second
+thought.
 
-(ideally you would set the sysfs attributes when calling 'add_device()',
-but not sure if that's possible here.)
+>
+> In this particular case, we need to double-check if this won't cause
+> any issues, in special with regards to media locks and mutexes.
+
+Agreed, I am not 100% confident about that part myself.
+
+>
+> I'll try to look on it after this merge window, as it is too late
+> for it to be applied during this one.
+
+Appreciate that - given the high traffic on the list I was worried that
+this patch would eventually be overlooked. Not making it for this merge
+window should not be a problem, so please take the time you need.
 
 Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Alex.
