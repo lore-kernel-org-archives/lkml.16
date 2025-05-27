@@ -1,82 +1,121 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A547B7E0E8;
-	Tue, 27 May 2025 14:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4591276050;
+	Tue, 27 May 2025 14:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357437; cv=none; b=NRMdf8kZx3P40zTOcGWPOm8rQLCYpgTTE3QnrEw44B2jMa0gq3IMGLt1Z4QLE0bo2tKahGRCypp4U/4uJTsDH7NIZz77IHOknPgEUygx6BrQDecU5rkWNvdpeDx8/H3sqvtu3OKVIh89AAg4L+m6tBYQ2R7tsERej9J+cnpv2vo=
+	t=1748357516; cv=none; b=S9PimCnmnGcA7JXVKQ5/B7K7s4sw7MyZw2j+vX23X/ggeFY3kNnxCNFFBNyKKpv3m00otwY/iHirzXaGwDrnN7U2WwQbLwi++YBzKs2zGwo+lcZqA5yJJpymn0AwlcpvRtfB438ke8Ufqd1h4FVBcryU91/PJSqy0+I/UY0XpiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357437; c=relaxed/simple;
-	bh=FEbfS+UuSSerkfHo9hXlvZXI3ZHzyKqp+ZFEEJh+akI=;
+	s=arc-20240116; t=1748357516; c=relaxed/simple;
+	bh=cmWVBXyCnDhgtaqPxFZD0Z5OdQ75nRbRM5ot30LJH88=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwSyGOxQ/BwMZ11lpwtxXAlePYQHCrfGmI/jUJuedTNFVmytv+yxH3k+d9fVAhwG3/97cQ5ZkWTH5HyLhzJDl9WYbyQJTcERdpBA2T+CsGkRl7/BhrOHWXe1jO2P+738LaGehLKuizpPWyMh04+MQoZizxOPhDoQ4m/kdhfF2sg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XQg8lBZ+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xWZrCapJ; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=ob48WrOcEKxzQjDlwaBq+oNL6Ve+QwvxDCepAiMlvJ17ptQqbY0mqH0tbaGnS/YTk8yuf9GufwuwEBkik+CEO1ymUomApVQO57AXnaiQjKVoraHJQOMuYlZHYGR3SFea77MGR3H4cfmKunJoHtfLzeqVSPOucWUPrdJHN+xQjpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wdY3kauB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1iMWerTV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XQg8lBZ+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xWZrCapJ"
-Date: Tue, 27 May 2025 16:50:32 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wdY3kauB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1iMWerTV"
+Date: Tue, 27 May 2025 16:51:49 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748357433;
+	s=2020; t=1748357510;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6iZ7GLWczHbCwoKVC3idZCK4EPn/0CsUSuZvQby/Nyw=;
-	b=XQg8lBZ+vxH7yFPMafojrv7Xiq31HBpEsvyEMW9qNBld1Op8ZpVkIoOvAU5D9yoaZ6h+MR
-	OCkIyCK71Gze66CqKhUJgCeDWT2mFzU5GSVZ6dG0VsTtniTKI86chxbaTGhN3zklQsXxfE
-	BHTi1pOa+fpIKOW/qkO4NNV7cwz5o/mDA52zbG5VxcswmAU69uZIrudvbAnm0foClWY24I
-	TckBeS0d1VH4Fo8hx2KuILazScDjaE2og5fs4H4mNaKMEtnNK05eyD+FgDcrezwzk1wf6t
-	EdQHxsApdoL6Il8TbgyPu8NMppximGSyspDicBEZTfOLhq1RTeO9Ago6oc64zg==
+	bh=BLLddXy0LKyaYi11oTN10X4v2tluFuR5tW4jJF8R+Xo=;
+	b=wdY3kauBDESuhaepipwXdJdgLTkWmkFa9CQ/5nbSYokghUU/PYCjiw4zc2k9p4cgDT7bqQ
+	YWCSK5Xeq74PvsjJpif9AstmIaS0d6DvW89DIIfBG9wBrnboG6p5jC5Jae8WStSAkoqXsi
+	NyRl5qMujotsvzQ/YwFabxxxDaavmHa2XIkLcDhjosta+FX5hWwza8Rw9ugUm0hmrdphIw
+	Rzk1K/Fs9+UrTMLiEpGXx13X7iLnRwh6EwgvQQSvtHGypCkXQMvJQDbU/S2ReB1s8x+8/x
+	s8TXCKqTsDxvM+3I6ZqTxLciCikNlqiATIjXyQGB2y6UTDSTF708GHfSfr/0sQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748357433;
+	s=2020e; t=1748357510;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6iZ7GLWczHbCwoKVC3idZCK4EPn/0CsUSuZvQby/Nyw=;
-	b=xWZrCapJs8ABU6OwpQ2Xc3CkeDsfDH3EEdtFsr/JSskcufD8rYsH/atgmjB9bLwEnSNKXl
-	4Y9rEez+ancOcbCg==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
-Message-ID: <20250527145032.fIN-37M_@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-13-gmonaco@redhat.com>
- <20250527133712.CFW5AcNE@linutronix.de>
- <6f33e6b7ad296f4fd0e9c089ac92e53c08cfd850.camel@redhat.com>
+	bh=BLLddXy0LKyaYi11oTN10X4v2tluFuR5tW4jJF8R+Xo=;
+	b=1iMWerTV4u9O+OZ2CvRWA5izDulQijwZXuRVry3Qbczp+j+ZeBmhTjEm+guXnYhJ2C1PPl
+	h4TW8EVhEb+wZTBg==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Nicolas Schier <nicolas.schier@linux.dev>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 09/11] kunit: uapi: Add example for UAPI tests
+Message-ID: <20250527164906-a0121867-5b6d-43ae-9263-ca2bebf44d99@linutronix.de>
+References: <20250407-kunit-kselftests-v2-0-454114e287fd@linutronix.de>
+ <20250407-kunit-kselftests-v2-9-454114e287fd@linutronix.de>
+ <20250526-marvellous-abstract-koala-317cb4@l-nschier-aarch64>
+ <20250526164038-12259c68-586f-4a24-a814-8ffed5778742@linutronix.de>
+ <20250527-dark-uakari-from-pluto-fbc8ae@l-nschier-aarch64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <6f33e6b7ad296f4fd0e9c089ac92e53c08cfd850.camel@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250527-dark-uakari-from-pluto-fbc8ae@l-nschier-aarch64>
 
-On Tue, May 27, 2025 at 04:35:04PM +0200, Gabriele Monaco wrote:
-> Thanks for trying it out, and good to know about this stressor.
-> Unfortunately it's a bit hard to understand from this stack trace, but
-> that's very likely a problem in the model.  I have a few ideas where that
-> could be but I believe it's something visible only on a physical machine
-> (haven't tested much on x86 bare metal, only VM).
->
-> You're running on bare metal right?
+On Tue, May 27, 2025 at 03:56:17PM +0200, Nicolas Schier wrote:
+> On Mon, May 26, 2025 at 04:50:19PM +0200, Thomas Weiﬂschuh wrote:
+> > On Mon, May 26, 2025 at 04:22:02PM +0200, Nicolas Schier wrote:
+> > > On Mon, Apr 07, 2025 at 09:42:46AM +0200, Thomas Weiﬂschuh wrote:
+> > > > Extend the example to show how to run a userspace executable.
+> > > > 
+> > > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > > > ---
+> > > >  lib/kunit/.kunitconfig         |  2 ++
+> > > >  lib/kunit/Makefile             |  9 ++++++++-
+> > > >  lib/kunit/kunit-example-test.c | 15 +++++++++++++++
+> > > >  lib/kunit/kunit-example-uapi.c | 22 ++++++++++++++++++++++
+> > > >  4 files changed, 47 insertions(+), 1 deletion(-)
+> > > 
+> > > 
+> > > Adding this diff allows 'make clean' to clean up the UAPI test binary:
+> > > 
+> > > 
+> > > diff --git a/lib/Makefile b/lib/Makefile
+> > > --- a/lib/Makefile
+> > > +++ b/lib/Makefile
+> > > @@ -112,8 +112,6 @@ CFLAGS_REMOVE_test_fpu_impl.o += $(CC_FLAGS_NO_FPU)
+> > >  # Some KUnit files (hooks.o) need to be built-in even when KUnit is a module,
+> > >  # so we can't just use obj-$(CONFIG_KUNIT).
+> > > -ifdef CONFIG_KUNIT
+> > > -obj-y += kunit/
+> > > -endif
+> > > +obj-$(if $(CONFIG_KUNIT),y) += kunit/
+> > 
+> > Wouldn't the following be sufficient?
+> > 
+> > obj-y += kunit/
+> > 
+> > The the kunit Makefile doesn't do anything if CONFIG_KUNIT=y and AFAIK for
+> > directories obj-m and obj-y should do the same.
+> 
+> that's wrong.  In lib/kunit/Makefile there is
+> 
+>     obj-y += hooks.o
+> 
+> thus, lib/kunit/hooks.o would then be built unconditionally (even w/o 
+> CONFIG_KUNIT).
 
-No, it's QEMU:
+Indeed, thanks for the hint.
 
-qemu-system-x86_64 -enable-kvm -m 2048 -smp 4 \
-    -nographic \
-    -drive if=virtio,format=raw,file=bookworm.img \
-    -kernel /srv/work/namcao/linux/arch/x86/boot/bzImage \
-    -append "console=ttyS0 root=/dev/vda rw" \
+> Iff we would add 'obj-y += kunit/' in lib/Makefile we'd have to adjust the 
+> hooks.o line in lib/kunit/Makefile appropriately.
 
-The kernel is just x86 defconfig + the monitors.
+I'll go with the 'obj-y += kunit/' solution for now.
+It keeps the special logic for hook.o in a single place, gets rid of a
+duplicate comment and is easier to understand.
 
-Nam
+<snip>
