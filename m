@@ -1,203 +1,212 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ADF1E4BE;
-	Tue, 27 May 2025 13:12:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE25A24DCF1;
+	Tue, 27 May 2025 13:13:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351579; cv=none; b=Rny4z/1bMinTPYcITp4vYoR5u5OowlDVftyAmIQRtO4SKHEHkC8mShaXijEndRiAzs0Vq/v8VXjmEyFoPAMKZZ826LtiHqebo1C6Z6vB4W0/x/zDhUJy48ljyzYdvZoU0mZyO7Bwg0KJotVWGA2GF4oAqbIS7+imdTcBAA/DMAU=
+	t=1748351609; cv=none; b=QkWz3kTApExJIIl9MeCq4UwNAstAIZT3rHHHYNgD1yES0taA07R/bOzLUwnzBNtTC/K8c6J0Rc90V2RRrrDt+Wu04lIF6nMVhrZlzYu5ex8T4Kl+wKQWnG2hCMcu8DGuN2fv6gVpKiOyfrOrbed/FYnI7N00m70Ig+E1voVusHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351579; c=relaxed/simple;
-	bh=dzGbsJp//zG7Ib4jWbLdhkmBxjqHy4GxwjXSB0ekCFg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nemh4/SvrrGVKlcCVE3s/KuU+URDXBcgznagRX07TiF/DVBWw16U3NOfXA2jzLR4nPcn1puA7CjtmcvyldMrDHy2Lb3+zfin4HUB63rYO+KhyYKrDMJEVvuF7rSSDwgNpmx3uIKk/tz9Em/XWOz+iTy8+5AjjPltLjswH2xjDms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qOzwl26J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748351609; c=relaxed/simple;
+	bh=jG394c909w+93hl23R87SLncNBijklgCCygVq3eWn+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X17PxXR42Ea7HFh68OCkSdbYunIklQzz0GVQlEVU7ww9+HVaYaNDEXR44gXaySd49nlUvxfoCRRmrVYvgeQUs4KsDB7gJ7zxeh6nzMku02nCdPb6VI2Q0Byj7y/2i5hM1A0EhOrOPm7RDyHnVgYq5BmVpKgXclqBvZJjKn5OjN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nANZiXo/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOzwl26J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A14DC4CEE9;
-	Tue, 27 May 2025 13:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nANZiXo/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 590AAC4CEE9;
+	Tue, 27 May 2025 13:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748351579;
-	bh=dzGbsJp//zG7Ib4jWbLdhkmBxjqHy4GxwjXSB0ekCFg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qOzwl26JN6O+y041qoX9r0mMR044QBRYuwDcw0qzQmN1G3G38vHvbkM1xjuuIZQke
-	 ExKpA99O4IBzVhvQF0VMFkqNgxtTOJNzHYyi95jv81cTKAHBqpdikYp7OqyzpZ5IMQ
-	 2nKBrcz11JWiGg+Hfkf212qytSXEZwK6jfKoKitW0DQ/rQMdyHpdygpKCiZdxST6ss
-	 Wr77GYqoxufgtwQEhXUCopGDbk6CwVf5o+EHDKMbYvgLsJLFUbcRhk+MmdPMYksEuT
-	 Xa7YPqgr2d7qUwFlD7YFI2d/Z6ykzyqQNkH3L7PmzOi49BAbpYlOV5ZjW38scOi0t9
-	 9aZYbxzzuWO0Q==
-Message-ID: <eec2a1db-717e-46f2-a988-6beefab7b699@kernel.org>
-Date: Tue, 27 May 2025 15:12:54 +0200
+	s=k20201202; t=1748351609;
+	bh=jG394c909w+93hl23R87SLncNBijklgCCygVq3eWn+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nANZiXo/34q9RxHjpN1Fp8fT3oFNMFhxXNKvo4oTcbYR4iTgnlZd/oYkHhnYfFfsN
+	 yikQp22qJ+RziHHYL/76LnySUpjF7cL9WmvRRmIR1+V5n2P0KxPVP26HzUZNELQq0q
+	 etjOSPyYNlm6HKmEBMJQQzIJ6vggybA8qlRrd5pgK+PciWbiEy9pIcpSyYoY8/6t2Z
+	 le5VrDS7zIP+bM1WoIX0qZJG2yjuXMDUZ4+gZTni+cmi+20bpGXoWAFm2C4drIaXbR
+	 S6RCNaU1EoQ90VV/wBiX8ZdVVYdg535iOToPwutfvILHcfqun7iBUcNh2lypxZIgrx
+	 ywgR2Z0lhvN8Q==
+Date: Tue, 27 May 2025 15:13:24 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Jiri Kosina <jikos@kernel.org>, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [GIT PULL] platform-drivers-x86 for v6.16-1
+Message-ID: <3xuwmzjmnu63r4l6fke6cbbiagjurbefdmcohzmpxy2thaegyg@dy75rzhxtiek>
+References: <pdx86-pr-20250527124435-2181824944@linux.intel.com>
+ <aDWq/U57DO7fMu4K@duo.ucw.cz>
+ <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] ARM: dts: stm32: fullfill diversity with OPP for
- STM32M15x SOCs
-To: Amelie Delaunay <amelie.delaunay@foss.st.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250527-stm32mp157f-dk2-v1-0-8aef885a4928@foss.st.com>
- <20250527-stm32mp157f-dk2-v1-1-8aef885a4928@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250527-stm32mp157f-dk2-v1-1-8aef885a4928@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4cac7f91-608b-4362-99ed-4d8cd5935900@kernel.org>
 
-On 27/05/2025 15:03, Amelie Delaunay wrote:
-> From: Alexandre Torgue <alexandre.torgue@foss.st.com>
+On May 27 2025, Hans de Goede wrote:
+> Hi Linus, Pavel, et al.,
 > 
-> This commit creates new files to manage security features and supported OPP
-> on STM32MP15x SOCs. On STM32MP15xY, "Y" gives information:
->  -Y = A means no cryp IP and no secure boot + A7-CPU@650MHz.
->  -Y = C means cryp IP + optee + secure boot + A7-CPU@650MHz.
->  -Y = D means no cryp IP and no secure boot + A7-CPU@800MHz.
->  -Y = F means cryp IP + optee + secure boot + A7-CPU@800MHz.
+> On 27-May-25 2:07 PM, Pavel Machek wrote:
+> > Hi!
+> > 
+> >> warning to hid-asus. I'm expecting Pavel might want object the approach
+> >> used in the tuxedo driver, I largely relied on my co-maintainer Hans'
+> >> opinion on what to do with that change as he was much more familiar with
+> >> that discussion, and the pros and cons of each approach.
 > 
-> It fullfills the initial STM32MP15x SoC diversity introduced by
-> commit 0eda69b6c5f9 ("ARM: dts: stm32: Manage security diversity
-> for STM32M15x SOCs").
+> Let me provide some background to this from my pov.
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-> ---
->  arch/arm/boot/dts/st/stm32mp15xa.dtsi |  5 +++++
->  arch/arm/boot/dts/st/stm32mp15xc.dtsi |  4 +++-
->  arch/arm/boot/dts/st/stm32mp15xd.dtsi |  5 +++++
->  arch/arm/boot/dts/st/stm32mp15xf.dtsi | 20 ++++++++++++++++++++
->  4 files changed, 33 insertions(+), 1 deletion(-)
+> This is not about plain backlit keyboards for which we have been
+> using the /sys/class/leds API for quite a while now without any
+> complaints.
 > 
-> diff --git a/arch/arm/boot/dts/st/stm32mp15xa.dtsi b/arch/arm/boot/dts/st/stm32mp15xa.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..cb55f5966f74011d12d7a5c6ad047569d25d4e98
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/st/stm32mp15xa.dtsi
-> @@ -0,0 +1,5 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-
-You create entirely empty, unused file. There is literally no benefit of
-this file, no impact, just more files to handle.
-
-> + */
-> diff --git a/arch/arm/boot/dts/st/stm32mp15xc.dtsi b/arch/arm/boot/dts/st/stm32mp15xc.dtsi
-> index 97465717f932fc223647af76e88a6182cf3c870f..4d30a2a537f15c1e145635b090de0f0222526579 100644
-> --- a/arch/arm/boot/dts/st/stm32mp15xc.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp15xc.dtsi
-> @@ -1,9 +1,11 @@
-> -// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-
-License change is not explained in commit msg and anyway should be
-separate commit with acks/sobs from all copyright holders. You also need
-to CC them (Cc e.g. Gatien).
-
->  /*
->   * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
->   * Author: Alexandre Torgue <alexandre.torgue@st.com> for STMicroelectronics.
->   */
->  
-> +#include "stm32mp15xa.dtsi"
-> +
->  &etzpc {
->  	cryp1: cryp@54001000 {
->  		compatible = "st,stm32mp1-cryp";
-> diff --git a/arch/arm/boot/dts/st/stm32mp15xd.dtsi b/arch/arm/boot/dts/st/stm32mp15xd.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..cb55f5966f74011d12d7a5c6ad047569d25d4e98
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/st/stm32mp15xd.dtsi
-> @@ -0,0 +1,5 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-> + */
-
-Same problems.
-
-> diff --git a/arch/arm/boot/dts/st/stm32mp15xf.dtsi b/arch/arm/boot/dts/st/stm32mp15xf.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..5f6a2952125d00d468e2e4012024f02380cfaa49
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/st/stm32mp15xf.dtsi
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) STMicroelectronics 2025 - All Rights Reserved
-> + * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
-> + */
-> +
-> +#include "stm32mp15xd.dtsi"
-> +
-> +/ {
-> +	soc {
-> +		cryp1: cryp@54001000 {
-> +			compatible = "st,stm32mp1-cryp";
-> +			reg = <0x54001000 0x400>;
-> +			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&rcc CRYP1>;
-> +			resets = <&rcc CRYP1_R>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
+> This is about gaming laptops / peripherals with individual
+> addressable RGB LEDs. For keyboards this will be one or more
+> RGB LEDs per key, but a similar problem exists for things
+> like RGB light strips on the side of laptops (possibly part
+> of the same hw interface), on mice, game-controllers etc.
 > 
+> The /sys/class/leds interface is based on 1 class device
+> per LED, for devices with a 100+ LEDs this does not work,
+> especially not since we want to do realtime effects in
+> software (userspace sw) which requires being able to
+> set all LEDs with a single syscall.
+> 
+> We have been trying to define a new userspace API for this
+> there are several long threads on both the platform-drivers-x86
+> and the linux-leds lists. Including some proposals from
+> Werner, the author of the patches Pavel is objecting to.
+> 
+> But we've failed to come up with a workable userspace API
+> everyone likes because every device is very different so
+> defining a uniform API for this is a hard problem to solve.
+> 
+> Microsoft has been pushing hw-vendors to use the new(ish)
+> HID lamp array API / specification for this. Since Microsoft
+> is pushing this most hw will move to this new interface:
+> 
+> https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/dynamic-lighting-devices
+> https://usb.org/sites/default/files/hut1_5.pdf (26 Lighting And Illumination Page (0x59))
+> https://github.com/microsoft/RP2040MacropadHidSample
+> 
+> The HID subsystem has no intention to provide a separate
+> API for HID lamp array devices instead userspace is expected
+> to use /dev/hidraw# and openrgb, the defacto standard for userspace
+> RGB LED control, has been working on supporting this for over
+> a year already:
+> 
+> https://gitlab.com/CalcProgrammer1/OpenRGB/-/merge_requests/2348
+> 
+> and this support is scheduled to get merged before the next
+> oprnrgb release. Also note that openrgb will need to support this
+> regardless of the patches we are discussing now, since other
+> hw is using this natively.
+> 
+> At some point someone suggested that existing laptops which use
+> vendor specific firmware interfaces to control the RGB LEDs should
+> just emulate a HID lamp array device. This way we get to use a well
+> defined API for this and userspace only needs to support the 1 API
+> instead of needing to support both HID lamparray + whatever we come
+> up as Linux specific userspace API for this.
+> 
+> Emulating a HID device was discussed with the HID subsys maintainers
+> and Benjamin Tissoires liked the approach.
+> 
+> Actually everyone involved like the approach. Since userspace will
+> need HID lamp-array support anyways why make userspace's and our
+> (kernel's) live harder by defining a new userspace API for this?
+> While at the same time we have been unable to to come to a consensus
+> what this new userspace API should look like.
+> 
+> The only person objecting against this approach is Pavel, who for
+> reasons which IMHO he has not been able to explain properly insists
+> that there *must* be a new Linux specific userspace API for this.
+> 
+> Benjamin, I assume you are still on favor of this approach can you
+> confirm this please ?
 
+Yes, I confirm changing the custom proprietary protocol of this keyboard
+to a known standard is still good to me.
 
-Best regards,
-Krzysztof
+> 
+> >>  drivers/platform/x86/tuxedo/nb04/wmi_ab.c          |  923 +++++
+> >>  drivers/platform/x86/tuxedo/nb04/wmi_util.c        |   91 +
+> >>  drivers/platform/x86/tuxedo/nb04/wmi_util.h        |  109 +
+> > 
+> > Yes, I'd preffer this not to go in.
+> > 
+> > Reasons:
+> > 
+> > 1) Normally, keyboard backlight is handled by LED subsystem.
+> 
+> This is not a keyboard backlight though, this is a keyboard with
+> per key addressable RGB lighting.
+> 
+> > This was not even Cc-ed to LED list.
+> 
+> Yes because it does not touch any files under drivers/leds nor
+> does it implement the LED class API.
+
+I would also add that the LED list was added at the very beginning of
+the submission process on previous versions. Only that particular
+implementation, not touching the LED subystem was not.
+
+> 
+> This is a driver talking to a device specific firmware interface
+> (so platform-driver-x86 domain) implementing a HID device on top
+> (so drivers/hid / linux-input domain).
+> 
+> And both the pdx maintainers (Ilpo, me) and the HID maintainers
+> (Benjamin Tissoires) are in favor of doing things this way.
+> 
+> > 2) It introduces new kernel API. Unfortunately, that API is not
+> > documented in the kernel and is very much unlike anything else we have
+> > in the kernel.
+> 
+> The beauty is actually that it does not introduce a new kernel API
+> at all. It exposes a new HID device following the specification linked
+> above (which userspace will need to support anyway) and allows access
+> to that HID device through /dev/hidraw#.
+> 
+> The not needing to define a new userspace API is actually why most people
+> like this idea.
+
+And again, I re-iterate that nobody is opposed to a well defined kernel
+api, which can be implemented in the HID subsystem now.
+
+That means a little longer path for this particular device (because
+proprietary->HID->wonderful kernel API), but that means that other new
+devices implementing natively HID lamp array would benefit from this
+work instead of having a single device with that new kernel API.
+
+But OTOH, nobody managed to be convincing enough that a new kernel API
+would be benefitial and that cross platform projects like openrgb would
+jump on it ASAP.
+
+Cheers,
+Benjamin
+
+> 
+> > 3) The code is not modular in any way, so the crazy API code is mixed
+> > with real driver code, making reuse hard.
+> 
+> This is the first and possibly only driver implementing HID lamparray
+> emulation. If we get more then we can factor out common code then, once
+> we actually will have some 
+> 
+> > 4) We don't have reasonable support for the new API in the userland.
+> 
+> This is simply not true. Openrgb's next release is planning to
+> include HID lamparray support.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
