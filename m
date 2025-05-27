@@ -1,85 +1,140 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B879279784
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F99B27A93D;
+	Tue, 27 May 2025 15:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748359870; cv=none; b=ja7/IDnGgNTm0PvGWXSl9ivJ8BFzANa43dkD4kj3J9Zw0Tb/qFG9wlfw8L5F+H5seRcR0H87iLckqdFqzGKSm9bXXIuYmxIEwuUpLDFOF2jLYbSMVdynDauq8Qw3Ee1RQNBo9uHHSRqMlLXPsRiR3PEzpbWBJWQW/k5xsX1JKoA=
+	t=1748359905; cv=none; b=OlTlFlQAH/VvbsXo7B7KNlLFNcvg+Ga44JKhGPSxGuu+do6Wd8/bP2xU74p2K+L6IC/nGNj20P22x+23xvRr39f0V0IksI+JGRfX1TqRxUzobhVffznFSNmHJnv35DKNg3ZLX8lTENOEH7fysAONvZGr+6l66OaForm6yMkb8aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748359870; c=relaxed/simple;
-	bh=BAhJ8b07z0CL+zogYz9RgQpw/mCTKYttsWo1Db9J5i8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nw7KEAErPNk6m9wZndueIOGh8SE/aIJrqb1wB0+bnReguu5FyEBgxH1zQgk7/lWPV1V/qz7rMeOA4hEWY9S91T8zS7+5ddpnCb1d3GXTX10T6d4iLXfii31UMpSwHWPVCtY6+UqoRZwSved2U13hhDsGStO0OciztZCtiMR5fSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s/zomrM4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DFsga0Xi; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748359905; c=relaxed/simple;
+	bh=iznhlCHEPeP5gtUawFfO/CMtIcM+gezphiFD8zog8f4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XcXYPVR0nCd31BSZVPdcRaNsc3+2NSGyvcBOE3gcApvVq1KmazKG1/VJofzv5gLgjjpedZ5okhtfeUgHx0bTmzjhnOdt3Ex5POFFvPnYnb8Y3iGXv6kLZmfhHLEvxwhxSC7ASYxKYp4q2/suzCh0dzwpBhrTZULulYy+JPiaT8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2G0p1eU; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s/zomrM4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DFsga0Xi"
-Date: Tue, 27 May 2025 17:31:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748359867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mghd6ymj7AZHKQfj/EO9+xXkykC2InOaEHCIjdtP6Hk=;
-	b=s/zomrM4LmvNvCE5plMSguD5TmcbApPgBn4OMLzTi0OqNnnU2vWKQhmRGJxhQACCUB1XL0
-	Hau8NuRak+f18oNwqZpgap2iXnKDEn/Mi9KnttfKigy9uX4waOt8DH3TanuYX9LNPjbsGO
-	35JiVugTbiJxXGfNFk56FYT7fN0dPrMf2eweKO/mp2wQKsp/7oseeBAxpwHyuGkLowRH+x
-	Pv/goRkoarYEwIykNzuPSIY0xeELmWGWbh/UrlyPYci0wSmtY2o87i5H04c7AeTF0InZXf
-	YIaCWz37vFtJiwMKoq2UMEOI1s1mIYG007vO/PFd9zE4kerhrbYXPWn4SZZDsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748359867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mghd6ymj7AZHKQfj/EO9+xXkykC2InOaEHCIjdtP6Hk=;
-	b=DFsga0XiZDpjjjwrmUstv5jOJuUWsgmd8wTDGstEEDxAxcgBZFY5y1m5XDc/KaqJYtper6
-	3eMosbusPABZSsBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: syzbot <syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com>,
-	andrealmeid@igalia.com, dave@stgolabs.net, dvhart@infradead.org,
-	linux-kernel@vger.kernel.org, mingo@redhat.com,
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: [syzbot] [kernel?] KASAN: wild-memory-access Read in
- get_futex_key
-Message-ID: <20250527153106.WFmvR15N@linutronix.de>
-References: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
- <20250527142217.GA7747@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2G0p1eU"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso33553981fa.2;
+        Tue, 27 May 2025 08:31:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748359901; x=1748964701; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iznhlCHEPeP5gtUawFfO/CMtIcM+gezphiFD8zog8f4=;
+        b=J2G0p1eU4saE3xpl5AhH9Nc6rzSAldYMZwK7UrJYLwT0t9AUu6s3IRjwAeNbU+Ky1X
+         VhTkE+1bsec8kdLm3Ra8XLDSsZR8unXPdzFfO3IDhS98+0ZwNiEsblzURdWGV5ojg/Yh
+         gfoOXZZTrUd98fIQr3EKu9/h/jZi5TT7lnQJ1uEB11JxfqiPbOM1TnxqI6OukEHL8kvf
+         T5+l/gQ8y4+lGp7QkFBTweJDm7jpIL0ij9zurn3SfQYGYrD6S7zSf2/DGNiHRAzzQ6u4
+         eRGLssfgQTs2HgtIecGY3CtOmsJTzKDui9rKbn1qn4Hkss0lxX8c5vj6VDjfFC+g0X7e
+         ezBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748359901; x=1748964701;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iznhlCHEPeP5gtUawFfO/CMtIcM+gezphiFD8zog8f4=;
+        b=hKMsvCk3Yl2WBdS4zR4Z9aldVAmpW0w3VxEeyGYIUsi22PbZwgJXQPlTAI/skl7ayK
+         jtQjZkVpx+8xOby9P/BghT9r1dNAow5naG79ugat91meGVn+mD/MS+4ZuAbA613g2pQD
+         x/SQpZhzH9lZCff4XQDIGZfq8tqLJnOM80oP8OOf58teyKsmfwKIZWcw+/NmX0oNjolg
+         gxeJWPiOYdEYd8la7GilBPlhr8+ZZsTx3bEbzgwx4XTC6V986zeey1liO2838t21rEFm
+         nJcDTMuofNqkqe7ZeUng3qKnok+sxYNSFbgwTwGr5qvirayt2jKUqZxJBEy23rAM/LkV
+         Djmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKjmM//ihtPaOGUISBXL5LScJFOWVHusmacciqSFOCmlUUn/AuHvBG6On3QmiW40JgtDUBLTdb0mg9/p05ys0/@vger.kernel.org, AJvYcCUozOWpUsmihg/igVWTc4CKTOPDvN69ZkItufiobMHIBWGGshuKHIcbbR7r2GuDphDETQyEWUz8xg8MSbE=@vger.kernel.org, AJvYcCV1Mqu6oxGqaF1CN/0aHp4zJcQ4hRgxw3rJfDjrjl+CLSGsqCO/qSn1nKp9cQmFbtHei+m6S3/foKTAdLLBESY=@vger.kernel.org, AJvYcCVKPanrK3IQkK84zIfKe3lopSayZ619m1HdKx4QZJmOUJSOeURBt2vGYPxk6sIpY9WdyQgNg643@vger.kernel.org, AJvYcCVZpb+PHe5WBxmJWCcogIMy9VEDCwri0MgTkUYeHa5vAURvRENCuCZbGvfL77J/svNUt95P06O7YaQh@vger.kernel.org, AJvYcCWE83ADzCK3YcCOQS958jaEvKpD9Q7fId1apQl4FD/r97HAU3c23tFJTDF2S5dWg4KPr/f3JH0fTmOUnXNh@vger.kernel.org, AJvYcCWtuI82HQZnS4hLyKK5tdSAmRen5paDEWf+8rsrjC3rjn+B493174xAjUfoObxKiyiewRLmNzBRyX5c@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcnsgO7644Mv4HF9b48feyxBeJbhoBhPTNYBUlw+lq5hBZO8hu
+	XFmmq+vSTpKYAVF95Tf9AxT+g2qc0tGfDy5ftZmIsoOymoyiWhVxcHYWphc8e7KiX0L3MQAqMNf
+	STnCpzrl+3StyXZbD8pX/8wFyS/BUWAQ=
+X-Gm-Gg: ASbGnct3ta2nAo751gD2yw1L1bewghMFt7RzVigR660yajUD0XFMnha5GOp6PxR72fE
+	nM++rwCV2fXoRzInKTmFAzPfVLKOdFIMx8/Bhs0NZaz2phTHOsNFLXbzsfBmcfzLPbGoZZLklNg
+	eS3ZMctqXnTC7mcSelmH30UQXcZgDsfPtY1JWSsg+VILUsYDqW
+X-Google-Smtp-Source: AGHT+IGh7j3R2Lz5ku1NP2jO6jmUvppwAP/M8QfRt/BCMIbepGXx0xkMd+/B+0FfsH2Ts/09nLW8pSm9EZf3hMbUgb0=
+X-Received: by 2002:a05:651c:304c:b0:30d:895d:2fa5 with SMTP id
+ 38308e7fff4ca-3295ba248d3mr26953991fa.14.1748359900905; Tue, 27 May 2025
+ 08:31:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250527142217.GA7747@noisy.programming.kicks-ass.net>
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-3-6412a94d9d75@gmail.com> <DA66HHUA8ANF.BI2FH7POFSRJ@kernel.org>
+ <CAJ-ks9kmDiOV_qH_s-r4Z4iQf2k6H7ZnqOf5okaQxWWxrj5Deg@mail.gmail.com> <DA6GUB3YOVBD.RWGBCC8CTE7K@kernel.org>
+In-Reply-To: <DA6GUB3YOVBD.RWGBCC8CTE7K@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 27 May 2025 11:31:04 -0400
+X-Gm-Features: AX0GCFt3TZm7A3lWw22HaGxbcPpRtWDbLI6U-f3H-j7VP2POqxnjTzuj9-Y7MDw
+Message-ID: <CAJ-ks9mCZ5rKUFmkM=KPdw=gALjCjdMrMzedu89w7TxwvPyREg@mail.gmail.com>
+Subject: Re: [PATCH v10 3/5] rust: replace `CStr` with `core::ffi::CStr`
+To: Benno Lossin <lossin@kernel.org>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-27 16:22:17 [+0200], Peter Zijlstra wrote:
-> >  get_futex_key+0x595/0x1540 kernel/futex/core.c:587
-> 
-> Does the this help?
+On Mon, May 26, 2025 at 7:03=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> On Tue May 27, 2025 at 12:24 AM CEST, Tamir Duberstein wrote:
+> > On Mon, May 26, 2025 at 10:56=E2=80=AFAM Benno Lossin <lossin@kernel.or=
+g> wrote:
+> >>
+> >> On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
+> >> > `std::ffi::CStr` was moved to `core::ffi::CStr` in Rust 1.64. Replac=
+e
+> >> > `kernel::str::CStr` with `core::ffi::CStr` now that we can.
+> >>
+> >> What's this supposed to mean?
+> >
+> > It means that kernel::str::CStr was introduced before core::ffi:CStr
+> > was available. I didn't check this before, but it is indeed true - see
+> > https://github.com/Rust-for-Linux/linux/commit/faa3cbcca03d0dec8f8e43f1=
+d8d5c0860d98a23f.
+>
+> I see, then just write that and mention the commit.
 
-it avoids boom but reject FUTEX_NO_NODE. What about
+=F0=9F=91=8D
 
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 19a2c65f3d373..d0f5645eac61c 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -583,8 +583,9 @@ int get_futex_key(u32 __user *uaddr, unsigned int flags, union futex_key *key,
- 		if (futex_get_value(&node, naddr))
- 			return -EFAULT;
- 
--		if (node != FUTEX_NO_NODE &&
--		    (node >= MAX_NUMNODES || !node_possible(node)))
-+		if ((node != FUTEX_NO_NODE) &&
-+		    (node < 0 || node > nr_node_ids ||
-+		     !node_possible(node)))
- 			return -EINVAL;
- 	}
- 
+> >> > C-String literals were added in Rust 1.77. Opportunistically replace
+> >> > instances of `kernel::c_str!` with C-String literals where other cod=
+e
+> >> > changes were already necessary; the rest will be done in a later com=
+mit.
+> >>
+> >> Similarly this, the message should explain the motivation for the
+> >> change, the change itself and can include additional information.
+> >
+> > The motivation is implied (that using standard types is preferable to
+> > having custom ones; this is also implicit rather than explicit in
+> > https://github.com/Rust-for-Linux/linux/issues/1075), but I can
+> > sharpen it.
+>
+> Please add this information to the commit message.
 
-Sebastian
+=F0=9F=91=8D
