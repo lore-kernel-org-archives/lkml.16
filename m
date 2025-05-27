@@ -1,109 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1481B652
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3E9193402;
+	Tue, 27 May 2025 06:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326139; cv=none; b=EfPU02eznU9eFnW/b25CYF21rKz6348P86UbDziSzkmaw/qw/NZUMIwpxMIluZkLK0bfDvqHA0Ry1mVD0c0/WmJ/RYdPQajTQ06hxUFauW/11zDD/LDPoPM39wiiAYGJZo720bnVggTEM17QWIZf+L3r6u10pMY0R2bsZdmdTOw=
+	t=1748326193; cv=none; b=mhntWHqrdlDOfG1UtmqeYHkfRX8WrVFUbT4QHw0NfVkK0Xor8YxW//lR1zkpy8IqmyYv9I80UN09Gq9vU2oBzJfWwmwDbuBQAMvwru6VbHaFxtrEeIJi6oQADpUscbGcjEVzqBzY2wS9RTSSHWx7Q+zK4phjSpQTPVmptBJwmEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326139; c=relaxed/simple;
-	bh=61jbQ6fa6Y3o4tynXM0JiWhjtIWbokyFgJb882cjQfI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rf9tRkblBY1FhHacLHgNkuFjhS1YeSMsqzAdC6V/f88fKDi9JdITir2DLKAQbXJ2Is37NPHVZlGLpq2cAa4n5OFsBgzcltzvtNBeeYqMG3lgHSteXb3SOFF1wYO2ge2dXj7hPZLnV91asYqbjIjtDTtEluUpnTA3Y64/+tgbDWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ach95SFY; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748326193; c=relaxed/simple;
+	bh=qOXDVrUaiO2l8wZl4UUJ7YeBOkFqYNSPmNtXngQ0I0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VM86qY2NjEGNlC7i95n9Bw381AU0fo9YEf2dOF9qMHx1zEfRANYZAdUMvVquts8RibP5vgLg/fZZb+vJ3pnrrjO3wGIJC3yGRpNtg3g9oMInvc4vnyKSvPA5RrtSNZGW1h5+vutVFC9dDgO2klOAoXiVMl5u4OmRat94MDwjfHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BWa0YSLn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ach95SFY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748326136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yr/iHE42lciAZJuWsNNhCZ1eCfByYTSyjML/1uGKARw=;
-	b=Ach95SFYnS3eIkGgZIbMS6atkt736gFRaCxPhMDka9hikYMCPg8pIc/FcY5Y/AWxlxAvAR
-	MnCdcI9BZkT4MCjaicMk0L8eF4AUFbf5HllTl9oUzey5OAH1vXMpzbuI+TXoVaH5tjdSsc
-	HAen6N+/nJngO50VeB2VDIA/a9hZq0Y=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-205-RahEunf4P-ibuQG0ekYrDQ-1; Tue, 27 May 2025 02:08:55 -0400
-X-MC-Unique: RahEunf4P-ibuQG0ekYrDQ-1
-X-Mimecast-MFC-AGG-ID: RahEunf4P-ibuQG0ekYrDQ_1748326134
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-44b1f5b91c1so22143535e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 23:08:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748326134; x=1748930934;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yr/iHE42lciAZJuWsNNhCZ1eCfByYTSyjML/1uGKARw=;
-        b=EB74zD3WF181aEqnpC7kPTc33Fh2qxV099J+cGqlE2iZMYIeT51F0HYDr4X0cD40+C
-         +Etc81PcE5fz7benwx1PNKPQdOYBZycihd0kWl2fMF1sh9H3Ng/7j6jo7zLUxza7tu7J
-         dlb7JbHQsJ1U7G1jRVz2Z/d3+JoBoMl78b15pH8cZjt5YmmYgQicegMMJBx9RYfhzbJE
-         5Hac2WeamHeDU+BHi97/ctvzjFofoB/2SqQZR5eMNx64haSSqsd/6b0HWLsKCLZ2Zn/G
-         AtqP0wWD7O1Swti/uDaHBcFpmG/Ilz+bBCRXPhawE2WDBbsaK0NNvwvq/ASePPbx7zBi
-         30mw==
-X-Forwarded-Encrypted: i=1; AJvYcCUryyj6/6wowLRCOs5orJlwuNY2VS2CjvTf6aCiFKhBU+hGw7zbud2hteKAHXslEaxmKLunRU+PNMF77Hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOppZmMbTDfhT1hB+rRE3ao1HhL11AZW30Y0S8PucTD5OtHNu3
-	LopG8GvklQFSR7AVaQubJ44mAcF8xJtWXNUEhu2T1xlcUud4CZN2JDbmnKVbhguoG1rcfSnamd1
-	ToZXOdNIrTKXvs/glZAAPL1/qvzmCrQuoDJuP09bMpNg89GVOqgqZ1V5UDpnUeGJLeA==
-X-Gm-Gg: ASbGncukB7yQyILf2h7F0AwOXjWmPg2JjpLPdENQqXSoviWeZA0UyQne2bJCBsgJC4I
-	boBJnfMbIIdhW4iCKvnzOri/dABGvL/x8yf0VMy+r9fsnwe7ufAxlXyumNSjA3pkTrikV9IG210
-	7m/s5PtVvdpEpmHQRzNSajWvyQf7M/ubsvoJg6VaY02OJU2RgNCaoqhOOXcX0CqnuK21cv3T6/H
-	DKARaafn1+UG77pQ437yzuRHcF2pDVaVsf8jb4CdfKW6ss63LZuFG+oSYivKaT6QRl7PqwZebPA
-	kRtUrVyo/oHkkIdQWHhsf+O+f50Tty47K3grRvH2ThK9k9jdV1zBsKaTEQc=
-X-Received: by 2002:a05:600c:8012:b0:43d:45a:8fbb with SMTP id 5b1f17b1804b1-44c92d3516cmr97440715e9.22.1748326133816;
-        Mon, 26 May 2025 23:08:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtEENZYkJ7PmbK5PzUATkfuQAjGiCkwpYW0D71exXRVvHMfIITt9n4VT6TFIbYDLgAOtnPFg==
-X-Received: by 2002:a05:600c:8012:b0:43d:45a:8fbb with SMTP id 5b1f17b1804b1-44c92d3516cmr97440385e9.22.1748326133458;
-        Mon, 26 May 2025 23:08:53 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f062fcsm253027875e9.15.2025.05.26.23.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 23:08:52 -0700 (PDT)
-Message-ID: <10a15ca4-ff93-4e62-9953-cbd3ba2c3f53@redhat.com>
-Date: Tue, 27 May 2025 08:08:51 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BWa0YSLn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC49CC4CEEA;
+	Tue, 27 May 2025 06:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748326192;
+	bh=qOXDVrUaiO2l8wZl4UUJ7YeBOkFqYNSPmNtXngQ0I0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BWa0YSLnW7rqZQo1X6vmYMR9QzV3ZkmpIQRnOulB6lbtvOvbQjjfKPLIt3VHSLFTe
+	 5XlzgQAwXbKqi1+ZdCPTHqTw4+LLEO9ZdedWn2/ojKLopt7W7rYwZYmAx880/7gH6K
+	 HtV78t3jj8PJo8HVbahmsXe4xGPjVs+JUgs30MCo=
+Date: Tue, 27 May 2025 08:09:48 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: clingfei <clf700383@gmail.com>
+Cc: elder@kernel.org, keescook@chromium.org, johan@kernel.org,
+	vireshk@kernel.org, greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] greybus: Avoid fake flexible array for response data
+Message-ID: <2025052727-goliath-freedom-102d@gregkh>
+References: <20250527050635.946553-1-clf700383@gmail.com>
+ <2025052700-ungodly-vitality-d86d@gregkh>
+ <CADPKJ-64_fod0ObZsg_prtB4u+ZA6shZ6AnXqn4vxK1NGxHgkQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] net: sysfs: Implement is_visible for
- phys_(port_id, port_name, switch_id)
-To: Yajun Deng <yajun.deng@linux.dev>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250521140824.3523-1-yajun.deng@linux.dev>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250521140824.3523-1-yajun.deng@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADPKJ-64_fod0ObZsg_prtB4u+ZA6shZ6AnXqn4vxK1NGxHgkQ@mail.gmail.com>
 
-On 5/21/25 4:08 PM, Yajun Deng wrote:
-> phys_port_id_show, phys_port_name_show and phys_switch_id_show would
-> return -EOPNOTSUPP if the netdev didn't implement the corresponding
-> method.
+On Tue, May 27, 2025 at 01:50:42PM +0800, clingfei wrote:
+> Greg KH <gregkh@linuxfoundation.org> 于2025年5月27日周二 13:15写道：
+> >
+> > On Tue, May 27, 2025 at 01:06:35PM +0800, clingfei wrote:
+> > > We want to get rid of zero size arrays and use flexible arrays instead.
+> > > However, in this case the struct is just one flexible array of u8 which
+> > > adds no value. Just use a pointer instead.
+> >
+> > Not true at all, sorry, it does "add value".  Please read the greybus
+> > specification if you have questions about this.
+> >
+> > >
+> > > v1: https://lore.kernel.org/all/202505262032.507AD8E0DC@keescook/
+> >
+> > Please read our documentation for how to properly version kernel patches
 > 
-> There is no point in creating these files if they are unsupported.
+> Sorry, I will read it.
+> >
+> > >
+> > > Signed-off-by: clingfei <clf700383@gmail.com>
+> >
+> > Also, we need a "full"name, not an email alias.
+> >
+> > > ---
+> > >  drivers/staging/greybus/i2c.c             | 12 ++++--------
+> > >  include/linux/greybus/greybus_protocols.h |  3 ---
+> > >  2 files changed, 4 insertions(+), 11 deletions(-)
+> > >
+> > > diff --git a/drivers/staging/greybus/i2c.c b/drivers/staging/greybus/i2c.c
+> > > index 14f1ff6d448c..b248d6717b71 100644
+> > > --- a/drivers/staging/greybus/i2c.c
+> > > +++ b/drivers/staging/greybus/i2c.c
+> > > @@ -144,15 +144,14 @@ gb_i2c_operation_create(struct gb_connection *connection,
+> > >  }
+> > >
+> > >  static void gb_i2c_decode_response(struct i2c_msg *msgs, u32 msg_count,
+> > > -                                struct gb_i2c_transfer_response *response)
+> > > +                                u8 *data)
+> > >  {
+> > >       struct i2c_msg *msg = msgs;
+> > > -     u8 *data;
+> > >       u32 i;
+> > >
+> > > -     if (!response)
+> > > +     if (!data)
+> > >               return;
+> > > -     data = response->data;
+> > > +
+> > >       for (i = 0; i < msg_count; i++) {
+> > >               if (msg->flags & I2C_M_RD) {
+> > >                       memcpy(msg->buf, data, msg->len);
+> > > @@ -188,10 +187,7 @@ static int gb_i2c_transfer_operation(struct gb_i2c_device *gb_i2c_dev,
+> > >
+> > >       ret = gb_operation_request_send_sync(operation);
+> > >       if (!ret) {
+> > > -             struct gb_i2c_transfer_response *response;
+> > > -
+> > > -             response = operation->response->payload;
+> > > -             gb_i2c_decode_response(msgs, msg_count, response);
+> > > +             gb_i2c_decode_response(msgs, msg_count, operation->response->payload);
+> > >               ret = msg_count;
+> > >       } else if (!gb_i2c_expected_transfer_error(ret)) {
+> > >               dev_err(dev, "transfer operation failed (%d)\n", ret);
+> > > diff --git a/include/linux/greybus/greybus_protocols.h b/include/linux/greybus/greybus_protocols.h
+> > > index 820134b0105c..6a35c78b967b 100644
+> > > --- a/include/linux/greybus/greybus_protocols.h
+> > > +++ b/include/linux/greybus/greybus_protocols.h
+> > > @@ -678,9 +678,6 @@ struct gb_i2c_transfer_request {
+> > >       __le16                          op_count;
+> > >       struct gb_i2c_transfer_op       ops[];          /* op_count of these */
+> > >  } __packed;
+> > > -struct gb_i2c_transfer_response {
+> > > -     __u8                            data[0];        /* inbound data */
+> > > -} __packed;
+> >
+> > As I said before, you can't just delete structures that are exported to
+> > userspace without breaking things.  Why is this change acceptable to do
+> > that?
+> >
+> > And how was any of this tested?
+> >
+> > greg k-h
 > 
-> Put these attributes in netdev_phys_group and implement the is_visible
-> method. make phys_(port_id, port_name, switch_id) invisible if the netdev
-> dosen't implement the corresponding method.
-> 
-> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
+> Could you please give some examples that will be broken by this change?
 
-I fear that some orchestration infra depends on the files existence -
-i.e. scripts don't tolerate the files absence, deal only with I/O errors
-after open.
+Have you searched all userspace tools to verify that they do not use
+this structure definition?  You are removing a user/kernel api here,
+something that we do not do without researching that no existing user in
+the world will not break.
 
-It feel a bit too dangerous to merge a change that could break
-user-space this late. Let's defer it to the beginning of the next cycle.
+> And I am not sure how this should be tested. It seems that it will not
+> have any negative impact on functionality.
 
-Paolo
+I would strongly recommend, that if you can not test this, that you not
+make the change :)
 
+good luck!
+
+greg k-h
