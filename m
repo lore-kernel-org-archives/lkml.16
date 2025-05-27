@@ -1,140 +1,192 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B596B17588
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE7C517588;
+	Tue, 27 May 2025 18:14:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369614; cv=none; b=tNZBEvJeX5HfhSxEOMiCHTUztM/EBGBSwaCnUgeC5Rzy/vYBCORJUqQFogBc/akDVmXEDScT68lMzp6MdjJQLVZlCClCMohJLLxNUktw0FuzV8/WKQU6vnYLiksJCpOoPW1faD0UOmcqs2zygxYv8g4qbHiqTiyHxuj+7f8pM1A=
+	t=1748369665; cv=none; b=JofVirAFIgdDTdsHzuHJ+ndZ+yL7cjLw+LffA2PRajVn71rI5aviUMqlTA2n5vP7BZniipYHhK7N62cbH0f8S3Wxxv4Udexx7PM7aRjnDiDr8t/wjRkJBGeoINZaEfFr3XZ6o1Q9JhhnlNFBXSKDgVmrdWuzF5tXpGAtTZQPpno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369614; c=relaxed/simple;
-	bh=+dNHJsRHE/JZChzL4jtoYzFUWpe+5i/Vh+Y/tynOtRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Kgjt6C8FpZxlvdoq5cyRQ6jRFzueu9Nt4XfK636I6QV9xqbkU9Ss4ofTTTMYufSA3CvZE/F//5DRdPpEZyyUiU4Jtk8tKDwvb0qHWhR54AsEDtQcYo0WZa3OWkZjr5Jeb+JPDb1RGf03rDdOOHgLsIKq9V69njBaRNYMlBdKBH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KkjIvfmE; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1748369665; c=relaxed/simple;
+	bh=PU+PyxKn0xcYNa7P58bbs3n1VenxbO0VxwPFev/OMxg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rmgOX/fiKb6SLdlKiE0eLhEGWEtIMVb9M4JJjg0lcP/awWrz70X/ih0TqqLrbWPljMWetewjG+shN8Fkiurg4KZpyq7ZJnRKo2ejcuFfZnqE++sbDe8/iWEbPVz2S/Ow7NC/TBHcgOvh4ElN0CsTqUg4V/8NMTsbkx+H/RO7gpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cM7CTwz3; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KkjIvfmE"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a0ac853894so3881489f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1748369610; x=1748974410; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dpxuBRogWor3q4lMth7t3PBdJyoOLprduS4IK1yfNYE=;
-        b=KkjIvfmEwEJtYEJtA/urhqgtYCyp2uVJJY8wEYEGwV423u58nqxuINyLhFUrlbuGSy
-         LOkcPvZw3B8zp/6jX73h75qzCvO9A8T7lY6nvgqmtiw3HVUx/OrON3PC1oC1i9HXtVUG
-         C8Z+TQRLCV5c6Rhm9UT739PVZRwemjCeZVHgvNK+8zCgKuNxnk1lSH4UXv0GuHbzMRCD
-         d6jnj9aPXWyqKVtvc1dWVQY0ANgKLp1OFjjj+9owAvJZC/Ab4jAplAua2bCVG9XhxLj8
-         tM+Hcsrf8cYMhhbr28F/qcg6VYLvGq2nV7FbTmtx6f6rtdJBlGVStds+b99+gPqPkyiW
-         M1TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748369610; x=1748974410;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dpxuBRogWor3q4lMth7t3PBdJyoOLprduS4IK1yfNYE=;
-        b=DShTFl/ousacsZWY201ajCmxZPyxmwiWBgAdszLQfjb2b2OrdNUSb1K0QzciCv3diT
-         mezvaqPB8rNntvEuHKj9oX1VyuilIOkHwm2D2gFXBy2y25Ay4K0xUB9WnqjOZGAY7lfI
-         ZRvrnbIM3lECIs92NOcDRCYtRosu4tCROGY3r88xlluKuYQZBznx+M3qDdddH9uiazuq
-         iuvJgbKoPOAPf3FbhopZcJ9ooUPpj+1DkYHo92vl3we2auQ+lqD7ZsprmdGqy/NrBWUt
-         1Sb+6+PjvmBmC2qoO2tIUMpyaCL2Lo9oyGRZqTs2+O/kfP1JGvPK9VjAPXpZaPI331C4
-         +meg==
-X-Forwarded-Encrypted: i=1; AJvYcCXq/CX1n/UVlUJTh4ulM16VozdIjL7w+V5Y+PX5rcInTC4bRi4AafbpPIPIOkFSMqGGd79RynkJZUVSrus=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCXGYu5DqboQczy+kYJmUVEVAouiSL3SMQvPBwKbQmlBVitUUz
-	BAYqSJ1Ufhsg6y8fJ9Vs01uiXcP3ClVk8Z1xKZtY912csNZ7ieyPqGNE78/oSCMKkrA=
-X-Gm-Gg: ASbGncuJKMr52IxcTUcHUTccy4t7CdBK0df5eOvSxxrqVDlnNnqGWJ/B3yJujv2D45k
-	+gdkG7dToznBlSsZrdNgKBDYpi1sLbr2naMDvdocNvLRARZ5fuXfzwlGmZIDzfXobRGGWSAo+al
-	b3wlbLPirsl7idh9Uzg1MDbYTsJ3i8g/g/0AKFKFjwTMoFjZYTwVno5RhBJgI/y4P5bcPAK48Wm
-	f/9IHBuzXh5jLkmkA5y0L2XcNLzkBpCcKp63XVcPAuquNwnZN1VM9G+jNFcm2HwXv2MJpFd22Sp
-	Qq87fS21CvyhjCpZq1z8WcSboziIuxZ3B+90HyYIRFg+cKUSyVBoCNNMy+23fU6/88xoxHCdcxA
-	PmZtqFV8x4tnByQE0eFQJsv/iY6nW
-X-Google-Smtp-Source: AGHT+IGyU3zHzfNm3yCtX8SfqxXihbtdFZqypQaZRfy+BYQa0ZaAr3pKhSRnVElWiW/7T7dSNF3VAQ==
-X-Received: by 2002:a05:6000:288b:b0:3a4:e65d:b6d5 with SMTP id ffacd0b85a97d-3a4e65db6demr1273634f8f.1.1748369609987;
-        Tue, 27 May 2025 11:13:29 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4e658f96bsm902113f8f.38.2025.05.27.11.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 11:13:29 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	=?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: bcm958625-meraki-mx6x: Use #pwm-cells = <3>
-Date: Tue, 27 May 2025 20:13:18 +0200
-Message-ID: <20250527181320.373572-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cM7CTwz3"
+Received: from [100.65.224.201] (unknown [20.236.10.206])
+	by linux.microsoft.com (Postfix) with ESMTPSA id B4D272068340;
+	Tue, 27 May 2025 11:14:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B4D272068340
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748369657;
+	bh=LTVke1CMUNvS4hQqIPDgYVFXjE9OC6zyKXgWVqd3TbI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cM7CTwz38s7tHQJXyuHl+kGxNFU9J00CxwrR1yGeMDxwKKYn7e4DEjl64yO6iZpXR
+	 x3cSVA8gRpRQ8MXZNCO+cenCVtnRzcFKE82gsXx5ENSn2nfcdvi3zMhMLlINviwEkp
+	 3wi7MS3TQPXEcJFF3Bn7Y3Q7x8sydCWwi6fQIDEY=
+Message-ID: <158e9461-9728-4d8f-801c-58ccb1883414@linux.microsoft.com>
+Date: Tue, 27 May 2025 11:14:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Reduce delay after FLR of Microsoft MANA devices
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
+ code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
+ linux-kernel@vger.kernel.org
+References: <20250523163932.GA1566378@bhelgaas>
+Content-Language: en-US
+From: Graham Whyte <grwhyte@linux.microsoft.com>
+In-Reply-To: <20250523163932.GA1566378@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1668; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=+dNHJsRHE/JZChzL4jtoYzFUWpe+5i/Vh+Y/tynOtRQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBoNgDAW5dubIg6+TqZHBRIzyah2FApIaAYRtXTf pqGRfowoMaJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaDYAwAAKCRCPgPtYfRL+ TkZGB/9L3cCZEK+NJYPysI9UUNFEL3UFLYkm0pC5Pc6rhtCooUd7UHPjpFwpnSERFbvwzqjhIir 8ok3PXRe5Vr9IZiZGJEA3jCFTl8fJnG9kaL9NJeFS1di59xHVkQpGJHNUdV3jDe80F/z175+Yi5 31wqH+aUr81mLJdgGkUfANvYr4jAlI6ieCUOKHIiTDUaRrx8sD962dl0NJbcZ1xgUFfExXwq2X0 NiNvFdTnxy2pzSe0g9dDSypBrpdxQgMc9ErQg31gHtRXJz1hdT6h6+E8U3/SAEjKiClfvJerdhC akYjIzxbITlzegy8qZBD4jL9EVhn8tZGs0XaN+nJfCFobCKy
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-bcm-nsp.dtsi has #pwm-cells = <3> as is specified in the binding. So to
-also use that correct value for bcm958625-meraki-mx6x the property
-overriding that value just has to be dropped. This fixes a few warnings
-like:
 
-	arch/arm/boot/dts/broadcom/bcm958625-meraki-mx65.dtb: pwm@31000: #pwm-cells: 3 was expected
-		from schema $id: http://devicetree.org/schemas/pwm/brcm,iproc-pwm.yaml#
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- .../boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi    | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On 5/23/2025 9:39 AM, Bjorn Helgaas wrote:
+> On Wed, May 21, 2025 at 11:15:39PM +0000, grwhyte@linux.microsoft.com wrote:
+>> From: Graham Whyte <grwhyte@linux.microsoft.com>
+>>
+>> Add a device-specific reset for Microsoft MANA devices with the FLR
+>> delay reduced from 100ms to 10ms. While this is not compliant with the pci
+>> spec, these devices safely complete the FLR much quicker than 100ms and
+>> this can be reduced to optimize certain scenarios
+> 
+> It looks like this could be done generically if the device advertised
+> the Readiness Time Reporting Capability (PCIe r6.0, sec 7.9.16) and
+> Linux supported that Capability (which it currently does not)?
+> 
+>>From 7.9.16.3:
+> 
+>   FLR Time - is the time that the Function requires to become
+>   Configuration-Ready after it was issued an FLR.
+> 
+> Does the device advertise that capability?  It would be much nicer if
+> we didn't have to add a device-specific quirk for this.
+> 
 
-diff --git a/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi b/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi
-index 71a8b77b46f4..7e71aecb7251 100644
---- a/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi
-+++ b/arch/arm/boot/dts/broadcom/bcm958625-meraki-mx6x-common.dtsi
-@@ -17,21 +17,21 @@ pwm-leds {
- 		led-1 {
- 			function = LED_FUNCTION_INDICATOR;
- 			color = <LED_COLOR_ID_RED>;
--			pwms = <&pwm 1 50000>;
-+			pwms = <&pwm 1 50000 0>;
- 			max-brightness = <255>;
- 		};
- 
- 		led-2 {
- 			function = LED_FUNCTION_POWER;
- 			color = <LED_COLOR_ID_GREEN>;
--			pwms = <&pwm 2 50000>;
-+			pwms = <&pwm 2 50000 0>;
- 			max-brightness = <255>;
- 		};
- 
- 		led-3 {
- 			function = LED_FUNCTION_INDICATOR;
- 			color = <LED_COLOR_ID_BLUE>;
--			pwms = <&pwm 3 50000>;
-+			pwms = <&pwm 3 50000 0>;
- 			max-brightness = <255>;
- 		};
- 	};
-@@ -132,7 +132,6 @@ pwm_leds: pwm_leds {
- 
- &pwm {
- 	status = "okay";
--	#pwm-cells = <2>;
- };
- 
- &uart0 {
+Unfortunately our device doesn't support the readiness time 
+reporting capability.
 
-base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
--- 
-2.47.2
+>> Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
+>> ---
+>>  drivers/pci/pci.c    |  3 ++-
+>>  drivers/pci/pci.h    |  1 +
+>>  drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 58 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index 9cb1de7658b5..ad2960117acd 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
+>>  		pci_walk_bus(bus, pci_resume_one, NULL);
+>>  }
+>>  
+>> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>>  {
+>>  	int delay = 1;
+>>  	bool retrain = false;
+>> @@ -1344,6 +1344,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>>  
+>>  	return 0;
+>>  }
+>> +EXPORT_SYMBOL_GPL(pci_dev_wait);
+>>  
+>>  /**
+>>   * pci_power_up - Put the given device into D0
+>> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+>> index f2958318d259..3a98e00eb02a 100644
+>> --- a/drivers/pci/pci.h
+>> +++ b/drivers/pci/pci.h
+>> @@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
+>>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
+>>  int pci_bus_error_reset(struct pci_dev *dev);
+>>  int __pci_reset_bus(struct pci_bus *bus);
+>> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
+>>  
+>>  struct pci_cap_saved_data {
+>>  	u16		cap_nr;
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index c354276d4bac..94bd2c82cbbd 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
+>>  	return 0;
+>>  }
+>>  
+>> +#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
+>> +#define MICROSOFT_2051_SVC 0xb210
+>> +#define MICROSOFT_2051_MANA_MGMT 0x00b8
+>> +#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
+>> +
+>> +/* Device specific reset for msft GFT and gdma devices */
+>> +static int msft_pcie_flr(struct pci_dev *dev)
+>> +{
+>> +	if (!pci_wait_for_pending_transaction(dev))
+>> +		pci_err(dev, "timed out waiting for pending transaction; "
+>> +			"performing function level reset anyway\n");
+>> +
+>> +	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
+>> +
+>> +	if (dev->imm_ready)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
+>> +	 * 100ms, but may silently discard requests while the FLR is in
+>> +	 * progress. However, 100ms is much longer than required for modern
+>> +	 * devices, so we can afford to reduce the timeout to 10ms.
+>> +	 */
+>> +	usleep_range(10000, 10001);
+>> +
+>> +	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
+>> +}
+>> +
+>> +/*
+>> + * msft_pcie_reset_flr - initiate a PCIe function level reset
+>> + * @dev: device to reset
+>> + * @probe: if true, return 0 if device can be reset this way
+>> + *
+>> + * Initiate a function level reset on @dev.
+>> + */
+>> +static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
+>> +{
+>> +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
+>> +		return -ENOTTY;
+>> +
+>> +	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
+>> +		return -ENOTTY;
+>> +
+>> +	if (probe)
+>> +		return 0;
+>> +
+>> +	return msft_pcie_flr(dev);
+>> +}
+>> +
+>>  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>>  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
+>>  		 reset_intel_82599_sfp_virtfn },
+>> @@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+>>  		reset_chelsio_generic_dev },
+>>  	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+>>  		reset_hinic_vf_dev },
+>> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
+>> +		msft_pcie_reset_flr},
+>> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
+>> +		msft_pcie_reset_flr},
+>> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
+>> +		msft_pcie_reset_flr},
+>>  	{ 0 }
+>>  };
+>>  
+>> -- 
+>> 2.25.1
+>>
 
