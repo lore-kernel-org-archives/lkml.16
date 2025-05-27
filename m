@@ -1,109 +1,72 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6263519005E;
-	Tue, 27 May 2025 14:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC1F19005E;
+	Tue, 27 May 2025 14:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748356929; cv=none; b=GNUPZ8fUY47RzWalwiGLObDRfc/u4FxSYhGW672CwKj7VVcBVH1/q8kYEE6vIh66jOrlOBqEHwby6NmgmNtdOybGzSYgEqQw3bLvfDbVmOwFkzB2pa3e75Zrh+CBbPtIXrCLVtnk4pAxaEehIwLnHW4vy3jpQsNMDlP6jZf0pSM=
+	t=1748356942; cv=none; b=A8bc3BPgrEs2ri2e9f4rWTDo4B5V+ts2Tu+CMwInlM2A4T0m7Llc6/BW0gztBd+vzJ4BP9fDfhshW+CSKGeX04dYXVpDdvQE3dsheeGfK5qZdwKHFgc7w9GAtBrzwQPpSoTfVrxIPG9cZAEod2z86GZ1xjOBkrFYuD8ITPy+6lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748356929; c=relaxed/simple;
-	bh=MOQTquOiYjtW1e5l0oNNoSU16XwMR2fQ9/z9D7F3yvE=;
+	s=arc-20240116; t=1748356942; c=relaxed/simple;
+	bh=ty9dKlbMTKoY8zi8UvjZi2QnisOm1tQhWnZWLR7ndiA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tnxkPX8lMHa6N3MshswX73ADTxYujOaMM7+hFonYHrPMZ3IRLctPKa2p8GnJzYkGkYy4BbNF9m8YYo/DFLHkaexjG48ZuJjO1eGyM0fd1zxirwkhXQywgXKKyINPo3GjNnUqe765j+qnYTXR6DHV0Z3xXPcaWN0hU+p8Df45FYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YMu/X2AH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=idX/Bz5g; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=FX5rUp4NwxQVFMlZeEtgLitj1VEy0dogPO+ivQKejPT3Qs/rWViFYzMX8602tqnUx8zqqQlX8sMYNwSgkN0kt19wLk2pQKe06cikqabjo1WdgaoC4u95i3gync3S6SMwoqaKqmEd3kTtXudvyeJXVsJB0skOIP50hZN2rUU2k2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JiOmaYNK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YMu/X2AH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="idX/Bz5g"
-Date: Tue, 27 May 2025 16:41:59 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748356921;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vh0GtLb/Ro7bDE/Iu+FS0sqb8Nr1hUL02cjCHkGR5g0=;
-	b=YMu/X2AHwCq8GaB+oFHkv2LrN5ufD3osVAKu0cG1NEqe24amEjMIXVFkGvUqzSlVSu2k0B
-	FtefRaXF54fQj7AZba0tCqSP9BwqP2tMz/QJY9F65XXJenLdsetbyFT7aAUY/0F34klng6
-	LXspOd6A02gxBeo21QQqgcEuP4R+sTY3RP/xul/hi+c/7MLJWiU4oT06bGMcBb88ms4lwJ
-	IpMkQo8EM3Jiptyk2Mowoo/LIbCBnVmzJzxuajXBeuQ0WWCKhCJsKl+bO/ADxx/c/+XO77
-	zS1n9NfZQyhEl4V13RAz48ydU6xzRoIELkS/ItLjRUeAPiM5+vtLIDgNw0Sj+A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748356921;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vh0GtLb/Ro7bDE/Iu+FS0sqb8Nr1hUL02cjCHkGR5g0=;
-	b=idX/Bz5g9vlEwoGrjguSpkjCSW9yPyhtB/23GwA3bVwvKweikbbjEtaBzdciETa8c9Q5n7
-	YXAFeY/utojEwxDQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Paul Cercueil <paul@crapouillou.net>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Subject: Re: [PATCH] Input: gpio-keys - fix a sleep while atomic with
- PREEMPT_RT
-Message-ID: <20250527144159.Dcstk83c@linutronix.de>
-References: <20250526-gpio_keys_preempt_rt-v1-1-09ddadf8e19d@foss.st.com>
- <20250526141321.FcXEgnV4@linutronix.de>
- <661af124-3072-4dcf-b613-ec3e48549626@foss.st.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JiOmaYNK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5351EC4CEE9;
+	Tue, 27 May 2025 14:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748356941;
+	bh=ty9dKlbMTKoY8zi8UvjZi2QnisOm1tQhWnZWLR7ndiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JiOmaYNKlFvegpci6aEq8zSqH4b/ndsszhIgYYQ1m3f3wCoDVb8RP2Rwrv5dcJOk6
+	 ifNmsXgUt+q5YybMgRmXtODdh3hUp0qYHkkqm4L6YkzhtfhAnUYhsf9WqhAOT8VDIt
+	 a4iIapNcUOLmnMp66epi5E2Myj2zKNtIKz4hIdcw=
+Date: Tue, 27 May 2025 16:42:17 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
+Message-ID: <2025052708-crafty-lethargy-1ad9@gregkh>
+References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <661af124-3072-4dcf-b613-ec3e48549626@foss.st.com>
+In-Reply-To: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
 
-On 2025-05-27 15:36:37 [+0200], Gatien CHEVALLIER wrote:
-> Hello Sebastian,
-Hello Gatien,
+On Tue, May 27, 2025 at 01:53:12PM +0000, Alice Ryhl wrote:
+> In C code we use sparse with the __user annotation to detect cases where
+> a user pointer is mixed up with other things. To replicate that, we
+> introduce a new struct UserPtr that serves the same purpose using the
+> newtype pattern.
+> 
+> The UserPtr type is not marked with #[derive(Debug)], which means that
+> it's not possible to print values of this type. This avoids ASLR
+> leakage.
+> 
+> The type is added to the prelude as it is a fairly fundamental type
+> similar to c_int. The wrapping_add() method is renamed to
+> wrapping_byte_add() for consistency with the method name found on raw
+> pointers.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-> Can you elaborate on "This flag change makes not difference on
-> !PREEMPT_RT" please? IIUC,this makes the callback not run in hard IRQ
-> context, even in !PREEMPT_RT, no?
+Nice!
 
-If you set
-- HRTIMER_MODE_REL_HARD
-  then the callback runs in
-  - hardirq context on !PREEMPT_RT
-  - hardirq context on PREEMPT_RT.
-
-- HRTIMER_MODE_REL
-  then the callback runs in
-  - hardirq context on !PREEMPT_RT
-  - preemptible softirq on PREEMPT_RT.
-
-- HRTIMER_MODE_REL_SOFT
-  then the callback runs in
-  - softirq context on !PREEMPT_RT
-  - preemptible softirq on PREEMPT_RT.
-
-Therefore if you switch HRTIMER_MODE_REL_HARD -> HRTIMER_MODE_REL then
-it is a nop on !PREEMPT_RT.
-
-> Regarding the need of the spin_lock: gpio_keys_irq_timer() and
-> gpio_keys_irq_isr() appear to access the same resources. Can't we
-> have a concurrent access on it from:
-> HR timer interrupt // GPIO interrupt?
-
-Yes, it could.
-
-> But looking back at the patch, this situation does not depend on
-> the HRTIMER_MODE_REL_HARD flag. So maybe it should be addressed
-> separately.
-
-Yes, please.
-
-> On the other hand, I should use the new
-> guard(spinlock_irqsave)(&bdata->lock);
-
-Yes, please. The other instance already does so.
-
-Sebastian
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
