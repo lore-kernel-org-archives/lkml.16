@@ -1,203 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7577B24A05B;
-	Tue, 27 May 2025 09:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2050F24A055
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748336940; cv=none; b=lEHlrFgJWOQSP8a/wjE3KeMzLMXb+/UYH1SRTdon8L12kasrnvY0Y1fDqhsUqYMl/cTkT6+S9hpVmdG4jwofZkROXeoePIA8wwQAHHUo0d9sh4Ep3C1cMpDpHSJPpfhCY1rtQ8KUa6lpoIkFi8zSfiG7DthasB42v4r16gPgJzQ=
+	t=1748336941; cv=none; b=GmaCSepzIlCSJogVG68VhqYHVJiawhYN3TTRjbygGl+sUctYRetC5Flqpksz06YxO1seswDs62Ta4CvPoCx2IOHBHqJtAhCywn6Hxar/MNzA/evwT4Eb2EYWvYNCpiemrk48w+slbLGBiKKqzi6h3LRVOu7zg/Fp+adr9gHzado=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748336940; c=relaxed/simple;
-	bh=iWsDzG0A2gdcMnQcWnkgpCC99IXz8MEny5NXCzqpqP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eIJtz8XlaTRfvKa7QQoC9ew3IEKcS9LNE/Cc48APuf51t8aoZoXaHJ2QHXtLkGqunjEs3isWNYW8ijClsR7fIVeKk7QBWLolamx93aaL2Ob0B55u1xiRPASZ0cUVihOvE9iXGLlbZxlJ3qMZhdM2RvBbpulhjNdzZqG2wtZDKlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwUVlcMJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748336941; c=relaxed/simple;
+	bh=TMs2Nxer80nn4wpc2IJXYNIKbIW2synLfliAZx8sFK4=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=lM9wuTPpmWRKQZtGkcBuOqHqUqCTlHObOvrkzsVAqgm37e4YHkFyRsP3U/skse2eJqIEMcsaYQfSlUe0WePB/7o/w+TilSbHUjj6nXSbm9rrHGlVfmxlHYj8S28JOmbhY0AwQgjS7QCBS/vYp635NlgO+VJDRhzBcifFh5UABoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b=jTyC10vR; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwUVlcMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D77B6C4CEE9;
-	Tue, 27 May 2025 09:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748336940;
-	bh=iWsDzG0A2gdcMnQcWnkgpCC99IXz8MEny5NXCzqpqP8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cwUVlcMJ16P8lh2f9wleWCS4M2idFzbE6Tg39X+7rVp3b5ItduS7C4B2A66G5bm2D
-	 /MgicETuipCmuAArLNJx7zDEChfJMHkAPr3JNt2+YhTJwMO46rIz2bquKOtDHh+nzL
-	 MnXzj+/uwz3THQky165vfUh6wIGCQyRSplGKbG9JS8OD8wLoEWbuXwSfEqaR0zBB2l
-	 6A/6XBVy8YKrZiodBlpjPN0M+axWnUmFLJOcjajberVeKqTX0K0mSkO7iLXkmb/NbV
-	 tYYRgpBXSJYZ4RGWvEDfGd4qKeBw1d6KUBmR3HnexrxXW9KDXRuKI1+wBuEIMrdR+t
-	 lxWPbo/wFhHeQ==
-Message-ID: <8ca5a908-467f-4738-8bfa-185f3eecc399@kernel.org>
-Date: Tue, 27 May 2025 11:08:54 +0200
+	dkim=pass (2048-bit key) header.d=amazon.de header.i=@amazon.de header.b="jTyC10vR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazoncorp2;
+  t=1748336939; x=1779872939;
+  h=from:to:cc:subject:date:message-id:reply-to:content-id:
+   mime-version:content-transfer-encoding;
+  bh=TMs2Nxer80nn4wpc2IJXYNIKbIW2synLfliAZx8sFK4=;
+  b=jTyC10vRxH73K60aymSwtwrOPUWcUDXMWo2atjkyHtX5HMC/OEXzu+ai
+   nIku+CAnVURE6deOx31+OCkmR+mRXvMuTRhp6KECEK4a5NwEQxcRTeXyX
+   vQ7VIg2uCWnkk50r0r8icht8ki+/INL2CA0F3d1HQJp3+sZVv3aOngRbV
+   EX8HsQ/acZxe9lhUpBMQsoLtAf/Uvw5jihn5b0gAlDY05Nkcqi6vcLgr6
+   H0NySc+QRktKZqKolqECo1lidnHD9/wXwAi/nzMn6/3+ltN/4gZsyHsXm
+   HexnQEt8NrjxvIh37X6SHhtPIOFkljDDA/pgkzBjqLTkzLcDFhGle0Ok3
+   g==;
+X-IronPort-AV: E=Sophos;i="6.15,318,1739836800"; 
+   d="scan'208";a="201157722"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 09:08:57 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.17.79:23226]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.31.17:2525] with esmtp (Farcaster)
+ id ddf0f3a5-e7f5-4dbb-9017-885f338d472a; Tue, 27 May 2025 09:08:56 +0000 (UTC)
+X-Farcaster-Flow-ID: ddf0f3a5-e7f5-4dbb-9017-885f338d472a
+Received: from EX19D030EUC002.ant.amazon.com (10.252.61.251) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 27 May 2025 09:08:55 +0000
+Received: from EX19D030EUC004.ant.amazon.com (10.252.61.164) by
+ EX19D030EUC002.ant.amazon.com (10.252.61.251) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 27 May 2025 09:08:55 +0000
+Received: from EX19D030EUC004.ant.amazon.com ([fe80::f98a:db18:b0eb:477]) by
+ EX19D030EUC004.ant.amazon.com ([fe80::f98a:db18:b0eb:477%3]) with mapi id
+ 15.02.1544.014; Tue, 27 May 2025 09:08:55 +0000
+From: "Krcka, Tomas" <krckatom@amazon.de>
+To: "longman@redhat.com" <longman@redhat.com>
+CC: "dave@stgolabs.net" <dave@stgolabs.net>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/5] locking/rwsem: Remove reader optimistic spinning
+Thread-Topic: [PATCH v2 5/5] locking/rwsem: Remove reader optimistic spinning
+Thread-Index: AQHbzub5PTJlbJ7XTkKUX881NRHzWw==
+Date: Tue, 27 May 2025 09:08:55 +0000
+Message-ID: <57E7A552-AFFA-4860-8149-747CBA5C0541@amazon.de>
+Reply-To: "20201121041416.12285-6-longman@redhat.com"
+	<20201121041416.12285-6-longman@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2A1500DE357A5349B6B736FA476B4EAC@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: mfd: rk806: allow to customize PMIC
- reset method
-To: Quentin Schulz <quentin.schulz@cherry.de>,
- Quentin Schulz <foss+kernel@0leil.net>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
- Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de>
- <20250526-rk8xx-rst-fun-v1-1-ea894d9474e0@cherry.de>
- <79903ad6-0228-41a3-b733-415cc43ec786@kernel.org>
- <d1fab35d-a4e7-449d-9666-0c651e44929a@cherry.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <d1fab35d-a4e7-449d-9666-0c651e44929a@cherry.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 
-On 27/05/2025 10:48, Quentin Schulz wrote:
-> Hi Krzysztof,
-> 
-> On 5/27/25 10:25 AM, Krzysztof Kozlowski wrote:
->> On 26/05/2025 19:05, Quentin Schulz wrote:
->>> From: Quentin Schulz <quentin.schulz@cherry.de>
->>>
->>> The RK806 PMIC (and RK809, RK817; but those aren't handled here) has a
->>> bitfield for configuring the restart/reset behavior (which I assume
->>> Rockchip calls "function") whenever the PMIC is reset (at least by
->>> software; c.f. DEV_RST in the datasheet).
->>>
->>> For RK806, the following values are possible for RST_FUN:
->>>
->>> 0b00 means "restart PMU"
->>> 0b01 means "Reset all the power off reset registers, forcing
->>>              the state to switch to ACTIVE mode"
->>> 0b10 means "Reset all the power off reset registers, forcing
->>>              the state to switch to ACTIVE mode, and simultaneously
->>>              pull down the RESETB PIN for 5mS before releasing"
->>> 0b11 means the same as for 0b10 just above.
->>>
->>> I don't believe this is suitable for a subsystem-generic property hence
->>> let's make it a vendor property called rockchip,rst-fun.
->>>
->>> The first few sentences in the description of the property are
->>> voluntarily generic so they could be copied to the DT binding for
->>> RK809/RK817 whenever someone wants to implement that for those PMIC.
->>>
->>> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->>> ---
->>>   .../devicetree/bindings/mfd/rockchip,rk806.yaml    | 24 ++++++++++++++++++++++
->>>   1 file changed, 24 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
->>> index 3c2b06629b75ea94f90712470bf14ed7fc16d68d..0f931a6da93f7596eac89c5f0deb8ee3bd934c31 100644
->>> --- a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
->>> +++ b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
->>> @@ -31,6 +31,30 @@ properties:
->>>   
->>>     system-power-controller: true
->>>   
->>> +  rockchip,rst-fun:
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    enum: [0, 1, 2, 3]
->>> +    description:
->>> +      RST_FUN value to set for the PMIC.
->>> +
->>> +      This is the value in the RST_FUN bitfield according to the
->>> +      datasheet. I.e. if RST_FUN is bits 6 and 7 and the desired value
->>> +      of RST_FUN is 1, this property needs to be set to 1 (and not 64,
->>> +      0x40, or BIT(6)).
->>> +
->>> +      The meaning of this value is specific to the PMIC and is
->>> +      explained in the datasheet.
->>
->> And why would that be exactly board-level configuration? IOW, I expect
->> all boards to be reset in the same - correct and optimal - way. Looks
->> close to SW policy.
->>
-> 
-> All RK3588 boards except ours in downstream kernel have their RST_FUN 
-> set to 1, we need 0 and I cannot talk for what's the actual expected 
-> behavior for other vendors' boards. I do not feel confident 
-> indiscriminately changing the PMIC reset behavior for all boards using 
-> RK806 (which also includes RK3576 boards). Hence why I made that a property.
-> 
-> Additionally, if all boards were "to be reset in the same - correct and 
+SGkgV2FpbWFuLA0KDQpJIHJlY2VudGx5IGRpc2NvdmVyZWQgdGhhdCB0aGlzIHBhdGNoICggY29t
+bWl0IDYxN2YzZWY5NTE3NyANCigibG9ja2luZy9yd3NlbTogUmVtb3ZlIHJlYWRlciBvcHRpbWlz
+dGljIHNwaW5uaW5nIikgKSByZXN1bHRzIGluIHVwIHRvIDUwJSBwZXJmb3JtYW5jZSBkcm9wIGlu
+DQpyZWFsIGxpZmUgc2NlbmFyaW9zIC0gbW9yZSBwcm9jZXNzZXMgYXJlIHRyeWluZyB0byBwZXJm
+b3JtIG9wZXJhdGlvbiBvbiB0b3Agb2Ygc3lzZnMgKHJlYWQgYW5kIHdyaXRlKS4NClJldmVydGlu
+ZyBvZiB0aGUgcGF0Y2ggZ2FpbmVkIHRoZSBwZXJmb3JtYW5jZSBiYWNrLiBNeSBzdWdnZXN0aW9u
+IHdvdWxkIGJlIHRvIHJldmVydCB0aGUgcGF0Y2gNCmZyb20gbWFpbmxpbmUgYXMgd2VsbC4NCg0K
+SSBub3RpY2UgdGhhdCBkZWdyYWRhdGlvbiBpbml0aWFsbHkgZHVlIHRvIGEgd29ya2xvYWQgd2hl
+cmUgbW9yZSBwcm9jZXNzZXMgYXJlICBhY2Nlc3NpbmcNCnNhbWUgc3lzZnMgc2VlaW5nIHVwIHRv
+IDUwJSBwZXJmb3JtYW5jZSBkcm9wIC0gdGltZSBzcGVudCB0byBwcm9jZWVkIHRoZSB0ZXN0Lg0K
+QWZ0ZXIgaW52ZXN0aWdhdGlvbiwgSSB0cmFjZWQgdGhlIHJvb3QgY2F1c2UgYmFjayB0byB0d28g
+cmVsYXRlZCBjaGFuZ2VzOg0KZmlyc3QsIHdoZW4ga2VybmZzIHN3aXRjaGVkIGZyb20gbXV0ZXgg
+dG8gcndzZW0gKGNvbW1pdCA3YmEwMjczYjJmMzQgKCJrZXJuZnM6IHN3aXRjaCBrZXJuZnMgdG8g
+dXNlIGFuIHJ3c2VtIikpLCANCmFuZCB1bHRpbWF0ZWx5IHRvIHRoZSByZW1vdmFsIG9mIHJlYWRl
+ciBvcHRpbWlzdGljIHNwaW5uaW5nLg0KDQpUaGUgbG9jayBjb250ZW50aW9uIHRyYWNpbmcgc2hv
+d3MgYSBjbGVhciBwYXR0ZXJuOiBwcm9jZXNzIGFjY2Vzc2luZyBhIGtlcm5mc19kZW50cnlfbm9k
+ZSB0YWtpbmcgcmVhZCBzZW1hcGhvcmUgaXMgDQpub3cgZm9yY2VkIHRvIHRha2UgdGhlIHNsb3cg
+cGF0aCBzaW5jZSB0aGUgbG9jayBpcyB0YWtlbiBieSBhbm90aGVyIHByb2Nlc3Mgb3BlcmF0aW5n
+IG9uIHNhbWUgbm9kZSBhbmQgbmVlZHMgd3JpdGUgc2VtYXBob3JlLg0KKFNlZSBiZWxvdyBmdHJh
+Y2UgZm9yIHRoZSBleGFjdCBvcGVyYXRpb25zLikNCg0KVGhpcyBjb250cmFzdHMgd2l0aCB0aGUg
+cHJldmlvdXMgYmVoYXZpb3Igd2hlcmUgb3B0aW1pc3RpYyBzcGlubmluZyBwcmV2ZW50ZWQgc3Vj
+aCANCnNpdHVhdGlvbnMuDQoNCkkgaGF2ZSBjb25maXJtZWQgdGhpcyBiZWhhdmlvciBhY3Jvc3Mg
+bXVsdGlwbGUga2VybmVsIHZlcnNpb25zICg2LjE0LjQsIDYuOC4xMiwgNi42LjgwKSwgYXMgd2Vs
+bCBpZiBiYWNrcG9ydGluZw0KdGhlIG1lbnRpb25lZCBjb21taXRzIHRvIG9sZGVyIHZlcnNpb25z
+IChzcGVjaWZpY2FsbHkgdjUuMTApDQpXaGlsZSB0aGUgcmVhbC13b3JsZCBpbXBhY3Qgd2FzIG9i
+c2VydmVkIG9uIEFBcmNoNjQsIEkndmUgc3VjY2Vzc2Z1bGx5IHJlcHJvZHVjZWQNCnRoZSBjb3Jl
+IGlzc3VlIHVzaW5nIG91ciB0ZXN0IGNhc2Ugb24gYm90aCBBQXJjaDY0ICgxOTIgdkNQVXMpIGFu
+ZCB4ODYgSWNlIExha2UgKDEyOCB2Q1BVcykgc3lzdGVtcy4NCg0KV2hpbGUgSSBpZGVudGlmaWVk
+IHRoaXMgdGhyb3VnaCBzeXNmcyAoa2VybmZzKSBvcGVyYXRpb25zLCBJIGJlbGlldmUgdGhpcyBy
+ZWdyZXNzaW9uIA0KY291bGQgYWZmZWN0IG90aGVyIHN1YnN5c3RlbXMgdXNpbmcgcmVhZGVyLXdy
+aXRlciBzZW1hcGhvcmVzIHdpdGggc2ltaWxhciBhY2Nlc3MgDQpwYXR0ZXJucy4gDQoNCmZ0cmFj
+ZSB3aXRoIHRoZSBjb21taXQgc2hvd2luZyB0aGlzIHBhdHRlcm46DQoNCiIiIiINCnVzZXJzcGFj
+ZV9iZW5jaC02Nzk2ICAgIFswMDBdIC4uLi4uICAyMzI4LjAyMzUxNTogY29udGVudGlvbl9iZWdp
+bjogMDAwMDAwMDBjYTY2YzQ4ZSAoZmxhZ3M9UkVBRCkNCl5eXiAtIHdhaXRpbmcgZm9yIGxvY2sg
+YW5kIG5vdyBhbGwgbmV4dCB0aHJlYWRzIHdpbGwgYmUgd2FpdGluZw0KDQp1c2Vyc3BhY2VfYmVu
+Y2gtNjc5NiAgICBbMDAwXSBkLi4uLiAgMjMyOC4wMjM1MTg6IHNjaGVkX3N3aXRjaDogcHJldl9j
+b21tPXVzZXJzcGFjZV9iZW5jaCBwcmV2X3BpZD02Nzk2IHByZXZfcHJpbz0xMjAgcHJldl9zdGF0
+ZT1EID09PiBuZXh0X2NvbW09dXNlcnNwYWNlX2JlbmNoIG5leHRfcGlkPTY3OTggbmV4dF9wcmlv
+PTEyMA0KdXNlcnNwYWNlX2JlbmNoLTY4MDYgICAgWzAwOV0gZC4uLi4gIDIzMjguMDIzNTI0OiBz
+Y2hlZF9zd2l0Y2g6IHByZXZfY29tbT11c2Vyc3BhY2VfYmVuY2ggcHJldl9waWQ9NjgwNiBwcmV2
+X3ByaW89MTIwIHByZXZfc3RhdGU9UisgPT0+IG5leHRfY29tbT1taWdyYXRpb24vOSBuZXh0X3Bp
+ZD03MCBuZXh0X3ByaW89MA0KdXNlcnNwYWNlX2JlbmNoLTY4MDQgICAgWzAwNF0gZC4uLi4gIDIz
+MjguMDIzNTMyOiBjb250ZW50aW9uX2JlZ2luOiAwMDAwMDAwMGNhNjZjNDhlIChmbGFncz1XUklU
+RSkNCnVzZXJzcGFjZV9iZW5jaC02ODA1ICAgIFswMDVdIGQuLi4uICAyMzI4LjAyMzUzMjogY29u
+dGVudGlvbl9iZWdpbjogMDAwMDAwMDBjYTY2YzQ4ZSAoZmxhZ3M9V1JJVEUpDQp1c2Vyc3BhY2Vf
+YmVuY2gtNjgwNCAgICBbMDA0XSBkLi4uLiAgMjMyOC4wMjM1MzM6IHNjaGVkX3N3aXRjaDogcHJl
+dl9jb21tPXVzZXJzcGFjZV9iZW5jaCBwcmV2X3BpZD02ODA0IHByZXZfcHJpbz0xMjAgcHJldl9z
+dGF0ZT1EID09PiBuZXh0X2NvbW09c3dhcHBlci80IG5leHRfcGlkPTAgbmV4dF9wcmlvPTEyMA0K
+dXNlcnNwYWNlX2JlbmNoLTY3OTcgICAgWzAwMV0gLi4uLi4gIDIzMjguMDIzNTM0OiBjb250ZW50
+aW9uX2JlZ2luOiAwMDAwMDAwMGNhNjZjNDhlIChmbGFncz1SRUFEKQ0KDQouLi4gW2N1dF0gLi4u
+LiANCg0KdXNlcnNwYWNlX2JlbmNoLTY4MDcgICAgWzAwN10gLi4uLi4gIDIzMjguMDIzNjYxOiBj
+b250ZW50aW9uX2JlZ2luOiAwMDAwMDAwMGNhNjZjNDhlIChmbGFncz1SRUFEKQ0KdXNlcnNwYWNl
+X2JlbmNoLTY4MDcgICAgWzAwN10gZC4uLi4gIDIzMjguMDIzNjY2OiBzY2hlZF9zd2l0Y2g6IHBy
+ZXZfY29tbT11c2Vyc3BhY2VfYmVuY2ggcHJldl9waWQ9NjgwNyBwcmV2X3ByaW89MTIwIHByZXZf
+c3RhdGU9RCA9PT4gbmV4dF9jb21tPXN3YXBwZXIvNyBuZXh0X3BpZD0wIG5leHRfcHJpbz0xMjAN
+CnVzZXJzcGFjZV9iZW5jaC02ODEzICAgIFswMTNdIC4uLi4uICAyMzI4LjAyMzY2OTogY29udGVu
+dGlvbl9iZWdpbjogMDAwMDAwMDBjYTY2YzQ4ZSAoZmxhZ3M9UkVBRCkNCnVzZXJzcGFjZV9iZW5j
+aC02ODE1ICAgIFswMTVdIC4uLi4uICAyMzI4LjAyMzY3MzogY29udGVudGlvbl9iZWdpbjogMDAw
+MDAwMDBjYTY2YzQ4ZSAoZmxhZ3M9UkVBRCkNCnVzZXJzcGFjZV9iZW5jaC02ODEzICAgIFswMTNd
+IGQuLi4uICAyMzI4LjAyMzY3NDogc2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09dXNlcnNwYWNlX2Jl
+bmNoIHByZXZfcGlkPTY4MTMgcHJldl9wcmlvPTEyMCBwcmV2X3N0YXRlPUQgPT0+IG5leHRfY29t
+bT1zd2FwcGVyLzEzIG5leHRfcGlkPTAgbmV4dF9wcmlvPTEyMA0KdXNlcnNwYWNlX2JlbmNoLTY4
+MTUgICAgWzAxNV0gZC4uLi4gIDIzMjguMDIzNjc1OiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT11
+c2Vyc3BhY2VfYmVuY2ggcHJldl9waWQ9NjgxNSBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9RCA9
+PT4gbmV4dF9jb21tPXN3YXBwZXIvMTUgbmV4dF9waWQ9MCBuZXh0X3ByaW89MTIwDQp1c2Vyc3Bh
+Y2VfYmVuY2gtNjgwMyAgICBbMDAzXSAuLi4uLiAgMjMyOC4wMjYxNzA6IGNvbnRlbnRpb25fYmVn
+aW46IDAwMDAwMDAwY2E2NmM0OGUgKGZsYWdzPVJFQUQpDQp1c2Vyc3BhY2VfYmVuY2gtNjgwMyAg
+ICBbMDAzXSBkLi4uLiAgMjMyOC4wMjYxNzE6IHNjaGVkX3N3aXRjaDogcHJldl9jb21tPXVzZXJz
+cGFjZV9iZW5jaCBwcmV2X3BpZD02ODAzIHByZXZfcHJpbz0xMjAgcHJldl9zdGF0ZT1EID09PiBu
+ZXh0X2NvbW09c3dhcHBlci8zIG5leHRfcGlkPTAgbmV4dF9wcmlvPTEyMA0KdXNlcnNwYWNlX2Jl
+bmNoLTY3OTggICAgWzAwMF0gZC4uLi4gIDIzMjguMDI3MTYyOiBzY2hlZF9zd2l0Y2g6IHByZXZf
+Y29tbT11c2Vyc3BhY2VfYmVuY2ggcHJldl9waWQ9Njc5OCBwcmV2X3ByaW89MTIwIHByZXZfc3Rh
+dGU9UiA9PT4gbmV4dF9jb21tPXVzZXJzcGFjZV9iZW5jaCBuZXh0X3BpZD02ODAwIG5leHRfcHJp
+bz0xMjANCnVzZXJzcGFjZV9iZW5jaC02Nzk5ICAgIFswMDFdIGQuLi4uICAyMzI4LjAyNzE2Mjog
+c2NoZWRfc3dpdGNoOiBwcmV2X2NvbW09dXNlcnNwYWNlX2JlbmNoIHByZXZfcGlkPTY3OTkgcHJl
+dl9wcmlvPTEyMCBwcmV2X3N0YXRlPVIgPT0+IG5leHRfY29tbT11c2Vyc3BhY2VfYmVuY2ggbmV4
+dF9waWQ9NjgwMSBuZXh0X3ByaW89MTIwDQp1c2Vyc3BhY2VfYmVuY2gtNjgwMCAgICBbMDAwXSAu
+Li4uLiAgMjMyOC4wMjcxNjU6IGNvbnRlbnRpb25fYmVnaW46IDAwMDAwMDAwY2E2NmM0OGUgKGZs
+YWdzPVJFQUQpDQp1c2Vyc3BhY2VfYmVuY2gtNjgwMSAgICBbMDAxXSAuLi4uLiAgMjMyOC4wMjcx
+NjY6IGNvbnRlbnRpb25fYmVnaW46IDAwMDAwMDAwY2E2NmM0OGUgKGZsYWdzPVJFQUQpDQp1c2Vy
+c3BhY2VfYmVuY2gtNjgwMCAgICBbMDAwXSBkLi4uLiAgMjMyOC4wMjcxNjc6IHNjaGVkX3N3aXRj
+aDogcHJldl9jb21tPXVzZXJzcGFjZV9iZW5jaCBwcmV2X3BpZD02ODAwIHByZXZfcHJpbz0xMjAg
+cHJldl9zdGF0ZT1EID09PiBuZXh0X2NvbW09dXNlcnNwYWNlX2JlbmNoIG5leHRfcGlkPTY3OTYg
+bmV4dF9wcmlvPTEyMA0KdXNlcnNwYWNlX2JlbmNoLTY4MDEgICAgWzAwMV0gZC4uLi4gIDIzMjgu
+MDI3MTY3OiBzY2hlZF9zd2l0Y2g6IHByZXZfY29tbT11c2Vyc3BhY2VfYmVuY2ggcHJldl9waWQ9
+NjgwMSBwcmV2X3ByaW89MTIwIHByZXZfc3RhdGU9RCA9PT4gbmV4dF9jb21tPXVzZXJzcGFjZV9i
+ZW5jaCBuZXh0X3BpZD02Nzk5IG5leHRfcHJpbz0xMjANCnVzZXJzcGFjZV9iZW5jaC02Nzk2ICAg
+IFswMDBdIC4uLi4uICAyMzI4LjAyNzE2ODogY29udGVudGlvbl9lbmQ6IDAwMDAwMDAwY2E2NmM0
+OGUgKHJldD0wKQ0KXl5eXiAtLSBoZXJlIHRoZSBSRUFEZXIgZ290IHRoZSBsb2NrIC0gaXQgdG9v
+ayB+M21zIHRvIGdldCB0aGUgbG9jaw0KIiIiIg0Kd2l0aG91dCB0aGUgY29tbWl0IHdlIGRvbid0
+IHNlZSBhbnkgb2YgdGhlIGFib3ZlIHdhaXRpbmcgYW5kIHRoZSBwcm9jZXNzZXMgYXJlIG9ubHkg
+aW4gdGhlIG9wdGltaXN0aWMgc3Bpbm5pbmcuDQoNCg0KSW4gb3VyIHNpdHVhdGlvbiB0aGUgd3Jp
+dGVyIGlzIGRvaW5nIHRoaXMgb3BlcmF0aW9uDQoiIiINCnVzZXJzcGFjZV9iZW5jaC02ODAwICAg
+ICBbMDMxXSAuLi4uLiAgICAgMC4yNTE3MDA6IGNvbnRlbnRpb25fYmVnaW46IDAwMDAwMDAwN2E0
+ZDUxN2MgKHJldD0wKQ0KdXNlcnNwYWNlX2JlbmNoLTY4MDAgICAgIFswMzFdIC4uLi4uICAgICAw
+LjI1MTcwMDogPHN0YWNrIHRyYWNlPg0KPT4gX190cmFjZWl0ZXJfY29udGVudGlvbl9mYXN0cGF0
+aA0KPT4gcndzZW1fZG93bl93cml0ZV9zbG93cGF0aA0KPT4gZG93bl93cml0ZQ0KPT4ga2VybmZz
+X2FjdGl2YXRlDQo9PiBrZXJuZnNfYWRkX29uZQ0KPT4gX19rZXJuZnNfY3JlYXRlX2ZpbGUNCj0+
+IHN5c2ZzX2FkZF9maWxlX21vZGVfbnMNCj0+IGludGVybmFsX2NyZWF0ZV9ncm91cA0KPT4gaW50
+ZXJuYWxfY3JlYXRlX2dyb3Vwcy5wYXJ0LjYNCj0+IHN5c2ZzX2NyZWF0ZV9ncm91cHMNCiIiIg0K
+DQphbmQgdGhlIHJlYWRlciBpcyBkb2luZyB0aGlzIC0gYm90aCBhcmUgdGFraW5nIHRoZSBzYW1l
+IHNlbWFwaG9yZQ0KIiIiDQp1c2Vyc3BhY2VfYmVuY2gtNjgwMSAgICAgWzA5NV0gLi4uLi4gICAg
+IDAuMjUxNzAwOiBjb250ZW50aW9uX2JlZ2luOiAwMDAwMDAwMDdhNGQ1MTdjIChmbGFncz1SRUFE
+KQ0KICAgICAgICAgICAgdXNlcnNwYWNlX2JlbmNoLTY4MDEgICAgIFswOTVdIC4uLi4uICAgICAw
+LjI1MTcwMDogPHN0YWNrIHRyYWNlPg0KPT4gX190cmFjZWl0ZXJfY29udGVudGlvbl9iZWdpbg0K
+PT4gcndzZW1fZG93bl9yZWFkX3Nsb3dwYXRoDQo9PiBkb3duX3JlYWQNCj0+IGtlcm5mc19kb3Bf
+cmV2YWxpZGF0ZQ0KPT4gbG9va3VwX2Zhc3QNCj0+IHdhbGtfY29tcG9uZW50DQo9PiBsaW5rX3Bh
+dGhfd2Fsay5wYXJ0Ljc0DQo9PiBwYXRoX29wZW5hdA0KPT4gZG9fZmlscF9vcGVuDQo9PiBkb19z
+eXNfb3BlbmF0Mg0KPT4gZG9fc3lzX29wZW4NCiIiIg0KDQotLS0tDQoNClRvIGhlbHAgaW52ZXN0
+aWdhdGUgdGhpcyBpc3N1ZSwgSSd2ZSBjcmVhdGVkIGEgbWluaW1hbCByZXByb2R1Y3Rpb24gY2Fz
+ZToNCjEuIFRlc3QgcmVwb3NpdG9yeTogaHR0cHM6Ly9naXRodWIuY29tL3RvbWFza3Jja2Evc3lz
+ZnNfYmVuY2gNCjIuIFRoZSB0ZXN0IGNvbnNpc3RzIG9mOg0KICAtIEEga2VybmVsIG1vZHVsZSB0
+aGF0IGNyZWF0ZXMgc3lzZnMgaW50ZXJmYWNlIGFuZCBoYW5kbGVzIGZpbGUgb3BlcmF0aW9ucw0K
+ICAtIEEgdXNlcnNwYWNlIGFwcGxpY2F0aW9uIHRoYXQgc3Bhd25zIHdyaXRlcnMgKG1hdGNoaW5n
+IENQVSBjb3JlIGNvdW50KSBhbmQgcmVhZGVycw0KDQpVc2luZyB0aGUgdGVzdCBjYXNlIG9uIGtl
+cm5lbCA2LjE0LjQsIEkgY29sbGVjdGVkIHRoZSBmb2xsb3dpbmcgbWVhc3VyZW1lbnRzIA0KKDEw
+MCBzYW1wbGVzIGVhY2gpOg0KDQpPbiBBQXJjaDY0IGM4ZyAoMTkyIHZDUFVzKToNCi0gV2l0aG91
+dCByZXZlcnQ6DQogKiBBdmc6IDMuNTBzIChtaW46IDMuMzlzLCBtYXg6IDMuNjNzLCBwOTk6IDMu
+NTlzKQ0KLSBXaXRoIHJldmVydDoNCiAqIEF2ZzogMi43MHMgKG1pbjogMi42NXMsIG1heDogMy4x
+MHMsIHA5OTogMi44M3MpDQogKiB+MjMlIGltcHJvdmVtZW50DQoNCk9uIHg4NiBJY2UgTGFrZSBt
+NmkgKDEyOCB2Q1BVcyk6DQotIFdpdGhvdXQgcmV2ZXJ0Og0KICogQXZnOiA2LjcxcyAobWluOiA2
+LjYxcywgbWF4OiA3LjYwcywgcDk5OiA2LjgycykNCi0gV2l0aCByZXZlcnQ6DQogKiBBdmc6IDYu
+MjhzIChtaW46IDUuODlzLCBtYXg6IDcuNTJzLCBwOTk6IDYuNjVzKQ0KICogfjYlIGltcHJvdmVt
+ZW50DQoNCkNvdWxkIHlvdSB0YWtlIGEgbG9vayBvbiB0aGF0IGFuZCBsZXQgbWUga25vdyB5b3Vy
+IHRob3VnaHRzID8NCg0KSeKAmW0gaGFwcHkgdG8gaGVscCB3aXRoIGZ1cnRoZXIgaW52ZXN0aWdh
+dGlvbi4NCg0KVGhhbmtzLA0KVG9tYXMKCgoKQW1hem9uIFdlYiBTZXJ2aWNlcyBEZXZlbG9wbWVu
+dCBDZW50ZXIgR2VybWFueSBHbWJIClRhbWFyYS1EYW56LVN0ci4gMTMKMTAyNDMgQmVybGluCkdl
+c2NoYWVmdHNmdWVocnVuZzogQ2hyaXN0aWFuIFNjaGxhZWdlciwgSm9uYXRoYW4gV2Vpc3MKRWlu
+Z2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIgSFJCIDI1Nzc2NCBC
+ClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDM2NSA1MzggNTk3Cg==
 
-I don't know if they have to, but that's what I would assume in general.
-Unless you say there is some specific hardware aspect of your boards,
-but so far you just described the register.
-
-> optimal - way", why would Rockchip even have a register for that in the 
-> PMIC? It's not an IP they bought (as far as I could tell), so there's 
-
-To allow SW to make a choice. Just like 1000 other registers for every
-other device which we do not add to DT.
-
-> likely a purpose to it. Especially if they also change the 
-> silicon-default in their own downstream fork AND provide you with a way 
-> to change their new default from Device Tree.
-> 
-> We can hardcode the change in the driver without using DT, but I wager 
-> we're going to see a revert in a few releases because it broke some 
-> devices. It may break in subtle ways as well, for example our boards 
-> seem to be working just fine except that because the PMIC doesn't 
-> entirely reset the power rails, our companion microcontroller doesn't 
-> detect the reboot.
-> 
-> If it's deemed a SW policy by the DT binding people, is there a way to 
-> customize this without having it hardcoded to the same value for all 
-> users of RK806 and without relying on module params?
-
-sysfs, reboot mode etc. I don't know what is the right here, because you
-did not explain the actual hardware issue being fixed here. You only
-described that bootloader does something, so you want to write something
-else there.
-
-
-Best regards,
-Krzysztof
