@@ -1,83 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BDDE1F4CAC;
-	Tue, 27 May 2025 09:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838FF1F4CAC;
+	Tue, 27 May 2025 09:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748339372; cv=none; b=nXe4oRA+yyMNu5F0h413z1a/U6XAz/gnUwS3+8upmeG1mxizYBxynSchZwh4JgmIpXpOXL6DHpfK461KJuhmYifEaF0IqmKWoF8k3cl4+2lE2nR2GIaGQS65zwsG1Cw6rqVgWU+ZIlt7IMbgfI1Z0+kXSpeugwGIvPFzl9/sGWs=
+	t=1748339400; cv=none; b=UzI8AeXjTuyHOXX5l5bVCgR6tFkyDm+YfM4SCE68kEVHWJ3rlM/KbXAjpASdzYu0BHeYMjFJYI0T42QUzPaFbQUJx4jfC24hdalZHtYLrPrpU6hVCe6QCLzCXOUVa8PcEdtpGgH+J8Sm4jjHmcuoYb2Mpl2Tu7dOaVFg5Abo8tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748339372; c=relaxed/simple;
-	bh=+h6UbpfiTWqp32wSjTJpECkbEu5qI0YU/w+MW0bl3ts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czyXKAZg7k2G1vnSfZSveOgQ3L2dhMlfXJxR84B8kCepXl0hvJpGY/bhgfagw4klTBn5oyyMEGOgPAJoL9+7FS9Pp7+JOkRcqTrBZ7irOKcfCQMOMY6X2ifLeGkuSUCaHpSjsrqmYc22ZElnk1kzeVViqc499/thGz+fPG6bT5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FF7A14BF;
-	Tue, 27 May 2025 02:49:13 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C6083F673;
-	Tue, 27 May 2025 02:49:28 -0700 (PDT)
-Date: Tue, 27 May 2025 10:49:24 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
-Message-ID: <20250527094924.GF2566836@e132581.arm.com>
-References: <20250331172759.115604-1-leo.yan@arm.com>
- <aC_Vn95vYqcXul03@x1>
- <aC_WFRe_4HjVPUrM@x1>
- <20250523081036.GB2566836@e132581.arm.com>
- <aDCsmjb7Fex1ccOW@x1>
+	s=arc-20240116; t=1748339400; c=relaxed/simple;
+	bh=K0rIG/9jfPhF/mymGPSs9fjPZlzOBraUDXaxA48k/Mw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=A2UQKcF5I8j9N5kfxO46YSAkvxdLCFsoizSc6AVjWmSOUZrCruQfXmbDFi2n2JwAu6sXVW3cFg9cyWF9O7RO7byCcnpHLBPf321cxsUqEy0gaC1htCQVBeBUxEdi11IBokcWHeD9Z/oEA+8JUQ4R3ZO7WNBP/Z3Anv5oxbz+N60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8B2haYf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8B2haYf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E94A3C4CEE9;
+	Tue, 27 May 2025 09:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748339400;
+	bh=K0rIG/9jfPhF/mymGPSs9fjPZlzOBraUDXaxA48k/Mw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=q8B2haYfaB8NgWtHLnnpPv5UnD86hnvaQOeueWauy8h+tCxsS89t8TXYpM7L1ksFJ
+	 yBwVh4KXcEg0bLRL/eG2++ZclwQab7O3Ty7DxDgF7FxKQHXUHBSvz6xAgnPExPUbxU
+	 R/LZ6e7xbXanWtcIM04629N9ZYQlbUUDTztv6D07YzBWGuVaqa8PQPPA7TukBigrpR
+	 YEKh8VwC7u4PSnEfGec12qcakMlG7+9f6ryr23SDqqiHzw6Jk9WtVO5JvWClGWliQc
+	 7dutcMld1ChsPGlW2bOk5ZZyZ+LrS4hy/EXFEiuGAwf3dbNFTG3Wt/9H8qWkPq+t4A
+	 zwVcFirSXEzsg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E28380AAE2;
+	Tue, 27 May 2025 09:50:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aDCsmjb7Fex1ccOW@x1>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v6 0/5] vsock: SOCK_LINGER rework
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174833943425.1235580.6276796573046054337.git-patchwork-notify@kernel.org>
+Date: Tue, 27 May 2025 09:50:34 +0000
+References: <20250522-vsock-linger-v6-0-2ad00b0e447e@rbox.co>
+In-Reply-To: <20250522-vsock-linger-v6-0-2ad00b0e447e@rbox.co>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: sgarzare@redhat.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, mst@redhat.com,
+ jasowang@redhat.com, xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
+ stefanha@redhat.com, virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 
-On Fri, May 23, 2025 at 02:12:58PM -0300, Arnaldo Carvalho de Melo wrote:
+Hello:
 
-[...]
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-> Thanks for the extra info, I'll add it to the commit log message, and
-> perhaps we could make this test exclusive and use stress-ng to generate
-> some background noise in the form of a good number of processes, see:
+On Thu, 22 May 2025 01:18:20 +0200 you wrote:
+> Change vsock's lingerning to wait on close() until all data is sent, i.e.
+> until workers picked all the packets for processing.
 > 
-> root@x1:~# stress-ng --switch $(($(nproc) * 2)) --timeout 30s & for a in $(seq 50) ; do perf test switch ; done
-
-Thanks for sharing the test command.
-
-> Now with your patch it also fails, so its for another reason:
+> Changes in v6:
+> - Make vsock_wait_sent() return bool, parametrize enable_so_linger() with
+>   timeout, don't open code DIV_ROUND_UP [Stefano]
+> - Link to v5: https://lore.kernel.org/r/20250521-vsock-linger-v5-0-94827860d1d6@rbox.co
 > 
-> --- start ---
-> test child forked, pid 1777071
-> Using CPUID GenuineIntel-6-BA-3
-> mmap size 528384B
-> 45221 events recorded
-> Missing comm events
-> ---- end(-1) ----
-> 113: Track with sched_switch                                         : FAILED!
-> 
-> Lots of short lived processes makes it fail as well :-\
+> [...]
 
-I searched internal CI record, we also occasionally saw the error:
+Here is the summary with links:
+  - [net-next,v6,1/5] vsock/virtio: Linger on unsent data
+    https://git.kernel.org/netdev/net-next/c/1c39f5dbbfd2
+  - [net-next,v6,2/5] vsock: Move lingering logic to af_vsock core
+    https://git.kernel.org/netdev/net-next/c/5ec40864aaec
+  - [net-next,v6,3/5] vsock/test: Introduce vsock_wait_sent() helper
+    https://git.kernel.org/netdev/net-next/c/e78e0596c762
+  - [net-next,v6,4/5] vsock/test: Introduce enable_so_linger() helper
+    https://git.kernel.org/netdev/net-next/c/8b07b7e5c253
+  - [net-next,v6,5/5] vsock/test: Add test for an unexpectedly lingering close()
+    https://git.kernel.org/netdev/net-next/c/393d070135ad
 
-  Missing cycles events
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-I will find time to check if anything in test can be improved.  Seems
-to me, the test is fragile if system has background activities.
 
-> Your patch is correct, so I'll probably just add your comments and go
-> with it.
-
-Thanks!  Also thanks Ian's suggestion for the iteration command.
-
-Leo
