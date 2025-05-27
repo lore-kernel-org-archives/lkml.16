@@ -1,161 +1,186 @@
-Received: from mail-24416.protonmail.ch (mail-24416.protonmail.ch [109.224.244.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F38279329;
-	Tue, 27 May 2025 16:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22422797A1
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748363542; cv=none; b=oMHHL29FQoRkLjyNfsRiYGghnYTfO4qrADMQkTkPlWrHzwZZJRw2A+gIR56hFGckIXf1iEsfG1DM2VYTCkXUIHvHsgNE4D5HIZuM3lgcbC1meUos7ktq3cvU7U0zkCbFlf/kyc0dVjUburLYLIU6r18luNS4/98khie97r/lhDo=
+	t=1748363544; cv=none; b=DhRewHyURvU4ETOT00YGWfJNsz2P/xv6khQcHCn11lYcOKvGbbMCgfO7MdmJ5LcNgojPanbz67EmYofYAvpgbq8lazbD58Bpi/safj6lTBfObU0JXy7sEpd9HDbip/0bHhxmp7CjHS3u6wxIj/DxjPJy7BDitXdk5JTRUT5Qhho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748363542; c=relaxed/simple;
-	bh=kFbKuKSn0OZ9knzwWvd7+06HGMPMlb3adA3RbCTnMKc=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qadfdRSQEMaNILWxMt9v5UpXvabVrBSVVBxS+p2j02NfwweVDTxvQn6zenzKY0382ga/qlq2gIyeNtytUNXwEFTIe2povDnF9xV5WVZS7e6tHcQKmMEtkrvTBe+jwubZeGV9fdTTSJfN9EMynI+eQA9HLwyAIu5QDJdPqgQLK5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=clIfl1/b; arc=none smtp.client-ip=109.224.244.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1748363544; c=relaxed/simple;
+	bh=2sIt4equTxMf7zNksQU/+IeDziUhiC69Jled1PWpUQE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=OJcyKA5vVuF80ml++I6iP6Az6Y1Th42Hy70aLhwBz3nWZw1h0OpffYHOCWclaPlNno2N1rELqKMt46uWketNQOHfTVzIsBRhrzhMC06gjL3P3QkBv2hoCcdjM04Jm28gQQWsKCUF+UmN1pUm17eKKu5q0f7tfMBLEyK41/c8i0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sslJajJC; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="clIfl1/b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1748363536; x=1748622736;
-	bh=xcKUc/kOE+to0tTeVZ2ljp2J0YIa+my4ALpGiSB6LPU=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=clIfl1/bQ7zs4Az7MPQsdpU5KOXabISlUXrfRN3ZRHbUgGdLxiYdckv08Kqnp8fud
-	 raRNYi2HSkRcYqEcyniwEmgp/x/MJIUh+N2AIuV4eM7Y66e+64sONQ3hgP20JT+/4V
-	 gD7JKGkQnoCtqZhpEhj9nPYeePGn7IarFjHDxJV5jcNhNDW3izpUUL/TcZbrUtUl+7
-	 nVrN1ZLCYvG9EP02rAExwmP/FR8wDXK/MPDN1faaFEWizSChsj2gNj8FbesKnqcCnm
-	 0REv2G3lLBinMCXOZ4yf6rkHFY+F0WcMw/A1vgXjX9W/2MfbEr5HRmzrRyMZ1SAEEv
-	 JAs/TzWsowKMg==
-Date: Tue, 27 May 2025 16:32:11 +0000
-To: Srinivas Kandagatla <srini@kernel.org>
-From: "Michael C. Pratt" <mcpratt@pm.me>
-Cc: Christian Lamparter <chunkeey@gmail.com>, =?utf-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, linux-kernel@vger.kernel.org, "Michael C . Pratt" <mcpratt@pm.me>, INAGAKI Hiroshi <musashino.open@gmail.com>, stable@vger.kernel.org
-Subject: [PATCH v1 RESEND stable tags] nvmem: layouts: u-boot-env: remove crc32 endianness conversion
-Message-ID: <20250527163123.9201-1-mcpratt@pm.me>
-Feedback-ID: 27397442:user:proton
-X-Pm-Message-ID: 031be010564a882665cc183088ff5591c6526fd8
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sslJajJC"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so42379155e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748363540; x=1748968340; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j4ceyXfpbHOb26b8XCYLDg0Adii9j8clPXP8isRHjuk=;
+        b=sslJajJCJsXGH1OU5imgef6CxF90BaOM9UBxOexziU1MFTfXryj133Ryw0898TK/oq
+         K6wy9zhUouFdvmTDuvYVs3NJx/QJS7ZfQI0IdEaaDZeScpKGI1bM84j5ooCO2Vgpy4jr
+         gqJQxDmUG/Ew2SszVOzFv+Y5pChEJxCbqj3YazYSgwpuJLjJlcjiaw++ZChkCRgFKXUR
+         HPpa4mxRLNRqm7jZNSaAZnXfAhDMmbPy5wkLniRNPyoYRDx7XBq+tX3e1HpOpn2vfUCh
+         RqjrTWNAJN6m70K8L5dKlHE3WbPgJknZJXL5/5RjI3Tmq4jXm+b4e5vqVVogvGQeGVcW
+         ppvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748363540; x=1748968340;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j4ceyXfpbHOb26b8XCYLDg0Adii9j8clPXP8isRHjuk=;
+        b=s5LPHIvfhw2SpEbsNQOGBs1Wc0Fj4tKLieiI/GZhrBxAHiscyJ1UN4rhM9C7NSOf51
+         tYbQlZqaPIGzoSh1a2kBgW575GhRO+92U2OYrwpx9vqES7AnA12500gA9yTKStZCf2mf
+         8XDhVT6QKKmmEz2vmcIqxbzvTDNknz42O0RYqC9OFwOuMRiY5uXEp7bnKSF2iEfc3NVG
+         vbhyLm1ZxL/yOmIEFxRApi+fru0tQj322vemT46eATrzXjKTQdYzMOo8B8fvm0qJnqrs
+         22+rcBlWaFdjfsH+vnidpqnuxo3LbfmpDiMHto5iqdqq/tS701kopR89vn87LAbzaCTG
+         6kNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXGwS+uBk1V8GpFtVcDS3ludVcejy4UW5Wt0lO/eanV/Yq2ROUPoDg+e4V/CBPfYLIcSJNJXfHp6tAqzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwefeoUUd3NfW0I1QxY9O3budqpPXB503FrBaz2G6RbDvUbtZbo
+	sFbklfIEP6Cm7SIKoFFmocQdtS0BTJNCCSUB00vFDNH+1g1Y5l5cdyG+f74m07xO7xc=
+X-Gm-Gg: ASbGnculQDUzKaWqODPQgOQRa78u41B8eW7lSfZ5fbYW4eVXoRfIIcbpUxmiBckOXAS
+	3b0MI1Psq2/Qz9FheS6mBU/t2Fob6xncHZpedPvQ53Zm/NXIRKfR6EjXACHqw3K8+/soOUdLOjn
+	a3Q2HXjVfbgEwmR3IT1FY4kuDtai5zxTpABN0KowIcffkuWDcxhmAEHE9YU+LvqpVhUnX+vO44u
+	987z+76mc2T7XjY0RGTyi3ql9U7GvKcsXXC4r5oG76oo+PSt8ZkG09fifVZkVDVJ2S+zhVOJ0X3
+	F9+/SQAzA05nfE/auaII5S3DaYwXYor1JkMwbL48NI7Td8+98XppprUL9g==
+X-Google-Smtp-Source: AGHT+IEmErbjqw+229GOiiiNp1gk2yeXCVD0vFAogvu/2yFKvfiLTxs0BLJ5USyClF4cC7YxbXHYeQ==
+X-Received: by 2002:a05:600c:6286:b0:442:d9f2:c74e with SMTP id 5b1f17b1804b1-44c932f9428mr116536725e9.23.1748363540016;
+        Tue, 27 May 2025 09:32:20 -0700 (PDT)
+Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3dd94d1sm270586605e9.34.2025.05.27.09.32.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 09:32:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 17:32:18 +0100
+Message-Id: <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Konrad Dybcio"
+ <konradybcio@kernel.org>, "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>
+Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, <linux-sound@vger.kernel.org>, "Liam Girdwood"
+ <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
+ <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Konrad
+ Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Jaroslav Kysela"
+ <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
+From: "Alexey Klimov" <alexey.klimov@linaro.org>
+X-Mailer: aerc 0.20.0
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+ <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+In-Reply-To: <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
 
-On 11 Oct 2022, it was reported that the crc32 verification
-of the u-boot environment failed only on big-endian systems
-for the u-boot-env nvmem layout driver with the following error.
+On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
+> On 22/05/2025 19:40, Alexey Klimov wrote:
+>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
+>> are required to support audio playback and audio capture on sm6115 and
+>> its derivatives.
+>>=20
+>> Cc: Konrad Dybcio <konradybcio@kernel.org>
+>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>
+> Just keep one CC.
 
-  Invalid calculated CRC32: 0x88cd6f09 (expected: 0x096fcd88)
+Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
+email here?
 
-This problem has been present since the driver was introduced,
-and before it was made into a layout driver.
+>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>
+> Missing SoB.
 
-The suggested fix at the time was to use further endianness
-conversion macros in order to have both the stored and calculated
-crc32 values to compare always represented in the system's endianness.
-This was not accepted due to sparse warnings
-and some disagreement on how to handle the situation.
-Later on in a newer revision of the patch, it was proposed to use
-cpu_to_le32() for both values to compare instead of le32_to_cpu()
-and store the values as __le32 type to remove compilation errors.
+IIRC I took Konrad's changes but at this point I don't remember how much wa=
+s changed.
+So I need to switch to Konrad's owned completely or somehow indicate using =
+tags
+that it is initial Konrad's work.
 
-The necessity of this is based on the assumption that the use of crc32()
-requires endianness conversion because the algorithm uses little-endian,
-however, this does not prove to be the case and the issue is unrelated.
+Konrad, what's your preference here?
 
-Upon inspecting the current kernel code,
-there already is an existing use of le32_to_cpu() in this driver,
-which suggests there already is special handling for big-endian systems,
-however, it is big-endian systems that have the problem.
+>> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm6115.dtsi | 132 ++++++++++++++++++++++++++++=
++++++++
+>>  1 file changed, 132 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/=
+qcom/sm6115.dtsi
+>> index c8865779173eca65f9e94535b5339f590d4b1410..045887ae215b0965ffc098fd=
+31fd18ac1ad90b7b 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
+>> @@ -2689,6 +2689,138 @@ funnel_apss1_in: endpoint {
+>>  			};
+>>  		};
+>
+>
+>
+> ...
+>
+>> +		swr0: soundwire@a740000 {
+>> +			compatible =3D "qcom,soundwire-v1.6.0";
+>> +			reg =3D <0x0 0x0a740000 0x0 0x2000>;
+>> +			interrupts =3D <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
+>> +				     <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&txmacro>;
+>> +			clock-names =3D "iface";
+>> +
+>> +			resets =3D <&lpasscc 0>;
+>> +			reset-names =3D "swr_audio_cgcr";
+>> +
+>> +			label =3D "VA_TX";
+>> +			qcom,din-ports =3D <3>;
+>> +			qcom,dout-ports =3D <0>;
+>> +
+>> +			qcom,ports-sinterval-low =3D	/bits/ 8 <0x03 0x03 0x03>;
+>> +			qcom,ports-offset1 =3D		/bits/ 8 <0x01 0x02 0x01>;
+>> +			qcom,ports-offset2 =3D		/bits/ 8 <0x00 0x00 0x00>;
+>> +			qcom,ports-hstart =3D		/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-hstop =3D		/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-word-length =3D	/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-block-pack-mode =3D	/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-block-group-count =3D	/bits/ 8 <0xff 0xff 0xff>;
+>> +			qcom,ports-lane-control =3D	/bits/ 8 <0x00 0x00 0x00>;
+>> +
+>> +			#sound-dai-cells =3D <1>;
+>> +			#address-cells =3D <2>;
+>> +			#size-cells =3D <0>;
+>
+> Why this not is not disabled? That's a bus. Each bus node makes no sense
+> on its own without the actual devices, thus it is always disabled in the
+> SoC file. Just take a look at other DTSI.
 
-This, being the only functional difference between architectures
-in the driver combined with the fact that the suggested fix
-was to use the exact same endianness conversion for the values
-brings up the possibility that it was not necessary to begin with,
-as the same endianness conversion for two values expected to be the same
-is expected to be equivalent to no conversion at all.
+Because I didn't know that. Ok, I'll add disable status to these.
 
-After inspecting the u-boot environment of devices of both endianness
-and trying to remove the existing endianness conversion,
-the problem is resolved in an equivalent way as the other suggested fixes.
+>> +		};
+>> +
+>> +		lpasscc: clock-controller@a7ec000 {
+>> +			compatible =3D "qcom,sm6115-lpasscc";
+>> +			reg =3D <0x0 0x0a7ec000 0x0 0x1000>;
+>> +			#reset-cells =3D <1>;
+>> +		};
+>> +
+>>  		remoteproc_adsp: remoteproc@a400000 {
+>
+> Looks like not ordered by unit address.
 
-Ultimately, it seems that u-boot is agnostic to endianness
-at least for the purpose of environment variables.
-In other words, u-boot reads and writes the stored crc32 value
-with the same endianness that the crc32 value is calculated with
-in whichever endianness a certain architecture runs on.
-
-Therefore, the u-boot-env driver does not need to convert endianness.
-Remove the usage of endianness macros in the u-boot-env driver,
-and change the type of local variables to maintain the same return type.
-
-If there is a special situation in the case of endianness,
-it would be a corner case and should be handled by a unique "compatible".
-
-Even though it is not necessary to use endianness conversion macros here,
-it may be useful to use them in the future for consistent error printing.
-
-Fixes: d5542923f200 ("nvmem: add driver handling U-Boot environment variabl=
-es")
-Reported-by: INAGAKI Hiroshi <musashino.open@gmail.com>
-Link: https://lore.kernel.org/all/20221011024928.1807-1-musashino.open@gmai=
-l.com
-Cc: <stable@vger.kernel.org> # 6.12.x
-Cc: <stable@vger.kernel.org> # 6.6.x: f4cf4e5: Revert "nvmem: add new confi=
-g option"
-Cc: <stable@vger.kernel.org> # 6.6.x: 7f38b70: of: device: Export of_device=
-_make_bus_id()
-Cc: <stable@vger.kernel.org> # 6.6.x: 4a1a402: nvmem: Move of_nvmem_layout_=
-get_container() in another header
-Cc: <stable@vger.kernel.org> # 6.6.x: fc29fd8: nvmem: core: Rework layouts =
-to become regular devices
-Cc: <stable@vger.kernel.org> # 6.6.x: 0331c61: nvmem: core: Expose cells th=
-rough sysfs
-Cc: <stable@vger.kernel.org> # 6.6.x: 401df0d: nvmem: layouts: refactor .ad=
-d_cells() callback arguments
-Cc: <stable@vger.kernel.org> # 6.6.x: 6d0ca4a: nvmem: layouts: store owner =
-from modules with nvmem_layout_driver_register()
-Cc: <stable@vger.kernel.org> # 6.6.x: 5f15811: nvmem: layouts: add U-Boot e=
-nv layout
-Cc: <stable@vger.kernel.org> # 6.6.x
-Signed-off-by: Michael C. Pratt <mcpratt@pm.me>
----
- drivers/nvmem/layouts/u-boot-env.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-b=
-oot-env.c
-index 731e6f4f12b2..21f6dcf905dd 100644
---- a/drivers/nvmem/layouts/u-boot-env.c
-+++ b/drivers/nvmem/layouts/u-boot-env.c
-@@ -92,7 +92,7 @@ int u_boot_env_parse(struct device *dev, struct nvmem_dev=
-ice *nvmem,
- =09size_t crc32_data_offset;
- =09size_t crc32_data_len;
- =09size_t crc32_offset;
--=09__le32 *crc32_addr;
-+=09uint32_t *crc32_addr;
- =09size_t data_offset;
- =09size_t data_len;
- =09size_t dev_size;
-@@ -143,8 +143,8 @@ int u_boot_env_parse(struct device *dev, struct nvmem_d=
-evice *nvmem,
- =09=09goto err_kfree;
- =09}
-=20
--=09crc32_addr =3D (__le32 *)(buf + crc32_offset);
--=09crc32 =3D le32_to_cpu(*crc32_addr);
-+=09crc32_addr =3D (uint32_t *)(buf + crc32_offset);
-+=09crc32 =3D *crc32_addr;
- =09crc32_data_len =3D dev_size - crc32_data_offset;
- =09data_len =3D dev_size - data_offset;
-=20
-
-base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
---=20
-2.30.2
-
+Ok, I need to sort it then and check other parts to see if they are sorted =
+or not.
 
