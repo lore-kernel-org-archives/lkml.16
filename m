@@ -1,83 +1,131 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4072A19539F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EB425D8FA
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346375; cv=none; b=W5Uvlq9ZnTAv/JhxomPOJZRDGNs881cWm0bfSGUKiuyN3DpkOyd89AjA5QTiZ88LsvsimIDE0wjS+OLQUVJqWf19I3dTx5Pph3tacQBsp87NxloG18F6c6/Ym19TgdIc0z6Big/bJJ3fV5ZRgBvSO4FGVJdst/es0X8Pd5XOUuc=
+	t=1748346570; cv=none; b=KXUwVZxrZ0LlzDFBWcbOYoB5XJy80vWjzIq71Cj7d9Q7gYepvfNy1JbIBw4Z6PbH1ynGzCgQu/FvxN5qj0MfBHxhUWMkvNMVc1k4c1Pak74e1JC0Wc4uESPlBHcwRbFEkCotBnrO3NX9x6YEBgdCFSw8/U1W1VdEMGS/imSjGm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346375; c=relaxed/simple;
-	bh=hZgsNJN5U6euHAUZEHEmUPgEJHbDN2WW54ZAPUUNn8I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Zq+oeceTBaBRGcpKV9PXlyalmOuPA3po8rPZOpsnONHYN6iQAKWL+u/NLbmnXF1w6bgELHokGH0a87aUYtz/c7jhjw5meDhzEqjVuXsfgwpQdvSYiQ4WOp8zQAEdIdWssW2pftXprbRN6w9DXI5pjAm86BLPk3FTGu494J1QWqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openpixelsystems.org; spf=fail smtp.mailfrom=openpixelsystems.org; dkim=pass (2048-bit key) header.d=openpixelsystems-org.20230601.gappssmtp.com header.i=@openpixelsystems-org.20230601.gappssmtp.com header.b=zhWlcXvX; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openpixelsystems.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=openpixelsystems.org
+	s=arc-20240116; t=1748346570; c=relaxed/simple;
+	bh=sYuK8ZW73WtREcRe3Wixl3SHRL4TOVZ3ohArwMovzZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pPyjMiNhZtyJYHG6QtQ8BSRN/BwnU4Nrwv207gZpyL5y00J+8QHITMR66gCLmv4NSeB8ua6X2Trfy9PkRlNWGJEiWwjR1CVPosqcsKGsyEMPM1C/7gUa39+MxLsFjq+BTCT+yo0AZuQUvm5gIpK9RGSRtkASOaqTwn43NPj8rIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B95ynLYm; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=B95ynLYm; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openpixelsystems-org.20230601.gappssmtp.com header.i=@openpixelsystems-org.20230601.gappssmtp.com header.b="zhWlcXvX"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a37ed01aa0so3228650f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:46:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openpixelsystems-org.20230601.gappssmtp.com; s=20230601; t=1748346370; x=1748951170; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hZgsNJN5U6euHAUZEHEmUPgEJHbDN2WW54ZAPUUNn8I=;
-        b=zhWlcXvXXbVPPhRC9534eIKWVRk0AijQqeFnKb5xZRtuhQcxN4dUpjyptiYYWxGdW8
-         OZ6u7m3mWDuJDik2DK1VEEfhGtC2jOEjzN2LS435rYvaOJTH4wkUNEVRodpMRTx/x4K6
-         DwCQ5TWyrNSY9KX+rvj2ylsPsKgSun4znHnivkye0OjgldDLOEem5IKQT/eVesc7lPHb
-         LlV/HQMdbdUzXNPMqpQr/gfb7NetSeWSXMy1OcuyRszaSrFL1g+R3riC6nd4AUXEs/yJ
-         YdN4vIedFilyvFPJe56hC8KSmk17QjJO2cFoMt1pkkKT/DbNwmMnZuHiLE5f8UATauB2
-         Mmtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748346370; x=1748951170;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hZgsNJN5U6euHAUZEHEmUPgEJHbDN2WW54ZAPUUNn8I=;
-        b=vUWaDyNpxyzDmUFG5LKLLfNkUde6OmAWBRYwM+t0QQuPCCanPyvsBuB2pn7Smu7hKd
-         NH0jALXorhFVegve3yEu7MUszJsVIRDVWBSlhNIVeFJDj0gWrm7CJKDK0z0A12oqWVpn
-         H8+ev76/LVP1akbucz7IbSwUmQZ4hEtCq2iz0AZnLSXGdmkdwNyibiSoOsfzc/zHG05+
-         XNl7Ecw5Dx5HL/XsBFjiu8IadtR5Hhnz3o25x/MgUY0lYIQ4hTLmX3ORjfyMA5yzd7DB
-         SdfmDexruOwkyBHZwXk5pE/Evk/hu5H5LWNngliRiH3eIaOAHrM8v4nweiXF2x49uwup
-         r2Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCV16MxXcIteGeFMe6z+ixXqohufS20QGnZWRKJtNEnLGs6i50V8DxoXXKp1PEi18wGCJDfJtxKEC1WQL40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf5u50NmVUQlvKPNou4jT78hvjX2kfyJ7JZphVrkhpUaefUb9z
-	u+NVo1KtMOAch7H8F8Pmmt/gdF5mF+qeEJZkS0dSjbUFeb+m6hec6fveGn2sC1pSsWg=
-X-Gm-Gg: ASbGncuyu3pu7fCnVq1KDZSByrzNCKz6OEWQIhCWr3apaL4+stCak2UuKNE89EyEMtF
-	JCYhTr6QAj1h55Zkv8E9v48ZVkILZ45/toOBuZaVS86QT3fIw9vX50AMbgXTdYvWkmFkpdCDosA
-	BXCW0di3X4SHjFuVzQn4jnZ95GagQuVPxk2iB0jEJMYWqtsz+xFPTO0B7ooalCRMVM8H8TtCoWJ
-	FX3JwQjSbGhF3iGHr/OjBsYaBP9W7Iz0VSIC8o1+CSLio7Wp7000WxY7bvjzGn+V4UJ8bm+q9La
-	beJiuR/GaYIn48eTAkfeBKUcdvgPBbUzkSFPwylRvv9NRWipPez2pqgY9msZYTK5o9wYwNpqYtV
-	eCITEzJwo6cj3rvgtVSpEn089e2rmWyoewJuT7B8=
-X-Google-Smtp-Source: AGHT+IEJksL9yUy4jX+PG0AKVXuGsMzofM/R8YjCchkDDQuXA/zsN6zJKbbWLD2SqIYtzpiCCZu9+w==
-X-Received: by 2002:a05:6000:240d:b0:3a4:d6ed:8e07 with SMTP id ffacd0b85a97d-3a4d6eda68cmr5840366f8f.32.1748346370483;
-        Tue, 27 May 2025 04:46:10 -0700 (PDT)
-Received: from localhost (253.124-78-194.adsl-static.isp.belgacom.be. [194.78.124.253])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcced4713sm17270135e9.1.2025.05.27.04.46.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 04:46:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B95ynLYm";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="B95ynLYm"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 459631F7E5;
+	Tue, 27 May 2025 11:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1748346566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=DKk+Nfm0Pb9igRgn4Q0sKMIabc0OAAHC/skA3hLHvUQ=;
+	b=B95ynLYmydgrlK/oVFVKqUQ3zLel9/cA0FIfPdalWOeaR7F5RUD8GxIT6Nzz9enaSw6ap8
+	wIANICnbKqatARY+Evz5rgZFbCvWC9h3sJtBT2xrc5gs4+Wq0g27E/1reKI3cPI7VpHTZC
+	862sK5VmdOjy8b9E0+m7PVbbbqhyg3c=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=B95ynLYm
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1748346566; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=DKk+Nfm0Pb9igRgn4Q0sKMIabc0OAAHC/skA3hLHvUQ=;
+	b=B95ynLYmydgrlK/oVFVKqUQ3zLel9/cA0FIfPdalWOeaR7F5RUD8GxIT6Nzz9enaSw6ap8
+	wIANICnbKqatARY+Evz5rgZFbCvWC9h3sJtBT2xrc5gs4+Wq0g27E/1reKI3cPI7VpHTZC
+	862sK5VmdOjy8b9E0+m7PVbbbqhyg3c=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 39D47136E0;
+	Tue, 27 May 2025 11:49:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yzbJDcamNWjtCgAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Tue, 27 May 2025 11:49:26 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixup for 6.16 pull request
+Date: Tue, 27 May 2025 13:49:22 +0200
+Message-ID: <cover.1748346039.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 13:46:09 +0200
-Message-Id: <DA6X2A2JC57H.DK70D9XL9C8Z@openpixelsystems.org>
-Cc: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <peter@korsgaard.com>
-Subject: Re: [PATCH] ASoC: tas571x: add separate tas5733 controls
-From: "Bram Vlerick" <bram.vlerick@openpixelsystems.org>
-To: "Bram Vlerick" <bram.vlerick@openpixelsystems.org>, "Kevin Cernekee"
- <cernekee@chromium.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark
- Brown" <broonie@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi
- Iwai" <tiwai@suse.com>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>
-X-Mailer: aerc 0.20.1
-References: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
-In-Reply-To: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-0.01 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCPT_COUNT_THREE(0.00)[4];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 459631F7E5
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Bar: /
+X-Spam-Level: 
+X-Spam-Score: -0.01
 
-Add Kamel Bouhara
+Hi,
+
+please pull a fixup to the xarray conversion sent in the main 6.16
+batch. It was not included because it would cause rebase/refresh of like
+80 patches, right before sending the early pull request last week.
+
+It's fixing a bug when zoned mode is enabled on btrfs so it's not
+affecting most people.
+
+The commit is fresh but the fix has been tested and verified, no reason
+to delay it.
+
+Thanks.
+
+----------------------------------------------------------------
+The following changes since commit eeb133a6341280a1315c12b5b24a42e1fbf35487:
+
+  btrfs: move misplaced comment of btrfs_path::keep_locks (2025-05-17 21:15:08 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.16-tag
+
+for you to fetch changes up to b83825a8f56a34e7352e424aae64ffe6b88247d1:
+
+  btrfs: don't drop a reference if btrfs_check_write_meta_pointer() fails (2025-05-27 13:39:15 +0200)
+
+----------------------------------------------------------------
+Josef Bacik (1):
+      btrfs: don't drop a reference if btrfs_check_write_meta_pointer() fails
+
+ fs/btrfs/extent_io.c | 1 -
+ 1 file changed, 1 deletion(-)
