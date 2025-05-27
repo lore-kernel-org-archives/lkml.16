@@ -1,180 +1,92 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6C3EAD7
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887B1192D87;
+	Tue, 27 May 2025 13:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351801; cv=none; b=EnRcEPdq1zzPrp3KPhwOGAMyt34/2yy1Z0g5GBfscZoF8PpJNtEjZUBLSMReJwmVH38t0UB3cvA560HSLrU2oNX0ikslkhp5ggSD6Yd8gYm+9MsrQXe8OU3MBOtDaGwAY/4Lqp4ZExv0A9qeqEs+in/OfTB3veaI52CL5ktX864=
+	t=1748351820; cv=none; b=TFo8lAWGEiF75s5hUS38PuFt0Hi59omm9aswxGVV5dL4M2N9aXUrTbzujx4ydOJvjnNqOrUeHS7Jb8NVUTLeRVHl+ICjF/f4kpeT57g3VbcfsSP3js3S2lFvJoI9GFpPjmOJVLzEUmNCCb2ZpQ4dQegwtgig1FpfHeW+1ng9+NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351801; c=relaxed/simple;
-	bh=toUL8kVmIYUpj+yHbWybTCF9PrGAGvHavC8vMENX1Lc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=c3c6SL86w2f3q4ntmqKunf3Eb/fClzYVFw5qI/2GASk8FaTd/8FRz6XyIKR7u/cb0VI1PRLv4dVLaIBIDGzxWMpsd6Mxo04uOPkw6/+T9nwee1WV8ChKqGJjaOgZ0g06U0XoKqNB9CO6QF40u7gXu7/NQ1EHoatL8L35SiAWeEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so634617139f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:16:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748351799; x=1748956599;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3fs5dnMU+gfL+8rHwXU1x0X13W7OhQWWELJjNHVdrCg=;
-        b=InnXGIw3rA+PoPHUc3vUD1wZ1GKBnf5g6pahPevgkzix33oducfzcElmqmLtlfjF+U
-         38HGhM1M2NOUdK01X8sxcNk8zgfRaaQDPswWKuZ9OItlX4MKIVGDyt9GlsqoXWSGMLEw
-         VizNsy2TgCaulwnismKjZ5I1yuU43GRCoZyksEZZrF9lN2VnQ+y2Dk7vJkuuUzekP3q2
-         d0IZhDENsGKGbKeoXoLC87IJ76M5czORdb/EhPU8kN1mW4QrYj7QKY1bV/38UL6raV1T
-         VqZcX8WaB3yIuBbaO1/BXHPdL7b6Go75nj3FMtwdS/oDCsQvORAD9iODduOog7tGDvag
-         gPKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWVMFUcU4wYjhEHOZ6wM7nKx4kghVZPwNPcettQS6p3sMwQ4VatG9refqPKbMTDoPGqLLOz6A5sBomM9o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3gsvehdi0Gi4YXujY+hTPZPSxWnWe7aKyLepvluvkMbqQpEjz
-	HEg0YNruSQH74GMPoO9MgPTJy9Ybmbsn9YFLpZYGeo1+vUGmt1woqO8fhVcCbekzeRh7yP1GqAP
-	gB5tqCpnzBFhvOODwX6SRdfhnAc61Op6DIuhnDulRLmIrHEqVh8jpPQNLORk=
-X-Google-Smtp-Source: AGHT+IHGRO3kfgMQ7ar84SSI3p4GXHmcWFk1okctqv4PnTzlS/IVJ68utuAAcATo9JvhtFOp2pFWI5TrCwJ/6xpePsNeqY2hvqL1
+	s=arc-20240116; t=1748351820; c=relaxed/simple;
+	bh=n/H8Wa7Ftb0H4j1QNhebHw57Ogax0FKs1fXVb4lhuj4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dRmsrITM+4CasV8IQivDSO1s0TIdmc/fxY8/6AW4UpYM/AidLuY6Id2ZJaiqJymvtJCy3z8kmX27wjq6XYuuaXkQ78ASWk1hTDOGlNRkE+l7qTr8+X5Gpv/SdmxXHxIEY2MxSJp29vuwpH5rBtsAMc5ikdPtOLnzT5ebE/UtObo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhvOlfHu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhvOlfHu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0312C4CEE9;
+	Tue, 27 May 2025 13:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748351820;
+	bh=n/H8Wa7Ftb0H4j1QNhebHw57Ogax0FKs1fXVb4lhuj4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=HhvOlfHun5eWDOutHEK8j3nc/KMUkcJkrhBYNOzh/fWupluJQqOw3m0iDqlrHeL47
+	 2GkHK98Km3bB4Ew5ABQYgufA8eoUWV01ox21ePYM7KH4zXcppG19a2NWL6Sk5yr12d
+	 mwlyJy4ek9R1cep8okRA2oNYKNGCradFPRRz2cBz0fNIo3x2zRLfKPM5Ut7cI+qjI6
+	 0ROMPJNI6o2TGeDhKd5O85aOFVrxf9I1Ijvfda1eak3k6aSEUyrcdSVK4/hFdO9xzh
+	 7b5F2P9IKpM7m8f8ZAsz/731rwQpHnCnfjjTNIfRXFQGcI3RULLceCKEuYPdK9ifYl
+	 MJFdDRsnFrQDA==
+From: Alexey Gladkov <legion@kernel.org>
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Khalid Aziz <khalid@gonehiking.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	Alexey Gladkov <legion@kernel.org>
+Subject: [PATCH v3 7/6] scsi: Always define MODULE_DEVICE_TABLE
+Date: Tue, 27 May 2025 15:15:44 +0200
+Message-ID: <20250527131544.63330-1-legion@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1748335606.git.legion@kernel.org>
+References: <cover.1748335606.git.legion@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:7211:b0:864:a1e9:f07 with SMTP id
- ca18e2360f4ac-86cbb80a7ecmr1620366539f.8.1748351799241; Tue, 27 May 2025
- 06:16:39 -0700 (PDT)
-Date: Tue, 27 May 2025 06:16:39 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6835bb37.a70a0220.253bc2.00b4.GAE@google.com>
-Subject: [syzbot] [wireless?] KMSAN: uninit-value in ieee80211_amsdu_to_8023s (2)
-From: syzbot <syzbot+3d9e2c65bdd43a254924@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Since MODULE_DEVICE_TABLE no longer depends on whether the module is
+built separately or compiled into the kernel, it now makes sense to
+always define DEVICE_TABLE. In this case, even if the module is in the
+kernel, correct module.builtin.modaliases will be generated.
 
-syzbot found the following issue on:
-
-HEAD commit:    94305e83eccb Merge tag 'pmdomain-v6.15-rc3' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16c9c170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a423536a47898618
-dashboard link: https://syzkaller.appspot.com/bug?extid=3d9e2c65bdd43a254924
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/82a518437203/disk-94305e83.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e1b8b32ab132/vmlinux-94305e83.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/1743502cacb0/bzImage-94305e83.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3d9e2c65bdd43a254924@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in ieee80211_get_8023_tunnel_proto net/wireless/util.c:543 [inline]
-BUG: KMSAN: uninit-value in ieee80211_amsdu_to_8023s+0x2226/0x2a40 net/wireless/util.c:897
- ieee80211_get_8023_tunnel_proto net/wireless/util.c:543 [inline]
- ieee80211_amsdu_to_8023s+0x2226/0x2a40 net/wireless/util.c:897
- __ieee80211_rx_h_amsdu+0x902/0x1400 net/mac80211/rx.c:3078
- ieee80211_rx_h_amsdu net/mac80211/rx.c:3164 [inline]
- ieee80211_rx_handlers+0x5b21/0x12440 net/mac80211/rx.c:4146
- ieee80211_invoke_rx_handlers net/mac80211/rx.c:4190 [inline]
- ieee80211_prepare_and_rx_handle+0x4c39/0x9ce0 net/mac80211/rx.c:5040
- __ieee80211_rx_handle_packet net/mac80211/rx.c:5245 [inline]
- ieee80211_rx_list+0x5f20/0x6120 net/mac80211/rx.c:5416
- ieee80211_rx_napi+0x84/0x400 net/mac80211/rx.c:5439
- ieee80211_rx include/net/mac80211.h:5179 [inline]
- ieee80211_handle_queued_frames+0x14f/0x350 net/mac80211/main.c:441
- ieee80211_tasklet_handler+0x25/0x30 net/mac80211/main.c:460
- tasklet_action_common+0x362/0xd70 kernel/softirq.c:829
- tasklet_action+0x2d/0x40 kernel/softirq.c:855
- handle_softirqs+0x169/0x6e0 kernel/softirq.c:579
- __do_softirq+0x14/0x1b kernel/softirq.c:613
- do_softirq+0x99/0x100 kernel/softirq.c:480
- __local_bh_enable_ip+0xa1/0xb0 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
- __dev_queue_xmit+0x2e5d/0x5e20 net/core/dev.c:4656
- dev_queue_xmit include/linux/netdevice.h:3350 [inline]
- __netlink_deliver_tap_skb net/netlink/af_netlink.c:307 [inline]
- __netlink_deliver_tap+0x93b/0xdd0 net/netlink/af_netlink.c:325
- netlink_deliver_tap net/netlink/af_netlink.c:338 [inline]
- __netlink_sendskb net/netlink/af_netlink.c:1256 [inline]
- netlink_sendskb+0x224/0x270 net/netlink/af_netlink.c:1265
- netlink_unicast+0x746/0x1290 net/netlink/af_netlink.c:1354
- nlmsg_unicast include/net/netlink.h:1162 [inline]
- netlink_ack+0xacc/0xf80 net/netlink/af_netlink.c:2496
- netlink_rcv_skb+0x3f9/0x680 net/netlink/af_netlink.c:2540
- genl_rcv+0x41/0x60 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0xed8/0x1290 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x10b3/0x1250 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x330/0x3d0 net/socket.c:727
- __sys_sendto+0x590/0x710 net/socket.c:2180
- __do_compat_sys_socketcall net/compat.c:-1 [inline]
- __se_compat_sys_socketcall net/compat.c:423 [inline]
- __ia32_compat_sys_socketcall+0xa89/0x1af0 net/compat.c:423
- ia32_sys_call+0x41be/0x42c0 arch/x86/include/generated/asm/syscalls_32.h:103
- do_syscall_32_irqs_on arch/x86/entry/syscall_32.c:83 [inline]
- __do_fast_syscall_32+0xb0/0x110 arch/x86/entry/syscall_32.c:306
- do_fast_syscall_32+0x38/0x80 arch/x86/entry/syscall_32.c:331
- do_SYSENTER_32+0x1f/0x30 arch/x86/entry/syscall_32.c:369
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4153 [inline]
- slab_alloc_node mm/slub.c:4196 [inline]
- kmem_cache_alloc_node_noprof+0x818/0xf00 mm/slub.c:4248
- kmalloc_reserve+0x13c/0x4b0 net/core/skbuff.c:577
- __alloc_skb+0x347/0x7d0 net/core/skbuff.c:668
- __netdev_alloc_skb+0x124/0x6a0 net/core/skbuff.c:732
- netdev_alloc_skb include/linux/skbuff.h:3413 [inline]
- dev_alloc_skb include/linux/skbuff.h:3426 [inline]
- __ieee80211_amsdu_copy net/wireless/util.c:757 [inline]
- ieee80211_amsdu_to_8023s+0xcfa/0x2a40 net/wireless/util.c:885
- __ieee80211_rx_h_amsdu+0x902/0x1400 net/mac80211/rx.c:3078
- ieee80211_rx_h_amsdu net/mac80211/rx.c:3164 [inline]
- ieee80211_rx_handlers+0x5b21/0x12440 net/mac80211/rx.c:4146
- ieee80211_invoke_rx_handlers net/mac80211/rx.c:4190 [inline]
- ieee80211_prepare_and_rx_handle+0x4c39/0x9ce0 net/mac80211/rx.c:5040
- __ieee80211_rx_handle_packet net/mac80211/rx.c:5245 [inline]
- ieee80211_rx_list+0x5f20/0x6120 net/mac80211/rx.c:5416
- ieee80211_rx_napi+0x84/0x400 net/mac80211/rx.c:5439
- ieee80211_rx include/net/mac80211.h:5179 [inline]
- ieee80211_handle_queued_frames+0x14f/0x350 net/mac80211/main.c:441
- ieee80211_tasklet_handler+0x25/0x30 net/mac80211/main.c:460
- tasklet_action_common+0x362/0xd70 kernel/softirq.c:829
- tasklet_action+0x2d/0x40 kernel/softirq.c:855
- handle_softirqs+0x169/0x6e0 kernel/softirq.c:579
- __do_softirq+0x14/0x1b kernel/softirq.c:613
-
-CPU: 1 UID: 0 PID: 20119 Comm: syz.6.1299 Tainted: G        W           6.15.0-rc7-syzkaller-00099-g94305e83eccb #0 PREEMPT(undef) 
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
-
-
+Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+Signed-off-by: Alexey Gladkov <legion@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/scsi/BusLogic.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/scsi/BusLogic.c b/drivers/scsi/BusLogic.c
+index 8ce2ac9293a3..08e12a3d6703 100644
+--- a/drivers/scsi/BusLogic.c
++++ b/drivers/scsi/BusLogic.c
+@@ -3715,7 +3715,6 @@ static void __exit blogic_exit(void)
+ 
+ __setup("BusLogic=", blogic_setup);
+ 
+-#ifdef MODULE
+ /*static const struct pci_device_id blogic_pci_tbl[] = {
+ 	{ PCI_VENDOR_ID_BUSLOGIC, PCI_DEVICE_ID_BUSLOGIC_MULTIMASTER,
+ 	  PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
+@@ -3732,7 +3731,6 @@ static const struct pci_device_id blogic_pci_tbl[] = {
+ 	{0, },
+ };
+ MODULE_DEVICE_TABLE(pci, blogic_pci_tbl);
+-#endif
+ 
+ module_init(blogic_init);
+ module_exit(blogic_exit);
+-- 
+2.49.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
