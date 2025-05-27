@@ -1,63 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4869A214209
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F131217663
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748384591; cv=none; b=A2Q4XiP8eTpO4s6fsg+/sLHjOhF+nT6HL2Hv3Wp1x2VuTgec8YqxQ6FgfsXokz6B0r8pHrfLN1fAeIXm8yYFKaFX9uwYuHml1VsxAr1vs6PYc9QA3yiJVrTPpOCGvXZaNikNzl5vFiFcx5pesJf5fai2u/BMMr8yhNtCOT+pwtc=
+	t=1748384594; cv=none; b=bJv5ZqtnutBP9uo+ii4dN8X2xkB4oWH6smr1xtSz4qw+TP3NQvhHOgx1iRZdkQowxvv1NBhCNhL7Chh7z1B5sqZRduncjvOXOJAuqOFCVD0iu/1iwvvx//3louthUfDKh9odRG//HY2/Nh3ld/9rUgiAG2gDoghe2tRrW4woRtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748384591; c=relaxed/simple;
-	bh=WFrf8h0EsBhuIZr3pXmc+Gk70qBJc63v1czz66GunHQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rnKgPTh5vLgENU/7d1DYR+r1Sc2AvLAtPMi5NTe9qDsfXUtElYSydOMMbxYGz9Ni2azrEg6kfPOaVYRSmlxWBhY9Dlir+cAFbW4/siIvKYYRPb3NTpkuZSC5vtF8qSiXzW1K3f6DYGppHY7l4TYiqHPJfLdwN71OUxVG8/3BG0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EbGgDvJA; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1748384594; c=relaxed/simple;
+	bh=DhNE6lF14CPdGsZE0KobLqxwSQt0aNL4B193ePPpRQ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OigLziFEMleD8EVTpoknSDUsCbaESPTL4R/MAyZNxI2PTSHLdi5Inn89sTDKrfC6VI2vBfZWuPUMh/j5xrFJ4ITLi8z+d+Nu3vjctZcqNCZ3QiuR70GTqmYBE0XzD8cKeauAyn/jALmf0YxBgeVPzxFHK+nXGHiYmswdMiw6C9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CiPBvl6b; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EbGgDvJA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CiPBvl6b"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748384588;
+	s=mimecast20190719; t=1748384591;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qyhGX9TysOct1LJVAWGiSKDcEfScPBYQiUtTvog/bC8=;
-	b=EbGgDvJAL7ywd+plxxwLC2I+ZzBtbG7eg96XhYbipAtYAyjF0lr2hPX6h0yMgoDr3I2Ax+
-	LNO6NsXoTKYvLfKk6vQtOobTYEgIFxXXr4svx9FjgYo65BczVctH/6G/ZbBAnh4VjOcQ7i
-	GdM8TsF5atE77RI46ndzyn6+N3qdsEw=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o1D/dLQQvIMU1jnPqA8TcYF0yBodWfuRo9ocdMJdqcc=;
+	b=CiPBvl6bAXl7aBSiqryVo6G+W2+bSkkqiWQNaFGeLFJKviVQx2KyMOwIG5apsCAHDBfGSC
+	WIbL9k1MJ0Np070vvz8L/WdbmjOflwRIcJ2PxRhQw/0SBLxM91Xsucu9aggPewNhM4Pwcp
+	nu11iAUO9l+3SKK/KdaGNO3yA8Bu5P4=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-301-WrhpyblTO72F1AwR2fgrTw-1; Tue,
- 27 May 2025 18:23:02 -0400
-X-MC-Unique: WrhpyblTO72F1AwR2fgrTw-1
-X-Mimecast-MFC-AGG-ID: WrhpyblTO72F1AwR2fgrTw_1748384580
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-40AAxw4SN0G-Ou-nYyE32g-1; Tue,
+ 27 May 2025 18:23:08 -0400
+X-MC-Unique: 40AAxw4SN0G-Ou-nYyE32g-1
+X-Mimecast-MFC-AGG-ID: 40AAxw4SN0G-Ou-nYyE32g_1748384586
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 41397195608B;
-	Tue, 27 May 2025 22:23:00 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C2FA51955DAD;
+	Tue, 27 May 2025 22:23:05 +0000 (UTC)
 Received: from chopper.redhat.com (unknown [10.22.88.105])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ABED419560AF;
-	Tue, 27 May 2025 22:22:56 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A4C03180047F;
+	Tue, 27 May 2025 22:23:01 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: rust-for-linux@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [RFC RESEND v10 00/14] Refcounted interrupts, SpinLockIrq for rust
-Date: Tue, 27 May 2025 18:21:41 -0400
-Message-ID: <20250527222254.565881-1-lyude@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: [RFC RESEND v10 01/14] preempt: Introduce HARDIRQ_DISABLE_BITS
+Date: Tue, 27 May 2025 18:21:42 -0400
+Message-ID: <20250527222254.565881-2-lyude@redhat.com>
+In-Reply-To: <20250527222254.565881-1-lyude@redhat.com>
+References: <20250527222254.565881-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,78 +69,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi! While this patch series still needs some changes on the C side, I
-wanted to update things and send out the latest version of it that's
-been sitting on my machine for a while now. This adds back the
-mistakenly missing commit messages along with a number of other changes
-that were requested.
+From: Boqun Feng <boqun.feng@gmail.com>
 
-Please keep in mind, there are still some issues with this patch series
-that I do need help with solving before it can move forward:
+In order to support preempt_disable()-like interrupt disabling, that is,
+using part of preempt_count() to track interrupt disabling nested level,
+change the preempt_count() layout to contain 8-bit HARDIRQ_DISABLE
+count.
 
-* https://lore.kernel.org/rust-for-linux/ZxrCrlg1XvaTtJ1I@boqun-archlinux/
-* Concerns around double checking the HARDIRQ bits against all
-  architectures that have interrupt priority support. I know what IPL is
-  but I really don't have a clear understanding of how this actually
-  fits together in the kernel's codebase or even how to find the
-  documentation for many of the architectures involved here.
+Note that HARDIRQ_BITS and NMI_BITS are reduced by 1 because of this,
+and it changes the maximum of their (hardirq and nmi) nesting level.
 
-  Please help :C! If you want these rust bindings, figuring out these
-  two issues will let this patch seires move forward.
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ include/linux/preempt.h | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-The previous version of this patch series can be found here:
-
-https://lore.kernel.org/rust-for-linux/20250227221924.265259-4-lyude@redhat.com/T/
-
-Boqun Feng (6):
-  preempt: Introduce HARDIRQ_DISABLE_BITS
-  preempt: Introduce __preempt_count_{sub, add}_return()
-  irq & spin_lock: Add counted interrupt disabling/enabling
-  rust: helper: Add spin_{un,}lock_irq_{enable,disable}() helpers
-  rust: sync: lock: Add `Backend::BackendInContext`
-  locking: Switch to _irq_{disable,enable}() variants in cleanup guards
-
-Lyude Paul (8):
-  rust: Introduce interrupt module
-  rust: sync: Add SpinLockIrq
-  rust: sync: Introduce lock::Backend::Context
-  rust: sync: Add a lifetime parameter to lock::global::GlobalGuard
-  rust: sync: lock/global: Rename B to G in trait bounds
-  rust: sync: Expose lock::Backend
-  rust: sync: lock/global: Add Backend parameter to GlobalGuard
-  rust: sync: lock/global: Add BackendInContext support to GlobalLock
-
- arch/arm64/include/asm/preempt.h  |  18 +++
- arch/s390/include/asm/preempt.h   |  19 +++
- arch/x86/include/asm/preempt.h    |  10 ++
- include/asm-generic/preempt.h     |  14 +++
- include/linux/irqflags.h          |   1 -
- include/linux/irqflags_types.h    |   6 +
- include/linux/preempt.h           |  20 +++-
- include/linux/spinlock.h          |  88 +++++++++++---
- include/linux/spinlock_api_smp.h  |  27 +++++
- include/linux/spinlock_api_up.h   |   8 ++
- include/linux/spinlock_rt.h       |  16 +++
- kernel/locking/spinlock.c         |  31 +++++
- kernel/softirq.c                  |   3 +
- rust/helpers/helpers.c            |   1 +
- rust/helpers/interrupt.c          |  18 +++
- rust/helpers/spinlock.c           |  15 +++
- rust/kernel/interrupt.rs          |  83 +++++++++++++
- rust/kernel/lib.rs                |   1 +
- rust/kernel/sync.rs               |   5 +-
- rust/kernel/sync/lock.rs          |  69 ++++++++++-
- rust/kernel/sync/lock/global.rs   |  91 ++++++++++-----
- rust/kernel/sync/lock/mutex.rs    |   2 +
- rust/kernel/sync/lock/spinlock.rs | 186 ++++++++++++++++++++++++++++++
- 23 files changed, 680 insertions(+), 52 deletions(-)
- create mode 100644 rust/helpers/interrupt.c
- create mode 100644 rust/kernel/interrupt.rs
-
-
-base-commit: a3b2347343e077e81d3c169f32c9b2cb1364f4cc
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index b0af8d4ef6e66..809af7b57470a 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -17,6 +17,7 @@
+  *
+  * - bits 0-7 are the preemption count (max preemption depth: 256)
+  * - bits 8-15 are the softirq count (max # of softirqs: 256)
++ * - bits 16-23 are the hardirq disable count (max # of hardirq disable: 256)
+  *
+  * The hardirq count could in theory be the same as the number of
+  * interrupts in the system, but we run all interrupt handlers with
+@@ -26,29 +27,34 @@
+  *
+  *         PREEMPT_MASK:	0x000000ff
+  *         SOFTIRQ_MASK:	0x0000ff00
+- *         HARDIRQ_MASK:	0x000f0000
+- *             NMI_MASK:	0x00f00000
++ * HARDIRQ_DISABLE_MASK:	0x00ff0000
++ *         HARDIRQ_MASK:	0x07000000
++ *             NMI_MASK:	0x38000000
+  * PREEMPT_NEED_RESCHED:	0x80000000
+  */
+ #define PREEMPT_BITS	8
+ #define SOFTIRQ_BITS	8
+-#define HARDIRQ_BITS	4
+-#define NMI_BITS	4
++#define HARDIRQ_DISABLE_BITS	8
++#define HARDIRQ_BITS	3
++#define NMI_BITS	3
+ 
+ #define PREEMPT_SHIFT	0
+ #define SOFTIRQ_SHIFT	(PREEMPT_SHIFT + PREEMPT_BITS)
+-#define HARDIRQ_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_DISABLE_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_SHIFT	(HARDIRQ_DISABLE_SHIFT + HARDIRQ_DISABLE_BITS)
+ #define NMI_SHIFT	(HARDIRQ_SHIFT + HARDIRQ_BITS)
+ 
+ #define __IRQ_MASK(x)	((1UL << (x))-1)
+ 
+ #define PREEMPT_MASK	(__IRQ_MASK(PREEMPT_BITS) << PREEMPT_SHIFT)
+ #define SOFTIRQ_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_MASK	(__IRQ_MASK(HARDIRQ_BITS) << HARDIRQ_SHIFT)
+ #define NMI_MASK	(__IRQ_MASK(NMI_BITS)     << NMI_SHIFT)
+ 
+ #define PREEMPT_OFFSET	(1UL << PREEMPT_SHIFT)
+ #define SOFTIRQ_OFFSET	(1UL << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_OFFSET	(1UL << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_OFFSET	(1UL << HARDIRQ_SHIFT)
+ #define NMI_OFFSET	(1UL << NMI_SHIFT)
+ 
 -- 
 2.49.0
 
