@@ -1,32 +1,48 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE7C517588;
-	Tue, 27 May 2025 18:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CE13FFD;
+	Tue, 27 May 2025 18:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369665; cv=none; b=JofVirAFIgdDTdsHzuHJ+ndZ+yL7cjLw+LffA2PRajVn71rI5aviUMqlTA2n5vP7BZniipYHhK7N62cbH0f8S3Wxxv4Udexx7PM7aRjnDiDr8t/wjRkJBGeoINZaEfFr3XZ6o1Q9JhhnlNFBXSKDgVmrdWuzF5tXpGAtTZQPpno=
+	t=1748369728; cv=none; b=exuLhr5qr8QuxDpsGWNI8CfiHT2OdwdcuoPeigFcxMpyjpFl9xfnQ6KsYNRiObssYG27xGE8M6BRfacDdYA6gaYLzMOueHdkeRco4XUnKpdfJQflJk2eqL+jdZQgzlKktDCC5+tcsZTBxBf/+fiQ2CSwTbqXuVV7gwU8Y3a5p7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369665; c=relaxed/simple;
-	bh=PU+PyxKn0xcYNa7P58bbs3n1VenxbO0VxwPFev/OMxg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rmgOX/fiKb6SLdlKiE0eLhEGWEtIMVb9M4JJjg0lcP/awWrz70X/ih0TqqLrbWPljMWetewjG+shN8Fkiurg4KZpyq7ZJnRKo2ejcuFfZnqE++sbDe8/iWEbPVz2S/Ow7NC/TBHcgOvh4ElN0CsTqUg4V/8NMTsbkx+H/RO7gpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=cM7CTwz3; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748369728; c=relaxed/simple;
+	bh=wyTPtsz4+3ra1RyixrCWgDLsRgUjFiTm2oJtL9t5Qhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=maGpZtsaqsiWNmRNKFFZtMMpZvMtZMgvZA7Ej5gS5Zu0WqUOK33Oat+Kj6mEXDfUZdVEzKL2OXlTtLwdIX9Q7ZjGMdm2/P7qJN5SmLljRzKMLJR/etJPNNw6MQVMuAO1l5tYmmdarHP0CWel67CwIQMbVsYafQKqv1R90+9BTrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=LgsIiN8i; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cM7CTwz3"
-Received: from [100.65.224.201] (unknown [20.236.10.206])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B4D272068340;
-	Tue, 27 May 2025 11:14:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B4D272068340
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748369657;
-	bh=LTVke1CMUNvS4hQqIPDgYVFXjE9OC6zyKXgWVqd3TbI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cM7CTwz38s7tHQJXyuHl+kGxNFU9J00CxwrR1yGeMDxwKKYn7e4DEjl64yO6iZpXR
-	 x3cSVA8gRpRQ8MXZNCO+cenCVtnRzcFKE82gsXx5ENSn2nfcdvi3zMhMLlINviwEkp
-	 3wi7MS3TQPXEcJFF3Bn7Y3Q7x8sydCWwi6fQIDEY=
-Message-ID: <158e9461-9728-4d8f-801c-58ccb1883414@linux.microsoft.com>
-Date: Tue, 27 May 2025 11:14:07 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LgsIiN8i"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54RIF4qZ3029528;
+	Tue, 27 May 2025 13:15:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748369704;
+	bh=ZcqNJR+8VtW41JbCbTfke1fL6148OIWbmIsZ4Ld5R8Q=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=LgsIiN8ivuotwzi99cArhQCpWe5Zzmmm4px+h2fS/yv38NvM22Rae7Q3nSC8Ok47I
+	 pOe7poeaZYVZF2YSA4LeBzY8WigkzVTZTHiQnc1w1rqGYfDn2EP3+q7DpKmoF/y3M6
+	 MXziNOUsVl6dfmhXregThLQFGcllGI5UOefCBylk=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54RIF4vD2831127
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 27 May 2025 13:15:04 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
+ May 2025 13:15:04 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 27 May 2025 13:15:04 -0500
+Received: from [10.249.141.75] ([10.249.141.75])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54RIExut3555206;
+	Tue, 27 May 2025 13:15:00 -0500
+Message-ID: <0fe3f172-5a88-4f1d-9eb2-7b748f9f6743@ti.com>
+Date: Tue, 27 May 2025 23:44:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,159 +50,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Reduce delay after FLR of Microsoft MANA devices
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, shyamsaini@linux.microsoft.com,
- code@tyhicks.com, Okaya@kernel.org, bhelgaas@google.com,
- linux-kernel@vger.kernel.org
-References: <20250523163932.GA1566378@bhelgaas>
+Subject: Re: [PATCH 0/2] TI: K3: Switch MCU R5F cluster into Split mode
+To: Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
+        Beleswar Prasad
+ Padhi <b-padhi@ti.com>
+CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <hnagalla@ti.com>,
+        <jm@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <u-kumar1@ti.com>
+References: <20250522073426.329344-1-b-padhi@ti.com>
+ <20250522155338.gpbcubkvygtju3qc@bagpipe>
+ <5cfaed26-28ec-42dc-b9f6-836869ad3fa3@ti.com>
+ <20250523114822.jrv73frz2wbzdd6d@falsify>
+ <6f4b2271-7249-4285-9fee-1851135e1207@ti.com>
 Content-Language: en-US
-From: Graham Whyte <grwhyte@linux.microsoft.com>
-In-Reply-To: <20250523163932.GA1566378@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <6f4b2271-7249-4285-9fee-1851135e1207@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 
+On 5/23/2025 6:46 PM, Andrew Davis wrote:
+> On 5/23/25 6:48 AM, Nishanth Menon wrote:
+>> On 14:27-20250523, Beleswar Prasad Padhi wrote:
+>>> Hi Nishanth,
+>>>
+>>> On 5/22/2025 9:23 PM, Nishanth Menon wrote:
+>>>> On 13:04-20250522, Beleswar Padhi wrote:
+>>>>> Several TI K3 SoCs like J7200, J721E, J721S2, J784S4 and J742S2 
+>>>>> have a
+>>>>> R5F cluster in the MCU domain which is configured for LockStep 
+>>>>> mode at
+>>>>> the moment. Switch this R5F cluster to Split mode by default in all
+>>>>> corresponding board level DTs to maximize the number of R5F cores.
+>>>> Why? I can read the patch to understand what you are trying to do, but
+>>>> the rationale needs to be explained.
+>>>
+>>>
+>>> [..]
+>> I suggest the following:
+>> * SoC dts files - use a common standard for remote proc - lockstep makes
+>>    sense as it is right now
+>> * Modification to board specific dts files - call them out as board
+>>    files specific patches to flip over to split mode - while considering
+>>    the possibilities that users may NOT upgrade kernel and bootloader at
+>>    the same time and the existence of EFI based dtb handover from
+>>    bootloader to kernel - which means, kernel should be able to 
+>> handle the
+>>    same combinations correctly. Also handle the carveouts correctly for
+>>    the new processors - at least state the strategy - overlays etc.. 
+>> Come
+>>    to think of it, I think we should fix up the carveout strategy for
+>>    user programmable remote cores first before attempting all this new
+>>    processor additions.
+>
+> +1
+>
+> The core issue here is that split vs lockstep is a *configuration*, which
+> means it doesn't belong in DT in the first place. This is the reason 
+> to keep
+> config out of DT, why should what mode my R5 core starts in be based 
+> on what
+> board I'm using? It hard-codes what should be configurable decisions.
 
-On 5/23/2025 9:39 AM, Bjorn Helgaas wrote:
-> On Wed, May 21, 2025 at 11:15:39PM +0000, grwhyte@linux.microsoft.com wrote:
->> From: Graham Whyte <grwhyte@linux.microsoft.com>
+configurable decisions is bootloader build .
+
+and you know what you are building then change DT as well.
+
+
+>
+> Same issue with carveouts, so IMHO all of the: carveouts, mailbox 
+> selection,
+> timer reserved status, and mode selection belong in an overlay. It 
+> doesn't
+> fix the issues, but at least it isolates it.
+>
+Its usage model, and split mode is enabled at board level.
+
+as default, split mode is used, in case lock-step is needed then change 
+DT in custom build too.
+
+
+Also, Patch 1/2 should be posted as different patch.
+
+
+> Andrew
+>
+>> * Split out the fixes patches separately out - no reason to mix it up
+>>    with the rest of the refactoring.
+>> * Fix your commit messages and subject lines to indicate clearly what is
+>>    impacted, rationale, backward compatibility status
 >>
->> Add a device-specific reset for Microsoft MANA devices with the FLR
->> delay reduced from 100ms to 10ms. While this is not compliant with the pci
->> spec, these devices safely complete the FLR much quicker than 100ms and
->> this can be reduced to optimize certain scenarios
-> 
-> It looks like this could be done generically if the device advertised
-> the Readiness Time Reporting Capability (PCIe r6.0, sec 7.9.16) and
-> Linux supported that Capability (which it currently does not)?
-> 
->>From 7.9.16.3:
-> 
->   FLR Time - is the time that the Function requires to become
->   Configuration-Ready after it was issued an FLR.
-> 
-> Does the device advertise that capability?  It would be much nicer if
-> we didn't have to add a device-specific quirk for this.
-> 
-
-Unfortunately our device doesn't support the readiness time 
-reporting capability.
-
->> Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
->> ---
->>  drivers/pci/pci.c    |  3 ++-
->>  drivers/pci/pci.h    |  1 +
->>  drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 58 insertions(+), 1 deletion(-)
+>> [1] 
+>> https://lore.kernel.org/all/20250522071828.285462-7-b-padhi@ti.com/#Z31dts:upstream:src:arm64:ti:k3-j7200-mcu-wakeup.dtsi
+>> [2] https://lore.kernel.org/all/20250522073426.329344-2-b-padhi@ti.com/
 >>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index 9cb1de7658b5..ad2960117acd 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
->>  		pci_walk_bus(bus, pci_resume_one, NULL);
->>  }
->>  
->> -static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->>  {
->>  	int delay = 1;
->>  	bool retrain = false;
->> @@ -1344,6 +1344,7 @@ static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
->>  
->>  	return 0;
->>  }
->> +EXPORT_SYMBOL_GPL(pci_dev_wait);
->>  
->>  /**
->>   * pci_power_up - Put the given device into D0
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index f2958318d259..3a98e00eb02a 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
->>  int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
->>  int pci_bus_error_reset(struct pci_dev *dev);
->>  int __pci_reset_bus(struct pci_bus *bus);
->> +int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
->>  
->>  struct pci_cap_saved_data {
->>  	u16		cap_nr;
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index c354276d4bac..94bd2c82cbbd 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
->>  	return 0;
->>  }
->>  
->> +#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
->> +#define MICROSOFT_2051_SVC 0xb210
->> +#define MICROSOFT_2051_MANA_MGMT 0x00b8
->> +#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
->> +
->> +/* Device specific reset for msft GFT and gdma devices */
->> +static int msft_pcie_flr(struct pci_dev *dev)
->> +{
->> +	if (!pci_wait_for_pending_transaction(dev))
->> +		pci_err(dev, "timed out waiting for pending transaction; "
->> +			"performing function level reset anyway\n");
->> +
->> +	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
->> +
->> +	if (dev->imm_ready)
->> +		return 0;
->> +
->> +	/*
->> +	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
->> +	 * 100ms, but may silently discard requests while the FLR is in
->> +	 * progress. However, 100ms is much longer than required for modern
->> +	 * devices, so we can afford to reduce the timeout to 10ms.
->> +	 */
->> +	usleep_range(10000, 10001);
->> +
->> +	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
->> +}
->> +
->> +/*
->> + * msft_pcie_reset_flr - initiate a PCIe function level reset
->> + * @dev: device to reset
->> + * @probe: if true, return 0 if device can be reset this way
->> + *
->> + * Initiate a function level reset on @dev.
->> + */
->> +static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
->> +{
->> +	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
->> +		return -ENOTTY;
->> +
->> +	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
->> +		return -ENOTTY;
->> +
->> +	if (probe)
->> +		return 0;
->> +
->> +	return msft_pcie_flr(dev);
->> +}
->> +
->>  static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->>  	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
->>  		 reset_intel_82599_sfp_virtfn },
->> @@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
->>  		reset_chelsio_generic_dev },
->>  	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
->>  		reset_hinic_vf_dev },
->> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
->> +		msft_pcie_reset_flr},
->> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
->> +		msft_pcie_reset_flr},
->> +	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
->> +		msft_pcie_reset_flr},
->>  	{ 0 }
->>  };
->>  
->> -- 
->> 2.25.1
->>
-
