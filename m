@@ -1,46 +1,46 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2045.outbound.protection.outlook.com [40.107.21.45])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2070.outbound.protection.outlook.com [40.107.20.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A97279910;
-	Tue, 27 May 2025 14:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CAF279918;
+	Tue, 27 May 2025 14:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357156; cv=fail; b=bloXGyvNMTkRV5wcBZhALmEbrufDLyBZzY9kAVr3vZANe8f7CfJUza5ib3aNw6J8nzMhkQsSLekYcPVp8AqiKzlVa3tMereuSB5agtqjulbmg3grjB3tM11najUF24XwWjT8yxgbI/vnED00dCjhIUOUBlogUfAa25JK0zJeL7M=
+	t=1748357157; cv=fail; b=l3e38v/bNCsd2ZbW/bY2UE1HI9qFoYz7i5Zcw57sbJGMNChrgtXjV8Y/ErlWdkRrXZG1U1F4Gu3FKEJFY3VMmw8xIVoZESSvd/NHAh0EpYiGRs0GVe3gIpCrA3NFw4QIgzXImlu0Ek+pb2sY+ppOs+u2J2+3epzoUtMPkdO8PqA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357156; c=relaxed/simple;
-	bh=0aPvqjQunqlXBRCN3KPkqe2qEqy7wDldQOUgpNZG2Qk=;
+	s=arc-20240116; t=1748357157; c=relaxed/simple;
+	bh=qpgfgqJcbDbUebLOPLkX8AvcGqj4OZjDU5MZhioX6o4=;
 	h=From:To:CC:Subject:In-Reply-To:Message-ID:Date:MIME-Version:
-	 Content-Type; b=ccoM4nrE4FNfmxB4woRbbqezALoFmNOcKQ/HIh1TnjtPT1USZ0SiAhclqcxjZTK2yUdw5vDbsFSSR8imWDUof/aNvArUEnZyblY8rgG8tep0oz2LQ8oeuLb24wd82MxP15m+8U1/80gxSa4qy31OvsdswNBfsTrxrElm/q+V7jU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=TTLInaNQ; arc=fail smtp.client-ip=40.107.21.45
+	 Content-Type; b=Pz+zsxKD2Quwh2gKEdjKp/yy8m2uwID+eRX9ZPSG/UGsdJLZtHohbEqWAAivNc+hJQYGbN74JbRbUaspLQCP/hkY+X3RXt57PQoGVwVsb3cqus7AkuFLIGbSXoitbpZ616gdv4lbcc+Ovo4RdHvO6koXWHKoa0Js4LN0s5co4Wc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=oCOn6rB9; arc=fail smtp.client-ip=40.107.20.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="TTLInaNQ"
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="oCOn6rB9"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eLqixQtkcxDvXYPlRIYX7Z5U/hblIZcJB3etYeA3Uc09l8Ahe56uN+UO4aJ9mhb4c8xJTXSZKVD79yO7MtepwgQs1nL6TC/CJIUznnonY3J0HKXCM9EpAVXrL4km9hZsTmUmHyg8e10snyANnLGHU9kiU96naBv4JNHNcj/KBMiFMqc3BvzuO3pjW+RiArNaE/bR0rAC0pDHVyrUFoSri6keQDuqc55EGMr6Oci2bvmNu5J/mmCimFT+18imufEAtGHaDFTD2143qx/QMCVbQAhwI9My+uZIu1YhwkNqWZTNWZwTvsfQG8G7YFEtq4e7Pt/9l8T3cff8D3RCuqTfuQ==
+ b=P79C4c7tF5wTWyjyELwoPXqDGu7QRP5dlTF1JCdALnpA3V38lgv3vuRat9xzZAIPhhKva0eQVNA6hMu0q9fZrfdV/Obj/2TYT46DbazTdSljTvIMVNiIGqgEiiMSCf4ec9f9C2N1Bxn3zXvJAo7cdTnqrF81kyx2YRXWNBityjMawDe2dHaBJr0wMoA5r0rwxkr5oezYhk79oIOW82J26fkTCO08y4LxjGySaFuD/jFHmRYLJHVzgHWYnWAERPp17a1xmo2QaA39qrlEO9330x2fLCXL5MrMVytweHBVj2wGAmAs5zW49MRbwEbce+oWP2gj9xI5IleSTG65VWKlgQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WJ65HvJCva9kd0Ydx+Gm71eAxRtjhJtvbgHdr9yAmbs=;
- b=YCzHeypVfiINd89H2pBbFZ0+RoJVbJ5gCFQz75pMdlKW/gT0ZJuZpP8/RhKYEX45uDAbMaOloWEH4HIrRbY/utyNEUsXuqAab3PZLdYH9ZewOJm588ScJOEoP6C8SmLdKxkr0LOhXYmUxQtYlDs0wbjvzX21jKha7ORD7Yaf6y+8jKqwxf66P76ArZ5XVJeeKyDHejkesW5cDircn7Yp55MrkpC6QPGXnWzgejw811ZQImaurMjQ0iXl9asxJ+0NOLXvLZp8kPdNkT/OoVcF04RpeG8wTbsCy5CdPs/e6QDpG6dVZvWrdkYGHp/lI9aAfIUui3KPB/cbuVtyr3/6ww==
+ bh=iyb39vPVY8ijzhlWNvwdC407SCy8oFP6s63Q7soielg=;
+ b=M87AZZW7apQwfro0pGleoTw+VttvdIhjjAtvMEBF44HF4maTBGDH1GN3RHkad55S9PEY+XstE3fgYMgf1ov8SR14fK4iJBKOC9b/w9/lHtqzF7IUFASbHyFZSCGbZc1kn/rTzg6vwf/5KBSZOAtLwE4K0rNHe+yGYesyXCxY2+Zo78UkJVuj0QsOJ/Gkb/DKBhtLBFJmwnhJdfVHY2JKZNatdsWaQ/7Q9pUMuaPRN96GHMbW9x4IQY2jBpefUE1V0eSjMZ6ChTEMka9bU50nII28BbUuEQHCg71LDbxYLdV5xD+dP1dSDyVwgvNTXRYPzReXj++7Lq1YPqZv+NW8UQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=axis.com;
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
  dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WJ65HvJCva9kd0Ydx+Gm71eAxRtjhJtvbgHdr9yAmbs=;
- b=TTLInaNQEzOERYFnGjLyBJpI7CQD/9AU7PiYPlu8W6dcCSm4AWmYmZLASYGBY902siLg6myjnpoOaomYw4ELSI6zTU2gOlemKxN5EqapeeEW3qYqLA94kLhao8k11ZovxgW4pAprL3Qj08T4fDuqv21rAsr4Izptu/5dDPAhLBo=
-Received: from CWLP265CA0323.GBRP265.PROD.OUTLOOK.COM (2603:10a6:401:57::23)
- by DU2PR02MB7776.eurprd02.prod.outlook.com (2603:10a6:10:2e7::22) with
+ bh=iyb39vPVY8ijzhlWNvwdC407SCy8oFP6s63Q7soielg=;
+ b=oCOn6rB9TEc1dtebYcy8NGXYiEo4SfZV5DD8VveSr71kAx4W80WVGkKyA58euegmvuzhMb6X8Vn+gQZX8yZjQtz7dbKDEr/211P5baLwoiHCUai9FTgQE7umOYo2+6rU2UQQFNhZD4ayWjeKxFIxmrSS8u1/ONgLer0EhLHXD2I=
+Received: from CWLP265CA0314.GBRP265.PROD.OUTLOOK.COM (2603:10a6:401:57::14)
+ by AM9PR02MB6658.eurprd02.prod.outlook.com (2603:10a6:20b:2cf::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Tue, 27 May
- 2025 14:45:46 +0000
+ 2025 14:45:49 +0000
 Received: from AM4PEPF00027A6A.eurprd04.prod.outlook.com
- (2603:10a6:401:57:cafe::16) by CWLP265CA0323.outlook.office365.com
- (2603:10a6:401:57::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.25 via Frontend Transport; Tue,
- 27 May 2025 14:45:45 +0000
+ (2603:10a6:401:57:cafe::59) by CWLP265CA0314.outlook.office365.com
+ (2603:10a6:401:57::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Tue,
+ 27 May 2025 14:45:48 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
  smtp.mailfrom=axis.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=axis.com;
@@ -50,23 +50,20 @@ Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
 Received: from mail.axis.com (195.60.68.100) by
  AM4PEPF00027A6A.mail.protection.outlook.com (10.167.16.88) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Tue, 27 May 2025 14:45:45 +0000
+ 15.20.8769.18 via Frontend Transport; Tue, 27 May 2025 14:45:48 +0000
 Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 27 May
- 2025 16:45:41 +0200
+ 2025 16:45:42 +0200
 From: Waqar Hameed <waqar.hameed@axis.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-	Haibo Chen <haibo.chen@nxp.com>, Michael Hennerich
-	<Michael.Hennerich@analog.com>
+To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
 CC: <kernel@axis.com>, <linux-iio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <imx@lists.linux.dev>
-Subject: [PATCH 1/4] iio: Remove single use of macro definition for driver
- name
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH 2/4] iio: Remove single use of macro definition for IRQ name
 In-Reply-To: <cover.1748356671.git.waqar.hameed@axis.com>
 User-Agent: a.out
-Message-ID: <4840779a167e027b8be77c82f7a4f27210ef084a.1748356671.git.waqar.hameed@axis.com>
-Date: Tue, 27 May 2025 16:45:41 +0200
+Message-ID: <3dc06cb2a83d292c50d9758643aad37ca5c6d95c.1748356671.git.waqar.hameed@axis.com>
+Date: Tue, 27 May 2025 16:45:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,357 +75,396 @@ X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
  (10.20.40.7)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A6A:EE_|DU2PR02MB7776:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10317a23-a751-413d-a6f4-08dd9d2d29b9
+X-MS-TrafficTypeDiagnostic: AM4PEPF00027A6A:EE_|AM9PR02MB6658:EE_
+X-MS-Office365-Filtering-Correlation-Id: f0ca74b6-b851-43c3-faaf-08dd9d2d2b3b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ZfK0j/AyCNLliCnMxvC549aJ+bjAqf6+CaX70ySNKNqxCzXCN/k1cIEpbfqg?=
- =?us-ascii?Q?TsPNojvFmlcTTsLnnTXU/R8iDnjArxOSqGCeSZqABQLtxOKb8so4/zUVOeTa?=
- =?us-ascii?Q?qQN3gAe9a1ZTE+O9dBMsU7N91vmJnewdpwSFKs8komsjbvimxZtc9tbTL4w5?=
- =?us-ascii?Q?yBvNpX9Re4V3E4osaR2Bn9ATviLRNHSqtZIzt56rJtyJbystfghbAqwXcfvE?=
- =?us-ascii?Q?dehQ3OJJ/+GfwrIfiPHMuIoZWrQwHBLM3C1jpnbeJaMVJBg+WKsFZhwjDKvZ?=
- =?us-ascii?Q?yBdTdA8L4Qq3ESmjWPN0ThqDW4kioYNbS8v4e0pV6KQnzbhlF7dBhVeQlUDj?=
- =?us-ascii?Q?iTbVXPfbZMxtjesneURgx69Xly4vws9AxMEsakS311UV/HPAV915DXGhv54O?=
- =?us-ascii?Q?Ie+WyjSXH5Ht5Yc/cL7onzlLDS7gzrzhGv2+6Rml2Fj/7gTQgYj9JASKnKn1?=
- =?us-ascii?Q?U1LnUU2DbDVFgbzeAlnqVvpOvgWsFa/u+JgPwXagzlUd68oENvK5m6RZTuKK?=
- =?us-ascii?Q?V9GPUyg9YyPZKNWkxdC5+UG8OStqRPnPsq1i0cfvTwwNkKforvty+n/HbdlT?=
- =?us-ascii?Q?tHBnrlm8pdKFyL6n5mQoFFueqzrxomZdTgnMCGnjNTClngy+WC2Gm0gNTonH?=
- =?us-ascii?Q?GSZjEwnYHCcoVNgwSszMBoR+vTLnhkFZ4oBWWTmjIFcMM53s0TzFqvCl/Q2Y?=
- =?us-ascii?Q?m+P8ui6d4zyNkmGIJK8FezaF2d9l/2Voy5y7WSjvTRmKtBT+7vEEaL/pDeXU?=
- =?us-ascii?Q?Ei36ErgP/Zr8sjlzSXWvUr8KPzosjVH8INUhyoa4rOupkBX+qMoWKQRmxcb3?=
- =?us-ascii?Q?plK6R4Q+Ox2wXtS14HZJIr+Tsv8QU2osPPaH5NG0cr0WBRkPmp058+Ngiml9?=
- =?us-ascii?Q?a52NH2hoE8TOQAcuyLlhK0F4kXVoEZt1KDrhVcbQht9SR9pvOn2zSimGrX9M?=
- =?us-ascii?Q?AoPK++u/70VniUklGd1a0gugf/C6Zxcdof5fYjEF5KMbD8JDXT2WQGgAV9Ic?=
- =?us-ascii?Q?UdX7rekHcati5SP6zjTWrTlvKwMQ2fdC/zCSuDG5FucZ83fB2RGZOu/wHJsT?=
- =?us-ascii?Q?tVZUC0DqFa3NK/nun7WNjNgSmGH2nk4gXQOT4YDQB4cSr1NyvG9VZOtOx96B?=
- =?us-ascii?Q?Q9l7KTnf0R5JHsYFnzTLyYvKpp5GatfWmrOK625BzwWw7CgJjM3lcdghA0Dm?=
- =?us-ascii?Q?jyxrWAv2deU6t+DCKeCNSKR7S3KZ9+xOtSC3Q8+xIhUx51EEYeyfbA7x8rqx?=
- =?us-ascii?Q?KePA3WKh4Lz2hv95wtKBTUfTR28+YwyyeJz0LYFa9gd5bJ+uk3nfHo7PBXw+?=
- =?us-ascii?Q?JP/uVN+6IAYTCsDZaFENfEEQ59n5CbuYMqKjoDpA0cYgfc4YwtwXR2ZjuNUH?=
- =?us-ascii?Q?YiZyEHGu8tb14x7PkZqBZKgZKi2JDJG46ICzrmVwBqJ7hwumFQr/SIlyer6G?=
- =?us-ascii?Q?7l9Duz2A17Zj6n7Ep2xefmkZh8Yx8bR2E+WXvN/cdrQkC6KXtlEqhW8LdKWo?=
- =?us-ascii?Q?OoVZNeY0sC4ikeMXTqyosZuRJmCH8LmiBml+?=
+	=?us-ascii?Q?N3jwaB0jagbQVtAhFprOI61QHuYAK/Dc/LBwQP/IgYMZ4EHY9cXeX/IiUaw6?=
+ =?us-ascii?Q?gPD4VM2+Ea+aHr1tDYWUi5WLk13syq/VACjTdnAesAG9zHx2QElWLBYBrJvs?=
+ =?us-ascii?Q?ROdPa63y9nC7wcTxGh8hyJA/g5jlle1U0/jmbR6FyiLorC9jXBlUsbCmyTwi?=
+ =?us-ascii?Q?WPiOHuCVjH4+V0nQltUrp+7AcOOzlGDO9PU5uuXWFBH8OaTfW4IAdW2ITw+3?=
+ =?us-ascii?Q?gd9Y5Hn+hLfvPoUZeaVRk6u4TGpbiznpQk4C2kpXT5s7dPEFBPLOaCeSze8e?=
+ =?us-ascii?Q?+CwMjQec+jTe7UuUiXafvqowA6+E0X3Yd1X1j1pfgv4oi2nBqyAzi2Jp421u?=
+ =?us-ascii?Q?UmWOZUh8xrFZIDzxOpm1GMbgge/BaV+bx8eeT8Nw31YfWw3f4STo862jc2M6?=
+ =?us-ascii?Q?zFGxVo/aCVh4rUlZXPmZieg5ye+z0UeGjDuYWxmrcQjbWEp2xEZIX8OCp6DJ?=
+ =?us-ascii?Q?TWB3dkdLA9LKiCPCGHhSetGvogfk/pI1n0wkB1fUCtlY8pL7WhMrjAur+wuS?=
+ =?us-ascii?Q?AYRdFSD53pcIyX+ttStTtSz02x2cwXRvkGQFETH1hHAU/9mbKiXN1dG/zGn/?=
+ =?us-ascii?Q?LzFEqFn7ks5/kVxy/MgEPN/rP4nmDEYy7lTDtHzxODaXoB0rkbs4x7TFaaMD?=
+ =?us-ascii?Q?HyTZNdlbxRezBSmNXc3SIe6S3gKwukSysWzdhysXpUWgO2UWcAMb4PKDP7u5?=
+ =?us-ascii?Q?IATc4auT0s8Q2fkvrtBc/EohQ3iB64nFcvIc1I5tHXNMr7OotfHWxT15J9wg?=
+ =?us-ascii?Q?8AJqO1tXUPKEB0I/9tMcHEgShwT6g+7WBNs5ztmO3801XYh8OLZipDYUoJj3?=
+ =?us-ascii?Q?xuo0YaOuiA6qL73rVHVSNthI5+tOt8UtLS4xB3vjhUn+nEEvjUteNr++1Yz8?=
+ =?us-ascii?Q?WbhF7Lh0V4IEX1G6IgVIKrRdocLThtzQeaaF43s/w4mBl1zkbjpK4se7Oo29?=
+ =?us-ascii?Q?Tnglxyr3ffTVvgT/5X2v52y95T3ZvMjpqsRiBy0ScLu83aOfE6gbt19xCK+Y?=
+ =?us-ascii?Q?+yDwEdGfygGJDtzbssV+xe44iod2SWu09qXLn8Ih5fHwGiOuFjkt5S/xTA0F?=
+ =?us-ascii?Q?IZxKRnUB7IV5l67BHn2TEjZqaFuIQCrEXfj+GGqs68IFmtAimaAdX9vFn3Q7?=
+ =?us-ascii?Q?Qft8817oBbCN0d7Vg1/UI4UOTocI00fgMy1DRLAi3nWWkg0lOBWPC5fuxjwL?=
+ =?us-ascii?Q?3v6Ui9po8RHzCWeFzUQguWFcHIdoyaeE0/27QXKbiWcfoC9afXRMfIOd6M/S?=
+ =?us-ascii?Q?FqJEAKP9uapG7ei9MN93NXMAfCZXKyrWmwQ3jPQaR/ad0J9cwznQvh8M4bqz?=
+ =?us-ascii?Q?QShsICCuwpAkVC8dlpf4BhOQ5n9QP46KQ/DnN59S2NQ891YQGJFcS2lwFuUD?=
+ =?us-ascii?Q?kspNvSsLjnsbfv4WDhIYsgnA1fNX9trVndbx1939gaWYftj9Fgxu0aBv6nFa?=
+ =?us-ascii?Q?/H8y4mCCQMCKFVdgn7glaU/MfuLVvqPocSp7lQX1v88mBGZCBTW/ecbr0NkU?=
+ =?us-ascii?Q?pxP9UYVGGNRxq5bJ+jIin5NL65vkhfGEv1uR?=
 X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 14:45:45.5177
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 14:45:48.0490
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10317a23-a751-413d-a6f4-08dd9d2d29b9
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0ca74b6-b851-43c3-faaf-08dd9d2d2b3b
 X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	AM4PEPF00027A6A.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR02MB7776
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB6658
 
-There is really no reason for having the driver name as a macro
-definition if it is only used once (often as `.name` in `struct
-device_driver`). It is also more readable this way. Remove these macro
-definitions and instead use the string literal directly.
+There is really no reason for having the IRQ name as a macro definition
+if it is only used once (often in functions requesting the IRQ). It
+is also more readable this way. Remove these macro definitions and
+instead use the string literal directly.
 
 Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
 ---
- drivers/iio/accel/kxcjk-1013.c  | 3 +--
- drivers/iio/accel/mma9551.c     | 3 +--
- drivers/iio/accel/mma9553.c     | 3 +--
- drivers/iio/accel/sca3300.c     | 4 +---
- drivers/iio/adc/hi8435.c        | 4 +---
- drivers/iio/adc/max9611.c       | 4 +---
- drivers/iio/adc/vf610_adc.c     | 5 +----
- drivers/iio/dac/max517.c        | 4 +---
- drivers/iio/dac/mcp4725.c       | 4 +---
- drivers/iio/humidity/dht11.c    | 4 +---
- drivers/iio/imu/kmx61.c         | 3 +--
- drivers/iio/light/ltr501.c      | 4 +---
- drivers/iio/resolver/ad2s1200.c | 3 +--
- 13 files changed, 13 insertions(+), 35 deletions(-)
+ drivers/iio/accel/bmc150-accel-core.c  | 3 +--
+ drivers/iio/accel/kxcjk-1013.c         | 4 +---
+ drivers/iio/accel/mma9551.c            | 3 +--
+ drivers/iio/accel/mma9553.c            | 4 +---
+ drivers/iio/accel/mxc4005.c            | 3 +--
+ drivers/iio/accel/stk8312.c            | 3 +--
+ drivers/iio/accel/stk8ba50.c           | 3 +--
+ drivers/iio/gyro/bmg160_core.c         | 4 +---
+ drivers/iio/imu/kmx61.c                | 4 +---
+ drivers/iio/light/apds9300.c           | 3 +--
+ drivers/iio/light/rpr0521.c            | 3 +--
+ drivers/iio/light/stk3310.c            | 3 +--
+ drivers/iio/light/vcnl4035.c           | 3 +--
+ drivers/iio/magnetometer/bmc150_magn.c | 3 +--
+ drivers/iio/proximity/sx9500.c         | 3 +--
+ 15 files changed, 15 insertions(+), 34 deletions(-)
 
+diff --git a/drivers/iio/accel/bmc150-accel-core.c b/drivers/iio/accel/bmc150-accel-core.c
+index 744a034bb8b5..546839d386a9 100644
+--- a/drivers/iio/accel/bmc150-accel-core.c
++++ b/drivers/iio/accel/bmc150-accel-core.c
+@@ -26,7 +26,6 @@
+ #include "bmc150-accel.h"
+ 
+ #define BMC150_ACCEL_DRV_NAME			"bmc150_accel"
+-#define BMC150_ACCEL_IRQ_NAME			"bmc150_accel_event"
+ 
+ #define BMC150_ACCEL_REG_CHIP_ID		0x00
+ 
+@@ -1706,7 +1705,7 @@ int bmc150_accel_core_probe(struct device *dev, struct regmap *regmap, int irq,
+ 						bmc150_accel_irq_handler,
+ 						bmc150_accel_irq_thread_handler,
+ 						IRQF_TRIGGER_RISING,
+-						BMC150_ACCEL_IRQ_NAME,
++						"bmc150_accel_event",
+ 						indio_dev);
+ 		if (ret)
+ 			goto err_buffer_cleanup;
 diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
-index f2496cad8ec2..4480dee96fc5 100644
+index 4480dee96fc5..b4b9aaee2b68 100644
 --- a/drivers/iio/accel/kxcjk-1013.c
 +++ b/drivers/iio/accel/kxcjk-1013.c
-@@ -26,7 +26,6 @@
+@@ -26,8 +26,6 @@
  #include <linux/iio/triggered_buffer.h>
  #include <linux/iio/accel/kxcjk_1013.h>
  
--#define KXCJK1013_DRV_NAME "kxcjk1013"
- #define KXCJK1013_IRQ_NAME "kxcjk1013_event"
- 
+-#define KXCJK1013_IRQ_NAME "kxcjk1013_event"
+-
  #define KXTF9_REG_HP_XOUT_L		0x00
-@@ -1727,7 +1726,7 @@ MODULE_DEVICE_TABLE(acpi, kx_acpi_match);
- 
- static struct i2c_driver kxcjk1013_driver = {
- 	.driver = {
--		.name	= KXCJK1013_DRV_NAME,
-+		.name	= "kxcjk1013",
- 		.acpi_match_table = kx_acpi_match,
- 		.of_match_table = kxcjk1013_of_match,
- 		.pm	= pm_ptr(&kxcjk1013_pm_ops),
+ #define KXTF9_REG_HP_XOUT_H		0x01
+ #define KXTF9_REG_HP_YOUT_L		0x02
+@@ -1516,7 +1514,7 @@ static int kxcjk1013_probe(struct i2c_client *client)
+ 						kxcjk1013_data_rdy_trig_poll,
+ 						kxcjk1013_event_handler,
+ 						IRQF_TRIGGER_RISING,
+-						KXCJK1013_IRQ_NAME,
++						"kxcjk1013_event",
+ 						indio_dev);
+ 		if (ret)
+ 			goto err_poweroff;
 diff --git a/drivers/iio/accel/mma9551.c b/drivers/iio/accel/mma9551.c
-index 1b96687da01a..d00b238331e9 100644
+index d00b238331e9..2099b3ac41f9 100644
 --- a/drivers/iio/accel/mma9551.c
 +++ b/drivers/iio/accel/mma9551.c
 @@ -17,7 +17,6 @@
  #include <linux/pm_runtime.h>
  #include "mma9551_core.h"
  
--#define MMA9551_DRV_NAME		"mma9551"
- #define MMA9551_IRQ_NAME		"mma9551_event"
+-#define MMA9551_IRQ_NAME		"mma9551_event"
  #define MMA9551_GPIO_COUNT		4
  
-@@ -592,7 +591,7 @@ MODULE_DEVICE_TABLE(i2c, mma9551_id);
- 
- static struct i2c_driver mma9551_driver = {
- 	.driver = {
--		   .name = MMA9551_DRV_NAME,
-+		   .name = "mma9551",
- 		   .acpi_match_table = mma9551_acpi_match,
- 		   .pm = pm_ptr(&mma9551_pm_ops),
- 	},
+ /* Tilt application (inclination in IIO terms). */
+@@ -421,7 +420,7 @@ static int mma9551_gpio_probe(struct iio_dev *indio_dev)
+ 		ret = devm_request_threaded_irq(dev, data->irqs[i],
+ 				NULL, mma9551_event_handler,
+ 				IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+-				MMA9551_IRQ_NAME, indio_dev);
++				"mma9551_event", indio_dev);
+ 		if (ret < 0) {
+ 			dev_err(dev, "request irq %d failed\n", data->irqs[i]);
+ 			return ret;
 diff --git a/drivers/iio/accel/mma9553.c b/drivers/iio/accel/mma9553.c
-index 00e224efc8ed..02a3085a3fe1 100644
+index 02a3085a3fe1..2389dd427af1 100644
 --- a/drivers/iio/accel/mma9553.c
 +++ b/drivers/iio/accel/mma9553.c
-@@ -15,7 +15,6 @@
+@@ -15,8 +15,6 @@
  #include <linux/pm_runtime.h>
  #include "mma9551_core.h"
  
--#define MMA9553_DRV_NAME			"mma9553"
- #define MMA9553_IRQ_NAME			"mma9553_event"
- 
+-#define MMA9553_IRQ_NAME			"mma9553_event"
+-
  /* Pedometer configuration registers (R/W) */
-@@ -1230,7 +1229,7 @@ MODULE_DEVICE_TABLE(i2c, mma9553_id);
- 
- static struct i2c_driver mma9553_driver = {
- 	.driver = {
--		   .name = MMA9553_DRV_NAME,
-+		   .name = "mma9553",
- 		   .acpi_match_table = mma9553_acpi_match,
- 		   .pm = pm_ptr(&mma9553_pm_ops),
- 	},
-diff --git a/drivers/iio/accel/sca3300.c b/drivers/iio/accel/sca3300.c
-index ca0ce83e42b2..25cb88d64531 100644
---- a/drivers/iio/accel/sca3300.c
-+++ b/drivers/iio/accel/sca3300.c
-@@ -20,8 +20,6 @@
+ #define MMA9553_REG_CONF_SLEEPMIN		0x00
+ #define MMA9553_REG_CONF_SLEEPMAX		0x02
+@@ -1101,7 +1099,7 @@ static int mma9553_probe(struct i2c_client *client)
+ 						mma9553_irq_handler,
+ 						mma9553_event_handler,
+ 						IRQF_TRIGGER_RISING,
+-						MMA9553_IRQ_NAME, indio_dev);
++						"mma9553_event", indio_dev);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "request irq %d failed\n",
+ 				client->irq);
+diff --git a/drivers/iio/accel/mxc4005.c b/drivers/iio/accel/mxc4005.c
+index cb5c4e354fc0..aa9ec5950121 100644
+--- a/drivers/iio/accel/mxc4005.c
++++ b/drivers/iio/accel/mxc4005.c
+@@ -19,7 +19,6 @@
  #include <linux/iio/trigger_consumer.h>
- #include <linux/iio/triggered_buffer.h>
  
--#define SCA3300_ALIAS "sca3300"
+ #define MXC4005_DRV_NAME		"mxc4005"
+-#define MXC4005_IRQ_NAME		"mxc4005_event"
+ #define MXC4005_REGMAP_NAME		"mxc4005_regmap"
+ 
+ #define MXC4005_REG_XOUT_UPPER		0x03
+@@ -493,7 +492,7 @@ static int mxc4005_probe(struct i2c_client *client)
+ 						NULL,
+ 						IRQF_TRIGGER_FALLING |
+ 						IRQF_ONESHOT,
+-						MXC4005_IRQ_NAME,
++						"mxc4005_event",
+ 						data->dready_trig);
+ 		if (ret) {
+ 			dev_err(&client->dev,
+diff --git a/drivers/iio/accel/stk8312.c b/drivers/iio/accel/stk8312.c
+index 471c154c3631..1df423b919f0 100644
+--- a/drivers/iio/accel/stk8312.c
++++ b/drivers/iio/accel/stk8312.c
+@@ -46,7 +46,6 @@
+ #define STK8312_ALL_CHANNEL_SIZE	3
+ 
+ #define STK8312_DRIVER_NAME		"stk8312"
+-#define STK8312_IRQ_NAME		"stk8312_event"
+ 
+ /*
+  * The accelerometer has two measurement ranges:
+@@ -543,7 +542,7 @@ static int stk8312_probe(struct i2c_client *client)
+ 						NULL,
+ 						IRQF_TRIGGER_RISING |
+ 						IRQF_ONESHOT,
+-						STK8312_IRQ_NAME,
++						"stk8312_event",
+ 						indio_dev);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "request irq %d failed\n",
+diff --git a/drivers/iio/accel/stk8ba50.c b/drivers/iio/accel/stk8ba50.c
+index cab592a68622..04db1584510e 100644
+--- a/drivers/iio/accel/stk8ba50.c
++++ b/drivers/iio/accel/stk8ba50.c
+@@ -42,7 +42,6 @@
+ #define STK8BA50_ALL_CHANNEL_SIZE		6
+ 
+ #define STK8BA50_DRIVER_NAME			"stk8ba50"
+-#define STK8BA50_IRQ_NAME			"stk8ba50_event"
+ 
+ #define STK8BA50_SCALE_AVAIL			"0.0384 0.0767 0.1534 0.3069"
+ 
+@@ -436,7 +435,7 @@ static int stk8ba50_probe(struct i2c_client *client)
+ 						NULL,
+ 						IRQF_TRIGGER_RISING |
+ 						IRQF_ONESHOT,
+-						STK8BA50_IRQ_NAME,
++						"stk8ba50_event",
+ 						indio_dev);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "request irq %d failed\n",
+diff --git a/drivers/iio/gyro/bmg160_core.c b/drivers/iio/gyro/bmg160_core.c
+index deb3c6459dde..781d3e96645f 100644
+--- a/drivers/iio/gyro/bmg160_core.c
++++ b/drivers/iio/gyro/bmg160_core.c
+@@ -21,8 +21,6 @@
+ #include <linux/regulator/consumer.h>
+ #include "bmg160.h"
+ 
+-#define BMG160_IRQ_NAME		"bmg160_event"
 -
- #define SCA3300_CRC8_POLYNOMIAL 0x1d
+ #define BMG160_REG_CHIP_ID		0x00
+ #define BMG160_CHIP_ID_VAL		0x0F
  
- /* Device mode register */
-@@ -687,7 +685,7 @@ MODULE_DEVICE_TABLE(spi, sca3300_ids);
- 
- static struct spi_driver sca3300_driver = {
- 	.driver   = {
--		.name		= SCA3300_ALIAS,
-+		.name		= "sca3300",
- 		.of_match_table = sca3300_dt_ids,
- 	},
- 	.probe	  = sca3300_probe,
-diff --git a/drivers/iio/adc/hi8435.c b/drivers/iio/adc/hi8435.c
-index 689e34f06987..1de3c921c7b7 100644
---- a/drivers/iio/adc/hi8435.c
-+++ b/drivers/iio/adc/hi8435.c
-@@ -19,8 +19,6 @@
- #include <linux/spi/spi.h>
- #include <linux/gpio/consumer.h>
- 
--#define DRV_NAME "hi8435"
--
- /* Register offsets for HI-8435 */
- #define HI8435_CTRL_REG		0x02
- #define HI8435_PSEN_REG		0x04
-@@ -536,7 +534,7 @@ MODULE_DEVICE_TABLE(spi, hi8435_id);
- 
- static struct spi_driver hi8435_driver = {
- 	.driver	= {
--		.name		= DRV_NAME,
-+		.name		= "hi8435",
- 		.of_match_table	= hi8435_dt_ids,
- 	},
- 	.probe		= hi8435_probe,
-diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
-index 14fe42fc4b7d..826566d7a85e 100644
---- a/drivers/iio/adc/max9611.c
-+++ b/drivers/iio/adc/max9611.c
-@@ -25,8 +25,6 @@
- #include <linux/mod_devicetable.h>
- #include <linux/property.h>
- 
--#define DRIVER_NAME			"max9611"
--
- /* max9611 register addresses */
- #define MAX9611_REG_CSA_DATA		0x00
- #define MAX9611_REG_RS_DATA		0x02
-@@ -553,7 +551,7 @@ static int max9611_probe(struct i2c_client *client)
- 
- static struct i2c_driver max9611_driver = {
- 	.driver = {
--		   .name = DRIVER_NAME,
-+		   .name = "max9611",
- 		   .of_match_table = max9611_of_table,
- 	},
- 	.probe = max9611_probe,
-diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
-index 513365d42aa5..4a325f3c626f 100644
---- a/drivers/iio/adc/vf610_adc.c
-+++ b/drivers/iio/adc/vf610_adc.c
-@@ -27,9 +27,6 @@
- #include <linux/iio/trigger_consumer.h>
- #include <linux/iio/triggered_buffer.h>
- 
--/* This will be the driver name the kernel reports */
--#define DRIVER_NAME "vf610-adc"
--
- /* Vybrid/IMX ADC registers */
- #define VF610_REG_ADC_HC0		0x00
- #define VF610_REG_ADC_HC1		0x04
-@@ -962,7 +959,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(vf610_adc_pm_ops, vf610_adc_suspend,
- static struct platform_driver vf610_adc_driver = {
- 	.probe          = vf610_adc_probe,
- 	.driver         = {
--		.name   = DRIVER_NAME,
-+		.name   = "vf610-adc",
- 		.of_match_table = vf610_adc_match,
- 		.pm     = pm_sleep_ptr(&vf610_adc_pm_ops),
- 	},
-diff --git a/drivers/iio/dac/max517.c b/drivers/iio/dac/max517.c
-index 84336736a47b..d334c67821ad 100644
---- a/drivers/iio/dac/max517.c
-+++ b/drivers/iio/dac/max517.c
-@@ -15,8 +15,6 @@
- #include <linux/iio/sysfs.h>
- #include <linux/iio/dac/max517.h>
- 
--#define MAX517_DRV_NAME	"max517"
--
- /* Commands */
- #define COMMAND_CHANNEL0	0x00
- #define COMMAND_CHANNEL1	0x01 /* for MAX518 and MAX519 */
-@@ -200,7 +198,7 @@ MODULE_DEVICE_TABLE(i2c, max517_id);
- 
- static struct i2c_driver max517_driver = {
- 	.driver = {
--		.name	= MAX517_DRV_NAME,
-+		.name	= "max517",
- 		.pm	= pm_sleep_ptr(&max517_pm_ops),
- 	},
- 	.probe		= max517_probe,
-diff --git a/drivers/iio/dac/mcp4725.c b/drivers/iio/dac/mcp4725.c
-index 1337fb02ccf5..8b9656a111e1 100644
---- a/drivers/iio/dac/mcp4725.c
-+++ b/drivers/iio/dac/mcp4725.c
-@@ -24,8 +24,6 @@
- 
- #include <linux/iio/dac/mcp4725.h>
- 
--#define MCP4725_DRV_NAME "mcp4725"
--
- #define MCP472X_REF_VDD			0x00
- #define MCP472X_REF_VREF_UNBUFFERED	0x02
- #define MCP472X_REF_VREF_BUFFERED	0x03
-@@ -546,7 +544,7 @@ MODULE_DEVICE_TABLE(of, mcp4725_of_match);
- 
- static struct i2c_driver mcp4725_driver = {
- 	.driver = {
--		.name	= MCP4725_DRV_NAME,
-+		.name	= "mcp4725",
- 		.of_match_table = mcp4725_of_match,
- 		.pm	= pm_sleep_ptr(&mcp4725_pm_ops),
- 	},
-diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
-index 48c59d09eea7..73d2033954e7 100644
---- a/drivers/iio/humidity/dht11.c
-+++ b/drivers/iio/humidity/dht11.c
-@@ -27,8 +27,6 @@
- 
- #include <linux/iio/iio.h>
- 
--#define DRIVER_NAME	"dht11"
--
- #define DHT11_DATA_VALID_TIME	2000000000  /* 2s in ns */
- 
- #define DHT11_EDGES_PREAMBLE 2
-@@ -331,7 +329,7 @@ static int dht11_probe(struct platform_device *pdev)
- 
- static struct platform_driver dht11_driver = {
- 	.driver = {
--		.name	= DRIVER_NAME,
-+		.name	= "dht11",
- 		.of_match_table = dht11_dt_ids,
- 	},
- 	.probe  = dht11_probe,
+@@ -1099,7 +1097,7 @@ int bmg160_core_probe(struct device *dev, struct regmap *regmap, int irq,
+ 						bmg160_data_rdy_trig_poll,
+ 						bmg160_event_handler,
+ 						IRQF_TRIGGER_RISING,
+-						BMG160_IRQ_NAME,
++						"bmg160_event",
+ 						indio_dev);
+ 		if (ret)
+ 			return ret;
 diff --git a/drivers/iio/imu/kmx61.c b/drivers/iio/imu/kmx61.c
-index e19c5d3137c6..05343655e58a 100644
+index 05343655e58a..3bb6bad3e89f 100644
 --- a/drivers/iio/imu/kmx61.c
 +++ b/drivers/iio/imu/kmx61.c
-@@ -22,7 +22,6 @@
+@@ -22,8 +22,6 @@
  #include <linux/iio/triggered_buffer.h>
  #include <linux/iio/trigger_consumer.h>
  
--#define KMX61_DRV_NAME "kmx61"
- #define KMX61_IRQ_NAME "kmx61_event"
- 
+-#define KMX61_IRQ_NAME "kmx61_event"
+-
  #define KMX61_REG_WHO_AM_I	0x00
-@@ -1494,7 +1493,7 @@ MODULE_DEVICE_TABLE(i2c, kmx61_id);
+ #define KMX61_REG_INS1		0x01
+ #define KMX61_REG_INS2		0x02
+@@ -1311,7 +1309,7 @@ static int kmx61_probe(struct i2c_client *client)
+ 						kmx61_data_rdy_trig_poll,
+ 						kmx61_event_handler,
+ 						IRQF_TRIGGER_RISING,
+-						KMX61_IRQ_NAME,
++						"kmx61_event",
+ 						data);
+ 		if (ret)
+ 			goto err_chip_uninit;
+diff --git a/drivers/iio/light/apds9300.c b/drivers/iio/light/apds9300.c
+index 938d76f7e312..05ba21675063 100644
+--- a/drivers/iio/light/apds9300.c
++++ b/drivers/iio/light/apds9300.c
+@@ -17,7 +17,6 @@
+ #include <linux/iio/events.h>
  
- static struct i2c_driver kmx61_driver = {
- 	.driver = {
--		.name = KMX61_DRV_NAME,
-+		.name = "kmx61",
- 		.pm = pm_ptr(&kmx61_pm_ops),
- 	},
- 	.probe		= kmx61_probe,
-diff --git a/drivers/iio/light/ltr501.c b/drivers/iio/light/ltr501.c
-index 669da0840eba..34ab4702277a 100644
---- a/drivers/iio/light/ltr501.c
-+++ b/drivers/iio/light/ltr501.c
-@@ -24,8 +24,6 @@
- #include <linux/iio/buffer.h>
+ #define APDS9300_DRV_NAME "apds9300"
+-#define APDS9300_IRQ_NAME "apds9300_event"
+ 
+ /* Command register bits */
+ #define APDS9300_CMD	BIT(7) /* Select command register. Must write as 1 */
+@@ -432,7 +431,7 @@ static int apds9300_probe(struct i2c_client *client)
+ 		ret = devm_request_threaded_irq(&client->dev, client->irq,
+ 				NULL, apds9300_interrupt_handler,
+ 				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-				APDS9300_IRQ_NAME, indio_dev);
++				"apds9300_event", indio_dev);
+ 		if (ret) {
+ 			dev_err(&client->dev, "irq request error %d\n", -ret);
+ 			goto err;
+diff --git a/drivers/iio/light/rpr0521.c b/drivers/iio/light/rpr0521.c
+index 2ba917c5c138..1f5aa88a66cd 100644
+--- a/drivers/iio/light/rpr0521.c
++++ b/drivers/iio/light/rpr0521.c
+@@ -68,7 +68,6 @@
+ #define RPR0521_DEFAULT_MEAS_TIME	0x06 /* ALS - 100ms, PXS - 100ms */
+ 
+ #define RPR0521_DRV_NAME		"RPR0521"
+-#define RPR0521_IRQ_NAME		"rpr0521_event"
+ #define RPR0521_REGMAP_NAME		"rpr0521_regmap"
+ 
+ #define RPR0521_SLEEP_DELAY_MS	2000
+@@ -982,7 +981,7 @@ static int rpr0521_probe(struct i2c_client *client)
+ 		ret = devm_request_threaded_irq(&client->dev, client->irq,
+ 			rpr0521_drdy_irq_handler, rpr0521_drdy_irq_thread,
+ 			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-			RPR0521_IRQ_NAME, indio_dev);
++			"rpr0521_event", indio_dev);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "request irq %d for trigger0 failed\n",
+ 				client->irq);
+diff --git a/drivers/iio/light/stk3310.c b/drivers/iio/light/stk3310.c
+index b81cc44db43c..1d5947723045 100644
+--- a/drivers/iio/light/stk3310.c
++++ b/drivers/iio/light/stk3310.c
+@@ -47,7 +47,6 @@
+ 
+ #define STK3310_DRIVER_NAME			"stk3310"
+ #define STK3310_REGMAP_NAME			"stk3310_regmap"
+-#define STK3310_EVENT				"stk3310_event"
+ 
+ #define STK3310_SCALE_AVAILABLE			"6.4 1.6 0.4 0.1"
+ 
+@@ -643,7 +642,7 @@ static int stk3310_probe(struct i2c_client *client)
+ 						stk3310_irq_event_handler,
+ 						IRQF_TRIGGER_FALLING |
+ 						IRQF_ONESHOT,
+-						STK3310_EVENT, indio_dev);
++						"stk3310_event", indio_dev);
+ 		if (ret < 0) {
+ 			dev_err(&client->dev, "request irq %d failed\n",
+ 				client->irq);
+diff --git a/drivers/iio/light/vcnl4035.c b/drivers/iio/light/vcnl4035.c
+index 67c94be02018..6ba2b1a5a4b8 100644
+--- a/drivers/iio/light/vcnl4035.c
++++ b/drivers/iio/light/vcnl4035.c
+@@ -23,7 +23,6 @@
  #include <linux/iio/triggered_buffer.h>
  
--#define LTR501_DRV_NAME "ltr501"
--
- #define LTR501_ALS_CONTR 0x80 /* ALS operation mode, SW reset */
- #define LTR501_PS_CONTR 0x81 /* PS operation mode */
- #define LTR501_PS_MEAS_RATE 0x84 /* measurement rate*/
-@@ -1624,7 +1622,7 @@ MODULE_DEVICE_TABLE(of, ltr501_of_match);
+ #define VCNL4035_DRV_NAME	"vcnl4035"
+-#define VCNL4035_IRQ_NAME	"vcnl4035_event"
+ #define VCNL4035_REGMAP_NAME	"vcnl4035_regmap"
  
- static struct i2c_driver ltr501_driver = {
- 	.driver = {
--		.name   = LTR501_DRV_NAME,
-+		.name   = "ltr501",
- 		.of_match_table = ltr501_of_match,
- 		.pm	= pm_sleep_ptr(&ltr501_pm_ops),
- 		.acpi_match_table = ltr_acpi_match,
-diff --git a/drivers/iio/resolver/ad2s1200.c b/drivers/iio/resolver/ad2s1200.c
-index 9d95241bdf8f..99c4333321d0 100644
---- a/drivers/iio/resolver/ad2s1200.c
-+++ b/drivers/iio/resolver/ad2s1200.c
-@@ -21,7 +21,6 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
+ /* Device registers */
+@@ -535,7 +534,7 @@ static int vcnl4035_probe_trigger(struct iio_dev *indio_dev)
+ 	ret = devm_request_threaded_irq(&data->client->dev, data->client->irq,
+ 			NULL, vcnl4035_drdy_irq_thread,
+ 			IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+-			VCNL4035_IRQ_NAME, indio_dev);
++			"vcnl4035_event", indio_dev);
+ 	if (ret < 0)
+ 		dev_err(&data->client->dev, "request irq %d for trigger0 failed\n",
+ 				data->client->irq);
+diff --git a/drivers/iio/magnetometer/bmc150_magn.c b/drivers/iio/magnetometer/bmc150_magn.c
+index 88bb673e40d8..b757ed55e99e 100644
+--- a/drivers/iio/magnetometer/bmc150_magn.c
++++ b/drivers/iio/magnetometer/bmc150_magn.c
+@@ -29,7 +29,6 @@
+ #include "bmc150_magn.h"
  
--#define DRV_NAME "ad2s1200"
+ #define BMC150_MAGN_DRV_NAME			"bmc150_magn"
+-#define BMC150_MAGN_IRQ_NAME			"bmc150_magn_event"
  
- /* input clock on serial interface */
- #define AD2S1200_HZ	8192000
-@@ -192,7 +191,7 @@ MODULE_DEVICE_TABLE(spi, ad2s1200_id);
+ #define BMC150_MAGN_REG_CHIP_ID			0x40
+ #define BMC150_MAGN_CHIP_ID_VAL			0x32
+@@ -918,7 +917,7 @@ int bmc150_magn_probe(struct device *dev, struct regmap *regmap,
+ 					   iio_trigger_generic_data_rdy_poll,
+ 					   NULL,
+ 					   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+-					   BMC150_MAGN_IRQ_NAME,
++					   "bmc150_magn_event",
+ 					   data->dready_trig);
+ 		if (ret < 0) {
+ 			dev_err(dev, "request irq %d failed\n", irq);
+diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
+index c4e94d0fb163..40e0edeedeb4 100644
+--- a/drivers/iio/proximity/sx9500.c
++++ b/drivers/iio/proximity/sx9500.c
+@@ -27,7 +27,6 @@
+ #include <linux/iio/trigger_consumer.h>
  
- static struct spi_driver ad2s1200_driver = {
- 	.driver = {
--		.name = DRV_NAME,
-+		.name = "ad2s1200",
- 		.of_match_table = ad2s1200_of_match,
- 	},
- 	.probe = ad2s1200_probe,
+ #define SX9500_DRIVER_NAME		"sx9500"
+-#define SX9500_IRQ_NAME			"sx9500_event"
+ 
+ /* Register definitions. */
+ #define SX9500_REG_IRQ_SRC		0x00
+@@ -939,7 +938,7 @@ static int sx9500_probe(struct i2c_client *client)
+ 		ret = devm_request_threaded_irq(&client->dev, client->irq,
+ 				sx9500_irq_handler, sx9500_irq_thread_handler,
+ 				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-				SX9500_IRQ_NAME, indio_dev);
++				"sx9500_event", indio_dev);
+ 		if (ret < 0)
+ 			return ret;
+ 
 -- 
 2.39.5
 
