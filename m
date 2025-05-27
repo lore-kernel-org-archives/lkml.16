@@ -1,240 +1,202 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012034.outbound.protection.outlook.com [52.101.71.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5517E0E8
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.34
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748316076; cv=fail; b=A3zgfB6O5PsUKKn16YT/j3ecQ7q3BhUek99hXAlQXbvZ7kfZ04iK2o1wiELpK23AJGQUFvDoOgQN3MZ673QeJWYjSWsnnx1URJItgTaMaW2VIgg86j/B1k2j5RT3KWhMd2gkwOB/fjkxgeo+TCc/wiZ4fsG0qHGlkDHGWgfQP6k=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748316076; c=relaxed/simple;
-	bh=pJ3ZXVZvt7DfDFDziQR43vqykMLgRcRFRjxv4U/OFbU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nfcyutptpCP0t6VqvYTDZdln+VANtrwyf5onHwkPAez32pGCczdwz1FQrQ4gx8Fcf27zmjSoE7CTSUajzcGAbSDvSxVm3myAbT6a4+5ME+d3v3guPmLtNPUxgs3VXIqQIYvQjQ+NQzFx/9ym5qW7HjMu9CRFRWSbHPV3pUZQkAI=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XznDTPjZ; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XznDTPjZ; arc=fail smtp.client-ip=52.101.71.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBD6BA38
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748316332; cv=none; b=nMYRK3QnrT6+Rqi0Excwii/Eh1VMwGy/KgKbJHFj3+C+lvWvzY75nWTAjNjgd6NjCWyE5/ImIWEcl+Gm46F/xriW7bRUhD3XzbUONV9ECoNyAot6LXAcQQqireWRVwkKtTTH3WsCCTi76ElOCtRuYhlymMWeKUmLKSrB54iU2j8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748316332; c=relaxed/simple;
+	bh=cLLpe3vDmcLqVqDKuTUWdXtdgFKHKU2FDg38BtlCZhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Bue2vTTLT7wE5z60XrWoEE5v2KTkmBMEUvgBdSMP22N4xZQsD8aw9ujFshqUlWSi3z4as9DW3eBFWQyQJwWC+WE6SAGj48ahIIVYr1oF/qJeOwZWwmxXSTV88MKP3nwCcdPCwvV+FMj3c0R0f1AwcRG6XJA4I/igj2aAGD/P4NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPoipsA5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XznDTPjZ";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XznDTPjZ"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=nSV5aCHiW2U43YqZFxW9rxIZcMAx8ff1j5lRK6bUEVSODNWfg2+/pWUdNw7NxGeHfGQJ7s3nQCgFKZtnYIR6zwUXESRy3Fwli919DaO9pXyHawFKrp9HV7JWMe1v2gmy2BKeW4i1AiRD3UZsoHsFS67P0MU3b4VYBkZrgeOqjj3N2vN6yJfmn+HCEsC2ZwvZJgsAj1DPX5ssv32u2hINn3JwXo0BJ4kHKxbCoLDwlfzx6N4dtDhYOt6+Ms1fs7J2KSJdkZVxQRL3QCwnHJIuV8Zfz90EaHDpRSgfiiBjYGsdYFl+IscPDM+ym0T5xjLi0jrp5WpiJ7F0Z9BVimy06g==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/BPGPScep4PbDsuG1vJThgotnAANjnq0fhaSWolk0g0=;
- b=Dy9yHnDuZRxsJ/SgoNTZTKUKmceTSYNDVi0ahHuNawuyCMSsaX6lpK1mfiDdHqRTAF3qQ0kCb4IJ16kwBguxrKy+6jkyaERBmlq0s4xvpDQHycxJXLBeaJrAsousu0dWC4xhlPSvMnN3KjHZOtEG9/v2nd2OwwpeDr8lN6R1g+l9I4o39wIhJSteenVauOYXbr7eiYyhTllwLRCIStAA8dVinyvCX0UaVJAD0TAPnrgLe1ZSXfpKiSBd9kg+QLqdH/Q9HLG7ONTLXQjmS/KtPiQTNAHa4fORXT1EiCfzZDjA8CzH9O5rHvLE3R3JtoAlrrStnAmqCHn31k/IvaVJzg==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=amd.com smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/BPGPScep4PbDsuG1vJThgotnAANjnq0fhaSWolk0g0=;
- b=XznDTPjZtMBbqx+2DugeIuhNE/WUtol7P31oRs63L9PbQFTk/2/Y1oLtz7LPgRQs2hjhpkz3O3T5m+J3RL7SKLyXRVoEtMmW3kEmalGQwsepHfhu8apSPSMqIEB13z6v90n49eeimTEAnekGaGoS/EYaQa8gxNliJR10o0yIN1I=
-Received: from DU2PR04CA0023.eurprd04.prod.outlook.com (2603:10a6:10:3b::28)
- by GVXPR08MB8235.eurprd08.prod.outlook.com (2603:10a6:150:16::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Tue, 27 May
- 2025 03:21:04 +0000
-Received: from DU6PEPF0000B61C.eurprd02.prod.outlook.com
- (2603:10a6:10:3b:cafe::eb) by DU2PR04CA0023.outlook.office365.com
- (2603:10a6:10:3b::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.30 via Frontend Transport; Tue,
- 27 May 2025 03:21:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU6PEPF0000B61C.mail.protection.outlook.com (10.167.8.135) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18
- via Frontend Transport; Tue, 27 May 2025 03:21:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U1Yqs3NjtfYXPFW3Wid2j7MvEmR5zZi6eeI3ov/rglfndQjShZJorUk0VOTwjGGhyg2Cj+zMxYqfh1fYPnBePO/Be8tUYGm0Zf0PRPbmsKKfPPlqXuchdFo1hVxOSR6lnEeuHztXeFsIoFrCd1s5g2eQW4QCKBCzAF3etdMPW29GuNmjWwbGio+F+PWID5Znm3pxMEx8+s3OXewCfC8uFwVeX84XraHtyl1McGdLIqkDtXKQWACtkGGjXmAMvDcuJSnYbUMWBNtMf1DOwg+gdjPWALR+9JBeID0PAXwMgWjG8/muQ0kAUt4o9FChhUaCqh1yy9IBDc/fWafhCKqbvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/BPGPScep4PbDsuG1vJThgotnAANjnq0fhaSWolk0g0=;
- b=qFHdFvaM98QoKJ2UwI+ZCjhGZUhs3AFi63NfT9bjZ3IT5lN7bG2XJnZIW21yrcgpZkQraHs/xiTHvZthNyMeyNqnaO2RKnHRACkDTonrYJsdPO4/McfaHYU0v83X3dQ8kUHGEW6LO+Or+2YorY9+D5rHJCbozZYAnQ8VUgmKn4hvMV8VNf+GljA7ottMhVG+6NvSoEOx/VEQovZWQxDo7LteKeV0oJIP4vJkcRnsPZTg89S7j7yFAJO4d1R/foMwyRL5dheL+jap0GoQumhE6W9mVAzWQbfq+dQuEw9CsVhxoqeO4yfhvyFFbJ4syxXh5gqp+UVR0Fw0xRDaATcJVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/BPGPScep4PbDsuG1vJThgotnAANjnq0fhaSWolk0g0=;
- b=XznDTPjZtMBbqx+2DugeIuhNE/WUtol7P31oRs63L9PbQFTk/2/Y1oLtz7LPgRQs2hjhpkz3O3T5m+J3RL7SKLyXRVoEtMmW3kEmalGQwsepHfhu8apSPSMqIEB13z6v90n49eeimTEAnekGaGoS/EYaQa8gxNliJR10o0yIN1I=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by DB9PR08MB6585.eurprd08.prod.outlook.com (2603:10a6:10:250::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Tue, 27 May
- 2025 03:20:28 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%2]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 03:20:27 +0000
-Message-ID: <b19653ae-8c9a-46f1-af93-3d09c3b0759e@arm.com>
-Date: Tue, 27 May 2025 08:50:21 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/2] mm/khugepaged: fix race with folio split/free
- using temporary reference
-To: Shivank Garg <shivankg@amd.com>, akpm@linux-foundation.org,
- david@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, fengwei.yin@intel.com, bharata@amd.com,
- syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-References: <20250526182818.37978-1-shivankg@amd.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250526182818.37978-1-shivankg@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0077.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:ad::18) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPoipsA5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9373DC4CEE7;
+	Tue, 27 May 2025 03:25:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748316331;
+	bh=cLLpe3vDmcLqVqDKuTUWdXtdgFKHKU2FDg38BtlCZhU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=iPoipsA5q65FYxEbK8HXToTAhppPL/f8G+VbAhe9YPBNAqaCUue9i5mOju1LDKqxC
+	 SOpo+C2qZdQhpoV27kGcW/xbjuXFQgl4NMZrEPgHdpzQyMZLOuYMyq4D6WSkk329rw
+	 5Xbll14HBUIC2yz1vDnmvjbRRvtIqmtU2az66ISkoMBVGPIvuvw/ipLf026aV8Bobp
+	 JeQNx/vfB+TgsGcZNA1PIFVwwK2roBdxMYlYPp4cWh3WQmvNEjrUNLB/7mpPrV8ulA
+	 DA291aj/W1Qd2zczh8styU232tcO2YIbNLqIMEfjD8TTpvq9mlTkXRPEed7KKJeFlU
+	 wcl40hSr4xXNw==
+Date: Mon, 26 May 2025 20:25:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Christoph Hellwig <hch@lst.de>, Coly Li <colyli@kernel.org>,
+	David Gow <davidgow@google.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Jan Hendrik Farr <kernel@jfarr.cc>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Mark Brown <broonie@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <n.schier@avm.de>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [GIT PULL] hardening updates for v6.16-rc1
+Message-ID: <202505262001.561C185@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|DB9PR08MB6585:EE_|DU6PEPF0000B61C:EE_|GVXPR08MB8235:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3980a51e-92b8-4085-8c02-08dd9ccd813b
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?ai9TNHdYL1ZxVmtUNTdub3JMQmlUaU1YKy9pcW5GVXpRMUNCSWdSQjlGVkVF?=
- =?utf-8?B?ZmEvQXVqdlNGdUw5Z1BTOUViTGRxS3EyWWl5SkdySUcxRFZOSDVyb1lMaUJo?=
- =?utf-8?B?a3RjdTI0ZHlpVDE0QmxsZ1JxQmNnbDhpbVlpa3JPU2JrT3NwYTcvci9PbXE4?=
- =?utf-8?B?cUpmRXZ6WnhrWXZOQmVBOG1Cam5Iald3RERGUWRBYjRySUR3bzRhUzJyVWlt?=
- =?utf-8?B?a1dtTmpOdmd3VTNEQ2cvOThIdVQwRGZpSnRnL1hyRTdQRWo3cnlrZnM0ZFZE?=
- =?utf-8?B?RUtyYU5TV1A5SXdhdHF6d0lkYnVWNzRCOFZQT003ZE1JVmFXc0JoVFhINXlH?=
- =?utf-8?B?Mit6VFpSSjJiZUdXaTdTeW5UKzQ3NWlVWVVmOHlsMDRuRXkveUVjTXBkTEZB?=
- =?utf-8?B?dkdncDA5RjBQS25wTjk5S1lPekdJRnZpREF6RWZNZ1lTbWdUMEYzU1ZUaEE3?=
- =?utf-8?B?SjZoTEp3TEFXN1FxdHJLZkQ3enFhVmpiTXcvSS9aczBLamVOWmdZSHhNR0pa?=
- =?utf-8?B?QUFac1pOYnhydkRnMlEzUmk5WnE4Wk90K0cxZlZjK2M5ZnVkSXUvRzVjRE5E?=
- =?utf-8?B?RkpxVmpkSXRnMkRWUENIMWFnKzIwenNrSXNhUkt6RlJhZTRuTUZSUStQWXdq?=
- =?utf-8?B?WWJDT0planpGVGcrK2FQdS9OcFJQaWRGcXVIT2FTTFlnMU8xYVVueWFDdUFa?=
- =?utf-8?B?emFBTzFEWDVtR2R0RTUvM3FKd1RTYTZIOEt3RlZEaTRPT0NObENXUS9aWW9V?=
- =?utf-8?B?QnQ1bzNxa0htdjRnL1o4WGZxZUdSTmNQeEpIbDhxMVZJT21OUkh2L2N5eWxQ?=
- =?utf-8?B?ZVN1dEJNVjhIM1RsUzE4aUt0N0hNejcwVzhPOWxJeC95bnh4alNDU2JtQjVF?=
- =?utf-8?B?QitjRGErN0VKOXhxZHd6bnJLWjZwRjRvRTdMd3dFcElPQlROSFVGcWRoZm1G?=
- =?utf-8?B?cmd1ZzhhU1FxUVFuM2kxOG11TU5NMHVkZTZxQnJXUUlka0piaExFRi9xdVhn?=
- =?utf-8?B?MzRUSFZxQUZZSWozTnNKVVNHTHdCcUNLOGV5Q2JUclEvYmJ4bk1scHJhNU1s?=
- =?utf-8?B?WUVkdWZpc2hCYkF6Rkk2RUMwR0E5K1d2WjZsN1NOSnNXS3IvYmg0MGJlSUVJ?=
- =?utf-8?B?WlI2S3VXK1RYbC9PNzJHSUlCbmVxcGhzclpmaHZRV1lDLy84VExKTWxkTVdU?=
- =?utf-8?B?SXpLZ1Bpb0dtb2dCdVE4Zkc2Q05iaWUxdGU3RzJJWmdMTmhIa1RCcHdMa0hS?=
- =?utf-8?B?eWhWM1gxN3c3amh3dm1WemdSNkdVaGxsSldUeU9RZGdGcGZjNDBWTmJuUkdS?=
- =?utf-8?B?cTVmUFpjbWRYeEpSckIyaGxUSjlCZ3k4OTlrSnhuc0NWYktWczg1Yy9oMFZ5?=
- =?utf-8?B?UnllOVJCMUpmVzBNQXFrL1hyTGt4cXBjNDJYWkJwT1dsbm1ZcUZSbE0yNFpy?=
- =?utf-8?B?RERVL3VaaWhmdXFqQWJ6RWVRQjFkUnVoWHNwaUZqM1RZRTRsaUVHS056aVl2?=
- =?utf-8?B?Um9ob0srUDMyVzZKaUJjWHhPTGdGbWhibEt0cGY4cllOUm5rdEdJOTVESzR2?=
- =?utf-8?B?UHlYQmI5T2JZdjVFZ3lpU1dtMzhiajYzVFRRMGE5bDBJYXlubTlYMHlMaG1W?=
- =?utf-8?B?OXFMTXh2eHFqSC9UN3FiSlFqNHJlcGNGNUcxWjN4L1hMWDF3RmpKSVg4UW83?=
- =?utf-8?B?dFo2ZHNjMDFVVzdSbHRObUFTcU12QzVsbjBEQmRqQUs3MHhBeWRVcmxOdXdT?=
- =?utf-8?B?OWZDNWdManIyb2pHU1JoVlhzNVd6NGRCekhBOElVeHY0Sk5mYTFMYWRJWEFF?=
- =?utf-8?Q?pPTwuniNTkTwApTfpEO1X9ZKjtKhJ9bu//Xkw=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB6585
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU6PEPF0000B61C.eurprd02.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	3c314c3d-d477-400d-0332-08dd9ccd6d66
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|14060799003|1800799024|7416014|376014|35042699022|82310400026|36860700013|7053199007|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnBqOWFWb0pKVXYrTnIvOTRacDFmeFc3ZkdUbVJuKyszM2ZJbFhxQlltUktH?=
- =?utf-8?B?eTdSN1hqSkRIeVN2T3RxMHA2QjJOSXhBdWE4WlhSU0d3OERqNHZNWE1MRHVQ?=
- =?utf-8?B?S3I1RUQ1UmR1KzBab01YM3VkeGtIUGhvMFJRK2ZHVWprSWwrM0VRVm5pUEN0?=
- =?utf-8?B?aWRueEFxalU3ZDRlS0hOQjBlV0JJN0c5N05paHA0UkVWcXZ0VGdxSzRWZzNv?=
- =?utf-8?B?emhld1NCc05KUEU2bDhhQy95ZkluZGdDWkZBYUxETnVhWHV4QnpjMk9oSjF3?=
- =?utf-8?B?UHZLajhGUEpUY1FWSStSTHdVVE9KWDdTa3VacXFiQlZncGtaQUFFZlh3SVQx?=
- =?utf-8?B?Z3ZPRjU4K2VSVnlhOVhKRW9TbFowcExiNThLd0VnSlRPZFl0cG1mYVNRL1g1?=
- =?utf-8?B?TFBkZFczRWtjYnBzdGwvNG1yQTFyN3ZBMlVmQlV6eGdyTStvUWd2dnliS3Nu?=
- =?utf-8?B?b09NaEY3T2JsZXphNUZVRmJ2dmY0U25iNVljL05IVXJGSHkvaE1rU01oKzhF?=
- =?utf-8?B?bTMwakZRVXJKYUEwYld0WnVNOFNEd2pDeEhIeXNjKy9rSGMwVEwvQTI3bnl6?=
- =?utf-8?B?WHZRRy9JNUNvcDV4MDlIRHZSVy9QcjhLMW1zdEVYR2hOQlNncmxLOXZncmhK?=
- =?utf-8?B?U29xR0F0T2dDalVTd1JEWkxkQ05hZFQrbXFxZksyY1NKajR0dUVPVkVCRk1R?=
- =?utf-8?B?anJwK3lzaDFzWE41RHcxUmRBYWlTZ0YxcHJlcllna3VZcStSZ2VZMzNPQ3l3?=
- =?utf-8?B?WENaaU9zWTFZN2JwZHdISkx3aHZ4U25tZndhZXdZTCtRUXhKVlhYOGNmUjV2?=
- =?utf-8?B?YXBFcHBDbkZrNUVTQkhNK3VEVG00OUJoR2VOV013bGlIM2lHWWQ3VG13eGV6?=
- =?utf-8?B?UnhETE5xaDdCNGVwVnFsWnArRjRNQi91NmJJbVVBbmp3M3NueDlvano0enJs?=
- =?utf-8?B?aTR0eUR2RW5za0IxaUxWd0hoNjZnbTFaZmk5OVVhVFMrY1krUzM1UlJGTzVH?=
- =?utf-8?B?Wk9pc1VOZ2V3VzZwTkhEWUhGLzdRK1lCN1hGc0JRc1czcUtjTWFHVlR4NWkv?=
- =?utf-8?B?TGNzL1hseHY3SnNqd3BQTldMblVQbU11aGJCdXp1dWdYdjk5L3BaOFh4VG1V?=
- =?utf-8?B?Vzd1YnhTaU1KM00xK292OUVvbHo3aTRtUFZabTFvdERnVy9VdVRuekpIQ1RL?=
- =?utf-8?B?RlpmUGxyWFFMMzBXSVB4VXZiWmNkN2R4MGs3aFFWQ255clAxS3FOUjllS2pp?=
- =?utf-8?B?TlBmUDR4N3JMMDFCSWViRlN5RnVvYVVEUG5LQVN2MW93VWFrUWdiQUVkOXda?=
- =?utf-8?B?MUtHT01BemN6U3BWVE1OT090K0pDcU9ZMnVoa3FXdkJLR0twTHBIY0dQZlpP?=
- =?utf-8?B?Y21lbFp5R2JFS1JrMktlSWV4dFdoMlhDbldoeGhJaXFaSnY4R2xsNEl4Y21G?=
- =?utf-8?B?R2I0cnJ0SEgrOGY2NlFaRDVzY3EwTnprRzUwRitKcGxYeExEZ3lYeDVwY2dO?=
- =?utf-8?B?S2R6V0RyNGdUQ2VFNlZJcjZTZDB3M1VuRmlxUXVWMW9JUnc3RU10Z0JpR21C?=
- =?utf-8?B?V1JDN3MvT1FDQndaeVNLeUxwUThzdzE4bzdYQWFiR0w1TXZWU0hRSE01Ynk5?=
- =?utf-8?B?WUtsL2x4b1JON2xrSStaNXJjQ2gvV1UwTTFpazFKUnM4Y3ZxOG5SY28wL1la?=
- =?utf-8?B?c0tHaUlSQ0wxTTZpYUhUeWFRTnRBMGJWbmVxNXRyWnpsdzdwT1JkQ0NGNS9E?=
- =?utf-8?B?NDUvWjVKWEpMZWZQenlPSlUwUG1vRm03bXJzeGlET2JPZXh3WGtLbGNiWVhM?=
- =?utf-8?B?TXMvemk3cEhNQ3p1V2lMakc3SXFjZklaMkUzcHpTWDV6OVptRVpmYVdqWklm?=
- =?utf-8?B?TkpOUjh0VXU5UDR2TG1mSFZlZ3Z1V3RPVE9adFJhcVJXd1VVRE16VjlOd21s?=
- =?utf-8?B?OHc0Qk83SDBEWnVEN2IrZEFIc0U2ZnQ4aEdiaitYcmh3clVUZjRiSzBYSWVv?=
- =?utf-8?B?WDJjMDA1QzlBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(14060799003)(1800799024)(7416014)(376014)(35042699022)(82310400026)(36860700013)(7053199007)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 03:21:00.5883
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3980a51e-92b8-4085-8c02-08dd9ccd813b
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU6PEPF0000B61C.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR08MB8235
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
+Hi Linus,
 
-On 26/05/25 11:58 pm, Shivank Garg wrote:
-> hpage_collapse_scan_file() calls is_refcount_suitable(), which in turn
-> calls folio_mapcount(). folio_mapcount() checks folio_test_large() before
-> proceeding to folio_large_mapcount(), but there is a race window where the
-> folio may get split/freed between these checks, triggering:
->
->    VM_WARN_ON_FOLIO(!folio_test_large(folio), folio)
->
-> Take a temporary reference to the folio in hpage_collapse_scan_file().
-> This stabilizes the folio during refcount check and prevents incorrect
-> large folio detection due to concurrent split/free. Use helper
-> folio_expected_ref_count() + 1 to compare with folio_ref_count()
-> instead of using is_refcount_suitable().
->
-> Fixes: 05c5323b2a34 ("mm: track mapcount of large folios in single value")
-> Reported-by: syzbot+2b99589e33edbe9475ca@syzkaller.appspotmail.com
-> Closes: https://lore.kernel.org/all/6828470d.a70a0220.38f255.000c.GAE@google.com
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
+Please pull these hardening updates for v6.16-rc1.
 
-The patch looks fine.
+The randstruct GCC plugin was fixed but it uncovered a missed
+randomization opportunity (that was similarly missed in Clang but has
+also now been fixed there too).
 
-I was just wondering about the implications of this on migration. Earlier
-we had a refcount race between migration and shmem page fault via filemap_get_entry()
-taking a reference and not releasing it till we take the folio lock, which was held
-by the migration path. I would like to *think* that real workloads, when migrating
-pages, will *not* be faulting on those pages simultaneously, just guessing. But now
-we have a kernel thread (khugepaged) racing against migration. I may just be over-speculating.
+There are two patches in this pull that are duplicated in other trees: 1
+in netdev and 1 in watchdog. They were needed to build the hardening tree
+(due to the randstruct fixes), but they were taken into their respective
+trees kind of later in the dev cycle. I debated splitting up this tree
+and ripping out the patches, but they're both small, and it seemed like
+more trouble for both of us (2 pulls). If you'd rather have it split up,
+let me know and I can resend it that way.
 
+Another item of note is the kbuild change that will induce a full kernel
+rebuild when other dependencies of the compile change (randstruct seed,
+GCC plugins are rebuilt, or the Clang sanitizer .scl file content
+changes). Several variations were attempted by myself and kbuild
+maintainers was the version ultimately agreed to (and I carried in my
+tree since it's all due to hardening features anyway).
+
+Thanks!
+
+-Kees
+
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.16-rc1
+
+for you to fetch changes up to f0cd6012c40da99b45f8f63052b97ec89d5f307b:
+
+  Revert "hardening: Disable GCC randstruct for COMPILE_TEST" (2025-05-08 09:42:40 -0700)
+
+----------------------------------------------------------------
+hardening updates for v6.16-rc1
+
+- Update overflow helpers to ease refactoring of on-stack flex array
+  instances (Gustavo A. R. Silva, Kees Cook)
+
+- lkdtm: Use SLAB_NO_MERGE instead of constructors (Harry Yoo)
+
+- Simplify CONFIG_CC_HAS_COUNTED_BY (Jan Hendrik Farr)
+
+- Disable u64 usercopy KUnit test on 32-bit SPARC (Thomas Weiﬂschuh)
+
+- Add missed designated initializers now exposed by fixed randstruct
+  (Nathan Chancellor, Kees Cook)
+
+- Document compilers versions for __builtin_dynamic_object_size
+
+- Remove ARM_SSP_PER_TASK GCC plugin
+
+- Fix GCC plugin randstruct, add selftests, and restore COMPILE_TEST
+  builds
+
+- Kbuild: induce full rebuilds when dependencies change with GCC plugins,
+  the Clang sanitizer .scl file, or the randstruct seed.
+
+- Kbuild: Switch from -Wvla to -Wvla-larger-than=1
+
+- Correct several __nonstring uses for -Wunterminated-string-initialization
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (3):
+      overflow: Add STACK_FLEX_ARRAY_SIZE() helper
+      kunit/overflow: Add tests for STACK_FLEX_ARRAY_SIZE() helper
+      overflow: Fix direct struct member initialization in _DEFINE_FLEX()
+
+Harry Yoo (1):
+      lkdtm: use SLAB_NO_MERGE instead of an empty constructor
+
+Jan Hendrik Farr (1):
+      hardening: simplify CONFIG_CC_HAS_COUNTED_BY
+
+Kees Cook (16):
+      gcc-plugins: Remove ARM_SSP_PER_TASK plugin
+      compiler_types: Identify compiler versions for __builtin_dynamic_object_size
+      overflow: Clarify expectations for getting DEFINE_FLEX variable sizes
+      mod_devicetable: Enlarge the maximum platform_device_id name length
+      watchdog: exar: Shorten identity name to fit correctly
+      input/joystick: magellan: Mark __nonstring look-up table const
+      kbuild: Switch from -Wvla to -Wvla-larger-than=1
+      gcc-plugins: Force full rebuild when plugins change
+      randstruct: Force full rebuild when seed changes
+      integer-wrap: Force full rebuild when .scl file changes
+      md/bcache: Mark __nonstring look-up table
+      scsi: qedf: Use designated initializer for struct qed_fcoe_cb_ops
+      randstruct: gcc-plugin: Remove bogus void member
+      lib/tests: Add randstruct KUnit test
+      lib/tests: randstruct: Add deep function pointer layout test
+      Revert "hardening: Disable GCC randstruct for COMPILE_TEST"
+
+Nathan Chancellor (1):
+      net: qede: Initialize qede_ll_ops with designated initializer
+
+Thomas Weiﬂschuh (1):
+      kunit/usercopy: Disable u64 test on 32-bit SPARC
+
+ arch/arm/Kconfig                              |   3 +-
+ init/Kconfig                                  |   9 +-
+ scripts/gcc-plugins/Kconfig                   |   4 -
+ lib/Kconfig.debug                             |   8 +
+ security/Kconfig.hardening                    |   2 +-
+ arch/arm/boot/compressed/Makefile             |   2 +-
+ lib/Makefile                                  |   1 -
+ lib/tests/Makefile                            |   1 +
+ mm/kasan/Makefile                             |   3 +-
+ scripts/basic/Makefile                        |   5 +
+ scripts/gcc-plugins/Makefile                  |   4 +
+ scripts/Makefile.extrawarn                    |   9 +-
+ scripts/Makefile.gcc-plugins                  |   8 +-
+ scripts/Makefile.lib                          |  18 ++
+ scripts/Makefile.ubsan                        |   1 +
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 107 ---------
+ scripts/gcc-plugins/randomize_layout_plugin.c |  18 +-
+ include/linux/compiler-version.h              |  30 +++
+ include/linux/compiler_types.h                |   5 +
+ include/linux/mod_devicetable.h               |   2 +-
+ include/linux/overflow.h                      |  23 +-
+ include/linux/vermagic.h                      |   1 -
+ drivers/input/joystick/magellan.c             |   2 +-
+ drivers/md/bcache/super.c                     |   3 +-
+ drivers/misc/lkdtm/heap.c                     |  17 +-
+ drivers/net/ethernet/qlogic/qede/qede_main.c  |   2 +-
+ drivers/scsi/qedf/qedf_main.c                 |   2 +-
+ drivers/watchdog/exar_wdt.c                   |   2 +-
+ lib/tests/overflow_kunit.c                    |   4 +
+ lib/tests/randstruct_kunit.c                  | 334 ++++++++++++++++++++++++++
+ lib/tests/usercopy_kunit.c                    |   1 +
+ MAINTAINERS                                   |   1 +
+ 32 files changed, 461 insertions(+), 171 deletions(-)
+ delete mode 100644 scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+ create mode 100644 lib/tests/randstruct_kunit.c
+
+-- 
+Kees Cook
