@@ -1,107 +1,111 @@
-Received: from sonic307-15.consmr.mail.ne1.yahoo.com (sonic307-15.consmr.mail.ne1.yahoo.com [66.163.190.38])
+Received: from dispatch1-eu1.ppe-hosted.com (dispatch1-eu1.ppe-hosted.com [185.132.181.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C781020FABA
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.190.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6FD7260B;
+	Tue, 27 May 2025 21:13:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.181.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748380312; cv=none; b=YHGiSAxF+1pKc+2rcGRwN2yFy0pPuNuBV9s+LreT6bsPzVnZ7U5+XuqsOq/DDWo9d+Yz2sdc3Yh23U8XPfll8OyCirT0xIKDgRVDPFy8gGcFM8YwsmidYjjYrD1KLQmbkccZbt6bMGDP0kb5QNoI/7h2TnxLIiIvGUdi1xvOjDk=
+	t=1748380422; cv=none; b=Bzx++KSL3SLhiH9MIwM9r3YRTjmPdryYE5qtNYj/IAjs94wf5UxpHZ+GvjZsiuPnv0PqYDlEC62WHv0W4nOnbKLfhNJCIj9t8t62BPlNxS21wKEk3H6Fbs/gpV3/9dlbAiC4iHfQ0+Txz66hobBgmNIU1UUde8G7WZ3/y7fHyxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748380312; c=relaxed/simple;
-	bh=G+3ndt1DxOo8pbfaUqCZvbSqptA7VFCzuNnq+E1FGCQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type:
-	 References; b=TpyiyweXDS4nWbK0hjjWt589SJWEVi2U0llSh3r8kvcGgUMUUA5bcbEKbzBGbJoz696Ya8D+BwZWryNd+egEfa4udd/TjV+wIXPOpQaaUuZFKH8I4vFSHokCXxw/jMpy1NUOJZXkTEQ/vtLDZOh4UCZeNZDY0FD3qnvVvSifEP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=ed3tIkfK; arc=none smtp.client-ip=66.163.190.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	s=arc-20240116; t=1748380422; c=relaxed/simple;
+	bh=Nl3slm3ORyXM24Jp136yutmN0T+7Y9mG0+TrxTs37VM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=itggiVpe94oXhWsbTHut9FDT9TY7QQrRCtS5BOqhKd3RQ7oAPdhuI7yE/R7gADa2L8nk60aBtODTzG/8vaQGq2uRHw3ANfNIzkc7G/G8yXlAAJkxoUoFR4aspsCj7XpmeTBa8TP25dxvVt6bFSowm+qxkhTUleFkoaVlP2akTdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mikaelkw.online; spf=pass smtp.mailfrom=mikaelkw.online; dkim=pass (2048-bit key) header.d=mikaelkw.online header.i=@mikaelkw.online header.b=FqgwUhoh; arc=none smtp.client-ip=185.132.181.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mikaelkw.online
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mikaelkw.online
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="ed3tIkfK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748380304; bh=kcHHNTuIruCsGWWRMvu1Wnl+DbxGdOf1gEsan2YW3DM=; h=Date:To:Cc:From:Subject:References:From:Subject:Reply-To; b=ed3tIkfKIcpFTgHXEQj1hoo48ngUr9H/JMrmCcvay4oVdZlk4NyHmZgAMJhZxZcl5p8kZAfd4q1Nn8W+DoKGlBwi2ZElbBm72n2nkHBOOBPZE8fnHoll60yxlWBfjd+cjYX2z6cuIwqyPG7vDVwSXMyshcJaCw5CUUO3rAMy+jNNnt1C+YeMcbRQyk59RJBqZyx2BZVdXlo0cXuFqW0ugTx/ihPlmbMOvdzkpyBUMdCHaPwxgCHx8i8uf9bMMZ9KqLBW64CoVkYocWT5+tFiF9QyTdbd3zClBJi7nk//oKfxUXrQowDE5E27zWkmgTNu0vO1qG7Y7VDhYfp0ZSr+sg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1748380304; bh=8Opk/rrxA9J3agqSY57PvlxSrjT9x7WDVXp21Cqgm44=; h=X-Sonic-MF:Date:To:From:Subject:From:Subject; b=WixOoJJ5iIy9si/N8yObjQqnfYO6yNEQO+VH9kOSmLr0TusfGdnUYbd06UlOsYOT/B3uwNP8OG+OmqFKHp3Rln9kyqsN8cFHJpO4ZQs6yUDlOlmmdZ7xGUGJgXwlFwBpELAc4xkuFHU1nD53mOTH27t77tuXeQQLIbGpnGhVKIq+vINg/5k7db0i25dycpN5tA41Y7whkWhgKcOGf9mUwLP9H+VhAldWkdQortLQBl1hbyhrPzG4s3fJ5OCb++5LGbYe3kdjG4NTS1Gliu2sw0P00Fyz1aF6pu6jN+mAfRv1LxqylmChV3YiAeb/pAx2s/JrhwVyoOaZw8JaIfxSbA==
-X-YMail-OSG: OKliedEVM1lsHQQVLm2JoVyvTf7IPhTMu8VWV71jaLLwyC7L__Ah80AaMgXoT2_
- 5.Ra7wEXdQw.ri8z8_uUtqYXCcDw2RAIggkk4bn5D3Zi4tk.BJWlKVZCuF1eaw59RvibpXvUuCZ3
- z8Bmkz92N.KZibrxREY4Tt0fdiW7B4Uer1_.MUWDh4raAOfSDNekCOcSucWIr3WsYf.wzCk2_8aB
- gjR9EEQuonWdbqLudsDuD_eHddAfWAjDRzdAcs7PRSopZ.FXqoDt4pQAuIfq77U3BE..EjVx.4XK
- xL8sQlQZiQb8Z_oUJ_utHo3EsK44yFDWKbOpCT0GAkY.L7SikyTab6N2iYRYBFMako8hvaEKhE8A
- tNR2g3o7AAMV2FGnbca9eE92g160EtFfAMo0Daj5l_6aKwo1wf83G2uZNBgBhPZbaMsR9kOgaLSR
- 9Zg0Wdu1Hoz5S5jfrNHo31pAzAfp9NXQLi2kcKK_pDIrYjA1an.Ttmc2fJ7zahPDgLmr_9LyDJy5
- DUrYrql0LAZ9e1FK2JVrRuy8CLYcLQ5Yi27ty2_wL4U9QSGAb0zRKOK3wt2SEIk9hXaoSNxYX.3N
- p.COXwWGJ_lW0V3e8W.R6n1lsK6vdL8AYBcjd5nLObAnWmjUm7hv8pBZeROscmJhxSfkAb.Vurl9
- OnQ7wOf5tMpscOMLHGA2uaHyo6u7lQeA88LSPtdEVHAWixtTzr.frPN75sugc2UofTVXBoAoDClO
- wL9zY1QryFcx9Wm3vK1Iy8hCJHIzTJp_gTQWIZzxTTHK9gqzsGHsMC39Ff2esV30Az2JBKsuI3Og
- qLRS.RZFT.1zxFFdQZ9gZhH8otcqZGYTUo9tBzPeRSzRCQCGd0pN9HcpKowACMQEh4x9Vuaf3Pe5
- TzsKyXIBnRT6UfC0LhvpfP0SuZnwsRADQwtotssHhcWhu_IdQXFA_SF9h7mNPr8yw4vy0sLkwbhe
- dBgGAdwvgrjEshhGHBtd7j0UTG4WX0JwKjmnPgOD0oF1dpMYthxWlUfogg7BJFb3nxVRDX43sbsi
- fL41Gfm2t9rqOBFq5oHe39d9uJxZMHOItO37L8QEAFMLOME81yFXMegO7vE458OGUj7MH_zLlj4c
- 42IdTx5JP7iCWxjMHTCTLoZXCtnYhfpekhYnyxrUtgsYOgFIyxFUWnd1MvHtRMTveVfHlJJ40EbP
- pRdCtWyD70nbIc.JfVcHNQ_OCGUeOmI5S3DSdNrpIZJlm3Bd7cB8Noh6_l9fgLg3gur94j_SGpuA
- A4QMyASIz3jAiuJ_01UOwO5BtaJsyCkwtucsLUhBTWscmkRLTI_uhpIZ0JZPcFxIAfFVJYJKU6CR
- ozCCIWnApy2KxbN2ToTV98RBerjVXZyITPU_SCrbMsz0lNWjzeIab7PsHtVsl4m3F7y0DtSO6cnB
- xzDM000HolZ5C_XPavAzYipvCas23BnjDynH6KwJRrWFsX4J9s.jKOr6RGKXyDg0c76U8KZmmBD9
- mNV_0cAn0_6AWKHRze1fRzd0AtPL1ZsrU5ISOcIR183ov8gh7gshDIuGsqKDHn4897VVhCNbkwQs
- atpzmhk6hd5QimQwLHHLyWJZ16FrGyGwMNr715Qil7pa3RyOMiXqJYEM.QkOCViubeg3wUx6dNbU
- jCFeKTm4ADtfMzdXZN.DVLsj8uGRY_tqYpcpmL_NXNRxbE7Krl2Sms0HcfdSs5KGh4zongP7ExV7
- aDpZD4lmN_fGUUE9njluyt2moYlOCssg6CaEG6JhEqslgp3eihRcCofmF4S8BlaPxkircMzPvXTw
- 8gg_lcHDRefN1FBTpMW5qn835SMxsK6yYhUfXW1Ntjp6KMAFDNQodSLGeL0FO8ITvUpqHh.kDjzF
- xY.1BToPz21fImhE7Z_a1H42HCHl1XRUCGfGsGv_IjCBCZ.RMz9_YFUo9I.P8R6KEPcp.GmhbQw3
- 9Fd3wY7DUiTqmW4tj1c32.4pRaevjKgAAANfmkce8C3QaHoHEYFsaeJ5a58ZqWeP0s6OoiMkljsj
- awU5klUCYuweSz2W98Dg1VdSpXl4UsOamtIipieZJnIxpD.f97VOYTr5I2zgExheUmU.RwTL.XeR
- 1_SOG0sXchSM3qwHAMwd_uYlI9h6vW8ZU747bEtLsEGMR2Rb67CSWyYpJaK2yTbmTU06g5Sp56vH
- 0VxZ_MCT73zC1omagGipd2atkpalpJUNtySpB1Ig.UtcOB4p6MpBGLhUAY8X0yflGb44f8hVSTZG
- RHHg3Ii83itmM3sz.Istokh4qKOI5VEq8DlU1VAEAaSp8ZJ4HJGFHRgyulTJ9G0GU6lqXqmGLY2v
- GnQhQ5Lj1RWJe1YpXLJtPnjxQ6A--
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: c3fb6c23-336d-46f7-9ea0-0a9ee77c8cf0
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Tue, 27 May 2025 21:11:44 +0000
-Received: by hermes--production-gq1-74d64bb7d7-45lk9 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9c9c905a8c68c8bd6ee833fd61de08ef;
-          Tue, 27 May 2025 21:11:40 +0000 (UTC)
-Message-ID: <c342db55-57ec-484c-b030-ef3dab89bd3a@schaufler-ca.com>
-Date: Tue, 27 May 2025 14:11:38 -0700
+	dkim=pass (2048-bit key) header.d=mikaelkw.online header.i=@mikaelkw.online header.b="FqgwUhoh"
+Received: from engine.ppe-hosted.com (unknown [10.70.45.172])
+	by dispatch1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 2B536200A3;
+	Tue, 27 May 2025 21:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mikaelkw.online;
+ h=cc:cc:content-transfer-encoding:content-transfer-encoding:date:date:from:from:message-id:message-id:mime-version:mime-version:subject:subject:to:to;
+ s=pp-selector; bh=lwjcejsgwEmNYg9nHk4XBk4Rx/Y1yysKSIvGN1YC2j4=;
+ b=FqgwUhohgsOkn4WR3lqS0LrQ7GIsqQrMYaREKDemPQ8N7Zsmds+g0D8VI19XEjK+MZtD96LFPcBYOGF2dHecLUIKsiQtU8NXTBaJW29U8qwY5xCC28kEKdadKhIboZxQm4wZYOFGQV0Y66dIirfp4lCjc4l2lAwFSDn7l6ER8r6d5RZapoiXkz9DEerO5cXufTlVedPjuZ1JJI+CR6lNm1CSwxU+rF8Kq+BCbTtcptfFYmsqPwP/aPt0C9hQQnJAnfF9NXS1KycPc4kBQppWLOjVlDXjqcoszlCV7Ilt/ao2yCZuI8fI+LIrpjC82AuS8OnWr3T25rgXOp6ZhXeF9Q==
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from test-ubuntu-rev3.. (78-26-16-15.network.trollfjord.no [78.26.16.15])
+	by mx1-eu1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 2FD35B0005D;
+	Tue, 27 May 2025 21:13:35 +0000 (UTC)
+From: Mikael Wessel <post@mikaelkw.online>
+To: netdev@vger.kernel.org
+Cc: intel-wired-lan@lists.osuosl.org,
+	torvalds@linuxfoundation.org,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew@lunn.ch,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	security@kernel.org,
+	stable@vger.kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	linux-kernel@vger.kernel.org,
+	Mikael Wessel <post@mikaelkw.online>
+Subject: [PATCH] e1000e: fix heap overflow in e1000_set_eeprom()
+Date: Tue, 27 May 2025 23:13:32 +0200
+Message-ID: <20250527211332.50455-1-post@mikaelkw.online>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LSM List <linux-security-module@vger.kernel.org>,
- Linux kernel mailing list <linux-kernel@vger.kernel.org>,
- Casey Schaufler <casey@schaufler-ca.com>,
- Randy Dunlap <rdunlap@infradead.org>
-From: Casey Schaufler <casey@schaufler-ca.com>
-Subject: [GIT PULL] Smack patches for 6.16
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <c342db55-57ec-484c-b030-ef3dab89bd3a.ref@schaufler-ca.com>
-X-Mailer: WebService/1.1.23884 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Transfer-Encoding: 8bit
+X-MDID: 1748380417-IY5a2VRwpn3R
+X-PPE-STACK: {"stack":"eu1"}
+X-MDID-O:
+ eu1;fra;1748380417;IY5a2VRwpn3R;<post@mikaelkw.online>;7544ea0f74a3697a45f5192d6efff48c
+X-PPE-TRUSTED: V=1;DIR=OUT;
 
-Hello Linus,
+The ETHTOOL_SETEEPROM ioctl copies user data into a kmalloc'ed buffer
+without validating eeprom->len and eeprom->offset. A CAP_NET_ADMIN
+user can overflow the heap and crash the kernel or gain code execution.
 
-Here is the Smack pull request for v6.16.
+Validate length and offset before kmalloc() to avoid leaking eeprom_buff.
 
-There is one trivial kernel doc patch.
+Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver (currently for ICH9 devices only)")
+Reported-by: Mikael Wessel <post@mikaelkw.online>
+Signed-off-by: Mikael Wessel <post@mikaelkw.online>
+Cc: stable@vger.kernel.org
+---
+ drivers/net/ethernet/intel/e1000e/ethtool.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  https://github.com/cschaufler/smack-next tags/Smack-for-6.16
-
-for you to fetch changes up to 4b59f4fd0a36c31876344d7e0cfdcb0202d09cf2:
-
-  security/smack/smackfs: small kernel-doc fixes (2025-05-19 16:28:32 -0700)
-
-----------------------------------------------------------------
-Kernel doc fix for 6.16
-
-----------------------------------------------------------------
-Randy Dunlap (1):
-      security/smack/smackfs: small kernel-doc fixes
-
- security/smack/smackfs.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
+index 98e541e39730..d04e59528619 100644
+--- a/drivers/net/ethernet/intel/e1000e/ethtool.c
++++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+@@ -561,7 +561,7 @@ static int e1000_set_eeprom(struct net_device *netdev,
+ 		return -EOPNOTSUPP;
+ 
+ 	if (eeprom->magic !=
+-	    (adapter->pdev->vendor | (adapter->pdev->device << 16)))
++		(adapter->pdev->vendor | (adapter->pdev->device << 16)))
+ 		return -EFAULT;
+ 
+ 	if (adapter->flags & FLAG_READ_ONLY_NVM)
+@@ -569,6 +569,10 @@ static int e1000_set_eeprom(struct net_device *netdev,
+ 
+ 	max_len = hw->nvm.word_size * 2;
+ 
++	/* bounds check: offset + len must not exceed EEPROM size */
++	if (eeprom->offset + eeprom->len > max_len)
++		return -EINVAL;
++
+ 	first_word = eeprom->offset >> 1;
+ 	last_word = (eeprom->offset + eeprom->len - 1) >> 1;
+ 	eeprom_buff = kmalloc(max_len, GFP_KERNEL);
+@@ -596,9 +600,6 @@ static int e1000_set_eeprom(struct net_device *netdev,
+ 	for (i = 0; i < last_word - first_word + 1; i++)
+ 		le16_to_cpus(&eeprom_buff[i]);
+ 
+-        if (eeprom->len > max_len ||
+-            eeprom->offset > max_len - eeprom->len)
+-                return -EINVAL;
+ 	memcpy(ptr, bytes, eeprom->len);
+ 
+ 	for (i = 0; i < last_word - first_word + 1; i++)
+-- 
+2.48.1
 
