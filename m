@@ -1,208 +1,268 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2078.outbound.protection.outlook.com [40.107.236.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950B61A5BA9;
-	Tue, 27 May 2025 06:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748325944; cv=fail; b=vBXByK/4nb/0PzEpMPjh/X++CYDm6liaifHaXZV1jpCr3Xg7ufxsyYv7O2boAVdaABmASw/e3uNJNDKfL7h5ZsdZWq28uNQ3RrZ5OdZ1gP6zxBfsqq52SVBiHWR7Ejw30rg5vRL/AlUZmBCdF5s3L1YyzqaLbC2wgzjaIAt1ZS4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748325944; c=relaxed/simple;
-	bh=68o/fBbN34Iw+JPDYeiGkBrXOuHx3E+/33jobLBZ9c0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=SsrZquq6DNIvdYP4ec92Zj9ak1wz0Z/hr736k+tVu8FUpaX/AdBLOZVYMZTtaK1DVB8/w09KSPMQRrcotc4+5FyuiDe7EXoCr7iaoBUmDnL5RGb4Yu5BPDRGndVgFwxTnDtAtRGi381Pm+iJ7u7hBtTbwmyovsJyXmEzret+1RI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IZ4LSRXf; arc=fail smtp.client-ip=40.107.236.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ACC8F5E;
+	Tue, 27 May 2025 06:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748326006; cv=none; b=gNzGkPQhZtJhRKQvr7715qpr25smlD4TEoXII31rAArC4Xe/XI5pdVFmk2ERay821VZllXMrsamTGiKK3TmkOwZu3zCWr3nrIBA0inxOGagnIYh5pEmZ2aOxYpEpl6UOyYZMbndkCNDE4423Xn6fDOlbF9rwBQkr1SNuolS+DB0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748326006; c=relaxed/simple;
+	bh=949plwvuDh0LXblafoGZmQ/UjZsqaCPbRV9YptNbJZg=;
+	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
+	 In-Reply-To; b=TF6s6L2cEPHX8RpI94B22rBR7DuA3ZTPtl6dhlg5ZUV1ceXVCz8aoEq9TP3rR1wVnQmlJP3lKsyEazww8389FtNZ+hHgmR8p0pSHuG4AH1FbRI+nCkF8fR6qX1F7A13vgtE0Zcub1Ii9qq32PrC3BLlmVVZzgeSf71mIdOpFS+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=px+5ixoM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IZ4LSRXf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fPnLhOsoMxYsM0eTiHSiySpjMHZz8Ap0ZZmEN2Ly8VtcK2lqQxjp0JE1Vk8Mf8OJBDB656mBefHbiWPcZs8MfMRRIIyi60BssinSZu7dAAX7aIgs7BEsPeGOzT5oQol3ArbLzj73fwtEVTUmKvdoAj8T366s8vv1TSETv0Gfyd6ncLQu8okhGjAB2BxxvpheC8tCnyw5O+HZuprCLuLJwv0vedU1PQ6K6IufL8GTpfqq2h2WgXyp9IqzBuI5dBceheR0ZabR8BT9tFgMz3QCc6heVBUShmDa97yalqEI+LTZuMMPKeUI/vTbZm4HN71zdBuN3CSUuaT3okpcfuSuNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=68o/fBbN34Iw+JPDYeiGkBrXOuHx3E+/33jobLBZ9c0=;
- b=Q2Vl3HIuOYeXkiQ1GREJAdPZnDSYjBuMCLRGswaGSNr7EdtzfCWownwe1OUmTNynyRm7TY8IkLPVeuc4rtU8bVklBODkgixpMu9sT/xziyl3pm0e5psMQiuBMtXHfmWy8ZN+M3q6qjXDcDZA+Ile8iMTauEnAvQ6zA6AF9j5LXclWL5Ji2Q2lUautRv2ZiH3ouqYOW7AoRPK6of9UFuDbS6fNohg/JYr8eoiSTdw+wr32r43XfBU6R1ClYSQvN98mlloAWn1SODgpl0Z9p7fth8osrW8TyRklxsyletKXCTPb2d6Lb8RPFMJ8LQSGTgJXYcVpLnw6yaFPAu9ebY2CQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=68o/fBbN34Iw+JPDYeiGkBrXOuHx3E+/33jobLBZ9c0=;
- b=IZ4LSRXffje0QYo3VEFHWTpCd/4f84N2k1bXjzSosvpkT9nY1o10n7FftcYFvAPilR1r/4NyL6t7iOnAIVaKsB5qXnQwX2sBg6gov4ZORgwuvnznk/N8/0RiUDB0HqhDlZLQE1Q9OyvYvrTOnlMuJJs9XK1pulALgL3+Iesf0WQ=
-Received: from IA0PR12MB7699.namprd12.prod.outlook.com (2603:10b6:208:431::7)
- by SJ5PPF665EE4E73.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::996) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Tue, 27 May
- 2025 06:05:37 +0000
-Received: from IA0PR12MB7699.namprd12.prod.outlook.com
- ([fe80::7ed1:80d:75c:f1aa]) by IA0PR12MB7699.namprd12.prod.outlook.com
- ([fe80::7ed1:80d:75c:f1aa%4]) with mapi id 15.20.8769.025; Tue, 27 May 2025
- 06:05:37 +0000
-From: "Mahapatra, Amit Kumar" <amit.kumar-mahapatra@amd.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor@kernel.org>
-CC: "broonie@kernel.org" <broonie@kernel.org>, "robh@kernel.org"
-	<robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>, "linux-spi@vger.kernel.org"
-	<linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "git (AMD-Xilinx)" <git@amd.com>,
-	"amitrkcian2002@gmail.com" <amitrkcian2002@gmail.com>
-Subject: RE: [PATCH v2] spi: dt-bindings: cdns,qspi-nor: Update
- minItems/maxItems of resets for Cadence OSPI controller
-Thread-Topic: [PATCH v2] spi: dt-bindings: cdns,qspi-nor: Update
- minItems/maxItems of resets for Cadence OSPI controller
-Thread-Index: AQHbywb9dprIEt0NbkSOfExrWnOpALPezReAgAWyaKCAAGWfgIABGyNw
-Date: Tue, 27 May 2025 06:05:36 +0000
-Message-ID:
- <IA0PR12MB76991D522A8E47DDA3800EE5DC64A@IA0PR12MB7699.namprd12.prod.outlook.com>
-References: <20250522104745.327675-1-amit.kumar-mahapatra@amd.com>
- <20250522-dropout-hertz-6f1db9256655@spud>
- <IA0PR12MB769903933CC9200FD082143BDC65A@IA0PR12MB7699.namprd12.prod.outlook.com>
- <6b71bbef-84f6-4255-b8b2-cf50c5183235@kernel.org>
-In-Reply-To: <6b71bbef-84f6-4255-b8b2-cf50c5183235@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=01aaa140-bdb1-4e78-89d6-d40b5f6e9f83;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-05-27T05:49:48Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA0PR12MB7699:EE_|SJ5PPF665EE4E73:EE_
-x-ms-office365-filtering-correlation-id: 221adda2-7816-41c1-4fc5-08dd9ce48001
-x-ld-processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?S0dmOEo5aFVwQXBHWU5hc2J1d2QzRUVFZTdQOG9YWStXd2RJV2FOSnBUcTFE?=
- =?utf-8?B?N3RVd2F2OVRycEJnQklCZ0ZCb01ISFVmZzNtRlF4UGdTeDN6L1NlWVRoN1Zi?=
- =?utf-8?B?VE0vdGd0cnJzelljT3JzTytSY2liTWRtbEhWanl5TjFLTCsranFWMEFTaU5s?=
- =?utf-8?B?MWFkNlYzcDVyREh2Z0g2RXk0cDdWTHc2VHl2MENuSGZRek1oU21GaGdGMUNJ?=
- =?utf-8?B?ZS81eTBMQ3cyWEZ3UlBSRWVoY1NKbGw2Z3czT1BrWFNobGFDMGdEWmNYa1Zz?=
- =?utf-8?B?RDAwS1VSaFJWT2FFdlR4QkkySWJzejc4N1lxemRhK2s5VjBub24vL0RXNHJS?=
- =?utf-8?B?Z0hNY09rbXRDaG5FWERoY21NbHVzN250S05ia20rdFVLbVZoeGEyMUttU3RK?=
- =?utf-8?B?UzJZelVlWmxNM2xxTGVPcmRXUE4rbjA0alVoeWFRNHczamhVVkV4eWlEcXpM?=
- =?utf-8?B?NXFXMWlOWW9pT0dkWStoNitnVXFjWUJnektIYkdDVHM5MmZuNm45YXQ0ZlZE?=
- =?utf-8?B?OFMzaWFSaUJyTkpyTVlGMG11dTdNQUc3eHdPV1Z1eUI0VXdSZXE2SDY5Nmcr?=
- =?utf-8?B?VGgrK1hlN3ozY3ZPQm1HTWpGUW9NRnQ0WUg2RThyTkF2ZHNUMmxMNDRiUWNS?=
- =?utf-8?B?Z2w0ckNRTkZ5dlp4WVAxcEt6Vy85dlV6QWZXb09zd3RMcGNEMmxjTERudExY?=
- =?utf-8?B?Q2Y0aVdYY3JlVFJJWUxmQjB6R2JOTGtiK1BuR1lsU1hGY2JlL1RaZGVENkQr?=
- =?utf-8?B?a0lLaWMxblRCRUNxOEVNc1RGeHB4WlF6MVhKTTZGTkVBT0IwS2t5cDI0SmFy?=
- =?utf-8?B?bjdDMlpaUTdhNVpFdmt6WVdmeHRVTmhPemowU0pEbC94YTB0RzA3VElPMHVq?=
- =?utf-8?B?bXRRN0xHdzMyTElPMHZySmcyZXc4QjlVVlRlNmxqVmk3M3dlNXVHTUF0bDNs?=
- =?utf-8?B?ZE53VWh1aVJ0MUM1RVFKTktuYm04a0lRUldCajVmRXJhRUtIdWpTN0YyUldX?=
- =?utf-8?B?SXdra3pzUUlPc09VdWQvbUExTmlKLy9OUTlOc1lVRDFIVkdvb0pKZHF4NXZB?=
- =?utf-8?B?b3UzcFdiWWpGalFVays3c1p4YWhGZ0JuZXlyQlZPZFg2K2MxUzE1aEQ5S1ZX?=
- =?utf-8?B?Q1JrSit3TlFYNFdDWGQ2dmZhSDVnZGlrUXBVbS8rYXIzbDRRVi9DTVNpam1P?=
- =?utf-8?B?MC9nSExwN1VDeGNrZGp4WEl3dVN6bE5XTGZCQU5ZMGVON09mQWc1REtucGdB?=
- =?utf-8?B?UGZKL0dDRHJXQ09Vc2V5Q2ZVOGhZRzVVM2ErNmZTNzVWS1ZUbDdNNmN4Z0k2?=
- =?utf-8?B?UEc3TlBKRjM0eGppVHJsaW5BNmFSNFlpazhJYjVYbFpLMjhlZkZWblNmM2pz?=
- =?utf-8?B?b1dxaXk4R05iWXRiOGs5ZjdEcnVmb084MDZqeXBISDBLYUdxOU5zL243NDRH?=
- =?utf-8?B?T01vbXUvNzFWd2xMUWd2WU1pQ3JacTNwSG52NzhhKzRuNmFvR1Q3Ky9UNEtJ?=
- =?utf-8?B?WElkdEZMNjU2QUtTYkZVVDNMV21NWHhKeHZEYUFwd2dpSUZvZkpYS2l6a0Jl?=
- =?utf-8?B?VzVwem1IYlVPNGdrbU5FSDZrWU1HbC82dEFpMFo1b3NRZEUrTmREbmJyYm5x?=
- =?utf-8?B?MnBNdjZQOEV6VHRkaXRnbDFrbTY0MWFCZ2tLclZPdDlJZ1dIMk4xUjkvMW9S?=
- =?utf-8?B?dnI5MDkydWlvRkRLb29NcTRMby9OZ2VuUFRUd1h1YnE5Sy9KUjhuZXJjdHdM?=
- =?utf-8?B?TEE5ZnNRT2dXdFVIU0JXRXRhbVdIWnEvOEZUQktsQzZDdUtmSXNVZWNpbVFu?=
- =?utf-8?B?a0tQTENrbml5dHAyZHVSbkNsUzh5c3FEcVVPRmFNMG1xbEh5bmdhWWNmOE1C?=
- =?utf-8?B?cjNqRHFBODFORkFpakFMVlFJaW9KWnRlRWpKbTJGekJpQU9NTC9rMzFINXBW?=
- =?utf-8?Q?qYuuPbSfxoiQHfbZcAHG9y0+GC86SZmn?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB7699.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?SzlxMHR1TnNpWGc0VWZnMDFzTDUzYUZUSjNmZjVTeXA1Skp6UWhCNzJLY2hT?=
- =?utf-8?B?LzFrNDdEZFpNUUhtNERPRkxXOGh0ZzFLaDFLaGlZNTg0SUVnc1Bkb3c2WU5Q?=
- =?utf-8?B?VW5PQVdKNlhMNXpIbmZQdEV6cVJ5bXlNaUliTzZScFBwRkQ2UEVuN01obzlH?=
- =?utf-8?B?d081LzZqV2g4a1JyTTNja2hJTnBBRkFMQ05vNTZGcGJnd1BQOWJFZGo0SlVP?=
- =?utf-8?B?YjZzcEwrSVVWWUVJSDVhejhQc3l2ZzUwd0hvUlJRc2pURzc3eDhHMWRVZ2dw?=
- =?utf-8?B?SUVDdnVuRTFYc2tpblp3bjRBVmp0SHhVblhkMmxjL0NVVHp2TGxkblF0VUth?=
- =?utf-8?B?WnhSZ1VmMHptVDNrWktLdWdqbW13cnd2c1ZxY0hUbzRSbjhVZ3RKcW5tSmJt?=
- =?utf-8?B?TngyT2VFaU1hQWgzamZVWUZrRnB3eXQ0dDhVS2xBa3VNVm1BUHk2ZnM4ZW4w?=
- =?utf-8?B?QXIxRm9ON2NoMzRIaGdwNDREMmVSejBVbkVrOXJXQzVQMXVDM1hPK0hoZkhp?=
- =?utf-8?B?ZmhmWkhaU0RLL1R2MkZBa0FmSXBwdDRXSmZOYUFRKzZIUDlkRk5hSnNnVml0?=
- =?utf-8?B?QVpqNHNPU05ZMHhyenpRc3FDWE1CN2IrbUVQbEFKZWRmQURhSW04OWpxTnZh?=
- =?utf-8?B?d1lUdlRqeEZHZmJiWi9lNTNRTk4zMitCSDM5cVFndERtaEw4ODFpNGhPVTFL?=
- =?utf-8?B?NHdHaW96Z1BKNlhwOVQ2UVpmYWlHWkRCR2swd1RKWDNibWp2MzNHWVdTYjJn?=
- =?utf-8?B?U1lvVFE0OVFmSUdUaDVIU242WHV5bVRMVXlWQkNiK0QyREpEcnZxRzE2aGN6?=
- =?utf-8?B?ZzNYRjNTOFBMVTZzaHdIUTlpMXlhMmV6NmhRMDU1eDdVVGlxSnVDMjN1YXlh?=
- =?utf-8?B?QVptVWE2bUFwQ2h6a0hzNWdDNEZ1b0RmeEJkTHlRczRCRktNTGZNSHBCaVJC?=
- =?utf-8?B?SXhzbVQ3U3VCSk9aNnltMkpoTmlkY1lTU2twb2EwbEd1K3o0aEFyRFhXdmtY?=
- =?utf-8?B?SkxSQWMwRzRJNElBb0twbVlxUm9rMWVqM210dVpoWVJSNDE2Vk9ibGVxend0?=
- =?utf-8?B?dkxISVpTVG5UZDVXVkZMUDVjdmZwUmpKa3ZGZlY2L3NHRldWTDhOTEswSHFU?=
- =?utf-8?B?a0g0bE1FcE13aEZzQlZiVXZ0MEtnVHJFd2tNSHpsc2VLZGEvMFhoVjFxSEdw?=
- =?utf-8?B?WW1WdWNwQ3BFR243OXlUZ3pqTWtJb2xqbXl0RmYvaGxueG9PVUh4REdXZnJm?=
- =?utf-8?B?dWZPazAwdjNIM1BjSkw2b1IwZjlsVngySDN5QXNGSkxiYytoWUsyRDFaRXM0?=
- =?utf-8?B?dWQ0TEdoRUZzTFk5NGNTWXlrZTVzMzNvbktaZk1ZdWFIbG1rRHM4Wi95a1cw?=
- =?utf-8?B?UUV0MGhyS1d3RjJxUFVobmtvMWpqUmMydmFxZjBZSkxsWmhOOFZNSXg1aHVT?=
- =?utf-8?B?YklINGhSbzZrQkdhbnJ0Z3hOdzU3ZWprK3o0N2M1bTZOYjNhanpWcFJhWnRX?=
- =?utf-8?B?MFNDRE9RK1pLR0ZoS2pxYUNtUEtCTEdLNGVUbzdrU2kwRTE1TjV6aWZUamdz?=
- =?utf-8?B?SkViVHNwdVVGbFo5NDlSSk9Pam9IQWJnaXUwU3l4ZVNVMTRFUnRtRVBGS2ZS?=
- =?utf-8?B?eVFJS0NBT29sR2dxZjI2bXR3clQ5d0VYcHBhT0FoSWQ3MHVuNTQxTGRncFp5?=
- =?utf-8?B?a3dCd05WTEx1OGlPZWZkYmJ3d25HOFEzdzFNTVBMcHpPbzRWUDA3b1ZjZWVG?=
- =?utf-8?B?SjZ1V3JmeGJiNXAwTjVGeDdpeUs1eHRYRUNBZi9GMFYxbE0wdmlOVk5ZNUJ1?=
- =?utf-8?B?TmFHdnFpYVJpdDJoc1YyeEY5emZnY3JsRStKclFybGs4dzBYK3lnWVphVUE3?=
- =?utf-8?B?am1selF2ZHZDVkp2NlZlSWc3SHM4WlBmcklkMTNRcTJtbDBFQnRlVFVsWGE0?=
- =?utf-8?B?aDBQR1hUOSsvOFI0UG1URkhmMjk1OXpkcEFBclBaK3FMV3dOVXk5MUw3NFZ2?=
- =?utf-8?B?RlNjMVhIdElQKy94WklsczFTd3BCeTBUbUdCblIvSmdSam96c1RVS0NpTkVY?=
- =?utf-8?B?RFd0QkFXQ2lsQ1RMaFBncC9tcDBuUTlMbEVvTXFtc0hhbGREMVU1MnNvcFNl?=
- =?utf-8?Q?rXqM=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="px+5ixoM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1586C4CEEA;
+	Tue, 27 May 2025 06:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748326006;
+	bh=949plwvuDh0LXblafoGZmQ/UjZsqaCPbRV9YptNbJZg=;
+	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
+	b=px+5ixoMOObPn1gjgY3F0Z9bRaiWd0CFRyD7XnyEGWCWSYXLTTL82yN0v9TlHGERB
+	 eXFfhu9FGpCAEN6Bz4edWRLy8Ozlf7EN+ipMkC8OatIve5c2h08LG3YMMfbGqaKVcP
+	 hC6Atl5DqAExiq3BW7u5C7RM26y9568VZXWPSSGxisF3PfXBGjvA+c+IMArifeX2OP
+	 Qt8hslVgHAbWNAb+A+G1BFmpV80FMM1Kn4y8w9v5YCBffPHAIeA8x62H8sSzXF8u/2
+	 KYb5mM608kaz7EmMJGRWs8BgcmWXU2RIakvi1AwgR0e4Qdw3/0ZB11ro4lY/qkwqQz
+	 Dd6J9zzh07Vqw==
+Content-Type: multipart/signed;
+ boundary=b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Tue, 27 May 2025 08:06:42 +0200
+Message-Id: <DA6PUDJXVXL3.1EILFHW8G19E9@kernel.org>
+To: "Aradhya Bhatia" <aradhya.bhatia@linux.dev>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Tomi Valkeinen"
+ <tomi.valkeinen@ideasonboard.com>, "Jyri Sarha" <jyri.sarha@iki.fi>
+Subject: Re: [PATCH v8 2/4] dt-bindings: display: ti: Add schema for AM625
+ OLDI Transmitter
+Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Thomas
+ Zimmermann" <tzimmermann@suse.de>, "Maxime Ripard" <mripard@kernel.org>,
+ "David Airlie" <airlied@gmail.com>, "Laurent Pinchart"
+ <laurent.pinchart@ideasonboard.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Nishanth Menon" <nm@ti.com>, "Vignesh Raghavendra" <vigneshr@ti.com>,
+ "Devarsh Thakkar" <devarsht@ti.com>, "Praneeth Bajjuri" <praneeth@ti.com>,
+ "Udit Kumar" <u-kumar1@ti.com>, "Jayesh Choudhary" <j-choudhary@ti.com>,
+ "Francesco Dolcini" <francesco@dolcini.it>, "Alexander Sverdlin"
+ <alexander.sverdlin@siemens.com>, "DRI Development List"
+ <dri-devel@lists.freedesktop.org>, "Devicetree List"
+ <devicetree@vger.kernel.org>, "Linux Kernel List"
+ <linux-kernel@vger.kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20250525151721.567042-1-aradhya.bhatia@linux.dev>
+ <20250525151721.567042-3-aradhya.bhatia@linux.dev>
+In-Reply-To: <20250525151721.567042-3-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB7699.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 221adda2-7816-41c1-4fc5-08dd9ce48001
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2025 06:05:37.0206
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: G3va90dVy7vdWYhmCM38e/KF51A06IuIGvynCjAOggzUWwLCD4E0hcjhTEr1cWeLagWStaLddsWBq+V70VlyhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF665EE4E73
 
-W0FNRCBPZmZpY2lhbCBVc2UgT25seSAtIEFNRCBJbnRlcm5hbCBEaXN0cmlidXRpb24gT25seV0N
-Cg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBzcGk6IGR0LWJpbmRpbmdzOiBjZG5zLHFzcGkt
-bm9yOiBVcGRhdGUgbWluSXRlbXMvbWF4SXRlbXMNCj4gb2YgcmVzZXRzIGZvciBDYWRlbmNlIE9T
-UEkgY29udHJvbGxlcg0KPg0KPiBPbiAyNi8wNS8yMDI1IDA5OjA3LCBNYWhhcGF0cmEsIEFtaXQg
-S3VtYXIgd3JvdGU6DQo+ID4+PiAgICAtIGlmOg0KPiA+Pj4gQEAgLTEzMiwxMSArMTM5LDExIEBA
-IHByb3BlcnRpZXM6DQo+ID4+PiAgICAgIG1heEl0ZW1zOiAxDQo+ID4+Pg0KPiA+Pj4gICAgcmVz
-ZXRzOg0KPiA+Pj4gLSAgICBtaW5JdGVtczogMg0KPiA+Pj4gKyAgICBtaW5JdGVtczogMQ0KPiA+
-Pg0KPiA+PiBJIHRoaW5rIHlvdSdyZSBzdGlsbCBtaXNzaW5nIG9uZSBvZiB0aGUgdGhpbmdzIEty
-enlzenRvZiByZXF1ZXN0ZWQgb24NCj4gPj4gdjEsIGNvcyB5b3UgcmVkdWNlIG1pbkl0ZW1zIGZv
-ciBhbGwgcGxhdGZvcm1zIHdpdGhvdXQgcmVzdHJpY3RpbmcgaXQNCj4gPj4gYmFjayB0byAyIGZv
-ciBub24tdmVyc2FsIHBsYXRmb3Jtcy4NCj4gPg0KPiA+IEkgYmVsaWV2ZSB3ZSBjYW4gcmVtb3Zl
-IHRoZSAicmVzZXRzIiBhbmQgY29ycmVzcG9uZGluZyAicmVzZXQtbmFtZXMiDQo+ID4gcHJvcGVy
-dGllcyBmcm9tIGhlcmUsIGFzIHRoZWlyIGRlZmF1bHQgbWluSXRlbXMvbWF4SXRlbXMgYXJlIGFs
-cmVhZHkNCj4gPiB0YWtlbiBjYXJlIG9mIGluIHRoZSBlbHNlIGJsb2NrIFsxXS4NCj4gPg0KPiA+
-IFsxXQ0KPiA+IGh0dHBzOi8vZ2l0aHViLmNvbS90b3J2YWxkcy9saW51eC9ibG9iLzBmZjQxZGYx
-Y2IyNjhmYzY5ZTcwM2EwOGE1N2VlMTQNCj4gPiBhZTk2N2QwY2EvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NwaS9jZG5zJTJDcXNwaS1ub3IueWFtbCNMDQo+ID4gMzkNCj4gSSBk
-b24ndCBzZWUgYW55dGhpbmcgZml4ZWQgdGhlcmUuDQoNClRoZSBpbnRlbnRpb24gd2FzIHRvIHBv
-aW50IG91dCB0aGUgcmVkdW5kYW5jeSByZWxhdGVkIHRvIHRoZSAncmVzZXRzJyBhbmQNCidyZXNl
-dC1uYW1lcycgcHJvcGVydGllcy4gQXQgWzFdLCB0aGUgZGVmYXVsdCBtaW5JdGVtcyBhbmQgbWF4
-SXRlbXMgdmFsdWVzDQphcmUgYWxyZWFkeSBkZWZpbmVkIGZvciBhbGwgcGxhdGZvcm1zLiBIb3dl
-dmVyLCB0aGUgc2FtZSBjb25zdHJhaW50cyBhcmUNCnJlZGVmaW5lZCBhdCBbMl0gd2l0aCBkaWZm
-ZXJlbnQgbWluSXRlbXMgYW5kIG1heEl0ZW1zIHZhbHVlcyAsIGFnYWluDQphcHBseWluZyB0byBh
-bGwgcGxhdGZvcm1zLiBCYXNlZCBvbiBteSB1bmRlcnN0YW5kaW5nLCB0aGUgZGVmaW5pdGlvbnMg
-YXQNClsyXSBmb3IgJ3Jlc2V0cycgYW5kIHRoZSBjb3JyZXNwb25kaW5nICdyZXNldC1uYW1lcycg
-Y2FuIGJlIHNhZmVseQ0KcmVtb3ZlZC4NCg0KWzFdIGh0dHBzOi8vZ2l0aHViLmNvbS90b3J2YWxk
-cy9saW51eC9ibG9iLzBmZjQxZGYxY2IyNjhmYzY5ZTcwM2EwOGE1N2VlMTRhZTk2N2QwY2EvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9jZG5zJTJDcXNwaS1ub3IueWFtbCNM
-NDENClsyXSBodHRwczovL2dpdGh1Yi5jb20vdG9ydmFsZHMvbGludXgvYmxvYi8wZmY0MWRmMWNi
-MjY4ZmM2OWU3MDNhMDhhNTdlZTE0YWU5NjdkMGNhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zcGkvY2RucyUyQ3FzcGktbm9yLnlhbWwjTDEzOQ0KDQpSZWdhcmRzLA0KQW1pdA0K
-DQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo=
+--b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+
+Hi Aradhya,
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments AM625 OLDI Transmitter
+> +
+> +maintainers:
+> +  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> +  - Aradhya Bhatia <aradhya.bhatia@linux.dev>
+> +
+> +description:
+> +  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialize=
+d RGB
+> +  pixel data transmission between host and flat panel display over LVDS =
+(Low
+> +  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to=
+-1 data
+> +  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS=
+ output
+> +  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RG=
+B or
+> +  padded and un-padded 18-bit RGB bus formats as input.
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: serial clock input for the OLDI transmitters
+> +
+> +  clock-names:
+> +    const: serial
+> +
+> +  ti,companion-oldi:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      phandle to companion OLDI transmitter. This property is mandatory =
+for the
+> +      primarty OLDI TX if the OLDI TXes are expected to work either in d=
+ual-lvds
+
+primary
+
+> +      mode or in clone mode. This property should point to the secondary=
+ OLDI
+> +      TX.
+
+You should mention that the second OLDI should also point back to
+the primary OLDI using this property.
+
+> +  ti,secondary-oldi:
+> +    type: boolean
+> +    description:
+> +      Boolean property to mark the OLDI transmitter as the secondary one=
+, when the
+> +      OLDI hardware is expected to run as a companion HW, in cases of du=
+al-lvds
+> +      mode or clone mode. The primary OLDI hardware is responsible for a=
+ll the
+> +      hardware configuration.
+> +
+
+
+> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+
+..
+
+> @@ -190,3 +244,105 @@ examples:
+>              };
+>          };
+>      };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> +
+> +    bus {
+> +        #address-cells =3D <2>;
+> +        #size-cells =3D <2>;
+> +        dss1: dss@30200000 {
+> +            compatible =3D "ti,am625-dss";
+> +            reg =3D <0x00 0x30200000 0x00 0x1000>, /* common */
+> +                  <0x00 0x30202000 0x00 0x1000>, /* vidl1 */
+> +                  <0x00 0x30206000 0x00 0x1000>, /* vid */
+> +                  <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
+> +                  <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
+> +                  <0x00 0x3020a000 0x00 0x1000>, /* vp1 */
+> +                  <0x00 0x3020b000 0x00 0x1000>, /* vp2 */
+> +                  <0x00 0x30201000 0x00 0x1000>; /* common1 */
+> +            reg-names =3D "common", "vidl1", "vid",
+> +                        "ovr1", "ovr2", "vp1", "vp2", "common1";
+> +            power-domains =3D <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
+> +            clocks =3D        <&k3_clks 186 6>,
+> +                            <&vp1_clock>,
+> +                            <&k3_clks 186 2>;
+> +            clock-names =3D "fck", "vp1", "vp2";
+> +            interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +            oldi-transmitters {
+> +                #address-cells =3D <1>;
+> +                #size-cells =3D <0>;
+> +                oldi0: oldi@0 {
+> +                    reg =3D <0>;
+> +                    clocks =3D <&k3_clks 186 0>;
+> +                    clock-names =3D "serial";
+> +                    ti,companion-oldi =3D <&oldi1>;
+> +                    ti,oldi-io-ctrl =3D <&dss_oldi_io_ctrl>;
+> +                    ports {
+> +                        #address-cells =3D <1>;
+> +                        #size-cells =3D <0>;
+> +                        port@0 {
+> +                            reg =3D <0>;
+> +                            oldi0_in: endpoint {
+> +                                remote-endpoint =3D <&dpi0_out0>;
+> +                            };
+> +                        };
+> +                        port@1 {
+> +                            reg =3D <1>;
+> +                            oldi0_out: endpoint {
+> +                                remote-endpoint =3D <&panel_in0>;
+> +                            };
+> +                        };
+> +                    };
+> +                };
+> +                oldi1: oldi@1 {
+> +                    reg =3D <1>;
+> +                    clocks =3D <&k3_clks 186 0>;
+> +                    clock-names =3D "serial";
+
+.. and update this example :)
+
+-michael
+
+> +                    ti,secondary-oldi;
+> +                    ti,oldi-io-ctrl =3D <&dss_oldi_io_ctrl>;
+> +                    ports {
+> +                        #address-cells =3D <1>;
+> +                        #size-cells =3D <0>;
+> +                        port@0 {
+> +                            reg =3D <0>;
+> +                            oldi1_in: endpoint {
+> +                                remote-endpoint =3D <&dpi0_out1>;
+> +                            };
+> +                        };
+> +                        port@1 {
+> +                            reg =3D <1>;
+> +                            oldi1_out: endpoint {
+> +                                remote-endpoint =3D <&panel_in1>;
+> +                            };
+> +                        };
+> +                    };
+> +                };
+> +            };
+> +            ports {
+> +                #address-cells =3D <1>;
+> +                #size-cells =3D <0>;
+> +                port@0 {
+> +                    #address-cells =3D <1>;
+> +                    #size-cells =3D <0>;
+> +                    reg =3D <0>;
+> +                    dpi0_out0: endpoint@0 {
+> +                        reg =3D <0>;
+> +                        remote-endpoint =3D <&oldi0_in>;
+> +                    };
+> +                    dpi0_out1: endpoint@1 {
+> +                        reg =3D <1>;
+> +                        remote-endpoint =3D <&oldi1_in>;
+> +                    };
+> +                };
+> +                port@1 {
+> +                    reg =3D <1>;
+> +                    dpi1_out: endpoint {
+> +                        remote-endpoint =3D <&hdmi_bridge>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+
+--b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaDVWchIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/iJGwGAxRGPDN8iRUtg8G3CHTd8XVfK1W17iIKB
+ah6wsakO6qA0866Uwb4kEHxqo8sk+wp+AYDf01M6KL6+J03glezubYBIUzMEdKYH
+ZKO8I7IXqBaIiJRTBxP7b/R5OeOR+RKyn1E=
+=hOQz
+-----END PGP SIGNATURE-----
+
+--b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c--
