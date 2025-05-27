@@ -1,151 +1,82 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B22227B519;
-	Tue, 27 May 2025 16:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F4B269B08;
+	Tue, 27 May 2025 16:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362180; cv=none; b=A40pZbxQMFamh7ChMaDbPjadpyYvAPdLQArna5hJS6DDIuzZYZSpwJxWEga480u2SQVAwt7mSJSQkP9MkEa43M4HGkqQkhnVKiSeC2Y/c9WdjamlNz2W5K1xH1JOOu0B1QiF3pVwcIfUqesF9mkR1ci/+RtT2WYekI7e/1rW5qY=
+	t=1748362226; cv=none; b=FAqKumfRQxtdheTe2GMebgfENQ5+NAiRS4K50YBW+4kfzQVeGc1VuQk0OMCXC+0IjAUDPNc0K4YbF5QRKhHzbLDeX/ENfHCQUAqSTKYyqHJkqpdvBX5ugpTGr24quvtwBGPbs3D0hO87hVEcCY/VM89SXt2AHLa6qB4FqrcSOpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362180; c=relaxed/simple;
-	bh=wmkhpzXDnZ0g8qX/wKkzt/uak/bBbTXP0RSHnvXCzog=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BpTEJS+WGgEeOx7AYIdUblWJmdcbHyBDH6BbiaPSJpZmDLVGd9VqOizDl5DtbUD4ERWtbndq52MTz6GP0eVkLyzHNvmPxj3XOdQzk32pmF+vZn+vvbatg8BOl0r0CQj6PxioMgjhODeeeX7zfwiy/OIiollw4CkVvo7aq+bbDA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GizWuES3; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748362226; c=relaxed/simple;
+	bh=L0a2IxCIeRqxZGEsyOFuSQpdCJEYvGEy+T/gO+GHS8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ts/6pU95A9IkgVvwjyDOmC2/L4bIOdZY/Hnou5g72pXz8lxuu0Q2g0jYasMnvxTc/1hX8n2PhoZEDkHy3v0b6V0glV62iG0+uHKfGfHUTfKW8wfCQRf97CnrJJOcL86eEVfJP28mpEMDa6qp7ayEktGarISRt23w4etfkwwHdRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0fgQBgQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GizWuES3"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5e39d1e0eso363324685a.1;
-        Tue, 27 May 2025 09:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748362178; x=1748966978; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SdafvH3qKchv40RUQ4A8gsyR+VlDxzAi3WsekEuYUJc=;
-        b=GizWuES3VLRYzDyrEn7L3mFopPxMl9AkO6GClft1jeux1yIH+3rSh3YeWQlvmTU8Mz
-         LWX4yA5zbOzV0iZAWltpKW07+ZT3Fla+t7X/vwMiR+HNkoU8MLWrwxwx6so54qBSK7OG
-         qmpJQgKe/GBZ6xIK3sELQKMzTpUAqSX/gfECpkBYmr09qCzSh0/EXFrGq/jV+Oj9hRb4
-         Dj2mUEXrbDLq+sTBsYe5iOazVFkBuMwLMODTzY0jMU7G0M5tgBQ77JoGf33O3ENVAokv
-         VKkX6lXh+URh5t1a1Jb8VZzVO8J3F5PqKORWyRIzNbn7j2yz6L9P4uQGn2WIPbRNik8p
-         sF6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748362178; x=1748966978;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SdafvH3qKchv40RUQ4A8gsyR+VlDxzAi3WsekEuYUJc=;
-        b=a4pmsgPHzLZvQ/C6ht3te8rdSjbj+7pL5DxF6H+RzyGecQK/F7yv2+JjdAasYPaurI
-         uV6/Jx/d5tqXiU7QCFAmjsvlkprnS/syzeCu0CjaM/MYtHVbIdiegYZZLQsib3CVLqFc
-         5xpl93z36sFy9i7hkuwFj/yaI6PbE1CYYYkpo4Eb5Pf5GlnFfq7EWIdZxESZdPxZ5qFu
-         a5FJYX8eNrKqWCBkQCV600TQeUVKsDQBfWxMveH7T+jTs6zl3lAormbZOkDsGDbvDDqY
-         /0ug+pQhvUJzKNuTDPi7ucQGbb5wzRz8ze3yvl8W+jH95d4r8t42tGwugg9q2/5LYGqg
-         nwHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMxUZJIiJtBwfmxE+Sy5aTviZzG55oFFy9fABWrEo+aQpchIzZ/B0yd5U26gI1r3oM+9NNRz8FiO75Sjun1/E=@vger.kernel.org, AJvYcCVwzSvqQVjSenaFi9ijMEtS3Zw2J0nBiEytMH/XzNmsesFi1a75TCfetMUQWleFc0v0yz67W5b2nULeksA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuOaexmKd6Yp+dP+zYAtJNGROCsHNdG1hMZ2C0+ew+zk7hcqSe
-	sK6WQCXSNEdDkZcygLr36GB25HqHXh7gugD0j4clljMK95V/hDtvCDh/
-X-Gm-Gg: ASbGnctIBZJ/DRY6Ys72779t5DqGn9GXr1FJRMwCstSDlrdiHKumiE8DA1arrddnnyU
-	eXzdDuBC49gSH3PNHVkoviPBFtr47de++278BiMGT7S6jLamuOk2EWFA/FEb4PPADIX8CQuWeO1
-	EAzb+7Eu2MJOCstQ8iAAQFrW70hqkI00IQxNxyWab92kCM2L8LD4GYxV5exHA7AlJ+vayjzE1/K
-	D95c5YuAS2sy0A/gEZPG5O4BhLrFD3sVw0GpnoYx96wJ1Sr7/B+0Sos5aQ7r7+3v4JysxZ/7OfP
-	hHQmpKmPBKGZdqJJoJ1r94W9MGjzCe+TGtHsj32qFsvw/wyFRBMcZ+unzfCeg3kLZ6xnt/nB9LQ
-	v0z76oql/8iDsjSrFg5G7dT2KjjZyaPrIPVmUcue2/6y/I2CubCmfMBbhZKhw
-X-Google-Smtp-Source: AGHT+IEhK8uYBSCXQVul2cqMuX9Zf1oRVVgkEUahL8gAo2qNPFQorLHLod0m8oVd9q4mVM934Q/vZQ==
-X-Received: by 2002:a05:620a:4448:b0:7c9:2425:a7ae with SMTP id af79cd13be357-7ceecbe0efcmr1789366485a.29.1748362178151;
-        Tue, 27 May 2025 09:09:38 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:24d7])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cedf7930b5sm763460685a.89.2025.05.27.09.09.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 09:09:37 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 27 May 2025 12:09:36 -0400
-Subject: [PATCH] rust: replace length checks with match
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0fgQBgQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA844C4CEE9;
+	Tue, 27 May 2025 16:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748362225;
+	bh=L0a2IxCIeRqxZGEsyOFuSQpdCJEYvGEy+T/gO+GHS8c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=r0fgQBgQjNHnfAqa4fhCcy5yshCrXhruDaGYITxVhsVJEiMfATbNcRec88o3oFbfQ
+	 L/Ipn372JPPWj0eF6brlcIvMcSKJZ6rJVbBJ7vnNO7U6HsqR86GpEJvHCEslR+B1a4
+	 slHgMUlLK1XPUluaurEOUfSC4Kq9QgjyShNlgj0kn9R13VHf6ikyulI90exYUe/VgE
+	 T+9++4YQ432cUtjVcUkHrNXuic7XLV/2wNpyMCU6Etk58rokI0NShYvvsbrUukr1rm
+	 jiylE1ECg+Q61j9M5MdNZJ2/MMp23FvrHlw1qrsB+v8RURyQjR/038S+MAySx3Jh+q
+	 ZhvzJrvPnErzQ==
+Date: Tue, 27 May 2025 09:10:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Saeed Mahameed <saeed@kernel.org>
+Cc: Tariq Toukan <tariqt@nvidia.com>, "David S. Miller"
+ <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet
+ <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Saeed Mahameed
+ <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Richard Cochran
+ <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch
+ <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, Cosmin Ratiu
+ <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
+Subject: Re: [PATCH net-next V2 11/11] net/mlx5e: Support ethtool
+ tcp-data-split settings
+Message-ID: <20250527091023.206faecb@kernel.org>
+In-Reply-To: <aC-xAK0Unw2XE-2T@x130>
+References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+	<1747950086-1246773-12-git-send-email-tariqt@nvidia.com>
+	<20250522155518.47ab81d3@kernel.org>
+	<aC-xAK0Unw2XE-2T@x130>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-idiomatic-match-slice-v1-1-34b0b1d1d58c@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAL/jNWgC/x3MQQqAIBCF4avErBNUKqmrRAvRKQdKQyMC6e4Nb
- R58i/dXKJgJC0xNhYw3FUqRodoGXLBxQ0GeDVrqXvbaMCkd9iIneF0QZSeHQg/WjF5JiZ0H/p4
- ZV3r+7ry87wfXkpzSZwAAAA==
-X-Change-ID: 20250527-idiomatic-match-slice-26a79d100e4d
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
 
-Use a match expression with slice patterns instead of length checks and
-indexing. The result is more idiomatic, which is a better example for
-future Rust code authors.
+On Thu, 22 May 2025 16:19:28 -0700 Saeed Mahameed wrote:
+> >Why are you modifying wanted_features? wanted_features is what
+> >*user space* wanted! You should probably operate on hw_features ?
+> >Tho, may be cleaner to return an error and an extack if the user
+> >tries to set HDS and GRO to conflicting values.
+> >  
+> 
+> hw_features is hw capabilities, it doesn't mean on/off.. so no we can't
+> rely on that.
+> 
+> To enable TCP_DATA_SPLIT we tie it to GRO_HW, so we enable GRO_HW when
+> TCP_DATA_SPLIT is set to on and vise-versa. I agree not the cleanest.. 
+> But it is good for user-visibility as you would see both ON if you query
+> from user, which is the actual state. This is the only way to set HW_GRO
+> to on by driver and not lose previous state when we turn the other bit
+> on/off.
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- scripts/rustdoc_test_gen.rs | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+   features = on
+hw_features = off
 
-diff --git a/scripts/rustdoc_test_gen.rs b/scripts/rustdoc_test_gen.rs
-index 1ca253594d38..a3dc251221e0 100644
---- a/scripts/rustdoc_test_gen.rs
-+++ b/scripts/rustdoc_test_gen.rs
-@@ -85,24 +85,25 @@ fn find_candidates(
-         }
-     }
- 
--    assert!(
--        valid_paths.len() > 0,
--        "No path candidates found for `{file}`. This is likely a bug in the build system, or some \
--        files went away while compiling."
--    );
--
--    if valid_paths.len() > 1 {
--        eprintln!("Several path candidates found:");
--        for path in valid_paths {
--            eprintln!("    {path:?}");
-+    match valid_paths.as_slice() {
-+        [] => panic!(
-+            "No path candidates found for `{file}`. This is likely a bug in the build system, or \
-+            some files went away while compiling."
-+        ),
-+        [valid_path] => {
-+            valid_path.to_str().unwrap()
-+        }
-+        valid_paths => {
-+            eprintln!("Several path candidates found:");
-+            for path in valid_paths {
-+                eprintln!("    {path:?}");
-+            }
-+            panic!(
-+                "Several path candidates found for `{file}`, please resolve the ambiguity by \
-+                renaming a file or folder."
-+            );
-         }
--        panic!(
--            "Several path candidates found for `{file}`, please resolve the ambiguity by renaming \
--            a file or folder."
--        );
-     }
--
--    valid_paths[0].to_str().unwrap()
- }
- 
- fn main() {
-
----
-base-commit: bfc3cd87559bc593bb32bb1482f9cae3308b6398
-change-id: 20250527-idiomatic-match-slice-26a79d100e4d
-
-Best regards,
--- 
-Tamir Duberstein <tamird@gmail.com>
-
+is how we indicate the feature is "on [fixed]"
+Tho, I'm not sure how much precedent there is for making things fixed
+at runtime.
