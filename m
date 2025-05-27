@@ -1,184 +1,110 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A981DF26E;
-	Tue, 27 May 2025 08:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F7124A07B
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335514; cv=none; b=eWy4V8wQmH0ZUwjKWfeeKBxHauc9QK0fjh4NNBs3p0Ft6mDJhPHgk3noSTEMG7cZDnhMnrdSg9NGIxl+i1fQ8tILGqaTK55H5rAFdC1nuwZJHVsQWl2O0u2M7wZtgLdoNuJGo62Ru8L7MFTDB7jAQgtZsb0K7FSpFTykfGDCeLM=
+	t=1748335516; cv=none; b=I58XOTvFUIAO1A7q95M4GJrDQpc7TGym13DAOiElx47Xbf/Czm8KTspxOk5BmG/fk51QEIuxW7fJrgUBaXHDCDF68MqHzwCwoZei9vN33YFv2M7rXVGGolaMjySnHnD/OwG8wdb/bBE0JBjC2kbI60lLoa9odIcywW6R0t6/zk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335514; c=relaxed/simple;
-	bh=q9A5It0VcKJo2Z0sOBgikusUjjLmdwUMhdXXAWimklU=;
-	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:Mime-Version:
-	 References:In-Reply-To; b=ZiXnbxk7AGGP5le5WEduWlyC22u8RbgVakpEdgHddXyHnr1OmYdRy7psfhmYaDjbg/spZyqOASqwslmTnsl2ZopuYooxF6l7kxUWbCwFyNTFV9c+mDG1i7+Dk4vfuYo89Vht4E7TCrQNMgkPKGae+n83U09ZdBBB4kErPWgMHo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WsHtfjyb; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748335516; c=relaxed/simple;
+	bh=g/OHQjDpbJeO7aSJx6LO1dgocetnFYYYHquamLC5R3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k25/Jdb8QylKy/LA/OPUbEOAiXs1gRhjt+7cQpBaq/tmCk7/gRJoDFRWb2flx/bdEM+tgei9Ca9A6oEFACp2VEahFbFSdiJ+C0Y2FOFwonC+pqXmlNC2GLQy1QlIF8d7htLlP1AZHij+uCEQwbpDvy5+KqXv2ji4llaozP+9CzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZXiOZDjn; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WsHtfjyb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 701CF43137;
-	Tue, 27 May 2025 08:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748335510;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QzPRMr1l+fHaNToRkbY1GkYZ/zbxBgq6V8xrU1tHPf8=;
-	b=WsHtfjyboYTn/inoED+hlu32+QYRGzVRTfeTxdp4gHe0upe98p4LMB8qXn4HvSNRYlUo0P
-	7X5QOwXR+mVsIlNhhLnSgqo56DgD0KhdaRFeMMV+rIhpTm4V5EDCbnOqYO448ucWaJ8lih
-	yTsdqmHp3lKzba+38ROjgdOTObnT5A1u3HMSCn4xndSuwcNscAQekWO5izBz6Yfp4RiqlO
-	snkxmUjnPsQZEuO2D48+cvX0sqhldyw6b4Ml/ZwU9FsLdaS2PW8qUagGqfstCDPPoFg/Lw
-	4eE0U/M9lzRCgpLz1w8SjY1h3XgCpUfQxbTC+klPVsmED9PpYGvnksdxgwljsg==
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 10:45:07 +0200
-Message-Id: <DA6T7OEF94IG.2BH2PWTCVEOTA@bootlin.com>
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Alexei Starovoitov"
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
- Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon"
- <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
- <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
- <revest@chromium.org>
-Cc: "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>, "Xu Kuohai"
- <xukuohai@huawei.com>
-Subject: Re: [PATCH bpf-next v2 1/2] bpf, arm64: Support up to 12 function
- arguments
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZXiOZDjn"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231e8553248so22174775ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 01:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748335514; x=1748940314; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5plvP5KcTSQCNhrzz/CfYJsTCK3IA9hQqyTdjVPsPvo=;
+        b=ZXiOZDjnAlgkV+dy6c98+T5fk5+GvekzhTUhaYblx/SyvseT5NbUCEGeOdj+6FuAKA
+         eeen1X9buQbIZh4H+JHPzKz8vQOs4yW3gYmJEnm+C4sZjhXswmVZ6bxC5GcSYBgiBcQe
+         mC3SORRhqI/cdaaSnMIEZT/3Wvvr/GQR2s/uo/aoEmJRfJ3v32k0iaSReRSSOd7YzjUA
+         BX0P4VCJcZE8F1ai9ZUjSSgHSrgrUI+ynfzDDgEekF+V386R0lzrQnjvR1wA/ug7Fyn9
+         J4ulV71P7cG+vnL2yxSBCiMrpX2bexP53clEBs5vmguD8+4qa+n95gtrRBDmAdpyC1d7
+         r/lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748335514; x=1748940314;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5plvP5KcTSQCNhrzz/CfYJsTCK3IA9hQqyTdjVPsPvo=;
+        b=waqycicK6mp5Cjlu0VWP+iaHWBm1P3XBLFkN7CMNrQOVFVOMkhVnjiG62WP0irUG4m
+         ok4TtFil4hK+wnYGZfdPDllmz2ZWb9tumE+j+N+Eqd/bq4NMm+dTKgOBUq3/Cup7Cf1D
+         rpnRVFiNeEGsBosQuFqU8aD2zYXo7QutK/yzkuRSllrmuDPlJaw7CKY1FbNhWm0u38wO
+         apeuYd8UokuvXvqivTf2EewoMe8dRn9YcPBwq/6bdxIoNHHoGAM1Eq+1iuFE8u6fGoEx
+         m1ACY+WAX/dEWWnLgpUrCAA+75sO2Fc2Y90ddHh/gj7oEn3zivuu3jnt0tEEw6x+UB9g
+         Gkgw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGMSOKGyN5RKStvPk0KqptWJDOO0CQstPZZIu2QX14IW4EhboT7VuwTBPsLJmvA1OdfDfGXSUymHJ9n2w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEW1SmKXM8U2c2vEehDdyNV3uiaC+pyCu6T/h805OWYYb46xu5
+	b2tUtGEKvYfKyQMlW/w/WKDvZ5z5xnNrl+h3lCpiuAVDqpQePMWfst4fg+6sFn711v4=
+X-Gm-Gg: ASbGncu/wbrJsr/bzzegeiyCBl55WUDs99jZdlt37yY19RAqxgeMskYJsMlHRTnCFW3
+	8tNfkHWF1IN1Run/XZbFS3SAi4usemgQ8zkUQ9ySE1TzRbOerz7wlb/Teh3cFe3c3gObg6VS8MB
+	0t0s68XK9ey8IcdWd3RX9iXACKyVxUA7zaLe3cluBeIKV0sR0W7QLWY64S1JYhJ/0hRZt9yyH0u
+	DwN7uNV4yuKmG3IvVAdPN4TURKDyFAumdnG0tl7MkIBq5uOGpKnRVIG0UiXb8Bgc/sDQErjK7D/
+	AUEOyqZ29efmtfr4yX6e+c0hNlVkCmPSjmHEW8hO5N0KZnbjDqEU
+X-Google-Smtp-Source: AGHT+IH0PwmJJSWcUj1FVrKXJZ5zyjJgcJctx2JJXHccuUo6vWybu14HrnIvMyHRtH39ycBL6f9Gnw==
+X-Received: by 2002:a17:903:2b0c:b0:22e:5e82:6701 with SMTP id d9443c01a7336-23414f535bdmr170018555ad.18.1748335514299;
+        Tue, 27 May 2025 01:45:14 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2340c2df1fbsm59336735ad.139.2025.05.27.01.45.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 01:45:13 -0700 (PDT)
+Date: Tue, 27 May 2025 14:15:11 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: opp: Move `cfg(CONFIG_OF)` attribute to the top of
+ doc test
+Message-ID: <20250527084511.gfwzuqhsaheifpe2@vireshk-i7>
+References: <9d93c783cc4419f16dd8942a4359d74bc0149203.1748323971.git.viresh.kumar@linaro.org>
+ <CANiq72m2jztPbqiH19560RTBW0PUghi8ajjyi6Pw6jmrHFdtSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
- <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
- <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
-In-Reply-To: <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduleelfeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurheptgffkffhvfevufgggffofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffefiedtuedvgfekkeefteelkedvheehvdetuedtgfekueeuheelhfdvgfdtvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeihedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopeiguhhkuhhohhgriheshhhurgifvghitghlohhuugdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhnhdrf
- hgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72m2jztPbqiH19560RTBW0PUghi8ajjyi6Pw6jmrHFdtSA@mail.gmail.com>
 
-Hi Xu, thanks for the review
+On 27-05-25, 10:39, Miguel Ojeda wrote:
+> Sorry, to be clear, I meant it as a discussion, i.e. no need to send a
+> patch for this in a hurry!
 
-On Tue May 27, 2025 at 10:11 AM CEST, Xu Kuohai wrote:
-> On 5/22/2025 6:14 PM, Alexis Lothor=C3=A9 wrote:
->
-> [...]
->
->> -static void save_args(struct jit_ctx *ctx, int args_off, int nregs)
->> +struct arg_aux {
->> +	/* how many args are passed through registers, the rest of the args ar=
-e
->> +	 * passed through stack
->> +	 */
->> +	int args_in_regs;
->> +	/* how many registers are used to pass arguments */
->> +	int regs_for_args;
->> +	/* how much stack is used for additional args passed to bpf program
->> +	 * that did not fit in original function registers
->> +	 **/
->
-> nit: "**/" should be "*/"
+Yeah, I know you started it as a discussion, but I did like it. And
+honestly I didn't realize earlier that I can add this at the top of
+the whole block (and hide it too), otherwise that would have been part
+of my initial patch itself.
 
-ACK
+> It is just something we did for another example, but it is not a
+> guideline or anything yet (it may not be a good idea, in fact -- I was
+> hoping for others to chime in). Even if it were, there is no rush to
+> "fix" it :)
 
-[...]
+That's why I didn't mark it as a fix, but just an improvement that I
+agree with :)
 
->> +	a->ostack_for_args =3D 0;
->> +
->> +	/* the rest arguments are passed through stack */
->> +	for (a->ostack_for_args =3D 0, a->bstack_for_args =3D 0;
->> +	     i < m->nr_args; i++) {
->
-> a->ostack_for_args is initialized twice.
->
-> move all initializations before the loop?
+Specially for this particular case, there is only function in this doc
+test, and so marking the whole block with cfg looks better.
 
-ACK
-
->> +		/* We can not know for sure about exact alignment needs for
->> +		 * struct passed on stack, so deny those
->> +		 */
->> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
->> +			return -EOPNOTSUPP;
->
-> leave the error code as is, namely, return -ENOTSUPP?
-
-Actually this change follows a complaint from checkpatch:
-
-"WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP"
-
->> +		stack_slots =3D (m->arg_size[i] + 7) / 8;
->> +		/* AAPCS 64 C.14: arguments passed on stack must be aligned to
->> +		 * max(8, arg_natural_alignment)
->> +		 */
->> +		a->bstack_for_args +=3D stack_slots * 8;
->> +		a->ostack_for_args =3D round_up(a->ostack_for_args + stack_slots * 8,=
- 8);
->
-> since a->ostack_for_args starts from 0 and is always incremented
-> by multiples of 8, round_up() to 8 is not needed.
-
-True. This is a (partial) remnant from the first attempt to handle more
-exotic alignments like large structs or __int128, but that's indeed not
-needed for this current version. I'll clean it up.
-
-[...]
-
->> +	for (i =3D a->args_in_regs; i < m->nr_args; i++) {
->> +		slots =3D (m->arg_size[i] + 7) / 8;
->> +		/* AAPCS C.14: additional arguments on stack must be
->> +		 * aligned on max(8, arg_natural_alignment)
->> +		 */
->> +		soff =3D round_up(soff, 8);
->> +		if (for_call_origin)
->> +			doff =3D  round_up(doff, 8);
->
-> since both soff and doff start from multiples of 8 and are
-> incremented by 8 each time, the two round_up()s are also
-> not needed.
-
-ACK. I guess the small AAPCS mention can go too then.
-
->
->> +		/* verifier ensures arg_size <=3D 16, so slots equals 1 or 2 */
->> +		while (slots-- > 0) {
->> +			emit(A64_LDR64I(tmp, A64_FP, soff), ctx);
->> +			/* if there is unused space in the last slot, clear
->> +			 * the garbage contained in the space.
->> +			 */
->> +			if (slots =3D=3D 0 && !for_call_origin)
->> +				clear_garbage(ctx, tmp, m->arg_size[i] % 8);
->> +			emit(A64_STR64I(tmp, A64_SP, doff), ctx);
->> +			soff +=3D 8;
->> +			doff +=3D 8;
->> +		}
->> +	}
->> +}
->
-> [...]
-
-
-
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+-- 
+viresh
