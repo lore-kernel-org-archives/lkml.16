@@ -1,82 +1,256 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F4B269B08;
-	Tue, 27 May 2025 16:10:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67F9269B08
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362226; cv=none; b=FAqKumfRQxtdheTe2GMebgfENQ5+NAiRS4K50YBW+4kfzQVeGc1VuQk0OMCXC+0IjAUDPNc0K4YbF5QRKhHzbLDeX/ENfHCQUAqSTKYyqHJkqpdvBX5ugpTGr24quvtwBGPbs3D0hO87hVEcCY/VM89SXt2AHLa6qB4FqrcSOpA=
+	t=1748362235; cv=none; b=R/WoFg+VAYhZ3Ug/kR+Vdrv1SKM8C/USgyw7naT3wEJWXYd8Uie/pKhKgkkcZwGmnASXrXc8bZzMAxqU/BLVIkSYeYArasHNqRHvfGPzZ82lH8lAQZMBtklTXM+Ec+pEIB7eVCluhKohq8VqxA0cUOgl2b04FSJcbN8yDzBrrJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362226; c=relaxed/simple;
-	bh=L0a2IxCIeRqxZGEsyOFuSQpdCJEYvGEy+T/gO+GHS8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ts/6pU95A9IkgVvwjyDOmC2/L4bIOdZY/Hnou5g72pXz8lxuu0Q2g0jYasMnvxTc/1hX8n2PhoZEDkHy3v0b6V0glV62iG0+uHKfGfHUTfKW8wfCQRf97CnrJJOcL86eEVfJP28mpEMDa6qp7ayEktGarISRt23w4etfkwwHdRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0fgQBgQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748362235; c=relaxed/simple;
+	bh=x02CK+8qrbvy4LwdV881C8rJPLJYRgJj2LP6IK2gJ5U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRglOTH/katZzUTGgxzwrYs2S08tQO0U7rnRYQJrynt4ehQ7MVs/fxUIXU3ZMnmzEzkifeZ/iWb1+ValBmrZiMJRqKrs6nbJNGhp3ulTlReq52Ni5ZcQc466GVrPm1zLd3H+pDZ+qg1hH8apbQws746Mqv+SYMRDAT/Xg0JHgFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rECuIYBJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0fgQBgQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA844C4CEE9;
-	Tue, 27 May 2025 16:10:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rECuIYBJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B5BC4CEE9;
+	Tue, 27 May 2025 16:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748362225;
-	bh=L0a2IxCIeRqxZGEsyOFuSQpdCJEYvGEy+T/gO+GHS8c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=r0fgQBgQjNHnfAqa4fhCcy5yshCrXhruDaGYITxVhsVJEiMfATbNcRec88o3oFbfQ
-	 L/Ipn372JPPWj0eF6brlcIvMcSKJZ6rJVbBJ7vnNO7U6HsqR86GpEJvHCEslR+B1a4
-	 slHgMUlLK1XPUluaurEOUfSC4Kq9QgjyShNlgj0kn9R13VHf6ikyulI90exYUe/VgE
-	 T+9++4YQ432cUtjVcUkHrNXuic7XLV/2wNpyMCU6Etk58rokI0NShYvvsbrUukr1rm
-	 jiylE1ECg+Q61j9M5MdNZJ2/MMp23FvrHlw1qrsB+v8RURyQjR/038S+MAySx3Jh+q
-	 ZhvzJrvPnErzQ==
-Date: Tue, 27 May 2025 09:10:23 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Saeed Mahameed <saeed@kernel.org>
-Cc: Tariq Toukan <tariqt@nvidia.com>, "David S. Miller"
- <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet
- <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, Saeed Mahameed
- <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Richard Cochran
- <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch
- <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>, Cosmin Ratiu
- <cratiu@nvidia.com>, Dragos Tatulea <dtatulea@nvidia.com>
-Subject: Re: [PATCH net-next V2 11/11] net/mlx5e: Support ethtool
- tcp-data-split settings
-Message-ID: <20250527091023.206faecb@kernel.org>
-In-Reply-To: <aC-xAK0Unw2XE-2T@x130>
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
-	<1747950086-1246773-12-git-send-email-tariqt@nvidia.com>
-	<20250522155518.47ab81d3@kernel.org>
-	<aC-xAK0Unw2XE-2T@x130>
+	s=k20201202; t=1748362234;
+	bh=x02CK+8qrbvy4LwdV881C8rJPLJYRgJj2LP6IK2gJ5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rECuIYBJfhCMLhOQr4xdq8+9OdV0x7uoz1jAIY0WoBAVhU5UwLCkeiWkTs08SWR+E
+	 ZWGe9Zf0JD/h8HQ/z58OIqh+hYIis4E8vvgSujoQpHwPpzvLGEQytmmyCM+vEMei26
+	 /2WNclsqVSGV7YvcHMWBlG3Fec8qD+5s82DaXano8MDGX2WP+E2Rn+Gvk50fkBzgdg
+	 JphSEDN3BIM5Opkw689sFzziuU7KL8Vjmj1HgjtxW4lwj6afr04cH09nP+b7sDoHhv
+	 FF1BsNlKR3BCV/ERXzKav9GhOlTWzf33Cgbc4oBbEphuhL836rD3MgqSQGj9oJW4/T
+	 mcBgI19c8drcw==
+Date: Tue, 27 May 2025 18:10:31 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Anusha Srivatsa <asrivats@redhat.com>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/3] drm/tests: bridge: add KUnit tests for
+ devm_drm_bridge_alloc()
+Message-ID: <20250527-smiling-peacock-from-uranus-dc032f@houat>
+References: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
+ <20250516-drm-bridge-alloc-doc-test-v8-3-7e356fd58ba5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="y2prcnw7nnkz2dsu"
+Content-Disposition: inline
+In-Reply-To: <20250516-drm-bridge-alloc-doc-test-v8-3-7e356fd58ba5@bootlin.com>
 
-On Thu, 22 May 2025 16:19:28 -0700 Saeed Mahameed wrote:
-> >Why are you modifying wanted_features? wanted_features is what
-> >*user space* wanted! You should probably operate on hw_features ?
-> >Tho, may be cleaner to return an error and an extack if the user
-> >tries to set HDS and GRO to conflicting values.
-> >  
-> 
-> hw_features is hw capabilities, it doesn't mean on/off.. so no we can't
-> rely on that.
-> 
-> To enable TCP_DATA_SPLIT we tie it to GRO_HW, so we enable GRO_HW when
-> TCP_DATA_SPLIT is set to on and vise-versa. I agree not the cleanest.. 
-> But it is good for user-visibility as you would see both ON if you query
-> from user, which is the actual state. This is the only way to set HW_GRO
-> to on by driver and not lose previous state when we turn the other bit
-> on/off.
 
-   features = on
-hw_features = off
+--y2prcnw7nnkz2dsu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 3/3] drm/tests: bridge: add KUnit tests for
+ devm_drm_bridge_alloc()
+MIME-Version: 1.0
 
-is how we indicate the feature is "on [fixed]"
-Tho, I'm not sure how much precedent there is for making things fixed
-at runtime.
+On Fri, May 16, 2025 at 06:48:39PM +0200, Luca Ceresoli wrote:
+> Add KUnit tests for the newly introduced devm_drm_bridge_alloc().
+>=20
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>=20
+> ---
+>=20
+> Changed in v8:
+>  - rebase on new patch converting drm_bridge_test.c to
+>    devm_drm_bridge_alloc()
+>  - add check that bridge is removed (thanks to the .destroy callback)
+>  - add a check with get/put
+>=20
+> Changed in v7:
+>  - rebase on current drm-misc-next, which now has a drm_bridge_test.c file
+>  - cleanup commit message
+>=20
+> Changed in v6:
+>  - update to new devm_drm_bridge_alloc() API
+>  - remove drm_test_drm_bridge_put test, not straightforward to write with
+>    the new API and the current notification mechanism
+>  - do not allocate a drm_device: a bridge is allocated without one
+>  - rename some identifiers for easier code reading
+>=20
+> This patch was added in v5.
+> ---
+>  drivers/gpu/drm/tests/drm_bridge_test.c | 84 +++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 84 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/te=
+sts/drm_bridge_test.c
+> index f3a625c536f610dc8560b56531056df7c613f564..32db3a82fe6d14a3e9d6536bc=
+f4b19f1bc65969a 100644
+> --- a/drivers/gpu/drm/tests/drm_bridge_test.c
+> +++ b/drivers/gpu/drm/tests/drm_bridge_test.c
+> @@ -8,6 +8,7 @@
+>  #include <drm/drm_bridge_helper.h>
+>  #include <drm/drm_kunit_helpers.h>
+> =20
+> +#include <kunit/device.h>
+>  #include <kunit/test.h>
+> =20
+>  /*
+> @@ -21,6 +22,7 @@ struct dummy_drm_bridge {
+>  	unsigned int enable_count;
+>  	unsigned int disable_count;
+>  	struct drm_bridge bridge;
+> +	void *data;
+>  };
+> =20
+>  struct drm_bridge_init_priv {
+> @@ -422,11 +424,93 @@ static struct kunit_suite drm_bridge_helper_reset_c=
+rtc_test_suite =3D {
+>  	.test_cases =3D drm_bridge_helper_reset_crtc_tests,
+>  };
+> =20
+> +struct drm_bridge_alloc_test_ctx {
+
+drm_bridge_alloc_priv
+
+> +	struct device *dev;
+> +	struct dummy_drm_bridge *dummy_br;
+> +	bool destroyed;
+
+This can be in drm_bridge_priv
+
+> +};
+> +
+> +static void dummy_drm_bridge_destroy(struct drm_bridge *bridge)
+> +{
+> +	struct dummy_drm_bridge *dummy_br =3D bridge_to_dummy_bridge(bridge);
+> +	struct drm_bridge_alloc_test_ctx *ctx =3D (struct drm_bridge_alloc_test=
+_ctx *)dummy_br->data;
+> +
+> +	ctx->destroyed =3D true;
+> +}
+> +
+> +static const struct drm_bridge_funcs drm_bridge_dummy_funcs =3D {
+> +	.destroy =3D dummy_drm_bridge_destroy,
+> +};
+
+And same here, you don't need to create yet another function set, just
+add it to the existing ones.
+
+> +static int drm_test_bridge_alloc_init(struct kunit *test)
+> +{
+> +	struct drm_bridge_alloc_test_ctx *ctx;
+> +
+> +	ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+> +
+> +	ctx->dev =3D kunit_device_register(test, "drm-bridge-dev");
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
+> +
+> +	test->priv =3D ctx;
+> +
+> +	ctx->dummy_br =3D devm_drm_bridge_alloc(ctx->dev, struct dummy_drm_brid=
+ge, bridge,
+> +					      &drm_bridge_dummy_funcs);
+> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dummy_br);
+> +
+> +	ctx->dummy_br->data =3D ctx;
+> +
+> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
+> +
+> +	return 0;
+> +}
+> +
+> +static void drm_test_drm_bridge_alloc_basic(struct kunit *test)
+
+You need a comment explaining what this test is about
+
+> +{
+> +	struct drm_bridge_alloc_test_ctx *ctx =3D test->priv;
+> +
+> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
+> +
+> +	kunit_device_unregister(test, ctx->dev);
+> +	KUNIT_ASSERT_TRUE(test, ctx->destroyed);
+
+EXPECT
+
+> +}
+> +
+> +static void drm_test_drm_bridge_alloc_get_put(struct kunit *test)
+
+Comment here
+
+> +{
+> +	struct drm_bridge_alloc_test_ctx *ctx =3D test->priv;
+> +
+> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
+> +
+> +	drm_bridge_get(&ctx->dummy_br->bridge);
+> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
+
+EXPECT
+
+> +	kunit_device_unregister(test, ctx->dev);
+> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
+
+Ditto
+
+> +	drm_bridge_put(&ctx->dummy_br->bridge);
+> +	KUNIT_ASSERT_TRUE(test, ctx->destroyed);
+
+Ditto
+
+> +}
+> +
+> +static struct kunit_case drm_bridge_alloc_tests[] =3D {
+> +	KUNIT_CASE(drm_test_drm_bridge_alloc_basic),
+> +	KUNIT_CASE(drm_test_drm_bridge_alloc_get_put),
+> +	{ }
+> +};
+> +
+> +static struct kunit_suite drm_bridge_alloc_test_suite =3D {
+> +	.name =3D "drm_bridge_alloc",
+> +	.init =3D drm_test_bridge_alloc_init,
+> +	.test_cases =3D drm_bridge_alloc_tests,
+> +};
+> +
+>  kunit_test_suites(
+>  	&drm_bridge_get_current_state_test_suite,
+>  	&drm_bridge_helper_reset_crtc_test_suite,
+> +	&drm_bridge_alloc_test_suite,
+>  );
+> =20
+>  MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
+> +MODULE_AUTHOR("Luca Ceresoli <luca.ceresoli@bootlin.com>");
+> +
+>  MODULE_DESCRIPTION("Kunit test for drm_bridge functions");
+>  MODULE_LICENSE("GPL");
+
+Looks good otherwise, thanks
+Maxime
+
+--y2prcnw7nnkz2dsu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDXj9wAKCRAnX84Zoj2+
+dr/BAX9uVwJKf3m4xtOc++ZZUCTKyhY/iUGf628qH7SRN1zyikZiRnX73TsiKBLo
+cep1bTwBf3Q9JBwvbW2AhtZ2UjUQnjSjjUXHK3pq5H8+oF2Q9CjoqHsfz9LpopfL
+9H5lA102Ww==
+=+xu1
+-----END PGP SIGNATURE-----
+
+--y2prcnw7nnkz2dsu--
