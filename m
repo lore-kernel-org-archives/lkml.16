@@ -1,81 +1,131 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7108613AD3F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD5613AD3F;
+	Tue, 27 May 2025 05:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748324858; cv=none; b=GteDIOc22NLkAvhnbkaMUsZ3/WFOvwH3sduy+qL8DcFQLpesWsnyt+PHVZ+hmGc5CgC3s2bbCr3nqok/Co7VCQ3h4eRB0DwmSL7PFvsEFFX5KYNsBEsv5eDx/8sFSy438xQgefNzLrSE+MwWoDGheFdYpNliFJBQnLBaE9B1txA=
+	t=1748324912; cv=none; b=Tm62C2HWZJKfQ4B9RcBeACYrNU8bFCBReGbp3vlDDZS6H0lFUAK8ereGNTwK5c3++UCOFWnpMwdgCapUUPXlexQd+U/phVFZfu2Z5kSKQuzRKExn+plW7kBSmV0jdkr+l4E0TTExObFJQrr0i1XNOMLLjo7sQfZr/hI+IwobahU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748324858; c=relaxed/simple;
-	bh=dv35agKUmjJyWkKju8n7GfQM/eqBqGelJiqdUmMGHx4=;
+	s=arc-20240116; t=1748324912; c=relaxed/simple;
+	bh=oz4aj9eSv0gKdBb78Dx/yRWEe0zfmxTCcxaG9VDnPgY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4aZ/aFMoQHP6ewEtKdK0F/BUJZ2fYQ6cff4QG9nXf2tSlfFPz+tH2EyXnNPAKxlovGXJwXTiotk+ae5Kwv9RPGDm0vwGU1pbXgp+UJtwnQS1knxOmH3ArfdQVZodvyuieux8IchvesS7+QzGGF2jLZvJ5al8PZwwqsZfhKOiOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X5mIUXQW; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=fDWPU4NUDQNadFksNJKX/ljzsMznl+8PI52+B8vge7jLzcRHn1Cgre21HnIlAGw8XegAZdSzGDAmall63wB2PHcOS5Xp7tybAfWb4Frudef8YWylmeZcBySxJ9lU3V8AgVajSbYvHmubDk3++MusUgI6YxeJP7owkZPg3VXnd/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pa6p0rj1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X5mIUXQW"
-Message-ID: <1876bf9a-a77d-40a5-bedd-643df939bfbf@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748324844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3GOjuGdUJzsWJUj/GE72t8vAkHTVxJTsMRBXBjrztw0=;
-	b=X5mIUXQWcU3REAESituGcRmT9iU0WFJ8keZ3ALlVCzjktZZU9fdH/EWsRercOEO1HpQyL6
-	L16pjvOvr6BdiRlYgusKrW5epacrwgvPcrJJEEwMWLTG9wC0645NBfxMJXfPznA9jwxDbr
-	PfkLwHZgPpZBt71F62GQbPf0nfcw5Wc=
-Date: Tue, 27 May 2025 13:47:17 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pa6p0rj1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A609DC4CEEA;
+	Tue, 27 May 2025 05:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748324911;
+	bh=oz4aj9eSv0gKdBb78Dx/yRWEe0zfmxTCcxaG9VDnPgY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Pa6p0rj1Ho9v/trhNivn7u/iCleXdqW6CFRV5Iv/M2LVudis9vaVlK6+JGyJbWSbe
+	 eV4YKsE/qbMO+7CU7DFHettAEDMXPg0QOC03maI6tZ3arAZpejZia32nHXbF59oIQZ
+	 xM+6CKnMc+w+J+HNIyjzfgKm62l3aBRJ9HbiL6hEnSvACL3qPguNb4y0XOtXwVa/mV
+	 cZer5qglwrxmTrsPxm86tSyZFc19j01TB9csu2KLgMq1VwMC/7ThUo24NjsW3EChAJ
+	 UQqbmWakKW8QAOyGBIprL5pTQ7pITSjOSXKljkZ2970ev7V4Q+wa4bqX1jLvolMSGR
+	 tijA+DLcNh5jA==
+Message-ID: <876916ad-1042-4750-a010-4a46c2e5942d@kernel.org>
+Date: Tue, 27 May 2025 07:48:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] Loongarch:Fixed up panic cause by a NULL-pmd
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
- kernel@xen0n.name, zhanghongchen@loongson.cn, wangming01@loongson.cn,
- peterx@redhat.com
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250526065512.13215-1-zhangtianyang@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v4 2/2] dt-bindings: leds: lp50xx: Document child reg,
+ fix example
+To: Johan Adolfsson <Johan.Adolfsson@axis.com>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>,
+ Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ Kernel <Kernel@axis.com>
+References: <20250526-led-fix-v4-0-33345f6c4a78@axis.com>
+ <20250526-led-fix-v4-2-33345f6c4a78@axis.com>
+ <128e3853-7192-4e90-bbb6-cb0b6e1aec3b@kernel.org>
+ <AS8PR02MB92881DA3213861C52AB0EC729B65A@AS8PR02MB9288.eurprd02.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250526065512.13215-1-zhangtianyang@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <AS8PR02MB92881DA3213861C52AB0EC729B65A@AS8PR02MB9288.eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-在 5/26/25 2:55 PM, Tianyang Zhang 写道:
-> From: zhangtianyang <zhangtianyang@loongson.cn>
+On 26/05/2025 18:42, Johan Adolfsson wrote:
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+>>> index 402c25424525..a7b2d87cc39d 100644
+>>> --- a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+>>> @@ -81,7 +81,12 @@ patternProperties:
+>>>
+>>>          properties:
+>>>            reg:
+>>> -            maxItems: 1
+>>> +            minimum: 0
+>>> +            maximum: 2
+>> "not compatible with minimum
+>>  and maximum."
+>>
+>> No, it is compatible. Just do:
+>>
+>> items:
+>  > - minimum: 0
+>   >  maximum: 2
 > 
-> Fixes: bd51834d1cf6 ("LoongArch: Return NULL from huge_pte_offset() for invalid PMD")
-> ERROR INFO:
+> I have tried every variant of that I can think of and can't make it pass the check:
+> DT_SCHEMA_FILES="Documentation/devicetree/bindings/leds/leds-lp50xx.yaml" make dt_binding_check
 > 
-> CPU 25 Unable to handle kernel paging request at virtual address 0x0
->           ...
->   Call Trace:
->   [<900000000023c30c>] huge_pte_offset+0x3c/0x58
->   [<900000000057fd4c>] hugetlb_follow_page_mask+0x74/0x438
->   [<900000000051fee8>] __get_user_pages+0xe0/0x4c8
->   [<9000000000522414>] faultin_page_range+0x84/0x380
->   [<9000000000564e8c>] madvise_vma_behavior+0x534/0xa48
->   [<900000000056689c>] do_madvise+0x1bc/0x3e8
->   [<9000000000566df4>] sys_madvise+0x24/0x38
->   [<90000000015b9e88>] do_syscall+0x78/0x98
->   [<9000000000221f18>] handle_syscall+0xb8/0x158
-> 
+> Exactly how should it look like? 
 
-> In some cases, pmd may be NULL and rely on NULL as the return value
-> for processing, so it is necessary to determine this situation here
+I pasted the exact syntax.
 
-Your description is a bit vague. Could you please specify
-on which machines and in what scenarios this bug can be
-reproduced? I believe such information should be included
-in the commit message.
-
-Thanks,
-Yanteng
-
+Best regards,
+Krzysztof
