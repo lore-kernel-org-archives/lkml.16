@@ -1,98 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E745B25DCE0;
-	Tue, 27 May 2025 11:50:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D09B2206A9;
+	Tue, 27 May 2025 11:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346602; cv=none; b=czgdDptlwc0GOMzzFNueENhLgfibNMp2GLiI7gX/CQeP5gj4dUoaadoUu9KvpY8LzN/HK6SaBprfBinE0wiqm+3PLBYS8DrI838niS6Vgr4fApXHE7sAI3Im8seLrXb2j1vflVYpgYFvGL5BPgkf6T1onxy7AvZ/3EgJ88U57/Q=
+	t=1748346641; cv=none; b=D2xWAnPIYDzFYsOeXojBjZ4MepmA89PdmxO7lqRGsrQZYkCAazvKQ1AXLV4EPu9tK8nh47rNHy7v3O6f10eWaXkM7UoiefN72YUQ3hCvB3LmpoL9ifKh2o6VshXalb0LvYRsp75yEyurRZgMnVjPwBirvLEpgyNnbocBkNbzTYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346602; c=relaxed/simple;
-	bh=M+WartH7+lxMBGnU5uEQH938CX2L/uK297c839dwtaQ=;
+	s=arc-20240116; t=1748346641; c=relaxed/simple;
+	bh=K+EGKk67L3sHlbFio3fjCi0fF2/KmZ9AHQJYFYfExI4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=raX2yif6pBVz9NiKfCXPDv0SL/51m9V7CvTZft0Y/ae5J/Gsvuu/2vm8IiT4ukG1SW73xlgIFdFOLnx9ZKvgtaiRYBIEAQ6Up10awxEAxoqaItaaJCSiZtUAIoLAA63bw1r+82WyMedaMU2qtg9N+l3162t5Yn7LbeedNXc9eh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWmBvgqp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IRYiLxxVrEPCGdC4ufsIXLSd3h6YQOtvxRyLUW19j83xczrk5BidepY/KAgHhPl0oYv1LYUBGAd63CqCikEttSkUa49wH44arf4l4+hUoChluwqu+lnRZH2o/niNJMQ3qPgbBP52a//1USZjHPC0+yIEE+utgnc+Eub1CvT4vck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMx5Fz+x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWmBvgqp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BD2C4CEE9;
-	Tue, 27 May 2025 11:49:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMx5Fz+x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FFAC4CEE9;
+	Tue, 27 May 2025 11:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748346601;
-	bh=M+WartH7+lxMBGnU5uEQH938CX2L/uK297c839dwtaQ=;
+	s=k20201202; t=1748346641;
+	bh=K+EGKk67L3sHlbFio3fjCi0fF2/KmZ9AHQJYFYfExI4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nWmBvgqpD741w5lbJwmdDob+G907KJNDwMysIapfRuNAwDVA6tc1BBs4Y7S8NRwt0
-	 CMTz+n9j70pB3DFVZABIAphn6T79L2+v+OoD76JNijWi4Pv/FpMWzj8gfvjcCSwfAx
-	 E8zNR//SqmHfquaEJkT8BHiNAzjDZ4ZhaQYrKb4SPOhO/+pxRo7M1ooq9+r84/q49d
-	 QFknR0I4El8ZPEoyk95Xc6TW8vE3Rsbebo+w5DdzLh/pdkhgz6tmEq0bn+RDzyuMhc
-	 fM19wHKELv+XDXpOnNKSg4UUA3s5TEFQLzcM2G5uIc2f6oUxrS2qW3uI0QhYJlY5F4
-	 vMV+EFJjyug5w==
-Date: Tue, 27 May 2025 12:49:57 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] selftests/mm: Report unique test names for each cow
- test
-Message-ID: <3729c741-fd02-41f9-9668-7575871e7acb@sirena.org.uk>
-References: <20250522-selftests-mm-cow-dedupe-v1-0-713cee2fdd6d@kernel.org>
- <20250522-selftests-mm-cow-dedupe-v1-3-713cee2fdd6d@kernel.org>
- <3745cced-199a-4c9f-a282-d9587f2edd41@lucifer.local>
+	b=oMx5Fz+x66wdU68SgQlo2s9FBCufAnjWstwv09tyZO+bRqtUWZj8ww38IATNjYqA5
+	 hx4niZ/oFJJQ3UNgbs/y2Jd7tcLr1VDK7lzTxk0HdWcdalON8rx6/3kkp/a2L0Fdqc
+	 58nLFYbbHgjSleiGnnPnhgHeXvBKPYFlBVAKbz/s9jiMm6fOEM/tFHvRhHQ0L4KpxO
+	 jC5DvEmSuLumR//VfxZhqqVJOXzZKfR4FOubTDswPtaNCpufYkfJV7+ilKz+6LAadt
+	 C9nBX0Z5GGGplW2pj4jQ4SmLjdu3t4NPZRosggW8hM0/8MRgK/d/tQQW6OsPeRAnMf
+	 bYSdSd+h2qazw==
+Date: Tue, 27 May 2025 13:50:34 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Matthew Maurer <mmaurer@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Message-ID: <aDWnCsVvlnpmYxUz@cassiopeiae>
+References: <aC5XDi7SaDJeUaAC@google.com>
+ <aC7DVewqqWIKetmk@pollux>
+ <aC8uNmrLUSS8sxHU@google.com>
+ <2025052201-return-reprogram-add9@gregkh>
+ <aC9krUYJmJqu0xVR@cassiopeiae>
+ <2025052330-reverence-slideshow-d498@gregkh>
+ <aDBC__rflS8625Vb@cassiopeiae>
+ <aDCrufEjtJeGjO6z@google.com>
+ <aDG6t-HdZSuWyPGo@pollux.localdomain>
+ <aDWkGmcUBVHl7QmM@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="OW/UBWju3qLilyOF"
-Content-Disposition: inline
-In-Reply-To: <3745cced-199a-4c9f-a282-d9587f2edd41@lucifer.local>
-X-Cookie: New customers only.
-
-
---OW/UBWju3qLilyOF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aDWkGmcUBVHl7QmM@google.com>
 
-On Tue, May 27, 2025 at 11:08:05AM +0100, Lorenzo Stoakes wrote:
-> On Thu, May 22, 2025 at 06:38:52PM +0100, Mark Brown wrote:
+On Tue, May 27, 2025 at 11:38:02AM +0000, Alice Ryhl wrote:
+> On Sat, May 24, 2025 at 02:25:27PM +0200, Danilo Krummrich wrote:
+> > On Fri, May 23, 2025 at 05:09:13PM +0000, Alice Ryhl wrote:
+> > > On Fri, May 23, 2025 at 11:42:23AM +0200, Danilo Krummrich wrote:
+> > > > The only thing I don't want to is to allow to leak files or directories, i.e.
+> > > > 
+> > > > 	File::new("bar_file", bar_dir).leak()
+> > > > 
+> > > > which keeps the file in the filesystem, but takes away the handle from the Rust
+> > > > side, such that it won't be removed from the filesystem anymore when the handle
+> > > > goes out of scope, which can cause nasty bugs. But I think there isn't any
+> > > > benefit to allow this anyways and it isn't needed with reference counting.
+> > > 
+> > > Why not have leak() for files only? That way, the files still go away
+> > > when you drop the directory, and you don't have to keep around a bunch
+> > > of File objects in your Rust structs.
+> > 
+> > In a previous mail I said that there are more reasons why we don't want to have
+> > files (or directories) in the filesystem without an object representation in
+> > Rust.
+> > 
+> > One of them is when attaching private data to a file, like we do with
+> > debugfs_create_file().
+> > 
+> > When we do this, in most of the cases we want to share data between a driver
+> > structure and the debugfs file (e.g. a GPU's VM to dump the virtual address
+> > space layout).
+> > 
+> > And most likely we do this by passing an Arc<T> to dir.file(), to make the file
+> > own a reference to the corresponding reference counted object (in C we just hope
+> > that no one frees the object while the debugfs file holds a pointer to it).
+> > 
+> > The question is, what happens to this reference if we would subsequently call
+> > file.leak()? We can't drop the Arc, because otherwise we risk a UAF in the
+> > filesystem callback, but we can't keep it either because otherwise we *really*
+> > leak this reference, even if the parent directory is removed eventually.
+> > 
+> > --
+> > 
+> > Now, one could say, what about attaching the file's private data to the directory
+> > instead? (And I think this has been proposed already elsewhere.)
+> > 
+> > But I really don't like this approach, because it would mean that when creating
+> > the directory we would necessarily need to know all the files we will ever
+> > create in this directory *and* have all the corresponding private data
+> > available at this point of time. But that would be an insane requirement.
+> > 
+> > For instance, let's assume a driver creates a directory 'clients', which for
+> > every connected userspace "client" wants to provide a file with some metadata
+> > for this client.
+> > 
+> > Sure, you can work around this somehow, e.g. by using a mutex protected Vec as
+> > private data or by always creating a new directory first for dynamically created
+> > debugfs entires. But this sounds pretty horrible to me.
+> 
+> I do agree that if we support file.leak(), then the private data should:
+> 
+> 1. Be provided when creating the file, not the directory.
+> 2. Be stored with the directory and be freed with it.
+> 3. Not be encoded in the type of the directory.
+>
+> Some sort of list with data to free when the directory is freed could
+> work.
 
-> >  	ret =3D setup_comm_pipes(&comm_pipes);
-> >  	if (ret) {
-> > -		ksft_test_result_fail("pipe() failed\n");
-> > +		log_test_result(KAFT_FAIL);
->=20
-> Looks like a typo here :) Should be KSFT not KAFT.
->=20
-> This is breaking the mm self test build for mm-new, could you fix-patch/r=
-espin?
-> Thanks!
+I think this would be problematic too.
 
-Ugh, this was masked because it's part of a series and among the
-problems with the kselftest build system is the fact that it eats
-errors.
+Think of the client example I gave above: Let's assume a driver creates a
+'client' directory for every bound device and we create a single file per client
+connecting to the corresponding device exposed to userspace.
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+Let's assume clients do connect and disconnect frequently. If we'd allow
+file.leak() in this case, it would mean that all the private data of the clients
+that have ever been connected piles up in the 'client' directories's private
+data storage until the 'client' directory is removed, which is when the device
+is unbound, which might be never.
 
---OW/UBWju3qLilyOF
-Content-Type: application/pgp-signature; name="signature.asc"
+> But it sounds like we should not consider file.leak() for the
+> initial API.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg1puQACgkQJNaLcl1U
-h9AqPwgAhfEK//IeybNjibTXbdt3qFtPzEf8yQJEj7kXBXQreZ53y6TcMhnCdfqH
-VsY8eXIv0QOEKssUYsxi29Dn4Tbn/mVbUOf2mFc45HTonnYf+ts7Gnsn427qAVsC
-qb/DX70AKJs15xjX91x2Vp60y1sc6ul7hUh1mIoZnOg7lIWowm9bfiKmcDoTDpSE
-KdiHZ5jIsfxDViZGYS1qbUfrJM6e0hhZU7oejRlO21TXtkmp+QTXcoH9YhSYweNb
-J2eMEHSoE4eaKb3eStreywZ8Fvx7gM4W2AZFkelGMoy9UmYyKHKnViqToSBPe20e
-+HNgBCmtDJlZz4jOgL+6DgimUYmIaQ==
-=MENN
------END PGP SIGNATURE-----
-
---OW/UBWju3qLilyOF--
+Yeah, let's not have file.leak() either.
