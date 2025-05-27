@@ -1,147 +1,111 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483F527FD58
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7B01DF980
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748370863; cv=none; b=VLSB1jFM5zxqTFt+kaWzqxnw6gTNVfMRY7HNLdqNSFfIOQVcka0R7V1T98WqgBg2pnxGsN9P3OXBZVNru9DatZB8LNz+N5RcQGcJjF0eeR7ZCuQGIC5FOliJz0n4WP2vZ39B0++fgpScgjZFuI24EEF4ma9RkYmaM2bdlzMEoak=
+	t=1748370916; cv=none; b=EOGgq8nIqJxKfmh6r1KInBnT1BVqk9RSibZWWv5So1W2EKbJ+hclqxono6tighaDgmMPB7mTyZl9YGmCaYnIT3UcQMquXOX8hgRGzNLcAwVT0vZvM/lDmdSsboRFarZ+4OpVCNirkMs23WCIWPqlpEq+T5M45lMlfw2/yrjFA/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748370863; c=relaxed/simple;
-	bh=xzK0DQKgDl2VsnhLHps4e+Yb233796ciej6oAyzmsNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b5bld/5Sbrue+wOi7eWqb5AHdqdSzkE/dzSygS6uvQgL6WOVW9Cffe8Nm4gAPPYspPEMMlOUf4CrxSzofznDIm3P/EUdlfZYPxGO7+l7zlsM2L6ZC2HJk5YpqU7rfdyZSz3vQSp6xwHdRB6VDWmi/YZOlDdeWZiNx4hrKidyycw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Fl0pHuJW; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1748370916; c=relaxed/simple;
+	bh=+8+iElqWcT0dDbkP3pmK2f9v7upnAUnEd8g7APK4p64=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tDwfi9YMuqGkxA50sz9wm+a8dGMihw8rLD23CCnntsPsVVs1SnJsCaqQLSwQii0W6e/xfnu6kMdJAdnfaG8lVfEU3FgxcQ9JmqxoDjrpKnn+K7BdxknXLrc/m9qY2nznOB6R/NigXXVi6wHSDBBEdWGmBz6f9QFKqlbKtoSfbWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XEDJ1Atv; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Fl0pHuJW"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RFu4B5030172;
-	Tue, 27 May 2025 18:34:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2025-04-25; bh=6WLXv
-	37STlgPCU/WZYgs3c18PPflVknELtcFYO6Y1Sg=; b=Fl0pHuJWlsw+ziUXtD1Ns
-	al9USylT3pXpUqzO1+l0x7mfjPfA0PVBZMhjgkJRe1n5BPkY9unRQPG8nM6zQslo
-	8DTmLC3+4QnA5F722dMQ6ua+0wEsUg88pmTS5CBKANhBt8nVKo90QxzVdKyIYEKl
-	r+S3HFJ97vglSRqy7AHQPqOqPME3zc8WP5uku+iFVJsEbwkIuCnadtggSzBe6BAT
-	FuPzCNqYie7upaSTwP+voTLoi2ka65Xn65Xvn1U3ubWxsb8KqrnvYNPC4IhwosTE
-	5sGg1IZYkb/qN4bY7y7YxvEsBYM8KTA9BPChCbUzxHaMxL4Ml2e9J0wqLOkea00E
-	A==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46v0g2c6a9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 18:34:14 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHtYi3007211;
-	Tue, 27 May 2025 18:34:13 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46u4j9jbx2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 18:34:13 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54RIXHl1028068;
-	Tue, 27 May 2025 18:34:12 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 46u4j9jbtx-3;
-	Tue, 27 May 2025 18:34:12 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: david@redhat.com, mst@redhat.com, jasowang@redhat.com,
-        xuanzhuo@linux.alibaba.com, eperezma@redhat.com,
-        virtualization@lists.linux.dev
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org,
-        darren.kenny@oracle.com
-Subject: [PATCH 3/3] virtio_ring: Fix typos in comments and documentation
-Date: Tue, 27 May 2025 11:33:40 -0700
-Message-ID: <20250527183407.2093374-3-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250527183407.2093374-1-alok.a.tiwari@oracle.com>
-References: <20250527183407.2093374-1-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XEDJ1Atv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748370915; x=1779906915;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+8+iElqWcT0dDbkP3pmK2f9v7upnAUnEd8g7APK4p64=;
+  b=XEDJ1AtvdkBXNgApt4XRWBE2KN66UTlbAJzFYKpVp4ukZTJcYnQKQ3kY
+   yNYlshN0vm/R6MF7unWb9mhE916X8w7qs5XwFitwTmwzXLSl0Fd6LIDfK
+   7gsW993NhG3UqVHV9VH5vDcuoyslp4I/REEm5b5/U0lA1LrVe/4Y5HLNI
+   GIiHFJnV9yQw/csQHip6doPkPUU4TxhO7icfdi11xuKyxDyu3JbIGlAL3
+   CWNZlfCSRM/LJ5A5GBnOshIzjDPqW2+ZmRnvEXt5JsRVZQ4eCHBnLRbPs
+   sUSMML13r6lxlfBlFyLxW5UdXzU1bAymAJn8WOYo6XOmcEkkMYkSkzfdY
+   A==;
+X-CSE-ConnectionGUID: 4Iq79/KTQharLYrsh8dGDw==
+X-CSE-MsgGUID: CRT8cYrpR+W2msIeWi11xQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="61038197"
+X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
+   d="scan'208";a="61038197"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 11:35:14 -0700
+X-CSE-ConnectionGUID: 0Wi5oRxtSpqfrK8DIV1HeA==
+X-CSE-MsgGUID: scnxzUhMSNq2G1HdZlyC5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
+   d="scan'208";a="147688246"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 11:35:09 -0700
+Date: Tue, 27 May 2025 21:35:05 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	"De Marchi, Lucas" <lucas.demarchi@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	"Poosa, Karthik" <karthik.poosa@intel.com>,
+	"Abliyev, Reuven" <reuven.abliyev@intel.com>,
+	"Weil, Oren jer" <oren.jer.weil@intel.com>,
+	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Tomas Winkler <tomasw@gmail.com>
+Subject: Re: [PATCH v10 06/10] drm/i915/nvm: add nvm device for discrete
+ graphics
+Message-ID: <aDYF2cBPdb0EHRrX@black.fi.intel.com>
+References: <20250515133345.2805031-1-alexander.usyskin@intel.com>
+ <20250515133345.2805031-7-alexander.usyskin@intel.com>
+ <aDGdWof1HfViERND@black.fi.intel.com>
+ <CY5PR11MB6366E83555BDF8B89C9DD6D9ED64A@CY5PR11MB6366.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_09,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
- malwarescore=0 mlxlogscore=999 bulkscore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2505270154
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE1NCBTYWx0ZWRfX+BBC7OS4K+2G dspJhq8XrH5lEIHHDrmfMilbjpD0BCQrQs8vud9zb3hsjTnX5XJ+pkKEdG1jq21TJkW3to+ZPve ejdzXQu6hRdbPQm/5TYOIeOKTkpe6T4w53KWPQGIvm8nxoh0Fv4MQbJIj+NeVfEEtws3NdzOr9u
- Q5OjIVYgIkj7ag2W54rUAOtYvkwryVgK+YsouMYOJB0W//PKdZF2n5ZBTKeMUaTjCf4LywhLNHE J6TbzL33BDOtPge4ZTMq27Q5+63TDQ+gniPMw3HOZdGfzVICnN/cZp0yxfdzSL/HmRbl2G1k1GY YDso9za3LDeo7nPJTpndzP3ibaWQcCJxShFRIjLMZUhwPQNt9RjGo9gJ4TT/hSTVUZFERA8887q
- 4EXe7XKVwtJX6qcQn1z1IRA5tEWiCePaLcke+drOV+/eU6Jw0rSGNkchosBfpUiyFFNVboN3
-X-Authority-Analysis: v=2.4 cv=NJLV+16g c=1 sm=1 tr=0 ts=683605a6 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=7WMo7ySrHbDt4XNLRQUA:9
-X-Proofpoint-ORIG-GUID: R_PC9h4KTQNo6OlxwVuL9AIDI4HK42e0
-X-Proofpoint-GUID: R_PC9h4KTQNo6OlxwVuL9AIDI4HK42e0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY5PR11MB6366E83555BDF8B89C9DD6D9ED64A@CY5PR11MB6366.namprd11.prod.outlook.com>
 
-Corrected several typos in virtio_ring.c for improved clarity and
-consistency. Fixes include:
-- "dind't" -> "didn't"
-- "use" -> "uses" in DMA mapping context
-- "can been used" -> "can be used"
-- "buf size for sync" -> "buffer size to synchronize"
+On Tue, May 27, 2025 at 11:30:20AM +0530, Usyskin, Alexander wrote:
+> > Subject: Re: [PATCH v10 06/10] drm/i915/nvm: add nvm device for discrete
+> > graphics
+> > 
+> > On Thu, May 15, 2025 at 04:33:41PM +0300, Alexander Usyskin wrote:
+> > > Enable access to internal non-volatile memory on
+> > > DGFX devices via a child device.
+> > > The nvm child device is exposed via auxiliary bus.
+> > 
+> > ...
+> > 
+> > > +void intel_nvm_init(struct drm_i915_private *i915)
+> > > +{
+> > 
+> > Lucas recently revamped xe driver to address this, so let's not hide bugs
+> > and return an error where possible.
+> > 
+> I can return error from this call, but the SPI failure is non-fatal for Xe.
+> Caller should ignore error from this init.
 
-No functional changes.
+Fair. Let's atleast return error and leave the handling to the caller,
+so we don't have to come back revamping it in the future.
 
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- drivers/virtio/virtio_ring.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index b784aab66867..e1456ec0db7c 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -606,7 +606,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
- 
- 			prev = i;
- 			/* Note that we trust indirect descriptor
--			 * table since it use stream DMA mapping.
-+			 * table since it uses stream DMA mapping.
- 			 */
- 			i = virtqueue_add_desc_split(_vq, desc, extra, i, addr, len,
- 						     VRING_DESC_F_NEXT,
-@@ -623,7 +623,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
- 
- 			prev = i;
- 			/* Note that we trust indirect descriptor
--			 * table since it use stream DMA mapping.
-+			 * table since it uses stream DMA mapping.
- 			 */
- 			i = virtqueue_add_desc_split(_vq, desc, extra, i, addr, len,
- 						     VRING_DESC_F_NEXT |
-@@ -2438,7 +2438,7 @@ EXPORT_SYMBOL_GPL(virtqueue_add_inbuf_premapped);
-  * virtqueue_dma_dev - get the dma dev
-  * @_vq: the struct virtqueue we're talking about.
-  *
-- * Returns the dma dev. That can been used for dma api.
-+ * Returns the dma dev. That can be used for dma api.
-  */
- struct device *virtqueue_dma_dev(struct virtqueue *_vq)
- {
-@@ -3225,7 +3225,7 @@ EXPORT_SYMBOL_GPL(virtqueue_dma_need_sync);
-  * @_vq: the struct virtqueue we're talking about.
-  * @addr: DMA address
-  * @offset: DMA address offset
-- * @size: buf size for sync
-+ * @size: buffer size to synchronize
-  * @dir: DMA direction
-  *
-  * Before calling this function, use virtqueue_dma_need_sync() to confirm that
-@@ -3252,7 +3252,7 @@ EXPORT_SYMBOL_GPL(virtqueue_dma_sync_single_range_for_cpu);
-  * @_vq: the struct virtqueue we're talking about.
-  * @addr: DMA address
-  * @offset: DMA address offset
-- * @size: buf size for sync
-+ * @size: buffer size to synchronize
-  * @dir: DMA direction
-  *
-  * Before calling this function, use virtqueue_dma_need_sync() to confirm that
--- 
-2.47.1
-
+Raag
