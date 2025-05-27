@@ -1,130 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FB01F63C1;
-	Tue, 27 May 2025 22:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAB2216E24;
+	Tue, 27 May 2025 22:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748383507; cv=none; b=W1iw029NeLWMvNstO+Kqa5MvySK5dAmcz/nCl7TmXFYhshJP01aRIsHY254acyhism1YDCY09JNIx8vMBidYUDKhEQI1DQUjaROQTsHzqWwxlaKqHXkm/4T2hzu6HPi037AWraaIZiOcEEorbAT0jtJ3yGnGcwJ3VxTXGqikgK8=
+	t=1748383510; cv=none; b=fBZupTP/Vvn2mbYTYFOZplQ3uAVV2dZY2E0Q1Jw6m5RNRB/b7+jzflxfjp1axGU1FDzUQlkka7GhRrfGMIwzm2FbnqkMfBrKOse/VCgdh4R604U+CKu8/e1GPtrl8f0FRwFzQxKc9RdOcLdTo45bmeiX2AhBJvRuuZm+cI0cApk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748383507; c=relaxed/simple;
-	bh=oSRAwBLVtyo7MIa7mWnSvmOppYtBygtu0bkYdFD9SZg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kh7XP3hvCJJjFuEnJlchIWNZ7/kVsGqqcQ4MMzhfKOIV6wVw5gbu7aBjjdsGUaOHcw5AfiajUxdDnq6WFk37XCgHfn+5qqoEcntuqUwHeKbZNiSIxvOiKwvh8pLzJQYOSC70U1exsMNPWx3j9aIFNC6SIUAbCnD05Jexe4fmU1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VDRSrObS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748383510; c=relaxed/simple;
+	bh=4NFsYd9R6QzobE2c85fQqC28+pYgiuIn/VbNigatOtI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SNCqAC3tvemmc2sczjiMnLPk0qgE1gowA+yVoYqzFdUYCQU5oPPcKRT8lLG5hbF9ti0MaCq6/M0rx5cv8Sqpp0GRNwj1Oo+NsyNMkjJIlda9pmXJqpQZSKrIYLolXkiA8Ch7mwb37xw3dbaH/nBGhAMMdW1xGFZvzQ7OgzMF/c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4sQ7EdI; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VDRSrObS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748383506; x=1779919506;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oSRAwBLVtyo7MIa7mWnSvmOppYtBygtu0bkYdFD9SZg=;
-  b=VDRSrObSpZT93zx0VqATrW+N6tRKozhmHLILDRlyvUb97Qq7z3TvMPuk
-   Ng2HZ2swWEix//Kb2y3Rh4prVm5BVPumpS3um3a73aFi9PF4JvjUpQlA8
-   zrT76GqV2i1I6PktW4LwwcHkeKJH3iocq9AjWdMn8l9/6edafpBt9mJFD
-   TY26SVYXqkm9cXBN5bMnR6l+YEqoSD7j2julWpg+R3EDkMlXbZxbYB7+k
-   ntNnlf7Xik1DLR5+pWj5hEuv3bV54iav8/yH8uF3pEb/BQOdisV0amX/S
-   7klKzrk8z4lITHuIfRDmOu+GI/dUNuS3zUHq6fjLO23E2z7geVs8Ov9uc
-   w==;
-X-CSE-ConnectionGUID: J61LZUnsSTWSFU2PAxXMwA==
-X-CSE-MsgGUID: vDPUdB1UQSaWFEy2Q+pOQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="54190106"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="54190106"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 15:05:05 -0700
-X-CSE-ConnectionGUID: vN2U/7HCRkmKRQoDU70FuQ==
-X-CSE-MsgGUID: RbdNF3YxT5ed0VBlicVDHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="173973947"
-Received: from lbogdanm-mobl3.ger.corp.intel.com (HELO rpedgeco-desk4..) ([10.124.221.92])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 15:05:04 -0700
-From: Rick Edgecombe <rick.p.edgecombe@intel.com>
-To: pbonzini@redhat.com
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lkp@intel.com,
-	xiaoyao.li@intel.com,
-	kai.huang@intel.com,
-	seanjc@google.com,
-	x86@kernel.org,
-	dave.hansen@intel.com,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH] x86/tdx: Always inline tdx_tdvpr_pa()
-Date: Tue, 27 May 2025 15:04:53 -0700
-Message-ID: <20250527220453.3107617-1-rick.p.edgecombe@intel.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4sQ7EdI"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36e0d22c1so2586378f8f.2;
+        Tue, 27 May 2025 15:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748383507; x=1748988307; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KG8BjnFz725w+RJTFOBJ8/xx3WkWJOjksuYHfHNSoPA=;
+        b=N4sQ7EdItuUv8QOTUJ0HwbHaPUnEdX6CmHXUA/Yf0e8lvrYSkCd3E0kIIr+bhQWk5/
+         Jp2RKHSDEELBUVXxXlVILRki5DNk2DA3RdqaF+IMer5Rt/46+ecNTuGZzSSQ3Kjq9kFV
+         cYtoO8JPI5c8lmN2DuImz2Sy8S9JZOCBgdAFUpzXh86U76cre3dIppO94JS9yRy6TD2C
+         tbtH1FfpN7/lEbIFIzk4YGANf/WGuz/QoYgj7BH3tys2mbobIysZqZSa5iEabqh60o0z
+         ovrhiuAl46Wt0S0uyyDEQ/YkjwnhkgLU+yeN/gU8m+7a/8BlDoFyqBzeXMhqdpoVn9dj
+         vtxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748383507; x=1748988307;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KG8BjnFz725w+RJTFOBJ8/xx3WkWJOjksuYHfHNSoPA=;
+        b=cxRxV0MQ5tvX87MbACBpT8Bg6GXGEOfzhRQ6ZA7xyCX2vuzJoXAcR3ZmmUpqwJnWGY
+         Bi409YOiO/VMb0NDm+Q+QwFeRdkxzV3P7gC2NoHmtzbXhB928y1N2EKqgUQH9qBChxbF
+         Ahhd6kHfEJtW9Fw8iz3kK3rvNYOnHqb+/kvwlcYSB8vqspC/5hquoj3Uko+ZzTf18tzh
+         +zImJTjk/1efAyLexOyK6ib6iqOZZ//sBIIdXniNdK2Jn8w57RQu4hGFPaK+WSey4QCp
+         9CWnYO2ZtDm2Bvhg1EQ0BbpYR8RF2BLl96ahWicUNAkT1mu3fXK2lj/HOXxdhfB6O1Et
+         Xvcg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3MLq/0ulv2kOagOQ/p6y3aKP8ZGC2w0fYF+mgoD4YZcMQEdajzM1OXXPsLjaWHtmlsf4QQnEB3dqO@vger.kernel.org, AJvYcCVHB6zTgjS8egX1z1HW1VmvoWltQF+LR+Ily6/iqiV7TNJ63fIPbOi2Jag8enC+H1qyys5si2HtZI6kmtgT@vger.kernel.org, AJvYcCWkipnIGMIQy6R6tFFiPwpu5pReZLFwzpdQjTHtfsVPCLHwb4KxOkuNnw0oWfyFEBPhM9faYby8+3Mw@vger.kernel.org, AJvYcCXnS6K2iNm4mKfY6bzlZZKVD0pRm5+T6yTml1Tc7Kp12zHqcaiOGcyd8BBCuPYg6Kk6argIM3ua8CmnBNY2dbc0ghk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwofMcihn6jgtQQfmWPimwVWT6ProGLRrfpOsc2XiDm+w3iNIad
+	2RNleuPJ7v8haV6TPP0rBoRKSz+OTlWI2Jvp08nStHR7weKrFxB1mBaByMCF5FqLqPmUdwYlAfo
+	1AIO6Q1Op/AdmoPs4YFU21D2d/fl6J/I=
+X-Gm-Gg: ASbGnctniQylcahRPE805U4N+aLWDVQZ5n4kMrM0jEjrpuqURbnqbChvIzaQ8fjSC7A
+	rZoED4IYcL3biPNrT8CYqqS8iFjjBDp+qxE/AHhH3PDlXMOzcUc4ZA/mpsAiNGW+TO4e7LyFl7s
+	0/DwS5bBFM3quYT0rFtC8XL5HHq2Sb0ZGAqBDixhNfX92emVNxjZPkAc+UrwlaKbcH4g==
+X-Google-Smtp-Source: AGHT+IGWzHwVyMPWLupHxdlIZ7x8pSXYNOI5yOCN63qH5VjrNlj/jeGAmW+KftK3jzltxm09oZuPLSrF0CmPFP7qfnA=
+X-Received: by 2002:a05:6000:430b:b0:3a4:d13b:4aaa with SMTP id
+ ffacd0b85a97d-3a4d13b4c6emr10639950f8f.5.1748383506671; Tue, 27 May 2025
+ 15:05:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512184302.241417-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU__dxi4wvS3ikBQefM7uwWWK0bCcHv=TL-Td678pEi9Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdU__dxi4wvS3ikBQefM7uwWWK0bCcHv=TL-Td678pEi9Q@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 27 May 2025 23:04:40 +0100
+X-Gm-Features: AX0GCFvzEXrNrs8pB60A-DbmcANSH2AumZoYJ7_LJzs0X887u5z28IVnMfYtap8
+Message-ID: <CA+V-a8u7PBz31L+b=x8+B_yXCRzOC351PArw02rx+yYNidT2OQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] dt-bindings: display: bridge: renesas,dsi: Add
+ support for RZ/V2H(P) SoC
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In some cases tdx_tdvpr_pa() is not fully inlined into tdh_vp_enter(),
-which causes the following warning:
+Hi Geert,
 
-  vmlinux.o: warning: objtool: tdh_vp_enter+0x8: call to tdx_tdvpr_pa() leaves .noinstr.text section
+Thank you for the review.
 
-tdh_vp_enter() is marked noinstr and so can't accommodate the function
-being outlined. Previously this didn't cause issues because the compiler
-inlined the function. However, newer Clang compilers are deciding to
-outline it.
+On Fri, May 23, 2025 at 3:58=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The MIPI DSI interface on the RZ/V2H(P) SoC is nearly identical to that=
+ of
+> > the RZ/G2L SoC. While the LINK registers are the same for both SoCs, th=
+e
+> > D-PHY registers differ. Additionally, the number of resets for DSI on
+> > RZ/V2H(P) is two compared to three on the RZ/G2L.
+> >
+> > To accommodate these differences, a SoC-specific
+> > `renesas,r9a09g057-mipi-dsi` compatible string has been added for the
+> > RZ/V2H(P) SoC.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> Thanks for your patch!
+>
+> > --- a/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> > @@ -14,16 +14,17 @@ description: |
+> >    RZ/G2L alike family of SoC's. The encoder can operate in DSI mode, w=
+ith
+> >    up to four data lanes.
+> >
+> > -allOf:
+> > -  - $ref: /schemas/display/dsi-controller.yaml#
+> > -
+> >  properties:
+> >    compatible:
+> > -    items:
+> > +    oneOf:
+> >        - enum:
+> > -          - renesas,r9a07g044-mipi-dsi # RZ/G2{L,LC}
+> > -          - renesas,r9a07g054-mipi-dsi # RZ/V2L
+> > -      - const: renesas,rzg2l-mipi-dsi
+> > +          - renesas,r9a09g057-mipi-dsi # RZ/V2H(P)
+>
+> Nit: I would add the new entry after all the old entries, to preserve
+> sort order (by part number).
+>
+I'll move that later to preserve the sort order in the next version.
 
-So mark the function __always_inline to force it to be inlined. This
-would leave the similar function tdx_tdr_pa() looking a bit asymmetric
-and odd, as it is marked inline but actually doesn't need to be inlined.
-So somewhat opportunistically remove the inline from tdx_tdr_pa() so that
-it is clear that it does not need to be inlined, unlike tdx_tdvpr_pa().
+Cheers,
+Prabhakar
 
-tdx_tdvpr_pa() uses page_to_phys() which can make further calls to
-outlines functions, but not on x86 following commit cba5d9b3e99d
-("x86/mm/64: Make SPARSEMEM_VMEMMAP the only memory model").
-
-Fixes: 69e23faf82b4 ("x86/virt/tdx: Add SEAMCALL wrapper to enter/exit TDX guest")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505240530.5KktQ5mX-lkp@intel.com/
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
----
-Previous discussion here:
-https://lore.kernel.org/kvm/20250526204523.562665-1-pbonzini@redhat.com/
-
-FWIW, I'm ok with the flatten version of the fix too, but posting this
-just to speed things along in case.
-
-And note, for full correctness, this and the flatten fix will depend on
-the queued tip commit:
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=cba5d9b3e99d6268d7909a65c2bd78f4d195aead
-
----
- arch/x86/virt/vmx/tdx/tdx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index f5e2a937c1e7..626cc2f37dec 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1496,12 +1496,12 @@ void tdx_guest_keyid_free(unsigned int keyid)
- }
- EXPORT_SYMBOL_GPL(tdx_guest_keyid_free);
- 
--static inline u64 tdx_tdr_pa(struct tdx_td *td)
-+static u64 tdx_tdr_pa(struct tdx_td *td)
- {
- 	return page_to_phys(td->tdr_page);
- }
- 
--static inline u64 tdx_tdvpr_pa(struct tdx_vp *td)
-+static __always_inline u64 tdx_tdvpr_pa(struct tdx_vp *td)
- {
- 	return page_to_phys(td->tdvpr_page);
- }
--- 
-2.49.0
-
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - renesas,r9a07g044-mipi-dsi # RZ/G2{L,LC}
+> > +              - renesas,r9a07g054-mipi-dsi # RZ/V2L
+> > +          - const: renesas,rzg2l-mipi-dsi
+> >
+> >    reg:
+> >      maxItems: 1
+>
+> The rest LGTM, so
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
