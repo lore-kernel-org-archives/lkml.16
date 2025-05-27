@@ -1,110 +1,141 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073B227A92C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 454C727C86B;
+	Tue, 27 May 2025 15:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748361518; cv=none; b=r6j7dRkkOolglI4cRV9KrTsF1xqtYLr2jmGPEXA45ePTG8WDU5VGrFCMSAZyD2Cod/TX9OlMTnR51oHMe1QcIpNnBGk8/2+hSpvZhqIrasDU+t7FqfSpA4xAKmMlsvJ2Z4vF+FlRDHMWsps4uGqpOmdKGKJMkga4haC9bmG1GUI=
+	t=1748361527; cv=none; b=AI+sH44UWc+S5/DvJFTqA9WF6ZylH65YwWbzlhMuNKsAWJZYxDnXzeDiHUV8hHE9PkfYeLv9Vx9qFX9EvpKTHYpY2ARBXf1hdvzoZcOorlpkEaCvNb0SotuEm32r/AI/wUfUGTFfkjlZ/y/Z34O/MYsQXYAzAF5w32FOzZjr1XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748361518; c=relaxed/simple;
-	bh=61A8ZZzlXfCu/SUZbAzP0EpUdS/Qz7fRFXmHVMVqQJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q3n++Itaz5j/fo3jVYCIJ9fJYbtYsBaYOIfBenNBteQdXxWjIfU81P8lhIOFlCn1SZSybkciiU5ReAhltcgJYOTrJQaZQQ9n1pHyXzvxZ3leBNFv8vkjkWRfTvsML/ljDnIvOlyPeFcOdzw97Wo1csmme2vbR7a4V1HpbEZRzuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uJwgz-0004eD-Ic; Tue, 27 May 2025 17:58:17 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uJwgx-000Rc3-37;
-	Tue, 27 May 2025 17:58:15 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 8E8EB41AA8E;
-	Tue, 27 May 2025 15:58:15 +0000 (UTC)
-Date: Tue, 27 May 2025 17:58:15 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
-	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] rockchip: add can for RK3576 Soc
-Message-ID: <20250527-steady-dormouse-of-culture-c45bd6-mkl@pengutronix.de>
-References: <20250526062559.2061311-1-zhangqing@rock-chips.com>
+	s=arc-20240116; t=1748361527; c=relaxed/simple;
+	bh=b8sMpoLVme1kGwGMb56xFMPBVe+zcUzYdDTbIVM7ygw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=mg7TvXrJQt/pFStCEwWhS8Ue1TUp+gurs3iHVUpuaZiK55oHGxE0v+SBMmZebvCoH9tb5dYLwewT94RHsVOy6zjk+h7h8w09NzYyZ+DZwmgg2OJm2uSvecpFjcw6LO91xC5dGElyxWZ+gOATFcixtQJc7d/lkNS+/G3XUwo0t5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YHYsLA9t; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YHYsLA9t"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id E3877206B778; Tue, 27 May 2025 08:58:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E3877206B778
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748361525;
+	bh=BwIXn4Mm68cZw0MA8Sj97K1PtJksjPbNJ6YWr0nO2/g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YHYsLA9tpGgv/v7gMk32D+Lc9PPP1fioktKRI3/XxMDH/2ohO79892DVxKp2nr2He
+	 RUZrSlSSOjIZRYPHE36sQj6lqR3quwK36o2pjmigjvZpv/JyItIP8aDQvy6i07Mt15
+	 XVu4TQ+uswTUPmWeiDIssHf+xuNGA7eh9eY2uxEY=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=EF=BF=BD=7EDski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v4 4/5] net: mana: Allow irq_setup() to skip cpus for affinity
+Date: Tue, 27 May 2025 08:58:44 -0700
+Message-Id: <1748361524-25653-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
+References: <1748361453-25096-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pckthsx2tg77kzdv"
-Content-Disposition: inline
-In-Reply-To: <20250526062559.2061311-1-zhangqing@rock-chips.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+In order to prepare the MANA driver to allocate the MSI-X IRQs
+dynamically, we need to enhance irq_setup() to allow skipping
+affinitizing IRQs to the first CPU sibling group.
 
---pckthsx2tg77kzdv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 0/4] rockchip: add can for RK3576 Soc
-MIME-Version: 1.0
+This would be for cases when the number of IRQs is less than or equal
+to the number of online CPUs. In such cases for dynamically added IRQs
+the first CPU sibling group would already be affinitized with HWC IRQ.
 
-On 26.05.2025 14:25:55, Elaine Zhang wrote:
-> rk3576 can is a new controller,new register layout and Bit position
-> definition:
-> Support CAN and CANFD protocol.
-> Support Dma.
->=20
-> There are major differences from the previous rk3568.
-> All errata on the rk3568 have been fixed and redesigned.
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Reviewed-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+---
+ Changes in v4
+ * fix commit description
+ * avoided using next_cpumask: label in the irq_setup()
+---
+ drivers/net/ethernet/microsoft/mana/gdma_main.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-Can you configure the IP core for CAN-2.0 a.k.a. CAN-CC only mode, so
-that it only receives CAN-CC frames only and not CAN-FD?
+diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+index f9e8d4d1ba3a..763a548c4a2b 100644
+--- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
++++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
+@@ -1329,7 +1329,8 @@ void mana_gd_free_res_map(struct gdma_resource *r)
+  * do the same thing.
+  */
+ 
+-static int irq_setup(unsigned int *irqs, unsigned int len, int node)
++static int irq_setup(unsigned int *irqs, unsigned int len, int node,
++		     bool skip_first_cpu)
+ {
+ 	const struct cpumask *next, *prev = cpu_none_mask;
+ 	cpumask_var_t cpus __free(free_cpumask_var);
+@@ -1344,11 +1345,18 @@ static int irq_setup(unsigned int *irqs, unsigned int len, int node)
+ 		while (weight > 0) {
+ 			cpumask_andnot(cpus, next, prev);
+ 			for_each_cpu(cpu, cpus) {
++				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
++				--weight;
++
++				if (unlikely(skip_first_cpu)) {
++					skip_first_cpu = false;
++					continue;
++				}
++
+ 				if (len-- == 0)
+ 					goto done;
++
+ 				irq_set_affinity_and_hint(*irqs++, topology_sibling_cpumask(cpu));
+-				cpumask_andnot(cpus, cpus, topology_sibling_cpumask(cpu));
+-				--weight;
+ 			}
+ 		}
+ 		prev = next;
+@@ -1444,7 +1452,7 @@ static int mana_gd_setup_irqs(struct pci_dev *pdev)
+ 		}
+ 	}
+ 
+-	err = irq_setup(irqs, (nvec - start_irq_index), gc->numa_node);
++	err = irq_setup(irqs, nvec - start_irq_index, gc->numa_node, false);
+ 	if (err)
+ 		goto free_irq;
+ 
+-- 
+2.34.1
 
-What happens if you configure register RKCAN_STR_CTL, ism_sel to 2'b01:
-CAN Fixed and receive a CAN-FD frame?
-
-Is there a more detailed description to "2'b00: Flexible; cover_mode
-must disable" and "2'b11: Mixed. cover_mode must disable"?
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---pckthsx2tg77kzdv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmg14RQACgkQDHRl3/mQ
-kZyZQgf7BB/yyOkv3ry1psGUXvjfa6oVbkh/JVbPbds5HJPB50UhBhjmhbGKPq30
-r4BTF8f4ZEPWK+cEbibjbBdW5DXR4VLJ1bMX4C2f53uDNua+5Z3C6TLq1R5IvDoy
-PDvwfcRTEba9Oivuu9TNEpsV7hMN9opc4UORUId8yU/2vco4Pt3bQSUlbm9iRgMk
-hrWJFWQ+YyEEiJfhVp7V5CarGiEB64ALiK7y8CTESWtc1IWINpFb7raFMF2RvSMW
-/oVTymupsa9ltY8nVa+Mz7o4BXe1wG2ReXfn2QIB+S7+nN+ZGF2PMl/V4a1s9ByH
-kBPX9qhW+6hvLQgeDJhzgFmF9bYpTQ==
-=y8iK
------END PGP SIGNATURE-----
-
---pckthsx2tg77kzdv--
