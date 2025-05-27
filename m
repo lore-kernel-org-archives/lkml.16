@@ -1,153 +1,91 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CBA25A323
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5601F8670
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748365441; cv=none; b=vE3PtI+1oYb9C8xW66NY0kvnCv7k8QcovJdflyZg8RP4MzxSd+kF8/E/YxVfodlyQ/djXvr0kqF32fU3VoqrOLkfymHa6U8gCLc7+B+SxWw4jmChHgPqFFZT+6JCoTObT079QezuMi/syl+qumwc5tabBeSDjVBI3UGUzvGOLO0=
+	t=1748365893; cv=none; b=WGIAh6skBEM+hOwuTZvfafiLBVWSYtu6j7Dp1keNswAZQcYeNbNcwmWEw58U7aLc1ujOTsVlI6Rdmvub+j+MBnGYUpaxUYxFShi/SI5fC16Sce748zlaqYzRYyRXyECBZm4q+oPIis4F+fOA/GAdxrQuouc1R5nGK+YTolzJSo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748365441; c=relaxed/simple;
-	bh=D/exj8D4Mdt6FJYvJh51f96SRZVSyPsguFJ4c+GikA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ILH4TttMslJAE++iw6jCc4nahVR945H4oMvzE9RajoIJ5+HLW5VEqVlvp3glyWISRJEv7lQCrDKRJGBwBhp5mBPr989PbYZRvfWYt2ze1732Yzxvyos0Um9Xuwns1daNOqvhVJoacPo0wA8LSC0AoIOKXXZipMRgiQML3TWVwA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pAX7QMoy; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1748365893; c=relaxed/simple;
+	bh=BAHBdkQJKTMWjTYd1N7GqR6d4nnM047AWC8u6YKpT1g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=bgL5Kj/Aiqf4UfKowG76C1byTfaIJ2acsgCURtjvhXFHp+yomuXroVrY55uUXUw5Y8vf+EWuRiLrAvQhgYIWxkecsNWEGD+U9VCa+/PbeuWzz5KMtkNn18SYPOLEoF1qXFqCFiY/TNRF/DDU4DUvRXm7yhS8gUgpuERdBvl4dKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ericflorin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k108hRjI; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ericflorin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pAX7QMoy"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RCmFcn031141
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:03:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fN5GCmNGnguuUfY6HIS616UzD+Rz36jMub2o4gFIJoQ=; b=pAX7QMoyiVE1rY9Z
-	+cKXPpiJ98pUzTz92OcGDPCydeOAXwvebWP7QHok+kDYdfdzki/19s9jOgDF556F
-	Y0sKH8EIvRhxDrtbrbnYwDxhmdtJY+wlI6wEAuWp2hpHj9cbU8iNmJU5v5nBK1eu
-	J34qCPZjcchBCurdEjc909jY4kpc1plvTBAZu0lb0wx7KOYTLhqVzDZZScp9n2VH
-	xrRs4rI2YRo0H0/+3RGD60ngh3+YcNwy1MXS6UDbwJlbjT6CbB9Mbl0Cr8Ao84Hk
-	JdkEmD5qE+OFOZ48YnC6lAN+/ZzLUUZbLgQ55BohYDY20fYtMNalhx+1mjWJoWfW
-	m7VuJg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u66wftf6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:03:53 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c53d5f85c9so107254285a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:03:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k108hRjI"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2344f94f9e5so17480895ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748365891; x=1748970691; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/JvhhsVzxZpk7DMVkKHCJuZXnAATuH0obboMI/6t6mU=;
+        b=k108hRjIrBfx9OLPw11n09lDC+YSvRwjhJi1UWs/xazNCvHvAPRUeZOSIkyxLclB2+
+         47OuQK5kLKXEXJZPj3KXW/8SVMc/F4175JfDFsOux6vy7SMi5dAPz6Xwrcm2z1qx1GvS
+         80OdXMWak0zA9lM4tBwAUgsmS8sbQsVBBAvxwPuVCBFRzcTUPM/lAP7nbOGqdVwnkcva
+         nwnfjSlpBVQh+vIvHKPvBgblxiV0ulaiCGYP0IBOdawSFjVFb6ugnvIAdlIiFXD/iYTk
+         XpMMEX4uOZQANsl8PGVMg20uHaovtUOhJLs+0maKbMY2zYDbnsBn3+BgZoiDM8vgxSCc
+         qEsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748365432; x=1748970232;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fN5GCmNGnguuUfY6HIS616UzD+Rz36jMub2o4gFIJoQ=;
-        b=OjwKE3LMIq+fLdDvjgVZeeO+afc2EOJybg6Cuxex3YY9DmLYUV8lhgzw2SF/ApwTFJ
-         OviqLm6boqE8KKfJluFt4jLoBzHHd8m5/MHb6dMMGaAO3jZyHF7mmuZ2Pm/GD2FxLWvR
-         JFmDtma6jiYRLIGz3G7ip/iGHxGY/C3rQwvfr1qfH7yk70CjIYA3SNO+9BLi5ldLEdCj
-         LdSGVizpO5SzuO7DCnZYM+aZgV3jcb4ThqiLHdwrJfscw3I1tVS/KwU4jvYVrF6YJChz
-         4LAJDupdbXnbwuNBV6k6lT93M3c8SIu/y4j8Z5JDbe448tqprQlbSTkyozU5NripN3Q3
-         gDdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIYoaqDnoSSY2S3pfPjA3lpzmVC9cQe8hGuOktSgHb7W2RKpqFWyNHRuTXxRFuiqen8eGxPIYc+gp8f54=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy4+OH0spUEzzZeT1z4ki1JhxadCz/Yg1TV7TcrfRmAgh595mO
-	yObEslR1Ubkl89Qx8QKHPNTQWAb/uBfkho9rNODMzadJk+oY6q8Jvq/rOvMIeO271Vg/2J+g61h
-	WVVnHF7lhcBvZfnDJ3F8z2tmyAamx/V0kqlKnNMcuThMvnA1I1VWJ+q/ca2+FjokBatg=
-X-Gm-Gg: ASbGnct11sQOujZrvtWAd+pO/VV7XO6TSvgTA4Ibf9PSdIB3C5S+6rno5Tr4hjpLcar
-	oVDEe5kLwLoBUb3mlBobc5HOn6TvX9fWpfD4WRBiandDBmbueOIWjpKoQyLm4LaeKn9e4jCiuIT
-	IZvtip0m4DusrheDeQqI7UhUweFkqbRYO/jHs79bz1+ObjgQHwkSBl7uY3v06bg86dpQaYPf4H8
-	Vyw+75phF+1bvq/eeU9HeFB6F3do0SnRC1AOn5q+oB6UdWSdH8eiq6oLS0+lgsRvJ533L5/IKkH
-	AJvW+A6CGuH8A8EbgEq0XGVZ1EZFU/adZP+MZJyl3ioOfnDIbBQj+B6CDlxjG+zRrQ==
-X-Received: by 2002:a05:620a:49b:b0:7cf:85b:4b2d with SMTP id af79cd13be357-7cf085b4bd1mr14853485a.15.1748365432584;
-        Tue, 27 May 2025 10:03:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGDevCtCl7OkxCN6/99TDwIJJTrAXaSCvcoslipOU+QfWt40Ux7PUXxxh0fu5f697QezV7y8w==
-X-Received: by 2002:a05:620a:49b:b0:7cf:85b:4b2d with SMTP id af79cd13be357-7cf085b4bd1mr14852585a.15.1748365432068;
-        Tue, 27 May 2025 10:03:52 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04b059sm1900573466b.10.2025.05.27.10.03.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 10:03:51 -0700 (PDT)
-Message-ID: <e40e3078-cfa7-4927-af6e-f66a5dc4861a@oss.qualcomm.com>
-Date: Tue, 27 May 2025 19:03:48 +0200
+        d=1e100.net; s=20230601; t=1748365891; x=1748970691;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/JvhhsVzxZpk7DMVkKHCJuZXnAATuH0obboMI/6t6mU=;
+        b=I+coPIL7pCVtP8707TA/6y3kBgr8FKAwLCBbmM1rqwLov4ZLsZtKN0E4QJArqqFulM
+         K4bbbmSFjRnVHrhsCAtBILmZpYfbV4GflrvFnsH5QvHXN4AZvJVKFcKESVJm6pQtD3mF
+         iZNsFQbgKhcy7DKMBqVRCATm68FmMNJxgiYQ4NoG/2URAo7FA08VCKQ+GYeG3lcwCMaN
+         vMjZJvB0vezEIW16Es4QHnFzm1Zz6aeTFow/xoMJMgHvF8DeDMvOxs9RXKhBTmdktQMS
+         M1fbZHU7+ROAGAGruV8DwcS7um5na7jFxLxeYrGuoFW8NdksLqxXjXu6UACsbx24mrW0
+         s/zA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqy9uu3Y9q6W2cVlmSWlVWtVMa3bgNZbrUMEWvX8KTA4d9MXe1y0JRK3N/Ih5mPOuyijB/7Vq+aC1SVD0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXdAwsNinoKALKJNrdoKTZamLteoYfWrm4yiXDTYTjKOnTtE9d
+	QA//UuzC+ohB2TFr5/XoeuHvF8QProlYyHI5CI2Q7AXjH+SJ0L+5nWgMdsc1/U3Yg0Yb0/aIfCb
+	RmVBII1fCdtFYAR9nBDkR3w==
+X-Google-Smtp-Source: AGHT+IFlObLHeHzUVU0aoa/6zQoHjEBLIMWsx/uXdkET+437ZwqTAGXDxMMkOl3bzunvlhVkDNDYu4RJDS5pvyYQ
+X-Received: from plu15.prod.google.com ([2002:a17:903:368f:b0:234:7a8f:b8e8])
+ (user=ericflorin job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:903:3a86:b0:224:23ab:b88b with SMTP id d9443c01a7336-23414f48ec8mr186992505ad.8.1748365891579;
+ Tue, 27 May 2025 10:11:31 -0700 (PDT)
+Date: Tue, 27 May 2025 10:11:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
-To: Alexey Klimov <alexey.klimov@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
-        linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
- <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
- <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=aYJhnQot c=1 sm=1 tr=0 ts=6835f079 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
- a=KKAkSRfTAAAA:8 a=IU-kIAO4L2lcGG9yRekA:9 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: BksQRWR0saoD8yqHylBHrDYnTA8mwOKu
-X-Proofpoint-GUID: BksQRWR0saoD8yqHylBHrDYnTA8mwOKu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE0MSBTYWx0ZWRfXypLzlXhUbhMJ
- D40mPEbl35yFDbXEDvHlujM2x6dRd8PCmlhXbCePTnYZa33dsMPCdm2aTnnlM3T/mekTQu6Myt/
- IG7PTnOYbdNhIJE06/J+VzYhF1k+AjMHQ8b79kYdqf2FG1npUqOZu/qHJWmuq2MCj4p+A82C0QK
- p1TE3s3nRLS8xWuSYwd3ykIyRZOr3nnfYLOU4k56erf4gsvxpMTjdBKf8JeSj53u59LSuqT5cz4
- llcs8nAsj9RLhqBtxVfDWP7uSNbj0QgN3AeLUEbKpRQsP2DdimrHaoSUOhfh0CxLH69kjxiBu6s
- mnpa5jeQMXUvV890rEucmfPN11L7PyeMTdNSpN6P/3xQqISBUOwsIinNWKULuqoszRBnliFotHf
- dtv78O7eNUWVODbbrjWvcYafOQLm5Oh3Gt22r02CPrx0ovFLuK1q9NfLyzve/cKo+zE0+q4F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_08,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 suspectscore=0 impostorscore=0 adultscore=0
- mlxlogscore=858 lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0
- clxscore=1015 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505270141
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
+Message-ID: <cover.1748365488.git.ericflorin@google.com>
+Subject: [PATCH 0/6] staging: sm750fb: cleanup `sm750_hw_copyarea`
+From: Eric Florin <ericflorin@google.com>
+To: teddy.wang@siliconmotion.com
+Cc: sudipm.mukherjee@gmail.com, gregkh@linuxfoundation.org, 
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Eric Florin <ericflorin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/27/25 6:32 PM, Alexey Klimov wrote:
-> On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
->> On 22/05/2025 19:40, Alexey Klimov wrote:
->>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
->>> are required to support audio playback and audio capture on sm6115 and
->>> its derivatives.
->>>
->>> Cc: Konrad Dybcio <konradybcio@kernel.org>
->>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>
->> Just keep one CC.
-> 
-> Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
-> email here?
-> 
->>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>
->> Missing SoB.
-> 
-> IIRC I took Konrad's changes but at this point I don't remember how much was changed.
-> So I need to switch to Konrad's owned completely or somehow indicate using tags
-> that it is initial Konrad's work.
-> 
-> Konrad, what's your preference here?
+This patchset covers style cleanups in `sm750_hw_copyarea` defined in
+`drivers/staging/sm750fb/sm750_accel.c`
 
-just loosely mention it in the commit message
+PATCH #1: staging: sm750fb: rename `sBase` parameter
+PATCH #2: staging: sm750fb: rename `sPitch` parameter
+PATCH #3: staging: sm750fb: rename `dBase` parameter
+PATCH #4: staging: sm750fb: rename `dPitch` parameter
+PATCH #5: staging: sm750fb: rename `Bpp` parameter
+PATCH #6: staging: sm750fb: Rename local var `nDirection`
 
-Konrad
+Eric Florin (6):
+  staging: sm750fb: rename `sBase` parameter
+  staging: sm750fb: rename `sPitch` parameter
+  staging: sm750fb: rename `dBase` parameter
+  staging: sm750fb: rename `dPitch` parameter
+  staging: sm750fb: rename `Bpp` parameter
+  staging: sm750fb: Rename local var `nDirection`
+
+ drivers/staging/sm750fb/sm750_accel.c | 46 +++++++++++++--------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
+
+-- 
+2.49.0.1151.ga128411c76-goog
+
