@@ -1,37 +1,39 @@
 Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CE235973;
-	Tue, 27 May 2025 10:06:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C633D253B60;
+	Tue, 27 May 2025 10:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748340377; cv=none; b=tXKS7lRCYSrEGMZLy8WyAB9ogW87dhnYCUpdZIVN2j2fGwIX1Dh83iqRJ1v15nGiTKTU56mliW1404MgcGX4YlpbO7fFH/oiClqmil5UdfOxW6/vnYJtL2KfimDhHujGg1Jm6nI6XcgBGbTU/hD4iOqiArRztIEA1YbGK24YEGc=
+	t=1748340380; cv=none; b=pDR68rpan4swdjBlRG7f7voVIlF+358GVqOMfSYrSmDft3MpbHDEd4cX2W8oN2opusE58JgWXfytBn+BsshXvjNEz/rJB2tITUaCe98z7uyWnkLs+riZtjlf0aOrh9QJrysrqMgXITOmuOYR6X0yNdtgWKTIqvJFU0SPXUicI30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748340377; c=relaxed/simple;
-	bh=7WSLUxaUDgCs2WPIV7adNYFOswKb/YdjK8z3bsFWn0s=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YektHPG2XO3FMNJgsdOVWH3bqZHAJWhK5U2RgnfJ3hirtzu+M2T8+iMHkXJt3tQQqdA+04Z2SkPEo8BnRIj2+OLRQu+cRJy53Ov9lrYm3cUBUebrakiGRtH39pp0tUfipHNqbV3Y+L97DE5PI1nGVNlawCYztWW2lXagSIkwBTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Bx7+1hAC; arc=none smtp.client-ip=217.70.183.195
+	s=arc-20240116; t=1748340380; c=relaxed/simple;
+	bh=SWutLzW2f0QowHEeX6Fe3tjpE4LQ738nisqkiqbIlys=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aZWTzulEG5j7+QLUwB6EsyBbU1/OcTkR641LmX37gJ0y3JbqvjI6IllN9C3sKs5qa07gfO+ZcEm3nW4ab2IgkedRS6OOteGyLNdipoSKe08FSL0ih3yrn0F5R86xQgejnLxCOaKaf/skezOGWlYgBiCkPLMWwGeHC8G1T+WTW+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nYrmYq/+; arc=none smtp.client-ip=217.70.183.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Bx7+1hAC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 547541F4F3;
-	Tue, 27 May 2025 10:06:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nYrmYq/+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4CDE71FD77;
+	Tue, 27 May 2025 10:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748340372;
+	t=1748340375;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=g9PY5sgRf+wMjq44Tp5gP3wPRWLLrFsYXl9Qe4W89/8=;
-	b=Bx7+1hACUM/l0dpn7ADyoDeEiJgnyCojm2ckjd2rLGz4sHPgSV+8BOqtujc6ZSOmauoltf
-	wPDRDKIltW+UxzHoS4vCbrDiK0BnTIwuOTDoDdyZ9KW4HvXQykXMx8I8b/rBW2H0gi2mNi
-	/6hytZKephHFIGTaHc6lp1NL/ZyW3vZLPWOTWsJvH6fHB4p1ah9LgCw+OWUfzTQ0qd52SY
-	SSz/58CjswdgrlIkAVtUCbW7eKKuv6/05ykABOLaaTt1PR0qxuXqMd5J66RF0WnPnRVTyy
-	pPgH4rplsyn4BHirsCmeLE1YF/esr153Zte7Ddn1D2HGshb31UToOaqmZ/ZeyA==
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Subject: [PATCH bpf-next v3 0/2] bpf, arm64: support up to 12 arguments
-Date: Tue, 27 May 2025 12:06:02 +0200
-Message-Id: <20250527-many_args_arm64-v3-0-3faf7bb8e4a2@bootlin.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AHN+uDsSXaJTkD0laSVsn0A5Nrq0eTHXt3UKaa7Mqnc=;
+	b=nYrmYq/+92zawj6+lX9PdBhCrVDmQ1u+KN1e/25bQ/jqN1TV7Litbr5z7PhU3HApE33vW4
+	TT/ZyzJjsCYILkLI5EyQJXBWK1JuYCvlU0b0dj7p8JsZ9w7Puj4Mnx5/Hilyr7dcHN8dYJ
+	XZBgLIKewusiawvMz1lOz9pGHufISFZ3Efza9UOhoOqayEpGP/alVN+CB7apFpOEUa6t/y
+	B8D12jzYjagNp2sF+XfPk8YYm3CgK5MQb5yQ5jnSJtSyl9NYCb7dhNoAi6GhZIRRySXsUQ
+	U0MT2SiHeG/9V4zteRFnDfViSuVbHXshR9o+5rnsUUcfaRH89JrNrwiVfn6qqw==
+From: =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
+Date: Tue, 27 May 2025 12:06:04 +0200
+Subject: [PATCH bpf-next v3 2/2] selftests/bpf: enable many-args tests for
+ arm64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAIqONWgC/2XNTQrDIBAF4KsU17XoaP666j1KKSaOidBo0BASQ
- u5ecVNKNgOPx/tmJxGDxUjul50EXGy03qUgrhfSDcr1SK1OmQCDggEwOiq3vVXoYzpjKWndalH
- JCstG1iStpoDGrll8knYy1OE6k1dqBhtnH7b8auG5z6rk/KQunDLKlACDFQjR4KP1fv5Yd+v8m
- LUFfkIBcBYgCbpURrdNZ2re/AvHcXwBRufAvfwAAAA=
-X-Change-ID: 20250220-many_args_arm64-8bd3747e6948
+Message-Id: <20250527-many_args_arm64-v3-2-3faf7bb8e4a2@bootlin.com>
+References: <20250527-many_args_arm64-v3-0-3faf7bb8e4a2@bootlin.com>
+In-Reply-To: <20250527-many_args_arm64-v3-0-3faf7bb8e4a2@bootlin.com>
 To: Alexei Starovoitov <ast@kernel.org>, 
  Daniel Borkmann <daniel@iogearbox.net>, 
  John Fastabend <john.fastabend@gmail.com>, 
@@ -65,76 +65,35 @@ Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>,
  bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
  linux-stm32@st-md-mailman.stormreply.com, 
- =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>, 
- Xu Kuohai <xukuohai@huawei.com>
+ =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvtddtleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffefvdelledtfeekudelvdekvdeuffduieevkedviedtgeefueehgfdvuedthfeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeiheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehpdhhvghloheplgduledvrdduieekrddurdduleejngdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhrgholhhuohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnr
- dgtohhmpdhrtghpthhtohepshgufhesfhhomhhitghhvghvrdhmvgdprhgtphhtthhopegsphhfsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhholhhsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphhurhgrnhhjrgihsehkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvtddtleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrroculdgvuefrhfcuhfhouhhnuggrthhiohhnmdcuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepleejkeetffefveelgeeklefhtefhgfeigeduveffjeehleeifeefjedtudejgeeunecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeihedphhgvlhhopegludelvddrudeikedruddrudeljegnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgrohhluhhosehgohhoghhlvgdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhop
+ ehsughfsehfohhmihgthhgvvhdrmhgvpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhlshgrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehpuhhrrghnjhgrhieskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: alexis.lothore@bootlin.com
 
-Hello,
-
-this is the v2 of the many args series for arm64, being itself a revival
-of Xu Kuhoai's work to enable larger arguments count for BPF programs on
-ARM64 ([1]).
-
-The discussions in v1 shed some light on some issues around specific
-cases, for example with functions passing struct on stack with custom
-packing/alignment attributes: those cases can not be properly detected
-with the current BTF info. So this new revision aims to separate
-concerns with a simpler implementation, just accepting additional args
-on stack if we can make sure about the alignment constraints (and so,
-refusing attachment to functions passing structs on stacks). I then
-checked if the specific alignment constraints could be checked with
-larger scalar types rather than structs, but it appears that this use
-case is in fact rejected at the verifier level (see a9b59159d338 ("bpf:
-Do not allow btf_ctx_access with __int128 types")). So in the end the
-specific alignment corner cases raised in [1] can not really happen in
-the kernel in its current state. This new revision still brings support
-for the standard cases as a first step, it will then be possible to
-iterate on top of it to add the more specific cases like struct passed
-on stack and larger types.
-
-[1] https://lore.kernel.org/all/20230917150752.69612-1-xukuohai@huaweicloud.com/#t
+Now that support for up to 12 args is enabled for tracing programs on
+ARM64, enable the existing tests for this feature on this architecture.
 
 Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
 ---
-Changes in v3:
-- switch back -EOPNOTSUPP to -ENOTSUPP
-- fix comment style
-- group intializations for arg_aux
-- remove some unneeded round_up
-- Link to v2: https://lore.kernel.org/r/20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com
-
 Changes in v2:
-- remove alignment computation from btf.c
-- deduce alignment constraints directly in jit compiler for simple types
-- deny attachment to functions with "corner-cases" arguments (ie:
-  structs on stack)
-- remove custom tests, as the corresponding use cases are locked either
-  by the JIT comp or the verifier
-- drop RFC
-- Link to v1: https://lore.kernel.org/r/20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com
-
+- keep tracing struct tests disabled, as structs passed on stack are not
+  handled by the new revision
 ---
-Alexis Lothoré (eBPF Foundation) (1):
-      selftests/bpf: enable many-args tests for arm64
+ tools/testing/selftests/bpf/DENYLIST.aarch64 | 2 --
+ 1 file changed, 2 deletions(-)
 
-Xu Kuohai (1):
-      bpf, arm64: Support up to 12 function arguments
+diff --git a/tools/testing/selftests/bpf/DENYLIST.aarch64 b/tools/testing/selftests/bpf/DENYLIST.aarch64
+index 6d8feda27ce9de07d77d6e384666082923e3dc76..12e99c0277a8cbf9e63e8f6d3a108c8a1208407b 100644
+--- a/tools/testing/selftests/bpf/DENYLIST.aarch64
++++ b/tools/testing/selftests/bpf/DENYLIST.aarch64
+@@ -1,3 +1 @@
+-fentry_test/fentry_many_args                     # fentry_many_args:FAIL:fentry_many_args_attach unexpected error: -524
+-fexit_test/fexit_many_args                       # fexit_many_args:FAIL:fexit_many_args_attach unexpected error: -524
+ tracing_struct/struct_many_args                  # struct_many_args:FAIL:tracing_struct_many_args__attach unexpected error: -524
 
- arch/arm64/net/bpf_jit_comp.c                | 225 ++++++++++++++++++++-------
- tools/testing/selftests/bpf/DENYLIST.aarch64 |   2 -
- 2 files changed, 171 insertions(+), 56 deletions(-)
----
-base-commit: 9435138c069117cd59a4912b5ea2ae44cc2c5ffa
-change-id: 20250220-many_args_arm64-8bd3747e6948
-
-Best regards,
 -- 
-Alexis Lothoré, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0
 
