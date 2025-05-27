@@ -1,78 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FFC1CD0C;
-	Tue, 27 May 2025 18:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F1C280A35;
+	Tue, 27 May 2025 18:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748372130; cv=none; b=MVVzd7nklDTl+EE/GUyAJ9Fc+oBb24kF8Htvefue04NShsubpfrHsOffJiFD2/BTGTljqR8Gyvxez28mYDT7dFP1SsYbKs4j0ELylbkQWJuKrBJEgyrxsmW0u3C9CaOfB90cT8854VXL3721mEJSljlnYhLxnT3yfWDMeo2ZpP0=
+	t=1748372217; cv=none; b=LDVUFwEyfjaT+gQwxApKi4914P5wE0IrpVZFA/YsiYzciWGN4XbNN77irXux7936f9K6cKOyiWzAKk40yMPi2Wh+TmjvqGlr/tr4abJqVbVu1+iTPFByyH8+ne+fixkf7BP5LyQJ+n+usKMn4u5Cf3Sb+CBE6/9We4SqjNE8FOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748372130; c=relaxed/simple;
-	bh=HDXaCTsUxEdeY81YLhMA8pdmocB2sFdW0FN8Boejtr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aea6C1HJ3W5ONA4ds/hc/Thya1JTeHbaB+H2r2cmqdBNVWnFPmFJ8UF67H7hjQ3G9rwVlfddJBM52T2tO4W9o8u0C4URcEsbcSzbVPFuJIhyihMnjBzZcVQO/WEv0rtlqYtTceTCnqhv2zcbNRe4qrQ7nWsQ1MnYN5O+Avb7N7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLqN274I; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLqN274I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF64EC4CEE9;
-	Tue, 27 May 2025 18:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748372130;
-	bh=HDXaCTsUxEdeY81YLhMA8pdmocB2sFdW0FN8Boejtr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OLqN274IqOQEL6R+W3wIgKDhhrztXA7SN+u5J3uyZ3Er3XRnvdAhTcbq73OTp2+kE
-	 +9H+RR/ftd5da6wd6nPZP1iRFT9MwsSXJj152DmolnR5v5PsYfqq5AFs/VRmVia/Q0
-	 zdt9jrgL9SKAZg5ew6artpcDLlyGjw5pmwm4A8kbNLQlKcq1+jmEtsqOiVpfWSeOK2
-	 rZNrTFtTJrsP5J8i/zp/pPqssAzvLmotHU5aWdVuquDWNQ941T2VnX8m2hDwaUis5q
-	 cI/8m8IUZogR+LIyO54IvHz/q52mBsUcNmYfe6Aa/6ND0lr0cSB7RqowXXuXaQPDiH
-	 T5R03iVy5pXKw==
-Date: Tue, 27 May 2025 08:55:28 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: torvalds@linux-foundation.org, mpatocka@redhat.com,
-	linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev,
-	msnitzer@redhat.com, ignat@cloudflare.com, damien.lemoal@wdc.com,
-	bob.liu@oracle.com, houtao1@huawei.com, peterz@infradead.org,
-	mingo@kernel.org, netdev@vger.kernel.org, allen.lkml@gmail.com,
-	kernel-team@meta.com, Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH 6/8] net: tcp: tsq: Convert from tasklet to BH workqueue
-Message-ID: <aDYKoA8lpX_Zxrhh@slm.duckdns.org>
-References: <20240130091300.2968534-1-tj@kernel.org>
- <20240130091300.2968534-7-tj@kernel.org>
- <CAL+tcoCKqs1m4bAWTWv9aoQKs7ZpC5PXtMS2ooi6xEB6CbxN1w@mail.gmail.com>
+	s=arc-20240116; t=1748372217; c=relaxed/simple;
+	bh=UzBD2LFNDaxTf0HiFaUy6eYRVbl/5f/e2WlI2942kQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uXiclFTnngGxysmOj+0IOwP3Y5hqrrHO8McadPkTVqonN+wtJYFwErHpfuBqX3158F6+3ClnVOYyBpAmCq4FLxPVWExpVa8D7V1ePgcNQr4OvAbcOw8rrBa6rOawydxzBPVirjGELnWB9b4cGUEQxGjh8B1cLksN0CoEiCU9Hsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12585C4CEEB;
+	Tue, 27 May 2025 18:56:55 +0000 (UTC)
+Date: Tue, 27 May 2025 14:57:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Remove jump to out label in
+ ring_buffer_swap_cpu()
+Message-ID: <20250527145753.6b45d840@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL+tcoCKqs1m4bAWTWv9aoQKs7ZpC5PXtMS2ooi6xEB6CbxN1w@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+From: Steven Rostedt <rostedt@goodmis.org>
 
-On Sun, May 25, 2025 at 11:51:55AM +0800, Jason Xing wrote:
-> Sorry to revive the old thread! I noticed this change because I've
-> been doing an investigation around TSQ recently. I'm very cautious
-> about the change in the core/sensitive part of the networking area
-> because it might affect some corner cases beyond our limited test,
-> even though I've tested many rounds and no regression results
-> (including the latency between tcp_wfree and tcp_tsq_handler) show up.
-> My main concern is what the exact benefit/improvement it could bring
-> with the change applied since your BH workqueue commit[1] says the
-> tasklet mechanism has some flaws. I'd like to see if I can
-> reproduce/verify it.
+The function ring_buffer_swap_cpu() has a bunch of jumps to the label out
+that simply returns "ret". There's no reason to jump to a label that
+simply returns a value. Just return directly from there.
 
-There won't be any behavioral benefits. It's mostly that it'd be great to
-get rid of tasklets with something which is more generic, so if BH workqueue
-doesn't regress, we want to keep moving users to BH workqueue until all
-tasklet users are gone and then remove tasklet.
+This goes back to almost the beginning when commit 8aabee573dff
+("ring-buffer: remove unneeded get_online_cpus") was introduced. That
+commit removed a put_online_cpus() from that label, but never updated all
+the jumps to it that now no longer needed to do anything but return a
+value.
 
-Thanks.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 897ce51d3bbf..e2aa90dc8d9e 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6309,37 +6309,33 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ 
+ 	if (!cpumask_test_cpu(cpu, buffer_a->cpumask) ||
+ 	    !cpumask_test_cpu(cpu, buffer_b->cpumask))
+-		goto out;
++		return -EINVAL;
+ 
+ 	cpu_buffer_a = buffer_a->buffers[cpu];
+ 	cpu_buffer_b = buffer_b->buffers[cpu];
+ 
+ 	/* It's up to the callers to not try to swap mapped buffers */
+-	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
+-		ret = -EBUSY;
+-		goto out;
+-	}
++	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped))
++		return -EBUSY;
+ 
+ 	/* At least make sure the two buffers are somewhat the same */
+ 	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+-		goto out;
++		return -EINVAL;
+ 
+ 	if (buffer_a->subbuf_order != buffer_b->subbuf_order)
+-		goto out;
+-
+-	ret = -EAGAIN;
++		return -EINVAL;
+ 
+ 	if (atomic_read(&buffer_a->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	if (atomic_read(&buffer_b->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	if (atomic_read(&cpu_buffer_a->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	if (atomic_read(&cpu_buffer_b->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	/*
+ 	 * We can't do a synchronize_rcu here because this
+@@ -6376,7 +6372,6 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ out_dec:
+ 	atomic_dec(&cpu_buffer_a->record_disabled);
+ 	atomic_dec(&cpu_buffer_b->record_disabled);
+-out:
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
 -- 
-tejun
+2.47.2
+
