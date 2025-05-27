@@ -1,173 +1,82 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010034.outbound.protection.outlook.com [52.101.84.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBEA17FAC2;
-	Tue, 27 May 2025 14:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357318; cv=fail; b=Nb5Fwa17UJIrz8jMf5XDHzrk6WENM7HAKrA5PLx5vgpb5dqWr/O5XL+BluoD2NJFBgB168rmAOb5AegfKKtLNO1B4hPdr2Dmxg2BbJTQCUy05fGIJzsiD2a69IWJF2o+gbeJ29pMsnR7uc+n9p5KT8x8dxrOlmgFtonlSDdh89Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357318; c=relaxed/simple;
-	bh=p2qe+GP4imkOreMDjKJpRvbhwK2wt7qh4dQCecAppGM=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EZQK558WWRyx0mf7N6a5K0INDN/LqRpKwHValXoJEytD5TYD6po95y/P6Zyzae2bPbdiBFH8SGydkmQenE7+Q+DYENREnGAuptcrlMvjMr9CToO9jwMnJYZt32rPlIHuwKlLPY2kes4vygtnjAmol9b2MNTG38lxCEOLcS+0Slg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=Oth/xoUG; arc=fail smtp.client-ip=52.101.84.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A547B7E0E8;
+	Tue, 27 May 2025 14:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748357437; cv=none; b=NRMdf8kZx3P40zTOcGWPOm8rQLCYpgTTE3QnrEw44B2jMa0gq3IMGLt1Z4QLE0bo2tKahGRCypp4U/4uJTsDH7NIZz77IHOknPgEUygx6BrQDecU5rkWNvdpeDx8/H3sqvtu3OKVIh89AAg4L+m6tBYQ2R7tsERej9J+cnpv2vo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748357437; c=relaxed/simple;
+	bh=FEbfS+UuSSerkfHo9hXlvZXI3ZHzyKqp+ZFEEJh+akI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cwSyGOxQ/BwMZ11lpwtxXAlePYQHCrfGmI/jUJuedTNFVmytv+yxH3k+d9fVAhwG3/97cQ5ZkWTH5HyLhzJDl9WYbyQJTcERdpBA2T+CsGkRl7/BhrOHWXe1jO2P+738LaGehLKuizpPWyMh04+MQoZizxOPhDoQ4m/kdhfF2sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XQg8lBZ+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xWZrCapJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="Oth/xoUG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WYA9U+KeTRFIGec2Tz5i8jfagEs3vXJ2PJngjTssrOHOrhTd9qA6LKCrgQkA0++TTxS/F9HsYb7zJP2+sOlB255483noNXZ0jtnM1np2BuSvRtbZM0F4w/5VjlhgCpkQZTYLHIXiOVTneNTgFrqjgv6cjsZ0Ja7Za+IPE7cvIZ1t967DVJMKYD7UIL2h8xEh1hYhqD6dbpaRsjFEkCHPBySBLp2mO+Q/Yi+ipVqk7ZO0xv2PI8JCC6VZnnrmF1KS4wt622qAaOlBGbQ/KrB2srpEXRIuyopuP3DKaRN1iNEVp5WchXp46tjlLSPcAr3S6O7rLNHzYZsuXZZR00tPhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zbdsz/fDQGSRqmy70q/hX6fVtERxJSYSUvfW7/g9ch0=;
- b=Un3vv048eqb1hUqWZaha+B18A/+Fm191v70PcrYNhz6fb0U3YcJ5Y+HMkC7hBDjkIEF92+GGwmMwVQUC+NNqVk2gNz7pNd6ZHUaHdfmuNkup0BRcwLFQKrP0xze+yBwoIOlz9E+BNxMsut6SzsciITKi78HOu0Ocw7Rh/vOEt8d2BM8zmTsqhNlf++gJFelFIJKEcQcv5Mi9hX7CZAciJQkfTYHn8LtBhEJmmqLCnofodWxRo8qoc9YpIqtgtwRAKGA/sPLHJBo8e0M9pe+5nTWMcc1JLZSd0DLbkU7V0J7cRXGY16RgMsLyZLkDbQmbmdjSqaEgXqxLawJQW5TeWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zbdsz/fDQGSRqmy70q/hX6fVtERxJSYSUvfW7/g9ch0=;
- b=Oth/xoUGV/uyrd37h4hr3c8ER4PxRt2WVTJf6JT5a4Vo7WdBxKtewBK/rsMpPN+5Qc7sdVMdIXIn3B6/0yId0/D94ZYdg7RPl8o9DvaO2m6yvwldLE59JWMU2x/3XvN00hYF/94gunPamP035+yob4e6prVKMmxPtFwhGCmBen0=
-Received: from AM0PR04CA0079.eurprd04.prod.outlook.com (2603:10a6:208:be::20)
- by AS2PR02MB10196.eurprd02.prod.outlook.com (2603:10a6:20b:62d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Tue, 27 May
- 2025 14:48:31 +0000
-Received: from AM4PEPF00027A65.eurprd04.prod.outlook.com
- (2603:10a6:208:be:cafe::48) by AM0PR04CA0079.outlook.office365.com
- (2603:10a6:208:be::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.27 via Frontend Transport; Tue,
- 27 May 2025 14:48:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- AM4PEPF00027A65.mail.protection.outlook.com (10.167.16.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Tue, 27 May 2025 14:48:31 +0000
-Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 27 May
- 2025 16:48:31 +0200
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>, <kernel@axis.com>,
-	<linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
-In-Reply-To: <20250525103019.3773be94@jic23-huawei> (Jonathan Cameron's
-	message of "Sun, 25 May 2025 10:30:19 +0100")
-References: <cover.1746802541.git.waqar.hameed@axis.com>
-	<c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
-	<20250511131432.1c6e381c@jic23-huawei> <pndldqwiihi.fsf@axis.com>
-	<20250518183852.7e9afdac@jic23-huawei> <pndo6vnfrnp.fsf@axis.com>
-	<20250525103019.3773be94@jic23-huawei>
-User-Agent: a.out
-Date: Tue, 27 May 2025 16:48:30 +0200
-Message-ID: <pndecwa85z5.fsf@axis.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XQg8lBZ+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xWZrCapJ"
+Date: Tue, 27 May 2025 16:50:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748357433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6iZ7GLWczHbCwoKVC3idZCK4EPn/0CsUSuZvQby/Nyw=;
+	b=XQg8lBZ+vxH7yFPMafojrv7Xiq31HBpEsvyEMW9qNBld1Op8ZpVkIoOvAU5D9yoaZ6h+MR
+	OCkIyCK71Gze66CqKhUJgCeDWT2mFzU5GSVZ6dG0VsTtniTKI86chxbaTGhN3zklQsXxfE
+	BHTi1pOa+fpIKOW/qkO4NNV7cwz5o/mDA52zbG5VxcswmAU69uZIrudvbAnm0foClWY24I
+	TckBeS0d1VH4Fo8hx2KuILazScDjaE2og5fs4H4mNaKMEtnNK05eyD+FgDcrezwzk1wf6t
+	EdQHxsApdoL6Il8TbgyPu8NMppximGSyspDicBEZTfOLhq1RTeO9Ago6oc64zg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748357433;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6iZ7GLWczHbCwoKVC3idZCK4EPn/0CsUSuZvQby/Nyw=;
+	b=xWZrCapJs8ABU6OwpQ2Xc3CkeDsfDH3EEdtFsr/JSskcufD8rYsH/atgmjB9bLwEnSNKXl
+	4Y9rEez+ancOcbCg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Subject: Re: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
+Message-ID: <20250527145032.fIN-37M_@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+ <20250514084314.57976-13-gmonaco@redhat.com>
+ <20250527133712.CFW5AcNE@linutronix.de>
+ <6f33e6b7ad296f4fd0e9c089ac92e53c08cfd850.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A65:EE_|AS2PR02MB10196:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8be81010-9b91-4ab1-70f9-08dd9d2d8cd6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AQJq48crAGPU5zrwrrLwVO0E/b3QRozIXp8HPCtJia7jrrFHDvb/3XfzMNVp?=
- =?us-ascii?Q?/bXt5kwNy8HzdHsfzDcA2DsEgajTl387KIN6mcfEVRghtAhsbTCWxJBwspRm?=
- =?us-ascii?Q?Z1g3KTaFXMsUofapiOmUWwdqCTT66bf6oY8nF1oeinqIa0vBP6ske7cVHO7t?=
- =?us-ascii?Q?yCSgbclw0rqMXAtictHMAs4qFP0/vmtPzYH9xFpGEF2RochEPGDjJmuRJ4PD?=
- =?us-ascii?Q?FVpFkIZdy7OyGYu7bycSTNVD/oAVxxIlylACRN8EpunIKeNkRPWnnIkO6ejn?=
- =?us-ascii?Q?4iYg1ixp/rCaXJ9sw+327X1Ur63kSfofbJzFyzIvZtek5J3aEe3nQZMvRSvh?=
- =?us-ascii?Q?Jhdt8LTcq2eqndptmcetyesZ4ykyhJm0gnuOGTTAXalq7Dh2tqRbSABlpLnb?=
- =?us-ascii?Q?MudzWbJW3HBiTvSNNk6TR68D3u7UCe3+e0DneXclry7S3Iw9zkoDMal0ClWh?=
- =?us-ascii?Q?KY7A2t3Lwctl8e7fb98EOGOobYijU5wpLGGF2ozXpSU8xIqC9pkACfuKO53T?=
- =?us-ascii?Q?T8eKwBRZ8haXlkzYUNX0vPKAsapSiYwR9X1EACHx74T+UU0cqyVc1TqpaCph?=
- =?us-ascii?Q?Tl00ssY9HMGraiEOa32nZ7a2dPSIlO/WfIUV34LMP2+qUeyDcdJvvcYFCyHq?=
- =?us-ascii?Q?Tgk+/Y+9hwinmZ6HcP0STNUcvfjiNpJHzb1L134wFsP6uB2Dqx+aN1FfuvIY?=
- =?us-ascii?Q?LhEcwIDD41CCRskk5kujBigVmsLeOHj4tSpoZIMHIqfpLrWW57xVX12sAApO?=
- =?us-ascii?Q?iO/DQoeq/QwpgQuwVu+ZDnu+9LYSNfxHLQZsPn/larHCZ7A47LBd56Qu8mte?=
- =?us-ascii?Q?cLMlNQGX5bRfpHuFj4mypaj6J0yosP4G2o/0bik5gXbFLri+UjP6oVY4cUJq?=
- =?us-ascii?Q?x+wejEM2IHUfTaHV6JnfLNn/HTNzFPCC4snd1Q2VGHrmQN9c2bvd389tt4GZ?=
- =?us-ascii?Q?n+V8GMn8LJZCmFTEVhWQyK+SKde1woRaGFQ+peyWoBZViaJikZ6dlvNvovRM?=
- =?us-ascii?Q?UvgwsEZJkCVP+0R1EuKV8CHguU4dlcWgw9O3zZC1Tk9ubhTpcT9oqwAQym6n?=
- =?us-ascii?Q?5swrNsSDaKiXsBJf7fywv55YVR4xkf1owcnOGiRqD11D8fuYzh5Hg4i0lCJQ?=
- =?us-ascii?Q?DjFbj8Nyyl3s/ye0OLiWZG9+R59JzKM844bU9B/5pa3FBf3mdakZo5BMyL4q?=
- =?us-ascii?Q?1eKcttv3yUNOLyq2uv/pwT3zKhPuq60D0tfkz8u+uDd+zetnFgm/3UJRUnPB?=
- =?us-ascii?Q?wN3oWKrGhqrZ1aQV84PzDwasJXsec2IpV7iNviKEwp5qE01m4DQRClM4KB8J?=
- =?us-ascii?Q?GYhMfe/tOjKH3s9P9wdIQlrWiieTardtume82Z80Gu4XVIuqkMO+y1Q2z2te?=
- =?us-ascii?Q?Xda/d3+kGiqLWy4YE/kzCHDN6mIAlq6vWz/qae16v0FjtVyYMWIL7JxUZQju?=
- =?us-ascii?Q?TMjocHRROlYPbrEW0apGuOIWR7zBPjJ8UQs/bCVwT2ivj7n72WMScJ0VrYGC?=
- =?us-ascii?Q?A8A12USV4TO4aqlKjZa78/rPghkXobaSho7U?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 14:48:31.8004
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8be81010-9b91-4ab1-70f9-08dd9d2d8cd6
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A65.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB10196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f33e6b7ad296f4fd0e9c089ac92e53c08cfd850.camel@redhat.com>
 
-On Sun, May 25, 2025 at 10:30 +0100 Jonathan Cameron <jic23@kernel.org> wrote:
-
-> On Tue, 20 May 2025 13:27:54 +0200
-> Waqar Hameed <waqar.hameed@axis.com> wrote:
+On Tue, May 27, 2025 at 04:35:04PM +0200, Gabriele Monaco wrote:
+> Thanks for trying it out, and good to know about this stressor.
+> Unfortunately it's a bit hard to understand from this stack trace, but
+> that's very likely a problem in the model.  I have a few ideas where that
+> could be but I believe it's something visible only on a physical machine
+> (haven't tested much on x86 bare metal, only VM).
 >
->> On Sun, May 18, 2025 at 18:38 +0100 Jonathan Cameron <jic23@kernel.org> wrote:
->> 
->> >> >> +#define D3323AA_DRV_NAME "d3323aa"    
->> >> >
->> >> > Put that inline where used.  A define like this both implies that various values
->> >> > must be the same when they need not be and means that we have to go find the
->> >> > define to fine out what they are set to.  Just setting the strings directly
->> >> > tends to end up more readable.    
->> >> 
->> >> Sure, we can do that. (There are a bunch of IIO-drivers doing this, so I
->> >> just thought that was the "convention".)  
->> >
->> > I'm sometimes in less fussy mood.  One day I might just clean those up
->> > so there is nothing to copy into new drivers!  
->> 
->> A quick search tells that there are (at least) 105 of those:
->> 
->>   rgrep -A 30 "\.driver" drivers/iio/ | grep "\.name" | grep -v '"'
->>   
->> I was just about to write a small Python script to fix those, but just
->> wanted to confirm with you before spending more time on this. So if you
->> don't want to do this yourself, I can help your here :)
->
-> It's probably not worth the churn on the ones that have the string repeated
-> multiple times.  However, perhaps any that are only using it for .name would
-> be good to tidy up?  Those are less a case of it being 'taste' vs it being silly
-> to have a define!
+> You're running on bare metal right?
 
-I think if you use it in multiple places, it should definitively be a
-macro definition. I just sent some patches for those that only used it
-once (I didn't include those with `KBUILD_MODNAME`. We can discuss if we
-should also address those in that thread).
+No, it's QEMU:
 
-However, there are a bunch of drivers that _only_ use a macro definition
-in `.name` and `indio_dev->name`, including this one. That _is_ more
-than one place, so we should actually leave it? Or do you still think we
-should have the same string literal in both places, as you originally
-commented above?
+qemu-system-x86_64 -enable-kvm -m 2048 -smp 4 \
+    -nographic \
+    -drive if=virtio,format=raw,file=bookworm.img \
+    -kernel /srv/work/namcao/linux/arch/x86/boot/bzImage \
+    -append "console=ttyS0 root=/dev/vda rw" \
+
+The kernel is just x86 defconfig + the monitors.
+
+Nam
