@@ -1,298 +1,215 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2046.outbound.protection.outlook.com [40.107.93.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629501C695
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748304317; cv=fail; b=tBKXITYLIf4qIWrzkL9Ub1ZfOhhjYtcVNK5bq5J3IkyM6Oin1YbMC816npJ/BTkT0f8AnosoKzIw9hyPe/2vEdp6Y/+mww1VOFQOg0s5dyW18Lvyerrqhm+g2XYPxFYw1FCFC7hJsCVze2p8lYmD0qhWG/JCQ8DewS4Ubej8E9k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748304317; c=relaxed/simple;
-	bh=qv52By25CVCjgr3sCFVyD9fTWOowD1KY+RocKk1hgJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sWgBrrn6MUC5Iv5cpxEaYzMFl4PVgbIFk5EoTAskIzYJWl+DJY90mCovEUdhpPO9fGnCLDmMLppM8p25NM0kYdp1UxwxTBJ4sNO85GpDdeG/x34YVwVimvZXl+YPBy6ycpCmpH/JlOd4Loei1LUAMvygul/L6nSyoseOgo4jAIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PKtjNeEN; arc=fail smtp.client-ip=40.107.93.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9825F2CA8;
+	Tue, 27 May 2025 00:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748304320; cv=none; b=lkILF+n/pPmkVspnWQxfjGp/vnYL6ksb4DQmo7NPqMWLb6d61rm+dxo3F2VVSmv2A/xjHWk3qDy8wjDFII7xGn0uyecI/n5Vqi0RKpKkHSIXIiWBMudwKxVIZJwSIDmWeIaZkO3Pjqm4wgynmLWg6kNtzPVZoWkkMTS+iGoMLeY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748304320; c=relaxed/simple;
+	bh=r1xxob3cHvQ50YeOPa143G4Cs++QqeFJ5fmfOzctg5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXptfkrOxaTwvJwqewfJCBbfU5NNuKE3Y/TB88otfkK9FaN01cPqb5YHATMr4NL+FePzklPoxXsKdE9LP2l24lhFgyUCAHPBa+tHj+1F2q695mAZdjZw+za2yncYktOHFnyCV3QNDjczJCtLDbHgdUmUbgD8PRkh8L/ugRXNaTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXOjpeYl; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PKtjNeEN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ii2tizbHHJZ9LeU+/Y/y4Ye/3j0nFSyB4e4u0a5CFQ+ta7tmeU2kENdhJXq4mjkrTSQQJGR6pnVtftBz98McRNtaXto23UZ25KMUaaOqz4pObc0lQUWxrcXHGiMP0zjocdRZc0UEr6KbqVfoOvGDbYzUxy6oN8kTg26sz9lnWY+VeUVh5dRqwXwKb91iEMBxwdtUMlgdgf8ck7EonKgWhR58e56krsK8Mx/ZU+V62ENgYbBQ8+XZgY7YdmiDZkIsT4WgdDbTN/P8WvbLTfeA8MXMatH8LeuEhGOS94eANwD2yknfArGLtYMekfRIDscVvWJYmdK6NaRnytDEgSSXgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r45xNP/pBQVxaLRCXI2f6Mtugo2nCyvpaxLGLpsXxSQ=;
- b=hV67aCeHuPeTW5uKPE6Y9YHvkFFyojti7tYiJNA4a1/8FidtygLQk6SnlM0AIOUBP64s0WOs97PC/OEf+gzKxW/apXHSLcsBkQbaHbtVqp9UY4QB41HiA6Aj3YSYnYYELGDwxXqTTgqNb2f27YeSlADAh+aiE1sK8wIAqiwFGFYDehkvCIXoCP98YrU4G0RlhzIwR78Yd6HD82RDvgkJ3xQlqRwqYQCY5TRZvkTVPM0qhAkc0Kztl4sgadhOL96hOV6d9FzJKZd60oY/SaLrK2oG593ZuDRhCNvAXPZwy5Lv+a8prqe4BVrlLhFQRUaImmzQBrq9qT9JXaZ2nF4PeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r45xNP/pBQVxaLRCXI2f6Mtugo2nCyvpaxLGLpsXxSQ=;
- b=PKtjNeEN0K+3peNpr7yKOlJ7avhpZYDaQS+F6We101PbpAq+aWf1EMmg1Z3rqkgD5j6LPhlcRlkGrxKi3924HfFtj0ZCXTvpBRrtWdgIwdeTitinvP125kOVQO+MBUfjEch/hNMv4B6GTsWh+FfEaKEOM1g8t5+WojqeaKOcvWeA294K6mNpWdxnn+HqXMXStKLYLg9Yd/a4jOIRJZLqh4Q1W+WTA4WYHyYJ45peaG/Tk939PaN4OYuN6UfGRFGI63jVJvbDRDQNh27q6rIQzfx4w1Ea6OqwLNgM46FgXHTlhgenNgFys0wdMN4yqFspq15Yryi2y5YbIx235n7EPQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by LV8PR12MB9406.namprd12.prod.outlook.com (2603:10b6:408:20b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 00:05:12 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 00:05:12 +0000
-Date: Mon, 26 May 2025 21:05:11 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Jacob Pan <jacob.pan@linux.microsoft.com>
-Cc: linux-kernel@vger.kernel.org,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	"Liu, Yi L" <yi.l.liu@intel.com>, Zhang Yu <zhangyu1@microsoft.com>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>
-Subject: Re: [PATCH 1/2] vfio: Fix unbalanced vfio_df_close call in no-iommu
- mode
-Message-ID: <20250527000511.GK61950@nvidia.com>
-References: <20250516164522.51905-1-jacob.pan@linux.microsoft.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516164522.51905-1-jacob.pan@linux.microsoft.com>
-X-ClientProxiedBy: BL1P222CA0021.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:208:2c7::26) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXOjpeYl"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52b2290e292so821530e0c.3;
+        Mon, 26 May 2025 17:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748304317; x=1748909117; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Addthv64Q3TTSQf/2nFhVGk8jr68iUDk2g8AigrRaGQ=;
+        b=kXOjpeYlXieH0mFDV7Bm+IDR9nTfnGhvagPXdH+fhDQ/Jr9svf3eVGNlwTRBgAuJDW
+         Nr8uizeV79Cj7sZM4sfo5mCfKBsnwl8mzZoyaXh82GHqHd1F6y9P9rKcSI9h8/Iw0YSe
+         dSpaFu8nEYBTuLgX7SrmU04I+0EzrVgtF9ZNqKBZgr8P1QLGYPonlCCvzQJIUmVnkjc6
+         BlmQEiXiY8FtMT4M+Roy9DQoF2eIGs4US9iFDRD7ncds6L6jnjZsf9G0xYp2Dn4zLSL6
+         +D+V5QpLGB2wP/haHtGtAnHKEhEH+Je3/pjt7cr+pArad7+21Cr7MBQLoaK0jNNbpvm5
+         xtnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748304317; x=1748909117;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Addthv64Q3TTSQf/2nFhVGk8jr68iUDk2g8AigrRaGQ=;
+        b=E6i6tpmvf85KPBe7rvIf/1cPUCHQ4xKpZrKrdbKJQZL7adXx6T6prhst2rYMvQWk6e
+         qE4lDd8DbPXYg3+4bCXJhr76hSGEGgGxK815h3aOSa6Ynq4i+s2pDgQNDh2vh5xRb45y
+         BMSSOs2HR+tQYtXjq8UIz6Hm6TVdCyiCnxLcXDrB7Gb0inSrSVcmwGsr9SkN327ZV9/3
+         djuS02sIq/EE9uOVaE7qzdOdVO7CzqNmbSK7MrhtVeqtNg2cO+Ahd4xHqE8JPCVp4V2y
+         32Os4F0da29fpZtqH3t/wJzallarfwAQvVbECQl9Fadw21uWNy9f/xUokqCS8TZCWmoB
+         y6vg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpBXgPdvIKNV5AUltYaYc7TwKeYS3DbN4WHR91np9/F19Cxx0at0/hiPhsxewKXth/HT8Ih5GpPqYMrPw=@vger.kernel.org, AJvYcCX7/EnIV3oi75n2/KJ255zkeUSsrL0TT70B5azvkiJmqGelNL0zfQJF1UNCYAeULJ6qyfUxplwetGM=@vger.kernel.org, AJvYcCXp55v/Fs8oGz1vI2NUn3Wbig4HPA5SQvEm41+1HD3aBBwKm/67Eqnz42z7rQUrNbX71q5Ou9H3heSr6cdiOGwXZA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDJ18zlLIaCgVTcXJLsznYRxi/pAkP+sLf+MOQBdhxjN4UANRW
+	BHd2z4Y8Y4q5ohukKN1B/jI2e6cj0K5AmHAs58PyH+eGUYDoqI2IQbbj
+X-Gm-Gg: ASbGncvLe/vRkrkCA+qR+A061DQAtyYUVlsytojzDCctcA8nPpW+Xs2vNka/o/xzBMZ
+	Si4ZfsYCOJP61pAkbVLEwDKcUXT1b/GJwSzsUnI/bM3Y9X4DqrBU/PcOFVcps3Q5dTrznjCnU0L
+	VlXXbsE9fVDj5W0hpFR3eKkgZtwJeZml+pm4bnl3rCvHLWU+XGbwcN1uCXweiXJTIrtzBmYwIS2
+	jgCVPr2S0aR1xpX7YfvbRC4Y4Y91TMFSMIqHZGodXZdHO6T0Jy5dGko0V86gRoAcrwt0EgUwhWB
+	QiQnUnaWfQB+VFEKKJixL9SnOwRbGHcOAScyy0PtflULc60Sox8=
+X-Google-Smtp-Source: AGHT+IHEjq49q8FhVaC/VV5WmHQM/CAYARQEncGZ9g1VnXXQ7c/Eg+DEVGvPVjcXeeAr8+7lupfz7w==
+X-Received: by 2002:a05:6122:169b:b0:52a:863f:4189 with SMTP id 71dfb90a1353d-52f2c5923f8mr7340486e0c.8.1748304317399;
+        Mon, 26 May 2025 17:05:17 -0700 (PDT)
+Received: from hiago-nb ([2804:1b3:a7c1:78c2:1931:19db:1830:5cf4])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52f2f73d4b4sm4433946e0c.20.2025.05.26.17.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 17:05:16 -0700 (PDT)
+Date: Mon, 26 May 2025 21:05:10 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Peng Fan <peng.fan@oss.nxp.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
+	Fabio Estevam <festevam@gmail.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
+ remote core attachment
+Message-ID: <20250527000510.fofehmsdhifcwlys@hiago-nb>
+References: <CAPDyKFr3yF=yYZ=Xo5FicvSbDPOTx7+fMwc8dMCLYKPBMEtCKA@mail.gmail.com>
+ <20250509191308.6i3ydftzork3sv5c@hiago-nb>
+ <CAPDyKFpnLzk5YR3piksGhdB8ZoGNCzmweBTxm_rDX5=vjLFxqQ@mail.gmail.com>
+ <20250519172357.vfnwehrbkk24vkge@hiago-nb>
+ <CAPDyKFpGcgMzOUHf-JTRTLBviFdLdbjZKrMm8yd37ZqJ1nfkHw@mail.gmail.com>
+ <20250521041306.GA28017@nxa18884-linux>
+ <20250521041840.GB28017@nxa18884-linux>
+ <CAPDyKFpSb+KsfDr1-=uk4TF4Op1dUQ9rDwPP5sSpMfxDRDhnZA@mail.gmail.com>
+ <20250523191713.nylhi74jq6z4hqmr@hiago-nb>
+ <CAPDyKFq6HG6iTZRnBSN25vhCU8Zj1c+r_ufGbiBsJ16N+1bJVg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|LV8PR12MB9406:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63c7ac75-7fa5-46ff-6448-08dd9cb22692
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OY+trXE1F/kBZKfCY6hPqEkGFZtmcMt0SS/1asYpFisj3JPc00pJKb6NhW2s?=
- =?us-ascii?Q?wd87HzBPHcH9RRZSTHydCFvOGIos2yK+AYFuTPzcLBRJno/bdkWyJcZjymAT?=
- =?us-ascii?Q?z22wLG5bO2wpzzC5deXlcWQ8rtvhT4ADq+nE6YrOVyZOxvya2PT9yRw2drLs?=
- =?us-ascii?Q?0PPtkq9QNRAk5yZQ3myukdVA8oEctRDVeNxaOK/U0Bg7peRkLby4fcdcM//o?=
- =?us-ascii?Q?Tcj9Am0XZf9QOIIljGqyxSijSb9aTAC/7wNnxQyikf9/qznRZy7KRp0EF3nI?=
- =?us-ascii?Q?UBajOIBuRJNJ1wrHwWS6vOVRnnkEjscTcDcFAViY0yzay9Oz69KYPbFVXOrY?=
- =?us-ascii?Q?E82jbBsiMi5CBfW7zU/oaOz60L9gIw5Pa+xHYDPNf6D3I+G/sxDGPqHd379a?=
- =?us-ascii?Q?tOATISsgft03/OJNerGelOAOZ4pxHY6n3aaTpX+CA0oHMmj/VYsuD0Rgb1mc?=
- =?us-ascii?Q?Wr5wC17Q3voUS4obwhc8ZIpUNLDIX2lLr/SNVj4OTyInjrOzt8npOJRFKGZQ?=
- =?us-ascii?Q?/vZGC13I+oGHm3Jt9PFuliIn3IhtBORPKeIcfPUbTyMS7JqBmo96Biqfo6tB?=
- =?us-ascii?Q?teBa1FeWjGStPkaRjC3VKcPoO3ZIOkIMBBGsWz9KaV6h9/KAoFeMK6tnaN9U?=
- =?us-ascii?Q?/Og6xdY075iDlYzFH1OCGZ3he2UHKDME12FLJU3UsqHPnAGepxdSo/Qvfud1?=
- =?us-ascii?Q?x1VZwvcHsv7DUIAUOD2fLcZsrcsIuTqUJKl5lDDBW3+9NKQDvBZydozR3hdV?=
- =?us-ascii?Q?Dja63TyASaB2FCv+Lohz272vCT7Z7C03y1fW5GOgVqMhvE/y0BvDGIIZLpi2?=
- =?us-ascii?Q?ijgZY6gUo71Ae7qwu5ZVj4k5RCKfDFgNncGXyR5YCHnBxl4Hynw11no65p63?=
- =?us-ascii?Q?talwl8JfvZOE9XN4RaoNnVX69KV8JfQOv9fDp8pypKkVMsUfLuMOdWN6QRIg?=
- =?us-ascii?Q?JQwgOsZ1WBQpo45ase2FhkoojXkq2oDhQItnVFwraCUWg3s0MHipS3TiEo9e?=
- =?us-ascii?Q?1RTPKpqr5qaEJ8eMt8TaO5rLDooTtVQFXupYZCkEASXg38nCPUaDTxCxGXJS?=
- =?us-ascii?Q?KW5DQOsnxVRONfnpDgWXJ8nAq6iAHQQef7X+aT5oaltewbcMhS2rs7lWLRfD?=
- =?us-ascii?Q?VlXwWF4yDbZp4iv/KHwrD0HqrY7u4EEZieLUt7y3fGYs0bdDZTGFQqxSL5Xe?=
- =?us-ascii?Q?Mm+Sy2hsUQsH/LNisWvjmB6AAV04vQD/33LRf1UZsceX2xm/b9wg2xqTMje5?=
- =?us-ascii?Q?BAea5VJyxhZGM4Wvu2qNMrKi0jtqecsLHdQRx2QYSfW5jy8kttLFMAHHHnTI?=
- =?us-ascii?Q?El86U2wgNMYk3VyUHIdOR2vKlUYuZIUKRgpfBFSRT42yq/2AF9Ny+j96oB/P?=
- =?us-ascii?Q?iCWoNcfic91XP0QNu7sDYJhONK/hf7Nqs3SGqUW87cDRSsuP7tPEiMtvsgi2?=
- =?us-ascii?Q?P+5sRXYqlqE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?w7epKvlmc5BK9yCy5iQQCLo1qQfwlPgJo7P9gzYtn7T8BKtNzUKeCkxfKmON?=
- =?us-ascii?Q?3/g/CnprBZ1uurSz1t5Eg5M0NyJq0cAjIwaFLX/yxUmVnfn3YpRuHN2w75d7?=
- =?us-ascii?Q?+Q3c+gC0uQe0odR5jfDehOSJ5B6tO3IDf4uBGz8gRijReHIoWxPb+tLDEAXY?=
- =?us-ascii?Q?LCw8YEST89N0fTA5HMwPUM19kSYeNm3b13KcznxgC3f+utJzgHZaQgejnlcl?=
- =?us-ascii?Q?mV7cQrNBps7xTHwYsRP644ed2hVqDdQbIfWnNkc2INwL+B4nrBtA7hwHbOPJ?=
- =?us-ascii?Q?dFD5goUmXXjTkItDRFc/miYrFNOZVdEYBP/hj5+uEQK1XpHaFGAisZatli2I?=
- =?us-ascii?Q?hDNnKIOubLAiUibsanI00IqNuyTzV3Xq8t6gfCRLONfJ1c8oOTHHDfJA5wUd?=
- =?us-ascii?Q?yd/TJLDC5xXg6SVBBQR5Aqc143yMIb6h5tKGDeipG2ElGUqJQe0SHM8h1bgr?=
- =?us-ascii?Q?hI8GacFzRPXPCimMAm9pnJYGwIXm/QV96sCSNVEtnfeJg5WzeZyTnYMyuHBm?=
- =?us-ascii?Q?GvKm5yzG/Z+6XAzDmnaucRqi+TuNLRCmNpuMEyByI/LyZTa5+F4fvpkJaktK?=
- =?us-ascii?Q?a9QotsQ3O1FK00uxi3FIHDVhm0y+LqADZWp82mPT+xxvcADDePdYnPy4ihkc?=
- =?us-ascii?Q?sELLodqTfDF2nMLuFBp5P1iSj44Pd9xmAW7tox16p7XV6tdr4+jrKDTQbqZW?=
- =?us-ascii?Q?feH385+8HbIHXoWXe/Ztx6OzfWtIQIVYUEK1xDZLwalZCzB0pXgZxH9184fN?=
- =?us-ascii?Q?CNy22jSAhEeAJYeYWGxry3ezbzOKaqxoxja568pBtHroIwwKdTPtylEFL4iv?=
- =?us-ascii?Q?p4t1VrLARRYlc0Vsh54XLqxSSF0hr54FgM5AUoxJF2GZ4IdT4uOIn67EoQme?=
- =?us-ascii?Q?fwD6m4ag3LX02xQRUG7xELWb2XaBB5nTEaW10RiFS81cPr+Lme3MnDwHK4Fq?=
- =?us-ascii?Q?/4AhpjmxQ/fzWSDPdsgBofVKm3etWjicLUqLZW8FUzLIhufMtn1Mz07iR0zx?=
- =?us-ascii?Q?N7wb1QCeXXsUPXgF5CSl2ljpWSCIonDQF6MNn/ydou300gV8G96DegwhmVtO?=
- =?us-ascii?Q?i0puq319Ki/HJ/YJWbYP2KIYzDEEiVYhUaXr4roTHwnCAIzEZJtTVICIYRyF?=
- =?us-ascii?Q?DYf5MPOD4Za8/YWO73qOeTbz/qW/DGun3T7gzlo8XLeISDOZ+9x63x0RHovU?=
- =?us-ascii?Q?fPBF6OOskoBYvmPLF6Q0iZVktsfE0jNewKCgCuI6glOZBbTwthdj/j+1JHJs?=
- =?us-ascii?Q?GVkXnuXV19kjHxHwKtCPmb6Vt25FN7n9jA+Y7i8H2Rp3/ZCyiVwD+lXl1W1p?=
- =?us-ascii?Q?LUGxdr9K57RtBTF2mg31rfxpzQqTGUsOtqrcWZieNYoQt7+3Ob3AFPo+n4dV?=
- =?us-ascii?Q?AKwCmLIYF0qMKTLb5yjskG/GCjxzrFEqbUloBM4InQOuQ6pcGgRPDHL7TDwF?=
- =?us-ascii?Q?SQYn+oQzACWgK70Y4tmjXV+gML/qVTVaZ+SfIRS7SBDPfIW76pM83gWBb8Sp?=
- =?us-ascii?Q?VcgQ/j+tsJ+V15eOw/7MFi7xb2OsApEO8Jm/HexSG2YG7dIxlyieuY90HKfy?=
- =?us-ascii?Q?SYjyO1F01HHebBoG8abU47o7a3QWcKi8z2Xox1/6?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63c7ac75-7fa5-46ff-6448-08dd9cb22692
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 00:05:12.3562
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7A9XmvXNXovJH44ikrCYmKs8OibEPGsl4G1PZhPHCzi9DyvgcZjA5ooj39YkooGo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9406
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFq6HG6iTZRnBSN25vhCU8Zj1c+r_ufGbiBsJ16N+1bJVg@mail.gmail.com>
 
-On Fri, May 16, 2025 at 09:45:21AM -0700, Jacob Pan wrote:
-> For no-iommu enabled devices working under IOMMUFD VFIO compat mode, the
-> group open path does not call vfio_df_open() and the open_count is 0. So
-> calling vfio_df_close() in the group close path will trigger warning in
-> vfio_assert_device_open(device);
+On Mon, May 26, 2025 at 12:07:49PM +0200, Ulf Hansson wrote:
+> On Fri, 23 May 2025 at 21:17, Hiago De Franco <hiagofranco@gmail.com> wrote:
+> >
+> > Hi Ulf,
+> >
+> > On Wed, May 21, 2025 at 02:11:02PM +0200, Ulf Hansson wrote:
+> > > You should not provide any flag (or attach_data to
+> > > dev_pm_domain_attach_list()) at all. In other words just call
+> > > dev_pm_domain_attach_list(dev, NULL, &priv->pd_list), similar to how
+> > > drivers/remoteproc/imx_dsp_rproc.c does it.
+> > >
+> > > In this way, the device_link is created by making the platform->dev
+> > > the consumer and by keeping the supplier-devices (corresponding to the
+> > > genpds) in RPM_SUSPENDED state.
+> > >
+> > > The PM domains (genpds) are then left in their current state, which
+> > > should allow us to call dev_pm_genpd_is_on() for the corresponding
+> > > supplier-devices, to figure out whether the bootloader turned them on
+> > > or not, I think.
+> > >
+> > > Moreover, to make sure the genpds are turned on when needed, we also
+> > > need to call pm_runtime_enable(platform->dev) and
+> > > pm_runtime_get_sync(platform->dev). The easiest approach is probably
+> > > to do that during ->probe() - and then as an improvement on top you
+> > > may want to implement more fine-grained support for runtime PM.
+> > >
+> > > [...]
+> > >
+> > > Kind regards
+> > > Uffe
+> >
+> > I did some tests here and I might be missing something. I used the
+> > dev_pm_genpd_is_on() inside imx_rproc.c with the following changes:
+> >
+> > @@ -902,7 +902,12 @@ static int imx_rproc_attach_pd(struct imx_rproc *priv)
+> >         if (dev->pm_domain)
+> >                 return 0;
+> >
+> >         ret = dev_pm_domain_attach_list(dev, &pd_data, &priv->pd_list);
+> > +       printk("hfranco: returned pd devs is %d", ret);
+> > +       for (int i = 0; i < ret; i++) {
+> > +               test = dev_pm_genpd_is_on(priv->pd_list->pd_devs[i]);
+> > +               printk("hfranco: returned value is %d", test);
+> > +       }
+> >         return ret < 0 ? ret : 0;
+> >  }
+> >
+> > This was a quick test to check the returned value, and it always return
+> > 1 for both pds, even if I did not boot the remote core.
+> >
+> > So I was wondering if it was because of PD_FLAG_DEV_LINK_ON, I removed
+> > it and passed NULL to dev_pm_domain_attach_list().
 > 
-> E.g. The following warning can be seen by running VFIO test.
-> https://github.com/awilliam/tests/blob/master/vfio-noiommu-pci-device-open.c
-> CONFIG_VFIO_CONTAINER = n
-> [   29.094781] vfio-pci 0000:02:01.0: vfio-noiommu device opened by user (vfio-noiommu-pc:164)
-> Failed to get device info
-> [   29.096540] ------------[ cut here ]------------
-> [   29.096616] WARNING: CPU: 1 PID: 164 at drivers/vfio/vfio_main.c:487 vfio_df_close+0xac/0xb4
+> Right, that's exactly what we should be doing.
 > 
-> This patch adds checks for no-iommu mode and open_count to skip calling vfio_df_close.
+> > Booting the kernel
+> > now it correctly reports 0 for both pds, however when I start the
+> > remote core with a hello world firmware and boot the kernel, the CPU
+> > resets with a fault reset ("Reset cause: SCFW fault reset").
+> >
+> > I added both pm functions to probe, just to test:
+> >
+> > @@ -1152,6 +1158,9 @@ static int imx_rproc_probe(struct platform_device *pdev)
+> >                 goto err_put_clk;
+> >         }
+> >
+> > +       pm_runtime_enable(dev);
+> > +       pm_runtime_get_sync(dev);
+> > +
 > 
-> Signed-off-by: Jacob Pan <jacob.pan@linux.microsoft.com>
-> ---
->  drivers/vfio/group.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
+> Indeed, calling pm_runtime_enable() and then pm_runtime_get_sync()
+> should turn on the PM domains for the device, which I assume is needed
+> at some point.
+> 
+> Although, I wonder if this may be a bit too late, I would expect that
+> you at least need to call these *before* the call to rproc_add(), as I
+> assume the rproc-core may start using the device/driver beyond that
+> point.
+> 
+> >         return 0
+> >
+> > Now the kernel boot with the remote core running, but it still returns
+> > 0 from dev_pm_genpd_is_on(). So basically now it always returns 0, with
+> > or without the remote core running.
+> 
+> dev_pm_genpd_is_on() is returning the current status of the PM domain
+> (genpd) for the device.
+> 
+> Could it be that the genpd provider doesn't register its PM domains
+> with the state that the HW is really in? pm_genpd_init() is the call
+> that allows the genpd provider to specify the initial state.
+> 
+> I think we need Peng's help here to understand what goes on.
+> 
+> >
+> > I tried to move pm_runtime_get_sync() to .prepare function but it make
+> > the kernel not boot anymore (with the SCU fault reset).
+> 
+> Try move pm_runtime_enable() before rproc_add().
 
-Sorry, this should have a fixes line:
+Thanks Ulf, that indeed made it work, at least now the kernel does not
+reset anymore with the SCU fault reset. However I am still only getting
+0 from dev_pm_genpd_is_on(), no matter what the state of the remote
+core. Maybe I am missing something in between?
 
-I think it is probably
+Peng, do you know what could be the issue here?
 
-Fixes: 6086efe73498 ("vfio-iommufd: Move noiommu compat validation out of vfio_iommufd_bind()")
+> 
+> >
+> > Do you have any suggestions? Am I doing something wrong with these PDs?
+> >
+> > Best regards,
+> > Hiago.
+> 
+> Kind regards
+> Uffe
 
-By the look of it, since that is what started skipping the vfio_df_open()
-
-But after looking at that patch I'm now doubting that this is the
-right fix.
-
-Previously we'd still do vfio_df_device_first_open(), just the
-vfio_df_iommufd_bind() was skipped.
-
-Now we skip all of vfio_df_device_first_open() which also means we skip:
-
-	if (!try_module_get(device->dev->driver->owner))
-		return -ENODEV;
-
-and
-	if (device->ops->open_device) {
-		ret = device->ops->open_device(device);
-
-Which seems wrong to me?? We only want to skip the bind, we should
-still do open_device! At least that is how it was before 6086e
-
-So.. This may not be the right fix.
-
-Maybe more like:
-
-diff --git a/drivers/vfio/group.c b/drivers/vfio/group.c
-index c321d442f0da09..1b6a0e30544401 100644
---- a/drivers/vfio/group.c
-+++ b/drivers/vfio/group.c
-@@ -192,18 +192,18 @@ static int vfio_df_group_open(struct vfio_device_file *df)
- 		 * implies they expected translation to exist
- 		 */
- 		if (!capable(CAP_SYS_RAWIO) ||
--		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd))
-+		    vfio_iommufd_device_has_compat_ioas(device, df->iommufd)) {
- 			ret = -EPERM;
--		else
--			ret = 0;
--		goto out_put_kvm;
-+			goto out_put_kvm;
-+		    }
- 	}
- 
- 	ret = vfio_df_open(df);
- 	if (ret)
- 		goto out_put_kvm;
- 
--	if (df->iommufd && device->open_count == 1) {
-+	if (df->iommufd && device->open_count == 1 &&
-+	    !vfio_device_is_noiommu(device)) {
- 		ret = vfio_iommufd_compat_attach_ioas(device, df->iommufd);
- 		if (ret)
- 			goto out_close_device;
-diff --git a/drivers/vfio/iommufd.c b/drivers/vfio/iommufd.c
-index c8c3a2d53f86e1..26c9c3068c77da 100644
---- a/drivers/vfio/iommufd.c
-+++ b/drivers/vfio/iommufd.c
-@@ -54,9 +54,6 @@ void vfio_df_iommufd_unbind(struct vfio_device_file *df)
- 
- 	lockdep_assert_held(&vdev->dev_set->lock);
- 
--	if (vfio_device_is_noiommu(vdev))
--		return;
--
- 	if (vdev->ops->unbind_iommufd)
- 		vdev->ops->unbind_iommufd(vdev);
- }
-diff --git a/drivers/vfio/vfio_main.c b/drivers/vfio/vfio_main.c
-index 1fd261efc582d0..ff19ea05442e7d 100644
---- a/drivers/vfio/vfio_main.c
-+++ b/drivers/vfio/vfio_main.c
-@@ -506,17 +506,19 @@ static int vfio_df_device_first_open(struct vfio_device_file *df)
- {
- 	struct vfio_device *device = df->device;
- 	struct iommufd_ctx *iommufd = df->iommufd;
--	int ret;
-+	int ret = 0;
- 
- 	lockdep_assert_held(&device->dev_set->lock);
- 
- 	if (!try_module_get(device->dev->driver->owner))
- 		return -ENODEV;
- 
--	if (iommufd)
--		ret = vfio_df_iommufd_bind(df);
--	else
-+	if (iommufd) {
-+		if (!vfio_device_is_noiommu(device))
-+			ret = vfio_df_iommufd_bind(df);
-+	} else {
- 		ret = vfio_device_group_use_iommu(device);
-+	}
- 	if (ret)
- 		goto err_module_put;
- 
-@@ -528,10 +530,12 @@ static int vfio_df_device_first_open(struct vfio_device_file *df)
- 	return 0;
- 
- err_unuse_iommu:
--	if (iommufd)
--		vfio_df_iommufd_unbind(df);
--	else
-+	if (iommufd) {
-+		if (!vfio_device_is_noiommu(device))
-+			vfio_df_iommufd_unbind(df);
-+	} else {
- 		vfio_device_group_unuse_iommu(device);
-+	}
- err_module_put:
- 	module_put(device->dev->driver->owner);
- 	return ret;
-@@ -546,10 +550,12 @@ static void vfio_df_device_last_close(struct vfio_device_file *df)
- 
- 	if (device->ops->close_device)
- 		device->ops->close_device(device);
--	if (iommufd)
--		vfio_df_iommufd_unbind(df);
--	else
-+	if (iommufd) {
-+		if (!vfio_device_is_noiommu(device))
-+			vfio_df_iommufd_unbind(df);
-+	} else {
- 		vfio_device_group_unuse_iommu(device);
-+	}
- 	module_put(device->dev->driver->owner);
- }
- 
-
-Jason
+Best regards,
+Hiago
