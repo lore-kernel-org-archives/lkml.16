@@ -1,143 +1,190 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC9A255F39
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FBC4A0A;
+	Tue, 27 May 2025 11:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748345888; cv=none; b=qMEcSe9g7fmX9PXHX7Y33dcEH7ksQTjPZ7xph3iXxi+47mTDDVVUtdah7beQVDXNhQF+o1aDBIMQHMwOgDNpD14HSnr/OQGzRwWJvXpS69XjW3I4xZhOL2BxNc4vSlzqi54TkSPyLZW21AmGMv6NEZrYXcb/zCPfAfwxi534Obo=
+	t=1748345947; cv=none; b=AL4rKv6VMdVCCssV0n1kQehdWucYnLEWce0g7Ido535z+yb+ADz4gr3v3Jfxc+uUKr66wQ6XLyhJQ+cG5kmj3pmFLPSf2Wpr/Php75koy+8p+VhJRhuKF0t+d0KbqGDGyUouU3ZC20KPK49E9qxv9TkPCT5mPxbiMYBeDMXAJlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748345888; c=relaxed/simple;
-	bh=I3iOwzn3pRnf0t+FYscW0taXwZ88KDJXhfGZXShT2mg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=G8424gNLf8MN3CsmEo1GU/t0syg3EfSEtnAISrWiFqBnZztGWwoPx2K7RLS0rjvEaahxAH0ZCdZXpWDjQRvgsy0zuKD2jm4sdLF4y+GMuGoyM+dHVGBy4HvunNBdu/+q39cStcd5+4NZRF+VHmLPgJLtfFS98mD7QA5ZJbqmTC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eItmrW7a; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eItmrW7a"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cec217977so18284755e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748345885; x=1748950685; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9ZFM1owHLSyIXqYqClroD9dE+A4zjVv7me0IORJZ8c=;
-        b=eItmrW7aznVxoWYyhG7NS95z45GopOgoHWc4cGXOIcA+HNWOpZXcQhOXa87GpOhUqT
-         ldMBxo/mGFYkAptgnJAbsDqM/qhIfvK2M4/0rYerSDwokLXzitV/MXEvLihGOnAOl76J
-         mVmqNRuYYzqlJi4ksAupav820SRBxv7O9P0PTVcvK7IvzVBN0gDzzKcbQ7yyDVcF9Pjs
-         4j+fOnluVzYUkW03G+qNZDqZvYkwnzi4PK1U7Vsx/kejLZcYHE3HZUBQ5XqX2Xr+qBLS
-         mtedxWX36RGBHyJpgoAvUDmplnBDkFekN5TU9p9gsb3NsLEJti96agGeBbA1FOKtGuxM
-         zh7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748345885; x=1748950685;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9ZFM1owHLSyIXqYqClroD9dE+A4zjVv7me0IORJZ8c=;
-        b=Gg+ZRLD0BEZo3+9sZGyJFsGOqP3bhmQ3PEetfYHA/P3uYCsE3gEaVbWbTMvi8HBV+l
-         wVCjhDMNf1d4YdRAr0aLZzWuaZ6QdJCE4WISUGkxY29k/eNqga/v6kGNZ4+ZouoJcs8g
-         C0qW+g82VrySNnEsFGlT8aNXXyE+gUlyfc9b830LTye7dv6Xmp+Ps00BYbzyv+bW9B0I
-         EeYarxXke9t31UhFK3pHMpGdfI0C5X1EEeAKRONu6yqVg34S7ntonctN23tdpgihaRin
-         rkxDKK09BRwTj/U72IVZkgPKoOyLzP8D+fv2Fnl5NLNCOkVXpht9M6/Nm9t/632ofRaH
-         ogrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUO36xTJA+IlnXJe3oLix+nwUnVZHEZhQZA/z7z/Rqn9A0s/XsZg5uDZ2wVOdEMZf07w9mQ+lsp9M3E83c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzToxlEg7WyygxrMrIeCgalLF2EwlC4TSTNpysk1g/hN2MuPooC
-	eLAeGJMKW5WT2DTeL4czZI9aD2DqB/uXEo0ZAzMIC27oLhuNM15gM0X6Gze1CDOpe5FVG/gnuUP
-	pSlTVHMVGP+738xiWFg==
-X-Google-Smtp-Source: AGHT+IFpvNOJ2/KXvQ51DYsYVifopBo7XSSIRwWdPrGINFoCrwsjAPVGbc7ZNuv/iQlzTsaZGh/BpZGdQzlBGKE=
-X-Received: from wmbjg20.prod.google.com ([2002:a05:600c:a014:b0:43c:ef7b:ffac])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:444f:b0:440:9b1a:cd78 with SMTP id 5b1f17b1804b1-44c935dca8emr145499115e9.10.1748345885099;
- Tue, 27 May 2025 04:38:05 -0700 (PDT)
-Date: Tue, 27 May 2025 11:38:02 +0000
-In-Reply-To: <aDG6t-HdZSuWyPGo@pollux.localdomain>
+	s=arc-20240116; t=1748345947; c=relaxed/simple;
+	bh=v8uyg8afEdAi69p+DRGtrXU2w+DDZuGr3H1wT8pqhrQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=diuUqIlH1R3u3eL26QmZpU1UXkZ6gJ2Aj9QCZmxGpGnP93vIqSe5XxId9zCxReBuLCVTKOwATx4BObQqseXSPtTrQn+uM+O4N1IZ6MKaF+gaT2jWV0r5kUkS20GMFAL8VQQwyaj/CutxRylk8HjCJUxwvo+YVsLHNxzALwxZ6+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4b69bv1vjlznfgc;
+	Tue, 27 May 2025 19:37:47 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id B945F1402C4;
+	Tue, 27 May 2025 19:39:01 +0800 (CST)
+Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 27 May 2025 19:39:01 +0800
+Received: from localhost.localdomain (10.175.104.82) by
+ kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 27 May 2025 19:39:00 +0800
+From: Dong Chenchen <dongchenchen2@huawei.com>
+To: <hawk@kernel.org>, <ilias.apalodimas@linaro.org>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<horms@kernel.org>, <almasrymina@google.com>, <linyunsheng@huawei.com>,
+	<toke@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhangchangzhong@huawei.com>, Dong Chenchen <dongchenchen2@huawei.com>,
+	<syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com>
+Subject: [PATCH net v2] page_pool: Fix use-after-free in page_pool_recycle_in_ring
+Date: Tue, 27 May 2025 19:41:52 +0800
+Message-ID: <20250527114152.3119109-1-dongchenchen2@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aC2HacSU7j5d9bzu@pollux> <aC5XDi7SaDJeUaAC@google.com>
- <aC7DVewqqWIKetmk@pollux> <aC8uNmrLUSS8sxHU@google.com> <2025052201-return-reprogram-add9@gregkh>
- <aC9krUYJmJqu0xVR@cassiopeiae> <2025052330-reverence-slideshow-d498@gregkh>
- <aDBC__rflS8625Vb@cassiopeiae> <aDCrufEjtJeGjO6z@google.com> <aDG6t-HdZSuWyPGo@pollux.localdomain>
-Message-ID: <aDWkGmcUBVHl7QmM@google.com>
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benno Lossin <lossin@kernel.org>, 
-	Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemq200002.china.huawei.com (7.202.195.90)
 
-On Sat, May 24, 2025 at 02:25:27PM +0200, Danilo Krummrich wrote:
-> On Fri, May 23, 2025 at 05:09:13PM +0000, Alice Ryhl wrote:
-> > On Fri, May 23, 2025 at 11:42:23AM +0200, Danilo Krummrich wrote:
-> > > The only thing I don't want to is to allow to leak files or directories, i.e.
-> > > 
-> > > 	File::new("bar_file", bar_dir).leak()
-> > > 
-> > > which keeps the file in the filesystem, but takes away the handle from the Rust
-> > > side, such that it won't be removed from the filesystem anymore when the handle
-> > > goes out of scope, which can cause nasty bugs. But I think there isn't any
-> > > benefit to allow this anyways and it isn't needed with reference counting.
-> > 
-> > Why not have leak() for files only? That way, the files still go away
-> > when you drop the directory, and you don't have to keep around a bunch
-> > of File objects in your Rust structs.
-> 
-> In a previous mail I said that there are more reasons why we don't want to have
-> files (or directories) in the filesystem without an object representation in
-> Rust.
-> 
-> One of them is when attaching private data to a file, like we do with
-> debugfs_create_file().
-> 
-> When we do this, in most of the cases we want to share data between a driver
-> structure and the debugfs file (e.g. a GPU's VM to dump the virtual address
-> space layout).
-> 
-> And most likely we do this by passing an Arc<T> to dir.file(), to make the file
-> own a reference to the corresponding reference counted object (in C we just hope
-> that no one frees the object while the debugfs file holds a pointer to it).
-> 
-> The question is, what happens to this reference if we would subsequently call
-> file.leak()? We can't drop the Arc, because otherwise we risk a UAF in the
-> filesystem callback, but we can't keep it either because otherwise we *really*
-> leak this reference, even if the parent directory is removed eventually.
-> 
-> --
-> 
-> Now, one could say, what about attaching the file's private data to the directory
-> instead? (And I think this has been proposed already elsewhere.)
-> 
-> But I really don't like this approach, because it would mean that when creating
-> the directory we would necessarily need to know all the files we will ever
-> create in this directory *and* have all the corresponding private data
-> available at this point of time. But that would be an insane requirement.
-> 
-> For instance, let's assume a driver creates a directory 'clients', which for
-> every connected userspace "client" wants to provide a file with some metadata
-> for this client.
-> 
-> Sure, you can work around this somehow, e.g. by using a mutex protected Vec as
-> private data or by always creating a new directory first for dynamically created
-> debugfs entires. But this sounds pretty horrible to me.
+syzbot reported a uaf in page_pool_recycle_in_ring:
 
-I do agree that if we support file.leak(), then the private data should:
+BUG: KASAN: slab-use-after-free in lock_release+0x151/0xa30 kernel/locking/lockdep.c:5862
+Read of size 8 at addr ffff8880286045a0 by task syz.0.284/6943
 
-1. Be provided when creating the file, not the directory.
-2. Be stored with the directory and be freed with it.
-3. Not be encoded in the type of the directory.
+CPU: 0 UID: 0 PID: 6943 Comm: syz.0.284 Not tainted 6.13.0-rc3-syzkaller-gdfa94ce54f41 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:489
+ kasan_report+0x143/0x180 mm/kasan/report.c:602
+ lock_release+0x151/0xa30 kernel/locking/lockdep.c:5862
+ __raw_spin_unlock_bh include/linux/spinlock_api_smp.h:165 [inline]
+ _raw_spin_unlock_bh+0x1b/0x40 kernel/locking/spinlock.c:210
+ spin_unlock_bh include/linux/spinlock.h:396 [inline]
+ ptr_ring_produce_bh include/linux/ptr_ring.h:164 [inline]
+ page_pool_recycle_in_ring net/core/page_pool.c:707 [inline]
+ page_pool_put_unrefed_netmem+0x748/0xb00 net/core/page_pool.c:826
+ page_pool_put_netmem include/net/page_pool/helpers.h:323 [inline]
+ page_pool_put_full_netmem include/net/page_pool/helpers.h:353 [inline]
+ napi_pp_put_page+0x149/0x2b0 net/core/skbuff.c:1036
+ skb_pp_recycle net/core/skbuff.c:1047 [inline]
+ skb_free_head net/core/skbuff.c:1094 [inline]
+ skb_release_data+0x6c4/0x8a0 net/core/skbuff.c:1125
+ skb_release_all net/core/skbuff.c:1190 [inline]
+ __kfree_skb net/core/skbuff.c:1204 [inline]
+ sk_skb_reason_drop+0x1c9/0x380 net/core/skbuff.c:1242
+ kfree_skb_reason include/linux/skbuff.h:1263 [inline]
+ __skb_queue_purge_reason include/linux/skbuff.h:3343 [inline]
 
-Some sort of list with data to free when the directory is freed could
-work. But it sounds like we should not consider file.leak() for the
-initial API.
+root cause is:
 
-Alice
+page_pool_recycle_in_ring
+  ptr_ring_produce
+    spin_lock(&r->producer_lock);
+    WRITE_ONCE(r->queue[r->producer++], ptr)
+      //recycle last page to pool
+				page_pool_release
+				  page_pool_scrub
+				    page_pool_empty_ring
+				      ptr_ring_consume
+				      page_pool_return_page  //release all page
+				  __page_pool_destroy
+				     free_percpu(pool->recycle_stats);
+				     free(pool) //free
+
+     spin_unlock(&r->producer_lock); //pool->ring uaf read
+  recycle_stat_inc(pool, ring);
+
+page_pool can be free while page pool recycle the last page in ring.
+Add producer-lock barrier to page_pool_release to prevent the page
+pool from being free before all pages have been recycled.
+
+recycle_stat_inc() is empty when CONFIG_PAGE_POOL_STATS is not
+enabled, which will trigger Wempty-body build warning. Add definition
+for pool stat macro to fix warning.
+
+Suggested-by: Jakub Kacinski <kuba@kernel.org>
+Link: https://lore.kernel.org/netdev/20250513083123.3514193-1-dongchenchen2@huawei.com
+Fixes: ff7d6b27f894 ("page_pool: refurbish version of page_pool code")
+Reported-by: syzbot+204a4382fcb3311f3858@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=204a4382fcb3311f3858
+Signed-off-by: Dong Chenchen <dongchenchen2@huawei.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+---
+Changes in v2:
+ - Change the return type from int to bool
+ - Fix Wempty-body warn of recycle_stat_inc
+---
+ net/core/page_pool.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+index 7745ad924ae2..862ec1dc48df 100644
+--- a/net/core/page_pool.c
++++ b/net/core/page_pool.c
+@@ -153,9 +153,9 @@ u64 *page_pool_ethtool_stats_get(u64 *data, const void *stats)
+ EXPORT_SYMBOL(page_pool_ethtool_stats_get);
+ 
+ #else
+-#define alloc_stat_inc(pool, __stat)
+-#define recycle_stat_inc(pool, __stat)
+-#define recycle_stat_add(pool, __stat, val)
++#define alloc_stat_inc(...)	do { } while (0)
++#define recycle_stat_inc(...)	do { } while (0)
++#define recycle_stat_add(...)	do { } while (0)
+ #endif
+ 
+ static bool page_pool_producer_lock(struct page_pool *pool)
+@@ -707,19 +707,16 @@ void page_pool_return_page(struct page_pool *pool, netmem_ref netmem)
+ 
+ static bool page_pool_recycle_in_ring(struct page_pool *pool, netmem_ref netmem)
+ {
+-	int ret;
+-	/* BH protection not needed if current is softirq */
+-	if (in_softirq())
+-		ret = ptr_ring_produce(&pool->ring, (__force void *)netmem);
+-	else
+-		ret = ptr_ring_produce_bh(&pool->ring, (__force void *)netmem);
++	bool in_softirq, ret;
+ 
+-	if (!ret) {
++	/* BH protection not needed if current is softirq */
++	in_softirq = page_pool_producer_lock(pool);
++	ret = !__ptr_ring_produce(&pool->ring, (__force void *)netmem);
++	if (ret)
+ 		recycle_stat_inc(pool, ring);
+-		return true;
+-	}
++	page_pool_producer_unlock(pool, in_softirq);
+ 
+-	return false;
++	return ret;
+ }
+ 
+ /* Only allow direct recycling in special circumstances, into the
+@@ -1091,10 +1088,14 @@ static void page_pool_scrub(struct page_pool *pool)
+ 
+ static int page_pool_release(struct page_pool *pool)
+ {
++	bool in_softirq;
+ 	int inflight;
+ 
+ 	page_pool_scrub(pool);
+ 	inflight = page_pool_inflight(pool, true);
++	/* Acquire producer lock to make sure producers have exited. */
++	in_softirq = page_pool_producer_lock(pool);
++	page_pool_producer_unlock(pool, in_softirq);
+ 	if (!inflight)
+ 		__page_pool_destroy(pool);
+ 
+-- 
+2.25.1
+
