@@ -1,30 +1,71 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042A7154457;
-	Tue, 27 May 2025 08:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A441FCCF8
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748333487; cv=none; b=Um90nfWcs7Y+8UFnlNQIH4t5goYgn1lRWrpLdJOwm5dcqGQaUDznyRPV88hmlehVV15ArJa+Y1SE/uGO5kyhjJE6KAbq0PdRtif6QkxfEYNysJVAN77W10CdB/n8WOthFfIKFNxzJmwlopPuaGTqmPl+xADNfbU6/iD7tzmY3Qg=
+	t=1748333518; cv=none; b=M0Ur976Prwbai2x+kSfUYaFe2sh4E2bR5sOlN7tjeTjDvWc1QcZE62PgGq9zbB/6TZ5QNtDtNYedaZtcOWbcXw6PkJV1o9D+0MbvP3pqgt+wSygevI6NsmQX7CoCIjaY8MvtvFxWceazNd7AaIFRthFTi65ztCG2eFjMtnxjviY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748333487; c=relaxed/simple;
-	bh=wkEbYlUmL/0e/Oq4Kc62UXZiv8Icaa5HQS20G9Srl+o=;
+	s=arc-20240116; t=1748333518; c=relaxed/simple;
+	bh=M0Z25TQaMMnFn5IurMQklTpt99v4cvYnHAu/IuqEobk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MtejY/z44ULheguW0DREMGSkiwVuHAzN/mBHqtWdRQ/20XB/DyANNKjbSRFc2/JzvsBHAR6+02F0T+5ezsZMVFq1T13sH+s0ROk17Y2Ww4NkNprSPOgRNB/OnyDfx+A3N6w00qabrlua7tnRwiz5gd5psAzfFkZ0qPUk7ruMtCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b651k2LxrzYQv8L;
-	Tue, 27 May 2025 16:11:22 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 701BD1A252A;
-	Tue, 27 May 2025 16:11:21 +0800 (CST)
-Received: from [10.67.111.192] (unknown [10.67.111.192])
-	by APP4 (Coremail) with SMTP id gCh0CgCXRlunczVo2KyeNg--.19162S2;
-	Tue, 27 May 2025 16:11:21 +0800 (CST)
-Message-ID: <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
-Date: Tue, 27 May 2025 16:11:19 +0800
+	 In-Reply-To:Content-Type; b=UBNoV0b+e0J3Kto0R382IQpiLujd37cYgLKQkgH/xG2wLc6f01MygDXDbyN7mxiqB3SSa2FvWsh3Vlmc3d6+5bpjFE99DaqRjaLtPxCDiiEKNHDOj1yLLcYMVAT7x9lt4QsB06YOEqmycpGSURuDApS5SfDmIayrYGcwykMblI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ivVl5llu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ivVl5llu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748333515;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uc8SBIaKuW9hd4Ztl1l2JfCcfjBxitXGrH2FjSYGyBI=;
+	b=ivVl5llu4DBwRCGO/v62wKHTpLkR7kCUspjWqEZDX90bcPDQlREBOZxj6zK/sUEu/Hdv7x
+	M/NHh2FYdIISFj+Mw1ymCWoTHKfbNd0+pjUHVeoDU/WstdVOggRm7T6Xg0fkAEHY87d8bP
+	kOt5RgrMuKnX8LkWA2AYEaxeArSAves=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-zdDm7ZGAOoi2Lzu7QDrqTA-1; Tue, 27 May 2025 04:11:53 -0400
+X-MC-Unique: zdDm7ZGAOoi2Lzu7QDrqTA-1
+X-Mimecast-MFC-AGG-ID: zdDm7ZGAOoi2Lzu7QDrqTA_1748333512
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442ffaa7dbeso22556185e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 01:11:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748333512; x=1748938312;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uc8SBIaKuW9hd4Ztl1l2JfCcfjBxitXGrH2FjSYGyBI=;
+        b=Ex06Q5fRDfnTHpOYbRv3/Y0U3ewe74fQgqJc6CUZWvn5gEmCDLlK/PP8yKvOYlhIVZ
+         1j64BcPCQKOgEx8RMbpDyPvWiJMbYlu4T/pl0u3eBd0i2DheLB26yP9cmQqBXE1bXk95
+         ntb7fY9LeUTMlW9Ji3lpCSj9bVJKs17dhixLZHbstmJfZH/ZYNztN3rxNu9cDu1d5OYQ
+         /KlB4+gTE8MTxr4NEFzkOTlIeGYN+jVfun2Ushk6riAkxcsWYJMH3VCMbck4fMlcD4jR
+         oxP9Zykl0F1Y7FEAb4302wqXOC5WWsrKFGXOMs4Dfkeg2uBI+S6NHF5gSeKE0Ele0u4c
+         SWAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXne1sBPfKnNjl61TEEkoEo5RwwQOtVeBvxtDjmM4UUzcudl2QhFCCgdpX+3ph4J9jNFkp6CPbetji1rb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+IRapsutSXQ+BUf4thWgQeMrv9t5vA1NxizM2JT5SaB6E+9L3
+	71MV2ewCiUNfbdUTDgINYA1fLX++ZIZmD7VouggI8/zJsemPS9OIe3I3iXb0BLQepcXXPqvJO+i
+	9jORZOSiDagxzRUi8eOwd8rM6KNUkRTAQzvpjnMGf0uU0REU1zFKypoKbdIwOrdX+Vw==
+X-Gm-Gg: ASbGncsTm3GEmhjNKdVARuQhOH0z9yv0zxPbujFo+NOOtQHsYtPY0nEe5y0JehO8/Do
+	EXr6fblw73mJ4RfiYhJ1pVRB70w4iMIlpa10rKIiY+bjmk6zdjD8lRN1LrcbrwLdj+xkZVuKvHq
+	d9ruua+mxXDs5MLo04ZVGtcTeswIv+MqmEkHmNfJJFh/wkK0wKHhrDQDrVSFOYGoeJ5yBPDyclR
+	qA1KStpGofkvSnL4Maf4/1BxPBSXExF8GROkSwqhszBR8RCDVRLbe8Dyds2b0flpoZXAVD9irbu
+	Gm506SEg+h3ArsDZC/mKo8LiCJuHWYeJt6CzgERXwgQCwL0BVJU=
+X-Received: by 2002:a05:600c:64c5:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-44c935dbb26mr120963485e9.30.1748333512438;
+        Tue, 27 May 2025 01:11:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYAtk9413NqBo2PajYHvgPjwcpaG+eT7N4Q6fyVV+Lil0t7i7dtNFpt991DzyOflFbKn4oJA==
+X-Received: by 2002:a05:600c:64c5:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-44c935dbb26mr120963055e9.30.1748333511996;
+        Tue, 27 May 2025 01:11:51 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:ced3:55bd:f454:e722? ([2a01:e0a:c:37e0:ced3:55bd:f454:e722])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7d975f4sm258858665e9.39.2025.05.27.01.11.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 01:11:50 -0700 (PDT)
+Message-ID: <8bfce982-b22a-4ef3-b79e-5e22a3364c5a@redhat.com>
+Date: Tue, 27 May 2025 10:11:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,203 +73,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v2 1/2] bpf, arm64: Support up to 12 function
- arguments
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Puranjay Mohan <puranjay@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Florent Revest <revest@chromium.org>
-Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>,
- ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, Xu Kuohai <xukuohai@huawei.com>
-References: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
- <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
-Content-Language: en-US
-From: Xu Kuohai <xukuohai@huaweicloud.com>
-In-Reply-To: <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
+Subject: Re: [PATCH RFC drm-misc-next v2 1/1] drm/hyperv: Add support for
+ drm_panic
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>, drawat.floss@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch
+Cc: linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250526090117.80593-1-ryasuoka@redhat.com>
+ <20250526090117.80593-2-ryasuoka@redhat.com>
+Content-Language: en-US, fr
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <20250526090117.80593-2-ryasuoka@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXRlunczVo2KyeNg--.19162S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCFyxAw1DZr17tr1xKryrtFb_yoWrCrWxpr
-	nYk3ZxGFs3Zw40g3WrXw4UX34FkFs5tF4Y9r48A343AF4DKrykKFsYkayjkFyfCr1kAF4j
-	93s0vrsxAF45J3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	4xRDUUUUU==
-X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
+Content-Transfer-Encoding: 7bit
 
-On 5/22/2025 6:14 PM, Alexis Lothoré wrote:
+On 26/05/2025 11:01, Ryosuke Yasuoka wrote:
+> Add drm_panic module for hyperv drm so that panic screen can be
+> displayed on panic.
 
-[...]
+Thanks, it looks good to me.
 
-> -static void save_args(struct jit_ctx *ctx, int args_off, int nregs)
-> +struct arg_aux {
-> +	/* how many args are passed through registers, the rest of the args are
-> +	 * passed through stack
-> +	 */
-> +	int args_in_regs;
-> +	/* how many registers are used to pass arguments */
-> +	int regs_for_args;
-> +	/* how much stack is used for additional args passed to bpf program
-> +	 * that did not fit in original function registers
-> +	 **/
-
-nit: "**/" should be "*/"
-
-> +	int bstack_for_args;
-> +	/* home much stack is used for additional args passed to the
-> +	 * original function when called from trampoline (this one needs
-> +	 * arguments to be properly aligned)
-> +	 */
-> +	int ostack_for_args;
-> +};
-> +
-> +static int calc_arg_aux(const struct btf_func_model *m,
-> +			 struct arg_aux *a)
->   {
-> -	int i;
-> +	int stack_slots, nregs, slots, i;
-> +
-> +	/* verifier ensures m->nr_args <= MAX_BPF_FUNC_ARGS */
-> +	for (i = 0, nregs = 0; i < m->nr_args; i++) {
-> +		slots = (m->arg_size[i] + 7) / 8;
-> +		if (nregs + slots <= 8) /* passed through register ? */
-> +			nregs += slots;
-> +		else
-> +			break;
-> +	}
-> +
-> +	a->args_in_regs = i;
-> +	a->regs_for_args = nregs;
-> +	a->ostack_for_args = 0;
-> +
-> +	/* the rest arguments are passed through stack */
-> +	for (a->ostack_for_args = 0, a->bstack_for_args = 0;
-> +	     i < m->nr_args; i++) {
-
-a->ostack_for_args is initialized twice.
-
-move all initializations before the loop?
-
-> +		/* We can not know for sure about exact alignment needs for
-> +		 * struct passed on stack, so deny those
-> +		 */
-> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
-> +			return -EOPNOTSUPP;
-
-leave the error code as is, namely, return -ENOTSUPP?
-
-> +		stack_slots = (m->arg_size[i] + 7) / 8;
-> +		/* AAPCS 64 C.14: arguments passed on stack must be aligned to
-> +		 * max(8, arg_natural_alignment)
-> +		 */
-> +		a->bstack_for_args += stack_slots * 8;
-> +		a->ostack_for_args = round_up(a->ostack_for_args + stack_slots * 8, 8);
-
-since a->ostack_for_args starts from 0 and is always incremented
-by multiples of 8, round_up() to 8 is not needed.
-
-> +	}
+Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
+> 
+> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+> ---
+>   drivers/gpu/drm/hyperv/hyperv_drm_modeset.c | 36 +++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> index f7d2e973f79e..945b9482bcb3 100644
+> --- a/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> +++ b/drivers/gpu/drm/hyperv/hyperv_drm_modeset.c
+> @@ -17,6 +17,7 @@
+>   #include <drm/drm_gem_framebuffer_helper.h>
+>   #include <drm/drm_gem_shmem_helper.h>
+>   #include <drm/drm_probe_helper.h>
+> +#include <drm/drm_panic.h>
+>   #include <drm/drm_plane.h>
 >   
-> -	for (i = 0; i < nregs; i++) {
-> -		emit(A64_STR64I(i, A64_SP, args_off), ctx);
-> -		args_off += 8;
-> +	return 0;
-> +}
-> +
-> +static void clear_garbage(struct jit_ctx *ctx, int reg, int effective_bytes)
-> +{
-> +	if (effective_bytes) {
-> +		int garbage_bits = 64 - 8 * effective_bytes;
-> +#ifdef CONFIG_CPU_BIG_ENDIAN
-> +		/* garbage bits are at the right end */
-> +		emit(A64_LSR(1, reg, reg, garbage_bits), ctx);
-> +		emit(A64_LSL(1, reg, reg, garbage_bits), ctx);
-> +#else
-> +		/* garbage bits are at the left end */
-> +		emit(A64_LSL(1, reg, reg, garbage_bits), ctx);
-> +		emit(A64_LSR(1, reg, reg, garbage_bits), ctx);
-> +#endif
+>   #include "hyperv_drm.h"
+> @@ -181,10 +182,45 @@ static void hyperv_plane_atomic_update(struct drm_plane *plane,
 >   	}
 >   }
 >   
-> -static void restore_args(struct jit_ctx *ctx, int args_off, int nregs)
-> +static void save_args(struct jit_ctx *ctx, int bargs_off, int oargs_off,
-> +		      const struct btf_func_model *m,
-> +		      const struct arg_aux *a,
-> +		      bool for_call_origin)
->   {
->   	int i;
-> +	int reg;
-> +	int doff;
-> +	int soff;
-> +	int slots;
-> +	u8 tmp = bpf2a64[TMP_REG_1];
+> +static int hyperv_plane_get_scanout_buffer(struct drm_plane *plane,
+> +					   struct drm_scanout_buffer *sb)
+> +{
+> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
+> +	struct iosys_map map = IOSYS_MAP_INIT_VADDR_IOMEM(hv->vram);
 > +
-> +	/* store arguments to the stack for the bpf program, or restore
-> +	 * arguments from stack for the original function
-> +	 */
-> +	for (reg = 0; reg < a->regs_for_args; reg++) {
-> +		emit(for_call_origin ?
-> +		     A64_LDR64I(reg, A64_SP, bargs_off) :
-> +		     A64_STR64I(reg, A64_SP, bargs_off),
-> +		     ctx);
-> +		bargs_off += 8;
+> +	if (plane->state && plane->state->fb) {
+> +		sb->format = plane->state->fb->format;
+> +		sb->width = plane->state->fb->width;
+> +		sb->height = plane->state->fb->height;
+> +		sb->pitch[0] = plane->state->fb->pitches[0];
+> +		sb->map[0] = map;
+> +		return 0;
 > +	}
-> +
-> +	soff = 32; /* on stack arguments start from FP + 32 */
-> +	doff = (for_call_origin ? oargs_off : bargs_off);
-> +
-> +	/* save on stack arguments */
-> +	for (i = a->args_in_regs; i < m->nr_args; i++) {
-> +		slots = (m->arg_size[i] + 7) / 8;
-> +		/* AAPCS C.14: additional arguments on stack must be
-> +		 * aligned on max(8, arg_natural_alignment)
-> +		 */
-> +		soff = round_up(soff, 8);
-> +		if (for_call_origin)
-> +			doff =  round_up(doff, 8);
-
-since both soff and doff start from multiples of 8 and are
-incremented by 8 each time, the two round_up()s are also
-not needed.
-
-> +		/* verifier ensures arg_size <= 16, so slots equals 1 or 2 */
-> +		while (slots-- > 0) {
-> +			emit(A64_LDR64I(tmp, A64_FP, soff), ctx);
-> +			/* if there is unused space in the last slot, clear
-> +			 * the garbage contained in the space.
-> +			 */
-> +			if (slots == 0 && !for_call_origin)
-> +				clear_garbage(ctx, tmp, m->arg_size[i] % 8);
-> +			emit(A64_STR64I(tmp, A64_SP, doff), ctx);
-> +			soff += 8;
-> +			doff += 8;
-> +		}
-> +	}
+> +	return -ENODEV;
 > +}
-
-[...]
+> +
+> +static void hyperv_plane_panic_flush(struct drm_plane *plane)
+> +{
+> +	struct hyperv_drm_device *hv = to_hv(plane->dev);
+> +	struct drm_rect rect;
+> +
+> +	if (!plane->state || !plane->state->fb)
+> +		return;
+> +
+> +	rect.x1 = 0;
+> +	rect.y1 = 0;
+> +	rect.x2 = plane->state->fb->width;
+> +	rect.y2 = plane->state->fb->height;
+> +
+> +	hyperv_update_dirt(hv->hdev, &rect);
+> +}
+> +
+>   static const struct drm_plane_helper_funcs hyperv_plane_helper_funcs = {
+>   	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
+>   	.atomic_check = hyperv_plane_atomic_check,
+>   	.atomic_update = hyperv_plane_atomic_update,
+> +	.get_scanout_buffer = hyperv_plane_get_scanout_buffer,
+> +	.panic_flush = hyperv_plane_panic_flush,
+>   };
+>   
+>   static const struct drm_plane_funcs hyperv_plane_funcs = {
 
