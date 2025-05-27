@@ -1,185 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446021F4CBB;
-	Tue, 27 May 2025 13:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CB9269CF6
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748351111; cv=none; b=tAA/eiw+PMTEAx8WE0+Lmqdj6jr2J0trZlPuzMlRD5+qVhdZFdH1fBYJl1LCEQUOaSBrhzKTo+IUf6hDKVXnTae3mdQxrDqUP7ofZKutlYOISX8ib32WZ42beq3AOvW6B1STnaF/W2Dui6sgmFwQinSyMCkQMRcZ4Kdb2xe5NTc=
+	t=1748351131; cv=none; b=ApHlb/fzE5Kttteyb3yHa6Ifqw0XP1RXjVX1UKlhKg8gVtoeo+WNlbFBTwhfzGUOwSckMNI39oTDgvnmFIWIEs3G73PgCko3NUfTbETYLUFSCCuDIVzMIxI0HgXfcBnIJHfTOyM3qJRXTHGzT4LS/GjfdEGImOSC1PE35Esob6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748351111; c=relaxed/simple;
-	bh=Ompy122E7fHKg2aBu7QUio5qAZ+AuN85g7YTBOJaKyA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjq+HZSUxcayKa5Ek9rAaX1aaJr4dsNZV6Ao5JEI0QhZuZ1juveiV9RW5QLmRBLftBKqy45YAKkFnKvVW548cKYfqgCNWS2yOHzHbg3N6KEp9h29Y+t2lxcCXIm61PQGiok4mJW8hgyouTo+MR9cTLh2XV+aiFqJuAjfHGMNJlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Si/NPXgd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Si/NPXgd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB640C4CEE9;
-	Tue, 27 May 2025 13:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748351111;
-	bh=Ompy122E7fHKg2aBu7QUio5qAZ+AuN85g7YTBOJaKyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Si/NPXgd83sNoeKHHt6o4b0SsEwFNoMY1gMTUuBC5hYiTLDcCbgFB8ndUekZgLMIN
-	 GufD2uZnoWccEpfAvoIQ5W7US/1fV+tzdu39X8Wy4ZyXl5n3K/zUqztPlb1k1ZMk9a
-	 YR+BnKcygGqQ8+0LSqyk34Cr1bPmyXzjTQFZ5qFNne1GsEd7EKcKe3oWwRekAgNluw
-	 4HX17jP4ZSqJmT7uKOg5iWe1/WrKbCcx1w5RrxB5HjCsTqGzV/oPfhHfS1G8PtSACA
-	 qLd4GhMHxK1j/3VN8peAyDplQSYF6ywMyPTmfQ6Z442X0+zNDBC/JkvSPeI2fWqLkk
-	 b0jK0FaKigWvw==
-Date: Tue, 27 May 2025 15:05:08 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Jared Kangas <jkangas@redhat.com>
-Cc: sumit.semwal@linaro.org, benjamin.gaignard@collabora.com, 
-	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com, 
-	christian.koenig@amd.com, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] dma-buf: heaps: Give default CMA heap a fixed name
-Message-ID: <20250527-gainful-jaguar-of-honor-a72e15@houat>
-References: <20250522191418.442390-1-jkangas@redhat.com>
- <20250522191418.442390-4-jkangas@redhat.com>
+	s=arc-20240116; t=1748351131; c=relaxed/simple;
+	bh=cFA/dkYyvc3X1Y7GQyzohC1dFXVFvAzkHJAS97M1O70=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=uwABt8DS6OzeUDvAyMXJZu/L2OHiqNcOdopCrnn0SjQfXblPN7Qy3LouaE4w28QjAUl1EdTxgmbZJMVMRATPHB9Jfx3RZHp48X8XEBXT1YI7ObTTZvwlXr+JXSojNNXLicKcqx80ymf1rymN5lcj4wq1W0JISsJvT/Z435Ie89o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b6CVm4T0kz13Lsf;
+	Tue, 27 May 2025 21:03:28 +0800 (CST)
+Received: from kwepemg100001.china.huawei.com (unknown [7.202.181.18])
+	by mail.maildlp.com (Postfix) with ESMTPS id D126C140134;
+	Tue, 27 May 2025 21:05:11 +0800 (CST)
+Received: from [10.67.121.183] (10.67.121.183) by
+ kwepemg100001.china.huawei.com (7.202.181.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 27 May 2025 21:05:11 +0800
+Message-ID: <86bcc70b-f41f-45d3-967e-c6190c6ceadd@huawei.com>
+Date: Tue, 27 May 2025 21:05:10 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="r3bmleoevfwb3cbp"
-Content-Disposition: inline
-In-Reply-To: <20250522191418.442390-4-jkangas@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: arm64: Make HCX writable from userspace
+To: Oliver Upton <oliver.upton@linux.dev>
+CC: <maz@kernel.org>, <yuzenghui@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <wangzhou1@hisilicon.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <liuyonglong@huawei.com>,
+	<jiangkunkun@huawei.com>
+References: <20250325121126.1380681-1-yangjinqian1@huawei.com>
+ <Z-LX5H5mjGyTQ9N4@linux.dev>
+From: Jinqian Yang <yangjinqian1@huawei.com>
+In-Reply-To: <Z-LX5H5mjGyTQ9N4@linux.dev>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemg100001.china.huawei.com (7.202.181.18)
 
 
---r3bmleoevfwb3cbp
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 3/3] dma-buf: heaps: Give default CMA heap a fixed name
-MIME-Version: 1.0
+> Hi Jinqian,
+>
+> On Tue, Mar 25, 2025 at 08:11:26PM +0800, Jinqian Yang wrote:
+>> Allow userspace to modify guest visible value for HCX in
+>> ID_AA64MMFR1_EL1.
+>>
+>> Signed-off-by: Jinqian Yang <yangjinqian1@huawei.com>
+>
+> This is fine, but I would rather we handle all the features like FEAT_HCX
+> instead of a trickle of one-off patches.
+>
+> So, could you please:
+>
+> - Identify all of the features that describe an *EL2* feature which
+>   we've exposed to non-nested VMs
+>
+> - Implement patch(es) to make those fields writable (i.e. allow them to
+>   be downgraded)
+>
+> - Add corresponding test cases to the set_id_regs selftest
+>
+> Thanks,
+> Oliver
+>
+Hi Oliver，
 
-Hi,
+Thanks for the detailed explantation!
 
-On Thu, May 22, 2025 at 12:14:18PM -0700, Jared Kangas wrote:
-> The CMA heap's name in devtmpfs can vary depending on how the heap is
-> defined. Its name defaults to "reserved", but if a CMA area is defined
-> in the devicetree, the heap takes on the devicetree node's name, such as
-> "default-pool" or "linux,cma". To simplify naming, unconditionally name
-> it "default_cma_region", but keep a legacy node in place backed by the
-> same underlying allocator for backwards compatibility.
->=20
-> Signed-off-by: Jared Kangas <jkangas@redhat.com>
-> ---
->  Documentation/userspace-api/dma-buf-heaps.rst |  7 +++++--
->  drivers/dma-buf/heaps/Kconfig                 | 10 ++++++++++
->  drivers/dma-buf/heaps/cma_heap.c              | 20 ++++++++++++++++++-
->  3 files changed, 34 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentatio=
-n/userspace-api/dma-buf-heaps.rst
-> index 23bd0bd7b0654..1dfe5e7acd5a3 100644
-> --- a/Documentation/userspace-api/dma-buf-heaps.rst
-> +++ b/Documentation/userspace-api/dma-buf-heaps.rst
-> @@ -21,5 +21,8 @@ following heaps:
->     usually created either through the kernel commandline through the
->     ``cma`` parameter, a memory region Device-Tree node with the
->     ``linux,cma-default`` property set, or through the ``CMA_SIZE_MBYTES`=
-` or
-> -   ``CMA_SIZE_PERCENTAGE`` Kconfig options. Depending on the platform, it
-> -   might be called ``reserved``, ``linux,cma``, or ``default-pool``.
-> +   ``CMA_SIZE_PERCENTAGE`` Kconfig options. The heap's name in devtmpfs =
-is
-> +   ``default_cma_region``. For backwards compatibility, when the
-> +   ``DMABUF_HEAPS_CMA_LEGACY`` Kconfig option is set, a duplicate node is
-> +   created following legacy naming conventions; the legacy name might be
-> +   ``reserved``, ``linux,cma``, or ``default-pool``.
-> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-> index a5eef06c42264..bb369b38b001a 100644
-> --- a/drivers/dma-buf/heaps/Kconfig
-> +++ b/drivers/dma-buf/heaps/Kconfig
-> @@ -12,3 +12,13 @@ config DMABUF_HEAPS_CMA
->  	  Choose this option to enable dma-buf CMA heap. This heap is backed
->  	  by the Contiguous Memory Allocator (CMA). If your system has these
->  	  regions, you should say Y here.
-> +
-> +config DMABUF_HEAPS_CMA_LEGACY
-> +	bool "Legacy DMA-BUF CMA Heap"
-> +	default y
-> +	depends on DMABUF_HEAPS_CMA
-> +	help
-> +	  Add a duplicate CMA-backed dma-buf heap with legacy naming derived
-> +	  from the CMA area's devicetree node, or "reserved" if the area is not
-> +	  defined in the devicetree. This uses the same underlying allocator as
-> +	  CONFIG_DMABUF_HEAPS_CMA.
-> diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma=
-_heap.c
-> index e998d8ccd1dc6..dfeccafc6ae3c 100644
-> --- a/drivers/dma-buf/heaps/cma_heap.c
-> +++ b/drivers/dma-buf/heaps/cma_heap.c
-> @@ -9,6 +9,9 @@
->   * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
->   *	Andrew F. Davis <afd@ti.com>
->   */
-> +
-> +#define pr_fmt(fmt) "cma_heap: " fmt
-> +
->  #include <linux/cma.h>
->  #include <linux/dma-buf.h>
->  #include <linux/dma-heap.h>
-> @@ -22,6 +25,7 @@
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> =20
-> +#define DEFAULT_CMA_NAME "default_cma_region"
-> =20
->  struct cma_heap {
->  	struct dma_heap *heap;
-> @@ -394,15 +398,29 @@ static int __init __add_cma_heap(struct cma *cma, c=
-onst char *name)
->  static int __init add_default_cma_heap(void)
->  {
->  	struct cma *default_cma =3D dev_get_cma_area(NULL);
-> +	const char *legacy_cma_name;
->  	int ret;
-> =20
->  	if (!default_cma)
->  		return 0;
-> =20
-> -	ret =3D __add_cma_heap(default_cma, cma_get_name(default_cma));
-> +	ret =3D __add_cma_heap(default_cma, DEFAULT_CMA_NAME);
->  	if (ret)
->  		return ret;
-> =20
-> +	if (IS_ENABLED(CONFIG_DMABUF_HEAPS_CMA_LEGACY)) {
-> +		legacy_cma_name =3D cma_get_name(default_cma);
-> +		if (!strcmp(legacy_cma_name, DEFAULT_CMA_NAME)) {
-> +			pr_warn("legacy name and default name are the same, skipping legacy h=
-eap\n");
-> +			return 0;
-> +		}
-> +
-> +		ret =3D __add_cma_heap(default_cma, legacy_cma_name);
-> +		if (ret)
-> +			pr_warn("failed to add legacy heap: %pe\n",
-> +				ERR_PTR(-ret));
+During our testing of cross-generation live migration, we encountered
+an issue that requires applying the patch. The problem arises when two
+chips have inconsistent FEAT_HCX. To ensure consistent virtual machine
+behavior before and after migration, we need to make FEAT_HCX writable,
+thereby aligning the feature flags across source and destination hosts.
 
-Are you sure about the -ret? ret should already be a negative number if it =
-failed?
 
-With that fixed,
+Above is the context of this patch. I will revise this patch following your
+suggestions, but I need to confirm: does the term *EL2* feature specifically
+refer to capabilities related to ​​HCRX_EL2​​ and ​​HCR_EL2​​?
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Jinqian
 
-Maxime
 
---r3bmleoevfwb3cbp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDW4hAAKCRAnX84Zoj2+
-drI1AYCje0uQohcShZdmczyCGhShy69dOYUIKlNGxe50CzVnAnj5Dj376Hc/uoWi
-/BLvaSoBfA+MFBNwCyZaxzRtUi9UC6/G0Wqz4e2xpBB8vDFuKRyiSYThzz3yJMSA
-erPg189vdQ==
-=m8g+
------END PGP SIGNATURE-----
-
---r3bmleoevfwb3cbp--
+>> ---
+>>  arch/arm64/kvm/sys_regs.c | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+>> index 82430c1e1dd0..b105f156bdf6 100644
+>> --- a/arch/arm64/kvm/sys_regs.c
+>> +++ b/arch/arm64/kvm/sys_regs.c
+>> @@ -2666,7 +2666,6 @@ static const struct sys_reg_desc 
+>> sys_reg_descs[] = {
+>>                      ID_AA64MMFR0_EL1_TGRAN16_2 |
+>>                      ID_AA64MMFR0_EL1_ASIDBITS)),
+>>      ID_WRITABLE(ID_AA64MMFR1_EL1, ~(ID_AA64MMFR1_EL1_RES0 |
+>> -                    ID_AA64MMFR1_EL1_HCX |
+>>                      ID_AA64MMFR1_EL1_TWED |
+>>                      ID_AA64MMFR1_EL1_XNX |
+>>                      ID_AA64MMFR1_EL1_VH |
+>> -- 
+>> 2.33.0
+>>
+>
