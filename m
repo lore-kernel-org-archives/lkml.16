@@ -1,126 +1,152 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56831F37C5
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4F3139D0A
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748339937; cv=none; b=t2Aw9/doNIXblI7mVykYWWSgWITxPsy2WUVAwWjqXD5/AO26aRg2WmPlzPwk7jdvEUWjCNyEw2/VJ2AgcKDkpx8wwHXaruJVmgGzRwbbxvrRplzTtjU+09zUnDcljcb7rv9tHYFKy+2T41I86cEE1isLWRZJEgVi/sxFmt2Q/yw=
+	t=1748339997; cv=none; b=alX1hdaCh/qEi3DHs7r29bY1BvNAn4hw+Tz3copgQ1LzIGJYc6SHVWVs+ff3UjSPJl9Z+RU23y8kvyaQ7JvJbcnIlAFr6bchuxDBVAf2jn67ppMsmlcawGvXgTGdqL+BcjMwYiwhDnqGACcw2rSkQCUVb/oAy4cvoueI8YzeJr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748339937; c=relaxed/simple;
-	bh=gPXYMkam9e7YUM5qKqIBAC+BmfBK97NM0JOhRxCvlVg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RDAWbQJlPseUCV/JngfDj9LHxrIo2ztfJ/xH+rUZC/RSCr+FgObjWfPDJqwv4jnjf7uB02oO+WBseYBJMEx+6NL+9iYcCG499jkkqRE+5lz431wFBtpG04G+qMpSMI5sFrt/Yah1h/hpou2QMqv7q+agYF2Q6DFphhQIAbgMsQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=eEzg4l66; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748339997; c=relaxed/simple;
+	bh=MzOvGX8O+4utQ4eU3Iajmah5bipRwCmAxAIkr/YrneE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gHim2iW97+PdgnP8c6APTxs6/iWfjZKqsOX4V25cNAy1ja4K8iAFCM5PmMT6CQLciYvnSCfLeYTDe9uXTReMBdKNVZS8TtRDUbOiUnHKjYlICSGUTtYHHy31Mo7W//wqrnbdyVqPfVgp5TbMzMyqNwcJpjyJ0d47wpkA1rwboaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VnQLdZeL; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="eEzg4l66"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so43684015e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:58:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VnQLdZeL"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a361b8a664so3267286f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748339933; x=1748944733; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovDeM7CFy59ro2G29zEI76iQj5LO8OiJCTjhuKqfgog=;
-        b=eEzg4l66tQDN5pumWbXC13F9MqjmL8stt3aOAPNKrWn5mUs36jhHAb6D07pkKcFNQk
-         jeqyA+vHBb08Pl7NFs/1PYhsnnMQH8Jam6wqKJA0/9vqcdD4grCjwx/XCdNTgEgsI6NO
-         9zuVy0+rTIuV3unOb+1dVLFCBpl/qOENpDfvg9sBH1WFuzO9bS3FYFkB2GsH1H7WAcfM
-         qqbhLL8BPgDfWaf0aUpsbZf1PnAEmWsp3G0zdg1SFNnnv2touQeIlNcrCjC1WpFjUm23
-         P81ctXq7fhO9M1SIcC9MVEFV/7Rj3oN1p8315QYhBvlVPCPACw9yGUXBMdTMF2Ai1brF
-         h7QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748339933; x=1748944733;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748339994; x=1748944794; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ovDeM7CFy59ro2G29zEI76iQj5LO8OiJCTjhuKqfgog=;
-        b=glqBNPyceeUCt1TbfV4weCF1yY5bSGHCvTPzasJelNnW64vmPNbbkNbp8wiMFh9hfr
-         7H6ClBar/F7vIGMSG/V5lhlelCU5JcNvnO8PrwZ2zXvsTxfWrigohXKq9MXdz/x9uY37
-         zcjzNxnwkIbOt/ve+jvBYY0gRNbbUAg42gaMdJ5Dgm6shwEAif6xxULBc50UGmWoTqPb
-         9RG4V5w47lCuQJ5ghN78BxRuPwmrEARFPOcGYM06/kReKsjjyKNcEdkfYTiM308uSdsA
-         txrl+ubmDS1FEdE218l4I4MqiG2NN5FnbUhTG/OWrUFXbSCAvtzXAEtcD0m+mPNc7Sar
-         C0hg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFlWpMQPVdDCQCtVsIJFSuF9BAo0PM6e53d4LhEEDEEE1dPsvZ9IuKYdwJXAG8cwy+UX0YwNb8ylxjY3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI8J+4zrpdESBV2+l+CiuItnl+j25gGkpuDNnVRdksxNzqiarS
-	9I35R922CbosjYjDDYvRchlFcGlkndnCl7MSrv+/zrxlcga/Cgf0GQuF7MJy9pbwZco=
-X-Gm-Gg: ASbGncsZHx6WsQ7M4Gb1JvcYlwpnfipHRWbJAqzLhRxm+5D/Xpg9YKCT0Q3ZeKNrTKW
-	fGcGQcO8rLGn3UMfBcztfO84Wrt+W0zC06xmVnrQ2dqP3Y6YXtx/MxprQSWwmaFnpILWtqvEP8+
-	UUbPeintA+yz0RwZrzajp3dR0oRvd/CpAyHU+nUKJaPfS/oKQlVhPNJNFXPrWoTP4JJIGGJhujY
-	B7xA06uLNm8EsWIQm+EXCPTik2u5zfaW6lrJg7IEp9CS9du4CFkPvTKUJZM7bjIWYe8pTODBvkI
-	66TBLSQh35z6Rk8541cZ8HKfj5gxiJfq1ruaW0o+7ERRV3qSM2C3snFWvgaiOdr+
-X-Google-Smtp-Source: AGHT+IFtwTUjZn2K0uyc0dB9w9W6AVN79yBgYpvErxn26uh2Ttzg6hAA9ZousEeaV8G5tSv1mKe7kA==
-X-Received: by 2002:a05:600c:4e16:b0:43d:98e7:38dc with SMTP id 5b1f17b1804b1-44c917f674amr93208125e9.5.1748339932904;
-        Tue, 27 May 2025 02:58:52 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44fcbe5c4edsm14789285e9.2.2025.05.27.02.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 02:58:52 -0700 (PDT)
-Date: Tue, 27 May 2025 11:58:50 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Vishal Chourasia <vishalc@linux.ibm.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
- semantics
-Message-ID: <vzdrzqphpjnvrfynx7ajdrgfraavebig4edipde3kulxp2euqh@7p32zx7ql6k6>
-References: <20250527085335.256045-2-vishalc@linux.ibm.com>
+        bh=o4DLlx+hKQhw+ENgyFAqY2PL5hW4DHMG/cxZu2R2Xik=;
+        b=VnQLdZeL7eOji61GOi7HPGKca7NmU8WKZcqkehppqcA4IRKmDSOKCJrlYt4HlmKPpa
+         eU6KKNINEfg8PZk3Pwek9poAcCqF/Tv5Y4by5Yc6Apt0pdGRpVlB/T+CcDEV60/pGIHu
+         MD5er/23EVDP2Bsyzxdj7696KH8cZjSXkY23qXG7Q7/ekSiI8NR5tZb85VCPQC04iWMS
+         PrsdakJ7e0TJbq451Nple24CBk5DGAZpZW0pV0BWfN2SZi6wBNb8MfOlIXHXaaSjM+Ky
+         Dd4wTBqQQ79dVBtPHsIj2JaAzYTbC94IWzgcAp1PZDmkyI4cbQEUh9+2m8p6VnXPfS2C
+         bb3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748339994; x=1748944794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o4DLlx+hKQhw+ENgyFAqY2PL5hW4DHMG/cxZu2R2Xik=;
+        b=cLBgW20lpIfmbWxz0Moev2/4aE49hErkYlA3+fmJhgYo3PmumP8YjrB2HTWGIiunUT
+         ndCeVv3mw1eTubWPOPzgltyPGj76D6HVql/2hGNE+M6PlyJ0jsiB/1g/dulxJ4+j2Fl+
+         J1xzWUCaDxlv6/YJXdsDOqk0kWT/HPNedNijBcZsLPUds5oY/Fma18Ypm1h2Wx4Of7Fm
+         lwY7QVk1k7u6c5c0lXihCesRT210SLdTCXYxX1nwVEjiDX5IRoaRhMGN/oXTcOKIM9y9
+         XuYrNkSyNLpo7rbYtW4TRRg7fF2rbmb/mkWgehoxLIcTex4fqSZXc4EE2JRoaMjOT5rs
+         i8/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWJ5K7PogYGmgpdhzZxuDICTEzP6J2JyOoMmJHMfDtonHGjvLAuuvgATSScxLqM0I3WJIVopH8NRvPgLDY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtZku3eF1+qYYz0kijzQobiyRhHl3+fZ7S2lCIG7ftVCTYA8X3
+	n/iPi6INwqEfnRKUQDkQcdxUOs6QegSgx59a3W4HgybsCsQFE/ebJxIsDa5qFyTlsLcg35Ukb5V
+	XZhNgv/43n6qQkSbAKI5ZFkszDUCwHxhLODnsb5VeWg==
+X-Gm-Gg: ASbGncsqppaR1BViVCC0WI8T1oqLAW7X9WulC60ukA3TNpD/iXAxHTM395r1k3sKJcV
+	sUUSN9Eg2sxSxENMWumt9KkCFWqsqcWHcuNrm7LiZweKhfNUbZG1kf9IcDeP47OoNa29E6UWT2e
+	1pD4WMziApErSecytbNGupTA8ESzxIzfc=
+X-Google-Smtp-Source: AGHT+IEW4jiGzBYUUJeQ+hZ9q3VAC3c3XCEXdCJkYQj3sC6I500v3SraZXfwDAQYqmh+I1E3eL9qo1sRnEJZg8HQc9I=
+X-Received: by 2002:a05:6000:240d:b0:3a4:d6ed:8e07 with SMTP id
+ ffacd0b85a97d-3a4d6eda68cmr5556606f8f.32.1748339993821; Tue, 27 May 2025
+ 02:59:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rntxf4t2quqmp4ym"
-Content-Disposition: inline
-In-Reply-To: <20250527085335.256045-2-vishalc@linux.ibm.com>
-
-
---rntxf4t2quqmp4ym
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com> <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
+In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Date: Tue, 27 May 2025 10:59:41 +0100
+X-Gm-Features: AX0GCFvLUhtMwBzFmk1b4gn3Tur4pK0okxD3qyqun7XWisCr-irbPglToM7Uhec
+Message-ID: <CAECbVCvPCsHVvm5QKQrw+DDLsZGaHMgCHyJ=cp_gFcAyiFA4ow@mail.gmail.com>
+Subject: Re: [PATCH v3 1/7] perf: Increase the maximum number of branches
+ remove_loops() can process.
+To: ak@linux.intel.com, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Atish Kumar Patra <atishp@rivosinc.com>, Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Beeman Strong <beeman@rivosinc.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
- semantics
-MIME-Version: 1.0
 
-Hello.
+Adding Andi Kleen as this was originally written by him.
 
-On Tue, May 27, 2025 at 02:23:36PM +0530, Vishal Chourasia <vishalc@linux.i=
-bm.com> wrote:
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -438,8 +438,8 @@ Controlling Controllers
->  Enabling and Disabling
->  ~~~~~~~~~~~~~~~~~~~~~~
-> =20
-> -Each cgroup has a "cgroup.controllers" file which lists all
-> -controllers available for the cgroup to enable::
-> +Each cgroup has a cgroup.controllers file, which lists all the controlle=
-rs
-> +available for that cgroup and which can be enabled for its children.
-> =20
->    # cat cgroup.controllers
->    cpu io memory
+-Rajnesh
 
-Honestly, I see little difference between the two resulting formulations.
-Could you perhaps add an example where the documentation confused you or
-behavior was not what you expected based on the docs?
-
-Thanks,
-Michal
-
---rntxf4t2quqmp4ym
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaDWM2AAKCRAt3Wney77B
-SehkAP4m2JBDAcWV7UZtGTJZhDwiZgZ5EpMBCX5UXgau7TpWXwEAyQspYhrq2elF
-Wq/V7UC4bJzdkIoiXD3ldrzKriS6VgQ=
-=vJ3L
------END PGP SIGNATURE-----
-
---rntxf4t2quqmp4ym--
+On Fri, May 23, 2025 at 12:26=E2=80=AFAM Rajnesh Kanwal <rkanwal@rivosinc.c=
+om> wrote:
+>
+> RISCV CTR extension supports a maximum depth of 256 last branch records.
+> Currently remove_loops() can only process 127 entries at max. This leads
+> to samples with more than 127 entries being skipped. This change simply
+> updates the remove_loops() logic to be able to process 256 entries.
+>
+> Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+> ---
+>  tools/perf/util/machine.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 2d51badfbf2e2d1588fa4fdd42ef6c8fea35bf0e..5414528b9d336790decfb42a4=
+f6a4da6c6b68b07 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2176,25 +2176,32 @@ static void save_iterations(struct iterations *it=
+er,
+>                 iter->cycles +=3D be[i].flags.cycles;
+>  }
+>
+> -#define CHASHSZ 127
+> -#define CHASHBITS 7
+> -#define NO_ENTRY 0xff
+> +#define CHASHBITS 8
+> +#define NO_ENTRY 0xffU
+>
+> -#define PERF_MAX_BRANCH_DEPTH 127
+> +#define PERF_MAX_BRANCH_DEPTH 256
+>
+>  /* Remove loops. */
+> +/* Note: Last entry (i=3D=3Dff) will never be checked against NO_ENTRY
+> + * so it's safe to have an unsigned char array to process 256 entries
+> + * without causing clash between last entry and NO_ENTRY value.
+> + */
+>  static int remove_loops(struct branch_entry *l, int nr,
+>                         struct iterations *iter)
+>  {
+>         int i, j, off;
+> -       unsigned char chash[CHASHSZ];
+> +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+>
+>         memset(chash, NO_ENTRY, sizeof(chash));
+>
+> -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
+> +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+>
+>         for (i =3D 0; i < nr; i++) {
+> -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ;
+> +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is not
+> +                * needed as hash_64 will anyway limit the hash
+> +                * to CHASHBITS
+> +                */
+> +               int h =3D hash_64(l[i].from, CHASHBITS);
+>
+>                 /* no collision handling for now */
+>                 if (chash[h] =3D=3D NO_ENTRY) {
+>
+> --
+> 2.43.0
+>
