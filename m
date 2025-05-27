@@ -1,121 +1,308 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE83219ED
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7711A275
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748317651; cv=none; b=hcU8pjphoSp0a2srLEPS+8BBgzPySuQm7lNTxixj/UwkTgAW/ZFNYqbACtWzBcJBh0DsHUBeilrlzQTeyr5nnIbbC9XxO24GvwrRi01H7tHS78PD4dvS01i/XAUX/08qj08zVNrlivnR1J3nIOwhExERWROokR9BETsGtXT31gw=
+	t=1748317999; cv=none; b=O2lt6wXGw9euYTmL0+EQ8Ss/L+Ao9jetnwHTgfdM4DtdgdgUS8f9p49U4aLwDrx9FC+cAHw5XrEucpGVqQJJK50i8XD/sYQWlkfDEGsQW75p0+YhLBkvEkxU/17L0r+4NlhlpTzlhwnoiIKMcUZ9HhRd92MZGByHTI9Rt6Tm+zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748317651; c=relaxed/simple;
-	bh=i8fK/UC7IwSbdmIBJIreMCZdiD3Bh2aW1zCYzj4Y994=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CjGFTNGl3qPBcNxwa574Pzp5t+iB65EpoXOMl2WhluYF6xj+ncHNXgpAUckm9b1uAbDMBZsxHxc5dp+Rwn+P2VsrgFkR3t4tWKsQfIWJ/nvVfclx0kRzg2UKKdeTYjB43fk2ARbU5N+RZNVqyfo+igNRfXko7ZbDd8MXtC8Yokc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=ZBflUHSv; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1748317999; c=relaxed/simple;
+	bh=IgUtu+iLkBrk1B0B4v8JHfUEqxee5mlwSDioSwW6W5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gaW9xTlkIrY0cxm1cK7QbkBLv0zXFR8V5WbqJz4/bjKf0ExoD4OSsrwCewMnO381Gfja8op7fLFcxZLUnsBG4yTY9+MwJTMfuKbT9+At+dP1pwKbkVuEeLLTErbVwikPSyHKyNK990A/EG66zD3Sx+DnPow4sAHoYWk/GOysxbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=gWkVOl1F; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="ZBflUHSv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1748317642;
-	bh=i8fK/UC7IwSbdmIBJIreMCZdiD3Bh2aW1zCYzj4Y994=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ZBflUHSvUt5M6O2sV4BqFvg07K3qf5H19DTMmwSHOCb+eAQrURkBBq+z/ye+Zk+6G
-	 o8y/EqMMUYBkxL/AaUXo6j1pOAhJ70UbIBxcXgHmG39dGXx3QpP79fG7heafYwqDYv
-	 E2iGL2K9AvHhmFRgK9QTyV4PhJfV+9a0VWl5T/BM=
-Received: from [192.168.124.38] (unknown [113.200.174.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 2B27F65F62;
-	Mon, 26 May 2025 23:47:21 -0400 (EDT)
-Message-ID: <19f4722d5cdb90a207129ee675c7278423cd328c.camel@xry111.site>
-Subject: Re: [RFC PATCH] LoongArch: Do not include larchintrin.h
-From: Xi Ruoyao <xry111@xry111.site>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Tue, 27 May 2025 11:47:19 +0800
-In-Reply-To: <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn>
-References: <20250520064936.32291-1-yangtiezhu@loongson.cn>
-	 <e005dd551aec8bea185b3d37295876bd75d7b3e4.camel@xry111.site>
-	 <a918b221-b7f3-9994-9a7a-d10345aa30df@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="gWkVOl1F"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3dd805a542bso5465995ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 20:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1748317997; x=1748922797; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5xrKH9i0vLKm95FaV4H3aJUrB006oqaghq5fFnCZo2M=;
+        b=gWkVOl1FcXam/5tnl81IviC6qUsKMuizXrCll5oLqIh3KmJsFAhwyiQpX5LxJawOD3
+         5d9iJZ4KeL6UKsdVPewmFlHv6YEoTwQlsaYA8y0Y9tKX68PfGf6dnCYiFzEGg/vEcjK9
+         2f+2SSgDmigV5nY2AzoYpnW9W1UlsqWIu0WvFNJaQDPtkfkK2DQltIdTVXEeScMUyd7c
+         N/9aZhixfYX5+c+y/UxvEvb7SwY4tfFKsgr+2kuagMzKAfsV2NbdLOy66U/ibkst9GFx
+         QDDlH1HBksu+UbOwudxgO016+HKDChRImbAVlclNm/7OyXsYTVoP1S6nPAqZswYOBlKx
+         sbfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748317997; x=1748922797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5xrKH9i0vLKm95FaV4H3aJUrB006oqaghq5fFnCZo2M=;
+        b=s1K0Mt4VmfQzT6/ZVaDv3yj5chr+hoSEIBuXi4Ti4Nh+NAnl7m/zSg0f+QX0jXi2PO
+         TFAeJFmTSKMerbovLtnZ10SJg403RzrBO/FigQd6KM3hOFnD2lhqIiG3j9CAMhQaYwEi
+         jRQFSx2TiScT+KUShbxAGAmTLPHkdmgIIIKPdwkWzHWmo4PneEXSCIKNVlF4sjBcxmnW
+         kh32XOdxSY1GKjiBkguCKUR1aRN/x+CpfAvONMtkshyFyLVEGXAJV3mtMoSCNTUvYLRg
+         72Lfatyn0tbqkTsQgYAY7rNDkkegExE8h+RHMWB607g8PgxhIjJhkDkB0xwjKTOZH+nq
+         5Q8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWNfHSw1HU7hkc8HcuMDlumvWMYryYGoYCnF58L1dHHG4gzxhD5PLw78Vz+AlIUfh9fmazKufx6Yn5Z29A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp764T4DkfxWJFfAWl8KeQQYONNWCjPwAajHA0h7l0QRCK9bXA
+	w9d4nHP5pCxqrTvK46qInvOwhjBzC4JYft2cbUV22dHFZMpx4DGYcXlEVFC3lzCCr3c+m5zruPY
+	9N27vu1Qe2J+m9z3/nz4H7oBY7R5B6PB6t3YClEFktQ==
+X-Gm-Gg: ASbGnctnBKx/6kxXloYxrCwFJ9GcQjiiAop1QdzEBDg6B5pyvZk6C42HkIejwC97vnP
+	Yd4pV+0Q1gf78Hbo5FjsQ2pQ4cjnNAYgHsXnHN99Lzp2knpGKFQK1CrhUE8PkmoDdEqvNmoQ5eb
+	bceFnoTuTjTJ+3Rh564tMMFGi1USwnIfjH8Q==
+X-Google-Smtp-Source: AGHT+IGxfTnvxcVhTT6Neh0+crV2uPu9gqQ3HtpS9iFZUfbD9668utg3xBLYk8xm/XIXcdCCLY5kNZqolBPcgTbXOwI=
+X-Received: by 2002:a05:6e02:12ca:b0:3dc:7a9a:44d5 with SMTP id
+ e9e14a558f8ab-3dc9b751754mr103323995ab.22.1748317997035; Mon, 26 May 2025
+ 20:53:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250523113347.2898042-3-rkrcmar@ventanamicro.com>
+ <20250526-e67c64d52c84a8ad7cb519c4@orel> <CAAhSdy1wtuLm2O7EwfVzCT7wgKf7-n9q9_DxfpA6kQA1oSoZoQ@mail.gmail.com>
+ <20250526-c5be5322d773143825948b8b@orel>
+In-Reply-To: <20250526-c5be5322d773143825948b8b@orel>
+From: Anup Patel <anup@brainfault.org>
+Date: Tue, 27 May 2025 09:23:05 +0530
+X-Gm-Features: AX0GCFuBqduLJhMhh1XnRxqG9FgILJjrCfnWo1gi00WGZUliy_Wp90F5Rbgg8Bw
+Message-ID: <CAAhSdy0uX9dEPdGiMgDcYbR6WS+Nc=V3rLvK_TEoA=fzeD9wBg@mail.gmail.com>
+Subject: Re: [PATCH v4] RISC-V: KVM: add KVM_CAP_RISCV_USERSPACE_SBI
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>, 
+	kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-05-27 at 11:17 +0800, Tiezhu Yang wrote:
-> On 2025/5/21 =E4=B8=8B=E5=8D=881:41, Xi Ruoyao wrote:
-> > On Tue, 2025-05-20 at 14:49 +0800, Tiezhu Yang wrote:
-> > > larchintrin.h is a system header of compiler, include it in the
-> > > kernel header may lead to the fatal error "'larchintrin.h' file
-> > > not found".
-> > >=20
-> > > There are two related cases so far:
-> > >=20
-> > > (1) When compiling samples/bpf, it has been fixed in the latest
-> > > kernel [1].
-> > >=20
-> > > (2) When running bcc script, it has been fixed in the latest
-> > > bcc [2] [3], like this:
-> > >=20
-> > > $ /usr/share/bcc/tools/filetop
-> > > In file included from <built-in>:4:
-> > > In file included from /virtual/include/bcc/helpers.h:54:
-> > > In file included from arch/loongarch/include/asm/page.h:7:
-> > > In file included from arch/loongarch/include/asm/addrspace.h:9:
-> > > arch/loongarch/include/asm/loongarch.h:11:10: fatal error:
-> > > 'larchintrin.h' file not found
-> > > =C2=A0=C2=A0=C2=A0 11 | #include <larchintrin.h>
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~
-> > > 1 error generated.
-> > >=20
-> > > Maybe there are same errors for the other unknown projects, it is
-> > > annoyance to add the include path each time. In order to avoid
-> > > such
-> > > errors once and for all, do not include larchintrin.h, just use
-> > > the
-> > > builtin functions directly.
-> >=20
-> > Sorry, but in GCC those builtin functions are not documented and may
-> > subject to change in the future.=C2=A0 Only the larchintrin.h interface
-> > is
-> > documented.
->=20
-> AFAICT, the LoongArch Base Built-in Functions are listed in the GCC
-> documentation [1], they will not be changed easily and frequently in
-> my opinion.
->=20
-> __builtin_loongarch_cpucfg()
-> __builtin_loongarch_csrrd_w()
-> __builtin_loongarch_csrrd_d()
-> __builtin_loongarch_csrwr_w()
-> __builtin_loongarch_csrwr_d()
-> __builtin_loongarch_csrxchg_w()
-> __builtin_loongarch_csrxchg_d()
-> __builtin_loongarch_iocsrrd_w()
-> __builtin_loongarch_iocsrrd_d()
-> __builtin_loongarch_iocsrwr_w()
-> __builtin_loongarch_iocsrwr_d()
->=20
-> > Thus if you don't want to rely on GCC for those operations, you may
-> > need
-> > to write inline asm...
->=20
-> so these builtin functions can be used directly and safely.
+On Mon, May 26, 2025 at 8:09=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
+om> wrote:
+>
+> On Mon, May 26, 2025 at 06:12:19PM +0530, Anup Patel wrote:
+> > On Mon, May 26, 2025 at 2:52=E2=80=AFPM Andrew Jones <ajones@ventanamic=
+ro.com> wrote:
+> > >
+> > > On Fri, May 23, 2025 at 01:33:49PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99=
+ wrote:
+> > > > The new capability allows userspace to implement SBI extensions tha=
+t KVM
+> > > > does not handle.  This allows userspace to implement any SBI ecall =
+as
+> > > > userspace already has the ability to disable acceleration of select=
+ed
+> > > > SBI extensions.
+> > > > The base extension is made controllable as well, but only with the =
+new
+> > > > capability, because it was previously handled specially for some re=
+ason.
+> > > > *** The related compatibility TODO in the code needs addressing. **=
+*
+> > > >
+> > > > This is a VM capability, because userspace will most likely want to=
+ have
+> > > > the same behavior for all VCPUs.  We can easily make it both a VCPU=
+ and
+> > > > a VM capability if there is demand in the future.
+> > > >
+> > > > Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.co=
+m>
+> > > > ---
+> > > > v4:
+> > > > * forward base extension as well
+> > > > * change the id to 242, because 241 is already taken in linux-next
+> > > > * QEMU example: https://github.com/radimkrcmar/qemu/tree/mp_state_r=
+eset
+> > > > v3: new
+> > > > ---
+> > > >  Documentation/virt/kvm/api.rst    | 11 +++++++++++
+> > > >  arch/riscv/include/asm/kvm_host.h |  3 +++
+> > > >  arch/riscv/include/uapi/asm/kvm.h |  1 +
+> > > >  arch/riscv/kvm/vcpu_sbi.c         | 17 ++++++++++++++---
+> > > >  arch/riscv/kvm/vm.c               |  5 +++++
+> > > >  include/uapi/linux/kvm.h          |  1 +
+> > > >  6 files changed, 35 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kv=
+m/api.rst
+> > > > index e107694fb41f..c9d627d13a5e 100644
+> > > > --- a/Documentation/virt/kvm/api.rst
+> > > > +++ b/Documentation/virt/kvm/api.rst
+> > > > @@ -8507,6 +8507,17 @@ given VM.
+> > > >  When this capability is enabled, KVM resets the VCPU when setting
+> > > >  MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is pr=
+eserved.
+> > > >
+> > > > +7.44 KVM_CAP_RISCV_USERSPACE_SBI
+> > > > +--------------------------------
+> > > > +
+> > > > +:Architectures: riscv
+> > > > +:Type: VM
+> > > > +:Parameters: None
+> > > > +:Returns: 0 on success, -EINVAL if arg[0] is not zero
+> > > > +
+> > > > +When this capability is enabled, KVM forwards ecalls from disabled=
+ or unknown
+> > > > +SBI extensions to userspace.
+> > > > +
+> > > >  8. Other capabilities.
+> > > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >
+> > > > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include=
+/asm/kvm_host.h
+> > > > index 85cfebc32e4c..6f17cd923889 100644
+> > > > --- a/arch/riscv/include/asm/kvm_host.h
+> > > > +++ b/arch/riscv/include/asm/kvm_host.h
+> > > > @@ -122,6 +122,9 @@ struct kvm_arch {
+> > > >
+> > > >       /* KVM_CAP_RISCV_MP_STATE_RESET */
+> > > >       bool mp_state_reset;
+> > > > +
+> > > > +     /* KVM_CAP_RISCV_USERSPACE_SBI */
+> > > > +     bool userspace_sbi;
+> > > >  };
+> > > >
+> > > >  struct kvm_cpu_trap {
+> > > > diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include=
+/uapi/asm/kvm.h
+> > > > index 5f59fd226cc5..dd3a5dc53d34 100644
+> > > > --- a/arch/riscv/include/uapi/asm/kvm.h
+> > > > +++ b/arch/riscv/include/uapi/asm/kvm.h
+> > > > @@ -204,6 +204,7 @@ enum KVM_RISCV_SBI_EXT_ID {
+> > > >       KVM_RISCV_SBI_EXT_DBCN,
+> > > >       KVM_RISCV_SBI_EXT_STA,
+> > > >       KVM_RISCV_SBI_EXT_SUSP,
+> > > > +     KVM_RISCV_SBI_EXT_BASE,
+> > > >       KVM_RISCV_SBI_EXT_MAX,
+> > > >  };
+> > > >
+> > > > diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
+> > > > index 31fd3cc98d66..497d5b023153 100644
+> > > > --- a/arch/riscv/kvm/vcpu_sbi.c
+> > > > +++ b/arch/riscv/kvm/vcpu_sbi.c
+> > > > @@ -39,7 +39,7 @@ static const struct kvm_riscv_sbi_extension_entry=
+ sbi_ext[] =3D {
+> > > >               .ext_ptr =3D &vcpu_sbi_ext_v01,
+> > > >       },
+> > > >       {
+> > > > -             .ext_idx =3D KVM_RISCV_SBI_EXT_MAX, /* Can't be disab=
+led */
+> > > > +             .ext_idx =3D KVM_RISCV_SBI_EXT_BASE,
+> > > >               .ext_ptr =3D &vcpu_sbi_ext_base,
+> > > >       },
+> > > >       {
+> > > > @@ -217,6 +217,11 @@ static int riscv_vcpu_set_sbi_ext_single(struc=
+t kvm_vcpu *vcpu,
+> > > >       if (!sext || scontext->ext_status[sext->ext_idx] =3D=3D KVM_R=
+ISCV_SBI_EXT_STATUS_UNAVAILABLE)
+> > > >               return -ENOENT;
+> > > >
+> > > > +     // TODO: probably remove, the extension originally couldn't b=
+e
+> > > > +     // disabled, but it doesn't seem necessary
+> > > > +     if (!vcpu->kvm->arch.userspace_sbi && sext->ext_id =3D=3D KVM=
+_RISCV_SBI_EXT_BASE)
+> > > > +             return -ENOENT;
+> > > > +
+> > >
+> > > I agree that we don't need to babysit userspace and it's even conceiv=
+able
+> > > to have guests that don't need SBI. KVM should only need checks in it=
+s
+> > > UAPI to protect itself from userspace and to enforce proper use of th=
+e
+> > > API. It's not KVM's place to ensure userspace doesn't violate the SBI=
+ spec
+> > > or create broken guests (userspace is the boss, even if it's a boss t=
+hat
+> > > doesn't make sense)
+> > >
+> > > So, I vote we drop the check.
+> > >
+> > > >       scontext->ext_status[sext->ext_idx] =3D (reg_val) ?
+> > > >                       KVM_RISCV_SBI_EXT_STATUS_ENABLED :
+> > > >                       KVM_RISCV_SBI_EXT_STATUS_DISABLED;
+> > > > @@ -471,8 +476,14 @@ int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *=
+vcpu, struct kvm_run *run)
+> > > >  #endif
+> > > >               ret =3D sbi_ext->handler(vcpu, run, &sbi_ret);
+> > > >       } else {
+> > > > -             /* Return error for unsupported SBI calls */
+> > > > -             cp->a0 =3D SBI_ERR_NOT_SUPPORTED;
+> > > > +             if (vcpu->kvm->arch.userspace_sbi) {
+> > > > +                     next_sepc =3D false;
+> > > > +                     ret =3D 0;
+> > > > +                     kvm_riscv_vcpu_sbi_forward(vcpu, run);
+> > > > +             } else {
+> > > > +                     /* Return error for unsupported SBI calls */
+> > > > +                     cp->a0 =3D SBI_ERR_NOT_SUPPORTED;
+> > > > +             }
+> > > >               goto ecall_done;
+> > > >       }
+> > > >
+> > > > diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+> > > > index b27ec8f96697..0b6378b83955 100644
+> > > > --- a/arch/riscv/kvm/vm.c
+> > > > +++ b/arch/riscv/kvm/vm.c
+> > > > @@ -217,6 +217,11 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm, s=
+truct kvm_enable_cap *cap)
+> > > >                       return -EINVAL;
+> > > >               kvm->arch.mp_state_reset =3D true;
+> > > >               return 0;
+> > > > +     case KVM_CAP_RISCV_USERSPACE_SBI:
+> > > > +             if (cap->flags)
+> > > > +                     return -EINVAL;
+> > > > +             kvm->arch.userspace_sbi =3D true;
+> > > > +             return 0;
+> > > >       default:
+> > > >               return -EINVAL;
+> > > >       }
+> > > > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > > > index 454b7d4a0448..bf23deb6679e 100644
+> > > > --- a/include/uapi/linux/kvm.h
+> > > > +++ b/include/uapi/linux/kvm.h
+> > > > @@ -931,6 +931,7 @@ struct kvm_enable_cap {
+> > > >  #define KVM_CAP_X86_GUEST_MODE 238
+> > > >  #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
+> > > >  #define KVM_CAP_RISCV_MP_STATE_RESET 240
+> > > > +#define KVM_CAP_RISCV_USERSPACE_SBI 242
+> > > >
+> > > >  struct kvm_irq_routing_irqchip {
+> > > >       __u32 irqchip;
+> > > > --
+> > > > 2.49.0
+> > > >
+> > >
+> > > Otherwise,
+> > >
+> > > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+> >
+> > We are not going ahead with this approach for the reasons
+> > mentioned in v3 series [1].
+>
+> IIUC, the main concern in that thread is that userspace won't know what t=
+o
+> do with some of the exits it gets or that it'll try to take control of
+> extensions that it can't emulate. I feel like not exiting to userspace in
+> those cases is trying to second guess it, i.e. KVM is trying to enforce a
+> policy on userspace. But, KVM shouldn't be doing that, as userspace shoul=
+d
+> be the policy maker. If userspace uses this capability to opt into gettin=
+g
+> all the SBI exits (which it doesn't want KVM to handle), then it should b=
+e
+> allowed to get them -- and, if userspace doesn't know what it's doing,
+> then it can keep all the pieces.
 
-Oops, I mistakenly believed they were like __builtin_lsx_* which are not
-documented.
+The userspace already has a mechanism to opt-in for select SBI exits
+which it can implement such as SBI DBCN and SBI SUSP. With SBI v3.0,
+userspace will be able implement SBI MPXY but SBI SSE, FWFT, and
+DBTR will be in kernel space due to reasons mentioned in the v3 series.
 
-So yes they can be used directly.
+There is no point in forwarding all SBI exits to userspace when userspace
+has no mechanism to implement many critical SBI extensions.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Regards,
+Anup
