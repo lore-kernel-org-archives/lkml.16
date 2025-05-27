@@ -1,131 +1,97 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A231FECDF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19D8139D0A;
+	Tue, 27 May 2025 09:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748339568; cv=none; b=E43ji9RkPw0CMw+Wb5e1yJeCAKK/dofsmCmtSpcA1oyh0UehXFgCiIdzhyFcrYRxhn9UQqoF/VtmeM0DJea+EF5/AsfNpUZORy0NRMRJPKg//j0Op1Xsy9SKMsixhGWLzU//gv2815vizUtLO6W2y/+0BS3ueDL7O45qThJWJhw=
+	t=1748339921; cv=none; b=cKun9/phYCcxINTdsOhOvjlANVHGZpJAyvcHGIvrmkzy7jh+++D+Wtg5qzbfNWIllTIVl42dB9HPppURGL7Gf5ATZJWfO8CfYWg6FYY1w5qkonLzyBF6cfKzZxg+dSLVpXNm1jrnQ3+0IBtCSSvq9zP0/89ML60Tpask8R4vrdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748339568; c=relaxed/simple;
-	bh=ySN5SL2V08gK0RzuM9krJbs2V0mmKi5sIxxDx4Ebdeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ECMCw8zPtkpVlGgU+2BsOTJM+nSHJaxpA9fTo7yRLf0XaNbga1OeQeJtD56UzBVkISl6I7Vm2p4Ue0Z51dtuAl6vmAtXKZhoXWEGV2LRr9wr25yYRUj9wSnNZHGNa1eh9YNveUBNHGmzX8LYlOdKsyu0OIi16q+CevVZ5EA8tLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PG14+0f5; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748339921; c=relaxed/simple;
+	bh=c7WSSyjdfKP/pCSd23kDXPF4A5xu8QHwMp2sNumHnaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k3eUvnEkL2n9KG/XunI3B5xmy1Q/Ndlsg1SKKkpc2iGqnSuSMZv39enuhHd4c3yJO2OoUmsw2MjSC24CNaZweVNuYnb0eSEy2tC++wCvtPB3p/ExYWfBBO9xEGIMzyGAt0+hj5xhVkJ4mL6lsKiJHR/0aG1JhrEncY0noepv4yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=zdyPE/6F; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PG14+0f5"
-Message-ID: <6147503e-1e73-42dc-a2b9-1b0cf26ca147@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748339554;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zNzPqOcrIMLkbW6pqRkowgAwEnkW9pgS1P80rwoJM3g=;
-	b=PG14+0f5KR1BMnGZAy6/w+as+/MDDALfjtqd2pISAmd/GyJsxozPgbxkP36Ulhp0xRYSQV
-	HWL9XZg1J5r+JF4BVayfI9XukkXMpYtBoeYASJgpNuhHawLQJSIQ6WOHZbpRvChvCLljeh
-	hy28I9XIT+OxVgBZb66LRh7ViM+zpyw=
-Date: Tue, 27 May 2025 17:52:26 +0800
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="zdyPE/6F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=CkhC4UgjPuQVaDzWVls8hkO6XTDFrLoAmVdIcxrQuac=; b=zdyPE/6FYF0B9hHYOcyAJQSQVb
+	v5p2PtNxurf+8p3BwNCAmbsiWZt75jOct2i6rviYg7cuSxRIJMtJLKN+NASU9Oo66Djpdjp4wjfEm
+	m0IwHZ8ZVzTGe770tvvY2YWklQCYcQBuQw38CgwAkZpu0e3lAIH4gUiUICPcvh03Q666yjHPzeCNu
+	e63o+lEPFgUfnMU19+gIuQSh+XsjmE3UK9ZYLFPVTC7Q4sj3pQzcYDP9Y/R3x5iT9hPP8Z6fVHuM+
+	PdZyny0o+QjDlJp124lzkh06v5yuaeiXkjwMVh0o3Jn15L7JVjC/0BDKhqrsJq8PmNGgFGa2J466h
+	gcnPF5dA==;
+Received: from i53875bdb.versanet.de ([83.135.91.219] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uJr4i-0007Bf-FG; Tue, 27 May 2025 11:58:24 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Quentin Schulz <foss+kernel@0leil.net>
+Cc: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Quentin Schulz <quentin.schulz@cherry.de>
+Subject:
+ Re: [PATCH v2] arm64: dts: rockchip: support Ethernet Switch adapter for
+ RK3588 Jaguar
+Date: Tue, 27 May 2025 11:58:23 +0200
+Message-ID: <2600723.TLnPLrj5Ze@diego>
+In-Reply-To: <20250523-jaguar-mezz-eth-switch-v2-1-aced8bf6612d@cherry.de>
+References: <20250523-jaguar-mezz-eth-switch-v2-1-aced8bf6612d@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] net: stmmac: add explicit check and error on invalid PTP
- clock rate
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250523-stmmac_tstamp_div-v1-1-bca8a5a3a477@bootlin.com>
- <8f1928e5-472e-4140-875c-6b5743be8fd3@linux.dev>
- <DA666WVCP2OB.300LVHEGH5V4Y@bootlin.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <DA666WVCP2OB.300LVHEGH5V4Y@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Am Freitag, 23. Mai 2025, 18:48:42 Mitteleurop=C3=A4ische Sommerzeit schrie=
+b Quentin Schulz:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
+>=20
+> This adds support for the Ethernet Switch adapter connected through the
+> mezzanine connector on RK3588 Jaguar.
+>=20
+> This adapter has a KSZ9896 Ethernet Switch with 4 1GbE Ethernet
+> connectors, two user controllable LEDs, and an M12 12-pin connector
+> which exposes the following signals:
+>  - RS232/RS485 (max 250Kbps/500Kbps, RX pin1, TX pin2)
+>  - two digital inputs (pin4 routed to GPIO3_C5 on SoC, pin5 to GPIO4_B4)
+>  - two digital outputs (pin7 routed to GPIO3_D3 on SoC, pin8 to
+>    GPIO3_D1)
+>  - two analog inputs (pin10 to channel1 of ADS1015, pin11 to channel2)
+>=20
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+
+> +&i2c1 {
+> +	#address-cells =3D <1>;
+> +	/* ADS1015 can handle high-speed (HS) mode (up to 3.4MHz) on I2C bus,
+> +	   but SOC can handle only up to 400kHz. */
+
+Multi-line comment style would be
+	/*
+	 * ADS1015 can handle high-speed (HS) mode (up to 3.4MHz) on I2C bus,
+	 * but SOC can handle only up to 400kHz
+	 */
+
+> +	clock-frequency =3D <400000>;
+> +	#size-cells =3D <0>;
+> +	status =3D "okay";
+> +
+
+other than that, looks fine
 
 
-在 5/26/25 10:42 PM, Alexis Lothoré 写道:
-> On Mon May 26, 2025 at 4:22 AM CEST, Yanteng Si wrote:
->> 在 5/23/25 7:46 PM, Alexis LothorÃ© 写道:
->>> While some platforms implementing dwmac open-code the clk_ptp_rate
->>> value, some others dynamically retrieve the value at runtime. If the
->>> retrieved value happens to be 0 for any reason, it will eventually
->>> propagate up to PTP initialization when bringing up the interface,
->>> leading to a divide by 0:
-> [...]
->
->>   From your description, I cannot determine the scope
->> of "some platforms". My point is: if there are only
->> a few platforms, can we find a way to handle this in
->> the directory of the corresponding platform?
->  From what I can see, it can affect any platform using the stmmac driver as
-> the platform driver (except maybe dwmac-qcom-ethqos.c, which enforces an
-> open-coded clk_ptp_rate after the stmmac_probe_config_dt call that sets
-> the clk_ptp_rate), if the platform declares a dedicated clk_ptp_ref clock.
-> So I would rather say that it can affect most of the platforms.
->
-> In my case, I have observed the issue with the dwmac-stm32.c driver, on an
-> STM32MP157a-dk1 platform.
-Okay!
->
->> And there need a Fixes tag.
-> Ok, I'll add a relevant Fixes tag.
-
-On this premise,
+Heiko
 
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-
-
-Thanks,
-
-Yanteng
-
->
-> Alexis
->
->>> Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
->>> ---
->>>    drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
->>>    1 file changed, 5 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> index 918d7f2e8ba992208d7d6521a1e9dba01086058f..f68e3ece919cc88d0bf199a394bc7e44b5dee095 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> @@ -835,6 +835,11 @@ int stmmac_init_tstamp_counter(struct stmmac_priv *priv, u32 systime_flags)
->>>    	if (!(priv->dma_cap.time_stamp || priv->dma_cap.atime_stamp))
->>>    		return -EOPNOTSUPP;
->>>    
->>> +	if (!priv->plat->clk_ptp_rate) {
->>> +		netdev_err(priv->dev, "Invalid PTP clock rate");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>>    	stmmac_config_hw_tstamping(priv, priv->ptpaddr, systime_flags);
->>>    	priv->systime_flags = systime_flags;
->>>    
->>>
->>> ---
->>> base-commit: e0e2f78243385e7188a57fcfceb6a19f723f1dff
->>> change-id: 20250522-stmmac_tstamp_div-f55112f06029
->>>
->>> Best regards,
->
->
->
