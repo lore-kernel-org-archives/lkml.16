@@ -1,152 +1,82 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4F3139D0A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FCC254AF3;
+	Tue, 27 May 2025 09:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748339997; cv=none; b=alX1hdaCh/qEi3DHs7r29bY1BvNAn4hw+Tz3copgQ1LzIGJYc6SHVWVs+ff3UjSPJl9Z+RU23y8kvyaQ7JvJbcnIlAFr6bchuxDBVAf2jn67ppMsmlcawGvXgTGdqL+BcjMwYiwhDnqGACcw2rSkQCUVb/oAy4cvoueI8YzeJr0=
+	t=1748339999; cv=none; b=OSceZlPbG+azvnMx5bdPWbX15dDqOl2kO2d5l39C64sUrEiTthRl7qtdq7vIDIbyiVzt2TIe1A9c3TVZ8S2QKU4fNV4hAQUpEIZqK/RQJ9OubSHzm0ti3d0nMuluR72mkGRYSViz/flqo9aN3ZrQr6el5V0R5uJeZXOjrzIQFGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748339997; c=relaxed/simple;
-	bh=MzOvGX8O+4utQ4eU3Iajmah5bipRwCmAxAIkr/YrneE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gHim2iW97+PdgnP8c6APTxs6/iWfjZKqsOX4V25cNAy1ja4K8iAFCM5PmMT6CQLciYvnSCfLeYTDe9uXTReMBdKNVZS8TtRDUbOiUnHKjYlICSGUTtYHHy31Mo7W//wqrnbdyVqPfVgp5TbMzMyqNwcJpjyJ0d47wpkA1rwboaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VnQLdZeL; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1748339999; c=relaxed/simple;
+	bh=MViKN2+i9zzdGHsc7eYtQ0YzQSzoXPV/RafepRFlVfc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=HhGW8fuDpZRGfp7lIxzTILeV0onRMtVH9C2XCQ5HOatWMLwDTBrGYGmv9JKU5rtpzQyZG2ZpdinDqCsVpmjEe0Qa7FmtvPyddUCaC46JBQQ5VKeNw1ewXCrNOCLdwXjGXXCsj6/DoHaAH3js0yLF9iby/gF/jDWRiBGRYTv/bVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJKoEI3l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VnQLdZeL"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a361b8a664so3267286f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1748339994; x=1748944794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o4DLlx+hKQhw+ENgyFAqY2PL5hW4DHMG/cxZu2R2Xik=;
-        b=VnQLdZeL7eOji61GOi7HPGKca7NmU8WKZcqkehppqcA4IRKmDSOKCJrlYt4HlmKPpa
-         eU6KKNINEfg8PZk3Pwek9poAcCqF/Tv5Y4by5Yc6Apt0pdGRpVlB/T+CcDEV60/pGIHu
-         MD5er/23EVDP2Bsyzxdj7696KH8cZjSXkY23qXG7Q7/ekSiI8NR5tZb85VCPQC04iWMS
-         PrsdakJ7e0TJbq451Nple24CBk5DGAZpZW0pV0BWfN2SZi6wBNb8MfOlIXHXaaSjM+Ky
-         Dd4wTBqQQ79dVBtPHsIj2JaAzYTbC94IWzgcAp1PZDmkyI4cbQEUh9+2m8p6VnXPfS2C
-         bb3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748339994; x=1748944794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o4DLlx+hKQhw+ENgyFAqY2PL5hW4DHMG/cxZu2R2Xik=;
-        b=cLBgW20lpIfmbWxz0Moev2/4aE49hErkYlA3+fmJhgYo3PmumP8YjrB2HTWGIiunUT
-         ndCeVv3mw1eTubWPOPzgltyPGj76D6HVql/2hGNE+M6PlyJ0jsiB/1g/dulxJ4+j2Fl+
-         J1xzWUCaDxlv6/YJXdsDOqk0kWT/HPNedNijBcZsLPUds5oY/Fma18Ypm1h2Wx4Of7Fm
-         lwY7QVk1k7u6c5c0lXihCesRT210SLdTCXYxX1nwVEjiDX5IRoaRhMGN/oXTcOKIM9y9
-         XuYrNkSyNLpo7rbYtW4TRRg7fF2rbmb/mkWgehoxLIcTex4fqSZXc4EE2JRoaMjOT5rs
-         i8/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ5K7PogYGmgpdhzZxuDICTEzP6J2JyOoMmJHMfDtonHGjvLAuuvgATSScxLqM0I3WJIVopH8NRvPgLDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtZku3eF1+qYYz0kijzQobiyRhHl3+fZ7S2lCIG7ftVCTYA8X3
-	n/iPi6INwqEfnRKUQDkQcdxUOs6QegSgx59a3W4HgybsCsQFE/ebJxIsDa5qFyTlsLcg35Ukb5V
-	XZhNgv/43n6qQkSbAKI5ZFkszDUCwHxhLODnsb5VeWg==
-X-Gm-Gg: ASbGncsqppaR1BViVCC0WI8T1oqLAW7X9WulC60ukA3TNpD/iXAxHTM395r1k3sKJcV
-	sUUSN9Eg2sxSxENMWumt9KkCFWqsqcWHcuNrm7LiZweKhfNUbZG1kf9IcDeP47OoNa29E6UWT2e
-	1pD4WMziApErSecytbNGupTA8ESzxIzfc=
-X-Google-Smtp-Source: AGHT+IEW4jiGzBYUUJeQ+hZ9q3VAC3c3XCEXdCJkYQj3sC6I500v3SraZXfwDAQYqmh+I1E3eL9qo1sRnEJZg8HQc9I=
-X-Received: by 2002:a05:6000:240d:b0:3a4:d6ed:8e07 with SMTP id
- ffacd0b85a97d-3a4d6eda68cmr5556606f8f.32.1748339993821; Tue, 27 May 2025
- 02:59:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJKoEI3l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF20FC4CEEE;
+	Tue, 27 May 2025 09:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748339998;
+	bh=MViKN2+i9zzdGHsc7eYtQ0YzQSzoXPV/RafepRFlVfc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=sJKoEI3lf3rEFIzhUe/PWajMZRg6WJpVveJpKbuKezfqZsaJK4Ps3lE4ZR7X/6T4T
+	 M4k6uuGQTp7OYNmAsymcCNaxzezWaRTva8Y1cQaMPfzQvomUsbzvBZsEOWbzkLO51j
+	 1QLxH4nRTP7ttiwQol5HsIea4Ck1wPFg3sX1cQpYZSBOm4g/7ADUkcT0hiR3GPxVE2
+	 iqNU2Jg0ohiSb4pUDJURyCKxm7TFuE34KRj23giZQX6HzRZbGW5PRk1kfLZqlg8P08
+	 L8XxVaGsSNd6PufNH0zLlWqRL68zSYA7eDV67mjoXKHDHQm0+F3AndVCkR+YZbTB5T
+	 dsUc9FHeRDGyA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E4B380AAE2;
+	Tue, 27 May 2025 10:00:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250523-b4-ctr_upstream_v3-v3-0-ad355304ba1c@rivosinc.com> <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
-In-Reply-To: <20250523-b4-ctr_upstream_v3-v3-1-ad355304ba1c@rivosinc.com>
-From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Date: Tue, 27 May 2025 10:59:41 +0100
-X-Gm-Features: AX0GCFvLUhtMwBzFmk1b4gn3Tur4pK0okxD3qyqun7XWisCr-irbPglToM7Uhec
-Message-ID: <CAECbVCvPCsHVvm5QKQrw+DDLsZGaHMgCHyJ=cp_gFcAyiFA4ow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] perf: Increase the maximum number of branches
- remove_loops() can process.
-To: ak@linux.intel.com, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Atish Kumar Patra <atishp@rivosinc.com>, Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Beeman Strong <beeman@rivosinc.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 net-next] xsk: add missing virtual address conversion for
+ page
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174834003324.1237935.11428627748212887379.git-patchwork-notify@kernel.org>
+Date: Tue, 27 May 2025 10:00:33 +0000
+References: <20250522040115.5057-1-minhquangbui99@gmail.com>
+In-Reply-To: <20250522040115.5057-1-minhquangbui99@gmail.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+ john.fastabend@gmail.com, edumazet@google.com, pabeni@redhat.com,
+ horms@kernel.org, maciej.fijalkowski@intel.com, aleksander.lobakin@intel.com,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Adding Andi Kleen as this was originally written by him.
+Hello:
 
--Rajnesh
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-On Fri, May 23, 2025 at 12:26=E2=80=AFAM Rajnesh Kanwal <rkanwal@rivosinc.c=
-om> wrote:
->
-> RISCV CTR extension supports a maximum depth of 256 last branch records.
-> Currently remove_loops() can only process 127 entries at max. This leads
-> to samples with more than 127 entries being skipped. This change simply
-> updates the remove_loops() logic to be able to process 256 entries.
->
-> Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
-> ---
->  tools/perf/util/machine.c | 21 ++++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 2d51badfbf2e2d1588fa4fdd42ef6c8fea35bf0e..5414528b9d336790decfb42a4=
-f6a4da6c6b68b07 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -2176,25 +2176,32 @@ static void save_iterations(struct iterations *it=
-er,
->                 iter->cycles +=3D be[i].flags.cycles;
->  }
->
-> -#define CHASHSZ 127
-> -#define CHASHBITS 7
-> -#define NO_ENTRY 0xff
-> +#define CHASHBITS 8
-> +#define NO_ENTRY 0xffU
->
-> -#define PERF_MAX_BRANCH_DEPTH 127
-> +#define PERF_MAX_BRANCH_DEPTH 256
->
->  /* Remove loops. */
-> +/* Note: Last entry (i=3D=3Dff) will never be checked against NO_ENTRY
-> + * so it's safe to have an unsigned char array to process 256 entries
-> + * without causing clash between last entry and NO_ENTRY value.
-> + */
->  static int remove_loops(struct branch_entry *l, int nr,
->                         struct iterations *iter)
->  {
->         int i, j, off;
-> -       unsigned char chash[CHASHSZ];
-> +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
->
->         memset(chash, NO_ENTRY, sizeof(chash));
->
-> -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
-> +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
->
->         for (i =3D 0; i < nr; i++) {
-> -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ;
-> +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is not
-> +                * needed as hash_64 will anyway limit the hash
-> +                * to CHASHBITS
-> +                */
-> +               int h =3D hash_64(l[i].from, CHASHBITS);
->
->                 /* no collision handling for now */
->                 if (chash[h] =3D=3D NO_ENTRY) {
->
-> --
-> 2.43.0
->
+On Thu, 22 May 2025 11:01:15 +0700 you wrote:
+> In commit 7ead4405e06f ("xsk: convert xdp_copy_frags_from_zc() to use
+> page_pool_dev_alloc()"), when converting from netmem to page, I missed a
+> call to page_address() around skb_frag_page(frag) to get the virtual
+> address of the page. This commit uses skb_frag_address() helper to fix
+> the issue.
+> 
+> Fixes: 7ead4405e06f ("xsk: convert xdp_copy_frags_from_zc() to use page_pool_dev_alloc()")
+> Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,net-next] xsk: add missing virtual address conversion for page
+    https://git.kernel.org/netdev/net-next/c/28fcb4b56f92
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
