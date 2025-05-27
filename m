@@ -1,182 +1,99 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88B8F50F;
-	Tue, 27 May 2025 08:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC6324A056;
+	Tue, 27 May 2025 08:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335085; cv=none; b=Av4EKeWmmGTcjYZBW813EVVC19S8mXFnIPIJ/Pg1fI7ER+00pLmSKNT4sJH8Hy77TRCj30zQbNKwzzp3DiIwck4I6C4Dx29yqgzY7EQazToGJ1qgyqglPcOOdYQ91g/jWT0AAi2ccDtxnmei3KylNvubek9O5+8ZQPXzxdCLhtg=
+	t=1748335182; cv=none; b=Ra2Qnx7NtsDAaTJeZaoUzNKSa52WYNjFX7FIy1IQbbkDYCTG1s/yHni6w/Il1syl7f8Ha65MpEZkQI1TrHI00jhyJpw3zOSkHL8wmkeRsQwJp3KQjCYxtaVgKhp6Ck6now2jDSoIX9R5xb+GprbUIflFC93tBEqcnAOjKt5KeXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335085; c=relaxed/simple;
-	bh=fYlFSLt2vWp0kd5ClMXYMsn4v04SxfbL1CjlQ6KQMfQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O0tMqF8QX5hev8FcLfsaRxR9JyR91Hg1LJj6wiuQu5zhr5psGP0ToA1Vsiw9zRKNVIyUrxjdIPY1l7POylXjoODTCBXKzz5GdRajozSbhe+BioYtens60B7q1xV87uPlldJ/PL9PZ23lylYsyqZx/dyZhmGwtHfJc3GkZi9N6vM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L/Wu17Ru; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748335182; c=relaxed/simple;
+	bh=an9Dpp+MtkCdkNTGPODtJ1diDg/WTHKHuUIZYnHZllg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QSs5eQb95VPusA2j8qoMJN9i89iHnakUZwzJ/qucd2xL9q+oEe7zxIrfGcqp2YJzG2T+YCdP0wJZBLb948N0wW1XNCVVNXFnFzherlv5qvetOrkqVn8D07nhCjlZvWpaCPWSKnxCNTCpo97ee+2WbYOank1qhJryWBJzz5fYFiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jb6/AHmZ; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L/Wu17Ru"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 02F214396A;
-	Tue, 27 May 2025 08:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748335075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OpM/KDvQBRopReoEwTUtRipcq4oHwuOqxwS8jNYE+N4=;
-	b=L/Wu17RuqmXs2iCJTa6K4FkUaFxFVCNWTU0ikfQjdsDA5jeQUShmeA+w007rzYIrlWOxer
-	B7k/TE5akU9QTTeEFmPF+gSxCb9h4kH7lioU6oZJVYVaWm12xTPyhHFlfxPIlxhEiAO++e
-	crltFxBXlCoiOODANBDPV/gcGUZFlpu5U3j92Ku4cg8zq8LmiONFVy256H9HRXRqlhuJKL
-	8CEJ8x8XA5dsLBZaf3tzQtk//pYU9pARY8KJsU+bL6KZoQl4GUDbckkpqPpH8rEaT1J6X4
-	koyzY6gP6IcGAo41o9xB9uVq65nCx7bqisT4i1BXiH4K1LgsTteJJwCoYW9iRQ==
-Date: Tue, 27 May 2025 10:37:49 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: <UNGLinuxDriver@microchip.com>, <andrew+netdev@lunn.ch>,
- <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
- <pabeni@redhat.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] net: lan966x: Make sure to insert the vlan tags
- also in host mode
-Message-ID: <20250527103749.66505756@2a02-8440-d111-2026-8d50-1f4f-0da2-e170.rev.sfr.net>
-In-Reply-To: <20250527070850.3504582-1-horatiu.vultur@microchip.com>
-References: <20250527070850.3504582-1-horatiu.vultur@microchip.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jb6/AHmZ"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-309e54e469cso422691a91.1;
+        Tue, 27 May 2025 01:39:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748335180; x=1748939980; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=an9Dpp+MtkCdkNTGPODtJ1diDg/WTHKHuUIZYnHZllg=;
+        b=Jb6/AHmZfTJ84UMvvofvLPtwJGDWeC6g1sqtR1wjJ86V7O8qhwVSK2PQzQaxdNM8CR
+         Pls9kGV8UFpm/ACSK2EvEf/jFCBJovql5QlGnxADdyhBFmNzak2dcQQR6wjXJcW/fmOI
+         qzbRvIpOGMmOm/EKF6K3thY8gEUddWSKoVdjBko15raLx91rmaQRAP6+bNG+d8ukdMwe
+         Jgw+Su7bDDh2mpEx0wpVKQLCiX7O7mHpZR+fMcoSvTgYg2OCN1/j96CPGCoDcygif2Dt
+         0q18LAiIP+iW1ylpYoxhbz0Mxx1WzGUyz/XfCMrZckfxQ3LKNn0lgzjMpPODODK5+83C
+         EoiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748335180; x=1748939980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=an9Dpp+MtkCdkNTGPODtJ1diDg/WTHKHuUIZYnHZllg=;
+        b=gd/8pjYio8VSl461OebOjbvOjDjxzhbZoWUpVz6CRiAryYOxpbkdloq4e/zcVtwNhN
+         WNuB6jkwfBw4F+i/ciD4jsS7WAqF2dDqmeQb1LAZb+6vZErI20jpE7WrHCCjo+sfGJQI
+         HClf7wUP7lsBWfEXBryp/OSQcRmonKmaKUfss26jeIBW2nQZUnsSNYP38zcAfV0JWZOt
+         9hFPELNJXMQHZqpfLWPZzCDX4FmspCqYv+Ksu0N/rQ+fI2YAhIiUsGvMNIsn38CofKTA
+         SWBbr/uyCSu0P7ridOBf7y5dSiDHZCPTbM5BmKFPrjeh4EqA9uWpvMsCHGvmA4dxqEYZ
+         fjcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVCZVoethVPABGGgTqnPg7SiUvl7gm5MnCD2KxqDJe7sgVxEpTlQ+F7jha8EuCG+KO+hCqO7uO7zsG4qHk=@vger.kernel.org, AJvYcCWx/dEKz3iQgeDcXcCz4ESODhGfDidluFbID+SYCu9BTbamIIe+eazda3sEjO0T7XJYUZxwYjtXFgQ=@vger.kernel.org, AJvYcCX6jLs73L/RgoWdqG+CiIkVNyyTnsrAMZ+c8FwJq24Mz7mO1ATmTsWw3AFL4COYAL6dFBzCqOxZgosSAFWI+90=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU0LBUuT14btZhLNcaCITuQM8BrsHd532T1eD9sye34qBM9nsq
+	G3sVVcYCICQNUSnyzpolaM1ZWO60jc98GijjqdGdtz+Hk1uIlHvHs2wfUpa99QOZwa+PeidOwDw
+	lg9xEPZhiYfA4RRWHN5A+45/XHW5SX9E=
+X-Gm-Gg: ASbGncscAUIZ6eyY7Ybz50y4teOLcBYknTNvnoVbZ5eXjvjivAiO0h+FgacwEJKkmEa
+	oncYffxBzq8vYCOyA/3T5A4GltRIoEg6XzCSP7r9z/XRr7vUd0eywj+Xg4dhxLkB4/NYnZsEKj1
+	fm++hHlyd7Y5AIY9sYPG0lQJAEscofUPtd
+X-Google-Smtp-Source: AGHT+IGpFpizqB5SfgTl841kY7avc32Mm2bRFLgu7sBidE8M+Mdk2Lh0XtJVawj+sV17S+IlsEid6TIvD5QwAR8C6/Y=
+X-Received: by 2002:a17:90b:33cc:b0:30e:7127:644c with SMTP id
+ 98e67ed59e1d1-311119433b7mr7288308a91.6.1748335179926; Tue, 27 May 2025
+ 01:39:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduleelvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejfedtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehteevfeeivdekjeefkeekffefgfdtudetjeehkeegieelheekgfefgfevveffhfenucfkphepledvrdekkedrudejtddriedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledvrdekkedrudejtddriedtpdhhvghlohepvdgrtddvqdekgeegtddqugduudduqddvtddviedqkeguhedtqddufhegfhdqtdgurgdvqdgvudejtddrrhgvvhdrshhfrhdrnhgvthdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohephhhorhgrthhiuhdrvhhulhhtuhhrsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepfgfpiffnihhnuhigffhrihhvvghrsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtoheprghnughrvgifo
- dhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+References: <9d93c783cc4419f16dd8942a4359d74bc0149203.1748323971.git.viresh.kumar@linaro.org>
+In-Reply-To: <9d93c783cc4419f16dd8942a4359d74bc0149203.1748323971.git.viresh.kumar@linaro.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 27 May 2025 10:39:27 +0200
+X-Gm-Features: AX0GCFtaO_BqO83Us9VmFP8uHQ6yFobCe1L4dso7Zu8yoGskjf1j4ixRzeBoOcI
+Message-ID: <CANiq72m2jztPbqiH19560RTBW0PUghi8ajjyi6Pw6jmrHFdtSA@mail.gmail.com>
+Subject: Re: [PATCH] rust: opp: Move `cfg(CONFIG_OF)` attribute to the top of
+ doc test
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Horatiu,
+On Tue, May 27, 2025 at 7:33=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> Sorry for the trouble, one more patch to apply :(
 
-On Tue, 27 May 2025 09:08:50 +0200
-Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
+Sorry, to be clear, I meant it as a discussion, i.e. no need to send a
+patch for this in a hurry!
 
-> When running these commands on DUT (and similar at the other end)
-> ip link set dev eth0 up
-> ip link add link eth0 name eth0.10 type vlan id 10
-> ip addr add 10.0.0.1/24 dev eth0.10
-> ip link set dev eth0.10 up
-> ping 10.0.0.2/24
-> 
-> The ping will fail.
-> 
-> The reason why is failing is because, the network interfaces for lan966x
-> have a flag saying that the HW can insert the vlan tags into the
-> frames(NETIF_F_HW_VLAN_CTAG_TX). Meaning that the frames that are
-> transmitted don't have the vlan tag inside the skb data, but they have
-> it inside the skb. We already get that vlan tag and put it in the IFH
-> but the problem is that we don't configure the HW to rewrite the frame
-> when the interface is in host mode.
-> The fix consists in actually configuring the HW to insert the vlan tag
-> if it is different than 0.
-> 
-> Fixes: 6d2c186afa5d ("net: lan966x: Add vlan support.")
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  .../ethernet/microchip/lan966x/lan966x_main.c |  1 +
->  .../ethernet/microchip/lan966x/lan966x_main.h |  1 +
->  .../microchip/lan966x/lan966x_switchdev.c     |  1 +
->  .../ethernet/microchip/lan966x/lan966x_vlan.c | 21 +++++++++++++++++++
->  4 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> index 427bdc0e4908c..7001584f1b7a6 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
-> @@ -879,6 +879,7 @@ static int lan966x_probe_port(struct lan966x *lan966x, u32 p,
->  	lan966x_vlan_port_set_vlan_aware(port, 0);
->  	lan966x_vlan_port_set_vid(port, HOST_PVID, false, false);
->  	lan966x_vlan_port_apply(port);
-> +	lan966x_vlan_port_rew_host(port);
->  
->  	return 0;
->  }
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-> index 1f9df67f05044..4f75f06883693 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
-> @@ -497,6 +497,7 @@ void lan966x_vlan_port_apply(struct lan966x_port *port);
->  bool lan966x_vlan_cpu_member_cpu_vlan_mask(struct lan966x *lan966x, u16 vid);
->  void lan966x_vlan_port_set_vlan_aware(struct lan966x_port *port,
->  				      bool vlan_aware);
-> +void lan966x_vlan_port_rew_host(struct lan966x_port *port);
->  int lan966x_vlan_port_set_vid(struct lan966x_port *port,
->  			      u16 vid,
->  			      bool pvid,
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c b/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
-> index 1c88120eb291a..bcb4db76b75cd 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_switchdev.c
-> @@ -297,6 +297,7 @@ static void lan966x_port_bridge_leave(struct lan966x_port *port,
->  	lan966x_vlan_port_set_vlan_aware(port, false);
->  	lan966x_vlan_port_set_vid(port, HOST_PVID, false, false);
->  	lan966x_vlan_port_apply(port);
-> +	lan966x_vlan_port_rew_host(port);
->  }
->  
->  int lan966x_port_changeupper(struct net_device *dev,
-> diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c b/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
-> index fa34a739c748e..f158ec6ab10cc 100644
-> --- a/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
-> +++ b/drivers/net/ethernet/microchip/lan966x/lan966x_vlan.c
-> @@ -149,6 +149,27 @@ void lan966x_vlan_port_set_vlan_aware(struct lan966x_port *port,
->  	port->vlan_aware = vlan_aware;
->  }
->  
-> +/* When the interface is in host mode, the interface should not be vlan aware
-> + * but it should insert all the tags that it gets from the network stack.
-> + * The tags are no in the data of the frame but actually in the skb and the ifh
-                   not
-> + * is confiured already to get this tag. So what we need to do is to update the
-         configured
-> + * rewriter to insert the vlan tag for all frames which have a vlan tag
-> + * different than 0.
+It is just something we did for another example, but it is not a
+guideline or anything yet (it may not be a good idea, in fact -- I was
+hoping for others to chime in). Even if it were, there is no rush to
+"fix" it :)
 
-Just to be extra clear, the doc seems to say that
+Thanks!
 
-	REW_TAG_CFG_TAG_CFG_SET(1);
-
-means "Tag all frames, except when VID=PORT_VLAN_CFG.PORT_VID or
-VID=0."
-
-Another setting for these bits are "Tag all frames except when VID=0",
-which is what you document in the above comment.
-
-In this case, is there any chance that it would make a difference ?
-
-> + */
-> +void lan966x_vlan_port_rew_host(struct lan966x_port *port)
-> +{
-> +	struct lan966x *lan966x = port->lan966x;
-> +	u32 val;
-> +
-> +	/* Tag all frames except when VID == DEFAULT_VLAN */
-> +	val = REW_TAG_CFG_TAG_CFG_SET(1);
-> +
-> +	/* Update only some bits in the register */
-> +	lan_rmw(val,
-> +		REW_TAG_CFG_TAG_CFG,
-> +		lan966x, REW_TAG_CFG(port->chip_port));
-> +}
-> +
->  void lan966x_vlan_port_apply(struct lan966x_port *port)
->  {
->  	struct lan966x *lan966x = port->lan966x;
-
-Sorry for the typo nitpicking, but with that :
-
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-
-Maxime
+Cheers,
+Miguel
