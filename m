@@ -1,93 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D2B27A459
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FA427A463;
+	Tue, 27 May 2025 14:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357181; cv=none; b=H2D5F0wd7gZG/i5suW4Bfrr8UPeSCXb2kcUTOU6IZUD8ww+V2AA2tweTVcdkpAQhnR3pDca5zBEf6lgF29kLkF+CEkNwrzZdmDN2pPmN4aon9g9aN1zO3W7K7kpGV4rMtw1QUm8DF6hhpjA9JZn/MelbVbpY9zN+27sRx5hWtbA=
+	t=1748357195; cv=none; b=toVqPhw7e59+9L5g0TQyhPdkhy7c/zwgmCoqKQdAFuDqrMKg1bIhwVIXwyKMgUmDD0vD9lM9j2ReS4NhYzdDM8PS8s6XC408oQEPzzYcd2rdTDfCSgmsGJ/Z9zf+Aa9rERXsSojBDCxBtEIxbLh0pPhVU/B5hTEqOiacv+gGOTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357181; c=relaxed/simple;
-	bh=j+1FYl1eH47hvev1VnD13nxIOLXyM7N6wIPD+7tAisw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p/jrkK/tui2kRCo/4FgdeEPl424yZuOCdGKMm4WeLaOFvXtntcGcyQnfjnI0YMPPD5sLJr9Y0fUj/3Rc4uni9T0ccX8RCI/0nrasO5DvWBJiiRtDF/xbpvSVRl3kF+/vgafX5KuZxNNgFlFoAvfmwUHjCiZgM1Oh+X2WZl5stqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cPJ5qlIX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPJ5qlIX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748357176;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=TYvH6opew6c0SfiVsSSap4M4b37BCRrFIqizknsdu/Q=;
-	b=cPJ5qlIXc99eKk7rSUVTJvQ+oq0zWVInia/K0aQLCLR9i/dfo+GwM26vmoVnQSoY0XV7jO
-	i6pKccaOz4hlPyihH44m660sgAcLZXRzd7ywamRlQwkDtFx+IEkdiMFuWRPLTNqLq+8X4i
-	fyZ766isqkIKTIGpea8bwKx4kHAeF1I=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-Senl8kZHMmmjF5SAdGBHUw-1; Tue,
- 27 May 2025 10:46:09 -0400
-X-MC-Unique: Senl8kZHMmmjF5SAdGBHUw-1
-X-Mimecast-MFC-AGG-ID: Senl8kZHMmmjF5SAdGBHUw_1748357168
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	s=arc-20240116; t=1748357195; c=relaxed/simple;
+	bh=seleYDxgE1umOn/0JRERNNOYBgsMY4pZhxEpoY2e0pY=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uofwjebXIzFgmlTAl1qaoEB+N5NzRaWcLu2cBx2Agi08POm79956SH8nQwkXu9fsS51LEVB8PztL6MYBCyZ/SGIeChzIFctlmKsDqCcuchc6vw/bnPQxgEIsLZHyboVs7iV+bGfrbbsT9gyRMmeZG/i/mACWph8ixOTPEsOOwSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.36] (g36.guest.molgen.mpg.de [141.14.220.36])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C6B0919560BB;
-	Tue, 27 May 2025 14:46:07 +0000 (UTC)
-Received: from dobby.home.kraxel.org (unknown [10.45.226.108])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 247183000717;
-	Tue, 27 May 2025 14:46:03 +0000 (UTC)
-Received: by dobby.home.kraxel.org (Postfix, from userid 1000)
-	id D2E7044FBC2; Tue, 27 May 2025 16:46:00 +0200 (CEST)
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: kvm@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] x86/sev/vc: fix efi runtime instruction emulation
-Date: Tue, 27 May 2025 16:45:44 +0200
-Message-ID: <20250527144546.42981-1-kraxel@redhat.com>
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7C27061E6478F;
+	Tue, 27 May 2025 16:45:54 +0200 (CEST)
+Message-ID: <f9d9774b-c566-43c1-90a0-f982826c1667@molgen.mpg.de>
+Date: Tue, 27 May 2025 16:45:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH v2 1/1] e1000e: fix heap overflow in
+ e1000_set_eeprom()
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Mikael Wessel <post@mikaelkw.online>
+Cc: netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ torvalds@linuxfoundation.org, anthony.l.nguyen@intel.com,
+ przemyslaw.kitszel@intel.com, andrew@lunn.ch, kuba@kernel.org,
+ pabeni@redhat.com, security@kernel.org, stable@vger.kernel.org,
+ davem@davemloft.net, edumazet@google.com, linux-kernel@vger.kernel.org
+References: <20250527085612.11354-1-post@mikaelkw.online>
+ <20250527085612.11354-2-post@mikaelkw.online>
+ <7eed2cf1-5d54-4669-9e31-96707a116f01@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <7eed2cf1-5d54-4669-9e31-96707a116f01@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-In case efi_mm is active go use the userspace instruction decoder which
-supports fetching instructions from active_mm.  This is needed to make
-instruction emulation work for EFI runtime code, so it can use cpuid
-and rdmsr.
+[one addition]
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- arch/x86/coco/sev/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Am 27.05.25 um 16:43 schrieb Paul Menzel:
+> Dear Mikael,
+> 
+> 
+> Thank you for your patch.
+> 
+> Am 27.05.25 um 10:56 schrieb Mikael Wessel:
+>> The ETHTOOL_SETEEPROM ioctl copies user data into a kmalloc'ed buffer
+>> without validating eeprom->len and eeprom->offset.  A CAP_NET_ADMIN
+>> user can overflow the heap and crash the kernel or gain code execution.
+>>
+>> Validate length and offset before memcpy().
+>>
+>> Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver 
+>> (currently for ICH9 devices only)")
+>> Reported-by: Mikael Wessel <post@mikaelkw.online>
+>> Signed-off-by: Mikael Wessel <post@mikaelkw.online>
+>> Cc: stable@vger.kernel.org
+>> ---
+>>   drivers/net/ethernet/intel/e1000e/ethtool.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/ 
+>> net/ethernet/intel/e1000e/ethtool.c
+>> index 9364bc2b4eb1..98e541e39730 100644
+>> --- a/drivers/net/ethernet/intel/e1000e/ethtool.c
+>> +++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
+>> @@ -596,6 +596,9 @@ static int e1000_set_eeprom(struct net_device 
+>> *netdev,
+>>       for (i = 0; i < last_word - first_word + 1; i++)
+>>           le16_to_cpus(&eeprom_buff[i]);
+>> +        if (eeprom->len > max_len ||
+>> +            eeprom->offset > max_len - eeprom->len)
+>> +                return -EINVAL;
+> 
+> I think you used spaces instead of tabs for indentation. It’d be great 
+> if you could fix this, and send v3 tomorrow. Running `scripts/ 
+> checkpatch.pl` with the patch as an argument, should catch these things.
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 36beaac713c1..145f594d7e6b 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -346,7 +346,7 @@ static enum es_result __vc_decode_kern_insn(struct es_em_ctxt *ctxt)
- 
- static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
- {
--	if (user_mode(ctxt->regs))
-+	if (user_mode(ctxt->regs) || current->active_mm == &efi_mm)
- 		return __vc_decode_user_insn(ctxt);
- 	else
- 		return __vc_decode_kern_insn(ctxt);
--- 
-2.49.0
+Should a warning/error be logged if the condition is true?
 
+>>       memcpy(ptr, bytes, eeprom->len);
+>>       for (i = 0; i < last_word - first_word + 1; i++)
+> 
+> 
+> Kind regards,
+> 
+> Paul
