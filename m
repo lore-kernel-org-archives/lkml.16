@@ -1,202 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBD6BA38
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8697FBA38;
+	Tue, 27 May 2025 03:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748316332; cv=none; b=nMYRK3QnrT6+Rqi0Excwii/Eh1VMwGy/KgKbJHFj3+C+lvWvzY75nWTAjNjgd6NjCWyE5/ImIWEcl+Gm46F/xriW7bRUhD3XzbUONV9ECoNyAot6LXAcQQqireWRVwkKtTTH3WsCCTi76ElOCtRuYhlymMWeKUmLKSrB54iU2j8=
+	t=1748316408; cv=none; b=VsqMOYt6liElrrYfsByJK5rNbnoG2cIcYXolPB3scrq5RhxkEqNO+qU5DwMMsylO4vcR8KBc/V81lqnfouyrUITz6xlpFkY/HfJzPuLd0TrIXFB0ucnM6NmN8HIHkcLxEHeIHo3w+s6f6heg6tjk9vuulCjoJ1akdjBqOj6oAHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748316332; c=relaxed/simple;
-	bh=cLLpe3vDmcLqVqDKuTUWdXtdgFKHKU2FDg38BtlCZhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Bue2vTTLT7wE5z60XrWoEE5v2KTkmBMEUvgBdSMP22N4xZQsD8aw9ujFshqUlWSi3z4as9DW3eBFWQyQJwWC+WE6SAGj48ahIIVYr1oF/qJeOwZWwmxXSTV88MKP3nwCcdPCwvV+FMj3c0R0f1AwcRG6XJA4I/igj2aAGD/P4NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPoipsA5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748316408; c=relaxed/simple;
+	bh=5AMmgb7ijJfzCs5AWWsr82LJn3t+meyVy/mNWRNbxIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T4OuYoLTdqRbB0+yZASKHut83CLKbkcJQucW3l+J5ht+UufRQkHeQKZPT5TVEqsIgfpnAL2cZAsyFJRBsGG5r4UHBNIHHxTrDgcThJI/RQiRhhsJAAVJS4+ul7lrwUf/GaENkHN2LpVVt+vIBPWMJjTBs4A4w6NEqBWNYoqMLxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ATm7chRK; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPoipsA5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9373DC4CEE7;
-	Tue, 27 May 2025 03:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748316331;
-	bh=cLLpe3vDmcLqVqDKuTUWdXtdgFKHKU2FDg38BtlCZhU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=iPoipsA5q65FYxEbK8HXToTAhppPL/f8G+VbAhe9YPBNAqaCUue9i5mOju1LDKqxC
-	 SOpo+C2qZdQhpoV27kGcW/xbjuXFQgl4NMZrEPgHdpzQyMZLOuYMyq4D6WSkk329rw
-	 5Xbll14HBUIC2yz1vDnmvjbRRvtIqmtU2az66ISkoMBVGPIvuvw/ipLf026aV8Bobp
-	 JeQNx/vfB+TgsGcZNA1PIFVwwK2roBdxMYlYPp4cWh3WQmvNEjrUNLB/7mpPrV8ulA
-	 DA291aj/W1Qd2zczh8styU232tcO2YIbNLqIMEfjD8TTpvq9mlTkXRPEed7KKJeFlU
-	 wcl40hSr4xXNw==
-Date: Mon, 26 May 2025 20:25:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Christoph Hellwig <hch@lst.de>, Coly Li <colyli@kernel.org>,
-	David Gow <davidgow@google.com>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Jan Hendrik Farr <kernel@jfarr.cc>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Mark Brown <broonie@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <n.schier@avm.de>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [GIT PULL] hardening updates for v6.16-rc1
-Message-ID: <202505262001.561C185@keescook>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ATm7chRK"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c9563fafso1829967b3a.0;
+        Mon, 26 May 2025 20:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748316406; x=1748921206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X+dQKs4smeHKhBn5vB7/b04LpJegWUgXprxkxS6zC3s=;
+        b=ATm7chRKuFCTaF5Dahs764qQra8c8+/sqgJcfytp7wBGCsWak7Id7dc7VDI9SW/ncs
+         bYLPO9b5eTVYARoiniNTT3fb4voAfMtZrD7HsP7+PfD3G67o6vW6PRAFP7QkH1Zt0YuV
+         4pYQV6iIgDeMgpsqLlxHqzzOblL449pRcWtWTn+01Hiv0r/Vwl0BDm8xaHjbB0SzlNkC
+         +WMohNlkOS6b4RGH1sYAK8e3pw1ycEGZAnVg0+CmFz7QIjOOx3faMl4ywDjIVdJ379EV
+         9YnY6fErzWeRxxh52XRNzc2M8aLTq5vIwQHae0J2vCiyRLkT4jdDiMfXaYSemYtOEhBT
+         fM/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748316406; x=1748921206;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X+dQKs4smeHKhBn5vB7/b04LpJegWUgXprxkxS6zC3s=;
+        b=unterzQ4wnZY40ne0OxHudSUHd9IZfLo/Gm+/EBRRPqxuuB58v6PSczDmnR7UR+3EV
+         Eg2dhgX18xe9uzZ3b6wUfHjQ275n2V74p78Z2j+cFFwgvQ/nmDP6hEilR0k3FL3hiuWH
+         +YXG1nxJ92xhEOKb60LoIgvGmO4vLoRU4KHpoD1ujbrYypUFRUM11QskluOzdhMGKuOS
+         1WbYQmM53AFEiHLhbwGGvVb4eycK5wPUvCCglJquLDZHIbk6aW5J+e9Qpjcx9WZ7W0x7
+         1uxNQ0sxq+MCphtO856O84F2LNtQafp+bHKUQs5LbAl44SUGXGKxDl0Ydkr9Q+SUdcBv
+         l75g==
+X-Forwarded-Encrypted: i=1; AJvYcCUrJI6jGUmZS8yaq0ShD1BSD9ZwRZ7lZaLVGqQWfwSjC6y4LbpvKgY5d1q0oPx3P9Uxt3xSoShIsdVwZXs=@vger.kernel.org, AJvYcCWIkX6I5B2ZkIhCIEJNZQvbFqInfCcNr2ZzD945xSj2UAGidVMimd6ayaCwesTIjw1nXbzRRJKVB9sbR5wikzYO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzzIB8u2KauKEFrHwKmWg3AOZH/MD28lkvE0LTN4/vRjRsbuZb
+	PKxrI9rl8qkEBwa9/SGZoTBABDGRdzaNJU+VwUqluixLkrLTe9173KgRtCyp5GlsgtufAQ==
+X-Gm-Gg: ASbGnculztkX4Kls101QtvvK/oUoBwxUIAfuej1EfOUbbsi1hlAjGe3RJn/IJgk+B7j
+	jcWR45dwQ3KxTNz8PvFPA7vUSvsc9oQWRvzoP8jFs778vDOnaoe4SaecKMAkOph46XNdtl/68X0
+	pAONsr7oClsuwTZVFpM5MTdahj2Eil2ZdiYglEXLeaR5hz6ImzPOEORHat/OyJK8ZyJMO9HfEi1
+	iOMMMsto594QnHWrbXd2XxsL9X04UGOT2ONmywraKbkCQ1OCr5tLE1ikAsamxlazRXay7uEeJyP
+	DVv2xxy2SYx3QjUVTl3eteuPkfj4rSl86KtjWW0TopGM7mB75rILnaGXmLHSWlB8p3HEeUw=
+X-Google-Smtp-Source: AGHT+IGgF85+/TM8/Lb9bTE3REIcJSRSSaneox0Iitx/fr11aMcDr510JMXivb83lsKssFF1zcKoxw==
+X-Received: by 2002:a05:6a00:f0d:b0:746:285b:595c with SMTP id d2e1a72fcca58-746285b5bdamr1242815b3a.8.1748316406483;
+        Mon, 26 May 2025 20:26:46 -0700 (PDT)
+Received: from fedora.dns.podman ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74622b3b481sm865926b3a.131.2025.05.26.20.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 20:26:45 -0700 (PDT)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>,
+	Phil Sutter <phil@nwl.cc>,
+	Florian Westphal <fw@strlen.de>,
+	Petr Mladek <pmladek@suse.com>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	wireguard@lists.zx2c4.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv7 RESEND wireguard 0/2] wireguard: selftests: use nftables for testing
+Date: Tue, 27 May 2025 03:26:33 +0000
+Message-ID: <20250527032635.10361-1-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+This patch set convert the wireguard selftest to nftables, as iptables is
+deparated and nftables is the default framework of most releases.
 
-Please pull these hardening updates for v6.16-rc1.
+v7: re-post, no update.
+v6: fix typo in patch 1/2. Update the description (Phil Sutter)
+v5: remove the counter in nft rules and link nft statically (Jason A.
+Donenfeld)
+v4: no update, just re-send
+v3: drop iptables directly (Jason A. Donenfeld)
+    Also convert to using nft for qemu testing (Jason A. Donenfeld)
+v2: use one nft table for testing (Phil Sutter)
 
-The randstruct GCC plugin was fixed but it uncovered a missed
-randomization opportunity (that was similarly missed in Clang but has
-also now been fixed there too).
+Hangbin Liu (2):
+  wireguard: selftests: convert iptables to nft
+  wireguard: selftests: update to using nft for qemu test
 
-There are two patches in this pull that are duplicated in other trees: 1
-in netdev and 1 in watchdog. They were needed to build the hardening tree
-(due to the randstruct fixes), but they were taken into their respective
-trees kind of later in the dev cycle. I debated splitting up this tree
-and ripping out the patches, but they're both small, and it seemed like
-more trouble for both of us (2 pulls). If you'd rather have it split up,
-let me know and I can resend it that way.
-
-Another item of note is the kbuild change that will induce a full kernel
-rebuild when other dependencies of the compile change (randstruct seed,
-GCC plugins are rebuilt, or the Clang sanitizer .scl file content
-changes). Several variations were attempted by myself and kbuild
-maintainers was the version ultimately agreed to (and I carried in my
-tree since it's all due to hardening features anyway).
-
-Thanks!
-
--Kees
-
-The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
-
-  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.16-rc1
-
-for you to fetch changes up to f0cd6012c40da99b45f8f63052b97ec89d5f307b:
-
-  Revert "hardening: Disable GCC randstruct for COMPILE_TEST" (2025-05-08 09:42:40 -0700)
-
-----------------------------------------------------------------
-hardening updates for v6.16-rc1
-
-- Update overflow helpers to ease refactoring of on-stack flex array
-  instances (Gustavo A. R. Silva, Kees Cook)
-
-- lkdtm: Use SLAB_NO_MERGE instead of constructors (Harry Yoo)
-
-- Simplify CONFIG_CC_HAS_COUNTED_BY (Jan Hendrik Farr)
-
-- Disable u64 usercopy KUnit test on 32-bit SPARC (Thomas Weiﬂschuh)
-
-- Add missed designated initializers now exposed by fixed randstruct
-  (Nathan Chancellor, Kees Cook)
-
-- Document compilers versions for __builtin_dynamic_object_size
-
-- Remove ARM_SSP_PER_TASK GCC plugin
-
-- Fix GCC plugin randstruct, add selftests, and restore COMPILE_TEST
-  builds
-
-- Kbuild: induce full rebuilds when dependencies change with GCC plugins,
-  the Clang sanitizer .scl file, or the randstruct seed.
-
-- Kbuild: Switch from -Wvla to -Wvla-larger-than=1
-
-- Correct several __nonstring uses for -Wunterminated-string-initialization
-
-----------------------------------------------------------------
-Gustavo A. R. Silva (3):
-      overflow: Add STACK_FLEX_ARRAY_SIZE() helper
-      kunit/overflow: Add tests for STACK_FLEX_ARRAY_SIZE() helper
-      overflow: Fix direct struct member initialization in _DEFINE_FLEX()
-
-Harry Yoo (1):
-      lkdtm: use SLAB_NO_MERGE instead of an empty constructor
-
-Jan Hendrik Farr (1):
-      hardening: simplify CONFIG_CC_HAS_COUNTED_BY
-
-Kees Cook (16):
-      gcc-plugins: Remove ARM_SSP_PER_TASK plugin
-      compiler_types: Identify compiler versions for __builtin_dynamic_object_size
-      overflow: Clarify expectations for getting DEFINE_FLEX variable sizes
-      mod_devicetable: Enlarge the maximum platform_device_id name length
-      watchdog: exar: Shorten identity name to fit correctly
-      input/joystick: magellan: Mark __nonstring look-up table const
-      kbuild: Switch from -Wvla to -Wvla-larger-than=1
-      gcc-plugins: Force full rebuild when plugins change
-      randstruct: Force full rebuild when seed changes
-      integer-wrap: Force full rebuild when .scl file changes
-      md/bcache: Mark __nonstring look-up table
-      scsi: qedf: Use designated initializer for struct qed_fcoe_cb_ops
-      randstruct: gcc-plugin: Remove bogus void member
-      lib/tests: Add randstruct KUnit test
-      lib/tests: randstruct: Add deep function pointer layout test
-      Revert "hardening: Disable GCC randstruct for COMPILE_TEST"
-
-Nathan Chancellor (1):
-      net: qede: Initialize qede_ll_ops with designated initializer
-
-Thomas Weiﬂschuh (1):
-      kunit/usercopy: Disable u64 test on 32-bit SPARC
-
- arch/arm/Kconfig                              |   3 +-
- init/Kconfig                                  |   9 +-
- scripts/gcc-plugins/Kconfig                   |   4 -
- lib/Kconfig.debug                             |   8 +
- security/Kconfig.hardening                    |   2 +-
- arch/arm/boot/compressed/Makefile             |   2 +-
- lib/Makefile                                  |   1 -
- lib/tests/Makefile                            |   1 +
- mm/kasan/Makefile                             |   3 +-
- scripts/basic/Makefile                        |   5 +
- scripts/gcc-plugins/Makefile                  |   4 +
- scripts/Makefile.extrawarn                    |   9 +-
- scripts/Makefile.gcc-plugins                  |   8 +-
- scripts/Makefile.lib                          |  18 ++
- scripts/Makefile.ubsan                        |   1 +
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 107 ---------
- scripts/gcc-plugins/randomize_layout_plugin.c |  18 +-
- include/linux/compiler-version.h              |  30 +++
- include/linux/compiler_types.h                |   5 +
- include/linux/mod_devicetable.h               |   2 +-
- include/linux/overflow.h                      |  23 +-
- include/linux/vermagic.h                      |   1 -
- drivers/input/joystick/magellan.c             |   2 +-
- drivers/md/bcache/super.c                     |   3 +-
- drivers/misc/lkdtm/heap.c                     |  17 +-
- drivers/net/ethernet/qlogic/qede/qede_main.c  |   2 +-
- drivers/scsi/qedf/qedf_main.c                 |   2 +-
- drivers/watchdog/exar_wdt.c                   |   2 +-
- lib/tests/overflow_kunit.c                    |   4 +
- lib/tests/randstruct_kunit.c                  | 334 ++++++++++++++++++++++++++
- lib/tests/usercopy_kunit.c                    |   1 +
- MAINTAINERS                                   |   1 +
- 32 files changed, 461 insertions(+), 171 deletions(-)
- delete mode 100644 scripts/gcc-plugins/arm_ssp_per_task_plugin.c
- create mode 100644 lib/tests/randstruct_kunit.c
+ tools/testing/selftests/wireguard/netns.sh    | 29 +++++++++------
+ .../testing/selftests/wireguard/qemu/Makefile | 36 ++++++++++++++-----
+ .../selftests/wireguard/qemu/kernel.config    |  7 ++--
+ 3 files changed, 49 insertions(+), 23 deletions(-)
 
 -- 
-Kees Cook
+2.46.0
+
