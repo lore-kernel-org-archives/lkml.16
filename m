@@ -1,294 +1,199 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52ECD281512;
-	Tue, 27 May 2025 17:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2660A287504;
+	Tue, 27 May 2025 17:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368587; cv=none; b=n1KfPrBA4VMd/VOrbJsH5etiB93B7INL1fYKbjpBVFwqBJieywWACIYNc3uKZMGGCYqmpoI7eaCkzWw9RdoPSDTrawB0sKtw6VQ6ErclWNa4uQYGg6nIro21qlq9rmwuwW2WiJJ/ceFakGrfOGS5jmsB9U/yE3w8mCiRQnJiKDo=
+	t=1748368590; cv=none; b=BDXMi1jq2YQCothrMrC1864yE3uOoUIldj+6cFD3WBSPW9FGz6ZOOB2Ox/+YlwCOnE7ehEMTSDz/oISlz1MkKLYux6hJIpiLMwRyYynPBiXbz5gMJQHU9v4R3NqPiUGxULEvoB0YaDYOTlXraZ/hizoAvrVZlxSz491/igR7vO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368587; c=relaxed/simple;
-	bh=ysE5VQEeovJqr9bZqisHWPRj0Fb3prPMdXXWvIA1Iwg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ASu6YF+JnWDq7E9pSIxzwLO4OI1F/ksm+dUz7VfeStXTC/y8NWercjqax6LdWDV0kEEVvERGIewYVAX/0VU7mo3GyuUW2F/xzIBLTPmM1rGtswOwmL8AE/bm0OZth+wO1pN3ayh28J03rnxRT5kwUF9oSSTfJVO3ZqW7OjeOCc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iw3b9Nie; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748368590; c=relaxed/simple;
+	bh=TYvcN0FXetMET/yMqKYpyaUprPLsn66NSldFSb6Hm7k=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qW88oc62ZDsMUVIchQ22jJ67VRCNy+KkKrvcJWZ9GZAgDzoRPO0MPR6XJ4MGarmK6LIrcuYHVyVEp4fULg58/v7vbTsqJ7EmR0DDoIa/Dn0vwh3Zkj/IIQhDQA/8LRLGFEJgHDKIt1oUHmbQlaFwD7C8JdYOwSVVjQVUnW8gowY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGDyc1Tv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iw3b9Nie"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3dd24c86779so21821185ab.1;
-        Tue, 27 May 2025 10:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748368584; x=1748973384; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=75t1KQGtX7DtR0KwXgxMTDEvGLkyel42aN9/Vltyf4E=;
-        b=Iw3b9Nie2JoZxmHvOcNo3WoQF6i3w7LILz1pxGBHuJ15zLENaXcVghKqG7TWKWZU0R
-         Ja3H7gEQE2JH+KdsDcGRd9KnjhhrQBDVmwS99Qt3OWElleszuPqIdZLBIaJDYByIcWzy
-         iYuRanEQMwc/xLGvCorXiTQ7pxmc8cpnFdfgTDzQ55JqzSPTsWjMZmCKJwlAZ4doxynv
-         xiAPEBo0SaS01NHQWj793mZwnOegfL7d3I4pzgzc6L5p5VcNr0NknJhNV2AsTChzbuqP
-         3mz90avhGjIMlqTftgskbTLnApqg8Ryt54O4I2kzDsPqNYjL69A622qGQtFiSpQgDKwz
-         KCUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748368584; x=1748973384;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=75t1KQGtX7DtR0KwXgxMTDEvGLkyel42aN9/Vltyf4E=;
-        b=PgDitu8B9yBpavw5Egd16MksUacrBQtyc0QuVbbb5kUp79sCHT61ebSHTjzyvuZtNh
-         Pv2q78u0VDoHLGW9NgvtOoQPuRG+zWymX/mWgzRemKKVGSdYFtVYIChjDd2WqyutCtbL
-         S/316XMzGTtGUbNoGweGL2uSaMsJpIWoD5TpCcvyRTYSDCEthhNmqvhOSxPJlAcZ210l
-         Vs1NtVvak5Y8UG2uOHvr7Ou35cfPHSN2ZtQDOMnVEqnaWhpwlRcQDPUIJ49masldSq7u
-         rPkcIqJJnQCBKu98upvu8RpOAv0dL82vupuNVgZ89mxfUn26VZne0wcZCUa8MQ27RrTz
-         rcPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvDjoPI4Yeu6PwwH5tYDm7Z3rvGINGVNgwJpX1okubw6leeN+E0rXOW1Z5vsALJ+gewbLqhqRiMs7HrZ54@vger.kernel.org, AJvYcCWeuALSc6LQsQ2+7wEqInQS8rSyJFOB9qISlLzfM4YXBZomvwVLvFUgh4QTfXKH+F6pmWHcHzscCV7H@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/5kRqnZsisOMErJJmPhYOYKHo5wXVdhwKjC3E94SGfdkNS4nM
-	DWhYwviB90rUrfat6eiHFPAUUotTYNMqOiE2Kqc/RaUrANXbIJCfMTf7xnET+1guKas=
-X-Gm-Gg: ASbGncvIPKhYNdCVEtO1gTu9sjT9SswMJip+IMYxnCPKb2Q2nOPDQjO5amPCU4yw6ut
-	fWQtzsLOuKlLymBeigWxxcgbxgpmKZ8F/ClptT7CV37/UOF0f5FpZsC+6ukf2rVAUknq3asaYcX
-	mCIY486k/h/swX5LVWnNCwaotjfNpjtBtFt0UXjW9Qa7l7l6A+ZXDQzKUe0uDa7Qk/D3C60caqH
-	Km9udmBoL9ZyRYCcFjj+9n4DTmZmQLyENnF9/SNmZR3bpQj+R8mrj5g8zCslvexThTRj1Ivy9zE
-	M7rhUb9Pg4xBSDrHY02qLBgHU/I/EqLW8bvll5B+E3zZaM4LLE3Neom4Pc0T3MkD3ql7hPlOGBz
-	RopWkIh1RrngoaxOaP/9y7oHAonutYw==
-X-Google-Smtp-Source: AGHT+IEG1Ty/l3Gh00PtWxsgabl40eUie4mjzIcYjsL+B8so87NPY18sPvIj6HQRx+VZNV4Xgx4J1g==
-X-Received: by 2002:a05:6e02:144d:b0:3d5:8923:faa5 with SMTP id e9e14a558f8ab-3dc9b6aa36dmr108298815ab.10.1748368584073;
-        Tue, 27 May 2025 10:56:24 -0700 (PDT)
-Received: from james-x399.localdomain (97-118-146-220.hlrn.qwest.net. [97.118.146.220])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc82e014f4sm38082275ab.40.2025.05.27.10.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 10:56:23 -0700 (PDT)
-From: James Hilliard <james.hilliard1@gmail.com>
-To: netdev@vger.kernel.org
-Cc: linux-sunxi@lists.linux.dev,
-	James Hilliard <james.hilliard1@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] dt-bindings: net: sun8i-emac: Add AC300 EMAC1 nvmem phy selection
-Date: Tue, 27 May 2025 11:55:56 -0600
-Message-Id: <20250527175558.2738342-3-james.hilliard1@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250527175558.2738342-1-james.hilliard1@gmail.com>
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGDyc1Tv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8338C4CEE9;
+	Tue, 27 May 2025 17:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748368589;
+	bh=TYvcN0FXetMET/yMqKYpyaUprPLsn66NSldFSb6Hm7k=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=ZGDyc1TvlC4v+xPxrJd+uSCgvUHnc+I7dcc37XRScxQwVkQRM5clhDUQJOJ0WEYP5
+	 3hk+RIDgyNxtDi3gjJ6wljWXK0gMfloB5Qc5bglnfG2in7ZbS6H3EPLVB07hUGUL1M
+	 YClwojpcDYcjxt61mjCVvqCoLTbv3IOA0c2cTDIoIOxKIREhkF4cCucs4vcUiPUwR4
+	 kXVXsj6GwZpxUMUpr+a10XMBylHsHpI+g8b2jVqNCd4bQngM8y18okvZXxUbtGjIfr
+	 omOb10xa8Ja5IsYT9TVH873r9IV8hXXLUEYe0QVvlB3fRpz3GTraoc0bGO4Sl7U8BA
+	 XyZGuvPQlJq0Q==
+Date: Tue, 27 May 2025 12:56:28 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, george.kw.lee@fii-foxconn.com, 
+ leo.jt.wang@gmail.com, Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+ linux-kernel@vger.kernel.org, leo.jt.wang@fii-foxconn.com, 
+ Joel Stanley <joel@jms.id.au>, Conor Dooley <conor+dt@kernel.org>, 
+ devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <c5e16072-e6de-4256-b0e2-3b45e420f0c4@kernel.org>
+References: <6822b851.050a0220.27a24d.d071@mx.google.com>
+ <68343bef.170a0220.23efba.1d80@mx.google.com>
+ <c5e16072-e6de-4256-b0e2-3b45e420f0c4@kernel.org>
+Message-Id: <174836831148.841003.9353881909107000956.robh@kernel.org>
+Subject: Re: [PATCH V3 2/2] ARM: dts: aspeed: clemente: add Meta Clemente
+ BMC
 
-The Allwinner H616 EMAC1 can be connected to an copackaged AC200
-or AC300 PHY depending upon the variant.
 
-Add a new allwinner,sun50i-h616-emac1 compatible and example, support
-for the allwinner,sun50i-h616-emac1 EMAC1 MAC will be added later on.
+On Mon, 26 May 2025 14:50:24 +0200, Krzysztof Kozlowski wrote:
+> On 26/05/2025 12:01, leo.jt.wang@gmail.com wrote:
+> > From: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> >
+> > Add linux device tree entry for Meta Clemente compute-tray
+> > BMC using AST2600 SoC.
+> >
+> > Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
+> > ---
+> >  arch/arm/boot/dts/aspeed/Makefile             |    1 +
+> >  .../aspeed/aspeed-bmc-facebook-clemente.dts   | 1195 +++++++++++++++++
+> >  2 files changed, 1196 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+> >
+> > diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+> > index b3170fdd3096..9d0a465cbb36 100644
+> > --- a/arch/arm/boot/dts/aspeed/Makefile
+> > +++ b/arch/arm/boot/dts/aspeed/Makefile
+> > @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+> >  	aspeed-bmc-delta-ahe50dc.dtb \
+> >  	aspeed-bmc-facebook-bletchley.dtb \
+> >  	aspeed-bmc-facebook-catalina.dtb \
+> > +	aspeed-bmc-facebook-clemente.dtb \
+> >  	aspeed-bmc-facebook-cmm.dtb \
+> >  	aspeed-bmc-facebook-elbert.dtb \
+> >  	aspeed-bmc-facebook-fuji.dtb \
+> > diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+> > new file mode 100644
+> > index 000000000000..63b5a13214f1
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dts
+> > @@ -0,0 +1,1195 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +// Copyright (c) 2021 Facebook Inc.
+> > +/dts-v1/;
+> > +
+> > +#include "aspeed-g6.dtsi"
+> > +#include <dt-bindings/gpio/aspeed-gpio.h>
+> > +#include <dt-bindings/usb/pd.h>
+> > +#include <dt-bindings/leds/leds-pca955x.h>
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/i2c/i2c.h>
+> > +
+> > +/ {
+> > +	model = "Facebook Clemente BMC";
+> > +	compatible = "facebook,clemente-bmc", "aspeed,ast2600";
+> Missing bindings.
+> 
+> Or your threading is broken because I did not receive 1/2.
+> 
+> Just in case:
+> 
+> Please version your patches (entire patchset!) correctly, e.g. use b4 or
+> git format-patch -vX, and add changelog in cover letter or under '---'
+> of individual patches describing changes from previous version.
+> 
+> Do not attach (thread) your patchsets to some other threads (unrelated
+> or older versions). This buries them deep in the mailbox and might
+> interfere with applying entire sets.
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
-Add nvmem-cells and nvmem-cell-names properties for the ac300 efuse
-based phy selection.
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
----
-Changes v1 -> v2:
-  - fix dt_binding_check
----
- .../net/allwinner,sun8i-a83t-emac.yaml        | 75 ++++++++++++++++++-
- .../bindings/net/ethernet-controller.yaml     | 26 +++++--
- .../devicetree/bindings/net/snps,dwmac.yaml   |  2 +
- 3 files changed, 94 insertions(+), 9 deletions(-)
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 7fe0352dff0f..3a8c31dd9ae7 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -18,6 +18,7 @@ properties:
-       - const: allwinner,sun8i-r40-gmac
-       - const: allwinner,sun8i-v3s-emac
-       - const: allwinner,sun50i-a64-emac
-+      - const: allwinner,sun50i-h616-emac1
-       - items:
-           - enum:
-               - allwinner,sun20i-d1-emac
-@@ -58,7 +59,6 @@ required:
-   - clock-names
-   - resets
-   - reset-names
--  - phy-handle
-   - phy-mode
-   - syscon
- 
-@@ -73,6 +73,7 @@ allOf:
-               - allwinner,sun8i-h3-emac
-               - allwinner,sun8i-v3s-emac
-               - allwinner,sun50i-a64-emac
-+              - allwinner,sun50i-h616-emac1
- 
-     then:
-       properties:
-@@ -189,6 +190,42 @@ allOf:
-             - mdio-parent-bus
-             - mdio@1
- 
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - allwinner,sun50i-h616-emac1
-+
-+    then:
-+      required:
-+        - phy-handle
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - allwinner,sun50i-h616-emac1
-+
-+    then:
-+      properties:
-+        nvmem-cells: true
-+
-+        nvmem-cell-names: true
-+
-+        phys:
-+          maxItems: 2
-+
-+        phy-names:
-+          items:
-+            - const: ac200
-+            - const: ac300
-+
-+        mdio:
-+          $ref: mdio.yaml#
-+
- unevaluatedProperties: false
- 
- examples:
-@@ -321,4 +358,40 @@ examples:
-         };
-     };
- 
-+  - |
-+    ethernet@5030000 {
-+        compatible = "allwinner,sun50i-h616-emac1";
-+        syscon = <&syscon>;
-+        reg = <0x05030000 0x10000>;
-+        interrupts = <0 15 4>;
-+        interrupt-names = "macirq";
-+        resets = <&ccu 31>;
-+        reset-names = "stmmaceth";
-+        clocks = <&ccu 83>;
-+        clock-names = "stmmaceth";
-+        phys = <&ac200_rmii_phy>, <&ac300_rmii_phy>;
-+        phy-names = "ac200", "ac300";
-+        phy-mode = "rgmii";
-+        nvmem-cells = <&ephy_acx00>;
-+        nvmem-cell-names = "ac300";
-+
-+        mdio {
-+            compatible = "snps,dwmac-mdio";
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            ac300_rmii_phy: ac300-ethernet-phy@0 {
-+              #phy-cells = <0>;
-+              compatible = "ethernet-phy-ieee802.3-c22";
-+              reg = <0>;
-+            };
-+
-+            ac200_rmii_phy: ac200-ethernet-phy@1 {
-+              #phy-cells = <0>;
-+              compatible = "ethernet-phy-ieee802.3-c22";
-+              reg = <1>;
-+            };
-+        };
-+    };
-+
- ...
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index a2d4c626f659..710e651851e5 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -45,14 +45,6 @@ properties:
-     description:
-       Specifies maximum speed in Mbit/s supported by the device.
- 
--  nvmem-cells:
--    maxItems: 1
--    description:
--      Reference to an nvmem node for the MAC address
--
--  nvmem-cell-names:
--    const: mac-address
--
-   phy-connection-type:
-     description:
-       Specifies interface type between the Ethernet device and a physical
-@@ -260,6 +252,24 @@ dependencies:
-   pcs-handle-names: [pcs-handle]
- 
- allOf:
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - allwinner,sun50i-h616-emac1
-+
-+    then:
-+      properties:
-+        nvmem-cells:
-+          maxItems: 1
-+          description:
-+            Reference to an nvmem node for the MAC address
-+
-+        nvmem-cell-names:
-+          const: mac-address
-+
-   - if:
-       properties:
-         phy-mode:
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 78b3030dc56d..a6dfed00c48f 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -56,6 +56,7 @@ properties:
-         - allwinner,sun8i-r40-gmac
-         - allwinner,sun8i-v3s-emac
-         - allwinner,sun50i-a64-emac
-+        - allwinner,sun50i-h616-emac1
-         - amlogic,meson6-dwmac
-         - amlogic,meson8b-dwmac
-         - amlogic,meson8m2-dwmac
-@@ -620,6 +621,7 @@ allOf:
-                 - allwinner,sun8i-r40-gmac
-                 - allwinner,sun8i-v3s-emac
-                 - allwinner,sun50i-a64-emac
-+                - allwinner,sun50i-h616-emac1
-                 - loongson,ls2k-dwmac
-                 - loongson,ls7a-dwmac
-                 - ingenic,jz4775-mac
--- 
-2.34.1
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250527 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for c5e16072-e6de-4256-b0e2-3b45e420f0c4@kernel.org:
+
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: / (facebook,clemente-bmc): compatible: 'oneOf' conditional failed, one must be fixed:
+	'facebook,clemente-bmc' is not one of ['delta,ahe50dc-bmc', 'facebook,galaxy100-bmc', 'facebook,wedge100-bmc', 'facebook,wedge40-bmc', 'microsoft,olympus-bmc', 'quanta,q71l-bmc', 'tyan,palmetto-bmc', 'yadro,vesnin-bmc']
+	'facebook,clemente-bmc' is not one of ['amd,daytonax-bmc', 'amd,ethanolx-bmc', 'ampere,mtjade-bmc', 'aspeed,ast2500-evb', 'asrock,e3c246d4i-bmc', 'asrock,e3c256d4i-bmc', 'asrock,romed8hm3-bmc', 'asrock,spc621d8hm3-bmc', 'asrock,x570d4u-bmc', 'bytedance,g220a-bmc', 'facebook,cmm-bmc', 'facebook,minipack-bmc', 'facebook,tiogapass-bmc', 'facebook,yamp-bmc', 'facebook,yosemitev2-bmc', 'facebook,wedge400-bmc', 'hxt,stardragon4800-rep2-bmc', 'ibm,mihawk-bmc', 'ibm,mowgli-bmc', 'ibm,romulus-bmc', 'ibm,swift-bmc', 'ibm,witherspoon-bmc', 'ingrasys,zaius-bmc', 'inspur,fp5280g2-bmc', 'inspur,nf5280m6-bmc', 'inspur,on5263m5-bmc', 'intel,s2600wf-bmc', 'inventec,lanyang-bmc', 'lenovo,hr630-bmc', 'lenovo,hr855xg2-bmc', 'portwell,neptune-bmc', 'qcom,centriq2400-rep-bmc', 'supermicro,x11spi-bmc', 'tyan,s7106-bmc', 'tyan,s8036-bmc', 'yadro,nicole-bmc', 'yadro,vegman-n110-bmc', 'yadro,vegman-rx20-bmc', 'yadro,vegman-sx20-bmc']
+	'facebook,clemente-bmc' is not one of ['ampere,mtjefferson-bmc', 'ampere,mtmitchell-bmc', 'aspeed,ast2600-evb', 'aspeed,ast2600-evb-a1', 'asus,x4tf-bmc', 'facebook,bletchley-bmc', 'facebook,catalina-bmc', 'facebook,cloudripper-bmc', 'facebook,elbert-bmc', 'facebook,fuji-bmc', 'facebook,greatlakes-bmc', 'facebook,harma-bmc', 'facebook,minerva-cmc', 'facebook,yosemite4-bmc', 'ibm,blueridge-bmc', 'ibm,everest-bmc', 'ibm,fuji-bmc', 'ibm,rainier-bmc', 'ibm,sbp1-bmc', 'ibm,system1-bmc', 'ibm,tacoma-bmc', 'inventec,starscream-bmc', 'inventec,transformer-bmc', 'jabil,rbp-bmc', 'nvidia,gb200nvl-bmc', 'qcom,dc-scm-v1-bmc', 'quanta,s6q-bmc', 'ufispace,ncplite-bmc']
+	'aspeed,ast2400' was expected
+	'aspeed,ast2500' was expected
+	from schema $id: http://devicetree.org/schemas/arm/aspeed/aspeed.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /: failed to match any schema with compatible: ['facebook,clemente-bmc', 'aspeed,ast2600']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
+	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e6e0000/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e6e0000/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e780000/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e790000/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e790000/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb@1e790000/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
+
+
+
+
 
