@@ -1,173 +1,104 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820BB19D07A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3003C30;
+	Tue, 27 May 2025 10:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748343395; cv=none; b=IPoozEixMwVHZWjmQHOkcI+2eU/cAuMB/hhGicSrshsegeFBzGbshSoxKCa+Pink+sYUs0rDoFV8QO1Xd+D+nLifllvSUicY/APbfJn041w7oRE1Ep1hl+SUvwnBs5Uvc/VVqV4MBV/AaV/uk3ckd78htVGuQ7C7dReILJPfYzo=
+	t=1748343471; cv=none; b=aUON1yXzUlfefhdJJeGlLMEVb9n3T3YtPwSAyRABQ/E4JVQrPDSDilvhtNLOj/tv/y1ju81f7NOJCi1X084TkSdk+qSyjvJ7nnMIofAyZltlDpPIZysr7fWMSw6oztf2l2l5LQlXw37mu9+ZPQ9l24i8WbNqObgHILmXYQl8vmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748343395; c=relaxed/simple;
-	bh=cwFmiiFLJC7CBK5W/zEvYAI9GN1jOvt1j9B/c2F9A/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T5wqdrK0Oyu34EVJ63sfWh0btcKkHvpniyfM0kIrUZo8BXGEvcTyyKwd74Fk72u/jkI11ZLcFLr5Q3enV/HiaQQuvcFthDXgf1cjYZOIUyIrtfzerNHS6Mkoluq1Uv1h9UIuVYt4HzA2rOkYxPBOejQie4HdCVnwFl0MwWWssaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eG4wTGPs; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nx9ZoWi8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=eG4wTGPs; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nx9ZoWi8; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eG4wTGPs";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nx9ZoWi8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="eG4wTGPs";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nx9ZoWi8"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	s=arc-20240116; t=1748343471; c=relaxed/simple;
+	bh=kn/nRRLMtAjxo7kfizv0Ybk8CZ92Ovm7QgzR/FkyBVw=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=RbiVD5CLXGEUKImv05KA+gRAf6iTdwNwPf80PznBMI5R3dC5FoD+UPQq+xCZY3zaZb2ycQ/7cQeeEqIzKpA9ke2sjx1BlWIoycrQAVYOJpu50piw5ay+URZfI8HM42iULN6exEinjlIWhHWBUhJja7MB5zzWkExvJOvi13w02iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 909F21F7F9;
-	Tue, 27 May 2025 10:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748343391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tpMpRVwHiJCh8CUdzFhHigcKV7xctfBGbb92ItfhxC0=;
-	b=eG4wTGPsVFifmjasXXPFErASx8JDtqgcaCMlU/3NLEo5dw9i2cmRn/Y8qRC01ABjZ8iQ8n
-	zx6BS5RqRjH6lo6esSf3kB/nB8YSI+wpPYF+c7zSCxOiTGMfxdaERcvu6QQdV83lhykEY7
-	KDbt6sr9FiXjmIRL/xyps/Pj1TcJHfg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748343391;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tpMpRVwHiJCh8CUdzFhHigcKV7xctfBGbb92ItfhxC0=;
-	b=nx9ZoWi8CDCMUzcua1/QNBrhm7YvoMJOqpGptptVb+orUcV8ylXz/Uij8QeP2H3JgQHlNL
-	8zXqru5kBVFOj0DQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1748343391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tpMpRVwHiJCh8CUdzFhHigcKV7xctfBGbb92ItfhxC0=;
-	b=eG4wTGPsVFifmjasXXPFErASx8JDtqgcaCMlU/3NLEo5dw9i2cmRn/Y8qRC01ABjZ8iQ8n
-	zx6BS5RqRjH6lo6esSf3kB/nB8YSI+wpPYF+c7zSCxOiTGMfxdaERcvu6QQdV83lhykEY7
-	KDbt6sr9FiXjmIRL/xyps/Pj1TcJHfg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1748343391;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=tpMpRVwHiJCh8CUdzFhHigcKV7xctfBGbb92ItfhxC0=;
-	b=nx9ZoWi8CDCMUzcua1/QNBrhm7YvoMJOqpGptptVb+orUcV8ylXz/Uij8QeP2H3JgQHlNL
-	8zXqru5kBVFOj0DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6AB531388B;
-	Tue, 27 May 2025 10:56:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Y9loGV+aNWhDdgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 27 May 2025 10:56:31 +0000
-Message-ID: <72513991-6a84-4a02-ae65-dba1a11b0906@suse.cz>
-Date: Tue, 27 May 2025 12:56:31 +0200
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4b68jc5V7Xz8R043;
+	Tue, 27 May 2025 18:57:40 +0800 (CST)
+Received: from njb2app07.zte.com.cn ([10.55.22.95])
+	by mse-fl1.zte.com.cn with SMTP id 54RAvW65014815;
+	Tue, 27 May 2025 18:57:32 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njy2app04[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Tue, 27 May 2025 18:57:36 +0800 (CST)
+Date: Tue, 27 May 2025 18:57:36 +0800 (CST)
+X-Zmail-TransId: 2afc68359aa0ffffffffc7e-feb8f
+X-Mailer: Zmail v1.0
+Message-ID: <20250527185736038u-6EtRPVin2ftxbrp-C4w@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/6] mm/page_isolation: remove migratetype from
- undo_isolate_page_range()
-Content-Language: en-US
-To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@redhat.com>,
- Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Oscar Salvador <osalvador@suse.de>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Richard Chang
- <richardycc@google.com>, linux-kernel@vger.kernel.org
-References: <20250523191258.339826-1-ziy@nvidia.com>
- <20250523191258.339826-6-ziy@nvidia.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <20250523191258.339826-6-ziy@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:mid]
-X-Spam-Level: 
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <edumazet@google.com>
+Cc: <davem@davemloft.net>, <kuba@kernel.org>, <dsahern@kernel.org>,
+        <pabeni@redhat.com>, <horms@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xu.xin16@zte.com.cn>,
+        <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHYyXSBuZXQ6IGFycDogdXNlIGtmcmVlX3NrYl9yZWFzb24oKSBpbiBhcnBfcmN2KCk=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 54RAvW65014815
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 68359AA4.002/4b68jc5V7Xz8R043
 
-On 5/23/25 21:12, Zi Yan wrote:
-> Since migratetype is no longer overwritten during pageblock isolation,
-> undoing pageblock isolation no longer needs which migratetype to restore.
-> 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
+From: Qiu Yutan <qiu.yutan@zte.com.cn>
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Replace kfree_skb() with kfree_skb_reason() in arp_rcv().
 
+Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
+Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+---
+ net/ipv4/arp.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
+index a648fff71ea7..5b4dac7bbde4 100644
+--- a/net/ipv4/arp.c
++++ b/net/ipv4/arp.c
+@@ -967,6 +967,7 @@ static int arp_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		   struct packet_type *pt, struct net_device *orig_dev)
+ {
+ 	const struct arphdr *arp;
++	enum skb_drop_reason drop_reason;
+
+ 	/* do not tweak dropwatch on an ARP we will ignore */
+ 	if (dev->flags & IFF_NOARP ||
+@@ -979,12 +980,15 @@ static int arp_rcv(struct sk_buff *skb, struct net_device *dev,
+ 		goto out_of_mem;
+
+ 	/* ARP header, plus 2 device addresses, plus 2 IP addresses.  */
+-	if (!pskb_may_pull(skb, arp_hdr_len(dev)))
++	drop_reason = pskb_may_pull_reason(skb, arp_hdr_len(dev));
++	if (drop_reason != SKB_NOT_DROPPED_YET)
+ 		goto freeskb;
+
+ 	arp = arp_hdr(skb);
+-	if (arp->ar_hln != dev->addr_len || arp->ar_pln != 4)
++	if (arp->ar_hln != dev->addr_len || arp->ar_pln != 4) {
++		drop_reason = SKB_DROP_REASON_NOT_SPECIFIED;
+ 		goto freeskb;
++	}
+
+ 	memset(NEIGH_CB(skb), 0, sizeof(struct neighbour_cb));
+
+@@ -996,7 +1000,7 @@ static int arp_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	consume_skb(skb);
+ 	return NET_RX_SUCCESS;
+ freeskb:
+-	kfree_skb(skb);
++	kfree_skb_reason(skb, drop_reason);
+ out_of_mem:
+ 	return NET_RX_DROP;
+ }
+-- 
+2.25.1
