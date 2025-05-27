@@ -1,95 +1,108 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE491D5145;
-	Tue, 27 May 2025 23:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D3B18DB35;
+	Tue, 27 May 2025 23:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748387923; cv=none; b=nFqaLsQ7EOQ5dWha3mBGLjy7LbYKzhWn0SmFjf697LtL5diYugkIzLIYd30ajtf6CdpJknZnHPNoaXNaTo6Eom7z5NclzE74Z9i06vpraZ6DstJAU1cQPACK0COig9kD6FUGHLTe8YPaWwbFyNtsYnNCA0wfgqgHNuEwx0D3iG4=
+	t=1748388224; cv=none; b=fsZqmIEfXl4txr4CuFTSx3sjKlVKJTw1J+bmFxJPMAEN7h5R6ngH5uDgFSlOF2uj6vMGxrPi1hVxpBy9ynbdliyTAFUNf8cgX2/GlcdT/mFb+aglIuts3yQclifo4JbNKWCT2QHz6NgZxREyYNJeTH039Y1rDYLzkCE0POYRt3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748387923; c=relaxed/simple;
-	bh=6SsMt8kv8bB9+DxdMnJRB0CnbK4lJ2b+4OehbD0omzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBmCyrLu1lmqT788+Hbxgg5ewCGLbxN2kZHGTR4YBropZ356/cIHQFyWQuAAykCclsXt32/ICxHW7iCOBhSZO+T3xrRqGyeZJsfJ+tnbadZVdLZXdWggMc6vDiSoBswDYIWuWRgfYML8kRTXCrFrdo+b2nSMkemt3qzxg0YFHOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=OIEzCcHs; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748388224; c=relaxed/simple;
+	bh=hV8ZhJ0z5fjSmbfqZL4LCeBt1spON4Y5Y+uEf08AhRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RCtLLSOBJWhTXh3qQX006F5ZwNqBQGSMFrj6YDDM4c/R7iOZG1nnfYiIqpF6UiL7Suaw6MxKq8j8TcdHuyHv0wU8siYcFJc0VrtirYsrjEYfGIvti0HVnJacgL7wJ6YCsgBql4p3eMQ5hxgSpVYdcHSRxBmagiiNqp34iXmVbrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Pb50IpjT; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OIEzCcHs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=7uNa+E5E1Fz2rSYeLmBtivbWjxVm5r8CjbbWJNdovR8=; b=OIEzCcHshhevfPGrJRPuYwDYYn
-	8iXyQC76t4Wfu/2IX3lgZKMRkiDoqAs/Z1tBPRvonm6i8VnqjeaiLgkGQ1wc7ADu0v3YQLM7kOyv1
-	csS2sXr2Eeo/LDU/fGxaScGrLkt7OGh0RY0Ht5Ytipc70Je1ODGslRrGZ9OHqFjNsYY0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uK3Yz-00E7FI-Iu; Wed, 28 May 2025 01:18:29 +0200
-Date: Wed, 28 May 2025 01:18:29 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Philipp Zabel <p.zabel@pengutronix.de>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next RFC PATCH 2/2] net: mdio: Add MDIO bus controller for
- Airoha AN7583
-Message-ID: <922a7c99-8acf-4b88-8e1a-b7c952e50811@lunn.ch>
-References: <20250527213503.12010-1-ansuelsmth@gmail.com>
- <20250527213503.12010-2-ansuelsmth@gmail.com>
- <e289d26e-9453-45f5-bfa6-f53f9e4647af@lunn.ch>
- <68363f34.050a0220.351f97.06f7@mx.google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Pb50IpjT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748388215;
+	bh=u1wTzxtVgecuSVP+iUSOPaULQ3zG9ey1MjZEn3KHkDk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Pb50IpjTPAZld6OVS5+RvtU0teyadmgef/g9caKX7aoIGQc4s9zEjHMNi12IYt5EL
+	 oH4dVWwv4Lf5C05baBu6Ab6wLrfk9a+nyQ0B6oCLXJDe1oGrEYiV7xz5WDiIQPZ41I
+	 Cp455DblEyixb+22jvzyghM1TeC8fwIwMMumBF7192ikMNCGmvR53JdVe4DoyIH2eH
+	 sHPi/mqamZHEwWDjb0iVYjqmCvNqZu70C8sqEGArjslhTaI59crmER9l1LlZ8LNrGP
+	 JhKSbFMJQ7apGw8bNNfIrqs5bUmFxWdRB5x31ppDArG5UtCXo9tHf5BbECmjqgLhNd
+	 kzlgazZx2yIVw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6TGG2x2lz4wc3;
+	Wed, 28 May 2025 09:23:34 +1000 (AEST)
+Date: Wed, 28 May 2025 09:23:33 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with the bcachefs tree
+Message-ID: <20250528092333.10969c39@canb.auug.org.au>
+In-Reply-To: <20250526144204.658ddfc7@canb.auug.org.au>
+References: <20250526144204.658ddfc7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68363f34.050a0220.351f97.06f7@mx.google.com>
+Content-Type: multipart/signed; boundary="Sig_/3YYf=Ds5=7o8ir2t1z3jIH4";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Wed, May 28, 2025 at 12:39:45AM +0200, Christian Marangi wrote:
-> On Wed, May 28, 2025 at 12:36:46AM +0200, Andrew Lunn wrote:
-> > > +#define AN7583_MDIO_PHY				0xd4
-> > > +#define   AN7583_MDIO1_SPEED_MODE		BIT(11)
-> > > +#define   AN7583_MDIO0_SPEED_MODE		BIT(10)
-> > 
-> > Is there any documentation about what these bits do? The bus should
-> > default to 2.5Mhz.
-> >
-> 
-> No but I can ask. In theory tho these MDIO controller are used for 10g
-> or 2.5g PHY that all require a firmware to load so 2.5MHz makes the boot
-> time of 2+ minute.
-> 
-> The documentation say...
-> 
-> 1: fast mode
-> 0: normal mode
-> 
-> Very useful I guess :D
+--Sig_/3YYf=Ds5=7o8ir2t1z3jIH4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Can you put an oscilloscope on the clock line and measure it?
+Hi all,
 
-We have the DT property:
+On Mon, 26 May 2025 14:42:04 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the tip tree got a conflict in:
+>=20
+>   fs/bcachefs/clock.c
+>=20
+> between commit:
+>=20
+>   881e64bc3a17 ("bcachefs: bch2_kthread_io_clock_wait_once()")
+>=20
+> from the bcachefs tree and commit:
+>=20
+>   aad823aa3a7d ("treewide, timers: Rename destroy_timer_on_stack() as tim=
+er_destroy_on_stack()")
+>=20
+> from the tip tree.
+>=20
+> I fixed it up (the former removed a line updated by the latter, so I
+> just used that) and can carry the fix as necessary. This is now fixed
+> as far as linux-next is concerned, but any non trivial conflicts should
+> be mentioned to your upstream maintainer when your tree is submitted for
+> merging.  You may also want to consider cooperating with the maintainer
+> of the conflicting tree to minimise any particularly complex conflicts.
 
-  clock-frequency:
-    description:
-      Desired MDIO bus clock frequency in Hz. Values greater than IEEE 802.3
-      defined 2.5MHz should only be used when all devices on the bus support
-      the given clock speed.
+This is now a conflict between the bcachefs tree and Linus' tree.
 
-It would be good to default to normal mode, but allow fast to be
-selected, once we know what it actually is.
+--=20
+Cheers,
+Stephen Rothwell
 
-	Andrew
+--Sig_/3YYf=Ds5=7o8ir2t1z3jIH4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2SXUACgkQAVBC80lX
+0Gxckgf9F4MLqnzTcLnUrO2Kdj9J4d3mn8oDi4Tb5mHPNFI87yFGasEes5FmTpwf
+p7xrrvTexqBrkXWNSiYg1y87YehN6SmEF+144u4V7PW1xARmhV5tHcZtV3g4U1bN
+4+IgOzRNpcRunVeV6/c2H93yNms01kZVw/boElojddeXm7B6d4bGAvBiHMINkPZj
+WYWuLVDLEOpOSviBXLa3Y5tpC23qrAK3ouWkq8/c723Reu5mBBKDLjxKzYiqo+BW
+8iQ8I/syWyhPmIlfBOMk6vI1BAg/N2IbP8mHv/gmC7Ke7vAvOQ1REEm0X6ZS5FnB
++dMC3EGRhwokso48mNWPajpwfVhtJw==
+=nexv
+-----END PGP SIGNATURE-----
+
+--Sig_/3YYf=Ds5=7o8ir2t1z3jIH4--
