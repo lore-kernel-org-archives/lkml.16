@@ -1,143 +1,75 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC830CA5E;
-	Tue, 27 May 2025 18:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C1D1AC44D;
+	Tue, 27 May 2025 18:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748371393; cv=none; b=Wc8UrMmikTWe0B90qPFCwnAvjP/n/8If1aeCGsipGJDXZeyhXzFVKsVsPkYjR7QFar28IasNAWABhxEAJ64u7IEPQ6MWU9KXl5xWYKOsQ5tBdebZd7PqmeP77GdMuYWOYWZQcm1A1GU/tm03rdnmMOEB6bpk/yPA22+/BIu9wDU=
+	t=1748371527; cv=none; b=hSqZ6R3EkvB2MlGJuURaEk3F/6xjY9MifjhMkFw5F1Tx4crlDDgW/2U6hFdEfVj5oJ3ocwDzQXX6a/NfaOrywWcxZM3soxDLg552gtvCXKEoUUlEYkHk4LJT7sAOLvRYNkqnmdF2Vqpe5fO/5UFEAr221Y/YVuzj7HhfL384gko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748371393; c=relaxed/simple;
-	bh=Uxxqi3lPyUurFuC0j85HtbPTxOM5XN/7nIKsNvQYQOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EdelZwiWP2vvuDujFuDIllsFXD2ebErqFPcts5RsAoJskFQVcLZ/vExPtd0YxdKbaG5II+bLYvOKYF/DF/VaiWy52blNJLxcgqOS2+LqrbcG2+uN2uXpZihb7WAU/RbTNs0dyj2Odspdo4ShkcdxnI7ajoH5sNyQH/H0i2G7EZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EG3302Cf; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EG3302Cf"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2346765d5b0so23142655ad.2;
-        Tue, 27 May 2025 11:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748371391; x=1748976191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FWrKohcnIv85cbuc7n+x+VuRl8U7VNcTKUXVw5gcCyU=;
-        b=EG3302CfL4bXPiYCRQeqJksbN4SsRd3EFQiGWxIYz3acmt6/ptmWdAuqMwOYxBc3zC
-         C/llbnmZsKNn1kTFYgihm8ftpVX18nQCSkJH8RrvXXUDY9iwS3qy4RSVZgywQJYNvXJ8
-         F12y8x0jDZcEBaDx12TJbEUXy1gWfHEyQ4narZsauW0nU1uiTzJ5KxHggDxSoclkmnCQ
-         ZDnmLaJ5X1Dg5bYxuBJykfNdb+bFkWPVEEnfLwhpnrQD2NCc3wFzFug8mB88uh+oe2Hc
-         6/UKm+rjmNiyIUCYBiZvbBEeNVYREnej3GX8KixNTFU1kdpzqmVbc6c3Y6FdY8O5ePbi
-         Eclg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748371391; x=1748976191;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FWrKohcnIv85cbuc7n+x+VuRl8U7VNcTKUXVw5gcCyU=;
-        b=ISJdd0ABN6baKClNwFewaR+5ZVuiBeKm+FDctL8vK5f7D2K6YzO1UQtBIBq4PGp8BX
-         qwF+GdjvHvaJ4BAfiZcllE5LJZ+k3pw+48w9ll+EpFii0aF66vpACYkE+tIYbHRh+Emd
-         hoxmtlGXakHw7fVCo6ad3UOnxqYdGYF4gCIjfro2wpZfgAUYifb0kEyBF+35/KXnxRD5
-         q1VbvPFi5yCrtww/MmcbzX6k77yd3GLGnCnJuTAX9l+S6xfbY8HwSySvC9qHLXJEEQBY
-         mepysc5nlzCR+k4wrhLJof4322U9RGtmrHlqqO7D/rXlfmREDuDqzV/JvjMTS5zFSlMJ
-         sgiw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTX66SMqN3iL4JS1IaAeOoiYuZKHSoCpqfkM88z3xbjvbHByhJEHfUipAeaH+uKmh0RthH7gbvPzi3+4I=@vger.kernel.org, AJvYcCXNSQ6OluEfNYSMhXvW0oS8YpHg3iptz9ZkbQit7Jq67cktVT6bo9xpuSIziTEcxKTD6c1cC1ab@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJH0NyzuHgfs0+Am91V6vmcnLMdSXocPHv61VzxHbQ6rDPHgRC
-	dIDE0+MSrOMIo2xwZUR1PEaCVf8jubIxcq8jdxJw2jDp46y9kKabPs0g
-X-Gm-Gg: ASbGncuB79iG/Su2Z7+RU+lEgyd44+CNtkJ/SGG2rTmUCx13pORihpw1P1ZeW0UjKPj
-	a1LnlFrg6UTVj1NpvnmftHXa9Ms9u7ZlYhR10JF1gnHibvyVd9UEm14u7vfEZHm9yU7HUVXFqfy
-	DBbwgGkrVKO+jxcbIfNAy9Cilx+ZMCRY20L/cE3ltgzmSjNtuDlTy58uzsIXheUfzi0zJARasF6
-	O9zIaMum4BvWgwvesRxrm/UDaW5TroQjozwG4Zv8COQWmSyGRn0y3THKZILIQ30tCItYwE0uSHb
-	VFDV5MPobJEeVhYR+QtgsptaNmitQ40ENrS0/Z3ZdQOCLDij6PNAIP2KJLWyZ9pv5eddJGCeR7s
-	lrww=
-X-Google-Smtp-Source: AGHT+IHHLop+I3d2LLaRp2FvvBzEHmDqyuZgu12OgR8qf1sVE+wWQIcUtegupgCHhzscV46TJyW2NA==
-X-Received: by 2002:a17:902:cf4c:b0:211:e812:3948 with SMTP id d9443c01a7336-23414e9fbdfmr214016845ad.0.1748371391025;
-        Tue, 27 May 2025 11:43:11 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23411640a62sm64868345ad.200.2025.05.27.11.43.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 11:43:10 -0700 (PDT)
-Message-ID: <dd48cfbe-ebbb-4e36-8df6-ad35f2b1c1fa@gmail.com>
-Date: Tue, 27 May 2025 11:43:06 -0700
+	s=arc-20240116; t=1748371527; c=relaxed/simple;
+	bh=qbR1nvMOL/0w3B8hpSA7B5j6lT4nrk8IfSqFKcJ8hN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Gyqg4uqbHL1zPfh/n3rv3g3+BLW+wpNG3llh+tTgMVR7bkgbwOYgMGQZ0TR97B468Wsff9KmxhHlPTHfDRso6ve9a/5xXdz3THAbV8e7cyvw/gii46JVrsFUcBg+5JuS4Fdf7MfBeUzD4qb+BZJj49s6T4thIZBwCWA6AIAiMZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E91DAC4CEE9;
+	Tue, 27 May 2025 18:45:25 +0000 (UTC)
+Date: Tue, 27 May 2025 14:46:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Simplify reset_disabled_cpu_buffer() with use
+ of guard()
+Message-ID: <20250527144623.77a9cc47@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/626] 6.12.31-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250527162445.028718347@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250527162445.028718347@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 5/27/25 09:18, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.31 release.
-> There are 626 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 29 May 2025 16:22:51 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.31-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+From: Steven Rostedt <rostedt@goodmis.org>
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Use guard(raw_spinlock_irqsave)() in reset_disabled_cpu_buffer() to
+simplify the locking.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 10a4b26929ae..0b21d64e90c8 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6112,21 +6112,16 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+ /* Must have disabled the cpu buffer then done a synchronize_rcu */
+ static void reset_disabled_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+ 
+ 	if (RB_WARN_ON(cpu_buffer, local_read(&cpu_buffer->committing)))
+-		goto out;
++		return;
+ 
+ 	arch_spin_lock(&cpu_buffer->lock);
+ 
+ 	rb_reset_cpu(cpu_buffer);
+ 
+ 	arch_spin_unlock(&cpu_buffer->lock);
+-
+- out:
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+ }
+ 
+ /**
 -- 
-Florian
+2.47.2
+
