@@ -1,35 +1,72 @@
-Received: from smtpcmd0756.aruba.it (smtpcmd0756.aruba.it [62.149.156.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BECA253B73
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CB528E0F
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748341353; cv=none; b=eahQi5y6ac1meh1j6ASRCbi3cqFGLf1kKUfE1CaGVgWszYB1cqU3U/v4LOQEmb859xfjVSvaMy3hYBgzN/xNkqf//DuUnKNut9W76UJ1MxhrG6VW3YtWC9L86SPv0TNs1hlQYw8t2zBLOBv9zlYFKJK1dPtZ9xkCp8vOojNk6Ok=
+	t=1748341431; cv=none; b=oB4KQ2GctBCbKpWXda8AnMMCaH6R040xGHiTF2+I9La1lQMuvlPYFx+rR+m9HtGzt5fltaLqsLWQOUY7L5aS4n4sQvYMlIpLdABgUa6Cu5UeRCdhRnchreGmd9JbeYv5k41xUV63OUTFXpHvJ7dfSjfZwCU76P0k9CiqrEJCKaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748341353; c=relaxed/simple;
-	bh=CCmDBe2cHO/aj6GjU1F7qAtsjhmTjEzQv7ntUYfF+dA=;
+	s=arc-20240116; t=1748341431; c=relaxed/simple;
+	bh=d5oYTkyvM5Rfr5kvW2WiUShV3782Y2zCoHdD4qgRIfA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tk9SnealqhgDc5teBnHUijsRvSSDulJp3inX42h6f79nRPTWd1Yz5M6LZ4PSjsLHOK1NBFhnO5bS64gpmYKLgcL1piK8olYCUH3M7SlG8VCEg0b8GtDvxOmBfnTAM8GH5yHK9X2RuCkkhCf7xo1hgb6UEpa2r2D7Tp6Q98RrY5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=S0m9jXq5; arc=none smtp.client-ip=62.149.156.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	 In-Reply-To:Content-Type; b=lt7qno5z6MrL++X72uOHFmetUL+IpO05RBkPIaUkUamc2xjzoJF6VAOX/leU5qc1Hq446uin7LJvqJL6dw3SWY4ba6Vyc3kl4+zCQOmBR3iJWK2gerS9e76xwlJNcVAL8FpfB/nHx64NC2Eihxy+YGGPjUPcy0w5YMixl7M6kQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cmj/ibiF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="S0m9jXq5"
-Received: from [192.168.1.58] ([79.0.204.227])
-	by Aruba SMTP with ESMTPSA
-	id JrOuu1Mg9t6p9JrOvuf7yy; Tue, 27 May 2025 12:19:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1748341157; bh=CCmDBe2cHO/aj6GjU1F7qAtsjhmTjEzQv7ntUYfF+dA=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=S0m9jXq5TWiK7ybu9uri0Zz1LwNmk4wuJ68g6WXZtGP4sXVj8sNx8IFzxRd15oK9D
-	 5IMXpPJ2rWJlepW+Bw2usSKQB0BXQuVxytSd5A2mWY3DF9wyU5sMDSgqv8YKMj87IY
-	 E6mOx+TfolgLZF98oIh4YL7xVWEjpmFxeJnzE+U+y5Lx/Zi1p829jWaFbttm3XE8oY
-	 /pxzAYlkVTdZ25VRZv2m+vsNdRBsSdn7n9wzxnOWxJTUaYVYpF06nysl6aucmlwHgY
-	 JkPpHw+ddPj1YrJylDlQvMxoa9X2Ly+cTnOqUEYnGNSXNFokp8D8raiTKlcGC5uMk6
-	 3kJG24aZ+VUhA==
-Message-ID: <20ba69f0-7ed9-48e7-8239-74a55c993c0b@enneenne.com>
-Date: Tue, 27 May 2025 12:19:16 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cmj/ibiF"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R7jHoF029201
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:23:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	s62TShu5x2yVlqUVBhpvVO8xAtnVMjqzkvJEdtCK5ak=; b=cmj/ibiFw5KtQZdD
+	gY20Lv6I08SF/k1hfGHiwrgxzVoHLl18xqKsZiZxqYZI1J+LsW8B2vGFSCP5Pofy
+	XccvktVt3znjzanBVh78MQlQt8WkE45RGV0vCgEr4coqdGljmJFOxzMbotC3ShtY
+	yibo5Onhb7WC0z/HiRz1UVyFcPxoAs+w29DFnSB1ZQTgaFK7/ZFdpuKUqlmbeLZb
+	QghGczkBzWCspFbFQJtU/tFvnxnTNcS1ZmP6zCE2SXeyz2EqFYFh421jhrLITKM1
+	qXvd7oS5JBtVtOxenGkyAkYyQjMMhAEFF2dNJPVlD8WBq/s49+l2HeyE7cJpknOz
+	y+B54g==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992gedg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:23:48 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c53d5f85c9so99468885a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:23:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748341420; x=1748946220;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s62TShu5x2yVlqUVBhpvVO8xAtnVMjqzkvJEdtCK5ak=;
+        b=EtiHNIdaxecQwtzfIGE3TtfCXM9PuwUKzUlKPECN/Haawoo8AKO/sPkWEcHEVl6Z6D
+         EnYiDl6mdEu8pLs7/TSecFtFjYd8HKbr+hIcSw0aTv8dxcW8a6MV5oJUzrNURyyVJuSw
+         Om5oCUrGKlVCFT+lsI2ZhYXiHo4eMSsLqG5ER6mEDg8bNraNXnJLhZyVpC04VsMkG+XY
+         t8C3ncmQYYRhrZ70mKw2pBdVhkbBabh3E1hxORtnuHhS6sJOf/Crenf9/+6hf6gY2ual
+         PwGAcsOXBrGPQVVafgF2Wb0DLwZvs3LxG93fKkX3VT7hs1suvv5/9IcJgN5SQBzILyG1
+         zmGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWmf3hKKtGMODlDCdSNOvHYYb3fmBdNOH9ntf3bF3MeGr8+5l1HP0Cs2bbPeBeDmHuhwoBFFEV8lGG748=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIoYQN8w9b03qGtxhjK59AKGTHDN2YabUqarrQDZ9cyT4UQgGI
+	Zp9YxpA9nzSJ95JC0wMCDZTJNW+7HA1laJWK+jHTFp3KYuPVkIB6ZYptTtzVDfvGyOggCEi+er7
+	CnlkD8xLBu0uvoeRNxjEhSgVUKbNo0UJKMjxbRwYYhM98MeCCgIX/Sm6a5CXTEuplylo=
+X-Gm-Gg: ASbGnct4hBQur5I+GOje+lSzN048/kCjOAlB7W4BvHK386y34hpbjCjdyWHcWm8XYpz
+	ADKkAYHzv0lAAT+WSmPKMIuekiPt2bV9KGof4PrvQ/9z6Wp565Ca0UFWUNcdgt03d3OQt3KtJtq
+	ZUwvswGHBxNeCxSsx/v1HJGii/XoeZXNwlbvB9YvGuKEvaLcVXDjT863ErD4eHOfkLwVWMZhIJ7
+	Bs6BXjaLmmc9qDkzwUB+EhwjO4gyi5wMx9FaQk6C6Z9I2VXmETWHy5JEoumCFpQ8c5Hn/vZAq6v
+	rNIRZqwVs3rFrFZ8WT+MUmfA/TCrgWhs48zgp9mjpfiDrEzr3TgJhuEae0t+bSnJYg==
+X-Received: by 2002:ac8:5710:0:b0:48a:80e5:72bb with SMTP id d75a77b69052e-49f46055e2cmr72004491cf.2.1748341420352;
+        Tue, 27 May 2025 03:23:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbnFf4IFSyFhIacoOMoDM+QdVT9dgMuaWvHP1dR9WzcAFqNAZ0pAaEKt+/hMSM5QRmaJ4iKw==
+X-Received: by 2002:ac8:5710:0:b0:48a:80e5:72bb with SMTP id d75a77b69052e-49f46055e2cmr72004311cf.2.1748341419928;
+        Tue, 27 May 2025 03:23:39 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6045a890427sm4231193a12.49.2025.05.27.03.23.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 03:23:39 -0700 (PDT)
+Message-ID: <5fbb515a-c3d0-4bbe-a689-41e730ecd952@oss.qualcomm.com>
+Date: Tue, 27 May 2025 12:23:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,74 +74,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pps: clients: gpio: fix interrupt handling order in
- remove path
+Subject: Re: [PATCH] arm64: dts: qcom: qcs615: disable the CTI device of the
+ camera block
+To: Jie Gan <jie.gan@oss.qualcomm.com>,
+        Bjorn Andersson
+ <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jie Gan <quic_jiegan@quicinc.com>
+Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+        Jinlong Mao <quic_jinlmao@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
 Content-Language: en-US
-To: "Farber, Eliav" <farbere@amazon.com>
-Cc: "Chocron, Jonathan" <jonnyc@amazon.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "mschmidt@redhat.com" <mschmidt@redhat.com>,
- "calvin@wbinvd.org" <calvin@wbinvd.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <d6358648c5b9420d8202bb9c23ac1824@amazon.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
-In-Reply-To: <d6358648c5b9420d8202bb9c23ac1824@amazon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfFzSurw6zXn+B64069VKGDJ13c6fpEMW36yi1QY0PdUgpc0HVLtIEny5UwT1FlTkXm521Tb5gQFMAtFPZUXQ7w5BWyVp/TN8bAbP5sylm0Rxy3l8Fmxw
- jAH1z4oZ5WLi+i4IoHADljsWvTTYACYMk3Oy8vVALnpN//4d3GHiIS/xtnS492WRXSmGQlTqNgPnr3GapIweex+KY2WgTWnMVJtySp/UM9OQFE0LDlJm/5Wy
- marv0ds7ryQjL2VXkkzdPvuhghz1ol4t6o3TY0CJRSyHaskxY5L4HSmiul10AYhCys60TkaICGD3Z9//pmQIvG5Rlaiekdk2il3AuqCOPLPM/fOs+By9/5rS
- ylSEljaKsE9R1AweZYgOLAq5XQHcyg==
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250527015224.7343-1-jie.gan@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA4NSBTYWx0ZWRfX/3p7vdraO9Ix
+ +W1CfScsZqLJcTNJE8uF/FyKL8bk7O2Jz9jjjCh04JE6h2921oVpzhS1CqVO17rXUrgMaF9Acwh
+ jYgnY4nSqE4Lh+ipEv1f2B82R57XPp/zGNo4O5IjFSEK0yX16kSruQ2llsBe9JsCNovER+KSBdu
+ nhZuMcfSNuyibVxgxez0wYVJz0oqWKDS3s35e9BY0X8dEky1K7+AKrgJpGBy9YoViKW56d+93Ye
+ 4ey6Wjar4uGwyFZgnszKkUWrynkuD/7tB46DgxUxIPYFchGyFOJwR4YbLOP2smI6N6mzllGvN8L
+ eIEQ7/12OGwh4h50Q2RhERqz9k/pivnyxs0s7oEv2rnxEISm5NigptD/uEfBM4hMs5TFDL5ghDW
+ xBc289udlp3GEncXo3g7M/EiL0Pkco0q36qpEjvcI1DFOoGgWXO93KJ5Ahoqp2uaX2rz9lEw
+X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=683592b4 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=vltdqEpKQTMQQ8pm6BgA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: LgDqAxpU9Pq0kO8t1x2TxSpGnitrpGsi
+X-Proofpoint-ORIG-GUID: LgDqAxpU9Pq0kO8t1x2TxSpGnitrpGsi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_05,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=514 spamscore=0
+ adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270085
 
-On 27/05/25 11:11, Farber, Eliav wrote:
->>> @@ -228,6 +228,7 @@ static void pps_gpio_remove(struct platform_device *pdev)
->>>    {
->>>        struct pps_gpio_device_data *data = platform_get_drvdata(pdev);
->>>
->>> +     free_irq(data->irq, data);
->>
->> Why not just use devm_free_irq()?
+On 5/27/25 3:52 AM, Jie Gan wrote:
+> Disable the CTI device of the camera block to prevent potential NoC errors
+> during AMBA bus device matching.
 > 
-> As far as I understand, the main purpose of devm_*() is to provide
-> hands-off resource management. devm_request_irq() is intended to
-> eliminate the need for explicit cleanup in the remove() function by
-> automatically freeing the IRQ after remove() returns.
+> The clocks for the Qualcomm Debug Subsystem (QDSS) are managed by aoss_qmp
+> through a mailbox. However, the camera block resides outside the AP domain,
+> meaning its QDSS clock cannot be controlled via aoss_qmp.
 
-In linux/kernel/irq/devres.c we can read:
+Which clock drives it then?
 
-/**
-  *      devm_free_irq - free an interrupt
-  *      @dev: device to free interrupt for
-  *      @irq: Interrupt line to free
-  *      @dev_id: Device identity to free
-  *
-  *      Except for the extra @dev argument, this function takes the
-  *      same arguments and performs the same function as free_irq().
-  *      This function instead of free_irq() should be used to manually
-  *      free IRQs allocated with devm_request_irq().
-  */
-
-> In my opinion, calling devm_free_irq() undermines the benefit of using
-> devm_request_irq() in the first place. If I need to explicitly free the
-> IRQ during remove(), then I’m no longer relying on devm’s automatic
-> cleanup - I’m effectively reverting to manual resource management while
-> still using devm-style registration, which I find unnecessary.
-> 
-> That said, if you still favor devm_free_irq(), I’ll revise the patch
-> accordingly.
-
-Since devm_free_irq() works exactly as free_irq() and can be used to manually 
-free IRQs allocated with devm_request_irq(), I think it is less invasive. Isn't 
-it? :-)
-
-Ciao,
-
-Rodolfo
-
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
-
+Konrad
