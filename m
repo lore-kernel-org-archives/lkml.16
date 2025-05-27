@@ -1,91 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F8F134AB;
-	Tue, 27 May 2025 13:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A3271468
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353794; cv=none; b=g3cyv6H9GbUr1CWYLTK28dLH/WhlQ80/Re2MrXaJpFVwkf7vqWaoo9UFdZPgokRHGkYFaVbaduJxOaK+vni4Jkdafw+ULKEMp4zxP0qzjCmTgZIXi6bZU8991aMaXGPRyRVo04HExUYPsCS/zIVB7wQoGo5/vCF1GgLMLup5288=
+	t=1748353876; cv=none; b=PFmtZsv1nrw/8zAPHFR0uBaGiaWLj+dEKKsD3tf33fK5J6ILwnPg4qCxT/5yBZMM9L0nZJqMxah0zXpyaapIXb3O4vZAsMFHmFjUi4ejwolpZ8+8+q/a/2qOgX0L1wpEIdqeEJzg4QdEq50TNKU6nlDKbqtKHdMauHlZDBix58E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353794; c=relaxed/simple;
-	bh=uH0uz40juE5V9Ge8tLOFlAbLYizJ/RQQk47dwWh3YnU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=X3P0xmhNR+ae/5zvq2GAqUxok1U/Ft5aGU9W6KpGQzyiQB2LBLcIr1k/h95kaQxA2UKKfBfu10uiYsoQ2uSby9WAnlhRqhdetMzVmMyam0sfkhbI8RjGoaA474j0XmgxBYjZJ0Rc8W60rC+/G4Ct8rrjmgM2WK7nEdnCxjGFmQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtyhFOCL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748353876; c=relaxed/simple;
+	bh=Xjm1UOsIF4B3Ar2Lun4M/5FKyHNeXHHMjLqO5gqdvxg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SOjgYCGudq/e8+zlgUoy5mtBqOg2GtrEKUd+euqbIdbQW4WNTcwi6zF1g/pp4iOpY8cIJzAd7fnU91qV8n/7BkKu2T7czFitiDCAKiroCu8c18TEY9MICUI1RIOVd/UFHHUJB2+gcEGJWXqYPbKunfl73sA7BjEcXxpOcMyLvr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wEP++0Lo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SAHv6+tz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtyhFOCL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EDC2C4CEEB;
-	Tue, 27 May 2025 13:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748353794;
-	bh=uH0uz40juE5V9Ge8tLOFlAbLYizJ/RQQk47dwWh3YnU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UtyhFOCLtHlywTIBuiFUEFbfO2zf/CcQ2oFV41vd9SA0Y1LlnFiCYqZlqJsOYYiC0
-	 pykplu2fUtvFv7K7j1wM8ADjaW5op0w26j0VC9RPuV6stfCkukrYGme9lLkPrRffYx
-	 Bj56pjYrMCMQHOLp98cYT7bHf6gyFK5kJ3mIN7/sBu5Nw2Hhqkp1WM6KChl+cFnPw5
-	 I0Uc6GcG8r6qdMw+/pGJq3wdp612k9ffbJNGWhVJ8+3MraGPZOSHhi+aLsFnSQt2m1
-	 IMEzoIhf3LaOjMKkttIGnc+agl+6dC4ON47vozAJY1MlisPxNIYVbCuMyeuFmxceTu
-	 Tlqix/J64upyA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE9C380AAE2;
-	Tue, 27 May 2025 13:50:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wEP++0Lo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SAHv6+tz"
+Date: Tue, 27 May 2025 15:51:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748353872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ds/AnRw/jhbjzyOWkUzO65tFmw9WcAGz+APKGjnNuuk=;
+	b=wEP++0LoI9x2DikxJHRC2V4nqusNd0UlMxHe0D8XmTeP5XPp0NTO+wrwDta36RvayRwKHS
+	y80pbLZeAcUtYg7lBwTpvHQQZFkr2xA+MLGTdqphu9ygVyRfzF4nttyO6uQNIuKPOCgUy7
+	fqxpVw4/FC9tZUYhKzVtf4gPyqlYUL3o4JBqdFryMLLu7LJ4ABGHx1/3pyPL8q4p5pmf4U
+	EgrKz8eSLgcvPm0Lpvv51YHnIlVkb351KDsZ66jLhMhHXsRbjY9l4eqfkR+vYz4WJV7x4V
+	GKgLRNJcrexaGjMtBEVLXKp+DwzIHP0a+4v7hrcvj3FGUxF6tUIqdPNknQPxlQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748353872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ds/AnRw/jhbjzyOWkUzO65tFmw9WcAGz+APKGjnNuuk=;
+	b=SAHv6+tzRb4kodTCP2PWZVPvaUQ+sN11E2V4Vueqn6oQgnS7thkjR2f1LV2Uaytt71j6Ek
+	Dcou20PbDW87f/BQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Subject: Re: [RFC PATCH v2 00/12] rv: Add monitors to validate task switch
+Message-ID: <20250527135111.NFCeqkvT@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+ <20250521071544.1adrW9ry@linutronix.de>
+ <719b183dbf2dadac8d5359cd68ff4b51769752de.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] af_packet: move notifier's packet_dev_mc out of rcu
- critical section
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174835382850.1645024.12860246850484744014.git-patchwork-notify@kernel.org>
-Date: Tue, 27 May 2025 13:50:28 +0000
-References: <20250522031129.3247266-1-stfomichev@gmail.com>
-In-Reply-To: <20250522031129.3247266-1-stfomichev@gmail.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, willemdebruijn.kernel@gmail.com,
- horms@kernel.org, linux-kernel@vger.kernel.org,
- syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <719b183dbf2dadac8d5359cd68ff4b51769752de.camel@redhat.com>
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Wed, 21 May 2025 20:11:28 -0700 you wrote:
-> Syzkaller reports the following issue:
+On Wed, May 21, 2025 at 09:31:38AM +0200, Gabriele Monaco wrote:
+> On Wed, 2025-05-21 at 09:15 +0200, Nam Cao wrote:
+> > On Wed, May 14, 2025 at 10:43:02AM +0200, Gabriele Monaco wrote:
+> > > I'm keeping this as RFC as I'm planning to make it ready after
+> > > merging
+> > > the LTL series [1]
+> > > 
+> > > This series adds three monitors to the sched collection, extends
+> > > and
+> > > replaces previously existing monitors:
+> > 
+> > What is your base? I cannot apply the series (maybe because I'm
+> > illiterate
+> > on git...)
 > 
->  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
->  __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
->  team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
->  dev_change_rx_flags net/core/dev.c:9145 [inline]
->  __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
->  netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
->  dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286 packet_dev_mc net/packet/af_packet.c:3698 [inline]
->  packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
->  packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
->  notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
->  call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
->  call_netdevice_notifiers net/core/dev.c:2228 [inline]
->  unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
->  rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
->  rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
->  rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
->  netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
-> 
-> [...]
+> Mmh, it /was/ linux-next, I'm not sure if that gets rebased and breaks
+> stuff, but it shouldn't.
 
-Here is the summary with links:
-  - [net,v2] af_packet: move notifier's packet_dev_mc out of rcu critical section
-    https://git.kernel.org/netdev/net/c/d8d85ef0a631
+Turned out it was because this series conflicts with ac01fa73f530
+("tracepoint: Have tracepoints created with DECLARE_TRACE() have _tp
+suffix")
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I resolved the conflict while applying, and all is good.
 
-
+Nam
