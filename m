@@ -1,99 +1,233 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FA427A463;
-	Tue, 27 May 2025 14:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C50F27A463
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357195; cv=none; b=toVqPhw7e59+9L5g0TQyhPdkhy7c/zwgmCoqKQdAFuDqrMKg1bIhwVIXwyKMgUmDD0vD9lM9j2ReS4NhYzdDM8PS8s6XC408oQEPzzYcd2rdTDfCSgmsGJ/Z9zf+Aa9rERXsSojBDCxBtEIxbLh0pPhVU/B5hTEqOiacv+gGOTY=
+	t=1748357204; cv=none; b=HXCtJn/oeZPlKn6RqU84RECDSg58mBzbXOQafK6ejPLLY14IeeTxwAD3DJkGHD01zbmt9JL0ifK7oU2bKHtdjFkQK4OCWWaatIylgL5NsxL637Op6TmAVR3HYgHrhgHChf9qiyBE/oPdphYd339LUjiympZvbMiApgD5ewNeEKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357195; c=relaxed/simple;
-	bh=seleYDxgE1umOn/0JRERNNOYBgsMY4pZhxEpoY2e0pY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=uofwjebXIzFgmlTAl1qaoEB+N5NzRaWcLu2cBx2Agi08POm79956SH8nQwkXu9fsS51LEVB8PztL6MYBCyZ/SGIeChzIFctlmKsDqCcuchc6vw/bnPQxgEIsLZHyboVs7iV+bGfrbbsT9gyRMmeZG/i/mACWph8ixOTPEsOOwSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.36] (g36.guest.molgen.mpg.de [141.14.220.36])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7C27061E6478F;
-	Tue, 27 May 2025 16:45:54 +0200 (CEST)
-Message-ID: <f9d9774b-c566-43c1-90a0-f982826c1667@molgen.mpg.de>
-Date: Tue, 27 May 2025 16:45:53 +0200
+	s=arc-20240116; t=1748357204; c=relaxed/simple;
+	bh=GiznE2HO0ZN0HoeBqp2hkR9BZn/IaPGpQJ2s7JpQC0U=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uhMLY0Rjq/YuMlNFuzkU0pTuyb9qZbtJOQFLA6V0QR1Dceu3+3AYEJVYSPn8slBIYTGKDT+GgCy/Zlp4u5UWxzeCCY2fpxeQqm9uvd0mV2Sbkuu75jgHmel7Tnyw+6UxO700EweSBrhUgu3xXkEg2OwGfKMp1Jr7L9YYVwbClDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BNwJwpQl; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BNwJwpQl"
+Message-ID: <fc77a1e2-be50-43b1-9863-f8ca70445428@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748357190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ik2RLMnsfWwLYke1BTsOZXwbZAxm0Sryd75+X2yF3Rs=;
+	b=BNwJwpQlZxDUBnE9qtHM+Hg9qM/nS4N7/TdRps1gfAhHWGXfyqe4ImWQRshStisyPcniHx
+	iS0HExzaiEczPvIBf4P8LD6GU7XvRhmM61/TYR30V3dlILRWpsrVWDLWgLT+UKev1LH+oY
+	zemSODHL0YUdaTbGE26aW94lJPdsqsU=
+Date: Tue, 27 May 2025 20:15:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH v2 1/1] e1000e: fix heap overflow in
- e1000_set_eeprom()
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Mikael Wessel <post@mikaelkw.online>
-Cc: netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- torvalds@linuxfoundation.org, anthony.l.nguyen@intel.com,
- przemyslaw.kitszel@intel.com, andrew@lunn.ch, kuba@kernel.org,
- pabeni@redhat.com, security@kernel.org, stable@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, linux-kernel@vger.kernel.org
-References: <20250527085612.11354-1-post@mikaelkw.online>
- <20250527085612.11354-2-post@mikaelkw.online>
- <7eed2cf1-5d54-4669-9e31-96707a116f01@molgen.mpg.de>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Subject: Re: [PATCH v8 4/4] drm/tidss: Add OLDI bridge support
+To: Michael Walle <mwalle@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+ Jyri Sarha <jyri.sarha@iki.fi>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Simona Vetter <simona@ffwll.ch>, Nishanth Menon <nm@ti.com>,
+ Vignesh Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
+ Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+ Jayesh Choudhary <j-choudhary@ti.com>,
+ Francesco Dolcini <francesco@dolcini.it>,
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+ DRI Development List <dri-devel@lists.freedesktop.org>,
+ Devicetree List <devicetree@vger.kernel.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>
+References: <20250525151721.567042-1-aradhya.bhatia@linux.dev>
+ <20250525151721.567042-5-aradhya.bhatia@linux.dev>
+ <DA5ZNDCHXC6M.1CDYDG6KKMAP0@kernel.org>
+ <a98ad2e7-50de-4d04-8d99-2cf77354b1d6@linux.dev>
+ <DA6PRDARLY70.1CILNJ8YLIOA1@kernel.org>
 Content-Language: en-US
-In-Reply-To: <7eed2cf1-5d54-4669-9e31-96707a116f01@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <DA6PRDARLY70.1CILNJ8YLIOA1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-[one addition]
+Hi Michael,
 
-Am 27.05.25 um 16:43 schrieb Paul Menzel:
-> Dear Mikael,
+On 27/05/25 11:32, Michael Walle wrote:
+> Hi Aradhya,
 > 
+> On Mon May 26, 2025 at 4:17 PM CEST, Aradhya Bhatia wrote:
+>> Thank you for reviewing and testing the patches! =)
 > 
-> Thank you for your patch.
+> Thank you for your dedication to bring this feature upstream :)
 > 
-> Am 27.05.25 um 10:56 schrieb Mikael Wessel:
->> The ETHTOOL_SETEEPROM ioctl copies user data into a kmalloc'ed buffer
->> without validating eeprom->len and eeprom->offset.  A CAP_NET_ADMIN
->> user can overflow the heap and crash the kernel or gain code execution.
+>> On 26/05/25 15:05, Michael Walle wrote:
+>>>
+>>>> +static int get_oldi_mode(struct device_node *oldi_tx, int *companion_instance)
+>>>> +{
+>>>> +	struct device_node *companion;
+>>>> +	struct device_node *port0, *port1;
+>>>> +	u32 companion_reg;
+>>>> +	bool secondary_oldi = false;
+>>>> +	int pixel_order;
+>>>> +
+>>>> +	/*
+>>>> +	 * Find if the OLDI is paired with another OLDI for combined OLDI
+>>>> +	 * operation (dual-link or clone).
+>>>> +	 */
+>>>> +	companion = of_parse_phandle(oldi_tx, "ti,companion-oldi", 0);
+>>>> +	if (!companion)
+>>>> +		/*
+>>>> +		 * The OLDI TX does not have a companion, nor is it a
+>>>> +		 * secondary OLDI. It will operate independently.
+>>>> +		 */
+>>>> +		return OLDI_MODE_SINGLE_LINK;
+>>>
+>>> How is this supposed to work? If I read this code correctly, the
+>>> second (companion) port is always reported as SINGLE_LINK if its
+>>> device tree node doesn't have a ti,companion-oldi property. But
+>>> reading the device tree binding, the companion-old property is only
+>>> for the first OLDI port.
 >>
->> Validate length and offset before memcpy().
->>
->> Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver 
->> (currently for ICH9 devices only)")
->> Reported-by: Mikael Wessel <post@mikaelkw.online>
->> Signed-off-by: Mikael Wessel <post@mikaelkw.online>
->> Cc: stable@vger.kernel.org
->> ---
->>   drivers/net/ethernet/intel/e1000e/ethtool.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/ 
->> net/ethernet/intel/e1000e/ethtool.c
->> index 9364bc2b4eb1..98e541e39730 100644
->> --- a/drivers/net/ethernet/intel/e1000e/ethtool.c
->> +++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
->> @@ -596,6 +596,9 @@ static int e1000_set_eeprom(struct net_device 
->> *netdev,
->>       for (i = 0; i < last_word - first_word + 1; i++)
->>           le16_to_cpus(&eeprom_buff[i]);
->> +        if (eeprom->len > max_len ||
->> +            eeprom->offset > max_len - eeprom->len)
->> +                return -EINVAL;
+>> With this series, the dt-schema for oldi changes a bit as well. Both the
+>> OLDIs, primary or secondary, need to pass each other's phandles now.
+>> The "ti,companion-oldi" and "ti,secondary-oldi" properties are not
+>> mutually exclusive anymore.
 > 
-> I think you used spaces instead of tabs for indentation. It’d be great 
-> if you could fix this, and send v3 tomorrow. Running `scripts/ 
-> checkpatch.pl` with the patch as an argument, should catch these things.
+> Ok, I thought so. But then you'll have to update the binding doc and
+> example (Patch 2/3) ;)
+> 
 
-Should a warning/error be logged if the condition is true?
+Ah, that's right. The example wasn't updated there. Thank you! =)
 
->>       memcpy(ptr, bytes, eeprom->len);
->>       for (i = 0; i < last_word - first_word + 1; i++)
+>> Something like this.
+>>
+>> &oldi0 {
+>> 	// primary oldi
+>> 	ti,companion-oldi = <&oldi1>;
+>> };
+>>
+>>
+>> &oldi1 {
+>> 	// secondary oldi
+>> 	ti,secondary-oldi = true;
+>> 	ti,companion-oldi = <&oldi0>;
+>> };
+>>
+>>
+>> If there is no companion for any OLDI dt node, then the OLDI TX will be
+>> deemed as acting by itself, and in a single-link mode.
 > 
+> And it's possible to still have these properties and treat them as
+> two distinct transmitters? I'm wondering if it's possible to have
+> the companion-oldi and secondary-oldi property inside the generic
+> SoC dtsi, so you don't have to repeat it in every board dts.
 > 
-> Kind regards,
+> If I read the code correctly, the panel has to have the even and odd
+> pixel properties to be detected as dual-link. Correct? Thus it would
+> be possible to have
 > 
-> Paul
+> oldi0: oldi@0 {
+>  	ti,companion-oldi = <&oldi1>;
+> };
+> 
+> oldi1: oldi@1 {
+>  	ti,secondary-oldi;
+>  	ti,companion-oldi = <&oldi0>;
+> };
+> 
+> in the soc.dtsi and in a board dts:
+> 
+> panel {
+> 	port {
+> 		remote-endpoint = <&oldi0>;
+> 	};
+> };
+
+In this case, the secondary OLDI (oldi1) would remain disabled from
+soc.dtsi.
+
+I gave this a quick try. Turns out, of_parse_phandle() is not able to
+return an error when primary OLDI tries to find a companion -- which is
+important for the driver to detect an absence of any secondary OLDI.
+
+Since the driver code registers a companion for primary OLDI, and
+further does not find the "dual-lvds-{odd,even}-pixels" properties,
+the driver ends up trying for a Clone Mode.
+
+So, for single-link , we'd have to actively delete the "companion-oldi"
+property, in the board.dts/panel.dtso.
+
+
+But, say, the disabled-node's phandle parse is circumvented, somehow,
+and we don't need to delete the property explicitly.
+
+There would still be one concern, I am afraid.
+
+In AM67A DSS (future scope at the moment), the 2 OLDIs can act
+independently. Like a 2x Independent Single-Link. Both the OLDI dt nodes
+will be enabled.
+
+So, if the soc.dtsi has them already connected, then the
+board.dts/panel.dtso would still need to explicitly delete those
+properties to get the 2 OLDI TXes to work independently.
+
+-- 
+Regards
+Aradhya
+
+
+> 
+> Or with a dual link panel:
+> 
+> dualpanel {
+> 	ports {
+> 		port@0 {
+> 			dual-lvds-odd-pixels;
+> 			remote-endpoint = <&oldi0>;
+> 		};
+> 
+> 		port@1 {
+> 			dual-lvds-even-pixels;
+> 			remote-endpoint = <&oldi1>;
+> 		};
+> 	};
+> };
+> 
+>>>
+>>> FWIW, I've tested this series and I get twice the clock rate as
+>>> expected and the second link is reported as "OLDI_MODE_SINGLE_LINK".
+>>> I'll dig deeper into this tomorrow.
+>>>
+>>
+>> I was able to reproduce this behavior as you mention when the second
+>> oldi dt does not have a companion-oldi property.
+>>
+>> However, upon analysis, I realize that even having the correct dt as I
+>> mention above, will fall into another bug in the code and fail during
+>> the OLDI init.
+>>
+>> Unfortunately, two wrongs in my setup yesterday caused my testing to
+>> pass!
+>>
+>> I will post another revision, if you want to hold out on debugging
+>> further!
+> 
+> Sure!
+> 
+> -michael
+
