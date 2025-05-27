@@ -1,125 +1,145 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7282798E6
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1373C465;
+	Tue, 27 May 2025 15:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748360859; cv=none; b=CmKOoGApBc9QvZNmXL/KDfNToJmSUfBDfW2akGtmHt75GW2Y5Lt+H6zCZau33CVlV0Hr1w7kEG9HwuLKIWQNTD4vF8JcHYPSxErh8w3Nm53sVIBb6tM/GnYxARr1JlDddcurGLmsv9lxUzDobz7VCpe3lRvo33+PVb6DXXOa7sA=
+	t=1748360870; cv=none; b=DcOAg4qG4VSaeD3N5U0ugcu5p5ahqQAA4JlZrkZ9D05+L1GyqIch0uh+ZVTEGMQsqZ1x3oZsDCxPFlXcnl2aFWGN8tAefJzBaOP81XPBJEUP5zzQelxiem4VRyJ4VoLBw+26z7K5gczbYVYb6i/8+7e4dgvbP7VjBzcswCpx0uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748360859; c=relaxed/simple;
-	bh=fahTupJYCgYuxYUPs+FyITf1Up7TsMqeiauXjHxmIJM=;
+	s=arc-20240116; t=1748360870; c=relaxed/simple;
+	bh=SXB/W5YGNq6LI6cMa8qdCfbwi61BqnQv3hX2p2dEEaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsjsGPRw2joC6iU17/txjvLcaIAneT3EkGTHL0wZ0dKIBxauiXRaAkdEwN03x/f58y54wtAuAc2umPQt0OWFiYlREuSpKAQtd/e2vNYMFGeNlGEIAvfV0Lt5bRj92zVTrRosUTzwxGSAoon0vqd0aoateDHcBDTJfnvTYybUiWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nAHT3qKO; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iOqjvFqM2kgEBrFtT7llLUz3Omy4nclXV3JXBzOxoN5xZEnH2ExRQukdEe7f6b/gudi6SMiC3QEyivEBlEUV91ZP+iNwER5uTDvJMy5M6EHBcDRiiN8DFbL9aIpC2BZ88/TIgygP2x6rFf3QB2pr/ZfvsWJ/FOIVvYoNMnSaLlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N89J5Ogf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAHT3qKO"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7376e311086so3306234b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748360857; x=1748965657; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5HJ+G4f3UGDUSs05RV4nd6Vun8C+JN7MZzygPkSv0I4=;
-        b=nAHT3qKOPvwBRJT0QgR/OvloJnk1okXGP9g89zGWBmWbFmzlEoER4j8WRW6hD4Brez
-         hfbemdGaiE4BQqOqESOHSmGoSKNHC5kOGDmR9RW12KcAI4g4QJ17y42rGqQtAtIFRYk/
-         GqOlw9o/VwX1KPDPkUT2MqnGVhrB8YbXGeCAeC0Gp4giwJHf91wKadQc5YOaoIr3q4Mh
-         10SPOOwqlMecjBUZpDm0VZkTYPRqF22FctkNHVFzPJTYY+gcSvvpM/eXReMzAgL3iyYb
-         jvx1tNm5s/NFDprNYIjFkYhW10TBvuRQIjprxmQxK70dNPssliNq5IBLx9tOOlbdouVU
-         wg0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748360857; x=1748965657;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5HJ+G4f3UGDUSs05RV4nd6Vun8C+JN7MZzygPkSv0I4=;
-        b=lTX9JmuFF1Sk0bGt8i0N4weWujiDzafG3lOqgmNAQ9zDNei4htT5UvbEE96cMTFp4Q
-         dCkbNYW+rW53NhY0KmmfuKmTu8I4FLogy4eNUYsBK+Jg/5ZRTicC7xgF5Vtq1PTXjwyP
-         DHII6gktwB1ZEJqSaSKBqGNuceDyFsrUSmroOjrX7JPzxKQPrNdaJlnkhukoRL0jZvnw
-         OVrYCZuQ3JmrrwDPpbGVhB1un2MAn8aFkELwn12aqySJIfzqY1P7cgnBM+5in92kzzSd
-         PcB5MJF7sCTZAk+ppi9+Z4Du/7LzzED2i/7bB+nmZn+vx5mFR1VoGxtar1u37d4OD3dP
-         7oQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWs6MNsNzhmyA8xUN1I4ZzkLCYacz6rNFUVbEGBBYyaPTnkyfygwYMFKA9zjhnGAHt4ozHLsRTl+/qJZww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuJiygX1kMSZrV+aUEC+58x5R+2mLMCHfwePaykGw9agVJWOQN
-	6xsodxhjdzKogDWdtTVehrru1cuPO+4d0sY89j4jfKdyJNtWCRJhW23v
-X-Gm-Gg: ASbGncty1ynbhjf6GQfhIAFEUfoDF7FsGVkPRnTs7Yrt6skWPFO/Ul0hlZaaVvDe3AM
-	EawARIForbeeeEc3xKiWf5nKrk8jv7sWZ71VrS/sJ8dXSQL1wC/9j9yKsg0WbinTrMvWzhUBbjh
-	oW/uCXibSjI8csM8F4duhk8cBxLaorRX7GBZjTFZjrlCBxpxpsiBOA8sCo3BeC+wgEzjth2mGdy
-	8r5Z6Bj0mpo1Jmn6B8joOZSYqmhhbuPILFNvpql5Lk/Fp/NC/UC+yzP4IafdSZiSB7w+dKIWV0b
-	jgz4I7rlLGlOOzi77irAxtKC/3Hx7AyNs/Hc8Qam7+KpMqRlM7++F1Rf5fnThw==
-X-Google-Smtp-Source: AGHT+IFof6u37ajHJRminVcIav224Mknf5nKiVqYH/LMS0EN2R3bddSei8ryn1cvxPPvxwDMFnZqPg==
-X-Received: by 2002:a05:6a00:acb:b0:740:5927:bb8b with SMTP id d2e1a72fcca58-745fdac66f8mr19817158b3a.0.1748360857307;
-        Tue, 27 May 2025 08:47:37 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26ecfc85e9sm18602758a12.11.2025.05.27.08.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 08:47:36 -0700 (PDT)
-Date: Tue, 27 May 2025 11:47:34 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, mingo@redhat.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	tglx@linutronix.de, maddy@linux.ibm.com, vschneid@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, jstultz@google.com,
-	kprateek.nayak@amd.com, huschle@linux.ibm.com, srikar@linux.ibm.com,
-	linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk
-Subject: Re: [RFC PATCH 0/5] sched: cpu parked and push current task mechanism
-Message-ID: <aDXelhCbIvKjZyqG@yury>
-References: <20250523181448.3777233-1-sshegde@linux.ibm.com>
- <20250527151020.GV24938@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N89J5Ogf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73D95C4CEE9;
+	Tue, 27 May 2025 15:47:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748360870;
+	bh=SXB/W5YGNq6LI6cMa8qdCfbwi61BqnQv3hX2p2dEEaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N89J5Ogf61kkviEXYSEru1lFMfWmBaDCr3850ZewH/QlCOnLhZYGcUGMt7qY6ZDMT
+	 oFO7wik1FJ9+YT9T4cpQi+aaWKc09PiA+40HXWsssxaZIcNoudic/3QkT5jajkcKnw
+	 y5MbqK1W17jxGwOXApecyKtE09bVt8+fLIkoNXmnTss4aTkR571BJqP26vt0ZrfBOn
+	 Lx76dbKMykRXZJd41txdC41Z4gDnQ8Mc0THiQzT7GjGKoCgbHQydmF+veyG1UHawE3
+	 qrj79aiJuqknL1+mDF6ef/rELc33h3fefrsyvC1AsjDFYXz/+J0AeLkwRYoqezXGzo
+	 7OBkjmnn9r1Lw==
+Date: Tue, 27 May 2025 16:47:46 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"open list:IRQCHIP DRIVERS" <linux-kernel@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	imx@lists.linux.dev
+Subject: Re: [PATCH 1/1] dt-bindings: interrupt-controller: Add fsl,icoll.yaml
+Message-ID: <20250527-ancient-monstrous-2b867b95524b@spud>
+References: <20250523192016.563540-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="NabpYVU0Es9zW1+Z"
+Content-Disposition: inline
+In-Reply-To: <20250523192016.563540-1-Frank.Li@nxp.com>
+
+
+--NabpYVU0Es9zW1+Z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527151020.GV24938@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 05:10:20PM +0200, Peter Zijlstra wrote:
-> On Fri, May 23, 2025 at 11:44:43PM +0530, Shrikanth Hegde wrote:
-> > In a para-virtualised environment, there could be multiple
-> > overcommitted VMs. i.e sum of virtual CPUs(vCPU) > physical CPU(pCPU). 
-> > When all such VMs request for cpu cycles at the same, it is not possible
-> > to serve all of them. This leads to VM level preemptions and hence the
-> > steal time. 
-> > 
-> > Bring the notion of CPU parked state which implies underlying pCPU may
-> > not be available for use at this time. This means it is better to avoid
-> > this vCPU. So when a CPU is marked as parked, one should vacate it as
-> > soon as it can. So it is going to dynamic at runtime and can change
-> > often.
-> 
-> You've lost me here already. Why would pCPU not be available? Simply
-> because it is running another vCPU? I would say this means the pCPU is
-> available, its just doing something else.
-> 
-> Not available to me means it is going offline or something like that.
-> 
-> > In general, task level preemption(driven by VM) is less expensive than VM
-> > level preemption(driven by hypervisor). So pack to less CPUs helps to
-> > improve the overall workload throughput/latency. 
-> 
-> This seems to suggest you're 'parking' vCPUs, while above you seemed to
-> suggest pCPU. More confusion.
-> 
-> > cpu parking and need for cpu parking has been explained here as well [1]. Much
-> > of the context explained in the cover letter there applies to this
-> > problem context as well. 
-> > [1]: https://lore.kernel.org/all/20250512115325.30022-1-huschle@linux.ibm.com/
-> 
-> Yeah, totally not following any of that either :/
-> 
-> 
-> Mostly I have only confusion and no idea what you're actually wanting to
-> do.
+On Fri, May 23, 2025 at 03:20:15PM -0400, Frank Li wrote:
+> Add fsl,icoll.yaml for i.MX23 and i.MX28.
+>=20
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../interrupt-controller/fsl,icoll.yaml       | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controlle=
+r/fsl,icoll.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,i=
+coll.yaml b/Documentation/devicetree/bindings/interrupt-controller/fsl,icol=
+l.yaml
+> new file mode 100644
+> index 0000000000000..7b09fd7d588f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,icoll.ya=
+ml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/fsl,icoll.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale MXS icoll Interrupt controller
+> +
+> +maintainers:
+> +  - Frank Li <Frank.Li@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,imx23-icoll
+> +              - fsl,imx28-icoll
+> +          - const: fsl,icoll
 
-My wild guess is that the idea is to not preempt the pCPU while running
-a particular vCPU workload. But I agree, this should all be reworded and
-explained better. I didn't understand this, either.
+Given this generic fallback, that would likely not be approved if this
+were actually what it is presented as (a binding for some new device),
+is only acceptable because it is already in use and this is some 15 year
+old device, you should state pretty clearly in your commit message.
+With it pointed out,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Thanks,
-YUry
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    interrupt-controller@80000000 {
+> +        compatible =3D "fsl,imx28-icoll", "fsl,icoll";
+> +        reg =3D <0x80000000 0x2000>;
+> +        interrupt-controller;
+> +        #interrupt-cells =3D <1>;
+> +    };
+> +
+> --=20
+> 2.34.1
+>=20
+
+--NabpYVU0Es9zW1+Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDXeogAKCRB4tDGHoIJi
+0hOBAPkBv8JYkIsYT13rVU0cUw9lky7j2QGQn086JoDm4uo3aAD9FFXCMfefltTB
+ZwSKCZ6t5+SXVbpCLff58xih4e+JUg4=
+=9mIs
+-----END PGP SIGNATURE-----
+
+--NabpYVU0Es9zW1+Z--
