@@ -1,238 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98181CEAD6;
-	Tue, 27 May 2025 08:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A981DF26E;
+	Tue, 27 May 2025 08:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335475; cv=none; b=Uylvwnkgxipy6Ki4/wFQtDJ2U1SQm/3yFeVGiRvhZFtLlohnIN43J3Oi9wJ8DKEu5qUMpHTlFT5foEgKxx3gD8EWiSLq2FV4feiLLfLtUYJV4YilUGs53v9kcN9+wIlj4ZC/90+ky6DzuzVUnLTCCflcISQw5lEaqDXz92UTXj8=
+	t=1748335514; cv=none; b=eWy4V8wQmH0ZUwjKWfeeKBxHauc9QK0fjh4NNBs3p0Ft6mDJhPHgk3noSTEMG7cZDnhMnrdSg9NGIxl+i1fQ8tILGqaTK55H5rAFdC1nuwZJHVsQWl2O0u2M7wZtgLdoNuJGo62Ru8L7MFTDB7jAQgtZsb0K7FSpFTykfGDCeLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335475; c=relaxed/simple;
-	bh=tu/Ta76Ml0gQqGnmCdVOydN9lwxl9NE68BkygeaRWyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YstKM4SV+zlAamG6DTYGLtMuybljAIXQIBtNvLZ2kUFeTrJuF8UMjuKwnfY3pXQI7bccs2j5cwMDgP7FwolP+boB/ZHM1dSLAE5u3F14JmiHSli/WPM/N/M7h54kIhB3mGCs0/aWQQJwLZpL+OBgSV+6dPC5d+LYEezBDdWjAYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMBLk28+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748335514; c=relaxed/simple;
+	bh=q9A5It0VcKJo2Z0sOBgikusUjjLmdwUMhdXXAWimklU=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:Mime-Version:
+	 References:In-Reply-To; b=ZiXnbxk7AGGP5le5WEduWlyC22u8RbgVakpEdgHddXyHnr1OmYdRy7psfhmYaDjbg/spZyqOASqwslmTnsl2ZopuYooxF6l7kxUWbCwFyNTFV9c+mDG1i7+Dk4vfuYo89Vht4E7TCrQNMgkPKGae+n83U09ZdBBB4kErPWgMHo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WsHtfjyb; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMBLk28+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578A9C4CEEE;
-	Tue, 27 May 2025 08:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748335475;
-	bh=tu/Ta76Ml0gQqGnmCdVOydN9lwxl9NE68BkygeaRWyM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bMBLk28+3Bza/oHd1Lf8FtKmDw7v1BsxxwOIxLo5BsGr/eXz1hY5hVFlkPrTpQWBz
-	 AZzvVzNYBqUJeABtTiV8yEiNBte8RSX9AsMFciqkh16ufXIwIROJuIj9drctvK1RPD
-	 jx7TGAXutfPAxJQKqUkI0ZTfc85DKV+JFaa2jP5jbjSEgwGyLvNdwxtcikEjgp8CCv
-	 zSIVmlKKbZBMgr5+MZqrKcXK8O7RyTyWExVcaUXiDE6KHlXJdO5spV9WYT/g++A6wx
-	 o6ghMsEIJMqJTs8OTg54uxeie2/CQ3Gm7xEU76JkWSpzzbX23Qo6mM0uaPL6G8zqVQ
-	 GlRgJ2nZDc21Q==
-Message-ID: <3a76c7b1-ce02-41eb-a4c0-ae065e9b99f3@kernel.org>
-Date: Tue, 27 May 2025 10:44:31 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WsHtfjyb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 701CF43137;
+	Tue, 27 May 2025 08:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748335510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QzPRMr1l+fHaNToRkbY1GkYZ/zbxBgq6V8xrU1tHPf8=;
+	b=WsHtfjyboYTn/inoED+hlu32+QYRGzVRTfeTxdp4gHe0upe98p4LMB8qXn4HvSNRYlUo0P
+	7X5QOwXR+mVsIlNhhLnSgqo56DgD0KhdaRFeMMV+rIhpTm4V5EDCbnOqYO448ucWaJ8lih
+	yTsdqmHp3lKzba+38ROjgdOTObnT5A1u3HMSCn4xndSuwcNscAQekWO5izBz6Yfp4RiqlO
+	snkxmUjnPsQZEuO2D48+cvX0sqhldyw6b4Ml/ZwU9FsLdaS2PW8qUagGqfstCDPPoFg/Lw
+	4eE0U/M9lzRCgpLz1w8SjY1h3XgCpUfQxbTC+klPVsmED9PpYGvnksdxgwljsg==
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 27 May 2025 10:45:07 +0200
+Message-Id: <DA6T7OEF94IG.2BH2PWTCVEOTA@bootlin.com>
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Alexei Starovoitov"
+ <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
+ Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon"
+ <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
+ <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+ "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
+ <revest@chromium.org>
+Cc: "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
+ <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>, "Xu Kuohai"
+ <xukuohai@huawei.com>
+Subject: Re: [PATCH bpf-next v2 1/2] bpf, arm64: Support up to 12 function
+ arguments
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] firmware: stratix10-svc: Add initial support for
- asynchronous communication with Stratix10 service channel
-To: mahesh.rao@altera.com, Dinh Nguyen <dinguyen@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250526-sip_svc_upstream-v3-0-6a08a4502de3@altera.com>
- <20250526-sip_svc_upstream-v3-3-6a08a4502de3@altera.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250526-sip_svc_upstream-v3-3-6a08a4502de3@altera.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
+ <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
+ <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
+In-Reply-To: <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduleelfeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurheptgffkffhvfevufgggffofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffefiedtuedvgfekkeefteelkedvheehvdetuedtgfekueeuheelhfdvgfdtvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeihedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopeiguhhkuhhohhgriheshhhurgifvghitghlohhuugdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhnhdrf
+ hgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On 26/05/2025 08:25, Mahesh Rao via B4 Relay wrote:
-> From: Mahesh Rao <mahesh.rao@altera.com>
-> 
-> This commit adds support for asynchronous communication
+Hi Xu, thanks for the review
 
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+On Tue May 27, 2025 at 10:11 AM CEST, Xu Kuohai wrote:
+> On 5/22/2025 6:14 PM, Alexis Lothor=C3=A9 wrote:
+>
+> [...]
+>
+>> -static void save_args(struct jit_ctx *ctx, int args_off, int nregs)
+>> +struct arg_aux {
+>> +	/* how many args are passed through registers, the rest of the args ar=
+e
+>> +	 * passed through stack
+>> +	 */
+>> +	int args_in_regs;
+>> +	/* how many registers are used to pass arguments */
+>> +	int regs_for_args;
+>> +	/* how much stack is used for additional args passed to bpf program
+>> +	 * that did not fit in original function registers
+>> +	 **/
+>
+> nit: "**/" should be "*/"
 
+ACK
 
-> with the Stratix10 service channel. It introduces
-> new definitions to enable asynchronous messaging to
-> the Secure Device Manager (SDM). The changes include
-> the adding/removing of asynchronous support to existing
-> channels, initializing/exit-cleanup of the new asynchronous
-> framework and sending/polling of messages to SDM.
+[...]
 
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+>> +	a->ostack_for_args =3D 0;
+>> +
+>> +	/* the rest arguments are passed through stack */
+>> +	for (a->ostack_for_args =3D 0, a->bstack_for_args =3D 0;
+>> +	     i < m->nr_args; i++) {
+>
+> a->ostack_for_args is initialized twice.
+>
+> move all initializations before the loop?
 
+ACK
 
-...
+>> +		/* We can not know for sure about exact alignment needs for
+>> +		 * struct passed on stack, so deny those
+>> +		 */
+>> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
+>> +			return -EOPNOTSUPP;
+>
+> leave the error code as is, namely, return -ENOTSUPP?
 
-> +	args.a0 = INTEL_SIP_SMC_ASYNC_POLL;
-> +	args.a1 =
-> +		STRATIX10_SIP_SMC_SET_TRANSACTIONID_X1(handle->transaction_id);
-> +
-> +	actrl->invoke_fn(actrl, &args, &handle->res);
-> +
-> +	data->status = 0;
-> +	if (handle->res.a0 == INTEL_SIP_SMC_STATUS_OK) {
-> +		return 0;
-> +	} else if (handle->res.a0 == INTEL_SIP_SMC_STATUS_BUSY) {
-> +		dev_dbg(ctrl->dev, "async message is still in progress\n");
-> +		return -EAGAIN;
-> +	}
-> +
-> +	dev_err(ctrl->dev,
-> +		"Failed to poll async message ,got status as %ld\n",
-> +		handle->res.a0);
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(stratix10_svc_async_poll);
+Actually this change follows a complaint from checkpatch:
 
-No, drop entire function. There is no user of it. You cannot add exports
-for dead code.
+"WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP"
 
-> +
-> +/**
-> + * stratix10_svc_async_done - Completes an asynchronous transaction.
-> + * @chan: Pointer to the service channel structure.
-> + * @tx_handle: Handle to the transaction being completed.
-> + *
-> + * This function completes an asynchronous transaction identified by the given
-> + * transaction handle. It ensures that the necessary structures are initialized
-> + * and valid before proceeding with the completion operation. The function
-> + * deallocates the transaction ID, frees the memory allocated for the handler,
-> + * and removes the handler from the transaction list.
-> + *
-> + * Return: 0 on success, -EINVAL if any input parameter is invalid, or other
-> + *         negative error codes on failure.
-> + */
-> +int stratix10_svc_async_done(struct stratix10_svc_chan *chan, void *tx_handle)
-> +{
-> +	if (!chan || !tx_handle)
-> +		return -EINVAL;
-> +
-> +	struct stratix10_svc_controller *ctrl = chan->ctrl;
-> +	struct stratix10_async_chan *achan = chan->async_chan;
-> +
-> +	if (!achan) {
-> +		dev_err(ctrl->dev, "async channel not allocated\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	struct stratix10_svc_async_handler *handle =
-> +		(struct stratix10_svc_async_handler *)tx_handle;
-> +	if (!hash_hashed(&handle->next)) {
-> +		dev_err(ctrl->dev, "Invalid transaction handle\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	struct stratix10_async_ctrl *actrl = &ctrl->actrl;
-> +
-> +	spin_lock(&actrl->trx_list_wr_lock);
-> +	hash_del_rcu(&handle->next);
-> +	spin_unlock(&actrl->trx_list_wr_lock);
-> +	synchronize_rcu();
-> +	stratix10_deallocate_id(achan->job_id_pool,
-> +				STRATIX10_GET_JOBID(handle->transaction_id));
-> +	kfree(handle);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(stratix10_svc_async_done);
+>> +		stack_slots =3D (m->arg_size[i] + 7) / 8;
+>> +		/* AAPCS 64 C.14: arguments passed on stack must be aligned to
+>> +		 * max(8, arg_natural_alignment)
+>> +		 */
+>> +		a->bstack_for_args +=3D stack_slots * 8;
+>> +		a->ostack_for_args =3D round_up(a->ostack_for_args + stack_slots * 8,=
+ 8);
+>
+> since a->ostack_for_args starts from 0 and is always incremented
+> by multiples of 8, round_up() to 8 is not needed.
 
-No, drop entire function. There is no user of it. You cannot add exports
-for dead code.
+True. This is a (partial) remnant from the first attempt to handle more
+exotic alignments like large structs or __int128, but that's indeed not
+needed for this current version. I'll clean it up.
 
-> +
-> +static inline void stratix10_smc_1_2(struct stratix10_async_ctrl *actrl,
-> +				     const struct arm_smccc_1_2_regs *args,
-> +				     struct arm_smccc_1_2_regs *res)
-> +{
-> +	arm_smccc_1_2_smc(args, res);
-> +}
-> +
-> +/**
-> + * stratix10_svc_async_init - Initialize the Stratix10 service controller
-> + *                            for asynchronous operations.
-> + * @controller: Pointer to the Stratix10 service controller structure.
-> + *
-> + * This function initializes the asynchronous service controller by setting up
-> + * the necessary data structures, initializing the transaction list.
-> + *
-> + * Return: 0 on success, -EINVAL if the controller is NULL or already initialized,
-> + *         -ENOMEM if memory allocation fails, -EADDRINUSE if the client ID is already
-> + *         reserved, or other negative error codes on failure.
-> + */
-> +static int stratix10_svc_async_init(struct stratix10_svc_controller *controller)
-> +{
-> +	int ret;
-> +	struct arm_smccc_res res;
-> +
-> +	if (!controller)
-> +		return -EINVAL;
-> +
-> +	struct stratix10_async_ctrl *actrl = &controller->actrl;
+[...]
 
-Do not declare variables in the middle of the code. See coding style.
+>> +	for (i =3D a->args_in_regs; i < m->nr_args; i++) {
+>> +		slots =3D (m->arg_size[i] + 7) / 8;
+>> +		/* AAPCS C.14: additional arguments on stack must be
+>> +		 * aligned on max(8, arg_natural_alignment)
+>> +		 */
+>> +		soff =3D round_up(soff, 8);
+>> +		if (for_call_origin)
+>> +			doff =3D  round_up(doff, 8);
+>
+> since both soff and doff start from multiples of 8 and are
+> incremented by 8 each time, the two round_up()s are also
+> not needed.
 
-> +
-> +	if (actrl->initialized)
-> +		return -EINVAL;
-> +
-> +	struct device *dev = controller->dev;
+ACK. I guess the small AAPCS mention can go too then.
 
-Same here.
+>
+>> +		/* verifier ensures arg_size <=3D 16, so slots equals 1 or 2 */
+>> +		while (slots-- > 0) {
+>> +			emit(A64_LDR64I(tmp, A64_FP, soff), ctx);
+>> +			/* if there is unused space in the last slot, clear
+>> +			 * the garbage contained in the space.
+>> +			 */
+>> +			if (slots =3D=3D 0 && !for_call_origin)
+>> +				clear_garbage(ctx, tmp, m->arg_size[i] % 8);
+>> +			emit(A64_STR64I(tmp, A64_SP, doff), ctx);
+>> +			soff +=3D 8;
+>> +			doff +=3D 8;
+>> +		}
+>> +	}
+>> +}
+>
+> [...]
 
 
 
-Best regards,
-Krzysztof
+
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
