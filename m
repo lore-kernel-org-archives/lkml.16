@@ -1,30 +1,50 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF162749CA
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F10267AED;
+	Tue, 27 May 2025 13:38:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353092; cv=none; b=paCgzr3ZK604TjJBOw6m72O/BDPlRYll4Nln6n0Qr+ajm0MoB4NENN0Bzk0V4dTgxxRDRIIKQVHDhCkHH/dB3moZSt1kfWPzdPHtDi+EJAt5XvYAFRk6LgzYUjwZ252jmodObal8oAQ+L374mT2GU/6CIZiekIYvtAfYlH5dXX0=
+	t=1748353127; cv=none; b=Bom30fpitAgUCfRfh1av67BoJNXzatcRW8rTOR0y6jAQMK4aC12jVNIz3Q7YcDeR6D6cN9c+0XvI7n7Yki+LrdclnUr/nIooMltJLcx2LcukhZtp6lX7GfpCrNZa/p6C1/k7A1/i26cQCzt0i3Ii6cQTP9TnMH1ypw2es56DvP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353092; c=relaxed/simple;
-	bh=yA9jjn66m7hHeKAY6NL326WUBnit5kXQLwaCQSgdp38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NPVFx+LtF9NBOh8xrGLjrBQRHzQcRZTQLIpvY/kVQytlj3fZ2GKMT6K7hXuxj9ge0Z/pmKqNsjhIaP+S9g6S2M5+ekj1XZwoXuTAFWyUHBrznt/5eUWkn2RbFEvwppX79/Ag/nW3NKLdiifMiqN7ZHw5Bm9O7+yH/KUNkcpZoj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b6DGB0t1Rz4f3lDF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:37:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DE9EF1A1BEF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:38:04 +0800 (CST)
-Received: from [10.67.109.184] (unknown [10.67.109.184])
-	by APP1 (Coremail) with SMTP id cCh0CgCX_Hw7wDVo7Z3VNQ--.8983S2;
-	Tue, 27 May 2025 21:38:04 +0800 (CST)
-Message-ID: <57533126-eb30-4b56-bc4d-2f27514ae5ad@huaweicloud.com>
-Date: Tue, 27 May 2025 21:38:03 +0800
+	s=arc-20240116; t=1748353127; c=relaxed/simple;
+	bh=YAK22hh9bF0xUHaZ37cM77JZCPU+tfEdr966jOJvfXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=vFPkcTPmUqAWQ98j+E5JlK5ZuF0E8v5+ufk+L+gWXwNqEYVlIFFW5qdHjznkGkKhkaQpgb+avyH158XqLIR+PcSldacPzY9gZmmh0aXRdP0+M71xEY7dbelU95Qsdd2lsd8ZeRaZ1tX9RtTuNJBXfYqWMKjaUx1UQp0Wiea46/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=WNpIQmMi; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="WNpIQmMi"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RBw2xZ002122;
+	Tue, 27 May 2025 15:38:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	G8Ua6pTVZVcQk45Vtse+7jeBJIEk6dgYvFzDSEU8xck=; b=WNpIQmMicdz4CkGh
+	l4ItB+PvWAGucajYF5iwdkXyXW5x0sCd/uwj6HQvwEdKDFALbMSaop27sGgjcqqX
+	Sq2LU4oJt1HFFK1jivnqP3el78O4HKDDCk7QF+VHf3MeImw+qv3cf0qQJiz1i0DA
+	7kdqsm37saO1vqXi3UNdJ1yJ737PKsdQCzEfkXvuglxfq+POJkDua5gHZNgHrPkw
+	vlmOpEySaJ/eUFsOukTJgJvb4nA4Hs/8cPggy5qTyM2YX8i+VKXos65gX2Mbq+0D
+	LUHKWJd/IxGSJQ7Fkfkg2387Q84UB1O8uu3bueGYA3BTmOHbTivK/K8xsrdbtENU
+	95iHzw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46w54hjs1w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 15:38:20 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1A4D840053;
+	Tue, 27 May 2025 15:37:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9ED31AEF6B9;
+	Tue, 27 May 2025 15:36:42 +0200 (CEST)
+Received: from [10.48.87.141] (10.48.87.141) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 27 May
+ 2025 15:36:42 +0200
+Message-ID: <661af124-3072-4dcf-b613-ec3e48549626@foss.st.com>
+Date: Tue, 27 May 2025 15:36:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,108 +52,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
- expanding vma during mremap
+Subject: Re: [PATCH] Input: gpio-keys - fix a sleep while atomic with
+ PREEMPT_RT
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Clark Williams
+	<clrkwllms@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Paul Cercueil
+	<paul@crapouillou.net>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rt-devel@lists.linux.dev>,
+        Fabrice
+ Gasnier <fabrice.gasnier@foss.st.com>
+References: <20250526-gpio_keys_preempt_rt-v1-1-09ddadf8e19d@foss.st.com>
+ <20250526141321.FcXEgnV4@linutronix.de>
 Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>
-Cc: lorenzo.stoakes@oracle.com, mhiramat@kernel.org, peterz@infradead.org,
- Liam.Howlett@oracle.com, akpm@linux-foundation.org, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, pulehui@huawei.com
-References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
- <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
- <afe53868-5542-47d6-8005-71c1b3bec840@huaweicloud.com>
- <13c5fe73-9e11-4465-b401-fc96a22dc5d1@redhat.com>
- <4cbc1e43-ea46-44de-9e2b-1c62dcd2b6d5@huaweicloud.com>
- <20250526154850.GA4156@redhat.com>
- <06bd94c0-fefe-4bdc-8483-2d9b6703c3d6@redhat.com>
-From: Pu Lehui <pulehui@huaweicloud.com>
-In-Reply-To: <06bd94c0-fefe-4bdc-8483-2d9b6703c3d6@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCX_Hw7wDVo7Z3VNQ--.8983S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFyrKFWDAFW8tw13uF1UAwb_yoW8ZFy8pa
-	48ta45JFyUJry8Jr1DJF1Utry0qr1Utw4UJr1rXFy5Awn8tr1jqFWYqFZ0gry5JrWktw15
-	Jr1UXwnruay7JFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
+From: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
+In-Reply-To: <20250526141321.FcXEgnV4@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_06,2025-05-27_01,2025-03-28_01
 
-Hi David,
+Hello Sebastian,
 
-On 2025/5/27 2:46, David Hildenbrand wrote:
-> On 26.05.25 17:48, Oleg Nesterov wrote:
->> Hi Lehui,
+On 5/26/25 16:13, Sebastian Andrzej Siewior wrote:
+> On 2025-05-26 15:56:29 [+0200], Gatien Chevallier wrote:
+>> From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 >>
->> As I said, I don't understand mm/, so can't comment, but...
+>> When enabling PREEMPT_RT, the gpio_keys_irq_timer() callback runs in
+>> hard irq context, but the input_event() takes a spin_lock, which isn't
+>> allowed there as it is converted to a rt_spin_lock().
 >>
->> On 05/26, Pu Lehui wrote:
->>>
->>> To make things simpler, perhaps we could try post-processing, that is:
->>>
->>> diff --git a/mm/mremap.c b/mm/mremap.c
->>> index 83e359754961..46a757fd26dc 100644
->>> --- a/mm/mremap.c
->>> +++ b/mm/mremap.c
->>> @@ -240,6 +240,11 @@ static int move_ptes(struct pagetable_move_control
->>> *pmc,
->>>                  if (pte_none(ptep_get(old_pte)))
->>>                          continue;
->>>
->>> +               /* skip move pte when expanded range has uprobe */
->>> +               if (unlikely(pte_present(*new_pte) &&
->>> +                            vma_has_uprobes(pmc->new, new_addr, 
->>> new_addr +
->>> PAGE_SIZE)))
->>> +                       continue;
->>> +
+>> [ 4054.289999] BUG: sleeping function called from invalid context at kernel/locking/spinlock_rt.c:48
+>> [ 4054.290028] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 0, name: swapper/0
+>> ...
+>> [ 4054.290195]  __might_resched+0x13c/0x1f4
+>> [ 4054.290209]  rt_spin_lock+0x54/0x11c
+>> [ 4054.290219]  input_event+0x48/0x80
+>> [ 4054.290230]  gpio_keys_irq_timer+0x4c/0x78
+>> [ 4054.290243]  __hrtimer_run_queues+0x1a4/0x438
+>> [ 4054.290257]  hrtimer_interrupt+0xe4/0x240
+>> [ 4054.290269]  arch_timer_handler_phys+0x2c/0x44
+>> [ 4054.290283]  handle_percpu_devid_irq+0x8c/0x14c
+>> [ 4054.290297]  handle_irq_desc+0x40/0x58
+>> [ 4054.290307]  generic_handle_domain_irq+0x1c/0x28
+>> [ 4054.290316]  gic_handle_irq+0x44/0xcc
 >>
->> I was thinking about
+>> Considering the gpio_keys_irq_isr() can run in any context, e.g. it can
+>> be threaded, it seems there's no point in requesting the timer isr to
+>> run in hard irq context.
 >>
->>     WARN_ON(!pte_none(*new_pte))
->>
->> at the start of the main loop.
->>
->> Obviously not to fix the problem, but rather to make it more explicit.
+>> So relax the hrtimer not to use the hard context. This requires the
+>> spin_lock to be added back in gpio_keys_irq_timer().
 > 
-> Yeah, WARN_ON_ONCE().
-> 
-> We really should fix the code to not install uprobes into the area we 
-> are moving.
-Alright, so let's try this direction.
-
-> 
-> Likely, the correct fix will be to pass the range as well to 
-> uprobe_mmap(), and passing that range to build_probe_list().
-
-It will be great. But IIUC, the range we expand to is already included 
-when entering uprobe_mmap and also build_probe_list.
-
-copy_vma
-     vma_merge_new_range
-         vma_expand
-             commit_merge
-                 vma_set_range(vma, vmg->start, vmg->end, vmg->pgoff);
-                 vmg_adjust_set_range(vmg); <-- adjust with new range
-                 vma_complete
-                     uprobe_mmap
-move_page_tables
-     move_ptes
-         set_pte_at(mm, new_addr, new_pte, pte);
-
-> 
-> Only when growing using mremap(), we want to call it on the extended 
-> range only.
+> Why does it? This needs to be explained or it deserves an independent
+> patch/ fix. This flag change makes not difference on !PREEMPT_RT and so
+> should be the requirements for locking here.
 > 
 
+Can you elaborate on "This flag change makes not difference on
+!PREEMPT_RT" please? IIUC,this makes the callback not run in hard IRQ
+context, even in !PREEMPT_RT, no?
+
+Regarding the need of the spin_lock: gpio_keys_irq_timer() and
+gpio_keys_irq_isr() appear to access the same resources. Can't we
+have a concurrent access on it from:
+HR timer interrupt // GPIO interrupt?
+
+But looking back at the patch, this situation does not depend on
+the HRTIMER_MODE_REL_HARD flag. So maybe it should be addressed
+separately.
+
+On the other hand, I should use the new
+guard(spinlock_irqsave)(&bdata->lock);
+
+>> Fixes: 019002f20cb5 ("Input: gpio-keys - use hrtimer for release timer")
+>> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+>> Signed-off-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+> 
+> Sebastian
