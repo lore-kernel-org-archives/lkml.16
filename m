@@ -1,1314 +1,168 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2107C25DCE0
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315E4257440
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748345064; cv=none; b=g9jvzxRsNo/vqvupLRmjnZNiD3t8TJGnxmdczlT8vrGM6zJmCbZY9O+tHN5FALRFG64VKEys3DocGTEyDSrT+0V1PPBDQfglWkLf1TPBoA/ON2aU5QFXFYhoJtbA0RzmYB1VzyJjdAQQ5luYqR/wsGCMJ++EJJXyUEMPfwV82sM=
+	t=1748345120; cv=none; b=BGbTqA4nePgzXCGuP3vxNDJVPVYp9BS87pP1vfPPYKGeOAU375csMXSx6qXf37J0OIM0PH4O4FRd+qyOg+zqjnWS96cKLeerBytfbhB46fowvGp9VXIWLQlO7O1FaZXaCUFvSBmKKK2cN/oR0Du5gVwdFVVZx2LvmTBi/IZJgM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748345064; c=relaxed/simple;
-	bh=HCIpJPIzzdJEKXxuEXzxNfR3cumv4LRlxJehymh38/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M7S8JjOoGtM57C3AmD94oxl3utF9GK3j/aBwslDN2z20OB6nLrFx5pFSVC0Lm31+WXun8/+cNFxrHxHqEL92qw9kXx3Sna9x0TUyuITumSvK0d094J++n8YGJsy+HGgyaBitNLqrUWDXgiRdEmH1CgmydMJYCz6XIoIy+zghGaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VqpBb6bR; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1748345120; c=relaxed/simple;
+	bh=IjYCkaz0vdLZNHpHQfeQHn8VelyKTW2bL453QEqv/S4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CoTxV3VgWQ1ZzoO1P+pT3GuhkEHiLuyW3REVHu6Kwm1sObz5nCGvybFx/7JG/TX8r3CzfG5bjwpu4M5b/DHQPk7kXPwrr9fgOtQOzPeTokO6p7b8GCqN38JLDd5R0tsWNaGj0Vz/uyYI5LB2gN8TKR1WCj09atNLuCQQvuv/C/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EtKlxpad; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VqpBb6bR"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad891bb0957so84020466b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1748345058; x=1748949858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wjf2nS6/7By4X6KPfQo6LvcBjW/l7nYNiNxGySqxVx8=;
-        b=VqpBb6bRQ9YJF6FvfSy3EbDiguBj1UxCwLsFr5CReIsECJygLYQ4s2ASJl/ZZrMlgl
-         jQoAkptWpgc8R0oBdYrsFOZ7HSj389jfukSXYz++G1xDds7c4H7hOzM2ceux53cQ71Yc
-         WMGN+PyWiAMIg/jFCIdHlbmImvnBiVxa6qbab8YDhIwy9XB7CkdrlcBd2tU7mnuMVaH8
-         R3ZR1LqOehZlpuYuHR0FqYp7JVVCIjgMgZKBUwICXBNNrUIEbJjRHFb1ZQA89Xgk+PjU
-         EcEshjaDMMgtrKn3Eolc/1xHDTEHXMbpuOtc2h8roP0MHvHsYiBEaytcFJ9LGz1IycMz
-         lpMQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EtKlxpad"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R9q4fY024094
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:25:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+EtwIED2VJ1CyFpdm5+4R02rvjaaRQ1G+TwJkZUU998=; b=EtKlxpadYqWlNZGo
+	bVbKqu+LpRGPMJLr9sVh7i1zk+bwgcBtlzXXfkT7fXAyGsX54XX+ZHj1YgQEQ+vu
+	SmiZkJrzAnn98IZradGQYtOx4FTzYvezqyrwgkFH8G0RWwjPl6Q3b0h9YmmMn1YT
+	5OSWkBbAQk6eMgKFaPzO3FxHXlpGWoKLZR4xn+Hq6ng/bF0jMONZJP7C7YDB0Ils
+	12ErRd6R36hYlUZWOhWzVF8YhrsfShqAAfCpWTKcFoKfVaNtu2djsVJsJ1JOdo+h
+	1MesTbGzvp1RcIaCwSHZmgof8CE7ZV2QbovBOriNVcQ06H+tdr2ALvNnbovtVuMb
+	uUm8uQ==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u5ejxkx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:25:17 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-48f812db91aso11106731cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:25:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748345058; x=1748949858;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wjf2nS6/7By4X6KPfQo6LvcBjW/l7nYNiNxGySqxVx8=;
-        b=HEaBGcbArgw65GquXilTp9VLjfVN1ug3O6u05cOMM+caaVOOA+JgUIL6Lv0WrA/5VL
-         4oBWAm9GJCVWVgiXEtaIgZZnul0IyO83giyntroXc9ZDlQIIj8TQme0wtdhPs4bdo9w1
-         sgyTu7zv+BviyAmbMr/CS7JcVeNNalMqUuYons43I8cIpWndxQDKJKqERU8XZono7CnU
-         3Mh1sjjAl03amCNHoCUl2aHVPLd1T7QyECwcwPn+cjhyNGjoczUk4IFOKnsVgxUmqtmR
-         yQ7Ryg8YLhUlqrBeq0i8fN0wTkpdh6+O7yg+bgbxDNnXrnhj8n5ua+kguhTs4ykQzgDt
-         9Dlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXl5unBPdwBh27dNzB88vLhausTmSWNqB5UoEeW6ijW9yNlXQ6djHUxJ816g49stfAz414juGf5021EDh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw564OE84Ssj3X4TGgSx/6mHHKIXt4HNw7ZSWogyE31HlXrAh9
-	qf5IT0UWMwXVAExeWKRdOpb/FsytfTHCrdCItfBCKvp34XsrFPBXdYFqLZqHcGiQ7Uc=
-X-Gm-Gg: ASbGnctpGPJIVI77445tsmK3nWhJ/fE49ABHg0cLgoY8P1uh0KAvpCaEKGsSay5gfdO
-	IiNz4sE0ZRA16IJGuEq50c6MnRXyHNJPlwqQgYYt668Tu2AV/meH1dgo0w437qhwNm9dljLhxGz
-	T/pCqqJz3GKbbq2s8gNe/euQ9ax+9QTiiNpOUVcwuQ3NCzKpqI2nGDEuusT8a2gjD3I5XJvRWtL
-	lYQAjSnI9MsFq3Rk8UjH2ytVWA0LZjAL9isgvpMBzSbitriTD35yHKZbcByBvWxcU+nEkIJizKj
-	mvSEPcmo1SDtmmO7DFoCI5XTj2lODa7nq+IBbCJTs5CRvRwPdiQGnjfci8rHCcav8fF3HWCTbMf
-	HCnnI
-X-Google-Smtp-Source: AGHT+IHxSJFL1J0WO0wFur6APQgewi96Gl/0W02gmaKzbqKcmIZMUwzklKoVabkRxxHsDDoGWA6Pjw==
-X-Received: by 2002:a17:907:7207:b0:ad8:9428:6a2b with SMTP id a640c23a62f3a-ad894286c94mr115747366b.42.1748345058100;
-        Tue, 27 May 2025 04:24:18 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d438403sm1807297466b.123.2025.05.27.04.24.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 04:24:17 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	magnus.damm@gmail.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 4/8] clk: renesas: rzg2l-cpg: Add support for MSTOP in clock enable/disable API
-Date: Tue, 27 May 2025 14:23:59 +0300
-Message-ID: <20250527112403.1254122-5-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250527112403.1254122-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250527112403.1254122-1-claudiu.beznea.uj@bp.renesas.com>
+        d=1e100.net; s=20230601; t=1748345117; x=1748949917;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+EtwIED2VJ1CyFpdm5+4R02rvjaaRQ1G+TwJkZUU998=;
+        b=wxMGAsLa/wWkCHM0g/F+xfAsA0j69S4CT42rCtquvJIBeD+icGQ1kJLxfJPhgAdpac
+         rFtyhCP2urO8nI45WJG6QTqt94SdM0n5AsQWlGYckjP0eRlAN2IuS5MoPoRHUkbDQXDt
+         xn5ZOVjkWNEkpB3mvzU9DxmEQOhUXm9CDbFvDt6Lyb3IWZ1Chi+o245axwdorzlY17rM
+         yjGWIOzO0/ZdKGojlgvhMd8IDSezZtY25LD5cltBXvNNGIC0dfFZA/txDsaABJwq+Xlh
+         ZpMpqAL4bQmAR9VUsyNvSWUX8V8sSlJowWhavMAjRjhsmv5q1D3a+edPfegWKvu+PpdN
+         u3qw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrUAf/sfTKGbpIS4/QGf/NHF91lCcA9xA6zgYb1aJzmZRVicewqyZr54fACM4NJ2SwPAd0B4MiHOBrzsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9sXVCOQ7/gqiuhiRPEhm5uKdY1uyBtPPktZPdKA7dMpG6XJbA
+	h1JvC1C5M7xGrCAWqB7NQ0B14Deugi1sOktEZDAgD/swwHKDCl9XEVCQLF6NevSodG7pKFc+txY
+	ByrV9GcT4iWCWjIal9t1h/cdQk7DmNWhCN25F02N2ElWdCmW+0nCtee4JVzTZVFFxqPoGeWBAar
+	s=
+X-Gm-Gg: ASbGncsPOsguIZSr9zhQB8QNp3vsgu7mmBXumZ8m8w1TSl3S4ZrsuhhvkeOMkXGP4qW
+	6rfVn3/K7xmEiEPHzXC8Pu202XtUfOicTNWyAQHu70IvO91zolJsgEeq97iT/VpwUY9QQUNiQ72
+	uFY0TFDdpxH3rF9qqnYbqSY+9RH+Sp2q4DJX+Y/VgTdE8NtB0Qu5XVNZe1Zq8BiDF1w82vGvDut
+	8NnSAwP/RIeIZ/835FXPSHL13vuPJ3n1NrhLh+fzB+cttDMLLs5rz/GTh5Mxq3TGG8ZSaux+cR8
+	Zp8Mf0DJtUuDckruE9CZsNulcdJ/ZjrUg3ZKzwpNj/SoKTHeBz0DwCRuE6+F2dO3Dw==
+X-Received: by 2002:ac8:7f4c:0:b0:494:b722:141a with SMTP id d75a77b69052e-49f47cf0bd0mr71401431cf.13.1748345116960;
+        Tue, 27 May 2025 04:25:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF2ruzyLpYqP3ZgSZCU5zmljRjhSOppccrtHdLEaHwolv/pBEbpZ1ykF4CBKUG18Jhw4r79wA==
+X-Received: by 2002:ac8:7f4c:0:b0:494:b722:141a with SMTP id d75a77b69052e-49f47cf0bd0mr71401291cf.13.1748345116568;
+        Tue, 27 May 2025 04:25:16 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60461463b01sm3971225a12.27.2025.05.27.04.25.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 04:25:16 -0700 (PDT)
+Message-ID: <673898ed-bc6b-46cc-bc60-aece7c6bde59@oss.qualcomm.com>
+Date: Tue, 27 May 2025 13:25:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] arm64: dts: qcom: Add support for X1E80100 Dell
+ Latitude 7455
+To: Val Packett <val@packett.cool>, Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250525095341.12462-2-val@packett.cool>
+ <20250525095341.12462-4-val@packett.cool>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250525095341.12462-4-val@packett.cool>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=GIgIEvNK c=1 sm=1 tr=0 ts=6835a11e cx=c_pps
+ a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=vswN9AVew7ZQbwbRgEAA:9
+ a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-ORIG-GUID: llIbKCLye6FHzOo8Oo1b3NsDDO-OYQpW
+X-Proofpoint-GUID: llIbKCLye6FHzOo8Oo1b3NsDDO-OYQpW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA5NCBTYWx0ZWRfX4mrkQOwzqLkw
+ K7Emj3OlzuOjhxiiN3AgqiJ1zz5w27gN4b4gL56/l+3XC75+DSxYvgKy7vUz5jtu+D2SlaNsJOe
+ NE5qldijN2pMy6A+PK0bke9DklrDjn2qUgu3SG1GCJ3c+PXTwn/OKOpPHZ9WjfmW3AeGBsCqpJE
+ gXDUtkvl0Qf4HYkf+fPK7QzmVP8EeL5cYdLrXUtxBte97OD7vvXUonxakigV4ZsBBkufMkXey+D
+ G7ybbWEcrrcPv7sByyESgb5t2S+3aLESqV6VeyhrdpEM1FNQB7MsedErnmkN83EK3UsZ8NnsfsM
+ uennJRzg8zNypeKVdoyNu+Sn3AtVjPyBuml0BcVA6xzkukT8cYDWoIoVHlI//S/1d5zehGCz6Co
+ f9K//XPyRDMoOcdJYTIGezigJi7Fm5s47lcSBeTiHyi60/WvXhbul4ewGNWntSXDAmcI71Oj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_05,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=979 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270094
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 5/25/25 11:53 AM, Val Packett wrote:
+> Add a device tree for the Dell Latitude 7455 (X Elite) laptop.
+> 
+> Working:
+> - Wi-Fi (WCN7850 hw2.0)
+> - Bluetooth
+> - USB Type-C x2 (with DP alt mode)
+> - USB Type-A
+> - USB Fingerprint reader
+> - eDP Display (with brightness)
+> - NVMe
+> - SDHC (microSD slot)
+> - Keyboard
+> - Touchpad
+> - Touchscreen
+> - Battery
+> 
+> Not included:
+> - Audio
+> - Camera
+> 
+> Signed-off-by: Val Packett <val@packett.cool>
+> ---
 
-The RZ/{G2L, V2L, G3S} CPG versions support a feature called MSTOP. Each
-module has one or more MSTOP bits associated with it, and these bits need
-to be configured along with the module clocks. Setting the MSTOP bits
-switches the module between normal and standby states.
+[...]
 
-Previously, MSTOP support was abstracted through power domains
-(struct generic_pm_domain::{power_on, power_off} APIs). With this
-abstraction, the order of setting the MSTOP and CLKON bits was as follows:
+> +&i2c3 {
+> +	clock-frequency = <400000>;
+> +
+> +	status = "okay";
+> +
+> +	typec-mux@8 {
+> +		compatible = "parade,ps8830";
 
-Previous Order:
-A/ Switching to Normal State (e.g., during probe):
-1/ Clear module MSTOP bit
-2/ Set module CLKON bit
+I'd assume these are ps8833 instead, IIRC there's a pair of ID registers
 
-B/ Switching to Standby State (e.g., during remove):
-1/ Clear CLKON bit
-2/ Set MSTOP bit
+[...]
 
-However, in some cases (when the clock is disabled through devres), the
-order may have been (due to the issue described in link section):
+> +&sdhc_2 {
+> +	cd-gpios = <&tlmm 71 GPIO_ACTIVE_LOW>;
+> +	pinctrl-0 = <&sdc2_default &sdc2_card_det_n>;
+> +	pinctrl-1 = <&sdc2_sleep &sdc2_card_det_n>;
+> +	pinctrl-names = "default", "sleep";
+> +	vmmc-supply = <&vreg_l9b_2p9>;
+> +	vqmmc-supply = <&vreg_l6b_1p8>;
+> +	bus-width = <4>;
+> +	no-sdio;
+> +	no-mmc;
+> +	status = "okay";
 
-1/ Set MSTOP bit
-2/ Clear CLKON bit
+A consistent \n before 'status' would be appreciated
 
-Recently, the hardware team has suggested that the correct order to set
-the MSTOP and CLKON bits is:
-
-Updated Order:
-A/ Switching to Normal State (e.g., during probe):
-1/ Set CLKON bit
-2/ Clear MSTOP bit
-
-B/ Switching to Standby State (e.g., during remove):
-1/ Set MSTOP bit
-2/ Clear CLKON bit
-
-To prevent future issues due to incorrect ordering, the MSTOP setup has
-now been implemented in rzg2l_mod_clock_endisable(), ensuring compliance
-with the sequence suggested in Figure 41.5: Module Standby Mode Procedure
-from the RZ/G3S HW manual, Rev1.10.
-
-Additionally, since multiple clocks of a single module may be mapped to a
-single MSTOP bit, MSTOP setup is reference-counted.
-
-Furthermore, as all modules start in the normal state after reset, if the
-module clocks are disabled, the module state is switched to standby. This
-prevents keeping the module in an invalid state, as recommended by the
-hardware team.
-
-Link: https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-
-Changes in v3:
-- s/for_each_mstp_clk/for_each_mod_clock/g
-- do not add clock to its own shared_mstop_clk[] array if it doesn't share
-  the mstop
-- update the shared_mstop_clks[] before priv->clks[] array is populated
-  when registering a clock; this simplifies the logic in
-  rzg2l_mod_clock_update_shared_mstop_clks()
-- in rzg2l_mod_clock_module_set_state():
--- in case the requested module state is normal update the register
-   only when the mstop->usecnt is zero
--- in case the requested module state is standby and the clock don't share
-   the mstop, check explictily if it is critical and increment local variable
-   "criticals" if so; this is necessary now as the clock is not preset in
-   shared_mstop_clks[] array if it doesn't share the mstop
-
-Changes in v2:
-- udpated patch description to avoid plural in the configuration
-  sequence description b/w MSTOP and CLK_ON
-- use atomic type to store the usage counter; s/refcnt/usecnt/g
-- moved MSTOP_OFF(), MSTOP_MASK() macros to rzg2l-cpg.c
-- dropped struct mstp_clock::critical and use clk_hw_get_flags()
-  instead to get the clock flags
-- used unsigned int iterators in for loops
-- keep memory allocated for a single list for clocks sharing the
-  same MSTOP by updating the rzg2l_mod_clock_add_shared_mstop_clk();
-- s/rzg2l_cpg_mstop_show/rzg2l_mod_clock_mstop_show/g,
-  s/rzg2l_cpg_mstop/rzg2l_mod_clock_mstop/g,
-  s/rzg2l_cpg_update_shared_mstop_clocks/rzg2l_mod_clock_update_shared_mstop_clks/g
-   to keep the same naming conventions for functions handling mod clock MSTOP
-- use the newly added for_each_mstp_clk() macro all over the code
-
- drivers/clk/renesas/r9a07g043-cpg.c | 132 +++++++--------
- drivers/clk/renesas/r9a07g044-cpg.c | 168 +++++++++----------
- drivers/clk/renesas/r9a08g045-cpg.c | 105 ++++++------
- drivers/clk/renesas/r9a09g011-cpg.c | 116 ++++++-------
- drivers/clk/renesas/rzg2l-cpg.c     | 247 +++++++++++++++++++++++++++-
- drivers/clk/renesas/rzg2l-cpg.h     |  15 +-
- 6 files changed, 517 insertions(+), 266 deletions(-)
-
-diff --git a/drivers/clk/renesas/r9a07g043-cpg.c b/drivers/clk/renesas/r9a07g043-cpg.c
-index fce2eecfa8c0..02dc5cecfd8d 100644
---- a/drivers/clk/renesas/r9a07g043-cpg.c
-+++ b/drivers/clk/renesas/r9a07g043-cpg.c
-@@ -164,143 +164,143 @@ static const struct cpg_core_clk r9a07g043_core_clks[] __initconst = {
- static const struct rzg2l_mod_clk r9a07g043_mod_clks[] = {
- #ifdef CONFIG_ARM64
- 	DEF_MOD("gic",		R9A07G043_GIC600_GICCLK, R9A07G043_CLK_P1,
--				0x514, 0),
-+				0x514, 0, 0),
- 	DEF_MOD("ia55_pclk",	R9A07G043_IA55_PCLK, R9A07G043_CLK_P2,
--				0x518, 0),
-+				0x518, 0, 0),
- 	DEF_MOD("ia55_clk",	R9A07G043_IA55_CLK, R9A07G043_CLK_P1,
--				0x518, 1),
-+				0x518, 1, 0),
- #endif
- #ifdef CONFIG_RISCV
- 	DEF_MOD("iax45_pclk",	R9A07G043_IAX45_PCLK, R9A07G043_CLK_P2,
--				0x518, 0),
-+				0x518, 0, 0),
- 	DEF_MOD("iax45_clk",	R9A07G043_IAX45_CLK, R9A07G043_CLK_P1,
--				0x518, 1),
-+				0x518, 1, 0),
- #endif
- 	DEF_MOD("dmac_aclk",	R9A07G043_DMAC_ACLK, R9A07G043_CLK_P1,
--				0x52c, 0),
-+				0x52c, 0, 0),
- 	DEF_MOD("dmac_pclk",	R9A07G043_DMAC_PCLK, CLK_P1_DIV2,
--				0x52c, 1),
-+				0x52c, 1, 0),
- 	DEF_MOD("ostm0_pclk",	R9A07G043_OSTM0_PCLK, R9A07G043_CLK_P0,
--				0x534, 0),
-+				0x534, 0, 0),
- 	DEF_MOD("ostm1_pclk",	R9A07G043_OSTM1_PCLK, R9A07G043_CLK_P0,
--				0x534, 1),
-+				0x534, 1, 0),
- 	DEF_MOD("ostm2_pclk",	R9A07G043_OSTM2_PCLK, R9A07G043_CLK_P0,
--				0x534, 2),
-+				0x534, 2, 0),
- 	DEF_MOD("mtu_x_mck",	R9A07G043_MTU_X_MCK_MTU3, R9A07G043_CLK_P0,
--				0x538, 0),
-+				0x538, 0, 0),
- 	DEF_MOD("wdt0_pclk",	R9A07G043_WDT0_PCLK, R9A07G043_CLK_P0,
--				0x548, 0),
-+				0x548, 0, 0),
- 	DEF_MOD("wdt0_clk",	R9A07G043_WDT0_CLK, R9A07G043_OSCCLK,
--				0x548, 1),
-+				0x548, 1, 0),
- 	DEF_MOD("spi_clk2",	R9A07G043_SPI_CLK2, R9A07G043_CLK_SPI1,
--				0x550, 0),
-+				0x550, 0, 0),
- 	DEF_MOD("spi_clk",	R9A07G043_SPI_CLK, R9A07G043_CLK_SPI0,
--				0x550, 1),
-+				0x550, 1, 0),
- 	DEF_MOD("sdhi0_imclk",	R9A07G043_SDHI0_IMCLK, CLK_SD0_DIV4,
--				0x554, 0),
-+				0x554, 0, 0),
- 	DEF_MOD("sdhi0_imclk2",	R9A07G043_SDHI0_IMCLK2, CLK_SD0_DIV4,
--				0x554, 1),
-+				0x554, 1, 0),
- 	DEF_MOD("sdhi0_clk_hs",	R9A07G043_SDHI0_CLK_HS, R9A07G043_CLK_SD0,
--				0x554, 2),
-+				0x554, 2, 0),
- 	DEF_MOD("sdhi0_aclk",	R9A07G043_SDHI0_ACLK, R9A07G043_CLK_P1,
--				0x554, 3),
-+				0x554, 3, 0),
- 	DEF_MOD("sdhi1_imclk",	R9A07G043_SDHI1_IMCLK, CLK_SD1_DIV4,
--				0x554, 4),
-+				0x554, 4, 0),
- 	DEF_MOD("sdhi1_imclk2",	R9A07G043_SDHI1_IMCLK2, CLK_SD1_DIV4,
--				0x554, 5),
-+				0x554, 5, 0),
- 	DEF_MOD("sdhi1_clk_hs",	R9A07G043_SDHI1_CLK_HS, R9A07G043_CLK_SD1,
--				0x554, 6),
-+				0x554, 6, 0),
- 	DEF_MOD("sdhi1_aclk",	R9A07G043_SDHI1_ACLK, R9A07G043_CLK_P1,
--				0x554, 7),
-+				0x554, 7, 0),
- #ifdef CONFIG_ARM64
- 	DEF_MOD("cru_sysclk",   R9A07G043_CRU_SYSCLK, CLK_M2_DIV2,
--				0x564, 0),
-+				0x564, 0, 0),
- 	DEF_MOD("cru_vclk",     R9A07G043_CRU_VCLK, R9A07G043_CLK_M2,
--				0x564, 1),
-+				0x564, 1, 0),
- 	DEF_MOD("cru_pclk",     R9A07G043_CRU_PCLK, R9A07G043_CLK_ZT,
--				0x564, 2),
-+				0x564, 2, 0),
- 	DEF_MOD("cru_aclk",     R9A07G043_CRU_ACLK, R9A07G043_CLK_M0,
--				0x564, 3),
-+				0x564, 3, 0),
- 	DEF_COUPLED("lcdc_clk_a", R9A07G043_LCDC_CLK_A, R9A07G043_CLK_M0,
--				0x56c, 0),
-+				0x56c, 0, 0),
- 	DEF_COUPLED("lcdc_clk_p", R9A07G043_LCDC_CLK_P, R9A07G043_CLK_ZT,
--				0x56c, 0),
-+				0x56c, 0, 0),
- 	DEF_MOD("lcdc_clk_d",	R9A07G043_LCDC_CLK_D, R9A07G043_CLK_M3,
--				0x56c, 1),
-+				0x56c, 1, 0),
- #endif
- 	DEF_MOD("ssi0_pclk",	R9A07G043_SSI0_PCLK2, R9A07G043_CLK_P0,
--				0x570, 0),
-+				0x570, 0, 0),
- 	DEF_MOD("ssi0_sfr",	R9A07G043_SSI0_PCLK_SFR, R9A07G043_CLK_P0,
--				0x570, 1),
-+				0x570, 1, 0),
- 	DEF_MOD("ssi1_pclk",	R9A07G043_SSI1_PCLK2, R9A07G043_CLK_P0,
--				0x570, 2),
-+				0x570, 2, 0),
- 	DEF_MOD("ssi1_sfr",	R9A07G043_SSI1_PCLK_SFR, R9A07G043_CLK_P0,
--				0x570, 3),
-+				0x570, 3, 0),
- 	DEF_MOD("ssi2_pclk",	R9A07G043_SSI2_PCLK2, R9A07G043_CLK_P0,
--				0x570, 4),
-+				0x570, 4, 0),
- 	DEF_MOD("ssi2_sfr",	R9A07G043_SSI2_PCLK_SFR, R9A07G043_CLK_P0,
--				0x570, 5),
-+				0x570, 5, 0),
- 	DEF_MOD("ssi3_pclk",	R9A07G043_SSI3_PCLK2, R9A07G043_CLK_P0,
--				0x570, 6),
-+				0x570, 6, 0),
- 	DEF_MOD("ssi3_sfr",	R9A07G043_SSI3_PCLK_SFR, R9A07G043_CLK_P0,
--				0x570, 7),
-+				0x570, 7, 0),
- 	DEF_MOD("usb0_host",	R9A07G043_USB_U2H0_HCLK, R9A07G043_CLK_P1,
--				0x578, 0),
-+				0x578, 0, 0),
- 	DEF_MOD("usb1_host",	R9A07G043_USB_U2H1_HCLK, R9A07G043_CLK_P1,
--				0x578, 1),
-+				0x578, 1, 0),
- 	DEF_MOD("usb0_func",	R9A07G043_USB_U2P_EXR_CPUCLK, R9A07G043_CLK_P1,
--				0x578, 2),
-+				0x578, 2, 0),
- 	DEF_MOD("usb_pclk",	R9A07G043_USB_PCLK, R9A07G043_CLK_P1,
--				0x578, 3),
-+				0x578, 3, 0),
- 	DEF_COUPLED("eth0_axi",	R9A07G043_ETH0_CLK_AXI, R9A07G043_CLK_M0,
--				0x57c, 0),
-+				0x57c, 0, 0),
- 	DEF_COUPLED("eth0_chi",	R9A07G043_ETH0_CLK_CHI, R9A07G043_CLK_ZT,
--				0x57c, 0),
-+				0x57c, 0, 0),
- 	DEF_COUPLED("eth1_axi",	R9A07G043_ETH1_CLK_AXI, R9A07G043_CLK_M0,
--				0x57c, 1),
-+				0x57c, 1, 0),
- 	DEF_COUPLED("eth1_chi",	R9A07G043_ETH1_CLK_CHI, R9A07G043_CLK_ZT,
--				0x57c, 1),
-+				0x57c, 1, 0),
- 	DEF_MOD("i2c0",		R9A07G043_I2C0_PCLK, R9A07G043_CLK_P0,
--				0x580, 0),
-+				0x580, 0, 0),
- 	DEF_MOD("i2c1",		R9A07G043_I2C1_PCLK, R9A07G043_CLK_P0,
--				0x580, 1),
-+				0x580, 1, 0),
- 	DEF_MOD("i2c2",		R9A07G043_I2C2_PCLK, R9A07G043_CLK_P0,
--				0x580, 2),
-+				0x580, 2, 0),
- 	DEF_MOD("i2c3",		R9A07G043_I2C3_PCLK, R9A07G043_CLK_P0,
--				0x580, 3),
-+				0x580, 3, 0),
- 	DEF_MOD("scif0",	R9A07G043_SCIF0_CLK_PCK, R9A07G043_CLK_P0,
--				0x584, 0),
-+				0x584, 0, 0),
- 	DEF_MOD("scif1",	R9A07G043_SCIF1_CLK_PCK, R9A07G043_CLK_P0,
--				0x584, 1),
-+				0x584, 1, 0),
- 	DEF_MOD("scif2",	R9A07G043_SCIF2_CLK_PCK, R9A07G043_CLK_P0,
--				0x584, 2),
-+				0x584, 2, 0),
- 	DEF_MOD("scif3",	R9A07G043_SCIF3_CLK_PCK, R9A07G043_CLK_P0,
--				0x584, 3),
-+				0x584, 3, 0),
- 	DEF_MOD("scif4",	R9A07G043_SCIF4_CLK_PCK, R9A07G043_CLK_P0,
--				0x584, 4),
-+				0x584, 4, 0),
- 	DEF_MOD("sci0",		R9A07G043_SCI0_CLKP, R9A07G043_CLK_P0,
--				0x588, 0),
-+				0x588, 0, 0),
- 	DEF_MOD("sci1",		R9A07G043_SCI1_CLKP, R9A07G043_CLK_P0,
--				0x588, 1),
-+				0x588, 1, 0),
- 	DEF_MOD("rspi0",	R9A07G043_RSPI0_CLKB, R9A07G043_CLK_P0,
--				0x590, 0),
-+				0x590, 0, 0),
- 	DEF_MOD("rspi1",	R9A07G043_RSPI1_CLKB, R9A07G043_CLK_P0,
--				0x590, 1),
-+				0x590, 1, 0),
- 	DEF_MOD("rspi2",	R9A07G043_RSPI2_CLKB, R9A07G043_CLK_P0,
--				0x590, 2),
-+				0x590, 2, 0),
- 	DEF_MOD("canfd",	R9A07G043_CANFD_PCLK, R9A07G043_CLK_P0,
--				0x594, 0),
-+				0x594, 0, 0),
- 	DEF_MOD("gpio",		R9A07G043_GPIO_HCLK, R9A07G043_OSCCLK,
--				0x598, 0),
-+				0x598, 0, 0),
- 	DEF_MOD("adc_adclk",	R9A07G043_ADC_ADCLK, R9A07G043_CLK_TSU,
--				0x5a8, 0),
-+				0x5a8, 0, 0),
- 	DEF_MOD("adc_pclk",	R9A07G043_ADC_PCLK, R9A07G043_CLK_P0,
--				0x5a8, 1),
-+				0x5a8, 1, 0),
- 	DEF_MOD("tsu_pclk",	R9A07G043_TSU_PCLK, R9A07G043_CLK_TSU,
--				0x5ac, 0),
-+				0x5ac, 0, 0),
- #ifdef CONFIG_RISCV
- 	DEF_MOD("nceplic_aclk",	R9A07G043_NCEPLIC_ACLK, R9A07G043_CLK_P1,
--				0x608, 0),
-+				0x608, 0, 0),
- #endif
- };
- 
-diff --git a/drivers/clk/renesas/r9a07g044-cpg.c b/drivers/clk/renesas/r9a07g044-cpg.c
-index 77ca3a789568..c851d4eeebbe 100644
---- a/drivers/clk/renesas/r9a07g044-cpg.c
-+++ b/drivers/clk/renesas/r9a07g044-cpg.c
-@@ -242,176 +242,176 @@ static const struct {
- } mod_clks = {
- 	.common = {
- 		DEF_MOD("gic",		R9A07G044_GIC600_GICCLK, R9A07G044_CLK_P1,
--					0x514, 0),
-+					0x514, 0, 0),
- 		DEF_MOD("ia55_pclk",	R9A07G044_IA55_PCLK, R9A07G044_CLK_P2,
--					0x518, 0),
-+					0x518, 0, 0),
- 		DEF_MOD("ia55_clk",	R9A07G044_IA55_CLK, R9A07G044_CLK_P1,
--					0x518, 1),
-+					0x518, 1, 0),
- 		DEF_MOD("dmac_aclk",	R9A07G044_DMAC_ACLK, R9A07G044_CLK_P1,
--					0x52c, 0),
-+					0x52c, 0, 0),
- 		DEF_MOD("dmac_pclk",	R9A07G044_DMAC_PCLK, CLK_P1_DIV2,
--					0x52c, 1),
-+					0x52c, 1, 0),
- 		DEF_MOD("ostm0_pclk",	R9A07G044_OSTM0_PCLK, R9A07G044_CLK_P0,
--					0x534, 0),
-+					0x534, 0, 0),
- 		DEF_MOD("ostm1_pclk",	R9A07G044_OSTM1_PCLK, R9A07G044_CLK_P0,
--					0x534, 1),
-+					0x534, 1, 0),
- 		DEF_MOD("ostm2_pclk",	R9A07G044_OSTM2_PCLK, R9A07G044_CLK_P0,
--					0x534, 2),
-+					0x534, 2, 0),
- 		DEF_MOD("mtu_x_mck",	R9A07G044_MTU_X_MCK_MTU3, R9A07G044_CLK_P0,
--					0x538, 0),
-+					0x538, 0, 0),
- 		DEF_MOD("gpt_pclk",	R9A07G044_GPT_PCLK, R9A07G044_CLK_P0,
--					0x540, 0),
-+					0x540, 0, 0),
- 		DEF_MOD("poeg_a_clkp",	R9A07G044_POEG_A_CLKP, R9A07G044_CLK_P0,
--					0x544, 0),
-+					0x544, 0, 0),
- 		DEF_MOD("poeg_b_clkp",	R9A07G044_POEG_B_CLKP, R9A07G044_CLK_P0,
--					0x544, 1),
-+					0x544, 1, 0),
- 		DEF_MOD("poeg_c_clkp",	R9A07G044_POEG_C_CLKP, R9A07G044_CLK_P0,
--					0x544, 2),
-+					0x544, 2, 0),
- 		DEF_MOD("poeg_d_clkp",	R9A07G044_POEG_D_CLKP, R9A07G044_CLK_P0,
--					0x544, 3),
-+					0x544, 3, 0),
- 		DEF_MOD("wdt0_pclk",	R9A07G044_WDT0_PCLK, R9A07G044_CLK_P0,
--					0x548, 0),
-+					0x548, 0, 0),
- 		DEF_MOD("wdt0_clk",	R9A07G044_WDT0_CLK, R9A07G044_OSCCLK,
--					0x548, 1),
-+					0x548, 1, 0),
- 		DEF_MOD("wdt1_pclk",	R9A07G044_WDT1_PCLK, R9A07G044_CLK_P0,
--					0x548, 2),
-+					0x548, 2, 0),
- 		DEF_MOD("wdt1_clk",	R9A07G044_WDT1_CLK, R9A07G044_OSCCLK,
--					0x548, 3),
-+					0x548, 3, 0),
- 		DEF_MOD("spi_clk2",	R9A07G044_SPI_CLK2, R9A07G044_CLK_SPI1,
--					0x550, 0),
-+					0x550, 0, 0),
- 		DEF_MOD("spi_clk",	R9A07G044_SPI_CLK, R9A07G044_CLK_SPI0,
--					0x550, 1),
-+					0x550, 1, 0),
- 		DEF_MOD("sdhi0_imclk",	R9A07G044_SDHI0_IMCLK, CLK_SD0_DIV4,
--					0x554, 0),
-+					0x554, 0, 0),
- 		DEF_MOD("sdhi0_imclk2",	R9A07G044_SDHI0_IMCLK2, CLK_SD0_DIV4,
--					0x554, 1),
-+					0x554, 1, 0),
- 		DEF_MOD("sdhi0_clk_hs",	R9A07G044_SDHI0_CLK_HS, R9A07G044_CLK_SD0,
--					0x554, 2),
-+					0x554, 2, 0),
- 		DEF_MOD("sdhi0_aclk",	R9A07G044_SDHI0_ACLK, R9A07G044_CLK_P1,
--					0x554, 3),
-+					0x554, 3, 0),
- 		DEF_MOD("sdhi1_imclk",	R9A07G044_SDHI1_IMCLK, CLK_SD1_DIV4,
--					0x554, 4),
-+					0x554, 4, 0),
- 		DEF_MOD("sdhi1_imclk2",	R9A07G044_SDHI1_IMCLK2, CLK_SD1_DIV4,
--					0x554, 5),
-+					0x554, 5, 0),
- 		DEF_MOD("sdhi1_clk_hs",	R9A07G044_SDHI1_CLK_HS, R9A07G044_CLK_SD1,
--					0x554, 6),
-+					0x554, 6, 0),
- 		DEF_MOD("sdhi1_aclk",	R9A07G044_SDHI1_ACLK, R9A07G044_CLK_P1,
--					0x554, 7),
-+					0x554, 7, 0),
- 		DEF_MOD("gpu_clk",	R9A07G044_GPU_CLK, R9A07G044_CLK_G,
--					0x558, 0),
-+					0x558, 0, 0),
- 		DEF_MOD("gpu_axi_clk",	R9A07G044_GPU_AXI_CLK, R9A07G044_CLK_P1,
--					0x558, 1),
-+					0x558, 1, 0),
- 		DEF_MOD("gpu_ace_clk",	R9A07G044_GPU_ACE_CLK, R9A07G044_CLK_P1,
--					0x558, 2),
-+					0x558, 2, 0),
- 		DEF_MOD("cru_sysclk",   R9A07G044_CRU_SYSCLK, CLK_M2_DIV2,
--					0x564, 0),
-+					0x564, 0, 0),
- 		DEF_MOD("cru_vclk",     R9A07G044_CRU_VCLK, R9A07G044_CLK_M2,
--					0x564, 1),
-+					0x564, 1, 0),
- 		DEF_MOD("cru_pclk",     R9A07G044_CRU_PCLK, R9A07G044_CLK_ZT,
--					0x564, 2),
-+					0x564, 2, 0),
- 		DEF_MOD("cru_aclk",     R9A07G044_CRU_ACLK, R9A07G044_CLK_M0,
--					0x564, 3),
-+					0x564, 3, 0),
- 		DEF_MOD("dsi_pll_clk",	R9A07G044_MIPI_DSI_PLLCLK, R9A07G044_CLK_M1,
--					0x568, 0),
-+					0x568, 0, 0),
- 		DEF_MOD("dsi_sys_clk",	R9A07G044_MIPI_DSI_SYSCLK, CLK_M2_DIV2,
--					0x568, 1),
-+					0x568, 1, 0),
- 		DEF_MOD("dsi_aclk",	R9A07G044_MIPI_DSI_ACLK, R9A07G044_CLK_P1,
--					0x568, 2),
-+					0x568, 2, 0),
- 		DEF_MOD("dsi_pclk",	R9A07G044_MIPI_DSI_PCLK, R9A07G044_CLK_P2,
--					0x568, 3),
-+					0x568, 3, 0),
- 		DEF_MOD("dsi_vclk",	R9A07G044_MIPI_DSI_VCLK, R9A07G044_CLK_M3,
--					0x568, 4),
-+					0x568, 4, 0),
- 		DEF_MOD("dsi_lpclk",	R9A07G044_MIPI_DSI_LPCLK, R9A07G044_CLK_M4,
--					0x568, 5),
-+					0x568, 5, 0),
- 		DEF_COUPLED("lcdc_a",	R9A07G044_LCDC_CLK_A, R9A07G044_CLK_M0,
--					0x56c, 0),
-+					0x56c, 0, 0),
- 		DEF_COUPLED("lcdc_p",	R9A07G044_LCDC_CLK_P, R9A07G044_CLK_ZT,
--					0x56c, 0),
-+					0x56c, 0, 0),
- 		DEF_MOD("lcdc_clk_d",	R9A07G044_LCDC_CLK_D, R9A07G044_CLK_M3,
--					0x56c, 1),
-+					0x56c, 1, 0),
- 		DEF_MOD("ssi0_pclk",	R9A07G044_SSI0_PCLK2, R9A07G044_CLK_P0,
--					0x570, 0),
-+					0x570, 0, 0),
- 		DEF_MOD("ssi0_sfr",	R9A07G044_SSI0_PCLK_SFR, R9A07G044_CLK_P0,
--					0x570, 1),
-+					0x570, 1, 0),
- 		DEF_MOD("ssi1_pclk",	R9A07G044_SSI1_PCLK2, R9A07G044_CLK_P0,
--					0x570, 2),
-+					0x570, 2, 0),
- 		DEF_MOD("ssi1_sfr",	R9A07G044_SSI1_PCLK_SFR, R9A07G044_CLK_P0,
--					0x570, 3),
-+					0x570, 3, 0),
- 		DEF_MOD("ssi2_pclk",	R9A07G044_SSI2_PCLK2, R9A07G044_CLK_P0,
--					0x570, 4),
-+					0x570, 4, 0),
- 		DEF_MOD("ssi2_sfr",	R9A07G044_SSI2_PCLK_SFR, R9A07G044_CLK_P0,
--					0x570, 5),
-+					0x570, 5, 0),
- 		DEF_MOD("ssi3_pclk",	R9A07G044_SSI3_PCLK2, R9A07G044_CLK_P0,
--					0x570, 6),
-+					0x570, 6, 0),
- 		DEF_MOD("ssi3_sfr",	R9A07G044_SSI3_PCLK_SFR, R9A07G044_CLK_P0,
--					0x570, 7),
-+					0x570, 7, 0),
- 		DEF_MOD("usb0_host",	R9A07G044_USB_U2H0_HCLK, R9A07G044_CLK_P1,
--					0x578, 0),
-+					0x578, 0, 0),
- 		DEF_MOD("usb1_host",	R9A07G044_USB_U2H1_HCLK, R9A07G044_CLK_P1,
--					0x578, 1),
-+					0x578, 1, 0),
- 		DEF_MOD("usb0_func",	R9A07G044_USB_U2P_EXR_CPUCLK, R9A07G044_CLK_P1,
--					0x578, 2),
-+					0x578, 2, 0),
- 		DEF_MOD("usb_pclk",	R9A07G044_USB_PCLK, R9A07G044_CLK_P1,
--					0x578, 3),
-+					0x578, 3, 0),
- 		DEF_COUPLED("eth0_axi",	R9A07G044_ETH0_CLK_AXI, R9A07G044_CLK_M0,
--					0x57c, 0),
-+					0x57c, 0, 0),
- 		DEF_COUPLED("eth0_chi",	R9A07G044_ETH0_CLK_CHI, R9A07G044_CLK_ZT,
--					0x57c, 0),
-+					0x57c, 0, 0),
- 		DEF_COUPLED("eth1_axi",	R9A07G044_ETH1_CLK_AXI, R9A07G044_CLK_M0,
--					0x57c, 1),
-+					0x57c, 1, 0),
- 		DEF_COUPLED("eth1_chi",	R9A07G044_ETH1_CLK_CHI, R9A07G044_CLK_ZT,
--					0x57c, 1),
-+					0x57c, 1, 0),
- 		DEF_MOD("i2c0",		R9A07G044_I2C0_PCLK, R9A07G044_CLK_P0,
--					0x580, 0),
-+					0x580, 0, 0),
- 		DEF_MOD("i2c1",		R9A07G044_I2C1_PCLK, R9A07G044_CLK_P0,
--					0x580, 1),
-+					0x580, 1, 0),
- 		DEF_MOD("i2c2",		R9A07G044_I2C2_PCLK, R9A07G044_CLK_P0,
--					0x580, 2),
-+					0x580, 2, 0),
- 		DEF_MOD("i2c3",		R9A07G044_I2C3_PCLK, R9A07G044_CLK_P0,
--					0x580, 3),
-+					0x580, 3, 0),
- 		DEF_MOD("scif0",	R9A07G044_SCIF0_CLK_PCK, R9A07G044_CLK_P0,
--					0x584, 0),
-+					0x584, 0, 0),
- 		DEF_MOD("scif1",	R9A07G044_SCIF1_CLK_PCK, R9A07G044_CLK_P0,
--					0x584, 1),
-+					0x584, 1, 0),
- 		DEF_MOD("scif2",	R9A07G044_SCIF2_CLK_PCK, R9A07G044_CLK_P0,
--					0x584, 2),
-+					0x584, 2, 0),
- 		DEF_MOD("scif3",	R9A07G044_SCIF3_CLK_PCK, R9A07G044_CLK_P0,
--					0x584, 3),
-+					0x584, 3, 0),
- 		DEF_MOD("scif4",	R9A07G044_SCIF4_CLK_PCK, R9A07G044_CLK_P0,
--					0x584, 4),
-+					0x584, 4, 0),
- 		DEF_MOD("sci0",		R9A07G044_SCI0_CLKP, R9A07G044_CLK_P0,
--					0x588, 0),
-+					0x588, 0, 0),
- 		DEF_MOD("sci1",		R9A07G044_SCI1_CLKP, R9A07G044_CLK_P0,
--					0x588, 1),
-+					0x588, 1, 0),
- 		DEF_MOD("rspi0",	R9A07G044_RSPI0_CLKB, R9A07G044_CLK_P0,
--					0x590, 0),
-+					0x590, 0, 0),
- 		DEF_MOD("rspi1",	R9A07G044_RSPI1_CLKB, R9A07G044_CLK_P0,
--					0x590, 1),
-+					0x590, 1, 0),
- 		DEF_MOD("rspi2",	R9A07G044_RSPI2_CLKB, R9A07G044_CLK_P0,
--					0x590, 2),
-+					0x590, 2, 0),
- 		DEF_MOD("canfd",	R9A07G044_CANFD_PCLK, R9A07G044_CLK_P0,
--					0x594, 0),
-+					0x594, 0, 0),
- 		DEF_MOD("gpio",		R9A07G044_GPIO_HCLK, R9A07G044_OSCCLK,
--					0x598, 0),
-+					0x598, 0, 0),
- 		DEF_MOD("adc_adclk",	R9A07G044_ADC_ADCLK, R9A07G044_CLK_TSU,
--					0x5a8, 0),
-+					0x5a8, 0, 0),
- 		DEF_MOD("adc_pclk",	R9A07G044_ADC_PCLK, R9A07G044_CLK_P0,
--					0x5a8, 1),
-+					0x5a8, 1, 0),
- 		DEF_MOD("tsu_pclk",	R9A07G044_TSU_PCLK, R9A07G044_CLK_TSU,
--					0x5ac, 0),
-+					0x5ac, 0, 0),
- 	},
- #ifdef CONFIG_CLK_R9A07G054
- 	.drp = {
- 		DEF_MOD("stpai_initclk", R9A07G054_STPAI_INITCLK, R9A07G044_OSCCLK,
--					0x5e8, 0),
-+					0x5e8, 0, 0),
- 		DEF_MOD("stpai_aclk",	R9A07G054_STPAI_ACLK, R9A07G044_CLK_P1,
--					0x5e8, 1),
-+					0x5e8, 1, 0),
- 		DEF_MOD("stpai_mclk",	R9A07G054_STPAI_MCLK, R9A07G054_CLK_DRP_M,
--					0x5e8, 2),
-+					0x5e8, 2, 0),
- 		DEF_MOD("stpai_dclkin",	R9A07G054_STPAI_DCLKIN, R9A07G054_CLK_DRP_D,
--					0x5e8, 3),
-+					0x5e8, 3, 0),
- 		DEF_MOD("stpai_aclk_drp", R9A07G054_STPAI_ACLK_DRP, R9A07G054_CLK_DRP_A,
--					0x5e8, 4),
-+					0x5e8, 4, 0),
- 	},
- #endif
- };
-diff --git a/drivers/clk/renesas/r9a08g045-cpg.c b/drivers/clk/renesas/r9a08g045-cpg.c
-index 4035f3443598..ddc5d6cd572b 100644
---- a/drivers/clk/renesas/r9a08g045-cpg.c
-+++ b/drivers/clk/renesas/r9a08g045-cpg.c
-@@ -192,58 +192,59 @@ static const struct cpg_core_clk r9a08g045_core_clks[] __initconst = {
- };
- 
- static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
--	DEF_MOD("gic_gicclk",		R9A08G045_GIC600_GICCLK, R9A08G045_CLK_P1, 0x514, 0),
--	DEF_MOD("ia55_pclk",		R9A08G045_IA55_PCLK, R9A08G045_CLK_P2, 0x518, 0),
--	DEF_MOD("ia55_clk",		R9A08G045_IA55_CLK, R9A08G045_CLK_P1, 0x518, 1),
--	DEF_MOD("dmac_aclk",		R9A08G045_DMAC_ACLK, R9A08G045_CLK_P3, 0x52c, 0),
--	DEF_MOD("dmac_pclk",		R9A08G045_DMAC_PCLK, CLK_P3_DIV2, 0x52c, 1),
--	DEF_MOD("wdt0_pclk",		R9A08G045_WDT0_PCLK, R9A08G045_CLK_P0, 0x548, 0),
--	DEF_MOD("wdt0_clk",		R9A08G045_WDT0_CLK, R9A08G045_OSCCLK, 0x548, 1),
--	DEF_MOD("sdhi0_imclk",		R9A08G045_SDHI0_IMCLK, CLK_SD0_DIV4, 0x554, 0),
--	DEF_MOD("sdhi0_imclk2",		R9A08G045_SDHI0_IMCLK2, CLK_SD0_DIV4, 0x554, 1),
--	DEF_MOD("sdhi0_clk_hs",		R9A08G045_SDHI0_CLK_HS, R9A08G045_CLK_SD0, 0x554, 2),
--	DEF_MOD("sdhi0_aclk",		R9A08G045_SDHI0_ACLK, R9A08G045_CLK_P1, 0x554, 3),
--	DEF_MOD("sdhi1_imclk",		R9A08G045_SDHI1_IMCLK, CLK_SD1_DIV4, 0x554, 4),
--	DEF_MOD("sdhi1_imclk2",		R9A08G045_SDHI1_IMCLK2, CLK_SD1_DIV4, 0x554, 5),
--	DEF_MOD("sdhi1_clk_hs",		R9A08G045_SDHI1_CLK_HS, R9A08G045_CLK_SD1, 0x554, 6),
--	DEF_MOD("sdhi1_aclk",		R9A08G045_SDHI1_ACLK, R9A08G045_CLK_P1, 0x554, 7),
--	DEF_MOD("sdhi2_imclk",		R9A08G045_SDHI2_IMCLK, CLK_SD2_DIV4, 0x554, 8),
--	DEF_MOD("sdhi2_imclk2",		R9A08G045_SDHI2_IMCLK2, CLK_SD2_DIV4, 0x554, 9),
--	DEF_MOD("sdhi2_clk_hs",		R9A08G045_SDHI2_CLK_HS, R9A08G045_CLK_SD2, 0x554, 10),
--	DEF_MOD("sdhi2_aclk",		R9A08G045_SDHI2_ACLK, R9A08G045_CLK_P1, 0x554, 11),
--	DEF_MOD("ssi0_pclk2",		R9A08G045_SSI0_PCLK2, R9A08G045_CLK_P0, 0x570, 0),
--	DEF_MOD("ssi0_sfr",		R9A08G045_SSI0_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 1),
--	DEF_MOD("ssi1_pclk2",		R9A08G045_SSI1_PCLK2, R9A08G045_CLK_P0, 0x570, 2),
--	DEF_MOD("ssi1_sfr",		R9A08G045_SSI1_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 3),
--	DEF_MOD("ssi2_pclk2",		R9A08G045_SSI2_PCLK2, R9A08G045_CLK_P0, 0x570, 4),
--	DEF_MOD("ssi2_sfr",		R9A08G045_SSI2_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 5),
--	DEF_MOD("ssi3_pclk2",		R9A08G045_SSI3_PCLK2, R9A08G045_CLK_P0, 0x570, 6),
--	DEF_MOD("ssi3_sfr",		R9A08G045_SSI3_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 7),
--	DEF_MOD("usb0_host",		R9A08G045_USB_U2H0_HCLK, R9A08G045_CLK_P1, 0x578, 0),
--	DEF_MOD("usb1_host",		R9A08G045_USB_U2H1_HCLK, R9A08G045_CLK_P1, 0x578, 1),
--	DEF_MOD("usb0_func",		R9A08G045_USB_U2P_EXR_CPUCLK, R9A08G045_CLK_P1, 0x578, 2),
--	DEF_MOD("usb_pclk",		R9A08G045_USB_PCLK, R9A08G045_CLK_P1, 0x578, 3),
--	DEF_COUPLED("eth0_axi",		R9A08G045_ETH0_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 0),
--	DEF_COUPLED("eth0_chi",		R9A08G045_ETH0_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 0),
--	DEF_MOD("eth0_refclk",		R9A08G045_ETH0_REFCLK, R9A08G045_CLK_HP, 0x57c, 8),
--	DEF_COUPLED("eth1_axi",		R9A08G045_ETH1_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 1),
--	DEF_COUPLED("eth1_chi",		R9A08G045_ETH1_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 1),
--	DEF_MOD("eth1_refclk",		R9A08G045_ETH1_REFCLK, R9A08G045_CLK_HP, 0x57c, 9),
--	DEF_MOD("i2c0_pclk",		R9A08G045_I2C0_PCLK, R9A08G045_CLK_P0, 0x580, 0),
--	DEF_MOD("i2c1_pclk",		R9A08G045_I2C1_PCLK, R9A08G045_CLK_P0, 0x580, 1),
--	DEF_MOD("i2c2_pclk",		R9A08G045_I2C2_PCLK, R9A08G045_CLK_P0, 0x580, 2),
--	DEF_MOD("i2c3_pclk",		R9A08G045_I2C3_PCLK, R9A08G045_CLK_P0, 0x580, 3),
--	DEF_MOD("scif0_clk_pck",	R9A08G045_SCIF0_CLK_PCK, R9A08G045_CLK_P0, 0x584, 0),
--	DEF_MOD("scif1_clk_pck",	R9A08G045_SCIF1_CLK_PCK, R9A08G045_CLK_P0, 0x584, 1),
--	DEF_MOD("scif2_clk_pck",	R9A08G045_SCIF2_CLK_PCK, R9A08G045_CLK_P0, 0x584, 2),
--	DEF_MOD("scif3_clk_pck",	R9A08G045_SCIF3_CLK_PCK, R9A08G045_CLK_P0, 0x584, 3),
--	DEF_MOD("scif4_clk_pck",	R9A08G045_SCIF4_CLK_PCK, R9A08G045_CLK_P0, 0x584, 4),
--	DEF_MOD("scif5_clk_pck",	R9A08G045_SCIF5_CLK_PCK, R9A08G045_CLK_P0, 0x584, 5),
--	DEF_MOD("gpio_hclk",		R9A08G045_GPIO_HCLK, R9A08G045_OSCCLK, 0x598, 0),
--	DEF_MOD("adc_adclk",		R9A08G045_ADC_ADCLK, R9A08G045_CLK_TSU, 0x5a8, 0),
--	DEF_MOD("adc_pclk",		R9A08G045_ADC_PCLK, R9A08G045_CLK_TSU, 0x5a8, 1),
--	DEF_MOD("tsu_pclk",		R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0),
--	DEF_MOD("vbat_bclk",		R9A08G045_VBAT_BCLK, R9A08G045_OSCCLK, 0x614, 0),
-+	DEF_MOD("gic_gicclk",		R9A08G045_GIC600_GICCLK, R9A08G045_CLK_P1, 0x514, 0, 0),
-+	DEF_MOD("ia55_pclk",		R9A08G045_IA55_PCLK, R9A08G045_CLK_P2, 0x518, 0, 0),
-+	DEF_MOD("ia55_clk",		R9A08G045_IA55_CLK, R9A08G045_CLK_P1, 0x518, 1, 0),
-+	DEF_MOD("dmac_aclk",		R9A08G045_DMAC_ACLK, R9A08G045_CLK_P3, 0x52c, 0, 0),
-+	DEF_MOD("dmac_pclk",		R9A08G045_DMAC_PCLK, CLK_P3_DIV2, 0x52c, 1, 0),
-+	DEF_MOD("wdt0_pclk",		R9A08G045_WDT0_PCLK, R9A08G045_CLK_P0, 0x548, 0, 0),
-+	DEF_MOD("wdt0_clk",		R9A08G045_WDT0_CLK, R9A08G045_OSCCLK, 0x548, 1, 0),
-+	DEF_MOD("sdhi0_imclk",		R9A08G045_SDHI0_IMCLK, CLK_SD0_DIV4, 0x554, 0, 0),
-+	DEF_MOD("sdhi0_imclk2",		R9A08G045_SDHI0_IMCLK2, CLK_SD0_DIV4, 0x554, 1, 0),
-+	DEF_MOD("sdhi0_clk_hs",		R9A08G045_SDHI0_CLK_HS, R9A08G045_CLK_SD0, 0x554, 2, 0),
-+	DEF_MOD("sdhi0_aclk",		R9A08G045_SDHI0_ACLK, R9A08G045_CLK_P1, 0x554, 3, 0),
-+	DEF_MOD("sdhi1_imclk",		R9A08G045_SDHI1_IMCLK, CLK_SD1_DIV4, 0x554, 4, 0),
-+	DEF_MOD("sdhi1_imclk2",		R9A08G045_SDHI1_IMCLK2, CLK_SD1_DIV4, 0x554, 5, 0),
-+	DEF_MOD("sdhi1_clk_hs",		R9A08G045_SDHI1_CLK_HS, R9A08G045_CLK_SD1, 0x554, 6, 0),
-+	DEF_MOD("sdhi1_aclk",		R9A08G045_SDHI1_ACLK, R9A08G045_CLK_P1, 0x554, 7, 0),
-+	DEF_MOD("sdhi2_imclk",		R9A08G045_SDHI2_IMCLK, CLK_SD2_DIV4, 0x554, 8, 0),
-+	DEF_MOD("sdhi2_imclk2",		R9A08G045_SDHI2_IMCLK2, CLK_SD2_DIV4, 0x554, 9, 0),
-+	DEF_MOD("sdhi2_clk_hs",		R9A08G045_SDHI2_CLK_HS, R9A08G045_CLK_SD2, 0x554, 10, 0),
-+	DEF_MOD("sdhi2_aclk",		R9A08G045_SDHI2_ACLK, R9A08G045_CLK_P1, 0x554, 11, 0),
-+	DEF_MOD("ssi0_pclk2",		R9A08G045_SSI0_PCLK2, R9A08G045_CLK_P0, 0x570, 0, 0),
-+	DEF_MOD("ssi0_sfr",		R9A08G045_SSI0_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 1, 0),
-+	DEF_MOD("ssi1_pclk2",		R9A08G045_SSI1_PCLK2, R9A08G045_CLK_P0, 0x570, 2, 0),
-+	DEF_MOD("ssi1_sfr",		R9A08G045_SSI1_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 3, 0),
-+	DEF_MOD("ssi2_pclk2",		R9A08G045_SSI2_PCLK2, R9A08G045_CLK_P0, 0x570, 4, 0),
-+	DEF_MOD("ssi2_sfr",		R9A08G045_SSI2_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 5, 0),
-+	DEF_MOD("ssi3_pclk2",		R9A08G045_SSI3_PCLK2, R9A08G045_CLK_P0, 0x570, 6, 0),
-+	DEF_MOD("ssi3_sfr",		R9A08G045_SSI3_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 7, 0),
-+	DEF_MOD("usb0_host",		R9A08G045_USB_U2H0_HCLK, R9A08G045_CLK_P1, 0x578, 0, 0),
-+	DEF_MOD("usb1_host",		R9A08G045_USB_U2H1_HCLK, R9A08G045_CLK_P1, 0x578, 1, 0),
-+	DEF_MOD("usb0_func",		R9A08G045_USB_U2P_EXR_CPUCLK, R9A08G045_CLK_P1, 0x578, 2,
-+					0),
-+	DEF_MOD("usb_pclk",		R9A08G045_USB_PCLK, R9A08G045_CLK_P1, 0x578, 3, 0),
-+	DEF_COUPLED("eth0_axi",		R9A08G045_ETH0_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 0, 0),
-+	DEF_COUPLED("eth0_chi",		R9A08G045_ETH0_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 0, 0),
-+	DEF_MOD("eth0_refclk",		R9A08G045_ETH0_REFCLK, R9A08G045_CLK_HP, 0x57c, 8, 0),
-+	DEF_COUPLED("eth1_axi",		R9A08G045_ETH1_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 1, 0),
-+	DEF_COUPLED("eth1_chi",		R9A08G045_ETH1_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 1, 0),
-+	DEF_MOD("eth1_refclk",		R9A08G045_ETH1_REFCLK, R9A08G045_CLK_HP, 0x57c, 9, 0),
-+	DEF_MOD("i2c0_pclk",		R9A08G045_I2C0_PCLK, R9A08G045_CLK_P0, 0x580, 0, 0),
-+	DEF_MOD("i2c1_pclk",		R9A08G045_I2C1_PCLK, R9A08G045_CLK_P0, 0x580, 1, 0),
-+	DEF_MOD("i2c2_pclk",		R9A08G045_I2C2_PCLK, R9A08G045_CLK_P0, 0x580, 2, 0),
-+	DEF_MOD("i2c3_pclk",		R9A08G045_I2C3_PCLK, R9A08G045_CLK_P0, 0x580, 3, 0),
-+	DEF_MOD("scif0_clk_pck",	R9A08G045_SCIF0_CLK_PCK, R9A08G045_CLK_P0, 0x584, 0, 0),
-+	DEF_MOD("scif1_clk_pck",	R9A08G045_SCIF1_CLK_PCK, R9A08G045_CLK_P0, 0x584, 1, 0),
-+	DEF_MOD("scif2_clk_pck",	R9A08G045_SCIF2_CLK_PCK, R9A08G045_CLK_P0, 0x584, 2, 0),
-+	DEF_MOD("scif3_clk_pck",	R9A08G045_SCIF3_CLK_PCK, R9A08G045_CLK_P0, 0x584, 3, 0),
-+	DEF_MOD("scif4_clk_pck",	R9A08G045_SCIF4_CLK_PCK, R9A08G045_CLK_P0, 0x584, 4, 0),
-+	DEF_MOD("scif5_clk_pck",	R9A08G045_SCIF5_CLK_PCK, R9A08G045_CLK_P0, 0x584, 5, 0),
-+	DEF_MOD("gpio_hclk",		R9A08G045_GPIO_HCLK, R9A08G045_OSCCLK, 0x598, 0, 0),
-+	DEF_MOD("adc_adclk",		R9A08G045_ADC_ADCLK, R9A08G045_CLK_TSU, 0x5a8, 0, 0),
-+	DEF_MOD("adc_pclk",		R9A08G045_ADC_PCLK, R9A08G045_CLK_TSU, 0x5a8, 1, 0),
-+	DEF_MOD("tsu_pclk",		R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0, 0),
-+	DEF_MOD("vbat_bclk",		R9A08G045_VBAT_BCLK, R9A08G045_OSCCLK, 0x614, 0, 0),
- };
- 
- static const struct rzg2l_reset r9a08g045_resets[] = {
-diff --git a/drivers/clk/renesas/r9a09g011-cpg.c b/drivers/clk/renesas/r9a09g011-cpg.c
-index 22272279b104..ba25429c244d 100644
---- a/drivers/clk/renesas/r9a09g011-cpg.c
-+++ b/drivers/clk/renesas/r9a09g011-cpg.c
-@@ -151,64 +151,64 @@ static const struct cpg_core_clk r9a09g011_core_clks[] __initconst = {
- };
- 
- static const struct rzg2l_mod_clk r9a09g011_mod_clks[] __initconst = {
--	DEF_MOD("pfc",		R9A09G011_PFC_PCLK,	 CLK_MAIN,     0x400, 2),
--	DEF_MOD("gic",		R9A09G011_GIC_CLK,	 CLK_SEL_B_D2, 0x400, 5),
--	DEF_MOD("sdi0_aclk",	R9A09G011_SDI0_ACLK,	 CLK_SEL_D,    0x408, 0),
--	DEF_MOD("sdi0_imclk",	R9A09G011_SDI0_IMCLK,	 CLK_SEL_SDI,  0x408, 1),
--	DEF_MOD("sdi0_imclk2",	R9A09G011_SDI0_IMCLK2,	 CLK_SEL_SDI,  0x408, 2),
--	DEF_MOD("sdi0_clk_hs",	R9A09G011_SDI0_CLK_HS,	 CLK_PLL2_800, 0x408, 3),
--	DEF_MOD("sdi1_aclk",	R9A09G011_SDI1_ACLK,	 CLK_SEL_D,    0x408, 4),
--	DEF_MOD("sdi1_imclk",	R9A09G011_SDI1_IMCLK,	 CLK_SEL_SDI,  0x408, 5),
--	DEF_MOD("sdi1_imclk2",	R9A09G011_SDI1_IMCLK2,	 CLK_SEL_SDI,  0x408, 6),
--	DEF_MOD("sdi1_clk_hs",	R9A09G011_SDI1_CLK_HS,	 CLK_PLL2_800, 0x408, 7),
--	DEF_MOD("emm_aclk",	R9A09G011_EMM_ACLK,	 CLK_SEL_D,    0x408, 8),
--	DEF_MOD("emm_imclk",	R9A09G011_EMM_IMCLK,	 CLK_SEL_SDI,  0x408, 9),
--	DEF_MOD("emm_imclk2",	R9A09G011_EMM_IMCLK2,	 CLK_SEL_SDI,  0x408, 10),
--	DEF_MOD("emm_clk_hs",	R9A09G011_EMM_CLK_HS,	 CLK_PLL2_800, 0x408, 11),
--	DEF_COUPLED("eth_axi",	R9A09G011_ETH0_CLK_AXI,	 CLK_PLL2_200, 0x40c, 8),
--	DEF_COUPLED("eth_chi",	R9A09G011_ETH0_CLK_CHI,	 CLK_PLL2_100, 0x40c, 8),
--	DEF_MOD("eth_clk_gptp",	R9A09G011_ETH0_GPTP_EXT, CLK_PLL2_100, 0x40c, 9),
--	DEF_MOD("usb_aclk_h",	R9A09G011_USB_ACLK_H,	 CLK_SEL_D,    0x40c, 4),
--	DEF_MOD("usb_aclk_p",	R9A09G011_USB_ACLK_P,	 CLK_SEL_D,    0x40c, 5),
--	DEF_MOD("usb_pclk",	R9A09G011_USB_PCLK,	 CLK_SEL_E,    0x40c, 6),
--	DEF_MOD("syc_cnt_clk",	R9A09G011_SYC_CNT_CLK,	 CLK_MAIN_24,  0x41c, 12),
--	DEF_MOD("iic_pclk0",	R9A09G011_IIC_PCLK0,	 CLK_SEL_E,    0x420, 12),
--	DEF_MOD("cperi_grpb",	R9A09G011_CPERI_GRPB_PCLK, CLK_SEL_E,  0x424, 0),
--	DEF_MOD("tim_clk_8",	R9A09G011_TIM8_CLK,	 CLK_MAIN_2,   0x424, 4),
--	DEF_MOD("tim_clk_9",	R9A09G011_TIM9_CLK,	 CLK_MAIN_2,   0x424, 5),
--	DEF_MOD("tim_clk_10",	R9A09G011_TIM10_CLK,	 CLK_MAIN_2,   0x424, 6),
--	DEF_MOD("tim_clk_11",	R9A09G011_TIM11_CLK,	 CLK_MAIN_2,   0x424, 7),
--	DEF_MOD("tim_clk_12",	R9A09G011_TIM12_CLK,	 CLK_MAIN_2,   0x424, 8),
--	DEF_MOD("tim_clk_13",	R9A09G011_TIM13_CLK,	 CLK_MAIN_2,   0x424, 9),
--	DEF_MOD("tim_clk_14",	R9A09G011_TIM14_CLK,	 CLK_MAIN_2,   0x424, 10),
--	DEF_MOD("tim_clk_15",	R9A09G011_TIM15_CLK,	 CLK_MAIN_2,   0x424, 11),
--	DEF_MOD("iic_pclk1",	R9A09G011_IIC_PCLK1,	 CLK_SEL_E,    0x424, 12),
--	DEF_MOD("cperi_grpc",	R9A09G011_CPERI_GRPC_PCLK, CLK_SEL_E,  0x428, 0),
--	DEF_MOD("tim_clk_16",	R9A09G011_TIM16_CLK,	 CLK_MAIN_2,   0x428, 4),
--	DEF_MOD("tim_clk_17",	R9A09G011_TIM17_CLK,	 CLK_MAIN_2,   0x428, 5),
--	DEF_MOD("tim_clk_18",	R9A09G011_TIM18_CLK,	 CLK_MAIN_2,   0x428, 6),
--	DEF_MOD("tim_clk_19",	R9A09G011_TIM19_CLK,	 CLK_MAIN_2,   0x428, 7),
--	DEF_MOD("tim_clk_20",	R9A09G011_TIM20_CLK,	 CLK_MAIN_2,   0x428, 8),
--	DEF_MOD("tim_clk_21",	R9A09G011_TIM21_CLK,	 CLK_MAIN_2,   0x428, 9),
--	DEF_MOD("tim_clk_22",	R9A09G011_TIM22_CLK,	 CLK_MAIN_2,   0x428, 10),
--	DEF_MOD("tim_clk_23",	R9A09G011_TIM23_CLK,	 CLK_MAIN_2,   0x428, 11),
--	DEF_MOD("wdt0_pclk",	R9A09G011_WDT0_PCLK,	 CLK_SEL_E,    0x428, 12),
--	DEF_MOD("wdt0_clk",	R9A09G011_WDT0_CLK,	 CLK_MAIN,     0x428, 13),
--	DEF_MOD("cperi_grpf",	R9A09G011_CPERI_GRPF_PCLK, CLK_SEL_E,  0x434, 0),
--	DEF_MOD("pwm8_clk",	R9A09G011_PWM8_CLK,	 CLK_MAIN,     0x434, 4),
--	DEF_MOD("pwm9_clk",	R9A09G011_PWM9_CLK,	 CLK_MAIN,     0x434, 5),
--	DEF_MOD("pwm10_clk",	R9A09G011_PWM10_CLK,	 CLK_MAIN,     0x434, 6),
--	DEF_MOD("pwm11_clk",	R9A09G011_PWM11_CLK,	 CLK_MAIN,     0x434, 7),
--	DEF_MOD("pwm12_clk",	R9A09G011_PWM12_CLK,	 CLK_MAIN,     0x434, 8),
--	DEF_MOD("pwm13_clk",	R9A09G011_PWM13_CLK,	 CLK_MAIN,     0x434, 9),
--	DEF_MOD("pwm14_clk",	R9A09G011_PWM14_CLK,	 CLK_MAIN,     0x434, 10),
--	DEF_MOD("cperi_grpg",	R9A09G011_CPERI_GRPG_PCLK, CLK_SEL_E,  0x438, 0),
--	DEF_MOD("cperi_grph",	R9A09G011_CPERI_GRPH_PCLK, CLK_SEL_E,  0x438, 1),
--	DEF_MOD("urt_pclk",	R9A09G011_URT_PCLK,	 CLK_SEL_E,    0x438, 4),
--	DEF_MOD("urt0_clk",	R9A09G011_URT0_CLK,	 CLK_SEL_W0,   0x438, 5),
--	DEF_MOD("csi0_clk",	R9A09G011_CSI0_CLK,	 CLK_SEL_CSI0, 0x438, 8),
--	DEF_MOD("csi4_clk",	R9A09G011_CSI4_CLK,	 CLK_SEL_CSI4, 0x438, 12),
--	DEF_MOD("ca53",		R9A09G011_CA53_CLK,	 CLK_DIV_A,    0x448, 0),
-+	DEF_MOD("pfc",		R9A09G011_PFC_PCLK,	 CLK_MAIN,     0x400, 2, 0),
-+	DEF_MOD("gic",		R9A09G011_GIC_CLK,	 CLK_SEL_B_D2, 0x400, 5, 0),
-+	DEF_MOD("sdi0_aclk",	R9A09G011_SDI0_ACLK,	 CLK_SEL_D,    0x408, 0, 0),
-+	DEF_MOD("sdi0_imclk",	R9A09G011_SDI0_IMCLK,	 CLK_SEL_SDI,  0x408, 1, 0),
-+	DEF_MOD("sdi0_imclk2",	R9A09G011_SDI0_IMCLK2,	 CLK_SEL_SDI,  0x408, 2, 0),
-+	DEF_MOD("sdi0_clk_hs",	R9A09G011_SDI0_CLK_HS,	 CLK_PLL2_800, 0x408, 3, 0),
-+	DEF_MOD("sdi1_aclk",	R9A09G011_SDI1_ACLK,	 CLK_SEL_D,    0x408, 4, 0),
-+	DEF_MOD("sdi1_imclk",	R9A09G011_SDI1_IMCLK,	 CLK_SEL_SDI,  0x408, 5, 0),
-+	DEF_MOD("sdi1_imclk2",	R9A09G011_SDI1_IMCLK2,	 CLK_SEL_SDI,  0x408, 6, 0),
-+	DEF_MOD("sdi1_clk_hs",	R9A09G011_SDI1_CLK_HS,	 CLK_PLL2_800, 0x408, 7, 0),
-+	DEF_MOD("emm_aclk",	R9A09G011_EMM_ACLK,	 CLK_SEL_D,    0x408, 8, 0),
-+	DEF_MOD("emm_imclk",	R9A09G011_EMM_IMCLK,	 CLK_SEL_SDI,  0x408, 9, 0),
-+	DEF_MOD("emm_imclk2",	R9A09G011_EMM_IMCLK2,	 CLK_SEL_SDI,  0x408, 10, 0),
-+	DEF_MOD("emm_clk_hs",	R9A09G011_EMM_CLK_HS,	 CLK_PLL2_800, 0x408, 11, 0),
-+	DEF_COUPLED("eth_axi",	R9A09G011_ETH0_CLK_AXI,	 CLK_PLL2_200, 0x40c, 8, 0),
-+	DEF_COUPLED("eth_chi",	R9A09G011_ETH0_CLK_CHI,	 CLK_PLL2_100, 0x40c, 8, 0),
-+	DEF_MOD("eth_clk_gptp",	R9A09G011_ETH0_GPTP_EXT, CLK_PLL2_100, 0x40c, 9, 0),
-+	DEF_MOD("usb_aclk_h",	R9A09G011_USB_ACLK_H,	 CLK_SEL_D,    0x40c, 4, 0),
-+	DEF_MOD("usb_aclk_p",	R9A09G011_USB_ACLK_P,	 CLK_SEL_D,    0x40c, 5, 0),
-+	DEF_MOD("usb_pclk",	R9A09G011_USB_PCLK,	 CLK_SEL_E,    0x40c, 6, 0),
-+	DEF_MOD("syc_cnt_clk",	R9A09G011_SYC_CNT_CLK,	 CLK_MAIN_24,  0x41c, 12, 0),
-+	DEF_MOD("iic_pclk0",	R9A09G011_IIC_PCLK0,	 CLK_SEL_E,    0x420, 12, 0),
-+	DEF_MOD("cperi_grpb",	R9A09G011_CPERI_GRPB_PCLK, CLK_SEL_E,  0x424, 0, 0),
-+	DEF_MOD("tim_clk_8",	R9A09G011_TIM8_CLK,	 CLK_MAIN_2,   0x424, 4, 0),
-+	DEF_MOD("tim_clk_9",	R9A09G011_TIM9_CLK,	 CLK_MAIN_2,   0x424, 5, 0),
-+	DEF_MOD("tim_clk_10",	R9A09G011_TIM10_CLK,	 CLK_MAIN_2,   0x424, 6, 0),
-+	DEF_MOD("tim_clk_11",	R9A09G011_TIM11_CLK,	 CLK_MAIN_2,   0x424, 7, 0),
-+	DEF_MOD("tim_clk_12",	R9A09G011_TIM12_CLK,	 CLK_MAIN_2,   0x424, 8, 0),
-+	DEF_MOD("tim_clk_13",	R9A09G011_TIM13_CLK,	 CLK_MAIN_2,   0x424, 9, 0),
-+	DEF_MOD("tim_clk_14",	R9A09G011_TIM14_CLK,	 CLK_MAIN_2,   0x424, 10, 0),
-+	DEF_MOD("tim_clk_15",	R9A09G011_TIM15_CLK,	 CLK_MAIN_2,   0x424, 11, 0),
-+	DEF_MOD("iic_pclk1",	R9A09G011_IIC_PCLK1,	 CLK_SEL_E,    0x424, 12, 0),
-+	DEF_MOD("cperi_grpc",	R9A09G011_CPERI_GRPC_PCLK, CLK_SEL_E,  0x428, 0, 0),
-+	DEF_MOD("tim_clk_16",	R9A09G011_TIM16_CLK,	 CLK_MAIN_2,   0x428, 4, 0),
-+	DEF_MOD("tim_clk_17",	R9A09G011_TIM17_CLK,	 CLK_MAIN_2,   0x428, 5, 0),
-+	DEF_MOD("tim_clk_18",	R9A09G011_TIM18_CLK,	 CLK_MAIN_2,   0x428, 6, 0),
-+	DEF_MOD("tim_clk_19",	R9A09G011_TIM19_CLK,	 CLK_MAIN_2,   0x428, 7, 0),
-+	DEF_MOD("tim_clk_20",	R9A09G011_TIM20_CLK,	 CLK_MAIN_2,   0x428, 8, 0),
-+	DEF_MOD("tim_clk_21",	R9A09G011_TIM21_CLK,	 CLK_MAIN_2,   0x428, 9, 0),
-+	DEF_MOD("tim_clk_22",	R9A09G011_TIM22_CLK,	 CLK_MAIN_2,   0x428, 10, 0),
-+	DEF_MOD("tim_clk_23",	R9A09G011_TIM23_CLK,	 CLK_MAIN_2,   0x428, 11, 0),
-+	DEF_MOD("wdt0_pclk",	R9A09G011_WDT0_PCLK,	 CLK_SEL_E,    0x428, 12, 0),
-+	DEF_MOD("wdt0_clk",	R9A09G011_WDT0_CLK,	 CLK_MAIN,     0x428, 13, 0),
-+	DEF_MOD("cperi_grpf",	R9A09G011_CPERI_GRPF_PCLK, CLK_SEL_E,  0x434, 0, 0),
-+	DEF_MOD("pwm8_clk",	R9A09G011_PWM8_CLK,	 CLK_MAIN,     0x434, 4, 0),
-+	DEF_MOD("pwm9_clk",	R9A09G011_PWM9_CLK,	 CLK_MAIN,     0x434, 5, 0),
-+	DEF_MOD("pwm10_clk",	R9A09G011_PWM10_CLK,	 CLK_MAIN,     0x434, 6, 0),
-+	DEF_MOD("pwm11_clk",	R9A09G011_PWM11_CLK,	 CLK_MAIN,     0x434, 7, 0),
-+	DEF_MOD("pwm12_clk",	R9A09G011_PWM12_CLK,	 CLK_MAIN,     0x434, 8, 0),
-+	DEF_MOD("pwm13_clk",	R9A09G011_PWM13_CLK,	 CLK_MAIN,     0x434, 9, 0),
-+	DEF_MOD("pwm14_clk",	R9A09G011_PWM14_CLK,	 CLK_MAIN,     0x434, 10, 0),
-+	DEF_MOD("cperi_grpg",	R9A09G011_CPERI_GRPG_PCLK, CLK_SEL_E,  0x438, 0, 0),
-+	DEF_MOD("cperi_grph",	R9A09G011_CPERI_GRPH_PCLK, CLK_SEL_E,  0x438, 1, 0),
-+	DEF_MOD("urt_pclk",	R9A09G011_URT_PCLK,	 CLK_SEL_E,    0x438, 4, 0),
-+	DEF_MOD("urt0_clk",	R9A09G011_URT0_CLK,	 CLK_SEL_W0,   0x438, 5, 0),
-+	DEF_MOD("csi0_clk",	R9A09G011_CSI0_CLK,	 CLK_SEL_CSI0, 0x438, 8, 0),
-+	DEF_MOD("csi4_clk",	R9A09G011_CSI4_CLK,	 CLK_SEL_CSI4, 0x438, 12, 0),
-+	DEF_MOD("ca53",		R9A09G011_CA53_CLK,	 CLK_DIV_A,    0x448, 0, 0),
- };
- 
- static const struct rzg2l_reset r9a09g011_resets[] = {
-diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
-index e5ad80f35cfd..df17f0c73e94 100644
---- a/drivers/clk/renesas/rzg2l-cpg.c
-+++ b/drivers/clk/renesas/rzg2l-cpg.c
-@@ -11,10 +11,13 @@
-  * Copyright (C) 2015 Renesas Electronics Corp.
-  */
- 
-+#include <linux/atomic.h>
- #include <linux/bitfield.h>
-+#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/clk-provider.h>
- #include <linux/clk/renesas.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/init.h>
-@@ -68,6 +71,9 @@
- 
- #define MAX_VCLK_FREQ		(148500000)
- 
-+#define MSTOP_OFF(conf)		FIELD_GET(GENMASK(31, 16), (conf))
-+#define MSTOP_MASK(conf)	FIELD_GET(GENMASK(15, 0), (conf))
-+
- /**
-  * struct clk_hw_data - clock hardware data
-  * @hw: clock hw
-@@ -1181,22 +1187,39 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
- 		core->name, PTR_ERR(clk));
- }
- 
-+/**
-+ * struct mstop - MSTOP specific data structure
-+ * @usecnt: Usage counter for MSTOP settings (when zero the settings
-+ *          are applied to register)
-+ * @conf: MSTOP configuration (register offset, setup bits)
-+ */
-+struct mstop {
-+	atomic_t usecnt;
-+	u32 conf;
-+};
-+
- /**
-  * struct mstp_clock - MSTP gating clock
-  *
-  * @hw: handle between common and hardware-specific interfaces
-  * @priv: CPG/MSTP private data
-  * @sibling: pointer to the other coupled clock
-+ * @mstop: MSTOP configuration
-+ * @shared_mstop_clks: clocks sharing the MSTOP with this clock
-  * @off: register offset
-  * @bit: ON/MON bit
-+ * @num_shared_mstop_clks: number of the clocks sharing MSTOP with this clock
-  * @enabled: soft state of the clock, if it is coupled with another clock
-  */
- struct mstp_clock {
- 	struct clk_hw hw;
- 	struct rzg2l_cpg_priv *priv;
- 	struct mstp_clock *sibling;
-+	struct mstop *mstop;
-+	struct mstp_clock **shared_mstop_clks;
- 	u16 off;
- 	u8 bit;
-+	u8 num_shared_mstop_clks;
- 	bool enabled;
- };
- 
-@@ -1209,6 +1232,99 @@ struct mstp_clock {
- 		else if (((hw) = __clk_get_hw((priv)->clks[(priv)->num_core_clks + i])) && \
- 			 ((mod_clock) = to_mod_clock(hw)))
- 
-+/* Need to be called with a lock held to avoid concurrent access to mstop->usecnt. */
-+static void rzg2l_mod_clock_module_set_state(struct mstp_clock *clock,
-+					     bool standby)
-+{
-+	struct rzg2l_cpg_priv *priv = clock->priv;
-+	struct mstop *mstop = clock->mstop;
-+	bool update = false;
-+	u32 value;
-+
-+	if (!mstop)
-+		return;
-+
-+	value = MSTOP_MASK(mstop->conf) << 16;
-+
-+	if (standby) {
-+		unsigned int criticals = 0;
-+
-+		for (unsigned int i = 0; i < clock->num_shared_mstop_clks; i++) {
-+			struct mstp_clock *clk = clock->shared_mstop_clks[i];
-+
-+			if (clk_hw_get_flags(&clk->hw) & CLK_IS_CRITICAL)
-+				criticals++;
-+		}
-+
-+		if (!clock->num_shared_mstop_clks &&
-+		    clk_hw_get_flags(&clock->hw) & CLK_IS_CRITICAL)
-+			criticals++;
-+
-+		/*
-+		 * If this is a shared MSTOP and it is shared with critical clocks,
-+		 * and the system boots up with this clock enabled but no driver
-+		 * uses it the CCF will disable it (as it is unused). As we don't
-+		 * increment reference counter for it at registration (to avoid
-+		 * messing with clocks enabled at probe but later used by drivers)
-+		 * do not set the MSTOP here too if it is shared with critical
-+		 * clocks and ref counted only by those critical clocks.
-+		 */
-+		if (criticals && criticals == atomic_read(&mstop->usecnt))
-+			return;
-+
-+		value |= MSTOP_MASK(mstop->conf);
-+
-+		/* Allow updates on probe when usecnt = 0. */
-+		if (!atomic_read(&mstop->usecnt))
-+			update = true;
-+		else
-+			update = atomic_dec_and_test(&mstop->usecnt);
-+	} else {
-+		if (!atomic_read(&mstop->usecnt))
-+			update = true;
-+		atomic_inc(&mstop->usecnt);
-+	}
-+
-+	if (update)
-+		writel(value, priv->base + MSTOP_OFF(mstop->conf));
-+}
-+
-+static int rzg2l_mod_clock_mstop_show(struct seq_file *s, void *what)
-+{
-+	struct rzg2l_cpg_priv *priv = s->private;
-+	struct mstp_clock *clk;
-+	struct clk_hw *hw;
-+
-+	seq_printf(s, "%-20s %-5s %-10s\n", "", "", "MSTOP");
-+	seq_printf(s, "%-20s %-5s %-10s\n", "", "clk", "-------------------------");
-+	seq_printf(s, "%-20s %-5s %-5s %-5s %-6s %-6s\n",
-+		   "clk_name", "cnt", "cnt", "off", "val", "shared");
-+	seq_printf(s, "%-20s %-5s %-5s %-5s %-6s %-6s\n",
-+		   "--------", "-----", "-----", "-----", "------", "------");
-+
-+	for_each_mod_clock(clk, hw, priv) {
-+		u32 val;
-+
-+		if (!clk->mstop)
-+			continue;
-+
-+		val = readl(priv->base + MSTOP_OFF(clk->mstop->conf)) &
-+		      MSTOP_MASK(clk->mstop->conf);
-+
-+		seq_printf(s, "%-20s %-5d %-5d 0x%-3lx 0x%-4x", clk_hw_get_name(hw),
-+			   __clk_get_enable_count(hw->clk), atomic_read(&clk->mstop->usecnt),
-+			   MSTOP_OFF(clk->mstop->conf), val);
-+
-+		for (unsigned int i = 0; i < clk->num_shared_mstop_clks; i++)
-+			seq_printf(s, " %pC", clk->shared_mstop_clks[i]->hw.clk);
-+
-+		seq_puts(s, "\n");
-+	}
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(rzg2l_mod_clock_mstop);
-+
- static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
- {
- 	struct mstp_clock *clock = to_mod_clock(hw);
-@@ -1231,7 +1347,15 @@ static int rzg2l_mod_clock_endisable(struct clk_hw *hw, bool enable)
- 	if (enable)
- 		value |= bitmask;
- 
--	writel(value, priv->base + CLK_ON_R(reg));
-+	scoped_guard(spinlock_irqsave, &priv->rmw_lock) {
-+		if (enable) {
-+			writel(value, priv->base + CLK_ON_R(reg));
-+			rzg2l_mod_clock_module_set_state(clock, false);
-+		} else {
-+			rzg2l_mod_clock_module_set_state(clock, true);
-+			writel(value, priv->base + CLK_ON_R(reg));
-+		}
-+	}
- 
- 	if (!enable)
- 		return 0;
-@@ -1332,6 +1456,83 @@ static struct mstp_clock
- 	return NULL;
- }
- 
-+static struct mstop *rzg2l_mod_clock_get_mstop(struct rzg2l_cpg_priv *priv, u32 conf)
-+{
-+	struct mstp_clock *clk;
-+	struct clk_hw *hw;
-+
-+	for_each_mod_clock(clk, hw, priv) {
-+		if (!clk->mstop)
-+			continue;
-+
-+		if (clk->mstop->conf == conf)
-+			return clk->mstop;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void rzg2l_mod_clock_init_mstop(struct rzg2l_cpg_priv *priv)
-+{
-+	struct mstp_clock *clk;
-+	struct clk_hw *hw;
-+
-+	for_each_mod_clock(clk, hw, priv) {
-+		if (!clk->mstop)
-+			continue;
-+
-+		/*
-+		 * Out of reset all modules are enabled. Set module state
-+		 * in case associated clocks are disabled at probe. Otherwise
-+		 * module is in invalid HW state.
-+		 */
-+		scoped_guard(spinlock_irqsave, &priv->rmw_lock) {
-+			if (!rzg2l_mod_clock_is_enabled(&clk->hw))
-+				rzg2l_mod_clock_module_set_state(clk, true);
-+		}
-+	}
-+}
-+
-+static int rzg2l_mod_clock_update_shared_mstop_clks(struct rzg2l_cpg_priv *priv,
-+						    struct mstp_clock *clock)
-+{
-+	struct mstp_clock *clk;
-+	struct clk_hw *hw;
-+
-+	if (!clock->mstop)
-+		return 0;
-+
-+	for_each_mod_clock(clk, hw, priv) {
-+		int num_shared_mstop_clks, incr = 1;
-+		struct mstp_clock **new_clks;
-+
-+		if (clk->mstop != clock->mstop)
-+			continue;
-+
-+		num_shared_mstop_clks = clk->num_shared_mstop_clks;
-+		if (!num_shared_mstop_clks)
-+			incr = 2;
-+
-+		new_clks = devm_krealloc(priv->dev, clk->shared_mstop_clks,
-+					 (num_shared_mstop_clks + incr) * sizeof(*new_clks),
-+					 GFP_KERNEL);
-+		if (!new_clks)
-+			return -ENOMEM;
-+
-+		if (!num_shared_mstop_clks)
-+			new_clks[num_shared_mstop_clks++] = clk;
-+		new_clks[num_shared_mstop_clks++] = clock;
-+
-+		for (unsigned int i = 0; i < num_shared_mstop_clks; i++) {
-+			new_clks[i]->shared_mstop_clks = new_clks;
-+			new_clks[i]->num_shared_mstop_clks = num_shared_mstop_clks;
-+		}
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static void __init
- rzg2l_cpg_register_mod_clk(const struct rzg2l_mod_clk *mod,
- 			   const struct rzg2l_cpg_info *info,
-@@ -1383,6 +1584,21 @@ rzg2l_cpg_register_mod_clk(const struct rzg2l_mod_clk *mod,
- 	clock->priv = priv;
- 	clock->hw.init = &init;
- 
-+	if (mod->mstop_conf) {
-+		struct mstop *mstop = rzg2l_mod_clock_get_mstop(priv, mod->mstop_conf);
-+
-+		if (!mstop) {
-+			mstop = devm_kzalloc(dev, sizeof(*mstop), GFP_KERNEL);
-+			if (!mstop) {
-+				clk = ERR_PTR(-ENOMEM);
-+				goto fail;
-+			}
-+			mstop->conf = mod->mstop_conf;
-+			atomic_set(&mstop->usecnt, 0);
-+		}
-+		clock->mstop = mstop;
-+	}
-+
- 	ret = devm_clk_hw_register(dev, &clock->hw);
- 	if (ret) {
- 		clk = ERR_PTR(ret);
-@@ -1400,6 +1616,13 @@ rzg2l_cpg_register_mod_clk(const struct rzg2l_mod_clk *mod,
- 		}
- 	}
- 
-+	/* Keep this before priv->clks[id] is updated. */
-+	ret = rzg2l_mod_clock_update_shared_mstop_clks(priv, clock);
-+	if (ret) {
-+		clk = ERR_PTR(ret);
-+		goto fail;
-+	}
-+
- 	clk = clock->hw.clk;
- 	dev_dbg(dev, "Module clock %pC at %lu Hz\n", clk, clk_get_rate(clk));
- 	priv->clks[id] = clk;
-@@ -1875,6 +2098,13 @@ static int __init rzg2l_cpg_probe(struct platform_device *pdev)
- 	for (i = 0; i < info->num_mod_clks; i++)
- 		rzg2l_cpg_register_mod_clk(&info->mod_clks[i], info, priv);
- 
-+	/*
-+	 * Initialize MSTOP after all the clocks were registered to avoid
-+	 * invalid reference counting when multiple clocks (critical,
-+	 * non-critical) share the same MSTOP.
-+	 */
-+	rzg2l_mod_clock_init_mstop(priv);
-+
- 	error = of_clk_add_provider(np, rzg2l_cpg_clk_src_twocell_get, priv);
- 	if (error)
- 		return error;
-@@ -1891,9 +2121,23 @@ static int __init rzg2l_cpg_probe(struct platform_device *pdev)
- 	if (error)
- 		return error;
- 
-+	debugfs_create_file("mstop", 0444, NULL, priv, &rzg2l_mod_clock_mstop_fops);
- 	return 0;
- }
- 
-+static int rzg2l_cpg_resume(struct device *dev)
-+{
-+	struct rzg2l_cpg_priv *priv = dev_get_drvdata(dev);
-+
-+	rzg2l_mod_clock_init_mstop(priv);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops rzg2l_cpg_pm_ops = {
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(NULL, rzg2l_cpg_resume)
-+};
-+
- static const struct of_device_id rzg2l_cpg_match[] = {
- #ifdef CONFIG_CLK_R9A07G043
- 	{
-@@ -1932,6 +2176,7 @@ static struct platform_driver rzg2l_cpg_driver = {
- 	.driver		= {
- 		.name	= "rzg2l-cpg",
- 		.of_match_table = rzg2l_cpg_match,
-+		.pm	= pm_sleep_ptr(&rzg2l_cpg_pm_ops),
- 	},
- };
- 
-diff --git a/drivers/clk/renesas/rzg2l-cpg.h b/drivers/clk/renesas/rzg2l-cpg.h
-index b6eece5ffa20..50a5a23f2e6a 100644
---- a/drivers/clk/renesas/rzg2l-cpg.h
-+++ b/drivers/clk/renesas/rzg2l-cpg.h
-@@ -82,6 +82,8 @@
- #define SEL_PLL6_2	SEL_PLL_PACK(CPG_PL6_ETH_SSEL, 0, 1)
- #define SEL_GPU2	SEL_PLL_PACK(CPG_PL6_SSEL, 12, 1)
- 
-+#define MSTOP(name, bitmask)	((CPG_##name##_MSTOP) << 16 | (bitmask))
-+
- #define EXTAL_FREQ_IN_MEGA_HZ	(24)
- 
- /**
-@@ -201,6 +203,7 @@ enum clk_types {
-  * @name: handle between common and hardware-specific interfaces
-  * @id: clock index in array containing all Core and Module Clocks
-  * @parent: id of parent clock
-+ * @mstop_conf: MSTOP configuration
-  * @off: register offset
-  * @bit: ON/MON bit
-  * @is_coupled: flag to indicate coupled clock
-@@ -209,26 +212,28 @@ struct rzg2l_mod_clk {
- 	const char *name;
- 	unsigned int id;
- 	unsigned int parent;
-+	u32 mstop_conf;
- 	u16 off;
- 	u8 bit;
- 	bool is_coupled;
- };
- 
--#define DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _is_coupled)	\
-+#define DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _mstop_conf, _is_coupled)	\
- 	{ \
- 		.name = _name, \
- 		.id = MOD_CLK_BASE + (_id), \
- 		.parent = (_parent), \
-+		.mstop_conf = (_mstop_conf), \
- 		.off = (_off), \
- 		.bit = (_bit), \
- 		.is_coupled = (_is_coupled), \
- 	}
- 
--#define DEF_MOD(_name, _id, _parent, _off, _bit)	\
--	DEF_MOD_BASE(_name, _id, _parent, _off, _bit, false)
-+#define DEF_MOD(_name, _id, _parent, _off, _bit, _mstop_conf)	\
-+	DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _mstop_conf, false)
- 
--#define DEF_COUPLED(_name, _id, _parent, _off, _bit)	\
--	DEF_MOD_BASE(_name, _id, _parent, _off, _bit, true)
-+#define DEF_COUPLED(_name, _id, _parent, _off, _bit, _mstop_conf)	\
-+	DEF_MOD_BASE(_name, _id, _parent, _off, _bit, _mstop_conf, true)
- 
- /**
-  * struct rzg2l_reset - Reset definitions
--- 
-2.43.0
-
+Konrad
