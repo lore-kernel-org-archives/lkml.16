@@ -1,44 +1,52 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D5A156CA;
-	Tue, 27 May 2025 19:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD549156CA;
+	Tue, 27 May 2025 19:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373187; cv=none; b=agMQewfSjichF+5mS6uOQKO0c8nPyuMTCSNFhk3sDZvag5MqpNRtn1+p2l/nzf6Q20/mCKo2XB5dfBT4L19cPL3qwYDPjOTa1A3Bli0xcHTesEbfCoAv2EN54pzBiNMtXr5uvcvB4SZuNpxF1URmxq0v4X+NJtr4r+R76e1CAtQ=
+	t=1748373260; cv=none; b=fLw1/zCUxJReeYJx6RSF9xJsbOqq5Equx0DxfDDMJC+iDoL8/gP/e9LUCzcz0PJCmaWmVULiBSIjuKk8Yc7tA3vp5mxKh+2E5Z2lo6dez22J9cj+akOMXPEREvMdY7YFxSE706x0RXV72Dsxgz4mTh7iVTKdKL6yQW3ro6AGENA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373187; c=relaxed/simple;
-	bh=ozlZ6ad1wq7Ak9GnlK1ruqF55DzzNDPNnFPG9giPuCE=;
+	s=arc-20240116; t=1748373260; c=relaxed/simple;
+	bh=a5IVo4yCm7LigODb+ANExP0xvZzE0gjGpDjtnFf0yWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o18CT612+Xoo0YkiasbjEYjxEG4Zo8ZLtyklyR9yJ4xMDXVzZ4rvuY0bdhPB6iXXjCdKji/Z+Y1hZcbZAYAOk+2wxkHMLi79NDKSTHFIyq2rLYzxE6wIpAy+dEebqPBCozlwlyR0RVLMBfGKxBG7/eP8sl2R1b7LwSC+GLB+gVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQPN7bIl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R0Ib7neYKWnq6qAysHQjJBIfrHc2nl15Z9tSef4LxZg/1OuzGd+QK0iGySREBTMJwGEDIDV7MTEszgg4uHTEgbzIrXbdL4Ylg1X+nzbuGoJKfFENEbGqwP59gcGc2Yk3oXH2cOUtBiGpto24dwAoryTMdisPeohB//X9V31Ks3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=f/ceSIhl; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQPN7bIl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C882C4CEE9;
-	Tue, 27 May 2025 19:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748373186;
-	bh=ozlZ6ad1wq7Ak9GnlK1ruqF55DzzNDPNnFPG9giPuCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZQPN7bIlvf0N9RSQtr6DAvKBK2P8eUE23nKs0E9iQAg3Su0CEoG3UXexfhLpvE2wi
-	 wVYTKTstMZGj3DaL/i4ncP9QJp0XykDwxW+2aTdahn5uHfhf1T4TZQwbM2YhgaYGfv
-	 mrgHZMhHfywHhG6iSuE3E2flyl/Iuo1cO2stl4+i4K0JdLQ1FaT6SPKHYNSkLFAZu9
-	 XgIDSkOy3sdHoR9+YQBDMwKlor67o4nyzi2vX09rSVZVinL21DCUQ967Rrqs3U44mo
-	 Mo+NZN4AGnECBhXz/puBM1xs/UM0vb1FU3pzGPagzl4sly/Ptp6gwfaQhh7twTrYfV
-	 IHqrf481S5E5Q==
-Date: Tue, 27 May 2025 14:13:04 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rao Mandadapu <quic_srivasam@quicinc.com>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: soundwire: qcom: Document v2.1.0 version of
- IP block
-Message-ID: <174837318334.1029846.8735268990996464177.robh@kernel.org>
-References: <20250519080453.29858-2-krzysztof.kozlowski@linaro.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="f/ceSIhl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Xfabu4AMllSeaju3LPHLpuFW8PQMwXw0t82FVJTwvEc=; b=f/ceSIhl0pwULuwRwhuhzl4giN
+	laI4TYdBH7PBMivr1Zr5limINaFDa5BQwXAl6I9eEonOEKfY5qJMs4fMPq6APZpumbh0weKMCdbiL
+	zT6fTSynB1S5FEcYmY0UPJTQ0BKfb0WpDWjKIgkdi3S2EgpiFRHz3FobBqls235E6GRM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uJzka-00E6OW-CJ; Tue, 27 May 2025 21:14:12 +0200
+Date: Tue, 27 May 2025 21:14:12 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: James Hilliard <james.hilliard1@gmail.com>
+Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Furong Xu <0x1207@gmail.com>,
+	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+Message-ID: <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
+References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,21 +55,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250519080453.29858-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250527175558.2738342-1-james.hilliard1@gmail.com>
 
+On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
+> Some devices like the Allwinner H616 need the ability to select a phy
+> in cases where multiple PHY's may be present in a device tree due to
+> needing the ability to support multiple SoC variants with runtime
+> PHY selection.
 
-On Mon, 19 May 2025 10:04:54 +0200, Krzysztof Kozlowski wrote:
-> All Qualcomm SoC Soundwire controllers are version-detectable (even
-> 1.x), however certain unidentified quirks might be potentially needed,
-> so document v2.1 version used on Qualcomm SM8650 and SM8750 SoCs,
-> fallbacking to v2.0.
-> 
-> Suggested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/soundwire/qcom,soundwire.yaml    | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
-> 
+I'm not convinced about this yet. As far as i see, it is different
+variants of the H616. They should have different compatibles, since
+they are not actually compatible, and you should have different DT
+descriptions. So you don't need runtime PHY selection.
 
-Applied, thanks!
-
+	Andrew
