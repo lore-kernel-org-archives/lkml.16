@@ -1,108 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F771DF254;
-	Tue, 27 May 2025 14:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B752741AB
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748355203; cv=none; b=f1Yji/Hmpq2F8D8VlX/Nzy4hk0Iw1T0Nt+51wlvBYrqCCuc8nWzVMNLCEu5dSNw1g6jPo57JJK81/gbZK8Z9iTDZm3xxGiELmhdLbLym3nX0lkhtFT6n6yrNwwPswnDEj7zROo5Ww25IkdvGd78pOftyY8OyxNAhpsN9Qno6CIg=
+	t=1748355293; cv=none; b=R/ywxpQJsXCzC1O3qkDyR7uQ1Sx82eGfZn1fu27hm01hEDWMn/zx6OkmQgKWv5kCBprL7FtfZQWBfQjl0jtlKBy2YxQnv8CvChRLusklvmMnE6N+K/+V+itlA1sGHzLAkTvwrKbbKQBT95Z+EPyg8O/1k95KjlS6uPkyR7gSBKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748355203; c=relaxed/simple;
-	bh=s1/Fl3iRmGCQlCudqjCG+PZ70PcwovATM6h2BAyhIz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKCPVFvKKAfL+2q7UjOl4sliNWnmopPrFxURJw/4VhEnDlehGHgs5QP/rMyVZIcVWA9fsMox/E3EzEReLDNPvKiF2VhF+e4hMbc50hv7ypZ5fdLdk0W/iEDJT7uDB5HtksZicUlwrB1fIA14sj9NdW8IAnKu4b9omNx/4yinJ3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkn/sBqo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkn/sBqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4886C4CEED;
-	Tue, 27 May 2025 14:13:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748355202;
-	bh=s1/Fl3iRmGCQlCudqjCG+PZ70PcwovATM6h2BAyhIz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dkn/sBqocoIftLHlFTZ2LSlb4tK30ZM9SKUm8A/A+h5H7XH2GqTiTqzc/tYvAejl0
-	 LwGIrtc//qPJNWvU51AoNto0CnTUxzaHfxd6wY7i/6WskrxAZv9vI5rXySLi47l9ha
-	 FTFaDaYQgxEexSY6vd5F1CAiXEuTXtpbisYVWW2EU9ddhinJhoOJCrXYqKL1PS/ETU
-	 FdErHUk5oVgvfzMcfbxPOIV0UKzqiEQJk+Of/8t05Fb8LoS5gWg6m9uGNfT6bhnL0I
-	 oFYM+7YuUq8g7x7Kbsqc8D0O2fy5PiLCrmYrhVNKMZV/daF9cXkTOZFMpu9/icjRNv
-	 UG4yWwL98RTMA==
-Date: Tue, 27 May 2025 15:13:16 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"mturquette@baylibre.com" <mturquette@baylibre.com>,
-	"sboyd@kernel.org" <sboyd@kernel.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [net 1/4] dt-bindings: net: ftgmac100: Add resets property
-Message-ID: <20250527-sandy-uninvited-084d071c4418@spud>
-References: <20250520092848.531070-1-jacky_chou@aspeedtech.com>
- <20250520092848.531070-2-jacky_chou@aspeedtech.com>
- <20250520-creature-strenuous-e8b1f36ab82d@spud>
- <SEYPR06MB51346A27CD1C50C2922FE30C9D64A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+	s=arc-20240116; t=1748355293; c=relaxed/simple;
+	bh=mKB7Di2doqet46c57n4jNm2mBdkI/5Nb0yCW7Ip3y0I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Jws+Xedqs+ADU2uy8h0gf1k4RS/dGLYYbckK7Sol6u9kxRF+7nA1jWN1yPJwFcoNWkR/ZoEBhz+xgzcz1BMMXtMd0FwiYaVWCh445Qnetc8PEMci6WqscB2IYQDZ8GA6gtgZZYa1ZXPxmyI2K6xDiF7kWKnFdgc3t1KNr/z5iEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1uJv4f-0002Ne-Nq; Tue, 27 May 2025 16:14:37 +0200
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Tue, 27 May 2025 16:14:33 +0200
+Subject: [PATCH RFC 3/4] drm/panel: samsung-s6e8aa0: Drop
+ MIPI_DSI_MODE_VSYNC_FLUSH flag
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oF1MzhfhQDns9knz"
-Content-Disposition: inline
-In-Reply-To: <SEYPR06MB51346A27CD1C50C2922FE30C9D64A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250527-dsi-vsync-flush-v1-3-9b4ea4578729@pengutronix.de>
+References: <20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
+In-Reply-To: <20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
+To: Inki Dae <inki.dae@samsung.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Artur Weber <aweber.kernel@gmail.com>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
+X-Mailer: b4 0.14.2
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::54
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Drop the MIPI_DSI_MODE_VSYNC_FLUSH flag from DSI mode_flags.
+It has no effect anymore.
 
---oF1MzhfhQDns9knz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, May 27, 2025 at 02:20:48AM +0000, Jacky Chou wrote:
-> Hi Conor Dooley,
->=20
-> Thank you for your reply
->=20
-> > > +  resets:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      Optional reset control for the MAC controller (e.g. Aspeed
-> > > + SoCs)
-> >=20
-> > If only aspeed socs support this, then please restrict to just your pro=
-ducts.
-> >=20
->=20
-> The reset function is optional in driver.
-> If there is reset function in the other SoC, it can also uses the reset p=
-roperty in their SoC.
+diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c b/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c
+index c51d07ec15295f81d4c2c07fcd5b58fdab18b084..201f94f45b7734320a3365a8e272e3e69dbc178e 100644
+--- a/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c
++++ b/drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c
+@@ -990,7 +990,7 @@ static int s6e8aa0_probe(struct mipi_dsi_device *dsi)
+ 	dsi->lanes = 4;
+ 	dsi->format = MIPI_DSI_FMT_RGB888;
+ 	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST
+-		| MIPI_DSI_MODE_VSYNC_FLUSH | MIPI_DSI_MODE_VIDEO_AUTO_VERT;
++		| MIPI_DSI_MODE_VIDEO_AUTO_VERT;
+ 
+ 	ret = s6e8aa0_parse_dt(ctx);
+ 	if (ret < 0)
 
-"if", sure. But you don't know about any other SoCs, so please restrict
-it to the systems that you do know have a reset.
+-- 
+2.39.5
 
---oF1MzhfhQDns9knz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDXIfAAKCRB4tDGHoIJi
-0gH9AQCRLkHk3neNHshJkYAPhnXtXcmS1T4OLHZhP/AyJZlligEAroQq3M9Xp8gF
-CRE717jgbijLXCXCNR11jW1nOPCN7g4=
-=2CfM
------END PGP SIGNATURE-----
-
---oF1MzhfhQDns9knz--
