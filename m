@@ -1,99 +1,84 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF2C27FD6F;
-	Tue, 27 May 2025 19:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8620F2882BD
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748373695; cv=none; b=BxCkk7dKPbYfZ7KN9amsVDMCFBWn4GsO9P+iKi9hSQgwfb4spmBJ7wJalul0xh2k8bPhz83vMmIQ6RF+SsoD6DoSJhVAVfaZd/5QjMjEY+jiA5aPZIlrXWrPYHF05WPR9HrGN2OWOEScjuom28CjWuje9lU7plZKMmAWXMlF/C4=
+	t=1748373727; cv=none; b=rw+Q4Hx3/x5Ub1nUAgnhuLUgG9F1OHwTUDXVFL9pfZl9nCEeWEbBeK2ymHHJkCDOOQvNdpIJU2E8bUgQ5EKP5ICgggWfmytOUyPDzJBb4OoXQp6yO4rm67hv0GcNRKMUnK82QZdi2ChJRSZsmgT9bCAMcOKh2fKZBhZ94m4XktA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748373695; c=relaxed/simple;
-	bh=ZOx7q4xf87k1jEIxa4jfUnotqYzGDRVn6aOkwlFU9qs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u7eWi6A4giUo0CVnRcavUwFLGyU7iBANUltdvWlVx+tRLcHJVjwcsaqf96pH1F4IiDnc280NYEFRMXDu/LVI5BB34gvZR3gb4H1awp9TSxBOHw8TksFW0OEDC31uuEXowLpg9NqAtoqRDMlqBmqMgyOMdwEpcrZNTYyLjqqad3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dj9RlTSF; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748373727; c=relaxed/simple;
+	bh=JxBRh0Vq4E+G8+OrUwhXT/4DRpNGa0/BjE1bb3JHjs0=;
+	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
+	 Cc:In-Reply-To:To; b=BmVUegFrji+zbnVqc2jpDfHISdJqZ4IWMO45KXBXDnrdk0tYdyRGy7Nl+Tm6o5fbK99XjSivDtsLj694qawTcOHBhgTM3h52cA1wDsOMX0MYcUx7tOlXT5ht+mpEekkP+4RqDXK+ZEIlp/NxmV1FYSbzy8KSayp97gAXCzUIs5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=V5EVJtwJ; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dj9RlTSF"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52eea8111easo999012e0c.2;
-        Tue, 27 May 2025 12:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748373693; x=1748978493; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aWXT/WupRqW0CupybvTkEKLCMDuWAmD/tW/zMc48HoA=;
-        b=dj9RlTSFfkqtxFT4IfLLgg3yBZXDcxzLATwwDB0jthKsCCYOz9SXCpjc2w6kNV5LnK
-         pwcQJDliDj3enWcoWQig9pwpucES4hHOSnclEp9/sfuna8mpo2GZEzJkWGa3tOPKSWPN
-         UNKuowRlUqqYyFXEFFwvvvoxetf9KrK8xIE9ZUyjx6uFNkxdvUCzYYDgV2GPIKIfs/Vk
-         aosHyyAF98QVU7fKchgwYZjRIYZm4G4R6RRFHN+Fwl44ZieW9d74Vibw3LoqmySAyW//
-         cXPXj5I9TZHgcpOwY6+loerRue3nv6ugbZlaStS0gofY7vqpiwM0jTCe3YEYmrUYvY8C
-         1GXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748373693; x=1748978493;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aWXT/WupRqW0CupybvTkEKLCMDuWAmD/tW/zMc48HoA=;
-        b=DmJeXw2r1tmgYxlgwwusUT1X2z+JwX2P+Z2qLEkjMNM5awY67VydasyHWVaC5tvZpP
-         ggQuRHfIb1wBT6nckNv70Q+d6MoblxP/YPzTW/5tajJve8DzkzmkgH19nAoLP/b3bxPs
-         Zb1P93ywchSaVn9jVulX8ZJPhVGsfb3yIkhDd0FUYI1EoA/sKcC389gabJkheO9a1NpU
-         c/cntNj8oyaG3BfYVOLuIT39z7YI2SbTIcb4m1Ur5q1vierm7VgDiS8aBxC7EkzYDKge
-         FEjCVxkwi39ZNIBSsnl5lpMXAW2vh1wdD8VfWznwBCAVSPxnkdM4dmhjD9th3k/o7jCa
-         xykA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNdzgeH9E2CvxDceUzRs3sLckh7PEh9VAgM8uWRDd90rxab5x/74kH5ISG+6XH1rrOYP5bqwN/Br073us=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB/SK/Y2E8fXhmw0Pj4Z/+iROYOzUzQIhx3diiYmpfxr67NtF1
-	k5BH0pPDvs8IEGT9nKFHZaEpoTVip2gV+iKJvz8jKz3jPGN7tIL1okLTIxc2O5pmjLv7fjoxflm
-	H4/XRmG0/LCBvQzfnD4P1p8TrW1Lvz3I=
-X-Gm-Gg: ASbGncvAVKJisZ2gEPw6ucQyvwZj0JHNsVJbTOD/5I9n9p8uoJH0Ej/OQhj12gPdp5X
-	kWEVEoYaLxDwwS/Adkt9mw6cuzBpVusTer97W/D1GCU54bWfH/qtKOGl8LKXXEuXFovz2Z6vmKE
-	fTXsi9vozCxsLUKHvw38VmsBqA9JDDDhIEgA==
-X-Google-Smtp-Source: AGHT+IEChjVJAaQHlGSjHa9hTKxCJFyJzR7c9+aL/0QxNkhj4bg8SHCtIwSUXtZJZi5/vjBpZfQlumATcldCYDUWxqA=
-X-Received: by 2002:a05:6102:290c:b0:4e5:9c06:39d6 with SMTP id
- ada2fe7eead31-4e59c063ae6mr471806137.2.1748373693026; Tue, 27 May 2025
- 12:21:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="V5EVJtwJ"
+Received: from smtpclient.apple ([IPv6:2600:1010:b069:8c00:5424:66c9:518d:199c])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54RJLr0I1144786
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 27 May 2025 12:21:54 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54RJLr0I1144786
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1748373714;
+	bh=WKuq4Pak9aKZHDwpamW1iZupuar33qNoHd5DpIJRkC0=;
+	h=From:Subject:Date:References:Cc:In-Reply-To:To:From;
+	b=V5EVJtwJBXLCBAMMHPU2rdayeHCqKZ8ASrzdu1tVqcwOLEWq1t54gKhrnpFdocaHc
+	 8ZF0YM3pkkOvs9d/Gg78/pGbDEOrYKAB/0ksD19t5HPqimOMMto2keMDsqaxYfdHy7
+	 aKbyhdCykZkncuSetAWp0htMz29s8jcQYeefJHVhb4aGpzHdB1wcrPZ8rPDzFJiId4
+	 WGsioLzv+OLUJouvVG+u7b7yPASdSCguWKLkS1lbun0R1x/dlfELrcox2jLHcYt1al
+	 DQRNt/q8FwAllUbZ4XgJxC9AE5zNZGATkOJ/PC+KNTvXwVaOEdeTSQ4s7wXigicCdm
+	 hwRHMlk5Yl8XA==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Xin Li <xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com> <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
-In-Reply-To: <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Tue, 27 May 2025 13:21:21 -0600
-X-Gm-Features: AX0GCFvF6Ti9-VC-WdHc6MfKeYhf1F3qOQDDP4BI4jj848sa9rzAvWhhkHP0KPs
-Message-ID: <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Russell King <linux@armlinux.org.uk>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Furong Xu <0x1207@gmail.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (1.0)
+Subject: Re: [Bug Report] Linux v6.15-rc7 boot failure on Xen-4.17
+Date: Tue, 27 May 2025 12:21:37 -0700
+Message-Id: <C28A8745-02AD-489E-B2F3-6DE81C511783@zytor.com>
+References: <607917bc-6788-425a-8051-181a078ddb49@suse.com>
+Cc: Gupta Pawan <pawan.kumar.gupta@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Zijlstra Peter <peterz@infradead.org>,
+        Hansen Dave <dave.hansen@linux.intel.com>,
+        alexandre.chartre@oracle.com,
+        Cooper Andrew <andrew.cooper3@citrix.com>,
+        Zhang Tao1 <tao1.zhang@intel.com>
+In-Reply-To: <607917bc-6788-425a-8051-181a078ddb49@suse.com>
+To: =?utf-8?Q?Gro=C3=9F_J=C3=BCrgen?= <jgross@suse.com>
+X-Mailer: iPhone Mail (22F76)
 
-On Tue, May 27, 2025 at 1:14=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Tue, May 27, 2025 at 11:55:54AM -0600, James Hilliard wrote:
-> > Some devices like the Allwinner H616 need the ability to select a phy
-> > in cases where multiple PHY's may be present in a device tree due to
-> > needing the ability to support multiple SoC variants with runtime
-> > PHY selection.
->
-> I'm not convinced about this yet. As far as i see, it is different
-> variants of the H616. They should have different compatibles, since
-> they are not actually compatible, and you should have different DT
-> descriptions. So you don't need runtime PHY selection.
 
-Different compatibles for what specifically? I mean the PHY compatibles
-are just the generic "ethernet-phy-ieee802.3-c22" compatibles.
+> On May 27, 2025, at 11:36=E2=80=AFAM, J=C3=BCrgen Gro=C3=9F <jgross@suse.c=
+om> wrote:
+>=20
+> =EF=BB=BFOn 27.05.25 19:54, Xin Li wrote:
+>> On 5/27/2025 10:46 AM, Pawan Gupta wrote:
+>>>> Attached is the serial console log and my kernel config.
+>>> Serial logs aren't telling much. I do not have a Xen setup to test, with=
+out
+>>> Xen the config that you provided is booting a KVM guest just fine.
+>> Yeah, as I replied to Juergen, the same kernel binary boots fine as
+>> "native".
+>> Unfortunately when booting as dom0 on Xen, it keeps rebooting w/o
+>> helpful log.
+>=20
+> What about booting Xen on bare metal, i.e. no KVM being involved?
 
->
->         Andrew
+The same exact problem happens on Intel Simics.  And I got to see it=E2=80=99=
+s a NX page fault in dom0 kernel during apply alternatives.
+
+It takes a while for me to set it up on bare metal so it won=E2=80=99t happe=
+n so soon.
+
+A more serious question in my mind right now is that who are acutely testing=
+ latest vanilla Linux on xen?=
+
