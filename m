@@ -1,104 +1,144 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D54B2517B9;
-	Tue, 27 May 2025 09:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0D11EF09D;
+	Tue, 27 May 2025 09:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748337208; cv=none; b=hb/p28DMJMAlLA37fjD9RNAVKptRGp7IQBOM8xozFBKX1S36065McwvSThlt/Vtmb/n6/tjW2egspVtxJPCL0Hrf22F3ZIMzY76S3u97RtcngMBRdkAaDpbKBcLQqT6BW0ccLacqwq3M37QgREPzB41uR5yyGNmM39UrWiNKSmk=
+	t=1748337296; cv=none; b=G19ElQfchkBBjNsCPCiSiZbvAjOrjlgpl14P8sjVB9sQEMHVpplzYYRa1eCRXYtlaAAwL10RXkXYf/WLA9qadLAhCo08c+CLjr6QxWgLb4hYnbbCqIBTuGP8WJh9ASrjtxpy5LAEyPwNtvFCDqtPizqo5waktjcnNMYT8KLQvg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748337208; c=relaxed/simple;
-	bh=zAuOrHemnpeLyMupl1/xQld0ci1rYZ5ezTxSN+CP3lU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=TQgLeFllz6dSDLCa1l0pRfSvVMsg2R1ps4Kjf3B3y/HotJaQQxLJ/WqocNJvHyLeSlcNu5/QoX8X98uzOyWDPrCtLA0DPkEpoiDTwGzZytwwCZte9rCrnwzzB3/GQmESDdOxBcWhJWVC0lw/yVQAdDhJ8KAY7arJsWCZw6e0yEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Xb2vwIHV; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1748337296; c=relaxed/simple;
+	bh=XIEtSh50r/yonznh6hQZQjUoc0cYgrP2M9XnPN63A+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EGEoWtD4v0bPkOfwFko0X8d5gD6VdUGf6xL02/+vhcQrtfdiR0TeB+cpFNcknadvXBf17ZEx69+CMpfAlNzjLkJWwf+9YC/onUmqoYiidXImBzdjmQeZ/zhVtqDGtdvrFtMEsf/R8sIw/Gw+ipqgEfXTjWC2RyXV7IVCPV8o1jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=basDyrob; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Xb2vwIHV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 72BCA43289;
-	Tue, 27 May 2025 09:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1748337203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pg9vGp1YHkXIBdUOEtw6pvaguTK4l9KgzQWa/jWZ448=;
-	b=Xb2vwIHVkxdOdtkzTqahMB8Ob0dPQkUA3ReoZGJM1L+qUX1Vj82fd4mZq3PzhNP32O1Jkx
-	rxSGUArUiUNECAYK3qxLtiRJm5PaVkldh1ripu3EGGANBnyTGQYq5Z+wUniIQZpG3OSQyk
-	fxy6iFkZ1zsno/GpVwOBAXOScSRK5Mgsp+pYsnop4MUJoH89/jvP3BX3j5OL2l62j7QPHZ
-	TRfxyJo+oz1CBl0pusuylCCBt1fFB0hODm+XfsGwexCOGnNlrkkNuQndIhVhgWYEdQAkkB
-	hu1CaDW+KPMGWdK7cB6wT/wJ4KKgUCIsA72wVLDaMj7d8mqzcV15qqamYMzVfw==
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="basDyrob"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R4Ui5h008681;
+	Tue, 27 May 2025 09:14:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9gpYX/
+	nada+1wpGrmo2oDu+X0GfW6oxLrIxjCbh6GjQ=; b=basDyrobYgnSynLAVnkRdo
+	bPRFTDabXIcm6IxvWThuSRaV7fnZhlY74v/O2YZTNrg1Iw3R1E7PSKf3ojMVWpl5
+	GqBD43J5MyDuOAJTisNbafZBGTWRv7ALmo6/cJVkNm2jjU6ntAHFGor5WZajBXBZ
+	jbtzp5wHZJwcQpBW4tks2+id2LXcT0hf2D+LlvvonShOyx3C1LcIf7GfsGscIYh3
+	0EylMhv3NxCHGnbwySL6w+6OqRsrmHp+hSaFToPJRXBqjTbSgybJ5tMgsNBLcYBO
+	DI5QGyPPeQQtJH6c5C4qPeaUQkM2CG95oofz1HurC1LDkwu6QaQqu14LAkkiISFQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5ucnb34-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 09:14:51 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54R6Rxkc016626;
+	Tue, 27 May 2025 09:14:50 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46ureua5nm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 09:14:50 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54R9ElvM17760706
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 09:14:47 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4187920040;
+	Tue, 27 May 2025 09:14:47 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 82D092004B;
+	Tue, 27 May 2025 09:14:46 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.111.27.210])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue, 27 May 2025 09:14:46 +0000 (GMT)
+Date: Tue, 27 May 2025 11:14:44 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: "Nico Boehr" <nrb@linux.ibm.com>
+Cc: <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>, <frankja@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <seiden@linux.ibm.com>, <nsg@linux.ibm.com>,
+        <david@redhat.com>, <hca@linux.ibm.com>, <agordeev@linux.ibm.com>,
+        <svens@linux.ibm.com>, <gor@linux.ibm.com>, <schlameuss@linux.ibm.com>
+Subject: Re: [PATCH v2 3/5] KVM: s390: refactor some functions in priv.c
+Message-ID: <20250527111444.701ea84c@p-imbrenda>
+In-Reply-To: <DA6RCZ7FOBOS.1U1CX5REWAGTN@linux.ibm.com>
+References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
+	<20250520182639.80013-4-imbrenda@linux.ibm.com>
+	<DA6RCZ7FOBOS.1U1CX5REWAGTN@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 11:13:21 +0200
-Message-Id: <DA6TTA76AU5Z.32W0O8EORBCQC@bootlin.com>
-To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Alexei Starovoitov"
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
- Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan" <puranjay@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon"
- <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
- <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
- <revest@chromium.org>
-Cc: "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>, "Xu Kuohai"
- <xukuohai@huawei.com>
-Subject: Re: [PATCH bpf-next v2 1/2] bpf, arm64: Support up to 12 function
- arguments
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
- <20250522-many_args_arm64-v2-1-d6afdb9cf819@bootlin.com>
- <8d184497-fecf-497f-8b4c-bcd4b0a697ce@huaweicloud.com>
- <DA6T7OEF94IG.2BH2PWTCVEOTA@bootlin.com>
- <5535f49f-8903-4055-b99a-cf8b2d4666e1@huaweicloud.com>
-In-Reply-To: <5535f49f-8903-4055-b99a-cf8b2d4666e1@huaweicloud.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdduleelleculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffvvefuhffofhgjsehtqhertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkefgfffhhefhfeegkefhffduhfehkeevffeluefhlefgfeeuveehvdekudfhheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmeguieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemugeihedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopeiguhhkuhhohhgriheshhhurgifvghitghlohhuugdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhnhdrf
- hgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: FfZPVOl8HXlzxZz5pngC2xl9sPcJvcSQ
+X-Proofpoint-GUID: FfZPVOl8HXlzxZz5pngC2xl9sPcJvcSQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA3MyBTYWx0ZWRfX/vBP+iUGGugC qqpOpwqUXaZmt1C5hX/Ts5Zu9lCzDwHd0ZKSRprD8bZPqWtMQ4Wvc2CewoTU2OMtuM2nNdRYxEy RToHugxWncqvNKWrhmuZUVN6sgr5CJh+R95ozc+LncwYdUT+LBX04ONW9fUG1iPUdBx04EAe50V
+ 4Qn/5y0xjbXRyz5f8DFK5bNtSYj55Yf5TW0vxhTzU1k6Sf63kVYimq1wfHZ/pgz6WZwraJDlMeC wFgYdDZMSol9zbY8PQdpDCaVcpa6/JOLsrAFp94ZSE/EnSE2YYoq6nhhaH5IGnmXsVjknvGdkQs osMC5vt2SkYy3KKLs7kkJd7c77K92N1oyLTrDOzfZQS5oX3veUXnk0CjBKSDD8nqhhllb15d8R0
+ bTCDRXsSm60ef84wYOb9Jxu/yDEJPpgyLDv7WahbD0d7geJjNwSceBPX5mHpXXlm/645lIo/
+X-Authority-Analysis: v=2.4 cv=fJM53Yae c=1 sm=1 tr=0 ts=6835828b cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=GRx3_awI1bdFvCwNOlsA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_04,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=722 suspectscore=0
+ phishscore=0 clxscore=1015 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270073
 
-On Tue May 27, 2025 at 11:09 AM CEST, Xu Kuohai wrote:
-> On 5/27/2025 4:45 PM, Alexis Lothor=C3=A9 wrote:
->
+On Tue, 27 May 2025 09:18:01 +0200
+"Nico Boehr" <nrb@linux.ibm.com> wrote:
+
+this patch had so many issues, and brought no real advantages, so I
+dropped it from v3 onwards
+
+> On Tue May 20, 2025 at 8:26 PM CEST, Claudio Imbrenda wrote:
 > [...]
->
->>>> +		/* We can not know for sure about exact alignment needs for
->>>> +		 * struct passed on stack, so deny those
->>>> +		 */
->>>> +		if (m->arg_flags[i] & BTF_FMODEL_STRUCT_ARG)
->>>> +			return -EOPNOTSUPP;
->>> leave the error code as is, namely, return -ENOTSUPP?
->> Actually this change follows a complaint from checkpatch:
->>=20
->> "WARNING: ENOTSUPP is not a SUSV4 error code, prefer EOPNOTSUPP"
->
-> Seems we can just ignore this warning, as ENOTSUPP is already used
-> throughout bpf, and the actual value -524 is well recognized.
-
-Ok, then I'll switch it back to ENOTSUPP
-
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> > diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+> > index 9253c70897a8..15843e7e57e6 100644
+> > --- a/arch/s390/kvm/priv.c
+> > +++ b/arch/s390/kvm/priv.c  
+> [...]
+> > +static int skeys_common_checks(struct kvm_vcpu *vcpu, struct skeys_ops_state *state)
+> > +{
+> > +	int rc;
+> > +
+> > +	if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE) {
+> > +		rc = kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
+> > +		return rc ? rc : -EAGAIN;  
+> 
+> What has changed that
+> 
+> return kvm_s390_inject_program_int()
+> 
+> is not sufficient any more?
+> 
+> [...]
+> > +	get_regs_rre_ptr(vcpu, &state->reg1, &state->reg2, &state->r1, &state->r2);
+> > +
+> > +	state->effective = vcpu->run->s.regs.gprs[state->reg2] & PAGE_MASK;  
+> 
+> *state->r2?
+> 
+> [...]
+> >  static int handle_pfmf(struct kvm_vcpu *vcpu)
+> >  {  
+> [...]
+> > +	if (r1.fsc) {
+> > +		end = kvm_s390_logical_to_effective(vcpu, end);
+> > +		if (kvm_s390_is_amode_64(vcpu))
+> > +			replace_selected_bits(r2, PAGE_MASK, end);
+> > +		else
+> > +			replace_selected_bits(r2, 0xfffff000, end);  
+> 
+> Maybe I'm missing something, but I don't get why you need replace_selected_bits
+> here.  kvm_s390_logical_to_effective() already does the neccesary masking, no?
 
