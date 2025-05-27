@@ -1,123 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA90B26FA4F;
-	Tue, 27 May 2025 13:00:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54221E4BE;
+	Tue, 27 May 2025 13:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748350835; cv=none; b=DpFE5lofZ+wRPvsyKYUpVdYUN6ZEZ1YVAS/BzhcTXlX4x63hV59Vzaav4hp4ySs9Z+ao+jYVrGUXh4IOBRDm8uQ4cwZ1mxB7yvnfR71W8vsg4ofWEGWsxKQT5qhq6nJi9jEUfbQEIbFypYjfMUlhWChA7gXgiJk4EUYo3V/cLNg=
+	t=1748350875; cv=none; b=WkG8ozW4z+RGBRNWXlihqzZgR6W43FEKu/CB5e+8VdJkE3tiOBEYCpTJwePpQkco7SuDuXiW37DPd8Z8Pz6WId7zHdrX3AaOCoeK8dTKnzdsdS3azd5rHj76dKCcl0fleiA6OlUdoDlreSLrK+HWLcV6maIq1+fgadWQ8zHfviU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748350835; c=relaxed/simple;
-	bh=rH0fS1EkuuKxnjq68htChxno+6ZqIneRHLz2oaYXSAU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTF8XOYCCWyyzc/o5vFREOdo3r02nO2JOalOZTHIU76pQYJC7h1u3LA9R2aTu4FpejXj2CUNpgDExIm6s9QwioFTZchsbOGe8CFys4dARwXsU6H/NpWlXkSAru24RSTK+p7vkZGuBpxIZ/UFXXmx96IcxLrzFnY9jIrRxi9fUCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SCyiXWXF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SCyiXWXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92C6C4CEE9;
-	Tue, 27 May 2025 13:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748350835;
-	bh=rH0fS1EkuuKxnjq68htChxno+6ZqIneRHLz2oaYXSAU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SCyiXWXF4GD5OzmsDdQm2QCmHs7Xi1pg9wMxuwnVVw/8vkuYASFSMMHdip77oyxSj
-	 tG5te1IK4mq50ciNIrEYi85zEql1zCDdnDDVCGPt1CbiJ9Rs6eW8JrIErnzB21A8E+
-	 q3uNIMmCP+OaD/aBHdF70fX0jjuiilWmXwyIK0MFA6Kt618+D5QeN/cAztiUxPldF1
-	 I8rnRBcwKcXHPPD5xL2q9zLQ5KVR3eqODR82grqgqX2zRz9ZEyFGW9dLjjhOVvtaAo
-	 IKypfo7BvCathejm9qT0X/ls7XOmb6/+Z2jz0gwXOb0ShLBLhgxULyVnX7LEIFYrop
-	 h4+pKxO03RMJA==
-Date: Tue, 27 May 2025 15:00:27 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: "Michal Wilczynski/Kernel (PLT) /SRPOL/Engineer/Samsung Electronics" <m.wilczynski@samsung.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC 2/6] pwm: Add Rust driver for T-HEAD TH1520 SoC
-Message-ID: <aDW3a1sjeWWfwaq8@cassiopeiae>
-References: <20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com>
- <CGME20250524211521eucas1p1929a51901c91d1a37e9f4c2da86ff7b0@eucas1p1.samsung.com>
- <20250524-rust-next-pwm-working-fan-for-sending-v1-2-bdd2d5094ff7@samsung.com>
- <aDMHEcpJn8nyJHFV@pollux.localdomain>
- <db8e34c9-daff-43d9-b79b-8ec1bc98a00f@samsung.com>
+	s=arc-20240116; t=1748350875; c=relaxed/simple;
+	bh=e3RWz1HSsecBHl0HCS04IuuI1P7LdQRmuFIuAJ37OuU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Qr7DgzeqYDmxtrfGtuTHliMPNNlL1oALlacG+6Q7YkzkLEGF5ILEDA6e4D1WqHuLD7ckdd4RpDi61AQ4B+xRH6PSml1O0TE26Tas0PX9zuOoHqdLgoaIlN2epJhPL/UBU49EHVePGWKE5+Irtlo1Nf+4us1ErH1OyK9YZzW6AkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b6CLv6wFDzvX0T;
+	Tue, 27 May 2025 20:56:39 +0800 (CST)
+Received: from kwepemh500010.china.huawei.com (unknown [7.202.181.141])
+	by mail.maildlp.com (Postfix) with ESMTPS id 585DE180492;
+	Tue, 27 May 2025 21:01:04 +0800 (CST)
+Received: from huawei.com (10.67.175.67) by kwepemh500010.china.huawei.com
+ (7.202.181.141) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 27 May
+ 2025 21:01:03 +0800
+From: Zhao Yipeng <zhaoyipeng5@huawei.com>
+To: <zohar@linux.ibm.com>, <roberto.sassu@huawei.com>,
+	<dmitry.kasatkin@gmail.com>, <eric.snowberg@oracle.com>,
+	<paul@paul-moore.com>, <jmorris@namei.org>, <serge@hallyn.com>,
+	<janne.karhunen@gmail.com>
+CC: <morgan@kernel.org>, <lujialin4@huawei.com>,
+	<linux-integrity@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] ima: prevent concurrent list operations in ima_lsm_update_rules
+Date: Tue, 27 May 2025 20:51:03 +0800
+Message-ID: <20250527125103.751077-1-zhaoyipeng5@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <db8e34c9-daff-43d9-b79b-8ec1bc98a00f@samsung.com>
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemh500010.china.huawei.com (7.202.181.141)
 
-On Tue, May 27, 2025 at 02:44:57PM +0200, Michal Wilczynski/Kernel (PLT) /SRPOL/Engineer/Samsung Electronics wrote:
-> W dniu 25.05.2025 o 14:03, Danilo Krummrich pisze:
-> > On Sat, May 24, 2025 at 11:14:56PM +0200, Michal Wilczynski wrote:
-> >> diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-> >> new file mode 100644
-> >> index 0000000000000000000000000000000000000000..4665e293e8d0bdc1a62a4e295cdaf4d47b3dd134
-> >> --- /dev/null
-> >> +++ b/drivers/pwm/pwm_th1520.rs
-> >> @@ -0,0 +1,272 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
-> >> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
-> >> +
-> >> +//! Rust T-HEAD TH1520 PWM driver
-> >> +use kernel::{c_st
-> >> +
-> >> +struct Th1520PwmChipData {
-> >> +    clk: Clk,
-> >> +    iomem: kernel::devres::Devres<IoMem<0>>,
-> > Why IoMem<0>? If you put the expected memory region size for this chip instead
-> > all your subsequent accesses can be iomem.write() / iomem.read() rather than the
-> > fallible try_{read,write}() variants.
-> The size of the memory region is not known at the compile time. Instead 
-> it's configured
-> via Device Tree. I'm not sure why it should work differently in Rust ?
+The current implementation of IMA policy list replacement via
+list_replace_rcu may trigger general protection faults under concurrent
+load policy operations. This occurs when a process replaces a node in
+ima_policy_rules list and sets old->prev = LIST_POISON2, while another
+parallel process still holds references to the old node. Subsequent list
+operations on the poisoned pointer result in kernel panic due to invalid
+memory access.
 
-There are two sizes:
+To resolve this, introduce a mutex lock (ima_rules_mutex) in
+ima_lsm_update_rules() to protect. ima_update_policy() also use the
+ima_policy_rules. Introduce a mutex lock in it.
 
-  (1) The size of the actual MMIO region, which comes from the device-tree.
-  (2) The size of the MMIO region that the driver knows it requires to work.
+Fixes: b16942455193 ("ima: use the lsm policy update notifier")
+Signed-off-by: Zhao Yipeng <zhaoyipeng5@huawei.com>
+---
+ security/integrity/ima/ima_policy.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Let's say your driver uses registers with the following offsets.
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 128fab897930..d27e615e97d5 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -471,6 +471,8 @@ static bool ima_rule_contains_lsm_cond(struct ima_rule_entry *entry)
+ 	return false;
+ }
+ 
++static DEFINE_MUTEX(ima_rules_mutex);
++
+ /*
+  * The LSM policy can be reloaded, leaving the IMA LSM based rules referring
+  * to the old, stale LSM policy.  Update the IMA LSM based rules to reflect
+@@ -481,16 +483,19 @@ static void ima_lsm_update_rules(void)
+ 	struct ima_rule_entry *entry, *e;
+ 	int result;
+ 
++	mutex_lock(&ima_rules_mutex);
+ 	list_for_each_entry_safe(entry, e, &ima_policy_rules, list) {
+ 		if (!ima_rule_contains_lsm_cond(entry))
+ 			continue;
+ 
+ 		result = ima_lsm_update_rule(entry);
+ 		if (result) {
++			mutex_unlock(&ima_rules_mutex);
+ 			pr_err("lsm rule update error %d\n", result);
+ 			return;
+ 		}
+ 	}
++	mutex_unlock(&ima_rules_mutex);
+ }
+ 
+ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
+@@ -1038,9 +1043,12 @@ int ima_check_policy(void)
+  */
+ void ima_update_policy(void)
+ {
+-	struct list_head *policy = &ima_policy_rules;
++	struct list_head *policy;
+ 
++	mutex_lock(&ima_rules_mutex);
++	policy = &ima_policy_rules;
+ 	list_splice_tail_init_rcu(&ima_temp_rules, policy, synchronize_rcu);
++	mutex_unlock(&ima_rules_mutex);
+ 
+ 	if (ima_rules != (struct list_head __rcu *)policy) {
+ 		ima_policy_flag = 0;
+-- 
+2.34.1
 
-REG0_OFFSET = 0x0
-REG1_OFFSET = 0x4
-REG2_OFFSET = 0x100
-
-This means that the size of (2) is 0x100 + width of REG2 (let's say 0x4), which
-means that you can safely define your MMIO memory type as IoMem<0x104>.
-
-If you subsequently call pdev.ioremap_resource_sized() it will fail on runtime
-if the MMIO region defined in the device-tree does not have a size of at least
-0x104, i.e. (1) < (2). That's not a problem because if (1) < (2) your driver
-can't work anyways.
-
-In return, you can call the non-try variant of the read / write methods of
-IoMem, which do boundary checks on compile time and hence are infallible.
-
-Note that this does not prevent you to still call the try variants of read /
-write in case you also have to deal with dynamic offsets that are not known at
-compile time.
-
-I hope this helps.
-
-- Danilo
