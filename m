@@ -1,172 +1,263 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D94013D8A3;
-	Tue, 27 May 2025 16:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01B92A1BA
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748361953; cv=none; b=PskXGZnDVFpNWhY5LlVhWu22LfwdK+eA9B+G4/xLakg2zTTLDj25jgODqGYvJdT1NjMVGxafCXA0d1SNXl961hsi02szV551AwPtt8dnB7mzbq4Hn2RjSOhO3sZK0rlx5C69+ArkzDCFmpioYRdgik4Tk8pB9OmPw1uiLXwio1o=
+	t=1748361980; cv=none; b=NqwEsQiUBK1A3qNq9/Hh3xM4+qZ2paG9NLNK7O+wceDfCyjJKkwJYrbLJs5LuoQrAWMq5397LcLq66hZQxCZARmvXulFrcgYwlYPCpW+72ufFoZz6DM1AjNJl6u25ORkPzWa8kLg87zqHKfOx8dQihDoEm9y1ygf3mXDWWqWDTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748361953; c=relaxed/simple;
-	bh=3uVamAYw/ZZsmkv6b5apdDz4d9BOYuF8j0j1I7FdKeM=;
+	s=arc-20240116; t=1748361980; c=relaxed/simple;
+	bh=fhnpy/PYcHEwPlpDVydVWjvf/DFa7I6kqd+DrbMW9HA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KfzyvBUdnD2M7Roax2DB/3dzqi3X1XWopnmCcSzmXzAAJTZIU1+L2+WNczzGostPS18d4XMDIRVXG3o64ZcQeF5+/DmX5uj4a2akoDzAxVGyskyhudyfG6ZGFtI9pvYs7aHgdJ7UkznyVgzmlsYc0Zggn+KvuCRmFnIEwtF+7Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CAfHfOjj; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wx1CzGlm36VQvBdjV7LikrUfiz3195vA496+1jZkxuSmucCgxzoBgJ6Fl4rXQWvVEmjKUceu9jj3yxUwYNcMGIXtW/FrfNRYSfYOXpWWz6/5FRL2J3LBrMOlPnbD1J7FbP72xkN8i/K4SzlsiV14Tlmv2okU60IdRrEKTbx7iwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdDdvhdl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAfHfOjj"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3081fe5987eso2729050a91.3;
-        Tue, 27 May 2025 09:05:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748361951; x=1748966751; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Qry7udYRwjpqYXgqHUem8Ub7uWZYWgOWIelkcLeOFI=;
-        b=CAfHfOjjs8iYx1lgQxda7Nknp9Pi53EzXGLio3ePcmET5xMiIR26wozsu/UCEUtX9l
-         kpxOHDe/IAqKi05VLPIn09YqyTXgmNXOxkWZ0VgE0WMaZF/f89QHTXXMU0I5GaG2usK9
-         dkiygIbfa3gHgNm5aS2m2BxEhxvMUkCUzXJlryscE2UmWVfPWbiQ+Auw1Rk80nV4WyCH
-         FcmituzgxjBfuJ8RB4TYZ77JyvWXrcQSsHLCH9m7FU3wr70uWysap8QM7mCm+V15epar
-         w7pdWs8Onl7lcfquUBQg4JCIvCcR6uDxkf8IiXv63i92US+uO1+A7LHNt8DwPwilu6be
-         n3hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748361951; x=1748966751;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0Qry7udYRwjpqYXgqHUem8Ub7uWZYWgOWIelkcLeOFI=;
-        b=TBNhbMBbb/cI/vveFnGdYWWyy6XbEojiPNXOjWgumAjziiCFiaztB2WjwGlzyfaFyB
-         PfVboW8wG6tzLDCo6xqG+VqWVX5nZEsEc/zMbZG2WTxSeGIAX7e6DWsY12MZoWpzQc84
-         k17+TnzFga3d/MpOsarPCF1G7Z0TzCGhT5sqyiVsiHGcZuemUyo1gaWZDtb8mFc/nfHp
-         1qr4lQOAA0UQZRyOnHvtpR5s8pdycn1ZL2ZsV/a71FV/ddpT6LlN7jiSn8PfyBrY2PF6
-         mNjcue9f+0gzunjOF8Wy+1OQJfljeA5P1tKwoChDrT/EAsiGOSArf4lgfjBtXNXhBR2x
-         sQSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVz3YxTI7QjB+Bq8NPoI+g527cKidWF9I4ybVGtGeNkNO5diZ5nmon7IKEdoqG7x9wj77Ouv23oiguG+CkG@vger.kernel.org, AJvYcCWZSrqvmad6cpbYiEUupxsXOsYa08vzGLvrO9Iz1JF5vWR6iy7sJglbnin5naLUcg153i4=@vger.kernel.org, AJvYcCXMUxbmxYZZtsHH9/IiAVbGyFjZnemxvjRQoH2XKr/+fEb7gPFXLOWJPNwGPE2H1WzrxB14sgIW@vger.kernel.org, AJvYcCXzR+mBh9TUHQ7jwpCNZyCHPlzDxVeo8Wy8+7bTk4GuvfimztyH5HQDtYkIgGPmldDy42DmwEnElkyJQg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIoqZE3/laNBKMJJ146GX7TEypYmFttcVUjFo4ZIEWWbqeJ3vL
-	h+S0pjRJQ+BcU87w5mhprRUi+0T2Misjs1v9sFz9o4GGFF7xXSm3f7M=
-X-Gm-Gg: ASbGncuCsBEdtl7sk8A2z5NQFjufnU6Fk1rZ5AhOEYLT8YYn8k6CiFg85rwR7gIKUjS
-	YSvSVZAEki8wqtJCSF+bjc3cmW7aJZjpbwmNrxxJsU9negP0Ud/zUrGvHmITWccSRnDnnyeKJxR
-	eRyLZoVMJyS8IH3Ep+dc6m4Jj467tDSV9inoyM/nWIH9DiulrZcJduchzNhd8Z32rqsDVJYd77D
-	yyBcC3tc9+tNG5qzxgrDrgS/iSA7sFYhKP+HEeOw+irXiFGluw20oBv7NQ1OteXpRvBlHRASYxT
-	Vy6axOEawkoCGnbbzTfXKwMpJOTyi+gvApq7wD4DKrcWSvLo0FdQea3tj6Nsn/9eqYJ4vK6EiRB
-	ZzRm389+r+z67
-X-Google-Smtp-Source: AGHT+IGQle7yz7txHkcZJJeQ7vhqL2kOqgfxzaXuleoaBckDZAadK0HPUqlnTevvgVxcFugate7byg==
-X-Received: by 2002:a17:90b:358e:b0:311:9c9a:58d7 with SMTP id 98e67ed59e1d1-3119c9a5b91mr5059535a91.19.1748361950545;
-        Tue, 27 May 2025 09:05:50 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3110f0926c7sm7425747a91.27.2025.05.27.09.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 09:05:50 -0700 (PDT)
-Date: Tue, 27 May 2025 09:05:49 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	Dragos Tatulea <dtatulea@nvidia.com>
-Subject: Re: [PATCH net-next V2 00/11] net/mlx5e: Add support for devmem and
- io_uring TCP zero-copy
-Message-ID: <aDXi3VpAOPHQ576e@mini-arch>
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdDdvhdl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE95C4CEED;
+	Tue, 27 May 2025 16:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748361979;
+	bh=fhnpy/PYcHEwPlpDVydVWjvf/DFa7I6kqd+DrbMW9HA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DdDdvhdl9/WhALce1PvLBmS1u06oCNqHo4C0LhFURX+uCMKDsSKDEWA9HYUjD4PHD
+	 b+ap64mjxk50hj4TuCL1/9+0ZI7s0FQqKGl0gJGoxZh/paZm9Z2dMCUzUu+mccXC5I
+	 P9k8WEvtzyItIvWj0Gtyv/ZZ5HGC6Gp/3KxaSI7hOx3HeBr6sjVgi+G2m98bBhTVd4
+	 ekfvvJ3ruqpVHIiRk3TJI/EEPFIukiDv3xgtXrSvevoiz6M4NbCrJ9PZmV1jyYiLxo
+	 luMSEb4AUsV5pS7EuZtQ7s2o2aFBMg2H6lqx8OqslM3FoGa0PEcRzjhbBN1SZtiGNh
+	 NXEnRzsNQsSsA==
+Date: Tue, 27 May 2025 18:06:16 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Anusha Srivatsa <asrivats@redhat.com>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/3] drm/tests: bridge: convert to
+ devm_drm_bridge_alloc() API
+Message-ID: <20250527-light-classic-raptor-d81327@houat>
+References: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
+ <20250516-drm-bridge-alloc-doc-test-v8-1-7e356fd58ba5@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="wuleouispyfh5nea"
 Content-Disposition: inline
-In-Reply-To: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <20250516-drm-bridge-alloc-doc-test-v8-1-7e356fd58ba5@bootlin.com>
 
-On 05/23, Tariq Toukan wrote:
-> This series from the team adds support for zerocopy rx TCP with devmem
-> and io_uring for ConnectX7 NICs and above. For performance reasons and
-> simplicity HW-GRO will also be turned on when header-data split mode is
-> on.
-> 
-> Find more details below.
-> 
-> Regards,
-> Tariq
-> 
-> Performance
-> ===========
-> 
-> Test setup:
-> 
-> * CPU: Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz (single NUMA)
-> * NIC: ConnectX7
-> * Benchmarking tool: kperf [1]
-> * Single TCP flow
-> * Test duration: 60s
-> 
-> With application thread and interrupts pinned to the *same* core:
-> 
-> |------+-----------+----------|
-> | MTU  | epoll     | io_uring |
-> |------+-----------+----------|
-> | 1500 | 61.6 Gbps | 114 Gbps |
-> | 4096 | 69.3 Gbps | 151 Gbps |
-> | 9000 | 67.8 Gbps | 187 Gbps |
-> |------+-----------+----------|
-> 
-> The CPU usage for io_uring is 95%.
-> 
-> Reproduction steps for io_uring:
-> 
-> server --no-daemon -a 2001:db8::1 --no-memcmp --iou --iou_sendzc \
->         --iou_zcrx --iou_dev_name eth2 --iou_zcrx_queue_id 2
-> 
-> server --no-daemon -a 2001:db8::2 --no-memcmp --iou --iou_sendzc
-> 
-> client --src 2001:db8::2 --dst 2001:db8::1 \
->         --msg-zerocopy -t 60 --cpu-min=2 --cpu-max=2
-> 
-> Patch overview:
-> ================
-> 
-> First, a netmem API for skb_can_coalesce is added to the core to be able
-> to do skb fragment coalescing on netmems.
-> 
-> The next patches introduce some cleanups in the internal SHAMPO code and
-> improvements to hw gro capability checks in FW.
-> 
-> A separate page_pool is introduced for headers. Ethtool stats are added
-> as well.
-> 
-> Then the driver is converted to use the netmem API and to allow support
-> for unreadable netmem page pool.
-> 
-> The queue management ops are implemented.
-> 
-> Finally, the tcp-data-split ring parameter is exposed.
-> 
-> Changelog
-> =========
-> 
-> Changes from v1 [0]:
-> - Added support for skb_can_coalesce_netmem().
-> - Avoid netmem_to_page() casts in the driver.
-> - Fixed code to abide 80 char limit with some exceptions to avoid
-> code churn.
 
-Since there is gonna be 2-3 weeks of closed net-next, can you
-also add a patch for the tx side? It should be trivial (skip dma unmap
-for niovs in tx completions plus netdev->netmem_tx=1).
+--wuleouispyfh5nea
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 1/3] drm/tests: bridge: convert to
+ devm_drm_bridge_alloc() API
+MIME-Version: 1.0
 
-And, btw, what about the issue that Cosmin raised in [0]? Is it addressed
-in this series?
+On Fri, May 16, 2025 at 06:48:37PM +0200, Luca Ceresoli wrote:
+> Use the new DRM bridge allocation API, which is the only supported now, f=
+or
+> the kunit tests.
+>=20
+> This change is more massive than for the typical DRM bridge driver because
+> struct drm_bridge_init_priv currently embeds a struct drm_bridge, which is
+> not supported anymore. We new have to use devm_drm_bridge_alloc() to
+> dynamically allocate a "private driver struct", which is a bit awkward he=
+re
+> because there is no real bridge driver. Thus let's add a "dummy" DRM brid=
+ge
+> struct to represent it.
+>=20
+> As a nice cleanup we can now move the enable_count and disable_count
+> members, which are counting bridge-specific events, into the new "private
+> driver struct" (and avoid adding new unnecessary indirections).
+>=20
+> Also add a trivial bridge_to_dummy_bridge() just like many drivers do.
+>=20
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>=20
+> ---
+>=20
+> This patch was added in v8.
+> ---
+>  drivers/gpu/drm/tests/drm_bridge_test.c | 95 +++++++++++++++++++--------=
+------
+>  1 file changed, 55 insertions(+), 40 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/te=
+sts/drm_bridge_test.c
+> index ff88ec2e911c9cc9a718483f09d4c764f45f991a..f3a625c536f610dc8560b5653=
+1056df7c613f564 100644
+> --- a/drivers/gpu/drm/tests/drm_bridge_test.c
+> +++ b/drivers/gpu/drm/tests/drm_bridge_test.c
+> @@ -10,31 +10,45 @@
+> =20
+>  #include <kunit/test.h>
+> =20
+> +/*
+> + * Mimick the typical struct defined by a bridge driver, which embeds a
+> + * bridge plus other fields.
+> + *
+> + * Having at least one member before @bridge ensures we test non-zero
+> + * @bridge offset.
+> + */
+> +struct dummy_drm_bridge {
+> +	unsigned int enable_count;
+> +	unsigned int disable_count;
+> +	struct drm_bridge bridge;
+> +};
+> +
 
-0: https://lore.kernel.org/netdev/9322c3c4826ed1072ddc9a2103cc641060665864.camel@nvidia.com/
+If we want to remain consistent with the rest of the names, I guess
+drm_bridge_priv would be a better choice.
+
+>  struct drm_bridge_init_priv {
+>  	struct drm_device drm;
+>  	struct drm_plane *plane;
+>  	struct drm_crtc *crtc;
+>  	struct drm_encoder encoder;
+> -	struct drm_bridge bridge;
+> +	struct dummy_drm_bridge *test_bridge;
+>  	struct drm_connector *connector;
+> -	unsigned int enable_count;
+> -	unsigned int disable_count;
+>  };
+> =20
+> +static struct dummy_drm_bridge *bridge_to_dummy_bridge(struct drm_bridge=
+ *bridge)
+
+bridge_to_priv
+
+> +{
+> +	return container_of(bridge, struct dummy_drm_bridge, bridge);
+> +}
+> +
+>  static void drm_test_bridge_enable(struct drm_bridge *bridge)
+>  {
+> -	struct drm_bridge_init_priv *priv =3D
+> -		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +	struct dummy_drm_bridge *dummy_br =3D bridge_to_dummy_bridge(bridge);
+
+and priv for the variable name is enough here too.
+
+> =20
+> -	priv->enable_count++;
+> +	dummy_br->enable_count++;
+>  }
+> =20
+>  static void drm_test_bridge_disable(struct drm_bridge *bridge)
+>  {
+> -	struct drm_bridge_init_priv *priv =3D
+> -		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +	struct dummy_drm_bridge *dummy_br =3D bridge_to_dummy_bridge(bridge);
+> =20
+> -	priv->disable_count++;
+> +	dummy_br->disable_count++;
+>  }
+> =20
+>  static const struct drm_bridge_funcs drm_test_bridge_legacy_funcs =3D {
+> @@ -45,19 +59,17 @@ static const struct drm_bridge_funcs drm_test_bridge_=
+legacy_funcs =3D {
+>  static void drm_test_bridge_atomic_enable(struct drm_bridge *bridge,
+>  					  struct drm_atomic_state *state)
+>  {
+> -	struct drm_bridge_init_priv *priv =3D
+> -		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +	struct dummy_drm_bridge *dummy_br =3D bridge_to_dummy_bridge(bridge);
+> =20
+> -	priv->enable_count++;
+> +	dummy_br->enable_count++;
+>  }
+> =20
+>  static void drm_test_bridge_atomic_disable(struct drm_bridge *bridge,
+>  					   struct drm_atomic_state *state)
+>  {
+> -	struct drm_bridge_init_priv *priv =3D
+> -		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +	struct dummy_drm_bridge *dummy_br =3D bridge_to_dummy_bridge(bridge);
+> =20
+> -	priv->disable_count++;
+> +	dummy_br->disable_count++;
+>  }
+> =20
+>  static const struct drm_bridge_funcs drm_test_bridge_atomic_funcs =3D {
+> @@ -102,6 +114,10 @@ drm_test_bridge_init(struct kunit *test, const struc=
+t drm_bridge_funcs *funcs)
+>  	if (IS_ERR(priv))
+>  		return ERR_CAST(priv);
+> =20
+> +	priv->test_bridge =3D devm_drm_bridge_alloc(dev, struct dummy_drm_bridg=
+e, bridge, funcs);
+> +	if (IS_ERR(priv->test_bridge))
+> +		return ERR_CAST(priv->test_bridge);
+> +
+>  	drm =3D &priv->drm;
+>  	priv->plane =3D drm_kunit_helper_create_primary_plane(test, drm,
+>  							    NULL,
+> @@ -125,9 +141,8 @@ drm_test_bridge_init(struct kunit *test, const struct=
+ drm_bridge_funcs *funcs)
+> =20
+>  	enc->possible_crtcs =3D drm_crtc_mask(priv->crtc);
+> =20
+> -	bridge =3D &priv->bridge;
+> +	bridge =3D &priv->test_bridge->bridge;
+>  	bridge->type =3D DRM_MODE_CONNECTOR_VIRTUAL;
+> -	bridge->funcs =3D funcs;
+> =20
+>  	ret =3D drm_kunit_bridge_add(test, bridge);
+>  	if (ret)
+> @@ -173,7 +188,7 @@ static void drm_test_drm_bridge_get_current_state_ato=
+mic(struct kunit *test)
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+> =20
+>  retry_commit:
+> -	bridge =3D &priv->bridge;
+> +	bridge =3D &priv->test_bridge->bridge;
+>  	bridge_state =3D drm_atomic_get_bridge_state(state, bridge);
+>  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, bridge_state);
+> =20
+> @@ -228,7 +243,7 @@ static void drm_test_drm_bridge_get_current_state_leg=
+acy(struct kunit *test)
+>  	 * locking. The function would return NULL in all cases anyway,
+>  	 * so we don't really have any concurrency to worry about.
+>  	 */
+> -	bridge =3D &priv->bridge;
+> +	bridge =3D &priv->test_bridge->bridge;
+>  	KUNIT_EXPECT_NULL(test, drm_bridge_get_current_state(bridge));
+>  }
+> =20
+> @@ -253,7 +268,7 @@ static void drm_test_drm_bridge_helper_reset_crtc_ato=
+mic(struct kunit *test)
+>  	struct drm_modeset_acquire_ctx ctx;
+>  	struct drm_bridge_init_priv *priv;
+>  	struct drm_display_mode *mode;
+> -	struct drm_bridge *bridge;
+> +	struct dummy_drm_bridge *dummy_br;
+
+and bridge_priv here.
+
+The rest looks good
+Maxime
+
+--wuleouispyfh5nea
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDXi+AAKCRAnX84Zoj2+
+dtRQAYDbjcMaz/8a550fi6QrsmkycaBeqok8lCpS4EJHUCa65ELnuaOeziWPUXSd
+t+ioaMEBgI4d1Ql+qCvefbH9zjs3Kkq12Z72QFk7GqUPV1nhjMp2f6k78btttSf7
+HhKh2tDiew==
+=WOE7
+-----END PGP SIGNATURE-----
+
+--wuleouispyfh5nea--
