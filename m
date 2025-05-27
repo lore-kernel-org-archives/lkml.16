@@ -1,367 +1,441 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2057.outbound.protection.outlook.com [40.107.237.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B899719DF7A
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748358158; cv=fail; b=V8AvmVCmTcz/bdcuYMBWy93p/IA+fkKMu8Xk/8ZEpArzjd84TY4cki006HZLYjNJyPgyotEGPjFJ/KWHUNuW9Wsm3XOWtkr/3v56ymfsLUJbZWtDVqIk6HItTtU7mqxfC4MZA8zuowh+n+yULLcasYCUrQxD1oOqaWdywKuVPMI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748358158; c=relaxed/simple;
-	bh=bDGRI6AI6+jYFDhwn97iq2tm/QlfrGnFn5+qTx2KMfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ornx4f1IlP+Yl2xPbNTHE9bOGBFiHLnTzIFvaO/UMRyi03wuBjqk1SN3dFnLBWmNS7KSaN/u4CMJRHympMZP75RRWbu7vyS0wyvPdP/dLLQ0kbAfOATaEBThIdxf/9unZJpwCjuQSO7xfYUhOq1llUGSD4yeP6+OWNRQ/Iniixk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZaC+im6V; arc=fail smtp.client-ip=40.107.237.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366CB1DFE8;
+	Tue, 27 May 2025 15:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748358166; cv=none; b=UKd0SLFf5VozSVGdhXFxIS0SYnVkiiftg0zVXao/YXPQtbjDPLkZmfYfo51ih7Zk6Fy8Dx0ejLYTpTmt0/NYTPm1EVOY6WPdWGP6e6qp+2pGJESwr51kkeKEq3zPSdsRFW6ba2s/4qmtJSU4i/SJLO3mjUlcRkfkQNWnsBO/4YA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748358166; c=relaxed/simple;
+	bh=ufI9LxH1wobCT8D1b4h/1BazhweXoWGp1yYCwSHwCI0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ti0fGA1cb1cjn2Pin7qUZXDkuB7YFE77sv9RWqM9EerUnOKaIghMbveiMnPUA/pg7wP4gqA6qXxqyTkY3lm7cQ1tDPkMBgxGww66MY2YC2vRVi/DOWBTThiWQUrgGsATEX3cW25LT/6SAXxVjCs2PH7vpg18n0Kxvhej8W3NEnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpChaz+o; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZaC+im6V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VdQT+mHm7p9Imoa0Z8DYipxaHmiqvN6hiLs9tK+qsI9Z9FZFmywvLiiOhkVu4dQdbagGhAS0M8mFg3w50/nYdTBF/zC7KhwAEVBrgUqxY0dEfzN99y9IBYD7eKnIAV6P3Tiq2nuf4opkn7AwTurDFO0J94Ay/DG+uXn6yAql9Kc9xaDMGhlqhct2dwHMv1cTiuCtrKeQPbDJtd1F+GNqLdDBufRfGHk4JSO6Miqbpik5c/v3X1vb3Q43LIHSrqLH4Yjg0LCe5Ma3nGzw9IqOMIdznFBDOU39ynLCpkA3/1WwPYbP1K06EdiHqHyP1/U5uncF2QWkdc7cweTV/Cof7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6rRo8W5Yk8foXvgjX1nlwOj2RpqjVpAl/hZRobBjObs=;
- b=Itob4cmZjfRIucoIpn20Rutnmobz5OmXQJqh2uo0LZhG/H44p+R9IKEiWBd98uREZf8vPf22jXdoea13gWKvDvKnwSQFVeGyi2ZOJL+JaHBDo3nAkdEHUshMAH1ospV3RtW0tZAzTcH8RwxLXPoHx4dfTBvoXc3Oo7oUQfTuzN18VyOlJaPB60K7jXkb/gjJdz6Sgy535x4yMWOitp6B+0cyv19P+c/E5ETdFbrEBO02mzz6Gbkf+VKS0BkiIBUjw4b465tLAO2/ODrBHxLQYhnm41eq7U0/nGVXuV0N6D7w/3dzljB3I5UM3C/J4+WGzKW1KdoCvbKTHjM2K7D0PQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6rRo8W5Yk8foXvgjX1nlwOj2RpqjVpAl/hZRobBjObs=;
- b=ZaC+im6VQ9xarKO51jMXzQqR7RPhhddDOiP0Gbv6Rgc/RNiIsXIrUtSyPkiYaLujnRHQc+3mPVVxOMBJCYAC+dsHFawsiRWpNdvnb4hVp+D5QRTAYWyb10T7HeZAYWUMLYQP3Mu6hMJ8EiBZU1v0S3VyrzvnfaZ8kuu22MXMdOob83xscGNhOd0SPXBGdNAVTfVlF6aH38miEPYnR/LEYjMDjHZlO+Tlyom4gOTISCWDFpsJmqc6AsKX1BEz0GXoRThaU4IQWtlOo1/zDZl9sLrkzF5Zf9x2sKmeTRkPYtYKuHYvg/IiYuyz96OfO/12FJNuR4wJeVnlK3ia/elqng==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- CY8PR12MB7147.namprd12.prod.outlook.com (2603:10b6:930:5d::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.29; Tue, 27 May 2025 15:02:31 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%4]) with mapi id 15.20.8769.022; Tue, 27 May 2025
- 15:02:31 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Vlastimil Babka <vbabka@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Oscar Salvador <osalvador@suse.de>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Mel Gorman <mgorman@techsingularity.net>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Richard Chang <richardycc@google.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] mm/page_isolation: remove migratetype from
- move_freepages_block_isolate()
-Date: Tue, 27 May 2025 11:02:29 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <FB393186-FE4D-4A67-9701-7BC4946AC222@nvidia.com>
-In-Reply-To: <2d8017fb-474f-493c-84ad-df172987e65e@suse.cz>
-References: <20250523191258.339826-1-ziy@nvidia.com>
- <20250523191258.339826-5-ziy@nvidia.com>
- <2d8017fb-474f-493c-84ad-df172987e65e@suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MN2PR13CA0027.namprd13.prod.outlook.com
- (2603:10b6:208:160::40) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpChaz+o"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-328114b26e1so22267861fa.1;
+        Tue, 27 May 2025 08:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748358162; x=1748962962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oWnpNgtFcY6Rfei4jRxG9rFAWp+cX3YYTz4I7H9Ixuk=;
+        b=KpChaz+oMtIU2ZaM4L8qlfQj60EJ52fMREPaNr65QKahaPTrdFMFPGRRvimOjDF7Gv
+         pLlYu1Cq4kwD61FOKDbtxXNuNI8x91VL9RmjsgjpwflbwhMRSZWhEgQ/EWy9Ae7zjTlU
+         TzG7MsMdDXb8JGmZKXAxRNqFUvhRwXiqYiKJkKryGNmrZ82de8C7O4W/YPRKfyrMrJOG
+         DeYtCC4e4Rm3YBWReO7aX3Cbw+Cbc0kaFElIcc3HQ9FP6ZfyPQl85urcQOO15fnmD8yJ
+         2DHdB+n+2xbxwbRKBsONstpMAYZOeNRK9/phxUNYRq8ZezE5G+Xf0q7d8Pezjn/SYF13
+         88/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748358162; x=1748962962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oWnpNgtFcY6Rfei4jRxG9rFAWp+cX3YYTz4I7H9Ixuk=;
+        b=vYzLXEHdx+ZgoupeVjUWzn2FeewBRRcm+4IHvC9lB6bpn1hePWMxKilIwlAsi/40MM
+         kTKDQ7p2zDS4+THAFk/tuj6HE5C+Dy2Y9YLQHGLOZ0XHPt+cOJBVxMcK30cWDfYem7a3
+         fqz0xsC7hxZjw5HV7aiw+lVU+l85u15uTWIWd5pz9MC1Q4JtJqmMFHcx9ay0k1rXXlz7
+         uh1iBWU8IN/rpZXonsd3CxMxHSg5AqIKMgy3LdLyf+2PwiBz4tH9sMRvD26ucgIVKkVw
+         brgQ/GgSuz+aRpy8CckHn9i4QCV1y2j21Uu1bqqsmyyGjBlgZ48KCDPxZGOsPsvk8Ztm
+         3gMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtVSeZm7qYipcF98W5/i44Ank6VQBlBPG7raWmhFxLRc7wxj+ax9ULPoSCFSwPFU/Jz2nxhORktnBaL5A=@vger.kernel.org, AJvYcCVCK6//BWi5PSxUI8OEI5LxQDPf0vhxBzv73ajyf9FBly4BFiRgfmBkwKn1VDsql1U2uHdcKbD/k0TF01Gxd6s=@vger.kernel.org, AJvYcCVaUnTfnmTYLCQECACrEl41plhxoO6HUaICFo9i6xCgnqORfhb7/xGkgQIatFKvvHtZTr7Qs9K22otL/id5CTrg@vger.kernel.org, AJvYcCW6IVVy3vzlw6r1EzUwn8SfdnF3th6iKnc31LDUn69KPaCpG2AiJ/9G/RJiVNpTaFVh6ad+CrDRv1qS@vger.kernel.org, AJvYcCWdM7WKo3s/L/UMe6ZHJMaj1pMbIs8IvC1N/GosbGWgi9/x7jBnvpvVfku5Imre7DXbAiLFxiZoWUbV@vger.kernel.org, AJvYcCX7ie9rDmFrSY09hbWek8I11f4rJE5a0xSR6N16Cr1dEiu4/NpjnpnUeINP7LSXvaSsEnSD001Z@vger.kernel.org, AJvYcCXtUnsgmRoh+fj+hwbkVaosR5Lfm5e8pUV442jgezTLyTHahjJxD3QuAqylF8WSdwC5KxImUloF6u0jF8aG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwZw5kuw2UShtqwotphoBoY4VWzud4qZcQwnh6/L+h0u1eLnNe
+	qXUAKAGTV3O7ANJmsIPRANMRJ27zegUfZDMBnAWr+thvDR5OTUdFxq5FBIdk4mHQayzQXZSuDW/
+	TTCuJ31V8cVXYR9Ys7ddI/V6mGerDEco=
+X-Gm-Gg: ASbGncuVu2vef9NTg9ib85P6AZQYn358PtGX4v9KsgDhytqazt9Bfh2oKPnhNSmXNiN
+	+RyJ/ADVVzsY+4ZdwpXFZ/QAUaozBHNNEe13nO4y0hm184YgRC1HF+ZFLhISSl+nlwWETzCRSU1
+	w95ReEmr0//c+b2RsAu8K6xNf/laUPJh1+8hKtyoaHaErxaBCI
+X-Google-Smtp-Source: AGHT+IGFw/n0N4u0zEu1rQhqLzZPgaC14Lz0t0tgt/02Nzcqwd49+7j8OT/V+Lq3Y4h3EFBfzwAWStg3WQPZ89F2+a4=
+X-Received: by 2002:a2e:be1d:0:b0:328:604:9da8 with SMTP id
+ 38308e7fff4ca-3295b991e39mr39297221fa.6.1748358161709; Tue, 27 May 2025
+ 08:02:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|CY8PR12MB7147:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f479141-328c-4c24-cee8-08dd9d2f8148
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NWw2NkxCdm83UU9GYXFEaUwwTVFlOU9XQzdtQW80TkRqZ1pEa0NrNGd5azRu?=
- =?utf-8?B?dzMwU1FZamtOT0NYSFMxNGZXNkRocUtJdm9FakI5U2Fva1hNN0tOM01YSVAv?=
- =?utf-8?B?UHpJZHB1YzdSd3VVRnlMRWdoR0xRNlVsNjU2bXZNZG02eTEyZlY3SHBzMXpX?=
- =?utf-8?B?aVVRYlhoSkhvVkJERDhCbmNLQ3R4TFI3WE91azREcS81NmQ2SlFVU1NJazVj?=
- =?utf-8?B?dnFUdnVQR1NoNTdGV0RwbzMzcW82NDA1TzdBd09FUUVWRkN2ZmhROFpydkZE?=
- =?utf-8?B?YU42YjhTaUVNazlQSmNwM2d1TTM5UUVqSjJyQ3RYMWNtVWtGNTRmUmorbnpX?=
- =?utf-8?B?UXQyaHNwSG5PVGg4YkNpVUI0NTRldWxGNFFJbzhRTEVVSXVNWXF1NkV0ZVBC?=
- =?utf-8?B?N0Vub0E4VndIandkSUl0TlkybmxuL3huT3RmL0Z3OHc0d3NlSFFPS1FIUmFz?=
- =?utf-8?B?dlNrQ1E1ZlhPMEszV3RGVzRtUEJMeVJpMElFb25JVGJjdE50aEdVaXR4RXNL?=
- =?utf-8?B?NFduaUgzQjNwbnRlcDNaQy9KazJ1RFNzNzdDQ0V1aHhYRTY4OHV4MU0yYUY1?=
- =?utf-8?B?bW13bmJhYXhhd2ZveHFtNkpXdmljWVpsRDAyeitxb2Z6WXpDRHc4M2pMSTJt?=
- =?utf-8?B?bm1hNWxySjhTMTUvcjVmb29IRGRkZldXZ3FzWTFFUHBKTFFGWTVITzluaUZq?=
- =?utf-8?B?UFpUbU1LQ3RjMUlybUNmWjBXWjFZQllPbHJPZVIwTmxiREZFSU5HZ0dxMWlL?=
- =?utf-8?B?MTd1SXlyODZtMlFuRkUvY2NKOWtYWkdqZ09DZWVVd2thNkljajFDM2RVR2FB?=
- =?utf-8?B?VXFGZWhwVFZJN3QvODVZZVJvajBESlZVc1ZsZ2lpdTgrQm9Fa0VhbzdJNjZD?=
- =?utf-8?B?aFNjdTVIYmoxNzVlRkR1cmFQTHplN1ZyZGZLaDBRblE1R3h5S2NEcDN6MFV5?=
- =?utf-8?B?ejhGQStlb3FPcy9GNFkzVnUzUGpHbTVnYVlqZ1pCMmpuUERXa0xVbWlOOGpx?=
- =?utf-8?B?VENseHRLU3JSd0YwK3NPdHlGZXdhWnNXL20waXdKdGRYd1JrNENFSlN4Undu?=
- =?utf-8?B?TzB1a1BRa2twL2NKUXhLYUN6SktKZjBrRW5GaGN4a1U0ZWlORWc4UG9ZRVdC?=
- =?utf-8?B?K1lrK240MEZpR2xKWkZMc2tJcS91VGUwTVdvOGlXOTYwcGNIR3hibGJnSDVE?=
- =?utf-8?B?RXFaaG54R1JHWkJJVjRFMjRZUURUcnQ0emtuRnI3aVpxL3N4eFNhVHVtZk4w?=
- =?utf-8?B?Nng5WWI2bUJabUxYS0YwWDVYczlKb2NpQ0pNaDBvd1FkMmlzQTk2RHl3aTVn?=
- =?utf-8?B?RDBPQjFRL1Uvb2VEK1NXMWNkZ1ZJeFRjVnNPSHVqWUt4cU5BVzVSa2ZnVEo4?=
- =?utf-8?B?dXJSb0h5WVFGL3RxclBJUVFrWUx4NkgrRHRzRmpNTXp4ak8vYjlUWWxGZEJM?=
- =?utf-8?B?NWZBdVkvUFRIUER1Mi9MNEVqd0c2NkovOUdISnBXcGZDN3lpSGVKa3MwTXp0?=
- =?utf-8?B?M3RSQU1Wa2RTSXN0TzhqdEpHWGZ2YXlEWTRVRkJlc3VPMjN0ZlBLK1A3NnlN?=
- =?utf-8?B?Y3UwMlMwVXJHRFFyVkZaQlJEaitMejRLaEVpWlU5LzFWNm9nWTA3c2REa3Er?=
- =?utf-8?B?VVJ0OW9UYzlkTTdEdjF6bkJmZUF3OEZScGt5MkNTaEQzQkhHVzF5emJOZ1lH?=
- =?utf-8?B?aGF4WUhnalU4NExWV1AzbFdQU05WM25EOUVoaS9OY2NKYlpWU1p2TnFON0Fq?=
- =?utf-8?B?UWQ5ZktER09KOVdYMlVzV2JpbjRDQnNnQ3JqSmdHME5oeTd3OUlhSXlaL1VD?=
- =?utf-8?B?SGVyMVNiclFPWHVHdzRCc0VvMkh2UHZpaDRwOU1iRjJ4VkhJRFU0dmRObVhm?=
- =?utf-8?B?M0EyTk1NOGt1emQxSG5KVVFycWhMalRNVDJhWFpBZWdxTlN4ZWNZaDljZVp1?=
- =?utf-8?Q?PGKyknFKE84=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eTZPbUJITDRmV05nbkdKTUg3SXZTQzZTV282Q2ZTNGFHVlpZaVllUGZDeVFO?=
- =?utf-8?B?TjRRRVhnVkhNOWI1RUVuNElTbmRJUDlQVXBQOEJzRjErcVp5WTJaWFdPcjN0?=
- =?utf-8?B?bFNEeFhaZm1oUEVXQ3BLcnJkbFk5bkNUWXBxUTUxTHZTZkhmWCs3MWhOcVZC?=
- =?utf-8?B?MDBsYXFFeTZGbU1zWHB0eDdOV1hJajNYcWdsdjl3OGhnYWRnSDJYNjM0NkdR?=
- =?utf-8?B?UGdyVmJEay8rZGc1eVlqdXU3Y3JvYjNTd0NLT21VTXRmSk1mQ1MwV2tORlJG?=
- =?utf-8?B?Y25KcUhrcmZPL1dWcTB4VlFzei9QTXZFeXNzVXlsUlpDd1NkR2dBTXk3RzJW?=
- =?utf-8?B?Z1pWRFh4WEpxZC9BWnBDNG9wSVRJZGU5bjcwQWNNaXhYcXk2QzlqQkdsWGpF?=
- =?utf-8?B?cU50Z3NuakpWY1BVVEZrdjhJc1NqY3FtS011ZStMYTkvNnNpa2N3Nno2S1Bv?=
- =?utf-8?B?a1VaMWNMbHJRT3VIRW82eGpzbnhONWdCK3NmNEJCVCsvRkY1WlNFT29qbW1T?=
- =?utf-8?B?T2ozUmFZZzY1TWZObGNCMk5Wc2JWMW5kQWJVY2d3Wk9WcFN3NE43L0lRUTV5?=
- =?utf-8?B?QkVNRnB4UlEzZVU3M0VuOWFTRnhqckU5WDBSa3NDc0RBbURqeXRVWDk1RXRV?=
- =?utf-8?B?dk1RdWhmUVNrN1Rpd296L2RSVUZEV2xab3lLcXFYRllLU3h1THIvMDRHVXpV?=
- =?utf-8?B?SkVKdmY5UFlzVWZXeFVyVmI0THVsVWNoOE4wazdLbGt5TnllM2VDY3FQOWNV?=
- =?utf-8?B?a0xGQnFVNDEvb1JjdXBucVRNZHVrYWRqSWYrbXBUMUFLRmZUbUJFeFRIalNh?=
- =?utf-8?B?cW5VUy9pTXdmMVU5dXhwV0x1UDUyOWdSWG5lSjhVbXR0TDJsamxYL1JSTnRO?=
- =?utf-8?B?Uk5xUjc5Vk44TDRlU1ZENGk0UlR4TDZobFgxV1BZcHJ3Y2UrYTJYTnE5M1lS?=
- =?utf-8?B?cE90ZDdENEFlU24zRWZCQ081MWJ1RHN1bUgxTlF6aHFSQ043VzR2MGg4L1U0?=
- =?utf-8?B?NUlUOGF2N3VSVTJEalQ0VkFDUzd0SERwcXVqNDF5elNDdURMUkovMjBteDBG?=
- =?utf-8?B?aHROaEpMc3hFZVpWRXkxU3VBUGE3NzBlVExXTFVWcFo2RTFqUTRxVmhub28r?=
- =?utf-8?B?MVdKRU1SUEFDRHovc1dUNVZNdW9MVzNURUkzaHA1ci9zQlRnUTB5aXF6QXp3?=
- =?utf-8?B?Q0VpS1VFVzZsWTdqUytvVGJKNWZkM0VTeFJGZkwzYlN3MG1TTnVSRk5yRGNh?=
- =?utf-8?B?cloyUEs5RWpCTGdxS0ZCYk00MXJ0RzNEOG9IZWhFc2xna1NVMVlIRXJSa29R?=
- =?utf-8?B?b3JPMXFxSUEwSkV5aklCQVhaemRsOHR2MzhBRzN5ejBzdUF3UWxRNUw0N0Rn?=
- =?utf-8?B?SkNPZUhRcnFYUDJnTmxrNEJWTk9INk5FUkc0bThFcWErb0t5VHJ4aHFtMkRo?=
- =?utf-8?B?aEZLQko4eFFGdWhqamJwRi82d29Ra0o2VktVbVF1aFd6c2I4c0J6WU1BOExn?=
- =?utf-8?B?eWgwTThZQUd2MDB6YXQxWjVtS0lGWFcxb3ozUkp0eXZkNXhKQUR0SDlEMXdV?=
- =?utf-8?B?SkdPbHRuWTl1ZWc1eGRablhHSHFqbmZJZVJtTERMbnc5Z0xrWW5EZFNNRnBk?=
- =?utf-8?B?UW9uVVp5QlowbE9LYlJHc001VEFmVlhaMXoxWUNaQ1IvYkY2MXlDc0FjUUkr?=
- =?utf-8?B?UFhaSk04Z3p1ZndWZW9LVkx0dWNNOUlaWksxWHdzMkZXcE5QVTZEeFlDajhX?=
- =?utf-8?B?aXZJRWxDb3pIdUVEVnlxbjM1dE1EYW16ZWRFckwxRnV5dHR2UlplSmxVemNh?=
- =?utf-8?B?QUJNN09HMXlpOVd2M3BHcHM5RUM4S2RPVDBXTkM0ME42TG10YlYzek54cDR2?=
- =?utf-8?B?ZTM1cGlPdklNd094SkZRWEdaOG4wall5VkdIcVBkVmxrQUlHOGdQRlhSTGRY?=
- =?utf-8?B?SENiTnhpQ29hY2d6bjErQ01jVE5nNGNLSkhHdlBDSGR3emhFbHlhUXNPajlq?=
- =?utf-8?B?OHFnVm9BRVVqOWViVmxHdzRMQkV6MXNRd3hXSlh0ZHRaaDFBbzE3TVhzZSsz?=
- =?utf-8?B?SFpoa0JwQTB0aVlaSy9hcEYvY0Q3NUNYTXpZYlVFbHJDc05mTllrTzZuMDQ1?=
- =?utf-8?Q?OAjx2KqvJsglL9vton16E2zkd?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f479141-328c-4c24-cee8-08dd9d2f8148
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 15:02:31.5802
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kIbd5npIFX5PCElUDi88vtrH+mZe2A7jKSFVNgi/dxwOp7xzHg1EkISI23QeLKqa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7147
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-2-6412a94d9d75@gmail.com> <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
+ <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com> <DA6GSMHMLRFM.YH9RGZWLY2X4@kernel.org>
+In-Reply-To: <DA6GSMHMLRFM.YH9RGZWLY2X4@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 27 May 2025 11:02:05 -0400
+X-Gm-Features: AX0GCFvsyDAFuT3w5C3nGuFHFjR6aYE_88niNwIangoOQL2awwx9lqh_vNT5Xj0
+Message-ID: <CAJ-ks9nTf4dCoDdg4+YSkXM1sJsZ-0vuSC7wybc2JMAoGemhXQ@mail.gmail.com>
+Subject: Re: [PATCH v10 2/5] rust: support formatting of foreign types
+To: Benno Lossin <lossin@kernel.org>
+Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27 May 2025, at 6:50, Vlastimil Babka wrote:
-
-> On 5/23/25 21:12, Zi Yan wrote:
->> Since migratetype is no longer overwritten during pageblock isolation,
->> moving a pageblock out of MIGRATE_ISOLATE no longer needs a new
->> migratetype.
->>
->> Add pageblock_isolate_and_move_free_pages() and
->> pageblock_unisolate_and_move_free_pages() to be explicit about the page
->> isolation operations. Both share the common code in
->> __move_freepages_block_isolate(), which is renamed from
->> move_freepages_block_isolate().
->>
->> Add toggle_pageblock_isolate() to flip pageblock isolation bit in
->> __move_freepages_block_isolate().
->>
->> Make set_pageblock_migratetype() only accept non MIGRATE_ISOLATE types,
->> so that one should use set_pageblock_isolate() to isolate pageblocks.
->> As a result, move pageblock migratetype code out of
->> __move_freepages_block().
->>
->> Signed-off-by: Zi Yan <ziy@nvidia.com>
->> ---
->>  include/linux/page-isolation.h |  5 +-
->>  mm/page_alloc.c                | 97 ++++++++++++++++++++++++++++------
->>  mm/page_isolation.c            | 21 ++++----
->>  3 files changed, 92 insertions(+), 31 deletions(-)
->>
->> diff --git a/include/linux/page-isolation.h b/include/linux/page-isolati=
-on.h
->> index 14c6a5f691c2..7241a6719618 100644
->> --- a/include/linux/page-isolation.h
->> +++ b/include/linux/page-isolation.h
->> @@ -44,10 +44,9 @@ static inline void set_pageblock_isolate(struct page =
-*page)
->>  void __meminit init_pageblock_migratetype(struct page *page,
->>  					  enum migratetype migratetype,
->>  					  bool isolate);
->> -void set_pageblock_migratetype(struct page *page, enum migratetype migr=
-atetype);
->>
->> -bool move_freepages_block_isolate(struct zone *zone, struct page *page,
->> -				  int migratetype);
->> +bool pageblock_isolate_and_move_free_pages(struct zone *zone, struct pa=
-ge *page);
->> +bool pageblock_unisolate_and_move_free_pages(struct zone *zone, struct =
-page *page);
->>
->>  int start_isolate_page_range(unsigned long start_pfn, unsigned long end=
-_pfn,
->>  			     int migratetype, int flags);
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 8fcbd7fa13c2..44a08b1a9de4 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -524,13 +524,36 @@ void clear_pfnblock_bit(const struct page *page, u=
-nsigned long pfn,
->>  	__clear_bit(bitidx + pb_bit, bitmap_word);
->>  }
->>
->> +#ifdef CONFIG_MEMORY_ISOLATION
->> +/**
->> + * toggle_pfnblock_bit - Toggle a standalone bit of a pageblock
->> + * @page: The page within the block of interest
->> + * @pfn: The target page frame number
->> + * @pb_bit: pageblock bit to toggle
->> + */
->> +static void toggle_pfnblock_bit(const struct page *page, unsigned long =
-pfn,
->> +		      enum pageblock_bits pb_bit)
->> +{
->> +	unsigned long *bitmap_word;
->> +	unsigned long bitidx;
->> +
->> +	if (WARN_ON_ONCE(pb_bit <=3D PB_migrate_end ||
->> +			 pb_bit >=3D __NR_PAGEBLOCK_BITS))
->> +		return;
->> +
->> +	get_pfnblock_bitmap_bitidx(page, pfn, &bitmap_word, &bitidx);
->> +
->> +	__change_bit(bitidx + pb_bit, bitmap_word);
+On Mon, May 26, 2025 at 7:01=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
 >
-> Again the non-atomic variant, but actually below I suggest we drop this.
-
-Yep.
-
+> On Tue May 27, 2025 at 12:17 AM CEST, Tamir Duberstein wrote:
+> > On Mon, May 26, 2025 at 10:48=E2=80=AFAM Benno Lossin <lossin@kernel.or=
+g> wrote:
+> >> On Sat May 24, 2025 at 10:33 PM CEST, Tamir Duberstein wrote:
+> >> > Introduce a `fmt!` macro which wraps all arguments in
+> >> > `kernel::fmt::Adapter` This enables formatting of foreign types (lik=
+e
+> >> > `core::ffi::CStr`) that do not implement `fmt::Display` due to conce=
+rns
+> >> > around lossy conversions which do not apply in the kernel.
+> >> >
+> >> > Replace all direct calls to `format_args!` with `fmt!`.
+> >> >
+> >> > In preparation for replacing our `CStr` with `core::ffi::CStr`, move=
+ its
+> >> > `fmt::Display` implementation to `kernel::fmt::Adapter<&CStr>`.
+> >> >
+> >> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> >> > Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-Ge=
+neral/topic/Custom.20formatting/with/516476467
+> >> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> >> > ---
+> >> >  drivers/block/rnull.rs      |   2 +-
+> >> >  rust/kernel/block/mq.rs     |   2 +-
+> >> >  rust/kernel/device.rs       |   2 +-
+> >> >  rust/kernel/fmt.rs          |  77 +++++++++++++++++++++++++++++
+> >> >  rust/kernel/kunit.rs        |   6 +--
+> >> >  rust/kernel/lib.rs          |   1 +
+> >> >  rust/kernel/prelude.rs      |   3 +-
+> >> >  rust/kernel/print.rs        |   4 +-
+> >> >  rust/kernel/seq_file.rs     |   2 +-
+> >> >  rust/kernel/str.rs          |  23 ++++-----
+> >> >  rust/macros/fmt.rs          | 118 +++++++++++++++++++++++++++++++++=
++++++++++++
+> >> >  rust/macros/lib.rs          |  19 +++++++
+> >> >  scripts/rustdoc_test_gen.rs |   2 +-
+> >> >  13 files changed, 235 insertions(+), 26 deletions(-)
+> >>
+> >> Can you split this into creating the proc-macro, forwarding the displa=
+y
+> >> impls and replacing all the uses with the proc macro?
+> >
+> > Can you help me understand why that's better?
 >
->> +}
->> +#endif
->> +
->>  /**
->>   * set_pageblock_migratetype - Set the migratetype of a pageblock
->>   * @page: The page within the block of interest
->>   * @migratetype: migratetype to set
->>   */
->> -__always_inline void set_pageblock_migratetype(struct page *page,
->> -					       enum migratetype migratetype)
->> +static void set_pageblock_migratetype(struct page *page,
->> +				      enum migratetype migratetype)
->>  {
->>  	unsigned long mask =3D MIGRATETYPE_MASK;
->>
->> @@ -540,11 +563,15 @@ __always_inline void set_pageblock_migratetype(str=
-uct page *page,
->>
->>  #ifdef CONFIG_MEMORY_ISOLATION
->>  	if (migratetype =3D=3D MIGRATE_ISOLATE) {
->> -		set_pfnblock_bit(page, page_to_pfn(page), PB_migrate_isolate);
->> +		VM_WARN_ONCE(1,
->> +			"Use set_pageblock_isolate() for pageblock isolation");
->>  		return;
->>  	}
->>  	/* change mask to clear PB_migrate_isolate if it is set */
->>  	mask =3D MIGRATETYPE_AND_ISO_MASK;
->> +	VM_WARN_ONCE(get_pfnblock_bit(page, page_to_pfn(page),
->> +				      PB_migrate_isolate),
->> +		     "Use clear_pageblock_isolate() to unisolate pageblock");
->>  #endif
+> It makes reviewing significantly easier.
 >
-> We might be too paranoid with the warnings given these are all local
-> functions to this file so risk of misuse should be low. Maybe we could
-> remove later...
+> >> > +macro_rules! impl_display_forward {
+> >> > +    ($(
+> >> > +        $( { $($generics:tt)* } )? $ty:ty $( { where $($where:tt)* =
+} )?
+> >>
+> >> You don't need `{}` around the `where` clause, as a `where` keyword ca=
+n
+> >> follow a `ty` fragment.
+> >
+> > This doesn't work:
+> > ```
+> > error: local ambiguity when calling macro `impl_display_forward`:
+> > multiple parsing options: built-in NTs tt ('r#where') or 2 other
+> > options.
+> >   --> rust/kernel/fmt.rs:75:78
+> >    |
+> > 75 |     {<T: ?Sized>} crate::sync::Arc<T> where crate::sync::Arc<T>:
+> > fmt::Display,
+> >    |
+> >            ^
+> > ```
+>
+> Ah right that's a shame, forgot about the `tt`s at the end...
+>
+> >> > +impl_display_forward!(
+> >> > +    bool,
+> >> > +    char,
+> >> > +    core::panic::PanicInfo<'_>,
+> >> > +    crate::str::BStr,
+> >> > +    fmt::Arguments<'_>,
+> >> > +    i128,
+> >> > +    i16,
+> >> > +    i32,
+> >> > +    i64,
+> >> > +    i8,
+> >> > +    isize,
+> >> > +    str,
+> >> > +    u128,
+> >> > +    u16,
+> >> > +    u32,
+> >> > +    u64,
+> >> > +    u8,
+> >> > +    usize,
+> >> > +    {<T: ?Sized>} crate::sync::Arc<T> {where crate::sync::Arc<T>: f=
+mt::Display},
+> >> > +    {<T: ?Sized>} crate::sync::UniqueArc<T> {where crate::sync::Uni=
+queArc<T>: fmt::Display},
+> >> > +);
+> >>
+> >> If we use `{}` instead of `()`, then we can format the contents
+> >> differently:
+> >>
+> >>     impl_display_forward! {
+> >>         i8, i16, i32, i64, i128, isize,
+> >>         u8, u16, u32, u64, u128, usize,
+> >>         bool, char, str,
+> >>         crate::str::BStr,
+> >>         fmt::Arguments<'_>,
+> >>         core::panic::PanicInfo<'_>,
+> >>         {<T: ?Sized>} crate::sync::Arc<T> {where Self: fmt::Display},
+> >>         {<T: ?Sized>} crate::sync::UniqueArc<T> {where Self: fmt::Disp=
+lay},
+> >>     }
+> >
+> > Is that formatting better? rustfmt refuses to touch it either way.
+>
+> Yeah rustfmt doesn't touch macro parameters enclosed in `{}`. I think
+> it's better.
 
-Yeah. In the next step, when struct pageblock_info is used to change
-a pageblock migratetype and isolation state, these warnings should
-go away, since caller will need to be explicit about isolation operations.
+OK, but why? This seems entirely subjective.
+
+> >> > +/// Please see [`crate::fmt`] for documentation.
+> >> > +pub(crate) fn fmt(input: TokenStream) -> TokenStream {
+> >> > +    let mut input =3D input.into_iter();
+> >> > +
+> >> > +    let first_opt =3D input.next();
+> >> > +    let first_owned_str;
+> >> > +    let mut names =3D BTreeSet::new();
+> >> > +    let first_lit =3D {
+> >> > +        let Some((mut first_str, first_lit)) =3D (match first_opt.a=
+s_ref() {
+> >> > +            Some(TokenTree::Literal(first_lit)) =3D> {
+> >> > +                first_owned_str =3D first_lit.to_string();
+> >> > +                Some(first_owned_str.as_str()).and_then(|first| {
+> >> > +                    let first =3D first.strip_prefix('"')?;
+> >> > +                    let first =3D first.strip_suffix('"')?;
+> >> > +                    Some((first, first_lit))
+> >> > +                })
+> >> > +            }
+> >> > +            _ =3D> None,
+> >> > +        }) else {
+> >> > +            return first_opt.into_iter().chain(input).collect();
+> >> > +        };
+> >>
+> >> This usage of let-else + match is pretty confusing and could just be a
+> >> single match statement.
+> >
+> > I don't think so. Can you try rewriting it into the form you like?
+>
+>     let (mut first_str, first_lit) match first_opt.as_ref() {
+>         Some(TokenTree::Literal(lit)) if lit.to_string().starts_with('"')=
+ =3D> {
+>             let contents =3D lit.to_string();
+>             let contents =3D contents.strip_prefix('"').unwrap().strip_su=
+ffix('"').unwrap();
+>             ((contents, lit))
+>         }
+>         _ =3D> return first_opt.into_iter().chain(input).collect(),
+>     };
+
+What happens if the invocation is utterly malformed, e.g.
+`fmt!("hello)`? You're unwrapping here, which I intentionally avoid.
 
 >
->>  	__set_pfnblock_flags_mask(page, page_to_pfn(page),
->>  				  (unsigned long)migratetype, mask);
->> @@ -1931,8 +1958,8 @@ static inline struct page *__rmqueue_cma_fallback(=
-struct zone *zone,
->>  #endif
->>
->>  /*
->> - * Change the type of a block and move all its free pages to that
->> - * type's freelist.
->> + * Move all free pages of a block to new type's freelist. Caller needs =
-to
->> + * change the block type.
->>   */
->>  static int __move_freepages_block(struct zone *zone, unsigned long star=
-t_pfn,
->>  				  int old_mt, int new_mt)
->> @@ -1964,8 +1991,6 @@ static int __move_freepages_block(struct zone *zon=
-e, unsigned long start_pfn,
->>  		pages_moved +=3D 1 << order;
->>  	}
->>
->> -	set_pageblock_migratetype(pfn_to_page(start_pfn), new_mt);
->> -
->>  	return pages_moved;
->>  }
->>
->> @@ -2023,11 +2048,16 @@ static int move_freepages_block(struct zone *zon=
-e, struct page *page,
->>  				int old_mt, int new_mt)
->>  {
->>  	unsigned long start_pfn;
->> +	int res;
->>
->>  	if (!prep_move_freepages_block(zone, page, &start_pfn, NULL, NULL))
->>  		return -1;
->>
->> -	return __move_freepages_block(zone, start_pfn, old_mt, new_mt);
->> +	res =3D __move_freepages_block(zone, start_pfn, old_mt, new_mt);
->> +	set_pageblock_migratetype(pfn_to_page(start_pfn), new_mt);
->> +
->> +	return res;
->> +
->>  }
->>
->>  #ifdef CONFIG_MEMORY_ISOLATION
->> @@ -2055,11 +2085,16 @@ static unsigned long find_large_buddy(unsigned l=
-ong start_pfn)
->>  	return start_pfn;
->>  }
->>
->> +static inline void toggle_pageblock_isolate(struct page *page)
->> +{
->> +	toggle_pfnblock_bit(page, page_to_pfn(page), PB_migrate_isolate);
->> +}
+> >> > +        while let Some((_, rest)) =3D first_str.split_once('{') {
+> >> > +            first_str =3D rest;
+> >> > +            if let Some(rest) =3D first_str.strip_prefix('{') {
+> >> > +                first_str =3D rest;
+> >> > +                continue;
+> >> > +            }
+> >> > +            while let Some((name, rest)) =3D first_str.split_once('=
+}') {
+> >> > +                first_str =3D rest;
+> >> > +                if let Some(rest) =3D first_str.strip_prefix('}') {
+> >>
+> >> This doesn't make sense, we've matched a `{`, some text and a `}`. You
+> >> can't escape a `}` that is associated to a `{`.
+> >
+> > Sure, but such input would be malformed, so I don't think it's
+> > necessary to handle it "perfectly". We'll get a nice error from
+> > format_args anyhow.
 >
-> I'm wary about the togle action, as we should always know what action we
-> want to do anyway. So we could just add a "bool isolate" parameter and ca=
-ll
-> set or clear explicitly? Allows for some hypothetical DEBUG_VM checks too
-> (pageblock is not already in the state we want it to be).
+> My suggestion in this case would be to just remove this if-let. The
+> search for `{` above would skip the `}` if it's correct.
+>
+> > https://play.rust-lang.org/?version=3Dstable&mode=3Ddebug&edition=3D202=
+4&gist=3D5f529d93da7cf46b3c99ba7772623e33
 
-This function was added to follow Johannes=E2=80=99 suggestion of getting r=
-id of
-if statement. I can change it back, make it explicit, and add
-an VM_WARN_ONCE.
+Makes sense to me.
 
-Hi Johannes,
+>
+> Yes it will error like that, but if we do the replacement only when the
+> syntax is correct, there also will be compile errors because of a
+> missing `Display` impl, or is that not the case?
 
-If you want the non if statement version to stay, please let me know.
+I'm not sure - I would guess syntax errors "mask" typeck errors.
 
+>
+> I'm a bit concerned about the ergonomics that this change will
+> introduce, but I guess there really isn't anything that we can do about
+> except not do it.
+>
+> >> > +                    first_str =3D rest;
+> >> > +                    continue;
+> >> > +                }
+> >> > +                let name =3D name.split_once(':').map_or(name, |(na=
+me, _)| name);
+> >> > +                if !name.is_empty() && !name.chars().all(|c| c.is_a=
+scii_digit()) {
+> >> > +                    names.insert(name);
+> >> > +                }
+> >> > +                break;
+> >> > +            }
+> >> > +        }
+> >> > +        first_lit
+> >>
+> >> `first_lit` is not modified, so could we just the code above it into a
+> >> block instead of keeping it in the expr for `first_lit`?
+> >
+> > As above, can you suggest the alternate form you like better? The
+> > gymnastics here are all in service of being able to let malformed
+> > input fall through to core::format_args which will do the hard work of
+> > producing good diagnostics.
+>
+> I don't see how this is hard, just do:
+>
+>     let (first_str, first_lit) =3D ...;
 
-Best Regards,
-Yan, Zi
+It requires you to unwrap, like you did above, which is what I'm
+trying to avoid.
+
+>
+>     while ...
+>
+> >> > +    };
+> >> > +
+> >> > +    let first_span =3D first_lit.span();
+> >> > +    let adapt =3D |expr| {
+> >> > +        let mut borrow =3D
+> >> > +            TokenStream::from_iter([TokenTree::Punct(Punct::new('&'=
+, Spacing::Alone))]);
+> >> > +        borrow.extend(expr);
+> >> > +        make_ident(first_span, ["kernel", "fmt", "Adapter"])
+> >> > +            .chain([TokenTree::Group(Group::new(Delimiter::Parenthe=
+sis, borrow))])
+> >>
+> >> This should be fine with using `quote!`:
+> >>
+> >>     quote!(::kernel::fmt::Adapter(&#expr))
+> >
+> > Yeah, I have a local commit that uses quote_spanned to remove all the
+> > manual constructions.
+>
+> I don't think that you need `quote_spanned` here at all. If you do, then
+> let me know, something weird with spans is going on then.
+
+You need to give idents a span, so each of `kernel`, `fmt`, and
+`adapter` need a span. I *could* use `quote!` and get whatever span it
+uses (mixed_site) but I'd rather retain control.
+
+>
+> >> > +    };
+> >> > +
+> >> > +    let flush =3D |args: &mut TokenStream, current: &mut TokenStrea=
+m| {
+> >> > +        let current =3D std::mem::take(current);
+> >> > +        if !current.is_empty() {
+> >> > +            args.extend(adapt(current));
+> >> > +        }
+> >> > +    };
+> >> > +
+> >> > +    let mut args =3D TokenStream::from_iter(first_opt);
+> >> > +    {
+> >> > +        let mut current =3D TokenStream::new();
+> >> > +        for tt in input {
+> >> > +            match &tt {
+> >> > +                TokenTree::Punct(p) =3D> match p.as_char() {
+> >> > +                    ',' =3D> {
+> >> > +                        flush(&mut args, &mut current);
+> >> > +                        &mut args
+> >> > +                    }
+> >> > +                    '=3D' =3D> {
+> >> > +                        names.remove(current.to_string().as_str());
+> >> > +                        args.extend(std::mem::take(&mut current));
+> >> > +                        &mut args
+> >> > +                    }
+> >> > +                    _ =3D> &mut current,
+> >> > +                },
+> >> > +                _ =3D> &mut current,
+> >> > +            }
+> >> > +            .extend([tt]);
+> >> > +        }
+> >>
+> >> This doesn't handle the following code correctly ):
+> >>
+> >>     let mut a =3D 0;
+> >>     pr_info!("{a:?}", a =3D a =3D a);
+> >>
+> >> Looks like we'll have to remember what "kind" of an equals we parsed..=
+.
+> >
+> > Hmm, good point. Maybe we can just avoid dealing with `=3D` at all unti=
+l
+> > we hit the `,` and just split on the leftmost `=3D`. WDYT? I'll have
+> > that in v11.
+>
+> Sounds good, if there is no `=3D`, then ignore it.
+>
+> >> > +/// Like [`core::format_args!`], but automatically wraps arguments =
+in [`kernel::fmt::Adapter`].
+> >> > +///
+> >> > +/// This macro allows generating `core::fmt::Arguments` while ensur=
+ing that each argument is wrapped
+> >> > +/// with `::kernel::fmt::Adapter`, which customizes formatting beha=
+vior for kernel logging.
+> >> > +///
+> >> > +/// Named arguments used in the format string (e.g. `{foo}`) are de=
+tected and resolved from local
+> >> > +/// bindings. All positional and named arguments are automatically =
+wrapped.
+> >> > +///
+> >> > +/// This macro is an implementation detail of other kernel logging =
+macros like [`pr_info!`] and
+> >> > +/// should not typically be used directly.
+> >> > +///
+> >> > +/// [`kernel::fmt::Adapter`]: ../kernel/fmt/struct.Adapter.html
+> >> > +/// [`pr_info!`]: ../kernel/macro.pr_info.html
+> >> > +#[proc_macro]
+> >> > +pub fn fmt(input: TokenStream) -> TokenStream {
+> >>
+> >> I'm wondering if we should name this `format_args` instead in order to
+> >> better communicate that it's a replacement for `core::format_args!`.
+> >
+> > Unfortunately that introduces ambiguity in cases where
+> > kernel::prelude::* is imported because core::format_args is in core's
+> > prelude.
+>
+> Ahh that's unfortunate.
+>
+> ---
+> Cheers,
+> Benno
