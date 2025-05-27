@@ -1,102 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9FC25634
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B879279784
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748359864; cv=none; b=MpxnZv8ETk5vZVArkUF7a7C8sIhXtiRfYzE5oZLDkeo4aHN5AaTAFAEkla2QdZy1mCW+B+3As8HFIU19R+HrgOepXvjoh41DznVBAIAROuU9fFmk2iKHss818rwZeqqjwUbkmgA/eHkIsJk6k8yDBJUbUv6vNwAQ5ADZy5Z+1ac=
+	t=1748359870; cv=none; b=ja7/IDnGgNTm0PvGWXSl9ivJ8BFzANa43dkD4kj3J9Zw0Tb/qFG9wlfw8L5F+H5seRcR0H87iLckqdFqzGKSm9bXXIuYmxIEwuUpLDFOF2jLYbSMVdynDauq8Qw3Ee1RQNBo9uHHSRqMlLXPsRiR3PEzpbWBJWQW/k5xsX1JKoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748359864; c=relaxed/simple;
-	bh=2erwN6Y7H2+Ivj/8faORZ/7jI/V9kK53sZr1lymHRL0=;
+	s=arc-20240116; t=1748359870; c=relaxed/simple;
+	bh=BAhJ8b07z0CL+zogYz9RgQpw/mCTKYttsWo1Db9J5i8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gv9wqRXi4o14tpwv6HlxndApFGVf3qYr3kBXUnro6Ea3C8htAdQXazSDjwUQW5Nfyt0zR2NkjuKJdn2P432N3rTqEHsUz1pDnlsva3P3vhyUTDoeFu8JvA3p+sik/VT+1IISGWtWYnhGlp/ZabHmH/asVi7k7PegDITEczX7tY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cPWnp4re; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nw7KEAErPNk6m9wZndueIOGh8SE/aIJrqb1wB0+bnReguu5FyEBgxH1zQgk7/lWPV1V/qz7rMeOA4hEWY9S91T8zS7+5ddpnCb1d3GXTX10T6d4iLXfii31UMpSwHWPVCtY6+UqoRZwSved2U13hhDsGStO0OciztZCtiMR5fSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s/zomrM4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DFsga0Xi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cPWnp4re"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748359861;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s/zomrM4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DFsga0Xi"
+Date: Tue, 27 May 2025 17:31:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748359867;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k3Iaq3MntvjDln6IzJbTGvcMOmcLmVF70dqmVM6voj4=;
-	b=cPWnp4re9Wd28CIKcoBlAJ4qP7fnhWFJo+kxuqPhz+mta/HHYV1Bm4344qO1mH5LI1aSMe
-	fHJZizK2kJxYbDT3wvPpCtD6tKgz++eC9QU8tfzbDeEmhCVZbFmFqN3t60EDUnsKomMYgi
-	XwKsO2AAQAVupYuRe3CPjd1+UtsuerI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-327-UvECuc6FMziKTV6uLV0KJg-1; Tue,
- 27 May 2025 11:30:57 -0400
-X-MC-Unique: UvECuc6FMziKTV6uLV0KJg-1
-X-Mimecast-MFC-AGG-ID: UvECuc6FMziKTV6uLV0KJg_1748359855
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 03A201945109;
-	Tue, 27 May 2025 15:30:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.4])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 25C7519560A3;
-	Tue, 27 May 2025 15:30:49 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 27 May 2025 17:30:14 +0200 (CEST)
-Date: Tue, 27 May 2025 17:30:08 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Pu Lehui <pulehui@huaweicloud.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
-	jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, pulehui@huawei.com
-Subject: Re: [RFC PATCH v2 1/2] mm/mremap: Fix uprobe anon page be
- overwritten when expanding vma during mremap
-Message-ID: <20250527153007.GD8333@redhat.com>
-References: <20250527132351.2050820-1-pulehui@huaweicloud.com>
- <20250527132351.2050820-2-pulehui@huaweicloud.com>
+	bh=mghd6ymj7AZHKQfj/EO9+xXkykC2InOaEHCIjdtP6Hk=;
+	b=s/zomrM4LmvNvCE5plMSguD5TmcbApPgBn4OMLzTi0OqNnnU2vWKQhmRGJxhQACCUB1XL0
+	Hau8NuRak+f18oNwqZpgap2iXnKDEn/Mi9KnttfKigy9uX4waOt8DH3TanuYX9LNPjbsGO
+	35JiVugTbiJxXGfNFk56FYT7fN0dPrMf2eweKO/mp2wQKsp/7oseeBAxpwHyuGkLowRH+x
+	Pv/goRkoarYEwIykNzuPSIY0xeELmWGWbh/UrlyPYci0wSmtY2o87i5H04c7AeTF0InZXf
+	YIaCWz37vFtJiwMKoq2UMEOI1s1mIYG007vO/PFd9zE4kerhrbYXPWn4SZZDsA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748359867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mghd6ymj7AZHKQfj/EO9+xXkykC2InOaEHCIjdtP6Hk=;
+	b=DFsga0XiZDpjjjwrmUstv5jOJuUWsgmd8wTDGstEEDxAxcgBZFY5y1m5XDc/KaqJYtper6
+	3eMosbusPABZSsBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: syzbot <syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com>,
+	andrealmeid@igalia.com, dave@stgolabs.net, dvhart@infradead.org,
+	linux-kernel@vger.kernel.org, mingo@redhat.com,
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Subject: Re: [syzbot] [kernel?] KASAN: wild-memory-access Read in
+ get_futex_key
+Message-ID: <20250527153106.WFmvR15N@linutronix.de>
+References: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
+ <20250527142217.GA7747@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250527132351.2050820-2-pulehui@huaweicloud.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <20250527142217.GA7747@noisy.programming.kicks-ass.net>
 
-Not that this is really important, but the test-case looks broken,
-
-On 05/27, Pu Lehui wrote:
->
-> #define _GNU_SOURCE
-> #include <fcntl.h>
-> #include <unistd.h>
-> #include <syscall.h>
-> #include <sys/mman.h>
-> #include <linux/perf_event.h>
+On 2025-05-27 16:22:17 [+0200], Peter Zijlstra wrote:
+> >  get_futex_key+0x595/0x1540 kernel/futex/core.c:587
 > 
-> int main(int argc, char *argv[])
-> {
->     int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
+> Does the this help?
 
-FNAME is not defined
+it avoids boom but reject FUTEX_NO_NODE. What about
 
->     struct perf_event_attr attr = {
->         .type = 9,
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index 19a2c65f3d373..d0f5645eac61c 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -583,8 +583,9 @@ int get_futex_key(u32 __user *uaddr, unsigned int flags, union futex_key *key,
+ 		if (futex_get_value(&node, naddr))
+ 			return -EFAULT;
+ 
+-		if (node != FUTEX_NO_NODE &&
+-		    (node >= MAX_NUMNODES || !node_possible(node)))
++		if ((node != FUTEX_NO_NODE) &&
++		    (node < 0 || node > nr_node_ids ||
++		     !node_possible(node)))
+ 			return -EINVAL;
+ 	}
+ 
 
-Cough ;) Yes I too used perf_event_attr.type == 9 when I wrote another
-test-case. Because I am lazy and this is what I see in
-/sys/bus/event_source/devices/uprobe/type on my machine.
-
-But me should not assume that perf_pmu_register(&perf_uprobe) -> idr_alloc()
-will return 9.
-
->     write(fd, "x", 1);
-
-looks unnecessary.
-
-Oleg.
-
+Sebastian
