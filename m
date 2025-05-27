@@ -1,204 +1,192 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC09367
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CCFC27A916
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362612; cv=none; b=aVQyEPcGAPWXA3jDLGeUbzJB0feDCCFKQxGGl3IRmn8uuVqXgTCf9NpQZKgAT/YyjKDOnn72NQeeNNmVtR1HGOwVKPGsJ8wjVSMQXTq2UbfKsIVfXm52Vtf4Ev3PF73oRRVr3pRFpP6LDyMiw9RUjsOVEJTMT9+DDPNJI4JxaBk=
+	t=1748362721; cv=none; b=jiVpG0Y+QwSfLgMHAXS5gSgtFVDKNJI1iqP/a3SMdnGuP+ybfA6zisp1nhT8mBafHXIdvTj8VeCUzjqTRrS5XphIq6GnF8YYwEznegX5kZLuIHzbhRyNk9TVYUIXLXvw2Wy3XiBjpg/MYiomTlmbK4GHxH9eDZ2UKE7R89u6a6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362612; c=relaxed/simple;
-	bh=LKZzSd4b8vDI3Z6hVkBihe5JHNwscioW3xfjEEQDhuQ=;
+	s=arc-20240116; t=1748362721; c=relaxed/simple;
+	bh=XhTt676vUTRZQa7c0XDUeYryAQMXPv7GVIuaao63lI8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZZomJncMd3RYCkmBLM9yupXsGfFebgHcbrYxQYlSqJhrWasQByeAbvhFyBnaPv/na1FTtNlTh0iQGN831tBfSQLhyiLY2CkfW4sawN4JNfccl1gzApgZZfYwzKPC5RRgiYPe3CjqLM1lJQPAlbGONhRHlijP5MkBufVjswhlYQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lJ76ReqC; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=ftCZSdmpda8RKlWh7KGgiGJIMBDH8odrX+liDiUKj88tnFlWjShMIdS5FKQO87piC1F4ZiKBaDDr69Atmt/XpAt7R+ZzrRwhXvd0HfiZpogIG/WRPfzHIvp9TaB692EXbUWTqVXNnUbK0qEzET6LnRlQjYy8q2Z0p7Gey6t4tn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=AS8wEHlA; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lJ76ReqC"
-Message-ID: <679d6810-9e76-425c-9d4e-d4b372928cc3@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748362598;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j3LFQ0ieKQpaqxJLyJ9iyNsYYxmUvLgA8cPK/4ZnBaA=;
-	b=lJ76ReqCndDsN2ac38Fwh/jWjcCo2hpONkdcTz62+a+81d9l4G453nftIx12FEoP1sN/3h
-	jcdKYutfgp+F/fQLwpRhQULLtaCY0bF39U1clrBcTwRBngWggAwVjiVkUeLjdY15PUm/0v
-	ny5lqbRvcqcxSHnoT9BeHyefrJImKFw=
-Date: Tue, 27 May 2025 12:16:33 -0400
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="AS8wEHlA"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7376e311086so3355029b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:18:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748362719; x=1748967519; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=L5cxpY74SeyEYMsHNu2Rje055exgHwznrIMIxOx3xXw=;
+        b=AS8wEHlAMn1L+2yEQy4nlZcRUKvtBmJK7t0FVW46GYJPo6QnSK/yqs+iOM2BLNpRhN
+         xavN6HHpgCeliuV6+kwRAtPBVqea6UC6WBenGEkZbTyyQGfAAq+E0gutaISxwYktd9HZ
+         qValqmX5DsPwTv3fx0oztSwrsuBbpsnnZ3S6s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748362719; x=1748967519;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L5cxpY74SeyEYMsHNu2Rje055exgHwznrIMIxOx3xXw=;
+        b=CBK+eTS6BYjQEIKfGYAAqoPOkdaC4yjtFoSfpBlzh37a9aYBkRWgH9HnTGSXVtUGkz
+         SqeDv78HhiaGGOKX0H18oRNkVy9X8XRHKWtxRpR2C7I0MuEwuc/9GNuPtLDc18RS2g2B
+         kf1e3q7Y4rVSxsd9RsmladD2SlV9UHm9ZK6MWkYvNCwa97Hqwwta6ltEDm0r2YhF5caD
+         xWcqpSD9mBIvTEe18X5zHIu+SQwuKfXJnooo1dp/gtXAz+q//y+v2+YdqlFIZwOfG5c+
+         RyGWDg+KN1eDPSOGPthKVb571L2P4WdihJR+oOP3FkCFjGC9GLsBz4dYwfDt7n9G+gko
+         mWPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjdHcG1inJRhZ7k5loVzMP6KMjb0Pqhey71OIjc8ONci78rTGdL/2SLL1Ajh7uYNHuaEtCQeDcGI6bAuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytbfJQVmXnjXWGQBbwH+toAtwMYOghvH5p1wp8YZl7i4QXIAbC
+	KAES27oSn27nhGgh3dBcy8RFYHJ8MJIak1jVS7IcbhvPI962umAHpffV/LbkbwShHQ==
+X-Gm-Gg: ASbGncv8xKQ31caMLpFJz1z1KE+yySUkMT00ceRbGMC7xQfEpoA+dU4s3Tr/Q2bUp+i
+	BYLXHNFeyU6SG2Wd6FxvW1UkCvOgnirk1xtdnkOOo9fQEUgmafXW94lyYjwJuBK/zEbptLIUNY6
+	Li4Dt2XqnFkAqJ9GAm0f/9YZMSS/qktSLa6Fx0MawyyHAG9/MEt7Dm0uC8nqw/Q4y88U+XY2L8f
+	xiyVebCbhMeYbwz9/mGSrFKAijgT7BUpfB51cix354PVS6Gtc/3Ne0B8ZiEnJCI7hxI8T7lKvm9
+	FV3yvc6L5OZzEclwkmu5UJwemRgFpxDRC7TlXjtxC7DzMawtpy/lMPHlJvpx71Ujze+MfPv/gzN
+	iw0KunN2b6DsoGoDmPC5/AgAu+g==
+X-Google-Smtp-Source: AGHT+IEom8QL6Y/Pg1q5xaK7iGO193QLG6Lm8YsAgtzmZjeb230ToJsSh7hjy+S2iDqt2W7r0HW6dA==
+X-Received: by 2002:a05:6a21:1084:b0:1f5:7d57:830f with SMTP id adf61e73a8af0-2188c37d5a0mr20596185637.33.1748362719553;
+        Tue, 27 May 2025 09:18:39 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6fd3bsm18838307a12.23.2025.05.27.09.18.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 09:18:38 -0700 (PDT)
+Message-ID: <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
+Date: Tue, 27 May 2025 09:18:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next] net: xilinx: axienet: Configure and report
- coalesce parameters in DMAengine flow
-To: Suraj Gupta <suraj.gupta2@amd.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, vkoul@kernel.org, michal.simek@amd.com,
- radhey.shyam.pandey@amd.com, horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, git@amd.com, harini.katakam@amd.com
-References: <20250525102217.1181104-1-suraj.gupta2@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+To: Matthias Brugger <mbrugger@suse.com>,
+ Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+ <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+ <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
+ <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
+ <aCIk40642nXZ3arz@apocalypse> <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250525102217.1181104-1-suraj.gupta2@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 5/25/25 06:22, Suraj Gupta wrote:
-> Add support to configure / report interrupt coalesce count and delay via
-> ethtool in DMAEngine flow.
-> Netperf numbers are not good when using non-dmaengine default values,
-> so tuned coalesce count and delay and defined separate default
-> values in dmaengine flow.
+On 5/26/25 07:06, Matthias Brugger wrote:
 > 
-> Netperf numbers and CPU utilisation change in DMAengine flow after
-> introducing coalescing with default parameters:
-> coalesce parameters:
->    Transfer type	  Before(w/o coalescing)  After(with coalescing)
-> TCP Tx, CPU utilisation%	925, 27			941, 22
-> TCP Rx, CPU utilisation%	607, 32			741, 36
-> UDP Tx, CPU utilisation%	857, 31			960, 28
-> UDP Rx, CPU utilisation%	762, 26			783, 18
 > 
-> Above numbers are observed with 4x Cortex-a53.
-
-How does this affect latency? I would expect these RX settings to
-increase latency around 5-10x. I only use these settings with DIM since
-it will disable coalescing during periods of light load for better
-latency.
-
-(of course the way to fix this in general is RSS or some other method
-involving multiple queues).
-
-> Signed-off-by: Suraj Gupta <suraj.gupta2@amd.com>
-> ---
-> This patch depend on following AXI DMA dmengine driver changes sent to
-> dmaengine mailing list as pre-requisit series:
-> https://lore.kernel.org/all/20250525101617.1168991-1-suraj.gupta2@amd.com/ 
-> ---
->  drivers/net/ethernet/xilinx/xilinx_axienet.h  |  6 +++
->  .../net/ethernet/xilinx/xilinx_axienet_main.c | 53 +++++++++++++++++++
->  2 files changed, 59 insertions(+)
+> On 12/05/2025 18:42, Andrea della Porta wrote:
+>> Hi Florian,
+>>
+>> On 15:02 Mon 12 May     , Florian Fainelli wrote:
+>>> On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta 
+>>> <andrea.porta@suse.com> wrote:
+>>>> Hi Florian, to accept the patches, what would work best for you?
+>>>>
+>>>> 1) Send only the relevant updated patches (maybe as an entirely new
+>>>> patchset with
+>>>>    only those specific patches)
+>>>
+>>> Only the updated patches work for me. I don't think there is that 
+>>> much coupling between the DT changes and the non-DT changes (other 
+>>> than without DT entries nothing is activated)
+>>
+>> It's a little bit more involved than that:
+>>
+>> - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
+>>    depends on 1 (clock binding header). Should be taken by Greg.
 > 
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> index 5ff742103beb..cdf6cbb6f2fd 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-> @@ -126,6 +126,12 @@
->  #define XAXIDMA_DFT_TX_USEC		50
->  #define XAXIDMA_DFT_RX_USEC		16
->  
-> +/* Default TX/RX Threshold and delay timer values for SGDMA mode with DMAEngine */
-> +#define XAXIDMAENGINE_DFT_TX_THRESHOLD	16
-> +#define XAXIDMAENGINE_DFT_TX_USEC	5
-> +#define XAXIDMAENGINE_DFT_RX_THRESHOLD	24
-> +#define XAXIDMAENGINE_DFT_RX_USEC	16
-> +
->  #define XAXIDMA_BD_CTRL_TXSOF_MASK	0x08000000 /* First tx packet */
->  #define XAXIDMA_BD_CTRL_TXEOF_MASK	0x04000000 /* Last tx packet */
->  #define XAXIDMA_BD_CTRL_ALL_MASK	0x0C000000 /* All control bits */
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 1b7a653c1f4e..f9c7d90d4ecb 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -1505,6 +1505,7 @@ static int axienet_init_dmaengine(struct net_device *ndev)
->  {
->  	struct axienet_local *lp = netdev_priv(ndev);
->  	struct skbuf_dma_descriptor *skbuf_dma;
-> +	struct dma_slave_config tx_config, rx_config;
->  	int i, ret;
->  
->  	lp->tx_chan = dma_request_chan(lp->dev, "tx_chan0");
-> @@ -1520,6 +1521,22 @@ static int axienet_init_dmaengine(struct net_device *ndev)
->  		goto err_dma_release_tx;
->  	}
->  
-> +	tx_config.coalesce_cnt = XAXIDMAENGINE_DFT_TX_THRESHOLD;
-> +	tx_config.coalesce_usecs = XAXIDMAENGINE_DFT_TX_USEC;
-> +	rx_config.coalesce_cnt = XAXIDMAENGINE_DFT_RX_THRESHOLD;
-> +	rx_config.coalesce_usecs =  XAXIDMAENGINE_DFT_RX_USEC;
+> Greg gave an Acked-by so I think Florian is good to take that patch. 
+> Which leaves us to the clock patches (driver + dt-bindings).
+> 
+>>
+>> - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
+>>    depends on 1 (clock binding header). Should be taken by Florian.
+>>
+>> - Patch 4 (clock driver) depends on 1 (clock binding header) and
+>>    should be taken by Stephen.
+>>
+> 
+> Steven reviewed the patches (driver + dt-binding) so he is waiting for a 
+> new version which addresses the review. He offered to either take them 
+> and provide a branch that Florian can merge into his branch or provide a 
+> Acked-by tag.
+> 
+> @Florian what would you prefer?
 
-I think it would be clearer to just do something like
+I am fine either way, it's definitively simpler if I can take all of the 
+patches in the respective Broadcom ARM SoC branches, but pulling a 
+branch from another maintainer's tree works just as well.
 
-	struct dma_slave_config tx_config = {
-		.coalesce_cnt = 16,
-		.coalesce_usecs = 5,
-	};
+Andrea, sorry to ask you this, can you post a v10 and we aim to get that 
+version applied?
 
-since these are only used once. And this ensures that you initialize the
-whole struct.
-
-But what tree are you using? I don't see these members on net-next or
-dmaengine.
-
-> +	ret = dmaengine_slave_config(lp->tx_chan, &tx_config);
-> +	if (ret) {
-> +		dev_err(lp->dev, "Failed to configure Tx coalesce parameters\n");
-> +		goto err_dma_release_tx;
-> +	}
-> +	ret = dmaengine_slave_config(lp->rx_chan, &rx_config);
-> +	if (ret) {
-> +		dev_err(lp->dev, "Failed to configure Rx coalesce parameters\n");
-> +		goto err_dma_release_tx;
-> +	}
-> +
->  	lp->tx_ring_tail = 0;
->  	lp->tx_ring_head = 0;
->  	lp->rx_ring_tail = 0;
-> @@ -2170,6 +2187,19 @@ axienet_ethtools_get_coalesce(struct net_device *ndev,
->  	struct axienet_local *lp = netdev_priv(ndev);
->  	u32 cr;
->  
-> +	if (lp->use_dmaengine) {
-> +		struct dma_slave_caps tx_caps, rx_caps;
-> +
-> +		dma_get_slave_caps(lp->tx_chan, &tx_caps);
-> +		dma_get_slave_caps(lp->rx_chan, &rx_caps);
-> +
-> +		ecoalesce->tx_max_coalesced_frames = tx_caps.coalesce_cnt;
-> +		ecoalesce->tx_coalesce_usecs = tx_caps.coalesce_usecs;
-> +		ecoalesce->rx_max_coalesced_frames = rx_caps.coalesce_cnt;
-> +		ecoalesce->rx_coalesce_usecs = rx_caps.coalesce_usecs;
-> +		return 0;
-> +	}
-> +
->  	ecoalesce->use_adaptive_rx_coalesce = lp->rx_dim_enabled;
->  
->  	spin_lock_irq(&lp->rx_cr_lock);
-> @@ -2233,6 +2263,29 @@ axienet_ethtools_set_coalesce(struct net_device *ndev,
->  		return -EINVAL;
->  	}
->  
-> +	if (lp->use_dmaengine)	{
-> +		struct dma_slave_config tx_cfg, rx_cfg;
-> +		int ret;
-> +
-> +		tx_cfg.coalesce_cnt = ecoalesce->tx_max_coalesced_frames;
-> +		tx_cfg.coalesce_usecs = ecoalesce->tx_coalesce_usecs;
-> +		rx_cfg.coalesce_cnt = ecoalesce->rx_max_coalesced_frames;
-> +		rx_cfg.coalesce_usecs = ecoalesce->rx_coalesce_usecs;
-> +
-> +		ret = dmaengine_slave_config(lp->tx_chan, &tx_cfg);
-> +		if (ret) {
-> +			NL_SET_ERR_MSG(extack, "failed to set tx coalesce parameters");
-> +			return ret;
-> +		}
-> +
-> +		ret = dmaengine_slave_config(lp->rx_chan, &rx_cfg);
-> +		if (ret) {
-> +			NL_SET_ERR_MSG(extack, "failed to set rx coalesce parameters");
-> +			return ret;
-> +		}
-> +		return 0;
-> +	}
-> +
->  	if (new_dim && !old_dim) {
->  		cr = axienet_calc_cr(lp, axienet_dim_coalesce_count_rx(lp),
->  				     ecoalesce->rx_coalesce_usecs);
+Thanks!
+-- 
+Florian
