@@ -1,110 +1,218 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12olkn2037.outbound.protection.outlook.com [40.92.22.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E5225A2BB
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748344446; cv=none; b=DQVq+yPjvEnqRi8g01/8O9kyqmJ0r92zzGHdlFxLlDUCyBSO8XJzzLRjTaETSfkKjrN75nF0HAghDqIGGYd+hdc1GaUXpXThw22sZvPXZg8AJwWS3DuoecjqCbucrxELN0yGgJTHztIPIVKhs/pY5dqAR4mhSpjhVc6DCeHiAQo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748344446; c=relaxed/simple;
-	bh=7xV9gBlCY8b19EKcOHBAPhpFl9Egi1GXkjeOkA6dkIo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UYJDlQZYU1GUG//niQ/Iy4v6VNOOFY8Fju2nn1DiRNVivRn5DTgK0Fp33mILVKNp0tjQfKN50ZZRy5UkVJ2KohYo8EBrpyfHNFK03elaALnRmyxqGrSiHPQbM5dPojwsJ3RBD8CsANBQFAd1AQsuMeml+KB9eKPcwRV+JkfcFxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rbi+klCS; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5900524887A;
+	Tue, 27 May 2025 11:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.22.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748344481; cv=fail; b=T1uKjXoEt/dYMG4atCPj0SBsO2TcnBOKn9ra0KyVZRquKzv8nGjbZuRE+3t/mGUcC4hSSzXEglr4LHWELm7MrU3U57uX4DyfD0UprasHOGAvYy3jVTtbod7sQVcTGyw8CH7VBzbmYx+HTdAYAMQppA2bnxxKTCRpQzepha/fMZk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748344481; c=relaxed/simple;
+	bh=QtRen8pK3Xo0GkjNZeyple8dNo5s6WFRb1daK3tvOXk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=etCEeCDMgfD5a1cwFaUb75XyCTIag3b6g7uGBE1l856fdBA+lhjPSuX0sbGHbIKhJTfkyoiCKIisZtA/8lNGATZfCdbtFrBHIugLXC2+E1Mq3wZKHn0UV6/vEEnCFCMTAbQ026qh7t0JODOsT4x0aQsdD/dYrP4Z+6e8CFqghDg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=g3neIP8P; arc=fail smtp.client-ip=40.92.22.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rbi+klCS"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a4cad7d6bdso2089752f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:14:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1748344442; x=1748949242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T9Mv8rBtATew6MrRBMBX7UtmzjFrS1BeqdLPFyFXnvs=;
-        b=rbi+klCSz4q96Q5wVC6oWubQyiDjYZaDMnvcReGiWsZmwFTpCLcOpbpvfP436Km8Aw
-         kyonLx7sOfw5XYlmNpzb7KplCQ42QcWrYdoWB2C+LKk5AE/gUqUwRW2sBFDnn1Y5le/N
-         nSoAD5vyTDWJwMugiRPa9eT21ipSismGVQ2/qoE9oZwusw8YTYcbTgylXvdFFjvQxEiP
-         O2NiC7+gIvAeeM0t33EMNml4YAYALzJXYgJ+Z7gzO4EKqjAJ2keNgBhxBnO6TWhQJAjm
-         kjdeOGv8LeIB7DoA4ipFtRnBdEInGsldYTh/uD6urvfn5asHfbVBGB3Nn+wic1OKBq/b
-         JKlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748344442; x=1748949242;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T9Mv8rBtATew6MrRBMBX7UtmzjFrS1BeqdLPFyFXnvs=;
-        b=MgM6kTaCgXPIEQubLJCO/iUYWneAlAR1YmZOD1cz0je21os+EYc9bZtucrfmIQQOI1
-         6zSC0eipZu6219Sd0+hqOJoO6UrbqYFuuwUbooKCI64JaclVeuz6VlV9RgqPKqxM6zLz
-         R3mR5WfFIIbjyIGjQxC2Cg7vlhJQEp9V8Qdd3nvb37qWy2dn3VTkzFo16vttLqvrtbBX
-         QbGy+8AezHnfF//itn32VhwKVcV0nFnx85PBbdHzpEcayEbZjObW99sRlaMBtO+v1gIe
-         3lGYK/5Yk7YnLToBWNW8K14+UXjIukiNK5SNdjvZOBnNyz9/NzXZE1HsFSfenzE6UM14
-         HlBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXxGxxNbgFfz5uebAOsfnkFB4uVdlDaDeEatt4O8PdC6xF1w06PjAfhlckg2GcRlRamGvdOoWDx0x9kvXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkCDMz00JiDg6qutu8qkwQm4lPPQByfwFAntB1GRtNM8Qol4t5
-	EiTqttFqFt4puiYAt78qHz1aBXaGSzdgxGhcAKYXx7Rz8/kwF3VRX+CA0/+LRyCyLHo=
-X-Gm-Gg: ASbGncvI6AILS647QtMj+IGoF2ffW8K6Gfeu9FEaS9VbCP23k3Mj0FCRGeULsZ4764b
-	ozuUwFF7BlpnmA4TJfLWZqfCOf12fkLGM5/eHOwRCVrtfx7nC8YRHLfTyIMUA5Dm0bdvSHm+zns
-	01+Kc5BT7fFVh2PGJxKMor49nw58T7S8zdxkFKQpv/Bjkj+QHhaw5tNmr6lyPWAyZ0u9vFWLSY6
-	akfOdD5i0HQMMoOpsoRnnWflhnHv++cvFONuleDeOUAJ8lQKdazu/aOGn37fdYFm4CZhBLNWhsA
-	1YPBY64G3/wiVj+EX/UMvNr7rVFUtBhYCuQENGnVJtllawZXlAs=
-X-Google-Smtp-Source: AGHT+IGEfaGDigCwu7r4I2UXBnlCsbwxk6WCqIVgjikS5CsXO+Dp82HB5UCqMOdEXfU3JqXv+5KJ6w==
-X-Received: by 2002:a05:6000:2583:b0:3a4:cc8f:a3d5 with SMTP id ffacd0b85a97d-3a4e5e69de5mr162780f8f.15.1748344441464;
-        Tue, 27 May 2025 04:14:01 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:bd12:adce:b990:490a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm260935355e9.27.2025.05.27.04.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 04:14:01 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: TODO: add a task for removing MMIO-specific fields from gpio_chip
-Date: Tue, 27 May 2025 13:13:53 +0200
-Message-ID: <20250527111353.71540-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="g3neIP8P"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zRwDyR/HsJaA5QD/1J0hJ/cI8DYN8ryKfVWZmLsym98K9BI3p0fx81rAUG1gg+Pj76ZngI1ZWpOVR6x3TSogRdcJVUYojLO1Y/eOVq/K9eSRRlSk58R6If+atIW1D1CdG8QvzDL65P+eFkHiFZkPEQxU+XQeaBCQ3dombcdZfaFR1aKZugsXvpCnOkpgR2N8gOVxTGJii/VBpIQGbkUNdg1l+8WQPe4r6oJNSywTYxwlRTN+e/gpqVIqjtS62yYJy2UAQ15u8FxrN3WZtGMVETzeYUMOi8+5JLl4Qd3Wmzg+AjV6NyLmAAnvqdYquHY9harw3HcvcrweumYUksS1PA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G0apB1l3eIgjWYBvSnLv+O8YTFrPinzwLXU1TgD2NtI=;
+ b=VZTTmc0Ikif9KdM25euBZ/Knr9rqo8jsc7HXwKvm+PjyLTsIiuY+inUOwRR0DOVNcHebdm4IjCsQkROj37z+d4+pL6nJ3Oz0i3dp+Nhw2WCNv0a7W8WjSD3dYRWbAKajA2pk5PVH6/qNxgoDVF1cDoMjndAKJjrkM2rBekiYYsI43+fo6gk+sC4VUaH6ePC236D8xz6tyBohGI7KbLtO5yfEU1z2niIdv01XlE1dV65gkyG74jxMyzo3u2tkkmR0MekdpFP9WF/KVTte/jzhDMPn2TztNKddtCdYtOkpDIlE/tVWx+U0VZlQ0wE8osH03th7/2c7QIuU893VxWcEsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G0apB1l3eIgjWYBvSnLv+O8YTFrPinzwLXU1TgD2NtI=;
+ b=g3neIP8PTjzzyvi6EBt3NaXFDHi5bQLT8OvVUw7tLkWxT5qDuBAxVjax4Tnmin1M5KC7PmH/m8GOfGHRWNYsweAIWNYuD216BEfGoMT8yFlY4XnUDeYHMR1oohzXp3j6gNheHMMRXu7N/7zglOY/+/rFmsUunJ07YGn/cSlPlFpDB6UpKwCfUg+TA0oriOA9ifNj/FtcRqJENqF8DsmkwHKRRDOwqsYJzrNKbuKzaMcU69fKXdFFgUxABPJgxw0UeupoF8rkxkJgLh3Vbj1J94a+Pqw8F1uXegZk5twkznj/RrsQVpfO+fMemEKV7LQG3G/JujJ50wCBwxbRpzcCZQ==
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
+ by BY3PR19MB5202.namprd19.prod.outlook.com (2603:10b6:a03:36a::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Tue, 27 May
+ 2025 11:14:35 +0000
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305%4]) with mapi id 15.20.8769.025; Tue, 27 May 2025
+ 11:14:35 +0000
+Message-ID:
+ <DS7PR19MB8883BE13166F7CD5DCA777DB9D64A@DS7PR19MB8883.namprd19.prod.outlook.com>
+Date: Tue, 27 May 2025 15:14:23 +0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] clk: qcom: gcc-ipq5018: fix GE PHY reset
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+ <20250525-ipq5018-ge-phy-v1-2-ddab8854e253@outlook.com>
+ <337068fa-adc2-478e-8f3f-ec93af0bb1c6@oss.qualcomm.com>
+Content-Language: en-US
+From: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <337068fa-adc2-478e-8f3f-ec93af0bb1c6@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ClientProxiedBy: DX0P273CA0090.AREP273.PROD.OUTLOOK.COM
+ (2603:1086:300:5d::17) To DS7PR19MB8883.namprd19.prod.outlook.com
+ (2603:10b6:8:253::16)
+X-Microsoft-Original-Message-ID:
+ <c23b3fc8-fac6-4dd2-b42b-7cd5ccc0054e@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|BY3PR19MB5202:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6631bd72-0a66-48ca-6914-08dd9d0fa8ee
+X-MS-Exchange-SLBlob-MailProps:
+	/UmSaZDmfYCV7gMu87/GtwOd6jzNwNFltboDOuONhDWeadRUwjWxNIGlFmrIBpwKDSAb35yWOmp/3qFYCDAGicJodze7Jn98XgYyC/ghS9Wz7OQHI4tNFO6M0ikIjFD8dEv/JjXCdx80ZUoISomEAFQTqStxrX5jbpEdrQvmwuM5vlaIEvCu3YcFyxVUS4PveziEhlymut823+zRScWcjrO2eJQO2pM1MtLFVDtntgj9+G4bAWng5Uv/g6nt8fHsrB79nBs7FtzhZmCrClziPS5QsIVpwrGqbrFG9aSyC2RUhgF2O5wtS1M3gT01vJtrpZPcC6WT5Fx0MBF3lVEaoaehhBE28jDsI+duTyru+7iju7OmP09ofpvZXpP6RNtiSAOE9nHZ7yXIALu3sMcJP/ZZklKXMfEl8fp+H5CEsVyRFxYaOVLsyT1l7NbXFSHLUht6USnNLGS40xvBoQZpn+Ecnkq2pSKbqYYNjj2/PCrFGLNYIXieQJXC8m7k+MuWywqfIFAK24mEZ/+QxfIZAAD9D10qeUlBOMk9mPZL3Xc5XJNUvpBti8J5sj8bCwpLw9pVlES5ue1FdtrV4ef9BQTGwqe3TG8Tw8hky3MpeYwHT8uM/RxMnUzCGSgWnA1l43aniId8dMgp1aP4lwtmswPmWZrxtutDkZaQxj7UvpseyJ4bGf4IWj1NReEK+h+HuKfz3R2qvQ3hjCIrrQQS9tkAfTQrPUAW1/dx8Mr88hsavcX+CcS4A1jC0FTeh2F3pxSC0whKhXkG9z1e7rLzYSgIinDSi9knPWlYrn4jNJhaB4PSlNNBDB+OEeJrK30Yx6SLOXoCtY8OOJxS66knZA==
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|6090799003|8060799009|7092599006|15080799009|19110799006|21061999006|5072599009|1602099012|440099028|3412199025|4302099013|10035399007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?c3RUYkZaK3A1MXhrT2tudzYyMjBqMVRsdE5IRzhmQzhjMnZJMEpyMk1vT2Fv?=
+ =?utf-8?B?ckg3NFltbVJwRnJlR0VrQnhidkI5TFpMTXBBTStZaU9pQWlqMWZSMmJiRDZq?=
+ =?utf-8?B?UlNkNGFydVVlSzZFeEVzVk14S1BqMnBhWjdmVlZXUU9mb3ljTEpISTh1bDla?=
+ =?utf-8?B?M2hERDg0VHdWd0gvWENmbE9JelFuTXkvWm9rT0VqcDJlN05SUnZpN1VtcVlk?=
+ =?utf-8?B?OUtPTXFBU1JnSDZtV2dhclU5NkhuUlFsQ1YyajVJR1dBeHlqZlU4WGZOd1h1?=
+ =?utf-8?B?V29nVEQ3bTQyL3B2MHAvVVF6U2luZW1QMjMxai9sNTI2MXZnZ05kRm5UeU1l?=
+ =?utf-8?B?SWlLQ0J0NnBlQUpqZnpING1HRkxleHYxSGkxNGVwTjdTaWNkUnc5cThMMzZL?=
+ =?utf-8?B?QWp4Y0lwWXlVditpRkpEeTVScHlxZlVOOEs5MkYydG91Tm8wZWpCNVJoR2d2?=
+ =?utf-8?B?UlA5a0NjZFVHTmEwRWVqZmVuWmdlRWZvUnMzRmVhUCt4dHJpdDFYRDZFVWVq?=
+ =?utf-8?B?a3Zya3hrRFJhVTc2dVJibXJnQiszQTFSTzFsRXp2R0xvR0l1WnBrRGFSbW8w?=
+ =?utf-8?B?b2lEZkJZcFd2T05FRWZUaHB0V0pEaGsrVm5MeStDTDlJZDM1UCtKVHQvWjVK?=
+ =?utf-8?B?dEpEQzkrTWFSQkNDZEZ0cXFkUWVEdmNMUHJ1UEtUMVhmTkxaNFd5Q3hQTjBJ?=
+ =?utf-8?B?U0VSTjVyQVZSY1RzK1h2bE1wemlxVE4rVHpnSGNoZ3MzTzN1Y3F3azFzUXpk?=
+ =?utf-8?B?UkRpYUdHUWNEbVBDSnBDdCt4U3ozL0tSS1NYOFhMU056a2Z3ek5TZm5haXdh?=
+ =?utf-8?B?MmpvRkF5cXlmYVdQTzlBcS9NQm5ha1NnTE4xMUxEanVrVXp3YUpycUNiUmU5?=
+ =?utf-8?B?aVdDU0xwUHdtY2ZqeWhtRmY3STh1OUgxQk9VUWZzNncrUEdJZVBBbmh2MmpE?=
+ =?utf-8?B?V0FuL0Z1STNTVWxuR0t4a1N5YnF3akhhdXFERzBhVjdXNHFseEZ6bWZrVG8z?=
+ =?utf-8?B?QXVkOTNINkY4bmVTdHN5SmNSY3QrRURuT05zWlJZU292VVFEbGJHS0JaaXBW?=
+ =?utf-8?B?SElOTlpReitXaWQxQWVEdmlqalE3STRLVG5NaFBCQXljeVNjanN3anVnQVlD?=
+ =?utf-8?B?WXI0V2s0T3Qva290a0ZTc3puRjNLRGdIUWNJVGFmbEJUOUttNFdpdHdPMlpG?=
+ =?utf-8?B?Y3c4SUo0ZmZ1azQ4YzlEMkRjOGhYc0RBYUhWZ3Fkb0xBOGlRamJ2TTJQNTZM?=
+ =?utf-8?B?czV2b2F1cFUyZ3BZVVppTzBELzBhOFhSTlBBNWhoR2ExYUJlV3RTZk9yalpB?=
+ =?utf-8?B?WlUvWUUvVFg0R09qSkFTUkFiNXU4SzdyZThzK1N0Tm5OV0dtRzZGNzY4NGtI?=
+ =?utf-8?B?T1Q1RElTZE8xSXR4bS9sYXJzck9BRGNoUXY2ZVhqYU9xN2t4TUx0L2R0REFh?=
+ =?utf-8?B?Ry9Sb01EVTNYbE5MQkUxSWw3WVNGWEM5M2VXbHIyK1AvSUxJVHF4MFVUWFBw?=
+ =?utf-8?B?c2FYNVBQRzlidDIwZmxJTnVqZmY2T2QwU2ZUbGVSK1hiSUlldGovM3VqaTAr?=
+ =?utf-8?B?MXYyZXBPNTl1ZzFYNVIrU1VteFJTdklBSmhFcjAxcVlmQ3p6akR4aU9hYjR6?=
+ =?utf-8?B?QlFwMTZVZlcyaU5iY3cyTUltempIcGtMTVFqNU51a2cxNDhvNHNrQmUwS3Q3?=
+ =?utf-8?B?UTlIS1UzOEN4WkxMWm5hMlhHSW5BZldCYlhFZVovaWlLMURTNWFCVFF3c3hL?=
+ =?utf-8?Q?G5tI+mqmvNDwXWxGsI=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OXZlTzd2bDA2VVFKOXFqOFpQdGRTVkRvWkpGdVFTZFB5Mk4vMkhQamEvV0dZ?=
+ =?utf-8?B?Z3Axd2xFYkt2RGdUTmtab3RiRlJGbnRnLzNpZ2R6NHZLTWk1VUl6SE5ROFNt?=
+ =?utf-8?B?MEZzUmpwZDczMXhZYUs0NjZ2STNpZzJxakZjOTlSWDJ3N2pKSC9TdDNNclox?=
+ =?utf-8?B?SHRXNHFoeGZoODJLRDVGNWZNREdTaC9Nd0hVMkpTMXVOQWR1K0F2eGV0YWJZ?=
+ =?utf-8?B?cGZqbVRsbEJSc0RKc0tpeDBvTWdjaXYwellxcnZCWURQSWNZVVVMYVdYWU5w?=
+ =?utf-8?B?NHN3SzM4VE9ZdUg0ZkN3U0pJYzdnejhteGlLeUc3MUNydWtxN1cyU2pxQlY1?=
+ =?utf-8?B?Q3dMUUdick9Bb01EUDdqNEZydFdKMExhTmVzcnhMSVlTRXJ5ZEZhZEI0UEVw?=
+ =?utf-8?B?WWdvUzltUzV3MzFZUUp4MEIwbmxOREpmRzlYS0dmY25PMjJSZm1GemdxNnRu?=
+ =?utf-8?B?Qi9tMUt0eWwrbERKOFMvckNUT2l3bWdzYTVrNFk3U0RFQ3dlRVBlNHhaZW9E?=
+ =?utf-8?B?bjNWeU9nV0ZXSG5Jb3MzemVuOGpydmRtTWd0dTlFNGZtd2Z6bXhpWEpLM0cy?=
+ =?utf-8?B?SStXVk9BNkFsUDNWNy9sZGFxTmVOWm12QnNjZExaTnl2SGNMRndkSnRBM3k3?=
+ =?utf-8?B?d1hsbmZRVjZ1UkRCRHBHQW9VTTNYbzVGbWY0b3Z0VHptWlVadmJyZ2tYclJk?=
+ =?utf-8?B?SFFKOFhsS2VHbE5kTmZ0OEpaUmN2ZEdiUEt1T2pEeThuTFVET0tBUkpLRkow?=
+ =?utf-8?B?cVd1Y3VJRTVxcXptcHZNc3J3a0I2dlVwN2FxWnd3MFJBTUJQQlF2NXRhRklV?=
+ =?utf-8?B?eWxtM2VkMnNjWVl0NG9pOEY5UGxseEpHNC8rYUlmd0JLVkRxTU1uMkNqNjBM?=
+ =?utf-8?B?clhZbVNxOWwrbStONm43S0RHbUh6UDFyU0NFdjRoWE1MbGpKWWJHOHBIQnBB?=
+ =?utf-8?B?aVIxM0F5VzNNV0l2NnV3QlFqZHovZWl2b2YyeVduMldtR3FsRnkvZER4ZUM4?=
+ =?utf-8?B?bDFtclJyem80dFRNZzc1L01JOWJPZ0ZicUVJK28wK3d3WTVuTVlxRVB3RTBt?=
+ =?utf-8?B?a0ozVFdIZFo5TEpvVEQ1bnBRaFNiZ2lYaHBabmRVbEpGUGovVjIrY1k1Q3JV?=
+ =?utf-8?B?cTJKTi9PdDA3R1ZYL25SaExVQmRlajFCWkgxMnhhWGNhcVlIZnN5dVZMdlhy?=
+ =?utf-8?B?NG10M3FIcnlSb1Y0MTRJeVl5TUhUbTRzWTRybE5YVjNvMXZiSG11Z0dWZUwr?=
+ =?utf-8?B?TkVUdXVkN1I2cDZ6OXNqdjlHSHFiR2p1aGVRTEloSkJlMGNqY0ttRVoyUG02?=
+ =?utf-8?B?NUV1WlQwZXY2VmdxRjVuVmRJeUtFY3QyZmEzU1BPSmM2bHhCVzBJblkrZDZK?=
+ =?utf-8?B?VXVBZTJYalFocW5kd05ISGVJdjlvT2JQcDB3b2hlL09mUFhyNFVYTDdEakdR?=
+ =?utf-8?B?Y1d5dlh5NDU3TjVaMTZUQmUySU81aGE1UmZnT2R1R1JqQzVraFA0TjhxbEho?=
+ =?utf-8?B?RUMyZlFTUmdsNDZFYnhQQzA1NDJYUGhrWHpIQkhpdDN0cVhzOG1CbVo1enpX?=
+ =?utf-8?B?UEJaWnZjVDI1cm90dkdhcWpjRVZxUUpJYmpPT1VzRGxPN1FFczlDVDRqMnc1?=
+ =?utf-8?B?V3dyT2VsbU5IQ1lYNHlYRWwvWDdFWFg3OHFkdGNWckVFQlpKRmJxZSt5SUpq?=
+ =?utf-8?Q?RU4OPm1UuFJuS6gtDsjh?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6631bd72-0a66-48ca-6914-08dd9d0fa8ee
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 11:14:34.8475
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR19MB5202
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Konrad,
 
-Currently for CONFIG_GPIO_GENERIC=y each struct gpio_chip object
-contains the fields relevant only for gpio-mmio users. It's not an
-insignificant number either as it's several pointers and integers.
+On 5/27/25 15:00, Konrad Dybcio wrote:
+> On 5/25/25 7:56 PM, George Moussalem via B4 Relay wrote:
+>> From: George Moussalem <george.moussalem@outlook.com>
+>>
+>> The MISC reset is supposed to trigger a resets across the MDC, DSP, and
+>> RX & TX clocks of the IPQ5018 internal GE PHY. So let's set the bitmask
+>> of the reset definition accordingly in the GCC as per the downstream
+>> driver.
+>>
+>> Link: https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/commit/00743c3e82fa87cba4460e7a2ba32f473a9ce932
+>>
+>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+>> ---
+>>   drivers/clk/qcom/gcc-ipq5018.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
+>> index 70f5dcb96700f55da1fb19fc893d22350a7e63bf..02d6f08f389f24eccc961b9a4271288c6b635bbc 100644
+>> --- a/drivers/clk/qcom/gcc-ipq5018.c
+>> +++ b/drivers/clk/qcom/gcc-ipq5018.c
+>> @@ -3660,7 +3660,7 @@ static const struct qcom_reset_map gcc_ipq5018_resets[] = {
+>>   	[GCC_WCSS_AXI_S_ARES] = { 0x59008, 6 },
+>>   	[GCC_WCSS_Q6_BCR] = { 0x18004, 0 },
+>>   	[GCC_WCSSAON_RESET] = { 0x59010, 0},
+>> -	[GCC_GEPHY_MISC_ARES] = { 0x56004, 0 },
+>> +	[GCC_GEPHY_MISC_ARES] = { 0x56004, .bitmask = 0xf },
+> 
+> The computer tells me there aren't any bits beyond this mask..
+> 
+> Does this actually fix anything?
 
-It makes sense to remove these fields from struct gpio_chip into a
-dedicated structure but this is not trivial due to how the bgpio_init()
-function is implemented.
+The mask is documented in the referenced downstream driver and allows 
+for consolidating:
 
-Add a task for tracking this rework.
+resets = <&gcc GCC_GEPHY_MDC_SW_ARES>,
+	 <&gcc GCC_GEPHY_DSP_HW_ARES>,
+	 <&gcc GCC_GEPHY_RX_ARES>,
+	 <&gcc GCC_GEPHY_TX_ARES>;
+to:
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/TODO | 5 +++++
- 1 file changed, 5 insertions(+)
+resets = <&gcc GCC_MISC_ARES>;
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index 4a8b349f2483a..ef53892cb44d7 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -131,6 +131,11 @@ Work items:
-   helpers (x86 inb()/outb()) and convert port-mapped I/O drivers to use
-   this with dry-coding and sending to maintainers to test
- 
-+- Move the MMIO GPIO specific fields out of struct gpio_chip into a
-+  dedicated structure. Currently every GPIO chip has them if gpio-mmio is
-+  enabled in Kconfig even if it itself doesn't register with the helper
-+  library.
-+
- -------------------------------------------------------------------------------
- 
- Generic regmap GPIO
--- 
-2.48.1
+to conform to this bindings restriction in ethernet-phy.yaml
+
+   resets:
+     maxItems: 1
+
+Effectively, there's no functional change. So we can also list all the 
+resets in the device tree, whatever is preferred.
+
+> 
+> Konrad
+
+Thanks,
+George
 
