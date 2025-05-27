@@ -1,27 +1,27 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D4C34CDD
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB196271455
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352099; cv=none; b=LNMZPlIhdFiuN9pkIEqRDpCjqejJmKsmi18YrmBTB7ZFzCWN2t//RYd1aO7FELJcunILKpc1IL1jndVSffJ2ihmuZ8g0xFGMevzZu4YFEpcZb4txFxFTg6F1gLpK8HLINZONgyrW5cu8DfQHYy1Ui7ScNBrRVAYsNBEtIwCjIfk=
+	t=1748352099; cv=none; b=K56ztEcUNyTmTxfzZj1MCRDsjNnwIjsaTb2aKTHDX0WyLCel9byjoGxcIon0zb9sQnGeanV2gnbIQ+CNvrebYfwJ4DkVZ/GXm1omc5WpCHLG2AzmZnoBdlil3PEQVTO+w1l5hJl1Qrk3LrdKibi0IpkMFztgsuuN+uoGGqwiwis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748352099; c=relaxed/simple;
-	bh=us/0eJOctHjFvBrPh/V3uCaMRE92YvukXrpOzn0thTI=;
+	bh=Q0RuftWqRTmI0z/0mzNToBYq8HBDJeREEk0wzhDz2Ik=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Im2r0Y7Cs1buw9BrACmhbMqGGWCfEJffxERb7bisKHggprpcRWJDPsrkOEc8gCnLJIm7Ot0oURjT6UduitvDmSXH+jG/HiWADEIvijrJrFQxY2CJ3HD4eXyjSmaEUophZwJfWsQo0xFsk2BKBXqbLddhk/BA7Kmhv2rIqjIxgLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=spFBLJzTWTDnOeBrr2wKTKJN3kMniKQgkLRinlEL+uvSRvOWskArBlBqph1zfFgxmPF8uqhsFfoRX6j8DHuahvehvmAjxPlA5piPuXB3LqvabbXnokKF6X0/O0QpcJQTQ1w2oUUsqCZb9L2Q0NYN4WebEIq4TBLzNe8krkx4Kn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b6Cvg3jkczKHMZ2
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:21:35 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b6CvF6h0Xz4f3k68
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:21:13 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id F0C921A1BEA
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:21:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 0F5D01A018D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:21:34 +0800 (CST)
 Received: from ultra.huawei.com (unknown [10.90.53.71])
-	by APP3 (Coremail) with SMTP id _Ch0CgBX98FavDVoK9fhNQ--.12329S3;
+	by APP3 (Coremail) with SMTP id _Ch0CgBX98FavDVoK9fhNQ--.12329S4;
 	Tue, 27 May 2025 21:21:33 +0800 (CST)
 From: Pu Lehui <pulehui@huaweicloud.com>
 To: mhiramat@kernel.org,
@@ -36,9 +36,9 @@ To: mhiramat@kernel.org,
 Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	pulehui@huawei.com
-Subject: [RFC PATCH v2 1/2] mm/mremap: Fix uprobe anon page be overwritten when expanding vma during mremap
-Date: Tue, 27 May 2025 13:23:50 +0000
-Message-Id: <20250527132351.2050820-2-pulehui@huaweicloud.com>
+Subject: [RFC PATCH v2 2/2] mm/mremap: Expose abnormal new_pte during move_ptes
+Date: Tue, 27 May 2025 13:23:51 +0000
+Message-Id: <20250527132351.2050820-3-pulehui@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250527132351.2050820-1-pulehui@huaweicloud.com>
 References: <20250527132351.2050820-1-pulehui@huaweicloud.com>
@@ -49,155 +49,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBX98FavDVoK9fhNQ--.12329S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw15WrWfZFy3Xr4DJF1xAFb_yoWrAF18pF
-	s2v3Z8KFs7JFsYkry7Zryqvry3KwnakFWUCry5X34Y9ryagrsIqFWfAF47Cry5GFZ29a4S
-	qr48tryftay2qaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
-	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI
-	0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2uyI
-	UUUUU
+X-CM-TRANSID:_Ch0CgBX98FavDVoK9fhNQ--.12329S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr43Kry8tF13uF47ZFy5Arb_yoWfJrgE9r
+	4Fqr95tr4DAr1vyw15Cwn8urZIkw1qgr18XFnxtr92yr4kJan3ur929rWkZa9ruryj9rZ8
+	Wr4kJrWIgr1UKjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M2
+	8IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
+	021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
+	4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
+	0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWU
+	JVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxV
+	WUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UCZXrU
+	UUUU=
 X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
 From: Pu Lehui <pulehui@huawei.com>
 
-We encountered a BUG alert triggered by Syzkaller as follows:
-   BUG: Bad rss-counter state mm:00000000b4a60fca type:MM_ANONPAGES val:1
+When executing move_ptes, the new_pte must be NULL, otherwise it will be
+overwritten by the old_pte, and cause the abnormal new_pte to be leaked.
+In order to make this problem to be more explicit, let's add
+WARN_ON_ONCE when new_pte is not NULL.
 
-And we can reproduce it with the following steps:
-1. register uprobe on file at zero offset
-2. mmap the file at zero offset:
-   addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
-3. mremap part of vma1 to new vma2:
-   addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
-4. mremap back to orig addr1:
-   mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
-
-In the step 3, the vma1 range [addr1, addr1 + 4096] will be remap to new
-vma2 with range [addr2, addr2 + 8192], and remap uprobe anon page from
-the vma1 to vma2, then unmap the vma1 range [addr1, addr1 + 4096].
-In tht step 4, the vma2 range [addr2, addr2 + 4096] will be remap back
-to the addr range [addr1, addr1 + 4096]. Since the addr range [addr1 +
-4096, addr1 + 8192] still maps the file, it will take
-vma_merge_new_range to merge these two addr ranges, and then do
-uprobe_mmap in vma_complete. Since the merged vma pgoff is also zero
-offset, it will install uprobe anon page to the merged vma. However, the
-upcomming move_page_tables step, which use set_pte_at to remap the vma2
-uprobe anon page to the merged vma, will over map the old uprobe anon
-page in the merged vma, and lead the old uprobe anon page to be orphan.
-
-Since the uprobe anon page will be remapped to the merged vma, we can
-remove the unnecessary uprobe_mmap on merged vma, that is, do not
-perform uprobe_mmap on expanded vma.
-
-This problem was first find in linux-6.6.y and also exists in the
-community syzkaller:
-https://lore.kernel.org/all/000000000000ada39605a5e71711@google.com/T/
-
-The complete Syzkaller C reproduction program is as follows:
-
-#define _GNU_SOURCE
-#include <fcntl.h>
-#include <unistd.h>
-#include <syscall.h>
-#include <sys/mman.h>
-#include <linux/perf_event.h>
-
-int main(int argc, char *argv[])
-{
-    int fd = open(FNAME, O_RDWR|O_CREAT, 0600);
-    struct perf_event_attr attr = {
-        .type = 9,
-        .uprobe_path = (long) FNAME,
-        .probe_offset = 0x0,
-    };
-    void *addr1, *addr2;
-
-    write(fd, "x", 1);
-    mmap(NULL, 4096, PROT_EXEC, MAP_PRIVATE, fd, 0);
-
-    syscall(__NR_perf_event_open, &attr, 0, 0, -1, 0);
-    addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
-    addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
-    mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
-
-    return 0;
-}
-
-Fixes: 78a320542e6c ("uprobes: Change valid_vma() to demand VM_MAYEXEC rather than VM_EXEC")
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: Pu Lehui <pulehui@huawei.com>
 ---
- mm/vma.c | 7 ++++++-
- mm/vma.h | 7 +++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ mm/mremap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/vma.c b/mm/vma.c
-index 1c6595f282e5..6445f515c7f2 100644
---- a/mm/vma.c
-+++ b/mm/vma.c
-@@ -358,7 +358,8 @@ static void vma_complete(struct vma_prepare *vp, struct vma_iterator *vmi,
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 83e359754961..adb3a111b5c1 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -237,6 +237,8 @@ static int move_ptes(struct pagetable_move_control *pmc,
  
- 	if (vp->file) {
- 		i_mmap_unlock_write(vp->mapping);
--		uprobe_mmap(vp->vma);
-+		if (!vp->skip_vma_uprobe)
-+			uprobe_mmap(vp->vma);
- 
- 		if (vp->adj_next)
- 			uprobe_mmap(vp->adj_next);
-@@ -737,6 +738,7 @@ static int commit_merge(struct vma_merge_struct *vmg)
- 	if (vma_iter_prealloc(vmg->vmi, vma))
- 		return -ENOMEM;
- 
-+	vp.skip_vma_uprobe = vmg->skip_vma_uprobe;
- 	vma_prepare(&vp);
- 	/*
- 	 * THP pages may need to do additional splits if we increase
-@@ -1151,6 +1153,9 @@ int vma_expand(struct vma_merge_struct *vmg)
- 	if (remove_next)
- 		vmg->__remove_next = true;
- 
-+	/* skip uprobe_mmap on expanded vma */
-+	vmg->skip_vma_uprobe = true;
+ 	for (; old_addr < old_end; old_pte++, old_addr += PAGE_SIZE,
+ 				   new_pte++, new_addr += PAGE_SIZE) {
++		WARN_ON_ONCE(!pte_none(*new_pte))
 +
- 	if (commit_merge(vmg))
- 		goto nomem;
+ 		if (pte_none(ptep_get(old_pte)))
+ 			continue;
  
-diff --git a/mm/vma.h b/mm/vma.h
-index 9a8af9be29a8..56cc0364d239 100644
---- a/mm/vma.h
-+++ b/mm/vma.h
-@@ -19,6 +19,8 @@ struct vma_prepare {
- 	struct vm_area_struct *insert;
- 	struct vm_area_struct *remove;
- 	struct vm_area_struct *remove2;
-+	/* Whether to skip uprobe_mmap on vma */
-+	bool skip_vma_uprobe;
- };
- 
- struct unlink_vma_file_batch {
-@@ -120,6 +122,11 @@ struct vma_merge_struct {
- 	 */
- 	bool give_up_on_oom :1;
- 
-+	/*
-+	 * Whether to skip uprobe_mmap on merged vma.
-+	 */
-+	bool skip_vma_uprobe :1;
-+
- 	/* Internal flags set during merge process: */
- 
- 	/*
 -- 
 2.34.1
 
