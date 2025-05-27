@@ -1,64 +1,50 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D42F13AD3F;
-	Tue, 27 May 2025 05:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2042F29;
+	Tue, 27 May 2025 05:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748323746; cv=none; b=PY8CunrZzFMURN64SetahfClE/xxcb30pmL6QAoYJNnnBY6R7x0tr8eGwgoHcKox2aCggOV+erWOxPZZI5Edz9s+MjW9Q0ozSKWuYo453jYgpPnhmmvuNG3oPVhPXDw/ilrsnEMfjxrczIJojhO7kcex5oe1DHDvyL2HdXSi+oE=
+	t=1748323881; cv=none; b=maCO93Y8eEbcU8+t4ohYpEN7m59ajpJAgjMw0ttsYjCQJeUbDHzKSU4Sy5ymgqnFEXHpBsuprDYhnCymy5xe5R/FB6Q9uHgSPk1VdcEA9WlxV9wHs62r4FwkzrY0WydIdrQO2aSZK6m/NbX0h334Kpto5rNTpLwnDjFObDuMFOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748323746; c=relaxed/simple;
-	bh=C8qkJH3MrAqV9gs5bawr3ON5EFZyUYFn+wmxYKLvcvA=;
+	s=arc-20240116; t=1748323881; c=relaxed/simple;
+	bh=5Now6IaadWLsxbSUmrNOd36MeABQBTNVzr7aeuW41gk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eiZQYhv35FQA5lDvYjHb4tWX5RGZUJX40u+akfQLpZkLHN1NrsW2uBQy0y8u46XL7EKvtKpqBBG2T674T4oIwg3vs2U0949OHexB10BpUwmiv1WeBi1uOl2oMmG0N9aBzFleG+mwYuA7UZ5vfkrmgxHMSI47y5ayF7H2RZw75CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0Z/XuMx; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=CoafkTdvBn91lPZd8yDomxtibkBqtxGMqn9yGwmFUxYxNWsXdmbgCdc+Cd324tKQNy0TP4n2NY5xJ10AmVQjE359JOUlWDGapw5QVjveYT2cG9eGOQOFMGBDPgrT9YQx/p+L5denl7Egz6Edz8NRs7h6D2drjJlrOinFtkAx6wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rp31qdJU; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0Z/XuMx"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad5394be625so541577266b.2;
-        Mon, 26 May 2025 22:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748323743; x=1748928543; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XPYBWyOq7r+7W8qExCRG+4zXFY/pJBbil6VcRDPRQGs=;
-        b=d0Z/XuMxfrJY2AqROTAIqB0bXKp2y6DzuzkHDbjcVhadF3V3xaFUVI/IlTfdjsnfUJ
-         5wqm94+jk+oJgQy/zKaaRWBk59pvM92xBPod9cvBbva+ILkVigFqMnFcO3MR3kYLtdx2
-         0hKyf1EO6SLkecB/IvZ8I5390HiJu8YeU1XIzyYH8CFsCsvMSAkwfLtZd/thziQxpQKo
-         dWslhs3BH+qV5TfVLsSmDTjz0Ns9Kai4nIBlAkLy/8zB7wNcHw5SGwCuPRAsGioGCU6p
-         6rnHLUr7H0OZSgZflwtUpKH5f3Na8bB9MM7FYsYFTt/1lPe6h1j/QWWBpAK5J3bFWqiI
-         rkxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748323743; x=1748928543;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XPYBWyOq7r+7W8qExCRG+4zXFY/pJBbil6VcRDPRQGs=;
-        b=uj6kJGOqfliDJ6jMwr9lZpArtEhhLKMLlk2qc9OCTFGbKC+4vwZQpC0xje1dY5WyJ1
-         FCwWP0x1myTM8wLj3NO4HWdv72eZDalTjx2lNo5DW6tlQhDFYRhv/4Pzhw54KH1rYXhT
-         56B1X/emWBT14ctcxTqrNQS30I9XnZ374rXfJfsIBETZ/MVQKnycC98pKlQ8rnhOzGmR
-         zX8ZOQX+X/dsNjhSsDD5lhhCMezS21qbENPAlSKYns7dKE1//TKU5sB4VEjlyBMR7eFO
-         soF9yxFmWIiOdrvm567xlpE7rn8mHQzCpdOLlx1RhCgmoskhiUaW5hpDnEDoMmTaxFa5
-         P7BA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0tsX5JfpLSLmbOq+YOzHOGt1T7btalFo6Mz6lRNHXJKgOlcZ8Pn5B5V8otSAkXAlTZcd9ZvWi@vger.kernel.org, AJvYcCXX9QaPGhuZrVntnTyXWwJnQA853M3b4u0MeNdRnzVOz0pD1IhORaj94GqYE/NlRYRmRKVkVkrysBdHdzcV@vger.kernel.org, AJvYcCXi/Qj0xRuIsl/9IpaHBs/jUKYkkYzxX2+1xeEkY9C8/uUzfXljllwqyMIYnMEsS/hnfLM=@vger.kernel.org, AJvYcCXoRlt7bePvKDOZD6T08DrEHi/VXpjDjvLEvP0l6f+Bm6OmEe3Q7zcUb9ZdwoRDdXVH38zbJ5e9ke//1w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOSmicNgtAtmUY2n8Prp7ozxVZUrg4gZDnW6OA3T+56keOBlGj
-	O8AFzZtS9XWV/YSw2J0dVhAErgDzuTN5GfElfUbkjFQ2edIXkE9h7xnG5SqdcYkU
-X-Gm-Gg: ASbGncvDk+TAq47+0Qo1X77YZJGg+FWg0sJefaPD3RXrvSvH9llORTRCS598MRXNdJe
-	hTW60dJiadT0wWDRD7YsMAFEav2RGWR5IbqYk9b7jDTOE/bKeRzX2rePeCwkLlFQsVXncBs2VGi
-	/fXzHwX9WesUwPVZKITsD5ZQHEgDq/LilUrJJKz7x398XLU333/rtgFTaCY8Wp1hftio9V6tn0s
-	oGZj6v4ZRXoHcIWH7w2YU3ZVzkCRnPcBMiEVPMwAHZGABwneNztRHmJKwtMz/ogkvyV8qVyRcVp
-	IFWfrnL4oHEF2rAKKdnuWRt93eIyDYEKAyDmJaHGU3Rj8J4LLlM4b08cb4Hr5ND7OtJelYI=
-X-Google-Smtp-Source: AGHT+IFyCR8YM6MYHZlh2Co1/HQCHjCvfrUUguXmsb48Z8OwvU5/EiOa5v8Hnhx4fjcjwxRKZC73BA==
-X-Received: by 2002:a17:907:97c8:b0:ad2:43be:6f04 with SMTP id a640c23a62f3a-ad85b1d6bb3mr930446566b.51.1748323742493;
-        Mon, 26 May 2025 22:29:02 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.132.24])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d0717c3sm1807896766b.65.2025.05.26.22.28.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 May 2025 22:29:01 -0700 (PDT)
-Message-ID: <651351db-e3ec-4944-8db5-e63290a578e8@gmail.com>
-Date: Tue, 27 May 2025 06:30:12 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rp31qdJU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748323879; x=1779859879;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5Now6IaadWLsxbSUmrNOd36MeABQBTNVzr7aeuW41gk=;
+  b=Rp31qdJUYa/gy75NxWIl7JcdfWncpyI7vineNTrRDdaTsMxAWLW/IhP3
+   2GFOhFdnFar8uN8F8vL/tJdVx7jStcXD6ACx4oozt+i06Hlhl/ymEjHnq
+   3Zz0z/JwZhp5lPZsnJi/hsd3N1oXAVgV4iKd/6F19tj9oTvvmDAKY9jf3
+   kqv6gMEo0UiqchNj9gVWv3EHsGrkpI1EJhtMJeF7oYPmnKY1OUQv/xd9G
+   470qcOAW6ndmN93fR/DfXSO1yRH091NXCgGLFnsnJf726YRc36O0zIxs4
+   q9f2Gl8/HvnuKFCrZKM/i58hMZqzdjnIHGismXHdgUbCqi8nHxpz09pcz
+   A==;
+X-CSE-ConnectionGUID: 8S+KDsAnTCevXxsrpbMwDQ==
+X-CSE-MsgGUID: 00lxM4cbRXyDQsTxif1Skg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50221079"
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="50221079"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 22:31:18 -0700
+X-CSE-ConnectionGUID: NV8NkFIJSPKBvHazeySFjA==
+X-CSE-MsgGUID: TtvnsP17QA+HmpSJgbuR0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="142629388"
+Received: from unknown (HELO [10.238.11.3]) ([10.238.11.3])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 22:31:16 -0700
+Message-ID: <58339ba1-d7ac-45dd-9d62-1a023d528f50@linux.intel.com>
+Date: Tue, 27 May 2025 13:31:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,87 +52,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct
- page
-To: Byungchul Park <byungchul@sk.com>
-Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
- harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
- davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
- toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
- saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
- vishal.moola@gmail.com
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-19-byungchul@sk.com>
- <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
- <20250526013744.GD74632@system.software.com>
- <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
- <20250527010226.GA19906@system.software.com>
+Subject: Re: [PATCH next] KVM: VMX: add noinstr for is_td_vcpu and is_td
+To: Edward Adam Davis <eadavis@qq.com>, seanjc@google.com
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <tencent_27A451976AF76E66DF1379C3604976A3A505@qq.com>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250527010226.GA19906@system.software.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <tencent_27A451976AF76E66DF1379C3604976A3A505@qq.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/27/25 02:02, Byungchul Park wrote:
-...>> Patch 1:
->>
->> struct page {
->> 	unsigned long flags;
->> 	union {
->> 		struct_group_tagged(netmem_desc, netmem_desc) {
->> 			// same layout as before
->> 			...
->> 			struct page_pool *pp;
->> 			...
->> 		};
-> 
-> This part will be gone shortly.  The matters come from absence of this
-> part.
 
-Right, the problem is not having an explicit netmem_desc in struct
-page and not using struct netmem_desc in all relevant helpers.
 
->> struct net_iov {
->> 	unsigned long flags_padding;
->> 	union {
->> 		struct {
->> 			// same layout as in page + build asserts;
->> 			...
->> 			struct page_pool *pp;
->> 			...
->> 		};
->> 		struct netmem_desc desc;
->> 	};
->> };
->>
->> struct netmem_desc *page_to_netmem_desc(struct page *page)
->> {
->> 	return &page->netmem_desc;
-> 
-> page will not have any netmem things in it after this, that matters.
+On 5/27/2025 11:45 AM, Edward Adam Davis wrote:
+> is_td() and is_td_vcpu() run in no instrumentation, so they are need
+> noinstr.
+>
+> [1]
+> vmlinux.o: error: objtool: vmx_handle_nmi+0x47:
+>          call to is_td_vcpu.isra.0() leaves .noinstr.text section
+>
+> Fixes: 7172c753c26a ("KVM: VMX: Move common fields of struct vcpu_{vmx,tdx} to a struct")
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> ---
+>   arch/x86/kvm/vmx/common.h | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
+> index 8f46a06e2c44..70e0879c58f6 100644
+> --- a/arch/x86/kvm/vmx/common.h
+> +++ b/arch/x86/kvm/vmx/common.h
+> @@ -59,20 +59,20 @@ struct vcpu_vt {
+>   
+>   #ifdef CONFIG_KVM_INTEL_TDX
+>   
+> -static __always_inline bool is_td(struct kvm *kvm)
+> +static noinstr __always_inline bool is_td(struct kvm *kvm)
+>   {
+>   	return kvm->arch.vm_type == KVM_X86_TDX_VM;
+>   }
+>   
+> -static __always_inline bool is_td_vcpu(struct kvm_vcpu *vcpu)
+> +static noinstr __always_inline bool is_td_vcpu(struct kvm_vcpu *vcpu)
+>   {
+>   	return is_td(vcpu->kvm);
+>   }
 
-Ok, the question is where are you going to stash the fields?
-We still need space to store them. Are you going to do the
-indirection mm folks want?
+noinstr is not needed when the functions are __always_inline.
 
-AFAIK, the plan is that in the end pages will still have
-netmem_desc but through an indirection. E.g.
+>   
+>   #else
+>   
+> -static inline bool is_td(struct kvm *kvm) { return false; }
+> -static inline bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
+> +static noinstr bool is_td(struct kvm *kvm) { return false; }
+> +static noinstr bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
 
-static inline bool page_pool_page_is_pp(struct page *page)
-{
-	return page->page_type == PAGE_PP_NET;
-}
+Oops, overlooked the !CONFIG_KVM_INTEL_TDX case.
 
-struct netmem_desc *page_to_netmem_desc(struct page *page)
-{
-	return page->page_private;
-}
+How about:
 
--- 
-Pavel Begunkov
+diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
+index 8f46a06e2c44..a0c5e8781c33 100644
+--- a/arch/x86/kvm/vmx/common.h
++++ b/arch/x86/kvm/vmx/common.h
+@@ -71,8 +71,8 @@ static __always_inline bool is_td_vcpu(struct kvm_vcpu *vcpu)
+
+  #else
+
+-static inline bool is_td(struct kvm *kvm) { return false; }
+-static inline bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
++static __always_inline bool is_td(struct kvm *kvm) { return false; }
++static __always_inline bool is_td_vcpu(struct kvm_vcpu *vcpu) { return false; }
+
+
+>   
+>   #endif
+>   
 
