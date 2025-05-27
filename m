@@ -1,283 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9533A1F4E4F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2370F213253
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748381141; cv=none; b=c/W+9rOAm1ppxEXkKPk5wxFmHKKya2E84nRu1CFS3v/ZJYgNVMiGLRKWWlcQl1K6xIkItJEX46+uLzV9FQ2t0TPecG0erxZ3ggodG7zHlYjm5dLILXfubXt9hsisdwqQLVhdoytyNPlct/3+xcS7+YLVdN+ySk68TH8gWDQWDls=
+	t=1748381216; cv=none; b=pxOcE+2ZmZsR+T1c6AeGje8/shZ0c6++cNKkelvRQlkLMC4X0WxgMwTjEv6TP9eN51K2alYOursV0eONTfCv5m7YH+Z1oo3Y4bYVRT91tcejRbBQjmJ4/l/g0VesFu3xiPl1+LDipDUiuizohr0VKQX8YUWiTdqMxCTxbre8J78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748381141; c=relaxed/simple;
-	bh=IFJb9ty+Wc/sSwjARuGvwzsfJU7JJUOjwPzuZYsW9rg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UWDxHgJ3BvhOADC43hepwiQ7B89Q4oLAS6+OUOdIO63GlAPVkMTEMWqOtj8IbumMYsNlfK6JMl3beoi/eJ4tzMKu6lg70JndA5M6GXUoyHkPoPPz6zRTM9ASrkCtrEqcl8qyNu6A79A6XQZqCt6SOvvrNb4imLI5sacUo6XywYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S90gGfEJ; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748381216; c=relaxed/simple;
+	bh=iYHew5Y9Rcgk1H526GrtGt4u5ZKs15YdHQwVaPhq3fw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RmxKpK87decN+Vn2zzRXYoqT9wB1SG1aSKNRdlTBU+8u7+0vapPp9GE3sWT0NeVGubXeC8ZLW9wTo75MtU1+CEtgItt8gLUxiFy7HEyO/VzmNnnEITiqQu6XvV+SSW9wk7cNoEfPZWgvsXKLIpF8v/W2yr9Pro6AM+BlBVepf7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=OoK4zsvH; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S90gGfEJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748381140; x=1779917140;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IFJb9ty+Wc/sSwjARuGvwzsfJU7JJUOjwPzuZYsW9rg=;
-  b=S90gGfEJuStAazgiaBnuzz6VzNXNQ3m1FruDiWTkhbvlC0Qzu/am9OjP
-   D3ajO4ufDdKio5pTr5bD4mTDpzrNhYw7FPXILQpU/gv8ZKZy8fEAzQbDK
-   YV7nR92mi7l6dU6QKSMZ/Vu9DDef4c0SEkCf2mBgIqWmuVc15+FAEraPd
-   XvytHDbY4ido/qW+lNXmT5Kar2BJP3ZPt/f4ECAowWbYob/AEQngmlQUF
-   NU4tnKdaNQ3peo3Ei4+miqoC/ol9K9sbo7HZGxmLIBOzQbjd39cw6RxB3
-   976W8ttYQ15DqKqF+g73ghxuwWEDHR/m4MuIHsenEbBIpjvq+KBZMWZS/
-   Q==;
-X-CSE-ConnectionGUID: eAJyofp1TqmrZm8tJeDqfA==
-X-CSE-MsgGUID: NedNleFLR0isdkMeAxFKBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50390133"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="50390133"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 14:25:39 -0700
-X-CSE-ConnectionGUID: I8KLJt81TfeOJowyAtUgVQ==
-X-CSE-MsgGUID: J4QLVc4fRy6KvpLI4+wLUw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="166171234"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 14:25:38 -0700
-Date: Tue, 27 May 2025 14:25:37 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Qinyun Tan <qinyuntan@linux.alibaba.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Reinette Chatre <reinette.chatre@intel.com>
-Subject: Re: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo
- in the resctrl subsystem.
-Message-ID: <aDYt0eXB4nSawkJr@agluck-desk3>
-References: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="OoK4zsvH"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-742c46611b6so4318247b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1748381214; x=1748986014; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Fz2IwiKLgIvS2GyTyNEhioSLhVlP1wKyrLN1LJ9DDs=;
+        b=OoK4zsvHSE3WGCUajzPeiYi4I9U0XcRgxPYRdHjuJZULFR5J7Y5iUjz6wPxobn92cg
+         VDdcdI7+8lOFekUZo8p5j8maBeEHJBozqPAvOuzqkB3Yg2zi1K2e45zP4xMJ57lBe2bU
+         ipm2A49lUl8vDgCUpsaxhhESxe65Gddk2OTeE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748381214; x=1748986014;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Fz2IwiKLgIvS2GyTyNEhioSLhVlP1wKyrLN1LJ9DDs=;
+        b=bhU2HJwgaDj4/0tMFIwGDk+yL4v7PXdlmZecwLddNX3o1+c3wFt8CTKpCMPmpzAjlq
+         13ihl0MOoQaw+j6btMpI400qa8vY4tSodVrerflEbf3t0JNyNsItkxkqzH+0XgoItF9f
+         ZSdl+jaDi6H5Zg4PK+sGniBIyWNOeZxBvoCltt7cp+1vUJva11HGlo0xKg5j1ZwvL0Pz
+         yucbVbYbu4w7m8U+fULZ0CzYkOnOEG348cQq3OdNR5BUOshgWdIPxB3sqoZNwpSsF7du
+         mDrTCzLQ9rPaaPo6alUx3YP3guj4cVkIPQwO2tn4/9HtvUI7fkdnmnUUOgaFsvXwfFvT
+         ERPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUg8N102qfJM8wjQnd/ZaH02FG/CjsAs7ZXZpbRyKwj6wWJKG5h2Ei+vwNDEJ4L/knCUghjsoawj2glcQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqfQjRjvOo2y6aybREVkz6RbOG+5vbDUqxpeuR+4x2THD14/95
+	5wX2MHwaCYmKk/PNN12DpGmN0T9tZHOISKbEJF3Ancmu8NjP/FAflfJdUji1xfSVAw==
+X-Gm-Gg: ASbGncsIWYpQTbK3mZY3uXK9d/efc8db5iys1cTJKNISViaz3WqMMWoKeRCstfGChcS
+	AUFWVnhtOKJbU7IzndT1g6qijORJFuZ/ZNslu63V5VsNIW2sG0d047K1S5DGZ5A7gPKOmZpb61+
+	/7T5aC/doMO3wFvV9Omnr60n0kxEa7TTNhIge4H4MI5roBnTniOrbXyfGzpj1QotMuMOzkZnYVi
+	Cey2a8aTtYGuP8WIeRSyqDSu+b3xsY/5ibsZnyFUxfKmVAn85Rs8xTAmCr9YIGSnmxulmxhd+uT
+	t6mr5m7zeeeTGp+YcJSRKBOFNjrPnpKkwIcEf/lZvjTd+PsM+r5FhfhWn8GE90P+TheUa+WwvP5
+	RZiy2rrg2JXEHMI4=
+X-Google-Smtp-Source: AGHT+IGbB4of3bVeCDZcaBDyBXB0MhYsMAeAxaUp2tSHxEQHByHVKBDEHHtoMZZUmLbInzOiyCiNOQ==
+X-Received: by 2002:a05:6a21:483:b0:1f5:7280:1cdb with SMTP id adf61e73a8af0-2188c245222mr23547171637.16.1748381214325;
+        Tue, 27 May 2025 14:26:54 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-746682ee04dsm36539b3a.126.2025.05.27.14.26.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 14:26:53 -0700 (PDT)
+Message-ID: <c291e9ee-7ad6-43a2-a686-a518b56eb8c1@broadcom.com>
+Date: Tue, 27 May 2025 14:26:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Matthias Brugger <mbrugger@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+ <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+ <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
+ <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
+ <aCIk40642nXZ3arz@apocalypse> <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
+ <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
+ <aDYthG54Wz3khQ88@apocalypse>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <aDYthG54Wz3khQ88@apocalypse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 26, 2025 at 03:37:44PM +0800, Qinyun Tan wrote:
-
-Hi Qinyun Tan,
-
-> In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
-> structure previously relied on the cacheinfo interface to store L3 cache
-> information (e.g., shared_cpu_map) for monitoring. However, this approach
-> introduces risks when CPUs go offline:
+On 5/27/25 14:24, Andrea della Porta wrote:
+> Hi Florian,
 > 
-> 1. Inconsistency: The ci field in rdt_mon_domain was initialized using the
-> first online CPU of a NUMA node. If this CPU later goes offline, the
-> shared_cpu_map (managed by the cache subsystem) is cleared, leading to
-> incorrect or undefined behavior when accessed via rdt_mon_domain.
+> On 09:18 Tue 27 May     , Florian Fainelli wrote:
+>> On 5/26/25 07:06, Matthias Brugger wrote:
+>>>
+>>>
+>>> On 12/05/2025 18:42, Andrea della Porta wrote:
+>>>> Hi Florian,
+>>>>
+>>>> On 15:02 Mon 12 May     , Florian Fainelli wrote:
+>>>>> On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta
+>>>>> <andrea.porta@suse.com> wrote:
+>>>>>> Hi Florian, to accept the patches, what would work best for you?
+>>>>>>
+>>>>>> 1) Send only the relevant updated patches (maybe as an entirely new
+>>>>>> patchset with
+>>>>>>     only those specific patches)
+>>>>>
+>>>>> Only the updated patches work for me. I don't think there is
+>>>>> that much coupling between the DT changes and the non-DT changes
+>>>>> (other than without DT entries nothing is activated)
+>>>>
+>>>> It's a little bit more involved than that:
+>>>>
+>>>> - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
+>>>>     depends on 1 (clock binding header). Should be taken by Greg.
+>>>
+>>> Greg gave an Acked-by so I think Florian is good to take that patch.
+>>> Which leaves us to the clock patches (driver + dt-bindings).
+>>>
+>>>>
+>>>> - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
+>>>>     depends on 1 (clock binding header). Should be taken by Florian.
+>>>>
+>>>> - Patch 4 (clock driver) depends on 1 (clock binding header) and
+>>>>     should be taken by Stephen.
+>>>>
+>>>
+>>> Steven reviewed the patches (driver + dt-binding) so he is waiting for a
+>>> new version which addresses the review. He offered to either take them
+>>> and provide a branch that Florian can merge into his branch or provide a
+>>> Acked-by tag.
+>>>
+>>> @Florian what would you prefer?
+>>
+>> I am fine either way, it's definitively simpler if I can take all of the
+>> patches in the respective Broadcom ARM SoC branches, but pulling a branch
+>> from another maintainer's tree works just as well.
+>>
+>> Andrea, sorry to ask you this, can you post a v10 and we aim to get that
+>> version applied?
 > 
-> 2. Lifecycle dependency: The cacheinfo structure's lifecycle is managed
-> by the cache subsystem, making it unsafe for resctrl to hold
-> long-term references.
-
-You are correct. Saving a pointer to the per-cpu cacheinfo leads to
-the problems that you describe.
-
-> To resolve these issues and align with design principles:
+> No problem, just to avoid any confusion I'll summarize what-goes-where with
+> respect to branches in your repo broadcom/stblinux, so I can adapt each patch
+> to the relevant branch:
 > 
-> 1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
-> rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+> - dt-binding/DTS (patch 1,2,3,6,8,9,10) -> devicetree/next
+
+Ack
+
+> - defconfig (patch 11,12) -> defconfig/next
+
+Ack
+
+> - drivers (patch 4,5,7) -> drivers/next or soc/next?
+
+I will take them in drivers/next.
+
 > 
-> 2. Use hdr.cpu_mask (already maintained by resctrl) to replace
-> shared_cpu_map logic for determining valid CPUs for RMID counter reads
-> via the MSR interface.
-> 
-> Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
-> ---
->  arch/x86/kernel/cpu/resctrl/core.c        | 6 ++++--
->  arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 6 +++---
->  arch/x86/kernel/cpu/resctrl/internal.h    | 4 ++--
->  arch/x86/kernel/cpu/resctrl/monitor.c     | 6 +-----
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 6 +++---
->  include/linux/resctrl.h                   | 4 ++--
->  6 files changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-> index cf29681d01e04..a0dff742e9e93 100644
-> --- a/arch/x86/kernel/cpu/resctrl/core.c
-> +++ b/arch/x86/kernel/cpu/resctrl/core.c
-> @@ -516,6 +516,7 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
->  	struct rdt_hw_mon_domain *hw_dom;
->  	struct rdt_domain_hdr *hdr;
->  	struct rdt_mon_domain *d;
-> +	struct cacheinfo *ci;
->  	int err;
->  
->  	lockdep_assert_held(&domain_list_lock);
-> @@ -543,12 +544,13 @@ static void domain_add_cpu_mon(int cpu, struct rdt_resource *r)
->  	d = &hw_dom->d_resctrl;
->  	d->hdr.id = id;
->  	d->hdr.type = RESCTRL_MON_DOMAIN;
-> -	d->ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
-> -	if (!d->ci) {
-> +	ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
-> +	if (!ci) {
->  		pr_warn_once("Can't find L3 cache for CPU:%d resource %s\n", cpu, r->name);
->  		mon_domain_free(hw_dom);
->  		return;
->  	}
-> +	d->ci_id = ci->id;
->  	cpumask_set_cpu(cpu, &d->hdr.cpu_mask);
->  
->  	arch_mon_domain_online(r, d);
-> diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-> index 0a0ac5f6112ec..f9768669ce806 100644
-> --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-> +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-> @@ -690,10 +690,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
->  		 * one that matches this cache id.
->  		 */
->  		list_for_each_entry(d, &r->mon_domains, hdr.list) {
-> -			if (d->ci->id == domid) {
-> -				rr.ci = d->ci;
-> +			if (d->ci_id == domid) {
-> +				rr.ci_id = d->ci_id;
->  				mon_event_read(&rr, r, NULL, rdtgrp,
-> -					       &d->ci->shared_cpu_map, evtid, false);
-> +					       &d->hdr.cpu_mask, evtid, false);
+> Also, should I split any patches that have MAINTAINERS changes so you can apply
+> them to your maintainers/next branch? Those are patches 4,5,6,7.
 
-This change restricts choice of CPUs to execute the read to one of the
-CPUs in the SNC domain, instead of any that share the L3 cache.
-
->  				goto checkresult;
->  			}
->  		}
-> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-> index eaae99602b617..91e71db554a9c 100644
-> --- a/arch/x86/kernel/cpu/resctrl/internal.h
-> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-> @@ -136,7 +136,7 @@ union mon_data_bits {
->   *	   domains in @r sharing L3 @ci.id
->   * @evtid: Which monitor event to read.
->   * @first: Initialize MBM counter when true.
-> - * @ci:    Cacheinfo for L3. Only set when @d is NULL. Used when summing domains.
-> + * @ci_id:    Cacheinfo id for L3. Only set when @d is NULL. Used when summing domains.
->   * @err:   Error encountered when reading counter.
->   * @val:   Returned value of event counter. If @rgrp is a parent resource group,
->   *	   @val includes the sum of event counts from its child resource groups.
-> @@ -150,7 +150,7 @@ struct rmid_read {
->  	struct rdt_mon_domain	*d;
->  	enum resctrl_event_id	evtid;
->  	bool			first;
-> -	struct cacheinfo	*ci;
-> +	unsigned int	ci_id;
->  	int			err;
->  	u64			val;
->  	void			*arch_mon_ctx;
-> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-> index a93ed7d2a1602..bedccd62158c3 100644
-> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> @@ -620,10 +620,6 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
->  		return 0;
->  	}
->  
-> -	/* Summing domains that share a cache, must be on a CPU for that cache. */
-> -	if (!cpumask_test_cpu(cpu, &rr->ci->shared_cpu_map))
-> -		return -EINVAL;
-> -
-
-This sanity check that code is executing on a CPU that shares the L3
-cache has gone. But I don't see any code to replace it based on checking
-your new "ci_id" field.
-
-Should it be something like:
-
-	struct cacheinfo *ci;
-
-	ci = get_cpu_cacheinfo_level(cpu, RESCTRL_L3_CACHE);
-	if (!ci || ci->id != rr->ci_id)
-		return -EINVAL;
-
->  	/*
->  	 * Legacy files must report the sum of an event across all
->  	 * domains that share the same L3 cache instance.
-> @@ -633,7 +629,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
->  	 */
->  	ret = -EINVAL;
->  	list_for_each_entry(d, &rr->r->mon_domains, hdr.list) {
-> -		if (d->ci->id != rr->ci->id)
-> +		if (d->ci_id != rr->ci_id)
->  			continue;
->  		err = resctrl_arch_rmid_read(rr->r, d, closid, rmid,
->  					     rr->evtid, &tval, rr->arch_mon_ctx);
-> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> index cc4a54145c83d..075fdca2080d8 100644
-> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-> @@ -3146,7 +3146,7 @@ static void rmdir_mondata_subdir_allrdtgrp(struct rdt_resource *r,
->  	char name[32];
->  
->  	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
-> -	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
-> +	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci_id : d->hdr.id);
->  	if (snc_mode)
->  		sprintf(subname, "mon_sub_%s_%02d", r->name, d->hdr.id);
->  
-> @@ -3171,7 +3171,7 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_mon_domain *d,
->  		return -EPERM;
->  
->  	priv.u.rid = r->rid;
-> -	priv.u.domid = do_sum ? d->ci->id : d->hdr.id;
-> +	priv.u.domid = do_sum ? d->ci_id : d->hdr.id;
->  	priv.u.sum = do_sum;
->  	list_for_each_entry(mevt, &r->evt_list, list) {
->  		priv.u.evtid = mevt->evtid;
-> @@ -3198,7 +3198,7 @@ static int mkdir_mondata_subdir(struct kernfs_node *parent_kn,
->  	lockdep_assert_held(&rdtgroup_mutex);
->  
->  	snc_mode = r->mon_scope == RESCTRL_L3_NODE;
-> -	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci->id : d->hdr.id);
-> +	sprintf(name, "mon_%s_%02d", r->name, snc_mode ? d->ci_id : d->hdr.id);
->  	kn = kernfs_find_and_get(parent_kn, name);
->  	if (kn) {
->  		/*
-> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-> index 880351ca3dfcb..c990670d18c02 100644
-> --- a/include/linux/resctrl.h
-> +++ b/include/linux/resctrl.h
-> @@ -145,7 +145,7 @@ struct rdt_ctrl_domain {
->  /**
->   * struct rdt_mon_domain - group of CPUs sharing a resctrl monitor resource
->   * @hdr:		common header for different domain types
-> - * @ci:			cache info for this domain
-> + * @ci_id:			cache info id for this domain
->   * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
->   * @mbm_total:		saved state for MBM total bandwidth
->   * @mbm_local:		saved state for MBM local bandwidth
-> @@ -156,7 +156,7 @@ struct rdt_ctrl_domain {
->   */
->  struct rdt_mon_domain {
->  	struct rdt_domain_hdr		hdr;
-> -	struct cacheinfo		*ci;
-> +	unsigned int			ci_id;
->  	unsigned long			*rmid_busy_llc;
->  	struct mbm_state		*mbm_total;
->  	struct mbm_state		*mbm_local;
-> -- 
-> 2.43.5
-> 
-
-One other note. Linus just[1] merged the patches that split the
-architecture independent portions of resctrl into "fs/resctrl"
-(moving just over 7000 lines out of arch/x86/kernel/cpu/resctrl).
-
-Some parts of this patch touch code that moved. But it should be
-fairly easy to track the new location as the function names did
-not change in the move. Please base new version of the patch on
-upstream.
-
--Tony
-
-[1] After you wrote this patch, and about 4 hours before I'm writing
-this reply!
+Not sure there is much value in splitting the MAINTAINERS file apart, 
+maybe one initial commit covering all of the entries you are right about 
+to add would do, up to you.
+-- 
+Florian
