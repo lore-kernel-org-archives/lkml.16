@@ -1,109 +1,152 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93642AF10
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D42F13AD3F;
+	Tue, 27 May 2025 05:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748323725; cv=none; b=BI/X13blddlaKjWQGRKbDxM5Za7B+dEABsEpfbQsSB2+ZnFj+iZ2fOr9uMOC/gYxuca9WnJ50pY9af2yRJiiJxhVlGVGX1u44NTGOQZlmnVPvg4TcXzms7nyPYA8XI7vwy9a49qx51YqEcU+n3ehfKL75ASkSyHQFS0oq2zT16Y=
+	t=1748323746; cv=none; b=PY8CunrZzFMURN64SetahfClE/xxcb30pmL6QAoYJNnnBY6R7x0tr8eGwgoHcKox2aCggOV+erWOxPZZI5Edz9s+MjW9Q0ozSKWuYo453jYgpPnhmmvuNG3oPVhPXDw/ilrsnEMfjxrczIJojhO7kcex5oe1DHDvyL2HdXSi+oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748323725; c=relaxed/simple;
-	bh=1Sib9gBMl8hnWPq2xz0C25YBREla2zAHNdN1LcPwDVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bKg1aHVWSJA7kVwN4BRwAjaSWNbXJ5rE7VKuZ+JhG3gNOIFO0nDJ88hr2SzBZ7cub0LBVP/AJKh88cXUAyj6yJL1O1bR+dxLVwVgyZIFZtv+RG0joR474Y2hONKmUbQJPerYZKtUm6Ya3bnBPCu0kBV6tfZAtx3c2kAFq8maYwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Z5oE8IYb; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748323746; c=relaxed/simple;
+	bh=C8qkJH3MrAqV9gs5bawr3ON5EFZyUYFn+wmxYKLvcvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eiZQYhv35FQA5lDvYjHb4tWX5RGZUJX40u+akfQLpZkLHN1NrsW2uBQy0y8u46XL7EKvtKpqBBG2T674T4oIwg3vs2U0949OHexB10BpUwmiv1WeBi1uOl2oMmG0N9aBzFleG+mwYuA7UZ5vfkrmgxHMSI47y5ayF7H2RZw75CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0Z/XuMx; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z5oE8IYb"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234488c2ea6so17088645ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 22:28:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0Z/XuMx"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad5394be625so541577266b.2;
+        Mon, 26 May 2025 22:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748323723; x=1748928523; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aMPUq7D6PukAbWgN0eC3EH73KmEOPEeZrHNJC7dBZq8=;
-        b=Z5oE8IYbwTHYNBQWEXkZnSghcLm0bxUSAUl/Wdm3vzQmOtC98jMd06Hsqu3hAyzkVk
-         4h0qzi1jUwflICqVvllKisH5TaVS2G8rfpgsGKvBWTBc2bpDUAtcKbrOeYR72BLw5HpU
-         LcCb/Vzj/RpaY0M5vVtGPa1jnsAm7rF6LW3pA=
+        d=gmail.com; s=20230601; t=1748323743; x=1748928543; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XPYBWyOq7r+7W8qExCRG+4zXFY/pJBbil6VcRDPRQGs=;
+        b=d0Z/XuMxfrJY2AqROTAIqB0bXKp2y6DzuzkHDbjcVhadF3V3xaFUVI/IlTfdjsnfUJ
+         5wqm94+jk+oJgQy/zKaaRWBk59pvM92xBPod9cvBbva+ILkVigFqMnFcO3MR3kYLtdx2
+         0hKyf1EO6SLkecB/IvZ8I5390HiJu8YeU1XIzyYH8CFsCsvMSAkwfLtZd/thziQxpQKo
+         dWslhs3BH+qV5TfVLsSmDTjz0Ns9Kai4nIBlAkLy/8zB7wNcHw5SGwCuPRAsGioGCU6p
+         6rnHLUr7H0OZSgZflwtUpKH5f3Na8bB9MM7FYsYFTt/1lPe6h1j/QWWBpAK5J3bFWqiI
+         rkxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748323723; x=1748928523;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aMPUq7D6PukAbWgN0eC3EH73KmEOPEeZrHNJC7dBZq8=;
-        b=CY9kF9j80NlY3eGCUYv1r25nS7vM1PRL62ISbrnT4tZ/gskeu9boiPtsoKNxKFAgTr
-         eMueB3QEQyQ7tDU93l5NPeyJbbScxA0IAwHyS17gsD+PgmrwZ3LajCO2jOoIJUrjiC77
-         VH+qfRAPue1GV/XGdg8K8bPUVFgqjos57Tiif/yjFdrPK3MjRaYQdLA6maN1fnzDgQBS
-         d+wFqiPWymybALR4PvO/G7lNZar90TjZXUbd8nmHomcmb+S3iL1g9dFODsx6R4BT0fRF
-         su9ijKCIEQKyxbmDPKRfwDOYkdlEHi6PpknbjKMAgKryCLoq0YBJpk/Eitvu83ssNS70
-         ND2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUChXYSaMIONPi9jt3qbBruFSmN2A7tZZpK+F2DyUAR0b3Qgx9CmcYGqcRT3yzrys817nW4hpr2Z0pAoSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7X+B8FIS9hhoLM7prtnVqYN/U5U0Oq7jmVYxtLP7g06nztKYR
-	AmNidAgxDAsLUU1i2GhJgGaMNDNNj4RCzKO9M3Wuzkoo5qixRpXkLUEyL9UtFUNrxcwbMYizve6
-	48FA=
-X-Gm-Gg: ASbGncstDSFFMt4AwNSMhoegJuALuej5RW9Dn8PuWBOZzezWiZknTdAAKCwxZH83URJ
-	Tb7kZDT00393QDcZiMH7ZJ3mHpshw4iMMrD9KOTPe3w74M1eA5kmoqA3UngDUSwP+uge7o7igce
-	R4JciPXV7zJEIGZ6dKnKuiFS3xko/T23zyzlPkUN0OSEyyTrqRKHbuFYCaWgE+JSFvRRYUzB8hS
-	5DQGXOg7IECcErcaqm9Q1ayuZNfwkKnw7unzazEL96zZ1kzksxpb8p/hN13+9nsoDeyZ1xdWcf/
-	sSxeogCukSxl7zNpMefwEYopOHLwZtmPtWlNH/sXUmH1+2UY1XK3i8g=
-X-Google-Smtp-Source: AGHT+IEzAcpd5IAd/5qHpi0TBrWgDvqlGt9jD8mtQVODpolQ+2SSc4qm1HBo7vCFZixFRyqqMGV4pw==
-X-Received: by 2002:a17:903:4296:b0:234:a139:11fa with SMTP id d9443c01a7336-234a139147dmr5707465ad.3.1748323723167;
-        Mon, 26 May 2025 22:28:43 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:c29c:b6db:d3d9:3acf])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23444765fe7sm35561665ad.0.2025.05.26.22.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 22:28:42 -0700 (PDT)
-Date: Tue, 27 May 2025 14:28:39 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Matthew Bobrowski <repnop@google.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
-Message-ID: <yo37kh4b27m2v5uddoorxmuhxif5n56hrc5h7ndl5btghiovdj@lsriah45m5ua>
-References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
- <20250520123544.4087208-1-senozhatsky@chromium.org>
- <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
- <ccdghhd5ldpqc3nps5dur5ceqa2dgbteux2y6qddvlfuq3ar4g@m42fp4q5ne7n>
- <xlbmnncnw6swdtf74nlbqkn57sxpt5f3bylpvhezdwgavx5h2r@boz7f5kg3x2q>
- <yo2mrodmg32xw3v3pezwreqtncamn2kvr5feae6jlzxajxzf6s@dclplmsehqct>
- <pehvvmy3vzimalic3isygd4d66j6tb6cnosoiu6xkgfjy3p3up@ikj4bhpmx4yt>
+        d=1e100.net; s=20230601; t=1748323743; x=1748928543;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XPYBWyOq7r+7W8qExCRG+4zXFY/pJBbil6VcRDPRQGs=;
+        b=uj6kJGOqfliDJ6jMwr9lZpArtEhhLKMLlk2qc9OCTFGbKC+4vwZQpC0xje1dY5WyJ1
+         FCwWP0x1myTM8wLj3NO4HWdv72eZDalTjx2lNo5DW6tlQhDFYRhv/4Pzhw54KH1rYXhT
+         56B1X/emWBT14ctcxTqrNQS30I9XnZ374rXfJfsIBETZ/MVQKnycC98pKlQ8rnhOzGmR
+         zX8ZOQX+X/dsNjhSsDD5lhhCMezS21qbENPAlSKYns7dKE1//TKU5sB4VEjlyBMR7eFO
+         soF9yxFmWIiOdrvm567xlpE7rn8mHQzCpdOLlx1RhCgmoskhiUaW5hpDnEDoMmTaxFa5
+         P7BA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0tsX5JfpLSLmbOq+YOzHOGt1T7btalFo6Mz6lRNHXJKgOlcZ8Pn5B5V8otSAkXAlTZcd9ZvWi@vger.kernel.org, AJvYcCXX9QaPGhuZrVntnTyXWwJnQA853M3b4u0MeNdRnzVOz0pD1IhORaj94GqYE/NlRYRmRKVkVkrysBdHdzcV@vger.kernel.org, AJvYcCXi/Qj0xRuIsl/9IpaHBs/jUKYkkYzxX2+1xeEkY9C8/uUzfXljllwqyMIYnMEsS/hnfLM=@vger.kernel.org, AJvYcCXoRlt7bePvKDOZD6T08DrEHi/VXpjDjvLEvP0l6f+Bm6OmEe3Q7zcUb9ZdwoRDdXVH38zbJ5e9ke//1w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOSmicNgtAtmUY2n8Prp7ozxVZUrg4gZDnW6OA3T+56keOBlGj
+	O8AFzZtS9XWV/YSw2J0dVhAErgDzuTN5GfElfUbkjFQ2edIXkE9h7xnG5SqdcYkU
+X-Gm-Gg: ASbGncvDk+TAq47+0Qo1X77YZJGg+FWg0sJefaPD3RXrvSvH9llORTRCS598MRXNdJe
+	hTW60dJiadT0wWDRD7YsMAFEav2RGWR5IbqYk9b7jDTOE/bKeRzX2rePeCwkLlFQsVXncBs2VGi
+	/fXzHwX9WesUwPVZKITsD5ZQHEgDq/LilUrJJKz7x398XLU333/rtgFTaCY8Wp1hftio9V6tn0s
+	oGZj6v4ZRXoHcIWH7w2YU3ZVzkCRnPcBMiEVPMwAHZGABwneNztRHmJKwtMz/ogkvyV8qVyRcVp
+	IFWfrnL4oHEF2rAKKdnuWRt93eIyDYEKAyDmJaHGU3Rj8J4LLlM4b08cb4Hr5ND7OtJelYI=
+X-Google-Smtp-Source: AGHT+IFyCR8YM6MYHZlh2Co1/HQCHjCvfrUUguXmsb48Z8OwvU5/EiOa5v8Hnhx4fjcjwxRKZC73BA==
+X-Received: by 2002:a17:907:97c8:b0:ad2:43be:6f04 with SMTP id a640c23a62f3a-ad85b1d6bb3mr930446566b.51.1748323742493;
+        Mon, 26 May 2025 22:29:02 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.132.24])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d0717c3sm1807896766b.65.2025.05.26.22.28.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 22:29:01 -0700 (PDT)
+Message-ID: <651351db-e3ec-4944-8db5-e63290a578e8@gmail.com>
+Date: Tue, 27 May 2025 06:30:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <pehvvmy3vzimalic3isygd4d66j6tb6cnosoiu6xkgfjy3p3up@ikj4bhpmx4yt>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct
+ page
+To: Byungchul Park <byungchul@sk.com>
+Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ kernel_team@skhynix.com, kuba@kernel.org, ilias.apalodimas@linaro.org,
+ harry.yoo@oracle.com, hawk@kernel.org, akpm@linux-foundation.org,
+ davem@davemloft.net, john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+ toke@redhat.com, tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
+ saeedm@nvidia.com, leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ david@redhat.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ horms@kernel.org, linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+ vishal.moola@gmail.com
+References: <20250523032609.16334-1-byungchul@sk.com>
+ <20250523032609.16334-19-byungchul@sk.com>
+ <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
+ <20250526013744.GD74632@system.software.com>
+ <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
+ <20250527010226.GA19906@system.software.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250527010226.GA19906@system.software.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On (25/05/26 18:47), Jan Kara wrote:
-> > Another silly question: what decrements group->user_waits in case of
-> > that race-condition?
-> > 
-> > ---
-> > 
-> > diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-> > index 9dac7f6e72d2b..38b977fe37a71 100644
-> > --- a/fs/notify/fanotify/fanotify.c
-> > +++ b/fs/notify/fanotify/fanotify.c
-> > @@ -945,8 +945,10 @@ static int fanotify_handle_event(struct fsnotify_group *group, u32 mask,
-> >         if (FAN_GROUP_FLAG(group, FANOTIFY_FID_BITS)) {
-> >                 fsid = fanotify_get_fsid(iter_info);
-> >                 /* Racing with mark destruction or creation? */
-> > -               if (!fsid.val[0] && !fsid.val[1])
-> > -                       return 0;
-> > +               if (!fsid.val[0] && !fsid.val[1]) {
-> > +                       ret = 0;
-> > +                       goto finish;
-> > +               }
-> >         }
+On 5/27/25 02:02, Byungchul Park wrote:
+...>> Patch 1:
+>>
+>> struct page {
+>> 	unsigned long flags;
+>> 	union {
+>> 		struct_group_tagged(netmem_desc, netmem_desc) {
+>> 			// same layout as before
+>> 			...
+>> 			struct page_pool *pp;
+>> 			...
+>> 		};
 > 
-> This code is not present in current upstream kernel. This seems to have
-> been inadvertedly fixed by commit 30ad1938326b ("fanotify: allow "weak" fsid
-> when watching a single filesystem") which you likely don't have in your
-> kernel.
+> This part will be gone shortly.  The matters come from absence of this
+> part.
 
-Oh, sweet.  Thanks for the pointers, Jan.
+Right, the problem is not having an explicit netmem_desc in struct
+page and not using struct netmem_desc in all relevant helpers.
+
+>> struct net_iov {
+>> 	unsigned long flags_padding;
+>> 	union {
+>> 		struct {
+>> 			// same layout as in page + build asserts;
+>> 			...
+>> 			struct page_pool *pp;
+>> 			...
+>> 		};
+>> 		struct netmem_desc desc;
+>> 	};
+>> };
+>>
+>> struct netmem_desc *page_to_netmem_desc(struct page *page)
+>> {
+>> 	return &page->netmem_desc;
+> 
+> page will not have any netmem things in it after this, that matters.
+
+Ok, the question is where are you going to stash the fields?
+We still need space to store them. Are you going to do the
+indirection mm folks want?
+
+AFAIK, the plan is that in the end pages will still have
+netmem_desc but through an indirection. E.g.
+
+static inline bool page_pool_page_is_pp(struct page *page)
+{
+	return page->page_type == PAGE_PP_NET;
+}
+
+struct netmem_desc *page_to_netmem_desc(struct page *page)
+{
+	return page->page_private;
+}
+
+-- 
+Pavel Begunkov
+
