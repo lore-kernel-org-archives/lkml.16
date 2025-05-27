@@ -1,58 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3454812B93;
-	Tue, 27 May 2025 19:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9422882B4;
+	Tue, 27 May 2025 19:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374106; cv=none; b=Qft1S7arPGsaCIvj1iG+MtDmwRNnehT+LPXc6GIkzLnjKckaEZi+9vgGSRneWL/Y4B80j3TiTBqCAkC6QqzbBDDJ8V/277BnJF4Z40KgLrPZkeJGyIgkXR5NV/fzVJPgglqOd8hT/YxUIKoOWzWcqJ9Kz6p1ifhU1Dq5Ji2RtcM=
+	t=1748374140; cv=none; b=GhPgg50UvgwRFfi5FM7Eh2ERmep5LR2DlO2RKumkx7wQHA8bVCerpToOZ3dvFeXDfbRGCF+ea+EOVguK+5sBOidDlYNBRXN6zw7u3i+mnfdcGL/y3Avwg/yrt7JJaTIgNs95lDVkC8uz1AdNt5vqRyqJga81XFWNQ1rlxNsKNpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374106; c=relaxed/simple;
-	bh=ZcppwkkBkGHzfL/HojYzLOl4RCeHBYYQUV63DqSRucM=;
+	s=arc-20240116; t=1748374140; c=relaxed/simple;
+	bh=MpHykqxWDAyFf40IcVv0Is/3+Mh+a8zNYGmx1jJOtpA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHR/nY6w51qeEoIx35R3p5hH5ejKBt76JaT16VubDwlK4DR5vtpY2J5pRnbR9JSsMiYHuLZ53/i0Zk9v6ZTbhOndWt2WBh7Y+9ofmlQCd8D/EvLJYHCrW22Z9RfDwxAry/asJisCPeVJrLJHxCP+vMWzysq8hL/bvWe3SOI8428=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C18Q4wxA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IGkh+oGgeg0iu5PAKtTR0PT0rRHLrRb630Fmkje0s2WKlowW9Wu/gXTwbmAgpTMqHTxcCKdMRVrZOMaxbmhETyV0CP7xcToi0P8UgclLzlN5iEd8Nbs4AwpQiyts3hNU8YFg76JeOXWd8GHy+x0TNuiJ+raMfVGySjCsLxpGPC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=iaV7rq0c; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C18Q4wxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6EB3C4CEE9;
-	Tue, 27 May 2025 19:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748374106;
-	bh=ZcppwkkBkGHzfL/HojYzLOl4RCeHBYYQUV63DqSRucM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C18Q4wxAIMAZ+UbWrE1lFvCpoZhpt/PBhWqEwgXbut9htZnxVTyZ4DBPOvmqZ6YNQ
-	 lJJ55e7ZRfL/bKDdOK4pOlYBu4SyQktp7wfoCYBdTYeQfUz3ogXafmvGCaT3662unh
-	 495cJTJLzsiFQ3oAnLez/2yCuqs2WN6gMWfJNLcE0mtBhFv8pd1GwL5/Dk6+dvoVs5
-	 JsvzkbFFzmk3HyeCtRK4HGry4Y8HX1IfiJtazdMxhSsuLe2UU4X9eeB8PRs02okcwG
-	 SmXCzdZ9yluDgM9b/BU73hkMHJuoSmWGN6Qo0FhwytFRi8d1kEsev0ZUQU75NQdUx5
-	 AH6eL3zDyhaag==
-Date: Tue, 27 May 2025 14:28:24 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Daniel Golle <daniel@makrotopia.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vladimir Oltean <olteanv@gmail.com>, devicetree@vger.kernel.org,
-	Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	linux-mediatek@lists.infradead.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>, Felix Fietkau <nbd@nbd.name>,
-	linux-kernel@vger.kernel.org,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Landen Chao <Landen.Chao@mediatek.com>,
-	linux-arm-kernel@lists.infradead.org,
-	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Subject: Re: [PATCH v2 01/14] dt-bindings: net: mediatek,net: update for
- mt7988
-Message-ID: <174837410385.1090056.12670391327460010323.robh@kernel.org>
-References: <20250516180147.10416-1-linux@fw-web.de>
- <20250516180147.10416-2-linux@fw-web.de>
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="iaV7rq0c"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4b6N3N3QXYz9vGt;
+	Tue, 27 May 2025 21:28:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1748374128;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mPtjj75LRfTYzMr7PmwGMbGTNi6uiMC9nL4Pt05dBys=;
+	b=iaV7rq0c9sPviNFq8k/l6+ZI7uEV8a+jxbHrGmGr3AAFY6ozHA49ZP8mqDQ0Wz6PruzSU7
+	EW/9I2wxBhoaskTqLXrx8ObKhDqKUZcokjtPvJCbe+ZvkJJWhxb7g+/3APHCERvUIQdr0P
+	jKpCD97ca7GHbFefbKnGzQBntKwW6JKPZqR3HoGYf7oC7yZ/9y29QApLKaGj2drvOpgy4m
+	fHzOSSFx7vRM+2/nEjXJQLeFRijj61SmP/TSTvxQTaag/q8S+IJ7yolna3lq01psb2dSfX
+	AJ4VcyVsBylnUm0dMVl9YiYeKTyLK9oTLL/w90cNBgs6suD4xClLwkIRf9Jrmw==
+Date: Tue, 27 May 2025 21:28:35 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Pankaj Raghav <p.raghav@samsung.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>, Mike Rapoport <rppt@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Michal Hocko <mhocko@suse.com>, 
+	David Hildenbrand <david@redhat.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-block@vger.kernel.org, willy@infradead.org, x86@kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, mcgrof@kernel.org, 
+	gost.dev@samsung.com, hch@lst.de
+Subject: Re: [RFC 2/3] mm: add STATIC_PMD_ZERO_PAGE config option
+Message-ID: <jewtporls43r5y3eybqzm4bcku5sf3wzw6ewfjbyykeb3mxp27@ydjcrck6ldkd>
+References: <20250527050452.817674-1-p.raghav@samsung.com>
+ <20250527050452.817674-3-p.raghav@samsung.com>
+ <626be90e-fa54-4ae9-8cad-d3b7eb3e59f7@intel.com>
+ <5dv5hsfvbdwyjlkxaeo2g43v6n4xe6ut7pjf6igrv7b25y2m5a@blllpcht5euu>
+ <1c1f0ad7-8668-406b-9e4c-59ee52f816b3@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,22 +64,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516180147.10416-2-linux@fw-web.de>
+In-Reply-To: <1c1f0ad7-8668-406b-9e4c-59ee52f816b3@intel.com>
+X-Rspamd-Queue-Id: 4b6N3N3QXYz9vGt
 
-
-On Fri, 16 May 2025 20:01:31 +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
+> > You are right that if this config is disabled, the callers with NULL mm
+> > struct are guaranteed to fail, but we are not generating extra code
+> > because there are still users who want dynamic allocation.
 > 
-> Update binding for mt7988 which has 3 gmac and 2 reg items.
+> I'm pretty sure you're making the compiler generate unnecessary code.
+> Think of this:
 > 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> v2:
-> - change reg to list of items
-> ---
->  .../devicetree/bindings/net/mediatek,net.yaml          | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> 	if (mm_get_huge_zero_folio(mm)
+> 		foo();
+> 	else
+> 		bar();
+> 
+> With the static zero page, foo() is always called. But bar() is dead
+> code. The compiler doesn't know that, so it will generate both sides of
+> the if().
 > 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Ahh, yeah you are right. I was thinking about the callee and not the
+caller.
 
+> If you can get the CONFIG_... option checks into the header, the
+> compiler can figure it out and not even generate the call to bar().
+
+Got it. I will keep this in mind before sending the next version.
+
+> > Do you think it is better to have the code with inside an #ifdef instead
+> > of using the IS_ENABLED primitive?
+> It has nothing to do with an #ifdef versus IS_ENABLED(). It has to do
+> with the compiler having visibility into how mm_get_huge_zero_folio()
+> works enough to optimize its callers.
+
+I think something like this should give some visibility to the compiler:
+
+struct folio *huge_zero_folio __read_mostly;
+
+...
+#if CONFIG_STATIC_PMD_ZERO_PAGE
+
+struct folio* mm_get_huge_zero_folio(...)
+{
+  return READ_ONCE(huge_zero_folio);
+}
+
+#else
+
+struct folio* mm_get_huge_zero_folio(...)
+{
+  <old-code>
+}
+
+#endif
+
+But I am not sure here if the compiler can assume here the static
+huge_zero_folio variable will be non-NULL. It will be interesting to
+check that in the output.
+
+--
+Pankaj
