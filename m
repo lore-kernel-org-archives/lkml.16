@@ -1,100 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAABD531;
-	Tue, 27 May 2025 23:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6003188715;
+	Tue, 27 May 2025 23:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748387666; cv=none; b=Fin9G4+ftwZKg+wTTH2HDK0ZlgyjKejeBsZa8ML4p7w3DqsnZ7Dpw9XX/KWyN5QImz0OrphEyubHKfB1kAvILvhZ5iBTE5gmnXCt4U1nU1ClfEDa5zNwJXUjV5l2zBzbua8HF1C+4HI7bVZtCxB5vDgM5djHzJpuZqWVSLraZx0=
+	t=1748387792; cv=none; b=LoCVWbCGRmv5Ck/ZPmsO9RwnwL/+KSw18RnIpqqspSOeY1aN0vj5QZUCUhCZM1reEPEj5nYMSiPZUygNZLkxKxSJwn1SerhhxYnYDaxxA3ym4+6s5fPDEXUrkyJ370u7wBEiMMvi0YBSykStpEoXzTbRAybY9QmxWz37M6M5u2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748387666; c=relaxed/simple;
-	bh=MsKGKfos+sWS/J61Jv507wPdYXiHp7tgmGBKaw82dqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WAX34sGmU1BkjSxwRALmG2u28z1WVHQuqGR/Xp6W2lgcuo4HYzvO/pbMMvhsRxtE36pnp1s4QgzznbwobvauTs15wt2U/0PpmlxajajNIISgoa3LAD041bPWTcZ1Gg0XMf7V73c+NNt4i9KmoDmOCWA6as0p3Www9uyYf/UMh0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37188C4CEE9;
-	Tue, 27 May 2025 23:14:25 +0000 (UTC)
-Date: Tue, 27 May 2025 19:15:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Rafal Bilkowski <rafalbilkowski@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace: Protect trace_iter_expand_format against
- overflow and ZERO_SIZE_PTR
-Message-ID: <20250527191523.15453dae@gandalf.local.home>
-In-Reply-To: <20250519070240.256200-1-rafalbilkowski@gmail.com>
-References: <20250519070240.256200-1-rafalbilkowski@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748387792; c=relaxed/simple;
+	bh=URVDoqoK1Lnss2W+aZ3GLczVpFnztrpNRWvzFXXm7l8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=B/cHPBmWrNnJZPjDpxPVV2DbWSZNhhBvcffLw22fVoEK39SwqW1/URtJJf9oyEJifD67JRMCc6IeOfejx8ITEBlMOc6Wf6dt1rS1GedDprfnPdsQCCcTMTcgQ2qOjgGxycjDKIzALDVNew3WUUOWYZyiNtRQwarMLOdQK2FjfrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bvWu25p6; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bvWu25p6"
+Received: by linux.microsoft.com (Postfix, from userid 1053)
+	id 553572113A56; Tue, 27 May 2025 16:16:30 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 553572113A56
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1748387790;
+	bh=Uw4aQdSp2oOTVYvmFhX9i9Ez0fzpo4DqVU3RltDQphc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bvWu25p694qGOtb5JPRr5Edo8AXLs9w7t7SRwxP5zBSdEXEmwdJlLtzSZ0ROH1ilk
+	 f565/ZxA+wt5kjidkiVipYK7daxyAXLdkT4WW80fnPLU5RODLrYTMgjE8j1ZN+SIxC
+	 iUIExCO84L7visV2xJx+r+UJLiNT8EiMx3xmT1bM=
+From: Vijay Balakrishna <vijayb@linux.microsoft.com>
+To: Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tyler Hicks <code@tyhicks.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	devicetree@vger.kernel.org,
+	Vijay Balakrishna <vijayb@linux.microsoft.com>
+Subject: [v10 PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
+Date: Tue, 27 May 2025 16:16:30 -0700
+Message-Id: <1748387790-20838-3-git-send-email-vijayb@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
+References: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 19 May 2025 09:02:40 +0200
-Rafal Bilkowski <rafalbilkowski@gmail.com> wrote:
+From: Sascha Hauer <s.hauer@pengutronix.de>
 
-> Add a check in trace_iter_expand_format to prevent integer overflow when
-> calculating the new format buffer size, and to handle the case where krealloc
-> returns ZERO_SIZE_PTR. This improves robustness and prevents potential
-> memory corruption or kernel crashes.
+Some ARM Cortex CPUs including A72 have Error Detection And
+Correction (EDAC) support on their L1 and L2 caches. This is implemented
+in implementation defined registers, so usage of this functionality is
+not safe in virtualized environments or when EL3 already uses these
+registers. This patch adds a edac-enabled flag which can be explicitly
+set when EDAC can be used.
 
-What exactly is this trying to protect?
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+[vijayb: Added A72 to the commit message]
+Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+---
+ .../devicetree/bindings/arm/cpus.yaml         | 51 +++++++++++++------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
-> 
-> Signed-off-by: Rafal Bilkowski <rafalbilkowski@gmail.com>
-> ---
->  kernel/trace/trace.c        | 4 ++++
->  kernel/trace/trace_output.c | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5b8db27fb6ef..637bd1ff9325 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3596,6 +3596,10 @@ char *trace_iter_expand_format(struct trace_iterator *iter)
->  	if (!iter->tr || iter->fmt == static_fmt_buf)
->  		return NULL;
->  
-> +	/* Protection against overflow and ZERO_SIZE_PTR returned from krealloc */
-> +	if (check_add_overflow(iter->fmt_size, STATIC_FMT_BUF_SIZE, &iter->fmt_size))
-> +		return NULL;
-
-This will *NEVER* happen!
-
-The fmt_size is initialized as STATIC_FMT_BUF_SIZE, and this is the only
-function that increases it, and that happens *only* if the krealloc() succeeds.
-
-For this to happen, then the krealloc must have allocated something that
-would allow the format size to be INT_MAX, which krealloc would fail much
-earlier than that.
-
-Not to mention, the formats can't be more that the sub-buffer size, which
-is by default 4K and can be at most 64K. Way smaller than INT_MAX.
-
-> +
->  	tmp = krealloc(iter->fmt, iter->fmt_size + STATIC_FMT_BUF_SIZE,
->  		       GFP_KERNEL);
->  	if (tmp) {
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index b9ab06c99543..42560027001a 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -979,6 +979,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
->  							  iter->fmt_size);
->  			if (ret < 0)
->  				trace_seq_printf(&iter->seq, "(0x%px)", pos);
-> +			else if (ret == 0)
-> +				trace_seq_printf(&iter->seq, "(0x%px:<NULL>)", pos);
-
-This part I'm OK with adding.
-
--- Steve
-
->  			else
->  				trace_seq_printf(&iter->seq, "(0x%px:%s)",
->  						 pos, iter->fmt);
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 2e666b2a4dcd..8f42c4fec59b 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -331,6 +331,13 @@ properties:
+       corresponding to the index of an SCMI performance domain provider, must be
+       "perf".
+ 
++  edac-enabled:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      A72 CPUs support Error Detection And Correction (EDAC) on their L1 and
++      L2 caches. This flag marks this function as usable.
++#    type: boolean
++
+   qcom,saw:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description: |
+@@ -378,22 +385,34 @@ properties:
+       formed by encoding the target CPU id into the low bits of the
+       physical start address it should jump to.
+ 
+-if:
+-  # If the enable-method property contains one of those values
+-  properties:
+-    enable-method:
+-      contains:
+-        enum:
+-          - brcm,bcm11351-cpu-method
+-          - brcm,bcm23550
+-          - brcm,bcm-nsp-smp
+-  # and if enable-method is present
+-  required:
+-    - enable-method
+-
+-then:
+-  required:
+-    - secondary-boot-reg
++allOf:
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              const: arm,cortex-a72
++    then:
++      # Allow edac-enabled only for Cortex A72
++      properties:
++        edac-enabled: false
++
++  - if:
++      # If the enable-method property contains one of those values
++      properties:
++        enable-method:
++          contains:
++            enum:
++              - brcm,bcm11351-cpu-method
++              - brcm,bcm23550
++              - brcm,bcm-nsp-smp
++      # and if enable-method is present
++      required:
++        - enable-method
++
++    then:
++      required:
++        - secondary-boot-reg
+ 
+ required:
+   - device_type
+-- 
+2.49.0
 
