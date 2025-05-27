@@ -1,184 +1,130 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C7A2741BC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5BD270572
 	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353055; cv=none; b=IV6b8GqQ85FiSs3miptK7IFhyn7RFgRO6Pj2P7g0zbpTeWtJoHrg0nHeYlzuA4E1R3jkC6Cw4BMV80RdlYlrLwS4gua9UkQ+bwwZtRUXDU9UyverYzdgeaVrTGp+o1MJV5gW0Lb2OggO2Cx6B7JmVvkQmund09RnEhYzGcu3PbI=
+	t=1748353055; cv=none; b=NZF79FPBeXxb4TQXUl1Wp2NkA0j1Ggs1yfx+/nquy87c/SojjVLSbknlBk+Ntn/e8scv1+WUu7FssXYJsthhiPszJ/OvA6xX4mEpmROFPBAI5q/ArazknkVsAwoNMytgwn0ImExhKqmiwDDRtllGU5zw9/QiXoNkFhtyhsaxzs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748353055; c=relaxed/simple;
-	bh=lkaAvlqrC2g3iGkCUuii5W10Di5fl/UKXiMCltLNGBI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=E+nCawmmJitnCy5BRI/8Yvd8iKOApuOY3iG2kgc/HwLeEzFZ69sJKxSCPkEt74fKqNS+uTcEI9QyWOvtCntkxbYb8lftffGIWPXNn9AyS6UlBOXCv53IZsYVwExIlA7/TKp0dzQIxwQUXN6gzblGzkZnyYJY9u9fiLRFdm5o7WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86463467dddso281578439f.3
+	bh=ifvf430JPDbe1qF9aTpOKg1CLqvI0uQ5QKpQwKYGJew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G+/z4JNqkzWFokl7rg9RC/Fka1yiBeTF67CJzifer8NE8iDZPHPtOIluC48b4frTogthN35b1G507ojdF5uqNQ3TqatoT2vtL4GapfZrUo/WKtgw0tm7Vg7QDpN0l7m/lj7aYqtL0c6rpLKJhU776TBdaLZn0jag6JW9pMbdER0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kkeUF6r5; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kkeUF6r5"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4774ce422easo28501851cf.1
         for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748353052; x=1748957852; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1DfXclIybJgrhp7Ns7X38FYQwzivRLt7u8VY7d1k9FQ=;
+        b=kkeUF6r56r1zP9RpL3Q/2ownEbl4UPJupGILb4DBSKeLJCtI4IXpGzujBGEJ3vGVB6
+         UBV3rdhvZriBrbJUSvjGrPzrc6OoM3EIHphMd7MSX/MoLPMGMnlto0O3KoybSFElNSHL
+         WRgx7s2+PfPHJDBPQ2q1CYHvO9TtCCcX98Q00+RaGQwXrlQP70a7dPFHO2HpQAc5hdwS
+         6MZAyN+QQsGY/RPZjbA90RMxT6mtfgm76GOgXkeTDZLun+L2bvrNidlIKtiIctUOD8fU
+         9h1Wi3Zb0CG7gPCPCza4EGssgCEaibo0qTkthHNbP3Zcat9T40XuaTiBiJRWPrrVcik4
+         /Wag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748353053; x=1748957853;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1py+DZ00oyprkVc+fla+24rh0dRjdu53vtBg26tccdo=;
-        b=mkZ4/SnyIq/qDfe+vR6Fztg/7EI4Www+K8DZmT8qAEGYNvR3ypIYLBxkL2fHIxu8Ze
-         39iflzY3Cvldl3FRpsEx8RBn9t3gd3boq72/l+59ehvbBQPcukSbwFM107XotbQiKJB1
-         kAnlpKawJYQkBPthyT/06CfwBP05Xi2QklRN/XtmpeD0MQNS9ZMzJy+LmIG8uW31ixw7
-         xyINcYdhQq7AaXfg4Xl9/A/CYOzlGgN/Y6AFd5er0u8mxD0dxw5Dc+h27wAFFWSPbfuX
-         Np8XPsjbVE+qNqFZrDBq2P9P+JMVBv1Aj8V2wQw3vXbzzt92RYrMYuJtX59eEPoCysrK
-         onGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWF/v56ajuHtSyTDvNvpHj8NDk19b1MVbqn4bgNZKNmIfH+Q1ebGX+dkqIF4DcC6LM4PVAWO4kWz1oInSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWvfo+mLFzfGqUX3wdl47VH/zstYexsQfenNuNCWmx8oZ3DWyc
-	YQTbcpX8jhG+9ddrx8lK9bN0OnWolzuPklTc0+lPyrV2kT3XVwyYrVUP7tNZGhfKscngVGViGs6
-	rDmhXbtbhcoOvBwSHfLxztt/MlPSAQ4gL+DUCkYYmGLUS6vnt32hqcWM8fEg=
-X-Google-Smtp-Source: AGHT+IHdbMEwKKnSrAAWp9WJoD6Pkfj9S+jcbGbdg4O4YoCpSQaOks7NJu+irfJruvpaLyymr000eUHQSzT+i9eb+zocGnOyME+j
+        d=1e100.net; s=20230601; t=1748353052; x=1748957852;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1DfXclIybJgrhp7Ns7X38FYQwzivRLt7u8VY7d1k9FQ=;
+        b=cCubbPwRl5jOb2DLz3iMOYAga7l6TPVawVrW0nO5UOz8WZhfN5n/c2Wi9tpdHJdbVN
+         d2yVM2eB8rXaTnI7sqVVBeHSETqeChXWBOG8Fl4orFMS4MBpL0WF8I2KLIe88Stc5f/F
+         cDZnTM58sekeN5zbmhrhMmDh+ttjjyBoBByI3/iC8aTysynlKCxc9BQS28RdoIXqrw06
+         csSDdu4/toS7VJyeECpymnh+nxdTnGUlFYfx32PnafHSn0C81teOqKMCDWxtl8VHVbaw
+         h6ubuz0b1vC/KdRvkFG+Eu8kdea7Y+kMLvw5qhgzE1R5peiQlHUM/RCtJ43/WH5V25vo
+         EYSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWuEoUUbV5dFwE7dKPOFHh1S5xrd90U8AZYCknsPmJ5eC8oDt0LsH8CJ/1tceBURFZgfMat4aZas+U9vPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK/zd5iv1My1RwGf9QuViO0XNoFAsH+Qzb8PQshk0PkAf277eE
+	JPOoSgI74x14XQF5+7D5L97uSqPr9XNLZUQaKLrakjLtThwa6NazQjscVpYhPE9VyO/vdujPFr+
+	dXqVLMus5buraAE9qaC+9WjgHdpxzdX1OmQQQoZbQ
+X-Gm-Gg: ASbGncsRf3gf/Iumbz3lDy3tdQh0gJ4++qJSJ0ELFJCQSOG5XGFQK0a+hPug0Rp4sUk
+	KFUOVR8Uvmtk/6dySfTKYTT7gBjQQL+K/0ZzPt5UCil3JrI9M6dkKP8MHh2Sq4M4Hl5s3HMQ9JT
+	2MEfE57xH9Ggh/C11Pvx/kFyFqg+WT+lZrkb6HvkVjI/JS
+X-Google-Smtp-Source: AGHT+IE7m4Cq3bQJjOeyJAia21VMlshs95gl112B78zB/spj93HG+Zo7WNUPRTmVelhviwuo19ZaiquZWB2TPUAPtQk=
+X-Received: by 2002:a05:622a:5512:b0:476:7eca:57e7 with SMTP id
+ d75a77b69052e-49f46d31350mr213132041cf.26.1748353052042; Tue, 27 May 2025
+ 06:37:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4191:b0:867:6c90:4867 with SMTP id
- ca18e2360f4ac-86cbb91658cmr1572338539f.14.1748353052928; Tue, 27 May 2025
- 06:37:32 -0700 (PDT)
-Date: Tue, 27 May 2025 06:37:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6835c01c.a70a0220.253bc2.00b7.GAE@google.com>
-Subject: [syzbot] [mm?] [cgroups?] general protection fault in refill_obj_stock
-From: syzbot <syzbot+5dd4e428fa723938e6fd@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@kernel.org, 
-	muchun.song@linux.dev, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
-	syzkaller-bugs@googlegroups.com
+References: <20250527-reftrack-dbgfs-v10-0-dc55f7705691@kernel.org>
+ <20250527-reftrack-dbgfs-v10-8-dc55f7705691@kernel.org> <CANn89i+PFJguSKfbiX1nWSvPA2S8O-pb7HxVT4+zkjMdD3meqg@mail.gmail.com>
+In-Reply-To: <CANn89i+PFJguSKfbiX1nWSvPA2S8O-pb7HxVT4+zkjMdD3meqg@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 27 May 2025 06:37:21 -0700
+X-Gm-Features: AX0GCFsrSMIV6ani5r800MRwO3KbNjXkHyjYRDMotIUPivEBkfDrOZ2V5akOvLk
+Message-ID: <CANn89i+qv8SsgdDv9PUG=Yuw1KMUyZC=_KqWdYOBL4p3nmcd1g@mail.gmail.com>
+Subject: Re: [PATCH v10 8/9] net: add symlinks to ref_tracker_dir for netns
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, May 27, 2025 at 6:35=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
+wrote:
+>
+> On Tue, May 27, 2025 at 4:34=E2=80=AFAM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >
+> > After assigning the inode number to the namespace, use it to create a
+> > unique name for each netns refcount tracker with the ns.inum and
+> > net_cookie values in it, and register a symlink to the debugfs file for
+> > it.
+> >
+> > init_net is registered before the ref_tracker dir is created, so add a
+> > late_initcall() to register its files and symlinks.
+> >
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  net/core/net_namespace.c | 30 +++++++++++++++++++++++++++++-
+> >  1 file changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> > index 8708eb975295ffb78de35fcf4abef7cc281f5a51..39b01af90d240df48827e5c=
+3159c3e2253e0a44d 100644
+> > --- a/net/core/net_namespace.c
+> > +++ b/net/core/net_namespace.c
+> > @@ -791,12 +791,40 @@ struct net *get_net_ns_by_pid(pid_t pid)
+> >  }
+> >  EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
+> >
+> > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+> > +static void net_ns_net_debugfs(struct net *net)
+> > +{
+> > +       ref_tracker_dir_symlink(&net->refcnt_tracker, "netns--%lx-%u-re=
+fcnt",
+> > +                               net->net_cookie, net->ns.inum);
+>
+> With proper annotations, you should be able to catch format error as in:
+>
+> warning: format =E2=80=98%lx=E2=80=99 expects argument of type =E2=80=98l=
+ong unsigned int=E2=80=99,
+> but argument x has type =E2=80=98u64=E2=80=99 {aka =E2=80=98long long uns=
+igned int=E2=80=99}
+> [-Wformat=3D]
 
-syzbot found the following issue on:
+Reference:
 
-HEAD commit:    914873bc7df9 Merge tag 'x86-build-2025-05-25' of git://git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12dcf882580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=231a962e5fdb804b
-dashboard link: https://syzkaller.appspot.com/bug?extid=5dd4e428fa723938e6fd
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ecae640d0786/disk-914873bc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/d451e50efeae/vmlinux-914873bc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f7363263e49/bzImage-914873bc.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5dd4e428fa723938e6fd@syzkaller.appspotmail.com
-
-Oops: general protection fault, probably for non-canonical address 0xffff11019a0ac400: 0000 [#1] SMP KASAN NOPTI
-KASAN: maybe wild-memory-access in range [0xfff8a80cd0562000-0xfff8a80cd0562007]
-CPU: 0 UID: 0 PID: 13104 Comm: dhcpcd Not tainted 6.15.0-syzkaller-01972-g914873bc7df9 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:percpu_ref_get_many include/linux/percpu-refcount.h:205 [inline]
-RIP: 0010:percpu_ref_get include/linux/percpu-refcount.h:222 [inline]
-RIP: 0010:obj_cgroup_get include/linux/memcontrol.h:760 [inline]
-RIP: 0010:replace_stock_objcg mm/memcontrol.c:2772 [inline]
-RIP: 0010:refill_obj_stock+0x1e1/0x7d0 mm/memcontrol.c:2950
-Code: 02 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 0f 85 96 05 00 00 49 8b 04 24 a8 03 0f 85 23 03 00 00 <65> 48 ff 00 e8 a6 40 ff ff 49 8d 7c 24 18 be 04 00 00 00 48 89 7c
-RSP: 0018:ffffc90002e27928 EFLAGS: 00010046
-RAX: ffff888075701400 RBX: ffffffff93a8a0c0 RCX: 0000000028853866
-RDX: 1ffff1100d2a5000 RSI: ffffffff8bf4fb80 RDI: ffffffff8dcf8da0
-RBP: ffffffff908687e4 R08: 85b13f40d71cc5de R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888069528000
-R13: 0000000000000078 R14: ffff8880b84350c0 R15: ffff8880b8435108
-FS:  0000000000000000(0000) GS:ffff8881249ab000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000563fcc194660 CR3: 000000004f19d000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- obj_cgroup_uncharge mm/memcontrol.c:3013 [inline]
- __memcg_slab_free_hook+0x23d/0x610 mm/memcontrol.c:3100
- memcg_slab_free_hook mm/slub.c:2205 [inline]
- slab_free mm/slub.c:4639 [inline]
- kmem_cache_free+0x37e/0x4d0 mm/slub.c:4744
- anon_vma_chain_free mm/rmap.c:147 [inline]
- unlink_anon_vmas+0x173/0x820 mm/rmap.c:421
- free_pgtables+0x2d4/0x810 mm/memory.c:391
- exit_mmap+0x3fb/0xb90 mm/mmap.c:1295
- __mmput+0x12a/0x410 kernel/fork.c:1381
- mmput+0x62/0x70 kernel/fork.c:1404
- exit_mm kernel/exit.c:595 [inline]
- do_exit+0xa3a/0x2c70 kernel/exit.c:947
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1108
- __do_sys_exit_group kernel/exit.c:1119 [inline]
- __se_sys_exit_group kernel/exit.c:1117 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1117
- x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fad55e056c5
-Code: Unable to access opcode bytes at 0x7fad55e0569b.
-RSP: 002b:00007ffdf148a868 EFLAGS: 00000206 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fad55e056c5
-RDX: 00000000000000e7 RSI: ffffffffffffff88 RDI: 0000000000000001
-RBP: 00007ffdf148ae78 R08: 0000563fee1c62c0 R09: 0000000000000002
-R10: 00000000000000e0 R11: 0000000000000206 R12: 00007ffdf148a8b0
-R13: 0000563fee1c7950 R14: 00007ffdf148aaf0 R15: 00007ffdf148a8a0
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:percpu_ref_get_many include/linux/percpu-refcount.h:205 [inline]
-RIP: 0010:percpu_ref_get include/linux/percpu-refcount.h:222 [inline]
-RIP: 0010:obj_cgroup_get include/linux/memcontrol.h:760 [inline]
-RIP: 0010:replace_stock_objcg mm/memcontrol.c:2772 [inline]
-RIP: 0010:refill_obj_stock+0x1e1/0x7d0 mm/memcontrol.c:2950
-Code: 02 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 0f 85 96 05 00 00 49 8b 04 24 a8 03 0f 85 23 03 00 00 <65> 48 ff 00 e8 a6 40 ff ff 49 8d 7c 24 18 be 04 00 00 00 48 89 7c
-RSP: 0018:ffffc90002e27928 EFLAGS: 00010046
-RAX: ffff888075701400 RBX: ffffffff93a8a0c0 RCX: 0000000028853866
-RDX: 1ffff1100d2a5000 RSI: ffffffff8bf4fb80 RDI: ffffffff8dcf8da0
-RBP: ffffffff908687e4 R08: 85b13f40d71cc5de R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888069528000
-R13: 0000000000000078 R14: ffff8880b84350c0 R15: ffff8880b8435108
-FS:  0000000000000000(0000) GS:ffff8881249ab000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000563fcc194660 CR3: 000000004f19d000 CR4: 0000000000350ef0
-----------------
-Code disassembly (best guess), 1 bytes skipped:
-   0:	00 00                	add    %al,(%rax)
-   2:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-   9:	fc ff df
-   c:	4c 89 e2             	mov    %r12,%rdx
-   f:	48 c1 ea 03          	shr    $0x3,%rdx
-  13:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-  17:	0f 85 96 05 00 00    	jne    0x5b3
-  1d:	49 8b 04 24          	mov    (%r12),%rax
-  21:	a8 03                	test   $0x3,%al
-  23:	0f 85 23 03 00 00    	jne    0x34c
-* 29:	65 48 ff 00          	incq   %gs:(%rax) <-- trapping instruction
-  2d:	e8 a6 40 ff ff       	call   0xffff40d8
-  32:	49 8d 7c 24 18       	lea    0x18(%r12),%rdi
-  37:	be 04 00 00 00       	mov    $0x4,%esi
-  3c:	48                   	rex.W
-  3d:	89                   	.byte 0x89
-  3e:	7c                   	.byte 0x7c
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+include/linux/compiler_attributes.h:158:#define __printf(a, b)
+         __attribute__((__format__(printf, a, b)))
