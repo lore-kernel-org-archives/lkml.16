@@ -1,145 +1,114 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B2514AD2B;
-	Tue, 27 May 2025 15:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED9214AD2B
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748359439; cv=none; b=LE90aDqm4Bq3lx5v363ECiOimE2BduJ2osOjdddCbzOieJ9pRlpyPlr4NBo+jZ3EdaWSxkbg5VkYLl2Zride4W+Ymk77MAo+vS8geWGmQXM5ryUKHExDaazRaDgMZeg/Gw7QX9vt2Yy1Ih9KCDfKNTa21Txp/gE/B8ozWLEmbJE=
+	t=1748359446; cv=none; b=uNG3+S/KS9A0RVLfmP9ganJwU0QHAe199kpOFtUUj/S8kynp393sT8C6hA8/aEeXNYEthUFzg7gLIgXKXzBiwPv1I4EnqdnolJczvsPBUOUypUjWz6rNUEqdrqK9qhxC/B++JsUC2/UmUGF3TWq+bmKGEZa51gsFb9f9uZhujLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748359439; c=relaxed/simple;
-	bh=uHawQKNWyX/cJedS815p5gSoBiadOAdhl0e7BQ3THks=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mYR3qrCCKIaJl3KUGr/5ppKCobu27K9ASD7pPh352ElAtHm8fBZBO8af7DMcEqn0+sAT3maUnXVpa/4PSkm+q8Ht4O+bHF8Cv34NUtSt2lid3nX/bQnpuHuuIKmtVSJaBZFd94Gm93RsBZ8lYz3eZa93X/IK/Ze+APbFGt5OF08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BvBC8bfP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1748359446; c=relaxed/simple;
+	bh=GHFKB1QUQJNQTrqD2WwkKwhukhmmQnO6znL7tsSrETk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qoCx/WlnXXFhk6pqKEx9dDoZg/NMHqa916Bm1udBboEEMvhnVoMyZkcLZSN30tLTEDFhSegZGiv3VLl24Sh4thO74f476goru1eyrRj2Kkq+bzjUDbAKEF/X3ce5cWMQIMDIKJ7pbErpPcFKhuqLDTEIntXfWbCnC3LWDuIKaO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ea9Wl5HR; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BvBC8bfP"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R7itaT028239;
-	Tue, 27 May 2025 15:22:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WH41sOw46uGb0O/mCSIo69Vm7oio0sgM/j+ncmuu7NA=; b=BvBC8bfPOQEZR/j7
-	+XXj7hmFjS2txjVbALo40AmFpZ81tzVhBpnPiVFH1xPSVhfSwwUS9aDVJZhsp2/0
-	vXiMIqSsUXB88DDiulFauIY6PAhhmhDCGBJtalJ8dtl8cUkg88s/sm2/q6NFcElf
-	G4SQL9sb4H2DZH7ihlmZIM9phup2jLObnJNMLt9eBl7PhIme3Ku042VBXBvusYWw
-	AsidcLMrg2QAK49B6OiX5eiAZKPXXKECx/ubqf3FgkcElj+BFATjhGe1oiSKufOQ
-	PsBKTUXG5J9AtWcbWb2FlSD5cMxqqHfufgB50A74uJ26dAuSXupJDxT9QO1Ddb4j
-	JfQwfg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w992hb1d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 15:22:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54RFMsxm028681
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 15:22:54 GMT
-Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 27 May
- 2025 08:22:49 -0700
-Message-ID: <93869cf3-de84-4f3b-b120-7126928a5ea6@quicinc.com>
-Date: Tue, 27 May 2025 20:52:47 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ea9Wl5HR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748359443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I9jwVu8HrDPFPJMGQ2KQGHA1uhYe2Oc6mR5giQLGgIM=;
+	b=Ea9Wl5HRbZEAxLaCeF9J0GUdnsU5R/V675CBlxHBRyMEQTRkuBWxjhIhsK0GAxpnIdvSUr
+	fhkmh1k6MSFtPuVBZVOKAfT6OnHec9rsqDn46uBH4Ra+vcYNqdrv6qbHWHdtwEm472NklN
+	8AG0CstBr718hx3LMrZEQkVSradbl/0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-90-y1OhgXCrOeidMIEGEIIHGQ-1; Tue, 27 May 2025 11:24:02 -0400
+X-MC-Unique: y1OhgXCrOeidMIEGEIIHGQ-1
+X-Mimecast-MFC-AGG-ID: y1OhgXCrOeidMIEGEIIHGQ_1748359441
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4cfda0ab8so1222708f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:24:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748359441; x=1748964241;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I9jwVu8HrDPFPJMGQ2KQGHA1uhYe2Oc6mR5giQLGgIM=;
+        b=g/bEe0tcAHUZ/2e+U6ISzMTQzPX6aFo7KarCSfjQ+uY6aYvR2J+MbwdYhplKeDFdDi
+         g3YjPmooGuAfnJv198kVvtoRjEX8qf/x7Mo5LeNNVVX503pOBIkYmCObsv0cpiwbFbHW
+         hva6abByfi4mDfY7HfjgIXXvPNzYhPHLtpXjkdnx8ZjZ+lvVI2wRx0UxrpDXW66UhyGT
+         nYx7W2g9adDh+aiX/UuzBSUUeSAPnqgR7zS1KGJZ4+fZMhxuWzYED5EeaWZXgHTOCZYI
+         hnpPmrhXed/MuU3rKpsywtKRFLjmtpnle0tZqutJ+X1XADYeDLusuoNtJc2ScafWIIhf
+         MGRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5I7pzu1cciRbYg18/m8Xj7dN+onfON60/of+sPstob4E67vn/Sh4k12In0ZhYJu+lSO99v2joY0Nc8f0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8hTdZAzoAdbSgJ991mFD0uIC031At8GonqPQMfp5UNtZB32ZD
+	7J8QxWSHJEoJ787oZ3at4HFjAcCAd7FcLAOfl3SmuJjEHJqE/HDVq41VoRLihHy7tl/0Ho20mZe
+	I2J1AAfYCP4Fe1e4Diao/r9w7xfdcwJ4xlWX4SE6ODO3W2FfseMFQRZf2bZAhwFOZ3Q==
+X-Gm-Gg: ASbGncsYU025nYmqMDW1sz2PdouO9nS+n7rUBXJEAPM0tSgrgbfIANoZN6EvJ4EIswG
+	LswLrmETEwqgvwGHYRWaJ/SXm1zstSte+zPxbP4FXHO5iTClgX27WNqKPLmHFDQHNmSmNq+XOkk
+	KsSWAQKb4tbNZUeP9pZSBPvpxQ5jqILQeRaDQRbDqrCH3XJBI5Syp8SpaIJMA7djrUgGhLCqhBi
+	eMr6n4onVYNIR3qeWKTRvNVcIvN6FpBsVJoLAEKmOKkYw5beMMr9x3f/jqj+6luDSjeELj8BBud
+	jd4w2JbRvzwsF6WHR4ym84wlqhSrvLLKzzQU66WCKA==
+X-Received: by 2002:a05:6000:1a8d:b0:3a4:c713:7e6 with SMTP id ffacd0b85a97d-3a4cb40911dmr11430887f8f.11.1748359441169;
+        Tue, 27 May 2025 08:24:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGHRVmqgl3pua6Auz/RYFYwGKLeA+VXh5dWAlPWu0bWW36b7NjZ8rN7M3F6n2Wa8Dc6jXSsuw==
+X-Received: by 2002:a05:6000:1a8d:b0:3a4:c713:7e6 with SMTP id ffacd0b85a97d-3a4cb40911dmr11430867f8f.11.1748359440792;
+        Tue, 27 May 2025 08:24:00 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.57.104])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4e6934f30sm307781f8f.18.2025.05.27.08.24.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 08:24:00 -0700 (PDT)
+Date: Tue, 27 May 2025 17:23:58 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH v2 0/2] sched_deadline, docs: update rt-app examples, add
+ cgroup v2 cpuset HOWTO
+Message-ID: <aDXZDvzghkimV7A4@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250527-sched-deadline-cpu-affinity-v2-0-b8b40a4feefa@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 00/11] Refactor ufs phy powerup sequence
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        "Martin K. Petersen"
-	<martin.petersen@oracle.com>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <manivannan.sadhasivam@linaro.org>,
-        <James.Bottomley@hansenpartnership.com>, <bvanassche@acm.org>,
-        <andersson@kernel.org>, <neil.armstrong@linaro.org>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
-        <quic_cang@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <yq1msb6lowo.fsf@ca-mkp.ca.oracle.com>
- <ni7kedpcz7vchztb5qrs5msdt37mfdoabtt4gdqsaiwmbxlb2a@im4wurr77z43>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <ni7kedpcz7vchztb5qrs5msdt37mfdoabtt4gdqsaiwmbxlb2a@im4wurr77z43>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDEyNyBTYWx0ZWRfX5pCPrc1zpff0
- ddINaK0caD+7H9oLrJq+xo1G13Cj9+QuLUJHQmSgyTHc/n4kwVEFi1/h+qVBCxNouy6ktD2sx2x
- 6IbVaYZPgTE1HG7mH+SoHavsgMVNtFMnG4SZZCODBrENmr/TYs0XnjcRlyWjpC0dXoyfDPNUIPN
- ZTGR2fAh69hDDhb51jn7p5K5q8MwDVNGyS0RFSnCV+CCv0jcrwzOUYhRaW2gBV6cfGq1K72o3l5
- LI6O2vG+oGOPPzKIpc5qZk+TGprNOCGLzlavI0+5APsVw5uwG91cl/iek8/Zu0x654zE+z+gwXc
- u/582/GAL5YzEr99/S9MaSTStcJ1q7eEKm6kqJGO+ij8Mk08oMsWs3ikSAI2Qote4FHJu4t7xf4
- ffniZCHTl71+ZTxqckv6AWLUqz2+k/NRZvw2BnJxTjHuX/zCqiTyJMufiqbyFYTfUbz5Xbtq
-X-Authority-Analysis: v=2.4 cv=Fes3xI+6 c=1 sm=1 tr=0 ts=6835d8cf cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=HGgBVA14KErkiVD9HLEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: yiuvSsOzWlmG4o9TUWcDiMtnHK8qHTcw
-X-Proofpoint-ORIG-GUID: yiuvSsOzWlmG4o9TUWcDiMtnHK8qHTcw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_07,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 malwarescore=0 impostorscore=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=904 spamscore=0
- adultscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505270127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527-sched-deadline-cpu-affinity-v2-0-b8b40a4feefa@sony.com>
 
+Hi!
 
-
-On 5/21/2025 6:40 PM, Dmitry Baryshkov wrote:
-> On Tue, May 20, 2025 at 09:45:40PM -0400, Martin K. Petersen wrote:
->>
->> Hi Nitin!
->>
->>> Nitin Rawat (11):
->>>    scsi: ufs: qcom: add a new phy calibrate API call
->>>    phy: qcom-qmp-ufs: Rename qmp_ufs_enable and qmp_ufs_power_on
->>>    phy: qcom-qmp-ufs: Refactor phy_power_on and phy_calibrate callbacks
->>>    phy: qcom-qmp-ufs: Refactor UFS PHY reset
->>>    phy: qcom-qmp-ufs: Remove qmp_ufs_com_init()
->>>    phy: qcom-qmp-ufs: Rename qmp_ufs_power_off
->>>    phy: qcom-qmp-ufs: Remove qmp_ufs_exit() and Inline qmp_ufs_com_exit()
->>>    phy: qcom-qmp-ufs: refactor qmp_ufs_power_off
->>>    scsi: ufs: qcom : Refactor phy_power_on/off calls
->>>    scsi: ufs: qcom : Introduce phy_power_on/off wrapper function
->>>    scsi: ufs: qcom: Prevent calling phy_exit before phy_init
->>
->> What is your intent wrt. getting this series merged? Can the phy: and
->> scsi: patches be merged independently?
+On 27/05/25 23:55, Shashank Balaji wrote:
+> The main goal of this patchset is to add the cgroup v2 cpuset controller HOWTO.
+> In v1 of this series, Juri commented that rt-app no longer takes command-line
+> options. So I ended up converting the rt-app examples to either use chrt instead
+> or use config.json.
 > 
-> Unfortunately PHY patches depend on the first scsi patch.
-
-Thanks, Dmitry, for mentioning the dependency
-
-Hi Martin,
-
-After addressing the review comments for v5, there has been a change in 
-the patch order.
-
-In the latest patchset (v6), Patch 2 (SCSI patch) is now required for 
-the functional dependency of the subsequent PHY patches (Patch 3 to 
-Patch 9).
-
-Patch 1 (SCSI patch) addresses an existing issue and does not depend on 
-any other changes.
-
-Regards,
-Nitin
-
-
-
+> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
+> ---
+> Changes in v2:
+> - update rt-app examples to either use a chrt example or use config.json
+> - Link to v1: https://lore.kernel.org/r/20250522-sched-deadline-cpu-affinity-v1-1-2172c683acac@sony.com
 > 
+> ---
+> Shashank Balaji (2):
+>       sched_deadline, docs: replace rt-app examples with chrt or use config.json
+>       sched_deadline, docs: add affinity setting with cgroup2 cpuset controller
+> 
+>  Documentation/scheduler/sched-deadline.rst | 77 ++++++++++++++++++++----------
+>  1 file changed, 53 insertions(+), 24 deletions(-)
+
+Looks good to me, thanks!
+
+Reviewed-by: Juri Lelli <juri.lelli@redhat.com>
+
+Best,
+Juri
 
