@@ -1,114 +1,184 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68647271459;
-	Tue, 27 May 2025 13:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C7A2741BC
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353043; cv=none; b=h/Pg7oZnCR4lo5rwz2jAxygQRFAA+gYjBK4iExIhJr9TDJDmaI9pv3t4DfPQiDiODiP5XtUwqFWuYek3FG7fCq8VX1b80I0sA37YZtUXjMNUKVQGYURpgtieuidq5s/wsioJoj13+Vl2OsOnNi/VyfQsF7R8OHgSxOm7vTIJPe4=
+	t=1748353055; cv=none; b=IV6b8GqQ85FiSs3miptK7IFhyn7RFgRO6Pj2P7g0zbpTeWtJoHrg0nHeYlzuA4E1R3jkC6Cw4BMV80RdlYlrLwS4gua9UkQ+bwwZtRUXDU9UyverYzdgeaVrTGp+o1MJV5gW0Lb2OggO2Cx6B7JmVvkQmund09RnEhYzGcu3PbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353043; c=relaxed/simple;
-	bh=YPFs7o1pRRdS96m8/sYCeukS83lHaWXXuwQF3hlGcx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GP3wyddRMQRXUx3Rh+VaHt+8EIcbXpinTyPSiHqU7zM7FrJorV5DEXn5BrUQnY99MPjusFlGL0stiKKtHlLE4EkEypxW3L31Js9EfX8ukW122wZUNum6ag/A7lLIv7pf59XIMAgIhi/TJjZQJMyyHb1B+kH3Dhhp5qlGG27yQhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lM93n7el; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6b5rbTN1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lM93n7el";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6b5rbTN1"
-Date: Tue, 27 May 2025 15:37:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748353037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JO6gI2ty1BBSgBwH8ImLfjoNHgWaxGFBPO8/nnHGiak=;
-	b=lM93n7elEmx3f8AfKLDFsZ8IxgItqachQCS2yeUo0CRiVbN1WAK5EOtu/4DnvduuYSZJGF
-	kZ7MKQwwQ+gHPZSUzH5lgIxHSBWC6caNHuCY/65McqFU0jXUG5eJnaD9VlAglozYj/XLyp
-	QwI0oAUGeYAtVTWy7h+hzd9SdRKHiGR2IxZHnp80QU+Xw5CovYF4Ew8629nhzLVuq0AXmN
-	CGGIcJ89AI5Z0CHM7aphY4aJ8Kk15FPsLHpjxO1L9vdXju72DC/Me3yvPuKUaRmhmPLAxb
-	AGHQD2G1xeBXytmAxDU0YkI02FjgiynQlceDu0oM3PEQhtdOoTAKORswv7Fgbg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748353037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JO6gI2ty1BBSgBwH8ImLfjoNHgWaxGFBPO8/nnHGiak=;
-	b=6b5rbTN1sN6/DeexP7ywcdO3CQ8f0ftxhgPlJMuCbZR8/6Qz/A4Kfo7juDef4JmBh/DRnW
-	4Mk0pZogCUHLeBAg==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
-Message-ID: <20250527133712.CFW5AcNE@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-13-gmonaco@redhat.com>
+	s=arc-20240116; t=1748353055; c=relaxed/simple;
+	bh=lkaAvlqrC2g3iGkCUuii5W10Di5fl/UKXiMCltLNGBI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=E+nCawmmJitnCy5BRI/8Yvd8iKOApuOY3iG2kgc/HwLeEzFZ69sJKxSCPkEt74fKqNS+uTcEI9QyWOvtCntkxbYb8lftffGIWPXNn9AyS6UlBOXCv53IZsYVwExIlA7/TKp0dzQIxwQUXN6gzblGzkZnyYJY9u9fiLRFdm5o7WQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-86463467dddso281578439f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:37:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748353053; x=1748957853;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1py+DZ00oyprkVc+fla+24rh0dRjdu53vtBg26tccdo=;
+        b=mkZ4/SnyIq/qDfe+vR6Fztg/7EI4Www+K8DZmT8qAEGYNvR3ypIYLBxkL2fHIxu8Ze
+         39iflzY3Cvldl3FRpsEx8RBn9t3gd3boq72/l+59ehvbBQPcukSbwFM107XotbQiKJB1
+         kAnlpKawJYQkBPthyT/06CfwBP05Xi2QklRN/XtmpeD0MQNS9ZMzJy+LmIG8uW31ixw7
+         xyINcYdhQq7AaXfg4Xl9/A/CYOzlGgN/Y6AFd5er0u8mxD0dxw5Dc+h27wAFFWSPbfuX
+         Np8XPsjbVE+qNqFZrDBq2P9P+JMVBv1Aj8V2wQw3vXbzzt92RYrMYuJtX59eEPoCysrK
+         onGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWF/v56ajuHtSyTDvNvpHj8NDk19b1MVbqn4bgNZKNmIfH+Q1ebGX+dkqIF4DcC6LM4PVAWO4kWz1oInSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWvfo+mLFzfGqUX3wdl47VH/zstYexsQfenNuNCWmx8oZ3DWyc
+	YQTbcpX8jhG+9ddrx8lK9bN0OnWolzuPklTc0+lPyrV2kT3XVwyYrVUP7tNZGhfKscngVGViGs6
+	rDmhXbtbhcoOvBwSHfLxztt/MlPSAQ4gL+DUCkYYmGLUS6vnt32hqcWM8fEg=
+X-Google-Smtp-Source: AGHT+IHdbMEwKKnSrAAWp9WJoD6Pkfj9S+jcbGbdg4O4YoCpSQaOks7NJu+irfJruvpaLyymr000eUHQSzT+i9eb+zocGnOyME+j
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-13-gmonaco@redhat.com>
+X-Received: by 2002:a05:6602:4191:b0:867:6c90:4867 with SMTP id
+ ca18e2360f4ac-86cbb91658cmr1572338539f.14.1748353052928; Tue, 27 May 2025
+ 06:37:32 -0700 (PDT)
+Date: Tue, 27 May 2025 06:37:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6835c01c.a70a0220.253bc2.00b7.GAE@google.com>
+Subject: [syzbot] [mm?] [cgroups?] general protection fault in refill_obj_stock
+From: syzbot <syzbot+5dd4e428fa723938e6fd@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@kernel.org, 
+	muchun.song@linux.dev, roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 14, 2025 at 10:43:14AM +0200, Gabriele Monaco wrote:
-> Add a per-cpu monitor as part of the sched model:
-> * opid: operations with preemption and irq disabled
->     Monitor to ensure wakeup and need_resched occur with irq and
->     preemption disabled or in irq handlers.
+Hello,
 
-This monitor reports some warnings:
+syzbot found the following issue on:
 
-$ perf record -e rv:error_opid --call-graph dwarf -a -- ./stress-epoll
-(stress-epoll program from
-https://github.com/rouming/test-tools/blob/master/stress-epoll.c)
+HEAD commit:    914873bc7df9 Merge tag 'x86-build-2025-05-25' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12dcf882580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=231a962e5fdb804b
+dashboard link: https://syzkaller.appspot.com/bug?extid=5dd4e428fa723938e6fd
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-$ perf script
-stress-epoll   315 [003]   527.674724: rv:error_opid: event preempt_disable not expected in the state preempt_disabled
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfba0d handle_preempt_disable+0x3d ([kernel.kallsyms])
-	ffffffff9fdd32d0 __traceiter_preempt_disable+0x30 ([kernel.kallsyms])
-	ffffffff9fdd38fe trace_preempt_off+0x4e ([kernel.kallsyms])
-	ffffffff9fee6c1c vfs_write+0x12c ([kernel.kallsyms])
-	ffffffff9fee7128 ksys_write+0x68 ([kernel.kallsyms])
-	ffffffffa0bdbd92 do_syscall_64+0xb2 ([kernel.kallsyms])
-	ffffffff9fa00130 entry_SYSCALL_64_after_hwframe+0x77 ([kernel.kallsyms])
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	            1937 thread_work+0x47 (/root/test-tools/stress-epoll)
-	           891f4 start_thread+0x304 (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	          10989b clone3+0x2b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+Unfortunately, I don't have any reproducer for this issue yet.
 
-stress-epoll   318 [002]   527.674759: rv:error_opid: event preempt_disable not expected in the state disabled
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfba0d handle_preempt_disable+0x3d ([kernel.kallsyms])
-	ffffffff9fdd32d0 __traceiter_preempt_disable+0x30 ([kernel.kallsyms])
-	ffffffff9fdd38fe trace_preempt_off+0x4e ([kernel.kallsyms])
-	ffffffffa0bec1aa _raw_spin_lock_irq+0x1a ([kernel.kallsyms])
-	ffffffff9ff4fe73 eventfd_write+0x63 ([kernel.kallsyms])
-	ffffffff9fee6be5 vfs_write+0xf5 ([kernel.kallsyms])
-	ffffffff9fee7128 ksys_write+0x68 ([kernel.kallsyms])
-	ffffffffa0bdbd92 do_syscall_64+0xb2 ([kernel.kallsyms])
-	ffffffff9fa00130 entry_SYSCALL_64_after_hwframe+0x77 ([kernel.kallsyms])
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	            1937 thread_work+0x47 (/root/test-tools/stress-epoll)
-	           891f4 start_thread+0x304 (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	          10989b clone3+0x2b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ecae640d0786/disk-914873bc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d451e50efeae/vmlinux-914873bc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8f7363263e49/bzImage-914873bc.xz
 
-I'm not sure what I'm looking at here. Do you think these are kernel bugs,
-or the monitor is missing some corner cases?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5dd4e428fa723938e6fd@syzkaller.appspotmail.com
 
-Best regards,
-Nam
+Oops: general protection fault, probably for non-canonical address 0xffff11019a0ac400: 0000 [#1] SMP KASAN NOPTI
+KASAN: maybe wild-memory-access in range [0xfff8a80cd0562000-0xfff8a80cd0562007]
+CPU: 0 UID: 0 PID: 13104 Comm: dhcpcd Not tainted 6.15.0-syzkaller-01972-g914873bc7df9 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:percpu_ref_get_many include/linux/percpu-refcount.h:205 [inline]
+RIP: 0010:percpu_ref_get include/linux/percpu-refcount.h:222 [inline]
+RIP: 0010:obj_cgroup_get include/linux/memcontrol.h:760 [inline]
+RIP: 0010:replace_stock_objcg mm/memcontrol.c:2772 [inline]
+RIP: 0010:refill_obj_stock+0x1e1/0x7d0 mm/memcontrol.c:2950
+Code: 02 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 0f 85 96 05 00 00 49 8b 04 24 a8 03 0f 85 23 03 00 00 <65> 48 ff 00 e8 a6 40 ff ff 49 8d 7c 24 18 be 04 00 00 00 48 89 7c
+RSP: 0018:ffffc90002e27928 EFLAGS: 00010046
+RAX: ffff888075701400 RBX: ffffffff93a8a0c0 RCX: 0000000028853866
+RDX: 1ffff1100d2a5000 RSI: ffffffff8bf4fb80 RDI: ffffffff8dcf8da0
+RBP: ffffffff908687e4 R08: 85b13f40d71cc5de R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff888069528000
+R13: 0000000000000078 R14: ffff8880b84350c0 R15: ffff8880b8435108
+FS:  0000000000000000(0000) GS:ffff8881249ab000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000563fcc194660 CR3: 000000004f19d000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ obj_cgroup_uncharge mm/memcontrol.c:3013 [inline]
+ __memcg_slab_free_hook+0x23d/0x610 mm/memcontrol.c:3100
+ memcg_slab_free_hook mm/slub.c:2205 [inline]
+ slab_free mm/slub.c:4639 [inline]
+ kmem_cache_free+0x37e/0x4d0 mm/slub.c:4744
+ anon_vma_chain_free mm/rmap.c:147 [inline]
+ unlink_anon_vmas+0x173/0x820 mm/rmap.c:421
+ free_pgtables+0x2d4/0x810 mm/memory.c:391
+ exit_mmap+0x3fb/0xb90 mm/mmap.c:1295
+ __mmput+0x12a/0x410 kernel/fork.c:1381
+ mmput+0x62/0x70 kernel/fork.c:1404
+ exit_mm kernel/exit.c:595 [inline]
+ do_exit+0xa3a/0x2c70 kernel/exit.c:947
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1108
+ __do_sys_exit_group kernel/exit.c:1119 [inline]
+ __se_sys_exit_group kernel/exit.c:1117 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1117
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fad55e056c5
+Code: Unable to access opcode bytes at 0x7fad55e0569b.
+RSP: 002b:00007ffdf148a868 EFLAGS: 00000206 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fad55e056c5
+RDX: 00000000000000e7 RSI: ffffffffffffff88 RDI: 0000000000000001
+RBP: 00007ffdf148ae78 R08: 0000563fee1c62c0 R09: 0000000000000002
+R10: 00000000000000e0 R11: 0000000000000206 R12: 00007ffdf148a8b0
+R13: 0000563fee1c7950 R14: 00007ffdf148aaf0 R15: 00007ffdf148a8a0
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:percpu_ref_get_many include/linux/percpu-refcount.h:205 [inline]
+RIP: 0010:percpu_ref_get include/linux/percpu-refcount.h:222 [inline]
+RIP: 0010:obj_cgroup_get include/linux/memcontrol.h:760 [inline]
+RIP: 0010:replace_stock_objcg mm/memcontrol.c:2772 [inline]
+RIP: 0010:refill_obj_stock+0x1e1/0x7d0 mm/memcontrol.c:2950
+Code: 02 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 80 3c 02 00 0f 85 96 05 00 00 49 8b 04 24 a8 03 0f 85 23 03 00 00 <65> 48 ff 00 e8 a6 40 ff ff 49 8d 7c 24 18 be 04 00 00 00 48 89 7c
+RSP: 0018:ffffc90002e27928 EFLAGS: 00010046
+RAX: ffff888075701400 RBX: ffffffff93a8a0c0 RCX: 0000000028853866
+RDX: 1ffff1100d2a5000 RSI: ffffffff8bf4fb80 RDI: ffffffff8dcf8da0
+RBP: ffffffff908687e4 R08: 85b13f40d71cc5de R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff888069528000
+R13: 0000000000000078 R14: ffff8880b84350c0 R15: ffff8880b8435108
+FS:  0000000000000000(0000) GS:ffff8881249ab000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000563fcc194660 CR3: 000000004f19d000 CR4: 0000000000350ef0
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	00 00                	add    %al,(%rax)
+   2:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+   9:	fc ff df
+   c:	4c 89 e2             	mov    %r12,%rdx
+   f:	48 c1 ea 03          	shr    $0x3,%rdx
+  13:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+  17:	0f 85 96 05 00 00    	jne    0x5b3
+  1d:	49 8b 04 24          	mov    (%r12),%rax
+  21:	a8 03                	test   $0x3,%al
+  23:	0f 85 23 03 00 00    	jne    0x34c
+* 29:	65 48 ff 00          	incq   %gs:(%rax) <-- trapping instruction
+  2d:	e8 a6 40 ff ff       	call   0xffff40d8
+  32:	49 8d 7c 24 18       	lea    0x18(%r12),%rdi
+  37:	be 04 00 00 00       	mov    $0x4,%esi
+  3c:	48                   	rex.W
+  3d:	89                   	.byte 0x89
+  3e:	7c                   	.byte 0x7c
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
