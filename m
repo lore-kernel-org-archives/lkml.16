@@ -1,42 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD4A288523;
-	Tue, 27 May 2025 19:26:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3454812B93;
+	Tue, 27 May 2025 19:28:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374003; cv=none; b=lX0yAVf8wSQOIBQ1gZTNM4Vl1AxNzac+44zT+kl7d7Cs79PCBxDPbMxo3A3A97DRwbwHl9ldvUgYvQ1fUZfwXiI7JTAm2DaplbcTxMxnl0LZ+Z0QHVlPf1MxRrEy6eAY+qAIw/SwcDYseJdWFvC8otLYa3G23c/6+JZvDDqNPlA=
+	t=1748374106; cv=none; b=Qft1S7arPGsaCIvj1iG+MtDmwRNnehT+LPXc6GIkzLnjKckaEZi+9vgGSRneWL/Y4B80j3TiTBqCAkC6QqzbBDDJ8V/277BnJF4Z40KgLrPZkeJGyIgkXR5NV/fzVJPgglqOd8hT/YxUIKoOWzWcqJ9Kz6p1ifhU1Dq5Ji2RtcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374003; c=relaxed/simple;
-	bh=H6haHA7oSNBrFCJ0OSt8DikUNfMFd/tbzmvR4IC+64E=;
+	s=arc-20240116; t=1748374106; c=relaxed/simple;
+	bh=ZcppwkkBkGHzfL/HojYzLOl4RCeHBYYQUV63DqSRucM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohOBvaMWJz8OLuYBzzTbbStIYX5pJ7Zc9JByxxNvxkHsa3fFTp2f5sZvsrE/HMlS+02JhUMQ2bNxL43ifuncDQUtGsfnsbGf994hcIyoZutU8QW3MmZVFumaJmA4VENt0u+fpC9nAdjioZzLtDiqhs5GsyW//M/Luj4zgZMALpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=trX4qoiF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZHR/nY6w51qeEoIx35R3p5hH5ejKBt76JaT16VubDwlK4DR5vtpY2J5pRnbR9JSsMiYHuLZ53/i0Zk9v6ZTbhOndWt2WBh7Y+9ofmlQCd8D/EvLJYHCrW22Z9RfDwxAry/asJisCPeVJrLJHxCP+vMWzysq8hL/bvWe3SOI8428=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C18Q4wxA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="trX4qoiF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B6EC4CEE9;
-	Tue, 27 May 2025 19:26:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C18Q4wxA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6EB3C4CEE9;
+	Tue, 27 May 2025 19:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748374003;
-	bh=H6haHA7oSNBrFCJ0OSt8DikUNfMFd/tbzmvR4IC+64E=;
+	s=k20201202; t=1748374106;
+	bh=ZcppwkkBkGHzfL/HojYzLOl4RCeHBYYQUV63DqSRucM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=trX4qoiF9C8t5p/j4u4YcLYkYnL27yW/TI0AqPQ9GaRcP+aNjqsPLtFuMgaYRmdv6
-	 nfwl9k/ej8PF2kVo6WsC1ftd9fSmVE9tyrdCCfXxROGYqaZ1YtWQnR0QKpTxNOfjfP
-	 fdI46iWQ/IKyJG8MkJpujd5I/UF5L4W61SsCKXZQSn+p2MziyIimuKiOfvMzOeaF/M
-	 ygCjYrXzs7etE1yZEU1KFO70Bwe1Sjq5WmRGU7yGTPTx/XQrTYeIR5qbhBOI/zv0LI
-	 1bdDPZl+CI5mEfgMByClEPxBtSGdCi+yg8f84hYt1Jrv7E2sNF9arDpcT+O55gURNZ
-	 EWAxLLxvFaO6A==
-Date: Tue, 27 May 2025 14:26:41 -0500
+	b=C18Q4wxAIMAZ+UbWrE1lFvCpoZhpt/PBhWqEwgXbut9htZnxVTyZ4DBPOvmqZ6YNQ
+	 lJJ55e7ZRfL/bKDdOK4pOlYBu4SyQktp7wfoCYBdTYeQfUz3ogXafmvGCaT3662unh
+	 495cJTJLzsiFQ3oAnLez/2yCuqs2WN6gMWfJNLcE0mtBhFv8pd1GwL5/Dk6+dvoVs5
+	 JsvzkbFFzmk3HyeCtRK4HGry4Y8HX1IfiJtazdMxhSsuLe2UU4X9eeB8PRs02okcwG
+	 SmXCzdZ9yluDgM9b/BU73hkMHJuoSmWGN6Qo0FhwytFRi8d1kEsev0ZUQU75NQdUx5
+	 AH6eL3zDyhaag==
+Date: Tue, 27 May 2025 14:28:24 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, git@amd.com,
-	linux-arm-kernel@lists.infradead.org, krzk+dt@kernel.org,
-	gregkh@linuxfoundation.org, devicetree@vger.kernel.org,
-	conor+dt@kernel.org
-Subject: Re: [PATCH] dt-bindings: usb: dwc3-xilinx: allow dma-coherent
-Message-ID: <174837399989.1087595.10398541718787330529.robh@kernel.org>
-References: <1747401516-286356-1-git-send-email-radhey.shyam.pandey@amd.com>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: Daniel Golle <daniel@makrotopia.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>, devicetree@vger.kernel.org,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	linux-mediatek@lists.infradead.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>, Felix Fietkau <nbd@nbd.name>,
+	linux-kernel@vger.kernel.org,
+	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	linux-arm-kernel@lists.infradead.org,
+	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Subject: Re: [PATCH v2 01/14] dt-bindings: net: mediatek,net: update for
+ mt7988
+Message-ID: <174837410385.1090056.12670391327460010323.robh@kernel.org>
+References: <20250516180147.10416-1-linux@fw-web.de>
+ <20250516180147.10416-2-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,18 +61,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1747401516-286356-1-git-send-email-radhey.shyam.pandey@amd.com>
+In-Reply-To: <20250516180147.10416-2-linux@fw-web.de>
 
 
-On Fri, 16 May 2025 18:48:36 +0530, Radhey Shyam Pandey wrote:
-> On Versal Gen 2 SoC the LPD USB DMA controller is coherent with the CPU
-> so allow specifying the information.
+On Fri, 16 May 2025 20:01:31 +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> Update binding for mt7988 which has 3 gmac and 2 reg items.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 > ---
->  Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> v2:
+> - change reg to list of items
+> ---
+>  .../devicetree/bindings/net/mediatek,net.yaml          | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
 
-Applied, thanks!
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
