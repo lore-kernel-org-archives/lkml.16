@@ -1,85 +1,108 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6C914A4C7;
-	Tue, 27 May 2025 22:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6074D2147EF
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748383942; cv=none; b=aB4kxscj/rjEIDYQOTyQZBT3vnR7SGN/UD/wdtFlWdb5V5o6fzH93tfXS/rlpdLlO8Sh8WnVJliNbt0j14kGyTsb9EOIp17yYTWkCzGVmBaI6JQRDtqchFXiLpKDcL3oSOah3vn1zg0ODuph0tBwyyZSH3xuUMU4C2dzHnxKtno=
+	t=1748384081; cv=none; b=VnOViplc0nYNllRODeMMERtk9VuQLzUEVvs6MQvKqv5iSwrEWJ7t1dqqfVCyOQKSKsSJd6t6Lp/ieQGPAKduwi0OjGYhRCi9s/O1T3Lk36EH1A7GwWiMcVzNTzp2acQxPf9Lw2pGGmcDT1knDtceqqmauoW6E/rXi805zniZpNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748383942; c=relaxed/simple;
-	bh=uPs433VGRl9db/ILN2nMaCBUmPTAy/uIceD+r1Ft9qA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YK8XDuRiVIscUIENj0psFR6exoiSMyINOT92/m3ZaqjeYi+ORCHoaehKa7ytV7zhSM0fe1kzabMNhWyXJ433/22uf35WBzRCq0mNH2WfDAI4J1JMabaBODPeld6ewk8fcM7rzjBTblRaNwplNpcHAGf9UBZXTOgcLUtnroW1M04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=ArWIVe6p; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1748384081; c=relaxed/simple;
+	bh=9udHDpAYAvxKPviZiivuKs3/emxHMcNVOQEErxHRjS0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g7rNvDBQWQFsWKbRmjxIoKPSyLkBLNJ/8P3K/jBKleCbwbus+5gxAcJMOCSAwTb9tw7KmT6tm/FHr5I5cKePo9BJEIu5DTt9+hWSu4jshspK/yj56VlSEUMtKcoYTfLFVwl3CGEeiNFReu8KxRZsLnXg/kluah7Z3ja29Lwd6Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TmmbvuLt; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="ArWIVe6p"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=b0vSVo0YmWdp5tB1WDGuqHQ2nb5vuvg5ODXM7uOhpJo=; b=ArWIVe6pN3qYHfM60zjkOC7qJ/
-	J+rrxrBTDz5EnDcHIB0wiNIxHwrc6uzRwcGI7RMSHmLm1dW7rVdPHfWPlTtOrJiIYCfjEcgMFU2et
-	eo3NK06dla3tu3sLlaqVOaCcnMmZqG6MgpXsrnleEWlt8FXoy0rmxRy1sp+ykNBT9SJrfoFAU36Ia
-	ls7r/q4scskJezGXynZhkxnowIV16TZMhPH/mKjRMdHAzGTSnFzLa7jixHzX857xq6B5ULR6Uy/5E
-	wDCdZC2k7F/MYwc4+tDS02EEtbNr7oqVrbEqsDzlsWcGk6VcT/qFt4Eb9oKeWdxMGpvUx9faIvMW5
-	GXEiDJoQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uK2Wp-0000000GUH1-2gtE;
-	Tue, 27 May 2025 22:12:11 +0000
-Date: Tue, 27 May 2025 23:12:11 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
-Message-ID: <20250527221211.GB2023217@ZenIV>
-References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TmmbvuLt"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3dc9e7d10bdso9463465ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1748384078; x=1748988878; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lFjcs9eaUw90jHcgEZEicT+OU2FTsE9C+Uzz54aKOIs=;
+        b=TmmbvuLtdXl7o4JRVz2LZ/G2bp64Vclb/7DjFeYJvzFH3QXo0H4dEfEhE6Y4fnExFV
+         Wj0FGZk9MzlBL+I1oyf+qw+GXXsCH7sWvJvaaJy5Wa45ugwbulEJ/D3b/RqwTRxcDmhA
+         +vLqzEtkniBdcboC7IiKmslBbHLLYPAWROTpQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748384078; x=1748988878;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lFjcs9eaUw90jHcgEZEicT+OU2FTsE9C+Uzz54aKOIs=;
+        b=LiU8/z2DX8Hj96ugvY80U81Kp4Y6I1/S+yiG++DPMNsqSDk21G3F75nhDRSBsnb0Gj
+         WDp36pkP1D2+GBL7yySeNBQe/GThoJ/SO/sLp23/MkO/COOS1ZSErilqg7R9qD5170Y8
+         fw4AjXOviBHO/Zwh6DWZvQUnX+V+ecVEvYUEYHLtcWLJVAcNtRzW9K/4LrOfQ/knBoiH
+         ix3iGNd08SAoKCQQIFatrBahucT+VKhQDzvcnKHnApPGxamI5gygN0pTx/OHFGgvJxdy
+         TY9EdsuCfvRhNqPgYng9J3Oe2gpWYYXh6mssjmuVR8lp3D8pJGnVfZHS2qI3hfcBw/9h
+         WgoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvdlPiSDVhYZb3HRbQneJ4xdcKlLez90SVJhxh2SV1PByIB3dX6QmX/3vV32YtP75U0lAH1nd3/432utc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySP5uwIGWj2/jGJ64nAxJDeVDkZg9xlS00XXMx8glH+Z4MK45c
+	9FDyBG/2/HzCq/I4UpNJEXsOFeiQ+izhpgOycyUeJj9qpYNgw+X4vm9u71MgCNYq1Xk2ZOX1IFt
+	N1NNq
+X-Gm-Gg: ASbGncv+pTfe3P/yhoG/lHPcGuOsKP7DF9ZK3NNa2En7Sf8v4O+n6KdSPibzcRqgpoo
+	kIc/fZyzXJ/3kYWhaQ0YC6ETlG4oKdFJllDhEq7I7m++OHv1Xd5SYTq61CtwWcoHzNb2E+dJwfD
+	4HOQOGvHAWSI+NYDdSUKjQMCSKdIk5MqsiEk4cWG2ApvDyKMiXy0I22QGGhdaOwd+Cgl4KwMB66
+	XyVt/VtmLrJJcsUXBQ/uDopJdHHdy1SDEPMV1ttcgu7+5Ew2fm4XtZC2Dy83lbljPKynwdtJPcP
+	YDLgiMMrN1BqX9Z2u0oiDT4hIbX35ibfLtRveTt5Es/YgZD6JU6ZajN2+9ucp7vmZggFQpJL
+X-Google-Smtp-Source: AGHT+IE7r/xzWEX6isdmF1z1Xc3VKhaKMmnxHU3LTROHn0/Zm9/kosE8qJWqlOrrf4zs/FMpG2JziA==
+X-Received: by 2002:a05:6e02:1488:b0:3dc:8746:962b with SMTP id e9e14a558f8ab-3dc9b6e58d3mr143356275ab.15.1748384078310;
+        Tue, 27 May 2025 15:14:38 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dd89b833a5sm635645ab.23.2025.05.27.15.14.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 15:14:37 -0700 (PDT)
+Message-ID: <94de490a-3cf3-44f1-aab3-32309725725f@linuxfoundation.org>
+Date: Tue, 27 May 2025 16:14:36 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/783] 6.14.9-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250527162513.035720581@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250527162513.035720581@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 01:53:12PM +0000, Alice Ryhl wrote:
-> In C code we use sparse with the __user annotation to detect cases where
-> a user pointer is mixed up with other things. To replicate that, we
-> introduce a new struct UserPtr that serves the same purpose using the
-> newtype pattern.
+On 5/27/25 10:16, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.9 release.
+> There are 783 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> The UserPtr type is not marked with #[derive(Debug)], which means that
-> it's not possible to print values of this type. This avoids ASLR
-> leakage.
+> Responses should be made by Thu, 29 May 2025 16:22:51 +0000.
+> Anything received after that time might be too late.
 > 
-> The type is added to the prelude as it is a fairly fundamental type
-> similar to c_int. The wrapping_add() method is renamed to
-> wrapping_byte_add() for consistency with the method name found on raw
-> pointers.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.9-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-That's considerably weaker than __user, though - with
-	struct foo {struct bar x; struct baz y[2]; };
-	struct foo __user *p;
-	void f(struct bar __user *);
-sparse does figure out that f(&p->y[1]) is a type error - &p->y[1] is
-struct baz __user * and f() expects struct bar __user *.
+Compiled and booted on my test system. No dmesg regressions.
 
-It's not just mixing userland pointers with other things - it's not mixing
-userland pointers to different types, etc.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-In practice I've seen quite a few brainos caught by that...
+thanks,
+-- Shuah
