@@ -1,122 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B597260E;
-	Tue, 27 May 2025 12:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09811EA91;
+	Tue, 27 May 2025 12:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748347236; cv=none; b=T1SJaAwYEhH4dccWi3FLYJ1zwVfN3g331svOoCt+RU5Pzy8LplBh1GMf9IuOOpZcBsOF+JlZBPFuiCEgZ7WC5SEDC4EVTUYGvbiXiJMUTnDduyCtao2rRiVsoDEGpTIwOiDIcvKUwKk4DK2bt8uJcd0xj6hevEaeTDV03oGxzEw=
+	t=1748347297; cv=none; b=FEE3+wBaLL4iiJInvXXVP2+noaXbhqPgY6QEz9oxZZlcgmokOkTgHA0qMTWIIhAB8r58UOgMujoHFLA4w3s5UAwguyPAnagzYIQzV0WzBuFd0g0dGAXItVZe7MxigTtL7lXV4e1B/cW2f1/zRnc0LtDsnASE5ClceP5ZQBXMW7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748347236; c=relaxed/simple;
-	bh=lMMy4g/MYXQ+b9gPcrJlEgyzSKdjqC5ncOGH/dfQoVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QjJHsQXBsk05fVBXqb1V4Zjge5uy0hMX14B2L8xVZIcnIpzKV65IidHwpVOJ2kNHDgnawwfp3/UgsJiLb//SVTjCoAjxjhhOrXw7Ia7X29cSzLu60dk1dK1oZWsgnYQaoqLWQi+POVzcwAQo6DakOVqlumXSLW/P/0NxuiWLqL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PH6Fdlz6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PH6Fdlz6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791EAC4CEE9;
-	Tue, 27 May 2025 12:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748347236;
-	bh=lMMy4g/MYXQ+b9gPcrJlEgyzSKdjqC5ncOGH/dfQoVo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PH6Fdlz681kpS84Jq83UnDedxxrKP0uYjlKEG6OTOmdUnaMGcABZ3Bu63oF0uVuol
-	 DbCoZcg5805u3rPwka/ONPeiULqgKvgzgAhZljBpLxxZ45ADkZMkXkaeYdbx/ZUdzA
-	 Mn9yG0pYcKqpgPaqBMId2F/PElTUt0kU08EplZJG+OCbx8aAlDIp9Wj44Ediey0KRZ
-	 7PtKD2nbz0MGWEyqlGuqYtDITOMrZjNI53VMp+ZM/uT9JwSDxWHQa4dr3bh4aX2vqt
-	 Co4f/e0aj4k02w1+AClJGZiEa9pja2I+GEJZuSMbgPszzjLdGF6viQInCmw4E8jeRX
-	 jzD+mpEYAdzaA==
-Message-ID: <0f70110d-4861-487b-834d-f217c9a77384@kernel.org>
-Date: Tue, 27 May 2025 14:00:29 +0200
+	s=arc-20240116; t=1748347297; c=relaxed/simple;
+	bh=SLIbpdBPLAqb/54sjGm0rka8fMCLwCtOyD5tlCd6OnY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y6SV53xROVn+iaQt/+6gjTo/aRr2hKX7W4WubDpSYdqUKK3SzI2ON4E4cYVPeDaiY86kVFca/4x8AGIuCSI6y1WUBmjYldYcyP/+KzJLrv7rAz1DOM7RLiDqiqpEb7GplJHltd84YWNtVkVW1ATzMq5YS5SsK1fh7igopBgdYCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [27.18.99.37])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 169309524;
+	Tue, 27 May 2025 20:01:25 +0800 (GMT+08:00)
+From: Ze Huang <huangze@whut.edu.cn>
+Subject: [PATCH v5 0/4] Add USB2.0 PHY and USB3.0 PHY support for SpacemiT
+ K1
+Date: Tue, 27 May 2025 20:01:14 +0800
+Message-Id: <20250527-b4-k1-usb3-phy-v2-v5-0-2d366b0af999@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/8] arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
- kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-7-quic_pkumpatl@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250527111227.2318021-7-quic_pkumpatl@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIqpNWgC/23OzU7DMAwH8FepcsZVPk27E+8x7ZCkLo3Q2pG0g
+ Wnqu5N1SICo5Mvfsn/2jSWKgRI7VDcWKYcUprEE81QxP9jxlSB0JTPJpeFaPIPT8CZgSU7BZbh
+ CltA7QVo0uuW6ZWXvEqkPn5t5PD1ypPel0POjyZxNBH46n8N8qDLWwkD0gt2Hh5DmKV63f7Lcp
+ r9PNzunS3Fw2BKXnW00uZePYZlr6pbaj5uX1Y9hdt/PqhjE0RgUygpU/w39y5C4Z+i74S1i03u
+ BVv411nX9AsNrsIppAQAA
+X-Change-ID: 20250417-b4-k1-usb3-phy-v2-fb1e41849049
+To: Vinod Koul <vkoul@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, Ze Huang <huangze@whut.edu.cn>, 
+ Junzhong Pan <junzhong.pan@spacemit.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748347285; l=2936;
+ i=huangze@whut.edu.cn; s=20250325; h=from:subject:message-id;
+ bh=SLIbpdBPLAqb/54sjGm0rka8fMCLwCtOyD5tlCd6OnY=;
+ b=erMhzmXgAgrdDShcZphQGvZ0V3vXC8JPL39vXOUUO/u7Es5nkVCQfiD50M6pSSMHSHqMlccLu
+ 0UHKtwXozOcC0inSKJvH6IaLVLSxh0VvABY8zEHmZS5T7M4FhCayyPg
+X-Developer-Key: i=huangze@whut.edu.cn; a=ed25519;
+ pk=C3zfn/kH6oMJickaXBa8dxTZO68EBiD93F+tAenboRA=
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGE0eVk1OSRkfGh5IHhgfTFYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktJQk1KSlVKS0tVS1kG
+X-HM-Tid: 0a97119e6f2b03a1kunm8e523759adeeb
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ogw6PTo6KjExHFYvUT0NPzYz
+	E1ZPCVZVSlVKTE9DSE9MSUJKQ0JIVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVITFlXWQgBWUFPTUhDNwY+
 
-On 27/05/2025 13:12, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> 
-> Add the sound card node with tested playback over WSA8835 speakers
-> and digital on-board mics.
-> 
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 45 ++++++++++++++++++++
->  1 file changed, 45 insertions(+)
+This patch series introduces support for the USB2.0 PHY and PCIe/USB3.0
+Combo PHY on the SpacemiT K1 SoC. The implementation has been tested on the
+Milk-V Jupiter and BananaPi-f3.
 
+K1 includes three USB ports as follows[1]:
+- A USB2.0 OTG Port
+- A USB2.0 Host Only Port
+- A USB3.0 Port with a USB2.0 DRD interface
 
-Don't add one-node per patch. Add entire sound for this board.
+USB3.0 PHY for USB3.0 Port is shared with PCIe port A, meaning that only one of
+these interfaces (PCIe or USB3.0) can be active at a given time.
+
+Link: https://developer.spacemit.com/documentation?token=AjHDwrW78igAAEkiHracBI9HnTb#part5 [1]
+
+Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+---
+Changes in v5:
+- phy driver for usb2:
+  - convert readl/writel to regmap
+  - fix typo: sentinal -> sentinel
+- Link to v4: https://lore.kernel.org/r/20250526-b4-k1-usb3-phy-v2-v4-0-eca668fc16a2@whut.edu.cn
+
+Changes in v4:
+- combphy driver:
+  - add in-code comments to indicate that PCIe mode is not yet supported.
+  - replace custom spacemit_reg_update() with standard regmap API.
+  - drop spacemit_combphy_wait_ready helper function as only used once.
+  - Fix PHY init timeout handling: ensure proper error reporting when PLL
+    lock fails during USB3 PHY initialization
+- Link to v3: https://lore.kernel.org/r/20250517-b4-k1-usb3-phy-v2-v3-0-e0655613a163@whut.edu.cn
+
+Changes in v3:
+- improve commit message, provide more info about phy hardware
+- drop superfluous local variable in `spacemit_combphy_wait_ready`
+- replace devm_reset_control_get with devm_reset_control_get_exclusive
+- Link to v2: https://lore.kernel.org/r/20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn
+
+Changes in v2:
+- combphy dt-bindings:
+  - fix reg-names
+  - describe reg
+  - describe #phy-cells argument
+- drop stale ".owner" in driver struct
+- add support for usb lfps_thres in combphy
+- fix Kconfig depends on
+- Link to v1: https://lore.kernel.org/all/20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn
+
+---
+Ze Huang (4):
+      dt-bindings: phy: spacemit: add K1 USB2 PHY
+      dt-bindings: phy: spacemit: add K1 PCIe/USB3 combo PHY
+      phy: spacemit: support K1 USB2.0 PHY controller
+      phy: spacemit: add USB3 support for K1 PCIe/USB3 combo PHY
+
+ .../bindings/phy/spacemit,k1-combphy.yaml          |  72 ++++++
+ .../devicetree/bindings/phy/spacemit,usb2-phy.yaml |  40 ++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/spacemit/Kconfig                       |  21 ++
+ drivers/phy/spacemit/Makefile                      |   3 +
+ drivers/phy/spacemit/phy-k1-combphy.c              | 266 +++++++++++++++++++++
+ drivers/phy/spacemit/phy-k1-usb2.c                 | 144 +++++++++++
+ 8 files changed, 548 insertions(+)
+---
+base-commit: 64e9fdfc89a76fed38d8ddeed72d42ec71957ed9
+change-id: 20250417-b4-k1-usb3-phy-v2-fb1e41849049
 
 Best regards,
-Krzysztof
+-- 
+Ze Huang <huangze@whut.edu.cn>
+
