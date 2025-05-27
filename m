@@ -1,190 +1,120 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78F42798E6;
-	Tue, 27 May 2025 14:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F74627A925
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357871; cv=none; b=bqyuucQ06WB3oZEjNTS3pM3BqhhfPaionBMD2mlXlIPKcjPPYpUQpX3JmnOfyXk54tZbMhpHhWGU+vXHBujfANo9vhjHsIQd83Y/IBC1W2HORveumxpepH2YAvFAS1suC6XD3cOh2HmYH8um+PhcGVKbMrRdzNzPu8/s6yTbmg4=
+	t=1748357875; cv=none; b=grZpbDSd9lyo7wMefA4hBRB5uccRMHpZh1VEdET9He4I5DGuVRNRy7Ufx2ctlBMiaCYicoL/7M0acmDTyPKMj3VFlGppelgaexpO8hjA55e8yttOYKGIpLh7Hdn/TNUMuI2ncPXlqQdgitvwbHy5KSysmtRMJhI/FWa+D0lFCw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357871; c=relaxed/simple;
-	bh=si/3D/lqAp5z97oyh3H7Ttrei9OF36F1phtFBwnKSQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FpRpsKGhmhqQjAaLxArtw/0F+POVcK/beT4BmGqyiIr+8bAY2n/+c0GZQJM6qjzbaknppD63WQlApVxV8AWY4CicwYzlNJZcNL6GHSyM5Q9KD+gRyldKkg1GZKrDtXfdbK4FaXJPYMHMhrXESQ3a8kSyTzA7kXvJvE/n0O3w06w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fhAw9Kqr; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748357875; c=relaxed/simple;
+	bh=6c8NYwxQYQ3V862xbvTlYlSVIDJLz9fGUYXs65CCQPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFZgTmqXizcIUKZxCu6HlPH0TFNkpPaA6ttGtQXT+Nwdqm2ZWqpQckZOBVXQxnT21zDtL44GIQTIv9Yt4rtE4a1hEl4WPtqv7D1qijbwUYRQI7zMu6iny2h+cRll9geNfaQxUjOC9eb2/BBmSTpc40Ce4wNB9nxLOLvlCFiUwUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZ/N/AV1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhAw9Kqr"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30f30200b51so36628581fa.3;
-        Tue, 27 May 2025 07:57:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748357868; x=1748962668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SNE3eNQigcgAPplki00LvwTSib7PfNi6+3iBJNr9+88=;
-        b=fhAw9Kqr7Zb/809HyPBiQNKjRIKXzu0HwWwyhYLtt98exSLsMpzdXm+fiFWgYHR2Aj
-         AjJg4Wgd4hjKMukqVAnmtvfsYZA1DN/YhBgTB222JylLvgfRAM2gcAV87f4W2XDZg58/
-         RDo2U+HVo+WWLujhQ8ssw5KDYA6dtO4tulg7t1RjoJmZzZY1xly+k996XERpo4dI/lbv
-         gLCK5AAyaB8xRVGQXkMJonUVKKZi9cvpq3mYU8dpBiBdeoySddI6BNcjagXY7OOugUvj
-         JyYRtUP+ojpyw2LkGklM0rdqdToblJKT+qFHUwx/2uKHFne+zUI2JzpYKDS3Qck2hWQC
-         +cxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748357868; x=1748962668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SNE3eNQigcgAPplki00LvwTSib7PfNi6+3iBJNr9+88=;
-        b=w8tWlA6LBXg5f3uzmWEDjwYQ3Rr8U1JNHaheFQwUVbeTeul8grWA5NfbPrYz2y2yz7
-         PRyF6NI0BSvR0gE3fviGxzTrpuHTlyfElWoY25pIc7ZobyValFMt4xlmwsIYrooYyvxX
-         yqubnTVnBcnzQq6pdM0MdvvNIU0gyRdBBnwbcszDm5L6DTmvHqcmh6SkC6Tw7b8lfayZ
-         MLvv3LI9CqexbX2ciaGwMGUbJE0Rz2KtzDFFdcn1HGfsv83R5nFph6PGVG3uE52+L5NT
-         SRp0IFDs1+iKAnMmCY0aQAPgrAMllwvJ/gO7HeP0VJEOXvDTA/NAAR41N1PbKiSixpsD
-         0z0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUNAfzms8ShxzK8AprRSOIWxWaFFwdFwya0rLrBPdTFfkczLP2Fm5O0Y+9vFQElU9WrZy8rWfrL8tstXcQ=@vger.kernel.org, AJvYcCV4VuLf3CGUzY0qTtWYkqU4ujymEt0TQ0hV62hdUS/maWv3Fm3zdHgjNZFTao9/Gz+UBmj9voxbBZ0M@vger.kernel.org, AJvYcCVO2Pq4WGiTgdCRKSuyb2bYOqThS95PreUPZiuTLzEdj36mYt+mE0SWuh741j6mJKxmEpRBZoRHAtKUSRjC@vger.kernel.org, AJvYcCWCftjuKhBxAh1+o+DE0TGXw/WPlwKHrqgOQWDEWQKj8wnXNKQnRc9emvV0P5kcBh4J29Rxcr+F@vger.kernel.org, AJvYcCWHpJFsRqU7ha4pNDnFPP7WIINau4XHyx/FB2B7TYWij53uirMS5Y3WeKGmf9PBG/3o8h0AKAMj+K4x8kqvLtg=@vger.kernel.org, AJvYcCWfOZRnZk7cg6GPd4TcY0Cm31D6GPnt9OEkyorqo9LS4AaN2KKLG2eoxRIaMIVxrXaXf9oyp3hxh5AZ5unr7EGD@vger.kernel.org, AJvYcCX2wqzDGcLBnHLPfhPdVwX4d+TP8Or33havnSaDCePx6v9WH6Xfq5dmV9g1tvJXKvmEUfHeiq6HeObD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4LYTwl5CyyMfPYxh99YwFTU+uINXZ9k/A8+SlzoADFxUg0Sdd
-	A5DdEfq0wmK6njqhsm6CNKqRx6FHmNyctHQgGqkxEc4KJggF0Idm+4ziW2BoOC4DItw4ev3T4rp
-	sQDIC97TO09Akva7p0O0c/Q4dt9hPC6A=
-X-Gm-Gg: ASbGncuxt4TNLbesUhcDviTqFRFg21sp379DQvM7Vn0XGWydTiUBCFXlCjTpR21LGkY
-	uSiNcLFo4QNNztG63iC2nbz4BUNBmTMFQiyfk+376EuMktoYXaZHBFoC45700Qu5uMrD7JoE0BF
-	SyeeqC8+JEtq7PPt5NxXldMAjm+hd90cZCUbvbwFbAFi2/HYEx
-X-Google-Smtp-Source: AGHT+IGMpsgNs0H0v36WCubbxlinvgNLfiVk9IX6EmewrCYJWnUCTsflWg1QTkNc19iE0AzQz3ot/ZAJjdnwjF/SkXc=
-X-Received: by 2002:a2e:8a93:0:b0:32a:604c:504e with SMTP id
- 38308e7fff4ca-32a604c5122mr6252591fa.38.1748357867433; Tue, 27 May 2025
- 07:57:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZ/N/AV1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF27C4CEED;
+	Tue, 27 May 2025 14:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748357873;
+	bh=6c8NYwxQYQ3V862xbvTlYlSVIDJLz9fGUYXs65CCQPU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XZ/N/AV1VxebNxlwGSCrP2AhiFSN4bdwpZoS6C+ydOav4vmyu8C7xhTAldizOUcQR
+	 eajI7VJ5TBAuBATJaFgUtBv4DffQAcN6uMcDXkgi5HdpWOmqiKO9CYeMw0vJD/Pi+O
+	 dQMFss4g8Wu7S9YLoFY+mpBk36XZpGKGw05lLtpoDOiJnFfF/Dy6E+LR+CANtTKvYd
+	 5G81TRsGJM9zLdbAjf5AoehXvUSywkaQJYLc3tFGJivIn+E50zGicitDpQ2LkQTQJE
+	 DpU5oHvDAeJacQpI9vv6Z+inpNQBXzrc0C3T9NUt1raZfMSGBzrovtkAra9KZVlW56
+	 x9p6Wmq1zamfA==
+Date: Tue, 27 May 2025 16:57:51 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+Message-ID: <20250527-winged-prawn-of-virtuosity-d11a47@houat>
+References: <87o6wfwcef.fsf@intel.com>
+ <20250505-slim-bizarre-marten-a674ac@houat>
+ <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
+ <874ixvtbxy.fsf@intel.com>
+ <20250509-rapid-flounder-of-devotion-6b26bb@houat>
+ <87r00yj6kv.fsf@intel.com>
+ <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
+ <875xi3im1r.fsf@intel.com>
+ <20250519-singing-silent-stingray-fe5c9b@houat>
+ <87sekztwyc.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
- <20250524-cstr-core-v10-2-6412a94d9d75@gmail.com> <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
- <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com> <CAH5fLgiUhvp9P7oSf4Rtv5jK1SNebW9-r5YFHVzCZjEwaR=Mjg@mail.gmail.com>
-In-Reply-To: <CAH5fLgiUhvp9P7oSf4Rtv5jK1SNebW9-r5YFHVzCZjEwaR=Mjg@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 27 May 2025 10:57:11 -0400
-X-Gm-Features: AX0GCFv2oY8lzrXQtwfj6_dQyq0RFoGjtHhR6-NzX_hnZZ_7RGNdHOXxleigo1M
-Message-ID: <CAJ-ks9=prR2TNFhqip8MsjtTWKkoUhoMG75v2mSLF1UaRNwJLg@mail.gmail.com>
-Subject: Re: [PATCH v10 2/5] rust: support formatting of foreign types
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Benno Lossin <lossin@kernel.org>, Michal Rostecki <vadorovsky@protonmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
-	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="vrxhigte2cmrplrl"
+Content-Disposition: inline
+In-Reply-To: <87sekztwyc.fsf@intel.com>
+
+
+--vrxhigte2cmrplrl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+MIME-Version: 1.0
 
-On Tue, May 27, 2025 at 8:44=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Tue, May 27, 2025 at 12:18=E2=80=AFAM Tamir Duberstein <tamird@gmail.c=
-om> wrote:
-> > > > +}
-> > > > +
-> > > > +fn make_ident<'a, T: IntoIterator<Item =3D &'a str>>(
-> > > > +    span: Span,
-> > > > +    names: T,
-> > > > +) -> impl Iterator<Item =3D TokenTree> + use<'a, T> {
-> > > > +    names.into_iter().flat_map(move |name| {
-> > > > +        [
-> > > > +            TokenTree::Punct(Punct::new(':', Spacing::Joint)),
-> > > > +            TokenTree::Punct(Punct::new(':', Spacing::Alone)),
-> > > > +            TokenTree::Ident(Ident::new(name, span)),
-> > > > +        ]
-> > > > +    })
-> > > > +}
-> > > > diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-> > > > index d31e50c446b0..fa956eaa3ba7 100644
-> > > > --- a/rust/macros/lib.rs
-> > > > +++ b/rust/macros/lib.rs
-> > > > @@ -10,6 +10,7 @@
-> > > >  mod quote;
-> > > >  mod concat_idents;
-> > > >  mod export;
-> > > > +mod fmt;
-> > > >  mod helpers;
-> > > >  mod kunit;
-> > > >  mod module;
-> > > > @@ -196,6 +197,24 @@ pub fn export(attr: TokenStream, ts: TokenStre=
-am) -> TokenStream {
-> > > >      export::export(attr, ts)
-> > > >  }
-> > > >
-> > > > +/// Like [`core::format_args!`], but automatically wraps arguments=
- in [`kernel::fmt::Adapter`].
-> > > > +///
-> > > > +/// This macro allows generating `core::fmt::Arguments` while ensu=
-ring that each argument is wrapped
-> > > > +/// with `::kernel::fmt::Adapter`, which customizes formatting beh=
-avior for kernel logging.
-> > > > +///
-> > > > +/// Named arguments used in the format string (e.g. `{foo}`) are d=
-etected and resolved from local
-> > > > +/// bindings. All positional and named arguments are automatically=
- wrapped.
-> > > > +///
-> > > > +/// This macro is an implementation detail of other kernel logging=
- macros like [`pr_info!`] and
-> > > > +/// should not typically be used directly.
-> > > > +///
-> > > > +/// [`kernel::fmt::Adapter`]: ../kernel/fmt/struct.Adapter.html
-> > > > +/// [`pr_info!`]: ../kernel/macro.pr_info.html
-> > > > +#[proc_macro]
-> > > > +pub fn fmt(input: TokenStream) -> TokenStream {
-> > >
-> > > I'm wondering if we should name this `format_args` instead in order t=
-o
-> > > better communicate that it's a replacement for `core::format_args!`.
-> >
-> > Unfortunately that introduces ambiguity in cases where
-> > kernel::prelude::* is imported because core::format_args is in core's
-> > prelude.
->
-> I'm pretty sure that glob imports are higher priority than the core
-> prelude? Or is this because there are macros that now incorrectly use
-> kernel::prelude::format_args when they should use the one from core?
+On Tue, May 20, 2025 at 01:09:47PM +0300, Jani Nikula wrote:
+>=20
+> Maxime -
+>=20
+> I'm cutting a lot of context here. Not because I don't think it deserves
+> an answer, but because I seem to be failing at communication.
+>=20
+> On Mon, 19 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> > You still haven't explained why it would take anything more than
+> > registering a dumb device at probe time though.
+>=20
+> With that, do you mean a dumb struct device, or any struct device with a
+> suitable lifetime, that we'd pass to devm_drm_panel_alloc()?
+>=20
+> Is using devm_drm_panel_alloc() like that instead of our own allocation
+> with drm_panel_init() the main point of contention for you? If yes, we
+> can do that.
 
-compiler says no, e.g.:
+Yeah, I was thinking of something along the lines of:
 
-error[E0659]: `format_args` is ambiguous
-    --> rust/doctests_kernel_generated.rs:8783:25
-     |
-8783 |     kernel::kunit::info(format_args!("    #
-rust_doctest_kernel_workqueue_rs_3.location:
-rust/kernel/workqueue.rs:77\n"));
-     |                         ^^^^^^^^^^^ ambiguous name
-     |
-     =3D note: ambiguous because of a conflict between a name from a
-glob import and an outer scope during import or macro resolution
-     =3D note: `format_args` could refer to a macro from prelude
-note: `format_args` could also refer to the macro imported here
-    --> rust/doctests_kernel_generated.rs:8772:9
-     |
-8772 |     use kernel::prelude::*;
-     |         ^^^^^^^^^^^^^^^^^^
-     =3D help: consider adding an explicit import of `format_args` to disam=
-biguate
+const struct drm_panel_funcs dummy_funcs =3D {};
+
+struct drm_panel *register_panel() {
+    struct faux_device *faux;
+    struct drm_panel *panel;
+    int ret;
+
+    faux =3D faux_device_create(...);
+    if IS_ERR(faux)
+       return ERR_CAST(faux);
+
+    return __devm_drm_panel_alloc(&faux->dev, sizeof(*panel), 0, &dummy_fun=
+cs, $CONNECTOR_TYPE);
+}
+
+And you have a panel, under your control, with exactly the same
+setup than anyone else.
+
+Maxime
+
+--vrxhigte2cmrplrl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDXS6wAKCRAnX84Zoj2+
+dkDUAYC5iZn1TuEBLw27T/PkCrKe8tbxEuy7qgQ0R0AkVjHAaVk5ip9n6kkwLRmX
+TkcmqWwBfRH9yn4WuyWOb4dNBTub0wm0ycegfvKL655zm3YXGO7USOj4aGjG/Ou9
+AEXevAVGuw==
+=lUVs
+-----END PGP SIGNATURE-----
+
+--vrxhigte2cmrplrl--
