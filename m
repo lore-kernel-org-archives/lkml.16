@@ -1,126 +1,153 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3161E1D88D7
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CBA25A323
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748365380; cv=none; b=a8AFLyd2bu+U/BIWtH3Xd4vmRMqrSU1Z5Qh+BoyfbYtBsW1px4CdOpEcY6xqrdG6Q5Cpsi8JHLmXani5jXtNh7NtmLnx827YUich15eBHH/Bn9IAJ7BDvrNc/1y+26n724SFBkRITaApGzs8u5lWmH8MZctno38y9gOOQeC3bJs=
+	t=1748365441; cv=none; b=vE3PtI+1oYb9C8xW66NY0kvnCv7k8QcovJdflyZg8RP4MzxSd+kF8/E/YxVfodlyQ/djXvr0kqF32fU3VoqrOLkfymHa6U8gCLc7+B+SxWw4jmChHgPqFFZT+6JCoTObT079QezuMi/syl+qumwc5tabBeSDjVBI3UGUzvGOLO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748365380; c=relaxed/simple;
-	bh=aVeuz6U3ZP8Pi2cSgrUYzQBvgbejSBQthrlVk69LKvY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G+qvFgqCt1RhNcW4A0xnhLBiusE5SxKeOgTMrVKiNoUfHmXFsdRtNYam2ICwGH3AnueOCgTrDGVHAyPYS5w/PqJf9uwthxl4WbHG6iu1cCgtDtuxWi+1y6OhS8+5PrAqbsfroGtoMrP2+DQSre4a9YoT5+BcwtBjn+keF6kQWfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VXalhx7A; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748365441; c=relaxed/simple;
+	bh=D/exj8D4Mdt6FJYvJh51f96SRZVSyPsguFJ4c+GikA8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ILH4TttMslJAE++iw6jCc4nahVR945H4oMvzE9RajoIJ5+HLW5VEqVlvp3glyWISRJEv7lQCrDKRJGBwBhp5mBPr989PbYZRvfWYt2ze1732Yzxvyos0Um9Xuwns1daNOqvhVJoacPo0wA8LSC0AoIOKXXZipMRgiQML3TWVwA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pAX7QMoy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VXalhx7A"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-310f3c7bd87so2606718a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748365376; x=1748970176; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i1cD0wSUoGRAfow7hZRrSlocwlqH/rpj2EVVATTYGe4=;
-        b=VXalhx7A6Df94AlQnqojUxxGVDkk3fUYEwRFcfTvNm33R0JwqGLL0J8+epfv66KVjL
-         /4Tc6wPPqOArKcMNeTaR6+I+xV3jzUaPlR1Y4m4pMcf8Fbk6ZFowHlBRZcWFubd0XQQW
-         SOTKXHWrytrRqDgAz47ezIkUuqE2bd7H1hWqU=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pAX7QMoy"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RCmFcn031141
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:03:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fN5GCmNGnguuUfY6HIS616UzD+Rz36jMub2o4gFIJoQ=; b=pAX7QMoyiVE1rY9Z
+	+cKXPpiJ98pUzTz92OcGDPCydeOAXwvebWP7QHok+kDYdfdzki/19s9jOgDF556F
+	Y0sKH8EIvRhxDrtbrbnYwDxhmdtJY+wlI6wEAuWp2hpHj9cbU8iNmJU5v5nBK1eu
+	J34qCPZjcchBCurdEjc909jY4kpc1plvTBAZu0lb0wx7KOYTLhqVzDZZScp9n2VH
+	xrRs4rI2YRo0H0/+3RGD60ngh3+YcNwy1MXS6UDbwJlbjT6CbB9Mbl0Cr8Ao84Hk
+	JdkEmD5qE+OFOZ48YnC6lAN+/ZzLUUZbLgQ55BohYDY20fYtMNalhx+1mjWJoWfW
+	m7VuJg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u66wftf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:03:53 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c53d5f85c9so107254285a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:03:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748365376; x=1748970176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i1cD0wSUoGRAfow7hZRrSlocwlqH/rpj2EVVATTYGe4=;
-        b=G9rr1lCdcHXG05cF7oXJexsqFbKoYUk4bEseX+pNSnBzLdjtIkile+PctMYQq+0Kei
-         WnLCLa/uhPJGBsWOCdlTxyyiuPbChTwp7QBTWVzhxleDLvOLik4Hle+bsG6kqhFiV4O4
-         zBmJIiauDmRc3AR53j4ynoo5qcxunCeuit0qUfzDLQdjc0oLXGz0bzKBy6vGkimmCtK5
-         R8kRW5iz04org8Xfl441Ag0am3Vo+lQcpn2FVkR5Qh36z5zr8kC0hZIlajlsPyPLAwlO
-         oB4otdZTR4tIQPPMZQQdH1xf6rEmlpkOKmDfKzZNVOHBJqrEiPKxPRwpOk49i7VjjXqc
-         LEKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzd7K0VrgDy8CLpXxYdJ0bNSUbNT2W9wFEz3PJmUQaUIAsq9NkY1FiUUDffAv8ps5Gba8JlNlQZC/mlnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo/D8CYc1vterzhsFsNZkwIpPWauOAvTIALw+kal6ci9Ieei35
-	MY8eWL1O01QRsVJ0eIMSmZbAfLmqBucviqS6Wo/XCFdIitWzervt+/gViRVjKuYrrIM2z+BWKiL
-	wPW0=
-X-Gm-Gg: ASbGncubj8jSOn3EgEShqr0vYuPuo0dKysNiF+BeSAuzUjKCjogG7xpmszl23l9n1P0
-	SSwg4iTZ6bzquLgyrSCsgv5dUAu4nv13relb4luZTAdhI+hZbGMCrG0+If24xAN9QEVvfOICXXE
-	kP9Qa2IqqRwhE+8Ye8TLHBcS+/oe4b+7dLP4ggxvFZ0SBOr/nFk65ivfYYXmePwXFJm1WqXLXh3
-	SKiH0Lk7AG7b+clFPUhWjc4+vRMXl+XyNF2IoW05qKVWf398BgoM/9LKH5rpJD91ANSwFJU3D+1
-	fjnCNPTFlII8zveIlYE33Hkpr5PTOFiIJUmIuPfzgcKiHHfrrFiywnwcJi/Q7JXO60pUKbvK7lS
-	uzt/USxil7TvFIXRUp9A=
-X-Google-Smtp-Source: AGHT+IEPm1h2H8x4YzSxfD2qWVsamBqJB4qdduk4xKnNgAW4ZtgE0eHfgnwYJrT22N/jUv4KIFBzig==
-X-Received: by 2002:a17:90b:17cb:b0:2f9:c144:9d13 with SMTP id 98e67ed59e1d1-3110feeacfcmr22162240a91.24.1748365374074;
-        Tue, 27 May 2025 10:02:54 -0700 (PDT)
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com. [209.85.215.169])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-311b3ed5206sm1419547a91.1.2025.05.27.10.02.52
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1748365432; x=1748970232;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fN5GCmNGnguuUfY6HIS616UzD+Rz36jMub2o4gFIJoQ=;
+        b=OjwKE3LMIq+fLdDvjgVZeeO+afc2EOJybg6Cuxex3YY9DmLYUV8lhgzw2SF/ApwTFJ
+         OviqLm6boqE8KKfJluFt4jLoBzHHd8m5/MHb6dMMGaAO3jZyHF7mmuZ2Pm/GD2FxLWvR
+         JFmDtma6jiYRLIGz3G7ip/iGHxGY/C3rQwvfr1qfH7yk70CjIYA3SNO+9BLi5ldLEdCj
+         LdSGVizpO5SzuO7DCnZYM+aZgV3jcb4ThqiLHdwrJfscw3I1tVS/KwU4jvYVrF6YJChz
+         4LAJDupdbXnbwuNBV6k6lT93M3c8SIu/y4j8Z5JDbe448tqprQlbSTkyozU5NripN3Q3
+         gDdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIYoaqDnoSSY2S3pfPjA3lpzmVC9cQe8hGuOktSgHb7W2RKpqFWyNHRuTXxRFuiqen8eGxPIYc+gp8f54=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy4+OH0spUEzzZeT1z4ki1JhxadCz/Yg1TV7TcrfRmAgh595mO
+	yObEslR1Ubkl89Qx8QKHPNTQWAb/uBfkho9rNODMzadJk+oY6q8Jvq/rOvMIeO271Vg/2J+g61h
+	WVVnHF7lhcBvZfnDJ3F8z2tmyAamx/V0kqlKnNMcuThMvnA1I1VWJ+q/ca2+FjokBatg=
+X-Gm-Gg: ASbGnct11sQOujZrvtWAd+pO/VV7XO6TSvgTA4Ibf9PSdIB3C5S+6rno5Tr4hjpLcar
+	oVDEe5kLwLoBUb3mlBobc5HOn6TvX9fWpfD4WRBiandDBmbueOIWjpKoQyLm4LaeKn9e4jCiuIT
+	IZvtip0m4DusrheDeQqI7UhUweFkqbRYO/jHs79bz1+ObjgQHwkSBl7uY3v06bg86dpQaYPf4H8
+	Vyw+75phF+1bvq/eeU9HeFB6F3do0SnRC1AOn5q+oB6UdWSdH8eiq6oLS0+lgsRvJ533L5/IKkH
+	AJvW+A6CGuH8A8EbgEq0XGVZ1EZFU/adZP+MZJyl3ioOfnDIbBQj+B6CDlxjG+zRrQ==
+X-Received: by 2002:a05:620a:49b:b0:7cf:85b:4b2d with SMTP id af79cd13be357-7cf085b4bd1mr14853485a.15.1748365432584;
+        Tue, 27 May 2025 10:03:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDevCtCl7OkxCN6/99TDwIJJTrAXaSCvcoslipOU+QfWt40Ux7PUXxxh0fu5f697QezV7y8w==
+X-Received: by 2002:a05:620a:49b:b0:7cf:85b:4b2d with SMTP id af79cd13be357-7cf085b4bd1mr14852585a.15.1748365432068;
+        Tue, 27 May 2025 10:03:52 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04b059sm1900573466b.10.2025.05.27.10.03.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 10:02:53 -0700 (PDT)
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2c384b2945so1374489a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:02:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUB4iR1rs1Ozyb5B5hOrFTrexTOKLBzLwE1vjyzMcoloa59HKxlqoVGUYynDq8oS3EVtiG5mayGNLJdMpY=@vger.kernel.org
-X-Received: by 2002:a17:90a:d60e:b0:30c:540b:9ba with SMTP id
- 98e67ed59e1d1-3110f0f9b4cmr23039125a91.10.1748365371916; Tue, 27 May 2025
- 10:02:51 -0700 (PDT)
+        Tue, 27 May 2025 10:03:51 -0700 (PDT)
+Message-ID: <e40e3078-cfa7-4927-af6e-f66a5dc4861a@oss.qualcomm.com>
+Date: Tue, 27 May 2025 19:03:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz> <20250524-tb16-dt-v4-2-2c1e6018d3f0@oldschoolsolutions.biz>
-In-Reply-To: <20250524-tb16-dt-v4-2-2c1e6018d3f0@oldschoolsolutions.biz>
-From: Doug Anderson <dianders@chromium.org>
-Date: Tue, 27 May 2025 10:02:40 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V1-xhzWjftAkSiwTR5AE=2nGxFSaiv18_KXFJkKL1USQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuyCqgo7k3OkEiBoeoIIm92d204Z5xqTgDrr1m_iEfNQkkSSlBFML6TL54
-Message-ID: <CAD=FV=V1-xhzWjftAkSiwTR5AE=2nGxFSaiv18_KXFJkKL1USQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] drm/panel-edp: add N160JCE-ELL CMN panel for
- Lenovo Thinkbook 16
-To: jens.glathe@oldschoolsolutions.biz
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Kaehlcke <mka@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>, 
-	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, linux-usb@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
+        linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+ <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+ <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=aYJhnQot c=1 sm=1 tr=0 ts=6835f079 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=KKAkSRfTAAAA:8 a=IU-kIAO4L2lcGG9yRekA:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: BksQRWR0saoD8yqHylBHrDYnTA8mwOKu
+X-Proofpoint-GUID: BksQRWR0saoD8yqHylBHrDYnTA8mwOKu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE0MSBTYWx0ZWRfXypLzlXhUbhMJ
+ D40mPEbl35yFDbXEDvHlujM2x6dRd8PCmlhXbCePTnYZa33dsMPCdm2aTnnlM3T/mekTQu6Myt/
+ IG7PTnOYbdNhIJE06/J+VzYhF1k+AjMHQ8b79kYdqf2FG1npUqOZu/qHJWmuq2MCj4p+A82C0QK
+ p1TE3s3nRLS8xWuSYwd3ykIyRZOr3nnfYLOU4k56erf4gsvxpMTjdBKf8JeSj53u59LSuqT5cz4
+ llcs8nAsj9RLhqBtxVfDWP7uSNbj0QgN3AeLUEbKpRQsP2DdimrHaoSUOhfh0CxLH69kjxiBu6s
+ mnpa5jeQMXUvV890rEucmfPN11L7PyeMTdNSpN6P/3xQqISBUOwsIinNWKULuqoszRBnliFotHf
+ dtv78O7eNUWVODbbrjWvcYafOQLm5Oh3Gt22r02CPrx0ovFLuK1q9NfLyzve/cKo+zE0+q4F
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_08,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=858 lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505270141
 
-Hi,
+On 5/27/25 6:32 PM, Alexey Klimov wrote:
+> On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
+>> On 22/05/2025 19:40, Alexey Klimov wrote:
+>>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
+>>> are required to support audio playback and audio capture on sm6115 and
+>>> its derivatives.
+>>>
+>>> Cc: Konrad Dybcio <konradybcio@kernel.org>
+>>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>
+>> Just keep one CC.
+> 
+> Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
+> email here?
+> 
+>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>>
+>> Missing SoB.
+> 
+> IIRC I took Konrad's changes but at this point I don't remember how much was changed.
+> So I need to switch to Konrad's owned completely or somehow indicate using tags
+> that it is initial Konrad's work.
+> 
+> Konrad, what's your preference here?
 
-On Sat, May 24, 2025 at 4:48=E2=80=AFAM Jens Glathe via B4 Relay
-<devnull+jens.glathe.oldschoolsolutions.biz@kernel.org> wrote:
->
-> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
->
-> Panel is widely used in 16" laptops, and also in my Thinkbook 16 G7 QOY.
->
-> CMN N160JCE-ELL EDID
-> edid-decode (hex):
->
-> 00 ff ff ff ff ff ff 00 0d ae 2b 16 00 00 00 00
-> 20 20 01 04 a5 22 16 78 03 28 65 97 59 54 8e 27
-> 1e 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-> 01 01 01 01 01 01 42 3c 80 a0 70 b0 24 40 30 20
-> a6 00 58 d7 10 00 00 18 35 30 80 a0 70 b0 24 40
-> 30 20 a6 00 58 d7 10 00 00 18 00 00 00 fd 00 28
-> 3c 4b 4b 10 01 0a 20 20 20 20 20 20 00 00 00 fe
-> 00 4e 31 36 30 4a 43 45 2d 45 4c 4c 0a 20 00 95
->
-> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> ---
->  drivers/gpu/drm/panel/panel-edp.c | 1 +
->  1 file changed, 1 insertion(+)
+just loosely mention it in the commit message
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-Pushed to drm-misc-next:
-
-[2/5] drm/panel-edp: add N160JCE-ELL CMN panel for Lenovo Thinkbook 16
-      commit: 126bf397bf58485cdd631824190cdcfeb86f5d9b
+Konrad
