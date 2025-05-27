@@ -1,143 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDB927A477;
-	Tue, 27 May 2025 16:12:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2C92CCC0;
+	Tue, 27 May 2025 16:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362374; cv=none; b=acVriErwERVkvpCMdGt22GtVdzO2Km8p2EW1X/J1SyWUKkKWnOYUK7/hm/Vxenc8tteBkIBuruJ0kyNzpOS/zrE891/qbmyVoQq+ruXTFgDga7opywiEBp9+Kiciom0sRK28p07e9KpthbE5ZtcKCmfJ36lKXGB03jSsT70wo3Q=
+	t=1748362398; cv=none; b=k6gT52nE5fydjUpoUhU5odMvXDxWF8uD3IWhN7HIiLYfUI2ZQp9PJQzGJzatLhtJ/eQLiHnP7Q+Lx0a5hrWLA34AoFjTqu8sFuS5UWT32/4Cegux8kL8Mi8yeRSJJlyXZ1OnAek0goKZcoRQcRbhu5dX8Wiqmy0CaXX+TzheN4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362374; c=relaxed/simple;
-	bh=GxIVaZFoqlqVil+CtwcC9E7UETK3do70uNSXMXX3VqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNT/eMeaLcGlG60c/aGW+XETqNIgwWAnr3tHheojOM8jZUI3WhkPNzBFj/LfTIdSrno7cfOFRCFgLiABJs9cKeoksZ1dSxJVbc9uXbVR9mXbJin+xYV2P7tqaY2KgxHFVtSYHJfAM7sTIZ4jA3/8LATjxDxsHWIUKN+8QpPHMUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbfWOvHs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748362398; c=relaxed/simple;
+	bh=IcBMxirkEMJCcf5JrNYvZntkt5fOQpVsCyuwtJrNgX8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NuqjeaCkD3Zj5Td2mzwwa3A8ET9572hqmNJAhRPr7aBgV3XACC3z3NVnTmOuugmNXbjSOdHkS7vUGSEfa+kG0s0/mLyjQL1wDSyzoAuU52Xk40OKeSvh5ssOv2UgDnpVO+Yur7xZxYX66EOOEBEnjM2hdEnGMS5Adl3u1R9GzX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ga0EdbsB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbfWOvHs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A04FC4CEE9;
-	Tue, 27 May 2025 16:12:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ga0EdbsB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7559BC4CEE9;
+	Tue, 27 May 2025 16:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748362373;
-	bh=GxIVaZFoqlqVil+CtwcC9E7UETK3do70uNSXMXX3VqA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sbfWOvHspa/22c/b2iPREaHWPEsd/SvfFekDE82YWtzInTaUiNIe3/Wp6r7vjCyC9
-	 QvOWuYYo6tVYBMay0pCQEkfktEgQefIxMtiV6qrcPuBzntjwJtl3rP8iupnOmAPn/y
-	 QziHnHrRc12xIlOGheI/zZmzSFkGCjgjGBNByLbLxyeFEdbtkNLfY+zdc3lk+UgunT
-	 FtDU3RHgtmd0Wdwl0CeAm+1oWJykMUQBmJMnpr8yE3PU/pisGguLSAqKvXv8O84xnz
-	 d8+5DNd2PgcwGlUPg8moCOuKPIk/GPgT9fYbILICLqfOoQftrCFNU8NpqH0iRX9rrD
-	 IosYhNC+pjCgA==
-Date: Tue, 27 May 2025 18:12:51 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: jdelvare@suse.com, linux@roeck-us.net, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-Message-ID: <jzxu6mcbxf5zwyirnb2jjpm2i7sln3v5mz3gyhc5xhpqexicvb@atrcjvh7wuh5>
-References: <20240722221737.3407958-1-chris.packham@alliedtelesis.co.nz>
- <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+	s=k20201202; t=1748362397;
+	bh=IcBMxirkEMJCcf5JrNYvZntkt5fOQpVsCyuwtJrNgX8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ga0EdbsBHshXltiBaJBUxOYih6egjCQAJBE1gVeT4DTy5CUIab4yJNxVsEsUx3Lg6
+	 JQvzwQ9sHCnRp59PxMxWyOShd6TL7v7TEbqoQUv8n0gEXECzEhh1d19lNgmHumIp3j
+	 19aAkt5JghF8WTYCMfq3D2l+ZDO9NE+nJ8E1dAhNwtDfhJig3Z4bziOWe4nxcdogZs
+	 iy2+kFT8p3wIfY5zGzZlhyGJ4rwDTzywqco7AJ1CZ1zFzaLMk+puFYAj8MEweF1vvg
+	 UI/5ZyBbzOoByS8/SjERpZHkUMkgZwGOThb4T/OM74OyNdPwBz0TKxIX7fKbBSxu+3
+	 1fN70OKlKzgvA==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v2 0/4] selftests/mm: cow and gup_longterm cleanups
+Date: Tue, 27 May 2025 17:04:44 +0100
+Message-Id: <20250527-selftests-mm-cow-dedupe-v2-0-ff198df8e38e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="llkyqi6gjk3ekkpa"
-Content-Disposition: inline
-In-Reply-To: <20240722221737.3407958-2-chris.packham@alliedtelesis.co.nz>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJziNWgC/3WNyw6CMBBFf4XM2jF9WDWu/A/DAjsDNCIlHUQN4
+ d+tJC5dnpPcc2cQToEFTsUMiacgIfYZzKYA31Z9wxgoMxhlnHJGo3BXjyyj4P2OPj6RmB4Do7X
+ kq6uyO+eOkNdD4jq81vKlzNwGGWN6r0eT/tpf0/xtThoVHrT1zKYm2tP5xqnnbhtTA+WyLB+Ob
+ nU8vwAAAA==
+X-Change-ID: 20250521-selftests-mm-cow-dedupe-33dcab034558
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>, David Hildenbrand <david@redhat.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, linux-mm@kvack.org, 
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2000; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=IcBMxirkEMJCcf5JrNYvZntkt5fOQpVsCyuwtJrNgX8=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoNeSYTfgEVZ8w6cB9jqFXTUNxbBZagS9VFQD8GR9X
+ oPqIfkyJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaDXkmAAKCRAk1otyXVSH0LtlB/
+ 9LRN6dVU9hnQM1fYo2dOl7n449s6V8aeALjhlDifkhqyTiKGarwYLDlqWDNrKqofd5HND/Qu/Tq5hy
+ ubBBa0hRV5LLnM5rK0A4vsYtncrak8mFqIIfU9l7vHMs75IMZIriXzFifeM/V9DgYgnh2f0PwhiAmt
+ U21HzMvvrgKSLFI2pS4+OX94BEhB1inxQf2pXYv3dkUsXPRuObsmIKaiVkh+Rab6obde00rNEZKpn7
+ WCGW+qwckZRwO4WseTjHEh5539IRCRVBvFRop1vveU8gvradgqsTFp0f7Wq3SiLYqEIdS77dg/KMTK
+ wxh3nd99H9UHRMzpC9wlAUbSc4i+Dw
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+The bulk of these changes modify the cow and gup_longterm tests to
+report unique and stable names for each test, bringing them into line
+with the expectations of tooling that works with kselftest.  The string
+reported as a test result is used by tooling to both deduplicate tests
+and track tests between test runs, using the same string for multiple
+tests or changing the string depending on test result causes problems
+for user interfaces and automation such as bisection.
 
---llkyqi6gjk3ekkpa
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 1/3] dt-bindings: hwmon: Add adt7475 fan/pwm properties
-MIME-Version: 1.0
+It was suggested that converting to use kselftest_harness.h would be a
+good way of addressing this, however that really wants the set of tests
+to run to be known at compile time but both test programs dynamically
+enumarate the set of huge page sizes the system supports and test each.
+Refactoring to handle this would be even more invasive than these
+changes which are large but straightforward and repetitive.
 
-Hello,
+A version of the main gup_longterm cleanup was previously sent
+separately, this version factors out the helpers for logging the start
+of the test since the cow test looks very similar.
 
-On Tue, Jul 23, 2024 at 10:17:35AM +1200, Chris Packham wrote:
-> Add fan child nodes that allow describing the connections for the
-> ADT7475 to the fans it controls. This also allows setting some
-> initial values for the pwm duty cycle and frequency.
->=20
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->=20
-> Notes:
->     Changes in v7:
->     - None
->     Changes in v6:
->     - Collect r-by from Rob
->     Changes in v5:
->     - Use nanoseconds for PWM frequency and duty cycle as per existing
->       conventions for PWMs
->     - Set flags to 0 in example to match adi,pwm-active-state setting
->     Changes in v4:
->     - 0 is not a valid frequency value
->     Changes in v3:
->     - Use the pwm provider/consumer bindings
->     Changes in v2:
->     - Document 0 as a valid value (leaves hardware as-is)
->=20
->  .../devicetree/bindings/hwmon/adt7475.yaml    | 35 ++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-> index 051c976ab711..df2b5b889e4d 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -51,6 +51,24 @@ properties:
->        enum: [0, 1]
->        default: 1
-> =20
-> +  "#pwm-cells":
-> +    const: 4
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v2:
+- Typo fixes.
+- Link to v1: https://lore.kernel.org/r/20250522-selftests-mm-cow-dedupe-v1-0-713cee2fdd6d@kernel.org
 
-I asked to add support for #pwm-cells =3D <4> to the pwm core in reply to
-v4 (see
-https://lore.kernel.org/linux-pwm/drqvaon5lb2ei3jqofutbr6demibyfdhbmr24sva2=
-7gzpqdnon@fxa7rpl33iih/).
+---
+Mark Brown (4):
+      selftests/mm: Use standard ksft_finished() in cow and gup_longterm
+      selftests/mm: Add helper for logging test start and results
+      selftests/mm: Report unique test names for each cow test
+      selftests/mm: Fix test result reporting in gup_longterm
 
-I'm unhappy to see this merged anyhow in combination with ad-hoc parsing
-of the pwm properties in the driver :-\
+ tools/testing/selftests/mm/cow.c          | 340 +++++++++++++++++++-----------
+ tools/testing/selftests/mm/gup_longterm.c | 158 ++++++++------
+ tools/testing/selftests/mm/vm_util.h      |  20 ++
+ 3 files changed, 334 insertions(+), 184 deletions(-)
+---
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+change-id: 20250521-selftests-mm-cow-dedupe-33dcab034558
 
-> +    description: |
-> +      Number of cells in a PWM specifier.
-> +      - 0: The PWM channel
-> +      - 1: The PWM period in nanoseconds
-> +           - 90909091 (11 Hz)
-> +           - 71428571 (14 Hz)
-> +           - 45454545 (22 Hz)
-> +           - 34482759 (29 Hz)
-> +           - 28571429 (35 Hz)
-> +           - 22727273 (44 Hz)
-> +           - 17241379 (58 Hz)
-> +           - 11363636 (88 Hz)
-> +           - 44444 (22 kHz)
-> +      - 2: PWM flags 0 or PWM_POLARITY_INVERTED
-> +      - 3: The default PWM duty cycle in nanoseconds
-> +
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-Best regards
-Uwe
-
---llkyqi6gjk3ekkpa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmg15H8ACgkQj4D7WH0S
-/k7FWQgAtEqgUb6AwUFfIVAEycbfhSikddkDLarrnlLWy0J4LF4ItrZ7Oc6f3OGt
-/fpPJhO71bh/r5bePC2Svv1FmrCcvMhTBdGtdIjfvMhKzi7/ApLl/dM6v7UmA7y4
-nwPpuLXoUUcs0jhJE9NS6gti8x2g8P+BOlZrV8uinozmYIZUmvL3vNI6w2SOQWE6
-D46gwlmJ4u/8ykOFgf9/5E2lzEHJLd0/W7fGSDpoEynHsfiLNPOGWc1cycZtf2jt
-tYgmu5gKM21/UWRNbZIGzgZfZjtN+fKYwtuQimt2CP08IUmstAKzxLjPJ1ApQ6TZ
-TJpJrnrv/xQ57RrAh1qRyRcygshP3A==
-=3n4L
------END PGP SIGNATURE-----
-
---llkyqi6gjk3ekkpa--
