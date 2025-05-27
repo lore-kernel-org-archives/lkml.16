@@ -1,98 +1,114 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A0019E7F9
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0534919E7F9
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748357933; cv=none; b=srk7yClHF+GLc6Ly7USk5lhlJjV22sfj7hgeIEsPgegILv3UoIWlfGnAqqvdA6ithDxRnqJJKnAjYJOTLczEStDKuvpxCCNbXH6pSFr178Y4wBbGkNjzny0kpoEvJUo0Xxx+18Ts6bCXtplwKZwUY/u/DW0MNuJ+G1o90H6Uyns=
+	t=1748357952; cv=none; b=g0ESkWUTD8ySVFcIwdutDDfqes/DXyyJhYnrEv+mlKlcF0/d6uMV1iVtQN8goltj6L9ATkli/XUJ6ZmgToMwXcHQpVZPwayJ2Xp47wEldX08BKdP3yvDsc2k5SJ8dtluWK84jln72xEoF5O/fiIl4Rs3Oi979wGdYpaX0Glq/iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748357933; c=relaxed/simple;
-	bh=msfafbvKH8k+6WrHApRJMu1ZHQUoHobjRRMKVSbWuVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GJxdUSmn9sxxtursse5xsHIxHeQky2G3EoWVYQwtoqULvstp1TMibP/whsX/fXDSJoFx8Pmbm4AuaF1uML2nuyDTMmyKMBzlbXGhIX0p8rJrZRg7qQ/O0zCl2BFk9J53/M/FG2nWj1BX0Tmz1kWo/QFq9kb1JWmc9laQygeUvKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=E0sBSGU7; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1748357952; c=relaxed/simple;
+	bh=0hGk1BipENri/pawAxd3E425f5+IuugKQMAlcZfMna0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=arjlOnTyf5aHhr384m7X2jb/JMXoF/AbZhxw6smdohnlDxuSLZZNPelM//yAvkuodJadk1lQSTSXRIpsHNPRNrtpmS97A62X3ASceqy6i6UXmVtLL1TokUawu0OIxOeD2EAGTeet3I9yIIY8aVsfmfT50WtdAgkmdT7Ay0zWxuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQpuwwKD; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="E0sBSGU7"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad1b94382b8so583624166b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:58:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQpuwwKD"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-310cf8f7301so2449170a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:59:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1748357929; x=1748962729; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xn/HpegMj8KBA7WUvuVnYcNPpUCOy6S5/PQDziNope8=;
-        b=E0sBSGU7cZdsRIMiHupdAEb7/+qLB3YoqYVSPfTJG17Ry0oj/fV58mTPzNPKhoxOin
-         Dhqs7BZ+GnJHcTj7/F9C4iVZmaerMZpXyBZkkL6pVG1NEuDCoMxb41fWxpmqlQgegjqo
-         YLRfKaVCNZkwrlNQ62YE1vbU2ZtgmLn58EwU8=
+        d=gmail.com; s=20230601; t=1748357950; x=1748962750; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUm2RN3Ck1X93suC2+x8ztLUIrvarI3GhREaPzl6gTw=;
+        b=lQpuwwKDIrPJC7RS5bb+ArPPtIKD3ovbns0/zLWFCruDZROkd+OEi/y/9OMWbhQhC5
+         lwGkGt7aEc0vTArHAo9y7sh9nTxKdwzv+uNWNW3DngQt8gFFdTz3FsK/DsQKfGEe5mkp
+         nYN0kiY/I9Esyc0G+77V9wltFUTrDdYB0w86AhSUy+vX9xuhsK8eWY2ktgziT2MQ0M81
+         l06jwQOXOMgZFcta+10g+qTJmi1pCOKUXkp0d9rlVWczP8uZnRmLbQe6SoPQfB+8W7Ld
+         EBUgHpuo+eqy0FzzCSQCW99Dyp3AKzCUMlUxFWWPZjxzKFofroweTSIqK8U9ngyqp08a
+         /Lug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748357929; x=1748962729;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xn/HpegMj8KBA7WUvuVnYcNPpUCOy6S5/PQDziNope8=;
-        b=Ec4/ALGf3p0pPZfEDRejgtPDgtdIxqOd3q7B/0ErKTOSCwdrh5mQP1eV3LO8Mc+kl3
-         zcPUQhhQn+x85XOXseic9fPQvsg5JGlvdGJR0oUNR7hUk0gHOxBzDcqGYyhUQ2AYl7W3
-         hPM+kCn94oQ9BpQA//hDwI1PhNH1WDK3nMUHAe1bNrxZmztYj4tYnxn3ALEC6y0wQFj4
-         u7tGSjKlYRTY84UE34csrjnU9IvVK2VgKA+KfiYpuCpSAZR4Y6IvX6W22aY7lvhN94f1
-         g/IlVv7AcxXylO3PFXbqh5iBdKJbRxfffVDUdFp5gXHiJPegULKMQLCSbmJy187r7fQp
-         jizQ==
-X-Gm-Message-State: AOJu0Yzd9AGSfJy5ThRsdCce1W/y412owbT+9VRaGcsqkdUMu7twu6k6
-	s7q3EJZZQmkXIm8VzZo2cRM0E6NVRVqZ8TrMi6p/WR5FUxU5bcc/sMfzI6dC6cOjJZf99HaVPMf
-	WtzTp/mE=
-X-Gm-Gg: ASbGncu25gXTV5zajmCJ319KykJJNAyJJqhIX+AX7B+CmnYhrgdm4blEU++d5Kp1jPW
-	5JjY2VX7dPeeZDFzNqhJGbfEYVWRtcWuGFiXlIGcBraCn6S9NAJtjDiQu044bE1x/MMcgCi2TDb
-	p/N5M1/RgDZKN1niWqvgPOprNwRE4Tw/sOY4jjJEITAarrqr/4L7qVV68EpptZIzeXphlEHZWBl
-	jGWZoWx4djm91MtlshalXrjFgZW8nGIVSo9wN4A62Y0JT/gJIgAUMUW1jl2MyRmrL9KM9eNIsuy
-	9iWYJeiiI7fOF2Hgr2rMH4ztiPuV0plQV1eDOc/aTno7vJdRaENhxS5B80bQM13fOfdplfosfYJ
-	BfMHSbDtyYWQawo/4HynDUv8MZzER+c5X/ia0
-X-Google-Smtp-Source: AGHT+IFp3bX6MoL2rcSenMXmlWKAp46s2IDn6Uz3aktoiO4d2BJxo/YFfYBC9qQJAubGVQBXexrAtQ==
-X-Received: by 2002:a17:907:97c5:b0:ad5:d597:561e with SMTP id a640c23a62f3a-ad85b2f62d2mr1182229366b.56.1748357929122;
-        Tue, 27 May 2025 07:58:49 -0700 (PDT)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4f945bsm1833415566b.184.2025.05.27.07.58.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 07:58:48 -0700 (PDT)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso6054399a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:58:48 -0700 (PDT)
-X-Received: by 2002:a05:6402:350e:b0:601:89d4:969f with SMTP id
- 4fb4d7f45d1cf-602db4b1b2cmr10652767a12.32.1748357927364; Tue, 27 May 2025
- 07:58:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748357950; x=1748962750;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WUm2RN3Ck1X93suC2+x8ztLUIrvarI3GhREaPzl6gTw=;
+        b=TP0hSRq5/dZxd3op1pkrqOLmSxmb1fU2g9Vck4cQpNDHPSJ7c3SjUGNGhkXKcDMJh7
+         FevMEGcdMNb1WLuEs9vG9NKFAhPvsD7N7A/hSIv/MmGBcSImr69I3SQkgKUClV038TYB
+         glYjwEwZUQnhg2EOHRJCDeIzQHJQeOEescZKkXyS9YdfrQ/LPNAbXvNjhAabyCf4EGPU
+         0TT974/0O38TsrbDVS+eCMA3EfVWBjWR3DfVUAI8po4chZuSwp3WsHmJP37mCYbYx+Og
+         PcfrIZRvLHO4NSKtFdYXWm11Yy+Hwlt2SmdVS2wQWzvQXBBF9mxfWiAqUmJ8O9cPn5GC
+         pgVw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6CEef87XachCeh/Yq70pFEU4PLcvyc+ROgkqtgzY7adal9b/7PQmjdaMhYiL6bNJ7fMqRkCo4M7d6zjU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxM0EjO4z/BDiHniy7Kajx913xVv8anq8S7iP6quVE9typYj9fj
+	iFVQX9o6N3+wrHDjDi9EwkUolkVvdS6aFW/emTaSgtGTXB+TrwRa6yyV
+X-Gm-Gg: ASbGncutPZq2FJgnBTOyM97tRrM2CBR5+mOZgFMCndtpur05Our9idq3VtbtBVXNoOj
+	l19y8FbhgJBD7pCzCKYpPKlpxLCYLCGpEoGMkVGYJLeEk868Khi8kICqle+iPIUCSPoP2VCP0Hc
+	WQ+2soN6W3wNR3Qr9YZMwLXFus3EIU5tC5M0K3QcGMdEtaAuwqpsAqBp/E0CfZuZBEFkTORp9fD
+	D4c2dGHpjuOptUYXcakkm6YF4SvoDaqaZIJHIa8Tuo62+J9L+3/Szw3nqwmBR4c8iHt7/wQQD+m
+	pWv7kvRXxM93bIlbCFfyZSdANLb5D7P4z16Z6xeb4zK79KusgKU=
+X-Google-Smtp-Source: AGHT+IF1FcIdjvJG9tlyYMtuzVsyLPmQ1KoVcZYvhzD7nXpZ0b9t4dlHOhaWMXgD4gFX0rivHRZxGg==
+X-Received: by 2002:a17:90b:1806:b0:30e:5c74:53c9 with SMTP id 98e67ed59e1d1-311cce9437dmr1278876a91.11.1748357950004;
+        Tue, 27 May 2025 07:59:10 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b2d8fsm14350978a91.7.2025.05.27.07.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 07:59:09 -0700 (PDT)
+Date: Tue, 27 May 2025 10:59:07 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, tglx@linutronix.de, maddy@linux.ibm.com,
+	vschneid@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+	jstultz@google.com, kprateek.nayak@amd.com, huschle@linux.ibm.com,
+	srikar@linux.ibm.com, linux-kernel@vger.kernel.org,
+	linux@rasmusvillemoes.dk
+Subject: Re: [RFC PATCH 2/5] sched/core: Don't use parked cpu for selection
+Message-ID: <aDXTOwRxhrtf5YPi@yury>
+References: <20250523181448.3777233-1-sshegde@linux.ibm.com>
+ <20250523181448.3777233-3-sshegde@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNAQezLBpYLqJ+=ONqoYKwdaw0_eywN9O26LTnifGq_g+tg@mail.gmail.com>
- <CAHk-=wg2YAc1TrqWB9HhKDWHGzrqeP9=uiW9hzU5p1oApcdAKA@mail.gmail.com> <CAK7LNARY48483tOLUf01-d_VnQh+K=-e+SLEeAqMaZfZC0YjLA@mail.gmail.com>
-In-Reply-To: <CAK7LNARY48483tOLUf01-d_VnQh+K=-e+SLEeAqMaZfZC0YjLA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 27 May 2025 07:58:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiSDWVRT6A1cTkzVFaodhnVPmbtnDtaOe573y=HsDHkzg@mail.gmail.com>
-X-Gm-Features: AX0GCFs_p7G6msogOW1YvWXgUShzebeCrbjAaYZ9oPQ1gVzmAtgd8KBOQ0T1aqs
-Message-ID: <CAHk-=wiSDWVRT6A1cTkzVFaodhnVPmbtnDtaOe573y=HsDHkzg@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild fixes for v6.15-rc7
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250523181448.3777233-3-sshegde@linux.ibm.com>
 
-On Mon, 26 May 2025 at 23:28, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> However, building the kernel in Fedora 42 is 30% slower
-> than in Fedora 41.
->
-> So, maybe, this is because you recently upgraded your OS to Fedora 42.
+On Fri, May 23, 2025 at 11:44:45PM +0530, Shrikanth Hegde wrote:
+> When the current running task is pushed using stop class mechanism, the
+> new CPU that going to be chosen shouldn't be a parked CPU. 
+> 
+> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+> ---
+>  kernel/sched/core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 62b3416f5e43..9ec12f9b3b08 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3526,7 +3526,7 @@ static int select_fallback_rq(int cpu, struct task_struct *p)
+>  		nodemask = cpumask_of_node(nid);
+>  
+>  		/* Look for allowed, online CPU in same node. */
+> -		for_each_cpu(dest_cpu, nodemask) {
+> +		for_each_cpu_andnot(dest_cpu, nodemask, cpu_parked_mask) {
+>  			if (is_cpu_allowed(p, dest_cpu))
+>  				return dest_cpu;
+>  		}
+> @@ -3534,7 +3534,7 @@ static int select_fallback_rq(int cpu, struct task_struct *p)
+>  
+>  	for (;;) {
+>  		/* Any allowed, online CPU? */
+> -		for_each_cpu(dest_cpu, p->cpus_ptr) {
+> +		for_each_cpu_andnot(dest_cpu, p->cpus_ptr, cpu_parked_mask) {
+>  			if (!is_cpu_allowed(p, dest_cpu))
+>  				continue;
 
-Yeah, so that explains all - or at least most - of it.
-
-There's probably a small amount of "the kernel keeps growing, so build
-inevitably slow down anyway", but yeah, it's probably just the slower
-compiler that is what I notice.
-
-Thanks for checking for me,
-
-               Linus
+You test for online and dying CPUs in the is_cpu_allowed(). Why this
+new 'parked' creature is different?
