@@ -1,185 +1,305 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825591990A7;
-	Tue, 27 May 2025 19:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49151C6FEC;
+	Tue, 27 May 2025 19:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748372597; cv=none; b=fBd063U0q+9uKc8BIgHGYxb+S+cA1OmkoxGu62Ka9nSrm+uDmCCjb58XvFK3KXAkyn0Tqo5JRUa8lt1obrHL/SjT9dbkPyf9C8DGKtc5sSKvFfhsybaI03iWTdy2qh20b7By/yGRRkzvSvCrZzpPlRhKneVNBcyHBttDAH+qo4I=
+	t=1748372613; cv=none; b=BUQtnN3FA9L0Z1B0snMIG5l9uPWmn64W7z5TwIEXgh/feHnTz0R4VZMqyc0Aq3hdBLGgPFw9TgdvTXBZ6l90kAD30ywuDMDhKGLzPa2EMsiYcs/8GOxuA7UBuLMHPIIg17ZgNWAZzGue/frIDyDsQnw7QhGeckXttkyI882ySPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748372597; c=relaxed/simple;
-	bh=doMS0trNlP/kwdokYAMx2s7mxwnpc0nNhX83X3QDP4E=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=pjbOshe7qPalx/7c4Zq61dkXf+I9kUAmYSyErDWtTn8LYfMYGUPmMDd5zWYdTZ2/yZkPZY8NAa6n8P1rpImj5H4Ij0cMQQ9VOUbfRl3Y8f8dp6rHiHua7iBjQMa+s6W04/ALPg9PwzTm78qAJlcJ0+kZyeAv7jXTBTdM9NVmLZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T7vJdhhU; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748372613; c=relaxed/simple;
+	bh=WVf+TL56oV2aKB53YKCdOUzvcUS7l1dZoeXjL0+hSEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nk51AX8AAoHTphBkLpKcQPJwghGpXofVjJxCa0Ryka8PlgwxIY0yamV/qYmxp7f+sqMNzXhGDGWEZHWbH3pq1LJv1D9N9RjBcCyZKUe6FT5O8oBUbmqKy9sbyhMKgtyuYnJa9LbA8kYersSSEJqnpU6HdDz9lBHlCLGypG52Ty8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpBHE4Dw; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T7vJdhhU"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RGHNHx004950;
-	Tue, 27 May 2025 19:02:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Us8SyY
-	ruv+FTdPUtNEtd3t+r94/trKQpiChagfVzK9Y=; b=T7vJdhhUvXPR0mc9VYwrPI
-	b0/u45ypLmm30hLwQSa+fEa0GmlyeZtYo2zK2R4kk5Rdjs963LSpkxt7nVhK3bHw
-	4i708vj7HC5zCMapQ/MnFLj+g+as8Kx+Ctqn7W6G28LWhGq7eK0opFOGGbRbMxOs
-	dDowdTY7mO7RE7Ul5qLi12c2uCUyGCzqpd3ui1VRn11WSyYz+kXNrwgdjw7LnEUq
-	+HsCGr1CjRULRGJID8hAx29dXFlsdjmWtJ8h54UlHMl4HBxxcaN4G30+CN+l4isa
-	7+cGAF3KoxIg4ilH7iveKKSzl5YElE53l3GuskCSEO23dWXuJhbcb/Nag318p0HA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsj0tbf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 19:02:45 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54RJ2iXG025065;
-	Tue, 27 May 2025 19:02:44 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsj0tbb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 19:02:44 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHOl9r028925;
-	Tue, 27 May 2025 19:02:43 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepv0n8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 19:02:43 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54RJ2g2D31261292
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 19:02:42 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B11E058057;
-	Tue, 27 May 2025 19:02:42 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 05D5C5805D;
-	Tue, 27 May 2025 19:02:42 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 May 2025 19:02:41 +0000 (GMT)
-Message-ID: <f04a8c07d7da1df2cd5b74f04d253611bab9f1ad.camel@linux.ibm.com>
-Subject: Re: [PATCH] ima: prevent concurrent list operations in
- ima_lsm_update_rules
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Zhao Yipeng <zhaoyipeng5@huawei.com>, roberto.sassu@huawei.com,
-        dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        janne.karhunen@gmail.com
-Cc: morgan@kernel.org, lujialin4@huawei.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250527125103.751077-1-zhaoyipeng5@huawei.com>
-References: <20250527125103.751077-1-zhaoyipeng5@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 27 May 2025 15:02:41 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpBHE4Dw"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad55d6aeb07so713687366b.0;
+        Tue, 27 May 2025 12:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748372610; x=1748977410; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uqL3BuTa32r+mcWNmQcAh/RC8cO57+wwwYvYXDnjjBg=;
+        b=WpBHE4Dw2IlTS04zWQfRMC9u2oECEEYCDF+v4ci7lqWBYYojPb30iAsBuh4Q0DeTcy
+         qJvf085h8JOqeqURoHKoOmh/BcRQsf9kpsdXBL2AwrHnxS9h2w/SPz4LWGvQwHyxeKJO
+         /9BYIEgbBxYQ1NPEi9LpNXKGlOulIFZnQ1W7VAwnUrBJ1Wjy/QqEPmvYLKo7h3XfaRgl
+         FTLUSk9cjoVcBAHVaNQFan+3lutgFrJhnkhhofQX/cX+5aPiqGP+D6rP8iV7an3KPbwz
+         s/jDwEqjuKdQJSOJbP0L0tqVhOp5tfVINxZ19R/ihkC7cXtpLikE4ipJmmk3Wzt82ZGi
+         XzGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748372610; x=1748977410;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uqL3BuTa32r+mcWNmQcAh/RC8cO57+wwwYvYXDnjjBg=;
+        b=IuhoIiRaytMdFtnGGtt7L2ajXdW7Gv6VdGJPW9rHNtKftXwroKphtBPEW5/unk+4ux
+         N93e7P2ysC5oLSyNRWyPvv58stxigLY6vzH7EcwrtD2NWtrjigt0IyXrSVgreksaTDds
+         1Mue2g8fiapWwWa+pbAxPHt+5zva8Hi7t+4lm9H6lFYhsLBvxEFOKgHeKlflPGIWXN3C
+         IgAj6aabJyURbmOJukCBnsFA2JuDZolMz5oO1EsBD2uYkhqoRGxTFiPBbJRV/Pr4rulc
+         KnKhScamYHsEq6IEcp7D4hVAdJAho33N/8KvFHtoGMGJKSfqdXYpjSP6gZG++Jc42cer
+         /CrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlLbUJRbamNZZ3SjGvGvroKb1LQ+YK1c4BHS3hkN25CmSr/Nuj0898RGZDfmG7wwu1AXUMT122uhT/wljlo3c=@vger.kernel.org, AJvYcCVwhcIDd2vaEdmqshQzgBLV1aI5pFZvq/hlBL9JdMbGokgkFEkIUVe4r8LhUFNgGSnHqECa4C6ESNIbSbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWjT1sDXIatvciK50mFMe7bz8katK2ImdK7aFPSlj659OqL0TC
+	uPfi9e2Tsc58+wdb4FlnWaJcwAOjN5VRDx17dDj2aX5IADgSE8vrx+ZC
+X-Gm-Gg: ASbGncuUIPnFqKhVU4G3+pd61l42ZHitOVGG+r5NEm1VXEsXaTh/CE1Xd52YaFKQ9EK
+	bmGgbOO6GxeuQvKr++EA7Ovbha4RVhQs+H7rnwoZjYwb2ZUY5vZVKOKN9JdO9J/3zdxAA+fYyNB
+	U/GfLbJ54qPWEPojlv1yp9UlLvlGLuNqgNdZKovkbOG4/kEIWuyuooypvVLIUUpqwRJDMwuCT9E
+	jAX1n6I6RhSZdl6F+h1g+SshHUOpqPiwHttDW8DbQMuCqMa4+LK/oWTYu6/BUqW9H3gBr4MyxmS
+	RZjmK8RYpF22slyYsNIdJQHxp7mG715XLqJVFd7FExvCFnUR2d+3To+QXXQqTpt6Rd9+OjNSYQ=
+	=
+X-Google-Smtp-Source: AGHT+IGWBAotwee+v0vPv3p8CdpbZ3G11p73pDNP8MzFW8ybviCcTxo/0K+5vN2QtP7czqOjqiaUEA==
+X-Received: by 2002:a17:907:7e93:b0:ad4:d135:cf68 with SMTP id a640c23a62f3a-ad85b1d7ce3mr1276961466b.59.1748372609651;
+        Tue, 27 May 2025 12:03:29 -0700 (PDT)
+Received: from [10.20.99.184] ([193.170.124.198])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d490a30sm1862680966b.127.2025.05.27.12.03.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 12:03:29 -0700 (PDT)
+Message-ID: <83969228-bc7c-4eda-8531-53681e7f6600@gmail.com>
+Date: Tue, 27 May 2025 21:03:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=IcmHWXqa c=1 sm=1 tr=0 ts=68360c55 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=i0EeH86SAAAA:8 a=RwKbe1zy0JAV_bTXriMA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE1OSBTYWx0ZWRfX/6shcxoJEONO gYcVKbllMdMawPpJ3afG3OzQfw2liWwHHYVMY6GnEppEzyiiuIqEVIBvxN+9lO8x0z46RlR+W2U TUmIEGeF1lc6fdySL28lqfd9CSFvL/8iRLcals9RkBft7IxcahZvD8RntLNL/GQAG8WQgLFjKTh
- RyzlbyFdBnW4XZxdmFEGsAB4X8tUH5T8du+a5XpBaCWWshpOxZchjXMz94UUK0Ji0uTzIZ1XtZz IaNh//hbenDd/vDBoBkJAdzvxb/5lFxc4KROkNEn/aWeNw0kN/Qj18G0U+UDKWRQtFtYkaAv8qE vVMiTyNeSv3E/dszGT3yST+pQzrRoxBvp0dLWiU8lydNiVUcYOXOofaXG29hvPAJfcEz9nCL776
- 3DAnhngmQuF/NWjfMBIyFAjfuTIbyLnzHT5gbBPXK+n5xaHOcKBUu4cPhXBs4zoOQc6lerrN
-X-Proofpoint-ORIG-GUID: xI2bhaKHgDBJDtf61pJ-5YsBPSzD1fSV
-X-Proofpoint-GUID: k8z10pVxgJ3YBUWhTOvC1EEXI1_ELafR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_09,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 mlxscore=0 phishscore=0 clxscore=1011
- lowpriorityscore=0 suspectscore=0 mlxlogscore=996 adultscore=0
- impostorscore=0 bulkscore=0 spamscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505270159
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
+To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2025-05-27 at 20:51 +0800, Zhao Yipeng wrote:
-> The current implementation of IMA policy list replacement via
-> list_replace_rcu may trigger general protection faults under concurrent
-> load policy operations. This occurs when a process replaces a node in
-> ima_policy_rules list and sets old->prev =3D LIST_POISON2, while another
-> parallel process still holds references to the old node. Subsequent list
-> operations on the poisoned pointer result in kernel panic due to invalid
-> memory access.
->=20
-> To resolve this, introduce a mutex lock (ima_rules_mutex) in
-> ima_lsm_update_rules() to protect. ima_update_policy() also use the
-> ima_policy_rules. Introduce a mutex lock in it.
+Hi Alice,
 
-A new IMA policy may replace the existing builtin policy rules with a custo=
-m
-policy. In all other cases, the IMA policy rules may only be extended.  Wri=
-ting
-or extending the IMA policy rules requires taking the ima_write_mutex.
-
-There's no need for a new mutex.
-
-Mimi
-
->=20
-> Fixes: b16942455193 ("ima: use the lsm policy update notifier")
-> Signed-off-by: Zhao Yipeng <zhaoyipeng5@huawei.com>
+On 27.05.25 3:53 PM, Alice Ryhl wrote:
+> In C code we use sparse with the __user annotation to detect cases where
+> a user pointer is mixed up with other things. To replicate that, we
+> introduce a new struct UserPtr that serves the same purpose using the
+> newtype pattern.
+> 
+> The UserPtr type is not marked with #[derive(Debug)], which means that
+> it's not possible to print values of this type. This avoids ASLR
+> leakage.
+> 
+> The type is added to the prelude as it is a fairly fundamental type
+> similar to c_int. The wrapping_add() method is renamed to
+> wrapping_byte_add() for consistency with the method name found on raw
+> pointers.
+> 
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 > ---
-> =C2=A0security/integrity/ima/ima_policy.c | 10 +++++++++-
-> =C2=A01 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/security/integrity/ima/ima_policy.c
-> b/security/integrity/ima/ima_policy.c
-> index 128fab897930..d27e615e97d5 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -471,6 +471,8 @@ static bool ima_rule_contains_lsm_cond(struct
-> ima_rule_entry *entry)
-> =C2=A0	return false;
-> =C2=A0}
-> =C2=A0
-> +static DEFINE_MUTEX(ima_rules_mutex);
+> This is based on top of the strncpy_from_user for Rust patch.
+> ---
+> Changes in v2:
+> - Change usize to raw pointer.
+> - Make field private.
+> - Rename wrapping_add to wrapping_byte_add.
+> - Add to prelude.
+> - Rebase on v4 of strncpy_from_user
+> - Link to v1: https://lore.kernel.org/r/20250506-userptr-newtype-v1-1-a0f6f8ce9fc5@google.com
+> ---
+>  rust/kernel/prelude.rs           |  2 ++
+>  rust/kernel/uaccess.rs           | 68 +++++++++++++++++++++++++++++++++-------
+>  samples/rust/rust_misc_device.rs |  2 ++
+>  3 files changed, 60 insertions(+), 12 deletions(-)
+> 
+> diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
+> index baa774a351ceeb995a2a647f78a27b408d9f3834..081af5bc07b0bcefb1da16e5a81fc611b3178aea 100644
+> --- a/rust/kernel/prelude.rs
+> +++ b/rust/kernel/prelude.rs
+> @@ -41,3 +41,5 @@
+>  pub use super::init::InPlaceInit;
+>  
+>  pub use super::current;
 > +
-> =C2=A0/*
-> =C2=A0 * The LSM policy can be reloaded, leaving the IMA LSM based rules =
-referring
-> =C2=A0 * to the old, stale LSM policy.=C2=A0 Update the IMA LSM based rul=
-es to reflect
-> @@ -481,16 +483,19 @@ static void ima_lsm_update_rules(void)
-> =C2=A0	struct ima_rule_entry *entry, *e;
-> =C2=A0	int result;
-> =C2=A0
-> +	mutex_lock(&ima_rules_mutex);
-> =C2=A0	list_for_each_entry_safe(entry, e, &ima_policy_rules, list) {
-> =C2=A0		if (!ima_rule_contains_lsm_cond(entry))
-> =C2=A0			continue;
-> =C2=A0
-> =C2=A0		result =3D ima_lsm_update_rule(entry);
-> =C2=A0		if (result) {
-> +			mutex_unlock(&ima_rules_mutex);
-> =C2=A0			pr_err("lsm rule update error %d\n", result);
-> =C2=A0			return;
-> =C2=A0		}
-> =C2=A0	}
-> +	mutex_unlock(&ima_rules_mutex);
-> =C2=A0}
-> =C2=A0
-> =C2=A0int ima_lsm_policy_change(struct notifier_block *nb, unsigned long =
-event,
-> @@ -1038,9 +1043,12 @@ int ima_check_policy(void)
-> =C2=A0 */
-> =C2=A0void ima_update_policy(void)
-> =C2=A0{
-> -	struct list_head *policy =3D &ima_policy_rules;
-> +	struct list_head *policy;
-> =C2=A0
-> +	mutex_lock(&ima_rules_mutex);
-> +	policy =3D &ima_policy_rules;
-> =C2=A0	list_splice_tail_init_rcu(&ima_temp_rules, policy, synchronize_rcu=
-);
-> +	mutex_unlock(&ima_rules_mutex);
-> =C2=A0
-> =C2=A0	if (ima_rules !=3D (struct list_head __rcu *)policy) {
-> =C2=A0		ima_policy_flag =3D 0;
+> +pub use super::uaccess::UserPtr;
+> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> index e6534b52a1920254d61f8349426d4cdb38286089..02e0561eb1c6f4d813a4ab13a124bfac2d2a5c75 100644
+> --- a/rust/kernel/uaccess.rs
+> +++ b/rust/kernel/uaccess.rs
+> @@ -14,8 +14,48 @@
+>  };
+>  use core::mem::{size_of, MaybeUninit};
+>  
+> -/// The type used for userspace addresses.
+> -pub type UserPtr = usize;
+> +/// A pointer into userspace.
+> +///
+> +/// This is the Rust equivalent to C pointers tagged with `__user`.
+> +#[repr(transparent)]
+> +#[derive(Copy, Clone)]
+> +pub struct UserPtr(*mut c_void);
+> +
+> +impl UserPtr {
+> +    /// Create a `UserPtr` from an integer representing the userspace address.
+> +    pub fn from_addr(addr: usize) -> Self {
+> +        Self(addr as *mut c_void)
+> +    }
+> +
+> +    /// Create a `UserPtr` from a pointer representing the userspace address.
+> +    pub fn from_ptr(addr: *mut c_void) -> Self {
+> +        Self(addr)
+> +    }
+> +
+> +    /// Cast this userspace pointer to a raw const void pointer.
+> +    ///
+> +    /// It is up to the caller to use the returned pointer correctly.
+> +    #[inline]
+> +    pub fn as_const_ptr(self) -> *const c_void {
+> +        self.0
+> +    }
+> +
+> +    /// Cast this userspace pointer to a raw mutable void pointer.
+> +    ///
+> +    /// It is up to the caller to use the returned pointer correctly.
+> +    #[inline]
+> +    pub fn as_mut_ptr(self) -> *mut c_void {
+> +        self.0
+> +    }
+> +
+> +    /// Increment this user pointer by `add` bytes.
+> +    ///
+> +    /// This addition is wrapping, so wrapping around the address space does not result in a panic
+> +    /// even if `CONFIG_RUST_OVERFLOW_CHECKS` is enabled.
+> +    pub fn wrapping_byte_add(self, add: usize) -> UserPtr {
+> +        UserPtr(self.0.wrapping_add(add))
+
+Why use `ptr::wrapping_add` instead of `ptr::wrapping_byte_add`?
+
+Should not really matter in this case, because `c_void` is 
+`repr(u8)`, but I find it a bit weird to use `wrapping_add` here.
+
+With that fixed:
+
+Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+
+> +    }
+> +}
+>  
+>  /// A pointer to an area in userspace memory, which can be either read-only or read-write.
+>  ///
+> @@ -179,7 +219,7 @@ impl UserSliceReader {
+>      pub fn skip(&mut self, num_skip: usize) -> Result {
+>          // Update `self.length` first since that's the fallible part of this operation.
+>          self.length = self.length.checked_sub(num_skip).ok_or(EFAULT)?;
+> -        self.ptr = self.ptr.wrapping_add(num_skip);
+> +        self.ptr = self.ptr.wrapping_byte_add(num_skip);
+>          Ok(())
+>      }
+>  
+> @@ -226,11 +266,11 @@ pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
+>          }
+>          // SAFETY: `out_ptr` points into a mutable slice of length `len`, so we may write
+>          // that many bytes to it.
+> -        let res = unsafe { bindings::copy_from_user(out_ptr, self.ptr as *const c_void, len) };
+> +        let res = unsafe { bindings::copy_from_user(out_ptr, self.ptr.as_const_ptr(), len) };
+>          if res != 0 {
+>              return Err(EFAULT);
+>          }
+> -        self.ptr = self.ptr.wrapping_add(len);
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+>          self.length -= len;
+>          Ok(())
+>      }
+> @@ -264,14 +304,14 @@ pub fn read<T: FromBytes>(&mut self) -> Result<T> {
+>          let res = unsafe {
+>              bindings::_copy_from_user(
+>                  out.as_mut_ptr().cast::<c_void>(),
+> -                self.ptr as *const c_void,
+> +                self.ptr.as_const_ptr(),
+>                  len,
+>              )
+>          };
+>          if res != 0 {
+>              return Err(EFAULT);
+>          }
+> -        self.ptr = self.ptr.wrapping_add(len);
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+>          self.length -= len;
+>          // SAFETY: The read above has initialized all bytes in `out`, and since `T` implements
+>          // `FromBytes`, any bit-pattern is a valid value for this type.
+> @@ -384,11 +424,11 @@ pub fn write_slice(&mut self, data: &[u8]) -> Result {
+>          }
+>          // SAFETY: `data_ptr` points into an immutable slice of length `len`, so we may read
+>          // that many bytes from it.
+> -        let res = unsafe { bindings::copy_to_user(self.ptr as *mut c_void, data_ptr, len) };
+> +        let res = unsafe { bindings::copy_to_user(self.ptr.as_mut_ptr(), data_ptr, len) };
+>          if res != 0 {
+>              return Err(EFAULT);
+>          }
+> -        self.ptr = self.ptr.wrapping_add(len);
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+>          self.length -= len;
+>          Ok(())
+>      }
+> @@ -411,7 +451,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+>          // is a compile-time constant.
+>          let res = unsafe {
+>              bindings::_copy_to_user(
+> -                self.ptr as *mut c_void,
+> +                self.ptr.as_mut_ptr(),
+>                  (value as *const T).cast::<c_void>(),
+>                  len,
+>              )
+> @@ -419,7 +459,7 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
+>          if res != 0 {
+>              return Err(EFAULT);
+>          }
+> -        self.ptr = self.ptr.wrapping_add(len);
+> +        self.ptr = self.ptr.wrapping_byte_add(len);
+>          self.length -= len;
+>          Ok(())
+>      }
+> @@ -444,7 +484,11 @@ fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> Result<us
+>  
+>      // SAFETY: `dst` is valid for writing `dst.len()` bytes.
+>      let res = unsafe {
+> -        bindings::strncpy_from_user(dst.as_mut_ptr().cast::<c_char>(), src as *const c_char, len)
+> +        bindings::strncpy_from_user(
+> +            dst.as_mut_ptr().cast::<c_char>(),
+> +            src.as_const_ptr().cast::<c_char>(),
+> +            len,
+> +        )
+>      };
+>  
+>      if res < 0 {
+> diff --git a/samples/rust/rust_misc_device.rs b/samples/rust/rust_misc_device.rs
+> index c881fd6dbd08cf4308fe1bd37d11d28374c1f034..e7ab77448f754906615b6f89d72b51fa268f6c41 100644
+> --- a/samples/rust/rust_misc_device.rs
+> +++ b/samples/rust/rust_misc_device.rs
+> @@ -176,6 +176,8 @@ fn open(_file: &File, misc: &MiscDeviceRegistration<Self>) -> Result<Pin<KBox<Se
+>      fn ioctl(me: Pin<&RustMiscDevice>, _file: &File, cmd: u32, arg: usize) -> Result<isize> {
+>          dev_info!(me.dev, "IOCTLing Rust Misc Device Sample\n");
+>  
+> +        // Treat the ioctl argument as a user pointer.
+> +        let arg = UserPtr::from_addr(arg);
+>          let size = _IOC_SIZE(cmd);
+>  
+>          match cmd {
+> 
+> ---
+> base-commit: f34da179a4517854b2ffbe4bce8c3405bd9be04e
+> change-id: 20250506-userptr-newtype-2f060985c33b
+> prerequisite-change-id: 20250424-strncpy-from-user-1f2d06b0cdde:v4
+> prerequisite-patch-id: d35c479ddb84bacc541dbb226c7911e5a22cad7e
+> prerequisite-patch-id: e0c345945dabfa18e9ca11f7fe11f8178d071285
+> 
+> Best regards,
 
