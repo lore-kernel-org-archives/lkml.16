@@ -1,63 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C8514AD2B
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEABD1DB34C;
+	Tue, 27 May 2025 17:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748366752; cv=none; b=VdgXZr6n3+3UbjX7w+GhSEwBp+Au+HrfPcCRCQ46X/rUgSUaWuOHmIQYn/x1EwfJL+mI7rjglJRoOoWnlkb3+eJFyEWGAOCkl9T4AgxB8Dg+DRIiXQ8CvdFXvXTgJ6goMfnxFbWLLxkZma9wLm9w6LHrtK4RM1Y9+BbVI/tbhm8=
+	t=1748366882; cv=none; b=uMn4aJzjEZ/Tilzj5UzD15XZhwjQUQkbzlLEYJn5BFbuLD8WOUA+68RBvYQ7+h+PDM6T9DkD7Gqx2P3n0eIFW34FD6FnHSSE8ZX1jODYtu7LEmG6gFQRIgp/tnIbrd+Rx+nq3lzJQHhk3b5xiLJolDI07Hp6S4O2Y8TmczoKtqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748366752; c=relaxed/simple;
-	bh=16fM0Ys1h+PWNic56xUBdwdjMy4Zvo3ud6vx8vfNdQg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ZVuDTd4emoyjwtAiBOP/GN11XilepLLCqXxn9zBX0ns2spLWPYJnYFhLcj214+eXE6JEuHgWYZbbdJHBysQXfxS3zfRi+WGmtnIhF0HY2nbF6QRcPIiVvspeh9riRgANftfi64g8trSpG0sHb7M/Xwmv31guHCcl9jjswl+xwfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhvcKgND; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748366882; c=relaxed/simple;
+	bh=3zHAxKJroQ6YXx+3rD3meznskmaWkRGoN69AX2ERnYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K/GtLBFbfJSr7H+x/YRA6PXC42luQiySksXibbXZTTErnDYiFIyVNI6bD7FenLaYdZMBZU5ybdALhu3QupUg275NROAY5qxJUIO4zwEwZHoztrtKzIVhpHkHb1K5WtT4vnSZnlGPUd7A7Pm42XxNp3TF6tc9PvDEn5g0qIcxfxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SJwW5+P5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhvcKgND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9EE8C4CEED;
-	Tue, 27 May 2025 17:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748366752;
-	bh=16fM0Ys1h+PWNic56xUBdwdjMy4Zvo3ud6vx8vfNdQg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=JhvcKgNDuOlev7x+EJf96i9orY8w/lriGJrU0h4u4eMC12vyoubrScyK8+Wp9DNY1
-	 8FoXsMEev2PaFnqs3QKJTYt1VSV15wmMA8/HpECh0aEEsobP0hsQyNliyUCdpnTh3S
-	 /m0Wov8BJ1o/OR3bEjjrDDaf64O7yyFsZ8+duKibcMUjjWy/R2e2lYq0DDE+8zj0Ng
-	 jOCpso1XchGUWk+xJHmCykC7xN1ai01aM75BsT13bSJGHnx4yF1wyqegAUCGtq/CEi
-	 /H7WpgucRV/ICQP/TdGdwfgss5dMJra9RDXofGSoFuq8OpQCDdrCAGS4rxGksqdFe9
-	 P+5IZ10XgT4Cg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70ADD380AAE2;
-	Tue, 27 May 2025 17:26:27 +0000 (UTC)
-Subject: Re: [GIT PULL] x86/sev for v6.16-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250526194634.GAaDTFGr3LAfeGdCxe@fat_crate.local>
-References: <20250526194634.GAaDTFGr3LAfeGdCxe@fat_crate.local>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20250526194634.GAaDTFGr3LAfeGdCxe@fat_crate.local>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_sev_for_v6.16_rc1
-X-PR-Tracked-Commit-Id: e396dd85172c6098e3b70b17e91424edc7bb2d8f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dd3922cf9d4d1421e5883614d1a6add912131c00
-Message-Id: <174836678601.1718433.15080191044484454943.pr-tracker-bot@kernel.org>
-Date: Tue, 27 May 2025 17:26:26 +0000
-To: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, x86-ml <x86@kernel.org>, lkml <linux-kernel@vger.kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SJwW5+P5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32239C4CEEA;
+	Tue, 27 May 2025 17:28:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1748366882;
+	bh=3zHAxKJroQ6YXx+3rD3meznskmaWkRGoN69AX2ERnYU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SJwW5+P5rl2q6GmJYl+KxeNMN2bvEvEKkv1EnfASJeSr9AJqeEPpdRvrHxeeZ9Vm2
+	 63qxmOCBQycBbn7nVWiJm8eayYjNnpxL7srythobH5g0aF9b5ePPXPcRhej7gV/ONa
+	 AAMcuc8YSayAZgeymzH2d05ebffEv7bAnGT+oqa4=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Will Deacon <will@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.14 207/783] arm64/mm: Check pmd_table() in pmd_trans_huge()
+Date: Tue, 27 May 2025 18:20:04 +0200
+Message-ID: <20250527162521.567351596@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250527162513.035720581@linuxfoundation.org>
+References: <20250527162513.035720581@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Mon, 26 May 2025 21:46:34 +0200:
+6.14-stable review patch.  If anyone has any objections, please let me know.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip tags/x86_sev_for_v6.16_rc1
+------------------
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dd3922cf9d4d1421e5883614d1a6add912131c00
+From: Ryan Roberts <ryan.roberts@arm.com>
 
-Thank you!
+[ Upstream commit d1770e909898c108e8c7d30ca039053e8818a9c9 ]
 
+Check for pmd_table() in pmd_trans_huge() rather then just checking for the
+PMD_TABLE_BIT. But ensure all present-invalid entries are handled correctly
+by always setting PTE_VALID before checking with pmd_table().
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Link: https://lore.kernel.org/r/20250221044227.1145393-8-anshuman.khandual@arm.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/include/asm/pgtable.h | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 0b2a2ad1b9e83..abf990ce175b1 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -548,18 +548,6 @@ static inline int pmd_protnone(pmd_t pmd)
+ #endif
+ 
+ #define pmd_present(pmd)	pte_present(pmd_pte(pmd))
+-
+-/*
+- * THP definitions.
+- */
+-
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-static inline int pmd_trans_huge(pmd_t pmd)
+-{
+-	return pmd_val(pmd) && pmd_present(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
+-}
+-#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+-
+ #define pmd_dirty(pmd)		pte_dirty(pmd_pte(pmd))
+ #define pmd_young(pmd)		pte_young(pmd_pte(pmd))
+ #define pmd_valid(pmd)		pte_valid(pmd_pte(pmd))
+@@ -724,6 +712,18 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ #define pmd_leaf_size(pmd)	(pmd_cont(pmd) ? CONT_PMD_SIZE : PMD_SIZE)
+ #define pte_leaf_size(pte)	(pte_cont(pte) ? CONT_PTE_SIZE : PAGE_SIZE)
+ 
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static inline int pmd_trans_huge(pmd_t pmd)
++{
++	/*
++	 * If pmd is present-invalid, pmd_table() won't detect it
++	 * as a table, so force the valid bit for the comparison.
++	 */
++	return pmd_val(pmd) && pmd_present(pmd) &&
++	       !pmd_table(__pmd(pmd_val(pmd) | PTE_VALID));
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++
+ #if defined(CONFIG_ARM64_64K_PAGES) || CONFIG_PGTABLE_LEVELS < 3
+ static inline bool pud_sect(pud_t pud) { return false; }
+ static inline bool pud_table(pud_t pud) { return true; }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.39.5
+
+
+
