@@ -1,278 +1,247 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56969136E;
-	Tue, 27 May 2025 01:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C1E2F852;
+	Tue, 27 May 2025 01:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748307766; cv=none; b=KGdbh7Zgwv1cwndd7h3V0kbJ82KYlUts5K++0pk5zxYYf7ANizKj5Ut6JEXDZCTfRhDt6iGOICU6LwNYjFfeaKLlIVptP/4AUESqv5xTQpT34hUNqJddCnWq/BCmu0aoBihWN2zDeTf4moLY7lOwNx3D6QxyOH59jSUoZYcZb7I=
+	t=1748308336; cv=none; b=k4rHWjpKh09SkNzjIR8JDwRCnFGe32S199F3kibay0WSBhUj6gtNNo/O9HQKdHs+mh30RhHRBvK7m22FCp12xLa+BDB8ZvMFHDB3wteCzpEYDwJlLr7vP7oh6GACbHZ9bJbzJivsGNPuhAd8S06QGGD2o1e6CLXIf5J0/QVRkkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748307766; c=relaxed/simple;
-	bh=rEmIUfYVSDi/CfZYPU5fVUEXDY2MADcse0UeERj6OCg=;
+	s=arc-20240116; t=1748308336; c=relaxed/simple;
+	bh=NaabEAXMenskDJ3R96u3GW/+2mPpv4nvngHgm8i51Lc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PqTn/ZuVMuOS1mEX7YKSjHsJhlkS7Sh1t86kjff2tBCe3yoxdee25s4Hu1rACe/ZqPCM+xv+ZYt/VqWCOpH9i8vceu2Rlun3wHGHy+wQYQAY6wQGRXHyW+3UlnNKBCuGehEJMpwBUDd72Julzc08oggFp45TWumsi5I/QAzffLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-bf-68350f2723b5
-Date: Tue, 27 May 2025 10:02:26 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Mina Almasry <almasrymina@google.com>, willy@infradead.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
-	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com
-Subject: Re: [PATCH 18/18] mm, netmem: remove the page pool members in struct
- page
-Message-ID: <20250527010226.GA19906@system.software.com>
-References: <20250523032609.16334-1-byungchul@sk.com>
- <20250523032609.16334-19-byungchul@sk.com>
- <CAHS8izM-ee5C8W2D2x9ChQz667PQEaYFOtgKZcFCMT4HRHL0fQ@mail.gmail.com>
- <20250526013744.GD74632@system.software.com>
- <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VdWLb6ozmhg9PuD69DZg9Njdp/oDvicA6e07ol2BlvrGenVKkkykcRKuSypILc1FO75dj07UXpoI19pyasdPNvT3yQKGJ6hSZXVjFNHFhEscNqwTdw18FtX7N0rv21caOeLCpusNLou4PVnxW6+yKl+51+XUYCfFJsWVGF3Iz2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NqX+eQ4S; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NqX+eQ4S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748308335; x=1779844335;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NaabEAXMenskDJ3R96u3GW/+2mPpv4nvngHgm8i51Lc=;
+  b=NqX+eQ4Sn2Qk07pOzA1lxC+OlxBxdWFxDM7Krz0xyWi5SIA+648IRq5u
+   0b3ZX4x5RuI/AgxcU0IMh20HBulr0Fh6vHSeXAMj63jUoKkHxeaOkec/e
+   dJtxxeD23O9zH69TtK3Q1a0X7TUbHQks5G7znvwSgiPkzDmKErFOl7rOa
+   ATwSn4i9B/l3BzxFuSsK2+YhaM9WI8qhTCqfD9QEHXiz1ILZwY/isBGtN
+   h5D3iouKalJ0j98XHOKNgChHiM4OAGQyE71e8WRb1KIncTTbCpimgf3Ez
+   uFsdVSwMG6sP+jSD/xY0Gr8YPI34moPEEGlT7koBlHIkUQqcSPLuxN23s
+   A==;
+X-CSE-ConnectionGUID: f76kAKRRTfGmTCmieAmVXw==
+X-CSE-MsgGUID: ZOO3WVprTXm2baSuUoN6CQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="50441038"
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="50441038"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2025 18:12:08 -0700
+X-CSE-ConnectionGUID: +Fgy8SvXTX6Hb8gi2pMf3A==
+X-CSE-MsgGUID: F+DAm4N9SnyoR6cqrBXwUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="143026312"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 26 May 2025 18:12:04 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uJirK-000Sme-1i;
+	Tue, 27 May 2025 01:12:02 +0000
+Date: Tue, 27 May 2025 09:11:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Quentin Schulz <foss+kernel@0leil.net>, Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
+	Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH 2/4] mfd: rk8xx-core: allow to customize RK806 reset
+ method
+Message-ID: <202505270807.tc7zzrMf-lkp@intel.com>
+References: <20250526-rk8xx-rst-fun-v1-2-ea894d9474e0@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cae26eaa-66cf-4d1f-ae13-047fb421824a@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SXUiTYRiGe79/p6vPpfZaoLWKSslKTJ4oZWd9CEGQdFBBjfxqozltmmkk
-	rGZJptN+iJyrVlH5R4O55iZitUYqGumymqVZlnqQJqlJ+VNtSuTZxXM/7309By9Hyu7Qyzm1
-	NlvUaZUaOSOhJCMhtzeuX7JVtfnaUDCYrbUM1PzMhQcfnTSYqx0IJn69Z2Hc08zA3duTJJhf
-	FlDwwzpFwsDzfhb67g9S0FhYT0J/aQsDJQXTJJx1VhLQ4TDScHXqHgn1+o8svGowM/Ch9g8N
-	g+4SClpNVRT0GRXw3BIBk23DCDzWegImi28wcMVrYeBzQR8C77N+CirOGBFYm3w0TP80M4pV
-	gr2qmxBcpl5WsNhOCHWVMUKRz0sKtuoLjGAbu8wKPW8aGaHl+jQluJzjhFBi+MYI3wfeUcJo
-	02tGsNpfU0K7xcMK47ao3fw+yY40UaPOEXWbkg9JVLNFGzOnIdfVWUfo0aP1RSiIw3wC7vW8
-	IP+xvteIAkzxa3Hhw1kmwAy/Dvt8v+Z2wvhY/PWtmy1CEo7kh2lsLXRQgWApn4q7PpWzAZby
-	gPtrXERgScZfJHB3g5eeD0Jxa/mXuQekv3Xmptffyvl5BX7wm5sfR2PDo4o5WRCfhEc6z891
-	hvOr8RNHMzF/qJ3DzVXb5zkSP630UWUo1LTAYFpgMP03mBYYLIiqRjK1NiddqdYkxKnytOrc
-	uMMZ6Tbk/zn382f2O9FYxx434jkkD5F2iAkqGa3MycpLdyPMkfIwqaPMP5KmKfNOibqMg7oT
-	GjHLjVZwlHyZNH7yZJqMP6rMFo+JYqao+5cSXNByPUqqDfWNboVzLnuuYdFXj7cmpaddf2ks
-	KrnFLY9vTDkbbndH7C3+cXr3Gjbx0EpfcMWGW6HfbgVPGUoT63baFYpBWYWKll7b1nVKbOiM
-	GFq2OOi9zRjJXd7Xvud4lW8mOn9bWbweycIUqROpbU5NZvKR2MXJWsOA7MAu9LjwUpycylIp
-	t8SQuizlX+OrG+I1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0iTYRTHed67o9WbeXnQD8UsLEMr0jhRRhjhQ4QUSNEFcuhLG84pm4oG
-	gTVRtGZ2o5yrFkNNzRZe5pQhNmcpRdnKUstrGkL3m3jrshmR3378/+f8zpcj0P4FbIig1mZK
-	Oq1So+BkjCxhmyEyfFmMauPjkWgw225zUDudA1UjDhbMNXYE32de8fDN/YAD680pGsxP8hn4
-	YZulYeL+GA/DlW8ZcBY20zB2rosDY/4cDacdtyjouNbNQo+9hIVLsxU0NOeN8PCs1czB0O3f
-	LLx1GRnoNlUzMFyyE+5bgmDq4XsEblszBVNnr3Fw0WPh4E3+MAJPxxgD5adKENja+liYmzZz
-	OxWksbqfIi2mQZ5Y6rNIw60IUtznoUl9TRFH6r9e4MnrF06OdF2dY0iL4xtFjIaPHPkyMcCQ
-	T229HLFOfqaIrbGXIY8sbn7f8sOy7SmSRp0t6TbsSJKpfhZHZsxBTsvTBioPNa0tRn4CFqNx
-	3mAJ8jEjrsGFd35yPubEcNzXN0P7OEBcj9+9dPHFSCbQ4nsW2wrtjK9YISbi56NlvI/lIuCx
-	2hbKN+QvnqFwf6uH/Vssx91l4wsLtNc6f93jtQpeDsVVv4S/8UpsaCpfOOYnxuIPTwsWnIFi
-	GG63P6BK0VLTIpNpkcn032RaZLIgpgYFqLXZaUq1JiZKn6rK1apzopLT0+qR9zsqT86fd6Dv
-	z+JdSBSQYom8R4pW+bPKbH1umgthgVYEyO2l3kieosw9IenSj+myNJLehUIFRhEs33NQSvIX
-	jyszpVRJypB0/1pK8AvJQ2d6GmYCu65oOjsPOc2jVmP86vi9l6sHzzpi7g47T8WlpMaN3nAm
-	/tZaraW7Ruv2fYw94Nkx8M6QvCX1qCc8aB3f32u6ewJvNoR92mqcdJ9eVVYbvH/3kU5hKCox
-	Lmbbk/byulb7uP5ewtKDk51JjyqmrzTWNG1wz5O6MLy3q8hvrYLRq5SbImidXvkHCzqGkRkD
-	AAA=
-X-CFilter-Loop: Reflected
+In-Reply-To: <20250526-rk8xx-rst-fun-v1-2-ea894d9474e0@cherry.de>
 
-On Mon, May 26, 2025 at 05:58:10PM +0100, Pavel Begunkov wrote:
-> On 5/26/25 02:37, Byungchul Park wrote:
-> > On Fri, May 23, 2025 at 10:55:54AM -0700, Mina Almasry wrote:
-> > > On Thu, May 22, 2025 at 8:26 PM Byungchul Park <byungchul@sk.com> wrote:
-> > > > 
-> > > > Now that all the users of the page pool members in struct page have been
-> > > > gone, the members can be removed from struct page.
-> > > > 
-> > > > However, since struct netmem_desc might still use the space in struct
-> > > > page, the size of struct netmem_desc should be checked, until struct
-> > > > netmem_desc has its own instance from slab, to avoid conficting with
-> > > > other members within struct page.
-> > > > 
-> > > > Remove the page pool members in struct page and add a static checker for
-> > > > the size.
-> > > > 
-> > > > Signed-off-by: Byungchul Park <byungchul@sk.com>
-> > > > ---
-> > > >   include/linux/mm_types.h | 11 -----------
-> > > >   include/net/netmem.h     | 28 +++++-----------------------
-> > > >   2 files changed, 5 insertions(+), 34 deletions(-)
-> > > > 
-> > > > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > > > index 873e820e1521..5a7864eb9d76 100644
-> > > > --- a/include/linux/mm_types.h
-> > > > +++ b/include/linux/mm_types.h
-> > > > @@ -119,17 +119,6 @@ struct page {
-> > > >                           */
-> > > >                          unsigned long private;
-> > > >                  };
-> > > > -               struct {        /* page_pool used by netstack */
-> > > > -                       unsigned long _pp_mapping_pad;
-> > > > -                       /**
-> > > > -                        * @pp_magic: magic value to avoid recycling non
-> > > > -                        * page_pool allocated pages.
-> > > > -                        */
-> > > > -                       unsigned long pp_magic;
-> > > > -                       struct page_pool *pp;
-> > > > -                       unsigned long dma_addr;
-> > > > -                       atomic_long_t pp_ref_count;
-> > > > -               };
-> > > >                  struct {        /* Tail pages of compound page */
-> > > >                          unsigned long compound_head;    /* Bit zero is set */
-> > > >                  };
-> > > > diff --git a/include/net/netmem.h b/include/net/netmem.h
-> > > > index c63a7e20f5f3..257c22398d7a 100644
-> > > > --- a/include/net/netmem.h
-> > > > +++ b/include/net/netmem.h
-> > > > @@ -77,30 +77,12 @@ struct net_iov_area {
-> > > >          unsigned long base_virtual;
-> > > >   };
-> > > > 
-> > > > -/* These fields in struct page are used by the page_pool and net stack:
-> > > > - *
-> > > > - *        struct {
-> > > > - *                unsigned long _pp_mapping_pad;
-> > > > - *                unsigned long pp_magic;
-> > > > - *                struct page_pool *pp;
-> > > > - *                unsigned long dma_addr;
-> > > > - *                atomic_long_t pp_ref_count;
-> > > > - *        };
-> > > > - *
-> > > > - * We mirror the page_pool fields here so the page_pool can access these fields
-> > > > - * without worrying whether the underlying fields belong to a page or net_iov.
-> > > > - *
-> > > > - * The non-net stack fields of struct page are private to the mm stack and must
-> > > > - * never be mirrored to net_iov.
-> > > > +/* XXX: The page pool fields in struct page have been removed but they
-> > > > + * might still use the space in struct page.  Thus, the size of struct
-> > > > + * netmem_desc should be under control until struct netmem_desc has its
-> > > > + * own instance from slab.
-> > > >    */
-> > > > -#define NET_IOV_ASSERT_OFFSET(pg, iov)             \
-> > > > -       static_assert(offsetof(struct page, pg) == \
-> > > > -                     offsetof(struct net_iov, iov))
-> > > > -NET_IOV_ASSERT_OFFSET(pp_magic, pp_magic);
-> > > > -NET_IOV_ASSERT_OFFSET(pp, pp);
-> > > > -NET_IOV_ASSERT_OFFSET(dma_addr, dma_addr);
-> > > > -NET_IOV_ASSERT_OFFSET(pp_ref_count, pp_ref_count);
-> > > > -#undef NET_IOV_ASSERT_OFFSET
-> > > > +static_assert(sizeof(struct netmem_desc) <= offsetof(struct page, _refcount));
-> > > > 
-> > > 
-> > > Removing these asserts is actually a bit dangerous. Functions like
-> > > netmem_or_pp_magic() rely on the fact that the offsets are the same
-> > > between struct page and struct net_iov to access these fields without
-> > 
-> > Worth noting this patch removes the page pool fields from struct page.
-> 
-> static inline struct net_iov *__netmem_clear_lsb(netmem_ref netmem)
-> {
-> 	return (struct net_iov *)((__force unsigned long)netmem & ~NET_IOV);
-> }
-> 
-> static inline atomic_long_t *netmem_get_pp_ref_count_ref(netmem_ref netmem)
-> {
-> 	return &__netmem_clear_lsb(netmem)->pp_ref_count;
-> }
-> 
-> That's a snippet of code after applying the series. So, let's say we
-> take a page, it's casted to netmem, then the netmem (as it was before)
-> is casted to net_iov. Before it relied on net_iov and the pp's part of
-> the page having the same layout, which was checked by static asserts,
-> but now, unless I'm mistaken, it's aligned in the exactly same way but
-> points to a seemingly random offset of the page. We should not be doing
-> that.
+Hi Quentin,
 
-I told it in another thread.  My bad.  I will fix it.
+kernel test robot noticed the following build warnings:
 
-> Just to be clear, I think casting pages to struct net_iov *, as it
-> currently is, is quite ugly, but that's something netmem_desc and this
-> effort can help with.
-> 
-> What you likely want to do is:
-> 
-> Patch 1:
-> 
-> struct page {
-> 	unsigned long flags;
-> 	union {
-> 		struct_group_tagged(netmem_desc, netmem_desc) {
-> 			// same layout as before
-> 			...
-> 			struct page_pool *pp;
-> 			...
-> 		};
+[auto build test WARNING on 0ff41df1cb268fc69e703a08a57ee14ae967d0ca]
 
-This part will be gone shortly.  The matters come from absence of this
-part.
+url:    https://github.com/intel-lab-lkp/linux/commits/Quentin-Schulz/dt-bindings-mfd-rk806-allow-to-customize-PMIC-reset-method/20250527-011711
+base:   0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+patch link:    https://lore.kernel.org/r/20250526-rk8xx-rst-fun-v1-2-ea894d9474e0%40cherry.de
+patch subject: [PATCH 2/4] mfd: rk8xx-core: allow to customize RK806 reset method
+config: arm-randconfig-001-20250527 (https://download.01.org/0day-ci/archive/20250527/202505270807.tc7zzrMf-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250527/202505270807.tc7zzrMf-lkp@intel.com/reproduce)
 
-> 	}
-> }
-> 
-> struct net_iov {
-> 	unsigned long flags_padding;
-> 	union {
-> 		struct {
-> 			// same layout as in page + build asserts;
-> 			...
-> 			struct page_pool *pp;
-> 			...
-> 		};
-> 		struct netmem_desc desc;
-> 	};
-> };
-> 
-> struct netmem_desc *page_to_netmem_desc(struct page *page)
-> {
-> 	return &page->netmem_desc;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505270807.tc7zzrMf-lkp@intel.com/
 
-page will not have any netmem things in it after this, that matters.
+All warnings (new ones prefixed by >>):
 
-> }
-> 
-> struct netmem_desc *netmem_to_desc(netmem_t netmem)
-> {
-> 	if (netmem_is_page(netmem))
-> 		return page_to_netmem_desc(netmem_to_page(netmem);
-> 	return &netmem_to_niov(netmem)->desc;
-> }
-> 
-> The compiler should be able to optimise the branch in netmem_to_desc(),
-> but we might need to help it a bit.
-> 
-> 
-> Then, patch 2 ... N convert page pool and everyone else accessing
-> those page fields directly to netmem_to_desc / etc.
-> 
-> And the final patch replaces the struct group in the page with a
-> new field:
-> 
-> struct netmem_desc {
-> 	struct page_pool *pp;
-> 	...
-> };
-> 
-> struct page {
-> 	unsigned long flags_padding;
-> 	union {
-> 		struct netmem_desc desc;
-		^
-		should be gone.
+>> drivers/mfd/rk8xx-core.c:723:3: warning: label followed by a declaration is a C23 extension [-Wc23-extensions]
+     723 |                 u32 rst_fun;
+         |                 ^
+   1 warning generated.
 
-	Byungchul
-> 		...
-> 	};
-> };
-> 
-> net_iov will drop its union in a later series to avoid conflicts.
-> 
-> btw, I don't think you need to convert page pool to netmem for this
-> to happen, so that can be done in a separate unrelated series. It's
-> 18 patches, and netdev usually requires it to be no more than 15.
-> 
-> -- 
-> Pavel Begunkov
+
+vim +723 drivers/mfd/rk8xx-core.c
+
+   694	
+   695	int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap *regmap)
+   696	{
+   697		struct rk808 *rk808;
+   698		const struct rk808_reg_data *pre_init_reg;
+   699		const struct mfd_cell *cells;
+   700		int dual_support = 0;
+   701		int nr_pre_init_regs;
+   702		int nr_cells;
+   703		int ret;
+   704		int i;
+   705	
+   706		rk808 = devm_kzalloc(dev, sizeof(*rk808), GFP_KERNEL);
+   707		if (!rk808)
+   708			return -ENOMEM;
+   709		rk808->dev = dev;
+   710		rk808->variant = variant;
+   711		rk808->regmap = regmap;
+   712		dev_set_drvdata(dev, rk808);
+   713	
+   714		switch (rk808->variant) {
+   715		case RK805_ID:
+   716			rk808->regmap_irq_chip = &rk805_irq_chip;
+   717			pre_init_reg = rk805_pre_init_reg;
+   718			nr_pre_init_regs = ARRAY_SIZE(rk805_pre_init_reg);
+   719			cells = rk805s;
+   720			nr_cells = ARRAY_SIZE(rk805s);
+   721			break;
+   722		case RK806_ID:
+ > 723			u32 rst_fun;
+   724	
+   725			rk808->regmap_irq_chip = &rk806_irq_chip;
+   726			pre_init_reg = rk806_pre_init_reg;
+   727			nr_pre_init_regs = ARRAY_SIZE(rk806_pre_init_reg);
+   728			cells = rk806s;
+   729			nr_cells = ARRAY_SIZE(rk806s);
+   730			dual_support = IRQF_SHARED;
+   731	
+   732			ret = device_property_read_u32(dev, "rockchip,rst-fun", &rst_fun);
+   733			if (ret) {
+   734				dev_dbg(dev,
+   735					"rockchip,rst-fun property missing, not setting RST_FUN\n");
+   736				break;
+   737			}
+   738	
+   739			ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
+   740						 RK806_RST_FUN_MSK,
+   741						 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
+   742			if (ret)
+   743				return dev_err_probe(dev, ret, "RST_FUN write err\n");
+   744			break;
+   745		case RK808_ID:
+   746			rk808->regmap_irq_chip = &rk808_irq_chip;
+   747			pre_init_reg = rk808_pre_init_reg;
+   748			nr_pre_init_regs = ARRAY_SIZE(rk808_pre_init_reg);
+   749			cells = rk808s;
+   750			nr_cells = ARRAY_SIZE(rk808s);
+   751			break;
+   752		case RK816_ID:
+   753			rk808->regmap_irq_chip = &rk816_irq_chip;
+   754			pre_init_reg = rk816_pre_init_reg;
+   755			nr_pre_init_regs = ARRAY_SIZE(rk816_pre_init_reg);
+   756			cells = rk816s;
+   757			nr_cells = ARRAY_SIZE(rk816s);
+   758			break;
+   759		case RK818_ID:
+   760			rk808->regmap_irq_chip = &rk818_irq_chip;
+   761			pre_init_reg = rk818_pre_init_reg;
+   762			nr_pre_init_regs = ARRAY_SIZE(rk818_pre_init_reg);
+   763			cells = rk818s;
+   764			nr_cells = ARRAY_SIZE(rk818s);
+   765			break;
+   766		case RK809_ID:
+   767		case RK817_ID:
+   768			rk808->regmap_irq_chip = &rk817_irq_chip;
+   769			pre_init_reg = rk817_pre_init_reg;
+   770			nr_pre_init_regs = ARRAY_SIZE(rk817_pre_init_reg);
+   771			cells = rk817s;
+   772			nr_cells = ARRAY_SIZE(rk817s);
+   773			break;
+   774		default:
+   775			dev_err(dev, "Unsupported RK8XX ID %lu\n", rk808->variant);
+   776			return -EINVAL;
+   777		}
+   778	
+   779		if (!irq)
+   780			return dev_err_probe(dev, -EINVAL, "No interrupt support, no core IRQ\n");
+   781	
+   782		ret = devm_regmap_add_irq_chip(dev, rk808->regmap, irq,
+   783					       IRQF_ONESHOT | dual_support, -1,
+   784					       rk808->regmap_irq_chip, &rk808->irq_data);
+   785		if (ret)
+   786			return dev_err_probe(dev, ret, "Failed to add irq_chip\n");
+   787	
+   788		for (i = 0; i < nr_pre_init_regs; i++) {
+   789			ret = regmap_update_bits(rk808->regmap,
+   790						pre_init_reg[i].addr,
+   791						pre_init_reg[i].mask,
+   792						pre_init_reg[i].value);
+   793			if (ret)
+   794				return dev_err_probe(dev, ret, "0x%x write err\n",
+   795						     pre_init_reg[i].addr);
+   796		}
+   797	
+   798		ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cells, nr_cells, NULL, 0,
+   799				      regmap_irq_get_domain(rk808->irq_data));
+   800		if (ret)
+   801			return dev_err_probe(dev, ret, "failed to add MFD devices\n");
+   802	
+   803		if (device_property_read_bool(dev, "system-power-controller") ||
+   804		    device_property_read_bool(dev, "rockchip,system-power-controller")) {
+   805			ret = devm_register_sys_off_handler(dev,
+   806					    SYS_OFF_MODE_POWER_OFF_PREPARE, SYS_OFF_PRIO_HIGH,
+   807					    &rk808_power_off, rk808);
+   808			if (ret)
+   809				return dev_err_probe(dev, ret,
+   810						     "failed to register poweroff handler\n");
+   811	
+   812			switch (rk808->variant) {
+   813			case RK809_ID:
+   814			case RK817_ID:
+   815				ret = devm_register_sys_off_handler(dev,
+   816								    SYS_OFF_MODE_RESTART, SYS_OFF_PRIO_HIGH,
+   817								    &rk808_restart, rk808);
+   818				if (ret)
+   819					dev_warn(dev, "failed to register rst handler, %d\n", ret);
+   820				break;
+   821			default:
+   822				dev_dbg(dev, "pmic controlled board reset not supported\n");
+   823				break;
+   824			}
+   825		}
+   826	
+   827		return 0;
+   828	}
+   829	EXPORT_SYMBOL_GPL(rk8xx_probe);
+   830	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
