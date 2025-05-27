@@ -1,124 +1,120 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B796F1A0BD6
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7B4288DB;
+	Tue, 27 May 2025 07:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748331202; cv=none; b=q2kqvPwXGZLB/xpDnIIKS4F/2RVzdTJvq9SNkc9NOQcuffrvr8hpT8uUNkUus7S+60KSLNB3CtpQoTGFSpARX0JSwI55E8VztIusVvypEFVjL1UUm2VY1VvtvvCB2VQQbm040XZNaYjzEPx4RdTyHu3OppUPTASI4r1QX4hysqI=
+	t=1748331506; cv=none; b=o7Gm6hM9WrnWa4KTuhfDOvlwuJxexdKHI7yb3+Up+mnrvddDCNhAQ0kMrX2G8xyIAhSs+8BiBlKYAm7aZbOGWCBzeVrhIp4eDEUX8fdLXwwwUKOk2f3iVH8XObAKmxwSzRow/69L60iw05dsGajBjJrr/D5vQUTZGskK22UzDO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748331202; c=relaxed/simple;
-	bh=Q5exNgIPZ3rcCXxGY7JdPG10hbHpapVoeEeX30T1eXw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nk7vN9TgwnxiSRE6icFtjgEFCUdYNAZdaKJ96wRiktbsRi1tTsiPDX/fE2BSZ5SxDFJ1QhFS9Rz4S+TQjGA3SLlHmg6W77fmvtiyrzE1LMNvEyKsk8Hv9BwrAFEpvYkCsHuhbue+Ene2tk19I/xx/MAf8jXrtHQK47VS6fr31Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FnHCegfl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748331506; c=relaxed/simple;
+	bh=i690CQjuRjliu6SJ2bm4fdZsogyF2RzFSpwTyVOSEyo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dQRIf5I6mm7aXBq1utkAjpbc8PApW61x7+htBJL39+HmIqWV752UiuOtYrox8UwXbhUi+R1s0UCubSXFr9H2T5+dv8kZrgAySFZ8h6jRqtPLi4suZAfjxWjs5DAGiAgboS9iM223/n8TNuU4yWI2apuu4JPjTuk+LRMOVEjtLUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=Oxnoi3Vj; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FnHCegfl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748331199;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cunzgH7S+aLdgPq0k81WwhGwjgYto2/OQbbZ283U668=;
-	b=FnHCegfld5DzPsL7EGcm3vrTTEmHaxgtS4xatXSFwncBOR0YeIKyHO//Nptv8bbmJO4xmB
-	wxCXachyX+ldhj5KPVkZNNqN0OsmlYZYvw5s4fZPsC4O8PtlNsDuY6n7pvxLIDeAbl/nuW
-	7C0XgK51eoSdkl1C+y+Uc5V61juKsrQ=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-100-gN7EzVI8Oxm6WBF5LXloLA-1; Tue, 27 May 2025 03:33:17 -0400
-X-MC-Unique: gN7EzVI8Oxm6WBF5LXloLA-1
-X-Mimecast-MFC-AGG-ID: gN7EzVI8Oxm6WBF5LXloLA_1748331196
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad56bfb164eso248487766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:33:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748331196; x=1748935996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cunzgH7S+aLdgPq0k81WwhGwjgYto2/OQbbZ283U668=;
-        b=ktwEgnnlVpiyN6BfI19KRxxqZCUWw1p/HEEWTZhPXKM8CnIqXL7H1QC+X4BzAOsjR0
-         iqixzM0M8OphCflAVNchEc13gK+5SF7bID5zh+8wJnf8BymxDleSwCMJuLosWFGVEqzD
-         lCUyVnfBRjLkK7QLZbaoai9zX8xngbyjmN5qMR2RBzF3RLfiEx66VOQXcqvZxYwgtork
-         QuwZ8BOQzJaGI0HDFLuabZC+cvdpMb6eGhIdK06qykGmvtsWSPuH8CDPbtzqRqgnZjTf
-         CRUVNWYR1A+hLjW2se8iNpkUyNLvSCH/oGTKzG5h6U1FBg/YMRLXMWQIBktT28rzRYSP
-         X+lA==
-X-Gm-Message-State: AOJu0YyKVhIX2Wmc+IrvAMvgwGYr+rLIRXKYG/ViXD+19bCoT4ejZ9NV
-	M359iWq+LJYMgyJdC7M3SJs+gyz0ipdeJAM4qGjSws7zBEI0Nn+7NH0AgVxS729w8VTV1kCNYYw
-	6WqjutA9oAFolG128VXsGdzr4umqRo8JR/uFBpIfsJtO28FjMYd2CYwijuYB9WXYFtbWVB4oCpp
-	VXX2CJyVYqmwxYH2hdV2CBtmfPfYN7hZeVFO9K0yRn
-X-Gm-Gg: ASbGnct1pHEoaGiX//0UhqBMwRdHxuBymPWieOnynp8n0/kINTK0fPSTkJ9esWaR3cY
-	6hu9zCPoltgn27UtIUPbmUSWJKk43fsfaiKNc5FGSZiUJpYdaB1RtdqEXxp5emJIlkILiuA==
-X-Received: by 2002:a17:907:2d06:b0:ad8:91e4:a939 with SMTP id a640c23a62f3a-ad891e4ab88mr90913566b.31.1748331196137;
-        Tue, 27 May 2025 00:33:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHE+yREw9Xt70cyZxJq0TzH4IO2hkS3lRZlAYZQR0TOm58NlaFFrIin3Tp0JuOk9uXg1wuPKl8my3Y4oIddiFk=
-X-Received: by 2002:a17:907:2d06:b0:ad8:91e4:a939 with SMTP id
- a640c23a62f3a-ad891e4ab88mr90911466b.31.1748331195805; Tue, 27 May 2025
- 00:33:15 -0700 (PDT)
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="Oxnoi3Vj"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54R7cId251450466, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1748331498; bh=x/ATG9zs6W7XqSUAA4bWjhCLRx0nRfw2siWd57FWhc0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=Oxnoi3VjOMGzejapufOTkYDHiskwr/UNp8AN3YMz4X3El4EILiulJvYCcCUtE94Mz
+	 kEfwELD003mf4esntSyRIwsGeD6DtbjnQ8mgTk7UF38Xcl7l3W9ZwndDSipfYx+w48
+	 e7bPjdTtzwKpF43ROKqkvmblJV+SbuMW35dI9p+r9Rk64gREvoNC8A4wB0cDZ0JzQJ
+	 9wezHNH8bOs8ku03tpZG0bPoQrYdXPk4tCbM/UKSjmIkd0xcEtUZuNK/wkdFtBiSVn
+	 ri4OjcXJwUOjoub/eD+z9BdZnJxEs1Oi9ndF+yYq3vfyIy07gzOcvu0gQf0ItjmLJz
+	 mrgIcjkhEOB8w==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54R7cId251450466
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 15:38:18 +0800
+Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 27 May 2025 15:38:18 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 27 May 2025 15:38:17 +0800
+Received: from RTEXMBS03.realtek.com.tw ([fe80::dd06:104c:e04d:a488]) by
+ RTEXMBS03.realtek.com.tw ([fe80::dd06:104c:e04d:a488%2]) with mapi id
+ 15.01.2507.035; Tue, 27 May 2025 15:38:17 +0800
+From: Zong-Zhe Yang <kevin_yang@realtek.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Ping-Ke Shih <pkshih@realtek.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org"
+	<kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH next] wifi: rtw89: mcc: prevent shift wrapping in rtw89_core_mlsr_switch()
+Thread-Topic: [PATCH next] wifi: rtw89: mcc: prevent shift wrapping in
+ rtw89_core_mlsr_switch()
+Thread-Index: AQHbzswfjeN9r26I10eoAov9FdTI97PmBnfw
+Date: Tue, 27 May 2025 07:38:17 +0000
+Message-ID: <582b5bc4c4434934838ae28d77b7f73a@realtek.com>
+References: <aDVUEHfa9q2zBD6i@stanley.mountain>
+In-Reply-To: <aDVUEHfa9q2zBD6i@stanley.mountain>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521092236.661410-1-lvivier@redhat.com>
-In-Reply-To: <20250521092236.661410-1-lvivier@redhat.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Tue, 27 May 2025 15:32:39 +0800
-X-Gm-Features: AX0GCFu3yaPuYSMtDazhp-Ne51miEA8ZjlwJwMW50oQSQAStMU3hnrGf9ypWHq0
-Message-ID: <CAPpAL=ytK4SA-m0ZWvByVJrTNTGzvqkpiC-yGvDB7KBBXWwm=g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error reporting
-To: Laurent Vivier <lvivier@redhat.com>
-Cc: linux-kernel@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org, 
-	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Tested pass this series of patches with virtio-net regression tests,
-everything works fine.
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>=20
+> The "link_id" value comes from the user via debugfs.  If it's larger than=
+ BITS_PER_LONG then
+> that would result in shift wrapping and potentially an out of bounds acce=
+ss later.  Fortunately,
+> only root can write to debugfs files so the security impact is minimal.
+>=20
 
-Tested-by: Lei Yang <leiyang@redhat.com>
+Thank you for catching this problem.
 
-On Wed, May 21, 2025 at 5:23=E2=80=AFPM Laurent Vivier <lvivier@redhat.com>=
- wrote:
->
-> This patch series contains two fixes and a cleanup for the virtio subsyst=
-em.
->
-> The first patch fixes an error reporting bug in virtio_ring's
-> virtqueue_resize() function. Previously, errors from internal resize
-> helpers could be masked if the subsequent re-enabling of the virtqueue
-> succeeded. This patch restores the correct error propagation, ensuring th=
-at
-> callers of virtqueue_resize() are properly informed of underlying resize
-> failures.
->
-> The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
->
-> The third patch addresses a reliability issue in virtio_net where the TX
-> ring size could be configured too small, potentially leading to
-> persistently stopped queues and degraded performance. It enforces a
-> minimum TX ring size to ensure there's always enough space for at least o=
-ne
-> maximally-fragmented packet plus an additional slot.
->
-> v2: clenup '2+MAX_SKB_FRAGS'
->
-> Laurent Vivier (3):
->   virtio_ring: Fix error reporting in virtqueue_resize
->   virtio_net: Cleanup '2+MAX_SKB_FRAGS'
->   virtio_net: Enforce minimum TX ring size for reliability
->
->  drivers/net/virtio_net.c     | 14 ++++++++++----
->  drivers/virtio/virtio_ring.c |  8 ++++++--
->  2 files changed, 16 insertions(+), 6 deletions(-)
->
+>=20
+> [...]
+>=20
+> @@ -5239,6 +5239,9 @@ int rtw89_core_mlsr_switch(struct rtw89_dev *rtwdev=
+, struct
+> rtw89_vif *rtwvif,
+>         if (unlikely(!ieee80211_vif_is_mld(vif)))
+>                 return -EOPNOTSUPP;
+>=20
+> +       if (unlikely(link_id >=3D BITS_PER_LONG))
+> +               return -EINVAL;
+> +
+
+Since I think this problem only comes from dbgfs path, would you like to ju=
+st add a check in debug.c ?
+
+For example,
+(based on 0 <=3D valid link id < IEEE80211_MLD_MAX_NUM_LINKS < BITS_PER_LON=
+G)
+
+rtw89_debug_priv_mlo_mode_set(...)
+{
+        ...
+        switch (mlo_mode) {
+        case RTW89_MLO_MODE_MLSR:
+               if (argv >=3D IEEE80211_MLD_MAX_NUM_LINKS)
+                       return -EINVAL;
+                ...
+
+
+>         if (unlikely(!(usable_links & BIT(link_id)))) {
+>                 rtw89_warn(rtwdev, "%s: link id %u is not usable\n", __fu=
+nc__,
+>                            link_id);
 > --
-> 2.49.0
->
->
->
+> 2.47.2
 
