@@ -1,256 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67F9269B08
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA54027EC9C;
+	Tue, 27 May 2025 16:10:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748362235; cv=none; b=R/WoFg+VAYhZ3Ug/kR+Vdrv1SKM8C/USgyw7naT3wEJWXYd8Uie/pKhKgkkcZwGmnASXrXc8bZzMAxqU/BLVIkSYeYArasHNqRHvfGPzZ82lH8lAQZMBtklTXM+Ec+pEIB7eVCluhKohq8VqxA0cUOgl2b04FSJcbN8yDzBrrJU=
+	t=1748362243; cv=none; b=ecTjMDngI5ODF919f2DAxqOmvyrHz8w83L4whM5llfaZdJ8bQ1u3QBOZnvEaABlPsXltJlIQyRmJnNVHXdoLhQsBsITL+FHF8ssqDLRY83ZTMgrfCv+zqByQPr20FDJAv/HMshL8kyUOnO+cIjrOsN0pa6j/mTcwOAxdVHJ1aF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748362235; c=relaxed/simple;
-	bh=x02CK+8qrbvy4LwdV881C8rJPLJYRgJj2LP6IK2gJ5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRglOTH/katZzUTGgxzwrYs2S08tQO0U7rnRYQJrynt4ehQ7MVs/fxUIXU3ZMnmzEzkifeZ/iWb1+ValBmrZiMJRqKrs6nbJNGhp3ulTlReq52Ni5ZcQc466GVrPm1zLd3H+pDZ+qg1hH8apbQws746Mqv+SYMRDAT/Xg0JHgFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rECuIYBJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rECuIYBJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B5BC4CEE9;
-	Tue, 27 May 2025 16:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748362234;
-	bh=x02CK+8qrbvy4LwdV881C8rJPLJYRgJj2LP6IK2gJ5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rECuIYBJfhCMLhOQr4xdq8+9OdV0x7uoz1jAIY0WoBAVhU5UwLCkeiWkTs08SWR+E
-	 ZWGe9Zf0JD/h8HQ/z58OIqh+hYIis4E8vvgSujoQpHwPpzvLGEQytmmyCM+vEMei26
-	 /2WNclsqVSGV7YvcHMWBlG3Fec8qD+5s82DaXano8MDGX2WP+E2Rn+Gvk50fkBzgdg
-	 JphSEDN3BIM5Opkw689sFzziuU7KL8Vjmj1HgjtxW4lwj6afr04cH09nP+b7sDoHhv
-	 FF1BsNlKR3BCV/ERXzKav9GhOlTWzf33Cgbc4oBbEphuhL836rD3MgqSQGj9oJW4/T
-	 mcBgI19c8drcw==
-Date: Tue, 27 May 2025 18:10:31 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Anusha Srivatsa <asrivats@redhat.com>, 
-	Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
-	=?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, Hui Pu <Hui.Pu@gehealthcare.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 3/3] drm/tests: bridge: add KUnit tests for
- devm_drm_bridge_alloc()
-Message-ID: <20250527-smiling-peacock-from-uranus-dc032f@houat>
-References: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
- <20250516-drm-bridge-alloc-doc-test-v8-3-7e356fd58ba5@bootlin.com>
+	s=arc-20240116; t=1748362243; c=relaxed/simple;
+	bh=XSFL++ESIEqvfRkKiEhhrY3YfIYdGSwa4dT8wqHzbXk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=SE3l9Cx0CH5R1jChrWKqUnpfWWZZizPHErz3cPNkRLkyhST56BYyDo5WA+h6l2bcHw8TLTIAwfWEX0JUvrsAsBdEIBwGLzXpRJfUg01wGahKoVtX4EaHi0htlNKHMaeccv3ztiirWP2X67BACq1OKIgwNU62PEA67y9pWIDPzks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246A9C4CEEB;
+	Tue, 27 May 2025 16:10:43 +0000 (UTC)
+Date: Tue, 27 May 2025 12:11:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
+ commit_overrun
+Message-ID: <20250527121140.0e7f0565@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="y2prcnw7nnkz2dsu"
-Content-Disposition: inline
-In-Reply-To: <20250516-drm-bridge-alloc-doc-test-v8-3-7e356fd58ba5@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
---y2prcnw7nnkz2dsu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 3/3] drm/tests: bridge: add KUnit tests for
- devm_drm_bridge_alloc()
-MIME-Version: 1.0
+When reading a memory mapped buffer the reader page is just swapped out
+with the last page written in the write buffer. If the reader page is the
+same as the commit buffer (the buffer that is currently being written to)
+it was assumed that it should never have missed events. If it does, it
+triggers a WARN_ON_ONCE().
 
-On Fri, May 16, 2025 at 06:48:39PM +0200, Luca Ceresoli wrote:
-> Add KUnit tests for the newly introduced devm_drm_bridge_alloc().
->=20
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
->=20
-> ---
->=20
-> Changed in v8:
->  - rebase on new patch converting drm_bridge_test.c to
->    devm_drm_bridge_alloc()
->  - add check that bridge is removed (thanks to the .destroy callback)
->  - add a check with get/put
->=20
-> Changed in v7:
->  - rebase on current drm-misc-next, which now has a drm_bridge_test.c file
->  - cleanup commit message
->=20
-> Changed in v6:
->  - update to new devm_drm_bridge_alloc() API
->  - remove drm_test_drm_bridge_put test, not straightforward to write with
->    the new API and the current notification mechanism
->  - do not allocate a drm_device: a bridge is allocated without one
->  - rename some identifiers for easier code reading
->=20
-> This patch was added in v5.
-> ---
->  drivers/gpu/drm/tests/drm_bridge_test.c | 84 +++++++++++++++++++++++++++=
-++++++
->  1 file changed, 84 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/te=
-sts/drm_bridge_test.c
-> index f3a625c536f610dc8560b56531056df7c613f564..32db3a82fe6d14a3e9d6536bc=
-f4b19f1bc65969a 100644
-> --- a/drivers/gpu/drm/tests/drm_bridge_test.c
-> +++ b/drivers/gpu/drm/tests/drm_bridge_test.c
-> @@ -8,6 +8,7 @@
->  #include <drm/drm_bridge_helper.h>
->  #include <drm/drm_kunit_helpers.h>
-> =20
-> +#include <kunit/device.h>
->  #include <kunit/test.h>
-> =20
->  /*
-> @@ -21,6 +22,7 @@ struct dummy_drm_bridge {
->  	unsigned int enable_count;
->  	unsigned int disable_count;
->  	struct drm_bridge bridge;
-> +	void *data;
->  };
-> =20
->  struct drm_bridge_init_priv {
-> @@ -422,11 +424,93 @@ static struct kunit_suite drm_bridge_helper_reset_c=
-rtc_test_suite =3D {
->  	.test_cases =3D drm_bridge_helper_reset_crtc_tests,
->  };
-> =20
-> +struct drm_bridge_alloc_test_ctx {
+But there just happens to be one scenario where this can legitimately
+happen. That is on a commit_overrun. A commit overrun is when an interrupt
+preempts an event being written to the buffer and then the interrupt adds
+so many new events that it fills and wraps the buffer back to the commit.
+Any new events would then be dropped and be reported as "missed_events".
 
-drm_bridge_alloc_priv
+In this case, the next page to read is the commit buffer and after the
+swap of the reader page, the reader page will be the commit buffer, but
+this time there will be missed events and this triggers the following
+warning:
 
-> +	struct device *dev;
-> +	struct dummy_drm_bridge *dummy_br;
-> +	bool destroyed;
+ ------------[ cut here ]------------
+ WARNING: CPU: 2 PID: 1127 at kernel/trace/ring_buffer.c:7357 ring_buffer_map_get_reader+0x49a/0x780
+ Modules linked in: kvm_intel kvm irqbypass
+ CPU: 2 UID: 0 PID: 1127 Comm: trace-cmd Not tainted 6.15.0-rc7-test-00004-g478bc2824b45-dirty #564 PREEMPT
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+ RIP: 0010:ring_buffer_map_get_reader+0x49a/0x780
+ Code: 00 00 00 48 89 fe 48 c1 ee 03 80 3c 2e 00 0f 85 ec 01 00 00 4d 3b a6 a8 00 00 00 0f 85 8a fd ff ff 48 85 c0 0f 84 55 fe ff ff <0f> 0b e9 4e fe ff ff be 08 00 00 00 4c 89 54 24 58 48 89 54 24 50
+ RSP: 0018:ffff888121787dc0 EFLAGS: 00010002
+ RAX: 00000000000006a2 RBX: ffff888100062800 RCX: ffffffff8190cb49
+ RDX: ffff888126934c00 RSI: 1ffff11020200a15 RDI: ffff8881010050a8
+ RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffed1024d26982
+ R10: ffff888126934c17 R11: ffff8881010050a8 R12: ffff888126934c00
+ R13: ffff8881010050b8 R14: ffff888101005000 R15: ffff888126930008
+ FS:  00007f95c8cd7540(0000) GS:ffff8882b576e000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007f95c8de4dc0 CR3: 0000000128452002 CR4: 0000000000172ef0
+ Call Trace:
+  <TASK>
+  ? __pfx_ring_buffer_map_get_reader+0x10/0x10
+  tracing_buffers_ioctl+0x283/0x370
+  __x64_sys_ioctl+0x134/0x190
+  do_syscall_64+0x79/0x1c0
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+ RIP: 0033:0x7f95c8de48db
+ Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
+ RSP: 002b:00007ffe037ba110 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+ RAX: ffffffffffffffda RBX: 00007ffe037bb2b0 RCX: 00007f95c8de48db
+ RDX: 0000000000000000 RSI: 0000000000005220 RDI: 0000000000000006
+ RBP: 00007ffe037ba180 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+ R13: 00007ffe037bb6f8 R14: 00007f95c9065000 R15: 00005575c7492c90
+  </TASK>
+ irq event stamp: 5080
+ hardirqs last  enabled at (5079): [<ffffffff83e0adb0>] _raw_spin_unlock_irqrestore+0x50/0x70
+ hardirqs last disabled at (5080): [<ffffffff83e0aa83>] _raw_spin_lock_irqsave+0x63/0x70
+ softirqs last  enabled at (4182): [<ffffffff81516122>] handle_softirqs+0x552/0x710
+ softirqs last disabled at (4159): [<ffffffff815163f7>] __irq_exit_rcu+0x107/0x210
+ ---[ end trace 0000000000000000 ]---
 
-This can be in drm_bridge_priv
+The way to differentiate this case from the normal case of there only
+being one page written to where the swap of the reader page received that
+one page (which is the commit page), check if the tail page is on the
+reader page. The difference between the commit page and the tail page is
+that the tail page is where new writes go to, and the commit page holds
+the first write that hasn't been committed yet. In the case of an
+interrupt preempting the write of an event and filling the buffer, it
+would move the tail page but not the commit page.
 
-> +};
-> +
-> +static void dummy_drm_bridge_destroy(struct drm_bridge *bridge)
-> +{
-> +	struct dummy_drm_bridge *dummy_br =3D bridge_to_dummy_bridge(bridge);
-> +	struct drm_bridge_alloc_test_ctx *ctx =3D (struct drm_bridge_alloc_test=
-_ctx *)dummy_br->data;
-> +
-> +	ctx->destroyed =3D true;
-> +}
-> +
-> +static const struct drm_bridge_funcs drm_bridge_dummy_funcs =3D {
-> +	.destroy =3D dummy_drm_bridge_destroy,
-> +};
+Have the warning only trigger if the tail page is also on the reader page,
+and also print out the number of events dropped by a commit overrun as
+that can not yet be safely added to the page so that the reader can see
+there were events dropped.
 
-And same here, you don't need to create yet another function set, just
-add it to the existing ones.
+Cc: stable@vger.kernel.org
+Fixes: fe832be05a8ee ("ring-buffer: Have mmapped ring buffer keep track of missed events")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-> +static int drm_test_bridge_alloc_init(struct kunit *test)
-> +{
-> +	struct drm_bridge_alloc_test_ctx *ctx;
-> +
-> +	ctx =3D kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-> +
-> +	ctx->dev =3D kunit_device_register(test, "drm-bridge-dev");
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
-> +
-> +	test->priv =3D ctx;
-> +
-> +	ctx->dummy_br =3D devm_drm_bridge_alloc(ctx->dev, struct dummy_drm_brid=
-ge, bridge,
-> +					      &drm_bridge_dummy_funcs);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dummy_br);
-> +
-> +	ctx->dummy_br->data =3D ctx;
-> +
-> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-> +
-> +	return 0;
-> +}
-> +
-> +static void drm_test_drm_bridge_alloc_basic(struct kunit *test)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 241acb470c42..508826886a87 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7351,10 +7351,25 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 		}
+ 	} else {
+ 		/*
+-		 * There really shouldn't be any missed events if the commit
++		 * There really shouldn't be any missed events if the tail_page
+ 		 * is on the reader page.
+ 		 */
+-		WARN_ON_ONCE(missed_events);
++		if (missed_events) {
++			if (!WARN_ONCE(cpu_buffer->reader_page == cpu_buffer->tail_page,
++				       "Reader on commit with %ld missed events",
++				       missed_events)) {
++				/*
++				 * If the tail page is not on the reader page but
++				 * the commit_page is, that would mean that there's
++				 * a commit_overrun (an interrupt preempted an
++				 * addition of an event and then filled the buffer
++				 * with new events). In this case it's not an
++				 * error, but it should still be reported.
++				 */
++				pr_info("Ring buffer commit overrun lost %ld events at timestamp:%lld\n",
++					missed_events, cpu_buffer->reader_page->page->time_stamp);
++			}
++		}
+ 	}
+ 
+ 	cpu_buffer->lost_events = 0;
+-- 
+2.47.2
 
-You need a comment explaining what this test is about
-
-> +{
-> +	struct drm_bridge_alloc_test_ctx *ctx =3D test->priv;
-> +
-> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-> +
-> +	kunit_device_unregister(test, ctx->dev);
-> +	KUNIT_ASSERT_TRUE(test, ctx->destroyed);
-
-EXPECT
-
-> +}
-> +
-> +static void drm_test_drm_bridge_alloc_get_put(struct kunit *test)
-
-Comment here
-
-> +{
-> +	struct drm_bridge_alloc_test_ctx *ctx =3D test->priv;
-> +
-> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-> +
-> +	drm_bridge_get(&ctx->dummy_br->bridge);
-> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-
-EXPECT
-
-> +	kunit_device_unregister(test, ctx->dev);
-> +	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-
-Ditto
-
-> +	drm_bridge_put(&ctx->dummy_br->bridge);
-> +	KUNIT_ASSERT_TRUE(test, ctx->destroyed);
-
-Ditto
-
-> +}
-> +
-> +static struct kunit_case drm_bridge_alloc_tests[] =3D {
-> +	KUNIT_CASE(drm_test_drm_bridge_alloc_basic),
-> +	KUNIT_CASE(drm_test_drm_bridge_alloc_get_put),
-> +	{ }
-> +};
-> +
-> +static struct kunit_suite drm_bridge_alloc_test_suite =3D {
-> +	.name =3D "drm_bridge_alloc",
-> +	.init =3D drm_test_bridge_alloc_init,
-> +	.test_cases =3D drm_bridge_alloc_tests,
-> +};
-> +
->  kunit_test_suites(
->  	&drm_bridge_get_current_state_test_suite,
->  	&drm_bridge_helper_reset_crtc_test_suite,
-> +	&drm_bridge_alloc_test_suite,
->  );
-> =20
->  MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
-> +MODULE_AUTHOR("Luca Ceresoli <luca.ceresoli@bootlin.com>");
-> +
->  MODULE_DESCRIPTION("Kunit test for drm_bridge functions");
->  MODULE_LICENSE("GPL");
-
-Looks good otherwise, thanks
-Maxime
-
---y2prcnw7nnkz2dsu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDXj9wAKCRAnX84Zoj2+
-dr/BAX9uVwJKf3m4xtOc++ZZUCTKyhY/iUGf628qH7SRN1zyikZiRnX73TsiKBLo
-cep1bTwBf3Q9JBwvbW2AhtZ2UjUQnjSjjUXHK3pq5H8+oF2Q9CjoqHsfz9LpopfL
-9H5lA102Ww==
-=+xu1
------END PGP SIGNATURE-----
-
---y2prcnw7nnkz2dsu--
