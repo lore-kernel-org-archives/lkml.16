@@ -1,48 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3916B25484A;
-	Tue, 27 May 2025 19:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D9412B93;
+	Tue, 27 May 2025 19:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374482; cv=none; b=an1cWjHg285W1rX7TgCJSUMpnJ/dLoHY5/XLckRCACfc9pZLc1p1yvxHhlKlsnpVAmTPze5M3QPYjudHD/8R91K8/sfLUadjMhMGU1MR4MJH7xdIQ7tNkp6345WpXS+od6xkUsR8Ih2SPQ6Rcfus9zINCUNgYAICo5pG5p/0+P8=
+	t=1748374552; cv=none; b=boCFlB8+tpzkohdBxyOF9lju6dOTK6IHUiXBAbcqD1sGIuBRY36alsEGrLCRuL+kdjVyrKUsteOw531kAN+7dF7FYmUUX1D1LrQXqT7eKot754a3Yy9/q2H9YGQZl69rOqQHYlVvUUMC7Dvme6c0Kl9RwWnAN2VuIxEbEIuch4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374482; c=relaxed/simple;
-	bh=/h34jjkP8Tzegi+t/1woEurKobo1VjvZzZ4R9+gNIYc=;
+	s=arc-20240116; t=1748374552; c=relaxed/simple;
+	bh=h4zhoTMI38sWqikCbt4K2joSWNXLc0BKXMI8jK3thK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFOnbZwgom4calTvloNjmOvTpRSJaLzgFSwq7f70CNL1i3QFCe7nHn7+K9L9wz4dwRn3W+JKo4p6O3mcsWE4QgT/3qvlgC9+f08tMYYgArQr56G+7/HnRU8PwNqOag8KjY4eFXR4kI9ZIb+xkHAGtpB14W7PwKDTaesIDWruJQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PhPia81T; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ce3ntRg3LtC2RfocnAw7nKBYSTDYLtaU041dJmn88DOnsV9/gP0QRYopY7qYEumclCV6bF8bgOWeXrh67ty2Oaj7lwTFwCip9rvJbsHaXIAjbql1b2EXnNSkKy3V0+ZSajbmIwkIbcs9IcN1fhz+GFaGsHCX9Dd3dw5VOM64cM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+sSydqP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PhPia81T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68F4EC4CEE9;
-	Tue, 27 May 2025 19:34:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+sSydqP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECF79C4CEE9;
+	Tue, 27 May 2025 19:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748374481;
-	bh=/h34jjkP8Tzegi+t/1woEurKobo1VjvZzZ4R9+gNIYc=;
+	s=k20201202; t=1748374552;
+	bh=h4zhoTMI38sWqikCbt4K2joSWNXLc0BKXMI8jK3thK8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PhPia81TIe3Dg79bgkliFloVIeCDISxZ9ufFJkL734ooVeE42cK1mFQALvIa9AbE4
-	 QI4jwwMZ9XrTAwd15ptjEXrUHPE/nISJ5rODk1d5EmiDpaBNKM9YBI5A+BwZDpy43H
-	 kr0AAkQcOPTwsKF05CuEUo82vtXjtc6a9H1B/d2eldgiRIsq8InCm6vnc/+cirvBzh
-	 2czuBVSw9jlEmNYRKFnzdjoeEGsDHSt29e+YbKnwNQqhvRfbmkOC6XvayihEQKhVAd
-	 OfmlM36ik/twqLUlPYRb3J1Ap0vCIcoEfYQwnZon2N7aPqrVRPkH35sMh5MfTvOl7Y
-	 akViLmW9olW5w==
-Date: Tue, 27 May 2025 14:34:39 -0500
+	b=p+sSydqP5tn9jeoRxzdTngtlfBBVE6Cl+O5HAaayPvtMv5LSsjRXdR5A79KFXAHyc
+	 dR3OFtSGo0VJoXb+xzGazN/EXH7FH9VW/7nbJjIjOscTssd+ebtXqPA/sp7tqAMYh0
+	 5tHfqhfV/TNlTFkNY2katYbMI2tDjm5kzWK+DGWCUpERnlQtJ8vPKB0GQWXLXByVat
+	 dqWrgGtcaMv0NzF6jWkwTP0SySyHoHMvj9Ggck3WQuejZD2z394r7MYSEuODmBaO2y
+	 WyFrf+mO8TNNuJE1huH7+Zrz3DRhXyqbFq32/j/BJUAwOiuClVeHrb7R2u2ZSYNC6W
+	 iQzZ+3NdFAEwA==
+Date: Tue, 27 May 2025 14:35:50 -0500
 From: Rob Herring <robh@kernel.org>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Heiko Stuebner <heiko@sntech.de>, Ulf Hansson <ulf.hansson@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yao Zi <ziyao@disroot.org>,
-	Chukun Pan <amadeus@jmu.edu.cn>, linux-rockchip@lists.infradead.org,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] dt-bindings: gpio: rockchip: Allow use of a
- power-domain
-Message-ID: <20250527193439.GA1101149-robh@kernel.org>
-References: <20250518220707.669515-1-jonas@kwiboo.se>
- <20250518220707.669515-7-jonas@kwiboo.se>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: Extend max-link-speed to support
+ PCIe Gen5/Gen6
+Message-ID: <20250527193550.GA1104855-robh@kernel.org>
+References: <20250519160448.209461-1-18255117159@163.com>
+ <20250519160448.209461-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,41 +46,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250518220707.669515-7-jonas@kwiboo.se>
+In-Reply-To: <20250519160448.209461-2-18255117159@163.com>
 
-On Sun, May 18, 2025 at 10:06:53PM +0000, Jonas Karlman wrote:
-> The GPIO controllers in most Rockchip SoCs are part or power domains
-> that are always powered on, i.e. PD_BUS or PD_PMU.
-
-Are these described in DT, so this is valid to add for all SoCs?
-
-> On RK3528 the GPIO controllers are spread out among the PD_RKVENC, PD_VO
-> and PD_VPU power domains.
-
-So should be required for RK3528?
-
+On Tue, May 20, 2025 at 12:04:46AM +0800, Hans Zhang wrote:
+> Update the device tree binding documentation for PCI to include
+> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
+> The original documentation limited the value to 1~4 (Gen1~Gen4),
+> but the kernel now supports up to Gen6. This change ensures the
+> documentation aligns with the actual code implementation.
 > 
-> Add support to describe power-domains for the GPIO controllers.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 > ---
->  Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/pci/pci.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+
+This file is now removed. Update the schema if you need to. It lives in 
+dtschema project.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> index d76987ce8e50..bdd83f42615c 100644
-> --- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> @@ -41,6 +41,9 @@ properties:
->    "#interrupt-cells":
->      const: 2
->  
-> +  power-domains:
-> +    maxItems: 1
-> +
->  patternProperties:
->    "^.+-hog(-[0-9]+)?$":
->      type: object
+> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+> index 6a8f2874a24d..5ffd690e3fc7 100644
+> --- a/Documentation/devicetree/bindings/pci/pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+> @@ -22,8 +22,9 @@ driver implementation may support the following properties:
+>     If present this property specifies PCI gen for link capability.  Host
+>     drivers could add this as a strategy to avoid unnecessary operation for
+>     unsupported link speed, for instance, trying to do training for
+> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+> -   for gen2, and '1' for gen1. Any other values are invalid.
+> +   unsupported link speed, etc.  Must be '6' for gen6, '5' for gen5, '4' for
+> +   gen4, '3' for gen3, '2' for gen2, and '1' for gen1. Any other values are
+> +   invalid.
+>  - reset-gpios:
+>     If present this property specifies PERST# GPIO. Host drivers can parse the
+>     GPIO and apply fundamental reset to endpoints.
 > -- 
-> 2.49.0
+> 2.25.1
 > 
