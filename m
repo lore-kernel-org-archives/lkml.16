@@ -1,33 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69BB322B;
-	Tue, 27 May 2025 18:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1A7255E26
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748370680; cv=none; b=nNvKHbTGYpSBe0EagKHgz/1ZJKEakO07NpAJ5Xy4Zb0j+oLZhl5Er6E4Urhw3Fv0nruQAvfN9u98+pS6jx8T//vGGFg/mQi5koAwciKOPWKs4/pOE0z5ppvTHfdE3DG3FLB1ZtSpOkEamUpp0VGnyUKs7C+DsDHGaio0lCneENg=
+	t=1748370809; cv=none; b=FeQubeoJ8CGST6CUDVK4yxSZQznJv0ueZDKcYz5wnp+Sn+HcxpFojhBktJbCY+CFdBSc8YBnBd/T8GLBT3V9wsE9ITYj6xbeDlPSgPLflZdWMPMD/c0/4sIp0LBE7rIRIsEGswxnwdrWpgT2OD7waS4sWnTzX3t5AbBVw/oJakI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748370680; c=relaxed/simple;
-	bh=2sS44xR4BqP6ZT0NN2NeXbfkEpdZ2MWF4j4vm7U0nFI=;
+	s=arc-20240116; t=1748370809; c=relaxed/simple;
+	bh=L2iE548AIHzZ8pItsHBp1mDshCcc2V1kn9eVKbCMQC8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GqUKlvlG6IiBaj0Kq6N39YG9RjXDB/RgfAc2mwttlKDc68uq5pZTSO26OeoqVJb3cPY+O237rbNRLCo6nOYuSmYeoJbj+4bJ020JfNzwUKddfo/uTZOx+Y8Eqsr7C5Nn42TMexQZ6NS2kdttFYagh0mQJOMk6LTIGx8mSgmckfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bD4yA/gq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WkQMNeAYfLwhtF1q6O423pZJEO6k8Xww+Osfb2096v4KUG5wu06Sf5EycKiwjkCoYmHf8G202rLledhUsqZUY1n7NHcWPcAMPZzd/uB6WISyYwCc3CI+Jw69vy/j/UQgqZD0YPZpNPnG21D9LV7kWAc1t1zHWYPUwyvPBqtsPmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=njDq0DCx; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bD4yA/gq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A332C4CEE9;
-	Tue, 27 May 2025 18:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748370680;
-	bh=2sS44xR4BqP6ZT0NN2NeXbfkEpdZ2MWF4j4vm7U0nFI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bD4yA/gqzIQ5hqCFevY/dvtWDUmxbVKqNuChwp6MgejkpWYhmc/xF9+/nRxDPye5Q
-	 YotGrFfYdZA0lrLKEoXCUh/jINCYq7758mEYK8eAeEmshBEdfNNfyl/djy7zF8gvS+
-	 XwSCHB7sBqQaLWriY6ubfg1gbrpC9p8TathnrfH5z14K6m44eT1WmRSWP6Y0lsZb2u
-	 NqQNmRQNwTfYSh9gM/3iqtaSFc+FVzfJyqt+ts6E8NulLYNp8HIIUryiZ0oLzunb2E
-	 HDzdDpHgC1x+f0LOxYCd9+pSITvWGbJcL+1O2oYvkSNhzsvq5z6NGZ7Y4K7ucD/e9+
-	 endILuZuq0AVA==
-Message-ID: <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
-Date: Tue, 27 May 2025 20:31:14 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="njDq0DCx"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-604f48c6e94so157550a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748370805; x=1748975605; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=72YEn2Q0Dpja16kxp7P37Pj+KBEUoWoQIQbFc6yNBwA=;
+        b=njDq0DCxEJi2+x3KePk7j8ppwJEANU5f4ZN2xezJk9GIxZ0ByBR5GrV6ZTFSu8VPJH
+         jfNw2f0Wwf6ZHlbFrciID2en0IWAIHOIZxjnG9up1k2HTwpBVBjYVGzRYJJf7ewrW+6D
+         N07Hzt+rbnoiy1a0b1z798+lwXg5MMBuguSxclcQJndxEDvcDu7r/qNXBSm+gOeeYbET
+         8xXUS4N4iKj8wlXoaFhBgcS+FohzVLgoF7cPdg1W73paO1vMr0w5e2g6KkKlQ+XUYqHY
+         qtuNBhJuDmIT+RdXzGU1cBwk3ZowBaesLdvLqg4ZlIFPSA8pNf2ym2GTAkX9JLNB0xuB
+         Ux0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748370805; x=1748975605;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=72YEn2Q0Dpja16kxp7P37Pj+KBEUoWoQIQbFc6yNBwA=;
+        b=NRl/rgKaZlmncgA7Bz9nnno5MALBVmB6AP97KCgLU4vkiIOIFwoF6K+xVDgQ1wNOgV
+         jhAW2eYX8McnkZqUwIimRKph1S7MeB8/oqbmQ1DMHLG4TAG47hpTFK78BEWldmskCMzl
+         cXF11YG8Bd5oPx08bxltj+6HH+j147jDtZJUa0Co3Qzlu8Tci5dJTQfcp+rGt1KotBMH
+         vtBYam1578rEXQ3jL3awSAo08ji7zwA/42oa8TapBViTnELv4hd41HEmKhynXkdE/tJN
+         jZ60ps+ItTBs/qDhm8WaeLDgXossVZI3D86g95ZgaeXJrOb+2u8hLlVfCihNwgPA9KKD
+         7Cug==
+X-Forwarded-Encrypted: i=1; AJvYcCVCjOiyxjNFk07l5JZQzvRCi92jJLvPx+NoE9yoJtFjo9r+0FgHOz5anoUhK46fIlnaEUr5HJ6vvw7T8Cg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSlFHHEdbHbjIxTE8hxgQ5Jgj+VDP4zIPY84abdI9zRL/xkPyV
+	tKQ7VHD1EqjoCtxLn3OGFhnjNxS1ADXJX6QY3OqN8067K9hjdjzz+K9+2q/PTOdWiSA=
+X-Gm-Gg: ASbGncsinGwkyN/vfQPDmwi4GM7gm7QINIKHuQieN7mpn7O6TRNJAOAeKdTZxq634yv
+	v9TnUjfsnX+0OeTF1Bsrd7UD9TSF9qWDP60pK2rGLRyt/LTB6DwwoTSZWux36Tf5X31BBTBZKWI
+	DnjLSm/qLw5+nQXprdSCjFC7b9YoLlUeNFLv+eHeccuaFYAsTjVKKWM7PVj3P8WEIXZ2EhukQGr
+	/H6mQAI5uy8TleT9WdJaly3Xymdo2JF5DOzP4UNWWk6Srs2YAsDhKwuor1JL6p3Nh9/eLktg0er
+	QLgDfRjSrMC6Bac6xuJjiLNIX7Q+fzcdNdrdcFXIiV0C2371bxjTfCEuMV1i6uEIaJauN9Cp2aY
+	OuTmDaA==
+X-Google-Smtp-Source: AGHT+IFOkXw4gHGIh60oSE6f0M1fnutLE7Ek73wWNqzXgh+uAjUI0U7Gu1VHfmKHmKh6pBG4MCH52Q==
+X-Received: by 2002:a05:6402:3582:b0:602:14f8:9a29 with SMTP id 4fb4d7f45d1cf-602d9bf1986mr4616222a12.2.1748370805364;
+        Tue, 27 May 2025 11:33:25 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-604f1204b68sm1234923a12.77.2025.05.27.11.33.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 11:33:23 -0700 (PDT)
+Message-ID: <b163bb31-2d02-47bb-a7a1-91c1fb007523@linaro.org>
+Date: Tue, 27 May 2025 20:33:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,23 +68,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
-To: Herve Codina <herve.codina@bootlin.com>,
- David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
- Ayush Singh <ayush@beagleboard.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>
-Cc: devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250430125154.195498-1-herve.codina@bootlin.com>
- <20250430125154.195498-2-herve.codina@bootlin.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
+ linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Dmitry Baryshkov <lumag@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
+ <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
+ <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
+ <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
  cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
  JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
@@ -61,210 +96,75 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  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
- 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 a/A=
-In-Reply-To: <20250430125154.195498-2-herve.codina@bootlin.com>
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/04/2025 14:51, Herve Codina wrote:
-> An export-symbols node allows to export symbols for symbols resolution
-> performed when applying a device tree overlay.
+On 27/05/2025 18:32, Alexey Klimov wrote:
+> On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
+>> On 22/05/2025 19:40, Alexey Klimov wrote:
+>>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
+>>> are required to support audio playback and audio capture on sm6115 and
+>>> its derivatives.
+>>>
+>>> Cc: Konrad Dybcio <konradybcio@kernel.org>
+>>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>
+>> Just keep one CC.
 > 
-> When a device tree overlay is applied on a node having an export-symbols
-> node, symbols listed in the export-symbols node are used to resolve
-> undefined symbols referenced from the overlay.
+> Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
+> email here?
+> 
+>>> Cc: Srinivas Kandagatla <srini@kernel.org>
+>>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>>
+>> Missing SoB.
+> 
+> IIRC I took Konrad's changes but at this point I don't remember how much was changed.
 
+And stripped his SoB?
 
-I have impression that this is being discussed in three places
-simultaneously - here, DT spec and DT schema. I don't know how to solve
-the multiplication, but I will keep answering here, because that's my part.
+> So I need to switch to Konrad's owned completely or somehow indicate using tags
+> that it is initial Konrad's work.
 
-> 
-> This allows:
->   - Referencing symbols from an device tree overlay without the need to
->     know the full base board. Only the connector definition is needed.
-> 
->   - Using the exact same overlay on several connectors available on a given
->     board.
-> 
-> For instance, the following description is supported with the
-> export-symbols node:
->  - Base device tree board A:
->     ...
->     foo_connector: connector1 {
->         export-symbols {
->            connector = <&foo_connector>;
->         };
->     };
-> 
->     bar_connector: connector2 {
->         export-symbols {
->            connector = <&bar_connector>;
->         };
->     };
->     ...
-
-And what would this mean? Which symbol is exported - foo or bar?
+No, you need to add proper SoB. See submitting patches about using
+co-developed-by. If there was no SoB in the original work (happens),
+maybe Konrad can provide now publicly.
 
 > 
->  - Base device tree board B:
->     ...
->     front_connector: addon-connector {
->         export-symbols {
->            connector = <&front_connector>;
->         };
->     };
-
-<from my other reply in private>
-Another problem is that the board DTS should not care about overlays. It
-feels like breaking encapsulation and I cannot imagine now adding 1000
-export-symbols, because every i2c, spi, mikrobus or PCI slot could have
-an overlay applied.
-
-You could argue that only few nodes will be exported like this, so only
-real mikrobus connectors. Then I will argue: look at aliases. People
-alias everything everywhere, not following the guidelines.
-
-If we assume that such overlays are designed for specific boards, thus
-there will be only one or two exported symbols not 1000, then what is
-the benefit of export symbols comparing to referencing by full path?
-</end from my other reply>
-
-And with above assumption - such overlays designed per board - plus my
-first point about duplicated exports:
-connector = <&foo_connector>;
-connector = <&bar_connector>;
-
-why not exporting the symbol with the same name? E.g.:
-
-     foo_connector: connector1 {
-         export-symbols {
-            whatever-property-style = <&foo_connector>;
-         };
-     };
-
-and overlay:
-
-     node {
-         ...
-         connector = <&foo_connector>;
-         ...
-     };
-
-Or even annotation?
-
-     foo_connector: connector1 __exported_symbol__ {
-         ....
-     };
-
-
-     node {
-         ...
-         connector = <&foo_connector>;
-         ...
-     };
-
-? This also answers my further question about DTS style (see at the bottom)
-
->     ...
-> 
->  - Overlay describing an addon board the can be connected on connectors:
->     ...
->     node {
->         ...
->         connector = <&connector>;
->         ...
->     };
->     ...
-> 
-> Thanks to the export-symbols node, the overlay can be applied on
-> connector1 or connector2 available on board A but also on
-> addon-connector available on board B.
-> 
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Tested-by: Ayush Singh <ayush@beagleboard.org>
-
-I would argue you cannot test a binding, because testing here is part of
-a process, but what do I know...
-
-
-> ---
->  .../devicetree/bindings/export-symbols.yaml   | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/export-symbols.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/export-symbols.yaml b/Documentation/devicetree/bindings/export-symbols.yaml
-> new file mode 100644
-> index 000000000000..0e404eff8937
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/export-symbols.yaml
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/export-symbols.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Export symbols
-> +
-> +maintainers:
-> +  - Herve Codina <herve.codina@bootlin.com>
-> +
-> +description: |
-> +  An export-symbols node allows to export symbols for symbols resolution
-> +  performed when applying a device tree overlay.
-> +
-> +  When a device tree overlay is applied on a node having an export-symbols
-> +  node, symbols listed in the export-symbols node are used to resolve undefined
-> +  symbols referenced from the overlay.
-> +
-> +properties:
-> +  $nodename:
-> +    const: export-symbols
-> +
-> +patternProperties:
-> +  "^[a-zA-Z_]?[a-zA-Z0-9_]*$":
-
-This messes up with coding style which I would prefer keep intact.
-Basically these properties will be using label style.
-
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      A symbol exported in the form <symbol_name>=<phandle>.
-> +
-> +additionalProperties: false
-> +
 Best regards,
 Krzysztof
