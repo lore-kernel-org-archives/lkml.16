@@ -1,106 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18434276057;
-	Tue, 27 May 2025 16:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E839327A900
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748364718; cv=none; b=cOHHukf66qgSu3XhEiUmxdeUViMRRw0lIWhDBQ5YQgwOyx44QLx8sLTpDDL48XelmSql7dByBafrmtC/Hjdf/CjCMDGLJrHx0VRDd6zQnpj1YTuWs/+akH0hAU/RKenSvseOFYac+LIqqF2nPqyIqA48tZbybzqhmigiRXcMoVY=
+	t=1748364735; cv=none; b=n/gy1ZGLKJJRwYQUwGP5t1d32xHOBkW4vKffDhqC1yXD6gaIvQQejJIdBZwkEzTS/gobpiEHh12m/rl6HEsIlRBtXn+iSgBnW9JbT8fNH5F+IvPLZyyn9HOKd9rMOqlyP2BzBP3rndQUUzcso2ROpFkiVLyFUi7REmXF8m2CY1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748364718; c=relaxed/simple;
-	bh=1QHtJ70y+rvjR6EHIWwb1H2O+LY90CK8zar6Avm1ejE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CDrB2QOoP7f6l8wh9XlgHHOfMWhhMAvBFhmspd2yt5LZQ5rHTcTdMM08jfHqcUXYw5k1nOqWAbeFIUzzvUvouutNM+F0MicfC8ycjfVUXqLXvdNNiT5Nda1Hbrvc3XktbnprvbfLE/j+vw4U/QDYCVjRUDmiZqN5uBGtuliS8sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7trjF/X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7trjF/X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21BCC4CEEB;
-	Tue, 27 May 2025 16:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748364718;
-	bh=1QHtJ70y+rvjR6EHIWwb1H2O+LY90CK8zar6Avm1ejE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=q7trjF/Xiu4/dOXeYm3XARMbuTenNw4xm/v/XKKhQ3Qpz2BR/MmP9HbtTAWT9WNY2
-	 9Ue0cdZe2532DMrkxHXjLPtpiQBle4NzeiOBgrcgpWd6Ppx42XazvV31CdT8BbCy74
-	 9KQX1OYFF0SFkEiAAhHpgAtJ9/PnPEyhv0/MJTjyKbm++CfIKWkGfC9cRP2KpMvq6T
-	 ZGrFw2XqrcTHFs4x3c0tnOmGTbcE2umdCs2wXDsQ7CTP0SNXYrT97dRzF97KDK4DZa
-	 qTvN/hAkBUo3bs+vwWqNantVMjKirXvuqg+P6KDHImv4jJ4X0Hi5fj24rhi/sf9biw
-	 /tS8x5vXTdGbA==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Zixian Zeng <sycamoremoon376@gmail.com>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
- <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,  Miquel Raynal
- <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>,
-  Vignesh Raghavendra <vigneshr@ti.com>,  Chen Wang
- <unicorn_wang@outlook.com>,  Inochi Amaoto <inochiama@gmail.com>,  Mark
- Brown <broonie@kernel.org>,  Rob Herring <robh@kernel.org>,  Krzysztof
- Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul
- Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,
-  Albert Ou <aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,
-  Longbin Li <looong.bin@gmail.com>,  linux-mtd@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  sophgo@lists.linux.dev,
-  linux-spi@vger.kernel.org,  devicetree@vger.kernel.org,
-  linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: Add SPI NOR node for SG2042
-In-Reply-To: <20250525-sfg-spifmc-v2-3-a3732b6f5ab4@gmail.com>
-References: <20250525-sfg-spifmc-v2-0-a3732b6f5ab4@gmail.com>
-	<20250525-sfg-spifmc-v2-3-a3732b6f5ab4@gmail.com>
-Date: Tue, 27 May 2025 18:51:53 +0200
-Message-ID: <mafs05xhmro7q.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1748364735; c=relaxed/simple;
+	bh=VRCY1eehv/Ver0nzPaJ4wEd3cjUwdvWZSvAV4mWIkYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Y0DEI+SrOJkgSd305j40cO+PD83wLIvdz0MjMBs1zto/w4tR45ZnqEmxI8w1l/Xd8xu/NUtuUXgiMYeZjwIZIhQgvOvWqhqFv+Q26WXBHK/g7df30TVkhQueYsvBPmp44ohod22Tuvw7Nm+nU5T5bwsnLY78uah6zAHcHzkPvfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4b6JTX6R3RzvWs5;
+	Wed, 28 May 2025 00:47:44 +0800 (CST)
+Received: from kwepemf100007.china.huawei.com (unknown [7.202.181.221])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5974F180B61;
+	Wed, 28 May 2025 00:52:09 +0800 (CST)
+Received: from [10.67.109.184] (10.67.109.184) by
+ kwepemf100007.china.huawei.com (7.202.181.221) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 28 May 2025 00:52:08 +0800
+Message-ID: <e9a85a82-750e-4ab8-aa1a-d760efd6a818@huawei.com>
+Date: Wed, 28 May 2025 00:52:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/2] mm/mremap: Fix uprobe anon page be overwritten
+ when expanding vma during mremap
+Content-Language: en-US
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Pu Lehui
+	<pulehui@huaweicloud.com>
+CC: Oleg Nesterov <oleg@redhat.com>, <mhiramat@kernel.org>,
+	<peterz@infradead.org>, <akpm@linux-foundation.org>,
+	<Liam.Howlett@oracle.com>, <vbabka@suse.cz>, <jannh@google.com>,
+	<pfalcato@suse.de>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <20250527132351.2050820-1-pulehui@huaweicloud.com>
+ <20250527132351.2050820-2-pulehui@huaweicloud.com>
+ <20250527142314.GA8333@redhat.com>
+ <fcb3b061-ca4b-44d7-a9fc-ecd0713c3fda@huaweicloud.com>
+ <3f0f86a3-6ac4-47b5-8626-162b117dce0f@lucifer.local>
+From: Pu Lehui <pulehui@huawei.com>
+In-Reply-To: <3f0f86a3-6ac4-47b5-8626-162b117dce0f@lucifer.local>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemf100007.china.huawei.com (7.202.181.221)
 
-On Sun, May 25 2025, Zixian Zeng wrote:
 
-> Add SPI-NOR controller and flash nodes to device tree for SG2042.
->
-> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
-> ---
->  .../riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts | 18 ++++++++++++++++
->  arch/riscv/boot/dts/sophgo/sg2042.dtsi             | 24 ++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-> index 34645a5f6038389cd00d4940947c6bb71d39ec6f..c59a819e35d3201c484bf98392aec14392a7eb04 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-> +++ b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
-> @@ -68,6 +68,24 @@ &sd {
->  	status = "okay";
->  };
->  
-> +&spifmc0 {
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
 
-Shouldn't you also add other properties like spi-max-frequency or
-spi-{rx,tx}-bus-width? Same for the other flash.
+On 2025/5/28 0:37, Lorenzo Stoakes wrote:
+> On Wed, May 28, 2025 at 12:32:57AM +0800, Pu Lehui wrote:
+>>
+>> On 2025/5/27 22:23, Oleg Nesterov wrote:
+>>> Well, I leave this to you / Lorenzo / David, but...
+>>>
+>>> On 05/27, Pu Lehui wrote:
+>>>>
+>>>> Fixes: 78a320542e6c ("uprobes: Change valid_vma() to demand VM_MAYEXEC rather than VM_EXEC")
+>>>
+>>> I don't think that commit could cause this problem.
+>>
+>> Hi Oleg,
+>>
+>> Me too! I was test that before and after commit 78a320542e6c, so call it the
+>> `directly related commit`. In fact, I think the issue was introduced in the
+>> original commit 2b1444983508 ("uprobes, mm, x86: Add the ability to install
+>> and remove uprobes breakpoints") # v3.5-rc1.
+> 
+> Yeah I missed this! I concure that the cited fixes commit is probably not it :P
+> 
+> Your repro is delightfully consistent so could you bisect to be sure?
 
-> +	};
-> +};
-> +
-> +&spifmc1 {
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
-> +	};
-> +};
-> +
->  &uart0 {
->  	status = "okay";
->  };
-[...]
+OK, I will try that tomorrow. PS: It is hard to work repro that for the 
+so old kernel.😅
 
--- 
-Regards,
-Pratyush Yadav
+> 
+> BTW did you just say v3.5... Good Lord :)
+> 
+>>
+>>>
+>>> Oleg.
+>>
+> 
