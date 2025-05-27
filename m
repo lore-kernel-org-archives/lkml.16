@@ -1,152 +1,109 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9269F27A45C
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A214527BF76;
+	Tue, 27 May 2025 15:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748361366; cv=none; b=d0WnouUwf3qWkCMjuP9vAYHtTUtLSuTDLos+rRkZ+/+bYtPAa3fsNVdvCXdxbHxO93j4H4KJDEmufp8dEt8FL2js8MKC9hqWIcsyD19aeBUHD+o+77Phad6P1J2sH3Z9aafyT1l7/KBThIh8AvpEp0WWpNGQdX0uI+7osA6GT2k=
+	t=1748361447; cv=none; b=AeVTji3DAiwfQYyBwdDHffLFnEKw4/sNfImoz4t/JxJqTduS2FeqSZul2VMQgfHBjju1lPHRDpCdFZJqwfiJQnEGz8fLOqMMSVJoAcbqvZrTID/zu6SrQInoVZvld0rYu6/GPcsGn8LlX8hFDw5iXXwn1KM8AATgQ+LwkvV19Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748361366; c=relaxed/simple;
-	bh=1EN/qo7phDn1lEOJKo1bEU9nZpbFRZxjY4LQ8qzGqFI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=oBXuAO8IS7rAES2Dz2vpsOaSRK2BdRaMd6AOlbK9Azqla7nAcbKP5yJej9oWzfS4JCeB3rKUiYQ6SNJBA1GueFRgbPl/J9uAnrWuWdbPyKB9IFvxhFBYQXWlR8ECU+OwenrT0gNIon+d08Uf7yF3huPGME08BveFd95GD9rurnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D9+bMXgB; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748361447; c=relaxed/simple;
+	bh=0Z9C1w5M/TsRnWXH2JrFiJvNsRS2GWWSYL7Uvs3V00o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lM5il6TK/9CUemCkzMWbBQZEw0oymrbAe2XuXzYYQUTw3f/1fEfzi70Vger9HhoOPXwVUShyBD9OpGNaVbiHbm02RT6O+vmj7iTyiZ5ikB83tnQHEA0ZY88EQH1q+MJ/2lTnCMmBb0UlRzRYTI+BLV1eR+MMGn/GpLZ+pEzl+TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlXXn/+c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9+bMXgB"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe574976so28445665e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748361361; x=1748966161; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WUOHpXno4FKjbaz+Vq7mO6g3BDL4JOg348p7rmPIkO0=;
-        b=D9+bMXgBs7Whru0LXz2r8gO7XmJknG9G4OyDwi7ccJ1O7tl45N6R2SM7BXlixt0hbN
-         p+wdfVF4mcWYrxKOqKhvj5QneCwW0HGgbkSstk3ZSOqrISIK3XRYzvLmmnzRQcbjjRHH
-         roaC8DMpMmT2XxdheJluYHIFNAblObzopbfDiKrdzVWHIiWy5kg4klQ/FvzPd7IprvWV
-         s2anymuNGOFM8TWZP+3Tj9DyWDwW26vmtZaLmJotryTT3NJunu2hHKQ+jEqerXwKSf8o
-         Tkr6cB1LTmEUnzw3ZhBFOi+plBdu6UPT4yuFFT53IWUA0E191w2W7eIfDOyxRRBEzWMR
-         B2Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748361361; x=1748966161;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WUOHpXno4FKjbaz+Vq7mO6g3BDL4JOg348p7rmPIkO0=;
-        b=MqRa88Q4P6PYOYIx7l08VsEgK1O7JNSqwrxKr/lODGNY3dxtskFbEJRt2PSTloVabp
-         /eoouZGaPkaf85BoQyn51037wBM627SFMCOgwAhh81DvOSNBzsiaE5au+4mg27dqf8y3
-         6wK+8I9thTgAkfLJwrB63Qcln5sThyk3hWICXHnxC08iH1pjyF/BK7ZHL5VBSd5wDjJU
-         W2xhYvFx9bkaZAz4Vku59cvVT0TiJhLeOVR0YE6LwyNK2u3xItT/lruf3mL36ef1NUji
-         3OzFtwZ9a/zy+Kg56T3MyvNOA4zEjlMIa9U1sW4wGM7cknO7gmWGqmHhcfZMEidzL5qI
-         yi6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWRvpx6z771KJSPTe+iLZ3ZPfdXa+N0jmi4YXwU/lCLbdqOx1W8E4mdGO/0YZ8zakKYpc1IZas1h5L0wl8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyozTIIc/X6ErUBLds013IUYdxTmrTZZf10h7atAzr9Rc9ZKtU+
-	cXFoKFTC2Y0O3fRDyDyb9zGWOnO/cr3y+UWTWvF6ksmuRC7oNPlYNph62SGeRiS6i4s=
-X-Gm-Gg: ASbGncso43AKyqGQa6l7LAho++EOG8IPecd5JR66FElX+u1bip2j1CJKMlfIJAsz3bs
-	fYwBC6YiuFSahYsmBczu4UEYZVBTThnl/ZgiByYa7VSH/L2mjdhA1WtTY8Ijk3TQrvsfe1fqA5R
-	hUd2nbdYsCaDXij0lmqOVuUaaA55uxZriy/fWnKKiLY0iq5hShzfgmawEs9AapCmqXuAgf+Rrsx
-	uucxEJGZvkOx59iW28f8AntARerMHlTzeS6dQP6e6U2TiWwaksm5Givd9F6R0ZdLCkZ8F9CzXt/
-	QDQYw7eYSioZcJ6Wo7itj/dCsKdlz6SADTk1nV3gWZhp3B4oK5aRbL7TsoHvqIzJ5otd
-X-Google-Smtp-Source: AGHT+IGWpBubqNiiMJO9C0pBAekzBnLwiPK9uY689/6fUTlai3/xs++Qb/ljE1+USh/yGxcE4+gWhA==
-X-Received: by 2002:a05:600c:6296:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-44c91ad6b46mr120335515e9.8.1748361360729;
-        Tue, 27 May 2025 08:56:00 -0700 (PDT)
-Received: from localhost ([2a02:c7c:7213:c700:f024:90b8:5947:4156])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0ab8sm270595235e9.13.2025.05.27.08.55.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 08:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlXXn/+c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC15AC4CEEB;
+	Tue, 27 May 2025 15:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748361447;
+	bh=0Z9C1w5M/TsRnWXH2JrFiJvNsRS2GWWSYL7Uvs3V00o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WlXXn/+csK9sVDR2afQauNdTMsQ019+M+xioJhgXsi2IWX9mKayqR2983BLfE2yo+
+	 Jj+CKK1PFOa5jEiMSC/dYr3Z5rCpsXvapdImtEn/6D4JS0l6z3b8ZGCdanqBWsFFcQ
+	 hMhwwb+S/gPpEfY7gavtCWgbWBJk//ltf3gzrTmT28en3nJNu6+131YlKJhCU4g64M
+	 aO6r4QUGDpr7ZNW0Gx2EUCMlf3YjUJOMa0JhQi3HkcG3ok+2VsIxrkgIL/qUPlVSku
+	 DlsgMlz4RF42EQ6jN3cDIYIMQNMdh+32Y9QFMkH1EiXfU7lN7l0kx6HhUgpI91/wVU
+	 wvpqDt1IhGUVw==
+Date: Tue, 27 May 2025 17:57:24 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Melissa Wen <melissa.srw@gmail.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mairacanal@riseup.net>, Haneen Mohammed <hamohammed.sa@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org, arthurgrillo@riseup.net, 
+	Jonathan Corbet <corbet@lwn.net>, pekka.paalanen@haloniitty.fi, Simona Vetter <simona@ffwll.ch>, 
+	Rodrigo Siqueira <siqueira@igalia.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com, 
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com, seanpaul@google.com, 
+	marcheu@google.com, nicolejadeyee@google.com, linux-doc@vger.kernel.org, 
+	Pekka Paalanen <pekka.paalanen@collabora.com>
+Subject: Re: [PATCH v18 6/8] drm/vkms: Create KUnit tests for YUV conversions
+Message-ID: <20250527-prawn-of-weird-hurricane-91af0f@houat>
+References: <20250415-yuv-v18-0-f2918f71ec4b@bootlin.com>
+ <20250415-yuv-v18-6-f2918f71ec4b@bootlin.com>
+ <adcd3356-5aae-42a8-8b55-9761c95d2e52@bootlin.com>
+ <20250522-skilled-brawny-parakeet-e5cccf@houat>
+ <ef78f01a-b996-4e44-bb93-b71c6d7526a3@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="rw7teijhdglkr4zz"
+Content-Disposition: inline
+In-Reply-To: <ef78f01a-b996-4e44-bb93-b71c6d7526a3@bootlin.com>
+
+
+--rw7teijhdglkr4zz
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 27 May 2025 16:55:59 +0100
-Message-Id: <DA72DKCKVX7T.269HYJZNIABOB@linaro.org>
-Cc: "Liam Girdwood" <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
- <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Jaroslav
- Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 10/12] arm64: dts: qcom: qrb4210-rb2: enable wsa881x
- amplifier
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Srinivas Kandagatla"
- <srini@kernel.org>, "Mark Brown" <broonie@kernel.org>,
- <linux-sound@vger.kernel.org>
-X-Mailer: aerc 0.20.0
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-10-9eeb08cab9dc@linaro.org>
- <c7d5dbab-0a51-4239-811e-dc68cac18887@oss.qualcomm.com>
-In-Reply-To: <c7d5dbab-0a51-4239-811e-dc68cac18887@oss.qualcomm.com>
+Subject: Re: [PATCH v18 6/8] drm/vkms: Create KUnit tests for YUV conversions
+MIME-Version: 1.0
 
-On Thu May 22, 2025 at 7:13 PM BST, Konrad Dybcio wrote:
-> On 5/22/25 7:41 PM, Alexey Klimov wrote:
->> One WSA881X amplifier is connected on QRB4210 RB2 board
->> hence only mono speaker is supported. This amplifier is set
->> to work in analog mode only. Also add required powerdown
->> pin/gpio.
->>=20
->> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->> ---
->>  arch/arm64/boot/dts/qcom/qrb4210-rb2.dts | 26 +++++++++++++++++++++++++=
-+
->>  1 file changed, 26 insertions(+)
->>=20
->> diff --git a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts b/arch/arm64/boot/=
-dts/qcom/qrb4210-rb2.dts
->> index 6bce63720cfffd8e0e619937fb1f365cbbbcb283..4b878e585227ee6b3b362108=
-be96aad99acba21d 100644
->> --- a/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
->> +++ b/arch/arm64/boot/dts/qcom/qrb4210-rb2.dts
->> @@ -270,6 +270,24 @@ zap-shader {
->>  	};
->>  };
->> =20
->> +&i2c1 {
->> +	clock-frequency =3D <400000>;
->> +	status =3D "okay";
->> +
->> +	wsa881x: amplifier@f {
->> +		compatible =3D "qcom,wsa8815";
->> +		reg =3D <0x0f>;
->> +		pinctrl-0 =3D <&wsa_en_active>;
->> +		pinctrl-names =3D "default";
->> +		clocks =3D <&q6afecc LPASS_CLK_ID_MCLK_2 LPASS_CLK_ATTRIBUTE_COUPLE_N=
-O>;
->> +		powerdown-gpios =3D <&lpass_tlmm 16 GPIO_ACTIVE_LOW>;
->> +		mclk-gpios =3D <&lpass_tlmm 18 GPIO_ACTIVE_HIGH>;
->> +		sound-name-prefix =3D "SpkrMono";
->> +		#sound-dai-cells =3D <0>;
->> +		#thermal-sensor-cells =3D <0>;
->> +	};
->> +};
->> +
->>  &i2c2_gpio {
->>  	clock-frequency =3D <400000>;
->>  	status =3D "okay";
->> @@ -736,6 +754,14 @@ wcd_reset_n: wcd-reset-n-state {
->>  		drive-strength =3D <16>;
->>  		output-high;
->>  	};
->> +
->> +	wsa_en_active: wsa-en-active-state {
->> +		pins =3D "gpio106";
->
-> Are there two separate enable pins? Or is the powerdown-gpio something
-> else?
+On Tue, May 27, 2025 at 03:36:16PM +0200, Louis Chauvet wrote:
+>=20
+>=20
+> Le 22/05/2025 =E0 17:39, Maxime Ripard a =E9crit=A0:
+> > On Mon, May 12, 2025 at 03:07:55PM +0200, Louis Chauvet wrote:
+> > > Hi Maxime,
+> > >=20
+> > > Did you have the time to look at this patch?
+> > >=20
+> > > Pekka added his Acked-by, but as you made some remarks about this pat=
+ch, I
+> > > would like to have your validation before applying it.
+> >=20
+> > Yep, thank you
+> >=20
+> > Acked-by: Maxime Ripard <mripard@kernel.org>
+> >=20
+>=20
+> Hi Maxime,
+>=20
+> Some time ago you told me "The rest looked good to me the last time I
+> looked." [1]
+>=20
+> Does it mean that I can add your ack on the rest of the series?
 
-No, should be only one. I think 106 on tlmm is wired into 16 on lpass tlmm.
-We need to assign gpio function to such pins, aren't we?
+Yes
 
-Best regards,
-Alexey
+Maxime
 
+--rw7teijhdglkr4zz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaDXg4AAKCRAnX84Zoj2+
+dulVAXoD13MCajcNMoBRJxAeK9HS/yXpjp5RlZ6rlybrQ615055N0mgDb5/jymAK
+A4hJ4yUBgJB5qctG/Jzs3MZECbUgoMWi4236moVZFYRoINliBBs1+0X9EAvbnteZ
+K+WWDjcHvA==
+=9WKU
+-----END PGP SIGNATURE-----
+
+--rw7teijhdglkr4zz--
