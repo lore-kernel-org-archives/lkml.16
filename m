@@ -1,72 +1,130 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013034.outbound.protection.outlook.com [52.101.72.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A84422541D;
-	Tue, 27 May 2025 08:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23552248F6A;
+	Tue, 27 May 2025 08:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335702; cv=fail; b=JWuRo+VV8RDNYuus2PUzynesmidNYDsLv/e0eks8OeR5kYeaqIF8klfrPJz8t/P5dCkbMLYqPkdI5Y3rYm7CD2KTJCaHlP29FaoVLcSYcFCBhV49TnslO0KhK4+1M01zXiU9VSfr0+sWdj8l8cYDzunzlXaWvzLOmz1lRXICIDA=
+	t=1748335715; cv=fail; b=f6f+nsQszYUzZh4Nffr9h1cbQJcDTLrjFTN58waqwFZRaNrpeCMybV0xep6fHQPJ9fSCrWEUbbYUVwqlyA17EQQeUO4JQKQxC62w0rpw6epJAD0IlYaba10GRUgtLmNquGPtqoJa/9eIF/qXB+rZ52XrnmeFkl1WGAJRtcmUGdA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335702; c=relaxed/simple;
-	bh=6+0O6fx++VbzRT0wVIUfVCmPwJ/McSy6LR6xrPdpp8E=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oQHndh8aaPxbF815ytzVoVycDjUlvJYddNhXBRDYhPOUOdMlm5LN7/T+kCXqUy1Js81tZyaBCddRZrQrb2UbMqnGUJrgec48ltYGpHBUvswz4cyll7RpDNr8CaMZ7Uy0gFwj67NESHxRhL7EDik9ocVw3VOVpLIBToGGYhGIB5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=gUT+y8wx; arc=fail smtp.client-ip=52.101.72.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	s=arc-20240116; t=1748335715; c=relaxed/simple;
+	bh=CKPKIRAq1AD/JPYw1WnxAZGcfKW2B2xo1aIjt+QbUJw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=JPLi9x6jLoZ7ZmVW4868pAgeCzzqYlI88+Of/Av0IubexdeU1WBQJbetK2qCJOrpt+ZCUpJM0eJMurR7UDJz60sn30L1YQtT8DLDSZ96WLUwnI5uJsWRyh1ndI7yxW05xSi5Z0PSXX65L2AsL4ZYVfV7PtPlOa+U4EdfutUrJkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IjWbnt+n; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="gUT+y8wx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IjWbnt+n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748335713; x=1779871713;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=CKPKIRAq1AD/JPYw1WnxAZGcfKW2B2xo1aIjt+QbUJw=;
+  b=IjWbnt+n3pZYKYftOxR1lRGa54u/K31gKHLeMMtp/69+qOx/3xSQ9ZuT
+   ykvRbL7bXmede7lKGC4mtj5jOXGkancMEn1KV8ADH4RH/feqOI40tlQqh
+   RWJROgiH2gBbo/SHriAlqY8e3Ps8H/TQKgYZiPYoMnOlc7uYf4leyiSLy
+   +rhntnv+rp2AF5jgG7hibtTQ782IXA2jpBGhDVjNjg+DGkYLa1iu85QhG
+   JUhK9BgobvLG8FYG8RPyCV6otbQ5HQ3jdEQp6jXmcb90zI511pgbZuMrK
+   EmwYapJsaMWiaJkXjI/KxeThAAVnTBkv5twG1DRjav0UY7WovLU6ZO14o
+   g==;
+X-CSE-ConnectionGUID: TlquUBHESmWy7J/2AZubRQ==
+X-CSE-MsgGUID: wcLjqblzRn+c56WCYGJ24w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11445"; a="49568536"
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="49568536"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:48:31 -0700
+X-CSE-ConnectionGUID: xRxJznNQSx2QDNCv89guoQ==
+X-CSE-MsgGUID: A6W8/kwSRfqQS99c8PvD/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,317,1739865600"; 
+   d="scan'208";a="142577125"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 01:48:30 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 27 May 2025 01:48:30 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 27 May 2025 01:48:30 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (40.107.92.71) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 27 May 2025 01:48:29 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OKmIVXinumuJacEavBJbUXERWi+SSRjV1heEZ2LWab7NtKswOL0aEX1Ph3VNl2RnQpFVaLxaaZR4ktDw5wySjmivxadj4MVdKdpz4x23PP9XTqWTogQ7WAAJIoXzIgCQe7zDPXahsnCrMPFDqJnK9BdHto3n4F0Wp6h7jPsqVZcjfYLG5qZbjBY2W97g7joGXeE8g0UKUUKyP4UPiOn0jIPqU1paomhd4j57RRoO3B52tuGPSiso+qR9JqczrnVGgN2q7Kmub1ybTb4IK4kHNlBW1eVZYK5yzf1w7CQ5LHOwFyYi6FlsGvSd9F3WHye1IlPYmmsdUEixlfTxgt6e3Q==
+ b=q3SyBcovSB6pOY0C8FIfHwuILhw03CPm1mZ1zKLn5hAT06rcpO0L3wC3PywA+/Urosq6lFxME8Yx9Pk0yk93Kbth0AdSggU0toAUuAtpOCJM8nbRP3xGU1Wu/Vou3zoRMH+InrOtByAXUVnZhcdB+Kv2Z9G8bYlydusA/glWmwHMnuNWQV770JnTO2iGFe2j00lQ/wVoI32jIdO0x8lEktL7WckTqyr5Jg9RJcJtcAmwf9vTd2BD2g1muU6pX+HSwuKHBltFFqUCfJLQC8tqRxUtpYhnqMqISUFXMwfLKb0aG23VmJeN7POM/etcT4VxxvJJyf0dbbaFJ9MWpnDqXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J5wfiClweX+GlnBQcf3RODd6fas2D3+YHCTyCuAPA2U=;
- b=AcmVzJd9QKd18vtFMrvmEgdMbGiyoob5tR2q8JUMc3N5qY5Com/N1fF7IxblgRO35btjlk0TQDORp57TcKTaV2jLBNGSDqZ3lfud47ZzB8uISXkbRbhrmJ59dORV4GEQP6uf181RHLduBErQq0nhtOr4zOwmIFiI+KjiVVVaZx7fwMqK9wlX88V6zO9krthY2cnsbbsUVuJZb+GWnDvRbX85zStB5TZdg0H9AdYgH0D8XX8i5M76pEM7DGfPwcwJbiijUn+t5hiJUro5PhWcCP7zSVmTSCTUgyk0UFrh1vJfNCOe8VERNBPnU3HI+L+1EAPJtz5Vv2WirQMySM+3wA==
+ bh=QNG+McTWe4AEScdElA4zyvWq3N7GBRoXZ3C+qxvIMj8=;
+ b=BV7OUGoRj0671/Fks5mOEct+b4Y1od/8upCTHoS5IxYJTLVOfL26M7h3iKsl8m1m2T4fDHC1XQ+L2w6qGWcTPJAvVf1iNK9a2xE6rIWVm0TM4NPw20HoXkJjXtGfokYSt1AsaKuQGWkLN3wEzLkiQZNWyaOJljv+Izf5vs5VK43XJ8NbJqU97kFyCeaukPoGMbxo7KiS+ak5ydEyF0FHQQcgqqoLb9cRcnuUdTfSXBckf0ZBxzdWZK1ZriiUL+Oos3eTmHRCQcBhOcLY79W3OHE2PZqhHuGM6XG9mHgbXDB5VKMPtXGj0UB+f8ezaIC7XDFAhVeUqVBnWFMZxxv4Zg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J5wfiClweX+GlnBQcf3RODd6fas2D3+YHCTyCuAPA2U=;
- b=gUT+y8wx0RE+jGJtJwaN3d/ekIqc/o0aILQXJRO7cs02Mby3uDhS4Dc5BCjxVMNenOa+sT7CMVOnOKydcym+O7jeg98WxLSv36QErfGCP+3EL7F4YNKijRCqwqQLY/oxDONKKG66NfUdnyoBYqslgJBeF0mYxbimoMKsYDMncOo=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by GV2PR04MB11400.eurprd04.prod.outlook.com (2603:10a6:150:2a2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Tue, 27 May
- 2025 08:48:11 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8769.025; Tue, 27 May 2025
- 08:48:10 +0000
-Message-ID: <d1fab35d-a4e7-449d-9666-0c651e44929a@cherry.de>
-Date: Tue, 27 May 2025 10:48:08 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: mfd: rk806: allow to customize PMIC
- reset method
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Quentin Schulz <foss+kernel@0leil.net>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
- Daniel Semkowicz <dse@thaumatec.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de>
- <20250526-rk8xx-rst-fun-v1-1-ea894d9474e0@cherry.de>
- <79903ad6-0228-41a3-b733-415cc43ec786@kernel.org>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <79903ad6-0228-41a3-b733-415cc43ec786@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: GV2PEPF0000452B.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:158:401::351) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ CH3PR11MB8708.namprd11.prod.outlook.com (2603:10b6:610:1be::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.29; Tue, 27 May 2025 08:48:25 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%2]) with mapi id 15.20.8769.021; Tue, 27 May 2025
+ 08:48:25 +0000
+Date: Tue, 27 May 2025 16:45:49 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Ackerley Tng <ackerleytng@google.com>
+CC: <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-fsdevel@vger.kernel.org>, <aik@amd.com>, <ajones@ventanamicro.com>,
+	<akpm@linux-foundation.org>, <amoorthy@google.com>,
+	<anthony.yznaga@oracle.com>, <anup@brainfault.org>, <aou@eecs.berkeley.edu>,
+	<bfoster@redhat.com>, <binbin.wu@linux.intel.com>, <brauner@kernel.org>,
+	<catalin.marinas@arm.com>, <chao.p.peng@intel.com>, <chenhuacai@kernel.org>,
+	<dave.hansen@intel.com>, <david@redhat.com>, <dmatlack@google.com>,
+	<dwmw@amazon.co.uk>, <erdemaktas@google.com>, <fan.du@intel.com>,
+	<fvdl@google.com>, <graf@amazon.com>, <haibo1.xu@intel.com>,
+	<hch@infradead.org>, <hughd@google.com>, <ira.weiny@intel.com>,
+	<isaku.yamahata@intel.com>, <jack@suse.cz>, <james.morse@arm.com>,
+	<jarkko@kernel.org>, <jgg@ziepe.ca>, <jgowans@amazon.com>,
+	<jhubbard@nvidia.com>, <jroedel@suse.de>, <jthoughton@google.com>,
+	<jun.miao@intel.com>, <kai.huang@intel.com>, <keirf@google.com>,
+	<kent.overstreet@linux.dev>, <kirill.shutemov@intel.com>,
+	<liam.merwick@oracle.com>, <maciej.wieczor-retman@intel.com>,
+	<mail@maciej.szmigiero.name>, <maz@kernel.org>, <mic@digikod.net>,
+	<michael.roth@amd.com>, <mpe@ellerman.id.au>, <muchun.song@linux.dev>,
+	<nikunj@amd.com>, <nsaenz@amazon.es>, <oliver.upton@linux.dev>,
+	<palmer@dabbelt.com>, <pankaj.gupta@amd.com>, <paul.walmsley@sifive.com>,
+	<pbonzini@redhat.com>, <pdurrant@amazon.co.uk>, <peterx@redhat.com>,
+	<pgonda@google.com>, <pvorel@suse.cz>, <qperret@google.com>,
+	<quic_cvanscha@quicinc.com>, <quic_eberman@quicinc.com>,
+	<quic_mnalajal@quicinc.com>, <quic_pderrin@quicinc.com>,
+	<quic_pheragu@quicinc.com>, <quic_svaddagi@quicinc.com>,
+	<quic_tsoni@quicinc.com>, <richard.weiyang@gmail.com>,
+	<rick.p.edgecombe@intel.com>, <rientjes@google.com>, <roypat@amazon.co.uk>,
+	<rppt@kernel.org>, <seanjc@google.com>, <shuah@kernel.org>,
+	<steven.price@arm.com>, <steven.sistare@oracle.com>,
+	<suzuki.poulose@arm.com>, <tabba@google.com>, <thomas.lendacky@amd.com>,
+	<usama.arif@bytedance.com>, <vannapurve@google.com>, <vbabka@suse.cz>,
+	<viro@zeniv.linux.org.uk>, <vkuznets@redhat.com>, <wei.w.wang@intel.com>,
+	<will@kernel.org>, <willy@infradead.org>, <xiaoyao.li@intel.com>,
+	<yilun.xu@intel.com>, <yuzenghui@huawei.com>, <zhiquan1.li@intel.com>
+Subject: Re: [RFC PATCH v2 38/51] KVM: guest_memfd: Split allocator pages for
+ guest_memfd use
+Message-ID: <aDV7vZ72S+uJDgmn@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <7753dc66229663fecea2498cf442a768cb7191ba.1747264138.git.ackerleytng@google.com>
+X-ClientProxiedBy: KL1PR02CA0010.apcprd02.prod.outlook.com
+ (2603:1096:820:c::15) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,181 +132,423 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|GV2PR04MB11400:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9dd7f989-b99d-4922-270e-08dd9cfb359e
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|CH3PR11MB8708:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0b13998-b099-4540-36cb-08dd9cfb3e5d
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c1gvYm9vdVlsNG1zYnJTOFprU0phZk1haVFZNk9kZ0I1MlBFdDZPdmkrWU82?=
- =?utf-8?B?L0xvM21tek5qd1BGSi9CT29wR2JGZTlWM05BQmppb0VMMHM0MUsrK1ZnbWpH?=
- =?utf-8?B?b3hBQ2tYSjRzVzhuaGY2OGFBRkM5OCtyVXpETUtWWjFGMUJsUGJsT0VaUXpk?=
- =?utf-8?B?RU1CYi9KSDJ1RkNyUGY4OXFRNG00OVdsbjlvZ1NhdHA4VEdNU1o5NGEzUmUx?=
- =?utf-8?B?ZXdJVnJvd0x4VjgvTUV5cWhUZVJRN2Zsa0xiUzJKK2lBY3I3ZGlRVEwxbFdK?=
- =?utf-8?B?SzZpWW40eXVUZlUvVFhlNXpCUVlIWHBoOHN5R0k1cktWL3BIQ0VGOVBNSG5i?=
- =?utf-8?B?OEtmL2lGaXY1M0VPUEtNT0tXYzNBMEpiL01Ld0lOcnVWT2k4dlN5ZWliTWFy?=
- =?utf-8?B?LzV2TVVSQlp0U2I1S2pTOFNJQkN1MkFmYmdtWWxSZk91RDlHckNzaUZDUWFL?=
- =?utf-8?B?SFZVNm93K2pMYUQ5NkhHZ3pMYWY3SHN6QXdrT0RYQjJRd1dvL29ZU0Q5dGlw?=
- =?utf-8?B?TFRVMTgwcSt0L1h2Rnc1eWhyeXBSZFBDMFlIN3FJdHJDKzdlckRmWVliQ1dv?=
- =?utf-8?B?OExnUDNwc0lKUCtKakNUZ3UydjJzTE84TWhZSVBVcTB3MENzc0Y1SldHa3BT?=
- =?utf-8?B?QytGaWZOYXhTQnE4Z2lYWnBzcTdWdG5KQmx6MzdHRVRnS1IzcGRvalNWckVJ?=
- =?utf-8?B?OFNVL2czZjNSZVhxQmlqcFZScGR1ZEdnRUZLZmlZZ3p6R24rWGtaR2pvSitp?=
- =?utf-8?B?blBBRnlFSG93NGlYN0FwZEh3V0taUnNXY2g4a3BmNjZuaTg4RjRzdG5HT3ZW?=
- =?utf-8?B?UFA1MWswdVVzR3FSQ0l2clFMZ250OWN3ang1VkZOTzc0aHdaQzAxbFY1Mkpz?=
- =?utf-8?B?SUlPL3pXalBBbUJFY2ttNXp6cFIraUdhcVZnZ0JWTmZsaktWTlhIQ3ZQRHZs?=
- =?utf-8?B?ZjMzbEZTRTBENFJtZHlhUkUyOUNRaFN4WW41eVlncEw2RENhSWJpZzFiTWQr?=
- =?utf-8?B?cEthZ1hhbjZtUVJsbGZYZWRnRVAvQVU5TUhrVTJWS2FuVTNkZzZkUDNoSHpX?=
- =?utf-8?B?ZktQaVFYSkFFL1FtdnJIRlF4TWpDZ3Uzc1QxNGxsQ0gyZU5BWVorNUVlY0tP?=
- =?utf-8?B?NWxhVUNuR2o4cVJUd0F1dThhaER4M3E3N1lzdDYrRmszVFBrTFIwYmhid1NT?=
- =?utf-8?B?WkFpbEM5YjNXNXRwZ05iQmVxNG54VmFNYVBRL2pLbzFrbkwrQ3FlNFpGWXB3?=
- =?utf-8?B?RERhN0tVRU1UV2hFNFF5Ynl1ZzZncHdDVU11N2lJQ3FNKzJzMkZqRUZ2MzVk?=
- =?utf-8?B?T3g2UVZzREZ2d0dnaWlPeUJyNlVXNi9idTBON1czMmx2USsyR3Q5VkY0RExj?=
- =?utf-8?B?TzJCZXlvYmJNMjEwckEyeDNJeGlKZUREZis4QmhHMTZpMjJta01OZDBneW5a?=
- =?utf-8?B?RnBET0xOYjJnQnI3Wm0xSFVtdlF4WDBWNnFoTS9CeXdsMmw4KzJvNTJJK2h3?=
- =?utf-8?B?cmV5MURzMXBXV3FOc1Z6NnJvUzZUTDBxMWZyZlJRbDFQZkZVZWlaUjZVMWxu?=
- =?utf-8?B?S3U4RGRXb0RHcjh0bFdiamRsNEVZb0xVaVVsb2U0UUs0cDVyWWoweFdnUGx3?=
- =?utf-8?B?RUg3ZHJ2ZU5tVGJGSzRzaGRSMU9BQS9talVxbTdyRTdJcytwdzNHREwxYnJS?=
- =?utf-8?B?ZzRSdUhiYm9DS0t0UE9MeGpSQjhKdXUxVHRmQmhnZXo0S291TlF1dk1LclRk?=
- =?utf-8?B?aFZCcG55Y2xFZkFmWnlTZTg0K3A3ZnVmaHNsaTB0aUtBOGhrMkpMVnZ6UTE2?=
- =?utf-8?B?RXJYcXIrK2ZKZWRpNnN0WUVRY1gvRk9PUk03RjFBNTgxR2U0L0EvVFV1eExw?=
- =?utf-8?B?Y2xoRTVVRDQxeHRDK1hxd2JWSmFjZEdCUlVsMkVZUWFxdnV3ZEFzQk1MVzNX?=
- =?utf-8?Q?kx91aZXegAU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?aqiAUwrx9j5c28gwTqCStRs9by8w66DWVX/tyB6HuhqG87s1+dcjteZtJPJo?=
+ =?us-ascii?Q?BV5v0Kr0gnLPRyxOfs3LtzXDAu9VmyxOf6GfvSmd531+RFVSGUT9Gxt2UCs8?=
+ =?us-ascii?Q?qc3AACQxCVmzVupKb8A1C77IHAQQeda+nDzGfIHUAsqMa/RjGbcA2rSAxtF1?=
+ =?us-ascii?Q?trw/Bv5/Lwyg7G0nIruceDZQ+5aqM/Bsp5vawzUmc2rfwFHLefL1cZAkQ1Xm?=
+ =?us-ascii?Q?FWzvN3j4uuhKqe7yU7XoJLoDgAQ16NF22zsyv4e1BwzHrh0QICt648iXebSW?=
+ =?us-ascii?Q?plvWcN5v6YkLfnjVJ+rXIZNPKH3KVspCt67NefN0kCXvSprbjAM4AhinEXKA?=
+ =?us-ascii?Q?67GhBSXyY6G2Gq0zQSHZ1gdeOkzTTxgDQLusvrgen5xPj2JBxOp3mO4RyuO6?=
+ =?us-ascii?Q?U0R5C9zCEwoPyH9Hi6OvCq32vEmaL0f3jcK9pZLMNaVnB6a6e7i8gf+9UKjQ?=
+ =?us-ascii?Q?VF5dBVko0sAA3q8jOFdJRJ9G54iXymNs9fzt26ftTyPKRP8fWgZUK39tTHyC?=
+ =?us-ascii?Q?iqMquu7XCYXJx4yytk6quWHvMVuE+UwMIA+GrG33hgi5WO0UpNK4y7hWIXUG?=
+ =?us-ascii?Q?H3vKQveGvA2eEMoht7rcKKb/i3rMWLv/At6IIv3zZSdoYHo5HtKqmPBOw037?=
+ =?us-ascii?Q?ZlIrtJyUdTcg6OUVtEusOJWC2Wc3sOmYPidC18OG0WkEoRUGFus6SFxGDBek?=
+ =?us-ascii?Q?Kk8A88UMFDO415Bq/mzgxKkrkQ3ZhQ0iwJe4Q+OO18kosBf63YBl4IUfH0EK?=
+ =?us-ascii?Q?PfLq3+vYK/3aJYptuqNtk+KeuS6r/JTRiwiq0vFOupDQxGjHAa1iMWMYJOFv?=
+ =?us-ascii?Q?XxxCOYqzJRJ4+br7dHjigp44ChzOEQMj93zFpEooXXkVFH7GIls3mUww6V5c?=
+ =?us-ascii?Q?6qXxFdBVD1Mg7relRdpqFjjykJaMcwaUV/9z3UETwdHr09tpFv7t0Bd+N5LQ?=
+ =?us-ascii?Q?DCVLIXaVFKrTJdwrKASCqHwL+tVRLH/hMN00cQjnQWomkcJiHGkEfv/MoAUO?=
+ =?us-ascii?Q?uX0bxiLtfQoftWBfvODq4Y3pojV8J9lPNNe5wiKQPuzcII6/FXlr6paRgNsy?=
+ =?us-ascii?Q?Pw8IbAR2mJ4YWH7sGraMILcqt/SEkz486BHNx0h/8gsUlB8TECzxFA3sYKP1?=
+ =?us-ascii?Q?MxOnrUj/AWVl/Q6s9TtDWeFIlbsFCCGKofE6W6++HtjVo166fXrmUAaXW3TL?=
+ =?us-ascii?Q?NwdKrAzeWWBCK6PQ0Awhk3Zenr5ovupcxPxM2+L3/TXoO8WQJU/EtRi2kvXb?=
+ =?us-ascii?Q?sXKUiYLWjeaWebMBSaZh//05WA3eMc5SzUzrbKrQ/kMDsiVuS4QdDAvwXtS6?=
+ =?us-ascii?Q?qLyN+hO3fypu0k6nbdWlFaSw28wRpcxRqTNzHYEkzGhME4R4U0Q3gXBhO1D4?=
+ =?us-ascii?Q?8yHwuDW5MaHvNTOUlmB8SzDRZ2LgvTiGBSH9C5t0S/kB3sgwMfJkOFfvxgkW?=
+ =?us-ascii?Q?HvR5Esjl7IA=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?enZQbFFLS1JHeFlKVHU5blEyK0VkMEJIYkh0ZThkVWQ3V1FkWGM0WlVEVVVi?=
- =?utf-8?B?RHEzZ1M0YWwvVFg4eVI0TzM2RzN4OEdGV0JpN3phRjlIZzFId2l6TkxQUEdI?=
- =?utf-8?B?K2JsR3dOVHphWng4THVOUGtwQW9wNzYwVXYyalB4aGVTMVJqWGR6MTBJaHEz?=
- =?utf-8?B?RHJlZXNGQmhoaDRsYVlNQnN3ZnpmMUFsdXhBZlNyNWR0SVllN2owbTFYMlJ5?=
- =?utf-8?B?b3NqNG1xWGtPWHFyZVpYTHprOTBkbmZuZ2ptT09aZytVb3BlME1lcUlFd3Bn?=
- =?utf-8?B?a0tDenhIQlhPY09seURiTm1xN0U0S0dSejBoc1B3MmsvQ2pxQlBNbVJOUlRs?=
- =?utf-8?B?cWxQU2pxcitQYk1KSW4vaityaUNyM2txT3FqZ0RNbGRNM0dsWFd5dHBFWVZT?=
- =?utf-8?B?Z1VWN3h5cTZyRXVnUyt4Ujg5dkxrZG5GWlA2VWFGdlF2N1hJL0NMU3ZZUTFs?=
- =?utf-8?B?Qy9RWXU1K2lPNFlGNEtHY2s0TjFCYTVHdmk5T2M4TVJPNzRqQ1FUc3FyakRO?=
- =?utf-8?B?aEpweGF0SUZjYkROUEVKbFNLd3dLblJxcHRQb3BIU0pFQldodkZMUjBFck9m?=
- =?utf-8?B?TlVqZW9OOFM2L0RqeUsrTTJhNGFaeDhEWE5nTUQveFBmNGR6OXp6YThsL3VM?=
- =?utf-8?B?R2c3TlhUV3pOY0lsdDJvU252MTgzSXBPS3YvQmVIYXVFcnoyY2FMVjRScTR4?=
- =?utf-8?B?UXArRFJvZ3BsY0cxY1orTytlNnNkSzhYeE5MWmcxSnMwSWQ4clQyRHZSdDE1?=
- =?utf-8?B?Y0RzUGp1MEdEdEoxZi9rU2hFazZtTElIaFRzZGpjQzZkd3FVNVdpbWpoeXVL?=
- =?utf-8?B?blUya1dsQlpma2hYNndNQkk2VFFzWDJYdklicWEyZGUvL1lmOWZVRmZxblhB?=
- =?utf-8?B?MEppK2RTZ3E4M2dVUVN0YlhPbEtjRWx5YVRqNTR6RFRSTTBvanFEZFVwTk12?=
- =?utf-8?B?TVJWOGhqS1ZkaHl6VWJac3dnT1k5ZkFlQ01mWTRPTzc2dFl4SGt4MVNwcHM3?=
- =?utf-8?B?MGVIOTQ3YTRjSHRBL21KWEN2QVdjRUpuN3FzbWxOeGY0UEQyUFprVFl1VmdE?=
- =?utf-8?B?RzVCVTd6YVFPYjRpVWZidnVBSndRLytQbFhsRzg5WjNCYlk2NVM3ZE0yRVBD?=
- =?utf-8?B?VXY2VkhFTEw5SjhYRXVUaGRvbWk4L3ZnMld0b3htVWlBNkVyZDZFU2hqeXNI?=
- =?utf-8?B?amlDb2VIcEk1NnFWcnM5Y2NXbzhUUlJsRHh6VGFoSnFubWJFM05zY25kRjZk?=
- =?utf-8?B?VVVoZTRiMSszQmsva01GS2FpRVh2RXRZb214SkpaTU5tQ2xmTGpxbkRLWlh5?=
- =?utf-8?B?RUlmeWM1RVJYbC9HYjlCMm05NjN5RWpGWk1OY3RKRlFvNWpGQ3liQU0wV2Rh?=
- =?utf-8?B?dVJTNFQxWkI5bEhDc0RoQlplOUxHTWN6UkV1MVJMVzR0cnppVXlTY0pJNXF3?=
- =?utf-8?B?amVJNjk4RFl4NUtkd2JmVUNmellaUGNtcWJ3SE1rSStIZ1hTQmhlQklGUGRY?=
- =?utf-8?B?YWQwMlh5VXhBeTUzeDNZYkJjdUdLc0sxaXdoTGhFZStFbjFPZDVJK2JMMis1?=
- =?utf-8?B?cVYyV0pmdGRaR1FMT3NjZVFwdm5EbmRIaGFoRDlsdDVlb213UG1HQzZ1VDA2?=
- =?utf-8?B?U05Wd2tQR3JVYjEwQjV2WExDbWNYTXR5czVuYXpvbmxSc0xBWFk1V3JlWmdE?=
- =?utf-8?B?T2VjekRlczgrVmVVWi82UWh3cGZMeHlNSG9pWEk0NEJNaTdxOStKRENXdHpH?=
- =?utf-8?B?LytYQU5OdzZaTVQrQzFJczFsM2d3SStlaGIyVnVpMFFCSDRlMDNRb0lTSDVp?=
- =?utf-8?B?OGM2UC9JUWtUUzVTeWpHbkIxNnNqZ3Zjc0g3SENOSGQzL3JqQkRFQU5Rbzhx?=
- =?utf-8?B?dDAxWUI5QUNqQzcyV3gyL2U1SSs3WmphY3Y4aE5jWWJ1T1dVS1NxWmJ0SzYy?=
- =?utf-8?B?bnE3YmNaRHh3ZElLa3dnY0tTMmFlT3pMYVNiM3ViMFF4LzNVOUpNa0RtbUdC?=
- =?utf-8?B?cWRxR1NoaG92U3pTUnNjSTVXcTFKYTIzOExWYkYvSnNzMW9aekIzV1dDYzFY?=
- =?utf-8?B?eTZRYUNUc1VQTVhTMGx6ZGlPWjBTM0hDZnY0dS90aTkrR2lrM0ZQYklsQlJt?=
- =?utf-8?B?MXp2azl4YXVaYVN0OVQ4OTFNdkdoZWcrTklGK3A0V0pwMzZCVXQxUFQ3YnQ5?=
- =?utf-8?B?aGc9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dd7f989-b99d-4922-270e-08dd9cfb359e
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?heveNI/agmto1yD6zOBtA+/9PdDNsItzv2uVN/08aat1r1CKaWAPGgXIXdUu?=
+ =?us-ascii?Q?bc8wnz7dAgu8wQQjmBFzGviU9awQmox/3aB0cdoJDqgz18AGyZwTM87X3zN2?=
+ =?us-ascii?Q?0Pzj2Q3FPi7GwlGBcncV89gQk1A4UCui4TPnPGbLlPQ4nrD18H8I976whmnM?=
+ =?us-ascii?Q?euu04kjfHB6ZPdg8n+iceJWJ75e+incvF8jsnuqIPzZD0FZQh+EA4XajyORZ?=
+ =?us-ascii?Q?HjPGkX2A6IwyEEOclpvTxIaGa0ZJMw2LpZ1zuNTbpSxP6SshSxwqZEv1ZpV1?=
+ =?us-ascii?Q?IK3dPcAwsXbuMen4SJIMyCtqpaLRprjNYg2mn2eGJoTH/it0d5pRhaMW8/Rr?=
+ =?us-ascii?Q?WRJYeriUIhOJeoTLIirwW1HQ0Gtb6uk8DW4xuJz6qRF1p+eMQt+zWgLjEJJE?=
+ =?us-ascii?Q?X8pJbwqNVANx3nasO+t9s9QvlkS+AjQsFKSXctEjlsycLCqFagTsqQR8V2hU?=
+ =?us-ascii?Q?Im87zRuW+uBw2On5H6ZvwaGIb7kk6znBdMO6tXixlS26Jw0YcA6dWhBPkky4?=
+ =?us-ascii?Q?6PBdHHb5mxG9T7lZvmLL4eHqJXAp20SwTVNI5jA4JUNDhmlelj2hk3CFXA4w?=
+ =?us-ascii?Q?GiBKGcJyoHNRV0C3H5EhFP3b+Ljm4af8rh53oS8fgZ2/QXG6MQ1mywsM147K?=
+ =?us-ascii?Q?59rb1XwygB4TpK3r2CtYrMR7yvPjQ+5PRv0Eeuk1yHT0fn/zyZUtzUCAxJWA?=
+ =?us-ascii?Q?lY+6qR8e6zdfpaHI8e9UApcvw0fmITL6XfqefqCGtLizznrE9wvgvGT9S8iM?=
+ =?us-ascii?Q?CCo83v0hAIAPbnVzQ0AwNy88ZbCfyVv9pGIUbEQaj6qg3Xdk+gKBU4liKycN?=
+ =?us-ascii?Q?ymTOW8OL1kxfBFSIcIwai12JfmTe94ssBBXUw/S8E8IbkF7LATgNwGCfkTQ9?=
+ =?us-ascii?Q?BBU8OAmvOovk1L8g5P1qykdr6NzK0VNJjU4FSK3+HYTO8og/kFQc6sk3QM5f?=
+ =?us-ascii?Q?oKsmg9y+6cjimnMysEwoeADbpIdgORONMgcXQqED5wkcT6KOryB5vIVLv2SM?=
+ =?us-ascii?Q?lAJ5dLjNrUR9uUGJ8Xjb/FbSyOG9ScSW9OWSEQB5sGQc6Ha6kk1DV4zm5SKu?=
+ =?us-ascii?Q?N1kVYZmn5C/Czz0kq9HqwU60ZpyC+FE8ZQBhnhZbYpxy6q2oilTNy7MMhUOJ?=
+ =?us-ascii?Q?NojoN3ty+oO3I4ZNbroEMjJPuhOgWnR1/i96VD1C88UkulPOqPY6ON7zeVEC?=
+ =?us-ascii?Q?LoWMUZ0GwXscGrMw+2bXJuSC0LODrLSu7ue6smJFdCQOu1DAR7spOKvbe3we?=
+ =?us-ascii?Q?MdSdz1Nk1a3ExX37/dg40j6zIM2AOs6FYrb3iEHxdwsovd0Io88c2pQmGKVT?=
+ =?us-ascii?Q?IIQVls1x/Y+hD2y125QTbMazWDL0GQrnajYTFDB/K/UQ05EA948wGkqcVfHz?=
+ =?us-ascii?Q?PR62ARUE++gqohAXlmpOLd4SZGAScpoH8IIF9yFnHWCPphZmlRi25eUxMUgL?=
+ =?us-ascii?Q?cAf/SIg9T8lVbsRIK3v8rlgnlpo1oY3HTlNWwiPlYXFbNuK+ffBk7t5ikoF7?=
+ =?us-ascii?Q?lJsPCc+rf4jMVcF/oka5XsovnOXTuK3rqwwh2D2X9N0dx1cCzDp+5Pu6WbgG?=
+ =?us-ascii?Q?67CPo54FYkhyaQPd7ZSbUw0PhcP00TNZJhThOiod?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0b13998-b099-4540-36cb-08dd9cfb3e5d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 08:48:10.8792
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 08:48:25.7286
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jaEQjQiBcZqQsubgzvuYuXLtPPnLbZF27pYufM/Z1DM0fea0mqQ2EI+VaqKMpqusHEFlOZHm9o3OOOf621BTDjoi1sDxq/6yR8Xafm5817s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR04MB11400
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4r04zGLfzBvyD7IqwlZcbHlscwrptqQTteAFGeGDLs9Jsss6w/mrM0XdTUdHrnShiimeNTYdwEGIsNEOJQgPBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8708
+X-OriginatorOrg: intel.com
 
-Hi Krzysztof,
+On Wed, May 14, 2025 at 04:42:17PM -0700, Ackerley Tng wrote:
+> +static int kvm_gmem_convert_execute_work(struct inode *inode,
+> +					 struct conversion_work *work,
+> +					 bool to_shared)
+> +{
+> +	enum shareability m;
+> +	int ret;
+> +
+> +	m = to_shared ? SHAREABILITY_ALL : SHAREABILITY_GUEST;
+> +	ret = kvm_gmem_shareability_apply(inode, work, m);
+> +	if (ret)
+> +		return ret;
+> +	/*
+> +	 * Apply shareability first so split/merge can operate on new
+> +	 * shareability state.
+> +	 */
+> +	ret = kvm_gmem_restructure_folios_in_range(
+> +		inode, work->start, work->nr_pages, to_shared);
+> +
+> +	return ret;
+> +}
+> +
+>  static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
+>  				  size_t nr_pages, bool shared,
+>  				  pgoff_t *error_index)
+> @@ -371,18 +539,21 @@ static int kvm_gmem_convert_range(struct file *file, pgoff_t start,
+>  
+>  	list_for_each_entry(work, &work_list, list) {
+>  		rollback_stop_item = work;
+> -		ret = kvm_gmem_shareability_apply(inode, work, m);
+> +
+> +		ret = kvm_gmem_convert_execute_work(inode, work, shared);
+>  		if (ret)
+>  			break;
+>  	}
+>  
+>  	if (ret) {
+> -		m = shared ? SHAREABILITY_GUEST : SHAREABILITY_ALL;
+>  		list_for_each_entry(work, &work_list, list) {
+> +			int r;
+> +
+> +			r = kvm_gmem_convert_execute_work(inode, work, !shared);
+> +			WARN_ON(r);
+> +
+>  			if (work == rollback_stop_item)
+>  				break;
+> -
+> -			WARN_ON(kvm_gmem_shareability_apply(inode, work, m));
+Could kvm_gmem_shareability_apply() fail here?
 
-On 5/27/25 10:25 AM, Krzysztof Kozlowski wrote:
-> On 26/05/2025 19:05, Quentin Schulz wrote:
->> From: Quentin Schulz <quentin.schulz@cherry.de>
->>
->> The RK806 PMIC (and RK809, RK817; but those aren't handled here) has a
->> bitfield for configuring the restart/reset behavior (which I assume
->> Rockchip calls "function") whenever the PMIC is reset (at least by
->> software; c.f. DEV_RST in the datasheet).
->>
->> For RK806, the following values are possible for RST_FUN:
->>
->> 0b00 means "restart PMU"
->> 0b01 means "Reset all the power off reset registers, forcing
->>              the state to switch to ACTIVE mode"
->> 0b10 means "Reset all the power off reset registers, forcing
->>              the state to switch to ACTIVE mode, and simultaneously
->>              pull down the RESETB PIN for 5mS before releasing"
->> 0b11 means the same as for 0b10 just above.
->>
->> I don't believe this is suitable for a subsystem-generic property hence
->> let's make it a vendor property called rockchip,rst-fun.
->>
->> The first few sentences in the description of the property are
->> voluntarily generic so they could be copied to the DT binding for
->> RK809/RK817 whenever someone wants to implement that for those PMIC.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
->> ---
->>   .../devicetree/bindings/mfd/rockchip,rk806.yaml    | 24 ++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
->> index 3c2b06629b75ea94f90712470bf14ed7fc16d68d..0f931a6da93f7596eac89c5f0deb8ee3bd934c31 100644
->> --- a/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
->> +++ b/Documentation/devicetree/bindings/mfd/rockchip,rk806.yaml
->> @@ -31,6 +31,30 @@ properties:
->>   
->>     system-power-controller: true
->>   
->> +  rockchip,rst-fun:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    enum: [0, 1, 2, 3]
->> +    description:
->> +      RST_FUN value to set for the PMIC.
->> +
->> +      This is the value in the RST_FUN bitfield according to the
->> +      datasheet. I.e. if RST_FUN is bits 6 and 7 and the desired value
->> +      of RST_FUN is 1, this property needs to be set to 1 (and not 64,
->> +      0x40, or BIT(6)).
->> +
->> +      The meaning of this value is specific to the PMIC and is
->> +      explained in the datasheet.
-> 
-> And why would that be exactly board-level configuration? IOW, I expect
-> all boards to be reset in the same - correct and optimal - way. Looks
-> close to SW policy.
-> 
+>  		}
+>  	}
+>  
+> @@ -434,6 +605,277 @@ static int kvm_gmem_ioctl_convert_range(struct file *file,
+>  	return ret;
+>  }
+>  
+> +#ifdef CONFIG_KVM_GMEM_HUGETLB
+> +
+> +static inline void __filemap_remove_folio_for_restructuring(struct folio *folio)
+> +{
+> +	struct address_space *mapping = folio->mapping;
+> +
+> +	spin_lock(&mapping->host->i_lock);
+> +	xa_lock_irq(&mapping->i_pages);
+> +
+> +	__filemap_remove_folio(folio, NULL);
+> +
+> +	xa_unlock_irq(&mapping->i_pages);
+> +	spin_unlock(&mapping->host->i_lock);
+> +}
+> +
+> +/**
+> + * filemap_remove_folio_for_restructuring() - Remove @folio from filemap for
+> + * split/merge.
+> + *
+> + * @folio: the folio to be removed.
+> + *
+> + * Similar to filemap_remove_folio(), but skips LRU-related calls (meaningless
+> + * for guest_memfd), and skips call to ->free_folio() to maintain folio flags.
+> + *
+> + * Context: Expects only the filemap's refcounts to be left on the folio. Will
+> + *          freeze these refcounts away so that no other users will interfere
+> + *          with restructuring.
+> + */
+> +static inline void filemap_remove_folio_for_restructuring(struct folio *folio)
+> +{
+> +	int filemap_refcount;
+> +
+> +	filemap_refcount = folio_nr_pages(folio);
+> +	while (!folio_ref_freeze(folio, filemap_refcount)) {
+> +		/*
+> +		 * At this point only filemap refcounts are expected, hence okay
+> +		 * to spin until speculative refcounts go away.
+> +		 */
+> +		WARN_ONCE(1, "Spinning on folio=%p refcount=%d", folio, folio_ref_count(folio));
+> +	}
+> +
+> +	folio_lock(folio);
+> +	__filemap_remove_folio_for_restructuring(folio);
+> +	folio_unlock(folio);
+> +}
+> +
+> +/**
+> + * kvm_gmem_split_folio_in_filemap() - Split @folio within filemap in @inode.
+> + *
+> + * @inode: inode containing the folio.
+> + * @folio: folio to be split.
+> + *
+> + * Split a folio into folios of size PAGE_SIZE. Will clean up folio from filemap
+> + * and add back the split folios.
+> + *
+> + * Context: Expects that before this call, folio's refcount is just the
+> + *          filemap's refcounts. After this function returns, the split folios'
+> + *          refcounts will also be filemap's refcounts.
+> + * Return: 0 on success or negative error otherwise.
+> + */
+> +static int kvm_gmem_split_folio_in_filemap(struct inode *inode, struct folio *folio)
+> +{
+> +	size_t orig_nr_pages;
+> +	pgoff_t orig_index;
+> +	size_t i, j;
+> +	int ret;
+> +
+> +	orig_nr_pages = folio_nr_pages(folio);
+> +	if (orig_nr_pages == 1)
+> +		return 0;
+> +
+> +	orig_index = folio->index;
+> +
+> +	filemap_remove_folio_for_restructuring(folio);
+> +
+> +	ret = kvm_gmem_allocator_ops(inode)->split_folio(folio);
+> +	if (ret)
+> +		goto err;
+> +
+> +	for (i = 0; i < orig_nr_pages; ++i) {
+> +		struct folio *f = page_folio(folio_page(folio, i));
+> +
+> +		ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, f,
+> +						   orig_index + i);
+Why does the failure of __kvm_gmem_filemap_add_folio() here lead to rollback,    
+while the failure of the one under rollback only triggers WARN_ON()?
 
-All RK3588 boards except ours in downstream kernel have their RST_FUN 
-set to 1, we need 0 and I cannot talk for what's the actual expected 
-behavior for other vendors' boards. I do not feel confident 
-indiscriminately changing the PMIC reset behavior for all boards using 
-RK806 (which also includes RK3576 boards). Hence why I made that a property.
+> +		if (ret)
+> +			goto rollback;
+> +	}
+> +
+> +	return ret;
+> +
+> +rollback:
+> +	for (j = 0; j < i; ++j) {
+> +		struct folio *f = page_folio(folio_page(folio, j));
+> +
+> +		filemap_remove_folio_for_restructuring(f);
+> +	}
+> +
+> +	kvm_gmem_allocator_ops(inode)->merge_folio(folio);
+> +err:
+> +	WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, folio, orig_index));
+> +
+> +	return ret;
+> +}
+> +
+> +static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
+> +						      struct folio *folio)
+> +{
+> +	size_t to_nr_pages;
+> +	void *priv;
+> +
+> +	if (!kvm_gmem_has_custom_allocator(inode))
+> +		return 0;
+> +
+> +	priv = kvm_gmem_allocator_private(inode);
+> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_page(priv);
+> +
+> +	if (kvm_gmem_has_some_shared(inode, folio->index, to_nr_pages))
+> +		return kvm_gmem_split_folio_in_filemap(inode, folio);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * kvm_gmem_merge_folio_in_filemap() - Merge @first_folio within filemap in
+> + * @inode.
+> + *
+> + * @inode: inode containing the folio.
+> + * @first_folio: first folio among folios to be merged.
+> + *
+> + * Will clean up subfolios from filemap and add back the merged folio.
+> + *
+> + * Context: Expects that before this call, all subfolios only have filemap
+> + *          refcounts. After this function returns, the merged folio will only
+> + *          have filemap refcounts.
+> + * Return: 0 on success or negative error otherwise.
+> + */
+> +static int kvm_gmem_merge_folio_in_filemap(struct inode *inode,
+> +					   struct folio *first_folio)
+> +{
+> +	size_t to_nr_pages;
+> +	pgoff_t index;
+> +	void *priv;
+> +	size_t i;
+> +	int ret;
+> +
+> +	index = first_folio->index;
+> +
+> +	priv = kvm_gmem_allocator_private(inode);
+> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
+> +	if (folio_nr_pages(first_folio) == to_nr_pages)
+> +		return 0;
+> +
+> +	for (i = 0; i < to_nr_pages; ++i) {
+> +		struct folio *f = page_folio(folio_page(first_folio, i));
+> +
+> +		filemap_remove_folio_for_restructuring(f);
+> +	}
+> +
+> +	kvm_gmem_allocator_ops(inode)->merge_folio(first_folio);
+> +
+> +	ret = __kvm_gmem_filemap_add_folio(inode->i_mapping, first_folio, index);
+> +	if (ret)
+> +		goto err_split;
+> +
+> +	return ret;
+> +
+> +err_split:
+> +	WARN_ON(kvm_gmem_allocator_ops(inode)->split_folio(first_folio));
+guestmem_hugetlb_split_folio() is possible to fail. e.g.
+After the stash is freed by guestmem_hugetlb_unstash_free_metadata() in
+guestmem_hugetlb_merge_folio(), it's possible to get -ENOMEM for the stash
+allocation in guestmem_hugetlb_stash_metadata() in
+guestmem_hugetlb_split_folio().
 
-Additionally, if all boards were "to be reset in the same - correct and 
-optimal - way", why would Rockchip even have a register for that in the 
-PMIC? It's not an IP they bought (as far as I could tell), so there's 
-likely a purpose to it. Especially if they also change the 
-silicon-default in their own downstream fork AND provide you with a way 
-to change their new default from Device Tree.
 
-We can hardcode the change in the driver without using DT, but I wager 
-we're going to see a revert in a few releases because it broke some 
-devices. It may break in subtle ways as well, for example our boards 
-seem to be working just fine except that because the PMIC doesn't 
-entirely reset the power rails, our companion microcontroller doesn't 
-detect the reboot.
+> +	for (i = 0; i < to_nr_pages; ++i) {
+> +		struct folio *f = page_folio(folio_page(first_folio, i));
+> +
+> +		WARN_ON(__kvm_gmem_filemap_add_folio(inode->i_mapping, f, index + i));
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static inline int kvm_gmem_try_merge_folio_in_filemap(struct inode *inode,
+> +						      struct folio *first_folio)
+> +{
+> +	size_t to_nr_pages;
+> +	void *priv;
+> +
+> +	priv = kvm_gmem_allocator_private(inode);
+> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
+> +
+> +	if (kvm_gmem_has_some_shared(inode, first_folio->index, to_nr_pages))
+> +		return 0;
+> +
+> +	return kvm_gmem_merge_folio_in_filemap(inode, first_folio);
+> +}
+> +
+> +static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
+> +						pgoff_t start, size_t nr_pages,
+> +						bool is_split_operation)
+> +{
+> +	size_t to_nr_pages;
+> +	pgoff_t index;
+> +	pgoff_t end;
+> +	void *priv;
+> +	int ret;
+> +
+> +	if (!kvm_gmem_has_custom_allocator(inode))
+> +		return 0;
+> +
+> +	end = start + nr_pages;
+> +
+> +	/* Round to allocator page size, to check all (huge) pages in range. */
+> +	priv = kvm_gmem_allocator_private(inode);
+> +	to_nr_pages = kvm_gmem_allocator_ops(inode)->nr_pages_in_folio(priv);
+> +
+> +	start = round_down(start, to_nr_pages);
+> +	end = round_up(end, to_nr_pages);
+> +
+> +	for (index = start; index < end; index += to_nr_pages) {
+> +		struct folio *f;
+> +
+> +		f = filemap_get_folio(inode->i_mapping, index);
+> +		if (IS_ERR(f))
+> +			continue;
+> +
+> +		/* Leave just filemap's refcounts on the folio. */
+> +		folio_put(f);
+> +
+> +		if (is_split_operation)
+> +			ret = kvm_gmem_split_folio_in_filemap(inode, f);
+kvm_gmem_try_split_folio_in_filemap()?
 
-If it's deemed a SW policy by the DT binding people, is there a way to 
-customize this without having it hardcoded to the same value for all 
-users of RK806 and without relying on module params?
+> +		else
+> +			ret = kvm_gmem_try_merge_folio_in_filemap(inode, f);
+> +
+> +		if (ret)
+> +			goto rollback;
+> +	}
+> +	return ret;
+> +
+> +rollback:
+> +	for (index -= to_nr_pages; index >= start; index -= to_nr_pages) {
+> +		struct folio *f;
+> +
+> +		f = filemap_get_folio(inode->i_mapping, index);
+> +		if (IS_ERR(f))
+> +			continue;
+> +
+> +		/* Leave just filemap's refcounts on the folio. */
+> +		folio_put(f);
+> +
+> +		if (is_split_operation)
+> +			WARN_ON(kvm_gmem_merge_folio_in_filemap(inode, f));
+> +		else
+> +			WARN_ON(kvm_gmem_split_folio_in_filemap(inode, f));
+Is it safe to just leave WARN_ON()s in the rollback case?
 
-Cheers,
-Quentin
+Besides, are the kvm_gmem_merge_folio_in_filemap() and
+kvm_gmem_split_folio_in_filemap() here duplicated with the
+kvm_gmem_split_folio_in_filemap() and kvm_gmem_try_merge_folio_in_filemap() in
+the following "r = kvm_gmem_convert_execute_work(inode, work, !shared)"?
+
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +#else
+> +
+> +static inline int kvm_gmem_try_split_folio_in_filemap(struct inode *inode,
+> +						      struct folio *folio)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int kvm_gmem_restructure_folios_in_range(struct inode *inode,
+> +						pgoff_t start, size_t nr_pages,
+> +						bool is_split_operation)
+> +{
+> +	return 0;
+> +}
+> +
+> +#endif
+> +
+ 
