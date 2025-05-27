@@ -1,94 +1,202 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5830424DCEE
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53591EF09D
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:13:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748337118; cv=none; b=L68BWjRN4rJNh46m2JD/FKyMzTLvZnQV81fN1BeacV8x8+m1hw0QGdmQ0uUxcZd5DjPfwaUrNpe+aSfwEOROyJt3MVh4J1kfHAqn3DbO9l6zLSTWz9y0KKr0u8flJmwD5DrEoEGzxa5ns+L8Yg3NIBxR6Cn6sFepisbqljf+mls=
+	t=1748337195; cv=none; b=ApDYknM1Z7DhEQTxbKQ4KfuhLNXVC1j2cfBOqaRi8LGbJQYyv100b6en5eS0nh/wpJpg0m99Ouxk4uIC5abUp4IqkSxnSe0HgQezjtt1nlqNCYVdCMXIHC1uIiUc2MGV1dqMkE0Skj4yxRYlMdmUZcfAwWlnZRtytixenH4T2aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748337118; c=relaxed/simple;
-	bh=Sbu2G5AagvgkHOH8QFHgDzpNrLvi/aeIVBS5N10oeUI=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DfqscA7f94djuEOW9n4IBMzR115ZcW0J3auk2bPkNCQjmraSXQ8CffYmvQ9CxHljroVtTHheKMZDsIgBds43N56BkkO8qxjrbI4A4GWnvhb4LdgqmsemCAhgfxeJfQAU6JuKhfUeksJzAYFr/GTLHyQFdXLZOf+bpDNqpG3YMys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=t0ubonT7; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1748337195; c=relaxed/simple;
+	bh=abqTtzvfpLe4Uvpk0Uo+xvVDO1TjWy7S8bPep2221yI=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
+	 In-Reply-To; b=pxkVE0XGhUXn9w5E2iaTQwaK3qxUA/S6bdh5rY/JzifNGJjkSzYlDmu+HB+tQbHiPU/tHOUGDw+NxYKES8mzcjKHgSwtD6HivplUQWBfXetLldKBnjmK/MERsFmxQ/TG2VIBnaplzOenzJ3q/sZ3IloC5aXDZYmed6V2lM+hGJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=An211V9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="t0ubonT7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1748337117; x=1779873117;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=Sbu2G5AagvgkHOH8QFHgDzpNrLvi/aeIVBS5N10oeUI=;
-  b=t0ubonT7gXmFAOl0z2f+yowelQmB8bgIOZT6TJ8lCfpxjRaRCkbB6KAm
-   vp6h5ELRP/NjKEmlNnJsq727k/yUd57IuhTmq12R2RunS+h5pHRsc3zGk
-   lxvaLbACTLLQpjSrPBTJ3HtgYQmjgyixDw6vvYqzpT2vaUaIJXarvhxON
-   4yeM+bMGwhkRtcBt3hRucdwPXZJnkOzThfAoiDAEym6rOkMXaFzWPnm9r
-   6xcoOa/YyKQDKq0mmCyNoWqQxgP4lYR0lGodclTkihJBydpn7oNQeA3xX
-   jb0R54l5rHzWcuNzvBs+6BB4TKa7ghshjeNtZX0tbyRIcgGYjVspGL5Di
-   g==;
-X-IronPort-AV: E=Sophos;i="6.15,318,1739836800"; 
-   d="scan'208";a="24023245"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 09:11:51 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:65357]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.5.194:2525] with esmtp (Farcaster)
- id b4f30fd8-23cc-4368-b344-f8ae71d7c325; Tue, 27 May 2025 09:11:51 +0000 (UTC)
-X-Farcaster-Flow-ID: b4f30fd8-23cc-4368-b344-f8ae71d7c325
-Received: from EX19D013UWB004.ant.amazon.com (10.13.138.62) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 27 May 2025 09:11:50 +0000
-Received: from EX19D018EUA004.ant.amazon.com (10.252.50.85) by
- EX19D013UWB004.ant.amazon.com (10.13.138.62) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 27 May 2025 09:11:50 +0000
-Received: from EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d]) by
- EX19D018EUA004.ant.amazon.com ([fe80::e53:84f8:3456:a97d%3]) with mapi id
- 15.02.1544.014; Tue, 27 May 2025 09:11:49 +0000
-From: "Farber, Eliav" <farbere@amazon.com>
-To: Rodolfo Giometti <giometti@enneenne.com>
-CC: "Chocron, Jonathan" <jonnyc@amazon.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "mschmidt@redhat.com" <mschmidt@redhat.com>,
-	"calvin@wbinvd.org" <calvin@wbinvd.org>, "tglx@linutronix.de"
-	<tglx@linutronix.de>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] pps: clients: gpio: fix interrupt handling order in
- remove path
-Thread-Topic: [PATCH] pps: clients: gpio: fix interrupt handling order in
- remove path
-Thread-Index: AdvO5qbf+gNlZMXWSO6O7YP4l+2Gqg==
-Date: Tue, 27 May 2025 09:11:48 +0000
-Message-ID: <d6358648c5b9420d8202bb9c23ac1824@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="An211V9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57D0C4CEE9;
+	Tue, 27 May 2025 09:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748337194;
+	bh=abqTtzvfpLe4Uvpk0Uo+xvVDO1TjWy7S8bPep2221yI=;
+	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
+	b=An211V9p+frR/eitZ0CS/a3bhryu27yCVxgoxqFZOMVdI+puDpHTgtF+tgbMdym2k
+	 wDCTba8AVi3lMO6VAjQSR2IAxRNkA1D91n70xH0jN0HmMF1zb/jhPX+9NSWGvb257U
+	 WzCQGf5LnVh8S/7mRil2hNWUvvn23FfvsziEVRaKQmUTu2KECrMtbhRTYTsZRrNPuf
+	 ZELfY/taBN0VymPO3naAloITWSmVsfra3n2tMFRkXnyb04Xyh0dfmG6PdNYvRiq0rr
+	 zVIu19znIxggPgLXvw2iO/wOa6efANsThym1CMhQ+r0IFU6BeTvlpA1oruOBJmx9iI
+	 CkcWC9vNi/aYA==
+Content-Type: multipart/signed;
+ boundary=9fcfc53e0fcd83cc188fa2e200cd3fe58dd86edaab762b63b2b775e59452;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Tue, 27 May 2025 11:13:10 +0200
+Message-Id: <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
+Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
+ capabilities
+Cc: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+ <linux-phy@lists.infradead.org>, "Francesco Dolcini"
+ <francesco@dolcini.it>, "Aradhya Bhatia" <aradhya.bhatia@linux.dev>,
+ "Devarsh Thakkar" <devarsht@ti.com>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "Tomi Valkeinen" <tomi.valkeinen@ideasonboard.com>, "Jyri Sarha"
+ <jyri.sarha@iki.fi>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Vinod Koul"
+ <vkoul@kernel.org>, "Kishon Vijay Abraham I" <kishon@kernel.org>, "Andrzej
+ Hajda" <andrzej.hajda@intel.com>, "Neil Armstrong"
+ <neil.armstrong@linaro.org>, "Robert Foss" <rfoss@kernel.org>, "Laurent
+ Pinchart" <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman"
+ <jonas@kwiboo.se>, "Jernej Skrabec" <jernej.skrabec@gmail.com>
+X-Mailer: aerc 0.16.0
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
+In-Reply-To: <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-Pj4gQEAgLTIyOCw2ICsyMjgsNyBAQCBzdGF0aWMgdm9pZCBwcHNfZ3Bpb19yZW1vdmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICAgew0KPj4gICAgICAgc3RydWN0IHBwc19ncGlv
-X2RldmljZV9kYXRhICpkYXRhID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+Pg0KPj4g
-KyAgICAgZnJlZV9pcnEoZGF0YS0+aXJxLCBkYXRhKTsNCj4NCj4gV2h5IG5vdCBqdXN0IHVzZSBk
-ZXZtX2ZyZWVfaXJxKCk/DQoNCkFzIGZhciBhcyBJIHVuZGVyc3RhbmQsIHRoZSBtYWluIHB1cnBv
-c2Ugb2YgZGV2bV8qKCkgaXMgdG8gcHJvdmlkZQ0KaGFuZHMtb2ZmIHJlc291cmNlIG1hbmFnZW1l
-bnQuIGRldm1fcmVxdWVzdF9pcnEoKSBpcyBpbnRlbmRlZCB0bw0KZWxpbWluYXRlIHRoZSBuZWVk
-IGZvciBleHBsaWNpdCBjbGVhbnVwIGluIHRoZSByZW1vdmUoKSBmdW5jdGlvbiBieQ0KYXV0b21h
-dGljYWxseSBmcmVlaW5nIHRoZSBJUlEgYWZ0ZXIgcmVtb3ZlKCkgcmV0dXJucy4NCg0KSW4gbXkg
-b3BpbmlvbiwgY2FsbGluZyBkZXZtX2ZyZWVfaXJxKCkgdW5kZXJtaW5lcyB0aGUgYmVuZWZpdCBv
-ZiB1c2luZw0KZGV2bV9yZXF1ZXN0X2lycSgpIGluIHRoZSBmaXJzdCBwbGFjZS4gSWYgSSBuZWVk
-IHRvIGV4cGxpY2l0bHkgZnJlZSB0aGUNCklSUSBkdXJpbmcgcmVtb3ZlKCksIHRoZW4gSeKAmW0g
-bm8gbG9uZ2VyIHJlbHlpbmcgb24gZGV2beKAmXMgYXV0b21hdGljDQpjbGVhbnVwIC0gSeKAmW0g
-ZWZmZWN0aXZlbHkgcmV2ZXJ0aW5nIHRvIG1hbnVhbCByZXNvdXJjZSBtYW5hZ2VtZW50IHdoaWxl
-DQpzdGlsbCB1c2luZyBkZXZtLXN0eWxlIHJlZ2lzdHJhdGlvbiwgd2hpY2ggSSBmaW5kIHVubmVj
-ZXNzYXJ5Lg0KDQpUaGF0IHNhaWQsIGlmIHlvdSBzdGlsbCBmYXZvciBkZXZtX2ZyZWVfaXJxKCks
-IEnigJlsbCByZXZpc2UgdGhlIHBhdGNoDQphY2NvcmRpbmdseS4NCg0KUmVnYXJkcywgRWxpYXYN
-Cg0KDQo=
+--9fcfc53e0fcd83cc188fa2e200cd3fe58dd86edaab762b63b2b775e59452
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+
+Hi Tomi,
+
+While testing Aardhya's OLDI support patches [1], I've noticed that
+the resulting LVDS clock is wrong if this patch is applied.
+
+> In practice, with the current K3 SoCs, the display PLL is capable of
+> producing very exact clocks, so most likely the rounded rate is the same
+> as the original one.
+
+This is now what I'm seeing. Most SoCs have that fixed clock thingy
+for (some?) VPs, e.g. [2]. And clk_round_rate() will return the
+fixed clock rate for this clock, which will then result in an LVDS
+clock which is way off.
+
+I'm testing on an AM67A (J722S) and I've backported some of the
+patches as well as dtsi fragmets from downstream. Thus, it might be
+as well the case that the fixed-factor-clock node is wrong here.
+OTOH other K3 SoCs do this in mainline as well.
+
+>
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/gpu/drm/tidss/tidss_crtc.c  | 23 +++++++++++++++++++----
+>  drivers/gpu/drm/tidss/tidss_dispc.c |  6 ++++++
+>  drivers/gpu/drm/tidss/tidss_dispc.h |  2 ++
+>  3 files changed, 27 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/t=
+idss_crtc.c
+> index 1604eca265ef..6c3967f70510 100644
+> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
+> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+> @@ -91,7 +91,7 @@ static int tidss_crtc_atomic_check(struct drm_crtc *crt=
+c,
+>  	struct dispc_device *dispc =3D tidss->dispc;
+>  	struct tidss_crtc *tcrtc =3D to_tidss_crtc(crtc);
+>  	u32 hw_videoport =3D tcrtc->hw_videoport;
+> -	const struct drm_display_mode *mode;
+> +	struct drm_display_mode *adjusted_mode;
+>  	enum drm_mode_status ok;
+> =20
+>  	dev_dbg(ddev->dev, "%s\n", __func__);
+> @@ -99,12 +99,27 @@ static int tidss_crtc_atomic_check(struct drm_crtc *c=
+rtc,
+>  	if (!crtc_state->enable)
+>  		return 0;
+> =20
+> -	mode =3D &crtc_state->adjusted_mode;
+> +	adjusted_mode =3D &crtc_state->adjusted_mode;
+
+Here, adjusted_mode->clock is still the correct pixel clock.
+
+> -	ok =3D dispc_vp_mode_valid(dispc, hw_videoport, mode);
+> +	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+> +		long rate;
+> +
+> +		rate =3D dispc_vp_round_clk_rate(tidss->dispc,
+> +					       tcrtc->hw_videoport,
+> +					       adjusted_mode->clock * 1000);
+> +		if (rate < 0)
+> +			return -EINVAL;
+> +
+> +		adjusted_mode->clock =3D rate / 1000;
+
+While after this statement, adjusted_mode->clock is 300MHz in my
+case (the VP1 clock seems to be 2.1GHz, divided by 7).
+
+-michael
+
+[1] https://lore.kernel.org/all/20250525151721.567042-1-aradhya.bhatia@linu=
+x.dev/
+[2] https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/ti/k3=
+-am62.dtsi#L110
+
+> +
+> +		drm_mode_set_crtcinfo(adjusted_mode, 0);
+> +	}
+> +
+> +	ok =3D dispc_vp_mode_valid(dispc, hw_videoport, adjusted_mode);
+>  	if (ok !=3D MODE_OK) {
+>  		dev_dbg(ddev->dev, "%s: bad mode: %ux%u pclk %u kHz\n",
+> -			__func__, mode->hdisplay, mode->vdisplay, mode->clock);
+> +			__func__, adjusted_mode->hdisplay,
+> +			adjusted_mode->vdisplay, adjusted_mode->clock); >  		return -EINVAL;
+>  	}
+> =20
+> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/=
+tidss_dispc.c
+> index a5107f2732b1..3930fb7f03c2 100644
+> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
+> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+> @@ -1318,6 +1318,12 @@ unsigned int dispc_pclk_diff(unsigned long rate, u=
+nsigned long real_rate)
+>  	return (unsigned int)(abs(((rr - r) * 100) / r));
+>  }
+> =20
+> +long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videopor=
+t,
+> +			     unsigned long rate)
+> +{
+> +	return clk_round_rate(dispc->vp_clk[hw_videoport], rate);
+> +}
+> +
+>  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>  			  unsigned long rate)
+>  {
+> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/=
+tidss_dispc.h
+> index c31b477a18b0..d4c335e918fb 100644
+> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
+> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+> @@ -120,6 +120,8 @@ enum drm_mode_status dispc_vp_mode_valid(struct dispc=
+_device *dispc,
+>  					 const struct drm_display_mode *mode);
+>  int dispc_vp_enable_clk(struct dispc_device *dispc, u32 hw_videoport);
+>  void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport);
+> +long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videopor=
+t,
+> +			     unsigned long rate);
+>  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>  			  unsigned long rate);
+>  void dispc_vp_setup(struct dispc_device *dispc, u32 hw_videoport,
+
+
+--9fcfc53e0fcd83cc188fa2e200cd3fe58dd86edaab762b63b2b775e59452
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaDWCJhIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/gUWAF/XnIRUuokTBhnPlsAEUUt79SPR3vV/Tvp
+5gWuHNuznd1PdThlB+vlGbAEGJp2uXDzAX0dbUeWPMM4k153g6b5Nw5QugAsnNj/
+ZqMhzPu9jIcshLO+1PnQRNDMcluYdGOnDxg=
+=qew6
+-----END PGP SIGNATURE-----
+
+--9fcfc53e0fcd83cc188fa2e200cd3fe58dd86edaab762b63b2b775e59452--
