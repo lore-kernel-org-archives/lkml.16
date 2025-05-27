@@ -1,55 +1,55 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8550281375
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E28283FE6
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369253; cv=none; b=TVz8UCQQxk2YSIdhMOcoPvepZAMt0ky4/tce4/ovleML/+euLUKPNfxNvBTeVBMRFuXgRJArH3sCbLy363BxMBVipFzd7AuRz5HumQgXLNAkNJu5oG18WYWnGMDkaKk10PhXlIe1hLCtyvwspgyGTNGs/3DxQNgXZTav0HmCBD0=
+	t=1748369256; cv=none; b=qlENHLBCp16LeoVt82c6a2AU7KzbQ0ttB2pzgZFgggXB/g+bVGpkG2XakMNAC1imEaJsmPpLRvgivZkwiGnTVuTdq8aAJ2ElyoVgbgBOwBaGZLVJtLXeU6zurYQLa6IgdjDk8k8gRtO8IrQP7ZaxdULgsdTX83W1GEPxvCAQF+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369253; c=relaxed/simple;
-	bh=CBWXDqwmWst2ZqdY/0uSvasMfgfkKz/Uh3ju60ADh2M=;
+	s=arc-20240116; t=1748369256; c=relaxed/simple;
+	bh=tXkzECMzlUGyQjl7egm1CU1/fCbel46uwneu6zgwPzk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=i98/e/ByrOT7gBwn6P8U9NmrG8xXPEha2GVdzoPpsOaGPoM7SIvjehwOzHiUeC2Scf/Q6b2OsEtG9TrestJneX6KwgjzmbL+SlIdhXeN84WWW+Qxbg9BNb6F10keieEZRgpqyWLCJTWo803E1asopfpB4Cz7Au/XVnKaYUX3WKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zL0jlFJX; arc=none smtp.client-ip=209.85.214.202
+	 To:Content-Type; b=tKU6gx2yLnMc8LtOD+QXgTgIGXVdFeQL13s8LjqEF2SQiO6ZRC+RAw2iaxSEvBy/4XPhSkYGJ+i7qUKxeD5W78dk2uH3bs0PN8AkgLKxve4aLQfcYQvCUTUwfSNPnxHxzvz6XWYQsIbwOXhzc3tg8HsvnU7qKy8wMKm3seiN78o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FQSOM2mI; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zL0jlFJX"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2323bd7f873so36157475ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQSOM2mI"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3111a07f102so119031a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748369251; x=1748974051; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748369253; x=1748974053; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MX8V9w5FVeExaYuyetA8waEgh5LNED363u7Lxm8ca88=;
-        b=zL0jlFJXGyxlsUD21aqW0bFet2sLNYLeKMK1o4Ro8srPJOIgc4bW4qZXvdryrk4iKP
-         B6ras8VwRLUKNQM6yBNgHclzhv99bF6PEjiL4ZSNye6yK4g54jjITLEnf9qkfUr68BwE
-         zR1v1zedIpqR4OlQ3hzlWF91OCLFwf1cevvV+TEgTynRrIM/M4nFirUR9lW0tSueze4s
-         1UjKRrhM5JvQ8LMM+jOAv2U1+Jo/ctj1BoZJauFehmBtyiImppp/PYB/oZfin6ZDTFeS
-         v29YPd0glAJM4xMWMT7EJTYcAIR0mkuI+Ax6+xyOHmvXTF09cxss1D2zoVKUGyl86j9q
-         aOaA==
+        bh=53MnQ+9b/xbDmubcmvXnyoPwpOHXHqAfzLcTz6K+YKE=;
+        b=FQSOM2mIqH6aJIdKU6K/0MBXrnKW5Tzv8Epei/2gt3GbwJa+n5WlnFDDixuEbkPQi/
+         SE1I4hEypayHvBagYE4C0h4Vd1yrk1davR02Ro9DmUknExouna7zxXgON99Lxn4fnker
+         cTB2kRutpv1DSYiKMipUgUC2NrRbW2Z6lh7l2q3ptHzWCJAXL+7/2j50S+7FI0SW83jc
+         pI7/6ZxdNv59mdsGhxhTQemN5zaTkH4njTDAYXeaX0Z3lzELXxRhnXSJbI6GRwl5/0sn
+         rj7m4Y3Vj006ideM55vA/3eFyLMnVkJ7snJ/q7tCXUGH5NpjgV9OpVJPAWSQhcla3iyy
+         waLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748369251; x=1748974051;
+        d=1e100.net; s=20230601; t=1748369253; x=1748974053;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MX8V9w5FVeExaYuyetA8waEgh5LNED363u7Lxm8ca88=;
-        b=mdwK6I66HnaNZs0hwFEBV7htSsjqMzGo/AV10Sfh68qRCIBfWh6PB9kNaXhCtAxm+7
-         Yu2Z8u0dQz5sTkBSKRnlPp5cz7sVsVE3dflr7DV2okTzBW/y5127UKIDRyKyvnkKVLDj
-         YqThlq+b4WQfUXfr6LRDecoKm1bOvI8bRceu+3s8ZXu5vPmWuXgi8y3XEVmb1Bu/cSWk
-         mvq0kydREMJ59foOYHJOHDCGN9Ex69iutnX3b+7ysGrzm9JaoYchEHtmfXpsNwlX/rRt
-         YqIlDT49MfmTl7Gs5VPGof9u2b+ozuSgEjC0MDprYCo72rV+OJorkNwNNQ91dqnhMSYF
-         wWVg==
-X-Forwarded-Encrypted: i=1; AJvYcCV429k75d5N9djzqNMBnROY60WbhC09UTjWGYILcbW1hNIHBVJhuTFg9hx6+9t4zrn1pdDTHjjcUHIQNY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo5386p3B2Oqq3tD9X6Fmh25E1ML8gSBWsjW2HWO6kw9PRWRVr
-	VuQduo59BV7TPkZ51SpjS6tBQX66ab2csQPNHXZ1MaJurr66Lb1GcAER7znNYjYZGd3f1duRHrH
-	nQHlRHvwRRA==
-X-Google-Smtp-Source: AGHT+IGNqZt8gE2AinHrs5u59vtVCFuseQxQglwLlKwXoQLPdUfefW6JEtTDFuscAHg/KyKTb9DfJ3w8oY6h
-X-Received: from plll21.prod.google.com ([2002:a17:902:d055:b0:234:949d:4a5c])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41c8:b0:234:a063:e2ac
- with SMTP id d9443c01a7336-234a063e540mr48300615ad.2.1748369250955; Tue, 27
- May 2025 11:07:30 -0700 (PDT)
-Date: Tue, 27 May 2025 11:07:02 -0700
+        bh=53MnQ+9b/xbDmubcmvXnyoPwpOHXHqAfzLcTz6K+YKE=;
+        b=UWn0SsJgn6wIcvVs4hHZc8frQV5srZJ6msIma1qDSIXpdlPwrZ7VsY2dqX9X4uCKZT
+         hZ0zLXFDm3LgJFWp2ydYeo2XSF5RvVAF5sVOFxEqPYTopHfpwq0dmYYpadTA06GgmqKm
+         WAQVnF8PB78ondZfLy2gK4S+qm5UwLFfKdfW0CP8xLl/10pPyXuuWqBcsLifnlh+7xVz
+         0Fj76my23rCQR8fWAf8uxDMo8isYBwPUXy1GOoXvW8dz2MbG8aYDUaRk5v1r8HsApKbh
+         jQbbQ97X6NZSv3AAZmb1BmBwmAFzyi7dee9Xl0bvh8WQb3D/XnzOcnO0fl+5vilZgb9v
+         EZlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUoSWDe9az2KUF3Xqxlu37LqNdYy6gPkAALoLdCAAbzDveage/cq7Il6hMxz3zwdl2OUoauWa/QZW5uNcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaHZF+6PVEzEWaE8aJxJKpa+EmRV3VpACV6/+sW9uD+opPaX8B
+	bp5FLpWTzuyYQ1smu1mr0QTL/7ZVXbduLSav/5b4S3AOiizPIv9US6oL6naEebBjH4SUKYzKCF4
+	W+FI8bAH+Bg==
+X-Google-Smtp-Source: AGHT+IEs/i83HeK/kXHhOK5DIrg4XPtLsBjqCQAU/a/iwZQOPo/OM37vvPcR33Fa5ijRrs50zf6/XS1uTSXu
+X-Received: from pjbsy7.prod.google.com ([2002:a17:90b:2d07:b0:311:466c:6062])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3cc3:b0:311:abba:53b6
+ with SMTP id 98e67ed59e1d1-311cce9432bmr2456854a91.14.1748369253276; Tue, 27
+ May 2025 11:07:33 -0700 (PDT)
+Date: Tue, 27 May 2025 11:07:03 -0700
 In-Reply-To: <20250527180703.129336-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250527180703.129336-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250527180703.129336-6-irogers@google.com>
-Subject: [PATCH v1 5/6] perf test intel-pt: Skip jitdump test if no libelf
+Message-ID: <20250527180703.129336-7-irogers@google.com>
+Subject: [PATCH v1 6/6] perf test trace_summary: Skip --bpf-summary tests if
+ no libbpf
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,30 +81,32 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-jitdump support is only present if building with libelf. Skip the
-intel-pt jitdump test if perf isn't compiled with libelf support.
+If perf is built without libbpf (e.g. NO_LIBBPF=1) then the
+--bpf-summary perf trace tests will fail. Skip the tests as this is
+expected behavior.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/test_intel_pt.sh | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/tests/shell/trace_summary.sh | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index f3a9a040bacc..32a9b8dcb200 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -288,6 +288,11 @@ test_jitdump()
- 	jitdump_incl_dir="${script_dir}/../../util"
- 	jitdump_h="${jitdump_incl_dir}/jitdump.h"
+diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
+index 49766524dc21..f9bb7f9388be 100755
+--- a/tools/perf/tests/shell/trace_summary.sh
++++ b/tools/perf/tests/shell/trace_summary.sh
+@@ -53,6 +53,12 @@ test_perf_trace "-as --summary-mode=thread --no-bpf-summary"
+ # summary only for system wide - total summary mode
+ test_perf_trace "-as --summary-mode=total --no-bpf-summary"
  
-+        if ! perf check feature -q libelf ; then
-+		echo "SKIP: libelf is needed for jitdump"
-+		return 2
-+	fi
++if ! perf check feature -q bpf; then
++    echo "Skip --bpf-summary tests as perf built without libbpf"
++    rm -f ${OUTPUT}
++    exit 2
++fi
 +
- 	if [ ! -e "${jitdump_h}" ] ; then
- 		echo "SKIP: Include file jitdump.h not found"
- 		return 2
+ # summary only for system wide - per-thread summary with BPF
+ test_perf_trace "-as --summary-mode=thread --bpf-summary"
+ 
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
