@@ -1,136 +1,80 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E561EA7DF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4C51EA7DF;
+	Tue, 27 May 2025 10:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748342555; cv=none; b=oBSlmDTku5B6WOlM8f/fx0SLrXyRwhaggYmZFfGKxK5dGgxw4EV2YH7mo4mjyVE+B62ajmjsuq78PGVwziekxzqFpwS9cMKAXeRqV+qx0RVO08tsdjzeUryvPRJb3P43Niw5RmJSO3c9mT96EgtBmAf6Ww1WC3QX9UNAYnVZWzs=
+	t=1748342665; cv=none; b=juySLtQdow07rSJ4aKrSEA7bS3+sBXqTYoEMilRrcnWadNV6UdGza2lFZ11GBIaqg4UOpORhlbEqRujZ5vsf4qrh5pckK2iWSihWPK5LtmlBALJp2xQ0m0kVUe2la5sYw/peleeFHwIov2tqeWZgN4t6NjcCfguf7gftbLrUOgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748342555; c=relaxed/simple;
-	bh=ylnWf94hRcWdF9suXgclvU2TBgd4dHED5ATVeOE78X8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Ujl730QqSpjiBx0VWGWo4jtiaEXF5KJiXTyy1jsBCSyEsNMCfrxoxxjhR8c1GclXz2MgGrn/6+WJ7sRgCcRWrQIkus7/FAav7nPZbKecYPmMzF8SG+gqWypStj4paxKjGePTu0CzP9XGJpE5DgVHbhkU0Vd93vwtx7MeLcfg3nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3db9a090c15so31374885ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 03:42:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748342553; x=1748947353;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GGIsTS2/wv6irS0gyfFOTsWPvGOReKGkibrvBLKqwiE=;
-        b=lZ58Hk+H1Mc9URMw7ky6epzYGToO27MfXjbVYzncG5KJTYfHOCF/uTllztHeICtqoN
-         Hg4pYT+7MYhnedS9MSu6n5YQGQryRfvcLLCJFjzpXzQeENvRmaZetKgzo/eco16W42kj
-         eRJ6J0Z7IT6ldn5+DJFpNDtQsoMZRdeYEEJVpYwD4Gwa5fETM6DPlYtrnNjcqLUz2kvw
-         Kjjkv6RL8HK1qYLlJYgHV0kZ32GxCvLNT1h6jp0xKPy46MYh21dSdx9I8fxDBVCEauCJ
-         VihBL0WdxjRisuNi8xnDNt55ourKTPmplU4ygUbqoyNbmavLSELszxthLRZHcbn1zdHw
-         IAaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUD59Nc1YbjL3RXOg4clGffUvqf/ApulEeenVfK/4OTHX3Yy3ci91IpuMt9n3rYrEMJxt9pekPpMdlvZUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXE1p2HiPkMxauhq+xQ3kF5liX+mkO5h6qaBAPFJ7g42J94Mnk
-	4ggk+UM//LkF3Ng8wNAtGOtgJosc/D0rmVSrkXrc8qpyjCkzbDuja33EbgyFs3kT6QA6vlQXuMV
-	0CKTUYnDHrCbpqVeDU2iJMe0jomem1aAJWshmHk3pBRoLwEba9pYKrWOBbmY=
-X-Google-Smtp-Source: AGHT+IFDCtCDx4Vqo4IhyglYRG3TOIGyhhy1uH3mWj6eEwwTD74jWnMD9gubSNOGF8mEm2mNVoBUPGCdtwfFJCxk3+BMxrMmJlRV
+	s=arc-20240116; t=1748342665; c=relaxed/simple;
+	bh=BiKsIF7qyIqH+nKWRGgd3o6WJ/+I6qpX6dPcNBsoy1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RMokv6ZnJa7Lzq+rWSfGXFL12LiogD3gW/tKg0mTyU5zR0ZQ8RHG3xX7T987Ac/27grMtHC+m7VR4R5sFA2wHp5QyseWIb/e1Z65qSsf3XCJ4W5hzxQe+7jASTEJx4SsAfNnWFdFtwBx/6PG//l0jaYpn9vMz2ljKo6cClkjmMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gu8oMO/9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gu8oMO/9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C007C4CEE9;
+	Tue, 27 May 2025 10:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748342665;
+	bh=BiKsIF7qyIqH+nKWRGgd3o6WJ/+I6qpX6dPcNBsoy1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gu8oMO/9C9fbq2G/yh6bUAXPKlOKqqJzIlXunY0by554ks38+92G9ZzzkcYRIiPMA
+	 WEYmEt8OOGRUUzMR/Bsnu6mr08MyNsDA2x9mZc1P4TE9+JmO/SIn8mYYRGML9lh1+v
+	 w1OlxyZ3X3CL/lu/sNeHYUG01+OAMTtXQscyRJJWDkep0/oGAEaQCEPnzFRRGuwhkq
+	 O7nSoI0KzW9eRaIIwVzme5JdYDXztQZY0v3pIIRI8vXgDBN2pmrSl4Dn6WVPdLpkln
+	 tFfS57Cu7GRLGGQdEchiS9xCWhQ4NNDDBB/h0ZR/E/ljRKiq1UAIBjvrCh623wJPSE
+	 uShogrxj6tqEQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uJrnH-000000000bu-37fE;
+	Tue, 27 May 2025 12:44:27 +0200
+Date: Tue, 27 May 2025 12:44:27 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: alejandroe1@geotab.com, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3] dt-bindings: gnss: add u-blox,neo-9m compatible
+Message-ID: <aDWXi7qBnkt3nTNW@hovoldconsulting.com>
+References: <20250523-ubx-m9-v3-1-6fa4ef5b7d4a@geotab.com>
+ <dfd63c64-184e-4e48-9344-a3db0612036b@kernel.org>
+ <dd1540f7-f4f8-4cf4-a448-aa91b71dd42d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2221:b0:3dc:7d79:1a5c with SMTP id
- e9e14a558f8ab-3dc9b7097f0mr110772535ab.20.1748342553057; Tue, 27 May 2025
- 03:42:33 -0700 (PDT)
-Date: Tue, 27 May 2025 03:42:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68359719.a70a0220.253bc2.00ae.GAE@google.com>
-Subject: [syzbot] [gfs2?] WARNING in gfs2_put_super
-From: syzbot <syzbot+56182be23469e01affbc@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd1540f7-f4f8-4cf4-a448-aa91b71dd42d@kernel.org>
 
-Hello,
+On Tue, May 27, 2025 at 10:35:14AM +0200, Krzysztof Kozlowski wrote:
+> On 23/05/2025 13:52, Krzysztof Kozlowski wrote:
+> > On 23/05/2025 13:19, Alejandro Enrique via B4 Relay wrote:
+> >> From: Alejandro Enrique <alejandroe1@geotab.com>
+> >>
+> >> Add compatible for u-blox NEO-9M GPS module.
+> >>
+> >> Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+> >> ---
+> >> This series just add the compatible string for u-blox NEO-9M module,
+> >> using neo-m8 as fallback. I have tested the driver with such a module
+> >> and it is working fine.
+> >> ---
+> > 
+> > I assume there is a user somewhere?
+> > 
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Un-reviewed. Please drop the patch. It turns out there is no user for
+> this binding. We don't take bindings for every possible device out there
+> - you need users of that binding.
 
-syzbot found the following issue on:
+No, we don't require manufacturers to upstream their machine dts.
 
-HEAD commit:    176e917e010c Add linux-next specific files for 20250523
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14389170580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e7902c752bef748
-dashboard link: https://syzkaller.appspot.com/bug?extid=56182be23469e01affbc
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+I'll try to take a closer look at these patches next week or so.
 
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5f7692c642fa/disk-176e917e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/057a442d42d0/vmlinux-176e917e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8f8ebdb4dd96/bzImage-176e917e.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+56182be23469e01affbc@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 13525 at fs/gfs2/super.c:608 gfs2_put_super+0x912/0x950 fs/gfs2/super.c:608
-Modules linked in:
-CPU: 0 UID: 0 PID: 13525 Comm: syz-executor Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:gfs2_put_super+0x912/0x950 fs/gfs2/super.c:608
-Code: ff e8 42 f2 f8 ff 4c 89 ff e8 5a 30 00 00 4c 89 ff 48 83 c4 38 5b 41 5c 41 5d 41 5e 41 5f 5d e9 44 1e fc ff e8 df 34 c8 fd 90 <0f> 0b 90 e9 4d fa ff ff e8 d1 34 c8 fd e9 9c f9 ff ff 44 89 f1 80
-RSP: 0018:ffffc90004e77cb0 EFLAGS: 00010293
-RAX: ffffffff83f80e51 RBX: 0000000000000000 RCX: ffff888029499e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff888035c58818 R08: ffff888035c580af R09: 1ffff11006b8b015
-R10: dffffc0000000000 R11: ffffed1006b8b016 R12: ffff888035c580a8
-R13: ffff888035c58818 R14: 0000000000000800 R15: ffff888035c58000
-FS:  0000555586d88500(0000) GS:ffff888125c56000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8ca2c3f000 CR3: 0000000041d1c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 000000000000f978 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- generic_shutdown_super+0x135/0x2c0 fs/super.c:643
- kill_block_super+0x44/0x90 fs/super.c:1753
- deactivate_locked_super+0xb9/0x130 fs/super.c:474
- cleanup_mnt+0x425/0x4c0 fs/namespace.c:1417
- task_work_run+0x1d4/0x260 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop+0xec/0x110 kernel/entry/common.c:114
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9a3158fc97
-Code: a8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 a8 ff ff ff f7 d8 64 89 02 b8
-RSP: 002b:00007ffdc6205458 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-RAX: 0000000000000000 RBX: 00007f9a3161089d RCX: 00007f9a3158fc97
-RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007ffdc6205510
-RBP: 00007ffdc6205510 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: 00007ffdc62065a0
-R13: 00007f9a3161089d R14: 0000000000109e74 R15: 00007ffdc62065e0
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Johan
