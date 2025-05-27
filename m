@@ -1,188 +1,200 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD5D248871
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC0422A4D8;
+	Tue, 27 May 2025 07:53:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748332368; cv=none; b=pRML4ISx5CPlP+4L5NUDodwewFxmpXpqkwjDZyV0Uq9L1hvOCcDGcz//aCNmqUMqRibgPfKab1NT1bSZEg1wX95qjSrnkt8i+EkDqae1dV7NetmC+xt721kgAkWTNVUMPg0afIYhxSkq1sreoBn1VQ9IyFTALOV4nXc5PvsIW+I=
+	t=1748332394; cv=none; b=M8ZKQuLsPyS0C5KRmT3bUV34y4iDLnVREkjwi1c3MFY82PnuPnDKy7D0sCtDZ/hqzOtSzKt5A4Z+6mdRKfM/HyFY5/pqKPE9Osp+lNE6SsobGVEhFl7C4EW4gURpbOcKQLrMVDMiPa698Zv3qJIv3BDfXHWWYcYj2jI+u0fc8t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748332368; c=relaxed/simple;
-	bh=qw2GQkeeIzLG3xGCKSEEhPdpbiheGul2TtZ2WVSNqQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IvHQVJeP+moC+gWZZ+mqdTA/NXYmhxSQ9CUXsTNcpJcASA/AKXbGqTjCQ2xVM2AidvWK7yx14U+bA0G14btanbfozmvwHDRO4/SYUC8n1ZEzTqsHrN7seEVBWclU/xWQOJNzMgNNbb8x3uz7ZfTQDgLbxNJzbLex1z96hs+sMeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LJJeJXzs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJJeJXzs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748332365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hxOeHEx725HLRHiV81cg5rWLcCbolT3s1LsCnjE9wGo=;
-	b=LJJeJXzse6hFFXGjpyGwrXFEnRLD4dqy6cknlDShyI6xrUTuTMv57WAvivt9qHlvo0gCe+
-	qFQW+6FNGGBcOWE2rcnwDM2MuOuk8yrdaCJiFnmhhc+YZJM5p2+Xx17f7h/REqV9EPso9c
-	hnSjJYxyFBfkYaoTxIhN8I61kqTpmX8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-J4XDkiBROlWfemwaaBks1Q-1; Tue, 27 May 2025 03:52:42 -0400
-X-MC-Unique: J4XDkiBROlWfemwaaBks1Q-1
-X-Mimecast-MFC-AGG-ID: J4XDkiBROlWfemwaaBks1Q_1748332362
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so17638075e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:52:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748332361; x=1748937161;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hxOeHEx725HLRHiV81cg5rWLcCbolT3s1LsCnjE9wGo=;
-        b=BF2WYc14IKhcMHdh5psCLLKRdNW1FQBh5fSc2s5XxgfJn0Ug9bRrCz62vTMcuaG0E+
-         OhgaCHVVGfWF9nlYu6HcWjGTb7PMvpRTUmXdTarUGCd1ccNCAhrNte+VC3vblJ0B3Z4+
-         xzSEiNkkOsaHPdw7138OL2xPbu0+4XtFwSutu2pwAlVf0ZmL4X10BSMnU2nAao0MwFbm
-         bEPTTcHCw3REa2NCHV7doDefmvt0InFv8iq+0TexVDKaEl6khLcYDQ7Vu4a7StLmygSH
-         h8ODwJQLyIZZlhIse3NE/RFTPiZ3loxKnNE8pwejYfU2iJ1c/5pKHrxI5TXw2mfjzKh3
-         FqxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZA9BT+qIELHnf6SLuw8TSyagI9d6fwFTMPPY3pMdW/ercsIHH6PJ/zEbVBcPE/PHXtRoHwX1Ezzs86Jk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5CB+Yj7rZfe9XIxAWarZja+Mxx5YXwEEHFR9BA81f64v+ZNwF
-	8rpTmgcEgh2LLvxcFBn6fbWBndeC/bCNle89I2KY46cdJlDdy4HA5gG87p0IQQfpzkDQDT/OXZp
-	PO0Q+8PSLtsekWOnVsQbrv4Ur2i9wPBwVEu2ASn9JCD8spb1AyeJ6NiQVrKWuavsNzQ==
-X-Gm-Gg: ASbGncvukFyw6j/O+QZf3WDmj/N4Jfrsy1/MG6YZYtqp9Xzt8hwNo+VfC9xxbkVQQJl
-	61v/7OBddXFGh93AIsk4Iw03X01Pm3T/J2oU1w37Skb5gRF0zGMkGtidM8lRtbvQeV8ToNuHdc1
-	CnlsATnXGS1Mt5EQS7TPkzWOZJ02vEPuO7zR/tptDiBeGcd4EQxFQw6QZRGzIsO1H98QlRKwGpk
-	6gxuTZ6CnRnxngPOfLvmYY0QTlQ1RHnGqFYsOKNY/qlwdEkKeIWZEP1rFz7MdBFWSsyzBlXfO6i
-	gikHI+XnG+HrwXGBABuTDG5MEL3xRf/XuqHjGM7XON1tIBcWYGWEXvtT7cg=
-X-Received: by 2002:a05:600c:218b:b0:442:f44f:65b with SMTP id 5b1f17b1804b1-44c930191b1mr61322755e9.32.1748332361555;
-        Tue, 27 May 2025 00:52:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IERmPsXwH93AqVjalbGse8xoO6q6eKOT6A8auaWUx7r1bzC6CSRXPraUYdfDDcfgwx9575l8Q==
-X-Received: by 2002:a05:600c:218b:b0:442:f44f:65b with SMTP id 5b1f17b1804b1-44c930191b1mr61322545e9.32.1748332361061;
-        Tue, 27 May 2025 00:52:41 -0700 (PDT)
-Received: from localhost (net-93-146-37-148.cust.vodafonedsl.it. [93.146.37.148])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef0ab8sm257981885e9.13.2025.05.27.00.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 00:52:40 -0700 (PDT)
-Date: Tue, 27 May 2025 09:52:39 +0200
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To: Marios Makassikis <mmakassikis@freebox.fr>
-Cc: netdev@vger.kernel.org, lorenzo@kernel.org, mcroce@microsoft.com,
-	marcin.s.wojtas@gmail.com, linux@armlinux.org.uk,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [REPOST PATCH] drivers: net: mvpp2: attempt to refill rx before
- allocating skb
-Message-ID: <aDVvR8XXPMEUzztC@lore-desk>
-References: <20250515080039.12c47bd3@kernel.org>
- <20250521171021.2978273-2-mmakassikis@freebox.fr>
+	s=arc-20240116; t=1748332394; c=relaxed/simple;
+	bh=mIYmdNiseXJCzoKhPH9jmbDI1kSmDLkOHQwElgcM5kc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RwNXycnyKcFziklo7lReEpz5/P0527w9rVVrz69MjI3cUeu+ixcZ789ZHQuhl8c33rOzej0N6GCpuhPpj4fNZEuv8A/VTSob+smYCUTA8gBSj1giJGfLYRi2CRrPC2xneMFQLJFw1Ma+LZoOlAcykqn0hg67W+QYz/54o7Anm0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b64cj5074zKHMqc;
+	Tue, 27 May 2025 15:53:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 245741A094F;
+	Tue, 27 May 2025 15:53:08 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgD3W2BjbzVodFOdNg--.25410S3;
+	Tue, 27 May 2025 15:53:07 +0800 (CST)
+Subject: Re: [PATCH 07/23] md/md-bitmap: delay registration of bitmap_ops
+ until creating bitmap
+To: Hannes Reinecke <hare@suse.de>, Yu Kuai <yukuai1@huaweicloud.com>,
+ hch@lst.de, xni@redhat.com, colyli@kernel.org, song@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250524061320.370630-1-yukuai1@huaweicloud.com>
+ <20250524061320.370630-8-yukuai1@huaweicloud.com>
+ <d2fabdfd-229d-4043-ad27-61bac1e1f6d2@suse.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d95b41a0-c1aa-8b8b-d959-05e41eee3a7f@huaweicloud.com>
+Date: Tue, 27 May 2025 15:53:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v5CvJe1XMYPGtXSg"
-Content-Disposition: inline
-In-Reply-To: <20250521171021.2978273-2-mmakassikis@freebox.fr>
+In-Reply-To: <d2fabdfd-229d-4043-ad27-61bac1e1f6d2@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgD3W2BjbzVodFOdNg--.25410S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jr4DGr47Ar17uF1kGr45Wrg_yoW7Zr48p3
+	97JF98GrW5JrZ5Xw17JFyDuFyrXr1kJa4qqryxX3WUArnrJrn0qF45WF1vgr1UAw4xAr1U
+	Aw15Jrsrur1UWF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+Hi,
 
---v5CvJe1XMYPGtXSg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+在 2025/05/27 14:13, Hannes Reinecke 写道:
+> On 5/24/25 08:13, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Currently bitmap_ops is registered while allocating mddev, this is fine
+>> when there is only one bitmap_ops, however, after introduing a new
+>> bitmap_ops, user space need a time window to choose which bitmap_ops to
+>> use while creating new array.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>   drivers/md/md.c | 86 +++++++++++++++++++++++++++++++------------------
+>>   1 file changed, 55 insertions(+), 31 deletions(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 4eb0c6effd5b..dc4b85f30e13 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -674,39 +674,50 @@ static void no_op(struct percpu_ref *r) {}
+>>   static bool mddev_set_bitmap_ops(struct mddev *mddev)
+>>   {
+>> +    struct bitmap_operations *old = mddev->bitmap_ops;
+>> +    struct md_submodule_head *head;
+>> +
+>> +    if (mddev->bitmap_id == ID_BITMAP_NONE ||
+>> +        (old && old->head.id == mddev->bitmap_id))
+>> +        return true;
+>> +
+>>       xa_lock(&md_submodule);
+>> -    mddev->bitmap_ops = xa_load(&md_submodule, mddev->bitmap_id);
+>> +    head = xa_load(&md_submodule, mddev->bitmap_id);
+>>       xa_unlock(&md_submodule);
+>> -    if (!mddev->bitmap_ops) {
+>> -        pr_warn_once("md: can't find bitmap id %d\n", mddev->bitmap_id);
+>> +    if (WARN_ON_ONCE(!head || head->type != MD_BITMAP)) {
+>> +        pr_err("md: can't find bitmap id %d\n", mddev->bitmap_id);
+>>           return false;
+>>       }
+>> +    if (old && old->group)
+>> +        sysfs_remove_group(&mddev->kobj, old->group);
+>> +
+>> +    mddev->bitmap_ops = (void *)head;
+>> +    if (mddev->bitmap_ops && mddev->bitmap_ops->group &&
+>> +        sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
+>> +        pr_warn("md: cannot register extra bitmap attributes for %s\n",
+>> +            mdname(mddev));
+>> +
+>>       return true;
+>>   }
+>>   static void mddev_clear_bitmap_ops(struct mddev *mddev)
+>>   {
+>> +    if (mddev->bitmap_ops && mddev->bitmap_ops->group)
+>> +        sysfs_remove_group(&mddev->kobj, mddev->bitmap_ops->group);
+>> +
+>>       mddev->bitmap_ops = NULL;
+>>   }
+>>   int mddev_init(struct mddev *mddev)
+>>   {
+>> -    mddev->bitmap_id = ID_BITMAP;
+>> -
+>> -    if (!mddev_set_bitmap_ops(mddev))
+>> -        return -EINVAL;
+>> -
+>>       if (percpu_ref_init(&mddev->active_io, active_io_release,
+>> -                PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+>> -        mddev_clear_bitmap_ops(mddev);
+>> +                PERCPU_REF_ALLOW_REINIT, GFP_KERNEL))
+>>           return -ENOMEM;
+>> -    }
+>>       if (percpu_ref_init(&mddev->writes_pending, no_op,
+>>                   PERCPU_REF_ALLOW_REINIT, GFP_KERNEL)) {
+>> -        mddev_clear_bitmap_ops(mddev);
+>>           percpu_ref_exit(&mddev->active_io);
+>>           return -ENOMEM;
+>>       }
+>> @@ -734,6 +745,7 @@ int mddev_init(struct mddev *mddev)
+>>       mddev->resync_min = 0;
+>>       mddev->resync_max = MaxSector;
+>>       mddev->level = LEVEL_NONE;
+>> +    mddev->bitmap_id = ID_BITMAP;
+>>       INIT_WORK(&mddev->sync_work, md_start_sync);
+>>       INIT_WORK(&mddev->del_work, mddev_delayed_delete);
+>> @@ -744,7 +756,6 @@ EXPORT_SYMBOL_GPL(mddev_init);
+>>   void mddev_destroy(struct mddev *mddev)
+>>   {
+>> -    mddev_clear_bitmap_ops(mddev);
+>>       percpu_ref_exit(&mddev->active_io);
+>>       percpu_ref_exit(&mddev->writes_pending);
+>>   }
+>> @@ -6093,11 +6104,6 @@ struct mddev *md_alloc(dev_t dev, char *name)
+>>           return ERR_PTR(error);
+>>       }
+>> -    if (md_bitmap_registered(mddev) && mddev->bitmap_ops->group)
+>> -        if (sysfs_create_group(&mddev->kobj, mddev->bitmap_ops->group))
+>> -            pr_warn("md: cannot register extra bitmap attributes for 
+>> %s\n",
+>> -                mdname(mddev));
+>> -
+>>       kobject_uevent(&mddev->kobj, KOBJ_ADD);
+>>       mddev->sysfs_state = sysfs_get_dirent_safe(mddev->kobj.sd, 
+>> "array_state");
+>>       mddev->sysfs_level = sysfs_get_dirent_safe(mddev->kobj.sd, 
+>> "level");
+> 
+> But now you've killed udev event processing.
+> Once the 'add' event is sent _all_ sysfs attributes must be present,
+> otherwise you'll have a race condition where udev is checking for
+> attributes which are present only later.
+> 
+> So when moving things around ensure to move the kobject_uevent() call, too.
 
-> on mvpp2_rx_refill() failure, the freshly allocated skb is freed,
-> the rx error counter is incremented and the descriptor currently
-> being processed is rearmed through mvpp2_bm_pool_put().
->=20
-> the logic is that the system is low on memory so it's not possible
-> to allocate both a rx descriptor and an skb, so we might as well
-> drop the skb and return the descriptor to the rx pool to avoid
-> draining it (and preventing any future packet reception).
+I do not expect the bitmap entries are checked by udev, otherwise this
+set can introduce regressions since the bitmap entries are no longer
+existed after using the new biltmap.
 
-Hi Marios,
+And the above KOBJ_ADD uevent is used for mddev->kobj, right? In this
+case, we're creating new entries under mddev->kobj, should this be
+KOBJ_CHANGE?
 
-Can we just run the mvpp2_rx_refill() when the skb has been already
-successfully sent to the networking stack? Doing so, if the skb allocation
-fails, we will refill the in-flight rx descriptor (the one consumed by the
-skb) to the descriptor ring, reducing the pressure on it.
-What do you think?
+Thanks,
+Kuai
 
-Regards,
-Lorenzo
-
->=20
-> the skb freeing is unfortunate, as build_skb() takes ownership
-> of the 'data' buffer:
->  - build_skb() calls  __finalize_skb_around() which sets skb->head
->  and skb->data to point to 'data'
->  - dev_free_skb_any() may call skb_free_frag() on skb->head
->=20
-> thus, the final mvpp2_bm_pool_put() rearms a descriptor that was
-> just freed.
->=20
-> call mvpp2_rx_refill() first, so there's no skb to free.
->=20
-> incidentally, doing rx refill prior to skb allocation is what is
-> done in marvell's mvneta driver for armada 370 (mvneta_rx_hwbm() in
-> mvneta.c)
->=20
-> Fixes: d6526926de739 ("net: mvpp2: fix memory leak in mvpp2_rx")
-> Signed-off-by: Marios Makassikis <mmakassikis@freebox.fr>
-> ---
->  drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/ne=
-t/ethernet/marvell/mvpp2/mvpp2_main.c
-> index 416a926a8281..e13055ec4483 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-> @@ -4003,6 +4003,12 @@ static int mvpp2_rx(struct mvpp2_port *port, struc=
-t napi_struct *napi,
->  			metasize =3D xdp.data - xdp.data_meta;
->  		}
-> =20
-> +		err =3D mvpp2_rx_refill(port, bm_pool, pp, pool);
-> +		if (err) {
-> +			netdev_err(port->dev, "failed to refill BM pools\n");
-> +			goto err_drop_frame;
-> +		}
-> +
->  		if (frag_size)
->  			skb =3D build_skb(data, frag_size);
->  		else
-> @@ -4021,13 +4027,6 @@ static int mvpp2_rx(struct mvpp2_port *port, struc=
-t napi_struct *napi,
->  					 skb_hwtstamps(skb));
->  		}
-> =20
-> -		err =3D mvpp2_rx_refill(port, bm_pool, pp, pool);
-> -		if (err) {
-> -			netdev_err(port->dev, "failed to refill BM pools\n");
-> -			dev_kfree_skb_any(skb);
-> -			goto err_drop_frame;
-> -		}
-> -
->  		if (pp)
->  			skb_mark_for_recycle(skb);
->  		else
-> --=20
-> 2.49.0
->=20
->=20
-
---v5CvJe1XMYPGtXSg
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaDVvRwAKCRA6cBh0uS2t
-rGAsAP4juNM2CCGS4mpdTIUDn8UqB+xKBicm9RMTsgyg4rfDOwEA0WoSzG9mkygB
-rOtmVdC/ktPn36v84yVnmg0MJQxLfAg=
-=g54o
------END PGP SIGNATURE-----
-
---v5CvJe1XMYPGtXSg--
+> 
+> (ideally you would set the sysfs attributes when calling 'add_device()',
+> but not sure if that's possible here.)
+> 
+> Cheers,
+> 
+> Hannes
 
