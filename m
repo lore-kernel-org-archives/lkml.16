@@ -1,63 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EA9280012
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18434276057;
+	Tue, 27 May 2025 16:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748364581; cv=none; b=ePw7SuHWVhU5f3d06kOFqgsVH1x4A16gjmZTv70uVReyxUSvsBTWQwp0lRnpR7Su+1HPgt5LZX87qk9mdmyQCAQE44rtCRZdOApou7GYKq4XpKpOHtHzI7IjvcRiyHqz3RGHOv+mDChc38Ox2aozw17n2fKPeQAJq1g7iczEBg4=
+	t=1748364718; cv=none; b=cOHHukf66qgSu3XhEiUmxdeUViMRRw0lIWhDBQ5YQgwOyx44QLx8sLTpDDL48XelmSql7dByBafrmtC/Hjdf/CjCMDGLJrHx0VRDd6zQnpj1YTuWs/+akH0hAU/RKenSvseOFYac+LIqqF2nPqyIqA48tZbybzqhmigiRXcMoVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748364581; c=relaxed/simple;
-	bh=bgjPKbaO2eqTOUC+VYP4g/UfuQiUrr3JHElDaH1m3xo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oicAmCnHNTGf1sTVv5swPAYOF8gCviu2HYX1k1TmQvpFK07kOzFjPaU23pj1J5n6scR0iYxpZmq4EWOoEAn5zjrOz62TWGcLfK0QYgg6+UC8cgphX+hmxWTQN/mjUjj9eWBKsLIVpc6Eec+zPbyeEZ5I+EO8RfpyHdJ5f5/bR2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5KC5Y+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748364718; c=relaxed/simple;
+	bh=1QHtJ70y+rvjR6EHIWwb1H2O+LY90CK8zar6Avm1ejE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CDrB2QOoP7f6l8wh9XlgHHOfMWhhMAvBFhmspd2yt5LZQ5rHTcTdMM08jfHqcUXYw5k1nOqWAbeFIUzzvUvouutNM+F0MicfC8ycjfVUXqLXvdNNiT5Nda1Hbrvc3XktbnprvbfLE/j+vw4U/QDYCVjRUDmiZqN5uBGtuliS8sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7trjF/X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5KC5Y+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 317D3C4CEEB;
-	Tue, 27 May 2025 16:49:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7trjF/X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21BCC4CEEB;
+	Tue, 27 May 2025 16:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748364581;
-	bh=bgjPKbaO2eqTOUC+VYP4g/UfuQiUrr3JHElDaH1m3xo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=f5KC5Y+EpcRJAv3oR0PMC1m5goWh/b4s1m33fgSv69vmTeQDhsJ8O98G6rmrVd832
-	 FXDQDzqYf8AR/mp0pmYX2/5vCy04Hvy4ygPJUNV+ZqKJuV3SMaTowIelQ6ToY2/LmH
-	 L+89pjDbiBgDxkvs+RKatthRsBP8ZBtHft1GCebgSj24vooUCVwv9zNuiscCdHrqn6
-	 vAgKosid6F3wJtHSg8ygAMHS5LfGg429ga9PuycGUOz8hDt/PQ1sGPL4oV27uQIyn7
-	 qEQU09I0HeKrwoDZfX7lygx0Gek4+yItxd9Z9bMoMZx9KbvzlYSOe/CtMcWkWXc9I2
-	 SP4kayxcZCOLw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE5C0380AAE2;
-	Tue, 27 May 2025 16:50:16 +0000 (UTC)
-Subject: Re: [GIT pull] timers/clocksource for v6.16-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <174820638317.238682.3878315364921093216.tglx@xen13>
-References: <174820637262.238682.1985899398053030312.tglx@xen13> <174820638317.238682.3878315364921093216.tglx@xen13>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <174820638317.238682.3878315364921093216.tglx@xen13>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-clocksource-2025-05-25
-X-PR-Tracked-Commit-Id: 29857e6f4e30b475e0713fc7a65a962745c429ab
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6376c0770656f3bdf7f411faf068371b6932aeca
-Message-Id: <174836461538.1706669.6719815260770088670.pr-tracker-bot@kernel.org>
-Date: Tue, 27 May 2025 16:50:15 +0000
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org
+	s=k20201202; t=1748364718;
+	bh=1QHtJ70y+rvjR6EHIWwb1H2O+LY90CK8zar6Avm1ejE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=q7trjF/Xiu4/dOXeYm3XARMbuTenNw4xm/v/XKKhQ3Qpz2BR/MmP9HbtTAWT9WNY2
+	 9Ue0cdZe2532DMrkxHXjLPtpiQBle4NzeiOBgrcgpWd6Ppx42XazvV31CdT8BbCy74
+	 9KQX1OYFF0SFkEiAAhHpgAtJ9/PnPEyhv0/MJTjyKbm++CfIKWkGfC9cRP2KpMvq6T
+	 ZGrFw2XqrcTHFs4x3c0tnOmGTbcE2umdCs2wXDsQ7CTP0SNXYrT97dRzF97KDK4DZa
+	 qTvN/hAkBUo3bs+vwWqNantVMjKirXvuqg+P6KDHImv4jJ4X0Hi5fj24rhi/sf9biw
+	 /tS8x5vXTdGbA==
+From: Pratyush Yadav <pratyush@kernel.org>
+To: Zixian Zeng <sycamoremoon376@gmail.com>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,  Pratyush Yadav
+ <pratyush@kernel.org>,  Michael Walle <mwalle@kernel.org>,  Miquel Raynal
+ <miquel.raynal@bootlin.com>,  Richard Weinberger <richard@nod.at>,
+  Vignesh Raghavendra <vigneshr@ti.com>,  Chen Wang
+ <unicorn_wang@outlook.com>,  Inochi Amaoto <inochiama@gmail.com>,  Mark
+ Brown <broonie@kernel.org>,  Rob Herring <robh@kernel.org>,  Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Paul
+ Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,
+  Albert Ou <aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>,
+  Longbin Li <looong.bin@gmail.com>,  linux-mtd@lists.infradead.org,
+  linux-kernel@vger.kernel.org,  sophgo@lists.linux.dev,
+  linux-spi@vger.kernel.org,  devicetree@vger.kernel.org,
+  linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: Add SPI NOR node for SG2042
+In-Reply-To: <20250525-sfg-spifmc-v2-3-a3732b6f5ab4@gmail.com>
+References: <20250525-sfg-spifmc-v2-0-a3732b6f5ab4@gmail.com>
+	<20250525-sfg-spifmc-v2-3-a3732b6f5ab4@gmail.com>
+Date: Tue, 27 May 2025 18:51:53 +0200
+Message-ID: <mafs05xhmro7q.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-The pull request you sent on Sun, 25 May 2025 22:53:47 +0200 (CEST):
+On Sun, May 25 2025, Zixian Zeng wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-clocksource-2025-05-25
+> Add SPI-NOR controller and flash nodes to device tree for SG2042.
+>
+> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
+> ---
+>  .../riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts | 18 ++++++++++++++++
+>  arch/riscv/boot/dts/sophgo/sg2042.dtsi             | 24 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
+> index 34645a5f6038389cd00d4940947c6bb71d39ec6f..c59a819e35d3201c484bf98392aec14392a7eb04 100644
+> --- a/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
+> +++ b/arch/riscv/boot/dts/sophgo/sg2042-milkv-pioneer.dts
+> @@ -68,6 +68,24 @@ &sd {
+>  	status = "okay";
+>  };
+>  
+> +&spifmc0 {
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6376c0770656f3bdf7f411faf068371b6932aeca
+Shouldn't you also add other properties like spi-max-frequency or
+spi-{rx,tx}-bus-width? Same for the other flash.
 
-Thank you!
+> +	};
+> +};
+> +
+> +&spifmc1 {
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +	};
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+[...]
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards,
+Pratyush Yadav
