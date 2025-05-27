@@ -1,1126 +1,243 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACC925A349
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCB62CCC1
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748348808; cv=none; b=uGz3yrVOtgoE0/zdzqvW0AzC4DriRCTz4A/L4fCqrYFP85FBFy4P42AAc50kow2yygJXYUP8ZJac+Mf9jXvzRGdvUEAmMhgcnpfvQmLs4jy/gEmu6H0V4b6H/WEtZb8UI7qq/WefVBVEm/v9v3NudiZ40mspC/q4Z3F712xMumo=
+	t=1748349244; cv=none; b=iz0hoDUpVEyTMSK5Fkym43Y7+PVdodaPVOEgAqZyfP/ZBb+vRANcSMGaRoOtuA0xEN8XIHI1hlXVOkYNLxI9XmP/4HNNrIrGvO0KJVzSzSqSLiChDTE/2ItylHkC9vq3eOqRT7eAL81nVMJwa/hf3l+LddoCmYFO1d4BA6QJ6Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748348808; c=relaxed/simple;
-	bh=ETmolC8mc8rvZzb243ydKbjuAJfkDZlxQOzO+DUrdOk=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=rNkqf7xHl5NSOC7hXcuW3MSlZaIDCTEUA898r7yHstfBvwsnd2xnU/m79g4tI3a1hKQZxrzewujZOVyc6NyJHesmfny9JMPCzy2T55LI769xopnlhshPNMc44iehcvWugqkAd0vm8EVDuticu18xLbXaR+NoCLKvxw48zAsyirY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GeGwdqaq; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748349244; c=relaxed/simple;
+	bh=n/7tgbnh1HYj1q4YPqzXdhqksDqU4MF2zBC9n53t8vE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aC6bvIEKGctTKEfmC+JsjKy15rslNWIVfN1SpywS7TmvC2uMEQewGjATqfQ+2uAc34EjBA1P2r7ixpToaEf40Qr9gP+VHYpueHjvZohbsbwQi7HO5cbLE0ep6gHedelsDnlnn8/p63EgeKP4f+WraDfBwYXlb8xitenRQOI7NK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JSEP8Qb/; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GeGwdqaq"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23449dde9ccso17359835ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:26:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748348806; x=1748953606; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DcDmZ8/rAa9+ie79VXTrHQE2ydRz2OYw5HXZLKKYTvE=;
-        b=GeGwdqaqOlos5gpigx0f6uJIsc0xvV+R0R8umO+iMGfEm0l7+TmyP0j0xIjTZzi9ZD
-         F4OTnYraPzkvzHvCd2heWh6l/IyYhzdg43bDx1A9/YMNOuCmoIkHbcA7+vWgbHlLH9Ao
-         w86fZYpzCv0Gws4GIWezdBhYdhhhXwkR9SLASbBjKp/8hXO5Wqgs9p5BpkTHE95vHK2e
-         h4Kh0WXDJHYs128q7hQ76YTWZWldJK/4MK5CUGBUGuclh1s5/Qbt5rTUOnpdlnP1fG+r
-         7ObQLXzCxgfNmHP3sh0M4XgL6tfhT0N5zGu+Mt/gigxghB1ldPS0jF2ccwwRcxsV0u26
-         3bhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748348806; x=1748953606;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DcDmZ8/rAa9+ie79VXTrHQE2ydRz2OYw5HXZLKKYTvE=;
-        b=Nf2jLDH2gE5GC1MGszAasOflTqTPooXW7DQYMgMRyL6Akwp9oN1vmgDYw/P+C1R7dr
-         vcCbRNJ4ybNO2P7NmE9bK7fSLAuDgEADhXIAy8YYrfeerNBDG4CS8VHw9e60I+HTX1fS
-         HNLv0ycO1MU2ZVpZSPHUtoIqjzW0cXSFGrIjFSZfc5x53HbZ065oaQs+9q2CGr/tAjkz
-         sPGmLekMI0vCznKWWnJ/y4PVJ/mMRKpKIy5RUssOeg8hxGZUYSHi3j9kqZSecVXAcHxd
-         vxs9zXMWtZQ/gWAiw7qI5s6POjdegnbnU3tKtU3GRb0fA+O/HY7+0InqdAX9GRbqeGms
-         /V+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVEpDNqSBguhZLboTuQRcvHFCzVe56myW7RrUAJKSquRAcNsCPMiVYNHrd5V5y4KCtZMuhLPQiHnxY8L/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFYqg+hN/HsLnpTe/rn6eqPCtz/zXjUyYev0L6/s8tcZ2zSg+U
-	mmfvPb0QoGxFJJ2vwMTx9xKB4kwcqLlKpAGfQM7wxhmwoyRGK6ppEOepIaQhNKQWtg==
-X-Gm-Gg: ASbGncstT2E+GNygpsRdZ7PI721DB13lkxp9zz41pGm7swg0H4Tn14LAmpLSjlesvM0
-	XfOp5GgjNw4GnU/txoyq1uhSWAtHHkD2dmPJifl+WelsO79FaeQgZS+yQHK9AE4cFNhfphNVjc4
-	rGxfIGfhzeWP4MyTLg1IMmYY79hmvki7k44NFhliT4fLw2CcfZUo7pl7OlZ0+mY1il6/35Moy/r
-	vG+PC8eVVIf7KtymCoEiJI8oPleuyU45YlbvRLSItzE5Hj2wSqZkRcI+JRc8sypaZe/1ppLScUe
-	YFfdfvmVFyTeruTKRD1leJ018RehNvx2xv4GrcP5fvl/eSwIdg==
-X-Google-Smtp-Source: AGHT+IH+FAE9D1Sl6dfRRrI4A/37zsOEnw1yDdpbC5eo4+xQr9uZbaMGA6GyVxQh7Vq3j3QCCeVLQQ==
-X-Received: by 2002:a17:903:228c:b0:215:b473:1dc9 with SMTP id d9443c01a7336-23414fc957dmr200237005ad.46.1748348805606;
-        Tue, 27 May 2025 05:26:45 -0700 (PDT)
-Received: from ?IPv6:::1? ([2409:40f4:2119:1d3:8000::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234989777ccsm13247365ad.83.2025.05.27.05.26.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 May 2025 05:26:45 -0700 (PDT)
-Date: Tue, 27 May 2025 17:54:49 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Val Packett <val@packett.cool>
-CC: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_2/4=5D_arm64=3A_dts=3A_qcom=3A_Add_?=
- =?US-ASCII?Q?support_for_X1E80100_Dell_Latitude_7455?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <a5tx3ekokrd5zif646ukd5z4gzkyod3b4vcjktwahtej7dpare@43djxfwza2jb>
-References: <20250525095341.12462-2-val@packett.cool> <20250525095341.12462-4-val@packett.cool> <a5tx3ekokrd5zif646ukd5z4gzkyod3b4vcjktwahtej7dpare@43djxfwza2jb>
-Message-ID: <9A47A2D6-93EA-4C73-A681-474C977474DD@linaro.org>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JSEP8Qb/"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B51C12B3;
+	Tue, 27 May 2025 14:33:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1748349214;
+	bh=n/7tgbnh1HYj1q4YPqzXdhqksDqU4MF2zBC9n53t8vE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JSEP8Qb/el8lj2iXAckQZs2X51X9/XhmOUt9ADvIRfZXqlu9QdpZbZZPE5K/VilK6
+	 Np8eZjDei/IfUayQ/aL/ESVFrUl5ACU3ZsXPjBsgKoShfwX7zMp3qYohp/yMbfhYBt
+	 F3Lx47cyq2QA9Hy4tB9V33wxNuzBqECiq/R6+i90=
+Message-ID: <8fc0c880-0809-43d6-b03a-1a5728f5d0d4@ideasonboard.com>
+Date: Tue, 27 May 2025 15:33:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/18] drm/tidss: Adjust the pclk based on the HW
+ capabilities
+To: Michael Walle <mwalle@kernel.org>, Devarsh Thakkar <devarsht@ti.com>,
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
+ Jyri Sarha <jyri.sarha@iki.fi>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
+ <20250402-cdns-dsi-impro-v2-3-4a093eaa5e27@ideasonboard.com>
+ <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <DA6TT575Z82D.3MPK8HG5GRL8U@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Michael (and Aradhya, Devarsh),
 
+On 27/05/2025 12:13, Michael Walle wrote:
+> Hi Tomi,
+> 
+> While testing Aardhya's OLDI support patches [1], I've noticed that
+> the resulting LVDS clock is wrong if this patch is applied.
+> 
+>> In practice, with the current K3 SoCs, the display PLL is capable of
+>> producing very exact clocks, so most likely the rounded rate is the same
+>> as the original one.
+> 
+> This is now what I'm seeing. Most SoCs have that fixed clock thingy
+> for (some?) VPs, e.g. [2]. And clk_round_rate() will return the
+> fixed clock rate for this clock, which will then result in an LVDS
+> clock which is way off.
+> 
+> I'm testing on an AM67A (J722S) and I've backported some of the
+> patches as well as dtsi fragmets from downstream. Thus, it might be
+> as well the case that the fixed-factor-clock node is wrong here.
+> OTOH other K3 SoCs do this in mainline as well.
 
-On May 25, 2025 6:55:42 PM GMT+05:30, Dmitry Baryshkov <dmitry=2Ebaryshkov=
-@oss=2Equalcomm=2Ecom> wrote:
->On Sun, May 25, 2025 at 06:53:34AM -0300, Val Packett wrote:
->> Add a device tree for the Dell Latitude 7455 (X Elite) laptop=2E
->>=20
->> Working:
->> - Wi-Fi (WCN7850 hw2=2E0)
->> - Bluetooth
->> - USB Type-C x2 (with DP alt mode)
->> - USB Type-A
->> - USB Fingerprint reader
->> - eDP Display (with brightness)
->> - NVMe
->> - SDHC (microSD slot)
->> - Keyboard
->> - Touchpad
->> - Touchscreen
->> - Battery
->>=20
->> Not included:
->> - Audio
->> - Camera
->>=20
->> Signed-off-by: Val Packett <val@packett=2Ecool>
+Thanks for findings this (It's not a fixed clock, but a (fixed)
+divider). I can reproduce on my AM62 SK's OLDI output.
+
+I didn't see AM625 TRM explaining the DSS + OLDI clocking. I remember it
+was a bit "interesting". Afaics from testing, the VP clock is derived
+from the OLDI serial clock divided by 7. To change the VP clock, we need
+to set the OLDI clock's rate. But the code we have at the moment is
+using clk_round_rate/set_rate to the VP clock.
+
+And we get the crtc atomic_check called before setting the OLDI clock
+rate, so it doesn't even work by luck (i.e. if the OLDI clock was set
+earlier, the VP clock would already have the right rate, and it would
+seem that everything is ok). In the atomic_check we see the OLDI bypass
+clock (25 MHz), which results in 3571428 Hz VP clock.
+
+And with this patch, the code then decides that 3571428 Hz is what the
+HW can do, and uses it as the pixel clock.
+
+Aradhya, Devarsh, do you remember how the clocking goes here? Or if it's
+in the TRM, please point me to it...
+
+ Tomi
+
+>>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 >> ---
->>  arch/arm64/boot/dts/qcom/Makefile             |    2 +
->>  =2E=2E=2E/dts/qcom/x1e80100-dell-latitude-7455=2Edts  | 1484 +++++++++=
-++++++++
->>  2 files changed, 1486 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-dell-latitude-745=
-5=2Edts
->>=20
->
->> +	pmic-glink {
->> +		compatible =3D "qcom,x1e80100-pmic-glink",
->> +			     "qcom,sm8550-pmic-glink",
->> +			     "qcom,pmic-glink";
->> +		orientation-gpios =3D <&tlmm 121 GPIO_ACTIVE_HIGH>,
->> +				    <&tlmm 123 GPIO_ACTIVE_HIGH>;
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <0>;
+>>  drivers/gpu/drm/tidss/tidss_crtc.c  | 23 +++++++++++++++++++----
+>>  drivers/gpu/drm/tidss/tidss_dispc.c |  6 ++++++
+>>  drivers/gpu/drm/tidss/tidss_dispc.h |  2 ++
+>>  3 files changed, 27 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
+>> index 1604eca265ef..6c3967f70510 100644
+>> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
+>> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+>> @@ -91,7 +91,7 @@ static int tidss_crtc_atomic_check(struct drm_crtc *crtc,
+>>  	struct dispc_device *dispc = tidss->dispc;
+>>  	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
+>>  	u32 hw_videoport = tcrtc->hw_videoport;
+>> -	const struct drm_display_mode *mode;
+>> +	struct drm_display_mode *adjusted_mode;
+>>  	enum drm_mode_status ok;
+>>  
+>>  	dev_dbg(ddev->dev, "%s\n", __func__);
+>> @@ -99,12 +99,27 @@ static int tidss_crtc_atomic_check(struct drm_crtc *crtc,
+>>  	if (!crtc_state->enable)
+>>  		return 0;
+>>  
+>> -	mode = &crtc_state->adjusted_mode;
+>> +	adjusted_mode = &crtc_state->adjusted_mode;
+> 
+> Here, adjusted_mode->clock is still the correct pixel clock.
+> 
+>> -	ok = dispc_vp_mode_valid(dispc, hw_videoport, mode);
+>> +	if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+>> +		long rate;
 >> +
->> +		/* Display-adjacent port */
->> +		connector@0 {
->> +			compatible =3D "usb-c-connector";
->> +			reg =3D <0>;
->> +			power-role =3D "dual";
->> +			data-role =3D "dual";
->
->What does UCSI tell about these connectors? Are they really
->dual-data-role?
->
+>> +		rate = dispc_vp_round_clk_rate(tidss->dispc,
+>> +					       tcrtc->hw_videoport,
+>> +					       adjusted_mode->clock * 1000);
+>> +		if (rate < 0)
+>> +			return -EINVAL;
 >> +
->> +			ports {
->> +				#address-cells =3D <1>;
->> +				#size-cells =3D <0>;
+>> +		adjusted_mode->clock = rate / 1000;
+> 
+> While after this statement, adjusted_mode->clock is 300MHz in my
+> case (the VP1 clock seems to be 2.1GHz, divided by 7).
+> 
+> -michael
+> 
+> [1] https://lore.kernel.org/all/20250525151721.567042-1-aradhya.bhatia@linux.dev/
+> [2] https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/ti/k3-am62.dtsi#L110
+> 
 >> +
->> +				port@0 {
->> +					reg =3D <0>;
+>> +		drm_mode_set_crtcinfo(adjusted_mode, 0);
+>> +	}
 >> +
->> +					pmic_glink_ss0_hs_in: endpoint {
->> +						remote-endpoint =3D <&usb_1_ss0_dwc3_hs>;
->> +					};
->> +				};
+>> +	ok = dispc_vp_mode_valid(dispc, hw_videoport, adjusted_mode);
+>>  	if (ok != MODE_OK) {
+>>  		dev_dbg(ddev->dev, "%s: bad mode: %ux%u pclk %u kHz\n",
+>> -			__func__, mode->hdisplay, mode->vdisplay, mode->clock);
+>> +			__func__, adjusted_mode->hdisplay,
+>> +			adjusted_mode->vdisplay, adjusted_mode->clock); >  		return -EINVAL;
+>>  	}
+>>  
+>> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+>> index a5107f2732b1..3930fb7f03c2 100644
+>> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
+>> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+>> @@ -1318,6 +1318,12 @@ unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
+>>  	return (unsigned int)(abs(((rr - r) * 100) / r));
+>>  }
+>>  
+>> +long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>> +			     unsigned long rate)
+>> +{
+>> +	return clk_round_rate(dispc->vp_clk[hw_videoport], rate);
+>> +}
 >> +
->> +				port@1 {
->> +					reg =3D <1>;
->> +
->> +					pmic_glink_ss0_ss_in: endpoint {
->> +						remote-endpoint =3D <&retimer_ss0_ss_out>;
->> +					};
->> +				};
->> +
->> +				port@2 {
->> +					reg =3D <2>;
->> +
->> +					pmic_glink_ss0_con_sbu_in: endpoint {
->> +						remote-endpoint =3D <&retimer_ss0_con_sbu_out>;
->> +					};
->> +				};
->> +			};
->> +		};
->> +
->> +		/* User-adjacent port */
->> +		connector@1 {
->> +			compatible =3D "usb-c-connector";
->> +			reg =3D <1>;
->> +			power-role =3D "dual";
->> +			data-role =3D "dual";
->> +
->> +			ports {
->> +				#address-cells =3D <1>;
->> +				#size-cells =3D <0>;
->> +
->> +				port@0 {
->> +					reg =3D <0>;
->> +
->> +					pmic_glink_ss1_hs_in: endpoint {
->> +						remote-endpoint =3D <&usb_1_ss1_dwc3_hs>;
->> +					};
->> +				};
->> +
->> +				port@1 {
->> +					reg =3D <1>;
->> +
->> +					pmic_glink_ss1_ss_in: endpoint {
->> +						remote-endpoint =3D <&retimer_ss1_ss_out>;
->> +					};
->> +				};
->> +
->> +				port@2 {
->> +					reg =3D <2>;
->> +
->> +					pmic_glink_ss1_con_sbu_in: endpoint {
->> +						remote-endpoint =3D <&retimer_ss1_con_sbu_out>;
->> +					};
->> +				};
->> +			};
->> +		};
->> +	};
->
->> +
->> +	vreg_wcn_3p3: regulator-wcn-3p3 {
->> +		compatible =3D "regulator-fixed";
->> +
->> +		regulator-name =3D "VREG_WCN_3P3";
->> +		regulator-min-microvolt =3D <3300000>;
->> +		regulator-max-microvolt =3D <3300000>;
->> +
->> +		gpio =3D <&tlmm 214 GPIO_ACTIVE_HIGH>;
->> +		enable-active-high;
->> +
->> +		pinctrl-0 =3D <&wcn_sw_en>;
->> +		pinctrl-names =3D "default";
->> +
->> +		regulator-boot-on;
->> +	};
->> +
->> +	/*
->> +	 * TODO: These two regulators are actually part of the removable M=2E=
-2
->> +	 * card and not the mainboard=2E Need to describe this differently=2E
->> +	 * Functionally it works correctly, because all we need to do is to
->> +	 * turn on the actual 3=2E3V supply above=2E
->> +	 */
->
->Indeed, it should be possible to describe just M=2E2 card, because in
->theory nothing prevents you from swapping it with some other card=2E
->I _think_, it should be possible to describe WiFI part by listing 3=2E3V
->supply as slot supply=2E However I don't think we have a way "random BT
->connected to the UART"=2E So, this is probably suitable=2E
+>>  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>>  			  unsigned long rate)
+>>  {
+>> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+>> index c31b477a18b0..d4c335e918fb 100644
+>> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
+>> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+>> @@ -120,6 +120,8 @@ enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
+>>  					 const struct drm_display_mode *mode);
+>>  int dispc_vp_enable_clk(struct dispc_device *dispc, u32 hw_videoport);
+>>  void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport);
+>> +long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>> +			     unsigned long rate);
+>>  int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+>>  			  unsigned long rate);
+>>  void dispc_vp_setup(struct dispc_device *dispc, u32 hw_videoport,
+> 
 
-If it is *just* an M=2E2 card, then why the PMU node for WLAN is defined? =
-PMU is defining the internal supplies of the M=2E2 cards=2E If that's not r=
-equired, you'd be better off with defining the slot supply alone in the PCI=
-e bridge node=2E Like,
-
-In SoC dtsi:
-
-pcieport0: pcie@0 {
-	compatible "pciclass,0604"
-	=2E=2E=2E
-};
-
-In board dts:
-
-&pcieport0 {
-	vpcie3v3-supply =3D <&vreg_wcn_3p3>;
-};
-
-But I guess you are sticking with PMU for UART? Even in that case, the PCI=
-e node should just define the slot supply=2E
-
-- Mani
-
->
->> +	vreg_wcn_0p95: regulator-wcn-0p95 {
->> +		compatible =3D "regulator-fixed";
->> +
->> +		regulator-name =3D "VREG_WCN_0P95";
->> +		regulator-min-microvolt =3D <950000>;
->> +		regulator-max-microvolt =3D <950000>;
->> +
->> +		vin-supply =3D <&vreg_wcn_3p3>;
->> +	};
->> +
->> +	vreg_wcn_1p9: regulator-wcn-1p9 {
->> +		compatible =3D "regulator-fixed";
->> +
->> +		regulator-name =3D "VREG_WCN_1P9";
->> +		regulator-min-microvolt =3D <1900000>;
->> +		regulator-max-microvolt =3D <1900000>;
->> +
->> +		vin-supply =3D <&vreg_wcn_3p3>;
->> +	};
->> +
->> +	wcn7850-pmu {
->> +		compatible =3D "qcom,wcn7850-pmu";
->> +
->> +		vdd-supply =3D <&vreg_wcn_0p95>;
->> +		vddio-supply =3D <&vreg_l15b_1p8>;
->> +		vddaon-supply =3D <&vreg_wcn_0p95>;
->> +		vdddig-supply =3D <&vreg_wcn_0p95>;
->> +		vddrfa1p2-supply =3D <&vreg_wcn_1p9>;
->> +		vddrfa1p8-supply =3D <&vreg_wcn_1p9>;
->> +
->> +		wlan-enable-gpios =3D <&tlmm 117 GPIO_ACTIVE_HIGH>;
->> +		bt-enable-gpios =3D <&tlmm 116 GPIO_ACTIVE_HIGH>;
->> +
->> +		pinctrl-0 =3D <&wcn_wlan_bt_en>;
->> +		pinctrl-names =3D "default";
->> +
->> +		regulators {
->> +			vreg_pmu_rfa_cmn: ldo0 {
->> +				regulator-name =3D "vreg_pmu_rfa_cmn";
->> +			};
->> +
->> +			vreg_pmu_aon_0p59: ldo1 {
->> +				regulator-name =3D "vreg_pmu_aon_0p59";
->> +			};
->> +
->> +			vreg_pmu_wlcx_0p8: ldo2 {
->> +				regulator-name =3D "vreg_pmu_wlcx_0p8";
->> +			};
->> +
->> +			vreg_pmu_wlmx_0p85: ldo3 {
->> +				regulator-name =3D "vreg_pmu_wlmx_0p85";
->> +			};
->> +
->> +			vreg_pmu_btcmx_0p85: ldo4 {
->> +				regulator-name =3D "vreg_pmu_btcmx_0p85";
->> +			};
->> +
->> +			vreg_pmu_rfa_0p8: ldo5 {
->> +				regulator-name =3D "vreg_pmu_rfa_0p8";
->> +			};
->> +
->> +			vreg_pmu_rfa_1p2: ldo6 {
->> +				regulator-name =3D "vreg_pmu_rfa_1p2";
->> +			};
->> +
->> +			vreg_pmu_rfa_1p8: ldo7 {
->> +				regulator-name =3D "vreg_pmu_rfa_1p8";
->> +			};
->> +
->> +			vreg_pmu_pcie_0p9: ldo8 {
->> +				regulator-name =3D "vreg_pmu_pcie_0p9";
->> +			};
->> +
->> +			vreg_pmu_pcie_1p8: ldo9 {
->> +				regulator-name =3D "vreg_pmu_pcie_1p8";
->> +			};
->> +		};
->> +	};
->> +};
->> +
->> +&apps_rsc {
->> +	regulators-0 {
->> +		compatible =3D "qcom,pm8550-rpmh-regulators";
->> +		qcom,pmic-id =3D "b";
->> +
->> +		vdd-bob1-supply =3D <&vph_pwr>;
->> +		vdd-bob2-supply =3D <&vph_pwr>;
->> +		vdd-l1-l4-l10-supply =3D <&vreg_s4c_1p8>;
->> +		vdd-l2-l13-l14-supply =3D <&vreg_bob1>;
->> +		vdd-l5-l16-supply =3D <&vreg_bob1>;
->> +		vdd-l6-l7-supply =3D <&vreg_bob2>;
->> +		vdd-l8-l9-supply =3D <&vreg_bob1>;
->> +		vdd-l12-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-l15-supply =3D <&vreg_s4c_1p8>;
->> +		vdd-l17-supply =3D <&vreg_bob2>;
->> +
->> +		vreg_bob1: bob1 {
->> +			regulator-name =3D "vreg_bob1";
->> +			regulator-min-microvolt =3D <3008000>;
->> +			regulator-max-microvolt =3D <3960000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_bob2: bob2 {
->> +			regulator-name =3D "vreg_bob2";
->> +			regulator-min-microvolt =3D <2504000>;
->> +			regulator-max-microvolt =3D <3008000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l1b_1p8: ldo1 {
->> +			regulator-name =3D "vreg_l1b_1p8";
->> +			regulator-min-microvolt =3D <1800000>;
->> +			regulator-max-microvolt =3D <1800000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l2b_3p0: ldo2 {
->> +			regulator-name =3D "vreg_l2b_3p0";
->> +			regulator-min-microvolt =3D <3072000>;
->> +			regulator-max-microvolt =3D <3100000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l4b_1p8: ldo4 {
->> +			regulator-name =3D "vreg_l4b_1p8";
->> +			regulator-min-microvolt =3D <1800000>;
->> +			regulator-max-microvolt =3D <1800000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l6b_1p8: ldo6 {
->> +			regulator-name =3D "vreg_l6b_1p8";
->> +			regulator-min-microvolt =3D <1800000>;
->> +			regulator-max-microvolt =3D <2960000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l7b_2p8: ldo7 {
->> +			regulator-name =3D "vreg_l7b_2p8";
->> +			regulator-min-microvolt =3D <2800000>;
->> +			regulator-max-microvolt =3D <2800000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l8b_3p0: ldo8 {
->> +			regulator-name =3D "vreg_l8b_3p0";
->> +			regulator-min-microvolt =3D <3072000>;
->> +			regulator-max-microvolt =3D <3072000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l9b_2p9: ldo9 {
->> +			regulator-name =3D "vreg_l9b_2p9";
->> +			regulator-min-microvolt =3D <2960000>;
->> +			regulator-max-microvolt =3D <2960000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l12b_1p2: ldo12 {
->> +			regulator-name =3D "vreg_l12b_1p2";
->> +			regulator-min-microvolt =3D <1200000>;
->> +			regulator-max-microvolt =3D <1200000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l13b_3p0: ldo13 {
->> +			regulator-name =3D "vreg_l13b_3p0";
->> +			regulator-min-microvolt =3D <3072000>;
->> +			regulator-max-microvolt =3D <3100000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l14b_3p0: ldo14 {
->> +			regulator-name =3D "vreg_l14b_3p0";
->> +			regulator-min-microvolt =3D <3072000>;
->> +			regulator-max-microvolt =3D <3072000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l15b_1p8: ldo15 {
->> +			regulator-name =3D "vreg_l15b_1p8";
->> +			regulator-min-microvolt =3D <1800000>;
->> +			regulator-max-microvolt =3D <1800000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +
->> +	regulators-1 {
->> +		compatible =3D "qcom,pm8550ve-rpmh-regulators";
->> +		qcom,pmic-id =3D "c";
->> +
->> +		vdd-l1-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-l2-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-l3-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-s4-supply =3D <&vph_pwr>;
->> +
->> +		vreg_s4c_1p8: smps4 {
->> +			regulator-name =3D "vreg_s4c_1p8";
->> +			regulator-min-microvolt =3D <1856000>;
->> +			regulator-max-microvolt =3D <2000000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l1c_1p2: ldo1 {
->> +			regulator-name =3D "vreg_l1c_1p2";
->> +			regulator-min-microvolt =3D <1200000>;
->> +			regulator-max-microvolt =3D <1200000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l2c_0p8: ldo2 {
->> +			regulator-name =3D "vreg_l2c_0p8";
->> +			regulator-min-microvolt =3D <880000>;
->> +			regulator-max-microvolt =3D <920000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l3c_0p8: ldo3 {
->> +			regulator-name =3D "vreg_l3c_0p8";
->> +			regulator-min-microvolt =3D <880000>;
->> +			regulator-max-microvolt =3D <920000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +
->> +	regulators-2 {
->> +		compatible =3D "qcom,pmc8380-rpmh-regulators";
->> +		qcom,pmic-id =3D "d";
->> +
->> +		vdd-l1-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-l2-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-l3-supply =3D <&vreg_s4c_1p8>;
->> +		vdd-s1-supply =3D <&vph_pwr>;
->> +
->> +		vreg_l1d_0p8: ldo1 {
->> +			regulator-name =3D "vreg_l1d_0p8";
->> +			regulator-min-microvolt =3D <880000>;
->> +			regulator-max-microvolt =3D <920000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l2d_0p9: ldo2 {
->> +			regulator-name =3D "vreg_l2d_0p9";
->> +			regulator-min-microvolt =3D <912000>;
->> +			regulator-max-microvolt =3D <912000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l3d_1p8: ldo3 {
->> +			regulator-name =3D "vreg_l3d_1p8";
->> +			regulator-min-microvolt =3D <1800000>;
->> +			regulator-max-microvolt =3D <1800000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +
->> +	regulators-3 {
->> +		compatible =3D "qcom,pmc8380-rpmh-regulators";
->> +		qcom,pmic-id =3D "e";
->> +
->> +		vdd-l2-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-l3-supply =3D <&vreg_s5j_1p2>;
->> +
->> +		vreg_l2e_0p8: ldo2 {
->> +			regulator-name =3D "vreg_l2e_0p8";
->> +			regulator-min-microvolt =3D <880000>;
->> +			regulator-max-microvolt =3D <920000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l3e_1p2: ldo3 {
->> +			regulator-name =3D "vreg_l3e_1p2";
->> +			regulator-min-microvolt =3D <1200000>;
->> +			regulator-max-microvolt =3D <1200000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +
->> +	regulators-4 {
->> +		compatible =3D "qcom,pmc8380-rpmh-regulators";
->> +		qcom,pmic-id =3D "f";
->> +
->> +		vdd-l1-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-l2-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-l3-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-s1-supply =3D <&vph_pwr>;
->> +
->> +		vreg_s1f_0p7: smps1 {
->> +			regulator-name =3D "vreg_s1f_0p7";
->> +			regulator-min-microvolt =3D <700000>;
->> +			regulator-max-microvolt =3D <1100000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +
->> +	regulators-6 {
->> +		compatible =3D "qcom,pm8550ve-rpmh-regulators";
->> +		qcom,pmic-id =3D "i";
->> +
->> +		vdd-l1-supply =3D <&vreg_s4c_1p8>;
->> +		vdd-l2-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-l3-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-s1-supply =3D <&vph_pwr>;
->> +		vdd-s2-supply =3D <&vph_pwr>;
->> +
->> +		vreg_l1i_1p8: ldo1 {
->> +			regulator-name =3D "vreg_l1i_1p8";
->> +			regulator-min-microvolt =3D <1800000>;
->> +			regulator-max-microvolt =3D <1800000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l2i_1p2: ldo2 {
->> +			regulator-name =3D "vreg_l2i_1p2";
->> +			regulator-min-microvolt =3D <1200000>;
->> +			regulator-max-microvolt =3D <1200000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l3i_0p8: ldo3 {
->> +			regulator-name =3D "vreg_l3i_0p8";
->> +			regulator-min-microvolt =3D <880000>;
->> +			regulator-max-microvolt =3D <920000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +
->> +	regulators-7 {
->> +		compatible =3D "qcom,pm8550ve-rpmh-regulators";
->> +		qcom,pmic-id =3D "j";
->> +
->> +		vdd-l1-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-l2-supply =3D <&vreg_s5j_1p2>;
->> +		vdd-l3-supply =3D <&vreg_s1f_0p7>;
->> +		vdd-s5-supply =3D <&vph_pwr>;
->> +
->> +		vreg_s5j_1p2: smps5 {
->> +			regulator-name =3D "vreg_s5j_1p2";
->> +			regulator-min-microvolt =3D <1256000>;
->> +			regulator-max-microvolt =3D <1304000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l1j_0p8: ldo1 {
->> +			regulator-name =3D "vreg_l1j_0p8";
->> +			regulator-min-microvolt =3D <912000>;
->> +			regulator-max-microvolt =3D <912000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l2j_1p2: ldo2 {
->> +			regulator-name =3D "vreg_l2j_1p2";
->> +			regulator-min-microvolt =3D <1256000>;
->> +			regulator-max-microvolt =3D <1256000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +
->> +		vreg_l3j_0p8: ldo3 {
->> +			regulator-name =3D "vreg_l3j_0p8";
->> +			regulator-min-microvolt =3D <880000>;
->> +			regulator-max-microvolt =3D <920000>;
->> +			regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM>;
->> +		};
->> +	};
->> +};
->> +
->> +&gpu {
->> +	status =3D "okay";
->> +
->> +	zap-shader {
->> +		firmware-name =3D "qcom/x1e80100/dell/latitude-7455/qcdxkmsuc8380=2E=
-mbn";
->> +	};
->> +};
->> +
->> +&i2c0 {
->> +	clock-frequency =3D <400000>;
->> +
->> +	status =3D "okay";
->> +
->> +	keyboard@5 {
->> +		compatible =3D "hid-over-i2c";
->> +		reg =3D <0x5>;
->> +
->> +		hid-descr-addr =3D <0x20>;
->> +		interrupts-extended =3D <&tlmm 67 IRQ_TYPE_LEVEL_LOW>;
->> +
->> +		pinctrl-0 =3D <&kybd_default>;
->> +		pinctrl-names =3D "default";
->> +
->> +		wakeup-source;
->> +	};
->> +
->> +	touchpad@2c {
->> +		compatible =3D "hid-over-i2c";
->> +		reg =3D <0x2c>;
->> +
->> +		hid-descr-addr =3D <0x20>;
->> +		interrupts-extended =3D <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
->> +
->> +		pinctrl-0 =3D <&tpad_default>;
->> +		pinctrl-names =3D "default";
->> +
->> +		wakeup-source;
->> +	};
->> +};
->> +
->> +&i2c1 {
->> +	clock-frequency =3D <400000>;
->> +
->> +	status =3D "okay";
->
->Anything present on the bus? You can add a comment with chip names (if
->you know them) or just probed I2C addresses=2E
->
->> +};
->> +
->> +
->> +&i2c4 {
->> +	clock-frequency =3D <400000>;
->> +
->> +	status =3D "okay";
->> +};
->
->Same here
->
->> +
->> +
->> +&i2c20 {
->> +	clock-frequency =3D <400000>;
->> +
->> +	status =3D "okay";
->
->And here
->
->> +};
->> +
->> +
->> +&qupv3_0 {
->> +	status =3D "okay";
->> +};
->> +
->> +&qupv3_1 {
->> +	status =3D "okay";
->> +};
->> +
->> +&qupv3_2 {
->> +	status =3D "okay";
->> +};
->
->And no GPI DMA devices?
->
->> +
->> +&remoteproc_adsp {
->> +	firmware-name =3D "qcom/x1e80100/dell/latitude-7455/qcadsp8380=2Embn"=
-,
->> +			"qcom/x1e80100/dell/latitude-7455/adsp_dtbs=2Eelf";
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&remoteproc_cdsp {
->> +	firmware-name =3D "qcom/x1e80100/dell/latitude-7455/qccdsp8380=2Embn"=
-,
->> +			"qcom/x1e80100/dell/latitude-7455/cdsp_dtbs=2Eelf";
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&sdhc_2 {
->> +	cd-gpios =3D <&tlmm 71 GPIO_ACTIVE_LOW>;
->> +	pinctrl-0 =3D <&sdc2_default &sdc2_card_det_n>;
->> +	pinctrl-1 =3D <&sdc2_sleep &sdc2_card_det_n>;
->> +	pinctrl-names =3D "default", "sleep";
->> +	vmmc-supply =3D <&vreg_l9b_2p9>;
->> +	vqmmc-supply =3D <&vreg_l6b_1p8>;
->> +	bus-width =3D <4>;
->> +	no-sdio;
->> +	no-mmc;
->> +	status =3D "okay";
->> +};
->> +
->> +&smb2360_0 {
->> +	status =3D "okay";
->> +};
->> +
->> +&smb2360_0_eusb2_repeater {
->> +	vdd18-supply =3D <&vreg_l3d_1p8>;
->> +	vdd3-supply =3D <&vreg_l2b_3p0>;
->> +};
->> +
->> +&smb2360_1 {
->> +	status =3D "okay";
->> +};
->> +
->> +&smb2360_1_eusb2_repeater {
->> +	vdd18-supply =3D <&vreg_l3d_1p8>;
->> +	vdd3-supply =3D <&vreg_l14b_3p0>;
->> +};
->> +
->> +&tlmm {
->> +	gpio-reserved-ranges =3D <44 4>,  /* SPI11 (TPM) */
->> +			       <76 4>,  /* SPI19 (TZ Protected) */
->> +			       <238 1>; /* UFS Reset */
->> +
->> +	cam_rgb_default: cam-rgb-default-state {
->> +		mclk-pins {
->> +			pins =3D "gpio100";
->> +			function =3D "cam_aon";
->> +			drive-strength =3D <16>;
->> +			bias-disable;
->> +		};
->> +
->> +		reset-n-pins {
->> +			pins =3D "gpio237";
->> +			function =3D "gpio";
->> +			drive-strength =3D <2>;
->> +			bias-disable;
->> +		};
->> +	};
->> +
->> +	cam_indicator_en: cam-indicator-en-state {
->> +		pins =3D "gpio110";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	cam_ldo_en: cam-ldo-en-state {
->> +		pins =3D "gpio91";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	edp_bl_en: edp-bl-en-state {
->> +		pins =3D "gpio74";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	edp_reg_en: edp-reg-en-state {
->> +		pins =3D "gpio70";
->> +		function =3D "gpio";
->> +		drive-strength =3D <16>;
->> +		bias-disable;
->> +	};
->> +
->> +	eusb3_reset_n: eusb3-reset-n-state {
->> +		pins =3D "gpio6";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +		output-low;
->> +	};
->> +
->> +	eusb5_reset_n: eusb5-reset-n-state {
->> +		pins =3D "gpio184";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +		output-low;
->> +	};
->> +
->> +	hall_int_n_default: hall-int-n-state {
->> +		pins =3D "gpio92";
->> +		function =3D "gpio";
->> +
->> +		bias-disable;
->> +	};
->> +
->> +	kybd_default: kybd-default-state {
->> +		pins =3D "gpio67";
->> +		function =3D "gpio";
->> +		bias-pull-up;
->> +	};
->> +
->> +	nvme_reg_en: nvme-reg-en-state {
->> +		pins =3D "gpio18";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	pcie4_default: pcie4-default-state {
->> +		clkreq-n-pins {
->> +			pins =3D "gpio147";
->> +			function =3D "pcie4_clk";
->> +			drive-strength =3D <2>;
->> +			bias-pull-up;
->> +		};
->> +
->> +		perst-n-pins {
->> +			pins =3D "gpio146";
->> +			function =3D "gpio";
->> +			drive-strength =3D <2>;
->> +			bias-disable;
->> +		};
->> +
->> +		wake-n-pins {
->> +			pins =3D "gpio148";
->> +			function =3D "gpio";
->> +			drive-strength =3D <2>;
->> +			bias-pull-up;
->> +		};
->> +	};
->> +
->> +	pcie6a_default: pcie6a-default-state {
->> +		clkreq-n-pins {
->> +			pins =3D "gpio153";
->> +			function =3D "pcie6a_clk";
->> +			drive-strength =3D <2>;
->> +			bias-pull-up;
->> +		};
->> +
->> +		perst-n-pins {
->> +			pins =3D "gpio152";
->> +			function =3D "gpio";
->> +			drive-strength =3D <2>;
->> +			bias-disable;
->> +		};
->> +
->> +		wake-n-pins {
->> +			pins =3D "gpio154";
->> +			function =3D "gpio";
->> +			drive-strength =3D <2>;
->> +			bias-pull-up;
->> +		};
->> +	};
->> +
->> +	rtmr1_default: rtmr1-reset-n-active-state {
->> +		pins =3D "gpio176";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	sdc2_card_det_n: sdc2-card-det-state {
->> +		pins =3D "gpio71";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-pull-up;
->> +	};
->> +
->> +	tpad_default: tpad-default-state {
->> +		disable-pins {
->> +			pins =3D "gpio38";
->> +			function =3D "gpio";
->> +			output-high;
->> +		};
->> +
->> +		int-n-pins {
->> +			pins =3D "gpio3";
->> +			function =3D "gpio";
->> +			bias-pull-up;
->> +		};
->> +
->> +		reset-n-pins {
->> +			pins =3D "gpio52";
->> +			function =3D "gpio";
->> +			bias-disable;
->> +		};
->> +	};
->> +
->> +	ts0_default: ts0-default-state {
->> +		disable-pins {
->> +			pins =3D "gpio75";
->> +			function =3D "gpio";
->> +			output-high;
->> +		};
->> +
->> +		int-n-pins {
->> +			pins =3D "gpio51";
->> +			function =3D "gpio";
->> +			bias-pull-up;
->> +		};
->> +
->> +		reset-n-pins {
->> +			/* Technically should be High-Z input */
->> +			pins =3D "gpio48";
->> +			function =3D "gpio";
->> +			output-low;
->> +			drive-strength =3D <2>;
->> +		};
->> +	};
->> +
->> +	usb1_pwr_1p15_reg_en: usb1-pwr-1p15-reg-en-state {
->> +		pins =3D "gpio188";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	usb1_pwr_1p8_reg_en: usb1-pwr-1p8-reg-en-state {
->> +		pins =3D "gpio175";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	usb1_pwr_3p3_reg_en: usb1-pwr-3p3-reg-en-state {
->> +		pins =3D "gpio186";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	wcn_sw_en: wcn-sw-en-state {
->> +		pins =3D "gpio214";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +
->> +	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
->> +		pins =3D "gpio116", "gpio117";
->> +		function =3D "gpio";
->> +		drive-strength =3D <2>;
->> +		bias-disable;
->> +	};
->> +};
->> +
->> +&uart14 {
->> +	status =3D "okay";
->> +
->> +	bluetooth {
->> +		compatible =3D "qcom,wcn7850-bt";
->> +		max-speed =3D <3200000>;
->> +
->> +		vddaon-supply =3D <&vreg_pmu_aon_0p59>;
->> +		vddwlcx-supply =3D <&vreg_pmu_wlcx_0p8>;
->> +		vddwlmx-supply =3D <&vreg_pmu_wlmx_0p85>;
->> +		vddrfacmn-supply =3D <&vreg_pmu_rfa_cmn>;
->> +		vddrfa0p8-supply =3D <&vreg_pmu_rfa_0p8>;
->> +		vddrfa1p2-supply =3D <&vreg_pmu_rfa_1p2>;
->> +		vddrfa1p8-supply =3D <&vreg_pmu_rfa_1p8>;
->> +	};
->> +};
->> +
->> +&usb_1_ss0_hsphy {
->> +	vdd-supply =3D <&vreg_l3j_0p8>;
->> +	vdda12-supply =3D <&vreg_l2j_1p2>;
->> +
->> +	phys =3D <&smb2360_0_eusb2_repeater>;
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_1_ss0_qmpphy {
->> +	vdda-phy-supply =3D <&vreg_l2j_1p2>;
->> +	vdda-pll-supply =3D <&vreg_l1j_0p8>;
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_1_ss0 {
->> +	status =3D "okay";
->> +};
->
->Please order the chunks alphabetically=2E &usb_1_ss0_qmpphy can't be
->before &usb_1_ss0=2E
->
->> +
->> +&usb_1_ss0_dwc3 {
->> +	dr_mode =3D "host";
->
->This doesn't seem to match with the PMIC glink properties=2E
->
->> +};
->> +
->> +&usb_1_ss0_dwc3_hs {
->> +	remote-endpoint =3D <&pmic_glink_ss0_hs_in>;
->> +};
->> +
->> +&usb_1_ss0_qmpphy_out {
->> +	remote-endpoint =3D <&retimer_ss0_ss_in>;
->> +};
->> +
->> +&usb_1_ss1_hsphy {
->> +	vdd-supply =3D <&vreg_l3j_0p8>;
->> +	vdda12-supply =3D <&vreg_l2j_1p2>;
->> +
->> +	phys =3D <&smb2360_1_eusb2_repeater>;
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_1_ss1_qmpphy {
->> +	vdda-phy-supply =3D <&vreg_l2j_1p2>;
->> +	vdda-pll-supply =3D <&vreg_l2d_0p9>;
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_1_ss1 {
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_1_ss1_dwc3 {
->> +	dr_mode =3D "host";
->
->This also doesn't match PMIC GLINK configuration=2E
->
->> +};
->> +
->> +&usb_1_ss1_dwc3_hs {
->> +	remote-endpoint =3D <&pmic_glink_ss1_hs_in>;
->> +};
->> +
->> +&usb_1_ss1_qmpphy_out {
->> +	remote-endpoint =3D <&retimer_ss1_ss_in>;
->> +};
->> +
->> +&usb_2 {
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_2_dwc3 {
->> +	dr_mode =3D "host";
->> +};
->> +
->> +&usb_2_hsphy {
->> +	vdd-supply =3D <&vreg_l2e_0p8>;
->> +	vdda12-supply =3D <&vreg_l3e_1p2>;
->> +
->> +	phys =3D <&eusb5_frp_repeater>;
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_mp {
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_mp_dwc3 {
->> +	phys =3D <&usb_mp_hsphy0>, <&usb_mp_qmpphy0>;
->> +	phy-names =3D "usb2-0", "usb3-0";
->> +};
->> +
->> +&usb_mp_hsphy0 {
->> +	vdd-supply =3D <&vreg_l2e_0p8>;
->> +	vdda12-supply =3D <&vreg_l3e_1p2>;
->> +
->> +	phys =3D <&eusb3_typea_repeater>;
->> +
->> +	status =3D "okay";
->> +};
->> +
->> +&usb_mp_qmpphy0 {
->> +	vdda-phy-supply =3D <&vreg_l3e_1p2>;
->> +	vdda-pll-supply =3D <&vreg_l3c_0p8>;
->> +
->> +	status =3D "okay";
->> +};
->> --=20
->> 2=2E49=2E0
->>=20
->
-
-=E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
