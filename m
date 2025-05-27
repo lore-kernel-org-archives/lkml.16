@@ -1,185 +1,187 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC0327A92B;
-	Tue, 27 May 2025 15:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B6327B4F1
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748359348; cv=none; b=O41RiPN2pSz3QTi1DDZMYvhvsp+YUK4MtisDmRC90d6p0gWC0lrVGpim9RJQRMa2dscYy8uUB1QK2HzjQ+q3+bnRmFiK7wR9cM3T+boDdedlB2cW1hJWnAypNJO0Tsnr1+WTrAkUsjdnpRJKLHmm0upXUF5hSVQJ8Sb+5bUY96Y=
+	t=1748359354; cv=none; b=nMPa/qFpvaIAjGvUXkgfSQwQOj0DjPzWkwH05NxHqjMmM/FxcaSRSHmXoQC6QjMKa4tI8Iuy+qyOWTsH1YxyWLDYV1aJp2iTMR7/4PkbVFYKbzgkwn5iViWm1kzpeyqF19DiMbNGdl7p4FfBwtjBPJDzWRT4BX8p8YATyms5OdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748359348; c=relaxed/simple;
-	bh=EByL9p87g8fIY4lbLkJJGq+5jE+TnPYaQXA4KJ+9CsQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AsWxXtvqvx/NElX0j+XqHIF05DNMQVk8SBjOpIQTpfr7qITfOgvVnDSYIKIgIdEetBL7Pk2l7OcMAfDZhD3wowXFGm1Nukanbls5D4fVPKnkqEHhLpRmuKEmJdyrWHNyHlj+MH63BmqXdhtzVN2VP+lBCgcXNOqE4kdAvr/xFuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=dqZKUk+A; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1748359354; c=relaxed/simple;
+	bh=hDMrSVIbC4dtjPtVjly7eI79j1pmfpFxQUQZdS8UXoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CNbchGVZzcjiE0lC2+FR861V8WqKNHcApgqdS5h9/9Vu1x6aJFiTqfSLYwDCGp0T6FwdcA1hd9TQwbL1Cp36gqRHNtFQuele4s7EAT7tJjA7auXRGyZEP003A7JS0CfqYgLYk2UVrBsm2bIFeUKPWm88H19TD/oDUOy9GHZ+WSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SNHaTlEy; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="dqZKUk+A"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RCGuLT003391;
-	Tue, 27 May 2025 17:22:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	hbHNouSnQewHtCw/SpQZz4t8tZtV7Zvd/CNWYDPfUXg=; b=dqZKUk+AjY8oTCLb
-	yIybiOmE6D7Wl7tTUckvFudQYRN0SGBHIqLAeWFYLoLjaP3OjnDWpz5tQnkkT6lO
-	OctAbTkeANzoV711TYQSJd8HD2FwGAKA8h2+NuLzumklUt9rqX5x5PELo5yc2xPQ
-	xTMUaTvyeuM+rt66BjhdNtF/Y0F6ch9krfc31geOikyR8vsMfQHwU4sRwHRKKEE8
-	FOWwAgbSvtxN73BjNOCm9jOtD8nmLtJWZgk7A4GdKwk+EqDFZ7rifjx0C36Y6wFj
-	1KZdeFEaZuyY/4wQGEpcakGSLIXI+EjeNyFj+IBvAAbasb+VmFv6BAy5dpzOoozu
-	QIaIBQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u5f24s5w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 17:22:01 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3764F40046;
-	Tue, 27 May 2025 17:19:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 06CEDB1A49A;
-	Tue, 27 May 2025 17:18:47 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 27 May
- 2025 17:18:46 +0200
-Message-ID: <6b9ad1a0-4f7d-498e-ac0d-49ac41a2532b@foss.st.com>
-Date: Tue, 27 May 2025 17:18:46 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SNHaTlEy"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a367ec7840so2579941f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748359350; x=1748964150; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lOkhiPj0Vap+xpfcOCKw5UumtTpYvoVRGFU8ty7tDEU=;
+        b=SNHaTlEyasIxuKcgUUmfJlvGcQYTBOkVAzkN0tM5U1RVylH+H3Bg7CNcnqIHWmVh6Q
+         D+WSoM6eK3GUOj5m7f32v4G4bEwWPC0l8KiJL1U7Q4PI9OXP0ekal9qPGFhWds7Pphgq
+         sVFuSRpc2k2iaplBLZNumI/3tuNNOwPAkSr/oklb1oIvsvr7++fbSb2rmDTicryjvQlD
+         b++0hj3H37LIeUMI75WgjxVo05HIh/BwbZACXb0jrbwp8UVEFxCkG//VAReqmtgFEAHv
+         usE1jyT12tbE7s52ZdpFXlgi8zAetdjkGKHFQ48S0EtObvP3AemCul5eFpG83omLbyRs
+         /YEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748359350; x=1748964150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lOkhiPj0Vap+xpfcOCKw5UumtTpYvoVRGFU8ty7tDEU=;
+        b=bRlor+aRgq0E0jWn6oc1aM+RpuRdQAWpTZLV8pzZAxsclBLkBcNUdCNZ+RWDtoK4CJ
+         OX+3WyGTjHl/eGLHdZ/9lVEwcg8utjaF6RpM/Kzt/af3yYuZjQ4HwOS8GQ7vWlpnl7On
+         GapQqXegBlzeo9vSNd/vzVJWa6CY6Y8DK2hWDbxihYljxVZbCoOz1He6Ez0nht/0DNwb
+         Mra7qXhZB6oOU7yBswl40kJ5yLXtqo2xN1XE1WvYf0OdZ5/iNoEkRO/AfV99JtBIDbaz
+         l1AJgK4hKfmhOrPeByBXopv2XEBh65MWw+I9ci4mkxDMZuSe9vAKVVXPNsE0jralAriW
+         FGwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXL8a22IsL1rqUciOUFESKKBKdPA5fCesmxvevH/uJ4i8LNeepRT4HlqWywQlC5Xs9WnYsQZQ5UOZxP2Lw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxrD+N6ZLZI3dMqHWVH6B4PDNZn8SVd5ywN/fRpDTJCn8zJeN7
+	OESt9b/SzQhHNF9qUURSdEzJVXH57T+vNuYJEu58Ph4hnpFNFFlu7tHKwiNH0/4ePgBEn4MkqfP
+	5odqb5EqrNoNioqC+cywQ5sXlsV+CAT5sA5kaHqUO
+X-Gm-Gg: ASbGnctBkZsM9K3r7keRxjXdpTOhLAufNFVm7RXje69fdqEfhsMIwUkz1yro7sCxGIS
+	+CNnwbHAgKBJ4l27xkJ6zqZKR0FLCm97dv8HLMHn2KEiCaHxHMSQ2Nui7CNk4fwR1dPy9Con0tN
+	+L1Ky7Sf0bOdfBhZe1JaWK4Q+Cv3AqB3bGCiAOPhp5xcEtU1t4WC2WiAiYz7lu8mKqoZfRAVfJA
+	w==
+X-Google-Smtp-Source: AGHT+IF2QRgdA1KUJy3arKBaTHAzpkdYnmjcqDIKvkrd4i1tev/OpxTGmJvRf4BU/Eh+VJvTT7e3c3LJB1BsmTeRPtc=
+X-Received: by 2002:a05:6000:2411:b0:3a3:67bb:8f46 with SMTP id
+ ffacd0b85a97d-3a4cb4c6bd0mr9479677f8f.57.1748359350141; Tue, 27 May 2025
+ 08:22:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] ARM: dts: stm32: add support of stm32mp157f-dk2
- board
-To: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>,
-        "amelie.delaunay@foss.st.com" <amelie.delaunay@foss.st.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc
- Kleine-Budde <mkl@pengutronix.de>,
-        =?UTF-8?Q?Leonard_G=C3=B6hrs?=
-	<l.goehrs@pengutronix.de>,
-        Marek Vasut <marex@denx.de>, David Jander
-	<david@protonic.nl>,
-        Roan van Dijk <roan@protonic.nl>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com"
-	<linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-References: <20250524100319.22521-1-himanshu.bhavani@siliconsignals.io>
- <20250524100319.22521-2-himanshu.bhavani@siliconsignals.io>
- <9d3df716-343f-4c32-9e2e-2058bc1a9b6f@foss.st.com>
- <PN0P287MB201936022C3BF4389C7BF8B79A64A@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <PN0P287MB201936022C3BF4389C7BF8B79A64A@PN0P287MB2019.INDP287.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_07,2025-05-27_01,2025-03-28_01
+References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com> <6835d823.050a0220.93bd2.dbfe@mx.google.com>
+In-Reply-To: <6835d823.050a0220.93bd2.dbfe@mx.google.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 27 May 2025 17:22:18 +0200
+X-Gm-Features: AX0GCFu7DcBZpojvk4MZQswg8autVII1WSAEmrN3aIauqYTPDDXT0ruaH_xNQ_U
+Message-ID: <CAH5fLggWi2yTx2EBVcC_SZ1HBTeu_SJ15NZFa57xws8Z5uEXYw@mail.gmail.com>
+Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Himanshu
+On Tue, May 27, 2025 at 5:20=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> On Tue, May 27, 2025 at 01:53:12PM +0000, Alice Ryhl wrote:
+> > In C code we use sparse with the __user annotation to detect cases wher=
+e
+> > a user pointer is mixed up with other things. To replicate that, we
+> > introduce a new struct UserPtr that serves the same purpose using the
+> > newtype pattern.
+> >
+> > The UserPtr type is not marked with #[derive(Debug)], which means that
+> > it's not possible to print values of this type. This avoids ASLR
+> > leakage.
+> >
+> > The type is added to the prelude as it is a fairly fundamental type
+> > similar to c_int. The wrapping_add() method is renamed to
+> > wrapping_byte_add() for consistency with the method name found on raw
+> > pointers.
+> >
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+>
+> A question below:
+>
+> > ---
+> > This is based on top of the strncpy_from_user for Rust patch.
+> > ---
+> > Changes in v2:
+> > - Change usize to raw pointer.
+> > - Make field private.
+> > - Rename wrapping_add to wrapping_byte_add.
+> > - Add to prelude.
+> > - Rebase on v4 of strncpy_from_user
+> > - Link to v1: https://lore.kernel.org/r/20250506-userptr-newtype-v1-1-a=
+0f6f8ce9fc5@google.com
+> > ---
+> >  rust/kernel/prelude.rs           |  2 ++
+> >  rust/kernel/uaccess.rs           | 68 ++++++++++++++++++++++++++++++++=
++-------
+> >  samples/rust/rust_misc_device.rs |  2 ++
+> >  3 files changed, 60 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
+> > index baa774a351ceeb995a2a647f78a27b408d9f3834..081af5bc07b0bcefb1da16e=
+5a81fc611b3178aea 100644
+> > --- a/rust/kernel/prelude.rs
+> > +++ b/rust/kernel/prelude.rs
+> > @@ -41,3 +41,5 @@
+> >  pub use super::init::InPlaceInit;
+> >
+> >  pub use super::current;
+> > +
+> > +pub use super::uaccess::UserPtr;
+> > diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
+> > index e6534b52a1920254d61f8349426d4cdb38286089..02e0561eb1c6f4d813a4ab1=
+3a124bfac2d2a5c75 100644
+> > --- a/rust/kernel/uaccess.rs
+> > +++ b/rust/kernel/uaccess.rs
+> > @@ -14,8 +14,48 @@
+> >  };
+> >  use core::mem::{size_of, MaybeUninit};
+> >
+> > -/// The type used for userspace addresses.
+> > -pub type UserPtr =3D usize;
+> > +/// A pointer into userspace.
+> > +///
+> > +/// This is the Rust equivalent to C pointers tagged with `__user`.
+> > +#[repr(transparent)]
+> > +#[derive(Copy, Clone)]
+> > +pub struct UserPtr(*mut c_void);
+> > +
+> > +impl UserPtr {
+> > +    /// Create a `UserPtr` from an integer representing the userspace =
+address.
+> > +    pub fn from_addr(addr: usize) -> Self {
+> > +        Self(addr as *mut c_void)
+> > +    }
+> > +
+> > +    /// Create a `UserPtr` from a pointer representing the userspace a=
+ddress.
+> > +    pub fn from_ptr(addr: *mut c_void) -> Self {
+> > +        Self(addr)
+> > +    }
+> > +
+> > +    /// Cast this userspace pointer to a raw const void pointer.
+> > +    ///
+> > +    /// It is up to the caller to use the returned pointer correctly.
+> > +    #[inline]
+> > +    pub fn as_const_ptr(self) -> *const c_void {
+> > +        self.0
+> > +    }
+> > +
+> > +    /// Cast this userspace pointer to a raw mutable void pointer.
+> > +    ///
+> > +    /// It is up to the caller to use the returned pointer correctly.
+> > +    #[inline]
+> > +    pub fn as_mut_ptr(self) -> *mut c_void {
+> > +        self.0
+> > +    }
+> > +
+>
+> why are these two inline but the rest not?
 
-On 5/27/25 08:36, Himanshu Bhavani wrote:
-> Hi Alexandre,
-> 
->> Hi Himanshu
->>
->> On 5/24/25 12:03, Himanshu Bhavani wrote:
->>> STM32MP157F is similar to the STM32MP157C, so reuse the existing
->>> stm32mp157c-dk2.dts as a base for the STM32MP157F-DK2 board.
->>>
->>> Datasheet: https://www.st.com/resource/en/data_brief/stm32mp157f-dk2.pdf
->>> Signed-off-by: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
->>> ---
->>>     arch/arm/boot/dts/st/Makefile            |  3 ++-
->>>     arch/arm/boot/dts/st/stm32mp157f-dk2.dts | 15 +++++++++++++++
->>>     2 files changed, 17 insertions(+), 1 deletion(-)
->>>     create mode 100644 arch/arm/boot/dts/st/stm32mp157f-dk2.dts
->>>
->>> diff --git a/arch/arm/boot/dts/st/Makefile b/arch/arm/boot/dts/st/Makefile
->>> index 60d55516f723..38179638e5eb 100644
->>> --- a/arch/arm/boot/dts/st/Makefile
->>> +++ b/arch/arm/boot/dts/st/Makefile
->>> @@ -70,7 +70,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
->>>         stm32mp157c-lxa-tac-gen2.dtb \
->>>         stm32mp157c-odyssey.dtb \
->>>         stm32mp157c-osd32mp1-red.dtb \
->>> -     stm32mp157c-phycore-stm32mp1-3.dtb
->>> +     stm32mp157c-phycore-stm32mp1-3.dtb \
->>> +     stm32mp157f-dk2.dtb
->>>     dtb-$(CONFIG_ARCH_U8500) += \
->>>         ste-snowball.dtb \
->>>         ste-hrefprev60-stuib.dtb \
->>> diff --git a/arch/arm/boot/dts/st/stm32mp157f-dk2.dts b/arch/arm/boot/dts/st/stm32mp157f-dk2.dts
->>> new file mode 100644
->>> index 000000000000..ab406b2c44c1
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/st/stm32mp157f-dk2.dts
->>> @@ -0,0 +1,15 @@
->>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
->>> +/*
->>> + * Copyright (C) 2025 Silicon Signals Pvt. Ltd.
->>> + *
->>> + * Author: Himanshu Bhavani <himanshu.bhavani@siliconsignals.io>
->>> + */
->>> +
->>> +/dts-v1/;
->>> +
->>> +#include "stm32mp157c-dk2.dts"
->>
->> In this case what is the aim of this series if you just use stm32mp157C
->> devicetree ?
-> 
-> This patch series aims to add support for the STM32MP157F board device
-> tree. The primary motivation is to ensure that users working with the
-> STM32MP157F variant have a reference DTS available. Currently, no such
-> device tree exists, even though the STM32MP157F and STM32MP157C are
-> largely similar.
-> 
->> ST people (mainly Amélie) are preparing a full support of
->> STM32MP157F-DK2 leveraging the F variant compare to the C variant.
->> Series will be sent this week.
-> 
-> If ST is working on a dedicated DTS for the F variant, it's likely they are starting
-> from the C variant as a base, this is exactly the approach I’ve taken here. At this
-> stage, I have not included an SCMI-based version of the board since it hasn't
-> been tested yet.
+Oh, I just forgot to add it.
 
-Please have a look on:
-
-https://lore.kernel.org/all/20250527-stm32mp157f-dk2-v1-0-8aef885a4928@foss.st.com/
-
-The idea is to have the same approach than for STM32MP13 and STM32MP25 
-relying on SCMI and preparing the add of F variant feature: DVFS/cpufreq.
-
-regards
-alex
-
-
-> Please let me know if you have any further suggestions.
-> 
-> 
-> Best Regards,
-> Himanshu
-> 
->> Regards
->> Alex
->>
->>> +
->>> +/ {
->>> +     model = "STMicroelectronics STM32MP157F-DK2 Discovery Board";
->>> +     compatible = "st,stm32mp157f-dk2", "st,stm32mp157";
->>> +};
+Alice
