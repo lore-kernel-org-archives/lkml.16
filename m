@@ -1,90 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F450248886;
-	Tue, 27 May 2025 16:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371D327B516
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748363568; cv=none; b=HkepIb2bBitZ4jomAm1lDGtV1pXHjdXB603TNm4lFJK7Ci3MVQG02VZxbCwqlC3ArTE5RtJgUR9DKiL6Ka77kV8NJm0WBV6porLz250ncq/xXpPN2ijNa2euEZTsXPmlBZkJzCzReLAsF9EAPpjyyh9UElLjx3Iual+JxGQ56yI=
+	t=1748363583; cv=none; b=RNYpSsUPsCxtTQwFp3qcFxEfhWehp+ZHxOgr4L8yWJ6WCHGFYC1IolWQqPiBsGpFkoy00lrS68CJkouVCvpFcG9grmqDwUH6sxQFPpno1nwz+NO048lM64yC/W1qMTD7+bFenuGc9zO+CSpRwslncXTLUe0AwNQIhZmIPS2SwG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748363568; c=relaxed/simple;
-	bh=ZVXm/cQRgPmvtNwv7BIjBbyhxwseApmwFg3oUawaEz8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tV2rY5wjxqDwlXHc4CakMkE6qusCad68PwfFPfuxZqpeUfwhM/giD0N2kcdsvcmzXN1mKUWya5Ofy58Ka+K1zBejtOvQgqjhPvshY8M8xPSKcQM0mIsAjmdjkifL05zKSr5nNqXtnptf7wNO9VuLdHlmECwJqBJXvUCMzMWl3Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jg90TGWr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jg90TGWr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1209AC4CEE9;
-	Tue, 27 May 2025 16:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748363567;
-	bh=ZVXm/cQRgPmvtNwv7BIjBbyhxwseApmwFg3oUawaEz8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Jg90TGWrPXQA8joQ1m4c7eR3VScy3tirvEQY2rWELL9r8hamJ7h2fJfuFFwfl+fgX
-	 zP15pVpwjtM9YyskMPQReQ4k/0YcflXAOylnXnZNjtFi+vF1prhL0F55HOcWetHy7b
-	 OsXxRDgEDpx2DMlNwF1S/7lpczzZ6ATi/ypm9rne0Oh3oLmcSrwEajftl0P3q0IJ3s
-	 uxgMA+TT3IuKjJK4AyGHcO+M9j8Sxq5A42GKfWIz4lALjdNlq3snybKu97+40L9xNw
-	 9NVe2eezBqHA4AisZu5GntVyHQOb5juDFSvHE5Z+LjSktNwNaWEnG3zt6+1a7U7eVG
-	 qYom8HKfDZBoA==
-From: Mark Brown <broonie@kernel.org>
-To: Kevin Cernekee <cernekee@chromium.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Bram Vlerick <bram.vlerick@openpixelsystems.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- peter@korsgaard.com
-In-Reply-To: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
-References: <20250527-tas5733-biquad-fix-v1-1-0d3d941700bb@openpixelsystems.org>
-Subject: Re: [PATCH] ASoC: tas571x: add separate tas5733 controls
-Message-Id: <174836356579.104699.8312897041646074055.b4-ty@kernel.org>
-Date: Tue, 27 May 2025 17:32:45 +0100
+	s=arc-20240116; t=1748363583; c=relaxed/simple;
+	bh=aaoUnSpomdvzgvj4+Q9C7t1981pz9wLQTa4zsN5K/qc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hG9HEFzYhnsjKxC9D47tIS9ZBYYx8Gw8G59oGYW/6ztX1Q1GBWRJS56oA4Zx0WlLASYkrW99Yipnj4s8RO3nlBaKJl4n7zjkKT+AjEx3lCtAyfgjzA9dJRAFIj0gH0Pg21bdm4/p4tZOIB391uwmxU9j1NLrevReSEHyXFOsg3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b6J8W1vm9zKHMZb
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:32:59 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id B09AD1A07BB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:32:57 +0800 (CST)
+Received: from [10.67.109.184] (unknown [10.67.109.184])
+	by APP3 (Coremail) with SMTP id _Ch0CgDHZcA56TVollDvNQ--.39387S2;
+	Wed, 28 May 2025 00:32:57 +0800 (CST)
+Message-ID: <fcb3b061-ca4b-44d7-a9fc-ecd0713c3fda@huaweicloud.com>
+Date: Wed, 28 May 2025 00:32:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/2] mm/mremap: Fix uprobe anon page be overwritten
+ when expanding vma during mremap
+Content-Language: en-US
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, pulehui@huawei.com
+References: <20250527132351.2050820-1-pulehui@huaweicloud.com>
+ <20250527132351.2050820-2-pulehui@huaweicloud.com>
+ <20250527142314.GA8333@redhat.com>
+From: Pu Lehui <pulehui@huaweicloud.com>
+In-Reply-To: <20250527142314.GA8333@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+X-CM-TRANSID:_Ch0CgDHZcA56TVollDvNQ--.39387S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYT7kC6x804xWl14x267AKxVW8JVW5JwAF
+	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67
+	AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_Jw0_GFyl4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJbIYCTnIWIevJa73UjIFyTuYvjxUOyCJDUUUU
+X-CM-SenderInfo: psxovxtxl6x35dzhxuhorxvhhfrp/
 
-On Tue, 27 May 2025 13:08:49 +0200, Bram Vlerick wrote:
-> The controls between the tas5717 and tas5733 should not be shared since
-> the biquad and register setup is not identical. For example, writing to
-> 0x5c on the tas5717 modifies ch2_bq[10] while on the tas5733 this is
-> ch1_cross_bq[3].
+
+On 2025/5/27 22:23, Oleg Nesterov wrote:
+> Well, I leave this to you / Lorenzo / David, but...
 > 
-> see https://www.ti.com/lit/ds/symlink/tas5733l.pdf and
-> https://www.ti.com/lit/ds/symlink/tas5717.pdf for more details on the
-> register maps.
+> On 05/27, Pu Lehui wrote:
+>>
+>> Fixes: 78a320542e6c ("uprobes: Change valid_vma() to demand VM_MAYEXEC rather than VM_EXEC")
 > 
-> [...]
+> I don't think that commit could cause this problem.
 
-Applied to
+Hi Oleg,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Me too! I was test that before and after commit 78a320542e6c, so call it 
+the `directly related commit`. In fact, I think the issue was introduced 
+in the original commit 2b1444983508 ("uprobes, mm, x86: Add the ability 
+to install and remove uprobes breakpoints") # v3.5-rc1.
 
-Thanks!
-
-[1/1] ASoC: tas571x: add separate tas5733 controls
-      commit: e3de7984e45155888eebbca5a32c1cc5f29fa859
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> 
+> Oleg.
 
