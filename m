@@ -1,138 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1009C241670;
-	Tue, 27 May 2025 14:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748356617; cv=none; b=YYNxhgz2eJHmyvKXEmED3ZNYWcp+dTdCESLYGVvi0mWxd/sBQbYy9hIrRYkmbhae57heqv79sSzKjWlXk30oFVuPgr1WJnvKKwXflplUqmYLDvAh499z7HbjE+G3d0kdRLMbf55ILfJ8vvtRKak28u4o8Ivw/oilqD67RDkl1VE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748356617; c=relaxed/simple;
-	bh=X9Cz2W+jbYe7aO07cnG2QDUmsVTr3qqndf3L1MTM/i8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpcoX5BhKKjZm85QPYm0Bmz4cS8CSb/4LnO7p8+c/2t83SaHxnv7Eur7QhQRtAEkyn2A/ZTuaRAk8SwWen9CtYyZmaALBiG4bbeHEGAAbDPq2e4EKjYue5KoGFOm4JGJVxA+c0a9nrynJY1r/JEPskkzBPXUnWMHa3oA4ai5v+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QW86HKcR; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D1927780C;
+	Tue, 27 May 2025 14:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748356664; cv=fail; b=IV5nHbM3pxxcKbwJ7SsigXpm0UYdFYbCRe28J0TJIuCpOJkvDSqiOMj9HuQXlSB5rVbxgYHnOhsIEufmk3KpSLpLioqMwrUi9H6UfEWBIGtlIVFdkDXwR+EiJdjuC9hLALrAzD4ZPm8SJpzoAZWNNue/1V7zCXQIZIMr7lSe8jI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748356664; c=relaxed/simple;
+	bh=xEesws7RUtPqWOkmmLL3q07qWXD4Rg6vlawitmYJzm0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Xob6DPPGdAbv5evVBN0UmFHol1mAIhxfwD9aCEONxyCy/bFuik6VUzyi4OztICxmIU5YIoONlg8gWlYc6ZYV2IY1ws8RnkKPihfs1ka1pRogbQiEtFpR0TFSB7qwn4H7+8rAeLFPeaQVOweF+NmZPDqWtj6gQdppHIfElX8o65I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=irahPn/E; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QW86HKcR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C4A3C4CEE9;
-	Tue, 27 May 2025 14:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748356616;
-	bh=X9Cz2W+jbYe7aO07cnG2QDUmsVTr3qqndf3L1MTM/i8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QW86HKcROD0DGPNnxsjOgbD36GlFPL/1ICd6rv3Kq9xiGPkpl3xpI5+NrK3Htq0wp
-	 casMjQhmeTbq+sXAyrhFiOYfa8zOUAvN3bo6ekD4gm9jiPFF8g82ztQdS1PzJzIDvZ
-	 0SdlNiEWF5pHsYax48PPbApQ/iDaVU3yX22oIyBttk6o/h1relsszsnfAZqx69zRgS
-	 boSoAn7mMOX2m3pLjVtrWk6PKzPEWjzmhu4SEctSqSem89iV8vCaQoMrkTj3g0/3q4
-	 2gUD63BAZ7z1o5yOwu9k5BZn7/XP6Q0NSybKWA7lLDeXfM8U04PuWpcWqDVT61e6a2
-	 E6/XwZWAM/cdg==
-Date: Tue, 27 May 2025 15:36:52 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ze Huang <huangze@whut.edu.cn>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev
-Subject: Re: [PATCH] dt-bindings: pinctrl: k230: fix child node name patterns
-Message-ID: <20250527-activism-container-4a9da77a8da1@spud>
-References: <20250527-k230-binding-fix-v1-1-3c18ae5221ab@whut.edu.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="irahPn/E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748356662; x=1779892662;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=xEesws7RUtPqWOkmmLL3q07qWXD4Rg6vlawitmYJzm0=;
+  b=irahPn/EYaLixosCJFPPHb2L5wQY4cBWvW2s22LYHUs7BxJNqJasOab7
+   npa6hHe9+SA64i4nDcRU5EgMrh+mtE9ZDVPp+zOVTRjDvMte+jeQDjbB3
+   xka7VwS8vCnD+kFZ78SLTk6e6466pkyYsLga2N/cK2NKXAkKUCAYcmr7B
+   IzAxNN5I8HTVfCkwzd8S5vvokfBfZzuzcbLajzr7jrbKQNLLqDmnVq8CK
+   bLsB/MlY8kvIxyObu2rRxs5DLtCnKPOZWfNa9dYfdllaBt2O6I2kinKf9
+   OdRECbFcoey8pnn3HiWLfj5TyJq5B9j0UOeu2HSeLDokevysbBDpYWIIj
+   w==;
+X-CSE-ConnectionGUID: PZk+FdhrS1+BxgM0s5zYIQ==
+X-CSE-MsgGUID: QjsvnaqtQdaz719v61p0pQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="54155152"
+X-IronPort-AV: E=Sophos;i="6.15,318,1739865600"; 
+   d="scan'208";a="54155152"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 07:37:42 -0700
+X-CSE-ConnectionGUID: Br1iJFMBSvGkdDbAgfwM0Q==
+X-CSE-MsgGUID: +TAUPLkBRQGPtH86otPMNA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,318,1739865600"; 
+   d="scan'208";a="143289971"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 07:37:41 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 27 May 2025 07:37:41 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 27 May 2025 07:37:41 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.57)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 27 May 2025 07:37:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i4ye7twUiBi2lQByKiGvDNRb+ND4FwWyuxx+ZIM68MSTLXL252W/Lzf7AtfeaSB7MyHHVdkJ9jTr+VbR4nSM/oVfrCstcedQoR8039koLUz5JrJ0nIOvVec4GAmsQ8FOdHiPSvpDqrLN4f7d1bkEsuu+CuSV31DXVy89zDVnBHqlcijVDmVVlQ8ICUlFSXvHpkdVgXqAdtcYTqfK/TB6keufJ/wHCikFf1g1XEX1dA0UrLYWD+slOuH7tKE6QQoXZ0RBel4FBdfHmtS8gtLXT4TzGj0iGzX+56UNmAJggsAZxsfBR1u2cNrjJc5esK+A+gwOi3hRf0d0F5AmooGLkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TroNkWORKnjW7CYf1Uyj29JyZ+HRKIyDZiXCfUZtc8o=;
+ b=HBmm0kXlQz3WGEb2nG4kKwVdvCuKd0TcCI3rULM2gNr+nnou6XcrbM8/SXDoZ0T4Yr274TAociPjoE2dE5Rs5oS3YeEFV6QOmev91xzsE6T5liwaRVGMHjhQHezlW44pmVLKevMILH1dOrNlNbfWFPHR3G6WFFRj1YK+DNI0W5Wxa+p0WsBcdB2voX9MWuaclJKJ0E79tBrPSiCIdf61kjMOlfCdzC9xX0ba5RvYxO3RQ3Bj71hO32JXJvxZP2kGy7E0yIArtY3ZJ/WF1f92DOs4nIwgLZPiT3ayqHN1wBZEm3NAx1ZAbaKGfjPbgd9jkSC6WZ+/UBGJR9memmgubQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SJ0PR11MB5866.namprd11.prod.outlook.com (2603:10b6:a03:429::10)
+ by LV1PR11MB8850.namprd11.prod.outlook.com (2603:10b6:408:2b4::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
+ 2025 14:37:19 +0000
+Received: from SJ0PR11MB5866.namprd11.prod.outlook.com
+ ([fe80::265f:31c0:f775:c25b]) by SJ0PR11MB5866.namprd11.prod.outlook.com
+ ([fe80::265f:31c0:f775:c25b%3]) with mapi id 15.20.8769.019; Tue, 27 May 2025
+ 14:37:19 +0000
+From: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
+To: Haoxiang Li <haoxiang_li2024@163.com>, "Nguyen, Anthony L"
+	<anthony.l.nguyen@intel.com>, "Kitszel, Przemyslaw"
+	<przemyslaw.kitszel@intel.com>, "andrew+netdev@lunn.ch"
+	<andrew+netdev@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "Temerkhanov,
+ Sergey" <sergey.temerkhanov@intel.com>
+CC: "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH] ice: Fix a null pointer dereference in
+ ice_copy_and_init_pkg()
+Thread-Topic: [Intel-wired-lan] [PATCH] ice: Fix a null pointer dereference in
+ ice_copy_and_init_pkg()
+Thread-Index: AQHbzxAxVSjmIjbEr0GCs4gJB1Ep8LPmi3iA
+Date: Tue, 27 May 2025 14:37:19 +0000
+Message-ID: <SJ0PR11MB586609F5E30394AFF23CC9F0E564A@SJ0PR11MB5866.namprd11.prod.outlook.com>
+References: <20250524072658.3586149-1-haoxiang_li2024@163.com>
+In-Reply-To: <20250524072658.3586149-1-haoxiang_li2024@163.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ0PR11MB5866:EE_|LV1PR11MB8850:EE_
+x-ms-office365-filtering-correlation-id: 67e8ca11-54d5-4dc0-323f-08dd9d2bfc48
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?UkP1Xep1iRuDyVjOmokq5uak4jGl9x/2z8qdpMonGleQygC6hJzBzs3G39vz?=
+ =?us-ascii?Q?dYaJbhtf9tLL4nCGtrssW1ocaRpzlX5fwz8i0JPc6UBdpSn5QSAf17z5yzqp?=
+ =?us-ascii?Q?gNxJ0p3rgQ8m9vxJxfkhYn+XFvRXw2/9Jo0OBPpuQhFvJgZJHiCBMHywg1tk?=
+ =?us-ascii?Q?wXo5MfHM2V/vfyiYmOugZcYl2BhW4ngbB1HhQ4Z3MA3xEG+1v/Smw61I1+15?=
+ =?us-ascii?Q?Zsqr1FN5wOIUtIeQ5nUynrtDnLHVyMMnci4Wb9jMHzdhdx2vV9J0wiVdRml8?=
+ =?us-ascii?Q?Za1cYzJYwhs1jRMUxG+YW1fraSP6DztMNnsJ63nzn+gDpbdnLOgwEnd6yMRp?=
+ =?us-ascii?Q?57JD/rsQLH0cOeeAoH7RqWulf5ehjtcmd2EUOF/2tRsuW8E4B4cPBsRNml7T?=
+ =?us-ascii?Q?43wMQF7RkTja7s+7+Q4iRBe06uURVtqTnUdc58QvQj66eRkvooKNfb+5RpiG?=
+ =?us-ascii?Q?QN++YiZgOoEIJLN9TabavBsgA0vpLU9/KMZ9f/AawVfGJkvFCQ4CPQBWdJ5Q?=
+ =?us-ascii?Q?z7QTrxeP+G7K0qyv6N1np7nH+oNynJpAhN5HzG4p4qW8o/93V5LTkeJI7d6k?=
+ =?us-ascii?Q?eOwp5W8rtAZ3arMiS8fKQwjmLFjiisDOpmImirAe2HVaUF+R8O0gM9qZOUeL?=
+ =?us-ascii?Q?P4Zf0xWl4Dv32Tt89j8HQGOaOjgVLORVS8tz9ISJHt3oy8A9J0GiFJoVk43X?=
+ =?us-ascii?Q?dUVG5aK+1jzA+nrsD5GOl8C+tNOC4ELhn0bzJ1HZor+bifG4zdr6ecebg4qV?=
+ =?us-ascii?Q?lST3FEoiU9araYWRQsgSIRz08sZQQGJtJazDtH3AQQwZ/VDO19TyW3Dq6gJQ?=
+ =?us-ascii?Q?8mtYP/nbKsTmFYbUtcZ1I6R3VPHuDhzBpDOWWojb/PfznmKbcBoA6eZ5yrBU?=
+ =?us-ascii?Q?LPbOw+7+n0x76nw7YijwfzEFk1Wjox7Xp47AESfeX++1WFeQzFsVUK1O1ReK?=
+ =?us-ascii?Q?axL6Qy3PQg7V72gbJmVyjcZKWJ2ZkqogGAUjK0vPwLDOESrgHz7YL49XLslH?=
+ =?us-ascii?Q?j4QKfelPxx2L6WXKq/YnQhiY8I/mOD9ajJMUN5/Z5bgqgbGSt50Y/8rWcIZ9?=
+ =?us-ascii?Q?juMSdiLfxFiH65yL+zdTQRzxFE8NpYpmlyu+Lha/5xPKpM5iYfcf4M+KmG7x?=
+ =?us-ascii?Q?rMro/PNDCteGRI15bdmOlHu9bNM7A+UhhRMWtgRN7G6yG1ym37MOHX15naF2?=
+ =?us-ascii?Q?Eda2pHdLjqPInLl4/w+wVVH7/5kvePEi2AmrR290DAYZvwa5/aph+bcSkXvm?=
+ =?us-ascii?Q?49Ed4sw/xX55mvsYglKJNGINOb69x6VZI6P7SxzMnKqSXK8LMyNwQvHdaXI1?=
+ =?us-ascii?Q?fSK23FnXzgVbMamWOtvTz/b5DCmupj6dFUmW7ELZ4FMdOIwexAaO8qfb3sH4?=
+ =?us-ascii?Q?+GlnZIIFmqWv2SeIRmiOJDZSWwSdU8ezqynp5WP9hiUioI51kCPtlXyYTvWK?=
+ =?us-ascii?Q?bzK4N4xYFtoGJx54/0VlWV8PHVirylaHoWdp/aBzADVYxrtaUUmNQrKcl7O2?=
+ =?us-ascii?Q?WoDl89ISIsYQvxY=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5866.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?mx1zATBqmrilTXDPxo49zQY0ZBApJ4MHSGXdoHrESNsu//ODvu2mItBbax30?=
+ =?us-ascii?Q?OeKt7xaucehUOEYbfN73W9ELeyH0JlOWq8rDP5sffI0OUe9T43u/3nd2nt7U?=
+ =?us-ascii?Q?MC5szrWS1eABW4ahjF6LVqu2OLvsncGcc18Fy8TSiq68fmTusQpPUKqB6KTa?=
+ =?us-ascii?Q?PvwPcwvqyvcf6djh3xxznenKWz5uhgasvcF5qgQz6CPGDg41UfXGXTCoLq0f?=
+ =?us-ascii?Q?zRUHls1ljEgvjenx/MLbmkpwniJyhRvcaNAQtdjaj4Nx061IcN44iDvRYy6w?=
+ =?us-ascii?Q?4SEHFlXgybzp5GzoFWf3BsoYHvMgvx68Y4pNMEneXrj4IaGI+peCZeZus5HR?=
+ =?us-ascii?Q?Ki9ymSayaYh0xZZ7pyAUU8PX77u/QkP3oVqHYfruBL6BYYZzZLCrZbiA5BA1?=
+ =?us-ascii?Q?Dc/MrNj8GyihSxw9PLjkp9FNynNUU/A0YXcIaaSWv2sjY9N2lmeB1Y12mRzK?=
+ =?us-ascii?Q?NOrWwA5TIQVjsrOHyoy6jmhf1WpIfbX/25e4LX8xWepxtdmgdY7OR+HsO4iu?=
+ =?us-ascii?Q?51ubRGg8nPFH/VMz32E4Y2wXm2bP2vcUnVNqhYrSH7QgSLv3ZkR7Yrs3uWs8?=
+ =?us-ascii?Q?el+vYYBY2hMZirNEnnIcHtzxhdfDvDI3RzW8S/Gd68f+znsOzSC7Xv7vyoA1?=
+ =?us-ascii?Q?Sk4dVCwHOtkuds02Ab61ZYZlD9pLJr8t7WPNG8Cv/N/OZh5i/BKW7uLL8Q8y?=
+ =?us-ascii?Q?Eh7U2w2+FoWKOKG/GKjiqrvpZij8CzXicaXY59GdDuZkDh++H58z8ov7vmeF?=
+ =?us-ascii?Q?kHHJnm0mZkPHpqJonzcFsP4oeLVhnZxQzh2RCylTYrOcoaSptd+RCWpClRL/?=
+ =?us-ascii?Q?MP4tVwLnp3oLhGhnl+P3Qbmc+A55jW2PNnDSQhOOu7WYIeC0rXK/+1iiEa7t?=
+ =?us-ascii?Q?ZAccQNmMTbRD9vUQjH5Qi9iNNMjJXqX7vQ/0WDGLVcmmzG0H631v/FP9B0az?=
+ =?us-ascii?Q?PD51WJxgA4RXqoqW+055oK9ZQUUeI8CZJLXZdjZkGF5g+HCSRsYaKlXGZydn?=
+ =?us-ascii?Q?ipmEEeU+ci1rRXxrzBzoweQpnqhMsnHtM0muBBYmXhseGUI2eTOEYqL6Z6Sl?=
+ =?us-ascii?Q?pDsKrmpGUKN/YFV5NdU2qnuAH2PcPGiFDNWkwjFdrFZoAvRoPJg3I9aBlBma?=
+ =?us-ascii?Q?+DZwxESzanK5Jy21dBDUYxa94VRHufe+UCIPmoUaOynM+PSR7MoVylgzZvz5?=
+ =?us-ascii?Q?2j+dcbhwyvpAZy/NuN+lqu1D/4Apk6n/Mc+0DZtKRHchjb1y/TZ/tZH14Sx7?=
+ =?us-ascii?Q?xYpVLDS28LtNOpzm/2sSEo+qSGZX4OpU6TStOwPZoqfaCqVu34E8Tm3k5g6p?=
+ =?us-ascii?Q?lx4fBvJXKa0sVhHQK0UQLwdXUrzWpLBVMa0mvnbxfwzr5kJR++2lpcnmphGq?=
+ =?us-ascii?Q?mMzssIGyNes97jAciZ5pm6TiUfTphIjWoJxtjwzoavVMaTW0HJn4tXlhdDBE?=
+ =?us-ascii?Q?3zjz0vS/XIeggGMF4Meg0r3xCYrPGGvK3nUv637rAWQpU1uATY/zATB9i0uU?=
+ =?us-ascii?Q?1eOOtd73wrqn5ZpAkHMBjoUhj7k3JWRS3li3xndRt9PAiFSU1Xhk692V5OzQ?=
+ =?us-ascii?Q?dVIo1SyCSBKJ5Gptj5xubjMsg5SH1EGwiG2jIGeRmJnh9yKfmWnACJP1ZPMq?=
+ =?us-ascii?Q?2g=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sa1FTMnuAHPfsB0F"
-Content-Disposition: inline
-In-Reply-To: <20250527-k230-binding-fix-v1-1-3c18ae5221ab@whut.edu.cn>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5866.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67e8ca11-54d5-4dc0-323f-08dd9d2bfc48
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2025 14:37:19.8034
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ch3p14gO+o5CknNCXf9H60q7hBUhzgy5D9f+a+ZBymnfKVEoPp+UjwhrzPrzzIsbipujhxPubk6SGG98wChODNvqZECMOuelSbEDjxwqXg8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV1PR11MB8850
+X-OriginatorOrg: intel.com
 
 
---sa1FTMnuAHPfsB0F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 12:23:35AM +0800, Ze Huang wrote:
-> Rename child node name patterns to align with conventions.
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf
+> Of Haoxiang Li
+> Sent: Saturday, May 24, 2025 9:27 AM
+> To: Nguyen, Anthony L <anthony.l.nguyen@intel.com>; Kitszel,
+> Przemyslaw <przemyslaw.kitszel@intel.com>; andrew+netdev@lunn.ch;
+> davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> pabeni@redhat.com; Temerkhanov, Sergey <sergey.temerkhanov@intel.com>
+> Cc: intel-wired-lan@lists.osuosl.org; netdev@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Haoxiang Li <haoxiang_li2024@163.com>;
+> stable@vger.kernel.org
+> Subject: [Intel-wired-lan] [PATCH] ice: Fix a null pointer dereference
+> in ice_copy_and_init_pkg()
 >=20
->     uart0-pins      =3D>   uart0-cfg
->         uart0-cfg            uart0-pins
+> Add check for the return value of devm_kmemdup() to prevent potential
+> null pointer dereference.
 >=20
-> This avoids potential confusion and improves consistency with existing
-> bindings like sophgo,sg2042-pinctrl and starfive,jh7110-aon-pinctrl.
->=20
-> Fixes: 561f3e9d21a1 ("dt-bindings: pinctrl: Add support for canaan,k230 S=
-oC")
+> Fixes: 2ffd87d38d6b ("ice: Move support DDP code out of
+> ice_flex_pipe.c")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+Reviewed-by: Aleksandr Loktionov <aleksandr.loktionov@intel.com>
 
-You're changing something merged in October of last year, which is an
-ABI break, for what seems like a cosmetic change to me. What makes this
-worth it? Consistency with some devices by other vendors isn't a strong
-argument I don't think.
-
-> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
 > ---
->  .../devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml          | 8 ++=
-++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/net/ethernet/intel/ice/ice_ddp.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctr=
-l.yaml b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
-> index 0b462eb6dfe169a292bf716503c03d029f1ac7ee..f4e0da0bf7fa30af513264410=
-9dbd371ddfc0228 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/canaan,k230-pinctrl.yaml
-> @@ -22,7 +22,7 @@ properties:
->      maxItems: 1
-> =20
->  patternProperties:
-> -  '-pins$':
-> +  '-cfg$':
->      type: object
->      additionalProperties: false
->      description:
-> @@ -30,7 +30,7 @@ patternProperties:
->        pinctrl groups available on the machine.
-> =20
->      patternProperties:
-> -      '-cfg$':
-> +      '-pins$':
->          type: object
->          allOf:
->            - $ref: /schemas/pinctrl/pincfg-node.yaml
-> @@ -112,8 +112,8 @@ examples:
->          compatible =3D "canaan,k230-pinctrl";
->          reg =3D <0x91105000 0x100>;
-> =20
-> -        uart2-pins {
-> -            uart2-pins-cfg {
-> +        uart2-cfg {
-> +            uart2-pins {
->                  pinmux =3D <0x503>, /* uart2 txd */
->                           <0x603>; /* uart2 rxd */
->                  slew-rate =3D <0>;
+> diff --git a/drivers/net/ethernet/intel/ice/ice_ddp.c
+> b/drivers/net/ethernet/intel/ice/ice_ddp.c
+> index 59323c019544..351824dc3c62 100644
+> --- a/drivers/net/ethernet/intel/ice/ice_ddp.c
+> +++ b/drivers/net/ethernet/intel/ice/ice_ddp.c
+> @@ -2301,6 +2301,8 @@ enum ice_ddp_state ice_copy_and_init_pkg(struct
+> ice_hw *hw, const u8 *buf,
+>  		return ICE_DDP_PKG_ERR;
 >=20
-> ---
-> base-commit: 0a4b866d08c6adaea2f4592d31edac6deeb4dcbd
-> change-id: 20250526-k230-binding-fix-3125ff43f930
+>  	buf_copy =3D devm_kmemdup(ice_hw_to_dev(hw), buf, len,
+> GFP_KERNEL);
+> +	if (!buf_copy)
+> +		return ICE_DDP_PKG_ERR;
 >=20
-> Best regards,
-> --=20
-> Ze Huang <huangze@whut.edu.cn>
->=20
+>  	state =3D ice_init_pkg(hw, buf_copy, len);
+>  	if (!ice_is_init_pkg_successful(state)) {
+> --
+> 2.25.1
 
---sa1FTMnuAHPfsB0F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDXOAwAKCRB4tDGHoIJi
-0lIaAP9XPa+r9fmfk69jSeVRmec3TkKNVVWTR2GA9dVUn0HVdQD/Wi7uFOI0aiMA
-gqhzTBid+hn53nc3AD29aMz7BofHAAg=
-=wJMJ
------END PGP SIGNATURE-----
-
---sa1FTMnuAHPfsB0F--
