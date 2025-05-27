@@ -1,192 +1,245 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425652566;
-	Tue, 27 May 2025 17:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919BF28030F;
+	Tue, 27 May 2025 17:56:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368581; cv=none; b=LUWsPu3Y9Uur/owOtO8OqMRKWbf+zQZJXcqPM4EeKHTKWFMazLq/h13w0UxO5UqpuJh489PFwQ5TNTWlmbhP2UUpihBlqp67MVzVj0KI4hnwAzb1SbVPa3YhanZjzK2+3ugG8DKR8X87BwOzkDLUkno+tIDAkksWXCAKzzj/PZI=
+	t=1748368582; cv=none; b=JSzpnUUi6NqLYRxqo4SLpaLJ1Ppa6vVrT102i+pSBB3wE2C/+3jcDOHzEYbvQJs3UJCVkphfHLI4VQIOLTwEfBZuq+drrhVjIMsoLrABVkIy9yR5IMTvZvyxZuNQg9pLgyQI80/IFDy4ZAEzD3uqu0odolwOScM1ezdKKTmQ0fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368581; c=relaxed/simple;
-	bh=eG389LQ+Xp78SjC4Ihx0dxZG+lEE3vE/NvkzUBfztsM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nksTc6VpR16cG8081VvdXSb34DTA1KrWXWRP3xgD0nFxs6kT5KLuvfATpiyYxeQPZbfK8hCBr9wRolF3Gxk+3rDiv8MyYgVj1e4KsbIeFieWcrHvhNITb+SWt4HJF3De048sSyIcvJ757ahWuEeg946T6HFsOIVkwk+d+I1a45o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5D1Fj32; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748368582; c=relaxed/simple;
+	bh=ETkF1OnVQp7f45KUierCwATe+rzbzH7OlHSlcERTaBI=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=o2MTRVw49jdNvIed74P+Sj3kgFWwKdBar10yowuHz17PXqY4/g8t56sm4SohObLjA834qytJP0rUaS5QC7s3d7Hbtq5gZ0GLtMvahK1h3BGKipeA891GpGP9TdwCfMYGpEFN1eEZ0bzc5zGeug+hZFo1sILFk4CfHfpfVwcBWFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hyb3iV42; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5D1Fj32"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A16AC4CEE9;
-	Tue, 27 May 2025 17:56:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hyb3iV42"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 185B4C4CEE9;
+	Tue, 27 May 2025 17:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748368581;
-	bh=eG389LQ+Xp78SjC4Ihx0dxZG+lEE3vE/NvkzUBfztsM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=F5D1Fj32VEUl3B6sNEwIPhTfO1xnxcw6t0cKI2opKKyIOBremDZgnT0mZx0kni2vd
-	 7RxuW+QnS9LAo8AHydgrVQvXFr2KfKDMuPuTdft0lO17rM/syFfkzRrp5KrtfOPJ2G
-	 xYn1NsX8xPYgitF9yx8X/QLJm2JgGVgVVqR/h5qNW2jc0OdKFEzuDCDxCeAzE9RGsC
-	 XnNLkReQHBuIddieg7Z8lYO+wqOiMZo//+Iz79NJXNibG7H453s9CAr6ij2f1+lh1s
-	 MlQV95bPPKOYGPInuQmdMo/mIKhAd3avTN3l0F7osZzXKUKWP9va17NOwGC2SpCgWr
-	 L/99FuX0cKWBQ==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] kconfig: introduce menu type enum
-Date: Wed, 28 May 2025 02:56:15 +0900
-Message-ID: <20250527175616.2450667-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1748368582;
+	bh=ETkF1OnVQp7f45KUierCwATe+rzbzH7OlHSlcERTaBI=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=hyb3iV42Ujw57iw7QRJTTYlOgZNxc6SQelg0lFoR5GCt58ZgEd9li3hhymP5kOulK
+	 3KoGITLy7YRRAFVLki4Od1kdUTrSCdIGVUZjMlhhtHl2LGgh9m8aQWcsqjKiMmMwWl
+	 g3MmJuZAReDWEL1HdCYD1OEMLM17oaG1vlg1G9GulBj/0oTtmld4iPn+uW1DE0kiSl
+	 9nvj3UwLz+tWzPXUjsps4f+deDGvMzbf1Wu23gVNMIw5la/L4Fe/ThxJz8jtQmc0yE
+	 udtORWdKp+KHXAV4OdaaB2FpdSxq6cMqglVq3Yj6zuRWmgmxeFnfNO26WTmruAeAfo
+	 H6xiyO1sbto+w==
+Date: Tue, 27 May 2025 12:56:20 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ linux-kernel@vger.kernel.org, 
+ Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, 
+ linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ devicetree@vger.kernel.org, David Airlie <airlied@gmail.com>, 
+ Matthias Kaehlcke <mka@chromium.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Douglas Anderson <dianders@chromium.org>, Simona Vetter <simona@ffwll.ch>, 
+ Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ dri-devel@lists.freedesktop.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ linux-usb@vger.kernel.org, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz>
+References: <20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz>
+Message-Id: <174836830633.840732.14973117205707463656.robh@kernel.org>
+Subject: Re: [PATCH v4 0/5] arm64: dts: qcom: Add Lenovo ThinkBook 16
+ device tree
 
-Currently, menu->prompt->type is checked to distinguish "comment"
-(P_COMMENT) and "menu" (P_MENU) entries from regular "config" entries.
-This is odd because P_COMMENT and P_MENU are not properties.
 
-This commit introduces menu type enum to distinguish menu types more
-naturally.
+On Sat, 24 May 2025 13:48:35 +0200, Jens Glathe wrote:
+> Device tree for the Lenovo Thinkbook 16 G7 QOY
+> 
+> The Laptop is a Snapdragon X1 / X1 Plus (Purwa) based device [1].
+> 
+> Supported features:
+> 
+> - USB type-c and type-a ports
+> - Keyboard
+> - Touchpad (all that are described in the dsdt)
+> - Touchscreen (described in the dsdt, no known SKUss)
+> - Display including PWM backlight control
+> - PCIe devices
+> - nvme
+> - SDHC card reader
+> - ath12k WCN7850 Wifi and Bluetooth
+> - ADSP and CDSP
+> - GPIO keys (Lid switch)
+> - Sound via internal speakers / DMIC / USB / headphone jack
+> - DP Altmode with 2 lanes (as all of these still do)
+> - Integrated fingerprint reader (FPC)
+> - Integrated UVC camera
+> 
+> Not supported yet:
+> 
+> - HDMI port.
+> - EC and some fn hotkeys.
+> 
+> Limited support yet:
+> 
+> - SDHC card reader is based on the on-chip sdhc_2 controller, but the driver from
+> the Snapdragon Dev Kit is only a partial match. It can do normal slow sd cards,
+> but not UHS-I (SD104) and UHS-II.
+> 
+> - The GPU is not yet supported. Graphics is only software rendered.
+> 
+> This work was done without any schematics or non-public knowledge of the device.
+> So, it is based on the existing x1 device trees, dsdt analysis, using HWInfo
+> ARM64, and pure guesswork. It has been confirmed, however, that the device really
+> has 4 NXP PTN3222 eUSB2 repeaters, one of which doesn't have a reset GPIO (eusb5
+> @43).
+> 
+> I have brought up the Thinkbook over the last 4 months since the x1p42100-crd
+> patches were available. The laptop is very usable now, and quite solid as a dev/
+> test platform. GPU support would be nice, though :)
+> 
+> Big thanks to Aleksandrs Vinarskis for helping (and sort of persisting) on the
+> fingerprint, camera and HDMI issues.
+> 
+> [1]: https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_16_G7_QOY/ThinkBook_16_G7_QOY_Spec.pdf
+> 
+> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> ---
+> Changes in v4:
+> - squashed Makefile and dts commits to one
+> - picked up r-b from Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> - Link to v3: https://lore.kernel.org/r/20250524-tb16-dt-v3-0-17e26d935e73@oldschoolsolutions.biz
+> 
+> Changes in v3:
+> - removed changes in x1e80100.dtsi and x1p42100.dtsi - resolved with [2]
+> - fixed schema errors with correct compatible string for the model
+> - added power management for the camera via onboard_usb_dev.c
+> - amended node ordering
+> - changed the panel driver used to edp-panel, added panel in the driver
+> - amended x1e80100.dtsi for exposing PM8010: This one is not present in the design,
+>   added /delete-node/ for it.
+> - removed commented-out lines for sdhc, specified which don't work.
+> - corrected ZAP shader firmware name
+> - Link to v2: https://lore.kernel.org/r/20250516-tb16-dt-v2-0-7c4996d58ed6@oldschoolsolutions.biz
+> 
+> Changes in v2:
+> - removed nodes that gave DTC compile errors (pm8010_thermal, edp0_hpd_active)
+> - amended qcom.yaml
+> - shortened the commit titles to fit 75 chars
+> - Link to v1: https://lore.kernel.org/r/20250515-tb16-dt-v1-0-dc5846a25c48@oldschoolsolutions.biz
+> 
+> [2]: 20250520-topic-x1p4_tsens-v2-1-9687b789a4fb@oss.qualcomm.com
+> 
+> ---
+> Jens Glathe (5):
+>       dt-bindings: arm: qcom: Add Lenovo TB16 support
+>       drm/panel-edp: add N160JCE-ELL CMN panel for Lenovo Thinkbook 16
+>       usb: misc: onboard_usb_dev: Add Bison Electronics Inc. Integrated Camera
+>       firmware: qcom: scm: Allow QSEECOM on Lenovo Thinkbook 16
+>       arm64: dts: qcom: Add Lenovo ThinkBook 16 G7 QOY device tree
+> 
+>  Documentation/devicetree/bindings/arm/qcom.yaml    |    1 +
+>  arch/arm64/boot/dts/qcom/Makefile                  |    3 +
+>  arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi       |    2 +-
+>  .../boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts | 1655 ++++++++++++++++++++
+>  drivers/firmware/qcom/qcom_scm.c                   |    1 +
+>  drivers/gpu/drm/panel/panel-edp.c                  |    1 +
+>  drivers/usb/misc/onboard_usb_dev.c                 |    2 +
+>  drivers/usb/misc/onboard_usb_dev.h                 |    8 +
+>  8 files changed, 1672 insertions(+), 1 deletion(-)
+> ---
+> base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
+> change-id: 20250511-tb16-dt-e84c433d87b1
+> 
+> Best regards,
+> --
+> Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> 
+> 
+> 
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
 
- scripts/kconfig/expr.h   | 11 +++++++++++
- scripts/kconfig/lkc.h    |  2 +-
- scripts/kconfig/menu.c   |  5 +++--
- scripts/kconfig/parser.y | 12 ++++++------
- 4 files changed, 21 insertions(+), 9 deletions(-)
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-diff --git a/scripts/kconfig/expr.h b/scripts/kconfig/expr.h
-index 21578dcd4292..fe2231e0e6a4 100644
---- a/scripts/kconfig/expr.h
-+++ b/scripts/kconfig/expr.h
-@@ -205,15 +205,26 @@ struct property {
- 	for (st = sym->prop; st; st = st->next) \
- 		if (st->text)
- 
-+enum menu_type {
-+	M_CHOICE,  // "choice"
-+	M_COMMENT, // "comment"
-+	M_IF,      // "if"
-+	M_MENU,    // "mainmenu", "menu", "menuconfig"
-+	M_NORMAL,  // others, i.e., "config"
-+};
-+
- /*
-  * Represents a node in the menu tree, as seen in e.g. menuconfig (though used
-  * for all front ends). Each symbol, menu, etc. defined in the Kconfig files
-  * gets a node. A symbol defined in multiple locations gets one node at each
-  * location.
-  *
-+ * @type: type of the menu entry
-  * @choice_members: list of choice members with priority.
-  */
- struct menu {
-+	enum menu_type type;
-+
- 	/* The next menu node at the same level */
- 	struct menu *next;
- 
-diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
-index b8ebc3094a23..fbc907f75eac 100644
---- a/scripts/kconfig/lkc.h
-+++ b/scripts/kconfig/lkc.h
-@@ -81,7 +81,7 @@ void _menu_init(void);
- void menu_warn(const struct menu *menu, const char *fmt, ...);
- struct menu *menu_add_menu(void);
- void menu_end_menu(void);
--void menu_add_entry(struct symbol *sym);
-+void menu_add_entry(struct symbol *sym, enum menu_type type);
- void menu_add_dep(struct expr *dep);
- void menu_add_visibility(struct expr *dep);
- struct property *menu_add_prompt(enum prop_type type, const char *prompt,
-diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
-index 6587ac86d0d5..7d48a692bd27 100644
---- a/scripts/kconfig/menu.c
-+++ b/scripts/kconfig/menu.c
-@@ -15,7 +15,7 @@
- 
- static const char nohelp_text[] = "There is no help available for this option.";
- 
--struct menu rootmenu;
-+struct menu rootmenu = { .type = M_MENU };
- static struct menu **last_entry_ptr;
- 
- /**
-@@ -65,12 +65,13 @@ void _menu_init(void)
- 	last_entry_ptr = &rootmenu.list;
- }
- 
--void menu_add_entry(struct symbol *sym)
-+void menu_add_entry(struct symbol *sym, enum menu_type type)
- {
- 	struct menu *menu;
- 
- 	menu = xmalloc(sizeof(*menu));
- 	memset(menu, 0, sizeof(*menu));
-+	menu->type = type;
- 	menu->sym = sym;
- 	menu->parent = current_menu;
- 	menu->filename = cur_filename;
-diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
-index 68372d3ff325..e9c3c664e925 100644
---- a/scripts/kconfig/parser.y
-+++ b/scripts/kconfig/parser.y
-@@ -139,7 +139,7 @@ stmt_list_in_choice:
- 
- config_entry_start: T_CONFIG nonconst_symbol T_EOL
- {
--	menu_add_entry($2);
-+	menu_add_entry($2, M_NORMAL);
- 	printd(DEBUG_PARSE, "%s:%d:config %s\n", cur_filename, cur_lineno, $2->name);
- };
- 
-@@ -173,7 +173,7 @@ config_stmt: config_entry_start config_option_list
- 
- menuconfig_entry_start: T_MENUCONFIG nonconst_symbol T_EOL
- {
--	menu_add_entry($2);
-+	menu_add_entry($2, M_MENU);
- 	printd(DEBUG_PARSE, "%s:%d:menuconfig %s\n", cur_filename, cur_lineno, $2->name);
- };
- 
-@@ -246,7 +246,7 @@ choice: T_CHOICE T_EOL
- {
- 	struct symbol *sym = sym_lookup(NULL, 0);
- 
--	menu_add_entry(sym);
-+	menu_add_entry(sym, M_CHOICE);
- 	menu_set_type(S_BOOLEAN);
- 	INIT_LIST_HEAD(&current_entry->choice_members);
- 
-@@ -315,7 +315,7 @@ default:
- if_entry: T_IF expr T_EOL
- {
- 	printd(DEBUG_PARSE, "%s:%d:if\n", cur_filename, cur_lineno);
--	menu_add_entry(NULL);
-+	menu_add_entry(NULL, M_IF);
- 	menu_add_dep($2);
- 	$$ = menu_add_menu();
- };
-@@ -338,7 +338,7 @@ if_stmt_in_choice: if_entry stmt_list_in_choice if_end
- 
- menu: T_MENU T_WORD_QUOTE T_EOL
- {
--	menu_add_entry(NULL);
-+	menu_add_entry(NULL, M_MENU);
- 	menu_add_prompt(P_MENU, $2, NULL);
- 	printd(DEBUG_PARSE, "%s:%d:menu\n", cur_filename, cur_lineno);
- };
-@@ -376,7 +376,7 @@ source_stmt: T_SOURCE T_WORD_QUOTE T_EOL
- 
- comment: T_COMMENT T_WORD_QUOTE T_EOL
- {
--	menu_add_entry(NULL);
-+	menu_add_entry(NULL, M_COMMENT);
- 	menu_add_prompt(P_COMMENT, $2, NULL);
- 	printd(DEBUG_PARSE, "%s:%d:comment\n", cur_filename, cur_lineno);
- };
--- 
-2.43.0
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: using specified base-commit 176e917e010cb7dcc605f11d2bc33f304292482b
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250524-tb16-dt-v4-0-2c1e6018d3f0@oldschoolsolutions.biz:
+
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@0 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@0 (qcom,oryon): power-domains: [[4], [5, 0]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@0 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@100 (qcom,oryon): power-domains: [[7], [5, 0]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@200 (qcom,oryon): power-domains: [[8], [5, 0]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@300 (qcom,oryon): power-domains: [[9], [5, 0]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10000 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10000 (qcom,oryon): power-domains: [[11], [5, 1]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10000 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10100 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10100 (qcom,oryon): power-domains: [[12], [5, 1]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10100 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10200 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10200 (qcom,oryon): power-domains: [[13], [5, 1]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10200 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10300 (qcom,oryon): power-domain-names: ['psci', 'perf'] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10300 (qcom,oryon): power-domains: [[14], [5, 1]] is too long
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dtb: cpu@10300 (qcom,oryon): Unevaluated properties are not allowed ('power-domain-names', 'power-domains' were unexpected)
+	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+
+
+
+
 
