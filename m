@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E28283FE6
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D06284678
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 18:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748369256; cv=none; b=qlENHLBCp16LeoVt82c6a2AU7KzbQ0ttB2pzgZFgggXB/g+bVGpkG2XakMNAC1imEaJsmPpLRvgivZkwiGnTVuTdq8aAJ2ElyoVgbgBOwBaGZLVJtLXeU6zurYQLa6IgdjDk8k8gRtO8IrQP7ZaxdULgsdTX83W1GEPxvCAQF+E=
+	t=1748369257; cv=none; b=MNjwqDdVyzAqqvbLr++jjVjcCyqEw7gIJqrVfLvEd5EL2BWxQCV9kC9jVYSpjhUqM3+JvQarLXTsqZ0UIAJIbr9WeOwYFkcv5Dejt7AQAHZ8UFNKrRdhHGVGOBz6rXhDdvUaFcFpOg5eKQLNkQZWthW7P66oGLMEB6wpsV68qW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748369256; c=relaxed/simple;
-	bh=tXkzECMzlUGyQjl7egm1CU1/fCbel46uwneu6zgwPzk=;
+	s=arc-20240116; t=1748369257; c=relaxed/simple;
+	bh=hYhJhw9lgUIEnIxwZHfufmbd/yzFeT8cZT61HtEgsyg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=tKU6gx2yLnMc8LtOD+QXgTgIGXVdFeQL13s8LjqEF2SQiO6ZRC+RAw2iaxSEvBy/4XPhSkYGJ+i7qUKxeD5W78dk2uH3bs0PN8AkgLKxve4aLQfcYQvCUTUwfSNPnxHxzvz6XWYQsIbwOXhzc3tg8HsvnU7qKy8wMKm3seiN78o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FQSOM2mI; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=iSkbijfEt1vDIoB7vxE7Hz5RgWlynni5aW5PAzec0uXfUCcyTP9Lv3CxTlj9sbLVZtGzGWdGkqyP+Xa5k9aYsHm3xhCnF8JFApb4ohDATw4elSexghyHiESPdgfpimrQhVOOH4ddl/ls1OvGeij8R2r40GYEWTF7qlR3Wv20UgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mzzdshBP; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQSOM2mI"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3111a07f102so119031a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mzzdshBP"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23443196f00so38252335ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:07:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748369253; x=1748974053; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1748369255; x=1748974055; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=53MnQ+9b/xbDmubcmvXnyoPwpOHXHqAfzLcTz6K+YKE=;
-        b=FQSOM2mIqH6aJIdKU6K/0MBXrnKW5Tzv8Epei/2gt3GbwJa+n5WlnFDDixuEbkPQi/
-         SE1I4hEypayHvBagYE4C0h4Vd1yrk1davR02Ro9DmUknExouna7zxXgON99Lxn4fnker
-         cTB2kRutpv1DSYiKMipUgUC2NrRbW2Z6lh7l2q3ptHzWCJAXL+7/2j50S+7FI0SW83jc
-         pI7/6ZxdNv59mdsGhxhTQemN5zaTkH4njTDAYXeaX0Z3lzELXxRhnXSJbI6GRwl5/0sn
-         rj7m4Y3Vj006ideM55vA/3eFyLMnVkJ7snJ/q7tCXUGH5NpjgV9OpVJPAWSQhcla3iyy
-         waLA==
+        bh=nD2QkUBNtYWidhmQthg28IqOzebmfKqF2U7ClZ+k9CY=;
+        b=mzzdshBPPjtKDQeFpuisUG5yberem71lqoIou9HDAv5EQumwpO8SaPNu+SKc5/VtIm
+         mqPrrGupKhdhNGsxQ7WaF5PA6FvDDBfhYu+IFFyV9UuWG6ugFBp8Uvv+G++EY1dVU2Dx
+         7yzWaxpTG0kr2bTnDo/tvDFu/YKAR/mB9AnmbI0TeBpe3kjcTYs/z0avCpowgtSclmsh
+         icL8DUrz00JFd0rE0OZIgUlbbgMdExfug7ZgA9wjEW9yqYpXq9zpa8zAeHXi4sKxcHC8
+         FGluo8GJWmWLVnHtEsLsPJgAWbx0zcTxC1sd67tIu2TdRpu7y6PC5Iz33b8uqlDHeVyj
+         HXmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748369253; x=1748974053;
+        d=1e100.net; s=20230601; t=1748369255; x=1748974055;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=53MnQ+9b/xbDmubcmvXnyoPwpOHXHqAfzLcTz6K+YKE=;
-        b=UWn0SsJgn6wIcvVs4hHZc8frQV5srZJ6msIma1qDSIXpdlPwrZ7VsY2dqX9X4uCKZT
-         hZ0zLXFDm3LgJFWp2ydYeo2XSF5RvVAF5sVOFxEqPYTopHfpwq0dmYYpadTA06GgmqKm
-         WAQVnF8PB78ondZfLy2gK4S+qm5UwLFfKdfW0CP8xLl/10pPyXuuWqBcsLifnlh+7xVz
-         0Fj76my23rCQR8fWAf8uxDMo8isYBwPUXy1GOoXvW8dz2MbG8aYDUaRk5v1r8HsApKbh
-         jQbbQ97X6NZSv3AAZmb1BmBwmAFzyi7dee9Xl0bvh8WQb3D/XnzOcnO0fl+5vilZgb9v
-         EZlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoSWDe9az2KUF3Xqxlu37LqNdYy6gPkAALoLdCAAbzDveage/cq7Il6hMxz3zwdl2OUoauWa/QZW5uNcw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaHZF+6PVEzEWaE8aJxJKpa+EmRV3VpACV6/+sW9uD+opPaX8B
-	bp5FLpWTzuyYQ1smu1mr0QTL/7ZVXbduLSav/5b4S3AOiizPIv9US6oL6naEebBjH4SUKYzKCF4
-	W+FI8bAH+Bg==
-X-Google-Smtp-Source: AGHT+IEs/i83HeK/kXHhOK5DIrg4XPtLsBjqCQAU/a/iwZQOPo/OM37vvPcR33Fa5ijRrs50zf6/XS1uTSXu
-X-Received: from pjbsy7.prod.google.com ([2002:a17:90b:2d07:b0:311:466c:6062])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3cc3:b0:311:abba:53b6
- with SMTP id 98e67ed59e1d1-311cce9432bmr2456854a91.14.1748369253276; Tue, 27
- May 2025 11:07:33 -0700 (PDT)
-Date: Tue, 27 May 2025 11:07:03 -0700
+        bh=nD2QkUBNtYWidhmQthg28IqOzebmfKqF2U7ClZ+k9CY=;
+        b=wJ2phLonPRYTrQlRCriCpm5elDv9qcusWDHlDjQkTzAd/Fw2B8tC53BSIKB2GmO8HG
+         SwGT9u5/vojTCCTGFvpFBa6lCWltpbgdhLfrS7n+9qoSc29GAMyWvCJhDfkfxbZvld0o
+         7TK8JksZrOW9fW7aR0BuA+FpSxFToAK1uUjKZ21nJZVI1K79d5ZtVkXjD0Taw/eD4SCb
+         mIF5UU5GadIilL3NM8DVZDiWA5LjT8RgcZO8B3NTwS2X6lWz4N1HfYM4uZZg75FDYIDJ
+         c2WkYhjOtVDVl7fgYly7oW/0KBkCPUEhXDPcDy/95wKIpJ9wqkEg6oM6KwsSM+luBZ25
+         zWRw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdVJNIZnSIHIvhuv/xCVyM+ufJa6sTeM7ObJwxpaFKsW6lR7JFLxBbHujnwzgnFcobvhLCPWOD0VRnpoc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy56QYRToqjZIHNBxhf4DLK0lE7PoKfCFJUciFLYTt56N502p/t
+	EiARJ3wL1tauCjqKTCmrxYEqro/Q7QP+8jG1JB6Jy0ISZKcQoMhIWOUEBtmpFnvN6r2cfwUafmt
+	18gjOssf52g==
+X-Google-Smtp-Source: AGHT+IE4fW6g74Tthm48qNxM7YBO8dkYBPd3gBkxzs41uElkUtHuH5YcJ4K+ZN7/1wnwXfEfwdwixMyWs3MB
+X-Received: from pllw5.prod.google.com ([2002:a17:902:7b85:b0:234:4c97:1e84])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db03:b0:224:1001:677c
+ with SMTP id d9443c01a7336-23414f32ca9mr193634635ad.9.1748369245048; Tue, 27
+ May 2025 11:07:25 -0700 (PDT)
+Date: Tue, 27 May 2025 11:06:59 -0700
 In-Reply-To: <20250527180703.129336-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,9 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250527180703.129336-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250527180703.129336-7-irogers@google.com>
-Subject: [PATCH v1 6/6] perf test trace_summary: Skip --bpf-summary tests if
- no libbpf
+Message-ID: <20250527180703.129336-3-irogers@google.com>
+Subject: [PATCH v1 2/6] perf test demangle-java: Don't segv if demangling fails
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,32 +80,30 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-If perf is built without libbpf (e.g. NO_LIBBPF=1) then the
---bpf-summary perf trace tests will fail. Skip the tests as this is
-expected behavior.
+The buffer returned by dso__demangle_sym may be NULL, don't segv in
+strcmp if this happens. Currently this happens for NO_LIBELF=1 builds.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/trace_summary.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/tests/demangle-java-test.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
-index 49766524dc21..f9bb7f9388be 100755
---- a/tools/perf/tests/shell/trace_summary.sh
-+++ b/tools/perf/tests/shell/trace_summary.sh
-@@ -53,6 +53,12 @@ test_perf_trace "-as --summary-mode=thread --no-bpf-summary"
- # summary only for system wide - total summary mode
- test_perf_trace "-as --summary-mode=total --no-bpf-summary"
+diff --git a/tools/perf/tests/demangle-java-test.c b/tools/perf/tests/demangle-java-test.c
+index ebaf60cdfa99..0fb3e5a4a0ed 100644
+--- a/tools/perf/tests/demangle-java-test.c
++++ b/tools/perf/tests/demangle-java-test.c
+@@ -30,6 +30,11 @@ static int test__demangle_java(struct test_suite *test __maybe_unused, int subte
  
-+if ! perf check feature -q bpf; then
-+    echo "Skip --bpf-summary tests as perf built without libbpf"
-+    rm -f ${OUTPUT}
-+    exit 2
-+fi
-+
- # summary only for system wide - per-thread summary with BPF
- test_perf_trace "-as --summary-mode=thread --bpf-summary"
- 
+ 	for (i = 0; i < ARRAY_SIZE(test_cases); i++) {
+ 		buf = dso__demangle_sym(/*dso=*/NULL, /*kmodule=*/0, test_cases[i].mangled);
++		if (!buf) {
++			pr_debug("FAILED to demangle: \"%s\"\n \"%s\"\n", test_cases[i].mangled,
++				 test_cases[i].demangled);
++			continue;
++		}
+ 		if (strcmp(buf, test_cases[i].demangled)) {
+ 			pr_debug("FAILED: %s: %s != %s\n", test_cases[i].mangled,
+ 				 buf, test_cases[i].demangled);
 -- 
 2.49.0.1204.g71687c7c1d-goog
 
