@@ -1,71 +1,72 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E422DCBF0;
-	Tue, 27 May 2025 19:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA70D2DCBF0;
+	Tue, 27 May 2025 19:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748375416; cv=none; b=OWgARn4fZtXWS6dDphopakQfbqwI76lY+xHru+CCuilT3r2s/gDaJl6fXxmF2KLyIMTJe14b95b3yT9y07MshoC0ZRgus5LREbl97aYYUsJ8EOFa2mcN7aowLdcQzyo17faaZMEF3OXaJMHJYBThzRx+DI4l4wRA4F2/l0A+W3c=
+	t=1748375419; cv=none; b=kw0Hp2vF4K5TdUGGZ3+TnWsqQXo07QrIOollGE3suoxX11bcFOB1QTMuzfU6ex7EJTDgrMmUUqSfS92Wg9WTgWwdF7y4gCqr1/XVIKMO5JYd10USlW49hHMZREZGvq9zlvrF+52vHTcbPlsjjSMoYMCKPPeEDVcMr0Vovttyd1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748375416; c=relaxed/simple;
-	bh=p0PVMMt8l8CmiG5kYSDEHRG0kgpk1Q+IBWoyKpHGFDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KziNd1uJhisYbNzUFkRGyOvLTB5z5n2kWutol4Gb1UYybCC0DSvxwOQIPmF+w9omCprCistaRrOfh/xlLZ/jFC1t4MqZjXKGu4fGYyicxM+AVhdirj0gf5iUwVUi/WriQ6j5K6e/LErfb04OqKFqOkEfcDy6qQpU5T34qr2Cglc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HJPt6xf+; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HJPt6xf+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=1nVcyb7G5V8vKnNriJjpKRn7ochwYQQyPFOHqYgisEg=; b=HJPt6xf+G928vb2HuWG8C4ta/b
-	vfs9ylM9NxCEx2vaYtdo+Ak5hpzCSCRU7kHv1V5Zx7r4zLklkcnLkI4LCxDer2v4/t0qw8sbr0oct
-	t0kEwihW/7G+2UxwEXaC7OP7kHvisAE66V7HEciv64739k0Fq45eexCSk/p4L/e/x6Rc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uK0JG-00E6Zf-Fq; Tue, 27 May 2025 21:50:02 +0200
-Date: Tue, 27 May 2025 21:50:02 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Jian Shen <shenjian15@huawei.com>, Salil Mehta <salil.mehta@huawei.com>,
-	Jijie Shao <shaojijie@huawei.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] [net-next] hns3: Demote load and progress messages to
- debug level
-Message-ID: <93f09b85-9e11-489c-9d7e-78ce057b6437@lunn.ch>
-References: <0df556d6b5208e4e5f0597c66e196775b45dac60.1748357693.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1748375419; c=relaxed/simple;
+	bh=dV8TaxUw9B/U7sVtHJzAMm/STGMFsc5fuVvoZ7Dxg9o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kOAevrvXmTdHPJ8cPYq+izm/p4nHJ3MjLHY9vWkVfklBi4F6wJXmKELuS+3vQ2ly8S0sFBo5AiXpZdD8ds6qrM0GqTbYvp1ort2cTyekg3oZ00Li6iUsBbqfn0Jkf/VnRDs8EL3vzjxRA3AD1YNExe1/h53We6k1YtcU0VqzgZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89235C4CEE9;
+	Tue, 27 May 2025 19:50:18 +0000 (UTC)
+Date: Tue, 27 May 2025 15:51:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] ring-buffer: Removed unnecessary if() goto out where out is
+ the next line
+Message-ID: <20250527155116.227f35be@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0df556d6b5208e4e5f0597c66e196775b45dac60.1748357693.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 09:30:15PM +0200, Geert Uytterhoeven wrote:
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> No driver should spam the kernel log when merely being loaded.
-> The message in hclge_init() is clearly a debug message.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Alternatively, the printing in hns3_init_module() could be removed
-> completely, but that would make hns3_driver_string[] and
-> hns3_copyright[] unused, which HiSilicon legal may object against?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-From a IANAL perspective, pr_debug() is O.K. for me.
+In the function ring_buffer_discard_commit() there's an if statement that
+jumps to the next line:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+	if (rb_try_to_discard(cpu_buffer, event))
+		goto out;
+ out:
 
-    Andrew
+This was caused by the change that modified the way timestamps were taken
+in interrupt context, and removed the code between the if statement and
+the goto, but failed to update the conditional logic.
+
+Fixes: a389d86f7fd0 ("ring-buffer: Have nested events still record running time stamp")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index e2aa90dc8d9e..0a3be3a01d14 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4681,10 +4681,7 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
+ 	RB_WARN_ON(buffer, !local_read(&cpu_buffer->committing));
+ 
+ 	rb_decrement_entry(cpu_buffer, event);
+-	if (rb_try_to_discard(cpu_buffer, event))
+-		goto out;
+-
+- out:
++	rb_try_to_discard(cpu_buffer, event);
+ 	rb_end_commit(cpu_buffer);
+ 
+ 	trace_recursive_unlock(cpu_buffer);
+-- 
+2.47.2
+
