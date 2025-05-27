@@ -1,27 +1,27 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A62827700B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A53C275864
 	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:14:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748355294; cv=none; b=qwQCkSlr0RZwGi41oMzo7Y8fmWrFhvgCSTuFUCuOnwg45Xaoa47eU7Kgt+fKwZCoAdOUXBA/K/oNnRA4QhY/rTWCsiT/JjZa5MlDKxs7Hw3/BrekZmp4QNCVj9WQ65uGMwf2+jVvMiFR+zzvFkRSKGTPlGvVg51xebVcaeqUzPI=
+	t=1748355294; cv=none; b=upqtwNCh/OjRH/uPvpuc3dLcLY+vKtwz7PFkxhGRYLULi+fXHtC05DClJChnmFqaC/VASOTbDVtlsfvS7+7YtwIbzEGeW5sZPyeEygyRM50kryDfFg75JDHUBFvofZMxzLQfH+Fhn7qI0239TTAL/hUBJ2E++By0CRJouECz6DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748355294; c=relaxed/simple;
-	bh=B/XX/1sBBg1VZc8S1AwtLNwmLgDDUs2220V3EEoEvt0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=utKnL0DNI3MPkKE7UlKeuDtSmBCYV0b1SpArS6xFhRuC0R90bsCflyoOImFRBIePBQQAZ2Jb1u/CXaqFp28MjZSnlDJbR21Z3rBqDR+KIeWhlKnmWiwJRPQnzX7GvHeMgbDWEVrWyz3n5/cbYIjfyx3WFMnWlBBDDxOEAn6j2co=
+	bh=I5aLatGpguRDg0LB9Scn1LjNWZ+bViwOhsHQD3l6ri8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PdZ/yIos0FoQlS/vAd82x4t3dy0xbuJ4BsBOP5qmc/fi0D9YkaIhSte4xvf975yEOG9eWp+mMwxnGGewLnFy7Zs51h2dx1dx/9xvnFZaaxBUWog4AhA3hKGk16hMi0ZfCONZL9MUuEUc9N+G0EQbWP+aRmAvK00Fgiv/guk6ouU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
 	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
 	(envelope-from <p.zabel@pengutronix.de>)
-	id 1uJv4f-0002Ne-JG; Tue, 27 May 2025 16:14:37 +0200
+	id 1uJv4f-0002Ne-CC; Tue, 27 May 2025 16:14:37 +0200
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Date: Tue, 27 May 2025 16:14:31 +0200
-Subject: [PATCH RFC 1/4] drm/bridge: samsung-dsim: Always flush display
- FIFO on vsync pulse
+Subject: [PATCH RFC 0/4] drm/bridge: samsung-dsim: Stop controlling vsync
+ display FIFO flush in panels
+Date: Tue, 27 May 2025 16:14:30 +0200
+Message-Id: <20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,9 +30,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-dsi-vsync-flush-v1-1-9b4ea4578729@pengutronix.de>
-References: <20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
-In-Reply-To: <20250527-dsi-vsync-flush-v1-0-9b4ea4578729@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAMbINWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyNz3ZTiTN2y4sq8ZN20nNLiDF2LNIvkZEvDRLM0AxMloK6CotS0zAq
+ widFKQW7OSrG1tQAtEmGyZgAAAA==
+X-Change-ID: 20250527-dsi-vsync-flush-8f8cc91a6f04
 To: Inki Dae <inki.dae@samsung.com>, 
  Jagan Teki <jagan@amarulasolutions.com>, 
  Marek Szyprowski <m.szyprowski@samsung.com>, 
@@ -53,49 +54,68 @@ X-SA-Exim-Mail-From: p.zabel@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Always flush the display FIFO on vsync pulse, even if not explicitly
-requested by the panel via MIPI_DSI_MODE_VSYNC_FLUSH mode_flag.
+This series enables the vsync flush feature in the samsung-dsim driver
+unconditionally and removes the MIPI_DSI_MODE_VSYNC_FLUSH flag.
 
-The display FIFO should be empty at vsync. Flushing it at vsync pulses
-helps to remove garbage that may have entered the FIFO during startup
-(if synchronisation between upstream display controller and Samsung DSIM
-is lacking) and that may persist in form of last frame's leftovers on
-subsequent frames. Flushing the display FIFO if it is already empty
-should have no effect.
+Background: I've recently seen shifted display issues on two different
+i.MX8MM boards (mxsfb + samsung-dsim) with different DSI panels.
+The symptoms were horizonally shifted display contents, with a stable
+offset, in about 0.1 to 0.6 percent of modesets.
+Enabling the MIPI_DSI_MODE_VSYNC_FLUSH flag in the panels' mode_flags
+fixed the issue in both cases.
 
-This will allow to remove the MIPI_DSI_MODE_VSYNC_FLUSH flag, which is
-only used by the Samsung DSIM bridge driver. Arguably this flag doesn't
-belong in the panel configuration at all: flushing the display FIFO on
-vsync is a workaround for issues with the integration between display
-controller and DSI bridge, not a property of the DSI link between bridge
-and panel. No panel actually has a requirement to receive garbage or old
-frame content after vsync.
+The samsung-dsim driver is the only DSI bridge driver that uses this
+flag: If the flag is absent, the driver sets the DSIM_MFLUSH_VS bit in
+the DSIM_CONFIG_REG register, which disables the vsync flush feature.
+The reset value of this bit is cleared (vsync flush is default-enabled).
+According to the i.MX8MM reference manual,
 
-I wonder if host controller FIFO resets are mentioned by the MIPI DSI
-specification at all. This patch is based on the assumption that the
-MIPI_DSI_MODE_VSYNC_FLUSH flag only exists because the DSIM_MFLUSH_VS
-bit happens to be located in the same register as the bits controlling
-the DSI mode.
+    "It needs that Main display FIFO should be flushed for deleting
+     garbage data."
+
+This appears to match the comment in mxsfb_reset_block() in mxsfb_kms.c:
+
+    /*
+     * It seems, you can't re-program the controller if it is still
+     * running. This may lead to shifted pictures (FIFO issue?), so
+     * first stop the controller and drain its FIFOs.
+     */
+
+Now I wonder why the bit is controlled by a flag in the panel drivers.
+Whether the display controller pushes up to a FIFO worth of garbage data
+into the DSI bridge during initialization seems to be a property of the
+display controller / DSI bridge integration (whether this is due to
+hardware or driver bugs), not a specific requirement of the panel.
+Surely no panel needs to receive a partial line of garbage data in front
+of the first frame?
+
+Instead of adding the flag to every panel connected to affected SoCs,
+the vsync flush feature could just be enabled unconditionally.
+Clearing an already-empty display FIFO should have no effect, unless
+I'm missing something? With that, the MIPI_DSI_MODE_VSYNC_FLUSH flag
+would not be used anymore and could be removed.
+
+regards
+Philipp
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/gpu/drm/bridge/samsung-dsim.c | 2 --
- 1 file changed, 2 deletions(-)
+Philipp Zabel (4):
+      drm/bridge: samsung-dsim: Always flush display FIFO on vsync pulse
+      drm/panel: samsung-s6d7aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
+      drm/panel: samsung-s6e8aa0: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
+      drm/mipi-dsi: Drop MIPI_DSI_MODE_VSYNC_FLUSH flag
 
-diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
-index 0014c497e3fe7d8349a119dbdda30d65d816cccf..f5561a702c711dcdcddfc5262b8d675f0216169e 100644
---- a/drivers/gpu/drm/bridge/samsung-dsim.c
-+++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-@@ -898,8 +898,6 @@ static int samsung_dsim_init_link(struct samsung_dsim *dsi)
- 		 * The user manual describes that following bits are ignored in
- 		 * command mode.
- 		 */
--		if (!(dsi->mode_flags & MIPI_DSI_MODE_VSYNC_FLUSH))
--			reg |= DSIM_MFLUSH_VS;
- 		if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
- 			reg |= DSIM_SYNC_INFORM;
- 		if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
+ drivers/gpu/drm/bridge/samsung-dsim.c         | 2 --
+ drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c | 2 +-
+ drivers/gpu/drm/panel/panel-samsung-s6e8aa0.c | 2 +-
+ include/drm/drm_mipi_dsi.h                    | 2 --
+ 4 files changed, 2 insertions(+), 6 deletions(-)
+---
+base-commit: 99764593528f9e0ee9509f9e4a4eb21db99d0681
+change-id: 20250527-dsi-vsync-flush-8f8cc91a6f04
 
+Best regards,
 -- 
-2.39.5
+Philipp Zabel <p.zabel@pengutronix.de>
 
