@@ -1,268 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6ACC8F5E;
-	Tue, 27 May 2025 06:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1481B652
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326006; cv=none; b=gNzGkPQhZtJhRKQvr7715qpr25smlD4TEoXII31rAArC4Xe/XI5pdVFmk2ERay821VZllXMrsamTGiKK3TmkOwZu3zCWr3nrIBA0inxOGagnIYh5pEmZ2aOxYpEpl6UOyYZMbndkCNDE4423Xn6fDOlbF9rwBQkr1SNuolS+DB0=
+	t=1748326139; cv=none; b=EfPU02eznU9eFnW/b25CYF21rKz6348P86UbDziSzkmaw/qw/NZUMIwpxMIluZkLK0bfDvqHA0Ry1mVD0c0/WmJ/RYdPQajTQ06hxUFauW/11zDD/LDPoPM39wiiAYGJZo720bnVggTEM17QWIZf+L3r6u10pMY0R2bsZdmdTOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326006; c=relaxed/simple;
-	bh=949plwvuDh0LXblafoGZmQ/UjZsqaCPbRV9YptNbJZg=;
-	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
-	 In-Reply-To; b=TF6s6L2cEPHX8RpI94B22rBR7DuA3ZTPtl6dhlg5ZUV1ceXVCz8aoEq9TP3rR1wVnQmlJP3lKsyEazww8389FtNZ+hHgmR8p0pSHuG4AH1FbRI+nCkF8fR6qX1F7A13vgtE0Zcub1Ii9qq32PrC3BLlmVVZzgeSf71mIdOpFS+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=px+5ixoM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748326139; c=relaxed/simple;
+	bh=61jbQ6fa6Y3o4tynXM0JiWhjtIWbokyFgJb882cjQfI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rf9tRkblBY1FhHacLHgNkuFjhS1YeSMsqzAdC6V/f88fKDi9JdITir2DLKAQbXJ2Is37NPHVZlGLpq2cAa4n5OFsBgzcltzvtNBeeYqMG3lgHSteXb3SOFF1wYO2ge2dXj7hPZLnV91asYqbjIjtDTtEluUpnTA3Y64/+tgbDWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ach95SFY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="px+5ixoM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1586C4CEEA;
-	Tue, 27 May 2025 06:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748326006;
-	bh=949plwvuDh0LXblafoGZmQ/UjZsqaCPbRV9YptNbJZg=;
-	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
-	b=px+5ixoMOObPn1gjgY3F0Z9bRaiWd0CFRyD7XnyEGWCWSYXLTTL82yN0v9TlHGERB
-	 eXFfhu9FGpCAEN6Bz4edWRLy8Ozlf7EN+ipMkC8OatIve5c2h08LG3YMMfbGqaKVcP
-	 hC6Atl5DqAExiq3BW7u5C7RM26y9568VZXWPSSGxisF3PfXBGjvA+c+IMArifeX2OP
-	 Qt8hslVgHAbWNAb+A+G1BFmpV80FMM1Kn4y8w9v5YCBffPHAIeA8x62H8sSzXF8u/2
-	 KYb5mM608kaz7EmMJGRWs8BgcmWXU2RIakvi1AwgR0e4Qdw3/0ZB11ro4lY/qkwqQz
-	 Dd6J9zzh07Vqw==
-Content-Type: multipart/signed;
- boundary=b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Tue, 27 May 2025 08:06:42 +0200
-Message-Id: <DA6PUDJXVXL3.1EILFHW8G19E9@kernel.org>
-To: "Aradhya Bhatia" <aradhya.bhatia@linux.dev>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, "Tomi Valkeinen"
- <tomi.valkeinen@ideasonboard.com>, "Jyri Sarha" <jyri.sarha@iki.fi>
-Subject: Re: [PATCH v8 2/4] dt-bindings: display: ti: Add schema for AM625
- OLDI Transmitter
-Cc: "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Thomas
- Zimmermann" <tzimmermann@suse.de>, "Maxime Ripard" <mripard@kernel.org>,
- "David Airlie" <airlied@gmail.com>, "Laurent Pinchart"
- <laurent.pinchart@ideasonboard.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Nishanth Menon" <nm@ti.com>, "Vignesh Raghavendra" <vigneshr@ti.com>,
- "Devarsh Thakkar" <devarsht@ti.com>, "Praneeth Bajjuri" <praneeth@ti.com>,
- "Udit Kumar" <u-kumar1@ti.com>, "Jayesh Choudhary" <j-choudhary@ti.com>,
- "Francesco Dolcini" <francesco@dolcini.it>, "Alexander Sverdlin"
- <alexander.sverdlin@siemens.com>, "DRI Development List"
- <dri-devel@lists.freedesktop.org>, "Devicetree List"
- <devicetree@vger.kernel.org>, "Linux Kernel List"
- <linux-kernel@vger.kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20250525151721.567042-1-aradhya.bhatia@linux.dev>
- <20250525151721.567042-3-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250525151721.567042-3-aradhya.bhatia@linux.dev>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ach95SFY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748326136;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yr/iHE42lciAZJuWsNNhCZ1eCfByYTSyjML/1uGKARw=;
+	b=Ach95SFYnS3eIkGgZIbMS6atkt736gFRaCxPhMDka9hikYMCPg8pIc/FcY5Y/AWxlxAvAR
+	MnCdcI9BZkT4MCjaicMk0L8eF4AUFbf5HllTl9oUzey5OAH1vXMpzbuI+TXoVaH5tjdSsc
+	HAen6N+/nJngO50VeB2VDIA/a9hZq0Y=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-205-RahEunf4P-ibuQG0ekYrDQ-1; Tue, 27 May 2025 02:08:55 -0400
+X-MC-Unique: RahEunf4P-ibuQG0ekYrDQ-1
+X-Mimecast-MFC-AGG-ID: RahEunf4P-ibuQG0ekYrDQ_1748326134
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-44b1f5b91c1so22143535e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 26 May 2025 23:08:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748326134; x=1748930934;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yr/iHE42lciAZJuWsNNhCZ1eCfByYTSyjML/1uGKARw=;
+        b=EB74zD3WF181aEqnpC7kPTc33Fh2qxV099J+cGqlE2iZMYIeT51F0HYDr4X0cD40+C
+         +Etc81PcE5fz7benwx1PNKPQdOYBZycihd0kWl2fMF1sh9H3Ng/7j6jo7zLUxza7tu7J
+         dlb7JbHQsJ1U7G1jRVz2Z/d3+JoBoMl78b15pH8cZjt5YmmYgQicegMMJBx9RYfhzbJE
+         5Hac2WeamHeDU+BHi97/ctvzjFofoB/2SqQZR5eMNx64haSSqsd/6b0HWLsKCLZ2Zn/G
+         AtqP0wWD7O1Swti/uDaHBcFpmG/Ilz+bBCRXPhawE2WDBbsaK0NNvwvq/ASePPbx7zBi
+         30mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUryyj6/6wowLRCOs5orJlwuNY2VS2CjvTf6aCiFKhBU+hGw7zbud2hteKAHXslEaxmKLunRU+PNMF77Hc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOppZmMbTDfhT1hB+rRE3ao1HhL11AZW30Y0S8PucTD5OtHNu3
+	LopG8GvklQFSR7AVaQubJ44mAcF8xJtWXNUEhu2T1xlcUud4CZN2JDbmnKVbhguoG1rcfSnamd1
+	ToZXOdNIrTKXvs/glZAAPL1/qvzmCrQuoDJuP09bMpNg89GVOqgqZ1V5UDpnUeGJLeA==
+X-Gm-Gg: ASbGncukB7yQyILf2h7F0AwOXjWmPg2JjpLPdENQqXSoviWeZA0UyQne2bJCBsgJC4I
+	boBJnfMbIIdhW4iCKvnzOri/dABGvL/x8yf0VMy+r9fsnwe7ufAxlXyumNSjA3pkTrikV9IG210
+	7m/s5PtVvdpEpmHQRzNSajWvyQf7M/ubsvoJg6VaY02OJU2RgNCaoqhOOXcX0CqnuK21cv3T6/H
+	DKARaafn1+UG77pQ437yzuRHcF2pDVaVsf8jb4CdfKW6ss63LZuFG+oSYivKaT6QRl7PqwZebPA
+	kRtUrVyo/oHkkIdQWHhsf+O+f50Tty47K3grRvH2ThK9k9jdV1zBsKaTEQc=
+X-Received: by 2002:a05:600c:8012:b0:43d:45a:8fbb with SMTP id 5b1f17b1804b1-44c92d3516cmr97440715e9.22.1748326133816;
+        Mon, 26 May 2025 23:08:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHtEENZYkJ7PmbK5PzUATkfuQAjGiCkwpYW0D71exXRVvHMfIITt9n4VT6TFIbYDLgAOtnPFg==
+X-Received: by 2002:a05:600c:8012:b0:43d:45a:8fbb with SMTP id 5b1f17b1804b1-44c92d3516cmr97440385e9.22.1748326133458;
+        Mon, 26 May 2025 23:08:53 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f062fcsm253027875e9.15.2025.05.26.23.08.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 May 2025 23:08:52 -0700 (PDT)
+Message-ID: <10a15ca4-ff93-4e62-9953-cbd3ba2c3f53@redhat.com>
+Date: Tue, 27 May 2025 08:08:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-
---b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] net: sysfs: Implement is_visible for
+ phys_(port_id, port_name, switch_id)
+To: Yajun Deng <yajun.deng@linux.dev>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, horms@kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250521140824.3523-1-yajun.deng@linux.dev>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250521140824.3523-1-yajun.deng@linux.dev>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Aradhya,
+On 5/21/25 4:08 PM, Yajun Deng wrote:
+> phys_port_id_show, phys_port_name_show and phys_switch_id_show would
+> return -EOPNOTSUPP if the netdev didn't implement the corresponding
+> method.
+> 
+> There is no point in creating these files if they are unsupported.
+> 
+> Put these attributes in netdev_phys_group and implement the is_visible
+> method. make phys_(port_id, port_name, switch_id) invisible if the netdev
+> dosen't implement the corresponding method.
+> 
+> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,am625-oldi.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/ti/ti,am625-oldi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments AM625 OLDI Transmitter
-> +
-> +maintainers:
-> +  - Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> +  - Aradhya Bhatia <aradhya.bhatia@linux.dev>
-> +
-> +description:
-> +  The AM625 TI Keystone OpenLDI transmitter (OLDI TX) supports serialize=
-d RGB
-> +  pixel data transmission between host and flat panel display over LVDS =
-(Low
-> +  Voltage Differential Sampling) interface. The OLDI TX consists of 7-to=
--1 data
-> +  serializers, and 4-data and 1-clock LVDS outputs. It supports the LVDS=
- output
-> +  formats "jeida-18", "jeida-24" and "vesa-18", and can accept 24-bit RG=
-B or
-> +  padded and un-padded 18-bit RGB bus formats as input.
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: serial clock input for the OLDI transmitters
-> +
-> +  clock-names:
-> +    const: serial
-> +
-> +  ti,companion-oldi:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      phandle to companion OLDI transmitter. This property is mandatory =
-for the
-> +      primarty OLDI TX if the OLDI TXes are expected to work either in d=
-ual-lvds
+I fear that some orchestration infra depends on the files existence -
+i.e. scripts don't tolerate the files absence, deal only with I/O errors
+after open.
 
-primary
+It feel a bit too dangerous to merge a change that could break
+user-space this late. Let's defer it to the beginning of the next cycle.
 
-> +      mode or in clone mode. This property should point to the secondary=
- OLDI
-> +      TX.
+Paolo
 
-You should mention that the second OLDI should also point back to
-the primary OLDI using this property.
-
-> +  ti,secondary-oldi:
-> +    type: boolean
-> +    description:
-> +      Boolean property to mark the OLDI transmitter as the secondary one=
-, when the
-> +      OLDI hardware is expected to run as a companion HW, in cases of du=
-al-lvds
-> +      mode or clone mode. The primary OLDI hardware is responsible for a=
-ll the
-> +      hardware configuration.
-> +
-
-
-> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-
-..
-
-> @@ -190,3 +244,105 @@ examples:
->              };
->          };
->      };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +    bus {
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <2>;
-> +        dss1: dss@30200000 {
-> +            compatible =3D "ti,am625-dss";
-> +            reg =3D <0x00 0x30200000 0x00 0x1000>, /* common */
-> +                  <0x00 0x30202000 0x00 0x1000>, /* vidl1 */
-> +                  <0x00 0x30206000 0x00 0x1000>, /* vid */
-> +                  <0x00 0x30207000 0x00 0x1000>, /* ovr1 */
-> +                  <0x00 0x30208000 0x00 0x1000>, /* ovr2 */
-> +                  <0x00 0x3020a000 0x00 0x1000>, /* vp1 */
-> +                  <0x00 0x3020b000 0x00 0x1000>, /* vp2 */
-> +                  <0x00 0x30201000 0x00 0x1000>; /* common1 */
-> +            reg-names =3D "common", "vidl1", "vid",
-> +                        "ovr1", "ovr2", "vp1", "vp2", "common1";
-> +            power-domains =3D <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
-> +            clocks =3D        <&k3_clks 186 6>,
-> +                            <&vp1_clock>,
-> +                            <&k3_clks 186 2>;
-> +            clock-names =3D "fck", "vp1", "vp2";
-> +            interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +            oldi-transmitters {
-> +                #address-cells =3D <1>;
-> +                #size-cells =3D <0>;
-> +                oldi0: oldi@0 {
-> +                    reg =3D <0>;
-> +                    clocks =3D <&k3_clks 186 0>;
-> +                    clock-names =3D "serial";
-> +                    ti,companion-oldi =3D <&oldi1>;
-> +                    ti,oldi-io-ctrl =3D <&dss_oldi_io_ctrl>;
-> +                    ports {
-> +                        #address-cells =3D <1>;
-> +                        #size-cells =3D <0>;
-> +                        port@0 {
-> +                            reg =3D <0>;
-> +                            oldi0_in: endpoint {
-> +                                remote-endpoint =3D <&dpi0_out0>;
-> +                            };
-> +                        };
-> +                        port@1 {
-> +                            reg =3D <1>;
-> +                            oldi0_out: endpoint {
-> +                                remote-endpoint =3D <&panel_in0>;
-> +                            };
-> +                        };
-> +                    };
-> +                };
-> +                oldi1: oldi@1 {
-> +                    reg =3D <1>;
-> +                    clocks =3D <&k3_clks 186 0>;
-> +                    clock-names =3D "serial";
-
-.. and update this example :)
-
--michael
-
-> +                    ti,secondary-oldi;
-> +                    ti,oldi-io-ctrl =3D <&dss_oldi_io_ctrl>;
-> +                    ports {
-> +                        #address-cells =3D <1>;
-> +                        #size-cells =3D <0>;
-> +                        port@0 {
-> +                            reg =3D <0>;
-> +                            oldi1_in: endpoint {
-> +                                remote-endpoint =3D <&dpi0_out1>;
-> +                            };
-> +                        };
-> +                        port@1 {
-> +                            reg =3D <1>;
-> +                            oldi1_out: endpoint {
-> +                                remote-endpoint =3D <&panel_in1>;
-> +                            };
-> +                        };
-> +                    };
-> +                };
-> +            };
-> +            ports {
-> +                #address-cells =3D <1>;
-> +                #size-cells =3D <0>;
-> +                port@0 {
-> +                    #address-cells =3D <1>;
-> +                    #size-cells =3D <0>;
-> +                    reg =3D <0>;
-> +                    dpi0_out0: endpoint@0 {
-> +                        reg =3D <0>;
-> +                        remote-endpoint =3D <&oldi0_in>;
-> +                    };
-> +                    dpi0_out1: endpoint@1 {
-> +                        reg =3D <1>;
-> +                        remote-endpoint =3D <&oldi1_in>;
-> +                    };
-> +                };
-> +                port@1 {
-> +                    reg =3D <1>;
-> +                    dpi1_out: endpoint {
-> +                        remote-endpoint =3D <&hdmi_bridge>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +    };
-
---b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCaDVWchIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/iJGwGAxRGPDN8iRUtg8G3CHTd8XVfK1W17iIKB
-ah6wsakO6qA0866Uwb4kEHxqo8sk+wp+AYDf01M6KL6+J03glezubYBIUzMEdKYH
-ZKO8I7IXqBaIiJRTBxP7b/R5OeOR+RKyn1E=
-=hOQz
------END PGP SIGNATURE-----
-
---b260a079bbf6f987508aa5a40dcc49a946433bd21971dc74e0800c22cc6c--
