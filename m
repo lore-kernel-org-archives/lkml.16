@@ -1,91 +1,161 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C73427A91F
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51D527A91F
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 15:41:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748360346; cv=none; b=U19C9I0E6rzodoL0w5Tb7CQKLSO11HN765RaPqoXxhleyetYBk6ba9297BIciGyA7VA67z6aSdt4vIo+zClHqDLf2ldtw1lLQ9s70rMJmT0LCxPDDs68bXOin6gjVV8gbxN6WNXOBNiCDGpZubC7S8J3hpX9jDfYtpz9/+U0ly4=
+	t=1748360464; cv=none; b=oTesVLTCm/QHF/LFzMcAjbPVB1FCTNx5YrlojsmaMgKKiZhTrVkp2YTExo+0mfcTqEjT1a92Jpe/HT2lY8/DergR3J+CjsyCuhK+Lm3UZa6cg1jRd4ubpaJxsLu5t/1FgC7WYFzq/NmO/4cdUtN7zwl4y+ihDZ98qV9r1n2vBTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748360346; c=relaxed/simple;
-	bh=t4a4M7gHbtuDfX6w0wocs9AUesKsdxo2pyY5YjnaIwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p89/pNrJydAxtE0gb3vERawdG72gMAI6OsAYDUpsW3Eug85NR2WNqxy8bmE0ndJsK+Eqph+d3Ai83XANLOvjsc9Cqs1SqwNiwn6nSiXjAH1FCgTuKPmYFXS1WPcovrbAujoVCtC1a0KmJjZxklvLgioMPSjJAGwO/dHFukmTZkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zfwbCeIc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7IDdTbsf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748360464; c=relaxed/simple;
+	bh=vQ3QVNkPOZTAiUL/JR4v0Jl56aEHncKyH8WIy0rWZVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GqtTNB2TR1jDT6QMMLD1s9qWYaIoGV7njhc6eG4d38lDg1jNr9LromcqRkfRdk6DvTvQHFcSh85P38fDY1vLlXYOzMMIb7RLsXNujEMjFgPGPf76ourLfQGx4+/Ajv6pf37pj9SoN0hHGghy/nweIKkcfRdN//NOyHD2GOIk02U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NC6+BIv9; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zfwbCeIc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7IDdTbsf"
-Date: Tue, 27 May 2025 17:39:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748360342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hF0TaXQZJhyz2kje/Q3JOCHYy0vPq7Q63K8fR4fhmXk=;
-	b=zfwbCeIcm6iphB4DPlzTGxZFVpm9NzERqg9mCo+dXMt7N2svf6C6gpERCz17H7OEnTis7K
-	4ex8Pp4yBxLeDXVjMcZQGI9pCfwdnUZ/Lp8QYQ56pm82gZqGqJb2CXV5ZtRPHK093SvNLz
-	+y/LohDoZRCVUo6BjdYlIBFTTmW2OQ+C35ARM6qABz3Tb4USeE6aC1lU+ttKXgXVpzgZZC
-	5RBemzrj8GWDVru7rCtf4CLzwK3RToZv/1ga6rDG9Any0eqU7Yg9BbaMr6jcw1rzU8w3g1
-	m9d5FvGUqFxZUG9/PBOsqYcaYL7ydLoBT5HY6Cq6VI6etpQAogq/v2ZZ9t1DVQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748360342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hF0TaXQZJhyz2kje/Q3JOCHYy0vPq7Q63K8fR4fhmXk=;
-	b=7IDdTbsfhCqffbh/Z6svtqgq2QTA7c92uwxN9AIY6rWVqFguinUg/T3v5/B3N614i7SDuk
-	0nzRcxkiIqL3lwAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: syzbot <syzbot+9afaf6749e3a7aa1bdf3@syzkaller.appspotmail.com>,
-	andrealmeid@igalia.com, dave@stgolabs.net, dvhart@infradead.org,
-	linux-kernel@vger.kernel.org, mingo@redhat.com,
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: [syzbot] [kernel?] KASAN: wild-memory-access Read in
- get_futex_key
-Message-ID: <20250527153901.ifh9HzZ_@linutronix.de>
-References: <6835bfe3.a70a0220.253bc2.00b5.GAE@google.com>
- <20250527142217.GA7747@noisy.programming.kicks-ass.net>
- <20250527153106.WFmvR15N@linutronix.de>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NC6+BIv9"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-232059c0b50so29774725ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1748360462; x=1748965262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XeydDyU8ewlBXPi1n8ex9WFeBrnGziCIRQQWhLDa9Ek=;
+        b=NC6+BIv95vfqbZ5TdPpX4k12WGP/mz7JgktMGOzVgwDOxR1RT7vngO4UpYbm8fWqXS
+         Wtfat8MkNfbv90ls32VI+W3w0FLwCZDDioNBe/z9c5rpACRHeWzfd2p1mDG7lapdFGTh
+         6uQthTuFakOxDVVFW/GlW4pH5KFQvI3RDK+vs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748360462; x=1748965262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XeydDyU8ewlBXPi1n8ex9WFeBrnGziCIRQQWhLDa9Ek=;
+        b=McTT/8itlZXuUceOIvcYHmdanHd2ApcvZ3h52H1fOXf0X6qujioayieBr4irKW45G+
+         IB7U9Zd0pf04JRhOeAYDF/K/FQ6LQ60PUrZLLNPpD7ndEOM5cH0YlYScguZ4EeC1qcIe
+         6DgQEP7+yYcd7iEubv7iENWcpMc/auzJpDCCPvub9WPWOu3VjSzIhdWJK5KPYu0sniPj
+         g9UKen9MvhjrZ9PHt56L3YyGf07cO9amr7WtKwlpp7oOHLcHSpxVPFk6j9j6PCvmY2sK
+         RnKGlEXG8wYTSfjfo3J2LBrIQLdQBBesOLu4Pa0ROytAXHuMvWrZS5E9+04vDirCHV+o
+         D6lw==
+X-Forwarded-Encrypted: i=1; AJvYcCVgqy6mTQfd/DG/g6iDYKyTQTmXhh6UJKZnWfWaLKYUn1L/KMHGnStL3hw18aWPVFdwUIMxW01eqbPIHfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPOiQiGnurUNLi6pB43XH2MYAd2YAMdMy5HfYjmgcNzCLXA4hU
+	8V6UQTVbahCizaoa+UgQKJUb9c01ldeQFE5Utw+PY0Ti9RRQsTY3Zp4/zZ0RgHOYkHC826jIaK4
+	qjWc=
+X-Gm-Gg: ASbGncuIiCwlX1ox4f4jmdplNYEG10nJpett6X8LfRjzyThm//fEqOn+zEX58ttiHmp
+	XRacmXvc47vh7EfdKXgnjODbygUtVvS43sowmZ0tQFMuAiTzVD4dRWzqXy5pPl661vrAxcoYCmW
+	pZSfmDW4kcQzy18LV0Qxd18fj1etIYymnhDrheEN0TtM1NOENwWa4X/5XOz8NvsCi0B9T3iRPH9
+	UpPUY/hVDLC/cEyOjOtK1rf2iv24pChZin1GMlrJi7jSPZxjZpxrpnVfSdSnFJom5g1N9HTRgLj
+	uebobzeirWcMVHzeWJgnhyat45x7pRlV+ZyACSWlCyAS1U98QWeLED7x9dpuol8bMAwfWxwW3rJ
+	s/zYoo9ahbSMCGTQ=
+X-Google-Smtp-Source: AGHT+IFJsNq8G24cQzMIONIq9v9uD5942vic9XWcl4JK39UF6pYJxJRh+6XSaUM4zvOenxs0MGBekQ==
+X-Received: by 2002:a17:902:d2d1:b0:22f:a932:5374 with SMTP id d9443c01a7336-23414fc9852mr238435375ad.48.1748360462198;
+        Tue, 27 May 2025 08:41:02 -0700 (PDT)
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com. [209.85.216.41])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2349dcc64f3sm14759345ad.3.2025.05.27.08.41.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 08:41:02 -0700 (PDT)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-311374f95b8so2157266a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:41:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXSqPHYL0tCLOu8xK4JONVrKMFnuauUdSwyuZUe1onvJu3iScduSgfmVd9SIds8ANiynLcmnL+yJT5XUQU=@vger.kernel.org
+X-Received: by 2002:a17:90b:3ec6:b0:30a:4700:ca91 with SMTP id
+ 98e67ed59e1d1-3110f31c2ebmr18375340a91.1.1748360461082; Tue, 27 May 2025
+ 08:41:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250527153106.WFmvR15N@linutronix.de>
+References: <20250508115433.449102-1-j-choudhary@ti.com> <CAD=FV=V1mNX-WidTAaENH66-2ExN=F_ovuX818uQGfc+Gsym1Q@mail.gmail.com>
+ <cr7int6r6lnpgdyvhhqccccuyrh7ltw5qzh7kj5upznhea4pfh@rn6rwlf7ynqt>
+In-Reply-To: <cr7int6r6lnpgdyvhhqccccuyrh7ltw5qzh7kj5upznhea4pfh@rn6rwlf7ynqt>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 27 May 2025 08:40:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WeY+7rkf+61TEv2=O_QEufQ+-6JWLnNnVq4YC_vPRZUQ@mail.gmail.com>
+X-Gm-Features: AX0GCFu6oHYgEYO-UX_wnBKECT_7Fwxez_Qo8ePpiYfVvnR_WniA6Ewzh05Szp0
+Message-ID: <CAD=FV=WeY+7rkf+61TEv2=O_QEufQ+-6JWLnNnVq4YC_vPRZUQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/bridge: ti-sn65dsi86: Add HPD for DisplayPort
+ connector type
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Jayesh Choudhary <j-choudhary@ti.com>, andrzej.hajda@intel.com, neil.armstrong@linaro.org, 
+	rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
+	dri-devel@lists.freedesktop.org, tomi.valkeinen@ideasonboard.com, 
+	max.krummenacher@toradex.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, kieran.bingham+renesas@ideasonboard.com, 
+	linux-kernel@vger.kernel.org, max.oss.09@gmail.com, devarsht@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-27 17:31:07 [+0200], To Peter Zijlstra wrote:
-> On 2025-05-27 16:22:17 [+0200], Peter Zijlstra wrote:
-> > >  get_futex_key+0x595/0x1540 kernel/futex/core.c:587
-> > 
-> > Does the this help?
-> 
-> it avoids boom but reject FUTEX_NO_NODE. What about
+Hi,
 
-maybe
+On Thu, May 22, 2025 at 6:14=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@oss.qualcomm.com> wrote:
+>
+> > > @@ -1194,13 +1196,14 @@ static enum drm_connector_status ti_sn_bridge=
+_detect(struct drm_bridge *bridge)
+> > >  {
+> > >         struct ti_sn65dsi86 *pdata =3D bridge_to_ti_sn65dsi86(bridge)=
+;
+> > >         int val =3D 0;
+> > > +       u8 link_status[DP_LINK_STATUS_SIZE];
+> > >
+> > > -       pm_runtime_get_sync(pdata->dev);
+> > > -       regmap_read(pdata->regmap, SN_HPD_DISABLE_REG, &val);
+> > > -       pm_runtime_put_autosuspend(pdata->dev);
+> > > +       val =3D drm_dp_dpcd_read_link_status(&pdata->aux, link_status=
+);
+> > >
+> > > -       return val & HPD_DEBOUNCED_STATE ? connector_status_connected
+> > > -                                        : connector_status_disconnec=
+ted;
+> > > +       if (val < 0)
+> > > +               return connector_status_disconnected;
+> > > +       else
+> > > +               return connector_status_connected;
+> >
+> > I'd really rather not do this. It took me a little while to realize
+> > why this was working and also not being slow like your 400ms delay
+> > was. I believe that each time you do the AUX transfer it grabs a
+> > pm_runtime reference and then puts it with "autosuspend". Then you're
+> > relying on the fact that detect is called often enough so that the
+> > autosuspend doesn't actually hit so the next time your function runs
+> > then it's fast. Is that accurate?
+> >
+> > I'd rather see something like this in the bridge's probe (untested)
+> >
+> >   if (pdata->bridge.type =3D=3D DRM_MODE_CONNECTOR_DisplayPort) {
+> >     pdata->bridge.ops =3D DRM_BRIDGE_OP_EDID | DRM_BRIDGE_OP_DETECT;
+> >
+> >     /*
+> >      * In order for DRM_BRIDGE_OP_DETECT to work in a reasonable
+> >      * way we need to keep the bridge powered on all the time.
+> >      * The bridge takes hundreds of milliseconds to debounce HPD
+> >      * and we simply can't wait that amount of time in every call
+> >      * to detect.
+> >      */
+> >     pm_runtime_get_sync(pdata->dev);
+> >   }
+> >
+> > ...obviously you'd also need to find the right times to undo this in
+> > error handling and in remove.
+>
+> What about:
+> - keeping pm_runtime_get()/put_autosuspend() in detect, but..
 
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 19a2c65f3d373..558c523766461 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -583,8 +583,9 @@ int get_futex_key(u32 __user *uaddr, unsigned int flags, union futex_key *key,
- 		if (futex_get_value(&node, naddr))
- 			return -EFAULT;
- 
--		if (node != FUTEX_NO_NODE &&
--		    (node >= MAX_NUMNODES || !node_possible(node)))
-+		if ((node != FUTEX_NO_NODE) &&
-+		    (node < 0 || node > MAX_NUMNODES ||
-+		     !node_possible(node)))
- 			return -EINVAL;
- 	}
- 
-to avoid the memory access on nr_node_ids since we need to go through
-node_possible() we could use a constant to ensure it is not too big.
+I guess? The problem is that if the calls in pm_runtime_get() actually
+cause the device to be resumed then detect() will not actually work.
+The chip simply won't report HPD right after being powered on because
+it needs the debouncing time. ...so having the calls there is
+misleading. Instead, I'd rather have a comment in there about why we
+_don't_ have the pm_runtime_get() calls there...
 
-Sebastian
+
+> - also adding .hpd_enable() / .hpd_disable() callbacks which would also
+>   get and put the runtime PM, making sure that there is no additional
+>   delay in .detect()?
+
+Sounds reasonable to me and sounds like it works.
