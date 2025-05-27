@@ -1,87 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1C625FA1D;
-	Tue, 27 May 2025 11:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898CA2356C4
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748346896; cv=none; b=N9u3sjJ5tivlAP53jLByeZj35e1Oa2r60FU2GQAV+tbmZTALumtpzb2g9Bp0IEyxPKYfPo5LtGIYeDNU2h5FCSQKCvvTA0AX8fJYLYj8+0zk/8uiPXmrj9LA4Zjt5RAA9EfA5UF+d31y//iVUDCIfEo0M0HtRVmgvnJfJ96ZsqY=
+	t=1748346897; cv=none; b=pXipxj86UvPqugQpC6aRe3o3iilqt5C1t1tBuogjmXPwJ8TFKq5/xSkMJnOkw3Gm4edfkuyhkQOLIFAb88a/95RyEBiaQfsiOK1w1S1/vk75AgYa6mfHwcluyqcak3E7sJ3OdJmaaHCGCFhTvA+S1fxn7uWbAqjuxlpniJK4LNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748346896; c=relaxed/simple;
-	bh=IUjsVUHoLW+jbfDN7gXz+vjDPdWp+GcouAig6th4mUE=;
+	s=arc-20240116; t=1748346897; c=relaxed/simple;
+	bh=VYl+vCyFrcN1xt8fF4+m11+iBRz4CZ5mcCYoL8oFYzg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ibKCxbA0oa0Hg74a+V9PH+IReMAmW4aoVxiSH8v/90gERDrCcHPh38PZ+YNDXjXv/jw0VEk5HyrjLt2UlKQh1CgJ1PLTXEaRmNLGA5EcTUqbLAl0KUGMbCUaQq1UW6IJO647xv0gSfpXm2QlCLP/bvnuzymu69IAhNepjWDNiBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FN/4b7q6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VnIY0deVRCZ/8qoj7zKhrhBB3R6iGSKM25PXD1BcjL82OqG67rMaEwpVu8M/LbupKngIrh8qQN28ErHSxSPhUWz4ueumxCQoyktJWUMG9sUipA1NTZ4b5C1PUeJNHWdoIpPlRPLjzW+DRpybl8bla93YpuZnNN5KDLPLeV7C5L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=afnkOonQ; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FN/4b7q6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9288EC4CEEB;
-	Tue, 27 May 2025 11:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748346895;
-	bh=IUjsVUHoLW+jbfDN7gXz+vjDPdWp+GcouAig6th4mUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FN/4b7q65B2O6Krre7dKF0xYdOlmPrBhzwRAR8nLPnwGsFacJtLy2NKo0Ftu/R/ut
-	 V+2uB5OFHUI/L0rTRPcV6Ebo10poTqSaT4QWjM1gxPNDFtL0JIW67zrRgcFEaHnV2z
-	 AvYD2v5WB8OCjC2KHxg6B1fU3OG4Nq40312xE709Q/2v3UHd8x8/lgdezdMmHLo85r
-	 6dIMfAO9GnSEZkpOelen0osMCirqjdqZajr6+jTSHNymzQQhUzquQXou7UNhM3iXME
-	 pd2wYQJ2tOSvkg86S0w9kiUM6mGFNYHOZoy53a0MsMAQQ/blydz5oyKj+sgVZpvgPV
-	 OK+a5vFIuEPfA==
-Date: Tue, 27 May 2025 13:54:49 +0200
-From: Alexey Gladkov <legion@kernel.org>
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, Khalid Aziz <khalid@gonehiking.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH v3 1/6] scsi: Define MODULE_DEVICE_TABLE only if necessary
-Message-ID: <aDWoCU2YrxaCBi42@example.org>
-References: <cover.1748335606.git.legion@kernel.org>
- <628e85f1b7e9d0423a8b83ac3150b3e151c9c4e3.1748335606.git.legion@kernel.org>
- <f361faffc1863358e8fda98f994f6a49b6f0d4c9.camel@HansenPartnership.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="afnkOonQ"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2347b7d6aeeso16038045ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1748346893; x=1748951693; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VYl+vCyFrcN1xt8fF4+m11+iBRz4CZ5mcCYoL8oFYzg=;
+        b=afnkOonQHV1IwHHgRGgrk3S1+14N1WsH+c9GYL0rrMkiRzdMLz4pmJhOEFk/GGLtqa
+         cjGKHRAWLVDR16fJNQgnBl+4/EWnRKUbqZ8qJOhsIFQyFMfyKqtEsf1AmYJpAC+2fDVu
+         7tmFdTO6z57CuzxMzZD2cGuYs6dRDhwXSqCB260B5QpFRu4SGFVAdmPgbb4MMAoeNtuW
+         EiEzkAcXJDJCSOYpk3fzhyJb6/9BXIEi3Ogrli3Jh4qH2NzkD44Dl6xZe8SSBdy7Kz30
+         +QhMtw30YtFa2qep8o6/xLCVwUKCm1EDWBgKoKRH4Nm4Z/GJkxullAe/jD3SzSQljsKr
+         eprg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748346893; x=1748951693;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VYl+vCyFrcN1xt8fF4+m11+iBRz4CZ5mcCYoL8oFYzg=;
+        b=ouPHQf9DlDgaPecFGJ/403rz6HCd50Chq0UYHYMXZ+mfFSx2yZw94leAJxZYV3Ljgl
+         3HfbQMlj+cEgGlYaCQA0q22WxljXiC0CAg5tQ4/wOVW8I3SwIC/KJCaYTvURN6WTfYVU
+         hsvo2Gkl67yBajC3g+D0CExuYtHK98tH2PisMWhho4dWDfI5YCKXv0Rb5IeEc4hzEDOa
+         MhIidjNEDRUfH+phfpyeNj3eDvC4CezBm73bbgOx93Mk4XsMmXSq81FxelnCIITkQRES
+         lC83HnGs7eZRIJ17cHt48CsWsCQKJ6oHwyHQkQ4UA8CMkvmEzeb3c7I3y3gz7dvRqLsg
+         awFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvhBuM5GNht0B2kZvkacUL7p7oo4JYwXxzLIdIhnKz6NQrKahmGzbdNXy+fVbQH1UckIcip7Vv5Di47l8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzP4mg832UD1J1WdIfboY0k+GdUVdNKHuE2NXc5BeqlEGSTQ8VC
+	AOeitwPi4iOw1MMlfzKc78bbs+lfsMdMYFq8TwQufo1HeN0HW7qnYgA4AUqIM4uTbg==
+X-Gm-Gg: ASbGncuqN34tQTb2k2qm0Q80rJouvVlPafFT2aY66kOCGpaKahhrSbiHun12tajPTJt
+	xI6UPWqx8JILXOzjjn0DRDkDdqwrO2odXVTsN+D2iH+HoIbmyDdPsj/2CYwHGF7KcUoHu0y3aPt
+	Qz+5R+T4Phauaipp0SmXKkt3KW8FP4NrMtK68q/Kwq3c+Hn8hsuR3WLz8dZXi9qJDcPzFRKbNru
+	TZ+q95s/mxuBdf28VvbhV2vMthOHFLltvdgUbUlY4IEvDolugsso7MtRZQxwl9LOo7srlL4uOmz
+	2xj3Jux5YhlFYc0iAvDEl6DoYRhPvGcIA2qUapGFca4wloP+vBs=
+X-Google-Smtp-Source: AGHT+IGMLSBCEC1K2AFmTBTG1jYMX3b3vNnIJEkwjTwnkBkTVP2uuG1JMTBetq4tdwf8el06Sl34/w==
+X-Received: by 2002:a17:902:f54e:b0:234:8ac5:3f31 with SMTP id d9443c01a7336-2348ac53fd2mr61286695ad.23.1748346893548;
+        Tue, 27 May 2025 04:54:53 -0700 (PDT)
+Received: from bytedance ([115.190.40.11])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2340934d91asm62983655ad.166.2025.05.27.04.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 04:54:53 -0700 (PDT)
+Date: Tue, 27 May 2025 19:54:41 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>, Josh Don <joshdon@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
+ change for throttled task
+Message-ID: <20250527114245.GA3578119@bytedance>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-5-ziqianlu@bytedance.com>
+ <20250522120336.GI39944@noisy.programming.kicks-ass.net>
+ <20250522124840.GC672414@bytedance>
+ <20250523145942.GL39944@noisy.programming.kicks-ass.net>
+ <20250526113352.GA2993700@bytedance>
+ <20250527065836.GA3373486@bytedance>
+ <8501f4a8-8480-477e-8ab1-1d7796b978f1@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f361faffc1863358e8fda98f994f6a49b6f0d4c9.camel@HansenPartnership.com>
+In-Reply-To: <8501f4a8-8480-477e-8ab1-1d7796b978f1@amd.com>
 
-On Tue, May 27, 2025 at 07:28:59AM -0400, James Bottomley wrote:
-> On Tue, 2025-05-27 at 11:07 +0200, Alexey Gladkov wrote:
-> > Define MODULE_DEVICE_TABLE only if a structure is defined for it.
-> > 
-> > drivers/scsi/BusLogic.c:3735:26: error: use of undeclared identifier
-> > 'blogic_pci_tbl'
-> >  3735 | MODULE_DEVICE_TABLE(pci, blogic_pci_tbl);
-> 
-> Well, a) need to cc the scsi list
+Hi Prateek,
 
-Sorry. I miss it.
+On Tue, May 27, 2025 at 04:49:36PM +0530, K Prateek Nayak wrote:
+... ...
+> Since we now have an official per-task throttle indicator, what are your
+> thoughts on reusing "p->se.group_node" for throttled_limbo_list?
+>
 
-> and b) how is this possible when
-> MODULE_DEVICE_TABLE() has an empty definition if MODULE isn't defined
-> (so the guard you move should be over an empty statement)?
+I'm not sure. I can easily get confused when I see se.group_node and
+thought it was something related with rq->cfs_tasks :) Maybe using a
+union could make it look better?
 
-In the next patch:
+Anyway, if space is a concern then this is a good way to do it, thanks
+for the suggestion. I'll leave it to Peter to decide.
 
-[PATCH v3 4/6] modpost: Create modalias for builtin modules
-
-I remove this condition for the MODULE_DEVICE_TABLE macro and it will be
-always defined.
-
-I put the drivers/scsi/BusLogic.c change before these changes to avoid
-errors. Besides, even an empty macro uses a structure name that is not
-defined (if MODULE isn't defined). This seems wrong in any case.
-
--- 
-Rgrds, legion
-
+Best wishes,
+Aaron
