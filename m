@@ -1,103 +1,155 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FA5283FD5
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748368666; cv=pass; b=likrF/vY9Iywfd9liRX1l/wk07AiPPCf/8XDPfAblUqbjBew4CkNd9KQyaixQXZMDvmtE5dBRSBKaR4le4v3hYmXrbQPPX5C/fFK0NsyJ8Vb7hcV2MK2M28gX0KWeWeoJg+aYLt09+qst4XZeZn8/A8qMohb1KCnOmizE3gHxOk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748368666; c=relaxed/simple;
-	bh=8oln4KSc34OGLinw2kMwU6yp/vNUjyOTYrkSQc0cf4Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cnw1XKFlwkzC5pllxFVP6lRuwkSgKZ5FTcuYNzjDAiHVpziNUouEhNLSSvGjQDYyRysOw+4z7a6wP1z9ULewbgTbERjxVzIx+wpe+vhbtaAZBMS9jctEA+DvJROi7mhnMtFaktgF5R9sm0ph4lwWoVt9h0UWdlmkL3yKEKruhqE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=j2tzrQxn; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8076D283FDA
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 17:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748368669; cv=none; b=Iz2tDTaG6oGzptlvmAhcV21sYpiMRYrr/dbaXpK2eAm8BUbun7Q2uLayeMidfDwgVEMq1kUmN6C+g41b2qZadnTz2TTsCqOwfKggnUS2A10r802sWu4CEmzJNyWb1N42980z9EHYPGMjd8JAB/PQSGbUnCaKNYC0wZ9J5p+sWwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748368669; c=relaxed/simple;
+	bh=Pba0PHIEYIGNrf6XjJ6nlDeAkd8emTX4pz2cTHqOo1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2UPN88rO/hvgL45vRoHeiXEc2iH7iqhK2v0eKD22DnrDNtVBQ3MS8OY86/43LR39kwpLS2cVkCEIgwLVUUhcnxVZCrsJKwfFYj86r/9VJgdV1wZh6UyyiweE1f1TexBGB4CrIPSfaqzRWawZDazlNXHAsl1aEcJWd8pWV9mXbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AcKh1dl0; arc=none smtp.client-ip=209.85.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="j2tzrQxn"
-ARC-Seal: i=1; a=rsa-sha256; t=1748368639; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=gwimHX9XqzeAJDV/zd+IG2XotyVOfgpoSFdyDymnqce/jOWmhbKNIuPxpjcFO5rH/pzYe5lebBOjcmdonq4WxhZP31O+wzWAY+rtIKdJqrsgouDsCIkthzHR0MhVRgqByo4KhSSoMlFI9W6VRRAcTYsiu0euHhSjMu3vEucV37g=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748368639; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=7OBjMWrGupcnVDTaEb5cuQtbsmhKT5VhtasjdYvma1c=; 
-	b=KTz/4RTR+GPXPQ6GFBj5YCsFNtutQu2OTAZhv6PgPaCw5JUhc+S3W3vsbngGClPBH4GIOYP+0iPH4Xn8yNdm/pkwhheB+kVOWJjS481mVUGua3xEpMU1qwN9GqtNsmH8k+VnpqOf6VC5jmHAdvjd+/wT/htNeqHsAq6pHTxda7E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748368639;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=7OBjMWrGupcnVDTaEb5cuQtbsmhKT5VhtasjdYvma1c=;
-	b=j2tzrQxnd8q/Flz5vlvRYcqQG9j3dXhpLQafbRRF+MgASy7c6HbzsT9iB564Pt+z
-	A7/20CypbDY6aN8ZokIY8Jf6zr2sbkhs8k8JjO2BD09EQDW6Jgn6tpods2VhDgmeG/u
-	xkD/R7foxz+zJZH5GZ6NpB4D9rumyxsPGlgoAYYs=
-Received: by mx.zohomail.com with SMTPS id 1748368637146989.7128297385533;
-	Tue, 27 May 2025 10:57:17 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Tue, 27 May 2025 19:57:08 +0200
-Subject: [PATCH] drm/connector: only call HDMI audio helper plugged cb if
- non-null
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcKh1dl0"
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-43cf257158fso31951555e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 10:57:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748368665; x=1748973465; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K66IbQMbjje707cA7mD5l9PP1/zHD1PIxR0a5Pb7bKE=;
+        b=AcKh1dl09BJNIrEtzO5y7K8k18nGIPCE0WjRxjU2h4vbth9eLkCuPykk5CpWMjuKBw
+         ErbtEi+Y4OS7Wjjw56BGtsDKYnemLCy1vzp6WuBauRVUCcSWmcdfxMibegATfMirNwgn
+         i7KARmrXOvpBN97SpVVor6TGV46mb4LQPpYbaZuHCVs07r1qjAQVnp1rltm8O+kzLVE+
+         RzsomXZrFk36qXsStK2SeaNK0+VMtUk2eWKBROyvqkMmfSqvm9bTGIpnrfsOQDTrQIdQ
+         vFJWy4LqP3LtCviBCvAtx079WfmjwZqnjLIWTmocN0J2lO5UvUA+Kyccjurk2ABBqUeV
+         sTqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748368665; x=1748973465;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K66IbQMbjje707cA7mD5l9PP1/zHD1PIxR0a5Pb7bKE=;
+        b=oOs83Mn2VnsPZ/viytcbrvR25hDInnBIshO6dD2Ms2ytT+ayo2ezgoEvqaMEfk3GzX
+         j3pG2aE4U5+wMtRT791VPKWVzzUB7KeHwd1Fn6W0QyAhXxsQe8Q2Ancd1zYsqfkA1C6W
+         H75VH98JHRAbIQhK7tWVe7GXllNTZMhhHaMP28AVBlTAJsBYdnjdxzkEzfOzVh85UD17
+         35YcfKG37IDWSHYKwf2byK6We4rkHb3hsl8StoS0gm6rIOuLZeZMp8XTvZ6RPU6QHUW8
+         kvWTii+5R6tRx6/6Bfj3t0gXOGlHyzv21IKAWrL3IZo4v2SehuRdpzffGBHyukJaTol2
+         OnTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGowOy41qhd+IT8AL5y8DDFezi2BSBfHS54Ibh86tNkxHiBMU/pZKuOmqhZq/BJk10EO3ySZm2romN8CM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUKFmPH3UTQglwSBKOvupRq6ZmqmdvObyEi4k9LQn/fqvS5/8X
+	NYec/eheAB33CzG62sfyHHLr0IViSJZu++VwM8/CrXoQAFCsDd1UzcfJsuXBh7a7c6E=
+X-Gm-Gg: ASbGncvol72NdsryTQOYJ/UsgMbdnutxX6slKpJPZrR+v8H4obvaCS84HoSgGT+s9jr
+	2Dh+94/8CXNIXybEA7IofcNfA7d2qpz7cA2sH3KazRXnUahzcbsXbyYow4fEYGLRFwSKVlDf+wh
+	daeCQge97T2lGY3pTcgCPjdJkoPfrcbPXVuew9QWo4o+IjK7FlrzgrMkLHfgh6/6wKjL400BG0K
+	ySDC+dwleGOhn8Chq/Q19S1mPVlyi9KxHBAzBia05ToxoxKYvIxgs9qmpxIlEd/QzGjus84ijms
+	QshGcy8NGVyXOWPtp5vKmr8pVp9zaBDLJAt5r3fa40b+IXQpUkMSiZGT
+X-Google-Smtp-Source: AGHT+IGWVp+1pe2g72Y3zco5kiY52P50nzKLHDIXvLoqcgNBLuwmb5ic8TmQyg2vlxnYIHLktroXHw==
+X-Received: by 2002:a05:600c:1e1c:b0:441:d438:4ea5 with SMTP id 5b1f17b1804b1-44c9493e6b1mr107966315e9.20.1748368664703;
+        Tue, 27 May 2025 10:57:44 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29548sm290642395e9.4.2025.05.27.10.57.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 10:57:44 -0700 (PDT)
+Message-ID: <c2393238-d1cb-43bd-b67e-08105a9834fd@linaro.org>
+Date: Tue, 27 May 2025 18:57:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v21 4/4] perf: arm_pmuv3: Add support for the Branch
+ Record Buffer Extension (BRBE)
+To: Will Deacon <will@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ kvmarm@lists.linux.dev
+References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
+ <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
+ <20250519150621.GA17177@willie-the-truck>
+ <20250519215651.GB2650608-robh@kernel.org>
+ <119c9a70-6ea8-46f0-b877-8a433d97ce84@linaro.org>
+ <20250527105035.GA26328@willie-the-truck>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250527105035.GA26328@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-hdmi-audio-helper-remove-fix-v1-1-6cf77de364d8@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAPP8NWgC/zWNQQ6CMBQFr0L+2p/UCmq4imFR2qf8xFJsCyEh3
- N1G4nJmMbNRQhQkaquNIhZJEsYC51NFdjDjCyyuMGmlG9XoGw/OC5vZSeAB7wmRI3xYwE9Zub7
- 02jqFa303VBJTRNG//KM7OOIzl0s+JPUmgW3wXnJbjVgz/0/U7fsX7BcHQ58AAAA=
-X-Change-ID: 20250527-hdmi-audio-helper-remove-fix-43b2cd0e648a
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
 
-On driver remove, sound/soc/codecs/hdmi-codec.c calls the plugged_cb
-with NULL as the callback function and codec_dev, as seen in its
-hdmi_remove function.
 
-The HDMI audio helper then happily tries calling said null function
-pointer, and produces an Oops as a result.
 
-Fix this by only executing the callback if fn is non-null. This means
-the .plugged_cb and .plugged_cb_dev members still get appropriately
-cleared.
+On 27/05/2025 11:50 am, Will Deacon wrote:
+> On Wed, May 21, 2025 at 04:58:42PM +0100, James Clark wrote:
+>>
+>>
+>> On 19/05/2025 10:56 pm, Rob Herring wrote:
+>>> On Mon, May 19, 2025 at 04:06:22PM +0100, Will Deacon wrote:
+>>>> Hey Rob,
+>>>>
+>>>> On Mon, Apr 07, 2025 at 12:41:33PM -0500, Rob Herring (Arm) wrote:
+>>>>> From: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>>
+>>>>> The ARMv9.2 architecture introduces the optional Branch Record Buffer
+>>>>> Extension (BRBE), which records information about branches as they are
+>>>>> executed into set of branch record registers. BRBE is similar to x86's
+>>>>> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
+>>>>> (BHRB).
+>>>>
+>>>> Since you picked this up from v19, the driver has changed considerably
+>>>> and I presume you will be continuing to extend it in future as the
+>>>> architecture progresses. Perhaps having you listed as Author (and
+>>>> crucially, in git blame :p) with Anshuman as a Co-developed-by: would be
+>>>> more appropriate?
+>>>
+>>> Shrug.
+>>>
+>>>>> ---
+>>>>>    drivers/perf/Kconfig         |  11 +
+>>>>>    drivers/perf/Makefile        |   1 +
+>>>>>    drivers/perf/arm_brbe.c      | 802 +++++++++++++++++++++++++++++++++++++++++++
+>>>>>    drivers/perf/arm_brbe.h      |  47 +++
+>>>>>    drivers/perf/arm_pmu.c       |  15 +-
+>>>>>    drivers/perf/arm_pmuv3.c     | 129 ++++++-
+>>>>>    include/linux/perf/arm_pmu.h |   8 +
+>>>>>    7 files changed, 1006 insertions(+), 7 deletions(-)
+>>>>
+>>>> Do you know if James Clark's tests [1] are going to be respun for the
+>>>> perf tool? It would be handy to have some way to test this new
+>>>> functionality.
+>>>
+>>> Yes. I dropped them here because I've been told by Arnaldo in the past
+>>> to send userspace stuff separately.
+>>>
+>>
+>> That version of the test was out of date so I've pushed the new version
+>> here: https://git.linaro.org/plugins/gitiles/people/james.clark/linux.git/+/16e4a18c2d5fc53736f05c9052b1d11d74909707
+>>
+>> But I'll wait for the driver changes to be finalised before posting it. Or
+>> Rob can take it back into the patchset.
+> 
+> Thanks, James. I just wanted to make sure that there was still a plan
+> for upstreaming these separately from the driver. Have you had a chance
+> to run them against this v21?
+> 
+> Will
 
-Fixes: baf616647fe6 ("drm/connector: implement generic HDMI audio helpers")
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
- drivers/gpu/drm/display/drm_hdmi_audio_helper.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_audio_helper.c b/drivers/gpu/drm/display/drm_hdmi_audio_helper.c
-index 05afc9f0bdd6b6f00d74223a9d8875e6d16aea5f..ae8a0cf595fc6fb11eecd820c7e8c5b75a746e18 100644
---- a/drivers/gpu/drm/display/drm_hdmi_audio_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_audio_helper.c
-@@ -103,7 +103,8 @@ static int drm_connector_hdmi_audio_hook_plugged_cb(struct device *dev,
- 	connector->hdmi_audio.plugged_cb = fn;
- 	connector->hdmi_audio.plugged_cb_dev = codec_dev;
- 
--	fn(codec_dev, connector->hdmi_audio.last_state);
-+	if (fn)
-+		fn(codec_dev, connector->hdmi_audio.last_state);
- 
- 	mutex_unlock(&connector->hdmi_audio.lock);
- 
+Yes I'll send it once the driver is merged. And yes they're passing 
+against v21, but I'll retest v22 as well.
 
----
-base-commit: 502d44c1a440c5f428f50f02e58cd5633454ea8d
-change-id: 20250527-hdmi-audio-helper-remove-fix-43b2cd0e648a
-
-Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+James
 
