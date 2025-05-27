@@ -1,119 +1,114 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8FD213E89;
-	Tue, 27 May 2025 22:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BF1224FD
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748386064; cv=none; b=qsNz5Och/RHzlhAD3dBtJ4IdR6nd1xXE0X+O/k73zHmTIgH+deRAWztrJ/RmTyuVEYNvcMDNCj8nopd4tuzYAxLqHE/Sy2f6IUl4SIdeGTr4ed6juDqRo8osPdHq0jjvNXGcZFRJWYYeJTebAuY5sugF8X9kwB/XvZ9CbyyUCZY=
+	t=1748386322; cv=none; b=gvXY0QqhT1vwj7J72iQRIiaKxwEx+CY/WEtAiTz/k9eoEB0nlRwwXdHABEc/If6xTRiMbprMJL6xuRB6kCHvHqz+zDI5bRiZEFJZT2I8I+LvoWtzDplmEL7HsO8Q6lJsA7xf85UMDcy3sSAHjxVkohSU7L9gy2ZolViUX599M54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748386064; c=relaxed/simple;
-	bh=nxxTE8N1NiBs4G5g2I9AK/16Q2IKP+a3RuAqB4TehIU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nlgjO7CVceWVWmHyIt9gtdY9HenllYG/lFiaCu2P79zR7TTtNXPvJSe5Tlb53CmtFNe1KAF58CRsCwha1gvL2XvtX17HMfuXhE+Vuzj3oF5GekU9iYxmYe3z7SuYdbH1bvVFI8iA+yw/ZULbHTyV+inDKWzjTkAucbZdCld8DIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EMbXdhY2; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748386322; c=relaxed/simple;
+	bh=eixPJmSBOHUU9V0mP09wATCfRqo0Gg2HZAMTM21cdaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f4LRVu9dsWYU63HH1CR2dv9bHhJQyyCK4qS8PJK4lRtT1X179otST/N3FL5NLLg5P8W7ySYot4OA4rZr2t9/NyddVB3YMWNDZuYv28Qxa9CJfALaMn5IlkgFnk8ZFu8zqLIC442uVuZ4RPuTC8pOHxzL1mbCXKG44BeP6UsWZZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=PxYQoF6L; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMbXdhY2"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5259331b31eso1293373e0c.0;
-        Tue, 27 May 2025 15:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748386061; x=1748990861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nxxTE8N1NiBs4G5g2I9AK/16Q2IKP+a3RuAqB4TehIU=;
-        b=EMbXdhY2fT2nXo6Ak0tX8MszVdyYz9i1k0BTxDo79bG3SAuY5S8CGceUP/vXx2DPCh
-         uKhvskQEaOJK2cYH1+nd1FIVfvIJOMngbheqv8/VOfUcERCA6IAvun0X9sCv7+YkZN5C
-         zsU51x5NHRLs46W/MA82PKnPZ5Y43gr6F4iKsK/uCZoHotiwNuNggE50ZkeeycaeCtRA
-         Ie2P0F+8OMvH18pBXBsjmb/IkwQhbiGIbH6w8wUSiXk7u8IdRCQlVHjMGBAp9nGK0bal
-         PRNlIIIfJRnHjba/KUtM/4yMXT1jxXEfH/CdVnVOuIKsTVBg1jXP65oity5KhRZI0R42
-         apcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748386061; x=1748990861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nxxTE8N1NiBs4G5g2I9AK/16Q2IKP+a3RuAqB4TehIU=;
-        b=iSWHFltzTdhihuFOuNKMq7MdbJAGYF9fuU3F3aJktpVcfE1FAc3Pb9tty4f7dG/K3k
-         pK4uIGJnKd/M72//CAyXJHOorTiJhrh4mlLmAlbZAAPUS24jJxDMRrYFyaxoSDZgdseH
-         Gxnblo1x6PVWjfWR1uG5YiBhTiDxRDCaIO2Ki6FU0u+hFheNGoIBcKQKRKHs4kRWQotl
-         3/KNKkbKQXIp9Xezp8hgA4uEouqJMoFi9Qv5pVhotLYXNMsU3krqpMWSekFXECip3dOK
-         jwwuGfXshlcx1ckmm3wbwiq0ApuTWle9hQZi4n/CzDaDndyNRhepJHBfYkJ/l8X2yzVT
-         CXHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzcgsdHes8f6D3aBnsu5nrexD+zy37vU4DBOo8NItDdYuZtU8BEYUw0Mz9eHlY0t1GGx9zVZcLibN89LE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/jmiRn5rr93GmfYH14PYoZPXYHcx9sHF4+sg1tgitTI1HLmML
-	DV3+pelh/OFSqGkUNg6atWOg1Q6a2poZPjuyYSdKYmHamTAPZjfIAW5K1zU/r8RL0kLbOSLxNPY
-	bGjIUWBMUBu0Hwh7K6nSAv9KNOS02MHQ=
-X-Gm-Gg: ASbGncsSgVZ0sn2dm6h5Uie0KP4zMFkkbfuxTcRhevQL7TdunImRMw3eVJqSOcfoOX5
-	jc2wPf8s4C6CFIYFvICHCDsTuspd+A0jnOYvPp1lY74odHtDEGnoR3dKW8iwS3pongpsBrCp3Jn
-	FTCg6x9dnCb4lL9uVt1pGI+i6xelxJtBVHmA==
-X-Google-Smtp-Source: AGHT+IEIHMkdlH/en+uXp0oVsAoqX5M/MWpWjcwQtNcI4RUU/vNIUEP2JP+Exp7QavSYY/Cs2DChtfMhjj8/xUWGVBU=
-X-Received: by 2002:a05:6122:3087:b0:530:63d9:115a with SMTP id
- 71dfb90a1353d-53063d913a6mr831217e0c.4.1748386061291; Tue, 27 May 2025
- 15:47:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="PxYQoF6L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=zYroR0JeTvEc5k+dhsSlbbRBRTuaHoKGLn9xLivB2FY=; b=PxYQoF6LWHnUgUJnGKULKZ3wU1
+	3B8i0EvtM0aqnuJPZzfTx1F9v65Gro8NfNfVa2b2aYVKa9yjJ7Fea7KFbr+KdnXsT7avL47pFm1h5
+	UC31fNC1YYD2pt8Tv/6sLwIgOCCs517tTgkviI7DKCPAKoGzu0r0cvwRVLO9K1Z1V45lG9ESMKDdx
+	wt/wJJsdgo17GMnSPzLicjfA49h32GvHJ0uxJBoYDEmwne/kc1+PimtVAnD4ejz+fbVCdZlSc6rph
+	rE+u0U1fNT5k5QwnEHgBvQxnyU54916Ef9RzIDPvI1ANnESt+rRobDb1/Bys/kA9EPwgUyOSi2YKG
+	JDPu96rQ==;
+Received: from i53875bdb.versanet.de ([83.135.91.219] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uK38r-0004UD-Ee; Wed, 28 May 2025 00:51:29 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org
+Cc: Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	dmitry.baryshkov@oss.qualcomm.com,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH] drm/bridge: analogix_dp: Fix clk-disable removal
+Date: Wed, 28 May 2025 00:51:19 +0200
+Message-ID: <20250527225120.3361663-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch> <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
- <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch> <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <93bfec74-c679-400f-8ce4-3bc84d6d803f@lunn.ch>
-In-Reply-To: <93bfec74-c679-400f-8ce4-3bc84d6d803f@lunn.ch>
-From: James Hilliard <james.hilliard1@gmail.com>
-Date: Tue, 27 May 2025 16:47:30 -0600
-X-Gm-Features: AX0GCFtPGtsaGbTe2C2G-Irv_0PosK6COEhRkyls49G6hbvQpWVi2Nid9Q5gamo
-Message-ID: <CADvTj4oF4UOnDUvVUtuaM6U5RR4WF02qmheqg8fEafev2En3eQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Russell King <linux@armlinux.org.uk>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Furong Xu <0x1207@gmail.com>, 
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 27, 2025 at 3:48=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Tue, May 27, 2025 at 02:37:03PM -0600, James Hilliard wrote:
-> > On Tue, May 27, 2025 at 2:30=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
-ote:
-> > >
-> > > > Sure, that may make sense to do as well, but I still don't see
-> > > > how that impacts the need to runtime select the PHY which
-> > > > is configured for the correct MFD.
-> > >
-> > > If you know what variant you have, you only include the one PHY you
-> > > actually have, and phy-handle points to it, just as normal. No runtim=
-e
-> > > selection.
-> >
-> > Oh, so here's the issue, we have both PHY variants, older hardware
-> > generally has AC200 PHY's while newer ships AC300 PHY's, but
-> > when I surveyed our deployed hardware using these boards many
-> > systems of similar age would randomly mix AC200 and AC300 PHY's.
->
-> Are they pin compatible?
+Commit 6579a03e68ff ("drm/bridge: analogix_dp: Remove the unnecessary
+calls to clk_disable_unprepare() during probing") removed the mismatched
+clock_disable calls from analogix_dp_probe.
 
-From my understanding they are entirely pin compatible.
+But that patch was created and sent before
+commit e5e9fa9f7aad ("drm/bridge: analogix_dp: Add support to get panel
+from the DP AUX bus") was merged, so couldn't know about this change.
 
-> But i assume none of these boards .dts files are actually in mainline?
-> So they need to go through review, and are likely to be horribly
-> broken and need fixing? So you can fix up the PHY node as part of the
-> cleanup.
+So in the original patch the last change is
+    if (ret) {
+	dev_err(&pdev->dev, "failed to request irq\n");
+-		goto err_disable_clk;
++		return ERR_PTR(ret);
+    }
+    disable_irq(dp->irq);
 
-The specific board I'm working with is not in mainline, however there
-are boards in mainline that will have the exact same issue. They simply
-do not currently have any hardline ethernet support in mainline at the
-moment and have to rely on wifi for internet connectivity unless using
-out of tree patches.
+    return dp;
+-
+-err_disable_clk:
+-	clk_disable_unprepare(dp->clock);
+-	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL_GPL(analogix_dp_probe);
+
+the analogix_dp_core.c actually now has the runtime-pm handling between
+disable_irq() and return do introducing another goto err_clk_disable there.
+
+So remove that one too and return an error pointer, to not create build
+breakage.
+
+Fixes: 6579a03e68ff ("drm/bridge: analogix_dp: Remove the unnecessary calls to clk_disable_unprepare() during probing")
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+When I reviewed the original patch, I failed to see that difference :-(
+But I do wonder how dim was able to apply the original patch.
+
+ drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index 01201fff59a6..505eec6b819b 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1586,7 +1586,7 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+ 	pm_runtime_set_autosuspend_delay(dp->dev, 100);
+ 	ret = devm_pm_runtime_enable(dp->dev);
+ 	if (ret)
+-		goto err_disable_clk;
++		return ERR_PTR(ret);
+ 
+ 	return dp;
+ }
+-- 
+2.47.2
+
