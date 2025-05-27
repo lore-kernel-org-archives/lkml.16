@@ -1,181 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56492248888
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 08:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ACB2405F6;
+	Tue, 27 May 2025 08:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748335279; cv=none; b=b9/CMeQLzkdfAJ7VKjUqUvWafDBYRM6bOE1ApEa+ivl2OZZbchKBnpDEycdjRUTj/q5nFmBODS7uq6RLqc0Lx9uMyM1lt+NsmWLfVvrGzQsM6eOyd+UP9dhKgf/WEy7oghLoM6FFG6jpS+Z0nvuxOWOssGSejpNtAbwcyymbhc4=
+	t=1748335333; cv=none; b=EfiDhrAx4nQO+lRKUHdacBQq07A3Nb6kYeZqpIuN4/Cj9iRFCyIAvZCv24LilkjQkTz9yWs+NWiZ3gnZTZCk7/czHgltdnsdlCx8vkyWPNfqfDTcVeKBlBgbkC3wvAw9lMMSuJrh3hoFThbRuaHfMbbTDYyd25IdSXCNjVXww5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748335279; c=relaxed/simple;
-	bh=9/4frAyuK+mH4dCPcWolggSSGYIz8T6fceKUO2hSxFA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NYzLwttM5gx7mVOjOj490ECVlBgdOzuqSEAVl+iL/y2ExYsYcTi3Od/dAhiqpNdKuCL7IxP0P8GSlCZ56LvmxY+jRxddjN4QBLgkKa5lfN//BHylG6SHwMCA6XSCRrwGvCIhHAIIl95d+oKXdVd3dIPLioHpVkN6085qNa5NCPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xt23eMhP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748335333; c=relaxed/simple;
+	bh=LJY0CHjEcus0vSGwLPR2uSy8OFr3DZQCKunHLlP0jTk=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=hMNC4SOJ9ayLyOeQzGpdHQvvZqGKzWP+uNbgkyI39e5yAIcu+S7uFB555SwJ4NBm7MkHMY1tAzsOHF6xwap7Kgi96alVYlIiUqzQT2jigI+DF6QjNc3d4U59oWHR66M+Rv2mcm3y0bpB4RNXCxPKSUoA1pNwn++hDI8bGEsXB+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=b4e3XCc/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xt23eMhP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748335275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=otnLpqmsUXmp5NS65WlS5qhIeAcyrstq9DF1BYfQqbs=;
-	b=Xt23eMhPwPfM8er5bW27evrs2OXruqv2ptFvcICkHaWY98OGkyrqBK4/4pWY6lxMu64gWP
-	20m0SuYnPGPXR4rCgsdlEAv987NBEyD9/LIuv0nquNgSRLmdHHmy5DSYn2s/+N6J277kYW
-	VEGu2eD4bILcHd861vuv7sbrZyykPk0=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-501-dU3dpYdbPUmao5-ycNpF9Q-1; Tue, 27 May 2025 04:41:12 -0400
-X-MC-Unique: dU3dpYdbPUmao5-ycNpF9Q-1
-X-Mimecast-MFC-AGG-ID: dU3dpYdbPUmao5-ycNpF9Q_1748335271
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad88ac202c0so58639066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 01:41:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748335271; x=1748940071;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=otnLpqmsUXmp5NS65WlS5qhIeAcyrstq9DF1BYfQqbs=;
-        b=QZLLgSWWRQGhPjScL7IjVZWvhlYYATpobldK4TJuyXWctHLkWKPtH5X9I/nUUgDvVl
-         ANFlU1uii3OUOm3vXPVNJ92mI9kH2d723j6k9KdHD9FnNnIvOoo+iofdndQxyGm0BeCO
-         XgFc9AGAOSSE+8tU3go0HY7nUP/3SEgHSitcFG+R9xaraATuq+A60ubadQfaED/Tsrr1
-         PzcXWUukA+6uxfhEQTomjqv0EmYAFTKVTEbGl8K7vhdbzhQjHx1jXmxVe8OIA7MTHlBZ
-         DMz7i8O3EKOpAWQwMuOaHCnAJ9ESxC83iFzmhKCrMblwLtGh1zsj0CFNopd0Hkl4Atl4
-         t5qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOqd3nSz+Tkysw8ENSz9CZNwE8gyVXaM6h9vYC71qWIcg9zWn+uUgSqSSbpVY2d/n9ZVyvxAl9Pmg3mGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLsXIWN+IGTeJLslUzAPJc+N/tc1NijmOab7mxBLrMNNEy9SUE
-	keg+owpBxaj/hNDWJ00vMuRDBjJojaQ0RJM9IeytBsAWcbO3nBt9Citc9XoBCo20oZeZ4XuR6fK
-	s9lKBItYurouhWymtAkfcN66IYKP9+KFS3WB72zdm3t89XWggXOL1uzttcupfbguKLw==
-X-Gm-Gg: ASbGnctEkwGYCyMMWRlbBQi07D2fHqqf0T2yWa1HgAHavRVJa6zxfLAgDK3G3ahtNx6
-	YdtQwQt+ad0JDPKkI8SE9PVxDINsYxv3bkh4q+obzNuUY8Kf7+PViMA/M9G/y1NSROtgJlTheWO
-	opp6lZ/vCpZWPgNaw7N2T2XASOqEKXaApx8TvifeHZYRxevBmwUbDumV00YPtNC6b0e3y5MOKfU
-	lDJ6QrhoZ7a90X0R2jm0Gwp7+fxPizCUHS5DhR9arwm8YFMGUHpqgzH8+peoQayWLX8pDXQ2JEP
-	9OFztk0ec/AmT2wNrfucLgGHDQUCrzGxrzL2bd4/5vzzwNnNWtlL1KjtIv+6
-X-Received: by 2002:a17:907:3f9c:b0:ad5:d6b3:5cd5 with SMTP id a640c23a62f3a-ad8596d9843mr1170685666b.5.1748335271011;
-        Tue, 27 May 2025 01:41:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMIKp0vFl+Prf74hN6X8U5dcoTMgJ4VBfKwNEdm/vm6CaEpdolph/x3lK/ErbdGrfTaaYqSg==
-X-Received: by 2002:a17:907:3f9c:b0:ad5:d6b3:5cd5 with SMTP id a640c23a62f3a-ad8596d9843mr1170682866b.5.1748335270353;
-        Tue, 27 May 2025 01:41:10 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad892d47536sm43991366b.12.2025.05.27.01.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 01:41:09 -0700 (PDT)
-Date: Tue, 27 May 2025 10:41:05 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] vsock/test: Cover more CIDs in transport_uaf
- test
-Message-ID: <skvayogoenhntikkdnqrkkjvqesmpnukjlil6reubrouo45sat@j7zw6lfthfrd>
-References: <20250523-vsock-test-inc-cov-v1-1-fa3507941bbd@rbox.co>
- <limbmrszio42lvkmalapooflj5miedlszkmnnm4ckmy2upfghw@24vxuhgdji2z>
- <1f5cc46a-de4c-4361-a706-fc7fe06a7068@rbox.co>
- <gfmoupl72tjyymhwxcstwpgaabbfaz6f4v6vj4lwwzwssg577c@urkmgn7rapnj>
- <151bf5fe-c9ca-4244-aa21-8d7b8ff2470f@rbox.co>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="b4e3XCc/"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R4K3dq012741;
+	Tue, 27 May 2025 08:42:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=2ZzsST5W+NlsSGj6Asj9v0
+	G7U7bQnVL/UVuPCuV/xoQ=; b=b4e3XCc/PUnLDCpMqDK65J/7LizXnGVwIVUJxd
+	7HX2GLbfOtlNNcvqwGxfBxi7v545peGWtzKB6O86obENn0CJMP4EMb/21LeLT+E9
+	Amyy5QhAryOxaeZV/sreiE0QzxSbfcSRhfuMiEgoKx+ilvp2K7ZczgK1FXskSpy9
+	eKSHrYhZzx6G+J8nwgK/PblCvGliChEly9cJG1uqB53RtJnk7jUk38W6Alw6JK+X
+	PvuUpzLZAmf2JdlXDlwPvtEdUd52BUb0Ek9AW75ymfCrdxO4qyrTnhO6GZ2ok8v3
+	FtPE5TK8COxMCs1lPodEtLafXF16CnwwJ29SBKPnIucIofHg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46w6918krh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 08:42:06 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54R8g5VB005576
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 08:42:05 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 27 May 2025 01:42:03 -0700
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Subject: [PATCH wireless-next v2 0/3] wifi: cfg80211/mac80211: Handle
+ simultaneous scan and DFS operations on different radios
+Date: Tue, 27 May 2025 14:11:42 +0530
+Message-ID: <20250527-mlo-dfs-acs-v2-0-92c2f37c81d9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <151bf5fe-c9ca-4244-aa21-8d7b8ff2470f@rbox.co>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMZ6NWgC/22NzQ6CMBCEX4Xs2TXQH1FPvofh0LSLbAJFu4gYw
+ rvbcPb4ZWa+WUEoMQlcixUSzSw8xgzqUIDvXHwQcsgMqlS2tJXBoR8xtILOC2od6nAhckbXkBf
+ PRC0vu+0OH07UkwhGWiZoctyxTGP67l9ztZf+aucKS6wNGeWsPWt/ur3e7Dn6ox8HaLZt+wEe6
+ 8ANtwAAAA==
+X-Change-ID: 20250514-mlo-dfs-acs-33d7d9eea437
+To: Johannes Berg <johannes@sipsolutions.net>
+CC: <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
+        "Raj
+ Kumar Bhagat" <quic_rajkbhag@quicinc.com>,
+        Aditya Kumar Singh
+	<aditya.kumar.singh@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=WfoMa1hX c=1 sm=1 tr=0 ts=68357ade cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=Lk2AThpSkLnqzM6nTBMA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: Q53NwelZPsT9tqSp-QhRu4F983CYpAwA
+X-Proofpoint-ORIG-GUID: Q53NwelZPsT9tqSp-QhRu4F983CYpAwA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDA3MCBTYWx0ZWRfX/FJh2LWHtqB2
+ mhbhq18XYwXFRhkQzMpcuEU6BDTk4geSWa0DN8GDGww05UhBGySrSZWphcjtc7bOVZ/4i+tMx8l
+ jY4eDTeHBeQ/DDOcAhfNnkeE+r9mNpmWeThEmBkQr8pGY4brGG89+6bapwaMr5ADAxEo8Q4hS19
+ lGBXA1q8oGEWhLbl1k0ORymzckG5P1ZViaLXcD39GA0I6XYOo4jD74Ode8lcxwozwWCnhb5pXso
+ TYVpYsurjtf6rf+mhmMGBZBZ/DvTT5n5S1QR/LqOgtX1xWQHwQ1V0TTDozuH+RHCl0lv+6IOVtf
+ pK+i44+NYPk4o4Sp6UGfl7JjsWd0GbDtR5NDLVFI6YDyXKJXq5C7kqVO0w4zWw4kAaIOAdTA8of
+ NbaY//CZTdu8RhBIR2XVNMcnRmc3lwiUn2sFv+dboP0EG732voSaSPr9sqkyYMsSDztmZwGs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_04,2025-05-26_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 phishscore=0 mlxlogscore=425 priorityscore=1501 mlxscore=0
+ bulkscore=0 adultscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270070
 
-On Mon, May 26, 2025 at 10:44:05PM +0200, Michal Luczaj wrote:
->On 5/26/25 16:39, Stefano Garzarella wrote:
->> On Mon, May 26, 2025 at 02:51:18PM +0200, Michal Luczaj wrote:
->>> On 5/26/25 10:25, Stefano Garzarella wrote:
->>>> On Fri, May 23, 2025 at 12:31:16AM +0200, Michal Luczaj wrote:
->>>>> Increase the coverage of test for UAF due to socket unbinding, and losing
->>>>> transport in general. It's a follow up to commit 301a62dfb0d0 ("vsock/test:
->>>>> Add test for UAF due to socket unbinding") and discussion in [1].
->>>>>
->>>>> The idea remains the same: take an unconnected stream socket with a
->>>>> transport assigned and then attempt to switch the transport by trying (and
->>>>> failing) to connect to some other CID. Now do this iterating over all the
->>>>> well known CIDs (plus one).
->>>>>
->>>>> Note that having only a virtio transport loaded (without vhost_vsock) is
->>>>> unsupported; test will always pass. Depending on transports available, a
->>>>
->>>> Do you think it might make sense to print a warning if we are in this
->>>> case, perhaps by parsing /proc/modules and looking at vsock
->>>> dependencies?
->>>
->>> That'd nice, but would parsing /proc/modules work if a transport is
->>> compiled-in (not a module)?
->>
->> Good point, I think not, maybe we can see something under /sys/module,
->> though, I would say let's do best effort without going crazy ;-)
->
->Grepping through /proc/kallsyms would do the trick. Is this still a sane
->ground?
+This patch series addresses the intersection of scan and DFS operations
+with multi-radio wiphy case. The changes allow for more flexible handling
+of scan and DFS operations when both operations are on different radios
+within a same wiphy.
 
-It also depends on a config right?
-I see CONFIG_KALLSYMS, CONFIG_KALLSYMS_ALL, etc. but yeah, if it's 
-enabled, it should work for both modules and built-in transports.
+---
+Changes in v2:
+- Half-open interval ([start, end[) frequency range check added for API:
+  cfg80211_get_radio_idx_by_chan().
+- In API ieee80211_is_radio_idx_in_scan_req(), WARN_ON() and abort logic
+  added for unexpected case.
+- Function __ieee80211_is_scan_ongoing() renamed to
+  ieee80211_is_scan_ongoing().
+- The logic to handle ongoing roc work and scan with multi-radio wiphy is
+  simplified in the function- ieee80211_is_scan_ongoing().
+- Patch re-ordering is done.
+- Link to v1: https://lore.kernel.org/r/20250514-mlo-dfs-acs-v1-0-74e42a5583c6@quicinc.com
 
->
->>> And I've just realized feeding VMADDR_CID_HYPERVISOR to bind() doesn't make
->>> sense at all. Will fix.
->>
->> Yeah, we don't support it for now and maybe it makes sense only in the
->> VMM code (e.g. QEMU), but it's a test, so if you want to leave to stress
->> it more, I don't think it's a big issue.
->
->All right, I'll keep it then. Fails quickly and politely anyway.
->
->>>>> +static void test_stream_transport_uaf_client(const struct test_opts *opts)
->>>>> +{
->>>>> +	bool tested = false;
->>>>> +	int cid;
->>>>> +
->>>>> +	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
->>>>
->>>>> +		tested |= test_stream_transport_uaf(cid);
->>>>> +
->>>>> +	if (!tested)
->>>>> +		fprintf(stderr, "No transport tested\n");
->>>>> +
->>>>> 	control_writeln("DONE");
->>>>
->>>> While we're at it, I think we can remove this message, looking at
->>>> run_tests() in util.c, we already have a barrier.
->>>
->>> Ok, sure. Note that console output gets slightly de-synchronised: server
->>> will immediately print next test's prompt and wait there.
->>
->> I see, however I don't have a strong opinion, you can leave it that way
->> if you prefer.
->
->How about adding a sync point to run_tests()? E.g.
+---
+Aditya Kumar Singh (1):
+      wifi: mac80211: Allow DFS/CSA on a radio if scan is ongoing on another radio
 
-Yep, why not, of course in another series :-)
+Raj Kumar Bhagat (1):
+      wifi: mac80211: Allow scan on a radio while operating on DFS on another radio
 
-And if you like, you can remove that specific sync point in that series 
-and check also other tests, but I think we have only that one.
+Vasanthakumar Thiagarajan (1):
+      wifi: cfg80211: Add utility API to get radio index from channel
 
-Thanks,
-Stefano
-
->
->diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
->index de25892f865f..79a02b52dc19 100644
->--- a/tools/testing/vsock/util.c
->+++ b/tools/testing/vsock/util.c
->@@ -451,6 +451,9 @@ void run_tests(const struct test_case *test_cases,
-> 			run(opts);
->
-> 		printf("ok\n");
->+
->+		control_writeln("RUN_TESTS_SYNC");
->+		control_expectln("RUN_TESTS_SYNC");
-> 	}
-> }
->
+ include/net/cfg80211.h     | 11 ++++++++++
+ net/mac80211/cfg.c         | 54 ++++++++++++++++++++++++++++++++++++++++++++--
+ net/mac80211/chan.c        | 30 +++++++++++++++++++++++---
+ net/mac80211/ieee80211_i.h |  6 +++++-
+ net/mac80211/offchannel.c  |  5 ++++-
+ net/mac80211/scan.c        | 20 +++++++++++------
+ net/mac80211/util.c        | 27 +++++++++++++++++++++++
+ net/wireless/util.c        | 24 +++++++++++++++++++++
+ 8 files changed, 163 insertions(+), 14 deletions(-)
+---
+base-commit: ea15e046263b19e91ffd827645ae5dfa44ebd044
+change-id: 20250514-mlo-dfs-acs-33d7d9eea437
 
