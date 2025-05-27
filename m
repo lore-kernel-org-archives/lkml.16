@@ -1,119 +1,161 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBEB218EBF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA6720D4E7;
+	Tue, 27 May 2025 23:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748389613; cv=none; b=h7Q3DDocsLRCJ9wK9HUSuNOLb0jh9WNjZyn/bMUExSrdLuxB0A5vvdvAycS5b0HQdL3Lns0C68SoQ6irQZpkWkapDmYMb9f2tCu72V6SG2ScsP6dYzNja9hPeUqUaWAIm6XIfuOhHLQcLCw/pNQyDvmUgEzTXhjt3EpCY15Y3gA=
+	t=1748390249; cv=none; b=uCjAU5k7TQZET0fbJ1kdKdT8PGPw7p1YqqxIm9PCOmP0PPAHCSV3EtfTdeV0WaStAS2LqgRBYeyDGKdldEybHsIizcZVmSavNJqEoGlaUW9RwRQHX03krzflaMBVx69Bnjn9o9aF9ms/Q7M33xxqJeoRCIb3yTZPaiI1uJmouLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748389613; c=relaxed/simple;
-	bh=WKcX2GjjarLw7YZjkROB1mJZ0w5M0D7LiFn1aBDa1zo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g9DqFRHBILH3xp25J/qvTIhVDw5jUs2GyhIm6E3cGAxtBCvItK0gNwY4Pgi1JLUD7dMzSU95UxiVKcvaD9qmBVL/pM0PNwzTWcjPvXuBwIhqfaDafwyyo8c+eNK6uIKd6ebMMVT+XqjVQGrYZnW5jEYpS6lziPNF0vdy4dSzh6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vJyGp2LD; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748390249; c=relaxed/simple;
+	bh=4rzospWiM3I9VYJW5PpLvtlA+s826zPjqIS9HklwM6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l0HcFRVb1uu6fOGGBWKjMqGNFwueb5kTMPcB7Lw2aDASTRW0S0CV6a2Jnt3Z+fN6g38Q8WSruc9FL1cUG+xaHrMmh18M/NHCHlNCqTKmgkm0X/uIRG7508amnl7O1vLs88li72xZVs25Jp7DpsMa7nIR5M/nG7HImkAZLGAjW4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=lnXWlQTu; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vJyGp2LD"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2349068ebc7so101535ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 16:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748389612; x=1748994412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VghbsdFVO3iyQV5woos45bPNqNZDe5XkDtH9YacJi2g=;
-        b=vJyGp2LDoULMeslodgMCkKrXBBhbaxCLTxtFxjoe/bA9Zv/8yvYAQuPm8122PiDnIF
-         wdylvL3No06kOxZRvdZbozV03i8RrkMlZJURJlPRyL/xDhfZp8i7POMzhzo//sA6F49v
-         xWwQBHhiB3TV5l+qwnmKtF0+DCxEA0BX+NCJ3zZtAGbgNrFTuiCz/Ch5z0ZrxU4U0i1W
-         9smqRENtm+EZ11COm9ReRwPvil17pCBXGc+7bmLomWUW20rT8BEokvjN7ECe4gcqiKaM
-         SgHD10ETdOYTu6ljXNXrhhWFqPb55k9vNUjkPiIZ1wh/FSBJOEV5u9Qs0el/k1sRT3qL
-         WvuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748389612; x=1748994412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VghbsdFVO3iyQV5woos45bPNqNZDe5XkDtH9YacJi2g=;
-        b=WINMlmE8Hy2DFVQP5gvT8pNHPOZ0daAvzDLmEAKmsoOQPATh7dqFqf0jBIhrRD4oIx
-         3P7v6MJImgQXabUpW+UWo1QcP51wz14MfShwINUacpbjUlq/1zeBC0We2LTFqUy4X2FE
-         yJhElSq3oatSzzal5mxihP61wUUP4bPLRmmR+bpnmTdpp1z8S7qMUGjJKVm/902hxHcP
-         Qgn5+yh19Eu1qHN2L/+lR7KS7DO4c8KQ6GBGUbZsJPwSramQ40QHDfYCGIMFy0DC/nEA
-         BX4RS3cuc+TQEPTO7Kx96FLTuLhiVIYfHgbRl1mRb0Nmu9gUcoz4pUYgJFwE83ON/sCG
-         Tpbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIyyIAJaooZwTPfW9fOvlkDHFML9QFKOSXtZcOudKpQRazOe/vwEMToqtUe27Z6JsQ7wrRRrDq2AtVn1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZpOo0DxmK8QiC1Qmqe6FtXimCddSThOfe2sloJ8otKx7hHm16
-	hIb8o/TpGbKYlOwVk4iZsCBUxXDuqdJdBN2p5pZIpjK/0bMUN80gb5SDEzhYHLI7bAbv9LJDUB3
-	J86CsyElKp3kvId2YLIjw0paLHDtZZllkbEimjWlM
-X-Gm-Gg: ASbGncs0S4/WjhlSJV9lbgPl2fiRhEbBy2gW41e5GnLZIw+tfeMiB59OUVE9J2lRtsc
-	I/1mqA0Dy1S7amSmb0fiRnejRzQrA6oj6C2+R/Yk2n5V/SIipylGVARh7S2VkgGToHlRWKjtRBZ
-	yqaLfkKRxZ71NUqxn+hbW7uunevBY2y2N79+QgSytNdfUXk0i14hICo2tMJv9E6rDoSWvPMcH2V
-	8KlUk1BKe21
-X-Google-Smtp-Source: AGHT+IFhVvQBS2s72jadYmZiV/4h4fh2gLaYB8UmxGcpXTK6Oa8dyDrO/A8UAzbuwGSFKflOIeEMssY6jTFGnCAgx0U=
-X-Received: by 2002:a17:902:cf12:b0:231:f3a3:17c6 with SMTP id
- d9443c01a7336-234c55ab59fmr1383225ad.20.1748389611470; Tue, 27 May 2025
- 16:46:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lnXWlQTu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748390243;
+	bh=uE7goBOyHoByTcAKpFO+8N6kWoUoMhxzA8GrTQkKBuQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lnXWlQTuZtPeeAvbcPhiGPBxAuoXyjQ4laLjkyvLCvdYdHNSO3XgvGj1JM9V6A8EL
+	 maQMmfG9aXjaW2Lk4EKxNzksRuyIyHDqsf9x7yRp5eRWiriPiN5VkBHuW+ixzGP1Fj
+	 vHqPsTBVcxlc2e210rufZ7sQUnGpHzrW9xF7Hn/q6y/oWUGdpv2v+ZUgLLhNldvveb
+	 zntb8BuPSH676yhrIutLidrw/3ZttMthRgsx0v5PQGW0UG4XMUmCjH0ntqxzLG9CKH
+	 6lsbBq6DycvsuitO3UYdUANf7c/S3ikwco+9l/G3jgH+3aKWXftLcANBj8YWN+KEoz
+	 lIdzwI5oRO1Aw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6V1G6p44z4wc3;
+	Wed, 28 May 2025 09:57:22 +1000 (AEST)
+Date: Wed, 28 May 2025 09:57:22 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with the mm-unstable
+ tree
+Message-ID: <20250528095722.11a4bb16@canb.auug.org.au>
+In-Reply-To: <20250515151102.5b0f9e4f@canb.auug.org.au>
+References: <20250515151102.5b0f9e4f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527130830.1812903-1-alok.a.tiwari@oracle.com>
-In-Reply-To: <20250527130830.1812903-1-alok.a.tiwari@oracle.com>
-From: Harshitha Ramamurthy <hramamurthy@google.com>
-Date: Tue, 27 May 2025 16:46:39 -0700
-X-Gm-Features: AX0GCFvYovlr20SM8ijf0L9FsoJRDmqYdfr78B7dTpS3CyYkJAMfh-_9uNOXneM
-Message-ID: <CAEAWyHfES0EepFr7Bm+BO6KXw1rNy9_7zv+Jk+rJadkGvdYgqg@mail.gmail.com>
-Subject: Re: [PATCH] gve: Fix RX_BUFFERS_POSTED stat to report per-queue fill_cnt
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: ziweixiao@google.com, joshwash@google.com, willemb@google.com, 
-	pkaligineedi@google.com, pabeni@redhat.com, kuba@kernel.org, 
-	jeroendb@google.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	darren.kenny@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/kLuN.o/neRA1gXKG9RIMQaE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/kLuN.o/neRA1gXKG9RIMQaE
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 6:08=E2=80=AFAM Alok Tiwari <alok.a.tiwari@oracle.c=
-om> wrote:
->
-> Previously, the RX_BUFFERS_POSTED stat incorrectly reported the
-> fill_cnt from RX queue 0 for all queues, resulting in inaccurate
-> per-queue statistics.
-> Fix this by correctly indexing priv->rx[idx].fill_cnt for each RX queue.
->
-> Fixes: 24aeb56f2d38 ("gve: Add Gvnic stats AQ command and ethtool show/se=
-t-priv-flags.")
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
-> ---
->  drivers/net/ethernet/google/gve/gve_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-Patch looks okay, but it needs to be prefixed with [PATCH net] since
-it's a fix.
+On Thu, 15 May 2025 15:11:02 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the tip tree got a conflict in:
+>=20
+>   arch/x86/mm/pat/memtype.c
+>=20
+> between commit:
+>=20
+>   f387f960a89a ("x86/mm/pat: factor out setting cachemode into pgprot_set=
+_cachemode()")
+>=20
+> from the mm-unstable tree and commit:
+>=20
+>   1b3f2bd04d90 ("x86/devmem: Remove duplicate range_is_allowed() definiti=
+on")
+>=20
+> from the tip tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+>=20
+> diff --cc arch/x86/mm/pat/memtype.c
+> index ccc55c00b4c8,c97b527c66fe..000000000000
+> --- a/arch/x86/mm/pat/memtype.c
+> +++ b/arch/x86/mm/pat/memtype.c
+> @@@ -773,39 -775,6 +775,12 @@@ pgprot_t phys_mem_access_prot(struct fi
+>   	return vma_prot;
+>   }
+>  =20
+> - #ifdef CONFIG_STRICT_DEVMEM
+> - /* This check is done in drivers/char/mem.c in case of STRICT_DEVMEM */
+> - static inline int range_is_allowed(unsigned long pfn, unsigned long siz=
+e)
+> - {
+> - 	return 1;
+> - }
+> - #else
+> - /* This check is needed to avoid cache aliasing when PAT is enabled */
+> - static inline int range_is_allowed(unsigned long pfn, unsigned long siz=
+e)
+> - {
+> - 	u64 from =3D ((u64)pfn) << PAGE_SHIFT;
+> - 	u64 to =3D from + size;
+> - 	u64 cursor =3D from;
+> -=20
+> - 	if (!pat_enabled())
+> - 		return 1;
+> -=20
+> - 	while (cursor < to) {
+> - 		if (!devmem_is_allowed(pfn))
+> - 			return 0;
+> - 		cursor +=3D PAGE_SIZE;
+> - 		pfn++;
+> - 	}
+> - 	return 1;
+> - }
+> - #endif /* CONFIG_STRICT_DEVMEM */
+> -=20
+>  +static inline void pgprot_set_cachemode(pgprot_t *prot, enum page_cache=
+_mode pcm)
+>  +{
+>  +	*prot =3D __pgprot((pgprot_val(*prot) & ~_PAGE_CACHE_MASK) |
+>  +			 cachemode2protval(pcm));
+>  +}
+>  +
+>   int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
+>   				unsigned long size, pgprot_t *vma_prot)
+>   {
 
-Thanks,
-Harshitha
->
-> diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/eth=
-ernet/google/gve/gve_main.c
-> index c3791cf23c87..d561d45021a5 100644
-> --- a/drivers/net/ethernet/google/gve/gve_main.c
-> +++ b/drivers/net/ethernet/google/gve/gve_main.c
-> @@ -2153,7 +2153,7 @@ void gve_handle_report_stats(struct gve_priv *priv)
->                         };
->                         stats[stats_idx++] =3D (struct stats) {
->                                 .stat_name =3D cpu_to_be32(RX_BUFFERS_POS=
-TED),
-> -                               .value =3D cpu_to_be64(priv->rx[0].fill_c=
-nt),
-> +                               .value =3D cpu_to_be64(priv->rx[idx].fill=
-_cnt),
->                                 .queue_id =3D cpu_to_be32(idx),
->                         };
->                 }
-> --
-> 2.47.1
->
+This is now a conflict between the mm-stable tree and Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kLuN.o/neRA1gXKG9RIMQaE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2UWIACgkQAVBC80lX
+0Gzpagf/dD1biF/kx5BhKiF1y1iONLJDxX7ExGyiIQR5nlRCUdQ3FjSeJUeUFYm8
+XRN7Rl+LSXsngljetgn/ebpCMR8Z5Sl/YYZP0ynjcnFM2bKbKAbz3p9BTkBz0WOA
+kK8+zYFzRarIFVrWEW+aXeW+rU26D6meQZXLzfhqmUmM1MY3L8nFAPmqpmHa+X9F
+bxPGLFXVZoT0L9vAwWdFydayofIt4zNryeouw7eaCABgXu0z/w3zQDhINCHyZhEJ
+Mba9sXCtL4NXf81+0AVvtZWBwXadUdIrArjySKY+9k35aruazbA9OMIhxe7lcvGp
+w9ngUpLaUWnF1U6sSyIIo1rlt5F06g==
+=n4GM
+-----END PGP SIGNATURE-----
+
+--Sig_/kLuN.o/neRA1gXKG9RIMQaE--
