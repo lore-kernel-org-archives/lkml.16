@@ -1,241 +1,325 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2081.outbound.protection.outlook.com [40.107.92.81])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F5F10E0;
-	Tue, 27 May 2025 18:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9228C3FC7;
+	Tue, 27 May 2025 18:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748371254; cv=fail; b=mx1dq/O/oGUZgltjxWSbEdDy3ka3b4MXQI8ziiH53zPzHEh+w556x7wlPmuQnSFObSBx8a+FZns9dLj6wpqmHsto7MSi5x5yCCH9MzSDPOmghQobHQ56LL+4SVuN0KS/o46aX8Fi4zqAe8I0ESuCOLaQZOZrN9w/jKXogcu6TNg=
+	t=1748371310; cv=fail; b=JKlB0tKf/BGV0guW6Xc+i4PPk5hcBbrpeHJA1lk/X//uYstyTzG/hAWi0c6Wbt7dvfx5IvV8BNiCmVVmofz2QLuVWhaidMJzvkBTw531GDlFdTnyY/8BrTDJmwUykHD8Ecnjc82ettDfOTAf5qmxY+DsIUuLUYVZMXvgL+XopIw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748371254; c=relaxed/simple;
-	bh=YwtMdQKHTqOieWejpJQ6Q67GFmyHz7P0NjWdJ4VaMFM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=swjWiJ5Khixm0sHT8uIiLh0in6Jg5Wq2G6oAVQv+/aW/uY1qcnqyRhmGK77JA3j+oc0UXu/NlGFUt8p4YSmIF9g2MiXyHtBcgO6zmQLt2uWZX/xITKNhA9LYRM0E+msmavzBLC0dTTYtwE1+MjvC2MDDFZqnRpFC8miUL2fqUp0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mudCCx4W; arc=fail smtp.client-ip=40.107.92.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1748371310; c=relaxed/simple;
+	bh=7WEmdW/blaUMMRgCpmIgzjNqeOrSoDoFKhpE6EHCp6s=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ad0mUJRSaL+1YprPzqSUYA9Wkpbu5FQC+oft/O3h+BaAoRrd0kXEIuGVrbc+Dc7EZWTWpBEWzt23BcUuCMYbuE7a2Z0BkIsJqqKNCJIEQptcgaXOboV+yBMmeK0YxKKq598+xJ5blPRD85T75XSd6qN1tMb6cWcpz45LKydi4SI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=t2iD62ss; arc=fail smtp.client-ip=40.107.243.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mudCCx4W"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="t2iD62ss"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rg6yvyH5175RRzXdi9LC+zDovwREhYou5GLxIKZ//BAXCOxBJ1nHOq29QqLi1xDGafabr06nTiWw0FG0AixeaHoYkvAlgx/74olyalchg5s+7TkT5Sd05Fe7kP53efEo31xjaqV3MQq1ZEfPMG9ewyb0PMeOp4ewPC1ILfoXtkOmH6Eh9xSCABL8BuAWZTN8XC92y/xhCh4iYWpoKLXRVuydr08PajDKkzdbGEreGt3+Dri47JWntBsDbXNitJOYNMN6i7jQjXAnkIS5sGsb0ZmN7w5FL4Q95qbhjbzqw6EBLemmgpOle7ZbozSIqMmgXnDdVAN3lU87M/AXlz81QQ==
+ b=wp5XiuLCvF0ZOKatJTZ4pkG8uCBbhu7xVL7bALjLpZ/N2/ezgQgdrIviCti8vZTen9QQAcNilgMn3C75nYRm8bNJd1iidkAXyBCeEhtMXW7Im46pSoL5/DjQOf+2SE22oo5aGejuJZIL5ynr+tW8bUgZjrePtgEOE4zktHy6LyQ0WASY3Lil50/WZcYBwnw1a7hSPn5coRkyO4gUHlt2AE6dvSV7LT0xSOhO6NkK+kN3yU+iolIOGy4AyoapWScW+1FpMXohee9Eiw5BbTtzBu6vJcAkfacui7vH4YRGKwuZOlE6qQ0DEsCPhp11VuCrvDzVm7yjlV085EliZycjQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lcpZQJWRd1RLcDMuHMCNqMLu6K5+PYCs8mJdql47zzc=;
- b=hskvYOLlw7nk+YEQY2TiFGd4pF07DYBuAdwF9Tw4xDfs57ktASdCNmiph/WLB+QYzbkWu1WFGT7PZ5RoYBbqIfS5/8zzmi1u1Q0vWOv0uIOoxOZyUnYdDx8PkZ527Jckza3D7wG1iHClxuOvGunvKw7Jy+itpvAQ1Xtj42GuzUMSNoR+Tm5nh6jHBYyUyL6L2Eur1GTBhLeNgWlid95fiZwrY4MT6gdghkMiUagkv7x7u31iBHZeUqzmO82kti7Kshd1LuDoCgd/UOrBXRe4l3inua3pj5PNMOY4DcphDG24T7GPSbhQ7H4uUXK1RQpqZ3ZeXCLO3YkWclXbRJAe6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=zqnRYC5T5aA/pLnFAA922tll4rD3AKJb7IGxUwbE3bg=;
+ b=JRrpz/EX2MADPWR/rt1g5MoWm2RsfZANbX4iUP28C5yI9PotMJb10Fjk5U6xbtmzfoh7d6IW8JGARqC07efaQQXOzMOv8RGEE+IuNBMLwikf/pcZGQLRsedBWyyjam1NrpqRdoa0ykW/cBzjv6CSYuIgAL3z2z63/eZqFGY7Ic7iiB3Ww48NVSMYzmMm0m5urqEctv39aKJsG8yUoOo8OnDaH2SBMuWNvQfqmmMx6Ky9Al4T7q2VMUdHaDkQRKhve1gEqh43rqT9Nl5LOqdV5V5y3L7yf0EQwiyaoHyGU/nMS3T3VsvPy82vT4eItcGWSBhOx+Dd+jIBE4OxsQPdpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lcpZQJWRd1RLcDMuHMCNqMLu6K5+PYCs8mJdql47zzc=;
- b=mudCCx4WmzlMqUNcaadxcNiG/2wskcnDZDQqXDlxZc9fGcm8OfNnJocDSagpLqW0PTjzxgBFl2Vl/J5019aCsvzRaE79uTT0IsrkbjdB/xR7gfQfh9PSHepQjs0cGyWDDyge1S2VEh5sQTiNxJUP+0BfMmCNnOJjYSQ6yG8FbOc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DM6PR12MB4171.namprd12.prod.outlook.com (2603:10b6:5:21f::18) with
+ bh=zqnRYC5T5aA/pLnFAA922tll4rD3AKJb7IGxUwbE3bg=;
+ b=t2iD62ssUZh0gX3DXKra8zNfPnP4DL74KjG7YWBFK59S2tQVBQPX+c2dn3vgbFbhQrMWfDfPu0zFQ2Sn3x7pIDIbZQO6kHWPosVZ9RN83rTxV7RXf1UCmulMqphikHyMF9/+o+Hs+LnZWrt1+oRQYb4MsCEdWSIUleL+yPs0pxYAo9dg9Xycxw7Z1KdNsiaoqHy/sVe3Wc5FZY82tqgToqtla2zZZRejCR1hTnqOxwMx95SGOmpdzFRW24fjYV9SJBjw8nGAJSYzyqVW90YB2DbchaNRn6svvPXxqgeHCTyixS5hYvrqLg1prWAUYpKVXSagHlw9Ny0mBuKCysN2WA==
+Received: from BN9PR03CA0466.namprd03.prod.outlook.com (2603:10b6:408:139::21)
+ by SJ0PR12MB6759.namprd12.prod.outlook.com (2603:10b6:a03:44b::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Tue, 27 May
- 2025 18:40:50 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.8722.031; Tue, 27 May 2025
- 18:40:50 +0000
-Message-ID: <3c22ea8f-7467-4a25-b1b7-4f7f47177211@amd.com>
-Date: Tue, 27 May 2025 13:40:30 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v13 01/27] x86/cpufeatures: Add support for Assignable
- Bandwidth Monitoring Counters (ABMC)
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: james.morse@arm.com, dave.martin@arm.com, fenghuay@nvidia.com,
- x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
- akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
- ardb@kernel.org, gregkh@linuxfoundation.org, daniel.sneddon@linux.intel.com,
- jpoimboe@kernel.org, alexandre.chartre@oracle.com,
- pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com,
- perry.yuan@amd.com, seanjc@google.com, kai.huang@intel.com,
- xiaoyao.li@intel.com, kan.liang@linux.intel.com, xin3.li@intel.com,
- ebiggers@google.com, xin@zytor.com, sohil.mehta@intel.com,
- andrew.cooper3@citrix.com, mario.limonciello@amd.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- peternewman@google.com, maciej.wieczor-retman@intel.com, eranian@google.com,
- Xiaojian.Du@amd.com, gautham.shenoy@amd.com
-References: <cover.1747349530.git.babu.moger@amd.com>
- <aef9947e5ed68feb0d33a2c882c140e2e472276f.1747349530.git.babu.moger@amd.com>
- <505f530c-810a-41a4-b3cf-7eb326bb6990@intel.com>
- <6cd9873c-1add-4d19-8d08-a7c3a514bfea@amd.com>
- <5f8b21c6-5166-46a6-be14-0c7c9bfb7cde@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <5f8b21c6-5166-46a6-be14-0c7c9bfb7cde@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CP5P284CA0070.BRAP284.PROD.OUTLOOK.COM
- (2603:10d6:103:97::21) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Tue, 27 May
+ 2025 18:41:42 +0000
+Received: from BN2PEPF000044A9.namprd04.prod.outlook.com
+ (2603:10b6:408:139:cafe::43) by BN9PR03CA0466.outlook.office365.com
+ (2603:10b6:408:139::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Tue,
+ 27 May 2025 18:41:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN2PEPF000044A9.mail.protection.outlook.com (10.167.243.103) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8769.18 via Frontend Transport; Tue, 27 May 2025 18:41:42 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 27 May
+ 2025 11:41:22 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 27 May
+ 2025 11:41:22 -0700
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com (10.129.68.8)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 27 May 2025 11:41:20 -0700
+Date: Tue, 27 May 2025 11:41:19 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <kevin.tian@intel.com>, <corbet@lwn.net>, <will@kernel.org>,
+	<bagasdotme@gmail.com>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
+	<shuah@kernel.org>, <jsnitsel@redhat.com>, <nathan@kernel.org>,
+	<peterz@infradead.org>, <yi.l.liu@intel.com>, <mshavit@google.com>,
+	<praan@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v4 05/23] iommufd/driver: Let iommufd_viommu_alloc helper
+ save ictx to viommu->ictx
+Message-ID: <aDYHT1iCxJKO9Vnh@Asurada-Nvidia>
+References: <cover.1746757630.git.nicolinc@nvidia.com>
+ <5288cec9804e7e394be3b7de6b246d8ca9c4792a.1746757630.git.nicolinc@nvidia.com>
+ <20250514170637.GE382960@nvidia.com>
+ <aCadeeP+Z4s6WzOi@Asurada-Nvidia>
+ <20250516132845.GH613512@nvidia.com>
+ <aCemeved47HE6Q2B@Asurada-Nvidia>
+ <20250526133046.GD9786@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250526133046.GD9786@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DM6PR12MB4171:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6156e0f1-1101-42a9-fd7e-08dd9d4e0081
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A9:EE_|SJ0PR12MB6759:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6d07137f-67ad-4ba6-a401-08dd9d4e1fc6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a09Wc3IxQTRoa3JZczZvUUdVSUVNWi9pbGIrVnZ3d2l0WlNTazFOa0NyTjVL?=
- =?utf-8?B?bEEyL1phM3lHYXY5eEZ6djM5VEpOSG5RY2twbTBkWkRGSnBadnozUEhsdG9L?=
- =?utf-8?B?aVJmbzkzNkZrYStMR2JQcEhjT1ZubFRmaWxOOUV3ZU1NbTRXcDM4MHFUYytO?=
- =?utf-8?B?TzJsbEp2cXF6QVV5Ymo4dGxsN3BiNms3eCtaek5XUkRLVnVmVkFsUzhDODJM?=
- =?utf-8?B?MFM0Z1VCd09VSURmNDJCUjdSUGVhRGVRWlVRc0lCY2VTbWRKVXFwT3J3cm05?=
- =?utf-8?B?K1p5bTZoWU5FMlA2NGZPMHhQK0FXNEpvVU5XRUtxenBxTWUrSW5VRzBvOXJO?=
- =?utf-8?B?N21LNnV2dEtoYWg5OTg5Z2p4Q3IwLy9YZC8ybHpVQzBudzV1dktVbDhkcnFZ?=
- =?utf-8?B?VUpwbkZIZ3F1TGxNTlU0OWdncWJBd1doVFpLYng1TllqZkJWampjUkJCVXFm?=
- =?utf-8?B?NUlaN3lRZXVHVzM2M1VtMXNsYlptR05nejdRZ1A5VVJtNlZvVFVpSmVWaldF?=
- =?utf-8?B?ZEhrbzErYW9OakZWOHp4TzhuZGVCamtPRTBXUDVXM0lieDFIb3krT1BuWms4?=
- =?utf-8?B?UXNkSjFpR1NDb2x6aTEwZkZ3bTZ2VFhWNThSYW1hMnVCVlhtZFMzN2lPQkk0?=
- =?utf-8?B?MVMwUXZZMXVqaDhHK2Yydi8yM1NISzA5clZmWHVqb0xjSkdZT0RRV3dOUFZ3?=
- =?utf-8?B?bDl6ckZYTElXbWdTS0JsWS9qRTZwMmFsLzZWY0ltQXBYbWo2MjRpMEY4WmR4?=
- =?utf-8?B?cjJLSE5EdU9FaDA1eUNlQnVkQ2dsRTh6MWpieXM5ajB3amV4Z2prTWhtVXhU?=
- =?utf-8?B?ZUIreDg5Uy9jNm1VSEZSdm1GbG5nWHVVekpRTTZRcDdMM1pOd2h6SU1VdHJ2?=
- =?utf-8?B?Z3kwRHJuN05XOFJ6UmFKNFUzVHhpeHVOVmdQUmtESlhtWmRvT2xIZHgvV2pO?=
- =?utf-8?B?eWtmbytDMEhJbmVvaHl4UmFVbU85TGtBTURpWUo4QUd3QXBMRGlRam14Ty8v?=
- =?utf-8?B?bFVCaVZvNWljZUF1c2JEZmIvZjA3ZFI4ZGtJdy9uL3ZMbEZpMFo1ZTNjTVpX?=
- =?utf-8?B?ZFhoekYrWjdhbTR5OEhtZ3dlcUduc2tBN05TMDUvK2Iyc3hvRld1Z1ZjUWdl?=
- =?utf-8?B?bHNQdVkrcEdVTytHdDYzMC81WW9UNVd6aXVmNk44dDlZV21GZVlPVVp3NExn?=
- =?utf-8?B?VkpORHBURjdDU3R3Z1EwVmJXQjEyMzFVVHRNTURWbm9LQ2lJZnV4TjVwbDNr?=
- =?utf-8?B?TWFVVjFvenA4bTdNOG9KRHF0c2F0VkttWmJJeDZWbzlrTUpwaC9NSVVZYU1M?=
- =?utf-8?B?TlcwVmhzcGtNcENFUytzc2FjUjlSQS9kWWl6QmVrMklJN0JROFpJczR4Z3h4?=
- =?utf-8?B?K005a2V6bVRON2lKeXdFNDRRUEk5c2Zzb3RZVmgwSVJzZ2RmQ3lJeHNpdTFU?=
- =?utf-8?B?cE5FVFdtK3p5dUxMRUV2eThwdVhiMmpodnFlZTB3TkFDVFJ6cDNPdTJiVXhB?=
- =?utf-8?B?TURWckN6TUt1K2ZJb3VhS2dEL1k4cjNUTC8yQVhLVnFKS1BlYi9iYXA1RmYy?=
- =?utf-8?B?ODVCd1lCMElVRVNVRzJ6Y3crcFM3RDI1MXhXbmRlTnJMNnhlalVCTHd2cThL?=
- =?utf-8?B?OEg2Uy83bE1yeTEyVGRkRzVIWEFSUFdWUnovWUZDK0VlbVBFcWNPNHBXRlh2?=
- =?utf-8?B?NTFZUGE5Mk4xMkc2OFMwK2RNYVhCSENQYXpYM1dGUG1lMG82Yk43SDZqOFUv?=
- =?utf-8?B?TE1UWUtHSEY5Z0kydzZObmlzUUhLNXR3Qkk0YUJlazRCam92L2RlQmxmUzRQ?=
- =?utf-8?B?Sko4eWZiMG82ekllNlcwVFFwOExTOXdDbEZUQi8yQUFjTndVUlprVGJreU9n?=
- =?utf-8?B?ckN3MDZrcHJUbUNQeDVxRUdIK3ZvV3NzU2tuY3AxbG9pQi9TZE1uUmJLNVFr?=
- =?utf-8?Q?UB43/qnXB18=3D?=
+	=?us-ascii?Q?/LK9nmZCvnL0JN+uNjEJq6OX/co0F7i7rCBoQl5/7QSgxG1mHAh2AskIJo5H?=
+ =?us-ascii?Q?pR8yxVSdUOMFIw/W3hVgjAw7m3/S9egV6aovlLAu+j67rP4wP9kYIZFsAG0j?=
+ =?us-ascii?Q?iWotrf1FMRAISfo6jgDNFweWpRqMRt37xg7Ye7t70IsV3DqDhGlB7P95svN6?=
+ =?us-ascii?Q?fZIgEUvD/Io8ohByX6v2ojmRdyieBW17ncvQpDag8SOzw0esuw++as+U5ZXB?=
+ =?us-ascii?Q?0g6qTgyJKk0xHZ6LUlSRcNfpiqPmzNUlK51ZYU1DX1TeFS7FdR7pByXtHPiJ?=
+ =?us-ascii?Q?vIzrh3ZkploybxbuG3cY7UJNT4c3G4E+RgFAFHBScPF3nkVw1lZ16SfFiVA9?=
+ =?us-ascii?Q?36hbw5qFLbrCJTkXemMghb8P5+0zi1a6nI7IJ562OXnATcYYSdYM52jJ+xtQ?=
+ =?us-ascii?Q?7LDIJOaG7ERpwg/cI3235HFLmGlqXI+bUlCqVAuwO9fAdRGUrYekRcF4IG9/?=
+ =?us-ascii?Q?u8o0eP2N4eaF1ocvIxU2pT4rp3/tpx6O7wq92MCFM/Oop9WbwZ+C8LPMGN86?=
+ =?us-ascii?Q?3g7p8nxvMfq20RRvR7TbaGa1T8K/Pok/cEsUEbDM4Wb2/IRiph87xu798Yid?=
+ =?us-ascii?Q?r3Z5LiTW+BCCykGsT4fULbxdQLPcNJg5K2hpCWcgglf4hRrvy6SHORydsdLl?=
+ =?us-ascii?Q?3rezZzX1tt+nMWHD0QDTpZsN4+TIjwGTWSpXqVeMQqTOYGIwFhh7odts6yvz?=
+ =?us-ascii?Q?EnQXGjXN3hKf1/q2YLePPPX0A38minhXSZ7EHmWZbY1k0sd49U/WdhXwSxUM?=
+ =?us-ascii?Q?cfJe3TCEblyC1Gt0BM8Ek0hSQEVuSdHfLc7eu+jsrgyk8P68wFLIVvI+Vylg?=
+ =?us-ascii?Q?Zli/L7dlrPyvLo+9eO+kBgcHVCSqIEopD5jx7xDM7M861QJEwacK3PxGkMsJ?=
+ =?us-ascii?Q?3b4yZh3em35y8SafxwXQKr5jeqlWZB+EupbReyw1p0JgqKN9rgBZysabbR6t?=
+ =?us-ascii?Q?7AopTk/FKnKxkeYnqxAUjhioN7q4sf/iuGhUD08G8Hsxt3B7ivhDHBptpxLD?=
+ =?us-ascii?Q?WLL2XBH/AiOWzZOn/SOIjIoF945o8VkntL+OGfk2FhxOz8bjhTZhHjpzk5qn?=
+ =?us-ascii?Q?AAyjZer+bSHkF6F6f24QNxqm/BmWPO2bWVxBCkwgFvR/aH+gRofzmFwKr5bd?=
+ =?us-ascii?Q?i6t8tIOG/NuAm0y6bIEC8KM5dqe2tgl7kvsp/N7EDfwdNHVeifacuKcnPKWt?=
+ =?us-ascii?Q?Rhw1y4OVb4qJUAnN83ttrDmCQ6Syl05rSGizTI1jRRcXQTSDT8MAmfD8jBW8?=
+ =?us-ascii?Q?4A66/PzRrpp2xeafXjo4SaKrvusVtMI3IKfy47vVOVATa0JJhefkaRZG7O4K?=
+ =?us-ascii?Q?4AepjOV/goRiAWkiB3TmrDPLQMkYi7GeKmlI3mkSYCWLysFXoZn2mnCfSsmT?=
+ =?us-ascii?Q?dMAe3UQFb0WZHNtK7Nfu/nYrK2fEtJ8uLUR/+QeS5s8VE8PBW3S0NHjOgNZu?=
+ =?us-ascii?Q?pWu5wH6sxriQ8HTtHPi+ebPQoPw+9WuvN/6DQyTPoMLz8sSxZfEzVME0SZMn?=
+ =?us-ascii?Q?MepasbXtR4pwIXcxQUGNRvdGIOfZEGDw4SH7?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TnhBZHJxU1Avak5DZU5pVGFzM3lXSE9TaWVxYWFkZ3hieG9UbmsxSlc2NzM4?=
- =?utf-8?B?TlRpbmFHU2NlNU5ORURQSXo4WmVmVlVidDM4OXJrM0REdUtCNVN3QlZHVkNk?=
- =?utf-8?B?NUJRWU9MUm43cDg0djduRmRVZmJyT0kwMXlkUE15Q2xOU2tTQi9XV3lZRmVX?=
- =?utf-8?B?Z29QckxwQmNFWHlrdGRhaGdjNnQ1OGhsWmw4dmwrcHNJQ2FiT3ZBNyt5a1RT?=
- =?utf-8?B?ZW02WmVhRWpxNVJRc2hFaGtqZUxhcU5GRU9PaWVEcnZhNW40UlNYRTFMS1Jx?=
- =?utf-8?B?MUVkSEpIemRYaTQ5R0NPMlhFMHUvbVhGMWFseW5tUmlzWU40Q1BnRXA4MWlv?=
- =?utf-8?B?S2pvRGJXMWU5UmFVR2hRUXdXM1lScCtsa3diOWxtc2gzQWpybXMxbU5KYzlH?=
- =?utf-8?B?UWNPcGVKa01jTmNyT1dneDdhK1JwdEZqaG1GamVOOHJrRjFaMGZBZ0Y5OEVW?=
- =?utf-8?B?YkdxV1hkVDZyWlZVVlVST3N1UXNIM1EycXBETlZWS0wyZkpSenpEbzFIOG9H?=
- =?utf-8?B?MEJINERMN2s4dzdQUmlTaFFrOFhucC8yK0VYYThvbFVPU0gzZkY0dWJkQ25Y?=
- =?utf-8?B?T2ZwVjJKeWRKeGJhNkVOcmJ4Um9JLy9PdGRWWjNDalZZQ0lGMzRUVE1KMUN0?=
- =?utf-8?B?WURZZldPdGFUUjUzcmZ3dWZpTnZvZ1p1WHhsSWkrQXhnNWhWY1RpNGlqMjVp?=
- =?utf-8?B?SU15S3pNOGwwRFhBUFBDd3BBZjVRMStHY2VKMmtSb2Jxc04yd2dVekhvU0Q4?=
- =?utf-8?B?K3VacEdxem1qV0tsRUwvYlRnK0dDbVl0TXJzcVMxekpTSHQwc0NoUFc0Zk5q?=
- =?utf-8?B?NlBEbFBUR1pINlpnbEU2L2grdU9jeTY2SnNtQUgyREVzS0FGVndOMjBXeUR1?=
- =?utf-8?B?UXE5K0xFQUxGNVRwdHlueFhpdUdjNlMyOVZhNDFkb2t6aDc2Y2s2Q0JGRHFC?=
- =?utf-8?B?Q3U5YXdjOWtPd2tNY2tFc08zVkd2dThTTmZkMk02S0puNEI5WXQwMGZGcUYw?=
- =?utf-8?B?VnA5SUEyeCtXcEZWRVB4VVBKOWJ1blc4Z0NpTlB4RXFWck4yNDl5WHgzV0Rv?=
- =?utf-8?B?cFY4TXUwaE1ySUJhalpUOXpSdCtvRjFxSVQ1K2Jrc1ZNTU9PVkU0ZUxIVmhS?=
- =?utf-8?B?TVFWd2NubEVSQUJxSzNheDIwcUhuVnlDMUlqdDNHZ2xYT3NVYThUNnZiNWps?=
- =?utf-8?B?ZldPaWdEdHRhUXZCVnpCSnBKeTJTWGlUV3VUNmxrSlJ1Y1ZkcjlrckFWcjhx?=
- =?utf-8?B?am5BT2h2Z3lmb1BWWmxkSzNMU1RXdDI3TFRsNkp0TEZsSVY3TWZhNjBvbE5B?=
- =?utf-8?B?UG5HZVVCTGE4aFg2MjM4SmRrQzBwbW81aGJqd1h3aTIyOENvaUhFUmdDN0pE?=
- =?utf-8?B?aTBhR0YyeG9iQitJMjVjSUZpUG1XUXlhNTZRTmE4TUhIVzBEbzFmUEMvTGxy?=
- =?utf-8?B?NnNyRktZeFZHNWlNOE9sVWlZSnB4cnh5dm91L1AzNkR6Z0duczlBbEZJcDJX?=
- =?utf-8?B?QlYyUmg3QU41S081bkZJWUVjaG0rMUM3MFYyYi9PQnFJVUhFdFNKeG4vMWk0?=
- =?utf-8?B?VzVodzYvcmh5RXBLZVUyQXRsMDdOZTMzVnlkOW5yQVNGanoyZHB1SG5GT3NR?=
- =?utf-8?B?RXNkSUo4THVkVi9uWXN0alV1UWpOYkZMU1BueHVJM1RUWENjZTNWRU9uRGhS?=
- =?utf-8?B?R1hDa1gxdmFSZU9WczZxUjZ2Zkg3bnZKeThCR3Q4WGdFRnBzWXNrWDZBS2FW?=
- =?utf-8?B?U0R2TkVPVlFlWTNLMjF1R3E2aFR3UlFvWmVBeFROMTRyZkdIcnJWY1JwOGJ4?=
- =?utf-8?B?cC9BK0Q5V3lxczd6LzNZbmF2NUpvL2JLT3UwYmU0MGk5K1g3UmN1Vml3STkw?=
- =?utf-8?B?NktYa0wyektreHdmSjROVHZEN3FrUi9SUzM0TnVST0tTZkxiR0hRekY5NXNy?=
- =?utf-8?B?VmZIeTdwSkJ3bU4ySWI0VXVOZElWbFBsMmIrTjhJSWxMQU5GZExvYnQ5SjUv?=
- =?utf-8?B?TTBVR3VuZ29VSGhIRG1xVFlpbno0RGpkVCtudDdVcGFhTWhaVGY4YUpWMjRI?=
- =?utf-8?B?TEUrYStISHBUdXVBM2JLdmJNbjlUV0lMMkdSdFRHSmhSTkg1UGlleTRFdDNW?=
- =?utf-8?Q?pBMs=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6156e0f1-1101-42a9-fd7e-08dd9d4e0081
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 18:40:50.0823
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 18:41:42.0543
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: h7pCmQx4ZekfWU0GlYwKtfnLtghU7yuxg5GwI23UpH/P+9mrNDFvjay5Ocuf6UCt
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4171
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d07137f-67ad-4ba6-a401-08dd9d4e1fc6
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A9.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6759
 
-Hi Reinette,
+On Mon, May 26, 2025 at 10:30:46AM -0300, Jason Gunthorpe wrote:
+> On Fri, May 16, 2025 at 01:56:26PM -0700, Nicolin Chen wrote:
+> 
+> > > You don't need to move this unless you are using inlines. Just use a
+> > > forward declaration.
+> > 
+> > Since we forward ucmd now, ictx is in the ucmd so we need this
+> > structure for:
+> > 
+> > -		if (!IS_ERR(ret))                                              \
+> > +		if (!IS_ERR(ret)) {                                            \
+> >  			ret->member.ops = viommu_ops;                          \
+> > +			ret->member.ictx = ucmd->ictx;                         \
+> > +		}                                                              \
+> 
+> De-inline more of that function probably..
+> 
+> Also seem my other remarks about not storing ictx so much..
 
-On 5/27/25 12:54, Reinette Chatre wrote:
-> Hi Babu,
-> 
-> On 5/27/25 10:23 AM, Moger, Babu wrote:
->> On 5/22/25 15:51, Reinette Chatre wrote:
->>> On 5/15/25 3:51 PM, Babu Moger wrote:
-> 
->>>> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
->>>> index a2fbea0be535..2f54831e04e5 100644
->>>> --- a/arch/x86/kernel/cpu/cpuid-deps.c
->>>> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
->>>> @@ -71,6 +71,8 @@ static const struct cpuid_dep cpuid_deps[] = {
->>>>  	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
->>>>  	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_TOTAL   },
->>>>  	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_LOCAL   },
->>>> +	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_TOTAL   },
->>>> +	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_LOCAL   },
->>>
->>> Is this dependency still accurate now that the implementation switched to the 
->>> "extended event ID" variant of ABMC that no longer uses the event IDs associated
->>> with X86_FEATURE_CQM_MBM_TOTAL and X86_FEATURE_CQM_MBM_LOCAL?
->>
->> That's a good question. Unfortunately, we may need to retain this
->> dependency for now, as a significant portion of the code relies on
->> functions like resctrl_is_mbm_event(), resctrl_is_mbm_enabled(),
->> resctrl_arch_is_mbm_total_enabled(), and others.
->>
-> 
-> Avoiding needing to change code is not a valid reason. 
-> 
-> I think that without this dependency the code will
-> still rely on "functions like resctrl_is_mbm_event(),
-> resctrl_is_mbm_enabled(), resctrl_arch_is_mbm_total_enabled(),
-> and others." though.
-> 
-> The core shift is to stop thinking about QOS_L3_MBM_TOTAL_EVENT_ID
-> to mean the same as X86_FEATURE_CQM_MBM_TOTAL, similarly to stop
-> thinking about QOS_L3_MBM_LOCAL_EVENT_ID to mean the same as
-> X86_FEATURE_CQM_MBM_LOCAL.
+I found that all other ictx pointers in vdev/hw_queue are unused,
+as the core simply gets an ictx from their viommu pointers. This
+means that only this viommu allocator here needs such a storing.
 
-oh. ok.
+With that, how about a change like this v.s. inline:
 
-> 
-> I expected that for backwards compatibility ABMC will start by
-> enabling QOS_L3_MBM_TOTAL_EVENT_ID and QOS_L3_MBM_LOCAL_EVENT_ID 
-> as part of its initialization, configuring them with the current
-> defaults for which memory transactions are expected to be monitored
-> by each. With these events enabled the existing flows using, for
-> example, resctrl_is_mbm_event(), will continue to work as expected, no?
+[ Sol-1: Store ucmd ]
+----------------------------------------------------------------------------
+diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+index 2b30627d1d8ed..513af9ba04f17 100644
+--- a/drivers/iommu/iommufd/viommu.c
++++ b/drivers/iommu/iommufd/viommu.c
+@@ -60,9 +60,15 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 		goto out_put_hwpt;
+ 	}
+ 
++	/* Verify if the driver correctly calls iommufd_viommu_alloc() */
++	static_assert(offsetof(typeof(*ucmd), ictx) == 0);
++	if (WARN_ON_ONCE(viommu->ictx != ucmd->ictx)) {
++		rc = -EINVAL;
++		goto out_put_hwpt;
++	}
++
+ 	xa_init(&viommu->vdevs);
+ 	viommu->type = cmd->type;
+-	viommu->ictx = ucmd->ictx;
+ 	viommu->hwpt = hwpt_paging;
+ 	refcount_inc(&viommu->hwpt->common.obj.users);
+ 	INIT_LIST_HEAD(&viommu->veventqs);
+diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
+index d74c97feb9b52..6843c748a6f74 100644
+--- a/include/linux/iommufd.h
++++ b/include/linux/iommufd.h
+@@ -104,7 +104,10 @@ void iommufd_ctx_get(struct iommufd_ctx *ictx);
+ 
+ struct iommufd_viommu {
+ 	struct iommufd_object obj;
+-	struct iommufd_ctx *ictx;
++	union {
++		struct iommufd_ctx *ictx;
++		struct iommufd_ucmd *ucmd; /* for allocation only */
++	};
+ 	struct iommu_device *iommu_dev;
+ 	struct iommufd_hwpt_paging *hwpt;
+ 
+@@ -262,8 +265,10 @@ static inline int iommufd_viommu_report_event(struct iommufd_viommu *viommu,
+ 									       \
+ 		ret = (drv_struct *)__iommufd_object_alloc_ucmd(               \
+ 			ucmd, ret, IOMMUFD_OBJ_VIOMMU, member.obj);            \
+-		if (!IS_ERR(ret))                                              \
++		if (!IS_ERR(ret)) {                                            \
+ 			ret->member.ops = viommu_ops;                          \
++			ret->member.ucmd = ucmd;                               \
++		}                                                              \
+ 		ret;                                                           \
+ 	})
+ #endif
+----------------------------------------------------------------------------
 
-Yes. It will work as it uses event id.
-> 
-> This would require more familiarity with L3 monitoring enumeration
-> on AMD since it will still be required to determine the number of
-> RMIDs etc. but if ABMC does not actually depend on these CQM features
-> then the current enumeration would need to be re-worked anyway.
+[ Sol-2: De-inline ]
+----------------------------------------------------------------------------
+diff --git a/drivers/iommu/iommufd/driver.c b/drivers/iommu/iommufd/driver.c
+index 28dec9e097204..0adb1a552e457 100644
+--- a/drivers/iommu/iommufd/driver.c
++++ b/drivers/iommu/iommufd/driver.c
+@@ -54,6 +54,23 @@ struct iommufd_object *_iommufd_object_alloc_ucmd(struct iommufd_ucmd *ucmd,
+ }
+ EXPORT_SYMBOL_NS_GPL(_iommufd_object_alloc_ucmd, "IOMMUFD");
+ 
++struct iommufd_viommu *
++_iommufd_viommu_alloc_ucmd(struct iommufd_ucmd *ucmd, size_t size,
++			   const struct iommufd_viommu_ops *viommu_ops)
++{
++	struct iommufd_viommu *viommu;
++
++	static_assert(offsetof(typeof(*viommu), obj) == 0);
++	viommu = (struct iommufd_viommu *)_iommufd_object_alloc_ucmd(
++		ucmd, size, IOMMUFD_OBJ_VIOMMU);
++	if (IS_ERR(viommu))
++		return viommu;
++	viommu->ops = viommu_ops;
++	viommu->ictx = ucmd->ictx;
++	return viommu;
++}
++EXPORT_SYMBOL_NS_GPL(_iommufd_viommu_alloc_ucmd, "IOMMUFD");
++
+ /* Caller should xa_lock(&viommu->vdevs) to protect the return value */
+ struct device *iommufd_viommu_find_dev(struct iommufd_viommu *viommu,
+ 				       unsigned long vdev_id)
+diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
+index 2b30627d1d8ed..259fcfd85b1bd 100644
+--- a/drivers/iommu/iommufd/viommu.c
++++ b/drivers/iommu/iommufd/viommu.c
+@@ -60,9 +60,14 @@ int iommufd_viommu_alloc_ioctl(struct iommufd_ucmd *ucmd)
+ 		goto out_put_hwpt;
+ 	}
+ 
++	/* Verify if the driver correctly calls iommufd_viommu_alloc() */
++	if (WARN_ON_ONCE(viommu->ictx != ucmd->ictx)) {
++		rc = -EINVAL;
++		goto out_put_hwpt;
++	}
++
+ 	xa_init(&viommu->vdevs);
+ 	viommu->type = cmd->type;
+-	viommu->ictx = ucmd->ictx;
+ 	viommu->hwpt = hwpt_paging;
+ 	refcount_inc(&viommu->hwpt->common.obj.users);
+ 	INIT_LIST_HEAD(&viommu->veventqs);
+diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
+index d74c97feb9b52..50ac3a5703520 100644
+--- a/include/linux/iommufd.h
++++ b/include/linux/iommufd.h
+@@ -209,6 +209,9 @@ struct iommufd_object *_iommufd_object_alloc(struct iommufd_ctx *ictx,
+ struct iommufd_object *
+ _iommufd_object_alloc_ucmd(struct iommufd_ucmd *ucmd, size_t size,
+ 			   enum iommufd_object_type type);
++struct iommufd_viommu *
++_iommufd_viommu_alloc_ucmd(struct iommufd_ucmd *ucmd, size_t size,
++			   const struct iommufd_viommu_ops *viommu_ops);
+ struct device *iommufd_viommu_find_dev(struct iommufd_viommu *viommu,
+ 				       unsigned long vdev_id);
+ int iommufd_viommu_get_vdev_id(struct iommufd_viommu *viommu,
+@@ -231,6 +234,13 @@ _iommufd_object_alloc_ucmd(struct iommufd_ucmd *ucmd, size_t size,
+ 	return ERR_PTR(-EOPNOTSUPP);
+ }
+ 
++static inline struct iommufd_viommu *
++_iommufd_viommu_alloc_ucmd(struct iommufd_ucmd *ucmd, size_t size,
++			   const struct iommufd_viommu_ops *viommu_ops)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
+ static inline struct device *
+ iommufd_viommu_find_dev(struct iommufd_viommu *viommu, unsigned long vdev_id)
+ {
+@@ -257,13 +267,7 @@ static inline int iommufd_viommu_report_event(struct iommufd_viommu *viommu,
+  * the iommufd core. The free op will be called prior to freeing the memory.
+  */
+ #define iommufd_viommu_alloc(ucmd, drv_struct, member, viommu_ops)             \
+-	({                                                                     \
+-		drv_struct *ret;                                               \
+-									       \
+-		ret = (drv_struct *)__iommufd_object_alloc_ucmd(               \
+-			ucmd, ret, IOMMUFD_OBJ_VIOMMU, member.obj);            \
+-		if (!IS_ERR(ret))                                              \
+-			ret->member.ops = viommu_ops;                          \
+-		ret;                                                           \
+-	})
++	container_of(_iommufd_viommu_alloc_ucmd(                               \
++			     ucmd, sizeof(drv_struct), viommu_ops),            \
++		     typeof(drv_struct), member)
+ #endif
+----------------------------------------------------------------------------
 
-Are you suggesting to remove the dependency and rework ABMC enumeration in
-get_rdt_mon_resources()?
-
--- 
 Thanks
-Babu Moger
+Nicolin
