@@ -1,86 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4761E5B7D;
-	Tue, 27 May 2025 13:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21F47263B;
+	Tue, 27 May 2025 13:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352434; cv=none; b=XCTD8UMjDaRFOrThQEpfxppd2KmxrWBSdVUVxG0tiTmg5VnSOyrF9HdHNZBv0npMWZrnn6lkiLLwfJ08B/g0cSmFIy1J/tJR3rUVKozreuS6C+D3mQ6cA+ZGWuBnv6UAHswKyhimYv19Bu7G+YKaamAJ0hVSq8SlyMpFc/TKb1I=
+	t=1748352483; cv=none; b=eiSeajO0HFD408rzztrxyb25tGC4oNU9y5DVYCvYq7BG/+DxRG/0Ak3m5nVxBYdTx1UmhuOVY6WnOOBRzrPDhkKM4ZROVQ8aByg9BYcyU4yAVKx60MAgIjm0ywM7CBk9R7bYe/3obK//kxw7GzbN86phuT3fLF2NJD6oc5L6294=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352434; c=relaxed/simple;
-	bh=WZLaUSVW1zTkLqqEDqdAyL85Ym7U6Tvej/VLIo/XULE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HCfrQTCXQ0IP060Wl9hhMUIcU0hPyLJIGeYGZxIvvw1F5RevUjMzgLjsP25qcTM+JGowKLA9I5j5MZoDckID4vrL0pwFWC7FQjxk7U5MWSuqfs76op8ZHqYtaOOJZOe/FdggtNYV2AgWgDIuCDv+SqMdU99w0drdOK1CUxuG5BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jibTMKC+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748352483; c=relaxed/simple;
+	bh=6n+ZjVHYJRruRP6QhiS37RnfCFSoYNr/NDgvQBN9BNE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b4la8OBN2FTCM6mca5mMa6WDDcCBo2xaGDLvPUG1X8FlKCi2QwSqtzauUo+lkpwaY6Hdw13VK2jeN3GW60wI+chVR+pyAVU4zpwYioGZ711N/7bisU8Nn8ohx18bhh1wtOF91n3ZnIfFCqEijU6NBW/d7n81j5mZw9VzHizQKr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPL1+zNz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jibTMKC+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD576C4CEE9;
-	Tue, 27 May 2025 13:27:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPL1+zNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A6CC4CEEB;
+	Tue, 27 May 2025 13:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748352433;
-	bh=WZLaUSVW1zTkLqqEDqdAyL85Ym7U6Tvej/VLIo/XULE=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=jibTMKC+BcPbNGo50bFhbpUoxQCvLqK1QmIli930KypQeRZZ6IwuRCslGY2RPz9vL
-	 gHvSRYxs/xthFKzTmstlLRCzQV3ULVoqVAqHXC+P7u8VVpG5eGD/3Mho9hnkigKwB3
-	 4KSotrfzoCNcSW7k46qtT1gYRNjihROEkVeGccpz7if7v5Q21kM24fsmt0S7EwF6uq
-	 7R3G2/6E2yBUwxQT7w1SYoWzacwMX0cUxdSFcn+sbIy4i/znJBcjdbcOupM8dC09g8
-	 gE3IXQ2a0q/gPLLjO1FbhT0s4eDDy0AxO+FO/pl+Su6AHVZKIuy+pTeHNEJPjg50Zz
-	 hAdLNvoXqm3Jw==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- zhangyi@everest-semi.com, Qasim Ijaz <qasdev00@gmail.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250526191820.72577-1-qasdev00@gmail.com>
-References: <20250526191820.72577-1-qasdev00@gmail.com>
-Subject: Re: [PATCH] ASoC: codecs: fix out-of-bounds access on invalid
- clock config
-Message-Id: <174835243163.49001.6702458241020988740.b4-ty@kernel.org>
-Date: Tue, 27 May 2025 14:27:11 +0100
+	s=k20201202; t=1748352482;
+	bh=6n+ZjVHYJRruRP6QhiS37RnfCFSoYNr/NDgvQBN9BNE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kPL1+zNzo8eovVYJnZOxmhDr7c+ycetyKLvdsuHP2z27c5e9hktGSZxRbhN37wd5H
+	 cSpcqe4MO/tXOQ/po6PSOoQ60Pb54GKunFW0kq+jyt0ckRC952ybdi06MSbUNQknVc
+	 Cy2EwTIRQuhpDHnwPhSuikSzuMz6UWTbUKRJla3oohNL+/5XTgBSpbFuMuMMx5OgYf
+	 kJFizpgXTDo34u2aiSla+rEPWGBWJMd0170QM7vBMSRFLVVRI/b+o7animPG1JYtGD
+	 7Hbk7nr6fJtUCneLiDJ22cpxhvBUrsZHppE74oK9fVeFSuoQDDzG4RcM9gztacZ3X3
+	 Fg/bcae0SpVEQ==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6066c02cd92so1478592eaf.2;
+        Tue, 27 May 2025 06:28:02 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVCb+VSe4fxON+MnIjZaTy4tIwfuZQscZaBBwAEPLTpYHBJ9EGvp9Wt+tdKNOjQMdZD6W1XmjX8xDc=@vger.kernel.org, AJvYcCWCeq4ehTtoj6f01CpRYcrif792vZ6RDinF4FCTzPB07S50ve2paig2q4jcp2JiVDw0dCvIHkE9gAJ3J42y@vger.kernel.org, AJvYcCXD29hg/p/17oigJvP6k9cU0KQs1HUKp6onhfpkeo6/3ok4C9Mud6RcnGeSsBrqiDkXyHMuSi3ZpwUkUMgZXcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyuNq/QeUAHOlOGaz8PFphKsBdhI5yXg0gjZ+ZapsKvMifaS4/
+	RiEAq3ENxjCOStnVgR/mCzdkduh5j9K2DGO75gAq9XVJX4KJOdpoWntcfccjwYKiQGF1dbZRPyl
+	+ASm3NXiRh06KJyc1+QjR+diuLoTQhA0=
+X-Google-Smtp-Source: AGHT+IFSAqGTRonCyHdzPHXzUnwF15GbCmScNUgBEQdqAtxS6EgzRVvQOgQAmShq5ZmtIno7kTA0NkVHIzzSEu9IsCQ=
+X-Received: by 2002:a05:6820:270c:b0:60b:c7bf:5ff4 with SMTP id
+ 006d021491bc7-60bc7bf6141mr2188782eaf.2.1748352481726; Tue, 27 May 2025
+ 06:28:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c25d1
+References: <aDVRcfU8O8sez1x7@stanley.mountain>
+In-Reply-To: <aDVRcfU8O8sez1x7@stanley.mountain>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 27 May 2025 15:27:50 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jAJN0dAHyUcpD1QvqZO36OmpGS2HpoRNkgG_-vNhO6tw@mail.gmail.com>
+X-Gm-Features: AX0GCFvDe7KgMteLqE5TkkcwRDYFaq8UOCj-peIRP-B2k_1-cXP7CZdFbN1z-YU
+Message-ID: <CAJZ5v0jAJN0dAHyUcpD1QvqZO36OmpGS2HpoRNkgG_-vNhO6tw@mail.gmail.com>
+Subject: Re: [PATCH next] cpuidle: psci: Fix uninitialized variable in dt_idle_state_present()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 26 May 2025 20:18:20 +0100, Qasim Ijaz wrote:
-> get_coeff() returns –EINVAL when no table entry matches.
-> The driver then uses that value as an index into coeff_div[],
-> causing an OOB access.
-> 
-> To fix lets abort the hw_params call instead.
-> 
-> 
-> [...]
+On Tue, May 27, 2025 at 7:45=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+>
+> If the first cpu_node =3D of_cpu_device_node_get() fails then the cleanup=
+.h
+> code will try to free "state_node" but it hasn't been initialized yet.
+> Declare the device_nodes where they are initialized to fix this.
+>
+> Fixes: 5836ebeb4a2b ("cpuidle: psci: Avoid initializing faux device if no=
+ DT idle states are present")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/cpuidle/cpuidle-psci.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psc=
+i.c
+> index 3c2756a539c4..4e1ba35deda9 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -456,14 +456,13 @@ static struct faux_device_ops psci_cpuidle_ops =3D =
+{
+>
+>  static bool __init dt_idle_state_present(void)
+>  {
+> -       struct device_node *cpu_node __free(device_node);
+> -       struct device_node *state_node __free(device_node);
+> -
+> -       cpu_node =3D of_cpu_device_node_get(cpumask_first(cpu_possible_ma=
+sk));
+> +       struct device_node *cpu_node __free(device_node) =3D
+> +                       of_cpu_device_node_get(cpumask_first(cpu_possible=
+_mask));
+>         if (!cpu_node)
+>                 return false;
+>
+> -       state_node =3D of_get_cpu_state_node(cpu_node, 0);
+> +       struct device_node *state_node __free(device_node) =3D
+> +                       of_get_cpu_state_node(cpu_node, 0);
+>         if (!state_node)
+>                 return false;
+>
+> --
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] ASoC: codecs: fix out-of-bounds access on invalid clock config
-      commit: 16719d48197bbd8cff121b32acec67d954335437
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Applied, thanks!
