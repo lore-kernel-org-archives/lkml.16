@@ -1,363 +1,332 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E233021885D;
-	Tue, 27 May 2025 21:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE711F03C7
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748382800; cv=none; b=Ha04q7YVIk7MtG/VyVU8FfANPMKVFTRYZ6y66VTUZPeaU/12VDChNWLloUZYyU9FyY5drRSJX5m03FTXOQ9I/7X2TPaiHbB6rG+lSXQE97ocDqD1Cxb7ZP337RqsQFBQ8aHD80VoGYiKuJY8sDLYxExJDqC98Xnvf3YyHyyyR9I=
+	t=1748382909; cv=none; b=q/sm7VvGqDC7AcSlijleaatQbdInoXAOSpNAiHilPvndgiOpdKFCwecnxrA9HJ1RDKdh6HTKfv1JXKXcDYO6oPHNbb+i2tpgb1Z6HjC2Qgk4Oo7HNbMmGtGfZAhk/F9EhrecDrzZ/Mr7+hdl2fYGr7+awb2kfW/rkMq+nXyXR90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748382800; c=relaxed/simple;
-	bh=zmNS/g/uQIEqjg8pv8e9ZCmB4hQz9Fpeoy2dOjmOTf0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=imPs4HwQs+AuT7peCcFtpxmnCE8mMD3J08/evq7x46Urxx9q7MUpoDoUR+gS9nFnjzFnZQKeXquJ+DysB5uuDMDWfAW8AMedp/jHNslOmV15FVZK2kwkIhr1eF6zHmTQMXvzv9jWBPCXMkDBywv+IgPnTInu4peXWN6oQO+R91U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HeMQqt9i; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748382909; c=relaxed/simple;
+	bh=nXe1Icil4NeLuKAWL16jSsRo21UwSmmjNwPMHL3MN2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdSMBsxtKXBW8GqXKPuDs940mUIvBogsPtTY1qPXMaZEdsL3uzCAUGnXopZ9p+PDM+BrnV5P1Ti71K0tM5RutEiECCLg1z8ZgC0hSWfE8OIzS5beq6ce8E0ShyNL1FODCKZKg5i4Pe7KVh63h1XBUodmgbCwPA7M9Nn4k2f+Cto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NiN1Q+zx; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HeMQqt9i"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf680d351so1955395e9.0;
-        Tue, 27 May 2025 14:53:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748382794; x=1748987594; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Gq4Q+VNy6npC1ksfAe5OpC6UqFwfJyc/g1FQnGCBY/w=;
-        b=HeMQqt9iti7KNNeoSsXhrB9lh1VE8L8DcE5uKZblgI4Nvt2Cgsp9WVqs6RsuWpCP4x
-         G2tcHNBuuHVS4lfWih4Plr8XEOU3whagD/5XHjTqjee8gr2VxMuvdLZRxtWlvqGP5/MD
-         6taGYxy/3aQiL1l3fuejwiML8VMag1nAOIoog03xGWTRSICxR8NCZqBw1mqpimEHuVda
-         UNAm8AzMREdrIx8x7ZhB33DixuScYidjfMwgmNpJ0DeuRvLu1UfNOt3GPeFhN87HSJ1a
-         qbAVAfHxPrcBdP3l7M6B4Mn/JT6PH6c6uSOK98qH9pO3V9Q83uhnInlts2v4FGRtHd/g
-         OS1Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NiN1Q+zx"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RHTYvi028888
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=ne0gIQPeeXA6jgzWvpGK1bbR
+	cxhFrzGXDtK9BlZZ+0M=; b=NiN1Q+zxSFX1HVMJWUPBbHM1fj+PQogE32B9s9rh
+	fZGbO7tmuoSg1WWTh+X/wNeIxzv0byXz2o5MpeZ5EJEYngFXnJmyuxsj+pZaqL+x
+	OwjeiHW4Osj5N2T807P3WR+ThjkQXlskCiqSrb6Ft4NU/hgNelJnFnDEVmh+YUUd
+	XLdVQ2Dr/jbokc+ZoGPJquor1Dv2Utws+QGCAAmbn3qdrWrTXFxlM1fW0ffpjDCF
+	KHS/QV+HAvQa74q+uDrL55uZmLw4WGB011gvLeLYAH6SG1XT9/k2a1nMdG9gbliK
+	NPMXo7u3nSwd7VKo7XkLPp7n2FOhS9PFLPr3mPr6Okajhw==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46whuf0nct-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:55:06 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fab07aa5e1so43615626d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:55:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748382794; x=1748987594;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gq4Q+VNy6npC1ksfAe5OpC6UqFwfJyc/g1FQnGCBY/w=;
-        b=UnLTAUfdUfXGjKwHPozvsT8MsxsvgERWq7i2eNxYDs5T+nakTpFWaMCB/iuOdT6nfF
-         ig377kYjSuNrvHonaBbv3NqnRKSkx0iq8YoOFEWkO7Fwdw96lXyyTgLHzajDlHP9KRQq
-         geJWRoDfgJIgUVGrVy8KTODLiuSNj+YhX6NH8casMfZnERDjGMCPEPa4ZJGr8DXKkjFy
-         RYErCTNlKTLfbMj1QnkJ1yLQBPIOeFWNxK8hTMYd6jxXiIRErGRgEaIFf0kwGH895t7D
-         M5Ga3eWFOwIBJA+3p1F9vaKHkWR41PseDey/rpAbgYfVUSKte0f2dPPM2fH/KFZoTr6r
-         8TzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXK4i17YeBOqHHRwhLhbAs6eLJ7Epsqq0C0KQvxE2cB2SlouMMyMvM57zxzE7Rq/xDJlPVn6evUbw=@vger.kernel.org, AJvYcCVvOgVqPStKBksI/96d04HIdBdKKBZq1+sZUP/pn3JE0xVsrEWTY7Yhv5ZLX5RweYOX2IO66X8cDfNO@vger.kernel.org, AJvYcCWckJ0ib1FZd793J8VLDv7MH66MldVR/r4KHZfQYdsCMUMIR1Z9P9aNYaAfrTU7SsYex+0/KoXVlqOw9HrV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/zltN+0v1+hx8WwKnNpH3EF+k6ODIiBdH8RRA38FCVk4sObBZ
-	hWplYDzQnw2X8JigK4jDhoJf51BkNGhjI6iNIlJ0p6idMCYHYyidq4MNlhjf3A==
-X-Gm-Gg: ASbGncsqMAiIH2ils2DS2Kz78w8YKZCrJ7FScbZZgcDKVdFy4d0HJgD736a5SAgCIDT
-	Yok4YnPSJTeKbs9w+eO12b0mqz5c7CzmcwICmVjHpabUS7AuI6J4GfNNjLePPLYs/Uy5ZbFcLTx
-	4sShfWu1GYrd7YVK26FRKjuwUrMpepnKmkQtgnmEA3FpBP+RTOETGhKmT2rigrgM5TlM53iNuDe
-	0ove9o7kLG/am48G3pImhgNMpZq3DTseNFrJIdEIvJMx1XC4SsfQngckEj5TTcko/BzQ7oy/lEw
-	YO+AMWQf8jPqx8N+WsECUzmOfQx3yvlXp0cnUI6mZ1JpQy372s79HgO1eQ3glQSGGWtbrZt3gk3
-	NxYJot0P/EcXk2G7JMZyT
-X-Google-Smtp-Source: AGHT+IHL/zXQxdrX/xfFoSnEBrs97F+A5I3OaSukghEzTxZ95IFMQvVQRnrHOcpwVxdVHqvUd3ByPQ==
-X-Received: by 2002:a05:6000:230b:b0:3a4:d045:6462 with SMTP id ffacd0b85a97d-3a4e5e9cbddmr2459193f8f.14.1748382793993;
-        Tue, 27 May 2025 14:53:13 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4e8b8dcdasm206656f8f.11.2025.05.27.14.53.12
+        d=1e100.net; s=20230601; t=1748382905; x=1748987705;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ne0gIQPeeXA6jgzWvpGK1bbRcxhFrzGXDtK9BlZZ+0M=;
+        b=Hz1xuqKlAI17yuooBXLtBvOvzeiZlI474XsXkxXcHbr6sx346c5rxeyYqRCEbzIcCw
+         kLC8RYWiaNv2hc5t/ErmNvCr3WXCm7XRWEz2e5/F6fYmwISpHrQCgKqbQoKpWY8jDu48
+         UZ7iYp5zhHVgpTGq/Cw5rstXdZwyzxpnuOxCFspplfhJ0WI9Fg2ZdWyF0uu6YebFlsjK
+         a3V8CqcHblGS2VMT0JVKBt1I+mDkr7qIL75hgwnh2JIul7zNMP0rtoBRwcZROK0pid5G
+         q2KWFSm09Lp3zQ9+U8zhphp2hELiaU1L9vmyMbumt4C+5HHNsmljKnAW6ud1vm5k5v5U
+         /u1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUzid5+CiC4K1ZadC972favGyNdt5bEVplbKtY80shIq+Tm3XRUhtSGqRJ697ujftEPsP7W+4D8+VtHK48=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2yUY4bUsWpVWdz0pa9/cyGYAwFUDWZPHPWHFfq92gw5+LETHQ
+	TKuPFChv9npxlYcvkWt+fTJsvl2DzF4JOi2nHuufXJp4IzG3gMqQoTPkZRWmtZCf10OChgFHyDW
+	Q50g0cusZ/b6HXEyFw1IpjUiyVYJHy2kF2c9zz+QMfiJLIDVoKllmnNAmqz1yJt7AXg8=
+X-Gm-Gg: ASbGncv3Q36xvjZgHT0+Ky/ACAPm4wUw9jbA3HeLdZemqaw0kuLMy6e4WxXguSq8jLo
+	B5QoOYxW9RNxEBAWH8n08SreG28AZmJxZi0J6CLIKzTSDhkJxjBij0L8HjWVfoDOopOU0L4HZZw
+	07FnVgi1OuzofEQg4xxuxxsd/9OWu8A9+F8zAtXgNDyINPDBoCgqgCVqLtnHAn7kmJOQ9xH7Int
+	lsQfJQLW5XpMsrQJLDZtD8wQA3Ml0cfpoxkKQzmNDlzs5qWUfFszX8ZlfnNRQDT5Fx9fjgq5i7U
+	tdoiZ0CgQ1jasrGuT47IsQdqSyIAmjzz4w2aufDgT2MhnsOi1tFbxY+SoYQHASI8jNr06mgQA64
+	=
+X-Received: by 2002:a05:6214:5095:b0:6f2:d25e:8f60 with SMTP id 6a1803df08f44-6fa9d2aea48mr243069896d6.22.1748382905545;
+        Tue, 27 May 2025 14:55:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcBAog/0QNelbBSobBObHpDOHFG6hBJ6xtUMTJD3tXlDyIcI+Swq6mULnQ7WDRT6XsVldWdA==
+X-Received: by 2002:a05:6214:5095:b0:6f2:d25e:8f60 with SMTP id 6a1803df08f44-6fa9d2aea48mr243069596d6.22.1748382905125;
+        Tue, 27 May 2025 14:55:05 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532edde019sm45678e87.49.2025.05.27.14.55.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 14:53:13 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] thermal/drivers: airoha: Add support for AN7583 Thermal Sensor
-Date: Tue, 27 May 2025 23:52:39 +0200
-Message-ID: <20250527215241.25767-6-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250527215241.25767-1-ansuelsmth@gmail.com>
-References: <20250527215241.25767-1-ansuelsmth@gmail.com>
+        Tue, 27 May 2025 14:55:03 -0700 (PDT)
+Date: Wed, 28 May 2025 00:55:01 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v3 5/6] phy: qcom: qmp-combo: register a typec mux to
+ change the QMPPHY_MODE
+Message-ID: <itmvwhcf37bmnpadcyc7kdt7wx3eljyjwyv64s24zwhbr2e45g@76uzcpjqzx22>
+References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
+ <20250527-topic-4ln_dp_respin-v3-5-f9a0763ec289@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250527-topic-4ln_dp_respin-v3-5-f9a0763ec289@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=OslPyz/t c=1 sm=1 tr=0 ts=683634bb cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=RX03QJoVYHKw4zbBXYoA:9
+ a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: cn4L5kZ1UAWZYvCrDy_DUIVsINjwln2x
+X-Proofpoint-GUID: cn4L5kZ1UAWZYvCrDy_DUIVsINjwln2x
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE4NCBTYWx0ZWRfX+SZfhsRAL6JC
+ /tyB8rsMVkYjQ2sLa7T1WjMP0k52sRNfqscboS/zUMhO/S5BJRTkqKJimbr8hOsE0+mmL24Rmum
+ s9T8/2yYt+l2lgOEGO2r9ySBivbE7EKrFJD/dYCwZyT00Y+FS085l7mbiOfUumUDqLmBaRC8cw3
+ i4BVWsaslqmOV3ASf252i82p7CmmVAZVHAVDqMusAmTggCIgLjVP/p9mDuHTk1vjsMrNnrQYkfm
+ UPQBL8S7nw6ecrBPo0pmTKI1L0rNR5Jjq2p0McXQovXdrH8+z+5vd+8OxEcRl5R23X0D6jOHBh7
+ bFz7hUDo0jQjKfMlioHgSZKvci6q49fVF8+s0BZty56FunRRDjsju5NovMX1jmH4CEI2bn6uuK8
+ ycLBPg4ocm9WKf0AItdwNu267V4/yPJ1n97NE80bcwqRxJ5rqrQONid7CnS6QPquHJ3DkdHW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_10,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270184
 
-Add support for Airoha AN7583 Thermal driver. This apply similar logic
-on how to read the temperature but totally drop support for the
-PTP_THERMAL subsystem. PTP_THERMAL subsystem was a way to trigger trip
-point from hardware by configuring how to read the temperature
-internally.
+On Tue, May 27, 2025 at 10:40:07PM +0200, Konrad Dybcio wrote:
+> From: Neil Armstrong <neil.armstrong@linaro.org>
+> 
+> Register a typec mux in order to change the PHY mode on the Type-C
+> mux events depending on the mode and the svid when in Altmode setup.
+> 
+> The DisplayPort phy should be left enabled if is still powered on
+> by the DRM DisplayPort controller, so bail out until the DisplayPort
+> PHY is not powered off.
+> 
+> The Type-C Mode/SVID only changes on plug/unplug, and USB SAFE states
+> will be set in between of USB-Only, Combo and DisplayPort Only so
+> this will leave enough time to the DRM DisplayPort controller to
+> turn of the DisplayPort PHY.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> [konrad: renaming, rewording, bug fixes]
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-combo.c | 121 ++++++++++++++++++++++++++++--
+>  1 file changed, 116 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> index b34ad92021a656b39562e2685a1e7a0a93660a35..4c9d92d6e0b8508191d052bd85dd135e4b8d7cc7 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/usb/typec.h>
+> +#include <linux/usb/typec_dp.h>
+>  #include <linux/usb/typec_mux.h>
+>  
+>  #include <drm/bridge/aux-bridge.h>
+> @@ -1709,6 +1710,8 @@ struct qmp_combo {
+>  
+>  	struct typec_switch_dev *sw;
+>  	enum typec_orientation orientation;
+> +
+> +	struct typec_mux_dev *mux;
+>  };
+>  
+>  static void qmp_v3_dp_aux_init(struct qmp_combo *qmp);
+> @@ -3582,17 +3585,112 @@ static int qmp_combo_typec_switch_set(struct typec_switch_dev *sw,
+>  	return 0;
+>  }
+>  
+> -static void qmp_combo_typec_unregister(void *data)
+> +static int qmp_combo_typec_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
+> +{
+> +	struct qmp_combo *qmp = typec_mux_get_drvdata(mux);
+> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +	enum qmpphy_mode new_mode;
+> +	unsigned int svid;
+> +
+> +	guard(mutex)(&qmp->phy_mutex);
+> +
+> +	if (state->alt)
+> +		svid = state->alt->svid;
+> +	else
+> +		svid = 0;
+> +
+> +	if (svid == USB_TYPEC_DP_SID) {
+> +		switch (state->mode) {
+> +		/* DP Only */
+> +		case TYPEC_DP_STATE_C:
+> +		case TYPEC_DP_STATE_E:
+> +			new_mode = QMPPHY_MODE_DP_ONLY;
+> +			break;
+> +
+> +		/* DP + USB */
+> +		case TYPEC_DP_STATE_D:
+> +		case TYPEC_DP_STATE_F:
+> +
+> +		/* Safe fallback...*/
+> +		default:
+> +			new_mode = QMPPHY_MODE_USB3DP;
+> +			break;
+> +		}
+> +	} else {
+> +		/* Fall back to USB3+DP mode if we're not sure it's strictly USB3-only */
 
-This subsystem has been totally removed from Airoha AN7583 permitting
-only to read the temperature.
+Why? if the SID is not DP, then there can't be a DP stream.
 
-The SoC support up to 3 sensor but the original driver always read the
-BGA sensor hence it's currently implemented reading only this specific
-sensor. Reference and values for the other 2 sensor are defined for
-further implementation if confirmed working.
+> +		if (state->mode == TYPEC_MODE_USB3 || state->mode == TYPEC_STATE_USB)
+> +			new_mode = QMPPHY_MODE_USB3_ONLY;
+> +		else
+> +			new_mode = QMPPHY_MODE_USB3DP;
+> +	}
+> +
+> +	if (new_mode == qmp->qmpphy_mode) {
+> +		dev_dbg(qmp->dev, "typec_mux_set: same qmpphy mode, bail out\n");
+> +		return 0;
+> +	}
+> +
+> +	if (qmp->qmpphy_mode != QMPPHY_MODE_USB3_ONLY && qmp->dp_powered_on) {
+> +		dev_dbg(qmp->dev, "typec_mux_set: DP PHY is still in use, delaying switch\n");
+> +		return 0;
+> +	}
 
-set_thermal_mux() is extended to also address muxing the sensor as
-AN7583 use a different way to read the temperature from 3 different
-diode. The EN7581 code is updated to account for these changes.
+Consider the following scenario: connect DP dongle, use modetest to
+setup DP stream, disconnect dongle, connect USB3 device. What would be
+the actual state of the PHY? Modetest is still running, so DP stream is
+not going to be shut down from the driver.
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/thermal/airoha_thermal.c | 158 ++++++++++++++++++++++++++++++-
- 1 file changed, 154 insertions(+), 4 deletions(-)
+I think we might need a generic notifier from the PHY to the user,
+telling that the PHY is going away (or just that the PHY is changing the
+state). Then it would be usable by both the DP and USB drivers to let
+them know that they should toggle the state.
 
-diff --git a/drivers/thermal/airoha_thermal.c b/drivers/thermal/airoha_thermal.c
-index 4c973cce106a..e71548f9cee1 100644
---- a/drivers/thermal/airoha_thermal.c
-+++ b/drivers/thermal/airoha_thermal.c
-@@ -18,6 +18,12 @@
- #define EN7581_DOUT_TADC			0x2f8
- #define   EN7581_DOUT_TADC_MASK			GENMASK(15, 0)
- 
-+#define AN7583_MUX_SENSOR			0x2a0
-+#define   AN7583_LOAD_ADJ			GENMASK(3, 2)
-+#define AN7583_MUX_TADC				0x2e4
-+#define   AN7583_MUX_TADC_MASK			GENMASK(3, 1)
-+#define AN7583_DOUT_TADC			0x2f0
-+
- /* PTP_THERMAL regs */
- #define EN7581_TEMPMONCTL0			0x800
- #define   EN7581_SENSE3_EN			BIT(3)
-@@ -181,6 +187,11 @@
- #define EN7581_SCU_THERMAL_PROTECT_KEY		0x12
- #define EN7581_SCU_THERMAL_MUX_DIODE1		0x7
- 
-+#define AN7583_SCU_THERMAL_PROTECT_KEY		0x80
-+#define AN7583_NUM_SENSOR			3
-+
-+#define AIROHA_THERMAL_NO_MUX_SENSOR		-1
-+
- /* Convert temp to raw value as read from ADC	((((temp / 100) - init) * slope) / 1000) + offset */
- #define TEMP_TO_RAW(priv, temp)			((((((temp) / 100) - (priv)->init_temp) * \
- 						  (priv)->default_slope) / 1000) + \
-@@ -193,8 +204,39 @@
- 
- #define AIROHA_MAX_SAMPLES			6
- 
-+/*
-+ * AN7583 supports all these ADC mux but the original driver
-+ * always checked temp with the AN7583_BGP_TEMP_SENSOR.
-+ * Assume using the other sensor temperature is invalid and
-+ * always read from AN7583_BGP_TEMP_SENSOR.
-+ *
-+ * On top of this it's defined that AN7583 supports 3
-+ * sensor: AN7583_BGP_TEMP_SENSOR, AN7583_GBE_TEMP_SENSOR,
-+ * AN7583_CPU_TEMP_SENSOR.
-+ *
-+ * Provide the ADC mux for reference.
-+ */
-+enum an7583_thermal_adc_mux {
-+	AN7583_BGP_TEMP_SENSOR,
-+	AN7583_PAD_AVS,
-+	AN7583_CORE_POWER,
-+	AN7583_AVSDAC_OUT,
-+	AN7583_VCM,
-+	AN7583_GBE_TEMP_SENSOR,
-+	AN7583_CPU_TEMP_SENSOR,
-+
-+	AN7583_ADC_MUX_MAX,
-+};
-+
-+enum an7583_thermal_diode_mux {
-+	AN7583_D0_TADC,
-+	AN7583_ZERO_TADC,
-+	AN7583_D1_TADC,
-+};
-+
- enum airoha_thermal_chip_scu_field {
- 	AIROHA_THERMAL_DOUT_TADC,
-+	AIROHA_THERMAL_MUX_SENSOR,
- 	AIROHA_THERMAL_MUX_TADC,
- 
- 	/* keep last */
-@@ -208,6 +250,7 @@ struct airoha_thermal_priv {
- 	struct resource scu_adc_res;
- 
- 	u32 pllrg_protect;
-+	int current_adc;
- 
- 	struct thermal_zone_device *tz;
- 	int init_temp;
-@@ -224,6 +267,24 @@ struct airoha_thermal_soc_data {
- 	int (*post_probe)(struct platform_device *pdev);
- };
- 
-+static const unsigned int an7583_thermal_coeff[AN7583_ADC_MUX_MAX] = {
-+	[AN7583_BGP_TEMP_SENSOR] = 973,
-+	[AN7583_GBE_TEMP_SENSOR] = 995,
-+	[AN7583_CPU_TEMP_SENSOR] = 1035,
-+};
-+
-+static const unsigned int an7583_thermal_slope[AN7583_ADC_MUX_MAX] = {
-+	[AN7583_BGP_TEMP_SENSOR] = 7440,
-+	[AN7583_GBE_TEMP_SENSOR] = 7620,
-+	[AN7583_CPU_TEMP_SENSOR] = 8390,
-+};
-+
-+static const unsigned int an7583_thermal_offset[AN7583_ADC_MUX_MAX] = {
-+	[AN7583_BGP_TEMP_SENSOR] = 294,
-+	[AN7583_GBE_TEMP_SENSOR] = 298,
-+	[AN7583_CPU_TEMP_SENSOR] = 344,
-+};
-+
- static int airoha_get_thermal_ADC(struct airoha_thermal_priv *priv)
- {
- 	u32 val;
-@@ -234,7 +295,7 @@ static int airoha_get_thermal_ADC(struct airoha_thermal_priv *priv)
- }
- 
- static void airoha_set_thermal_mux(struct airoha_thermal_priv *priv,
--				   int tdac_idx)
-+				   int tdac_idx, int sensor_idx)
- {
- 	u32 pllrg;
- 
-@@ -245,9 +306,20 @@ static void airoha_set_thermal_mux(struct airoha_thermal_priv *priv,
- 	regmap_write(priv->chip_scu, EN7581_PLLRG_PROTECT,
- 		     priv->pllrg_protect);
- 
-+	/*
-+	 * Configure Thermal Sensor mux to sensor_idx.
-+	 * (if not supported, sensor_idx is AIROHA_THERMAL_NO_MUX_SENSOR)
-+	 */
-+	if (sensor_idx != AIROHA_THERMAL_NO_MUX_SENSOR)
-+		regmap_field_write(priv->chip_scu_fields[AIROHA_THERMAL_MUX_SENSOR],
-+				   sensor_idx);
-+
- 	/* Configure Thermal ADC mux to tdac_idx */
--	regmap_field_write(priv->chip_scu_fields[AIROHA_THERMAL_MUX_TADC],
--			   tdac_idx);
-+	if (priv->current_adc != tdac_idx) {
-+		regmap_field_write(priv->chip_scu_fields[AIROHA_THERMAL_MUX_TADC],
-+				   tdac_idx);
-+		priv->current_adc = tdac_idx;
-+	}
- 
- 	/* Sleep 10 ms for Thermal ADC to enable */
- 	usleep_range(10 * USEC_PER_MSEC, 11 * USEC_PER_MSEC);
-@@ -360,7 +432,8 @@ static void en7581_thermal_setup_adc_val(struct device *dev,
- 	u32 efuse_calib_info, cpu_sensor;
- 
- 	/* Setup Thermal Sensor to ADC mode and setup the mux to DIODE1 */
--	airoha_set_thermal_mux(priv, EN7581_SCU_THERMAL_MUX_DIODE1);
-+	airoha_set_thermal_mux(priv, EN7581_SCU_THERMAL_MUX_DIODE1,
-+			       AIROHA_THERMAL_NO_MUX_SENSOR);
- 
- 	regmap_read(priv->map, EN7581_EFUSE_TEMP_OFFSET_REG, &efuse_calib_info);
- 	if (efuse_calib_info) {
-@@ -476,6 +549,10 @@ static int en7581_thermal_probe(struct platform_device *pdev,
- 	for (i = 0; i < AIROHA_THERMAL_FIELD_MAX; i++) {
- 		struct regmap_field *field;
- 
-+		/* Skip registering MUX_SENSOR field as not supported */
-+		if (i == AIROHA_THERMAL_MUX_SENSOR)
-+			continue;
-+
- 		field = devm_regmap_field_alloc(dev, priv->chip_scu,
- 						en7581_chip_scu_fields[i]);
- 		if (IS_ERR(field))
-@@ -516,6 +593,71 @@ static int en7581_thermal_post_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int an7583_thermal_get_temp(struct thermal_zone_device *tz, int *temp)
-+{
-+	struct airoha_thermal_priv *priv = thermal_zone_device_priv(tz);
-+	int sensor_idx;
-+	int delta_diode, delta_gain;
-+	int coeff, slope, offset;
-+
-+	int diode_zero, diode_d0, diode_d1;
-+
-+	/* Always read sensor AN7583_BGP_TEMP_SENSOR */
-+	sensor_idx = AN7583_BGP_TEMP_SENSOR;
-+
-+	coeff = an7583_thermal_coeff[sensor_idx];
-+	slope = an7583_thermal_slope[sensor_idx];
-+	offset = an7583_thermal_offset[sensor_idx];
-+
-+	airoha_set_thermal_mux(priv, sensor_idx, AN7583_ZERO_TADC);
-+	diode_zero = airoha_get_thermal_ADC(priv);
-+	airoha_set_thermal_mux(priv, sensor_idx, AN7583_D0_TADC);
-+	diode_d0 = airoha_get_thermal_ADC(priv);
-+	airoha_set_thermal_mux(priv, sensor_idx, AN7583_D1_TADC);
-+	diode_d1 = airoha_get_thermal_ADC(priv);
-+
-+	delta_diode = diode_d1 - diode_d0;
-+	delta_gain = (delta_diode * coeff) / 100 + (diode_zero - diode_d1);
-+	*temp = (slope * delta_diode * 10) / delta_gain - offset * 10;
-+	*temp *= 100;
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_device_ops an7583_tz_ops = {
-+	.get_temp = an7583_thermal_get_temp,
-+};
-+
-+static const struct reg_field an7583_chip_scu_fields[AIROHA_THERMAL_FIELD_MAX] = {
-+	[AIROHA_THERMAL_DOUT_TADC] = REG_FIELD(AN7583_DOUT_TADC, 0, 31),
-+	[AIROHA_THERMAL_MUX_TADC] = REG_FIELD(AN7583_MUX_TADC, 1, 3),
-+	[AIROHA_THERMAL_MUX_SENSOR] = REG_FIELD(AN7583_MUX_SENSOR, 2, 3),
-+};
-+
-+static int an7583_thermal_probe(struct platform_device *pdev,
-+				struct airoha_thermal_priv *priv)
-+{
-+	struct device *dev = &pdev->dev;
-+	int i;
-+
-+	priv->chip_scu = device_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(priv->map))
-+		return PTR_ERR(priv->map);
-+
-+	for (i = 0; i < AIROHA_THERMAL_FIELD_MAX; i++) {
-+		struct regmap_field *field;
-+
-+		field = devm_regmap_field_alloc(dev, priv->chip_scu,
-+						an7583_chip_scu_fields[i]);
-+		if (IS_ERR(field))
-+			return PTR_ERR(field);
-+
-+		priv->chip_scu_fields[i] = field;
-+	}
-+
-+	return 0;
-+}
-+
- static int airoha_thermal_probe(struct platform_device *pdev)
- {
- 	const struct airoha_thermal_soc_data *soc_data;
-@@ -530,6 +672,7 @@ static int airoha_thermal_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	priv->pllrg_protect = soc_data->pllrg_protect;
-+	priv->current_adc = -1;
- 
- 	if (!soc_data->probe)
- 		return -EINVAL;
-@@ -558,8 +701,15 @@ static const struct airoha_thermal_soc_data en7581_data = {
- 	.post_probe = &en7581_thermal_post_probe,
- };
- 
-+static const struct airoha_thermal_soc_data an7583_data = {
-+	.pllrg_protect = AN7583_SCU_THERMAL_PROTECT_KEY,
-+	.thdev_ops = &an7583_tz_ops,
-+	.probe = &an7583_thermal_probe,
-+};
-+
- static const struct of_device_id airoha_thermal_match[] = {
- 	{ .compatible = "airoha,en7581-thermal", .data = &en7581_data },
-+	{ .compatible = "airoha,an7583-thermal", .data = &an7583_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, airoha_thermal_match);
+> +
+> +	dev_dbg(qmp->dev, "typec_mux_set: switching from qmpphy mode %d to %d\n",
+> +		qmp->qmpphy_mode, new_mode);
+> +
+> +	qmp->qmpphy_mode = new_mode;
+> +
+> +	if (qmp->init_count) {
+> +		if (qmp->usb_init_count)
+> +			qmp_combo_usb_power_off(qmp->usb_phy);
+> +
+> +		if (qmp->dp_init_count)
+> +			writel(DP_PHY_PD_CTL_PSR_PWRDN, qmp->dp_dp_phy + QSERDES_DP_PHY_PD_CTL);
+> +
+> +		qmp_combo_com_exit(qmp, true);
+> +
+> +		/* Now everything's powered down, power up the right PHYs */
+> +		qmp_combo_com_init(qmp, true);
+> +
+> +		if (new_mode == QMPPHY_MODE_DP_ONLY) {
+> +			if (qmp->usb_init_count)
+> +				qmp->usb_init_count--;
+> +		}
+> +
+> +		if (new_mode == QMPPHY_MODE_USB3DP || new_mode == QMPPHY_MODE_USB3_ONLY) {
+> +			qmp_combo_usb_power_on(qmp->usb_phy);
+> +			if (!qmp->usb_init_count)
+> +				qmp->usb_init_count++;
+> +		}
+> +
+> +		if (new_mode == QMPPHY_MODE_DP_ONLY || new_mode == QMPPHY_MODE_USB3DP) {
+> +			if (qmp->dp_init_count)
+> +				cfg->dp_aux_init(qmp);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void qmp_combo_typec_switch_unregister(void *data)
+>  {
+>  	struct qmp_combo *qmp = data;
+>  
+>  	typec_switch_unregister(qmp->sw);
+>  }
+>  
+> -static int qmp_combo_typec_switch_register(struct qmp_combo *qmp)
+> +static void qmp_combo_typec_mux_unregister(void *data)
+> +{
+> +	struct qmp_combo *qmp = data;
+> +
+> +	typec_mux_unregister(qmp->mux);
+> +}
+> +
+> +static int qmp_combo_typec_register(struct qmp_combo *qmp)
+>  {
+>  	struct typec_switch_desc sw_desc = {};
+> +	struct typec_mux_desc mux_desc = { };
+>  	struct device *dev = qmp->dev;
+> +	int ret;
+>  
+>  	sw_desc.drvdata = qmp;
+>  	sw_desc.fwnode = dev->fwnode;
+> @@ -3603,10 +3701,23 @@ static int qmp_combo_typec_switch_register(struct qmp_combo *qmp)
+>  		return PTR_ERR(qmp->sw);
+>  	}
+>  
+> -	return devm_add_action_or_reset(dev, qmp_combo_typec_unregister, qmp);
+> +	ret = devm_add_action_or_reset(dev, qmp_combo_typec_switch_unregister, qmp);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mux_desc.drvdata = qmp;
+> +	mux_desc.fwnode = dev->fwnode;
+> +	mux_desc.set = qmp_combo_typec_mux_set;
+> +	qmp->mux = typec_mux_register(dev, &mux_desc);
+> +	if (IS_ERR(qmp->mux)) {
+> +		dev_err(dev, "Unable to register typec mux: %pe\n", qmp->mux);
+> +		return PTR_ERR(qmp->mux);
+> +	}
+> +
+> +	return devm_add_action_or_reset(dev, qmp_combo_typec_mux_unregister, qmp);
+>  }
+>  #else
+> -static int qmp_combo_typec_switch_register(struct qmp_combo *qmp)
+> +static int qmp_combo_typec_register(struct qmp_combo *qmp)
+>  {
+>  	return 0;
+>  }
+> @@ -3839,7 +3950,7 @@ static int qmp_combo_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_node_put;
+>  
+> -	ret = qmp_combo_typec_switch_register(qmp);
+> +	ret = qmp_combo_typec_register(qmp);
+>  	if (ret)
+>  		goto err_node_put;
+>  
+> 
+> -- 
+> 2.49.0
+> 
+
 -- 
-2.48.1
-
+With best wishes
+Dmitry
