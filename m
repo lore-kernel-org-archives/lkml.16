@@ -1,136 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0353C01
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 19:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7117A248F72;
+	Tue, 27 May 2025 19:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748374857; cv=none; b=OB7f2VzS0SaNh1XP9ZIy0XWW1nmJibVg/KMR+oHvBfWD4YPgAnB/Q50zdszT2abj4ZMHH6qtIKm75Mh6c8ETnSPgWntEjHJGU/vzXUNetWrfOg/SGVBhiYTYbUxkgvMuzC8ZYTDcTKQgkAZ8Jb4tg+iTw7XG50dovpv75QVviPE=
+	t=1748374974; cv=none; b=T1eRdSkmKQ/nK7XNLu484G+8gXoz7Sdz/NEymNq7ShZn8AeGyMWiFkXceME+cW4M3bP0kArsqprOOTKyFxwtuErODG5nsDtWpflna8wLJkSShNqhcKofYMjWKorf0CDrk0K6GjMhC5jj/fR/YgRRdOXzLuy2XmWy3F/gNWbpy5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748374857; c=relaxed/simple;
-	bh=CcNB/LW3IX5MqotXtvEeyQzFZtAd+/ZUkjigVGBmxsk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=EkDu+OS9qm3CBjvye4lDi5g8u9OFD6KQqX9NovRbK4/I6ThI32ZJ44SpyeZTJncCarmw6lKW58c3b4W1nF3nPSfmXJdLUDUawEtJdjYOzu+sWHY/dvupYLKtfdftKBLeBJOjKNfWQJEJWYPsK4UfOv6+oS6HRMm1ow93PU5ZgWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iKpQJUGF; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748374974; c=relaxed/simple;
+	bh=a2m/Xm0Fx0H//NfL7YFGhI3gk44cer5mXM1DGjNXank=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=P0aXJU0LUZFSrMPxt9vzjFJ2G1t5E3Gn1phKv2hnG0kd9PIrLAPA80EUwnymID35Uajxf4Ppf/OH/0Kgde5eDmrlcGNRgHvOt80GASN+TBrJQGQTVbLtaj4MI8ZxBDSd70bhCl1UIEmMLZY8A1zP1bCGY+fdLd7xG/hrTjxHiQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=amR6FtHf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iKpQJUGF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748374855; x=1779910855;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=CcNB/LW3IX5MqotXtvEeyQzFZtAd+/ZUkjigVGBmxsk=;
-  b=iKpQJUGF/y1dy8EVtnanCV3PJeJ2ghWBnFBOthWR+7AGUNl7e/29zrMf
-   nP5NTD3OKTm8c607Jydo7E+HxQhtYvqSN2pVceZ8S0NdT9cVMPLbtsAmr
-   gP+WxM5yZxlnoUTmOcN8q3IddycM4Xab1RU3Trelk9+jWNRbI//6nNele
-   YkUipRkY7vrshgGjP9OAlY+UsmKJTITgYNl4E77mGPanPlX97OBAY3osJ
-   wRcEThUtkkhIdiLyvh2+vzVzUVScYFSon3IhGBccn3xN8oleOAn0GK/3w
-   nXLW/iocMlwRD0xVPkNYCDcdo+KGLzZtoe+2b8n5toe9iFlMu6w56ozzl
-   Q==;
-X-CSE-ConnectionGUID: iY+1+njrSUWikIRnMupdXw==
-X-CSE-MsgGUID: Jx8wPKEBS7iaSHfHt9CnNw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50438823"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="50438823"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:40:54 -0700
-X-CSE-ConnectionGUID: MMYfXGaKR9CuYkjh/uAD1A==
-X-CSE-MsgGUID: BnqARss/QlekpmwP32TdJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="143919633"
-Received: from smoticic-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.23])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 12:40:51 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
-In-Reply-To: <20250527-winged-prawn-of-virtuosity-d11a47@houat>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <87o6wfwcef.fsf@intel.com>
- <20250505-slim-bizarre-marten-a674ac@houat>
- <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
- <874ixvtbxy.fsf@intel.com>
- <20250509-rapid-flounder-of-devotion-6b26bb@houat>
- <87r00yj6kv.fsf@intel.com>
- <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
- <875xi3im1r.fsf@intel.com> <20250519-singing-silent-stingray-fe5c9b@houat>
- <87sekztwyc.fsf@intel.com>
- <20250527-winged-prawn-of-virtuosity-d11a47@houat>
-Date: Tue, 27 May 2025 22:40:49 +0300
-Message-ID: <4a1c28b2ad4f701b9b2fe363ebf6acbab504e6ad@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="amR6FtHf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF520C4CEE9;
+	Tue, 27 May 2025 19:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748374974;
+	bh=a2m/Xm0Fx0H//NfL7YFGhI3gk44cer5mXM1DGjNXank=;
+	h=Date:From:To:Cc:Subject:From;
+	b=amR6FtHfQ099XCyRkIHq5Z7+novkFXoVDurJQF4fVbEVgyXL5MreH20ieSIhg2aJW
+	 VLu51hxN1wn+1EIV71Ej822hhF5v74Td55cmjb1NFA0iqdLccJBDu1y5ZoOHyktI3J
+	 9zP7QoBlEnmJ2W0UQea2SYjewSe2YvfQRvBCo1k40Rk5ryb/ZwiRU1egVdYkbpIVA7
+	 7C2QKx5+DIlSEIUBcfTGySQZnYjZRenAId3YH4ZTYPeYcxkK4M0lqypr1srBz46UTY
+	 5+RB1LtYud7Fs+hEMKk6VA358NT/dagwBK4SwNx+dEtNtZsDTTSr080Kcc6h1wYYaP
+	 6IvCEOy7fCzcw==
+Date: Tue, 27 May 2025 09:42:52 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	cgroups@vger.kernel.org
+Subject: [GIT PULL] cgroup: Changes for v6.16
+Message-ID: <aDYVvLimkaLAtdiV@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 27 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
-> On Tue, May 20, 2025 at 01:09:47PM +0300, Jani Nikula wrote:
->> 
->> Maxime -
->> 
->> I'm cutting a lot of context here. Not because I don't think it deserves
->> an answer, but because I seem to be failing at communication.
->> 
->> On Mon, 19 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
->> > You still haven't explained why it would take anything more than
->> > registering a dumb device at probe time though.
->> 
->> With that, do you mean a dumb struct device, or any struct device with a
->> suitable lifetime, that we'd pass to devm_drm_panel_alloc()?
->> 
->> Is using devm_drm_panel_alloc() like that instead of our own allocation
->> with drm_panel_init() the main point of contention for you? If yes, we
->> can do that.
->
-> Yeah, I was thinking of something along the lines of:
->
-> const struct drm_panel_funcs dummy_funcs = {};
->
-> struct drm_panel *register_panel() {
->     struct faux_device *faux;
->     struct drm_panel *panel;
->     int ret;
->
->     faux = faux_device_create(...);
->     if IS_ERR(faux)
->        return ERR_CAST(faux);
->
->     return __devm_drm_panel_alloc(&faux->dev, sizeof(*panel), 0, &dummy_funcs, $CONNECTOR_TYPE);
-> }
->
-> And you have a panel, under your control, with exactly the same
-> setup than anyone else.
+The following changes since commit a22b3d54de94f82ca057cc2ebf9496fa91ebf698:
 
-This [1] is what I'm toying with now, but again, draft stuff. Using
-__devm_drm_panel_alloc() directly like above does make it cleaner.
+  cgroup/cpuset: Fix race between newly created partition and dying one (2025-04-01 21:46:22 -1000)
 
-Long term it can be improved, but my first dab at refactoring to make
-that happen is already like 15-20 patches, and it'll just have to wait
-until after making stuff work at all first.
+are available in the Git repository at:
 
-I'm not sure if the ACPI device I'm passing to devm_drm_panel_alloc() is
-correct, but it'll have to be *some* ACPI device for the lookup to
-work. I am blissfully ignorant about its lifetime, but as long as
-drm_panel_add() and drm_panel_remove() remain as they are, I don't think
-it leaks anything. Fingers crossed.
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ cgroup-for-6.16
 
+for you to fetch changes up to 82648b8b2ae0a0ff371e2a98133844658cfaae9a:
 
-BR,
-Jani.
+  sched_ext: Convert cgroup BPF support to use cgroup_lifetime_notifier (2025-05-22 09:20:19 -1000)
 
+----------------------------------------------------------------
+cgroup: Changes for v6.16
 
-[1] https://gitlab.freedesktop.org/jani/linux/-/commit/241f21487e5e9a8fa72e37a8eebcc36099e6a1ee
+- cgroup rstat shared the tracking tree across all controlers with the
+  rationale being that a cgroup which is using one resource is likely to be
+  using other resources at the same time (ie. if something is allocating
+  memory, it's probably consuming CPU cycles). However, this turned out to
+  not scale very well especially with memcg using rstat for internal
+  operations which made memcg stat read and flush patterns substantially
+  different from other controllers. JP Kobryn split the rstat tree per
+  controller.
+
+- cgroup BPF support was hooking into cgroup init/exit paths directly.
+  Convert them to use a notifier chain instead so that other usages can be
+  added easily. The two of the patches which implement this are mislabeled
+  as belonging to sched_ext instead of cgroup. Sorry.
+
+- Relatively minor cpuset updates.
+
+- Documentation updates.
+
+----------------------------------------------------------------
+JP Kobryn (12):
+      cgroup: move rstat base stat objects into their own struct
+      cgroup: add helper for checking when css is cgroup::self
+      cgroup: change rstat function signatures from cgroup-based to css-based
+      cgroup: fix pointer check in css_rstat_init()
+      cgroup: fix goto ordering in cgroup_init()
+      cgroup: warn on rstat usage by early init subsystems
+      cgroup: compare css to cgroup::self in helper for distingushing css
+      cgroup: use separate rstat trees for each subsystem
+      cgroup: use subsystem-specific rstat locks to avoid contention
+      cgroup: helper for checking rstat participation of css
+      cgroup: document the rstat per-cpu initialization
+      cgroup: avoid per-cpu allocation of size zero rstat cpu locks
+
+Shashank Balaji (3):
+      cgroup, docs: be specific about bandwidth control of rt processes
+      cgroup, docs: convert space indentation to tab indentation
+      cgroup, docs: cpu controller's interaction with various scheduling policies
+
+Tejun Heo (3):
+      cgroup: Minor reorganization of cgroup_create()
+      sched_ext: Introduce cgroup_lifetime_notifier
+      sched_ext: Convert cgroup BPF support to use cgroup_lifetime_notifier
+
+Waiman Long (4):
+      cgroup/cpuset: Always use cpu_active_mask
+      cgroup/cpuset: Fix obsolete comment in cpuset_css_offline()
+      cgroup/cpuset: Add warnings to catch inconsistency in exclusive CPUs
+      cgroup/rstat: Improve cgroup_rstat_push_children() documentation
+
+Yury Norov (1):
+      cgroup/cpuset: drop useless cpumask_empty() in compute_effective_exclusive_cpumask()
+
+ Documentation/admin-guide/cgroup-v2.rst            |  79 +++-
+ block/blk-cgroup.c                                 |  10 +-
+ include/linux/bpf-cgroup.h                         |   9 +-
+ include/linux/cgroup-defs.h                        | 100 +++--
+ include/linux/cgroup.h                             |  24 +-
+ include/trace/events/cgroup.h                      |  12 +-
+ kernel/bpf/cgroup.c                                |  38 +-
+ kernel/cgroup/cgroup-internal.h                    |   6 +-
+ kernel/cgroup/cgroup.c                             | 148 +++----
+ kernel/cgroup/cpuset.c                             |  90 ++--
+ kernel/cgroup/rstat.c                              | 460 ++++++++++++++-------
+ mm/memcontrol.c                                    |   4 +-
+ .../selftests/bpf/progs/btf_type_tag_percpu.c      |  18 +-
+ .../bpf/progs/cgroup_hierarchical_stats.c          |   9 +-
+ 14 files changed, 665 insertions(+), 342 deletions(-)
 
 -- 
-Jani Nikula, Intel
+tejun
