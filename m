@@ -1,101 +1,185 @@
 Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2371C1ACEAC;
-	Tue, 27 May 2025 21:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9701F8691
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:22:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748380754; cv=none; b=n8qOjqJtG+ynrbA1TeVvSM8o3LEoe5+EL5re2osNjcaZGEIM6dzFqzC/hmWp8Mf8vLoJ9Sawc18/Lwn1o5ePc7hE2gy58+oilFS2InAbD/wl6emAUL3qu0dkzNI5dLuJCovKLPBe/HrjM2KmHROEBRimIMFAKM37BXDWPFkz8W4=
+	t=1748380971; cv=none; b=hXdhXq+WlNgP/Z4uFS8HkzAwJ2iDf8+4WKIDZKfVuxsEcKDJ7nJoeROFqAFBsg3kuT1HA8xVodNGW6zgv2WQn5PpaBxmUjHQc1EggEd5n4RmuhHq8LJKCx0AK4s8qxVHbTWd27FSOHboonNbRKhqZW41RIiJZ8bfD4+i0W53bow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748380754; c=relaxed/simple;
-	bh=QNXapWZJsE3dC+9G+ikHCtws5pJjt7oS+h1R5KWH/J8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vzem7ZikGgH3HVoJVEFeXHczO9U2pL6Q0X3RlYnX/0utjs+Ab7pN6F6MeB4tHf6vFjuUbgh7FBu6C++ctueaNFv1Jyc6EYU7bPGW9WM3hH1p3qy+fqjsUYzzYruWHYZw4q3nafJDiAgN+xMJjWpFDLMZHnVPCSpsH+n6hhb8tn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ky9ByhhS; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748380971; c=relaxed/simple;
+	bh=CmXNjfU2YBa1jt2Z+F/46nl2cI2JRC7z389h5i3eWiA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nShUVUwKLqgNe0PN8bxs7tC+bsxoR1auoWN/sWpX4V2FeCKI5XSqhcfQJF/G3oNqQy7/W+P4v7rP0mdBvB4hB2k2ceAGv+SYGEuxR+zSLqmp2CnE6Vx+yoat+vQ9h9+Xl6iD+aH0BVrql6N3140e1gZcQxRrDc6h8iT/ux3cLCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H69psyHK; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ky9ByhhS"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso6630056a12.0;
-        Tue, 27 May 2025 14:19:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H69psyHK"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6045a3a2c5eso3976916a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:22:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748380751; x=1748985551; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QNXapWZJsE3dC+9G+ikHCtws5pJjt7oS+h1R5KWH/J8=;
-        b=ky9ByhhSNTZ5nq0z3sQLZ3aMqbr9SQRcPgVSeriVhASKd0DnVQZG+YVIKfvNUycO6V
-         3E1m5DxP5DTDNtSYEkRTpuRQHVh3aGyBcHtbC3TOkKO3bCQ6/xIhhf1QWDOXivU+cYSh
-         aeMkuTpzvfJxjSCuAnzsrIiR6kR6eXdpVXK8lXNw7ZEvmfakiaPXD7VJQUeoU+Jm9vjF
-         bjb9/mw/5FBAgv6MMDxYGH1MF3QH3oNUkmA5QcdgDWSAlk6ItaStLvmbaNDYaknerTDR
-         hr78GbSeJvs55iQtKolZibgdKliRqWujiRKuapplcSf6zsaWvNIPPV+A4H2JGcY2eksG
-         MslQ==
+        d=suse.com; s=google; t=1748380967; x=1748985767; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rf03yAgQQGBhErkrSSaEFDElj+fjBRlARFLOXQZblAk=;
+        b=H69psyHKbQd+b1T7e2t1AoZ7tFyB8lK5HSQmjuD4D/7k4SnwZHcfu1urhxpPqWYzwc
+         qw3Da9W98rPjPC8ZszP9Mcd5P2DBqssZl30GNyhWM66Yb/IdMXGAQXObQO1lNdzTw7zu
+         yLWwhTGy04iCD04EUbey1mHl7vQs8uiYqk+b+VEatSNwgPTfVN+XHTWFz5wHHdQf6t78
+         PfPNlOGGSo3fYrlwSkDTATULV6VvjZ7Vjd6ezZOhT3c3ch9kFOIPjD4Zyk5hAsXvZEjY
+         FU2Gda7Cf1knFTS16k5nMmS7BMg/rG2zpr5I7z8D3yy+na7KjrTQRVXitX4ZsZLNHJO0
+         BFDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748380751; x=1748985551;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QNXapWZJsE3dC+9G+ikHCtws5pJjt7oS+h1R5KWH/J8=;
-        b=WP+xN6CpiwpX/88kiS4ApeyoxV5DmQ8ntwnODOK9WXm5C+Ta6dmgCXBkviNx6I8f7i
-         LskUkskWI0S3pC/7tvPl8wxP1TF5QhRjmYbQpuLGF98IER6jRhevt34S47ecumKKhAGn
-         UDPliXI16CdwJKNxJ0yIaGzH6BiQKqKHIH2zLnwR7hRgXcfjcwM2FyF9KJSjCcihaZ6k
-         Q31Yl1mdnKynJR7wUs+pVqEQ4C3QG10P7We/8BuWL73cMQ+GRrNj1xf6IQl1esMBAzs3
-         8GkBUa3zYnKrnaS4ZLGE3/6Cbv02xEvhAOfWEWFRT3/8XVjOwwrJiiuwb3F4N3KAaIwH
-         svGA==
-X-Forwarded-Encrypted: i=1; AJvYcCWo1nDcPYUQBQCpgeWmDHOqIxhMg4KtwFnQuvKvEB/d1FuAiPzUraODClaivCnF+Z4kF5jA3KB7nkokopnz@vger.kernel.org, AJvYcCWyTY8tK/oTEmB1z234Ot4h4rZf9cwDwHyIj6JlESbN8jQkJ3oJ8RRFeUavefqG6BKQc/TZryV32Cw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxg0GganIPmXumSU95KIns7SQkWg1K5jNOfPROOKqem/e1Wdbtd
-	wVZiU4HubAPY3gciIoinc8yBPLdLlhgmk1nYntiTW9G+tNeGgs3yndqkqdEeDRtxvljzWPV897b
-	VJU7CUbofyi0XeZDgub77BM3YTsWm34Y=
-X-Gm-Gg: ASbGncvY6Q7mejuwrg4uCE8XKr9Br5qPuLFT6TDaitDRJoZmJN4LRMowipG8GzsDpUC
-	STNmzkD8j/XIhk9xJ8ppeRtiHscGJPJiXV86iqC9td3GAOVe1ZKux1WWlE7TkhmSW7QmXjmYjOc
-	FYHg1fuqpYocl7fUmx5S3OJ3adcP7g+uLW54ZQkpaBm5S8Fw==
-X-Google-Smtp-Source: AGHT+IE+S2MVeo+3/sxGQLYFz2Hcp8x3nRWvwF87mAfdOLk/d5dJa1KwvvCt1EUnmqr03VYT0OhOmyVhhkU/BqOcSzM=
-X-Received: by 2002:a17:907:9616:b0:ad2:2e5c:89c5 with SMTP id
- a640c23a62f3a-ad85b13879amr1396851966b.20.1748380751239; Tue, 27 May 2025
- 14:19:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748380967; x=1748985767;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rf03yAgQQGBhErkrSSaEFDElj+fjBRlARFLOXQZblAk=;
+        b=OogZoDKP2wtdppijvCaTS9601PDf1Y+L1psK8fwBGvsY1faXAEvWVxeY94irl8JVek
+         gvxSenbtx2DJiV7f11HRiXw/AAXOp28iW2X7Ee12rA5WG+RSTU8f59E9+B9U5bDBg/WN
+         e8DjrUQUTrzDiPgVhGNfU6XVxbOtN6VQPNCdEmEfLV7kUpIRITkopfSczoavBBns80EX
+         WKDFNp/vaIGtuH0Zx/3wFmrMEgml2PWLo9HcHCaGVluPdnGhwX92Xxjrjyp8iuJIhJQS
+         kJQv02Hg3qF1JNfE9Zm+4kp+ssVJA25awr4IVt/ZCDt6wQWViPo8N5FuVwW3iLdA+Dot
+         Y5Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkGwQVRcKKzAL5CcGr94ouFpWh+ADoT3Gl9Qfj+v8vljPk0udwouAJHxCzmSeIrjJXhrPTMaR+47tDoAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx98sW0u6Yu8lL8PXJWROE6DTV8MvYBDyNIl8cv1ZW8sPlUzDLF
+	TS1+rqFdO/RJXrTjlimgjBwWHEFzK5/BQ1vkuqZ8MNf1vJ10hcVqFzK4BsznAourf+o=
+X-Gm-Gg: ASbGncup7+GRW/rSbgepLaNRR/j/dgfwpQhwlKbfjn7iFxZdzjZK+5gcUf+ghSDOkyw
+	b/kaI3/itQ8IPQPy4vsNgKyHbQY2OwVPiTU9dI+LilkaWzK4JoT5Yc2jEAJd8ma1IXzPr1Ue5MV
+	NwJ6AYaEpckj8AUi3DhYVSEG/lZyDuQU77vORXxV5SpARtqIs4xa8iLORDw55NOfYTjEth4uBIS
+	P9jdg8lDNMGD1OXIL6kjcmFjQvcsCJ35wQMTBWT8cdejNJjvHTVekcHSgCcXHSa9E0p98yHWpZ7
+	Crl686EIz7oGxdc4CNUAUEkJl3he0heHtfTE3OHxg4Cds8/yxgFhl4gmqe8e1zevwgn+5BRVggJ
+	SF5gbFH05rOthKN34sFqLIwTxYBkBxyIW
+X-Google-Smtp-Source: AGHT+IFERg8h0M0q68ymhrrsY3ViILpvzLyzrWuNOWeP4SVGe1Wg+ZNpOzN/Rnmv7ShgttQHfLkmmw==
+X-Received: by 2002:a05:6402:1d4b:b0:601:f185:fc2 with SMTP id 4fb4d7f45d1cf-602d8e5e352mr13569888a12.3.1748380967163;
+        Tue, 27 May 2025 14:22:47 -0700 (PDT)
+Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60517a7f920sm128296a12.53.2025.05.27.14.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 14:22:46 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 27 May 2025 23:24:20 +0200
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Matthias Brugger <mbrugger@suse.com>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
+ for RP1 chipset on Rpi5
+Message-ID: <aDYthG54Wz3khQ88@apocalypse>
+References: <cover.1745347417.git.andrea.porta@suse.com>
+ <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
+ <aBp1wye0L7swfe1H@apocalypse>
+ <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
+ <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
+ <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
+ <aCIk40642nXZ3arz@apocalypse>
+ <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
+ <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527200534.98689-1-gye976@gmail.com> <CAHp75VcUr7-X+F1f=wPH4=Z7q3kFffv8BgkmKWM4VTjy2w-tGg@mail.gmail.com>
- <CAKbEznuuGX3Gnqg6WF2mqbigRps0gzK_PfGHGNy8-v1WOZoMUQ@mail.gmail.com>
-In-Reply-To: <CAKbEznuuGX3Gnqg6WF2mqbigRps0gzK_PfGHGNy8-v1WOZoMUQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 27 May 2025 23:18:34 +0200
-X-Gm-Features: AX0GCFsKbz9xXTe30H4PaFsKzDdWANkcbuG1BlN2lXy99rHGR9MCfOWniEri0Hc
-Message-ID: <CAHp75VfEeNyspiMSax1_d+cpbmCQQVbOBEPCHuAag2O0ZHC1jA@mail.gmail.com>
-Subject: Re: [PATCH] iio: trigger: Avoid data race
-To: Gyeyoung Baek <gye976@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
 
-On Tue, May 27, 2025 at 11:10=E2=80=AFPM Gyeyoung Baek <gye976@gmail.com> w=
-rote:
-> On Wed, May 28, 2025 at 5:25=E2=80=AFAM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Tue, May 27, 2025 at 10:05=E2=80=AFPM Gyeyoung Baek <gye976@gmail.co=
-m> wrote:
+Hi Florian,
 
-...
+On 09:18 Tue 27 May     , Florian Fainelli wrote:
+> On 5/26/25 07:06, Matthias Brugger wrote:
+> > 
+> > 
+> > On 12/05/2025 18:42, Andrea della Porta wrote:
+> > > Hi Florian,
+> > > 
+> > > On 15:02 Mon 12 May     , Florian Fainelli wrote:
+> > > > On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta
+> > > > <andrea.porta@suse.com> wrote:
+> > > > > Hi Florian, to accept the patches, what would work best for you?
+> > > > > 
+> > > > > 1) Send only the relevant updated patches (maybe as an entirely new
+> > > > > patchset with
+> > > > >    only those specific patches)
+> > > > 
+> > > > Only the updated patches work for me. I don't think there is
+> > > > that much coupling between the DT changes and the non-DT changes
+> > > > (other than without DT entries nothing is activated)
+> > > 
+> > > It's a little bit more involved than that:
+> > > 
+> > > - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
+> > >    depends on 1 (clock binding header). Should be taken by Greg.
+> > 
+> > Greg gave an Acked-by so I think Florian is good to take that patch.
+> > Which leaves us to the clock patches (driver + dt-bindings).
+> > 
+> > > 
+> > > - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
+> > >    depends on 1 (clock binding header). Should be taken by Florian.
+> > > 
+> > > - Patch 4 (clock driver) depends on 1 (clock binding header) and
+> > >    should be taken by Stephen.
+> > > 
+> > 
+> > Steven reviewed the patches (driver + dt-binding) so he is waiting for a
+> > new version which addresses the review. He offered to either take them
+> > and provide a branch that Florian can merge into his branch or provide a
+> > Acked-by tag.
+> > 
+> > @Florian what would you prefer?
+> 
+> I am fine either way, it's definitively simpler if I can take all of the
+> patches in the respective Broadcom ARM SoC branches, but pulling a branch
+> from another maintainer's tree works just as well.
+> 
+> Andrea, sorry to ask you this, can you post a v10 and we aim to get that
+> version applied?
 
-> > At bare minimum they are not relevant to the patch change and haven't
-> > been described in the commit messages.
->
-> Hi Andy, thanks for your review.
-> I initially skipped this part as I thought it was minor.
-> But on a second look, it seems better to separate the declaration from
-> the logic.
->
-> What do you think about the data race logic? Would it make sense?
+No problem, just to avoid any confusion I'll summarize what-goes-where with
+respect to branches in your repo broadcom/stblinux, so I can adapt each patch
+to the relevant branch:
 
-The point is valid, the atomic_read() + atomic_set() is 101 thingy,
-whoever did that doesn't really have a clue what atomic(ity) is.
+- dt-binding/DTS (patch 1,2,3,6,8,9,10) -> devicetree/next
+- defconfig (patch 11,12) -> defconfig/next
+- drivers (patch 4,5,7) -> drivers/next or soc/next?
 
---=20
-With Best Regards,
-Andy Shevchenko
+Also, should I split any patches that have MAINTAINERS changes so you can apply
+them to your maintainers/next branch? Those are patches 4,5,6,7.
+
+Many thanks,
+Andrea
+
+> Thanks!
+> -- 
+> Florian
