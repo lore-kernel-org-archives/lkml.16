@@ -1,80 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD6A1990A7;
-	Tue, 27 May 2025 19:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A2D1F7586;
+	Tue, 27 May 2025 19:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748372687; cv=none; b=fsCRWTgXT6fRuiBye80b+JKOxyaqOiDGt2UXCZk9ZFLRjqdYXWiL8Sy4dXkSc4QJnLR286+ah7PVL5sbkyPccZldIXnXkGKYU9Ypkq+RE7LSJUG83FMMuPK3yF12mdhFK3dhxJiupESKVTpfphAW+MFhnB0tzm+E69/rYyDL5AE=
+	t=1748372715; cv=none; b=lh/3tMrRkRGMu5BV9uUBH3HTktq19qxthpuMQoQqxtUU0IIeHNtMqa3bl9oZsdxxkdU4y1cFvoNJp6em2T93yPksVOC5kLfLbnAJ3+TCwEPaBPZ905oaThoy9WVG3bxZx1pOXdH/C3vNFruPtjgdUvacMj+5ND2E8TNCJf8J/bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748372687; c=relaxed/simple;
-	bh=MwRofHnla/VucXUYUgL45YwvUyP3cAoOdQAxIpjk/CI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+sjbZgK37EvNiH0DtvJbGfdAhIrqIOx2O8vZGshaSr5tjg3kjdODMd0ahu7wWRXbPZBik7WtUrlkAo7hYHdtcSS1/Ll53s7tbb2E/HYS4QB3QKpGOYfIq7dGtpMJN3pMkHc5dobM4S40ftIM4HHPs0tT57oAq87msV+eJhaMK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FoVICZlC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748372715; c=relaxed/simple;
+	bh=DErBwuGDA0aAYvIh8kx8TKOu8IPySNxIzGeGTG3YRzQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IKLkqSvIb2QojVAipCUe+SexUeSIfaI8Q+O62IF6FRAPAiYcrZcwkdgyYrFE6XxWNg+wU3feSmKYVMd+cidnemzFCaqJ4W/vwjkbfKzRlZo9Z0Q5PAPmsNDaLC14tvg/oeMKeAxKZ4d1rBMmqHjJ7lsJ9z2UbMQ+ItqyyfBJ0D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=hhWXpHyR; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FoVICZlC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBACC4CEE9;
-	Tue, 27 May 2025 19:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748372686;
-	bh=MwRofHnla/VucXUYUgL45YwvUyP3cAoOdQAxIpjk/CI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FoVICZlCHB8xSxvLnEzulZSHz5/U1iOGrgZWk6lvGV359Dq1EXdx6rH3sIOuXum7d
-	 Nk9r6dmpR+NLJR7JNhpgfdJLFhG/qbqXlaR7pm1OCpPdoCD4PljoXzfxNc6byYz2ac
-	 O+nSE0Zlw3wo4HObz1WbCwjMdENnGrBp4WYmuDTBcvJmqLFtu488iXWDnbJm8+449D
-	 9kx/2EoyiZELVnIpdeZaDGvTgJNhXCgjrS5IfjP5yS7odBZuQx4RlSkzLYO/MWyNPO
-	 iLj1KFUKMa4tZ72M7zoJ69wCIDCaLICz3bxTqUS0rFIkvOJJD/IG+GCQTIFnp3YtBG
-	 I/Qk0ANn8Q5iw==
-Date: Tue, 27 May 2025 09:04:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: Waiman Long <llong@redhat.com>, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
-	Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking
- cpuset.mems setting option
-Message-ID: <aDYMzfYYSS8ly1Nt@slm.duckdns.org>
-References: <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com>
- <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
- <aC4J9HDo2LKXYG6l@slm.duckdns.org>
- <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
- <aC90-jGtD_tJiP5K@slm.duckdns.org>
- <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
- <aDCnnd46qjAvoxZq@slm.duckdns.org>
- <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
- <aDEdYIEpu_7o6Kot@slm.duckdns.org>
- <CACSyD1N2CjY-yqcSg+Q6KHKGzzQnio9HjwUHutup+FEX08wg0g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hhWXpHyR"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54RJ4tL61848158;
+	Tue, 27 May 2025 14:04:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1748372695;
+	bh=QMdcykWUhhJabXPslQaqBIiFZkw7Vp/iY23BnvihBl4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=hhWXpHyRd4vJRCJNRt7XuDYUA3kXrzoA/8GWXh+fG3c551ytKs/0r9jKNWazWo96V
+	 cahMobmTqeJNzMVY0vksM1UUD0VeI2Zwd5Ofy6ceii3YYQum9PqvVw6c1LqEkjuNxM
+	 UCDy2Map/Wel9lHwdcMKWdFSIaAIMqFbKbbQVIPg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54RJ4tl43064132
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 27 May 2025 14:04:55 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 27
+ May 2025 14:04:55 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 27 May 2025 14:04:55 -0500
+Received: from DMZ007XYY.dhcp.ti.com (dmz007xyy.dhcp.ti.com [128.247.29.251])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 54RJ4tcQ3540893;
+	Tue, 27 May 2025 14:04:55 -0500
+From: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+To: <aaro.koskinen@iki.fi>, <andreas@kemnade.info>, <khilman@baylibre.com>,
+        <rogerq@kernel.org>, <tony@atomide.com>, <lee@kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <m-leonard@ti.com>, <praneeth@ti.com>, <afd@ti.com>
+Subject: [PATCH 1/2] mfd: tps65219: Update TPS65214 MFD cell's GPIO compatible string
+Date: Tue, 27 May 2025 14:04:54 -0500
+Message-ID: <20250527190455.169772-2-s-ramamoorthy@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250527190455.169772-1-s-ramamoorthy@ti.com>
+References: <20250527190455.169772-1-s-ramamoorthy@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACSyD1N2CjY-yqcSg+Q6KHKGzzQnio9HjwUHutup+FEX08wg0g@mail.gmail.com>
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello,
+This patch reflects the change made to move TPS65215 from 1 GPO and 1 GPIO
+to 2 GPOs and 1 GPIO. TPS65215 and TPS65219 both have 2 GPOs and 1 GPIO.
+TPS65214 has 1 GPO and 1 GPIO. TPS65215 will reuse the TPS65219 GPIO
+compatible string.
 
-On Sat, May 24, 2025 at 10:09:36AM +0800, Zhongkun He wrote:
-> On Sat, May 24, 2025 at 9:14 AM Tejun Heo <tj@kernel.org> wrote:
-> Per my understanding,  the interface of migration rate is far more complex.
-> To slow down the migration, moving it to the userspace can also help determine
-> when to carry out this operation.
+TPS65214 TRM: https://www.ti.com/lit/pdf/slvud30
+TPS65215 TRM: https://www.ti.com/lit/pdf/slvucw5/
 
-(cc'ing Johannes for mm)
+Fixes: 7947219ab1a2 ("mfd: tps65219: Add support for TI TPS65214 PMIC")
+Signed-off-by: Shree Ramamoorthy <s-ramamoorthy@ti.com>
+---
+ drivers/mfd/tps65219.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The user interface can be pretty simple. It can just be an approximate
-bandwidth of scan or migration, but yeah, I don't know whether this is going
-to be too complex. Pacing migration from user side isn't trivial either,
-tho. If this is something necessary, it'd be nice if kernel can provide
-something relatively simple to use and can cover most usecases.
-
-Johannes, what do you think?
-
-Thanks.
-
+diff --git a/drivers/mfd/tps65219.c b/drivers/mfd/tps65219.c
+index fd390600fbf0..297511025dd4 100644
+--- a/drivers/mfd/tps65219.c
++++ b/drivers/mfd/tps65219.c
+@@ -190,7 +190,7 @@ static const struct resource tps65219_regulator_resources[] = {
+ 
+ static const struct mfd_cell tps65214_cells[] = {
+ 	MFD_CELL_RES("tps65214-regulator", tps65214_regulator_resources),
+-	MFD_CELL_NAME("tps65215-gpio"),
++	MFD_CELL_NAME("tps65214-gpio"),
+ };
+ 
+ static const struct mfd_cell tps65215_cells[] = {
 -- 
-tejun
+2.43.0
+
