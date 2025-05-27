@@ -1,100 +1,167 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688BC2472AF
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277D426C3B5
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 12:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748349811; cv=none; b=QeKYIca4Dgxc8UuE/0HdJbzQkcsnC/ENII94uISv3KDmpMo2gwQR26ZcMHCSC222T16w2gZPCerpB+BQtzeypdMl82QHnq3rMi+57qtov2TI7LxdrJA9TIumTGVuaGgnKethW7eY+Qy15gPjVvpkCnKMLEy9T7O7V66SyWczV4Y=
+	t=1748349886; cv=none; b=sygaoVBrEqFON7MK8fjVYjBVJyFtYsJQLTLnAboQ1kxXB0Qs2orvvRNM7AwmpQATz1nqDgNNi6WVR0y7MqINJ4gsfl0gRciax1zcIu+q/G4OtrmrDD8D6H/zfAdMMEBh4vA3m16IDBoI+bhYcyaNgzdtViNv0lg6xHLWFc82eYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748349811; c=relaxed/simple;
-	bh=rUnhLEryivUI8dDXO05+YOqnvj0dLEgjJGq5M9Xh5rM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fxTQ9eWE97JG7i5vaIeBjHZ6YGj8l+CZGDuC3Hc8iBKhT+TZsCgzkhxmSd3bfk7n+jEUAAfELpUo0f5Wi0TKWf/BXljVDJyU1ry6xzqZ1xTWuRATlyXIjsJO6vfG3W26cblqm99/dT5PGzRs5EP8BhHzoHPTreN0ACl/LaVWVio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i7PZaP9A; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=viaqKrMs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748349886; c=relaxed/simple;
+	bh=10pm6SoapnDJvi5UUh+zwz2m9mE3i07P8POT8yLYzj8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=onechj8AIc5NFQjBC0Duu+Uzk3ihXxCGakpf4NnF3CO+g1zIUup4xpnlSq/vX692ZRzR+7qOpsp8zarLeXYB7lcKM6LIRxxorIc0kHQg15t0cR6dxTPfb3LPBGa7cyKAsqGeAkXRVZW1fKvhVZUIFO1aCeiajRW1cKXGntXbC+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcvoRoLc; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i7PZaP9A";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="viaqKrMs"
-Date: Tue, 27 May 2025 14:43:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748349808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GgGYluBZK38NIiosfn6Rm3FdAkQ1QV8pdfCCpCblFvA=;
-	b=i7PZaP9AiMsoiNqBYwqqWOX9fbuBiPSQWo43XkjpnPTUJDQSn9j6LHjbWOokNNH38ZOCIl
-	tPPup4CxASxozt26huj+zqmLffgW03whNYpPxldB0LUd4/ajBYquh9jhz2Jxglrkwcw/+S
-	4nqcL6zYRYeO2JVT52LhtSFGqPxLTheKgDdVjhwqlembi6Xmod7ZPCELodTDFKermc1rPs
-	/fgzHvcrBjdeG72U9GtZGhxpU5jUzhHFLo1QOofe1mCyuAXqh+fzB5N/pDbDQrXbe9fbPW
-	sQacrVGOgAJVUih7MKQCX7yZbgYrVNN+SG5lDyTzrm1ltf25cjDAqmIRG8xOTg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748349808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GgGYluBZK38NIiosfn6Rm3FdAkQ1QV8pdfCCpCblFvA=;
-	b=viaqKrMsfSO/9w6O4x2AO3+Uf0XerRufyi0ZsrpL5xVhUZG16Fnbj3Y0PwROA+ruEe8VIn
-	KTxbh1p2PXjbhjDA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v12 20/21] selftests/futex: Add futex_priv_hash
-Message-ID: <20250527124327.5UDnm-ho@linutronix.de>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-21-bigeasy@linutronix.de>
- <31869a69-063f-44a3-a079-ba71b2506cce@sirena.org.uk>
- <20250527122332.M0ucxhwh@linutronix.de>
- <231a9862-58ea-4a6d-8893-862776d9deca@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcvoRoLc"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so25711285e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 05:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748349881; x=1748954681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/+1ORexpCal/yWarvUklj5P7KVERu3osu4+FfJ0CMj4=;
+        b=XcvoRoLcCtVUPvy65xJfk1KQG529kbbSSLET2kD3LxtcR1OWq+EO0wGuefGCcCSZvP
+         BNkVRWIgQQi+aqSu2GroQ3HnyNVDr1o5sT8K4drSuez10Cp+jklozf+9UWipo21l4irS
+         Ma2BNmBAcmiDt8Ogc8QFesXS+QX9MIPRtHNZEjrSVXNv1tRyFSsKH1Pt/Djwpyb9QrDc
+         CH0JPjnO8SiZcbllaKVbeQomjd67TgzU8YWdlEtHrWAw7lLMgGJaaHXmMD2SxiiaofTx
+         1psySLAkisHF3Bk1w1auUZvbfqPsPNDbLWPepopvnenbtJNSBxFfDM/t5s4JEffG/ORa
+         2z9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748349881; x=1748954681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/+1ORexpCal/yWarvUklj5P7KVERu3osu4+FfJ0CMj4=;
+        b=jT2JuXlG6T/hBTU0JtZXHN1/q6nrQX2Kv8DnrxxXYkWRcCBwVVeCr83TXpQWc3zYXb
+         +djFzb98Ev3641QCpM00RLVpvfUBnlNBebDDlu2E/Ac/16epWz9w5T+G5cG4xOq4yYmQ
+         L3dt/z6fP0ivCn9P5/573KI3UUX5dV9yCSfQiBz5qYB+QHZ2BuBFLbR2puTcULOg3EoL
+         nVpDsUtq9FOw0kFXVCJzGKkJtbjghqKsi56JivrOvJhyXz/wntCV+2KP7v3UDdZZ2e4E
+         moHOQdiU3y42/NVNO91Bs2i8DykmtrzlfhScaJpWjLviEX3fzyEEkcGyTYbIrnarDy8s
+         jwMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOrkMwIRT5RHIFO2Xeu5e2otGNJKVcLaOGP/E74HEEwAvEQl0INrCidtYELRPG01DGhOEznlJ7btoLNXA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo2bUZQqNWJrLbBwWyV9n3qcL841Xuecqv6L6Jxu+cLcksQYxP
+	corfk8B9NEphj3do1W3R5yYztJWPMHGMfTEOHlsjYT0ziTcKjp3XCgMx9Q1RhXctEPCvkDyV4rR
+	8sfU4jsENKFHNiHdCLqqnw2Vee8VHwvyFh1BsxOVz
+X-Gm-Gg: ASbGnctDDf2FQ+jRkR0EFTa+9obCGWQUEJZIuf4SM6u9ZBRdffN6vVHwIxHjQFl4oe2
+	NDsPWNaOlFdint2iK2RRNGi2Qh39U9m2z8jPkRkqCc4H0qzUNVfQc4eg0iEfH2kSgD6TXI9XhI+
+	b/dvJO/T0lvUxCSNIfaLqEIzhAtbyW0aRNf3WROOavZBZJPPL1PwCSWSHUX/52e/utyDgHUFzx
+X-Google-Smtp-Source: AGHT+IEky1d5meo1qHzcDPYMKOo6itgabi6xnmNH55BIUhfTHja5jzKInw1nb+GfsRVDFZjoQp10Sz6+0092+zxkyU8=
+X-Received: by 2002:a05:600c:54cc:b0:442:ea3b:9d72 with SMTP id
+ 5b1f17b1804b1-44fd1a229demr3814135e9.5.1748349881244; Tue, 27 May 2025
+ 05:44:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <231a9862-58ea-4a6d-8893-862776d9deca@sirena.org.uk>
+References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+ <20250524-cstr-core-v10-2-6412a94d9d75@gmail.com> <DA66BBX1PDGI.10NHLG3D4CIT7@kernel.org>
+ <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com>
+In-Reply-To: <CAJ-ks9m48gmar0WWP9WknV2JLqkKNU0X4nwXaQ+JdG+b-EcVxA@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 27 May 2025 14:44:27 +0200
+X-Gm-Features: AX0GCFs41915HXTpfqcCKH3n_1X5KqqnwxYwkDK8S1yQqomTcDJwCXbrNKkuqdo
+Message-ID: <CAH5fLgiUhvp9P7oSf4Rtv5jK1SNebW9-r5YFHVzCZjEwaR=Mjg@mail.gmail.com>
+Subject: Re: [PATCH v10 2/5] rust: support formatting of foreign types
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Benno Lossin <lossin@kernel.org>, Michal Rostecki <vadorovsky@protonmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, llvm@lists.linux.dev, linux-pci@vger.kernel.org, 
+	nouveau@lists.freedesktop.org, linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-27 13:35:50 [+0100], Mark Brown wrote:
-> On Tue, May 27, 2025 at 02:23:32PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-05-27 12:28:00 [+0100], Mark Brown wrote:
-> 
-> > > This newly added test is not running successfully on arm64, it looks
-> > > like it's just a straightforward integration issue:
-> 
-> > > # Usage: futex_priv_hash
-> > > #   -c    Use color
-> > > #   -g    Test global hash instead intead local immutable 
-> > > #   -h    Display this help message
-> > > #   -v L  Verbosity level: 0=QUIET 1=CRITICAL 2=INFO
-> 
-> > That is odd. If I run ./run.sh then it passes. I tried it with forcing
-> > COLOR=-c and without it. This is the only option that is passed. That is on
-> > x86 however but I doubt arm64 is doing anything special here.
-> 
-> > A bit puzzled here.
-> 
-> Yeah, I was a bit confused as well.  This is running with an installed
-> copy of the selftests and IIRC the build is out of tree so it's possible
-> something is different with that path compared to what you're doing?
-> It's a common source of problems?
+On Tue, May 27, 2025 at 12:18=E2=80=AFAM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+> > > +}
+> > > +
+> > > +fn make_ident<'a, T: IntoIterator<Item =3D &'a str>>(
+> > > +    span: Span,
+> > > +    names: T,
+> > > +) -> impl Iterator<Item =3D TokenTree> + use<'a, T> {
+> > > +    names.into_iter().flat_map(move |name| {
+> > > +        [
+> > > +            TokenTree::Punct(Punct::new(':', Spacing::Joint)),
+> > > +            TokenTree::Punct(Punct::new(':', Spacing::Alone)),
+> > > +            TokenTree::Ident(Ident::new(name, span)),
+> > > +        ]
+> > > +    })
+> > > +}
+> > > diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> > > index d31e50c446b0..fa956eaa3ba7 100644
+> > > --- a/rust/macros/lib.rs
+> > > +++ b/rust/macros/lib.rs
+> > > @@ -10,6 +10,7 @@
+> > >  mod quote;
+> > >  mod concat_idents;
+> > >  mod export;
+> > > +mod fmt;
+> > >  mod helpers;
+> > >  mod kunit;
+> > >  mod module;
+> > > @@ -196,6 +197,24 @@ pub fn export(attr: TokenStream, ts: TokenStream=
+) -> TokenStream {
+> > >      export::export(attr, ts)
+> > >  }
+> > >
+> > > +/// Like [`core::format_args!`], but automatically wraps arguments i=
+n [`kernel::fmt::Adapter`].
+> > > +///
+> > > +/// This macro allows generating `core::fmt::Arguments` while ensuri=
+ng that each argument is wrapped
+> > > +/// with `::kernel::fmt::Adapter`, which customizes formatting behav=
+ior for kernel logging.
+> > > +///
+> > > +/// Named arguments used in the format string (e.g. `{foo}`) are det=
+ected and resolved from local
+> > > +/// bindings. All positional and named arguments are automatically w=
+rapped.
+> > > +///
+> > > +/// This macro is an implementation detail of other kernel logging m=
+acros like [`pr_info!`] and
+> > > +/// should not typically be used directly.
+> > > +///
+> > > +/// [`kernel::fmt::Adapter`]: ../kernel/fmt/struct.Adapter.html
+> > > +/// [`pr_info!`]: ../kernel/macro.pr_info.html
+> > > +#[proc_macro]
+> > > +pub fn fmt(input: TokenStream) -> TokenStream {
+> >
+> > I'm wondering if we should name this `format_args` instead in order to
+> > better communicate that it's a replacement for `core::format_args!`.
+>
+> Unfortunately that introduces ambiguity in cases where
+> kernel::prelude::* is imported because core::format_args is in core's
+> prelude.
 
-It shouldn't be. The test is self-contained and as long as the run.sh
-script invokes all is good.  I don't see what futex_priv_hash might be
-is doing different compared to the previous test.
+I'm pretty sure that glob imports are higher priority than the core
+prelude? Or is this because there are macros that now incorrectly use
+kernel::prelude::format_args when they should use the one from core?
 
-I just noticed that after the two futex_priv_hash invocations there
-should be one futex_numa_mpol invocation. That one is missing in the
-output. Any idea why?
-
-Sebastian
+Alice
