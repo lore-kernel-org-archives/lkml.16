@@ -1,98 +1,62 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78742741B0
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F368271455;
+	Tue, 27 May 2025 13:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748352123; cv=none; b=MAoBmFeU1d5RovzZDV1uEPvL7snBWFtDiS99qN4Jy6KDeDfPqsQW9tjbRzWuMAYg6V3S9FCRw4EiLC4xq4gLq340sV3NoKXDmFdVWwt/36gRY0Xnf3kAAce98HgDa7NuIaopSjmkoQ2te9yLXBrwoe/zEF/czCabdVjnH5P6rFo=
+	t=1748352134; cv=none; b=Mx7IzZpnqcY97tZqtV8z1d5KXT+wMZovzx5ak/KP7pwyWgYUCb5WIwozY0WBilUuu72hfRf/RGpVZgO6eQI/wfRp1RrHOh0w/ZKx7f5pNoEZqH9G+lGnTiSkiGBakRivETnJo0c0RpMrpQpIWO96dRM2In2/Q5VP/ik8hdZryCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748352123; c=relaxed/simple;
-	bh=VyWGs92VxZHmYWq/MBjeYIKfJS3oITyIiMO5I+wjqS4=;
+	s=arc-20240116; t=1748352134; c=relaxed/simple;
+	bh=JoX/GVvzyAHgjxmoic7eh6PfFZiGid8DL474U3DuiIw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XlR4opPnmYIvf2AHVnGegQHPCDx+cdjv+cp6U11/dsHKI0lIdzHLHzwWapxupRVQrywMvg27hkiezkazvWe0bUEyHUNTmPuY7k/jyyNy2nBeJsFfdR2YvA2TON4E4VpZRK86t7m9vWfFN7+pQQZtq7hsJglnB8hBzDhYl1mQBBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=0zUaUtqo; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	 Content-Type:MIME-Version; b=k6PCEQjx3Rg/Sv8yGworpYxh77UXvC93D/Hgvd8Ze7wqPQocAV8BJjFWYSt+X2+32jxqf5gocX3t9qZ/dCG85ZHF+51s2PnbGPUFF+aJYbTiodr2eH0rEi/RAnEAqKCpvEW9129BUMHvKq7QRGrT7n59+QjmBRucvg0klZlkF90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=U6ng9kC8; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="0zUaUtqo"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c559b3eb0bso189074385a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 06:22:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1748352120; x=1748956920; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=VyWGs92VxZHmYWq/MBjeYIKfJS3oITyIiMO5I+wjqS4=;
-        b=0zUaUtqop5RzqVPB8/4UsJPZFJastdqhSXlSQMVoQLBR+RuECoVeTEn8t89DMSYbuC
-         qRPd2APug4sGJbzeSosJXs/QNIdBDIdmP9sRRasfzgVd7+e0SXiGzXCL0v006MjoOLX9
-         0Vro09AbATX26oJi+aW0SfJHiZPzCzzAa8WUCoHgIaCXm8r/RXYUYmpVGs1gxjQqMDly
-         9PT2Tj8XuL11YIEeYX7DcA9HKdGNEXC9jsffJiSHi8bgKoTKpoeWDqHhwDLRpLFb4R+t
-         0WRIzzscMTxAuUM2vIxZkalDR25rMgRkGx6A5ABGKDyuPP6udzlj9faZWlv3nphWUwbE
-         CVRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748352120; x=1748956920;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VyWGs92VxZHmYWq/MBjeYIKfJS3oITyIiMO5I+wjqS4=;
-        b=k+ARVCsWKREA+ZnZY92EIKseP8rr/Hz+1kNftctlOPxwmFUAsQQKWIL6Bu6F1KIfEN
-         FSbKlgmuoehSpPKnld2A9vZ7kh66lqpPofj3npt7iBp46PUrFP3orKHoHJ9jmkTT8pgy
-         /ikSb2govxOeISnXHCwY/tDDN0+teeYn1WnlVJvMVaSGodbNj/kPDpiTlGjgZv9DC0vG
-         vklT22VTEQkRE9cYtA9tyCwovyhUjwnJpiZuqG5j4HEi/N7nP6djhlT/bmC31ix0LyyZ
-         eEYWeHhzE5U68aUCeml0kKsykm7kwOLv6xiQmp0KIhrhYSfwwN7H2czuKDRgV0TD9ePk
-         ZbrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXV0wjPhNYfcNvOCU2JXBOFdMPJoI/DwYbDVCyx1pus6TP8lx2dvm7UzK+PDBKK3vm0VSVx5mtFT7BWsjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA4TY/XSdUw2mHjr1miT0oORDpww7nABodFhtfdUjegCOHSmYb
-	lG30Vn/I+JmxwJgxoAq9mlnTOQzz4JhZCcpPaCrV8P6+DV6DICONt3LhS32lUw9hb/4=
-X-Gm-Gg: ASbGncvXiOLG5laz0Z4hFdBln+2BWKUWO4lO/NE1+iCCVXuIBKD1XM6vdP/aWXuDgR4
-	t0J7gUAf6C5tjsckIStGmWN/Y//vbeC7xSdllZRcA8t8IKRXT7RIl5ncQlRC8a4xllO7KprDgfk
-	LPkAG4fBUHyqvoZzdWbikyZxqFiqBMxKNGMwbEhXWW1+bAS64JJZ5K9UGLrz52/5dTC81Ljt80b
-	4fByEfbrrt6jvnb69HXI+l+CBNwjp2D5i+Bde6gyzU3ihJAJGlBTo/VdKqm8L1RCom/1Y+avuN2
-	wi19X42uMxSoHoVWvQ3DGIC3vd1BzmkbbrTAR64Cq2IgaYKLGsRk5NKV
-X-Google-Smtp-Source: AGHT+IGqjEuOc/rQc0o4CTVNkvRn1LeoDd94pgaJaN+RFhGpz7B5jdeGPrzKG2P1R07nsKaMUvmdnQ==
-X-Received: by 2002:a05:620a:c4a:b0:7c5:e226:9da2 with SMTP id af79cd13be357-7ceecbf9338mr2045791485a.47.1748352120422;
-        Tue, 27 May 2025 06:22:00 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:17:b2fc::5ac? ([2606:6d00:17:b2fc::5ac])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467dd34csm1725927585a.47.2025.05.27.06.21.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 06:21:59 -0700 (PDT)
-Message-ID: <30acbaadc08869687c22e6a70052571c99556979.camel@ndufresne.ca>
-Subject: Re: [PATCH 2/5] dt-bindings: media: allegro-dvt: add decoder
- dt-bindings for Gen3 IP
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>, Krzysztof Kozlowski
-	 <krzk@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh@kernel.org>,  Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Tretter	 <m.tretter@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,  Michal Simek
- <michal.simek@amd.com>, Heiko Stuebner <heiko@sntech.de>, Neil Armstrong	
- <neil.armstrong@linaro.org>, Junhao Xie <bigfoot@classfun.cn>, Rafa??
- Mi??ecki	 <rafal@milecki.pl>, Kever Yang <kever.yang@rock-chips.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Christophe JAILLET	 <christophe.jaillet@wanadoo.fr>,
- Sebastian Fricke	 <sebastian.fricke@collabora.com>, Gaosheng Cui
- <cuigaosheng1@huawei.com>,  Uwe Kleine-K??nig
- <u.kleine-koenig@baylibre.com>, Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
- Wolfram Sang	 <wsa+renesas@sang-engineering.com>, Ricardo Ribalda
- <ribalda@chromium.org>, 	linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Date: Tue, 27 May 2025 09:21:58 -0400
-In-Reply-To: <uys462vhrhzeapzkve7z5k3xg6bjvpdne4xw44voqn6uhjdkmc@owrdgvraiqyb>
-References: <20250523134207.68481-1-yassine.ouaissa@allegrodvt.com>
-	 <20250523134207.68481-3-yassine.ouaissa@allegrodvt.com>
-	 <3e6be40a-2644-416a-bd32-f6256f1501ff@kernel.org>
-	 <7863d15a-fa20-4db5-89b5-77a026d3f937@kernel.org>
-	 <a72z6exgol5cbur2cy7wjwyroi4zddtki5ab3zdkfuwpskpavr@r26wahldhd3r>
-	 <b5bb919e-6273-48ed-b5d8-29177dbbfb76@kernel.org>
-	 <flwocneutp64bxxwfkfqvm6dq7klc2nu33ybr3ap6qeovopfq7@7qognvdf4zew>
-	 <04e1f361-b3cf-4fdb-a008-42eb489f6c4d@kernel.org>
-	 <uys462vhrhzeapzkve7z5k3xg6bjvpdne4xw44voqn6uhjdkmc@owrdgvraiqyb>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="U6ng9kC8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1748352130;
+	bh=JoX/GVvzyAHgjxmoic7eh6PfFZiGid8DL474U3DuiIw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=U6ng9kC8CMqkQZSXsZSjT8a2R5dgCdJoT6UwLb0G3QfKgqiR7Lkhu29vWmgnJ6+ge
+	 fGbwK3GdJ2kA66MZfaKwjHJyA49q5UztPFvXiV+ctIpHdsu2M3QQ7ZfKnPCFo/mnbj
+	 D3SU56hul44lfQv2hy2q4ANQfWzuQ6VVMt0CQ+tU=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id EBC811C035B;
+	Tue, 27 May 2025 09:22:09 -0400 (EDT)
+Message-ID: <9b1a69dd12531299dcc9b077d065ebbaa6e14c51.camel@HansenPartnership.com>
+Subject: Re: [PATCH v3 7/6] scsi: Always define MODULE_DEVICE_TABLE
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Alexey Gladkov <legion@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Masahiro
+ Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>, Khalid Aziz
+ <khalid@gonehiking.org>, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-scsi@vger.kernel.org
+Date: Tue, 27 May 2025 09:22:09 -0400
+In-Reply-To: <20250527131544.63330-1-legion@kernel.org>
+References: <cover.1748335606.git.legion@kernel.org>
+	 <20250527131544.63330-1-legion@kernel.org>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -100,78 +64,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Hi Yassine,
-
-Le lundi 26 mai 2025 =C3=A0 12:58 +0000, Yassine Ouaissa a =C3=A9crit=C2=A0=
-:
-> On 26.05.2025 14:46, Krzysztof Kozlowski wrote:
-> > On 26/05/2025 14:27, Yassine Ouaissa wrote:
-> > > On 26.05.2025 12:57, Krzysztof Kozlowski wrote:
-> > > > On 26/05/2025 09:25, Yassine Ouaissa wrote:
-> > > > > On 23.05.2025 19:13, Krzysztof Kozlowski wrote:
-> > > > > > On 23/05/2025 19:11, Krzysztof Kozlowski wrote:
-> > > > > > > On 23/05/2025 15:41, Yassine Ouaissa wrote:
-> > > > > > > > Add compatible for video decoder on allegrodvt Gen 3 IP.
-> > > > > > > >=20
-> > > > > > > > Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.=
-com>
-> > > > > > > Please do not send the same patches over and over again. You =
-got review
-> > > > > > > which you need to address.
-> > > > > > >=20
-> > > > > > > Once address you send NEXT version with proper CHANGELOG for =
-each patch
-> > > > > > > or top of cover letter. See submitting patches... or just use=
- b4. This
-> > > > > > > should be actually requirement for this work.
-> > > > > > >=20
-> > > > > > > Anyway, I see all of previous review ignored so let's be expl=
-icit:
-> > > > > > >=20
-> > > > > > > NAK
-> > > > > > >=20
-> > > > > Hi Krzysztof,
-> > > > >=20
-> > > > > Make sure that i'm not ignoring anyone reviews, i sent a new set =
-of
-> > > > > patches to start cleanly, and i have sent you an email about this=
-.
-> > > >=20
-> > > > It is still v1 - the same? - while you already sent three patchsets=
- before.
-> > >=20
-> > > As i mentioned, this patch is sent to start cleanly, so it still v1.
-> > > And the previous patchsets should be ignored.
-> > This is not how the process works and it is not making reviewers life
-> > easier. It makes it impossible for us to compare (try yourself with `b4
-> > diff`) and forces to re-review everything every time.
+On Tue, 2025-05-27 at 15:15 +0200, Alexey Gladkov wrote:
+> Since MODULE_DEVICE_TABLE no longer depends on whether the module is
+> built separately or compiled into the kernel, it now makes sense to
+> always define DEVICE_TABLE. In this case, even if the module is in
+> the
+> kernel, correct module.builtin.modaliases will be generated.
 >=20
-> I know that i made a mistake by not respecting the "submitting patches".
-> this is why, i prefer to start from a good base ( clean patches ).
-> =C2=A0From this patchsets, You & I can use the b4 or other tools to get t=
-he diffs.
-
-For future submissions, once there is a base, don't try and "fix" things, j=
-ust do
-add V2, V3 on future submissions, even if its completely rewritten. Just sa=
-y so in
-your cover letter change log. If everyone was to reset to V1 all the time o=
-ur work
-as reviewer and maintainers would be completely un-manageable. Please under=
-stand
-and take our explanations for the future. There is no need for you to argue=
- on this,
-this is not just personal preference. Same driver, second submission mean v=
-2. That is
-even true if you take over someone else series.
-
-regards,
-Nicolas
-
+> Suggested-by: James Bottomley <James.Bottomley@HansenPartnership.com>
+> Signed-off-by: Alexey Gladkov <legion@kernel.org>
+> ---
+> =C2=A0drivers/scsi/BusLogic.c | 2 --
+> =C2=A01 file changed, 2 deletions(-)
 >=20
-> >=20
-> > Best regards,
-> > Krzysztof
->=20
-> Best regards,
-> Yassine OUAISSA
+> diff --git a/drivers/scsi/BusLogic.c b/drivers/scsi/BusLogic.c
+> index 8ce2ac9293a3..08e12a3d6703 100644
+> --- a/drivers/scsi/BusLogic.c
+> +++ b/drivers/scsi/BusLogic.c
+> @@ -3715,7 +3715,6 @@ static void __exit blogic_exit(void)
+> =C2=A0
+> =C2=A0__setup("BusLogic=3D", blogic_setup);
+> =C2=A0
+> -#ifdef MODULE
+> =C2=A0/*static const struct pci_device_id blogic_pci_tbl[] =3D {
+> =C2=A0	{ PCI_VENDOR_ID_BUSLOGIC,
+> PCI_DEVICE_ID_BUSLOGIC_MULTIMASTER,
+> =C2=A0	=C2=A0 PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
+> @@ -3732,7 +3731,6 @@ static const struct pci_device_id
+> blogic_pci_tbl[] =3D {
+> =C2=A0	{0, },
+> =C2=A0};
+> =C2=A0MODULE_DEVICE_TABLE(pci, blogic_pci_tbl);
+> -#endif
+
+You don't need to do this in two steps.  The original problem of
+defined but not used table stopped being a problem when the structure
+was converted to static const over ten years ago (the compiler doesn't
+warn about unused static consts).
+
+Regards,
+
+James
+
