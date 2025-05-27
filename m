@@ -1,185 +1,89 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9701F8691
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 21:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAFE29A1;
+	Tue, 27 May 2025 21:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748380971; cv=none; b=hXdhXq+WlNgP/Z4uFS8HkzAwJ2iDf8+4WKIDZKfVuxsEcKDJ7nJoeROFqAFBsg3kuT1HA8xVodNGW6zgv2WQn5PpaBxmUjHQc1EggEd5n4RmuhHq8LJKCx0AK4s8qxVHbTWd27FSOHboonNbRKhqZW41RIiJZ8bfD4+i0W53bow=
+	t=1748381108; cv=none; b=bPPn1r13JB/WLCxkIdcc9mNRfNo3oh0D3xbHeC4Efj58UEtV8OEVUCxpqiwagQ5TOgHRwwEAY7JmO3Oz7eSk+RM92spLp0okAY3xKlyl95sPDr+ervOu0kLSjjBJsXB1T/zaaWFkv6vRnggrb8wOPNKlPArMNvVRN0L3yTuwB/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748380971; c=relaxed/simple;
-	bh=CmXNjfU2YBa1jt2Z+F/46nl2cI2JRC7z389h5i3eWiA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nShUVUwKLqgNe0PN8bxs7tC+bsxoR1auoWN/sWpX4V2FeCKI5XSqhcfQJF/G3oNqQy7/W+P4v7rP0mdBvB4hB2k2ceAGv+SYGEuxR+zSLqmp2CnE6Vx+yoat+vQ9h9+Xl6iD+aH0BVrql6N3140e1gZcQxRrDc6h8iT/ux3cLCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H69psyHK; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748381108; c=relaxed/simple;
+	bh=yGb89xEjY3Woi7LpabLSzMNw5oe1bMQc/Fb6oP4wld4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VY4DW6ywqMEy41lMt0WePNnPrBPBjhurU4u843aysjqR8MVUY1M02JPnF+0d6m9U8qtGwqVLs2Td3sf1YivL8Y+U/h+Ajmff8zxtmuDHOAImettPLheiVfx9KuTadbOIo1jMh4w844j41mLSL21MKbcZFqgBQ/1A/vwW7GVERYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=lEZgAcxJ; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H69psyHK"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6045a3a2c5eso3976916a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 14:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748380967; x=1748985767; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rf03yAgQQGBhErkrSSaEFDElj+fjBRlARFLOXQZblAk=;
-        b=H69psyHKbQd+b1T7e2t1AoZ7tFyB8lK5HSQmjuD4D/7k4SnwZHcfu1urhxpPqWYzwc
-         qw3Da9W98rPjPC8ZszP9Mcd5P2DBqssZl30GNyhWM66Yb/IdMXGAQXObQO1lNdzTw7zu
-         yLWwhTGy04iCD04EUbey1mHl7vQs8uiYqk+b+VEatSNwgPTfVN+XHTWFz5wHHdQf6t78
-         PfPNlOGGSo3fYrlwSkDTATULV6VvjZ7Vjd6ezZOhT3c3ch9kFOIPjD4Zyk5hAsXvZEjY
-         FU2Gda7Cf1knFTS16k5nMmS7BMg/rG2zpr5I7z8D3yy+na7KjrTQRVXitX4ZsZLNHJO0
-         BFDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748380967; x=1748985767;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rf03yAgQQGBhErkrSSaEFDElj+fjBRlARFLOXQZblAk=;
-        b=OogZoDKP2wtdppijvCaTS9601PDf1Y+L1psK8fwBGvsY1faXAEvWVxeY94irl8JVek
-         gvxSenbtx2DJiV7f11HRiXw/AAXOp28iW2X7Ee12rA5WG+RSTU8f59E9+B9U5bDBg/WN
-         e8DjrUQUTrzDiPgVhGNfU6XVxbOtN6VQPNCdEmEfLV7kUpIRITkopfSczoavBBns80EX
-         WKDFNp/vaIGtuH0Zx/3wFmrMEgml2PWLo9HcHCaGVluPdnGhwX92Xxjrjyp8iuJIhJQS
-         kJQv02Hg3qF1JNfE9Zm+4kp+ssVJA25awr4IVt/ZCDt6wQWViPo8N5FuVwW3iLdA+Dot
-         Y5Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkGwQVRcKKzAL5CcGr94ouFpWh+ADoT3Gl9Qfj+v8vljPk0udwouAJHxCzmSeIrjJXhrPTMaR+47tDoAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx98sW0u6Yu8lL8PXJWROE6DTV8MvYBDyNIl8cv1ZW8sPlUzDLF
-	TS1+rqFdO/RJXrTjlimgjBwWHEFzK5/BQ1vkuqZ8MNf1vJ10hcVqFzK4BsznAourf+o=
-X-Gm-Gg: ASbGncup7+GRW/rSbgepLaNRR/j/dgfwpQhwlKbfjn7iFxZdzjZK+5gcUf+ghSDOkyw
-	b/kaI3/itQ8IPQPy4vsNgKyHbQY2OwVPiTU9dI+LilkaWzK4JoT5Yc2jEAJd8ma1IXzPr1Ue5MV
-	NwJ6AYaEpckj8AUi3DhYVSEG/lZyDuQU77vORXxV5SpARtqIs4xa8iLORDw55NOfYTjEth4uBIS
-	P9jdg8lDNMGD1OXIL6kjcmFjQvcsCJ35wQMTBWT8cdejNJjvHTVekcHSgCcXHSa9E0p98yHWpZ7
-	Crl686EIz7oGxdc4CNUAUEkJl3he0heHtfTE3OHxg4Cds8/yxgFhl4gmqe8e1zevwgn+5BRVggJ
-	SF5gbFH05rOthKN34sFqLIwTxYBkBxyIW
-X-Google-Smtp-Source: AGHT+IFERg8h0M0q68ymhrrsY3ViILpvzLyzrWuNOWeP4SVGe1Wg+ZNpOzN/Rnmv7ShgttQHfLkmmw==
-X-Received: by 2002:a05:6402:1d4b:b0:601:f185:fc2 with SMTP id 4fb4d7f45d1cf-602d8e5e352mr13569888a12.3.1748380967163;
-        Tue, 27 May 2025 14:22:47 -0700 (PDT)
-Received: from localhost (host-87-21-228-106.retail.telecomitalia.it. [87.21.228.106])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60517a7f920sm128296a12.53.2025.05.27.14.22.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 14:22:46 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 27 May 2025 23:24:20 +0200
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Matthias Brugger <mbrugger@suse.com>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v9 -next 08/12] arm64: dts: bcm2712: Add external clock
- for RP1 chipset on Rpi5
-Message-ID: <aDYthG54Wz3khQ88@apocalypse>
-References: <cover.1745347417.git.andrea.porta@suse.com>
- <38514415df9c174be49e72b88410d56c8de586c5.1745347417.git.andrea.porta@suse.com>
- <aBp1wye0L7swfe1H@apocalypse>
- <96272e42-855c-4acc-ac18-1ae9c5d4617f@broadcom.com>
- <CAO50JKVF6x_=MUuzjhdK0QotcdUgHysMb9v1g0UvWjaJF2fjDA@mail.gmail.com>
- <48AFA657-5683-42A4-888E-3E98A515F3B1@broadcom.com>
- <aCIk40642nXZ3arz@apocalypse>
- <3899c82c-d6a7-4daf-889b-b4d7f3185909@suse.com>
- <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="lEZgAcxJ"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4b6QdY6pTLzm0yQ1;
+	Tue, 27 May 2025 21:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1748381102; x=1750973103; bh=nWR/Tw1R8H9uMvTSu9ifpTSp
+	3GnNEXesJatUEekQH8I=; b=lEZgAcxJT+2CvXmT39VJ1rqw3wso9u/J5Y93OI6P
+	0oezKl4PjCxCCvVSKWYb6I44siWKjrtZdEF1q2GyOjuCQ01dBYrIqLbXoIxCxbCE
+	vDvYI5V/Qke+KiOunOcu9ttN2mULQQZ3dGAkR4f1cMM1sUK6b/zB0/8Qsi3hjOUE
+	oGhwMWnbWGFU6G04m7/J7+mKJmDldJL1jDbJ57OVM+43rPKtXaW9p0opgW2r8MpD
+	RRpEvnHo8lIedq35lsWB/znQ7PY+d/k8Td5afPJsJ+mA+6PxRAzg0w1spOCUTRW7
+	PjNGc+GPvAV5jdj8K6RL3586LQUduKwHukBdREvm9gfVxw==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 03RSyhsk2Bkl; Tue, 27 May 2025 21:25:02 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4b6QdC2ls4zm0xjy;
+	Tue, 27 May 2025 21:24:46 +0000 (UTC)
+Message-ID: <bfe4b18f-aa09-4b1b-89fb-1cb0cc0a78ed@acm.org>
+Date: Tue, 27 May 2025 14:24:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6953caf0-0fef-4bd6-898c-4f86ee738f30@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] scsi: ufs: core: Don't perform UFS clkscale if host
+ asyn scan in progress
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
+ mani@kernel.org, beanhuo@micron.com, avri.altman@wdc.com,
+ junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+ quic_rampraka@quicinc.com, neil.armstrong@linaro.org,
+ luca.weiss@fairphone.com, konrad.dybcio@oss.qualcomm.com,
+ peter.wang@mediatek.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250522081233.2358565-1-quic_ziqichen@quicinc.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250522081233.2358565-1-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Florian,
-
-On 09:18 Tue 27 May     , Florian Fainelli wrote:
-> On 5/26/25 07:06, Matthias Brugger wrote:
-> > 
-> > 
-> > On 12/05/2025 18:42, Andrea della Porta wrote:
-> > > Hi Florian,
-> > > 
-> > > On 15:02 Mon 12 May     , Florian Fainelli wrote:
-> > > > On May 7, 2025 5:01:05 PM GMT+02:00, Andrea della Porta
-> > > > <andrea.porta@suse.com> wrote:
-> > > > > Hi Florian, to accept the patches, what would work best for you?
-> > > > > 
-> > > > > 1) Send only the relevant updated patches (maybe as an entirely new
-> > > > > patchset with
-> > > > >    only those specific patches)
-> > > > 
-> > > > Only the updated patches work for me. I don't think there is
-> > > > that much coupling between the DT changes and the non-DT changes
-> > > > (other than without DT entries nothing is activated)
-> > > 
-> > > It's a little bit more involved than that:
-> > > 
-> > > - Patch 7 (misc driver) depends on 6 (RP1 common dts) which in turn
-> > >    depends on 1 (clock binding header). Should be taken by Greg.
-> > 
-> > Greg gave an Acked-by so I think Florian is good to take that patch.
-> > Which leaves us to the clock patches (driver + dt-bindings).
-> > 
-> > > 
-> > > - Patch 9 and 10 (board dts) depends on 6 (RP1 common dts) which again
-> > >    depends on 1 (clock binding header). Should be taken by Florian.
-> > > 
-> > > - Patch 4 (clock driver) depends on 1 (clock binding header) and
-> > >    should be taken by Stephen.
-> > > 
-> > 
-> > Steven reviewed the patches (driver + dt-binding) so he is waiting for a
-> > new version which addresses the review. He offered to either take them
-> > and provide a branch that Florian can merge into his branch or provide a
-> > Acked-by tag.
-> > 
-> > @Florian what would you prefer?
+On 5/22/25 1:12 AM, Ziqi Chen wrote:
+> When preparing for UFS clock scaling, the UFS driver will quiesce all sdevs
+> queues in the UFS SCSI host tagset list and then unquiesce them when UFS
+> clock scaling unpreparing. If the UFS SCSI host async scan is in progress
+> at this time, some LUs may be added to the tagset list between UFS clkscale
+> prepare and unprepare. This can cause two issues:
 > 
-> I am fine either way, it's definitively simpler if I can take all of the
-> patches in the respective Broadcom ARM SoC branches, but pulling a branch
-> from another maintainer's tree works just as well.
+> 1. During clock scaling, there may be IO requests issued through new added
+> queues that have not been quiesced, leading to task abort issue.
 > 
-> Andrea, sorry to ask you this, can you post a v10 and we aim to get that
-> version applied?
-
-No problem, just to avoid any confusion I'll summarize what-goes-where with
-respect to branches in your repo broadcom/stblinux, so I can adapt each patch
-to the relevant branch:
-
-- dt-binding/DTS (patch 1,2,3,6,8,9,10) -> devicetree/next
-- defconfig (patch 11,12) -> defconfig/next
-- drivers (patch 4,5,7) -> drivers/next or soc/next?
-
-Also, should I split any patches that have MAINTAINERS changes so you can apply
-them to your maintainers/next branch? Those are patches 4,5,6,7.
-
-Many thanks,
-Andrea
-
-> Thanks!
-> -- 
-> Florian
+> 2. These new added queues that have not been quiesced will be unquiesced as
+> well when UFS clkscale is unprepared, resulting in warning prints.
+> 
+> Therefore, use the mutex lock scan_mutex in ufshcd_clock_scaling_prepare()
+> and ufshcd_clock_scaling_unprepare() to protect it.
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
