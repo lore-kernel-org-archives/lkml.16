@@ -1,291 +1,181 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAACC120
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:31:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DB22046A9
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 09:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748338281; cv=none; b=qzjpcBWgzwOFvxMD8V6ZHZEQxdW3tgkxBEBiKzpKzALEdV9WXq+V43IF1/Y3x32UsHIvFaiBLEIIBzEf+eDAId7yK8YGwrVobqo69T4ydMIgLnN7bYDzXy3KfVXGca4+jk9H3jQ/kFse3793IdPNgCO7L3qyLgve8EvjnbN8pkI=
+	t=1748338365; cv=none; b=Cb3tREiBmx/s0E72o5/rsynBK+Lc37+4NzEQ00rITOwpFjdqGeCn8SyopIq7vtbS6GmTwXRM1Qdl92IzkfzAKDz4nul5HJ9lp5PUbQytKf78EukfHtd7aRpAGa4DNqDDctn0sRGhoKwr5TpX3EPWL1OtAqlfvMuGcFM7yl7Deww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748338281; c=relaxed/simple;
-	bh=mpK1CrRH8Iaqa/Ff0mAx6cLKBU+OYet/+uo3FaCNQoA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B8/Sk/ZrzLX4t+WiK6200sLLA32PMz/vnRTKPTMSPBdTJ9K8dxV08jg8/Y8rLNEER4JjRc0WKp/NLfBrLOxYQDS0KUy28QUq6QXLVv5ij9owZ9+FzgMJy1QqDVsmX/W9asaw1KHqKxPrbjmMYCg6quqUCO9F/EQWY6sWtY25O94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMM3jiit; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748338365; c=relaxed/simple;
+	bh=kBOYzjEOA1UOSzxYusR2QCkHuynXvOslEyq8QhBHrQE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WtWnhbX6puQWbrZyi5W4n8+Si7gIZa98w2j4FNsxZRgquHzY4aVCDIOh8BQW2tMskfxU3VVoi/gd+KO7U1rOxqPlf05e5kx77ubysEaVB0wITxqH1CWSbGwSzhxkMu1vZjZxQNy2wscOmB/0HCGk7IsW+9Qp0722/ax3nM0h9Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMjRnWj+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMM3jiit"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52dbcd398f9so2036294e0c.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748338277; x=1748943077; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=97+T8oC1dJwTDjXMcPA6pmXDbFR9V/YrjWwp0CCMtPs=;
-        b=jMM3jiitHRbg8Ly6pMy1oYEO28FvhJ7hCfK/siEhiN8CDfYr6IrsHHkNbJx4bCJyKw
-         31ryi4YVgcDxKZQbbxV9TCGi0nwg8hITZf6H5ZZiSSa2q9nTaQERDmgsfPz8ffT09oJO
-         Hy+lL5PGfj++gDdJ/PoNnweJ4DeJTG8sxRFkmzddc9qbLUIjZAhLXIuiAn+CZvRcJxd4
-         7N5WS6OkVnq/WkgxaG9DM2fGR4lOvukioPt2pX7RAFedWPsgraJ3ncZ9OJtr06Bp/Its
-         DB7t/NXzauiy46fb16JbN5Gnd+lq/YPaY1LLWV/MVCIrfvZaAQ5C3/9savT75O837tPI
-         djxg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMjRnWj+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748338362;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=kBOYzjEOA1UOSzxYusR2QCkHuynXvOslEyq8QhBHrQE=;
+	b=UMjRnWj+6FuqwZLhcQaYBYKPXEA2GlKOe30FFRsQeJpjFx2n/oM1r6aAMoJQCsYZ/QJ5CH
+	3ic/CqZDyctB7HTCgTqBneW9ZVH6y6P58P7YFGzrXiH2UwxAegd6GN27/WvZ7JDI5Yq2gE
+	JxSsEJBfCxUv1/R30m1UoiJbw68+k1A=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-RtXTTK0bM8aipOb3_Nyj6w-1; Tue, 27 May 2025 05:32:38 -0400
+X-MC-Unique: RtXTTK0bM8aipOb3_Nyj6w-1
+X-Mimecast-MFC-AGG-ID: RtXTTK0bM8aipOb3_Nyj6w_1748338357
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4dcfb3bbcso712564f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 02:32:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748338277; x=1748943077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=97+T8oC1dJwTDjXMcPA6pmXDbFR9V/YrjWwp0CCMtPs=;
-        b=Tgg1HvN4gfborp+iR+loSDoyJGPzEyD9UMR9CaeWbet8+rc+Q8jOeFJfJ6nwV8Vj52
-         9ua9y9ziipFpJvVR0KF/a8Crv90AGOopVl7z6VwZcB0rq+BTxJfEVEGzra7HLgbKB3Wl
-         vReVM5YdEj2lpNEMpRs8EfgQ4+BgExfBBxBHcOKfL1G98ByaSxbp79vDbSyBevhjWTKz
-         /11sgs/niOcRgXyly1+LovAlIgSpWSCxSO57X185nenGhLzut7vDZ8LhZkyQPPXN9BG5
-         zcc+26Ii1Y1yr0R7t8qhNsHKelKEITQXSP/m+25X/tB59Mn4HDjdNBmp5LicrwdkhbeX
-         Lpsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXwpOAiUfITtVPeZaj9tRnR4GXatDvszmIQE822mZSo0K792opgGTrpyxuJpPiXAi/NovozyGznBcllJk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsOcwimjXGdJWpgUujzuOqr+cQqCk5/Qe01jUzia01sDigq807
-	yLNBkPqI33YbKCTIWGh7rHXKBb1nXwhoNBGNeJ90LdAnEkdDJOfatUIlsyFulOvXXtChKlp9mIt
-	3zPL4ysEYdWTYC/15dQBwJfzf9S3qJso=
-X-Gm-Gg: ASbGnct6JHaRcamkHwCMUQKbA1+b8s1glB+lXn0fAkLNxK92jGaj4yQ73DfcLijpi8c
-	s0shR079/0ATGz7GR/ki+RSJLkd6UXExyYQP+HGvwAhHqYKHtzaZn3oMuTbHu7zoSAr1wHLABZS
-	I8v3WaA473zcwdMxR+KdKlNhL4EWgqvfWR9Q==
-X-Google-Smtp-Source: AGHT+IEC6n+Jh7ll5RCcHL45yLJ31qkJq1Ed59X8Pjk9iz0BDBVctTKK8vDXycYmqs2PwBOWNrsQClc91os9m+niJt0=
-X-Received: by 2002:a05:6122:2223:b0:526:23d2:6ecd with SMTP id
- 71dfb90a1353d-52f2c025fe4mr8566706e0c.6.1748338277002; Tue, 27 May 2025
- 02:31:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748338357; x=1748943157;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kBOYzjEOA1UOSzxYusR2QCkHuynXvOslEyq8QhBHrQE=;
+        b=MbxA7bN//9ZF4Esuee13jBFSU8+/l6tIPBYwJWFnjN/cyo5ufNtllKfe/NWq004mcr
+         /f9afTQX3A6/2syni9Rqo57SJ0XkcTL/dN3rexBObLQTxhctz8H3zQsaocVLv3EOM571
+         bKAnVGVXy87WNe3lORHLKcuA88Cb/XZFhkKWjZ2hccGhNnrAU0p0NpiXuvt+gru5NSoz
+         Xv+7uH1cLGuF10ZzWdcOXA6sFuF59msTUrXezHj1cr9kq7+Proo+1h1lbc64v8RuG0uT
+         n9XwalUag8j2KTYjVWYMjUfEWqDVCQFGuWrjGkcDtSgOAHeX/icTP9b/V5zUgaQJEa6u
+         l2ew==
+X-Forwarded-Encrypted: i=1; AJvYcCVt6bHMb53r9DQCrCb7jb3uVAq6SXrXYUAerGdGapyVy4isDg9EkqTktK9dgWn/3VPOlR3LKNOH9yQMbkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqbDR5l/sVWr9fXf3Hmpk+GnTi0wo8wl4aTZBIH22vF7VVT1QJ
+	xYTavsYlJBsZpoIHH9LmOv0QU/Id0bSuX7wIC1L3WpXl6sGjpQfNqW13Tb1RgFzW5mzaULa1r2N
+	JR50TVds6uzlePpOA4tG980iDa8fzIm9fhmbVMOPDZ6TRnqMCTBL7I0YRPNO3FrCL0it1wvYIa4
+	64
+X-Gm-Gg: ASbGnctBuKcfqQYkbhQ+ZjsGv8rht5H0wGOq/Dpv9fKVIIOMiPTQIcl3W/XHtE0FRU3
+	0WJjxudIkVjaWZR7LLTNiaLB77sXnN34Bimg5YTU6XDiMJYyz0+kfB10QRZHOmoVb1nBCzzPXZQ
+	dJHfBu4ZX69X7yuCBeFMduuKg9aEk+l+NoZbAx1OXv4mcDH5T4CN8S+mI+zocIOcfWiPcgsJtXy
+	M3S2GDc2MgKFpzYXfPzGHal4cQpLzj/WgKDeWMGpDjZWrvlT163BeDpOzVNI7bcSangduLvyh9Z
+	NozMQtPTWxNCCnmSfx4fbiv8uxUg3KPtjBso1A==
+X-Received: by 2002:a05:6000:1814:b0:3a4:cb8e:d118 with SMTP id ffacd0b85a97d-3a4cb8ed307mr7788279f8f.24.1748338357320;
+        Tue, 27 May 2025 02:32:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGOPw1yKFpRKpRR31/yCWnQYEpqGvfknCwekf03EA5lc6V5ZNABZ3W/T4ahko0a/4vA/rRcPA==
+X-Received: by 2002:a05:6000:1814:b0:3a4:cb8e:d118 with SMTP id ffacd0b85a97d-3a4cb8ed307mr7788256f8f.24.1748338356977;
+        Tue, 27 May 2025 02:32:36 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4e4f4d58esm206946f8f.28.2025.05.27.02.32.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 02:32:36 -0700 (PDT)
+Message-ID: <91719ddbeca0e37617558687feb1191a69793dad.camel@redhat.com>
+Subject: Re: [PATCH v9 12/22] verification/rvgen: Restructure the classes to
+ prepare for LTL inclusion
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ john.ogness@linutronix.de
+Date: Tue, 27 May 2025 11:32:35 +0200
+In-Reply-To: <20250527092734.BgoHvn6n@linutronix.de>
+References: <cover.1747649899.git.namcao@linutronix.de>
+	 <c1dd325f5f8f01dd7c29ff90be22164c17f073a0.1747649899.git.namcao@linutronix.de>
+	 <1927d98817cd97a70d177e0a3001603ee3e34b35.camel@redhat.com>
+	 <20250527092734.BgoHvn6n@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGsJ_4zOhNBe9b1m1LYaJbFur3TdLma+2EXbc=BhAToDeLfvAg@mail.gmail.com>
- <20250527083722.27309-1-21cnbao@gmail.com> <bcc5cbb6-4ce6-4c01-8b5b-f6e01b306b2d@redhat.com>
-In-Reply-To: <bcc5cbb6-4ce6-4c01-8b5b-f6e01b306b2d@redhat.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 27 May 2025 17:31:05 +0800
-X-Gm-Features: AX0GCFu2pfGa-TJu0at63iJrzVFoQlxp_JxZP5wS7HpNUnTLtTCvgDB2o3KhtmA
-Message-ID: <CAGsJ_4xQ4-bszHNi=0QDCqsap+0WdfU9_u8ftaMuKCuNcn8RYA@mail.gmail.com>
-Subject: Re: [BUG]userfaultfd_move fails to move a folio when swap-in occurs
- concurrently with swap-out
-To: David Hildenbrand <david@redhat.com>
-Cc: aarcange@redhat.com, akpm@linux-foundation.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lokeshgidra@google.com, 
-	peterx@redhat.com, ryncsn@gmail.com, surenb@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 27, 2025 at 5:00=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 27.05.25 10:37, Barry Song wrote:
-> > On Tue, May 27, 2025 at 4:17=E2=80=AFPM Barry Song <21cnbao@gmail.com> =
-wrote:
-> >>
-> >> On Tue, May 27, 2025 at 12:39=E2=80=AFAM David Hildenbrand <david@redh=
-at.com> wrote:
-> >>>
-> >>> On 23.05.25 01:23, Barry Song wrote:
-> >>>> Hi All,
-> >>>
-> >>> Hi!
-> >>>
-> >>>>
-> >>>> I'm encountering another bug that can be easily reproduced using the=
- small
-> >>>> program below[1], which performs swap-out and swap-in in parallel.
-> >>>>
-> >>>> The issue occurs when a folio is being swapped out while it is acces=
-sed
-> >>>> concurrently. In this case, do_swap_page() handles the access. Howev=
-er,
-> >>>> because the folio is under writeback, do_swap_page() completely remo=
-ves
-> >>>> its exclusive attribute.
-> >>>>
-> >>>> do_swap_page:
-> >>>>                  } else if (exclusive && folio_test_writeback(folio)=
- &&
-> >>>>                             data_race(si->flags & SWP_STABLE_WRITES)=
-) {
-> >>>>                           ...
-> >>>>                           exclusive =3D false;
-> >>>>
-> >>>> As a result, userfaultfd_move() will return -EBUSY, even though the
-> >>>> folio is not shared and is in fact exclusively owned.
-> >>>>
-> >>>>                           folio =3D vm_normal_folio(src_vma, src_add=
-r,
-> >>>> orig_src_pte);
-> >>>>                           if (!folio || !PageAnonExclusive(&folio->p=
-age)) {
-> >>>>                                   spin_unlock(src_ptl);
-> >>>> +                               pr_err("%s %d folio:%lx exclusive:%d
-> >>>> swapcache:%d\n",
-> >>>> +                                       __func__, __LINE__, folio,
-> >>>> PageAnonExclusive(&folio->page),
-> >>>> +                                       folio_test_swapcache(folio))=
-;
-> >>>>                                   err =3D -EBUSY;
-> >>>>                                   goto out;
-> >>>>                           }
-> >>>>
-> >>>> I understand that shared folios should not be moved. However, in thi=
-s
-> >>>> case, the folio is not shared, yet its exclusive flag is not set.
-> >>>>
-> >>>> Therefore, I believe PageAnonExclusive is not a reliable indicator o=
-f
-> >>>> whether a folio is truly exclusive to a process.
-> >>>
-> >>> It is. The flag *not* being set is not a reliable indicator whether i=
-t
-> >>> is really shared. ;)
-> >>>
-> >>> The reason why we have this PAE workaround (dropping the flag) in pla=
-ce
-> >>> is because the page must not be written to (SWP_STABLE_WRITES). CoW
-> >>> reuse is not possible.
-> >>>
-> >>> uffd moving that page -- and in that same process setting it writable=
-,
-> >>> see move_present_pte()->pte_mkwrite() -- would be very bad.
-> >>
-> >> An alternative approach is to make the folio writable only when we are
-> >> reasonably certain it is exclusive; otherwise, it remains read-only. I=
-f the
-> >> destination is later written to and the folio has become exclusive, it=
- can
-> >> be reused directly. If not, a copy-on-write will occur on the destinat=
-ion
-> >> address, transparently to userspace. This avoids Lokesh=E2=80=99s user=
-space-based
-> >> strategy, which requires forcing a write to the source address.
-> >
-> > Conceptually, I mean something like this:
-> >
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index bc473ad21202..70eaabf4f1a3 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
-> > @@ -1047,7 +1047,8 @@ static int move_present_pte(struct mm_struct *mm,
-> >       }
-> >       if (folio_test_large(src_folio) ||
-> >           folio_maybe_dma_pinned(src_folio) ||
-> > -         !PageAnonExclusive(&src_folio->page)) {
-> > +         (!PageAnonExclusive(&src_folio->page) &&
-> > +         folio_mapcount(src_folio) !=3D 1)) {
-> >               err =3D -EBUSY;
-> >               goto out;
-> >       }
-> > @@ -1070,7 +1071,8 @@ static int move_present_pte(struct mm_struct *mm,
-> >   #endif
-> >       if (pte_dirty(orig_src_pte))
-> >               orig_dst_pte =3D pte_mkdirty(orig_dst_pte);
-> > -     orig_dst_pte =3D pte_mkwrite(orig_dst_pte, dst_vma);
-> > +     if (PageAnonExclusive(&src_folio->page))
-> > +             orig_dst_pte =3D pte_mkwrite(orig_dst_pte, dst_vma);
-> >
-> >       set_pte_at(mm, dst_addr, dst_pte, orig_dst_pte);
-> >   out:
-> > @@ -1268,7 +1270,8 @@ static int move_pages_pte(struct mm_struct *mm, p=
-md_t *dst_pmd, pmd_t *src_pmd,
-> >                       }
-> >
-> >                       folio =3D vm_normal_folio(src_vma, src_addr, orig=
-_src_pte);
-> > -                     if (!folio || !PageAnonExclusive(&folio->page)) {
-> > +                     if (!folio || (!PageAnonExclusive(&folio->page) &=
-&
-> > +                                     folio_mapcount(folio) !=3D 1)) {
-> >                               spin_unlock(src_ptl);
-> >                               err =3D -EBUSY;
-> >                               goto out;
-> >
-> > I'm not trying to push this approach=E2=80=94unless Lokesh clearly sees=
- that it
-> > could reduce userspace noise. I'm mainly just curious how we might make
-> > the fixup transparent to userspace. :-)
->
-> And that reveals the exact problem: it's all *very* complicated. :)
->
-> ... and dangerous when we use the mapcount without having a complete
-> understanding how it all works.
->
->
-> What we would have to do for a small folio is
->
-> 1) Take the folio lock
->
-> 2) Make sure there is only this present page table mapping:
->         folio_mapcount(folio) !=3D 1
->
->         of better
->
->         !folio_maybe_mapped_shared(folio);
->
-> 3) Make sure that there are no swap references
->
->         If in the swapcache, check the actual swapcount
->
-> 3) Make sure it is not a KSM folio
->
->
-> THPs are way, way, way more complicated to get right that way. Likely,
-> the scenario described above cannot happen with a PMD-mapped THP for now
-> at least (we don't have PMD swap entries).
 
-Yeah, this can get really complicated.
 
->
->
-> Of course, we'd then also have to handle the case when we have a swap
-> pte where the marker is not set (e.g., because of swapout after the
-> described swapin where we dropped the marker).
->
->
-> What could be easier is triggering a FAULT_FLAG_UNSHARE fault. It's
-> arguably less optimal in case the core will decide to swapin / CoW, but
-> it leaves the magic to get all this right to the core -- and mimics the
-> approach Lokesh uses.
->
-> But then, maybe letting userspace just do a uffdio_copy would be even
-> faster (only a single TLB shootdown?).
->
->
-> I am also skeptical of calling this a BUG here. It's described to behave
-> exactly like that [1]:
->
->         EBUSY
->                The pages in the source virtual memory range are either
->                pinned or not exclusive to the process. The kernel might
->                only perform lightweight checks for detecting whether the
->                pages are exclusive. To make the operation more likely to
->                succeed, KSM should be disabled, fork() should be avoided
->                or MADV_DONTFORK should be configured for the source
->               virtual memory area before fork().
->
-> Note the "lightweight" and "more likely to succeed".
->
+On Tue, 2025-05-27 at 11:27 +0200, Nam Cao wrote:
+> On Tue, May 27, 2025 at 11:15:21AM +0200, Gabriele Monaco wrote:
+> >=20
+> >=20
+> > On Mon, 2025-05-19 at 12:27 +0200, Nam Cao wrote:
+> > > Both container generation and DA monitor generation is
+> > > implemented in
+> > > the
+> > > class dot2k. That requires some ugly "if is_container ... else
+> > > ...".
+> > > If
+> > > linear temporal logic support is added at the current state, the
+> > > "if
+> > > else"
+> > > chain is longer and uglier.
+> > >=20
+> > > Furthermore, container generation is irrevelant to .dot files. It
+> > > is
+> > > therefore illogical to be implemented in class "dot2k".
+> > >=20
+> > > Clean it up, restructure the dot2k class into the following class
+> > > hierarchy:
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (RVGenerator)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 /\
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 /=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=
+=C2=A0=C2=A0=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0 (Container)=C2=A0 (Monitor)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /\
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=C2=A0=C2=A0=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 (dot2k)=C2=A0 [ltl2k] <- intended
+> > >=20
+> > > This allows a simple and clean integration of LTL.
+> > >=20
+> > > Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> > > Signed-off-by: Nam Cao <namcao@linutronix.de>
+> > > ---
+> >=20
+> > Steve,
+> >=20
+> > since this series is quite /meaty/ and it seems the later parts
+> > require
+> > a bit more discussion about tracepoints, could we start merging
+> > until
+> > here (1-12/22)?
+> > I'd be tempted merging also 13 (actual LTL introduction) but
+> > perhaps
+> > keeping it together with the LTL monitors is cleaner.
+>=20
+> The x86 patches have been merged through tip tree. My plan is sending
+> the
+> next version without the merged x86 patches, and without the arm64
+> patch -
+> it can be sent separately. Then the whole series can be applied.
+>=20
+> I will do it after the merge window.
 
-Initially, my point was that an exclusive folio (single-process case)
-should be movable.
-Now I understand this isn=E2=80=99t a bug, but rather a compromise made due
-to implementation constraints.
-Perhaps the remaining value of this report is that it helped better
-understand scenarios beyond fork where a move might also fail.
+Alright, sounds good too.
+Sorry for being pushy but I'm have a couple of other series kinda based
+on this one and I'm getting a bit crazy maintaining all that ;)
 
-I truly appreciate your time and your clear analysis.
+Cheers,
+Gabriele
 
->
-> [1] https://lore.kernel.org/lkml/20231206103702.3873743-3-surenb@google.c=
-om/
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+>=20
+> Best regards,
+> Nam
 
-Thanks
-Barry
