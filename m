@@ -1,171 +1,170 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAB2216E24;
-	Tue, 27 May 2025 22:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22AD2153C7;
+	Tue, 27 May 2025 22:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748383510; cv=none; b=fBZupTP/Vvn2mbYTYFOZplQ3uAVV2dZY2E0Q1Jw6m5RNRB/b7+jzflxfjp1axGU1FDzUQlkka7GhRrfGMIwzm2FbnqkMfBrKOse/VCgdh4R604U+CKu8/e1GPtrl8f0FRwFzQxKc9RdOcLdTo45bmeiX2AhBJvRuuZm+cI0cApk=
+	t=1748383727; cv=none; b=BlNp/XPk7z8D46uXXt/R9hfudVZYbzfZ4m7eCgaEfIXOOc8FyC5Y5E0eRv2oHzhIf6eFb4yZa7vltwJTuHqSfFIxgOgx3+BGjL79LlnhX6XVVFNuavNNij/D0GC5+B92TzVU+tYwRVMEiaI9R5pj9cCPXanXvcT+CN7Tca0u+2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748383510; c=relaxed/simple;
-	bh=4NFsYd9R6QzobE2c85fQqC28+pYgiuIn/VbNigatOtI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SNCqAC3tvemmc2sczjiMnLPk0qgE1gowA+yVoYqzFdUYCQU5oPPcKRT8lLG5hbF9ti0MaCq6/M0rx5cv8Sqpp0GRNwj1Oo+NsyNMkjJIlda9pmXJqpQZSKrIYLolXkiA8Ch7mwb37xw3dbaH/nBGhAMMdW1xGFZvzQ7OgzMF/c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4sQ7EdI; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748383727; c=relaxed/simple;
+	bh=nfbvpQXSErwoMt1fAZCaoWf2Wp0M63j9GJB+h1tYXu4=;
+	h=Message-ID:Subject:From:To:Cc:Content-Type:Date:MIME-Version; b=Ln2kuqZviZZF2lcY2vPqJdYcdY1K/Ga2/wiMnA808OpehbxY65hw/sgcKxpxc5GBhIzjTsmAUaAZnDkxEwp6ioPEI5snI6GfYr18g8zqPelr3xihyUjoDvrfl7vEd73FtV0Z40Ja9L5/xWadUDGqm19uvZOmq5zctGHaQsLaeP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OZ8GVL53; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4sQ7EdI"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a36e0d22c1so2586378f8f.2;
-        Tue, 27 May 2025 15:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748383507; x=1748988307; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KG8BjnFz725w+RJTFOBJ8/xx3WkWJOjksuYHfHNSoPA=;
-        b=N4sQ7EdItuUv8QOTUJ0HwbHaPUnEdX6CmHXUA/Yf0e8lvrYSkCd3E0kIIr+bhQWk5/
-         Jp2RKHSDEELBUVXxXlVILRki5DNk2DA3RdqaF+IMer5Rt/46+ecNTuGZzSSQ3Kjq9kFV
-         cYtoO8JPI5c8lmN2DuImz2Sy8S9JZOCBgdAFUpzXh86U76cre3dIppO94JS9yRy6TD2C
-         tbtH1FfpN7/lEbIFIzk4YGANf/WGuz/QoYgj7BH3tys2mbobIysZqZSa5iEabqh60o0z
-         ovrhiuAl46Wt0S0uyyDEQ/YkjwnhkgLU+yeN/gU8m+7a/8BlDoFyqBzeXMhqdpoVn9dj
-         vtxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748383507; x=1748988307;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KG8BjnFz725w+RJTFOBJ8/xx3WkWJOjksuYHfHNSoPA=;
-        b=cxRxV0MQ5tvX87MbACBpT8Bg6GXGEOfzhRQ6ZA7xyCX2vuzJoXAcR3ZmmUpqwJnWGY
-         Bi409YOiO/VMb0NDm+Q+QwFeRdkxzV3P7gC2NoHmtzbXhB928y1N2EKqgUQH9qBChxbF
-         Ahhd6kHfEJtW9Fw8iz3kK3rvNYOnHqb+/kvwlcYSB8vqspC/5hquoj3Uko+ZzTf18tzh
-         +zImJTjk/1efAyLexOyK6ib6iqOZZ//sBIIdXniNdK2Jn8w57RQu4hGFPaK+WSey4QCp
-         9CWnYO2ZtDm2Bvhg1EQ0BbpYR8RF2BLl96ahWicUNAkT1mu3fXK2lj/HOXxdhfB6O1Et
-         Xvcg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3MLq/0ulv2kOagOQ/p6y3aKP8ZGC2w0fYF+mgoD4YZcMQEdajzM1OXXPsLjaWHtmlsf4QQnEB3dqO@vger.kernel.org, AJvYcCVHB6zTgjS8egX1z1HW1VmvoWltQF+LR+Ily6/iqiV7TNJ63fIPbOi2Jag8enC+H1qyys5si2HtZI6kmtgT@vger.kernel.org, AJvYcCWkipnIGMIQy6R6tFFiPwpu5pReZLFwzpdQjTHtfsVPCLHwb4KxOkuNnw0oWfyFEBPhM9faYby8+3Mw@vger.kernel.org, AJvYcCXnS6K2iNm4mKfY6bzlZZKVD0pRm5+T6yTml1Tc7Kp12zHqcaiOGcyd8BBCuPYg6Kk6argIM3ua8CmnBNY2dbc0ghk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwofMcihn6jgtQQfmWPimwVWT6ProGLRrfpOsc2XiDm+w3iNIad
-	2RNleuPJ7v8haV6TPP0rBoRKSz+OTlWI2Jvp08nStHR7weKrFxB1mBaByMCF5FqLqPmUdwYlAfo
-	1AIO6Q1Op/AdmoPs4YFU21D2d/fl6J/I=
-X-Gm-Gg: ASbGnctniQylcahRPE805U4N+aLWDVQZ5n4kMrM0jEjrpuqURbnqbChvIzaQ8fjSC7A
-	rZoED4IYcL3biPNrT8CYqqS8iFjjBDp+qxE/AHhH3PDlXMOzcUc4ZA/mpsAiNGW+TO4e7LyFl7s
-	0/DwS5bBFM3quYT0rFtC8XL5HHq2Sb0ZGAqBDixhNfX92emVNxjZPkAc+UrwlaKbcH4g==
-X-Google-Smtp-Source: AGHT+IGWzHwVyMPWLupHxdlIZ7x8pSXYNOI5yOCN63qH5VjrNlj/jeGAmW+KftK3jzltxm09oZuPLSrF0CmPFP7qfnA=
-X-Received: by 2002:a05:6000:430b:b0:3a4:d13b:4aaa with SMTP id
- ffacd0b85a97d-3a4d13b4c6emr10639950f8f.5.1748383506671; Tue, 27 May 2025
- 15:05:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OZ8GVL53"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54RGHQ6a017244;
+	Tue, 27 May 2025 22:08:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=WhGjwuAmWq7QvhA7Pl1DzvvUw0nA
+	pFVIUNFIHpnkn68=; b=OZ8GVL531rZZf13wfPiH6b6foiKTMAu7/M4sSwznO45U
+	v2/ArXD9321GCp9x+Th/71lpydcHCEMSMgGxKuB5hVIGHw4dHYKtsVx3ytZ9IpsR
+	htTU6caxGWeSTH3kpVkWt8ieh5kLTTOkZg54qMIC9G7E8oESXFQvhj9/67N+IEIY
+	5H8MSbIOq0OA06LxHi0yiHbgMms/2n1MAbQUq7YgICsjv0ZiqzyIFOtwY4iI32pf
+	pjb/eghca7PeS+ZZwogEQlTxI58szSZl5QPA8q56rd/cESLzE8ZiU467QF2dMtqD
+	YT3wUT3Zw4hUYNI4uEtRTwfqt1XxVZzL2lNTWpo8BA==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsghg98-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 22:08:37 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RLgb9w028983;
+	Tue, 27 May 2025 22:08:36 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepvmam-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 27 May 2025 22:08:36 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54RM8a6828836492
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 27 May 2025 22:08:36 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 367135805D;
+	Tue, 27 May 2025 22:08:36 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB19E58052;
+	Tue, 27 May 2025 22:08:35 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 27 May 2025 22:08:35 +0000 (GMT)
+Message-ID: <283be073924bd046f180880b5912338744550884.camel@linux.ibm.com>
+Subject: [GIT PULL] integrity: subsystem fixes for v6.16
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel	
+ <linux-kernel@vger.kernel.org>,
+        Roberto Sassu
+ <roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 27 May 2025 18:08:35 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512184302.241417-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512184302.241417-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU__dxi4wvS3ikBQefM7uwWWK0bCcHv=TL-Td678pEi9Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdU__dxi4wvS3ikBQefM7uwWWK0bCcHv=TL-Td678pEi9Q@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 27 May 2025 23:04:40 +0100
-X-Gm-Features: AX0GCFvzEXrNrs8pB60A-DbmcANSH2AumZoYJ7_LJzs0X887u5z28IVnMfYtap8
-Message-ID: <CA+V-a8u7PBz31L+b=x8+B_yXCRzOC351PArw02rx+yYNidT2OQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] dt-bindings: display: bridge: renesas,dsi: Add
- support for RZ/V2H(P) SoC
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: piJ-QIMhxf0-6imdi4PFOEZEAgO9UKuo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDE4NiBTYWx0ZWRfX9mGqTff/zw63 cafc2TsnVimEQNhOTBNNoqh17rAWGSIArlfUpzXPE/2kaRYwbxVda1CoociwFntrbgEaPlXK+1H Mj16t22fezjKabHPTR7Gzu8J/8Zo5iM13jqI5FzpOoDFRFNzMD0RWvAurBu4l2dN6fo9tetcaNm
+ DMSdMXlvTSX3z2CIyWvHaQDn2rWSabXwaKLRXkwHTRUOMfP6iLqH/xh3pcKeL8UfhVhu9NtdYZN h2BejZBbdN47Kq24vLlgClBgqEcpELMmCW6xFWUnIouX1fM+eO2HwrtbbEGjQqVm35hqssYZERJ ilI+PRgHbP1X2nKwbF8SjYZv024/ACm7SZ+RGbWDxt+gWvx24zMaYAl13KmM034pmOpAuv2BV9D
+ 3KXNpwqNv8swqT2G/Sk7jbFcpDQ5jF/Kdo3hYZNT16ypEAd+FWTCIm9wOePsJ8U+DZ9uMCxp
+X-Authority-Analysis: v=2.4 cv=bZRrUPPB c=1 sm=1 tr=0 ts=683637e5 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=ADT_KZKfxQbkmW_C2EoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: piJ-QIMhxf0-6imdi4PFOEZEAgO9UKuo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-27_10,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 adultscore=0
+ mlxscore=0 suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505270186
 
-Hi Geert,
+Hi Linus,
 
-Thank you for the review.
+Carrying the IMA measurement list across kexec is not a new feature, but is
+updated to address a couple of issues:
+                                          =20
+- Carrying the IMA measurement list across kexec required knowing apriori a=
+ll
+the file measurements between the "kexec load" and "kexec execute" in order=
+ to
+measure them before the "kexec load".  Any delay between the "kexec load" a=
+nd
+"kexec exec" exacerbated the problem.
+                                                                           =
+    =20
+- Any file measurements post "kexec load" were not carried across kexec,
+resulting in the measurement list being out of sync with the TPM PCR.
+                                                                           =
+   =20
+With these changes, the buffer for the IMA measurement list is still alloca=
+ted
+at "kexec load", but copying the IMA measurement list is deferred to after
+quiescing the TPM.
 
-On Fri, May 23, 2025 at 3:58=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 12 May 2025 at 20:43, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > The MIPI DSI interface on the RZ/V2H(P) SoC is nearly identical to that=
- of
-> > the RZ/G2L SoC. While the LINK registers are the same for both SoCs, th=
-e
-> > D-PHY registers differ. Additionally, the number of resets for DSI on
-> > RZ/V2H(P) is two compared to three on the RZ/G2L.
-> >
-> > To accommodate these differences, a SoC-specific
-> > `renesas,r9a09g057-mipi-dsi` compatible string has been added for the
-> > RZ/V2H(P) SoC.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> Thanks for your patch!
->
-> > --- a/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
-> > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
-> > @@ -14,16 +14,17 @@ description: |
-> >    RZ/G2L alike family of SoC's. The encoder can operate in DSI mode, w=
-ith
-> >    up to four data lanes.
-> >
-> > -allOf:
-> > -  - $ref: /schemas/display/dsi-controller.yaml#
-> > -
-> >  properties:
-> >    compatible:
-> > -    items:
-> > +    oneOf:
-> >        - enum:
-> > -          - renesas,r9a07g044-mipi-dsi # RZ/G2{L,LC}
-> > -          - renesas,r9a07g054-mipi-dsi # RZ/V2L
-> > -      - const: renesas,rzg2l-mipi-dsi
-> > +          - renesas,r9a09g057-mipi-dsi # RZ/V2H(P)
->
-> Nit: I would add the new entry after all the old entries, to preserve
-> sort order (by part number).
->
-I'll move that later to preserve the sort order in the next version.
+Two new kexec critical data records are defined.
 
-Cheers,
-Prabhakar
+Note:                                                                      =
+    =20
+- The IMA kexec segment hash is not calculated or verified.              =
+=20
+                                                                           =
+    =20
+thanks,                                                                    =
+    =20
+                                                                           =
+    =20
+Mimi                                                                       =
+   =20
 
-> > +
-> > +      - items:
-> > +          - enum:
-> > +              - renesas,r9a07g044-mipi-dsi # RZ/G2{L,LC}
-> > +              - renesas,r9a07g054-mipi-dsi # RZ/V2L
-> > +          - const: renesas,rzg2l-mipi-dsi
-> >
-> >    reg:
-> >      maxItems: 1
->
-> The rest LGTM, so
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e=
+:
+
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git=
+/ tags/integrity-v6.16
+
+for you to fetch changes up to fe3aebf27dc1875b2a0d13431e2e8cf3cf350cca:
+
+  ima: do not copy measurement list to kdump kernel (2025-05-14 06:40:09 -0=
+400)
+
+----------------------------------------------------------------
+integrity-v6.16
+
+----------------------------------------------------------------
+Steven Chen (10):
+      ima: rename variable the seq_file "file" to "ima_kexec_file"
+      ima: define and call ima_alloc_kexec_file_buf()
+      kexec: define functions to map and unmap segments
+      ima: kexec: skip IMA segment validation after kexec soft reboot
+      ima: kexec: define functions to copy IMA log at soft boot
+      ima: kexec: move IMA log copy from kexec load to execute
+      ima: verify if the segment size has changed
+      ima: make the kexec extra memory configurable
+      ima: measure kexec load and exec events as critical data
+      ima: do not copy measurement list to kdump kernel
+
+ include/linux/ima.h                |   3 +
+ include/linux/kexec.h              |   9 ++
+ kernel/kexec_core.c                |  54 ++++++++++
+ kernel/kexec_file.c                |  33 ++++++-
+ security/integrity/ima/Kconfig     |  11 +++
+ security/integrity/ima/ima.h       |   6 ++
+ security/integrity/ima/ima_kexec.c | 196 ++++++++++++++++++++++++++++++---=
+----
+ security/integrity/ima/ima_queue.c |   5 +
+ 8 files changed, 283 insertions(+), 34 deletions(-)
+
