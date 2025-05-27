@@ -1,121 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B292749ED
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 13:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260A8274FE9;
+	Tue, 27 May 2025 13:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353228; cv=none; b=nF6OgYo+uMZBWo3UmaTf+FE+BXjhO05fqSpfzvlac5dw5HwWuzCisKFa6ErAIIovxowuzFaPWFwbzFUXRsntdnvcbJFy4Po/1uy4q0gs6Vdj5iGUSW0n3SG/YSMOAAwqMAgDTV1CUU53T9Wxvu4uMg5m/r+UUpOofsf41JHXGMU=
+	t=1748353236; cv=none; b=d41fq9xz4WF97CJRKL79OSyMKe7U5sbmdoLf2K0LzeEuKdCWryEnOn4/GRLNlypI33kob3D8QgGbKjD7oYEE0GF1DX6z4mkNt6pzutIrojPJN5Kyu7FI4NyqsS4f5Ev76+WeGf1mQ1fWAeSWLZTaOdMT9yt7I1TzNMHJBtAkKyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353228; c=relaxed/simple;
-	bh=NKXxKBLhKHSeCIL8DOxhqdNGPwSsn0FRVfaShuEsJlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CpwExlcsiqcD74EvOUP07cw/xQUmYMZZtg0G450KQuRQOO2ZApKnWNJn3nYPijjq5UciI5PQiZhbq8UgfUibiHIwhNnLzkyM7MGBgq0F2iJLQimb5y5W2iI6pQh+mcrhZe0bIWwHu2VUG13yXqcBnE1KnnNOpaUtC/QewEF80RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BoZh9I2e; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BoZh9I2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8075C4CEE9;
-	Tue, 27 May 2025 13:40:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748353227;
-	bh=NKXxKBLhKHSeCIL8DOxhqdNGPwSsn0FRVfaShuEsJlA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BoZh9I2eAjzVq4ZywHMWomwG5MvufiipnhUf/UkFwmxfJ7TpoLQA3CC//3ldEgfyH
-	 wtPNw9V4EBBUq8BfIj+ifbiOHpzyM88DKVZX9SYjChZpEbQoNNOUH5UjFimkqSjBOM
-	 WB2teLi/cDX92ryiXd6rSW+R93GmIIszm/eqMiBhO4CQDvaj3TY8b0O5KQoNNK61Hm
-	 D+7kYmyCUwAKc0ixAAxdAugFEEHHND8sdN7uKf0z3wiLeHp77cdwk9MLJP2YzR0g8P
-	 xSBSdFLd0IHVI0H0FjGq+PpXuvDKwRgLV/1fYuYaDOU/V72LD2I1So3cf/TP5rYqxW
-	 HyApKMwno1gMg==
-Date: Tue, 27 May 2025 14:40:22 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v12 20/21] selftests/futex: Add futex_priv_hash
-Message-ID: <36bdcbe1-5f74-4afb-83dd-89f7348aeb5d@sirena.org.uk>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-21-bigeasy@linutronix.de>
- <31869a69-063f-44a3-a079-ba71b2506cce@sirena.org.uk>
- <20250527122332.M0ucxhwh@linutronix.de>
- <231a9862-58ea-4a6d-8893-862776d9deca@sirena.org.uk>
- <20250527124327.5UDnm-ho@linutronix.de>
- <269b2f41-1405-4cab-9310-11df428e64c6@sirena.org.uk>
- <20250527132533.lqWBepWy@linutronix.de>
+	s=arc-20240116; t=1748353236; c=relaxed/simple;
+	bh=jwje34nB6gKyQoKpfDGgc2ECy7vWfnVq2EpNyYhTPuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CDnhHKMAvlWhMPBevZgu1kmYNnQ4Vo0j7MxoNmwcjytm1DbQsqLa6DApKMhUOlk2FouhBsXTTy46IhEKMIqjtgWa00aMaw8XHVqzrXbEL9SfC2IWK+Me09897B9a6oPWFPX11t7L5LVrpu7ALwhbIhk4H/FbFfigk+8CVqm63TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF84DC4CEE9;
+	Tue, 27 May 2025 13:40:33 +0000 (UTC)
+Date: Tue, 27 May 2025 09:41:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: yebin <yebin@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yebin10@huawei.com
+Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
+ disabled
+Message-ID: <20250527094131.1f4a92ab@gandalf.local.home>
+In-Reply-To: <6833C4F1.3030300@huaweicloud.com>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
+	<20250523083945.3390587-2-yebin@huaweicloud.com>
+	<20250523135452.626d8dcd@gandalf.local.home>
+	<6833C4F1.3030300@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lkiLacFJXVqFQ3sk"
-Content-Disposition: inline
-In-Reply-To: <20250527132533.lqWBepWy@linutronix.de>
-X-Cookie: New customers only.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 26 May 2025 09:33:37 +0800
+yebin <yebin@huaweicloud.com> wrote:
 
---lkiLacFJXVqFQ3sk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 2025/5/24 1:54, Steven Rostedt wrote:
+> > On Fri, 23 May 2025 16:39:44 +0800
+> > Ye Bin <yebin@huaweicloud.com> wrote:
+> >  
+> >> Above issue may happens as follow:
+> >> (1) Add kprobe trace point;
+> >> (2) insmod test.ko;
+> >> (3) Trigger ftrace disabled;  
+> >
+> > This is the bug. How was ftrace_disabled triggered? That should never
+> > happen. Was test.ko buggy?
+> >  
+> Yes. The following warning is reported during concurrent registration 
+> between register_kprobe() and live patch, causing ftrace_disabled.
+> 
+> WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612 
+> ftrace_modify_all_code+0x116/0x140
 
-On Tue, May 27, 2025 at 03:25:33PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-05-27 13:59:38 [+0100], Mark Brown wrote:
+OK, so it is a buggy module.
 
-> >    https://builds.sirena.org.uk/cda95faef7bcf26ba3f54c3cddce66d50116d14=
-6/arm64/defconfig/build.log
-> >    https://builds.sirena.org.uk/cda95faef7bcf26ba3f54c3cddce66d50116d14=
-6/arm64/defconfig/kselftest.tar.xz
+> >> (4) rmmod test.ko;
+> >> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
+> >> ftrace_mod_get_kallsym()
+> >> ...
+> >> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+> >> ...
+> >>
+> >> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
+> >> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
+> >> release. Therefore, this also causes residual resources to accumulate.
+> >> To solve above issue, unconditionally clean up'mod_map'.
+> >>
+> >> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")  
+> >
+> > This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
+> > this prevents ftrace_disabled from getting set, then it would be a fix. But
+> > if something else happens when ftrace_disabled is set, it just fixes a
+> > symptom and not the bug itself.
+> >  
+> There are multiple causes for triggering ftrace_disabled. I agree that 
 
-> > (note that this is the specific commit that I'm replying to the patch
+Yes, just like there's multiple causes for BUG_ON() ;-)
 
-> Ach, okay. I assumed you had the master branch as of today. The whole
-> KTAP/ machine readable output was added later.
+The ftrace_disable is used to help keep the system from being totally
+corrupted. When it triggers, the best thing to do is a reboot.
 
+> aba4b5c22cba is not faulty. However, the incorporation of this patch 
+> will cause problems due to triggering ftrace_disabled. The generation of 
+> ftrace_disabled is beyond our control. This is related to the user. What 
+> we can do is even if there are no additional derivative problems.
 
+Well, when a user inserts a module, then they become a kernel developer too ;-)
 
-> > for, not -next.)  It looks like it's something's getting mistbuilt or
-> > there's some logic bug with the argument parsing, if I run the binary
-> > with -h it exits with return code 0 rather than 1.
+> >  
+> >> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> >> ---
+> >>   kernel/trace/ftrace.c | 3 ---
+> >>   1 file changed, 3 deletions(-)
+> >>
+> >> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> >> index a3d4dfad0cbc..ff5d9d73a4a7 100644
+> >> --- a/kernel/trace/ftrace.c
+> >> +++ b/kernel/trace/ftrace.c
+> >> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+> >>
+> >>   	mutex_lock(&ftrace_lock);
+> >>
+> >> -	if (ftrace_disabled)
+> >> -		goto out_unlock;
+> >> -  
+> >
+> > Here you delete the check, and the next patch you have:
+> >
+> > +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
+> > +		mutex_unlock(&ftrace_lock);
+> > +		return;
+> > +	}
+> > +
+> >  
+> The second patch I added judgment when initializing 'mod_map' in 
+> ftrace_free_mem(). The first patch removes the judgment when 
+> ftrace_release_mod() releases'mod_map'. The logic modified by the two 
+> patches is isolated.
 
-> I copied the logic from the other tests in that folder. If you set -h (a
-> valid argument) then it exits with 0. If you an invalid argument it
-> exits with 1.
+Actually I think both patches are buggy.
 
-Yeah, so it was actually parsing arguments.
+When ftrace_disabled is set, we don't know the state of the code and we do
+not want to do *any* more text modification. That's what ftrace_disable
+means. Something went wrong with text modification and any more changes can
+cause a bigger problem.
 
-> But now that I start the binary myself, it ends the same way. This
-> cures it:
+We don't add "exceptions".
 
->  	int ret;
-> -	char c;
-> +	int c;
-> =20
->  	while ((c =3D getopt(argc, argv, "cghv:")) !=3D -1) {
+If you are worried about unloading modules when ftrace_disable is set, what
+is a much safer solution is to up the module count of all modules that have
+any ftrace callsites active, and prevent those modules from being removed.
 
-Ah, yes - that'd do it.  Looking at the other tests there they do have c
-as int.
+Again, the only solution to a ftrace_disable being set is a full reboot.
 
---lkiLacFJXVqFQ3sk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmg1wMYACgkQJNaLcl1U
-h9BHLQf+IKeUMy71KRyZ7siyYFfNYd3lI9daFcqN0hkpy16wx6JIPAL1ITcgYX3W
-N5CAj0Ql/8M8QdioqDgUCxByzidNPDa3kky3dhKkaBztpO6/H0eOsGRN3gqrjFSX
-1NoN/ZTUe+aBoNnjw8cdjKGM6IfMX7c8EWiirSk07Z8YHyOMhcG1gGvC30Wl3L4Y
-F/vfbq7zeESk9u6OGwlH0E1R5hlrWQ9GpvEj1yTcdcUkWcggM0DT2458x0Q/Q9dn
-lSszCg4d4MoeKKGhZrFqHSriNAq8AxBHFt10De0baKf+OX3CYF/OYkXdW7fUgzbW
-qksHO25qb+yDCSfzALC+4B17W78x3g==
-=L7Ov
------END PGP SIGNATURE-----
-
---lkiLacFJXVqFQ3sk--
+-- Steve
