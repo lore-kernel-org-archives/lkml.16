@@ -1,207 +1,309 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2063.outbound.protection.outlook.com [40.107.92.63])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2071.outbound.protection.outlook.com [40.107.212.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33951863E;
-	Tue, 27 May 2025 02:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706ED6DCE1;
+	Tue, 27 May 2025 02:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748313814; cv=fail; b=oHTwOT3+33DX5ZTvN1Pjl7jFmjZP+A9X6qHOsPo6grLowq34GLp3jkhInd1Bw8WdbXRyl/Z8vMcwDQck7wwe6Rt1su8g0RvWygX8GKjnYu/HlHTDkqLbBnXqvvGV8cpld+i+6IXnIrsl2CeHzFEZvE8omXetkd5saW93Keu1hXA=
+	t=1748313845; cv=fail; b=BpZb8WjXeXsldWEewl5CmEGRTTGvgScTQQD9+rESKGJMzmJEWCZ59qAUJC7RsdiQvJ0KNpW216ZmtjXAGjIcWmMd3boNfZZfYWf9/sfD+ggjrLrepaIE5OuWcKTdaSOKzwwMR26eBwliKBDhvaYQEy4QUfVfE3mx8LMNi0pamIc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748313814; c=relaxed/simple;
-	bh=IkOrj510YFWRDNSm44ivGUKJnKE50wms1mxHclGNhFY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=brJFeiXVI4y8mk3chRzKgpDVJzThmY7elXFSPlFQXi4GxnW23fjOhO1gRdtxs6ceq+S4pP3vqM/h3VkzSqWx9gpL/XG3MQA4ZLXKbVKCqxkFKdXYCU+LlpVvRz6n7IpE4tPy51NybB+kKctN3B4gy0N7m20FAGa1mleO7qGrUbs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=I5uvh+/O; arc=fail smtp.client-ip=40.107.92.63
+	s=arc-20240116; t=1748313845; c=relaxed/simple;
+	bh=mlDhSCZt0blgVIUM/INt7erieDmMhnZ3XZA0+sIYwtM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dF9Jn684907iM/Kbwydrsusy4ytPp2G2ZmGF69asREBbGlA38JCB/wBmBR40LFvj4Aal6Cl5ON7t0qqU72UgUvS9MVeFCv4x1DGYpCJQj2FbscIleETBLRk3H3z05vlM3P7SJhLfgLZ7nvGUUeSM8Im7WQhG8lrpzf2ZSZwoia0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jEvbqhWM; arc=fail smtp.client-ip=40.107.212.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I5uvh+/O"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jEvbqhWM"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OJqwGbYpgBtlwb1I0Y2pQSYfaDFpUx7+okpOK2nxUBoylWfFp6KQkajHwBNxfmKsLFd35tyQfNvANAW99hrAph1XxNm4Spq9iqzIVRIrr5isSBkghbNoUf3U5OxFvwzEPy/7sUJNqNH/ig4yeSZppzwnmbSBjiA1ZpnycHXwWWVbskhbdutfiYU9mKPMkp2UftifpnvRegM5J7NWIKfCou4eqi3/lGkTNGZjZLFcgCsO8nHxpdqdZeGSaXEilzTwP+u2ZzAMA3oHLECT0T/PYc82e0mdoNv66pZDWWl4CB2Oe0dzNjBC3fz/kwv3GaQN7ASnRybwxe2K915hVmK7gQ==
+ b=c/11ZePx8EOw49SgZEZQEmi1uvPiXwqaeLlI7nyYz0W4XXtxCxVrpyGC8MHoRPzBZyLWYSGn8dBtdwOLE1wOGcswliB4wNuaRPd0EjeE7rFSxXgC5gxvBPTnEGQ/sP/X+zJyd4yP/v9sgDhLvWFPIGM594UQhnhesFsAPTh3BvzPnKk6s6YBxKUaAFkXL7AbxU78suR3P0ctyliITjbTdbrAex31p5xE/lWmDpgIEcg2USJlWI6AO81mMOcA0MXZ1JFsUQYiEsr2EJPmqcti4vWAvKSR0Tmiv3Mnc5YcpMOe2wqNM9YW+WOTIMg5q8BR34umbYUW01eSxeWjlwXhiA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cu+icsXbXuRczsQPhjPvdsEHYLFVuhFEYGdotm5OVvY=;
- b=N61VWpxa/NNkJVvyAcf95FhYWEifgdvY+or/iG9bhfmZeNt+FZK3nWnfrGrsnLuVyVO5N3yWyxVJSfUUIXsmeTHna4hf20JvDz4I/i8+FjfmDP1mrrAMJbyQT26D3wtzW2L6Cx2VsKwhFpXYSmNtoGwQiLBTLuaIZKrTk9qKSXoPu+Fl0h6OUFaqGwhU3AtYGIs/v/tAHNAJrYyjXM1t2S2tHscaIaQBJcgrTBGND75nK/gv/oGd3JjW/XLlzP/2T9LFzvjVUttoJFaYveCtXqo3yoWDYJ3bCFGybJ2DWtJB4ekiACZC32i7yd3du48c8k1eVXD4qPy6efxohxhrzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
+ bh=CohgG8X3oY6VlsRxKPHeKg13MakJu134xguWgPhh38Q=;
+ b=gezsQEhmXFZdNgAGsEKgSjWwiC5RknxsVKcMUJiD38bLOVZaMe2exYGE8KtAO45YYBg8yidui+eOvGj/v5ItQZvHM54nISSuBhYa+nktCob32kzcw2YTbqOUEfWuKPPKcC4bNXfI9fZL4y49VxmeB5R2PWSHnVXHIAT6fjxUoreOlPk1BcV8/gvXyuw3RmgM6M+J+Ajnxr+JC91VYtN8C6QETopQxDY+DYFKWoGcIRLb5Vy6nxPIDofhpGA7P3adqDi5DtrO5E04CDjuiDs9wJUCbmiMZ5iaiIfZpl9Yj3Z1AOYryIhCtCdtZ9TIiH5nHqYGYyGp6ycBNAObSr1HKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cu+icsXbXuRczsQPhjPvdsEHYLFVuhFEYGdotm5OVvY=;
- b=I5uvh+/Oh9gLSWfr4WHV4rm7IUWrLsSnRp+PzlrzthdKzO95ViHeBRcRsE0sqkd00wI2qFwX7dRPB9AoW0kmyBoGVaI4sdtUBKzwMCWMMAS3WW8d0wXU/2S0b4LhfnBNR8SVi1f7uCcc7Obeyw0Ytvp30NPqJE2TFi50KfwmFwU=
-Received: from SA9PR13CA0084.namprd13.prod.outlook.com (2603:10b6:806:23::29)
- by IA1PR12MB9062.namprd12.prod.outlook.com (2603:10b6:208:3aa::14) with
+ bh=CohgG8X3oY6VlsRxKPHeKg13MakJu134xguWgPhh38Q=;
+ b=jEvbqhWMY5A32V86XZBVxrtgzS/O2zSPqaSfMl18zHwGErC6LZtjURsPPnVOzbaTNt0R7MbC7WnF5G+4Ha3fZmRHU8Zd9BCdmHS2ZC9UR80jx7+mp/lXaWCn3N1oT1DfMteh6xXcD0NSVQ1d5jg+dAr6GiGJeDbkedhbSeAPFs0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
+ by SA3PR12MB7806.namprd12.prod.outlook.com (2603:10b6:806:31d::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Tue, 27 May
- 2025 02:43:28 +0000
-Received: from SN1PEPF00036F41.namprd05.prod.outlook.com
- (2603:10b6:806:23:cafe::a2) by SA9PR13CA0084.outlook.office365.com
- (2603:10b6:806:23::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.19 via Frontend Transport; Tue,
- 27 May 2025 02:43:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00036F41.mail.protection.outlook.com (10.167.248.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Tue, 27 May 2025 02:43:28 +0000
-Received: from qyzhu-os-debug.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 26 May
- 2025 21:43:26 -0500
-From: Zhu Qiyu <qiyuzhu2@amd.com>
-To: <rafael@kernel.org>
-CC: <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <qiyuzhu2@amd.com>
-Subject: [PATCH v5] ACPI:PRM: Reduce unnecessary printing to avoid the worries of regular users
-Date: Tue, 27 May 2025 02:42:59 +0000
-Message-ID: <20250527024259.56996-1-qiyuzhu2@amd.com>
-X-Mailer: git-send-email 2.43.0
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Tue, 27 May
+ 2025 02:44:00 +0000
+Received: from DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
+ ([fe80::2ed6:28e6:241e:7fc1%5]) with mapi id 15.20.8769.022; Tue, 27 May 2025
+ 02:44:00 +0000
+Message-ID: <cf68299c-2409-4728-a4d2-c1e9c15ecbdf@amd.com>
+Date: Mon, 26 May 2025 20:43:57 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/amd/display: Constify struct timing_generator_funcs
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+References: <7dd73263342c1093f3e86ae5841a53c1e3739b5e.1748105447.git.christophe.jaillet@wanadoo.fr>
+Content-Language: en-US
+From: Alex Hung <alex.hung@amd.com>
+In-Reply-To: <7dd73263342c1093f3e86ae5841a53c1e3739b5e.1748105447.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0128.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:87::26) To DM4PR12MB8476.namprd12.prod.outlook.com
+ (2603:10b6:8:17e::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F41:EE_|IA1PR12MB9062:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45429438-552f-440d-4d96-08dd9cc842a4
+X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|SA3PR12MB7806:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ed2a339-ec2e-497a-9301-08dd9cc855d9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026|13003099007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pohf4oFFwEmMYXgnQoU/ewv7y7ERrVjy5iWYMXNa+Y28C5Pbo82kF1xo2mch?=
- =?us-ascii?Q?oybDjYU+YJ1sPaQcMwnenca6Omf88Pd7dD73yfJQC9b1dEUCXdRilNTfPXJB?=
- =?us-ascii?Q?2F+hkpEt1KKdF7pJU7QPRNJXYEcP3I6sI5sPbNU+YDkLCawG7Eukhdp8VKEh?=
- =?us-ascii?Q?TDLAeKE9sCpNLNqNSVwdKAaHc4GJj5muHNNerrzlyUAUgR1Y95kJyzjlLGG4?=
- =?us-ascii?Q?BlIWFmKHxbmxpYZ4ymY1oZwGEkQDhC59ppxoP8ZxuS8SRtM5cVZYulEw4MI4?=
- =?us-ascii?Q?wOJqx21H8Loa1o6qre6yQa7TzsNY3ttLYy6XPqocHefXKDhVf9UCqqnzZAP6?=
- =?us-ascii?Q?19XM8bUlPKCz5ce/Yw84fLd5Gig+YKJAY0sG8LpqaKskfmml20lf0iWSTorD?=
- =?us-ascii?Q?hKoJEJ5AWThiX95iftSmXH/bXUVjLq+OVe67ZtaDvDoolPK6Xdv1eG7MwjDg?=
- =?us-ascii?Q?YNiYSCVHFyTWRSuhR6doPnJ/35ZS93Dp7CP7PYoU3vQBdOC9vzEWvAjKHT+L?=
- =?us-ascii?Q?glM0FO53vrrJLXcmm+7RPYVc8Q7AU67KmLhdZbyO3o2YfEgDqY6e+e+CqJDq?=
- =?us-ascii?Q?CfHddHdezBLvuzQR8k+eHw4f1wPWjGQODJxyazwFf3Yu45Cd+q1d1/1xDrY1?=
- =?us-ascii?Q?jE172V2BH3LAG/UMmlQzwZGVLOPh7kXujlMYNb6CW01/YNpNCazUIHPQkEtd?=
- =?us-ascii?Q?V21epwhO7I2+PP+V+u6TQq7Y4eaqdckybm0LQG5+PocRWMNK4aoL30PzKO+f?=
- =?us-ascii?Q?z/Rr0Pkz94ETuY1f4NLXiaUIiBp3UVslBFoDQ9L7SJ096ObNjYZ89xbs19s/?=
- =?us-ascii?Q?FyZ1A4dnrgtcg9CM9svhefPjYsDxeJf9KbAtv8b2KAPVaW2toQRrYHG03jUj?=
- =?us-ascii?Q?J/duBRAJrkQYL1G4KKMIJYuO5VxfeJTMnbFsXOfW9wz+jveZsNbIjp0hzcAM?=
- =?us-ascii?Q?fUvcVaG12bzTMKLcjrGJsN0dHVlD0NyyELOJCAmN6L2poM+oSSR2r86jwmAe?=
- =?us-ascii?Q?bA07d+Nb+WuhgzFuUQtL5GjxYKaMrmATVkoTqf4ouPA1Ecd4WTkY0tN8o5nh?=
- =?us-ascii?Q?sXiWFesFc4QQ/Kr/gDV/DNx9l7Rg5ObZDCBrBc2NT1UDMUiryt/PnO/GYX70?=
- =?us-ascii?Q?ZmEdYC1GduDGKoB3fvbVNYSQCCjvTjXMOyDn/iLmZMh/LPHXm+Tsa34NIZrm?=
- =?us-ascii?Q?RFyyFNaBPClrryWiGh/6RRwYRF1zKDpuzHL8LYk3VHxFIdcNOBYr/925MJ+5?=
- =?us-ascii?Q?xdHdWsENqXUJqNTXQnJBw9jaV5hLROFhLwnKOSRtSLgcXx9GEaPDrw7ljVDH?=
- =?us-ascii?Q?7GdTDf3RSChin9xGG75CaLvDHEC9EbVB59e35vp011tPZKvTfnMM5WqoytBW?=
- =?us-ascii?Q?O+6QA1eVi2ZRfsL12cVly09wesUrduceCozDWzS5FNyuow1qIv2ZWonEFGWF?=
- =?us-ascii?Q?5oROJ1Ux0sDW3yLPmy/ZpCIz7BxWj2Z/lcEtIghr6oQMXDUB65LBowSTqo5H?=
- =?us-ascii?Q?JfPO5ftq/v+yeD8=3D?=
+	=?utf-8?B?SnkxS3R3VVNNZzZFNUNtWVNyT0ZWUjM5YVZYTDlFaFhNUm1BYmNsOGdwTEF3?=
+ =?utf-8?B?RHJ0VWx5OFhkR2t6OUU1b0h2d0EzWWV1NUZQeEdRNFE3ZWl3cWUwNG1rQ0lo?=
+ =?utf-8?B?ZFFXQkhEaG5vRm1YUE5rRC9INjhXd0RGeHFrSkpwNWI4TXh3SWxiVmdITXh0?=
+ =?utf-8?B?ZVE3UllEeGRFck1MQUVSdlVWd1hYdnJOK3pFSmExM2NvNWt3UHRFamR4MTBp?=
+ =?utf-8?B?SnlXankva2tWTjJRYTlmSDBYdEN5bVFqSjRKYStzQ1ByamRpWCt5eHU1N1Bl?=
+ =?utf-8?B?VGRKRktCcmwweUk1RW41eUl0QTgrQTEzZkc4M09Hc29rSXdPTUExdUFjM3Fp?=
+ =?utf-8?B?Ty9FQ3VuVUJkVlFDRGwrblhlVFJUNjJod25SNU9FUHhnNEtoLzI1QVpKaWdU?=
+ =?utf-8?B?SjFVQnVBMVdQalNnK3NIQkVlTjNtNHhIeU8rMTZMc2tsa2ZFZU42QytHRTc3?=
+ =?utf-8?B?RzMyQXMvWDc5SmlXalc3d1JoOGsxdEJzREFiNnJMNUgwQ1AvL09HbjBySHNz?=
+ =?utf-8?B?SkNidU9udmwrRmdpM3BKclFBMzlsNWppd0VZUDZUdkxxaHduRU5CRGJQU1BT?=
+ =?utf-8?B?OUV3bDF5TTlEdVBVajhGSldhNlp1aHUxdS90dngrb0FRNnVBa2VYUFplakR6?=
+ =?utf-8?B?Kzl6NUIzZG1NVXgyZnZra1g4U2IwRUJFNW9vdDRDbGpGdytYa084eko3TEVJ?=
+ =?utf-8?B?SkJRV20yQXBKZDFWNTV1S2d1bWhQZzNUT1pqTno2aWRjbjdHaXlsOU1vNjAx?=
+ =?utf-8?B?NWp3NWJIMjRyY096L3lFdDJJS09ESzhaM1B3aHdTR3ZiZHg3ZVJEZG5DQjBq?=
+ =?utf-8?B?SVZtNytwQnlXT3lkUysvelM2ZDNWRzRrZVdoYmNOQktZRTAxRnFKMy9BdXg0?=
+ =?utf-8?B?SGlyeXdTMWhJWjMyRlFZTk1WejRkZThFNC9IK1o5eE10dHpBV0lPZm1xVjRr?=
+ =?utf-8?B?eEl5VkxSYkFvUzJSRDJ6c293ZU9SMHBJRVBpVDNzWnJCams1RWNFSm9pR0tC?=
+ =?utf-8?B?dUtkV21GWHR1T2pPbFVGbUV1U2VUSDAzbXZUNXFLdC9XUVArOFZwWWRYN1Vz?=
+ =?utf-8?B?VFU1NWN3clhSTWQ5NDJzblRWNnR2SDhyM1FVM3YwcG5wb1FtU1NZeHdEWTM5?=
+ =?utf-8?B?bWhHejA2U1g5ZFM3T21wVEVOOWZ5YVExR0NHNWdGUkZGZVlyQVlPVlMrekcw?=
+ =?utf-8?B?bmVQQWlyT2FPdEpTWVgxZURNYkxmY0Q3UHRGS1NXekUwdWVVTXhVVUQvM3NO?=
+ =?utf-8?B?UHcwam1XUUpNbWtGSFdRM2x5bFRxTlQzQVNuVmFEdlhHbFRWMU5KVm81MS9v?=
+ =?utf-8?B?anVUSnROS2dIdFFGaW5rbCtoSy8rb2dIZ2NUb01lQnhidFdSbzdUU0xDUzU4?=
+ =?utf-8?B?SEN6dTN4amZoWWNDdzNlSlYwSGlRbmV0eWtJWTZpNWNBem85d3dyaTgxejVZ?=
+ =?utf-8?B?a2k3QXE3NWJEUlBQSWg1dGhXeVNzTUR1TDNOSDd6VElhQmp3bDI0dk1XbU1a?=
+ =?utf-8?B?TlFIZzRkOWJHWDU4RkxGdU1QMmtzTTRCTDM3ZUN6SldMWFRDcGJDK3ZtSDVI?=
+ =?utf-8?B?VHUyZVBRMVhKS1BMRndiVWFFeW8vLzhFMGtQTW1XU3ozK3hUU0NUUmthTk45?=
+ =?utf-8?B?VFk1LzBKb0VjdnJyR3BCSEtYWXV3R2p4QVdtTnF4RDNGbzVSZnVxbXlmK05p?=
+ =?utf-8?B?d3k3ZnNZUzY5b01UMnMrMUZDNXFKTDhsY3dyemUzdXJQdnNGQzQwZmJsL01D?=
+ =?utf-8?B?aDFMc3FQTGdKeHZpaUZ0K3lhaEZXdUhDdXRpVDBtamRiSG9MNkpOc1c1dnJW?=
+ =?utf-8?B?SGlSOG1JWWp0V21KSkpJTTdxTnREbUdsaDBYbTh5SVF1bkxxbDhWcExQdnMx?=
+ =?utf-8?B?Vi9mYXVYM0t2aDY2K2RRNDRjdDlINTJpWFhBRmpDYkl2QXJLZm5iZ1hQYjMw?=
+ =?utf-8?Q?DzuVz8HnMlA=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QklHV1VSZU9yVUFVazE5T040UzJReENmVzdYcU80MFAzVE4wMTZFUzV0Q3JG?=
+ =?utf-8?B?UkhRWmNXY3pPMWFFRlV4dGswMkE1a2kva0ZHZWZFT2wwWURLWVI3akx4Wkxh?=
+ =?utf-8?B?SWRQYnMvSFJZUkRGZ2hKR1JHRFdBbjJSOEFKT1JKalB4MGxHVHV1a3ZCQ294?=
+ =?utf-8?B?MVJKN09JbEt6RjFBVjVKM2Q4Ujdpc1J6YllZQ3Jvd0E2NEhGZy9UWWFVUEtU?=
+ =?utf-8?B?Rnl0dTByM1JibDFRZGdlRElXaTNoL2pMRERoRXlxNVNoS2R5d1BWdFJHclp6?=
+ =?utf-8?B?WnFGd0xYNEtqU2Fqa2szSXhuRlFaV3YxZW1jTlZSVHhZNHdtdmVnT045K3hR?=
+ =?utf-8?B?S1ZXWGtFeFNROXd3Qi9SMXZ4d0g0QmlxR2c5NGZWY1cyZTJrZG1ubU5EQU1H?=
+ =?utf-8?B?ci9sLzNBRUZzSWN5NlBwRGkzKy9GLzZueFBoQjVqRytrT3ZXR3hscXJQYnFV?=
+ =?utf-8?B?eVE5VXdlRStIVS9zaU93V1g2aE9pa0ZVTXN0bmx1K01ERUFTWkxuOUhlN2wr?=
+ =?utf-8?B?S0dJNlpzSDQvWTdadWRpYVFIREpaK29SLzV3Z1lxVFQzQ2N4WFZpSWdvQVg3?=
+ =?utf-8?B?UjRZQXZVMkpycUFhSDlxeHZuVkU3YS9Ib0JHeGVxZW5yMklaZVlNc3FzVWxk?=
+ =?utf-8?B?SjQrNGNCblZaYkdtU0t4ZDZacXpSYkpSR2tmellWWWRnSld4QkJGSWIyK0d1?=
+ =?utf-8?B?ZFBmS2FUZmk2TzNZTENnVFNnSGljSE80eFEzdkNJYmRjSGd2QVhkeTBaT1VS?=
+ =?utf-8?B?Yis3c0ZQT0cyT1NhbTNyNld5OVMvWXFhTE9pQWVQUk1HUG1Ia0tUSW4wMXFX?=
+ =?utf-8?B?R3pHcW02SEZPMW93WUJZU1gyY3dLb3p6bHF4VEhMc1FpK0pQZmlUbTJFYVdC?=
+ =?utf-8?B?YW1QZTNPSW1tRXNab2RoODJQWHlYdHY5bTFxMDRsWHlmWCs5MzF6Y1VYTGpn?=
+ =?utf-8?B?RkJDak9wcHV2bXFwR2JJMmd4VnNzZ3FNblI5b1FnK2ZPcTRMN3RnYXJnMkFJ?=
+ =?utf-8?B?UmdKdDBXc3pveENwYzkvRFVhRzJhN2hFREZ3UlgyV1BnelBHZ1psMllieDRS?=
+ =?utf-8?B?c281ejlSdURtdVoyQi9Pb0orRCt1RnRVVjUrZFZkbzc3YTRuWFp3U3MvOGpa?=
+ =?utf-8?B?WE5PUU1FUG1MODlxZ0UwVS9tcnVRcENTMmExTm9ZNHZXeHZVZmpReTcvWHRH?=
+ =?utf-8?B?aWFacW14NjlZY2k1eHV1WExNRmIvSy9HTittckp6Q2xoTEV5TzdmYVA3RmU3?=
+ =?utf-8?B?M1RVdFJRVVpIeXdqZkdGdGxUTHQxQUJqOFdjZlhqZ05aVWcrdEhRODVoSGpK?=
+ =?utf-8?B?N01IanJrZDZURmdFSUJ1R3l4TjJHZEFMWVN6YWRlWDNaTWdTTEhrM0R4NHdZ?=
+ =?utf-8?B?Qmt0amV0VGFIMHhpNzJrdU1xU1lRdzZtNG9lRmx6TzdnamJ2SzlFNmhKbHhm?=
+ =?utf-8?B?Mm51bzF4RGxuaWJSd09HUmp3VkpwV3E1ZEVacHM0dFdaYm52dmFWbzRvUVA4?=
+ =?utf-8?B?MThPc093TUJsR09VVC9vYkRKTnVlQklBbVl2T0xwOHRONkxLWHovMk9Kd3FF?=
+ =?utf-8?B?V0hUa2RRL1RqclgwT2xGMWdVVzl6S0FndGN6K2lYaXNhRmtjQldYa3V1UTNp?=
+ =?utf-8?B?dzNwc2llbzFRdTdQSnV2MXNDMzF6aUhBeFFyRzhyUjF2Ryt6d25xYXBBNUlG?=
+ =?utf-8?B?ODRQa3B3aDVGZXhrU0RhNnZNZTAraVhsYVg2N3hBdnYvRUkxdE1iM1VZQm9Q?=
+ =?utf-8?B?TFNMUjBLWXN6NUJ2SlV2cVlYYXFNMVlaK0ZRbERnSVpwYjR2cWFTSFNxMkRo?=
+ =?utf-8?B?aGJnYVdlRjIwWlpHKzMyZ25nNm5KVFo2NVFwcTQzbmtNZE9TZFFHVnJmYWJD?=
+ =?utf-8?B?M21iQno4VnVwYk9RaTJjRCtQenRCeGtkeEJIUy9xelV2TGI1K3VQOW1qdFE2?=
+ =?utf-8?B?dVc4YU02cjdtVCtsOGlBSjdOZnpkN0xVeTAweFU3RG9Sd2dMTG1IbHhZd3Ay?=
+ =?utf-8?B?VmFqS1dsK1prejB5dklBWk5IZUJmSlFzMnJuMmdCbmp3dllNa254TVk3MXFD?=
+ =?utf-8?B?UWdKaUpPOGU1YitjMVNCbUhSVExIQWp3RzRyODlYNlhHajZwelhUMnR5eWps?=
+ =?utf-8?Q?oMAnJlA7BTzsl8hIx8OwVmXQp?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 02:43:28.1195
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ed2a339-ec2e-497a-9301-08dd9cc855d9
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2025 02:44:00.5918
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45429438-552f-440d-4d96-08dd9cc842a4
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F41.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9062
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jBB0mx0u15ZwBevKuBULPXn022yeLG8QiQfGrrbqbAnglfDxV+Umh8JEQxOBq2lwphP1MteMo1x9nq+NGuUncA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7806
 
-Commit 088984c8d54c ("ACPI: PRM: Find EFI_MEMORY_RUNTIME block for PRM
-handler and context") introduces non-essential printing "Failed to find
-VA for GUID: xxxx, PA: 0x0" which causes unnecessary worry for regular
-users.
+Reviewed-by: Alex Hung <alex.hung@amd.com>
 
-Refer to PRM Spec Section 4.1.2[1], both static data buffer address
-and ACPI parameter buffer address may be NULL if they are not needed.
-So there is no need to print out "Failed to find VA ... " to intimidate
-regular users.
-
-Link: https://uefi.org/sites/default/files/resources/Platform%20Runtime%20Mechanism%20-%20with%20legal%20notice.pdf # [1]
-
-Signed-off-by: Zhu Qiyu <qiyuzhu2@amd.com>
----
-Previous versions can be found at:
-v1: https://lore.kernel.org/linux-acpi/20250427075317.42687-1-qiyuzhu2@amd.com/ 
-v2: https://lore.kernel.org/linux-acpi/20250512010620.142155-1-qiyuzhu2@amd.com/#r
-v3: https://lore.kernel.org/linux-acpi/20250512011833.142204-1-qiyuzhu2@amd.com/t/#u
-v4: https://lore.kernel.org/linux-acpi/20250518062507.218855-1-qiyuzhu2@amd.com/
-
-Changes in v2:
- - Reduce the code changes.
-Changes in v3:
- - Fixed title letters not showing.
-Changes in v4:
- - Only print the necessary warnings.
-Changes in v5:
- - Add more cases of print warnings.
-
- drivers/acpi/prmt.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/acpi/prmt.c b/drivers/acpi/prmt.c
-index e549914a636c..ed39502ed86f 100644
---- a/drivers/acpi/prmt.c
-+++ b/drivers/acpi/prmt.c
-@@ -85,8 +85,6 @@ static u64 efi_pa_va_lookup(efi_guid_t *guid, u64 pa)
- 		}
- 	}
- 
--	pr_warn("Failed to find VA for GUID: %pUL, PA: 0x%llx", guid, pa);
--
- 	return 0;
- }
- 
-@@ -154,13 +152,33 @@ acpi_parse_prmt(union acpi_subtable_headers *header, const unsigned long end)
- 		guid_copy(&th->guid, (guid_t *)handler_info->handler_guid);
- 		th->handler_addr =
- 			(void *)efi_pa_va_lookup(&th->guid, handler_info->handler_address);
-+		/*
-+		 * Refer to PRM Spec, both static data buffer address and
-+		 * ACPI parameter buffer address may be NULL if they are not
-+		 * needed, so there print out warning if handler_addr is zero.
-+		 */
-+		if (unlikely(!th->handler_addr))
-+			pr_warn("Failed to find VA of handler for GUID: %pUL, PA: 0x%llx",
-+				&th->guid, handler_info->handler_address);
- 
- 		th->static_data_buffer_addr =
- 			efi_pa_va_lookup(&th->guid, handler_info->static_data_buffer_address);
-+		/*
-+		 * As for the static_data_buffer_addr/acpi_param_buffer_addr,
-+		 * if the physical address passed to efi_pa_va_lookup() is nonzero
-+		 * and the return value is zero, there should print out the warnings.
-+		 */
-+		if (unlikely(!th->static_data_buffer_addr && handler_info->static_data_buffer_address))
-+			pr_warn("Failed to find VA of static data buffer for GUID: %pUL, PA: 0x%llx",
-+				&th->guid, handler_info->static_data_buffer_address);
- 
- 		th->acpi_param_buffer_addr =
- 			efi_pa_va_lookup(&th->guid, handler_info->acpi_param_buffer_address);
- 
-+		if (unlikely(!th->acpi_param_buffer_addr && handler_info->acpi_param_buffer_address))
-+			pr_warn("Failed to find VA of acpi param buffer for GUID: %pUL, PA: 0x%llx",
-+				&th->guid, handler_info->acpi_param_buffer_address);
-+
- 	} while (++cur_handler < tm->handler_count && (handler_info = get_next_handler(handler_info)));
- 
- 	return 0;
-
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
--- 
-2.43.0
+On 5/24/25 10:51, Christophe JAILLET wrote:
+> 'struct timing_generator_funcs' are not modified in these drivers.
+> 
+> Constifying these structures moves some data to a read-only section, so
+> increases overall security, especially when the structure holds some
+> function pointers.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This is NOT compile tested, because apparently some .h files are missing on
+> my system ("reg_helper.h")
+> 
+> However, I've checked how these struct timing_generator_funcs are used.
+> They end in "struct optc->base.funcs" which is a
+> "const struct timing_generator_funcs", so evething should be fine.
+> ---
+>   drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c   | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c   | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c   | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c   | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c   | 2 +-
+>   drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c | 2 +-
+>   9 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
+> index 81857ce6d68d..e7a90a437fff 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn20/dcn20_optc.c
+> @@ -502,7 +502,7 @@ void optc2_get_last_used_drr_vtotal(struct timing_generator *optc, uint32_t *ref
+>   	REG_GET(OTG_DRR_CONTROL, OTG_V_TOTAL_LAST_USED_BY_DRR, refresh_rate);
+>   }
+>   
+> -static struct timing_generator_funcs dcn20_tg_funcs = {
+> +static const struct timing_generator_funcs dcn20_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c
+> index f2415eebdc09..772a8bfb949c 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn201/dcn201_optc.c
+> @@ -129,7 +129,7 @@ static void optc201_get_optc_source(struct timing_generator *optc,
+>   	*num_of_src_opp = 1;
+>   }
+>   
+> -static struct timing_generator_funcs dcn201_tg_funcs = {
+> +static const struct timing_generator_funcs dcn201_tg_funcs = {
+>   		.validate_timing = optc201_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c
+> index 78b58a449fa4..ee4665aa49e9 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn30/dcn30_optc.c
+> @@ -357,7 +357,7 @@ void optc3_tg_init(struct timing_generator *optc)
+>   	optc1_clear_optc_underflow(optc);
+>   }
+>   
+> -static struct timing_generator_funcs dcn30_tg_funcs = {
+> +static const struct timing_generator_funcs dcn30_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c
+> index 65e9089b7f31..38f85bc2681a 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn301/dcn301_optc.c
+> @@ -109,7 +109,7 @@ void optc301_setup_manual_trigger(struct timing_generator *optc)
+>   			OTG_TRIGA_CLEAR, 1);
+>   }
+>   
+> -static struct timing_generator_funcs dcn30_tg_funcs = {
+> +static const struct timing_generator_funcs dcn30_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c
+> index ef536f37b4ed..4f1830ba619f 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn31/dcn31_optc.c
+> @@ -315,7 +315,7 @@ void optc31_read_otg_state(struct timing_generator *optc,
+>   	s->otg_double_buffer_control = REG_READ(OTG_DOUBLE_BUFFER_CONTROL);
+>   }
+>   
+> -static struct timing_generator_funcs dcn31_tg_funcs = {
+> +static const struct timing_generator_funcs dcn31_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c
+> index 0e603bad0d12..4a2caca37255 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn314/dcn314_optc.c
+> @@ -192,7 +192,7 @@ static void optc314_set_h_timing_div_manual_mode(struct timing_generator *optc,
+>   }
+>   
+>   
+> -static struct timing_generator_funcs dcn314_tg_funcs = {
+> +static const struct timing_generator_funcs dcn314_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c
+> index 2cdd19ba634b..b2b226bcd871 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn32/dcn32_optc.c
+> @@ -297,7 +297,7 @@ static void optc32_set_drr(
+>   	optc32_setup_manual_trigger(optc);
+>   }
+>   
+> -static struct timing_generator_funcs dcn32_tg_funcs = {
+> +static const struct timing_generator_funcs dcn32_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
+> index 4cfc6c0fa147..72bff94cb57d 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn35/dcn35_optc.c
+> @@ -428,7 +428,7 @@ static void optc35_set_long_vtotal(
+>   	}
+>   }
+>   
+> -static struct timing_generator_funcs dcn35_tg_funcs = {
+> +static const struct timing_generator_funcs dcn35_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
+> diff --git a/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c b/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c
+> index 382ac18e7854..ff79c38287df 100644
+> --- a/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c
+> +++ b/drivers/gpu/drm/amd/display/dc/optc/dcn401/dcn401_optc.c
+> @@ -459,7 +459,7 @@ bool optc401_wait_update_lock_status(struct timing_generator *tg, bool locked)
+>   	return true;
+>   }
+>   
+> -static struct timing_generator_funcs dcn401_tg_funcs = {
+> +static const struct timing_generator_funcs dcn401_tg_funcs = {
+>   		.validate_timing = optc1_validate_timing,
+>   		.program_timing = optc1_program_timing,
+>   		.setup_vertical_interrupt0 = optc1_setup_vertical_interrupt0,
 
