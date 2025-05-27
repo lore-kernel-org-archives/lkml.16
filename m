@@ -1,381 +1,143 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC46425D91B
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC9A255F39
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 11:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748345854; cv=none; b=Y1sqV65MBqQ3DA91mUHtAHSoUxlSzON2ZyOk2dYEUs1mprx5bWZSaNPETOcoTL83GUb1OKCgrZdayJ0cQkKwQuxdgKXNRcKhYfjqj0NtM/s1OxHi2lQtWwl085ntCD2adV0B0wXj2aeoRvJjYF/wlOTleNYP9DVzhzz/kJdWCUM=
+	t=1748345888; cv=none; b=qMEcSe9g7fmX9PXHX7Y33dcEH7ksQTjPZ7xph3iXxi+47mTDDVVUtdah7beQVDXNhQF+o1aDBIMQHMwOgDNpD14HSnr/OQGzRwWJvXpS69XjW3I4xZhOL2BxNc4vSlzqi54TkSPyLZW21AmGMv6NEZrYXcb/zCPfAfwxi534Obo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748345854; c=relaxed/simple;
-	bh=lFkT+5/G0QzkQCrHD/MZR2cgD5qBXMfmgDOLXrIwqpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eZjZFEloI6ROPTX8/sYrUro6KKisz/ZCXavdYK9dsgOKT+wVrgMb+0I9WG/nwy9Bneyc2tKjF07H1ZcJdo9l9dIiY81uuY7SLGgvLBtSX6Ta2NSLQiaS6Bq2IjoT+aCrAs22CPF53ockFPw7ngHPMg0/58ZvF4X2HVOb9vsOUnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uJscK-0006US-6f; Tue, 27 May 2025 13:37:12 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uJscI-000PZg-1p;
-	Tue, 27 May 2025 13:37:10 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 3364C41A77F;
-	Tue, 27 May 2025 11:37:10 +0000 (UTC)
-Date: Tue, 27 May 2025 13:37:09 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: kernel@pengutronix.de, mailhol.vincent@wanadoo.fr, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, cl@rock-chips.com, 
-	kever.yang@rock-chips.com, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] net: can: rockchip: add can for RK3576 Soc
-Message-ID: <20250527-sage-python-of-variation-1c7759-mkl@pengutronix.de>
-References: <20250526062559.2061311-1-zhangqing@rock-chips.com>
- <20250526062559.2061311-4-zhangqing@rock-chips.com>
+	s=arc-20240116; t=1748345888; c=relaxed/simple;
+	bh=I3iOwzn3pRnf0t+FYscW0taXwZ88KDJXhfGZXShT2mg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=G8424gNLf8MN3CsmEo1GU/t0syg3EfSEtnAISrWiFqBnZztGWwoPx2K7RLS0rjvEaahxAH0ZCdZXpWDjQRvgsy0zuKD2jm4sdLF4y+GMuGoyM+dHVGBy4HvunNBdu/+q39cStcd5+4NZRF+VHmLPgJLtfFS98mD7QA5ZJbqmTC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eItmrW7a; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eItmrW7a"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cec217977so18284755e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 04:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748345885; x=1748950685; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K9ZFM1owHLSyIXqYqClroD9dE+A4zjVv7me0IORJZ8c=;
+        b=eItmrW7aznVxoWYyhG7NS95z45GopOgoHWc4cGXOIcA+HNWOpZXcQhOXa87GpOhUqT
+         ldMBxo/mGFYkAptgnJAbsDqM/qhIfvK2M4/0rYerSDwokLXzitV/MXEvLihGOnAOl76J
+         mVmqNRuYYzqlJi4ksAupav820SRBxv7O9P0PTVcvK7IvzVBN0gDzzKcbQ7yyDVcF9Pjs
+         4j+fOnluVzYUkW03G+qNZDqZvYkwnzi4PK1U7Vsx/kejLZcYHE3HZUBQ5XqX2Xr+qBLS
+         mtedxWX36RGBHyJpgoAvUDmplnBDkFekN5TU9p9gsb3NsLEJti96agGeBbA1FOKtGuxM
+         zh7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748345885; x=1748950685;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K9ZFM1owHLSyIXqYqClroD9dE+A4zjVv7me0IORJZ8c=;
+        b=Gg+ZRLD0BEZo3+9sZGyJFsGOqP3bhmQ3PEetfYHA/P3uYCsE3gEaVbWbTMvi8HBV+l
+         wVCjhDMNf1d4YdRAr0aLZzWuaZ6QdJCE4WISUGkxY29k/eNqga/v6kGNZ4+ZouoJcs8g
+         C0qW+g82VrySNnEsFGlT8aNXXyE+gUlyfc9b830LTye7dv6Xmp+Ps00BYbzyv+bW9B0I
+         EeYarxXke9t31UhFK3pHMpGdfI0C5X1EEeAKRONu6yqVg34S7ntonctN23tdpgihaRin
+         rkxDKK09BRwTj/U72IVZkgPKoOyLzP8D+fv2Fnl5NLNCOkVXpht9M6/Nm9t/632ofRaH
+         ogrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUO36xTJA+IlnXJe3oLix+nwUnVZHEZhQZA/z7z/Rqn9A0s/XsZg5uDZ2wVOdEMZf07w9mQ+lsp9M3E83c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzToxlEg7WyygxrMrIeCgalLF2EwlC4TSTNpysk1g/hN2MuPooC
+	eLAeGJMKW5WT2DTeL4czZI9aD2DqB/uXEo0ZAzMIC27oLhuNM15gM0X6Gze1CDOpe5FVG/gnuUP
+	pSlTVHMVGP+738xiWFg==
+X-Google-Smtp-Source: AGHT+IFpvNOJ2/KXvQ51DYsYVifopBo7XSSIRwWdPrGINFoCrwsjAPVGbc7ZNuv/iQlzTsaZGh/BpZGdQzlBGKE=
+X-Received: from wmbjg20.prod.google.com ([2002:a05:600c:a014:b0:43c:ef7b:ffac])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:444f:b0:440:9b1a:cd78 with SMTP id 5b1f17b1804b1-44c935dca8emr145499115e9.10.1748345885099;
+ Tue, 27 May 2025 04:38:05 -0700 (PDT)
+Date: Tue, 27 May 2025 11:38:02 +0000
+In-Reply-To: <aDG6t-HdZSuWyPGo@pollux.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wm5rma25slqeowsj"
-Content-Disposition: inline
-In-Reply-To: <20250526062559.2061311-4-zhangqing@rock-chips.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+References: <aC2HacSU7j5d9bzu@pollux> <aC5XDi7SaDJeUaAC@google.com>
+ <aC7DVewqqWIKetmk@pollux> <aC8uNmrLUSS8sxHU@google.com> <2025052201-return-reprogram-add9@gregkh>
+ <aC9krUYJmJqu0xVR@cassiopeiae> <2025052330-reverence-slideshow-d498@gregkh>
+ <aDBC__rflS8625Vb@cassiopeiae> <aDCrufEjtJeGjO6z@google.com> <aDG6t-HdZSuWyPGo@pollux.localdomain>
+Message-ID: <aDWkGmcUBVHl7QmM@google.com>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Benno Lossin <lossin@kernel.org>, 
+	Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
+On Sat, May 24, 2025 at 02:25:27PM +0200, Danilo Krummrich wrote:
+> On Fri, May 23, 2025 at 05:09:13PM +0000, Alice Ryhl wrote:
+> > On Fri, May 23, 2025 at 11:42:23AM +0200, Danilo Krummrich wrote:
+> > > The only thing I don't want to is to allow to leak files or directories, i.e.
+> > > 
+> > > 	File::new("bar_file", bar_dir).leak()
+> > > 
+> > > which keeps the file in the filesystem, but takes away the handle from the Rust
+> > > side, such that it won't be removed from the filesystem anymore when the handle
+> > > goes out of scope, which can cause nasty bugs. But I think there isn't any
+> > > benefit to allow this anyways and it isn't needed with reference counting.
+> > 
+> > Why not have leak() for files only? That way, the files still go away
+> > when you drop the directory, and you don't have to keep around a bunch
+> > of File objects in your Rust structs.
+> 
+> In a previous mail I said that there are more reasons why we don't want to have
+> files (or directories) in the filesystem without an object representation in
+> Rust.
+> 
+> One of them is when attaching private data to a file, like we do with
+> debugfs_create_file().
+> 
+> When we do this, in most of the cases we want to share data between a driver
+> structure and the debugfs file (e.g. a GPU's VM to dump the virtual address
+> space layout).
+> 
+> And most likely we do this by passing an Arc<T> to dir.file(), to make the file
+> own a reference to the corresponding reference counted object (in C we just hope
+> that no one frees the object while the debugfs file holds a pointer to it).
+> 
+> The question is, what happens to this reference if we would subsequently call
+> file.leak()? We can't drop the Arc, because otherwise we risk a UAF in the
+> filesystem callback, but we can't keep it either because otherwise we *really*
+> leak this reference, even if the parent directory is removed eventually.
+> 
+> --
+> 
+> Now, one could say, what about attaching the file's private data to the directory
+> instead? (And I think this has been proposed already elsewhere.)
+> 
+> But I really don't like this approach, because it would mean that when creating
+> the directory we would necessarily need to know all the files we will ever
+> create in this directory *and* have all the corresponding private data
+> available at this point of time. But that would be an insane requirement.
+> 
+> For instance, let's assume a driver creates a directory 'clients', which for
+> every connected userspace "client" wants to provide a file with some metadata
+> for this client.
+> 
+> Sure, you can work around this somehow, e.g. by using a mutex protected Vec as
+> private data or by always creating a new directory first for dynamically created
+> debugfs entires. But this sounds pretty horrible to me.
 
---wm5rma25slqeowsj
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 3/4] net: can: rockchip: add can for RK3576 Soc
-MIME-Version: 1.0
+I do agree that if we support file.leak(), then the private data should:
 
-Hey,
+1. Be provided when creating the file, not the directory.
+2. Be stored with the directory and be freed with it.
+3. Not be encoded in the type of the directory.
 
-here's a partial review.
+Some sort of list with data to free when the directory is freed could
+work. But it sounds like we should not consider file.leak() for the
+initial API.
 
-On 26.05.2025 14:25:58, Elaine Zhang wrote:
-> Is new controller, new register layout and Bit position definition:
-> Support CAN and CANFD protocol, ISO 11898-1
-> Support transmit or receive error count
-> Support acceptance filter, more functional
-> Support interrupt and all interrupt can be masked
-> Support error code check
-> Support self test\silent\loop-back mode
-> Support auto retransmission mode
-> Support auto bus on after bus-off state
-> Support 2 transmit buffers
-> Support Internal Storage Mode
-> Support DMA
->=20
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-> ---
->  .../net/can/rockchip/rockchip_canfd-core.c    | 453 ++++++++++++++++++
->  drivers/net/can/rockchip/rockchip_canfd-rx.c  | 111 +++++
->  drivers/net/can/rockchip/rockchip_canfd-tx.c  |  27 ++
->  drivers/net/can/rockchip/rockchip_canfd.h     | 267 +++++++++++
->  4 files changed, 858 insertions(+)
->=20
-> diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net=
-/can/rockchip/rockchip_canfd-core.c
-> index c21ca4c1fb9a..92e260cb2527 100644
-> --- a/drivers/net/can/rockchip/rockchip_canfd-core.c
-> +++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
-> @@ -31,6 +31,8 @@ static const char *__rkcanfd_get_model_str(enum rkcanfd=
-_model model)
->  		return "rk3568v2";
->  	case RKCANFD_MODEL_RK3568V3:
->  		return "rk3568v3";
-> +	case RKCANFD_MODEL_RK3576:
-> +		return "rk3576";
->  	}
-> =20
->  	return "<unknown>";
-> @@ -176,6 +178,30 @@ static void rkcanfd_get_berr_counter_corrected(struc=
-t rkcanfd_priv *priv,
->  		    !!(reg_state & RKCANFD_REG_STATE_ERROR_WARNING_STATE));
->  }
-> =20
-> +static void rk3576canfd_get_berr_counter_corrected(struct rkcanfd_priv *=
-priv,
-> +						   struct can_berr_counter *bec)
-> +{
-
-Is the rk3576 affected by this problem?
-
-> +	struct can_berr_counter bec_raw;
-> +	u32 reg_state;
-> +
-> +	bec->rxerr =3D rkcanfd_read(priv, RK3576CANFD_REG_RXERRORCNT);
-> +	bec->txerr =3D rkcanfd_read(priv, RK3576CANFD_REG_TXERRORCNT);
-> +	bec_raw =3D *bec;
-> +
-> +	if (!bec->rxerr && !bec->txerr)
-> +		*bec =3D priv->bec;
-> +	else
-> +		priv->bec =3D *bec;
-> +
-> +	reg_state =3D rkcanfd_read(priv, RKCANFD_REG_STATE);
-> +	netdev_vdbg(priv->ndev,
-> +		    "%s: Raw/Cor: txerr=3D%3u/%3u rxerr=3D%3u/%3u Bus Off=3D%u Warning=
-=3D%u\n",
-> +		    __func__,
-> +		    bec_raw.txerr, bec->txerr, bec_raw.rxerr, bec->rxerr,
-> +		    !!(reg_state & RK3576CANFD_REG_STATE_BUS_OFF_STATE),
-> +		    !!(reg_state & RK3576CANFD_REG_STATE_ERROR_WARNING_STATE));
-> +}
-> +
->  static int rkcanfd_get_berr_counter(const struct net_device *ndev,
->  				    struct can_berr_counter *bec)
->  {
-> @@ -206,6 +232,11 @@ static void rkcanfd_chip_interrupts_disable(const st=
-ruct rkcanfd_priv *priv)
->  	rkcanfd_write(priv, RKCANFD_REG_INT_MASK, RKCANFD_REG_INT_ALL);
->  }
-> =20
-> +static void rk3576canfd_chip_interrupts_disable(const struct rkcanfd_pri=
-v *priv)
-> +{
-> +	rkcanfd_write(priv, RK3576CANFD_REG_INT_MASK, RK3576CANFD_REG_INT_ALL);
-> +}
-> +
->  static void rkcanfd_chip_fifo_setup(struct rkcanfd_priv *priv)
->  {
->  	u32 reg;
-> @@ -220,6 +251,72 @@ static void rkcanfd_chip_fifo_setup(struct rkcanfd_p=
-riv *priv)
->  	netdev_reset_queue(priv->ndev);
->  }
-> =20
-> +static void rk3576canfd_chip_fifo_setup(struct rkcanfd_priv *priv)
-> +{
-> +	u32 ism =3D 0, water =3D 0;
-
-no need to init as 0
-
-> +
-> +	ism =3D RK3576CANFD_REG_STR_CTL_ISM_SEL_CANFD_FIXED;
-> +	water =3D RK3576CANFD_ISM_WATERMASK_CANFD;
-> +
-> +	/* internal sram mode */
-
-personally I would prefer:
-
-reg_ism =3D FIELD_PREP(RK3576CANFD_REG_STR_CTL_ISM_SEL,
-                    RK3576CANFD_REG_STR_CTL_ISM_SEL_CANFD_FIXED) |
-          RK3576CANFD_REG_STR_CTL_STORAGE_TIMEOUT_MODE;
-
-> +	rkcanfd_write(priv, RK3576CANFD_REG_STR_CTL,
-> +		      (FIELD_PREP(RK3576CANFD_REG_STR_CTL_ISM_SEL, ism) |
-> +		      RK3576CANFD_REG_STR_CTL_STORAGE_TIMEOUT_MODE));
-
-reg_water =3D RK3576CANFD_ISM_WATERMASK_CANFD;
-
-> +	rkcanfd_write(priv, RK3576CANFD_REG_STR_WTM, water);
-> +	WRITE_ONCE(priv->tx_head, 0);
-> +	WRITE_ONCE(priv->tx_tail, 0);
-> +	netdev_reset_queue(priv->ndev);
-> +}
-> +
-> +static int rk3576canfd_atf_config(struct rkcanfd_priv *priv, int mode)
-
-With the proposed cleanup, this will become a void function.
-
-> +{
-> +	u32 id[10] =3D {0};
-
-What's the use of this array?
-
-> +	u32 dlc =3D 0, dlc_over =3D 0;
-> +
-> +	switch (mode) {
-
-It's called with RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE only...
-
-> +	case RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE:
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF0, id[0]);
-
-why not call it with 0x0?
-
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF1, id[1]);
-
-create:
-
-#define RK3576CANFD_REG_ATF(n) (0x700 + (n) << 2)
-
-and use a for loop
-
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF2, id[2]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF3, id[3]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF4, id[4]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM0, RK3576CANFD_REG_ATFM_ID);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM1, RK3576CANFD_REG_ATFM_ID);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM2, RK3576CANFD_REG_ATFM_ID);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM3, RK3576CANFD_REG_ATFM_ID);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM4, RK3576CANFD_REG_ATFM_ID);
-> +		break;
-> +	case RK3576CANFD_REG_ATFM_MASK_SEL_LIST_MODE:
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF0, id[0]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF1, id[1]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF2, id[2]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF3, id[3]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF4, id[4]);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM0, id[5] | RK3576CANFD_REG_ATF=
-M_MASK_SEL);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM1, id[6] | RK3576CANFD_REG_ATF=
-M_MASK_SEL);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM2, id[7] | RK3576CANFD_REG_ATF=
-M_MASK_SEL);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM3, id[8] | RK3576CANFD_REG_ATF=
-M_MASK_SEL);
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATFM4, id[9] | RK3576CANFD_REG_ATF=
-M_MASK_SEL);
-> +		break;
-> +	default:
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ATF_CTL, RK3576CANFD_REG_ATF_CTL_A=
-TF_DIS_ALL);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (dlc) {
-> +		if (dlc_over)
-
-both are 0, please remove the dead code
-
-> +			rkcanfd_write(priv, RK3576CANFD_REG_ATF_DLC,
-> +				      dlc | RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN);
-> +		else
-> +			rkcanfd_write(priv, RK3576CANFD_REG_ATF_DLC,
-> +				      dlc | RK3576CANFD_REG_ATF_DLC_ATF_DLC_EN |
-> +				      RK3576CANFD_REG_ATF_DLC_ATF_DLC_MODE);
-> +	}
-> +	rkcanfd_write(priv, RK3576CANFD_REG_ATF_CTL, 0);
-> +
-> +	return 0;
-> +}
-> +
->  static void rkcanfd_chip_start(struct rkcanfd_priv *priv)
->  {
->  	u32 reg;
-> @@ -285,6 +382,68 @@ static void rkcanfd_chip_start(struct rkcanfd_priv *=
-priv)
->  		   rkcanfd_read(priv, RKCANFD_REG_MODE));
->  }
-> =20
-> +static void rk3576canfd_chip_start(struct rkcanfd_priv *priv)
-> +
-> +{
-> +	u32 reg;
-> +
-> +	rkcanfd_chip_set_reset_mode(priv);
-> +
-> +	/* Receiving Filter: accept all */
-> +	rk3576canfd_atf_config(priv, RK3576CANFD_REG_ATFM_MASK_SEL_MASK_MODE);
-> +
-> +	/* enable:
-> +	 * - CAN_FD: enable CAN-FD
-> +	 * - AUTO_RETX_MODE: auto retransmission on TX error
-> +	 * - COVER_MODE: RX-FIFO overwrite mode, do not send OVERLOAD frames
-> +	 * - RXSTX_MODE: Receive Self Transmit data mode
-> +	 * - WORK_MODE: transition from reset to working mode
-> +	 */
-
-please adjust the comments
-
-> +	reg =3D rkcanfd_read(priv, RKCANFD_REG_MODE);
-> +	priv->reg_mode_default =3D reg | RKCANFD_REG_MODE_WORK_MODE;
-> +
-> +	if (priv->can.ctrlmode & CAN_CTRLMODE_LOOPBACK) {
-> +		priv->reg_mode_default |=3D RKCANFD_REG_MODE_LBACK_MODE;
-> +		rkcanfd_write(priv, RK3576CANFD_REG_ERROR_MASK,
-> +			      RK3576CANFD_REG_ERROR_MASK_ACK_ERROR);
-> +	}
-> +
-> +	/* mask, i.e. ignore:
-> +	 * - TIMESTAMP_COUNTER_OVERFLOW_INT - timestamp counter overflow interr=
-upt
-> +	 * - TX_ARBIT_FAIL_INT - TX arbitration fail interrupt
-> +	 * - OVERLOAD_INT - CAN bus overload interrupt
-> +	 * - TX_FINISH_INT - Transmit finish interrupt
-> +	 */
-> +	priv->reg_int_mask_default =3D RK3576CANFD_REG_INT_RX_FINISH_INT;
-
-please adjust the comments
-
-> +
-> +	/* Do not mask the bus error interrupt if the bus error
-> +	 * reporting is requested.
-> +	 */
-> +	if (!(priv->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING))
-> +		priv->reg_int_mask_default |=3D RKCANFD_REG_INT_ERROR_INT;
-> +
-> +	memset(&priv->bec, 0x0, sizeof(priv->bec));
-> +
-> +	priv->devtype_data.fifo_setup(priv);
-
-Why do you need a callback here? You're already know you're a
-rk3576canfd, here.
-
-> +
-> +	rkcanfd_write(priv, RK3576CANFD_REG_AUTO_RETX_CFG,
-> +		      RK3576CANFD_REG_AUTO_RETX_CFG_AUTO_RETX_EN);
-> +
-> +	rkcanfd_write(priv, RK3576CANFD_REG_BRS_CFG,
-> +		      RK3576CANFD_REG_BRS_CFG_BRS_NEGSYNC_EN |
-> +		      RK3576CANFD_REG_BRS_CFG_BRS_POSSYNC_EN);
-> +
-> +	rkcanfd_set_bittiming(priv);
-> +
-> +	priv->devtype_data.interrupts_disable(priv);
-> +	rkcanfd_chip_set_work_mode(priv);
-> +
-> +	priv->can.state =3D CAN_STATE_ERROR_ACTIVE;
-> +
-> +	netdev_dbg(priv->ndev, "%s: reg_mode=3D0x%08x\n", __func__,
-> +		   rkcanfd_read(priv, RKCANFD_REG_MODE));
-> +}
-> +
-
-more later...
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---wm5rma25slqeowsj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmg1o+IACgkQDHRl3/mQ
-kZwlcAgAp0JdNemXDYJQP2NtGDnnNFQoPnjeNpkF+YvkXizqgIxjzLfewpIZf3Be
-MA2WfFN/ewOwBAX7TrBfWAoCiRqc4mdHlupNO5VrKflNq4cQXRkbSoB9Q2xl3SQX
-VFTUeyJDd5i/N1kGYa8iXDVQ5I3T9eNjlCmKqP9PwrXkQHAyKlfu17u1nW7Uf4GS
-h8ebrFhb5FlTtanZY5+GL7Qlngg0lEaYdqcvOx0JyepgNugewSmTcWf1QSUnwx7h
-bQF4IoVm12zELwQRPalBgC2qX/nwXeZKOi1i4GTzVMZvqqPSba7JOMYgnCNZagK3
-AHtBIhG91hPtC0ykR3IYV3LbR3SWcg==
-=wAW9
------END PGP SIGNATURE-----
-
---wm5rma25slqeowsj--
+Alice
