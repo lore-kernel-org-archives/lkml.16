@@ -1,277 +1,511 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8BE1A0BD6
-	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB0422655B
+	for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 07:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748332739; cv=none; b=I9by2u7V2cCdnZfhmsRvSyfQPlkH7sI47em5bzaITeKee7EbpQQJ3+gXCoG47N85H6b3GTxeDtVfYiot5eS4GJW1Fqchn0m0tgzUDJH+ppK6D9sUIPPSCGjIoVyTDlYmkHuk6riqWxPaDjn2s6Rty91D1h+cLu3mEOO8OQafKP4=
+	t=1748332752; cv=none; b=YKpX09tof7M2NxpQYpEQM7hsD5OjxDk576cMFT+62Krr4xQt1tPvFalukwwd69vltk0+1jP48+VluuerMP0tHfxAbVdILOwXxDDw+0ydFW8UdtgepeiUmu+wXr3Z6yVLiQkhkKp6uA3ruqcIcKRb+SHZb2sCND4P6Sm8J58sQTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748332739; c=relaxed/simple;
-	bh=rGTcM0GJJ8KWe4DGMipQC2LPFETTFNoNUGvTTh61xx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WeS6fcCqjjtIBivVxCGbAYAWzEnzPDnDG62I++Tmd6oY4ahqJaGd3+E4rIWC/LSXiiwTCcYdoX/m3RM7Fjt9WDxlz7qCPhGfuCCzlxGVlGD3c2MYMgZn2NzZO36S4WuwYIaCa7Hni6xgiwF0QtgzjqkhMYRnP0DqFxqv27pUnR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LUTEDqi7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1748332752; c=relaxed/simple;
+	bh=Ivy7uy1YlsWpEU+Fzej/9b7JacXaVTQ4w7O1lSCplZs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IhdkcLb5q46oxrUvZfCTW548VIXF+5/7dLJFjC5olm9oVW9c3pcZkibQ4vNbP9OM8Voj1qoDsttZ+F17jAskaVwIWHRTS0MSLSQB8bguZ0yRtnZD+GKZodnahWYtDq3PxLIdr0Rw7Dy+Md/lm/DpOunNWLouZ/3VjOxAWirRedg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ismys2oU; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LUTEDqi7"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 201F1725;
-	Tue, 27 May 2025 09:58:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1748332709;
-	bh=rGTcM0GJJ8KWe4DGMipQC2LPFETTFNoNUGvTTh61xx4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LUTEDqi7l9rjlHVOrW7lxOC1vHSWsvuMyKK5U6pVYd7GGe/5fJNSfrmGTY2RBh55x
-	 4JHiSdnFH22uNJTvv8Ao9nLRSj9TRar4vHYoAA3YCEBLuJQD43m36kFLQLyCSi9bqn
-	 eNfRFLyIBkmLQ7j/W2YkujQBga8OO6V+/wLddInM=
-Message-ID: <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
-Date: Tue, 27 May 2025 10:58:51 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ismys2oU"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47664364628so30796091cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 00:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748332749; x=1748937549; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hplfmEAI0ObABv6iennLOuBJUZpDNYU6guT+clGZ648=;
+        b=Ismys2oUQtPMjB8VQpiUHbTzuMZ3A43Cgpdq43O1wFOCmuulzAR4+L4lsRCwQ8Wizs
+         GMYfynka9dHRPnBzTQh2vQSHko8VuK7jXz4oxRe0B9O2Rg3jAm/0KduxzkRUQcxcEU1F
+         KPMjy0PtO43/VZU/dvgCmd0NAMj5lmUw49WZHfgmd+UpRQDcnSL7z5502BycDKPDDgdT
+         eCaer4aYNbmjSsdRP45E/5+R7jQUmf8HiUfqHLczc2VL3GSrFvHud3m3g1MtvAqby8p2
+         rJZytaOhyXhr2MhJA6DkPp1eMHdxAlmTxDJ1Hiqnie0Ld4z1HBcGQacDwf5gq1tn70YU
+         jO2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748332749; x=1748937549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hplfmEAI0ObABv6iennLOuBJUZpDNYU6guT+clGZ648=;
+        b=n3GHGpvnrGQVRW+TYG18V+MQSHuny77KFRMrQ8NRPis8nvg22szCM8G+dbfdDhSbnO
+         hzR/AglFIK9jOKT8JuSAV162xdWPZIk0If6pEFs+QPox2lLo9jCJpB0GVM03meNOyzSv
+         pcvlBiAX8rKhkpGxWYd4NsTySFELFpzfj11HLep+3rExR4+MRJWRILk9AEqqAZL1pm7d
+         6okgLFdAVboJNtQYAybWyaRU/EaSDgRSAUUxYuv1w9CQS2XBIcJk5kiILkVi8e6AlGZX
+         fmwYxslhWK5z9ZuFCM0pk4vB9ltxjwduE4mRyLoHuxa0hrC8G+P5woX0ILFWskBdnr50
+         Me/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXyxJx7860kxZTeXRHxzFkxXQTSi0xXcIpkU48qF8USn3p90GnI9u/1KGUpYNG2GRAN9/yig83lLviMOAE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLxToY+CUD9ODdxX2ig0xVLCSimxhU8CEz7qrn8CL1u9H+yO7q
+	0e4iixxZD5J2suOP4COBBaGac2R+oexxOFjaU5BvYv4XHLk8ssedX7bDWgcrKq0jJ8OIsdqW5Gt
+	39fPmPchTLoczDcStAEyNSNIGF97xoLGkYwNn
+X-Gm-Gg: ASbGncsh+C5CEKJY652Omu7k3xTTJzBBGwMdZ/99ElVWrjJSUxPFKv86c8fFRsjkdAR
+	PFEkgDOtLmadyifDbL8+fHUvo27oqDAIYoxT2D/E8A0zIdnZs9xUD4NaaFNgbv/3W954qllMg4U
+	a/3xax48LSDSiXIekLBUaX7blK3V2T59wUNw==
+X-Google-Smtp-Source: AGHT+IGKzpgcFn4eQbWsqR5WJWfumDy1Xr9B/icnNkP390i2UgIIEEB1AFM6EhiUFaVHt+jC+iU0a1EqCrY90kksQjg=
+X-Received: by 2002:a05:6102:dd2:b0:4dd:ab6c:7654 with SMTP id
+ ada2fe7eead31-4e423e601e5mr9168751137.8.1748332738801; Tue, 27 May 2025
+ 00:58:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/3] drm/bridge: cadence: cdns-mhdp8546*: Change
- drm_connector from pointer to structure
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: jonas@kwiboo.se, jernej.skrabec@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, lumag@kernel.org, jani.nikula@intel.com,
- andy.yan@rock-chips.com, mordan@ispras.ru, linux@treblig.org,
- viro@zeniv.linux.org.uk, yamonkar@cadence.com, sjakhade@cadence.com,
- quentin.schulz@free-electrons.com, jsarha@ti.com,
- linux-kernel@vger.kernel.org, devarsht@ti.com, dianders@chromium.org,
- andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
- alexander.stein@ew.tq-group.com
-References: <20250521073237.366463-1-j-choudhary@ti.com>
- <20250521073237.366463-3-j-choudhary@ti.com>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250521073237.366463-3-j-choudhary@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
+ <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
+ <CAGsJ_4wC5_YSMLNoY5q4hUsZTpD+YPHSBtzCAdWRFH65EJA_iw@mail.gmail.com>
+ <CAMgjq7AO__8TFE8ibwQswWmmf4tTGg2NBEJp0aEn32vN+Dy8uw@mail.gmail.com>
+ <CAGsJ_4z1cJfOCcpZDt4EuHK7+SON1r0ptRJNv1h=cDv+eOcdSQ@mail.gmail.com>
+ <CAMgjq7CJ4_9bB=46TVzByFRuOwxNs4da=sN==x8cc++YsV+ETQ@mail.gmail.com>
+ <CAGsJ_4wo6u1WSXdzj8RUUDNdk5_YCfLV_mcJtvhiv2UonXw+nw@mail.gmail.com> <CAMgjq7Bc0-eXZ8G=bN8bo2NG1ndtPmCUvxCi0bdM+HdqmOjaPQ@mail.gmail.com>
+In-Reply-To: <CAMgjq7Bc0-eXZ8G=bN8bo2NG1ndtPmCUvxCi0bdM+HdqmOjaPQ@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 27 May 2025 19:58:47 +1200
+X-Gm-Features: AX0GCFtSjRdfbo_re4Zx58GpTYN0U7VxlXrr-1Kmf-HNfqbkzeyTydFvtPqllfU
+Message-ID: <CAGsJ_4ymRwXhQdzabstHhkK0OM0JEWtvR3tjeyQppm7sKZ8FUw@mail.gmail.com>
+Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
+To: Kairui Song <ryncsn@gmail.com>
+Cc: akpm@linux-foundation.org, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Baoquan He <bhe@redhat.com>, Chris Li <chrisl@kernel.org>, David Hildenbrand <david@redhat.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Hugh Dickins <hughd@google.com>, 
+	Kalesh Singh <kaleshsingh@google.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Tim Chen <tim.c.chen@linux.intel.com>, Matthew Wilcox <willy@infradead.org>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sat, May 24, 2025 at 8:01=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> On Fri, May 23, 2025 at 10:30=E2=80=AFAM Barry Song <21cnbao@gmail.com> w=
+rote:
+> >
+> > On Wed, May 21, 2025 at 2:45=E2=80=AFPM Kairui Song <ryncsn@gmail.com> =
+wrote:
+> > >
+> > > Barry Song <21cnbao@gmail.com> =E4=BA=8E 2025=E5=B9=B45=E6=9C=8821=E6=
+=97=A5=E5=91=A8=E4=B8=89 06:33=E5=86=99=E9=81=93=EF=BC=9A
+> > > >
+> > > > On Wed, May 21, 2025 at 7:10=E2=80=AFAM Kairui Song <ryncsn@gmail.c=
+om> wrote:
+> > > > >
+> > > > > On Tue, May 20, 2025 at 12:41=E2=80=AFPM Barry Song <21cnbao@gmai=
+l.com> wrote:
+> > > > > >
+> > > > > > On Tue, May 20, 2025 at 3:31=E2=80=AFPM Kairui Song <ryncsn@gma=
+il.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, May 19, 2025 at 12:38=E2=80=AFPM Barry Song <21cnbao@=
+gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > > From: Kairui Song <kasong@tencent.com>
+> > > > > > > >
+> > > > > > > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > > > > > > > index e5a0db7f3331..5b4f01aecf35 100644
+> > > > > > > > > --- a/mm/userfaultfd.c
+> > > > > > > > > +++ b/mm/userfaultfd.c
+> > > > > > > > > @@ -1409,6 +1409,10 @@ static int move_pages_pte(struct m=
+m_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+> > > > > > > > >                               goto retry;
+> > > > > > > > >                       }
+> > > > > > > > >               }
+> > > > > > > > > +             if (!folio_swap_contains(src_folio, entry))=
+ {
+> > > > > > > > > +                     err =3D -EBUSY;
+> > > > > > > > > +                     goto out;
+> > > > > > > > > +             }
+> > > > > > > >
+> > > > > > > > It seems we don't need this. In move_swap_pte(), we have be=
+en checking pte pages
+> > > > > > > > are stable:
+> > > > > > > >
+> > > > > > > >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst=
+_pte, orig_src_pte,
+> > > > > > > >                                  dst_pmd, dst_pmdval)) {
+> > > > > > > >                 double_pt_unlock(dst_ptl, src_ptl);
+> > > > > > > >                 return -EAGAIN;
+> > > > > > > >         }
+> > > > > > >
+> > > > > > > The tricky part is when swap_cache_get_folio returns the foli=
+o, both
+> > > > > > > folio and ptes are unlocked. So is it possible that someone e=
+lse
+> > > > > > > swapped in the entries, then swapped them out again using the=
+ same
+> > > > > > > entries?
+> > > > > > >
+> > > > > > > The folio will be different here but PTEs are still the same =
+value to
+> > > > > > > they will pass the is_pte_pages_stable check, we previously s=
+aw
+> > > > > > > similar races with anon fault or shmem. I think more strict c=
+hecking
+> > > > > > > won't hurt here.
+> > > > > >
+> > > > > > This doesn't seem to be the same case as the one you fixed in
+> > > > > > do_swap_page(). Here, we're hitting the swap cache, whereas in =
+that
+> > > > > > case, there was no one hitting the swap cache, and you used
+> > > > > > swap_prepare() to set up the cache to fix the issue.
+> > > > > >
+> > > > > > By the way, if we're not hitting the swap cache, src_folio will=
+ be
+> > > > > > NULL. Also, it seems that folio_swap_contains(src_folio, entry)=
+ does
+> > > > > > not guard against that case either.
+> > > > >
+> > > > > Ah, that's true, it should be moved inside the if (folio) {...} b=
+lock
+> > > > > above. Thanks for catching this!
+> > > > >
+> > > > > > But I suspect we won't have a problem, since we're not swapping=
+ in =E2=80=94
+> > > > > > we didn't read any stale data, right? Swap-in will only occur a=
+fter we
+> > > > > > move the PTEs.
+> > > > >
+> > > > > My concern is that a parallel swapin / swapout could result in th=
+e
+> > > > > folio to be a completely irrelevant or invalid folio.
+> > > > >
+> > > > > It's not about the dst, but in the move src side, something like:
+> > > > >
+> > > > > CPU1                             CPU2
+> > > > > move_pages_pte
+> > > > >   folio =3D swap_cache_get_folio(...)
+> > > > >     | Got folio A here
+> > > > >   move_swap_pte
+> > > > >                                  <swapin src_pte, using folio A>
+> > > > >                                  <swapout src_pte, put folio A>
+> > > > >                                    | Now folio A is no longer val=
+id.
+> > > > >                                    | It's very unlikely but here =
+SWAP
+> > > > >                                    | could reuse the same entry a=
+s above.
+> > > >
+> > > >
+> > > > swap_cache_get_folio() does increment the folio's refcount, but it =
+seems this
+> > > > doesn't prevent do_swap_page() from freeing the swap entry after sw=
+apping
+> > > > in src_pte with folio A, if it's a read fault.
+> > > > for write fault, folio_ref_count(folio) =3D=3D (1 + folio_nr_pages(=
+folio))
+> > > > will be false:
+> > > >
+> > > > static inline bool should_try_to_free_swap(struct folio *folio,
+> > > >                                            struct vm_area_struct *v=
+ma,
+> > > >                                            unsigned int fault_flags=
+)
+> > > > {
+> > > >        ...
+> > > >
+> > > >         /*
+> > > >          * If we want to map a page that's in the swapcache writabl=
+e, we
+> > > >          * have to detect via the refcount if we're really the excl=
+usive
+> > > >          * user. Try freeing the swapcache to get rid of the swapca=
+che
+> > > >          * reference only in case it's likely that we'll be the exl=
+usive user.
+> > > >          */
+> > > >         return (fault_flags & FAULT_FLAG_WRITE) && !folio_test_ksm(=
+folio) &&
+> > > >                 folio_ref_count(folio) =3D=3D (1 + folio_nr_pages(f=
+olio));
+> > > > }
+> > > >
+> > > > and for swapout, __removing_mapping does check refcount as well:
+> > > >
+> > > > static int __remove_mapping(struct address_space *mapping, struct f=
+olio *folio,
+> > > >                             bool reclaimed, struct mem_cgroup *targ=
+et_memcg)
+> > > > {
+> > > >         refcount =3D 1 + folio_nr_pages(folio);
+> > > >         if (!folio_ref_freeze(folio, refcount))
+> > > >                 goto cannot_free;
+> > > >
+> > > > }
+> > > >
+> > > > However, since __remove_mapping() occurs after pageout(), it seems
+> > > > this also doesn't prevent swapout from allocating a new swap entry =
+to
+> > > > fill src_pte.
+> > > >
+> > > > It seems your concern is valid=E2=80=94unless I'm missing something=
+.
+> > > > Do you have a reproducer? If so, this will likely need a separate f=
+ix
+> > > > patch rather than being hidden in this patchset.
+> > >
+> > > Thanks for the analysis. I don't have a reproducer yet, I did some
+> > > local experiments and that seems possible, but the race window is so
+> > > tiny and it's very difficult to make the swap entry reuse to collide
+> > > with that, I'll try more but in theory this seems possible, or at
+> > > least looks very fragile.
+> > >
+> > > And yeah, let's patch the kernel first if that's a real issue.
+> > >
+> > > >
+> > > > >     double_pt_lock
+> > > > >     is_pte_pages_stable
+> > > > >       | Passed because of entry reuse.
+> > > > >     folio_move_anon_rmap(...)
+> > > > >       | Moved invalid folio A.
+> > > > >
+> > > > > And could it be possible that the swap_cache_get_folio returns NU=
+LL
+> > > > > here, but later right before the double_pt_lock, a folio is added=
+ to
+> > > > > swap cache? Maybe we better check the swap cache after clear and
+> > > > > releasing dst lock, but before releasing src lock?
+> > > >
+> > > > It seems you're suggesting that a parallel swap-in allocates and ad=
+ds
+> > > > a folio to the swap cache, but the PTE has not yet been updated fro=
+m
+> > > > a swap entry to a present mapping?
+> > > >
+> > > > As long as do_swap_page() adds the folio to the swap cache
+> > > > before updating the PTE to present, this scenario seems possible.
+> > >
+> > > Yes, that's two kinds of problems here. I suspected there could be an
+> > > ABA problem while working on the series, but wasn't certain. And just
+> > > realised there could be another missed cache read here thanks to your
+> > > review and discussion :)
+> > >
+> > > >
+> > > > It seems we need to double-check:
+> > > >
+> > > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > > index bc473ad21202..976053bd2bf1 100644
+> > > > --- a/mm/userfaultfd.c
+> > > > +++ b/mm/userfaultfd.c
+> > > > @@ -1102,8 +1102,14 @@ static int move_swap_pte(struct mm_struct *m=
+m,
+> > > > struct vm_area_struct *dst_vma,
+> > > >         if (src_folio) {
+> > > >                 folio_move_anon_rmap(src_folio, dst_vma);
+> > > >                 src_folio->index =3D linear_page_index(dst_vma, dst=
+_addr);
+> > > > +       } else {
+> > > > +               struct folio *folio =3D
+> > > > filemap_get_folio(swap_address_space(entry),
+> > > > +                                       swap_cache_index(entry));
+> > > > +               if (!IS_ERR_OR_NULL(folio)) {
+> > > > +                       double_pt_unlock(dst_ptl, src_ptl);
+> > > > +                       return -EAGAIN;
+> > > > +               }
+> > > >         }
+> > > > -
+> > > >         orig_src_pte =3D ptep_get_and_clear(mm, src_addr, src_pte);
+> > > >  #ifdef CONFIG_MEM_SOFT_DIRTY
+> > > >         orig_src_pte =3D pte_swp_mksoft_dirty(orig_src_pte);
+> > >
+> > > Maybe it has to get even dirtier here to call swapcache_prepare too t=
+o
+> > > cover the SYNC_IO case?
+> > >
+> > > >
+> > > > Let me run test case [1] to check whether this ever happens. I gues=
+s I need to
+> > > > hack kernel a bit to always add folio to swapcache even for SYNC IO=
+.
+> > >
+> > > That will cause quite a performance regression I think. Good thing is=
+,
+> > > that's exactly the problem this series is solving by dropping the SYN=
+C
+> > > IO swapin path and never bypassing the swap cache, while improving th=
+e
+> > > performance, eliminating things like this. One more reason to justify
+> > > the approach :)
+>
+> Hi Barry,
+>
+> >
+> > I attempted to reproduce the scenario where a folio is added to the swa=
+pcache
+> > after filemap_get_folio() returns NULL but before move_swap_pte()
+> > moves the swap PTE
+> > using non-synchronized I/O. Technically, this seems possible; however,
+> > I was unable
+> > to reproduce it, likely because the time window between swapin_readahea=
+d and
+> > taking the page table lock within do_swap_page() is too short.
+>
+> Thank you so much for trying this!
+>
+> I have been trying to reproduce it too, and so far I didn't observe
+> any crash or warn. I added following debug code:
+>
+>  static __always_inline
+>  bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long dst_=
+end)
+> @@ -1163,6 +1167,7 @@ static int move_pages_pte(struct mm_struct *mm,
+> pmd_t *dst_pmd, pmd_t *src_pmd,
+>         pmd_t dummy_pmdval;
+>         pmd_t dst_pmdval;
+>         struct folio *src_folio =3D NULL;
+> +       struct folio *tmp_folio =3D NULL;
+>         struct anon_vma *src_anon_vma =3D NULL;
+>         struct mmu_notifier_range range;
+>         int err =3D 0;
+> @@ -1391,6 +1396,15 @@ static int move_pages_pte(struct mm_struct *mm,
+> pmd_t *dst_pmd, pmd_t *src_pmd,
+>                 if (!src_folio)
+>                         folio =3D filemap_get_folio(swap_address_space(en=
+try),
+>                                         swap_cache_index(entry));
+> +               udelay(get_random_u32_below(1000));
+> +               tmp_folio =3D filemap_get_folio(swap_address_space(entry)=
+,
+> +                                       swap_cache_index(entry));
+> +               if (!IS_ERR_OR_NULL(tmp_folio)) {
+> +                       if (!IS_ERR_OR_NULL(folio) && tmp_folio !=3D foli=
+o) {
+> +                               pr_err("UFFDIO_MOVE: UNSTABLE folio
+> %lx (%lx) -> %lx (%lx)\n", folio, folio->swap.val, tmp_folio,
+> tmp_folio->swap.val);
+> +                       }
+> +                       folio_put(tmp_folio);
+> +               }
+>                 if (!IS_ERR_OR_NULL(folio)) {
+>                         if (folio_test_large(folio)) {
+>                                 err =3D -EBUSY;
+> @@ -1413,6 +1427,8 @@ static int move_pages_pte(struct mm_struct *mm,
+> pmd_t *dst_pmd, pmd_t *src_pmd,
+>                 err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr,
+> dst_pte, src_pte,
+>                                 orig_dst_pte, orig_src_pte, dst_pmd, dst_=
+pmdval,
+>                                 dst_ptl, src_ptl, src_folio);
+> +               if (tmp_folio !=3D folio && !err)
+> +                       pr_err("UFFDIO_MOVE: UNSTABLE folio passed
+> check: %lx -> %lx\n", folio, tmp_folio);
+>         }
+>
+> And I saw these two prints are getting triggered like this (not a real
+> issue though, just help to understand the problem)
+> ...
+> [ 3127.632791] UFFDIO_MOVE: UNSTABLE folio fffffdffc334cd00 (0) ->
+> fffffdffc7ccac80 (51)
+> [ 3172.033269] UFFDIO_MOVE: UNSTABLE folio fffffdffc343bb40 (0) ->
+> fffffdffc3435e00 (3b)
+> [ 3194.425213] UFFDIO_MOVE: UNSTABLE folio fffffdffc7d481c0 (0) ->
+> fffffdffc34ab8c0 (76)
+> [ 3194.991318] UFFDIO_MOVE: UNSTABLE folio fffffdffc34f95c0 (0) ->
+> fffffdffc34ab8c0 (6d)
+> [ 3203.467212] UFFDIO_MOVE: UNSTABLE folio fffffdffc34b13c0 (0) ->
+> fffffdffc34eda80 (32)
+> [ 3206.217820] UFFDIO_MOVE: UNSTABLE folio fffffdffc7d297c0 (0) ->
+> fffffdffc38cedc0 (b)
+> [ 3214.913039] UFFDIO_MOVE: UNSTABLE folio passed check: 0 -> fffffdffc34=
+db140
+> [ 3217.066972] UFFDIO_MOVE: UNSTABLE folio fffffdffc342b5c0 (0) ->
+> fffffdffc3465cc0 (21)
+> ...
+>
+> The "UFFDIO_MOVE: UNSTABLE folio fffffdffc3435180 (0) ->
+> fffffdffc3853540 (53)" worries me at first. On first look it seems the
+> folio is indeed freed completely from the swap cache after the first
+> lookup, so another swapout can reuse the entry. But as you mentioned
+> __remove_mapping won't release a folio if the refcount check fails, so
+> they must be freed by folio_free_swap or __try_to_reclaim_swap, there
+> are many places that can happen. But these two helpers won't free a
+> folio from swap cache if its swap count is not zero. And the folio
+> will either be swapped out (swap count non zero), or mapped (freeing
+> it is fine, PTE is non_swap, and another swapout will still use the
+> same folio).
+>
+> So after more investigation and dumping the pages, it's actually the
+> second lookup (tmp_folio) seeing the entry being reused by another
+> page table entry, after the first folio is swapped back and released.
+> So the page table check below will always fail just fine.
+>
+> But this also proves the first look up can see a completely irrelevant
+> folio too: If the src folio is swapped out, but got swapped back and
+> freed, then another folio B shortly got added to swap cache reuse the
+> src folio's old swap entry, then the folio B got seen by the look up
+> here and get freed from swap cache, then src folio got swapped out
+> again also reusing the same entry, then we have a problem as PTE seems
+> untouched indeed but we grabbed a wrong folio. Seems possible if I'm
+> not wrong:
+>
+> Something like this:
+> CPU1                             CPU2
+> move_pages_pte
+>   entry =3D pte_to_swp_entry(orig_src_pte);
+>     | Got Swap Entry S1 from src_pte
+>   ...
+>                                  <swapin src_pte, using folio A>
 
-On 21/05/2025 10:32, Jayesh Choudhary wrote:
-> After adding DBANC framework, mhdp->connector is not initialised during
-> bridge calls. But the asyncronous work scheduled depends on the connector.
-> We cannot get to drm_atomic_state in these asyncronous calls running on
-> worker threads. So we need to store the data that we need in mhdp bridge
-> structure.
-> Like other bridge drivers, use drm_connector pointer instead of structure
-> and make appropriate changes to the conditionals and assignments related
-> to mhdp->connector.
-> Also, in the atomic enable call, move the connector  and connector state
-> calls above, so that we do have a connector before we can retry the
-> asyncronous work in case of any failure.
-> 
+I=E2=80=99m assuming you mean `<swapin src_pte, using folio B>`, since I=E2=
+=80=99m not
+sure where folio B comes from in the statement `<someone else tried to
+swap out folio B>`.
 
-I don't quite understand this patch. You change the mhdp->connector to a
-pointer, which is set at bridge_enable and cleared at bridge_disable.
-Then you change the "mhdp->connector.dev" checks to "mhdp->connector".
+If that assumption is correct, and folio A is still in the swapcache,
+how could someone swap in folio B without hitting folio A? That would
+suggest folio A must have been removed from the swapcache earlier=E2=80=94r=
+ight?
 
-So, now in e.g. cdns_mhdp_fw_cb(), we check for mhdp->connector, which
-is set at bridge_enable(). Can we ever have the bridge enabled before
-the fb has been loaded? What is the check even supposed to do there?
+>                                  <free folio A from swap cache freeing S1=
+>
+>                                  <someone else try swap out folio B >
+>                                  <put folio B to swap cache using S1 >
+>                                 ...
+>   folio =3D swap_cache_get_folio(S1)
+>     | Got folio B here !!!
+>   move_swap_pte
+>                                  <free folio B from swap cache>
+>                                    | Holding a reference doesn't pin the =
+cache
+>                                    | as we have demonstrated
+>                                  <Swapout folio A also using S1>
+>     double_pt_lock
+>     is_pte_pages_stable
+>       | Passed because of S1 is reused
+>     folio_move_anon_rmap(...)
+>       | Moved invalid folio B here !!!
+>
+> But this is extremely hard to reproduce though, even if doing it
+> deliberately...
+>
+> So I think a "folio_swap_contains" or equivalent check here is a good
+> thing to have, to make it more robust and easier to understand. The
+> checking after locking a folio has very tiny overhead and can
+> definitely ensure the folio's swap entry is valid and stable.
+>
+> The "UFFDIO_MOVE: UNSTABLE folio passed check: 0 -> fffffdffc385fb00"
+> here might seem problematic, but it's still not a real problem. That's
+> the case where the swapin in src region happens after the lookup, and
+> before the PTE lock. It will pass the PTE check without moving the
+> folio. But the folio is guaranteed to be a completely new folio here
+> because the folio can't be added back to the page table without
+> holding the PTE lock, and if that happens the following PTE check here
+> will fail.
+>
+> So I think we should patch the current kernel only adding a
+> "folio_swap_contains" equivalent check here, and maybe more comments,
+> how do you think?
 
-Another in cdns_mhdp_hpd_work(), it checks for mhdp->connector. So...
-HPD code behaves differently based on if the bridge has been enabled or
-not? What is it supposed to do?
+The description appears to have some inconsistencies.
+Would you mind rephrasing it?
 
-Isn't the whole "if (mhdp->connector.dev)" code for the legacy
-non-DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
-
- Tomi
-
-> Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546 DPI/DP bridge")
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
->  .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 28 +++++++++----------
->  .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  2 +-
->  .../drm/bridge/cadence/cdns-mhdp8546-hdcp.c   |  8 +++---
->  3 files changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> index 66bd916c2fe9..5388e62f230b 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-> @@ -740,7 +740,7 @@ static void cdns_mhdp_fw_cb(const struct firmware *fw, void *context)
->  	bridge_attached = mhdp->bridge_attached;
->  	spin_unlock(&mhdp->start_lock);
->  	if (bridge_attached) {
-> -		if (mhdp->connector.dev)
-> +		if (mhdp->connector)
->  			drm_kms_helper_hotplug_event(mhdp->bridge.dev);
->  		else
->  			drm_bridge_hpd_notify(&mhdp->bridge, cdns_mhdp_detect(mhdp));
-> @@ -1759,17 +1759,25 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
->  	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
->  	struct cdns_mhdp_bridge_state *mhdp_state;
->  	struct drm_crtc_state *crtc_state;
-> -	struct drm_connector *connector;
->  	struct drm_connector_state *conn_state;
->  	struct drm_bridge_state *new_state;
->  	const struct drm_display_mode *mode;
->  	u32 resp;
-> -	int ret;
-> +	int ret = 0;
->  
->  	dev_dbg(mhdp->dev, "bridge enable\n");
->  
->  	mutex_lock(&mhdp->link_mutex);
->  
-> +	mhdp->connector = drm_atomic_get_new_connector_for_encoder(state,
-> +								   bridge->encoder);
-> +	if (WARN_ON(!mhdp->connector))
-> +		goto out;
-> +
-> +	conn_state = drm_atomic_get_new_connector_state(state, mhdp->connector);
-> +	if (WARN_ON(!conn_state))
-> +		goto out;
-> +
->  	if (mhdp->plugged && !mhdp->link_up) {
->  		ret = cdns_mhdp_link_up(mhdp);
->  		if (ret < 0)
-> @@ -1789,15 +1797,6 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
->  	cdns_mhdp_reg_write(mhdp, CDNS_DPTX_CAR,
->  			    resp | CDNS_VIF_CLK_EN | CDNS_VIF_CLK_RSTN);
->  
-> -	connector = drm_atomic_get_new_connector_for_encoder(state,
-> -							     bridge->encoder);
-> -	if (WARN_ON(!connector))
-> -		goto out;
-> -
-> -	conn_state = drm_atomic_get_new_connector_state(state, connector);
-> -	if (WARN_ON(!conn_state))
-> -		goto out;
-> -
->  	if (mhdp->hdcp_supported &&
->  	    mhdp->hw_state == MHDP_HW_READY &&
->  	    conn_state->content_protection ==
-> @@ -1857,6 +1856,7 @@ static void cdns_mhdp_atomic_disable(struct drm_bridge *bridge,
->  		cdns_mhdp_hdcp_disable(mhdp);
->  
->  	mhdp->bridge_enabled = false;
-> +	mhdp->connector = NULL;
->  	cdns_mhdp_reg_read(mhdp, CDNS_DP_FRAMER_GLOBAL_CONFIG, &resp);
->  	resp &= ~CDNS_DP_FRAMER_EN;
->  	resp |= CDNS_DP_NO_VIDEO_MODE;
-> @@ -2157,7 +2157,7 @@ static void cdns_mhdp_modeset_retry_fn(struct work_struct *work)
->  
->  	mhdp = container_of(work, typeof(*mhdp), modeset_retry_work);
->  
-> -	conn = &mhdp->connector;
-> +	conn = mhdp->connector;
->  
->  	/* Grab the locks before changing connector property */
->  	mutex_lock(&conn->dev->mode_config.mutex);
-> @@ -2234,7 +2234,7 @@ static void cdns_mhdp_hpd_work(struct work_struct *work)
->  	int ret;
->  
->  	ret = cdns_mhdp_update_link_status(mhdp);
-> -	if (mhdp->connector.dev) {
-> +	if (mhdp->connector) {
->  		if (ret < 0)
->  			schedule_work(&mhdp->modeset_retry_work);
->  		else
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
-> index bad2fc0c7306..b297db53ba28 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
-> @@ -375,7 +375,7 @@ struct cdns_mhdp_device {
->  	 */
->  	struct mutex link_mutex;
->  
-> -	struct drm_connector connector;
-> +	struct drm_connector *connector;
->  	struct drm_bridge bridge;
->  
->  	struct cdns_mhdp_link link;
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
-> index 42248f179b69..59f18c3281ef 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
-> @@ -394,7 +394,7 @@ static int _cdns_mhdp_hdcp_disable(struct cdns_mhdp_device *mhdp)
->  	int ret;
->  
->  	dev_dbg(mhdp->dev, "[%s:%d] HDCP is being disabled...\n",
-> -		mhdp->connector.name, mhdp->connector.base.id);
-> +		mhdp->connector->name, mhdp->connector->base.id);
->  
->  	ret = cdns_mhdp_hdcp_set_config(mhdp, 0, false);
->  
-> @@ -445,7 +445,7 @@ static int cdns_mhdp_hdcp_check_link(struct cdns_mhdp_device *mhdp)
->  
->  	dev_err(mhdp->dev,
->  		"[%s:%d] HDCP link failed, retrying authentication\n",
-> -		mhdp->connector.name, mhdp->connector.base.id);
-> +		mhdp->connector->name, mhdp->connector->base.id);
->  
->  	ret = _cdns_mhdp_hdcp_disable(mhdp);
->  	if (ret) {
-> @@ -487,13 +487,13 @@ static void cdns_mhdp_hdcp_prop_work(struct work_struct *work)
->  	struct cdns_mhdp_device *mhdp = container_of(hdcp,
->  						     struct cdns_mhdp_device,
->  						     hdcp);
-> -	struct drm_device *dev = mhdp->connector.dev;
-> +	struct drm_device *dev = mhdp->connector->dev;
->  	struct drm_connector_state *state;
->  
->  	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
->  	mutex_lock(&mhdp->hdcp.mutex);
->  	if (mhdp->hdcp.value != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
-> -		state = mhdp->connector.state;
-> +		state = mhdp->connector->state;
->  		state->content_protection = mhdp->hdcp.value;
->  	}
->  	mutex_unlock(&mhdp->hdcp.mutex);
-
+Thanks
+barry
