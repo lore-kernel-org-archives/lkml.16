@@ -1,65 +1,64 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039B96A33B
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB57280A51
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748431350; cv=none; b=qEMso0FHg5rMyipAQmTdxcX6+bASYtRv614bNcWNnq3iE7BkLFt/+8WoIKEA9ucVnhncPLvGZWXKTLznrh7/yZVPmzT/UClxHm08s9VT3TyrqHQZR3oyZjFjEwv1vaHG5Oek8xc/pZbAjP/jUhCUgosVcZc4v9LsSO4usNDKgik=
+	t=1748431354; cv=none; b=AMtVrwB1YuiWX1YxawsYI4N6J6z85x0i3XIMhDCx0KzbFGq14NWUpYb9SbZZUA1pF3FiRJfSrnafExMbj17pMcQGpPDQ3nfiNjsUgBQG+idORymWjKvB6RSq9cNh8iNl7bl9GtFt+DpMZmDv9Ddyb47IrGMmFjhTE0ktkmWnnYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748431350; c=relaxed/simple;
-	bh=10PVymAmcGCTR/6W21iG1eqNwdFqvazhU8h4mfFwtLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NPcqnZHhaVOcWvQ7tKDsMDysLKprXWfuKkv9/6j0ykLtFxc9wgLCfgT2aYs3+eqeUZGBSSxVUMHNwGexS3DNRvCy8YRSfzwoMUaOvhbY8F5TDTsXjrFSd+1KPozlNVvZam4H/keEu3FZOoQ4EoNDhDQEVL6g1RQL6Jn6mOpkoD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zQVoAbyh; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1748431354; c=relaxed/simple;
+	bh=dGay5GEaCgs3Evn7kiNWMaKleoTY7yUgWKtAJy1x6Pg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=u7pMmVw6A8or1c4gT8saQEKBJTa0D8kwdpr7bwkqIdN11gWN3ibco7JXMwwMULTIYAre+r4wkTpTJekEWjKRL9win3BW7lZbYmD9gXmzTBUPiwEng/yRrSBrjjttifU8iHbyvSfeyToYmk9ugMk9P1CHe/lUvtjWlbnhlppfhrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5i9bndD; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQVoAbyh"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4eb4acf29so69359f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:22:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5i9bndD"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a3758b122cso2785669f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748431347; x=1749036147; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=tRdSg+ES8rqgc/LyI/xNmB9YhTxqTSjvA2Sa1o6EE/k=;
-        b=zQVoAbyhV3Ypd5KuJWvKh2KkoFsp+gi0YEL4rV0h/9Y8E8jk9AGxMHcug/sB+Sh7Ye
-         XhuqMJhyKHbgyAl5hmPv7ucVOlTUaGuS5UBnTYeOqd1hflFt5V/DKTAKm8IC/1HHuJyL
-         8st1S/8rjEKOMJJRoDQLAR5cqC0j7cmW+FbYdqdQeB2lN+XIJeROUQ7HftOm6r0L1NLp
-         c5h8D+njsxXpZJej5mmc9oYvzwiHhudT8EkCvvR38Vbqm+o7GdmY4kfUPWRQNkN7yPIS
-         l3ItuyeLHnH061rJzzdVIyY8j/7T/kLenRIMQqg9ersbt59/EhM8RsMS/ToyD3mgDpsX
-         iZYA==
+        d=linaro.org; s=google; t=1748431350; x=1749036150; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=x1wmNFCteFQvjcvkw+beYXhxykf9CQu5mcRPT6RwrJQ=;
+        b=s5i9bndDNxnbJsRRgv9oSWwZjaVnBQUUnyVzGnBqXlLYYBx5Eavy9PS2bPhLRiec5o
+         c3gBvogbu1dr5KKzbqmS/5/RooSkJTgt/hw7Fikcv3Rn/a6PnU8tDVQpKD1xau8FnwsV
+         LVwII2ZYAUbjNCapzSaYk4Q7JOCgC8EVHwDozi7xqAHlg+DyIrp271GTWD7RDLUFjJam
+         5EEH7S7f8NJly1lzxvnR9TMkb0uW1khxfuufFLfVOEczlyboB9zVWe9j43YkKPc8Fx58
+         I6M8LymodeeglFVmerteAiDdhCmx4Xbm8ulkTBeLbimnMTfR2ihk5ePq9DLcwuRNPAx5
+         5xvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748431347; x=1749036147;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tRdSg+ES8rqgc/LyI/xNmB9YhTxqTSjvA2Sa1o6EE/k=;
-        b=IK1J9Tw6wHH8Whee19gjdXSqD49NXJU+aqN4VbmMx0wkZbMdPxo13szSwhgN91fvZQ
-         1uff36f8u/dSVUDW58k6RBk+8hEXVVS4I0wfZc5uZj/dY1y4wPLdVfzA4JaaOQBKc3Tq
-         YQS1Krx5ye2pw06NzoE/UpXpSF6S+BvG9awpsZ0YK4qKGsPdgyiO/o7OuHaItX9HaMMV
-         Z4OJIIEhxb/zwyF4ji2LxoNJqwTjN57NptLpZuI1FZAlnwa1JTIvB9woSR/wQFzJgEL4
-         y6ZFhhuvqPhJ5j1HCrP2nChx21C99bI7/+RnmRjBXQfL/IDNQU7JkRjp8vd75MAXQqVw
-         LKbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIUU5h7cpeoE2IIsYalFWWDaou/xaxKZ9Mu+0knJpBbrY8FsjO1psmqhX+Kz3HS/zjZ2FQvZorusjRXys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzpqxDwe9/zKdngi/WUiDEdoIQqHh1DGOQIRPUpKVzJoGF7I0+
-	1d3zCPAyYhYRsNhBjbhs1cQDf4f7Gei5UDBd9fLAlNTpF5DdF1kwSP0BTS5qaWWO2SU=
-X-Gm-Gg: ASbGnctUSl8TLyBKIzUQO2rSKgg9nU+8kltse4dk8qwcIK6VPHNz/a1N76jKaYpP2D3
-	Hw+vhQhTzpMUucMJfjdEDEKMrPpNVjWfsD7//GwGGEZpAEr27SUMe4RT6O26eNKpJXEtqVlSkSS
-	6uh6V1JPJtnLVIHWEUgDmbD4dmgwvHzGZwGWILA0w7QQPlAhJQXu+L9+OoZWVFK0hYba7rKQfiD
-	4IwFMvN8Sen3D/ql3ms7nsxugldQPeKkr9edDqW8RMhq1M6b5zXprtLInCcS0z6YZbiVALaSelt
-	JpYETFq6WhAFuK89YkmiJNpGzY/pqPjshsuJ/a7R1nBcfMs5UCXK73MXWYXl+oN4bEwB1C4=
-X-Google-Smtp-Source: AGHT+IF10Djn/+417XqgzjwYR53SwB6YsQXDnUYQvUgzphkE8hm7GNKdlPw/JrJhOZ3z/6T2T6Nnmg==
-X-Received: by 2002:a05:600c:1d0d:b0:43b:cab3:1fd1 with SMTP id 5b1f17b1804b1-44c934e5f3cmr49189875e9.1.1748431347165;
-        Wed, 28 May 2025 04:22:27 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4509a0452f4sm13604245e9.28.2025.05.28.04.22.25
+        d=1e100.net; s=20230601; t=1748431350; x=1749036150;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x1wmNFCteFQvjcvkw+beYXhxykf9CQu5mcRPT6RwrJQ=;
+        b=jCEicAlpfwETD8+YNi93MLk2w/Gfvnn9q987WuEmk+JaE44Aa0SrIjDc+oRVbN+vmu
+         Ne2LwmNuoQLtART5cq8h9a9B+/2wwIl//97X5x038RI23NA/nhHD48KWiB0Go6cp9VJB
+         3LCNjUCAOSeROF2GPUrslY6qDhnoK/Lea83s3IBNmJDXB2H/8lrIrL8tQn9WYpTHGskV
+         HhHQ7pUpk3NvuDu7J1C7Qd7yT1NWRezizbVdr9zIcuhwUtkWjnKeJwkp86p+5Null3Gk
+         aGNYh1RmChXYKZU3N5Wu+Jw6dF03oMqsGn3DBivGyOIhJGZGlDE1kATQHbVZIej2tFCI
+         Eghg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJUoE59vEb7pDSmAG4cTfr8H1mcQMvflaWDItxNvO7Kas+o2sxQkV3zVvxaMCdMCUrjvMl2oBWM+Q8Res=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAMnERHWY2rm4piuVkdg69iubocxpf3FR/Beq3GA/EevXJ+9Zd
+	K7KwlEuL+ORxIVZCQN6oQarglYlDmfacBCR18nru8lYwKJrnzEZhhcQexnWeDfgWzis=
+X-Gm-Gg: ASbGncs9o2T9uow4CJEcMStQoIe3cfcA+onic2Ao17Bi5H5aqXk4LPbd740LVxmIBgR
+	3igLHiWFO1ZvIKH2v+Z5nvXsmUvzc88pl5CSOFf+o12AmdYlRHt/7KjjsiEZSGMShKSGUPxrv7f
+	6XIb7KleV4nG6CItC4+dRBBrfzjqa2/PHSMor8Q7YeK+joRhDTqXNlzz6PmXNjzrd3PtoCMTbNS
+	kk+yi+8SWu88zGdX7ziIOCJn19uZYZQZuVuUTL7K+lwAYZDvW33di0XBgRd5Hu2JIEm1r6CwCIn
+	H7dDOuI5CpHmg83X1GcBmZMIjAfuft866SqJYD0LhHFE1DB0n9CumpYOFp0=
+X-Google-Smtp-Source: AGHT+IHu2BF42kNiuIy1z+5pAukmZK8j1poSZ6IXSr+HxLW4ZC3Ou+VtHvrYEWOPGd4uoBcNJEAYGw==
+X-Received: by 2002:a05:6000:2505:b0:3a3:6e62:d8e8 with SMTP id ffacd0b85a97d-3a4cb4a9776mr12850388f8f.55.1748431349621;
+        Wed, 28 May 2025 04:22:29 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.75])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd78ddsm1217811f8f.77.2025.05.28.04.22.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 04:22:26 -0700 (PDT)
-Message-ID: <71db5dad-de6f-4573-b764-cba5c28e271d@linaro.org>
-Date: Wed, 28 May 2025 13:22:24 +0200
+        Wed, 28 May 2025 04:22:29 -0700 (PDT)
+Message-ID: <3a47fc82-dc21-46c3-873d-68e713304af3@linaro.org>
+Date: Wed, 28 May 2025 12:22:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,78 +66,271 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 7/9] arm64: defconfig: Enable BST SoC
-To: Albert Yang <yangzh0906@thundersoft.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Rob Herring <robh@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- Dmitry Baryshkov <lumag@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- Taniya Das <quic_tdas@quicinc.com>, Eric Biggers <ebiggers@google.com>,
- Ross Burton <ross.burton@arm.com>,
- Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Ge Gordon <gordon.ge@bst.ai>
-References: <20250528085459.481424-1-yangzh0906@thundersoft.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?UTF-8?Q?Micha=C5=82_Winiarski?= <michal.winiarski@intel.com>,
+ Igor Mammedov <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ William McVicker <willmcvicker@google.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <5f103643-5e1c-43c6-b8fe-9617d3b5447c@linaro.org>
+ <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- 2+47PN9NZAOyb771QoVr8A==
-In-Reply-To: <20250528085459.481424-1-yangzh0906@thundersoft.com>
+In-Reply-To: <8f281667-b4ef-9385-868f-93893b9d6611@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 28/05/2025 10:54, Albert Yang wrote:
-> Enable BST C1200 SoC support at ARM64 defconfig
+
+
+On 5/6/25 4:53 PM, Ilpo Järvinen wrote:
+> On Tue, 6 May 2025, Tudor Ambarus wrote:
 > 
-> Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
-> Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
-> ---
->  arch/arm64/configs/defconfig | 2 ++
-Squash with previous.
+>> Hi!
+>>
+>> On 12/16/24 5:56 PM, Ilpo Järvinen wrote:
+>>> Resetting resource is problematic as it prevent attempting to allocate
+>>> the resource later, unless something in between restores the resource.
+>>> Similarly, if fail_head does not contain all resources that were reset,
+>>> those resource cannot be restored later.
+>>>
+>>> The entire reset/restore cycle adds complexity and leaving resources
+>>> into reseted state causes issues to other code such as for checks done
+>>> in pci_enable_resources(). Take a small step towards not resetting
+>>> resources by delaying reset until the end of resource assignment and
+>>> build failure list (fail_head) in sync with the reset to avoid leaving
+>>> behind resources that cannot be restored (for the case where the caller
+>>> provides fail_head in the first place to allow restore somewhere in the
+>>> callchain, as is not all callers pass non-NULL fail_head).
+>>>
+>>> The Expansion ROM check is temporarily left in place while building the
+>>> failure list until the upcoming change which reworks optional resource
+>>> handling.
+>>>
+>>> Ideally, whole resource reset could be removed but doing that in a big
+>>> step would make the impact non-tractable due to complexity of all
+>>> related code.
+>>>
+>>> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>>
+>> I'm hitting the BUG_ON(!list_empty(&add_list)); in
+>> pci_assign_unassigned_bus_resources() [1] with 6.15-rc5 and the the
+>> pixel6 downstream pcie driver.
+>>
+>> I saw the thread where "a34d74877c66 PCI: Restore assigned resources
+>> fully after release" fixes things for some other cases, but it's not the
+>> case here.
+>>
+>> Reverting the following patches fixes the problem:
+>> a34d74877c66 PCI: Restore assigned resources fully after release
+>> 2499f5348431 PCI: Rework optional resource handling
+>> 96336ec70264 PCI: Perform reset_resource() and build fail list in sync
+> 
+> So it's confirmed that you needed to revert also this last commit 
+> 96336ec70264, not just the rework change?
 
-Best regards,
-Krzysztof
+I needed to revert 96336ec70264 as well otherwise the build fails.
+> 
+>> In the working case the add_list list is empty throughout the entire
+>> body of pci_assign_unassigned_bus_resources().
+>>
+>> In the failing case __pci_bus_size_bridges() leaves the add_list not
+>> empty and __pci_bus_assign_resources() does not consume the list, thus
+>> the BUG_ON. The failing case contains an extra print that's not shown
+>> when reverting the blamed commits:
+>> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
+>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+>>
+>> I've added some prints trying to describe the code path, see
+>> https://paste.ofcode.org/Aeu2YBpLztc49ZDw3uUJmd#
+>>
+>> Failing case:
+>> [   13.944231][ T1101] pci 0000:01:00.0: [144d:a5a5] type 00 class
+>> 0x000000 PCIe Endpoint
+>> [   13.944412][ T1101] pci 0000:01:00.0: BAR 0 [mem
+>> 0x00000000-0x000fffff 64bit]
+>> [   13.944532][ T1101] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
+>> pref]
+>> [   13.944649][ T1101] pci 0000:01:00.0: enabling Extended Tags
+>> [   13.944844][ T1101] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+>> [   13.945015][ T1101] pci 0000:01:00.0: 15.752 Gb/s available PCIe
+>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
+>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+>> [   13.950616][ T1101] __pci_bus_size_bridges: before pbus_size_mem.
+>> list empty? 1
+>> [   13.950784][ T1101] pbus_size_mem: 2. list empty? 1
+>> [   13.950886][ T1101] pbus_size_mem: 1 list empty? 0
+>> [   13.950982][ T1101] pbus_size_mem: 3. list empty? 0
+>> [   13.951082][ T1101] pbus_size_mem: 4. list empty? 0
+>> [   13.951185][ T1101] pcieport 0000:00:00.0: bridge window [mem
+>> 0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+>> [   13.951448][ T1101] __pci_bus_size_bridges: after pbus_size_mem. list
+>> empty? 0
+>> [   13.951643][ T1101] pci_assign_unassigned_bus_resources: before
+>> __pci_bus_assign_resources -> list empty? 0
+>> [   13.951924][ T1101] pcieport 0000:00:00.0: bridge window [mem
+>> 0x40000000-0x401fffff]: assigned
+>> [   13.952248][ T1101] pci_assign_unassigned_bus_resources: after
+>> __pci_bus_assign_resources -> list empty? 0
+>> [   13.952634][ T1101] ------------[ cut here ]------------
+>> [   13.952818][ T1101] kernel BUG at drivers/pci/setup-bus.c:2514!
+>> [   13.953045][ T1101] Internal error: Oops - BUG: 00000000f2000800 [#1]
+>>  SMP
+>> ...
+>> [   13.976086][ T1101] Call trace:
+>> [   13.976206][ T1101]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
+>> [   13.976462][ T1101]  pci_rescan_bus+0x28/0x48
+>> [   13.976628][ T1101]  exynos_pcie_rc_poweron
+>>
+>> Working case:
+>> [   13.786961][ T1120] pci 0000:01:00.0: [144d:a5a5] type 00 class
+>> 0x000000 PCIe Endpoint
+>> [   13.787136][ T1120] pci 0000:01:00.0: BAR 0 [mem
+>> 0x00000000-0x000fffff 64bit]
+>> [   13.787280][ T1120] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
+>> pref]
+>> [   13.787541][ T1120] pci 0000:01:00.0: enabling Extended Tags
+>> [   13.787808][ T1120] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+>> [   13.787988][ T1120] pci 0000:01:00.0: 15.752 Gb/s available PCIe
+>> bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
+>> 31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+>> [   13.795279][ T1120] __pci_bus_size_bridges: before pbus_size_mem.
+>> list empty? 1
+>> [   13.795408][ T1120] pbus_size_mem: 2. list empty? 1
+>> [   13.795495][ T1120] pbus_size_mem: 2. list empty? 1
+>> [   13.795577][ T1120] __pci_bus_size_bridges: after pbus_size_mem. list
+>> empty? 1
+>> [   13.795692][ T1120] pci_assign_unassigned_bus_resources: before
+>> __pci_bus_assign_resources -> list empty? 1
+>> [   13.795849][ T1120] pcieport 0000:00:00.0: bridge window [mem
+>> 0x40000000-0x401fffff]: assigned
+>> [   13.796072][ T1120] pci_assign_unassigned_bus_resources: after
+>> __pci_bus_assign_resources -> list empty? 1
+>> [   13.796662][ T1120] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
+>> up, yet(s5100_pdev is NULL)
+>> [   13.796666][ T1120] cpif: register_pcie: s51xx_pcie_init start
+>>
+>>
+>> Any hints are welcomed. Thanks,
+>> ta
+> 
+> Hi and thanks for the report.
+
+Hi! Thanks for the help. I've been out of office for the last 2 weeks,
+sorry for the delayed reply.
+
+> 
+> The interesting part occurs inside reassign_resources_sorted() where most 
+> items are eliminated from realloc_head by the list_del().
+> 
+> My guess is that somehow, the change in 96336ec70264 from !res->flags
+> to the more complicated check somehow causes this. If the new check 
+> doesn't match and subsequently, no match is found from the head list, the 
+> loop will do continue and not remove the entry from realloc_head.
+
+I added a print right there and it seems it's something else. See below.
+> 
+> But it's hard to confirm without knowing what that resources realloc_head 
+> contains. Perhaps if you print the resources that are processed around 
+> that part of the code in reassign_resources_sorted(), comparing the log 
+> from the reverted code with the non-working case might help to understand 
+> what is different there and why. To understand better what is in the head 
+> list, it would be also useful to know from which device the resources were 
+> added into the head list in pdev_sort_resources().
+> 
+
+I added the suggested prints
+(https://paste.ofcode.org/DgmZGGgS6D36nWEzmfCqMm) on top of v6.15 with
+the downstream PCIe pixel driver and I obtain the following. Note that
+all added prints contain "tudor" for differentiation.
+
+[   15.211179][ T1107] pci 0001:01:00.0: [144d:a5a5] type 00 class
+0x000000 PCIe Endpoint
+[   15.212248][ T1107] pci 0001:01:00.0: BAR 0 [mem
+0x00000000-0x000fffff 64bit]
+[   15.212775][ T1107] pci 0001:01:00.0: ROM [mem 0x00000000-0x0000ffff
+pref]
+[   15.213195][ T1107] pci 0001:01:00.0: enabling Extended Tags
+[   15.213720][ T1107] pci 0001:01:00.0: PME# supported from D0 D3hot
+D3cold
+[   15.214035][ T1107] pci 0001:01:00.0: 15.752 Gb/s available PCIe
+bandwidth, limited by 8.0 GT/s PCIe x2 link at 0001:00:00.0 (capable of
+31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+[   15.222286][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: BAR 0
+[mem 0x00000000-0x000fffff 64bit] list empty? 1
+[   15.222813][ T1107] pci 0001:01:00.0: tudor: 1: pbus_size_mem: ROM
+[mem 0x00000000-0x0000ffff pref] list empty? 1
+[   15.224429][ T1107] pci 0001:01:00.0: tudor: 2: pbus_size_mem: ROM
+[mem 0x00000000-0x0000ffff pref] list empty? 0
+[   15.224750][ T1107] pcieport 0001:00:00.0: bridge window [mem
+0x00100000-0x001fffff] to [bus 01-ff] add_size 100000 add_align 100000
+
+[   15.225393][ T1107] tudor : pci_assign_unassigned_bus_resources:
+before __pci_bus_assign_resources -> list empty? 0
+[   15.225594][ T1107] pcieport 0001:00:00.0: tudor:
+pdev_sort_resources: bridge window [mem 0x00100000-0x001fffff] resource
+added in head list
+[   15.226078][ T1107] pcieport 0001:00:00.0: bridge window [mem
+0x40000000-0x401fffff]: assigned
+[   15.226419][ T1107] tudor : pci_assign_unassigned_bus_resources:
+after __pci_bus_assign_resources -> list empty? 0
+[   15.226442][ T1107] ------------[ cut here ]------------
+[   15.227587][ T1107] kernel BUG at drivers/pci/setup-bus.c:2522!
+[   15.227813][ T1107] Internal error: Oops - BUG: 00000000f2000800 [#1]
+ SMP
+...
+[   15.251570][ T1107] Call trace:
+[   15.251690][ T1107]  pci_assign_unassigned_bus_resources+0x110/0x114 (P)
+[   15.251945][ T1107]  pci_rescan_bus+0x28/0x48
+
+I obtain the following output when using the same prints adapted
+(https://paste.ofcode.org/37w7RnKkPaCxyNhi5yhZPbZ) and with the blamed
+commits reverted:
+a34d74877c66 PCI: Restore assigned resources fully after release
+2499f5348431 PCI: Rework optional resource handling
+96336ec70264 PCI: Perform reset_resource() and build fail list in sync
+
+[   15.200456][ T1102] pci 0000:01:00.0: [144d:a5a5] type 00 class
+0x000000 PCIe Endpoint
+[   15.200632][ T1102] pci 0000:01:00.0: BAR 0 [mem
+0x00000000-0x000fffff 64bit]
+[   15.200755][ T1102] pci 0000:01:00.0: ROM [mem 0x00000000-0x0000ffff
+pref]
+[   15.200876][ T1102] pci 0000:01:00.0: enabling Extended Tags
+[   15.201075][ T1102] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+[   15.201254][ T1102] pci 0000:01:00.0: 15.752 Gb/s available PCIe
+bandwidth, limited by 8.0 GT/s PCIe x2 link at 0000:00:00.0 (capable of
+31.506 Gb/s with 16.0 GT/s PCIe x2 link)
+[   15.206555][ T1102] pci 0000:01:00.0: tudor: 1: pbus_size_mem: BAR 0
+[mem 0x00000000-0x000fffff 64bit] list empty? 1
+[   15.206737][ T1102] pci 0000:01:00.0: tudor: 1: pbus_size_mem: ROM
+[mem 0x00000000-0x0000ffff pref] list empty? 1
+[   15.206901][ T1102] tudor : pci_assign_unassigned_bus_resources:
+before __pci_bus_assign_resources -> list empty? 1
+[   15.207072][ T1102] pcieport 0000:00:00.0: tudor:
+pdev_sort_resources: bridge window [mem 0x00100000-0x002fffff] resource
+added in head list
+[   15.207396][ T1102] pcieport 0000:00:00.0: bridge window [mem
+0x40000000-0x401fffff]: assigned
+[   15.208165][ T1102] tudor : pci_assign_unassigned_bus_resources:
+after __pci_bus_assign_resources -> list empty? 1
+[   15.208783][ T1102] cpif: s5100_poweron_pcie: DBG: MSI sfr not set
+up, yet(s5100_pdev is NULL)
+[   15.208786][ T1102] cpif: register_pcie: s51xx_pcie_init start
+
+> In any case, that BUG_ON() seems a bit drastic action for what might be 
+> just a single resource allocation failure so it should be downgraded to:
+> 
+> if (WARN_ON(!list_empty(&add_list))
+> 	free_list(&add_list);
+> 	
+> ... or WARN_ON_ONCE().
+
+I saw your patch doing this, the phone now boots, but obviously I still
+see the WARN, so maybe there's still something to be fixed.
+
+Thanks!
+ta
