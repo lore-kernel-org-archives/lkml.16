@@ -1,52 +1,52 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9691428751D;
-	Wed, 28 May 2025 13:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA24526A0E0;
+	Wed, 28 May 2025 13:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439201; cv=none; b=mR0vdrmGLZ0SAu9PXgd2ZZuEwbdJU1BPqLSrPz0Si7IN4GARv2iHiVj5BLBA54FEVHnPCunyRtVOZjyl7teSfFZ+7jhjaW75eHxG92440QZJ1RLKHASA2yananRyFE8TE0hTUpGgTTy12HFSDsAcRtLB6F5BFKs5kerkJVaVuko=
+	t=1748439201; cv=none; b=U+85XmiRS5Ozc8ctnuzNB3j1tWTDNL5PlW4wyDSXpz2Czj1WgXZmp5m/+RDOjLZaqlqm2ijA9sNZvKXj7XCOAeK7MtxYn7e7RDEXrTk6cy7PNLYzX4taxoqhfgMZUxWt+70l5qjMyrTS5INBBJVojylgwmr2zchNpaVRCHuChyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748439201; c=relaxed/simple;
-	bh=G4nnRfKUQeHDcQinxtuGQUF6giZzdtMuIKCcHDFpGxY=;
+	bh=0gXlghNReQ3xJ96aGlYAz/HNqdU+fsvzFoHWeweIWEM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=GrE3XyLN4zTmln/YX4iDRQtEPTv1P70lkKvzK6/dwkvaezMwFKaDD69ZbWJMLNI8dScSrxWEZCbXAOrcTfTNx2oC2vHvHQZMMVVkJwX6cPVd6mvCEB+/SO8INbGi9xGMzC+adloOn0MAj6wxDhgZYC8TeqhaJ+L4F6FJo1RHLW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kl814dqG; arc=none smtp.client-ip=91.207.212.93
+	 In-Reply-To:To:CC; b=lRiII+tZckK3RoCnOFfdM03h7QeKL1gRh9xcf6HRAFHYJ9m8LdyKjAhxHWNovCPrMva46dzvqpy4VO8TRgMh7ud0w2Gj4MNRRU0ORQqb0fJxGuzGr/iC1R3Tu0wrkl5mz6G9Fa3UovhfJTzJFap8KVq82oBKNkpP2dmOyF3z2r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Vgx6lHBJ; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kl814dqG"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SC8uDa028907;
-	Wed, 28 May 2025 15:32:57 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Vgx6lHBJ"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SC50nv016771;
+	Wed, 28 May 2025 15:33:05 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	/fb3UPZu5WN39hqyomy18YDn8fBiBvMNblbm+Y5i2po=; b=kl814dqGPeFuSLFL
-	npVSgaX618J4kCsu13eiO+jS2rH+UwlnExum79SSgzu8sVDRqxWyh43XzWFvJNaI
-	gp3/uJCyBnwk0T3A8g97n+0TSMTKgThX4gdhYb8iNevZ4+h7TzzeQsyXevcrSEAO
-	jg2wWKkt/39v95TeHUDp9gyUs+CPJCklub2/iMzG02TOpBxpJBgiRtzdMYIQU14L
-	f0tdL9RGS4sFMBULRG4S/EoXeapvNYwM/94/Y9Q2Z+9rDI+iEByJ9YpnB55QKb+m
-	dTQeq6ik1qNCphbvI87+g61bskosNsIESA0MnzzVtI0bUAowOuM95AwwMQ7Se4s0
-	++t4Gw==
+	E50xYFA31UxV2r8i4ZX3G+C/OQH/OeYpXAFoahXjSdE=; b=Vgx6lHBJQdIh+MUI
+	arbDveMPv8zTQMBrwDm4eeG+uDzjIXdRp9xyVK+J71R4PQaU+yd6001npOIdj99d
+	GqbHWfNog7vETGZrXGggrUoMDrSK72vhw0hGMuPTK+MBagPebEyemKf0p7FdyzcT
+	V+bhOzdFUYtlb0aaIf2uFIk/ps9V2ZWyizpvSeoMjsU7JRdLZ6NwGvp53uT2M0mK
+	9Ch3nZe/8NjAa1C5b+TqqJlRSF426OPsgyYVHZux6JGCe9jOvL5Xbh4uFJs+OvdB
+	a5Phs+8zkjy+xuHJxONWrJ+geKpHChgJs2382GSTKRWxR6Lk/vVE2FJW+HQ8z521
+	+XHyXA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u3891que-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46u50gsjhv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 15:32:57 +0200 (MEST)
+	Wed, 28 May 2025 15:33:05 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 14C2F4004F;
-	Wed, 28 May 2025 15:31:45 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8E34C4006D;
+	Wed, 28 May 2025 15:31:48 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 066E06CCECA;
-	Wed, 28 May 2025 15:31:01 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 38F2E6CCEF7;
+	Wed, 28 May 2025 15:31:06 +0200 (CEST)
 Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 28 May
- 2025 15:31:00 +0200
+ 2025 15:31:05 +0200
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Date: Wed, 28 May 2025 15:30:54 +0200
-Subject: [PATCH v4 1/9] gpio: mmio: add BGPIOF_NO_INPUT flag for GPO
- gpiochip
+Date: Wed, 28 May 2025 15:31:01 +0200
+Subject: [PATCH v4 8/9] ARM: dts: stm32: add alternate pinmux for HDP pin
+ and add HDP pinctrl node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250528-hdp-upstream-v4-1-7e9b3ad2036d@foss.st.com>
+Message-ID: <20250528-hdp-upstream-v4-8-7e9b3ad2036d@foss.st.com>
 References: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
 In-Reply-To: <20250528-hdp-upstream-v4-0-7e9b3ad2036d@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
@@ -78,60 +78,57 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
 
-When using bgpio_init with a gpiochip acting as a GPO (output only), the
-gpiochip ops `direction_input` was set to `bgpio_simple_dir_in` by
-default but we have no input ability.
-
-Adding this flag allows to set a valid ops for the `direction_output`
-ops without setting a valid ops for `direction_input` by default.
+Introduce hdp node to output a user defined value on port hdp2.
+Add pinctrl nodes to be able to output this signal on one SoC pin.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
- drivers/gpio/gpio-mmio.c    | 11 ++++++++++-
- include/linux/gpio/driver.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-index 4841e4ebe7a6..09b9e1275e7e 100644
---- a/drivers/gpio/gpio-mmio.c
-+++ b/drivers/gpio/gpio-mmio.c
-@@ -335,6 +335,11 @@ static int bgpio_dir_return(struct gpio_chip *gc, unsigned int gpio, bool dir_ou
- 		return pinctrl_gpio_direction_input(gc, gpio);
- }
+diff --git a/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
+index 40605ea85ee1..4a31e9f7a897 100644
+--- a/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi
+@@ -5,6 +5,14 @@
+  */
+ #include <dt-bindings/pinctrl/stm32-pinfunc.h>
  
-+static int bgpio_dir_in_err(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	return -EINVAL;
-+}
++&hdp {
++	/omit-if-no-ref/
++	hdp2_gpo: hdp2-pins {
++		function = "gpoval2";
++		pins = "HDP2";
++	};
++};
 +
- static int bgpio_simple_dir_in(struct gpio_chip *gc, unsigned int gpio)
- {
- 	return bgpio_dir_return(gc, gpio, false);
-@@ -566,7 +571,11 @@ static int bgpio_setup_direction(struct gpio_chip *gc,
- 			gc->direction_output = bgpio_dir_out_err;
- 		else
- 			gc->direction_output = bgpio_simple_dir_out;
--		gc->direction_input = bgpio_simple_dir_in;
+ &pinctrl {
+ 	/omit-if-no-ref/
+ 	adc1_ain_pins_a: adc1-ain-0 {
+@@ -731,6 +739,23 @@ pins {
+ 		};
+ 	};
+ 
++	/omit-if-no-ref/
++	hdp2_pins_a: hdp2-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 13, AF0)>; /* HDP2 */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <2>;
++		};
++	};
 +
-+		if (flags & BGPIOF_NO_INPUT)
-+			gc->direction_input = bgpio_dir_in_err;
-+		else
-+			gc->direction_input = bgpio_simple_dir_in;
- 	}
- 
- 	return 0;
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 4c0294a9104d..42890db9b10e 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -749,6 +749,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
- #define BGPIOF_NO_OUTPUT		BIT(5) /* only input */
- #define BGPIOF_NO_SET_ON_INPUT		BIT(6)
- #define BGPIOF_PINCTRL_BACKEND		BIT(7) /* Call pinctrl direction setters */
-+#define BGPIOF_NO_INPUT			BIT(8) /* only output */
- 
- #ifdef CONFIG_GPIOLIB_IRQCHIP
- int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
++	/omit-if-no-ref/
++	hdp2_sleep_pins_a: hdp2-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 13, ANALOG)>; /* HDP2 */
++		};
++	};
++
+ 	/omit-if-no-ref/
+ 	i2c1_pins_a: i2c1-0 {
+ 		pins {
 
 -- 
 2.43.0
