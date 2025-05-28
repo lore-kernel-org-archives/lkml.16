@@ -1,185 +1,171 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8D128C2C8;
-	Wed, 28 May 2025 15:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EA628B50C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 15:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447106; cv=none; b=mfp7aD1Qtg9p8lPIsUm3+1BGlz0DgEJxqwQKFmc4O5W5G/d7WQOB8vy/foWyHiwLMKUf/2NA3Ek2CBFD8TfshkJu5L7bv2MpA0bOuJko9UxDh5ppa06uzVioLm5ZKxAVa2MJ+0BVE+FjVFuH+BW9U5Ye/eugEog7Y4kwkFkNmOk=
+	t=1748447136; cv=none; b=OwVq2TXp4vxP8X34cko0dotcp9Vbty2MqXoQTW1ufOfJ1/ileJQk78/mFn0n1QQGR46WeUwQ1l6yLxHs2tdDnhByPB3dD9dmqUvz+U2fXg0yB2MESKPGCT1f/PTdEhao7A4GybDiBW66/Ekxm83DjtdEqOm6LeJPuXYtrCh+ewM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447106; c=relaxed/simple;
-	bh=gyWQ50bxUGAr7H5zPZLBDhEZf8F8PQAbcSfeFFmzTzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cbv7xs7sVl3yn172rDGz70XvBs7ab5sNLaMAN0Fm8DhC3XcM7gegCfibCgZXFPUv76z8A0pDe7Bh9xsbOT5UEcBa7goEJNqWesLx55la+56PBUITpwpTYQwIKYp3cREkD4+XHCP3mbMzD7xLoptVrcu60XWXVtCavfvHVTY+vRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fEAN2DQY; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748447136; c=relaxed/simple;
+	bh=/CbNirfnMFT6iFLSja2Zj2oVfKKWn3klp7446jTgwUs=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:References:
+	 In-Reply-To:Content-Type; b=mIP4l22aHH2xgge69X3mk+IioBLj3ZmagxhBxQ0r61//ZhNLvFJWndtFZDRH0cRtJN1n0lcCd8c1JWVvUgi5GbXG3qS3FYowlykh2bYALq+9kZbE/aOWkaQjoJAk6BuyNXhNCysFvQ3lMR4F/3XuiPn25Ktd/ipVOMq/z/SEl/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gIlkdiOn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEAN2DQY"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-747abb3cd0bso188638b3a.1;
-        Wed, 28 May 2025 08:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748447104; x=1749051904; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bvyh2sL5jukcsE+iHbmofbSz17i0re3e8SaGtWtBoVc=;
-        b=fEAN2DQYYDjcnrIQgrkEo9X+Wqv6YzFepfHeXKqVhiN683FX8e+nIVrwjB2TaXOjfl
-         0SAJ5RzyQlAPKxHjItYS8ncWsssbJ6w3SVi1bBZp696bwMjMy/0eaWPcbbVK+KGctlUg
-         ddMICNoQaAns3GpbP9YAY0v6zGFyW9e4MinkCYkHjFYYIyVvyGcqsGDy5H4KscnYy9c3
-         DKOCWYAPNfwblyhLWdBFmaJ8HkjTXf7QnYvu8BfhPTTJVjeRXbQzC9HuTYUnT95YCdnU
-         hrrqubPxPYcl6x1JOlVab/8j/NffbBc58+Ji4YbNmhA/BDns5te8A4S9+lQ3UAMuo+/N
-         gvMw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIlkdiOn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748447134;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pyLOwGypbK7cil/VDfYgN1Gr/yfNRiyW37n+n15jPLw=;
+	b=gIlkdiOnCtea0VdQoZOFxJQVTXWAAe8GTkTAcDCvapEC01qXZ6Uudkpe2KEVTX4LhIxckT
+	PpJ9TpCJf8B/XaQAGpnvRGOAzqQS++IVETWNWBSN3sGSw7h+ew788rMed9hiWxfkmUYqSc
+	sNi0QKL5CHYpUn8Uec/KWFcDC2fr7G8=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-101-rF7MVA4SNf--q4MOFuQWwA-1; Wed, 28 May 2025 11:45:32 -0400
+X-MC-Unique: rF7MVA4SNf--q4MOFuQWwA-1
+X-Mimecast-MFC-AGG-ID: rF7MVA4SNf--q4MOFuQWwA_1748447132
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5f3b94827so716256185a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:45:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748447104; x=1749051904;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bvyh2sL5jukcsE+iHbmofbSz17i0re3e8SaGtWtBoVc=;
-        b=UWfBDxroPdzpvGWajtqqXU7I7FdQGOZG6VuL+IPX7K3qoEIO8vcqX4AGqpDRShJLZr
-         9Eb8CA0153Rf6Ps/C/+Qi+GlY/JjzNsjAvmtiSO+zGvxw70kdGbClNlv6TvxV/VuaXk/
-         XXBuf0ynEVZxc9MVBjB4Y7yEZ7JlqCdTWlz3PmkuAVr1zkrUOzooeO//w5fPPC7PLBhv
-         YdnB+2A8nc+2Yni1RXk07VY01Hwrvdiw092r3z4GWgKNlv+HQwQm4ubU2rJ24GI2JyM6
-         28TkY5CsrPO3O97OvE4BeRzNCXrjzLKngr6fs0h/8M+ln8D5wv7eOakBef39J4Kj7RXc
-         1Wog==
-X-Forwarded-Encrypted: i=1; AJvYcCUWA3M1OwbvV5OVaLr1axqHecO0w2Zbcd+76yj+XYYuF7PR5qom50WwaHw/MKemFypcsIjCWWvZ@vger.kernel.org, AJvYcCVGAgOXR5lRZe1C70bpCtilnVGHOYNNm/YMl6Xjpy1vSZG6UageRCCkDdNr+bghRmGJ0k7yCwdE5jwyzR01@vger.kernel.org, AJvYcCXSFQCjlalcz64jWwOGBTdSUfL74WJMKRTQG+ERdzyHvpmy48E/X4EYPr6U275HWWzo+/o=@vger.kernel.org, AJvYcCXleH3dJIs+hXFjQKSuj2i9XmQ9iXo0rkzYKelxvC6VckMtAD293SVZG349FlGvtDO0FjKZTqKSr8SXaA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YximIZVDh2UW4fnCs3HWwbHy5jw+rRnVKS1EtKi/SWT6iH6eRVm
-	aXrkDlIyPyURtgs34MBkcOZdlH/Lw1MPEX20wQk7C7qYUgYfK9hZxuU=
-X-Gm-Gg: ASbGncvh8JrLlHOQ2BM/NtPcPJ3rnn6nZ+lEv0SG8Gdz9MBkwF8LehAW+Su4DL7lPQ/
-	msM2XCxAFt1jE5yQOoQUHoFyba9aDZpLw4IJOH4mzwTx6WGfmkqgVnMvw3cvgx5j/ZitSUdsrFt
-	9uLF96eHrwjq0SwghqCjPAwRbKO4SJSJA0UQkS4/QgPSL6cRb6IuUH9bav/4UxuMmXkcblM3eCe
-	T6L0dE8XYMxzBSI6dmbQpyY/ujhBmiVHOjEWbqfBRCvI9GwJqDyfelsFDv1+wkNkTKq8BGRbbMY
-	nQ00kCP3M944knHtNkhk3XSBCgyGr+nVIBnlSwH1omtMh3UNcGJpAHJc9rinGttoB6cyr5W2Vuy
-	jvnT+8+ca+Vxh
-X-Google-Smtp-Source: AGHT+IGSIsno6X7q+kUR6kRJB9l4MrL/N1la21dLaIi3MVJ9y47uMvcECGTsZZ59dCO2/u8b0YoX3Q==
-X-Received: by 2002:a05:6a21:33a4:b0:218:2264:1178 with SMTP id adf61e73a8af0-21ac5b89dc1mr94275637.7.1748447104474;
-        Wed, 28 May 2025 08:45:04 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b2d99ec4b05sm1300558a12.49.2025.05.28.08.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 08:45:03 -0700 (PDT)
-Date: Wed, 28 May 2025 08:45:02 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Dragos Tatulea <dtatulea@nvidia.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>
-Subject: Re: [PATCH net-next V2 00/11] net/mlx5e: Add support for devmem and
- io_uring TCP zero-copy
-Message-ID: <aDcvfvLMN2y5xkbo@mini-arch>
-References: <1747950086-1246773-1-git-send-email-tariqt@nvidia.com>
- <aDXi3VpAOPHQ576e@mini-arch>
- <izjshibliwhxfqiidy24xmxsq6q6te4ydmcffucwrhikaokqgg@l5tn6arxiwgo>
+        d=1e100.net; s=20230601; t=1748447132; x=1749051932;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pyLOwGypbK7cil/VDfYgN1Gr/yfNRiyW37n+n15jPLw=;
+        b=faX6GQ+x92Zav9bz9T8yjPTkraKePwyAJjSguJImblzieieWHQXyUk0ujHuxK+fU39
+         vTwLSFL22042lkGw0Z4VX2gDiiDYGCM/u2wKSQ+OLFUXYbDfhbhyPNdEMwI9joYn19Ku
+         YKl1AFK14IF0qsH+8OqpvDH1hFVYz9DKkCS1KgpX1sSA8GcFxINxJF9IMC9eFdy423Bt
+         xIHqgkYOc211A1+dxKng1MqTrDsYALDlK80jgiA1fyGMiZuHo3MHorB1Tm3YfkyddRpp
+         xxa0CyXo5vtJTdO0zthJRMzYQIexgoZPBBFqySDDwhyTvzdlO+y4wJzxLTkQJ0Jd7dey
+         wLYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdUAfHLdopVhDGEXxN3Y8zXVPLtemICcMP+wpJny+tvRj6nuMCIyCXOk5B6eHzmYR4ChqTKyINMCX3gvI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3ENcW18h5DtQ3Pjrsh0rYdHl9Jp0RjWOiwQgT7ZwXyuXj1OFu
+	ew1DxbKqb+8E/GsWqE7hR/2wq38+9gSEa9xrdGXMKc5qFVy49qI7P87PIZ6000UEbp2Zy9qjQ64
+	xMdxb+s9U1jAq34EA8jvIikR2edXCPem4b/MrYEaT5PgtKbDndUIswnfWBYO9lJnGMQ==
+X-Gm-Gg: ASbGncspN+2fux4Saq6VudaxaBrdxNv8m9B9CjxiOyc4LNLEGBSE2wxko7QtqojcvDa
+	8k3gFyGmPOxrQA+T77CM+3h4IfyBvCCg8UBF98WH00+V2FGzbY1bKwoMiFAy0PneQITB3MS2UIh
+	Qh2Twa6qfizaq8MCyo8VgzpsP8Gi2hqkXbEYTbb7Zl0AtFV3Ex4U5kzhDYPij4OxaX7TYfNiyk6
+	lfvnYNXw9YiByDIEHqMJNdwf2a3F6KBqamYA95+SuNC6NChgI3pIXNWbmkOCy8oDR6btfnN8rui
+	w0FKYWQ4enko
+X-Received: by 2002:a05:620a:2952:b0:7ce:e010:88bb with SMTP id af79cd13be357-7cfc5d3bea0mr319656185a.22.1748447132200;
+        Wed, 28 May 2025 08:45:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGUqlAX9B3FIW5eZMrtvbf91YzWhqy3WejI0SBLhs/OnmLka0kFn2dRtq7rU7LdniOGPnZkrQ==
+X-Received: by 2002:a05:620a:2952:b0:7ce:e010:88bb with SMTP id af79cd13be357-7cfc5d3bea0mr319652185a.22.1748447131835;
+        Wed, 28 May 2025 08:45:31 -0700 (PDT)
+Received: from [172.20.4.10] ([50.234.147.137])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfb82002bdsm84495085a.17.2025.05.28.08.45.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 08:45:31 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <a9d0e503-ec70-41a7-adb2-989082e4d9f2@redhat.com>
+Date: Wed, 28 May 2025 11:45:29 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <izjshibliwhxfqiidy24xmxsq6q6te4ydmcffucwrhikaokqgg@l5tn6arxiwgo>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation: cgroup: clarify controller enabling
+ semantics
+To: Vishal Chourasia <vishalc@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250527085335.256045-2-vishalc@linux.ibm.com>
+ <99be9c8e-a5c4-4378-b03b-2af01608de9f@redhat.com>
+Content-Language: en-US
+In-Reply-To: <99be9c8e-a5c4-4378-b03b-2af01608de9f@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 05/28, Dragos Tatulea wrote:
-> On Tue, May 27, 2025 at 09:05:49AM -0700, Stanislav Fomichev wrote:
-> > On 05/23, Tariq Toukan wrote:
-> > > This series from the team adds support for zerocopy rx TCP with devmem
-> > > and io_uring for ConnectX7 NICs and above. For performance reasons and
-> > > simplicity HW-GRO will also be turned on when header-data split mode is
-> > > on.
-> > > 
-> > > Find more details below.
-> > > 
-> > > Regards,
-> > > Tariq
-> > > 
-> > > Performance
-> > > ===========
-> > > 
-> > > Test setup:
-> > > 
-> > > * CPU: Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz (single NUMA)
-> > > * NIC: ConnectX7
-> > > * Benchmarking tool: kperf [1]
-> > > * Single TCP flow
-> > > * Test duration: 60s
-> > > 
-> > > With application thread and interrupts pinned to the *same* core:
-> > > 
-> > > |------+-----------+----------|
-> > > | MTU  | epoll     | io_uring |
-> > > |------+-----------+----------|
-> > > | 1500 | 61.6 Gbps | 114 Gbps |
-> > > | 4096 | 69.3 Gbps | 151 Gbps |
-> > > | 9000 | 67.8 Gbps | 187 Gbps |
-> > > |------+-----------+----------|
-> > > 
-> > > The CPU usage for io_uring is 95%.
-> > > 
-> > > Reproduction steps for io_uring:
-> > > 
-> > > server --no-daemon -a 2001:db8::1 --no-memcmp --iou --iou_sendzc \
-> > >         --iou_zcrx --iou_dev_name eth2 --iou_zcrx_queue_id 2
-> > > 
-> > > server --no-daemon -a 2001:db8::2 --no-memcmp --iou --iou_sendzc
-> > > 
-> > > client --src 2001:db8::2 --dst 2001:db8::1 \
-> > >         --msg-zerocopy -t 60 --cpu-min=2 --cpu-max=2
-> > > 
-> > > Patch overview:
-> > > ================
-> > > 
-> > > First, a netmem API for skb_can_coalesce is added to the core to be able
-> > > to do skb fragment coalescing on netmems.
-> > > 
-> > > The next patches introduce some cleanups in the internal SHAMPO code and
-> > > improvements to hw gro capability checks in FW.
-> > > 
-> > > A separate page_pool is introduced for headers. Ethtool stats are added
-> > > as well.
-> > > 
-> > > Then the driver is converted to use the netmem API and to allow support
-> > > for unreadable netmem page pool.
-> > > 
-> > > The queue management ops are implemented.
-> > > 
-> > > Finally, the tcp-data-split ring parameter is exposed.
-> > > 
-> > > Changelog
-> > > =========
-> > > 
-> > > Changes from v1 [0]:
-> > > - Added support for skb_can_coalesce_netmem().
-> > > - Avoid netmem_to_page() casts in the driver.
-> > > - Fixed code to abide 80 char limit with some exceptions to avoid
-> > > code churn.
-> > 
-> > Since there is gonna be 2-3 weeks of closed net-next, can you
-> > also add a patch for the tx side? It should be trivial (skip dma unmap
-> > for niovs in tx completions plus netdev->netmem_tx=1).
-> >
-> Seems indeed trivial. We will add it.
-> 
-> > And, btw, what about the issue that Cosmin raised in [0]? Is it addressed
-> > in this series?
-> > 
-> > 0: https://lore.kernel.org/netdev/9322c3c4826ed1072ddc9a2103cc641060665864.camel@nvidia.com/
-> We wanted to fix this afterwards as it needs to change a more subtle
-> part in the code that replenishes pages. This needs more thinking and
-> testing.
 
-Thanks! For my understanding: does the issue occur only during initial
-queue refill? Or the same problem will happen any time there is a burst
-of traffic that might exhaust all rx descriptors?
+On 5/28/25 11:23 AM, Waiman Long wrote:
+> On 5/27/25 4:53 AM, Vishal Chourasia wrote:
+>> The documentation for cgroup controller management has been updated to
+>> be more consistent regarding following concepts:
+>>
+>> What does it mean to have controllers
+>> 1) available in a cgroup, vs.
+>> 2) enabled in a cgroup
+>>
+>> Which has been clearly defined below in the documentation.
+>>
+>> "Enabling a controller in a cgroup indicates that the distribution of
+>> the target resource across its immediate children will be controlled.
+>> Consider the following sub-hierarchy"
+>>
+>> As an example, consider
+>>
+>> /sys/fs/cgroup # cat cgroup.controllers
+>> cpuset cpu io memory hugetlb pids misc
+>> /sys/fs/cgroup # cat cgroup.subtree_control # No controllers by default
+>> /sys/fs/cgroup # echo +cpu +memory > cgroup.subtree_control
+>> /sys/fs/cgroup # cat cgroup.subtree_control
+>> cpu memory                   # cpu and memory enabled in /sys/fs/cgroup
+>> /sys/fs/cgroup # mkdir foo_cgrp
+>> /sys/fs/cgroup # cd foo_cgrp/
+>> /sys/fs/cgroup/foo_cgrp # cat cgroup.controllers
+>> cpu memory                   # cpu and memory available in 'foo_cgrp'
+>> /sys/fs/cgroup/foo_cgrp # cat cgroup.subtree_control  # empty by default
+>> /sys/fs/cgroup/foo_cgrp # ls
+>> cgroup.controllers      cpu.max.burst           memory.numa_stat
+>> cgroup.events           cpu.pressure            memory.oom.group
+>> cgroup.freeze           cpu.stat                memory.peak
+>> cgroup.kill             cpu.stat.local          memory.pressure
+>> cgroup.max.depth        cpu.weight              memory.reclaim
+>> cgroup.max.descendants  cpu.weight.nice         memory.stat
+>> cgroup.pressure         io.pressure memory.swap.current
+>> cgroup.procs            memory.current memory.swap.events
+>> cgroup.stat             memory.events           memory.swap.high
+>> cgroup.subtree_control  memory.events.local     memory.swap.max
+>> cgroup.threads          memory.high             memory.swap.peak
+>> cgroup.type             memory.low memory.zswap.current
+>> cpu.idle                memory.max              memory.zswap.max
+>> cpu.max                 memory.min memory.zswap.writeback
+>>
+>> Once a controller is available in a cgroup it can be used to resource
+>> control processes of the cgroup.
+>>
+>> Signed-off-by: Vishal Chourasia <vishalc@linux.ibm.com>
+>> ---
+>>   Documentation/admin-guide/cgroup-v2.rst | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/cgroup-v2.rst 
+>> b/Documentation/admin-guide/cgroup-v2.rst
+>> index 1a16ce68a4d7..0e1686511c45 100644
+>> --- a/Documentation/admin-guide/cgroup-v2.rst
+>> +++ b/Documentation/admin-guide/cgroup-v2.rst
+>> @@ -438,8 +438,8 @@ Controlling Controllers
+>>   Enabling and Disabling
+>>   ~~~~~~~~~~~~~~~~~~~~~
+>>   -Each cgroup has a "cgroup.controllers" file which lists all
+>> -controllers available for the cgroup to enable::
+>> +Each cgroup has a cgroup.controllers file, which lists all the 
+>> controllers
+>> +available for that cgroup and which can be enabled for its children.
+>
+> I believe breaking the sentence into two separate components is 
+> actually making it less correct. There are implicit controllers that 
+> are always enabled and do not show up in cgroup.controllers. Prime 
+> examples are perf_event and freezer. IOW, only controllers that are 
+> available and need to be explicitly enabled will show up.
+
+A correction: The cgroup.controllers file shows the controllers that are 
+available in the current cgroup and which have to be explicitly enabled 
+in cgroup.subtree_control to make them available in the child cgroups.
+
+Cheers,
+Longman
+
