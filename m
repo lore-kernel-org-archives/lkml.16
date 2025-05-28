@@ -1,183 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE42B220687
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from www.linux-watchdog.org (www.linux-watchdog.org [185.87.125.42])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFA482206A7;
+	Wed, 28 May 2025 20:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.87.125.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748462989; cv=none; b=fHz091dVjUILgSPBx+slGiwCQpWwwe0La/W1byPxCfpwpm6YuAS2aFMl5jYfPvijLUKJJVcNhWmEAkIlQu0blJ1LH8ZHhN/aZ7ttn32X0rxeHJK7T46kGknr8fXACAsK4EPhYvatuAXQy9TsAdcOH9AcHxJ8JzkA+vqrX772OZc=
+	t=1748463041; cv=none; b=Fmx1spu4g4H90HY/6PT2k5EcCVIp2UT263TBvSKte4v5I+PzoBpUF6yPl4BtW+7gFABFr/AU217W4CLc5qQLjQ08Bd9aoCeWR+mSjF4dGvdxifhOWoK6monMRxA6ogM23A07HIVLVUgXBKMNxyMe3exPNzOuaTojfcunB02B6Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748462989; c=relaxed/simple;
-	bh=OYjwPIs0TzQA0aRsuoivWOqjA0CM0zUZyAIfgw/GceY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kzbmOjkAcNMtLNI+5a3noeWNLbWR+jTReuubkrcMpDgR65PS9h/HKivengKpebMZ4/Q8DLmY4ogGqVXsXvOMoIhNVqUcl7/r1Tp6NRd2IuQ73M/dcooH6N1oCzbl3zfJygUBq4bcBrbxC5x8DmYgjYmgsdR79rlbsyOEH7VTWWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dqHtSf8t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748463041; c=relaxed/simple;
+	bh=75JKcaE3gPt4gA1Koo8W9hqsCToTwcF3NPIS9IYS+RU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WS3I2juA9hY3t5WdK/tWRavkD0BmvHXiewKc0l2V3MUkihT5uZrHA3rpHZ+IW8i9G/3gqHQhiSnXhZKC8PQKuPfBIHPTa6dlOCUNSGrD4ZpAA4TG/p0PSLfMdZ3fCamnhefuIDJ7ZAh14X5+OIPLnSgWNxKqjiNCm2rjdXJRLxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org; spf=pass smtp.mailfrom=linux-watchdog.org; dkim=pass (2048-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b=z9Kpv6+0; arc=none smtp.client-ip=185.87.125.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=linux-watchdog.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux-watchdog.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dqHtSf8t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748462986;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4epIKwRgyQTi3ZuIRLGasK2wDW5JnSiHLO3mysT8gAQ=;
-	b=dqHtSf8tBrvedYBu8uY/+qw34dVANYyb1jIVe4Tt/rzWA4j/bDJfZogH3qPQze1xUKuGI8
-	cQPyp1VE1bsHssVVJVfBd9cu3RErVEAz5DQiJmFmQ83tGYPyXuDV4waCNEfz9ktyUOxVCr
-	2AH0YJZahPqWpuQ9gCWQvBWZYluZvLA=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-kgSb1Mu3O0iHefr48fEHmQ-1; Wed, 28 May 2025 16:09:45 -0400
-X-MC-Unique: kgSb1Mu3O0iHefr48fEHmQ-1
-X-Mimecast-MFC-AGG-ID: kgSb1Mu3O0iHefr48fEHmQ_1748462985
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3dc9fc7f4a0so319255ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:09:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748462985; x=1749067785;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4epIKwRgyQTi3ZuIRLGasK2wDW5JnSiHLO3mysT8gAQ=;
-        b=TpL/uRmKUYEO4W8a2R2pTX5lOPuX6twT2soLBCWEAkfQpmKq9fdFWaEo8o/iJ6SBGg
-         5roWaHypebLYQFTKN0jw9ls3yh9FkZmyIeH5U8AyimY/OA1GI2zay3ng9mhv/CHpFr7z
-         9rkxJnaH6QXCR68pnlFB89OZ4ut8x6tMFGuoNFJ5XEWmXo1AD+0BiJHWh01USoPOW430
-         jENeW9ZyZlWFe10K6EJB8AOzr1NEUxKrgdE+XpbKDt3NMuU5oEcWpIVANOTyhNOhdnEp
-         QslrxcCinIDnCqxClD6TdbOtYnWnoWOMJAMHC07Qtd0go7tBoGUoOaL7ZuDmgjMS38Ma
-         FGDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWapxpmPKcw6RMzRTkQt3Sr/28dRvkALwYowsxMXH1rCWZxiIW1e3/0mbhpP68CO8Ql72LRwfxQbk1a8kM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywvox15pTTlb4QwlWm9Mx9jGOdi987LhwnaD9z899iNQFcK1n+5
-	2qyg8sx1ghljIv14VpBLnhtPx56uMfjTxc/F8Ycpvizold7Z+MVRCdP7aqIaAfis1AhRoujMXOu
-	HF6IHi6nryuX5HvG17t8+jP3HlQDRaufOoairBkxZ2r/TYEPQddC2hdZCSsGVtWTuhQ==
-X-Gm-Gg: ASbGnctu2spmX7mK+/XBoOVEMSayvKcvLGd4mJ+IA4T1agnOnzCN+NcBfbcJC2T1wcC
-	/WqDGmRgdr33UZoy544/bhNbZEUD3Giw+wv7W+vKMOfXKMQHNATWDmDtnt35Tn4+7ZpSIvmRcJw
-	aw9RTYJjmIJMssu06ExsxwWP8609yiciMjv4PaUJQ9c1o7u0WfGK3H5kBSq2Zp15NP8yd7x78ef
-	HaxhkUU8iG6RMraPHSsW+wgQxqLG6cPe0RSPr/DIY+zu3lA9C4uEREyZWw/R0Pn+JCAAO7BIHg5
-	Uc//n7SHYovr4To=
-X-Received: by 2002:a05:6602:2c0d:b0:85a:e406:5836 with SMTP id ca18e2360f4ac-86cbb8f7c9emr552149239f.5.1748462984658;
-        Wed, 28 May 2025 13:09:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1rOZ6iMvniSbx4lNRjQibyiCEt0/JnaW+E8wRrzAONFdZ6+X4ew43SDLHpA7p0VVeDyESaA==
-X-Received: by 2002:a05:6602:2c0d:b0:85a:e406:5836 with SMTP id ca18e2360f4ac-86cbb8f7c9emr552147839f.5.1748462984263;
-        Wed, 28 May 2025 13:09:44 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fdbd4cc665sm369599173.71.2025.05.28.13.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 13:09:43 -0700 (PDT)
-Date: Wed, 28 May 2025 14:09:41 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: David Hildenbrand <david@redhat.com>, lizhe.67@bytedance.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
-Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for
- huge folio
-Message-ID: <20250528140941.151b2f70.alex.williamson@redhat.com>
-In-Reply-To: <20250527234627.GB146260@ziepe.ca>
-References: <20250520070020.6181-1-lizhe.67@bytedance.com>
-	<3f51d180-becd-4c0d-a156-7ead8a40975b@redhat.com>
-	<20250520162125.772d003f.alex.williamson@redhat.com>
-	<ff914260-6482-41a5-81f4-9f3069e335da@redhat.com>
-	<20250521105512.4d43640a.alex.williamson@redhat.com>
-	<20250526201955.GI12328@ziepe.ca>
-	<20250527135252.7a7cfe21.alex.williamson@redhat.com>
-	<20250527234627.GB146260@ziepe.ca>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="z9Kpv6+0"
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+	id D2A19409F8; Wed, 28 May 2025 21:24:50 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org D2A19409F8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+	s=odk20250313; t=1748460290;
+	bh=75JKcaE3gPt4gA1Koo8W9hqsCToTwcF3NPIS9IYS+RU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=z9Kpv6+0ky7XFWEAljuOrbSqY020gRgP1pofUrSI0LZhqsIOpecd/cytCy+KV5hbs
+	 96c5dLUmQummtZ5wyDGamV3PM6Dkuz/O30yr9y0ftrBu1vEow+HBf7E1d7oJTZB6cL
+	 DT2blBoDok09DonG6D22GOhrKApWLbz7aidAxW7YzjS/ltcnl2jzetM2lvR6Vegx/S
+	 +2nH7XIJk6koHAiaBRjFADkQzrlRJqVSCqGgGXp2l3p6F/3lnSKUGqFmKYlwmP71UY
+	 GAaa4Jv48yL4T8GeNylLiAfg+uA7iTOBBYmH3CeuIXIPUaIVQIG5ieXq8KHVSQvDaE
+	 iQFSuhCgd1nQQ==
+Date: Wed, 28 May 2025 21:24:50 +0200
+From: Wim Van Sebroeck <wim@linux-watchdog.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org,
+	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+	S32@nxp.com, ghennadi.procopciuc@nxp.com, thomas.fossati@linaro.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, alexandru-catalin.ionita@nxp.com
+Subject: Re: [PATCH v4 0/2] Add the NXP S32 Watchdog
+Message-ID: <20250528192450.GA15816@www.linux-watchdog.org>
+References: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
+ <650c336b-a698-42f5-ad59-7dcdf24667f4@linaro.org>
+ <2a8e1ae7-2a8a-4cd8-b699-c010019c766e@roeck-us.net>
+ <a6d64948-e713-4a50-9d4e-6de02a550d06@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6d64948-e713-4a50-9d4e-6de02a550d06@linaro.org>
+User-Agent: Mutt/1.5.20 (2009-12-10)
 
-On Tue, 27 May 2025 20:46:27 -0300
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
+Hi Daniel,
 
-> On Tue, May 27, 2025 at 01:52:52PM -0600, Alex Williamson wrote:
+> Hi Guenter, Wim,
 > 
-> > > Lots of CSPs are running iommufd now. There is a commonly used OOT
-> > > patch to add the insecure P2P support like VFIO. I know lots of folks
-> > > have backported iommufd.. No idea about libvirt, but you can run it in
-> > > compatibility mode and then you don't need to change libvirt.  
-> > 
-> > For distributions that don't have an upstream first policy, sure, they
-> > can patch whatever they like.  I can't recommend that solution though.  
+> On 14/05/2025 20:09, Guenter Roeck wrote:
 > 
-> I appreciate that, and we are working on it.. The first round of
-> patches for DMA API improvements that Christoph asked for were sent as
-> a PR yesterday.
+> [ ... ]
 > 
-> > Otherwise the problem with compatibility mode is that it's a compile
-> > time choice.  
+> >AFAICS the patches do have Reviewed-by: tags, so this is just
+> >waiting for Wim
+> >to pick it up.
 > 
-> The compile time choice is not the compatability mode.
+> I fetched the watchdog tree and saw it was updated from May 23th but
+> I don't see this watchdog series.
 > 
-> Any iommufd, even if opened from /dev/iommu, is usable as a VFIO
-> container in the classic group based ioctls.
-> 
-> The group path in VFIO calls vfio_group_ioctl_set_container() ->
-> iommufd_ctx_from_file() which works with iommufd from any source.
-> 
-> The type 1 emulation ioctls are also always available on any iommufd.
-> After set container VFIO does iommufd_vfio_compat_ioas_create() to
-> setup the default compatability stuff.
-> 
-> All the compile time option does is replace /dev/vfio/vfio with
-> /dev/iommu, but they have *exactly* the same fops:
-> 
-> static struct miscdevice iommu_misc_dev = {
-> 	.minor = MISC_DYNAMIC_MINOR,
-> 	.name = "iommu",
-> 	.fops = &iommufd_fops,
-> 
-> static struct miscdevice vfio_misc_dev = {
-> 	.minor = VFIO_MINOR,
-> 	.name = "vfio",
-> 	.fops = &iommufd_fops,
-> 
-> So you can have libvirt open /dev/iommu, or you can have the admin
-> symlink /dev/iommu to /dev/vfio/vfio and opt in on a case by case
-> basis.
+> Is it possible to give a status about it ?
 
-Yes, I'd forgotten we added this.  It's QEMU opening /dev/vfio/vfio and
-QEMU already has native iommufd support, so a per VM hack could be done
-via qemu:args or a QEMU wrapper script to instantiate an iommufd object
-in the VM xml, or as noted, a system-wide change could be done
-transparently via 'ln -sf /dev/iommu /dev/vfio/vfio'.
+commit bd3f54ec559b554671e5a683e05794abe3a609df
+Author: Daniel Lezcano <daniel.lezcano@linaro.org>
+Date:   Thu Apr 10 10:26:14 2025 +0200
 
-To be fair to libvirt, we'd really like libvirt to make use of iommufd
-whenever it's available, but without feature parity this would break
-users.  And without feature parity, it's not clear how libvirt should
-probe for feature parity.  Things get a lot easier for libvirt if we
-can switch the default at a point where we expect no regressions.
+    watchdog: Add the Watchdog Timer for the NXP S32 platform
 
-> The compile time choice is really just a way to make testing easier
-> and down the road if a distro decides they don't want to support both
-> code bases then can choose to disable the type 1 code entirely and
-> still be uAPI compatible, but I think that is down the road a ways
-> still.
 
-Yep.
- 
-> > A single kernel binary cannot interchangeably provide
-> > either P2P DMA with legacy vfio or better IOMMUFD improvements without
-> > P2P DMA.  
-> 
-> See above, it can, and it was deliberately made easy to do without
-> having to change any applications.
-> 
-> The idea was you can sort of incrementally decide which things to move
-> over. For instance you can keep all the type 1 code and vfio
-> group/container stuff unchanged but use a combination of
-> IOMMU_VFIO_IOAS_GET and then IOMMUFD_CMD_IOAS_MAP_FILE to map a memfd.
+It's in linux-watchdog-next since the 24th.
+It will be sent to Linus probably this weekend.
 
-Right, sorry, it'd slipped my mind that we'd created the "soft"
-compatibility mode too.
-
-Zhe, so if you have no dependencies on P2P DMA within your device
-assignment VMs, the options above may be useful or at least a data
-point for comparison of type1 vs IOMMUFD performance.  Thanks,
-
-Alex
+Kind regards,
+Wim.
 
