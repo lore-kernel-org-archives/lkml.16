@@ -1,229 +1,268 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013006.outbound.protection.outlook.com [40.107.162.6])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C03207DE2;
-	Wed, 28 May 2025 07:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419021; cv=fail; b=MX0KXXv1dULSzKqcdZkRQq5uCnBvymTPqxA7IO36pMGGt1LNJlkGaF3Efs9RBy7C8jVsKfWbnDnKDne7EPuOURb9V7il/vqu7CS8uXyCmMob9NhPTkaj3Nw/l8MNJKXvH/l66RI7GdXCwcTWxez8IqU6CUBT/awm0Kuow/ftQOI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419021; c=relaxed/simple;
-	bh=76T1Vh+iBA5HH93fkjwph9NXWvmDkzOYcHdVesVRsvA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nLwOFIUV8cfi5AaFoXLeGZuG1F+dxhR3Pdh1ngG7wP6ZnXgbfD0eUP+TwZ2jE5rq56nRFXCB91MT6cGFAMYwpUyUKOq21tT0VC52I05+KpIKXrEn0ZN864fm1R4ZG3wtE4Vnx6GBO1anq9x20SC+rs9HBi5OgkJDA+IH/tnXANo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=ctmeYbW0; arc=fail smtp.client-ip=40.107.162.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFC1246333
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748419041; cv=none; b=kN+UNexsc0dMl2t954Ak/PZgojuOAVItLji31IogDp8RDIc4+hKTUjym/QpkTlcuvo/2EaIcnXlTdGZjQfA83R4s5dcwpq/aHXbEOXGpWL6f6DqvytBdxddWKVier5OwJ9K2h1rSV7wsAKMghpB6LgWEdceJkEEeWaDa4NEtMz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748419041; c=relaxed/simple;
+	bh=++Q4mKF98cD+c18CNdwprn8yWU8Z/zioCJe8t2w0Kb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VRtXy/kS6oYTYBbFGHLp9aKKD2lrEaTkJCyW2dPHgKCmarh3GQtRTveDH9rnzmPl8Nt8klygSDUdns94x6iXTwfLSy+4JkN4xGnzCCMtjbjbEOdEEzJJ2lUm3OdBXvNkoPGDamkFCtquCYwbCVRHmSqPgUKrBankPPmD3ab1atw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E12zlNVr; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="ctmeYbW0"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YB0kwjY0cgwPvlSTZrnVWayfi5KkxGWBngB7+1LzO/HRxGxwbXyMNl/JY8g4pSbwITrzLVeG/3lFgW+BisekTJat570OBVpbjq3gn18URtgrd+ESostjmJF0wZQyhq5xztewy4SupcjM0/B8KB45KhV5GQRnRFgSmSr2X4QlMCDmxKKd7/Jf9n23yuGn8WmjP+bRUVRxvLs0Uk0OcCSt7QMou2oezEVx2wtayRbKUno7ENbVkPRLTTq0i2Yh0HfV0tZbZcCuWjPZIcWpZeLFiog+ITxuHw14xXIkWcH8PMMV0tMYMNcKmZ9hfK4ielQLIpCeb/RGO2WSZ4A+PI0oew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aJGyll++d4N8cr/UuHrqmerbjAl0ICsQjhWR5FgUS84=;
- b=Kusbm/uBy9md3Iarj+ShYsbNnLWE6Gf8XtTKHA75OnixIo9+3G6/sCuKMgrIYeXnOU/fWLFmBCsKF6s3iK+1A1zK2Du9QXEDM5i8VouCdBLAvoDnWMDdk9kGS34UtWnq9ecziZd8djzHXFhkKUuOIsytnpASzNxogHF9i33eCJk+RPO1f8QqfdOiDnSo403L1Y0YO/JgAwbfGhryUQ9JmluW5hdYpukAyrdBSNf+vedlUuwVeBpVeGaDg1UFNodT9/ihPCWfZVybXcDQB9nMp+H5IOyOR5iH3FoUgTxGId6j2WtnqDE0Y8UjLIhdf5V0OaYYvCN2Uv0eu5nLG7CQzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aJGyll++d4N8cr/UuHrqmerbjAl0ICsQjhWR5FgUS84=;
- b=ctmeYbW0pJYBsKJJN3rqO5xJPw+F5k1IEH1JhOhcigdVSK5zHW0wKhPvvaToE7y1AeUHIUztdOdXkqfT+3PdbmpCzTPgwBWpfvdboiMZ8zBa3K4uup+6v6sVQyn0Rqvl4CEPkj7R0ROBFJfjKX4cqWv7tJOj3FSqESuux1ahz/M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by VI1PR04MB9836.eurprd04.prod.outlook.com (2603:10a6:800:1d9::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Wed, 28 May
- 2025 07:56:53 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%4]) with mapi id 15.20.8769.025; Wed, 28 May 2025
- 07:56:53 +0000
-Message-ID: <380ba32b-bb9a-411e-8006-127461cac08a@cherry.de>
-Date: Wed, 28 May 2025 09:56:51 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: dts: rockchip: support Ethernet Switch adapter
- for RK3588 Jaguar
-To: Andrew Lunn <andrew@lunn.ch>, Jakob Unterwurzacher <jakobunt@gmail.com>
-Cc: foss+kernel@0leil.net, conor+dt@kernel.org, devicetree@vger.kernel.org,
- heiko@sntech.de, jakob.unterwurzacher@cherry.de, krzk+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, robh@kernel.org,
- Kever Yang <kever.yang@rock-chips.com>
-References: <20250523-jaguar-mezz-eth-switch-v2-1-aced8bf6612d@cherry.de>
- <20250527131142.1100673-1-jakob.unterwurzacher@cherry.de>
- <35e0a925-4cba-41de-8fe4-4dd10e8816f1@lunn.ch>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <35e0a925-4cba-41de-8fe4-4dd10e8816f1@lunn.ch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO2P265CA0082.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8::22) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E12zlNVr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748419039;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iar4upBixTl9NYOuefrehoa64+W7FsckxVPaK+xP0LI=;
+	b=E12zlNVrv0UBVB8w84PwURbopaPGIP7vY2+Fx1zMc5Kxjf2spxhtmJxUgQU7pYn3ZmhTMx
+	qNl/Vd04dEyImn0aBILCVA+Jp2xZu7iZYYWrc9qD82AlJShlMC+p9KJq0TXzECp1o0pPgk
+	4qKLm/mWypx2bbrKw4zdXJEENCK5TR4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-BChBfZbUOmOExrSuAXn72Q-1; Wed, 28 May 2025 03:57:15 -0400
+X-MC-Unique: BChBfZbUOmOExrSuAXn72Q-1
+X-Mimecast-MFC-AGG-ID: BChBfZbUOmOExrSuAXn72Q_1748419034
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cec217977so24113455e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:57:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748419034; x=1749023834;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iar4upBixTl9NYOuefrehoa64+W7FsckxVPaK+xP0LI=;
+        b=Mlc2W+Zej/Qzn3I6sdJHxa7yB1qRUkKniNtwLcujTxz2Ws8AcB/GoL+Vj7yJe8hvuf
+         pjxtJ+ZfZ7eBOO8aUdz3kIAooewqhrlDY1tkEWbFuM3zjNlQpJ+a4kM0Q7ofnhrMA7Dp
+         XQijICNlSI1E/CgMTknKhR2MZIbA4G9zv0WSVA/FYPV5tKjpRGrWuaopLTQLb/ESwxsS
+         pDc3tB3chnZocVLdXHhJYG1kmCqXWnA4AUwMNVDjaqkhMtMXQFEaOoLv0nnFdUT1JfwI
+         MexhKGZkXxHaNBgs2nK2O2co3WnJBrmJHrWoZC28RJGyhwPF5ZSiHy3dbI5bzrJMTVbg
+         2yqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGudIUmxu4fWyiAxdHKpQfv4a4JuQLvaFjMzOVxiechcnQV3hNUsPXT5KsmNQ6+1vCLoakArCT2QmbByQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7qoPHtShDZLf8rtGK1o/dCVQLA29WNx0VXcn6Nm70tUyykWzg
+	td/Ir6y7/rcWJQLHB4DBCdVPMR/TSIHR7t1dbXuqroSEmxbph7Wv6bBvrpCv2UE3cBYA7KvCyK+
+	ETfPGo96mBt68U0XZf1SruxUfZ/b/A2yoDEKegf5aqu27cmxJexn+F+1qdeXKZlYTlw==
+X-Gm-Gg: ASbGncsIjdjTWm3i/OJDlg58+qq6AAqZagFV3cNr1RFvzwSrIAb7keyGGB5+c6pL7kd
+	JjZkCC98ueJfZvs9X1qy8c6BU6PqsfzQcMDkUjWJhQAf6CjXoU0dGA3Yv05QHLjGBcVEQc1hvte
+	A92nwNBckBhXTeBHNttNeHEC45llnqo7XEhkSqlnS7SwQFesgFDjR5iF9iTNBIL0wOtV/YwYAYg
+	sUnoEJNSLVKAGRbyK9vIL7K5c85StHpx1/grhDBDqMsMNoyk/fDoJBlwXl1Q2Wokqc2Kuob/Ysv
+	tj4/1mUoKWQvS2q+mlo1eRpi26ybIdBvirutuG0vskpdPCevBshjcNEzi233
+X-Received: by 2002:a05:600c:8283:b0:43d:45a:8fca with SMTP id 5b1f17b1804b1-44c94c2a4c6mr144954595e9.30.1748419034131;
+        Wed, 28 May 2025 00:57:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEMJo+Ct94cj0YyB7i6b94aZWFudVWZko8nkaONnu4gYPe+xjPHrearFkc8yOOEVQn4tCzDyQ==
+X-Received: by 2002:a05:600c:8283:b0:43d:45a:8fca with SMTP id 5b1f17b1804b1-44c94c2a4c6mr144954225e9.30.1748419033483;
+        Wed, 28 May 2025 00:57:13 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064add8bsm12831655e9.17.2025.05.28.00.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 00:57:12 -0700 (PDT)
+Date: Wed, 28 May 2025 09:57:04 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
+	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
+Message-ID: <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <20250528065944.4511-5-zhaoqunqin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|VI1PR04MB9836:EE_
-X-MS-Office365-Filtering-Correlation-Id: 232ff0ac-6d49-4a2a-50dd-08dd9dbd358c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VlZXT1NWMTVBem91eGw1V3BWTTR1V0NEU08wWHJ0YzBMenQ3SlRYdFJidTF3?=
- =?utf-8?B?M1RmZVNLLzZ6T29aZGxTTUFUM2U2bXNaOWw2SDB3STY0RlNVRVNBZCtld1Ew?=
- =?utf-8?B?S0pVMTJ3dEtPcHEyYU1lWEpwM0FrbzBKSmVGckpRQXZ0bVBDOXhETFFXQXgx?=
- =?utf-8?B?Z0FyazJqSGJYb090T3RrMTY5K21DdSttRUhVQm9hUUhBS2EzOUU0YlJDbHJZ?=
- =?utf-8?B?Q0wvWHlyUHlhWU4yTXhvelhWZmpENGd2eCtLRGR5Si9NNFdRaFF2SlNTUS9k?=
- =?utf-8?B?NnBkanJuclFKdHY3VEFPc1FVTnRnU3hnbm16ZE9NQXdMc0VvYlhMd3JTdDgx?=
- =?utf-8?B?dUN1dVRwb1hFSjRYTllreUI4TE8xUHloQTdTQnd3S1RXL0xoS0MrTWRFWVJF?=
- =?utf-8?B?djRTZzk0ZUR6MVQ0ZHpCanhDUHFoV01rV29XUkVlRWl4ZklldHpTLzJER1hY?=
- =?utf-8?B?d3FNWGZzRkJPUkd1cUF2Tk1XZ0NaOHRtczZERFdpbUVpZzN5TmNRUXZpWHF6?=
- =?utf-8?B?UVhOZU9oOGtTc0Z5VFlMSGd5eGxzQTVFL3RRUlh3aDBGY2RxMy9HcE9jaUJp?=
- =?utf-8?B?VWFLcWJhL2FDbk9ib0JlSThuK2RvdEY5YWpDM1Y4Q0NrYUhWK2ZFQ1MyNGc2?=
- =?utf-8?B?NlFFcVJMbWtvcjUrcy9QZjVsZkJGZ3B5RjBJRW1IYkFCdy9xWVI0OG16dmZO?=
- =?utf-8?B?OXpqeXNlZ2dGM1pjZGM2Z3N5WXdUbTBwUTlxZTFxYVMrY2FtRHo3WERVY3RR?=
- =?utf-8?B?cko3YUlnL1U0WktBdEhFcDhZMUNsd1VjUUpsMFdTT0JndnUvc21RdHY5aHlJ?=
- =?utf-8?B?VktMRklOdVprSTJ4YlBSK2hqK3REbVdLWms1NFBoY0xaU1cwZkQ4YnhCa1V3?=
- =?utf-8?B?bE42a2daVzFkTHRFUjNZWEtXcEREYWpUOUhQWkxIYThuUGNjNTNYZXZWeW5H?=
- =?utf-8?B?WjhJM2NISEs0RTkwdXVOVG9ncElQUHFra05DOENxcS9JbDVIVkowa3p5dWF5?=
- =?utf-8?B?NnU4L3Fzc21EOUdmMU9obTFSeGFIMWVVYjdBdUMwYS8vTUYzbVJCakhsZkpP?=
- =?utf-8?B?TWNIbTdtMVZ5d2VuU0E1UGlwMkYvRjMvTFA4UUNrakNIY3VobEZkY2FSM2Vj?=
- =?utf-8?B?Wk92SUdxZmFVVEZTQmluVnduZTFOdWJKeXVucEU3eTFJK1Q2OTRoUENtdmN4?=
- =?utf-8?B?L1F6YStXK0hRdG11TUREUnFhb1dLOWEwa2t1TGdVYXFSTnFWZFFXZllMYmhF?=
- =?utf-8?B?WVBsNWR0b1RUNjlUSFZ2MlhURlFsZG5SbDJQQ2R3V2RIRkZoaXg2TElBeDk0?=
- =?utf-8?B?R1hMU0Z5MTBSUXA4Z3R6dGZReDkydHFaZ29sd0ZMOW93QXBQQUVDUnNDUHZo?=
- =?utf-8?B?NjFnYzNvNWdtZXh2QVBpTU84MzFrQ1BQeEdpdGpvdkJzSUxmUVpEMTQvMTd3?=
- =?utf-8?B?eTdFd0ZKdU83U2N0S3pselYvYjd2VmpmMm5Kbzh3TFVBbGVlakg3a01GZHIz?=
- =?utf-8?B?MW1oaXY3VHA1WnFiSzZRWjV4MFFBNnlUazJacTQ2My92UjF5NjNuMFJHY3hH?=
- =?utf-8?B?U1lxYldacWIzRmlZVVg5ZEJvQUF5L3JCN0NKOGVyMEJ4VXMzN0diVk1qTzg2?=
- =?utf-8?B?Wk9NRXFSbFY4a0Zua3Q3Z1hxbGNMbk9IWHlTYVBBOTVLWEhzemQ0Tm11U3VK?=
- =?utf-8?B?ZmNUWjdmWlF1SUZIc0ZnWnIzVExRRnhsOEdWWWExckZNVmRDdkZ4NDBtQkRQ?=
- =?utf-8?B?QmZjakhzSmsvOXYySDJPWFhLdDVlcGR6YnpmaHF0UnVQcCtsL2tpQTYvYUYw?=
- =?utf-8?B?d0xDZHVjUnh5Rk0vRnNsa0NSNWxmSUlWRzV6L0V4eHNJUVo0TlVOSkZVYStt?=
- =?utf-8?B?M3E3WjE3UTdIZFZMRmw0MFV3ODMyc3dGRExWbVRGRWREbmJ0SmZpUEg4aVBU?=
- =?utf-8?Q?5E/J0BoNGpA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cko0RDNWd2xjL3cxd3E5MHk5STFxeXdRWUdFOGF3UUUwbWtwQ0loVDhSMHhW?=
- =?utf-8?B?YkF6VVRleHRXT2x4VGV6bTRBQVMxaVptdjBVem5VUkYzTnZuOHJhdTFsOTZO?=
- =?utf-8?B?R3FDSkR4Q05sMWt5UXRsTVZDMEdLclNqZUJpc25ycDc4eS8rMlcrL3hwamlv?=
- =?utf-8?B?enplbHhabWNGZkVaN1pIam1KUnY2bm9MVCtiU2t5dFpFNXRtei8yNnV5djlF?=
- =?utf-8?B?RjJXNTk5SHpmU1o2RXBJRXNxM2RHRm4rNGQ3NCtoVDdmbDZra050N1dOUU51?=
- =?utf-8?B?OGFINHEzL3RYbHZMdXlrNWxyZEpIUkdLL2lEVlJCNHdEdkdnNHdEL1RXWFAy?=
- =?utf-8?B?MDhkeXdIZjFOM01vbFNmTmF2WExmN3pYejJLZERaa0R6dFc0cnFmeGZ1RFZx?=
- =?utf-8?B?SzJUN0RrMnBSWUhHUlh0c0Y0UUFMaGxoWWR4cUd0SS91K3JzZkFqTmZidzVD?=
- =?utf-8?B?YWs3UWFUdUF4STJqT09WM0g5TWFtck9CdzRrZjhyMzBNSEZ1RnMzbzFpdzdx?=
- =?utf-8?B?dUxodGFhc0RObFB6ck5DRTdSd0hSRUpjY2Y4VzlGVnlseHc3RUl0Rnh0WGFj?=
- =?utf-8?B?V0hmYWJSSkNNd1F2RjRBTHRBbmt5bVlQOU9neHlVb2dmME81QmVxd204dHk2?=
- =?utf-8?B?cldDZkczVkxNR1RqY2ExN0MzNVpQa1doZzNNVFdDNnBsMGJWWWxkME1rMlBo?=
- =?utf-8?B?Z01aN2JLbVJNa29RekZ1TlM5UjJMWXBlZjJReDZJVGxaeEtqcXQ5Z1FWSi9X?=
- =?utf-8?B?WEVKY09kLzZRR3F5YVBLVnQyc2ZtdVhTL09hNHRqaUc1ZldjMFEzeUVvZVgv?=
- =?utf-8?B?SUZmQnkzdGJJSDRQeXo5OTZIc3RuOVFkRCt4VzR0UTAzaE5VdVZqdDlweFMz?=
- =?utf-8?B?Y1g4Mkt5UEd0OWN4bGs4NkVVYzR2eFkxNEU5ZW0yR1dVWkNJNlR4U3A5ejFR?=
- =?utf-8?B?MmRQb3o2bXlpTU04Q0VDc0RVbzFUazdpRFdXZVhqRXJuK1Jja2VHRHR4V29B?=
- =?utf-8?B?d2RhZDBzSmN4cUI4UHRKZVE3cDNQcW9veWZXL0ZWdlUxTzduQjlkSWEwZzBT?=
- =?utf-8?B?bGVzV1pmVFRLbDFocHBXVk5PZTJ4SjdTVHlSNnQ3RVo4ZnNDM2kyT3N2TCtE?=
- =?utf-8?B?bExqN1ZDL2wxUWR3ck5pdXMvUWUzQ2xQMEdZMlhtQUordGs3T2Q2eU9qQWVH?=
- =?utf-8?B?UmdqalJ0Y1RzcDFKUUNGWmFLZVZzZ1Bxb1BQVC85cVVlMWRTVGdOV0VEUFJH?=
- =?utf-8?B?dmF2d0JLMjc5WmZuLy9WZmIwK3JoeVM1QWR1VE4xcVF1cGRRc0prT0VFZFVI?=
- =?utf-8?B?blMwM1JpN3FCSUlGVU5HTzdXUGgveDZ3NEY4VHdKNVpJUURSbTRzWmJScklV?=
- =?utf-8?B?NTZzdklMWmZVY3VDd2hMWUo2VC94VXl0eEJGZXB2OGl4MnNYT2N3Yy8xOGxy?=
- =?utf-8?B?eklFMmZYWWpsOThkNjBqWEczOVEyOUxTMUE2NU5kbWR2NUpzVTFPRDgxdTU3?=
- =?utf-8?B?YkoyRk96Ykd5Vi9ibDJxT0ROK3AycW4xSFZxTjMySEJCbkVXV050R1IrZHN3?=
- =?utf-8?B?eGtXMXVINGNreXNqMEtNb1F1LzBxNjAxaXdUM0VEZ0VWMWVmZzFtVmtieUZm?=
- =?utf-8?B?eGNwWVhWbWoyMUhuc2lVWWVrRXZ0anpmM2JyTmp1MmhoWTJHdytqbnhDeFRW?=
- =?utf-8?B?bW11WU9rcjRWK2FTYVo4MjJieXJsaDJMWTBiSUtVTTZPcXZETVJBTlhDbkln?=
- =?utf-8?B?alhFb2o2c2xwUCtuNHBBUXBSelBDUlBoR1ZIRGVkT0c4REJsTVMxSjNJelRs?=
- =?utf-8?B?SzFYblhQTzhtRHFQTlljdVY5SmpZdzUyN1RZUkJiczFQcFBsME1SWEltUXM2?=
- =?utf-8?B?SzZDbWRIK3hLcVlQQlltdUNDVGxVZTJ3RjhiNFVLZTNjdStPT0tId0dZQ3NX?=
- =?utf-8?B?aWJzRWhiUVVlZGp5L3hCZHZ0dERIRHJxT1QrTTZjVk9wYTdlamhWNk5LaUdR?=
- =?utf-8?B?dmdwRWVPeCsyUjJPcFRiWVY5eUlGdjNuaWNzWVFmT3VTRFlvZTQyUVFzbFlQ?=
- =?utf-8?B?R2ZBSGNmRWJENGF0NFJPR3RxVFArenJsK2tiUnc0UDFTV2swdEp2UFBncEQ0?=
- =?utf-8?B?SEYyTGwyU2s1cWszL2QzWGdsRjFydVFsbHhzbWhORnZ6aDBpbkJHWjg5TjE4?=
- =?utf-8?B?R2c9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 232ff0ac-6d49-4a2a-50dd-08dd9dbd358c
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 07:56:53.0938
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lcePiZqUjzWtwtxKdkXckOkezBnlPdJfhPqZMfDH21cBGSrUkyTOnu/qoPuCOeXms1JumHcDb9SfcUiDzlys8fk7vnakjAyjc+xGKOCQdo4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB9836
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250528065944.4511-5-zhaoqunqin@loongson.cn>
 
-Hi Andrew,
+On Wed, May 28, 2025 at 02:59:43PM +0800, Qunqin Zhao wrote:
+>Loongson Security Engine supports random number generation, hash,
+>symmetric encryption and asymmetric encryption. Based on these
+>encryption functions, TPM2 have been implemented in the Loongson
+>Security Engine firmware. This driver is responsible for copying data
+>into the memory visible to the firmware and receiving data from the
+>firmware.
+>
+>Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+>Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+>Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+>Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+>---
+>v10: Added error check in send and recv callbak
+>
+>v9: "tpm_loongson_driver" --> "tpm_loongson"
+>    "depends on CRYPTO_DEV_LOONGSON_SE" --> "depends on MFD_LOONGSON_SE"
+>
+>v8: In the send callback, it will wait until the TPM2 command is
+>    completed. So do not need to wait in the recv callback.
+>    Removed Jarkko's tag cause there are some changes in v8
+>
+>v7: Moved Kconfig entry between TCG_IBMVTPM and TCG_XEN.
+>    Added Jarkko's tag(a little change, should be fine).
+>
+>v6: Replace all "ls6000se" with "loongson"
+>    Prefix all with tpm_loongson instead of tpm_lsse.
+>    Removed Jarkko's tag cause there are some changes in v6
+>
+>v5: None
+>v4: Prefix all with tpm_lsse instead of tpm.
+>    Removed MODULE_AUTHOR fields.
+>
+>v3: Added reminder about Loongson security engine to git log.
+>
+> drivers/char/tpm/Kconfig        |  9 ++++
+> drivers/char/tpm/Makefile       |  1 +
+> drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
+> 3 files changed, 94 insertions(+)
+> create mode 100644 drivers/char/tpm/tpm_loongson.c
+>
+>diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+>index dddd702b2..ba3924eb1 100644
+>--- a/drivers/char/tpm/Kconfig
+>+++ b/drivers/char/tpm/Kconfig
+>@@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> 	  will be accessible from within Linux.  To compile this driver
+> 	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+>
+>+config TCG_LOONGSON
+>+	tristate "Loongson TPM Interface"
+>+	depends on MFD_LOONGSON_SE
+>+	help
+>+	  If you want to make Loongson TPM support available, say Yes and
+>+	  it will be accessible from within Linux. To compile this
+>+	  driver as a module, choose M here; the module will be called
+>+	  tpm_loongson.
+>+
+> config TCG_XEN
+> 	tristate "XEN TPM Interface"
+> 	depends on TCG_TPM && XEN
+>diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+>index 9de1b3ea3..5b5cdc0d3 100644
+>--- a/drivers/char/tpm/Makefile
+>+++ b/drivers/char/tpm/Makefile
+>@@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+>+obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+>diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+>new file mode 100644
+>index 000000000..5cbdb37f8
+>--- /dev/null
+>+++ b/drivers/char/tpm/tpm_loongson.c
+>@@ -0,0 +1,84 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+>+
+>+#include <linux/device.h>
+>+#include <linux/mfd/loongson-se.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/wait.h>
+>+
+>+#include "tpm.h"
+>+
+>+struct tpm_loongson_cmd {
+>+	u32 cmd_id;
+>+	u32 data_off;
+>+	u32 data_len;
+>+	u32 pad[5];
+>+};
+>+
+>+static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+>+{
+>+	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+>+	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+>+
+>+	if (cmd_ret->data_len > count)
+>+		return -EIO;
+>+
+>+	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+>+
+>+	return cmd_ret->data_len;
+>+}
+>+
+>+static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+>+{
+>+	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+>+	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+>+
+>+	if (count > tpm_engine->buffer_size)
+>+		return -E2BIG;
+>+
+>+	cmd->data_len = count;
+>+	memcpy(tpm_engine->data_buffer, buf, count);
+>+
+>+	return loongson_se_send_engine_cmd(tpm_engine);
+>+}
+>+
+>+static const struct tpm_class_ops tpm_loongson_ops = {
+>+	.flags = TPM_OPS_AUTO_STARTUP,
+>+	.recv = tpm_loongson_recv,
+>+	.send = tpm_loongson_send,
+>+};
+>+
+>+static int tpm_loongson_probe(struct platform_device *pdev)
+>+{
+>+	struct loongson_se_engine *tpm_engine;
+>+	struct device *dev = &pdev->dev;
+>+	struct tpm_loongson_cmd *cmd;
+>+	struct tpm_chip *chip;
+>+
+>+	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+>+	if (!tpm_engine)
+>+		return -ENODEV;
+>+	cmd = tpm_engine->command;
+>+	cmd->cmd_id = SE_CMD_TPM;
+>+	cmd->data_off = tpm_engine->buffer_off;
+>+
+>+	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+>+	if (IS_ERR(chip))
+>+		return PTR_ERR(chip);
+>+	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
 
-On 5/27/25 6:18 PM, Andrew Lunn wrote:
-> On Tue, May 27, 2025 at 03:11:42PM +0200, Jakob Unterwurzacher wrote:
->>> @Jakob, is this something you could check? devmem2 0xfd58c31c w 0x3c0000
->>> should do the trick to disable the circuitry according to the TRM?
->>
->> I measured TXCLK vs TXD3 on an oscilloscope on gmac1:
->>
->> 	Setting	Decimal	Actual TXCLK delay (ps)
->> 	00	0	47
->> 	0a	10	283
->> 	10	16	440
->> 	20	32	893
->> 	30	48	1385
->> 	40	64	1913
->> 	50	80	2514
->> 	60	96	3077
->> 	70	112	3565
->> 	7f	127	4009
->>
->> 	off	x	-315
->>
->> Setting = tx_delay (hex)
->> Decimal = tx_delay (dec)
->> Actual TXCLK delay (ps) = Measurement from oscilloscope
->>
->> Plotting this we can deduce that one tx_delay unit is about 31ps.
-> 
-> Nice to see somebody actually do the measurements. Based on this, it
-> would be good to implement:
-> 
->          tx-internal-delay-ps:
->            description:
->              RGMII Transmit Clock Delay defined in pico seconds. This is used for
->              controllers that have configurable TX internal delays. If this
->              property is present then the MAC applies the TX delay.
-> 
-> For the moment, please limit it to just the device you measured it on.
-> 
+Why setting TPM_CHIP_FLAG_IRQ?
 
-What exactly do you mean with "limit it to just the device you measured 
-it on"?
+IIUC this driver is similar to ftpm and svsm where the send is 
+synchronous so having .status, .cancel, etc. set to 0 should be enough 
+to call .recv() just after send() in tpm_try_transmit(). See commit 
+980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
 
-I'll need to implement reading the delay from the stmmac driver to use 
-this property, do I need to restrict reading this property to the SoC we 
-tested (RK3588)? Or should I just apply it indiscriminately (considering 
-that no Rockchip board actually set this property in its DT?) and let 
-future users fix up the scale for the other SoCs whenever they want to 
-use this property?
+BTW, I think I should touch also this driver in the next version of my 
+series that I'll send after the merge window:
+https://lore.kernel.org/linux-integrity/20250514134630.137621-1-sgarzare@redhat.com/
 
-I assume you're then expecting tx-internal-delay-ps only on this new 
-DTSO's gmac1?
+The rest LGTM!
 
-Would you still want rx_delay/tx_delay to be set to 0x00? Maybe only 
-rx_delay since we won't have a companion rx-internal-delay-ps for now 
-(until someone from Rockchip answers :); adding Kever back to the Cc for 
-that)? Or should I remove both of them?
+Thanks,
+Stefano
 
-Is this request blocking the merging of this DTSO patch or would a 
-follow-up series be okay?
+>+	dev_set_drvdata(&chip->dev, tpm_engine);
+>+
+>+	return tpm_chip_register(chip);
+>+}
+>+
+>+static struct platform_driver tpm_loongson = {
+>+	.probe   = tpm_loongson_probe,
+>+	.driver  = {
+>+		.name  = "loongson-tpm",
+>+	},
+>+};
+>+module_platform_driver(tpm_loongson);
+>+
+>+MODULE_ALIAS("platform:loongson-tpm");
+>+MODULE_LICENSE("GPL");
+>+MODULE_DESCRIPTION("Loongson TPM driver");
+>-- 
+>2.45.2
+>
+>
 
-Cheers,
-Quentin
