@@ -1,50 +1,79 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACEF8F6B;
-	Wed, 28 May 2025 20:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53147221273
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463734; cv=none; b=qWNT/4gLEekoc7Hh/GrTgKda2cooJSPXY69t8qqZQ4uoHEdphwubhtw05easlYbKvMaYiBHA2sxGNMviTxATqqz0scfB3inKkgVYaSLuyQ1Ht03zI6iVcsp7hCwjg5WXLUAsVW53caYOWlAjlvgRT3OsX49qhwavYz0N5DYt4sw=
+	t=1748463739; cv=none; b=HEzsO43X9gqfxb88ubmoKbfWu6Izlwpyyv8/YctTuXgjmQRDx72mKBuClshvFSEI5joW0MFMfVCLXMrcRb2rDGHyPJ59urT/6Z78zQV4dHD+I2P2vj2+TqcRowHG+JeUNAfKAOWXqiK7XfR4T5On0DT924ahhbVPWpY0QCFE9Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463734; c=relaxed/simple;
-	bh=ZI6VQPkrPer19ZEC9jKMXXA3lE38+GZfUoNzjphj3ZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hXehIs7iK6tzrN2SbYySDrOlZ8UdoXVLaGISxVX8tuneUTNRodEVljW6ME2F/T1uh1q0EK3f8xuUmGJatrFTFw9j9FZvjecV8DFgbiAPS/WCPd2SVMX+Bd2NDXKaDabnRN+mcZ57OoHdXBEnez9z7aXswyLi04nytclgHXqHq98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lWaSbmne; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1748463739; c=relaxed/simple;
+	bh=U5is5MEGe0X0Mjfo2ZU5wxoOjTJwYdWcA8HyweQzW18=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IT3jAtaafPp3MW4Lh8RmNs8wq4ZufdepaBOvLi0/Bv5q77giqaPFtxdV+ixVw5GeHv9W3Jrk9pEStZCC8hW6UKDp8Z8vRhhPB7Soh73XdhFG/0ObyckfaQtPZIyWxLeWQNG0y49bnDJNjdTbPIBLv5hP7ITb+9GGAVFVJvk1S1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZSVBS4Ks; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lWaSbmne"
-Date: Wed, 28 May 2025 13:21:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1748463720;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZJF9HWy7wkusHjQ5XOzTnD26subHMVamVnoXMJ3j9ys=;
-	b=lWaSbmnesIXm8TvqRaGJyb4mtKLnRTErMhmaV0isdSqCDAUXJtv5slw7A+8jLeTIwU6k5M
-	kLCq8ZAZWXOIGy3Um5AcDj1pA7a6FPgFpMMw0brsDPLtDla6O0Bq85rKGuqthWj+wjKRdo
-	1X29WU4k78nHFAS3E3MD/bNL587ZQAE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: James Houghton <jthoughton@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Nikita Kalyazin <kalyazin@amazon.com>,
-	Anish Moorthy <amoorthy@google.com>,
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>,
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com,
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 05/13] KVM: x86/mmu: Add support for KVM_MEM_USERFAULT
-Message-ID: <aDdwXrbAHmVqu0kA@linux.dev>
-References: <20250109204929.1106563-1-jthoughton@google.com>
- <20250109204929.1106563-6-jthoughton@google.com>
- <aBqj3s8THH9SFzLO@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZSVBS4Ks"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so2421255e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748463735; x=1749068535; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6n2HYaqYB+4+SpTa+7TCxA7tS9wMhIgWlUlVyt1cSE8=;
+        b=ZSVBS4KsA62UBzmryV7reh+DNtINeskrHvuzPT2u9wT6oZ82HaEx7z04UVumetLUs7
+         RtO+x0mUGhSkRNPmhEt7PL0PdAS8PD5r0daQ4hgFUCKRFfugnSk/LR9t2lB6tjIoRfed
+         tn/64kCV2itG63ToTGAKzhAErRvpmNm2euZ3sP90mCD901X7IfTaTPSdSgDtOo+gUh7g
+         H3ZgonSCjX2xlFOSTOh9SK6tUA3gvgxN/2kBmiMkLIFVmzaRO00BV1muavnESHLiKzkI
+         iqivjwwhu3kQiVhzyjXRsas7LLinbmfMU6rfzGWKvX3+sbrDlpPf3nf03J65XJblb/gl
+         7muQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748463735; x=1749068535;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6n2HYaqYB+4+SpTa+7TCxA7tS9wMhIgWlUlVyt1cSE8=;
+        b=nASu1sUaqD+t373ecD1LeN5IfC0dpxSE1GUWXAehANr8F9IqUA4ziZuYu/wv2fYwD7
+         qBaZbrpYX4+oD3RrlUvBfbKVFDSCyG72fnbihuOf+P4BhZ4tjE+z0N/o6FkJZ5/UeaFV
+         Ywk4f9eWTAgp86RInTmrC4A8zf/3KbPU3UYGLRphjpLczUL2fm2MYtJ/SM0nPbBXnAJe
+         01+dqeM6D7T5+glm+6btID2YYecESyIVHVjGcnyAMZieQGGkxYVRDyBNpmLrdb6DhCvC
+         R8mWYijrI9n/Lyc67iktq/DdZSkHpcu4QFIWXqk0LJjpbv0cOsA0EIhqXQexv4T+PVAI
+         j0vA==
+X-Forwarded-Encrypted: i=1; AJvYcCXmkigJA5GS5I7PY0dx7fxf0U57wwN0uqMcpWPMlCit/Y5ZkfFgvjg+E05PsBWLoziUicPIjAVQTr5pDeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy70tJxBIsysLk9wouU+CHVRKZmi/xaUkkBCYhqCGmaAfalJoV1
+	3qeAnVUvEYgc2ijgB8SNsJaEw6zybfZIqBRXdR+eGDnQ0B6sFJn4lQbSM8yAKzme8Ag=
+X-Gm-Gg: ASbGncvLOMLqjKMDmlbqsQti12IFdHAQ5FqtYiIMCOUwnxQhb73zHhgXwtCFhWXy1hM
+	cKg0DMIn5QPkd2S2daBPGrFxPAewbj4/ftySCmUKFMrJt54RgkkZ7fPOhD1svFx5UIzP11msJGO
+	dhNSAaV3dv1pQxU5BUDYxVza+Dq0abVA+Qnn593tjD4XDfUaKlstzIKsdpWbkVVKxpnUJNLCCIs
+	EYfpj+Y3zI1cCD9qn5OuO8pvpc4IieUbEbP0A12Czqhc7rk7qOHPthLBrHOMpzEWHug/zcRFTg3
+	/in4gXdLrYUE4Eupp8eHiQq6nly6le1MblUK7xxL7iKZdUNV/BvAskC3WmXMYOn5jw==
+X-Google-Smtp-Source: AGHT+IFhEjwKosmh6o7JSDsWNqf3r0DNviU4lQBAzz0dD0Lq1a43Nmr4tCObHush6tfO3W5ltflU2Q==
+X-Received: by 2002:a05:600c:511f:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-44c919e1212mr153260135e9.8.1748463735586;
+        Wed, 28 May 2025 13:22:15 -0700 (PDT)
+Received: from localhost ([41.210.143.146])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eac7dafdsm2343292f8f.25.2025.05.28.13.22.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 13:22:14 -0700 (PDT)
+Date: Wed, 28 May 2025 23:22:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	David Lechner <dlechner@baylibre.com>,
+	Enric Balletbo i Serra <eballetbo@kernel.org>,
+	Erick Archer <erick.archer@outlook.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Kees Cook <kees@kernel.org>, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 0/3] ihex: add some bounds checking to firmware parsing
+Message-ID: <cover.1748463049.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,35 +82,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBqj3s8THH9SFzLO@google.com>
-X-Migadu-Flow: FLOW_OUT
 
-On Tue, May 06, 2025 at 05:05:50PM -0700, Sean Christopherson wrote:
-> > +	if ((old_flags ^ new_flags) & KVM_MEM_USERFAULT &&
-> > +	    (change == KVM_MR_FLAGS_ONLY)) {
-> > +		if (old_flags & KVM_MEM_USERFAULT)
-> > +			kvm_mmu_recover_huge_pages(kvm, new);
-> > +		else
-> > +			kvm_arch_flush_shadow_memslot(kvm, old);
-> 
-> The call to kvm_arch_flush_shadow_memslot() should definitely go in common code.
-> The fancy recovery logic is arch specific, but blasting the memslot when userfault
-> is toggled on is not.
+These three patches go to different subsystems so hopefully the
+individual maintainers can apply them.  I can resend them as
+individual patches if that's easier.
 
-Not like anything in KVM is consistent but sprinkling translation
-changes / invalidations between arch and generic code feels
-error-prone. Especially if there isn't clear ownership of a particular
-flag, e.g. 0 -> 1 transitions happen in generic code and 1 -> 0 happens
-in arch code.
+The ihex firmware code is a list of records of various lengths.  The
+ihex code ensures that total length of the records doesn't read
+beyond the end of the fw->data[], however the parsers need to check
+that individual records are not too large.
 
-Even in the case of KVM_MEM_USERFAULT, an architecture could potentially
-preserve the stage-2 translations but reap access permissions without
-modifying page tables / TLBs.
+Dan Carpenter (3):
+  media: gspca: Add bounds checking to firmware parser
+  watchdog: ziirave_wdt: check record length in ziirave_firm_verify()
+  Input: ims-pcu - Check record size in ims_pcu_flash_firmware()
 
-I'm happy with arch interfaces that clearly express intent (make this
-memslot inaccessible), then the architecture can make an informed
-decision about how to best achieve that. Otherwise we're always going to
-use the largest possible hammer potentially overinvalidate.
+ drivers/input/misc/ims-pcu.c    |  6 ++++++
+ drivers/media/usb/gspca/vicam.c | 10 ++++++++--
+ drivers/watchdog/ziirave_wdt.c  |  3 +++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-Thanks,
-Oliver
+-- 
+2.47.2
+
