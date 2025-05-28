@@ -1,149 +1,120 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DE228E5E5
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A937137923;
+	Wed, 28 May 2025 17:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748454300; cv=none; b=qL5RP6sF6tayZU8pK6TdcGphjz03My1VJxS0qRASSBRJqQDYwybGpK55RcAl0l+ba55CtHCr4kU8txO3osBg3437tKlYoysKxtQ5zkiXUrL74bRml08DC24Q67QxsfASg+k1KGdqlCDPxNk8DWJxyjHMGxbAYqNBMuWMp/Op9Us=
+	t=1748454341; cv=none; b=jy/p2Ps7NQbDQTaz0ZBEA9xUEdp91PCozcxOnfXKwC9efKPdxi8vblt0xzC8Em90mXJabhwgOoa4WpfCtHrFSN3dQYjOlqTLQPw2CZg6uy/GEcu7T4Oe0qKGS1eHaFRDxRHoRNV4xdQacxLIyAUsoannSlmHwMotUxpHGRsjlyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748454300; c=relaxed/simple;
-	bh=CfKoB+H1EPnWjDF21p5ashefuOfjHibZfRb+hSdfnhk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xc6HuSEFBoYvjIr/WxGnaRgeKlDBqO/Rkr5jcCIAZjttwheAqLjUN/bx2ObvIWALTZpRr/FiN3PVBmqZgW9UO+ty2gCxNY1LRGImz5WBjIS5+h7jhBidw0WYURPH54aEauoo1tChT5yokah45tPfG8buCnSMYpbvwgifR+gwgyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dtokazaki.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H7mSapTS; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dtokazaki.bounces.google.com
+	s=arc-20240116; t=1748454341; c=relaxed/simple;
+	bh=60APgDZJxBk9xro71MqYiSmTSeDZs9bMdWJV5wfWH1w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kxpDEV6zG3URBTgoFQfRLfz4ziNbkYO6PhKhcysjV2h6gemQMbV9OqZOP6TjZp6IYJT7TBxynOftFdkfgGvXv1s/QWmjaJZCOJ9gRaIfm7Y+TomPDUmiyT+WVxXnfL9U9tw/afc5GUMd28t/fpiQu0QUXzZSSO5oRYSNvV+Zkes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C/ylC1KB; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H7mSapTS"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73e0094706bso6217292b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:44:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C/ylC1KB"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso6137144e87.3;
+        Wed, 28 May 2025 10:45:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748454298; x=1749059098; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ONaoEX46NTS+RJXuxksvrbx3Hu5+s3ifCRgxz67kE6k=;
-        b=H7mSapTSnL0gofCvh06sMK8fTl/ukay9zUKfNc+ews9WKHQcuw+auv18e2p9ddKJ1T
-         EVoxaZHfuMPErih1oHVXx+GojpEHqVDVLdOYqYiu+4EEX+pEvITLFWboVdqAfkIgP5um
-         OWMzGZ9Vi6N4xSM/vxmpSBYQO9VNTmGydzHpA4kFLutI73PJIwrKSyVeGAl7Ke68P/SG
-         u9Dfo4hKLblhF/ywEJW8zl0j1LrfyhtVhNDONevEWS+o5SIo+R8G/3hKW4rU7HX1YMyL
-         YxZzk+OYsCVkxdoxG5g1fcx4uPbvq+JxFRucdEeRZ18XRFK0eWD2LyP+AdM4tmui4DTw
-         BMtw==
+        d=gmail.com; s=20230601; t=1748454337; x=1749059137; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vfbvcUyjsrPaltQIZdnZTuOiypSudH36zL4/KM7+5qI=;
+        b=C/ylC1KBxFtXUIGBfFA297wmgjdritfIVIdkNIgMYJsLYzZX8kvTC0XcBRoQksE4nr
+         nKn1JshinJIjXlWi0Rv0migwpb6GajLKMLB7xTrGRTuAu84dPOqHYiSalgqTYsRVfJNs
+         yjlffVVnY0xndv5S+MQbnaMtVMLO+DNiVQZ7eeq6uzeEB28teMR3/CdFVnlwpyWBY3Ab
+         gKBVpKiBdW7Ozedmuy21EaVXVE1eOmLX7iHiatzY4Z8DmGZ2XA2UlrbkSLvhj5FKNmiP
+         oAwXzKM4WuM2ltid42CfIDqUUfu2V+dhpPPRYqOJhl+BU1NFkVtiHg9eMGHkW61xCW9b
+         JoxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748454298; x=1749059098;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ONaoEX46NTS+RJXuxksvrbx3Hu5+s3ifCRgxz67kE6k=;
-        b=NeStl2x9pY/rjbi9gHy3y2BahQS3GvkTW3fdFTeALWpT3aItOZRBekNryXEesGo4p8
-         3xnKfcJyBjkAIPPxY0uc4mL1jSq67AGZByWRngZADzNaqqWzOREpWZnpouIhBLTGCO2r
-         vVkdwsFyfwDUgaljYi2CJNMXIgOxd0ibUg97qFkwoKxlJM2AVcRKVHmXb8rVcvjcEwpg
-         OWTUcfxzW/tWlYYKWCw9qNTYD3/b3nwJvmYCcgkzyYX/fMgtcZ3H3yZfk6QdNY5P2u18
-         fhwAgo1kGDprSLJYUh4nPPvBCUoV5U2f8DMj4nfAf9CNqQHcwnm6ABBW/pkR2hJ7fYZy
-         MKRw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+QgIgdaSCz6fDjdTjIIInmw3t+Cpzw9icQkUzYJY8hkOPAxI1j8p2ZdtmY+TU/30ME+SJ4j/LVlkDbtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzU8gLq4wplb2x4/N5GWAxZuIpwcAReW+Vq7ylvDrx33WkG84W
-	3NCtSzH9ndBbIPrVOXnX3153FkiLRpi20XsaSDqF64TAEDcjVG6AP2CKFTghHdiEhKRobJEP5ua
-	Cm87gr0MqT6F4+FMauA==
-X-Google-Smtp-Source: AGHT+IHXsZLAjf8hgLHjXcnk9jfwgypv4Nnb0xnVKOifJ7lyjzN89gVF77wc7+Nu77gZXC6nZNZIOjxOBW5HLrQ=
-X-Received: from pfkq9.prod.google.com ([2002:a05:6a00:849:b0:746:24d7:a6aa])
- (user=dtokazaki job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:130a:b0:732:a24:7354 with SMTP id d2e1a72fcca58-745fde79710mr25993509b3a.4.1748454298130;
- Wed, 28 May 2025 10:44:58 -0700 (PDT)
-Date: Wed, 28 May 2025 17:44:25 +0000
-In-Reply-To: <20250528174426.3318110-1-dtokazaki@google.com>
+        d=1e100.net; s=20230601; t=1748454337; x=1749059137;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vfbvcUyjsrPaltQIZdnZTuOiypSudH36zL4/KM7+5qI=;
+        b=Qvj3OBo75H+fLiWefEM1yRffsQM7V54QzctheeW+jYO+TatrItsMt3RPJrkO33evRS
+         5DyzIRZ4LOU2rfZjMtQ3J9o4zD2rJQYSDLWz2G5jekz5wbEaB97VjFMaZOskFevV4lj5
+         W8LPipxzZ65FBDjLDcz4ARfn1L17YHKwiCt872SfIsmN5FEmeMe68G/Czr/vZJnyMGQu
+         +T3wV7l/xN8KbnebMKu5IUUqWVAom21YBVH9/6KtiBIYRI32caJLNEc+nBoyY8yUuMaj
+         1zfiMRWbcUBVHWcAzCUR6qQKDYP926aPgOOMJmfmezIquP1mWhtcUYx2o135ZugwsBVv
+         8b2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWoQwJjVx1HoT/TVZCQKAvjApIJgZAX+9dFcurtzT+XC++tsBXSA4Xj7pYbtPX+sE0xG0EMb0ZSXPAaqLY=@vger.kernel.org, AJvYcCXUYtsTd+LKrQ0g5tkLu/h4dTn3tIjN9npzmqBjXHt3X0trTdzBrxNiONkNZz5Wd0xRKlhJ5yE+IlLARDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8d1Wrp9SUcPFnH4I79CaVpvdCHolwasohK5NYcN4cFZU4mHR2
+	dufFxcLPNmw7ce4aXNNBpHUPi2HH9mryO/iHhvFTa5stiXZRcLulxs3DO7sFYYICxC5/pKnB/fv
+	t3IYKKRaDEX3nl3nDOpbRYvwkSsjrv84=
+X-Gm-Gg: ASbGncuUl72xl9yH3842bY4IgBGsRyS6Da8YyT6B8RDrRLA8oh+1lFs65U4nlDNEWgz
+	+BOchGYjP6KlV0vog//X0WL2Th8OyFKaQCKfU87dwAcHLz1WFmN0NInSRzh7D4kJq9PfTNpXw7j
+	3mNw2lFTdiGD7UPlfT1KWqq7cMKNVSUH2AbPN00838Zz8=
+X-Google-Smtp-Source: AGHT+IE50d5cC46kRAB7AG1Wvgv40PQ5flcgNy54WFeoBt+wY7VUUu4UH+CR4hMgrhhgp1YCMK5/SyewZvJ5ZJUiAgI=
+X-Received: by 2002:a05:6512:3e04:b0:54f:c101:4c04 with SMTP id
+ 2adb3069b0e04-5521c7c47a2mr5617350e87.46.1748454337119; Wed, 28 May 2025
+ 10:45:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250528174426.3318110-1-dtokazaki@google.com>
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250528174426.3318110-3-dtokazaki@google.com>
-Subject: [PATCH v1 2/2] regulator: userspace-consumer add shared supply functionality
-From: Daniel Okazaki <dtokazaki@google.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Zev Weiss <zev@bewilderbeest.net>
-Cc: Daniel Okazaki <dtokazaki@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+MIME-Version: 1.0
+References: <20250522-mach-tegra-kasan-v1-1-419041b8addb@gmail.com>
+In-Reply-To: <20250522-mach-tegra-kasan-v1-1-419041b8addb@gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Wed, 28 May 2025 12:45:23 -0500
+X-Gm-Features: AX0GCFtw6EOz4hp5YkRpjgPCO_GRJV-z3wAN2pksjWiT0dZd5iq6XbMFR1v4t8M
+Message-ID: <CALHNRZ_7Yv98v83JvYLP2MmUZj+EDPwk7dDDArN4_U5docbRCw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: tegra: Use io memcpy to write to iram
+To: webgeek1234@gmail.com
+Cc: Russell King <linux@armlinux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add is_shared flag to indictae that regulator control is not
-exclusive to this module.
+On Thu, May 22, 2025 at 11:11=E2=80=AFAM Aaron Kling via B4 Relay
+<devnull+webgeek1234.gmail.com@kernel.org> wrote:
+>
+> From: Aaron Kling <webgeek1234@gmail.com>
+>
+> Kasan crashes the kernel trying to check boundaries when using the
+> normal memcpy.
+>
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+> Change-Id: I27714f45aa6aea6a7bee048f706b14b8c7535164
+> ---
+>  arch/arm/mach-tegra/reset.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
+> index d5c805adf7a82b938bebd8941eae974cf6bcdbe3..ea706fac63587a393a17fe0f1=
+c2ad69d6e5c14f2 100644
+> --- a/arch/arm/mach-tegra/reset.c
+> +++ b/arch/arm/mach-tegra/reset.c
+> @@ -63,7 +63,7 @@ static void __init tegra_cpu_reset_handler_enable(void)
+>         BUG_ON(is_enabled);
+>         BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SI=
+ZE);
+>
+> -       memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
+> +       memcpy_toio(iram_base, (void *)__tegra_cpu_reset_handler_start,
+>                         tegra_cpu_reset_handler_size);
+>
+>         err =3D call_firmware_op(set_cpu_boot_addr, 0, reset_address);
+>
+> ---
+> base-commit: d608703fcdd9e9538f6c7a0fcf98bf79b1375b60
+> change-id: 20250522-mach-tegra-kasan-fabd0253f268
+>
+> Best regards,
+> --
+> Aaron Kling <webgeek1234@gmail.com>
+>
+>
 
-Signed-off-by: Daniel Okazaki <dtokazaki@google.com>
----
- drivers/regulator/userspace-consumer.c | 39 ++++++++++++++++----------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+Friendly reminder about this patch.
 
-diff --git a/drivers/regulator/userspace-consumer.c b/drivers/regulator/userspace-consumer.c
-index 72bb5ffb49a8..4ab316d528fb 100644
---- a/drivers/regulator/userspace-consumer.c
-+++ b/drivers/regulator/userspace-consumer.c
-@@ -26,6 +26,7 @@ struct userspace_consumer_data {
- 	struct mutex lock;
- 	bool enabled;
- 	bool no_autoswitch;
-+	bool is_shared;
- 
- 	int num_supplies;
- 	struct regulator_bulk_data *supplies;
-@@ -156,8 +157,14 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
- 
- 	mutex_init(&drvdata->lock);
- 
--	ret = devm_regulator_bulk_get_exclusive(&pdev->dev, drvdata->num_supplies,
--						drvdata->supplies);
-+	drvdata->is_shared = of_property_read_bool(pdev->dev.of_node, "is_shared");
-+	if (drvdata->is_shared) {
-+		ret = devm_regulator_bulk_get(&pdev->dev, drvdata->num_supplies,
-+					      drvdata->supplies);
-+	} else {
-+		ret = devm_regulator_bulk_get_exclusive(&pdev->dev, drvdata->num_supplies,
-+							drvdata->supplies);
-+	}
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "Failed to get supplies\n");
- 
-@@ -167,22 +174,24 @@ static int regulator_userspace_consumer_probe(struct platform_device *pdev)
- 	if (ret != 0)
- 		return ret;
- 
--	if (pdata->init_on && !pdata->no_autoswitch) {
--		ret = regulator_bulk_enable(drvdata->num_supplies,
--					    drvdata->supplies);
--		if (ret) {
--			dev_err(&pdev->dev,
--				"Failed to set initial state: %d\n", ret);
--			goto err_enable;
-+	if (!drvdata->is_shared) {
-+		if (pdata->init_on && !pdata->no_autoswitch) {
-+			ret = regulator_bulk_enable(drvdata->num_supplies,
-+						    drvdata->supplies);
-+			if (ret) {
-+				dev_err(&pdev->dev,
-+					"Failed to set initial state: %d\n", ret);
-+				goto err_enable;
-+			}
- 		}
--	}
- 
--	ret = regulator_is_enabled(pdata->supplies[0].consumer);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Failed to get regulator status\n");
--		goto err_enable;
-+		ret = regulator_is_enabled(pdata->supplies[0].consumer);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "Failed to get regulator status\n");
-+			goto err_enable;
-+		}
-+		drvdata->enabled = !!ret;
- 	}
--	drvdata->enabled = !!ret;
- 
- 	return 0;
- 
--- 
-2.49.0.1204.g71687c7c1d-goog
-
+Sincerely,
+Aaron
