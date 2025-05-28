@@ -1,90 +1,282 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97582212FAD;
-	Wed, 28 May 2025 20:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4AC210F59
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463935; cv=none; b=U4uZ42vK7b0jam9JnFwPywFjjoQTYnnFxqNxiBiZRNe3Y6VrJsQbMq8NCEf/m7coBHyZVATIUA7muMRD5q+xJg1O9tGuDoa/vdbRp693dCIrnT8tTrJY7bw+hqh3NhYzeY+vJBj6O8Ss0SMNLVYJNAO3jhQzASJ4HyE5aFVgRRM=
+	t=1748463973; cv=none; b=rHetrfdV7fmYXvW1gfkzJ8PZ9o3aj+gyqMScbohKRNMv5WrnMjZBZifRdwF2AxbWknpun7uz3haY6B8veSjLvyfnrUkl/TcCBFLAKZInGpSa1T0NViNj8dSkePtIyrBTVuu2F40CS59E972yYi7PekLMD/dsn0GhzxGGxAoH0Vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463935; c=relaxed/simple;
-	bh=R8AjUu7sGxQQEaA5M26S3qZOPeUe7gB6plxu/BKRFME=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bm7fYjBGelUlQqjYwMAVuA09ysOXxfVEv3jqeeseYHuEun2SVZBqi6ESvxXNzUSeVmishkV0v+vbzs2JfwPMtMvkCADRTO/fwUchh0Z5TBns3IvvkkGp8OaJ5KuPFuYbfonDS7AUUUO6W9mh7sed/YFHCdtDHmCAOcUt4m4kau8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HE/Xy65E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kVe8VJqg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748463973; c=relaxed/simple;
+	bh=1qlSlQLUMQn0f6CCbuO8uPQqSSrtOQ6FaVh8vkOL1cM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lcEargCsd726EU2hxz3sYxtWaZZ9qI+UoTqLzR6Uiey+eWYQ/ctA17huQkgIXS9CwCx83ozuTcRrOoflRF2kO44ewFJEQQUnPx387tNpO4XLVG+CVN1JN0mlhTgVmCe6tDhtSxEXgdEWm8faxEZN2SlEUKr77t/ejbX0UtJOfn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G2APl22/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HE/Xy65E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kVe8VJqg"
-Date: Wed, 28 May 2025 22:25:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748463926;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G2APl22/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748463969;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IjiMb4Q5y6Y1U24/A6lsu0hJaeOxplBCKBHXs1GFG/Y=;
-	b=HE/Xy65ETPofJeCefcInmuueE1keY3WIh68k1jLkA2BIGad41C1sD91fp+/dkEcFO082HL
-	61eAiOtxxz/pNhjPfQZYqvI/IQ6t8rJGziemzjJa4MlAMSkCNFBWBnkDHZtzn2tysrKTH0
-	nFXz0VeteUaMmmy9S+FuehfYXCng3NurkzaszKw01gqfSFd5mje4qvNakNAUcWz2l5pnmG
-	jFDayaNSBJPxWvZUT45RzjxOjOOsju4NS22Gp09UZ/igRvCbFZI9VqpPmWVNNAw5En6bGU
-	vqfX3di5SXkGBf6LRfAS1ldBFqqT+SpoDql2Y+We5eJjgxxjmz3Xx99UiLF8YA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748463926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IjiMb4Q5y6Y1U24/A6lsu0hJaeOxplBCKBHXs1GFG/Y=;
-	b=kVe8VJqgmGMGy5sJq1ljbME2bF5bZhgirE2rR0i2XG7dO3meoX4TyAtch3qqVZer/RYCtr
-	JtFOV0DFeRmC4vBQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Bram Vlerick <bram.vlerick@openpixelsystems.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: fbtft: add invert display parameter
-Message-ID: <20250528202518.Kq5YuwFq@linutronix.de>
-References: <20250528-ili9341-invert-dtb-v1-1-080202809332@openpixelsystems.org>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FC7FWOIvZGBtznnKQ9ub2nhNjZp56JzMAsF9Q1073Xk=;
+	b=G2APl22/YqJgVlHrqQsPdRnMgwcZP5l6Gh8kknzrlwJOfd0tuBI7YqG80aY7KlF78G7qJB
+	K9DgXkxZ5UByaDV2Foras6gT6S8cFFoQ8StxtuJ4PHLt59Cm2V9mvsq5UkD4d8jsBIrj51
+	rsb/rzuk2qtovdfjLvpOBlXtN23Yy1A=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-311-BqIRGWOWNL2McaS5_Lmz6w-1; Wed, 28 May 2025 16:26:07 -0400
+X-MC-Unique: BqIRGWOWNL2McaS5_Lmz6w-1
+X-Mimecast-MFC-AGG-ID: BqIRGWOWNL2McaS5_Lmz6w_1748463967
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-441c96c1977so1805495e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:26:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748463967; x=1749068767;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FC7FWOIvZGBtznnKQ9ub2nhNjZp56JzMAsF9Q1073Xk=;
+        b=tCRyMQll0MTEWqL/VkVMAEY6BTZXpJuY22vFIGHiU2tyum84jePxzpoSEYBvXJO4GS
+         RxYMmfV7AFB+98CmLf37usWf4Bowd+kef1dYe0axhfwbrmf8HIIqA0Pp4XZEthpjvkJ5
+         aUlsZWTaFO+tYlOQlRywTZ/WbjEFWaoyTLRDSadAG2DzBrCTy/w1XHUYXv68VFJ+KqnH
+         4deJwDVMkLo7KWCIxy7NMhdX1ttGroZXMYrmEgjnmiWdhBwTyReYeaD6SWDR0NPH3a/4
+         2l2544Y7Azc8juFQdisnkjVxjtSfp75aY7pcpmuQEbAZVois8FHzmY/wczCl9Ku8NmC6
+         UuMg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpCZwfhDvxl/VoWOrwOEPOwFJZE9PsLAA5g7QSVxp93cBAj7iUSqC5wpPPV/+BEHnj8fVdn34DU9yuQpg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzN6O+TGZ/gmOwdyHjtiE/X7fNBmd0SV7uWJP7qoDrUewwFguzD
+	2BFgzIUmycrn8eeH4nR7mC/gjMxbxbL2cAI2Ef6w7wWDUzZOu9YFLD0ZiXGudQDy0+mlCr/Gp6B
+	rfvTmQ2C/UBGAkle8MFDN7x83msw1nUzQEKhy3bUyh+0e3O+B57HGlVUDfl2sUB50yg==
+X-Gm-Gg: ASbGncvyP9p0E7L0S25LEHXwatD5h9jUPh8Ukz+/WUNL98t7Y5ff+tpPeQIrZForeTj
+	O/2Z2cpFuH/J6/cDFsuocJD37iXomUvfVGN+2t13OgJCCQAFbOMdpsBRxJZtgR4PfzF6P3oknvj
+	7VuR43biC4zAiDnZDJFjvQj6KXQgbl9w9S/A7qAThJQEsoWdpNYafTJWpfX5NTtYm5sS9dZBfaz
+	GQACnUyb6u8m5vYfKbnoDhxtdQenocb1eJAGyZ8VC0TyuwSmxwgIrh06lqettQ+7dLMT6J/WhtG
+	mCxpaY62JQkIK0XgbCpsFm9o4NEkoBanN+Px6HSWlCbbbNeivfOIwPm/kfInjRBSFC/6JuVmctx
+	VZmqyvOhiKJ05jNryn+bSY7NyENz4XkGTW58A8fA=
+X-Received: by 2002:a05:600c:4684:b0:43c:f87c:24ce with SMTP id 5b1f17b1804b1-44c955dc476mr165327305e9.21.1748463966599;
+        Wed, 28 May 2025 13:26:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFl9iKLxUdb8Lx653EW40oPpCh5HAsCocZ1VcQx/sJxTqqrIx/uvv3RMhUjhg1voWirB1ECYA==
+X-Received: by 2002:a05:600c:4684:b0:43c:f87c:24ce with SMTP id 5b1f17b1804b1-44c955dc476mr165327105e9.21.1748463966158;
+        Wed, 28 May 2025 13:26:06 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450cfc0344asm1185555e9.11.2025.05.28.13.26.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 13:26:05 -0700 (PDT)
+Message-ID: <04ecf2e3-651a-47c9-9f30-d31423e2c9d7@redhat.com>
+Date: Wed, 28 May 2025 22:26:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528-ili9341-invert-dtb-v1-1-080202809332@openpixelsystems.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+From: David Hildenbrand <david@redhat.com>
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+ akpm@linux-foundation.org, mike.kravetz@oracle.com, kernel-dev@igalia.com,
+ stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+ Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>
+References: <20250528023326.3499204-1-gavinguo@igalia.com>
+ <aDbXEnqnpDnAx4Mw@localhost.localdomain> <aDcl2YM5wX-MwzbM@x1.local>
+ <629bb87e-c493-4069-866c-20e02c14ddcc@redhat.com>
+ <aDcvplLNH0nGsLD1@localhost.localdomain>
+ <4cc7e0bb-f247-419d-bf6f-07dc5e88c9c1@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <4cc7e0bb-f247-419d-bf6f-07dc5e88c9c1@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 05:42:30PM +0200, Bram Vlerick wrote:
-> Add devicetree parameter to enable or disable the invert feature of the
-> ili9341 display
-
-Can't/shouldn't this be done by userspace application? Why would someone
-want to invert the color by default.
-
-Also, this driver is built on top of the deprecated framebuffer, it will
-never get out of staging/. For new feature, you probably want to send it to
-drivers/gpu/drm/panel/panel-ilitek-ili9341.c instead.
-
-> Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
-> ---
->  drivers/staging/fbtft/fb_ili9341.c | 3 +++
->  drivers/staging/fbtft/fbtft-core.c | 2 ++
->  drivers/staging/fbtft/fbtft.h      | 3 +++
->  3 files changed, 8 insertions(+)
+On 28.05.25 22:00, David Hildenbrand wrote:
+> On 28.05.25 17:45, Oscar Salvador wrote:
+>> On Wed, May 28, 2025 at 05:09:26PM +0200, David Hildenbrand wrote:
+>>> On 28.05.25 17:03, Peter Xu wrote:
+>>>> So I'm not 100% sure we need the folio lock even for copy; IIUC a refcount
+>>>> would be enough?
+>>>
+>>> The introducing patches seem to talk about blocking concurrent migration /
+>>> rmap walks.
+>>
+>> I thought the main reason was because PageLock protects us against writes,
+>> so when copying (in case of copying the underlying file), we want the
+>> file to be stable throughout the copy?
 > 
-> diff --git a/drivers/staging/fbtft/fb_ili9341.c b/drivers/staging/fbtft/fb_ili9341.c
-> index 47e72b87d76d996111aaadcf5e56dfdfc1c331ab..a184f57df12b5ad6612a2e83b664a8911c7c79be 100644
-> --- a/drivers/staging/fbtft/fb_ili9341.c
-> +++ b/drivers/staging/fbtft/fb_ili9341.c
-> @@ -103,6 +103,9 @@ static int set_var(struct fbtft_par *par)
->  		break;
->  	}
->  
-> +	if (par->invert)
-> +		write_reg(par, 0x21);
+> Well, we don't do the same for ordinary pages, why should we do for hugetlb?
+> 
+> See wp_page_copy().
+> 
+> If you have a MAP_PRIVATE mapping of a file and modify the pagecache
+> pages concurrently (write to another MAP_SHARED mapping, write() ...),
+> there are no guarantees about one observing any specific page state.
+> 
+> At least not that I am aware of ;)
+> 
+> 
+>>
+>>> Maybe also concurrent fallocate(PUNCH_HOLE) is a problem regarding
+>>> reservations? Not sure ...
+>>
+>> fallocate()->hugetlb_vmdelete_list() tries to grab the vma in write-mode,
+>> and hugetlb_wp() grabs the lock in read-mode, so we should be covered?
+> 
+> Yeah, maybe that's the case nowadays. Maybe it wasn't in the past ...
+> 
+>>
+>> Also, hugetlbfs_punch_hole()->remove_inode_hugepages() will try to grab the mutex.
+>>
+>> The only fishy thing I see is hugetlbfs_zero_partial_page().
+>>
+>> But that is for old_page, and as I said, I thought main reason was to
+>> protect us against writes during the copy.
+> 
+> See above, I really wouldn't understand why that is required.
+> 
+>>
+>>> For 2) I am also not sure if we need need the pagecache folio locked; I
+>>> doubt it ... but this code is not the easiest to follow.
+>>    
+>> I have been staring at that code and thinking about potential scenarios
+>> for a few days now, and I cannot convice myself that we need
+>> pagecache_folio's lock when pagecache_folio != old_folio because as a
+>> matter of fact I cannot think of anything it protects us against.
+>>
+>> I plan to rework this in a more sane way, or at least less offusctaed, and then
+>> Galvin can fire his syzkaller to check whether we are good.
 
-Use MIPI_DCS_ENTER_INVERT_MODE instead of the magic number.
+Digging a bit:
 
-Best regards,
-Nam
+commit 56c9cfb13c9b6516017eea4e8cbe22ea02e07ee6
+Author: Naoya Horiguchi <nao.horiguchi@gmail.com>
+Date:   Fri Sep 10 13:23:04 2010 +0900
+
+     hugetlb, rmap: fix confusing page locking in hugetlb_cow()
+     
+     The "if (!trylock_page)" block in the avoidcopy path of hugetlb_cow()
+     looks confusing and is buggy.  Originally this trylock_page() was
+     intended to make sure that old_page is locked even when old_page !=
+     pagecache_page, because then only pagecache_page is locked.
+
+Added the comment
+
++       /*
++        * hugetlb_cow() requires page locks of pte_page(entry) and
++        * pagecache_page, so here we need take the former one
++        * when page != pagecache_page or !pagecache_page.
++        * Note that locking order is always pagecache_page -> page,
++        * so no worry about deadlock.
++        */
+
+
+And
+
+commit 0fe6e20b9c4c53b3e97096ee73a0857f60aad43f
+Author: Naoya Horiguchi <nao.horiguchi@gmail.com>
+Date:   Fri May 28 09:29:16 2010 +0900
+
+     hugetlb, rmap: add reverse mapping for hugepage
+     
+     This patch adds reverse mapping feature for hugepage by introducing
+     mapcount for shared/private-mapped hugepage and anon_vma for
+     private-mapped hugepage.
+     
+     While hugepage is not currently swappable, reverse mapping can be useful
+     for memory error handler.
+     
+     Without this patch, memory error handler cannot identify processes
+     using the bad hugepage nor unmap it from them. That is:
+     - for shared hugepage:
+       we can collect processes using a hugepage through pagecache,
+       but can not unmap the hugepage because of the lack of mapcount.
+     - for privately mapped hugepage:
+       we can neither collect processes nor unmap the hugepage.
+     This patch solves these problems.
+     
+     This patch include the bug fix given by commit 23be7468e8, so reverts it.
+
+Added the real locking magic.
+
+Not that much changed regarding locking until COW support was added in
+
+commit 1e8f889b10d8d2223105719e36ce45688fedbd59
+Author: David Gibson <david@gibson.dropbear.id.au>
+Date:   Fri Jan 6 00:10:44 2006 -0800
+
+     [PATCH] Hugetlb: Copy on Write support
+     
+     Implement copy-on-write support for hugetlb mappings so MAP_PRIVATE can be
+     supported.  This helps us to safely use hugetlb pages in many more
+     applications.  The patch makes the following changes.  If needed, I also have
+     it broken out according to the following paragraphs.
+
+
+Confusing.
+
+Locking the *old_folio* when calling hugetlb_wp() makes sense when it is
+an anon folio because we might want to call folio_move_anon_rmap() to adjust the rmap root.
+
+Locking the pagecache folio when calling hugetlb_wp() if old_folio is an anon folio ...
+does not make sense to me.
+
+Locking the pagecache folio when calling hugetlb_wp if old_folio is a pageache folio ...
+also doesn't quite make sense for me.
+
+Again, we don't take the lock for ordinary pages, so what's special about hugetlb for the last
+case (reservations, I assume?).
+
+-- 
+Cheers,
+
+David / dhildenb
+
