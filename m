@@ -1,159 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9F4202F71;
-	Wed, 28 May 2025 08:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA64E24678C;
+	Wed, 28 May 2025 08:27:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748420833; cv=none; b=mJMolr82kZFoxPBb4khHTB3/aspo1GIHKVt90h10mXoo9tT59yiq4Y4SRNrWLqZNuPeDmDo04rKOdPuABSwGmNkgfxYINIkejNPzSMvKzSz6mU+h16rn0KDVlLqrIkgxStKwKFQ8YCzoIziXSyUg80wUDFHekWuDVuwMj7xvIfA=
+	t=1748420863; cv=none; b=ECqP4oCrxw4iIqHeR/5OXamJz2Rr0aaesOHrUUWGHXCMHy7ukNH7qO/zujym4BvIXwSGo91dDB95T50un4NSnnuIMNXGw/m3SvaQ++ibQvxxUETfmCNkaAjAnWtU9Ln2vnNODcauaUII+AeFMRFZLgQVnWYknYaBrzHzKUomLE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748420833; c=relaxed/simple;
-	bh=AZYT5eehBkY6DjTM6tnPNFjrQP4VYvsXTO8hD+AcBro=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ewZyl+UU+FK+tZEjrbzFqzpCfxNtsMQTVmZSOVwiNwJgmF+ruA7361ocjlXw+crGwb7aNSYQhWxoPk3MCGRyX4c+cYQy3sf7vA+dd8WDYqwHb4sNyx12QzunseAgluIFpacKQiSZZnyIIaQQOgFqu4LT3qAGRXzAsdiw/3QiztA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZCBwxFP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748420863; c=relaxed/simple;
+	bh=qLnZjR5wE3DyZBiN4fnzAvQnOiDhhA+pPzkjxW5NRyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W3hSMGhxgC/3flI+NXuyzLxRtXH7C//DiefYhpzDTrDkCoBk97dURn/6MHv6kC81d9GJ5SOxtZUlV/wiFhk1VVjsmu0y3DDXDZT9yULuhnB7AfhoNcSiCxJO5Cagts5bE1rcso6hqcVRWPThXLESpuQYffq5xPEot38XA8ltv98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=K3IkmPC+; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZCBwxFP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13EEC4CEE7;
-	Wed, 28 May 2025 08:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748420831;
-	bh=AZYT5eehBkY6DjTM6tnPNFjrQP4VYvsXTO8hD+AcBro=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cZCBwxFPxSbbG0V/IBF4pyP+zJ2oTzfeuk75Y0+AgXA298mlmYyAUstaNnKXGB0rP
-	 Z9BNTx8kzibzmiQXqgwzTN4BwGygElkxBTBeS8/az6MUF3GQzLgPPi3PdfdcFvICG1
-	 8fhA1Oa2hfxxjuIBU2mzH2TSRgIPlx/m4/632E2qCOL2jnDupXz0nNQNQnf7M40wuR
-	 +1xCgfvpx9itO4yhEIKbLGBIfP1VfJssYCpSIZ2gkUOlpyp/IbZ8Dx7HpBYdBPsdCg
-	 rxDUPwo6XcJbLAe1JNEuVp/sbVSNXFykmdcMPiQM2fVGP9kjg7o+GridB6oeWtToTA
-	 d2wVhQ94ck2lw==
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="K3IkmPC+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=p4GyEZl+mDR1sWV2pSIz0EJuWrr/vpkKFxzXESdLPaQ=; b=K3IkmPC+zp6tbdNaTD+hv7BgP7
+	sd/kwRnbL+FP54irW/4WRt0zocJHvy9mLWHqWRNLsJlQ5kbRj2sCnYX5tPTFt1nisi7z2OUoyQoS4
+	EfhsWFL+ofX8EnldVfikRNLiWIFe7nEErqt3+EG/Z64H+zglwyRTbQDGt8W/lNxvgcN3Ke/Ef5xyD
+	a8s6Utls3q+ituZ5oJV01DoKVevRzJoQkzlcReWKaTAK4esuIoebCRv4x4jkkn3ydP9GUdG3/BY5V
+	eJMygR9ak1i9+vVusehns8htyZwzh+Rs2vn0wtHO/STN3GkwseZC+8XRCuhlK+2cGCISrB70gy/+O
+	DgqX4KCA==;
+Received: from i53875bdb.versanet.de ([83.135.91.219] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uKC88-0005bl-T8; Wed, 28 May 2025 10:27:20 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Simona Vetter <simona.vetter@ffwll.ch>, dri-devel@lists.freedesktop.org
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Intel Graphics <intel-gfx@lists.freedesktop.org>,
+ DRI <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Damon Ding <damon.ding@rock-chips.com>
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+Date: Wed, 28 May 2025 10:27:19 +0200
+Message-ID: <9453742.CDJkKcVGEf@diego>
+In-Reply-To: <64499337-fc61-42b0-8c50-7749b2036c54@rock-chips.com>
+References:
+ <20250528134245.13dc84aa@canb.auug.org.au>
+ <64499337-fc61-42b0-8c50-7749b2036c54@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 28 May 2025 10:27:04 +0200
-From: Michael Walle <mwalle@kernel.org>
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Jyri Sarha <jyri.sarha@iki.fi>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, David Airlie
- <airlied@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Simona Vetter <simona@ffwll.ch>, Nishanth Menon <nm@ti.com>, Vignesh
- Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>, Praneeth
- Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary
- <j-choudhary@ti.com>, Francesco Dolcini <francesco@dolcini.it>, Alexander
- Sverdlin <alexander.sverdlin@siemens.com>, DRI Development List
- <dri-devel@lists.freedesktop.org>, Devicetree List
- <devicetree@vger.kernel.org>, Linux Kernel List
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 4/4] drm/tidss: Add OLDI bridge support
-In-Reply-To: <fc77a1e2-be50-43b1-9863-f8ca70445428@linux.dev>
-References: <20250525151721.567042-1-aradhya.bhatia@linux.dev>
- <20250525151721.567042-5-aradhya.bhatia@linux.dev>
- <DA5ZNDCHXC6M.1CDYDG6KKMAP0@kernel.org>
- <a98ad2e7-50de-4d04-8d99-2cf77354b1d6@linux.dev>
- <DA6PRDARLY70.1CILNJ8YLIOA1@kernel.org>
- <fc77a1e2-be50-43b1-9863-f8ca70445428@linux.dev>
-Message-ID: <fc5f6000fbe1f01223f8a28a952b40ea@kernel.org>
-X-Sender: mwalle@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hi Aradhya,
+Hi,
 
->>> Something like this.
->>> 
->>> &oldi0 {
->>> 	// primary oldi
->>> 	ti,companion-oldi = <&oldi1>;
->>> };
->>> 
->>> 
->>> &oldi1 {
->>> 	// secondary oldi
->>> 	ti,secondary-oldi = true;
->>> 	ti,companion-oldi = <&oldi0>;
->>> };
->>> 
->>> 
->>> If there is no companion for any OLDI dt node, then the OLDI TX will 
->>> be
->>> deemed as acting by itself, and in a single-link mode.
->> 
->> And it's possible to still have these properties and treat them as
->> two distinct transmitters? I'm wondering if it's possible to have
->> the companion-oldi and secondary-oldi property inside the generic
->> SoC dtsi, so you don't have to repeat it in every board dts.
->> 
->> If I read the code correctly, the panel has to have the even and odd
->> pixel properties to be detected as dual-link. Correct? Thus it would
->> be possible to have
->> 
->> oldi0: oldi@0 {
->>  	ti,companion-oldi = <&oldi1>;
->> };
->> 
->> oldi1: oldi@1 {
->>  	ti,secondary-oldi;
->>  	ti,companion-oldi = <&oldi0>;
->> };
->> 
->> in the soc.dtsi and in a board dts:
->> 
->> panel {
->> 	port {
->> 		remote-endpoint = <&oldi0>;
->> 	};
->> };
-> 
-> In this case, the secondary OLDI (oldi1) would remain disabled from
-> soc.dtsi.
-> 
-> I gave this a quick try. Turns out, of_parse_phandle() is not able to
-> return an error when primary OLDI tries to find a companion -- which is
-> important for the driver to detect an absence of any secondary OLDI.
-> 
-> Since the driver code registers a companion for primary OLDI, and
-> further does not find the "dual-lvds-{odd,even}-pixels" properties,
-> the driver ends up trying for a Clone Mode.
-> 
-> So, for single-link , we'd have to actively delete the "companion-oldi"
-> property, in the board.dts/panel.dtso.
+Am Mittwoch, 28. Mai 2025, 09:17:13 Mitteleurop=C3=A4ische Sommerzeit schri=
+eb Damon Ding:
+> On 2025/5/28 11:42, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the drm-misc tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >=20
+> > drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: In function 'analog=
+ix_dp_probe':
+> > drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1589:17: error: labe=
+l 'err_disable_clk' used but not defined
+> >   1589 |                 goto err_disable_clk;
+> >        |                 ^~~~
+> >=20
+> > Caused by commit
+> >=20
+> >    6579a03e68ff ("drm/bridge: analogix_dp: Remove the unnecessary calls=
+ to clk_disable_unprepare() during probing")
+> >=20
+> > I have used the drm-misc tree from next-20250527 for today.
+> >=20
+>=20
+> Oh, I have found the same compile error after rebasing.
+>=20
+> I have removed the 'err_disable_clk' flag and made it return=20
+> ERR_PTR(ret) in:
+> https://lore.kernel.org/all/20250310104114.2608063-7-damon.ding@rock-chip=
+s.com/
+>=20
+> Likely a small merge conflict bug. Will patch it later. ;-)
 
-Last time I've checked you cannot delete nodes or properties in DT
-overlays. So maybe it's better to make that a board property and don't
-set it by default in the soc dtsi.
+I have sent in a patch for that issue yesterday, in
 
-> But, say, the disabled-node's phandle parse is circumvented, somehow,
-> and we don't need to delete the property explicitly.
-> 
-> There would still be one concern, I am afraid.
-> 
-> In AM67A DSS (future scope at the moment), the 2 OLDIs can act
-> independently. Like a 2x Independent Single-Link. Both the OLDI dt 
-> nodes
-> will be enabled.
+https://lore.kernel.org/dri-devel/20250527225120.3361663-1-heiko@sntech.de/
 
-The first DSS0 can drive two single link displays? Reading your 
-downstream
-AM67A DSS patches, thats not particular clear:
 
-     The DSS0 HW supports one each of video pipeline (vid) and video-lite
-     pipeline (vidl1). It outputs OLDI signals on one video port (vp1) 
-and
-     DPI signals on another (vp2). The video ports are connected to the
-     pipelines via 2 identical overlay managers (ovr1 and ovr2).
+Heiko
 
-The TRM also doesn't tell much (or I just didn't find it yet).
 
-> So, if the soc.dtsi has them already connected, then the
-> board.dts/panel.dtso would still need to explicitly delete those
-> properties to get the 2 OLDI TXes to work independently.
-
-Yeah looks like that should really be a board property.
-
--michael
