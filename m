@@ -1,150 +1,360 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 851E928D8DB;
-	Wed, 28 May 2025 16:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7466928D8DB
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449050; cv=none; b=oVfZGBA8oNxIeN0Uay20T5SvhkVniFdt7qH24MJx2SBuTB5sCVGK6omkaOi08VvCB1x29dm8ud8NpbyTn1LOvcMaRk3Jnneu+SIwcdlAgSysaojCa7AQl/OQ9WW972r8XqcwGMDWOtgMWYLxEytLD5jUXr/Ny+YsINxijVMjeME=
+	t=1748449057; cv=none; b=gb1pOfrPPbilk1qmWSxAJCyBumEl55wlx7h8To2F4FUikh25jMENWXdXQlFVFmA2xmfdPB2ep38fkhVQW+sNtOfp4jyDozdCLKe20b/GyWlsI0qDM6Jq5S1ioyd70PvbMW3t1Hj66VlqQknQ7Zhe3t+GAhiaN3P3mY8PVC1j7O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449050; c=relaxed/simple;
-	bh=UhXhHXqGnsFxg+kHq1kEOUu4fzlnoiBRxONX9YRLNjs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PP2/WPIDvGmrDHa/Tymmd0KC8uyS4uMYfDueEApYwBXvc+ugIpBK/Nw0VDD5SbIhofoJa/UrC4zcxgI+WW8UFBUXj/PpIDKWVB3cWDBQvp0Uuh5uc0VdzzMa2fIrADeNzNts9mObmU19Ly2cT2Bp41V2qoGPl+fp7TVIO2JtCCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2732D1A2D;
-	Wed, 28 May 2025 09:17:11 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C3353F673;
-	Wed, 28 May 2025 09:17:27 -0700 (PDT)
-Date: Wed, 28 May 2025 17:17:22 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
-	irogers@google.com, mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com,
-	Aishwarya TCV <aishwarya.tcv@arm.com>
-Subject: Re: [PATCH] perf: Fix the throttle error of some clock events
-Message-ID: <20250528161722.GL2566836@e132581.arm.com>
-References: <20250528144823.2996185-1-kan.liang@linux.intel.com>
+	s=arc-20240116; t=1748449057; c=relaxed/simple;
+	bh=eoA47rogCFpNR9Tkp0qdf/QF8lVs8dsGQjdd9xff9mo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fL4LfcxYUlPUO6mFIiQW+cnydrTb/+0AmIS1clpeKRvV47Fs2ij5SyxRrvt5G56aP4n5WB3jajZBNC20KdmMR18xJjD/WA1kJ+8L/eKCdowVNTQXYvAjx2xHfEOzZFo9x52BGt1/WLyFEy1WYhHF1TuvB27fCtV00YVc1oW6ZiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pK06utRe; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pK06utRe"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1748449050;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Pn98AFuFJVRfrXheY2sIBg6u+lxsCC5KB/mfc1OY4Tc=;
+	b=pK06utRe4sZNQgZl6s+J01SB4EAoD/2YJCoowUhDM3w+6jdLWZ9bptn16zfUHGblnkealE
+	9nzOtsd5RsEyrRkKIAykY9VdTqypr/jZGD8cESst1SN+bjfYqNG0RBrpBhbMhbvz+MK3Im
+	5PVmtOw6N5ncYeu0tQSRmxycn0WxTP8=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Feng Yang <yangfeng@kylinos.cn>,
+	Tejun Heo <tj@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v1 2/2] bpf/selftests: Add test cases for retrieving classid
+Date: Thu, 29 May 2025 00:16:26 +0800
+Message-ID: <20250528161653.55162-2-jiayuan.chen@linux.dev>
+In-Reply-To: <20250528161653.55162-1-jiayuan.chen@linux.dev>
+References: <20250528161653.55162-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528144823.2996185-1-kan.liang@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 28, 2025 at 07:48:23AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The Arm CI reports RCU stall, which can be reproduced by the below perf
-> command.
->   perf record -a -e cpu-clock -- sleep 2
-> 
-> The cpu-clock and task_clock are two special SW events, which rely on
-> the hrtimer. Instead of invoking the stop(), the HRTIMER_NORESTART is
-> returned to stop the timer. Because the hrtimer interrupt handler cannot
-> cancel itself, which causes infinite loop.
-> 
-> There may be two ways to fix it.
-> - Add a check of MAX_INTERRUPTS in the event_stop. Return immediately if
-> the stop is invoked by the throttle.
-> - Introduce a PMU flag to track the case. Avoid the event_stop in
-> perf_event_throttle() if the flag is detected.
-> 
-> The latter looks more generic. It may be used if there are more other
-> cases that want to avoid the stop later. The latter is implemented.
-> 
-> Reported-by: Leo Yan <leo.yan@arm.com>
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
+Covers all scenarios where classid can be retrieved with bpf.
 
-Thanks for adding me and my colleague's name!
+./test_progs -a cgroup_get_classid
+53/1    cgroup_get_classid/get classid from tc:OK
+53/2    cgroup_get_classid/get classid from sysctl:OK
+53/3    cgroup_get_classid/get classid from cgroup dev:OK
+53/4    cgroup_get_classid/get classid from cgroup sockopt:OK
+53      cgroup_get_classid:OK
+Summary: 1/4 PASSED, 0 SKIPPED, 0 FAILED
 
-> Closes: https://lore.kernel.org/lkml/20250527161656.GJ2566836@e132581.arm.com/
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  include/linux/perf_event.h |  1 +
->  kernel/events/core.c       | 23 ++++++++++++++++++++---
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 947ad12dfdbe..66f02f46595c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -303,6 +303,7 @@ struct perf_event_pmu_context;
->  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
->  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
->  #define PERF_PMU_CAP_AUX_PAUSE			0x0200
-> +#define PERF_PMU_CAP_NO_THROTTLE_STOP		0x0400
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ .../selftests/bpf/prog_tests/cgroup_classid.c | 212 ++++++++++++++++++
+ .../selftests/bpf/progs/test_cgroup_classid.c |  51 +++++
+ 2 files changed, 263 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/cgroup_classid.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_cgroup_classid.c
 
-When applying the patch on the top of tip/sched/core, I found it is
-conflict with a new added PERF_PMU_CAP_AUX_PREFER_LARGE.  So need to
-change the PERF_PMU_CAP_NO_THROTTLE_STOP to 0x0800.
+diff --git a/tools/testing/selftests/bpf/prog_tests/cgroup_classid.c b/tools/testing/selftests/bpf/prog_tests/cgroup_classid.c
+new file mode 100644
+index 000000000000..f00da952e52c
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/cgroup_classid.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <sys/types.h>
++#include <unistd.h>
++#include <test_progs.h>
++#include "cgroup_helpers.h"
++#include "network_helpers.h"
++#include "test_cgroup_classid.skel.h"
++
++#define TEST_CGROUP "/cgroup_classid"
++
++static int test_cgroup_get_classid_from_tc(int cgroup_fd, int srv_fd, int srv_port, bool egress)
++{
++	struct test_cgroup_classid *skel;
++	int cli_fd = -1, ret = -1, expected;
++
++	LIBBPF_OPTS(bpf_tcx_opts, optl);
++
++	skel = test_cgroup_classid__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "skel_open"))
++		return ret;
++
++	skel->bss->classid = -1;
++	if (egress) {
++		expected = getpid();
++		skel->links.tc_egress =
++			bpf_program__attach_tcx(skel->progs.tc_egress, 1, &optl);
++	} else {
++		expected = 0;
++		skel->links.tc_ingress =
++			bpf_program__attach_tcx(skel->progs.tc_ingress, 1, &optl);
++	}
++
++	cli_fd = connect_to_fd_opts(srv_fd, NULL);
++	if (!ASSERT_GE(cli_fd, 0, "connect_to_fd_opts"))
++		goto out;
++
++	ASSERT_EQ(skel->bss->classid, expected, "classid mismatch");
++	ret = 0;
++out:
++	if (cli_fd > 0)
++		close(cli_fd);
++
++	test_cgroup_classid__destroy(skel);
++	return ret;
++}
++
++static void test_cgroup_get_classid_tc(void)
++{
++	int srv_fd = -1, srv_port = -1;
++	int cgroup_fd = -1;
++
++	setup_classid_environment();
++	set_classid();
++	join_classid();
++
++	cgroup_fd = open_classid();
++	if (!ASSERT_GE(cgroup_fd, 0, "open_classid"))
++		goto out;
++
++	srv_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
++	if (!ASSERT_GE(srv_fd, 0, "srv_fd"))
++		goto out;
++
++	srv_port = get_socket_local_port(srv_fd);
++	if (!ASSERT_GE(srv_port, 0, "get_socket_local_port"))
++		goto out;
++
++	ASSERT_OK(test_cgroup_get_classid_from_tc(cgroup_fd, srv_fd, srv_port, 1), "egress");
++	ASSERT_OK(test_cgroup_get_classid_from_tc(cgroup_fd, srv_fd, srv_port, 0), "ingress");
++out:
++	if (srv_fd > 0)
++		close(srv_fd);
++	if (cgroup_fd > 0)
++		close(cgroup_fd);
++	cleanup_classid_environment();
++}
++
++static void test_cgroup_get_classid_cgroup_dev(void)
++{
++	struct test_cgroup_classid *skel = NULL;
++	int cgroup_fd = -1;
++
++	cgroup_fd = test__join_cgroup(TEST_CGROUP);
++	if (!ASSERT_GE(cgroup_fd, 0, "join cgroup"))
++		goto out;
++
++	if (!ASSERT_OK(setup_classid_environment(), "setup env"))
++		goto out;
++
++	if (!ASSERT_OK(set_classid(), "set_classid"))
++		goto out;
++
++	skel = test_cgroup_classid__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "load program"))
++		goto out;
++
++	skel->links.cg_dev =
++		bpf_program__attach_cgroup(skel->progs.cg_dev, cgroup_fd);
++
++	if (!ASSERT_OK_PTR(skel->links.cg_dev, "attach_program"))
++		goto out;
++
++	skel->bss->classid = -1;
++	if (!ASSERT_OK(join_classid(), "join_classid"))
++		goto out;
++
++	open("/dev/null", O_RDWR);
++	ASSERT_EQ(skel->bss->classid, getpid(), "classid mismatch");
++out:
++	if (cgroup_fd > 0)
++		close(cgroup_fd);
++	test_cgroup_classid__destroy(skel);
++	cleanup_classid_environment();
++}
++
++static void test_cgroup_get_classid_sysctl(void)
++{
++	struct test_cgroup_classid *skel = NULL;
++	int cgroup_fd = -1;
++
++	cgroup_fd = test__join_cgroup(TEST_CGROUP);
++	if (!ASSERT_GE(cgroup_fd, 0, "join cgroup"))
++		goto out;
++
++	if (!ASSERT_OK(setup_classid_environment(), "setup env"))
++		goto out;
++
++	if (!ASSERT_OK(set_classid(), "set_classid"))
++		goto out;
++
++	skel = test_cgroup_classid__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "load program"))
++		goto out;
++
++	skel->links.sysctl_tcp_mem =
++		bpf_program__attach_cgroup(skel->progs.sysctl_tcp_mem, cgroup_fd);
++	if (!ASSERT_OK_PTR(skel->links.sysctl_tcp_mem, "attach_program"))
++		goto out;
++
++	skel->bss->classid = -1;
++	if (!ASSERT_OK(join_classid(), "join_classid"))
++		goto out;
++
++	SYS_NOFAIL("cat /proc/sys/net/ipv4/tcp_mem");
++	ASSERT_EQ(skel->bss->classid, getpid(), "classid mismatch");
++out:
++	if (cgroup_fd > 0)
++		close(cgroup_fd);
++	test_cgroup_classid__destroy(skel);
++	cleanup_classid_environment();
++}
++
++static void test_cgroup_get_classid_sockopt(void)
++{
++	struct test_cgroup_classid *skel = NULL;
++	int cgroup_fd = -1, fd = -1, val, err;
++	socklen_t val_len;
++
++	cgroup_fd = test__join_cgroup(TEST_CGROUP);
++	if (!ASSERT_GE(cgroup_fd, 0, "join cgroup"))
++		goto out;
++
++	if (!ASSERT_OK(setup_classid_environment(), "setup env"))
++		goto out;
++
++	if (!ASSERT_OK(set_classid(), "set_classid"))
++		goto out;
++
++	skel = test_cgroup_classid__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "load program"))
++		goto out;
++
++	skel->links.cg_getsockopt =
++		bpf_program__attach_cgroup(skel->progs.cg_getsockopt, cgroup_fd);
++	if (!ASSERT_OK_PTR(skel->links.cg_getsockopt, "attach_program"))
++		goto out;
++
++	skel->bss->classid = -1;
++	if (!ASSERT_OK(join_classid(), "join_classid"))
++		goto out;
++
++	fd = socket(AF_INET, SOCK_STREAM, 0);
++	if (!ASSERT_OK_FD(fd, "socket"))
++		goto out;
++
++	val_len = sizeof(val);
++	err = getsockopt(fd,  SOL_SOCKET, SO_SNDBUF, &val, &val_len);
++	if (!ASSERT_OK(err, "getsockopt"))
++		goto out;
++
++	ASSERT_EQ(skel->bss->classid, getpid(), "classid mismatch");
++out:
++	if (fd > 0)
++		close(fd);
++	if (cgroup_fd > 0)
++		close(cgroup_fd);
++	test_cgroup_classid__destroy(skel);
++	cleanup_classid_environment();
++}
++
++void test_cgroup_get_classid(void)
++{
++	if (test__start_subtest("get classid from tc"))
++		test_cgroup_get_classid_tc();
++	if (test__start_subtest("get classid from sysctl"))
++		test_cgroup_get_classid_sysctl();
++	if (test__start_subtest("get classid from cgroup dev"))
++		test_cgroup_get_classid_cgroup_dev();
++	if (test__start_subtest("get classid from cgroup sockopt"))
++		test_cgroup_get_classid_sockopt();
++}
+diff --git a/tools/testing/selftests/bpf/progs/test_cgroup_classid.c b/tools/testing/selftests/bpf/progs/test_cgroup_classid.c
+new file mode 100644
+index 000000000000..7a555ba6bb17
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/test_cgroup_classid.c
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/bpf.h>
++#include <sys/socket.h>
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_endian.h>
++
++int classid;
++
++SEC("tc/egress")
++int tc_egress(struct __sk_buff *skb)
++{
++	/* expecte real classid */
++	classid = bpf_get_cgroup_classid(skb);
++	return TCX_PASS;
++}
++
++SEC("tc/ingress")
++int tc_ingress(struct __sk_buff *skb)
++{
++	/* expecte 0 */
++	classid = bpf_get_cgroup_classid(skb);
++	return TCX_PASS;
++}
++
++SEC("cgroup/dev")
++int cg_dev(struct bpf_cgroup_dev_ctx *ctx)
++{
++	/* expecte real classid */
++	classid = bpf_get_cgroup_classid((struct __sk_buff *)ctx);
++	/* Allow all */
++	return 1;
++}
++
++SEC("cgroup/sysctl")
++int sysctl_tcp_mem(struct bpf_sysctl *ctx)
++{
++	/* expecte real classid */
++	classid = bpf_get_cgroup_classid((struct __sk_buff *)ctx);
++	return 1;
++}
++
++SEC("cgroup/getsockopt")
++int cg_getsockopt(struct bpf_sockopt *ctx)
++{
++	/* expecte real classid */
++	classid = bpf_get_cgroup_classid((struct __sk_buff *)ctx);
++	return 1;
++}
++
++char _license[] SEC("license") = "GPL";
+-- 
+2.47.1
 
-With the change, I tested on Arm64 board with two commands:
-
-  perf record -a -e cpu-clock -- sleep 2
-  perf test "perftool-testsuite_report"
-
-Tested-by: Leo Yan <leo.yan@arm.com>
-
-Thanks for quick fixing.
-
->  /**
->   * pmu::scope
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 8327ab0ee641..4df274705038 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -2655,7 +2655,22 @@ static void perf_event_unthrottle(struct perf_event *event, bool start)
->  
->  static void perf_event_throttle(struct perf_event *event)
->  {
-> -	event->pmu->stop(event, 0);
-> +	/*
-> +	 * Some PMUs, e.g., cpu-clock and task_clock, may rely on
-> +	 * a special mechanism (hrtimer) to manipulate counters.
-> +	 * The regular stop doesn't work, since the hrtimer interrupt
-> +	 * handler cannot cancel itself.
-> +	 *
-> +	 * The stop should be avoided for such cases. Let the
-> +	 * driver-specific code handle it.
-> +	 *
-> +	 * The counters will eventually be disabled in the driver-specific
-> +	 * code. In unthrottle, they still need to be re-enabled.
-> +	 * There is no handling for PERF_PMU_CAP_NO_THROTTLE_STOP in
-> +	 * the perf_event_unthrottle().
-> +	 */
-> +	if (!(event->pmu->capabilities & PERF_PMU_CAP_NO_THROTTLE_STOP))
-> +		event->pmu->stop(event, 0);
->  	event->hw.interrupts = MAX_INTERRUPTS;
->  	perf_log_throttle(event, 0);
->  }
-> @@ -11846,7 +11861,8 @@ static int cpu_clock_event_init(struct perf_event *event)
->  static struct pmu perf_cpu_clock = {
->  	.task_ctx_nr	= perf_sw_context,
->  
-> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
-> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
-> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->  	.dev		= PMU_NULL_DEV,
->  
->  	.event_init	= cpu_clock_event_init,
-> @@ -11928,7 +11944,8 @@ static int task_clock_event_init(struct perf_event *event)
->  static struct pmu perf_task_clock = {
->  	.task_ctx_nr	= perf_sw_context,
->  
-> -	.capabilities	= PERF_PMU_CAP_NO_NMI,
-> +	.capabilities	= PERF_PMU_CAP_NO_NMI |
-> +			  PERF_PMU_CAP_NO_THROTTLE_STOP,
->  	.dev		= PMU_NULL_DEV,
->  
->  	.event_init	= task_clock_event_init,
-> -- 
-> 2.38.1
-> 
