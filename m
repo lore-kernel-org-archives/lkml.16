@@ -1,77 +1,63 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516F61367
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5B719B3EC;
+	Wed, 28 May 2025 07:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748418285; cv=none; b=mze46ljX21f5WFkgFkiJih+eLONj3eilJWhgBcwOavYyJIjG618Byf9azIiMy252fZ9v+FRgsh9b8RfTqv2gLmom0aLa+zLxEm/D2P1zBHtyfSMwsS/eLPVWwQ7+o0y7TUoSrSbg9F2S1lEkn2ZfMEZYt8W/L/fqNRhVx3xu8p8=
+	t=1748418313; cv=none; b=h5JdJEiZl9TdDR7s+Zy9TJiF3Bbtndlay09kwKYmG6Gk+P2I5Ci4u9h1xZIVqTBqDA5tgYOmD8hvlz+tp/zxpfcFFq/hRMn2QPz4ZJ2J0octJdJi0YQZBSOlpj612uqrODuJ2qCiMBxyH1fgfXr/BTgLSHDuhMLQU9XXDvhtl3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748418285; c=relaxed/simple;
-	bh=9n0cPJV+g+yarXV9zmLs6fR1CGDsXbBKFs5PKVOvzX8=;
+	s=arc-20240116; t=1748418313; c=relaxed/simple;
+	bh=iafivI8V/MTAg4QPelROK6ZjF73rLhrtzNbr40jE06Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sBwtnNUfM67UeR4jGT0sE/kl7TjX8vT25DqcxGVju/tG8QeEZhSjEXcSVnKI6C9KlxlKkBN4v34kmuNT8y1ya8hF7M3CjR/Bt6DXKARBh4zt21M4NNnrwTgZRqDtgHx4sRcoarSoIh01D2QTCHvgTM2FW1FxbBosZ9A8aNecq/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R3CA8d9E; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=m9Sv/yLhJbCvFuxCARs75HcJ4smRtmmtmSSDqiYIp3ApoF5qsox0IDZDwk14D17eZRBeqAW3ujNHmCPq8rYR8XYjvS4Atrh856Apesj66lmqpxyhqKYxbXiLhQmq1dBWYXgaBUflryVQjJgeIJ0Z77gOxKqsRYi+kDkpVHnfack=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LsgC/GyR; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R3CA8d9E"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so38921345e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748418281; x=1749023081; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NCAzjCL4Bl6CH02UvykJmrP16J+tWlFWZGvoCIzzt7U=;
-        b=R3CA8d9EK0zyietaYcN++gt5HGPpzFv1JD5ABNjJk3oHFpjslnQXmxjpQQS6GjvHTW
-         81H2MVjfNiXXZpZa4gMXwFxxPO3jCUr1QdNJIFWfNfGf5+AX7pd7XOWtAG2MSjfmCbvq
-         lownUMvsWFu8h2NtbnVke4leOTgrlt/7RkB1QwdIO468S1xdz83OL6i5TKiHaCZH5MVT
-         slTbFLsFDZSup7Tlp0tk6SQRwoRMqXXp/Yx3b4z1r+Aoa5m3kLGECKyf1TthW+MzF6JU
-         G7knqzShOf4js/1jXwLWDF/hHfuWlf5Ij2wcZUq4PQnNqUUJqAWTpPMpzuKSMHvtsD57
-         neyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748418281; x=1749023081;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NCAzjCL4Bl6CH02UvykJmrP16J+tWlFWZGvoCIzzt7U=;
-        b=rzvNSSE6wQbZg/3QG9f9+OqvObtuSKs1XFno7OlKniM4VK4gHCc0IITATaUhcu7KIU
-         DbffQVGGcFbe34gnGZU4eVWhUUEjqvlJ7oWi2heTQr7Gr1t0hnFvEULNVdLKWorbxhwf
-         JSRbU8XFXEBog6EOG7gRuK1MD0/f3OWSMZzZoUxSoDroy2FwFhACFF7xXw9jUvyAwfUq
-         VIDhyYUjbPXv7V4pwKmoMb6Khvirtx0YTx/aryxzbEIibszkg6NthQ8zHUV774VZY8Me
-         zfLClwVPVUuxMgEcj6tigE7oz9c/R4RzxMikU9L/9km6VOB1lMVkMz7B6g3uJy4DLMmX
-         S5UA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRVIDs9KmWvxNGz+rpT9PI5EdNkwQgb/Y8Rpj7J5gQIqsQlAQYYUzVXKAaXTcvmTPPAU5K4fVrdZ63aZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO/5/sjg3GUMUEQOQV94OsRaxmrUvoeV9xDsd67o/W5LQTdwmL
-	Sr3bN7PnfxFP5XA2SXXMnGVRDgEEvFHLMdPRdc7SAmYwYN8Lc2m9+nT3rE3/FVznJGY=
-X-Gm-Gg: ASbGncsxxwMfM50lO5NdaxgW5e9OcJ7xNWxXqRcoRqAg7nnQtYcK6TmK3l6lxktVGPD
-	af2N2mpKWH483ASSEw5Nd2oPe8xMX8Ud8y/SoliE7oo7qbNS/TLgbSOLJnin5LEZyISFjgTYIsZ
-	wV4kBoUqNP4/TNrPJ+00Q0dZxrsEQNQh/IMb5wd9RNKLZ2MSsXnUlwWLNQ8VdXVu7d8lL0puUvD
-	z/Hxg1BMoQx4DFNQDnzeiIxY0XJU1x2gNQJsnnRMZ+mEm92XpqhVulRfA8okOma9ns3cSslsWom
-	IT+gDcbeBCNgJwczSAGqzbo+JoBssTNZodBh7Qf5bIarj2ew
-X-Google-Smtp-Source: AGHT+IE/iUqPKQrG7bwzgJBp3KKnYuDmJ/JAmKt65e94C4RB9c06whWy8YwNSu/XTnIj1izcf15HNw==
-X-Received: by 2002:a05:600c:4e0a:b0:43c:f895:cb4e with SMTP id 5b1f17b1804b1-44c91dd158bmr145314685e9.17.1748418281526;
-        Wed, 28 May 2025 00:44:41 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064a1246sm12549605e9.10.2025.05.28.00.44.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 00:44:40 -0700 (PDT)
-Date: Wed, 28 May 2025 10:44:39 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH] arm64: dts: qcom: x1e80100: Add interconnect to primary
- USB3 controller
-Message-ID: <aDa+57zCFSOXyYY7@linaro.org>
-References: <20250527-topic-x1e_usb_icc-v1-1-43b604cb0609@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LsgC/GyR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iafivI8V/MTAg4QPelROK6ZjF73rLhrtzNbr40jE06Q=; b=LsgC/GyR5rTERHl0o7UzTubCfZ
+	AJh7GZltqv7gxIf2314J6nKbqBoaTeQhbu6/bPN7yAzvTtCaqAH3Uq5SxT7OUamehRbcZCXpn7KBM
+	D2NwnVgTmQSEqrPC02BXOilRVb4cUMw5qz12MS4FDMZcOEVU85lACRniDOt4uzVFCsooqqwSmwAw4
+	dhxUoNrSvFoEvCsD5A+TCba/7u5qCsm7wBu2SCJio0AMODUc2ftmiQ5pA4uvrD1drrKLnfZzdVkP8
+	S47F5d+REC77oIN8pLOiENDsJVYxGk4In1LZXRTlkYbYFLDsSJoE+0qFMilT1q6u6/VthQckhRsIq
+	TiUi/m3A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKBT6-0000000DMJR-0nhG;
+	Wed, 28 May 2025 07:44:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 60707300472; Wed, 28 May 2025 09:44:52 +0200 (CEST)
+Date: Wed, 28 May 2025 09:44:52 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org, xin@zytor.com
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
+ in __nocfi functions
+Message-ID: <20250528074452.GU39944@noisy.programming.kicks-ass.net>
+References: <20250501103038.GB4356@noisy.programming.kicks-ass.net>
+ <20250501153844.GD4356@noisy.programming.kicks-ass.net>
+ <aBO9uoLnxCSD0UwT@google.com>
+ <20250502084007.GS4198@noisy.programming.kicks-ass.net>
+ <aBUiwLV4ZY2HdRbz@google.com>
+ <20250503095023.GE4198@noisy.programming.kicks-ass.net>
+ <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
+ <20250506073100.GG4198@noisy.programming.kicks-ass.net>
+ <20250506133234.GH4356@noisy.programming.kicks-ass.net>
+ <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,14 +66,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250527-topic-x1e_usb_icc-v1-1-43b604cb0609@oss.qualcomm.com>
+In-Reply-To: <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
 
-On 25-05-27 21:26:17, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> 
-> This seems to have been omitted during the initial bringup.
-> 
-> Fixes: 4af46b7bd66f ("arm64: dts: qcom: x1e80100: Add USB nodes")
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Tue, May 06, 2025 at 12:18:49PM -0700, Josh Poimboeuf wrote:
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+> Weird, I'm not seeing that.
+
+I Ate'nt Crazeh...
+
+https://lore.kernel.org/all/202505280410.2qfTQCRt-lkp@intel.com/T/#u
+
+I'll go poke at it, see if today is the day I can figure out WTF
+happens.
