@@ -1,116 +1,148 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B4A220F27
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 20:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966E220FA90;
+	Wed, 28 May 2025 20:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748463396; cv=none; b=YrqY7agalpZlDQv269UL93kcJXz7InyDTMwWyUBqWvZDayoOzvD7GdqHwuPLaI3SHV6oaFRdB5wreHdFNxPkVJJWF0g4eKNSXz+gElA9PsTWMl62WMSxxZsjh12hLgZgoe4Yza/6ZhVVbkrvL4DqMvtW9QtkOk5F7e3ZC6Kf/yw=
+	t=1748463464; cv=none; b=MoeRcS9msZ0AM1kbuAFPEwykbsDt7txBY0vHlryDiRvI/VCLZrgUUYNdVG7CTABvQOXFZ468yaKvpSPl89EkUPKs5suN4fzKnA5vSFkXcN9OIuhUPnl0vpvjPsT3wBaYyqHDJiSjxkHj0MuhDnkRvbGZ0Wpuw7Yqa0TknAhW+w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748463396; c=relaxed/simple;
-	bh=LZcbrYMWjl7rCmnKTWkpUvLhbC2EmiJSa/uslHoWZhU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eoLAAtGWyBwNRhc0pRbwud4Si2QqPa/sP9kVuhSv8/fVf/M89SOpE6f4oPdeA+PHFQ/yYlOnQlvahecaxmE3pEgMJAIwK0LwasE8ZzQgPDWqjIVdXA8CNDCgqDKdfSA81svSRlZEuBXo1TRJ6ovIRnQBxmUNvwNYB31AiVAZmRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=KWZ2M/Rx; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1748463464; c=relaxed/simple;
+	bh=/Np1zwPyXNowrj8gyBj7aEg2EQY/YKZNBSPDvnx555E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=guOsLHXc/qQ3ykyTBwWAYKamtX5x5Uk0g/98ReP9gSGegu+8o3zXsPbX8+Ap8AiPeAaRdtF2dt8LIk+BeE13aQIyF8+QauzqPc6dxDSK1WuIcSO/R8slOCQebFoJCNh9A6aK9rWub2yHe8tWAe2TvLEEcseM/FBljOOEdz9krq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b1CaswHv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="KWZ2M/Rx"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so238325a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1748463394; x=1749068194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XlflE3W2a3akeMQBqgUqFu0YqDFCnqAH8aHLfP8pyks=;
-        b=KWZ2M/Rxv3F55ZHGhY6Upr7KI/hDP7AYLHARdFiY0BV/jzvR85UT1SLsfaP4BpPfmv
-         BLSjgNJ+QbDzs3u+GQ7u5DvZWiLxTuOLIwb8oyAXTI6rKmdupQsGmEuyKUv8DYSa4daX
-         OgqM7+H0RN/aCuNYaACa0AiyINjWiugp3u92WRGMa65vZ3EpDA31jtIGkDjsNhRLGvm/
-         RjsB+ylW4z6IHL/mB8Q/n8N+IM6l//1HppVrAF/JqESZDWhfcOhv4o9JcNm4Ni1zFKMM
-         iJ3jZX7sEUeqZouhOfsitnNU99JP0dlvEP/h+KUdotbyPD/NHpApF/Fc/s+0UWVfgeOn
-         RfSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748463394; x=1749068194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XlflE3W2a3akeMQBqgUqFu0YqDFCnqAH8aHLfP8pyks=;
-        b=Gz55m53y24v0IUlqc9JT6s1XHbVioozyeqnofNAS2UBCgSVOA4SySYtt53Bj4g3Y2c
-         K0M72r0elTGIzE3SMrFV6lxyjIn2N6xcnjM2ufB+GA+IEDNh2onKwY18aIqpeUPe+XmK
-         WiWFercyRtI36xf0FgvN9qb7o9eM/OYPlBGTQspVYjymvkbPza9q2W9rPvoR1j9v6GNy
-         3Tv/tzwGLGbSYe6KGrFBPu1vfhTZw6a05/pgjZ8+PjkugRne9gKA+wz30ksgJ51KCVwB
-         Mn6JDpb8NQqJ3nHbFPbqTluOtTmKtwhxRyI+8M0uP6HHC1uMN49umt/3DjIrod4fS1me
-         6ofg==
-X-Forwarded-Encrypted: i=1; AJvYcCWbInmDyu5/Nk2ijzJ7cerMrkSfFssNnFSJBhDvxYiFhK3IZMxokzVrKr89W7Dd5tKGye8xwAdvUHfrSQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFLknCMKuFgCLz0KpP1ikXDHdKfdwsDRcmVmuNPEajGOqrnEOn
-	hGjkw/yWFdTAX/86mrDIwqXQ+ebem91uU15V4IRJC82dn6i5oT7xM3SPxka/Qod0/o5IBPSzNsw
-	Ohn5YloBjBx7NLcWEYFqKUoI99hFExQhs5F5iKxJJ
-X-Gm-Gg: ASbGncuV4hq1vLZouL+DrXWr2nqf2FP2xpUvIQfDOL2D0iJ6MbmXtf+N5T+3IYCkK3U
-	OGwZtFgdV7TsGkTHhaZyviaghTrFCpGZc6ynyqrlhwwyHyOQzr9vRbk7m5qIzWaAv9AHYZEpd/l
-	gyzkt12J9rDh+dRcLduRl2gucTnGelhO//zw==
-X-Google-Smtp-Source: AGHT+IEbzD4dK8cOpUc/SPnSTr0/q9POJtIYt5FZDgdkw1rUB7DCCT7GF+7V1yqq0ARc9GyC7IdW4RGwpUbj5bwumgk=
-X-Received: by 2002:a17:90b:2789:b0:311:baa0:89ce with SMTP id
- 98e67ed59e1d1-311baa0945amr11939710a91.12.1748463394345; Wed, 28 May 2025
- 13:16:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b1CaswHv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E56C4CEE3;
+	Wed, 28 May 2025 20:17:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748463464;
+	bh=/Np1zwPyXNowrj8gyBj7aEg2EQY/YKZNBSPDvnx555E=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=b1CaswHvKBYzgEicvj492JV/JryFjFWop3NOENUCSBtgUz3d/1BiYve+5mKTgGwkm
+	 rqHRV3N6+Ei7bt1ekFi18wFDcQNKJNLXpgt09+BOrHYqcvNGdzSWLPedW9m4v7o5a1
+	 6Gvy4Ic8IfeL2h8YtT0wZHAYpLdN7PqaCfoFrjnAvqfuKt42eCGlJryF29gBcRuh5L
+	 Tvko8B+A4+q4JVFNFQsZNpXMsRfKYLkcTBcMqAoag8Va/RVsQqMyLdyAaeYZKxQb6I
+	 uv+CpiNw7QeUBOIlkT/uK48jZDboTlPo001jfY34cqCnjvojDUOH6aLS7M7VBcRM4L
+	 239fEyc3wKAxg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <68351d36.a70a0220.253bc2.009d.GAE@google.com> <df01d028-cf41-49be-8f70-b512f57c5cc6@suse.com>
-In-Reply-To: <df01d028-cf41-49be-8f70-b512f57c5cc6@suse.com>
-From: Alan Stern <stern@rowland.harvard.edu>
-Date: Wed, 28 May 2025 16:16:17 -0400
-X-Gm-Features: AX0GCFuOr2egM6jCm14HTPWnC_M2ECP58RsFUbSycoMBuK6T9yYYC7THb-xebpk
-Message-ID: <CANsfzsQ7zSS2Usk3apniSvK-zfggRt-sjN-dYoLVr6+2EXtDog@mail.gmail.com>
-Subject: Re: [syzbot] [usb?] WARNING in dtv5100_i2c_msg/usb_submit_urb
-To: Oliver Neukum <oneukum@suse.com>
-Cc: syzbot <syzbot+0335df380edd9bd3ff70@syzkaller.appspotmail.com>, 
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 May 2025 22:17:37 +0200
+Message-Id: <DA82KFLNAOG7.R7YT4BHCLNZQ@kernel.org>
+Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer
+ operations
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+X-Mailer: aerc 0.20.1
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+In-Reply-To: <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
 
-On Wed, May 28, 2025 at 9:02=E2=80=AFAM Oliver Neukum <oneukum@suse.com> wr=
-ote:
+On Wed May 21, 2025 at 8:44 AM CEST, Alexandre Courbot wrote:
+> Introduce the `num` module, featuring the `NumExt` extension trait
+> that expands unsigned integers with useful operations for the kernel.
 >
-> On 27.05.25 04:02, syzbot wrote:
+> These are to be used by the nova-core driver, but they are so ubiquitous
+> that other drivers should be able to take advantage of them as well.
 >
-> >
-> > ------------[ cut here ]------------
-> > usb 1-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
-> > WARNING: CPU: 0 PID: 5833 at drivers/usb/core/urb.c:413 usb_submit_urb+=
-0x1112/0x1870 drivers/usb/core/urb.c:411
+> The currently implemented operations are:
 >
-> [..]
-> > Call Trace:
-> >   <TASK>
-> >   usb_start_wait_urb+0x114/0x4c0 drivers/usb/core/message.c:59
-> >   usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
-> >   usb_control_msg+0x232/0x3e0 drivers/usb/core/message.c:154
-> >   dtv5100_i2c_msg+0x250/0x330 drivers/media/usb/dvb-usb/dtv5100.c:60
-> >   dtv5100_i2c_xfer+0x1a4/0x3c0 drivers/media/usb/dvb-usb/dtv5100.c:86
+> - align_down()
+> - align_up()
+> - fls()
 >
-> Hi,
+> But this trait is expected to be expanded further.
 >
-> these transfers are done via control transfers to endpoint 0.
-> So this is not yet another one of those cases that a driver fails
-> to verify that it operates on the intended hardware.
-> I'd say that a driver can assume that endpoint 0 exists and is
-> a control endpoint.
+> `NumExt` is on unsigned types using a macro. An approach using another
+> trait constrained by the operator traits that we need (`Add`, `Sub`,
+> etc) was also considered, but had to be dropped as we need to use
+> wrapping operations, which are not provided by any trait.
 >
-> But I am afraid we never check that. Should we?
+> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  rust/kernel/lib.rs |  1 +
+>  rust/kernel/num.rs | 82 ++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 83 insertions(+)
 
-That's not the problem here.  The problem is the same as in other USB
-I2C drivers, and
-Wolfgang Sang has been fixing them up one by one.  Namely, these
-devices send I2C
-messages as control transfers over ep0, and this doesn't work right
-with the client asks
-for a 0-length read transfer (since USB doesn't support 0-length read
-control transfers,
-only 0-length writes).
+Have you proposed `align_down` to upstream rust? Not saying that we
+shouldn't do it here, but if we haven't tried yet, it might be a good
+idea to just get them upstreamed. (if you do, it should probably be
+named `prev_multiple_of`)
 
-Alan Stern
+> +    /// Align `self` up to `alignment`.
+> +    ///
+> +    /// `alignment` must be a power of 2 for accurate results.
+> +    ///
+> +    /// Wraps around to `0` if the requested alignment pushes the result=
+ above the type's limits.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// use kernel::num::NumExt;
+> +    ///
+> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
+> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
+> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
+> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
+> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
+> +    /// ```
+> +    fn align_up(self, alignment: Self) -> Self;
+
+Isn't this `next_multiple_of` [1] (it also allows non power of 2
+inputs).
+
+[1]: https://doc.rust-lang.org/std/primitive.u32.html#method.next_multiple_=
+of
+
+> +
+> +    /// Find Last Set Bit: return the 1-based index of the last (i.e. mo=
+st significant) set bit in
+> +    /// `self`.
+> +    ///
+> +    /// Equivalent to the C `fls` function.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// use kernel::num::NumExt;
+> +    ///
+> +    /// assert_eq!(0x0u32.fls(), 0);
+> +    /// assert_eq!(0x1u32.fls(), 1);
+> +    /// assert_eq!(0x10u32.fls(), 5);
+> +    /// assert_eq!(0xffffu32.fls(), 16);
+> +    /// assert_eq!(0x8000_0000u32.fls(), 32);
+> +    /// ```
+> +    fn fls(self) -> u32;
+
+Isn't this just `trailing_zeros` [2]?
+
+[2]: https://doc.rust-lang.org/std/primitive.u32.html#method.trailing_zeros
+
+---
+Cheers,
+Benno
