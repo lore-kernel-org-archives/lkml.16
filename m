@@ -1,184 +1,164 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-43166.protonmail.ch (mail-43166.protonmail.ch [185.70.43.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DF78280A20
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6968B280A5C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428922; cv=none; b=ABHHtBKsijLhL/3QXZpipRaUaklutNemNM4451Ug8nx321F8sh0iI92ykVaK4tbfo8alghYTG1q3b0zi0CZ6kg28G7MwvPWJgal2EhTGFmpVd8rW2Hpttd83fSbQnVQbia8tq6ayo25dIn8Bjppc0xojZFDUCNiAypQhS9FThT0=
+	t=1748428925; cv=none; b=Ai7+p/gHTxlAFzGFJjqzrAuKkjGUipPm3CyIcPmU0CKyuMhZr72xs4gbLdYZc0RsURDbp2QTyNuCPoqaNccoW7FH9oVZa++E65b7fAu/6FQEp4sXTbZNpNgqS57h1T9UxS2K2G3nCzFRMDL8o/r6irr09s4+ZMxORS6/Y3n7UPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428922; c=relaxed/simple;
-	bh=8TSMAdNwJJ4cMP69sWF06naMdDsc0YKsL1F2ggY8MtU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Yl8KmFNfdqN8H5rRrQ3LEx1MchcowF09qJVFqlezXghhG1nDugOkS6PZXcC7DGELplD2Asp0xPGsVqirw6xzwjMhtpHi9MQ0jK4gpxeo/OHE2gGsaxYYbb6eQgjj4NzxbvAgi08Uco/DSBvG0kaIWE64mRbAaagNKrPRs7QPBXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A4GapL91; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748428925; c=relaxed/simple;
+	bh=MoI8b7oa97jRlr/sjBIV0CzffELLWWFXDnaiN5Lgkuk=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Yb61fZozNHhRHJPaU4TvLzAT+vvyCu3rnNlgra9SURNWO22LWqTlw7rEBNAKEsODI9Zn19auimd7IRcU+1cox6OdII1GVepHAxqRtRG/hXZmEf3S/u/6z+kX0yFmOd+uXnSD6Gt+G2ubfauek76daDXtPhkynMrJl0TWq0XxrOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=i7JnFSbr; arc=none smtp.client-ip=185.70.43.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A4GapL91"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4e575db1aso162073f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748428918; x=1749033718; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pf1YR4gqV6lGcgRNt14+w6xZNohisJw9ukNkMtmqRYQ=;
-        b=A4GapL91ElpqDu8rytCKHqOvDc+7LHOhT/s4CkaDHcsbQEz9Fk3+CTcK0bAzX8mzBP
-         RDWOw5nXr6P+jEYbseht5mI3NmDvijhVmIdqfk/7Z1C+nkJ9Y6dYEkqSGPZ1BPQtzMEE
-         3/BVBGoueeRRXbGutij///mY5Bu3AEa7OncET/atBXgJcjAhCbnQ+FXAFbWnhoq+Ry5t
-         1R5guscOzzgimGDEJQovBFJoI5lNPHbljAKHzrb2WdE9Pawq+yX+ju3byJB3/bsTA/6c
-         lr6eLloFluGLGE+hKnOevsNAfafn4oCarIaFHJlxmIfFOjNqhPe0Ha7SSqX3co0aGHNV
-         SnHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748428918; x=1749033718;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pf1YR4gqV6lGcgRNt14+w6xZNohisJw9ukNkMtmqRYQ=;
-        b=RqVzVOqZk4SOtCQE0rOnzwqBF0VITFHsjbe02Osrr+aTlrgQ0Q2W/c9WmBo2Hp13gh
-         BkWbSGXUMeBjmoZb25eTr1x+7PrAj6DF6w+XEDXNTvURjgzMRwuRwJmso+JfoeFzoX/M
-         BNjlU8yt8oHuTr0JXYPren80xvH5gtcb8Kc5ZV5Ofpzj6RrfLsXg8Xy92W+YasGB6Ape
-         pUCuoj+16t8mwmORma22ROHldVa09Z/gJfBdnBGnJf3erdm5MavQ3G+589b6/M0LyTAd
-         jvWyGfEsEVCc4v07Iw8M8rtvpLbdYaK5feNLzaKaTeMf44HLVehIS/5qIP9ztiah0u52
-         Xj2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWQLsyLhRkYe5gtigjIVfbiNLiw2TzDNrQsHqGd2/I/b6qu5VDXpmkQTNyzlypBqpBtN00Ac9Nu5fPaPyA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTiXesXRM4avuz70XISwt+KEH+WjW8c4nIeGK2Syturkm1hvFA
-	jFDj4JpLIaz96dflRMFTbehlDFcddgUPKuzjcx0SLWXCQism0H2dU4+pDbnpNx6v6o8=
-X-Gm-Gg: ASbGncvIPB80Uch4z61rkWU3a1A+3OJk/YHUsNUzaSrSddmYPa30dKHldO41cQeep0P
-	xGIq9MRO+MmwQI3xvOrd/H3VZI3vP7d4SY543VO/Lrb7wL8KHPYO+RRFkQJ3awVMcll2+MBp1h/
-	7fDEJzxnysw+BDiaq0HCFYCHuHJyt/PjFYTjw+/OK3ZUsd6Ck+7FpgB5YSALcnITpqgdmzJZW83
-	+pVFaVnWObwJpbnnNYSkYNrq+Xf+Z297pZUdCraPRsrBvc19oT298mIJQ/2MsBlul0RPpTIp9tT
-	8nqgod4a2UFe03Pe9EtXnFmz08oTmjAUjTvU2sslfcbLLu/F63Qxz7nPTr7gfMkLdMnBdUA=
-X-Google-Smtp-Source: AGHT+IH1zOEOLeCxje+RyhJLL9R7to4LG+S/YoypX4dofkpM8V4nOT+IYOSlqNv+mgg8x3vhGGPHiQ==
-X-Received: by 2002:a05:6000:2303:b0:3a3:75ea:f9d3 with SMTP id ffacd0b85a97d-3a4cb4addbdmr5341295f8f.11.1748428917518;
-        Wed, 28 May 2025 03:41:57 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064add8bsm17331595e9.17.2025.05.28.03.41.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 03:41:56 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 28 May 2025 12:41:04 +0200
-Subject: [PATCH 08/17] pinctrl: bcm: cygnus-mux: Move fixed assignments to
- 'pinctrl_desc' definition
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="i7JnFSbr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1748428915; x=1748688115;
+	bh=MoI8b7oa97jRlr/sjBIV0CzffELLWWFXDnaiN5Lgkuk=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=i7JnFSbrT4910lKctgAcXYvei7ZDrpOwig/AmBOi0sYacOYX/8ytneqmqEbd/mQTt
+	 UTANYrPZRHhYhux4utjArFJaw5sqvgWufkSigOKatIxOFzEonTQbqwgKHCQJjuUopk
+	 C0LWsJRjf4rJefNwSuloKaYoF7fHRaCwE196O787m/HU+oJm04U/+nTdnjnTtYdkY4
+	 qGt1tLnwBnQBSYufzlcbchH2P8T+AULACfyun5p1E1f+oUJ+ySB8iLRUCOyBYuSel8
+	 IL9Wx86SR4zJcb4MoPKL6LY137+XNaRpYOL+qVZ+uq9Jb0ns8ANOgB3cujFhfSmYIn
+	 oUfQ5NMOg3YOg==
+Date: Wed, 28 May 2025 10:41:51 +0000
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Turritopsis Dohrnii Teo En Ming <teo.en.ming@protonmail.com>
+Cc: "ceo@teo-en-ming-corp.com" <ceo@teo-en-ming-corp.com>
+Subject: Activities of Singapore Government hackers inside Teo En Ming's Android (Linux) phone - 28 May 2025 Report
+Message-ID: <YN06wepewthmtr0QpcQpEAHnm6AiBnFmwMe-3A39LskUDyCS2ZuA6ye6PKE8XTP-upuwlecQ6cZFsraRsqxNhKEvhenaJ7Ta8vLhTHhshYw=@protonmail.com>
+Feedback-ID: 39510961:user:proton
+X-Pm-Message-ID: 6973f1ebe0fd78efe58096036b95afe8f05eac15
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-pinctrl-const-desc-v1-8-76fe97899945@linaro.org>
-References: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
-In-Reply-To: <20250528-pinctrl-const-desc-v1-0-76fe97899945@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
- Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
- Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
- Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Sean Wang <sean.wang@kernel.org>, 
- Jesper Nilsson <jesper.nilsson@axis.com>, 
- Lars Persson <lars.persson@axis.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Damien Le Moal <dlemoal@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, 
- Michal Simek <michal.simek@amd.com>, Emil Renner Berthing <kernel@esmil.dk>, 
- Jianlong Huang <jianlong.huang@starfivetech.com>, 
- Hal Feng <hal.feng@starfivetech.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
- linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
- linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-mediatek@lists.infradead.org, linux-arm-kernel@axis.com, 
- linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2098;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=8TSMAdNwJJ4cMP69sWF06naMdDsc0YKsL1F2ggY8MtU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoNuhP4ba+/mFh+oFgO6EmJOLE0PvaD+UB1YrZI
- JEnxOp0UJOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaDboTwAKCRDBN2bmhouD
- 1wZUD/9bA+sdZ/7ZzrhcN224T33+HyLau7J4D7YZ4cKaBQB0U8+Zw8EsZqd4MTQZ6emR9L2iOku
- vB4WqG5e+8Z9LIfvJznXFBRZIVYlQMVs4gKMA6n1IQK+b3fdbSKyrWYxGzgWg1qHRWfrn6gFq8V
- qwQ3u4tXG8zk+5W7WCD/WmhtFm8AjfVPdLdTzD6BTNO5/1O3UECTfd4bdy5uAlIjjeeaglJ6U9x
- TfGg4iHSiUave8A4vNsJKpd2jh/UHo31b0ZzfwImQA+f8HM2q+iJGrpHX3CyIV6W2b20CcjaITi
- BVPzXRwFn1atUdyNm687e7TwfcAjztLBlCv8F8SICMdzeIwhYxkIJwrnzyA/XJKL8VZDWTgHXCG
- K2DF/qGfjZ5NgbqxaZoqwf1DAfB+eqty4Xax4UbJTIBeoox4mmxjYZGajNOOihw9gH0KKvHsj26
- zBwOdZRN9WJjBF/BLwvfGx358OA0ejwj8JIbMzzv7XPnPz8YhtHemtM/2Q/BUcu49g7M9Zn+SBQ
- kXnJY427cgGJL4hSfheW6ucWUtyWdpu9qP9QkoTJviZEn3MuNR1TyXnZlNQPQziFWzqHoSJpgWa
- B1C0T6yk8njHeARq0LwxzSDnTjEtcAmRHwCS5FH+LfTz1zCNy8ZkWDkhOkDAGNbKgggkp4iOtAa
- Y4YpkDzEcJUCemQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Assign 'struct pinctrl_desc' .npins member in definition to make clear
-that number of pins is fixed and have less code in the probe.
+Subject: Activities of Singapore Government hackers inside Teo En Ming's An=
+droid (Linux) phone - 28 May 2025 Report
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/bcm/pinctrl-cygnus-mux.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Good day from Singapore,
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-index bf9597800954affd954e45a4baa01da4d5dbf420..e9aa99f85e05944a2a0cb9a3e6245c707dbc9b3a 100644
---- a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-+++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-@@ -903,6 +903,7 @@ static struct pinctrl_desc cygnus_pinctrl_desc = {
- 	.name = "cygnus-pinmux",
- 	.pctlops = &cygnus_pinctrl_ops,
- 	.pmxops = &cygnus_pinmux_ops,
-+	.npins = ARRAY_SIZE(cygnus_pins),
- };
- 
- static int cygnus_mux_log_init(struct cygnus_pinctrl *pinctrl)
-@@ -935,7 +936,6 @@ static int cygnus_pinmux_probe(struct platform_device *pdev)
- 	struct cygnus_pinctrl *pinctrl;
- 	int i, ret;
- 	struct pinctrl_pin_desc *pins;
--	unsigned num_pins = ARRAY_SIZE(cygnus_pins);
- 
- 	pinctrl = devm_kzalloc(&pdev->dev, sizeof(*pinctrl), GFP_KERNEL);
- 	if (!pinctrl)
-@@ -963,11 +963,12 @@ static int cygnus_pinmux_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	pins = devm_kcalloc(&pdev->dev, num_pins, sizeof(*pins), GFP_KERNEL);
-+	pins = devm_kcalloc(&pdev->dev, ARRAY_SIZE(cygnus_pins), sizeof(*pins),
-+			    GFP_KERNEL);
- 	if (!pins)
- 		return -ENOMEM;
- 
--	for (i = 0; i < num_pins; i++) {
-+	for (i = 0; i < ARRAY_SIZE(cygnus_pins); i++) {
- 		pins[i].number = cygnus_pins[i].pin;
- 		pins[i].name = cygnus_pins[i].name;
- 		pins[i].drv_data = &cygnus_pins[i].gpio_mux;
-@@ -978,7 +979,6 @@ static int cygnus_pinmux_probe(struct platform_device *pdev)
- 	pinctrl->functions = cygnus_pin_functions;
- 	pinctrl->num_functions = ARRAY_SIZE(cygnus_pin_functions);
- 	cygnus_pinctrl_desc.pins = pins;
--	cygnus_pinctrl_desc.npins = num_pins;
- 
- 	pinctrl->pctl = devm_pinctrl_register(&pdev->dev, &cygnus_pinctrl_desc,
- 			pinctrl);
+I recall 1-2 years ago, Singapore Government hackers deleted 2 selfie photo=
+s I took with celebrities/artistes from my vivo V25 Pro 5G Android (Linux) =
+phone. I had to restore the selfie photos from the "Recently deleted" folde=
+r.
 
--- 
-2.45.2
+On 7 March 2025, Singapore Government hackers changed the name of my phone =
+contact from "Michael Chen Photographer" to "Michen Chen Photographer".
+
+Inside the WhatsApp messages that I had sent to myself, dated 3 April 2022,=
+ I think "Michael Chen" was also changed to "Michen Chen" by Singapore Gove=
+rnment hackers.
+
+Then on 10 May 2025, Singapore Government hackers changed the name of my ph=
+one contact from "Hairy Ted Events" to "Hairy Ted Ted Events".
+
+Yesterday 27 March 2025 Tuesday, I had visited my mother at IMH from 3.00 P=
+M to 6.00 PM.
+
+While visiting my mother at IMH, I checked through my Singtel mobile phone =
+bills from April 2025 to May 2025.
+
+To my surprise, I discovered that Singapore Government hackers had made an =
+unauthorized long distance IDD 001 call from Singapore to Germany in my Apr=
+il 2025 Singtel mobile phone bill.
+
+Details of the long distance IDD 001 call are as follows:
+
+Date: 3 April 2025
+Time: 7.31 am
+Country: Germany
+Called No.: 4989262034700
+Duration: 5.0 Min(s)
+Charges: SGD$5.25
+
+Singtel mobile phone bill ID: 000173084076
+
+I remember 3 Apr 2025 very vividly. 3 Apr 2025 is my last day of service wi=
+th SBS Transit Ltd as Network Operations Engineer/IT Infrastructure Special=
+ist.
+
+On the morning of 3 Apr 2025, Singapore Government hackers had corrupted th=
+e Android (Linux) operating system on my vivo V25 Pro 5G Android (Linux) ph=
+one.
+
+In the afternoon of 3 Apr 2025 the same day, I had sent my vivo phone to Vi=
+vo Service Center at International Plaza in Singapore for servicing.
+
+Vivo Service Center technicians acknowledged that my Android (Linux) phone =
+had been hacked/compromised.
+
+They proceeded to erase/format my vivo phone and re-install the Android (Li=
+nux) operating system from scratch.
+
+Even AFTER Vivo Service Center technicians had erased/formatted my vivo pho=
+ne and reinstalled the Android (Linux) operating system from scratch, Singa=
+pore Government hackers still managed to hack into my Android (Linux) phone=
+ AGAIN, very very quickly. How many times must I send my Android (Linux) ph=
+one to Vivo Service Center to reinstall the Android (Linux) operating syste=
+m from scratch? 10,000 times? 10 billion times?
+
+I do not remember making long distance IDD 001 call from Singapore to Germa=
+ny on 3 Apr 2025.
+
+I repeat.
+
+I do not remember making long distance IDD 001 call from Singapore to Germa=
+ny on 3 Apr 2025.
+
+Hence, Singapore Government hackers must have made the unauthorized long di=
+stance IDD 001 call from Singapore to Germany on 3 April 2025.
+
+Now, I have a habit of sending WhatsApp messages to MYSELF to record inform=
+ation such as what time I sleep, what time I wake up, what time I take sema=
+glutide (weight loss medication), what time I take the morning medication, =
+what time I take the night medication and of course various other informati=
+on.
+
+Since 26 May 2025, I discovered that some WhatsApp messages that I had sent=
+ to MYSELF were missing and/or were deleted.
+
+Needless to say, Singapore Government hackers must have deleted some of my =
+WhatsApp messages.
+
+On 26 MARCH 2025, Singapore Government hackers sent a message to Meta AI on=
+ my WhatsApp app. The message goes: "I need help finding a job".
+
+I do not recall asking Meta AI on WhatsApp app such a message. Hence, Singa=
+pore Government hackers must have sent that message without my knowledge.
+
+Singapore Government hackers can easily hack into my Android (Linux) phone =
+and maintain ABSOLUTE and TOTAL control over my Android (Linux) phone. Sing=
+apore Government hackers can do practically ANYTHING inside my Android (Lin=
+ux) phone, since my have UNFETTERED access to my Android (Linux) phone.
+
+I am still wondering why Android (Linux) phones are so easy for Singapore G=
+overnment hackers to hack into. Why? Why? Why?
+
+Is there any way that Linux kernel developers can improve the security of A=
+ndroid (Linux) phones so that government hackers won't be able to hack into=
+ Android (Linux) phones so easily? Increased collaboration with various And=
+roid phone manufacturers to improve their security??
+
+Thank you very much.
+
+Regards,
+
+Mr. Turritopsis Dohrnii Teo En Ming
+Targeted Individuals in Singapore
+GIMP =3D Government-Induced Medical Problems
+28 May 2025 Wednesday 6.41 PM
+
+
 
