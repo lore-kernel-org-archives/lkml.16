@@ -1,149 +1,77 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC65F288504
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB2A1F473C
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748443071; cv=none; b=nDIvApLWkJ25rae+/5D0Z59H2wfjteoNHGu41VvVSGP1TZM23effoS8bkww9xf/8YShNyJd8QUm0oiToNjcdWO7uswUyG972522G2y3lrxCg7qAu81AHZGwCt0ZHO7W5MaMdnfno9me/rKu4jOBCbf1lp/iFa8VhzdIu5WZ0Fbg=
+	t=1748443152; cv=none; b=FTV8OzddsHdSRboH2R4nxyYvj30e+oFHRp1iL0GhgWhW5K22NeuKYBw4FW4MigVi5RUDqc9N3RtgrS9LMvRf93pZjlf/WCcG/VqEVtwFhLUWhYTrgfUbw102e7ojf/MU1zIQNvxrx6t8oeMHV+3Nouzqe0WQO6uwz3mZ5jZxFt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748443071; c=relaxed/simple;
-	bh=E/d0r6OOpns+M1s/P1Grzi0S5pY57VyTC8g4426MF4A=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=E67lV362sX+e+hPNiMog51jNcqiJHOo/4DeoQNdLQvy6Xn7M2MapBv3jtpDUzvjfRxOsQwQGW1Dn++SlV+o1fGyDe8ILRQGmmZJCLtXr/cYEP9Sg/KK+fXFblNmffJ1YOCfVfERso4+Xl/ymM7eSmWG5ev6bBGyV0z1HjEbK+4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=erkqbxt8; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748443152; c=relaxed/simple;
+	bh=MDmnkq8+Itlg3khoIZNBGAIgH4Fb/xMO2XKebl8pjFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AlkXkVwZj2LT62iYuhzuV0t6BWEBWNTL3Yn4qlGutx1xFyHHqve4PcumzmdOvWv2yBr2gPDuouZoPKRswq6vC10XUxtIuFHTLY5oYMFqMEGVCChz5DEHJ4QCmuYGEqTR0fdZvbfK/OFSlg0dAMHLsM3VqXrB58XjH7/T/nHZIvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=We/bsCcO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="erkqbxt8"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so36614825e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748443068; x=1749047868; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8e/FVNVV68OMZMjntDEe+D+IU61dqOd3DPdYBN+2WAg=;
-        b=erkqbxt8Z1K4KelvFp4KBetLfSTi7qibcWWSbW+liggles7H3+h63gj9e1GpVyRDeM
-         1vIf/sIiVKj5E7gQo4Lvtc6F4a84YfMcW7ln2HwqFrP+cetnIoeEZDbFlVFA7xytmAFk
-         rwSpK/RWeIkyfj0HDn1NTLSJlEvwN4eyJmKO6jei2b1Cn2dxlpeKXOa0PWtAEgSqp+a8
-         ba8ngUVlKeG4wvmkozZigPdqn+YP1lLYXMYWAxjTOIvCyEAdxlVRyJf184woEILNa2gV
-         3bMnxsSkmq/wNunhPVxfyXhEk91yVFGogEiJD4a3u0vwqZQcIVlFF3TbxvAK0YRbifE1
-         efuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748443068; x=1749047868;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8e/FVNVV68OMZMjntDEe+D+IU61dqOd3DPdYBN+2WAg=;
-        b=nir3U53kqYdwaVXfi4PjEbm7XzVzcHXaq0oXlI0J08ulvvnutRTwc4BUFkt0eElMrC
-         6SHE1wJ50QGcokubYfLSqF20j9WwszgE7C7cX4d7eLs9Nh+2NbbcaMpyXTyY9q0zyQ8Z
-         n+rj/KchWSQX+XOKvOJm/N+Xjw209lehiQOv1VwYPAPeQDnXqy6JkpmvIrMFq5WN5zzN
-         n+9wsKO7fAtqjLEIM4Rvro+GWU1NbCeBtc/Z+rmdoSFbo9fy199R5Htl/rQALSsLYwbg
-         lpVG1yRs0PtjdOyO2Xp7+WOw3Y3bjw4dh1QeFbqZqFzjfq5GQ00pZnQDXYN1D1Xufidd
-         N7gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXg3Z8+k475TrAqgSqqnfkNfVP8pbT+G7ao/toczDyJN9ZmwfkWk5OqYYYnd7gJSt9dtM4+xKgnQrKy7N4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8HUVEiOvhcRaL4PDyRBCUQCKxNZwKOMqZByruu9Fq+OkTPjnP
-	Bf/WkjYr0JDkyEkyjozN3KhQr2GgNj8oREdZuMs6uoIURqnNjKOisIASWQkWkza5vxE=
-X-Gm-Gg: ASbGncuKvNXwig/Srj8lbQInN8W+sKCxx+3A9fcIUl86zHW6VRmfwXXxlJDTY/0j8jF
-	r1aG2iYv6bw/wo0Jp+/3/5WrAitM75uqmMaZOXvPF56G0L7Ml/UVbit/HxLA11agQtgVHD0bSkc
-	ZhDr4ZAawizBJ9AHb1gpoRqNYq0GPzVOdJM+zovDEaL/iwaoPj2wzICFMBwoQlzj3LIJVaSaFg/
-	6JESeIYwPPtUJcZ8ZClN8twEKP0wbZl4f3hxUjjb1PM0fSX/IqrPatUZp6pHPkVhp7f0V8/4sJq
-	Ol6YDjNzmCYwllACA7Eqr2e3t6sFS/jyN2ilYjco0expalx32CUquP2U
-X-Google-Smtp-Source: AGHT+IHIM9BVzOCXjIDgxXeOl1dIOtdnPxWp/iK5O/TdB3YnpE+mVV2tCG/RghqPvH2Xw5hFmwSDyA==
-X-Received: by 2002:a05:600c:1d0d:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-44c9141d90emr133062395e9.7.1748443068029;
-        Wed, 28 May 2025 07:37:48 -0700 (PDT)
-Received: from localhost ([2a00:2381:fd67:101:6c39:59e6:b76d:825])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064a133csm24375355e9.11.2025.05.28.07.37.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 07:37:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="We/bsCcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33433C4CEED;
+	Wed, 28 May 2025 14:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748443150;
+	bh=MDmnkq8+Itlg3khoIZNBGAIgH4Fb/xMO2XKebl8pjFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=We/bsCcOlCTZfNb1DUVQgicc8PAfli6EFlqnWncULdYK/TmHdJHOWhZ3OUh/jaFSL
+	 omS7gB7RwuJ8+veFWfewUHEoWJXQpWK0tVAKSOF+R/e0zjVWZJHXOW6OJJpwSNh0hn
+	 72TsGoFyuwUtCR1jN9H03yfHdfOfwUvg5p4Ve75BiwFeA4UGwOb1vyHy8nZD5zq2vN
+	 JpaNchKBLi7KHvlpn4nC7Hk4BvdPXiugKaagEE5mIZbthW1y9cCnEMwdfHV1E35J+f
+	 ol4MPdBSldz7PxoFjq16jzWZ+EyGbkD0DpSf7USAZH4agtpg1KwXp4tNs+iivUbIYZ
+	 zI2nK49X6e8dw==
+Date: Wed, 28 May 2025 15:39:07 +0100
+From: Conor Dooley <conor@kernel.org>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH] riscv: cpufeature: add validation for zfa, zfh and zfhmin
+Message-ID: <20250528-stuffing-parasitic-89064d69d780@spud>
+References: <20250527100001.33284-1-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KDMI6SrfLb5YgK4d"
+Content-Disposition: inline
+In-Reply-To: <20250527100001.33284-1-cleger@rivosinc.com>
+
+
+--KDMI6SrfLb5YgK4d
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 May 2025 15:37:46 +0100
-Message-Id: <DA7VC87A0OMF.1X5XEWVCHFLE5@linaro.org>
-Cc: "Srinivas Kandagatla" <srini@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, <linux-sound@vger.kernel.org>, "Liam Girdwood"
- <lgirdwood@gmail.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Bjorn Andersson" <andersson@kernel.org>, "Dmitry Baryshkov"
- <lumag@kernel.org>, "Konrad Dybcio" <konradybcio@kernel.org>, "Konrad
- Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Jaroslav Kysela"
- <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3 02/12] dt-bindings: arm: qcom-soc: ignore "wsa" from
- being selected as SoC component
-From: "Alexey Klimov" <alexey.klimov@linaro.org>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-X-Mailer: aerc 0.20.0
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-2-9eeb08cab9dc@linaro.org>
- <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
-In-Reply-To: <20250523-fancy-upbeat-stoat-e9ecbd@kuoka>
 
-On Fri May 23, 2025 at 9:12 AM BST, Krzysztof Kozlowski wrote:
-> On Thu, May 22, 2025 at 06:40:52PM GMT, Alexey Klimov wrote:
->> The pattern matching incorrectly selects "wsa" because of "sa" substring
->> and evaluates it as a SoC component or block.
->>=20
->> Wsa88xx are family of amplifiers and should not be evaluated here.
->>=20
->> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom-soc.yaml | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/Documentation/devicetree/bindings/arm/qcom-soc.yaml b/Docum=
-entation/devicetree/bindings/arm/qcom-soc.yaml
->> index a77d68dcad4e52e4fee43729ac8dc1caf957262e..99521813a04ca416fe90454a=
-811c4a13143efce3 100644
->> --- a/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->> +++ b/Documentation/devicetree/bindings/arm/qcom-soc.yaml
->> @@ -23,7 +23,7 @@ description: |
->>  select:
->>    properties:
->>      compatible:
->> -      pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|sc|sd[am=
-x]|sm|x1[ep])[0-9]+.*$"
->> +      pattern: "^qcom,(?!.*wsa)(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sa|sar|s=
-c|sd[amx]|smx1[ep])[0-9]+.*$"
->
-> Why dropping front .*? Are you sure this matches what we want - so
-> incorrect compatibles? To me it breaks the entire point of this select,
-> so I am sure you did not test whether it still works. To remind: this is
-> to select incorrect compatibles.
+On Tue, May 27, 2025 at 12:00:00PM +0200, Cl=E9ment L=E9ger wrote:
+> These extensions depends on the F one. Add a validation callback
+> checking for the F extension to be present. Now that extensions are
+> correctly reported using the F/D presence, we can remove the
+> has_fpu() check in hwprobe_isa_ext0().
+>=20
+> Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
 
-Thanks, great point. I tested it with regular dtbs checks with different
-dtb files but I didn't check if it selects incorrect compatibles.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
+--KDMI6SrfLb5YgK4d
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> (?!wsa)
-> Because qcom,x-wsa8845 should be matched and cause warnings.
+-----BEGIN PGP SIGNATURE-----
 
-This is now confusing. I thought that the main job for the pattern above
-is to avoid selecting wsa88xx amplifiers in the first place. Or, if I can
-quote yourself: "What is WSA8815 that it should be here?"
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcgCgAKCRB4tDGHoIJi
+0tcIAP96A+ZQ0TxlKr55JHZ0NuqQ1MG8NvB7955IHUTsvSSHSwEAiC6UiaVfS5AS
+pw2FqoPvoXb/TdUUyuHoIubHVOoX5ws=
+=g5Ge
+-----END PGP SIGNATURE-----
 
-If said wsa8845 with incorrect or correct should be selected by that patter=
-n
-then why not just leave that pattern as it is then? I am lost.
-
-> And probably we are getting past the point of readability, so could you
-> try:
->
-> compatible:
->   anyOf:
->     - pattern: "^qcom,.*(apq|ipq|mdm|msm|qcm|qcs|q[dr]u|sar|sc|sd[amx]|sm=
-|x1[ep])[0-9]+.*$"
->     - pattern: "^qcom,.*(?!wsa)sa[0-9]+.*$"
-
-Thanks, that one is much better for readability. I'll test that one then.
-
-Best regards,
-Alexey
+--KDMI6SrfLb5YgK4d--
