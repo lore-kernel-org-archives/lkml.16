@@ -1,64 +1,97 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81816283C8E;
-	Wed, 28 May 2025 16:19:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D9228D8D3
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449196; cv=none; b=Bq0F3i8jfIEJwbdZw4URTBsx7u4ffKdo4cUL1vA2LaiU9EqNqCO/8VDA0VJMjFp6/dH1ZPFk++4JvGirvNf7/RV/ieGzQ1k4VrjLa/pzCrazY1ZaX6ot7GsALGVDRRr7OEWL59q87cQhFU3ElnG+SF/Y05V+cIfPJikgfxAzgCY=
+	t=1748449197; cv=none; b=FrKfFaB8EwnpBbK5MXq5geVRt30QaUrub42wrS+5YF9AoYA9T8qYOr3THsj6tf8w8jACw2gtsKZqzZ9zA/1S8AbDsl8+XIHY/3biLu3UzhTXegTZ0fozMqdWmuUcA/F04//DRFBX9+53F1FDI/bwPz4ONGGgmABIyoO4/G3WmCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449196; c=relaxed/simple;
-	bh=qXJ+IqF7/m//76C8fW+mrTCbhGzi0qHG48chXP0zz94=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I90EvDYROxhb+1NMTk4qjIQyaZfT0/8Z4kCFYc7cEZCY5GgFzWJ5QQ71B7EZE5/KAnIjU5/Fbez8/CbB021WKdWHHAp+//m+ZIVVAspiOPkxh2gzQwbxORHz7nltoYB24gNIJKy+O8dQeOWk28+inkdSVe6j66KkR1TsC7OxRZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Hc85KsCc; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748449197; c=relaxed/simple;
+	bh=was6HKWg8q3bCy8wjBqt1mSU3XXZMmZRo8cHl90Nx4s=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=HYM0j0jesetCynFiWc92a0wzVJCUjKtjzXjx29cZKocj5gxvEHweYQGc2ItkxS45fxZh6h/4euJ2CwShThTns2szdKitsxp7orIx9d+0WLLF/b+oewzIgjA8QRnn6qLzucAL9MxfMWHzvH3hkFVLRlyUdY+sfD3N/Uz0Ak8Fvy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raZEqM78; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Hc85KsCc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=HBGgu+PfumtYHtFWP6ldbnKLzKxWqLSqPhfinDYGxe0=; b=Hc85KsCcSxtr3DnRBNcInCYQgN
-	kYsvXqr6Nbn3E83MCxyzvZvoeaMyy7CeREfC2jEeEka4CKYj2v4vdvmVrVpc/hDGwG1GR5+39tjLR
-	+kHLu7mBmDBE+BXlq2gzNhC5I7Ebf+VyNt8kRBrEa0/Fa4YhRtOm6ahiUHsglAv9HFO4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uKJVE-00EC2y-Ga; Wed, 28 May 2025 18:19:40 +0200
-Date: Wed, 28 May 2025 18:19:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, richardcochran@gmail.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mun Yew Tham <mun.yew.tham@altera.com>
-Subject: Re: [PATCH v2] dt-bindings: net: Convert socfpga-dwmac bindings to
- yaml
-Message-ID: <c8ba074c-c689-44f0-9513-59661b12e232@lunn.ch>
-References: <20250528144650.48343-1-matthew.gerlach@altera.com>
- <20250528170650.2357ea07@fedora.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raZEqM78"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB3BC4AF0B;
+	Wed, 28 May 2025 16:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748449196;
+	bh=was6HKWg8q3bCy8wjBqt1mSU3XXZMmZRo8cHl90Nx4s=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=raZEqM78y6G5f+VeQ+ip3ezKW5gxf9742s7boQMiPJygBDc58q9/g9ySexHD9l8U0
+	 o5Kfu/WJMW3sclf8+J31S+AsBe6m9o5kxAss49PiD1E8LZXU31JX0jVxJVHKD72iVU
+	 DgaaiPbH8Asg/Pe7X6cuiRU7d6eJMg2LxnG9iPD4GrYYTNYhmCJUN1BCTjU99iKvil
+	 YueBvvhXBfH52zN03PPES/B69HaHwNWcAR0fHnV8WB68pP/IPnoOCmYdE2T7knZ+BS
+	 NUS/zkelFKqnMMlxY/ng99Pt3LSlHR6hbuLd4i8oAv90KDv5MmgdvHqV9cRMNfKBQ5
+	 AbyUuAN5J4fgA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADB0A3822D1A;
+	Wed, 28 May 2025 16:20:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528170650.2357ea07@fedora.home>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: fix to skip f2fs_balance_fs() if
+ checkpoint is disabled
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <174844923023.2455931.17793935058942024770.git-patchwork-notify@kernel.org>
+Date: Wed, 28 May 2025 16:20:30 +0000
+References: <20250523032545.1392641-1-chao@kernel.org>
+In-Reply-To: <20250523032545.1392641-1-chao@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com,
+ hanqi@vivo.com, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
-> > +  phy-mode:
-> > +    enum:
-> > +      - rgmii
+Hello:
+
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
+
+On Fri, 23 May 2025 11:25:45 +0800 you wrote:
+> Syzbot reports a f2fs bug as below:
 > 
-> You're missing rgmii-id, rgmii-rxid and rgmii-txid
+> INFO: task syz-executor328:5856 blocked for more than 144 seconds.
+>       Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz-executor328 state:D stack:24392 pid:5856  tgid:5832  ppid:5826   task_flags:0x400040 flags:0x00004006
+> Call Trace:
+>  <TASK>
+>  context_switch kernel/sched/core.c:5382 [inline]
+>  __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
+>  __schedule_loop kernel/sched/core.c:6845 [inline]
+>  schedule+0x165/0x360 kernel/sched/core.c:6860
+>  io_schedule+0x81/0xe0 kernel/sched/core.c:7742
+>  f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
+>  f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
+>  f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
+>  f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
+>  vfs_fallocate+0x6a0/0x830 fs/open.c:338
+>  ioctl_preallocate fs/ioctl.c:290 [inline]
+>  file_ioctl fs/ioctl.c:-1 [inline]
+>  do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
+>  __do_sys_ioctl fs/ioctl.c:904 [inline]
+>  __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> [...]
 
-And it is unlikely anybody actually needs rgmii. rgmii-id should be
-the most used rgmii variant.
+Here is the summary with links:
+  - [f2fs-dev,v3] f2fs: fix to skip f2fs_balance_fs() if checkpoint is disabled
+    https://git.kernel.org/jaegeuk/f2fs/c/c836d3b8d94e
 
-	Andrew
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
