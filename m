@@ -1,137 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B9284A35;
-	Wed, 28 May 2025 05:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608D9946C;
+	Wed, 28 May 2025 06:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748411953; cv=none; b=EhGVhPSDxdQJYMqtxyHsR5FG4h1nD21ic74ApXGyrogl1WdvQljy7lR7J7LxpVX3S2l2di+hnd4zJa2QhmfNoTs2S8nSESI2pXBZQ7GaS676e8lVKh5tLq5vmTl04MElnjPxEFBuFOD5tcZK2ZUlU6f71vSiZYs0xmYLHrjJnYQ=
+	t=1748412164; cv=none; b=H6v6Jd/j3Ylhs0YIYRwKF4fjHVfsO7q2iFcQBocrmXtnz4T9EtPrmdFjsEENCi8ptM/UaUecSx2P6pKjgZVWyukzBy6w2Mb/8IA+9v1MVrMS7ZHZMZMzf2CYK92A0EQAi+ZC2r1zwgKkbnIri4ABsFpyh2eI7xGLjCaz8Exj/wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748411953; c=relaxed/simple;
-	bh=UTvNIVWWhnhGQ65MdDP5oOsZnXPxBKSF/A15KmFo3Uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZA02qKU2oGK0ZAFK7PKDfcnhXCHE0Q8fXgMtR7/WZQDrQ/yz1uaPDvzKSMhpqT6N8SuIvqTLGKD28esEOGeO1eGicADIZDsmbQ963bk8bYAasLhmx057RCUr1V7iUQvc0HyOCa07Bg/mcFNXRuU6qYTA80OrdXPOxwsuhi1TMXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1tV9d5S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1tV9d5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EC1C4CEE7;
-	Wed, 28 May 2025 05:59:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748411953;
-	bh=UTvNIVWWhnhGQ65MdDP5oOsZnXPxBKSF/A15KmFo3Uk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S1tV9d5SKxXHN6owAkHT5cjDhewtybgTGpD/nB+1zsItUgDmYnfOK5RmFoS1+xIz+
-	 /GCcgJEOly29rFWfNX9koEVZlh4mKhaPk5FBap5aBSj5P7rpQS+iGMwXWaNcVyJI5b
-	 Rj9bIqoV6n1AcJ4q+OeGb3IZUV0eXX2bO0fy/0Ivp2SAViX68H2rjp7PsbO7JEtduR
-	 0R75NKg+qQ41w8CMm6jv9Pz6rQ7AvIlEgZ5TSlSEuQ/OhSTEsiidswMepYgXh78jCm
-	 WzqhBw7KZUhZ5vYxB4foht1DpHTenpLP+UZbs1HBZPtsNIXjpOGgmkIgaw8Vqx9dh9
-	 xcOe6zEJKX9Pg==
-Message-ID: <f41763a9-0371-4a1d-aa3b-0aadf54c0655@kernel.org>
-Date: Wed, 28 May 2025 07:59:07 +0200
+	s=arc-20240116; t=1748412164; c=relaxed/simple;
+	bh=g+ZXM88JGqJF3j2j/6W/3xccEWWCQ5wx+u00mjIwc1E=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=OnKfhqY3UEF9COHHOxLiofb16zGZoOUNunHw/r3iXBMMF8i0pVKpEZZn+VILbtQMgUL5XxySSlS+TAcXs3uIB+wyoem8C+yVQITG9dddGUx7RG5TiemSdna/bQDF9eHU2iJPK2hWyo/LImxJtM8ZWy8N5AD/03mCTsyh52U/qbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b2e8559.dip0.t-ipconnect.de [91.46.133.89])
+	by mail.itouring.de (Postfix) with ESMTPSA id 82921C939;
+	Wed, 28 May 2025 07:57:26 +0200 (CEST)
+Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 26B8360191E20;
+	Wed, 28 May 2025 07:57:26 +0200 (CEST)
+Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
+To: Nam Cao <namcao@linutronix.de>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ John Ogness <john.ogness@linutronix.de>,
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-rt-users@vger.kernel.org,
+ Joe Damato <jdamato@fastly.com>, Martin Karsten <mkarsten@uwaterloo.ca>,
+ Jens Axboe <axboe@kernel.dk>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+ Valentin Schneider <vschneid@redhat.com>
+References: <20250523061104.3490066-1-namcao@linutronix.de>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
+Date: Wed, 28 May 2025 07:57:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/12] arm64: dts: qcom: sm6115: add LPASS devices
-To: Alexey Klimov <alexey.klimov@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Srinivas Kandagatla <srini@kernel.org>, Mark Brown <broonie@kernel.org>,
- linux-sound@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Dmitry Baryshkov <lumag@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20250522-rb2_audio_v3-v3-0-9eeb08cab9dc@linaro.org>
- <20250522-rb2_audio_v3-v3-7-9eeb08cab9dc@linaro.org>
- <26afac49-2500-470b-a21a-d57e4ff14fa6@linaro.org>
- <DA735DM0N649.3NLLMFUW7ANNM@linaro.org>
- <b163bb31-2d02-47bb-a7a1-91c1fb007523@linaro.org>
- <DA78C0GLXJDX.2Z7K375XWOZH3@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20250523061104.3490066-1-namcao@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <DA78C0GLXJDX.2Z7K375XWOZH3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/05/2025 22:36, Alexey Klimov wrote:
-> On Tue May 27, 2025 at 7:33 PM BST, Krzysztof Kozlowski wrote:
->> On 27/05/2025 18:32, Alexey Klimov wrote:
->>> On Thu May 22, 2025 at 6:52 PM BST, Krzysztof Kozlowski wrote:
->>>> On 22/05/2025 19:40, Alexey Klimov wrote:
->>>>> The rxmacro, txmacro, vamacro, soundwire nodes, lpass clock controllers
->>>>> are required to support audio playback and audio capture on sm6115 and
->>>>> its derivatives.
->>>>>
->>>>> Cc: Konrad Dybcio <konradybcio@kernel.org>
->>>>> Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>
->>>> Just keep one CC.
->>>
->>> Question is which one now. Konrad, is it fine to keep your oss.qualcomm.com
->>> email here?
->>>
->>>>> Cc: Srinivas Kandagatla <srini@kernel.org>
->>>>> Co-developed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>>>
->>>> Missing SoB.
->>>
->>> IIRC I took Konrad's changes but at this point I don't remember how much was changed.
->>
->> And stripped his SoB?
-> 
-> If the memory serves me well there was none.
-Sure, then the last part of my response is applicable (which was below
-above sentence).
+Hello,
 
-Best regards,
-Krzysztof
+I have been running with v2 on 6.15.0 without any issues so far, but just
+found this in my server's kern.log:
+
+May 27 22:02:12 tux kernel: ------------[ cut here ]------------
+May 27 22:02:12 tux kernel: WARNING: CPU: 2 PID: 3011 at fs/eventpoll.c:850 __ep_remove+0x137/0x250
+May 27 22:02:12 tux kernel: Modules linked in: loop nfsd auth_rpcgss oid_registry lockd grace sunrpc sch_fq_codel btrfs nct6775 blake2b_generic nct6775_core xor lzo_compress hwmon_vid i915 raid6_pq zstd_compress x86_pkg_temp_thermal drivetemp lzo_decompress coretemp i2c_algo_bit sha512_ssse3 drm_buddy sha512_generic intel_gtt sha256_ssse3 drm_client_lib sha256_generic libsha256 sha1_ssse3 drm_display_helper sha1_generic wmi_bmof drm_kms_helper aesni_intel mq_deadline ttm usbhid gf128mul libaes drm crypto_simd cryptd i2c_i801 video atlantic i2c_smbus drm_panel_orientation_quirks zlib_deflate i2c_core wmi backlight
+May 27 22:02:12 tux kernel: CPU: 2 UID: 996 PID: 3011 Comm: chrony_exporter Not tainted 6.15.0 #1 PREEMPTLAZY
+May 27 22:02:12 tux kernel: Hardware name: System manufacturer System Product Name/P8Z68-V LX, BIOS 4105 07/01/2013
+May 27 22:02:12 tux kernel: RIP: 0010:__ep_remove+0x137/0x250
+May 27 22:02:12 tux kernel: Code: 48 89 c7 48 85 c0 74 22 48 8d 54 24 08 48 89 fe e8 3e 1c 24 00 48 89 df e8 56 1c 24 00 48 89 c7 4c 39 e8 74 07 48 85 ff 75 de <0f> 0b 4d 85 f6 74 10 48 8b 7c 24 08 48 89 da 4c 89 f6 e8 12 1c 24
+May 27 22:02:12 tux kernel: RSP: 0018:ffffc90002a4be40 EFLAGS: 00010246
+May 27 22:02:12 tux kernel: RAX: 0000000000000000 RBX: ffff888104361710 RCX: ffff8881100f2d00
+May 27 22:02:12 tux kernel: RDX: 0000000000000000 RSI: ffff888100e04800 RDI: 0000000000000000
+May 27 22:02:12 tux kernel: RBP: ffff888367929080 R08: ffff888104361718 R09: ffffffff81575c7b
+May 27 22:02:12 tux kernel: R10: 0000000000000001 R11: 0000000000000000 R12: ffff8881043616c0
+May 27 22:02:12 tux kernel: R13: ffff8883679290a0 R14: 0000000000000000 R15: 0000000000000002
+May 27 22:02:12 tux kernel: FS:  00007fee87df5740(0000) GS:ffff88887c9c4000(0000) knlGS:0000000000000000
+May 27 22:02:12 tux kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+May 27 22:02:12 tux kernel: CR2: 000000c002a33000 CR3: 00000001076f1003 CR4: 00000000000606f0
+May 27 22:02:12 tux kernel: Call Trace:
+May 27 22:02:12 tux kernel:  <TASK>
+May 27 22:02:12 tux kernel:  do_epoll_ctl+0x6ee/0xcf0
+May 27 22:02:12 tux kernel:  ? kmem_cache_free+0x2c5/0x3b0
+May 27 22:02:12 tux kernel:  __x64_sys_epoll_ctl+0x53/0x70
+May 27 22:02:12 tux kernel:  do_syscall_64+0x47/0x100
+May 27 22:02:12 tux kernel:  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+May 27 22:02:12 tux kernel: RIP: 0033:0x55a289d4952e
+May 27 22:02:12 tux kernel: Code: 24 28 44 8b 44 24 2c e9 70 ff ff ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 49 89 f2 48 89 fa 48 89 ce 48 89 df 0f 05 <48> 3d 01 f0 ff ff 76 15 48 f7 d8 48 89 c1 48 c7 c0 ff ff ff ff 48
+May 27 22:02:12 tux kernel: RSP: 002b:000000c0000584d0 EFLAGS: 00000246 ORIG_RAX: 00000000000000e9
+May 27 22:02:12 tux kernel: RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000055a289d4952e
+May 27 22:02:12 tux kernel: RDX: 0000000000000008 RSI: 0000000000000002 RDI: 0000000000000004
+May 27 22:02:12 tux kernel: RBP: 000000c000058528 R08: 0000000000000000 R09: 0000000000000000
+May 27 22:02:12 tux kernel: R10: 000000c000058514 R11: 0000000000000246 R12: 000000c000058578
+May 27 22:02:12 tux kernel: R13: 000000c00015e000 R14: 000000c000005a40 R15: 0000000000000000
+May 27 22:02:12 tux kernel:  </TASK>
+May 27 22:02:12 tux kernel: ---[ end trace 0000000000000000 ]---
+
+It seems the condition (!n) in __ep_remove is not always true and the WARN_ON triggers.
+This is the first and only time I've seen this. Currently rebuilding with v3.
+
+cheers
+Holger
+
