@@ -1,192 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902A928315B
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:12:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23418288C03;
+	Wed, 28 May 2025 16:12:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448758; cv=none; b=Xj1XizL5rFeS/W1QQxWczwHELJAwpjJ6j8JhFPt2+sSiBWyM98ApG3z7fN+29CwsCdknAUdBbRITqQcRzpKNHS8y93cjfuKGTUC8k4uv+7WltYogCiyqpIHfuRr5fPRhA5IX36KEyf6CPmUKvLeMeJvUtSJm2o+/ZHm36FGJfec=
+	t=1748448777; cv=none; b=hhLCtuNd5sy6YVr6xRl77yJWwMELpCOMprads1O8qZ83rBtTKfUciKgU25cL3tgKPm3SJyF1KZ0O+SlkEwqMLoNNcvqq2MSGsnLrbQkIZ6FX689+GtAZlD1LqbI2EMl6SkF8rVgChesPFqw7Od5dT2PW4m/iNGtMZf89i/2rRi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448758; c=relaxed/simple;
-	bh=dwuxk90UKREmy9WgLcJOSq1Ev+FSaeKaXWlk1jnBAls=;
+	s=arc-20240116; t=1748448777; c=relaxed/simple;
+	bh=fpi71ToKhzI4Ih0RsP1jwKepkejd8JqAFlfm4lSaG00=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnTH92CINS41aI/XcKfxrNcwByuAwNskuq5N2JQlD4DuY3GqM+g0bksno3SA20n3+ZDWjdUJSGCVtMKUOGF1QYNrMz8MKycT/1+wq5fk7wqiy3t1OyCwCDRAaH5eX2yHzkkO9TL70+chnaSDi5QtEFoCA9o0SXLT5RWEoj7M2s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cV6HiJGS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=co4kDXyYan99l1tRN7a4B/UnhNZtDfYoqNYT/051+TEs1Xh0PTAq/rZR9Sut3ha/JPdnWpmKDGTY2CTmmswzBLWlgwUvjahI86dphRFnsYx1dHoOg4NvoAkGYVo7QWVyFdDjn186B2N+HYy1bbTYMLkZfRul6ITLmbHF2vnkNe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rHml+0Ha; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cV6HiJGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9622C4CEE3;
-	Wed, 28 May 2025 16:12:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rHml+0Ha"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C52AC4CEE3;
+	Wed, 28 May 2025 16:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748448758;
-	bh=dwuxk90UKREmy9WgLcJOSq1Ev+FSaeKaXWlk1jnBAls=;
+	s=k20201202; t=1748448776;
+	bh=fpi71ToKhzI4Ih0RsP1jwKepkejd8JqAFlfm4lSaG00=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cV6HiJGSgJWKc6X8/f6OPyR3AQArSISL2a1aSf4TDDk6Cjv0TprJSnqX45NeISZps
-	 FkbZJsX1iS0bFzgmTrsP0beywFgRt5gjjQMGTkaTyzrJSXHDS9BtCp21BCP2Ut2M38
-	 cdDQMCrkL108fntO3JlyqLHjbMu+9XNhZs0Wsaprn6EdBNXsb1tfsVhu6ULNESDvuT
-	 SSU/45V3SwslFvtxyC4Y0Aruttcgn2K9EjcRd2Yetg5VxBexiSfjujQgrjwt6feAwv
-	 7qI6d41xWspDDMZoXQGQTusupOrUKwX1qozswqtPaMV9OUyGQL6rnOcIR9ju1LO2hO
-	 0APbF0D/9Xo1g==
-Date: Wed, 28 May 2025 16:12:36 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	stable@kernel.org
-Subject: Re: [PATCH] f2fs: fix to zero post-eof page
-Message-ID: <aDc19Lwwm3JkCi3Z@google.com>
-References: <20250521062403.742048-1-chao@kernel.org>
+	b=rHml+0HaqUcY9UrUHjk+viHrLfRKcPDgWPT5GKYfY3635zzgS4jydPVsZ3YIk4vsu
+	 OxwZDw9XNvoW5fIhEPZ7OpVLSKaxF0AkY70oHc/tdtbcmW/SVAd/agOb+tGeVaauVU
+	 oZfW1h1OAyBHt/ScLR4+SOj2bv8TyKYsaAEbR97TXQu3Ak/htIc3iMcOol4h3upiuj
+	 sq8zzSGeyujGxUqFI8Irqn7+RzWLrEuZW22criHBa3uiE+hfg8zHBdCYkjPxfhDN0H
+	 9u+rB+GdOLELUr7J3ovntiXCYTlNDcZm9eBK7FKO9oRw196ml3AuUhZG5YSliJ+39M
+	 gaTpVE4liakIA==
+Date: Wed, 28 May 2025 17:12:50 +0100
+From: Simon Horman <horms@kernel.org>
+To: Meghana Malladi <m-malladi@ti.com>
+Cc: saikrishnag@marvell.com, pabeni@redhat.com, kuba@kernel.org,
+	edumazet@google.com, davem@davemloft.net, andrew+netdev@lunn.ch,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, srk@ti.com,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, danishanwar@ti.com
+Subject: Re: [PATCH net] net: ti: icssg-prueth: Fix swapped TX stats for MII
+ interfaces.
+Message-ID: <20250528161250.GE1484967@horms.kernel.org>
+References: <20250527121325.479334-1-m-malladi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250521062403.742048-1-chao@kernel.org>
+In-Reply-To: <20250527121325.479334-1-m-malladi@ti.com>
 
-Chao,
-
-Can we add the similar path that other filesystems have?
-
-On 05/21, Chao Yu wrote:
-> fstest reports a f2fs bug:
+On Tue, May 27, 2025 at 05:43:25PM +0530, Meghana Malladi wrote:
+> In MII mode, Tx lines are swapped for port0 and port1, which means
+> Tx port0 receives data from PRU1 and the Tx port1 receives data from
+> PRU0. This is an expected hardware behavior and reading the Tx stats
+> needs to be handled accordingly in the driver. Update the driver to
+> read Tx stats from the PRU1 for port0 and PRU0 for port1.
 > 
-> generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/git/fstests/results//generic/363.out.bad)
->     --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
->     +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:58.000000000 +0800
->     @@ -1,2 +1,78 @@
->      QA output created by 363
->      fsx -q -S 0 -e 1 -N 100000
->     +READ BAD DATA: offset = 0xd6fb, size = 0xf044, fname = /mnt/f2fs/junk
->     +OFFSET      GOOD    BAD     RANGE
->     +0x1540d     0x0000  0x2a25  0x0
->     +operation# (mod 256) for the bad data may be 37
->     +0x1540e     0x0000  0x2527  0x1
->     ...
->     (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fstests/results//generic/363.out.bad'  to see the entire diff)
-> Ran: generic/363
-> Failures: generic/363
-> Failed 1 of 1 tests
-> 
-> The root cause is user can update post-eof page via mmap, however, f2fs missed
-> to zero post-eof page in below operations, so, once it expands i_size, then it
-> will include dummy data locates previous post-eof page, so during below
-> operations, we need to zero post-eof page.
-> 
-> Operations which can include dummy data after previous i_size after expanding
-> i_size:
-> - write
-> - mapwrite
-> - truncate
-> - fallocate
->  * preallocate
->  * zero_range
->  * insert_range
->  * collapse_range
-> - clone_range (doesn’t support in f2fs)
-> - copy_range (doesn’t support in f2fs)
-> 
-> Cc: stable@kernel.org
-> Signed-off-by: Chao Yu <chao@kernel.org>
+> Fixes: c1e10d5dc7a1 ("net: ti: icssg-prueth: Add ICSSG Stats")
+> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
 > ---
->  fs/f2fs/file.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+>  drivers/net/ethernet/ti/icssg/icssg_stats.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 6bd3de64f2a8..c7c66e591ebc 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -35,6 +35,17 @@
->  #include <trace/events/f2fs.h>
->  #include <uapi/linux/f2fs.h>
+> diff --git a/drivers/net/ethernet/ti/icssg/icssg_stats.c b/drivers/net/ethernet/ti/icssg/icssg_stats.c
+> index 6f0edae38ea2..0b77930b2f08 100644
+> --- a/drivers/net/ethernet/ti/icssg/icssg_stats.c
+> +++ b/drivers/net/ethernet/ti/icssg/icssg_stats.c
+> @@ -29,6 +29,10 @@ void emac_update_hardware_stats(struct prueth_emac *emac)
+>  	spin_lock(&prueth->stats_lock);
 >  
-> +static void f2fs_zero_post_eof_page(struct inode *inode, loff_t new_size)
-> +{
-> +	loff_t old_size = i_size_read(inode);
-> +
-> +	if (old_size > new_size)
-> +		return;
-> +
-> +	/* zero or drop pages only in range of [old_size, new_size] */
-> +	truncate_pagecache(inode, old_size);
-> +}
-> +
->  static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
->  {
->  	struct inode *inode = file_inode(vmf->vma->vm_file);
-> @@ -105,6 +116,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
->  
->  	file_update_time(vmf->vma->vm_file);
->  	filemap_invalidate_lock_shared(inode->i_mapping);
-> +
-> +	f2fs_zero_post_eof_page(inode, (folio->index + 1) << PAGE_SHIFT);
-> +
->  	folio_lock(folio);
->  	if (unlikely(folio->mapping != inode->i_mapping ||
->  			folio_pos(folio) > i_size_read(inode) ||
-> @@ -1109,6 +1123,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->  		f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
->  		filemap_invalidate_lock(inode->i_mapping);
->  
-> +		if (attr->ia_size > old_size)
-> +			f2fs_zero_post_eof_page(inode, old_size);
->  		truncate_setsize(inode, attr->ia_size);
->  
->  		if (attr->ia_size <= old_size)
-> @@ -1227,6 +1243,8 @@ static int f2fs_punch_hole(struct inode *inode, loff_t offset, loff_t len)
->  	if (ret)
->  		return ret;
->  
-> +	f2fs_zero_post_eof_page(inode, offset + len);
-> +
->  	pg_start = ((unsigned long long) offset) >> PAGE_SHIFT;
->  	pg_end = ((unsigned long long) offset + len) >> PAGE_SHIFT;
->  
-> @@ -1542,6 +1560,8 @@ static int f2fs_collapse_range(struct inode *inode, loff_t offset, loff_t len)
->  	if (ret)
->  		return ret;
->  
-> +	f2fs_zero_post_eof_page(inode, offset + len);
-> +
->  	ret = f2fs_do_collapse(inode, offset, len);
->  	if (ret)
->  		return ret;
-> @@ -1631,6 +1651,8 @@ static int f2fs_zero_range(struct inode *inode, loff_t offset, loff_t len,
->  	if (ret)
->  		return ret;
->  
-> +	f2fs_zero_post_eof_page(inode, offset + len);
-> +
->  	pg_start = ((unsigned long long) offset) >> PAGE_SHIFT;
->  	pg_end = ((unsigned long long) offset + len) >> PAGE_SHIFT;
->  
-> @@ -1754,6 +1776,8 @@ static int f2fs_insert_range(struct inode *inode, loff_t offset, loff_t len)
->  	if (ret)
->  		return ret;
->  
-> +	f2fs_zero_post_eof_page(inode, offset + len);
-> +
->  	pg_start = offset >> PAGE_SHIFT;
->  	pg_end = (offset + len) >> PAGE_SHIFT;
->  	delta = pg_end - pg_start;
-> @@ -1819,6 +1843,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
->  	if (err)
->  		return err;
->  
-> +	f2fs_zero_post_eof_page(inode, offset + len);
-> +
->  	f2fs_balance_fs(sbi, true);
->  
->  	pg_start = ((unsigned long long)offset) >> PAGE_SHIFT;
-> @@ -4860,6 +4886,8 @@ static ssize_t f2fs_write_checks(struct kiocb *iocb, struct iov_iter *from)
->  	err = file_modified(file);
->  	if (err)
->  		return err;
-> +
-> +	f2fs_zero_post_eof_page(inode, iocb->ki_pos + iov_iter_count(from));
->  	return count;
->  }
->  
+>  	for (i = 0; i < ARRAY_SIZE(icssg_all_miig_stats); i++) {
+
+Hi Meghana,
+
+Perhaps it would be nice to include a comment here.
+
+> +		if (emac->phy_if == PHY_INTERFACE_MODE_MII &&
+> +		    icssg_all_miig_stats[i].offset >= ICSSG_TX_PACKET_OFFSET &&
+> +		    icssg_all_miig_stats[i].offset <= ICSSG_TX_BYTE_OFFSET)
+> +			base = stats_base[slice ^ 1];
+>  		regmap_read(prueth->miig_rt,
+>  			    base + icssg_all_miig_stats[i].offset,
+>  			    &val);
+> 
+> base-commit: 32374234ab0101881e7d0c6a8ef7ebce566c46c9
 > -- 
-> 2.49.0
+> 2.43.0
+> 
+> 
