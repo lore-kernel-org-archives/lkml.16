@@ -1,144 +1,109 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7217C28CF76
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386451B6D06
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448907; cv=none; b=SSi/oS1hIDHAjcquvhoEipnuLja3mSZzk1ug47SZKLIrubMcmCth80CZ2JWk9qjc7eBiecl96yHrBe9f87peUMPO8KdEVinhEpPJkA2bRj6CtqHn1Da2kPFiVk01SWKUXarE3gdQppHqCkUlQ/AkOF/cOVZylluNz0pqc309isM=
+	t=1748448945; cv=none; b=RoslpByZxi0M25itpCAS7/qYFRea+duRgQZeTIy6F+bMYy/ApGZYfWNVdQKXEcPAQqaEe55XPt63+3OGLJgaHUg30EBEDnXPkslg8tWK5rcdHDmp1MMZrUrfdsQ9C8yQPMSkBuO5lcAFfzgsc021WO8kasYPQi5ZfnojpNj05LI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448907; c=relaxed/simple;
-	bh=oftCGjGpACLgWjDfLsAyXAfYxlJ+xGu9uinKdgFYgsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vf8r9dhYTrCeu4F8jtHsohq+7C1wPYjAxkMKJi//7Cnb61TF+0583fiPEgBotePwCdpm0/mXdhW6zqOUFOFt6MeTTJ1faJNGgLz6HUH0QTienRtptms1X2nc9N7hB+fGzO6nbO+KQir3CxHuoOXmSWhlRHlc3O74+rkeHyczYqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SaW5KfKM; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748448945; c=relaxed/simple;
+	bh=7szsciP4s4R9wknqXBXBTZqN3lbaKfXPhicwDQ8Hmdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gx+eQ+Rpr16FWfHePBZD6v/We6w9KcfWrxXrhTEu8rJMKPlcDnHWTp6eUUCL8cSCZHSfaqxebZ7CI9GC4Cgvns7ERejL4HINPqyhBQ2BsebXuJ2vsiS5vbtUlztr20U8Gu8BNlcRYdr6VAS0mI4TJ5d6jB7KchWwIvQ6F0s7s/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gL3Skzeh; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SaW5KfKM"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e75668006b9so4011639276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:15:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gL3Skzeh"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so432465e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748448904; x=1749053704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oftCGjGpACLgWjDfLsAyXAfYxlJ+xGu9uinKdgFYgsQ=;
-        b=SaW5KfKMU5iqNDyf1Ck5tVJ6aA4C2qc8B6kDtVSqWhRfO0yrI30RlNaU7XxBH6ImVH
-         ocqLYMS3DEHv0Uv8ewSNkaN8X5zCRtxe8yxHIrtwPNIlrRHWJsvHutujKcjXdYTHur6b
-         HeZhdwqF71RlsixpiKycpzY/7vaQpZ2rwW0Fp4KPSLAT96sJ8Au/IaQoTALo3SFbbDmh
-         tWvyCKXVCPBfWU6r+SPVpYdf7udeglG5hK4y8bhMTp5/ecyFDmJ+JtSDM8S6dplBuYSZ
-         B//JB5TJLZxRIIY7a6BjTfoj2xc0/BW/KpRoYyLfsQBiZsYhY/wemUY14wdhrGGTd/cj
-         R+Ug==
+        d=linaro.org; s=google; t=1748448941; x=1749053741; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+C1RzNTr6MbSo58wcEFxOVAmKna9VJA+FNUjpMEd4H8=;
+        b=gL3SkzehCRPTbEareMaVrIuuL6aN9um90oEuhc5yudHJfX8iUpFwRjTv6VAtRpVUEu
+         ecAF5HVrSVpLSDuTcwdCGvtq+A3LrsFZWosbDZi4JZQaHdkErRKv9mq2KROHE5T7r47x
+         K+JFF1SZaGOziosFC3+L0UHqqfItztS6aMDZeNddyNnIyuQBrF+nR/75OSlXJZwtTEzY
+         dD5nuonu3a0OvG1FFjc1Hp654WRktMqyWlWOILhcM+AJBXOP9HoQuitiDqLX0LdIMtYV
+         AXH3N04AZ5E+nRN1c8ZtvKmDrBTMlLTOa0cR2rxDHdbGDSUMGTR50BNX/gOuVuqJR2Ox
+         mQMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748448904; x=1749053704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oftCGjGpACLgWjDfLsAyXAfYxlJ+xGu9uinKdgFYgsQ=;
-        b=lw+b1FXtFw+tM3rYcqSzxRUcM+mHVL5z6dPkdhQkfcY1U7RO8FahW1lnPKGQ5rgOwm
-         zGItms3Xr29Jtg3lRwsrqcFL4u725rb8zRcl+Uv0S0g6JJM/6UovsdYdz7qLj/qtpMqJ
-         aSB4/s+8FpFy/3eDYuyBkcewKGPiBmqMRe6O9g6eyzube2I07i+uZy4Kum+avhFu9g4g
-         k8IhKItRzwuFf0m3jyE9TQpXTW1wCY/UvE8ScQ3kwoTdsVRlYv7X3GtOaGQz3ZnGZU6k
-         m+2tQFZ9eOc4NYdYHAHEgjiVWJIwCxPfsTxVz0n1G2LHTovfggMhUfF19JnZinfGSdN+
-         jyEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPFCI0uzEsVYql83HQXAS3+S9CqBDqFFTD/jh435jfxpqEvrncoXsGN7BeSzLIx78a5E5rbH+2KebHq5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzywzfPs0AbU/FAGSzpULxCdGcD1nwvdzj5Tuz1QkMfdQuG8fHS
-	fbzh9vMKnB2GL0PEzKiD7ec/R2GN735GCmW8awohKm2OK+e58FllBGse6KuS2/Pv3AWUnyI8yUQ
-	XfiTCFiIyLLYmMM25fNSLnURQ3F1pe+ROGLWvV1Sm
-X-Gm-Gg: ASbGncu87sfshJq0AvD7uPyavrAMYPX+1cz1ndjG9i/CroMKbx0gbWN+IgsQfDrC9+G
-	7oi7TR95v0PSqaNEET9set850wxhQZXDs5HQzEM2D5m3aD/9WnqcSusb1EqfclF7lbEqKNPLc/i
-	945ab5ow9J0evfU1rmFV1N1hLK5glVZII7iEW4dJ8sTwyxB98bhr5JCFcmiaHbyov5naEgZPKUT
-	Mz2hw==
-X-Google-Smtp-Source: AGHT+IFwW0/MrySaPT+ucgIg1dChgPDCXdJtXWgrMY95UPokdViJg0CdZ9UXjyC8CVjk5twtVkLrVgdpew1P2vJKaig=
-X-Received: by 2002:a05:6902:1b8a:b0:e7d:c87a:6249 with SMTP id
- 3f1490d57ef6-e7dc87a6957mr7030815276.36.1748448903884; Wed, 28 May 2025
- 09:15:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748448941; x=1749053741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+C1RzNTr6MbSo58wcEFxOVAmKna9VJA+FNUjpMEd4H8=;
+        b=V88Rn+6y39M0m5wiTN8LO5oOV/lN9GHkKIJy4lj8TIp799CC1TTVipeXahqokaaOD4
+         IHseIa01yrYxA75pEWqkqGElxWZ3uf9rzC/hAHa9pG3BgXUY3vRnynqXuioNyITX+rLj
+         qjIi41b4BFVNFM8cUMwHcKcDk7RCMA/2rHdAUilrq8WMmVpksfqjz1jvgxJEBD5KAMp5
+         pBPFruoNC+yxUYh0j53ZBGr5sYunDHRvhK6xKFRvpTYxmcibHrDb3WjGHoWTC2HlbN/k
+         yzHmpLux6fQovZT4IHSpqbJVK2PF3bgXaszgsGQEOuQPZdzadC7Ouv8JJwPNUGlBlYdg
+         nfIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUDb3zpPCBQa898vlNL4I8WYxy/Nb1QzLXl1hKLDHYYftCGxs5NXV/xNfILgKMK97V3Yh3IUkUps/wq4EA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQRBV+MkKuZFzpy4Lbn1xUV17/ot8on5VH2p7462za0naOARhI
+	UN3YiKE5IpqMNOWXvNcpTVtyihz/+Ory3t1GWvepOL5kL0lfhH3GDK4xOceMqjPG0Uw=
+X-Gm-Gg: ASbGnctI9+MIb78qM0NEfmdaRp83ogGhW+04hzHazg7r5yh4Weltq5lY/1n/87RWovF
+	oRTl7033zECstFPrvG9cv7mLZ1aceATZL/v1IqwlXicCjxK+ZcZiPYPzkuopmGT4HLvMYgKptZ0
+	LdBpGMSphs6pTMRTFp9bevPPeHNxjv0F91JfT2YSAfMOU1YZe3+HKKSa6e2kUDWXjHsC5YYZ5kN
+	IM4STteYC5drstwzMp7dxj+yvFxBcu0wb+mkMLwGO4H0tqTmTdolMxNyBzqNM1+ge5Vhzrdmkxt
+	kvz0bAgQJ/0bvqaL8BTwTqNYjY0H5a4+EBrhNWYogNw6SejpNkXg3V8=
+X-Google-Smtp-Source: AGHT+IGY3B2n3dEpBIQTEIc4UcD13zJbfNxCVilIBzIvGrsLXjUktw06sdl/F0Rxa0Z5ypRV303Ptw==
+X-Received: by 2002:a05:6000:2389:b0:3a4:d238:682c with SMTP id ffacd0b85a97d-3a4d2386cfbmr12567851f8f.53.1748448941430;
+        Wed, 28 May 2025 09:15:41 -0700 (PDT)
+Received: from localhost ([41.210.143.146])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eac8a74esm1859615f8f.45.2025.05.28.09.15.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 09:15:41 -0700 (PDT)
+Date: Wed, 28 May 2025 19:15:36 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Shiju Jose <shiju.jose@huawei.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Li Ming <ming.li@zohomail.com>, Fan Ni <fan.ni@samsung.com>,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] cxl: fix return value in
+ cxlctl_validate_set_features()
+Message-ID: <aDc2qGgYVzXMSUpz@stanley.mountain>
+References: <aDbFPSCujpJLY1if@stanley.mountain>
+ <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528023326.3499204-1-gavinguo@igalia.com> <aDbXEnqnpDnAx4Mw@localhost.localdomain>
- <aDcl2YM5wX-MwzbM@x1.local> <629bb87e-c493-4069-866c-20e02c14ddcc@redhat.com> <aDcvplLNH0nGsLD1@localhost.localdomain>
-In-Reply-To: <aDcvplLNH0nGsLD1@localhost.localdomain>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 28 May 2025 12:14:28 -0400
-X-Gm-Features: AX0GCFtQ3Y_TJAz9gxU-mydw8Rp4n4FQFwD-d7vMDgv4nmmNrG0P_Nb3Fcuv7Sk
-Message-ID: <CADrL8HXD0hX+5WvtZWKXAr0NvfvOJZhqL9PVBawYQuAyzhGgYg@mail.gmail.com>
-Subject: Re: [PATCH v3] mm/hugetlb: fix a deadlock with pagecache_folio and hugetlb_fault_mutex_table
-To: Oscar Salvador <osalvador@suse.de>
-Cc: David Hildenbrand <david@redhat.com>, Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev, 
-	akpm@linux-foundation.org, mike.kravetz@oracle.com, kernel-dev@igalia.com, 
-	stable@vger.kernel.org, Hugh Dickins <hughd@google.com>, 
-	Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDcqO5hlGrRXzIPT@aschofie-mobl2.lan>
 
-On Wed, May 28, 2025 at 11:45=E2=80=AFAM Oscar Salvador <osalvador@suse.de>=
- wrote:
->
-> On Wed, May 28, 2025 at 05:09:26PM +0200, David Hildenbrand wrote:
-> > On 28.05.25 17:03, Peter Xu wrote:
-> > > So I'm not 100% sure we need the folio lock even for copy; IIUC a ref=
-count
-> > > would be enough?
-> >
-> > The introducing patches seem to talk about blocking concurrent migratio=
-n /
-> > rmap walks.
->
-> I thought the main reason was because PageLock protects us against writes=
-,
-> so when copying (in case of copying the underlying file), we want the
-> file to be stable throughout the copy?
->
-> > Maybe also concurrent fallocate(PUNCH_HOLE) is a problem regarding
-> > reservations? Not sure ...
->
-> fallocate()->hugetlb_vmdelete_list() tries to grab the vma in write-mode,
-> and hugetlb_wp() grabs the lock in read-mode, so we should be covered?
->
-> Also, hugetlbfs_punch_hole()->remove_inode_hugepages() will try to grab t=
-he mutex.
->
-> The only fishy thing I see is hugetlbfs_zero_partial_page().
->
-> But that is for old_page, and as I said, I thought main reason was to
-> protect us against writes during the copy.
->
-> > For 2) I am also not sure if we need need the pagecache folio locked; I
-> > doubt it ... but this code is not the easiest to follow.
->
-> I have been staring at that code and thinking about potential scenarios
-> for a few days now, and I cannot convice myself that we need
-> pagecache_folio's lock when pagecache_folio !=3D old_folio because as a
-> matter of fact I cannot think of anything it protects us against.
+On Wed, May 28, 2025 at 08:22:35AM -0700, Alison Schofield wrote:
+> On Wed, May 28, 2025 at 11:11:41AM +0300, Dan Carpenter wrote:
+> > The cxlctl_validate_set_features() function is type bool.  It's supposed
+> > to return true for valid requests and false for invalid.  However, this
+> > error path returns ERR_PTR(-EINVAL) which is true when it was intended to
+> > return false.
+> 
+> Shiju - Can you trace this one through and add the impact statement?
+> Wondering if this is going to fail gracefully, or badly, further 
+> down this path?
+> 
 
-Hi Oscar,
+Sorry, I would normally analyse this a bit more myself, but it's only in
+linux-next so I assumed no one was using it yet.  It ends up being fine.
 
-Have you thought about the UFFDIO_CONTINUE case (hugetlb_mfill_atomic_pte()=
-)?
+cxlctl_set_feature() has a check for:
 
-I'm slightly concerned that, if you aren't holding pagecache_folio's
-lock, there might be issues where hugetlb_mfill_atomic_pte() proceeds
-to map a hugetlb page that it is not supposed to. (For example, if the
-fault handler does not generally hold pagecache_folio's lock,
-hugetlb_mfill_atomic_pte() will see a page in the pagecache and map
-it, even though it may not have been zeroed yet.)
+	if (rpc_in->op_size <= sizeof(feat_in->hdr))
 
-I haven't had enough time to fully think through this case, but just
-want to make sure it has been considered.
+at the start and sizeof(feat_in->hdr) is larger than sizeof(uuid_t).
 
-Thanks!
+regards,
+dan carpenter
 
-> I plan to rework this in a more sane way, or at least less offusctaed, an=
-d then
-> Galvin can fire his syzkaller to check whether we are good.
->
-> --
-> Oscar Salvador
-> SUSE Labs
->
