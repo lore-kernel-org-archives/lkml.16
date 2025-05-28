@@ -1,93 +1,140 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA1541760
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5034863B9;
+	Wed, 28 May 2025 21:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748468579; cv=none; b=YRCSUCrUben1I42tF1DVlQBO9zClDK1LXaYbJMtcO/FO/O8MB2q6TO4Rl+ZGoCzPHfOciHs85k4zOg6ZJV9lG14xHe+gtxzc7RnaefkmeGaJLExN3hNlQuFiu1Hrmj8T3dy8sojtFOia6/5QDTB+TA5ulvUeX5JfoqqHFZsQdXY=
+	t=1748468755; cv=none; b=Kw7O3VefcHuQCg3i2YN++jx0FLesj8A1BFkv59w6nh1my8lknoAI6HQjpNZn7rQWOe3mSm73M66mwMMidBu6cxtCpG5BhjwnCFASKDKxYPcQnsEmcCjAb25fiKZIH9bGVeESySTpTpeAsH6qE8EVoU1s/3Vt7gY5+HdIHE9JvHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748468579; c=relaxed/simple;
-	bh=5SEO4Lii/dO1ErTWQYUDBUHArBBPtFeRt2gLsxAsbww=;
+	s=arc-20240116; t=1748468755; c=relaxed/simple;
+	bh=hpEaJTEpfR9+TojleH3uk2aBSDLiXQVkHne1HqD9Ces=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YVskY7FzWeDpx4OgBvikMFWVMZMGgcHaMAju/ShofhfGT5GyYfJRT9HkuLh0kzCp5I2lxJydKwifssnI6zGnNxonjkCqWS8GVXOfnwSgeATC4fRTQXJ05jq330PrHM7gPUUHAoay3Fsd/9tlJGXvlEfTeg3slVcBA5QA0gADwmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=hPYc7XV+; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=Ke6ECF/G+9wR2Bl/fJChg2lCnQna5lSQP/7E1iAz5tLylGC8GbD+KU53LtAjvtz08C0IvcmSREvJzDUIlDWgsiNHoCV5Iz91HdC3mmMkO53LmkM2G27fVVQq+i0MfwN+t9T95ENH4TlNr581YyHLj8ZudN2coXOHVDk+CMxd5As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TBEKTjwU; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="hPYc7XV+"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so41947066b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:42:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBEKTjwU"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-51eb1a714bfso135817e0c.3;
+        Wed, 28 May 2025 14:45:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1748468574; x=1749073374; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F3HkVKIWy8f2uOrQhhKClido3q4z9FPIBYGEy/T4RDY=;
-        b=hPYc7XV+3pFI24+qQ6+iSSqEB93hIhHX3+HK2/jfhca+uyDrImL1av05GxpPBl6mf7
-         yyvjZWVDF9HmG8/bv6M3niqD0otCYGsNUfiLwGtQcw2xKQJOeyjQrCNSckm/GSqxhsPy
-         NstKli8d65ZOe6OpIqqcFYPsPKe3owFsI1O/4=
+        d=gmail.com; s=20230601; t=1748468753; x=1749073553; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpEaJTEpfR9+TojleH3uk2aBSDLiXQVkHne1HqD9Ces=;
+        b=TBEKTjwUaPQY1JKkSAkae+nIUlVdZHWmnMcyCtPezNz2TjHs+SIEYyoaJjctmi5O9C
+         rumHIhodvwZnN2W1Jvj4x9ytUGBBV7DY8si6BkUwD3gEEdIwgQ+gDB0KWA5k4KJrHxG2
+         W/mgmKkTdqL0sLFP+sRtcWW8bx+Az8/yi7E57da7b0HfK08k1bRI5QRUEmpWXvSAJk/X
+         3dak6YcHY84Ch778O7mIlZ9222XL8TmzVFhdmxOeBGdmv05oIr49xEEBrl2mPNLv9yo7
+         ieUL6k0WNRaEWk+1MI0lmMl92tJOOoNw3ryJF5b20CojpQRvc0za4Z54XuixG4UbMjp+
+         eerA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748468574; x=1749073374;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F3HkVKIWy8f2uOrQhhKClido3q4z9FPIBYGEy/T4RDY=;
-        b=fUxTWHBCiH2R9htzDKSKzIItGFEH4E7zWbGmM2GlBHraPy4GRP1kCbpaCRGRgKUkiv
-         p5k8PgHbwDXn8N1VOMsnYPHRFOCvsPR9PgsrPs4zgDoqOf09PDZ3qrn1wIjmdU/hENNX
-         MMWapNTaAXNxB9fEABTHvlgpEYz1qhorxLeIL20PwvY+Z1fyv9AXXT8gxH8acRbwLyI8
-         IiqKYGervs0uENLCggR56pQvHq5xeHXP74X8GJ2DdW+sanlo9Hdu8Ru8dLVTUZe9uipU
-         TdkeBtQlpgTTQS6etWOvf+8Ov5L/Z1Rdd7cCOnR0MIR+R6sf/fb4SHfDzN8dCcqBbURW
-         fP6Q==
-X-Gm-Message-State: AOJu0YyD8KtwETHuGeb7D+QDlPn83A2Va1kTJw915Sv0hmHSgn7Xx0+J
-	ruVIfVb20UG2E2v9AecYhPOYBJ0ado/SVPnsSxUbntq/WqG3XZlDcNytwWWJThx/kUdy49Vb3zS
-	ULz/gZlA=
-X-Gm-Gg: ASbGncuKYMExpaON+ukfHuWuQ1KAg93Yq0roIp/v5lL/qw6AtCwDIYGkjH4CzT4do9B
-	c5LUzbg4Mm1gW+oYu7CXRbEO4orARpu/AQ+rlztQtGm1VbMN+wg20B3KprO5JcTvVU3LLljfvjN
-	IEDicFZcpCsHhmEk/jPYdBhtk2AJZoTTnSlG17PTx5wfnDJ07Ox4bS86Gm7f2Tuzxb3UEccj7NH
-	OvC9a9cMOMbfDIMG4Rv2r9XRDF6EyYZuPJY4+cSaFy4RnR4vvBmK7OYtML+JBVj3P2bEizHyw2a
-	QGdSsEAjtZJ0gIUj3UsEKGR3eGEbFbpWlgj2XdxhmmEslBE1q/Rx6aZZuNVPSF4819TcBoSBKT/
-	TIZ5dj39inibyx063je4sea8K5YQeJJtkvjDU
-X-Google-Smtp-Source: AGHT+IHU50JzDeher6U7Sj4qtwlM7n1WrYNI7tNsEW2du8vXaKoPt4B/YiLnojgmEX9fl3gBpUHLtQ==
-X-Received: by 2002:a17:907:3c8e:b0:ad9:f54f:70a2 with SMTP id a640c23a62f3a-ad9f54f7193mr29247366b.22.1748468574028;
-        Wed, 28 May 2025 14:42:54 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ada6ad6a84dsm5437266b.162.2025.05.28.14.42.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 14:42:52 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad5273c1fd7so41943966b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:42:52 -0700 (PDT)
-X-Received: by 2002:a17:906:dc8a:b0:ad2:2fdd:fef2 with SMTP id
- a640c23a62f3a-ad85b27959amr1686791966b.53.1748468572584; Wed, 28 May 2025
- 14:42:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1748468753; x=1749073553;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hpEaJTEpfR9+TojleH3uk2aBSDLiXQVkHne1HqD9Ces=;
+        b=tVJ+Pavdcpe3FRd1Xo4Mhoy+vr+xaqX5w4brhIRpQZnrhmSKWgvg/Oe2OKB0IhD9Jl
+         3QdTc0GDL6QzlI+k33hZ1N4cZKI9k9Y+PL6mRkL0bhbmhOsZvnWq0WDUzdLgec6Q78b0
+         XUpF/epG+VvF2NVz5TOm13B/jHoohn35xeZFSDN4v7WEdirwVySJ6rmweRrX3znUc3Kc
+         Q4A9DqKlBVLjGys/xXtjBK6EBLm9cegP7iHbfNknpLTSdz/arvz1lwsbePa+RUrsAT+M
+         6g20IRx2hemPiMOAIWIxJ2IlcTwmea1934TJf9LUKx/cWL+DD7Pe09jPluqmTwRrNajv
+         YfHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaEohQnIAV59YcZuFjaX9m68oVNxdm95hP4u89/CqbiW9J72ASyRGkEV9NNDhrMcYMjbPu4mFK@vger.kernel.org, AJvYcCUvUC0m5dmZ874OT812T4SfUkqWwrPm/PUBz5j7p3A37YKT97OrWiukU+Mt2JB4NpFeMoYbAvVyZuqMsqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+RcUJYdsQIqm6CdWLCm2vcdEFMxiDCthH9gRNPwB/xCQaXaxw
+	LGSbjLpbW1oUbpaSc2HOBfl/WX/S6+D8Nfr8dEJS3PpF/3Z3fGpze2cfPOZaFFfYsSCNAppU3DT
+	RLyBDfCWHPnih4zAEiiALDISEcuEjBSY=
+X-Gm-Gg: ASbGncujLcF7kPyusBJHUNTlp4n8FqFNt0eKL3ThvLtaWx2ikpdHAs+9uYxiFSyMwpb
+	SUEExiL8FLxs8wDWwmnr9EW/KDriZAV50r44y/BI/KuX1moKVrQZc2PULbCTckBRNAVN1ZU5eJ1
+	jejWa5z7Oqjf1k5lO3fpGClTxbso9rN/FTfA==
+X-Google-Smtp-Source: AGHT+IGpsHKYbxIXwCy/oeyiPruU2kwkLfCm0N6ezu9dQx6lfofizVF8mmR7cTBw0/YoCHcNbrcZCx1R7ipPXQVnY1Y=
+X-Received: by 2002:a05:6122:6185:b0:52f:4624:35ef with SMTP id
+ 71dfb90a1353d-52f46243757mr6427374e0c.6.1748468753120; Wed, 28 May 2025
+ 14:45:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aDYMkVGnByTn6HBQ@yury>
-In-Reply-To: <aDYMkVGnByTn6HBQ@yury>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 28 May 2025 14:42:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whi6O47-0r=eOJHnd1ACa83Kd-aaELi=Tw4p4HwJ74q2w@mail.gmail.com>
-X-Gm-Features: AX0GCFuXsEL24gGxqfSuC-fjFFuIPbV9XNmmcuRKPnT3ULibMV1e6RdKmOAW9T8
-Message-ID: <CAHk-=whi6O47-0r=eOJHnd1ACa83Kd-aaELi=Tw4p4HwJ74q2w@mail.gmail.com>
-Subject: Re: [GIT PULL] bitmap fixes for 6.16
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Lucas De Marchi <lucas.demarchi@intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luo Jie <quic_luoj@quicinc.com>, 
-	Andrea Righi <arighi@nvidia.com>
+References: <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
+ <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch> <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
+ <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
+ <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk> <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
+ <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch> <CADvTj4rWvEaFyOm2HdNonASE4y1qoPoNgP_9n_ZbLCqAo1gGYw@mail.gmail.com>
+ <1e6e4a44-9d2b-4af4-8635-150ccc410c22@lunn.ch> <CADvTj4r1VvjiK4tj3tiHYVJtLDWtMSJ3GFQgYyteTnLGsQQ2Eg@mail.gmail.com>
+ <0bf48878-a3d0-455c-9110-5c67d29073c9@lunn.ch>
+In-Reply-To: <0bf48878-a3d0-455c-9110-5c67d29073c9@lunn.ch>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Wed, 28 May 2025 15:45:40 -0600
+X-Gm-Features: AX0GCFsQQOiCt1aAs6THJH6hfyWkXOQcM4Hww3s0-x--VPr5n56VGuMBPUsnYgI
+Message-ID: <CADvTj4qab272xTpZGRoPnCstufK_3e9CY99Og+2mey2co6u5dg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org, netdev@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Furong Xu <0x1207@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 27 May 2025 at 12:03, Yury Norov <yury.norov@gmail.com> wrote:
+On Wed, May 28, 2025 at 3:29=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Please notice I changed my pgp key.
+> > > Describe the one PHY which actually exists in device tree for the
+> > > board, and point to it using phy-handle. No runtime detection, just
+> > > correctly describe the hardware.
+> >
+> > But the boards randomly contain SoC's with different PHY's so we
+> > have to support both variants.
+>
+> You have two .dts files, resulting in two .dtb files, which are 95%
+> identical, but import a different .dtsi file for the PHY.
+>
+> You can test if the correct .dtb blob is used by checking the fuse. If
+> it is wrong, you can give a hint what .dtb should be used.
 
-Well, I'm not finding your new key anywhere, so I can't even check
-that the new key is signed with the old one.
+How is this better than just choosing the correct PHY based on the
+efuse?
 
-So I can't pull this.
+> Or, as Russell suggested, you give the bootloader both .dtb blobs, and
+> it can pick the correct one to pass to the kernel. Or the bootloader
+> can patch the .dtb blob to make it fit the hardware.
 
-               Linus
+This is what I'm really trying to avoid since it requires special
+handling in the bootloader and therefore will result in a lot of broken
+systems since most people doing ports to H616 based boards will only
+ever test against one PHY variant.
+
+> > > Do you have examples of boards where the SoC variant changed during
+> > > the boards production life?
+> >
+> > Yes, the boards I'm working for example, but this is likely an issue fo=
+r
+> > other boards as well(vendor BSP auto detects PHY variants):
+> > https://www.zeusbtc.com/ASIC-Miner-Repair/Parts-Tools-Details.asp?ID=3D=
+1139
+>
+> Mainline generally does not care what vendors do, because they often
+> do horrible things. Which is O.K, it is open source, they can do what
+> they want in their fork of the kernel.
+
+That's not really true IMO, mainline implements all sorts of workarounds
+for various vendor hardware quicks/weirdness.
+
+> But for Mainline, we expect a high level of quality, and a uniform way
+> of doing things.
+
+Sure, and I'm trying to do that here rather than do some super hacky
+unmaintainable bootloader based device tree selector.
+
+> This can also act as push back on SoC vendors, for doing silly things
+> like changing the PHY within a SoC without changing its name/number.
+
+It won't here, because Allwinner doesn't care about non-BSP kernels.
