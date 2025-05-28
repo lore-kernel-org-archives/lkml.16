@@ -1,180 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB7B1F0E34;
-	Wed, 28 May 2025 11:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C9519343B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748430774; cv=none; b=AZE0ZO9CavfpQ2XCd6g+OBraakr+6VoHs/N1xjH9U1UQ24dln7nSgaPjCIIyzLwMXaqo/yWk3TKoTy22ZCv8+rJW4Tvx0UrDZ5TtJ/tVnIcjgeGiJ0t1ZGC5loHRk34gnDKLv/cGS4YHecLEZQIFXxhgPuKyRn18npSa1+7o0sQ=
+	t=1748430813; cv=none; b=YW2LJEhrghhXXUIrR674cOmo+rZqnsGJL04GImCs+lqf2t9XEmPXKOW3zZhAgXFyLi+XAMg5lgFLpfLAibOWmk+I7mzX3+fUuNgo7MVF1/TDQ6z2a+Yb6Ec3czbuGO0eDRDvKbDVR56efi3WiEVpTFqIPoqkCQedpP2VH21XkJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748430774; c=relaxed/simple;
-	bh=c6XCpPi3M9BjDPmcDyl0ht/M9nZpoLiGCe0c8n7fGEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TRzK2HxH42TgI/ypi3ud7YuZev2E4CRvNyBttTno6NlBUzH5Qadrx1+phcQs+0TYg4pNjaGWQ3A3mdR85VEqPc4Ac+/uHXQsNU7d6GBJfKrrX5y1ZNKv4UeoVwwxtKe05hbEOGcg7zjmF07O1K+G/hCeDPNCtfEJaoOdEFfK6eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KVSF8Ill; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748430813; c=relaxed/simple;
+	bh=kSxeXKRTq2AWY+QK4FBihHz03SpIclgrupOj+3QM8gI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tqAguSBM0rEBntQE6BtNqhycfWXl5QMsc7FJgJQLEBL0Vl3NSeifnNne/V8D1aX9xCIuhm55O7lf+3lqGzgBo3LS2l+gZESpabRKFawT5kYTeAGnmPM/Qmxh7XT+1C+fQLyJOfAB9j0eJWv+sgysIbVRbNjY5AHd8fdUDaU+azY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SXmpdtcw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KVSF8Ill"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748430773; x=1779966773;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=c6XCpPi3M9BjDPmcDyl0ht/M9nZpoLiGCe0c8n7fGEs=;
-  b=KVSF8IlljaT1L1pTAyK8oDSSPU/zWyB1XtSaxNQH54O6ik/Y+FuWfxPp
-   KuOl23uOTm/cR35WHNIGMKoq2QF8GH8okHSZTCFtvvIh7wTTAWLYbZ0nd
-   eT8VE/9ieYHHhTYj6SD1G/Qoo5hsAoy0G0wTwyeOHbBkvOHuS6SQ545xI
-   T7uOJUi7J1Iq1EcOo+gxD97XWZtdUjY5i5rKLvZdGarGwRTvINw5TpThB
-   IkT/NAqKB7ziKOSKlVzs6lIKlW3hrJOj343vaH2DJIWP3SZxhW5uP7BWp
-   FTL+ZmE2wKD254/utJH6KwnSomm6j4kMz3U85FZAxjC+j4qRjV6DLWn8F
-   g==;
-X-CSE-ConnectionGUID: BEXSK10GRSemXHzPW8qjHw==
-X-CSE-MsgGUID: fQkDMC8ZTbSHFY8g3KMadA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="67865579"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="67865579"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 04:12:52 -0700
-X-CSE-ConnectionGUID: Z5GF7ThkQ/2fRNHoz4p8Bw==
-X-CSE-MsgGUID: TctObnezS36UB8YJTadhng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="147966943"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 28 May 2025 04:12:50 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKEiF-000VbA-11;
-	Wed, 28 May 2025 11:12:47 +0000
-Date: Wed, 28 May 2025 19:12:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
-	Johannes Berg <johannes@sipsolutions.net>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH wireless-next] wifi: mac80211: consider links for
- validating SCAN_FLAG_AP in scan request during MLO
-Message-ID: <202505281853.CBjCB3yV-lkp@intel.com>
-References: <20250528-fix_scan_ap_flag_requirement_during_mlo-v1-1-35ac0e3a2f7b@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SXmpdtcw"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S896He026404
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:13:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vgyuAx7dSshWcQQhWvUbmXixp8HbacWD1UD6odQRfDI=; b=SXmpdtcwbio5lhSK
+	rN/v64jtZDFc8B9yTOIX04ce5thjB3uvDghaVCXJFic6wmAcctUmKZSU66L8weja
+	cRgkn5jMhPFhuj+WKbIx/Q26n1Wl15ralEzIKH3baDjvZOxBsaNh0soGYkGeOmjz
+	OQedSDimJPJ7Q2Np59bTbL3VxXoQTig9ijJFCSq2LC5a53stMbFjA+JNuZ4qBPn5
+	8LtrbbCOkzvE0c4CP97NjquG2yabMRQOBpZk/cTBORCF4gNVpjVtMiwmSnvn4BQW
+	VozEl3nf97Cp73G4f4fxfxG5/iShGuVIfH06rLzOVJqkueAs2dlmaiZceTbN33vA
+	v3oFHg==
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6vjt1qu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:13:30 +0000 (GMT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-49452798bd4so8432621cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:13:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748430809; x=1749035609;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vgyuAx7dSshWcQQhWvUbmXixp8HbacWD1UD6odQRfDI=;
+        b=RRVynlkQAcC6NeWCwQzW/5kQLOgG+pooO5rVqSzRw6VHjztAQ8Dr3TwgffVlNij9gv
+         oOeGcF6++OAyCWo3C3Rh82oxMgIVsDBR/K0IPyH2aLoUr8ornCIihzSjEuR/Zhliv1WV
+         tBeBP1ELa+kLlMn2F/W22/Tz3uvwyfL3dUdtgv3HfriB3xAtPAYUpj5Jydmwy7gAdnWv
+         uz21CRHxMpTwXPLAxdcZi7lXxkyxSURItIn1wAc2zUNzUM0bjw0K9rnPSfkrNxaD8Y5t
+         4ZUlNE/WH3FU6IjwR1/yDM9xRnfj1xUOm88kUQ7JwMn7OTJ/JPMzXWtGmh4QsWHIuhXE
+         Glww==
+X-Forwarded-Encrypted: i=1; AJvYcCU0x18qYyvdNjBeESp7NiimwgMWOcPg5BgYDkD6OocYsalTt8BBueFJivuQX/LzIIs1o1uz9V4ypzPT/V4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHjdS4+3bLPldO9vdqVH4lbR34fyMeVFhwJtdLT4EJif78+nd/
+	7YsD2QI2WAjNJ0PV4iqmZAdPDbvnJRv28y8fML2HvCNuDZUiynnIwKohNdWaC8McVBwWga5X+Ij
+	/lZwu4xtV9iV17OL2wxyqNaHRJcXZOunCmjN3Aj94RMmcUvQBMSchhLCy8n+GuIWNZZs=
+X-Gm-Gg: ASbGncuncMQd3bUClG0zdYdhCZDvWlCqKSIjfEcU/fPWjNAI3nZD0fRCRsIu4mJ2B3m
+	/PFkUNDPiykmYrQWoDkbf0zxxa/6uxeqA5vHEtRkJ8ccgRRIsUOz/wSxqN4WZqdwTJDCzHH7+Sv
+	4HpYu2q9zdwQHHOOibijT13P8H8o3f98p0f7o/07ane8tinj9z5U7aJJFyaRZIfekfBxHmm4SKb
+	9qGt+fmMtAUtI+PozZm/xluaPSleLW4SH7i2o23oClm5Biosj0dv0/rlsERkjJOcQoM8RggoY9i
+	7Bfg+NtB5qEALAdtcaXlPsFa0iuCThhzwRl9RisapdRJOP0xWjzALYa3bwwzhRlC4g==
+X-Received: by 2002:ad4:5c65:0:b0:6fa:b954:2c35 with SMTP id 6a1803df08f44-6fab9542d12mr26075796d6.10.1748430809486;
+        Wed, 28 May 2025 04:13:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEeKRrREHf2m6YYb/SYCGixIP+aO46rPYYipbA1Vi8xkIBSTUT+o+9WPcrWNSOLCsqtY0Enyg==
+X-Received: by 2002:ad4:5c65:0:b0:6fa:b954:2c35 with SMTP id 6a1803df08f44-6fab9542d12mr26075586d6.10.1748430808982;
+        Wed, 28 May 2025 04:13:28 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1a1323bsm90175166b.84.2025.05.28.04.13.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 May 2025 04:13:28 -0700 (PDT)
+Message-ID: <9037fefe-aa40-4884-97ee-b81ff8346944@oss.qualcomm.com>
+Date: Wed, 28 May 2025 13:13:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528-fix_scan_ap_flag_requirement_during_mlo-v1-1-35ac0e3a2f7b@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/6] arm64: qcom: allow up to 4 lanes for the Type-C
+ DisplayPort Altmode
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+References: <20250527-topic-4ln_dp_respin-v3-0-f9a0763ec289@oss.qualcomm.com>
+ <styd5gjksbsqt7efylpfn6bgwgyvt6zexxiooihjsnmp25yigp@unq7dor6gso2>
+ <447c3b13-8d6d-4bcb-83c1-9456b915a77e@oss.qualcomm.com>
+ <inpfuxskvmrebxitqtqwzvpnpicibo6zakgk4ujpcrqrpef2vw@nhclj5rg7axr>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <inpfuxskvmrebxitqtqwzvpnpicibo6zakgk4ujpcrqrpef2vw@nhclj5rg7axr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=UOXdHDfy c=1 sm=1 tr=0 ts=6836efda cx=c_pps
+ a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=PC4tWo4A_DL9_zoQyE8A:9
+ a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
+X-Proofpoint-ORIG-GUID: cKGTPbQ3b7STIpJfMD3gwXU9Br0vG3kh
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA5OCBTYWx0ZWRfX/UjLrC1MadcQ
+ cHvfm6EZnWM5iJKsryYpmwiOfvmftkcge3KysVbUbm42R+KbgQ3TPuzI9WV0GhD313VbuEMNMQl
+ fmCI/5NtpgNGm2h3C2yibrKUc9fDIAsd4FfH6AuKcegKhp8INU4r0wALa8CAhgdYxWAwoX8iF5Q
+ s6UvGBTmbEtSDJnUHVI0S5ZXmbjRAoudrnYebFXJYo2jorFYur0HH12D8pUg5xPGhSvp/u+ubIk
+ pgUkiwe3ilUx18pv6PChWdT8jA5NDWp5y6i1BPNm2YZocBJG2bkoSn5WotBPTrkM4NF7lEhotaJ
+ oYPMOtXBGGtD6X9qFs1KDZ3ZP9O5BtqjN07pCpop+x7Ap0vSKcOsuqBt0oXrF0SUE+Zx9BWy1jP
+ U1295UkmcBPAQqnxmNvjMVwDJvHxQkbFgKbgBMXS0W1erm/Eq+tjuPsRU7EvP/0fcve8QMVC
+X-Proofpoint-GUID: cKGTPbQ3b7STIpJfMD3gwXU9Br0vG3kh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_05,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=590 bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505280098
 
-Hi Aditya,
+On 5/28/25 11:00 AM, Dmitry Baryshkov wrote:
+> On Wed, May 28, 2025 at 12:24:02AM +0200, Konrad Dybcio wrote:
+>> On 5/27/25 11:10 PM, Dmitry Baryshkov wrote:
+>>> On Tue, May 27, 2025 at 10:40:02PM +0200, Konrad Dybcio wrote:
+>>>> Register a typec mux in order to change the PHY mode on the Type-C
+>>>> mux events depending on the mode and the svid when in Altmode setup.
+>>>>
+>>>> The DisplayPort phy should be left enabled if is still powered on
+>>>> by the DRM DisplayPort controller, so bail out until the DisplayPort
+>>>> PHY is not powered off.
+>>>
+>>> This series doesn't seem to solve the USB side of a problem. When the
+>>> PHY is being switch to the 4-lane mode, USB controller looses PIPE
+>>> clock, so it needs to be switched to the USB-2 mode.
+>>
+>> I didn't find issues with that on X13s.. Not sure if it's related, but
+>> on the SL7, after plugging in a 4ln DP connection, I need to plug in
+>> the USB thumb drive twice for the first time (only in that sequence)
+> 
+> Might be.
+> 
+>> But there's nothing interesting in dmesg and the phy seems to be
+>> programmed with the same values on both the initial and the subsequent
+>> working plug-in
+> 
+> Please try using a DP dongle with USB 2 passthrough (there are some).
+> Or just emulate this by enabling DP PHY / DP chain for plugged in USB3
+> devices. Would you be able to see the USB device on a bus?
 
-kernel test robot noticed the following build errors:
+I only have a dongle with both display and usb that does 2ln dp
+(I tested 4ln dp on a type-c display that I don't think has a hub)
 
-[auto build test ERROR on ea15e046263b19e91ffd827645ae5dfa44ebd044]
+USB3 - yes, USB2 - no (but it works after a replug)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Aditya-Kumar-Singh/wifi-mac80211-consider-links-for-validating-SCAN_FLAG_AP-in-scan-request-during-MLO/20250528-113350
-base:   ea15e046263b19e91ffd827645ae5dfa44ebd044
-patch link:    https://lore.kernel.org/r/20250528-fix_scan_ap_flag_requirement_during_mlo-v1-1-35ac0e3a2f7b%40oss.qualcomm.com
-patch subject: [PATCH wireless-next] wifi: mac80211: consider links for validating SCAN_FLAG_AP in scan request during MLO
-config: arm-randconfig-003-20250528 (https://download.01.org/0day-ci/archive/20250528/202505281853.CBjCB3yV-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505281853.CBjCB3yV-lkp@intel.com/reproduce)
+Are you talking about essentially doing qcom,select-utmi-as-pipe-clk
+at runtime?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505281853.CBjCB3yV-lkp@intel.com/
+Konrad
 
-All errors (new ones prefixed by >>):
-
->> net/mac80211/cfg.c:2953:16: error: call to undeclared function 'cfg80211_get_radio_idx_by_chan'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    2953 |                         radio_idx = cfg80211_get_radio_idx_by_chan(wiphy, chan);
-         |                                     ^
->> net/mac80211/cfg.c:2955:8: error: call to undeclared function 'ieee80211_is_radio_idx_in_scan_req'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    2955 |                         if (ieee80211_is_radio_idx_in_scan_req(wiphy, req,
-         |                             ^
-   2 errors generated.
-
-
-vim +/cfg80211_get_radio_idx_by_chan +2953 net/mac80211/cfg.c
-
-  2895	
-  2896	static int ieee80211_scan(struct wiphy *wiphy,
-  2897				  struct cfg80211_scan_request *req)
-  2898	{
-  2899		struct ieee80211_sub_if_data *sdata;
-  2900		struct ieee80211_link_data *link;
-  2901		struct ieee80211_channel *chan;
-  2902		int radio_idx;
-  2903		u8 link_id;
-  2904	
-  2905		sdata = IEEE80211_WDEV_TO_SUB_IF(req->wdev);
-  2906	
-  2907		switch (ieee80211_vif_type_p2p(&sdata->vif)) {
-  2908		case NL80211_IFTYPE_STATION:
-  2909		case NL80211_IFTYPE_ADHOC:
-  2910		case NL80211_IFTYPE_MESH_POINT:
-  2911		case NL80211_IFTYPE_P2P_CLIENT:
-  2912		case NL80211_IFTYPE_P2P_DEVICE:
-  2913			break;
-  2914		case NL80211_IFTYPE_P2P_GO:
-  2915			if (sdata->local->ops->hw_scan)
-  2916				break;
-  2917			/*
-  2918			 * FIXME: implement NoA while scanning in software,
-  2919			 * for now fall through to allow scanning only when
-  2920			 * beaconing hasn't been configured yet
-  2921			 */
-  2922			fallthrough;
-  2923		case NL80211_IFTYPE_AP:
-  2924			/*
-  2925			 * If the scan has been forced (and the driver supports
-  2926			 * forcing), don't care about being beaconing already.
-  2927			 * This will create problems to the attached stations (e.g. all
-  2928			 * the frames sent while scanning on other channel will be
-  2929			 * lost)
-  2930			 */
-  2931			for (link_id = 0; link_id < IEEE80211_MLD_MAX_NUM_LINKS;
-  2932			     link_id++) {
-  2933				link = sdata_dereference(sdata->link[link_id], sdata);
-  2934				if (!link)
-  2935					continue;
-  2936	
-  2937				/* if the link is not beaconing, ignore it */
-  2938				if (!sdata_dereference(link->u.ap.beacon, sdata))
-  2939					continue;
-  2940	
-  2941				/* If we are here then at least one of the link is
-  2942				 * beaconing and since radio level information is
-  2943				 * not present or single underlying radio is present,
-  2944				 * no point in checking further and hence return if
-  2945				 * flag requirements are not met.
-  2946				 */
-  2947				if (wiphy->n_radio < 2 &&
-  2948				    (!(wiphy->features & NL80211_FEATURE_AP_SCAN) ||
-  2949				     !(req->flags & NL80211_SCAN_FLAG_AP)))
-  2950					return -EOPNOTSUPP;
-  2951	
-  2952				chan = link->conf->chanreq.oper.chan;
-> 2953				radio_idx = cfg80211_get_radio_idx_by_chan(wiphy, chan);
-  2954	
-> 2955				if (ieee80211_is_radio_idx_in_scan_req(wiphy, req,
-  2956								       radio_idx) &&
-  2957				    (!(wiphy->features & NL80211_FEATURE_AP_SCAN) ||
-  2958				     !(req->flags & NL80211_SCAN_FLAG_AP)))
-  2959					return -EOPNOTSUPP;
-  2960			}
-  2961			break;
-  2962		case NL80211_IFTYPE_NAN:
-  2963		default:
-  2964			return -EOPNOTSUPP;
-  2965		}
-  2966	
-  2967		return ieee80211_request_scan(sdata, req);
-  2968	}
-  2969	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
