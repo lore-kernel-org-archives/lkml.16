@@ -1,73 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66BF2B9A6
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C7654764;
+	Wed, 28 May 2025 02:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748398092; cv=none; b=JDgmaMJ+v/Qusz1nnoJxAhnsVyf2m/0a1m2te2pB87JZ6nZg/XbN6zA0wLrcz9QSL9aVSMe+rj69bVSJ+AGehWr/lyG5hdjCKz47lfoSqWMUGCWOjg3P1qL0qH5wSDhhehLdSSTp7Zj/8yKj13pzMBemovaFgULwjBGKToku3Bw=
+	t=1748398290; cv=none; b=Rq7CjD+dyVxz8qcd7T692pAnvM5+pXzxhJMq1kH0HmpyuSA4swug0kh75zD5Nf9DhJKhVWaUjcSa3A9ojcS9ftkm1SKhq4HlnHsmZed7KoSXa32P+8DtuLPa4oEUUH5WnOC/6jgGCdNwNeQHkVrUfN/L1lSd9Isw6q5cbXJvLbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748398092; c=relaxed/simple;
-	bh=QToKGrlvFUYinwPi5NW51sedo2o3ko9Iy1rwyPVIWos=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=nZztrB3cyr+KF27NOsVDtCb8Z2W39kNGptUkJvvTFL1Qr0OHENHE2JbhB/Ta0zJtACsg6d6vXPeku6tmUPG2V/R2gDyXz39YlETlYwBWcRHzFjNCL2SSxal+w6hgVbGDQndATW9dollH1QHn2c6j/sDjqouFMdYwOvpeZao5G1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=h2uilgXu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748398290; c=relaxed/simple;
+	bh=pOkeTJAMxL0EATITKTnUKdNuGMng0EDHbknS08HfamE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QjpGlIfiJPCCfj5apOTn7pfnn5sC3Q9r6mXOCy7st8DwWhySK5533ODK1d9/b1glSXuPPAzzzLCFvBqrH8tEZvxqYYrxhZglLS8LYaBQ/tNldEcf+DDodbDY+eO+87FLEWN4el6GgXCZrAqOhhepQHDGI3hJmGUUFfYizQkL/6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZNiwBun; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h2uilgXu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC6D5C4CEE9;
-	Wed, 28 May 2025 02:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1748398092;
-	bh=QToKGrlvFUYinwPi5NW51sedo2o3ko9Iy1rwyPVIWos=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h2uilgXu7mAlYkZJqMoAFSxXeLzcpbOHHnEgdHyFhhn/0Tss3I0KeD7B0wD7pHm8D
-	 wUGX3hdEOTtvUUR8GWnw4ojq6l+gm9nEkEFM1d64XoHvcRlWSz2aWZSVBDFu7yQQKz
-	 busFYqMMtqupeErVIcql88N4cMQWlJ0mZEw9tk0Y=
-Date: Tue, 27 May 2025 19:08:11 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: nifan.cxl@gmail.com, muchun.song@linux.dev, willy@infradead.org,
- osalvador@suse.de, mcgrof@kernel.org, a.manzanares@samsung.com,
- dave@stgolabs.net, david@redhat.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Fan Ni <fan.ni@samsung.com>, Sidhartha Kumar
- <sidhartha.kumar@oracle.com>
-Subject: Re: [PATCH v4 2/4] mm/hugetlb: Refactor unmap_hugepage_range() to
- take folio instead of page
-Message-Id: <20250527190811.08e3c035f30187ba852f1914@linux-foundation.org>
-In-Reply-To: <aBkYmLOiTZt1sLr_@fedora>
-References: <20250505182345.506888-2-nifan.cxl@gmail.com>
-	<20250505182345.506888-4-nifan.cxl@gmail.com>
-	<aBkYmLOiTZt1sLr_@fedora>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZNiwBun"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fa9ce24d44so80034366d6.1;
+        Tue, 27 May 2025 19:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748398287; x=1749003087; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+IW/tbaDggglZV+0MU4J5fQthnAp+Rb913Pmy/jkw0=;
+        b=IZNiwBunmYJPuPA2NWDtuureQ5FT7f9YXUA4O6BZKfrCQSa1ya0TdYRKyGxiMNxB43
+         GxpKFpTntq0/wKpzT6jNTwop3TvHsGmrBLCfaKdEIybHcO5/JVLjDsOxR/XxoI/jeEw9
+         QN4xjBbw+QQZ2HkoBjLVR/pDKjhIbQwfpCjwZ7VMhF68jz/T9BzJaryGjHShD8HBwVGc
+         /HyEK+YOFYjEzWe9WoV1rNdvviLtEqfvhsn3YfpXQIzZwzSv+I42MxhkWu7c2k0DyN+7
+         CJF9XJBsAZmrta44ZM00aEUhqKkQdKS7O3z30KiJgsUGqYUlQPDvb+MovMuCybcm780R
+         wfew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748398287; x=1749003087;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+IW/tbaDggglZV+0MU4J5fQthnAp+Rb913Pmy/jkw0=;
+        b=WbnJlUfBafcg9mhQG8GobHhLlDgQ9pME9JqBgMdsWWHVr6pVBV7ZKb2Gy23da6kUa0
+         ghws65OSkZLfTy9iz0SM7eFAWYuPiJ35D6MKeElvBEA1r+G5Q/K44NUwFWuPLj9qdWWc
+         ZACKhDvJsaRuHH1sgnjE9m1rfQD8z3SSoY+pDux0XMDCbebmtipHzIToGSwENylaYYk4
+         BZiWfGxOJxj+0muIWqisT0WqagYKxFh2kAxnE5m9NEFPvJ9acXo5ewgMl+LNJ/mkRwqi
+         U+5wCs9ZAhLF0tjQqf+cAOtuD7I4rNOWf23gNPjvJ6TUdbxv/5At+dU/L/2PboyNnGDj
+         HhYw==
+X-Forwarded-Encrypted: i=1; AJvYcCU77HCe3Av0R3NRGUVl28OpLxh+YetQ+j6cr8AZO7lvD56eoeSDzVV0tRlr9k2j4D2i3e6s8Dzy@vger.kernel.org, AJvYcCWPyoTparn8Hslscs/5+2hqiLd1MiDFqSVcYWeM6zC50V5jeutKmrM04ekN+jw3DJ5smF0Dq9yuh9MG7nLi@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTHcAuRfIESoSYrVItYkQa7D/+mxPlZ4e1e+52YNnQ8VO0AAne
+	UKK3OecJDq0jmdLGEnizbi5wZN9LBRsujV9uWY+zYHvZ5A0PQwNOOGjYIpHg10svTPEX6QDbBae
+	N5cosdwA4PQiKxwIyUZVIXwBtLgoJ0LA=
+X-Gm-Gg: ASbGncv+rerqxHy61Zp6Koh5T/bEJ9RsQzZoQ1Iqt7mRx0PWP5NPRAp695fyR/NuVVH
+	UxqFts2vUedynmLNAu7IBjzqgRSXaYGTTjQ3ojzo6ZHsylpgZilfRRbnPutVERml1oYpFnsEwh8
+	hhn6G8U571qewbqfQeFyJS6uUWKWgRFg+7xd6Pw/rOUMrX
+X-Google-Smtp-Source: AGHT+IFqGoiUYCgGrbA5DxzQtE0trjSe6SrEJmB9sYlmq9AqpiNwyRutGDaPq8aMbxqXgNunrJfRsi8Q2v0lW20nS0o=
+X-Received: by 2002:a05:6214:4016:b0:6e8:fa33:2965 with SMTP id
+ 6a1803df08f44-6fa9d281ceamr245758656d6.14.1748398287548; Tue, 27 May 2025
+ 19:11:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250511030800.1900-1-laoar.shao@gmail.com> <20250511030800.1900-2-laoar.shao@gmail.com>
+ <2e3mby62lswkw454sq4b4wnjmcr6etoug5bazafutb6dbbpozl@juhpci6ebev2>
+In-Reply-To: <2e3mby62lswkw454sq4b4wnjmcr6etoug5bazafutb6dbbpozl@juhpci6ebev2>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Wed, 28 May 2025 10:10:51 +0800
+X-Gm-Features: AX0GCFs-iee39CFIkSuN-rGZvbGheNTuMekcfo6HWdqcULPDoQGXbErWiG2nuok
+Message-ID: <CALOAHbBQXSuUmz8C2CKA2o-Menup8uz3qOX34JsZCCG68GhaWg@mail.gmail.com>
+Subject: Re: [PATCH v9 1/2] sched: Fix cgroup irq time for CONFIG_IRQ_TIME_ACCOUNTING
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: mingo@redhat.com, peterz@infradead.org, hannes@cmpxchg.org, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	surenb@google.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	lkp@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 5 May 2025 12:59:20 -0700 "Vishal Moola (Oracle)" <vishal.moola@gmail.com> wrote:
+On Tue, May 27, 2025 at 11:33=E2=80=AFPM Michal Koutn=C3=BD <mkoutny@suse.c=
+om> wrote:
+>
+> Hello.
+>
+> On Sun, May 11, 2025 at 11:07:59AM +0800, Yafang Shao <laoar.shao@gmail.c=
+om> wrote:
+> > The CPU usage of the cgroup is relatively low at around 55%, but this u=
+sage
+> > doesn't increase, even with more netperf tasks. The reason is that CPU0=
+ is
+> > at 100% utilization, as confirmed by mpstat:
+> >
+> >   02:56:22 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %st=
+eal  %guest  %gnice   %idle
+> >   02:56:23 PM    0    0.99    0.00   55.45    0.00    0.99   42.57    0=
+.00    0.00    0.00    0.00
+> >
+> >   02:56:23 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %st=
+eal  %guest  %gnice   %idle
+> >   02:56:24 PM    0    2.00    0.00   55.00    0.00    0.00   43.00    0=
+.00    0.00    0.00    0.00
+> >
+> > It is clear that the %soft is excluded in the cgroup of the interrupted
+> > task. This behavior is unexpected. We should include IRQ time in the
+> > cgroup to reflect the pressure the group is under.
+>
+> I think this would go against intention of CONFIG_IRQ_TIME_ACCOUNTING
+> (someony more familiar may chime in).
 
-> On Mon, May 05, 2025 at 11:22:42AM -0700, nifan.cxl@gmail.com wrote:
-> > From: Fan Ni <fan.ni@samsung.com>
-> > 
-> > The function unmap_hugepage_range() has two kinds of users:
-> > 1) unmap_ref_private(), which passes in the head page of a folio.  Since
-> >    unmap_ref_private() already takes folio and there are no other uses
-> >    of the folio struct in the function, it is natural for
-> >    unmap_hugepage_range() to take folio also.
-> > 2) All other uses, which pass in NULL pointer.
-> > 
-> > In both cases, we can pass in folio. Refactor unmap_hugepage_range() to
-> > take folio.
-> 
-> It looks like unmap_ref_private() is the only caller that cares about
-> passing a particular folio to unmap_hugepage_range(). Is there any
-> reason we shouldn't drop the folio argument and call
-> __unmap_hugepage_range() directly? 
+Please refer to the discussion with Ingo :
+https://lore.kernel.org/all/aBsGXCKX8-2_Cn9x@gmail.com/
 
-afaict there was no response to this review comment.
+>
+> > After a thorough analysis, I discovered that this change in behavior is=
+ due
+> > to commit 305e6835e055 ("sched: Do not account irq time to current task=
+"),
+> > which altered whether IRQ time should be charged to the interrupted tas=
+k.
+> > While I agree that a task should not be penalized by random interrupts,=
+ the
+> > task itself cannot progress while interrupted. Therefore, the interrupt=
+ed
+> > time should be reported to the user.
+> >
+> > The system metric in cpuacct.stat is crucial in indicating whether a
+> > container is under heavy system pressure, including IRQ/softirq activit=
+y.
+> > Hence, IRQ/softirq time should be included in the cpuacct system usage,
+> > which also applies to cgroup2=E2=80=99s rstat.
+>
+> So I guess, it'd be better to add a separate entry in cpu.stat with
+> irq_usec (instead of bundling it into system_usec in spite of
+> CONFIG_IRQ_TIME_ACCOUNTING).
+>
+> I admit, I'd be happier if irq.pressure values could be used for
+> that. Maybe not the PSI ratio itself but irq.pressure:total should be
+> that amount. WDYT?
 
-I'll proceed with the patchset, but please let's not lose sight of this.
+Thank you for your suggestion. Both methods can effectively retrieve
+the container=E2=80=99s IRQ usage. However, I prefer adding a new entry
+irq_usec to cpu.stat since it aligns better with CPU utilization
+metrics.
+
+
+--
+Regards
+Yafang
