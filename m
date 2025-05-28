@@ -1,190 +1,112 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ADE1E47B3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA0D2206BF;
+	Wed, 28 May 2025 19:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748462193; cv=none; b=kUjbRstx2CSGKJdOjfjEYsB3GDhWHTFaVnmZfmKVV6KOnE98rzc1hmckrc2ii+TBsJrtC9lUUNzxljfBKYiuHBsCD7brG0ABgUyzz0c+kQXJBm1smnv8U7kT+Geyg/dE7ulkWY7qNQuKpm6DPTkIkQc8euuGsXjOkQG6AkOt/Gk=
+	t=1748462196; cv=none; b=pHlNoitthsssrlWasyp2AXtKQDLvtowiXBiWgN0IDspPMF1h1hZa83x82JpJtLTIr5h3db5MFZeMOFR6OdMsMOGgM+Ib9BVGjcBkEeATzwGMhJicQuH6LScZUqrJMTv7U93gzYPn4CXg6V4Nqk+fARKknf59xSvvTRX+J5sDqKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748462193; c=relaxed/simple;
-	bh=OB7MWLP4yrp3bJtXUUZYYFMCjCcMT3kpUGeeUVvJ74k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q0RlLSmup1jD1oiStDEzEDDGADBQSHf0PKSZ7eQEoTrcWA1+tUpHEL6QGiDoRwH0YgBcgj6VbVxOWBpr+3mwMLwCUoiXAc/4YPpPY8/WUK6mvgYkTg21sAAE5TbHn1ReicCfRBwtMCDaB51QPDp9cXdOeqb9YHQA6R+5yfQkOpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OyO5BUz4; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1748462196; c=relaxed/simple;
+	bh=pnfecmKSpQYkvxOkvpTwWbsi+mXim4QALt0Lzr4hQOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NpjAPKSQ3iTyPi4+k6HliPzPUKW5Lsp21HgofVlBkRpvbEYB3va2UWpwL7vbcyDfPar6Alw0fya1cBJyWHEPu/f9QEy3rDPtNSxLipFXSmy7Yrp0b/RpTbfGGe9SCAqXqKgS1ijBfkX8EuSBDpEVKvDReqo9sjy049/MoE2kjcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bq7WOE57; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OyO5BUz4"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cd6b511cso1717235e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748462189; x=1749066989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W8L7PhpfmS2m6BHlUu71cqULvSSH20y8r59Td9C3Kyo=;
-        b=OyO5BUz4bG+CxcffXm8uoRbB8uHasH35ebE4tze4v2HHZklsVzC/CYnp8Zxt0/FYeB
-         RFkc9vj/yoAfcWvt1NKanDqu3Hom8t3g4lTITym12QgI2CuAdh9uSti1a2NoouY3zgpZ
-         jllcn0uNSghGELlI+mO18k3d45ktGYbcB8FTr2NIPtTn0QIPF/C11UcKTpQXpuu8vO0+
-         niUjbzmsvz7SAM4agRnxmFSxQY/iepQF9niUN94kxNnlzlM1+khoEF9IxqwsNR2RzDw9
-         iQl6iy6/pJsKyqDgPwCRzc+iwjagrv4MwTje8qCNWeMGKDzEl6STc9r20XA60uIDDcnx
-         GUsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748462189; x=1749066989;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W8L7PhpfmS2m6BHlUu71cqULvSSH20y8r59Td9C3Kyo=;
-        b=UDRKMk+ZCOp9xyUyIdt+KZWZoVGlbZpwvjNjesHW8cmRKAXTudLUgRmiz0NFiBNsZ8
-         A3iKdjYy1vuGo8dPYSgwiafgf6YhG+UxjittpStHC8MEeoWjxOj89jIh9l1Bm0en1Qxo
-         Lg0wvEFFV+krb+VERa9uyi2fag+MPiRr5sY0gYxFDDJHDz4GXLG+9MyaDMsgvepxi/J0
-         Px1UIvCfgSL89DSWXXPjTbarlwPdfvzmovbe5jdXwqlstikv3Y8wt+rLCUTZUPg1iMTw
-         tE5Cr3WmghsrSJd0Ngz5Qngs546rXtHxdz6Kh3PLjExt63wgcZk4egEium4GKuQo5AHk
-         j0/g==
-X-Forwarded-Encrypted: i=1; AJvYcCVXN2lHjLjDr6qEKCszjbkF5YPbqMHS8yukECqDZQHhEVrKCvHziQWCq9ZfWO4xm7+fds0V4+MCaiOLoW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3l0bf7vA/n6H8Bhgi9j41yw3Bw/HNy7JKQKMktFNZxuwoGdTo
-	8JTHi2fSWLKKEV+fGOqFfLvEO1Chi9Hw5ByUm4MVroCbu26GnbB62BSGw5rCJMLL2BLVmQQH1rE
-	NXH5SBu04d7ZPxfmEyCFUc/Ye6HyoWPXRkURpoJn1
-X-Gm-Gg: ASbGncuL33miNeg5URWALAsNDghMtIweHpXMP8G6tKNA/5t3WI7EqByvFFn0kZclVUG
-	N1GzSKR44UVpksChtqY0F5b3xrgOHZzltE+DkMJIpS0Fk9Lt9WoHHHssK2btshApDXoTXOKoykp
-	J7gvs05GU5gco8nYw04P0ZqPQL9cMa8fSaeTb6DzZd073N
-X-Google-Smtp-Source: AGHT+IFRVTFehgHIP4jtTiYzkqzpeEat7ZA6bJJwBruO3MHFT/UlZRIXUBmqTA+/UeIEFdiM+66uwtk4K0Bw983sfEM=
-X-Received: by 2002:a05:6000:402b:b0:3a4:cbc6:9db0 with SMTP id
- ffacd0b85a97d-3a4e95818e6mr3321018f8f.51.1748462189419; Wed, 28 May 2025
- 12:56:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bq7WOE57"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C08AC4CEE3;
+	Wed, 28 May 2025 19:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748462195;
+	bh=pnfecmKSpQYkvxOkvpTwWbsi+mXim4QALt0Lzr4hQOI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bq7WOE57EBGZ7ojGxYtDeoRGXQOvOAzkr0vDVuW5dz+pNOk+MY8RxNLpMdMcJ//T3
+	 28oBNmdhcZWJMktvsSY9a/z8XCaWiOW3m/TRpylW1qLphUXMS1RE/AuCrwC0+b12jC
+	 gUBrziJ7VWcpsvGZJfP/xY09H2Dww9tDDoxM8T/JKR7npqUrslsg5rrBfxM7UEFSgO
+	 PlljObfXP0oRWfnp5OpUvkjN5dkN7HFk9R5TlEkQ2kxhuDqKnNngmi3gcHMPUANvLV
+	 BSRFC6dYpFV8y1KdoKXN0R2C1jjS+9Znert72fLGlZHNZigk86iRRA1n1XLnvJxWai
+	 0vofM2t+KXmbg==
+Date: Wed, 28 May 2025 12:56:33 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's
+ -Wunreachable-code
+Message-ID: <aDdqcfuAuk78eKXD@google.com>
+References: <20250410202647.1899125-1-irogers@google.com>
+ <Z_mK9BVv16MT7shL@z2>
+ <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
+ <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+ <aDdU1npHL2Vczhsa@google.com>
+ <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com> <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
-In-Reply-To: <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 28 May 2025 21:56:17 +0200
-X-Gm-Features: AX0GCFvvfi0IO-4qmWiebEf60BPOOjb4AGpy4FTSeIFi9VcgYiwZXSln0SEgVK0
-Message-ID: <CAH5fLgg6s2JM3HtzR3jimUnjLY0BBBpnNLuBUdrsOYCqmx+8pg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer operations
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
-	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUycjUUWW=hoSSvxfUVPXcqAk5KHnknFuUDOr7+Zf=M2A@mail.gmail.com>
 
-On Wed, May 21, 2025 at 8:45=E2=80=AFAM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
->
-> Introduce the `num` module, featuring the `NumExt` extension trait
-> that expands unsigned integers with useful operations for the kernel.
->
-> These are to be used by the nova-core driver, but they are so ubiquitous
-> that other drivers should be able to take advantage of them as well.
->
-> The currently implemented operations are:
->
-> - align_down()
-> - align_up()
-> - fls()
->
-> But this trait is expected to be expanded further.
->
-> `NumExt` is on unsigned types using a macro. An approach using another
-> trait constrained by the operator traits that we need (`Add`, `Sub`,
-> etc) was also considered, but had to be dropped as we need to use
-> wrapping operations, which are not provided by any trait.
->
-> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  rust/kernel/lib.rs |  1 +
->  rust/kernel/num.rs | 82 ++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 83 insertions(+)
->
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index ab0286857061d2de1be0279cbd2cd3490e5a48c3..be75b196aa7a29cf3eed7c902=
-ed8fb98689bbb50 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -67,6 +67,7 @@
->  pub mod miscdevice;
->  #[cfg(CONFIG_NET)]
->  pub mod net;
-> +pub mod num;
->  pub mod of;
->  pub mod page;
->  #[cfg(CONFIG_PCI)]
-> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..05d45b59313d830876c1a7b45=
-2827689a6dd5400
-> --- /dev/null
-> +++ b/rust/kernel/num.rs
-> @@ -0,0 +1,82 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Numerical and binary utilities for primitive types.
-> +
-> +/// Extension trait providing useful methods for the kernel on integers.
-> +pub trait NumExt {
+On Wed, May 28, 2025 at 11:35:00AM -0700, Ian Rogers wrote:
+> On Wed, May 28, 2025 at 11:24 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
+> > > On Fri, Apr 11, 2025 at 3:14 PM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > On Fri, Apr 11, 2025 at 2:34 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > >
+> > > > > Hi Ian,
+> > > > >
+> > > > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
+> > > > > > Clang's unreachable code warning is able to catch bugs like the famous
+> > > > > > "goto fail" which gcc's unreachable code warning fails to warn about
+> > > > > > (it will complain about misleading indent). The changes here are
+> > > > > > sufficient to get perf building with clang with -Wunreachable code,
+> > > > > > but they don't really fix any bugs. Posting as an RFC to see if anyone
+> > > > > > things this is worth pursuing.
+> > > > >
+> > > > > I'm not sure if it's useful and don't see what kind of bugs it can
+> > > > > address.  The proposed changes don't look like an improvement.
+> > > >
+> > > > The goto fail case was in OpenSSL the code from a bad merge:
+> > > > ```
+> > > > if (...)
+> > > >   goto fail;
+> > > >   goto fail;
+> > > > ```
+> > > > Meaning the fail path was always taken and checking on the non-fail
+> > > > code never executed. Newer GCCs will warn of this because of the
+> > > > "misleading indent" but  clang won't. It is easy to imagine similar
+> > > > mistakes creeping in, so using compiler warnings to avoid the bug
+> > > > could be useful.
+> >
+> > It doesn't look very convincing to me but it might be valuable in some
+> > rare cases.  But the proposed changes - basically replace exit() to
+> > __builtin_unreachable() - seem weird.  Why is calling it a problem?  I
+> > guess it already has some kind of annotation like "noreturn"?
+> 
+> Yep. The exit is incorrect (depending on your notion of correct, I'd
+> go with clang's notion as they've had to consider this for a while) as
+> it can never be executed. I've added the __builtin_unreachable() to
+> document that you can never get to that statement, as otherwise it can
+> make the code readability harder with the code looking like it will
+> fall through after calling something like usage_with_options (which is
+> noreturn). In unoptimized builds __builtin_unreachable() will fail if
+> executed, so it is a bit more active than just a comment.
 
-I wonder if these should just be standalone methods instead of an
-extension trait?
+Oh I see, usage_with_options() calls exit() inside so any code after
+that won't be executed.  Hmm.. isn't it better to remove those codes
+then?
 
-> +    /// Align `self` down to `alignment`.
-> +    ///
-> +    /// `alignment` must be a power of 2 for accurate results.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// use kernel::num::NumExt;
-> +    ///
-> +    /// assert_eq!(0x4fffu32.align_down(0x1000), 0x4000);
-> +    /// assert_eq!(0x4fffu32.align_down(0x0), 0x0);
-> +    /// ```
-> +    fn align_down(self, alignment: Self) -> Self;
-> +
-> +    /// Align `self` up to `alignment`.
-> +    ///
-> +    /// `alignment` must be a power of 2 for accurate results.
-> +    ///
-> +    /// Wraps around to `0` if the requested alignment pushes the result=
- above the type's limits.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// use kernel::num::NumExt;
-> +    ///
-> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
-> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
-> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
-> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
-> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
-> +    /// ```
-> +    fn align_up(self, alignment: Self) -> Self;
+Thanks,
+Namhyung
 
-I would probably make alignment into a const parameter.
-
-fn align_up<ALIGN: usize>(value: usize) -> usize {
-    const { assert!(ALIGN.is_power_of_two()) };
-    self.wrapping_add(ALIGN.wrapping_sub(1)).align_down(ALIGN)
-}
-
-Here the check for power-of-two happens at compile time. Unless you
-have cases where the alignment is a dynamic parameter?
-
-Alice
