@@ -1,81 +1,44 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7BB1C84B2;
-	Wed, 28 May 2025 00:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E711862;
+	Wed, 28 May 2025 00:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748393402; cv=none; b=P4nUZtY2IgzCC0kVhIa1SV6sCzvnxEaOXEtqxrvNkWdNxoCzPb/gvRHJVAOcRjJKuNyavQdtx9YLXYtBeDt7ee9wc5jjEvyDKNzJXjeM9On+j9zp2yPy6kX89doEH/C9YLVBJKe9dPLD/lUdnKUSFFh45d+5mURApOEkcl1+BYs=
+	t=1748393682; cv=none; b=IQ/JP75u/Ynt0GFbG8AfT++PrJ25X7hCgR3x7HRfig1g1y5blYtkrnjRORh5PmZg4Rcg8XSYQgRRY2KSSlxmsKMrpleR4Z9eVd/M2RKgw2ICvBIAYrB5LjRyk/9WG/EteswUu+9XQSgIKQuV+ZdicgBzwtyb/bdwv/LVR6G2NEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748393402; c=relaxed/simple;
-	bh=gpBLtlkGM4oAG9AwfT2x15Xi285hIx49/ofZvJOQccM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V/2L8YvM3kRysHlRrfDRq/Obz4nV2mTeNLG1Qq/fRD533lp4veN9k7p00AG13pnPWyMZObSWUZOSGpJfEcXDJCPm7nUF6x9crBFXvurnDObwfE/QKML+IqLXoQk0uUYr1D97QaWe3i/m6eN80nKycikORtwQaIEdn5SgEKUfLy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HYgSwoKR; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYgSwoKR"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4508287895dso75265e9.1;
-        Tue, 27 May 2025 17:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748393398; x=1748998198; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sMepoabFQW1etE0k1cIZwoujR5CGEJouw2O2av/kOeQ=;
-        b=HYgSwoKRL79BAZvwg5d483v3IiyDZfQCGhMDqsO8hIUuTflVr23deNFKCZ1tR9Tfcy
-         HTPuOn0HF7elrKDVQre80xZJgdJvKU+YIvhE7S2A0dicO1CAXavbdnbVNq16XMqMSIUD
-         FAus5c++9eYB9IgNnvXGMHLIYgKO2XgkVF9EeZ1FLQUzNrESCsRBE8lRQ2lTTHqDpx8b
-         BiQkNaot69OhqD+gwAtO7/JI7JUKnmtN/Hd0ohTOhpC2xCEHEpuXuROKwOuMv72xo7L3
-         9ZAqqmnd00/rPvf5bS5Ri/meZFHsY6v2FnQRXQAPZEdpGXb3lOBTsP64RwJXWR06502S
-         2ctg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748393398; x=1748998198;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sMepoabFQW1etE0k1cIZwoujR5CGEJouw2O2av/kOeQ=;
-        b=Fgxb7RcXuxfoBz1lYp4gNWmN02kiGhoWlYmN9lG/5weNtCUkiveGjYWMSKDLO4ltaV
-         V+ULJo4McpGWMexgq51HXV4rmXJP8d6OuUOylRlu0Cwdhm4mEfoF8mX+uC2BLqjFxRMf
-         JzfALlGAHJE7B4eqKQddBWWULT2zuVC7Id+BVLnwvfDCQdNHc3HmaDlJP9PsnsId8DIp
-         5YOTE0nWg/p2YOPJRSBWqMPRuucpx7GspHVRBFYUp8UNtEjqW//lsFRdrKgZAnoN0tNh
-         wZl3WLy4MZ5JJ4dH5DSbARBFbeDLXqXja7ePe1GPHT9naV0ym2fi4FnSLKmHg47RP8MX
-         rXeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUa8eu9AOKLPXN0DEHIdNgDKpgC3G0VDZvU5GZJWkTDAFyxHA9pDz2fd2G3b0KQouWVf0RZQAM9r1RJA9bB@vger.kernel.org, AJvYcCVOrR9fdtx1ZlwEMJ3KhHiT/DDXTlH0aOCKGgsFi2vtBZIjHaR6K7S4oriTpHx6KBi2uhSsfvZuSslf@vger.kernel.org, AJvYcCVwNmV36R3vjXf+dZXA1/S/dM+a0YSk+UVUpWrlpxHaOeL4DKFKVNjSNCZnkLNNx1taQHBCtUbOkSED@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwTgQGBLa+/SJS9aP1agCLJ+3tKtG0GhCLByOXWE3zNmAjfE73
-	QTjBK0KEkLYXDRfKSulfJZmwK0OKnVK9dyXPkq93JRD8Ibi1JcooDFLcyY5NOA==
-X-Gm-Gg: ASbGncsi+qowL4svszMF2K88m2EAl+Y16nfTTCAVtYKa9ZNQ6QmET70aUFQYChxQF6/
-	rTU5VleCgz7kpoZppN8qF6hYJjbGPKKg9AE/ghNULJRDT3FwY2mVrNZGBHE/HwwZqJd/pQo7DW0
-	N06L/ANxs6lm5XmEfHJPepnOKyiNFyyy1aU/K7pX02oS6mD0MVzHdyxL5kfiJ0U7aeCWFXraH3o
-	xmeLGe3qw5RqEdsuSMyRaqCBxkTl6hp2GZSzXMYSvfc/sbCjRs5L+mB5+hUKE3caAF4lNgzM+bI
-	iQSwR/fz6vdgpkjRFKojx7sZ4AbVN8M77xv/9qs5ci3sYCb9DKcKNLpkUTvVjveBRKk1eL9Wmrt
-	a5Q1ArZpvZdZBavE8++E5
-X-Google-Smtp-Source: AGHT+IEuqcts/Y9EqxufAqkAoh7hMxdfIPHQIbWJcVRP6UTF+zluZL7rrWRJBesNSyU5r9iWVbJM9Q==
-X-Received: by 2002:a05:600c:6818:b0:439:4b23:9e8e with SMTP id 5b1f17b1804b1-44fd1a01b05mr23103845e9.3.1748393398085;
-        Tue, 27 May 2025 17:49:58 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-44fccee6c54sm33682535e9.1.2025.05.27.17.49.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 17:49:57 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Felix Fietkau <nbd@nbd.name>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH 5/5] clk: en7523: add support for Airoha AN7583 clock
-Date: Wed, 28 May 2025 02:49:18 +0200
-Message-ID: <20250528004924.19970-6-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250528004924.19970-1-ansuelsmth@gmail.com>
-References: <20250528004924.19970-1-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1748393682; c=relaxed/simple;
+	bh=gd4xfLncHNUyQzg2P69vjaMSh6/QXK433Ho/ho8ZwVA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uhgA2F1FAIbP/5yDRZRl31v1hlLOvLv5shR4EF255v+yYYC9BKH90/q5lnKT5sIbWlVI+OohPZmzHa75kvisfGeU6V6eRY+tL6/vg2kD3KbBGe4qRvGGuG/QipeaOq7zDqsglt5Twe74ryAtDNUD+bscaaaE1N/SLFa30QtkMLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b6WHK5hTWzYQv4N;
+	Wed, 28 May 2025 08:54:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E3A701A178F;
+	Wed, 28 May 2025 08:54:36 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDHK2DKXjZomuPmNg--.45313S4;
+	Wed, 28 May 2025 08:54:36 +0800 (CST)
+From: Zheng Qixing <zhengqixing@huaweicloud.com>
+To: sathya.prakash@broadcom.com,
+	sreekanth.reddy@broadcom.com,
+	suganath-prabu.subramani@broadcom.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: MPT-FusionLinux.pdl@broadcom.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	zhengqixing@huawei.com
+Subject: [PATCH v2] scsi: mpt3sas: fix uaf in _scsih_fw_event_cleanup_queue() during hard reset
+Date: Wed, 28 May 2025 08:49:35 +0800
+Message-Id: <20250528004935.2000196-1-zhengqixing@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,298 +46,252 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHK2DKXjZomuPmNg--.45313S4
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF4kAw18Gr18tw15Gr17Wrg_yoW3Zw43pr
+	95Ca43tws8WFyIgrsxWw1UX3WrA39Yqr1DGFW0g3Z3Ar43u34UtF18CFyYgF15Gr93Zasr
+	JayDt393CFWUJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
+	n4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU17KsUUUUUU==
+X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-Add support for Airoha AN7583 clock and reset.
+From: Zheng Qixing <zhengqixing@huawei.com>
 
-Airoha AN7583 SoC have the same register address of EN7581 but implement
-different bits and additional base clocks. Also reset are different with
-the introduction of 2 dedicated MDIO line and drop of some reset lines.
+Changes in v2:
 
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+  1. Reference counting: Ensuring the fw_event_work has proper reference
+    counting so it's not freed while still in use
+  2. Read-write locks: Protecting access to ioc->current_event with locks
+     to prevent race conditions between readers and writers
+
+During mpt3sas hard reset, there are two asynchronous execution paths that
+can lead to use-after-free issues:
+
+Path A (cleanup):
+  _base_clear_outstanding_commands()
+    mpt3sas_scsih_clear_outstanding_scsi_tm_commands()
+      _scsih_fw_event_cleanup_queue()
+	cancel_work_sync // UAF!
+
+Path B (recovery):
+  _base_reset_done_handler()
+    mpt3sas_scsih_reset_done_handler()
+      _scsih_error_recovery_delete_devices()
+        alloc_fw_event_work()
+        _scsih_fw_event_add()
+          _firmware_event_work()
+            _mpt3sas_fw_work() // free fw_event
+
+Here is a use-after-free issue during hard reset:
+
+==================================================================
+BUG: KASAN: slab-use-after-free in __cancel_work_timer+0x172/0x3e0
+Read of size 8 at addr ffff88be08e72610 by task scsi_eh_10/980
+
+CPU: 50 PID: 980 Comm: scsi_eh_10 Kdump: loaded Not tainted 6.6.0+ #24
+Call Trace:
+ <TASK>
+ __cancel_work_timer+0x172/0x3e0
+ _scsih_fw_event_cleanup_queue+0x2a2/0x570 [mpt3sas]
+ mpt3sas_scsih_clear_outstanding_scsi_tm_commands+0x171/0x2c0 [mpt3sas]
+ mpt3sas_base_hard_reset_handler+0x2e8/0x9d0 [mpt3sas]
+ mpt3sas_scsih_issue_tm+0xaa1/0xc10 [mpt3sas]
+ scsih_target_reset+0x344/0x7f0 [mpt3sas]
+ scsi_try_target_reset+0xa7/0x1f0
+ scsi_eh_target_reset+0x4e8/0xc50
+ scsi_eh_ready_devs+0xc8/0x5b0
+ scsi_unjam_host+0x2fa/0x700
+ scsi_error_handler+0x434/0x700
+ kthread+0x2d1/0x3b0
+ ret_from_fork+0x2b/0x70
+ ret_from_fork_asm+0x1b/0x30
+ </TASK>
+
+Allocated by task 980:
+ mpt3sas_scsih_reset_done_handler+0x575/0x7f0 [mpt3sas]
+ mpt3sas_base_hard_reset_handler+0x7a7/0x9d0 [mpt3sas]
+ mpt3sas_scsih_issue_tm+0xaa1/0xc10 [mpt3sas]
+ scsih_dev_reset+0x354/0x8e0 [mpt3sas]
+ scsi_eh_bus_device_reset+0x255/0x7a0
+ scsi_eh_ready_devs+0xb6/0x5b0
+ scsi_unjam_host+0x2fa/0x700
+ scsi_error_handler+0x434/0x700
+ kthread+0x2d1/0x3b0
+ ret_from_fork+0x2b/0x70
+ ret_from_fork_asm+0x1b/0x30
+
+Freed by task 660838:
+ __kmem_cache_free+0x174/0x370
+ _mpt3sas_fw_work+0x269/0x2510 [mpt3sas]
+ process_one_work+0x578/0xc60
+ worker_thread+0x6c0/0xc90
+ kthread+0x2d1/0x3b0
+ ret_from_fork+0x2b/0x70
+ ret_from_fork_asm+0x1b/0x30
+
+Last potentially related work creation:
+ insert_work+0x24/0x230
+ __queue_work.part.0+0x3d2/0x840
+ queue_work_on+0x4b/0x60
+ _scsih_fw_event_add.part.0+0x20e/0x2c0 [mpt3sas]
+ mpt3sas_scsih_reset_done_handler+0x64b/0x7f0 [mpt3sas]
+ mpt3sas_base_hard_reset_handler+0x7a7/0x9d0 [mpt3sas]
+ mpt3sas_scsih_issue_tm+0xaa1/0xc10 [mpt3sas]
+ scsih_dev_reset+0x354/0x8e0 [mpt3sas]
+ scsi_eh_bus_device_reset+0x255/0x7a0
+ scsi_eh_ready_devs+0xb6/0x5b0
+ scsi_unjam_host+0x2fa/0x700
+ scsi_error_handler+0x434/0x700
+ kthread+0x2d1/0x3b0
+ ret_from_fork+0x2b/0x70
+ ret_from_fork_asm+0x1b/0x30
+
+Second to last potentially related work creation:
+ kasan_save_stack+0x21/0x40
+ __kasan_record_aux_stack+0x94/0xa0
+ kvfree_call_rcu+0x25/0xa20
+ kernfs_unlink_open_file+0x2dd/0x410
+ kernfs_fop_release+0xc4/0x320
+ __fput+0x35e/0xa10
+ __se_sys_close+0x4f/0xa0
+ do_syscall_64+0x55/0x100
+ entry_SYSCALL_64_after_hwframe+0x78/0xe2
+
+After commit 991df3dd5144 ("scsi: mpt3sas: Fix use-after-free warning"),
+a race condition exists in _scsih_fw_event_cleanup_queue(). When Path A
+dequeues a fw_event and Path B concurrently processes the same fw_event,
+the reference count can drop to zero before cancel_work_sync() is called
+in Path A, leading to use-after-free when accessing the already freed
+fw_event structure.
+
+Fix this by:
+1. Protecting all accesses to ioc->current_event with ioc->fw_event_lock
+2. Adding reference counting when accessing current_event
+3. Moving the fw_event_work_put() call from dequeue_next_fw_event() to
+   the caller, ensuring fw_event remains valid during cancel_work_sync()
+
+Fixes: 991df3dd5144 ("scsi: mpt3sas: Fix use-after-free warning")
+Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
 ---
- drivers/clk/clk-en7523.c | 231 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 231 insertions(+)
+ drivers/scsi/mpt3sas/mpt3sas_scsih.c | 40 +++++++++++++++++++++-------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
-index 07ab5b42fd5a..65c7b66ab78f 100644
---- a/drivers/clk/clk-en7523.c
-+++ b/drivers/clk/clk-en7523.c
-@@ -11,6 +11,7 @@
- #include <linux/reset-controller.h>
- #include <dt-bindings/clock/en7523-clk.h>
- #include <dt-bindings/reset/airoha,en7581-reset.h>
-+#include <dt-bindings/reset/airoha,an7583-reset.h>
- 
- #define RST_NR_PER_BANK			32
- 
-@@ -96,6 +97,14 @@ static const u32 bus7581_base[] = { 600000000, 540000000 };
- static const u32 npu7581_base[] = { 800000000, 750000000, 720000000, 600000000 };
- static const u32 crypto_base[] = { 540000000, 480000000 };
- static const u32 emmc7581_base[] = { 200000000, 150000000 };
-+/* AN7583 */
-+static const u32 gsw7583_base[] = { 540672000, 270336000, 400000000, 200000000 };
-+static const u32 emi7583_base[] = { 540672000, 480000000, 400000000, 300000000 };
-+static const u32 bus7583_base[] = { 600000000, 540672000, 480000000, 400000000 };
-+static const u32 spi7583_base[] = { 100000000, 12500000 };
-+static const u32 npu7583_base[] = { 666000000, 800000000, 720000000, 600000000 };
-+static const u32 crypto7583_base[] = { 540672000, 400000000 };
-+static const u32 emmc7583_base[] = { 150000000, 200000000 };
- 
- static const struct en_clk_desc en7523_base_clks[] = {
- 	{
-@@ -298,6 +307,114 @@ static const struct en_clk_desc en7581_base_clks[] = {
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+index 508861e88d9f..a17963ce3f93 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+@@ -3659,7 +3659,6 @@ static struct fw_event_work *dequeue_next_fw_event(struct MPT3SAS_ADAPTER *ioc)
+ 		fw_event = list_first_entry(&ioc->fw_event_list,
+ 				struct fw_event_work, list);
+ 		list_del_init(&fw_event->list);
+-		fw_event_work_put(fw_event);
  	}
- };
+ 	spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
  
-+static const struct en_clk_desc an7583_base_clks[] = {
-+	{
-+		.id = EN7523_CLK_GSW,
-+		.name = "gsw",
-+
-+		.base_reg = REG_GSW_CLK_DIV_SEL,
-+		.base_bits = 2,
-+		.base_shift = 8,
-+		.base_values = gsw7583_base,
-+		.n_base_values = ARRAY_SIZE(gsw7583_base),
-+
-+		.div_bits = 3,
-+		.div_shift = 0,
-+		.div_step = 1,
-+		.div_offset = 1,
-+	}, {
-+		.id = EN7523_CLK_EMI,
-+		.name = "emi",
-+
-+		.base_reg = REG_EMI_CLK_DIV_SEL,
-+		.base_bits = 2,
-+		.base_shift = 8,
-+		.base_values = emi7583_base,
-+		.n_base_values = ARRAY_SIZE(emi7583_base),
-+
-+		.div_bits = 3,
-+		.div_shift = 0,
-+		.div_step = 1,
-+		.div_offset = 1,
-+	}, {
-+		.id = EN7523_CLK_BUS,
-+		.name = "bus",
-+
-+		.base_reg = REG_BUS_CLK_DIV_SEL,
-+		.base_bits = 2,
-+		.base_shift = 8,
-+		.base_values = bus7583_base,
-+		.n_base_values = ARRAY_SIZE(bus7583_base),
-+
-+		.div_bits = 3,
-+		.div_shift = 0,
-+		.div_step = 1,
-+		.div_offset = 1,
-+	}, {
-+		.id = EN7523_CLK_SLIC,
-+		.name = "slic",
-+
-+		.base_reg = REG_SPI_CLK_FREQ_SEL,
-+		.base_bits = 1,
-+		.base_shift = 0,
-+		.base_values = slic_base,
-+		.n_base_values = ARRAY_SIZE(slic_base),
-+
-+		.div_reg = REG_SPI_CLK_DIV_SEL,
-+		.div_bits = 5,
-+		.div_shift = 24,
-+		.div_val0 = 20,
-+		.div_step = 2,
-+	}, {
-+		.id = EN7523_CLK_SPI,
-+		.name = "spi",
-+
-+		.base_reg = REG_SPI_CLK_FREQ_SEL,
-+		.base_bits = 1,
-+		.base_shift = 1,
-+		.base_values = spi7583_base,
-+		.n_base_values = ARRAY_SIZE(spi7583_base),
-+
-+		.div_reg = REG_SPI_CLK_DIV_SEL,
-+		.div_bits = 5,
-+		.div_shift = 8,
-+		.div_val0 = 40,
-+		.div_step = 2,
-+	}, {
-+		.id = EN7523_CLK_NPU,
-+		.name = "npu",
-+
-+		.base_reg = REG_NPU_CLK_DIV_SEL,
-+		.base_bits = 2,
-+		.base_shift = 9,
-+		.base_values = npu7583_base,
-+		.n_base_values = ARRAY_SIZE(npu7583_base),
-+
-+		.div_bits = 3,
-+		.div_shift = 0,
-+		.div_step = 1,
-+		.div_offset = 1,
-+	}, {
-+		.id = EN7523_CLK_CRYPTO,
-+		.name = "crypto",
-+
-+		.base_reg = REG_CRYPTO_CLKSRC2,
-+		.base_bits = 1,
-+		.base_shift = 0,
-+		.base_values = crypto7583_base,
-+		.n_base_values = ARRAY_SIZE(crypto7583_base),
-+	}, {
-+		.id = EN7581_CLK_EMMC,
-+		.name = "emmc",
-+
-+		.base_reg = REG_CRYPTO_CLKSRC2,
-+		.base_bits = 1,
-+		.base_shift = 13,
-+		.base_values = emmc7583_base,
-+		.n_base_values = ARRAY_SIZE(emmc7583_base),
-+	}
-+};
-+
- static const u16 en7581_rst_ofs[] = {
- 	REG_RST_CTRL2,
- 	REG_RST_CTRL1,
-@@ -361,6 +478,59 @@ static const u16 en7581_rst_map[] = {
- 	[EN7581_XPON_MAC_RST]		= RST_NR_PER_BANK + 31,
- };
- 
-+static const u16 an7583_rst_map[] = {
-+	/* RST_CTRL2 */
-+	[AN7583_XPON_PHY_RST]		= 0,
-+	[AN7583_GPON_OLT_RST]		= 1,
-+	[AN7583_CPU_TIMER2_RST]		= 2,
-+	[AN7583_HSUART_RST]		= 3,
-+	[AN7583_UART4_RST]		= 4,
-+	[AN7583_UART5_RST]		= 5,
-+	[AN7583_I2C2_RST]		= 6,
-+	[AN7583_XSI_MAC_RST]		= 7,
-+	[AN7583_XSI_PHY_RST]		= 8,
-+	[AN7583_NPU_RST]		= 9,
-+	[AN7583_TRNG_MSTART_RST]	= 12,
-+	[AN7583_DUAL_HSI0_RST]		= 13,
-+	[AN7583_DUAL_HSI1_RST]		= 14,
-+	[AN7583_DUAL_HSI0_MAC_RST]	= 16,
-+	[AN7583_DUAL_HSI1_MAC_RST]	= 17,
-+	[AN7583_WDMA_RST]		= 19,
-+	[AN7583_WOE0_RST]		= 20,
-+	[AN7583_HSDMA_RST]		= 22,
-+	[AN7583_TDMA_RST]		= 24,
-+	[AN7583_EMMC_RST]		= 25,
-+	[AN7583_SOE_RST]		= 26,
-+	[AN7583_XFP_MAC_RST]		= 28,
-+	[AN7583_MDIO0]			= 30,
-+	[AN7583_MDIO1]			= 31,
-+	/* RST_CTRL1 */
-+	[AN7583_PCM1_ZSI_ISI_RST]	= RST_NR_PER_BANK + 0,
-+	[AN7583_FE_PDMA_RST]		= RST_NR_PER_BANK + 1,
-+	[AN7583_FE_QDMA_RST]		= RST_NR_PER_BANK + 2,
-+	[AN7583_PCM_SPIWP_RST]		= RST_NR_PER_BANK + 4,
-+	[AN7583_CRYPTO_RST]		= RST_NR_PER_BANK + 6,
-+	[AN7583_TIMER_RST]		= RST_NR_PER_BANK + 8,
-+	[AN7583_PCM1_RST]		= RST_NR_PER_BANK + 11,
-+	[AN7583_UART_RST]		= RST_NR_PER_BANK + 12,
-+	[AN7583_GPIO_RST]		= RST_NR_PER_BANK + 13,
-+	[AN7583_GDMA_RST]		= RST_NR_PER_BANK + 14,
-+	[AN7583_I2C_MASTER_RST]		= RST_NR_PER_BANK + 16,
-+	[AN7583_PCM2_ZSI_ISI_RST]	= RST_NR_PER_BANK + 17,
-+	[AN7583_SFC_RST]		= RST_NR_PER_BANK + 18,
-+	[AN7583_UART2_RST]		= RST_NR_PER_BANK + 19,
-+	[AN7583_GDMP_RST]		= RST_NR_PER_BANK + 20,
-+	[AN7583_FE_RST]			= RST_NR_PER_BANK + 21,
-+	[AN7583_USB_HOST_P0_RST]	= RST_NR_PER_BANK + 22,
-+	[AN7583_GSW_RST]		= RST_NR_PER_BANK + 23,
-+	[AN7583_SFC2_PCM_RST]		= RST_NR_PER_BANK + 25,
-+	[AN7583_PCIE0_RST]		= RST_NR_PER_BANK + 26,
-+	[AN7583_PCIE1_RST]		= RST_NR_PER_BANK + 27,
-+	[AN7583_CPU_TIMER_RST]		= RST_NR_PER_BANK + 28,
-+	[AN7583_PCIE_HB_RST]		= RST_NR_PER_BANK + 29,
-+	[AN7583_XPON_MAC_RST]		= RST_NR_PER_BANK + 31,
-+};
-+
- static u32 en7523_get_base_rate(const struct en_clk_desc *desc, u32 val)
+@@ -3679,10 +3678,15 @@ static void
+ _scsih_fw_event_cleanup_queue(struct MPT3SAS_ADAPTER *ioc)
  {
- 	if (!desc->base_bits)
-@@ -690,6 +860,54 @@ static int en7581_clk_hw_init(struct platform_device *pdev,
- 	return en7581_reset_register(&pdev->dev, clk_map);
+ 	struct fw_event_work *fw_event;
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&ioc->fw_event_lock, flags);
+ 	if ((list_empty(&ioc->fw_event_list) && !ioc->current_event) ||
+-	    !ioc->firmware_event_thread)
++	    !ioc->firmware_event_thread) {
++		spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
+ 		return;
++	}
++
+ 	/*
+ 	 * Set current running event as ignore, so that
+ 	 * current running event will exit quickly.
+@@ -3691,10 +3695,21 @@ _scsih_fw_event_cleanup_queue(struct MPT3SAS_ADAPTER *ioc)
+ 	 */
+ 	if (ioc->shost_recovery && ioc->current_event)
+ 		ioc->current_event->ignore = 1;
++	spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
+ 
+ 	ioc->fw_events_cleanup = 1;
+-	while ((fw_event = dequeue_next_fw_event(ioc)) ||
+-	     (fw_event = ioc->current_event)) {
++	while (true) {
++		fw_event = dequeue_next_fw_event(ioc);
++
++		spin_lock_irqsave(&ioc->fw_event_lock, flags);
++		if (!fw_event) {
++			fw_event = ioc->current_event;
++			if (!fw_event) {
++				spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
++				break;
++			}
++			fw_event_work_get(fw_event);
++		}
+ 
+ 		/*
+ 		 * Don't call cancel_work_sync() for current_event
+@@ -3714,8 +3729,11 @@ _scsih_fw_event_cleanup_queue(struct MPT3SAS_ADAPTER *ioc)
+ 		    ioc->current_event->event !=
+ 		    MPT3SAS_REMOVE_UNRESPONDING_DEVICES) {
+ 			ioc->current_event = NULL;
++			spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
++			fw_event_work_put(fw_event);
+ 			continue;
+ 		}
++		spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
+ 
+ 		/*
+ 		 * Driver has to clear ioc->start_scan flag when
+@@ -3741,6 +3759,7 @@ _scsih_fw_event_cleanup_queue(struct MPT3SAS_ADAPTER *ioc)
+ 		if (cancel_work_sync(&fw_event->work))
+ 			fw_event_work_put(fw_event);
+ 
++		fw_event_work_put(fw_event);
+ 	}
+ 	ioc->fw_events_cleanup = 0;
+ }
+@@ -10690,15 +10709,16 @@ mpt3sas_scsih_reset_done_handler(struct MPT3SAS_ADAPTER *ioc)
+ static void
+ _mpt3sas_fw_work(struct MPT3SAS_ADAPTER *ioc, struct fw_event_work *fw_event)
+ {
++	unsigned long flags;
++
++	spin_lock_irqsave(&ioc->fw_event_lock, flags);
+ 	ioc->current_event = fw_event;
++	spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
+ 	_scsih_fw_event_del_from_list(ioc, fw_event);
+ 
+ 	/* the queue is being flushed so ignore this event */
+-	if (ioc->remove_host || ioc->pci_error_recovery) {
+-		fw_event_work_put(fw_event);
+-		ioc->current_event = NULL;
+-		return;
+-	}
++	if (ioc->remove_host || ioc->pci_error_recovery)
++		goto out;
+ 
+ 	switch (fw_event->event) {
+ 	case MPT3SAS_PROCESS_TRIGGER_DIAG:
+@@ -10794,8 +10814,10 @@ _mpt3sas_fw_work(struct MPT3SAS_ADAPTER *ioc, struct fw_event_work *fw_event)
+ 		return;
+ 	}
+ out:
++	spin_lock_irqsave(&ioc->fw_event_lock, flags);
+ 	fw_event_work_put(fw_event);
+ 	ioc->current_event = NULL;
++	spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
  }
  
-+static int an7583_reset_register(struct device *dev, struct regmap *map)
-+{
-+	struct en_rst_data *rst_data;
-+
-+	rst_data = devm_kzalloc(dev, sizeof(*rst_data), GFP_KERNEL);
-+	if (!rst_data)
-+		return -ENOMEM;
-+
-+	rst_data->bank_ofs = en7581_rst_ofs;
-+	rst_data->idx_map = an7583_rst_map;
-+	rst_data->map = map;
-+
-+	rst_data->rcdev.nr_resets = ARRAY_SIZE(an7583_rst_map);
-+	rst_data->rcdev.of_xlate = en7523_reset_xlate;
-+	rst_data->rcdev.ops = &en7581_reset_ops;
-+	rst_data->rcdev.of_node = dev->of_node;
-+	rst_data->rcdev.of_reset_n_cells = 1;
-+	rst_data->rcdev.owner = THIS_MODULE;
-+	rst_data->rcdev.dev = dev;
-+
-+	return devm_reset_controller_register(dev, &rst_data->rcdev);
-+}
-+
-+static int an7583_clk_hw_init(struct platform_device *pdev,
-+			      const struct en_clk_soc_data *soc_data,
-+			      struct clk_hw_onecell_data *clk_data)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct regmap *map, *clk_map;
-+
-+	map = syscon_regmap_lookup_by_compatible("airoha,en7581-chip-scu");
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+
-+	clk_map = device_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(clk_map))
-+		return PTR_ERR(clk_map);
-+
-+	en75xx_register_clocks(dev, soc_data, clk_data, map, clk_map);
-+
-+	regmap_clear_bits(clk_map, REG_NP_SCU_SSTR,
-+			  REG_PCIE_XSI0_SEL_MASK | REG_PCIE_XSI1_SEL_MASK);
-+	regmap_update_bits(clk_map, REG_NP_SCU_PCIC, REG_PCIE_CTRL,
-+			   FIELD_PREP(REG_PCIE_CTRL, 3));
-+
-+	return an7583_reset_register(dev, clk_map);
-+}
-+
- static int en7523_clk_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
-@@ -736,9 +954,22 @@ static const struct en_clk_soc_data en7581_data = {
- 	.hw_init = en7581_clk_hw_init,
- };
- 
-+static const struct en_clk_soc_data an7583_data = {
-+	.base_clks = an7583_base_clks,
-+	/* We increment num_clocks by 1 to account for additional PCIe clock */
-+	.num_clocks = ARRAY_SIZE(an7583_base_clks) + 1,
-+	.pcie_ops = {
-+		.is_enabled = en7581_pci_is_enabled,
-+		.enable = en7581_pci_enable,
-+		.disable = en7581_pci_disable,
-+	},
-+	.hw_init = an7583_clk_hw_init,
-+};
-+
- static const struct of_device_id of_match_clk_en7523[] = {
- 	{ .compatible = "airoha,en7523-scu", .data = &en7523_data },
- 	{ .compatible = "airoha,en7581-scu", .data = &en7581_data },
-+	{ .compatible = "airoha,an7583-clock", .data = &an7583_data },
- 	{ /* sentinel */ }
- };
- 
+ /**
 -- 
-2.48.1
+2.39.2
 
