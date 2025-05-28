@@ -1,78 +1,84 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8E0284672
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:13:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871F6283FC5
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434397; cv=none; b=rAlusd0njHwNxTrd8FJNvSE51BVmLrqD1IptG3ebkkYDKOlTYJQLGpfRmrwoYMcrojQc/vKgdoHm05lJyQVsjemKJdk8VBLEgS+0Mk+k8s9XhDZZodsHHgTk9G3LvDB15Ry9zxdA+AzH3qqGjRGPqYniniM+3XiE9hSIueXGxpU=
+	t=1748434399; cv=none; b=tNRx1+gb33vwcVzQ3zyVGiUh/PxwCRSmlXwCXIeHPSeEy1eEpMdU/S+oLdLD/HRJiUSKKt6L0uRV1xkDbpxanjeMt3FM41+chUPIznpWaRW0LMVBz+6XNGHewx0TmzzNiHp0Dk8L2WCmJwZ8bGS5YEdpSYBzdXCpOKEaGEKuMNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434397; c=relaxed/simple;
-	bh=rl1DYff208utY7B4albm0ztL9bncdC6Wfr37/QGcCvI=;
+	s=arc-20240116; t=1748434399; c=relaxed/simple;
+	bh=tFUwK8osdkR3kQ55LeHDS1pqM9vMk8mtJ3mieIzJofQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ie8zRUx/Q31PUvDZBjNWAUw6/GHsBlo2WjmqkCQYiP8GFJ0HQdB8vNlNWorMaRVy34ghk5bOPdHYRDqgYjNDrsd4E31UNXwEw5MPlXBL9RbCtYCgXEvzfczEMrwcnIsMRwr9rk1upvxsAIO5yfdTerB53KdINU9QNq5Nh1KBuxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=DrMQ029l; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=F/KH6H6ek8tKji4QJo+j9N82tR9LQXjGOWXN+YRzObh9iA3UYK8WNaees7rIieaeFAwWwsawa+VmLMoadXZ9fDcfojN4YMMyt4IjMoDMjmYyzyiIMj2xkJSGekrithfguTRBB9ioHH++GIOtzlOGEiZL90bRcg2hMmsFTAuNZOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=YBC9dg2b; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DrMQ029l"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-604533a2f62so7000351a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:13:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="YBC9dg2b"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad56829fabdso621068466b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:13:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1748434394; x=1749039194; darn=vger.kernel.org;
+        d=amarulasolutions.com; s=google; t=1748434396; x=1749039196; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/UmkYBDuhm77tmexgekeXNedIehqsLYbAaP26M4i/3g=;
-        b=DrMQ029l38hUFTUKHAluVoZKHVwmuEKbH/IDnZ3VBA3CjGDw+2WnJIp0RbP36K+WTJ
-         SLPRQ3UsHhH/dLSuXtD1rIb2TpNLRTQ+p5oPk8Cj8O8OrUk5L4Nq82f4UL0TjO79pYAT
-         mLR9TkXI+UacG2njhmEmoju4lS32tb8VlK5+E=
+        bh=fw04JnK5IoPkplJtwQfPjdHnamcMU8mHDxupSjYcvsA=;
+        b=YBC9dg2bcCszhzdtTvqQ/drltrxRefW2gHFvM0UTTA0U6GqsBvWfb0JhDKu8mYcPDD
+         ogkQS23hhXcgjtYvOfh/g7hepxYdsU8kHlJktSeL1Cs69b4iaIBF1o13UjX48Yqts072
+         24QO4xpQF6saX9SX0ApzurGz1rFnRi86xO9PA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748434394; x=1749039194;
+        d=1e100.net; s=20230601; t=1748434396; x=1749039196;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/UmkYBDuhm77tmexgekeXNedIehqsLYbAaP26M4i/3g=;
-        b=tWc/npxXWvFu55wGanCOzOGue3abPZqs3F/6Jdb/opHJkt/eJsYEiYTuY/Ab2DmZGJ
-         sZew8nn+SKrIHHCmEv8YQXVH/Ri2SRP2HstCltNuOv+Tr8EXkL2SyyctjNxqMbYx6btG
-         gK/EryHL3RhBOpvuYjnTHy4cwpAwPm7uaZRZydEx4vOSewFHYJuDgMCj0DrED34k3pM/
-         kJZ/QGMRuVG2mcQYz06Rynz0P93CxHLU5Ou73zzEEWLA61AuT851qR+23HFw59xVL1tQ
-         5TW3wz7ErNYBwd6obprykkpRA8jQ9Q9fQN/2H2OkQoyjPXd+KjlxyRnHMWMDJ477/xjD
-         mfTg==
-X-Gm-Message-State: AOJu0YwaSGjkVbX0EepZ4DS7qRlwv51HwGmbyHqIOfOh9653XUbRKxAE
-	xqFEsjIzGqCRS5F4HR6LWtAIZFOMlmhOJn6xijBUOwN7XoAROvT+XO6mSRGYyo24RYuVCUMy8mt
-	9UOlS
-X-Gm-Gg: ASbGncs+mgfmSxKlFKI2JMO1Poi3NjWmQI+/CVPZWr4VAxjs0e5c8T/YBIPZ4qvWmnC
-	fGgN4tWV4XbTHrmdOyqOwIQT/HOUCtVmndyfIcw8BTmf1PIzd5aihW8UnTkzc9Izx9GczjsGyqh
-	e+0y5dPt+ZQPrjL3m64Gxh+u7tEAaAv5aH/ZCmDls/HW9OvtT/5gp1qzLLwf6ksUBod0ledliGg
-	MOX7+vt5zs0Enpj6mWsLcreKZqvM6dDwWNbUcNp/Bl4PD7PUXtz3cHopfefYa67fOCKueT4XV+2
-	blBHMS/o/GL7xoYkt5UOEbDAP8DUBtFXSArQddXcBskyTz6vlCpOC2Gq/i7OTZj236APwu2Jaof
-	EQ2c/FIDKjOFU
-X-Google-Smtp-Source: AGHT+IGX/l3aYv50yZQiAwumavns5Baq8oSOepnjn19OavmavGdcIsWU1pqdCC9aSgoKvq+TMQezmg==
-X-Received: by 2002:a17:906:f58b:b0:ad5:557b:c369 with SMTP id a640c23a62f3a-ad85b1c2be8mr1532953166b.33.1748434394098;
-        Wed, 28 May 2025 05:13:14 -0700 (PDT)
+        bh=fw04JnK5IoPkplJtwQfPjdHnamcMU8mHDxupSjYcvsA=;
+        b=sVPUHIz3XJl2n0/UKm+0FqzPfAnij6FkWND1lF6Nb5oRG+k1HDrezrRHtHARDUAaKP
+         ztWAmc3jIaBVheAd8ohd0zqHynVmoTLOD9b0j58AtDNahI2HSHH0UiZQqMGwNMNp+/Nm
+         ruEes/UEmCVMxmp3eIEOtLVpZNXcazBa193LDvmAT96tagpsqAkSYP9fpdyfN9NKmOXF
+         Td3sYYazkZ0ZLWL7Whvc1pi1dArAH48IzLzWk9Ev2b+3YOvsWbW+C9cMq4h8/wqaZZ4L
+         nIzAHLC7v82sZrfKHwlRt/3EOa7vkaySV1dcTWORrKohf19qKfdx619uGku+pvXXYXMg
+         k9aw==
+X-Gm-Message-State: AOJu0Yy3s1HXsI5+DxQfwht+OSvaupPehrhGr8T4fj7pdVO2t2h6Li9c
+	Z2J0omXVpwfyUv9kb0Q6pdp42dXdvwidINRwJwVfelIdTDeKBAUe+RUV4pccrlL791Lr4S8S2MG
+	jkByy
+X-Gm-Gg: ASbGncvhvErvOHL1UztXSC88Kc2Tckuchb77f6sJaTQLMfrevprTLWcgTTf1jGbzWOF
+	khthm07psl3yzrftan3MswkYu8FkOXM2IZAO75HN9VN3+4o9De5mUPfbd2tvFJ3GKjL0LPEcIuD
+	ftuTVFlw6wa0GXcQObJmGXmGSBegNlOMBYLjUve2NiPspkd1nM2xzkuoMvF+DxJpcaEXPV2ItJr
+	9PtyxaSF884kab3Cr3b4K/VZjxLfG0aELUXGFTBjin59rQADV8C4u7Xog1Wogc4OXh2Ufmsldry
+	ytHAu62oV845hmFKdgvERNCGgFZ4d2QaXZcgQXWJZVHDCquMtU+mBvCWLPfY5L0LBNtYdHoMwTZ
+	iGr9qKJiDqMul
+X-Google-Smtp-Source: AGHT+IHjHVf7EnkMIgSIuPbunpDiuFLD53MNNfAy8UL/f57+DzwfftpdTMBZSEsbPUhVtUknM6NWKw==
+X-Received: by 2002:a17:907:d716:b0:ad5:6b8a:a0a6 with SMTP id a640c23a62f3a-ad85b319ab8mr1649803866b.58.1748434395702;
+        Wed, 28 May 2025 05:13:15 -0700 (PDT)
 Received: from localhost.localdomain ([2001:b07:6474:ebbf:5631:61bf:398a:c492])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5b8afsm98523266b.170.2025.05.28.05.13.12
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5b8afsm98523266b.170.2025.05.28.05.13.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 05:13:13 -0700 (PDT)
+        Wed, 28 May 2025 05:13:15 -0700 (PDT)
 From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 To: linux-kernel@vger.kernel.org
 Cc: michael@amarulasolutions.com,
 	linux-amarula@amarulasolutions.com,
 	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
+	Fabio Estevam <festevam@denx.de>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Heiko Schocher <hs@denx.de>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Marek Vasut <marex@denx.de>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
 	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
 	Shawn Guo <shawnguo@kernel.org>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/4] ARM: dts: imx28: add pwm7 muxing options
-Date: Wed, 28 May 2025 14:11:39 +0200
-Message-ID: <20250528121306.1464830-3-dario.binacchi@amarulasolutions.com>
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 3/4] dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
+Date: Wed, 28 May 2025 14:11:40 +0200
+Message-ID: <20250528121306.1464830-4-dario.binacchi@amarulasolutions.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250528121306.1464830-1-dario.binacchi@amarulasolutions.com>
 References: <20250528121306.1464830-1-dario.binacchi@amarulasolutions.com>
@@ -84,35 +90,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+The board includes the following resources:
+ - 256 Mbytes NAND Flash
+ - 128 Mbytes DRAM DDR2
+ - CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
+
 Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
 ---
 
 (no changes since v1)
 
- arch/arm/boot/dts/nxp/mxs/imx28.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-index bbea8b77386f..ece46d0e7c7f 100644
---- a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-+++ b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-@@ -755,6 +755,16 @@ MX28_PAD_PWM4__PWM_4
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
-+				pwm7_pins_a: pwm7@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_SAIF1_SDATA0__PWM_7
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
- 				lcdif_24bit_pins_a: lcdif-24bit@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b90870958a2..b67f0e71e4c8 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -89,6 +89,7 @@ properties:
+       - description: i.MX28 based Boards
+         items:
+           - enum:
++              - amarula,imx28-rmm
+               - armadeus,imx28-apf28      # APF28 SoM
+               - bluegiga,apx4devkit       # Bluegiga APx4 SoM on dev board
+               - crystalfontz,cfa10036     # Crystalfontz CFA-10036 SoM
 -- 
 2.43.0
 
