@@ -1,154 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail-m32100.qiye.163.com (mail-m32100.qiye.163.com [220.197.32.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A401C3F36
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2151C3F36;
+	Wed, 28 May 2025 09:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424542; cv=none; b=IkfssVRkEXKRQxW+2Fq9bdVWUvfEnRHhbd4RzIt+5FKSF9guw7Q80vsUU/pP4w0t1gVtcbbQGNS/SNX0lQFAd/z/hnMX1NMvsU0+28UcNMtF4kuyYxvHx7H+Btyqu1SQyx6AJD06efakRZmXifhj+DiD+Ci5tZQXSNEsNh9ylvc=
+	t=1748424589; cv=none; b=q2DMjPpysX2ygLcp5mehR44nMh0ZUiipKpr1A2/iBL8js7OiD20T0X94bkQl9MLYKbzcTOQs+4OYtXVXu0bNzmjschAR13K56+pUIpWfK9nDj8wnKq3yF007GkYCfSamONPU385SupG41Qdy8sAeTtyiVxn8yGwSapxphNwxdBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424542; c=relaxed/simple;
-	bh=RVRBM0RuYVyvhcotX52kpZx1R8EMcidpMsxxq8Rgg5k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=E+5qjf9BlxTZH4aCOpntvxhfh95QJcy0pbZE10VidhrFjGbng6uzrcu9i78cJ8Gr2t0vrAEEPr236NZZeRh8YDvbIw1AXHCyG+6/GqyXtYCN+6PiFn1W5Am9WaerRwKOe5VMX6VVvgfGp27DdSoMKW5+mn2JE0E5GFMG5tZV5MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YFc33oKl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748424589; c=relaxed/simple;
+	bh=yWhuVxMPiOKdsI/vKCGMniZKg4uK/kBT2UHZ49fzVi4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pZA1R/9rTKaoTPWsKZng3nSD24zuVd7I2CGhUjccc6RfY7dMWv62QYTlF7or02LdH9I7hEYj23l0X3ONN3dQTkaENKoAwpKXPF0VWq3k2ySwpGg4j6fQ5yVDakUD99sKCaZDM30D7xR2fnoeL4yQkUf7T87dt8Pt9HbCp2zFmOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=X92BVYze; arc=none smtp.client-ip=220.197.32.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YFc33oKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748424539;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RVRBM0RuYVyvhcotX52kpZx1R8EMcidpMsxxq8Rgg5k=;
-	b=YFc33oKl38kF6sNf2bfN3WbAT3OSGsJwv+aGJhNQvpyQdgI6R4lF1xhCUr46qc2WAEEPsL
-	GyS43gQ6y7UJxmPiqK3sSFP3vdqE+Dk6UYfUhbQ2QMadC4E25tDB8CVB3eXN3xMighO2y1
-	bkjEXhbUJ9gmK8izShEAyM6NO3uIyTs=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-Gigd-kiJOL-5khYoIc7zcQ-1; Wed, 28 May 2025 05:28:58 -0400
-X-MC-Unique: Gigd-kiJOL-5khYoIc7zcQ-1
-X-Mimecast-MFC-AGG-ID: Gigd-kiJOL-5khYoIc7zcQ_1748424537
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5531fe7f143so1903377e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:28:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748424536; x=1749029336;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RVRBM0RuYVyvhcotX52kpZx1R8EMcidpMsxxq8Rgg5k=;
-        b=AZpAiZLIF1yhiQyIF/QsRjA3CSq5lQGYnBxpJSu3IRNd2mXr0nsMNrlL+HYkqx7Q4N
-         vFE5sGZu6wLJlMucnbYfm/72xH0rTRZSjPc/pyKKkhNLAdAioYu5MTmP+R9vE59SXCgI
-         aXwjzzlynaP5znB5QXhLgIeZe0ckoo0ShX6OcJNmTZl2eJQDKIZYcvkvVHv/78RoTh9B
-         YNNXv+BeqZLKm9DyUGKoaQJJCYb/YGw9uxXKG7xsGBIdI8yPjV4ZZRNRdkZz410SSwQk
-         I3sIpxe+jj8VOD1l3ddTtLRrt9oEbP5uinDdleTbSgLMiLN2P+2Tho2ZtUheLWtLy3jt
-         9Uog==
-X-Forwarded-Encrypted: i=1; AJvYcCVc7gIRWAbq8z2xnxhC3QFVSMAi2fa4tjlkZwUxh0kgG/URuD27LCwt48BLQcRY8Z/J6GW3J6eRqKLfxt4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl0SJpaUVlIEUDs2CEVfDnSBQa6Y+oHYkMz2x517oUNJEMbIvW
-	g4Gge3leK7QzdYhyxRR6Uix6aKNdFHwqh+FdjlqLV68JazkTYDBjXCIgOov+jKGhajKTpAWRuQv
-	LL7jxjaehZAbgoBWp2Xp+EuYPCzjrxUIp6ur4DuM/2ybbz+I12CwwvLERNvf/d+xLNldh6zNn2K
-	fU
-X-Gm-Gg: ASbGncvKrEWOqaIepC0pYzt+vwj7hkagR7iLevjTs5+igvakqwzmGI8LL8BKtUthWgF
-	6FMLjn13p5O4nU91auAgRTYEVljyrdrGeFcY8ejjHNuLdz9vrd2sgGhp1GGNsN5qx19staIBCqP
-	7SubOgAsWnB/123EsaRV8DKVnX+8ijkKMxCH0wCamT/zlycptYplGjZchiDrVw6PNUSKM3JeT4+
-	MyH6ilY9zU3cbwAxoF8ykqsTsxkK9dB5drb6/T4aSRBzd3uQ5pOALx6kpRiieTPI/rJI0LeND9g
-	7QRTapkW
-X-Received: by 2002:a05:6512:3b24:b0:553:2ca4:39e2 with SMTP id 2adb3069b0e04-5532ca43ae5mr1082645e87.52.1748424536325;
-        Wed, 28 May 2025 02:28:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IERtNwL1FkFyF5XJrwQ/6eIIimnsdoqLDXrIrCZO1fju6zFy9XmVXSsHiIUEFU+SKOJJmRqCA==
-X-Received: by 2002:a05:6512:3b24:b0:553:2ca4:39e2 with SMTP id 2adb3069b0e04-5532ca43ae5mr1082627e87.52.1748424535858;
-        Wed, 28 May 2025 02:28:55 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532f6b3f0esm199717e87.221.2025.05.28.02.28.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 02:28:55 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 358001AA8877; Wed, 28 May 2025 11:28:54 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Jesper Dangaard Brouer <hawk@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan
- <shuah@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH RFC net-next v2] page_pool: import Jesper's page_pool
- benchmark
-In-Reply-To: <CAHS8izOSW8dZpqgKT=ZxqpctVE3Y9AyR8qXyBGvdW0E8KFgonA@mail.gmail.com>
-References: <20250525034354.258247-1-almasrymina@google.com>
- <87iklna61r.fsf@toke.dk>
- <CAHS8izOSW8dZpqgKT=ZxqpctVE3Y9AyR8qXyBGvdW0E8KFgonA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Wed, 28 May 2025 11:28:54 +0200
-Message-ID: <87h615m6cp.fsf@toke.dk>
+	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="X92BVYze"
+Received: from localhost.localdomain (unknown [117.184.129.134])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 16b13e7e0;
+	Wed, 28 May 2025 16:54:07 +0800 (GMT+08:00)
+From: Albert Yang <yangzh0906@thundersoft.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ge Gordon <gordon.ge@bst.ai>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	BST Linux Kernel Upstream Group <bst-upstream@bstai.top>,
+	linux-mmc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Victor Shih <victor.shih@genesyslogic.com.tw>,
+	Shan-Chun Hung <shanchun1218@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	Ben Chuang <ben.chuang@genesyslogic.com.tw>,
+	soc@lists.linux.dev,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Ross Burton <ross.burton@arm.com>,
+	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
+	Albert Yang <yangzh0906@thundersoft.com>
+Subject: [PATCH v1 0/9] arm64: Introduce Black Sesame Technologies C1200 SoC and CDCU1.0 board 
+Date: Wed, 28 May 2025 16:54:03 +0800
+Message-Id: <20250528085403.481055-1-yangzh0906@thundersoft.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ0gdVk1KGRhIGksfTUlNS1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE5VSk
+	tLVUpCS0tZBg++
+X-HM-Tid: 0a971619533c09cckunm56b16e873977ff
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PxA6PQw4QzExLkg8UQ4POg8#
+	MhUaCTxVSlVKTE9DT0lJT05LS0JNVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
+	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQU1LTU83Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=X92BVYze+FDykM3ZBObdOjojJQdlAV/2cTwFjvMT6/Xgl+LBFpnnRmsVeWD2scpXayORmz8+50gqzdjr1gNbbReYh/8o5rT662nj8gQ6IDydF+kW+TT58ZO0myp6ezLKEn5ZS4CyzQ8goN/RWjGTyxBPofsBe9CPgz/ExxoIK60=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
+	bh=aq3WV+O2bYKN04nPLa/IM/y7JcSQg3FEsNEEzJZKpcs=;
+	h=date:mime-version:subject:message-id:from;
 
-Mina Almasry <almasrymina@google.com> writes:
+Black Sesame Technologies C1200 is a high-performance Armv8 SoC designed for automotive
+and industrial applications. The CDCU1.0 (Central Domain Control Unit) board is the
+development platform built by Black Sesame Technologies. You can find more information
+about the SoC and related boards at:
+https://bst.ai
 
-> On Mon, May 26, 2025 at 5:51=E2=80=AFAM Toke H=C3=B8iland-J=C3=B8rgensen =
-<toke@redhat.com> wrote:
->> > Fast path results:
->> > no-softirq-page_pool01 Per elem: 11 cycles(tsc) 4.368 ns
->> >
->> > ptr_ring results:
->> > no-softirq-page_pool02 Per elem: 527 cycles(tsc) 195.187 ns
->> >
->> > slow path results:
->> > no-softirq-page_pool03 Per elem: 549 cycles(tsc) 203.466 ns
->> > ```
->> >
->> > Cc: Jesper Dangaard Brouer <hawk@kernel.org>
->> > Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
->> > Cc: Jakub Kicinski <kuba@kernel.org>
->> > Cc: Toke H=C3=B8iland-J=C3=B8rgensen <toke@toke.dk>
->> >
->> > Signed-off-by: Mina Almasry <almasrymina@google.com>
->>
->> Back when you posted the first RFC, Jesper and I chatted about ways to
->> avoid the ugly "load module and read the output from dmesg" interface to
->> the test.
->>
->
-> I agree the existing interface is ugly.
->
->> One idea we came up with was to make the module include only the "inner"
->> functions for the benchmark, and expose those to BPF as kfuncs. Then the
->> test runner can be a BPF program that runs the tests, collects the data
->> and passes it to userspace via maps or a ringbuffer or something. That's
->> a nicer and more customisable interface than the printk output. And if
->> they're small enough, maybe we could even include the functions into the
->> page_pool code itself, instead of in a separate benchmark module?
->>
->> WDYT of that idea? :)
->
-> ...but this sounds like an enormous amount of effort, for something
-> that is a bit ugly but isn't THAT bad. Especially for me, I'm not that
-> much of an expert that I know how to implement what you're referring
-> to off the top of my head. I normally am open to spending time but
-> this is not that high on my todolist and I have limited bandwidth to
-> resolve this :(
->
-> I also feel that this is something that could be improved post merge.
-> I think it's very beneficial to have this merged in some form that can
-> be improved later. Byungchul is making a lot of changes to these mm
-> things and it would be nice to have an easy way to run the benchmark
-> in tree and maybe even get automated results from nipa. If we could
-> agree on mvp that is appropriate to merge without too much scope creep
-> that would be ideal from my side at least.
+Currently, to run the upstream kernel on the CDCU1.0 board, you need to use the
+bootloader provided by Black Sesame Technologies. The board supports various
+interfaces including MMC/SD card, which is implemented using the BST C1200 DWCMSHC
+SDHCI controller.
 
-Right, fair. I guess we can merge it as-is, and then investigate whether
-we can move it to BPF-based (or maybe 'perf bench' - Cc acme) later :)
+In this series, we add initial SoC and board support for kernel building. The series
+includes:
 
--Toke
+Patch 1: Add Black Sesame Technologies vendor prefix in vendor-prefixes.yaml
+- Adds "bst" vendor prefix for Black Sesame Technologies Co., Ltd.
+- Required for device tree bindings to properly identify BST hardware
+
+Patch 2: Add device tree bindings for BST SoC platforms
+- Creates new binding file Documentation/devicetree/bindings/arm/bst.yaml
+- Defines compatible strings for BST C1200 family and C1200 CDCU1.0 board
+- Documents BST's focus on automotive-grade SoCs for ADAS applications
+
+Patch 3: Add ARCH_BST configuration for BST silicon support
+- Adds Kconfig option for BST architecture support
+- Enables building kernel for BST platforms
+
+Patch 4: Add device tree binding for BST DWCMSHC SDHCI controller
+- Documents the BST C1200 SDHCI controller binding
+- Required for MMC/SD card support on BST platforms
+
+Patch 5: Add BST C1200 SDHCI controller driver
+- Implements the MMC host controller driver for BST C1200
+- Enables SD card support on BST platforms
+
+Patch 6: Add device tree support for BST C1200 CDCU1.0 board
+- Adds device tree source files for C1200 SoC and CDCU1.0 board
+- Configures hardware components including MMC controller
+
+Patch 7: Enable BST SoC in arm64 defconfig
+- Adds ARCH_BST configuration to default arm64 config
+
+Patch 8: Enable BST C1200 DWCMSHC controller in defconfig
+- Enables MMC controller driver in default arm64 config
+
+Patch 9: Update MAINTAINERS for BST support
+- Adds maintainer information for BST ARM SoC support
+- Consolidates BST-related entries
+
+Albert Yang (9):
+  dt-bindings: vendor-prefixes: Add Black Sesame Technologies Co., Ltd.
+  dt-bindings: arm: add Black Sesame Technologies (bst) SoC
+  arm64: Kconfig: add ARCH_BST for bst silicons
+  dt-bindings: mmc: add binding for BST DWCMSHC SDHCI controller
+  mmc: sdhci: add Black Sesame Technologies BST C1200 controller driver
+  arm64: dts: bst: add support for Black Sesame Technologies C1200
+    CDCU1.0 board
+  arm64: defconfig: Enable BST SoC
+  arm64: defconfig: enable BST C1200 DWCMSHC SDHCI controller
+  MAINTAINERS: add and consolidate Black Sesame Technologies (BST) ARM
+    SoC support
+
+ .../devicetree/bindings/arm/bst.yaml          |  34 +
+ .../bindings/mmc/bst,dwcmshc-sdhci.yaml       | 115 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |  10 +
+ arch/arm64/Kconfig.platforms                  |  19 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/bst/Makefile              |  10 +
+ .../dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts    |  44 +
+ arch/arm64/boot/dts/bst/bstc1200.dtsi         | 130 +++
+ arch/arm64/configs/defconfig                  |   3 +
+ drivers/mmc/host/Kconfig                      |  11 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-bst-c1200.c         | 920 ++++++++++++++++++
+ 13 files changed, 1300 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bst.yaml
+ create mode 100644 Documentation/devicetree/bindings/mmc/bst,dwcmshc-sdhci.yaml
+ create mode 100644 arch/arm64/boot/dts/bst/Makefile
+ create mode 100644 arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts
+ create mode 100644 arch/arm64/boot/dts/bst/bstc1200.dtsi
+ create mode 100644 drivers/mmc/host/sdhci-of-bst-c1200.c
+
+-- 
+2.25.1
 
