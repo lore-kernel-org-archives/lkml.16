@@ -1,198 +1,385 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2066.outbound.protection.outlook.com [40.107.96.66])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A991E28B7E4;
-	Wed, 28 May 2025 17:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748452684; cv=fail; b=RM6I2IcD0S1pqsipWwq0kX0OBmzFiWz3K7VQFlPiEkKXPhnGBiluIWHT+kBCPCjKnC4p2EVkapeEgM5qa+ma2BvtFujetLlvRXTpYupvMHKrljqC+z6fQFURNzwJiUWlb9aG5u33qginhX4osVSaB1+4uAZzTs67gYDIDBdxDTE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748452684; c=relaxed/simple;
-	bh=YNlBiXt/RPLAaV/fjXm/x1U5Vj+YhHo0y0iyH63qnwM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IJ0Pp+yRQvRqnONCD7OAcC3SU468Syc0G+vaN8xZ2cSJcrS54W/dvpEg24Z6OuBHrFUwr8cTHLASPXFqS+xgUHGCw3cckp5ok6xAaJawGzbg4RXisMD7X1lVi6uDd75hbVTo5U3U/Bkki456hdyKSAA0qhAyR3aF0yRe55fEx0Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eJ910oSv; arc=fail smtp.client-ip=40.107.96.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A9928E597
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748452719; cv=none; b=ZdYiJzmSYiaeZJL6NdxFCvgGkzPp98dlcG9fXDnd5mvw2kkh+nDM17H9d0wPm/ojmq2IR8ED7SgTgrI1ykSz/Z0k9E0nT2V3fQk8N9LBHA1FRbkLXR83CH2lqiAU2m5iw0AdkZX33lpbGpCgr1xdJM5J15QUgjEY/WMYReCvRLc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748452719; c=relaxed/simple;
+	bh=8mUgSsaRLC5W8OrTM7KK2+QCRSjQIpzYfK8Heok4Jt8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KaqQfigRqwCeoWDIPb2EwTv4nzjAeFBGE+rurEhX/Tq3Z497RyWNDe3jHprZArsLyqWx+UlOiZNvbRVX3+V5jdsNK0gnRhjFC59B8pPZ3IrJj1hMv88Qfm877dkHIYTjHskc1jG2XQxGos5etK5JfTETdiZoKxwolBjPfjBh4ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=huO3LMEz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eJ910oSv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i+7Kf2RYdAxZxl2/iuaEt0YIf2hXrnBjJ6P9PrtWHSAsRIQRzrCGKeqbNQQ6BoP8n0/mfWs6gBQouLRcNOom/okXJIFSxi6ZoHuE4QZOWflZWpccfw1ymKho9Pde7eJMYKZeYmYMOnATq5X0qZWKZI6Yeox9sbkXoBsfhaFis6tOWpuGX7hyvTza00biaykGDBwkdhQ3NcDHlesLZTiaJgJJMvO8lJMD6Rg1Nx/MBYB16++q6mUxktG/TOp6n1wr0Tru992XJxRReI9jAZkPJYofuZat53D+YYRpEy3tq3azx+lVsPqRYVphD96H0dRCtvxjGiThCB2n0o7obMkcOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yUXQ3tSndGwrXkjqYfGzUlroQjb/x/XoXqZ2955HnUQ=;
- b=L1Hr2jsTZk7oi23RYzOCSAaWOAj2jMui7wf8OUiA5U7Rf7Ov7SRNFUEavemq3QqVzDyHmVfRj6/B0rc6MQoL9/wDBfJWQ/oVk5azG5nmKJdrx9gAPVx2SrIlCprOktwixgvUwsIP+xklzlJIRMKLpPdrQwvTlNXcNgCMjk17v+XRXyEbzbDnKd7Uly5fsl3zp/aIAaLsKZEyxQSziKNGrXSVyG4mWBGuWdN1h9WvaYsm3ARvapLMJP/pE0cHsUJM9WU/+beNmBT3/Mc+oNOPhaqW9+ZegEbX1puQSETkLSwsUuF52V2T1tpNV/za1+Pz+B6ZW81/oK79ODuhH1ok+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yUXQ3tSndGwrXkjqYfGzUlroQjb/x/XoXqZ2955HnUQ=;
- b=eJ910oSvvCCSx3eWP8iprKXUY6MMAkkqa3MdWg+1uzV/epioAUFmoK6I+GIl1hqnSCIefPY1sSEkXfBi22yGjATVm3dUPCJqQxad+ZZ21/BW5TOoTVNak/+Z3QDAenvgbfTWjx1D1Y4tFdsvTW705/xODbXoS5TXpi030+T0szbFOjK+zehMvouF4OSnCMhhVvyQjcsypEoJ/z9qQskuOxBL7CHrhB7aF5RQuY7Oeg60DwUSIApmcrMnnYHBGlCdr4yH49r8NMphGE3m+yXb11775kGyJg8unVNWpVFhypiKY9GRguLTwJ1Uep1MlYA2+9APDeaG2aoM64IxmVOtxw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by LV8PR12MB9229.namprd12.prod.outlook.com (2603:10b6:408:191::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Wed, 28 May
- 2025 17:17:56 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%6]) with mapi id 15.20.8769.022; Wed, 28 May 2025
- 17:17:56 +0000
-Date: Wed, 28 May 2025 14:17:54 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com
-Subject: Re: [PATCH v5 10/29] iommufd: Abstract iopt_pin_pages and
- iopt_unpin_pages helpers
-Message-ID: <20250528171754.GY61950@nvidia.com>
-References: <cover.1747537752.git.nicolinc@nvidia.com>
- <49f7143c1b513049fd8158278a11d9f8b6c837d3.1747537752.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49f7143c1b513049fd8158278a11d9f8b6c837d3.1747537752.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: BL0PR1501CA0024.namprd15.prod.outlook.com
- (2603:10b6:207:17::37) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="huO3LMEz"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SE9l0t022766;
+	Wed, 28 May 2025 17:18:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=rNxRMpzTpRqHtbiY/bcnyUNUB7Io
+	Snep9XeZFcyAA3Q=; b=huO3LMEzguUMP65ukJy9AKeSLNrL1WiMfzMki2ENYB0V
+	NV02vvtk28dqu9FJxtd6/hr/fq0Eb7EVI9cEfxoamOricCVx7P0svH8Jis7lKR+K
+	rFmUVwstv27R/5ASk5NDdC1sLwaLzXuSgdqoF+U8oDI245+x7/tRKYSStMCLdrWY
+	7VstbyiK17lZx+RMT+1MV72PGtmTu7iOZAH2p3vfHgklagu63lAJJZS/8HBXl0fe
+	oeVPB8LkBPfV1UlxKLVJKB9arIvG/QqN7qqr+SUeYkHpSgF3MMdjPFL+3JcP3rGt
+	sSWFFZoSeCJ9SIOlVridAylqcgDPZQ9BIrrmqciQ0Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40h10cc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 17:18:15 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SHDEkg009137;
+	Wed, 28 May 2025 17:18:14 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46x40h10cb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 17:18:14 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SFFKel026439;
+	Wed, 28 May 2025 17:18:14 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usxn0f9j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 17:18:13 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SHI9cr34275758
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 17:18:09 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9EBBB2004D;
+	Wed, 28 May 2025 17:18:09 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E88F420040;
+	Wed, 28 May 2025 17:18:06 +0000 (GMT)
+Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 28 May 2025 17:18:06 +0000 (GMT)
+From: Donet Tom <donettom@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+        Zi Yan <ziy@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Nilay Shroff <nilay@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: [PATCH v7 1/5] drivers/base/node: Optimize memory block registration to reduce boot time
+Date: Wed, 28 May 2025 12:18:00 -0500
+Message-ID: <2a0a05c2dffc62a742bf1dd030098be4ce99be28.1748452241.git.donettom@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|LV8PR12MB9229:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70a0a218-d960-4b28-8ea7-08dd9e0b9634
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mDVE71knRiIxjjmeQxH8vAIQKVUIpVrjErYds1qIQ2DC/3MsH8daTgq+mdom?=
- =?us-ascii?Q?US+DFBaIX63pL15SpcuUkFEDKha3iMJhR34r/IpXyUv1YDNxp8v3IM1ul8D0?=
- =?us-ascii?Q?+7fGxqAbkOfTrGFtrlkT7ESOhP1T5glZh8p3K0hz/kA5bmqPKyJ2qfdqvbFy?=
- =?us-ascii?Q?8ahGrc6S7AwbXmyrVXmFRvb/JqGY/EOGo3w2s6jwlQ7e4YzSYdkFOlxuReI0?=
- =?us-ascii?Q?2jAC92TLW7PYmIDi7utCOLlmY1HqZIsgFzyXk/Wy9/ji0v6dweyCSXg8dw73?=
- =?us-ascii?Q?CSF3UjeaDNPrum3sHcObQVleFC21D5BsjWtubW/2qLegaWLnW9s+69Owczou?=
- =?us-ascii?Q?33Tl+0hfHBNHe4p7lLLSMWmsemEO9M7PfyXkrOZ4+rcOsGdnRsPxJA/wIoCI?=
- =?us-ascii?Q?di/k+xGhvh1pC4dlRz9LZCvIxOpXKmlnE9T0sj9aA3DUWoW/fHzOYfrK5SwT?=
- =?us-ascii?Q?3w9jVeLYwWO1FnuGmx5+5e5xYfWQ/HQCynQZ3YBCJovf615xYjQEmr8ZTvsU?=
- =?us-ascii?Q?gGGcmmaHEp5ie65+aIkOI3upHwCmeaeRH4HqyxTYBXxehV0O36M0dYErPVcf?=
- =?us-ascii?Q?icanxl4t9iNYqGu+8x8EHUh0h/qOpZ/e/+E+CYBwI7mD7SBs4ZB9N2Ge6qky?=
- =?us-ascii?Q?sID4ln9V8Q9gNpAdBAqcBucq8GmeJpPh4Ve35km/7gokwjfBC9FNMlUUYBiZ?=
- =?us-ascii?Q?uVMzGGvGbm7wU6pqD81V6oyxD55XKxq4lWug+ctHohRejdD3aeRcdI2/sCiU?=
- =?us-ascii?Q?HqLAAprFopO4HFVrDL0UPdd7wLukW4qdhr2SbAXwODQcZRIb1BWSZ1+Y+y1Z?=
- =?us-ascii?Q?sNeRU+Ef5i+Qur0Rf1jeq9/phJnUQtpr3S7sHT+L+bqxPZ7zdenAbTQakRK/?=
- =?us-ascii?Q?TYnrhIibGcs+MP1CJWdRhUIRmJjB58gtb4RbFgCmw2SiIaQe1NG9rIDOtQAo?=
- =?us-ascii?Q?cNrtF3r8nLnJQMe93neV17+QxIkOGAf5SLTyIpT0epKNsw1Dp6OhVFf9fWFU?=
- =?us-ascii?Q?AckM3mcZY7U0ewjwVs7ZGUocVEeYVm4kdgoQfQWzrPtnhutku/k1O3Cts1fo?=
- =?us-ascii?Q?eO3htX0kQebC8u4ZxW5aAdtExQys9gQMNjCJnPKTqLR0qgu1Q6xuqZCesoWl?=
- =?us-ascii?Q?j4fCz7OkaYjSFXAqGi1dO2IRCgdbaOFe/oLl4FbezW/fIkhZudHTTbpTC4zo?=
- =?us-ascii?Q?weXeCpi3oNHbi7pbZUjzWw6IAXMmLw8xoPB0U/JOPxQujNmKWrs9cHWTf4uQ?=
- =?us-ascii?Q?JQshOI3hZ1YL1/47LCnGU0/c7wUCHCeddc3kQ4iXvwyKAP+zuuE6+BmTIPEz?=
- =?us-ascii?Q?mMbq6DX0K0JA8NTnhTP7HssB1Srx2/3VoRrcJczH378yoPOtREL5wJUcZXvU?=
- =?us-ascii?Q?QiE+//dMmQgs22ySDur2VtuGikAkkpkWESVDngU7pIYrVGQCFT0569XPsdvk?=
- =?us-ascii?Q?x/MSBu8MIs0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cxP8nJReXG+D2qjyC0XydHAEdNyw0V7afKt9gE5lWP9ZjmH1PFeYgr59g0CW?=
- =?us-ascii?Q?0cVHAgxTtbv+Uesz+1mw9Cf6beAyN/XUxus0bz0yuDLxOz09A7JFet990IH1?=
- =?us-ascii?Q?U+n1kiBnpGGlniuQW4nl2QDoRNvp7j+GjMW3Pwfymez56cK96uFLSpUec5LR?=
- =?us-ascii?Q?er6WWjPdzQBPZYnQdpkiJaxMWLRCley12ASu7zdh+QyixaHdu70nQzjSfI1i?=
- =?us-ascii?Q?NCbahTM5moS+rIfKT3t3pYBuOdHYzQiqcG4AH/u3WfQMXcljPuk07L6i0VtJ?=
- =?us-ascii?Q?nxf3lv9Z6plq0fb5hNCyvRA/fgWosbcZwBBbCkWYQGM0zI1Hb9SWvmj5khcv?=
- =?us-ascii?Q?Y6esMRAhxD0bJd84WA0YEV9l7u7fiSIUumaVNKBAJC22QVRYKecFd5FfE7xs?=
- =?us-ascii?Q?L6dMZGhaF6TkX6ysidAlmkYfEGpgRp6qLVDVvYJPXEXZbMfLeX7I6S857X0n?=
- =?us-ascii?Q?LqNnqf7HygsVDE78DXQZgD9Zg3HTycvSYhN0gLVbX0s1Prad+hF5WvVfgEAw?=
- =?us-ascii?Q?baMFvETn31oAXlMin5RF9vT2hs26m+tRCuiHHSx7tQo8fwyioPrpbI4s2k9w?=
- =?us-ascii?Q?BWFcvD/LM3BuG1BM6VNM7MUPwnz6cY5cFIvkhlcsg18hHYYELwVB9qprpXLj?=
- =?us-ascii?Q?UaqrY0n7tJQsNcl/y2ObadJGPWmm80pqRTP37JiwQDJ0SmjoRimJIcoeVqbI?=
- =?us-ascii?Q?uOP1xSZaRW3xIy0FqSml+eNIDtsEhxcpaI+/un13C2JYYr2f4Rcr5en3tzyN?=
- =?us-ascii?Q?xt/9r8gfhX7Bct8LAc76RCGHho2ce/pvAzcM7eNuKcCVM7bgCDJJvpogUAkd?=
- =?us-ascii?Q?Zf0q9jaF05rk1dij8Ty/3EJtjVTeEtBzCQkZvHKDsOcHnhGZyoJ6NxWCZMRl?=
- =?us-ascii?Q?XxjnQd7eaN+k0iX3eMoH+yL7Uc31Raa2UGRI2vNHHGe9yeS3/RGssd8jtNf0?=
- =?us-ascii?Q?sdP+q18FsRQdvpGcpwrZpUKKNlAGAaex/pv9CpW9tFc1nUFAt1gKbwTrlZ7n?=
- =?us-ascii?Q?oVNI4Mqcp8ivLaq1xo52OTKbvByCTiO/tP2cclYytaTg0sADNdO4HvKZnFF3?=
- =?us-ascii?Q?rPojro3jZ6XAF8hEHYxOdooDnejZ7YYU6jCk43+fW6D5J0VZMLYKNYHpEkkg?=
- =?us-ascii?Q?XLogM2SQe/xpwmi1It4QdawJAvkSNtEAYhbNPi32UjE6D9qK/qSbTbYQM8c9?=
- =?us-ascii?Q?RcJgqyPw7vkfgHMMr3k/57Ff+/Skr8XP3QJtjyJSzkclLitBLIZ3lClF31iE?=
- =?us-ascii?Q?156rlcw8gyBssTwXzZ5fUamEgLdFkq4/GlGsJvY2Bh+ds+IwzjtOmepadFhP?=
- =?us-ascii?Q?j6Sh3ve8ZRjPmIJa4IEUZJzDGBJ9ved/gkzg0HF/9UDfJ2N+L5je9xBYR0Be?=
- =?us-ascii?Q?gmPhOhBgMX2txrF+h7AqMY579L+D4pXtHXlK/W2WKH90PFB/Ptcghvh4PmSv?=
- =?us-ascii?Q?PIkZFfP+3LcO0ElBrkyZUL0I7Go38Wp0O0Mkm3+axnwbjEnFmTXl5vV0Z3EJ?=
- =?us-ascii?Q?Q9wpWG+aLGxPSeUYqdRqBYzTFtB3J4Z1YlgzWQu67jK4wPL5tj0U0fDjmFAK?=
- =?us-ascii?Q?hVNTKbNC7ocedk8t859VLMWn7uHZe9OIbYNL/qoi?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70a0a218-d960-4b28-8ea7-08dd9e0b9634
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 17:17:56.1034
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tqh17P7WFtFS954SAwNRL5vDcv/1emT+0gfDU62QAW8wR46gLuGWZd0WQpbO4rCx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9229
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: cnWZHcMqQQ42pRsCFB6mUvkfzaW15eh1
+X-Proofpoint-ORIG-GUID: VB-UuhShpyTVBAeKxCo3gvpYJlXY6-Sy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE0OCBTYWx0ZWRfX/bKOXGZb5Gf3 UQSg044X/FmMij/Vmp5xVk4nkN6mTDwAvIkdwKXVwtz3d2zebTlv9grk+5pYhXMWNwXFTo3Aq/Z KiXFA5q7zXSzo1kw2scBpk2aaKCxJ2jQ8mlHT7NEo9LIYPgxqnvVtK9wwycLHzsDs1PNB7n9wHo
+ oFg4rt9wjUpd7L3orevrh16OsHqANognCBUP1FjpREfQuN+jFOObApz1rIIqo9X0jpI8wk2eiDt 3N+4v5xaCNxYI1CHcryKB8wQIerG+lDLifBf6WCEz6zAqOae2i7pjFA8VpySIUy6P6rX5/PZ1Rr j5hcqDZSXpw40nCE48P6GRANKMWZM+a18CEmykGL4tz9Si4PaXWi+OUdAw5DLDW8dCe6wXVxgm0
+ Ia6BEI/fXdOzHw3f+vYuhyY8U3Y0Cyrk+YogiSMwXMpDHjIHrVAeQ5zVT1tYCkRwAKl/8cME
+X-Authority-Analysis: v=2.4 cv=L8MdQ/T8 c=1 sm=1 tr=0 ts=68374557 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=Ikd4Dj_1AAAA:8
+ a=y_Vbiix7gtgA8xZMur0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_08,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 phishscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280148
 
-On Sat, May 17, 2025 at 08:21:27PM -0700, Nicolin Chen wrote:
-> The new HW QUEUE object will be added for HW to access the guest queue for
-> HW-accelerated virtualization feature. Some of HW QUEUEs are designed in a
-> way of accessing the guest queue via a host physical address without doing
-> a translation using the nesting parent IO page table, while others can use
-> the guest physical address. For the former case, kernel working with a VMM
-> needs to pin the physical pages backing the guest memory to lock them when
-> HW QUEUE is accessing, and to ensure those physical pages to be contiguous
-> in the physical address space.
-> 
-> This is very like the existing iommufd_access_pin_pages() that outputs the
-> pinned page list for the caller to test its contiguity.
-> 
-> Move those code from iommufd_access_pin/unpin_pages() and related function
-> for a pair of iopt helpers that can be shared with the HW QUEUE allocator.
-> 
-> Rename check_area_prot() to align with the existing iopt_area helpers, and
-> inline it to the header since iommufd_access_rw() still uses it.
-> 
-> Reviewed-by: Pranjal Shrivastava <praan@google.com>
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/iommufd/io_pagetable.h    |   8 ++
->  drivers/iommu/iommufd/iommufd_private.h |   6 ++
->  drivers/iommu/iommufd/device.c          | 119 ++----------------------
->  drivers/iommu/iommufd/io_pagetable.c    |  97 +++++++++++++++++++
->  4 files changed, 119 insertions(+), 111 deletions(-)
+During node device initialization, `memory blocks` are registered under
+each NUMA node. The `memory blocks` to be registered are identified using
+the node’s start and end PFNs, which are obtained from the node's pg_data
 
-And if you do what was suggested do we need this patch at all? Just
-use the normal access sequence:
+However, not all PFNs within this range necessarily belong to the same
+node—some may belong to other nodes. Additionally, due to the
+discontiguous nature of physical memory, certain sections within a
+`memory block` may be absent.
 
- iommufd_access_create(ops=NULL)
- iommufd_access_attach(viommu->hwpt->ioas)
- iommufd_access_pin_pages()
+As a result, `memory blocks` that fall between a node’s start and end
+PFNs may span across multiple nodes, and some sections within those blocks
+may be missing. `Memory blocks` have a fixed size, which is architecture
+dependent.
 
-And store a viommu->access pointer to undo it all.
+Due to these considerations, the memory block registration is currently
+performed as follows:
 
-This avoids making it all special with different internal behavior
-from a mdev. The only difference is we allowe ops=null for viommu but
-not for mdev.
+for_each_online_node(nid):
+    start_pfn = pgdat->node_start_pfn;
+    end_pfn = pgdat->node_start_pfn + node_spanned_pages;
+    for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
+        mem_blk = memory_block_id(pfn_to_section_nr(pfn));
+        pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
+        pfn_mb_end = pfn_start + memory_block_pfns - 1
+        for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
+            if (get_nid_for_pfn(pfn) != nid):
+                continue;
+            else
+                do_register_memory_block_under_node(nid, mem_blk,
+                                                        MEMINIT_EARLY);
 
-I don't think it is worth doing all these changes just to eliminate
-the access memory allocation.. viommu allocation is not fast path.
+Here, we derive the start and end PFNs from the node's pg_data, then
+determine the memory blocks that may belong to the node. For each
+`memory block` in this range, we inspect all PFNs it contains and check
+their associated NUMA node ID. If a PFN within the block matches the
+current node, the memory block is registered under that node.
 
-Jason
+If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
+a binary search in the `memblock regions` to determine the NUMA node ID
+for a given PFN. If it is not enabled, the node ID is retrieved directly
+from the struct page.
+
+On large systems, this process can become time-consuming, especially since
+we iterate over each `memory block` and all PFNs within it until a match is
+found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
+overhead of the binary search increases the execution time significantly,
+potentially leading to soft lockups during boot.
+
+In this patch, we iterate over `memblock region` to identify the
+`memory blocks` that belong to the current NUMA node. `memblock regions`
+are contiguous memory ranges, each associated with a single NUMA node, and
+they do not span across multiple nodes.
+
+for_each_memory_region(r): // r => region
+  if (!node_online(r->nid)):
+    continue;
+  else
+    for_each_memory_block_between(r->base, r->base + r->size - 1):
+      do_register_memory_block_under_node(r->nid, mem_blk, MEMINIT_EARLY);
+
+We iterate over all memblock regions, and if the node associated with the
+region is online, we calculate the start and end memory blocks based on the
+region's start and end PFNs. We then register all the memory blocks within
+that range under the region node.
+
+Test Results on My system with 32TB RAM
+=======================================
+1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+
+Without this patch
+------------------
+Startup finished in 1min 16.528s (kernel)
+
+With this patch
+---------------
+Startup finished in 17.236s (kernel) - 78% Improvement
+
+2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
+
+Without this patch
+------------------
+Startup finished in 28.320s (kernel)
+
+With this patch
+---------------
+Startup finished in 15.621s (kernel) - 46% Improvement
+
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Oscar Salvador <osalvador@suse.de>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Acked-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+
+---
+
+v6 -> v7
+
+Removed unwanted comments
+
+v6 - https://lore.kernel.org/all/bc754a238aa91fa36be463985ccde66aac7055e7.1748270306.git.donettom@linux.ibm.com/
+v5 - https://lore.kernel.org/all/d2490e807b2c13950bc1d4199f22ec078cc4c56a.1747904868.git.donettom@linux.ibm.com/
+v4 - https://lore.kernel.org/all/f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com/
+v3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
+v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
+v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
+---
+---
+ drivers/base/memory.c  | 21 ++++-----------------
+ drivers/base/node.c    | 35 +++++++++++++++++++++++++++++++++--
+ include/linux/memory.h | 19 ++++++++++++++++++-
+ include/linux/node.h   |  3 +++
+ 4 files changed, 58 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 19469e7f88c2..39fcc075a36f 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -22,6 +22,7 @@
+ #include <linux/stat.h>
+ #include <linux/slab.h>
+ #include <linux/xarray.h>
++#include <linux/export.h>
+ 
+ #include <linux/atomic.h>
+ #include <linux/uaccess.h>
+@@ -48,22 +49,8 @@ int mhp_online_type_from_str(const char *str)
+ 
+ #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+ 
+-static int sections_per_block;
+-
+-static inline unsigned long memory_block_id(unsigned long section_nr)
+-{
+-	return section_nr / sections_per_block;
+-}
+-
+-static inline unsigned long pfn_to_block_id(unsigned long pfn)
+-{
+-	return memory_block_id(pfn_to_section_nr(pfn));
+-}
+-
+-static inline unsigned long phys_to_block_id(unsigned long phys)
+-{
+-	return pfn_to_block_id(PFN_DOWN(phys));
+-}
++int sections_per_block;
++EXPORT_SYMBOL(sections_per_block);
+ 
+ static int memory_subsys_online(struct device *dev);
+ static int memory_subsys_offline(struct device *dev);
+@@ -632,7 +619,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+  *
+  * Called under device_hotplug_lock.
+  */
+-static struct memory_block *find_memory_block_by_id(unsigned long block_id)
++struct memory_block *find_memory_block_by_id(unsigned long block_id)
+ {
+ 	struct memory_block *mem;
+ 
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 618712071a1e..b229dee13632 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -20,6 +20,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/swap.h>
+ #include <linux/slab.h>
++#include <linux/memblock.h>
+ 
+ static const struct bus_type node_subsys = {
+ 	.name = "node",
+@@ -850,6 +851,34 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+ 			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
+ }
+ 
++/* register all memory blocks under the corresponding nodes */
++static void register_memory_blocks_under_nodes(void)
++{
++	struct memblock_region *r;
++
++	for_each_mem_region(r) {
++		const unsigned long start_block_id = phys_to_block_id(r->base);
++		const unsigned long end_block_id = phys_to_block_id(r->base + r->size - 1);
++		const int nid = memblock_get_region_node(r);
++		unsigned long block_id;
++
++		if (!node_online(nid))
++			continue;
++
++		for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
++			struct memory_block *mem;
++
++			mem = find_memory_block_by_id(block_id);
++			if (!mem)
++				continue;
++
++			do_register_memory_block_under_node(nid, mem, MEMINIT_EARLY);
++			put_device(&mem->dev);
++		}
++
++	}
++}
++
+ void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+ 				       unsigned long end_pfn,
+ 				       enum meminit_context context)
+@@ -971,11 +1000,13 @@ void __init node_dev_init(void)
+ 
+ 	/*
+ 	 * Create all node devices, which will properly link the node
+-	 * to applicable memory block devices and already created cpu devices.
++	 * to already created cpu devices.
+ 	 */
+ 	for_each_online_node(i) {
+-		ret = register_one_node(i);
++		ret =  __register_one_node(i);
+ 		if (ret)
+ 			panic("%s() failed to add node: %d\n", __func__, ret);
+ 	}
++
++	register_memory_blocks_under_nodes();
+ }
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index 12daa6ec7d09..2a61088e17ad 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -171,12 +171,30 @@ struct memory_group *memory_group_find_by_id(int mgid);
+ typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
+ int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
+ 			       struct memory_group *excluded, void *arg);
++struct memory_block *find_memory_block_by_id(unsigned long block_id);
+ #define hotplug_memory_notifier(fn, pri) ({		\
+ 	static __meminitdata struct notifier_block fn##_mem_nb =\
+ 		{ .notifier_call = fn, .priority = pri };\
+ 	register_memory_notifier(&fn##_mem_nb);			\
+ })
+ 
++extern int sections_per_block;
++
++static inline unsigned long memory_block_id(unsigned long section_nr)
++{
++	return section_nr / sections_per_block;
++}
++
++static inline unsigned long pfn_to_block_id(unsigned long pfn)
++{
++	return memory_block_id(pfn_to_section_nr(pfn));
++}
++
++static inline unsigned long phys_to_block_id(unsigned long phys)
++{
++	return pfn_to_block_id(PFN_DOWN(phys));
++}
++
+ #ifdef CONFIG_NUMA
+ void memory_block_add_nid(struct memory_block *mem, int nid,
+ 			  enum meminit_context context);
+@@ -188,5 +206,4 @@ void memory_block_add_nid(struct memory_block *mem, int nid,
+  * can sleep.
+  */
+ extern struct mutex text_mutex;
+-
+ #endif /* _LINUX_MEMORY_H_ */
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 2b7517892230..485370f3bc17 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -120,6 +120,9 @@ static inline void register_memory_blocks_under_node(int nid, unsigned long star
+ 						     enum meminit_context context)
+ {
+ }
++static inline void register_memory_blocks_under_nodes(void)
++{
++}
+ #endif
+ 
+ extern void unregister_node(struct node *node);
+-- 
+2.43.5
+
