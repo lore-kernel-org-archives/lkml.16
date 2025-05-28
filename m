@@ -1,252 +1,373 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26251D6195
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD501D6195
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456534; cv=none; b=tNxyg+HkciOkoZEHNZAT2ytyaiOrj9faUNEC1spVNGAgvPHrsWndAgxVODKXoVRQqB/V0qEh3LM335gr4H87vWm7Eyc4KquKjX9NZl3iQIDIivKkXvLamGKlAjLfSL81kD0xwWq8dMkV93uhrybIVvYbekMfvfJ5151Am49aqWU=
+	t=1748456561; cv=none; b=EpQrs+N0h3muICJrbNpDstkLEe5F1OYEXvAW1btAJ8hk50LykwHEyBElJ47daPYrsL9OAJlVeyBOx4nuxDeC40JWQAltMogHDpG5TnY9UkfuRYdFKPdVc9oBWynxOBnSOCuNB6CVXCXzSVoHO81XOSpglqvCpEvHrAsLVXUt1Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456534; c=relaxed/simple;
-	bh=g9Uij2wLtuQhXOCGoStG5OmI/vXOT+cSxhUXvGV0hlc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VMvg6NCVN0lQVV4YtIf350+ZzLMJ9uriGCAQ6H9XhqFO9sQupehcIZlOH1+4DIuiKLFQaNbes718R/8eH9zjasurYuER4yO/Jz+YMMUOfdeWdNRnGBHMrf8W+GzZEHGCJLvVOWTsthLLNjDvt+oLF0BkQlRPZECrwEVNtRn7NPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=WqqAoPNS; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1748456561; c=relaxed/simple;
+	bh=m2bWizstM8R2IyWJ5UZGzimLBXaHf+NXg+15yOIEsvY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0pgXcDgnv3aBW86oSZVnqxiOEQ0gnzGJPjLlsd6rSni0eleL84Az9gv4U7EyiultQgsjUMcBx99i8jJURU6BR3yedaIBUzqgCnUNVLB3DHpdrdY+jjsFZIYIQvW960JLh3ewAL1Csx1ADA4jxJ4YoUDehP+8112W5aWEJZUiNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SR0X2GWM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WqqAoPNS"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a375888297so110513f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1748456530; x=1749061330; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=g9Uij2wLtuQhXOCGoStG5OmI/vXOT+cSxhUXvGV0hlc=;
-        b=WqqAoPNSNxuAR3PqT4ij7Cq3MillF4T50EfpA5J4dOzAq33++n5/3sal6ZZZ5DeVqL
-         zb/s9Tmf1X7riSw2/yzvnZKD47tD3SJh8Lj0sy2aNvNCZx5slWbWh36XEiulo4ESZhsy
-         hLEFKR8wvWkzeo7JRhc/aaZiKpadqvvPYteR4rDovqiPlRQ9dHo0BYcCYpBXDaFlfbCX
-         c8XYCy0qoG+alHf7JeHn8rlGxCvG6bPVt4/heAEx1p6cmuMk6ZqyWlS82rigyqUU+7ug
-         PfXFF2RvRjOGcrUp1819O+WxjTJ4v86YaLS+Gv/rNuJxECBppW0hYKRiy/DzP0N6i6xT
-         joIg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SR0X2GWM"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAI3XT021578
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:22:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=VSqQFgb0vNsBP9uzJZGqkiym
+	8JmNyD9K1JA4p69RyL4=; b=SR0X2GWMZdeo5YIMfu1V5VWPXhm5fizEiLOyztxn
+	Z31tpRZ5q6jNRWmaYP+x8IHw0ufMx5363oFhVUhFnrTxk/zjJSVSuVK8PnZFR5gC
+	bE6BeHJJii2czVgO5uOnjNSdNYYzEjsPtxzE/32hPxmLoj4VYG44PYcu8s5p+elY
+	zgT2AtngHJT+lduDoIt+ig4bjYQ1aPEZXmgHNLWTZM7Z6hBrMT0lmR45xlg6Brjd
+	7uqgILGSKM7p14GZDFhBQx9fPQsMH0NfhpV6K+MQzR9m534ylmFFbY8mJVgeF1ua
+	SA8D7ZH8KXzbFEpvb8Tisqc0VasR+SX0gANBDJKCvyj70A==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46u6g935pf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:22:37 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8d3f48f35so2898986d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:22:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748456530; x=1749061330;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g9Uij2wLtuQhXOCGoStG5OmI/vXOT+cSxhUXvGV0hlc=;
-        b=M76so4F+H1/1LsNp8RgxhvfU8hTBNNJG+gOIaEE8FwBOwqHsFI18YQJac0hkSnKq/+
-         qwyxC6hWvyJnB2dSrw/NwSy0cgYiCxrm2QvKa9irchBxFPVFjcDC+bQyBHwo+JKMaIQa
-         yv15ImsW+TMjUSE7GibrRboTuEibB0l+11LwV3mpN6nezgT+SYDrHp1yyfjs8msAZUUe
-         r3YM1nvU248WGaeIvVT3XWM8qB/gXXaKKjyXYNk75ARO+N/1ercHoh2JboPpeY8vExVJ
-         iy6Udz98abgVSyJpNmutyKbewY9Nj/7RgnlJunJBWGp9apJXygQg8ZW/SgY5+mK61A60
-         6tkQ==
-X-Gm-Message-State: AOJu0YxOqbuI/apZl1e69Vj/Z12EEkdUVsBLlColrCQBIsjXVt61/pZc
-	U24L1fL/6EckwULL+hJJLvk8yZ49d0yIv0jAtRbtFzSBZJ/F8wDBuBQwcvLxx9GFP0I=
-X-Gm-Gg: ASbGnctqzafnG+3X2cvm+0mVrui29mM4ijeBHoMe8YDQsIuZ7rDniXdoQz4MxzSI7pV
-	kkg3h8TOtZK3wzGiIKZC1jb4WSO1kJR4qhHAcMYvJqqsta01ijsWQZgo/PULs4Lc8Nm7+w76o2k
-	7rMOIpQgZjWDMQ84t/h/ZWIpYjWSPFA44tHPSPwvs5umg5zToAd4BCZ9idOAnvCXVxw2Hi/SUsE
-	PTJyE3UR1yKsiGjOUw5nS9QWEHHK1VoTC6VjljJUoBoOzTFjUUjsKjpkoO3mPjfNNJFCKQ8FEAM
-	XGL+vCUlMPlzu8jI9B/e9X2ErAaiZssx1ve1RePCnQqTIoKXtyPqYIZGlQDO5sX6QNIGtf10b3W
-	nTh1otm1sB91K6iupQgzHK0jbSEV0XmLU9B++M86nL+SJ1Uq2co/4Pjpex9kICcd1f/N64lhDoo
-	LD9yZ/vBvnPRQ=
-X-Google-Smtp-Source: AGHT+IHTOE0+PFMYz990jpg9Oe0N7CBnAi3AYUtP4/dXlixK8CwlJULu/dNKcHyCmmvXjdwh0Z/kUw==
-X-Received: by 2002:a05:6000:2289:b0:3a3:7675:902 with SMTP id ffacd0b85a97d-3a4eedada59mr621835f8f.21.1748456529856;
-        Wed, 28 May 2025 11:22:09 -0700 (PDT)
-Received: from ?IPV6:2003:e5:872a:8800:5c7b:1ac1:4fa0:423b? (p200300e5872a88005c7b1ac14fa0423b.dip0.t-ipconnect.de. [2003:e5:872a:8800:5c7b:1ac1:4fa0:423b])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd6f1bsm2109613f8f.80.2025.05.28.11.22.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 11:22:09 -0700 (PDT)
-Message-ID: <137571b5-0665-4ddd-ae78-0b8530daa549@suse.com>
-Date: Wed, 28 May 2025 20:22:08 +0200
+        d=1e100.net; s=20230601; t=1748456557; x=1749061357;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VSqQFgb0vNsBP9uzJZGqkiym8JmNyD9K1JA4p69RyL4=;
+        b=Gi0XHeSyVg0/QlJp8KdVJxM3ODcVYatBg+px2+NcQUKUfHSYJG66SMEtZ3eaeWFond
+         gDPoeHlrgrZaPdFtj0GXcooorLt9R5iVbfYPga44geSmlbEd+b8fqh8cZ/EbsKilSu2e
+         Qbtzj86L0bmUi+fs5zf7Um2MMcLxHBFTUEYqkUzFvhZLn5zt/SETvYsQ9yVrJuS25Ag0
+         02IqleODm4BNyHWzmbjYfvqk0JALwSU/6mS9FDl1ThUcHzlzhCQrG9eizeH/MxXlLS8v
+         YaLWGf8If1a1Cj+C+VO1Tr/HyYsXfnlGg5ITdwcYTtCDSu4DTHITMriQMksJRQpm5Lcl
+         XPcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBfHcJ3v0sdN35XoPk/3e2/xfFkb2RX0JDDXWdoP/zylGn6/h93I/24hxEt1KJwmj1xT1FK/2NcUvIggE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMYM9tZFHO4wrf3aoIVVI8LzJZ3/77rCZfeFyXvY0vlkV/kBkp
+	xmV8x8SI0HAOKYAXXMzOK1NfyNoGLXFT3Z1F4rw+UmoI0zyWO+0rqlwFZTOfuSn81ykNGeF2vAr
+	7wx6H/Wcf7CCTgxKd1hsI/sBOdEWT9ahhPKlEK7347VJEigXU30FWWCj0buO2+H49cFjZ+XIJPN
+	8=
+X-Gm-Gg: ASbGnct2bVr+qrm8ZlTaOst3zyxAGRGlD/00z/DgSeDl0JheL+iRidVuFWoNnJ1BsBW
+	Q4JIEdzxaRn3azcE/tmKG0JS4widLnwYvtoV8Tvh8uO/Zh0UhUeCRBeF01HBFapWJflwyVuA2Lo
+	9Rgir1vF0CkKFPWfMVXHDfj1gGCHzqyi9CRi9YjyGctlcmP6P/5nPWd4qe5ZJu4qyaVyPx+Njqx
+	rakk3Q13wrYh13/SsgcBibAQ+RcwuHPf8a7CUdjxFFDrQ81mJtQBbXtRLrdDg3GY7XsilxODMea
+	P3Wp+xlEnGfvFBWjB0ujHV5T8eZw/ulv2ULBXcJY6Rzn1HyMdVf1W2Af0yUtw3/t8FF+AkidZZA
+	=
+X-Received: by 2002:a05:622a:10d:b0:48a:4465:bfd8 with SMTP id d75a77b69052e-49f47fd22a3mr268804841cf.49.1748456552243;
+        Wed, 28 May 2025 11:22:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBgHDOWO+XsRhKCVgZVBb0vNNcV9Fn1O7FSP1azZt5CGQL4wmPuRN66m2zfRg/m3rWXeXP6g==
+X-Received: by 2002:a05:620a:4587:b0:7c5:61b2:b95 with SMTP id af79cd13be357-7ceecc33813mr2659680885a.30.1748456539153;
+        Wed, 28 May 2025 11:22:19 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532f69a484sm378762e87.116.2025.05.28.11.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 11:22:16 -0700 (PDT)
+Date: Wed, 28 May 2025 21:22:15 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jun Nie <jun.nie@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jessica Zhang <quic_jesszhan@quicinc.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 10/12] drm/msm/dpu: support SSPP assignment for
+ quad-pipe case
+Message-ID: <45hk22fdghaqnilukvqayjcbnf3btntknqrwf5ivx346vrgag3@aebzt76tkjzw>
+References: <20250526-v6-15-quad-pipe-upstream-v10-0-5fed4f8897c4@linaro.org>
+ <20250526-v6-15-quad-pipe-upstream-v10-10-5fed4f8897c4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] x86/execmem: don't use PAGE_KERNEL protection for
- code pages
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
- stable@vger.kernel.org
-References: <20250528123557.12847-1-jgross@suse.com>
- <20250528123557.12847-2-jgross@suse.com> <aDdHdwf8REvdu5FF@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <aDdHdwf8REvdu5FF@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------UsuyoDqOVngPVJZQPUnQdaoT"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526-v6-15-quad-pipe-upstream-v10-10-5fed4f8897c4@linaro.org>
+X-Authority-Analysis: v=2.4 cv=d4b1yQjE c=1 sm=1 tr=0 ts=6837546e cx=c_pps
+ a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=sWKEhP36mHoA:10 a=KKAkSRfTAAAA:8 a=giFwS8THduiqBY6JDEUA:9
+ a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: iAldZnUdqOy1MmCBbVhO9wCqXnb-xfT8
+X-Proofpoint-GUID: iAldZnUdqOy1MmCBbVhO9wCqXnb-xfT8
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDE2MCBTYWx0ZWRfX0nifCmxfBw09
+ VFN5VUpek1dGrzF0vB9xA4Sk88i6Oh4BEzSB+y4w+xduvpcX8M9GuzS7SEfz8FUuULEXLdUhpkW
+ PSY5d6cNm9CH3hg61KUjDepRSRkta93yvU4PYUeyhIx3t25sKxSOZqWB4Xi7jDeW10nwXuLLfnw
+ o/sz116nX493ANhWUZmGhpLo9DUG9A3DIeoWl8jK6oM9VztUDgAemjFbdarPmYzquV//MMN42wo
+ TPJWYgcOBrL3ZQ27wJdUvZKpQYj26KGPyDLPCBa+3xrnomnTIBmI8fLVYBOsdmi+JQ0kdgcuDRd
+ nTJWlpIbjkb2vWXyRyjqf/Mzjv4NCWQznXUcHz8yNDwL9P/6LUi8tgyXjR6jLub3upE6oJ9ILAj
+ f0i1tpj4efTyq+9QPxFzSyJcGD6QAISDx4/hq1EdcuY0IiAOZn6ulElAr4z8jhFkYOacgYfU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_09,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 suspectscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280160
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------UsuyoDqOVngPVJZQPUnQdaoT
-Content-Type: multipart/mixed; boundary="------------qYBFV4fxCGWNE5BE1KOr8YrG";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
- stable@vger.kernel.org
-Message-ID: <137571b5-0665-4ddd-ae78-0b8530daa549@suse.com>
-Subject: Re: [PATCH 1/3] x86/execmem: don't use PAGE_KERNEL protection for
- code pages
-References: <20250528123557.12847-1-jgross@suse.com>
- <20250528123557.12847-2-jgross@suse.com> <aDdHdwf8REvdu5FF@kernel.org>
-In-Reply-To: <aDdHdwf8REvdu5FF@kernel.org>
+On Mon, May 26, 2025 at 05:28:28PM +0800, Jun Nie wrote:
+> Currently, SSPPs are assigned to a maximum of two pipes. However,
+> quad-pipe usage scenarios require four pipes and involve configuring
+> two stages. In quad-pipe case, the first two pipes share a set of
+> mixer configurations and enable multi-rect mode when certain
+> conditions are met. The same applies to the subsequent two pipes.
+> 
+> Assign SSPPs to the pipes in each stage using a unified method and
+> to loop the stages accordingly.
+> 
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  11 +++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h  |   2 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 126 ++++++++++++++++++------------
+>  3 files changed, 88 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index 85f585206218f4578e18b00452762dbada060e9c..47ab43dfec76acc058fb275d1928603e8e8e7fc6 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -1562,6 +1562,17 @@ int dpu_crtc_vblank(struct drm_crtc *crtc, bool en)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * dpu_crtc_get_num_lm - Get mixer number in this CRTC pipeline
+> + * @state: Pointer to drm crtc state object
+> + */
+> +unsigned int dpu_crtc_get_num_lm(const struct drm_crtc_state *state)
+> +{
+> +	struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
+> +
+> +	return cstate->num_mixers;
+> +}
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  static int _dpu_debugfs_status_show(struct seq_file *s, void *data)
+>  {
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+> index 94392b9b924546f96e738ae20920cf9afd568e6b..6eaba5696e8e6bd1246a9895c4c8714ca6589b10 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
+> @@ -267,4 +267,6 @@ static inline enum dpu_crtc_client_type dpu_crtc_get_client_type(
+>  
+>  void dpu_crtc_frame_event_cb(struct drm_crtc *crtc, u32 event);
+>  
+> +unsigned int dpu_crtc_get_num_lm(const struct drm_crtc_state *state);
+> +
+>  #endif /* _DPU_CRTC_H_ */
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index 0bb153a71353ca9eaca138ebbee4cd699414771d..f721dc504bbbe3a49986239adee113bfb6790f70 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -961,6 +961,33 @@ static int dpu_plane_is_multirect_parallel_capable(struct dpu_hw_sspp *sspp,
+>  		dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidth);
+>  }
+>  
+> +static bool dpu_plane_check_single_pipe(struct dpu_plane_state *pstate,
+> +					struct dpu_sw_pipe **single_pipe,
+> +					struct dpu_sw_pipe_cfg **single_pipe_cfg,
+> +					bool config_pipe)
+> +{
+> +	int i, valid_pipe = 0;
+> +	struct dpu_sw_pipe *pipe;
+> +
+> +	for (i = 0; i < PIPES_PER_PLANE; i++) {
+> +		if (drm_rect_width(&pstate->pipe_cfg[i].src_rect) != 0) {
+> +			valid_pipe++;
+> +			if (valid_pipe > 1)
+> +				return false;
+> +			*single_pipe = &pstate->pipe[i];
+> +			*single_pipe_cfg = &pstate->pipe_cfg[i];
+> +		} else {
+> +			if (!config_pipe)
+> +				continue;
+> +			pipe = &pstate->pipe[i];
+> +			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +			pipe->sspp = NULL;
 
---------------qYBFV4fxCGWNE5BE1KOr8YrG
-Content-Type: multipart/mixed; boundary="------------WLDyLAPat7iV2ru9hIIK7gDk"
+If this function is 'check', then why does it change something in the
+pipe configuration?
 
---------------WLDyLAPat7iV2ru9hIIK7gDk
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+>  
+>  static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
+>  				       struct drm_atomic_state *state,
+> @@ -1028,15 +1055,15 @@ static int dpu_plane_try_multirect_shared(struct dpu_plane_state *pstate,
+>  					  const struct msm_format *fmt,
+>  					  uint32_t max_linewidth)
+>  {
+> -	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
+> -	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
+> -	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
+> -	struct dpu_sw_pipe *prev_pipe = &prev_adjacent_pstate->pipe[0];
+> -	struct dpu_sw_pipe_cfg *prev_pipe_cfg = &prev_adjacent_pstate->pipe_cfg[0];
+> +	struct dpu_sw_pipe *pipe, *prev_pipe;
+> +	struct dpu_sw_pipe_cfg *pipe_cfg, *prev_pipe_cfg;
+>  	const struct msm_format *prev_fmt = msm_framebuffer_format(prev_adjacent_pstate->base.fb);
+>  	u16 max_tile_height = 1;
+>  
+> -	if (prev_adjacent_pstate->pipe[1].sspp != NULL ||
+> +	if (!dpu_plane_check_single_pipe(pstate, &pipe, &pipe_cfg, true))
+> +		return false;
+> +
+> +	if (!dpu_plane_check_single_pipe(prev_adjacent_pstate, &prev_pipe, &prev_pipe_cfg, false) ||
+>  	    prev_pipe->multirect_mode != DPU_SSPP_MULTIRECT_NONE)
+>  		return false;
+>  
+> @@ -1050,11 +1077,6 @@ static int dpu_plane_try_multirect_shared(struct dpu_plane_state *pstate,
+>  	if (MSM_FORMAT_IS_UBWC(prev_fmt))
+>  		max_tile_height = max(max_tile_height, prev_fmt->tile_height);
+>  
+> -	r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -	r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> -
+> -	r_pipe->sspp = NULL;
+> -
+>  	if (dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidth) &&
+>  	    dpu_plane_is_parallel_capable(prev_pipe_cfg, prev_fmt, max_linewidth) &&
+>  	    (pipe_cfg->dst_rect.x1 >= prev_pipe_cfg->dst_rect.x2 ||
+> @@ -1194,12 +1216,11 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>  	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
+>  	struct dpu_rm_sspp_requirements reqs;
+>  	struct dpu_plane_state *pstate, *prev_adjacent_pstate;
+> -	struct dpu_sw_pipe *pipe;
+> -	struct dpu_sw_pipe *r_pipe;
+> -	struct dpu_sw_pipe_cfg *pipe_cfg;
+> -	struct dpu_sw_pipe_cfg *r_pipe_cfg;
+> +	struct dpu_sw_pipe *pipe, *r_pipe;
+> +	struct dpu_sw_pipe_cfg *pipe_cfg, *r_pipe_cfg;
+> +	struct dpu_plane *pdpu = to_dpu_plane(plane);
+>  	const struct msm_format *fmt;
+> -	int i;
+> +	int i, num_lm, stage_id, num_stages;
+>  
+>  	if (plane_state->crtc)
+>  		crtc_state = drm_atomic_get_new_crtc_state(state,
+> @@ -1209,11 +1230,6 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>  	prev_adjacent_pstate = prev_adjacent_plane_state ?
+>  		to_dpu_plane_state(prev_adjacent_plane_state) : NULL;
+>  
+> -	pipe = &pstate->pipe[0];
+> -	r_pipe = &pstate->pipe[1];
+> -	pipe_cfg = &pstate->pipe_cfg[0];
+> -	r_pipe_cfg = &pstate->pipe_cfg[1];
+> -
+>  	for (i = 0; i < PIPES_PER_PLANE; i++)
+>  		pstate->pipe[i].sspp = NULL;
+>  
+> @@ -1227,44 +1243,52 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>  
+>  	reqs.rot90 = drm_rotation_90_or_270(plane_state->rotation);
+>  
+> -	if (drm_rect_width(&r_pipe_cfg->src_rect) == 0) {
+> -		if (!prev_adjacent_pstate ||
+> -		    !dpu_plane_try_multirect_shared(pstate, prev_adjacent_pstate, fmt,
+> -						    dpu_kms->catalog->caps->max_linewidth)) {
+> -			pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -			if (!pipe->sspp)
+> -				return -ENODEV;
+> +	if (prev_adjacent_pstate &&
+> +	    dpu_plane_try_multirect_shared(pstate, prev_adjacent_pstate, fmt,
+> +					    dpu_kms->catalog->caps->max_linewidth)) {
+> +		goto assigned;
+> +	}
+>  
+> -			r_pipe->sspp = NULL;
+> +	num_lm = dpu_crtc_get_num_lm(crtc_state);
+> +	num_stages = (num_lm + 1) / 2;
+> +	for (stage_id = 0; stage_id < num_stages; stage_id++) {
 
-T24gMjguMDUuMjUgMTk6MjcsIE1pa2UgUmFwb3BvcnQgd3JvdGU6DQo+IE9uIFdlZCwgTWF5
-IDI4LCAyMDI1IGF0IDAyOjM1OjU1UE0gKzAyMDAsIEp1ZXJnZW4gR3Jvc3Mgd3JvdGU6DQo+
-PiBJbiBjYXNlIFg4Nl9GRUFUVVJFX1BTRSBpc24ndCBhdmFpbGFibGUgKGUuZy4gd2hlbiBy
-dW5uaW5nIGFzIGEgWGVuDQo+PiBQViBndWVzdCksIGV4ZWNtZW1fYXJjaF9zZXR1cCgpIHdp
-bGwgZmFsbCBiYWNrIHRvIHVzZSBQQUdFX0tFUk5FTA0KPj4gcHJvdGVjdGlvbiBmb3IgdGhl
-IEVYRUNNRU1fTU9EVUxFX1RFWFQgcmFuZ2UuDQo+Pg0KPj4gVGhpcyB3aWxsIHJlc3VsdCBp
-biBhdHRlbXB0cyB0byBleGVjdXRlIGNvZGUgd2l0aCB0aGUgTlggYml0IHNldCBpbg0KPj4g
-Y2FzZSBvZiBJVFMgbWl0aWdhdGlvbiBiZWluZyBhcHBsaWVkLg0KPj4NCj4+IEF2b2lkIHRo
-aXMgcHJvYmxlbSBieSB1c2luZyBQQUdFX0tFUk5FTF9FWEVDIHByb3RlY3Rpb24gaW5zdGVh
-ZCwNCj4+IHdoaWNoIHdpbGwgbm90IHNldCB0aGUgTlggYml0Lg0KPj4NCj4+IENjOiA8c3Rh
-YmxlQHZnZXIua2VybmVsLm9yZz4NCj4+IFJlcG9ydGVkLWJ5OiBYaW4gTGkgPHhpbkB6eXRv
-ci5jb20+DQo+PiBGaXhlczogNTE4NWU3ZjlmM2JkICgieDg2L21vZHVsZTogZW5hYmxlIFJP
-WCBjYWNoZXMgZm9yIG1vZHVsZSB0ZXh0IG9uIDY0IGJpdCIpDQo+PiBTaWduZWQtb2ZmLWJ5
-OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+DQo+PiAtLS0NCj4+ICAgYXJjaC94
-ODYvbW0vaW5pdC5jIHwgMiArLQ0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24o
-KyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vaW5p
-dC5jIGIvYXJjaC94ODYvbW0vaW5pdC5jDQo+PiBpbmRleCA3NDU2ZGY5ODVkOTYuLmY1MDEy
-YWUzMWQ4YiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L21tL2luaXQuYw0KPj4gKysrIGIv
-YXJjaC94ODYvbW0vaW5pdC5jDQo+PiBAQCAtMTA4OSw3ICsxMDg5LDcgQEAgc3RydWN0IGV4
-ZWNtZW1faW5mbyBfX2luaXQgKmV4ZWNtZW1fYXJjaF9zZXR1cCh2b2lkKQ0KPj4gICAJCXBn
-cHJvdCA9IFBBR0VfS0VSTkVMX1JPWDsNCj4+ICAgCQlmbGFncyA9IEVYRUNNRU1fS0FTQU5f
-U0hBRE9XIHwgRVhFQ01FTV9ST1hfQ0FDSEU7DQo+PiAgIAl9IGVsc2Ugew0KPj4gLQkJcGdw
-cm90ID0gUEFHRV9LRVJORUw7DQo+PiArCQlwZ3Byb3QgPSBQQUdFX0tFUk5FTF9FWEVDOw0K
-PiANCj4gUGxlYXNlIGRvbid0LiBFdmVyeXRoaW5nIGV4Y2VwdCBJVFMgY2FuIHdvcmsgd2l0
-aCBQQUdFX0tFTlJFTCBzbyB0aGUgZml4DQo+IHNob3VsZCBiZSBvbiBJVFMgc2lkZS4NCg0K
-SG1tLCBtYXliZSBhZGRpbmcgYW5vdGhlciBlbGVtZW50IHRvIGV4ZWNtZW1faW5mb1tdIHdp
-dGggdGhlIG5ldw0KdHlwZSBFWEVDTUVNX0tFUk5FTF9URVhULCBzcGVjaWZ5aW5nIFBBR0Vf
-S0VSTkVMX0VYRUMgaWYgIVBTRT8NCg0KDQpKdWVyZ2VuDQo=
---------------WLDyLAPat7iV2ru9hIIK7gDk
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Can't we just loop through all possible stages? Same result, but makes
+the logic somewhat easier.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+> +		for (i = stage_id * PIPES_PER_STAGE; i < (stage_id + 1) * PIPES_PER_STAGE; i++) {
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+I still really don't like this idea (and especially the part with
+(i % PIPES_PER_STAGE == 0) condition). Extract current code which deals
+with two planes and a single stage. Call it for each stage. That's it.
 
---------------WLDyLAPat7iV2ru9hIIK7gDk--
+> +			pipe = &pstate->pipe[i];
+> +			pipe_cfg = &pstate->pipe_cfg[i];
+>  
+> -			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +			if (drm_rect_width(&pipe_cfg->src_rect) == 0)
+> +				break;
+>  
+> -			r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -			r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> -		}
+> -	} else {
+> -		pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -		if (!pipe->sspp)
+> -			return -ENODEV;
+> -
+> -		if (!dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_pipe, r_pipe_cfg,
+> -						      pipe->sspp,
+> -						      msm_framebuffer_format(plane_state->fb),
+> -						      dpu_kms->catalog->caps->max_linewidth)) {
+> -			/* multirect is not possible, use two SSPP blocks */
+> -			r_pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -			if (!r_pipe->sspp)
+> +			pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +			if (!pipe->sspp)
+>  				return -ENODEV;
+>  
+> -			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> -
+> -			r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -			r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +			r_pipe = &pstate->pipe[i + 1];
+> +			r_pipe_cfg = &pstate->pipe_cfg[i + 1];
+> +
+> +			/*
+> +			 * If current pipe is the first pipe in pipe pair, check
+> +			 * multi-rect opportunity for the 2nd pipe in the pair.
+> +			 * SSPP multi-rect mode cross mixer pairs is not supported.
+> +			 */
+> +			if ((i % PIPES_PER_STAGE == 0) &&
+> +			    drm_rect_width(&r_pipe_cfg->src_rect) != 0 &&
+> +			    dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_pipe, r_pipe_cfg,
+> +							      pipe->sspp,
+> +							      msm_framebuffer_format(plane_state->fb),
+> +							      dpu_kms->catalog->caps->max_linewidth)) {
+> +				i++;
+> +			} else {
+> +				/* multirect is not possible, use two SSPP blocks */
+> +				pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +				pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +				DPU_DEBUG_PLANE(pdpu, "allocating sspp_%d for pipe %d.\n",
+> +						pipe->sspp->idx - SSPP_NONE, i);
+> +			}
+>  		}
+>  	}
+>  
+> +assigned:
+>  	return dpu_plane_atomic_check_sspp(plane, state, crtc_state);
+>  }
+>  
+> 
+> -- 
+> 2.34.1
+> 
 
---------------qYBFV4fxCGWNE5BE1KOr8YrG--
-
---------------UsuyoDqOVngPVJZQPUnQdaoT
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmg3VFAFAwAAAAAACgkQsN6d1ii/Ey/E
-cgf9HRi/AUlT/PCZ9hF6vBahfHdlNPASDJOnfCGPtL8frn28VN6qnsVsRzyX/DWDXJWwGvHmgYlp
-TqZE6yodTXoUnZ1BzxoYYbp/t5Rkr+BM8iciOvvrMFXOOHnIpzxpSr1ne4LksCBNnx6jWmIvO+/H
-W2NKgHagfSl/iSPHW4bzebWP7DIAUBwFsyG+RJQ6v1pGsSuDFJDrm7pHPJPOVNhlqrdTJOQBaA38
-wIVku11yvIeBWX35AV0vkzo2jCvCM3KDqTtSivlmP2+YyeU1/PTKoMkUZrRm0rj74E46wUwgAxst
-Art9F25zxwgKv8r0/4Q+ore+g7gWvQdcOZHs2KFnEQ==
-=8AsH
------END PGP SIGNATURE-----
-
---------------UsuyoDqOVngPVJZQPUnQdaoT--
+-- 
+With best wishes
+Dmitry
