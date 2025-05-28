@@ -1,322 +1,281 @@
-Received: from mail-m1973179.qiye.163.com (mail-m1973179.qiye.163.com [220.197.31.79])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A86157493
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748397745; cv=none; b=MPoVO5KBDpxQElVs4uJ0GRWCyAN1R/fPuFILlK5lNgGKqQbsiqXVcshUhnTaZR7a/rEbm9YukRr5gHedF/JOZgMHz257xkQJL7olxnJAE575SZ513H2eQmsQA2AI8X8mhJruj3sd0wG8XCGbnSoiCaRtNyEurXjosP7ij3q/S74=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748397745; c=relaxed/simple;
-	bh=HRgAzfTIec+dmfaKZK6uEWLqRxaLMQqEBB67UFMsHxc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FbYLlTYw4Fu9s+Ehq3XihF/1nohiDQWZVAJy/wOE59GwpUf/h/dlecFuR1x9xThVMJm1Vh7BjTERWsTCzD0ZtA9mYOryYUYZospHh0noqLIdJEBydraFxPI2cLbCObDk3vE31xLd29jxNGAoR+IO8aDLmriAYA4Vl/xefuQILUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=fLu2xJSW; arc=none smtp.client-ip=220.197.31.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1791531E3;
+	Wed, 28 May 2025 02:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748397896; cv=fail; b=f0V34JQykFmN46RvY8yL1mjEKsWe9jxa5R4qove/fAfJZ7eMtVOze1W33KNrTXHS6KB7ybqlAyzL7x47Hocv5h8eKtQOpaX7Wc7PHD9KzK2lCDy/Esx6I36wMe+78ucEAzygjJzQ696ZUeJ7uUyXXEA/k64cglFW1/Sd3DPhRl0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748397896; c=relaxed/simple;
+	bh=9sy3RlhEhdRBQIA0RxS088RTLyYe04x5AOy6nHmOigw=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Wp+AEL3lj0oOPZ4PpXwEKV2TW4yqr2dc13L0Y50Q9NkqzA5djP2D6mLTozYEywYpcsgN2yZ05bRbYSnksd0eQ68ObZHYxUoy7oPkwHXgmfafI/LUH2GEHJdSXRM61WVF6aAVOsi3dXeik22ag898OIsb5CV7Act1niwHL78y8GI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMXJIN57; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="fLu2xJSW"
-Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-1-entmail-virt204.gy.ntes [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16a0c918b;
-	Wed, 28 May 2025 09:56:58 +0800 (GMT+08:00)
-Message-ID: <bc321a71-1934-4889-bd8e-3bb593c8feba@rock-chips.com>
-Date: Wed, 28 May 2025 09:56:56 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMXJIN57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748397894; x=1779933894;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   mime-version;
+  bh=9sy3RlhEhdRBQIA0RxS088RTLyYe04x5AOy6nHmOigw=;
+  b=IMXJIN579e0uOEsX1GdEpfqshX/6CKGTkU8VjBLOyloxj37D/EHW74hG
+   Q6vQ5rrI569pD4ogV/2CIIVgW/h1ODhrpDHrJEkfNGhXDr/tD6DIe+uEh
+   zCwriZPMl4UKh6OQhGTIyAbPEcGLFdBLbXJe1S5g/0pCMNkwGEOAV9Ffy
+   SKPcy7fJPlzVXC5MyeCCoqkIi2P440kJw80VyoUVdA1LOnHOLZ7+sv0qx
+   tx5EdAyKpq4Zvrv1f5+wvlvG6e1v26DbPmKvGFE/wEn1xkgidOO5Jh1+/
+   qAAVXhWILXd1fBVEGkesnpNo/EePMW4OqUzXo/6w1DbZ0hPve6yIxbAVN
+   A==;
+X-CSE-ConnectionGUID: x8nU5Z2IS8y8lX4X/kBVIQ==
+X-CSE-MsgGUID: 7rYBwEsgR/iW+UpBKoL2Dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="50334229"
+X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
+   d="scan'208";a="50334229"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 19:04:54 -0700
+X-CSE-ConnectionGUID: jYj++MlnSrCyYHlqk+fzuw==
+X-CSE-MsgGUID: xxs6CBP0QHebNuTadVeI+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
+   d="scan'208";a="166252411"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 19:04:53 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 27 May 2025 19:04:53 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 27 May 2025 19:04:53 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (40.107.95.62) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.55; Tue, 27 May 2025 19:04:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Nw0S41OaEm9IT1qCQVCMwikfGqHtXCJDHmzvIwhRoPCxoU+LjyhPsGRwIZZJo4ngYzaLqfHb2KOn3CxfkepHk7eJVBqp2y3SKJICf6gaSYr1RbGKT7Grc+V5Euetw+mZlwuJBqu8XreCjqIg5BzKSLElt1c10ErarALjxAH+lhYBjNlxu6VNmbB6p5Y1tHvBWr4uCjGL1/IcE2YCVIc1y42H+HxgOMEP2NKaicFzmT9QqxpIAmbvyqC0a5ZTFoJ5cQ+AE5iIWAs1IwVl6svwBgcxZcrXCjpzp5yrG7yINc6DLFG030x8dLs+3T59a5FaAZvJwk/5uPfv9ARmcP5n1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o0sW4qeC3zZWzefKv4Oa+Ie87yaN16SUKIVAVXG/pzo=;
+ b=j98VZ2+sTT+/jKMOolfXNelyHikGJf+bUOUH4tSz8Kj4BDan2UxjERamlkFSxb55RRn8AWJyOvYYjwAU5vn0rkjhpzNN7CN6uPE5VYqeK7A3atiDbsa1HydBTWETU5WJljigv8vI+6epik6Szjk/gbVSGmloSbSW0FmQN5NqFTzIyjJ8KTE0rMDIKzYcdyEKRASwWQUVr1qkV//gb0sayaQH9l5dQzGYoDq/kythL5tISauRW7kOs0BqSaSI60hTAGpCvqyJlBPRgZHpzWYBZ9R9gx1GZWhxIFZnPAgiM1K4KqmS0YC2FEbiH6RwEEH2qwpEaRMbZGC4JQdmtocMBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by CH3PR11MB7843.namprd11.prod.outlook.com (2603:10b6:610:124::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Wed, 28 May
+ 2025 02:04:51 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.8746.030; Wed, 28 May 2025
+ 02:04:50 +0000
+Date: Wed, 28 May 2025 10:04:39 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Eric Biggers <ebiggers@kernel.org>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Ayush Jain
+	<Ayush.Jain3@amd.com>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<linux-crypto@vger.kernel.org>, <linux-pm@vger.kernel.org>, Borislav Petkov
+	<bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Herbert Xu
+	<herbert@gondor.apana.org.au>, Ard Biesheuvel <ardb@kernel.org>,
+	<oliver.sang@intel.com>
+Subject: Re: [PATCH v3 2/2] x86/fpu: Fix irq_fpu_usable() to return false
+ during CPU onlining
+Message-ID: <202505280957.3efe5bf5-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250520152938.21881-3-ebiggers@kernel.org>
+X-ClientProxiedBy: KU2P306CA0041.MYSP306.PROD.OUTLOOK.COM
+ (2603:1096:d10:3c::13) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] drm/rockchip: cdn-dp: Convert to drm bridge
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Chaoyi Chen <kernel@airkyi.com>
-Cc: Sandy Huang <hjc@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
- Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250527081447.304-1-kernel@airkyi.com>
- <e2dnvpbze4xuubggduqr3p5nnhg7huk3dnpdcb6tldxbrn2qtn@bfsewz5trfv3>
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-In-Reply-To: <e2dnvpbze4xuubggduqr3p5nnhg7huk3dnpdcb6tldxbrn2qtn@bfsewz5trfv3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGh9DTlZOSB0eTB1NQ00YGkNWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a97149b688003abkunm77e47d98241a65
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pjo6GQw4LTE3NksaNTgaNyMw
-	ODFPCwhVSlVKTE9DSEJMT0lPSU5DVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
-	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBQkNCTzcG
-DKIM-Signature:a=rsa-sha256;
-	b=fLu2xJSWp2q3mIFbhxKUfmzkkg7OGqq2VSI2np3hR6rk7UET9jBFcx/7ez3nOPi5SrHt5GHYxbVMvrqqLJVHS/Cvx1h9RTIWSsTcQLCswYLMkygSFFz0Hlod73nPcG63IIP/RfmbZwidfVCe0E9+xjjMA/xWiH0fXeMfxSJI0xo=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=dXyIr6GWGoafvoq9UPbumJcJpzJMA1NBV0qBispuyFM=;
-	h=date:mime-version:subject:message-id:from;
-
-Hi Dmitry,
-
-On 2025/5/28 4:25, Dmitry Baryshkov wrote:
-> On Tue, May 27, 2025 at 04:14:47PM +0800, Chaoyi Chen wrote:
->> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
->>
->> Convert it to drm bridge driver, it will be convenient for us to
->> migrate the connector part to the display driver later.
->> Considering that some code depend on the connector, the following
->> changes have been made:
->> - Only process edid in &drm_bridge_funcs.edid_read(), so no need to
->> store additional edid info.
->> - Now cdn_dp_get_sink_capability() only focused on reading DPCD_REV.
->> - Update bpc info in cdn_dp_bridge_atomic_enable() instead of
->> cdn_dp_encoder_mode_set(). Actually, the bpc data will be used in
->> cdn_dp_bridge_atomic_enable().
->> - Switch to use DRM_BRIDGE_OP_DP_AUDIO helpers.
->>
->> This patch also convert to use devm_drm_bridge_alloc() API.
->>
->> Tested with RK3399 EVB IND board.
->>
->> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
->> ---
->>
->> Changes in v3:
->> - Link to V2: https://lore.kernel.org/all/20250523011310.120-1-kernel@airkyi.com/
->> - Switch to use DRM_BRIDGE_OP_DP_AUDIO helpers
->> - Remove the dependency for connector
->> - Remove the extra stored edid
->> - Code cleanup
->>
->> Changes in v2:
->> - Link to V1: https://lore.kernel.org/all/20250507035148.415-1-kernel@airkyi.com/
->> - Use drm_atomic_get_new_connector_for_encoder() to get connector
->> - Convert to use devm_drm_bridge_alloc() API
->> - Fix typo: cdn_dp_connector_edid_read -> cdn_dp_bridge_edid_read
->>
->>   drivers/gpu/drm/rockchip/cdn-dp-core.c | 279 ++++++++++---------------
->>   drivers/gpu/drm/rockchip/cdn-dp-core.h |   9 +-
->>   2 files changed, 110 insertions(+), 178 deletions(-)
->>
->
->> @@ -595,16 +546,41 @@ static bool cdn_dp_check_link_status(struct cdn_dp_device *dp)
->>   static void cdn_dp_audio_handle_plugged_change(struct cdn_dp_device *dp,
->>   					       bool plugged)
->>   {
->> -	if (dp->codec_dev)
->> -		dp->plugged_cb(dp->codec_dev, plugged);
->> +	if (dp->sink_has_audio)
->> +		drm_connector_hdmi_audio_plugged_notify(dp->connector, plugged);
-> I'd say, notify always and let userspace figure it out via the ELD. Then
-> you shouldn't need sink_has_audio. This would match the behaviour of
-> HDMI drivers.
-
-Oh, I find that there are similar usages in qcom msm driver. Is there 
-any more progress?
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CH3PR11MB7843:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66b916b6-5246-4a5c-e706-08dd9d8c07ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?BV4h4dUAxLp4z+BG3TCfQRy070XpJIPRDIYgPjVV6qsouAso/r4jXmiv2c72?=
+ =?us-ascii?Q?ViVRM9T6BGJKTASuZNUi8udh7oMk3ERyRus/AK5ym4Mbv/JkFIL/x3Z0tCiF?=
+ =?us-ascii?Q?gj0Qj3v2MMSXloavy2VJfbkdRV+LQc+fuZsJEt8cLG35HodXXHv3028n6L8v?=
+ =?us-ascii?Q?K7Ge8O4JK8S/Pm6HFGOvaPZMQWI9Axgx8jWq+u9KFwugKTdv2xwDThRpCfwq?=
+ =?us-ascii?Q?BejOMFvs36KxmUsjizWXSpyRDAV+pVOUg3awd3DzP8bEG/hjuY/8gHrt1ktI?=
+ =?us-ascii?Q?zlvXYH72P8iXa+RAMVkZTSuvi0MtvX/Q433/PE2ftiyeLkkwboZLw/eBgxsT?=
+ =?us-ascii?Q?ofPaDBYGwtSkQ2vXJnTMdT4LDQHOCUs9q7Wq+1lDCRO7ZtrI966NkouHM1s0?=
+ =?us-ascii?Q?rG9IFOwOumZ7KbdJ6jXYXp6Ifep/4zo9uKuVo3UrHsn7gfpC2RR/7n5BOCK7?=
+ =?us-ascii?Q?H/yWDyQSWA4IBQwwa84GM15XsD6icoG7je8cDB720KBDSArSmPVPrabC44nP?=
+ =?us-ascii?Q?d0Je61IOjB89i9gIwDcKq2swpYEeH2R4uSaPl1QX1f9hzXY4V3E3MwnOzsxK?=
+ =?us-ascii?Q?Bmzda5HokYQm/SjyAisOalsl35c9NpOYOYpPlV+D/byc9KwPpbAqGQDSo/3/?=
+ =?us-ascii?Q?xz2xdK18R31MW5OV76Z87PlDSJK5aJxqGvW6yXrlxeskGbJfFuvvFqmNnodh?=
+ =?us-ascii?Q?vWE3ATkc9hXFF73HWk3BWwcGSCd+WFAaDwASDhJP/gLehO65cdAJOc7qUjJN?=
+ =?us-ascii?Q?NWJ7deKotOn+Ra/KP2Kp+s7wh8pKqIRhQBn+MNjnSFrwgI0gGhnDSklg4P//?=
+ =?us-ascii?Q?jTZJI/HvfWBozcbbbCtKQYEu+ivZJy5kO4WICHhtO3i73C+4tZ72fVUEzj5Q?=
+ =?us-ascii?Q?ouKvBIEdP8JC8sKgr3HxLLUgPQuZgQETHrG0QmW5Yxt6DCK4onaLmQqti020?=
+ =?us-ascii?Q?AOkm8fbQgoCarEynP0GwNndvEagj0NCDD7mXLOsU7FD28nvjutwnsKQKV9c6?=
+ =?us-ascii?Q?XL29QFaBaCN1RZPrn5W07t6/rcsYLdJuQedWRRgqGRxHDk8TETML4Yp8dWfx?=
+ =?us-ascii?Q?UsCgCp3snC/LGVHKINXy8KY/PKK41Ta4qQObgirkFcRsw7u1f3dYwUyEb+Qh?=
+ =?us-ascii?Q?CjnoFHxaYeblFH6CswyPtgR/zQs2ie6jYup8fAIgfAU7hQOF8f8FQTQHz6b0?=
+ =?us-ascii?Q?19RyANouxn+mo2U5sxt1L5xSg3Z3KDVMohbudWoq/up/6axBML/dqj6R2es+?=
+ =?us-ascii?Q?chqgQnUu+hwInkD8vuK2Kb6jt59aBHoZgCJafrebwxRAPYaJVuvcfSI0dHP5?=
+ =?us-ascii?Q?X4MLgyeKZ+6ssvrpjt+mPKMKoplrqeqNu6pij4pZcg8g9o/XnJQ/a0cg/Jrp?=
+ =?us-ascii?Q?2ynMXa52535dbP9gM34RSjQ1i63e?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YzepRcyZcCHHJfC6KcyhS+pT46xvPq0XZquha0u5/OkQtvDNFhnz9N7IFppX?=
+ =?us-ascii?Q?01XwNA87AkjRjuHJWEb8zDq1c4mImL5gdyJtD1245af4cUYwLK0pfXNyfPbc?=
+ =?us-ascii?Q?7W5qpdtftsveC+viMxMH3vyBfWIgxc37OK0x0Hy2qxgUMVbI/YKvY4+4XItI?=
+ =?us-ascii?Q?TbVByJ4krFUK5U0RqCLG2/O4HUv29Z6TKofiVbITR0jpaLa2+JM54vFSVo/A?=
+ =?us-ascii?Q?+S8L9Wcuhr01OlCQV4sRuHXvE9tPZmWTtYQe9JMQcZCs7fsqLVsCp+GigIyH?=
+ =?us-ascii?Q?K083FpizlA1+XIcTLXw1ETW4k4CyeowpgQit//ydk1aXH5R/Ay1zuHxMJn3V?=
+ =?us-ascii?Q?wHstGzvbt4PL4uieRlxYke2jP/XsdKv/iVlakKSupA1RSHnsRhyEvh6yaCVf?=
+ =?us-ascii?Q?+Y9+BE0EPPY8gQoB467NPHka+00UA5O5fuR9qtGkNrb7EpcKTOsVuqgMOsHc?=
+ =?us-ascii?Q?br7H19CORUtm/xZG0xXOZnntEJ2eJe4/C7G4fIMjadLLhbXOqDOInlc2dvR4?=
+ =?us-ascii?Q?9kE6BQI7ZjBSz/Yg+wkDJ0aywqMZNv3o7uzzin0ixTwh6wdc3azsauSOCVm8?=
+ =?us-ascii?Q?g8ZtHJiev2ORpuDQwpiH8mE7+A/iq22tEdeEqj3yw496RzIgqHelaO9IhH5p?=
+ =?us-ascii?Q?42GeRsGx6xN1PwjFVBQWK6BHd2lAGM/z3BNXeWCEkhUG62GydkDYixEhLMVM?=
+ =?us-ascii?Q?gIUzQwGRCR+Dw/FqXCRk/hW0++DrODtFreVEojvhzPIyMpePzJ0Rg9hwmPdc?=
+ =?us-ascii?Q?8js3vIolfnfgzR9a7rGe2qYMi9kxOl/ZiP+u1SL3+vv2M6fh5wR4ocYGwtGc?=
+ =?us-ascii?Q?6Du2kQuTi7lDlekoD9KbM2yCKPu0qOHv5wPLkAZug+CHDTqAmev1WhxcJ7uN?=
+ =?us-ascii?Q?pBsKtM+B4f9YMj0GCvl3njy3KdHF7oMiNyIuHubCbaiDHQJFP91KzC6JrQWG?=
+ =?us-ascii?Q?Qw+nwg3y6OdG6vuQepZtPeDUmqD1cXoHsojqAwO1A33Ep+yYLngwzT+OjFyU?=
+ =?us-ascii?Q?5hjfiSYJ5rJIBbXoYg/04vZ6spVUR6tRrEW2tEBnjNFUDIjwqH+qfQn4kOnQ?=
+ =?us-ascii?Q?vGgDZpFiRATeBrLkY7dCtspVp4s9KPoIiRerQNU8vYebsnk4oULiMvbzxS0N?=
+ =?us-ascii?Q?2L5gYjNA1smU7grVg3z4veo7S+GCc08sBRRpcgcIWLBZBpcJs/Mzuwu3496U?=
+ =?us-ascii?Q?0ZTz5tE8SVKxg2vvY6o9q0meUrQXCzvSpp597iY29Qq0nApfhLkPMFohoMbG?=
+ =?us-ascii?Q?lr2N+NIw4w68GC6RnvZj/UqZXDnfRarrNuRF913TPwEH/gquZNhk87uhdKLw?=
+ =?us-ascii?Q?KjDNns7UlRzkjCW1TZNfLh3YRGrUJWBHVg2CZO8J25TsJrZoVJZvPiVDzPJk?=
+ =?us-ascii?Q?OLrZiFOOAYzWIcA5b0Q8GNHocUAPQTqxw8FDK+ff8bEp3FgzA+p1BnwfZH58?=
+ =?us-ascii?Q?norbpS6hyAuSWRpDNnXZj/9e3NJEKLusDGlEwjMiTtz5TI4fvp3rG97ie4kS?=
+ =?us-ascii?Q?yM5+U+uK+MHIPCKia9mTnw6fALbVeWy7W0TrTzVGzqo9NoUkGfHf2MKhUTll?=
+ =?us-ascii?Q?DKAEscBJIxYYPzyCXHphfrflI4bpSZ1Fp0poDO/EZZrM5gBYtAxGP6j1/ejd?=
+ =?us-ascii?Q?lw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66b916b6-5246-4a5c-e706-08dd9d8c07ae
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 02:04:50.8300
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D4Cjf+B2NSCeybI4f9FMRfY0JazaIiSK6rREXDy+7uJ0FfIzQdMdlQiaS3xMQjWQj8wRFlkXpCpjcFdnBfzNJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7843
+X-OriginatorOrg: intel.com
 
 
->
->>   }
->>   
-> [...]
->
->> @@ -705,8 +681,6 @@ static int cdn_dp_encoder_atomic_check(struct drm_encoder *encoder,
->>   
->>   static const struct drm_encoder_helper_funcs cdn_dp_encoder_helper_funcs = {
->>   	.mode_set = cdn_dp_encoder_mode_set,
->> -	.enable = cdn_dp_encoder_enable,
->> -	.disable = cdn_dp_encoder_disable,
->>   	.atomic_check = cdn_dp_encoder_atomic_check,
-> Nit: for the future cleanup, it should probably be possible to get rid
-> of these encoder ops too by moving them to the bridge ops.
+Hello,
 
-Interesting, have these patches been submitted upstream yet?
+kernel test robot noticed "WARNING:at_arch/x86/kernel/fpu/init.c:#fpu__init_cpu" on:
 
+commit: b88c4665c7f43e1898f695642fd159c6c542e49b ("[PATCH v3 2/2] x86/fpu: Fix irq_fpu_usable() to return false during CPU onlining")
+url: https://github.com/intel-lab-lkp/linux/commits/Eric-Biggers/x86-fpu-Replace-in_kernel_fpu-with-kernel_fpu_allowed/20250520-233322
+patch link: https://lore.kernel.org/all/20250520152938.21881-3-ebiggers@kernel.org/
+patch subject: [PATCH v3 2/2] x86/fpu: Fix irq_fpu_usable() to return false during CPU onlining
 
->
->>   };
->>   
-> [...]
->
->> @@ -1006,7 +947,8 @@ static void cdn_dp_pd_event_work(struct work_struct *work)
->>   
->>   out:
->>   	mutex_unlock(&dp->lock);
->> -	drm_connector_helper_hpd_irq_event(&dp->connector);
->> +	if (dp->connector)
->> +		drm_connector_helper_hpd_irq_event(dp->connector);
-> drm_bridge_hpd_notify(). I think then you don't need dp->connector.
+in testcase: boot
 
-That make sense! Will fix in v4.
+config: i386-randconfig-003-20250522
+compiler: clang-20
+test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
 
 
->
->>   }
->>   
->>   static int cdn_dp_pd_event(struct notifier_block *nb,
->> @@ -1062,26 +1004,35 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   
->>   	drm_encoder_helper_add(encoder, &cdn_dp_encoder_helper_funcs);
->>   
->> -	connector = &dp->connector;
->> -	connector->polled = DRM_CONNECTOR_POLL_HPD;
->> -	connector->dpms = DRM_MODE_DPMS_OFF;
->> -
->> -	ret = drm_connector_init(drm_dev, connector,
->> -				 &cdn_dp_atomic_connector_funcs,
->> -				 DRM_MODE_CONNECTOR_DisplayPort);
->> -	if (ret) {
->> -		DRM_ERROR("failed to initialize connector with drm\n");
->> -		goto err_free_encoder;
->> -	}
->> +	dp->bridge.ops =
->> +			DRM_BRIDGE_OP_DETECT |
->> +			DRM_BRIDGE_OP_EDID |
->> +			DRM_BRIDGE_OP_HPD |
->> +			DRM_BRIDGE_OP_DP_AUDIO;
->> +	dp->bridge.of_node = dp->dev->of_node;
->> +	dp->bridge.type = DRM_MODE_CONNECTOR_DisplayPort;
->> +	dp->bridge.hdmi_audio_dev = dp->dev;
->> +	dp->bridge.hdmi_audio_max_i2s_playback_channels = 8;
->> +	dp->bridge.hdmi_audio_spdif_playback = 1;
->> +	dp->bridge.hdmi_audio_dai_port = -1;
->> +
->> +	ret = devm_drm_bridge_add(dev, &dp->bridge);
->> +	if (ret)
->> +		return ret;
->>   
->> -	drm_connector_helper_add(connector, &cdn_dp_connector_helper_funcs);
->> +	ret = drm_bridge_attach(encoder, &dp->bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
->> +	if (ret)
->> +		return ret;
->>   
->> -	ret = drm_connector_attach_encoder(connector, encoder);
->> -	if (ret) {
->> -		DRM_ERROR("failed to attach connector and encoder\n");
->> -		goto err_free_connector;
->> +	connector = drm_bridge_connector_init(drm_dev, encoder);
->> +	if (IS_ERR(connector)) {
->> +		ret = PTR_ERR(connector);
->> +		dev_err(dp->dev, "failed to init bridge connector: %d\n", ret);
->> +		return ret;
->>   	}
->>   
->> +	drm_connector_attach_encoder(connector, encoder);
->> +
->>   	for (i = 0; i < dp->ports; i++) {
->>   		port = dp->port[i];
->>   
->> @@ -1101,30 +1052,19 @@ static int cdn_dp_bind(struct device *dev, struct device *master, void *data)
->>   	schedule_work(&dp->event_work);
->>   
->>   	return 0;
->> -
->> -err_free_connector:
->> -	drm_connector_cleanup(connector);
->> -err_free_encoder:
->> -	drm_encoder_cleanup(encoder);
->> -	return ret;
->>   }
->>   
->>   static void cdn_dp_unbind(struct device *dev, struct device *master, void *data)
->>   {
->>   	struct cdn_dp_device *dp = dev_get_drvdata(dev);
->>   	struct drm_encoder *encoder = &dp->encoder.encoder;
->> -	struct drm_connector *connector = &dp->connector;
->>   
->>   	cancel_work_sync(&dp->event_work);
->> -	cdn_dp_encoder_disable(encoder);
->>   	encoder->funcs->destroy(encoder);
->> -	connector->funcs->destroy(connector);
->>   
->>   	pm_runtime_disable(dev);
->>   	if (dp->fw_loaded)
->>   		release_firmware(dp->fw);
->> -	drm_edid_free(dp->drm_edid);
->> -	dp->drm_edid = NULL;
->>   }
->>   
->>   static const struct component_ops cdn_dp_component_ops = {
->> @@ -1171,9 +1111,10 @@ static int cdn_dp_probe(struct platform_device *pdev)
->>   	int ret;
->>   	int i;
->>   
->> -	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
->> -	if (!dp)
->> -		return -ENOMEM;
->> +	dp = devm_drm_bridge_alloc(dev, struct cdn_dp_device, bridge,
->> +				   &cdn_dp_bridge_funcs);
->> +	if (IS_ERR(dp))
->> +		return PTR_ERR(dp);
->>   	dp->dev = dev;
->>   
->>   	match = of_match_node(cdn_dp_dt_ids, pdev->dev.of_node);
->> @@ -1209,19 +1150,11 @@ static int cdn_dp_probe(struct platform_device *pdev)
->>   	mutex_init(&dp->lock);
->>   	dev_set_drvdata(dev, dp);
->>   
->> -	ret = cdn_dp_audio_codec_init(dp, dev);
->> -	if (ret)
->> -		return ret;
->> -
->>   	ret = component_add(dev, &cdn_dp_component_ops);
->>   	if (ret)
->> -		goto err_audio_deinit;
->> +		return ret;
->>   
->>   	return 0;
->> -
->> -err_audio_deinit:
->> -	platform_device_unregister(dp->audio_pdev);
->> -	return ret;
->>   }
->>   
->>   static void cdn_dp_remove(struct platform_device *pdev)
->> diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.h b/drivers/gpu/drm/rockchip/cdn-dp-core.h
->> index 17498f576ce7..6aa3ce489382 100644
->> --- a/drivers/gpu/drm/rockchip/cdn-dp-core.h
->> +++ b/drivers/gpu/drm/rockchip/cdn-dp-core.h
->> @@ -8,6 +8,8 @@
->>   #define _CDN_DP_CORE_H
->>   
->>   #include <drm/display/drm_dp_helper.h>
->> +#include <drm/drm_bridge.h>
->> +#include <drm/drm_bridge_connector.h>
-> This include can go to the C file instead of the header.
-
-Okay, will fix in v4.
++------------------------------------------------------+------------+------------+
+|                                                      | 5454801de7 | b88c4665c7 |
++------------------------------------------------------+------------+------------+
+| WARNING:at_arch/x86/kernel/fpu/init.c:#fpu__init_cpu | 0          | 12         |
+| EIP:fpu__init_cpu                                    | 0          | 12         |
++------------------------------------------------------+------------+------------+
 
 
->
->>   #include <drm/drm_panel.h>
->>   #include <drm/drm_probe_helper.h>
->>   #include <sound/hdmi-codec.h>
->> @@ -65,12 +67,12 @@ struct cdn_dp_port {
->>   struct cdn_dp_device {
->>   	struct device *dev;
->>   	struct drm_device *drm_dev;
->> -	struct drm_connector connector;
->> +	struct drm_bridge bridge;
->> +	struct drm_connector *connector;
->>   	struct rockchip_encoder encoder;
->>   	struct drm_display_mode mode;
->>   	struct platform_device *audio_pdev;
->>   	struct work_struct event_work;
->> -	const struct drm_edid *drm_edid;
->>   
->>   	struct mutex lock;
->>   	bool connected;
->> @@ -102,8 +104,5 @@ struct cdn_dp_device {
->>   
->>   	u8 dpcd[DP_RECEIVER_CAP_SIZE];
->>   	bool sink_has_audio;
->> -
->> -	hdmi_codec_plugged_cb plugged_cb;
->> -	struct device *codec_dev;
->>   };
->>   #endif  /* _CDN_DP_CORE_H */
->> -- 
->> 2.49.0
->>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202505280957.3efe5bf5-lkp@intel.com
+
+
+[    0.324937][    T0] ------------[ cut here ]------------
+[ 0.325455][ T0] WARNING: CPU: 0 PID: 0 at arch/x86/kernel/fpu/init.c:56 fpu__init_cpu (arch/x86/kernel/fpu/init.c:56 (discriminator 15)) 
+[    0.326299][    T0] Modules linked in:
+[    0.326690][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Tainted: G                T   6.15.0-rc7-00706-gb88c4665c7f4 #1 PREEMPTLAZY  c76c09082e833299bbcc71b75dc4abf37758b94a
+[    0.328079][    T0] Tainted: [T]=RANDSTRUCT
+[    0.328493][    T0] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[ 0.329028][ T0] EIP: fpu__init_cpu (arch/x86/kernel/fpu/init.c:56 (discriminator 15)) 
+[ 0.329483][ T0] Code: 75 00 00 db e3 e8 64 28 00 00 a0 10 76 8a 83 84 c0 75 17 c6 05 10 76 8a 83 01 83 c4 08 5e 5f 5d 31 c0 31 d2 2e e9 58 cc 8c 01 <0f> 0b eb e5 e8 b3 0b 8c 01 f7 c7 00 02 00 00 75 bc eb bb 90 55 89
+All code
+========
+   0:	75 00                	jne    0x2
+   2:	00 db                	add    %bl,%bl
+   4:	e3 e8                	jrcxz  0xffffffffffffffee
+   6:	64 28 00             	sub    %al,%fs:(%rax)
+   9:	00 a0 10 76 8a 83    	add    %ah,-0x7c7589f0(%rax)
+   f:	84 c0                	test   %al,%al
+  11:	75 17                	jne    0x2a
+  13:	c6 05 10 76 8a 83 01 	movb   $0x1,-0x7c7589f0(%rip)        # 0xffffffff838a762a
+  1a:	83 c4 08             	add    $0x8,%esp
+  1d:	5e                   	pop    %rsi
+  1e:	5f                   	pop    %rdi
+  1f:	5d                   	pop    %rbp
+  20:	31 c0                	xor    %eax,%eax
+  22:	31 d2                	xor    %edx,%edx
+  24:	2e e9 58 cc 8c 01    	cs jmp 0x18ccc82
+  2a:*	0f 0b                	ud2		<-- trapping instruction
+  2c:	eb e5                	jmp    0x13
+  2e:	e8 b3 0b 8c 01       	call   0x18c0be6
+  33:	f7 c7 00 02 00 00    	test   $0x200,%edi
+  39:	75 bc                	jne    0xfffffffffffffff7
+  3b:	eb bb                	jmp    0xfffffffffffffff8
+  3d:	90                   	nop
+  3e:	55                   	push   %rbp
+  3f:	89                   	.byte 0x89
+
+Code starting with the faulting instruction
+===========================================
+   0:	0f 0b                	ud2
+   2:	eb e5                	jmp    0xffffffffffffffe9
+   4:	e8 b3 0b 8c 01       	call   0x18c0bbc
+   9:	f7 c7 00 02 00 00    	test   $0x200,%edi
+   f:	75 bc                	jne    0xffffffffffffffcd
+  11:	eb bb                	jmp    0xffffffffffffffce
+  13:	90                   	nop
+  14:	55                   	push   %rbp
+  15:	89                   	.byte 0x89
+[    0.331175][    T0] EAX: 00000001 EBX: 00020801 ECX: 00000000 EDX: 00000000
+[    0.332290][    T0] ESI: 00000600 EDI: 00200206 EBP: 83841f78 ESP: 83841f68
+[    0.332937][    T0] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 0068 EFLAGS: 00210202
+[    0.333655][    T0] CR0: 80050033 CR2: ffbff000 CR3: 0413a000 CR4: 000406b0
+[    0.334516][    T0] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[    0.335460][    T0] DR6: fffe0ff0 DR7: 00000400
+[    0.336093][    T0] Call Trace:
+[ 0.336599][ T0] arch_cpu_finalize_init (arch/x86/kernel/cpu/common.c:2536) 
+[ 0.337340][ T0] start_kernel (init/main.c:1067) 
+[ 0.338019][ T0] i386_start_kernel (arch/x86/kernel/head32.c:79 (discriminator 1)) 
+[ 0.338725][ T0] startup_32_smp (arch/x86/kernel/head_32.S:290) 
+[    0.339030][    T0] irq event stamp: 2667
+[ 0.339652][ T0] hardirqs last enabled at (2677): __console_unlock (arch/x86/include/asm/irqflags.h:19 arch/x86/include/asm/irqflags.h:109 arch/x86/include/asm/irqflags.h:151 kernel/printk/printk.c:344 kernel/printk/printk.c:2885) 
+[ 0.340902][ T0] hardirqs last disabled at (2686): __console_unlock (kernel/printk/printk.c:342 (discriminator 9)) 
+[ 0.342501][ T0] softirqs last enabled at (0): 0x0 
+[ 0.345464][ T0] softirqs last disabled at (0): 0x0 
+[    0.346433][    T0] ---[ end trace 0000000000000000 ]---
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250528/202505280957.3efe5bf5-lkp@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
