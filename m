@@ -1,134 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5C9193077;
-	Wed, 28 May 2025 14:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0419D193077;
+	Wed, 28 May 2025 14:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748442858; cv=none; b=Hj418L5PDz9Gf1/fOmAEp6iWhG7kxsRP8Vjz8b6QUxEceOSDdUqghHAMCONjYftWlc4cBy1kSdLd+6RlG7QjT2bLbg60uHEyAU2qLxzcoLGb1GbzDi21DX3NN6iOGOBN4pbkRwgrS9L2E3cqBbaCgLSen4OpfHqCUdizh6Qs8NY=
+	t=1748442889; cv=none; b=oK5xfaN5K0pAsz+ubuASzf3UgQrrzgnM6yXMTqaZSe8JVPM7YRHGHAp1BAP8f8Q3jfJunlwymgEjLxvaZFXD4OVEOuM/q5vbbhuw6ty2BSfdRAJ7kYtKkYvQimF31DuHWid3U8Ws9kBXEqbEEjPVjc8cmCMWS72LLRFA7pCrfMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748442858; c=relaxed/simple;
-	bh=bD/iZOx/OO0MmzF4E85/i3xPWDZwNRVsc8nz96LYuR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=diQsPisY5T4ndQuYQqRKBMZhmfj94te6zwSRlXksSXqxnbfeEU79S35Ccce29EL3MUzHJNmO5yZNHzgNVt69NhLrjmqHebREEBpC0HX8NkzJK1K4wCEFWm6GCJzjZd+1+VwYOr+diq5Ck2txKNiacV4QWWydgKA/MdkD4niQZ6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iz6o/u7S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748442889; c=relaxed/simple;
+	bh=la70WX+ZHL0nPCFtUsmvxU0TbQDjoteqMB0xVg2UTpo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Hqh/4kpAGLoOCKJ43ne+A3ZZwoNdStpG2W3XbT+NavwV2UPhQbbZr1P6lWjRvLfMFyjBTwSK7MJiFGaKZC7mks03aj6aAiyT8Iq7/Bv/bfse9ugFGYN2FbXAwvE/V/kgWaIw5BqQtPTD7BrXAFGCQmGnYr57WnnYwc6CDn1/pao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmjn/eJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iz6o/u7S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BC2C4CEE3;
-	Wed, 28 May 2025 14:34:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmjn/eJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC51C4CEE3;
+	Wed, 28 May 2025 14:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748442858;
-	bh=bD/iZOx/OO0MmzF4E85/i3xPWDZwNRVsc8nz96LYuR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iz6o/u7SG54xss53eKO8vPEeMsmQBvFSsZxs0lpx8xsH7bcPcl4x2z6O9PazMOtgo
-	 yxIfXXtttpo/zAr4CQbPZDf6U1ucqr+T/B9wseTSog9s2LwnP+crfUqPjmN6Qgjj/j
-	 8FQyKpmcrFfS3/M6Hptkbt648JUVg7hGhHbkwa2gLIVi6L5uxfqcPwmwXJTOI5IAQl
-	 xTLpYNifM3+x67pPSeYiITjt0NEeLVB1p3MsRoZ10JF4oY900vlov9f6vW2R8/yuqi
-	 7DzrqGUshosPYRz7M/9M700ZennoVRAeLLFA9uT0Bbf6Shq4kqjMebK9IGP/AOt+lA
-	 wBbg7F5UngOKA==
-Date: Wed, 28 May 2025 16:34:09 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 19/26] arm64: Add support for GICv5 GSB barriers
-Message-ID: <aDce4TGxUoGGONA3@lpieralisi>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
- <20250513-gicv5-host-v4-19-b36e9b15a6c3@kernel.org>
- <20250528141730.0000232e@huawei.com>
+	s=k20201202; t=1748442888;
+	bh=la70WX+ZHL0nPCFtUsmvxU0TbQDjoteqMB0xVg2UTpo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qmjn/eJ8MyNPMizk1BpxNT4BSJ5d8cWdaFq1rS427rcoeOpAmw7i4Ooxu45hBdelx
+	 xDD3IaO6jOgfoYgjkxOhCrq6yRuCKhK158MJWgGwRu6AIsebHZhm+xK+TXht41ldqx
+	 m3LWt+2BXGqM+V5v6SnrPZiC4wFULOsmdsQJu6RP+k8xoVPGo9J7RhWR54/+07foML
+	 MVyMX1BSaVj2ZYuR4Hf2Xz+agj9RJCQaG21o3lpl2muq/IWeBkGwjXZp9XtQ6WJUtz
+	 hbhk/oxhQFD15hnqUYPcCvvPDtnRyeWbLXcl87e35p269vfMUoedaIrflxIGdDnn7Y
+	 NLA9Q0g3KcdoQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v11 00/10] ref_tracker: add ability to register a debugfs
+ file for a ref_tracker_dir
+Date: Wed, 28 May 2025 10:34:32 -0400
+Message-Id: <20250528-reftrack-dbgfs-v11-0-94ae0b165841@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528141730.0000232e@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPgeN2gC/2XQS2oDMQwG4KuEWXeKXxrJXfUepQs/kyElCZ4wt
+ ITcvZpAqVvhlWy+35Juw1LaXJbhZXcbWlnnZT6fuND6aTekQzjtyzhnvhiMMqCctmMr9dpCOo4
+ 57usyWpwwWmWLqWFgdOH3+fOR+PbO9WFeruf29fhg1dvtT5T7H7XqUY1VWSAga4yyr8fSTuXj+
+ dz2w5a1mt6D8IZ91JRciFkbU4W3vUfhLftkNXhnKFGNwrvek/COPaQACcl7cE546LyRHtjrFGO
+ uPDzFLPzUeauEn9jThMn4UHmPQXj89XyEx23/SAmyx5iS9NR7uT9iPylEjdnG6El433svvN/6D
+ 5GIggPj5PxadQFGNqAVJ+QEUBEVTF7/Sbjf798wo54L8AIAAA==
+X-Change-ID: 20250413-reftrack-dbgfs-3767b303e2fa
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+ Jeff Layton <jlayton@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4580; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=la70WX+ZHL0nPCFtUsmvxU0TbQDjoteqMB0xVg2UTpo=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoNx7/6/eA3upt3zeE4DWP2UU17Ec+usxykPRIq
+ ef5IGth2byJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaDce/wAKCRAADmhBGVaC
+ FT1WD/4hg4MqOVwhf66jaDEuhZ+DfRLZx83XT+w0cGXI5pG4f3e9TndsQV38W5/Kxrpdgk2Ni2Z
+ Qye+uNd/Ww93OBsrB57zk4oMD2qzStmB9fCm3MzOEn57/+/zV64UEoUgFU+jEywVyTgF+sWqW0s
+ cbKH5JvnSsY8v480OMPPV/i3P5XjUeiIdCvMQLF3cMvFoVOCxNgBATH/6JRrVxN880H9UqO298h
+ 4AnOyicPD3xwzP7CwbHXtoUKlSgD9g0TGwYmEFY5+SUA3cFBVODGI8Q/Q3XWLMeTzSbRmnl0Spq
+ 8Pgae+GF9lqD34HF8+EAEpig3Hq1iatLSl0nXzY9Av+XfPc7dsS0UgWdy12lMCjtoEd6j/P0wUW
+ BcUNW0cVF4OrmGUR6ihEpjbl2LIyL3UUV/fGXTQb+pcpfS3XPRDqUuquuAmzbANoujA3kdfhfQ+
+ 8CKcHLt9K7Gs3l/S8vTOedKx4+bFmQZYXiRja+K7C71+fcTqwY52EJKj928jor+bnYbi5bslxOI
+ JoetmyOxsaG0jAcLsXzAvwKY49bdWH4FQWijTEI/Ai2fvV4jD7z/rtxxLsM5zJmcS02zjZUqPjH
+ HfgI4qsS6X7ZqMx4eZSp6vdmszjqoHxLRJIHXkHiYnfWDK/JbBjKoji/tBwXOalABiHKaCMJoTl
+ nzY+9z8sSlGvQKg==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, May 28, 2025 at 02:17:30PM +0100, Jonathan Cameron wrote:
-> On Tue, 13 May 2025 19:48:12 +0200
-> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> 
-> > The GICv5 architecture introduces two barriers instructions
-> > (GSB SYS, GSB ACK) that are used to manage interrupt effects.
-> > 
-> > Rework macro used to emit the SB barrier instruction and implement
-> > the GSB barriers on top of it.
-> > 
-> > Suggested-by: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > ---
-> >  arch/arm64/include/asm/barrier.h |  3 +++
-> >  arch/arm64/include/asm/sysreg.h  | 10 +++++++---
-> >  2 files changed, 10 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-> > index 1ca947d5c93963d33fe8fb02d6037fc71bd9fd7a..f5801b0ba9e9e7e0433f16ffedf0ec7dfb3e358e 100644
-> > --- a/arch/arm64/include/asm/barrier.h
-> > +++ b/arch/arm64/include/asm/barrier.h
-> > @@ -44,6 +44,9 @@
-> >  						 SB_BARRIER_INSN"nop\n",	\
-> >  						 ARM64_HAS_SB))
-> >  
-> > +#define gsb_ack()	asm volatile(GSB_ACK_BARRIER_INSN : : : "memory")
-> > +#define gsb_sys()	asm volatile(GSB_SYS_BARRIER_INSN : : : "memory")
-> > +
-> >  #ifdef CONFIG_ARM64_PSEUDO_NMI
-> >  #define pmr_sync()						\
-> >  	do {							\
-> > diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> > index 2639d3633073de10f5040a7efff059021f847530..e7734f90bb723bfbd8be99f16dd6d6fdc7fa57e8 100644
-> > --- a/arch/arm64/include/asm/sysreg.h
-> > +++ b/arch/arm64/include/asm/sysreg.h
-> > @@ -112,10 +112,14 @@
-> >  /* Register-based PAN access, for save/restore purposes */
-> >  #define SYS_PSTATE_PAN			sys_reg(3, 0, 4, 2, 3)
-> >  
-> > -#define __SYS_BARRIER_INSN(CRm, op2, Rt) \
-> > -	__emit_inst(0xd5000000 | sys_insn(0, 3, 3, (CRm), (op2)) | ((Rt) & 0x1f))
-> > +#define __SYS_BARRIER_INSN(op0, op1, CRn, CRm, op2, Rt)		\
-> > +	__emit_inst(0xd5000000				|	\
-> > +	sys_insn((op0), (op1), (CRn), (CRm), (op2))	|	\
-> > +	((Rt) & 0x1f))
-> 
-> Perhaps indent as something like the following for readbility?
-> #define __SYS_BARRIER_INSN(op0, op1, CRn, CRm, op2, Rt)			\
-> 	__emit_inst(0xd5000000 |					\
-> 		    sys_insn((op0), (op1), (CRn), (CRm), (op2)) |	\
-> 		    ((Rt) & 0x1f))
-> 
+More CI reports [1]. This time it showed what I consider to be an
+existing bug in the i915 driver. It can call ref_tracker_dir_init() more
+than once on the same dir object, which could cause reference tracking
+objects to leak.
 
-I can do - even though readability is subjective, this looks nicer to
-me but if possible I'd avoid the churn required if I change it and then
-it is not readable for other people.
+The first patch in the series ensures that this doesn't happen. The rest
+is basically identical to v10 aside from a small format cleanup.
 
-Noted.
+[1]: https://intel-gfx-ci.01.org/tree/drm-tip/Patchwork_148490v6/index.html
 
-Thanks,
-Lorenzo
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v11:
+- don't call ref_tracker_dir_init() more than once for same i915 objects
+- use %llx in format for net_cookie in symlink name
+- Link to v10: https://lore.kernel.org/r/20250527-reftrack-dbgfs-v10-0-dc55f7705691@kernel.org
 
-> >  
-> > -#define SB_BARRIER_INSN			__SYS_BARRIER_INSN(0, 7, 31)
-> > +#define SB_BARRIER_INSN			__SYS_BARRIER_INSN(0, 3, 3, 0, 7, 31)
-> > +#define GSB_SYS_BARRIER_INSN		__SYS_BARRIER_INSN(1, 0, 12, 0, 0, 31)
-> > +#define GSB_ACK_BARRIER_INSN		__SYS_BARRIER_INSN(1, 0, 12, 0, 1, 31)
-> >  
-> >  #define SYS_DC_ISW			sys_insn(1, 0, 7, 6, 2)
-> >  #define SYS_DC_IGSW			sys_insn(1, 0, 7, 6, 4)
-> > 
-> 
+Changes in v10:
+- drop the i915 symlink patch
+- Link to v9: https://lore.kernel.org/r/20250509-reftrack-dbgfs-v9-0-8ab888a4524d@kernel.org
+
+Changes in v9:
+- fix typo in ref_tracker_dir_init() kerneldoc header
+- Link to v8: https://lore.kernel.org/r/20250507-reftrack-dbgfs-v8-0-607717d3bb98@kernel.org
+
+Changes in v8:
+- fix up compiler warnings that the KTR warned about
+- ensure builds with CONFIG_DEBUG_FS=n and CONFIG_REF_TRACKER=y work
+- Link to v7: https://lore.kernel.org/r/20250505-reftrack-dbgfs-v7-0-f78c5d97bcca@kernel.org
+
+Changes in v7:
+- include net->net_cookie in netns symlink name
+- add __ostream_printf to ref_tracker_dir_symlink() stub function
+- remove unneeded #include of seq_file.h
+- Link to v6: https://lore.kernel.org/r/20250430-reftrack-dbgfs-v6-0-867c29aff03a@kernel.org
+
+Changes in v6:
+- clean up kerneldoc comment for ref_tracker_dir_debugfs()
+- add missing stub function for ref_tracker_dir_symlink()
+- temporary __maybe_unused on ref_tracker_dir_seq_print() to silence compiler warning
+- Link to v5: https://lore.kernel.org/r/20250428-reftrack-dbgfs-v5-0-1cbbdf2038bd@kernel.org
+
+Changes in v5:
+- add class string to each ref_tracker_dir
+- auto-register debugfs file for every tracker in ref_tracker_dir_init
+- add function to allow adding a symlink for each tracker
+- add patches to create symlinks for netns's and i915 entries
+- change output format to print class@%p instead of name@%p
+- eliminate the name field in ref_tracker_dir
+- fix off-by-one bug when NULL terminating name string
+- Link to v4: https://lore.kernel.org/r/20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org
+
+Changes in v4:
+- Drop patch to widen ref_tracker_dir_.name, use NAME_MAX+1 (256) instead since this only affects dentry name
+- Link to v3: https://lore.kernel.org/r/20250417-reftrack-dbgfs-v3-0-c3159428c8fb@kernel.org
+
+Changes in v3:
+- don't overwrite dir->name in ref_tracker_dir_debugfs
+- define REF_TRACKER_NAMESZ and use it when setting name
+- Link to v2: https://lore.kernel.org/r/20250415-reftrack-dbgfs-v2-0-b18c4abd122f@kernel.org
+
+Changes in v2:
+- Add patch to do %pK -> %p conversion in ref_tracker.c
+- Pass in output function to pr_ostream() instead of if statement
+- Widen ref_tracker_dir.name to 64 bytes to accomodate unique names
+- Eliminate error handling with debugfs manipulation
+- Incorporate pointer value into netdev name
+- Link to v1: https://lore.kernel.org/r/20250414-reftrack-dbgfs-v1-0-f03585832203@kernel.org
+
+---
+Jeff Layton (10):
+      i915: only initialize struct ref_tracker_dir once
+      ref_tracker: don't use %pK in pr_ostream() output
+      ref_tracker: add a top level debugfs directory for ref_tracker
+      ref_tracker: have callers pass output function to pr_ostream()
+      ref_tracker: add a static classname string to each ref_tracker_dir
+      ref_tracker: allow pr_ostream() to print directly to a seq_file
+      ref_tracker: automatically register a file in debugfs for a ref_tracker_dir
+      ref_tracker: add a way to create a symlink to the ref_tracker_dir debugfs file
+      net: add symlinks to ref_tracker_dir for netns
+      ref_tracker: eliminate the ref_tracker_dir name field
+
+ drivers/gpu/drm/display/drm_dp_tunnel.c |   2 +-
+ drivers/gpu/drm/i915/intel_runtime_pm.c |   4 +-
+ drivers/gpu/drm/i915/intel_wakeref.c    |   3 +-
+ include/linux/ref_tracker.h             |  58 +++++++++-
+ lib/ref_tracker.c                       | 190 +++++++++++++++++++++++++++++---
+ net/core/dev.c                          |   2 +-
+ net/core/net_namespace.c                |  34 +++++-
+ 7 files changed, 267 insertions(+), 26 deletions(-)
+---
+base-commit: fefff2755f2aa4125dce2a1edfe7e545c7c621f2
+change-id: 20250413-reftrack-dbgfs-3767b303e2fa
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
