@@ -1,124 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDBD28DF24;
-	Wed, 28 May 2025 17:09:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119F328DF45
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:09:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748452174; cv=none; b=G+s3nuzdcmPgtlsV4Lu4CfPCRuj6k2HuCB5cr2ntoqiylk8a6LwjcAaVujd4OfhFg1wzCQvfyuVNim0D+bvP8UMe5nj7PXbYyBOX+q/eulSoS+Th5luoCyFQfxNc2wzag7Zhi05F+uTjeXI87yHJEDb3LHir8PEYrh0c9LpJftM=
+	t=1748452181; cv=none; b=bJ05D+61IKb+IctEO0h65wm13dcNZyW5i5LXxIZGqV7WLaE2lRdzK88t5ybEZbRXhmDm03kBEiUe2PifarZql78XUTX8lSWqh5hpSaOqTlp68yW0EOe7MY6Y/2mbacRGaBmL4FU3WwSiDm6rZPFPxp4UFjoIj4xM0MbiUNXlMaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748452174; c=relaxed/simple;
-	bh=HkR+wu8C2YNUTGexZDvoxynMprEXblTejO/1RGsnJHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u4V89GvMwvIholUzm5bOhl3krhOQG8HZqB1Xq+6J9edMVd7xsXoHNBPpq9NqalRkjwdJJslIeIPXJDDYjdBxKXJgL5X2XL6NjiXIogwLxQiwBU27gopWpHkvaEyRvNl2soNsiAvj4J6+eCtNvAfxrZiK8d9o+Au6C2WQIpZfAXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXU5e9hj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748452181; c=relaxed/simple;
+	bh=BJ/ZgklTcy9+MXNhe9PBNRegZQfOjXStNiGBkaVuyMU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HTTyqZdt1d1TqP3D3mjfKeKlpKjvMDRJ01DPL8H/a9S1tfu7GlLTRLGXqY/RzWWIUPX+FzMRj0PG5px+IIbzdKMAiZXovxY5Hfkiq2hUzvQ7Bjzch/0LKv7S0JmrpnIGMSw9ICJKRpe6jWdiV3xc4deO202jz7pMTNeTExeeM/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvrY54qe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXU5e9hj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60282C4CEF1;
-	Wed, 28 May 2025 17:09:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvrY54qe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F11C4CEEF;
+	Wed, 28 May 2025 17:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748452174;
-	bh=HkR+wu8C2YNUTGexZDvoxynMprEXblTejO/1RGsnJHo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=eXU5e9hjwe0RYk1Cjl+MC9IAeql1/93wm+xIE6QweWrVed7erIrx4cKBSF9Ph0ozt
-	 FQN9B5RrjJ0IlgDEYvqa0BvZtpJEBDNh1o67zXt/NBx0sGV+HejX9v6zpbTyStnGfe
-	 gSyyMANFIquDgxWE3VyfhaaEs59SZuAf/0AcDRlV9+5FBluenqy1+hqL+zFO05GwA/
-	 kHNwgKS34ayd9RXVjXD5e+ceH+ain/uKwbH2IXzsHZuH8BkTts2LojpeFw9K0IJJXE
-	 fOMF1PkUSRNOBShtFWq1mSWIQyFRP7qzW2XKL70Z4/9Tq5BrfrM8Ub6LIXXGG5Uwpz
-	 jJoOI3bf4pKtA==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-60219d9812bso18609eaf.0;
-        Wed, 28 May 2025 10:09:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVOMBnxHuYu4FCRo2ioybT+mQMZ7BvUn93PdyEf9SFRoO4dUxwV28uqoAHan0/KStcvByB3nxqWcaYyaRo=@vger.kernel.org, AJvYcCXGgg7n5SqFwUEJ5P5zVDNkWCWMTbQ3ayAbyvfCeiMG5uW2pPmBY7PwqhPzkPUbKWLOh5y7FmmKdv0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyALCOKQOydQG1fJ6oKS6OH2pBgcy27UMUDCHjDT8qHb+D0vyUy
-	UdgdJoYqxACdqJwiUc8zZkUFXqKzxLa0raa+xufEKQ+Najckve+JPv7O/4Us2GiH3KimDbtlQQQ
-	G667F0CgpdjSGd0yPQnOp5rN/qsz8K+c=
-X-Google-Smtp-Source: AGHT+IFxlmFquI8XlLScaVJomEsGf59emFFFBAZ/64sUKvyXiS5JOJ76G4+elEalKulRHHzba52P+lI3Tpz0ktuByPE=
-X-Received: by 2002:a05:6820:4c81:b0:604:4846:78a with SMTP id
- 006d021491bc7-60b9fa5c426mr9718070eaf.2.1748452173721; Wed, 28 May 2025
- 10:09:33 -0700 (PDT)
+	s=k20201202; t=1748452180;
+	bh=BJ/ZgklTcy9+MXNhe9PBNRegZQfOjXStNiGBkaVuyMU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=UvrY54qeuqkLPbDgr89sGf0odhUehgJBEFqzF8+2/D1jUoMphYhq5neO/jcBC3yrU
+	 Q3wbfpG8d3kyLKUJHQAQyOuCzimf7HOoqQwh19NVyVM4CkB+j2fb4ebraDlFMBJQAD
+	 dskOuq/7rx5QUagmtvdtm6gLdkacj+QJnWrUvgzUpZ15jAS0DhD3lGW0f4fOGH1yJ6
+	 TeTQ1OFV4mxTfMcz3U8psne4V8mmoTvygrMyuTRFR4kn6N+9tf16QzG8GaCgYVUMC5
+	 /ZiD3d/qtCTfOisdWvE6lck1CAraXOuMwCpaPuCZYioApqdubuJOVjgjNoSXk5f38w
+	 kV7cjxW6PsSLQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 311EE3822D25;
+	Wed, 28 May 2025 17:10:16 +0000 (UTC)
+Subject: Re: [git pull] drm for 6.16-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CAPM=9tyv4CODKMbTW0Xwx4xYWgKPA0rMgThLgCy8OkF-DvVTNg@mail.gmail.com>
+References: <CAPM=9tyv4CODKMbTW0Xwx4xYWgKPA0rMgThLgCy8OkF-DvVTNg@mail.gmail.com>
+X-PR-Tracked-List-Id: Direct Rendering Infrastructure - Development
+ <dri-devel.lists.freedesktop.org>
+X-PR-Tracked-Message-Id: <CAPM=9tyv4CODKMbTW0Xwx4xYWgKPA0rMgThLgCy8OkF-DvVTNg@mail.gmail.com>
+X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2025-05-28
+X-PR-Tracked-Commit-Id: f8bb3ed3197966fb60bedcbdc126d2bd5bc0a77f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b08494a8f7416e5f09907318c5460ad6f6e2a548
+Message-Id: <174845221480.2474092.12132473999464633723.pr-tracker-bot@kernel.org>
+Date: Wed, 28 May 2025 17:10:14 +0000
+To: Dave Airlie <airlied@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <2006806.PYKUYFuaPT@rjwysocki.net> <20250528131759.GA39944@noisy.programming.kicks-ass.net>
- <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
- <20250528133807.GC39944@noisy.programming.kicks-ass.net> <CAJZ5v0g2+OVdFM-bUCOynNivUc4doxH=ukt9e9Z_nKpoZh6gPA@mail.gmail.com>
- <20250528160523.GE39944@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250528160523.GE39944@noisy.programming.kicks-ass.net>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 28 May 2025 19:09:21 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
-X-Gm-Features: AX0GCFtKiXc3m4qPv0Ukobep1NVEUOLfrhFWYC5AiBQNz19Akzfh3sFePEUu36k
-Message-ID: <CAJZ5v0jzF19rToJMHhEvU6Zbt3690KWCs-B_0sPR=s9xeRiUnQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by commit 96040f7273e2
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	x86 Maintainers <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Ingo Molnar <mingo@redhat.com>, 
-	Todd Brandt <todd.e.brandt@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 6:05=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, May 28, 2025 at 04:25:19PM +0200, Rafael J. Wysocki wrote:
->
-> > If cpuidle is available and works, it will do the same thing.
->
-> Why can't we make it available sooner? But no, cpuidle does not do the
-> same thing -- it was argued it does the right thing because it has them
-> tables with C states on and doesn't try and divinate from CPUID.
->
-> > > The whole point was that mwait_play_dead did not DTRT because hints a=
-re
-> > > stupid and it could not select the deepest C state in an unambiguous
-> > > fashion.
-> >
-> > Yes, on some systems.
->
-> The 'on some systems' thing is irrelevant. Either it always works, or it
-> doesn't and we shouldnt be having it.
->
-> > > And now you're restoring that -- code you all argued was fundamentall=
-y
-> > > buggered.
-> > >
-> > > Yes is 'fixes' things on old platforms, but it is equally broken on t=
-he
-> > > new platforms where you all argued it was broken on. So either way
-> > > around you're going to need to fix those, and this isn't it.
->
-> > The commit reverted by the first patch removed
-> > mwait_play_dead_cpuid_hint() altogether, so it never runs and the only
-> > fallback is hlt_play_dead(), but this doesn't work for disabling SMT
-> > siblings.
->
-> It should either be fixed to always work or stay dead.
+The pull request you sent on Wed, 28 May 2025 13:51:25 +1000:
 
-I'm talking about the current code which is broken on many systems.
+> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-next-2025-05-28
 
-> > > Now, SMT siblings are all AP, by definition. So can't we simply send
-> > > them INIT instead of doing CLI;HLT, that way they drop into
-> > > Wait-for-SIPI and the ucode can sort it out?
-> >
-> > No, I don't think so.  I don't think that Wait-for-SIPI is an idle stat=
-e.
-> >
-> > But we are discussing patch [2/2] here while really the problem is
-> > that the commit in question is broken, so it needs to be reverted in
-> > the first place.
->
-> No, you all very much argued that mwait_play_dead couldn't be fixed, as
-> such it must die and stay dead. Sometimes working is worse than never
-> working.
->
-> So no, I very much object to the revert.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b08494a8f7416e5f09907318c5460ad6f6e2a548
 
-And I object to leaving a user-visible regression behind.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
