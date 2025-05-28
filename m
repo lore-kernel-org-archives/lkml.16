@@ -1,134 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5806B1E3DC8;
-	Wed, 28 May 2025 12:44:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27BC283FF6;
+	Wed, 28 May 2025 12:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748436252; cv=none; b=FPwHjQLbnjstCfspyz3UvToxQZych7j7zkJNgkMaB8bAETHNJ6XDMZNZRkU3IGB6qmzwsQ6Z3YhnoOeA4as1cbDNIPVLkFlujRCNcJtYDxcHDaXRbKPozTpKb2D9zVFiuOxcsk+zkQeoX5tG9/+4SV4uzIottQrrTw7GRsG62w4=
+	t=1748436304; cv=none; b=qE5/3NODVJ32l6xjL/qgP4m+Mg4tTDtMEIR1nGREbU/IBuU2hjlpIrGE/AUTggAa2Pml62ckxErlmXwOejTUhnXtDmNp2V/2de06DvMVe14tRVGBu9tNzqU4KMR2KdPstz2ZUkVh1C5i8DJmE8J3Yr8Y+S6lQa++9MTXyePnc1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748436252; c=relaxed/simple;
-	bh=crBVArDH+A3z/R+SIMKBS2QOt2TADWyRrbSjnmFUSHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4SwKwZcKWOS06choqQXBpIFQi7ndxPeW3HwWoLZeCqGXf9cBdi0GJ40oSXfwq5/+XanQcLdAHqNFSCcfFBMrlX2wuxIBgeYwPmTHUhkV9dsxPMTnMsom/cCygvEgb+m2d1eVjzE8QPHVpZ5Mfo6fOcSqXHK8q+034MNklxIVL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RihmlOvW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748436304; c=relaxed/simple;
+	bh=jPRH3OiK/9a97AF/dwI7dyrPsGMp9AO1LyvMSi3+Sc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G2+UuSKQqtA6Yw4Hzq1kaDr/M6qx3jpA9NHxgawSUb7TIxN8AaSeGSwOdqAP5zfYom5t7gQT1+Zt0zZyHYZEEBKUTRfH9pL3LGhbfrloiRD+YYb1xl0XPRQ3vUaDKBv7d5IHnbtQEdlMDM49nRXpKqJmpPH05WxEIHimTCF73u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emJiWeVa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RihmlOvW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455D5C4CEE7;
-	Wed, 28 May 2025 12:44:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emJiWeVa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38105C4CEE7;
+	Wed, 28 May 2025 12:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748436250;
-	bh=crBVArDH+A3z/R+SIMKBS2QOt2TADWyRrbSjnmFUSHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RihmlOvWB26JeWPZ01gn4DDSvN0v/bsJ24ZjWydEYlCtxxDaIKIxV/YNfaabOGB9h
-	 OXBFLRKSH6KB0zFiClo9Ueilpp7aV6kPqR1/b8J/v7SJX+lBKu/iqwA+iK3mlhbOWr
-	 Lw2qTrBXMlB+JUf69B5AF94nHIS7axSjPl4FYbz6XbMWU+DHd2Qb7q14YopImJ8ygc
-	 4VOMlX46DoB9BK+vxIjI0zGNdYzvZ4J0gnIrsqxsByPzYgi+QZzgHXGQ+8UAadQzIb
-	 lot4/IFFmFqKL/pyzPnMiPZe/dSH43o5tjFIeEu/7i4PPTLR1ivMEj58tyMa/o1iI3
-	 FgD0DyGc2tMlw==
-Date: Wed, 28 May 2025 09:44:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf pmu: Avoid segv for missing name/alias_name in
- wildcarding
-Message-ID: <aDcFF35JF4002MfK@x1>
-References: <20250527215035.187992-1-irogers@google.com>
+	s=k20201202; t=1748436304;
+	bh=jPRH3OiK/9a97AF/dwI7dyrPsGMp9AO1LyvMSi3+Sc8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=emJiWeVa/VjqGNMEKf7A2csHkn4bg6RJdJPE0suLmSmPzPBjBnPdde2jtE3w9Xq2z
+	 eWYE/WCRPTSyF2hMHNDXe/RL7pZv6cN3SPTXMnRM/HuO3VWfhNW8LKfN9yn2nCbcom
+	 Enhd1sp0SyXskxDr5K/vLJ+3YlQrC/2BFgUPU+8YRLLNg5td2Rz8uW2eKfBe4H4K2Z
+	 7b5veurmdOEAfYhiXvuHs/qByX08aHcaBkpo1CsPIaoeVnIZaUZnJ9JVlfnZcLm+H2
+	 pVMRkA/2XpIwRJnPLqrLRfW1hsLWWsWB7GKTAJKDZKPmUXBbiagFkUX2Eqfq2JoiID
+	 beQScaDzurshw==
+Message-ID: <7aa4a8c8-a719-4c53-8732-25b7908af30f@kernel.org>
+Date: Wed, 28 May 2025 14:44:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250527215035.187992-1-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ASoC: dt-bindings: tas57xx: add tas5753 compatibility
+To: Bram Vlerick <bram.vlerick@openpixelsystems.org>,
+ Kevin Cernekee <cernekee@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, peter@korsgaard.com
+References: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
+ <20250528-asoc-tas5753-support-v1-2-a50c3f6734ee@openpixelsystems.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250528-asoc-tas5753-support-v1-2-a50c3f6734ee@openpixelsystems.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 02:50:35PM -0700, Ian Rogers wrote:
-> The pmu name or alias_name fields may be NULL and should be skipped if
-> so. This is done in all loops of perf_pmu___name_match except the
-> final wildcard loop which was an oversight.
+On 28/05/2025 14:10, Bram Vlerick wrote:
+> Add tas5753 to ti,tas57xx devicetree bindings.
 > 
-> Fixes: c786468a3585 ("perf pmu: Rename name matching for no suffix or wildcard variants")
-
-I fixed the Fixes: to the right commit, as it seems to have been rebased
-and ended up not present on my local repo:
-
-Fixes: 63e287131cf0c59b ("perf pmu: Rename name matching for no suffix or wildcard variants")
-
-⬢ [acme@toolbx perf-tools-next]$ git tag --contains 63e287131cf0c59b | grep ^v6
-v6.15
-v6.15-rc1
-v6.15-rc2
-v6.15-rc3
-v6.15-rc4
-v6.15-rc5
-v6.15-rc6
-v6.15-rc7
-⬢ [acme@toolbx perf-tools-next]$
-
-Or something else:
-
-⬢ [acme@toolbx perf-tools-next]$ git tag --contains 86468a358 | grep ^v6
-error: malformed object name 86468a358
-⬢ [acme@toolbx perf-tools-next]$ git cat-file -t c786468a3585
-fatal: Not a valid object name c786468a3585
-⬢ [acme@toolbx perf-tools-next]$ 
-
-further details:
-
-commit 63e287131cf0c59b026053d6d63fe271604ffa7e
-Author: Ian Rogers <irogers@google.com>
-Date:   Fri Jan 31 23:43:18 2025 -0800
-
-    perf pmu: Rename name matching for no suffix or wildcard variants
-    
-    Wildcard PMU naming will match a name like pmu_1 to a PMU name like
-    pmu_10 but not to a PMU name like pmu_2 as the suffix forms part of
-    the match. No suffix matching will match pmu_10 to either pmu_1 or
-    pmu_2. Add or rename matching functions on PMU to make it clearer what
-    kind of matching is being performed.
-    
-    Signed-off-by: Ian Rogers <irogers@google.com>
-    Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-    Link: https://lore.kernel.org/r/20250201074320.746259-4-irogers@google.com
-    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks, applied.
-
-- Arnaldo
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
 > ---
-> v2. Rebase resolving merge conflicts, add Namhyung's Acked-by.
-> ---
->  tools/perf/util/pmu.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index bc1178234d3b..609828513f6c 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -2143,6 +2143,9 @@ static bool perf_pmu___name_match(const struct perf_pmu *pmu, const char *to_mat
->  	for (size_t i = 0; i < ARRAY_SIZE(names); i++) {
->  		const char *name = names[i];
->  
-> +		if (!name)
-> +			continue;
-> +
->  		if (wildcard && perf_pmu__match_wildcard_uncore(name, to_match))
->  			return true;
->  		if (!wildcard && perf_pmu__match_ignoring_suffix_uncore(name, to_match))
-> -- 
-> 2.49.0.1204.g71687c7c1d-goog
-> 
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
