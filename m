@@ -1,133 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013022.outbound.protection.outlook.com [52.101.72.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FF028A415;
-	Wed, 28 May 2025 15:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447352; cv=none; b=FSntAryQeb9Hj/gAg/eHE1QanQlY6ojhw7TEU0qINta+8i8fPELv9s2GpSpimeeKOrm8ZbB3+SJ0VgrO7G6Z91k0/FuZgN8wJ7NCucZjshmV5D/EFhxMGnrUMX6z5AB+9XmdwObppRqo1x9X0VUkbBOeydIgrwOnm4UinFsMYPY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447352; c=relaxed/simple;
-	bh=aJ2WMLCSX44iSStAIMvDDspDN9X8UmDN8ucWqh9qNTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nw5GNmploN/yvOOitb13B9bGv3aq36S+LOqrkiy2wDswkqU3ulvDZkb/4cTJn6vsAb3Dn5GwXJucmiGK3Lb8ObPbbemkE2xNf+mcJo8U3OrvG8vjIJ5UUxpFur2l0d/o05BBaYYs6FvY1YAFQfjHJm7JbZBrijmDdtp77Vzwb6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkB/QMIv; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A6A1E8323;
+	Wed, 28 May 2025 15:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748447455; cv=fail; b=sLwbRLgR71RaSQFQZDLSwro1ds3gXVEDGNjZSSqVfWbHQ1YAd41+ik1se6vh/uVfXejDyRyBC8qAnn/+jNohZtkAU01/RJ9PAYWrIMwfL1jOi4DBPTrNZ6SGVzI3cnlhL4To2sPN97J2u6sXmcVXsmQ/mFn69REfmj4LYnnJkOA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748447455; c=relaxed/simple;
+	bh=7ml1oZdkVgSFyGugHPI5otBEPXxRwkAbRqPa7awbPSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MJmpyKh7WnYli94xdYZOiVSmBFg60S/0qxb6lNlPWGOooM5oM/nYLfvtEOSOG0EztFVVr3pjx1VNNvBPFlmMBMVYcvxBkYQVpxUeyl3u70UhUIFpsw2uu3loi/U5xXIUOaJ2tVeBM85ffBsNNw7+QR4sUKd0Po7tkuvWhMYlFLw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=InY11afn; arc=fail smtp.client-ip=52.101.72.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkB/QMIv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76E65C4CEE3;
-	Wed, 28 May 2025 15:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748447352;
-	bh=aJ2WMLCSX44iSStAIMvDDspDN9X8UmDN8ucWqh9qNTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UkB/QMIvCRG8lhyTHK4ZClCcPcCOR6kEHf5wFQNBU6hJOGSgUvDPGLtf+EGP8KbII
-	 3o3rUT7WyQaPv6DfnJYq4U8sVPFaM6ghiMyttbOd9gLmK0TofcmDhTQNV+XSHD5vdx
-	 GiXyH4uXXTaZdJD/44uHqlHVeGaUU8UTl5iOdS3HstyLslqDx2UV2gm0rxG5fD3y3D
-	 R2MVm9e01uI+s82RF6OG+sloU2pENCEAD7zhXKvo/jHy6VJEC8hAU5kkvSJqe2hZps
-	 ZOp/00ejMeb3KK/FECAtiu1Bl+CPvO3Vbduvow6HWIGovD3zx/yC7cEl9PskvQYhx/
-	 2n4QUWBCx6m1A==
-Date: Wed, 28 May 2025 16:49:06 +0100
-From: Simon Horman <horms@kernel.org>
-To: Yuyang Huang <yuyanghuang@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-	Lorenzo Colitti <lorenzo@google.com>
-Subject: Re: [PATCH net-next] selftest: Add selftest for multicast address
- notifications
-Message-ID: <20250528154906.GD1484967@horms.kernel.org>
-References: <20250527091855.340837-1-yuyanghuang@google.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="InY11afn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NbZwOfaHqsLz3yOyrk+KryIAtyul/YsVkpxX2Q5bNqb11Kbq0wEZOQEdTcVmOOApZxEQcyOFl4Pw3zQgP3YE5Iml5i8TIBHl4yJPfVmTfyt7hQ+xOADB3A+MQITKAnCctSpNSZju+wVWp6wFSEdCsvlGMg9jobepvKkCsRZMiNb1PyC9hbEGn+Ev32rN2eaGEGc3O9wWy+9e+B84C8n9jCtIWXa2TS7l7/YuI1kKNLgnDViSjmjDdAr0Lcw5sunROZTcTtJc17jesW4voYSdtCPfxmn/I6Snty0+xfymQkaza8zxglaVPNCSnShbfPzd2MkyKzFBwBvnQWMvUL8L4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kYQtwrCw+MX/gECF32P1RLrNEcJi3TazTt9akbUxPQM=;
+ b=VVczaZStVsrUmg3lOL9HvR5wbqDYSAOtA4pCbOX1Hf3BM4KXysxW+zyXQVWH32McGdi5XSciks4wyraEiEvpXCkXtGazzRHg/RfvQ47/qxmri1ZfjoooFA8SJ/zSVEQfdyoc8ukgW0rdh8rbz0+ZsWQ9ACu4oLnbPcI2JyKA+eqI1zp5YnN5+6+TLGL/EdNBBS2ybTgEZcHwP6X8uq8/RwXvNl0tguTi3n0GDxYbBPWvlXGMhFR7uujYHCIcCpQHAzt24+kIHSnDv6+k/xd0jFWYUaKGwjbRKq08KFuMTRJhMT907wY9sQKpvnTKadbV9gC1q7tgT0he30BTkjLcaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kYQtwrCw+MX/gECF32P1RLrNEcJi3TazTt9akbUxPQM=;
+ b=InY11afnM2XTp+AaY6cPHy8cwUI0HPMDIeeWOAxTxnfS1geHuWUxKRs6O69MKecBGMsJpIm2fRroqpx82xb7STo92K+eWOIqc1r66RIRjsuARa80FPXbqDuY+nx2ZsX5ahSGAkPNQHh5stTflIZ+vg8MqLa/7NP0++NNJClfW9Gn7e3uoJGzewzMPKbSo4rr1SlO5VgWfe3NDbta5h7IDMEooGCpEtUVQI2q4x+ljipUBLIyAQWoyPUC/VLNLMZ80J3ZQSNlBer9Yug41gSL5+Oj7gdEEkBus+Fd667AgiPFyqS1/OfgE5slAkpS9GnROaLXk4qKuW+/ygY0llOd4A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PAXPR04MB8491.eurprd04.prod.outlook.com (2603:10a6:102:1df::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.31; Wed, 28 May
+ 2025 15:50:51 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 28 May 2025
+ 15:50:51 +0000
+Date: Wed, 28 May 2025 11:50:42 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Marek Vasut <marex@denx.de>,
+	"open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: dma: fsl-mxs-dma: allow interrupt-names
+ for fsl,imx23-dma-apbx
+Message-ID: <aDcw0sgN1ZX0kCCZ@lizhi-Precision-Tower-5810>
+References: <20250523213252.582366-1-Frank.Li@nxp.com>
+ <20250526-plural-nifty-b43938d9f180@spud>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250526-plural-nifty-b43938d9f180@spud>
+X-ClientProxiedBy: SJ0PR03CA0195.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250527091855.340837-1-yuyanghuang@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8491:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1518a72-93dd-44e2-0920-08dd9dff6c01
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|52116014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hLqDDbKZMnP1R6GoZSHSgYB0zjvHP67t2UuQHxk9rydfb3os/CtdeBztBNj+?=
+ =?us-ascii?Q?AHuaJ/AuSnm1srZC2ANHlaWF1fK9vAtz6s1XFCkWMe4CKi15+x3q31XIxrji?=
+ =?us-ascii?Q?MIw1jBMCMCbop9CSNaHPCX3+dlXDDilEhGsUfHquc85ct1pZWg7kkT3il6lL?=
+ =?us-ascii?Q?wwk6OmxHtzEe0TfWvCIoZyZLuVWH9/VxZ5oA72GREtHG1KmemwHbOlZ2Dp9y?=
+ =?us-ascii?Q?2dpYKC9ym0XviuXDHxrRX1P3rx0s3XAGUaFnwosLoi7GTi+5631pfbiRtbti?=
+ =?us-ascii?Q?kiLGbtugoK78v9wXuh83SV0u8/rMJD1DP7VQKZPUQj8xBf7rE0rrr87QX70A?=
+ =?us-ascii?Q?JT+CAHbpv7t+E1BumG1M5nVEqBC2NpdYqX9oyNQWtW+1jV/tGJhiTGw+45Ls?=
+ =?us-ascii?Q?rvtVswU2iR0dp6feZf0wXsxU9MQDzuOBCXA2+hnE1O18slxvB0F6GUy8O+wI?=
+ =?us-ascii?Q?VH+ulOSO7OirsU5OKdikzXjHsHDogZYdxZGnMo5xUamP2GpVUQwQTfE+jYaw?=
+ =?us-ascii?Q?7DyyPzurU7H7L52H9m5RrrINhvQk8P/L5NCQYHmZWGNz7WSOcdUzziY9sQfn?=
+ =?us-ascii?Q?pTFEIpW9Op6nfWHVALrFwcQc13MLJ1/6ElRinquvWSh5BSQUWkQwk7GdG3+n?=
+ =?us-ascii?Q?an17Qr8P7kBYroBnG0AR+JA5fXx0bDbzt9ZnYnnu0LFa8h9ch5Zq5J/BeT1O?=
+ =?us-ascii?Q?9xsRbHtaUbYAAyWjKmVXeddRGPkAdevkQesUhdMPk+/72X/tZr5It8ITKA1X?=
+ =?us-ascii?Q?bzb9NKrZ4tDpn0DBrh47KrydKtxpSjSB36WCEWRaIrUcMFP+u4RCAegEmILr?=
+ =?us-ascii?Q?5zuFQIPQTeWaEOBrLbaalJdr48mUH2I+t0d8A9/AclxZBMZ7wx6JQ80lbtNT?=
+ =?us-ascii?Q?Oz0G/MM/R+K6eGAFCahMq+UT6Eiit/OzX4dAeZciFHMB4UugAF+mirAs3tvR?=
+ =?us-ascii?Q?acm7pHZAsLogSrtP+tO98PwiYrxPap7U6Pk+y27QyX41LbdWFYswJxdUhox8?=
+ =?us-ascii?Q?JxLNrnSTNhfhEW1YqQR6Y0l7IfLblG5SCiabvV/6nZUfbQLx6hwyyUpTNdu7?=
+ =?us-ascii?Q?w0ooOJEkaohPsK3nJA4OqGwUa06X76IUfqlajm3aRiIacNRsZrAMmbBApmlv?=
+ =?us-ascii?Q?855dpPaSJT+xIjg9e0Oe91W/QV9KPNEHxd9/0G3m6Cij7T1sLdDCFt2oOR65?=
+ =?us-ascii?Q?P5f3RpQ0G6ZmALrqbVEQb5IhyKjopVcCvmzUmXCtRrggYjkYhAYLX/PzJbcg?=
+ =?us-ascii?Q?na0FqH3LKRY7F9Q7hj7Due1AS16WEvRg9P7S+VYCvqETZiPS6P9392O5ENH1?=
+ =?us-ascii?Q?B4WW+57lJaHm9RYlS6bqASf1H82vANFzWZKUakrNmowpBDdqVqWl/s1csKvm?=
+ =?us-ascii?Q?Y+srn6A9S5+B9EyGreC6+KmJpYAAi1G9gYLa5HZ8aCwl3OqLgVeFqxUQUucH?=
+ =?us-ascii?Q?Q/7O1UhbjdNpW8V2EqI5iPsbcoL4YGQo0yWtVPoxsKcBvViWDohyjg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(52116014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yR4UJvP/YdoXr9nsYn8EYnODIpK1jF+HqA270Zo1apV/mGxZS7wHSMYNonSX?=
+ =?us-ascii?Q?4M5ohTOdPONPiq2bQ4kfKrfwTbU07HMJ9vUpOGOBvQAoTkezxsA+mbmvP1ev?=
+ =?us-ascii?Q?R6hcNwzJZovsAHWZPFPOxXEcb2hZVIYi+uLATNFSwxAVXtA6rrn2s0Ituznu?=
+ =?us-ascii?Q?KjadOE7DmiDPeZmJ1K1777WLucRZOLRcpBStA8rq/klzyXHicdV2lJ5U8eSq?=
+ =?us-ascii?Q?ub5RtjEJwzJJGbZjUkjMXuqOxT8phunh8DM4le2BPqof4TAZV6/4GIH8sTEo?=
+ =?us-ascii?Q?S3GZOhF1E0wMFZCHXxIHvDHvIBL45AHHuFOV2fdqjtFuLTQ4TWmhrSfocc+q?=
+ =?us-ascii?Q?hgnykdVU/rRN9vahiiiik4a+orALdn//3cVdEAAi7l6Ty6v+jWZqfgRoaHuD?=
+ =?us-ascii?Q?6TobaU+8xDcXiiNr6l4XQJtpkjD8DF6nT5mKFzt6xKqXPY1OYxuRNYSJCITU?=
+ =?us-ascii?Q?oRdYkF3wgPQGKuwP9nZ45Sy/ox+Z5ufnZDRaWFjSKHHfzWxmnSes8yoISS4s?=
+ =?us-ascii?Q?ixPfR25AJXcTvwE37doYYaJ/7qB06NCTT3u559ImFKMq1QtELeUA3cVeehJz?=
+ =?us-ascii?Q?YaECAMrfxx1RfvIx4/9iNSKSjc8TAMTbsmEScPcXg8FXog0UIUl2rwBlCHDN?=
+ =?us-ascii?Q?h1p6CwlA2bWzM60KET0s+9arCyhxJ+eXnl6k2Fij82cc0Rdpj1yHOVwrIwlt?=
+ =?us-ascii?Q?fwShoGibYgB4t1nAVk21rIgrU/AXUYySE954veq8ocUKB0yj/FXwDhLVg+oi?=
+ =?us-ascii?Q?/dtEcWllG+3pK/jFPIGsfbwgUkBQJ0uj6+zP3Lkeb6U+fJG6Huvj7evHe0Cr?=
+ =?us-ascii?Q?KqVcAKW4NjtljcrKOG3soGdCLOnyBqcaaEAnRnZOQz5VPUAqUi2JZDamqojK?=
+ =?us-ascii?Q?ycNSevXHuZcIPGaoHbazMyRBeINyCvVgeAagUA8XA+g8BHC+wBzG/Koz2oQx?=
+ =?us-ascii?Q?YA83NVjh8dorWNwmsP4AD+Y992AO8wAzceGs69G97BkH2LXIQVtuOq2iiqsm?=
+ =?us-ascii?Q?KcbBRLgcH3h4dA2ri2EfBO5/SsRMp4yKqhLplNwwlToy4F8mSbavjxc3VHww?=
+ =?us-ascii?Q?fCc5BhBtozIJys9NleVVwO53IUV2kLdjXGYwsbMwc9YrIxlRLlY5YoiM9Uvk?=
+ =?us-ascii?Q?fhH4l2xeqqVLWnsxxRrH2cnyLp6YlhPvWHPlFIftDKzlDJyRMsc1Ko28uWee?=
+ =?us-ascii?Q?Xn3QXPXykRScvHlmOS3u7hONa9v514iIXxITsuvUb84+pRm9zM2a6fsFsDi8?=
+ =?us-ascii?Q?fnpqPDjRLr/aiQerAv/FlkxodxMimm9ZJe7fsR280/h2n0EsRatdpzH4GcM2?=
+ =?us-ascii?Q?h8EQSpDX80m5O7CqaHbWbvwhEBMyDLNCBibOEsPA6FA758+SItOHT4gC8UTG?=
+ =?us-ascii?Q?337SPGXjxcXVlLnBHu1c2LkCxdhUywnV/FSpKO60n8569OA683NkZjvg3fsM?=
+ =?us-ascii?Q?BT1qZW6DN15a+V8sPs6mrN0SmXgapQ4TyLVi8x08Q/bIcPDJXlSpuL6T66UO?=
+ =?us-ascii?Q?ipRkamccEOfN4JJXFvLypdFBv2QoN3ViBcGQkRuy9j1OGCMapAZsHXDW/fuw?=
+ =?us-ascii?Q?ZEyitFL4SEnCP96oG/U=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1518a72-93dd-44e2-0920-08dd9dff6c01
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 15:50:51.2980
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: y/Co4ZJdfTb6Vkzr9S0V5pGs2jJ9lfT1PUZvM8KP/FEMoupHvbQRwYaZL1m35HKHWOLhFa0SXkLWfrcSdoi/iA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8491
 
-On Tue, May 27, 2025 at 06:18:55PM +0900, Yuyang Huang wrote:
-> This commit adds a new kernel selftest to verify RTNLGRP_IPV4_MCADDR
-> and RTNLGRP_IPV6_MCADDR notifications. The test works by adding and
-> removing a dummy interface and then confirming that the system
-> correctly receives join and removal notifications for the 224.0.0.1
-> and ff02::1 multicast addresses.
-> 
-> The test relies on the iproute2 version to be 6.13+.
-> 
-> Tested by the following command:
-> $ vng -v --user root --cpus 16 -- \
-> make -C tools/testing/selftests TARGETS=net TEST_PROGS=rtnetlink.sh \
-> TEST_GEN_PROGS="" run_tests
-> 
-> Cc: Maciej Żenczykowski <maze@google.com>
-> Cc: Lorenzo Colitti <lorenzo@google.com>
-> Signed-off-by: Yuyang Huang <yuyanghuang@google.com>
+On Mon, May 26, 2025 at 04:28:07PM +0100, Conor Dooley wrote:
+> On Fri, May 23, 2025 at 05:32:52PM -0400, Frank Li wrote:
+> > Allow interrupt-names for fsl,imx23-dma-apbx and keep the same restriction
+> > for others.
+>
+> The content of the patch seems okay, but why are you doing this? What is
+> the value on this particular platform but not the others?
 
-...
+Actually it is not used in dma driver, i.MX23 is quite old chips (over 10year).
+Just to match existed dts to reduce warnings.
 
-> +kci_test_mcast_addr_notification()
-> +{
-> +	local tmpfile
-> +	local monitor_pid
-> +	local match_result
-> +
-> +	tmpfile=$(mktemp)
-> +
-> +	ip monitor maddr > $tmpfile &
-> +	monitor_pid=$!
+Frank
+>
+> >
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  .../devicetree/bindings/dma/fsl,mxs-dma.yaml  | 33 +++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> > index 75a7d9556699c..9102b615dbd61 100644
+> > --- a/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/fsl,mxs-dma.yaml
+> > @@ -23,6 +23,35 @@ allOf:
+> >        properties:
+> >          power-domains: false
+> >
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: fsl,imx23-dma-apbx
+> > +    then:
+> > +      properties:
+> > +        interrupt-names:
+> > +          items:
+> > +            - const: audio-adc
+> > +            - const: audio-dac
+> > +            - const: spdif-tx
+> > +            - const: i2c
+> > +            - const: saif0
+> > +            - const: empty0
+> > +            - const: auart0-rx
+> > +            - const: auart0-tx
+> > +            - const: auart1-rx
+> > +            - const: auart1-tx
+> > +            - const: saif1
+> > +            - const: empty1
+> > +            - const: empty2
+> > +            - const: empty3
+> > +            - const: empty4
+> > +            - const: empty5
+> > +    else:
+> > +      properties:
+> > +        interrupt-names: false
+> > +
+> >  properties:
+> >    compatible:
+> >      oneOf:
+> > @@ -54,6 +83,10 @@ properties:
+> >      minItems: 4
+> >      maxItems: 16
+> >
+> > +  interrupt-names:
+> > +    minItems: 4
+> > +    maxItems: 16
+> > +
+> >    "#dma-cells":
+> >      const: 1
+> >
+> > --
+> > 2.34.1
+> >
 
-Hi Yuyang Huang,
 
-Other tests in this file seem to warn if the ip command is too old
-to support the test. Perhaps we can achieve that here something like this
-(completely untested!):
-
-	if [ ! -e "/proc/$monitor_pid" ]; then
-		end_test "SKIP: mcast addr notification: iproute2 too old"
-		rm $tmpfile
-		return $ksft_skip
-	fi
-
-> +	sleep 1
-> +
-> +	run_cmd ip link add name test-dummy1 type dummy
-> +	run_cmd ip link set test-dummy1 up
-> +	run_cmd ip link del dev test-dummy1
-> +	sleep 1
-> +
-> +	match_result=$(grep -cE "test-dummy1.*(224.0.0.1|ff02::1)" $tmpfile)
-> +
-> +	kill $monitor_pid
-> +	rm $tmpfile
-> +	# There should be 4 line matches as follows.
-> +	# 13: test-dummy1    inet6 mcast ff02::1 scope global 
-> +	# 13: test-dummy1    inet mcast 224.0.0.1 scope global 
-> +	# Deleted 13: test-dummy1    inet mcast 224.0.0.1 scope global 
-> +	# Deleted 13: test-dummy1    inet6 mcast ff02::1 scope global 
-> +	if [ $match_result -ne 4 ];then
-> +		end_test "FAIL: mcast addr notification"
-> +		return 1
-> +	fi
-> +	end_test "PASS: mcast addr notification"
-> +}
-> +
-
-...
-
-## Form letter - net-next-closed
-
-The merge window for v6.16 has begun and therefore net-next is closed
-for new drivers, features, code refactoring and optimizations. We are
-currently accepting bug fixes only.
-
-Please repost when net-next reopens after June 8th.
-
-RFC patches sent for review only are obviously welcome at any time.
-
-pw-bot: deffer
