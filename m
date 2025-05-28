@@ -1,143 +1,129 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B71B74420;
-	Wed, 28 May 2025 15:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A17D28C855;
+	Wed, 28 May 2025 15:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447684; cv=none; b=ed9YB+ya4CZEApNJ8fpFyURuSOaBfCROJ9fovHOxg30UizWPvEx4ictFiqIZeMAtAgFWa4tbOGIILOMMPAfrWl6yHYKCeCvl3lQqMY0uveAKwdE4+ypwO98QfPQSN9Nu0M0enGnn3ovR7+4FC+zc8H0kw/5YfQj/pCG55cz7++8=
+	t=1748447731; cv=none; b=ELVIbzxIXAI+XVDC/fH2PuxWynvqxEtx+zy/nGESLjxi7UWaiOVyeqUXK/QCBER1LhcpHtukGZw2zx2AUwahaInqIPX/VRP9p5BelxX7opVt5KTuXqA88mD8GRbdAOvQs/uDv5J56TUXoty/l83k4eViVy5jwpsAixI87fVi+VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447684; c=relaxed/simple;
-	bh=Dw/g/lE1rQzkBlq4qZ/qURcgH6xjlgUmtkzi7h8i4P8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CpR48DMOaLLuiglhPaXw8C5Ko0bwH3NZDIoDisjaKsUDg255VyHxQ0tg7GgIawlfzG8GLIXAsmeFFMasw/SmGfJ9TwQOfX6bzl8gN38pV4dICGEM2OmXuJoVb89XjZwGBuveolR9OJhl4O1O7GsmQfIQ1320gUIZr85euZKISv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6v9Z09hfz6H6py;
-	Wed, 28 May 2025 23:50:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id E14461400CA;
-	Wed, 28 May 2025 23:54:31 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
- 2025 17:54:31 +0200
-Date: Wed, 28 May 2025 16:54:29 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Alireza Sanaee <alireza.sanaee@huawei.com>
-CC: <devicetree@vger.kernel.org>, <robh@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <mark.rutland@arm.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <krzk@kernel.org>,
-	<dianders@chromium.org>, <catalin.marinas@arm.com>, <suzuki.poulose@arm.com>,
-	<mike.leach@linaro.org>, <james.clark@linaro.org>,
-	<linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
-	<gshan@redhat.com>, <ruanjinjie@huawei.com>, <saravanak@google.com>
-Subject: Re: [PATCH v3 1/7] of: add infra for finding CPU id from phandle
-Message-ID: <20250528165429.00000d4d@huawei.com>
-In-Reply-To: <20250512080715.82-2-alireza.sanaee@huawei.com>
-References: <20250512080715.82-1-alireza.sanaee@huawei.com>
-	<20250512080715.82-2-alireza.sanaee@huawei.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748447731; c=relaxed/simple;
+	bh=8JXxfcJjoGbvpn9MgUUsyU3cv+zoDwRCtAsunztYnAk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qoBNs8utzySIpd7fhRhNleRpZvyLVyu4BUdPbtbcyu5LPjz9QG5YDhgkd2pTzAOJpyQPMi8Gj43L5AEv/Z7eynWGl1vBiYwCd1znrgpC83UaUMJQ33/qULi1r0UZnzbeNIGBcVvlCclk8dKVJ98/jVNX8VwZiGqdTIWabQJtRlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FArEaPVp; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FArEaPVp"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af548cb1f83so13773a12.3;
+        Wed, 28 May 2025 08:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748447729; x=1749052529; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TdWUtiBXIpdQ6dngRJ0xyGfp5ROuWsfYLJvZy2BONrs=;
+        b=FArEaPVptH9fjYu43o54yy0BxrH5zu3xRFqk9plxS5KFV+moMvGr6kl4X7YfTWIA69
+         e84dsIlvflrmqIkuYJl1ybU1rWRwfGfQzKdkHrx3EQcfzD3p3yHFKNC4d+7hxQPv/0Ig
+         A4uH6i02tiAOQBklHYMEgK3BC5/NXWoNUSxqE01/hFkOvN0VoUszfTUH6d3WuES4xW18
+         1oMMezAUskW4lrVhUUkFpPhS0tslNoCTdQHIaqk5Q+prAcTdHzZIFjgBo0k96DatHy9u
+         BdQ0D7jO1Et6526C8k90KiaOCcoqiS4Kf47fbKm/9/GNyQlO0fB+6ItWsfFmE3ksCtJ1
+         9JXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748447729; x=1749052529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TdWUtiBXIpdQ6dngRJ0xyGfp5ROuWsfYLJvZy2BONrs=;
+        b=be5v3Thh+HY4JPK9ivBziPJOn0fOBIyZ4o/wpHJLlKyQgnJUJj0jSvLTd7mDdt7cmk
+         usFd6r4devq/uLWYecNFUnwTTqYhY4cWXJnFPdR6UotoRkmfe85bUFxsTRd5Vx1XUsD3
+         4Tp8yp7MFulLI4Vb9DvNtaOlIXOJFq3QfgU41lr8oYJbBOlQlAdAY8kDyJbJaN6PgQU8
+         GPT12ErEVpHdzixDtGkoqpsKGSsyabBlKpXTLvrzU0+NTRaAiQQtLANNG72h8lMEDzlz
+         I5UmnLtQ7wEn5USZ3CNZLGwLYGUrMx8QYHrxn/PRwpf3aA8fEZAcKYmXrrwJMtiRajeq
+         Z3FA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8QzYNYGinwanP0Wr2GaK5vSfYNbsh6qNPPhqXxY1LjficNBylPbnotUsSymQ5SFP/eQYqjWCyvHoLUts=@vger.kernel.org, AJvYcCUCRQ0LtoeOiZOg2R0utvQXn8+b8IT/5AN6m/kJKPE6An7Ls7Zn9pUQ+X1UEnMoJD1yQjneuPz+QvsjdVsq/sc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygSWLO++tpLV+2/A2Bu7wSh2IsPLJTtUDgrvyJFPahVz7CoRxT
+	/XaQISMlkDFk2dSlc0rtMmK4byLe4fncGSjoaId6CKJVRwFibSpCDp02
+X-Gm-Gg: ASbGncuxjmoktB7f+34C6sSAj/cUXES/a1C9DQuhAf0zSgP1KdX9PiBuwdAGo8WCtZF
+	7+Ma6hTndIsraA62Q4lD2aLMsjgZNDarJytMiDgBwj5S5EE2th4Yr1G2I7EZDqbxLdQHvFkW8sq
+	iyWcsqQbxXRpd5tea7QZJFQK4EVb2f3ZIC571y3lE3f6+mJ5IjyOJVcS6jirJQUeVT2EAcnOB+3
+	HFAaldehPOyJiWHeNe5XlzmGKhhAEt96TOPrmVc+4eFra8G8rt6sPg5jtKtn3mSn4keH7XXDaIV
+	C0hqH44oKdYEOpRdLPoAhobpPuJxGETRD9pHEJhFE1zUaq6trX9NrQKnHtzko3x6cD3vfpPz
+X-Google-Smtp-Source: AGHT+IFANBqiDmGcHFrSu/ihjwM81fRnfat123aATS9Fi9jALatSGZQFvIRcNwOkXvOpaOAjW8Lmpw==
+X-Received: by 2002:a05:6a20:d04d:b0:1f5:9d5d:bcdd with SMTP id adf61e73a8af0-2188c1e811dmr28470637637.1.1748447729374;
+        Wed, 28 May 2025 08:55:29 -0700 (PDT)
+Received: from localhost.localdomain ([112.149.32.52])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2d9872c835sm1311815a12.14.2025.05.28.08.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 08:55:28 -0700 (PDT)
+From: Jesung Yang <y.j3ms.n@gmail.com>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jesung Yang <y.j3ms.n@gmail.com>
+Subject: [PATCH v2] rust: kunit: use crate-level mapping for `c_void`
+Date: Wed, 28 May 2025 15:51:47 +0000
+Message-Id: <20250528155147.2793921-1-y.j3ms.n@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Mon, 12 May 2025 09:07:09 +0100
-Alireza Sanaee <alireza.sanaee@huawei.com> wrote:
+Use `kernel::ffi::c_void` instead of `core::ffi::c_void` for consistency
+and to centralize abstraction.
 
-> Get CPU id from phandle. Many drivers get do this by getting hold of CPU
-> node first through a phandle and then find the CPU ID using the relevant
-> function. This commit encapsulates cpu node finding and improves
-> readability.
-> 
-> The API interface requires two parameters, 1) node, 2) pointer to CPU
-> node. API sets the pointer to the CPU node and allows the driver to play
-> with the CPU itself, for logging purposes for instance.
-> 
-> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
-> ---
->  drivers/of/cpu.c   | 29 +++++++++++++++++++++++++++++
->  include/linux/of.h |  9 +++++++++
->  2 files changed, 38 insertions(+)
-> 
-> diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
-> index 5214dc3d05ae..fba17994fc20 100644
-> --- a/drivers/of/cpu.c
-> +++ b/drivers/of/cpu.c
-> @@ -173,6 +173,35 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
->  }
->  EXPORT_SYMBOL(of_cpu_node_to_id);
->  
-> +/**
-> + * of_cpu_phandle_to_id: Get the logical CPU number for a given device_node
-> + *
-> + * @node: Pointer to the device_node containing CPU phandle.
-> + * @cpu_np: Pointer to the device_node for CPU.
-> + * @cpu_idx: The index of the CPU in the list of CPUs.
-> + *
-> + * Return: The logical CPU number of the given CPU device_node or -ENODEV if
-> + * the CPU is not found, or if the node is NULL, it returns -1. On success,
-> + * cpu_np will always point to the retrieved CPU device_node with refcount
-> + * incremented, use of_node_put() on it when done.
-> + */
-> +int of_cpu_phandle_to_id(const struct device_node *node,
-> +			 struct device_node **cpu_np,
-> +			 uint8_t cpu_idx)
-> +{
-> +	if (!node)
-> +		return -1;
-> +
-> +	*cpu_np = of_parse_phandle(node, "cpu", 0);
-> +	if (!*cpu_np)
-> +		*cpu_np = of_parse_phandle(node, "cpus", cpu_idx);
-> +			if (!*cpu_np)
-> +				return -ENODEV;
+Since `kernel::ffi::c_void` is a straightforward re-export of
+`core::ffi::c_void`, both are functionally equivalent. However, using
+`kernel::ffi::c_void` improves consistency across the kernel's Rust code
+and provides a unified reference point in case the definition ever needs
+to change, even if such a change is unlikely.
 
-Indent has gone a bit crazy here.
+Signed-off-by: Jesung Yang <y.j3ms.n@gmail.com>
+Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089/topic/x/near/520452733
+---
+So in sum, I believe it's reasonable to keep the diff unchanged... but
+I'm happy to adjust if you'd prefer a different approach.
+---
+Changes in v2:
+- Add "Link" tag to the related discussion on Zulip
+- Reword the commit message to clarify `kernel::ffi::c_void` is a re-export
+- Link to v1: https://lore.kernel.org/rust-for-linux/20250526162429.1114862-1-y.j3ms.n@gmail.com/
+---
+ rust/kernel/kunit.rs | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> +
-> +	return of_cpu_node_to_id(*cpu_np);
-> +}
-> +EXPORT_SYMBOL(of_cpu_phandle_to_id);
-> +
->  /**
->   * of_get_cpu_state_node - Get CPU's idle state node at the given index
->   *
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index eaf0e2a2b75c..194f1cb0f6c6 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -360,6 +360,8 @@ extern const void *of_get_property(const struct device_node *node,
->  extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
->  extern struct device_node *of_cpu_device_node_get(int cpu);
->  extern int of_cpu_node_to_id(struct device_node *np);
-> +extern int of_cpu_phandle_to_id(const struct device_node *np,
-> +				struct device_node **cpu_np, uint8_t cpu_idx);
->  extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
->  extern struct device_node *of_get_cpu_state_node(const struct device_node *cpu_node,
->  						 int index);
-> @@ -662,6 +664,13 @@ static inline int of_cpu_node_to_id(struct device_node *np)
->  	return -ENODEV;
->  }
->  
-> +static inline int of_cpu_phandle_to_id(const struct device_node *np,
-> +				       struct device_node **cpu_np,
-> +				       uint8_t cpu_idx)
-> +{
-> +	return -ENODEV;
-> +}
-> +
->  static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
->  {
->  	return NULL;
+diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
+index 81833a687b75..bd6fc712dd79 100644
+--- a/rust/kernel/kunit.rs
++++ b/rust/kernel/kunit.rs
+@@ -6,7 +6,8 @@
+ //!
+ //! Reference: <https://docs.kernel.org/dev-tools/kunit/index.html>
+ 
+-use core::{ffi::c_void, fmt};
++use core::fmt;
++use kernel::ffi::c_void;
+ 
+ /// Prints a KUnit error-level message.
+ ///
+
+base-commit: f4daa80d6be7d3c55ca72a8e560afc4e21f886aa
+-- 
+2.39.5
 
