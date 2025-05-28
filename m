@@ -1,89 +1,87 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD47328EA4C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A430728DF50;
+	Wed, 28 May 2025 18:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456746; cv=none; b=EVQUUIJbMkgoRykKUVxKYuYkwWnViIQw829HwnSn2PfTga1By3tUuoIEzbBrE+YYGWac3iUg/aHSfUjAt9Ga/qMegHleIykyLY6O06T6lwaahal8hhTJ/jOM6NU3a97FLpnITJNFhTvNomqbVz2L8jRosoO9yF3HNPGxigIIpWI=
+	t=1748456786; cv=none; b=B5WwGY/W7vbQCwTC00lG+fqFATTwZMvuLN8QC4vpfZ4VePQzqfLbEEBCjPVesGV3rajLeV6q/9e3hlwC09w57jvETTVeqMerojTX9Y2fwqU9o4Kwjc0lxQnFtUnr+y/BDF+zYLM4ugo26jyVUv8+l/XvHdBUvxIA6gXvPFsruJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456746; c=relaxed/simple;
-	bh=AcwcyGpDrfErPsyWm8xAfFlcYZSyGNfZutLD4QklKxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H7TAzuNMU6hWbL9yW2WDhAwgHeCWPbKWgW/q3rs0v5mcoMITJMok7DIs8IYpmHwZdy57Sar+rArfQyORGVMqLA0zQv4qPIOslU5cBYAwH+rtiVm4hCgcZxl5fbcmrU+cY6joxWK7/lyokEgB/R0Yq8nz6afT29pzRtQg65SCEjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=bcdf9GzU; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1748456786; c=relaxed/simple;
+	bh=mEfXzcnqDNQheuyLIWUHO0vVqugIkry0kL3KxVq/byg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sI9eqoT0E54wUATfM9q1N7PFRLysXnItqR757WBL4l8k0Xq2t7kjNl9Jx9KmFoPBsbSv6ulPJP/dL7E4lvwQFLtdaglsBgPhYmDZpO3BUhAivjCKfSRm6CDelPxICHWhMOOdl7s/HRc+n2Y6UYrVFLErHlP3XgQC1uxxSZtlUF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6xC55NK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="bcdf9GzU"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2322d8316f6so234825ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:25:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1748456743; x=1749061543; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AcwcyGpDrfErPsyWm8xAfFlcYZSyGNfZutLD4QklKxk=;
-        b=bcdf9GzUH/qkvrQSKiVwX3UGs1vEkrTQECdy0fa2oyHOgsyjRl9EharQdf1hrOxT5S
-         aOgqVAhiFy38epz8gLWuFNKnZVI87uDMvm2Czhz4ACUQFWufFrAm7cNj4iMzmIstrJdR
-         6SPaI1NtnmZ5amQbOuuBLlGr90UEvwq/Ox33pfIIwfce/Fa/0xkO7KIziJEhtVGxloz8
-         sZDwmrFOgsPCuqm2GwgExxbVBxsf/lhbSYNJXoaAdlIhhETa4mvvzVv2CZCp95SE3KoU
-         JrNM1aTQQpngAB/1d1KJdpyUyAeq7PyX/U8XqoPUhJwHvShnK5vz4AEn0LIcbBA8gBB2
-         +9yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748456743; x=1749061543;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AcwcyGpDrfErPsyWm8xAfFlcYZSyGNfZutLD4QklKxk=;
-        b=H2/h9qYgIK5inm9Q0cDok8xGc8He9SXboP9J5BeEuOVmnFYcfEKo0ntWZ6AVci93y1
-         ruYADKgXlzdzchfymvph89pcNmcS6adc1hPa4QEUfuOsmhmzlbeFY8RsIQtCeGTEKiZp
-         mutoD00sy1HEdNArlTOh0OZnqag+JKv7omaIzFbNG7sWSTfwuh2DPdmD6Q3qPHF9o7d2
-         b306p/71h2GwX17PUHZoEeVLEf41MbhH181/uTEqctKrTBZSl6MfogDbHKF3xGhHv/9W
-         C64EzQHJBYTy9odQIrdt/CtnkCkM8UC7BjqlcYez5sLmVxIMQtcZTgEGTMuGw3xKVKV2
-         9BvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHd+acW7tyKKmlxqVzJMYmhNHW/QFXanDeu4jnRJfq/vshZhUT4eGRQdPqJdDuPI/ViyaTmO3b9AHwEvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbeJ7N+OsXREiDzvd+03I6TcO8FtuuDBsKYXv1bb5EFzQrwHc4
-	z2NjQ8L/YyuXBtg8+ddiI3HGgtLzay7aTpyVK5aNVYyIAEg5r9ubMAO9r88T9c73Him2R0YC7oG
-	UqhStltv0RW9UKKuexjbSAMm44aM23VI5HRWq0a6/Sw==
-X-Gm-Gg: ASbGncteOJKGDwouIUkXzFJvT5RImY8989scKzJbAqLHyxw8tUo5U4QOF9SJOTZameM
-	RiKVcSuObqp11asL6B5cuJoHBUJ5Mqz68uXRN0nZO+vVxyA3jXNac/1KGHJKD0i8gUTGks4ni9x
-	n6uqJj82HXG1x623ouwJgHvvIKi0O9mNEL
-X-Google-Smtp-Source: AGHT+IEqPgJEvwuKzLiSxyyIQ81so3lXBN15LCeb6qSM07Ix99PnGXOOlMeJsGGG1A/YckjG2+wZSDm+qfUtj+1ifm4=
-X-Received: by 2002:a17:903:1b6d:b0:21b:b115:1dd9 with SMTP id
- d9443c01a7336-23414f53285mr102307925ad.5.1748456742958; Wed, 28 May 2025
- 11:25:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6xC55NK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17C6C4CEE3;
+	Wed, 28 May 2025 18:26:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748456785;
+	bh=mEfXzcnqDNQheuyLIWUHO0vVqugIkry0kL3KxVq/byg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P6xC55NKD6rWiTE8l4AGmFtl6Y09SrdUutWPVAk5TpsfdnCeh+w4FGGxrhPcI8hQ2
+	 iGWVJApyBVCqyGrx5o9B/UzamVdi9T1/KEdl/dKjyhHBvFcNBETZ3PEPs0GvAC/o2M
+	 5/BtVVFU8Zw7DhSwmNJiFp5ZghQddn4MctbAm/P0hWTekKmgOeEgdc5JeSc0dvKJqW
+	 9JTFuGnGO+Wt4Z8UBFdBTYqOrGJ4rWQ1p9vXGYDnaDls/JnOub2XoYFc/N8I3Vi+7q
+	 98CQt6M/PdSjHfTJrWTQQ8SvuoCMZgzatuUOvz8r1rKs5tQwi7XHFKq96fRCqlOJoJ
+	 BhWUxHlkO0zuQ==
+From: Kees Cook <kees@kernel.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Jann Horn <jannh@google.com>,
+	Marco Elver <elver@google.com>,
+	llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ubsan: integer-overflow: depend on BROKEN to keep this out of CI
+Date: Wed, 28 May 2025 11:26:22 -0700
+Message-Id: <20250528182616.work.296-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527-ublk_task_per_io-v7-0-cbdbaf283baa@purestorage.com> <20250527-ublk_task_per_io-v7-8-cbdbaf283baa@purestorage.com>
-In-Reply-To: <20250527-ublk_task_per_io-v7-8-cbdbaf283baa@purestorage.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Wed, 28 May 2025 11:25:31 -0700
-X-Gm-Features: AX0GCFtwLbawvnl7mK2nPLXhDZ3ch13VYeZVtizo1aZXU9QSxG4dusWwjli_jhE
-Message-ID: <CADUfDZpjFv9Vo1H2rzeCyYo2nsnP_k1prkTCQqTtpk1YjL==zg@mail.gmail.com>
-Subject: Re: [PATCH v7 8/8] Documentation: ublk: document UBLK_F_PER_IO_DAEMON
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1397; i=kees@kernel.org; h=from:subject:message-id; bh=mEfXzcnqDNQheuyLIWUHO0vVqugIkry0kL3KxVq/byg=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnmob7Z0YytHhlTTn6VXleWGLZxwxRZDZuHa19LbbX7m O9srB3QUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCMJGjRgy/WeYmZ0Sl3NbgOvLj jojXOyPO6Hn+OdEKnisUfHXOP1l+leEX843DKnbrHx7O/Tbly7UTuWqbWlxfZk+Q/XSWbYfG9k9 eXAA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 27, 2025 at 4:01=E2=80=AFPM Uday Shankar <ushankar@purestorage.=
-com> wrote:
->
-> Explain the restrictions imposed on ublk servers in two cases:
-> 1. When UBLK_F_PER_IO_DAEMON is set (current ublk_drv)
-> 2. When UBLK_F_PER_IO_DAEMON is not set (legacy)
->
-> Remove most references to per-queue daemons, as the new
-> UBLK_F_PER_IO_DAEMON feature renders that concept obsolete.
->
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+Depending on !COMPILE_TEST isn't sufficient to keep this feature out of
+CI because we can't stop it from being included in randconfig builds.
+This feature is still highly experimental, and is developed in lock-step
+with Clang's Overflow Behavior Types[1]. Depend on BROKEN to keep it
+from being enabled by anyone not expecting it.
 
-Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+Link: https://discourse.llvm.org/t/rfc-v2-clang-introduce-overflowbehaviortypes-for-wrapping-and-non-wrapping-arithmetic/86507 [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jann Horn <jannh@google.com>
+Cc: Marco Elver <elver@google.com>
+Cc: llvm@lists.linux.dev
+Cc: <linux-hardening@vger.kernel.org>
+---
+ lib/Kconfig.ubsan | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index f6ea0c5b5da3..96cd89668467 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -118,6 +118,8 @@ config UBSAN_UNREACHABLE
+ 
+ config UBSAN_INTEGER_WRAP
+ 	bool "Perform checking for integer arithmetic wrap-around"
++	# This is very experimental so drop the next line if you really want it
++	depends on BROKEN
+ 	depends on !COMPILE_TEST
+ 	depends on $(cc-option,-fsanitize-undefined-ignore-overflow-pattern=all)
+ 	depends on $(cc-option,-fsanitize=signed-integer-overflow)
+-- 
+2.34.1
+
