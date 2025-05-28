@@ -1,80 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBC174420;
-	Wed, 28 May 2025 13:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7E3548EE;
+	Wed, 28 May 2025 13:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439970; cv=none; b=A2Eo0kvZOeTBkHfpCM1i5H4N88Q5DSy+EXIWYJghSeXukXtZ2EFdCRc521qosxqSmpPq4DjjYFXtrgQiD5HIRX0MbjErpcQkBsG3Txmkm7ysVx/8DMFcM57nQVYVtqCkrrpriechl87pWTPMvuvOFDBvGtmkuaDC6JijNk4gCh8=
+	t=1748439972; cv=none; b=SyK+3iLtBxRzS0l+K+LBCwWr6YxxTcDyAvXiLlqd4FcJiPl2+VQbdTCa/KyikHt7NlHigrSBzYtC+sAqSMb3cuGquqkMARkX3W893Ei+ENjDH0P7J42k14aXmbOMSyBwEBkaFZA/m4Z1eCA4SIouii1uAZ9fLvHKrT06x7yiP0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439970; c=relaxed/simple;
-	bh=oq6Fac4wS0SHANH2J2t3p21BoUKhwTFerUYFaLqweXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dnGTjRU5ZeTrEhwqJh0uHYc5ECpvcnQFoXZGTJliwrAGNL7PXXzD+Ph8jxFVxmTgtaImoadVzi2PuFlPd5q9rttE48HM/PQVJv0kJ27BAOaquWSOVIS6YqVgfq882qknOAW2tfi7msytwpaWcA3DRnefFI2kEnI7LdrCm9kxMqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fz/vjLJB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fz/vjLJB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F8DC4CEE7;
-	Wed, 28 May 2025 13:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748439969;
-	bh=oq6Fac4wS0SHANH2J2t3p21BoUKhwTFerUYFaLqweXU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fz/vjLJBco5Nolft1Ameracr5zQZuWlEjDpRrZfwHbbD1CdFkvvu7lcYeOq8Dm1iN
-	 jIRW6PW2JF6IRXEBZU5XemKRYa+DIh+K9Xen+vwLg14fNQpziBW3M3gKUNKlWdc2Pp
-	 vIGsAXGkw4opFX2GH41OOq8IWSrAttIbQbyD6cS1Clirj4qJ0EDFgzBoQuDcA8a+Cp
-	 s0LpDAOSuYh8g0XACgKgFEhHAwyICnrve8/hboDl5wKMyTJLZs4jZ6IB3RBeg+VM3Q
-	 eeit6KsvBpRXCw9DHZ7jFkfJ+I/5S+Yhh/Eq8jApLuptSeFLuUWUe9l1qQHGj8pmxz
-	 FTvC+hUjrxyDg==
-Date: Wed, 28 May 2025 14:46:03 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jianhua Lin <jianhua.lin@mediatek.com>
-Cc: mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH 0/2] Add MT8189 jpeg encoder and decoder compatible
-Message-ID: <20250528-energetic-voltage-b02704c14df8@spud>
-References: <20250528095748.17485-1-jianhua.lin@mediatek.com>
+	s=arc-20240116; t=1748439972; c=relaxed/simple;
+	bh=9QsVaD96h9TZ8yRguSQmceVk5sbKpRXUCWFq4YA94Uc=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=c4nsfwiunfqzhRfqHRUTnpHaUT1t5FChEcOVNV5Fxz6PIcmPf3+Xv4ugUYCyEUkNiTh9p5Cfb523nx4BK7osMQZka8+TR7jNGzLqD1oB7a8PJHvPAKEzoNFULsDVKIvT7AxhVkept2+j1RcaNyeRq1J2JPzA9T5G6/rM4m5FpE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com; spf=pass smtp.mailfrom=korsgaard.com; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=korsgaard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=korsgaard.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 42762438DA;
+	Wed, 28 May 2025 13:46:04 +0000 (UTC)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.96)
+	(envelope-from <peter@korsgaard.com>)
+	id 1uKH6Z-001CgK-2G;
+	Wed, 28 May 2025 15:46:03 +0200
+From: Peter Korsgaard <peter@korsgaard.com>
+To: Bram Vlerick <bram.vlerick@openpixelsystems.org>
+Cc: Kevin Cernekee <cernekee@chromium.org>,  Liam Girdwood
+ <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>,  Jaroslav Kysela
+ <perex@perex.cz>,  Takashi Iwai <tiwai@suse.com>,  Rob Herring
+ <robh@kernel.org>,  Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor
+ Dooley <conor+dt@kernel.org>,  Neil Armstrong <neil.armstrong@linaro.org>,
+  linux-sound@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] ASoC: tas571x: add support for tas5753
+References: <20250528-asoc-tas5753-support-v1-0-a50c3f6734ee@openpixelsystems.org>
+	<20250528-asoc-tas5753-support-v1-1-a50c3f6734ee@openpixelsystems.org>
+Date: Wed, 28 May 2025 15:46:03 +0200
+In-Reply-To: <20250528-asoc-tas5753-support-v1-1-a50c3f6734ee@openpixelsystems.org>
+	(Bram Vlerick's message of "Wed, 28 May 2025 14:10:08 +0200")
+Message-ID: <87plfsx2zo.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vv8zY9ORmuVZuCZ/"
-Content-Disposition: inline
-In-Reply-To: <20250528095748.17485-1-jianhua.lin@mediatek.com>
+Content-Type: text/plain
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeegvdculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufhffjgfkfgggtgesthdttddttdertdenucfhrhhomheprfgvthgvrhcumfhorhhsghgrrghrugcuoehpvghtvghrsehkohhrshhgrggrrhgurdgtohhmqeenucggtffrrghtthgvrhhnpeetgfelveffveehtdevgeefjeeiudduledtffehgefgleekteektedutdfhleeiueenucfkphepkedvrddugeefrdelhedrvddvvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeekvddrudegfedrleehrddvvddvpdhhvghlohepuggvlhhlrdgsvgdrgeekvghrshdrughkpdhmrghilhhfrhhomhepphgvthgvrheskhhorhhsghgrrghrugdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepsghrrghmrdhvlhgvrhhitghksehophgvnhhpihigvghlshihshhtvghmshdrohhrghdprhgtphhtthhopegtvghrnhgvkhgvvgestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdprhgtphhtthhopehpvghrvgigsehpvghrvgigrdgtiidprhgtphhtthhopehtihifrghisehsuhhsvgdrtghomhdpr
+ hgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: peter@korsgaard.com
 
+>>>>> "Bram" == Bram Vlerick <bram.vlerick@openpixelsystems.org> writes:
 
---vv8zY9ORmuVZuCZ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ > Add support for tas5753, device is similar to tas5733 but with added
+ > headphone / line driver.
 
-On Wed, May 28, 2025 at 05:57:46PM +0800, Jianhua Lin wrote:
-> This series is based on tag: next-20250528, linux-next/master
->=20
-> jianhua.lin (2):
->   dt-bindings: media: mediatek-jpeg-encoder: Add MT8189 compatible
->     string
->   dt-bindings: media: mediatek-jpeg-decoder: Add MT8189 compatible
->     string
+ > Signed-off-by: Bram Vlerick <bram.vlerick@openpixelsystems.org>
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Peter Korsgaard <peter@korsgaard.com>
 
---vv8zY9ORmuVZuCZ/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcTmwAKCRB4tDGHoIJi
-0sGYAQC2bzGNx7UyUv973y6yM7B6lHc6xUzFs1DLjDP/D/+C4wEA4pyq+WoirUwj
-3RkNS7UtPhUxDGsw7kjuGUrdy7EvEQs=
-=pFRV
------END PGP SIGNATURE-----
-
---vv8zY9ORmuVZuCZ/--
+-- 
+Bye, Peter Korsgaard
