@@ -1,334 +1,276 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69D421322F
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF78246774;
+	Wed, 28 May 2025 12:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748436976; cv=none; b=CK7vRUlhknkUO2hhyDcaPYArvPp84+pT5Z+27lQNJxbcSdB6ou87sS/JQS6d793MLcjt5p17oX+8X6iQ6IIoBojr/EguJOmyu1LU/GSjvhrtuqu6NsWacbTAIiDDrk0I9mbX3734aktVqIK27OkoBkHAtfIeoooneLvmtGJGKf4=
+	t=1748437072; cv=none; b=aOiyjFW1mSsahXWWnRsypFMW4sXHSYkJ9G7suz1f84V/v1F0r2s4M+6IntT4rfLmwQyKPCnUDgUdVg/31Ge2AO0xBq4KkZpTQbVzOMxYmJDXcGgtp99h0P0rH/+vTcLc0stRzqwxX5RWlfuHqqgdvfg/e3Jm04si2sK4kcdRJwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748436976; c=relaxed/simple;
-	bh=wrTsX888SHe2pwLAvDM5IvkLDcqY4EVJA4saPsPNazI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=f73K5nshS8GkxVQpoJh1AnYeM5QgAckO129Vxl9zL7hRnoaS0TqQq/Awur5pQvCo5gNTTpe3W2z1HAke4Mkd8fy+hxX+T/TLqHELWVXpiIveTiIp7CGFgXqB6zV19jVBtp3jPF58xNzyMWlolmoc/WWbC8zRvt5t/Qjtl0V0OyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=l1GgMpk4; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1748437072; c=relaxed/simple;
+	bh=WpeZQl5vh0yqYxs+79UsHi2F/aa84sVNJqFa7mJ4Avc=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IB4dNENg1rijFIFUott8/NQbFWj6vBfJiS5AYX5aLHRJivp0+fuD1ilNuKVDbnYY9dGDmoJFuwxJX2pOg/1kzhhqwW00KkaEUn7S8D2VYLgQ+JDJtAKOViiP/ZQ9Om3w5nqms84Rs3RS+KRz40CxVmLrUbA6pbyxd21MFxth0GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZD/wViPJ; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l1GgMpk4"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54SBQ6qt2044934;
-	Wed, 28 May 2025 06:26:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1748431566;
-	bh=Ng5y3IcVaAM8zkZwvKrmrajhf/9Uq276eRu5V1b+gKg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=l1GgMpk4Cgpdj70UtUfKKl8sKqjDNWPO8pfX3YHpl6W8PsXvxKUfS5ZDOi9byBS+o
-	 kxMP4zAFee6buyhlcWSTqi3kVyE0/IfN+iol6d7OuulduAhSBr11GzPsUiAzWZFrL8
-	 4ZJyARVAa1XwTiaK5w7PipBPuW1LlaOvLu4tGl2c=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54SBQ6vX3571213
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 28 May 2025 06:26:06 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 28
- May 2025 06:26:05 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 28 May 2025 06:26:06 -0500
-Received: from [172.24.227.14] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.14])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54SBPw66052053;
-	Wed, 28 May 2025 06:25:58 -0500
-Message-ID: <870d036a-0fa0-43e0-8b72-428096173526@ti.com>
-Date: Wed, 28 May 2025 16:55:57 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZD/wViPJ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a36f26584bso2754810f8f.0;
+        Wed, 28 May 2025 05:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748437069; x=1749041869; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=qz431+WLyrOYjxIXVQx5eCUQ1G5IA4208Qab297D8GM=;
+        b=ZD/wViPJNg/FqKxbWpXaB/MW2Vt3Z2mb+ngEhaaRURUbC2HtKoDxDeiMAiqup6AS6D
+         wt15zExhb1YZoTd6wn3xvIPT51dmerOpnLOx+9E3duLBi+qebQIGLERs9DyIP8XM7sBj
+         d50+qiZqSb61bnI95Dka58D5fNhwvmwMf7Pm3xNMv2ZtJ15Yr9GtuPddNchgvhqlnI5o
+         NoCyp7Vkxt/RnHTRmQNX3eeUMtqaGBDjjqJZlCt4za4bsp+FsocuwdQVfpnGXqI5qHuQ
+         RxmSqz9rXgbqn40To+GFqM5LDH7pAYSrOW1eg3UZq53J/Q6ZhqNXqZd1J0BjuVYVocqP
+         erQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748437069; x=1749041869;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qz431+WLyrOYjxIXVQx5eCUQ1G5IA4208Qab297D8GM=;
+        b=R3zlYNbA07qBzg4BjsBZmL9Fzaa/JG/Mc7KcgRUzAYIPcEhHgESDskztU3Ws2BDytg
+         baMtI0aRRz8ocnOxAKMi9rRADJRQOXbx52wfaNENDC3ZWQVncc6UcXTzgMxpgK8OKYNf
+         RfsIppfgemuiFoKWyb7h2Lb0lwvztzQKb6huc4P3z0sQI+AkooNGduw8gAV+Z9AKQKyD
+         no+Ice4Ljvv4Fx7lfVnQ0uqwKJKubM95An4Dx2gYbYtDgYsF7+UbzrMJ7fyJN3AR+t0K
+         P1Zl1UnhtMJESeqBCjrQLl4+QVp4XWI1FIkVk8q74jThwKHI8SGnrPxKWDvgCvKLL/aI
+         gtYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCbdbg0uxCQpZsuVLURmwl5YXjFGjczv8PJ2wC24EwC97P+LouerPC9jS5L66HqeyJDMf76SEumPaJNm7b@vger.kernel.org, AJvYcCVhW7vvMMhIGukeaRDeG62AUgQ86O37SMs1/mjMLfnojt1uQJCGU/en+/Hk25CFVYJ1afVdmKwlscPO@vger.kernel.org, AJvYcCWCBrDvSWQ2XmNao0RuLCvgyIxKbkdGFFJhrpU01WSnXTnBpicv+OEgOTAHMqIIy3l0sOobX6f20/75@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCloU9NTeBZJCrYLrqDfyTP9kfBM+aAdYGiZ7BAPCTU7lY460g
+	AZro3C3aBpbkPhf1oZUxhG3lI6Z8vgj/clbR27XuDdZqEgtuWrd4NgzX
+X-Gm-Gg: ASbGnctAxS2n8S4W0HoJAlwhh9fx29asN2UVtBDQjJ3p84UpsW7arcgqnkkDRbQ5WxV
+	b6c9b2dh2Fjz9DhzlVcG6Ug6sxYyv8vh4waL3Cb1XOfBrmJySyvjiXkz608yLb0VMnFI8jZLU8F
+	m2stwbw2XUedqZF1UaNWhOkR16PhrRjpPq5sx3LB+hi0kuReDpkpzM2O5sVMNY0Ka5yFB+y0l3k
+	FQ93V72xyw2dV09X4879YbAgVKgAVeJ+Vx49qdXnb/NpID/LcO0u4CURBhqMDFycgsyz33DG5Kv
+	lomJ/qzWPoZbn2abWPF+3gfgJigzE4j6TrCJhwPpjfjum5XtbZTAUB121m7G9jrVEZ+5JOLRK/Q
+	+FzCnnjI=
+X-Google-Smtp-Source: AGHT+IEl/pHPv7vigoqckP9ECM+urkLDQK2RF8IW0Ah4JbrbzZh1z1Et6i/TKjhKBeupCdDcJQ72Aw==
+X-Received: by 2002:a5d:584c:0:b0:3a4:d452:fff with SMTP id ffacd0b85a97d-3a4d45211edmr11122707f8f.17.1748437068809;
+        Wed, 28 May 2025 05:57:48 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac6e615sm1446608f8f.19.2025.05.28.05.57.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 05:57:48 -0700 (PDT)
+Message-ID: <6837084c.050a0220.1e474f.3f20@mx.google.com>
+X-Google-Original-Message-ID: <aDcISot-sCztcyqa@Ansuel-XPS.>
+Date: Wed, 28 May 2025 14:57:46 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: clock: airoha: Document support for
+ AN7583 clock
+References: <20250528004924.19970-1-ansuelsmth@gmail.com>
+ <20250528004924.19970-5-ansuelsmth@gmail.com>
+ <f9aebfb8-6312-45db-be12-94580ad412cb@kernel.org>
+ <6836cf62.5d0a0220.35d0aa.2025@mx.google.com>
+ <969c42d7-0a40-4daf-a074-f2713d0d0412@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/3] drm/bridge: cadence: cdns-mhdp8546*: Change
- drm_connector from pointer to structure
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <lumag@kernel.org>, <jani.nikula@intel.com>, <andy.yan@rock-chips.com>,
-        <mordan@ispras.ru>, <linux@treblig.org>, <viro@zeniv.linux.org.uk>,
-        <yamonkar@cadence.com>, <sjakhade@cadence.com>,
-        <quentin.schulz@free-electrons.com>, <jsarha@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>,
-        <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <alexander.stein@ew.tq-group.com>
-References: <20250521073237.366463-1-j-choudhary@ti.com>
- <20250521073237.366463-3-j-choudhary@ti.com>
- <19dd2795-c693-4c1a-989c-8b3bc2b3cdfd@ideasonboard.com>
- <493afc6c-59a0-4f6b-9a9e-568dd2eff873@ti.com>
- <2a15263b-2d36-4c46-be0f-4145069d134f@ti.com>
- <027ad6e9-5070-43f2-a082-fd498cc6d31d@ideasonboard.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <027ad6e9-5070-43f2-a082-fd498cc6d31d@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <969c42d7-0a40-4daf-a074-f2713d0d0412@kernel.org>
 
-Hi,
-
-On 27/05/25 17:07, Tomi Valkeinen wrote:
-> Hi,
+On Wed, May 28, 2025 at 01:56:54PM +0200, Krzysztof Kozlowski wrote:
+> On 28/05/2025 10:54, Christian Marangi wrote:
+> > On Wed, May 28, 2025 at 09:30:37AM +0200, Krzysztof Kozlowski wrote:
+> >> On 28/05/2025 02:49, Christian Marangi wrote:
+> >>>    - if:
+> >>>        properties:
+> >>>          compatible:
+> >>> @@ -75,6 +78,17 @@ allOf:
+> >>>          reg:
+> >>>            maxItems: 1
+> >>>  
+> >>> +      required:
+> >>> +        - reg
+> >>> +
+> >>> +  - if:
+> >>> +      properties:
+> >>> +        compatible:
+> >>> +          const: airoha,an7583-clock
+> >>> +    then:
+> >>> +      properties:
+> >>> +        reg: false
+> >>
+> >>
+> >> No resources here, so this should be part of parent node.
+> >>
+> > 
+> > Ok hope you can help here. This is another case of "MFD" thing.
+> > 
+> > I was with the idea that it was O.K. to use this with very different
+> > devices. (current scenario Clock controller and MDIO controller)
+> > 
+> > The node structure I had in mind was
+> > 
+> > 		system-controller@1fa20000 {
+> > 			compatible = "airoha,an7583-scu", "syscon", "simple-mfd";
+> > 			reg = <0x0 0x1fb00000 0x0 0x970>;
+> > 
+> > 			scuclk: scuclk {
+> > 				compatible = "airoha,an7583-clock";
+> > 				#clock-cells = <1>;
+> > 				#reset-cells = <1>;
+> > 			};
+> > 
+> > 			mdio {
+> > 				compatible = "airoha,an7583-mdio";
+> > 				#address-cells = <1>;
+> > 				#size-cells = <0>;
+> > 
+> > 				mdio_0: bus@0 {
+> > 					reg = <0>;
+> > 					resets = <&scuclk AN7583_MDIO0>;
+> > 				};
+> > 
+> > 				mdio_1: bus@1 {
+> > 					reg = <1>;
+> > 					resets = <&scuclk AN7583_MDIO1>;
+> > 				};
+> > 			};
+> > 		};
+> > 
+> > But you want
+> > 
+> > system-controller@1fa20000 {
+> >         compatible = "airoha,an7583-scu", "syscon";
+> >         reg = <0x0 0x1fb00000 0x0 0x970>;
+> > 
+> >         #clock-cells = <1>;
+> >         #reset-cells = <1>;
+> > 
 > 
-> On 27/05/2025 13:39, Jayesh Choudhary wrote:
->>
->>
->> On 27/05/25 14:59, Jayesh Choudhary wrote:
->>> Hello Tomi,
->>>
->>> On 27/05/25 13:28, Tomi Valkeinen wrote:
->>>> Hi,
->>>>
->>>> On 21/05/2025 10:32, Jayesh Choudhary wrote:
->>>>> After adding DBANC framework, mhdp->connector is not initialised during
->>>>> bridge calls. But the asyncronous work scheduled depends on the
->>>>> connector.
->>>>> We cannot get to drm_atomic_state in these asyncronous calls running on
->>>>> worker threads. So we need to store the data that we need in mhdp
->>>>> bridge
->>>>> structure.
->>>>> Like other bridge drivers, use drm_connector pointer instead of
->>>>> structure
->>>>> and make appropriate changes to the conditionals and assignments
->>>>> related
->>>>> to mhdp->connector.
->>>>> Also, in the atomic enable call, move the connector  and connector
->>>>> state
->>>>> calls above, so that we do have a connector before we can retry the
->>>>> asyncronous work in case of any failure.
->>>>>
->>>>
->>>> I don't quite understand this patch. You change the mhdp->connector to a
->>>> pointer, which is set at bridge_enable and cleared at bridge_disable.
->>>> Then you change the "mhdp->connector.dev" checks to "mhdp->connector".
->>>>
->>>> So, now in e.g. cdns_mhdp_fw_cb(), we check for mhdp->connector, which
->>>> is set at bridge_enable(). Can we ever have the bridge enabled before
->>>> the fb has been loaded? What is the check even supposed to do there?
->>>>
->>>> Another in cdns_mhdp_hpd_work(), it checks for mhdp->connector. So...
->>>> HPD code behaves differently based on if the bridge has been enabled or
->>>> not? What is it supposed to do?
->>>>
->>>> Isn't the whole "if (mhdp->connector.dev)" code for the legacy
->>>> non-DRM_BRIDGE_ATTACH_NO_CONNECTOR case?
->>>>
->>>>    Tomi
->>>
->>> I misinterpreted your comment in v1[0] regarding finding the connector
->>> from the current state in cdns_mhdp_modeset_retry_fn() and I missed
->>> this. I was more focused on finding a connector for that function.
->>>
->>> For the current code, in all the conditionals involving mhdp->connector,
->>> we are entering else statements as connector is not initialised.
->>> So I will just drop if statements in cdns_mhdp_fw_cb() and
->>> cdns_mhdp_hpd_work() (like you said, its legacy case) while still having
->>> mhdp->connector as pointer as we need it for
->>> cdns_mhdp_modeset_retry_fn() and in cdns-mhdp8546-hdcp driver.
->>>
->>> That should be okay?
->>>
->>> [0]: https://lore.kernel.org/all/e76f94b9-b138-46e7-bb18-
->>> b33dd98c9abb@ideasonboard.com/
->>>
->>> Warm Regards,
->>> Jayesh
->>>
->>>
->>
->> Tomi,
->>
->> One more thing here. Should this be squashed with the first patch as
->> this is sort of removing !(DRM_BRIDGE_ATTACH_NO_CONNECTOR) case and
->> associated changes?
+> mdio could be here just to group the bus (it's pretty common I think),
+> although not sure if compatible is useful then.
 > 
+> >         mdio_0: bus@0 {
+> >                 reg = <0>;
+> >                 resets = <&scuclk AN7583_MDIO0>;
+> >         };
+> > 
+> >         mdio_1: bus@1 {
+> >                 reg = <1>;
+> >                 resets = <&scuclk AN7583_MDIO1>;
+> >         };
+> > };
+> > 
+> > Again sorry if this question keeps coming around and I can totally
+> > understand if you are getting annoyed by this. The reason I always ask
+> > this is because it's a total PAIN to implement this with the driver
+> > structure due to the old "simple-mfd" model.
 > 
-> All the legacy code should be removed in the previous patch, yes. But
-> it's not quite clear to me what's going on here. At least parts of this
-> patch seem to be... fixing some previous code? You move the
-> drm_atomic_get_new_connector_for_encoder() call to be earlier in the
-> bridge_enable. That doesn't sound like removing the legacy code. But
-> it's not quite clear to me why that's done (or why it wasn't needed
-> earlier. or was it?).
+> ... and Rob was saying multiple times: be careful when adding
+> simple-mfd. If it bites back, then I am sorry, but everyone were warned,
+> weren't they?
 > 
->   Tomi
+> What is exactly the pain anyway? You cannot instantiate children from
+> SCU driver?
+>
+
+Answering below since they are related.
+
+> > 
+> > (as again putting everything in a single node conflicts with the OF
+> > principle of autoprobing stuff with compatible property)
 > 
-
-drm_atomic_get_new_connector_for_encoder() call is moved earlier
-in bridge_enable to address the cases when we get error in
-cdns_mhdp_link_up(mhdp) or cdns_mhdp_reg_read(mhdp, CDNS_DPTX_CAR,
-&resp), and we goto 'out' to schedule modeset_retry_work. We need to
-have drm_connector before that if we want to change the connector
-link state here.
-
-In legacy usecase we are not hitting this as attach already initialised
-mhdp->connector before bridge_enable() that would be used by
-cdns_mhdp_modeset_retry_fn() as required.
-
-These errors usually don't hit during bridge_enable calls but in
-one of my boards, I saw cdns_mhdp_link_up() giving error and after
-that the null pointer dereference in cdns_mhdp_modeset_retry_fn()
-while trying to access the mutex there (&conn->dev->mode_config.mutex)
-
--Jayesh
-
-
-
->>
->>>>
->>>>> Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546
->>>>> DPI/DP bridge")
->>>>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>>>> ---
->>>>>    .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 28 ++++++++
->>>>> +----------
->>>>>    .../drm/bridge/cadence/cdns-mhdp8546-core.h   |  2 +-
->>>>>    .../drm/bridge/cadence/cdns-mhdp8546-hdcp.c   |  8 +++---
->>>>>    3 files changed, 19 insertions(+), 19 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/
->>>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>>> index 66bd916c2fe9..5388e62f230b 100644
->>>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
->>>>> @@ -740,7 +740,7 @@ static void cdns_mhdp_fw_cb(const struct
->>>>> firmware *fw, void *context)
->>>>>        bridge_attached = mhdp->bridge_attached;
->>>>>        spin_unlock(&mhdp->start_lock);
->>>>>        if (bridge_attached) {
->>>>> -        if (mhdp->connector.dev)
->>>>> +        if (mhdp->connector)
->>>>>                drm_kms_helper_hotplug_event(mhdp->bridge.dev);
->>>>>            else
->>>>>                drm_bridge_hpd_notify(&mhdp->bridge,
->>>>> cdns_mhdp_detect(mhdp));
->>>>> @@ -1759,17 +1759,25 @@ static void cdns_mhdp_atomic_enable(struct
->>>>> drm_bridge *bridge,
->>>>>        struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
->>>>>        struct cdns_mhdp_bridge_state *mhdp_state;
->>>>>        struct drm_crtc_state *crtc_state;
->>>>> -    struct drm_connector *connector;
->>>>>        struct drm_connector_state *conn_state;
->>>>>        struct drm_bridge_state *new_state;
->>>>>        const struct drm_display_mode *mode;
->>>>>        u32 resp;
->>>>> -    int ret;
->>>>> +    int ret = 0;
->>>>>        dev_dbg(mhdp->dev, "bridge enable\n");
->>>>>        mutex_lock(&mhdp->link_mutex);
->>>>> +    mhdp->connector = drm_atomic_get_new_connector_for_encoder(state,
->>>>> +                                   bridge->encoder);
->>>>> +    if (WARN_ON(!mhdp->connector))
->>>>> +        goto out;
->>>>> +
->>>>> +    conn_state = drm_atomic_get_new_connector_state(state, mhdp-
->>>>>> connector);
->>>>> +    if (WARN_ON(!conn_state))
->>>>> +        goto out;
->>>>> +
->>>>>        if (mhdp->plugged && !mhdp->link_up) {
->>>>>            ret = cdns_mhdp_link_up(mhdp);
->>>>>            if (ret < 0)
->>>>> @@ -1789,15 +1797,6 @@ static void cdns_mhdp_atomic_enable(struct
->>>>> drm_bridge *bridge,
->>>>>        cdns_mhdp_reg_write(mhdp, CDNS_DPTX_CAR,
->>>>>                    resp | CDNS_VIF_CLK_EN | CDNS_VIF_CLK_RSTN);
->>>>> -    connector = drm_atomic_get_new_connector_for_encoder(state,
->>>>> -                                 bridge->encoder);
->>>>> -    if (WARN_ON(!connector))
->>>>> -        goto out;
->>>>> -
->>>>> -    conn_state = drm_atomic_get_new_connector_state(state, connector);
->>>>> -    if (WARN_ON(!conn_state))
->>>>> -        goto out;
->>>>> -
->>>>>        if (mhdp->hdcp_supported &&
->>>>>            mhdp->hw_state == MHDP_HW_READY &&
->>>>>            conn_state->content_protection ==
->>>>> @@ -1857,6 +1856,7 @@ static void cdns_mhdp_atomic_disable(struct
->>>>> drm_bridge *bridge,
->>>>>            cdns_mhdp_hdcp_disable(mhdp);
->>>>>        mhdp->bridge_enabled = false;
->>>>> +    mhdp->connector = NULL;
->>>>>        cdns_mhdp_reg_read(mhdp, CDNS_DP_FRAMER_GLOBAL_CONFIG, &resp);
->>>>>        resp &= ~CDNS_DP_FRAMER_EN;
->>>>>        resp |= CDNS_DP_NO_VIDEO_MODE;
->>>>> @@ -2157,7 +2157,7 @@ static void cdns_mhdp_modeset_retry_fn(struct
->>>>> work_struct *work)
->>>>>        mhdp = container_of(work, typeof(*mhdp), modeset_retry_work);
->>>>> -    conn = &mhdp->connector;
->>>>> +    conn = mhdp->connector;
->>>>>        /* Grab the locks before changing connector property */
->>>>>        mutex_lock(&conn->dev->mode_config.mutex);
->>>>> @@ -2234,7 +2234,7 @@ static void cdns_mhdp_hpd_work(struct
->>>>> work_struct *work)
->>>>>        int ret;
->>>>>        ret = cdns_mhdp_update_link_status(mhdp);
->>>>> -    if (mhdp->connector.dev) {
->>>>> +    if (mhdp->connector) {
->>>>>            if (ret < 0)
->>>>>                schedule_work(&mhdp->modeset_retry_work);
->>>>>            else
->>>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h b/
->>>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->>>>> index bad2fc0c7306..b297db53ba28 100644
->>>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->>>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.h
->>>>> @@ -375,7 +375,7 @@ struct cdns_mhdp_device {
->>>>>         */
->>>>>        struct mutex link_mutex;
->>>>> -    struct drm_connector connector;
->>>>> +    struct drm_connector *connector;
->>>>>        struct drm_bridge bridge;
->>>>>        struct cdns_mhdp_link link;
->>>>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c b/
->>>>> drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->>>>> index 42248f179b69..59f18c3281ef 100644
->>>>> --- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->>>>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-hdcp.c
->>>>> @@ -394,7 +394,7 @@ static int _cdns_mhdp_hdcp_disable(struct
->>>>> cdns_mhdp_device *mhdp)
->>>>>        int ret;
->>>>>        dev_dbg(mhdp->dev, "[%s:%d] HDCP is being disabled...\n",
->>>>> -        mhdp->connector.name, mhdp->connector.base.id);
->>>>> +        mhdp->connector->name, mhdp->connector->base.id);
->>>>>        ret = cdns_mhdp_hdcp_set_config(mhdp, 0, false);
->>>>> @@ -445,7 +445,7 @@ static int cdns_mhdp_hdcp_check_link(struct
->>>>> cdns_mhdp_device *mhdp)
->>>>>        dev_err(mhdp->dev,
->>>>>            "[%s:%d] HDCP link failed, retrying authentication\n",
->>>>> -        mhdp->connector.name, mhdp->connector.base.id);
->>>>> +        mhdp->connector->name, mhdp->connector->base.id);
->>>>>        ret = _cdns_mhdp_hdcp_disable(mhdp);
->>>>>        if (ret) {
->>>>> @@ -487,13 +487,13 @@ static void cdns_mhdp_hdcp_prop_work(struct
->>>>> work_struct *work)
->>>>>        struct cdns_mhdp_device *mhdp = container_of(hdcp,
->>>>>                                 struct cdns_mhdp_device,
->>>>>                                 hdcp);
->>>>> -    struct drm_device *dev = mhdp->connector.dev;
->>>>> +    struct drm_device *dev = mhdp->connector->dev;
->>>>>        struct drm_connector_state *state;
->>>>>        drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
->>>>>        mutex_lock(&mhdp->hdcp.mutex);
->>>>>        if (mhdp->hdcp.value != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
->>>>> -        state = mhdp->connector.state;
->>>>> +        state = mhdp->connector->state;
->>>>>            state->content_protection = mhdp->hdcp.value;
->>>>>        }
->>>>>        mutex_unlock(&mhdp->hdcp.mutex);
->>>>
+> I am not sure if I follow. What principle? Where is this principle
+> expressed?
 > 
+> And you do not have in your second example additional compatibles, so
+> even if such principle exists it is not broken: everything autoprobes, I
+> think.
+> 
+> > 
+> 
+>
+
+The principle I'm talking about is one driver for one compatible.
+(to be more precise excluding syscon compatible that is actually
+ignored, if a driver for the compatible is found, any other compatible
+is ignored.)
+
+This means that declaring multiple compatible as:
+
+compatible = "airoha,clock", "airoha,mdio"
+
+doesn't result in the clock driver and the mdio driver probed but only
+one of the 2 (probably only clock since it does have priority)
+
+The "simple-mfd" compatible is just a simple compatible that indicate to
+the OF system that every child (with a compatible) should be also probed.
+And then automagically the driver gets probed.
+
+Now the ""PAIN"" explaination. Not using the "simple-mfd" way with the
+child with compatible and putting everything in the node means having to
+create a dedicated MFD driver that just instruct to manually probe the
+clock and mdio driver. (cause the compatible system can't be used)
+
+So it's 3 driver instead of 2 with the extra effort of MFD driver
+maintainer saying "Why simple-mfd is not used?"
+
+
+There is a solution for this but I always feel it's more of a workaround
+since it doesn't really describe the HW with the DT node.
+
+The workaround is:
+
+		system-controller@1fa20000 {
+                        /* The parent SCU node implement the clock driver */
+                        compatible = "airoha,an7583-scu", "syscon";
+                        reg = <0x0 0x1fb00000 0x0 0x970>;
+
+                        #clock-cells = <1>;
+                        #reset-cells = <1>;
+
+                        /* Clock driver is instructed to probe child */
+                        mdio {
+                                compatible = "airoha,an7583-mdio";
+                                #address-cells = <1>;
+                                #size-cells = <0>;
+
+                                mdio_0: bus@0 {
+                                        reg = <0>;
+                                        resets = <&scuclk AN7583_MDIO0>;
+                                };
+
+                                mdio_1: bus@1 {
+                                        reg = <1>;
+                                        resets = <&scuclk AN7583_MDIO1>;
+                                };
+                        };
+                };
+
+
+But this really moves the probe from the simple-mfd to the clock driver.
+
+So it's either 3 solution
+1. 2 driver + "simple-mfd"
+2. 3 driver + PAIN (due to MFD required driver)
+3. 2 driver + not very correct DT node structure
+
+Maybe option 3. is more acceptable?
+
+The SCU node is mainly clock + reset controller and the MDIO bus is an
+expansion of it?
+
+Hope the long explaination makes sense to you (especially about the
+OF principle thing)
+
+--
+Ansuel
