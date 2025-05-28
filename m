@@ -1,157 +1,133 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C320E19B3CB;
-	Wed, 28 May 2025 14:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D84247285;
+	Wed, 28 May 2025 14:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441532; cv=none; b=P7RNQ1cXCQYlYNUkzhpMswWlMMFliyYQ6UBpO+NbASvhWu24mTTXe/bSBhvJr0HQLM9DNbHK+Pu/IF3uZAxlaOKRwdgQLNp0laWuo38H2cnGLIyceckD7Gs9FpBX8nBg+ySawJ97+aFgHWCogLXb7Kl0TIm5JKhbX1NSEjqXSFE=
+	t=1748441539; cv=none; b=M9eRxxP2BX+ALaK+USdefzv14JpOTtcs+MCYXw1tRL5Mg/AvAU0CO6eZyuXFUPc8I7Esfs1wDHsGoU6Xvqyc4NjhnQE0a53oQxHkTb3bGahiIfG6dcVejD/LrUAwpL/XB4YJiufIkR7P9CH2ID8Jr3yXA3IhYe1N9UwmfbEKzKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441532; c=relaxed/simple;
-	bh=RgnF/poN7NkMo2BBglJzOP/AgJJGoqN5W76orbXdxCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bVaQpTqMB28ReTURkX2pEz4t74SjH5h9oiFxJz763TpweHf6fappqIw0UYTqRfkqYyEXNMZdzRPvznQ/ze8Fc2NSyR4lCwiJllTpR7RqsfCiJOFeO4+/H0Bkw58ELkhxVOCpUSsFVz2D7kNXHwJUQ6hzdA/BtalQQ5i9rdW6bwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55329bd977aso944117e87.1;
-        Wed, 28 May 2025 07:12:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748441527; x=1749046327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ksdw7M5oeACHV4O06/7f6T9AIjZYxql+qwEMoPd8Euo=;
-        b=FMYztMJhhU1xXoh0DDkL9wzlxXzxnqlLpHBF/Pbo3LZLpYz2k381a2e+SJA+YLyWOn
-         1wO0cxCxZrDFZqh1Kzs6ft/L6dvrrD5KJXaCPqXg3vHFU4ke5siQnA8EGRAeQxBtxnfj
-         LDbzNftwiAEZIbYOvD99h8Xi2SHMHlleuZyNgQ0tk0vwP0sFEvg0P3SG6hbyjEqU1gzP
-         hvpgQo1z1eLNaDEPUhuFnZOuc3ZghUBm07M1ndzVw4taWz02Kxx6qsJf4+I7lN9TQ+qh
-         2aNilZsT1NgGcFcahvR9Ylxqqyx5i/9a2u1ZjTCDzchVTEBGHMiP0Q3PEO3mWERyRKdD
-         tctg==
-X-Forwarded-Encrypted: i=1; AJvYcCVf4cSbbZgitCIpodZbYpgPPzUTlLG46Ke9E9S4Lbxnr1TDbymiMtqzluXQL8XDT5L4L3kpAmRX82PJcAo=@vger.kernel.org, AJvYcCVoQeqNpgoEio6x6zWOsc+PAhjUt3DpmeAdsHHtGkoyTEjk379HDpNkrE1OFB4V2R3VC3L3obYX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/cBcNcetFVqbe0HxArkDH1Dlnxb05qjGkI5RmubDZC4A9jBhc
-	Qm8i9B09fB64BLlU5InoIsdnAqyi59NWDLWluAgxcj0+9JGX5GvVd5CtixaYS35f
-X-Gm-Gg: ASbGncvyWvtlFBvESV5NJhTzLQvh7lugiuj9a/TnqL6aJeKrn7VtdNxwhC98XSe6itE
-	9Q35CG9/l8mw7Olb1yFpopuiq5rfpU60r4rThmIrIX7T319F1ucxixPHZcKFZcXSW7YuQ/JgJ4I
-	S5rY/4/3x42LTpEIKS29ewIXa7ocWmXhnzSjb79QuDg7xsXB5OVe6tteR/ARUQRvuQKjovQeKpD
-	saJUga+WDg91wkHS6Pk+OwGnT2aq+eUVlza888QZRF1n42Ma/WiG5KL/Bd6VvjKp0IPIfAelfh9
-	/0J0BLoEgrCN37TI4qrh4/vKTzzdkrxczK0ooJyB1NmXQBbKfkynAaBBC9B6HUniIvv5ucQOyJa
-	pDFBkEkRN
-X-Google-Smtp-Source: AGHT+IHPkU1HOH6Azz6SI+m7AVROLNZoTJwibx8Ipm/kJ+LLQsZKFeo76hF6rK47R6w0jKpxMgLJaA==
-X-Received: by 2002:a05:6512:3408:b0:549:8c0c:ea15 with SMTP id 2adb3069b0e04-5532ccfd942mr1828332e87.0.1748441526984;
-        Wed, 28 May 2025 07:12:06 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5532f6a5f86sm296428e87.179.2025.05.28.07.12.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 07:12:05 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32a61af11ffso11488781fa.1;
-        Wed, 28 May 2025 07:12:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVlBMpyE66xpTY2OvcrFGKjdo85mlQXDEi7u3DIyH6wuBoQs4wh7mVutBRl7PxOmcdbXULXyP0Fh/LwLqM=@vger.kernel.org, AJvYcCW0aapBmvDVZFKvc782+pbCxZnZ+KIEZWGgA9lLzrrjvZ1HLFy4cxNSqFNdVHemD1ldXU0RB/wJ@vger.kernel.org
-X-Received: by 2002:a05:651c:418e:b0:326:cf84:63c4 with SMTP id
- 38308e7fff4ca-32a736a7554mr15406341fa.1.1748441525068; Wed, 28 May 2025
- 07:12:05 -0700 (PDT)
+	s=arc-20240116; t=1748441539; c=relaxed/simple;
+	bh=oG4ypAGdLjwXhX+tqp2oG4fyMx5KH/HkGNDMrgscEHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dh/kPGSba93b8+9RuXTT8qkDOseTbxIBfUNPfog5wCVz5FM99Bvgz0hi0kF8ycn3ntU6AEJVrslH6r41zBP4H6y9XnXxJb3zrIDUZDBPgtnurn2ll30DINGX2TdEzAofnbYwpUQijX4hGo+7r+tJxfYl2ziYKP+AwF9H97AYf28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA4AC4CEE3;
+	Wed, 28 May 2025 14:12:18 +0000 (UTC)
+Date: Wed, 28 May 2025 10:13:18 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: yebin <yebin@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yebin10@huawei.com
+Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
+ disabled
+Message-ID: <20250528101318.5ee12329@gandalf.local.home>
+In-Reply-To: <68370E1D.3070802@huaweicloud.com>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
+	<20250523083945.3390587-2-yebin@huaweicloud.com>
+	<20250523135452.626d8dcd@gandalf.local.home>
+	<6833C4F1.3030300@huaweicloud.com>
+	<20250527094131.1f4a92ab@gandalf.local.home>
+	<68370E1D.3070802@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527175558.2738342-1-james.hilliard1@gmail.com>
- <631ed4fe-f28a-443b-922b-7f41c20f31f3@lunn.ch> <CADvTj4rGdb_kHV_gjKTJNkzYEPMzqLcHY_1xw7wy5r-ryqDfNQ@mail.gmail.com>
- <fe8fb314-de99-45c2-b71e-5cedffe590b0@lunn.ch> <CADvTj4qRmjUQJnhamkWNpHGNAtvFyOJnbaQ5RZ6NYYqSNhxshA@mail.gmail.com>
- <014d8d63-bfb1-4911-9ea6-6f4cdabc46e5@lunn.ch> <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk> <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
- <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
-In-Reply-To: <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Wed, 28 May 2025 22:11:50 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvkvTc-VRmYOaYU5xGuR2czReptL7cuDFoxwx0sxNWmjpy1lDF4i_MRIR8
-Message-ID: <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: James Hilliard <james.hilliard1@gmail.com>, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, netdev@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Furong Xu <0x1207@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 9:25=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Wed, May 28, 2025 at 05:57:38AM -0600, James Hilliard wrote:
-> > On Wed, May 28, 2025 at 1:53=E2=80=AFAM Russell King (Oracle)
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > On Tue, May 27, 2025 at 02:37:03PM -0600, James Hilliard wrote:
-> > > > On Tue, May 27, 2025 at 2:30=E2=80=AFPM Andrew Lunn <andrew@lunn.ch=
-> wrote:
-> > > > >
-> > > > > > Sure, that may make sense to do as well, but I still don't see
-> > > > > > how that impacts the need to runtime select the PHY which
-> > > > > > is configured for the correct MFD.
-> > > > >
-> > > > > If you know what variant you have, you only include the one PHY y=
-ou
-> > > > > actually have, and phy-handle points to it, just as normal. No ru=
-ntime
-> > > > > selection.
-> > > >
-> > > > Oh, so here's the issue, we have both PHY variants, older hardware
-> > > > generally has AC200 PHY's while newer ships AC300 PHY's, but
-> > > > when I surveyed our deployed hardware using these boards many
-> > > > systems of similar age would randomly mix AC200 and AC300 PHY's.
-> > > >
-> > > > It appears there was a fairly long transition period where both var=
-iants
-> > > > were being shipped.
-> > >
-> > > Given that DT is supposed to describe the hardware that is being run =
-on,
-> > > it should _describe_ _the_ _hardware_ that the kernel is being run on=
-.
-> > >
-> > > That means not enumerating all possibilities in DT and then having ma=
-gic
-> > > in the kernel to select the right variant. That means having a correc=
-t
-> > > description in DT for the kernel to use.
-> >
-> > The approach I'm using is IMO quite similar to say other hardware
-> > variant runtime detection DT features like this:
-> > https://github.com/torvalds/linux/commit/157ce8f381efe264933e9366db828d=
-845bade3a1
->
-> That is for things link a HAT on a RPi. It is something which is easy
-> to replace, and is expected to be replaced.
+On Wed, 28 May 2025 21:22:37 +0800
+yebin <yebin@huaweicloud.com> wrote:
 
-Actually it's for second sourced components that are modules _within_
-the device (a tablet or a laptop) that get swapped in at the factory.
-Definitely not something easy to replace and not expected to be replaced
-by the end user.
+> This problem can be solved by releasing the 'mod_map' resource when the 
+> module is unloaded. Freeing up these resources is just an address that 
+> cannot be translated into symbols, and there are no worse consequences.
 
-The other thing is that there are no distinguishing identifiers for a
-device tree match for the swap-in variants at the board / device level.
-Though I do have something that does DT fixups in the kernel for IDs
-passed over by the firmware. There are other reasons for this arrangement,
-one being that the firmware is not easily upgradable.
+OK, I'm fine with releasing the mod_map resource without doing the text
+modifications.
 
-ChenYu
+> 
+> > Again, the only solution to a ftrace_disable being set is a full reboot.
+> >  
+> We can't ask users to know such specialized details of the 
+> implementation, which are unclear even to developers unfamiliar with the 
+> ftrace module. Users can accept planned reboot system recovery, but 
+> should not accept casual operations and the system crashes.All we can do 
+> is do a good job of protection, give users more tolerance.Perhaps a 
+> system that is dead but won't lie down is also a very undesirable 
+> situation.However, ftrace is used to collect information and locate 
+> faults. Even if it does not work, it does not affect services.In the 
+> production environment, the most afraid of using ftrace suddenly crashes 
+> the system.Therefore, the robustness of the tool itself is very important.
 
-> You are talking about some form of chiplet like component within the
-> SoC package. It is not easy to replace, and not expected to be
-> replaced.
->
-> Different uses cases altogether.
->
-> What i think we will end up with is the base SoC .dtsi file, and two
-> additional .dtsi files describing the two PHY variants.
->
->         Andrew
->
+Preventing ftrace from crashing the system is the reason ftrace_disabled is
+set and stops it from doing any more damage.
+
+If you are worried about users not knowing that a reboot is necessary, we
+could always add the "Dazed and confused, but trying to continue" message
+that could also recommend a reboot.
+
+> > -- Steve
+> >  
+> 
+> I reworked the two patches, and the changes to the existing process 
+> should be minimal. I don't know if I can get your approval. If you 
+> agree, I'll post another V3 version.
+> 
+> PATCH[1/2]:
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 51580e54677f..b3436d86e470 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7438,9 +7438,10 @@ void ftrace_release_mod(struct module *mod)
+> 
+>          mutex_lock(&ftrace_lock);
+> 
+> -       if (ftrace_disabled)
+> -               goto out_unlock;
+> -
+> +       /*
+> +        * To avoid the UAF problem after the module is unloaded, the
+> +        * 'mod_map' resource needs to be released unconditionally.
+> +        */
+>          list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
+>                  if (mod_map->mod == mod) {
+>                          list_del_rcu(&mod_map->list);
+> @@ -7451,6 +7452,9 @@ void ftrace_release_mod(struct module *mod)
+>                  }
+>          }
+> 
+> +       if (ftrace_disabled)
+> +               goto out_unlock;
+> +
+>          /*
+>           * Each module has its own ftrace_pages, remove
+>           * them from the list.
+
+Yes, this is more appropriate.
+
+Thanks,
+
+-- Steve
+
+> 
+> PATCH[2/2]:
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index a3d4dfad0cbc..51580e54677f 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7629,6 +7629,9 @@ allocate_ftrace_mod_map(struct module *mod,
+>   {
+>          struct ftrace_mod_map *mod_map;
+> 
+> +       if (ftrace_disabled)
+> +               return NULL;
+> +
+>          mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
+>          if (!mod_map)
+>                  return NULL;
+
