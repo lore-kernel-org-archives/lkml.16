@@ -1,134 +1,245 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408AC2459E6;
-	Wed, 28 May 2025 09:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B744275859
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424429; cv=none; b=F1eqZv8WPiWOizXbpsrf3G4HUL7Z7BS6+jhD3dJarRNzx1NpHbvwy91tbPal4tFzGSkgrrpbpJxHH16hOni4xS0HpWQ+1kDbcYo1wPtzUP3Wp8IX5Kny5171/nKaJffCrrDpY7FBl2gsNBhiGvGwGYr6eJIDcklMXIK71Qb5jyM=
+	t=1748424475; cv=none; b=pnAYpgGRoMg8HgIDk7laEl0yyfurZ7w/zwTlIhJSqmFgElZtXsA+LICa/kFo6NoLMi+1FVMuNB389MmZPAaLDhERZ8cWBVGaVsj+yHmidlufre7MQ1kMiUg57nXIoCZownGd1efFHGJphTW8RVYwGvEin7ly3lyABaKfPhDXcos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424429; c=relaxed/simple;
-	bh=Rkl9MnMzfps/nZK5j3AhdUB2c0gHsAoIEhsLJwN4W20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rVsqSN2b2lOyBu6DzLpOa5hGc/d1UJa7bU3hl7rtVCAAezhhOZj7hcup9y6LQoEV7+T3ASiI3z1lw8NibLmbg43NzdOrCoXsmASQT5XLenHd2jwpYfRwI/dfSqyQDZ4jA1wibSv4dUKzUGNNSgiJ/AX5sV7l0WIfIvSIiUVNFJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gzHKjDwU; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748424475; c=relaxed/simple;
+	bh=QA8Tu+x5uJNtSj2hb1PFx7cIXbvT0/ULNV68F0rxeTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIeG8rZeL1q/g6rnOi6WEQbnt7sCvPtCTa1kouLYEXlgj0yFVYNPmEGga5Z2OdzP1gkJVc3DH8Pqmsu/jBFVCoMMaEXsS69NsW/FdOoz2FjqkZeg+QiL9JfolUJQ5MBv9bkyEz1un0r6sGeHqmajWdWbehx/I6dUGEcjz4ZvwZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n+W2arJC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PLgbUBee; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n+W2arJC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PLgbUBee; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzHKjDwU"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edb40f357so36731785e9.0;
-        Wed, 28 May 2025 02:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748424426; x=1749029226; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DADbSQp6yUGzEJGyGZDGlB+r00LCI7Uhk326gSg6NQ0=;
-        b=gzHKjDwUwmku/JbteNmo0SbauFqxVf5yCd0iF5LcoW98ZDJyTH/vJ4O9wg/OZH2p1D
-         UpQKDYphN87U4XoLfhb34QUAxefTtIrgM937LU/R2ldggr8vJFMHtvBtfNtiLO4N0m8q
-         QGgHEAdYnqH34VWncPTT3I3vKDTJKgCeVybyp0MJ3swtUe7Smk40+hcqFQx+hxj1kObz
-         Ohvhmou1pqdNmFWbYyyb99Y18ZqSirXNnsj4IeIEdAeEY0eRCEat8tcwIb8LAhe2Nt+q
-         6xBHQ6SyTBJee4h01CZRJNKelb9Sq609hApsYVqBR+lZ2jxR/0bRTVo6RcgVcldNPJHi
-         4pmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748424426; x=1749029226;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DADbSQp6yUGzEJGyGZDGlB+r00LCI7Uhk326gSg6NQ0=;
-        b=BJsq4+AQPimNCg5QaoSjziemaPzgRIlmQqVCAjGuNxsQd5JrcJwc1xV7rSPuUrhZYj
-         JMKQeqwpa4ExcTx2+qSkBFgfgRzdqEgjpQQ4mcJWL09hMxXhEOJtYe0rvZVBQGL2Jzk5
-         sANEuOVYgy66L1Sc6XGMuhmqfnJi3tbiP8zm+mE+Mj01RWAqM9B3YrC6suHt0PykiOUy
-         Wp6plBsPqki2+7+7dWRjaN/8cjnH2c+Y/uo7uXsMLFlIAAFqW74DlzE5sZ79203t9PH1
-         1KKMK5+/wzYr+xNY1CPPQiyKZbodEDFk8VzUxm7dGReymh7Es4/wodjW8ljBfl2KxAm4
-         Dk1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUy6TwbdysiGCsrAvTnQTyVVOTF0lREOZO6rzQTwx7TXJv6bcytpe+6EszBvYnD+ALtZ6xECkfxkzz4jCM=@vger.kernel.org, AJvYcCXncl3pJWTE1fiCN3hPzL//aWBNmr+z8qfR58uS8AWVTjsF4x1xlZo92EYMelAddIigrdYBgQU4lpD+Eg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ44YdA+ldS4djPt47HIR5DlArCsZzm7leUV6ldY+cziq3JL7t
-	48R7PorryiZT7VI0PNjNH+6YhK9LADv6WrkU6JF+9QflFowvapGBlFbN4YzJRFVkjjY=
-X-Gm-Gg: ASbGncs/zNVOJt9atSpHWgVJ1hv+w4a57dvDWNxxSKxh4kUkAMUpY2iTZ3BRcDEkNdz
-	7CMkguxLyz4ijnMfoJtjhArZukBKjGR2w62qo2Cgh1Wecs8pwickYqUkKSCI94JUbTqnIZGBzbE
-	eGw13LU3AvpVllrql1k1CuKMVShPxq6gOCXePVBC4Hk+vgS1Zyx/NrzrHIP05tfFhoRXNfDI5J9
-	NpZiDgZEl2gUA7E6fFoFB8O/WrlMBkolJal+us1TGW9dbmE6UTpAOufbDvG8mPpN3PknoYrLb6H
-	AoyDwh362hGIiKPhyKuph4WS8Aw2yghpVhxS5h/k/7zW2CM/16YGOjxjMQ==
-X-Google-Smtp-Source: AGHT+IHF6OaK+bSac6ECH1IPMqyc2b/hXMEmiIYiRExLKW0p4wvXpqkSjymxtwCMsKX4jY6/QmRP3A==
-X-Received: by 2002:a05:600c:870b:b0:450:c210:a01b with SMTP id 5b1f17b1804b1-450c210a070mr12108165e9.17.1748424426206;
-        Wed, 28 May 2025 02:27:06 -0700 (PDT)
-Received: from [10.43.17.62] ([85.93.96.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4500e1d8671sm15371465e9.29.2025.05.28.02.27.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:27:05 -0700 (PDT)
-Message-ID: <c60f5fc9-6053-49d7-852f-fc581bd10169@gmail.com>
-Date: Wed, 28 May 2025 11:27:04 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n+W2arJC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PLgbUBee";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n+W2arJC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PLgbUBee"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3959221BFC;
+	Wed, 28 May 2025 09:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748424470; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B4mwwW9r0OHxt1yikCbUfXebtF5UgdxJ9FNgvzHDIfE=;
+	b=n+W2arJC9K4LnK8d5fiG8AWGKKHDpg2CEWV2F7309g7HyeUKZS8KPrbC70sqLPwSwr2jZu
+	F94CF4I9wfrIvAUic+im00Q29l49NvTK33VFQksiJuk+WfP27KHDdJ6S4RM/oqIiAOrbdE
+	9KMGpN56EZlNIg3Quv9Zdg4WW5/vXSk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748424470;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B4mwwW9r0OHxt1yikCbUfXebtF5UgdxJ9FNgvzHDIfE=;
+	b=PLgbUBeeeE9X8XNwWP958G8cg9vwCEdd90usoWLBmPLRdkns9WWz6AyA7Mdc+WIgALZnUr
+	f75JSjED5VJg2YAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1748424470; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B4mwwW9r0OHxt1yikCbUfXebtF5UgdxJ9FNgvzHDIfE=;
+	b=n+W2arJC9K4LnK8d5fiG8AWGKKHDpg2CEWV2F7309g7HyeUKZS8KPrbC70sqLPwSwr2jZu
+	F94CF4I9wfrIvAUic+im00Q29l49NvTK33VFQksiJuk+WfP27KHDdJ6S4RM/oqIiAOrbdE
+	9KMGpN56EZlNIg3Quv9Zdg4WW5/vXSk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1748424470;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B4mwwW9r0OHxt1yikCbUfXebtF5UgdxJ9FNgvzHDIfE=;
+	b=PLgbUBeeeE9X8XNwWP958G8cg9vwCEdd90usoWLBmPLRdkns9WWz6AyA7Mdc+WIgALZnUr
+	f75JSjED5VJg2YAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8073C136E3;
+	Wed, 28 May 2025 09:27:49 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BQmlHBXXNmgyawAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 28 May 2025 09:27:49 +0000
+Date: Wed, 28 May 2025 11:27:46 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Gavin Guo <gavinguo@igalia.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+	akpm@linux-foundation.org, mike.kravetz@oracle.com,
+	kernel-dev@igalia.com, stable@vger.kernel.org,
+	Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
+	Gavin Shan <gshan@redhat.com>, David Hildenbrand <david@redhat.com>,
+	Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v3] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+Message-ID: <aDbXEnqnpDnAx4Mw@localhost.localdomain>
+References: <20250528023326.3499204-1-gavinguo@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] md/raid1,raid10: don't handle IO error for REQ_RAHEAD
- and REQ_NOWAIT
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: mpatocka@redhat.com, song@kernel.org, linux-raid@vger.kernel.org,
- linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
- johnny.chenyi@huawei.com, "yukuai (C)" <yukuai3@huawei.com>,
- Heinz Mauelshagen <heinzm@redhat.com>
-References: <20250527081407.3004055-1-yukuai1@huaweicloud.com>
- <190d2a22-b858-1320-cd2e-c71f057b233d@huaweicloud.com>
- <CALTww2-_QoC7OCVSXHy=XfYE3K9m_CQ05HKX7QqJ504qnN=0cA@mail.gmail.com>
-Content-Language: en-US, cs
-From: Zdenek Kabelac <zdenek.kabelac@gmail.com>
-In-Reply-To: <CALTww2-_QoC7OCVSXHy=XfYE3K9m_CQ05HKX7QqJ504qnN=0cA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528023326.3499204-1-gavinguo@igalia.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-Dne 28. 05. 25 v 3:28 Xiao Ni napsal(a):
-> CC Heinz who is a dm-raid expert. But he is on holiday this week.
+On Wed, May 28, 2025 at 10:33:26AM +0800, Gavin Guo wrote:
+> There is ABBA dead locking scenario happening between hugetlb_fault()
+> and hugetlb_wp() on the pagecache folio's lock and hugetlb global mutex,
+> which is reproducible with syzkaller [1]. As below stack traces reveal,
+> process-1 tries to take the hugetlb global mutex (A3), but with the
+> pagecache folio's lock hold. Process-2 took the hugetlb global mutex but
+> tries to take the pagecache folio's lock.
 > 
-> On Tue, May 27, 2025 at 4:24 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> Hi, Zdenek Kabelac
->>
->> 在 2025/05/27 16:14, Yu Kuai 写道:
->>> From: Yu Kuai <yukuai3@huawei.com>
->>>
->>> IO with REQ_RAHEAD or REQ_NOWAIT can fail early, even if the storage medium
->>> is fine, hence record badblocks or remove the disk from array does not
->>> make sense.
->>>
->>> This problem if found by lvm2 test lvcreate-large-raid, where dm-zero
->>> will fail read ahead IO directly.
->>>
->>> Reported-and-tested-by: Mikulas Patocka <mpatocka@redhat.com>
->>> Closes: https://lore.kernel.org/all/34fa755d-62c8-4588-8ee1-33cb1249bdf2@redhat.com/
->>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>> ---
->>> Changes in v2:
->>>    - handle REQ_NOWAIT as well.
->>>
->>>    drivers/md/raid1-10.c | 10 ++++++++++
->>>    drivers/md/raid1.c    | 19 ++++++++++---------
->>>    drivers/md/raid10.c   | 11 ++++++-----
->>>    3 files changed, 26 insertions(+), 14 deletions(-)
->>>
->>
->> Just to let you know that while testing lvcreate-large-raid, the test
->> can fail sometime:
->>
->> [ 0:12.021] ## DEBUG0: 08:11:43.596775 lvcreate[8576]
->> device_mapper/ioctl/libdm-iface.c:2118  device-mapper: create ioctl on
->> LVMTEST8371vg1-LV1_rmeta_0
->> LVM-iqJjW9HItbME2d4DC2S7D58zd2omecjf0yQN83foinyxHaPoZqGEnX4rRUN7i0kH
->> failed: Device or resource busy
+> Process-1                               Process-2
+> =========                               =========
+> hugetlb_fault
+>    mutex_lock                  (A1)
+>    filemap_lock_hugetlb_folio  (B1)
+>    hugetlb_wp
+>      alloc_hugetlb_folio       #error
+>        mutex_unlock            (A2)
+>                                         hugetlb_fault
+>                                           mutex_lock                  (A4)
+>                                           filemap_lock_hugetlb_folio  (B4)
+>        unmap_ref_private
+>        mutex_lock              (A3)
+> 
+> Fix it by releasing the pagecache folio's lock at (A2) of process-1 so
+> that pagecache folio's lock is available to process-2 at (B4), to avoid
+> the deadlock. In process-1, a new variable is added to track if the
+> pagecache folio's lock has been released by its child function
+> hugetlb_wp() to avoid double releases on the lock in hugetlb_fault().
+> The similar changes are applied to hugetlb_no_page().
+> 
+> Link: https://drive.google.com/file/d/1DVRnIW-vSayU5J1re9Ct_br3jJQU6Vpb/view?usp=drive_link [1]
+> Fixes: 40549ba8f8e0 ("hugetlb: use new vma_lock for pmd sharing synchronization")
+> Cc: <stable@vger.kernel.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Florent Revest <revest@google.com>
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+... 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 6a3cf7935c14..560b9b35262a 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -6137,7 +6137,8 @@ static void unmap_ref_private(struct mm_struct *mm, struct vm_area_struct *vma,
+>   * Keep the pte_same checks anyway to make transition from the mutex easier.
+>   */
+>  static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+> -		       struct vm_fault *vmf)
+> +		       struct vm_fault *vmf,
+> +		       bool *pagecache_folio_locked)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct mm_struct *mm = vma->vm_mm;
+> @@ -6234,6 +6235,18 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+>  			u32 hash;
+>  
+>  			folio_put(old_folio);
+> +			/*
+> +			 * The pagecache_folio has to be unlocked to avoid
+> +			 * deadlock and we won't re-lock it in hugetlb_wp(). The
+> +			 * pagecache_folio could be truncated after being
+> +			 * unlocked. So its state should not be reliable
+> +			 * subsequently.
+> +			 */
+> +			if (pagecache_folio) {
+> +				folio_unlock(pagecache_folio);
+> +				if (pagecache_folio_locked)
+> +					*pagecache_folio_locked = false;
+> +			}
 
-Hi
+I am having a problem with this patch as I think it keeps carrying on an
+assumption that it is not true.
 
-This issue is caused by occasional race with udev - which holds open our 
-internal device open while we are deactivating raid LV.
+I was discussing this matter yesterday with Peter Xu (CCed now), who has also some
+experience in this field.
 
-We are currently trying to resolve this issue.
+Exactly against what pagecache_folio's lock protects us when
+pagecache_folio != old_folio?
 
-Regards
+There are two cases here:
 
-Zdenek
+1) pagecache_folio = old_folio  (original page in the pagecache)
+2) pagecache_folio != old_folio (original page has already been mapped
+                                 privately and CoWed, old_folio contains
+				 the new folio)
 
+For case 1), we need to hold the lock because we are copying old_folio
+to the new one in hugetlb_wp(). That is clear.
+
+But for case 2), unless I am missing something, we do not really need the
+pagecache_folio's lock at all, do we? (only old_folio's one)
+The only reason pagecache_folio gets looked up in the pagecache is to check
+whether the current task has mapped and faulted in the file privately, which
+means that a reservation has been consumed (a new folio was allocated).
+That is what the whole dance about "old_folio != pagecache_folio &&
+HPAGE_RESV_OWNER" in hugetlb_wp() is about.
+
+And the original mapping cannot really go away either from under us, as
+remove_inode_hugepages() needs to take the mutex in order to evict it,
+which would be the only reason counters like resv_huge_pages (adjusted in
+remove_inode_hugepages()->hugetlb_unreserve_pages()) would
+interfere with alloc_hugetlb_folio() from hugetlb_wp().
+
+So, again, unless I am missing something there is no need for the
+pagecache_folio lock when pagecache_folio != old_folio, let alone the
+need to hold it throughout hugetlb_wp().
+I think we could just look up the cache, and unlock it right away.
+
+So, the current situation (previous to this patch) is already misleading
+for case 2).
+
+And comments like:
+
+ /*
+  * The pagecache_folio has to be unlocked to avoid
+  * deadlock and we won't re-lock it in hugetlb_wp(). The
+  * pagecache_folio could be truncated after being
+  * unlocked. So its state should not be reliable
+  * subsequently.
+  */
+
+Keep carrying on the assumption that we need the lock.
+
+Now, if the above is true, I would much rather see this reworked (I have
+some ideas I discussed with Peter yesterday), than keep it as is.
+
+Let me also CC David who tends to have a good overview in this.
+
+-- 
+Oscar Salvador
+SUSE Labs
