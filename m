@@ -1,150 +1,215 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22728152E02;
-	Wed, 28 May 2025 09:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570D27585C;
+	Wed, 28 May 2025 09:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424184; cv=none; b=T445n1joH1iGjSfsQxzWurA98ZkE4ss1Fp7Dv6s9loxGjO5IBFNyrlpOIb/H5z/iUpJLJiY//2hzErlJ1mdbGFTM9RxJeVLLC6igTqxJ5ypYJvSb74VrtKriz6xMOUCx//t5zvzKF6TpEdPHJcR6Vx4Vx03Ek8Qh6imaJWBm04I=
+	t=1748424194; cv=none; b=nNvmb1MvKBXXBGMCBTQxxUL9oYAZJ/FzcRpakmIk5i+NwUClbni697rX52fZx2y6Xxw8zg5JEK+zmgE7Ve6C5Tiy2O8/YLqwYbwS+rr+MmaXiWRtpTCg1nO/7NcAqqzR4xJidQmce4PcJ1QkxLa23wNtSxJidepBowmOlracw3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424184; c=relaxed/simple;
-	bh=xkNiKYgODlSY9yyRlPkx7iULzopxvQVIpmtbhyv/rTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=msDDlPNC0r6X/BslLLZ0OK0JHoBfaLBZaFFX9m79u8Gt/615dEWiz1iAQ5QBjKlhV5HC5kEQHtkS2wRvFPUtaW8HLthh0fdF6X6iMt2vs3ro4wuDKK6XV6eOomMtjx7EJZq22jSvonkVOfbfVQ1rhwJk1VwTvqI4y6H9/yhoXRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Stkx4be7; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1748424194; c=relaxed/simple;
+	bh=XwVcsM0Ke27QaXVu4HALsNtN2BuTrzEyaowisRAZRTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZaERraTyQfFkQLsm9vJjuPQs7NUq5/NVNArclvP3KhoeZhiPNnuPmSflUCTU4SZieWn1JeW8hkwHBLLmJ3I3iVyLYmOdSW2rEH1AfB+YGdRaLPhI5wLcYPgu9WDoqRu031S01HK1/brrEXg+Cep0HaOS79wM+vUuR2+W46COLLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MwCo+B4S reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Stkx4be7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3j
-	2smcIYQQg9AX7JiG4sdGXoPpomEDE53IFAHBoEZdQ=; b=Stkx4be72PteeZ5DEC
-	pUc8I/3Ny1Yl2Ef5+6aAVkKppN+yqCG5TG6caQ2p7uA/oUqzqjwmuMS7DFVxwglL
-	rmo9+rpG4dx5KbEvBF0DmIUmbcNGSO9fE5bg+M2Nwmwu1eqnpJ6vyTL44TV3MRWp
-	g7zTe2TeU2Fs6Z8Ouf/lTCsqw=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCnjVLa1TZoOyU7Eg--.4046S2;
-	Wed, 28 May 2025 17:22:35 +0800 (CST)
-From: Slark Xiao <slark_xiao@163.com>
-To: manivannan.sadhasivam@linaro.org,
-	johan+linaro@kernel.org,
-	mhi@lists.linux.dev
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH v2] bus: mhi: host: pci_generic: Add Foxconn T99W696
-Date: Wed, 28 May 2025 17:22:32 +0800
-Message-Id: <20250528092232.16111-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MwCo+B4S"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9D2DA40E01AD;
+	Wed, 28 May 2025 09:23:07 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 6k1iIRKJfFlA; Wed, 28 May 2025 09:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1748424182; bh=si5vjMB3rqYmyMn24gD/zflzQ5T1gxEmIVKPQTemnUs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MwCo+B4SRUadtIe1XUxkBce8rFMI6dulfrRCIQeV3A/qP5P4UrULAs//ut1GGt8+J
+	 9cddGaZsgFOhZ/f7kdnmMZlk8VIDBzPOuasIQm8Qum51RnHfLzrPaGcQMYORD23uhs
+	 yDXcDlf7ilZ+EjBjxFxdDeCXbOjQyT4YAflvjvn0anDy6S305curU6phw351VdLwFo
+	 1tzAj8ndKknisMKZ4HE0bxEnzWlDSyH65EUH4UuFWAOG40AL8G9Aa0He++7W04oP/u
+	 q+rIDZ3iylb9GLu4mlDOxqv4td3pOfZ/3NUvtP7FVrvsqjzBvGgkW0muYsEj/Vk9DK
+	 V3uMCtuXN1CTURb9BADn9kTtTU+Jnf3qBNxhp2+ZiV7vY5dqyU0W09bVkEOyRbeyWO
+	 5acH68wcAQ/Pv8c4IdbW9yZND1szWbqX/o/wyxzDepbSZsdEI4jdUMPGPP9lYeDp5E
+	 sOnn3m7TLbXQan6OtBfgNSxomfAbw7SKLFjkJGbOOB69ME28Fw7sCDaZza7S3lW4YE
+	 YpyiTTDOcSviSuAJCdGI/v6Ig8FUkI5hwGEsblInpI7axuw38BeiQZQ4A48LdpKGFH
+	 dbV06SpVtBjqJAvgf4TMYdMne7uEHnzZuMET81tnV7XWX8G21DLMYjEMGb6uG4Iga9
+	 G1QxEwJ2RSUvJZyJ5OM7ZCXo=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6159540E01B5;
+	Wed, 28 May 2025 09:22:56 +0000 (UTC)
+Date: Wed, 28 May 2025 11:22:50 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Avadhut Naik <avadhut.naik@amd.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	avadnaik@amd.com,
+	=?utf-8?Q?=C5=BDilvinas_=C5=BDaltiena?= <zilvinas@natrix.lt>,
+	Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v4] EDAC/amd64: Fix size calculation for Non-Power-of-Two
+ DIMMs
+Message-ID: <20250528092250.GAaDbV6oEqvE3279dJ@fat_crate.local>
+References: <20250513192221.784445-1-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCnjVLa1TZoOyU7Eg--.4046S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWF13Cw15Kr4kZw4kWF43GFg_yoWrurWkpF
-	WIv3y5KrWkJa1Fg3y0y34kKas5Zan3Xr93Krnrtw10g3WYk3y5XrWkt342qFWYv34qqrWI
-	vFykuFy7uanrJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRqsUtUUUUU=
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1S2mRxpbZGg2zteGcAABsS
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250513192221.784445-1-avadhut.naik@amd.com>
+Content-Transfer-Encoding: quoted-printable
 
-T99W696 is designed based on Qualcomm SDX61 chip which is a cost
-down chip refer to previous SDX62/SDX65. Though we have a support
-on SDX62/SDX65, we create a new channel config for SDX61 since
-we add a NMEA channel support from this product.
-For new products we are allowed to customize the subVID and
-subPID only.
+On Tue, May 13, 2025 at 07:20:11PM +0000, Avadhut Naik wrote:
+> Each Chip-Select (CS) of a Unified Memory Controller (UMC) on AMD's
+> modern Zen-based SOCs has an Address Mask and a Secondary Address Mask
+> register associated with it. The amd64_edac module logs DIMM sizes on a
+> per-UMC per-CS granularity during init using these two registers.
+>=20
+> Currently, the module primarily considers only the Address Mask registe=
+r
+> for computing DIMM sizes. The Secondary Address Mask register is only
+> considered for odd CS. Additionally, if it has been considered, the
+> Address Mask register is ignored altogether for that CS. For
+> power-of-two DIMMs, this is not an issue since only the Address Mask
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
-v2: Correct the ch_cfg as sdx61 channels
----
- drivers/bus/mhi/host/pci_generic.c | 52 ++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+What are power-of-two DIMMs?
 
-diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-index a4a62429c784..a90ab31c46a9 100644
---- a/drivers/bus/mhi/host/pci_generic.c
-+++ b/drivers/bus/mhi/host/pci_generic.c
-@@ -490,6 +490,23 @@ static const struct mhi_channel_config mhi_foxconn_sdx55_channels[] = {
- 	MHI_CHANNEL_CONFIG_HW_DL(101, "IP_HW0_MBIM", 128, 3),
- };
- 
-+static const struct mhi_channel_config mhi_foxconn_sdx61_channels[] = {
-+	MHI_CHANNEL_CONFIG_UL(0, "LOOPBACK", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL(1, "LOOPBACK", 32, 0),
-+	MHI_CHANNEL_CONFIG_UL(4, "DIAG", 32, 1),
-+	MHI_CHANNEL_CONFIG_DL(5, "DIAG", 32, 1),
-+	MHI_CHANNEL_CONFIG_UL(12, "MBIM", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL(13, "MBIM", 32, 0),
-+	MHI_CHANNEL_CONFIG_UL(32, "DUN", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL(33, "DUN", 32, 0),
-+	MHI_CHANNEL_CONFIG_UL_FP(34, "FIREHOSE", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL_FP(35, "FIREHOSE", 32, 0),
-+	MHI_CHANNEL_CONFIG_UL(50, "NMEA", 32, 0),
-+	MHI_CHANNEL_CONFIG_DL(51, "NMEA", 32, 0),
-+	MHI_CHANNEL_CONFIG_HW_UL(100, "IP_HW0_MBIM", 128, 2),
-+	MHI_CHANNEL_CONFIG_HW_DL(101, "IP_HW0_MBIM", 128, 3),
-+};
-+
- static struct mhi_event_config mhi_foxconn_sdx55_events[] = {
- 	MHI_EVENT_CONFIG_CTRL(0, 128),
- 	MHI_EVENT_CONFIG_DATA(1, 128),
-@@ -506,6 +523,15 @@ static const struct mhi_controller_config modem_foxconn_sdx55_config = {
- 	.event_cfg = mhi_foxconn_sdx55_events,
- };
- 
-+static const struct mhi_controller_config modem_foxconn_sdx61_config = {
-+	.max_channels = 128,
-+	.timeout_ms = 20000,
-+	.num_channels = ARRAY_SIZE(mhi_foxconn_sdx61_channels),
-+	.ch_cfg = mhi_foxconn_sdx61_channels,
-+	.num_events = ARRAY_SIZE(mhi_foxconn_sdx55_events),
-+	.event_cfg = mhi_foxconn_sdx55_events,
-+};
-+
- static const struct mhi_controller_config modem_foxconn_sdx72_config = {
- 	.max_channels = 128,
- 	.timeout_ms = 20000,
-@@ -615,6 +641,17 @@ static const struct mhi_pci_dev_info mhi_foxconn_dw5934e_info = {
- 	.sideband_wake = false,
- };
- 
-+static const struct mhi_pci_dev_info mhi_foxconn_t99w696_info = {
-+	.name = "foxconn-t99w696",
-+	.edl = "qcom/sdx61/foxconn/prog_firehose_lite.elf",
-+	.edl_trigger = true,
-+	.config = &modem_foxconn_sdx61_config,
-+	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
-+	.dma_data_width = 32,
-+	.mru_default = 32768,
-+	.sideband_wake = false,
-+};
-+
- static const struct mhi_channel_config mhi_mv3x_channels[] = {
- 	MHI_CHANNEL_CONFIG_UL(0, "LOOPBACK", 64, 0),
- 	MHI_CHANNEL_CONFIG_DL(1, "LOOPBACK", 64, 0),
-@@ -863,6 +900,21 @@ static const struct pci_device_id mhi_pci_id_table[] = {
- 	/* Telit FE990A */
- 	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x1c5d, 0x2015),
- 		.driver_data = (kernel_ulong_t) &mhi_telit_fe990a_info },
-+	/* Foxconn T99W696.01, Lenovo Generic SKU */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe142),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
-+	/* Foxconn T99W696.02, Lenovo X1 Carbon SKU */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe143),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
-+	/* Foxconn T99W696.03, Lenovo X1 2in1 SKU */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe144),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
-+	/* Foxconn T99W696.04, Lenovo PRC SKU */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe145),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
-+	/* Foxconn T99W696.00, Foxconn SKU */
-+	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, PCI_VENDOR_ID_FOXCONN, 0xe146),
-+		.driver_data = (kernel_ulong_t) &mhi_foxconn_t99w696_info },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0308),
- 		.driver_data = (kernel_ulong_t) &mhi_qcom_sdx65_info },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_QCOM, 0x0309),
--- 
-2.25.1
+The number of DIMMs on the system is a 2^x?
 
+Their ranks are a power of two?
+
+Their combined size is not power of two?
+
+One can only guess...
+
+> register is used.
+>=20
+> For non-power-of-two DIMMs, however, the Secondary Address Mask registe=
+r
+> is used in conjunction with the Address Mask register. However, since t=
+he
+> module only considers either of the two registers for a CS, the size
+> computed by the module is incorrect.
+
+Yah, it must be something about the size...
+
+> The Secondary Address Mask register
+> is not considered for even CS, and the Address Mask register is not
+> considered for odd CS.
+>=20
+> Introduce a new helper function so that both Address Mask and Secondary
+> Address Mask registers are considered, when valid, for computing DIMM
+> sizes. Furthermore, also rename some variables for greater clarity.
+
+So it is non-power-of-two sized DIMMs?
+
+IOW, DIMMs whose size is not a power of two?
+
+> Fixes: 81f5090db843 ("EDAC/amd64: Support asymmetric dual-rank DIMMs")
+> Reported-by: =C5=BDilvinas =C5=BDaltiena <zilvinas@natrix.lt>
+> Closes: https://lore.kernel.org/dbec22b6-00f2-498b-b70d-ab6f8a5ec87e@na=
+trix.lt
+> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+> Tested-by: =C5=BDilvinas =C5=BDaltiena <zilvinas@natrix.lt>
+> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Cc: stable@vger.kernel.org
+
+All that changelog stuff...
+
+> ```
+> Changes in v2:
+> 1. Avoid unnecessary variable initialization.
+> 2. Modify commit message to accurately reflect the changes.
+> 3. Move check for non-zero Address Mask register into the new helper.
+>=20
+> Changes in v3:
+> 1. Add the missing Closes tag and rearrange tags per tip tree handbook.
+> 3. Slightly modify commit message to properly reflect the SOCs that may
+> encounter this issue.
+> 4. Rebase on top of edac-for-next.
+>=20
+> Changes in v4:
+> 1. Rebase on top of edac-for-next.
+>=20
+> Links:
+> v1: https://lore.kernel.org/all/20250327210718.1640762-1-avadhut.naik@a=
+md.com/
+> v2: https://lore.kernel.org/all/20250415213150.755255-1-avadhut.naik@am=
+d.com/
+> v3: https://lore.kernel.org/all/20250416222552.1686475-1-avadhut.naik@a=
+md.com/
+> ---
+
+<--- ... goes here, under the --- line so that patch handling tools can i=
+gnore
+it.
+
+>  drivers/edac/amd64_edac.c | 57 ++++++++++++++++++++++++---------------
+>  1 file changed, 36 insertions(+), 21 deletions(-)
+
+...
+
+> +static int __addr_mask_to_cs_size(u32 addr_mask, u32 addr_mask_sec,
+> +				  unsigned int cs_mode, int csrow_nr, int dimm)
+> +{
+> +	int size;
+> =20
+>  	edac_dbg(1, "CS%d DIMM%d AddrMasks:\n", csrow_nr, dimm);
+> -	edac_dbg(1, "  Original AddrMask: 0x%x\n", addr_mask_orig);
+> -	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", addr_mask_deinterleav=
+ed);
+> +	edac_dbg(1, "  Primary AddrMask: 0x%x\n", addr_mask);
+> =20
+>  	/* Register [31:1] =3D Address [39:9]. Size is in kBs here. */
+> -	size =3D (addr_mask_deinterleaved >> 2) + 1;
+> +	size =3D calculate_cs_size(addr_mask, cs_mode);
+> +
+> +	edac_dbg(1, "  Secondary AddrMask: 0x%x\n", addr_mask_sec);
+> +	size +=3D calculate_cs_size(addr_mask_sec, cs_mode);
+> =20
+>  	/* Return size in MBs. */
+>  	return size >> 10;
+> @@ -1270,7 +1284,7 @@ static int umc_addr_mask_to_cs_size(struct amd64_=
+pvt *pvt, u8 umc,
+>  				    unsigned int cs_mode, int csrow_nr)
+>  {
+>  	int cs_mask_nr =3D csrow_nr;
+> -	u32 addr_mask_orig;
+> +	u32 addr_mask =3D 0, addr_mask_sec =3D 0;
+>  	int dimm, size =3D 0;
+
+The EDAC tree preferred ordering of variable declarations at the
+beginning of a function is reverse fir tree order::
+
+	struct long_struct_name *descriptive_name;
+	unsigned long foo, bar;
+	unsigned int tmp;
+	int ret;
+
+The above is faster to parse than the reverse ordering::
+
+	int ret;
+	unsigned int tmp;
+	unsigned long foo, bar;
+	struct long_struct_name *descriptive_name;
+
+And even more so than random ordering::
+
+	unsigned long foo, bar;
+	int ret;
+	struct long_struct_name *descriptive_name;
+	unsigned int tmp;
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
