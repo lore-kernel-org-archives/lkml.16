@@ -1,33 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B883595D;
-	Wed, 28 May 2025 06:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EC8228C8D
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748413327; cv=none; b=gBz55vlZIItr0hLG/OoKeThL2fgzBfJ/ylswt4JENDIXPvk3oz/fGLV15IavSfCcn9cvMc9bQmd9Gf2Mpg2V3z0qhC9s2MJyg+UTCNHvNoBdUjsGe2v9IiEfFdsvdX5IbnzfgdnIuxs6APELa58pGvE3hRDr2Bhh6nxZgW01T/I=
+	t=1748413480; cv=none; b=JKFkcWL/YM3uDSWCiNB4JlH4UQi2p6QPrL0wz9gjZLWYrWAtVEfGp4JRV3ZWYvDfV6+Cyrb7gsN+ae/WGt/F4UHlzhclLXlkJ5f/9/HTe4gv+DQ0L2P7QOccaYmIkHeAd7n5wbZROBDp+nHlNGSsl+f8sddQaHYYyIEa+55Xlaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748413327; c=relaxed/simple;
-	bh=dkeqXqP5bwN2yutJIiKxhDYA23yreeU/xaihJHx2wWQ=;
+	s=arc-20240116; t=1748413480; c=relaxed/simple;
+	bh=kTVvThaepVpjwYf+NroDpxcy/+LSdRi3RXkZGjHWijU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PrgKJVkP1oaSZ2z8sB/UYJNbmVqFdSVOONJ+J2mgT4Z9Qscc1XIkG3K0tC0HEE/zWAEWY8vFJXitbPdCShebLUoFswqAPZtm0LCQ/eD9Y7hnoSKM4ZRpRlrWCdWlKpkzQ+NtCGeZRz6SO009S5VZERADrL/jd6BWhi+Gx1LDaOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CyXNFi2J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=djk49R1LrvPV5NcDx5OJho6EbMudnqWVpyQjbEHq3wVlc4sXZ3Scx+JEOk+EyBMr4LSHgnhVoSaPXOEmHCo8lnQGEjMH789dNl65T3sRXra2/uZSkwP6vACE7i5dFJAW1ycuPb1yVxYOGe4qBbEfM2I+nheBh3oRr2Lk0S9QADE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hmuwslO4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CyXNFi2J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDF8C4CEE7;
-	Wed, 28 May 2025 06:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748413326;
-	bh=dkeqXqP5bwN2yutJIiKxhDYA23yreeU/xaihJHx2wWQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CyXNFi2J81j85OvBG1p1WD0UYqwkb4jyWDLTuAgkdWOOhwrVyHVdn5N7pQZxLq3BR
-	 O8OCzwJpbvvLEBWhqiMDtzEBpHbwKAVe2d0yeJuRR0cKtETAMh8tJ9zFMFL7+ON4kX
-	 rhxfi/4NjS/zQB1hTTnYTmUUAMjaxhrMe5MNokiH281npEeJsZK6CA2JSdEEDB3zDp
-	 sA5Hd/x7qidxUGeV+BloXGYPoDlbYV/27z8Eg5NGXJxMLDpOm5uG96ts5YTICNiCru
-	 SS5r/k019tSB8rZM7x7x1YgZPTyJ34gqdjB6ivSVjcyeZahAWLXeBAeWAMkQfRv6+5
-	 o6YlR62LjG/Nw==
-Message-ID: <50121bd6-76ae-4417-86c2-d5ef71164dfe@kernel.org>
-Date: Wed, 28 May 2025 08:22:01 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hmuwslO4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748413477;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=754vc2wjDI7HXePVLvdpk2rAWv3hYor0wtSkoWf1dhE=;
+	b=hmuwslO4a9x3F2dgw0eA35ahYmukZzd5RPbbRwQncZaAYflfFhmmi7OCUJ8PkdjNm0LclT
+	AKUQ8JwmlaBiWlCDONdVWERM6G7CR+9nZEcf+QZ9kgQdRc8p3JVJEeL5FrF8AgVH+OEIio
+	DLdhBzhz6PpsfjO3DPawAaM9XZiKLoQ=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-359--l_xsyrbMV6SytR5-mnt8A-1; Wed, 28 May 2025 02:24:35 -0400
+X-MC-Unique: -l_xsyrbMV6SytR5-mnt8A-1
+X-Mimecast-MFC-AGG-ID: -l_xsyrbMV6SytR5-mnt8A_1748413475
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so25697095e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:24:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748413475; x=1749018275;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=754vc2wjDI7HXePVLvdpk2rAWv3hYor0wtSkoWf1dhE=;
+        b=l9rrfZIR3KT1ic0iQbLB+M4syvyUsJIXObfMbkfR3LMUsJAn7vTVnYYBrcZe3bnfQr
+         mdM4g/4PxR9GwJgr/mDZ/ViEDRn+3iWdV2mf6bz0S5jxZf2St84ZqzQlNlKf817EoIFc
+         VdTvcJRM7DIwqUMFImvaxGlHyhApNd0NTZYngynw0ajo5padh8dzakZPmamiKW+RMSvL
+         BY5m9gnKavBF5wW1YQkh0gKyziLeOsEIhxu7+uF8SqwRLdKV/f10FthSOzIssJTpa+jd
+         C+dk1wqId/E3FodhJEaJRHe1YgiYQJFz7dAdDc7NmcpXNPJDliS78j+ogTP8Zy6nfeNp
+         AlCw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9aY+dj+ZNp5mJU6DTHTJoJXS/7/sBwLzQ9u4gLvKXQIUxlQMkO+gp+AhsktunKZRARErUyfIuyDkwDnE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/DCouP4OTG8aTkeaERWgcyhSwmUtjGVf3nluM0UW+H1Uyi6iU
+	5i025/4jFBYjLdHrop2EdkVtVmnS9RiFRz1PH2qgcjnS9NoZhEP/0B8bTHYprvJx4slugDipImL
+	d7CX4S5OhAWGMtS0x5lnj/OCnM1GupUAD+AtNeKF2MTfzYb6kecAq0s5+Cr32ONGBfA==
+X-Gm-Gg: ASbGncvGGDXA0f66UPHFYLYv2oi2Bl2dy6U0zvZdvM92wdoNqsAwmi7Tjj90d1Ew0JQ
+	NBUUUx2rpV09xvOF8gjNpraiwvqDEZEv5Cw9aryLMKnTYChbkM7Avbi+MMd3NLmVOvp9zkxivmR
+	+8I+H64z7qzxvOw6C4gNFYcvsfoC5SK6VeaR8W3aKb+/5aoSehwbeC6aFcgUoKyihzWrfyjZEGP
+	I59RPwvXZ8Q/qDb7dkU0angS4Y9SGqDQSoe6jmHgkkdY1w7hnXKbyB4KJf46DS+ZG4s/vxgKFxt
+	b3Hl8lkgWmFLkKBkbmgoNUovaCktDz6ImmbO4rQebhUnaBYGkt5cEfxech8=
+X-Received: by 2002:a05:600c:5395:b0:43d:9d5:474d with SMTP id 5b1f17b1804b1-44c90a7d192mr145123935e9.0.1748413474625;
+        Tue, 27 May 2025 23:24:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHTGyxwzn4y7CuSci4QeX+QzVGzuRFKJU+ecJ07NbBvlyTkZlPDD/iB7UoMAp4+3o8jBBb6bw==
+X-Received: by 2002:a05:600c:5395:b0:43d:9d5:474d with SMTP id 5b1f17b1804b1-44c90a7d192mr145123695e9.0.1748413474243;
+        Tue, 27 May 2025 23:24:34 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2728:e810:827d:a191:aa5f:ba2f? ([2a0d:3344:2728:e810:827d:a191:aa5f:ba2f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4507254b82esm7053935e9.9.2025.05.27.23.24.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 May 2025 23:24:33 -0700 (PDT)
+Message-ID: <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
+Date: Wed, 28 May 2025 08:24:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,70 +73,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: iio: gyroscope: invensense,itg3200: add
- binding
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, jic23@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
- manuel.stahl@iis.fraunhofer.de
-Cc: ~lkcamp/patches@lists.sr.ht, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250527210308.4693-1-rodrigo.gobbi.7@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error
+ reporting
+To: Laurent Vivier <lvivier@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>
+Cc: netdev@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org
+References: <20250521092236.661410-1-lvivier@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250527210308.4693-1-rodrigo.gobbi.7@gmail.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250521092236.661410-1-lvivier@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 27/05/2025 22:55, Rodrigo Gobbi wrote:
-> There is no txt file for it, add yaml for invensense,itg3200 gyroscope.
+On 5/21/25 11:22 AM, Laurent Vivier wrote:
+> This patch series contains two fixes and a cleanup for the virtio subsystem.
+> 
+> The first patch fixes an error reporting bug in virtio_ring's
+> virtqueue_resize() function. Previously, errors from internal resize
+> helpers could be masked if the subsequent re-enabling of the virtqueue
+> succeeded. This patch restores the correct error propagation, ensuring that
+> callers of virtqueue_resize() are properly informed of underlying resize
+> failures.
+> 
+> The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
+> 
+> The third patch addresses a reliability issue in virtio_net where the TX
+> ring size could be configured too small, potentially leading to
+> persistently stopped queues and degraded performance. It enforces a
+> minimum TX ring size to ensure there's always enough space for at least one
+> maximally-fragmented packet plus an additional slot.
 
-... which is already used in DTS and driver.
+@Michael: it's not clear to me if you prefer take this series via your
+tree or if it should go via net. Please LMK, thanks!
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Paolo
 
-Best regards,
-Krzysztof
