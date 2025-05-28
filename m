@@ -1,215 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EE621CC55
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57ADE1E47B3
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748461972; cv=none; b=FBfpF4489GZYieD4C/pi3nivFYAcl+z797ssPfukT7N+6Jc7TizcridNUSUiPb15QmQ6OCt4jHowGUWUELc2PKGYnkj/pwaSbB9KVbgM9LL0h0JEfst59QEp4WNK5VoewyH9UOVZVht/eBtuaNci9uQwaQqvC8pvAoFVwxHZgdI=
+	t=1748462193; cv=none; b=kUjbRstx2CSGKJdOjfjEYsB3GDhWHTFaVnmZfmKVV6KOnE98rzc1hmckrc2ii+TBsJrtC9lUUNzxljfBKYiuHBsCD7brG0ABgUyzz0c+kQXJBm1smnv8U7kT+Geyg/dE7ulkWY7qNQuKpm6DPTkIkQc8euuGsXjOkQG6AkOt/Gk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748461972; c=relaxed/simple;
-	bh=31R4xKWKmitjG5RnBTZ6fLS+lQ/xEclC30oq87oWNSQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Lbq0Lt+pgc6aX8WVSsldTIPbNcPSf27L6AirjWxpConGjtgSrpeevJCT7ULOnXJxFfhHlDaY5ihqjtpunrErOQlvsG8RU9iCJv23R4qlmhjF/yxcAWQDPlWN4mZIqJcXiDxQEvG0Abv0cV9W9q/EiGN7Q+EVs9/oueMEQMOYVG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fwyxeheJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748462193; c=relaxed/simple;
+	bh=OB7MWLP4yrp3bJtXUUZYYFMCjCcMT3kpUGeeUVvJ74k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q0RlLSmup1jD1oiStDEzEDDGADBQSHf0PKSZ7eQEoTrcWA1+tUpHEL6QGiDoRwH0YgBcgj6VbVxOWBpr+3mwMLwCUoiXAc/4YPpPY8/WUK6mvgYkTg21sAAE5TbHn1ReicCfRBwtMCDaB51QPDp9cXdOeqb9YHQA6R+5yfQkOpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OyO5BUz4; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fwyxeheJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748461969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=g+3zZ1K31xkV4VckIAeGyggNzsEYBYLzL0Y5N0v1H1Q=;
-	b=fwyxeheJQMA0EaOy17upH1oo6MCK5F+yQwEH10psXL75vqClFM/l7R6gITP5G9MmVwinaZ
-	VBBrRWHzAltUVd0+1fGPeO46miYSSvJyxq/lHCu8PfhbedrdqV+zvAdGsNuR53hGRqUKJr
-	xlfmdCjkTnDK9NxWnGeih6BrQWaCmEI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-oTMprtAgOO-RWPQ_8Dr_tg-1; Wed, 28 May 2025 15:52:47 -0400
-X-MC-Unique: oTMprtAgOO-RWPQ_8Dr_tg-1
-X-Mimecast-MFC-AGG-ID: oTMprtAgOO-RWPQ_8Dr_tg_1748461966
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so958835e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:52:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OyO5BUz4"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450cd6b511cso1717235e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:56:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748462189; x=1749066989; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W8L7PhpfmS2m6BHlUu71cqULvSSH20y8r59Td9C3Kyo=;
+        b=OyO5BUz4bG+CxcffXm8uoRbB8uHasH35ebE4tze4v2HHZklsVzC/CYnp8Zxt0/FYeB
+         RFkc9vj/yoAfcWvt1NKanDqu3Hom8t3g4lTITym12QgI2CuAdh9uSti1a2NoouY3zgpZ
+         jllcn0uNSghGELlI+mO18k3d45ktGYbcB8FTr2NIPtTn0QIPF/C11UcKTpQXpuu8vO0+
+         niUjbzmsvz7SAM4agRnxmFSxQY/iepQF9niUN94kxNnlzlM1+khoEF9IxqwsNR2RzDw9
+         iQl6iy6/pJsKyqDgPwCRzc+iwjagrv4MwTje8qCNWeMGKDzEl6STc9r20XA60uIDDcnx
+         GUsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748461966; x=1749066766;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g+3zZ1K31xkV4VckIAeGyggNzsEYBYLzL0Y5N0v1H1Q=;
-        b=YMUgetG3TCH8z4eJpoTWvi2+OCTg8c56ZY3cdV+T25D8xgMsHAWrOYi6liQ6sbRL0j
-         /3WONtQ1mKqg/Rpj9mGnLZNaPpD/sDMdPWiwkqs15gbqWMftcqzbMdHsZ4CvZsgf6Dwi
-         WcXeVMo3lqWvprejQc+HA8qyBl3RG7q/XvhcnGkCatkUZR8mWKAYRsx7t7+HX2aeT7Od
-         7yGABE6bCWx6iuBzIFJLJRTJ4aMa00csmsfrn/SK55LnQNekGAUTqXUnK1je7HCLgetj
-         p21WrSyxezoHhlY54lcxzVlq+6/An3Mc6bxAKSuPkPPPgJcYd0jOlZ2m/2NG99MlsPXx
-         XSSg==
-X-Gm-Message-State: AOJu0Yy5cShdK6hyK/iNSuYP1N/Kwva2fnNfpa3jlJRMoHjcXgklLOCD
-	X4SPtcODsH7m8Rt0G5GvwP+C7aEulsZtVvPJcegvpJTSSWmVLr7N/io1+dmP1uLskjaUFFHF+jt
-	S3rrNAMMa9s6yinA3EfB6DRgLfhm97pP64l2sRTSzy9YJ7/2RuosUd4tfrhEZghcp4YJAciEcat
-	M/F3Ob3y49n4O6D6Bl6SCk4YH0dScIguouOABXGd28k6eJHM0K
-X-Gm-Gg: ASbGncssgFFsOE07OVnGhARgor1glMfwQm8LIJGYaaKGAy8USaPfjWnIfWIWhsnim/F
-	BblQ9FDLFCqNwc1F5dKfQDK7GfsWtAzrzRjDw/GWUVuu2zdVQfqzlZtJhGIY7WsLuK3hc3D2I1x
-	1F1s82VI3q89fDtj71eOk09i7p2sV6owTclcIERSaxknMT22RQYUPx4cdkTzeC+8w12UWc9hqxZ
-	/FPzG+NaTklZ5gaTKUaCJP/2yI52y76nBgg2xKYjnh3k3u8BDV+1XG8W07Vt5hf8rCfel/Nj2vy
-	Huoes0wFNGLhbgqocNzSoMTK6t20BZM0/R0T4g==
-X-Received: by 2002:a05:600c:64c6:b0:442:ffa6:d07e with SMTP id 5b1f17b1804b1-44c9141d996mr142856585e9.1.1748461966196;
-        Wed, 28 May 2025 12:52:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGgw89HXpBys9AtsSs/u0lppq8iYMgrEKAe3lvjHHrT75X3gsbzLMb8QzLWDC7F41Sro+0ENQ==
-X-Received: by 2002:a05:600c:64c6:b0:442:ffa6:d07e with SMTP id 5b1f17b1804b1-44c9141d996mr142856365e9.1.1748461965729;
-        Wed, 28 May 2025 12:52:45 -0700 (PDT)
-Received: from localhost (p57a1aa11.dip0.t-ipconnect.de. [87.161.170.17])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a4eac89d98sm2283367f8f.42.2025.05.28.12.52.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 12:52:45 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Subject: [PATCH v1] selftests/mm: two fixes for the pfnmap test
-Date: Wed, 28 May 2025 21:52:44 +0200
-Message-ID: <20250528195244.1182810-1-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1748462189; x=1749066989;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W8L7PhpfmS2m6BHlUu71cqULvSSH20y8r59Td9C3Kyo=;
+        b=UDRKMk+ZCOp9xyUyIdt+KZWZoVGlbZpwvjNjesHW8cmRKAXTudLUgRmiz0NFiBNsZ8
+         A3iKdjYy1vuGo8dPYSgwiafgf6YhG+UxjittpStHC8MEeoWjxOj89jIh9l1Bm0en1Qxo
+         Lg0wvEFFV+krb+VERa9uyi2fag+MPiRr5sY0gYxFDDJHDz4GXLG+9MyaDMsgvepxi/J0
+         Px1UIvCfgSL89DSWXXPjTbarlwPdfvzmovbe5jdXwqlstikv3Y8wt+rLCUTZUPg1iMTw
+         tE5Cr3WmghsrSJd0Ngz5Qngs546rXtHxdz6Kh3PLjExt63wgcZk4egEium4GKuQo5AHk
+         j0/g==
+X-Forwarded-Encrypted: i=1; AJvYcCVXN2lHjLjDr6qEKCszjbkF5YPbqMHS8yukECqDZQHhEVrKCvHziQWCq9ZfWO4xm7+fds0V4+MCaiOLoW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3l0bf7vA/n6H8Bhgi9j41yw3Bw/HNy7JKQKMktFNZxuwoGdTo
+	8JTHi2fSWLKKEV+fGOqFfLvEO1Chi9Hw5ByUm4MVroCbu26GnbB62BSGw5rCJMLL2BLVmQQH1rE
+	NXH5SBu04d7ZPxfmEyCFUc/Ye6HyoWPXRkURpoJn1
+X-Gm-Gg: ASbGncuL33miNeg5URWALAsNDghMtIweHpXMP8G6tKNA/5t3WI7EqByvFFn0kZclVUG
+	N1GzSKR44UVpksChtqY0F5b3xrgOHZzltE+DkMJIpS0Fk9Lt9WoHHHssK2btshApDXoTXOKoykp
+	J7gvs05GU5gco8nYw04P0ZqPQL9cMa8fSaeTb6DzZd073N
+X-Google-Smtp-Source: AGHT+IFRVTFehgHIP4jtTiYzkqzpeEat7ZA6bJJwBruO3MHFT/UlZRIXUBmqTA+/UeIEFdiM+66uwtk4K0Bw983sfEM=
+X-Received: by 2002:a05:6000:402b:b0:3a4:cbc6:9db0 with SMTP id
+ ffacd0b85a97d-3a4e95818e6mr3321018f8f.51.1748462189419; Wed, 28 May 2025
+ 12:56:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com> <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+In-Reply-To: <20250521-nova-frts-v4-4-05dfd4f39479@nvidia.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Wed, 28 May 2025 21:56:17 +0200
+X-Gm-Features: AX0GCFvvfi0IO-4qmWiebEf60BPOOjb4AGpy4FTSeIFi9VcgYiwZXSln0SEgVK0
+Message-ID: <CAH5fLgg6s2JM3HtzR3jimUnjLY0BBBpnNLuBUdrsOYCqmx+8pg@mail.gmail.com>
+Subject: Re: [PATCH v4 04/20] rust: add new `num` module with useful integer operations
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+	Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+	Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When unregistering the signal handler, we have to pass SIG_DFL, and
-blindly reading from PFN 0 and PFN 1 seems to be problematic on !x86
-systems. In particularly, on arm64 tx2 machines where noting resides
-at these physical memory locations, we can generate RAS errors.
+On Wed, May 21, 2025 at 8:45=E2=80=AFAM Alexandre Courbot <acourbot@nvidia.=
+com> wrote:
+>
+> Introduce the `num` module, featuring the `NumExt` extension trait
+> that expands unsigned integers with useful operations for the kernel.
+>
+> These are to be used by the nova-core driver, but they are so ubiquitous
+> that other drivers should be able to take advantage of them as well.
+>
+> The currently implemented operations are:
+>
+> - align_down()
+> - align_up()
+> - fls()
+>
+> But this trait is expected to be expanded further.
+>
+> `NumExt` is on unsigned types using a macro. An approach using another
+> trait constrained by the operator traits that we need (`Add`, `Sub`,
+> etc) was also considered, but had to be dropped as we need to use
+> wrapping operations, which are not provided by any trait.
+>
+> Co-developed-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  rust/kernel/lib.rs |  1 +
+>  rust/kernel/num.rs | 82 ++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 83 insertions(+)
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index ab0286857061d2de1be0279cbd2cd3490e5a48c3..be75b196aa7a29cf3eed7c902=
+ed8fb98689bbb50 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -67,6 +67,7 @@
+>  pub mod miscdevice;
+>  #[cfg(CONFIG_NET)]
+>  pub mod net;
+> +pub mod num;
+>  pub mod of;
+>  pub mod page;
+>  #[cfg(CONFIG_PCI)]
+> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..05d45b59313d830876c1a7b45=
+2827689a6dd5400
+> --- /dev/null
+> +++ b/rust/kernel/num.rs
+> @@ -0,0 +1,82 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Numerical and binary utilities for primitive types.
+> +
+> +/// Extension trait providing useful methods for the kernel on integers.
+> +pub trait NumExt {
 
-Let's fix it by scanning /proc/iomem for actual "System RAM".
+I wonder if these should just be standalone methods instead of an
+extension trait?
 
-Reported-by: Ryan Roberts <ryan.roberts@arm.com>
-Closes: https://lore.kernel.org/all/232960c2-81db-47ca-a337-38c4bce5f997@arm.com/T/#u
-Fixes: 2616b370323a ("selftests/mm: add simple VM_PFNMAP tests based on mmap'ing /dev/mem")
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-Tested-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- tools/testing/selftests/mm/pfnmap.c | 61 +++++++++++++++++++++++++++--
- 1 file changed, 57 insertions(+), 4 deletions(-)
+> +    /// Align `self` down to `alignment`.
+> +    ///
+> +    /// `alignment` must be a power of 2 for accurate results.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// use kernel::num::NumExt;
+> +    ///
+> +    /// assert_eq!(0x4fffu32.align_down(0x1000), 0x4000);
+> +    /// assert_eq!(0x4fffu32.align_down(0x0), 0x0);
+> +    /// ```
+> +    fn align_down(self, alignment: Self) -> Self;
+> +
+> +    /// Align `self` up to `alignment`.
+> +    ///
+> +    /// `alignment` must be a power of 2 for accurate results.
+> +    ///
+> +    /// Wraps around to `0` if the requested alignment pushes the result=
+ above the type's limits.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// use kernel::num::NumExt;
+> +    ///
+> +    /// assert_eq!(0x4fffu32.align_up(0x1000), 0x5000);
+> +    /// assert_eq!(0x4000u32.align_up(0x1000), 0x4000);
+> +    /// assert_eq!(0x0u32.align_up(0x1000), 0x0);
+> +    /// assert_eq!(0xffffu16.align_up(0x100), 0x0);
+> +    /// assert_eq!(0x4fffu32.align_up(0x0), 0x0);
+> +    /// ```
+> +    fn align_up(self, alignment: Self) -> Self;
 
-diff --git a/tools/testing/selftests/mm/pfnmap.c b/tools/testing/selftests/mm/pfnmap.c
-index 8a9d19b6020c7..866ac023baf5c 100644
---- a/tools/testing/selftests/mm/pfnmap.c
-+++ b/tools/testing/selftests/mm/pfnmap.c
-@@ -12,6 +12,8 @@
- #include <stdint.h>
- #include <unistd.h>
- #include <errno.h>
-+#include <stdio.h>
-+#include <ctype.h>
- #include <fcntl.h>
- #include <signal.h>
- #include <setjmp.h>
-@@ -43,14 +45,62 @@ static int test_read_access(char *addr, size_t size, size_t pagesize)
- 			/* Force a read that the compiler cannot optimize out. */
- 			*((volatile char *)(addr + offs));
- 	}
--	if (signal(SIGSEGV, signal_handler) == SIG_ERR)
-+	if (signal(SIGSEGV, SIG_DFL) == SIG_ERR)
- 		return -EINVAL;
- 
- 	return ret;
- }
- 
-+static int find_ram_target(off_t *phys_addr,
-+		unsigned long long pagesize)
-+{
-+	unsigned long long start, end;
-+	char line[80], *end_ptr;
-+	FILE *file;
-+
-+	/* Search /proc/iomem for the first suitable "System RAM" range. */
-+	file = fopen("/proc/iomem", "r");
-+	if (!file)
-+		return -errno;
-+
-+	while (fgets(line, sizeof(line), file)) {
-+		/* Ignore any child nodes. */
-+		if (!isalnum(line[0]))
-+			continue;
-+
-+		if (!strstr(line, "System RAM\n"))
-+			continue;
-+
-+		start = strtoull(line, &end_ptr, 16);
-+		/* Skip over the "-" */
-+		end_ptr++;
-+		/* Make end "exclusive". */
-+		end = strtoull(end_ptr, NULL, 16) + 1;
-+
-+		/* Actual addresses are not exported */
-+		if (!start && !end)
-+			break;
-+
-+		/* We need full pages. */
-+		start = (start + pagesize - 1) & ~(pagesize - 1);
-+		end &= ~(pagesize - 1);
-+
-+		if (start != (off_t)start)
-+			break;
-+
-+		/* We need two pages. */
-+		if (end > start + 2 * pagesize) {
-+			fclose(file);
-+			*phys_addr = start;
-+			return 0;
-+		}
-+	}
-+	return -ENOENT;
-+}
-+
- FIXTURE(pfnmap)
- {
-+	off_t phys_addr;
- 	size_t pagesize;
- 	int dev_mem_fd;
- 	char *addr1;
-@@ -63,14 +113,17 @@ FIXTURE_SETUP(pfnmap)
- {
- 	self->pagesize = getpagesize();
- 
-+	/* We'll require two physical pages throughout our tests ... */
-+	if (find_ram_target(&self->phys_addr, self->pagesize))
-+		SKIP(return, "Cannot find ram target in '/proc/iomem'\n");
-+
- 	self->dev_mem_fd = open("/dev/mem", O_RDONLY);
- 	if (self->dev_mem_fd < 0)
- 		SKIP(return, "Cannot open '/dev/mem'\n");
- 
--	/* We'll require the first two pages throughout our tests ... */
- 	self->size1 = self->pagesize * 2;
- 	self->addr1 = mmap(NULL, self->size1, PROT_READ, MAP_SHARED,
--			   self->dev_mem_fd, 0);
-+			   self->dev_mem_fd, self->phys_addr);
- 	if (self->addr1 == MAP_FAILED)
- 		SKIP(return, "Cannot mmap '/dev/mem'\n");
- 
-@@ -129,7 +182,7 @@ TEST_F(pfnmap, munmap_split)
- 	 */
- 	self->size2 = self->pagesize;
- 	self->addr2 = mmap(NULL, self->pagesize, PROT_READ, MAP_SHARED,
--			   self->dev_mem_fd, 0);
-+			   self->dev_mem_fd, self->phys_addr);
- 	ASSERT_NE(self->addr2, MAP_FAILED);
- }
- 
--- 
-2.49.0
+I would probably make alignment into a const parameter.
 
+fn align_up<ALIGN: usize>(value: usize) -> usize {
+    const { assert!(ALIGN.is_power_of_two()) };
+    self.wrapping_add(ALIGN.wrapping_sub(1)).align_down(ALIGN)
+}
+
+Here the check for power-of-two happens at compile time. Unless you
+have cases where the alignment is a dynamic parameter?
+
+Alice
