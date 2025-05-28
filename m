@@ -1,94 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDD128E585;
-	Wed, 28 May 2025 18:24:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660921EE7B7;
+	Wed, 28 May 2025 18:25:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748456665; cv=none; b=pJ7pdaY1m37unCd/RgQn4ZZ7nb2sevJV3Y0Q2KmhcZlkYGjcW2F/7LLIDsoQxsdm5JPlfEZTmFGrBdj9vgNPwVWyXxdYq/X0bMrWA5x3H2w3Y+D+xblUMj9CB1YScnetkLPKPxJIOQjlBL5DDZ7YjxiA/TKrjkhVPMG+7ieFwQk=
+	t=1748456707; cv=none; b=mdVfVDhB81QmVBynbn2trAbf564azOcTiMj8Y5LJCtVp977tuBaYoDMA5z4NKCD16j4OegShKABpKHj51zo/Y2s2V+uUT8bmVp/6/smfwI8F7s9dolrPCmVnq37jFuqmzCC7lo8w6esfWLMiMFH6LGDPhW84RkxkRecwWKtQE58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748456665; c=relaxed/simple;
-	bh=VdtY8LqEyBJypLL5p9nIDE+rbyWPhX/d8Y9T4l0C3Ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WNPYiHS8pDsjGE/t2iv+PBOiRKdAIgsoojaBcD8I2ly825ZSM4iwtbw+a8xAboFOjasC1TYpqbHjVF07IIMRmijRSmYVJPT4Ff/xrGdd90yJidN5RH4VXMV/pOi42Itb/1ZypFrnV2902OwoLg5DcoU9fCCEEKFareJlJelnD9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPhtmiXc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748456707; c=relaxed/simple;
+	bh=9R7rQjswLIJrPgJWl6lP8SrIEa2p86XfG8Anl84D21U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cEXbjy1D4ncB4JQ+BQY/Ud94SxQL/Brf7+9txqymDITR32wOedAA5BEvwvfl/MRBeO+E2mbmByr6Yahu43H3NTO3sqrqSw6MrH8SZ9cVoo+ZUVkpyKldKErwQH6vgQzXVx4vch97BXDTSJTm4wjT9WRzjJd4tp22hi3NCFEslyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lm6NlCxb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPhtmiXc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B35BC4CEED;
-	Wed, 28 May 2025 18:24:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lm6NlCxb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B4DC4CEEB;
+	Wed, 28 May 2025 18:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748456664;
-	bh=VdtY8LqEyBJypLL5p9nIDE+rbyWPhX/d8Y9T4l0C3Ek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SPhtmiXcJ/CDPHmkzH6ZeAnm3VOouWW2jo1NU2cVzU3XJE407CBJfkWNI5VyQsf2L
-	 i9yC07kM3ppoQQupL20LMvolMMAyM4SnACNStq/4aszjmi0q6rR8i9Dg0zc6RkDdr1
-	 aacxX5by0RYlMcjexBLDZBZQCmp4JAakfLjPv6B6CXGyEGT5TvscgWxw9IGjUAsyej
-	 xedLpE+tVuEGln0jEe1qTHubC1DAxouNvZggEUXnISkxTEueiGlVaJlQDQzmQlB6Dr
-	 Gt7ih24VuOPw5/c8OXBdnZAuJKRH7vpFso4l2lvkIi8R80nsaTMbVPxC4t5ASbKzOK
-	 LmV5pOSONMBcw==
-Date: Wed, 28 May 2025 11:24:22 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v1] perf build: Fix build for clang's
- -Wunreachable-code
-Message-ID: <aDdU1npHL2Vczhsa@google.com>
-References: <20250410202647.1899125-1-irogers@google.com>
- <Z_mK9BVv16MT7shL@z2>
- <CAP-5=fWykL-01S=35zz-6JASbM_cQkx6PHdKS7pJAX0=JBTuNQ@mail.gmail.com>
- <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+	s=k20201202; t=1748456706;
+	bh=9R7rQjswLIJrPgJWl6lP8SrIEa2p86XfG8Anl84D21U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lm6NlCxb4vJfwwDcN3M2IJMcH6XVEBaOsoyVhSjaFO6iaP8Fvlf+oxupHzRawfPff
+	 Q8hd7RaxLTWOMi4ZI3RPk2rdJUrOd4tDzZjbV5Ni4ETaLsyBGIWHbitCyhJFG0+3tw
+	 cY2PQXrv743zvL+0Ey9h0Aoe0I8PTQRCspi2+YABHXwzqRv5qp59euZuZFvV9PJWdT
+	 sr2uPrzcpf7DhWTlvHAJJpeE44NYZxC6iPI1nYibsBO2wRTG9VL5imJ9f8FJg3E68B
+	 ZY2oA7BKjVHApGbiHAjegPoQiaFpANf3Uf1q9IHnSFY5R72sX1uIA303KVUJeYVKTe
+	 J5pBf/3lIn1Cg==
+Message-ID: <b8061efa-83ef-4a7a-a39e-0475dce42614@kernel.org>
+Date: Wed, 28 May 2025 14:25:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWFYS7-FcbyJ5Z5U2rqA7eYwwJ4dMf90TUzwJ0Shh2yxA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] nfsd: use threads array as-is in netlink thread set
+ interface
+To: Jeff Layton <jlayton@kernel.org>, Olga Kornievskaia
+ <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, NeilBrown <neil@brown.name>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Mike Snitzer <snitzer@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
+ <174845587080.200069.9203268802136145057.b4-ty@oracle.com>
+ <298ef5505e7abb9a0ca5f151090a42f8bf330c43.camel@kernel.org>
+Content-Language: en-US
+From: Chuck Lever <cel@kernel.org>
+Organization: kernel.org
+In-Reply-To: <298ef5505e7abb9a0ca5f151090a42f8bf330c43.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 27, 2025 at 01:53:37PM -0700, Ian Rogers wrote:
-> On Fri, Apr 11, 2025 at 3:14 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Fri, Apr 11, 2025 at 2:34 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Thu, Apr 10, 2025 at 01:26:47PM -0700, Ian Rogers wrote:
-> > > > Clang's unreachable code warning is able to catch bugs like the famous
-> > > > "goto fail" which gcc's unreachable code warning fails to warn about
-> > > > (it will complain about misleading indent). The changes here are
-> > > > sufficient to get perf building with clang with -Wunreachable code,
-> > > > but they don't really fix any bugs. Posting as an RFC to see if anyone
-> > > > things this is worth pursuing.
-> > >
-> > > I'm not sure if it's useful and don't see what kind of bugs it can
-> > > address.  The proposed changes don't look like an improvement.
-> >
-> > The goto fail case was in OpenSSL the code from a bad merge:
-> > ```
-> > if (...)
-> >   goto fail;
-> >   goto fail;
-> > ```
-> > Meaning the fail path was always taken and checking on the non-fail
-> > code never executed. Newer GCCs will warn of this because of the
-> > "misleading indent" but  clang won't. It is easy to imagine similar
-> > mistakes creeping in, so using compiler warnings to avoid the bug
-> > could be useful.
+On 5/28/25 2:22 PM, Jeff Layton wrote:
+> On Wed, 2025-05-28 at 14:11 -0400, cel@kernel.org wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>
+>> On Tue, 27 May 2025 20:12:46 -0400, Jeff Layton wrote:
+>>> The first patch is probably appropriate for stable. It should fix
+>>> problems when someone sets the pool_mode to pernode, without userland
+>>> sending down a fully-populated thread array.
+>>>
+>>> The second patch just adds a couple of new tracepoints that I ended up
+>>> using to track this down.
+>>>
+>>> [...]
+>>
+>> Applied to nfsd-testing, thanks!
+>>
+>> [1/2] nfsd: use threads array as-is in netlink interface
+>>       commit: b2a9a114a3c7f5abfa2875b70ce9b73525a74291
+>> [2/2] sunrpc: new tracepoints around svc thread wakeups
+>>       commit: 65b8babe551bddf00aac69bc905f88a4e0371766
+>>
+> 
+> My apologies, Chuck. Patch #2 has a bug in it:
+> 
+> +       trace_svc_pool_thread_noidle(pool, rqstp->rq_task->pid);
+> 
+> In the call above, the rqstp will be undefined. That should be:
+> 
+> +       trace_svc_pool_thread_noidle(pool, 0);
+> 
+> You can fix that up in tree, or I can resend if you prefer.
 
-It doesn't look very convincing to me but it might be valuable in some
-rare cases.  But the proposed changes - basically replace exit() to
-__builtin_unreachable() - seem weird.  Why is calling it a problem?  I
-guess it already has some kind of annotation like "noreturn"?
+Fixed.
 
-Thanks,
-Namhyung
 
+-- 
+Chuck Lever
