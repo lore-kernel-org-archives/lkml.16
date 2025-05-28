@@ -1,142 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E5928C864;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C8828C860;
 	Wed, 28 May 2025 15:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447911; cv=none; b=Yh+7uPSDYxElEsjSWjl659pjSWbQz1C9xjvyC9fAGO/g2CskW4smmfi7Mv4xm6NE6zsRjDfNH3Y+wtaBjtKt0y+LUB5XokcQpRn877AoPwOBAqfuWvSzSt3EqU78JAAZHadhO2b5LJ1/rLNP7sVz3UrsjnKN56lP/SZ/9SKv6pA=
+	t=1748447911; cv=none; b=VKvbJ0HEJigY8Sg92M5Ay9LKLAEP4LxD4FY7sKVoxG8tfrR2vLm3IZ4f4MHhuFW1oeYP1l+n51u1uU6GfFT3Yeh8kmaRxYb/SmBXmYcyKfTe3yoD75PiLEA04XAGZtaFhZo+MRhw3N/SqSr6EamihNfJdawADqOzevBZG0IR8eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748447911; c=relaxed/simple;
-	bh=jQ1GOT+yh1Z61cRE9ycQmcM+5PDeTXfT6DSI9iMG7MA=;
+	bh=OtBi/ZITK7WUZHutB/hNpw5QOeKdiYbhIrHeY6xrCpw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H7WTWVTS8Y5CI6NPMM1yJ293604tPtaXuqA8Q38vOv+b34EnG86Nxk8mFpEZxOJAGyPI71+wRaSidV8TZ4H/N7pRjkGhnVzPzbMvJ1kJ2gKpjanCfaDgqxs9nh8tITYHERqTy0hgh5vUb2u9jb9fpwsLpFCBdTRUT1U0VQKxgnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EW3dVrLt; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=vFkvaX0bZnf+a0hkg9YirD+f1QLsg7tEVuPLrXZexpF6oFlMV6+cHdXA7YdGZgUa2c0Jl8FshP9pPAgYmwn3Nk1C7Sy0RJFLdp2oNeIrJ1OUxpWZDjf3hu7EclEDGMDqya1jwMPeoPRPzRt2LnTD9OBz9fzx9sWfhPCjF9LB3F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tW0PZ6E8; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EW3dVrLt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748447910; x=1779983910;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jQ1GOT+yh1Z61cRE9ycQmcM+5PDeTXfT6DSI9iMG7MA=;
-  b=EW3dVrLtbpUPzSO7v+1XHiRsjEIiMuOAztH+3s07Y+nnrIdE/QDAtNEi
-   yVutIGP7eXbWheH2dOlTFcMsKEsEojriyrHZYIxXO7a4Qh3AkagxlHEM9
-   Bb+uZcL4M0exKq2bHp7DKxr1Cu0ADi5M6eRX2FJCKfC5uGjVU8cMO1jEo
-   htSLDkJ+59MQJm2Jdhh37PmHpRYWsIAFS4Q/H2KmqpVGbQdMu8yWUonbq
-   y+z/kA20UHF+VuLTwIziP+Czo5HcUUy2UZgws7AsBMe6c5uyhfHuINMvQ
-   9GrdEPlDrnEEfF51leDkVj2SeGH4z1Gu9H+iczukRBx3uW+6mfrDJKDiw
-   w==;
-X-CSE-ConnectionGUID: E6DM9eaWQaG1g0v4kDV0QA==
-X-CSE-MsgGUID: ex8vJjGCS3iTnI23eUpEiQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="60740128"
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="60740128"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 08:58:29 -0700
-X-CSE-ConnectionGUID: 7vNOD3ErRAaVAEJcQ5OGBA==
-X-CSE-MsgGUID: DTfw/s/YRguYfCNhsp5rkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
-   d="scan'208";a="148140975"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 28 May 2025 08:58:22 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uKJAZ-000Vow-2h;
-	Wed, 28 May 2025 15:58:19 +0000
-Date: Wed, 28 May 2025 23:57:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Byungchul Park <byungchul@sk.com>, willy@infradead.org,
-	netdev@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
-	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
-	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
-	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-	david@redhat.com, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com
-Subject: Re: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page
- pool
-Message-ID: <202505282311.lZqpYSc9-lkp@intel.com>
-References: <20250528022911.73453-17-byungchul@sk.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tW0PZ6E8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=RoswSQk/PEBsr2RK6KX9ltQEgshvqW8g4fwZIoz7jqs=; b=tW0PZ6E8yx4NYov5nHPcC49wvh
+	Kz2J1xJfwGwlcQwNL78Xbi5R5nWGz8VYiTMxidyGDiJyiVFP9OKpP49ZNSkJDc0kfx6aSq4i3yiQL
+	Hm4F1fh6NI2uq/jkzPr4rErFYjwWpz/rBxfbtMmR2vmKujf+0o94RtCwJ1FkuSgZjX3QM8BWWik3v
+	jA2ifdYUPIIhHWUqNWmEyYMxuiU4aWjf7zdUw0yj4UeNcjq4W55vinm1yuAEIcLIyyfXDZywe/UfD
+	ha8KxMNEyROgtrL9c17E/9iLITIHATCtn4m4i+6lf/J5rX772GvhosJcfUA/kH31d9LWLu6JAHC6Z
+	fe6gVjzg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKJAc-0000000DomJ-3tZM;
+	Wed, 28 May 2025 15:58:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A7F4A3005AF; Wed, 28 May 2025 17:58:21 +0200 (CEST)
+Date: Wed, 28 May 2025 17:58:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org,
+	rppt@kernel.org
+Subject: Re: [PATCH 3/3] x86/alternative: make kernel ITS thunks read-only
+Message-ID: <20250528155821.GD39944@noisy.programming.kicks-ass.net>
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-4-jgross@suse.com>
+ <20250528131052.GZ39944@noisy.programming.kicks-ass.net>
+ <044f0048-95bb-4822-978e-a23528f3891f@suse.com>
+ <20250528132231.GB39944@noisy.programming.kicks-ass.net>
+ <7c8bf4f5-29a0-4147-b31a-5e420b11468e@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250528022911.73453-17-byungchul@sk.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7c8bf4f5-29a0-4147-b31a-5e420b11468e@suse.com>
 
-Hi Byungchul,
+On Wed, May 28, 2025 at 03:30:33PM +0200, J=FCrgen Gro=DF wrote:
 
-kernel test robot noticed the following build errors:
+> Have a look at its_fini_mod().
 
-[auto build test ERROR on d09a8a4ab57849d0401d7c0bc6583e367984d9f7]
+Oh, that's what you mean. But this still isn't very nice, you now have
+restore_rox() without make_temp_rw(), which was the intended usage
+pattern.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/netmem-introduce-struct-netmem_desc-struct_group_tagged-ed-on-struct-net_iov/20250528-103136
-base:   d09a8a4ab57849d0401d7c0bc6583e367984d9f7
-patch link:    https://lore.kernel.org/r/20250528022911.73453-17-byungchul%40sk.com
-patch subject: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page pool
-config: i386-buildonly-randconfig-004-20250528 (https://download.01.org/0day-ci/archive/20250528/202505282311.lZqpYSc9-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250528/202505282311.lZqpYSc9-lkp@intel.com/reproduce)
+Bah, I hate how execmem works different for !PSE, Mike, you see a sane
+way to fix this?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505282311.lZqpYSc9-lkp@intel.com/
+Anyway, if we have to do something like this, then I would prefer it
+shaped something like so:
 
-All errors (new ones prefixed by >>):
-
->> drivers/net/wireless/mediatek/mt76/sdio_txrx.c:74:3: error: must use 'struct' tag to refer to type 'page'
-      74 |                 page = netmem_compound_head(virt_to_netmem(data));
-         |                 ^
-         |                 struct 
->> drivers/net/wireless/mediatek/mt76/sdio_txrx.c:74:8: error: expected identifier or '('
-      74 |                 page = netmem_compound_head(virt_to_netmem(data));
-         |                      ^
-   2 errors generated.
-
-
-vim +74 drivers/net/wireless/mediatek/mt76/sdio_txrx.c
-
-    58	
-    59	static struct sk_buff *
-    60	mt76s_build_rx_skb(void *data, int data_len, int buf_len)
-    61	{
-    62		int len = min_t(int, data_len, MT_SKB_HEAD_LEN);
-    63		struct sk_buff *skb;
-    64	
-    65		skb = alloc_skb(len, GFP_KERNEL);
-    66		if (!skb)
-    67			return NULL;
-    68	
-    69		skb_put_data(skb, data, len);
-    70		if (data_len > len) {
-    71			netmem_ref netmem;
-    72	
-    73			data += len;
-  > 74			page = netmem_compound_head(virt_to_netmem(data));
-    75			skb_add_rx_frag_netmem(skb, skb_shinfo(skb)->nr_frags,
-    76					       netmem, data - netmem_address(netmem),
-    77					       data_len - len, buf_len);
-    78			get_netmem(netmem);
-    79		}
-    80	
-    81		return skb;
-    82	}
-    83	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ecfe7b497cad..33d4d139cb50 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -111,9 +111,8 @@ static bool cfi_paranoid __ro_after_init;
+=20
+ #ifdef CONFIG_MITIGATION_ITS
+=20
+-#ifdef CONFIG_MODULES
+ static struct module *its_mod;
+-#endif
++static struct its_array its_pages;
+ static void *its_page;
+ static unsigned int its_offset;
+=20
+@@ -151,68 +150,78 @@ static void *its_init_thunk(void *thunk, int reg)
+ 	return thunk + offset;
+ }
+=20
+-#ifdef CONFIG_MODULES
+ void its_init_mod(struct module *mod)
+ {
+ 	if (!cpu_feature_enabled(X86_FEATURE_INDIRECT_THUNK_ITS))
+ 		return;
+=20
+-	mutex_lock(&text_mutex);
+-	its_mod =3D mod;
+-	its_page =3D NULL;
++	if (mod) {
++		mutex_lock(&text_mutex);
++		its_mod =3D mod;
++		its_page =3D NULL;
++	}
+ }
+=20
+ void its_fini_mod(struct module *mod)
+ {
++	struct its_array *pages =3D &its_pages;
++
+ 	if (!cpu_feature_enabled(X86_FEATURE_INDIRECT_THUNK_ITS))
+ 		return;
+=20
+ 	WARN_ON_ONCE(its_mod !=3D mod);
+=20
+-	its_mod =3D NULL;
+-	its_page =3D NULL;
+-	mutex_unlock(&text_mutex);
++	if (mod) {
++		pages =3D &mod->arch.its_pages;
++		its_mod =3D NULL;
++		its_page =3D NULL;
++		mutex_unlock(&text_mutex);
++	}
+=20
+-	for (int i =3D 0; i < mod->its_num_pages; i++) {
+-		void *page =3D mod->its_page_array[i];
++	for (int i =3D 0; i < pages->num; i++) {
++		void *page =3D pages->pages[i];
+ 		execmem_restore_rox(page, PAGE_SIZE);
+ 	}
++
++	if (!mod)
++		kfree(pages->pages);
+ }
+=20
+ void its_free_mod(struct module *mod)
+ {
++	struct its_array *pages =3D &its_pages;
++
+ 	if (!cpu_feature_enabled(X86_FEATURE_INDIRECT_THUNK_ITS))
+ 		return;
+=20
+-	for (int i =3D 0; i < mod->its_num_pages; i++) {
+-		void *page =3D mod->its_page_array[i];
++	if (mod)
++		pages =3D &mod->arch.its_pages;
++
++	for (int i =3D 0; i < pages->num; i++) {
++		void *page =3D pages->pages[i];
+ 		execmem_free(page);
+ 	}
+-	kfree(mod->its_page_array);
++	kfree(pages->pages);
+ }
+-#endif /* CONFIG_MODULES */
+=20
+ static void *its_alloc(void)
+ {
+-	void *page __free(execmem) =3D execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SI=
+ZE);
++	struct its_array *pages =3D &its_pages;
++	void *tmp;
+=20
++	void *page __free(execmem) =3D execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SI=
+ZE);
+ 	if (!page)
+ 		return NULL;
+=20
+-#ifdef CONFIG_MODULES
+-	if (its_mod) {
+-		void *tmp =3D krealloc(its_mod->its_page_array,
+-				     (its_mod->its_num_pages+1) * sizeof(void *),
+-				     GFP_KERNEL);
+-		if (!tmp)
+-			return NULL;
++	tmp =3D krealloc(pages->pages, (pages->num + 1) * sizeof(void *), GFP_KER=
+NEL);
++	if (!tmp)
++		return NULL;
+=20
+-		its_mod->its_page_array =3D tmp;
+-		its_mod->its_page_array[its_mod->its_num_pages++] =3D page;
++	pages->pages =3D tmp;
++	pages->pages[pages->num++] =3D page;
+=20
++	if (its_mod)
+ 		execmem_make_temp_rw(page, PAGE_SIZE);
+-	}
+-#endif /* CONFIG_MODULES */
+=20
+ 	return no_free_ptr(page);
+ }
+@@ -2338,6 +2347,8 @@ void __init alternative_instructions(void)
+ 	apply_retpolines(__retpoline_sites, __retpoline_sites_end);
+ 	apply_returns(__return_sites, __return_sites_end);
+=20
++	its_fini_mod(NULL);
++
+ 	/*
+ 	 * Adjust all CALL instructions to point to func()-10, including
+ 	 * those in .altinstr_replacement.
