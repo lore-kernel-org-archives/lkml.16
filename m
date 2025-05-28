@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE9E2857DD;
-	Wed, 28 May 2025 12:37:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A4428640A;
+	Wed, 28 May 2025 12:37:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435843; cv=none; b=U4ZT/rSqG7LIdhvsofsMmf8F8oJJRv/vB4ZeykKsjLTDBjUEh+7WTxdQ1uqgtPxtlZDnMBhUp01iVYUHF/bv8s8Ux85cLo0045vd2HePWgRYNshFf4fJXOLQCrTjgb2fYaK/5nQHdE+GGhGk3jcjvhIJvnCtx70OeiKAHSL1dbg=
+	t=1748435845; cv=none; b=OJgffo5nEFlO1yAVZ2XZJEDUgogqKiEv+JEtxklj1gRwcYdV840Y3P9wv/gS13TH4RB/hM1W6eNPq+AzzxyafcJEVi13eHDN1MgwZXOkbOv8f5I+8AiywOAngM7OOXybrxFpuhvwvSyGtPUxKq73e6YjGb/M4SC++cU5vDJBlhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748435843; c=relaxed/simple;
-	bh=SwIjqVSvohQeuyiIN8uNmg4HfM55OQFRpt3e7TbxcD8=;
+	s=arc-20240116; t=1748435845; c=relaxed/simple;
+	bh=eUA0BDfpbYKOu7zRQ2U4yKvk2szX91xJ+8ngKIX4azc=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=gqzSjVl8jKfAJENx+sbZFb0cgWCVuuK66soIaDa5M5pr3EVLxcc+p2xihVvoR/CEvvJiaKJ0l9I8TA+AlAoyw4n1zy4SFNz4wEM2dt3RSgjblC3PHutycujEIDIFjOzbma1QQ/IwJjCRy4voyRd+8fGbWHSxses9qs0+b1qb/Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6LFxqXi; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=ih9ivjZCFobunAgOMAHUJTxbw9XydlFkkYdaZcp4f0gYbldGGnoFX5V5F0PRlaJhPNsznrpaDlZPhKiDd6+nK7p0H4pzwB299/Aj8GAw4wPHjHqllmQ77/S3XhquxXXxTS7S8lTl/BXR9FuDQMATsxT9C3xSCu5C3M5ufFbVIj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jazg0UmC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6LFxqXi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C89C4CEED;
-	Wed, 28 May 2025 12:37:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jazg0UmC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65DBEC4CEE7;
+	Wed, 28 May 2025 12:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748435842;
-	bh=SwIjqVSvohQeuyiIN8uNmg4HfM55OQFRpt3e7TbxcD8=;
+	s=k20201202; t=1748435844;
+	bh=eUA0BDfpbYKOu7zRQ2U4yKvk2szX91xJ+8ngKIX4azc=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=l6LFxqXiYbmvXE3d5oHFaMP/IYEtmIuQvHyEgP6i6Es59vyX6G2tFH2EcmgX7USz/
-	 Zu6iviFZKESD6T/0kAU3SH4M36aqdUcxo8UgN23bVEa8j/It5Wsa+vhJiiJAbEz1KB
-	 eNxeZhYiuxt98pGsccMpFYSxY5unPEoP5HwZZyvyJ/516Bg8dWHj2vVg/rryoi//cn
-	 d0LrmR94N9X0hEen2iqLYbHl64HvCktAfuzI8nm7On4v2iFbYvlfFrUmWr8MyBGKYj
-	 KABb26JvVbeuD3QnC/YcYfKG6nZOZArcd2miZTJ4gVuBVYSqDL0wiL8dAVDu5hY6JH
-	 XyqFwilZK4pqQ==
-Date: Wed, 28 May 2025 07:37:20 -0500
+	b=jazg0UmCvQ2wV++PyxuX/XABwG1uLNgiyt9I+MfXiFIAD6pOYtbF4Vr79wA4pE8hH
+	 fEWhbdCgSvmh43nXEUtRK0Amq7+8UrVQ1mNv9fnTcHQ8tHwLWG1Rrj3tdHYIv1KcEe
+	 7gzDcSAYWtZR9gz0Pd9Y8qEHAVXKt5H2eB6SegyOgbvfntjP49qrHfgqsS3DJa6WOa
+	 QKi4t8b5Ve9hmIIBvuIbFEp0EoEYmPdepve4eFn0mlP/GGxKoLr4JyvAnBW05UvBXG
+	 lTngUL4DUoFWPpS2hgMdeijYRw64b6suDmK5eGzP5kMCIIUqvS5fAhHHZUHQJ+YEvq
+	 QlfAE5S3nVhjg==
+Date: Wed, 28 May 2025 07:37:23 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,44 +36,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: soc@lists.linux.dev, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, Ge Gordon <gordon.ge@bst.ai>, 
- linux-kernel@vger.kernel.org, 
- BST Linux Kernel Upstream Group <bst-upstream@bstai.top>, 
- Arnd Bergmann <arnd@arndb.de>, Conor Dooley <conor+dt@kernel.org>, 
- devicetree@vger.kernel.org
-To: Albert Yang <yangzh0906@thundersoft.com>
-In-Reply-To: <20250528085457.481372-1-yangzh0906@thundersoft.com>
-References: <20250528085457.481372-1-yangzh0906@thundersoft.com>
-Message-Id: <174843567439.3636671.2589475239055731550.robh@kernel.org>
-Subject: Re: [PATCH v1 6/9] arm64: dts: bst: add support for Black Sesame
- Technologies C1200 CDCU1.0 board
+Cc: linux-kernel@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Umer Uddin <umer.uddin@mentallysanemainliners.org>
+In-Reply-To: <20250528105821.158140-1-umer.uddin@mentallysanemainliners.org>
+References: <20250528105821.158140-1-umer.uddin@mentallysanemainliners.org>
+Message-Id: <174843567453.3636707.847885249011261450.robh@kernel.org>
+Subject: Re: [PATCH v1 0/1] Enable CMU_HSI1 for Exynos990
 
 
-On Wed, 28 May 2025 16:54:57 +0800, Albert Yang wrote:
-> Add device tree support for the Black Sesame Technologies (BST) C1200
-> CDCU1.0 ADAS 4C2G platform. This platform is based on the BST C1200 SoC
-> family.
+On Wed, 28 May 2025 11:58:20 +0100, Umer Uddin wrote:
+> Hi all.
 > 
-> The changes include:
-> - Adding a new BST device tree directory
-> - Adding Makefile entries to build the BST platform device trees
-> - Adding the device tree for the BST C1200 CDCU1.0 ADAS 4C2G board
+> This series enables a new clock block (CMU_HSI1) for the Exynos990
+> SoC. This clock block provides clocks for the DesignWare MMC
+> Controller, PCIE subsystem and UFS subsystem.
 > 
-> This board features a quad-core Cortex-A78 CPU, and various peripherals
-> including UART, MMC, watchdog timer, and interrupt controller.
+> This patch depends on the following series:
 > 
-> Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
-> Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
-> ---
->  arch/arm64/boot/dts/Makefile                  |   1 +
->  arch/arm64/boot/dts/bst/Makefile              |  10 ++
->  .../dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts    |  44 ++++++
->  arch/arm64/boot/dts/bst/bstc1200.dtsi         | 130 ++++++++++++++++++
->  4 files changed, 185 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/bst/Makefile
->  create mode 100644 arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dts
->  create mode 100644 arch/arm64/boot/dts/bst/bstc1200.dtsi
+> [CMU_HSI1] https://lore.kernel.org/linux-samsung-soc/20250528105252.157533-1-umer.uddin@mentallysanemainliners.org/
+> 
+> Best regards,
+> Umer Uddin.
+> 
+> Umer Uddin (1):
+>   arm64: dts: exynos990: Add CMU_HSI1 node
+> 
+>  arch/arm64/boot/dts/exynos/exynos990.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> --
+> 2.47.2
+> 
+> 
 > 
 
 
@@ -98,18 +95,12 @@ This patch series was applied (using b4) to base:
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/bst/' for 20250528085457.481372-1-yangzh0906@thundersoft.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250528105821.158140-1-umer.uddin@mentallysanemainliners.org:
 
-arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dtb: /: failed to match any schema with compatible: ['bst,c1200']
-arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dtb: cpu@0 (arm,cortex-a78): Unevaluated properties are not allowed ('freq-domain' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dtb: cpu@1 (arm,cortex-a78): Unevaluated properties are not allowed ('freq-domain' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dtb: cpu@2 (arm,cortex-a78): Unevaluated properties are not allowed ('freq-domain' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dtb: cpu@3 (arm,cortex-a78): Unevaluated properties are not allowed ('freq-domain' was unexpected)
-	from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
-arch/arm64/boot/dts/bst/bstc1200-cdcu1.0-adas_4c2g.dtb: /soc@0/dwmmc0@22200000: failed to match any schema with compatible: ['bst,dwcmshc-sdhci']
+arch/arm64/boot/dts/exynos/exynos990-c1s.dtb: /soc@0/clock-controller@13000000: failed to match any schema with compatible: ['samsung,exynos990-cmu-hsi1']
+arch/arm64/boot/dts/exynos/exynos990-x1slte.dtb: /soc@0/clock-controller@13000000: failed to match any schema with compatible: ['samsung,exynos990-cmu-hsi1']
+arch/arm64/boot/dts/exynos/exynos990-r8s.dtb: /soc@0/clock-controller@13000000: failed to match any schema with compatible: ['samsung,exynos990-cmu-hsi1']
+arch/arm64/boot/dts/exynos/exynos990-x1s.dtb: /soc@0/clock-controller@13000000: failed to match any schema with compatible: ['samsung,exynos990-cmu-hsi1']
 
 
 
