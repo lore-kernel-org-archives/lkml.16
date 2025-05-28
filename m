@@ -1,107 +1,63 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520CB1367;
-	Wed, 28 May 2025 00:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14742433A6;
+	Wed, 28 May 2025 00:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748392138; cv=none; b=ZheBHDnlHTgTad/A1hJWFstt2h4fG9mmpVKfIhvoBrysDukzuRbH70n4P5zyykOhVb50IDZf08uplQSdGHnibktbkN287AwN6DgBgKOhLYE+FrxGB7ZAUnamaveVmiKzTOiwAUWfkIy+b3ippVI5kRDYUsdVc73KbCrFAZlNxpY=
+	t=1748392148; cv=none; b=T08LCrzd2YCkBxDMkbgQcxDMMtaMOT49CvuqSPfXKmqEUPF3IBu4HEk87Pe5HE5e+d+q4BT9SDmA5Z1g5fibiuU7SE1FAgznzV7soYmL7djV1ghW1vabOekMS7tZiFXFhHkm/6DDaAUvfPNytz8xQ4CMBgmlu5tBHHQvx1hal1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748392138; c=relaxed/simple;
-	bh=2O/eZ+PVqKQBD9BOUwMNiGwOsrD5/Jy7inCLCeOdak4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cKde3buE+HyZwmZEaYnFhVnK1dInaE2BdEm86kn+RShMidqWPPI6lQZPgt3fbUN74FE10NLvvKEB6eLNNNQ2860oM+LydeaNf8oGVGs6lHQTUDa2Tv8MsZLupDdNDhLHK5jFJ+GfGnwhtW5tE8UsyyOtu1vHzN0mSEjY8aEPQuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JkIPGz9b; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1748392148; c=relaxed/simple;
+	bh=E0bPhgFZCMLFbSxypsa1RlNtcOqOpu3ifA2g26DwHNE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=sfrBTQuchdoItNCJBg2a5ckEhlg1SyLMeTPDN5JAXnbvRuaYTWJyGhG+2X3i49wRpsP7ES3QNZnA3LlyLST5ifKMdnfH9E5qM3JPxBPyQi2E4AmFPcpyd4XlZrWB90x7DeRY9WCSD8VnjVBDqmhNIGsbssvCfoV+bYDSV1P0RR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mvt8V/XS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JkIPGz9b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748392136; x=1779928136;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2O/eZ+PVqKQBD9BOUwMNiGwOsrD5/Jy7inCLCeOdak4=;
-  b=JkIPGz9bTPfmcyRiWJiodS/Z1w+yTJQmLN+Whb1HCGn8aK7CBBdUtKY5
-   GXg4DOPDeMrOE5Rfe9e7cTb+o+1+MdnYoYfzPZMnB57Y7lhUjQXc7XPCO
-   r+Vp1xsw8a2cfn5luWvtgT5ecKfGaQLa9RzVKzIPID17UK3D7dXz3Sg27
-   xHIl5+D10Jw+ZEURvb8/sCC8jdUTjSEPauHuEbcADc8deMqWMJT9VabV9
-   08wtaEV/u0lqkgPA8QUoL4lXjfwRnTMmsljetwM1hLkvTBS66c5Y9PmS2
-   uep3uVrAgCzb7biHADSOAVX7Uge4ZYruMtDRJLIRe6YWdlDSIIdcjrC5b
-   w==;
-X-CSE-ConnectionGUID: HBVKAv5RThec4eAfKYtZFQ==
-X-CSE-MsgGUID: /ot979yaSgm09pTZ06asGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="60654368"
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="60654368"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:28:55 -0700
-X-CSE-ConnectionGUID: 7P55cVC7S6qpcgjZkfLlHA==
-X-CSE-MsgGUID: 9Dp6lqIESwG0hpuXqum9lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
-   d="scan'208";a="148072599"
-Received: from unknown (HELO [10.238.3.95]) ([10.238.3.95])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:28:53 -0700
-Message-ID: <63dab0c1-b4b4-4da2-8366-59faaa42cc8e@linux.intel.com>
-Date: Wed, 28 May 2025 08:28:50 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mvt8V/XS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87305C4CEED;
+	Wed, 28 May 2025 00:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748392147;
+	bh=E0bPhgFZCMLFbSxypsa1RlNtcOqOpu3ifA2g26DwHNE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=Mvt8V/XSgOndO9JRXaat6YHE1t041IA5oMiHE63hpIoa4HsXn1/y4iq0b3Pe56mIy
+	 lO2iUWG3j+2qOcsa7MgW8VWyi+zqbyDlWQ9popP4I4IoXFhTv1LJ1leKxMGueGsACH
+	 3ohC8dYPNzX2D7nNWGZdAf8GsnniLBrrqNBOXM7oi7ssQKITdxkNraZDJM+UDRANP8
+	 n9ME5QnqRBmmQv9moKmwXLsZdC0/T2v2Jo1K2pgbjzw51TtwwkcpBVF42zi9R9ig9+
+	 ilSrNhgmY28dHR0G2dEhgaeVWnp3vsFe3lgWJg6Bkt6JceINQ/OeuTe9JnmzPThSrY
+	 RvQ39MYOzLlGQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB01D380AAE2;
+	Wed, 28 May 2025 00:29:42 +0000 (UTC)
+Subject: Re: [GIT PULL] pmdomain/cpuidle-psci updates for v6.16
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250527104856.206797-1-ulf.hansson@linaro.org>
+References: <20250527104856.206797-1-ulf.hansson@linaro.org>
+X-PR-Tracked-List-Id: <linux-arm-kernel.lists.infradead.org>
+X-PR-Tracked-Message-Id: <20250527104856.206797-1-ulf.hansson@linaro.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git tags/pmdomain-v6.16
+X-PR-Tracked-Commit-Id: 36795548dcc841c73f03793ed6cf741a88130922
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 418da6ee1ea62090f6b66d95b8fcf7db2f42c00f
+Message-Id: <174839218144.1837144.13413788928509105361.pr-tracker-bot@kernel.org>
+Date: Wed, 28 May 2025 00:29:41 +0000
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Linus <torvalds@linux-foundation.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-kernel@lists.infradead.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next V2] KVM: VMX: use __always_inline for is_td_vcpu and
- is_td
-To: "Huang, Kai" <kai.huang@intel.com>,
- "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "eadavis@qq.com" <eadavis@qq.com>
-Cc: "seanjc@google.com" <seanjc@google.com>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "x86@kernel.org"
- <x86@kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <58339ba1-d7ac-45dd-9d62-1a023d528f50@linux.intel.com>
- <tencent_1A767567C83C1137829622362E4A72756F09@qq.com>
- <c281170eeeda8974eb0e0f755b55c998ba01b7a2.camel@intel.com>
- <18b805fbe1de59f45b0d61667933f5301cea4f86.camel@intel.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <18b805fbe1de59f45b0d61667933f5301cea4f86.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+The pull request you sent on Tue, 27 May 2025 12:48:56 +0200:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git tags/pmdomain-v6.16
 
-On 5/28/2025 5:48 AM, Huang, Kai wrote:
-> On Tue, 2025-05-27 at 17:53 +0000, Edgecombe, Rick P wrote:
->> On Tue, 2025-05-27 at 16:44 +0800, Edward Adam Davis wrote:
->>> is_td() and is_td_vcpu() run in no instrumentation, so use __always_inline
->>> to replace inline.
->>>
->>> [1]
->>> vmlinux.o: error: objtool: vmx_handle_nmi+0x47:
->>>          call to is_td_vcpu.isra.0() leaves .noinstr.text section
->>>
->>> Fixes: 7172c753c26a ("KVM: VMX: Move common fields of struct vcpu_{vmx,tdx} to a struct")
->>> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
->>> ---
->>> V1 -> V2: using __always_inline to replace noinstr
->> Argh, for some reason the original report was sent just to Paolo and so I didn't
->> see this until now:
->> https://lore.kernel.org/oe-kbuild-all/202505071640.fUgzT6SF-lkp@intel.com/
->>
->> You (or Paolo) might want to add that link for [1]. Fix looks good.
->>
->> Tested-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-> Also,
->
-> Reviewed-by: Kai Huang <kai.huang@intel.com>
-Also,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/418da6ee1ea62090f6b66d95b8fcf7db2f42c00f
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Thank you!
 
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
