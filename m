@@ -1,108 +1,121 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0288B1C5F30
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:09:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 475BFBA53;
+	Wed, 28 May 2025 04:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748405359; cv=none; b=kbAa85UFIZatC5IAC+mmGsVphJ/apBGl0ZUiRgz26a5CFpVcW2m2Vle/EO4Iy5FFK3fs9PnC0EXuq6wk6YZ3eE+zOdAu/DT23NFPsmehrbJyO/qv0pKR18FUOVZuOfH32DIcrsdsjRgJpPN2mNA4c9OrY5H1qPviVQLzGDyDnb4=
+	t=1748405756; cv=none; b=tSl/Fm0Nidkwgzgoe4vm4MvcQgtwjSQuyohyoXtUy+xNem1urdiXKpjQCf0mtIEoYTtRP7HA/Np6p6Vd4GSZl/wcsuBat+bm6K3SyAln4wh2LBgefAD3FQ2QtNaI8pkQdlnaLYqyF+wAnVo4GXHqepqlrzH0K4MSaBlr8o3Dnio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748405359; c=relaxed/simple;
-	bh=hlkY2UnwS2X9PoR6gQ2SIXXXnrL2PXxoo85bg6yIUbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LhWmDmOF0l1Co7ic8wBLQN6UCQA99DBLaqztid30YF228/t0yzfwpyF958LmEtUw9CxsyM76mouzej18FsipUHql9QkdMqf3rRH273AQBTPeqvzMW2TocFkvVQT388yx8Io0bUJtINj/mG8+iqMWtytQQXTSTmZwxUjfvvXfJlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: esmtpsz19t1748405343t0434c731
-X-QQ-Originating-IP: NwjThKqgRnNipc/Nq5ZYdlUS87D/gsFjAfql9alCxk0=
-Received: from [192.168.3.231] ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 28 May 2025 12:09:01 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 12572820072714361507
-Message-ID: <01BDDAE323133ED0+e7d23f35-c6d8-48a3-8fe6-c23e3a9c64dc@chenxiaosong.com>
-Date: Wed, 28 May 2025 12:09:01 +0800
+	s=arc-20240116; t=1748405756; c=relaxed/simple;
+	bh=/I/sCH3HYYMfI7pUcDNfIom6DhGMCZFJGmPYmZ2Jix4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XC2mO5sibFPbQOoldLQZ6DVKEYWJRcCxES/mOg8Q4A/Zeb4tA/+EBJHQ4FX5tX5564j3/zVG/OSXoVTvag+7ckPOR3lGY5x632XhUG13pk4s6tR5DF+9EOAST5EbjD10OQgrlpP6nHUg2Dk+g4Hkz6N6PQ4eyF6frsNQnSphcNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005182DT.eswin.cn (unknown [10.12.97.162])
+	by app1 (Coremail) with SMTP id TAJkCgD3DQ_DjTZoOQuVAA--.6922S2;
+	Wed, 28 May 2025 12:15:04 +0800 (CST)
+From: weishangjuan@eswincomputing.com
+To: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	vladimir.oltean@nxp.com,
+	rmk+kernel@armlinux.org.uk,
+	yong.liang.choong@linux.intel.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	inochiama@gmail.com,
+	jan.petrous@oss.nxp.com,
+	jszhang@kernel.org,
+	p.zabel@pengutronix.de,
+	0x1207@gmail.com,
+	boon.khai.ng@altera.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	lizhi2@eswincomputing.com,
+	Shangjuan Wei <weishangjuan@eswincomputing.com>
+Subject: [PATCH v2 0/2] Add driver support for Eswin eic7700 SoC ethernet controller
+Date: Wed, 28 May 2025 12:14:42 +0800
+Message-ID: <20250528041455.878-1-weishangjuan@eswincomputing.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] smb/client: use sock_create_kern() in
- generic_ip_connect()
-To: Steve French <smfrench@gmail.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: pc@manguebit.com, ronniesahlberg@gmail.com, sprasad@microsoft.com,
- tom@talpey.com, bharathsm@microsoft.com, linux-cifs@vger.kernel.org,
- linux-kernel@vger.kernel.org, ChenXiaoSong <chenxiaosong@kylinos.cn>,
- David Laight <david.laight.linux@gmail.com>,
- Wang Zhaolong <wangzhaolong1@huawei.com>, Enzo Matsumiya <ematsumiya@suse.de>
-References: <20250528031531.171356-1-chenxiaosong@chenxiaosong.com>
- <CAH2r5mtAYV925FbL-5GPGvk3wMG5u0027_icNtUw6uZ9yOBqyw@mail.gmail.com>
-From: ChenXiaoSong <chenxiaosong@chenxiaosong.com>
-In-Reply-To: <CAH2r5mtAYV925FbL-5GPGvk3wMG5u0027_icNtUw6uZ9yOBqyw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MprdIpiwXvQIxjQnEQPCDYWZX+Vl58IqfBnwyubUw/SEHUdGliI0RIwg
-	QaKPv6zKwaQHfaYs79BwwmCHWzLOUB8ZWb1FfanDifxZxJ0CH+8xFfRKL+4IgV3xVt60i+0
-	qKEA7299SCh2JMyfmYXpu72Pc4eq0nbgXyQNtO7pL5kxVCF1ME+goWS2XJ4cUXQ3yTXQOEf
-	pOV4S0o90SYnZCLehZGclus+Q7I5Khea6XXOi4ETujwwzssNbsTMWbkxuSiOvx1+CR8Swmo
-	gPsqTDiqn8b06ehROCpYaHGk1VeBoTzDMKI+AnZ+ZUiGIDChh95LG0j9hPE98+DNUyu7u6A
-	pccxc8aarIDO9E2LMJ2SOh2Q6iGJuODBF3kk2c5o8EtTKtjC5hMVQ357vCbO7/XuA0I4ou2
-	MAHWohXe9fMjs4L8/HR6A7+H+L17G1FvhKH78rdtyUij8xQ0LXt9qprGHlEFvwAr/GeWN7u
-	doUSo/2PPdyiOUz0BY7q9YWi/DnI9pSVawesYIXys6eRLQ9SMGKNzZ7VUwOvmDXUlsG6M8f
-	ixKwALhYtMEDK+Q+4pNxm0P1hOHlfKECqbujI7gBK5zH4AOwhDqbsQtIQiQ6eas95kkSBVK
-	eQ8Ur/8HLsAsPDMPP63wVPpyMt7gavOd2CCJx7zfVhnwIZtPNwcHPOb9wsh7iJk7axlgVV8
-	2ISOX/1X3jXfO/QQhwv1IUPMzioKBgektQbWLm2x66X8CML54ep9oCbeWSERvXlPIXVIBSK
-	ZNLgDQNKjI1g3q27TH+1uMglMZ5aBoJhp9I0pX8zA541RrrYj1963X0W0H7yZdxZVyskuI8
-	y6iPVI1tiXGEYHCGqtMza7ulOaf7xsfrZNlLtSD6qgjvMG+z8qSV6mmRTLehn+MaEHy+emO
-	jCEiKtJpU5Lh+lU27ofCKQkA6sk82wf/dCjIo65b0Nkb9/tsKVL07uhYmwOf1arsZNTMoyy
-	9Nx3IG2AJDG8ZJnWdwBTgHuQZ4V/mIfen/7xHIvYjLBOoCLBOZBcAOjvaSUz0KM1Yj3M=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+X-CM-TRANSID:TAJkCgD3DQ_DjTZoOQuVAA--.6922S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw4UZFy3KFy5ZFykGF4DArb_yoW8tr1kpa
+	yDGFy5trn5Jr1xXws3Aa18KF95Xa97Kr43KFyfJwn3Xan8A34ktwn8KFyY9F97Cr48X3Wa
+	qF1Yk343CFyqy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBq14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRifHU3UUUUU==
+X-CM-SenderInfo: pzhl2xxdqjy31dq6v25zlqu0xpsx3x1qjou0bp/
 
-This patch is simply a cleanup that wraps the original code for 
-explicitness, the last argument of __sock_create(..., 1) specifies that 
-the socket is created in kernel space.
+From: Shangjuan Wei <weishangjuan@eswincomputing.com>
 
-在 2025/5/28 11:39, Steve French 写道:
-> Weren't there issues brought up earlier with using sock_create_kern
-> due to network namespaces and refcounts?
-> 
-> On Tue, May 27, 2025 at 10:18 PM <chenxiaosong@chenxiaosong.com> wrote:
->>
->> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
->>
->> Change __sock_create() to sock_create_kern() for explicitness.
->>
->> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
->> ---
->>   fs/smb/client/connect.c | 3 +--
->>   1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
->> index 6bf04d9a5491..3275f2ff84cb 100644
->> --- a/fs/smb/client/connect.c
->> +++ b/fs/smb/client/connect.c
->> @@ -3350,8 +3350,7 @@ generic_ip_connect(struct TCP_Server_Info *server)
->>                  struct net *net = cifs_net_ns(server);
->>                  struct sock *sk;
->>
->> -               rc = __sock_create(net, sfamily, SOCK_STREAM,
->> -                                  IPPROTO_TCP, &server->ssocket, 1);
->> +               rc = sock_create_kern(net, sfamily, SOCK_STREAM, IPPROTO_TCP, &server->ssocket);
->>                  if (rc < 0) {
->>                          cifs_server_dbg(VFS, "Error %d creating socket\n", rc);
->>                          return rc;
->> --
->> 2.34.1
->>
->>
-> 
-> 
+Updates:
 
+  dt-bindings: ethernet: eswin: Document for EIC7700 SoC
+  v1 -> v2:
+    1. Remove the code related to PHY LED configuration from the MAC driver.
+    2. Use phylib instead of the GPIO API in the driver to implement the PHY reset function.
+    3. Align with the latest stmmac API, use the API provided by stmmac helper to refactor the driver,
+       and replace or remove duplicate code.
+    4. Adjust the code format and driver interfaces, such as replacing kzalloc with devm_kzalloc, etc.
+
+  ethernet: eswin: Add eic7700 ethernet driver
+  v1 -> v2:
+    1. Significant errors have been corrected in the email reply for version v1.
+    2. Add snps,dwmac.
+    3. Chang the names of reset-names and phy-mode.
+    4. Add descriptions of eswin, hsp_sp_csr, eswin, syscrg.csr, eswin, dly_hsp.reg.
+
+  Regarding the question about delay parameters in the previous email reply, the explanation is as follows:
+    Dly_hsp_reg: Configure the delay compensation register between MAC/PHY;
+    Dly_param_ *: The value written to the dly_hsp_reg register at a rate of 1000/100/10, which varies due 
+                  to the routing of the board;
+
+  In addition, your bot found errors running 'make dt_binding_check' on our patch about yamllint warnings/errors,
+  it looks like the validation failure is because missing eswin entry in vendor-prefixes.yaml. 
+  When we run "make dt_binding_check", we get the same error. We have already added 'eswin' in the vendor-prefixes.yaml 
+  file before, and the code has mentioned the community, but you have not yet integrated it.
+
+Shangjuan Wei (2):
+  dt-bindings: ethernet: eswin: Document for EIC7700 SoC
+  ethernet: eswin: Add eic7700 ethernet driver
+
+ .../bindings/net/eswin,eic7700-eth.yaml       | 200 +++++++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ .../ethernet/stmicro/stmmac/dwmac-eic7700.c   | 410 ++++++++++++++++++
+ 4 files changed, 622 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c
+
+-- 
+2.17.1
 
