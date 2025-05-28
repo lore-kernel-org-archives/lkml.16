@@ -1,140 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m21470.qiye.163.com (mail-m21470.qiye.163.com [117.135.214.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C961F872D;
-	Wed, 28 May 2025 07:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0285210F4B;
+	Wed, 28 May 2025 07:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416646; cv=none; b=cW7Yp087+YU9ZIpc2PiH3FqvSygDh/tyn+Zjii6A/V9nlGSkyLqiJ6T/ZKqQbXGPvvVo/o/MPaQsSXYajo7hTqxeAHG6UAI9RTOq94gErRrNlbt5He7BJQHFxpZynR4j0VOom2+ZEUG0gX9iBrTnhOAxaqjg7RsWLSUoN8YUYJQ=
+	t=1748416647; cv=none; b=NdcVxSA8D/DaQL3QIvES0v7s/mNox7y7rbyoWmLg+04Hjz/FSge1IrZZuMMcu5yfuRGAfkGWx/U2CJQXJZuak+a9OZU8pGKY4P6stE+6eBP86lTnQ87hwWDk+wXAF+aVrrOJ1NgBaewOP5edeGQhDnafKq8WFjJdDiLjqt/2qVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416646; c=relaxed/simple;
-	bh=R+f29xiLd8IReSQyDpamYthFgoEuOJOqeanA6Eoi8Qk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=igLpMyKxTNdMCyYHfw8sIis9MER5HgNWwn00gZj7tP62TFIN6dMNhPjcZKwDRKjiF/IReSLuBLkxTIRotQcSzDIMaj66C3+TJhh1LOGRbPZDsguGDwAtmK/pGG2pPngMXU0YqS4RXlVZA+SZaeiyylTCBN/LvIrb7aArQtsWMwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ced6P5O/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748416647; c=relaxed/simple;
+	bh=IPvRjDM80lWDHGgo28IBzcYx0Ckk1dRIKONDiTK4iSg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=si05lQ8/faEMk2lOcRoapXDjvy0c46NnfR/evPT4njeHhF3JaluW5Duh4zCw6JL4b+Q+9QDH2FomCkeLMHvMsqDoaFHH7NlrjIM4zIRwGLbR3FF6beqCEhwXS8hYLzmV2xbf3x0C+rER6TR/+A8cqILqvVZFXLNGSLrIrK3ZoLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Rm31BU1I; arc=none smtp.client-ip=117.135.214.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ced6P5O/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB129C4CEF2;
-	Wed, 28 May 2025 07:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748416645;
-	bh=R+f29xiLd8IReSQyDpamYthFgoEuOJOqeanA6Eoi8Qk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ced6P5O/gL4/4hT7d4beZXNWruI6RNKDrJFw1HI2NaKeauOVVC0GSx3hOvXrzzHSm
-	 y6EtHewr5HuyC8pRYGAYZ8xevfi4d0QhAHcpXl3WGO0/1oTC+PY9Cb0Ojx4gSFOnWm
-	 M4cAeVDBqpfxXxXkJLrjv26i6FRzfYw7gvFEzE7GZ/2s+SP0n6RoLrtQiT4AB8/FXC
-	 lVdDgO79mj5V0aMYNm5iokted9AQzDR4r76Ssw5j6BImRLqk4NSDIFanAyKnoUIIbg
-	 om1fD21cq/eY0Kbre2i8gGGtqjyIA/mSF18LOcm39fOyHB7zHQbQ5RYot349fJQx+C
-	 U8frzT9dX5Atw==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-604e745b6fbso3970017a12.2;
-        Wed, 28 May 2025 00:17:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVJnbhX4x5535yM7qwPRRy9D7+5mkdhVOnkTV8g9AXV5TIbqEgxqxq3XYGxtEMQduPM+wwB81BsIlvFcmn+@vger.kernel.org, AJvYcCW5GuGUKOiPotDarYQqqHDif9ZDHQP7qOHSM1+j4875XqIQCyMFkQA/Vul8sFWI/julyyqnLD77b769TEw=@vger.kernel.org, AJvYcCWh7ilaGcVvABf/2O5VQYAXiOEXVTCEnzI+vXxf1UTm4VFZ3Sc59bqpNRG0lYRjVinMZC2yVcGYsgS7Sx3E2wOh@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAu1aNBCZFY1PTO79J4jjXda8Tm9ulZ+Ak9a8TvHkC9tCyvRLn
-	cQe54DimfeGxFx+L5llyAHW4xnE94/HGSTNKlwn1XJNGut1669zNZRqHIpNeTiLnIOHfnirDruQ
-	ZNgqd8BHjrPpc5H/vnRiBdc85njallHE=
-X-Google-Smtp-Source: AGHT+IHCLtdmroV2Jn717BjtWj2/PFsHPpgneov+NHQPQi7ryO9RQG3YNYf02S1+/qgP7fr2xVHK2n+PMl/EbxAxjb0=
-X-Received: by 2002:a05:6402:27d2:b0:5fb:c4be:b1e with SMTP id
- 4fb4d7f45d1cf-6051c377803mr795235a12.11.1748416644421; Wed, 28 May 2025
- 00:17:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Rm31BU1I"
+Received: from [172.16.12.26] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 16ad4c5b7;
+	Wed, 28 May 2025 15:17:14 +0800 (GMT+08:00)
+Message-ID: <64499337-fc61-42b0-8c50-7749b2036c54@rock-chips.com>
+Date: Wed, 28 May 2025 15:17:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
-In-Reply-To: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 28 May 2025 15:17:11 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
-X-Gm-Features: AX0GCFv1PqBc0S9eTI_-YpcpFrAcsFhiOkHWorIkKM40rfRHllkBaZF6-n5uegw
-Message-ID: <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
-Subject: Re: [PATCH v10 0/5] Add Loongson Security Engine chip driver
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, 
-	linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of the drm-misc tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Intel Graphics <intel-gfx@lists.freedesktop.org>,
+ DRI <dri-devel@lists.freedesktop.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250528134245.13dc84aa@canb.auug.org.au>
+Content-Language: en-US
+From: Damon Ding <damon.ding@rock-chips.com>
+In-Reply-To: <20250528134245.13dc84aa@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGU0aGlZNGB1DHx1KQk8aSBhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpKQk
+	xVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9715c09ca103a3kunmf43b205c7c0117
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NUk6PTo5DzE3HElCMUgLPwko
+	DBQaCxNVSlVKTE9DT0pNTUhOS0JPVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKQ09JNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=Rm31BU1IBANLdwjKdweGRV23FdVzgx6FBf6ic/48VtsB/DskqVdw9vmZGiAvRMfS/Abti7vA2c4j9h2XdHRm+C6GaBFYuXUiORvNf0iEJ1ivgG2mt02/J1EkmfnT3ZULWyshmZTIUJUt/cMbsbdqMtDY35AsR6IHgccScvRVwUc=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=1y9XPtE/Gokh+W8CqyQCHL4aO+4NRxKNs2KqCpdAynE=;
+	h=date:mime-version:subject:message-id:from;
 
-Hi, Qunqin,
+Hi Stephen,
 
-As I said before, why the patch "MAINTAINERS: Add entry for Loongson
-Security Module driver" is missing?
+On 2025/5/28 11:42, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the drm-misc tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+> 
+> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c: In function 'analogix_dp_probe':
+> drivers/gpu/drm/bridge/analogix/analogix_dp_core.c:1589:17: error: label 'err_disable_clk' used but not defined
+>   1589 |                 goto err_disable_clk;
+>        |                 ^~~~
+> 
+> Caused by commit
+> 
+>    6579a03e68ff ("drm/bridge: analogix_dp: Remove the unnecessary calls to clk_disable_unprepare() during probing")
+> 
+> I have used the drm-misc tree from next-20250527 for today.
+> 
 
-Huacai
+Oh, I have found the same compile error after rebasing.
 
-On Wed, May 28, 2025 at 2:59=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
-> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
-> accelerator engines. Each engine have its own DMA buffer provided
-> by the controller. The kernel cannot directly send commands to the
-> engine and must first send them to the controller, which will
-> forward them to the corresponding engine. Based on these engines,
-> TPM2 have been implemented in the chip, then let's treat TPM2 itself
-> as an engine.
->
-> v10: mfd: Cleanned up coding style.
->      crypto: Unlimited tfm
->      tpm: Added error check
->
-> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
->
-> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
->     are all encryption related drivers and SM2, SM3, and SM4 drivers
->     will be added to the crypto subsystem in the future, the base driver
->     need to be changed when adding these drivers. Therefore, it may be
->     more appropriate to place the base driver within the crypto
->     subsystem.
->
->     Removed complete callback in all driver. Removed the concepts of
->     "channel", "msg" and "request" as they may be confusing. Used
->
-> v7: Addressed Huacai's comments.
->
-> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
->
->     crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
->     ls6000se-rng.c ->loongson-rng.c
->
->     tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
->
-> v5: Registered "ls6000se-rng" device in mfd driver
->
->
-> Qunqin Zhao (5):
->   mfd: Add support for Loongson Security Engine chip controller
->   crypto: loongson - add Loongson RNG driver support
->   MAINTAINERS: Add entry for Loongson crypto driver
->   tpm: Add a driver for Loongson TPM device
->   MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
->
->  MAINTAINERS                            |   9 +
->  drivers/char/tpm/Kconfig               |   9 +
->  drivers/char/tpm/Makefile              |   1 +
->  drivers/char/tpm/tpm_loongson.c        |  84 ++++++++
->  drivers/crypto/Kconfig                 |   1 +
->  drivers/crypto/Makefile                |   1 +
->  drivers/crypto/loongson/Kconfig        |   5 +
->  drivers/crypto/loongson/Makefile       |   1 +
->  drivers/crypto/loongson/loongson-rng.c | 211 +++++++++++++++++++++
->  drivers/mfd/Kconfig                    |  11 ++
->  drivers/mfd/Makefile                   |   2 +
->  drivers/mfd/loongson-se.c              | 253 +++++++++++++++++++++++++
->  include/linux/mfd/loongson-se.h        |  53 ++++++
->  13 files changed, 641 insertions(+)
->  create mode 100644 drivers/char/tpm/tpm_loongson.c
->  create mode 100644 drivers/crypto/loongson/Kconfig
->  create mode 100644 drivers/crypto/loongson/Makefile
->  create mode 100644 drivers/crypto/loongson/loongson-rng.c
->  create mode 100644 drivers/mfd/loongson-se.c
->  create mode 100644 include/linux/mfd/loongson-se.h
->
->
-> base-commit: c89756bcf406af313d191cfe3709e7c175c5b0cd
-> --
-> 2.45.2
->
->
+I have removed the 'err_disable_clk' flag and made it return 
+ERR_PTR(ret) in:
+https://lore.kernel.org/all/20250310104114.2608063-7-damon.ding@rock-chips.com/
+
+Likely a small merge conflict bug. Will patch it later. ;-)
+
+Best regards,
+Damon
+
