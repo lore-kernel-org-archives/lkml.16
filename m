@@ -1,105 +1,177 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229752853EF
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A45A288526;
+	Wed, 28 May 2025 13:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439722; cv=none; b=ORlnpw26BRrYtGUhEZ3JIfR6vc4JtiOO7Lbtib8LdCUvthnPSMlNKHYO1tkXFjSlWYCpxvmoi3ITp4ILLBVnIv6mRWuc5cP8oDtsBLwD1rVdBrt5s7RlW9ea0qVDsf20Oxw9jSg0mKKoYYhJfLuNTTzNMjLGZNn1URqUc8l0jnk=
+	t=1748439726; cv=none; b=QxhoyCZGRjS3YQ34/MUdaKqTWRoUr/bHoO4FjWPOo5/GZjr29E5h/uDfoUyWIYbdvsG04hv8yBgLf7+1LB4GpreN61pXEgCMsJBWN2p+Ho5JPaj98w3J6UrG5Huyea4t2c68qfegrerj52dV8HkGhSHJFCQoN7aMuLLnl1dYIGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439722; c=relaxed/simple;
-	bh=q6+NUbSkDfbULFIkQSRxG3LqAFTgY8fsGbQ0EjJoDmg=;
+	s=arc-20240116; t=1748439726; c=relaxed/simple;
+	bh=V9S/2REy6SRPwlWHL+UjOecCAm58nBM9YBmNFi5Tywo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qMwihIxCT3KJdPNDBDnOP9m38989vK3aXMr54Yv2Hcln2RcGn5O/PQe2R25g3mSYOx8UxbcDsaWvpeaTWDsKDnOQut0hnsQGB2o22p3xDWvQ4Ukl/DObkstO/V96I1NUo90sWN3ihvVCpbWgtE8ZE4nBTJpHk36DuoGtjc71604=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dvDTI76j; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=A01xXwPLpDjaqBG5BScIvwppG1CDEPvM1o9dKc7ixDmS7j9vTMG5XJ6VUkQJfgqHPGIWZwMkUDIV9z9AflZbdtKc9hKpV+J5DxFSeuFpYuM7+GldbJziZiZXQT4rEUHf1bxP/gW/yFedc/zXLQteotgWO9Y9d47MQPfBQ1yujGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNsjXw9M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvDTI76j"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47677b77725so41399911cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:41:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748439719; x=1749044519; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q6+NUbSkDfbULFIkQSRxG3LqAFTgY8fsGbQ0EjJoDmg=;
-        b=dvDTI76jZZGKZmTUy8Wff5m8yyne23JCwucBRkoFbQLgPKmcWzyLZ2j6RrrAgnWDlA
-         Db5GSXJPcEIp1gJIjJmCCAnswBjT7gBApuO25JjYe/9SkA5BSUfPS02mZUwesFAVHmL+
-         mrvM509kQpcIPbIWZPVIWspkkPPA3rxuHJKyloF4yoyc0wrHf8oA325hyPgtI6+n0Uo0
-         qUPjyuJAKbzSwr10pvyQU8OKlKxenOXH7rvszJf1DqxBrBU2ZdhzifhdezlkvRgijtFs
-         CLqEaXxVmkLzvJya9w2F3JcjClKiCSTiyXAgdCTx/qnSD394/bmpLZdVjJPwcdOpAOJK
-         EANw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748439719; x=1749044519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q6+NUbSkDfbULFIkQSRxG3LqAFTgY8fsGbQ0EjJoDmg=;
-        b=FjTRhJe5ZzMwejRELtuuqTrcp3w8kh+j12h9jX1cwGVc1JkFHvQkuFlkaecJaatbgl
-         zUIDEaSH6pkp/vR1DkoArFgHvR74Dgk0lsMU++0fGDB2k0yxahwT5MyGLI9ZgglcIy7Y
-         jQfYOHsbNMUJeUu9k/fS0NOLPfEzamxh9AjkJpRZcu0MXV8ldmSiuzC1fPHmwbTSts/w
-         J7xuYQXRAn3g01vunNmKrZ/kJgy60EYhk2i0cw1oqVW3j/hxXPP1q1F/LHZVdVRzo8Rc
-         aN5KGXJ7YICAndspxZBiBJaCW5XSXFSHgAfOOlId260AnvL4QP95nlkbBTkYKZ65OvDG
-         hoAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvKwwS6Pto4VVEgXD9MxbImLfiV5FdJH/mwyKmIsjus7lDHX4WnZAHPOH3jmn6pOiXhHUpXhHeJpJLnzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/L21gOA0WSHT1EQWTmiG0iuIAvE7HfiylkQ6hul4dYPvDmYfc
-	6eZ7LPP6TP2jOP9TXcjsXNK0qZKHL6Dsy+nKsFYX7oe4Ort1cljt9FUiQafjniXZAScGZbvUa2V
-	wBm8VbIp29ictywM/lryQS8hPXQ4Nm5qvKczgpn2x
-X-Gm-Gg: ASbGncvn4OSgPhCCq5rrAuYMp/hzeNRbeUR5ZcAjMhqnYPGJBAILuZ3+ubXn7vBtXyc
-	mQQmqC4mwDgsZwXFokY4FE62Cj2Joxix14MH3zH90XtmXgDSDifDVHdtb0Ht82G4686mihtZR5H
-	33k1U/I4/tWqbiLQo5Oo6GRsW/8LdKLL8rJqfP1ky+e2nkjef98W34Fw==
-X-Google-Smtp-Source: AGHT+IFXUSUWOaRqlGgnQsk3Ddxf9ikBISkt0/KlPz6xvIxI0l0YyOvrvNO9ok6mnWdgT9562252wxJ87xj+prWb40Q=
-X-Received: by 2002:a05:622a:5c15:b0:476:add4:d2a9 with SMTP id
- d75a77b69052e-49f46c33b2dmr291076841cf.30.1748439717984; Wed, 28 May 2025
- 06:41:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNsjXw9M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C975C4CEF4;
+	Wed, 28 May 2025 13:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748439725;
+	bh=V9S/2REy6SRPwlWHL+UjOecCAm58nBM9YBmNFi5Tywo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=GNsjXw9M9L1DpZv3jViNj4XkRdb+mXI+2m/G47jUDBV7WxLPvUEubGj+1ixOIJqRZ
+	 e717/UmjcPxGcIwM1BREjJHjlHf7DQ6xXKLJDrFl1tj04VPf1Nl1KOdgCgSbhZFqe1
+	 fB4uuTK4326ar1JEQv1u6vI97cf23A7RHdJvMGc4fpP8miZY3I2LE258OtWM74XvuF
+	 uyjjxH7Jkv2eBczrYAMXiiQ4xzeMUCcmt8tKkGRjgdQl+plEZu+sAUbi3CzKXza/g/
+	 qkqGVbbTWmfb3tPdTBHScCSnX5dqhvmCdvqDtXY9/jBXm1ah6dywidLzlVPvpGBgkS
+	 H/v7sUXokTZ5Q==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-604b9c53f6fso6198532a12.2;
+        Wed, 28 May 2025 06:42:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdtAbmoiLXxg2NpIyWwsqEG7J42UhRVk1A0nkoP7m5sJggzseyC6MA5pTNOBf1/DWGFykmxNlfqDDe@vger.kernel.org, AJvYcCV3Cp7hU17NJmrsFwFeoidb7DPFuxPCZA+U+5V2x7u+CFOoBx7oVm/BxLoheOD+YFbn+jjMKpZK2jMxC0A=@vger.kernel.org, AJvYcCX73D11X+0+lxz62B7/QDlmHJzZKFS+UhdTeNPLYr377J6/iIfUa/Clqe0OYO/OSAYnl12xEfZegv8WVLbH@vger.kernel.org, AJvYcCXeW1In+Cg42CG1OuKvYhPAX9K12ySHnulPo+cZGmOlJT8DetDG7/fllGhk3erseAs3bxtqSWVMt50n@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4DhbO8wojG3FVTKyg4jyvKZDfiX283MHZ1cjmS2Yn14jEHpcv
+	Jdzrdkb2lz2MoaatIrqt4gxPcybLDNQxfFBkCdi62TdH2Jl+KveVobuGv6s6nX5IrnHrJjFyBVv
+	YjoU952VBTKI3d3E9cFqlXFOvO/nzsA==
+X-Google-Smtp-Source: AGHT+IF33pDJOIkUnFeeemo7C8vEsrRKhSwUSbgBJjMPDXVeNtNZPzFqXBOHGol2WTjwYaKgOgXZo2D8V9wI8E6hrhc=
+X-Received: by 2002:a17:907:7f09:b0:ad5:23e3:48b6 with SMTP id
+ a640c23a62f3a-ad85b2b586fmr1522153166b.45.1748439724013; Wed, 28 May 2025
+ 06:42:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com>
- <aDcLIh2lPkAWOVCI@strlen.de> <CAN2Y7hzKd+VxWy56q9ad8xwCcHPy5qoEaswZapnF87YkyYMcsA@mail.gmail.com>
-In-Reply-To: <CAN2Y7hzKd+VxWy56q9ad8xwCcHPy5qoEaswZapnF87YkyYMcsA@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 28 May 2025 06:41:45 -0700
-X-Gm-Features: AX0GCFtlj7sv-EQdf2aW5VpoDTLIYK53zi24E4KIItVmjWV2JQld-StOJ3wEEoo
-Message-ID: <CANn89iLG4mgzHteS7ARwafw-5KscNv7vBD3zM9J6yZwDq+RbcQ@mail.gmail.com>
-Subject: Re: [bug report, linux 6.15-rc4] A large number of connections in the
- SYN_SENT state caused the nf_conntrack table to be full.
-To: ying chen <yc1082463@gmail.com>
-Cc: Florian Westphal <fw@strlen.de>, pablo@netfilter.org, kadlec@netfilter.org, 
-	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250520-6-10-rocket-v5-0-18c9ca0fcb3c@tomeuvizoso.net> <20250520-6-10-rocket-v5-1-18c9ca0fcb3c@tomeuvizoso.net>
+In-Reply-To: <20250520-6-10-rocket-v5-1-18c9ca0fcb3c@tomeuvizoso.net>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 28 May 2025 08:41:51 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
+X-Gm-Features: AX0GCFtEoojAQ2L7InqgVIis2qLVvXMe-zX4FDkooFBAAdsDZZRxWtAdT4YSjTY
+Message-ID: <CAL_Jsq+2mvUDWWvtPSryAiCNJP_=1vNRxARxWTS=-O-LTQO3Dg@mail.gmail.com>
+Subject: Re: [PATCH v5 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 28, 2025 at 6:26=E2=80=AFAM ying chen <yc1082463@gmail.com> wro=
-te:
+On Tue, May 20, 2025 at 5:27=E2=80=AFAM Tomeu Vizoso <tomeu@tomeuvizoso.net=
+> wrote:
 >
-> On Wed, May 28, 2025 at 9:10=E2=80=AFPM Florian Westphal <fw@strlen.de> w=
-rote:
-> >
-> > ying chen <yc1082463@gmail.com> wrote:
-> > > Hello all,
-> > >
-> > > I encountered an "nf_conntrack: table full" warning on Linux 6.15-rc4=
-.
-> > > Running cat /proc/net/nf_conntrack showed a large number of
-> > > connections in the SYN_SENT state.
-> > > As is well known, if we attempt to connect to a non-existent port, th=
-e
-> > > system will respond with an RST and then delete the conntrack entry.
-> > > However, when we frequently connect to non-existent ports, the
-> > > conntrack entries are not deleted, eventually causing the nf_conntrac=
-k
-> > > table to fill up.
-> >
-> > Yes, what do you expect to happen?
-> I understand that the conntrack entry should be deleted immediately
-> after receiving the RST reply.
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+>
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+>
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+>
+> v4:
+> - Change required node name to npu@ (Rob Herring and Krzysztof Kozlowski)
+> - Remove unneeded items: (Krzysztof Kozlowski)
+> - Fix use of minItems/maxItems (Krzysztof Kozlowski)
+> - Add reg-names to list of required properties (Krzysztof Kozlowski)
+> - Fix example (Krzysztof Kozlowski)
+>
+> v5:
+> - Rename file to rockchip,rk3588-rknn-core.yaml (Krzysztof Kozlowski)
+> - Streamline compatible property (Krzysztof Kozlowski)
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> ---
+>  .../bindings/npu/rockchip,rk3588-rknn-core.yaml    | 147 +++++++++++++++=
+++++++
+>  1 file changed, 147 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-c=
+ore.yaml b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.=
+yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..9eb426367afcbc03c387d43c4=
+b8250cdd1b9ee86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/npu/rockchip,rk3588-rknn-core.yam=
+l
+> @@ -0,0 +1,147 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/npu/rockchip,rk3588-rknn-core.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Neural Processing Unit IP from Rockchip
+> +
+> +maintainers:
+> +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> +
+> +description:
+> +  Rockchip IP for accelerating inference of neural networks, based on NV=
+IDIA's
+> +  open source NVDLA IP.
+> +
+> +  There is to be a node per each core in the NPU. In Rockchip's design t=
+here
+> +  will be one core that is special and needs to be powered on before any=
+ of the
+> +  other cores can be used. This special core is called the top core and =
+should
+> +  have the compatible string that corresponds to top cores.
 
-Then it probably hints that you do not receive RST for all your SYN packets=
-.
+Is this really a distinction in the h/w? If you change which core is
+the top one in the DT, does it still work?
+
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: '^npu@[a-f0-9]+$'
+> +
+> +  compatible:
+> +    enum:
+> +      - rockchip,rk3588-rknn-core-top
+> +      - rockchip,rk3588-rknn-core
+> +
+> +  reg:
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +    items:
+> +      - const: pc
+> +      - const: cna
+> +      - const: core
+> +
+> +  clocks:
+> +    minItems: 2
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aclk
+> +      - const: hclk
+> +      - const: npu
+> +      - const: pclk
+> +    minItems: 2
+
+It is odd that the non-top cores only have bus clocks and no module
+clock. But based on the clock names, I'm guessing the aclk/hclk are
+not shared, but the npu and pclk are shared. Since you make the top
+core probe first, then it will enable the shared clocks and the
+non-top cores don't have to worry about them. If so, that is wrong as
+it is letting the software design define the bindings.
+
+Rob
