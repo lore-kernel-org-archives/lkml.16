@@ -1,110 +1,78 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058B223CB
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3505123CB;
+	Wed, 28 May 2025 13:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438263; cv=none; b=Uck40K7VD51YhEGBojJPbLvja9oYeKlgBxbF+PTChK4wggbO2LEvBdTml8t3eRESIJaXuiZIAN/pwYhYWdM6B+dlkW0HC+4pHehGSR8opv9AmHq2qkqK16zRweTkUQYUtKlOxQYmpbdtErqEVNXEhfAw6daypZ/zPf7gAFXWZBU=
+	t=1748438289; cv=none; b=iv8vbPE+6URVp+mL0sdWjZ0b3wBNhquIzsd55JgTLG5z22fEQpyxKEK/RKMnzbNFXOX27KfRfKlXrUYv71iFNo+JlqKDEIZC2l01pIyuVsb93jo5O7mNQqwdIB6BIAbZOXSkKwcSWyBscfXRHSHlSQ3yIhDYdLserpaTlACrbSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438263; c=relaxed/simple;
-	bh=+8JeJ0WuWhzvAWlP/eWg/yGnQ5jEOIHa1Vy8lkmwQAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jhJ8+TV5efEY5Z1LfTE7nafQZUcbfHqw/CkuUqPlTo+43ZgytXQcqFDiVN/uG9tkVBlBRUjm6l4Z2ilzhfR8RYs0Ko1qsJwhodNQGiewnGdb8AWUqdvc3SFyzxAxqz6gwOwIIgVBYGRVWJFbWg5TpSbUpvsjRBhTYEGVMOPoZ0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xDjHDgkj; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1748438289; c=relaxed/simple;
+	bh=JyQ/g7Kg5zGeYkYRJRGiz+qenkQhnkpuUKlYzzPl8U4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k10uxEPoW4O1DGTReVXmhqk2H7NJQUiLrzTLY/PqtDoCKVogPLnDC5hdp1IM4NePk0HAwPSA6zEjIgSUSxkG4Tu3SJFaX+xKf1GrUzN8l4eImPEG0NGTi+F/d1NVvJq6xLRg9jaYTNs7CCku47Kd1xhIaXPD3J7cBGgPDnVZYiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EyQhrn7j; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xDjHDgkj"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4c4e6a0ccso3367504f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1748438260; x=1749043060; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=etuOIVUU4x5SySaTzeLNRaqDZ3hUnhSaZPYuWZNFHOo=;
-        b=xDjHDgkjiAQIndoaIzHn1Uc+K0cJAoizjAHQicY87NOfQD5c0YoHvu2tbGQdjCruNx
-         7juAQuxEPoyLd5uIIDL50t1opayQZ0DtZ66rjInnvEqIAIEQoGY0124sRqZVh/cwfdMv
-         1mUS5lWPJrrfAiBIBaOKCjq3crMOSgV8Sl65fmW4jabg6Grk40B3m0cOvA7Ox8AL/8j1
-         FRnuOdWsBfMooh1W2E5LlShZsquGXCuxCw4j+LWxBx1qtA+zsGzcKaeEfcezWW7Vzhpj
-         FSvM8A5AiuVALahUlTILjAC1SEq+rwfKfQ12arGDcIqsNGlb/g4eQEb6U5nKraJQPQXE
-         oQnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748438260; x=1749043060;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=etuOIVUU4x5SySaTzeLNRaqDZ3hUnhSaZPYuWZNFHOo=;
-        b=Om3MpgdvZxtw6Z0svc8ez/mSz97KT9FGROMo/g9dyhPZIIDmI2TROSGR7pGOrreiGe
-         yqCqExwXt+ycXl84DxVRRBF3q7BnU1l24yg3S9G0nmfK+r/oBRWb9x/biPaMmBZ+3wOT
-         WC/fyjHo2rVcX9ALAteoiw+yAnLqFvgDVafvt20mFYJhV2xSTPnSgPoOE9RFvwerYaaD
-         OL1jN5iSu7DZBfoUS4P9nwa7S9j4cqps0GbT7UsTK7mBdmWh+M9BLT7rg4nczpNSZGHC
-         UUWm8y4Jc6FF+fVTQ0pVKNcOhtTULRwdjut/86NxwisAm0wQhYlrUBZtmSb/GHmZqcBj
-         XN6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWXTz0K+7aCaW4by36yCnISiDUJGMcuW0CUvZfkEId6XO83lQg9yfY1tWXjaahoS0qMVT3XXOwCGka1+No=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHaP4Zm5ZNgnsJOquwUpez9Psmj7/dEqqBKNI3SJdNMxbvd+kV
-	pDArCzq9m79xz73ePQnl5bhHCy1l90lCql+wROY5JDxn7rcrEN2HLcAQ8ipM4Gw9PVA=
-X-Gm-Gg: ASbGncsP/PHv795AeNxnJ1Un9yn/wCJUchiedlJE9VaBbpR52ECx5n8mqq/8gntXex1
-	s6ICurLqvQ0uD0ZZgGG8JoGd1e2Ee0dTi9X/lOou0TkcGDYHoa+GSkFXc80/uHX7GjsmR2+MTWj
-	sMjLqzp/PNsnbJOfWA7VJCtrDWeEvo3oo5YwOiAsvT2lZsYDyS7m0rplo45zdnqK/KYzjVwzuja
-	o17J7RVl9/MQvceeAxHGHZr00lrTJ+jN8T72smzRvs81GOhbHbqWo6q5yjvnxUwWIOCpyEvTuYN
-	C0NsVQSDfSd/38hC24CYj3COOqEo9eebGT9KLr6aWMOGOZjt+3e+6kioFTfdDpfuGAOqVf4f1CX
-	6zv9nX5ZlcSmkg5T0Eg0h9m5ZWA==
-X-Google-Smtp-Source: AGHT+IF6k9N6RDrHL9CWqquYKN5znltPLRFbYrRqu24xJR1k0tX7fObXTd2EmsKCVpIINagQQXmgGQ==
-X-Received: by 2002:a05:6000:4308:b0:3a4:ed1e:405b with SMTP id ffacd0b85a97d-3a4ed1e40c4mr749522f8f.46.1748438260235;
-        Wed, 28 May 2025 06:17:40 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a4eac6ed4dsm1509868f8f.17.2025.05.28.06.17.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 06:17:39 -0700 (PDT)
-Message-ID: <a6d64948-e713-4a50-9d4e-6de02a550d06@linaro.org>
-Date: Wed, 28 May 2025 15:17:38 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EyQhrn7j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=AVELsSfT+NEsd6GMqBswfz7jVJ/MdJvCvrkyarXhQCQ=; b=EyQhrn7jpycft0MeKIZGHyWnJS
+	ibq1GqgdSdrU8tsQyawklHn+12vyeXjBzV6dery6l2SD8cOTNx5/oB1HNcGEL27lWhewnxWPye9Js
+	nA79OsaIKp86WbLInP4ThC6poftelv6zYQUUzgfcoTLjXC6WNJkI5k9klFu3NHap01jEkk9HkQwIF
+	1727Xlwu+i8z1/1hu9w0iIHPk1ptBXXpHj7GNzKXQip+nCN7GB54WuQaRC65UPCcEp8Yt9Cv/ibPp
+	4gfdH+rM+/abnV9+WYPqErR8508sW8sjHs6pNJ4MCMF1J3d1B+PElS4/YArtLUsBm97tBYSup/C9n
+	BerYQpKw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKGfS-0000000DfhL-3vdd;
+	Wed, 28 May 2025 13:18:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D91C9300155; Wed, 28 May 2025 15:17:59 +0200 (CEST)
+Date: Wed, 28 May 2025 15:17:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: x86 Maintainers <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Todd Brandt <todd.e.brandt@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by
+ commit 96040f7273e2
+Message-ID: <20250528131759.GA39944@noisy.programming.kicks-ass.net>
+References: <2006806.PYKUYFuaPT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Add the NXP S32 Watchdog
-To: Guenter Roeck <linux@roeck-us.net>, wim@linux-watchdog.org
-Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
- S32@nxp.com, ghennadi.procopciuc@nxp.com, thomas.fossati@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, alexandru-catalin.ionita@nxp.com
-References: <20250410082616.1855860-1-daniel.lezcano@linaro.org>
- <650c336b-a698-42f5-ad59-7dcdf24667f4@linaro.org>
- <2a8e1ae7-2a8a-4cd8-b699-c010019c766e@roeck-us.net>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <2a8e1ae7-2a8a-4cd8-b699-c010019c766e@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2006806.PYKUYFuaPT@rjwysocki.net>
 
-Hi Guenter, Wim,
+On Wed, May 28, 2025 at 02:53:13PM +0200, Rafael J. Wysocki wrote:
+> Hi Everyone,
+> 
+> Commit 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint()")
+> that shipped in 6.15 introduced a nasty power regression on systems that
+> start with "nosmt" in the kernel command line which prevents it from entering
+> deep package idle states (for instance, PC10) later on.  Idle power, including
+> power in suspend-to-idle, goes up significantly on those systems as a result.
+> 
+> Address this by reverting commit 96040f7273e2 (patch [1/2]) and using a
+> different approach, which is to retain mwait_play_dead_cpuid_hint() and
+> still prefer it to hlt_play_dead() in case it is needed when cpuidle is
+> not available, but prefer cpuidle_play_dead() to it by default (patch [2/2]).
 
-On 14/05/2025 20:09, Guenter Roeck wrote:
+I don't understand. The revert says the reason it regresses is that it
+goes into play_dead before cpuidle is initialized. The fix is then to
+call cpuidle first.
 
-[ ... ]
-
-> AFAICS the patches do have Reviewed-by: tags, so this is just waiting 
-> for Wim
-> to pick it up.
-
-I fetched the watchdog tree and saw it was updated from May 23th but I 
-don't see this watchdog series.
-
-Is it possible to give a status about it ?
-
-Thanks
-
-   -- Daniel
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+But if cpuidle isn't initialized yet, how does that fix anything?
