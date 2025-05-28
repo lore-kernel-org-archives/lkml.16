@@ -1,106 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD213B1A4
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0B0244695
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416854; cv=none; b=NAomeh18z3jlQUWDpc+y8TKdHNP157FA+MAgP3GzIoL2JpUU+UI2wR6bZqSGUA5jU+ZqDrBlMaw6lCIGk3EwLgYLNaefI1vMOdfVC/s6sGC7oHiZbkLjiTm883mBWvY5XCiG945ZGkb3OUh7BSgaVrGLB/EAwPh3lLmr7Lx38X4=
+	t=1748416868; cv=none; b=VPnTEtZdbVekH7ORoSc1R7YSvZRvcMhPug1h0ubvuEGG6HhhEtjkBunzDB8ZaYq5HyGmjuuKGCOodzqfrV/5VpM9MYXMWZNFHBr9wwtInUAaA+AZKgLNhjToGzmDKWwjvZBJCoXeEpRSl6BaM4n/09TCMmZhkWGQ8nlgyx2Ht7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416854; c=relaxed/simple;
-	bh=1d1WGAVVXkGYDtw9DCPpZQCb5ZPBQACYubXaunIzu7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OESeNo5V54gNkrBuyQZN9aeIpSLNNpJrFVhoo3o9dIDeIemMoKDGBbdJ9cPuQL0Vi+doiOo1pg4nQvFqOsjS2GAsuIHJf0mzAv0dbBGqkk5Kn+JIxKk2Xu8YB6/3IgtQ6PF0+EFwL8xTYT88jsTQPd7GMNF2DE8Qj6/9D0x5moc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZ9QK7eY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748416868; c=relaxed/simple;
+	bh=2qHmQEB1E1zkN71QCfVoyToUf5ogIWK0R6isdin/Ad0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nr2KZNcxsaHVNn0IYk/ILzdAIqsukRKmWnxIP6vHkqLQM05e4GyavY9g0DVW35xUkH+dORSGKmI0/BKKvSU5d7OVoVxF9cmm1jbm67pZoUoD829RwTBh0g4S2f3pYEAbQXBooKTMT4z9F4cksChfmKCG3JAJ4I/q1fSHn0PXGPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GpvP0Qtu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZ9QK7eY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC39C4CEE7;
-	Wed, 28 May 2025 07:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748416854;
-	bh=1d1WGAVVXkGYDtw9DCPpZQCb5ZPBQACYubXaunIzu7M=;
-	h=From:To:Cc:Subject:Date:From;
-	b=fZ9QK7eYgWzXWJ9hea8LA7KkjNvlOYNMHolRXCAxRMhGFBDhcsMN/C4f8LiuPuC+b
-	 m9k61EsM13Hc0+mjExS0Q3k84NYuNYPaQvc65I3qZ4Y0TLBoNOMxY8wTyXCu+zCpLd
-	 fYtFEh7fOTftNV2Wtez4dY6xQhQ1H0eGvOogItcr3ggd6+ZzXIfLeweXWYH31WmWzy
-	 oNIZWYh18I2i+nx+YzydFJ4uSies36eGZqaYoNNxFK3ZYwzHRB1L3yCS40OMeU/mwk
-	 uhVyUg+xEbajwZ92z1/ZZqOh23dszT3yXu5uXH5bqJwy3c6sULP4j9rBMZP+Dqi6VO
-	 VistsSWQQylyQ==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	syzbot+1fa48dc6faf1ff972d7d@syzkaller.appspotmail.com,
-	"yohan.joung" <yohan.joung@sk.com>
-Subject: [PATCH] f2fs: fix to do sanity check on section ckpt_valid_blocks correctly
-Date: Wed, 28 May 2025 15:20:45 +0800
-Message-ID: <20250528072045.416898-1-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpvP0Qtu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748416864;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yb7F8w++tHPp3njA+diY9i2D1I8vF7wYtoKldSCXI70=;
+	b=GpvP0QtuF1mYahqkmTAqPmOLH/B8RLIhD/cn/+l+3BD0e8pctjDUG62jqgcqmlilUFeSYG
+	g+ycD+te2NPKCz8z3WSZoP4X/NCSav5kQ4bVZCTBXfUoEnwGTT/e92JEIWoSLMn1KaDysA
+	BF01WznYj+jHyviukGdRFHlk5pgul/Q=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-688-4xfbBtN1NvWzzN-tDPIIWQ-1; Wed, 28 May 2025 03:21:02 -0400
+X-MC-Unique: 4xfbBtN1NvWzzN-tDPIIWQ-1
+X-Mimecast-MFC-AGG-ID: 4xfbBtN1NvWzzN-tDPIIWQ_1748416861
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-445135eb689so25562455e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:21:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748416861; x=1749021661;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yb7F8w++tHPp3njA+diY9i2D1I8vF7wYtoKldSCXI70=;
+        b=wIXW2TEuC4Ph1jml0Sy/MtLzHOEWzvnVJcQSYsSPIL5EgLjqASqyKsPRoac+fAbbsH
+         /WzzRMZf+SbxaFu6o0CrW4u+V5hDHQUnEc+6wrwf31MQm4G3FUFiYLRBZVe+vp2xFUTB
+         y7QkZ2IvDO5qpuKmvoIaDu1WCQWFHvvfZw9OfwHtOw5q95XcqjMd0S53BhHuklLTN1Pt
+         sM1yiB+zqrFZt8IHIsYGn1bLNNZYN7JNVNaLKnxsDSzFWxs7cgfj6YjuR4TpGOmlethk
+         4YF3WLK72MF59Lle0hpznPliM9zAxSw8NLLH3ujVdqnSab1X1Z7bYdSpEBJ5hzqSikxZ
+         ubsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Ddwp7BE7V2hOiG5KRyAQhqCRIxTjk6L/AMhTbIuINRtkul1foRpt5LdkaKAuhlDqGVOkr5BDfot5VDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeLozJg/z3E7k/OgqNbC/OSDHuYEHg8quP9jvhOiOWugnztHkS
+	UzZ1XxHvV7bGAd5/0ZmjZxNp69V+xOxRktavUVWxqTqkJLV092wXkbnGLSCY6sRdIU6QVym/BLJ
+	OWiIr578s5xzKNNyHhmt+hrhhm91sECxgIgY1GXUOa3TJt9L36gjywUAsxnpElfbOUw==
+X-Gm-Gg: ASbGncsZ6NXZLhSTjv2v6PCcHWvJqMKuqqeBdigBImbZJU529lPua/+S2zwVwJGFGky
+	3Ve3FyJPDX5Cn2uNaGQP9c1k/V8nbW4irzmItauQw2H3yLmxDkJ0mpqHaz1VUxsrNq9L2cB4GL3
+	AoNXp1NtSz4EfAlKdAQ6M61c/AzPVyoNW5LbtySKTxgdY26lSLFbY0FHNx3c/rgt5szdiufDR+Q
+	q1fXlTW22gzKXD6e1W3AtHA3g+pFYiBf9SEb1xzCbunDEBncrlEgzAEmM50ps2YmKFJD1Qh5edu
+	g+HGKA==
+X-Received: by 2002:a05:600c:4e0e:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-450725459f7mr9070095e9.2.1748416861124;
+        Wed, 28 May 2025 00:21:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHtS9Q0iEWdCKqSBK4rpAPZvD0CQFR0nxD5Boy80MHIXn1Qzua/IJWOZxrhYd51QhCIxJ9zSA==
+X-Received: by 2002:a05:600c:4e0e:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-450725459f7mr9069825e9.2.1748416860757;
+        Wed, 28 May 2025 00:21:00 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4507253becasm8466095e9.2.2025.05.28.00.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 00:20:59 -0700 (PDT)
+Date: Wed, 28 May 2025 03:20:57 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Laurent Vivier <lvivier@redhat.com>, netdev@vger.kernel.org,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error
+ reporting
+Message-ID: <20250528031540-mutt-send-email-mst@kernel.org>
+References: <20250521092236.661410-1-lvivier@redhat.com>
+ <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
 
-syzbot report a f2fs bug as below:
+On Wed, May 28, 2025 at 08:24:32AM +0200, Paolo Abeni wrote:
+> On 5/21/25 11:22 AM, Laurent Vivier wrote:
+> > This patch series contains two fixes and a cleanup for the virtio subsystem.
+> > 
+> > The first patch fixes an error reporting bug in virtio_ring's
+> > virtqueue_resize() function. Previously, errors from internal resize
+> > helpers could be masked if the subsequent re-enabling of the virtqueue
+> > succeeded. This patch restores the correct error propagation, ensuring that
+> > callers of virtqueue_resize() are properly informed of underlying resize
+> > failures.
+> > 
+> > The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
+> > 
+> > The third patch addresses a reliability issue in virtio_net where the TX
+> > ring size could be configured too small, potentially leading to
+> > persistently stopped queues and degraded performance. It enforces a
+> > minimum TX ring size to ensure there's always enough space for at least one
+> > maximally-fragmented packet plus an additional slot.
+> 
+> @Michael: it's not clear to me if you prefer take this series via your
+> tree or if it should go via net. Please LMK, thanks!
+> 
+> Paolo
 
-CPU: 0 UID: 0 PID: 5840 Comm: syz-executor138 Not tainted 6.15.0-rc7-next-20250523-syzkaller #0 PREEMPT(full)
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- sanity_check_valid_blocks fs/f2fs/segment.h:385 [inline]
- build_sit_entries+0x1b0c/0x1f80 fs/f2fs/segment.c:5060
- f2fs_build_segment_manager+0x3112/0x49f0 fs/f2fs/segment.c:5707
- f2fs_fill_super+0x45bc/0x6c80 fs/f2fs/super.c:4754
- mount_bdev+0x211/0x2c0 fs/super.c:1736
- legacy_get_tree+0xfd/0x1a0 fs/fs_context.c:666
- vfs_get_tree+0x92/0x2b0 fs/super.c:1802
- do_new_mount+0x24a/0xa40 fs/namespace.c:3869
- do_mount fs/namespace.c:4206 [inline]
- __do_sys_mount fs/namespace.c:4417 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4394
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-sanity_check_valid_blocks() should be called after set_ckpt_valid_blocks()
-in the loop, otherwise, @segno passed to sanity_check_valid_blocks() will
-become invalid, fix it.
-
-Fixes: 313d10d79a82 ("f2fs: add ckpt_valid_blocks to the section entry")
-Reported-by: syzbot+1fa48dc6faf1ff972d7d@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/linux-f2fs-devel/68345c8d.a70a0220.253bc2.0097.GAE@google.com
-Cc: yohan.joung <yohan.joung@sk.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
----
-Change v1:
-- merge this into original patch is fine to me as well.
- fs/f2fs/segment.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 5ff0111ed974..b77b5de71a48 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -5054,10 +5054,10 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 	if (__is_large_section(sbi)) {
- 		unsigned int segno;
- 
--		for (segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi))
-+		for (segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi)) {
- 			set_ckpt_valid_blocks(sbi, segno);
--
--		sanity_check_valid_blocks(sbi, segno);
-+			sanity_check_valid_blocks(sbi, segno);
-+		}
- 	}
- 
- 	if (err)
--- 
-2.49.0
+Given 1/3 is in virtio I was going to take it. Just after rc1,
+though.
 
