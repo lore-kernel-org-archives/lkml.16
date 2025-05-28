@@ -1,114 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9C721FF32;
-	Wed, 28 May 2025 22:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFAE1E98E3;
+	Wed, 28 May 2025 22:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748470186; cv=none; b=TT4uQYerMVmTrjFQIAIHaORxKbDSk26g/j4CFJbYyt7gL7v9S3YkBNtFyu4vj2r7Krlj0azS69YmvQbcJzYdD/GdTrS+6ZuNg7t5VN7ivt5r+aElg8WW4ptAX65yi69bxvgibG5op2gF4AwXUHGifF3MhKQGIzQy3CHw5fPJriU=
+	t=1748470330; cv=none; b=We1SPuCbnM5HgEY7L/O9oLhbJLFCHVqbCu/irH9lig3NrOMAHxFB8qawVjKaHOpl3FjC64m8+AvJi50DjLkwuC8dAvB6oT1AUgJpfT5nLEh6Lq0NURBkCtU/BDawg4HzRdaXn/Tgrs/Kuiaqom3G7QJmKhMAalQ9dWWD8WVje+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748470186; c=relaxed/simple;
-	bh=n46FXXFYxUar6By9Qp5cWormoFxrDOYWHPfPPSfPcHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KGjBJm4lMhqB/Cd0+vTfsi2JgdPG0sZQtk7V4RJ/h/9r5AYLRC+euC2iaQqfxTHhMXkIfwk6gXuaEPohhXFQ1aHcCB7wbZE9/q9llPINdiSDrmMAwoAsuI3sSVrOKXeo/GvhzJIzBcMduA8Xu+v9ldIg79qnmVmVT1U/ZxgMeUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqzlQIMI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748470330; c=relaxed/simple;
+	bh=JiseGLwIbj9BNipfB204c8kdBEtpwFWpj2vXB9O98qI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KauSMgI0kxew8cxgxLow/UqnptoLMFOx6UXEqJDwtPKgatnYGSEEJkc6uDwacI8JTNWca81Tm5URSkuRIUkUk6PU5R6AHuGBqyEXc1OwG9nwldOg+LpMej1T6wDuBb3iQ3ufE9zcP5+TJ2lyPH33KSz6W7Iy6xqFFAMHbG7/Wj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VMasHqNG; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqzlQIMI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC9DC4CEE3;
-	Wed, 28 May 2025 22:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748470185;
-	bh=n46FXXFYxUar6By9Qp5cWormoFxrDOYWHPfPPSfPcHI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FqzlQIMIU5uJ6vkK3AJRW3tNLUxxwp34FMFZaZUVyD19bE09e4OAPqxqwgGhoYRuQ
-	 HZYPmQEAWVfo63FgqJ+Bro1Jdj1onIt5Nvalp40bMq84vIWL0FOdvvlGpBNMvvz7Ov
-	 GLVQNdi7NDY+deDfKiq6siu1smYYCALPUZACuQo07DxOX5zZyr1xvRnnkgnIQxNoz5
-	 kHyrlIwR3wC96LVrFxTZ8usSCpTQnPqiVh7jN2fYeTtB+KuMGKZfObkzwlUT6Z9ifD
-	 lsWD+kaybyFFzXdfdWeVylx0B7i78JDm6GaPDywMqs1Db4Z6CWKnAu0Bby4gs0HS76
-	 xOpw0o9Di+SaQ==
-From: SeongJae Park <sj@kernel.org>
-To: wangchuanguo <wangchuanguo@inspur.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	hannes@cmpxchg.org,
-	david@redhat.com,
-	mhocko@kernel.org,
-	zhengqi.arch@bytedance.com,
-	shakeel.butt@linux.dev,
-	lorenzo.stoakes@oracle.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	damon@lists.linux.dev,
-	Jagdish Gediya <jvgediya.oss@gmail.com>
-Subject: Re: [PATCH 1/2] mm: migrate: restore the nmask after successfully allocating on the  target node
-Date: Wed, 28 May 2025 15:09:42 -0700
-Message-Id: <20250528220942.55350-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250528111038.18378-2-wangchuanguo@inspur.com>
-References: 
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VMasHqNG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748470323;
+	bh=SGQvhWif3QYPIYX6pawvxuDDLJ9nBo78PsLIaUJuC+4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VMasHqNGh7KnwiqrHbjjKLlnhT7sGDjOWMSw7BwARrnLcIqvHaBoYIT7IA8oklOXa
+	 Uc0q7BZFbPZyQgws3Zg+g9l5m0PP0wccC+HYjgsski5Bhs/KovKHevJEa8z+B8aXCg
+	 Srt0QzaKq/Vals+yRQQD7gTazNt1viQ+43kg33mXGdLOm1wDQtUrlB5kao8ZHmHXFW
+	 +icVUwYF/l9R209I/OQ4I5gwB29qfvKrggjrwRof1aPf9DyL3pJjRE5q+9Gh4EqZCA
+	 UrDXWk48IfX7SNEsF1LSL4uSkCoBiQu5nkt8DB44mJyksbnq+UIx1Lxxzy9twmrGl2
+	 2V+URghR/qDLA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b73dG0Gkmz4wxh;
+	Thu, 29 May 2025 08:12:01 +1000 (AEST)
+Date: Thu, 29 May 2025 08:12:00 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, "Ugwekar, Dhananjay"
+ <Dhananjay.Ugwekar@amd.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the tip tree with the pm tree
+Message-ID: <20250529081200.280bb922@canb.auug.org.au>
+In-Reply-To: <45b82a09-07a4-4bbd-a71c-d86010542dfe@amd.com>
+References: <20250512145517.6e0666e3@canb.auug.org.au>
+	<20250512152326.3f2f0226@canb.auug.org.au>
+	<20250528135020.79fec9ca@canb.auug.org.au>
+	<45b82a09-07a4-4bbd-a71c-d86010542dfe@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/_LFh1+GkUx18LD7UR+Q/bY3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-+ Jagdish, since seems the behavior that this patch tries to change is
-apparently made by Jagdish's commit 320080272892 ("mm/demotion: demote pages
-according to allocation fallback order").
+--Sig_/_LFh1+GkUx18LD7UR+Q/bY3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 May 2025 19:10:37 +0800 wangchuanguo <wangchuanguo@inspur.com> wrote:
+Hi Mario,
 
-> If memory is successfully allocated on the target node and the
-> function directly returns without value restore for nmask,
-> non-first migration operations in migrate_pages() by again label
-> may ignore the nmask settings,
+On Wed, 28 May 2025 14:14:40 +0000 "Limonciello, Mario" <Mario.Limonciello@=
+amd.com> wrote:
+>
+> On 5/27/25 22:50, Stephen Rothwell wrote:
+> >=20
+> > On Mon, 12 May 2025 15:23:26 +1000 Stephen Rothwell <sfr@canb.auug.org.=
+au> wrote: =20
+> >>
+> >> On Mon, 12 May 2025 14:55:17 +1000 Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote: =20
+> >>>
+> >>> Today's linux-next merge of the tip tree got a conflict in:
+> >>>
+> >>>    drivers/cpufreq/amd-pstate.c
+> >>>
+> >>> between commit:
+> >>>
+> >>>    608a76b65288 ("cpufreq/amd-pstate: Add support for the "Requested =
+CPU Min frequency" BIOS option")
+> >>>
+> >>> from the pm tree and commit:
+> >>>
+> >>>    d7484babd2c4 ("x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu=
+()'")
+> >>>
+> >>> from the tip tree.
+> >>>
+> >>> I fixed it up (the former removed a line updated by the latter) and c=
+an
+> >>> carry the fix as necessary. This is now fixed as far as linux-next is
+> >>> concerned, but any non trivial conflicts should be mentioned to your
+> >>> upstream maintainer when your tree is submitted for merging.  You may
+> >>> also want to consider cooperating with the maintainer of the conflict=
+ing
+> >>> tree to minimise any particularly complex conflicts. =20
+> >>
+> >> Actually it needed the fix up below.
+> >>
+> >>
+> >> diff --cc drivers/cpufreq/amd-pstate.c
+> >> index d96bb3e202ee,66fdc74f13ef..0d4c0de89a00
+> >> --- a/drivers/cpufreq/amd-pstate.c
+> >> +++ b/drivers/cpufreq/amd-pstate.c
+> >> @@@ -389,10 -389,9 +389,10 @@@ static inline int amd_pstate_cppc_enabl
+> >>    static int msr_init_perf(struct amd_cpudata *cpudata)
+> >>    {
+> >>    	union perf_cached perf =3D READ_ONCE(cpudata->perf);
+> >>   -	u64 cap1, numerator;
+> >>   +	u64 cap1, numerator, cppc_req;
+> >>   +	u8 min_perf;
+> >>   =20
+> >> - 	int ret =3D rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
+> >> + 	int ret =3D rdmsrq_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
+> >>    				     &cap1);
+> >>    	if (ret)
+> >>    		return ret;
+> >> @@@ -401,22 -400,6 +401,22 @@@
+> >>    	if (ret)
+> >>    		return ret;
+> >>   =20
+> >> - 	ret =3D rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
+> >> ++	ret =3D rdmsrq_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
+> >>   +	if (ret)
+> >>   +		return ret;
+> >>   +
+> >>   +	WRITE_ONCE(cpudata->cppc_req_cached, cppc_req);
+> >>   +	min_perf =3D FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cppc_req);
+> >>   +
+> >>   +	/*
+> >>   +	 * Clear out the min_perf part to check if the rest of the MSR is =
+0, if yes, this is an
+> >>   +	 * indication that the min_perf value is the one specified through=
+ the BIOS option
+> >>   +	 */
+> >>   +	cppc_req &=3D ~(AMD_CPPC_MIN_PERF_MASK);
+> >>   +
+> >>   +	if (!cppc_req)
+> >>   +		perf.bios_min_perf =3D min_perf;
+> >>   +
+> >>    	perf.highest_perf =3D numerator;
+> >>    	perf.max_limit_perf =3D numerator;
+> >>    	perf.min_limit_perf =3D FIELD_GET(AMD_CPPC_LOWEST_PERF_MASK, cap1)=
+; =20
+> >=20
+> > This is now a conflict between the pm tree and Linus' tree.
+> >  =20
+>=20
+> I thought that Ingo added an extra #define for compatibility?
 
-Nice finding!
+Having that define does not change the above conflict at all.  It just
+means that further additions of calls to rdmsrl_safe_on_cpu() will not
+cause build failures.
 
-> thereby allowing new memory
-> allocations for migration on any node.
+--=20
+Cheers,
+Stephen Rothwell
 
-But, isn't the consequence of this behavior is the opposite?  That is, I think
-this behavior restricts to use only the specified node (mtc->nid) in the case,
-ignoring more allowed fallback nodes (mtc->nmask)?
+--Sig_/_LFh1+GkUx18LD7UR+Q/bY3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Anyway, to me, this seems not an intended behavior but a bug.  Cc-ing Jagdish,
-who authored the commit 320080272892 ("mm/demotion: demote pages according to
-allocation fallback order"), which apparently made this behavior initially,
-though, since I may misreading the original author's intention.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> Signed-off-by: wangchuanguo <wangchuanguo@inspur.com>
-> ---
->  mm/vmscan.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index f8dfd2864bbf..e13f17244279 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1035,11 +1035,11 @@ struct folio *alloc_migrate_folio(struct folio *src, unsigned long private)
->  	mtc->nmask = NULL;
->  	mtc->gfp_mask |= __GFP_THISNODE;
->  	dst = alloc_migration_target(src, (unsigned long)mtc);
-> +	mtc->nmask = allowed_mask;
->  	if (dst)
->  		return dst;
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3ijAACgkQAVBC80lX
+0Gzvlwf3VG5iu/KkhuBpYt85nxQftsDbAJBj7EHsCa/ilw9lWHTBYjdoNtySRlLq
+AXZp9+luNnIbRVFSXDWZ3MgEggjes96JgIhs3sPjfPNNXcT2dOx0GbQFeV9xR/2n
+MWAwt9tFIv/1tSV91sJMhGDNw/gd4IlmbIaUYmUgwue7rMLgeDPhkwDR9WdHKSvA
+gDsxPowrzvrxCTrHDXKkvXMd0KbX7h8+wd82hfdk84xKjIfDFALwTxchD1SFGuPH
+E6ki+90olVTLPfzhYVOv1nUaStVYheUol76bOl1C1gqBYyICpTMeVJBOjC93YOio
+IYrr7XrkN+ihqtNAV7ovFL7EcMRQ
+=XcqE
+-----END PGP SIGNATURE-----
 
-Restoring ->nmask looks right behavior to me.  But, if so, shouldn't we also
-restore ->gfp_mask?
-
->  
->  	mtc->gfp_mask &= ~__GFP_THISNODE;
-> -	mtc->nmask = allowed_mask;
->  
->  	return alloc_migration_target(src, (unsigned long)mtc);
->  }
-> -- 
-> 2.39.3
-
-
-Thanks,
-SJ
+--Sig_/_LFh1+GkUx18LD7UR+Q/bY3--
