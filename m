@@ -1,186 +1,191 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010026.outbound.protection.outlook.com [52.101.228.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6069120F087;
-	Wed, 28 May 2025 07:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748415910; cv=none; b=ci5LLUtENAr6gSIXHT0r5Nunysn+N5t4fo9KdAIhhJmfnNyGyvjJ/jNI5RA8nT4kKPD2fTLxHg2GQjS93VXIaJ6TLHvNjHWeofL6BSwm8MS/xAFf8dJ2OP8SJmyqc+QUN3iPTY/QRANUY8dAoAIgKR61CZSSe+5Qe91VlDyzDlo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748415910; c=relaxed/simple;
-	bh=7q2WhUY3sGrbDCrsFXssOt+MLhkRFiK6Br4N8IzOHM8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FAiMC79XUMLxwsJMRltS2+c8h3V9EiH5LkDgkQkcGNKkGplDiis1e75WtyJzrWyR84jw0ZO1ossCDN9xEqROmfgBjfBzAWG61Wf34LIoCn0CS+L9bilwg0dqGKGOGK0wXurwcIl+JPFJy7aQoKIPnml8LD0ijEIGuCvlwpYZhXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=eF5bVtXx; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97220229B0B;
+	Wed, 28 May 2025 07:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748415932; cv=fail; b=iIHJC05JKWpzPULyWVy5UWCi8EfZUHSJKPqC/DuliU3gML8qVUq0TYNhb1gdif5IQ523fL4AfQ61LRZ7St4W144zjfksuwAUnZNlbGhU2HLe7Be46ngHeix7d8OdYWe1juUgFC2BBdHzhQW+YXebAhR7r64xxqWz2Mp66YF4dSY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748415932; c=relaxed/simple;
+	bh=6Dhree7NsuPwNOdjca8NOKZ5T6vU9z4t5TZPcrRPKqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=S11XZGR/hbF5WMPpHMchtOiTXnqZPhTqPJ6UBHD1hVekvGStqvmYbvNhMlP+Pwlbss/XtXvP0BsO4NAFrAyLFphiFkhd0uOjJS704d83HKEp/VofIWRSxh0WL/LORSSZZMDLFgOOBi2wi5BZ+qZtur1E4xLHC6xsAjjlvuILyn4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=cqEW3CXG; arc=fail smtp.client-ip=52.101.228.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eF5bVtXx"
-X-UUID: 147e36ae3b9211f082f7f7ac98dee637-20250528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=MqiAn4xMWzvpz7Cv23GHwx+M+Be0XsmKUKljJu0u7Hg=;
-	b=eF5bVtXxrGhoV86Cu8+AXFbemaW2+is2jErrTAws0QaLltc1cqxBrgfpKUP9FQGZyHezI9IzQhcSQs2G4K3qRGBSIDUxgbYxu6TVsktzbfS3FIbkS28014T6ggAD0bo6dDT/94ZIKjoyqBINpUxpGHfQePJb+cTLccTm0CAaDms=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:a6f7c184-92f4-49bd-97c5-b3174d43f04d,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:acb23259-eac4-4b21-88a4-d582445d304a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 147e36ae3b9211f082f7f7ac98dee637-20250528
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
-	(envelope-from <ot_zhangchao.zhang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1835244049; Wed, 28 May 2025 15:05:04 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 28 May 2025 15:05:00 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 28 May 2025 15:05:01 +0800
-From: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
-CC: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
-	Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>, "Steve
- Lee" <steve.lee@mediatek.com>, linux-bluetooth
-	<linux-bluetooth@vger.kernel.org>, linux-kernel
-	<linux-kernel@vger.kernel.org>, linux-mediatek
-	<linux-mediatek@lists.infradead.org>, Zhangchao Zhang
-	<ot_zhangchao.zhang@mediatek.com>
-Subject: [PATCH] Bluetooth: BT Driver: mediatek: add gpio pin to reset bt
-Date: Wed, 28 May 2025 15:03:23 +0800
-Message-ID: <20250528070323.14902-1-ot_zhangchao.zhang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="cqEW3CXG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HtyeHUKFzhA27SFo5q+hEE2eJEu7HOfSmaVxFgnH1hfOGcGBjgq4HRqWUT1u+6e/Zs0IHYx1yz9KabYn2U0o+PfxIYewQ/df/t+R/WBnf46Otd1Bpb9BINTNHWaDjGAgeGkBAgL1q1Dzt0/Blw4I94RfX+utIyF1qMLaONLtrrJSqq59bloaDGpyVxJgMx/GMFsFq5TxUvGesbUWePw7feT0bFNm2lr+aYkjQJx8/Oiq00sy44+Os6y3UmyFweBrdibETLXnxoieGn744J+FA8xEwlrWvTK70CJ980uNiXeaj/BCrNSxg0EbLzK05T8uHv/wj0XdpXvQ/oTqUtq7Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mJ8O9aEYyFSQrkkRD29n//y1MkAzcxiPthnNEFPfoog=;
+ b=AW5IQhpVj0o4rQBWTxTFdTC9E1ph4X9yiPT3mWUiQ6/EFMaTNrn6m4Sepua5ZOKX/DAscQ+H7tuGibE/aeL0mqz/4wUmP3R0iD8mM7GwpPH08soDiAkLb3ow7NqUjDdgGbvYd7oWKZ9hRurKNu8Ib58x8szlNh41L6hFIHAfvYRK7FKTw+odZUm8Taqn/lVxNRHIOcb1XHEpxQldv0vkXJVXSH0vQ5macZxNtWY+bjGg0kcdIHGXvY6NGNnYiLzmUXdgkg8bvA3Ev7WxSiraoZgX5DKbEkqcZQ43KAN7H3mHOYjOnz0f5p6P9Zvh+MongGyGwHmzPiYtUuwTm6Azyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mJ8O9aEYyFSQrkkRD29n//y1MkAzcxiPthnNEFPfoog=;
+ b=cqEW3CXG28fvGEuG3dzBp12rn+3FEDMogR3vrQE2aBKr860I9r50YpHUXfEa+RoNhC3uvX6GTjbjWtnRj4jCED7edCD+a7Tx5D0WhsU7ZXAo5/TYrha2hooFn62MU0e0Mz/bHT8hG+hLgCgaFeWHJgYn6dzQbo6tNIMQM4pI0tU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
+ by TYYPR01MB14051.jpnprd01.prod.outlook.com (2603:1096:405:210::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.29; Wed, 28 May
+ 2025 07:05:25 +0000
+Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
+ ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
+ ([fe80::244d:8815:7064:a9f3%3]) with mapi id 15.20.8769.025; Wed, 28 May 2025
+ 07:05:25 +0000
+From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+To: tomm.merciai@gmail.com
+Cc: linux-renesas-soc@vger.kernel.org,
+	biju.das.jz@bp.renesas.com,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	Adam Ford <aford173@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Jesse Van Gavere <jesseevg@gmail.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Improve adv7511_mode_set()
+Date: Wed, 28 May 2025 09:04:36 +0200
+Message-ID: <20250528070452.901183-1-tommaso.merciai.xr@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: FR4P281CA0134.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b9::8) To OS9PR01MB13950.jpnprd01.prod.outlook.com
+ (2603:1096:604:35e::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|TYYPR01MB14051:EE_
+X-MS-Office365-Filtering-Correlation-Id: 83a36339-e9b6-4911-d95f-08dd9db60530
+X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+ =?us-ascii?Q?iHUpWulkPxu3mPN0Hk/cC/FnH0E6BPONR0rlzHXm0CoNZJAAe2ADbLihEDE/?=
+ =?us-ascii?Q?H9m38BXrZGKIyUEWzRarzXjSMjSYOcel+L5Z7MzHTOWkTps39Qr3MWh64pvK?=
+ =?us-ascii?Q?OSEri6uhzyh1Io/MG7HxPHPtdvlZ/v7lo34zzm9wRbDq50hShApxVXSchhI+?=
+ =?us-ascii?Q?7Ey+pClJwJKsikfESH2/nhREylzr4DxWFqFqJqyo/1lOh5tgzEzB1ue71Li3?=
+ =?us-ascii?Q?P4ax+NaYkGNQm0ya0A9EGduFhhd0XQYXm9ce7PcZZL6TZklYwaHej6tEswlC?=
+ =?us-ascii?Q?gIPQi7f6Q95Acawyo+khnKJgCx2cNGKqOrTNUyNKbnOTRx+wHhfEDxR1o0Tc?=
+ =?us-ascii?Q?lEJOIBfFdPHYM2j4WIfcsKNEdEFTHeM7dQVBXM6fpayPcJYCEyKajkWD1Hpr?=
+ =?us-ascii?Q?bOmmGmpK0Fvyp8K/7lrDefipVfFrfrf7LESWQP7cUMKcx5O+VoD6DdTSwfA9?=
+ =?us-ascii?Q?bE/4oQ8uFpVRTLgPgZOGNe07AaTlC4GHTX37Q6Qg1gSe6UhguFpvgq4y+Mp+?=
+ =?us-ascii?Q?6K8yjV9oFma7obHGF3AgMonmMbgAwQED7bw64gvQEg+JpX7LOHELEr+LACv1?=
+ =?us-ascii?Q?kOQld0HG3C1nGdC9BnwepPRzSGIT126CcB1Rb+46Ni59DqxK3MywzDazQarq?=
+ =?us-ascii?Q?iGg1xROuYpAN5R7No+9QSlaoH8MKAkQTPvO72k6ogBVxyKRWaHcYLh3iJyjW?=
+ =?us-ascii?Q?Q5Ui0ayFC+7UWKm3N9EXJ6tF+3NdtUXN5gUe7P5PQ2IBKlfp0cV2xDfcvNNB?=
+ =?us-ascii?Q?jvfbZoWv+o1K2xni9K0+86oqqXc2fi8qdvVgBBiTA+IfEMD1lleThhKr3keP?=
+ =?us-ascii?Q?gCww0fmfLvMQ+zsKDq1zGuT701G0+/eVCgcVoT63L5w0ZJHgLouG0KJ718G5?=
+ =?us-ascii?Q?z8x4tCCJ428sbTbGxJyzoBYcJvEmLMoaso8VFZhp7UunlZGmaUnHOB7BonT0?=
+ =?us-ascii?Q?8bWKfbtgTzwua2G1Qqk7zf3a9MC13c12R4e46vl5OK9c3pswiQ7nk9FJqy1P?=
+ =?us-ascii?Q?h/engUuFs2bJixbkoOTBd6aUAQHv0E+9DUI/t+7CY46QPqvC+1MYfSqRFAnG?=
+ =?us-ascii?Q?nSmeBR1+7U6/B9vrj9RC+6uv4WDfE8ny1qWrQ1xmDDq7S2488jfQalpc1peB?=
+ =?us-ascii?Q?fTlCbF8NWcfWLC5+Q81UIe9v3zvsHRSuzbPNAka5rflEdhEnWTDuRAfGBSpN?=
+ =?us-ascii?Q?D0ajWPlDc3yTjy5244DK72yeCECxSzxy1mEkMB/LkA3xgy1iylVrI7M4sd0J?=
+ =?us-ascii?Q?P/g0+J4lqZzT3/uLXgS2K8p5nOl9/eSxL4hK3jFcrr3/uXsym5+/HagExS43?=
+ =?us-ascii?Q?e06LKUFh9XbPSlTAc9SZoK2Jywn9H+JYV5lnoUj2esXRp2f8eIvS4HvDz6v8?=
+ =?us-ascii?Q?cLur68gPUE/1/G92mXej5iU13pMhfLbrh2VF4P53bUdqJGtX4eba86bdz0MN?=
+ =?us-ascii?Q?+tXSwGUNkjGyUvsmCT5N+kdAYMgANQIXjm2FghDLhMUjb+YfEQHEtw=3D=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?us-ascii?Q?1tQpuf3EM0fUyytDVvYszpIbJK0KWcvKi63H3kDkOVkjCDwCuvHaa+Q583o1?=
+ =?us-ascii?Q?Gb1GzcCH254QwFUXih6kCwWI6UD7CART1A2gDxt4Ufeaj1HfFpAf+u24nUr/?=
+ =?us-ascii?Q?1scYNpe45gSQA7ZPZapUC/71QVrTErQCXGKPvmX++hPl8DNbAk732Nywwxh6?=
+ =?us-ascii?Q?g123RKEWuqZr5muAxML/JfUu/MyQXwAncQ4gWfP9hF/ofsKjyRybs2Zm9x/o?=
+ =?us-ascii?Q?S2YoiYRs32raxwIJzmS5sMu5qeFcrR6pHl+N6iL6UCpQ7M5fZlw/11G3gtzm?=
+ =?us-ascii?Q?/ZMFY+AC9tHyMB/1wpTuukgygM3VhTDIVyLoQFXEAdXZM+56eQcVdD61RlhE?=
+ =?us-ascii?Q?25W7tskd9IOYxeytcAhY7rJxO4HObmZkx9kkAWx+ikTfLBMOqKehV7sRHAY3?=
+ =?us-ascii?Q?8Y9mPXdIClQBeqzxilIl8AdFLo71OiHZtDnHSc7CVY3EaRnxVOTrDEG6R3kk?=
+ =?us-ascii?Q?3OcsuisklhHmlEmC5mpaQtEjruTb66TVFyd0iyKa2SmNKxtWj/pGIotCnaWg?=
+ =?us-ascii?Q?dU7nuIYzri4ghzlouYYNtuCvuv0Q7TjRHzeqred3cP4liloBPaaR7Y7WuhCQ?=
+ =?us-ascii?Q?jZp93v5NrlS8DKURCSFI+w9TNV7Y3pNI62cRctbNt627Hauul/xYmg0Tz6Hu?=
+ =?us-ascii?Q?9sChFq8/gYbdXJZ8yG2o39cfiA6of+8yNKj3QMBuQ3rWtRzBdZUMrN14sma7?=
+ =?us-ascii?Q?tEW3TsV5cW5htZI8X/o+nP0kYG+CuJfUSUwy7dbIYkk1ddq77Duqn/ez+KLZ?=
+ =?us-ascii?Q?RBdLvs2zyJLfbHIQZw8X+iM47eRBPHFYm44JBlQer4t87yJv/z7MICNImD17?=
+ =?us-ascii?Q?WDm574vqPtyJsHo4gcUoBdOmzU1DQ/ngmVbKHRn8yW9JPOtOAKUXhCKv1iwD?=
+ =?us-ascii?Q?fM8SutzbPCjN5tczOu6SdSRqEysjoT3Hywaa/IU9yy2/RR/K/62Uvw2DoyoJ?=
+ =?us-ascii?Q?v0gHbNPnwrED6GFC989uu9Dst1TzLJuNCoxEOJgATMoxbX9e76tZXL4QVNGg?=
+ =?us-ascii?Q?0X/s6rs09BWImbH/Bx4ZDxTeeToxVcHCp9Yp0542gLtY3ABPrIs35IO51/+n?=
+ =?us-ascii?Q?m8rGxbUqS6B7trJzJRek3hkbUNU9hHjGHIX+oNLn6NnO6F84xK/BjVg9ffAP?=
+ =?us-ascii?Q?aKuOuVo2w1thbWllYYSPMOuflwo7K2444XM1kEh+Q86Ed9HXqEtqA5bgKfUc?=
+ =?us-ascii?Q?kx8/XG4Be3qcVM66K5e1HcHfd948wXI8wUphBo4RaZSuHq1GNd9FoQKyh3iM?=
+ =?us-ascii?Q?i19k3xDv0cOxCdC1Cf/NkwB1Ryattx5J85c+z+qqTb95ZUz6ZHJLcdWpObFf?=
+ =?us-ascii?Q?pYoqLKfr22slczC7ndDQ2SlOKkgpynLdyHwCF9fSu2Wc0Tg5lCCdgrGKDohY?=
+ =?us-ascii?Q?hCzQm8ZyLg/JhnenNLHL0C9gFlEm+Aa5ytv/c58YO+hldctN+Sp9jUfMOUFN?=
+ =?us-ascii?Q?TznyXiOpKdurRuj7Lewro3Epi+u7SxKY4SrBT6G50NfO/BhgYgElkWKGywKa?=
+ =?us-ascii?Q?8mOfDnmhwMhXrVGiYkIAcwnixem9Ct+r/LEMq43XjbrHqEP2pPm/vkRyPgoK?=
+ =?us-ascii?Q?u2c5lzDAI01uChS7nI4Y6CFmDaOcBZe2nWlixN02bjSyAPyrS/ERXCYHHoOZ?=
+ =?us-ascii?Q?+izpAJUSWsrfSCMTBWJUWro=3D?=
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83a36339-e9b6-4911-d95f-08dd9db60530
+X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 07:05:25.7424
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C0U/NV1PTPzvDZ/cBr3Sks1Z5djW/JzW+t87g15FqU/R81wQIpoOa7h2OxjQFh4EI8a0bCdBjJjh4HEwkDi4R0nwS0tNW3DNq1qy0Nua8zkd3HxcT0GRNW+njE3Pw09f
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB14051
 
-This patch provides some methods btmtk_reset_by_gpio,
-btmtk_reset_by_gpio_work_for mediatek controller.
+Dear All,
 
-The pin is configured in dts files, bluetooth is reset by pulling
-the pin, when an exception or coredump occurs, the above method will
-be used to reset the bluetooth.
+Currently adv7511_bridge_atomic_enable() call adv7511_power_on(), then
+adv7511_dsi_config_timing_gen() that is responsible to update h/v porch
+params.
 
-Co-developed-by Hao qin <hao.qin@mediatek.com>
-Co-developed-by Chirs lu <chris.lu@mediatek.com>
-Co-developed-by Jiande lu <jiande.lu@mediatek.com>
-Signed-off-by: Zhangchao Zhang <ot_zhangchao.zhang@mediatek.com>
----
- drivers/bluetooth/btmtk.c | 59 +++++++++++++++++++++++++++++++++++++++
- drivers/bluetooth/btmtk.h |  5 ++++
- 2 files changed, 64 insertions(+)
+But during the adv7511_mode_set() adv7511->curr_mode change and this is
+not reflected into the h/v ADV porch regs, then h/w porch regs are keeping
+the old values.
 
-diff --git a/drivers/bluetooth/btmtk.c b/drivers/bluetooth/btmtk.c
-index 4390fd571dbd..16542c724b40 100644
---- a/drivers/bluetooth/btmtk.c
-+++ b/drivers/bluetooth/btmtk.c
-@@ -6,6 +6,8 @@
- #include <linux/firmware.h>
- #include <linux/usb.h>
- #include <linux/iopoll.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/unaligned.h>
- 
- #include <net/bluetooth/bluetooth.h>
-@@ -109,6 +111,59 @@ static void btmtk_coredump_notify(struct hci_dev *hdev, int state)
- 	}
- }
- 
-+static void btmtk_reset_by_gpio_work(struct work_struct *work)
-+{
-+	struct btmtk_reset_gpio *reset_gpio_data =
-+			container_of(work, struct btmtk_reset_gpio, reset_work.work);
-+
-+	gpio_direction_output(reset_gpio_data->gpio_number, 1);
-+	kfree(reset_gpio_data);
-+}
-+
-+static int btmtk_reset_by_gpio(struct hci_dev *hdev)
-+{
-+	struct btmtk_data *data = hci_get_priv(hdev);
-+	struct btmtk_reset_gpio *reset_gpio_data;
-+	struct device_node *node;
-+	int reset_gpio_number;
-+
-+	node = of_find_compatible_node(NULL, NULL, "mediatek,usb-bluetooth");
-+	if (node) {
-+		reset_gpio_number = of_get_named_gpio(node, "reset-gpios", 0);
-+		if (!gpio_is_valid(reset_gpio_number)) {
-+			bt_dev_warn(hdev, "invalid reset gpio, use SW reset");
-+			return -EINVAL;
-+		}
-+	} else {
-+		bt_dev_warn(hdev, "no reset gpio, use SW reet");
-+		return -ENODEV;
-+	}
-+
-+	/* Toggle the hard reset line. The Mediatek device is going to
-+	 * yank itself off the USB and then replug. The cleanup is handled
-+	 * correctly on the way out (standard USB disconnect), and the new
-+	 * device is detected cleanly and bound to the driver again like
-+	 * it should be.
-+	 */
-+
-+	if (test_and_set_bit(BTMTK_HW_RESET_ACTIVE, &data->flags)) {
-+		bt_dev_err(hdev, "last reset failed? Not resetting again");
-+		return 0;
-+	}
-+
-+	reset_gpio_data = kzalloc(sizeof(*reset_gpio_data), GFP_KERNEL);
-+	if (!reset_gpio_data)
-+		return -ENOMEM;
-+
-+	INIT_DELAYED_WORK(&reset_gpio_data->reset_work, btmtk_reset_by_gpio_work);
-+	reset_gpio_data->gpio_number = reset_gpio_number;
-+
-+	gpio_direction_output(reset_gpio_number, 0);
-+	schedule_delayed_work(&reset_gpio_data->reset_work, msecs_to_jiffies(200));
-+
-+	return 0;
-+}
-+
- void btmtk_fw_get_filename(char *buf, size_t size, u32 dev_id, u32 fw_ver,
- 			   u32 fw_flavor)
- {
-@@ -364,6 +419,10 @@ void btmtk_reset_sync(struct hci_dev *hdev)
- 	struct btmtk_data *reset_work = hci_get_priv(hdev);
- 	int err;
- 
-+	/*Toggle reset gpio if the platform provieds one*/
-+	err = btmtk_reset_by_gpio(hdev);
-+	if (!err)
-+		return;
- 	hci_dev_lock(hdev);
- 
- 	err = hci_cmd_sync_queue(hdev, reset_work->reset_sync, NULL, NULL);
-diff --git a/drivers/bluetooth/btmtk.h b/drivers/bluetooth/btmtk.h
-index 5df7c3296624..8a265ce367d1 100644
---- a/drivers/bluetooth/btmtk.h
-+++ b/drivers/bluetooth/btmtk.h
-@@ -179,6 +179,11 @@ struct btmtk_data {
- 	spinlock_t isorxlock;
- };
- 
-+struct btmtk_reset_gpio {
-+	struct delayed_work reset_work;
-+	int gpio_number;
-+};
-+
- typedef int (*wmt_cmd_sync_func_t)(struct hci_dev *,
- 				   struct btmtk_hci_wmt_params *);
- 
+This series fix this issue moving adv711_dsi_config_timing_gen() into
+the adv7511_mode_set().
+
+Thanks & Regards,
+Tommaso
+
+v1->v2:
+ - Added cover letter
+
+Tommaso Merciai (2):
+  drm/bridge: adv7511: Move adv711_dsi_config_timing_gen() into
+    adv7511_mode_set()
+  drm/bridge: adv7511: Rename adv7511_dsi_config_timing_gen() into
+    adv7533_dsi_config_timing_gen()
+
+ drivers/gpu/drm/bridge/adv7511/adv7511.h     | 1 +
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 4 ++++
+ drivers/gpu/drm/bridge/adv7511/adv7533.c     | 5 +----
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
 -- 
-2.46.0
+2.43.0
 
