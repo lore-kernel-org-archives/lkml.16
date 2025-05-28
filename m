@@ -1,342 +1,202 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010040.outbound.protection.outlook.com [52.101.69.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428F91C7017;
-	Wed, 28 May 2025 16:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448055; cv=fail; b=gPoELqW7facHnaH9Rra2FgrOlUhlD8+Wo8uMVvaPPI+cNSTxFBAaMyxJi716lImZ4e2m56oGoImBAZXo8i07JBMF5854iBmbPJuP6UYzUOq/R0gFbuxu7Sa2NRuxnHGYNZbsyjmF9Wm8dLNB2v6hP/T4NUfqqgl+SzGwI925cxk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448055; c=relaxed/simple;
-	bh=FyCQClSquZ+8afQ5m//REJmQvDZ0QJqSKVfkqQIkMUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=vDj0ZjCw1fJV8WM5qfykTqd6Nj0W6/OhqiLKaXuLalVshTYnMrzFL52gry4k3xJbbNKrWKw1gkZH/rkfat1brHQ07Z422ON0iGrW6age1bLi+FabqbPtwHDcwxz+2WDaB5zlChHbQjl+3H5xvFsAukX5SxOjKG6//XnUtiQ5k88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SaHUBoZ1; arc=fail smtp.client-ip=52.101.69.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AF13234;
+	Wed, 28 May 2025 16:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748448155; cv=none; b=tptD1J/ZgUGP9hhQt+r3JF9cF/bP37Yy8snr4k3WUFanaOjQbgJn1WqBUbSbk5hYbNFYWuSZl7AzsgOSKOr/sVnl4v93e3wO8ZaanQKW0kn7CHA8W0/Ef0F5X2OMv2AA+80NNK26J9rrOM672+yXQHXGp7QZ5MM98xuIpB8x6AY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748448155; c=relaxed/simple;
+	bh=BfaLnGVVAMXeRLwpyWCe0o/QrbP67rbScb+PH9wdpLE=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lYHknyX27TZl7kjod5bIMSUSc3qPq/33bnWISA9lZ0SyG43d0Pb6t6gin0wU/tDZXGYWaOkqt2k+P96RxrgWSrAc9a/KvdWmNt4Wqb4WGTFMoIQ6TK9oT4D1pCTZHYAgCd5pLBy8H8HU6ICoIkVzE/eszNw7w+MBDMyulWREXZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QxDSKSsS; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SaHUBoZ1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tyony/jd75CatrPgaRHPPSt18CyThN3/5l/zS6bGKSd0Kg9S/ToqDDa01nFfx4MrE10o+CNbzicFKWeG87cd7AFVx7AmnWlug8wIohFPgGmTckr8dPMFXnjt9HhvS2l7xOVssp0RSpBzBczL2rmQbllQh8e/Kdnuqb9bqM8/viA0Z8yOCRFdtovnPjjFT/nD4+oqRBP2UKKQLH8OO8D6yctKAVaPClTdCEijRleJQx/a6obGkipUho/bWSjNeDFGhwlVQxnE0DDSKOmHwFFLFHXwLPiL6ZnNPy6yPZwoB85R0+cJLizIn1bbk1suKS6N6D8w/5WYhZG+MDijTUyXzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cQP8e1hOsjMVduH4mUkZVLt+/S7HcZ82dt1IhcMZTQ8=;
- b=JY+QQuNaP2Yw0kRqlybVN1DOdnE0P6K5V6eeIm++zHiLmkEfcVO4SpMpLzcI5aA1NDdzpoNJl/5yLJTeYypA5UVcul0Biplq7MAB7XojdBZnNMsGD6ESBkmd3/n1ZM7ByndZxIBpe9hiyxWWPG/b4oaGrE1S8tS5lNfl2ehMiKkTQNVLk68NuuuT6sidaourM2SJ5Rml96sFdcxxQcwWJrgBbF9rcCvG1IFlsbTt2762HT5NRanaea1Baoy379wGgE1wHjMPsHxUllT19TbhDGPhOuR3R2WbP9jmr2627j44mXKMMywYyCFNP4/Z9Yf7y4/wBhDR9rufzMYlbQ4xlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cQP8e1hOsjMVduH4mUkZVLt+/S7HcZ82dt1IhcMZTQ8=;
- b=SaHUBoZ1Spm3bjsHhsV18/ArsLdqQCCmKv4Og4GrEiRWmioXVRPyZpUPwj6neIN/rGkE+A5vfTQePVwc/VcSKKat/OmVn9ahGVJnRnk//IfVJT0AS7Gpcu216UTo5oDG5mteZWGMEtNcSVAL06FflJ+MuLxicQxrjQUwQEwAcz4zXMYwUvNXch2hvdq2g+zMONwtNj03Bd9MFqzv7VkE2AVeVK8/3oYU2VLwBUjHxTwgzykrkatlXvBODG4ixfpg34nFghDFADgV80dLrPd1AUOuqNYGfO27n5N/rQRdOom8W4b84OMbCYP0F/uOal9eUfPQCuC++M82BAx2o+uBbg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB9128.eurprd04.prod.outlook.com (2603:10a6:20b:44b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.25; Wed, 28 May
- 2025 16:00:50 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 28 May 2025
- 16:00:50 +0000
-Date: Wed, 28 May 2025 12:00:40 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Support Opensource <support.opensource@diasemi.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-pm@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] thermal: Constify struct thermal_zone_device_ops
-Message-ID: <aDczKA71dqJscfUK@lizhi-Precision-Tower-5810>
-References: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5bba3bf0139e2418b306a0f9a2f1f81ef49e88a6.1748165978.git.christophe.jaillet@wanadoo.fr>
-X-ClientProxiedBy: BY5PR04CA0006.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxDSKSsS"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ecf99dd567so379346d6.0;
+        Wed, 28 May 2025 09:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748448152; x=1749052952; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6pJnqnr02148Y6KCRblrRe9rVOkiYKPXEDLgkGFViuE=;
+        b=QxDSKSsSI2ZaSPUhk+2+cDqY7nF4M1bzpHiQXEKXY1OlF0MUzcTSFkR+NLV4bsZy+9
+         LOU5+joQItQle93+a2s7Ig/aBo8FmV+6nE0Zajk8Y8LxPTyf+53MPCK3WH1PhMaRms//
+         n9op56ruxtVu7+zxlJYelcfAG9kpIzfzYkMQKPMkRV4abuhaa4PpVcGtvZVHfDhqB+Si
+         Vmk3Iyff9Vl2gJKSr+Myd+1//R45twpwwNEeVzgc+Jy+yEaGl0+uXlBEAUe14771fepH
+         N3WK/WI9qGOwV+jC9iiIV6o/0tRf4xKjDq5xH7WGefpPZ52ZxObtWsem1ib02nw5VrrX
+         ecJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748448152; x=1749052952;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6pJnqnr02148Y6KCRblrRe9rVOkiYKPXEDLgkGFViuE=;
+        b=Uuhmsx/HixIiKHsTADk80FIvzD8/Fu24gGGzvWB3gNX9dzxm4QQa/GdWXSjRr6QMtW
+         mpBhL7zBD0zjr9X8joMiIGxxDfbUCIIiJl9eLCytYehuV/NTC4bZsj+wLyVPx6726dpJ
+         TcqfKBu2C9RBn2kWQ4/s+Guy43rFMCiumaIkP1b1vWxEEoKmItmK8NUVd3PLscXaD4Vr
+         nGiBCrXqjDUkBV4O8qcfi3gLtW6LWfC/bjIEacj6snN22Y6YZQzuDK7i47JL4i5Ybg5M
+         xGV/VZLGbKvt7/qxQNDFdSZB4OoHshVgTfGlswahhHK0ONaGvLfya2fc8vNluwXN7XKr
+         pMaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVb0BucaQI78gUNsOAqBtbtbE61m4AHbVCNW3vkHJYO0MNXY+IwIjTayvulkWZDLUmhm3kaX0yaYqMkWRU=@vger.kernel.org, AJvYcCXVi6Cw3kkf5cHU2FP/QvJ9rGaRwBly0+6WQkJALlLURjRhSKNJdRG4jnayA+v5wGt8IDnoiPc1Rp7lIgF4YaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSBWvgv63Tmr9V3+I7nPEbmqmma5f+XLdRvPbRrmWMRdcsFMjc
+	fvHlngzM0661lQB1VmvTxoEUMh4tDGB9Ebw41pn29OYu+NggIrBYZdLb
+X-Gm-Gg: ASbGncv0AEjWz7XCLODkZ3xNLwRmpGS6pN/f3uzxHNSNC8oANruZkDAg/oAwZW6bRpY
+	IeX7GMoZIZSrvbI5JItvMF45pe0l8wfhzqIzPK/4a066gjMFhzp4UNiDrF4adqOvlTGja2ZMDy+
+	cucgFPwo6ND8jAcJkopL2NAg+HDCjCQHc31aEs8FV0vvqt7OU2LRG9+GNTCYZd51zX7+qf72HrS
+	D6cV4etU2gbzm0HYsP3oiHrbjyFjbMT0AS8GuV3ZQGa2vhvtb5pZ2Cuj5lWkFEvwbqdzaMm+uKl
+	KgQmzRo6CCyuPmAvwB2j5Spt+8iUaqB4Bn7pYXh+VjVZk/BC0LpdxPP8/Tb4P++slWO6Eiz8eWd
+	YtcxJxrm/hUFJNrDL4R5KLJ1+ldZq/JFcq9vRtFQlvw==
+X-Google-Smtp-Source: AGHT+IEj1aBYgtsIbxF3nbJLZWnraAF3NKveBguXb55vmTnnLPGMU1HlcAD8nkRwVJsLjQOT2OfHmA==
+X-Received: by 2002:a05:6214:5095:b0:6f8:af2b:8ba7 with SMTP id 6a1803df08f44-6fa9d169f5dmr258168286d6.24.1748448152162;
+        Wed, 28 May 2025 09:02:32 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fac0b3b66bsm7957036d6.57.2025.05.28.09.02.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 09:02:31 -0700 (PDT)
+Message-ID: <68373397.0c0a0220.2ee6b.2fb9@mx.google.com>
+X-Google-Original-Message-ID: <aDczlTQQzbfPXzey@winterfell.>
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id EC75B1200068;
+	Wed, 28 May 2025 12:02:30 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Wed, 28 May 2025 12:02:30 -0400
+X-ME-Sender: <xms:ljM3aINkF85vo4dlFZfGWc3slJUF1ZPH1mexJ_yx5V-o4mzFZtcHnA>
+    <xme:ljM3aO-Z_U4agQ-XRRQRrihNmzwsqxPPII8GAdY_s3Oax_Eky25dzlaEuvYINiAET
+    CEcW5YJJvgK3AB55g>
+X-ME-Received: <xmr:ljM3aPSc-5uJdWR5ynE2IBqLhkOlutv0DDFDdvaO-UC_1_2uzT2F9eVmGDSihZGRnVQvgdQvwwym>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfeeikeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhf
+    gggtuggjsehttdortddttddvnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquh
+    hnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhepiedtfeevhfet
+    keelgfethfegleekfeffledvvefhheeukedtvefhtedtvdetvedvnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsg
+    hoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggp
+    rhgtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhoshhsih
+    hnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhu
+    gidrohhrghdruhhkpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtoh
+    hmpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhr
+    vghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghrnh
+    gusegrrhhnuggsrdguvgdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtg
+    hpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:ljM3aAt4-Ab_1Obb2rBA5a_v2j1UlHJKAsw7tPaNeADDAuuzIUIjaA>
+    <xmx:ljM3aAfDDKRukUelNx5wwfVlBq7ws9WwH9IMIPOA6FokY8nsMPCDoA>
+    <xmx:ljM3aE3wAa4zkaVawqnZMUuw0jGC1d9CXpi7hS2LUwbs-ko0pZrh9Q>
+    <xmx:ljM3aE8QUpSA4nIyL3YcrjtKvWw61rzp93FJYTuHoBEu-SYGiH3Q0g>
+    <xmx:ljM3aH-4HHUZwYlbRDZ1Iy3V-EZaVd--TD2Mr0M1jv0up0mQy4gwxdmW>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 May 2025 12:02:30 -0400 (EDT)
+Date: Wed, 28 May 2025 09:02:29 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Alice Ryhl <aliceryhl@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] uaccess: rust: use newtype for user pointers
+References: <20250527-userptr-newtype-v2-1-a789d266f6b0@google.com>
+ <20250527221211.GB2023217@ZenIV>
+ <68364701.050a0220.48858.0017@mx.google.com>
+ <DA7WMFWY8I6Z.2EADXSPL111PP@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB9128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62ea17f3-fe0e-4965-e8dd-08dd9e00d12c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|1800799024|366016|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mbjPqbBDmqgR+EMcagDD4bxA1N6wYw42bUvlHpZREdqObMCvReRNNSC3LYUQ?=
- =?us-ascii?Q?khbymmhlhV3hW0+g0Yd4l0Nu2JV58trFTEzWcNop58v7xvfWjIom+yA63hDL?=
- =?us-ascii?Q?ORW24vQVpoRdFmEo61gdQoKHnR4DlE6lD0dBlxqpMeMKH1WmHrxAnVLjO3ES?=
- =?us-ascii?Q?hKZyB/Uxq5nqX8zaFBtxnzN3K6HFsHggjxq6ovodIckh4OPaRepD6At5aYFm?=
- =?us-ascii?Q?UXqFFFs5F5L4pvfgGQunBmKRJ6WHNBrzgM0Jv0mQIvvOO/tMVmz8B9UXiizs?=
- =?us-ascii?Q?6AgQYxXD9Ve5Br2QnwzIguABCXqyU4TH1i5yCQN6xp7eWaYOHbXSA2ZyOZx8?=
- =?us-ascii?Q?UaompkifKOCQaf/CoJYjIC/JGJw0OBnAguJddAtM2JTOq2wEakBRGdrP1A0o?=
- =?us-ascii?Q?ajrIjp8iS+tp3TY6HsiEnWI5zgZP1TenTjA33Ne9UghkbOjcRbdPyN0Nu90p?=
- =?us-ascii?Q?HkbhdJ9BTFqL0bCKayxeqEXhLmIY0QJUaibQ06ZeVky6SKouwJhiHq1oSRqY?=
- =?us-ascii?Q?+W0Gs6G65zZuhbZLP5/em8fw/tzeyZ+ojSu1xnrnGu+zCAcG1U3EYZyWY3vU?=
- =?us-ascii?Q?29XiMwZw+WvDVoFhvmPMPxlOa7PgCjbNqFo9v6UPXgt+tPJNhxZKd2sE882w?=
- =?us-ascii?Q?zgZwjeptrKUrLgzVuOZZdKlymzCRWHThjeLvTokfMqlVuEFMspt55KE++Eon?=
- =?us-ascii?Q?7CNXMpWzhoHi5kfFuuqFGAnOzDsuEPWPEdb8A7bwhHmCWnWuZVDFPoPHjGAX?=
- =?us-ascii?Q?/X5xWqqe8wD4/6gyDlOJ9otJbUL5Vy3twGJk1VBmfutGN2aYF6OoNWvjrXsR?=
- =?us-ascii?Q?qwfiBkidwjKRLoSHQDOhMvrvrDr+WEuP0F2Ja30ACD4JdIC9zBADZC6ee1l/?=
- =?us-ascii?Q?diHnix0jI83z4v93zbUNm3EvEsg+PZAyxIxmOfFmiZ+2tMWh7jISeqL+pkgP?=
- =?us-ascii?Q?UB8cz3hL0ymD3eSgJkpAGSmSdyDUBPTQ+lz3osDvmQ+YIHpb/RD6y1s0cADj?=
- =?us-ascii?Q?Fu/r8DYX8FCzmprW4S6gC2B1F7MxjgMe1dNB3Sl3WgHRuFrTDq3EnV01GBQ3?=
- =?us-ascii?Q?rs/3TnlwyKOuGWATKspLKXqc30S2rKI81pQFCGnMtXiipHf9q8e0Czs4KwXX?=
- =?us-ascii?Q?WslLRnfOXnwOpgQvrDPdWJchdMfLJIr6hwdshOs/teX30AS8lv8vo/67Nl26?=
- =?us-ascii?Q?W63WsI3BqkY1pNWBdVlvR/rwbmoeI7EJ4ht4etnZE1rCxA5fj5L2Oczl4fr0?=
- =?us-ascii?Q?x8RmxgYOqOvVN+6yCXj35+oEGY3Vmucjuyj1sRAJZ3lqlW7hw9Eq6WlcPnpU?=
- =?us-ascii?Q?eA2cPoe5b7RwXUhAhyBxYiE2CI15PQJOMDOZG0GszOf2zo2XE3QIHfiUOs6i?=
- =?us-ascii?Q?47UTgWPYO62jtwU3pySrj+9vQmyupVe3rGQJSdw68JHjn9TH0XhGEnEw0L6C?=
- =?us-ascii?Q?9/fEAiZ5/cemanyPIGCh9IBPYZC1O5u1QZCu18gN0eC+WznYyxBtnA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(1800799024)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Z37KK/4imPu96DvXJCMMgPBgKiWtScUC8gY8K6eYWOmIPEozj1ejt089M1Nx?=
- =?us-ascii?Q?wOMqGXn5stOjVBEzkuSnEaNiVFfaFKyr/XwvRIkJnGmvIZpHfVUMAlAZ+iGt?=
- =?us-ascii?Q?pNTCSEisZu0mPQOtlxEkGL37KrK5ax3dqzx9YEm7yY4EgfzgwPE+dUveuPt8?=
- =?us-ascii?Q?FnXT8fkYiSdBOEN47CTJCwbXncpSNKDPjMaN2FRpL0m1qY3NmqTKo4GjJmU8?=
- =?us-ascii?Q?paFYKA5c7bwFCQR0y0kPpll4zAMZUUNSLtRnKRM2IuPdxD3Lo0aCjVqSbDbl?=
- =?us-ascii?Q?gKwf0/9PbIwinQhRp9cy7MeUEnGqciKGKBBbwSYV9Vc5BcKvj6TSlnLzVydS?=
- =?us-ascii?Q?sRpSwixI9ntCcslEUijrT3VooWvLYlCdElBBT4RteNRrsArUcJViW6/jijkh?=
- =?us-ascii?Q?IyGPmTY17YqE+1yCtPmIqjtC4UAD0/Ml6APWEHAZSjlEU21ZWuGP/bO+zNME?=
- =?us-ascii?Q?dndx0tmopVH44tQ4e1lGfCwCBSCuURuQcd1mgv1iDY3b45PeT0UOX6ec0rQK?=
- =?us-ascii?Q?mHD1mX1N3HrxO3Rrcnemzsktg3wgXnBs+XCuX8RBbI57YNZm7hhg14Z0QQow?=
- =?us-ascii?Q?pQBRfp7nFS2UGw3tgD9VD2cb7AgCyjVbuUr3Xam5O62zgY9ZOoZ3Gf0WMQqo?=
- =?us-ascii?Q?Tknhhl4oXQohZcL/ufUOMHd2StWtPZaNZGLhUHk8MDajRgMaOKWoJcFurCnS?=
- =?us-ascii?Q?cfbqMh+oXh7ncthE1Qz3W5MdqV12auxGdqJy0MuIiXJFHfmby9EjHPjWQEM0?=
- =?us-ascii?Q?l78nUwE5MEp5XUmyDToEmiOUIlszxiEhcvcm/y8M9VC8yEWljAwYahSaZEW9?=
- =?us-ascii?Q?Uoun3DlWZhqZGqJrWJxJCclRpJ/s0J7MHPavJzGzgYQgM/pANoIuGqoZV9eS?=
- =?us-ascii?Q?wMSOnepkFT64InaGRTdfMlcncESfpiAEXWmzI84sPkBK4prmK0bVdiAEafqX?=
- =?us-ascii?Q?IMV2pwLDN7p/3F1ZRZ4Lx5suViYqtijXKZ8dPRPj9eAduainlcwskJ+R3q9V?=
- =?us-ascii?Q?sSudGEJmowvGmlZhUobhVfQZeu92ea3eXt+4VF3poPvNhcwDmoXjkgqoALLZ?=
- =?us-ascii?Q?8o8cmHmiK32L4rafzJijbp/BwqN2SZYdfAiX9P/L82KSjznYSy9T/p6ZNb0/?=
- =?us-ascii?Q?2n1CDqzyUDzsg1lOiVAySTX+RU3oaIvoKfov1eOgEdEpcOmBC7JFPj4vcfzR?=
- =?us-ascii?Q?0Gf9T9TpAWxD9xNI4qCxPOyfmOFBPsmHaqufOIpD+2CFl81kMNNyTy6SfIXw?=
- =?us-ascii?Q?xt5yV5M0ORF6BbYsF5mbAOacnG4MF9XGn2adjovg0H5tqFvXjeJqhNqiDjnW?=
- =?us-ascii?Q?JQEMrzoJ/yR+bJ46gDBfg7gm3hG9r5kQ1DE1C2Ln4GxPV/Rj5vhXqL1h1rZQ?=
- =?us-ascii?Q?hp6EO4hNtG1p2ASAcVc3KtSEtbWZOd79iOOQuTXVKCq225dYg3gBzrCg8WIg?=
- =?us-ascii?Q?nBhcL6tfklB9lmMy56ak/IVcMl0MOVAFyf8yY89GB/Zt0OxGVDYjgC1E1LWx?=
- =?us-ascii?Q?uDC/S6dfueQS8cxkf/ZcchWJHWSlTtL3DZ3sCM1ySO9ILsY2bed+LFwdtKjw?=
- =?us-ascii?Q?U+iIwBjnJgleK+1cDd81JramJvLjFhukkjYKGwjv?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62ea17f3-fe0e-4965-e8dd-08dd9e00d12c
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 16:00:50.5095
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lqMChZdpZB+dQrB+ZfIfYWKLj6iUgk9Ai0TsFcYDCPReEB9Jlepp8//cnp97XmzTaGHH7g3RyCIv5nCaOj690w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9128
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DA7WMFWY8I6Z.2EADXSPL111PP@kernel.org>
 
-On Sun, May 25, 2025 at 11:40:04AM +0200, Christophe JAILLET wrote:
-> 'struct thermal_zone_device_ops' are not modified in these drivers.
->
-> Constifying these structures moves some data to a read-only section, so
-> increases overall security, especially when the structure holds some
-> function pointers.
->
-> On a x86_64, with allmodconfig, as an example:
-> Before:
-> ======
->    text	   data	    bss	    dec	    hex	filename
->   28116	   5168	    128	  33412	   8284	drivers/thermal/armada_thermal.o
->
-> After:
-> =====
->    text	   data	    bss	    dec	    hex	filename
->   28244	   5040	    128	  33412	   8284	drivers/thermal/armada_thermal.o
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Wed, May 28, 2025 at 05:38:08PM +0200, Benno Lossin wrote:
+> On Wed May 28, 2025 at 1:13 AM CEST, Boqun Feng wrote:
+> > On Tue, May 27, 2025 at 11:12:11PM +0100, Al Viro wrote:
+> >> On Tue, May 27, 2025 at 01:53:12PM +0000, Alice Ryhl wrote:
+> >> > In C code we use sparse with the __user annotation to detect cases where
+> >> > a user pointer is mixed up with other things. To replicate that, we
+> >> > introduce a new struct UserPtr that serves the same purpose using the
+> >> > newtype pattern.
+> >> > 
+> >> > The UserPtr type is not marked with #[derive(Debug)], which means that
+> >> > it's not possible to print values of this type. This avoids ASLR
+> >> > leakage.
+> >> > 
+> >> > The type is added to the prelude as it is a fairly fundamental type
+> >> > similar to c_int. The wrapping_add() method is renamed to
+> >> > wrapping_byte_add() for consistency with the method name found on raw
+> >> > pointers.
+> >> 
+> >> That's considerably weaker than __user, though - with
+> >> 	struct foo {struct bar x; struct baz y[2]; };
+> >
+> > Translate to Rust this is:
+> >
+> >     struct Foo {
+> >         x: Bar,
+> > 	y: Baz[2],
+> >     }
+> >
+> >> 	struct foo __user *p;
+> >
+> > UserPtr should probably be generic over pointee, so:
+> >
+> >     pub struct UserPtr<T>(*mut c_void, PhantomData<*mut T>);
+> >
+> > and
+> >
+> >     let p: UserPtr<Foo> = ...;
+> >
+> >> 	void f(struct bar __user *);
+> >
+> > and this is:
+> >
+> >     pub fn f(bar: UserPtr<Bar>)
+> >
+> > and the checking should work, a (maybe unrelated) tricky part though..
+> >
+> >> sparse does figure out that f(&p->y[1]) is a type error - &p->y[1] is
+> >
+> > In Rust, you will need to play a little unsafe game to get &p->y[1]:
+> >
+> >     let foo_ptr: *mut Foo = p.as_mut_ptr();
+> >     let y_ptr: *mut Baz = unsafe { addr_of_mut!((*foo_ptr).y[1]) };
+> >     let y: UserPtr<Baz> = unsafe { UserPtr::from_ptr(y_ptr) };
+> 
+> Shouldn't this use `wrapping_add` since the pointer shouldn't be
+> dereferenced?
+> 
+
+Good point, so:
+
+     let foo_ptr: *mut Foo = p.as_mut_ptr();
+     let y_ptr: *mut Baz = foo_ptr.wrapping_byte_add(offset_of!(Foo, y[1]));
+     let y: UserPtr<Baz> = unsafe { UserPtr::from_ptr(y_ptr) };
+
+(using wrapping_byte_add() + offset_of!())
+
+Regards,
+Boqun
+
+> If we don't use `wrapping_add`, then the field projection operation for
+> this type must be `unsafe`.
+> 
 > ---
-> Compile tested only
-> ---
->  drivers/thermal/armada_thermal.c                        | 2 +-
->  drivers/thermal/da9062-thermal.c                        | 2 +-
->  drivers/thermal/dove_thermal.c                          | 2 +-
->  drivers/thermal/imx_thermal.c                           | 2 +-
-
-for imx thermal part
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-
->  drivers/thermal/intel/int340x_thermal/int3400_thermal.c | 2 +-
->  drivers/thermal/kirkwood_thermal.c                      | 2 +-
->  drivers/thermal/mediatek/lvts_thermal.c                 | 2 +-
->  drivers/thermal/renesas/rcar_thermal.c                  | 2 +-
->  drivers/thermal/spear_thermal.c                         | 2 +-
->  drivers/thermal/st/st_thermal.c                         | 2 +-
->  drivers/thermal/testing/zone.c                          | 2 +-
->  11 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/thermal/armada_thermal.c b/drivers/thermal/armada_thermal.c
-> index 9bff21068721..c2fbdb534f61 100644
-> --- a/drivers/thermal/armada_thermal.c
-> +++ b/drivers/thermal/armada_thermal.c
-> @@ -408,7 +408,7 @@ static int armada_get_temp_legacy(struct thermal_zone_device *thermal,
->  	return ret;
->  }
->
-> -static struct thermal_zone_device_ops legacy_ops = {
-> +static const struct thermal_zone_device_ops legacy_ops = {
->  	.get_temp = armada_get_temp_legacy,
->  };
->
-> diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
-> index 2077e85ef5ca..a8d4b766ba21 100644
-> --- a/drivers/thermal/da9062-thermal.c
-> +++ b/drivers/thermal/da9062-thermal.c
-> @@ -137,7 +137,7 @@ static int da9062_thermal_get_temp(struct thermal_zone_device *z,
->  	return 0;
->  }
->
-> -static struct thermal_zone_device_ops da9062_thermal_ops = {
-> +static const struct thermal_zone_device_ops da9062_thermal_ops = {
->  	.get_temp	= da9062_thermal_get_temp,
->  };
->
-> diff --git a/drivers/thermal/dove_thermal.c b/drivers/thermal/dove_thermal.c
-> index f9157a47156b..723bc72f0626 100644
-> --- a/drivers/thermal/dove_thermal.c
-> +++ b/drivers/thermal/dove_thermal.c
-> @@ -106,7 +106,7 @@ static int dove_get_temp(struct thermal_zone_device *thermal,
->  	return 0;
->  }
->
-> -static struct thermal_zone_device_ops ops = {
-> +static const struct thermal_zone_device_ops ops = {
->  	.get_temp = dove_get_temp,
->  };
->
-> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-> index bab52e6b3b15..38c993d1bcb3 100644
-> --- a/drivers/thermal/imx_thermal.c
-> +++ b/drivers/thermal/imx_thermal.c
-> @@ -361,7 +361,7 @@ static bool imx_should_bind(struct thermal_zone_device *tz,
->  	return trip->type == THERMAL_TRIP_PASSIVE;
->  }
->
-> -static struct thermal_zone_device_ops imx_tz_ops = {
-> +static const struct thermal_zone_device_ops imx_tz_ops = {
->  	.should_bind = imx_should_bind,
->  	.get_temp = imx_get_temp,
->  	.change_mode = imx_change_mode,
-> diff --git a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> index 0e07693ecf59..5736638c586b 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int3400_thermal.c
-> @@ -515,7 +515,7 @@ static int int3400_thermal_change_mode(struct thermal_zone_device *thermal,
->  	return result;
->  }
->
-> -static struct thermal_zone_device_ops int3400_thermal_ops = {
-> +static const struct thermal_zone_device_ops int3400_thermal_ops = {
->  	.get_temp = int3400_thermal_get_temp,
->  	.change_mode = int3400_thermal_change_mode,
->  };
-> diff --git a/drivers/thermal/kirkwood_thermal.c b/drivers/thermal/kirkwood_thermal.c
-> index 7c2265231668..4619e090f756 100644
-> --- a/drivers/thermal/kirkwood_thermal.c
-> +++ b/drivers/thermal/kirkwood_thermal.c
-> @@ -48,7 +48,7 @@ static int kirkwood_get_temp(struct thermal_zone_device *thermal,
->  	return 0;
->  }
->
-> -static struct thermal_zone_device_ops ops = {
-> +static const struct thermal_zone_device_ops ops = {
->  	.get_temp = kirkwood_get_temp,
->  };
->
-> diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
-> index 985925147ac0..acce8fde2cba 100644
-> --- a/drivers/thermal/mediatek/lvts_thermal.c
-> +++ b/drivers/thermal/mediatek/lvts_thermal.c
-> @@ -571,7 +571,7 @@ static irqreturn_t lvts_irq_handler(int irq, void *data)
->  	return iret;
->  }
->
-> -static struct thermal_zone_device_ops lvts_ops = {
-> +static const struct thermal_zone_device_ops lvts_ops = {
->  	.get_temp = lvts_get_temp,
->  	.set_trips = lvts_set_trips,
->  };
-> diff --git a/drivers/thermal/renesas/rcar_thermal.c b/drivers/thermal/renesas/rcar_thermal.c
-> index 00a66ee0a5b0..fdd7afdc4ff6 100644
-> --- a/drivers/thermal/renesas/rcar_thermal.c
-> +++ b/drivers/thermal/renesas/rcar_thermal.c
-> @@ -277,7 +277,7 @@ static int rcar_thermal_get_temp(struct thermal_zone_device *zone, int *temp)
->  	return rcar_thermal_get_current_temp(priv, temp);
->  }
->
-> -static struct thermal_zone_device_ops rcar_thermal_zone_ops = {
-> +static const struct thermal_zone_device_ops rcar_thermal_zone_ops = {
->  	.get_temp	= rcar_thermal_get_temp,
->  };
->
-> diff --git a/drivers/thermal/spear_thermal.c b/drivers/thermal/spear_thermal.c
-> index bb96be947521..603dadcd3df5 100644
-> --- a/drivers/thermal/spear_thermal.c
-> +++ b/drivers/thermal/spear_thermal.c
-> @@ -41,7 +41,7 @@ static inline int thermal_get_temp(struct thermal_zone_device *thermal,
->  	return 0;
->  }
->
-> -static struct thermal_zone_device_ops ops = {
-> +static const struct thermal_zone_device_ops ops = {
->  	.get_temp = thermal_get_temp,
->  };
->
-> diff --git a/drivers/thermal/st/st_thermal.c b/drivers/thermal/st/st_thermal.c
-> index a14a37d54698..1470ca519def 100644
-> --- a/drivers/thermal/st/st_thermal.c
-> +++ b/drivers/thermal/st/st_thermal.c
-> @@ -132,7 +132,7 @@ static int st_thermal_get_temp(struct thermal_zone_device *th, int *temperature)
->  	return 0;
->  }
->
-> -static struct thermal_zone_device_ops st_tz_ops = {
-> +static const struct thermal_zone_device_ops st_tz_ops = {
->  	.get_temp	= st_thermal_get_temp,
->  };
->
-> diff --git a/drivers/thermal/testing/zone.c b/drivers/thermal/testing/zone.c
-> index 1f4e450100e2..4257d813d572 100644
-> --- a/drivers/thermal/testing/zone.c
-> +++ b/drivers/thermal/testing/zone.c
-> @@ -381,7 +381,7 @@ static int tt_zone_get_temp(struct thermal_zone_device *tz, int *temp)
->  	return 0;
->  }
->
-> -static struct thermal_zone_device_ops tt_zone_ops = {
-> +static const struct thermal_zone_device_ops tt_zone_ops = {
->  	.get_temp = tt_zone_get_temp,
->  };
->
-> --
-> 2.49.0
->
+> Cheers,
+> Benno
