@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B260247283
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1A52749D3
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:10:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423379; cv=none; b=RmNxEVLLB1aNhhGI5pn+9UswVeH6KVgAsq5/iH+L5T9Klo3Q2IbVaK46RFyKWbuBQXYY9TWSHXnrbBd6ZD0/rB9YE2osRZ/xDqMR7/VJ/mSO9xUXKPRJf982B7ocYQ239L3OIUBBGrRD7Ybb95z+Svhi4MUMYaUPUUXBKL3I7t8=
+	t=1748423426; cv=none; b=LmkwvmibXR0EwNEzpXJ8OpdlBR3O7f4RNpWoteCbUaFp8CpwSbQ8Rd6tkf1HQ9/q2Q6jLILFAuchqoe7BvU/3FUXBwj9wK4Lz2b3mrpT+TIY+O/vRxgB6zAXts6mWZO1C71AzAhlZMWopiXjssWqikX2avcKfSwbj1xun1ktvCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423379; c=relaxed/simple;
-	bh=eaZNI22j514NOTuL5YNsiQQHcPGm+KwlO2UZuSEedCE=;
+	s=arc-20240116; t=1748423426; c=relaxed/simple;
+	bh=yoVcG/irg/aTytIKIEbhE3xRsOHi04Ko0PIaWu0jbKw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZLn7PkhmJ/on5vOh2PhZil6CKbgp7v8LSmUR7R4adxzXbFwV0IB+gJL5ghdM1RIsc0ZKI2UyYUKq78qAxCrjNiAjwYakJ39PTURBAZ/t/r64isvmBvOW9hZaWnII85mursvjbjlktaKl2JIRqJRHNnzzPowpAKHHhvEBzKoVPPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bHyEwZ6X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=nEzQxQ8AhARLvdHd0Zv6LRiAMakMiL9oY7uES+1iEoUYFQGxqOvHmQ6jovxiyLL62sLgu1+FGidcEVoi0UFoq5FWUACNSi1QaUy5+R4t36jrsp57NZ/KDtqdwjARafu3i7R+OXV6CQkyp+IjXc0yOAS/KftwSCEnF6GG1z97V/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6dePIFP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bHyEwZ6X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748423377;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3O3V+YBB8M7I1+j2oOnnuqTbUPyASRos/wIVAbMl2TY=;
-	b=bHyEwZ6Xwsv1hf6l63RY09DyOrpExnaNKSucF+znlO7WKlN1ICcOQpQvzeKhDIYnIJhxEe
-	fxkoNbGX7bVdYKCCdjSYImosErkXrj3cyyLHmbZem4bx0h5oatKlQTtZP82qCMFgqMJtcq
-	qEk7fZKGTsqesIKMHTCe3NNoLyb6vQs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-627-cXxSPZfMPwKWcXB7ps5bLg-1; Wed, 28 May 2025 05:09:35 -0400
-X-MC-Unique: cXxSPZfMPwKWcXB7ps5bLg-1
-X-Mimecast-MFC-AGG-ID: cXxSPZfMPwKWcXB7ps5bLg_1748423374
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso1905763f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:09:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748423374; x=1749028174;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3O3V+YBB8M7I1+j2oOnnuqTbUPyASRos/wIVAbMl2TY=;
-        b=pQpnKe00gJpIfESPx0EuBCAhDC3xnq6zij4fdTm2grxw36bOxj5sbFtsPWqdWrAURy
-         uSsOlYabx1J9XE6Y/w0nH4AJ+L9+Gx6tjeT/5ZAzAI3bM3iXGabk01L3xmnhCSFjHg27
-         OGa2+pafYcTWxduAgT+T+pCy7WIxAFkS6R1Nk1pozFSr+1+FeV5rAmiU9rBL5WzeHavg
-         31RKh2tWrzZxNbydpWfN10UqfDb7+SNiCiarh/ogJMwKEGWixHLHeD2UhapgsCExt3TT
-         dfc/hldfFizItFcvEqO04gEHP8HB9ByqR2Sb5Jho1YprEfqf1Q8Et/ze4FvQ7B1SJ8Cv
-         Zlpg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPjoGvkWofrShwImLevFPEO5BxU4BUAdcOWHAT50Aeg3JaiyM6QAm7M8+vDRe77Rq5sy5xRrAj9GAa95A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw28THKeMbFj/DpyvEPbcKZyb8IIfcmVJ3z7YdonBdJgszNv3d/
-	Fc36KMs1XxJkYS3eDg6+xywqWeNUL1frhJ0RLAJI8IjVXde5bwJlQzlt2W/l95B+dg7gZxVEYrG
-	DiJpqab9Dnu2bpK85SXy8CPcnNnC4JgX56rWeVnjJ3ss89QraQqwHNHA+FhqO13q9eQ==
-X-Gm-Gg: ASbGncsfB/TJvb8AiCAmzxbcP2ewpVzqckawlAEzTO7kXeh98mPw4ohX3seOD5c77WS
-	qP8w161r7VihAcpYxrYZGkz2QO1I7R6vfqFw9WyudovwqKfmx3vT0NS3x4tXIr6ikCW2XCAbCzs
-	xoQmU5LgbhmJ4iLHBl7GkG2p6xS9BXxyPQ/DSh1aTxvKKa678zWczGEMevxUCLWZk5HwX5xEQzO
-	ukNVzoENv6dTgsVEyATICSzr8pDShCGiLc06c0YYbUz0R2x2OJa27YVMTeGk7ETOhzJ8y53xQRi
-	H+z3TwdgG9o=
-X-Received: by 2002:a5d:5f93:0:b0:3a4:dc77:5789 with SMTP id ffacd0b85a97d-3a4dc7759bdmr8989965f8f.10.1748423374024;
-        Wed, 28 May 2025 02:09:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFuVB49DNuCMZCD9ZgAV1EUkM+z/1OmkaF2/KqRplm9wSye2rAwg1/YAa3nrHj+Rb8/4fGOJA==
-X-Received: by 2002:a5d:5f93:0:b0:3a4:dc77:5789 with SMTP id ffacd0b85a97d-3a4dc7759bdmr8989934f8f.10.1748423373482;
-        Wed, 28 May 2025 02:09:33 -0700 (PDT)
-Received: from [10.43.17.53] ([85.93.96.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4507253bbe8sm11514425e9.7.2025.05.28.02.09.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:09:33 -0700 (PDT)
-Message-ID: <c8bb97cc-68b6-44f1-a4f4-b0ebc42a7f92@redhat.com>
-Date: Wed, 28 May 2025 11:09:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6dePIFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97075C4CEEB;
+	Wed, 28 May 2025 09:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748423425;
+	bh=yoVcG/irg/aTytIKIEbhE3xRsOHi04Ko0PIaWu0jbKw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L6dePIFPunIYqtV7Lp65JA4+QgBhwRx3rynBJnW9Bn8LB6PTn0jaJuNQ+6iXHUlwY
+	 lxFRBvUb7isTrd/Wzgh2de9n4nq9k5v4NPUlG71KM1VX/+uJP7A8siQSe+DEfYeHuR
+	 m4Cvi6OftYOQV6UPEpNvIaAbMZY5M8YVxjIm0k03ZojiQgSZXkoIxhRIzkhjkEUFV0
+	 24fbcCYUsEC+bE/FIXtONvtMtg6W6Jl0AhwvuF+sekppzT4dw0DWqK1JltKwZBuHko
+	 qwqhPg01blDIq501MbUqzug7+pCOPJLcUoTFyQq76gQcmL8QwPJ6ILid9PRTyrHVuq
+	 G2rYQ8uhpB57A==
+Message-ID: <9f0d0109-3376-40f1-935a-bf341019956d@kernel.org>
+Date: Wed, 28 May 2025 11:10:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,219 +35,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bpf: Specify access type of bpf_sysctl_get_name args
-To: Yonghong Song <yonghong.song@linux.dev>, bpf@vger.kernel.org
-Cc: Martin KaFai Lau <martin.lau@linux.dev>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
- Eduard Zingerman <eddyz87@gmail.com>
-References: <20250527165412.533335-1-jmarchan@redhat.com>
- <7aed6949-1076-4c8f-8939-35b47072d431@linux.dev>
-From: Jerome Marchand <jmarchan@redhat.com>
+Subject: Re: [PATCH v1 3/9] arm64: Kconfig: add ARCH_BST for bst silicons
+To: Albert Yang <yangzh0906@thundersoft.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Ge Gordon <gordon.ge@bst.ai>
+References: <20250528085448.481215-1-yangzh0906@thundersoft.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-In-Reply-To: <7aed6949-1076-4c8f-8939-35b47072d431@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250528085448.481215-1-yangzh0906@thundersoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 27/05/2025 21:56, Yonghong Song wrote:
+On 28/05/2025 10:54, Albert Yang wrote:
+> Add ARCH_BST for bst SoC series support.
+> Add ARCH_BSTC1200 for BSTC1200 platform.
 > 
+> Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
+> Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
+> ---
+>  arch/arm64/Kconfig.platforms | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> On 5/27/25 9:54 AM, Jerome Marchand wrote:
->> The second argument of bpf_sysctl_get_name() helper is a pointer to a
->> buffer that is being written to. However that isn't specify in the
->> prototype.
->>
->> Until commit 37cce22dbd51a ("bpf: verifier: Refactor helper access
->> type tracking"), all helper accesses were considered as a possible
->> write access by the verifier, so no big harm was done. However, since
->> then, the verifier might make wrong asssumption about the content of
->> that address which might lead it to make faulty optimizations (such as
->> removing code that was wrongly labeled dead). This is what happens in
-> 
-> Could you give more detailed example about the above statement?
-> 
->    the verifier might make wrong asssumption about the content of
->    that address which might lead it to make faulty optimizations (such as
->    removing code that was wrongly labeled dead)
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 8b76821f190f..b94c8c5d038c 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -402,4 +402,23 @@ config ARCH_ZYNQMP
+>  	help
+>  	  This enables support for Xilinx ZynqMP Family
+>  
+> +config ARCH_BSTC1200
 
-To be clear, I don't mean that the verifier does anything wrong in this
-case. It makes a wrong assumption because it was fed wrong information
-by the helper prototype. Here is the output of the verifier with commit
-37cce22dbd51a:
+B is not after Z. Anyway one ARCH entry per architecture, not per soc.
 
-func#0 @0
-Live regs before insn:
-   0: .1........ (bf) r7 = r10
-   1: .1.....7.. (07) r7 += -8
-   2: .1.....7.. (b7) r0 = 0
-   3: 01.....7.. (7b) *(u64 *)(r7 +0) = r0
-   4: .1.....7.. (bf) r2 = r7
-   5: .12....7.. (b7) r3 = 8
-   6: .123...7.. (b7) r4 = 1
-   7: .1234..7.. (85) call bpf_sysctl_get_name#101
-   8: 0......7.. (55) if r0 != 0x7 goto pc+6
-   9: .......7.. (18) r8 = 0x6d656d5f706374
-  11: .......78. (79) r9 = *(u64 *)(r7 +0)
-  12: ........89 (5d) if r8 != r9 goto pc+2
-  13: .......... (b7) r0 = 1
-  14: 0......... (05) goto pc+1
-  15: .......... (b7) r0 = 0
-  16: 0......... (95) exit
-0: R1=ctx() R10=fp0
-0: (bf) r7 = r10                      ; R7_w=fp0 R10=fp0
-1: (07) r7 += -8                      ; R7_w=fp-8
-2: (b7) r0 = 0                        ; R0_w=0
-3: (7b) *(u64 *)(r7 +0) = r0          ; R0_w=0 R7_w=fp-8 fp-8_w=0
-4: (bf) r2 = r7                       ; R2_w=fp-8 R7_w=fp-8
-5: (b7) r3 = 8                        ; R3_w=8
-6: (b7) r4 = 1                        ; R4_w=1
-7: (85) call bpf_sysctl_get_name#101
-mark_precise: frame0: last_idx 7 first_idx 0 subseq_idx -1
-mark_precise: frame0: regs=r3 stack= before 6: (b7) r4 = 1
-mark_precise: frame0: regs=r3 stack= before 5: (b7) r3 = 8
-8: R0_w=scalar()
-8: (55) if r0 != 0x7 goto pc+6        ; R0_w=7
-9: (18) r8 = 0x6d656d5f706374         ; R8_w=0x6d656d5f706374
-11: (79) r9 = *(u64 *)(r7 +0)         ; R7=fp-8 R9=0 fp-8=0
-12: (5d) if r8 != r9 goto pc+2
-mark_precise: frame0: last_idx 12 first_idx 12 subseq_idx -1
-mark_precise: frame0: parent state regs=r8 stack=:  R0_w=7 R7_w=fp-8 R8_rw=P0x6d656d5f706374 R9_rw=0 R10=fp0 fp-8_w=0
-mark_precise: frame0: last_idx 11 first_idx 0 subseq_idx 12
-mark_precise: frame0: regs=r8 stack= before 11: (79) r9 = *(u64 *)(r7 +0)
-mark_precise: frame0: regs=r8 stack= before 9: (18) r8 = 0x6d656d5f706374
-mark_precise: frame0: last_idx 12 first_idx 12 subseq_idx -1
-mark_precise: frame0: parent state regs=r9 stack=:  R0_w=7 R7_w=fp-8 R8_rw=P0x6d656d5f706374 R9_rw=P0 R10=fp0 fp-8_w=0
-mark_precise: frame0: last_idx 11 first_idx 0 subseq_idx 12
-mark_precise: frame0: regs=r9 stack= before 11: (79) r9 = *(u64 *)(r7 +0)
-mark_precise: frame0: regs= stack=-8 before 9: (18) r8 = 0x6d656d5f706374
-mark_precise: frame0: regs= stack=-8 before 8: (55) if r0 != 0x7 goto pc+6
-mark_precise: frame0: regs= stack=-8 before 7: (85) call bpf_sysctl_get_name#101
-mark_precise: frame0: regs= stack=-8 before 6: (b7) r4 = 1
-mark_precise: frame0: regs= stack=-8 before 5: (b7) r3 = 8
-mark_precise: frame0: regs= stack=-8 before 4: (bf) r2 = r7
-mark_precise: frame0: regs= stack=-8 before 3: (7b) *(u64 *)(r7 +0) = r0
-mark_precise: frame0: regs=r0 stack= before 2: (b7) r0 = 0
-12: R8=0x6d656d5f706374 R9=0
-15: (b7) r0 = 0                       ; R0_w=0
-16: (95) exit
-mark_precise: frame0: last_idx 16 first_idx 12 subseq_idx -1
-mark_precise: frame0: regs=r0 stack= before 15: (b7) r0 = 0
 
-from 8 to 15: R0_w=scalar() R7_w=fp-8 R10=fp0 fp-8_w=0
-15: R0_w=scalar() R7_w=fp-8 R10=fp0 fp-8_w=0
-15: (b7) r0 = 0                       ; R0_w=0
-16: (95) exit
-mark_precise: frame0: last_idx 16 first_idx 0 subseq_idx -1
-mark_precise: frame0: regs=r0 stack= before 15: (b7) r0 = 0
-processed 16 insns (limit 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
+> +	bool "BSTC1200 Platforms"
+> +	select SOC_NONCOHERENT
 
-At line 11, it still assume that fp-8=0, despite the call to
-bpf_sysctl_get_name. Because of that, it assumes that the first branch
-of the conditional jump at line 12 is never taken an the program always
-return 0 (access denied).
+There is no such thing. You need to clean up all your patches from
+downstream stuff. Please start working on upstream kernel.
 
-For comparison, here's the verifier output when commit 37cce22dbd51a is
-reverted:
 
-func#0 @0
-Live regs before insn:
-   0: .1........ (bf) r7 = r10
-   1: .1.....7.. (07) r7 += -8
-   2: .1.....7.. (b7) r0 = 0
-   3: 01.....7.. (7b) *(u64 *)(r7 +0) = r0
-   4: .1.....7.. (bf) r2 = r7
-   5: .12....7.. (b7) r3 = 8
-   6: .123...7.. (b7) r4 = 1
-   7: .1234..7.. (85) call bpf_sysctl_get_name#101
-   8: 0......7.. (55) if r0 != 0x7 goto pc+6
-   9: .......7.. (18) r8 = 0x6d656d5f706374
-  11: .......78. (79) r9 = *(u64 *)(r7 +0)
-  12: ........89 (5d) if r8 != r9 goto pc+2
-  13: .......... (b7) r0 = 1
-  14: 0......... (05) goto pc+1
-  15: .......... (b7) r0 = 0
-  16: 0......... (95) exit
-0: R1=ctx() R10=fp0
-0: (bf) r7 = r10                      ; R7_w=fp0 R10=fp0
-1: (07) r7 += -8                      ; R7_w=fp-8
-2: (b7) r0 = 0                        ; R0_w=0
-3: (7b) *(u64 *)(r7 +0) = r0          ; R0_w=0 R7_w=fp-8 fp-8_w=0
-4: (bf) r2 = r7                       ; R2_w=fp-8 R7_w=fp-8
-5: (b7) r3 = 8                        ; R3_w=8
-6: (b7) r4 = 1                        ; R4_w=1
-7: (85) call bpf_sysctl_get_name#101
-mark_precise: frame0: last_idx 7 first_idx 0 subseq_idx -1
-mark_precise: frame0: regs=r3 stack= before 6: (b7) r4 = 1
-mark_precise: frame0: regs=r3 stack= before 5: (b7) r3 = 8
-8: R0_w=scalar()
-8: (55) if r0 != 0x7 goto pc+6        ; R0_w=7
-9: (18) r8 = 0x6d656d5f706374         ; R8_w=0x6d656d5f706374
-11: (79) r9 = *(u64 *)(r7 +0)         ; R7=fp-8 R9=scalar() fp-8=mmmmmmmm
-12: (5d) if r8 != r9 goto pc+2        ; R8=0x6d656d5f706374 R9=0x6d656d5f706374
-13: (b7) r0 = 1                       ; R0_w=1
-14: (05) goto pc+1
-16: (95) exit
-mark_precise: frame0: last_idx 16 first_idx 12 subseq_idx -1
-mark_precise: frame0: regs=r0 stack= before 14: (05) goto pc+1
-mark_precise: frame0: regs=r0 stack= before 13: (b7) r0 = 1
-
-from 12 to 15: R0=7 R7=fp-8 R8=0x6d656d5f706374 R9=scalar() R10=fp0 fp-8=mmmmmmmm
-15: R0=7 R7=fp-8 R8=0x6d656d5f706374 R9=scalar() R10=fp0 fp-8=mmmmmmmm
-15: (b7) r0 = 0                       ; R0_w=0
-16: (95) exit
-mark_precise: frame0: last_idx 16 first_idx 12 subseq_idx -1
-mark_precise: frame0: regs=r0 stack= before 15: (b7) r0 = 0
-
-from 8 to 15: R0_w=scalar() R7_w=fp-8 R10=fp0 fp-8_w=mmmmmmmm
-15: R0_w=scalar() R7_w=fp-8 R10=fp0 fp-8_w=mmmmmmmm
-15: (b7) r0 = 0                       ; R0_w=0
-16: (95) exit
-mark_precise: frame0: last_idx 16 first_idx 0 subseq_idx -1
-mark_precise: frame0: regs=r0 stack= before 15: (b7) r0 = 0
-processed 19 insns (limit 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
-
-> 
-> This patch actually may cause a behavior change.
-> 
-> Without this patch, typically the whole buffer will be initialized
-> to 0 and then the helper itself will copy bytes until seeing a '\0'.
-> 
-> With this patch, bpf prog does not need to initialize the buffer.
-> Inside the helper, the copied bytes may not cover the whole buffer.
-
-If that's an issue, it could be easily fixed by replacing
-ARG_PTR_TO_UNINIT_MEM by ARG_PTR_TO_MEM | MEM_WRITE.
-I don't know what the original intention was when bpf_sysctl_get_name()
-was introduced, but almost all helpers use ARG_PTR_TO_UNINIT_MEM for
-such a case.
-
-Jerome
-
-> 
->> test_sysctl selftest to the tests related to sysctl_get_name.
->>
->> Correctly mark the second argument of bpf_sysctl_get_name() as
->> ARG_PTR_TO_UNINIT_MEM.
->>
->> Signed-off-by: Jerome Marchand <jmarchan@redhat.com>
->> ---
->>   kernel/bpf/cgroup.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
->> index 84f58f3d028a3..09c02a592d24a 100644
->> --- a/kernel/bpf/cgroup.c
->> +++ b/kernel/bpf/cgroup.c
->> @@ -2104,7 +2104,7 @@ static const struct bpf_func_proto 
->> bpf_sysctl_get_name_proto = {
->>       .gpl_only    = false,
->>       .ret_type    = RET_INTEGER,
->>       .arg1_type    = ARG_PTR_TO_CTX,
->> -    .arg2_type    = ARG_PTR_TO_MEM,
->> +    .arg2_type    = ARG_PTR_TO_UNINIT_MEM,
->>       .arg3_type    = ARG_CONST_SIZE,
->>       .arg4_type    = ARG_ANYTHING,
->>   };
-> 
-> 
-
+Best regards,
+Krzysztof
