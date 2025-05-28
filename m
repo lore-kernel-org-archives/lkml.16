@@ -1,99 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991A22857D2
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 13:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76FD2459EA;
+	Wed, 28 May 2025 13:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438516; cv=none; b=VlNjwEP5wF6i7wBzoeLNJnW+iKIpPnEsJ6SzrAKNn2/u9Vfpe+HgVsh3RA2QZgK612eKO8LgUama2j5YtCPis1zi+XeE2IlKwYB76WH0gzfwxWebCwbCh4YsAn795+RUoQydibCp8IKwz9ffrPLmjlejUN6RATuJli6fE2gGo0w=
+	t=1748438560; cv=none; b=LgbghBUxbifSN4X5xMBQyYwKNgYYq4a44CXiapqxdQcQvUlrbOQ/mt9K7kpRdhj5qmbagwSpSYv3E/NSgwEnHcJOYkVhV1obfsJTP1FOHvFMWnsBh6O4H0oDaiPomTOujFzlztyDwZ7PUZiGtNOTTLJOygx2Buu+FNRuw70tvQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438516; c=relaxed/simple;
-	bh=g+xOFZ57Bsw1wMhdPNhPQ3EPoGnnqN87CcjYVj3CF94=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kajKT5s5XpmYBqaE8S5mp4HdYxvbJ4yGx+Sf+dlBoyh3c0fJd9W3Av/PtBujfHxBfKqUCV2VRYmSFQXH2lzlDxjezw5lMwEYykiV+aqvLmrBhk4Xo/PNPWsBG0Wfcsn64h2DdBr4qe7TJC0IgpCI2wlKyGzUNG/BsnxGT0zxgd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aDDD7Asz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748438560; c=relaxed/simple;
+	bh=4Pn5+IaraLwfB51pd3e88aEPpbE+Xpl78G5c8jBouU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHylBcd0YOKReQAuRbqgKDc273u0stNHCMsGXm16lu1HMUkYiKiZuqQMOqyhcIhmkIjzmdielYlQmy+JbYQWBoCkoXe5uFIKd3znp1/d5YD5QvD1O6PyQkng5Q7ULFkV6i0LrtOU5PcvZNmvs0C6h+Djj7LNXVwaIQ0yozeropI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=olyCyipN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aDDD7Asz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D9EBC4CEE7;
-	Wed, 28 May 2025 13:21:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748438516;
-	bh=g+xOFZ57Bsw1wMhdPNhPQ3EPoGnnqN87CcjYVj3CF94=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aDDD7AszRyVaRBu6mbucjjvqIYsnL0MnUri9+IbJl0PBXTbVzH38hkf9h4zKvjNLX
-	 H5Gqg7STXWEFlRHOxo5ri+u07BldrSB7YTKT8JhNqu5R8JIHpPhy42QYBPGVXWA0Hw
-	 YkbZTV2kapsJuXU2/uAe+JJ0vunTY+SNBVRW8WsE3sSPzknJVvauNxihQPEY7dN4pS
-	 GtsCEfBRBAeVajEIwGIVvMGaCkn+/B1D5czx3PzmU6RCRcewIL8Je0pNTvmJ7babpk
-	 YkGFPULzGg1PO0tMTYKRXjPObZDBgIWN7vIlVG2hJYwjk1UdlCOZl2sJoiWzL/wFUS
-	 9OWbPrRr1bNJg==
-From: Michael Walle <mwalle@kernel.org>
-To: Douglas Anderson <dianders@chromium.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH] drm/bridge: ti-sn65dsi86: fix REFCLK setting
-Date: Wed, 28 May 2025 15:21:48 +0200
-Message-Id: <20250528132148.1087890-1-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="olyCyipN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=EKajYrvbUK7K9eBj0BAcVo9PVCzIMkEs/jt3hskWVO0=; b=olyCyipNVyN0DI1Kq+4tOKvnyO
+	GlVT+ibtDB4n4Emex6vrP2lhgZaTRQGDL1Yg+x+otaG+Pvcwrj/m+g+lI7G/FzyfvF5nTZBTXlDra
+	wWFwjz5etn3iUWbLyZLSxpmZ8CFOAAmCx7MDmXDeZjCh/DUGpvIkNEPaCOQd1zYqEuVnWCyydm7Wz
+	QemXA26cgxJF3RLRoKgR9q9FOAfdYsu/s9d3KmRAO4QjqPDCOnXx/Lts7JxoemlalYqJolw0QWsjp
+	EWm1gzPRGFO9wW/knkhvImSIuEYVRoMcwqF21JkBPZSEUuy2/31KZtVAyJ//4wxYh9IuJaUF1+jlM
+	/4ulWODw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKGjp-0000000Dfve-48jJ;
+	Wed, 28 May 2025 13:22:34 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 09B7F300263; Wed, 28 May 2025 15:22:32 +0200 (CEST)
+Date: Wed, 28 May 2025 15:22:31 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] x86/alternative: make kernel ITS thunks read-only
+Message-ID: <20250528132231.GB39944@noisy.programming.kicks-ass.net>
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-4-jgross@suse.com>
+ <20250528131052.GZ39944@noisy.programming.kicks-ass.net>
+ <044f0048-95bb-4822-978e-a23528f3891f@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <044f0048-95bb-4822-978e-a23528f3891f@suse.com>
 
-The bridge has three bootstrap pins which are sampled to determine the
-frequency of the external reference clock. The driver will also
-(over)write that setting. But it seems this is racy after the bridge is
-enabled. It was observed that although the driver write the correct
-value (by sniffing on the I2C bus), the register has the wrong value.
-The datasheet states that the GPIO lines have to be stable for at least
-5us after asserting the EN signal. Thus, there seems to be some logic
-which samples the GPIO lines and this logic appears to overwrite the
-register value which was set by the driver. Waiting 20us after
-asserting the EN line resolves this issue.
+On Wed, May 28, 2025 at 03:19:24PM +0200, J=FCrgen Gro=DF wrote:
+> On 28.05.25 15:10, Peter Zijlstra wrote:
+> > On Wed, May 28, 2025 at 02:35:57PM +0200, Juergen Gross wrote:
+> > > When allocating memory pages for kernel ITS thunks, make them read-on=
+ly
+> > > after having written the last thunk.
+> > >=20
+> > > This will be needed when X86_FEATURE_PSE isn't available, as the thunk
+> > > memory will have PAGE_KERNEL_EXEC protection, which is including the
+> > > write permission.
+> > >=20
+> > > Cc: <stable@vger.kernel.org>
+> > > Fixes: 5185e7f9f3bd ("x86/module: enable ROX caches for module text o=
+n 64 bit")
+> > > Signed-off-by: Juergen Gross <jgross@suse.com>
+> > > ---
+> > >   arch/x86/kernel/alternative.c | 16 ++++++++++++++++
+> > >   1 file changed, 16 insertions(+)
+> > >=20
+> > > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternat=
+ive.c
+> > > index ecfe7b497cad..bd974a0ac88a 100644
+> > > --- a/arch/x86/kernel/alternative.c
+> > > +++ b/arch/x86/kernel/alternative.c
+> > > @@ -217,6 +217,15 @@ static void *its_alloc(void)
+> > >   	return no_free_ptr(page);
+> > >   }
+> > > +static void its_set_kernel_ro(void *addr)
+> > > +{
+> > > +#ifdef CONFIG_MODULES
+> > > +	if (its_mod)
+> > > +		return;
+> > > +#endif
+> > > +	execmem_restore_rox(addr, PAGE_SIZE);
+> > > +}
+> > > +
+> > >   static void *its_allocate_thunk(int reg)
+> > >   {
+> > >   	int size =3D 3 + (reg / 8);
+> > > @@ -234,6 +243,8 @@ static void *its_allocate_thunk(int reg)
+> > >   #endif
+> > >   	if (!its_page || (its_offset + size - 1) >=3D PAGE_SIZE) {
+> > > +		if (its_page)
+> > > +			its_set_kernel_ro(its_page);
+> > >   		its_page =3D its_alloc();
+> > >   		if (!its_page) {
+> > >   			pr_err("ITS page allocation failed\n");
+> > > @@ -2338,6 +2349,11 @@ void __init alternative_instructions(void)
+> > >   	apply_retpolines(__retpoline_sites, __retpoline_sites_end);
+> > >   	apply_returns(__return_sites, __return_sites_end);
+> > > +	/* Make potential last thunk page read-only. */
+> > > +	if (its_page)
+> > > +		its_set_kernel_ro(its_page);
+> > > +	its_page =3D NULL;
+> > > +
+> > >   	/*
+> > >   	 * Adjust all CALL instructions to point to func()-10, including
+> > >   	 * those in .altinstr_replacement.
+> >=20
+> > No, this is all sorts of wrong. Execmem API should ensure this.
+>=20
+> You are aware that this patch is basically mirroring the work which is
+> already done for modules in alternative.c?
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
-I couldn't find a good commit for a Fixes: tag and I'm not sure how
-fixes are handled in drm.
-
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 60224f476e1d..fcef43154558 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -386,6 +386,17 @@ static int __maybe_unused ti_sn65dsi86_resume(struct device *dev)
- 
- 	gpiod_set_value_cansleep(pdata->enable_gpio, 1);
- 
-+	/*
-+	 * After EN is deasserted and an external clock is detected, the bridge
-+	 * will sample GPIO3:1 to determine its frequency. The driver will
-+	 * overwrite this setting. But this is racy. Thus we have to wait a
-+	 * couple of us. According to the datasheet the GPIO lines has to be
-+	 * stable at least 5 us (td5) but it seems that is not enough and the
-+	 * refclk frequency value is lost/overwritten by the bridge itself.
-+	 * Waiting for 20us seems to work.
-+	 */
-+	usleep_range(20, 30);
-+
- 	/*
- 	 * If we have a reference clock we can enable communication w/ the
- 	 * panel (including the aux channel) w/out any need for an input clock
--- 
-2.39.5
-
+I am having trouble parsing that -- where does alternative.c do this to
+modules?
