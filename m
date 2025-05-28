@@ -1,66 +1,91 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A813A55;
-	Wed, 28 May 2025 22:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664C18634A;
+	Wed, 28 May 2025 22:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748471861; cv=none; b=DOkTC4/h2VRppetvypvXbboBjLFg3KxecuXHh82kleKcUZvHJCdvPzUGs8jP0s8H9gRz1iWJoH8NDxiPaqClG4HB0rDM1wyHLBQx1OiGJHyHlL8CFLedYiqGu3qYIY3OcB0GW6PfFPYCma7S3aVGfnMteZqvaCbLNT+Q6E7UXFk=
+	t=1748471960; cv=none; b=IW634s2q59v0T39eWU+kJSKqGmujgGU5PevDv+qLG1qGYB9IjrftRLprGjsdAY/AV9pGyDSsDRacAMPQlORmZRv8w7VfuBJ7XHO9hi5qLCwvFW/6+YM6NXTtQX2oaT9UYXP8QQj5hoKmQrM/geJ1FY4nPUi5rnN0B82rxxZu6w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748471861; c=relaxed/simple;
-	bh=xmQYotvaywYw/vHqjd6pEK8c6S0COqcKSf9drJjX+fM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oa4Sf8kRgEzPggbpm7MkzRbI0o68aebeg0eej/svEHsIDgHKWBS9O6d4UNDq+Rprc6md0JnPwRaPnmIR6bx8yAvdSyKqF4qS2O3SVFEfoy97xe/grB5IgpuChx2nhGipbuMwvgkmG8pIp00Pvm8PFABmQFojgD5zEraslWk+/NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Oc1KfxHL; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1748471960; c=relaxed/simple;
+	bh=H6sNMIHXeTr/9xzRzueBp5o1yGTA9o+s7DYHLjD3t1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nAnXPEFphNXejAllYAPSiZB3BiT60AVloXqps62ey+O5+CPShKTZ3pp5iU3mrMxVclJHfFObR7Zd8yn2kluSitpOa2u4Ua/K5rnaOSCmL+oCsIfEKuT0PL+DA4MP76wzhgfJln6cKR2LdJyu7RZo431Tjc45u+v0KHuxVxvx5f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmQ3+q7C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Oc1KfxHL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=edzQ9Ntr0wuVhkuHEzdr0zVPfW1RopJDB/sRSx9qXAM=; b=Oc1KfxHLpJW18hybyOdvys7lIy
-	PU3NAaBnJHp5q9PyKXkKq/Atvrsz0Nktq911yn3TkNtW+xcCIHleANherqdXBd071IM+KOXBlFeEo
-	Z+AJQFiSn3zKCvHth80+46fyZcgBdhuZIEGiSS1bSZ2bjreUTiGLyovVoIK/UV30kv6myOYUuFyTF
-	KpL4+VHL8rWFPHn3krf1gRILl/KOHKEglH9kIg9xgMFpvMIR43h3iFgvkCDUhXceWDbqXfsDhyDHF
-	H5LRD+RZXi9lVVoLYCHtvHdVxLCgLbxKiNrwoXitahBzoyt7BCi3/pdNBHNQYIr5bUGhb2NgN4Hpp
-	2HiOdTkg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKPOn-0000000AGTU-00QN;
-	Wed, 28 May 2025 22:37:25 +0000
-Date: Wed, 28 May 2025 23:37:24 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com,
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
-	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org,
-	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com,
-	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net,
-	gnoack@google.com
-Subject: Re: [PATCH bpf-next 3/4] bpf: Introduce path iterator
-Message-ID: <20250528223724.GE2023217@ZenIV>
-References: <20250528222623.1373000-1-song@kernel.org>
- <20250528222623.1373000-4-song@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmQ3+q7C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9661DC4CEE3;
+	Wed, 28 May 2025 22:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748471957;
+	bh=H6sNMIHXeTr/9xzRzueBp5o1yGTA9o+s7DYHLjD3t1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mmQ3+q7CpSp7N2CadSmUinswYYLasIFN0UUEyKWKcltxv1tqZ3aXksmAJU1YOjQup
+	 wBJoGc4xNws/q4MosvdovkeTO7WwyImMLymtpuwMFfhwSK0DrPQWsfBUhQ0d/200MM
+	 oliBdvRjad8eAN34ov3xikN/vxiTMNy2FLXKoO/h7cBdcVKRUgqnI+XMH2A3CdZVt0
+	 Oj1SQcaFI7wyD02s2ZM8x49EeoCl3MgQ8QrL2zf+7hUFawjBv6ZQ4vrGpALFZpxTSk
+	 Ju4Au41D5f/jaNwnA8+7fDSnP1qPtq0QuXoqM28bt1zpqilY4bam2MwRLqDyIh50Et
+	 usOOBYY+uzKDw==
+From: SeongJae Park <sj@kernel.org>
+To: wangchuanguo <wangchuanguo@inspur.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	akpm@linux-foundation.org,
+	hannes@cmpxchg.org,
+	david@redhat.com,
+	mhocko@kernel.org,
+	zhengqi.arch@bytedance.com,
+	shakeel.butt@linux.dev,
+	lorenzo.stoakes@oracle.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	damon@lists.linux.dev
+Subject: Re: [PATCH 0/2] add a knob to control whether to use other nodes at the same tier of the target node in DAMON
+Date: Wed, 28 May 2025 15:39:15 -0700
+Message-Id: <20250528223915.55694-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250528111038.18378-1-wangchuanguo@inspur.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528222623.1373000-4-song@kernel.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 28, 2025 at 03:26:22PM -0700, Song Liu wrote:
-> Introduce a path iterator, which reliably walk a struct path.
+Hi wangchuanguo,
 
-No, it does not.  If you have no external warranty that mount
-*and* dentry trees are stable, it's not reliable at all.
 
-And I'm extremely suspicious regarding the validity of anything
-that pokes around in mount trees.  There is a very good reason
-struct mount is *not* visible in include/linux/*.h
+Thank you for sending this patch series!
+
+On Wed, 28 May 2025 19:10:36 +0800 wangchuanguo <wangchuanguo@inspur.com> wrote:
+
+> In DAMON's migrate_hot and migrate_cold features, the code was
+> intended to migrate pages ​​only to the node specified by target_nid​​.
+> However, during testing, it was observed that memory allocation
+> and migration could occur on ​​any nodes​​, which is a BUG.
+> The first patch in this PR fix this issue.
+> 
+> A use_nodes_of_tier file has been added under the directory /sys/kernel/mm/damon/admin/kdamonds/<N>/contexts/<N>/schemes/<N>/
+> to control whether to ​​use other nodes in the same tier as
+> the target node​​ for migration.
+
+I left a few comments on the patches.  Looking forward to discussions on each
+sub-thread :)
+
+> 
+> wangchuanguo (2):
+
+I believe your name is Wang Chuanguo?  Sorry if I read/wrote it wrongly.  But
+we disallow[1] anonymous contributions, and prefer more formal Signed-off-by:
+if possible.  Could you please use such formal Signed-off-by: identity, say,
+"Wang Chuanguo <wangchuanguo@inspur.com>" from next time?
+
+[1] https://docs.kernel.org/process/submitting-patches.html#developer-s-certificate-of-origin-1-1
+
+
+Thanks,
+SJ
+
+[...]
