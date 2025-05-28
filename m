@@ -1,110 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE86B28D84D;
-	Wed, 28 May 2025 16:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C51286D60;
+	Wed, 28 May 2025 16:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449814; cv=none; b=TUDbZEfRBCrhA/ZL3BqfUKQ+B86PD2n/0T2sg4COXSMeeu9shroJmFX3SJDlpp5lR9Sl1Pm+9RMTsj09yXHOOBaNHV1OrnGMtONVOtmSfZJbSxXJtfnLwYEctUgsfS7Z2iS7XvurfzEFh8eH1SN9xxeEU7nsUrPgABwWbgvgIgo=
+	t=1748449844; cv=none; b=LsgQdJekijiCr90AFvEbr9NDQ1StNBJNrDi0eFmOpBH9kivFqlJh0EA8L1BNJ6MqeLsFytjzRZ1E2obfnZSAcOaM/0ALdGsoh8mHxzD4PGgr6386ZbuNXsl629QZNOPFPyPxrQZbZABVokrrWnRdR2CHoS2tm54EuOg9EAdzj1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449814; c=relaxed/simple;
-	bh=7Ddco8Bs8XoPP7Sgox9+6gs/ynZ2ONDg+RF4XTZ26x8=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=EDSZ1TC0qx4X4gUb5CYV61y4l2buIUet7B2xUkkmQmp2W1si3JhyiFJIkyzXWUSJYrLS2BjrhZvTFtMBOVVphpVYl3uR5Z49VJn7tHvv30rM3oD1ys7uuN2jkwAeCNRpbB6Md92Yf1zp9CIIgJs5JiwJmGWjVNtfVOshRkFGfjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qM2hQoUQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748449844; c=relaxed/simple;
+	bh=1tbP8NGTysAyLnBcbOao/6nlF/KpXN5Kj8jDrC4wW3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qWM5IpEsSHhMidOiyoADE3hHr5qsPRpQybk3SZ2BiLYRqDId5D+k3XZAE4MskP5UiMmGNGr+dSDaoRmLrwM0XNV86b7+Y6FM/2tfzPguZ/AOrzRiQN927gOn3prYxBoy/+M0DWcBo61jeRiXCVVTXtVDZH+Dyrjsr9kFmzl5t6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nZGM34tr; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qM2hQoUQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124ACC4CEED;
-	Wed, 28 May 2025 16:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748449813;
-	bh=7Ddco8Bs8XoPP7Sgox9+6gs/ynZ2ONDg+RF4XTZ26x8=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=qM2hQoUQRoa+sjl+Pd34UZ8gWk9fmaucPWGcXjz2hhNVtu0jQ7cosdxFBtew2i8mg
-	 eijOPXuC37GVroVoy8qFYJdRZ3aDCMTDZklItaIlYhJ8t5NEmf1qVm2ilGq6R7toz/
-	 C6PA5DLY5uu04KrGsgJ0TlP+fw+XBsxB+4MNt1njgkdHntLx2xQKKoQkTmnB3XbZ/x
-	 zxQovxJHQ43ngRcCqoHp9z/4bxJJANwnF06U/+W7dnH6ZEuG0HU09oE6Fk9VecnkMG
-	 XsKkKFXd9WxKXjMLxbuU/yVPLZUPXBDfDkckVDfPv81s9KyUBh7whN0nhQaq4IBR0H
-	 f2dGfD0xkFkjg==
-Date: Wed, 28 May 2025 11:30:11 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nZGM34tr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=XzNgzVM/OEVZ+RLegAjSkzoDiYYza0R+KlXhx6KrfY0=; b=nZGM34trj98iolZ9YbYPglJvKZ
+	4nZ9cTwYUfobD6NOHivUypANtFU9MxRBrSLM0LdG5uwyZ85mwrRiRlnH4OxhV0FJJiht7zaIbXnCa
+	in9W607mjqkAk624BNTDeyhksLwRhWDhb67uy2HGeGnuPQyVvu2Ari/Sky/qMjj9hByF+wcUBSrM+
+	BPhZek0J/ZHcxePqihuOjLLUCchVF/faSJLTDK/TPxFUHkKOoGPtT5SAYFwdGsUo48Qq0d0VhJe48
+	nqe3GjEriP/s6WMJd2mDWse0zL10MXPmLLQpFJgWKRfqi71SmTRQ58xih4NE1IGeX0jtdcQ9Bcw9Q
+	nQ9LTFqA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKJfo-0000000Dqjg-1t2e;
+	Wed, 28 May 2025 16:30:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F160A3005AF; Wed, 28 May 2025 18:30:35 +0200 (CEST)
+Date: Wed, 28 May 2025 18:30:35 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org, xin@zytor.com
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
+ in __nocfi functions
+Message-ID: <20250528163035.GH31726@noisy.programming.kicks-ass.net>
+References: <20250501153844.GD4356@noisy.programming.kicks-ass.net>
+ <aBO9uoLnxCSD0UwT@google.com>
+ <20250502084007.GS4198@noisy.programming.kicks-ass.net>
+ <aBUiwLV4ZY2HdRbz@google.com>
+ <20250503095023.GE4198@noisy.programming.kicks-ass.net>
+ <p6mkebfvhxvtqyz6mtohm2ko3nqe2zdawkgbfi6h2rfv2gxbuz@ktixvjaj44en>
+ <20250506073100.GG4198@noisy.programming.kicks-ass.net>
+ <20250506133234.GH4356@noisy.programming.kicks-ass.net>
+ <vukrlmb4kbpcol6rtest3tsw4y6obopbrwi5hcb5iwzogsopgt@sokysuzxvehi>
+ <20250528074452.GU39944@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
- Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
- Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, linux-clk@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, 
- Stephen Boyd <sboyd@kernel.org>, Eric Dumazet <edumazet@google.com>, 
- Heiner Kallweit <hkallweit1@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com>
-References: <20250528-ipq5018-ge-phy-v2-0-dd063674c71c@outlook.com>
- <20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com>
-Message-Id: <174844980913.122039.6315970844779589359.robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: net: qca,ar803x: Add IPQ5018
- Internal GE PHY support
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528074452.GU39944@noisy.programming.kicks-ass.net>
 
-
-On Wed, 28 May 2025 18:45:48 +0400, George Moussalem wrote:
-> Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
-> SoC. Its output pins provide an MDI interface to either an external
-> switch in a PHY to PHY link scenario or is directly attached to an RJ45
-> connector.
+On Wed, May 28, 2025 at 09:44:52AM +0200, Peter Zijlstra wrote:
+> On Tue, May 06, 2025 at 12:18:49PM -0700, Josh Poimboeuf wrote:
 > 
-> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
-> 802.3az EEE.
+> > Weird, I'm not seeing that.
 > 
-> For operation, the LDO controller found in the IPQ5018 SoC for which
-> there is provision in the mdio-4019 driver. In addition, the PHY needs
-> to take itself out of reset and enable the RX and TX clocks.
+> I Ate'nt Crazeh...
 > 
-> Two common archictures across IPQ5018 boards are:
-> 1. IPQ5018 PHY --> MDI --> RJ45 connector
-> 2. IPQ5018 PHY --> MDI --> External PHY
-> In a phy to phy architecture, DAC values need to be set to accommodate
-> for the short cable length. As such, add an optional boolean property so
-> the driver sets the correct register values for the DAC accordingly.
+> https://lore.kernel.org/all/202505280410.2qfTQCRt-lkp@intel.com/T/#u
 > 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  .../devicetree/bindings/net/qca,ar803x.yaml        | 52 +++++++++++++++++++++-
->  1 file changed, 51 insertions(+), 1 deletion(-)
-> 
+> I'll go poke at it, see if today is the day I can figure out WTF
+> happens.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+It manages to trip the CFI_UNDEFINED case in op->dest.reg == cfa->base
+in update_cfi_state().
 
-yamllint warnings/errors:
+I figured it ought to tickle the regular 'mov %rbp, %rsp' case above
+there, but it doesn't, for some reason it has cfa.base == SP at this
+point.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/net/qca,ar803x.example.dtb: ethernet-phy@7 (ethernet-phy-id004d.d0c0): clocks: [[4294967295, 36], [4294967295, 37]] is too long
-	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+This happens... /me looks in scrollback ... at POP_REGS 'pop
+%rbp'. ARGH!!
 
-doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250528-ipq5018-ge-phy-v2-2-dd063674c71c@outlook.com
+So the sequence of fail is:
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+	push %rbp
+	mov %rsp, %rbp	# cfa.base = BP
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+	SAVE
+	...
+	push %rbp
+	...
+	pop %rbp	# cfa.base = SP
+	...
+	mov %rbp, %rsp  # UNDEF
+	nop		# FAIL
+	RESTORE
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Note that the MOV+NOP is the 4 bytes ERETS needs.
