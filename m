@@ -1,40 +1,37 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DF9268C7F;
-	Wed, 28 May 2025 08:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96144268FDD;
+	Wed, 28 May 2025 08:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421006; cv=none; b=daP3He3F/l79GbRzv85c6/MVnFvfK+ps2Og4GXqeGqYE8OFUvif+pqsDP6VFMENaNMn/XpIq8ID8DGfUj5ZgFcPdXnwJXzn5AAvvq3f35/aknokrYGRK7Orm17T2Y493eGdf5jjIDmOFPTpJ5KKvAv1nPCPS/HV0YS/7otf0LQM=
+	t=1748421009; cv=none; b=sph9DAvI6B9FnUKPSlxQMH4tq3ZlSzdDwtaD7wQ1le01BpaCGOXAx9aBC+kLD23WxTTPtFPutvdk2LtDHN04kJ6605L43VsAjhRkE7zMY8I4dNzW4TBXrTL0Hluhlyb8eC9ggz6yzKPWw7K/p+Z7qSB8CQuRhogqZInqIVWpDC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421006; c=relaxed/simple;
-	bh=/Ow1PmBI4yy/CopXyfAdNlFq6FA7vnRAq4zgFhQTxKw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hGStCR5LNi5yNyQT4PtE7qr+XFd+cGFhiv0tt7kNUhw9sMN25MYQKa8pewlKY6onWKG8CtuXwQLLSU9iijsmgkGNH+JCnQKc0KCEdOjA0MicCMCpcwdnY4FahB3Nwb9lD9i6ZnunyOHfMXySx4v4lByzpYUL/Ch5tWgpG5/8ZUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=HqzETtbx; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1748421009; c=relaxed/simple;
+	bh=T3lD6gZ98QUASETxVSn3qZ/GWqCoVzjcL8V3LnhqE44=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JEFzmbICbdxNyH5+BVjH85Dv6MeIyWx8wluvgsRtvNrjI21kG7VPWEXNi1MNSVIAU+nX0xs0HrWRFHGYuV2Uzc1Spsxzj10/O6FbHP4cUt8LMx6y0nDTPMolp4kK73piBoG+vMKSMbBDniSIaT9S7zHeiaJepN+1+5cii1fqhZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=P7aRpHv7; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="HqzETtbx"
-Received: from 2001-b400-e281-d348-7542-b73b-b580-4415.emome-ip6.hinet.net (unknown [10.101.200.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 775C73F796;
-	Wed, 28 May 2025 08:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1748420640;
-	bh=AstLYq3VMdkE8US+TLkn18adQxf0vcyp/yq783YeBek=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc;
-	b=HqzETtbxp9eSvSjd4i+6yFEnSZEb1i9MEzQcHtZ7FoLQF476btywbmOYZgbqxhPHh
-	 Lxvb/WY6lVhCBQtUWs+inJsmeQ1835urs+4znbxuqWoQSl8v5Tqr5t2cZFXgwOkzvK
-	 fa30jjEkYkTqJRJteD135smOcUuFk51YVSVzZCs3+skQc7eirzxEqyHkxAwQdYyN9F
-	 pdJuM/SENumq5xo/yFmME1FTQGbvKq8qwvGc7AXDl47ssvH5tlJnVmDpG352kwNinz
-	 mkxP/ZpNxit7Pdp/9fVDHEW0iEJsnTlI7P1tlbbi3VYM8eHMxJ4aRUIaC5NbkS2ggB
-	 H87eJbr6P/Low==
-From: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
-Date: Wed, 28 May 2025 16:23:40 +0800
-Subject: [PATCH] i2c: i801: Do not instantiate spd5118 under SPD Write
- Disable
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P7aRpHv7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6A2A743153;
+	Wed, 28 May 2025 08:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1748420999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NdtCm4KeLnVfdZbdleEEAwUOA4JSpjcY4XsOVNaCHbA=;
+	b=P7aRpHv7sMWWrZgOxiKy1icjDjdNKPlrhclj5/VB53qk4dbSNWVQoiwJRhv8erY0AQcw1D
+	I4VB4G1QvEcmKyuxr9+CNXY/N/IkfahRsO70dhKZIo7AvRTMUHIhlcyrgfsxE+X+N6fvNS
+	kPWL9uB0+1RclnJDiq/3XiSiGjGivFgDLf7JBujpLMw2zeaLZ99v905KZlEVsdwGMEqrYV
+	zbFbwyG6IVPGuB9n+FZ4OyM3m0JkCWwLI5gakTFl3bSTTxGg/dd3CesKN5CZy0SihhDSJL
+	9dskNPfyLFiJtnMcb4DCDmxTZOPtqu+Td0sI/q8V7yBqy7BIATfIn/qW5S5qiw==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Subject: [PATCH v3 0/2] net: stmmac: prevent div by 0
+Date: Wed, 28 May 2025 10:29:49 +0200
+Message-Id: <20250528-stmmac_tstamp_div-v3-0-b525ecdfd84c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,138 +39,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-for-upstream-not-instantiate-spd5118-v1-1-8216e2d38918@canonical.com>
-X-B4-Tracking: v=1; b=H4sIAAvINmgC/x3NwQrCMAyA4VcZORtos7WIryIeOpdpDrYl6UQYe
- /cVj9/l/3cwVmGD27CD8ldMSu7wlwGe75RfjLJ0AzkKLlDEtShu1Zpy+mAuDSVbS7lJaoxWl+D
- 9Fac4EoV5nGJy0FNVeZXff3N/HMcJlOgKb3YAAAA=
-To: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>, 
- Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, 
- "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, 
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Yo-Jung Lin (Leo)" <leo.lin@canonical.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3638; i=leo.lin@canonical.com;
- h=from:subject:message-id; bh=/Ow1PmBI4yy/CopXyfAdNlFq6FA7vnRAq4zgFhQTxKw=;
- b=owEBbQKS/ZANAwAKAV8XsZZKKe6GAcsmYgBoNsgdiyPwpuPkoaBHvJPCxpFGouM9JGEIYo+Kx
- dhDZaHqswyJAjMEAAEKAB0WIQQzqV4kW+yguuqHrw5fF7GWSinuhgUCaDbIHQAKCRBfF7GWSinu
- hjv9D/9ln2uf0BMDipKtSG5gJLMIsM2aDUV2VLoqJkm2bTaI3BIX0EckM7cI/Cpw+zecR2+eo2b
- 7JWz9I8LjrD+l/BlI1hNXR9Z32XousFTKB0QZX9N6Bt/lhwY1a1uVwuj/Yq//irnPtA2l0zGbBg
- ubyyqSPNBGu9TML/BVFRrtWCAL6X37HqqrFhkNBck9Lpxx1husx/+VQRsujad3leL3qaDEAVMKi
- QHrL56I6yMfVTuTTyz6Xad6Q4si8ZpLZmkU1CxWY2/5fBrgX48Gnrc95A2n5hB3BGZ8nUGBBE5l
- DzHrFA7IE/ReqwyKZTbLcEnGg/4Xq0NGTOkw9TNbXm7/4NrQ9CyzcKvtX/f9/aVfrmIzUC0cGY0
- 7XMtGH98dexr5gTU2zgLSdIJJgmq5xid8WFFJLpIlk7B5jwHr8AvHqCubBXYWX7X5Mibazr47gg
- CS1Yv00UsyJfWIfIAWNpYaEJSFMCwJGD3NMrGNZQtjct1vnLqavLPIWGC4CtAaktyFKdmtgb/pq
- BMk7Eha4H3H5Myg/Wc2/Jy34kQ625BO13BAU/Zl4f64TVL6AiJKMMg0zRgGU728K5flvEp/OWan
- K4r9Z75wwQYH9CPxCUEfvFjrYqsn9VmZJYLlEw5JtabzY+koEBo5D8SHZQx8SeS+ehkabIjOTjb
- CDJPnYLWbAJcXpg==
-X-Developer-Key: i=leo.lin@canonical.com; a=openpgp;
- fpr=33A95E245BECA0BAEA87AF0E5F17B1964A29EE86
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAH3JNmgC/23N0QrCIBTG8VcZXmfocW7VVe8RMdS5dqDNoSLF2
+ LvnBkHBLv8fnN+ZSbAebSCXYibeJgzoxhziUBDTq/FhKba5CTCQTALQEIdBmSaGqIapaTHRTkr
+ OoWMVgzPJd5O3Hb4283bP3WOIzr+3F4mv61cTO1rilFNt1ElJJVRZ11ftXHzieDRuIKuX4Neo9
+ wzIRlUJkFwLLUv4N5Zl+QDThLVm+AAAAA==
+X-Change-ID: 20250522-stmmac_tstamp_div-f55112f06029
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Phil Reid <preid@electromag.com.au>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jose Abreu <Jose.Abreu@synopsys.com>, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdejkeculddtuddrgeefvddrtddtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpeetlhgvgihishcunfhothhhohhrrocuoegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepffefvdelledtfeekudelvdekvdeuffduieevkedviedtgeefueehgfdvuedthfeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvudgnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrv
+ gessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhmfedvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtoheplhhinhhugidqshhtmhefvdesshhtqdhmugdqmhgrihhlmhgrnhdrshhtohhrmhhrvghplhihrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvght
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-If SPD Write Disable bit in the SMBus is enabled, writing data to
-addresses from 0x50 to 0x57 is forbidden. This may lead to the
-following issues for spd5118 devices:
+Hello,
+this small series aims to fix a small splat I am observing on a STM32MP157
+platform at boot (see commit 1) due to a division by 0. This new
+revision add the same check in another code path possibly affected by
+the same issue, as discussed in v2.
 
-  1) Writes to the sensor hwmon sysfs attributes will always result
-     in ENXIO.
-
-  2) During system-wide resume, errors may occur during regcache sync,
-     resulting in the following error messages:
-
-     kernel: spd5118 1-0050: failed to write b = 0: -6
-     kernel: spd5118 1-0050: pm: dpm_run_callback(): spd5118_resume [spd5118] returns -6
-     kernel: spd5118 1-0050: pm: failed to resume async: error -6
-
-  3) nvmem won't be usable, because writing to the page selector becomes
-     impossible.
-
-Also, BIOS vendors may choose to set the page to a value != 0 after a board
-reset. This will make the sensor not functional unless its MR11 register
-can be changed, which is impossible due to writes being disabled.
-
-To address these issues, don't instantiate it at all if the SPD Write Disable
-bit is set.
-
-Signed-off-by: Yo-Jung Lin (Leo) <leo.lin@canonical.com>
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
-This is intended to be the fixed version of the second patch in the
-following patch series[1]:
+Changes in v3:
+- remove now duplicate check
+- add ptp_rate check in est_configure
+- Link to v2: https://lore.kernel.org/r/20250527-stmmac_tstamp_div-v2-1-663251b3b542@bootlin.com
 
-[PATCH v2 0/2] i2c: i801: don't instantiate spd5118 under SPD Write Disable
-
-The original version got reverted due to breaking i386 defconfig build.
-However the first patch in that series didn't. To avoid the first patch in
-the series being repeatedly sent and applied, this is sent as a separate
-patch. 
-
-Also not pulling Reviewed-by from Guenter because the patch differs from
-what was originally reviewed.
-
-[1] https://lore.kernel.org/all/20250430-for-upstream-i801-spd5118-no-instantiate-v2-0-2f54d91ae2c7@canonical.com/
----
- drivers/i2c/busses/i2c-i801.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index a7f89946dad4..de17532402b9 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -1157,6 +1157,27 @@ static void dmi_check_onboard_devices(const struct dmi_header *dm, void *adap)
- 	}
- }
- 
-+static void __i801_register_spd(struct i801_priv *priv)
-+{
-+	if (priv->original_hstcfg & SMBHSTCFG_SPD_WD)
-+		i2c_register_spd_write_disable(&priv->adapter);
-+	else
-+		i2c_register_spd_write_enable(&priv->adapter);
-+}
-+
-+#ifdef CONFIG_I2C_I801_MUX
-+static void i801_register_spd(struct i801_priv *priv)
-+{
-+	if (!priv->mux_pdev)
-+		__i801_register_spd(priv);
-+}
-+#else
-+static void i801_register_spd(struct i801_priv *priv)
-+{
-+	__i801_register_spd(priv);
-+}
-+#endif
-+
- /* Register optional targets */
- static void i801_probe_optional_targets(struct i801_priv *priv)
- {
-@@ -1177,10 +1198,7 @@ static void i801_probe_optional_targets(struct i801_priv *priv)
- 		dmi_walk(dmi_check_onboard_devices, &priv->adapter);
- 
- 	/* Instantiate SPD EEPROMs unless the SMBus is multiplexed */
--#ifdef CONFIG_I2C_I801_MUX
--	if (!priv->mux_pdev)
--#endif
--		i2c_register_spd_write_enable(&priv->adapter);
-+	i801_register_spd(priv);
- }
- #else
- static void __init input_apanel_init(void) {}
-@@ -1283,7 +1301,7 @@ static int i801_notifier_call(struct notifier_block *nb, unsigned long action,
- 		return NOTIFY_DONE;
- 
- 	/* Call i2c_register_spd for muxed child segments */
--	i2c_register_spd_write_enable(to_i2c_adapter(dev));
-+	__i801_register_spd(priv);
- 
- 	return NOTIFY_OK;
- }
+Changes in v2:
+- Add Fixes tag
+- Reword commit message to clarify the triggering cause of the issue
+- Link to v1: https://lore.kernel.org/r/20250523-stmmac_tstamp_div-v1-1-bca8a5a3a477@bootlin.com
 
 ---
-base-commit: 176e917e010cb7dcc605f11d2bc33f304292482b
-change-id: 20250526-for-upstream-not-instantiate-spd5118-463225b346a0
+Alexis Lothoré (2):
+      net: stmmac: make sure that ptp_rate is not 0 before configuring timestamping
+      net: stmmac: make sure that ptp_rate is not 0 before configuring EST
+
+ drivers/net/ethernet/stmicro/stmmac/stmmac_est.c  | 5 +++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_ptp.c  | 2 +-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+---
+base-commit: e0e2f78243385e7188a57fcfceb6a19f723f1dff
+change-id: 20250522-stmmac_tstamp_div-f55112f06029
 
 Best regards,
 -- 
-Yo-Jung (Leo) Lin <leo.lin@canonical.com>
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
