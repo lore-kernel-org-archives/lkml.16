@@ -1,388 +1,89 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5B56AD3
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6266AD3;
+	Wed, 28 May 2025 21:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748466545; cv=none; b=lL2B0Tq09SV1c9e0CpxwXz8obj/aBqBGeE3sIxyYzTIm4CibKOdbtBGMR/pjWroL5iuwvHUiS732SQfI8XfKNCu5X4DomqcSDInh5VlPtHC65SA2/uylDdGDLSGAzTHryad8QotkO028V+o707zo5B/oBPwRbJ5pBG4G5F1Jib4=
+	t=1748466664; cv=none; b=fc7/Gj18QktBjKL1W2ktLq3VqGsjJai+9UQrxiRN7gCNAjYQRh7eM6QtYuPAeu68BZLYzCvyXnakmIitctqFbFnge58JfovTqzVqcbGBYtVf5EVzwTLp4lUWMfoiJnarwuz1omBopD0I0rKkzRpX0aiRNihuhJ1m2N0MtKbgHys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748466545; c=relaxed/simple;
-	bh=LIQqj/rBG4WJ9Who6aNm8nmVF5Zg8C2dGZq6Mmu5uXE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=WAu0b2wFENdA18kFoTBNptlmKoqwD97sX6CBO3Ue1eH4moeV9xrp2fEFFDhKIrfLBUtUSm6wrLWWoAEkF1oajhpsWikVA8gogr9/eRRY/CRTWCTdOFTs3wgRl1c118QPj6sgXKxSkSiDPypfmeQC78guxbjqNLzWDEIKPV+lcac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pvt8rGyG; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1748466664; c=relaxed/simple;
+	bh=gT/dev74+/pWOOvJ1OFMcY0gnXKyWT6fdZv53jUrGto=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YIXEkR6zYNv2MrJZdq7HY0BPoOV5bXumndM9irKULA5q39yMkvOO+ASadln6k1Fqgw9kugeRa1rtQY88wlN614dslmqYvBiFknacqfi17izCcAujqOuaRK4IIVQwNxI6S+DqJCZIunEzXV0jkBgzHFWrST1M4JnnDjEAyHCUcmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=U/wGcFHH; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pvt8rGyG"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23202dacd94so3240045ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748466543; x=1749071343; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Fgz4RLpwM5kTcN0bNVkBpOujZlSaW0l8gHcBwYFiKWw=;
-        b=pvt8rGyGD4Jhka+GB2O/Th3WwmgPfghY8ZkIUD47dCkKJ84uCqYST9DmcJe/neqtXd
-         BEGPvq4ph4sX3UeFBupNaV0Xr2kYtpyL603JpAShBu9OmCnZv3/hQ7knDsPSqeidTS5W
-         2szKSr9z3rQgWPH35lXzBetb17ij1001MAIgjQ6AbkM1m+OO47oVPT4YVdpjbpM2BQ/M
-         N0Dpvf8etruwMVH/nLkL/7BWPV19fRxpbBB0yw//wUCp2o95n2VKkBw+RMBFat83vRwk
-         AGOjhTYLbBEzZW3uTpDcQkuTa9qZfU3+tBGP25jGVjzcoSGKh3eVrxyZPUORKf7p+dwv
-         g2qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748466543; x=1749071343;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fgz4RLpwM5kTcN0bNVkBpOujZlSaW0l8gHcBwYFiKWw=;
-        b=czeusuclxhiTTJ2ql+Fh3DlUWVc9rgwOYoGTmjMFwF0bNowknt4N4IimHKwm/kPKTd
-         mt8m6o3upnecUkFnMtmFpYCYBY5JkUZbp34BY2lNOnhIxEyGyvJh+L5Qo7Pr14JjFPQ2
-         pJnM3n9SHEQIExaHY4QDXTKI5hPZ5To1eEDlzs2VXsSJUk6KV9Flz+E48UIdYxD7VQZR
-         mNsbbiVrRotnI5fylkRjdQPUL76Q5EHYHUZ55QGlXqbTzim9JFgpRIK0sKII5g+GrkTJ
-         zEr4Lv8Y8HCbsIL9QNLwKGmEtjz89YRcRf6CrgRPEXagpFbpQagifTCgyqFGy858+zr1
-         eyXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrE9paySrhwfkrVu9sryXICS+PIUo5m4Bzg/26c5K62zSPXnFXswwGZW5pQD6Dnnzx916gZoKDYwAA3SE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx+CkPCZUqyyvTjscFqYmZhUl+7h9DS9rEuS6Z27UgqIGspas6
-	ZN+4fEJCYo4XLe/f+KOCBwO4uqUUwlmH81Hd3hK+qP3oJ9YuPF2xcPKbSVGSuv1g91RuAx2ZBbm
-	3G6Adt7E6Jw==
-X-Google-Smtp-Source: AGHT+IHEuBh0mTSW0osNedaN9qHRnf++NfYvmP1VWxvfmSTBGmGBn6W3fdTiYgeI8fDDxSyFi1cnq5SSmGu7
-X-Received: from plky7.prod.google.com ([2002:a17:902:7007:b0:234:6701:babc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:46c4:b0:234:a033:b6f6
- with SMTP id d9443c01a7336-234a033ba9bmr124093795ad.31.1748466543024; Wed, 28
- May 2025 14:09:03 -0700 (PDT)
-Date: Wed, 28 May 2025 14:08:58 -0700
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U/wGcFHH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748466656;
+	bh=9n7aevo7Av0U2DTH7TTU+2VbyX8vvoCaadoxKjMwy9M=;
+	h=Date:From:To:Cc:Subject:From;
+	b=U/wGcFHH8lB8nlToetj9H59mJre6L7x9hllqNYvNNqE971FeId2/B90yjCxaqArhR
+	 esnmWjZaRiKBItxK++8Mqm59nutf7fd+8cYWsdB6nTxYJHtfv3DYimc+atEuwD3sEm
+	 Xe0BYKcGQmQX10aBPXuP/S2mArkJcdM5e0RJrAmf1dU09ybAdNowzblM5gNzSs6vDB
+	 FOupJ5PuFrcK9Xckf/hwUntnx6CzKodccdxUkKPI4fSFByDL4t3jOHC/avd0DH6cm/
+	 yXG+rSKNqdzmaw4yL0t5wlsdxNckaya4M3VBjdupmHahS8eAZqlbjprJNahZyYwvHY
+	 jloukC0iiUvJw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b72Gm3VpYz4x8Y;
+	Thu, 29 May 2025 07:10:56 +1000 (AEST)
+Date: Thu, 29 May 2025 07:10:09 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: David Sterba <dsterba@suse.cz>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the btrfs-fixes tree
+Message-ID: <20250529071009.72d9e8c6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
-Message-ID: <20250528210858.499898-1-irogers@google.com>
-Subject: [PATCH v3] perf symbol: Move demangling code out of symbol-elf.c
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/JG.S1Odn4Za7HmEuJ3tYzO9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-symbol-elf.c is used when building with libelf, symbol-minimal is used
-otherwise. There is no reason the demangling code with no dependencies
-on libelf is part of symbol-elf.c so move to symbol.c. This allows
-demangling tests to pass with NO_LIBELF=1.
+--Sig_/JG.S1Odn4Za7HmEuJ3tYzO9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Structurally, while moving the functions rename demangle_sym to
-dso__demangle_sym which is already a function exposed in symbol.h and
-the only purpose of which in symbol-elf.c was to call
-demangle_sym. Change the calls to demangle_sym in symbol-elf.c to
-calls to dso__demangle_sym.
+Hi all,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-v3. Separate patch as most of v2 landed already. Fix issues with
-    libelf build while merging dso__demangle_sym and demangle_sym to
-    remove some unneeded complexity.
-    The thread comm_lock fix also isn't included:
-https://lore.kernel.org/lkml/20250528032637.198960-8-irogers@google.com/
-    as discussion on that has moved to a revert by Arnaldo:
-https://lore.kernel.org/lkml/aDcyVLVpZRui1ole@x1/
----
- tools/perf/util/demangle-cxx.h   |  2 +
- tools/perf/util/symbol-elf.c     | 92 ++------------------------------
- tools/perf/util/symbol-minimal.c |  7 ---
- tools/perf/util/symbol.c         | 82 ++++++++++++++++++++++++++++
- 4 files changed, 87 insertions(+), 96 deletions(-)
+The following commit is also in Linus Torvalds' tree as a different commit
+(but the same patch):
 
-diff --git a/tools/perf/util/demangle-cxx.h b/tools/perf/util/demangle-cxx.h
-index 26b5b66c0b4e..9359937a881a 100644
---- a/tools/perf/util/demangle-cxx.h
-+++ b/tools/perf/util/demangle-cxx.h
-@@ -2,6 +2,8 @@
- #ifndef __PERF_DEMANGLE_CXX
- #define __PERF_DEMANGLE_CXX 1
- 
-+#include <stdbool.h>
-+
- #ifdef __cplusplus
- extern "C" {
- #endif
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 8734e8b6cf84..01818abd02df 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -13,17 +13,12 @@
- #include "maps.h"
- #include "symbol.h"
- #include "symsrc.h"
--#include "demangle-cxx.h"
--#include "demangle-ocaml.h"
--#include "demangle-java.h"
--#include "demangle-rust-v0.h"
- #include "machine.h"
- #include "vdso.h"
- #include "debug.h"
- #include "util/copyfile.h"
- #include <linux/ctype.h>
- #include <linux/kernel.h>
--#include <linux/log2.h>
- #include <linux/zalloc.h>
- #include <linux/string.h>
- #include <symbol/kallsyms.h>
-@@ -280,82 +275,6 @@ static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
- 	return -1;
- }
- 
--static bool want_demangle(bool is_kernel_sym)
--{
--	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
--}
--
--/*
-- * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
-- * version.
-- */
--#ifndef HAVE_CXA_DEMANGLE_SUPPORT
--char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
--		       bool modifiers __maybe_unused)
--{
--#ifdef HAVE_LIBBFD_SUPPORT
--	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
--
--	return bfd_demangle(NULL, str, flags);
--#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
--	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
--
--	return cplus_demangle(str, flags);
--#else
--	return NULL;
--#endif
--}
--#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
--
--static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
--{
--	struct demangle rust_demangle = {
--		.style = DemangleStyleUnknown,
--	};
--	char *demangled = NULL;
--
--	/*
--	 * We need to figure out if the object was created from C++ sources
--	 * DWARF DW_compile_unit has this, but we don't always have access
--	 * to it...
--	 */
--	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
--		return demangled;
--
--	rust_demangle_demangle(elf_name, &rust_demangle);
--	if (rust_demangle_is_known(&rust_demangle)) {
--		/* A rust mangled name. */
--		if (rust_demangle.mangled_len == 0)
--			return demangled;
--
--		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
--		     buf_len < 1024 * 1024; buf_len += 32) {
--			char *tmp = realloc(demangled, buf_len);
--
--			if (!tmp) {
--				/* Failure to grow output buffer, return what is there. */
--				return demangled;
--			}
--			demangled = tmp;
--			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
--							   /*alternate=*/true) == OverflowOk)
--				return demangled;
--		}
--		/* Buffer exceeded sensible bounds, return what is there. */
--		return demangled;
--	}
--
--	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
--	if (demangled)
--		return demangled;
--
--	demangled = ocaml_demangle_sym(elf_name);
--	if (demangled)
--		return demangled;
--
--	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
--}
--
- struct rel_info {
- 	u32		nr_entries;
- 	u32		*sorted;
-@@ -641,7 +560,7 @@ static bool get_plt_got_name(GElf_Shdr *shdr, size_t i,
- 	/* Get the associated symbol */
- 	gelf_getsym(di->dynsym_data, vr->sym_idx, &sym);
- 	sym_name = elf_sym__name(&sym, di->dynstr_data);
--	demangled = demangle_sym(di->dso, 0, sym_name);
-+	demangled = dso__demangle_sym(di->dso, /*kmodule=*/0, sym_name);
- 	if (demangled != NULL)
- 		sym_name = demangled;
- 
-@@ -839,7 +758,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 		gelf_getsym(syms, get_rel_symidx(&ri, idx), &sym);
- 
- 		elf_name = elf_sym__name(&sym, symstrs);
--		demangled = demangle_sym(dso, 0, elf_name);
-+		demangled = dso__demangle_sym(dso, /*kmodule=*/0, elf_name);
- 		if (demangled)
- 			elf_name = demangled;
- 		if (*elf_name)
-@@ -868,11 +787,6 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
- 	return 0;
- }
- 
--char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
--{
--	return demangle_sym(dso, kmodule, elf_name);
--}
--
- /*
-  * Align offset to 4 bytes as needed for note name and descriptor data.
-  */
-@@ -1861,7 +1775,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 			}
- 		}
- 
--		demangled = demangle_sym(dso, kmodule, elf_name);
-+		demangled = dso__demangle_sym(dso, kmodule, elf_name);
- 		if (demangled != NULL)
- 			elf_name = demangled;
- 
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index 36c1d3090689..c73fe2e09fe9 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -355,13 +355,6 @@ void symbol__elf_init(void)
- {
- }
- 
--char *dso__demangle_sym(struct dso *dso __maybe_unused,
--			int kmodule __maybe_unused,
--			const char *elf_name __maybe_unused)
--{
--	return NULL;
--}
--
- bool filename__has_section(const char *filename __maybe_unused, const char *sec __maybe_unused)
- {
- 	return false;
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index fe801880afea..8b30c6f16a9e 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -19,6 +19,11 @@
- #include "build-id.h"
- #include "cap.h"
- #include "cpumap.h"
-+#include "debug.h"
-+#include "demangle-cxx.h"
-+#include "demangle-java.h"
-+#include "demangle-ocaml.h"
-+#include "demangle-rust-v0.h"
- #include "dso.h"
- #include "util.h" // lsdir()
- #include "debug.h"
-@@ -36,6 +41,7 @@
- #include "header.h"
- #include "path.h"
- #include <linux/ctype.h>
-+#include <linux/log2.h>
- #include <linux/zalloc.h>
- 
- #include <elf.h>
-@@ -2648,3 +2654,79 @@ int symbol__validate_sym_arguments(void)
- 	}
- 	return 0;
- }
-+
-+static bool want_demangle(bool is_kernel_sym)
-+{
-+	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
-+}
-+
-+/*
-+ * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
-+ * version.
-+ */
-+#ifndef HAVE_CXA_DEMANGLE_SUPPORT
-+char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
-+		       bool modifiers __maybe_unused)
-+{
-+#ifdef HAVE_LIBBFD_SUPPORT
-+	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
-+
-+	return bfd_demangle(NULL, str, flags);
-+#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
-+	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
-+
-+	return cplus_demangle(str, flags);
-+#else
-+	return NULL;
-+#endif
-+}
-+#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
-+
-+char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
-+{
-+	struct demangle rust_demangle = {
-+		.style = DemangleStyleUnknown,
-+	};
-+	char *demangled = NULL;
-+
-+	/*
-+	 * We need to figure out if the object was created from C++ sources
-+	 * DWARF DW_compile_unit has this, but we don't always have access
-+	 * to it...
-+	 */
-+	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
-+		return demangled;
-+
-+	rust_demangle_demangle(elf_name, &rust_demangle);
-+	if (rust_demangle_is_known(&rust_demangle)) {
-+		/* A rust mangled name. */
-+		if (rust_demangle.mangled_len == 0)
-+			return demangled;
-+
-+		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
-+		     buf_len < 1024 * 1024; buf_len += 32) {
-+			char *tmp = realloc(demangled, buf_len);
-+
-+			if (!tmp) {
-+				/* Failure to grow output buffer, return what is there. */
-+				return demangled;
-+			}
-+			demangled = tmp;
-+			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
-+							   /*alternate=*/true) == OverflowOk)
-+				return demangled;
-+		}
-+		/* Buffer exceeded sensible bounds, return what is there. */
-+		return demangled;
-+	}
-+
-+	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
-+	if (demangled)
-+		return demangled;
-+
-+	demangled = ocaml_demangle_sym(elf_name);
-+	if (demangled)
-+		return demangled;
-+
-+	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
-+}
--- 
-2.49.0.1204.g71687c7c1d-goog
+  4db7384ce55c ("btrfs: don't drop a reference if btrfs_check_write_meta_po=
+inter() fails")
 
+This is commit
+
+  b83825a8f56a ("btrfs: don't drop a reference if btrfs_check_write_meta_po=
+inter() fails")
+
+in Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/JG.S1Odn4Za7HmEuJ3tYzO9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3e7EACgkQAVBC80lX
+0GzoUQf8CgOrHA3D1pDeiJyrcHFV5RsJ7mF1nyS3wfj5R0HdD2F/ge5qLAtZ4/Zm
+GeQjVoaC554Oju9g/BSaytn83/Yc8Tc/MbapM3WPtgNDH2b/fciivvZexM5ep0q/
++sTGSrZ9YnG8D8Iu5Xt1XhnhZSzYbytKLFcDqPKgI8JuCbkAQyjG3WTTYfUSFlEj
+Q9ke0gIbjXJ2GjwxsI+fil+XaSVGhCNcNxgySCHaqFKeBd8Sv5hdwEuMfqG7n96o
+uR1zbOh6L4CZHWGsqWQhvEdNI8C3GCxV3chRon8i5fBE+YBxx+86k93DzLtNinbG
+Mh79imygIvnywWSjeEEfsKBOEYCVJg==
+=THS4
+-----END PGP SIGNATURE-----
+
+--Sig_/JG.S1Odn4Za7HmEuJ3tYzO9--
