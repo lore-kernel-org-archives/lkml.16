@@ -1,104 +1,130 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DBF8548EE;
-	Wed, 28 May 2025 14:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01868289345
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748442762; cv=none; b=WCedmAtR84Y7ZhNRJnvuKaiqnLYWYwE8+dNgzcvct/Gmaggq+Onk7eUrwwEkplL6KWshIqvzkji81KB823BxA4/qFgSWtwGzau3tzhOCVPhoNq62siSnGo6rkOTWlg98MbCwkNsMuuVcoM2kpNkqNgB3xBuIMHEn36mKeGv1uyg=
+	t=1748442766; cv=none; b=d5ZSvs1w5eDImzYf6CSv/QiBOnAweXGrtqwjcWMAdW65pSW/ELGJp2JVjYSLgQkOKtJUgOzDm/Izw6/98T3H6JXz0bfrf7sr/dvzUJlxRCRNtsq2Q0qqZt24KVsxjWay9qJZch4NYtMCRP9ZmDcu4OSXLlx4VU7iQN4+ctb1Bnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748442762; c=relaxed/simple;
-	bh=1vSCO5vTiinfXc1wGmDJEIBv6Q5jDE79VgZ6H2zNW6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cz/13QY+huomBUoVAINd9RIn4Ep+nG5bQpXf4ZBj9kwnbe9RhYCDDaQNuJEe/MhpgN1+UYfExxm/Ch2aaVGrwaILBfn6lJ3BhmKZQ1heAMNGPLeTxRrtDzPK0PYFDQnGlWBfUwI4RLOE29Rlv3N5Ch0vaybY2RQ0fIUPw1mZyZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=0g0dZYmb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1748442766; c=relaxed/simple;
+	bh=JBYwdCdTyvYoQAXWxDyaQxN2QX3e1Xl53i4v/JIvq8g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kLvbUOKgX6S6YEjLeJzfgdcl0H8Ltx2gN3D2lYFPlUz+c01S7mJwBoBr+N/+eCx5z+uZ7dUz07fGVHkpawK0nTGiHFq2StNDpyq81PY2bQ45C79YGI/fo+Wwj9qupMDPmxIg0DznGnI1OaoQmk8+Yg8PNUFHcz6apx9fZ+AffS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pd0Ki3/F; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0g0dZYmb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=U+FDShjpx6kGEUB2/dQKTjU6xdyCNeX5trpYm619UV4=; b=0g0dZYmb7qFGfQ6Gt46nLap1SM
-	L54LEYGcitbtYKGtm9Fz/qwyr1CXW4N6f2R0fuO8qrUfCyopQMDIvPocpm79WXDEZ6nYQVga+Dxli
-	tsnaCIBD9NDb0B3YXnWZ5FFmDWioIi3kERl1fFLstxdirVcevQWSL3slMVX/xcjm6J5fzLvljyKX6
-	DuK4Lq/+Zgs3yg0vnTiIurv7ny7d2x+Y9Ynr+4A6DwvY/9aZcbAAWJkLUC6TfjccvbKpNqTSjRuog
-	bu18UN9MXxuWyUJKrjjFyQjmJRpewfpkHUvev73LP6t2aRCste0h1QQmVmxs7Gwy0RQL8nQ5uYkcl
-	GCfODJSw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38612)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uKHpN-0000Ns-0k;
-	Wed, 28 May 2025 15:32:21 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uKHpF-0002UB-2v;
-	Wed, 28 May 2025 15:32:13 +0100
-Date: Wed, 28 May 2025 15:32:13 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: weishangjuan@eswincomputing.com
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	vladimir.oltean@nxp.com, yong.liang.choong@linux.intel.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
-	jan.petrous@oss.nxp.com, jszhang@kernel.org, p.zabel@pengutronix.de,
-	0x1207@gmail.com, boon.khai.ng@altera.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, lizhi2@eswincomputing.com
-Subject: Re: [PATCH v2 2/2] =?iso-8859-1?Q?ethernet?=
- =?iso-8859-1?B?OqBlc3dpbjqgQWRkoGVpYzc3MDCgZXRoZXJuZXSgZHJpdmVy?=
-Message-ID: <aDcebRguDnM7sqVk@shell.armlinux.org.uk>
-References: <20250528041455.878-1-weishangjuan@eswincomputing.com>
- <20250528041634.912-1-weishangjuan@eswincomputing.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pd0Ki3/F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748442763;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=eBwB1N+lCFgkoewCyl34COuFv/09dqI6TaRz6nP+SHg=;
+	b=Pd0Ki3/FUZK7Ti95N3fpyNAWALh4VmLS7S6lfmLXGgT5wdBN2YbkEL7vN/K0pTefr912Q/
+	fiTp2o2gL0+85LLf3PV8BZfXRO49l1UH0AdcHQuCZfAi0+XqcinaWdaJk9UA7IpkOq98In
+	cV1N+tkGwIgykM59YHnNkiCL34LwL48=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-68-H7OXcgnFOLqjTVayGDFiGA-1; Wed,
+ 28 May 2025 10:32:42 -0400
+X-MC-Unique: H7OXcgnFOLqjTVayGDFiGA-1
+X-Mimecast-MFC-AGG-ID: H7OXcgnFOLqjTVayGDFiGA_1748442761
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 275351955DAD;
+	Wed, 28 May 2025 14:32:36 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.225.94])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C93EC19560AA;
+	Wed, 28 May 2025 14:32:33 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [RFC PATCH 0/2] rtla/timerlat: Implement flexible actions on latency threshold overflow
+Date: Wed, 28 May 2025 16:28:56 +0200
+Message-ID: <20250528142858.185017-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528041634.912-1-weishangjuan@eswincomputing.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, May 28, 2025 at 12:16:25PM +0800, weishangjuan@eswincomputing.com wrote:
-> +static struct clk *dwc_eth_find_clk(struct plat_stmmacenet_data *plat_dat,
-> +				    const char *name)
-> +{
-> +	for (int i = 0; i < plat_dat->num_clks; i++)
-> +		if (strcmp(plat_dat->clks[i].id, name) == 0)
-> +			return plat_dat->clks[i].clk;
-> +
-> +	return NULL;
-> +}
+rtla-timerlat defines the -i and -T options to set a threshold for
+latency, stopping tracing if a sample above the threshold is
+encountered. After tracing is stopped, one of two optional actions can
+be enabled: saving trace output and auto-analysis. Auto-analysis is
+enabled by default, unless --aa-only is supplied, while trace output has
+to be explicitly set with -t/--trace-output.
 
-Okay, I think this driver is mindless copying of dwmac-dwc-qos-eth.c
-between 24th February and 9th April 2025. I can say this because I added
-this function to that driver and later removed it.
+This is an RFC of a feature extending this to a potentionally arbitrary
+action. It adds a new option, -A/--action-on-overflow, that takes
+the action to be performed and optionally, arguments to that action. For
+example:
 
-Looking at the rest of the code, I doubt this even does anything useful
-(hence "mindless copying") as you're not fetching any clocks into this
-array, and plat_dat->num_clks will be zero here. Thus, this will return
-NULL. Therefore, you haven't thought about whether you need this or not,
-but have just copied dwmac-dwc-qos-eth.c and then modified it until it
-works for you.
+$ rtla timerlat hist -T 10 -A command,exec=date
 
-You haven't acknowledged where you derived this code from - you've cut
-the header of your source file out, and basically are claiming it to be
-all your own work. I know this is rubbish for the reason I've stated
-above. This is quite simply plagiarism. I am not impressed.
+will print the date after stopping tracing. The argument also supports
+trace output, via -A trace (equivalent to -t), and can be specified
+multiple times. See the patch log for more information on the actions
+implemented in the RFC.
 
-Thus I will end the review here, and simply state that this is not
-acceptable.
+The feature was inspired by a case where collecting perf data on rtla
+latency overflow was required, which can be done by sending a signal
+to the perf process. In general, the feature is aiming to allow
+integration with external tooling.
+
+The RFC contains two patches. The first one clearly distinguishes
+between rtla-timerlat tracing modes with regards to collecting data:
+BPF-only mode, tracefs-only mode, and mixed mode. It is not a hard
+prerequisite of the other patch, but is expected to be useful in
+the implementation of the next version of the patchset. The second one
+contains the actions feature itself.
+
+Missing functionality in this RFC expected to be in the final version:
+- Allowing the tracing to continue after the action. This is expected
+to be implemented via either explicitly stopping tracing with "-A stop"
+if needed (and not stopping if any other action is specified), or vice
+versa by explicitly continuing with "-A continue". The latter might be
+better for more meaningful backwards compatibility.
+
+An unresolved question is whether to stop tracing or not during
+the execution of the actions, if the measurement is to continue.
+- Specifying a trace output file, like -t does, e.g. "-A trace,file=a.txt".
+- Converting auto-analysis into an action of this kind.
+- Multiple actions of same kind in one run, e.g.:
+"-A signal,pid=2,num=2 -A signal,pid=3,num=2"
+- Properly handling errors when adding actions.
+- Providing the latency to the exec action command via an environmental
+variable.
+- Plus there are a few minor checkpatch issues.
+
+Suggestions (e.g. with respect to your own use cases) are most welcome.
+
+Tomas Glozar (2):
+  rtla/timerlat: Introduce enum timerlat_tracing_mode
+  rtla/timerlat: Add action on threshold
+
+ tools/tracing/rtla/src/Build           |   1 +
+ tools/tracing/rtla/src/actions.c       | 155 +++++++++++++++++++++++++
+ tools/tracing/rtla/src/actions.h       |  33 ++++++
+ tools/tracing/rtla/src/timerlat.c      |  66 +++++++++--
+ tools/tracing/rtla/src/timerlat.h      |  22 +++-
+ tools/tracing/rtla/src/timerlat_hist.c |  83 ++++++++-----
+ tools/tracing/rtla/src/timerlat_top.c  |  89 ++++++++------
+ 7 files changed, 375 insertions(+), 74 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/actions.c
+ create mode 100644 tools/tracing/rtla/src/actions.h
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.49.0
+
