@@ -1,219 +1,176 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A5B19DF7A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D009C1367
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748403011; cv=none; b=g+zLR/eFVqUiZZZUJIJnorQaWND9w7yKbEF4ke/GZsMjjQIbB1f7JyLDO/JyA9n8ezV/AUhUhnnZ+ew/GtDk/3urlISvxSZADCx2XjcjosU7o2dNZpNFvyzJqOC8+AyB9iwqsad0m4/mpkE4Ol738iGekiXsELFFm8feUxIe/Wg=
+	t=1748403137; cv=none; b=PLWnqtEywDRs3e/3fhDJ2e97fj4XZGbin0QX2kllh0XKviqJpmSJqAEiFhdUdpew4pvTxQJToQSFJ1xuPMZc2SPrCqFdqR3i/8jZn14USRthIBLhwGNoHBO6sWEvEk+Toz1g4UZ0dZ8s1obCNpj8Gv3OXxGbYeLU8MdtFrNDqQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748403011; c=relaxed/simple;
-	bh=lp59MG/v0MEjnyPw9NAqaEU+qnQ/CI3UyhnltWOSdD4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HNCIh1wRecMev4AJcE4OLkPPxFhqpw5U6s3LGx9aPsrFzyiIXgVLEkSSKaPUcsHCxSiPn7+K58h5Z+qVwv/yvMNWwRcrNRAh1DezX+TJH+Jg9Oty1gB8pdPisxe2erjPN59cyfsVTIig9rZVKa9aGDOiBOSyN/rySxsbZETwqKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=IneiC2An; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1748403137; c=relaxed/simple;
+	bh=VluvKjbbQH105ItemVeQF7gLo9Bw44WFYGH88u6rT2U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mxys9/DrWL1yP8fLmSJvBWAv6MK/lksBlY6NLcpPUMNx35L3HIqHc4dfkJmw7GgvH9qHRXjXcwpzaWIwYcl1iKl9mlkw3/Db0jtdzMNp8Iaw3DNljo0D/ATH0gveNiO3ZpEj30+cJ3a3iISS61athmApH0DUgtjfUyXSt+ZZ4vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jhhHEGF8; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="IneiC2An"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-601ad30bc0cso300209eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 20:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748403008; x=1749007808; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VrpEuuXYvnSuwWGsniVnX2YpkMWl6dVwsPZNUsHfWF0=;
-        b=IneiC2AnaH9l+bH9QnSyFBFORZxwRCR34xeHjAKi77lDEuL1t78exhV737N5mOZTNS
-         f3DfCXpQYy+EVTvie0m2KMKX+8irttOXGAyKt/WQ/f5cbJN6Kx2j7a6zkrGvfqZH7zu/
-         qMk/zP3+cOsxjPs2SU5jjIn3XqP5s0M1PGSafo4r7ZE6qTo+kR2bGIAQLMFY6vZc5Lqo
-         U07qsCtsixz+okq5uJoeCqb85FV/uXOxyj4nOKRWN1qje3HxxyVyKZfhSLVwP9KCU1U0
-         S+B0UhVdDwpmFVTT+53b5CrskZBR4ATuzDyMHUqyg+SHtcf53TCFfNK5+qSo9ATyg+yd
-         tnyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748403008; x=1749007808;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VrpEuuXYvnSuwWGsniVnX2YpkMWl6dVwsPZNUsHfWF0=;
-        b=bwCq8gSYR4kx91zc5tFJnvhE1TxBji2erzbwitJf9nnwFHnNPJGkrRor8l2wWp86VD
-         cMSvbjKnny+DIL8xveOqYx2vXoNZY2rfM0z28xxhl65iJtKiZfTY2MPENZQQwp3RAi0A
-         XokRu5yVUUf0nTwbXD/3I3B3dI5akftiSpYwgDpmlftnRDfiuPIXb37VCrB7LOQqj8R1
-         ZYHRGBDwyY1Ahqs8NjCbD2Z1nAR5uDo0y5DW9vmqx2h3/4dhva6kmO3GnEunrMieOIhU
-         EsiHC3+4V828yMkndJTIXvIZNSiMTzjDfc4HWlN3um59Bg00fexXQkZS7l0vT1YI1lye
-         VrOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmjmrg47+F5Z/GqwhBZlsw4LhNukSJibAoDYeobiJSUvp3eA/SSqgWoJPWnPYR/kSNE795fWhYLuIz2co=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi5wkibygbE9AxQgP+ZIXG1Yc9MxLBz4pqr29Znh8eE2ML72pZ
-	WqNT75TPM3KynXlpCF8o0w1P2xCqfh1tzKE99T4zT/RaroTkbX0MjnYQH88mQTyj8GU/4I9+Xhf
-	YlIAbgkWdm2Zvhl2GUiEcexrm/MUuv1O0s66w5f/MaQ==
-X-Gm-Gg: ASbGncv75wLXQ4zeXaQO9+NIQGPnlJSMV8eRgfPmsQ6ocldXrQUuuUwuV6CZXGYfTr+
-	FflELba582fhxTtnk9GcOq/4weEh4sNHWHzttSux0d7C5eKi2+JEXgVxCnpBEJkTERbMsS7mAOJ
-	TDl3kFGnE4MZRySO6PFuie2rBXQq3y5k4UQ+c=
-X-Google-Smtp-Source: AGHT+IHM257O3Htv6+WIrvCz49XVMrZHrN3aXMi+LHiIEKQzjeEjAt/Co+wbNNhuDh0ENQfvDtdU1wumurlo0vJP6vw=
-X-Received: by 2002:a05:6808:1b87:b0:406:4e0c:9aab with SMTP id
- 5614622812f47-406603dcfb4mr1959266b6e.11.1748403007652; Tue, 27 May 2025
- 20:30:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jhhHEGF8"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748403125; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=X829loQdjZMRMLJn95qVnLpfmXgsxTO1cLTqaD979QA=;
+	b=jhhHEGF8JOsciuH88ls3CdaVp25oyMSG24f3U3py1Y+brLNXq2jkmCUV9aZSteGOiXMF+K4n9wmoBAA8ETIu+bjTixEW0udqai16jd9vpwJ5wtmPp4hyPzBEIJGzGiBdftFnGm1MWx/yitXzOAZoqP6cV4RHsNpUYWaAg03pN/A=
+Received: from 30.178.82.30(mailfrom:qinyuntan@linux.alibaba.com fp:SMTPD_---0WcBfXY4_1748403124 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 May 2025 11:32:04 +0800
+Message-ID: <b67949b8-7eac-47b4-a667-6343837226f7@linux.alibaba.com>
+Date: Wed, 28 May 2025 11:32:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513024212.74658-1-cuiyunhui@bytedance.com>
- <20250513024212.74658-2-cuiyunhui@bytedance.com> <84y0uq9z0o.fsf@jogness.linutronix.de>
-In-Reply-To: <84y0uq9z0o.fsf@jogness.linutronix.de>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Wed, 28 May 2025 11:29:55 +0800
-X-Gm-Features: AX0GCFtY48YUUoKYOkevJvcVSQCY_T7dJuR9Fc4nQmnT8dJb_3-42tZKJL-37Ck
-Message-ID: <CAEEQ3wn6tY7QQppTScBMQTeAZDTXdEY1CJYxvGHhE9FNm_4a7g@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v6 2/4] serial: 8250: avoid potential
- PSLVERR issue
-To: John Ogness <john.ogness@linutronix.de>
-Cc: arnd@arndb.de, andriy.shevchenko@linux.intel.com, 
-	benjamin.larsson@genexis.eu, gregkh@linuxfoundation.org, 
-	heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com, 
-	jirislaby@kernel.org, jkeeping@inmusicbrands.com, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de, 
-	paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com, 
-	sunilvl@ventanamicro.com, tim.kryger@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: =?UTF-8?B?TW96aWxsYSBUaHVuZGVyYmlyZCDmtYvor5XniYg=?=
+Subject: Re: [PATCH] x86/resctrl: Remove unnecessary references to cacheinfo
+ in the resctrl subsystem.
+To: Reinette Chatre <reinette.chatre@intel.com>,
+ Tony Luck <tony.luck@intel.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org
+References: <20250526073744.62520-1-qinyuntan@linux.alibaba.com>
+ <c4382156-a51e-4d07-9ccb-e6db2ca9d719@intel.com>
+From: qinyuntan <qinyuntan@linux.alibaba.com>
+In-Reply-To: <c4382156-a51e-4d07-9ccb-e6db2ca9d719@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi John Ogness,
+Hi Reinette Chatre,
 
-On Wed, May 21, 2025 at 3:57=E2=80=AFPM John Ogness <john.ogness@linutronix=
-.de> wrote:
->
-> On 2025-05-13, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-> > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8=
-250/8250_port.c
-> > index 07fe818dffa34..9a04f24b0c762 100644
-> > --- a/drivers/tty/serial/8250/8250_port.c
-> > +++ b/drivers/tty/serial/8250/8250_port.c
-> > @@ -2133,25 +2132,22 @@ static void wait_for_xmitr(struct uart_8250_por=
-t *up, int bits)
-> >  static int serial8250_get_poll_char(struct uart_port *port)
-> >  {
-> >       struct uart_8250_port *up =3D up_to_u8250p(port);
-> > -     int status;
-> > +     int status =3D NO_POLL_CHAR;
-> >       u16 lsr;
-> > +     unsigned long flags;
-> >
-> >       serial8250_rpm_get(up);
-> >
-> > +     uart_port_lock_irqsave(port, &flags);
-> >       lsr =3D serial_port_in(port, UART_LSR);
-> > +     if (lsr & UART_LSR_DR)
-> > +             status =3D serial_port_in(port, UART_RX);
-> > +     uart_port_unlock_irqrestore(port, flags);
->
-> I realize I previously made a comment saying it was OK to add the spin
-> locking here. But I have changed my mind. Please remove this spin
-> locking. It is not necessary because with kgdb all the other CPUs are
-> quiesced, so there is no need to synchronize with the console. Also, it
-> will deadlock if kgdb took over while the port was locked.
->
+On 5/28/25 7:36 AM, Reinette Chatre wrote:
+> Hi Qinyun,
+> 
+> Thank you for catching this.
+> 
+> On 5/26/25 12:37 AM, Qinyun Tan wrote:
+>> In the resctrl subsystem's Sub-NUMA Cluster (SNC) mode, the rdt_mon_domain
+>> structure previously relied on the cacheinfo interface to store L3 cache
+> 
+> "previously relied" -> "relies"
+Thanks, it will be corrected in the next patch.
+>> information (e.g., shared_cpu_map) for monitoring. However, this approach
+>> introduces risks when CPUs go offline:
+>>
+>> 1. Inconsistency: The ci field in rdt_mon_domain was initialized using the
+> 
+> "was initialized" -> "is initialized"
+The same as above.>
+>> first online CPU of a NUMA node. If this CPU later goes offline, the
+>> shared_cpu_map (managed by the cache subsystem) is cleared, leading to
+> 
+> "is cleared" sounds like the shared_cpu_map is empty. Looking at
+> cache_shared_cpu_map_remove() it seems that the worst case is when the
+> CPU goes offline the shared_cpu_map only contains the offline CPU itself.
+> If there remains a reference to that shared_cpu_map then it will thus be
+> to a cpumask with an offline CPU. Are you seeing other scenarios?
+> 
+Yes, you are right. Once this CPU goes offline, its shared_cpu_map will 
+only include itself. If we then try to call this offline CPU using 
+smp_call_on_cpu, it will result in a failure.
 
-Okay.
+>> incorrect or undefined behavior when accessed via rdt_mon_domain.
+> 
+> Could you please elaborate what "incorrect and undefined behavior" you
+> encountered?
+> It looks like reading the top level event would not be able to read
+> an event from one (or more?) of the online domains since the shared_cpu_map
+> will contain an offline CPU causing smp_call_on_cpu() to return with a failure
+> that is not caught ... the symptom may this be that there are no errors but
+> data is wrong?
 
+Yes, there won't be any errors here, but when reading the top-level 
+events, it may not retrieve any values.
 
-> > @@ -2513,7 +2514,6 @@ void serial8250_do_shutdown(struct uart_port *por=
-t)
-> >               port->mctrl &=3D ~TIOCM_OUT2;
-> >
-> >       serial8250_set_mctrl(port, port->mctrl);
-> > -     uart_port_unlock_irqrestore(port, flags);
-> >
-> >       /*
-> >        * Disable break condition and FIFOs
-> > @@ -2521,6 +2521,14 @@ void serial8250_do_shutdown(struct uart_port *po=
-rt)
-> >       serial_port_out(port, UART_LCR,
-> >                       serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
-> >       serial8250_clear_fifos(up);
-> > +     /*
-> > +      * Read data port to reset things, and then unlink from
-> > +      * the IRQ chain.
-> > +      * Since reading UART_RX clears interrupts, doing so with
-> > +      * FIFO disabled won't trigger PSLVERR.
-> > +      */
-> > +     serial_port_in(port, UART_RX);
-> > +     uart_port_unlock_irqrestore(port, flags);
-> >
-> >  #ifdef CONFIG_SERIAL_8250_RSA
-> >       /*
-> > @@ -2529,11 +2537,6 @@ void serial8250_do_shutdown(struct uart_port *po=
-rt)
-> >       disable_rsa(up);
-> >  #endif
-> >
-> > -     /*
-> > -      * Read data port to reset things, and then unlink from
-> > -      * the IRQ chain.
-> > -      */
-> > -     serial_port_in(port, UART_RX);
->
-> I am thinking you should keep the read here and instead move the unlock
-> below the read. This would mean the lock/unlock in disable_rsa() need to
-> be removed. (The function comments for disable_rsa() aready say that the
-> caller needs to hold the port lock.)
->
-> I am thinking something like the below (untested) diff instead of the
-> above 2 hunks.
+For example, in the SNC-3 mode, suppose cpus 0, 40, and 80 are the 
+firtst online cpus on node0, node1, and node2 respectively. If cpus 0, 
+40, and 80 are all offline, At this point, reading "the top level event" 
+will result in a zero.
 
-Reasonable. disable_rsa() has only one caller currently, to be updated
-in the next version.
+Why hasn’t this issue been discovered earlier? The reason is that CPU0 
+is always the first online CPU on node0. The cacheinfo stored in the 
+first rdt_mon_domain corresponds to CPU0. When rdtgroup_mondata_show 
+reads the top-level event, it iterates through all rdt_mon_domain 
+entries, using if (d->ci->id == domid) to find the first rdt_mon_domain 
+that shares the resource. It then selects a CPU from the corresponding 
+cacheinfo to perform the monitoring group data read operation. In a 
+single-socket environment, all CPUs typically share the L3 Cache, which 
+means this traversal action will usually lead directly to CPU0's 
+cacheinfo. Additionally, since the mainline kernel no longer supports 
+taking CPU0 offline, that cacheinfo remains valid indefinitely.
 
->
-> John Ogness
->
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
-0/8250_port.c
-> index 22b3f7a193070..51467383aaf5a 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -781,8 +781,6 @@ static void disable_rsa(struct uart_8250_port *up)
->
->         if (up->port.type =3D=3D PORT_RSA &&
->             up->port.uartclk =3D=3D SERIAL_RSA_BAUD_BASE * 16) {
-> -               uart_port_lock_irq(&up->port);
-> -
->                 mode =3D serial_in(up, UART_RSA_MSR);
->                 result =3D !(mode & UART_RSA_MSR_FIFO);
->
-> @@ -794,7 +792,6 @@ static void disable_rsa(struct uart_8250_port *up)
->
->                 if (result)
->                         up->port.uartclk =3D SERIAL_RSA_BAUD_BASE_LO * 16=
-;
-> -               uart_port_unlock_irq(&up->port);
->         }
->  }
->  #endif /* CONFIG_SERIAL_8250_RSA */
-> @@ -2536,7 +2533,6 @@ void serial8250_do_shutdown(struct uart_port *port)
->                 port->mctrl &=3D ~TIOCM_OUT2;
->
->         serial8250_set_mctrl(port, port->mctrl);
-> -       uart_port_unlock_irqrestore(port, flags);
->
->         /*
->          * Disable break condition and FIFOs
-> @@ -2555,8 +2551,12 @@ void serial8250_do_shutdown(struct uart_port *port=
-)
->         /*
->          * Read data port to reset things, and then unlink from
->          * the IRQ chain.
-> +        *
-> +        * Since reading UART_RX clears interrupts, doing so with
-> +        * FIFO disabled won't trigger PSLVERR.
->          */
->         serial_port_in(port, UART_RX);
-> +       uart_port_unlock_irqrestore(port, flags);
->         serial8250_rpm_put(up);
->
->         up->ops->release_irq(up);
+> 
+>>
+>> 2. Lifecycle dependency: The cacheinfo structure's lifecycle is managed
+>> by the cache subsystem, making it unsafe for resctrl to hold
+>> long-term references.
+> 
+> This is not obvious to me. Could you please elaborate how resctrl could
+> have a reference to a removed structure?
+As mentioned above, although the cacheinfo of each CPU is not freed in 
+the latest mainline, the shared_cpu_map within the cacheinfo will be 
+modified as CPUs go online or offline. Each rdt_mon_domain directly 
+references the cacheinfo of the first online CPU in the node, and the 
+shared_cpu_map is used in various processes. This situation is bound to 
+lead to some problems.
 
-Thanks,
-Yunhui
+> 
+>>
+>> To resolve these issues and align with design principles:
+>>
+>> 1. Replace direct cacheinfo references in struct rdt_mon_domain and struct
+>> rmid_read with the cacheinfo ID (a unique identifier for the L3 cache).
+>>
+>> 2. Use hdr.cpu_mask (already maintained by resctrl) to replace
+>> shared_cpu_map logic for determining valid CPUs for RMID counter reads
+>> via the MSR interface.
+> 
+> I think it will help to explain why it is ok now to use hdr.cpu_mask instead
+> of the shared_cpu_map. In support of this you could mention that the original
+> solution aimed to read the counters on any CPU associated with the L3 cache
+> that the sub-numa domain forms part of, but this solution uses the
+> cpumask of one of the sub-numa domains that is known to be associated with
+> the L3 cache. This is a reduced set of CPUs from previously intended but
+> known to be accurate. Alternative may be to build a local cpumask from the
+> all the sub-numa domains but it is not clear to me how much this will
+> improve things.
+> 
+> Considering this I do not think the references are "unnecessary" as the
+> subject claims since the solution does not replace the original cpumask with
+> an identical one.
+
+Thanks a lot, you are correct. hdr.cpu_mask is a subset of 
+shared_cpu_map, and we can almost use hdr.cpu_mask to replace the 
+functionality of shared_cpu_map.
+
+In fact, in resctrl, the only purpose of using cpu_mask is to select a 
+CPU that shares the cache resource for performing monitoring group data 
+reads. Therefore, I think there is no need to build a local cpumask from 
+all the sub-NUMA domains in this context.
+
+I will provide a more detailed description in my commit log moving forward.
+
+> 
+>>
+> 
+> Needs a "Fixes:" tag.
+Ok，it will be added in the next patch.>
+>> Signed-off-by: Qinyun Tan <qinyuntan@linux.alibaba.com>
+>> ---
+> 
+> Reinette
+
+--
+Thanks
+Qinyun Tan
+
