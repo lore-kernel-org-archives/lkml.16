@@ -1,187 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC48257D;
-	Wed, 28 May 2025 00:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748392136; cv=none; b=lyV0vVlUH85W3zG7cCM4d0KAl15ZGssTfVi5DvEvaoZGn4nLsk1gGK0WlC36drA7u15TZfgyGrUGFMyKNXIs15m5K24sa9Nx88h14VOOiiaLMtzm4FjFNX6tpre4+Qe4Ct0ZL7N/MSbtF4OVK1NWfTZ2nSFlWUbE4NWltSQalEc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748392136; c=relaxed/simple;
-	bh=aALOo4alZ8rfYTwA9YSKRic4KjG4rxUpZmDPOqt+IlU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YeLIYeMEpW//Q1jEP9qKBDqE44CoTj1YrTvpvg5ThZaqFbfoVQSyOTnEzOcaBYQPoZtJ82e92UlWBwdF+ChqGroTxPQPnvxlgdmy3887yGz+YKs8eqFjI3SJPc953Bd+P8efq2G5yyWg9LwbG+3/5REJBW/aEX4DJ5IvitZLBPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKOcCzO4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKOcCzO4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9806DC4CEE9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520CB1367;
 	Wed, 28 May 2025 00:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748392136;
-	bh=aALOo4alZ8rfYTwA9YSKRic4KjG4rxUpZmDPOqt+IlU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dKOcCzO4MTvN5uFT/xs380i2Zy0S4gZradxT03RVUqO7YutK8+P5RnLLs+xCU3zfb
-	 Nq/+LwzfXy2UTXLtWs3ESD0hYF2no+eUqaoxXh50MA7u+t2rxH8CUzKrOrXhxWQfGR
-	 vA7PmAGYt3Kge6CHOyWDuXLerJWigQ0B00tUXVcr3JRJ82lgcHv0ljjRWzJni7bF7L
-	 goPldz/P3fNSNVtxztBsB0ojI5oV1fhX4BwgGM1yg6Vb29j9VBBQ2NAgc7Zq2dTL9N
-	 nizltDyXwjsDv9EOopULNL6IIs+JWXpdc0VFKRa65irRj5dFKeL26aIfbLsBipkvu0
-	 TeJJFQjILC71Q==
-Date: Wed, 28 May 2025 09:28:54 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ring-buffer: Simplify functions with __free(kfree) to
- free allocations
-Message-Id: <20250528092854.2d94f047c5c947a7d1b1ea8b@kernel.org>
-In-Reply-To: <20250527143144.6edc4625@gandalf.local.home>
-References: <20250527143144.6edc4625@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748392138; cv=none; b=ZheBHDnlHTgTad/A1hJWFstt2h4fG9mmpVKfIhvoBrysDukzuRbH70n4P5zyykOhVb50IDZf08uplQSdGHnibktbkN287AwN6DgBgKOhLYE+FrxGB7ZAUnamaveVmiKzTOiwAUWfkIy+b3ippVI5kRDYUsdVc73KbCrFAZlNxpY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748392138; c=relaxed/simple;
+	bh=2O/eZ+PVqKQBD9BOUwMNiGwOsrD5/Jy7inCLCeOdak4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cKde3buE+HyZwmZEaYnFhVnK1dInaE2BdEm86kn+RShMidqWPPI6lQZPgt3fbUN74FE10NLvvKEB6eLNNNQ2860oM+LydeaNf8oGVGs6lHQTUDa2Tv8MsZLupDdNDhLHK5jFJ+GfGnwhtW5tE8UsyyOtu1vHzN0mSEjY8aEPQuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JkIPGz9b; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JkIPGz9b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748392136; x=1779928136;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=2O/eZ+PVqKQBD9BOUwMNiGwOsrD5/Jy7inCLCeOdak4=;
+  b=JkIPGz9bTPfmcyRiWJiodS/Z1w+yTJQmLN+Whb1HCGn8aK7CBBdUtKY5
+   GXg4DOPDeMrOE5Rfe9e7cTb+o+1+MdnYoYfzPZMnB57Y7lhUjQXc7XPCO
+   r+Vp1xsw8a2cfn5luWvtgT5ecKfGaQLa9RzVKzIPID17UK3D7dXz3Sg27
+   xHIl5+D10Jw+ZEURvb8/sCC8jdUTjSEPauHuEbcADc8deMqWMJT9VabV9
+   08wtaEV/u0lqkgPA8QUoL4lXjfwRnTMmsljetwM1hLkvTBS66c5Y9PmS2
+   uep3uVrAgCzb7biHADSOAVX7Uge4ZYruMtDRJLIRe6YWdlDSIIdcjrC5b
+   w==;
+X-CSE-ConnectionGUID: HBVKAv5RThec4eAfKYtZFQ==
+X-CSE-MsgGUID: /ot979yaSgm09pTZ06asGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11446"; a="60654368"
+X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
+   d="scan'208";a="60654368"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:28:55 -0700
+X-CSE-ConnectionGUID: 7P55cVC7S6qpcgjZkfLlHA==
+X-CSE-MsgGUID: 9Dp6lqIESwG0hpuXqum9lA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,319,1739865600"; 
+   d="scan'208";a="148072599"
+Received: from unknown (HELO [10.238.3.95]) ([10.238.3.95])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2025 17:28:53 -0700
+Message-ID: <63dab0c1-b4b4-4da2-8366-59faaa42cc8e@linux.intel.com>
+Date: Wed, 28 May 2025 08:28:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Tue, 27 May 2025 14:31:44 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The function rb_allocate_pages() allocates cpu_buffer and on error needs
-> to free it. It has a single return. Use __free(kfree) and return directly
-> on errors and have the return use return_ptr(cpu_buffer).
-> 
-> The function alloc_buffer() allocates buffer and on error needs to free
-> it. It has a single return. Use __free(kfree) and return directly on
-> errors and have the return use return_ptr(buffer).
-> 
-> The function __rb_map_vma() allocates a temporary array "pages". Have it
-> use __free() and not worry about freeing it when returning.
-> 
-
-Looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 27 +++++++++------------------
->  1 file changed, 9 insertions(+), 18 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index f3aa18c89166..10a4b26929ae 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -2226,7 +2226,7 @@ static int rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
->  static struct ring_buffer_per_cpu *
->  rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->  {
-> -	struct ring_buffer_per_cpu *cpu_buffer;
-> +	struct ring_buffer_per_cpu *cpu_buffer __free(kfree) = NULL;
->  	struct ring_buffer_cpu_meta *meta;
->  	struct buffer_page *bpage;
->  	struct page *page;
-> @@ -2252,7 +2252,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->  	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
->  			    GFP_KERNEL, cpu_to_node(cpu));
->  	if (!bpage)
-> -		goto fail_free_buffer;
-> +		return NULL;
->  
->  	rb_check_bpage(cpu_buffer, bpage);
->  
-> @@ -2318,13 +2318,11 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
->  		rb_head_page_activate(cpu_buffer);
->  	}
->  
-> -	return cpu_buffer;
-> +	return_ptr(cpu_buffer);
->  
->   fail_free_reader:
->  	free_buffer_page(cpu_buffer->reader_page);
->  
-> - fail_free_buffer:
-> -	kfree(cpu_buffer);
->  	return NULL;
->  }
->  
-> @@ -2359,7 +2357,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
->  					 unsigned long scratch_size,
->  					 struct lock_class_key *key)
->  {
-> -	struct trace_buffer *buffer;
-> +	struct trace_buffer *buffer __free(kfree) = NULL;
->  	long nr_pages;
->  	int subbuf_size;
->  	int bsize;
-> @@ -2373,7 +2371,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
->  		return NULL;
->  
->  	if (!zalloc_cpumask_var(&buffer->cpumask, GFP_KERNEL))
-> -		goto fail_free_buffer;
-> +		return NULL;
->  
->  	buffer->subbuf_order = order;
->  	subbuf_size = (PAGE_SIZE << order);
-> @@ -2472,7 +2470,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
->  
->  	mutex_init(&buffer->mutex);
->  
-> -	return buffer;
-> +	return_ptr(buffer);
->  
->   fail_free_buffers:
->  	for_each_buffer_cpu(buffer, cpu) {
-> @@ -2484,8 +2482,6 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
->   fail_free_cpumask:
->  	free_cpumask_var(buffer->cpumask);
->  
-> - fail_free_buffer:
-> -	kfree(buffer);
->  	return NULL;
->  }
->  
-> @@ -7076,7 +7072,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->  {
->  	unsigned long nr_subbufs, nr_pages, nr_vma_pages, pgoff = vma->vm_pgoff;
->  	unsigned int subbuf_pages, subbuf_order;
-> -	struct page **pages;
-> +	struct page **pages __free(kfree) = NULL;
->  	int p = 0, s = 0;
->  	int err;
->  
-> @@ -7144,10 +7140,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->  		struct page *page;
->  		int off = 0;
->  
-> -		if (WARN_ON_ONCE(s >= nr_subbufs)) {
-> -			err = -EINVAL;
-> -			goto out;
-> -		}
-> +		if (WARN_ON_ONCE(s >= nr_subbufs))
-> +			return -EINVAL;
->  
->  		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
->  
-> @@ -7162,9 +7156,6 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
->  
->  	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
->  
-> -out:
-> -	kfree(pages);
-> -
->  	return err;
->  }
->  #else
-> -- 
-> 2.47.2
-> 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next V2] KVM: VMX: use __always_inline for is_td_vcpu and
+ is_td
+To: "Huang, Kai" <kai.huang@intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "eadavis@qq.com" <eadavis@qq.com>
+Cc: "seanjc@google.com" <seanjc@google.com>, "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "x86@kernel.org"
+ <x86@kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <58339ba1-d7ac-45dd-9d62-1a023d528f50@linux.intel.com>
+ <tencent_1A767567C83C1137829622362E4A72756F09@qq.com>
+ <c281170eeeda8974eb0e0f755b55c998ba01b7a2.camel@intel.com>
+ <18b805fbe1de59f45b0d61667933f5301cea4f86.camel@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <18b805fbe1de59f45b0d61667933f5301cea4f86.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+On 5/28/2025 5:48 AM, Huang, Kai wrote:
+> On Tue, 2025-05-27 at 17:53 +0000, Edgecombe, Rick P wrote:
+>> On Tue, 2025-05-27 at 16:44 +0800, Edward Adam Davis wrote:
+>>> is_td() and is_td_vcpu() run in no instrumentation, so use __always_inline
+>>> to replace inline.
+>>>
+>>> [1]
+>>> vmlinux.o: error: objtool: vmx_handle_nmi+0x47:
+>>>          call to is_td_vcpu.isra.0() leaves .noinstr.text section
+>>>
+>>> Fixes: 7172c753c26a ("KVM: VMX: Move common fields of struct vcpu_{vmx,tdx} to a struct")
+>>> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+>>> ---
+>>> V1 -> V2: using __always_inline to replace noinstr
+>> Argh, for some reason the original report was sent just to Paolo and so I didn't
+>> see this until now:
+>> https://lore.kernel.org/oe-kbuild-all/202505071640.fUgzT6SF-lkp@intel.com/
+>>
+>> You (or Paolo) might want to add that link for [1]. Fix looks good.
+>>
+>> Tested-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> Also,
+>
+> Reviewed-by: Kai Huang <kai.huang@intel.com>
+Also,
+
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+
+
