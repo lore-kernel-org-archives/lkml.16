@@ -1,161 +1,590 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229BB21FF28;
-	Wed, 28 May 2025 03:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4955A1F790F;
+	Wed, 28 May 2025 03:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748404226; cv=none; b=nJ1SYNWGQBwmq6cozqj7npf2JZHmiq3ZZ5DSg+0kyirk5RPFOGMU+DJH/8rHhJr438V5mUBbMDgbyZ3gOwJ/XQjqh/h9cdRBY5OWiuBe4XExgk+D4OkVDRXhW4lfVDjbpJuYVwbM1jA0GCe31m9N7Pyz3iEqKxBdPStfPeQgDXw=
+	t=1748404229; cv=none; b=hvfqMEO+X7QIH/JAH4JKdtcpEGsAmE1luXVoP2kEGg/r4WoDnQ671oocFeo3/KCQ3OhtB2MGrpD3h8meg+8wviSq/e5aJqiEI8eabaNpzydtnwGWpCuWen6PI8r9nvoP4GUiOm8yLKVe/g1n0c9umqZeam/r5+PnpBt0M2KWd7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748404226; c=relaxed/simple;
-	bh=Qk4nHCkADnbfTIM4W1CsfM3+08ySxEejIoTE2hirFro=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YDiGwKD+eOJXqDKGMFq4SjfdFjDUu8RY+YLIuloF9HCzCDMLuuUqP01fvdIJPL7i4sIvXdedZmFGjnfX0PjvZWkfAeqJtSa54Z2ESfwd+MzNaoKgZore1ln4OgVtWv3a5yGaUVRuumpKRoo09hvi/Xk2qGJ2/gc9g9FznDcASCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ERR4ng0g; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748404229; c=relaxed/simple;
+	bh=AcaO69fi2Cm16me+V0/KdP3xPRhkcRRYM/GGL20HM90=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GvQPwJmzYQSxElEmnWJX2X/KqtO3f6uE7v7toCxzCiCmVJCoOxzYyAZLjjqDTk/XGNMbTufGleVCwcUC8JMoneptjk2DrdwIDB8xvBYLmQhdEadl5/dmRPF/Z5GKScLTgdFMFb+FPXUIM5OvWEgo6UoluZxdWaU8q3GPMvBXQbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQgSsfYu; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ERR4ng0g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748404222;
-	bh=DwuT4/TbxenjhCKVGWcqy/2GUCPhX9aI91AX7mvwGnw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ERR4ng0ghr90zNyKln+70M9niwRdTUUksuQQEvCmOgRsAV0Ps5Op4+sUtm9i94sTZ
-	 wulivgTgzyTGkmWV+7iqO+oyMc2vZBrftEFN6JCcxHFLi8Jnagq86qnTHyj60UlXNj
-	 E4uXSofqIaUDtoqYOf86QB075yFKaTcJ1ZP9qs/Tpd/z1E5HAXS7kt79Rh5yAKueSq
-	 Hme3t6sHUPx8DXO4TzODRuzuH3HEbAi8w0xVIldjnrvRzl4wFegYMftceVReQ6kurO
-	 CVD5jDTC9F6TTnMDz49omfv1EKxkqdVwzfPk/LJwMa+70TU5Z0Pie8DbgQuTNRyyqG
-	 nU2oJ9pQJMh9A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6bB53kRlz4wbY;
-	Wed, 28 May 2025 13:50:21 +1000 (AEST)
-Date: Wed, 28 May 2025 13:50:20 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: linux-next: manual merge of the tip tree with the pm tree
-Message-ID: <20250528135020.79fec9ca@canb.auug.org.au>
-In-Reply-To: <20250512152326.3f2f0226@canb.auug.org.au>
-References: <20250512145517.6e0666e3@canb.auug.org.au>
-	<20250512152326.3f2f0226@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQgSsfYu"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-22e16234307so4362895ad.0;
+        Tue, 27 May 2025 20:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748404226; x=1749009026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cv8Gaih+91J3pEdij4+7GRCFDqzELtyA4Kb4EEM5piM=;
+        b=OQgSsfYu1I7GYiFcgXDqOPhGv8XsQ9LzYhcYafWUFJOBKpN8140YCtSFgzZ3k+8Lw7
+         3jHZIBcIKYOKyGKvB3EG6qgSe2QqdZn2J1rORcwXY7AzUpVF+yW519e3p3Tow+D7iFz0
+         7y8svWEaSApd6pv9mHNACZJQaRHslCnH6dLkKBuscq0XZ9pKFe+en/zY4G0TH6pn/YFO
+         qlpjKPUYd099+U58+ZnfEJG1NA9pVyBcuCiJesBEC3hvG7BbTBpr0o66uC38Wztn+XW8
+         dbDdC2LLXX/bMiOfqQEoRhMWgb2sY/EUKU1V7nDyojpCOxBI5Tccx1nMGAL+zVYZMijI
+         fC1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748404226; x=1749009026;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cv8Gaih+91J3pEdij4+7GRCFDqzELtyA4Kb4EEM5piM=;
+        b=rUE6W+HB/PTiiDxRKerMmb8VD/oRkwN8D6GlFXPb2d4+cejSzmHA2Vu+1erjDCyL52
+         GG1JRa7VCByDXC/HI7/VLBKmaZS/PpbXg6z3W9TGiStwqGQUA2oKtLCET/N8GMnst1Kf
+         O7xItq+sLTyNSyafHLFNJg5SkvsqhlNjjvcwtwIWiRj2BbPLSH211pJoZ56EE04jT3Ta
+         CYNrYsDdjUy+JCDYcB7P6fGMzDl5McVbZwad0sOGItihBx++4TZRa+U5htlLEOk767Ga
+         fCgofBlXdgc8YA3nAmZ4CU0PTsj77NJ3uRCRsMZLzsSG8j3prFq0CpBm6AdoG0JJtxMG
+         Nq3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXw9QcMobtJx7rliQM4MCpnQJbB2n1FTk3lpBUC/ykCD/eYCR+mFAlzX72eaPPacjZTcgwWPdyaP1lGavE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqTqJ5dhLxmzLVoOAwvT86O2sMPM81/7Ek8MYY800dEL2LbNyE
+	bnh7QdzXpsC2V9vtOuuJmq5jVjyvLnd1SPJUULfmxlUl/JFyQlLHJ4OE
+X-Gm-Gg: ASbGncvywImuCENZ6nq/pTuR9n843UnSn3knL3IViGWj7r+qTIxA6jUTiKKQFlTzY2D
+	jbG/FRzKT/3qHmeZqj8zFOb2iALThBojViIpojjSPImd/m2Y/+TmICLeBLSfknFYh/oZ3ihinEV
+	T6tRwDrzFVT/A1lBKdqRoICcnE4MZ/j9JS21wOiZwZL4DK8n6w2pBwob1HtlOdoN5+VvtwgaGYK
+	LqHnklTEuI+3XQoAvIjmwRWPyC5eLuYswMhWCns1xMjCNAdtYCWPw4PH9uVq2ousGIidqzD5gNX
+	l/74vusfNHeEHQBsZ6UpUwj900Npw2cbKnt6bSwxwfpJU3lheA80wyy+XSS2cUBBNwly
+X-Google-Smtp-Source: AGHT+IEt91bPXG7soyKF2aKcPaT2KY1bHpuur1X67g7WjyjNsrjONQCoB0VAJ9kcDLP+2eGzwYxV1g==
+X-Received: by 2002:a17:903:2f89:b0:215:6c5f:d142 with SMTP id d9443c01a7336-234b74dba8amr44353475ad.20.1748404226348;
+        Tue, 27 May 2025 20:50:26 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac417sm2074505ad.169.2025.05.27.20.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 20:50:25 -0700 (PDT)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: alexei.starovoitov@gmail.com,
+	rostedt@goodmis.org,
+	jolsa@kernel.org
+Cc: bpf@vger.kernel.org,
+	Menglong Dong <dongml2@chinatelecom.cn>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next 23/25] selftests/bpf: add get_ksyms and get_addrs to test_progs.c
+Date: Wed, 28 May 2025 11:47:10 +0800
+Message-Id: <20250528034712.138701-24-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250528034712.138701-1-dongml2@chinatelecom.cn>
+References: <20250528034712.138701-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sZbYF9/Sski6OZaHAn.giTg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/sZbYF9/Sski6OZaHAn.giTg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+We need to get all the kernel function that can be traced sometimes, so we
+move the get_syms() and get_addrs() in kprobe_multi_test.c to test_progs.c
+and rename it to bpf_get_ksyms() and bpf_get_addrs().
 
-Hi all,
+Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+---
+ .../bpf/prog_tests/kprobe_multi_test.c        | 220 +-----------------
+ tools/testing/selftests/bpf/test_progs.c      | 214 +++++++++++++++++
+ tools/testing/selftests/bpf/test_progs.h      |   2 +
+ 3 files changed, 219 insertions(+), 217 deletions(-)
 
-On Mon, 12 May 2025 15:23:26 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Mon, 12 May 2025 14:55:17 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> >
-> > Today's linux-next merge of the tip tree got a conflict in:
-> >=20
-> >   drivers/cpufreq/amd-pstate.c
-> >=20
-> > between commit:
-> >=20
-> >   608a76b65288 ("cpufreq/amd-pstate: Add support for the "Requested CPU=
- Min frequency" BIOS option")
-> >=20
-> > from the pm tree and commit:
-> >=20
-> >   d7484babd2c4 ("x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu()'=
-")
-> >=20
-> > from the tip tree.
-> >=20
-> > I fixed it up (the former removed a line updated by the latter) and can
-> > carry the fix as necessary. This is now fixed as far as linux-next is
-> > concerned, but any non trivial conflicts should be mentioned to your
-> > upstream maintainer when your tree is submitted for merging.  You may
-> > also want to consider cooperating with the maintainer of the conflicting
-> > tree to minimise any particularly complex conflicts. =20
->=20
-> Actually it needed the fix up below.
->=20
->=20
-> diff --cc drivers/cpufreq/amd-pstate.c
-> index d96bb3e202ee,66fdc74f13ef..0d4c0de89a00
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@@ -389,10 -389,9 +389,10 @@@ static inline int amd_pstate_cppc_enabl
->   static int msr_init_perf(struct amd_cpudata *cpudata)
->   {
->   	union perf_cached perf =3D READ_ONCE(cpudata->perf);
->  -	u64 cap1, numerator;
->  +	u64 cap1, numerator, cppc_req;
->  +	u8 min_perf;
->  =20
-> - 	int ret =3D rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
-> + 	int ret =3D rdmsrq_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
->   				     &cap1);
->   	if (ret)
->   		return ret;
-> @@@ -401,22 -400,6 +401,22 @@@
->   	if (ret)
->   		return ret;
->  =20
-> - 	ret =3D rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
-> ++	ret =3D rdmsrq_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
->  +	if (ret)
->  +		return ret;
->  +
->  +	WRITE_ONCE(cpudata->cppc_req_cached, cppc_req);
->  +	min_perf =3D FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cppc_req);
->  +
->  +	/*
->  +	 * Clear out the min_perf part to check if the rest of the MSR is 0, i=
-f yes, this is an
->  +	 * indication that the min_perf value is the one specified through the=
- BIOS option
->  +	 */
->  +	cppc_req &=3D ~(AMD_CPPC_MIN_PERF_MASK);
->  +
->  +	if (!cppc_req)
->  +		perf.bios_min_perf =3D min_perf;
->  +
->   	perf.highest_perf =3D numerator;
->   	perf.max_limit_perf =3D numerator;
->   	perf.min_limit_perf =3D FIELD_GET(AMD_CPPC_LOWEST_PERF_MASK, cap1);
+diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+index e19ef509ebf8..171706e78da8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
++++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+@@ -422,220 +422,6 @@ static void test_unique_match(void)
+ 	kprobe_multi__destroy(skel);
+ }
+ 
+-static size_t symbol_hash(long key, void *ctx __maybe_unused)
+-{
+-	return str_hash((const char *) key);
+-}
+-
+-static bool symbol_equal(long key1, long key2, void *ctx __maybe_unused)
+-{
+-	return strcmp((const char *) key1, (const char *) key2) == 0;
+-}
+-
+-static bool is_invalid_entry(char *buf, bool kernel)
+-{
+-	if (kernel && strchr(buf, '['))
+-		return true;
+-	if (!kernel && !strchr(buf, '['))
+-		return true;
+-	return false;
+-}
+-
+-static bool skip_entry(char *name)
+-{
+-	/*
+-	 * We attach to almost all kernel functions and some of them
+-	 * will cause 'suspicious RCU usage' when fprobe is attached
+-	 * to them. Filter out the current culprits - arch_cpu_idle
+-	 * default_idle and rcu_* functions.
+-	 */
+-	if (!strcmp(name, "arch_cpu_idle"))
+-		return true;
+-	if (!strcmp(name, "default_idle"))
+-		return true;
+-	if (!strncmp(name, "rcu_", 4))
+-		return true;
+-	if (!strcmp(name, "bpf_dispatcher_xdp_func"))
+-		return true;
+-	if (!strncmp(name, "__ftrace_invalid_address__",
+-		     sizeof("__ftrace_invalid_address__") - 1))
+-		return true;
+-	return false;
+-}
+-
+-/* Do comparision by ignoring '.llvm.<hash>' suffixes. */
+-static int compare_name(const char *name1, const char *name2)
+-{
+-	const char *res1, *res2;
+-	int len1, len2;
+-
+-	res1 = strstr(name1, ".llvm.");
+-	res2 = strstr(name2, ".llvm.");
+-	len1 = res1 ? res1 - name1 : strlen(name1);
+-	len2 = res2 ? res2 - name2 : strlen(name2);
+-
+-	if (len1 == len2)
+-		return strncmp(name1, name2, len1);
+-	if (len1 < len2)
+-		return strncmp(name1, name2, len1) <= 0 ? -1 : 1;
+-	return strncmp(name1, name2, len2) >= 0 ? 1 : -1;
+-}
+-
+-static int load_kallsyms_compare(const void *p1, const void *p2)
+-{
+-	return compare_name(((const struct ksym *)p1)->name, ((const struct ksym *)p2)->name);
+-}
+-
+-static int search_kallsyms_compare(const void *p1, const struct ksym *p2)
+-{
+-	return compare_name(p1, p2->name);
+-}
+-
+-static int get_syms(char ***symsp, size_t *cntp, bool kernel)
+-{
+-	size_t cap = 0, cnt = 0;
+-	char *name = NULL, *ksym_name, **syms = NULL;
+-	struct hashmap *map;
+-	struct ksyms *ksyms;
+-	struct ksym *ks;
+-	char buf[256];
+-	FILE *f;
+-	int err = 0;
+-
+-	ksyms = load_kallsyms_custom_local(load_kallsyms_compare);
+-	if (!ASSERT_OK_PTR(ksyms, "load_kallsyms_custom_local"))
+-		return -EINVAL;
+-
+-	/*
+-	 * The available_filter_functions contains many duplicates,
+-	 * but other than that all symbols are usable in kprobe multi
+-	 * interface.
+-	 * Filtering out duplicates by using hashmap__add, which won't
+-	 * add existing entry.
+-	 */
+-
+-	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
+-		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
+-	else
+-		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
+-
+-	if (!f)
+-		return -EINVAL;
+-
+-	map = hashmap__new(symbol_hash, symbol_equal, NULL);
+-	if (IS_ERR(map)) {
+-		err = libbpf_get_error(map);
+-		goto error;
+-	}
+-
+-	while (fgets(buf, sizeof(buf), f)) {
+-		if (is_invalid_entry(buf, kernel))
+-			continue;
+-
+-		free(name);
+-		if (sscanf(buf, "%ms$*[^\n]\n", &name) != 1)
+-			continue;
+-		if (skip_entry(name))
+-			continue;
+-
+-		ks = search_kallsyms_custom_local(ksyms, name, search_kallsyms_compare);
+-		if (!ks) {
+-			err = -EINVAL;
+-			goto error;
+-		}
+-
+-		ksym_name = ks->name;
+-		err = hashmap__add(map, ksym_name, 0);
+-		if (err == -EEXIST) {
+-			err = 0;
+-			continue;
+-		}
+-		if (err)
+-			goto error;
+-
+-		err = libbpf_ensure_mem((void **) &syms, &cap,
+-					sizeof(*syms), cnt + 1);
+-		if (err)
+-			goto error;
+-
+-		syms[cnt++] = ksym_name;
+-	}
+-
+-	*symsp = syms;
+-	*cntp = cnt;
+-
+-error:
+-	free(name);
+-	fclose(f);
+-	hashmap__free(map);
+-	if (err)
+-		free(syms);
+-	return err;
+-}
+-
+-static int get_addrs(unsigned long **addrsp, size_t *cntp, bool kernel)
+-{
+-	unsigned long *addr, *addrs, *tmp_addrs;
+-	int err = 0, max_cnt, inc_cnt;
+-	char *name = NULL;
+-	size_t cnt = 0;
+-	char buf[256];
+-	FILE *f;
+-
+-	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
+-		f = fopen("/sys/kernel/tracing/available_filter_functions_addrs", "r");
+-	else
+-		f = fopen("/sys/kernel/debug/tracing/available_filter_functions_addrs", "r");
+-
+-	if (!f)
+-		return -ENOENT;
+-
+-	/* In my local setup, the number of entries is 50k+ so Let us initially
+-	 * allocate space to hold 64k entries. If 64k is not enough, incrementally
+-	 * increase 1k each time.
+-	 */
+-	max_cnt = 65536;
+-	inc_cnt = 1024;
+-	addrs = malloc(max_cnt * sizeof(long));
+-	if (addrs == NULL) {
+-		err = -ENOMEM;
+-		goto error;
+-	}
+-
+-	while (fgets(buf, sizeof(buf), f)) {
+-		if (is_invalid_entry(buf, kernel))
+-			continue;
+-
+-		free(name);
+-		if (sscanf(buf, "%p %ms$*[^\n]\n", &addr, &name) != 2)
+-			continue;
+-		if (skip_entry(name))
+-			continue;
+-
+-		if (cnt == max_cnt) {
+-			max_cnt += inc_cnt;
+-			tmp_addrs = realloc(addrs, max_cnt);
+-			if (!tmp_addrs) {
+-				err = -ENOMEM;
+-				goto error;
+-			}
+-			addrs = tmp_addrs;
+-		}
+-
+-		addrs[cnt++] = (unsigned long)addr;
+-	}
+-
+-	*addrsp = addrs;
+-	*cntp = cnt;
+-
+-error:
+-	free(name);
+-	fclose(f);
+-	if (err)
+-		free(addrs);
+-	return err;
+-}
+-
+ static void do_bench_test(struct kprobe_multi_empty *skel, struct bpf_kprobe_multi_opts *opts)
+ {
+ 	long attach_start_ns, attach_end_ns;
+@@ -670,7 +456,7 @@ static void test_kprobe_multi_bench_attach(bool kernel)
+ 	char **syms = NULL;
+ 	size_t cnt = 0;
+ 
+-	if (!ASSERT_OK(get_syms(&syms, &cnt, kernel), "get_syms"))
++	if (!ASSERT_OK(bpf_get_ksyms(&syms, &cnt, kernel), "bpf_get_ksyms"))
+ 		return;
+ 
+ 	skel = kprobe_multi_empty__open_and_load();
+@@ -696,13 +482,13 @@ static void test_kprobe_multi_bench_attach_addr(bool kernel)
+ 	size_t cnt = 0;
+ 	int err;
+ 
+-	err = get_addrs(&addrs, &cnt, kernel);
++	err = bpf_get_addrs(&addrs, &cnt, kernel);
+ 	if (err == -ENOENT) {
+ 		test__skip();
+ 		return;
+ 	}
+ 
+-	if (!ASSERT_OK(err, "get_addrs"))
++	if (!ASSERT_OK(err, "bpf_get_addrs"))
+ 		return;
+ 
+ 	skel = kprobe_multi_empty__open_and_load();
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index e246fe4b7b70..26cc50bbed8b 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -18,6 +18,7 @@
+ #include <bpf/btf.h>
+ #include <time.h>
+ #include "bpf/libbpf_internal.h"
++#include "bpf/hashmap.h"
+ #include "json_writer.h"
+ 
+ #include "network_helpers.h"
+@@ -646,6 +647,219 @@ int bpf_find_map(const char *test, struct bpf_object *obj, const char *name)
+ 	return bpf_map__fd(map);
+ }
+ 
++static size_t symbol_hash(long key, void *ctx __maybe_unused)
++{
++	return str_hash((const char *) key);
++}
++
++static bool symbol_equal(long key1, long key2, void *ctx __maybe_unused)
++{
++	return strcmp((const char *) key1, (const char *) key2) == 0;
++}
++
++static bool is_invalid_entry(char *buf, bool kernel)
++{
++	if (kernel && strchr(buf, '['))
++		return true;
++	if (!kernel && !strchr(buf, '['))
++		return true;
++	return false;
++}
++
++static bool skip_entry(char *name)
++{
++	/*
++	 * We attach to almost all kernel functions and some of them
++	 * will cause 'suspicious RCU usage' when fprobe is attached
++	 * to them. Filter out the current culprits - arch_cpu_idle
++	 * default_idle and rcu_* functions.
++	 */
++	if (!strcmp(name, "arch_cpu_idle"))
++		return true;
++	if (!strcmp(name, "default_idle"))
++		return true;
++	if (!strncmp(name, "rcu_", 4))
++		return true;
++	if (!strcmp(name, "bpf_dispatcher_xdp_func"))
++		return true;
++	if (!strncmp(name, "__ftrace_invalid_address__",
++		     sizeof("__ftrace_invalid_address__") - 1))
++		return true;
++	return false;
++}
++
++/* Do comparison by ignoring '.llvm.<hash>' suffixes. */
++static int compare_name(const char *name1, const char *name2)
++{
++	const char *res1, *res2;
++	int len1, len2;
++
++	res1 = strstr(name1, ".llvm.");
++	res2 = strstr(name2, ".llvm.");
++	len1 = res1 ? res1 - name1 : strlen(name1);
++	len2 = res2 ? res2 - name2 : strlen(name2);
++
++	if (len1 == len2)
++		return strncmp(name1, name2, len1);
++	if (len1 < len2)
++		return strncmp(name1, name2, len1) <= 0 ? -1 : 1;
++	return strncmp(name1, name2, len2) >= 0 ? 1 : -1;
++}
++
++static int load_kallsyms_compare(const void *p1, const void *p2)
++{
++	return compare_name(((const struct ksym *)p1)->name, ((const struct ksym *)p2)->name);
++}
++
++static int search_kallsyms_compare(const void *p1, const struct ksym *p2)
++{
++	return compare_name(p1, p2->name);
++}
++
++int bpf_get_ksyms(char ***symsp, size_t *cntp, bool kernel)
++{
++	size_t cap = 0, cnt = 0;
++	char *name = NULL, *ksym_name, **syms = NULL;
++	struct hashmap *map;
++	struct ksyms *ksyms;
++	struct ksym *ks;
++	char buf[256];
++	FILE *f;
++	int err = 0;
++
++	ksyms = load_kallsyms_custom_local(load_kallsyms_compare);
++	if (!ASSERT_OK_PTR(ksyms, "load_kallsyms_custom_local"))
++		return -EINVAL;
++
++	/*
++	 * The available_filter_functions contains many duplicates,
++	 * but other than that all symbols are usable to trace.
++	 * Filtering out duplicates by using hashmap__add, which won't
++	 * add existing entry.
++	 */
++
++	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
++		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
++	else
++		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
++
++	if (!f)
++		return -EINVAL;
++
++	map = hashmap__new(symbol_hash, symbol_equal, NULL);
++	if (IS_ERR(map)) {
++		err = libbpf_get_error(map);
++		goto error;
++	}
++
++	while (fgets(buf, sizeof(buf), f)) {
++		if (is_invalid_entry(buf, kernel))
++			continue;
++
++		free(name);
++		if (sscanf(buf, "%ms$*[^\n]\n", &name) != 1)
++			continue;
++		if (skip_entry(name))
++			continue;
++
++		ks = search_kallsyms_custom_local(ksyms, name, search_kallsyms_compare);
++		if (!ks) {
++			err = -EINVAL;
++			goto error;
++		}
++
++		ksym_name = ks->name;
++		err = hashmap__add(map, ksym_name, 0);
++		if (err == -EEXIST) {
++			err = 0;
++			continue;
++		}
++		if (err)
++			goto error;
++
++		err = libbpf_ensure_mem((void **) &syms, &cap,
++					sizeof(*syms), cnt + 1);
++		if (err)
++			goto error;
++
++		syms[cnt++] = ksym_name;
++	}
++
++	*symsp = syms;
++	*cntp = cnt;
++
++error:
++	free(name);
++	fclose(f);
++	hashmap__free(map);
++	if (err)
++		free(syms);
++	return err;
++}
++
++int bpf_get_addrs(unsigned long **addrsp, size_t *cntp, bool kernel)
++{
++	unsigned long *addr, *addrs, *tmp_addrs;
++	int err = 0, max_cnt, inc_cnt;
++	char *name = NULL;
++	size_t cnt = 0;
++	char buf[256];
++	FILE *f;
++
++	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
++		f = fopen("/sys/kernel/tracing/available_filter_functions_addrs", "r");
++	else
++		f = fopen("/sys/kernel/debug/tracing/available_filter_functions_addrs", "r");
++
++	if (!f)
++		return -ENOENT;
++
++	/* In my local setup, the number of entries is 50k+ so Let us initially
++	 * allocate space to hold 64k entries. If 64k is not enough, incrementally
++	 * increase 1k each time.
++	 */
++	max_cnt = 65536;
++	inc_cnt = 1024;
++	addrs = malloc(max_cnt * sizeof(long));
++	if (addrs == NULL) {
++		err = -ENOMEM;
++		goto error;
++	}
++
++	while (fgets(buf, sizeof(buf), f)) {
++		if (is_invalid_entry(buf, kernel))
++			continue;
++
++		free(name);
++		if (sscanf(buf, "%p %ms$*[^\n]\n", &addr, &name) != 2)
++			continue;
++		if (skip_entry(name))
++			continue;
++
++		if (cnt == max_cnt) {
++			max_cnt += inc_cnt;
++			tmp_addrs = realloc(addrs, max_cnt);
++			if (!tmp_addrs) {
++				err = -ENOMEM;
++				goto error;
++			}
++			addrs = tmp_addrs;
++		}
++
++		addrs[cnt++] = (unsigned long)addr;
++	}
++
++	*addrsp = addrs;
++	*cntp = cnt;
++
++error:
++	free(name);
++	fclose(f);
++	if (err)
++		free(addrs);
++	return err;
++}
++
+ int compare_map_keys(int map1_fd, int map2_fd)
+ {
+ 	__u32 key, next_key;
+diff --git a/tools/testing/selftests/bpf/test_progs.h b/tools/testing/selftests/bpf/test_progs.h
+index 870694f2a359..477a785c8b5f 100644
+--- a/tools/testing/selftests/bpf/test_progs.h
++++ b/tools/testing/selftests/bpf/test_progs.h
+@@ -468,6 +468,8 @@ int trigger_module_test_write(int write_sz);
+ int write_sysctl(const char *sysctl, const char *value);
+ int get_bpf_max_tramp_links_from(struct btf *btf);
+ int get_bpf_max_tramp_links(void);
++int bpf_get_ksyms(char ***symsp, size_t *cntp, bool kernel);
++int bpf_get_addrs(unsigned long **addrsp, size_t *cntp, bool kernel);
+ 
+ struct netns_obj;
+ struct netns_obj *netns_new(const char *name, bool open);
+-- 
+2.39.5
 
-This is now a conflict between the pm tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/sZbYF9/Sski6OZaHAn.giTg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2h/wACgkQAVBC80lX
-0GyOngf5Af9kXxfg0zurRt95kanM4WcI6lUjQgpKPYP7mwlXus3/SigHPJw6As61
-9oMX8y91PqByfAkADUZMUCBO5gS5M0K/LODoVKx0+C0KpnEeMr2n4xvygrUhMXbE
-N0Lvh3ycV7PwmNoAH/tBsdKYjJ1eh1MOx+z25FE/LFR1vXaf1/Vg8m5JzqkY4OO7
-qAfterVE8WXJ0E5s3lOQ3kvT0Pa1b5Sm9p9MxJkmfpRSNHsFTLMbGeJ2Se4lLcat
-UlowprxDYXeyksU6677O1/VzJXUatcYrvhuqYRjOw54a2kPSWeMVPHbVxyy2pSP8
-005LS6JO7xmKH8B+l48pS53LwrKz3g==
-=rAWc
------END PGP SIGNATURE-----
-
---Sig_/sZbYF9/Sski6OZaHAn.giTg--
