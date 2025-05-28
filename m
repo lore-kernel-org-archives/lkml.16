@@ -1,129 +1,96 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8123C1FAA;
-	Wed, 28 May 2025 13:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F62C284696;
+	Wed, 28 May 2025 13:26:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438769; cv=none; b=e0jiwNzLtazEUOCt8X7Y+AfP6UP9B74tFN0FY/Sl4Q6fOKHHOLGZMyKYIcT9wiu/GG5rqdhZM7Bwtmc+loQbN/KXf6AxIzS8pAJVIpiXeztjauxF5h6Y6PrtxHA8BRJmeV/FV1t/FccmfvrwlaM9eIivJD/QhDOotQPTdHWXDBo=
+	t=1748438798; cv=none; b=R6mpWf2zWmnYDBzihJ3mjXbVvR6O5ztte8Wom9GPMB5HbOr2ttXDZOYIqvEfVb8IibuO9stZ8xLTP2NbnZ59qNuBnshj5wbJdrkYlfqWARc5FKZafARKTC7LP5OYPNyq7xOUlzmTeCzqeAPfolPhnBSyUJ95CsSk8MqtOMIUrrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438769; c=relaxed/simple;
-	bh=rxep3wf4faA2onypK2iZ/bRRCLhtffcSXOxeWi8D5cg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sVnJsbGA92GGtM0MjoS/SqB2T2a4NSmlM1TdJePeOIsH0N5LZo9Fhz52f+ZLcA8Awhc8/5baNWu5Zw5ZAXkn6Eat+GXAJwVAldFc82GThUN+EC6ppRYBSAulS9aVRN3kYH/YU5EFRs3436O5UXVWer0r7AeClbbhbZ+ASuZb29o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UWjAUUJ5; arc=none smtp.client-ip=209.85.208.47
+	s=arc-20240116; t=1748438798; c=relaxed/simple;
+	bh=VPsQqkwfPHGKSpcpB8sg7p0QtkZWF9LZET1JEEHDW4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RO69bCe/KtISj36pd0wSuQWgbr3xMRLidfFIbTSFXOax2hgQxNHvlyvmYGZhRX4Z9jirzTMFf+8QfaOHGYS5Iq37EVDXlQB2c6S/5KWD3PttssQR2Au2Hjoz9q/I95804HhL98Qph5MlF0sDm0zLKxaD8oTFzlv3JoNzJMfHrn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hVmcOgcn; arc=none smtp.client-ip=209.85.208.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWjAUUJ5"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-604e299b5b6so1766842a12.0;
-        Wed, 28 May 2025 06:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hVmcOgcn"
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-604e745b6fbso4620821a12.2;
+        Wed, 28 May 2025 06:26:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748438766; x=1749043566; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ieSLku7E97lhZ4UgdnDAb1QCFNhVxCm/IzChsnoZiEc=;
-        b=UWjAUUJ5665ICvx61xNY6FK/9oHtzZc6a4KQT2vCkLxbY9HmJmQN9PvCE8psN6kP24
-         TrtFqM3+4XuJP7yi29DrkTTqfMSg5HPA3Wwg+zIbR+AI+L2qKi5Nw6s7zdcglWziqidb
-         P06TTV6bOJ+kYFt8+6MwuRa0J6qTQpLl6eChDTqnCDF86MlpHVrwcZrfMg77VKHlVpLZ
-         qyUyjry3C6MEws4M0jnTF86M2kpwaw7jpynQ4fjD6R2kwHFeLZKwWwSPFppPNMk6p9Ik
-         kvBez8B4rfuyY/OaQha+/XaVz+oEduN/04aOg2MPdZDZQMXcXzC296i3UGuKKqAnxzWa
-         l2yA==
+        d=gmail.com; s=20230601; t=1748438795; x=1749043595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VPsQqkwfPHGKSpcpB8sg7p0QtkZWF9LZET1JEEHDW4w=;
+        b=hVmcOgcnciSLSb3chLtS/4fV9Aw/7dR6Aw/+gRJeuWddE4dXwGytcOQnT0y+egFsGN
+         9JCAIlFrg4vWnM8TxLyKwMMjwtnndxFBy8XRBwTkpEmJvKlZSSQwi31Yxd++LBRdxWdj
+         inbGUuUMcFl8c1a2yiG2s6Wu9PQJG3Mn1zk+Fr6eaRjJLHDIQ3RUwiW1b6RNPHAVadyv
+         kQJTYUCkZt1YUbubu/42OH4U/EVGcatm48a0iqC6v5AGqCDWVT0egu/UyatkOaCy4rv5
+         qbTAToMfQ2gorYnf11nQp33QQmVHroXC6pMwklWz+FWyzOKY1sD1Il3Hl58p4cepJCtd
+         dKoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748438766; x=1749043566;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ieSLku7E97lhZ4UgdnDAb1QCFNhVxCm/IzChsnoZiEc=;
-        b=LutXOfge8/OnymtH5ba8fcPsedAmbtgs43SOpWaVvRpbklmp3S4jeNdQnRWHhy4G2n
-         PcaKu9RKzzEdokRo7eEWtDWsNi6wsAxcp4l0AWuUPBlEZAUyk+6jv+EJ89dB5ABRCe/t
-         93GzfTA10S2olPfoTMF5yPVjjyBNOikHgawRzahDYpaBlNfUt1YqbehYMsioK6myA+U3
-         N8xNZFruv11mE0oTF2SFYc1qnxA1kdJdPAWghwtGV1uq5/5e6E4NXyGNaYYErsKSh162
-         cuRh8fBUQqMPTJ8BfdhTugVzgK9l0sQpAKAyoRzhhX1ZY7HmiNQeOTxqLxijML25iq0v
-         6uQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWIJ1P3hnSNpbX921UbzYKdMPx9tkpB231Pca3ZV8L/89UfALRqd8mAys8dzCK9xBzSdsZAThZT6mgV5HD4@vger.kernel.org, AJvYcCXQmg11sfpnl36i9hLkZYtX99HyUS1RLbPjv9F1sNTmlqPtUErbiWctvoW9ia9yCfWudjVW/QpSCCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTUI0aRYqPYbIkTlXbVF5Do+p0IjP51nm3x73rePt3SyVFveR+
-	dOv5gDfbtaVU96Zu+m6Q/jCJc6rVNbB3GKtvvS7wEOnV5g1jizZn8yOC
-X-Gm-Gg: ASbGncuLkjeTbX7kBpWkfOyluXiyoVrV/5/mnNP1LJgIj828lnyjY58vbiSeTMnKiH3
-	ZB9elTvVaSvztdF02h14E0JmWNlmM3U2IQ8fKXY3Z6gquJyJmcC1uUTrJO2Sf+PWRsYODnzouBW
-	GrEApjTbUIjnSlXT9Va14DuW4zMlSXE+5bNI0RhYckDhumJYENnHeDhf0g8wwAqhzxsk8rYWM38
-	WP6Jw+JQ5RzAsTfl2U4uSGUv2ILtrlUzDy1agj2L8EkW7mp/EIIUgL1ZvIY7NusH9J3sKN1nbP3
-	3b/ESFVdYN+bZrJDHaOLiZ+mzcMjdRoGg4hoNyuUQrU680eXPRFYpxEV5GWTJqU/IGeNrT4obNn
-	F
-X-Google-Smtp-Source: AGHT+IGH6NhjWRQzveyywsEHiNFK4CABJe+WM0+dyFghWFFkW3BP9KOOz7lN2b71Pta0/mTCAqJMrA==
-X-Received: by 2002:a17:907:9717:b0:ad5:6258:996f with SMTP id a640c23a62f3a-ad8989f78acmr418190566b.19.1748438765502;
-        Wed, 28 May 2025 06:26:05 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:7078:193c:ccdc:e2f5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a19ad462sm107742766b.4.2025.05.28.06.26.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 06:26:04 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] clk: renesas: r9a09g056: Add clock and reset entries for USB2.0
-Date: Wed, 28 May 2025 14:25:58 +0100
-Message-ID: <20250528132558.167178-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1748438795; x=1749043595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VPsQqkwfPHGKSpcpB8sg7p0QtkZWF9LZET1JEEHDW4w=;
+        b=dv9vRrVKGtFGtJRm8IWZtjBaXnblOa25Lr2qJTPHl65k6oxP4OwZUL78nTz7PdnyLq
+         6qmPIhV3mf448xwx4K0GtAlLFQauNn1NLKrBTGf7MtQUgXTo/Jc3/zAV7STLgJzXSeR7
+         JsJglrZ7Y9RV4/IjGF2O9GSgJBWWn92rItwayQgxtgUmMZKZ9nAftz0Z7+HX74drZZCv
+         Gj5B0ZYAjuC0OeIGrmx5PkQHELyKiVe9zUgn6OL23ixS2Q7eFBEn8llHE97PFACcd85k
+         joO2xmiS54Zfsfa+1s01HXHzo1Wq13EtL42mbKvddd2IcVdbMNHPnFTYF3ffRlqcE6U+
+         o6KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4CkxwTO/kx4+y7L+/Q9qfnDY6KS8i0dtrZkENxnT6mzxfrEmnHFnnJkDF+uYu2S41hxKGgtTep0mPWBbI214Q@vger.kernel.org, AJvYcCUFSfuOK4irxpCON7enEuUFIoXe2HCQ0l8udRL1891+sLUYejc1SY0zi+rLpBmTDG09ObzLc3uX@vger.kernel.org, AJvYcCVN9wuGEIgRT8TBnhuuRbfHGHgNOn8Dn7rVSDaQGuJO9VilNaP7OJaOEdV5iOZYM/ZHE/3UbmPGilAoJMQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeRMFm4gbCZzBEhLGMYl1jSH5yeqrZRYTRF/9O9QavxDlnrknL
+	TPRILA5Xpt9nxm0tPjyZCmBmaCRYkXh108zzEc3xL4SF2bhGBVH1n5Jcn+PLC59mp0n6EpchMRe
+	SUZauUJ2a2Nf8o18GDu7YoTKWz5RmeGk=
+X-Gm-Gg: ASbGncs5V4ZfoMNDb4cAcGDJl+rcLoJnYpnv8KO4ZYJmxupwzWeiLzjyJelYPuLAJbz
+	/qIyymG2G/QZbAE06IvuB4RUXenAJmYu1cTrQp9Lj6x3VnCK4qfUpZdZuVZMcMUShLFAlmYxaXh
+	o9IGKJutc2sXBPQd7a3r9kMQEZvu8yCgnJ0g==
+X-Google-Smtp-Source: AGHT+IGY3WTGofHERJhXHFrVQNx0Lrd8u5WGFlxYXOOuC8HUrH3lQtd0jPe8jURqgKSoVM5HoKIfeodRWCOxl77FccQ=
+X-Received: by 2002:a17:907:2da5:b0:ad5:34cf:d23f with SMTP id
+ a640c23a62f3a-ad8a1f0f399mr213276466b.21.1748438794380; Wed, 28 May 2025
+ 06:26:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com>
+ <aDcLIh2lPkAWOVCI@strlen.de>
+In-Reply-To: <aDcLIh2lPkAWOVCI@strlen.de>
+From: ying chen <yc1082463@gmail.com>
+Date: Wed, 28 May 2025 21:26:22 +0800
+X-Gm-Features: AX0GCFuIrdW9VNZ1czfCrrMjSQPt9e8UqQ69svvcfmWJ9RkuT0Vx34are8Ftpmk
+Message-ID: <CAN2Y7hzKd+VxWy56q9ad8xwCcHPy5qoEaswZapnF87YkyYMcsA@mail.gmail.com>
+Subject: Re: [bug report, linux 6.15-rc4] A large number of connections in the
+ SYN_SENT state caused the nf_conntrack table to be full.
+To: Florian Westphal <fw@strlen.de>
+Cc: pablo@netfilter.org, kadlec@netfilter.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Add clock and reset entries for USB2.0.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/clk/renesas/r9a09g056-cpg.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/clk/renesas/r9a09g056-cpg.c b/drivers/clk/renesas/r9a09g056-cpg.c
-index 13b5db79aab4..e370ffb8c1e2 100644
---- a/drivers/clk/renesas/r9a09g056-cpg.c
-+++ b/drivers/clk/renesas/r9a09g056-cpg.c
-@@ -134,6 +134,7 @@ static const struct cpg_core_clk r9a09g056_core_clks[] __initconst = {
- 	DEF_DDIV("ca55_0_coreclk3", R9A09G056_CA55_0_CORE_CLK3, CLK_PLLCA55,
- 		 CDDIV1_DIVCTL3, dtable_1_8),
- 	DEF_FIXED("iotop_0_shclk", R9A09G056_IOTOP_0_SHCLK, CLK_PLLCM33_DIV16, 1, 1),
-+	DEF_FIXED("usb2_0_clk_core0", R9A09G056_USB2_0_CLK_CORE0, CLK_QEXTAL, 1, 1),
- 	DEF_FIXED("gbeth_0_clk_ptp_ref_i", R9A09G056_GBETH_0_CLK_PTP_REF_I,
- 		  CLK_PLLETH_DIV_125_FIX, 1, 1),
- 	DEF_FIXED("gbeth_1_clk_ptp_ref_i", R9A09G056_GBETH_1_CLK_PTP_REF_I,
-@@ -219,6 +220,12 @@ static const struct rzv2h_mod_clk r9a09g056_mod_clks[] __initconst = {
- 						BUS_MSTOP(8, BIT(4))),
- 	DEF_MOD("sdhi_2_aclk",			CLK_PLLDTY_ACPU_DIV4, 10, 14, 5, 14,
- 						BUS_MSTOP(8, BIT(4))),
-+	DEF_MOD("usb2_0_u2h0_hclk",		CLK_PLLDTY_DIV8, 11, 3, 5, 19,
-+						BUS_MSTOP(7, BIT(7))),
-+	DEF_MOD("usb2_0_u2p_exr_cpuclk",	CLK_PLLDTY_ACPU_DIV4, 11, 5, 5, 21,
-+						BUS_MSTOP(7, BIT(9))),
-+	DEF_MOD("usb2_0_pclk_usbtst0",		CLK_PLLDTY_ACPU_DIV4, 11, 6, 5, 22,
-+						BUS_MSTOP(7, BIT(10))),
- 	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_tx_i", CLK_SMUX2_GBE0_TXCLK, 11, 8, 5, 24,
- 						BUS_MSTOP(8, BIT(5)), 1),
- 	DEF_MOD_MUX_EXTERNAL("gbeth_0_clk_rx_i", CLK_SMUX2_GBE0_RXCLK, 11, 9, 5, 25,
-@@ -280,6 +287,9 @@ static const struct rzv2h_reset r9a09g056_resets[] __initconst = {
- 	DEF_RST(10, 7, 4, 24),		/* SDHI_0_IXRST */
- 	DEF_RST(10, 8, 4, 25),		/* SDHI_1_IXRST */
- 	DEF_RST(10, 9, 4, 26),		/* SDHI_2_IXRST */
-+	DEF_RST(10, 12, 4, 29),		/* USB2_0_U2H0_HRESETN */
-+	DEF_RST(10, 14, 4, 31),		/* USB2_0_U2P_EXL_SYSRST */
-+	DEF_RST(10, 15, 5, 0),		/* USB2_0_PRESETN */
- 	DEF_RST(11, 0, 5, 1),		/* GBETH_0_ARESETN_I */
- 	DEF_RST(11, 1, 5, 2),		/* GBETH_1_ARESETN_I */
- 	DEF_RST(13, 13, 6, 14),		/* GPU_0_RESETN */
--- 
-2.49.0
-
+On Wed, May 28, 2025 at 9:10=E2=80=AFPM Florian Westphal <fw@strlen.de> wro=
+te:
+>
+> ying chen <yc1082463@gmail.com> wrote:
+> > Hello all,
+> >
+> > I encountered an "nf_conntrack: table full" warning on Linux 6.15-rc4.
+> > Running cat /proc/net/nf_conntrack showed a large number of
+> > connections in the SYN_SENT state.
+> > As is well known, if we attempt to connect to a non-existent port, the
+> > system will respond with an RST and then delete the conntrack entry.
+> > However, when we frequently connect to non-existent ports, the
+> > conntrack entries are not deleted, eventually causing the nf_conntrack
+> > table to fill up.
+>
+> Yes, what do you expect to happen?
+I understand that the conntrack entry should be deleted immediately
+after receiving the RST reply.
