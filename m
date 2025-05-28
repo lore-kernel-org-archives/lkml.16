@@ -1,162 +1,141 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE522230BFD
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE13621D5B8;
+	Wed, 28 May 2025 23:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748474727; cv=none; b=NBsyI3r70ysgT/6heBmogZd+nxx2rr8oz4TVECcsEsQ3hkvVhU9spgI2rX9gwLOv5gr/5kxpqFTmjLLDwWEHqC4HgIvtsqeCvp1DmMxTRorYHOeM49ZvCxjYhQMVV4hs+kZmywq3K2n2+UI9eXhGVyGvnZM72HkIB71cOOKU8s4=
+	t=1748474781; cv=none; b=A/60D7pqgExNtQr5hvAIRX7zsQaHYwpY7QTEvo0ouF3Gv14EItVAlNStniq8b7GPeKk02ptvuYcN3MXE9KNVABVcvQDqYoe1tqMjwBjJCFZyMb+hVQ5Eg2rG/eYehEPG/XhSOIUAyN9qxVgGfNJFEOGGYFHEGrqnLXSf6vTgZpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748474727; c=relaxed/simple;
-	bh=HgABNnq1PWhhK0FklJ/SVzoi8Z+ONJI1riVy8DoPDxc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kKEoANnng3TzML4oz5D5Fs3qGVCtx7Dmna6zxpPjQIxr6RXU2SCig+gnXXgNa9pAfi1sL1FjSMxlSosncuchcftXKEkIkpa3+qabEKAlP0b8BLj0Kp38l92SowUmbgUbafUUVuCsIS2uuUJlkrR8WNm7RheKedhEQryEa900T9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qvPhFn5C; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748474781; c=relaxed/simple;
+	bh=CIiZWvuxveOfvj1dMpqf3skmK6WOvXCeyxFf+XT3oAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lf2TIk5I7YvYqXFqZebbsZF5yGApzs0vLSENL+Ej5RS1d0+aMF5Ed/FYldE5xlbMOfoA8PzuhwuOa1hAYSsMpKRIjYdbSCPHwCs3hd6Pf1afdxQ1lJeyMD8JRfOcMNw8Es+vIMBRBRKrLL2Fj6A2Ll2RB1PYhqW1nVKC4fV6uNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pn/HerPa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qvPhFn5C"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742a091d290so173169b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748474725; x=1749079525; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gcxQaHt9YO/4vp8lHIwRWi8ySYcHIjzznVMdx4yu7+k=;
-        b=qvPhFn5C7xkIsZMR74eG1/yGyBDLzHvm0ki039CDhMZMtrTYu9xtTbWIonU4QFFrRy
-         P7P6vvexlvwz8jI0hYou3l8HRum86xYAq+oOawt+8fhC6YXPGMPIzFyerjH49NRfWSuN
-         5lFkIxd10awpvxrNt2PJMf6YpTaFZLMVMdehAV4neX2uNDaNEWneELyxLLXG3JNMlVhf
-         gcbleUICbeO28+7a52ckZNwrbSf3rciEZRRUMbOM9U3CL7sv+Muc6GDl40Nbfz92OBBU
-         fqjrmoUr3ggY4SYmzbid5kI/PuT+y8P2BQmdqu+uBBj5tb1ujfcijxVrxPa1hm7/wNzF
-         CGNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748474725; x=1749079525;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gcxQaHt9YO/4vp8lHIwRWi8ySYcHIjzznVMdx4yu7+k=;
-        b=aJs/y2lrYjsMs4e3dyyN00L+m/CWsvPWvAGMZGPNbRMBC9ta2XU5dsZz0j+qBc1wmT
-         BjDFTqzT8dmABXXWatz3KavhZwVFvhf8FCfkBHl9Mfhg1yy605otvczTXoGoWyYkQnYw
-         VS6FeGyLwSUSOwv5zc6w/Uw2jluUIR69zM24xzNFQgySRc3bon8TcdmPaJYFeL3md0Go
-         3NlCF3tgiw51AHsn7C2p8q2xllu2NpRADb/Yo8I1PoqXqhGHSIocUQWe3qyZIjWUtalf
-         7FrIAXTYY8jt5t1nKW6OlKn3jkb5/DtU5m3qqlkYef3lEe8rg/s/fUQGy9k3puPYTQSF
-         rR8g==
-X-Forwarded-Encrypted: i=1; AJvYcCU49xWDXVNzgS+k0WIPHlL8maIgFx7pvLYZRsb9meTez02Dscq8ebTO3nyFVazVtGZuKmtklhr+XanE/M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziM0pNHCQB+JfZdxa/rrHikLaCJkhsdCTRGr89z7xsHdpI+m01
-	f072duPLGJ/p8qvHY8Wv8GjzpHy1KlxjIxYnRyex8dpAW0CF9habhUaxRBbyASZi+6XN2IEF/Yb
-	yDmeYRQ==
-X-Google-Smtp-Source: AGHT+IErw9co+DcBT121540SfwKH6gZVIzfkdn9B2d2kwxMAwaFIuqhkwNuL6Huhgc39bFpmxXdGbf8i9Ig=
-X-Received: from pgdu5.prod.google.com ([2002:a05:6a02:2f45:b0:b2e:c392:14f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:699:b0:218:cdcf:106b
- with SMTP id adf61e73a8af0-21aad7827femr6695431637.9.1748474725210; Wed, 28
- May 2025 16:25:25 -0700 (PDT)
-Date: Wed, 28 May 2025 16:25:24 -0700
-In-Reply-To: <20250528201756.36271-1-jthoughton@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pn/HerPa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D0FC4CEE3;
+	Wed, 28 May 2025 23:26:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748474781;
+	bh=CIiZWvuxveOfvj1dMpqf3skmK6WOvXCeyxFf+XT3oAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pn/HerPa9QP3+VoRBOKsuuJVEqUdtrNe9tWdWvjVbTe9GbPbGZGU50EClueBVnwdG
+	 GJTJSfA1QtRPU+aydpCbgovCag42XYHK+8eHe9ZtT9gXebFYFvIVAihRkIoUAvdalb
+	 vDCa7eCkaHuAd3/uUVjhxk2mn+J2hmp7VPWUhHHwHNKkvjjfRWR/OFoprcT3iO2K1P
+	 S1JX/+Vht/ZNGYsZddaz07oIYUYRGhXcXkytjfYQe2Hj5U2PzIGc5TjUhlH+OEpNi1
+	 gnLOKfdphojF28XOaoEtTlNPTSk5Ai/a3O0seoy6b03OEbSaklQpACAmR48Lexq2TI
+	 8tdlglLQIglBw==
+Date: Wed, 28 May 2025 16:26:18 -0700
+From: Kees Cook <kees@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	David Lechner <dlechner@baylibre.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] Input: ims-pcu - Check record size in
+ ims_pcu_flash_firmware()
+Message-ID: <202505281611.A024D45E@keescook>
+References: <cover.1748463049.git.dan.carpenter@linaro.org>
+ <131fd1ae92c828ee9f4fa2de03d8c210ae1f3524.1748463049.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aDdILHOu9g-m5hSm@google.com> <20250528201756.36271-1-jthoughton@google.com>
-Message-ID: <aDebZD1Kmmg15zs7@google.com>
-Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
-From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: amoorthy@google.com, corbet@lwn.net, dmatlack@google.com, 
-	kalyazin@amazon.com, kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	pbonzini@redhat.com, peterx@redhat.com, pgonda@google.com, 
-	wei.w.wang@intel.com, yan.y.zhao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <131fd1ae92c828ee9f4fa2de03d8c210ae1f3524.1748463049.git.dan.carpenter@linaro.org>
 
-On Wed, May 28, 2025, James Houghton wrote:
-> On Wed, May 28, 2025 at 1:30=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index c5d21bcfa3ed4..f1db3f7742b28 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -2127,15 +2131,23 @@ void kvm_arch_commit_memory_region(struct kvm *kv=
-m,
->  				   const struct kvm_memory_slot *new,
->  				   enum kvm_mr_change change)
->  {
-> -	bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRTY_PAGES;
-> +	u32 old_flags =3D old ? old->flags : 0;
-> +	u32 new_flags =3D new ? new->flags : 0;
+On Wed, May 28, 2025 at 11:22:24PM +0300, Dan Carpenter wrote:
+> The "len" variable comes from the firmware and we generally do
+> trust firmware, but it's always better to double check.  If the "len"
+> is too large it could result in memory corruption when we do
+> "memcpy(fragment->data, rec->data, len);"
+> 
+> Fixes: 628329d52474 ("Input: add IMS Passenger Control Unit driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> Kees, this is a __counted_by() thing.  Would the checkers catch this?
+> We know the maximum valid length for "fragment" is and so it's maybe
+> possible to know that "fragment->len = len;" is too long?
+
+I see:
+
+pcu->cmd_buf as:
+
+        u8 cmd_buf[IMS_PCU_BUF_SIZE];
+
+and fragment is:
+
+struct ims_pcu_flash_fmt {
+        __le32 addr;
+        u8 len;
+        u8 data[] __counted_by(len);
+};
+
+I assume you're asking about this line:
+
+		fragment->len = len;
+
+I'm not aware of any compiler instrumentation that would bounds check
+this -- it was designed to trust these sort of explicit assignments.
+
+This is hardly the only place in the kernel doing this kind of
+deserialization into a flexible array structure, so maybe there should
+be some kind of helper to do the bounds checking and set the
+"counted_by" counter?
+
+#define gimme(from, into, counter, len)				\
+	({							\
+		int __gimme_rc = -EINVAL			\
+		size_t __gimme_size = __member_size(from);	\
+		if (__gimme_size >= sizeof(*into) &&		\
+		    __gimme_size - sizeof(*into) >= len) {	\
+			into = (void *)from;			\
+			into->counter = len;			\
+			__gimme_rc = 0;				\
+		}						\
+		__gimme_rc;					\
+	})
+
+	rc = gimme(&pcu->cmd_buf[1], fragment, len, len);
+	if (rc) {
+		dev_err(pcu->dev,
+			"Invalid record length in firmware: %d\n", len);
+		return rc;
+	}
+
+-Kees
+
+> 
+>  drivers/input/misc/ims-pcu.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/input/misc/ims-pcu.c b/drivers/input/misc/ims-pcu.c
+> index d9ee14b1f451..4581f1c53644 100644
+> --- a/drivers/input/misc/ims-pcu.c
+> +++ b/drivers/input/misc/ims-pcu.c
+> @@ -844,6 +844,12 @@ static int ims_pcu_flash_firmware(struct ims_pcu *pcu,
+>  		addr = be32_to_cpu(rec->addr) / 2;
+>  		len = be16_to_cpu(rec->len);
+>  
+> +		if (len > sizeof(pcu->cmd_buf) - 1 - sizeof(*fragment)) {
+> +			dev_err(pcu->dev,
+> +				"Invalid record length in firmware: %d\n", len);
+> +			return -EINVAL;
+> +		}
 > +
-> +	/*
-> +	 * If only changing flags, nothing to do if not toggling
-> +	 * dirty logging.
-> +	 */
-> +	if (change =3D=3D KVM_MR_FLAGS_ONLY &&
-> +	    !((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
-> +		return;
-> =20
->  	/*
->  	 * At this point memslot has been committed and there is an
->  	 * allocated dirty_bitmap[], dirty pages will be tracked while the
->  	 * memory slot is write protected.
->  	 */
-> -	if (log_dirty_pages) {
-> -
-> +	if (new_flags & KVM_MEM_LOG_DIRTY_PAGES) {
->  		if (change =3D=3D KVM_MR_DELETE)
->  			return;
-> =20
->=20
-> So we need to bail out early if we are enabling KVM_MEM_USERFAULT but
-> KVM_MEM_LOG_DIRTY_PAGES is already enabled, otherwise we'll be
-> write-protecting a bunch of PTEs that we don't need or want to WP.
->=20
-> When *disabling* KVM_MEM_USERFAULT, we definitely don't want to WP
-> things, as we aren't going to get the unmap afterwards anyway.
->=20
-> So the check we started with handles this:
-> > > > > + =C2=A0 =C2=A0 =C2=A0 u32 old_flags =3D old ? old->flags : 0;
-> > > > > + =C2=A0 =C2=A0 =C2=A0 u32 new_flags =3D new ? new->flags : 0;
-> > > > > +
-> > > > > + =C2=A0 =C2=A0 =C2=A0 /* Nothing to do if not toggling dirty log=
-ging. */
-> > > > > + =C2=A0 =C2=A0 =C2=A0 if (!((old_flags ^ new_flags) & KVM_MEM_LO=
-G_DIRTY_PAGES))
-> > > > > + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;
->=20
-> So why also check for `change =3D=3D KVM_MR_FLAGS_ONLY` as well? Everythi=
-ng I just
-> said doesn't really apply when the memslot is being created, moved, or
-> destroyed. Otherwise, consider the case where we never enable dirty loggi=
-ng:
->=20
->  - Memslot deletion would be totally broken; we'll see that
->    KVM_MEM_LOG_DIRTY_PAGES is not getting toggled and then bail out, skip=
-ping
->    some freeing.
+>  		fragment = (void *)&pcu->cmd_buf[1];
+>  		put_unaligned_le32(addr, &fragment->addr);
+>  		fragment->len = len;
+> -- 
+> 2.47.2
+> 
 
-No, because @new and thus new_flags will be 0.  If dirty logging wasn't ena=
-bled,
-then there's nothing to be done.
-
->  - Memslot creation would be broken in a similar way; we'll skip a bunch =
-of
->    setup work.
-
-No, because @old and thus old_flags will be 0.  If dirty logging isn't bein=
-g
-enabled, then there's nothing to be done.
-
->  - For memslot moving, the only case that we could possibly be leaving
->    KVM_MEM_LOG_DIRTY_PAGES set without the change being KVM_MR_FLAGS_ONLY=
-,
->    I think we still need to do the split and WP stuff.
-
-No, because KVM invokes kvm_arch_flush_shadow_memslot() on the memslot and =
-marks
-it invalid prior to installing the new, moved memslot.  See kvm_invalidate_=
-memslot().
-
-So I'm still not seeing what's buggy.
+-- 
+Kees Cook
