@@ -1,126 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195BA2749E7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC481274646;
+	Wed, 28 May 2025 09:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422824; cv=none; b=SGq8kOLrpQHQh4lQj6BlGReDRmeZEtFa3MSQE5A2E+HUYYqJ6g7i0repVwc4rnByWVI0dpTOKBGE4bRQyacOgKPNdqiL57EW9gXyInmwdk9BzDi7rsFvTiBhW2CqQXyEJzlo/eyta/YEH5TQPyv7jaxlQlk6eYfSN3wi0hHZ9PA=
+	t=1748422835; cv=none; b=RVfASOL+y0lipf8rVGreFey0cTFqHHWkHyCP1i1BWoxoHT7Cs/5N7RZeFj9kzNoaRPlGDw/b8WPHTOYyKr9AkpfANkiLGMGZuIxCt67hHl/B0gdPUWucpulKqJlJSVbbJPMxllVr0is3dtdpJlUWGHEJG9hO5Ei2sXlco89rs1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422824; c=relaxed/simple;
-	bh=t1e/HvfosFpsLoFkhIGG8ncpvv+6aZviJ2nKgmWiOW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mwnDxF03nWchpmqqGZv20SKFkG2hMToFg91xcMju8keIpUHgcpt+hQIoEkIamnIp6NzoksIHurFCfuQ0rMokMCO6FgczZamzvqn/hAe5+yuMb0Rs2PjdKnfgtNg8SOe+9SVAVQkdVW4TQAd0j8OQzsbDiiuO5p7J3tOsa6t10Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K2fmwfCT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748422835; c=relaxed/simple;
+	bh=z6W/IJ2e+qbl9PkcC1h6jlkIMPh1FARrtaYFaS3okqs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=UzZbtUk5rZ06ZFY35ADBUZuQb3p0+LnRXNmQbaDN2JG/BCkJlXD+OuSTxvPZawB7Gs59n947hkzdaKEM7Ft/i7L2hOd+xdfGx0B4LnbdYKpSqqq/jc1psDuGv/B+kVHMM0EM1Zltno1M90BVfzOf+C2528FYeMqD+RZuF+KenB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=J+P6ryq+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eIbJAUhi; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K2fmwfCT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748422822;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=64QsXwazpQwW+tOYOMo7hDdSauBGVg6nC6ZKTpmi0VI=;
-	b=K2fmwfCTDs4dGc61cpflZabEFOjCWO6oam0nm+IY1Lvbu4lzezAithrhmsp2vOKWGMMiBJ
-	UAcOhUN6o7hSsJ/3z4jDSmQVHpgbwJd+W4wiTQy9xXxlKpWMG9aSxVq2vP1DXNLWggV3l+
-	CVn4NCFhicR0swLEFFd3vemDGlKeLVA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-25-zq31eJI9M1y50WE8YFheuw-1; Wed, 28 May 2025 05:00:20 -0400
-X-MC-Unique: zq31eJI9M1y50WE8YFheuw-1
-X-Mimecast-MFC-AGG-ID: zq31eJI9M1y50WE8YFheuw_1748422819
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so2463405f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:00:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748422819; x=1749027619;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=64QsXwazpQwW+tOYOMo7hDdSauBGVg6nC6ZKTpmi0VI=;
-        b=LpnEvf9VXKi8dWURItagPglfLpISHG4AQwQZIYqrN3TVi6aBcgXejgfNMDfuQEzsL2
-         54Of/+QIa35V7JVJdyKLhrIUKs7MLjVZwb9HTtBnzq3oLSiawEemKMLzl44DsOUm1E6r
-         44JcprAnsq6aEqOBeMaSqibDkh0E+wX7x73OWoWiFjO/jNyYEgYHOjWO7V5KLvBiW0xH
-         bQoynO5Lgl7yd+xfLSh/G+3nDIEOOXh3oXiRzN5V20z9BkKf6gSkOLH5MGpr0b/8ZfeC
-         npfBogIx0L0XbnSuufQJeRfNkVrtyvRek0Pc8AEW+QMQCyZ72KjxGlkIzWJXdjPFqEr1
-         CNvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlF20E6HrGfLMHXy0osKCJfE11dJN4ZA+3+IDRul/TDbAC0bZHcXzm8qNNd8nOsyVMH/KhEt6LhtY9Sjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7nieCquecTN72rmLIVbnxvK15k9aPijGC93wm2WaQDdYHCrTY
-	cGNs3USoIKBkt2z2TNDZeuZVK4xgmiEF5hEsTcUi0Vnxu9tq1hePh6wM08dwdwG15qqd9OpenF/
-	qsRocShs88KUydGSdtV6dV1H4IndiA5EaSAq5Y1B/8dBLMe78Yjb4KtlhYYJfSLYReg==
-X-Gm-Gg: ASbGncvrTrqTGRHXvZjSAqILH7tZHqrDyRzae+iMouGBQFHo+x6tg7JNtfStn7ZrzyZ
-	/JSCoUMzSXaYR8XCarHSqhiTxK3p4d6kRSsOTdzl3X1Oj2LxMrfQ8hSVWDmtdtg4k5tv8n5jPtw
-	dhFRpfsJh5/Us20wGzSTBmwLXwoFER7HU41bJbGihxO1E//cn7cIP9IyVeEHeBjp4NH30oHro02
-	3SfSRrYADDjzFUDMmTNe9+g99lTY8kuAac0Vx/sIyOx24NAWglxcdgQHtyBpm5pxzgKTDQ0nQSk
-	NRrNDEzVR6FyPwRMu9d0t2RAioqZwZXTFMEEql6PYW3wy9xS+j8/PyTEuJJ2
-X-Received: by 2002:a5d:5f8b:0:b0:3a3:6595:921f with SMTP id ffacd0b85a97d-3a4cb4b822dmr12928267f8f.41.1748422818883;
-        Wed, 28 May 2025 02:00:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjrV5vgUL5ysXDl7B3oxB4ovG+UqKk+QHfVQ+EndsK3P47vCbb2duzqpq4xfTjaqx9Sg54xQ==
-X-Received: by 2002:a5d:5f8b:0:b0:3a3:6595:921f with SMTP id ffacd0b85a97d-3a4cb4b822dmr12928217f8f.41.1748422818345;
-        Wed, 28 May 2025 02:00:18 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eab0b596sm892079f8f.0.2025.05.28.02.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 02:00:17 -0700 (PDT)
-Date: Wed, 28 May 2025 11:00:12 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
-	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
-	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
-Message-ID: <gymx5tbghi55gm76ydtuzzd6r522expft36twwtvpkbgcl266a@zelnthnhu7kq>
-References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
- <20250528065944.4511-5-zhaoqunqin@loongson.cn>
- <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
- <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="J+P6ryq+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eIbJAUhi"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.phl.internal (Postfix) with ESMTP id C6B9E1380B08;
+	Wed, 28 May 2025 05:00:31 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Wed, 28 May 2025 05:00:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1748422831;
+	 x=1748509231; bh=Z1yOxaM2wfMvKI2kVWfHUYbkiPZ7bTZx5z+jZhW1zmw=; b=
+	J+P6ryq+XgBkSGADS8inZDprJWswloO7nEtlMXpix6eT51jG9p4g3FINCn02sUe9
+	MvD6gyJLHYSdmgCr0ZZPWVG2fvBjmTa4nJeDxzlCzqWwA741z3ob8CsvViLOu7t7
+	5dZIMF9z32YbFRBBqH6CsurGRPT10fVhn6LMSNWK4q2cXmkTEgqlweeOBEbNtciP
+	ZLpqZpSZ3IGMWMYHTqBS36fGXtLTNcotjI0y1fsrD2ZlRczbQPFOI7kKTFiL2Wwn
+	qdUOOPZkWlrIbZ2N5KDuVpCw7lj7Eh9eVKffZNRkidk2FrRDqG8CfBub0PV7Emxm
+	cs2/gaIsIKRwwwTyGaS6gw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748422831; x=
+	1748509231; bh=Z1yOxaM2wfMvKI2kVWfHUYbkiPZ7bTZx5z+jZhW1zmw=; b=e
+	IbJAUhiQseVLDs7B308JF56W6tTO8SrEK/DjkDGeSwkBxseO+2Er3VLGXb0SkfIU
+	W4S8w8aREdTTANutogr6zBDDjIUjW2TPx3Db1m4es4MGTytDxKuW5E3kkJ7Hywia
+	wem/KRZVl9cehB6qVYfeq+T1kblQAytdfQ3EnXj2WOnSjay9FdoEvd3lnZQ+6Vcv
+	+ElI1jVYJej7KMOcAGrP6Jf6rXf+d7OIY3b0YncE/bGIjst7GVgr2Yk19GZXF788
+	dy+nuwLgi00mkcSUL7HqPUsJRJquzP/er8O7Z6Nms3gY6PAAe289+P18G1BMj5n3
+	qCUxE7qOEhDmIwZ0sPzjg==
+X-ME-Sender: <xms:rtA2aMDBQJ2j1EwDRAI8TbKCwfvqNydHRzNRuziiVT8JGhNxJgzQ6g>
+    <xme:rtA2aOgam4fH8dKn-4x1N4RLiJZwKV3qMX9buenG0HkgJCkdYSlYif_AMQgihUf3t
+    8Ger203jxuF-YdtkVA>
+X-ME-Received: <xmr:rtA2aPk8dwxb6YufPQzz6hmv21ELdBJj1BxB950mh2pax08B1fc-OpzlsGEXNkQoDn4sbJHnAEMlHEKNXlYmuBgDJoQXexu3qg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdekgeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefu
+    hffvofhfjgesthhqredtredtjeenucfhrhhomhepfdevhhhrihhsthhophhhvghrucfunh
+    hofihhihhllhdfuceotghhrhhisheskhhouggvheegrdhnvghtqeenucggtffrrghtthgv
+    rhhnpeeileetudejffegjeegfffhhffhkeefjefgtddujeehheevleevjeejffekieekve
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhr
+    ihhssehkohguvgehgedrnhgvthdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtohepjhhohhhnsehsthhofhhfvghlrdhorhhgpdhrtghpthhtohep
+    khgvnhhtrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphhtthhopehtoh
+    hrvhgrlhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rtA2aCwY_NeT4DE9OTqJY8rptC2V451djeBMBxTfOLF0AdLUeCQSCA>
+    <xmx:rtA2aBSX4SBlWIP-AFjclFMOKYMB4l7Ei2aGeMSezdFGZqErXMYI4A>
+    <xmx:rtA2aNbnH82s9MX5q6K4yRAKZ-bOrTocfVBC-1n1g4iMvQQMNm6d2w>
+    <xmx:rtA2aKSLxcAXVOZuMjIDQchC1NjET6839D0xgon-LtyzqWnV8twelw>
+    <xmx:r9A2aCvP1EHZIVkzUmeUR479AiDabuMllQHbU9Q0Xlc_fwh58kI6eK-e>
+Feedback-ID: i9ec6488d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 May 2025 05:00:29 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 May 2025 02:00:29 -0700
+Message-Id: <DA7O5Z6M9D5H.2OX4U4K5YQ7C9@kode54.net>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ <linux-bcachefs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] bcachefs changes for 6.16
+From: "Christopher Snowhill" <chris@kode54.net>
+To: "John Stoffel" <john@stoffel.org>, "Kent Overstreet"
+ <kent.overstreet@linux.dev>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <oxkibsokaa3jw2flrbbzb5brx5ere724f3b2nyr2t5nsqfjw4u@23q3ardus43h> <dmfrgqor3rfvjfmx7bp4m7h7wis4dt5m3kc2d3ilgkg4fb4vem@wytvcdifbcav> <26678.2527.611113.400746@quad.stoffel.home>
+In-Reply-To: <26678.2527.611113.400746@quad.stoffel.home>
 
-On Wed, May 28, 2025 at 04:42:05PM +0800, Qunqin Zhao wrote:
+On Tue May 27, 2025 at 11:52 AM PDT, John Stoffel wrote:
+>>>>>> "Kent" =3D=3D Kent Overstreet <kent.overstreet@linux.dev> writes:
 >
->在 2025/5/28 下午3:57, Stefano Garzarella 写道:
->>>+    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
->>>+    if (IS_ERR(chip))
->>>+        return PTR_ERR(chip);
->>>+    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
->>
->>Why setting TPM_CHIP_FLAG_IRQ?
+>> There was a feature request I forgot to mention - New option,
+>> 'rebalance_on_ac_only'. Does exactly what the name suggests, quite
+>> handy with background compression.
 >
->When tpm_engine completes  TPM_CC* command,
->
->the hardware will indeed trigger an interrupt to the kernel.
+> LOL, only if you know what the _ac_ part stands for.  :-)
 
-IIUC that is hidden by loongson_se_send_engine_cmd(), that for this 
-driver is completely synchronous, no?
-
->
->>
->>IIUC this driver is similar to ftpm and svsm where the send is 
->>synchronous so having .status, .cancel, etc. set to 0 should be 
->>enough to call .recv() just after send() in tpm_try_transmit(). See 
->>commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} 
->>opt")
->The send callback would wait until the TPM_CC* command complete. We 
->don't need a poll.
-
-Right, that's what I was saying too, send() is synchronous (as in ftpm 
-and svsm). The polling in tpm_try_transmit() is already skipped since we 
-are setting .status = 0, .req_complete_mask = 0, .req_complete_val = 0, 
-etc. so IMHO this is exactly the same of ftpm and svsm, so we don't need 
-to set TPM_CHIP_FLAG_IRQ.
-
-Thanks,
-Stefano
-
+Would you have suggested perhaps _mains_ ? That may have rang better
+with some folks. I suppose, at least.
