@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9636A1FF610;
-	Wed, 28 May 2025 05:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C619382;
+	Wed, 28 May 2025 05:54:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748411428; cv=none; b=V1+cGJXQZQcRJRCUqd0r8s1cmCwC4lzyr3Q0jPXmHN64ZkO6VtHCMf5yFnsiLVM9JErdyc43q5q2a2dZUKbV/68S7uuWweuB3Np7LIOIFBBdlFEYSotgg+XVLWIwB/41gqknBp/Cc+kcH5x72fivO2mtBqUCVNVaPGKsLIBP/08=
+	t=1748411662; cv=none; b=r85DKPawjbGnQf4tsqSYadJ1VKN3+Akl930EJxUPrzNzjqIhl8i8rYKT8trFeiAt19l/8PHZHIOAR8P/9D9aXEpb8PXC3fWm8dssYml1qu87uT52B352KrgnRMtBIulR/n46v4ysB2jazlLw2iuvG4eGdIurAHpsS8BrpYKvk28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748411428; c=relaxed/simple;
-	bh=Fetu2A3BMPrF7Sx5veFNHWw2KUfE62wPI9tWz7exgW0=;
+	s=arc-20240116; t=1748411662; c=relaxed/simple;
+	bh=+bFLltYmSUsgiJWkIjc2Unk84xHSX/9YmaXa3vkXmwc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nkUNMkYdrqExI0n7dR0G89OustFlnnTohHMwqGEzTsXvKgqf0Pb3R0IXE+i7eUs0wbp8eQsVa2tHqGSxSmUqcS1Lna2U15VAe7NH4MGu1Gp2ZwmO+/0ZxFvwekfvKYZbVW2w7vUoA/ekb6t3/qs1sxCNUBht7bmp38AfTEcqVwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHHSOZ9S; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=u1KX5AGP0wddvfcBK7ZT3rb/CWcBPgxTMxbVEweTJZIZsADG93RsbHiwqarC2XQ1fGlV5/7+9fKwhWQKjpd34zTsa86bIYAC24QZksHhv/TQXLKFTvbPIAzUvGNP0T1sTaNhHZNP1zHaxZq6syzK6A431xWAEmg088gqNVaGWTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWcfs3Cn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHHSOZ9S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D90DC4CEE7;
-	Wed, 28 May 2025 05:50:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWcfs3Cn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFE0C4CEEB;
+	Wed, 28 May 2025 05:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748411428;
-	bh=Fetu2A3BMPrF7Sx5veFNHWw2KUfE62wPI9tWz7exgW0=;
+	s=k20201202; t=1748411662;
+	bh=+bFLltYmSUsgiJWkIjc2Unk84xHSX/9YmaXa3vkXmwc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kHHSOZ9SXEQ3a3ZMNwrzlOI9A8yfLaeMK7vfGS4Lsq6BkUoWBjyCIIt7fV+kn6o7S
-	 qYVczK/kFESYOKDxCMXbEf8X2oJP7fPHZFronE9hXyotzDgxphqejCunJFAsh0GCyy
-	 M238W1iFjR+3CBwsT3A1VWTd3y+ZVhXeB+qXZf1bgqJS+DD07Swnn0kNuXg5wZlt31
-	 ZbxSNGyUGaGc4DFWxTGXrxOfYY6v2YaWTsHRbrRFDrctuX2b1ufOmLB/ue0SKHwtt4
-	 s2ThoyAl0QwS0GvbGWrCyqF1ysWWnjFzJzGIVEv7RlJ9wDwxCv9kBvuS12TaFWJhHY
-	 dkvn9UWiCU+kg==
-Message-ID: <1b975a3e-ae1c-4354-90db-1f8d7ff567d3@kernel.org>
-Date: Wed, 28 May 2025 07:50:20 +0200
+	b=eWcfs3CnkCCP8bW6oV7+NUWgT33Sb1PUb0ARDPOzjKeHl9FR+ZL8R6By4AfWQSkKC
+	 1RXvqbIhhOofy98ykyn1qYUn2URpfN6y5AZUneZfIaSGPyORrG4XCV7WVo/F0NZVkn
+	 qxCt32MCn15kR743RPCpp8Kk/k61RdmD7WWBnzW/V17ceGqYJZSsgmMpwloTFo4ima
+	 9gfR97I3b0q0am/0EmrOi67TRUFeeEnYst4RrH4qXu7rgz99dY+4cZeiaKHyv/7HF7
+	 HliSRQgX1pSdZVwOXFmh0iqOAT/VTmhXA6m38XiWGbNpESDBrn66IwjS/7AY+7wX9B
+	 O5Vt97zEayjKQ==
+Message-ID: <4dc85254-215c-4826-a157-b755b738dd5a@kernel.org>
+Date: Wed, 28 May 2025 07:54:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,23 +35,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] ethernet: eswin: Add eic7700 ethernet driver
-To: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, vladimir.oltean@nxp.com,
- rmk+kernel@armlinux.org.uk, yong.liang.choong@linux.intel.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, inochiama@gmail.com,
- jan.petrous@oss.nxp.com, jszhang@kernel.org, p.zabel@pengutronix.de,
- 0x1207@gmail.com, boon.khai.ng@altera.com,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- lizhi2@eswincomputing.com
-References: <20250528041455.878-1-weishangjuan@eswincomputing.com>
- <20250528041634.912-1-weishangjuan@eswincomputing.com>
+Subject: Re: [v10 PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
+To: Vijay Balakrishna <vijayb@linux.microsoft.com>,
+ Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: James Morse <james.morse@arm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter
+ <rric@kernel.org>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Tyler Hicks <code@tyhicks.com>, Marc Zyngier <maz@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, devicetree@vger.kernel.org
+References: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
+ <1748387790-20838-3-git-send-email-vijayb@linux.microsoft.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,33 +93,48 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250528041634.912-1-weishangjuan@eswincomputing.com>
+In-Reply-To: <1748387790-20838-3-git-send-email-vijayb@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 28/05/2025 06:16, weishangjuan@eswincomputing.com wrote:
-> +static int eswin_qos_probe(struct platform_device *pdev,
-> +			   struct plat_stmmacenet_data *plat_dat,
-> +			   struct stmmac_resources *stmmac_res)
-> +{
-> +	struct eswin_qos_priv *dwc_priv;
-> +	u32 hsp_aclk_ctrl_offset;
-> +	u32 hsp_aclk_ctrl_regset;
-> +	u32 hsp_cfg_ctrl_offset;
-> +	u32 eth_axi_lp_ctrl_offset;
-> +	u32 eth_phy_ctrl_offset;
-> +	u32 eth_phy_ctrl_regset;
-> +	struct clk *clk_app;
-> +	int ret;
-> +	int err;
-> +
-> +	dwc_priv = devm_kzalloc(&pdev->dev, sizeof(*dwc_priv), GFP_KERNEL);
-> +	if (!dwc_priv)
-> +		return -ENOMEM;
-> +
-> +	if (device_property_read_u32(&pdev->dev, "id", &dwc_priv->dev_id))
+On 28/05/2025 01:16, Vijay Balakrishna wrote:
+> From: Sascha Hauer <s.hauer@pengutronix.de>
+> 
+> Some ARM Cortex CPUs including A72 have Error Detection And
+> Correction (EDAC) support on their L1 and L2 caches. This is implemented
+> in implementation defined registers, so usage of this functionality is
+> not safe in virtualized environments or when EL3 already uses these
+> registers. This patch adds a edac-enabled flag which can be explicitly
+> set when EDAC can be used.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> [vijayb: Added A72 to the commit message]
+> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+> ---
+>  .../devicetree/bindings/arm/cpus.yaml         | 51 +++++++++++++------
+>  1 file changed, 35 insertions(+), 16 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index 2e666b2a4dcd..8f42c4fec59b 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -331,6 +331,13 @@ properties:
+>        corresponding to the index of an SCMI performance domain provider, must be
+>        "perf".
+>  
+> +  edac-enabled:
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description:
+> +      A72 CPUs support Error Detection And Correction (EDAC) on their L1 and
+> +      L2 caches. This flag marks this function as usable.
+> +#    type: boolean
 
-NAK, you cannot have undocumented ABI. You did not test your DTS.
+Drop
+
+Rest looks fine to me, seems implementing Rob's comments.
+
+With change above:
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
