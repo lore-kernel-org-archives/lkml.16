@@ -1,140 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B12DB667;
-	Wed, 28 May 2025 00:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8952E7FD;
+	Wed, 28 May 2025 00:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748392340; cv=none; b=pSOIrvdptemeiydvEgXnIIPupWgUAV0E7Jy0DzuJuNFKAB9mwABeCyDSB6ZnMmK1GsPCll8xbfit+T7pimdTSxvj99OLBAb46u1zjtjh8j09GzwL/muzFBAh/Ymk4mz8cLd2QPYF7I20CXaZB7QKyjrr09QoTcQz9ub8zF5rzPM=
+	t=1748392468; cv=none; b=IhM0MfIYDT9oU/BtxeO+hGqtvKi7LwAzUGBBKWHRFr5hV7YLwgGyrQiyaYMm0+UJpfIAnHlF2pZf68wF0Pbq/TRNNjyrtB2nDIoPAfdSCR1YgwlXCwOJxkncogkPLeFARSNbptf88oi3r0emqt3YhvIJspoPdR72iNjQGHpK5HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748392340; c=relaxed/simple;
-	bh=g+0xIknKOTlR5K4WGreRBmyCPChTUPRIXfJeAmIpMes=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZnFtxHtnm8veQrw8qtPdVh7SCEOVovywyzhHrBHrxNnP/3zJAX3iz3WcFKQ84phz+t1KU9xsYsl1gOoMWlPi0uu3kQCIraeQFVOHv3HtTvB6j4tnRB2a7qpwEr37YME6uQOKHcxCEfqYJETmOxCGcBlVW1a4YygDeggIyn6u3qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMAN9Mtd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748392468; c=relaxed/simple;
+	bh=5GFXSpEpeLWoYhHZ+j305dRuuPCeQzQJoy+Dw/dgqFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cz7v4gAfUBoPgmpML8xQaqOsGbz3kQfp9TxBGTJGQvjlkwapNr+yyAzqsHC6XScJfrsIaZnYjeStfFrNTatkcefswFzgB7vKNkOb0/GtOUdhSY77dor9dd27T/+P3joIZ/BgFICR92cWrN1qXtK7vxMBGXP/PjWxEA0CVfuMcEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PP0t7Rt/; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMAN9Mtd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06CEAC4CEE9;
-	Wed, 28 May 2025 00:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748392340;
-	bh=g+0xIknKOTlR5K4WGreRBmyCPChTUPRIXfJeAmIpMes=;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PP0t7Rt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1748392461;
+	bh=s4UQYV+JONCHyeFoPV4H4ondPwl2BoLxFk9H8Jsm8Ls=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rMAN9Mtd2zxgFsd+TEboIoNsFfRrF28Iv6bEwtaVSOhoKAQScr0xhei/+w3KGCbsP
-	 8+AzVP8+g+FJ/wv/QhcDkwiCSQ3+msKX54bTs9smQIbs9RnaexpF0obJGBLpgxC96q
-	 y0wTCjwEkxw5UMpA0VAC96jXqtLi0gXdI2CvDQZ3jU0vksnu8ovWSm/xaIqbktti/m
-	 iW4BSqvUxXgBt8OlfPvBi4+uXg41bPD3tvdQAjrMJtnWJU9xvUEIdZDBi8Av+byYn2
-	 mvzc4ervmcJQkX0ZwK79QdT3reuOzMQLcW99q99QDojZF951lolT5l+6o6SlSWJ+Jz
-	 HGcKtP1vCI4CA==
-Date: Wed, 28 May 2025 09:32:17 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ring-buffer: Remove jump to out label in
- ring_buffer_swap_cpu()
-Message-Id: <20250528093217.5a106d3561b2234080e3be35@kernel.org>
-In-Reply-To: <20250527145753.6b45d840@gandalf.local.home>
-References: <20250527145753.6b45d840@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	b=PP0t7Rt/rXrOtYPN+7/12ni6DAQbZ0weq3A+kXvD7fcUE6Kr3FK78wblwt+4AK8wX
+	 Y7ApxBXE3xW4U+EdaPtFco80NFhYhqwjmFXdEznvKCEaPkRKoUn+t7JTdoLTc++15b
+	 PBGD6d41F5bIXxq7fC0BjGlRnshjKCyGGoFBl0kYu3MOcg0jdLaid1PG0y4f77/cq9
+	 Oq9dOhmA2dEM7WZao7SPNfOE+fyiRiF1yyqr3D/yolQTKJmwVEQJe89RI9UEbzJkDa
+	 WKpd8gYhWsvljmbFml5IYUdP26+bl5SB5IsSp16MS4YHsmDzncLgOWUVPgq639Mq2g
+	 Rr8PULQeA9RBw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6Vqv5C7yz4wbR;
+	Wed, 28 May 2025 10:34:19 +1000 (AEST)
+Date: Wed, 28 May 2025 10:34:18 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
+ <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, "Borislav Petkov (AMD)"
+ <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>, "Xin Li (Intel)"
+ <xin@zytor.com>
+Subject: Re: linux-next: manual merge of the tip tree with the perf tree
+Message-ID: <20250528103418.3da40a9f@canb.auug.org.au>
+In-Reply-To: <20250526145015.615882b0@canb.auug.org.au>
+References: <20250526145015.615882b0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/Iz1AJZkvEwYVeSR_NVfxk08";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/Iz1AJZkvEwYVeSR_NVfxk08
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 27 May 2025 14:57:53 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi all,
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The function ring_buffer_swap_cpu() has a bunch of jumps to the label out
-> that simply returns "ret". There's no reason to jump to a label that
-> simply returns a value. Just return directly from there.
-> 
-> This goes back to almost the beginning when commit 8aabee573dff
-> ("ring-buffer: remove unneeded get_online_cpus") was introduced. That
-> commit removed a put_online_cpus() from that label, but never updated all
-> the jumps to it that now no longer needed to do anything but return a
-> value.
-> 
+On Mon, 26 May 2025 14:50:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> Today's linux-next merge of the tip tree got a conflict in:
+>=20
+>   tools/arch/x86/include/asm/cpufeatures.h
+>=20
+> between commit:
+>=20
+>   444f03645f14 ("tools headers x86 cpufeatures: Sync with the kernel sour=
+ces to pick ZEN6 and Indirect Target Selection (ITS) bits")
+>=20
+> from the perf tree and commits:
+>=20
+>   282cc5b67623 ("x86/cpufeatures: Clean up formatting")
+>   13327fada7ff ("x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_V=
+MEXIT")
+>   3aba0b40cacd ("x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_C=
+ORES")
+>=20
+> from the tip tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+>=20
+> diff --cc tools/arch/x86/include/asm/cpufeatures.h
+> index 30144ef9ef02,bc81b9d1aeca..000000000000
+> --- a/tools/arch/x86/include/asm/cpufeatures.h
+> +++ b/tools/arch/x86/include/asm/cpufeatures.h
+> @@@ -476,12 -476,11 +476,12 @@@
+>   #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history a=
+t syscall entry using SW loop */
+>   #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control availa=
+ble */
+>   #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control ena=
+bled */
+> - #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch=
+ history at vmexit using SW loop */
+> - #define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
+> - #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneou=
+s Core Topology */
+> - #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classifi=
+cation */
+> - #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due =
+to downclocking */
+> - #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32 + 9) /* Use thunk for ind=
+irect branches in lower half of cacheline */
+> + #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history=
+ at vmexit using SW loop */
+> + #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
+> + #define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topo=
+logy */
+> + #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classific=
+ation */
+> + #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due t=
+o downclocking */
+> ++#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+ 9) /* Use thunk for indi=
+rect branches in lower half of cacheline */
+>  =20
+>   /*
+>    * BUG word(s)
+> @@@ -528,12 -527,10 +528,12 @@@
+>   #define X86_BUG_TDX_PW_MCE		X86_BUG(31) /* "tdx_pw_mce" CPU may incur #=
+MC if non-TD software does partial write to TDX private memory */
+>  =20
+>   /* BUG word 2 */
+> - #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* "srso" AMD SRSO bug */
+> - #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* "div0" AMD DIV0 speculation=
+ bug */
+> - #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable to=
+ Register File Data Sampling */
+> - #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Bra=
+nch History Injection */
+> - #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB=
+ omits return target predictions */
+> - #define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user"=
+ CPU is affected by Spectre variant 2 attack between user processes */
+> - #define X86_BUG_ITS			X86_BUG(1*32 + 6) /* "its" CPU is affected by Ind=
+irect Target Selection */
+> - #define X86_BUG_ITS_NATIVE_ONLY		X86_BUG(1*32 + 7) /* "its_native_only"=
+ CPU is affected by ITS, VMX is not affected */
+> + #define X86_BUG_SRSO			X86_BUG( 1*32+ 0) /* "srso" AMD SRSO bug */
+> + #define X86_BUG_DIV0			X86_BUG( 1*32+ 1) /* "div0" AMD DIV0 speculation=
+ bug */
+> + #define X86_BUG_RFDS			X86_BUG( 1*32+ 2) /* "rfds" CPU is vulnerable to=
+ Register File Data Sampling */
+> + #define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by Bra=
+nch History Injection */
+> + #define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB om=
+its return target predictions */
+> + #define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_user"=
+ CPU is affected by Spectre variant 2 attack between user processes */
+> ++#define X86_BUG_ITS			X86_BUG( 1*32+ 6) /* "its" CPU is affected by Ind=
+irect Target Selection */
+> ++#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 7) /* "its_native_only"=
+ CPU is affected by ITS, VMX is not affected */
+>   #endif /* _ASM_X86_CPUFEATURES_H */
 
-Looks good to me.
+This is now a conflict between the perf tree and Linus' tree.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+Cheers,
+Stephen Rothwell
 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/ring_buffer.c | 23 +++++++++--------------
->  1 file changed, 9 insertions(+), 14 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 897ce51d3bbf..e2aa90dc8d9e 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -6309,37 +6309,33 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
->  
->  	if (!cpumask_test_cpu(cpu, buffer_a->cpumask) ||
->  	    !cpumask_test_cpu(cpu, buffer_b->cpumask))
-> -		goto out;
-> +		return -EINVAL;
->  
->  	cpu_buffer_a = buffer_a->buffers[cpu];
->  	cpu_buffer_b = buffer_b->buffers[cpu];
->  
->  	/* It's up to the callers to not try to swap mapped buffers */
-> -	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
-> -		ret = -EBUSY;
-> -		goto out;
-> -	}
-> +	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped))
-> +		return -EBUSY;
->  
->  	/* At least make sure the two buffers are somewhat the same */
->  	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
-> -		goto out;
-> +		return -EINVAL;
->  
->  	if (buffer_a->subbuf_order != buffer_b->subbuf_order)
-> -		goto out;
-> -
-> -	ret = -EAGAIN;
-> +		return -EINVAL;
->  
->  	if (atomic_read(&buffer_a->record_disabled))
-> -		goto out;
-> +		return -EAGAIN;
->  
->  	if (atomic_read(&buffer_b->record_disabled))
-> -		goto out;
-> +		return -EAGAIN;
->  
->  	if (atomic_read(&cpu_buffer_a->record_disabled))
-> -		goto out;
-> +		return -EAGAIN;
->  
->  	if (atomic_read(&cpu_buffer_b->record_disabled))
-> -		goto out;
-> +		return -EAGAIN;
->  
->  	/*
->  	 * We can't do a synchronize_rcu here because this
-> @@ -6376,7 +6372,6 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
->  out_dec:
->  	atomic_dec(&cpu_buffer_a->record_disabled);
->  	atomic_dec(&cpu_buffer_b->record_disabled);
-> -out:
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
-> -- 
-> 2.47.2
-> 
+--Sig_/Iz1AJZkvEwYVeSR_NVfxk08
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2WgoACgkQAVBC80lX
+0GzjBAf/SIBivpLtckusWHRUg4dGzoNKRVutPTrpW+EyReZUiGZh+zIBkt2Uoycm
+nnmFHR7Bncbodne3sXyexnXiEHJqk5EMNtYldlM4CT/c6ZNWv13Cy8ZrmaV4azNu
+nXfz4EOHSLeIf4LCKf8JK0DcItL35Ew5ozVlyNp0nVyk55qdbZnb9gDYuIWfRXVd
+97fTbLW1XaQp+SPTHvL3kim6Ro0KDFu/QhzNJg2oMz8BujzxSm8jsoFu2dRn5VsB
+nxRVsXK+edxVRxmQdu1YM7XM/g1nrQW1uurcfRBVZ78CbBPyDOlUlcUljFy7rffH
+l1yB9gRCE0JoITylk+JuUnv+bIbs0w==
+=saWL
+-----END PGP SIGNATURE-----
+
+--Sig_/Iz1AJZkvEwYVeSR_NVfxk08--
