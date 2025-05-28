@@ -1,36 +1,59 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D47036A33B;
-	Wed, 28 May 2025 11:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8D96A33B;
+	Wed, 28 May 2025 11:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748431920; cv=none; b=iYoEnsP1eQ3bB9VfPm1tyZsisnCuOoZiMG3RDihgJUMjdDjTrYYjiYE0j/OGKXxLFzCnLGI/K5u/ezkf3VytvBCaT4GNUos2a2KymqMIqhvTaQqfT3obbT+tLORD7Feh9yRL5ni39N5nkr25oW43V5KFmXfdQQADC9cIOrslaJQ=
+	t=1748431935; cv=none; b=qtr6Bc/TOvijMghSm+sPCKHxvFLAUE75XukLtYCtIMXUMmG30ORjijIeZ8tX0KeG8k+vWAu6NSy6kyQgIMGBT29MChNZ8Cj8jyp4MiVt1jVe0Aw7TuYgn3TnpuVxWiRVZFFPto1cW+SMpiWIzqYSXVxIkiAYNFUDHqUR1233tlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748431920; c=relaxed/simple;
-	bh=M28L9NabqiiiSMq+L/jI0962Wz2oEsat/29mEBFseHU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YuV7YiVqwa3J8q1/EBvRZa0gC8pCD0Qm1zWEzG9dmeh3LZOdPizlntYm+YMXg+xq+V9qNEJYSVZPFGrPDATmzaSAgGHeoSkyFpaaOwn7RKP/QtrKBPlbjpucE55S32f7tSg6qVGbrXbxYAOwCECds6g7HQA7yYdtDQW6NSf2Ftk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F7621A25;
-	Wed, 28 May 2025 04:31:40 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (unknown [10.164.18.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8666B3F5A1;
-	Wed, 28 May 2025 04:31:54 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org,
-	willy@infradead.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	david@redhat.com,
-	anshuman.khandual@arm.com,
-	ryan.roberts@arm.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH] xarray: Add a BUG_ON() to ensure caller is not sibling
-Date: Wed, 28 May 2025 17:01:24 +0530
-Message-Id: <20250528113124.87084-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1748431935; c=relaxed/simple;
+	bh=iv4qvN2l1NEUV02CdKzcBJCMlMmP0+cKrnFzewtczAw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PKm5t8vxYHzj3kPBmtX9Qx2+GmhRRB/ymNqV7bC5mcdEcHm9kiVnm1YUmwCnGdaHhnxSbGtnU5GhomikesioC/MsYKW/IZOsJHEeizCyNneyymBnJmRljEUitglCmtUunTBuUSuEMjjdimstvTKYzn7wcJewtNMljv3D1GsQeYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXZNXs96; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXZNXs96"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748431933; x=1779967933;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iv4qvN2l1NEUV02CdKzcBJCMlMmP0+cKrnFzewtczAw=;
+  b=mXZNXs968t/bhEbLGrEPtx1Cctcqs4wPg6nSkFPeU2wR/bzc4Ynom2pg
+   p2TFOBW7WiXLuKt3YosTLUGQG5DQRdjvQc2rpItkFItuqjifI6nUSQ2yX
+   ygr5b8hpJjwo9eItDOfoGiwQ5rJmy/T26jK1AZcAycFfyiFWtZjc4IQ9a
+   ZC8ZXgZyJxSQJbr60EfOA7m5YWdGvOqbVnv9ywe5kF8Hk09TibaFkYYML
+   Gv1ofXfaEkXTa+IeUaWkfFhfu7SmHy59l+v8YIZqvg7w1S4CGCK9aBDp6
+   k/HSmJyMjaYVkCypc491S2130IkHpF+CbtME7cTE1+VLmpyCqx+5hzUay
+   A==;
+X-CSE-ConnectionGUID: /NHq0J9uTF+vUJ2IQ+cpSQ==
+X-CSE-MsgGUID: Qb3rCX7tS9ebxusYl3fXdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="49567371"
+X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
+   d="scan'208";a="49567371"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 04:32:13 -0700
+X-CSE-ConnectionGUID: WjIP6fTUQraUPHaLMfMzbQ==
+X-CSE-MsgGUID: WOX10nMwRAaLnfbp/fXXZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,321,1739865600"; 
+   d="scan'208";a="166386899"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa002.fm.intel.com with ESMTP; 28 May 2025 04:32:11 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4F862193; Wed, 28 May 2025 14:32:10 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andy Walls <awalls@md.metrocast.net>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH v1 1/1] media: cx18: Replace custom implementation of list_entry_is_head()
+Date: Wed, 28 May 2025 14:32:04 +0300
+Message-ID: <20250528113204.2742626-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,34 +62,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Suppose xas is pointing somewhere near the end of the multi-entry batch.
-Then it may happen that the computed slot already falls beyond the batch,
-thus breaking the loop due to !xa_is_sibling(), and computing the wrong
-order. Thus ensure that the caller is aware of this by triggering a BUG
-when the entry is a sibling entry.
+Besides list_entry_is_past_end() is the same as list_entry_is_head(),
+it's implemented in the list namespace. Fix both of the issue by replacing
+the custom version with list_entry_is_head() calls.
 
-This patch is motivated by code inspection and not a real bug report.
-
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-The patch applies on 6.15 kernel.
+ drivers/media/pci/cx18/cx18-driver.h  | 12 ------------
+ drivers/media/pci/cx18/cx18-fileops.c |  2 +-
+ drivers/media/pci/cx18/cx18-ioctl.c   |  2 +-
+ 3 files changed, 2 insertions(+), 14 deletions(-)
 
- lib/xarray.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/lib/xarray.c b/lib/xarray.c
-index 9644b18af18d..0f699766c24f 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -1917,6 +1917,8 @@ int xas_get_order(struct xa_state *xas)
- 	if (!xas->xa_node)
- 		return 0;
+diff --git a/drivers/media/pci/cx18/cx18-driver.h b/drivers/media/pci/cx18/cx18-driver.h
+index af05bde75816..485ca9747c4c 100644
+--- a/drivers/media/pci/cx18/cx18-driver.h
++++ b/drivers/media/pci/cx18/cx18-driver.h
+@@ -271,18 +271,6 @@ struct cx18_options {
+ #define CX18_SLICED_TYPE_WSS_625        (5)
+ #define CX18_SLICED_TYPE_VPS            (7)
  
-+	XA_NODE_BUG_ON(xas->xa_node, xa_is_sibling(xa_entry(xas->xa,
-+		       xas->xa_node, xas->xa_offset)));
- 	for (;;) {
- 		unsigned int slot = xas->xa_offset + (1 << order);
+-/**
+- * list_entry_is_past_end - check if a previous loop cursor is off list end
+- * @pos:	the type * previously used as a loop cursor.
+- * @head:	the head for your list.
+- * @member:	the name of the list_head within the struct.
+- *
+- * Check if the entry's list_head is the head of the list, thus it's not a
+- * real entry but was the loop cursor that walked past the end
+- */
+-#define list_entry_is_past_end(pos, head, member) \
+-	(&pos->member == (head))
+-
+ struct cx18_vb2_buffer {
+ 	/* Common video buffer sub-system struct */
+ 	struct vb2_v4l2_buffer vb;
+diff --git a/drivers/media/pci/cx18/cx18-fileops.c b/drivers/media/pci/cx18/cx18-fileops.c
+index 7e742733391b..25aa38a55674 100644
+--- a/drivers/media/pci/cx18/cx18-fileops.c
++++ b/drivers/media/pci/cx18/cx18-fileops.c
+@@ -371,7 +371,7 @@ static size_t cx18_copy_mdl_to_user(struct cx18_stream *s,
+ 		mdl->curr_buf = list_first_entry(&mdl->buf_list,
+ 						 struct cx18_buffer, list);
  
+-	if (list_entry_is_past_end(mdl->curr_buf, &mdl->buf_list, list)) {
++	if (list_entry_is_head(mdl->curr_buf, &mdl->buf_list, list)) {
+ 		/*
+ 		 * For some reason we've exhausted the buffers, but the MDL
+ 		 * object still said some data was unread.
+diff --git a/drivers/media/pci/cx18/cx18-ioctl.c b/drivers/media/pci/cx18/cx18-ioctl.c
+index 1817b9ed042c..9a1512b1ccaa 100644
+--- a/drivers/media/pci/cx18/cx18-ioctl.c
++++ b/drivers/media/pci/cx18/cx18-ioctl.c
+@@ -764,7 +764,7 @@ static int cx18_process_idx_data(struct cx18_stream *s, struct cx18_mdl *mdl,
+ 		mdl->curr_buf = list_first_entry(&mdl->buf_list,
+ 						 struct cx18_buffer, list);
+ 
+-	if (list_entry_is_past_end(mdl->curr_buf, &mdl->buf_list, list)) {
++	if (list_entry_is_head(mdl->curr_buf, &mdl->buf_list, list)) {
+ 		/*
+ 		 * For some reason we've exhausted the buffers, but the MDL
+ 		 * object still said some data was unread.
 -- 
-2.30.2
+2.47.2
 
