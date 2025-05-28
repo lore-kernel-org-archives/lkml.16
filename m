@@ -1,127 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF42283FC7;
-	Wed, 28 May 2025 12:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805C3283FC5
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748434278; cv=none; b=Nj25nBrhoe+F260GgG1dug0d93wthTSZIhXPkdu4ozqWZVsMPxO10F+not4Pxm9Fsz/zdyH5zqrABiN6GeC7dL7ndpI9KnpJPA7ejuAvs3PwObb8qh7nP7ATk8snkqjZHZDnrXzgmcBIXSR17Q7/7iQ+8ePKLRw7ulfPWwxijPs=
+	t=1748434394; cv=none; b=P2cJhd4kdfiQxPuZJPrn/IaV/PJhExik9ilGPuTtfwupIwjJkrzUXOufiw/Y0/VCz2+gfo1rzfhAp/GX1dHPbfrqMYNj58mhXg8vm6/Jwfb1dlfut01EXsKH4GtjsX8g/2XlhxQRbRljOqs2XOW+D492VkvVwo2yMNf0TnMl0Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748434278; c=relaxed/simple;
-	bh=8MfdXtHyOEsCmd1YNW5odISMpHpK4Xt9XoQx6rI00ew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IY9JRcn3BQC7ggmvFXH0ROv4YAbH93QTVPcoLlpjDHIBsIq6E8QE4Q3eQjxb6Byjd2o7sW1zmaBDBOU2ml7hjvZ1LpXyodmKXBSbdfcgBADXAIPrBvA6g2f/dHb21u5QiXDje+oT2jNJm0R4RoEQCRopfcehvuDgQqp1Ui3Ot84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5CTCwkV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748434394; c=relaxed/simple;
+	bh=RMtFUse+IKv78RNPdpuh1ai7TKuWgiCBZr/6gVgYYoc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=loacw/Fow0jb7IE3Dm1n9kD8oTQnnk1RcMT+bxiufm4NV1OhcuBLzGEa7ZotHXW1DJ+jMinas4LLdW8DFQ9CBlCvPAbjc6syfpbJZxOoCgN5wn4gdPEl6p/QA6ViJUOIDhMNbM54LV/X9KpUdLuf9DqWUq0Zx2zSTIqqsYGA/y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=T9ExcSXS; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5CTCwkV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E5BC4CEE7;
-	Wed, 28 May 2025 12:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748434276;
-	bh=8MfdXtHyOEsCmd1YNW5odISMpHpK4Xt9XoQx6rI00ew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G5CTCwkVw2zDw45I+BjQQ/PqW9ZeMRMNcW73i0sHphYveNnkQifCpFfdL09ode8OF
-	 HN/cDyzjy3BRjh+4HQS0qVhVPEIiAhAgLkPzqEbyjhTSUq+SwzZYnj/7g3xgEX4Hkw
-	 TiXoxfUFkNZyxgAMPC9h2sz50uxctB9XJtthduxKIyXV6Xk456XqL5WohOuxiWwAZz
-	 Kq7EQCEoClxzCIqqgBNCN5yrduDZnlZxIRoEJFvWvrAJyJ6fDC8poRnC0tloKwdZeI
-	 Ic3nz9RNlMfuMB5scE0Yt2upnWmjxPtIyiPTT40ZRqEJUI1RCf10OSdPEJCPCyiqPh
-	 y56VOzODK5zEA==
-Message-ID: <cae7d546-3e9a-4d31-8d46-ee4d6c8e0892@kernel.org>
-Date: Wed, 28 May 2025 14:11:12 +0200
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="T9ExcSXS"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad69e4f2100so662319566b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 05:13:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1748434391; x=1749039191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kIm5zjYKMN6OFYzQuz3a5OKGZSsL3cGIU0/LJYInxwI=;
+        b=T9ExcSXSztrgqI0DbjkOienfTTa6lisU/T9zkMpnnue6+umYgZZLZSkwwk16pljvpG
+         feYuELtIniJNHISdC6VRdd9DgbHu6cH5w+pbIv9tbWFlVue8q5AKChralKFnGMXzxMTY
+         UH8M9u1CAxd1ib2wVxplgJahY6HNy/sLwCQ9w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748434391; x=1749039191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kIm5zjYKMN6OFYzQuz3a5OKGZSsL3cGIU0/LJYInxwI=;
+        b=VTw7c5fIyz0ewjcXE/SwFyy/R2G0Hd+o7naFsZTOOaDF0ByY9azymkqLUQgBRgpp8u
+         +sSM8bP3Hf7GCRcMkUnssdGQ3tJJVfCMoks4why0tp3w/b7GcNAOTKVfHK2cqDn50apy
+         opaAotVk5PBETdP7VlFClQBn+n5XfUap4w7oxWvruW+pT0Sl1M2A8lsVHOfKRLSNtqOJ
+         v8ytXhbqjkiZJyHSMK1wcshWVrLW+P5JbwJl/lTrLH4iYBVLIrX5/MYrCvX4pkBiicbZ
+         /vscNPoqyYV3XVVGBeIk/tErLu9pHL1ZPzPSUD9qrLbTNjgli8U4M0GvqYLlDCi8TKS5
+         ExCA==
+X-Gm-Message-State: AOJu0YwE6ZZrFSePlLr97Bjg6ciej5wHDH0AHp1IwMyHCwdfFgcMecEQ
+	AJ94kdNVpS/h9u0tp/6sztP04Zk56uemGQzrrb+WkYatLriYpKbrBJfbcxdG5avdvaXakGNnon2
+	pstj7
+X-Gm-Gg: ASbGncvAOiLGPcnK9lDaqrGx5y8zQjVkO/jvtb5QjJmjzzN0zXCELBMFuPwwvlAt3MQ
+	Fg38va+szznuocc8/ReW7CtnIlWVAF4oD8JdY5bnegVcdj+tC0PZqh8y4LezlZ1bRq77UdalUQZ
+	clJEcuIc51EI0UV0VxhZ9W6/JkdAUixmBI/1PMDFKGNdYKqR/9FRztTA2RoK/JQOyau55Zu581i
+	OI6SoQMNO+99q2HzbNCB8wQLkyyKRsCXzrmaAmHi1C6jqc6yr6aMThJLW2EG+k+zlh4APGkecIG
+	YHiGehqab8OAK41SAMgXv6C4mkTfQEDQGphrqBOgnb8kneF68sGNm7ncoIgxeOZlQcDQ4T/GWbL
+	Nl6gxfPJk/dWb
+X-Google-Smtp-Source: AGHT+IETyf2GSBL4as/yohckfyx/K6gSToAZaD2CCVz7+dNiszWCRp1kQVLr9GgDovIvyA8Dl2hlzQ==
+X-Received: by 2002:a17:907:608b:b0:ad8:91e4:a91c with SMTP id a640c23a62f3a-ad891e4ab51mr577513966b.29.1748434390436;
+        Wed, 28 May 2025 05:13:10 -0700 (PDT)
+Received: from localhost.localdomain ([2001:b07:6474:ebbf:5631:61bf:398a:c492])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b5b8afsm98523266b.170.2025.05.28.05.13.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 05:13:09 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: michael@amarulasolutions.com,
+	linux-amarula@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frank Li <Frank.Li@nxp.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Heiko Schocher <hs@denx.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/4] Support i.MX28 Amarula rmm board
+Date: Wed, 28 May 2025 14:11:37 +0200
+Message-ID: <20250528121306.1464830-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 5/5] MAINTAINERS: Add tpm_loongson.c to LOONGSON
- CRYPTO DRIVER entry
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>, lee@kernel.org,
- herbert@gondor.apana.org.au, jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
- jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- Huacai Chen <chenhuacai@loongson.cn>
-References: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250528070104.4525-1-zhaoqunqin@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 28/05/2025 09:01, Qunqin Zhao wrote:
-> Changes to Loongson TPM driver would be best reviewed by the Loongson
-> crypto driver maintainers.
-> 
-> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> ---
-> v8-v10: None 
-> v7: Added tag from Jarkko and Huacai 
-> v6: "tpm_lsse.c" -> "tpm_loongson"
-> v4-v5: None
-> 
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0fd568a6b..aa6db2912 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13984,6 +13984,7 @@ LOONGSON CRYPTO DRIVER
->  M:	Qunqin Zhao <zhaoqunqin@loongson.cn>
->  L:	linux-crypto@vger.kernel.org
->  S:	Maintained
-> +F:	drivers/char/tpm/tpm_loongson.c
->  F:	drivers/crypto/loongson/
+The series adds support for i.MX28 Amarula rmm board.
 
-This makes no sense - you just added this entry in patch #3. Just add a
-complete entry instead of adding first half and second half later.
+The board includes the following resources:
+ - 256 Mbytes NAND Flash
+ - 128 Mbytes DRAM DDR2
+ - CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
 
-Best regards,
-Krzysztof
+Changes in v2:
+- In imx28-amarula-rmm.dts:
+  - Replace '-' with '@' for the pinctrl sub-nodes.
+  - Replace edt,edt-ft5x06 with edt,edt-ft5306.
+  - Drop LCD reset hog pin.
+  - Add correct #address-cells and #size-cells to gpmi node.
+  - Replace edt-ft5x06@38 with touchscreen@38.
+- Drop from commit messages all references to LCD display.
+- Add patch [1/4] "dt-bindings: mfd: convert mxs-lradc bindings to
+  json-schema".
+
+Dario Binacchi (4):
+  dt-bindings: mfd: convert mxs-lradc bindings to json-schema
+  ARM: dts: imx28: add pwm7 muxing options
+  dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
+  ARM: dts: mxs: support i.MX28 Amarula rmm board
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ .../devicetree/bindings/mfd/mxs-lradc.txt     |  45 ---
+ .../devicetree/bindings/mfd/mxs-lradc.yaml    | 106 ++++++
+ arch/arm/boot/dts/nxp/mxs/Makefile            |   1 +
+ .../boot/dts/nxp/mxs/imx28-amarula-rmm.dts    | 303 ++++++++++++++++++
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |  10 +
+ 6 files changed, 421 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/mxs-lradc.yaml
+ create mode 100644 arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
+
+-- 
+2.43.0
+
+base-commit: 33f410b0eaf4ebc3272720b4a68943a73a59cb05
+branch: imx28-amarula-rmm
