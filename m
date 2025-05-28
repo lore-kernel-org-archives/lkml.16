@@ -1,96 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A2A26AA8F
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A60126A0F8
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419877; cv=none; b=UNqRtMLXMzqvbmLWFxSw1EAdZYwDvhaxoNNMjktTyDOB3DTNUi7kWEpRwHgNfLwJEsGJG5+oHIVqCzTq+4btXz628CXsStFZi3QYBcP4bIMqXwaXfBZ0647W1vgc1y5524B3Dy5DRB8tBSpfptn05zwk1Y3v0+sLipa1lWgYscQ=
+	t=1748419877; cv=none; b=Pteys5RoYz/zGZXXa4f3mtXOvO22D0yDM1agOCmeKK2i1+MabW7vSU/MTjq023YQ0Ag1I3iwKlv8PD2PD7soF0SsIDLYaOHchm616QOOIF1hLfF6oSINSBPVikK+upfVdKSO3zcz/P3JfboRM52/pMc1A/zB26Yh+d0N2+yoa7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748419877; c=relaxed/simple;
-	bh=wDpwR49UWi0ljBeIQkbNv8UOQoWdLigZTUZ/r3UlnbM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pSezs7JLa4alDa+RFMJ+1w5eZsze0wZapB7IpjRyLK64utjQsmNcm4RXHY5E5nA0FLhc+5CLLxrRN7GvCNpxfROPCxfnl/ornP1ZJZIJfg9eKXcwtnnAGsfa+HU/3Gf2GQWfa+5ahm0wL56KO97lGzNVgtWvRwkcI5OxyjlVP04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nVc9nCU7; arc=none smtp.client-ip=10.30.226.201
+	bh=Mou1ieGyUfMk0Ql4ddZnpgGEyPlSxoqDatPUfQa5VIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=otLrF2UhpMYZCwnv/QDfFnRNtx35UUF0p7xQMVhW+rDiVD2TpedmsMu16hpvyjMrYmZ188nB2AzVYeiouorBJdEJhS5IsrQlVLzPmJCegeKZj9cJWvUrcf5qONxqWvr6mHnaFLZY4Av5Uc8Rdd4wKDRXUQdAls9S6xoREQOXWDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kbk5JKQJ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nVc9nCU7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E7EC4CEEF;
-	Wed, 28 May 2025 08:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419876;
-	bh=wDpwR49UWi0ljBeIQkbNv8UOQoWdLigZTUZ/r3UlnbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nVc9nCU7eeqtbqtQT9/xbuawzxsjUGBG5/jVN7aWc09YEHEctc8/VbqXzGa+UvSuJ
-	 WsER1psHWDChU5kmvQ3p8JYa684Xtat8JyMhkiCllOUlJOytDFRcolu+tiCdROK0T5
-	 xsQQtR/d/gSzzxb5w0FPvqa7hJQmA4WnNfIRy/+oinT0bLTDa5qCLMmBdMMy6H3sf9
-	 GeJ3DRlSIeDv/hjfE7W3yS0tw8xaRcIdJhQO+BtE4t6SHOg76B5nqJdEMlqEuIUfEO
-	 8RzmFTTLz6dIFeyik4i90z+fMBw6UvhEWr5Xj5TCB5rWJw7pV4c7zXE0B/vKw3hcvd
-	 s2+yemP6R+Cvw==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mel Gorman <mgorman@suse.de>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 25/43] sched/smp: Use the SMP version of wake_up_new_task()
-Date: Wed, 28 May 2025 10:09:06 +0200
-Message-ID: <20250528080924.2273858-26-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
-References: <20250528080924.2273858-1-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kbk5JKQJ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450caff6336so942285e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 01:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1748419874; x=1749024674; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2eGBmhHpAoBCXn4dDL8o5LjT2W5woVp7uljWhl0TnKw=;
+        b=Kbk5JKQJO6bcJ66sbfD5oJcyrM2Eejliy35OG+5TsyyaDjs1UphVXxvz3EiP24THym
+         W8TL8L77U4YHJ2uEjz3x+Btwy/yLy/yJS1kaOqf+jRurQ/gbdnkgCjhiXLx2CbwwrlHF
+         i4e+NhVR2c5Wd+mRuO5N8OIC9X6XkYb/X/lx3sKJH5zZa9J/DSQ26ZkFsee+QbtBOg1G
+         dIgKxd+ojQZ6gOxEpVtS8F0VPAXFKr0keXb+YXs5rIa0gJOUnsj1lVfjGNbF+d3pTjrO
+         7B5BJGNvbYJpEKWDUbZYpc1CbLUw5lLIb6wTFCSapplHE53XBpb+LM6c3JEEEBYnXvSd
+         D8Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748419874; x=1749024674;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2eGBmhHpAoBCXn4dDL8o5LjT2W5woVp7uljWhl0TnKw=;
+        b=es6IpPStrg5WnlgjRGLxsjAaj5XhkktC7VtronV/jg5f51dr9xOa91SwAhx3vWY6zM
+         6K6dYRebULL5jzsOWqn9DC2d8/VtdcEx69CUW0+684OOBOkF8lobfJNuCX6SYrwVX4/6
+         ZPKMe77YLSIx8mXOyK1+iCsOLRS1l4gI475FGt7GRmyf8x0+/6v5iJiZYmdtg1JNvMv4
+         cfr2tWPakvZbXc3ZsIt8TF1h4Lg2WscP5i78HTCOFojOWt9s3fWplTb3cP4AnKurnDRO
+         vrKurjw7wTLoge+0/t1C79ontGG5sTLLp/gNW/goSF5BggP86Drabciv0qMZ4wM/Seve
+         +EPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXk4xeOgCT2hbfiGKGfb6ViYh48Xww0lLTOkQjaRjpZVczXbcVKEbhs3/845Ho5BDm3S44ZTivAgop1Y/w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4SkaYY0jio+9dtR3XTKVpu4yt/hiDHbuVR96soNc4gBUUyso4
+	N4LZ7KpsXZVlIoyL6NQ6i5td8Gcv94dyW6J4hmvmeGwVjqJjKGL7CwCJaIblYIZMh2k=
+X-Gm-Gg: ASbGncvvyvHGvSqGd3F9t9dA925QdqwhzZ2O15zc0R/DNIKwyRMms/kFLVmM2mJ4uFj
+	fZumF81Ta2eCyIGhpGawHdJO0A2dEdtEu4toVvlsFqaNiRO2t43HIxyQK6VhRCMmo+Dp26Df0Rn
+	MEhtwtIp9+Eo28hSwWVmBgft5tlAq340GzN4TBMuv0vjf3BKkOBhy+1AxmDQRh+oOuVHy3dnMjM
+	5UKu6hzSFad5dRLPoBy1NgKbzl9d8WWhvCjsmkYGKbyH96SjVbCU1g6ZuR1ka1GtjEKYVwDlvWa
+	2P9u4WyiZZzDbEh3LPXYi717kptjD8ZEARjP4DK+wlo+tgUwsIng5rbL
+X-Google-Smtp-Source: AGHT+IGyt9pIlXzNb8QFnz35HETogZyJleM14B194rW68Yuuufz6AtscehzIU6fQJn738bKFOwrivA==
+X-Received: by 2002:a05:6000:2dc4:b0:3a4:e8bc:594 with SMTP id ffacd0b85a97d-3a4e8bc0917mr1162825f8f.8.1748419873739;
+        Wed, 28 May 2025 01:11:13 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45006498d2dsm13303805e9.4.2025.05.28.01.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 01:11:13 -0700 (PDT)
+Date: Wed, 28 May 2025 11:11:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Eugenia Emantayev <eugenia@mellanox.com>
+Cc: Tariq Toukan <tariqt@nvidia.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Or Gerlitz <ogerlitz@mellanox.com>,
+	Matan Barak <matanb@mellanox.com>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v2 net] net/mlx4_en: Prevent potential integer overflow
+ calculating Hz
+Message-ID: <aDbFHe19juIJKjsb@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Simplify the scheduler by making formerly SMP-only primitives and data
-structures unconditional.
+The "freq" variable is in terms of MHz and "max_val_cycles" is in terms
+of Hz.  The fact that "max_val_cycles" is a u64 suggests that support
+for high frequency is intended but the "freq_khz * 1000" would overflow
+the u32 type if we went above 4GHz.  Use unsigned long long type for the
+mutliplication to prevent that.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Fixes: 31c128b66e5b ("net/mlx4_en: Choose time-stamping shift value according to HW frequency")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- kernel/sched/core.c | 2 --
- 1 file changed, 2 deletions(-)
+v2: Use ULL instead UL.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 9eefc74f35a8..5a77afcbb60b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4820,7 +4820,6 @@ void wake_up_new_task(struct task_struct *p)
- 	activate_task(rq, p, ENQUEUE_NOCLOCK | ENQUEUE_INITIAL);
- 	trace_sched_wakeup_new(p);
- 	wakeup_preempt(rq, p, wake_flags);
--#ifdef CONFIG_SMP
- 	if (p->sched_class->task_woken) {
- 		/*
- 		 * Nothing relies on rq->lock after this, so it's fine to
-@@ -4830,7 +4829,6 @@ void wake_up_new_task(struct task_struct *p)
- 		p->sched_class->task_woken(rq, p);
- 		rq_repin_lock(rq, &rf);
- 	}
--#endif
- 	task_rq_unlock(rq, p, &rf);
- }
- 
+ drivers/net/ethernet/mellanox/mlx4/en_clock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_clock.c b/drivers/net/ethernet/mellanox/mlx4/en_clock.c
+index cd754cd76bde..d73a2044dc26 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_clock.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_clock.c
+@@ -249,7 +249,7 @@ static const struct ptp_clock_info mlx4_en_ptp_clock_info = {
+ static u32 freq_to_shift(u16 freq)
+ {
+ 	u32 freq_khz = freq * 1000;
+-	u64 max_val_cycles = freq_khz * 1000 * MLX4_EN_WRAP_AROUND_SEC;
++	u64 max_val_cycles = freq_khz * 1000ULL * MLX4_EN_WRAP_AROUND_SEC;
+ 	u64 max_val_cycles_rounded = 1ULL << fls64(max_val_cycles - 1);
+ 	/* calculate max possible multiplier in order to fit in 64bit */
+ 	u64 max_mul = div64_u64(ULLONG_MAX, max_val_cycles_rounded);
 -- 
-2.45.2
+2.47.2
 
