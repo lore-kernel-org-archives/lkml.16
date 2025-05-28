@@ -1,128 +1,87 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A217E107;
-	Wed, 28 May 2025 17:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453435; cv=pass; b=drPQNUk09/D8+uyblVSySiFgFwIO2IGQdoRo7bA7l77hTb3hRpG//uIlivX2EKyB9g/i5ahrUHCUpuRWPU5QBmOWaqHmfehpkE7wZlTujPuCGlaqDVGRBIij/UgDfd4ElkAIeFBqbgghF5m1xpfErI8DKhxQDn1Va/3BkIN8VyQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453435; c=relaxed/simple;
-	bh=oxapIJUhuAH7C5mchQDq2upP03mEfxyRa2A9sT6SIrs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=MOghUTgPFCXdJht0ORpOQQa70YSNZZsz9M3fEgW33EtZ9ydq2gSi7R/HTov7r06nVaEzjMpItgAnN+ZVPDlR4TQJKMJ9LTPcthluiQf01qJ8ZxDNTnZ03NIYf48gEKsi6GkCkSTNDJa8dXDQcSGgLP1sxLMWJNATP2zf2Yd8rwo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=VzCrRYax; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236F01EA91;
+	Wed, 28 May 2025 17:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748453487; cv=none; b=FwBgsXntm8uznF7+HBC7/fi6dtP+NJXvGJtM6GXnXpwOn/vWkMnHPNi0dL5HtaEpxUQGRF1xJykgWRub/4eaJ2M4p6djX6w1N7WPFQKGssh2ukmc1g38cWX7wXftzcRbBwDuHbQS/JCoTlU7sRR09fOm2oyOmgdydsLCJrwLk1s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748453487; c=relaxed/simple;
+	bh=/Th+Pz8Nrw7iBiRuBIiL0T1wvKZ7+6gYKRu1TAAFNoE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmCNQHmDrRwoiXf5WoU1jPex/nYwk5o7no7O4rGX+sLzaRqMUnbiYFAfnRK5SxqkKSykKcWKUp657YK1+ikTAF6GmsVBQEt2BOoKlLlpEmNF8SmpZykYFYg7pOK0mjyg1k3NQlfpdRmGgV1RQpR12dxvoWOQ4HsGRIYjXPjppIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hT8UkacD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="VzCrRYax"
-ARC-Seal: i=1; a=rsa-sha256; t=1748453402; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=A9brW/8mv1YNAt58KcT18LlPzEOQaZkEEzKoTQeX0IVGFAtOxfusodD3nJuX93wAlbWvsCpi5XQ3ssR/oRjzWTIEM/YhhqDoGGZohLle6VqAo1QZbPwGn8tLY/G1Tlv3Jq2T4WkH1HtLsG29NLwhSOCg9KByOLGLu06JesgcGaw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1748453402; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vijCCIgMRuv2HsNGVhwlJlzo9DZfoqJJX6CBYjOowuY=; 
-	b=IszMaJO+SwvxiQ2yplc/xe1W/znJemQPVTwlwXOkgFnpypMbZGxiKmE2PTNtiukZqR0D02JqxKko5YCZMOB4MJnmgUrp25a5RY1tKZ8u69ej2jt4erXPtLpoQLn0CKVTeE5I5yiB0FMcIe1mTIpSTAgZ/y5xcXHPe61uBph+9+U=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748453402;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=vijCCIgMRuv2HsNGVhwlJlzo9DZfoqJJX6CBYjOowuY=;
-	b=VzCrRYaxx1JMo6Yq85D/aWmwpLLtucRJZPvz9vGKX/RZSA6UQFwGgZnwLN7T1oEo
-	z92RWsDoLohqZWTYigceeA+GR4ZmRBTYpBUL1Sn15bsrWVgb8XJ/n4CjLRDyQPWvivg
-	IwE1iAL1KkD6vFoKR6opedMjguv89hCMjvRksN2I=
-Received: by mx.zohomail.com with SMTPS id 1748453401588404.8876402861505;
-	Wed, 28 May 2025 10:30:01 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hT8UkacD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 631D5C4CEE3;
+	Wed, 28 May 2025 17:31:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748453486;
+	bh=/Th+Pz8Nrw7iBiRuBIiL0T1wvKZ7+6gYKRu1TAAFNoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hT8UkacD3Qpuag/oApBDUAZISWgJCi1/ayoMAYg9bwAphNxHDqvY7VaDfvZ6v8juJ
+	 bI87hNUvwrpnbNfW01jxO9eQkYo40g/cpBI8x4laFS0r0q5uGX23hz22J46snnJMI7
+	 FwJJrxP3Snu66iNheffkHsj/Txha+IChG2fIFFQNZVpqniPugt0xqghu0bZYUspSfY
+	 xlnZIH1fJ4DxbLir3Bs4rnZm3YBwvnuzbhKrLergznFx5jpoVH6fanp+8mkUbVoyxo
+	 ZTn8c4s6xGLGVz1HzMNsMNF4EVpNSVFxXhfjhGf7Q2qDvDs5KIFx5hxME6UYYuXqev
+	 guSZ/lDLbdaCQ==
+Date: Wed, 28 May 2025 20:31:19 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] x86/alternative: make kernel ITS thunks read-only
+Message-ID: <aDdIZ9vBQ3JQoIN5@kernel.org>
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-4-jgross@suse.com>
+ <20250528131052.GZ39944@noisy.programming.kicks-ass.net>
+ <044f0048-95bb-4822-978e-a23528f3891f@suse.com>
+ <20250528132231.GB39944@noisy.programming.kicks-ass.net>
+ <7c8bf4f5-29a0-4147-b31a-5e420b11468e@suse.com>
+ <20250528155821.GD39944@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v8 3/3] rust: platform: allow ioremap of platform
- resources
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aCYVG-VVdJXYnSTt@pollux>
-Date: Wed, 28 May 2025 14:29:44 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5B875DFB-D655-4BAC-A475-43AE309520E2@collabora.com>
-References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
- <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
- <aCYVG-VVdJXYnSTt@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250528155821.GD39944@noisy.programming.kicks-ass.net>
 
-Hi Danilo,
+On Wed, May 28, 2025 at 05:58:21PM +0200, Peter Zijlstra wrote:
+> On Wed, May 28, 2025 at 03:30:33PM +0200, Jürgen Groß wrote:
+> 
+> > Have a look at its_fini_mod().
+> 
+> Oh, that's what you mean. But this still isn't very nice, you now have
+> restore_rox() without make_temp_rw(), which was the intended usage
+> pattern.
+> 
+> Bah, I hate how execmem works different for !PSE, Mike, you see a sane
+> way to fix this?
 
-[=E2=80=A6]
+The least ugly thing I could think of is to replace the current pattern of
 
->=20
->> +    ///     let offset =3D 0; // Some offset.
->> +    ///
->> +    ///     // If the size is known at compile time, use =
-`ioremap_resource_sized`.
->> +    ///     // No runtime checks will apply when reading and =
-writing.
->> +    ///     let resource =3D pdev.resource(0).ok_or(ENODEV)?;
->> +    ///     let iomem =3D =
-pdev.ioremap_resource_sized::<42>(&resource)?;
->> +    ///
->> +    ///     // Read and write a 32-bit value at `offset`. Calling =
-`try_access()` on
->> +    ///     // the `Devres` makes sure that the resource is still =
-valid.
->> +    ///     let data =3D =
-iomem.try_access().ok_or(ENODEV)?.read32_relaxed(offset);
->> +    ///
->> +    ///     iomem.try_access().ok_or(ENODEV)?.write32_relaxed(data, =
-offset);
->=20
-> Since this won't land for v6.16, can you please use Devres::access() =
-[1]
-> instead? I.e.
->=20
-> let iomem =3D pdev.ioremap_resource_sized::<42>(&resource)?;
-> let io =3D Devres::access(pdev.as_ref())?;
->=20
-> let data =3D io.read32_relaxed(offset);
-> io.write32_relaxed(data, offset);
->=20
-> Devres::access() is in nova-next and lands in v6.16.
->=20
-> [1] =
-https://gitlab.freedesktop.org/drm/nova/-/commit/f301cb978c068faa8fcd630be=
-2cb317a2d0ec063
+	execmem_alloc()
+	exemem_make_temp_rw()
+	/* update */
+	execmem_restore_rox()
 
-Devres:access takes &Device<Bound>, but the argument in probe() is
-&Device<Core>.
+with
 
-Are these two types supposed to convert between them? I see no explicit
-function to do so.
+	execmem_alloc_rw()
+	/* update */
+	execmem_protect()
 
-=E2=80=94 Daniel
+but I still haven't got to try it.
 
+-- 
+Sincerely yours,
+Mike.
