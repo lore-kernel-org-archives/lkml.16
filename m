@@ -1,90 +1,117 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329E5279785;
-	Wed, 28 May 2025 09:59:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD24E274FCE;
+	Wed, 28 May 2025 10:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748426362; cv=none; b=EYN05mOs7I2IVawfTgiY9kQzH9w5DedgayxDGPK8YmiLO7BTrgf9ML7uw8X02Lhyss9Vxj5dYVIl/AD026LspX/gTtiJGmByLeFLP1o3qcWokrnzoF5G4ZuktCVfdbfltPtfMmpiVVRrfr4tuZwO72/D7H9Gw09m8+0nsFj5wdU=
+	t=1748426443; cv=none; b=scdeEb5Xp0iPssW4UopFSh8RLjaO2YjVE0xvjv6D55K0NFK9lpR1aSQYTQ+NCZOW5HMSa6E0b4nsZKs8azjW7utn24LhZCHShKqh59iwcamJ3fGZJgbq/MUYmUc7ufFG8ddG4i6DUvrfr02uXZK7MalzURtm0uBfdZLfD0VT94c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748426362; c=relaxed/simple;
-	bh=GFa5vZhRv5F2GMJAt1tQEFe0rx951lfdEMR+nvzQwKE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MmBWzS9JYdfqNz/JvEEVPvR1BF2qkXetGEBek50/wEZrRp+eujDqHWUgUq5IsOQd7Y2lCRDfIN4/gEl7RWHE6Z9MgAiNjAE1ovO3YTwJd9jvH57VMozyOhmf/wkikwducPfGSz7HKrUDEgij4jyBHfTRoNI02sz7BEW/W5pj64w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tdk0rGzV; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1748426443; c=relaxed/simple;
+	bh=WQeTlHuVSBJoVN4kE4XxtFen/lxCvh0cIB1WExXu+rE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=hPj2m7QbYuIdKfwtnajgIa404hh5c1K+JyZm0s0bsk2+36qlWEoqp9XQ1MWvS7w0BirkF2a+os8T7dTqLvt8aMdKekfM9HDJdE0g5bdDQ6s30zu/E5Xbc4d67tBEgjH7opQ2pQhB2yhmW81HUqc6RlvN7mo2MyW5LnMfXGusC1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=UMj86KVn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nqqf7JzF; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tdk0rGzV"
-X-UUID: 69b53cae3baa11f082f7f7ac98dee637-20250528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=9B6feVEkzDZb0WiiyR1UVAxjlgd9mBvDC5TxNZRpR5E=;
-	b=tdk0rGzViVFrqpeXDV5Z+T8o8/dznz9Xii+Q106Dxm45zTcIJfB2uMZ/Kny/BNueShj3VBElo77ZFV7toheNtJcauMIppAxXlFz495UrPRU6jWfgs+H/2AFq5VkQQRXsY+x1tQw46LvH1bSbhk5y7f9Hh7jtYs2TYx5RIz6fUc0=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:6a6b35f6-b682-4096-8232-e6e951ffbd6b,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:4bab3459-eac4-4b21-88a4-d582445d304a,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 69b53cae3baa11f082f7f7ac98dee637-20250528
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw02.mediatek.com
-	(envelope-from <jianhua.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1508653084; Wed, 28 May 2025 17:59:15 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 28 May 2025 17:59:13 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 28 May 2025 17:59:12 +0800
-From: Jianhua Lin <jianhua.lin@mediatek.com>
-To: <mchehab@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <matthias.bgg@gmail.com>,
-	<angelogioacchino.delregno@collabora.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jianhua Lin
-	<jianhua.lin@mediatek.com>
-Subject: [PATCH 2/2] dt-bindings: media: mediatek-jpeg-decoder: Add MT8189 compatible string
-Date: Wed, 28 May 2025 17:57:48 +0800
-Message-ID: <20250528095748.17485-3-jianhua.lin@mediatek.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250528095748.17485-1-jianhua.lin@mediatek.com>
-References: <20250528095748.17485-1-jianhua.lin@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="UMj86KVn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nqqf7JzF"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id D8B07138270D;
+	Wed, 28 May 2025 06:00:39 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 28 May 2025 06:00:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1748426439;
+	 x=1748512839; bh=eV4x9DFHlcFo11zyF70Wii41wecmfGe1saKF1QyZteg=; b=
+	UMj86KVnVkk9x4kxSTJn398QXEufLltreS1u1o8VijElPbOqAIRxvZtD6hBnEnwI
+	JA7SLMM6R93+xe8hbheD/eP5I8wpNdttxSxMjebZUPC999tX3KUXHYldkMDORc8f
+	NC4ogrZsqFYqkizkS/4VNs2jVQMRF0cJB9gDqp2ILOnwCnYa2LGfBrdtVcI8oBVn
+	7jQ5vvWzh+CoYTR99GImMX1nyKYdxhLY2iymc2508FkWVC76YgisDzUK5hpiAHsa
+	8HWvy46ph6qcpBa6bjnXYwOEkSaYj9324St90GtHhnVQCbroj6izcZSDkzbH/dFd
+	saQjVMA5KgefmcxAH4soFg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748426439; x=
+	1748512839; bh=eV4x9DFHlcFo11zyF70Wii41wecmfGe1saKF1QyZteg=; b=n
+	qqf7JzFpU5LxnKowSZ4sr1iecrmSRZn04ZpK3yQH35os2zW0JmlYz/7xy6BCklJW
+	Lw19+PkmeCeFgLSOnD3ogUEL/iD5djEQgnNTh4SB7zPfD9+6txGG6+ySfuHJUhqJ
+	MYjvPt1e0qgcKxwUZ9zASdQ7rjq/iFhe55mFgZZMn9qITs5Us/gwoWKmFaIu6M1J
+	stL9EmXQ0QO7zakobDRRRyEqx6W+C1KYjwVqwI5gQYDVWR+aqOFfYARu11e6Q+fZ
+	zp9P2W9ouxXa7PeRgBrCTjQDAHzGcf7FEHFVJPvKcxbhf/lVsbWEEBNT/fgl75ia
+	cKU/bylVEmOYVs8WZAhEw==
+X-ME-Sender: <xms:x942aKc5FrRDD1sYuINC_LnkbU1_wJ3Z9wDZX3gP_k764qkjXaV80g>
+    <xme:x942aEOyLOU0EzqkXFH5ptTE-51UxugRK_4Oua2ApsfNHbzpa9mKHYWvTz85RcUEO
+    -Eun6ImqbVlwjqG_Uc>
+X-ME-Received: <xmr:x942aLhwVCO0FnsNg3m-JxaIXucFNlXQDGvoK9o-H_o7gSAz55m-uf0PlWM-SeeNK8Y3ecqnDouyguH-zPnf8upc_CwcL2iwqQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvvdeljeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvfev
+    uffhofhfjgesthhqredtredtjeenucfhrhhomhepfdevhhhrihhsthhophhhvghrucfunh
+    hofihhihhllhdfuceotghhrhhisheskhhouggvheegrdhnvghtqeenucggtffrrghtthgv
+    rhhnpeeijeelkefhudekueekvdejtdeuueelteegvdeuveettdekjeekiedugeegteevud
+    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhr
+    ihhssehkohguvgehgedrnhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtohepmhgrlhhtvgdrshgthhhrohgvuggvrhesthhngihiphdruggv
+    pdhrtghpthhtohepjhhohhhnsehsthhofhhfvghlrdhorhhgpdhrtghpthhtohepkhgvnh
+    htrdhovhgvrhhsthhrvggvtheslhhinhhugidruggvvhdprhgtphhtthhopehtohhrvhgr
+    lhgusheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqsggtrggthhgvfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    lhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:x942aH-6vKaUwCdpcQxktyla0Yut1_YwlSPY1nY9TTYTSnglESol7Q>
+    <xmx:x942aGtGQdk0348b9oihzzecNN8iIpcUb6cYqLgsUkrmdcubR7LdbA>
+    <xmx:x942aOG5mVvIcxicGbUuUPhZgKq39eYphjwoTCNYIu0cjKfiq1NBew>
+    <xmx:x942aFPcfQkWGI6VtKFgq13sbwz89_YzFpek22la9-zjI7t32ajY-Q>
+    <xmx:x942aPW5c4arKAfoY7TncaYrgRdrdS0iSqwaGsQfplAvs7EisPI-lZFx>
+Feedback-ID: i9ec6488d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 28 May 2025 06:00:38 -0400 (EDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 May 2025 03:00:38 -0700
+Message-Id: <DA7PG162QJME.2FUT6C3GBGDB3@kode54.net>
+To: =?utf-8?q?Malte_Schr=C3=B6der?= <malte.schroeder@tnxip.de>, "John
+ Stoffel" <john@stoffel.org>, "Kent Overstreet" <kent.overstreet@linux.dev>
+Cc: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ <linux-bcachefs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] bcachefs changes for 6.16
+From: "Christopher Snowhill" <chris@kode54.net>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <oxkibsokaa3jw2flrbbzb5brx5ere724f3b2nyr2t5nsqfjw4u@23q3ardus43h> <dmfrgqor3rfvjfmx7bp4m7h7wis4dt5m3kc2d3ilgkg4fb4vem@wytvcdifbcav> <26678.2527.611113.400746@quad.stoffel.home> <DA7O5Z6M9D5H.2OX4U4K5YQ7C9@kode54.net> <c2001c69-e735-4976-ac8b-6269c825cb92@tnxip.de>
+In-Reply-To: <c2001c69-e735-4976-ac8b-6269c825cb92@tnxip.de>
 
-Add compatible for MT8189 jpeg decoder.
+On Wed May 28, 2025 at 2:33 AM PDT, Malte Schr=C3=B6der wrote:
+> On 28/05/2025 11:00, Christopher Snowhill wrote:
+>> On Tue May 27, 2025 at 11:52 AM PDT, John Stoffel wrote:
+>>>>>>>> "Kent" =3D=3D Kent Overstreet <kent.overstreet@linux.dev> writes:
+>>>> There was a feature request I forgot to mention - New option,
+>>>> 'rebalance_on_ac_only'. Does exactly what the name suggests, quite
+>>>> handy with background compression.
+>>> LOL, only if you know what the _ac_ part stands for.  :-)
+>> Would you have suggested perhaps _mains_ ? That may have rang better
+>> with some folks. I suppose, at least.
+>>
+> What about 'no_rebalance_on_battery'?=C2=A0
 
-Signed-off-by: Jianhua Lin <jianhua.lin@mediatek.com>
----
- .../devicetree/bindings/media/mediatek-jpeg-decoder.yaml         | 1 +
- 1 file changed, 1 insertion(+)
+Oh, awesome suggestion. A little inversion of language, so battery is
+front and center, and we avoid having to think of a billion different
+terms for line power. What say anyone else?
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.yaml b/Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.yaml
-index a4aacd3eb189..33e7a6e5a069 100644
---- a/Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.yaml
-+++ b/Documentation/devicetree/bindings/media/mediatek-jpeg-decoder.yaml
-@@ -23,6 +23,7 @@ properties:
-           - enum:
-               - mediatek,mt7623-jpgdec
-               - mediatek,mt8188-jpgdec
-+              - mediatek,mt8189-jpgdec
-           - const: mediatek,mt2701-jpgdec
- 
-   reg:
--- 
-2.46.0
+>
+> /Malte
 
