@@ -1,73 +1,98 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFCC1990A7
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538DA1990A7;
+	Wed, 28 May 2025 08:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419444; cv=none; b=aIf30tiwTE7vbIH0ZLYIYzLzXxEESrKGehpLKT18nhRhaWVDHFNJ9luIpjMOFQUMt33G28GT2pjh30J+VK4afXIsoSvJY0FRazLvF2aSsoVUfZFdh04h/Bxf0r1vIdR6AQyuC9jQpWo8kHdNZxdv1UK1jU5Q3B35f7FNPkSKgpU=
+	t=1748419477; cv=none; b=c1wEY/s9/2ZvSqvS29sRt+f3sEwWymGRj6WRcCwpDC0H/Vs1Ude6EyXZdkb2HqMHI9FiESN3w5N500Wr/AOluM+LM0MIrlabFuvsJGwcOHshWpZ6r5N5EHEcOwCF1H8tu5vPwBknv2v2WxK82oDR0LS41kLRa7TWvZCYZjfiKEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419444; c=relaxed/simple;
-	bh=1oeI1j1lw8DC0A/7yt/5p9dEKr5IkC/rOemfjplVwlI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZeKg4WuF78zHSpWr9eh9uOc0P2KM95Qz8WljYSYiYv5Xyxwq6dm0mOvmIQOvV46K3IXKJmUp8lfdz6vCEWNwgSQA3L/jthYOUpHO0rdU5Rp9HMRQQwAwJqxVKBvTmL7glUgKyJMN7990+z+oDZu21X+xfPuB4XXGOmaGf0yYggo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86195b64df7so631857539f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 01:04:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748419442; x=1749024242;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MWDhC9r9oehNAeAGxW4ZZpblr+pALrjlJXaJu5GfEiI=;
-        b=vDTouUSjtY2tYxVFWCOBnGJL3nC28PGDL/OIDp3LA/nBrVEY+Os2NwgSfuVY4DtMQe
-         UWYVb6Gi00iv9/x6G6YsVuxqgu9hjikt2lIJRGA1+wmx9FFykmeAJDJU8vJGRjWazu5p
-         v1eOPvjjYEnuG8jr7w2aA0Q1VABVpVGAbhpg56YrSl6grFOA5sTRikgHhiexDH072t2F
-         bVbLUtL63fNSwdDfi+XsSqtnWWa9WOVrRxeT+4hUddW+ybcLux1xcxMtpuJujh+7UQ1K
-         rWYTkawSAsPffl+kxS+GEdn+yhEk9FyXZBgGrohy4LqJKwjDSKR99c7jc0BUO2MRIuIv
-         L8ow==
-X-Forwarded-Encrypted: i=1; AJvYcCVF9enFvKqf9kAcJcsJ2vGqYv+GKoqNjxg1d2mc2WxmA0yCta6qoaq0eIXPypIYimJyN3tVXuOoiOxJlIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI7JnDzJOcsPvXyHq5cYcb1oPoBZv+gOoU4S9yWMs0hfmJBb0V
-	iF4fjdkq/jlelUi7NVKmp0THJ/VQ+aEoZ7cIQOMntd897eTN0cX1XiAHJNxgFRcHpcByAhdwT0P
-	sFocT+zXIBz4UZnvC5O3lIyW2b29jFstnorFiMeoMVwsWKJGYdNlXUL/2hM4=
-X-Google-Smtp-Source: AGHT+IEWDo3N5Y8nJt4+xEYmCWGJ5P4xfnzlN1fx3ds89XYRyy+o3hQXbMe2tox95EQkf7Cfu+qZRRLsC7xzQomT57mTkOqhoTy7
+	s=arc-20240116; t=1748419477; c=relaxed/simple;
+	bh=XqT576a4+pge7B4a4Rzz0v2Or+g/qgeLaa1Dg40HAWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDnEnz7oTXacd9/v5x+ct8kNeyxigX2YmGHaiFW1M5arr5pGO3lk2E00PGS2WS5TOz0i+CAVHYQZEBYj5inuBS7GixK2gTIiqJnMiChSlVCYWdLIdvfFEHfFIzArd9+iM9bHRGvYmZhinix92Kzc8m4SiT/OWJZ6yF5shDxZMXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wNqcsvHH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i72A5JCB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wNqcsvHH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i72A5JCB"
+Date: Wed, 28 May 2025 10:04:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1748419474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ovrRv3FXIRrWqtjmQh9OpUxF47ZJQWlIULBJidB3gng=;
+	b=wNqcsvHH6McVUSiMrlgCo3LTQwVwhgf0mPCMpt9R2KGu+FVTqTVg5a44RP2KRT8Pc5+bUL
+	xAcg5mYhzBkLFccdvw9AEQMsMkcnwsOGdhqfA07+KXbUmfF/+Hs24egqAooz+xrvNoBJEC
+	77TZ5xYpidvzv0TUnWNf/IrD9VLDfuy2y3vKm82746Gtjoa2KimeBWr8/YiNdTOic68Zd9
+	TSHZ80jmP5k33g/IjGozXKDUflBl+oPF3WWmFd0LYehqLrJ89Z548y9LOpoe4ewY/JuUMG
+	6adKo/tWZ5vPFEwHAhiJxsGzHdmjpzgpKgZelfxg3gj7mcJoA6FAbcT9utqs0g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1748419474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ovrRv3FXIRrWqtjmQh9OpUxF47ZJQWlIULBJidB3gng=;
+	b=i72A5JCBGUIF5ClurNrGNHBichGzZbPsYF1G187CWSqEG0evuQoIdcPRiH7PHQLMuLtxSf
+	1uLDT5gD4W0S1DBg==
+From: Nam Cao <namcao@linutronix.de>
+To: Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v2] eventpoll: Fix priority inversion problem
+Message-ID: <20250528080432.Qke-VMIY@linutronix.de>
+References: <20250523061104.3490066-1-namcao@linutronix.de>
+ <3475f3f1-4109-b6ac-6ea6-dadcdec8db1f@applied-asynchrony.com>
+ <20250528061252.AeDA23yH@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:371a:b0:85b:3a51:2923 with SMTP id
- ca18e2360f4ac-86cbb8b7b35mr1789997039f.14.1748419441880; Wed, 28 May 2025
- 01:04:01 -0700 (PDT)
-Date: Wed, 28 May 2025 01:04:01 -0700
-In-Reply-To: <68c2c045-c0d4-4896-b3e5-ba3d767f7110@kernel.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6836c371.a70a0220.253bc2.00c4.GAE@google.com>
-Subject: Re: [syzbot] [f2fs?] KASAN: slab-out-of-bounds Read in build_sit_entries
-From: syzbot <syzbot+1fa48dc6faf1ff972d7d@syzkaller.appspotmail.com>
-To: chao@kernel.org, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250528061252.AeDA23yH@linutronix.de>
 
-Hello,
+On Wed, May 28, 2025 at 08:12:58AM +0200, Nam Cao wrote:
+> On Wed, May 28, 2025 at 07:57:26AM +0200, Holger Hoffstätte wrote:
+> > I have been running with v2 on 6.15.0 without any issues so far, but just
+> > found this in my server's kern.log:
+> 
+> Thanks for testing!
+> 
+> > It seems the condition (!n) in __ep_remove is not always true and the WARN_ON triggers.
+> > This is the first and only time I've seen this. Currently rebuilding with v3.
+> 
+> Yeah this means __ep_remove() thinks the item is in epoll's rdllist and
+> attempt to remove it, but then couldn't actually find the item in the list.
+> 
+> __ep_remove() relies on the 'ready' flag, and this flags is quite
+> complicated. And as my colleague pointed out off-list, I got memory
+> ordering wrong for this flag. Therefore it is likely that you stepped on a
+> bug with this flag.
+> 
+> I got rid of this flag in v3, so hopefully the problem goes away.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Sorry, I have been staring at this but still have no clue why. None of my
+stress test can reproduce the issue.
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+Let me know if testing for v3 goes well.
 
-
-Tested on:
-
-commit:         8b56d4fb f2fs: fix to do sanity check on section ckpt_..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git bugfix/syzbot
-console output: https://syzkaller.appspot.com/x/log.txt?x=171403f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d25f4819d9920a3e
-dashboard link: https://syzkaller.appspot.com/bug?extid=1fa48dc6faf1ff972d7d
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-
-Note: no patches were applied.
+Best regards,
+Nam
