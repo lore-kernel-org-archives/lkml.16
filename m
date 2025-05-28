@@ -1,63 +1,63 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F416229B16
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EB722A1CA
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748413597; cv=none; b=ImSQ8Xym8nreNJmh2EyqUX2gdvWR5ldjqGWb1kVbWi90U6aOM70H6TPXU1ToYK7ty99Pl/UZ/mwluQ8rb+vFxiLTXYoWZsJFD0owk642vCJzy3VYA/3+biqnIhgRUegl8/k/nskdC48A8jw5hXhQBJLRmg5P3L4QxJWcPDyD7j0=
+	t=1748413604; cv=none; b=cAAwB/+h+nXyuA0QUNCM77a0PZxXUncPdv5KC5fb2nGFYhtgl7UsA/eiOaO0sqPC0RTDwFuc79jTGK3pH0uQUkEwQy3ZojQ48o431GBinfp2dx5H8hHoOA/mc4xfqRgWLOvdvsffliwu2sJ3KB8k1Qw/ZzmXLJzp9Twqo+1P1A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748413597; c=relaxed/simple;
-	bh=sh1cGUiYYVGEGi8YqLowXFl/GRJaaw2ICSbcRxFVUtk=;
+	s=arc-20240116; t=1748413604; c=relaxed/simple;
+	bh=Hl0w23mrzQVVxb+O6fUHIAinrRyuTfuw7GdMc0h4XGI=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kH/7lXKriaRggEoE51pGGDZT/n86TW61ew5PapyiSQAUTDJDSZl2vL/yWGXY0zEYNFPV10Ncw6eyY6zVu5S3SdbC/2frAQbrH/gLlpwQ+DFglXqheeIvTOSN74NukKoetTbUNVCQhxRa/X6/dF8UGFux64ydvLRgXa03SjB1zjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QhbjGgX4; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=UjbwtJz95DM+kWFQOwKyG/T8wkq+pfnpga+AvOVDwPcmgQPZZvuRIYuRMy5YOR4MjJW264UuUW1ektBxerJNZBiRGluGDgk2L8wsPcfLM18nUvP4CL8AcsyFU6y0MHBECisKDvDg/WkuD5MyuRdUc4C6KvilmvZ4vVtr/FzOCsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FW3JdXuT; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QhbjGgX4"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23446bb8785so38527935ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:26:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FW3JdXuT"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-23278ce78efso29326955ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 23:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1748413595; x=1749018395; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1748413602; x=1749018402; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Tf3d4NxJrcGNbUN64elIQLb/pmeQW1fbqHye+etV/RM=;
-        b=QhbjGgX4fiBmX5P9KVykKiyVB88EhJgWGY27uWUonc1g2hwGg/HuVpZcSbh0gvI+/f
-         fohlZWwZFVuHl0cLlC4KxpGe6jmmgfyexUaccS8AFAJgjX1Wr9YA8SUxZ0nqenTew5ng
-         WFpw54iG3Lp8xosOD5mOuHocdcZyRPJB4rdhMCqnoua8z7RApiDI5lKF5lAk+I2OntwT
-         3oXf4W2S/YKnFUA4faw3NijOvtQgs4rvHNH5K8b/A8isFcSWzQ9XVDhWbP1+aFH7efbq
-         udtAdsrnO63k215nYXJuFp25oDYB3vA8qNglqQQ58wYwoZ7zVwLpbP+p/1DBl8TxBrhl
-         sSlA==
+        bh=egKi337a/czANHevIeQRx3Ni+h1cnqrDQFS+UirVS+M=;
+        b=FW3JdXuTBJ/YJzb0HQkHGhSolA7EsopwF8zH6ZZ1bM3MrMpifKi0ux3cfh1B+yP5Ug
+         L4DEcjTIpifzCKlp7UGNyO4rAWbJhPM0bQO27ID6s0mKaQCZo9cqZgkG+Pm098gi/lxu
+         FlB7urvhqu54RguIy65oiWGA7SVViuFW4Zc/wQT0OFxACeJXHMukfup+sVDAAQmVmFYb
+         A59hc1nucpDJWfAKfUBJBC/jhUAYhZ648GC20TOY4qLFV991tlR3fwsBElg/WeOSuIcC
+         2WuFhQ82SmhkNqUVdX0eCiahfIhPnOzlXC/LRufcH1MSGJxcYQmb78u3hEKBJrugS79h
+         atSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748413595; x=1749018395;
+        d=1e100.net; s=20230601; t=1748413602; x=1749018402;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tf3d4NxJrcGNbUN64elIQLb/pmeQW1fbqHye+etV/RM=;
-        b=Xq0LsO3Y3wEVEJYXU9/KBw0e5avIHFJONQ/tN8pb/2FyiBflBC9854uTmgHc/r1EMX
-         ArssD8uzGz7OzbDFM9b3CTZR3muo69gJrqYlWRJUx4q52efQgcKU9exoj29Jxgeqpcho
-         Lqj0m9VdcllLhbk/r0Nt52XIAxOg5l/OkrQ3Af2DzR5q7NL48Ds7czt1l1QRBKgtV2fd
-         l3DUo8puWU73YwAtfRW5cnDRByqlxR058LOMTGbn7hXOMlIoPd0mxMOFniw87tJPy1rP
-         ETDuzqIauVZ70JGmoc+WHr7OdgKSwHnNs+uY8CgoZd8U9pI6xq8aT4iNjYhns0TMnz3N
-         DuGw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5CvwhCI6WRNGC4+4xOYadxAskb2ZQSwOQDD+CoQOstp+y5wKb24Q/ha9zaTsPIjAY9802y/JqjsE6RAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAWmoT3fhBGkgz34vNkxMhCt3aG5yot5Xb/n9SmvTGAbsWWkvT
-	MBg3zocIaY8sZjAo/OERjX+B8kUvEGO+58gomq97YAARqXf2H04caa/fqixvBLG/4G8=
-X-Gm-Gg: ASbGncv8wBdoij8sKuJisOLY4CFZLK8KPFr6R1ViPXGT50nlYlWx9o6c/r0Dr6hCv5a
-	/iuxIe+f0m3k7cMxwSuqNfyXH7IPuq882SJRANYeJepHFbBoMTGNKsJZieouEFO7NaSJxH/1FPO
-	44qo2s0T4Y846+GguLIFAwIQbHqGNz6/C8JpWdEruRtaQU5gWxKtXac32NtxCgC6jxLnh4J+BmV
-	hz1HHjTBAQctiQLoW4nA0I5ztkzKPGkvLC8a7tKSHylc5g/6KxGb8keOA7vJgBjEmYN4QiG0E1T
-	g5jUozMWCs1XyFo/LeroyRzTONjYYQ6Bx2FwN0ul4XQs5q5nElHvpbakaBY/8Tnqt4nFWqevNHc
-	rcQAbCmvMkw==
-X-Google-Smtp-Source: AGHT+IHMwV9pu4i8J+GgFkOBOpyMXF805fnm3igvxyjsK4pKznBH1Watf3hetuV0tb6o3s9sRcJvDA==
-X-Received: by 2002:a17:903:fa4:b0:220:e655:d77 with SMTP id d9443c01a7336-23414fcd21bmr292803245ad.36.1748413595413;
-        Tue, 27 May 2025 23:26:35 -0700 (PDT)
+        bh=egKi337a/czANHevIeQRx3Ni+h1cnqrDQFS+UirVS+M=;
+        b=HF5dEAqyuy5yx0hYRJQnhjoZ9kP2TlDsfkLGDF7iLRFfmcHTu+CXhld/WCeR6mS36e
+         0D78f760zSqJdSOgFU7syYy+8cWejeI8Nm0k207tYrQM+qaVldbO3fmNa+4EVfFzFsvw
+         4bA2GGsJ/uQAPcq5lv8SPxmPdpOGpPA5J05UmoFR5/SoytLSremM2afXyg4btpNTYsm9
+         waPCJ2b5W21l6uBlvFr6dS7Jkqj5TMoWMbY3hakyirDbhnCR3FHrG1uJ8pl7bikM3hIx
+         l59M+z+f1q2MAWWa7SbNiYgg2MZAag/Ud7GvxL/vjU62fHyEDKdyXmst3aylsV76sEbo
+         SZ5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWUFsS4khzPSWFjxaIYU9TOEwPH3WmwA1ExEsLK+Fr7xch6xUf/w9GPgti7FIJDoXQMjYjQsZ8b7Jl9Zdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ5nG7+oNGdmK+MNw63zx/9bvu8rzBbnhM1Hg3+KMemF/g9nES
+	TRSGrfJ9jP5hbE3Np3oopR0kPyhB8BcHu8JIfmhMGeTnvV5cjE1ZlINsXzn1+vc2gpA=
+X-Gm-Gg: ASbGncvd49E9kL/fOt7BZqe9AF63M+1A5gNr7iPh55i7uxtsH/RfSCuBozMbZTynRUF
+	Z8s1G87Rn320zNLsj8Wn+UbW3klclQY5F2BGN26rPyinsxlYhwUuSJh50oB59eEGE/JrPXx8bYZ
+	BLxYSfOVLNOsprY/WkfY3oNYFkNr6uVozzG41UknaIa+yy3a4A8nmeNk6dFEkiIlYPAFQqSfJH/
+	uCl0c9GKUfkQwleB8KzwA5GmGvdET1rXSt2yynrS6jJuNnc5cDa5NdMCupw8qrXy2JULcJYVHjy
+	7ihb0oh6BO9EzmdL4nNQOAR7zG+8zhbg/tG+vC+acnP4FAM/4zwzdLppepZrKUh4Ibt9fnYRZEs
+	AY4gRH8feiun5QUVs8MUP
+X-Google-Smtp-Source: AGHT+IHHp2wXUQjEdDIJNL7mrh4ujlV3e+koW9KDIE/Yo3qAyu0LXQJ4yBHqBGF03QD+PyHMJ88zuQ==
+X-Received: by 2002:a17:902:ce0f:b0:234:bfe3:c4a5 with SMTP id d9443c01a7336-234bfe3c615mr41162865ad.2.1748413602186;
+        Tue, 27 May 2025 23:26:42 -0700 (PDT)
 Received: from L6YN4KR4K9.bytedance.net ([139.177.225.234])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35acf6dsm4619515ad.201.2025.05.27.23.26.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35acf6dsm4619515ad.201.2025.05.27.23.26.35
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 27 May 2025 23:26:35 -0700 (PDT)
+        Tue, 27 May 2025 23:26:41 -0700 (PDT)
 From: Yunhui Cui <cuiyunhui@bytedance.com>
 To: arnd@arndb.de,
 	andriy.shevchenko@linux.intel.com,
@@ -79,9 +79,9 @@ To: arnd@arndb.de,
 	schnelle@linux.ibm.com,
 	sunilvl@ventanamicro.com,
 	tim.kryger@linaro.org
-Subject: [PATCH v7 3/4] serial: 8250_dw: assert port->lock is held in dw8250_force_idle()
-Date: Wed, 28 May 2025 14:26:08 +0800
-Message-Id: <20250528062609.25104-3-cuiyunhui@bytedance.com>
+Subject: [PATCH v7 4/4] serial: 8250_dw: fix PSLVERR on RX_TIMEOUT
+Date: Wed, 28 May 2025 14:26:09 +0800
+Message-Id: <20250528062609.25104-4-cuiyunhui@bytedance.com>
 X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 In-Reply-To: <20250528062609.25104-1-cuiyunhui@bytedance.com>
 References: <20250528062609.25104-1-cuiyunhui@bytedance.com>
@@ -93,36 +93,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reading UART_RX and checking whether UART_LSR_DR is set should be
-atomic. Ensure the caller of dw8250_force_idle() holds port->lock.
+The DW UART may trigger the RX_TIMEOUT interrupt without data
+present and remain stuck in this state indefinitely. The
+dw8250_handle_irq() function detects this condition by checking
+if the UART_LSR_DR bit is not set when RX_TIMEOUT occurs. When
+detected, it performs a "dummy read" to recover the DW UART from
+this state.
 
+When the PSLVERR_RESP_EN parameter is set to 1, reading the UART_RX
+while the FIFO is enabled and UART_LSR_DR is not set will generate a
+PSLVERR error, which may lead to a system panic. There are two methods
+to prevent PSLVERR: one is to check if UART_LSR_DR is set before reading
+UART_RX when the FIFO is enabled, and the other is to read UART_RX when
+the FIFO is disabled.
+
+Given these two scenarios, the FIFO must be disabled before the
+"dummy read" operation and re-enabled afterward to maintain normal
+UART functionality.
+
+Fixes: 424d79183af0 ("serial: 8250_dw: Avoid "too much work" from bogus rx timeout interrupt")
 Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 ---
- drivers/tty/serial/8250/8250_dw.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/tty/serial/8250/8250_dw.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index 1902f29444a1c..8b0018fadccea 100644
+index 8b0018fadccea..686f9117a3339 100644
 --- a/drivers/tty/serial/8250/8250_dw.c
 +++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/io.h>
-+#include <linux/lockdep.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/notifier.h>
-@@ -117,6 +118,9 @@ static void dw8250_force_idle(struct uart_port *p)
- 	struct uart_8250_port *up = up_to_u8250p(p);
- 	unsigned int lsr;
+@@ -301,9 +301,17 @@ static int dw8250_handle_irq(struct uart_port *p)
+ 		uart_port_lock_irqsave(p, &flags);
+ 		status = serial_lsr_in(up);
  
-+	/* Reading UART_LSR and UART_RX should be atomic. */
-+	lockdep_assert_held_once(&p->lock);
+-		if (!(status & (UART_LSR_DR | UART_LSR_BI)))
++		if (!(status & (UART_LSR_DR | UART_LSR_BI))) {
++			/* To avoid PSLVERR, disable the FIFO first. */
++			if (up->fcr & UART_FCR_ENABLE_FIFO)
++				serial_out(up, UART_FCR, 0);
 +
- 	/*
- 	 * The following call currently performs serial_out()
- 	 * against the FCR register. Because it differs to LCR
+ 			serial_port_in(p, UART_RX);
+ 
++			if (up->fcr & UART_FCR_ENABLE_FIFO)
++				serial_out(up, UART_FCR, up->fcr);
++		}
++
+ 		uart_port_unlock_irqrestore(p, flags);
+ 	}
+ 
 -- 
 2.39.5
 
