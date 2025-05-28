@@ -1,130 +1,128 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360197E107
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 17:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748453423; cv=none; b=av+FMdOh1JQz7OIzME90m5xNJp+Syth8dv0kXUushDMvrjkrZELoM+oioXqsLGL9mfVqEGBvcBQ6UAbMnT27cMsC8upJ+QZeeC6/NuGUn7aPBA5iytXra/vLQ9AaeZgULfTbwtZmJUluCqX1p6EhFMYn547sZsDC7EQe0npZJcI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748453423; c=relaxed/simple;
-	bh=ARY8CwNgeEkx4xeewofft7OOZG05/4+sLW6rStZljR4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=A5ZHhtISNk/GQx41+vK7hFQgFqr4takWWqrbG1u9d8gdJou7nDv/o1SjT3vwRiSy86GzI1H53utho89mvrfyF7xvpReuCuGr0CSbGWsFTz+PSZ5JdSpNJJPkAZEPLmzGdkUo3D01mcVQna85PsNW+L95ZbjrONFP+kbS6m4EMdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0vHEnPRv; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A217E107;
+	Wed, 28 May 2025 17:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748453435; cv=pass; b=drPQNUk09/D8+uyblVSySiFgFwIO2IGQdoRo7bA7l77hTb3hRpG//uIlivX2EKyB9g/i5ahrUHCUpuRWPU5QBmOWaqHmfehpkE7wZlTujPuCGlaqDVGRBIij/UgDfd4ElkAIeFBqbgghF5m1xpfErI8DKhxQDn1Va/3BkIN8VyQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748453435; c=relaxed/simple;
+	bh=oxapIJUhuAH7C5mchQDq2upP03mEfxyRa2A9sT6SIrs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=MOghUTgPFCXdJht0ORpOQQa70YSNZZsz9M3fEgW33EtZ9ydq2gSi7R/HTov7r06nVaEzjMpItgAnN+ZVPDlR4TQJKMJ9LTPcthluiQf01qJ8ZxDNTnZ03NIYf48gEKsi6GkCkSTNDJa8dXDQcSGgLP1sxLMWJNATP2zf2Yd8rwo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=VzCrRYax; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0vHEnPRv"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2c3e576201so1031339a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748453421; x=1749058221; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X5lk3aR+RzRKEkMTxOWzVHzMD+THYlxrp/Tixh3xiWc=;
-        b=0vHEnPRvxl8OZy/Y7wTTc11pqfjzRERfZHMbTLrG+0UHdiRO08+rT9acCaXYZzXHvu
-         AYAGz/8VNERpC1goEnKBJZZt9lYQF3QlOUm/3T555gduuaV5Yg1edrv8bDx3MFV/izJs
-         GGGB+5VjPH+0MJBsLYGMLkRg56dglb55mO1XGbj7GnRj33Bg+0NuPYu5iiPZzI9lvmeF
-         FF2+PC/P6x5Qk9vHwVLR8RZvyRVK4BE+hu/QkTJiTX754RsdzIHsGuLgdw44iRxHnjwT
-         5VkM6uKhUZsOVjd/C6k4rKYBlhGyNUsW8aj/KbuNEezB0wQggbxvuK6lJt0LHtRVnHVs
-         t22A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748453421; x=1749058221;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=X5lk3aR+RzRKEkMTxOWzVHzMD+THYlxrp/Tixh3xiWc=;
-        b=o20Nfp48cRFRbrKXRbl7Uo+UeRskH6napGwOq8rBYMTrHmG91I505OZTI2WRZ3Wh7o
-         /vv1p3toy10YwzrqXRmuRR/MnV4hjcWtn1eVVdR+qHIK662Oyw/odXTEVgIodsvpwq3c
-         Ak3xE0Lg+H39UMJm2JrNu4TxxVKtYzYyeb56zYockiNbCPq80RxtSfXhRboR5sPh36m5
-         /7etBzVISTQs2xRGh8/0IgAHrTL5owDVRtcYnAXA6OlzdNfxP/rQuZfglWsQNQDdimlS
-         FW4AFyA+MwdbrZbg/tH3mUIWkEd17WAzMNMHFZ+rZHsaneD3p54/09Fp4XMyQZuBQK7v
-         e4Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8WpMePBlkQEcSb/qx8FzjsboAJYRFBhPxhxeZM/0x1egim5Jbgizb91278tbJu1lkFHMCYHxPJBiVsEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYBYQUjCdeq8EcGC7VGcBekfsWHcotPvFy6T6txHAVyL0i8nf2
-	4wWDqJy+U8BAaZCSC0QXITtuYEQKl7Sa9k3uy2FRmUKqmiHSN9hbMoHfPm09fwrb09PPxgswB3t
-	J1Lx1Rw==
-X-Google-Smtp-Source: AGHT+IEsnEf7VuMExZRw8wVJdfyr2XCnHx5H/B/LOCvx+d5raumWeIsp3ExyZi0ZxIt7xWBlYTiCNvkn+ag=
-X-Received: from pjbpx18.prod.google.com ([2002:a17:90b:2712:b0:311:8076:14f1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3848:b0:311:be43:f09a
- with SMTP id 98e67ed59e1d1-31214e6e01dmr517950a91.9.1748453421388; Wed, 28
- May 2025 10:30:21 -0700 (PDT)
-Date: Wed, 28 May 2025 10:30:20 -0700
-In-Reply-To: <CADrL8HXS7zvJZjOxTxPKH0dAGoMXnFrrxCW7J7CXRtaeV6izjQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="VzCrRYax"
+ARC-Seal: i=1; a=rsa-sha256; t=1748453402; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=A9brW/8mv1YNAt58KcT18LlPzEOQaZkEEzKoTQeX0IVGFAtOxfusodD3nJuX93wAlbWvsCpi5XQ3ssR/oRjzWTIEM/YhhqDoGGZohLle6VqAo1QZbPwGn8tLY/G1Tlv3Jq2T4WkH1HtLsG29NLwhSOCg9KByOLGLu06JesgcGaw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1748453402; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vijCCIgMRuv2HsNGVhwlJlzo9DZfoqJJX6CBYjOowuY=; 
+	b=IszMaJO+SwvxiQ2yplc/xe1W/znJemQPVTwlwXOkgFnpypMbZGxiKmE2PTNtiukZqR0D02JqxKko5YCZMOB4MJnmgUrp25a5RY1tKZ8u69ej2jt4erXPtLpoQLn0CKVTeE5I5yiB0FMcIe1mTIpSTAgZ/y5xcXHPe61uBph+9+U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1748453402;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=vijCCIgMRuv2HsNGVhwlJlzo9DZfoqJJX6CBYjOowuY=;
+	b=VzCrRYaxx1JMo6Yq85D/aWmwpLLtucRJZPvz9vGKX/RZSA6UQFwGgZnwLN7T1oEo
+	z92RWsDoLohqZWTYigceeA+GR4ZmRBTYpBUL1Sn15bsrWVgb8XJ/n4CjLRDyQPWvivg
+	IwE1iAL1KkD6vFoKR6opedMjguv89hCMjvRksN2I=
+Received: by mx.zohomail.com with SMTPS id 1748453401588404.8876402861505;
+	Wed, 28 May 2025 10:30:01 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250109204929.1106563-1-jthoughton@google.com>
- <20250109204929.1106563-7-jthoughton@google.com> <aBqkINKO9PUAzZeS@google.com>
- <CADrL8HXDDRC6Ey5HYWvtzQzjcM2RNX7c7ngGyjUsD3WiBF3VYA@mail.gmail.com> <CADrL8HXS7zvJZjOxTxPKH0dAGoMXnFrrxCW7J7CXRtaeV6izjQ@mail.gmail.com>
-Message-ID: <aDdILHOu9g-m5hSm@google.com>
-Subject: Re: [PATCH v2 06/13] KVM: arm64: Add support for KVM_MEM_USERFAULT
-From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v8 3/3] rust: platform: allow ioremap of platform
+ resources
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <aCYVG-VVdJXYnSTt@pollux>
+Date: Wed, 28 May 2025 14:29:44 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>,
+ Ying Huang <huang.ying.caritas@gmail.com>,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <5B875DFB-D655-4BAC-A475-43AE309520E2@collabora.com>
+References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
+ <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
+ <aCYVG-VVdJXYnSTt@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-On Wed, May 28, 2025, James Houghton wrote:
-> On Wed, May 28, 2025 at 11:09=E2=80=AFAM James Houghton <jthoughton@googl=
-e.com> wrote:
-> >
-> > On Tue, May 6, 2025 at 8:06=E2=80=AFPM Sean Christopherson <seanjc@goog=
-le.com> wrote:
-> > >
-> > > On Thu, Jan 09, 2025, James Houghton wrote:
-> > > > @@ -2073,6 +2080,23 @@ void kvm_arch_commit_memory_region(struct kv=
-m *kvm,
-> > > >                                  enum kvm_mr_change change)
-> > > >  {
-> > > >       bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRT=
-Y_PAGES;
-> > > > +     u32 new_flags =3D new ? new->flags : 0;
-> > > > +     u32 changed_flags =3D (new_flags) ^ (old ? old->flags : 0);
-> > >
-> > > This is a bit hard to read, and there's only one use of log_dirty_pag=
-es.  With
-> > > zapping handled in common KVM, just do:
-> >
-> > Thanks, Sean. Yeah what you have below looks a lot better, thanks for
-> > applying it for me. I'll post a new version soon. One note below.
-> >
-> > >
-> > > @@ -2127,14 +2131,19 @@ void kvm_arch_commit_memory_region(struct kvm=
- *kvm,
-> > >                                    const struct kvm_memory_slot *new,
-> > >                                    enum kvm_mr_change change)
-> > >  {
-> > > -       bool log_dirty_pages =3D new && new->flags & KVM_MEM_LOG_DIRT=
-Y_PAGES;
-> > > +       u32 old_flags =3D old ? old->flags : 0;
-> > > +       u32 new_flags =3D new ? new->flags : 0;
-> > > +
-> > > +       /* Nothing to do if not toggling dirty logging. */
-> > > +       if (!((old_flags ^ new_flags) & KVM_MEM_LOG_DIRTY_PAGES))
-> > > +               return;
-> >
-> > This is my bug, not yours, but I think this condition must also check
-> > that `change =3D=3D KVM_MR_FLAGS_ONLY` for it to be correct. This, for
-> > example, will break the case where we are deleting a memslot that
-> > still has KVM_MEM_LOG_DIRTY_PAGES enabled. Will fix in the next
-> > version.
+Hi Danilo,
+
+[=E2=80=A6]
+
 >=20
-> Ah it wouldn't break that example, as `new` would be NULL. But I think
-> it would break the case where we are moving a memslot that keeps
-> `KVM_MEM_LOG_DIRTY_PAGES`.
+>> +    ///     let offset =3D 0; // Some offset.
+>> +    ///
+>> +    ///     // If the size is known at compile time, use =
+`ioremap_resource_sized`.
+>> +    ///     // No runtime checks will apply when reading and =
+writing.
+>> +    ///     let resource =3D pdev.resource(0).ok_or(ENODEV)?;
+>> +    ///     let iomem =3D =
+pdev.ioremap_resource_sized::<42>(&resource)?;
+>> +    ///
+>> +    ///     // Read and write a 32-bit value at `offset`. Calling =
+`try_access()` on
+>> +    ///     // the `Devres` makes sure that the resource is still =
+valid.
+>> +    ///     let data =3D =
+iomem.try_access().ok_or(ENODEV)?.read32_relaxed(offset);
+>> +    ///
+>> +    ///     iomem.try_access().ok_or(ENODEV)?.write32_relaxed(data, =
+offset);
+>=20
+> Since this won't land for v6.16, can you please use Devres::access() =
+[1]
+> instead? I.e.
+>=20
+> let iomem =3D pdev.ioremap_resource_sized::<42>(&resource)?;
+> let io =3D Devres::access(pdev.as_ref())?;
+>=20
+> let data =3D io.read32_relaxed(offset);
+> io.write32_relaxed(data, offset);
+>=20
+> Devres::access() is in nova-next and lands in v6.16.
+>=20
+> [1] =
+https://gitlab.freedesktop.org/drm/nova/-/commit/f301cb978c068faa8fcd630be=
+2cb317a2d0ec063
 
-Can you elaborate?  Maybe with the full snippet of the final code that's br=
-oken.
-I'm not entirely following what's path you're referring to.
+Devres:access takes &Device<Bound>, but the argument in probe() is
+&Device<Core>.
+
+Are these two types supposed to convert between them? I see no explicit
+function to do so.
+
+=E2=80=94 Daniel
+
