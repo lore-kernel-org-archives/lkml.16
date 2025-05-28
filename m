@@ -1,114 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0B0244695
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 07:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41291367;
+	Wed, 28 May 2025 07:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748416868; cv=none; b=VPnTEtZdbVekH7ORoSc1R7YSvZRvcMhPug1h0ubvuEGG6HhhEtjkBunzDB8ZaYq5HyGmjuuKGCOodzqfrV/5VpM9MYXMWZNFHBr9wwtInUAaA+AZKgLNhjToGzmDKWwjvZBJCoXeEpRSl6BaM4n/09TCMmZhkWGQ8nlgyx2Ht7E=
+	t=1748416893; cv=none; b=hwE1FpcnQRzLugnTe75mCq6FcipfsDBZzPZUDQvTPpoYyvH4udyPH2fpMFSlMCjITCJaCIYogJ34A03JvH+XwnsKgo5NgE3Ttbs620mklWSQOXedURY7f4YJGxRSYtmIhe4EX0X81uyT4UDFrtg4eZAB/6JCqYadITpXy108mw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748416868; c=relaxed/simple;
-	bh=2qHmQEB1E1zkN71QCfVoyToUf5ogIWK0R6isdin/Ad0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nr2KZNcxsaHVNn0IYk/ILzdAIqsukRKmWnxIP6vHkqLQM05e4GyavY9g0DVW35xUkH+dORSGKmI0/BKKvSU5d7OVoVxF9cmm1jbm67pZoUoD829RwTBh0g4S2f3pYEAbQXBooKTMT4z9F4cksChfmKCG3JAJ4I/q1fSHn0PXGPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GpvP0Qtu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748416893; c=relaxed/simple;
+	bh=SkRP/MS8cvO2FVA3kFfTyM8+otz9fEhJJqVQBSgvjeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QdfutxzS26ywlBiI1RIBPNHCqKZl/kP9K/GkNpix0wxnK6gJWIVUEIdAv9COSdiI2UWEkayl1aei9QHJzACjJgC5JpJfB2LAPJj2p92KpK8NyNDPkZGNFyhrqaBNg9ty9ZXsU62rBxaiA0SFyRJHGtEpt78v61THExsRksDdrKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEaHx6s/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpvP0Qtu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748416864;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Yb7F8w++tHPp3njA+diY9i2D1I8vF7wYtoKldSCXI70=;
-	b=GpvP0QtuF1mYahqkmTAqPmOLH/B8RLIhD/cn/+l+3BD0e8pctjDUG62jqgcqmlilUFeSYG
-	g+ycD+te2NPKCz8z3WSZoP4X/NCSav5kQ4bVZCTBXfUoEnwGTT/e92JEIWoSLMn1KaDysA
-	BF01WznYj+jHyviukGdRFHlk5pgul/Q=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-688-4xfbBtN1NvWzzN-tDPIIWQ-1; Wed, 28 May 2025 03:21:02 -0400
-X-MC-Unique: 4xfbBtN1NvWzzN-tDPIIWQ-1
-X-Mimecast-MFC-AGG-ID: 4xfbBtN1NvWzzN-tDPIIWQ_1748416861
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-445135eb689so25562455e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 00:21:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748416861; x=1749021661;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yb7F8w++tHPp3njA+diY9i2D1I8vF7wYtoKldSCXI70=;
-        b=wIXW2TEuC4Ph1jml0Sy/MtLzHOEWzvnVJcQSYsSPIL5EgLjqASqyKsPRoac+fAbbsH
-         /WzzRMZf+SbxaFu6o0CrW4u+V5hDHQUnEc+6wrwf31MQm4G3FUFiYLRBZVe+vp2xFUTB
-         y7QkZ2IvDO5qpuKmvoIaDu1WCQWFHvvfZw9OfwHtOw5q95XcqjMd0S53BhHuklLTN1Pt
-         sM1yiB+zqrFZt8IHIsYGn1bLNNZYN7JNVNaLKnxsDSzFWxs7cgfj6YjuR4TpGOmlethk
-         4YF3WLK72MF59Lle0hpznPliM9zAxSw8NLLH3ujVdqnSab1X1Z7bYdSpEBJ5hzqSikxZ
-         ubsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Ddwp7BE7V2hOiG5KRyAQhqCRIxTjk6L/AMhTbIuINRtkul1foRpt5LdkaKAuhlDqGVOkr5BDfot5VDw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeLozJg/z3E7k/OgqNbC/OSDHuYEHg8quP9jvhOiOWugnztHkS
-	UzZ1XxHvV7bGAd5/0ZmjZxNp69V+xOxRktavUVWxqTqkJLV092wXkbnGLSCY6sRdIU6QVym/BLJ
-	OWiIr578s5xzKNNyHhmt+hrhhm91sECxgIgY1GXUOa3TJt9L36gjywUAsxnpElfbOUw==
-X-Gm-Gg: ASbGncsZ6NXZLhSTjv2v6PCcHWvJqMKuqqeBdigBImbZJU529lPua/+S2zwVwJGFGky
-	3Ve3FyJPDX5Cn2uNaGQP9c1k/V8nbW4irzmItauQw2H3yLmxDkJ0mpqHaz1VUxsrNq9L2cB4GL3
-	AoNXp1NtSz4EfAlKdAQ6M61c/AzPVyoNW5LbtySKTxgdY26lSLFbY0FHNx3c/rgt5szdiufDR+Q
-	q1fXlTW22gzKXD6e1W3AtHA3g+pFYiBf9SEb1xzCbunDEBncrlEgzAEmM50ps2YmKFJD1Qh5edu
-	g+HGKA==
-X-Received: by 2002:a05:600c:4e0e:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-450725459f7mr9070095e9.2.1748416861124;
-        Wed, 28 May 2025 00:21:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtS9Q0iEWdCKqSBK4rpAPZvD0CQFR0nxD5Boy80MHIXn1Qzua/IJWOZxrhYd51QhCIxJ9zSA==
-X-Received: by 2002:a05:600c:4e0e:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-450725459f7mr9069825e9.2.1748416860757;
-        Wed, 28 May 2025 00:21:00 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4507253becasm8466095e9.2.2025.05.28.00.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 00:20:59 -0700 (PDT)
-Date: Wed, 28 May 2025 03:20:57 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Laurent Vivier <lvivier@redhat.com>, netdev@vger.kernel.org,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error
- reporting
-Message-ID: <20250528031540-mutt-send-email-mst@kernel.org>
-References: <20250521092236.661410-1-lvivier@redhat.com>
- <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEaHx6s/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2716FC4CEE7;
+	Wed, 28 May 2025 07:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748416893;
+	bh=SkRP/MS8cvO2FVA3kFfTyM8+otz9fEhJJqVQBSgvjeY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eEaHx6s/f96D84HDtDZITR8TwrnXkMxwpSnlxiLsDEo8zSv1CR2wePfzDROHKmm7V
+	 Ep6fohXmQIa79YjWIDuSqy+5rLhjKE2SScaDusjuMJZGE2iLoKt/k/KvW9nO6r9oGX
+	 Gbh8mwEDFQm7EQqXjgJYOlzj9lyNtRkmBjXc9e3Dzftyz6xl4rnJbY9NlVvM/I+ine
+	 yXnu3PlLu69naPHBhHw+veayI/cVDoFMHtUts6bsWTMnJIR0MUGY1OWxcJd7B8DZSb
+	 /0XjJyv33d6rnMWoFwJ8P7R6JTrDpGS4oaVOONUFsOvWpRDvNelLvmD2IxM+rgiyJk
+	 Fgrb2DSraMv2g==
+Message-ID: <a42f7c93-4c26-489e-a680-ad20a8b8a0a6@kernel.org>
+Date: Wed, 28 May 2025 09:21:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7974cae6-d4d9-41cc-bc71-ffbc9ce6e593@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/10] phy: exynos: Add PCIe PHY support for FSD SoC
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+ manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
+ robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
+ krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+ vkoul@kernel.org, kishon@kernel.org, arnd@arndb.de,
+ m.szyprowski@samsung.com, jh80.chung@samsung.com
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+ <CGME20250518193256epcas5p442e9549fd8fd810522f960df74c22e34@epcas5p4.samsung.com>
+ <20250518193152.63476-9-shradha.t@samsung.com>
+ <20250521-certain-quoll-from-vega-11885b@kuoka>
+ <0e2701dbcef4$6f5f24d0$4e1d6e70$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <0e2701dbcef4$6f5f24d0$4e1d6e70$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 08:24:32AM +0200, Paolo Abeni wrote:
-> On 5/21/25 11:22 AM, Laurent Vivier wrote:
-> > This patch series contains two fixes and a cleanup for the virtio subsystem.
-> > 
-> > The first patch fixes an error reporting bug in virtio_ring's
-> > virtqueue_resize() function. Previously, errors from internal resize
-> > helpers could be masked if the subsequent re-enabling of the virtqueue
-> > succeeded. This patch restores the correct error propagation, ensuring that
-> > callers of virtqueue_resize() are properly informed of underlying resize
-> > failures.
-> > 
-> > The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'
-> > 
-> > The third patch addresses a reliability issue in virtio_net where the TX
-> > ring size could be configured too small, potentially leading to
-> > persistently stopped queues and degraded performance. It enforces a
-> > minimum TX ring size to ensure there's always enough space for at least one
-> > maximally-fragmented packet plus an additional slot.
+On 27/05/2025 12:45, Shradha Todi wrote:
+>>>
+>>> -	generic_phy = devm_phy_create(dev, dev->of_node, &exynos5433_phy_ops);
+>>> +	generic_phy = devm_phy_create(dev, dev->of_node, drv_data->phy_ops);
+>>>  	if (IS_ERR(generic_phy)) {
+>>>  		dev_err(dev, "failed to create PHY\n");
+>>>  		return PTR_ERR(generic_phy);
+>>>  	}
+>>>
+>>> +	exynos_phy->pcs_base = devm_platform_ioremap_resource(pdev, 1);
+>>> +	exynos_phy->phy_id = of_alias_get_id(dev->of_node, "pciephy");
+>>
+>> Where did you document aliases?
+>>
 > 
-> @Michael: it's not clear to me if you prefer take this series via your
-> tree or if it should go via net. Please LMK, thanks!
+> Will add it to dt bindings.
 > 
-> Paolo
+>> Anyway, all this looks because you have completely buggy way of handling MMIO via syscon. That's a no-go. Use proper address
+>> ranges assigned to ddevices. If you ever need to use syscon, you should pass the offset as argument - just like other devices are
+>> doing.
+>>
+> 
+> Alias is used for 2 reasons.
 
-Given 1/3 is in virtio I was going to take it. Just after rc1,
-though.
+So if on my board the PCI slots are named differently and I use
+different alias, everything will stop working, right? Usually aliases
+for exposable buses are matching what is physically labeled on the
+exposed interface.
 
+> 1. Each of the 2 PHYs in FSD have different initializing sequence due to channel length, etc. We need the alias to select the init sequence accordingly
+
+So devices are different? What is channel length? Number of lanes?
+
+
+> 2. The syscon offset can be passed via DT but the bit field also varies according to instance. (common reset is bit 8 in PHY0 and bit 1 in PHY1).
+
+You did not address the main problem here: you use MMIO but do not
+define any MMIO. Syscon is not a replacement for MMIO.
+
+
+Best regards,
+Krzysztof
