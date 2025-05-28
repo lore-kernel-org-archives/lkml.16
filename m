@@ -1,27 +1,27 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9521D272E44
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95283272E57
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:50:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422237; cv=none; b=PZbO0hPbmcsHJpkaNELxXmJCTaakStcB0LlmGpHGPdN+dcjvoQE5xxMm3m+M1G3NCKjvGuRuZBvu9ffw/W/tOJJlcPb704YD2huuvx/4b6WMn+6Ddky11ogyHrmdMiKy8KdP+CS0fyUdg2uspX/VKS/O2X7GPfQKcoJJemv7hmQ=
+	t=1748422238; cv=none; b=K/8zxnGaHxZKCpQHgiPgsW7wnVwGRg5ke8GapZPce/9Oe+bmr+RdX99aXAwcQz3WiBxlDRRY9GA5NDp5iQwJ9Qscq5tYps0VFXFezT+Q8hk91turmr4m16dJgmp8jB6xh2ZvJ0UmqUM0dRgr11Q7phxR/AuIQUbrl46TIYfuKY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422237; c=relaxed/simple;
-	bh=pCCYAvYNoODYZFFhTywbk2w+TCIsXMVU5Q7VyOHhfZM=;
+	s=arc-20240116; t=1748422238; c=relaxed/simple;
+	bh=srC6b53sTsamx9er80sImDaUipaqbkwyTPJzfq2MthI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To; b=t3g3/+1l37cUGShToepozYdHpflaya1SfD2I/wmfxoOu5Naz7SKremRTQ7XOLqr0vwV35fPNwpbKLGzsbdeEYMCuImn59T4LncVfCK7Po5vuD/k6AGORlYlOInMb8C3VQrEcjFqfRFMnkOzL7eFerpVh9tU7VcohzFd0x1ZgKWk=
+	 In-Reply-To:To; b=lMfNEZOTUiRPsn7FbICY2l47qDGzxLOYq9C2JDNMwCOwCfiPuY5lWQqLStGoJZ190FS9WhMVfx1O4saXVeFO0bcX/HtR1kMV/AEUQu4voT5wfgpZi/4XTnWGCEEIy2plAO8Wt93XwVvq72e1UA6x/SFvxeku4vmOdICmqJkP+gI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A7052308;
-	Wed, 28 May 2025 01:50:12 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 362902309;
+	Wed, 28 May 2025 01:50:13 -0700 (PDT)
 Received: from e133711.arm.com (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FBB43F673;
-	Wed, 28 May 2025 01:50:27 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AECF3F673;
+	Wed, 28 May 2025 01:50:28 -0700 (PDT)
 From: Sudeep Holla <sudeep.holla@arm.com>
-Date: Wed, 28 May 2025 09:49:42 +0100
-Subject: [PATCH 2/3] firmware: arm_ffa: Move memory allocation outside the
- mutex locking
+Date: Wed, 28 May 2025 09:49:43 +0100
+Subject: [PATCH 3/3] firmware: arm_ffa: Replace mutex with rwlock to avoid
+ sleep in atomic context
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,8 +29,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-ffa_notif_fix-v1-2-5ed7bc7f8437@arm.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250528-ffa_notif_fix-v1-3-5ed7bc7f8437@arm.com>
 References: <20250528-ffa_notif_fix-v1-0-5ed7bc7f8437@arm.com>
 In-Reply-To: <20250528-ffa_notif_fix-v1-0-5ed7bc7f8437@arm.com>
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
@@ -39,126 +39,138 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  =?utf-8?q?J=C3=A9r=C3=B4me_Forissier?= <jerome.forissier@linaro.org>
 X-Mailer: b4 0.14.2
 
-The notifier callback node allocation is currently done while holding
-the notify_lock mutex. While this is safe even if memory allocation may
-sleep, we need to move the allocation outside the locked region in
-preparation to move from using muxtes to rwlocks.
+The current use of a mutex to protect the notifier hashtable accesses
+can lead to issues in the atomic context. It results in the below
+kernel warnings:
 
-Move the memory allocation to avoid potential sleeping in atomic context
-once the locks are moved from mutex to rwlocks.
+  |  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:258
+  |  in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 9, name: kworker/0:0
+  |  preempt_count: 1, expected: 0
+  |  RCU nest depth: 0, expected: 0
+  |  CPU: 0 UID: 0 PID: 9 Comm: kworker/0:0 Not tainted 6.14.0 #4
+  |  Workqueue: ffa_pcpu_irq_notification notif_pcpu_irq_work_fn
+  |  Call trace:
+  |   show_stack+0x18/0x24 (C)
+  |   dump_stack_lvl+0x78/0x90
+  |   dump_stack+0x18/0x24
+  |   __might_resched+0x114/0x170
+  |   __might_sleep+0x48/0x98
+  |   mutex_lock+0x24/0x80
+  |   handle_notif_callbacks+0x54/0xe0
+  |   notif_get_and_handle+0x40/0x88
+  |   generic_exec_single+0x80/0xc0
+  |   smp_call_function_single+0xfc/0x1a0
+  |   notif_pcpu_irq_work_fn+0x2c/0x38
+  |   process_one_work+0x14c/0x2b4
+  |   worker_thread+0x2e4/0x3e0
+  |   kthread+0x13c/0x210
+  |   ret_from_fork+0x10/0x20
 
+To address this, replace the mutex with an rwlock to protect the notifier
+hashtable accesses. This ensures that read-side locking does not sleep and
+multiple readers can acquire the lock concurrently, avoiding unnecessary
+contention and potential deadlocks. Writer access remains exclusive,
+preserving correctness.
+
+This change resolves warnings from lockdep about potential sleep in
+atomic context.
+
+Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Reported-by: Jérôme Forissier <jerome.forissier@linaro.org>
+Closes: https://github.com/OP-TEE/optee_os/issues/7394
 Fixes: e0573444edbf ("firmware: arm_ffa: Add interfaces to request notification callbacks")
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_ffa/driver.c | 48 +++++++++++++++++++--------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ drivers/firmware/arm_ffa/driver.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-index 6f75cdf29720993b1cd95eb7d3a36d01b0fdd1de..44eecb786e67b205161e2d48602e1f1b53533360 100644
+index 44eecb786e67b205161e2d48602e1f1b53533360..37eb2e6c2f9f4d30831b7bf6ce5142a39a19f50c 100644
 --- a/drivers/firmware/arm_ffa/driver.c
 +++ b/drivers/firmware/arm_ffa/driver.c
-@@ -1250,13 +1250,12 @@ notifier_hnode_get_by_type(u16 notify_id, enum notify_type type)
- 	return NULL;
- }
+@@ -110,7 +110,7 @@ struct ffa_drv_info {
+ 	struct work_struct sched_recv_irq_work;
+ 	struct xarray partition_info;
+ 	DECLARE_HASHTABLE(notifier_hash, ilog2(FFA_MAX_NOTIFICATIONS));
+-	struct mutex notify_lock; /* lock to protect notifier hashtable  */
++	rwlock_t notify_lock; /* lock to protect notifier hashtable  */
+ };
  
--static int
--update_notifier_cb(struct ffa_device *dev, int notify_id, void *cb,
--		   void *cb_data, bool is_registration, bool is_framework)
-+static int update_notifier_cb(struct ffa_device *dev, int notify_id,
-+			      struct notifier_cb_info *cb, bool is_framework)
- {
- 	struct notifier_cb_info *cb_info = NULL;
- 	enum notify_type type = ffa_notify_type_get(dev->vm_id);
--	bool cb_found;
-+	bool cb_found, is_registration = !!cb;
- 
- 	if (is_framework)
- 		cb_info = notifier_hnode_get_by_vmid_uuid(notify_id, dev->vm_id,
-@@ -1270,18 +1269,7 @@ update_notifier_cb(struct ffa_device *dev, int notify_id, void *cb,
- 		return -EINVAL;
- 
- 	if (is_registration) {
--		cb_info = kzalloc(sizeof(*cb_info), GFP_KERNEL);
--		if (!cb_info)
--			return -ENOMEM;
--
--		cb_info->dev = dev;
--		cb_info->cb_data = cb_data;
--		if (is_framework)
--			cb_info->fwk_cb = cb;
--		else
--			cb_info->cb = cb;
--
--		hash_add(drv_info->notifier_hash, &cb_info->hnode, notify_id);
-+		hash_add(drv_info->notifier_hash, &cb->hnode, notify_id);
- 	} else {
- 		hash_del(&cb_info->hnode);
- 		kfree(cb_info);
-@@ -1303,8 +1291,7 @@ static int __ffa_notify_relinquish(struct ffa_device *dev, int notify_id,
- 
- 	mutex_lock(&drv_info->notify_lock);
- 
--	rc = update_notifier_cb(dev, notify_id, NULL, NULL, false,
--				is_framework);
-+	rc = update_notifier_cb(dev, notify_id, NULL, is_framework);
- 	if (rc) {
- 		pr_err("Could not unregister notification callback\n");
- 		mutex_unlock(&drv_info->notify_lock);
-@@ -1335,6 +1322,7 @@ static int __ffa_notify_request(struct ffa_device *dev, bool is_per_vcpu,
- {
- 	int rc;
- 	u32 flags = 0;
-+	struct notifier_cb_info *cb_info = NULL;
- 
- 	if (ffa_notifications_disabled())
- 		return -EOPNOTSUPP;
-@@ -1342,6 +1330,17 @@ static int __ffa_notify_request(struct ffa_device *dev, bool is_per_vcpu,
+ static struct ffa_drv_info *drv_info;
+@@ -1289,19 +1289,19 @@ static int __ffa_notify_relinquish(struct ffa_device *dev, int notify_id,
  	if (notify_id >= FFA_MAX_NOTIFICATIONS)
  		return -EINVAL;
  
-+	cb_info = kzalloc(sizeof(*cb_info), GFP_KERNEL);
-+	if (!cb_info)
-+		return -ENOMEM;
-+
-+	cb_info->dev = dev;
-+	cb_info->cb_data = cb_data;
-+	if (is_framework)
-+		cb_info->fwk_cb = cb;
-+	else
-+		cb_info->cb = cb;
-+
- 	mutex_lock(&drv_info->notify_lock);
+-	mutex_lock(&drv_info->notify_lock);
++	write_lock(&drv_info->notify_lock);
  
- 	if (!is_framework) {
-@@ -1349,21 +1348,22 @@ static int __ffa_notify_request(struct ffa_device *dev, bool is_per_vcpu,
- 			flags = PER_VCPU_NOTIFICATION_FLAG;
- 
- 		rc = ffa_notification_bind(dev->vm_id, BIT(notify_id), flags);
--		if (rc) {
--			mutex_unlock(&drv_info->notify_lock);
--			return rc;
--		}
-+		if (rc)
-+			goto out_unlock_free;
- 	}
- 
--	rc = update_notifier_cb(dev, notify_id, cb, cb_data, true,
--				is_framework);
-+	rc = update_notifier_cb(dev, notify_id, cb_info, is_framework);
+ 	rc = update_notifier_cb(dev, notify_id, NULL, is_framework);
  	if (rc) {
- 		pr_err("Failed to register callback for %d - %d\n",
- 		       notify_id, rc);
- 		if (!is_framework)
- 			ffa_notification_unbind(dev->vm_id, BIT(notify_id));
+ 		pr_err("Could not unregister notification callback\n");
+-		mutex_unlock(&drv_info->notify_lock);
++		write_unlock(&drv_info->notify_lock);
+ 		return rc;
  	}
-+
-+out_unlock_free:
- 	mutex_unlock(&drv_info->notify_lock);
-+	if (rc)
-+		kfree(cb_info);
+ 
+ 	if (!is_framework)
+ 		rc = ffa_notification_unbind(dev->vm_id, BIT(notify_id));
+ 
+-	mutex_unlock(&drv_info->notify_lock);
++	write_unlock(&drv_info->notify_lock);
  
  	return rc;
  }
+@@ -1341,7 +1341,7 @@ static int __ffa_notify_request(struct ffa_device *dev, bool is_per_vcpu,
+ 	else
+ 		cb_info->cb = cb;
+ 
+-	mutex_lock(&drv_info->notify_lock);
++	write_lock(&drv_info->notify_lock);
+ 
+ 	if (!is_framework) {
+ 		if (is_per_vcpu)
+@@ -1361,7 +1361,7 @@ static int __ffa_notify_request(struct ffa_device *dev, bool is_per_vcpu,
+ 	}
+ 
+ out_unlock_free:
+-	mutex_unlock(&drv_info->notify_lock);
++	write_unlock(&drv_info->notify_lock);
+ 	if (rc)
+ 		kfree(cb_info);
+ 
+@@ -1407,9 +1407,9 @@ static void handle_notif_callbacks(u64 bitmap, enum notify_type type)
+ 		if (!(bitmap & 1))
+ 			continue;
+ 
+-		mutex_lock(&drv_info->notify_lock);
++		read_lock(&drv_info->notify_lock);
+ 		cb_info = notifier_hnode_get_by_type(notify_id, type);
+-		mutex_unlock(&drv_info->notify_lock);
++		read_unlock(&drv_info->notify_lock);
+ 
+ 		if (cb_info && cb_info->cb)
+ 			cb_info->cb(notify_id, cb_info->cb_data);
+@@ -1447,9 +1447,9 @@ static void handle_fwk_notif_callbacks(u32 bitmap)
+ 
+ 	ffa_rx_release();
+ 
+-	mutex_lock(&drv_info->notify_lock);
++	read_lock(&drv_info->notify_lock);
+ 	cb_info = notifier_hnode_get_by_vmid_uuid(notify_id, target, &uuid);
+-	mutex_unlock(&drv_info->notify_lock);
++	read_unlock(&drv_info->notify_lock);
+ 
+ 	if (cb_info && cb_info->fwk_cb)
+ 		cb_info->fwk_cb(notify_id, cb_info->cb_data, buf);
+@@ -1974,7 +1974,7 @@ static void ffa_notifications_setup(void)
+ 		goto cleanup;
+ 
+ 	hash_init(drv_info->notifier_hash);
+-	mutex_init(&drv_info->notify_lock);
++	rwlock_init(&drv_info->notify_lock);
+ 
+ 	drv_info->notif_enabled = true;
+ 	return;
 
 -- 
 2.34.1
