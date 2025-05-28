@@ -1,207 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825452459EA;
-	Wed, 28 May 2025 08:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F3224728C;
+	Wed, 28 May 2025 08:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419600; cv=none; b=leAZFwzOEE8OtRGJi/Hr1Q+dGs+Z3FW2xdrTYoQjjkIYm9e9y37t38x/8i/pSYn4NEqydcFv+1Np52NbhCAsnSR4DUKMHeMGwmz13+wBwCf5WmK+qPvJTfEeO8kPn4EsgulxDHhpncW0OmPGry+DF2fP8ZBMASWiqcW3LlPszwE=
+	t=1748419607; cv=none; b=LCfZydscWsw9ZO4NZikABE6LZjd8CjQG/2ROnVCtNeyIaAAo3D+qjJhCtO0ibNLyqGmSmgwSuzUZ7bBlCRnzoV8YDPZiQVrZX0sTEcFkd7Xhzo9fuS65qb5RchK5kseY6164qnitk0Uxj6cKtS84EWxB/+TaxHjXepqUTbY2kIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419600; c=relaxed/simple;
-	bh=SW97+/6o0Bda4FjXubNbdRzpoyh+i+v91gUy6eOTLnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zc53j/kawKnTqE5C6fNhEMWdYnnQtl2sC2Sl4jaPd3QDVb81rWxggr2c3mSfqEl5/WVTuVftQsZSHte9h2zE9lLCJihaHgicQu+6EdvvIWdlyV12g8/+UJb+HjWO9xtrLXtgDiz1moGXitQ6RsadbaaDqy6DNbgCEMlqefkdgos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnXdCUZ4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnXdCUZ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CBC9C4CEEF;
-	Wed, 28 May 2025 08:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419600;
-	bh=SW97+/6o0Bda4FjXubNbdRzpoyh+i+v91gUy6eOTLnw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MnXdCUZ4xGgmcADcuH8m4JaGdkcG7IZRZVNxJV6pOk2wBRf6P7LFmWZg8ikKdSok5
-	 c/F6aAGMEBlRBrDRt/0v57upw4kP0EuWXE3UrGyatLFJvYRMzBLHPmvkdmB5d/oLKr
-	 slMAAbBnaKTMUsEm9zidYETJLxMPMUI4n/LVANKTGj/1E3nz3lcaimGUT1lc1WIdiW
-	 4wVWMcfPU3OM16wZ8rC56c78a9qnN65CRqByN+++s3UEbs4rM9K34I1zAD79FqWiEb
-	 /BnkFFncv1s8JN4vK6Sr8HmTzANGCdWgoCSkrr8XsiSSNdfc46VhNvD6TwAMmvIMJ2
-	 NzdPz5jnu8OOQ==
-Message-ID: <412231e0-5fcf-4708-aeab-cc3aa38c817e@kernel.org>
-Date: Wed, 28 May 2025 10:06:34 +0200
+	s=arc-20240116; t=1748419607; c=relaxed/simple;
+	bh=Utmj1w9gpAnryKiUXD1QajcvknvGJPR2n8w8hmdFaHw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WV7VtxIwCtEDy9H64c7/sS0VzJJCK9+mu/f9a/LbUJFa1aT5sqVTRQfxeTC3uOL1m1Dv+8S9WM6USAwUymTmKA/Rp5EXJJjkEKWY/YE4UnkiHlI4piyB4dHgpP5DQIx+lq+PiwzCAI+m/oWCRRfsxymgEQkZ9AtiGRCd/csqsoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8Bx22oRxDZo5Mb_AA--.49226S3;
+	Wed, 28 May 2025 16:06:41 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMDxfRsLxDZolYv3AA--.27101S2;
+	Wed, 28 May 2025 16:06:38 +0800 (CST)
+Subject: Re: [PATCH v10 0/5] Add Loongson Security Engine chip driver
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org,
+ linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ davem@davemloft.net, linux-crypto@vger.kernel.org, peterhuewe@gmx.de,
+ jgg@ziepe.ca, linux-integrity@vger.kernel.org
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <cda7ef56-87b3-6594-c2b6-2a4f5a1b63ce@loongson.cn>
+Date: Wed, 28 May 2025 16:05:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
-To: Ayush Singh <ayush@beagleboard.org>,
- Herve Codina <herve.codina@bootlin.com>,
- David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Saravana Kannan <saravanak@google.com>
-Cc: devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org,
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20250430125154.195498-1-herve.codina@bootlin.com>
- <20250430125154.195498-2-herve.codina@bootlin.com>
- <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
- <6c61a101-6ec7-4350-bfa7-5b7d32177818@beagleboard.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <6c61a101-6ec7-4350-bfa7-5b7d32177818@beagleboard.org>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAAhV-H7hBksA2P+vfMbpDVnbjW1Mo09Out_wOQLgLRXPLaFCfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxfRsLxDZolYv3AA--.27101S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxXF4ktFWfCry3XFyrXw18Zwc_yoW5ZF47pF
+	45Ca9xCr4UJF47C3s3t34rCFyrZ3s3Jr9rKa9rXw15ur9rAa4xXrW7AFyUCFW7ZF1rGry2
+	vFWxCF43uF15AacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWU
+	twAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	k0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l
+	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-On 28/05/2025 09:59, Ayush Singh wrote:
-> On 5/28/25 00:01, Krzysztof Kozlowski wrote:
-> 
->> On 30/04/2025 14:51, Herve Codina wrote:
->>> An export-symbols node allows to export symbols for symbols resolution
->>> performed when applying a device tree overlay.
->>>
->>> When a device tree overlay is applied on a node having an export-symbols
->>> node, symbols listed in the export-symbols node are used to resolve
->>> undefined symbols referenced from the overlay.
->>
->> I have impression that this is being discussed in three places
->> simultaneously - here, DT spec and DT schema. I don't know how to solve
->> the multiplication, but I will keep answering here, because that's my part.
->>
->>> This allows:
->>>    - Referencing symbols from an device tree overlay without the need to
->>>      know the full base board. Only the connector definition is needed.
->>>
->>>    - Using the exact same overlay on several connectors available on a given
->>>      board.
->>>
->>> For instance, the following description is supported with the
->>> export-symbols node:
->>>   - Base device tree board A:
->>>      ...
->>>      foo_connector: connector1 {
->>>          export-symbols {
->>>             connector = <&foo_connector>;
->>>          };
->>>      };
->>>
->>>      bar_connector: connector2 {
->>>          export-symbols {
->>>             connector = <&bar_connector>;
->>>          };
->>>      };
->>>      ...
->> And what would this mean? Which symbol is exported - foo or bar?
->>
->>>   - Base device tree board B:
->>>      ...
->>>      front_connector: addon-connector {
->>>          export-symbols {
->>>             connector = <&front_connector>;
->>>          };
->>>      };
->> <from my other reply in private>
->> Another problem is that the board DTS should not care about overlays. It
->> feels like breaking encapsulation and I cannot imagine now adding 1000
->> export-symbols, because every i2c, spi, mikrobus or PCI slot could have
->> an overlay applied.
->>
->> You could argue that only few nodes will be exported like this, so only
->> real mikrobus connectors. Then I will argue: look at aliases. People
->> alias everything everywhere, not following the guidelines.
->>
->> If we assume that such overlays are designed for specific boards, thus
->> there will be only one or two exported symbols not 1000, then what is
->> the benefit of export symbols comparing to referencing by full path?
->> </end from my other reply>
-> 
-> Can you explain how referencing by full path will work in connector + 
-> addon board setups?
-> 
-> The full path will be dependent on the connector, which means the same 
-> addon  board overlay cannot work for different connectors.
 
-That was the assumption.
+在 2025/5/28 下午3:17, Huacai Chen 写道:
+> Hi, Qunqin,
+>
+> As I said before, why the patch "MAINTAINERS: Add entry for Loongson
+> Security Module driver" is missing?
 
-> 
-> 
->>
->> And with above assumption - such overlays designed per board - plus my
->> first point about duplicated exports:
->> connector = <&foo_connector>;
->> connector = <&bar_connector>;
->>
->> why not exporting the symbol with the same name? E.g.:
->>
->>       foo_connector: connector1 {
->>           export-symbols {
->>              whatever-property-style = <&foo_connector>;
->>           };
->>       };
->>
->> and overlay:
->>
->>       node {
->>           ...
->>           connector = <&foo_connector>;
->>           ...
->>       };
-> 
-> 
-> Isn't this overlay tied to `foo_connector`, i.e. it cannot be used with 
-> `bar_connector`?
+Hi, Huacai
 
-I don't know what the example tried to say. I asked the question, so
-don't ask question to my question. We both apparently do not know. What
-is the meaning of that example I questioned? To which connector this is
-an overlay? Which symbol is exported for that example?
+https://lore.kernel.org/all/8e55801a-a46e-58d5-cf84-2ee8a733df9a@loongson.cn/
 
-Best regards,
-Krzysztof
+Thanks,
+
+Qunqin.
+
+>
+> Huacai
+>
+> On Wed, May 28, 2025 at 2:59 PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
+>> The Loongson Security Engine chip supports RNG, SM2, SM3 and SM4
+>> accelerator engines. Each engine have its own DMA buffer provided
+>> by the controller. The kernel cannot directly send commands to the
+>> engine and must first send them to the controller, which will
+>> forward them to the corresponding engine. Based on these engines,
+>> TPM2 have been implemented in the chip, then let's treat TPM2 itself
+>> as an engine.
+>>
+>> v10: mfd: Cleanned up coding style.
+>>       crypto: Unlimited tfm
+>>       tpm: Added error check
+>>
+>> v9: Moved the base driver back to drivers/mfd. Cleanned up coding style.
+>>
+>> v8: Like Lee said, the base driver goes beyond MFD scope. Since these
+>>      are all encryption related drivers and SM2, SM3, and SM4 drivers
+>>      will be added to the crypto subsystem in the future, the base driver
+>>      need to be changed when adding these drivers. Therefore, it may be
+>>      more appropriate to place the base driver within the crypto
+>>      subsystem.
+>>
+>>      Removed complete callback in all driver. Removed the concepts of
+>>      "channel", "msg" and "request" as they may be confusing. Used
+>>
+>> v7: Addressed Huacai's comments.
+>>
+>> v6: mfd :MFD_LS6000SE -> MFD_LOONGSON_SE,  ls6000se.c -> loongson-se.c
+>>
+>>      crypto :CRYPTO_DEV_LS6000SE_RNG -> CRYPTO_DEV_LOONGSON_RNG,
+>>      ls6000se-rng.c ->loongson-rng.c
+>>
+>>      tpm: TCG_LSSE -> TCG_LOONGSON, tpm_lsse.c ->tpm_loongson.c
+>>
+>> v5: Registered "ls6000se-rng" device in mfd driver
+>>
+>>
+>> Qunqin Zhao (5):
+>>    mfd: Add support for Loongson Security Engine chip controller
+>>    crypto: loongson - add Loongson RNG driver support
+>>    MAINTAINERS: Add entry for Loongson crypto driver
+>>    tpm: Add a driver for Loongson TPM device
+>>    MAINTAINERS: Add tpm_loongson.c to LOONGSON CRYPTO DRIVER entry
+>>
+>>   MAINTAINERS                            |   9 +
+>>   drivers/char/tpm/Kconfig               |   9 +
+>>   drivers/char/tpm/Makefile              |   1 +
+>>   drivers/char/tpm/tpm_loongson.c        |  84 ++++++++
+>>   drivers/crypto/Kconfig                 |   1 +
+>>   drivers/crypto/Makefile                |   1 +
+>>   drivers/crypto/loongson/Kconfig        |   5 +
+>>   drivers/crypto/loongson/Makefile       |   1 +
+>>   drivers/crypto/loongson/loongson-rng.c | 211 +++++++++++++++++++++
+>>   drivers/mfd/Kconfig                    |  11 ++
+>>   drivers/mfd/Makefile                   |   2 +
+>>   drivers/mfd/loongson-se.c              | 253 +++++++++++++++++++++++++
+>>   include/linux/mfd/loongson-se.h        |  53 ++++++
+>>   13 files changed, 641 insertions(+)
+>>   create mode 100644 drivers/char/tpm/tpm_loongson.c
+>>   create mode 100644 drivers/crypto/loongson/Kconfig
+>>   create mode 100644 drivers/crypto/loongson/Makefile
+>>   create mode 100644 drivers/crypto/loongson/loongson-rng.c
+>>   create mode 100644 drivers/mfd/loongson-se.c
+>>   create mode 100644 include/linux/mfd/loongson-se.h
+>>
+>>
+>> base-commit: c89756bcf406af313d191cfe3709e7c175c5b0cd
+>> --
+>> 2.45.2
+>>
+>>
+
