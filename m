@@ -1,103 +1,63 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713BE35942;
-	Wed, 28 May 2025 04:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E2B35942;
+	Wed, 28 May 2025 04:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748405858; cv=none; b=PO1HmwDhOuetvXWeiC9OzxqieU8USZc7OHLrOtzXISpaQNTjrUe++hUCEJCY2EThe8xhT6ybiM9aO+NaXH4MqWBvJRi/JpqlrS7vXACsjIkFgq7SoqRt54djzjP3xx8OAw6Y+nJaN0V2xu5NjaIVqXkCXpHp4Qm9rGYZKYopM80=
+	t=1748405892; cv=none; b=hXJobMTXdQaD2DiUWPoJs6KSDk6kxVYdKJJftdEm7uSUetdEpZ08JTkfRn/lMu+HEsajj8pFZnG8UzHzLNeHogU7HaFajvUrGaCLpaLV7I+agFZwxutRfWHNfn7Y015gIHToeE0fxo/Szb3GCKUFelCR6DpiJuMBfkF79r++Vc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748405858; c=relaxed/simple;
-	bh=gIK2jNLj7PiRi/n9fkxad7k+Zo8ms0qzbUkbvTzAz+w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H/QlquGFW6zLmk4JjNhlS/Hx0y2L8FCWHSx6yZ3wyvupRQgc8y+tjf5WwfRJPTEMUlwX6WnN6UZYwvhEAqJhHu6NnNO9c/QSEDdFsCPYCMR3EvLxWsJbppDij8G8zffJ1ViSy6Cwx97mQqr1/Yr5+Ng3h9GHVEnhNUQzZVMQhHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJA5ckYW; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748405892; c=relaxed/simple;
+	bh=3oqDe+nZl49bWs1AAjbXlZTd7P0+aP5nhvYs2YK/iJE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=upcmQ4yXz+1hpMuyZd7akOLGGfYRW2eI6Hw60RvcTUjRmWxrDflJSAvT4UL6JmBmrgE6Mt7zA0QRWivtYrsa6we00k2+OfbZGYoTwKdSj3GsTlrDJ4/6TnIllm/9VLQbrqbROqbgPdsUmD3sAmnbr3DFNWIbaDaaUcx36y0DBa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnwklXt7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJA5ckYW"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e7dc83224d5so443441276.1;
-        Tue, 27 May 2025 21:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748405856; x=1749010656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gIK2jNLj7PiRi/n9fkxad7k+Zo8ms0qzbUkbvTzAz+w=;
-        b=OJA5ckYW6NopUu7hwgwRf6PHa/jMWQqUS7Llb0j/DX2SXt7kftlsIEvzksgjoY5gQ1
-         FaTmQjyf0hXTarC80AB5snl+iz8oWZK6ttiMgnLdJHJwxNJV2ir3Ttq3F8SuCuLoLJaW
-         kDJPiu/mLExy9piv7WJZZm3OZwhZfdellkoZCsOykw0j7rqnBZlxghNh+u+l0dVBx6OJ
-         Ibu8U0NJUVZdbdxfw5Syb4bDTTs/fGdgh7/1tBFxNnhZiakan6HzjRRQemCUUDglBsgt
-         djv2k2zL7cDAMzOylLjmS/VY8iZfA2D6jC0k62ZZgixj/LtsOzjBvYd6hFq9przM+khE
-         OJTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748405856; x=1749010656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gIK2jNLj7PiRi/n9fkxad7k+Zo8ms0qzbUkbvTzAz+w=;
-        b=wsHPFO0euKzHCZe9TSm9A1rEUMGNHc/D9e3PGzvJ5txh4DVX4t99v/IbRwoI7ASwbY
-         01jH02FN9mwe8NM0Clj8YxIvOxjmLrJPItFUwHOABl3H8kCMfdc2lgffI4xDysRmypNV
-         uKhwMpq6vn3J1Z4pyPce8rrHeOzf9QmpIPNza4TXyJ8OnOX6MYrwDFKU9QBrbs4dXNlv
-         MfYxC5zrvCZFDPMBP5Cjs+xvLB8YRcZsAoj6UqkJAHpowhEfdbl1SEaqeNnVHds8GcVU
-         nVVt1DllCEHOJvvNLEB7kMyMaBsjBf6F45g5WqSsqdYe+0NxoMyEXpanVlzjE82flOnE
-         n10Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV84Oyhq2Qh4ftZKPR4Ee8XINibWOG0v5FtRsx7TrSHsKGU4Nf2Ps7iWsOryIWMbRef7OCVYrqpH+w7UEC91oy5Cg==@vger.kernel.org, AJvYcCX7rT14Tn7+nI1w11ldOBk5pwoyDwiRGgdKoFtQKbskKoCxnkLMzqzyLINUYoq7LJKynmr9M+c6PV0BIKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj3sRLupHFi+Rt/2tdH6UauaVraoPhdRclmnTfcuZEeyb2A2fk
-	hxoCLnsxWbuxTzLHKocNyHmfhlUZlyKcfo72ub5f5nJ1drB2dkTWGOa3453zU2SkLaQwb9bzqX3
-	p67MBttiy9Zqo0vWHPZ8tfn2msKT0be0=
-X-Gm-Gg: ASbGnct5Kla8e/pqIQs8kjfxp8wkVzBs52sTJGToDI19uSpOSru7GCyU9FCZVnjAerL
-	0tXHIWSJx1PtFMMTA77XQNYMO+Tn+hpjL9BpObHxw/bARQGfNcGgJo1+D+lb+hPyzarSVDbIKEH
-	ueMBD1TXVzoFp86D27jsYVPoe1PcD/9WM=
-X-Google-Smtp-Source: AGHT+IEexpuRJ1vvdcYophv5hvwFX/OFfNUCCHcz8/hxPY31SkPnhwLAv1nUNkfrrbqW4GU91pvWcm26arQODUe40rU=
-X-Received: by 2002:a05:6902:1109:b0:e7d:a7c7:3f2e with SMTP id
- 3f1490d57ef6-e7dd031fc4bmr4445810276.3.1748405856297; Tue, 27 May 2025
- 21:17:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnwklXt7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AEBEC4CEE7;
+	Wed, 28 May 2025 04:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748405892;
+	bh=3oqDe+nZl49bWs1AAjbXlZTd7P0+aP5nhvYs2YK/iJE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=UnwklXt7PMZ0XckhLtY5qmdtf7jiHRKWoiseYm0QP5ECwl7f85DXpVYYQrQleZ4/f
+	 6JLpbgrYh3aDRvF500oilESuPa0QpQPzW5KOzTUwCZdEeydQ44XNxTRoG0+83NbsZo
+	 7Lb58Ua0zr8c0i+FakWfuyObkoBpZ+R/iPHzXQWbCeKOgb0QENzWVl/uvW8AwIr6wj
+	 5ZjUxaS2cXtcp1oGAOS0DcfxFQj13h7HFxEi6tCPQ/yP3bOvgAVlB41L+QzqXu4dF+
+	 S5NBzvv31vJzOXd1OnfnmLDKAA2F71CstYFF3CSPznelmLR7u8M8wR2Ne9EWyZ8Usz
+	 4TAYDRmPRR3Lg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ECB143822D1A;
+	Wed, 28 May 2025 04:18:47 +0000 (UTC)
+Subject: Re: [GIT PULL] sysctl changes for v6.16-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <itvalur2ynrnjc3grs5nk36fbfm52atybcad2nmxidaavkeqap@nlxzuqvygpta>
+References: <itvalur2ynrnjc3grs5nk36fbfm52atybcad2nmxidaavkeqap@nlxzuqvygpta>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <itvalur2ynrnjc3grs5nk36fbfm52atybcad2nmxidaavkeqap@nlxzuqvygpta>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/sysctl-6.16-rc1
+X-PR-Tracked-Commit-Id: 23b8bacf154759ed922d25527dda434fbf57436a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f1975e4765e5df2b91d400d4ac25c9243a25e92a
+Message-Id: <174840592662.1893196.11610385891138675926.pr-tracker-bot@kernel.org>
+Date: Wed, 28 May 2025 04:18:46 +0000
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250528032637.198960-1-irogers@google.com> <20250528032637.198960-7-irogers@google.com>
-In-Reply-To: <20250528032637.198960-7-irogers@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Tue, 27 May 2025 21:17:25 -0700
-X-Gm-Features: AX0GCFsByp54ESAL7HTGBpk-ibfmatGCNo6smxv07FCnf_glIPUAnURAOBPmNME
-Message-ID: <CAH0uvoiEY0kkz09TavHG-KHqtk7UNHyRLfYC382D_yhvrstBGw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] perf test trace_summary: Skip --bpf-summary tests
- if no libbpf
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, 
-	James Clark <james.clark@linaro.org>, Weilin Wang <weilin.wang@intel.com>, 
-	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello Ian,
+The pull request you sent on Mon, 26 May 2025 08:35:51 +0200:
 
-On Tue, May 27, 2025 at 8:26=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> If perf is built without libbpf (e.g. NO_LIBBPF=3D1) then the
-> --bpf-summary perf trace tests will fail. Skip the tests as this is
-> expected behavior.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/sysctl-6.16-rc1
 
-Acked-by: Howard Chu <howardchu95@gmail.com>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f1975e4765e5df2b91d400d4ac25c9243a25e92a
 
-Thanks,
-Howard
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
