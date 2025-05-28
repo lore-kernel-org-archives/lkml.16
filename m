@@ -1,105 +1,193 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDD3279789
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 10:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D2227A12F;
+	Wed, 28 May 2025 10:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428687; cv=none; b=syIY/R5NOx7BZ1RQCeQApcIarsqEJ41G3yJmfdO7HfHpPGF8by/9Bp+Q/b9xPP8sLduyZypkfEqTp8yUah0a+jKy+rh/v9Ho+b7kcL+wOpt4fqSkIoDXalJnWBJhIupDMb6wMsW44kk6PrbS1cFHoBH8NFd6VBCpcq5pZr0vpWY=
+	t=1748428851; cv=none; b=IASPYBPFwgWguAsKZw3O9gmpsDMtaDV5VJ5EYpfcgxqWebrx4jMIRrvRriypIFRxx3HYguRtBl/JEqHVo9qNRad5UEequcPzIzgXdBsTNVTWrAmwdSAmm50ASq+TSVJ4FarH2bO/2h6HSicULA0VmSngbW+eYKWo4zNJ11M6GzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428687; c=relaxed/simple;
-	bh=f88538q2yu07+QCvEaeEz9oVquJwFySRVSt/ENxM+xU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MqnPO76f8UuVV6bvIZs4/hMrzqbVbUrbCTyewKNaCn3toke0QmVgLQM2nsGj5Kh91djV8NaoVvc68NcofFzYDrfN1gcHa3FrsahurZBZnHc0bZeHdXXPPIwiqH7cozWvng4+n4RicmvKbKUMAW7qxFfVM1W8H5vswKSEq+W6iww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VWBoXXg2; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VWBoXXg2"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4c8a4963fso2696292f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 03:38:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748428684; x=1749033484; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IeeR9yH0GpAyOFZydrFxToBZKNrKT1e0eUyjOqJKqG0=;
-        b=VWBoXXg2NKCUo1b0ZAwDu3yGggmSYzpOOrmhru6hwShEWwN5g+N2vaIJ76si/ovTlU
-         fb6bOkDkEQIitJr0XlnJCaBoxuOrx2WMrFhhZ7tU488N5eEBAdq3Yqr3gVBrYctdinbK
-         EmCD7KeZXxCX9abK4O8wJjqm0svYkdKy2CtsGqYRejSzDEJtFLRuEOl9aFrTuYJqkL1G
-         B9F+SS+snvFhYk1pSRIoek5V1cNSDCkCV0U0mecx/gisAaD138LbyTcDsiuSUQ8A88GT
-         riNA01LSgnqAhVnGkcrzl0JDzSBB/t9hjPr7P87MoYvOxtuiCC9O1Fxezph5bJF2m0lu
-         niFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748428684; x=1749033484;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IeeR9yH0GpAyOFZydrFxToBZKNrKT1e0eUyjOqJKqG0=;
-        b=J+Wy3Q0XlFbpMz2RwjB+otqhrDFXHlB+5t9KJwVKGMtG+IWz4gzUWOxruC/TJEOAWc
-         oJuadr0fde/+ffaWB2x2ihC1AldEDlP+HoTIZmcRpIPeHR4frvvdXVbfeT+Qdq0V0iy4
-         IZiTNfphaxX4BqpypMqp7QegQz+Eza4n+JS8hVLQ6cOauFl1jupWe/GRXkjxJ8FOLv4O
-         2hzC+hUZzdXWr1IHS/enmI7UdpQ6NsHNuCi1+cadHsLzqt5obRtg3ytmr5qnblIq1wr/
-         GDxBEVTsp2AGZr6Laux22CjZhnaXkAMKisEJYXOx7pWtUG/FpobQQMGiBehtqEPigmwM
-         kstg==
-X-Forwarded-Encrypted: i=1; AJvYcCUPPwF+yAY3tS7g+tOK+vzaEuc99urnn8HFm6/YdmSdaQVmkxWiirat2XYDHpRS3l9zHO0dQoqehSz6mts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymWN/mgXFJFiRLd8eiv1rK6aBevbqbl2Kf7a+BqCbl93F7Pn94
-	5jeOBL5U2uDZfg17M2szLtsOrv0SYri5EnaacMNFxEErl0NS5PAxd8oM+9u4sF3UZEstuyvC6xG
-	ffVvi0fNIt6uMyi6P0g==
-X-Google-Smtp-Source: AGHT+IEQyiB/rjNjbMrROAYgPHAOQltkjwgoUsDbxSNhCEmiFFBD4KxkcRnm6cL1n1mzqucg+R5Lc+Nr+C90dyo=
-X-Received: from wmbdv21.prod.google.com ([2002:a05:600c:6215:b0:450:5dbe:5f11])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:5f8b:0:b0:3a4:c95f:c1d1 with SMTP id ffacd0b85a97d-3a4cb428313mr13345804f8f.4.1748428683991;
- Wed, 28 May 2025 03:38:03 -0700 (PDT)
-Date: Wed, 28 May 2025 10:38:01 +0000
-In-Reply-To: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
+	s=arc-20240116; t=1748428851; c=relaxed/simple;
+	bh=4haYlpXI5Ixcum997fl2z6nwrGcuYNAvbh9OqGw7pCg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YA8H7smZV79gxAJqhsTYpysJSGTKE7l2HP8i2xcw+Taq+au84Py8nKV2K2pNN8NOD2II4LkwgZyQ2Hi7IoQ2krM25oSWzgFJ+kpC24cstv0r1e/v0/2cF+vSABuYdiE/4QX4haLQ8tGS9u5hbXU+nr5YzGLoWo31BvZ5bInIXqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 30eaf12e3bb011f0b29709d653e92f7d-20250528
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:d77636db-7685-4e1e-b6c2-abe4fb78a234,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:7
+X-CID-INFO: VERSION:1.1.45,REQID:d77636db-7685-4e1e-b6c2-abe4fb78a234,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:7
+X-CID-META: VersionHash:6493067,CLOUDID:a5b747f2bb1facfd45d139daa1634ba9,BulkI
+	D:250528184038GRIC8D5J,BulkQuantity:0,Recheck:0,SF:17|19|23|42|66|74|78|10
+	0|101|102,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,
+	QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+	,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
+X-UUID: 30eaf12e3bb011f0b29709d653e92f7d-20250528
+X-User: jianghaoran@kylinos.cn
+Received: from localhost.localdomain [(114.246.238.195)] by mailgw.kylinos.cn
+	(envelope-from <jianghaoran@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1632325228; Wed, 28 May 2025 18:40:36 +0800
+From: Haoran Jiang <jianghaoran@kylinos.cn>
+To: loongarch@lists.linux.dev
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel@xen0n.name,
+	chenhuacai@kernel.org,
+	hengqi.chen@gmail.com,
+	yangtiezhu@loongson.cn,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	sdf@fomichev.me,
+	kpsingh@kernel.org,
+	john.fastabend@gmail.com,
+	yonghong.song@linux.dev,
+	song@kernel.org,
+	eddyz87@gmail.com,
+	martin.lau@linux.dev,
+	andrii@kernel.org,
+	daniel@iogearbox.net
+Subject: [PATCH] LoongArch: BPF: Optimize the calculation method of jmp_offset in the emit_bpf_tail_call function
+Date: Wed, 28 May 2025 18:40:32 +0800
+Message-Id: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250524-cstr-core-v10-0-6412a94d9d75@gmail.com>
-Message-ID: <aDbniZzL1ZOSnfVi@google.com>
-Subject: Re: [PATCH v10 0/5] rust: replace kernel::str::CStr w/ core::ffi::CStr
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Michal Rostecki <vadorovsky@protonmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>, Benno Lossin <lossin@kernel.org>, 
-	"Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=" <kwilczynski@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, dri-devel@lists.freedesktop.org, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, llvm@lists.linux.dev, 
-	linux-pci@vger.kernel.org, nouveau@lists.freedesktop.org, 
-	linux-block@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 24, 2025 at 04:33:00PM -0400, Tamir Duberstein wrote:
-> This picks up from Michal Rostecki's work[0]. Per Michal's guidance I
-> have omitted Co-authored tags, as the end result is quite different.
-> 
-> Link: https://lore.kernel.org/rust-for-linux/20240819153656.28807-2-vadorovsky@protonmail.com/t/#u [0]
-> Closes: https://github.com/Rust-for-Linux/linux/issues/1075
-> 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+For a ebpf subprog JIT，the last call bpf_int_jit_compile function will
+directly enter the skip_init_ctx process. At this point, out_offset = -1,
+the jmp_offset in emit_bpf_tail_call is calculated
+by #define jmp_offset (out_offset - (cur_offset)) is a negative number,
+which does not meet expectations.The final generated assembly as follow.
 
-Overall LGTM, thanks! Left a few comments on individual patches, but I
-can probably give a RB when those a fixed. :)
+54:	bgeu        	$a2, $t1, -8	    # 0x0000004c
+58:	addi.d      	$a6, $s5, -1
+5c:	bltz        	$a6, -16	    # 0x0000004c
+60:	alsl.d      	$t2, $a2, $a1, 0x3
+64:	ld.d        	$t2, $t2, 264
+68:	beq         	$t2, $zero, -28	    # 0x0000004c
 
-Alice
+Before apply this patch, the follow test case will reveal soft lock issues.
+
+cd tools/testing/selftests/bpf/
+./test_progs --allow=tailcalls/tailcall_bpf2bpf_1
+
+dmesg:
+watchdog: BUG: soft lockup - CPU#2 stuck for 26s! [test_progs:25056]
+
+Signed-off-by: Haoran Jiang <jianghaoran@kylinos.cn>
+---
+ arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
+ 1 file changed, 9 insertions(+), 19 deletions(-)
+
+diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
+index fa1500d4aa3e..d85490e7de89 100644
+--- a/arch/loongarch/net/bpf_jit.c
++++ b/arch/loongarch/net/bpf_jit.c
+@@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+ 	return true;
+ }
+ 
+-/* initialized on the first pass of build_body() */
+-static int out_offset = -1;
+-static int emit_bpf_tail_call(struct jit_ctx *ctx)
++static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
+ {
+ 	int off;
+ 	u8 tcc = tail_call_reg(ctx);
+@@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	u8 t2 = LOONGARCH_GPR_T2;
+ 	u8 t3 = LOONGARCH_GPR_T3;
+ 	const int idx0 = ctx->idx;
+-
+-#define cur_offset (ctx->idx - idx0)
+-#define jmp_offset (out_offset - (cur_offset))
++	int tc_ninsn = 0;
++	int jmp_offset = 0;
+ 
+ 	/*
+ 	 * a0: &ctx
+@@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	 * if (index >= array->map.max_entries)
+ 	 *	 goto out;
+ 	 */
++	tc_ninsn = insn ? ctx->offset[insn+1] - ctx->offset[insn] :
++		ctx->offset[0];
+ 	off = offsetof(struct bpf_array, map.max_entries);
+ 	emit_insn(ctx, ldwu, t1, a1, off);
++	jmp_offset = tc_ninsn - (ctx->idx - idx0);
+ 	/* bgeu $a2, $t1, jmp_offset */
+ 	if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset) < 0)
+ 		goto toofar;
+@@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	 *	 goto out;
+ 	 */
+ 	emit_insn(ctx, addid, REG_TCC, tcc, -1);
++	jmp_offset = tc_ninsn - (ctx->idx - idx0);
+ 	if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+ 		goto toofar;
+ 
+@@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	emit_insn(ctx, alsld, t2, a2, a1, 2);
+ 	off = offsetof(struct bpf_array, ptrs);
+ 	emit_insn(ctx, ldd, t2, t2, off);
++	jmp_offset = tc_ninsn - (ctx->idx - idx0);
+ 	/* beq $t2, $zero, jmp_offset */
+ 	if (emit_tailcall_jmp(ctx, BPF_JEQ, t2, LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+ 		goto toofar;
+@@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx)
+ 	emit_insn(ctx, ldd, t3, t2, off);
+ 	__build_epilogue(ctx, true);
+ 
+-	/* out: */
+-	if (out_offset == -1)
+-		out_offset = cur_offset;
+-	if (cur_offset != out_offset) {
+-		pr_err_once("tail_call out_offset = %d, expected %d!\n",
+-			    cur_offset, out_offset);
+-		return -1;
+-	}
+-
+ 	return 0;
+ 
+ toofar:
+ 	pr_info_once("tail_call: jump too far\n");
+ 	return -1;
+-#undef cur_offset
+-#undef jmp_offset
+ }
+ 
+ static void emit_atomic(const struct bpf_insn *insn, struct jit_ctx *ctx)
+@@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx, bool ext
+ 	/* tail call */
+ 	case BPF_JMP | BPF_TAIL_CALL:
+ 		mark_tail_call(ctx);
+-		if (emit_bpf_tail_call(ctx) < 0)
++		if (emit_bpf_tail_call(i, ctx) < 0)
+ 			return -EINVAL;
+ 		break;
+ 
+@@ -1342,7 +1333,6 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
+ 	if (tmp_blinded)
+ 		bpf_jit_prog_release_other(prog, prog == orig_prog ? tmp : orig_prog);
+ 
+-	out_offset = -1;
+ 
+ 	return prog;
+ 
+-- 
+2.43.0
+
