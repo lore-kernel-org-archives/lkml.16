@@ -1,178 +1,112 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01A320458A
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 18:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C495A111AD;
+	Wed, 28 May 2025 18:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748455573; cv=none; b=fPhpJIWOtT7cuSR+vXCjxcAhwOIR3krvGEAMKSAbMHdsTMZs+8SJ12vaCoXeTl8SHNfU8ZaUHubS2q6UVbEDsgO7RvI6FXAMbq7rbIuOIp5CKFvl5H400ZSQVb+Pwx43IlcB9VKPW/U6WjNtl+FS7AZm9YoLg38CICzX0SsoIbs=
+	t=1748455583; cv=none; b=I0DGH0oUwC1vztlYifPcbYUt01UWgFUhWO0lYSvFauvVcepyABr5b9HkeZxl2mrBn7a1HJ225327sUr1YIeebrjPN16r38CSvV495uztzvANfLUD1zZtLiwQSBfXzyn8/QwBZriUDLEy0K1gZ+6HodII5PK0QjnjHHM/yY2nNvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748455573; c=relaxed/simple;
-	bh=VRd1lkT9N5ACH+1BjDwXdFBCq75yta6YVidqEhnw3us=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eIWU/4NhhI1XLInYLGaZIDXStoS4UVYBOe2+6FjNQVYqKCd8y34dQodgr0Cj7ziXUUxjHDWVgIev/pCg5aO5knoZb+kQdvzY8c0M/xkOMFI6nR5xWsWXT31FOlk0xV23QTZ7grHuzsTRuIwJau7xYx6MzYm+R2fSl+/L+nyuY2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=L5G4AwX9; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1748455583; c=relaxed/simple;
+	bh=SwYQFIc7r2JHQ2hnmDJnXLD9YNcIS11EmU+W4n5WpnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ioTWUxN7Qflcgv4wD+BORdChkgsBa0Ung05XWhUbr3OR8AE2Tt7c7XqcXM5XOeZLXioqcR2bXnNItVxzG7L3JPESpwSKEjloUjTHs44x6SzMNhvoaRALzqnZcbKR7fVSI2UkHwzi6M5Gi1x5tG0dCCMSts9CmSlT5oXnMkcCHtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPYy9JI5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L5G4AwX9"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2349282084bso1860455ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1748455571; x=1749060371; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+fgzLhtoA+AV7JPQdrF/lZ8VWpagMNnkYPcAKrhW+k=;
-        b=L5G4AwX95c2PoEuPtyhKEiy2TDc7+q6vD69iWF6eZc7Tk5OCpGYmrU4P2RA/DN4Zuk
-         kLHXZRUlDd4RrpwXA3cHwdwHzNXDSsMLatXcF2/jCcNn0gKuSXxw2YI56Geo2maQkc+J
-         6VAwo3Osx3ZiT971UMGPvrBf06tGxNp3i5r2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748455571; x=1749060371;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V+fgzLhtoA+AV7JPQdrF/lZ8VWpagMNnkYPcAKrhW+k=;
-        b=cgj/iwPpLz2R3YVCpkF1iMbY8gQ8MWg0TuRV65uvhH6xgdh9+RzqEyxVTYFCWbMBBD
-         1lAvSg2novFyRSX2TKtc/tlahH2Wr7ptu/v6aUGm4W5nCzBI5h4yXgSCWElV5dSxYS67
-         eHiXRqNb82/QlTgvnf3s8vOztr9EOBkPPlJS8Jxl1TT1+DOw2Kf2UqHksJlTklicKSZg
-         DDRmHAvYBeGupvshz/e30FabUYqbFkFRiMyqqlwEtuPx86+q3hWg9WIhrinhZfF01iov
-         ItbpnZKwa/oObI4BObleKTH9GPiqrO/QFaj2za/HZeJPI51B6/fkrnhw+yK62J4j5Ale
-         baFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMxlTAH1CQsUbO3RG1oW1GMGDlUeuiwA/QF1ZqOJ81EnGn6r85wcZJuESv+5c9005xcGe0nFhuzC6TZSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfdlObW1q2RLVVkNFsu108jmDoSceaPyUjU1xCdzCWwYcytZ07
-	mFqAxCCSyUDomI1oQvsfHeALxXDnzAc8Mj+nQST4xsT1kydxuteOKsEjA0g/Xw+zNpQ55agCPpz
-	/TAVR/KXI
-X-Gm-Gg: ASbGncvcWERUla4sFAyWujCCTqfqVQdnyNXEEsxSKsKlHo4i8PbvO6ztUP+T0m4+Jee
-	ZEH/1c1fpEWLZerZl2gKOKshwPS4JSONKqGr7XVpfhstEUjiA48iozCeYy8963uzdu+X1KSTUWi
-	VTt7kTDntTBvK3bS8glgBdbtXa3SHRsv+QX3Hn5/X5mE8T2uEtTzP3kMzkTx5zlKgriUyco9kTT
-	h5PLMYL6ASAJCVBl+grDum35QWbVNEwetKcUXvdCzOHYc+/LbQFvKtK3F3Jp0UJ5rqzECcKe1Li
-	ZrF+dTPGQbV599Wi5dQVs3gq3i80SJ05FV0rNcdgeX//eCklzTVUnscKIm/k+CDq9+awJKOSyXx
-	mNeBYzRQLVxGeLvbI2A==
-X-Google-Smtp-Source: AGHT+IE0MbcL7TCwRAJqHBFLnBzuD7OWqOUxL6t6VrEH0kdYZvzZFqAYUKIm3J6LXZPT04e+9H+S+w==
-X-Received: by 2002:a17:902:ecc3:b0:234:d7b2:2ab2 with SMTP id d9443c01a7336-234d7b22bb6mr35506185ad.8.1748455570906;
-        Wed, 28 May 2025 11:06:10 -0700 (PDT)
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com. [209.85.215.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-234d35ac75fsm14640865ad.167.2025.05.28.11.06.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 11:06:08 -0700 (PDT)
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b2c40a7ca6eso149184a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:06:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUbmyiYWSXxGmWLNkc35dE8DMPGgqITZE7kUh2JInu9DQTfnYOvivSracBKM/9g+7w9IY4SOabTthE/7Lg=@vger.kernel.org
-X-Received: by 2002:a17:90b:1e11:b0:311:fde5:e224 with SMTP id
- 98e67ed59e1d1-311fde5e3a7mr2621369a91.6.1748455567945; Wed, 28 May 2025
- 11:06:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPYy9JI5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35DC1C4CEE3;
+	Wed, 28 May 2025 18:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748455583;
+	bh=SwYQFIc7r2JHQ2hnmDJnXLD9YNcIS11EmU+W4n5WpnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tPYy9JI5+Gq5oIXon40EQ7pZd9jgDOyyAG7rfA1wIsXVU6Qg1E7TFYs9rekn7ijcZ
+	 czdAEjOqRjbCaQC5a1Zf4ZXBhNSpGOM39Oj+BUsp0Ckgzc7oP4wjVoJpmhgSzBO8UY
+	 5oUxUni4HiriTQY9fnXq7QAo5h55D801ScHz80ztdfprIIDTx7TDfUn9rwRHrCdzi+
+	 ysZHBygnTEMVto2mSjV+I5Ulb/YBHAebj1cxrloW8JxHyYDno1597lDZ496iqVPqrU
+	 ZtE5dX013juINIBqTO3C/BtjYmsX30k0MKDhpZ0Hec8EXu8wiVsfefoMfdmdpninH4
+	 pmAXzwCsHDwEQ==
+Date: Wed, 28 May 2025 20:06:16 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v8 3/3] rust: platform: allow ioremap of platform
+ resources
+Message-ID: <aDdQmJ-pen_MQNDB@cassiopeiae>
+References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
+ <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
+ <aCYVG-VVdJXYnSTt@pollux>
+ <5B875DFB-D655-4BAC-A475-43AE309520E2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327-uvc-granpower-ng-v6-0-35a2357ff348@chromium.org>
- <20250327-uvc-granpower-ng-v6-5-35a2357ff348@chromium.org>
- <64c00146-e6d2-448d-a416-19d5ae7ae3f6@jjverkuil.nl> <CANiDSCvM_V0Pv+cxd31AwcXjG-etJ3imsDYfRb7W2t0NKT67OA@mail.gmail.com>
-In-Reply-To: <CANiDSCvM_V0Pv+cxd31AwcXjG-etJ3imsDYfRb7W2t0NKT67OA@mail.gmail.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Wed, 28 May 2025 20:05:50 +0200
-X-Gmail-Original-Message-ID: <CANiDSCv6vb=o-gizVr33XX2sVfBookaze2S1hkzshUyNNnzTbw@mail.gmail.com>
-X-Gm-Features: AX0GCFtPgVMd2juZVahO7Uk3bU64vKS_xa1UhEfT0crKE5AC7K-BWl6NWKkoiUE
-Message-ID: <CANiDSCv6vb=o-gizVr33XX2sVfBookaze2S1hkzshUyNNnzTbw@mail.gmail.com>
-Subject: Re: [PATCH v6 5/5] media: uvcvideo: Do not turn on the camera for
- some ioctls
-To: Hans Verkuil <hans@jjverkuil.nl>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5B875DFB-D655-4BAC-A475-43AE309520E2@collabora.com>
 
-On Fri, 9 May 2025 at 15:51, Ricardo Ribalda <ribalda@chromium.org> wrote:
->
-> Hi Hans
->
-> On Fri, 9 May 2025 at 15:44, Hans Verkuil <hans@jjverkuil.nl> wrote:
-> >
-> > On 27/03/2025 22:05, Ricardo Ribalda wrote:
-> > > There are some ioctls that do not need to turn on the camera. Do not
-> > > call uvc_pm_get in those cases.
-> > >
-> > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_v4l2.c | 20 ++++++++++++++++++++
-> > >  1 file changed, 20 insertions(+)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> > > index 0f1ed0387b2611c8d21e211afe21a35101071d93..668a4e9d772c6d91f045ca75e2744b3a6c69da6b 100644
-> > > --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> > > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> > > @@ -1440,6 +1440,26 @@ static long uvc_v4l2_unlocked_ioctl(struct file *file,
-> > >       struct uvc_fh *handle = file->private_data;
-> > >       int ret;
-> > >
-> > > +     /* The following IOCTLs do not need to turn on the camera. */
-> > > +     switch (cmd) {
-> > > +     case VIDIOC_CREATE_BUFS:
-> > > +     case VIDIOC_DQBUF:
-> > > +     case VIDIOC_ENUM_FMT:
-> > > +     case VIDIOC_ENUM_FRAMEINTERVALS:
-> > > +     case VIDIOC_ENUM_FRAMESIZES:
-> > > +     case VIDIOC_ENUMINPUT:
-> > > +     case VIDIOC_EXPBUF:
-> > > +     case VIDIOC_G_FMT:
-> > > +     case VIDIOC_G_PARM:
-> > > +     case VIDIOC_G_SELECTION:
-> > > +     case VIDIOC_QBUF:
-> > > +     case VIDIOC_QUERYCAP:
-> > > +     case VIDIOC_REQBUFS:
-> > > +     case VIDIOC_SUBSCRIBE_EVENT:
-> > > +     case VIDIOC_UNSUBSCRIBE_EVENT:
-> >
-> > Wouldn't it be better to check against the ioctls that DO need to turn on the camera?
->
-> I thought it was safer this way. I will look into inverting the logic
-> in a follow-up patch.
+On Wed, May 28, 2025 at 02:29:44PM -0300, Daniel Almeida wrote:
+> Hi Danilo,
+> 
+> […]
+> 
+> > 
+> >> +    ///     let offset = 0; // Some offset.
+> >> +    ///
+> >> +    ///     // If the size is known at compile time, use `ioremap_resource_sized`.
+> >> +    ///     // No runtime checks will apply when reading and writing.
+> >> +    ///     let resource = pdev.resource(0).ok_or(ENODEV)?;
+> >> +    ///     let iomem = pdev.ioremap_resource_sized::<42>(&resource)?;
+> >> +    ///
+> >> +    ///     // Read and write a 32-bit value at `offset`. Calling `try_access()` on
+> >> +    ///     // the `Devres` makes sure that the resource is still valid.
+> >> +    ///     let data = iomem.try_access().ok_or(ENODEV)?.read32_relaxed(offset);
+> >> +    ///
+> >> +    ///     iomem.try_access().ok_or(ENODEV)?.write32_relaxed(data, offset);
+> > 
+> > Since this won't land for v6.16, can you please use Devres::access() [1]
+> > instead? I.e.
+> > 
+> > let iomem = pdev.ioremap_resource_sized::<42>(&resource)?;
+> > let io = Devres::access(pdev.as_ref())?;
+> > 
+> > let data = io.read32_relaxed(offset);
+> > io.write32_relaxed(data, offset);
+> > 
+> > Devres::access() is in nova-next and lands in v6.16.
+> > 
+> > [1] https://gitlab.freedesktop.org/drm/nova/-/commit/f301cb978c068faa8fcd630be2cb317a2d0ec063
+> 
+> Devres:access takes &Device<Bound>, but the argument in probe() is
+> &Device<Core>.
+> 
+> Are these two types supposed to convert between them? I see no explicit
+> function to do so.
 
-https://patchwork.linuxtv.org/project/linux-media/list/?series=15601
+Yes, it comes from impl_device_context_deref!() [1], which, as the name implies,
+implements the corresponding Deref traits.
 
->
-> Regards!
->
-> >
-> > That is more future proof IMHO.
-> >
-> > If a new ioctl is created, and uvc implements it and that needs to turn on the camera,
-> > then presumably you will realize that when you add that ioctl in uvc.
-> >
-> > If a new ioctl is created and uvc does not need to turn on the camera, then you will
-> > almost certainly forget to add it to this list.
-> >
-> > I'm not blocking this patch, but I think it will be hard to keep this list up to date.
-> > Inverting the test is probably much easier to handle in the future.
-> >
-> > Apologies if this has been discussed before, if so, just point to that discussion so I
-> > can read through it.
-> >
-> > Regards,
-> >
-> >         Hans
-> >
-> > > +             return video_ioctl2(file, cmd, arg);
-> > > +     }
-> > > +
-> > >       ret = uvc_pm_get(handle->stream->dev);
-> > >       if (ret)
-> > >               return ret;
-> > >
-> >
->
->
-> --
-> Ricardo Ribalda
+Device dereference in the following way:
 
+	&Device<Core> -> &Device<Bound> -> &Device (i.e. &Device<Normal>)
 
+You can just pass in the &Device<Core>, it will work.
 
--- 
-Ricardo Ribalda
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git/tree/rust/kernel/device.rs?h=driver-core-next#n284
