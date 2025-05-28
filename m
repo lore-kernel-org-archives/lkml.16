@@ -1,20 +1,20 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A0B213E78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE21121A931
 	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 19:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748459159; cv=none; b=iockzJD7mjfAUkFK32C8ktB0jtI/E2hmOF81c7bOQEe2XRmv7/nfbuIREjlcXHZ+AuWhJoCjLUBTykYaeKtRfve8EFyVw3gVdd69uY+l6sLKyXt+bjcNOHDsmcGnD9SSn95VGmAxc2s3rkgA5fWwlKspAVRQIzplAW2rvuvyUHc=
+	t=1748459159; cv=none; b=ICXS1UGaUMEHj0wvKTf5M2gC3O1Zap+6HBc6TYP4zF8egnwkiTX1hnBQPzdRlGpoECTtvcDL1wmZF9bCtWmBK3PU6WhzWeBIIqu/x8FbBWosdqUY4FfLIzNLL0CgS1kooJHtZWYZX9954uPApwS0CxYJ84ntHezzMkbpFCKF2Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1748459159; c=relaxed/simple;
 	bh=sZ9FIcQVpn0uh9fCmpFV7+WIIQpiLB3e3RkxJVozPN8=;
 	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=XV0mX36pfyntmXa/WTqznoz7up/BOnstXVpt1COsw2TKJZoZOQqYJwOBSBnfWmg0z0Vp/PTVQTvT41N2JdS/PuFoUi90Vbf3/LgSQASfuLO1ESA7X4iJbAoRu44oOENnj77fSljn6RD03iHzKr5lq3s1BQmyRpT8ueGOh/AmmC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+	 Content-Type; b=tgbd+CHsonzHv4I0o5xGjw3Zn1ZaYwDRFQfrdJV2WcF8QerfVnoo6goyQHG2wSPjX2GxeSf/1hSWAyH4/RbKexIQ/UuWKotje7b7qFH1nGO3JECfNq5qITXuyAoeq45oLKZUyQyUKGNhPRktBX/DfNF4IVdzHi9EhsuW88bxRqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cc7cdb86fso6656539f.1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b4dc23f03so7691339f.1
         for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 12:05:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1748459156; x=1749063956;
@@ -22,30 +22,30 @@ X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
          :date:mime-version:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
         bh=BoU3G5hmnMDZf8TfEo1AisxE9BKN/r0sRMS8lO5Dwng=;
-        b=OENPvjQMBtB3uSg6FLnSykKnD7ICTGPPmIfZWKVEKscqaWD6C3vL06NOhY22p7KRLJ
-         mUj8vtS4dRfINQVp4gA1CTFnpxxT/IZdDSNPw1XdxPMGCmhwfsod4J/BeEtqKZjhy58I
-         mre7ugQI+V9Y2wH+SfiHlDY8xA2OoZhNu6AN89XrVNP1RFY/QFCcBwMzm7BksQEsDja0
-         rFXpDu/hP7mJ0C2A2NqTc3w+Q+FW/6OgrhLLocK4ZUCGliuG1AICLJaKqanXg8YWmXn8
-         V9AhAoCTo6IYv8fQDMaKvqoMLlTkFkne9y04nHXv4mhpzq1pKre2Qf3qv4X9AgL0XhHK
-         belQ==
-X-Gm-Message-State: AOJu0YyiM7P0nw7Jqy2A7eOlyR/7gRqWjTKv0t4U63m2FCUBHcgvW4Te
-	GZni2EPnHwkzS3qJdfQeVDtrK/5MEdGnBW8oMoZstztOZ/6dRH7vjeAhqU0lWkKqULSZFLB1KZd
-	AVwKueqZLklBXEehFX3k41/pGpJgXa5Fk3OwbD3EGggaz7VAIpl8oT8X8YcE=
-X-Google-Smtp-Source: AGHT+IHEcFiWJx+aq4rrujh1U0qWDR+yRX9NIAc68zBmL3hm7q1iCA4EeHyWO+hywyLInLvW6G+ki5gJtkVbyUTfGtI3t59WmoaI
+        b=LukHMwLDg6sZqgttrVfFYxEm7U22sVqq1hKOICxONMOsk2aV1Xx8sKalqZiz80jVea
+         USpKjtj7wbgpDtCiOkrSkhVZDtU4JSDDpbSqf7sujnW4slnI1lBYWvmOnc+EW7upfb6P
+         mQ7M0ZQYR4Bxd7ExglPGEvHq8oHw6+J9JxRkk1UL3vbNbz2gXrGl4H8qi7FGTLTLfwof
+         RzjvUjR5j99ODw5M1GQtTGSKBkOmxPvM0YleQNbOA/gCBr5huNr7h2+OFM+JxyW3cLuV
+         uFXw1FaV6Nxbo0U0M/PyoX9gHhJ9F8knnYw+05yTKaL0daR4ezV2U5Bs/Y7SgtSvbBVN
+         WzKg==
+X-Gm-Message-State: AOJu0YzTtQ8Hyb5anPhI6Mph2AIb4Dt3TZKNA6Nmy95Ih4cBqobqzpFU
+	Ueo/FV5bfEATTnESwePus2I1SDp2tdb5+wa9ghqLOeAmrQ+NivMyT97mCP7YNrfMMsfFc5EHAgD
+	WRbPiv6oX5G870sM7l4T20/roN5eQhQEcm8AhHT6WN7dydyQ87vaWhbgSaWA=
+X-Google-Smtp-Source: AGHT+IHnobeXPhkJhU1Kln+vyv4TZKs8Ugwrfz+lpH/9hKDMAqTaPa5d0cR+7tenVCY8nvhoEJINuTNP3hNaWD/4vH1lYieEL3UD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4894:b0:861:7237:9021 with SMTP id
- ca18e2360f4ac-86cbb818161mr2133480639f.3.1748459156686; Wed, 28 May 2025
+X-Received: by 2002:a05:6602:474b:b0:867:9af:812e with SMTP id
+ ca18e2360f4ac-86cbb7e4163mr1809562139f.5.1748459156610; Wed, 28 May 2025
  12:05:56 -0700 (PDT)
 Date: Wed, 28 May 2025 12:05:56 -0700
 In-Reply-To: <6832ca5f.a70a0220.1765ec.015d.GAE@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68375e94.a70a0220.1765ec.0174.GAE@google.com>
+Message-ID: <68375e94.a70a0220.1765ec.0173.GAE@google.com>
 Subject: Re: [syzbot] Re: [PATCH v1] Bluetooth: MGMT: Use RCU-protected in
  mgmt_pending list
 From: syzbot <syzbot+0a7039d5d9986ff4ecec@syzkaller.appspotmail.com>
