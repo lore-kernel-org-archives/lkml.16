@@ -1,83 +1,59 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D055221574;
-	Wed, 28 May 2025 22:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7D2221F2E
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 22:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748471112; cv=none; b=Kit9SVk/PKm9MFcdyN7OQKezB2eRHhq7wu4NMZnu8UZEgY/RIGBYoHXXFj8fDt33G8p4nzDA1egYNgFsUva1WWZex5jKldgodmIhxe6TtduhvyjYkaeXpNttJLvegYebEqnB9/eagCOunfTITUzlx23PXIB/YjN6N4+ckcvWbhs=
+	t=1748471188; cv=none; b=CqWK5wnu7DsmIS9bdvv6Rl00l+jvXugDKmKdiJoPKOdjotBiv0wqlC7XdO+ylr8lI7MHs0c5m+MutoU5W1nHC6NJsRIzvk4f8KZrw16K3QGaeF++VlgVfklS0APcoPykxQp16qL2ShzvNzDpRXRO1CECDwSzVryk2K1E8SgkYzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748471112; c=relaxed/simple;
-	bh=NeXatPkVOJSPTjPkImsLQK/s5cx3CnEYMpHmeUmLOm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XaQkfDk6v2nssgnu9JPd6UQYK6pBqgKkgNwtlD3TDY1/y58VlcvlpXqjvn/THCHOXfUJ2eGs40ZQpk9OHUaICDkH/QyeMjc45DpCJJg7YkYsxlovHcdEVHfeiep8Kd+qMTCYWJp2xxNU9zb1TiKqw8eCCed9TS1V7M/eO+a2nSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eY8zGJ4U; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eY8zGJ4U"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7d0997d3ac7so19311685a.2;
-        Wed, 28 May 2025 15:25:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748471110; x=1749075910; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NeXatPkVOJSPTjPkImsLQK/s5cx3CnEYMpHmeUmLOm0=;
-        b=eY8zGJ4UziTxJRinyHHybROKfbUmYMF/BWLHOA4q5yC3BJEz4msj7kXgO935UE5gih
-         1a48M2j8Ca/avRhbXKsPtQhjdHEjNVp03UMB8zH6qF1jZ9xcigRphL9g8CZ0OJT9TfsY
-         rbHu2+chqbdmi65brjKjccB5xZp/QK4b5VK++j0C2hSEwuG8QAkzExjj1CJwRZIvjkVE
-         V8V2z9ScajoKFPnTK8Q6zZH59pRhDpdKD1rJcAlc8ejj9wnuCCWRYU5VlYHmxifWkk9q
-         jmDfSZzBSCUE3kX4WBebLu0O3DrERqjsLuRjYPYWzqHsZNftc/EtsgIacWnmaoBiSSke
-         9gJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748471110; x=1749075910;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NeXatPkVOJSPTjPkImsLQK/s5cx3CnEYMpHmeUmLOm0=;
-        b=iZ06WhJw4vq/vHc0Wdsg9zdZhH3eABQ8fuA7L6XDPQbQl5I97A77p1b1+jgcyuHSgV
-         h2wXCMRQ6bWFSxv5F5T6H240mqZpTiuChKfddJ+AIiWNr52l7DZaf8jf2aJyhoKmpxrg
-         90+/n60nUPZD5Ngg6wsZfJKtSDx85igJK0DQrtSLJpflhRFcO8XmUvlrcMDU3U82Cuj/
-         dtutXpp7cW3QCOpX7sNF+G8r7/ZyOBCJiT/enO2CPKx1mmVCsO0P7APncDLUfhoisDqm
-         PMrMcU6B1A3N0WTysmvnvKYIRWmcJUXxiMfQCukFzKlReG8XGHzUu8UMyenoprKASyhI
-         G94A==
-X-Forwarded-Encrypted: i=1; AJvYcCU3uCXU7s/XgtZYwFEEhLVcD5rfFHHdzCAobPgkIq7k+z1v+P5JPg7XG1+04t0wsArgogwvNXmznAsdyPs=@vger.kernel.org, AJvYcCXYKd4AfoCC0l7F6jHUnmS8p/jfJD/hXlcqoybMGdrAMNrdGIYnPr0K9Fha5JWD29p9/ZLAKn89XRCbIh6nDSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ2NEsmQVFSjIGOzRIarsT9kTqmqUbPySQmCf5Htek5eRm0FU6
-	OpFfZWqzadUAuIsw5CDe+15FeMvC0dQpsbNDryXXNzlIw4UsWYuytCq7
-X-Gm-Gg: ASbGnctC8NCVEmj1hhIyRPktEKc9TmP+xk9SlWEQojdIuiYilZcv9fGFxZ6K3izogVH
-	xwM1bXhiYyIUqjq6YiFlMd8CSwxVupuaSvEfvwqVbLyEu0qfou+gKfCLlZE3JOiFXW8NvsVr+fr
-	A8W7Y5nM0byfffKzdpqZXOr+HauhkblnLeYh0Ew7sRvfbcsBfrLFO/vb855nA4hBLhl8y8IRLTf
-	viBna6zUT74We1y38n/mtLD7NzhbadoCf9WBrAw9ufvIxMRp5xFkekgvbWXOij32lRBWdWaJYwn
-	MiTY5lGMRK2IpVlvY3N3swKKSxYHFYEiq/51Wvd91cAH
-X-Google-Smtp-Source: AGHT+IEJUBSsIaWe6phGuCUnqOqW9W60o2oxc8R894FCnR3z1Jh268Di5dKJ5+u2nneQJ3fPgG+X4Q==
-X-Received: by 2002:a05:620a:4543:b0:7c9:6707:b466 with SMTP id af79cd13be357-7ceecba453emr2478084085a.11.1748471110392;
-        Wed, 28 May 2025 15:25:10 -0700 (PDT)
-Received: from arch-box ([2607:fea8:54de:2200::dd7])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0f8df7sm8548785a.36.2025.05.28.15.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 15:25:09 -0700 (PDT)
-Date: Wed, 28 May 2025 18:25:07 -0400
-From: Albin Babu Varghese <albinbabuvarghese20@gmail.com>
-To: ojeda@kernel.org
-Cc: alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rust/list: replace unwrap() with ? in doctest examples
-Message-ID: <aDeNQ7zpfDrYAsyU@arch-box>
-References: <20250527204928.5117-1-albinbabuvarghese20@gmail.com>
+	s=arc-20240116; t=1748471188; c=relaxed/simple;
+	bh=MZjUkKHS1vCjdXkfYflxs7Zno0iAOCiqgPK5E4whLTY=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=DZoa2DygKyh+e6vVz+qFT8e7Sfnu/d+38UNqeeeKKx5vJ0c/VR721ZaxCW3avJ8eE6cVfPAtNMgQl2vFlLDhGUmF+aLIgCEk9wDEXx+Pp0xcCGAdzP8s6RlnAUM0smzUhN+ZN6iyFHUbRpioo17mNQgK32sAwHIe4sCM5VqsndY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46007C4CEE3;
+	Wed, 28 May 2025 22:26:28 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uKPFB-0000000AoxW-1bEI;
+	Wed, 28 May 2025 18:27:29 -0400
+Message-ID: <20250528222704.623477429@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 28 May 2025 18:27:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [for-next][PATCH 00/10] ring-buffer: Updates for v6.16
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527204928.5117-1-albinbabuvarghese20@gmail.com>
 
-Thank you Alice and Danilo for reviewing the patch.
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ring-buffer/for-next
 
----
-Cheers,
-Albin
+Head SHA1: 1e83735aeb8330a23dd6020cd917ef12dd7ee56e
+
+
+Masami Hiramatsu (Google) (1):
+      tracing: Reset last-boot buffers when reading out all cpu buffers
+
+Steven Rostedt (9):
+      ring-buffer: Move cpus_read_lock() outside of buffer->mutex
+      ring-buffer: Do not trigger WARN_ON() due to a commit_overrun
+      ring-buffer: Allow reserve_mem persistent ring buffers to be mmapped
+      ring-buffer: Removed unnecessary if() goto out where out is the next line
+      ring-buffer: Remove jump to out label in ring_buffer_swap_cpu()
+      ring-buffer: Simplify reset_disabled_cpu_buffer() with use of guard()
+      ring-buffer: Simplify ring_buffer_read_page() with guard()
+      ring-buffer: Make ring_buffer_{un}map() simpler with guard(mutex)
+      ring-buffer: Simplify functions with __free(kfree) to free allocations
+
+----
+ kernel/trace/ring_buffer.c | 213 ++++++++++++++++++++++++---------------------
+ kernel/trace/trace.c       |  26 +++++-
+ 2 files changed, 134 insertions(+), 105 deletions(-)
