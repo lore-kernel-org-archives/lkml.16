@@ -1,115 +1,158 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3BD3286D7D;
-	Wed, 28 May 2025 13:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8709928750D;
+	Wed, 28 May 2025 13:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439286; cv=none; b=ept30hfsWG8WAS18SogveSekvG8Kow7lo9+dFo/Snq7jswC7GEwK/3HQHzb1hzzGDrqwfnGaRtg4QhR24M9TLYxZ2hx578Q+C/2j0pm/5pBv6bhNwDthzhQ0BSyJH9dDv9nycImaW9RHmv4calvawvUjMPnw+VNMKdN/zaeCHUs=
+	t=1748439302; cv=none; b=dmZViHZUZlj1pBP/FMwLTJn4rbp7X79IyLUU4glX94/+Ux82GDGL1N7eqiqEynUgJ4bWRx6B/AKLje1dwGhhAQ6hkxP1XCV/JcpJ+8ly99JA0NgJ5dwna+CclpenYQCDKtCf+GaC30mx+oiCsPCDk5tJqFjvSXCP0JdVm1/ZS7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439286; c=relaxed/simple;
-	bh=qAXP3u+F6kQv8fklR/9r9VbSdVa03zSafbWjGJc6TIQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e8/lrFwmP+AffnBvvwecCsa/Y7JdKyJ0nvXARA4DOodGhLyBlqEtV4rsdIMoXBS1Teec5rCkBwh0gRlZvHygq/DYTn5pl1LTT9AZQN41MQ8vF2SHn0jL2+2ONPiHR9O354DaQpkdF92Gz93TbgngYEINDfXXOZHCD1K7KCGtsEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X//Zv9nN; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748439302; c=relaxed/simple;
+	bh=AL79StjEVtOpavdCkIahecDYTSI5U301axB+UHG6/+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i48dwgptsdM3eJq0oS0o0PRBCY81k5wdCEnQ4Q98yFrU1i5jIDZGpEnRi2OVHw9QpteKwaaW2asMtHvsqfoP+M24cWUOOBxDQeZ0zMn9f9pVHW+jFPFk3VKbEbOk4fCT2Dd2kisTD9BLqWRi4xtRpN1772TrmtubvLAq9qxsk+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcZ1hRKl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X//Zv9nN"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ad8826c05f2so435543066b.3;
-        Wed, 28 May 2025 06:34:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748439283; x=1749044083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=60xNEii/ejRTOcRUkHwbDeFVkYWfusBxmvyh2qWNN6c=;
-        b=X//Zv9nNB6iCXC3Z4W/y8rU6JXbXQ8hS4eB3zn7dIpfXJlmyLjwD7CgUtUdfJh2WOZ
-         DvyAjFhyNuSkUazUeOst5rvETonISSesPAY88kaDP7dSmEN4k2LaXJ55WR3ExewfD2Az
-         Jgd5e/2UwNYXkw+ANY2Bn5oiuYj3w3OfLdzZivWcWXLsLKjNuT0FnyoOxFvtGpbztMSp
-         KXE188DyCl4PTAI4DrQ1EbFO055tQITcvQBbHsj9uoF0qq4IZrJmHZ6YzRfCEJfQUEP4
-         huQ654j38GixaoEnial/N+Ll9ikZV79toVJm9+sxvgGWlSiEDi4pT8BxAKY3AqD1OvX9
-         qSng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748439283; x=1749044083;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=60xNEii/ejRTOcRUkHwbDeFVkYWfusBxmvyh2qWNN6c=;
-        b=gJ2C/qRuTt5eSGrxvtKmM+wHk1F3u0YasWngPfAf5NFIQHZm1EgDVXv2twlbvCxY+A
-         KlPqHWRMSCX2DDRxfFpDsZ8OXnZEk9cV+wZyyCUTzjcLDaLA9FxPY8YGW5YxcvGStAAu
-         LlxPPE/npzWTfxxKscWaEqXS1MZfbfupQ4IwuH5WKEhfvXLiCpsycIaL+My/ZVe7FjPa
-         X3mFzJRSPDVtryqEUr2JiyaI9iqOb+48FOOVoLGnZG5N5ZIw0WW9EWqiblaplCqrDRFi
-         hu/mq8lpAtiDa3vunCW5UrqcsaUaVqtmILIsu1xrMJpjn89tneKL2VdFldxHMZl1OSUO
-         fSMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDfWEMXUaeqQIH41+KQ0P8aLzQzDFPpa5s01AosH+ZvLtc+30Bi656JkxihL/Tnx2wde4HvvRoSbRQ@vger.kernel.org, AJvYcCVLXzRT5LiKrpNyDh866GokUeXJFdlqkHjVyh+HRS5csqE9NhoGQEQSJ+H57Wf94c2CpP+chutrtrFdSG7a@vger.kernel.org, AJvYcCXEMzCjiK1ZfCIc0V0GsZpEHqtsYGAvyYtfdfBf1fUTo4N+tTcgHAXal3xHOwO+3D1GoiYWBF9WHrsZ4a/WYJK48G4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0kcSFB8wUbqJfZZPwXwGkKEe8kcAhiehCB94wvPfqgVaO024t
-	cpO6nP5PZWiAvlBS51aW8BRLbiwtenUUOJOkJaSWKQIoNKVHQr8v2Lad
-X-Gm-Gg: ASbGncvJRFiVNEvb2DmRm5QSvXU3nozTGfFSSa4JEwoChIhyXXuy/u913KEk5Zg3+c7
-	DE0Czyg7604rAc3UjxFv9BODnUKKYkDw/dpZJK3JQpFfoWCo9s4QwwuvorInVMyyqCtQTfYzGHL
-	lX83+87/815Mr4G+ee6JJhO+hRKkut8xwq/zIyX/b4coL1ZVDXdKYKSbvAmONLUuIS8KdRQpECy
-	H28xKihpvN4Yb3cKGlyH74dMQtDlk0ruZGfGlXzvWo3RpXfAsDqf4XsWWzWAuvZqLcf0AR0+IzQ
-	4BGZeOR5LHA/dQ8mozpqfyzpYBbH8UJpT6u61vLPqvkDx0OQB0B7Vz9gEO+jKdDc0f2QEXP+RgL
-	o
-X-Google-Smtp-Source: AGHT+IFOoYxe9+Z/+NoI14zW+cDeiop575WEkIIi/FLFUl9a9GCb/oDdN6EXweUmggecB51ORj+C3g==
-X-Received: by 2002:a17:907:8687:b0:ad8:8883:9fef with SMTP id a640c23a62f3a-ad88883a01fmr714474966b.26.1748439282766;
-        Wed, 28 May 2025 06:34:42 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:7078:193c:ccdc:e2f5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a1b486d5sm107881266b.149.2025.05.28.06.34.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 06:34:42 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcZ1hRKl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC0E8C4CEE7;
+	Wed, 28 May 2025 13:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748439301;
+	bh=AL79StjEVtOpavdCkIahecDYTSI5U301axB+UHG6/+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mcZ1hRKl5SI6DfS7sQRRpj9srZkoV1J1Ed07m7kfcRYNurWctQ2ZJdCkF3SD+LI1j
+	 /pTze2DEljbQvvEtdsJNehKbTrKru8jANdHP0ioR5QtL1QeaCtH3Lg0L/7to98X+PA
+	 HBT4BHe+F4DXI7paCfPryMjT8TbQKGI3Zrco3GORP3ur8QKLVlwGACfAT9DnQW7ZwI
+	 nJzLtwY8xiOPD9/WYwHLTudmE4cw0pcDj9IJZM7ElP/X0B/uX1waFeIHkIZaSFFHou
+	 IMA8EsJuXVSMmpXvuyWPfsTPtEt8QMLXq+Ue46tGtpdO72UAduNeiFbpA/jxus95ng
+	 UDzauWwz9ka0g==
+Date: Wed, 28 May 2025 14:34:57 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yao Zi <ziyao@disroot.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dt-bindings: usb: renesas,usbhs: Add RZ/V2N SoC support
-Date: Wed, 28 May 2025 14:34:40 +0100
-Message-ID: <20250528133440.168133-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+	Conor Dooley <conor+dt@kernel.org>, Lubomir Rintel <lkundrak@v3.sk>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: serial: 8250: Make clocks and
+ clock-frequency exclusive
+Message-ID: <20250528-drastic-clever-e6122922e360@spud>
+References: <20250524105602.53949-1-ziyao@disroot.org>
+ <20250527-polio-snooze-c05aafc1e270@spud>
+ <aDZ0NPg2UCVZisk2@pie.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="340YyRNb6DFGG/A4"
+Content-Disposition: inline
+In-Reply-To: <aDZ0NPg2UCVZisk2@pie.lan>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Document the Renesas USBHS controller found on the Renesas RZ/V2N
-(R9A09G056) SoC. The USBHS block on RZ/V2N is functionally identical to
-the one on the RZ/G2L family, so no driver changes are needed. The
-existing "renesas,rzg2l-usbhs" fallback compatible will continue to be
-used for handling this IP.
+--340YyRNb6DFGG/A4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas,usbhs.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, May 28, 2025 at 02:25:56AM +0000, Yao Zi wrote:
+> On Tue, May 27, 2025 at 04:24:11PM +0100, Conor Dooley wrote:
+> > On Sat, May 24, 2025 at 10:56:02AM +0000, Yao Zi wrote:
+> > > The 8250 binding before converting to json-schema states,
+> > >=20
+> > >   - clock-frequency : the input clock frequency for the UART
+> > >   	or
+> > >   - clocks phandle to refer to the clk used as per Documentation/devi=
+cetree
+> > >=20
+> > > for clock-related properties, where "or" indicates these properties
+> > > shouldn't exist at the same time.
+> > >=20
+> > > Additionally, the behavior of Linux's driver is strange when both clo=
+cks
+> > > and clock-frequency are specified: it ignores clocks and obtains the
+> > > frequency from clock-frequency, left the specified clocks unclaimed. =
+It
+> > > may even be disabled, which is undesired most of the time.
+> >=20
+> > That sounds like an issue in the driver itself, no? If the clock phandle
+> > is present it sounds like the driver should be claiming the clock
+> > whether a frequency is specified or not. If so, that should be fixed
+> > whether this patch gets applied or not.
+>=20
+> Agree.
+>=20
+> > >=20
+> > > But "anyOf" doesn't prevent these two properties from coexisting, as =
+it
+> > > considers the object valid as long as there's at LEAST one match.
+> > >=20
+> > > Let's switch to "oneOf" and disallows the other property if one exist=
+s,
+> > > exclusively matching the original binding and avoid future confusion =
+on
+> > > the driver's behavior.
+> >=20
+> > Have you checked whether or not there are devices that have both
+> > in-tree? If there are, can you fix them up as part of the change, rather
+> > than adding new warnings.
+>=20
+> Had taken a brief search, seems all UARTs ship both clock-frqeuency and
+> clocks properties are snps,dw-apb-uart variants, which are not related
+> to the generic 8250 binding. So I think it shouldn't cause new warnings.
+>=20
+> > >=20
+> > > Fixes: e69f5dc623f9 ("dt-bindings: serial: Convert 8250 to json-schem=
+a")
+> > > Signed-off-by: Yao Zi <ziyao@disroot.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/serial/8250.yaml | 10 +++++++---
+> > >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Doc=
+umentation/devicetree/bindings/serial/8250.yaml
+> > > index dc0d52920575..4322394f5b8f 100644
+> > > --- a/Documentation/devicetree/bindings/serial/8250.yaml
+> > > +++ b/Documentation/devicetree/bindings/serial/8250.yaml
+> > > @@ -45,9 +45,13 @@ allOf:
+> > >                    - ns16550
+> > >                    - ns16550a
+> > >      then:
+> > > -      anyOf:
+> > > -        - required: [ clock-frequency ]
+> > > -        - required: [ clocks ]
+> > > +      oneOf:
+> > > +        - allOf:
+> >=20
+> > Why is the allOf needed here? Does
+> > oneOf:
+> >   - required: foo
+> >   - required: bar
+> > not work? There's a bunch of bindings doing that, so not sure why it
+> > doesn't work in your case.
+>=20
+> Oops, you're right, it does work here and emits an "... is valid under
+> each of ..." error. Will change to this form in v2.
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-index 6f4d41ba6ca7..a19816bbb1fd 100644
---- a/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-+++ b/Documentation/devicetree/bindings/usb/renesas,usbhs.yaml
-@@ -27,6 +27,7 @@ properties:
-               - renesas,usbhs-r9a07g044 # RZ/G2{L,LC}
-               - renesas,usbhs-r9a07g054 # RZ/V2L
-               - renesas,usbhs-r9a08g045 # RZ/G3S
-+              - renesas,usbhs-r9a09g056 # RZ/V2N
-               - renesas,usbhs-r9a09g057 # RZ/V2H(P)
-           - const: renesas,rzg2l-usbhs
- 
--- 
-2.49.0
+With that,
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+I'd suggest you also send the driver patch to solve the issue on
+platforms with whatever existing devicetree with both properties that
+you're dealing with - or at the very least it'd open some discussion
+about your problem.
 
+--340YyRNb6DFGG/A4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcRAQAKCRB4tDGHoIJi
+0itSAP0cec8wqaljsnwTaGRD+Bzi9Y3dDDG+9F/K2r9XJm7/WgEAg+BAR0d6I+M8
+A+ibSVgjYRZXLGLRDFAtnxKWNYwlQwU=
+=ibR1
+-----END PGP SIGNATURE-----
+
+--340YyRNb6DFGG/A4--
