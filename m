@@ -1,146 +1,252 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2077.outbound.protection.outlook.com [40.107.96.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1F91632C8
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:17:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748449069; cv=none; b=LIr6I3riVfhc8ZFAlG/8Hx38fHU2wjCT5RpT5zJsNxnaHuYZVL4WjUJ5KClRuWKnDEUcxS+Kk8YbG1ZlIs4fII2U9vxQ5Sj52vVG76Xki/SIeRNppKbqygQ1CqbcXLz79/U5i0TZfAwSAVpVukxyOAUimg2T0zmMYaLl2b19Mao=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748449069; c=relaxed/simple;
-	bh=XQvIWAytjBtx5roMruaxdFWO06D+VdCxLVFPTEz9p4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hU//y/smN7VQY8w/BPywa0vOpTCQRwDs07ck7fDuUUwg+e3y8j18UMsOZQiVLDdsEmjkdUxhF1aVwIdoBlZ4zwy+SE+EIc4MCFWKqeyEF+pKt66Wgh+/C4LZ809ek8uQLsvyQOg5P5ZoQv0aaU6uOpxtNXDsnOJDQwfD351YaXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UwJzwrgl; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7CA2AD22;
+	Wed, 28 May 2025 16:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748449141; cv=fail; b=ljsokGr7cLxeEcF8REZXADU+6azGidffI2pvXyOfXiNuXACj9PHte1JfDcTxQoscMzmvJLV0tSXivQnO4IYA888kCPdLqlZtagVpbe5/5lfn2EBHhK+J4qj9OilPC+i21CSVXEB3q++2CCwLRQIksZEHkwhxuN+w/URG06Rcd30=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748449141; c=relaxed/simple;
+	bh=GHT+sRAPwjXhHmWvK/ecZqkmby2mPJ6z5hxrtICKC+0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gHv+yj93e6Cvh7SjCH5CxkAsoKl5rNBjHO1xVagCLeNO7S8rqZO6oZ3Sn1XiRSy8mBUftKzAGHscKYaT1UnrquMJLhLfuKQx51/hfl1ZchBA8qBWe1a1jvborZPrXLI/oHOWXQMezNRr53/2y1vrdvvO3myY9xPY0hyf1n+4Nw4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NIk7UKl2; arc=fail smtp.client-ip=40.107.96.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwJzwrgl"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-8644aa73dfcso100671039f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748449066; x=1749053866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uTzSLuw5Tgn9PujxmjAjgP7UtvlX2ja/Zjw4kSQsqdg=;
-        b=UwJzwrgl3vvA4AQrmVbSI0timBluu6X22E/XaKWb0vkS6jDpY8Wc2ojq3E7uB4gT42
-         bc62vmHVS7HFq4OOAxWPm0Rh1ORJ+MTVhdLWwnCBYWoICEZPC7mNbZIulw5GLBRh2+lK
-         cC0HsyHe+Cec5fceuJxcoob9SpWkLqTg+U1rRvtK7wizwLDEkWKxpK5htDeudwzkE2kN
-         GY+OA8DONSXXWDmJjzFWniOhjvpZPWqoxdy0eOuFBHKY8t1tsLkYRAbXYUjqnJPjnowG
-         4SRpJt7dRHyPiFq43HYfEYDUb/yw2FwBPnuHAq/J0jjGXVujSWLTfZxcX4xe2wpzDPq6
-         WkCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748449066; x=1749053866;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uTzSLuw5Tgn9PujxmjAjgP7UtvlX2ja/Zjw4kSQsqdg=;
-        b=Z4ydEMUMkibhtTA7PIjG8Apq7T49cyqOx05dVQCjufUCzgzOJJLJGBsFJ19TFxsRV/
-         41jSEA+/h/VXkN99LT3+seOGneb67/rvUVixOAjbYSzo4LctrC+jVcP4JE8FCSzy1Zny
-         aksTjtTQFob0yGpO48xSCeR5wvoqrcpZdEJF1ygfSSQnSMaFHbTwra1ZcXpR+Xpe3O3P
-         dz+qCHS+uGnZe4DjUNat2KcwZpTtVS9jUbZVQSJC/1xy3KhtViVcchv78LSXiQJqZl3O
-         8+b3gm3vNZlh+HsLdebJnEpbkilYh4qRNzXw/dvrsTvrAtmYQRWqCIMTb5mbs2TVqk4f
-         +NAw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+m/wnnxPCCWm+cH1fUPVARz6RRJP3x/idHZIA72/SIb/lnjffK9sdY+SfkSJcGiM48VXKVNKFeONwoi4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdl059PEK9Z8dRQDTu4mHn0UT0sdY6HIjwKb3MBxLLldd2cWaK
-	LwR2BgYxjy4XEDrsJzi3q26xEpdpwXM8G0/s+apMCSVIGFpuZTQTsaEvSwZnLJ2ESFZO0UTauVn
-	/lbjsh7BJIro6A3xk2zet9drtY6xyBdTkoQ==
-X-Gm-Gg: ASbGncu++klrs3XY/tnvg/xLGLpYcstOaObsiMbN9/aldmc3D7rbvVj7lxYIauwLRgl
-	OWc9lQ3fiOnWViYdUV3OI03rTD9hezKXiPw6/BNRXKtlK1h0Y41n7uyXLWuJPSoonbhrZl4JYdm
-	uIZhPDRV3BfYvbOWi5duQpSklCOn9M3lA=
-X-Google-Smtp-Source: AGHT+IFF/umILiMgGZDGCLbJ5sT/qzWVOHlqk/6oUs0GExo2HD46i9Ov/em8Cdr+A78lOfG7WV8hw5tz0sQQvQ//DcA=
-X-Received: by 2002:a17:90b:3ec6:b0:2fe:b774:3ec8 with SMTP id
- 98e67ed59e1d1-3110f332a9cmr20114781a91.23.1748449055876; Wed, 28 May 2025
- 09:17:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NIk7UKl2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fslESAUDUkEsEFMUC6J5gdXaQy/d9P9ZB/irql6oTuBUSVQsfbUs7MYPbpNc2b7aion46AP+Tc2PhCNkg2budLj3Nk1blNF5L6zqq5G7LiFsUkahBQw92ZUQl9DldCbBJmHFhBE7Opob2aOu+hy8JQ7nYrBJTD76zIv0BcwglGtTmBExF/SlrIoMwftNZG0q3TunCQRvDT+KACcuNiOtdItDFjr1nZiE/osrkIhbw63UJzLQNt++M3oL2ObJBA3qv6il2fhkqPpemaOQrmwnLvQNU5twMni1yjDO67Bf+snv9z3YAsSTmIS/OSNyIrxwwl7P6tCB/pYA13GiaKnmkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5i1/OL5n1Ojj0NXKSnt4E+fujUcshKJbsicK3Mg47zE=;
+ b=BoJDXOp6o/w7MUc7gT0bP/JwUJXz5JFBHyUPIj2bivQXGtg1nrMh/Tb3lvuN1FKeL1GE989DTnKpX2DV2IeEe8VcxFfE/SHix5xMHrpKWykPq6aYKyNS+jSPeQVGG3trcn/D46oxTGVBPwlHlc50mpWSB19Igc51EQUiN9//N//Oso3m7TXN4SuWlXDBX3wv/lir4oiG8+gB4aCilfOKLfVoVQ/0tVccWbbobC0DgIzesUwRUB9SBloH2tK/82bFaNaidRA2negB/wsT0zQUPN1JOHciluvHi3AvD4q2Rr2mjsdmGfbovRXyRoIICPZ1QKXx0q2FB49hGaI8OYcxUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5i1/OL5n1Ojj0NXKSnt4E+fujUcshKJbsicK3Mg47zE=;
+ b=NIk7UKl2FM1htrzA2Yv+/HRHbI4ZfZLOXpVrGuyD8V60Zh4onBWF/VnMfviq06CEi2yLo3fRwzY4bdqKfTFMcNrgkqyIO9APbH7BW3/ZnZQlW08nxXNjJOUMVSxqHRrinlJkZRl8qMsPGP6h16Fsddxfd2d9sMcMZC5lSql1ZIA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by DS0PR12MB9058.namprd12.prod.outlook.com (2603:10b6:8:c6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.26; Wed, 28 May
+ 2025 16:18:55 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%5]) with mapi id 15.20.8722.031; Wed, 28 May 2025
+ 16:18:55 +0000
+Message-ID: <bbb6b6fb-7b9d-45ab-87eb-82747c370cb1@amd.com>
+Date: Wed, 28 May 2025 11:18:51 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 01/27] x86/cpufeatures: Add support for Assignable
+ Bandwidth Monitoring Counters (ABMC)
+To: Reinette Chatre <reinette.chatre@intel.com>, babu.moger@amd.com,
+ corbet@lwn.net, tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com
+Cc: james.morse@arm.com, dave.martin@arm.com, fenghuay@nvidia.com,
+ x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
+ akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
+ ardb@kernel.org, gregkh@linuxfoundation.org, daniel.sneddon@linux.intel.com,
+ jpoimboe@kernel.org, alexandre.chartre@oracle.com,
+ pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com,
+ perry.yuan@amd.com, seanjc@google.com, kai.huang@intel.com,
+ xiaoyao.li@intel.com, kan.liang@linux.intel.com, xin3.li@intel.com,
+ ebiggers@google.com, xin@zytor.com, sohil.mehta@intel.com,
+ andrew.cooper3@citrix.com, mario.limonciello@amd.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ peternewman@google.com, maciej.wieczor-retman@intel.com, eranian@google.com,
+ Xiaojian.Du@amd.com, gautham.shenoy@amd.com
+References: <cover.1747349530.git.babu.moger@amd.com>
+ <aef9947e5ed68feb0d33a2c882c140e2e472276f.1747349530.git.babu.moger@amd.com>
+ <505f530c-810a-41a4-b3cf-7eb326bb6990@intel.com>
+ <6cd9873c-1add-4d19-8d08-a7c3a514bfea@amd.com>
+ <5f8b21c6-5166-46a6-be14-0c7c9bfb7cde@intel.com>
+ <3c22ea8f-7467-4a25-b1b7-4f7f47177211@amd.com>
+ <8e22044c-f36e-41d0-bf1b-311ac8758da3@intel.com>
+Content-Language: en-US
+From: "Moger, Babu" <bmoger@amd.com>
+In-Reply-To: <8e22044c-f36e-41d0-bf1b-311ac8758da3@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0060.namprd13.prod.outlook.com
+ (2603:10b6:806:22::35) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522160954.429333-1-cyrilbur@tenstorrent.com> <2c07d65e-0641-42a0-9eb4-9e42d9325ff2@ghiti.fr>
-In-Reply-To: <2c07d65e-0641-42a0-9eb4-9e42d9325ff2@ghiti.fr>
-From: Andy Chiu <andybnac@gmail.com>
-Date: Thu, 29 May 2025 00:17:24 +0800
-X-Gm-Features: AX0GCFt9_AqO8_XbUCelsbyxCoWk63hdmjOhaTlGWY4wVu0fiMlfSByuwGx24k0
-Message-ID: <CAFTtA3PATS2CT-jax7eTNS=ZqU55CwGr=TeGiNX16ztfp5v9_w@mail.gmail.com>
-Subject: Re: [PATCH] riscv: uaccess: Only restore the CSR_STATUS SUM bit
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Cyril Bur <cyrilbur@tenstorrent.com>, samuel.holland@sifive.com, 
-	ben.dooks@codethink.co.uk, palmer@dabbelt.com, linux-kernel@vger.kernel.org, 
-	jszhang@kernel.org, paul.walmsley@sifive.com, charlie@rivosinc.com, 
-	jrtc27@jrtc27.com, aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, 
-	Deepak Gupta <debug@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DS0PR12MB9058:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7c755d1-4407-49a2-7e8f-08dd9e035792
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OERpcnh5OXp4MTQ1WGsyTFdQNVpwc3dQTU05aFlGMy9maXdHd2l1MWtVVnNu?=
+ =?utf-8?B?ZnVUTzJzYVRoRFR6SGpvVEpBZGp6MGgweC9JUCtlMmZPb2lGOGxpb3ZEallP?=
+ =?utf-8?B?cms4SEpLb2JQeVFRbFZ3NVZ6SUtRb1NkeEE2YnVueUlVTnZjakpMZmdoMms2?=
+ =?utf-8?B?YTZXNWtnTDNoWUJpajRxejZtTXRiejVxYm5ZUmNRTjJPdmt2S0xvNGgzSHZZ?=
+ =?utf-8?B?N1g3NVJnL0pNMDNoL0lRRVA2YmN4Y2E0RTBicVc1NGhVa1l2NzlOQ0VoQ2Rz?=
+ =?utf-8?B?bk93c1lsenY0ZGRON0prU0E4SE9HRW5pMzNrMmh2UERiS05ndEJGRUlxNUFq?=
+ =?utf-8?B?cGxnRVlMQUt0OGtpWjFJNDlQSlczcEE3M3I4UmR0N3NkaEtIVkJWV2hLTnl5?=
+ =?utf-8?B?djEyVC9uRnJnaGhPNnRGaU5kaFYrMkNUdW9DRGFON3BNMzU5TjRTNXRZaXl4?=
+ =?utf-8?B?MTE0SXRHN09seUtCaWFoRytSajBwVmhSY0czYmJqZFJ2by9DOXRJYUNmQWs2?=
+ =?utf-8?B?Wkk5amxXYkFIWEplM3EyTkRCMU5JM0RUNkVBMUNtb0dtN1l0MDk4QXNZaFBN?=
+ =?utf-8?B?VzN4MkYvS2RSNStxK3hVYUNSYmQyaklEZWtjY245c215VXJVemtUWkpLR3dv?=
+ =?utf-8?B?bFF0Y2I5SHVkWlJIcGluelNWMVB5OW0xekI5SlhVRWlLSHQ2V2ZETjU0NGRp?=
+ =?utf-8?B?bmN3U0FuMTJGMkhEaEM0UEwxTzFGNy9LY1NaUjlqNDVYbDJVZ0VjVmdQdE12?=
+ =?utf-8?B?VlN5RkUyVGxsQUNEV3lQaTl0emdUNXRqRXZYOFdOT256MEZ0czFESXgvUzJj?=
+ =?utf-8?B?TkRtcFZiUXV2S01zSWdCeWJvTS9ELzhpajdZdUFIQWNuOHgvQXJnbnhkdk1L?=
+ =?utf-8?B?d3hGcFJGNEFUNFVBYU8zYytQSVltNkYrT1FRYmIvdlgrK2EydSt5NDh5YW5C?=
+ =?utf-8?B?SlExbjByMi8yY24zSm50a2lmMkdlc1hid1I2d09jb0VlYzE5MjJjQzlkNldx?=
+ =?utf-8?B?b095NjFvTnNaTmtqc2oyUkk4S1o5eUxBM0dZYVplam9STkNwQVZleVVGVGJD?=
+ =?utf-8?B?K2FGTFNQa2graXpsSzhXVE43V2hkZzYzeG1QZHp3TWRDY0hGTXBVN1NqeWNl?=
+ =?utf-8?B?Z2hFMGgrTHFEakRZUUl4ZjB0ZXdoMUxmSy94OXREL2FoazZIVVZyRlBiSXor?=
+ =?utf-8?B?Zm9Pbk52MnpuSHNmWmNNdnFtZk1MQXNSV1ozQy83cURGb25taUJZSlNpQ1Rj?=
+ =?utf-8?B?dEJaek1uZjdEZ3Y2YmQwNzRYZFdlOGtpZEdWaWZvQ3doMEh2d2dnWTRLYXEx?=
+ =?utf-8?B?ZEtCLzFiUi9RVkhBNGtwbnlHb2h1ODFsSnUzclE1TmE1SDZYUkc1ZmdwcDk0?=
+ =?utf-8?B?RzNrZUdKbEpRQ2hYUWpFTGNoYjg4ZytPbVlQcGNBbkY1OGlMem54THF6dkRO?=
+ =?utf-8?B?ZitoUkFoT1A2SHFvdk9KWTNUSFVBRHRreUg2KzNpV2FPcFJJZnRVN0hDMy9F?=
+ =?utf-8?B?M3RJUENEZkdBRFdRWWtLbGdmUnhSSzhXZkZCcTMra0NqekFsaVZhWUE5eWpu?=
+ =?utf-8?B?d3ZXSXlURjd3NWd1ZGFYb00wcWJob0Jjc3l4dWRWelpWNjA5OWNjR243eVdh?=
+ =?utf-8?B?MFhZSTZCWFl3KytIc1B5Q2ZqckZNVjNsQkJXaytHTmhKbVRsM2RrNGZYL1hU?=
+ =?utf-8?B?R3hORG8yL3lHSmtDREhVckZTV0RVNXhOekRHaW9BdWNYcnRDM0RuM2ZUQmVr?=
+ =?utf-8?B?bGhmWHkweUZRWEdrMUdvckdBd0dJMmN1Ujk1TUE0Yy9JdTl1a1RWL0Njc3Bu?=
+ =?utf-8?B?Y2FWTlRsL1NJZVFWcTJ1OEZpeXkyUnlyVG1RTlh4OTYzcWxudDFITHpkalBS?=
+ =?utf-8?B?MXExYkFIbi9qMk9NdFdyZmtCTGNFbmorNGJkN045V3F0TVlyYlAxQ25WYUVG?=
+ =?utf-8?Q?guztNxEZp9U=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VFA1NXhFSGxIRHYwakJPTEwyYmpTaUVSRGJabXdFVWxJbEZGa1g0dFhiSkQx?=
+ =?utf-8?B?NE02UGNlSGxJUTJRZHNxbVpqU3lYRHFyUFJraHF2RXBPN0RrMndBa3pRMjd0?=
+ =?utf-8?B?anJsU1l3VnNvUUVMNGVxcXFKSXJtcm5wSzliTVcvbzFVTTdQTTlXK2I5c0Z1?=
+ =?utf-8?B?L3RLaEhoUEhTYUhlNWc5Wm1Vb1IxeGQ0ZXVmd3lkSnVyZmdnQ1Naa0N5Rmg4?=
+ =?utf-8?B?RC9kb1p6SGpUWEQvRitzekJneHpEZGZxTFhDMkNuYURrRFdXZUszL3IwVWlB?=
+ =?utf-8?B?bWxobHRFRlpIanlIOHQvWmZBTW1FWXNIV2FJTHVqKytxcHhOdjA4Q2ZUUXlh?=
+ =?utf-8?B?Z0FiRXBDWWE4OXQvendnTUVnWWdGcFMvMFVvaDVDdk05ZEU3WjRlTXBXMHkr?=
+ =?utf-8?B?dk1MRURaZEx6UCtYWm9hVlA5ZVFaNGhDWVBUYWxLdnlTclpaMUphRC9yM2Z5?=
+ =?utf-8?B?LzJDWUMwOVNXQmdPTEhaZXo5UmJNTStFMlF3MkV3VFZYOVYvc0R3TlQzdEhO?=
+ =?utf-8?B?eXVDZ2R5KzlTSHlvRmgzeE5mbTRTUDQ2YU1SdVJpalhqbXhOcVY0MDgxWEVl?=
+ =?utf-8?B?dWwxZEhxQmQwVVZjQTBVTG5HcnFhdEJTSThJYUZhTHVRZGl1cmlGam8xRm9k?=
+ =?utf-8?B?WGE4YmExOSttckRtY1RyZmdnRFVzbnlwVWFYQ1pwYVNNTldYU1RLTEZBd05w?=
+ =?utf-8?B?bnNKME1yaUdLV1dSRHY3b0xwRFVpNW5WWFVCd2FUNHM5WWsvcERWUStxL0ll?=
+ =?utf-8?B?UUxmZG01YW9VRUgvam0vYlRlcFdwUWJ4d3NYM1VuVXBxUXhMZXRWS0J3dkND?=
+ =?utf-8?B?NkQxRncxZ0xyL2taWXZrcjlkbVdzL3BDUWlDUmNySVIvVGMrQmg0bDlwc3lj?=
+ =?utf-8?B?ak43dFR1VkN5Q0VZOXRORmlDNS9VUGd6Y2hHNXJ2Q2VEV3AvRmVpalNmc3N4?=
+ =?utf-8?B?cFEwQjNGZzRFQUFmS01rNGMvV2psVlZuVXhMM3VLeUtocFdiY1M3VGhGa1E5?=
+ =?utf-8?B?d0tKZDlVbjQxWC9SYlNqRmhpNmJXU2RTOFFnNkFHUzZLdkozVms5TXZmOGVL?=
+ =?utf-8?B?WG4reW1mbVRYam5jNStyK2JlaXZnZUpjZm9HMkxlZUpjY2tTWmJqKzBWYjA0?=
+ =?utf-8?B?Wmk5WEZRdjNFV3Znck5jOEsvbEVWT1ZWWmo1eXFGU2pQaW9FeVM2NGo2a0NJ?=
+ =?utf-8?B?dGh1YzkvSDZrcEJpdFlSOUxERk9ZR3ZMWHVmdmUvZDl6NW1FMmNVWStkb0tw?=
+ =?utf-8?B?NVhpL2huWGxPNHF3bW5IemtpOVdMZ3orUUZaNHozZ1FNNVpMTk4rejNLSVJa?=
+ =?utf-8?B?YUh0dnNyVmgyOHZKWnQ1dmRoK2trcVFramM2NUVja1Noa0RmZWNiNTZ0ZkJa?=
+ =?utf-8?B?MXpoNnZ5RHJHTHEycXNnaVVacjRkQTJBSlhQQkZTOFp3SWRTRDVFUVc0SFQ4?=
+ =?utf-8?B?ODVnNlBaUkVFTHZiSnRvSHdpZG9BcCt4aXVDcVBKWjFVTjVNRERkT0lwOTVG?=
+ =?utf-8?B?NTQ5dUx0WWF2Nk5FT0YxZk9VVDJTcnVMV0ZiN2NSaVA3UFBEN0F3WVRNMlNS?=
+ =?utf-8?B?R0k3Z2ZNV2hpR0VmNVVPRGk0Q2UyRFRQOU9GK05QdVFEOU8rQW5kdmhnVnky?=
+ =?utf-8?B?aUFmcy9ieGtSczlUVkRURzVMYXlpTi9UcVFidEd4WE9lUU42SHJjUFFpRys3?=
+ =?utf-8?B?L3g4b2JOdG5LRldhdUx1ay85c2ljL2gxVXpiT0tHcHRieTZ3S21kdHlQUW95?=
+ =?utf-8?B?eGJDdzF2WUQvMVZvQmc3RVl2eTg0c2FqUkxnaEpJc2lxTlQ5Q1pOR3V3QjNT?=
+ =?utf-8?B?QU5wWi8wdzdCR0xWVDZXcnNMREhJcExxVXdZL3FjSW05d1kzTkl3eklYNDhD?=
+ =?utf-8?B?VGp3Z2FXVWtYK0p6VWZqenczTWdhYm56b3dCN0pwb1d2SlZ1TXFiYTlqOVoy?=
+ =?utf-8?B?VmZCYzJpc1dOMFNKMm5RcUxvZkxtUWZZWm0vbHlXQm9sbDhqdk9UQ1FLbEtE?=
+ =?utf-8?B?U012Tk1adE93TW82YTJBMGVkRy9ub1VobXRtaDJya01zQXllM3BaY2xNbUxL?=
+ =?utf-8?B?N0xBeTg4VU9iWHE5YzVtUEJqSURjVlBYTERIMmZ2aVUwaFJrQlc0d3plY2hI?=
+ =?utf-8?Q?zjDg=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7c755d1-4407-49a2-7e8f-08dd9e035792
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 16:18:55.0131
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4QznIW5PImUmCIy9HA/SCxtHwcWFrYkBo5ce0GZokPJ0gdqqN6l4plkBFiKIjebK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9058
 
-On Tue, May 27, 2025 at 4:39=E2=80=AFAM Alexandre Ghiti <alex@ghiti.fr> wro=
-te:
->
-> +cc linux-riscv, Andy, Deepak
->
-> On 5/22/25 18:09, Cyril Bur wrote:
-> > During switch to csrs will OR the value of the register into the
-> > corresponding csr. In this case we're only interested in restoring the
-> > SUM bit not the entire register.
-> >
-> > Fixes: 788aa64c0 ("riscv: save the SR_SUM status over switches")
-> > Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
-> > ---
-> > I've put the Fixes tag in but I assume this will get squashed into the
-> > patch. Either way I hope this works to fix the immediate issue.
-> >
-> >   arch/riscv/kernel/entry.S | 12 ++++++++----
-> >   1 file changed, 8 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> > index 00bd0de9faa2..6ed3bd80903d 100644
-> > --- a/arch/riscv/kernel/entry.S
-> > +++ b/arch/riscv/kernel/entry.S
-> > @@ -399,14 +399,18 @@ SYM_FUNC_START(__switch_to)
-> >       REG_S s11, TASK_THREAD_S11_RA(a3)
-> >
-> >       /* save the user space access flag */
-> > -     li    s0, SR_SUM
-> > -     csrr  s1, CSR_STATUS
-> > -     REG_S s1, TASK_THREAD_STATUS_RA(a3)
-> > +     csrr  s0, CSR_STATUS
-> > +     REG_S s0, TASK_THREAD_STATUS_RA(a3)
-> >
-> >       /* Save the kernel shadow call stack pointer */
-> >       scs_save_current
-> > -     /* Restore context from next->thread */
-> > +     /*
-> > +      * Restore context from next->thread. csrs will OR the bits from =
-s0 and
-> > +      * only want to restore the SR_SUM bit
-> > +      */
-> >       REG_L s0,  TASK_THREAD_STATUS_RA(a4)
-> > +     li    s1,  SR_SUM
-> > +     and   s0,  s0, s1
-> >       csrs  CSR_STATUS, s0
-> >       REG_L ra,  TASK_THREAD_RA_RA(a4)
-> >       REG_L sp,  TASK_THREAD_SP_RA(a4)
->
-> To conclude the discussion we had here
-> https://lore.kernel.org/linux-riscv/aDCtATl2N21fBsyT@debug.ba.rivosinc.co=
-m/#t,
-> in addition to Cyril's patch above, to me we only have to rename the
-> status field into sum and we're good to go. @Andy, @Deepak @Samuel Do
-> you agree?
+Hi Reinette,
 
-LGTM, thanks!
+On 5/27/2025 6:42 PM, Reinette Chatre wrote:
+> Hi Babu,
+> 
+> On 5/27/25 11:40 AM, Moger, Babu wrote:
+>> On 5/27/25 12:54, Reinette Chatre wrote:
+>>> On 5/27/25 10:23 AM, Moger, Babu wrote:
+>>>> On 5/22/25 15:51, Reinette Chatre wrote:
+>>>>> On 5/15/25 3:51 PM, Babu Moger wrote:
+>>>
+>>>>>> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+>>>>>> index a2fbea0be535..2f54831e04e5 100644
+>>>>>> --- a/arch/x86/kernel/cpu/cpuid-deps.c
+>>>>>> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
+>>>>>> @@ -71,6 +71,8 @@ static const struct cpuid_dep cpuid_deps[] = {
+>>>>>>   	{ X86_FEATURE_CQM_MBM_LOCAL,		X86_FEATURE_CQM_LLC   },
+>>>>>>   	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_TOTAL   },
+>>>>>>   	{ X86_FEATURE_BMEC,			X86_FEATURE_CQM_MBM_LOCAL   },
+>>>>>> +	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_TOTAL   },
+>>>>>> +	{ X86_FEATURE_ABMC,			X86_FEATURE_CQM_MBM_LOCAL   },
+>>>>>
+>>>>> Is this dependency still accurate now that the implementation switched to the
+>>>>> "extended event ID" variant of ABMC that no longer uses the event IDs associated
+>>>>> with X86_FEATURE_CQM_MBM_TOTAL and X86_FEATURE_CQM_MBM_LOCAL?
+>>>>
+>>>> That's a good question. Unfortunately, we may need to retain this
+>>>> dependency for now, as a significant portion of the code relies on
+>>>> functions like resctrl_is_mbm_event(), resctrl_is_mbm_enabled(),
+>>>> resctrl_arch_is_mbm_total_enabled(), and others.
+>>>>
+>>>
+>>> Avoiding needing to change code is not a valid reason.
+>>>
+>>> I think that without this dependency the code will
+>>> still rely on "functions like resctrl_is_mbm_event(),
+>>> resctrl_is_mbm_enabled(), resctrl_arch_is_mbm_total_enabled(),
+>>> and others." though.
+>>>
+>>> The core shift is to stop thinking about QOS_L3_MBM_TOTAL_EVENT_ID
+>>> to mean the same as X86_FEATURE_CQM_MBM_TOTAL, similarly to stop
+>>> thinking about QOS_L3_MBM_LOCAL_EVENT_ID to mean the same as
+>>> X86_FEATURE_CQM_MBM_LOCAL.
+>>
+>> oh. ok.
+>>
+>>>
+>>> I expected that for backwards compatibility ABMC will start by
+>>> enabling QOS_L3_MBM_TOTAL_EVENT_ID and QOS_L3_MBM_LOCAL_EVENT_ID
+>>> as part of its initialization, configuring them with the current
+>>> defaults for which memory transactions are expected to be monitored
+>>> by each. With these events enabled the existing flows using, for
+>>> example, resctrl_is_mbm_event(), will continue to work as expected, no?
+>>
+>> Yes. It will work as it uses event id.
+>>>
+>>> This would require more familiarity with L3 monitoring enumeration
+>>> on AMD since it will still be required to determine the number of
+>>> RMIDs etc. but if ABMC does not actually depend on these CQM features
+>>> then the current enumeration would need to be re-worked anyway.
+>>
+>> Are you suggesting to remove the dependency and rework ABMC enumeration in
+>> get_rdt_mon_resources()?
+>>
+> 
+> If you have an alternative proposal that would accurately reflect the ABMC
+> and existing L3 MON features then we can surely consider it.
 
-Andy
+I don't see any other option at this point. Will change it next revision.
 
->
-> As this is an important fix (along with 2 other fixes, one for thead
-> vector and vdso static values), I'd like to send another PR soon for
-> inclusion in 6.16-rc1, I did not want to delay the second PR any longer.
->
-> Thanks for your feedbacks,
->
-> Alex
->
->
+Thanks
+Babu
+
+
+
