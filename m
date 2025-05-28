@@ -1,175 +1,118 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEC438FB0;
-	Wed, 28 May 2025 14:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F23861A5BA3;
+	Wed, 28 May 2025 14:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748441076; cv=none; b=WQ6H1SoVvOZbXlCye1l8lxGoem+3oUe3Aeu5n+dQRAYw8KD/05m9OZ/gKuLh+0ZL4khSdT3EWZsb+zyCp54hkqK+LsahwKYsd1H/ep66BnMbWoHiNmn8YERhuLaSx8HZy3MGqwsGkxYv4J2cDBIW3BdL9D2HbWJM5bTVOpc8Iso=
+	t=1748441106; cv=none; b=HCPUeAkTL+XBc5/9jXuyMGVTRUzKWorUHo99yDQqt9icmVfPlngsv3y0kukxpjFXIk9B70h/F2mKmP5TWkGVcDCNcGg0HXvW/nVGYzggR51Eu/bStOOuvbyNHypPZSzjq4V1aK6xxOF6kwrS0JMvyOw1w4LHsZWIRjcjKLdiu8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748441076; c=relaxed/simple;
-	bh=9xvdpUTqNvPH1sdA+4tjhROXXbncThrelIiLgy3shaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o5Urw72IcYx/GSJjGgzftrpGISMTFtaR34K2BgfQ9Ura+cvJR82g/ZWetNwRwEI8KP0AYmzDBsAO/Uvtg1bi4lkpL1+szEa6no9BR6IsBsy/25G1pZuDh7kK3JcnGwo+ln16q7YJlj/5kdwbGI/pBcFDaGfVHquIECnUMNoagOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XLSzmyY0; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1748441106; c=relaxed/simple;
+	bh=zjn5gJRBgTscFFqn7FJUgUIpKHNTfnPwm0I1AAWljy4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EhJq/GimghOa9/VfGGeNaRaH3EfRqj7H6FgqYjuAjaosz1tshb1eeJEYJOtkk9mNxaooRGv8LlRUHtFZQpNK2kVm31GzTf8XcUhGBMqbGyUd7yMPJNkURD8gFmZuAoI3Gc/5HwTiQpa2QQXcgIDfUXEsla6qnHKFz8xk/AqFVp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdfI/omr; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XLSzmyY0"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748441069; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=VS4Pm+zKew2qwigMu2CJywp/34i9y6xWwalLXDrUznQ=;
-	b=XLSzmyY0jzpoGn037vaBy6kxc02OH2OcK0g6QCtmx9pyEP2sprwUY4+awoHhgllMqC/Y6+Klt7Lyb22zAEWd4JCzgSDSquYIOGEp9Z+4s7wrB3sMPpfKsxZJ4+m1PTKSVDQRYw73XcLk1jWrqNgA4c7RuXLP/N3v4Nd8PFsb4pc=
-Received: from 30.39.222.111(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcDdxLt_1748441065 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 22:04:26 +0800
-Message-ID: <e800189d-ad3d-409d-bfba-2c32a6ac66c0@linux.alibaba.com>
-Date: Wed, 28 May 2025 22:04:24 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdfI/omr"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a366843fa6so2853063f8f.1;
+        Wed, 28 May 2025 07:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748441103; x=1749045903; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oPEjb9xSYINExy0eyIdBHIutjX/5AUSSUBN5rBiGPII=;
+        b=MdfI/omrnUGROE7u6KoEZVVGzO58cnZdmD7RZqpYDk+OeY5v5Frq0bsFtmDKx2vmZJ
+         MYKeo2NuumD2W9gExFsD/c4b5GZgycola9Nea0l32NFK728A7DXM2hMFcF0E6xMUMWA2
+         plJrGv0m3LQHmDf7x0PYK2qGt8IWrksndOfgME0vsULrYLPxEvjitwozJ0iLduFq4Lh0
+         jM6TeVy0S3z5JOW+YvcuNcqUMtUYVhts/fwY0kzKxBh1fKew4JkyHzNGmiOEZpsQ1TVw
+         sGYGqAaiOARXMYcRfai/9YjFDjZnCYDh+mYCBwjMLaw3REoWkKtpMig3Iqxu2T5TLc9E
+         KduQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748441103; x=1749045903;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oPEjb9xSYINExy0eyIdBHIutjX/5AUSSUBN5rBiGPII=;
+        b=NDKbLitt7WNUlZNvDrv0gI6FA/fk5ubufrnJSAH7eDcXG8FTQNltjESp15oxUUIBap
+         CtqqTkIjJtETOcbaVGxg5x+BPZGLDbRTFzxMHiMGq6yrUk5ogyF9k5cVcufrZ9O391BO
+         /7p6tEx+hmKgDVwHbR6u4g2N5OZOz+Tqf4E6klkpwdbFmpdBcjJKrefOURzPpta0au3Y
+         8laX/PfCPTYLhIwSFL70hSJhe89joGNX8yNtwMDr/xEuEciOYA+ix2sG4RwMnZcC03JB
+         gpOypP2xRhBnK+bY1AI36eRflZlICeaSYtThBqahrP2a1nPQLDDoA8WzN+O7CNPdKGTl
+         G7qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOcsNvr983MRriJZD5SV8TN9xPkcdhpJQ1nesFaDcmdLC385isVXrCOad5kaNyVQ+2PC68SGpAy6EvOdPB@vger.kernel.org, AJvYcCVhQ8iyJKFXype+0/9okX/oIFqBBAL+DviFmZLgImfrvmn8XFmjvhp0BVjCs8ZCGj0H5K/KyBE8Rn1e@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuMDJTxMA2LmZtrF6Uk3cGn8lzvaujgiQcbdCGuHC6JgJ/bG4j
+	IKKfDSrf2VK3lGY0DWzYLy97fb1jv2Gvro3BP6avgXhCg5C/sCxQTaXO1hoL4C/S
+X-Gm-Gg: ASbGncswQCN2mpON6jDXa3J6s3cnhoLsaVT0U1DwzrmOHX6MoTp6FKuik4RHCkwTF5e
+	nNML16BB82CnR30IamvYcHK9znbgv5ZK4DiX7VGdw6AHCiWOKoMSr43cVrrtsdy+S8KW+xWQV2R
+	RhnHMj8aGIHmcoLZrk2KN/HZ6FriqOs7JUkxXygHrV72OhKFprY55rAeDOpA57I7SxRM9XkRPUl
+	UA1BrnkkyXwzC8TdSHWEJocYr2ajM5GZJ2G89DSqzAzEpIAxuIGNd7BpC9LxnPqjkEU7I7PpEvK
+	j0ZEeenuLrQCiacBLLtZtYUO3bPnXNL4D0euljn7U6NBG+PR5Uox9ztE/Svq7U6Ol+RaSE9Vumd
+	J
+X-Google-Smtp-Source: AGHT+IHgujYjNU6Xq5ZNRiDumeW0aKz5xZPU9Qup+8+ClYpot9snD3m49i9q/XW2gyj5h/3d/p97IA==
+X-Received: by 2002:a5d:4102:0:b0:3a4:cddc:d3da with SMTP id ffacd0b85a97d-3a4cddcd4f1mr12452290f8f.36.1748441102966;
+        Wed, 28 May 2025 07:05:02 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:7078:193c:ccdc:e2f5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450787ccbd1sm18846795e9.25.2025.05.28.07.05.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 07:05:02 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/2] Add USB2.0 support for R9A09G056 SoC and RZ/V2N EVK
+Date: Wed, 28 May 2025 15:04:51 +0100
+Message-ID: <20250528140453.181851-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: David Hildenbrand <david@redhat.com>, Nico Pache <npache@redhat.com>,
- David Rientjes <rientjes@google.com>, zokeefe@google.com
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
- peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
- sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, hannes@cmpxchg.org, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-7-npache@redhat.com>
- <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
- <CAA1CXcC9MB2Nw4MmGajESfH8DhAsh4QvTj4ABG3+Rg2iPi087w@mail.gmail.com>
- <ed1d1281-ece3-4d2c-8e58-aaeb436d3927@linux.alibaba.com>
- <CAA1CXcAWcahkxzsvK_bcWei6or_gKBjt+97dqhuSem8N7cBAQw@mail.gmail.com>
- <1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com>
- <cf33ff99-ac97-4a33-9df0-01a59d5b8424@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <cf33ff99-ac97-4a33-9df0-01a59d5b8424@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Hi all,
 
-On 2025/5/28 17:26, David Hildenbrand wrote:
-> On 22.05.25 11:39, Baolin Wang wrote:
->>
->>
->> On 2025/5/21 18:23, Nico Pache wrote:
->>> On Tue, May 20, 2025 at 4:09 AM Baolin Wang
->>> <baolin.wang@linux.alibaba.com> wrote:
->>>>
->>>> Sorry for late reply.
->>>>
->>>> On 2025/5/17 14:47, Nico Pache wrote:
->>>>> On Thu, May 15, 2025 at 9:20 PM Baolin Wang
->>>>> <baolin.wang@linux.alibaba.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2025/5/15 11:22, Nico Pache wrote:
->>>>>>> khugepaged scans anons PMD ranges for potential collapse to a 
->>>>>>> hugepage.
->>>>>>> To add mTHP support we use this scan to instead record chunks of 
->>>>>>> utilized
->>>>>>> sections of the PMD.
->>>>>>>
->>>>>>> khugepaged_scan_bitmap uses a stack struct to recursively scan a 
->>>>>>> bitmap
->>>>>>> that represents chunks of utilized regions. We can then determine 
->>>>>>> what
->>>>>>> mTHP size fits best and in the following patch, we set this 
->>>>>>> bitmap while
->>>>>>> scanning the anon PMD. A minimum collapse order of 2 is used as 
->>>>>>> this is
->>>>>>> the lowest order supported by anon memory.
->>>>>>>
->>>>>>> max_ptes_none is used as a scale to determine how "full" an order 
->>>>>>> must
->>>>>>> be before being considered for collapse.
->>>>>>>
->>>>>>> When attempting to collapse an order that has its order set to 
->>>>>>> "always"
->>>>>>> lets always collapse to that order in a greedy manner without
->>>>>>> considering the number of bits set.
->>>>>>>
->>>>>>> Signed-off-by: Nico Pache <npache@redhat.com>
->>>>>>
->>>>>> Sigh. You still haven't addressed or explained the issues I 
->>>>>> previously
->>>>>> raised [1], so I don't know how to review this patch again...
->>>>> Can you still reproduce this issue?
->>>>
->>>> Yes, I can still reproduce this issue with today's (5/20) mm-new 
->>>> branch.
->>>>
->>>> I've disabled PMD-sized THP in my system:
->>>> [root]# cat /sys/kernel/mm/transparent_hugepage/enabled
->>>> always madvise [never]
->>>> [root]# cat 
->>>> /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
->>>> always inherit madvise [never]
->>>>
->>>> And I tried calling madvise() with MADV_COLLAPSE for anonymous memory,
->>>> and I can still see it collapsing to a PMD-sized THP.
->>> Hi Baolin ! Thank you for your reply and willingness to test again :)
->>>
->>> I didn't realize we were talking about madvise collapse-- this makes
->>> sense now. I also figured out why I could "reproduce" it before. My
->>> script was always enabling the THP settings in two places, and I only
->>> commented out one to test this. But this time I was doing more manual
->>> testing.
->>>
->>> The original design of madvise_collapse ignores the sysfs and
->>> collapses even if you have an order disabled. I believe this behavior
->>> is wrong, but by design. I spent some time playing around with madvise
->>> collapses with and w/o my changes. This is not a new thing, I
->>> reproduced the issue in 6.11 (Fedora 41), and I think its been
->>> possible since the inception of madvise collapse 3 years ago. I
->>> noticed a similar behavior on one of my RFC since it was "breaking"
->>> selftests, and the fix was to reincorporate this broken sysfs
->>> behavior.
->>
->> OK. Thanks for the explanation.
->>
->>> 7d8faaf15545 ("mm/madvise: introduce MADV_COLLAPSE sync hugepage 
->>> collapse")
->>> "This call is independent of the system-wide THP sysfs settings, but
->>> will fail for memory marked VM_NOHUGEPAGE."
->>>
->>> The second condition holds true (and fails for VM_NOHUGEPAGE), but I
->>> dont know if we actually want madvise_collapse to be independent of
->>> the system-wide.
->>
->> This design principle surprised me a bit, and I failed to find the
->> reason in the commit log. I agree that "never should mean never," and we
->> should respect the THP/mTHP sysfs setting. Additionally, for the
->> 'shmem_enabled' sysfs interface controlled for shmem/tmpfs, THP collapse
->> can still be prohibited through the 'deny' configuration. The rules here
->> are somewhat confusing.
-> 
-> I recall that we decided to overwrite "VM_NOHUGEPAGE", because the 
-> assumption is that the same app that triggered MADV_NOHUGEPAGE triggers 
-> the collapse. So the app decides on its own behavior.
-> 
-> Similarly, allowing for collapsing in a VM without VM_HUGEPAGE in the 
-> "madvise" mode would be fine.
-> 
-> But in the "never" case, we should just "never" collapse.
+This patch series adds USB2.0 support for the R9A09G056 SoC and the
+RZ/V2N EVK board.
 
-OK. Let's fix the "never" case first. Thanks.
+The first patch updates the device tree source file for the R9A09G056
+SoC to include the USB2.0 controller configuration. The second patch
+enables USB2.0 support in the device tree for the RZ/V2N EVK board.
+
+Note the binding and clock patches have been sent separately,
+clock:
+https://lore.kernel.org/all/20250528132558.167178-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+bindings:
+https://lore.kernel.org/all/20250528133031.167647-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+https://lore.kernel.org/all/20250528133440.168133-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+https://lore.kernel.org/all/20250528133858.168582-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (2):
+  arm64: dts: renesas: r9a09g056: Add USB2.0 support
+  arm64: dts: renesas: r9a09g056n48-rzv2n-evk: Enable USB2.0 support
+
+ arch/arm64/boot/dts/renesas/r9a09g056.dtsi    | 66 +++++++++++++++++++
+ .../dts/renesas/r9a09g056n48-rzv2n-evk.dts    | 36 ++++++++++
+ 2 files changed, 102 insertions(+)
+
+-- 
+2.49.0
+
