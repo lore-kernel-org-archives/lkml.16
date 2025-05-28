@@ -1,165 +1,125 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1175199939;
-	Wed, 28 May 2025 18:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9B9199939;
+	Wed, 28 May 2025 18:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748455850; cv=none; b=jFhqdn6dFz7S1q6ACDz11WsBC2TiE+Hb2nkjbFrF9mk6BKRjZHkfY6nAwLJPx9+n80D8Xm1P6soI6b9/fR3SfBHiPmoHFCs55n87nO0dHKptvvC7RpX7ULuAOMf29F7P2szI7ZJf/W/eFqKDIuiB4WYS1twlr3TPQi9Sp/LeTSk=
+	t=1748455893; cv=none; b=hZPZH8Xe3+HxjYF83grFQNJK6AMBjNBnwf+T/BHuOfKKFBnN2DADwd+5CTaoHbVrgzovxfmSbbVE1PhNiMuD6Yzkq42I1I4p21ThuMHlTK9qvBqmMyrbBgG6NznAKof2n7ilw8hyXiIRkAvUQbqpEZVwj20xKM3+zH6H01J33AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748455850; c=relaxed/simple;
-	bh=tJgGaeL8lDq9uscvebOcn4+6B6FshQVjhO0hl3B3BdA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pq6a3+O/6wcFdt4EKskPYEY3bLUITIxAGeW8UfrOLjIaL2JIdeh8322cY401qT49lQm31sZN1VEM6B2RjHEWWRwrslaQsaUJE/0pbZY7BG61ALs5j3Ei8z4cxiUOoTmNTh7lgghh0jWykdLrJIYu508Zjr8+8d2MInpX+PNEXAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=N2vKWmS6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1748455893; c=relaxed/simple;
+	bh=pA6/+lW7KQ8D9sdiQUAJgFyLpd7301C+JPUAiDBNi6Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bn3JNKTVSNX9JjkNsqRzrfe3mTwRSJtz7B7uIvgMlcZeVyRC67tvFPSFHlb3cpFsmR1lUS6ldoNb1mW6mwXiSw49shSWl7t8fJyfKDeaa38C5Tde6ZxZ2hgONdOsQh9TpE9+SF1TwBkJ0MuZYNDPzzHyY76l8StL2MRf5nKiUis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYacyj/Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="N2vKWmS6"
-Received: from CPC-grwhy-1BDK8.redmond.corp.microsoft.com (unknown [70.37.26.37])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 65C62207860A;
-	Wed, 28 May 2025 11:10:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 65C62207860A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1748455848;
-	bh=BN4btWrgT6mTRx8CSI6Tnm6/WQ8RUzdUec/ttgLYXhY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=N2vKWmS6UItT4oQ1mziW5lSnPP3CcGCEpdMKxoVnYFrgfIFgpZ+1EXwAv2gAMqeBb
-	 Co8n0qAUWkV6ND2NgIEK3RgSu5M3zd4OmYs63LXBYB3+yNh1MMs8ktxnCbpfUADsd/
-	 pyqQEL3zEAAhJFCKQYCxCuyNe5A0fp7DVmBXZsi8=
-From: grwhyte@linux.microsoft.com
-To: linux-pci@vger.kernel.org
-Cc: shyamsaini@linux.microsoft.com,
-	code@tyhicks.com,
-	Okaya@kernel.org,
-	bhelgaas@google.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI: Reduce delay after FLR of Microsoft MANA devices
-Date: Wed, 28 May 2025 18:10:47 +0000
-Message-Id: <20250528181047.1748794-1-grwhyte@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYacyj/Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3EDC4CEE3;
+	Wed, 28 May 2025 18:11:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748455892;
+	bh=pA6/+lW7KQ8D9sdiQUAJgFyLpd7301C+JPUAiDBNi6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iYacyj/YCQ5Npy3F3wheC1SzvhJOVNjtyG2ed/DUVuv5KCpM3AxcKT/uRHRTd3i3Y
+	 oEjEJWzWjzKLulrMma0UtJqtgVj1PMCkKUha9gdzGNPaT/7yis2Hiakx0otvueg0Bd
+	 wSjQFO4SHn96l7uhhCGEOJruMurOtNpPun/a82ry8IiP2b9MZ3XEevJ6Zt9jhzYgdt
+	 toJAgmwx/RyNVOKmGahgN52nYyHIaplqoECEJSy5zOrOgoFaYA4m/+E5w3Ejjr+OUy
+	 tyxk/Xq9GfKJ6Hu19dG4VR4fOofQz2Qzl5jkYwrKnYixI8PxZ/eHEqNDEWq3/VEgJ4
+	 4O9Uw1w7rTQtQ==
+Date: Wed, 28 May 2025 11:11:30 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
+	Yujie Liu <yujie.liu@intel.com>,
+	Graham Woodward <graham.woodward@arm.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>,
+	Matt Fleming <matt@readmodwrite.com>,
+	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>,
+	Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Kajol Jain <kjain@linux.ibm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 1/3] perf sample: Remove arch notion of sample parsing
+Message-ID: <aDdR0pCNSmxCEyEZ@google.com>
+References: <20250521165317.713463-1-irogers@google.com>
+ <20250521165317.713463-2-irogers@google.com>
+ <aC43Et06tyrBOrsT@google.com>
+ <CAP-5=fUYUDq6hmd+e3_E7HCRPYuy-0KLE+gLuSCWAHh3A5wJLA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUYUDq6hmd+e3_E7HCRPYuy-0KLE+gLuSCWAHh3A5wJLA@mail.gmail.com>
 
-From: Graham Whyte <grwhyte@linux.microsoft.com>
+On Wed, May 21, 2025 at 02:15:24PM -0700, Ian Rogers wrote:
+> On Wed, May 21, 2025 at 1:27 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Wed, May 21, 2025 at 09:53:15AM -0700, Ian Rogers wrote:
+> > > By definition arch sample parsing and synthesis will inhibit certain
+> > > kinds of cross-platform record then analysis (report, script,
+> > > etc.). Remove arch_perf_parse_sample_weight and
+> > > arch_perf_synthesize_sample_weight replacing with a common
+> > > implementation. Combine perf_sample p_stage_cyc and retire_lat to
+> > > capture the differing uses regardless of compiled for architecture.
+> >
+> > Can you please do this without renaming?  It can be a separate patch but
+> > I think we can just leave it.
+> 
+> It is not clear what the use of the union is. Presumably it is a
+> tagged union but there is no tag as the union value to use is implied
+> by either being built on x86_64 or powerpc. The change removes the
+> notion of this code being built for x86_64 or powerpc and so the union
+> value to use isn't clear (e.g. should arm use p_stage_cyc or
+> retire_lat from the union), hence combining to show that it could be
+> one or the other. The code could be:
+> ```
+> #ifdef __x86_64__
+>        u16 p_stage_cyc;
+> #elif defined(powerpc)
+>        u16 retire_lat;
+> #endif
+> ```
+> but this isn't cross-platform.
 
-Add a device-specific reset for Microsoft MANA devices with the FLR
-delay reduced from 100ms to 10ms. While this is not compliant with the pci
-spec, these devices safely complete the FLR much quicker than 100ms and
-this can be reduced to optimize certain scenarios
+Right, we probably don't want it.
 
-Signed-off-by: Graham Whyte <grwhyte@linux.microsoft.com>
 
----
-Changes in v2:
-- Removed unnecessary EXPORT_SYMBOL_GPL for function pci_dev_wait
-- Link to v1:https://lore.kernel.org/linux-pci/20250522085253.GN7435@unreal/T/#m7453647902a1b22840f5e39434a631fd7b2515ce
----
- drivers/pci/pci.c    |  2 +-
- drivers/pci/pci.h    |  1 +
- drivers/pci/quirks.c | 55 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 57 insertions(+), 1 deletion(-)
+> The change in hist.h of
+> ```
+> @@ -255,7 +255,7 @@ struct hist_entry {
+>         u64                     code_page_size;
+>         u64                     weight;
+>         u64                     ins_lat;
+> -       u64                     p_stage_cyc;
+> +       u64                     p_stage_cyc_or_retire_lat;
+> ```
+> could be a follow up CL, but then we lose something of what the field
+> is holding given the value is just a copy of that same named value in
+> perf_sample. The code only inserts 34 lines and so the churn of doing
+> that seemed worse than having the change in a single patch for
+> clarity.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 9cb1de7658b5..28f3bfd24357 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1262,7 +1262,7 @@ void pci_resume_bus(struct pci_bus *bus)
- 		pci_walk_bus(bus, pci_resume_one, NULL);
- }
- 
--static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
-+int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- {
- 	int delay = 1;
- 	bool retrain = false;
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index f2958318d259..3a98e00eb02a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -109,6 +109,7 @@ void pci_init_reset_methods(struct pci_dev *dev);
- int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
- int pci_bus_error_reset(struct pci_dev *dev);
- int __pci_reset_bus(struct pci_bus *bus);
-+int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout);
- 
- struct pci_cap_saved_data {
- 	u16		cap_nr;
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index c354276d4bac..94bd2c82cbbd 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4205,6 +4205,55 @@ static int reset_hinic_vf_dev(struct pci_dev *pdev, bool probe)
- 	return 0;
- }
- 
-+#define MSFT_PCIE_RESET_READY_POLL_MS 60000 /* msec */
-+#define MICROSOFT_2051_SVC 0xb210
-+#define MICROSOFT_2051_MANA_MGMT 0x00b8
-+#define MICROSOFT_2051_MANA_MGMT_GFT 0xb290
-+
-+/* Device specific reset for msft GFT and gdma devices */
-+static int msft_pcie_flr(struct pci_dev *dev)
-+{
-+	if (!pci_wait_for_pending_transaction(dev))
-+		pci_err(dev, "timed out waiting for pending transaction; "
-+			"performing function level reset anyway\n");
-+
-+	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_BCR_FLR);
-+
-+	if (dev->imm_ready)
-+		return 0;
-+
-+	/*
-+	 * Per PCIe r4.0, sec 6.6.2, a device must complete an FLR within
-+	 * 100ms, but may silently discard requests while the FLR is in
-+	 * progress. However, 100ms is much longer than required for modern
-+	 * devices, so we can afford to reduce the timeout to 10ms.
-+	 */
-+	usleep_range(10000, 10001);
-+
-+	return pci_dev_wait(dev, "FLR", MSFT_PCIE_RESET_READY_POLL_MS);
-+}
-+
-+/*
-+ * msft_pcie_reset_flr - initiate a PCIe function level reset
-+ * @dev: device to reset
-+ * @probe: if true, return 0 if device can be reset this way
-+ *
-+ * Initiate a function level reset on @dev.
-+ */
-+static int msft_pcie_reset_flr(struct pci_dev *dev, bool probe)
-+{
-+	if (dev->dev_flags & PCI_DEV_FLAGS_NO_FLR_RESET)
-+		return -ENOTTY;
-+
-+	if (!(dev->devcap & PCI_EXP_DEVCAP_FLR))
-+		return -ENOTTY;
-+
-+	if (probe)
-+		return 0;
-+
-+	return msft_pcie_flr(dev);
-+}
-+
- static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_82599_SFP_VF,
- 		 reset_intel_82599_sfp_virtfn },
-@@ -4220,6 +4269,12 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 		reset_chelsio_generic_dev },
- 	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
- 		reset_hinic_vf_dev },
-+	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_SVC,
-+		msft_pcie_reset_flr},
-+	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT,
-+		msft_pcie_reset_flr},
-+	{ PCI_VENDOR_ID_MICROSOFT, MICROSOFT_2051_MANA_MGMT_GFT,
-+		msft_pcie_reset_flr},
- 	{ 0 }
- };
- 
--- 
-2.25.1
+Assuming other archs can add something later, we won't rename the field
+again.  So I can live with the ugly union fields.  If we really want to
+rename it, I prefer calling it just 'weight3' and let the archs handle
+the display name only.
+
+Thanks,
+Namhyung
 
