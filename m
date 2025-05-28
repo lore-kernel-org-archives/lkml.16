@@ -1,113 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F38268FDD
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58B0268FFF;
+	Wed, 28 May 2025 08:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748421280; cv=none; b=kahm2591dYbnCDg4Ero5Vccs1376LxqKvw/KePbId2Sf8tQG9ME2d7gLVbfn5N9Rk9wZkYJQ5qT8Yn9VbDe+pHiwMlsBFKLOtKePuXrsJaQ15/PayX9DeTlHMpvDQbNF5/zKqnygqWli+lS223jziQ6Ea/63Amm25Cr2p5dRZwo=
+	t=1748421340; cv=none; b=A8cVt5N6JAbMFRtmidgz/GGFwnJDS/o1c03dL94bvF97qDQUtZIoHibmNWJR1ozqpnfiOT6bkaRjBhikPIxdITHukwrn0ALCvLRiubqGNjwxlCbNCY+fIrs+apvy8NFS6lEz4ar2H2lxIT6THqFfki8uRKOsxQq2PSspHPNnrfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748421280; c=relaxed/simple;
-	bh=WuwyUAHqnp7HPv0q9YY9o8U6CvTjARcWIkJ++XQwOv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aNcHrRn1hqnWarPkaNI7CR+BktjJV6aCVfFJUfwktvS7Kotn5/dansJbzj72di69KxKSvK2Yayw4htr8Szwc1xbywVUxsLwfJSkgK4C2Gu+CH+mwgr/chF4O4j+k6NB6eXDiEqee4Go7+f3iCEgZ/AlLc1E+QGX7Qlv1Fl/j7FI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fo+EJ2TB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748421340; c=relaxed/simple;
+	bh=rALpFPEiTVr308SndMzrfaKc23oNScVyKdtgmZ2jaZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X4Fa6UsnQz2k/gNaqX8SeUMFiYu+7ocH/By0SVdY7rBZoLTFuP58xkNkO7ALf9V/f7OGR7uC8qxDlFLL/WbFBQ0Cm5pKVytIVivd1OCcomUoO2A31aTBOedS+xqXWdHKQ2Vlc9v8uWz6TAKzSrtQYb8X8w+1NPvbiFnqSl4AzdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ey/HoVHv; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fo+EJ2TB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748421277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=U4i+JqyZ/XZ2/PTdI6CeFGM3MJ6lxIFb7tc48utqptU=;
-	b=fo+EJ2TBzw72F8UTyIa18pQsA2MbPXODZHXL2xMuLFF1BDa/qStO10NDSElNqOqLYabfJj
-	J+sc1koyYarO6cK17mlKvCkqaRRfpF/hCR1rL8LKj9E9RD6cT4vVqcQaX19IwRqnNr7G40
-	2S4/fi+ZR3wQhx6b1uQRC8h8NwHMA2A=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-149-C0hxtqIeM5GTv-0o0Knggg-1; Wed, 28 May 2025 04:34:35 -0400
-X-MC-Unique: C0hxtqIeM5GTv-0o0Knggg-1
-X-Mimecast-MFC-AGG-ID: C0hxtqIeM5GTv-0o0Knggg_1748421274
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-601a4d2913fso4704230a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 01:34:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748421273; x=1749026073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U4i+JqyZ/XZ2/PTdI6CeFGM3MJ6lxIFb7tc48utqptU=;
-        b=qm0tYQnTcagGQE4eedMNk8jhQKXNOMK0kgUXTU0NySjOpEqSZZ0x42uyWqT7bKPJAF
-         duCoe84AzLMdRUjxtVDT5UrAH4rbphvx/0lyD7txiluQYtp+qryy8bB2j5j+OgesOzAf
-         eM7ReTjrIHY8PG2I4a4cc8AZuaeSdSI5qY5ZKval4bfZc5HPMM9HSLG9+9VFtM/7saii
-         zaQ+J6bYsoarXQT8q39259WHeQJggTBAFnGp/KiUJeorDDksU/diCccisuIgAbM6JgUP
-         qnL/MuXeqzC7X1omk3ZSkzTOfrFYfp9AMueebC+hzLd4THhh8usYVLs1M/WJeADVaXUc
-         VE6w==
-X-Gm-Message-State: AOJu0YwLXwU/2rhPFcAeYgbPrhO99CXT4YVYeFKOL9LqEbIspTucht8D
-	r1qICNudWcuAS9mpS9qQrjuPWhSuLf0UfNpnmlhxf8hcptXiOQCXqrJnGfAYBYimE0RPTKAxWRP
-	WTXED2HkAtNVxx0HRry2hJ/shULyhOjiXV1CrqFYD4CDxfv7CWvaz4p9VlCk7lqEA+xFk87fcmf
-	FW/vWPuXrP9eEx9g3Au1It84WsXbXeBPJ6H+uxTvbkwmwM8cctJA==
-X-Gm-Gg: ASbGnctn86wJmkNCcnOgEW0y601bta0r+2b3je/u2fmQmMrWKcmwe8JrAm0osgoYpIy
-	CBHnQsb87L8cLxWVeDgFjebDZnNv0VcapvU4Vi7rjZKRGkRr6kbiBJ/OX4eouIQWd29VyK1wLIR
-	F9c1HO9oOvmxB470YL9HTp4QYSmwaSE+ktol50wCNqngwmhlqribPjDvZcgFyuHFI0LkPjp03OD
-	KqHHo5oi4QjEdiImgoN+B9d7a08Ua7V/+cauSRlVVxxJtOT0dl+QI+O3ZSylaPND5MHLgxD8fly
-	RH4f+p0/4f9rmA==
-X-Received: by 2002:a17:907:944c:b0:ad8:9988:44d2 with SMTP id a640c23a62f3a-ad899884717mr339412866b.20.1748421273252;
-        Wed, 28 May 2025 01:34:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4e2bHjQQ64E6JdYrHpC7X4lCExyEp/3G8BfrYRE/V4IpI0prysNOJc41oeaxS+qaPAGw0SA==
-X-Received: by 2002:a17:907:944c:b0:ad8:9988:44d2 with SMTP id a640c23a62f3a-ad899884717mr339410266b.20.1748421272788;
-        Wed, 28 May 2025 01:34:32 -0700 (PDT)
-Received: from [192.168.122.1] ([151.95.46.79])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad8a19acd7esm70875766b.11.2025.05.28.01.34.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 01:34:32 -0700 (PDT)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: rust-for-linux@vger.kernel.org,
-	ojeda@kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH] rust: add helper for mutex_trylock
-Date: Wed, 28 May 2025 10:34:30 +0200
-Message-ID: <20250528083431.1875345-1-pbonzini@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ey/HoVHv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748421328; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=C1C3naz7hPNUvfz7qjQzQeD+k7g8b1WXlsA41wkU4Fg=;
+	b=ey/HoVHvaDVT7sf8n102x9de18es3mQ+kRvKPbMNJcJS2Og1tVbh25/qmXLw25PqURFdFDQ6GcfMqllAoBLvQ16BAY1NZJ4Q6cMWNJ7T/sXtGVsZqIa7Y1L7KzP7YeGBDt42fxAgs/UhYa1nubbVFFzyFxEx6QPK4q7HGQSn+uQ=
+Received: from 30.221.130.248(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WcCj5pL_1748421326 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 May 2025 16:35:27 +0800
+Message-ID: <d0e08cbf-c6e4-4ecd-bcaf-40c426279c4f@linux.alibaba.com>
+Date: Wed, 28 May 2025 16:35:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [QUESTION] cachefiles: Recovery concerns with on-demand loading
+ after unexpected power loss
+To: Zizhi Wo <wozizhi@huaweicloud.com>, netfs@lists.linux.dev,
+ dhowells@redhat.com, jlayton@kernel.org, brauner@kernel.org
+Cc: jefflexu@linux.alibaba.com, zhujia.zj@bytedance.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, wozizhi@huawei.com, libaokun1@huawei.com,
+ yangerkun@huawei.com, houtao1@huawei.com, yukuai3@huawei.com
+References: <20250528080759.105178-1-wozizhi@huaweicloud.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250528080759.105178-1-wozizhi@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-After commit c5b6ababd21a ("locking/mutex: implement mutex_trylock_nested",
-currently in the KVM tree) mutex_trylock() will be a macro when lockdep is
-enabled.  Rust therefore needs the corresponding helper.  Just add it and
-the rust/bindings/bindings_helpers_generated.rs Makefile rules will do
-their thing.
+Hi Zizhi,
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
-        Ok to apply to the KVM tree?
+On 2025/5/28 16:07, Zizhi Wo wrote:
+> Currently, in on-demand loading mode, cachefiles first calls
+> cachefiles_create_tmpfile() to generate a tmpfile, and only during the exit
+> process does it call cachefiles_commit_object->cachefiles_commit_tmpfile to
+> create the actual dentry and making it visible to users.
+> 
+> If the cache write is interrupted unexpectedly (e.g., by system crash or
+> power loss), during the next startup process, cachefiles_look_up_object()
+> will determine that no corresponding dentry has been generated and will
+> recreate the tmpfile and pull the complete data again!
+> 
+> The current implementation mechanism appears to provide per-file atomicity.
+> For scenarios involving large image files (where significant amount of
+> cache data needs to be written), this re-pulling process after an
+> interruption seems considerable overhead?
+> 
+> In previous kernel versions, cache dentry were generated during the
+> LOOK_UP_OBJECT process of the object state machine. Even if power was lost
+> midway, the next startup process could continue pulling data based on the
+> previously downloaded cache data on disk.
+> 
+> What would be the recommended way to handle this situation? Or am I
+> thinking about this incorrectly? Would appreciate any feedback and guidance
+> from the community.
 
- rust/helpers/mutex.c                               |   5 +++++
- 1 files changed, 5 insertions(+)
+As you can see, EROFS fscache feature was marked as deprecated
+since per-content hooks already support the same use case.
 
-diff a/rust/helpers/mutex.c b/rust/helpers/mutex.c
-index 06575553eda5,06575553eda5..9ab29104bee1
---- a/rust/helpers/mutex.c
-+++ b/rust/helpers/mutex.c
-@@ -7,6 +7,11 @@ void rust_helper_mutex_lock(struct mute
- 	mutex_lock(lock);
- }
- 
-+int rust_helper_mutex_trylock(struct mutex *lock)
-+{
-+	return mutex_trylock(lock);
-+}
-+
- void rust_helper___mutex_init(struct mutex *mutex, const char *name,
- 			      struct lock_class_key *key)
- {
+the EROFS fscache support will be removed after I make
+per-content hooks work in erofs-utils, which needs some time
+because currently I don't have enough time to work on the
+community stuff.
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> Zizhi Wo
 
