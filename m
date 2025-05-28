@@ -1,83 +1,127 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0235219B3EC;
-	Wed, 28 May 2025 21:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367F619B3EC;
+	Wed, 28 May 2025 21:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748466784; cv=none; b=fh1WBsdPusb/+eBlU4zzjibeXvd418MpaSBz6v17QOdXoHB8zVTnTxn4s6Cw8rw6Ja9QVqJY90oF+Vtp4IM2mP/SD8ciYsXmNhPeLmcsigq/zkg/G1msikjhSvq548SABDyiWqqMaJihTcbN3yTXGawCGMwtV3KGjIvHyON/ab8=
+	t=1748466870; cv=none; b=YQd23j0bqdLYeTDCQEfqPwiI1R0SnI87BsqovMGqeFi4fSTYz2/OE72yEfRYIJjJQfns3VuW91sepKhiyE9Xokeh5k8DyyLCRTT/wtD36+90+JjhGCQeztzw8w2OZd+GkShcUQsq2G42FxVBqNhUvmrdPPT9QkhfBYUw7z4cIEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748466784; c=relaxed/simple;
-	bh=B1dJQNdURrw4rLjUeXXoBmpbVavIVpxnCv5m/seyF9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DfCDgW6wq0JnTd6on912q7//HA7Tig9eB/L1YnwW/t/s0DOlN8Vj+Njt/De0KNmfYj+fxCJykQWPxM7DoA/YIj1X3nyuXnW+sr3FM1S5/U4zOxqAhOPzMHXdkM/YuHVk9yqmPZWPGbr9rJGZdRFwXiBlwg4jDH7O4x6OgjAUY+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fLkxi5pP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748466870; c=relaxed/simple;
+	bh=bik8tiy9zD4tncn3V/spfXhSHei4QkySdXosKgPMaGo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N4hAjtvgw+PI8vhmOqyOjAwZLrrT70dYx1gGV2M7wdi5/2z/lZ12wxH2MIBi/4+yU6tJNXSsPLyQ+YXd+NY7XrHzg4FDsv7UiuaofDKkoloUT6bDhikXmQmwYKWslceAAtnVzAt5f+nYe1YAKf6gLZsYLsPRgYm5pBU/geVjkZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ncvpEiP4; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fLkxi5pP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748466780;
-	bh=+5Ei/8QNz7zs4TJvFRQxJ+aTL3fgH7zEb18HGTXwx4Q=;
-	h=Date:From:To:Cc:Subject:From;
-	b=fLkxi5pPw4IU+IAcGiZIJjd0Cnq9zYXl2p/ix7uXaXdgEI8brlkfAX4770c7sE+xI
-	 t3myFz2lzevD3kU5NGAEWYpqWg55pv7yWHTf+w3UCOa7bLdwG4upWl1KHVH6YR7WcL
-	 c2QKG1SiCh6zgwHeEo6/gF01xRQhxY1zyAqHH/S//TqvFOEgaE7b9Dwye76GyUHONd
-	 ViYlFckzQF1QvU7jnI9Z95Zeur4x1sGMwy3glI4cO3FPuafp0OSvG4Zkc8VeCef5N4
-	 fChmWVGUybGyd0vnvh3M9C4p0aE/WCK68dIzKX2zoz7FnF/eNgwQr3cLB9csOsgScv
-	 QjgfWj0WTMWwg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b72K800F3z4x8Y;
-	Thu, 29 May 2025 07:12:59 +1000 (AEST)
-Date: Thu, 29 May 2025 07:12:59 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Anna Schumaker <anna@kernel.org>, Trond Myklebust <trondmy@gmail.com>
-Cc: NFS Mailing List <linux-nfs@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the nfs-anna tree
-Message-ID: <20250529071259.3da451d7@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncvpEiP4"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87de3223127so59750241.1;
+        Wed, 28 May 2025 14:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748466868; x=1749071668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bik8tiy9zD4tncn3V/spfXhSHei4QkySdXosKgPMaGo=;
+        b=ncvpEiP4AQqOJr2Nm//DPlN289FixuqQYffHdD5X/vwG1g4ukGCnGafiHgThG0GMjc
+         EfQx3kQz2UG+FqTAoH9b6G4s5HiYMLxwrVFUSJIRbAjbmTNel66q9SfjMRxowNWRnIhe
+         qhwlG2p3SKRQn/tX/tx1lYlKvojRORvpjRBPeVr+qt8c3IWRiV25YNPHlcUZ71t81GXh
+         hC9dwngL3rZiVhmaMo5DI5iiqHmX0+NWxIq14gk6AyIwVlaHIwcgyavha5ucD7hdu/LS
+         931PtLlZkp/LTbA+A88tv2rNwUnVsTalbwetPkGIBuIzZVH+43QTvK5ljp9lZWuAmfx8
+         MHiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748466868; x=1749071668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bik8tiy9zD4tncn3V/spfXhSHei4QkySdXosKgPMaGo=;
+        b=uS22fnlbrbhUatejWnt3eTH39LFsBKlkiy29K0B1n4jiouXljI8MjxsnJDa7tSYFYB
+         xYARrEKq/CAHettl0mPH69CdYjqlHDaoXGvXc/a0LY8AAOXNsvQm1DVjEnOlWaxR4amE
+         TFmJAWNSRIHoSJcZmtG0d0DLIaJ9j87RnSToSlEXBVFOyjdODfeBUYEH0crfEfmXmN1d
+         E0MTwZ/duu7TpVUZbscICG22+VtcyvAi3L7O7ln3J99v+s/p5x867o04kQqULH9bSHvE
+         6l7SGWYDuXD4KXVMyK+wOP6ArqEy1C3jX1sm4P1zzbjK/9oloHfm9tPsTIXlid2wGBfu
+         lgkA==
+X-Forwarded-Encrypted: i=1; AJvYcCU30EeiauxJ+PTPyrwT3obXqdbxw9OMP/EIsubdTyGD1Gys69CWv+BQGurUufkx5t+1rpr5te51@vger.kernel.org, AJvYcCXI1wyQFzMjcIj/jtqFUrXCS1Juliw7BR3NFz8mhrCrYIkInAEvQiCKflDW1lRbBSJLnQVWWjMVwnUbHH0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0rK7sXkJKt6KMraVW3ii+shxuvEhxRLk/p1y5EqmGNBsCnAKT
+	Nxt7nLtlUApLE89lagPZm1d4SRm5CTkGnnegsatKqPNAIPLKSqsCySkqqnyOk3Qh6TIZaAEGjWN
+	C32AoOq+cFYkfamz40lXCttfVM3L4pjc=
+X-Gm-Gg: ASbGncsot8+lkwfYknwYDn0PuLNuZV/r0jupFdXqT65EON066Uk0TqEm6r0kPVtw5H/
+	n1gcxenM3UxSvw7ICwGsj8jmvIyX5W7ISsj/uz7jaKEQ090ePi4LBFNXpl8hLoJGrx/mXTSS5wY
+	1sJPB6p1F9MLOkKdakE98pNIRvWMRUjKH5hQ==
+X-Google-Smtp-Source: AGHT+IGGLLvtEb730nnh7rC673oR16aeQY2nH92ZW4fGCX/YiQ4QwWrxJP/i3AUVjXlzBuIQT/Ux8cWPw7wSCO4tioo=
+X-Received: by 2002:a05:6102:1612:b0:4e5:958d:4962 with SMTP id
+ ada2fe7eead31-4e5958d5d03mr7448988137.2.1748466867876; Wed, 28 May 2025
+ 14:14:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xX3r/pUhntQn7M.qhBT8r6u";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/xX3r/pUhntQn7M.qhBT8r6u
-Content-Type: text/plain; charset=US-ASCII
+References: <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
+ <aDbA5l5iXNntTN6n@shell.armlinux.org.uk> <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
+ <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch> <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
+ <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
+ <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk> <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
+ <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch> <CADvTj4rWvEaFyOm2HdNonASE4y1qoPoNgP_9n_ZbLCqAo1gGYw@mail.gmail.com>
+ <1e6e4a44-9d2b-4af4-8635-150ccc410c22@lunn.ch>
+In-Reply-To: <1e6e4a44-9d2b-4af4-8635-150ccc410c22@lunn.ch>
+From: James Hilliard <james.hilliard1@gmail.com>
+Date: Wed, 28 May 2025 15:14:16 -0600
+X-Gm-Features: AX0GCFtJbKcSZrV6aI_DEhodkWvBg_0kUSxJMObTitKRlUNU-S1IGzUWOHTLoqc
+Message-ID: <CADvTj4r1VvjiK4tj3tiHYVJtLDWtMSJ3GFQgYyteTnLGsQQ2Eg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
+ PHY device
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org, netdev@vger.kernel.org, 
+	linux-sunxi@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Furong Xu <0x1207@gmail.com>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, May 28, 2025 at 3:05=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Wed, May 28, 2025 at 01:45:40PM -0600, James Hilliard wrote:
+> > On Wed, May 28, 2025 at 1:27=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wr=
+ote:
+> > >
+> > > > I think a lot of ethernet drivers use phy_find_first() for phy scan=
+ning
+> > > > as well so it's not limited to just stmmac AFAIU.
+> > >
+> > > You need to differentiate by time. It has become a lot less used in
+> > > the last decade. DT describes the PHY, so there is no need to hunt
+> > > around for it. The only real use case now a days is USB dongles, whic=
+h
+> > > don't have DT, and maybe PCIe devices without ACPI support.
+> >
+> > I mean, hardware probing features for this sort of use case have been
+> > getting added outside the network subsystem so I'm not sure what the
+> > issue with this is as those use cases don't appear to be meaningfully
+> > different.
+> >
+> > > I suggest you give up pushing this. You have two Maintainers saying n=
+o
+> > > to this, so it is very unlikely you are going to succeed.
+> >
+> > So what should I be doing instead?
+>
+> Describe the one PHY which actually exists in device tree for the
+> board, and point to it using phy-handle. No runtime detection, just
+> correctly describe the hardware.
 
-Commit
+But the boards randomly contain SoC's with different PHY's so we
+have to support both variants.
 
-  f75f8ab8c93c ("NFSv4.2: fix listxattr to return selinux security label")
+> Do you have examples of boards where the SoC variant changed during
+> the boards production life?
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/xX3r/pUhntQn7M.qhBT8r6u
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg3fFsACgkQAVBC80lX
-0GxJqgf+NfT9ptMgHJ8FKX1yi/PRgFvqyafUkPaOHyx6OCcR50qcBbZa5MFOycnI
-i4DvCc3tafmAe733zizT7+OwBu9cCeITwdI7pRxp0yIAgrH29rF6IXsDD14nf2oW
-mT+Tvw3ShTY0KY82HI2wuuhucA4ND05B+HEFLTryeqGqbJDUujUhh5W0wGMguvzb
-cWOZdywpFTmrLXPHEZMIceW5+jWR4hoaJU1Z/jbmp2V2QcDpFXaKfDD4IMEunvUm
-VJ0w/AjYgw5PrXf4cynhtGKH27411whsIVp5GP3IiXsFoZaO183WSRbtba33Bdy/
-RNoG7a/Peb5NiFg1AbODjShRX4u5Hg==
-=Bh2B
------END PGP SIGNATURE-----
-
---Sig_/xX3r/pUhntQn7M.qhBT8r6u--
+Yes, the boards I'm working for example, but this is likely an issue for
+other boards as well(vendor BSP auto detects PHY variants):
+https://www.zeusbtc.com/ASIC-Miner-Repair/Parts-Tools-Details.asp?ID=3D1139
