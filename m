@@ -1,92 +1,126 @@
-Received: from mail-m3271.qiye.163.com (mail-m3271.qiye.163.com [220.197.32.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F56D266B56
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195BA2749E7
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422822; cv=none; b=WZ7TxIwXavTNqeCsaBtOiU/zYxmRUbtHzF07z/Loh3Ee+cNqIW9IC11BZSbxdYsOY3ZC3vQCA+0BEdT61UW3xIKNDyzmDmDg77mzit30UOqwpidNtJTsgynjXgZ012eZ/00jt032UupC5rG+Fofe35zvw9Xo/LziFkpWbQi+uBg=
+	t=1748422824; cv=none; b=SGq8kOLrpQHQh4lQj6BlGReDRmeZEtFa3MSQE5A2E+HUYYqJ6g7i0repVwc4rnByWVI0dpTOKBGE4bRQyacOgKPNdqiL57EW9gXyInmwdk9BzDi7rsFvTiBhW2CqQXyEJzlo/eyta/YEH5TQPyv7jaxlQlk6eYfSN3wi0hHZ9PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422822; c=relaxed/simple;
-	bh=dPh4CWO9LoE1FnUVpv9+BowNSpqjjHQ638GZin7PRLA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H+m/bfZg5aLdsy46ftsd6GBcBXQWK8hxkJetqLKB7rMOil2Han6+Nh/TDiVVyT44PFZEPojaa3RUPhcaY/roF/lgT+ar92zvophGL532pr1Gevtg2qTDcnZMEXg+WZaNQGDiNPonS1mBVQOevCPGeBL6SU4zoUvOc/e7GOQpMpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com; spf=pass smtp.mailfrom=thundersoft.com; dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b=HyRd/gYM; arc=none smtp.client-ip=220.197.32.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thundersoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thundersoft.com
+	s=arc-20240116; t=1748422824; c=relaxed/simple;
+	bh=t1e/HvfosFpsLoFkhIGG8ncpvv+6aZviJ2nKgmWiOW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mwnDxF03nWchpmqqGZv20SKFkG2hMToFg91xcMju8keIpUHgcpt+hQIoEkIamnIp6NzoksIHurFCfuQ0rMokMCO6FgczZamzvqn/hAe5+yuMb0Rs2PjdKnfgtNg8SOe+9SVAVQkdVW4TQAd0j8OQzsbDiiuO5p7J3tOsa6t10Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K2fmwfCT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=thundersoft.com header.i=@thundersoft.com header.b="HyRd/gYM"
-Received: from localhost.localdomain (unknown [117.184.129.134])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 16b15a650;
-	Wed, 28 May 2025 16:55:03 +0800 (GMT+08:00)
-From: Albert Yang <yangzh0906@thundersoft.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	=?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?= <nfraprado@collabora.com>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Eric Biggers <ebiggers@google.com>,
-	Elinor Montmasson <elinor.montmasson@savoirfairelinux.com>,
-	Ross Burton <ross.burton@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Albert Yang <yangzh0906@thundersoft.com>,
-	Ge Gordon <gordon.ge@bst.ai>
-Subject: [PATCH v1 8/9] arm64: defconfig: enable BST C1200 DWCMSHC SDHCI controller
-Date: Wed, 28 May 2025 16:55:02 +0800
-Message-Id: <20250528085502.481476-1-yangzh0906@thundersoft.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K2fmwfCT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748422822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=64QsXwazpQwW+tOYOMo7hDdSauBGVg6nC6ZKTpmi0VI=;
+	b=K2fmwfCTDs4dGc61cpflZabEFOjCWO6oam0nm+IY1Lvbu4lzezAithrhmsp2vOKWGMMiBJ
+	UAcOhUN6o7hSsJ/3z4jDSmQVHpgbwJd+W4wiTQy9xXxlKpWMG9aSxVq2vP1DXNLWggV3l+
+	CVn4NCFhicR0swLEFFd3vemDGlKeLVA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-25-zq31eJI9M1y50WE8YFheuw-1; Wed, 28 May 2025 05:00:20 -0400
+X-MC-Unique: zq31eJI9M1y50WE8YFheuw-1
+X-Mimecast-MFC-AGG-ID: zq31eJI9M1y50WE8YFheuw_1748422819
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so2463405f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:00:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748422819; x=1749027619;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=64QsXwazpQwW+tOYOMo7hDdSauBGVg6nC6ZKTpmi0VI=;
+        b=LpnEvf9VXKi8dWURItagPglfLpISHG4AQwQZIYqrN3TVi6aBcgXejgfNMDfuQEzsL2
+         54Of/+QIa35V7JVJdyKLhrIUKs7MLjVZwb9HTtBnzq3oLSiawEemKMLzl44DsOUm1E6r
+         44JcprAnsq6aEqOBeMaSqibDkh0E+wX7x73OWoWiFjO/jNyYEgYHOjWO7V5KLvBiW0xH
+         bQoynO5Lgl7yd+xfLSh/G+3nDIEOOXh3oXiRzN5V20z9BkKf6gSkOLH5MGpr0b/8ZfeC
+         npfBogIx0L0XbnSuufQJeRfNkVrtyvRek0Pc8AEW+QMQCyZ72KjxGlkIzWJXdjPFqEr1
+         CNvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlF20E6HrGfLMHXy0osKCJfE11dJN4ZA+3+IDRul/TDbAC0bZHcXzm8qNNd8nOsyVMH/KhEt6LhtY9Sjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7nieCquecTN72rmLIVbnxvK15k9aPijGC93wm2WaQDdYHCrTY
+	cGNs3USoIKBkt2z2TNDZeuZVK4xgmiEF5hEsTcUi0Vnxu9tq1hePh6wM08dwdwG15qqd9OpenF/
+	qsRocShs88KUydGSdtV6dV1H4IndiA5EaSAq5Y1B/8dBLMe78Yjb4KtlhYYJfSLYReg==
+X-Gm-Gg: ASbGncvrTrqTGRHXvZjSAqILH7tZHqrDyRzae+iMouGBQFHo+x6tg7JNtfStn7ZrzyZ
+	/JSCoUMzSXaYR8XCarHSqhiTxK3p4d6kRSsOTdzl3X1Oj2LxMrfQ8hSVWDmtdtg4k5tv8n5jPtw
+	dhFRpfsJh5/Us20wGzSTBmwLXwoFER7HU41bJbGihxO1E//cn7cIP9IyVeEHeBjp4NH30oHro02
+	3SfSRrYADDjzFUDMmTNe9+g99lTY8kuAac0Vx/sIyOx24NAWglxcdgQHtyBpm5pxzgKTDQ0nQSk
+	NRrNDEzVR6FyPwRMu9d0t2RAioqZwZXTFMEEql6PYW3wy9xS+j8/PyTEuJJ2
+X-Received: by 2002:a5d:5f8b:0:b0:3a3:6595:921f with SMTP id ffacd0b85a97d-3a4cb4b822dmr12928267f8f.41.1748422818883;
+        Wed, 28 May 2025 02:00:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGjrV5vgUL5ysXDl7B3oxB4ovG+UqKk+QHfVQ+EndsK3P47vCbb2duzqpq4xfTjaqx9Sg54xQ==
+X-Received: by 2002:a5d:5f8b:0:b0:3a3:6595:921f with SMTP id ffacd0b85a97d-3a4cb4b822dmr12928217f8f.41.1748422818345;
+        Wed, 28 May 2025 02:00:18 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eab0b596sm892079f8f.0.2025.05.28.02.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 02:00:17 -0700 (PDT)
+Date: Wed, 28 May 2025 11:00:12 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, jarkko@kernel.org, 
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, davem@davemloft.net, 
+	linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
+	Yinggang Gu <guyinggang@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v10 4/5] tpm: Add a driver for Loongson TPM device
+Message-ID: <gymx5tbghi55gm76ydtuzzd6r522expft36twwtvpkbgcl266a@zelnthnhu7kq>
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <20250528065944.4511-5-zhaoqunqin@loongson.cn>
+ <7ifsmhpubkedbiivcnfrxlrhriti5ksb4lbgrdwhwfxtp5ledc@z2jf6sz4vdgd>
+ <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGk4ZVk9NSU8fHxofQ0hIQlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSkxVSkNPVUpJQlVKSE9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0hVSk
-	tLVUpCS0tZBg++
-X-HM-Tid: 0a97161a2dbf09cckunm84ffe6dd397f07
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PTo6Cjo6IzE#UUgcEANDAw8B
-	C0wwFBlVSlVKTE9DT0lJTktOSUhMVTMWGhIXVQIaFRwBE0tCS007DxMOFR8eCQgUHQ9VGBQWRVlX
-	WRILWUFZSkpMVUpDT1VKSUJVSkhPWVdZCAFZQUlLQ0g3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=HyRd/gYMuD9hDyqYu2NK1/3JLjy1jI4EpX2O95sBuVnp+0VXrj4r/VY7A9hPhfszpdW5pPk/8GaHNTlkF0U8ykTKoAkoyQ4rdjxjRw73QhchL4O/uPFZoMY+NJO+CVBXMydxot8VxDFWP0MQNBGemGq+o59N8oqyQ/ck5c08qLk=; c=relaxed/relaxed; s=default; d=thundersoft.com; v=1;
-	bh=h1wNZIxAqWJkI8Bzz88+kjjGoUH05jFKvXNWe1iLpcg=;
-	h=date:mime-version:subject:message-id:from;
+In-Reply-To: <afaeb91a-afb4-428a-2c17-3ea5f098da22@loongson.cn>
 
-Enable the BST C1200 DWCMSHC SDHCI controller driver
-(CONFIG_MMC_SDHCI_BST)
-in the ARM64 defconfig to support eMMC/SD card access on Black Sesame
-Technologies C1200 series SoCs.
+On Wed, May 28, 2025 at 04:42:05PM +0800, Qunqin Zhao wrote:
+>
+>在 2025/5/28 下午3:57, Stefano Garzarella 写道:
+>>>+    chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+>>>+    if (IS_ERR(chip))
+>>>+        return PTR_ERR(chip);
+>>>+    chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+>>
+>>Why setting TPM_CHIP_FLAG_IRQ?
+>
+>When tpm_engine completes  TPM_CC* command,
+>
+>the hardware will indeed trigger an interrupt to the kernel.
 
-This driver provides hardware-specific implementation for the Synopsys
-DesignWare Mobile Storage Host Controller integrated in BST SoCs.
+IIUC that is hidden by loongson_se_send_engine_cmd(), that for this 
+driver is completely synchronous, no?
 
-Signed-off-by: Ge Gordon <gordon.ge@bst.ai>
-Signed-off-by: Albert Yang <yangzh0906@thundersoft.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+>
+>>
+>>IIUC this driver is similar to ftpm and svsm where the send is 
+>>synchronous so having .status, .cancel, etc. set to 0 should be 
+>>enough to call .recv() just after send() in tpm_try_transmit(). See 
+>>commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} 
+>>opt")
+>The send callback would wait until the TPM_CC* command complete. We 
+>don't need a poll.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 9f072028fb72..81c2b698e37b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1172,6 +1172,7 @@ CONFIG_MMC_SDHCI_CADENCE=y
- CONFIG_MMC_SDHCI_ESDHC_IMX=y
- CONFIG_MMC_SDHCI_TEGRA=y
- CONFIG_MMC_SDHCI_F_SDH30=y
-+CONFIG_MMC_SDHCI_BST=y
- CONFIG_MMC_MESON_GX=y
- CONFIG_MMC_SDHCI_MSM=y
- CONFIG_MMC_SPI=y
--- 
-2.25.1
+Right, that's what I was saying too, send() is synchronous (as in ftpm 
+and svsm). The polling in tpm_try_transmit() is already skipped since we 
+are setting .status = 0, .req_complete_mask = 0, .req_complete_val = 0, 
+etc. so IMHO this is exactly the same of ftpm and svsm, so we don't need 
+to set TPM_CHIP_FLAG_IRQ.
+
+Thanks,
+Stefano
 
