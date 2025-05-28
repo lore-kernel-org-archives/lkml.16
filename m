@@ -1,167 +1,256 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2090.outbound.protection.outlook.com [40.92.46.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168AE20C030
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748408011; cv=none; b=Z3qOWovqaaig4+6uVsNP3MfWNlsdM3pX/3VyDce2ZJWqgmX17ZXVeKgc6XtlWccTdJcY+aiqUAwNH1xOkVtD3bI+/ajc0todZODKRCDZ3kOgY5n3VfkfUTEdmXf3KvRoOBcbNQKrY9A6tPdklaQSmIVDaA6IK74z/4+Sf4TSL0I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748408011; c=relaxed/simple;
-	bh=VB3eq3aBNnjKqYRK+RlhX0GF7OHenCwl9MVAsuqjPq4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=Yps+cjYrax4ICumnEo8JSazIDgqxuqESO3mSG2OUCM3EnIDGvACaf43CfZKCPnLOMJ/VhRfMCF/VZ+4BWVgldAj58MTMkAm8iQPmYpkqjTcO0ImVFpPKJe6GJtQjLmP72HSpNDchZXtgiHQwzztkhMuKOrNgBP6MyN9h9nhg/xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EJrYRTqp; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D79139D0A;
+	Wed, 28 May 2025 04:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748408270; cv=fail; b=V5BM1o4G2egPekn+cDmU2NMZ6yZhftl+ehlfkO3F1ePEhDhR0fXWuEgQ8kh7kOvn+OxWjxO9aL1/YvknWSo7bJns6/pnmowVXpDb8vqdtTrIi5VhLAhp/9jBm7WiFLi04doOqoyG/+AhIYoPoYo1oVXrL1WpEqb3mmIw8B6wfBE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748408270; c=relaxed/simple;
+	bh=XLSPDZOfFJFu9qcCraRXYdjhPrA15YcFWaxEe7Q2Yj0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=THXC2Hqpuz6ja/YFLNEK1IEiXODCBYtUVcjmAf9vw5yf3ly0WGt2uAQbEotWmsbpJCcjFv33m2gdOQ+phNNbjsAs3c9DXWUYO84Ok9qL7yl13V2jVoOAmE/FRSJI1AvHn/3UiIXLx/neoS88T70dGa6DyzB5OXeM/nCRbPiu54E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=G1bXEKRO; arc=fail smtp.client-ip=40.92.46.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EJrYRTqp"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250528045328epoutp01ed049ad9544b7899351310a44b2dc1f0~Dl9H-uPtc0048500485epoutp01C
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 04:53:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250528045328epoutp01ed049ad9544b7899351310a44b2dc1f0~Dl9H-uPtc0048500485epoutp01C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1748408008;
-	bh=FdZF5l83khTomcseO+QoMWKGMiLcHWOd9nqmuhm1swA=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=EJrYRTqp/+MYUfnbc2HwU5likBWwHpJ+eK95A9am+3wxwQNbo+QlzgTYFrRz+AhEF
-	 fC9lmU0dmVGakWqw9MjJs28kBPCGOpmnHwePuxgH5cnEP4v0fLpy9fGRHVXC+vBjkB
-	 f4FhFUAiAyBMz5DEy2bP7cUugUb1sGxieRrjnqVg=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250528045327epcas5p355159aadc57fde03a3cb555653fe9bd6~Dl9HZzFwx0196601966epcas5p3-;
-	Wed, 28 May 2025 04:53:27 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.182]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4b6cZt1bwDz3hhTR; Wed, 28 May
-	2025 04:53:26 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250527104533epcas5p2ce335b06bb6564469fcfd96786de5cbb~DXHP819kQ1647416474epcas5p2I;
-	Tue, 27 May 2025 10:45:33 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250527104533epsmtrp298f462a0270bbc1d8cee2dbe97f1a7ae~DXHP6vdyF3064030640epsmtrp2d;
-	Tue, 27 May 2025 10:45:33 +0000 (GMT)
-X-AuditID: b6c32a29-566fe7000000223e-7b-683597cd959e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C2.54.08766.DC795386; Tue, 27 May 2025 19:45:33 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250527104530epsmtip121c695d30e18eef84fe768e5794ed6fa~DXHNDu7CF0476404764epsmtip1H;
-	Tue, 27 May 2025 10:45:30 +0000 (GMT)
-From: "Shradha Todi" <shradha.t@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>
-Cc: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.or>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<manivannan.sadhasivam@linaro.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<robh@kernel.org>, <bhelgaas@google.com>, <jingoohan1@gmail.com>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
-	<vkoul@kernel.org>, <kishon@kernel.org>, <arnd@arndb.de>,
-	<m.szyprowski@samsung.com>, <jh80.chung@samsung.com>
-In-Reply-To: <20250521-competent-honeybee-of-will-3f3ae1@kuoka>
-Subject: RE: [PATCH 09/10] PCI: exynos: Add support for Tesla FSD SoC
-Date: Tue, 27 May 2025 16:15:29 +0530
-Message-ID: <0e2801dbcef4$78fe5ec0$6afb1c40$@samsung.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="G1bXEKRO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x9I0j3QRCPuY7WjAFh87p4atwMcCbpsaBBQALCkoJ/RK1DdgTmoFMqDE4/NPFffY/k0sz3jZXiCQFg8dfQV11HsCL0NLGeLcZhyxYuHNg+DuusXvYSEetk+dWqkPxKh1tSD7qJGafyVG3ze/E84G0MkuV7xh6mx6YIOMYk6YtA+EzXwbWVpERAg9HLn3XUyPcDMQlz6XVmkDe3w85lXSXPclFcBSrQqMVLqSpXRJhO0s2NYCg6i77F7yAHFQ03mD/3YXlzCNDJnU3GjD/oNMx+Q+pDzic7MZ5QMyf8ukX3ht3Vk2Q4S+iD2EBqZkgW4Y50qJVzDJJVkUO5R+yigJQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Nzhs12bei9HwL4ApSAJQzSHyZImBaMlR4C8Loi7d7Cw=;
+ b=yIZLpllOB0ZOt6HgW/me67TQEZvF8cLetqY4qsQIRylwS8i1QvaE9nN7QhBisZLYAe9m1nnXEp3GySO9+ad5OEUuwpCC2AbIYW+/ZiaZ46T8wdOpCl9DTIoVL7ph6ryGELb0uLfiIzElFr/10H5glbUY1QpZyCZ010JjT4DQxMneL5lEw6je93JRpqrpqnKl0z1PKIlgnHfdTVc01H10MN207+s+os7eN+M+9xk1StPnJFKCR18Oj97haNXgu1j5h3LjlKxTpzeYt2hDuSHotJGuqBgpftuXmAnsstUiBAh8KqR2mIXwOnyAJ2zf3ThByrUKG3OeJu0oqR9db2upqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nzhs12bei9HwL4ApSAJQzSHyZImBaMlR4C8Loi7d7Cw=;
+ b=G1bXEKROydj0mN9OmJDXP5G6XUeGZzk8ffGbyWmYqb8ju010SG+0BZehqipkMMCVef5tFP50CAjZUkMwJyW54mYC0/4Ekd6YoXVc/PLmi8k0QP48ROxa3gJFUHRgNgQ1Pmd7mpg8XGND8Eibq8QdvP+DjdF9O6hUxRA2Zs/5oFfclYuSyh1rqa6ATNcjzrjs4TaJ54YqJJQl+Li0qYwYyYaMLx2pBEHlH0tyYhj7xvHeFZ37UuMbouWR8HGVAFGQaT5G751NKTw5xyROVocUNiH3s0pam/OhiNvJQnQau/LJPF8+U6H6HH2IwRUBMp6Vaqe0++axTIzcAE+Vjl6nSg==
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
+ by MN0PR19MB6165.namprd19.prod.outlook.com (2603:10b6:208:3cf::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.24; Wed, 28 May
+ 2025 04:57:46 +0000
+Received: from DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305]) by DS7PR19MB8883.namprd19.prod.outlook.com
+ ([fe80::e0c2:5b31:534:4305%4]) with mapi id 15.20.8769.025; Wed, 28 May 2025
+ 04:57:46 +0000
+Message-ID:
+ <DS7PR19MB88839AC485C51FD2940BEE6D9D67A@DS7PR19MB8883.namprd19.prod.outlook.com>
+Date: Wed, 28 May 2025 08:57:33 +0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] Add support for the IPQ5018 Internal GE PHY
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Heiner Kallweit
+ <hkallweit1@gmail.com>, devicetree@vger.kernel.org,
+ Andrew Lunn <andrew@lunn.ch>, Conor Dooley <conor+dt@kernel.org>,
+ Jakub Kicinski <kuba@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, "David S. Miller"
+ <davem@davemloft.net>, linux-clk@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Paolo Abeni
+ <pabeni@redhat.com>, linux-arm-msm@vger.kernel.org,
+ Eric Dumazet <edumazet@google.com>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+References: <20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com>
+ <174836830808.840816.13708187494007888255.robh@kernel.org>
+Content-Language: en-US
+From: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <174836830808.840816.13708187494007888255.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ClientProxiedBy: DX0P273CA0102.AREP273.PROD.OUTLOOK.COM
+ (2603:1086:300:5c::13) To DS7PR19MB8883.namprd19.prod.outlook.com
+ (2603:10b6:8:253::16)
+X-Microsoft-Original-Message-ID:
+ <263bf782-818f-47db-9ef2-fcca0cf16199@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKa2HaEso6x90WQFKmaYw3pYxuT6gLGtKN5Ag2CUBUBvBCtG7IzpxAA
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAIsWRmVeSWpSXmKPExsWy7bCSnO7Z6aYZBpcuSVk8mLeNzeLvpGPs
-	FkuaMizW7D3HZDH/yDlWixu/2lgtVnyZyW5xtPU/s8XLWffYLM6f38Bu0dDzm9Vi0+NrrBaX
-	d81hszg77zibxYRV31gszn5fwGTR8qeFxWLtkbvsFndbOlkt/u/ZwW6x884JZgdRj9+/JjF6
-	7Jx1l91jwaZSj02rOtk87lzbw+bx5Mp0Jo/NS+o9+rasYvQ48nU6i8fnTXIBXFFcNimpOZll
-	qUX6dglcGQcXtTEX7BeueHd1HWsDY6NAFyMHh4SAicTpeaZdjFwcQgK7GSV2H9/H1sXICRSX
-	lPh8cR0ThC0ssfLfc3aIomeMEs2fHjKDJNgEdCSeXPkDZosI6EpsvrEcrIhZYDuLxJmlDxkh
-	Ot4zSrS2bWEFqeIUsJe4NakXrENYwFVix+n3YDaLgKrE0f3TwFbzClhKtBzbygphC0qcnPmE
-	BcRmFtCW6H3YyghjL1v4mhniPAWJn0+XsUJc4SaxYslBqHpxiaM/e5gnMArPQjJqFpJRs5CM
-	moWkZQEjyypGydSC4tz03GLDAsO81HK94sTc4tK8dL3k/NxNjOBEoKW5g3H7qg96hxiZOBgP
-	MUpwMCuJ8G6bYJIhxJuSWFmVWpQfX1Sak1p8iFGag0VJnFf8RW+KkEB6YklqdmpqQWoRTJaJ
-	g1OqgWmnfMa32XIi8zh+mf4yL3j35vz1hfL/Hq3+vzbygrhv/u8ZPSJcH3dqzFy9u+EGA29G
-	fef0lfFCxo8m+E1cvsJ7y6Il+7YZNBfPNTb6fvZMluduXUnjusitiouj815NczijP+fhCjOr
-	e3e85KQ5HU9esMuxWFxnsD/AuUDzZeEUnhsW05Nv7XFb927nW5VrhfXFM5ZpXE4uM3pky+Ih
-	4eh2NDPD5rHPvcRTFbpSyxLPfMrlepDKYd6ek8n18chzCVUug/VLm/bonDtbftK356/5xIOP
-	JlpfVLU5arQp4Ub836IWdYOVz968dvVcWcB6Y9eJIx4zbFfOdYmaeelhTMFWnsibk/axbnlu
-	O4e99cEbJZbijERDLeai4kQAUGU8LXMDAAA=
-X-CMS-MailID: 20250527104533epcas5p2ce335b06bb6564469fcfd96786de5cbb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-541,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250518193300epcas5p17e954bb18de9169d65e00501b1dcd046
-References: <20250518193152.63476-1-shradha.t@samsung.com>
-	<CGME20250518193300epcas5p17e954bb18de9169d65e00501b1dcd046@epcas5p1.samsung.com>
-	<20250518193152.63476-10-shradha.t@samsung.com>
-	<20250521-competent-honeybee-of-will-3f3ae1@kuoka>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|MN0PR19MB6165:EE_
+X-MS-Office365-Filtering-Correlation-Id: c72e18af-f452-4007-5356-08dd9da42f54
+X-MS-Exchange-SLBlob-MailProps:
+	/UmSaZDmfYCV7gMu87/GtwOd6jzNwNFlVVkOARdIFHq39e4DsnPcjaO6RMZ2lRO/WQChJFHjCK9ujAZ7Gr99VoVw7M46iWwNUSn75lNBk+US3vB2SpKVGjT7MVUFs6AKDz0jWqRMSnPTLSeDEqUdcd9au80Y/bQzt3ZfNjpSDI4NPLbbZ9VOPfxHRoqK77Gt6SYbAxz+yTQ5YZojaoivBh6FPrl04qQ2I/g9VBgI6BEw7/hDZZ1b/5aVt+97cmoYXspfsXJZMhfshS8Jx68y40T7UnnIftNL/ApjuPhf470Ioi7XectYwISDr5D72VeGYIB4A0RfRAZG5m0sfxEh5oRAzMqEwNO4oOvtZGmyJ/oFJYeXcOfjNH/YaYgRGQYwa1CyzLDa7ye037CtCypJeLnB+aP588nj62LgXvf/NEpLmwQlVYEI4ZLkjemB7KPKLhgzLsjU6PCmIFPbIDNJ/whq8e8EhJCQBOhhf0loACRU8ZI5/Ews3PsVBePcAoAzEsFwM60g01gcW/+m6Mh8LAX+lq+yACPKdgjMf1FXZfJZEp5UlAYbvw49Cir+fOqzeHZUcfcB3uDjw4bSEunniOdnaQoHuptC2YhKnRKopk43qYZ+fqoXN5C5IqePv3EPlUCTtALb5UN7sLPvqPfdsVR5T43/yOuzmRM9b0hwC0/a0lxM9JbR2GWbp5bYfzGZLBX+dlFLnttL68cnMsP97epLde0I9Zfk4AaxaRuslAAZj6E2XS9z1xgy3cSEQoDej5mj55beszDVgn4jIphR1PziiHvHoMabXbT0d5/nTkboD1H4Fl5WkrMGFfFw+R4nMedzGc1uOcF1w02SMCJyqg==
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|5072599009|19110799006|7092599006|461199028|8060799009|15080799009|440099028|3412199025|10035399007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OGJra2UrV0lEMzJ6ZWJhYnVhdGJHbXh0bi9lRnMvcWZvd3FOZEhJVkFEOG4y?=
+ =?utf-8?B?dFNvR09YSEdpOEgwZ3BuWjhsU1BwZkhWYUVrc3ROaVNQb2ZQM245Smx0d0ND?=
+ =?utf-8?B?eTFWUmEvNk1WMjZTaURvRCtVbzBBanZ1eUNiUGpZcUptREIyR2d6R0ltODFK?=
+ =?utf-8?B?ZkZpaFBQWVBpRDgrR2p6T1BXY2RJS3kzSUM3Yk9QdWpEc3pKT2cwWVBuNXE1?=
+ =?utf-8?B?WGpPbkdjRFpQdUpqKzR2OWZ2dEVOSVU1UGh4TnlSTG11RHhna2xlQkFYanZp?=
+ =?utf-8?B?SzNPdWlnK0U0TDFjNkIvUVNMSG1ScTdHRExmTC9tRmFYVmZ6aVFHN0NhYkgv?=
+ =?utf-8?B?bDNNckErSzdoYUhJSVRRbGhWZUZVU0NSVjlUYTRDYUVxR1NnNldoZnhxaU5y?=
+ =?utf-8?B?RlArei9LYnZsYmhoSmpSRk52Y0dPZys5RitWQ3RSQ01JV1BMQ3RKYU1lQU05?=
+ =?utf-8?B?L1dDNUcrSHVHdDdXZ0FuazhNbjU4Ly90NlBsdG1RNlVHM0dwaXRKZFVqcW9o?=
+ =?utf-8?B?V3NsdkpUSnZMZ3h3dHNLS3hLUXlmL0VKV3I5Rmt6Ly9ReWk4c3JickFhT2hj?=
+ =?utf-8?B?R1RZVlFOUTdFUHM2bkVyZ0l4Wk0xNzQzZVJMQVNodlN5TERxV2JhMXIzMFZQ?=
+ =?utf-8?B?c0FWQ0xQOVZLQ3VIZHlHVXA0QTRpelFMNG9pSCtYVys0MHBwUzNvSmhwQzZ0?=
+ =?utf-8?B?aHFPbU5jcHdXQkRnU1kzS0NLM1N5Y0pDbHNUYU9WN0pnUEJMWGpDaWV4OVVz?=
+ =?utf-8?B?a3FLYjNqcW5KaHBTS1YxYUpBakwyeFY3L0lGRzA4OEY3TVpaRG96MFdSenN5?=
+ =?utf-8?B?RXFubjdRN0V4dDNxYm43UENvdVpVemFyaU43MzdVK2FFY0pmSWRVclZjSWFN?=
+ =?utf-8?B?YW9qeHhreUs5SFJkb2JubG02eXl1Y01kWVJ1dlFmb0tiSFpNdUJ5NGlCSGdL?=
+ =?utf-8?B?NitzVzg5THVRaFQyaTZlVVBZN1RhcjNMWCtrVzJuVStHT3hwSUhPUFBKZ3pM?=
+ =?utf-8?B?eXF2ZSt4djlpcVByVGNUZWJyMTFTZVdSY1BZMTd1MUJIUEpvS1BuOUhic2M0?=
+ =?utf-8?B?YllIdnFZbE9DTklyNzlXUlJpa25kRGVXOHpjeDhaNnR6WUlrcDcvYm9VVmh1?=
+ =?utf-8?B?bE51RC8remZRK0lXRVl5VHVuMXhadDZaQktwdEJlOXNjS0tRZU05UlJ6NVoy?=
+ =?utf-8?B?U2Ria2dQbEtwZDlSbkF3L1N6dWk5T29CYnVtTEtYQUZ3WGp1Qno0cUtRSFpp?=
+ =?utf-8?B?TUFmek9OZ2hUWTlzNnl5dG0wNjZvYU82ZlZzOG5lbjZ3NTVBMnl3K0YwTTZT?=
+ =?utf-8?B?Q3pNc2w5dFEwZGlsQ1ZTempOdWxSVVFGTUtLTU56ckpqNnY2OUlpYTM3SHdM?=
+ =?utf-8?B?eERvcVNnZHNXbGgvQ1NtbDFBcHA0aGY4MWpoOThBTXZyV0dWc1ZlQWRXb1px?=
+ =?utf-8?B?Szh6ejVpdlIwZHlvd08zOW9PK09rL015U04zWVNRb1AvK2M1UUREWVlsYXNh?=
+ =?utf-8?B?aUJTRm0wUkJrb0tKbkFLRWl2REUwQTZNT1lKVlg3dThGamNDaG9Qd2FrZUVt?=
+ =?utf-8?Q?N7yYuC2Zr9jQmV6ywhnb3zKzjizRxSVeD9Sa/TaaBUe+m4?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YTZ0UldCcDhXbXUzcytHSWVQZ3RzK0N4WUVxSUlkR21naDZXZkF0SXkydmUz?=
+ =?utf-8?B?cWlRWDBNMklMVzJGeDh6QitBUnFhWHFVOFdqS016VWNmNDB2UUdjRndYYjRU?=
+ =?utf-8?B?SE1Tak9INUFkazBrK2xsdzArSG42QngxbGN0UnlGNkZaYWVKSkNvZkQ1RmQ4?=
+ =?utf-8?B?SHRvdytnQTFrWUpjQm41OXZacEk5T2pQWEFtSWk2dzhTT3VzdHZYUmo1M2lx?=
+ =?utf-8?B?NHNMTVRBaUE5UW1scjgwUXhLWXZxWCszUzNMbE11QTJNYTJ2RFppM1d0T2Ja?=
+ =?utf-8?B?bDJ3MWx2UkRXcmNrcDl5ZUl1dXp4Y2IwS3M1S1hTeGFENEN5UVVHdVRGRVhQ?=
+ =?utf-8?B?Znd6b2RVbnE5UVlVUXJMUEZUYmRlOE92Qk9TQngwRjlJN2hyRThZSVg5T3NW?=
+ =?utf-8?B?MmpLWUlkN0NmZUpCVkRkS2taUDBzVVR0ZGdvSWN0SGRNQnZtcTJvKy9UTXhn?=
+ =?utf-8?B?Q2ZQVmkzSlh4WlFaVnhudEMzaWgwamxSQjB0MVphMTlBeldNY3owSUZ0U2xs?=
+ =?utf-8?B?QnRlNTlZbHZ2STRDYUJpM2VjMWVRZE45QjloYkpxRW9kK1FlMzM4aWNieFJw?=
+ =?utf-8?B?aW96dStrbXo2STBsM1JzL1c3TDh5b0oxUG40bGY1ZDVsVHNBNXZJRWs2Tlhw?=
+ =?utf-8?B?MU5oK2tMMW5Fbnd2dE9jcXpqOGFQY1dPaGdqZm5JaUtpaTZSWndGUGRmZUNl?=
+ =?utf-8?B?R1hDOUZydngxakFhUDJESnd2WVJLclBvRzJicm10WWpOaG45WGFqWXdjdHNo?=
+ =?utf-8?B?MUI0bHczZ0t5ZmZLZDhodzh5RHl3OGMrRyt5ZWIyNHBPYzZreFNXTVRFV2JV?=
+ =?utf-8?B?eWd1UUIrT2JWZjV2LzRWZlVuT1pLRndrc05LUmpiVFpZZVYyRFZ4aWNSV2xq?=
+ =?utf-8?B?TlpLUzFyai81MFA3OGdqV3R5WGY4Nis3YUJOTUNEdWEyOG5PKzNSSWVNcGR1?=
+ =?utf-8?B?c0xmcDRqR082YklJUXd1eXZlblpzd0NmcEQ3S3lHaGhBbkxwWEZJcVhyK0Y2?=
+ =?utf-8?B?dUVpVE9jSnFYTkdSNng0YTJvNWFSTnpxQUV0WElOU1BxR3FZNEtxdzR6SldK?=
+ =?utf-8?B?T1FlY2t3cGtmWDhjamxkRDBHMjNpd29lZWIrSjF2dFZmWHJZMkJhdGx1TXF1?=
+ =?utf-8?B?T2QyamZOOGtScmFsQUlLdVhnaUQwTGVRdVB2Zi9IV3AxRXI3d3hWWEM5OHBz?=
+ =?utf-8?B?Z1VWSm1jTURvcGlJQmh6S0dCbU81QUxxUHJNVGswQ1lVbkJFQi9PcGh2M21O?=
+ =?utf-8?B?aDJCNjdjSzA2UnNKQmhobHA0RUZGM1h0M2Q5OU9IVy9CcjNEL1pmVVpVcDJp?=
+ =?utf-8?B?QnZJazRZelVBWlNkVktiZm8wNTRXazhkNWFEeW5zQXBPOVhoSW5EL0ZmYUlm?=
+ =?utf-8?B?aVB5TUxDNzRQRURXcGJQbjNiN3dKTmpyTlhhak5sbkd4MjVlUGRQTWJlNVdF?=
+ =?utf-8?B?Qi9ld3NVTTlib2JKcTZoeWhNYU41bVcwbmdRSkdrUCtHVFRZTVB1R1FsUDBV?=
+ =?utf-8?B?QzRKUkdzWjhFSENqbTFsbVVsYVRINnNiTEEvM1dzczNaWTBvdW1ReWxld25K?=
+ =?utf-8?B?cmZGa1dFZGtxOHkxYWY1N3JCSEMrZUkzQmQ2K2R3RExlWmFXM1IvRTU2TXhG?=
+ =?utf-8?B?RUphVFkyNTZsYThOUFpKR1c1K2Y2T3ZEWE01L1RwWTRoZStoSlJaeWJiSmh5?=
+ =?utf-8?Q?OV0N+N+vfhSgg1Mu8OtK?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c72e18af-f452-4007-5356-08dd9da42f54
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 04:57:45.8875
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR19MB6165
 
+Hi Rob,
 
+On 5/27/25 21:56, Rob Herring (Arm) wrote:
+> 
+> On Sun, 25 May 2025 21:56:03 +0400, George Moussalem wrote:
+>> The IPQ5018 SoC contains an internal Gigabit Ethernet PHY with its
+>> output pins that provide an MDI interface to either an external switch
+>> in a PHY to PHY link architecture or directly to an attached RJ45
+>> connector.
+>>
+>> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+>> 802.3az EEE.
+>>
+>> The LDO controller found in the IPQ5018 SoC needs to be enabled to drive
+>> power to the CMN Ethernet Block (CMN BLK) which the GE PHY depends on.
+>> The LDO must be enabled in TCSR by writing to a specific register.
+>>
+>> In a phy to phy architecture, DAC values need to be set to accommodate
+>> for the short cable length.
+>>
+>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+>>
+>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+>> ---
+>> George Moussalem (5):
+>>        dt-bindings: net: qca,ar803x: Add IPQ5018 Internal GE PHY support
+>>        clk: qcom: gcc-ipq5018: fix GE PHY reset
+>>        net: phy: qcom: at803x: Add Qualcomm IPQ5018 Internal PHY support
+>>        arm64: dts: qcom: ipq5018: add MDIO buses
+>>        arm64: dts: qcom: ipq5018: Add GE PHY to internal mdio bus
+>>
+>>   .../devicetree/bindings/net/qca,ar803x.yaml        |  23 +++
+>>   arch/arm64/boot/dts/qcom/ipq5018.dtsi              |  51 ++++-
+>>   drivers/clk/qcom/gcc-ipq5018.c                     |   2 +-
+>>   drivers/net/phy/qcom/Kconfig                       |   2 +-
+>>   drivers/net/phy/qcom/at803x.c                      | 221 ++++++++++++++++++++-
+>>   5 files changed, 287 insertions(+), 12 deletions(-)
+>> ---
+>> base-commit: ebfff09f63e3efb6b75b0328b3536d3ce0e26565
+>> change-id: 20250430-ipq5018-ge-phy-db654afa4ced
+>>
+>> Best regards,
+>> --
+>> George Moussalem <george.moussalem@outlook.com>
+>>
+>>
+>>
+> 
+> 
+> My bot found new DTB warnings on the .dts files added or changed in this
+> series.
+> 
+> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+> are fixed by another series. Ultimately, it is up to the platform
+> maintainer whether these warnings are acceptable or not. No need to reply
+> unless the platform maintainer has comments.
+> 
+> If you already ran DT checks and didn't see these error(s), then
+> make sure dt-schema is up to date:
+> 
+>    pip3 install dtschema --upgrade
+> 
+> 
+> This patch series was applied (using b4) to base:
+>   Base: base-commit ebfff09f63e3efb6b75b0328b3536d3ce0e26565 not known, ignoring
+>   Base: attempting to guess base-commit...
+>   Base: remotes/arm-soc/qcom/dt64-11-g43fefd6c7129 (exact match)
+> 
+> If this is not the correct base, please add 'base-commit' tag
+> (or use b4 which does this automatically)
+> 
+> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250525-ipq5018-ge-phy-v1-0-ddab8854e253@outlook.com:
+> 
+> arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dtb: ethernet-phy@7: clocks: [[7, 36], [7, 37]] is too long
+> 	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+> arch/arm64/boot/dts/qcom/ipq5018-tplink-archer-ax55-v1.dtb: ethernet-phy@7: clocks: [[7, 36], [7, 37]] is too long
+> 	from schema $id: http://devicetree.org/schemas/net/ethernet-phy.yaml#
+> 
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: 21 May 2025 15:18
-> To: Shradha Todi <shradha.t=40samsung.com>
-> Cc: linux-pci=40vger.kernel.org; devicetree=40vger.kernel.org; linux-arm-=
-kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.or;
-> linux-kernel=40vger.kernel.org; linux-phy=40lists.infradead.org; manivann=
-an.sadhasivam=40linaro.org; lpieralisi=40kernel.org;
-> kw=40linux.com; robh=40kernel.org; bhelgaas=40google.com; jingoohan1=40gm=
-ail.com; krzk+dt=40kernel.org; conor+dt=40kernel.org;
-> alim.akhtar=40samsung.com; vkoul=40kernel.org; kishon=40kernel.org; arnd=
-=40arndb.de; m.szyprowski=40samsung.com;
-> jh80.chung=40samsung.com
-> Subject: Re: =5BPATCH 09/10=5D PCI: exynos: Add support for Tesla FSD SoC
->=20
-> On Mon, May 19, 2025 at 01:01:51AM GMT, Shradha Todi wrote:
-> >  static int exynos_pcie_probe(struct platform_device *pdev)  =7B
-> >  	struct device *dev =3D &pdev->dev;
-> > =40=40 -355,6 +578,26 =40=40 static int exynos_pcie_probe(struct platfo=
-rm_device *pdev)
-> >  	if (IS_ERR(ep->phy))
-> >  		return PTR_ERR(ep->phy);
-> >
-> > +	if (ep->pdata->soc_variant =3D=3D FSD) =7B
-> > +		ret =3D dma_set_mask_and_coherent(dev, DMA_BIT_MASK(36));
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		ep->sysreg =3D syscon_regmap_lookup_by_phandle(dev->of_node,
-> > +				=22samsung,syscon-pcie=22);
-> > +		if (IS_ERR(ep->sysreg)) =7B
-> > +			dev_err(dev, =22sysreg regmap lookup failed.=5Cn=22);
-> > +			return PTR_ERR(ep->sysreg);
-> > +		=7D
-> > +
-> > +		ret =3D of_property_read_u32_index(dev->of_node, =22samsung,syscon-p=
-cie=22, 1,
-> > +						 &ep->sysreg_offset);
-> > +		if (ret) =7B
-> > +			dev_err(dev, =22couldn't get the register offset for syscon=21=5Cn=
-=22);
->=20
-> So all MMIO will go via syscon? I am pretty close to NAKing all this, but=
- let's be sure that I got it right - please post your complete DTS
-> for upstream. That's a requirement from me for any samsung drivers - I do=
-n't want to support fake, broken downstream solutions
-> (based on multiple past submissions).
->=20
+These pop up as the phy needs to enable 2 clocks (RX and TX) during 
+probe which conflicts with the restriction set in ethernet-phy.yaml 
+which says:
 
-By all MMIO do you mean DBI read/write? The FSD hardware architecture is su=
-ch that the DBI/ATU/DMA address is at the same offset.
-The syscon register holds the upper bits of the actual address differentiat=
-ing between these 3 spaces. This kind of implementation was done
-to reduce address space for PCI DWC controller. So yes, each DBI/ATU regist=
-er read/write will have syscon write before it to switch address space.
+   clocks:
+     maxItems: 1
 
-> Best regards,
-> Krzysztof
+Would you like me to add a condition in qca,ar803x.yaml on the 
+compatible (PHY ID) to override it and set it to two?
 
+Likewise on resets, right now we I've got 1 reset (a bitmask that 
+actually triggers 4 resets) to conform to the bindings. If, as per 
+ongoing discussion, I need to list all resets, it will also conflict 
+with the restriction on resets of max 1 item.
 
+> 
+> 
+> 
+> 
+
+Thanks,
+Georg
