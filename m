@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2997256C9E
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60357248F44
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419823; cv=none; b=SL7vjJZ/jR5xwIudq6AIqGy6KtlnRHdDe2oH/o3ReXoIvF/rSZ9LQA0qfDca7kHiX2boZ7Mluv5YRRJuTaDAQWT9t1nGoeue5RuX3NjBYfjYriSY0yKUEi+/nx0nlFbYmp/iIt7wfxldrIamE4tZPeJd59oYWVTq9+xdleY8nyQ=
+	t=1748419827; cv=none; b=OeIs58ijBRfYOP2UVhKP8Wqh2WPrOEXFq8/C0ZEw1Dt5HevhSpURbl0zf3cTCtErcTOsNfFfJuRCtlvLYSP7x+A12mkCrsiE14mMY7o29Kwb5VWkW1SwcMSgyjmjjScCCjNb87GTaKghcYlQELW0KoefROoYzFE8ClGMNIaVFZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419823; c=relaxed/simple;
-	bh=iW2wp64UhYj72B17BJT/RjglonE4/PkPrYzggByrwHI=;
+	s=arc-20240116; t=1748419827; c=relaxed/simple;
+	bh=P3OiQqibFlzAx0PMB2tm/D261Zww/xz/JyMwv2Fj7JI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A7LnhjwDEoE+apX5HHM2Q9RXjOIFxe/hLHwfPELRsM7/5cc7CRf1IaFXoadHYKXGnbFQwpZ5mKDYh+76G8VNwY/dEOr41ljZKVlaV0gFvq3iBTQDvxwEG3J+4Dli3hCmIY6RBoYqPGE59heV+2xXlPJ2KUqcb8n2TeMhaUEm6g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiP70I7S; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SY8eT7nP9P1iy3Op1g3NkCVFw4uAp66/P9of8H2Lqn06OlJMBAFcjBcKMTLduzHLStEgbf9YDcqwzPKujITVxqcyn8AVMViTReQ/p/p/q8fJZtUsGOO/PFLktboy3PnJW16VxHiCM3iIWsbwINHt0tutM0GO2W7wRTvRMx1wnsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKRSQtm8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiP70I7S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2C6EC4CEEF;
-	Wed, 28 May 2025 08:10:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKRSQtm8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3983FC4CEE7;
+	Wed, 28 May 2025 08:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419823;
-	bh=iW2wp64UhYj72B17BJT/RjglonE4/PkPrYzggByrwHI=;
+	s=k20201202; t=1748419827;
+	bh=P3OiQqibFlzAx0PMB2tm/D261Zww/xz/JyMwv2Fj7JI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MiP70I7S0UmS6XnSZZPzgIlLQWbHvAKff3nNFSKBMQ5UeD926ebRqs6W76mQikekH
-	 rx+6hBZu6uKQ+CKAHePuldY4AJItLW5dM/zCeeSQC3dCbWj9o+4xVlwa4daRKn6W9+
-	 qE8YYT6mqH1a15Gd4zuTVjS5rfdEiTqWZoNfbatz9R+miHzHZIjBP2SGb5A+40stmM
-	 2+m/JsGjmVGGAm26DOHa/M3ENf6xChT/L2wCvorKQJSbls4Sd1hkpBaNZPT1wO11bB
-	 kUPJj/IoaJ7sMZe3E/E3X0KklT4GGOs64PTmKvAfOBM0hBFyE3EheglcPx4iHwBWRz
-	 WQ6q+8K9SVXAw==
+	b=SKRSQtm8kpyEmrtQYpAWzB1wLcckvdnzRZO943TCEJIBEmYTzizV2xe8Zi5PCXAMR
+	 S92oo7cncp5LBMhYuSuKl4hNzcleWlX0V/1BeY+YBc6jVbzihpwwReMR6alCMYT6LR
+	 lCmcrmxENu+IC3MrVTk8uNRddqOpApv1nij6Dn2d8Bow640gUxgu+WJukczaSAMx81
+	 SF3stR1OaWlk9+NjoFEpQjMdWB7GnrlB0NPMnswpMIDBdXbLGLlLsKgscxt/fQ4cyG
+	 hCsQ3aMIfFoLHzzzPCsRkwSd4OCQW5ZFGiUcXV2dEYZXEqV0pQKwbMYFwpr/b9ngkJ
+	 Gi57pXbC8c6pQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 10/43] sched: Clean up and standardize #if/#else/#endif markers in sched/idle.c
-Date: Wed, 28 May 2025 10:08:51 +0200
-Message-ID: <20250528080924.2273858-11-mingo@kernel.org>
+Subject: [PATCH 11/43] sched: Clean up and standardize #if/#else/#endif markers in sched/loadavg.c
+Date: Wed, 28 May 2025 10:08:52 +0200
+Message-ID: <20250528080924.2273858-12-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -76,44 +76,28 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/idle.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/sched/loadavg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 2c85c86b455f..cb01b063d733 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -47,7 +47,7 @@ static int __init cpu_idle_nopoll_setup(char *__unused)
- 	return 1;
+diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
+index c48900b856a2..318a271f9e91 100644
+--- a/kernel/sched/loadavg.c
++++ b/kernel/sched/loadavg.c
+@@ -333,12 +333,12 @@ static void calc_global_nohz(void)
+ 	smp_wmb();
+ 	calc_load_idx++;
  }
- __setup("hlt", cpu_idle_nopoll_setup);
--#endif
-+#endif /* CONFIG_GENERIC_IDLE_POLL_SETUP */
+-#else /* !CONFIG_NO_HZ_COMMON */
++#else /* !CONFIG_NO_HZ_COMMON: */
  
- static noinline int __cpuidle cpu_idle_poll(void)
- {
-@@ -95,10 +95,10 @@ static inline void cond_tick_broadcast_exit(void)
- 	if (static_branch_unlikely(&arch_needs_tick_broadcast))
- 		tick_broadcast_exit();
- }
--#else
-+#else /* !CONFIG_GENERIC_CLOCKEVENTS_BROADCAST_IDLE: */
- static inline void cond_tick_broadcast_enter(void) { }
- static inline void cond_tick_broadcast_exit(void) { }
--#endif
-+#endif /* !CONFIG_GENERIC_CLOCKEVENTS_BROADCAST_IDLE */
+ static inline long calc_load_nohz_read(void) { return 0; }
+ static inline void calc_global_nohz(void) { }
  
- /**
-  * default_idle_call - Default CPU idle routine.
-@@ -439,7 +439,7 @@ balance_idle(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- {
- 	return WARN_ON_ONCE(1);
- }
--#endif
-+#endif /* CONFIG_SMP */
+-#endif /* CONFIG_NO_HZ_COMMON */
++#endif /* !CONFIG_NO_HZ_COMMON */
  
  /*
-  * Idle tasks are unconditionally rescheduled:
+  * calc_load - update the avenrun load estimates 10 ticks after the
 -- 
 2.45.2
 
