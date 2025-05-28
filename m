@@ -1,137 +1,246 @@
-Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6A4382
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 06:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 234DD1A262D;
+	Wed, 28 May 2025 06:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748412355; cv=none; b=UBsoOjKEQZpH7Jo3q8cJzX5+yLOY0zqHyQ3FBNrLZFjELV/6TRPbWFpo2JQGmMRxkVRFdCBMDWiQDNVs1c2HnkRbJgVSeOA/k/mgclM/9QfrbB1qIITxMcEhATNmPoVf+Qdb1LkeHTsgymPhTZBOU5q4E6f73kZ/ieQzGJD2BQ8=
+	t=1748412446; cv=none; b=eegECh2RDOD6S6CsLDZBXPqU8IUoRhhLCrffQjoGVKX6H2a7vq4dduJ3cVz7L2tKwAiIhQjzQ+77QtriO4k6giz3NiUGJ2UC4b4AysK5Eo9IREolnhE2EyrThLKowGTunmr7ESWqnUNAsByWumyyCfgcbpNnHtijYhOp9yWN4ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748412355; c=relaxed/simple;
-	bh=u4GnJWVjLuTGqbXgtkf1x2zfHjnxuyVndV+7heCn/5s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K9hkbYi+028NnMAZPJcSb5uRLigVVKfMzBqt81tgcsleZTYbk87DHZmiAc2x068s9zHmrC6z9iJUqGmX4H26TS1azeJuL1g/gW5P5qu4hAbR+StH7iGGMa1UMYAyQx9FRfuedouCl44H/nj5/wqP96RMPsepuBaEgsz6mQ90Gjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=NIAVSOt1; arc=none smtp.client-ip=148.163.139.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="NIAVSOt1"
-Received: from pps.filterd (m0167075.ppops.net [127.0.0.1])
-	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S5Y4VX025530
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 01:35:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pps01;
- bh=fe1SF0gP7B1T3vG5mU/w/LphwhnjbUzeEhTplFhLHQw=;
- b=NIAVSOt1US8wy8tVfB4d//T4g+Ngd4zgAlyOn7Bjl86GRNzVyy/cdz0jn7PPTJONGCCv
- 77EGAOXrbfes+dwvKUH05kGB0jONEvPKEQ2f3ZFF2s8pwqQyXu4ndGrfB38cUJ2O/Sjm
- 3azPDmNcdC07qkbcLBW4FE85BiLJu1xSzUgc47E3fk0Nk4Z9k70AA1K73JEDAvlWv+tK
- ZQKVPbnf/v90Je0bCFqyjqlJKJipJQSAZscfvU0lXK+Bgthmo6rsgSK7qUxgTn9lQIqJ
- mqKJFdcJSAnpW2aeZHeK7SOUiml/SpF0Jqb2WOC5gfeXZ097aVPamAFXya/6unPdsSi4 mQ== 
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 46uu8pkx65-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 01:35:56 -0400
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c92425a8b1so91045285a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 27 May 2025 22:35:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748410555; x=1749015355;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fe1SF0gP7B1T3vG5mU/w/LphwhnjbUzeEhTplFhLHQw=;
-        b=VoXpQoAEJHd7FWcsgDskKO1Fni8hyzeBEzTsJgD4vZnf3LEDVKhJ6evRdct9w91x6r
-         yexLVwfFPkjWMHG+XymwU43JdamCW2YD3vdg24enQAeyHSm9DoJRCT1eUWidNoocMdyU
-         S34xseez8GYxdHXJMFrtlxmR6RxzWie7sNOUX8JjUuol5EIdZIY6DjOIFLrOiB7hJyo3
-         vGcli0L3W56TWuOps+KExTBnBSeTTrt063LnSsLLiEXg68OkVqRmaiWmTaMFb0ElP0ze
-         ZcTZcFirAY6CqUZ02o10DlOaS8HfbXfsWQQKDqqOwqAol+ynJuVrBL2dB8VQ9kzw8RLa
-         ulSA==
-X-Gm-Message-State: AOJu0Yzfvc4VdmNq/r1FL2og6QhO4GmkBCZLYro5hn4xdIuc6gs5x4GB
-	Iyz/YKsYntyiWx3ozMse4XGwhqHLOMFgdjhaXKB5XAtT3MRNNuA15jGFfiM2S1afYlV1XdFTuiz
-	oZ4eSlKcpa+jR/1PVywpyEbVSjti2RU9vh5mmf8fAXLLTr2b1KnCmiVc7aKVjuQ==
-X-Gm-Gg: ASbGnctw2vFcZvMTB9BsW2JLMVW3Pil2C+vmgNj4I8U2rRGsphCded/syPrRAFWTpp/
-	ZUJK1cO0yLJqq5E9dkaWbzY5UNrqhZo2y36SAg5VOGjM+XzZuzNoK7LImMvilBpuY6Kk/VpDl+T
-	z8H1/ZE+B89ghYHGfKtiotrCwt82CUK8qCGma5QcFsguvvSdhbAYm2+W1yQGNpmuO9VwxKmX7Pz
-	4dBH5twBOSd+9uAwU3YJjrrl4krS5PQwT6Ho9sLbPu4Lba0EP/U0Fw+2luGgjvChoO6IAjfco2v
-	MZNxJkRRV2KURXXZ3nsvOk1p35kKfDp2sXs7XIVoDW9ggiL23+qw6zVIUA==
-X-Received: by 2002:a05:620a:2601:b0:7c9:65cb:6214 with SMTP id af79cd13be357-7cf06d5bd10mr469357185a.17.1748410555529;
-        Tue, 27 May 2025 22:35:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF61pX8i34SIykQlgLDQcjKk6sMZRhh/Gcw6X2tklDh3wPlD4onZOxTChntHVEvJ2DiXPhjrw==
-X-Received: by 2002:a05:620a:2601:b0:7c9:65cb:6214 with SMTP id af79cd13be357-7cf06d5bd10mr469355185a.17.1748410555126;
-        Tue, 27 May 2025 22:35:55 -0700 (PDT)
-Received: from [127.0.1.1] (dyn-160-39-33-242.dyn.columbia.edu. [160.39.33.242])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfb82001f9sm32382585a.9.2025.05.27.22.35.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 22:35:54 -0700 (PDT)
-From: Tal Zussman <tz2294@columbia.edu>
-Date: Wed, 28 May 2025 01:35:37 -0400
-Subject: [PATCH 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
+	s=arc-20240116; t=1748412446; c=relaxed/simple;
+	bh=fVL6Ph/WHENDhIDbOIHvEp2LxfqkRuIHqktgIJHhWJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMxhoeHzf+knspsAi/cHSUocEp8dpTPVUexEXgVExlxmNxgGXwGI+LCOTZZfTUef7GvXgHBF0BwWLcYuXJ7Lspf1Ne5EFKQr0ogxmy/lq2aAYw2SJQtEyCAJGG3jUOtGKvp5RoSKLrjT+x4H3nYMY8VZ+PjBBLxYxLCcRtnaF9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-66-6836a818f72e
+Date: Wed, 28 May 2025 15:07:15 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, kuba@kernel.org, almasrymina@google.com,
+	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
+	akpm@linux-foundation.org, davem@davemloft.net,
+	john.fastabend@gmail.com, andrew+netdev@lunn.ch,
+	asml.silence@gmail.com, toke@redhat.com, tariqt@nvidia.com,
+	edumazet@google.com, pabeni@redhat.com, saeedm@nvidia.com,
+	leon@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	david@redhat.com, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, horms@kernel.org,
+	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
+	vishal.moola@gmail.com
+Subject: Re: [PATCH v2 16/16] mt76: use netmem descriptor and APIs for page
+ pool
+Message-ID: <20250528060715.GE9346@system.software.com>
+References: <20250528022911.73453-1-byungchul@sk.com>
+ <20250528022911.73453-17-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
-References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
-In-Reply-To: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Tal Zussman <tz2294@columbia.edu>
-X-Mailer: b4 0.14.3-dev-d7477
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748410551; l=595;
- i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
- bh=u4GnJWVjLuTGqbXgtkf1x2zfHjnxuyVndV+7heCn/5s=;
- b=/anNJxI6PBsPAb9nL8K3TkHBwTCNxPLHsxU3pP17HIP1qu0oXl7UIZoQn7VyX7NeJ/QtOr3oF
- /8zzLs/hG/8CmZIF6I/PcKL0dy4c9Ybfey2WxI3CEETNVmDEjA0IC3A
-X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
- pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
-X-Proofpoint-GUID: tpLvrnUghPw6fUcReex-8uEwjmje187q
-X-Proofpoint-ORIG-GUID: tpLvrnUghPw6fUcReex-8uEwjmje187q
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA0OCBTYWx0ZWRfXy3QWy4HLclNb le+6ojGNAhVIuSvlimpbWIf6C7BmxlRODZI0qhH8TMKfGtFVMyX5dau8QSAOS9ydn+5IcSWxgvw Spxa3hp8NO8es0oHb7WuwrJE3hDdn9N1suTr8mAXcf7c8NgauXfrd5pbBwWwVYVzLP1/7b38nk5
- Nst+dab00XDybEPG6krEeJVObYvKVz9VqSXF/LB5nYF7NcYFNQ7cSINF2/nF+d5JFJ1bQfmJv5z s/VaAoveQqeMX98SFMtEZPlzx8Xz203RFtpwWNC3ggEkJNPvfB53FUbS8hjt7Mv+4Ir6MtEiU19 rOeNwxuyFHtPuLo21oMHYJlzSEOS2+1PI/Hzt2hrFfgPZqhQMgU9PqSR+2nTqcLj3lMAl7iYhIH 4UWkbbEg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_03,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=732 phishscore=0 spamscore=0
- mlxscore=0 bulkscore=10 impostorscore=0 lowpriorityscore=10 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2505280048
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528022911.73453-17-byungchul@sk.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfZ/nueeebt32OMWjMM7MZDrs5LP8qNj4/mMTYdyGo2fuUofr
+	ujqbObmJo5Afy7nmjFJXdjxynfSDtMrYSsYOqZQaVqHUqjPpao3/3nt9Pp/X5/PHhyFlGaIQ
+	Rqsz8HqdOlFOSyhJT+DNJTMLIjRLR4cR2F3FNBQNpcGdNo8I7E43gl/DH8TQX1NHw62bgyTY
+	GywUDLhGSOisbRdDa34XBeUZpSS0n6+nIdPiIyHdU0BAoztLBJdH8kgoNbeJ4XWZnYaW4lER
+	dFVnUvDcVkhBa1Y01Dqmw+CLbgQ1rlICBs/l0nCpyUFDh6UVQdOzdgqun8hC4Kr0isA3ZKej
+	5+GSwncEfmT7KMYOIQU/KAjDVm8TiQXnGRoLfdli3Py2nMb1OT4KP/L0EzjzZC+Nf3a+p/D3
+	yjc0dpW8ofBLR40Y9wtzNrO7JKvj+UStkdcr1u6VaG4LhsPflqddLOklzOjuIisKYDhWyVny
+	LNRkviJ0EFbEMBS7gLufE+THNLuQ83qHST8OYhXc2+ydViRhSLZexPlufBH5e6axW7jeqyOE
+	P0vZlZzXeXVcKWP3cWeFHDTBp3LPr30e5yQbxnn/fB1fRbKh3J0/jB8HjI2aHVXjymB2PvfE
+	XUdMXFbIcFeuqSbyTO5pgZe6gFjbf1bbf1bbP6sDkU4k0+qMSWptojJcY9Jp08L3H0oS0Nh7
+	5B/7rfKgvsat1YhlkDxQiu+t0MhEamOyKakacQwpD5KmR0VoZNJ4tekorz+0R5+SyCdXo1CG
+	ks+QLh9MjZexB9QG/iDPH+b1k1WCCQgxoyjlcM+UbvfabWSwEJs729TyMJ4oK4rpnntcEVxZ
+	V/Gj51XtkfNh6hB5UENVzuIdik3r5KEVKjtWijeejjM2p7RkO/Rxuzs+qoyXGgPXD8yPcVq0
+	n+7HJjybevnU9riohSOPw3MDIm2vNwwkdK5JbbzRM8s50LEqMkFuaFvQYFb45FSyRr0sjNQn
+	q/8Co+PWFBoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHec85OztbLY5L62DWh0WEgmWR9kChQkIvBdGVSIKcdXTDeWFT
+	c0VkakWa5q2wNW1m6jRjNkVnDKspXppiKNq6mKZpWmkXy9SF1ozIb39+z/N7ni9/hpR+pDwZ
+	ZUw8r46Rq2S0mBLv25HqyxkDFH5NVm/Qm6pouDeTBOWDFgHoK+sQfJ99JYSp5lYaSoqnSdB3
+	pVHwwzRHwkjLkBAGykYpsF6uJ2HoWhsNmWlOElIsRgKaCtsF8KwuSwD5c6Uk1CcPCqHnoZ6G
+	N1ULAhi1ZVLQrqugYCArGFoMq2Da/glBs6megOmrhTTkdRtoGE4bQNDdNETBrQtZCEyNDgE4
+	Z/R0sAzXVrwgcIOuX4gN5gRcY/TB6Y5uEpsrr9DY/C1XiF/3WWncVuCkcINlisCZqZM0/jry
+	ksKfG3tpXDL2hcCm2l4KdxiahfvdQsU7T/EqZSKv3hwYJlbcNcfHfdialFM7SSSj+97pSMRw
+	7DbuunmYSEcMQ7EbuAcF7i5Msxs5h2OWdGF3djPXl3ssHYkZkm0TcM7bYwLXzkr2IDd5Y45w
+	ZQm7nXNU3qBcWcqGcxnmAvSXu3HtN98tcpL14Rzz44uvSHYNVz7PuLDoj5pseLR40oNdzz2u
+	ayWykUS3xNYtsXX/bQMiK5G7MiYxWq5U+W/SRCm0McqkTSdjo83oTwXKzv3KsaDvPbttiGWQ
+	bLkEV/srpAJ5okYbbUMcQ8rcJSlBAQqp5JRce4ZXx55QJ6h4jQ2tYSjZasmeo3yYlI2Ux/NR
+	PB/Hq/9NCUbkmYw6JzqrzxpV2ihP3BFS/LN7bbHvjNwq0gb2TtoCdq14K70TkkhFPM884NW1
+	0jYclFdToD3vt3d4wS+jFT2ZWmY/fNwclI+n47RP+aIJ+vToikj7uvcOD6sxInwhe1x0MctZ
+	mmtMa6/PC+3y9Qhu7Dx05FKnv1dXjqe9zDFa1L8gozQK+RYfUq2R/wYu4fp4/gIAAA==
+X-CFilter-Loop: Reflected
 
-This has been unused since it was added 11 years ago in commit
-d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
+On Wed, May 28, 2025 at 11:29:11AM +0900, Byungchul Park wrote:
+> To simplify struct page, the effort to separate its own descriptor from
+> struct page is required and the work for page pool is on going.
+> 
+> Use netmem descriptor and APIs for page pool in mt76 code.
+> 
+> Signed-off-by: Byungchul Park <byungchul@sk.com>
+> ---
+>  drivers/net/wireless/mediatek/mt76/dma.c      |  6 ++---
+>  drivers/net/wireless/mediatek/mt76/mt76.h     | 12 +++++-----
+>  .../net/wireless/mediatek/mt76/sdio_txrx.c    | 24 +++++++++----------
+>  drivers/net/wireless/mediatek/mt76/usb.c      | 10 ++++----
+>  4 files changed, 26 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+> index 35b4ec91979e..cceff435ec4a 100644
+> --- a/drivers/net/wireless/mediatek/mt76/dma.c
+> +++ b/drivers/net/wireless/mediatek/mt76/dma.c
+> @@ -820,10 +820,10 @@ mt76_add_fragment(struct mt76_dev *dev, struct mt76_queue *q, void *data,
+>  	int nr_frags = shinfo->nr_frags;
+>  
+>  	if (nr_frags < ARRAY_SIZE(shinfo->frags)) {
+> -		struct page *page = virt_to_head_page(data);
+> -		int offset = data - page_address(page) + q->buf_offset;
+> +		netmem_ref netmem = netmem_compound_head(virt_to_netmem(data));
+> +		int offset = data - netmem_address(netmem) + q->buf_offset;
+>  
+> -		skb_add_rx_frag(skb, nr_frags, page, offset, len, q->buf_size);
+> +		skb_add_rx_frag_netmem(skb, nr_frags, netmem, offset, len, q->buf_size);
+>  	} else {
+>  		mt76_put_page_pool_buf(data, allow_direct);
+>  	}
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
+> index 5f8d81cda6cd..f075c1816554 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
+> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
+> @@ -1795,21 +1795,21 @@ int mt76_rx_token_consume(struct mt76_dev *dev, void *ptr,
+>  int mt76_create_page_pool(struct mt76_dev *dev, struct mt76_queue *q);
+>  static inline void mt76_put_page_pool_buf(void *buf, bool allow_direct)
+>  {
+> -	struct page *page = virt_to_head_page(buf);
+> +	netmem_ref netmem = netmem_compound_head(virt_to_netmem(buf));
+>  
+> -	page_pool_put_full_page(page->pp, page, allow_direct);
 
-Signed-off-by: Tal Zussman <tz2294@columbia.edu>
----
- include/linux/mm_types.h | 1 -
- 1 file changed, 1 deletion(-)
+To Mina,
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 3e934dc6057c..8b91362fcf8e 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1539,7 +1539,6 @@ enum tlb_flush_reason {
- 	TLB_LOCAL_MM_SHOOTDOWN,
- 	TLB_REMOTE_SEND_IPI,
- 	TLB_REMOTE_WRONG_CPU,
--	NR_TLB_FLUSH_REASONS,
- };
- 
- /**
+They touch ->pp field.  That's why I thought they use page pool.  Am I
+missing something?
 
--- 
-2.39.5
+	Byungchul
 
+> +	page_pool_put_full_netmem(netmem_get_pp(netmem), netmem, allow_direct);
+>  }
+>  
+>  static inline void *
+>  mt76_get_page_pool_buf(struct mt76_queue *q, u32 *offset, u32 size)
+>  {
+> -	struct page *page;
+> +	netmem_ref netmem;
+>  
+> -	page = page_pool_dev_alloc_frag(q->page_pool, offset, size);
+> -	if (!page)
+> +	netmem = page_pool_dev_alloc_netmem(q->page_pool, offset, &size);
+> +	if (!netmem)
+>  		return NULL;
+>  
+> -	return page_address(page) + *offset;
+> +	return netmem_address(netmem) + *offset;
+>  }
+>  
+>  static inline void mt76_set_tx_blocked(struct mt76_dev *dev, bool blocked)
+> diff --git a/drivers/net/wireless/mediatek/mt76/sdio_txrx.c b/drivers/net/wireless/mediatek/mt76/sdio_txrx.c
+> index 0a927a7313a6..8663070191a1 100644
+> --- a/drivers/net/wireless/mediatek/mt76/sdio_txrx.c
+> +++ b/drivers/net/wireless/mediatek/mt76/sdio_txrx.c
+> @@ -68,14 +68,14 @@ mt76s_build_rx_skb(void *data, int data_len, int buf_len)
+>  
+>  	skb_put_data(skb, data, len);
+>  	if (data_len > len) {
+> -		struct page *page;
+> +		netmem_ref netmem;
+>  
+>  		data += len;
+> -		page = virt_to_head_page(data);
+> -		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+> -				page, data - page_address(page),
+> -				data_len - len, buf_len);
+> -		get_page(page);
+> +		page = netmem_compound_head(virt_to_netmem(data));
+> +		skb_add_rx_frag_netmem(skb, skb_shinfo(skb)->nr_frags,
+> +				       netmem, data - netmem_address(netmem),
+> +				       data_len - len, buf_len);
+> +		get_netmem(netmem);
+>  	}
+>  
+>  	return skb;
+> @@ -88,7 +88,7 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+>  	struct mt76_queue *q = &dev->q_rx[qid];
+>  	struct mt76_sdio *sdio = &dev->sdio;
+>  	int len = 0, err, i;
+> -	struct page *page;
+> +	netmem_ref netmem;
+>  	u8 *buf, *end;
+>  
+>  	for (i = 0; i < intr->rx.num[qid]; i++)
+> @@ -100,11 +100,11 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+>  	if (len > sdio->func->cur_blksize)
+>  		len = roundup(len, sdio->func->cur_blksize);
+>  
+> -	page = __dev_alloc_pages(GFP_KERNEL, get_order(len));
+> -	if (!page)
+> +	netmem = page_to_netmem(__dev_alloc_pages(GFP_KERNEL, get_order(len)));
+> +	if (!netmem)
+>  		return -ENOMEM;
+>  
+> -	buf = page_address(page);
+> +	buf = netmem_address(netmem);
+>  
+>  	sdio_claim_host(sdio->func);
+>  	err = sdio_readsb(sdio->func, buf, MCR_WRDR(qid), len);
+> @@ -112,7 +112,7 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+>  
+>  	if (err < 0) {
+>  		dev_err(dev->dev, "sdio read data failed:%d\n", err);
+> -		put_page(page);
+> +		put_netmem(netmem);
+>  		return err;
+>  	}
+>  
+> @@ -140,7 +140,7 @@ mt76s_rx_run_queue(struct mt76_dev *dev, enum mt76_rxq_id qid,
+>  		}
+>  		buf += round_up(len + 4, 4);
+>  	}
+> -	put_page(page);
+> +	put_netmem(netmem);
+>  
+>  	spin_lock_bh(&q->lock);
+>  	q->head = (q->head + i) % q->ndesc;
+> diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
+> index f9e67b8c3b3c..03f0d35981c9 100644
+> --- a/drivers/net/wireless/mediatek/mt76/usb.c
+> +++ b/drivers/net/wireless/mediatek/mt76/usb.c
+> @@ -478,7 +478,7 @@ mt76u_build_rx_skb(struct mt76_dev *dev, void *data,
+>  
+>  	head_room = drv_flags & MT_DRV_RX_DMA_HDR ? 0 : MT_DMA_HDR_LEN;
+>  	if (SKB_WITH_OVERHEAD(buf_size) < head_room + len) {
+> -		struct page *page;
+> +		netmem_ref netmem;
+>  
+>  		/* slow path, not enough space for data and
+>  		 * skb_shared_info
+> @@ -489,10 +489,10 @@ mt76u_build_rx_skb(struct mt76_dev *dev, void *data,
+>  
+>  		skb_put_data(skb, data + head_room, MT_SKB_HEAD_LEN);
+>  		data += head_room + MT_SKB_HEAD_LEN;
+> -		page = virt_to_head_page(data);
+> -		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
+> -				page, data - page_address(page),
+> -				len - MT_SKB_HEAD_LEN, buf_size);
+> +		netmem = netmem_compound_head(virt_to_netmem(data));
+> +		skb_add_rx_frag_netmem(skb, skb_shinfo(skb)->nr_frags,
+> +				       netmem, data - netmem_address(netmem),
+> +				       len - MT_SKB_HEAD_LEN, buf_size);
+>  
+>  		return skb;
+>  	}
+> -- 
+> 2.17.1
