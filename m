@@ -1,110 +1,80 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618F9548EE;
-	Wed, 28 May 2025 13:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBC174420;
+	Wed, 28 May 2025 13:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748439955; cv=none; b=WnimeS+kbFsO4WnCtMxerkCTruznvBz0EEEtYSJXQuAwIOdm4yMZl54KMlNwrLGHdaZNbXstEcnmo2TsxL+t0QqtB+lJuUyvUIF1kCt19JdZ64xtCbD6UvL4BgUzAkTYq+7QEyMlv/PfggB8G2f0+SyladBo/jUjldzTudHDbm8=
+	t=1748439970; cv=none; b=A2Eo0kvZOeTBkHfpCM1i5H4N88Q5DSy+EXIWYJghSeXukXtZ2EFdCRc521qosxqSmpPq4DjjYFXtrgQiD5HIRX0MbjErpcQkBsG3Txmkm7ysVx/8DMFcM57nQVYVtqCkrrpriechl87pWTPMvuvOFDBvGtmkuaDC6JijNk4gCh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748439955; c=relaxed/simple;
-	bh=NhKDJGKersmYwYbpcpxHMhulBIGoduKgjFIZ/h9f4Xo=;
+	s=arc-20240116; t=1748439970; c=relaxed/simple;
+	bh=oq6Fac4wS0SHANH2J2t3p21BoUKhwTFerUYFaLqweXU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LCEgospQB4bkgYCFNtaes4dWdzzphmVPGuvbqvWReomQoQrngOoyPLUZ9RvBDYAuP/dBIKPvqxhj7CQDv18RwVUQDA54BRtsMeFfbQLYVfnk3GdU++iucElUcoTe8lL0ZF/3EMsrMv+o2nIAtZ2OhdCM8oJ0sPwysYF1bXJCyn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=scTt5q38; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=dnGTjRU5ZeTrEhwqJh0uHYc5ECpvcnQFoXZGTJliwrAGNL7PXXzD+Ph8jxFVxmTgtaImoadVzi2PuFlPd5q9rttE48HM/PQVJv0kJ27BAOaquWSOVIS6YqVgfq882qknOAW2tfi7msytwpaWcA3DRnefFI2kEnI7LdrCm9kxMqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fz/vjLJB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="scTt5q38"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=RJTCnxK1El4r0A3ClIoA68ji0JX4Tz5IvIhvEj1UhXI=; b=scTt5q38Q6lSPhAtr0dXmNDhgM
-	ypwqrkoRXPv+Wr1bHPWDqTleGFtWeH8JtWgbfSFW2jYuJXfFy31HjlTskC5j2MxDwzAF5bmkEok7M
-	RvyRjS8LR45QPKIX7+qEZ0SeB70ER9Ka4tjMekrJQMvOJxgj7ARhL0X//KM+m3Ij3/vu3S8TdZVkQ
-	NoU9mTK/gy0ewgbiQHpUP+7HfUV2Yz3cu+6YT6gtwEy7fQ0dZ7nOYGZAY+ozfohpc0UOxo3D+TKyW
-	CCDc7GLIArvxmWTnFGpO9hxQB/u256zJLc9603181iKRgzrkzOletd86sPjCovJleSPuMf2dEy35W
-	/xes/BuQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uKH6J-0000000DhDE-3k3S;
-	Wed, 28 May 2025 13:45:47 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 791A9300263; Wed, 28 May 2025 15:38:07 +0200 (CEST)
-Date: Wed, 28 May 2025 15:38:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	x86 Maintainers <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux PM <linux-pm@vger.kernel.org>, Len Brown <lenb@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Todd Brandt <todd.e.brandt@linux.intel.com>
-Subject: Re: [PATCH v1 0/2] x86/smp: Fix power regression introduced by
- commit 96040f7273e2
-Message-ID: <20250528133807.GC39944@noisy.programming.kicks-ass.net>
-References: <2006806.PYKUYFuaPT@rjwysocki.net>
- <20250528131759.GA39944@noisy.programming.kicks-ass.net>
- <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fz/vjLJB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08F8DC4CEE7;
+	Wed, 28 May 2025 13:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748439969;
+	bh=oq6Fac4wS0SHANH2J2t3p21BoUKhwTFerUYFaLqweXU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fz/vjLJBco5Nolft1Ameracr5zQZuWlEjDpRrZfwHbbD1CdFkvvu7lcYeOq8Dm1iN
+	 jIRW6PW2JF6IRXEBZU5XemKRYa+DIh+K9Xen+vwLg14fNQpziBW3M3gKUNKlWdc2Pp
+	 vIGsAXGkw4opFX2GH41OOq8IWSrAttIbQbyD6cS1Clirj4qJ0EDFgzBoQuDcA8a+Cp
+	 s0LpDAOSuYh8g0XACgKgFEhHAwyICnrve8/hboDl5wKMyTJLZs4jZ6IB3RBeg+VM3Q
+	 eeit6KsvBpRXCw9DHZ7jFkfJ+I/5S+Yhh/Eq8jApLuptSeFLuUWUe9l1qQHGj8pmxz
+	 FTvC+hUjrxyDg==
+Date: Wed, 28 May 2025 14:46:03 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Jianhua Lin <jianhua.lin@mediatek.com>
+Cc: mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH 0/2] Add MT8189 jpeg encoder and decoder compatible
+Message-ID: <20250528-energetic-voltage-b02704c14df8@spud>
+References: <20250528095748.17485-1-jianhua.lin@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vv8zY9ORmuVZuCZ/"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0i=TWMjPKxGa8eT-prV=dtQo=pwys5amcj3QL9qo=EYyQ@mail.gmail.com>
+In-Reply-To: <20250528095748.17485-1-jianhua.lin@mediatek.com>
 
-On Wed, May 28, 2025 at 03:20:16PM +0200, Rafael J. Wysocki wrote:
-> On Wed, May 28, 2025 at 3:18 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, May 28, 2025 at 02:53:13PM +0200, Rafael J. Wysocki wrote:
-> > > Hi Everyone,
-> > >
-> > > Commit 96040f7273e2 ("x86/smp: Eliminate mwait_play_dead_cpuid_hint()")
-> > > that shipped in 6.15 introduced a nasty power regression on systems that
-> > > start with "nosmt" in the kernel command line which prevents it from entering
-> > > deep package idle states (for instance, PC10) later on.  Idle power, including
-> > > power in suspend-to-idle, goes up significantly on those systems as a result.
-> > >
-> > > Address this by reverting commit 96040f7273e2 (patch [1/2]) and using a
-> > > different approach, which is to retain mwait_play_dead_cpuid_hint() and
-> > > still prefer it to hlt_play_dead() in case it is needed when cpuidle is
-> > > not available, but prefer cpuidle_play_dead() to it by default (patch [2/2]).
-> >
-> > I don't understand. The revert says the reason it regresses is that it
-> > goes into play_dead before cpuidle is initialized. The fix is then to
-> > call cpuidle first.
-> >
-> > But if cpuidle isn't initialized yet, how does that fix anything?
-> 
-> The revert fixes the bug.
 
-This is not what I asked.
+--vv8zY9ORmuVZuCZ/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The other patch does what the reverted commit was supposed to be
-> doing, but differently.
+On Wed, May 28, 2025 at 05:57:46PM +0800, Jianhua Lin wrote:
+> This series is based on tag: next-20250528, linux-next/master
+>=20
+> jianhua.lin (2):
+>   dt-bindings: media: mediatek-jpeg-encoder: Add MT8189 compatible
+>     string
+>   dt-bindings: media: mediatek-jpeg-decoder: Add MT8189 compatible
+>     string
 
-No, it does not.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-The whole point was that mwait_play_dead did not DTRT because hints are
-stupid and it could not select the deepest C state in an unambiguous
-fashion.
+--vv8zY9ORmuVZuCZ/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And now you're restoring that -- code you all argued was fundamentally
-buggered.
+-----BEGIN PGP SIGNATURE-----
 
-Yes is 'fixes' things on old platforms, but it is equally broken on the
-new platforms where you all argued it was broken on. So either way
-around you're going to need to fix those, and this isn't it.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaDcTmwAKCRB4tDGHoIJi
+0sGYAQC2bzGNx7UyUv973y6yM7B6lHc6xUzFs1DLjDP/D/+C4wEA4pyq+WoirUwj
+3RkNS7UtPhUxDGsw7kjuGUrdy7EvEQs=
+=pFRV
+-----END PGP SIGNATURE-----
 
-Now, SMT siblings are all AP, by definition. So can't we simply send
-them INIT instead of doing CLI;HLT, that way they drop into
-Wait-for-SIPI and the ucode can sort it out?
+--vv8zY9ORmuVZuCZ/--
