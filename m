@@ -1,161 +1,90 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52A0275868
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 09:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5DC275100;
+	Wed, 28 May 2025 09:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748424155; cv=none; b=XnfKrPNBvUbk0eJLzdBasSY9MytbFQp6p99JAOYaruk+l8YpackcxdGKhL8fyYWk5s1CFobzHd8+iLIcsKpVCGg8xFErmzVm9lB51LFi5GfTEoglqVftoyEVtUJ9kG5VK6bBjwJcI6imv4vzeB39O5hAKvKEI4JbaBQeiVnMXpA=
+	t=1748424168; cv=none; b=AsqVxzG6BX/IFpZ6DRmDM5APicwULjTZiqxBpZ6dZTWN988xWOdouZOvZlq4SJxubGVSsaN+Dp4ZqkdvnfHFXpgpwrxQQrg5oU9Oj+b8cv0RqWpn1hNUs0i/uvKL2NDA5oxngAXoGC5yHuUQabrxJ18MAq9mLITZSchha2EYflM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748424155; c=relaxed/simple;
-	bh=EH1mMXQI5wxXfEugUS09ywjvRboZIQjKHsBHP/oQu+A=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ekbnl6lcjfCziqqTSGlAsEw6gFwsFXf9oQ9w1n+Xrx5Mw/iNvy7Iw5tYVjGMIUSWRQ9RGT2D59u1td8efNKlNqMVV6dYo4+TsrFj9DkLsT7n21NgWXckNpdM2HDsdLGLG2JnXbQQSw3IXQZJI8ComUDaLXyVmxIFBgpHPL7oRdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-86cd99974d7so287099739f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 02:22:33 -0700 (PDT)
+	s=arc-20240116; t=1748424168; c=relaxed/simple;
+	bh=Z5HyxWdH0KaGnOZO7JeE8+gXZA+GfoyeQH+lmP4o4As=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UOWDM70C9KrBH0+jrcVkWav40ufS95c8AuwbCqMY8hbQ/3zNuAZNpNF1RTG8e1ZqfUV9HlRszR8TDLuiSABepNpkPk6SzE//QUnW5wHjjTzR/BDpLr4hY6OMq3MDZOuFg05FQADd5wDVVzfaN5A7hU6PVTXc02mgwd34zsYUDzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YsAd1fAK; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsAd1fAK"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad52d9be53cso639974866b.2;
+        Wed, 28 May 2025 02:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748424164; x=1749028964; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z5HyxWdH0KaGnOZO7JeE8+gXZA+GfoyeQH+lmP4o4As=;
+        b=YsAd1fAKA31OgV/R3qlpxx1gZPIn+r97hykZDGK/LpI+jGcQ8DMflT3uo1nuHfuGuD
+         xgs/HsCCCjRhKA0QJr5IG7UGjlL4Sw4PES8PBTjF/DAdppGVY51ToUM85J1ZPtzVu0eJ
+         sv4af1Vg/5ax7aylfeDgfX5OEOafXWZMJrNDEy3Biq9g9uBx7CubiS3WSsbNL65c5h2/
+         UfL6oy291HvFEQXw6LiRqwkW1WN1hwW3BeuC7cTIF+Km68MK44tlH3JHkQ3rjgOQ17Vt
+         1zNaBdIK3v66AOpARq/TIVEpeCvljG1MbRXJNH3syWO/2OghlFigV19A19q0uHdCCYaa
+         a4hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748424153; x=1749028953;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QaxN9yI31Cw8gE+zvX2r8p8Olm+56SyVzimumhvEfJc=;
-        b=E6xhXPfxIZjDH5TYco9dRDcgxRX9S+0cSAlG62oKWLflI/crndsRyMsIh3N9okdv12
-         5iJqqv0qGJBrjgVrLechArGwtg9kRv8XQE4vIn+MamUSQWfglh72QnBPsQViONECVjJD
-         C1w2mFyScFAMFxGbOCIVjot2jFr+h6sXQMxwwmwC3tRF3bwl2E2p+YmtcPVjlX+Q3SG0
-         Jm3e+rQPD2SaNVwqzxPNCwDhBellMdiH+7eMllzdJCU5xF70KnKsuwCz8g6KxiT3T649
-         EF13K3rqm3cGwg/honqO6kTmTBbyLWcNhcEDemrXJpi/EtUm3K3NRoEcw6ughVhkYBtg
-         Pzgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWiUA0W1o9gCxQFxPm2bZ6vtOVjItnJo3HaMsWoquGHPiK6jUSF9NiIqL0CrK1ctcvrZGHtkUcXVYlGNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBbaEOF+d8RYHX7FicSd4GD1yf/WduFyhz9FixQVvdH0azc0J+
-	kgTi7pkaokdm6BzzDko7ZrACA/100Uy256HwlevXR//8R0dt5NHxYvNbzenodk9LLbhg0Bwnnbo
-	/j6JCP3g1e84Wz4fBhow2ciklqLnkNI8BO+R8LFY2MVoMU3g3RPqV4vamXF4=
-X-Google-Smtp-Source: AGHT+IEU8oC+KFnoYP3nDRWZ403fy3i4VUTZQ8/uDd7pju+VTyPCCQ2XA+O9zAdIm7tXNHqKPXfH4qvZVoL4nJW5cEwGqe+QDBym
+        d=1e100.net; s=20230601; t=1748424164; x=1749028964;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z5HyxWdH0KaGnOZO7JeE8+gXZA+GfoyeQH+lmP4o4As=;
+        b=Ud6ZcD5XN2BcY1ZEMEd5xWKMMMagCtNMVHgxXf5ISOOfO+aKaRQI8VND5Xh7SSU/gz
+         1bu7ZV9pR7+chQ7qYZXhLDwA8xxA1S/2wi3I8fPGUcT/e+Qre/KTSLD/sEAmmBICdMNi
+         jNjv4g2BSF7z8ddHncBmfLtV4/QoiZPOhloFWOx7Wsa1uCg7+bgQrae35KoCdvyxTcoC
+         3bHZBOshu8iVWEmzF+6KywQNLipGupLgCG4MwwIt6G/WtG0audvqW5L/eah+BJCP9TsC
+         isXV5vOD9X6JisFBq9m1aU0/bSkz/6Q4Fp9q1a4FuND5X9OJF7y1o8l8/CqZZeI+2E1z
+         pK3w==
+X-Forwarded-Encrypted: i=1; AJvYcCViGr4I26EolfpycoJKLSuOGLlFVT1jWmPULFRhrf/c4iLCOc/GH8tNvS7Fz2nWZhhcXyTs++fD77Z/8fY7@vger.kernel.org, AJvYcCWJUFMjvCp1BZd/x/UHyR2KbAZ9hrY30HcqYcxwC+kIUHxEn/40fo0/9JdRdSS5rONUBRtHwZGOS7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywud1tloyzEiVXx3uhKtRXG295zJ2B8nQsS7dPYyPAG7JvHOA2B
+	WJf4lPGHW8ZNgQf2UFUT5l2qSJ8O9OOo8ocQTCvknEk2ZG93ZAtm2sMQ1gUgD1cKqz9DC09TxFj
+	4hhhi7sXasgjmKyRafh/kODGeZ5p56TY=
+X-Gm-Gg: ASbGncttv1XUFMyzxdNHRH6qSD3WvkIXxMllIOYS4OKm/OegyQZhnnZHnUBPWlQ62w4
+	/4piCitQE4LJX6rgK/0LgcshvpH0RUJQNFV6PONd/fzJd2273tbNUcW2/JBgIV8bjwIWtzd65an
+	ZkP8u4eE5pMLGGGJ5GNsl3Z0eRoz97+t4DIYw=
+X-Google-Smtp-Source: AGHT+IFKYN9n2rkV2PZefCaqRfYU3re0P4utva0VpHPFE+K2BVhU6PWrUUJ2nKg/dYSV1lYeauSugGZrxtVP3B7ICIU=
+X-Received: by 2002:a17:906:f587:b0:ad8:a2a8:23db with SMTP id
+ a640c23a62f3a-ad8a2a825bbmr104381166b.56.1748424164196; Wed, 28 May 2025
+ 02:22:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:7509:b0:867:2374:49cd with SMTP id
- ca18e2360f4ac-86cbb7b73demr1657350139f.2.1748424152959; Wed, 28 May 2025
- 02:22:32 -0700 (PDT)
-Date: Wed, 28 May 2025 02:22:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6836d5d8.a70a0220.253bc2.00c5.GAE@google.com>
-Subject: [syzbot] [fbdev?] KASAN: vmalloc-out-of-bounds Write in fillrect
-From: syzbot <syzbot+7a63ce155648954e749b@syzkaller.appspotmail.com>
-To: deller@gmx.de, dri-devel@lists.freedesktop.org, 
-	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, simona@ffwll.ch, 
-	soci@c64.rulez.org, syzkaller-bugs@googlegroups.com
+References: <20250528080119.9380-1-gye976@gmail.com>
+In-Reply-To: <20250528080119.9380-1-gye976@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 28 May 2025 11:22:07 +0200
+X-Gm-Features: AX0GCFvCaaze7T6kJScaIwxolgrLro7kCQGTu5210iyv7oSEWYbCeoX0cpurpd4
+Message-ID: <CAHp75VdhgftCKAuBuoDJ4d9HcKLqkGJ+bdx5gxQmkCSWO7SBAw@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: trigger: Avoid data race
+To: Gyeyoung Baek <gye976@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, May 28, 2025 at 10:01=E2=80=AFAM Gyeyoung Baek <gye976@gmail.com> w=
+rote:
+>
+> A data race could occur between `atomic_read()` and `atomic_set()`.
+> Use `atomic_cmpxchg_relaxed()` to group them atomically.
+>
+> Previously the main logic was executed when `use_count` was 0.
+> Now it returns early when `use_count` was not 0.
 
-syzbot found the following issue on:
+This needs Fixes tag, otherwise LGTM,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-HEAD commit:    a5806cd506af Linux 6.15-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12afde70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87b7b87abbf1a67f
-dashboard link: https://syzkaller.appspot.com/bug?extid=7a63ce155648954e749b
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/d0398ca67d9a/disk-a5806cd5.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/dccdb3c5ff14/vmlinux-a5806cd5.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/3d94cf3493b5/bzImage-a5806cd5.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7a63ce155648954e749b@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in fb_write_offset drivers/video/fbdev/core/sysmem.h:30 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in bitfill drivers/video/fbdev/core/fb_fillrect.h:134 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in fb_fillrect_static drivers/video/fbdev/core/fb_fillrect.h:220 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in fb_fillrect drivers/video/fbdev/core/fb_fillrect.h:279 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in sys_fillrect+0x15d4/0x17b0 drivers/video/fbdev/core/sysfillrect.c:22
-Write of size 8 at addr ffffc90003849000 by task syz.1.1552/13525
-
-CPU: 1 UID: 0 PID: 13525 Comm: syz.1.1552 Tainted: G     U              6.15.0-rc7-syzkaller #0 PREEMPT(full) 
-Tainted: [U]=USER
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- fb_write_offset drivers/video/fbdev/core/sysmem.h:30 [inline]
- bitfill drivers/video/fbdev/core/fb_fillrect.h:134 [inline]
- fb_fillrect_static drivers/video/fbdev/core/fb_fillrect.h:220 [inline]
- fb_fillrect drivers/video/fbdev/core/fb_fillrect.h:279 [inline]
- sys_fillrect+0x15d4/0x17b0 drivers/video/fbdev/core/sysfillrect.c:22
- drm_fbdev_shmem_defio_fillrect+0x22/0x140 drivers/gpu/drm/drm_fbdev_shmem.c:37
- bit_clear+0x17a/0x220 drivers/video/fbdev/core/bitblit.c:73
- __fbcon_clear+0x600/0x780 drivers/video/fbdev/core/fbcon.c:1292
- fbcon_scroll+0x48b/0x690 drivers/video/fbdev/core/fbcon.c:1851
- con_scroll+0x45c/0x690 drivers/tty/vt/vt.c:579
- csi_M drivers/tty/vt/vt.c:2072 [inline]
- csi_ECMA drivers/tty/vt/vt.c:2483 [inline]
- do_con_trol drivers/tty/vt/vt.c:2657 [inline]
- do_con_write+0x6869/0x7c90 drivers/tty/vt/vt.c:3092
- con_write+0x23/0xb0 drivers/tty/vt/vt.c:3432
- process_output_block drivers/tty/n_tty.c:561 [inline]
- n_tty_write+0x40f/0x1160 drivers/tty/n_tty.c:2377
- iterate_tty_write drivers/tty/tty_io.c:1015 [inline]
- file_tty_write.constprop.0+0x502/0x9b0 drivers/tty/tty_io.c:1090
- tty_write drivers/tty/tty_io.c:1111 [inline]
- redirected_tty_write drivers/tty/tty_io.c:1134 [inline]
- redirected_tty_write+0xd4/0x150 drivers/tty/tty_io.c:1114
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x5ba/0x1180 fs/read_write.c:684
- ksys_write+0x12a/0x240 fs/read_write.c:736
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f457158e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f457244f038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f45717b5fa0 RCX: 00007f457158e969
-RDX: 0000000000000013 RSI: 0000200000000000 RDI: 0000000000000005
-RBP: 00007f4571610ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f45717b5fa0 R15: 00007ffddb9e8a38
- </TASK>
-
-The buggy address ffffc90003849000 belongs to a vmalloc virtual mapping
-Memory state around the buggy address:
- ffffc90003848f00: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
- ffffc90003848f80: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
->ffffc90003849000: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-                   ^
- ffffc90003849080: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
- ffffc90003849100: f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8 f8
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--=20
+With Best Regards,
+Andy Shevchenko
