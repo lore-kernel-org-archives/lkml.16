@@ -1,99 +1,388 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6729CFC0E;
-	Wed, 28 May 2025 21:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5B56AD3
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 21:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748466345; cv=none; b=CkWM6MCQ0VKwTQaFDIR2Jp3Bxiryzj5pnHY6gGehJtO54f+NWnw6vy4OJNroFmwt4nBRZA826lcD37oN5NUyl4fdEcA07FOBkGj/KBWHeylF4f2jHxodDYrFR5rXpy4UXcnuK4ewxzzqJ94K4cKQJuAHBfYiiARIYlUBPas/i6Y=
+	t=1748466545; cv=none; b=lL2B0Tq09SV1c9e0CpxwXz8obj/aBqBGeE3sIxyYzTIm4CibKOdbtBGMR/pjWroL5iuwvHUiS732SQfI8XfKNCu5X4DomqcSDInh5VlPtHC65SA2/uylDdGDLSGAzTHryad8QotkO028V+o707zo5B/oBPwRbJ5pBG4G5F1Jib4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748466345; c=relaxed/simple;
-	bh=thfMG70n9VgYdgGnvWHjyk1eF+yc+6WAcoijPrrRo4I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gzCEn00vbn6vOwX1FqhTMNLF52Pkq2I/WpUkNqmqKeUG7xGVbsLo+O4XCHsois8snr3u8HVa2m6CnkmIiynQysjfb+bEN/qU8sPfHhkv+oV/eszodOcQh1a2QuuFECTvMDZ2AkJGNI8ZkwRqqYCqC1D3TOVymcexnXHC5Tzlpmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4L8mlfeR; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1748466545; c=relaxed/simple;
+	bh=LIQqj/rBG4WJ9Who6aNm8nmVF5Zg8C2dGZq6Mmu5uXE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=WAu0b2wFENdA18kFoTBNptlmKoqwD97sX6CBO3Ue1eH4moeV9xrp2fEFFDhKIrfLBUtUSm6wrLWWoAEkF1oajhpsWikVA8gogr9/eRRY/CRTWCTdOFTs3wgRl1c118QPj6sgXKxSkSiDPypfmeQC78guxbjqNLzWDEIKPV+lcac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pvt8rGyG; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4L8mlfeR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=b95mbv58GC1sLRpCdVviPp1TGSLCgwADdPiOEMX8kAs=; b=4L
-	8mlfeRvliv9ijr/wpaHqc6/m0DT95i0TweNRw89IsfTxUOZnG0O1o0KeOLB19ufZ+HsFnaxD3i5Ts
-	XssIZNhQxsjOi4mcw1okG4dYNjkby2gZWp5YFVilP1G+kR0xz7chzpgpvJNNB0vrjgUZNLTaWFF4m
-	A2gneThrUTubonA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uKNxl-00ED1x-It; Wed, 28 May 2025 23:05:25 +0200
-Date: Wed, 28 May 2025 23:05:25 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: James Hilliard <james.hilliard1@gmail.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, wens@csie.org,
-	netdev@vger.kernel.org, linux-sunxi@lists.linux.dev,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] net: stmmac: allow drivers to explicitly select
- PHY device
-Message-ID: <1e6e4a44-9d2b-4af4-8635-150ccc410c22@lunn.ch>
-References: <CADvTj4oVj-38ohw7Na9rkXLTGEEFkLv=4S40GPvHM5eZnN7KyA@mail.gmail.com>
- <aDbA5l5iXNntTN6n@shell.armlinux.org.uk>
- <CADvTj4qP_enKCG-xpNG44ddMOJj42c+yiuMjV_N9LPJPMJqyOg@mail.gmail.com>
- <f915a0ca-35c9-4a95-8274-8215a9a3e8f5@lunn.ch>
- <CAGb2v66PEA4OJxs2rHrYFAxx8bw4zab7TUXQr+DM-+ERBO-UyQ@mail.gmail.com>
- <CADvTj4qyRRCSnvvYHLvTq73P0YOjqZ=Z7kyjPMm206ezMePTpQ@mail.gmail.com>
- <aDdXRPD2NpiZMsfZ@shell.armlinux.org.uk>
- <CADvTj4pKsAYsm6pm0sgZgQ+AxriXH5_DLmF30g8rFd0FewGG6w@mail.gmail.com>
- <8306dac8-3a0e-4e79-938a-10e9ee38e325@lunn.ch>
- <CADvTj4rWvEaFyOm2HdNonASE4y1qoPoNgP_9n_ZbLCqAo1gGYw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pvt8rGyG"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23202dacd94so3240045ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 14:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1748466543; x=1749071343; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Fgz4RLpwM5kTcN0bNVkBpOujZlSaW0l8gHcBwYFiKWw=;
+        b=pvt8rGyGD4Jhka+GB2O/Th3WwmgPfghY8ZkIUD47dCkKJ84uCqYST9DmcJe/neqtXd
+         BEGPvq4ph4sX3UeFBupNaV0Xr2kYtpyL603JpAShBu9OmCnZv3/hQ7knDsPSqeidTS5W
+         2szKSr9z3rQgWPH35lXzBetb17ij1001MAIgjQ6AbkM1m+OO47oVPT4YVdpjbpM2BQ/M
+         N0Dpvf8etruwMVH/nLkL/7BWPV19fRxpbBB0yw//wUCp2o95n2VKkBw+RMBFat83vRwk
+         AGOjhTYLbBEzZW3uTpDcQkuTa9qZfU3+tBGP25jGVjzcoSGKh3eVrxyZPUORKf7p+dwv
+         g2qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748466543; x=1749071343;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fgz4RLpwM5kTcN0bNVkBpOujZlSaW0l8gHcBwYFiKWw=;
+        b=czeusuclxhiTTJ2ql+Fh3DlUWVc9rgwOYoGTmjMFwF0bNowknt4N4IimHKwm/kPKTd
+         mt8m6o3upnecUkFnMtmFpYCYBY5JkUZbp34BY2lNOnhIxEyGyvJh+L5Qo7Pr14JjFPQ2
+         pJnM3n9SHEQIExaHY4QDXTKI5hPZ5To1eEDlzs2VXsSJUk6KV9Flz+E48UIdYxD7VQZR
+         mNsbbiVrRotnI5fylkRjdQPUL76Q5EHYHUZ55QGlXqbTzim9JFgpRIK0sKII5g+GrkTJ
+         zEr4Lv8Y8HCbsIL9QNLwKGmEtjz89YRcRf6CrgRPEXagpFbpQagifTCgyqFGy858+zr1
+         eyXw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrE9paySrhwfkrVu9sryXICS+PIUo5m4Bzg/26c5K62zSPXnFXswwGZW5pQD6Dnnzx916gZoKDYwAA3SE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx+CkPCZUqyyvTjscFqYmZhUl+7h9DS9rEuS6Z27UgqIGspas6
+	ZN+4fEJCYo4XLe/f+KOCBwO4uqUUwlmH81Hd3hK+qP3oJ9YuPF2xcPKbSVGSuv1g91RuAx2ZBbm
+	3G6Adt7E6Jw==
+X-Google-Smtp-Source: AGHT+IHEuBh0mTSW0osNedaN9qHRnf++NfYvmP1VWxvfmSTBGmGBn6W3fdTiYgeI8fDDxSyFi1cnq5SSmGu7
+X-Received: from plky7.prod.google.com ([2002:a17:902:7007:b0:234:6701:babc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:46c4:b0:234:a033:b6f6
+ with SMTP id d9443c01a7336-234a033ba9bmr124093795ad.31.1748466543024; Wed, 28
+ May 2025 14:09:03 -0700 (PDT)
+Date: Wed, 28 May 2025 14:08:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADvTj4rWvEaFyOm2HdNonASE4y1qoPoNgP_9n_ZbLCqAo1gGYw@mail.gmail.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1204.g71687c7c1d-goog
+Message-ID: <20250528210858.499898-1-irogers@google.com>
+Subject: [PATCH v3] perf symbol: Move demangling code out of symbol-elf.c
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, James Clark <james.clark@linaro.org>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 28, 2025 at 01:45:40PM -0600, James Hilliard wrote:
-> On Wed, May 28, 2025 at 1:27 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> >
-> > > I think a lot of ethernet drivers use phy_find_first() for phy scanning
-> > > as well so it's not limited to just stmmac AFAIU.
-> >
-> > You need to differentiate by time. It has become a lot less used in
-> > the last decade. DT describes the PHY, so there is no need to hunt
-> > around for it. The only real use case now a days is USB dongles, which
-> > don't have DT, and maybe PCIe devices without ACPI support.
-> 
-> I mean, hardware probing features for this sort of use case have been
-> getting added outside the network subsystem so I'm not sure what the
-> issue with this is as those use cases don't appear to be meaningfully
-> different.
-> 
-> > I suggest you give up pushing this. You have two Maintainers saying no
-> > to this, so it is very unlikely you are going to succeed.
-> 
-> So what should I be doing instead?
+symbol-elf.c is used when building with libelf, symbol-minimal is used
+otherwise. There is no reason the demangling code with no dependencies
+on libelf is part of symbol-elf.c so move to symbol.c. This allows
+demangling tests to pass with NO_LIBELF=1.
 
-Describe the one PHY which actually exists in device tree for the
-board, and point to it using phy-handle. No runtime detection, just
-correctly describe the hardware.
+Structurally, while moving the functions rename demangle_sym to
+dso__demangle_sym which is already a function exposed in symbol.h and
+the only purpose of which in symbol-elf.c was to call
+demangle_sym. Change the calls to demangle_sym in symbol-elf.c to
+calls to dso__demangle_sym.
 
-Do you have examples of boards where the SoC variant changed during
-the boards production life?
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v3. Separate patch as most of v2 landed already. Fix issues with
+    libelf build while merging dso__demangle_sym and demangle_sym to
+    remove some unneeded complexity.
+    The thread comm_lock fix also isn't included:
+https://lore.kernel.org/lkml/20250528032637.198960-8-irogers@google.com/
+    as discussion on that has moved to a revert by Arnaldo:
+https://lore.kernel.org/lkml/aDcyVLVpZRui1ole@x1/
+---
+ tools/perf/util/demangle-cxx.h   |  2 +
+ tools/perf/util/symbol-elf.c     | 92 ++------------------------------
+ tools/perf/util/symbol-minimal.c |  7 ---
+ tools/perf/util/symbol.c         | 82 ++++++++++++++++++++++++++++
+ 4 files changed, 87 insertions(+), 96 deletions(-)
 
-	Andrew
+diff --git a/tools/perf/util/demangle-cxx.h b/tools/perf/util/demangle-cxx.h
+index 26b5b66c0b4e..9359937a881a 100644
+--- a/tools/perf/util/demangle-cxx.h
++++ b/tools/perf/util/demangle-cxx.h
+@@ -2,6 +2,8 @@
+ #ifndef __PERF_DEMANGLE_CXX
+ #define __PERF_DEMANGLE_CXX 1
+ 
++#include <stdbool.h>
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 8734e8b6cf84..01818abd02df 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -13,17 +13,12 @@
+ #include "maps.h"
+ #include "symbol.h"
+ #include "symsrc.h"
+-#include "demangle-cxx.h"
+-#include "demangle-ocaml.h"
+-#include "demangle-java.h"
+-#include "demangle-rust-v0.h"
+ #include "machine.h"
+ #include "vdso.h"
+ #include "debug.h"
+ #include "util/copyfile.h"
+ #include <linux/ctype.h>
+ #include <linux/kernel.h>
+-#include <linux/log2.h>
+ #include <linux/zalloc.h>
+ #include <linux/string.h>
+ #include <symbol/kallsyms.h>
+@@ -280,82 +275,6 @@ static int elf_read_program_header(Elf *elf, u64 vaddr, GElf_Phdr *phdr)
+ 	return -1;
+ }
+ 
+-static bool want_demangle(bool is_kernel_sym)
+-{
+-	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
+-}
+-
+-/*
+- * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
+- * version.
+- */
+-#ifndef HAVE_CXA_DEMANGLE_SUPPORT
+-char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
+-		       bool modifiers __maybe_unused)
+-{
+-#ifdef HAVE_LIBBFD_SUPPORT
+-	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+-
+-	return bfd_demangle(NULL, str, flags);
+-#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+-	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+-
+-	return cplus_demangle(str, flags);
+-#else
+-	return NULL;
+-#endif
+-}
+-#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
+-
+-static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+-{
+-	struct demangle rust_demangle = {
+-		.style = DemangleStyleUnknown,
+-	};
+-	char *demangled = NULL;
+-
+-	/*
+-	 * We need to figure out if the object was created from C++ sources
+-	 * DWARF DW_compile_unit has this, but we don't always have access
+-	 * to it...
+-	 */
+-	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
+-		return demangled;
+-
+-	rust_demangle_demangle(elf_name, &rust_demangle);
+-	if (rust_demangle_is_known(&rust_demangle)) {
+-		/* A rust mangled name. */
+-		if (rust_demangle.mangled_len == 0)
+-			return demangled;
+-
+-		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
+-		     buf_len < 1024 * 1024; buf_len += 32) {
+-			char *tmp = realloc(demangled, buf_len);
+-
+-			if (!tmp) {
+-				/* Failure to grow output buffer, return what is there. */
+-				return demangled;
+-			}
+-			demangled = tmp;
+-			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
+-							   /*alternate=*/true) == OverflowOk)
+-				return demangled;
+-		}
+-		/* Buffer exceeded sensible bounds, return what is there. */
+-		return demangled;
+-	}
+-
+-	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
+-	if (demangled)
+-		return demangled;
+-
+-	demangled = ocaml_demangle_sym(elf_name);
+-	if (demangled)
+-		return demangled;
+-
+-	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
+-}
+-
+ struct rel_info {
+ 	u32		nr_entries;
+ 	u32		*sorted;
+@@ -641,7 +560,7 @@ static bool get_plt_got_name(GElf_Shdr *shdr, size_t i,
+ 	/* Get the associated symbol */
+ 	gelf_getsym(di->dynsym_data, vr->sym_idx, &sym);
+ 	sym_name = elf_sym__name(&sym, di->dynstr_data);
+-	demangled = demangle_sym(di->dso, 0, sym_name);
++	demangled = dso__demangle_sym(di->dso, /*kmodule=*/0, sym_name);
+ 	if (demangled != NULL)
+ 		sym_name = demangled;
+ 
+@@ -839,7 +758,7 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+ 		gelf_getsym(syms, get_rel_symidx(&ri, idx), &sym);
+ 
+ 		elf_name = elf_sym__name(&sym, symstrs);
+-		demangled = demangle_sym(dso, 0, elf_name);
++		demangled = dso__demangle_sym(dso, /*kmodule=*/0, elf_name);
+ 		if (demangled)
+ 			elf_name = demangled;
+ 		if (*elf_name)
+@@ -868,11 +787,6 @@ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss)
+ 	return 0;
+ }
+ 
+-char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+-{
+-	return demangle_sym(dso, kmodule, elf_name);
+-}
+-
+ /*
+  * Align offset to 4 bytes as needed for note name and descriptor data.
+  */
+@@ -1861,7 +1775,7 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 			}
+ 		}
+ 
+-		demangled = demangle_sym(dso, kmodule, elf_name);
++		demangled = dso__demangle_sym(dso, kmodule, elf_name);
+ 		if (demangled != NULL)
+ 			elf_name = demangled;
+ 
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index 36c1d3090689..c73fe2e09fe9 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -355,13 +355,6 @@ void symbol__elf_init(void)
+ {
+ }
+ 
+-char *dso__demangle_sym(struct dso *dso __maybe_unused,
+-			int kmodule __maybe_unused,
+-			const char *elf_name __maybe_unused)
+-{
+-	return NULL;
+-}
+-
+ bool filename__has_section(const char *filename __maybe_unused, const char *sec __maybe_unused)
+ {
+ 	return false;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index fe801880afea..8b30c6f16a9e 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -19,6 +19,11 @@
+ #include "build-id.h"
+ #include "cap.h"
+ #include "cpumap.h"
++#include "debug.h"
++#include "demangle-cxx.h"
++#include "demangle-java.h"
++#include "demangle-ocaml.h"
++#include "demangle-rust-v0.h"
+ #include "dso.h"
+ #include "util.h" // lsdir()
+ #include "debug.h"
+@@ -36,6 +41,7 @@
+ #include "header.h"
+ #include "path.h"
+ #include <linux/ctype.h>
++#include <linux/log2.h>
+ #include <linux/zalloc.h>
+ 
+ #include <elf.h>
+@@ -2648,3 +2654,79 @@ int symbol__validate_sym_arguments(void)
+ 	}
+ 	return 0;
+ }
++
++static bool want_demangle(bool is_kernel_sym)
++{
++	return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
++}
++
++/*
++ * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
++ * version.
++ */
++#ifndef HAVE_CXA_DEMANGLE_SUPPORT
++char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
++		       bool modifiers __maybe_unused)
++{
++#ifdef HAVE_LIBBFD_SUPPORT
++	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
++
++	return bfd_demangle(NULL, str, flags);
++#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
++	int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
++
++	return cplus_demangle(str, flags);
++#else
++	return NULL;
++#endif
++}
++#endif /* !HAVE_CXA_DEMANGLE_SUPPORT */
++
++char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
++{
++	struct demangle rust_demangle = {
++		.style = DemangleStyleUnknown,
++	};
++	char *demangled = NULL;
++
++	/*
++	 * We need to figure out if the object was created from C++ sources
++	 * DWARF DW_compile_unit has this, but we don't always have access
++	 * to it...
++	 */
++	if (!want_demangle((dso && dso__kernel(dso)) || kmodule))
++		return demangled;
++
++	rust_demangle_demangle(elf_name, &rust_demangle);
++	if (rust_demangle_is_known(&rust_demangle)) {
++		/* A rust mangled name. */
++		if (rust_demangle.mangled_len == 0)
++			return demangled;
++
++		for (size_t buf_len = roundup_pow_of_two(rust_demangle.mangled_len * 2);
++		     buf_len < 1024 * 1024; buf_len += 32) {
++			char *tmp = realloc(demangled, buf_len);
++
++			if (!tmp) {
++				/* Failure to grow output buffer, return what is there. */
++				return demangled;
++			}
++			demangled = tmp;
++			if (rust_demangle_display_demangle(&rust_demangle, demangled, buf_len,
++							   /*alternate=*/true) == OverflowOk)
++				return demangled;
++		}
++		/* Buffer exceeded sensible bounds, return what is there. */
++		return demangled;
++	}
++
++	demangled = cxx_demangle_sym(elf_name, verbose > 0, verbose > 0);
++	if (demangled)
++		return demangled;
++
++	demangled = ocaml_demangle_sym(elf_name);
++	if (demangled)
++		return demangled;
++
++	return java_demangle_sym(elf_name, JAVA_DEMANGLE_NORET);
++}
+-- 
+2.49.0.1204.g71687c7c1d-goog
 
