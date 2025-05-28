@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFEA24DCFE
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B09124DD0F
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:10:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748419848; cv=none; b=HD89iUsqjMyJ8ueDVx3W347WJHHcYNyQXXcP8TwcQ1pURdZW9I6yobxFXASNQ9X+snrIlu+nnVxfW39Hvry/hkt3CgT9y1vsaDYll61GyBy6RbapQvLVu9wnE/Ka0WZynAonNu68X/piJeCXUAUjE4yXGRsMO/VM5ekrF2/ETIY=
+	t=1748419853; cv=none; b=o4rBVjSoiG8LgsVYMX/IlQY10/jE34Kk/P9GPEu7AwvlJXC4Li9q9u5uzaN8Xe+GH6mzmGpRrDuYndCTwtNk3+fiV28NRCAkFZOenuWWHxOD6yNheizvoNyl0tIxwFThkzBuBUPcsfmI/cOQ0irCSUY4Ng9muWPbg6IapNECSoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748419848; c=relaxed/simple;
-	bh=EUMq3U+2g1Y6gO9i90Y9JxXLAlxi7fyMP9TxxTt6mJA=;
+	s=arc-20240116; t=1748419853; c=relaxed/simple;
+	bh=mGk3g1M31GRTi5uDYP8pJrBKo0TW7wSdq0MMUjWhrwY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oWUWc+rYio+cT8WMXtjH/M+tYAgQ/dyFEprHYW2jNF76c5/dlRyAh99sMuLYCWpb1+lLLMv/BoHITqQU0qvdm35YBdx7WD6JcLCvZVLwYejZv+1tzwTNtRWbaqgo8EJfX8xjx9qDt/XRvtSHt3Q32Tbu/okHtL410ctyAmzEf4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxTG9bRp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tlZ/OpQjScfqil/UGT9umy3hqWmO1752LX9Ae3mNQu9xHGxFSbZyfWJY8g9ExH5MqxCUNSwLPhUo5UPG2aO0OXWbrGSiQhIdDrPCT6jXjEaLCKVEZ67rTy7KnTfMFHU638iTKJUOWiZTbu1yOKowvWQWgsUefxCwLWCAIHSph2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r08EkqhA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxTG9bRp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F1AC4CEE7;
-	Wed, 28 May 2025 08:10:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r08EkqhA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB589C4CEEB;
+	Wed, 28 May 2025 08:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748419848;
-	bh=EUMq3U+2g1Y6gO9i90Y9JxXLAlxi7fyMP9TxxTt6mJA=;
+	s=k20201202; t=1748419851;
+	bh=mGk3g1M31GRTi5uDYP8pJrBKo0TW7wSdq0MMUjWhrwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lxTG9bRpDV9A3L06A/lXpePQ2if1v2R3D6sU47vLRC8ys7yeiG1KyuIjc7v/VHHxm
-	 CZEd/pOnIlMow2Qn/nPjqeMFJmo7WDHlfFrNVZVBZmN5/XCoNG5YZVZUyQtZlZ+C+n
-	 /zt8BmB08AvFRttmJDvoymGwLsSzsWxs38nySmlrMruVOxnICLNZWMxm3zA2AW7JGU
-	 EaUYTcx5WgZBeBJPWpXQ8wPdXhnwIHR+gnPENblUZ9rCuqY/yMYvPBL/TSmlyzEkOD
-	 SN5tUyoTiEKW9zqJpg26dJFR60q+L/ixpPfGFKw50p55rFLNjP88Hx8SEA6WUd6Lsv
-	 quJPbKIyZmqXQ==
+	b=r08EkqhAgoR/uAeiACeBHvkGaMlSZUjnp1+wcs5RcyRfhhdpj5tBazHsRM+dg2RYQ
+	 l+bgCtPAV6pMaBk0wnkCIBiRrEzIfEj2UcEbsMePz1FD8Z5s/5AKPkwP6EToNG5fok
+	 QupIG9Hdo3uqbxfUTveYW7vyGeaBkHPwlkEsyQD6z95yQsOaQOIGE/CN27CyVJNSfL
+	 HyWXqir16OKNILKnjvNEH8Hykfj3D+WUBQL05R7bn0e/kywnMDpCkV60CpA9Qa7z+q
+	 VbBl0ebG7iSGZNEr6FVhboM0twJfrhwvM1NVziI8FaUYsLelU2aKRLoCq+NZccbRUC
+	 ub9CSRDXbsDnA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -40,9 +40,9 @@ Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 17/43] sched: Clean up and standardize #if/#else/#endif markers in sched/syscalls.c
-Date: Wed, 28 May 2025 10:08:58 +0200
-Message-ID: <20250528080924.2273858-18-mingo@kernel.org>
+Subject: [PATCH 18/43] sched: Clean up and standardize #if/#else/#endif markers in sched/topology.c
+Date: Wed, 28 May 2025 10:08:59 +0200
+Message-ID: <20250528080924.2273858-19-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250528080924.2273858-1-mingo@kernel.org>
 References: <20250528080924.2273858-1-mingo@kernel.org>
@@ -63,6 +63,8 @@ Content-Transfer-Encoding: 8bit
         ...
         #endif /* !CONFIG_FOO */
 
+ - Fix whitespace noise and other inconsistencies.
+
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Juri Lelli <juri.lelli@redhat.com>
@@ -74,50 +76,52 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vincent Guittot <vincent.guittot@linaro.org>
 ---
- kernel/sched/syscalls.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ kernel/sched/topology.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-index 547c1f05b667..5cb5e9487f0d 100644
---- a/kernel/sched/syscalls.c
-+++ b/kernel/sched/syscalls.c
-@@ -174,7 +174,7 @@ SYSCALL_DEFINE1(nice, int, increment)
- 	return 0;
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index a2a38e1b6f18..4f52b8e56c19 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -328,7 +328,7 @@ static int __init sched_energy_aware_sysctl_init(void)
  }
  
+ late_initcall(sched_energy_aware_sysctl_init);
 -#endif
-+#endif /* __ARCH_WANT_SYS_NICE */
++#endif /* CONFIG_PROC_SYSCTL */
  
- /**
-  * task_prio - return the priority value of a given task.
-@@ -255,8 +255,7 @@ int sched_core_idle_cpu(int cpu)
+ static void free_pd(struct perf_domain *pd)
+ {
+@@ -464,9 +464,9 @@ static bool build_perf_domains(const struct cpumask *cpu_map)
  
- 	return idle_cpu(cpu);
+ 	return false;
  }
--
--#endif
-+#endif /* CONFIG_SCHED_CORE */
+-#else
++#else /* !(CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL): */
+ static void free_pd(struct perf_domain *pd) { }
+-#endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL*/
++#endif /* !(CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL) */
  
- /**
-  * find_process_by_pid - find a process with a matching PID value.
-@@ -448,7 +447,7 @@ static inline int uclamp_validate(struct task_struct *p,
- }
- static void __setscheduler_uclamp(struct task_struct *p,
- 				  const struct sched_attr *attr) { }
+ static void free_rootdomain(struct rcu_head *rcu)
+ {
+@@ -1613,7 +1613,7 @@ static int			sched_domains_curr_level;
+ int				sched_max_numa_distance;
+ static int			*sched_domains_numa_distance;
+ static struct cpumask		***sched_domains_numa_masks;
 -#endif
-+#endif /* !CONFIG_UCLAMP_TASK */
++#endif /* CONFIG_NUMA */
  
  /*
-  * Allow unprivileged RT tasks to decrease priority.
-@@ -658,7 +657,7 @@ int __sched_setscheduler(struct task_struct *p,
- 				goto unlock;
- 			}
+  * SD_flags allowed in topology descriptions.
+@@ -1729,7 +1729,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 				       SD_WAKE_AFFINE);
  		}
--#endif
-+#endif /* CONFIG_SMP */
- 	}
  
- 	/* Re-check policy now with rq lock held: */
+-#endif
++#endif /* CONFIG_NUMA */
+ 	} else {
+ 		sd->cache_nice_tries = 1;
+ 	}
 -- 
 2.45.2
 
