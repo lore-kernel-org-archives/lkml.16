@@ -1,77 +1,86 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C53242D95;
-	Wed, 28 May 2025 06:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B0D1F1507;
+	Wed, 28 May 2025 06:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748414342; cv=none; b=VqPFk8GZ7AWrq297v2AeSPBT5tEQlHkWhbQ/ajUnd3W8QrM16zlcV7WcSFvk60kf1MutXp4iJ04CuYi/8rUElssivM9PmUTYne9wEEdfmv1Hj8hhKiO709lQM23FUZjycUDt416OAZrGriurXAQTronxMxJZE39CrPEvXVuryOw=
+	t=1748414394; cv=none; b=LkSuJW/NHE2XSofv0lwclFHmcT+OLc7pjeZ8PqcxJ8P1T9t5d/LA9b2ct7H8SXc0/m+DaIH4AcBvPt7QY4PMLZQtVBlvZNE7mRweILsepFzCsnBraW5HLAfbyk+iMX7FkS0C70c0DWTaH/pzqPauWodGVgLnJJZm1R2wmeOhmS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748414342; c=relaxed/simple;
-	bh=Duw0wz08mc2oHMqHnxezalaq0om2rCtkTpHvQTZc+XI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P71+4y/HwGLpzILQnTUM0IFSMb7gciaIA6wLgv8sZSUmABxEVXIhtQdFBTpCtuRyw7D7FXZRWtPiL810D4+F+lEiyFv7ktkQnagx0r4dbHLMJE9vvbv18xLSYPQW0sk6Vag5DAe+wL3wA+/UcdNzywZI9c+rfg/KC0DZfuiwJ18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 7F9772C0AD18;
-	Wed, 28 May 2025 08:38:51 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3F699176016; Wed, 28 May 2025 08:38:51 +0200 (CEST)
-Date: Wed, 28 May 2025 08:38:51 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v8 13/20] PCI/ERR: Add printk level to
- pcie_print_tlp_log()
-Message-ID: <aDave5XyXZoKWole@wunner.de>
-References: <20250522232339.1525671-1-helgaas@kernel.org>
- <20250522232339.1525671-14-helgaas@kernel.org>
+	s=arc-20240116; t=1748414394; c=relaxed/simple;
+	bh=6kzdFimLYbbRrahrMQogfiYEoFCwuFBfTY0KaSQMewI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pw82rP/MCnUel3y6MI2Ah/cCszXsFNQszSLFS0YYSbFibo3sW1J9yXTIQAGI+Ua92NjTwlNpHTBZJLfpB2VgXhcPg7B0K3qOGnQyjPeuYpwnFwXP8y2wYdF3uDrtlcHdG6yU0aT9EK4EvvBHUJYfxP9dnKtGWJKfAeFFY5d6IQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG+tGgO7; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG+tGgO7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241BDC4CEE7;
+	Wed, 28 May 2025 06:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748414394;
+	bh=6kzdFimLYbbRrahrMQogfiYEoFCwuFBfTY0KaSQMewI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MG+tGgO7sqNV/yoBBf6BNGKaSykvoPPK/2rnCDFcR2diBn0X1IFuoJwDrfXzT9g6m
+	 ZCyr7FLMKDa+SncilWAC5M8bbDHwWl6KgXt/558Lu3TSKMRyW8SsHiqT3oOt0jfMy6
+	 G5DDDN3onCt2A7zHa+ys2XnIbNanZDCZFxTFLdgbQdIiyOgBAMHTvdk2QPViesvU5X
+	 F5RN72EAP4PGtSDlqSEfueV1AqZ9J3ec1XYzk1m2Im9R++WC012/q7hy86TgnZTuXR
+	 5f5d/R7MVAMRW21LPoH4rM3CP/I8eE3pGuNIU+F9xqj0hoC1giT5Tglum4xVdeaPsK
+	 QIintSI4oQ5Bw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D6039F1DE4;
+	Wed, 28 May 2025 06:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522232339.1525671-14-helgaas@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next,v2] net: mana: Add support for Multi Vports on Bare
+ metal
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174841442825.1926848.6843941704832885467.git-patchwork-notify@kernel.org>
+Date: Wed, 28 May 2025 06:40:28 +0000
+References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
+ stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
+ olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+ longli@microsoft.com, ssengar@linux.microsoft.com,
+ linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ bpf@vger.kernel.org, ast@kernel.org, hawk@kernel.org, tglx@linutronix.de,
+ shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
+ kotaranov@microsoft.com, horms@kernel.org, linux-kernel@vger.kernel.org
 
-On Thu, May 22, 2025 at 06:21:19PM -0500, Bjorn Helgaas wrote:
-> @@ -130,6 +132,6 @@ void pcie_print_tlp_log(const struct pci_dev *dev,
->  		}
->  	}
->  
-> -	pci_err(dev, "%sTLP Header%s: %s\n", pfx,
-> +	dev_printk(level, &dev->dev, "%sTLP Header%s: %s\n", pfx,
->  		log->flit ? " (Flit)" : "", buf);
->  }
+Hello:
 
-Nit: pci_printk() ?
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-The definition in include/linux/pci.h was retained by fab874e12593.
+On Mon, 19 May 2025 09:20:36 -0700 you wrote:
+> To support Multi Vports on Bare metal, increase the device config response
+> version. And, skip the register HW vport, and register filter steps, when
+> the Bare metal hostmode is set.
+> 
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+> v2:
+>   Updated comments as suggested by ALOK TIWARI.
+>   Fixed the version check.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2] net: mana: Add support for Multi Vports on Bare metal
+    https://git.kernel.org/netdev/net-next/c/290e5d3c49f6
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
