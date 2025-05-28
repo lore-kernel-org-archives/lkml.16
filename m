@@ -1,32 +1,49 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3492F286889;
-	Wed, 28 May 2025 13:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAE17E9;
+	Wed, 28 May 2025 13:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748437836; cv=none; b=kFO8H+H9oEcmLDv7Gyc0wTfu0AC/c2yju9459Vnu/S47iq4OnON5yfQUGCkbYdtktnhP3WqXSHgxdlSTE3Hz8gxfo4tIEYH5XALVRsbroRIeqfB/+gmxUHsBfGB+o914GKO45xqPD3aP2S4Wyp6a4D+2Al4Yq9Gy2wi9UbP5M28=
+	t=1748437860; cv=none; b=FXfQX0RrLvaay0seDFZD06E96pT5W4EfQ6HLvePDM0RopNKS3DAmGW4+kX0Oi8au/pGR/+NNXsK/Txz1eS4oulXznbrYTVkpd7v2qMSl/J8YvpbJFh5VIK7/lsL/k2wWYns3dpF4deTsot2L+D9KHJl/Hi94vwzqRM9NwLWZMeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748437836; c=relaxed/simple;
-	bh=5gw9lFZJbt318WQjHz4/WwLts5uGrE1i3Hhu6mIN18M=;
+	s=arc-20240116; t=1748437860; c=relaxed/simple;
+	bh=KpW/GiAaO4IEYVE6pBKqBoHdlU5iOrI46SKaEKNozU8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiqmeUmneWN/zeH3//YcTJ5zFo75ZPN5yq/hcsSjgwJf3qaGRZ+LoKYpBdeAFRkNAJ93SZL3tmK56pQ/eDtC2ARp7k8TJMCNLecCAf46TvQwqk1JJ/RyNx80045mNv2C5HnFohkgd60i/Fl3geA+ovAdw/9amVp5bJ0IrqqP530=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Received: by Chamillionaire.breakpoint.cc (Postfix, from userid 1003)
-	id 1E2A86042D; Wed, 28 May 2025 15:10:32 +0200 (CEST)
-Date: Wed, 28 May 2025 15:09:54 +0200
-From: Florian Westphal <fw@strlen.de>
-To: ying chen <yc1082463@gmail.com>
-Cc: pablo@netfilter.org, kadlec@netfilter.org, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [bug report, linux 6.15-rc4] A large number of connections in
- the SYN_SENT state caused the nf_conntrack table to be full.
-Message-ID: <aDcLIh2lPkAWOVCI@strlen.de>
-References: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=oB3cqgBjMDHwN1ImM4PPbfplYayvZlrjEr2O/YjKjGjAg71WhOfVKGvpaeHQZaRAv9Tvzho2BTm876bRxY8kTatku83THwj9o/A+AsT4y44BIW7uwKxqUFYJ5SKpsXJB7UQFrsU5VFm/W2Uw6HTbLod7OXi3OjtNMFT7jBC6pXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oewuF3I5; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oewuF3I5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rI1fCTktbDZK+H9GNDwtSrkRyZD7L6P9hnuVyfA7BUo=; b=oewuF3I5HpADvb9JIl1NwmNqrM
+	XDhuRIk63Y5TizxQOMADXEbIjqN7Ib7FNVPF5ES9wGipGJTWNfNWLlgLWVlPv4oaoFx25hrJYh6hH
+	/R/+RXWkhnuMFaf7SYY+zVLsP8fRby1ZvDNj93tL1p8Nv/5987vhSx7v0MUXpJWPOtMPVDxjuQOfE
+	9jr+IxpFHkrX4bNrdRGIKPCfr56k7Cql7UTptKK/E5tmLg+DRRGCyaBbSf+YIiu4l1bajlYd912Ja
+	5nyu2lC4iuuKP1Xdh/zSxkl38Xn+i+mlWodTGbFM1nk1F/qI4D0qsRvruXTfE2s7cgu6z2g5AVOEW
+	S4Wgd7Iw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uKGYX-0000000DfGu-14zX;
+	Wed, 28 May 2025 13:10:53 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id AB4E8300263; Wed, 28 May 2025 15:10:52 +0200 (CEST)
+Date: Wed, 28 May 2025 15:10:52 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, xin@zytor.com,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 3/3] x86/alternative: make kernel ITS thunks read-only
+Message-ID: <20250528131052.GZ39944@noisy.programming.kicks-ass.net>
+References: <20250528123557.12847-1-jgross@suse.com>
+ <20250528123557.12847-4-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +52,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN2Y7hxscai7JuC0fPE8DZ3QOPzO_KsE_AMCuyeTYRQQW_mA2w@mail.gmail.com>
+In-Reply-To: <20250528123557.12847-4-jgross@suse.com>
 
-ying chen <yc1082463@gmail.com> wrote:
-> Hello all,
+On Wed, May 28, 2025 at 02:35:57PM +0200, Juergen Gross wrote:
+> When allocating memory pages for kernel ITS thunks, make them read-only
+> after having written the last thunk.
 > 
-> I encountered an "nf_conntrack: table full" warning on Linux 6.15-rc4.
-> Running cat /proc/net/nf_conntrack showed a large number of
-> connections in the SYN_SENT state.
-> As is well known, if we attempt to connect to a non-existent port, the
-> system will respond with an RST and then delete the conntrack entry.
-> However, when we frequently connect to non-existent ports, the
-> conntrack entries are not deleted, eventually causing the nf_conntrack
-> table to fill up.
+> This will be needed when X86_FEATURE_PSE isn't available, as the thunk
+> memory will have PAGE_KERNEL_EXEC protection, which is including the
+> write permission.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: 5185e7f9f3bd ("x86/module: enable ROX caches for module text on 64 bit")
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+>  arch/x86/kernel/alternative.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index ecfe7b497cad..bd974a0ac88a 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -217,6 +217,15 @@ static void *its_alloc(void)
+>  	return no_free_ptr(page);
+>  }
+>  
+> +static void its_set_kernel_ro(void *addr)
+> +{
+> +#ifdef CONFIG_MODULES
+> +	if (its_mod)
+> +		return;
+> +#endif
+> +	execmem_restore_rox(addr, PAGE_SIZE);
+> +}
+> +
+>  static void *its_allocate_thunk(int reg)
+>  {
+>  	int size = 3 + (reg / 8);
+> @@ -234,6 +243,8 @@ static void *its_allocate_thunk(int reg)
+>  #endif
+>  
+>  	if (!its_page || (its_offset + size - 1) >= PAGE_SIZE) {
+> +		if (its_page)
+> +			its_set_kernel_ro(its_page);
+>  		its_page = its_alloc();
+>  		if (!its_page) {
+>  			pr_err("ITS page allocation failed\n");
+> @@ -2338,6 +2349,11 @@ void __init alternative_instructions(void)
+>  	apply_retpolines(__retpoline_sites, __retpoline_sites_end);
+>  	apply_returns(__return_sites, __return_sites_end);
+>  
+> +	/* Make potential last thunk page read-only. */
+> +	if (its_page)
+> +		its_set_kernel_ro(its_page);
+> +	its_page = NULL;
+> +
+>  	/*
+>  	 * Adjust all CALL instructions to point to func()-10, including
+>  	 * those in .altinstr_replacement.
 
-Yes, what do you expect to happen?
+No, this is all sorts of wrong. Execmem API should ensure this.
