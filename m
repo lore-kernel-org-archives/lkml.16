@@ -1,177 +1,192 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011026.outbound.protection.outlook.com [52.101.70.26])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2299C28C859;
-	Wed, 28 May 2025 16:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748448654; cv=fail; b=YBePZWeGdth5QAUamHzKXKQjACjCHYSh32/xPxMbud01GXuYTuIRmZUJsmG2Ivh8Y+8QtnSHC7wDndiIJS5AMdsevs9x9+3RaSiCaWdTZ7khp9iw2P9ywya9wI+pls6bgVokNVTTGEM/nLZYERSsmpYdC+LFOHlWlNEIhujjEB4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748448654; c=relaxed/simple;
-	bh=sztoKlPoxB77CqozbsApDLuVLdxOwnVcWIa+s739TfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lgNF/pto0f8v0lXVbc9D0RGRc6Xf58Vw3xQPxCock9R8sw4WDrOl1Eg1OqxP+c2PKA+GOZ2Bq7C/9Hf4kjAJTmuXu/tqG2bats2rjLatRWR2mqcuQWooFsPWO0Fn7vdBL5HH6hsdgYKJDLGN2Y7t9rQKUUlbHv/27rJJg1Uc7YE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lVcZ4yaW; arc=fail smtp.client-ip=52.101.70.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902A928315B
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1748448758; cv=none; b=Xj1XizL5rFeS/W1QQxWczwHELJAwpjJ6j8JhFPt2+sSiBWyM98ApG3z7fN+29CwsCdknAUdBbRITqQcRzpKNHS8y93cjfuKGTUC8k4uv+7WltYogCiyqpIHfuRr5fPRhA5IX36KEyf6CPmUKvLeMeJvUtSJm2o+/ZHm36FGJfec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1748448758; c=relaxed/simple;
+	bh=dwuxk90UKREmy9WgLcJOSq1Ev+FSaeKaXWlk1jnBAls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnTH92CINS41aI/XcKfxrNcwByuAwNskuq5N2JQlD4DuY3GqM+g0bksno3SA20n3+ZDWjdUJSGCVtMKUOGF1QYNrMz8MKycT/1+wq5fk7wqiy3t1OyCwCDRAaH5eX2yHzkkO9TL70+chnaSDi5QtEFoCA9o0SXLT5RWEoj7M2s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cV6HiJGS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lVcZ4yaW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oiKgCwTEQblzx8PbkRCsXxwN0R9Hfj9Af9NI4WmESD8HOVX7jijtNLPeiKIIkzvxP3lHL6d5zZ03fQ7xIPKc+WUrgefbKJ29iX8Z+B5ALKVM+fPOi4SYfVz1PBBJxtg3r8vk5AKddSTKb0Oq1kUaLkT4VUqGtM/UQtlCk57O1zwLpGUI5CvEIFsgDm37sB2hiqwek/6NSTHTG0WIolWiZh1VJA1xfS5IaJnjc4hNluWOzByXD5+bcDELSN7U38CCM5FSwTcqGZR2ZNYH7qAYijFnKJUrspAUwpMGAb79IcpMuEfHS3JKAyBQFRbd/ewJfPKnpH7HahOaMU7EpBLFug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D5ZlZjBFrApavmKsxv0r6ijKoyb2QbsXN+4IsQHpUIU=;
- b=XL5/JpFpE0Qg0zbYx2Fw3twlNxHvvrH6WYF1LE3xeymC3PlZdbOmdrYuAQv7aqZfliW6kAlcOaaFilQAKYkf3BfE3W2H2lmnXbQ8NcUfz8AD9Fw7krL1zNhKQs0iNvmjRsVgSZNNbdMipw/1bM+eTtWLhcHhao4fZoavQcaxyO+dJs+fmHJgKuioX41z5zmxTRifBUD67J3T1rxs1WXTluMNIoiFs7JYE1+FhxoBDqhiATve9+E+c99KBNhzQkO/niuY/APDsMEjcFxcUQtzyTTP/VtgsKWx2ccYti4Bp5Mp/OKGPVqWogR3B3Ji8WdO1XaqAqAGT3A3TTwLCBY9aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D5ZlZjBFrApavmKsxv0r6ijKoyb2QbsXN+4IsQHpUIU=;
- b=lVcZ4yaW91ZrIesnNsLcqQAELSeNeMo2M3HpvyZEDi0y0EkWRZePkhC4Hboii3XvfuO/4dhy06ZsPEvD+Kl/zfsO6OUIb4Ozzz//3GdTK0PzQly6uLCodo2sOXO32xWKp2NrP7xcyszKv7kitcRhlKkAsi3hUDcqX8PvayqBAncrrajbv69wpxilXpePSBgXOqYZT+P3/KmNm4hCK8HSPvvV+8yJRcf9CDXKVodnnGR2uoLv7ZLAbe8soV/af9cc8mkbNIohg0uJoZRQsFWDGLqmMjJD4NEGNvsOyaVJ6mkTlZI2lwAyo1FDA98n0sh6FYwzFM7chO/NrmGp4ktT5A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM8PR04MB7347.eurprd04.prod.outlook.com (2603:10a6:20b:1d0::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.27; Wed, 28 May
- 2025 16:10:49 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 28 May 2025
- 16:10:49 +0000
-Date: Wed, 28 May 2025 12:10:42 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Meng Li <Meng.Li@windriver.com>
-Cc: shawnguo@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch: arm64: dts: add big-endian property back into
- watchdog node
-Message-ID: <aDc1gobqagsYohO0@lizhi-Precision-Tower-5810>
-References: <20250528111751.3505224-1-Meng.Li@windriver.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250528111751.3505224-1-Meng.Li@windriver.com>
-X-ClientProxiedBy: SJ0PR13CA0222.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::17) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cV6HiJGS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9622C4CEE3;
+	Wed, 28 May 2025 16:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748448758;
+	bh=dwuxk90UKREmy9WgLcJOSq1Ev+FSaeKaXWlk1jnBAls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cV6HiJGSgJWKc6X8/f6OPyR3AQArSISL2a1aSf4TDDk6Cjv0TprJSnqX45NeISZps
+	 FkbZJsX1iS0bFzgmTrsP0beywFgRt5gjjQMGTkaTyzrJSXHDS9BtCp21BCP2Ut2M38
+	 cdDQMCrkL108fntO3JlyqLHjbMu+9XNhZs0Wsaprn6EdBNXsb1tfsVhu6ULNESDvuT
+	 SSU/45V3SwslFvtxyC4Y0Aruttcgn2K9EjcRd2Yetg5VxBexiSfjujQgrjwt6feAwv
+	 7qI6d41xWspDDMZoXQGQTusupOrUKwX1qozswqtPaMV9OUyGQL6rnOcIR9ju1LO2hO
+	 0APbF0D/9Xo1g==
+Date: Wed, 28 May 2025 16:12:36 +0000
+From: Jaegeuk Kim <jaegeuk@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	stable@kernel.org
+Subject: Re: [PATCH] f2fs: fix to zero post-eof page
+Message-ID: <aDc19Lwwm3JkCi3Z@google.com>
+References: <20250521062403.742048-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM8PR04MB7347:EE_
-X-MS-Office365-Filtering-Correlation-Id: 25a889ee-f005-4996-9e7c-08dd9e02362b
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|52116014|376014|1800799024|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?TF4w5QhRWFGZ/CrLukG7V4aQeisZy9Q/ZbMcj4rs3aWD60fanLIBc+w/AHy6?=
- =?us-ascii?Q?7BYT0sxlA+dXDBSvnyVYxAFwE6rBtlBAItep53Vvtgh0DP3f0xv66lA10zNP?=
- =?us-ascii?Q?TouxyTjAjwtShmix0Zf+2SO+0Il+a4gyT4SJNR/zhT7TWQtDk4LHPfq3HreM?=
- =?us-ascii?Q?vVm7s0DcIM08BcWVeOCMZObuMYjZ5i91PhmXFjrRIz7pc/p7nQV3DCu+3XW6?=
- =?us-ascii?Q?NeLUESUKU2NOgBzEBWy0Q1S5eV+/jm3fVqJPuzWjsS1ayxkI4l+3zhvpQb3r?=
- =?us-ascii?Q?Qtdz/3SYXBT9wE72Ef/pc+uL2RUCYxp/jG5R1hUh66RQEyJOaR87vhSY3Lwq?=
- =?us-ascii?Q?C6fmS8AAQWyBcEGA4m+POuSYg/GrYszAcrynLvw/A+UO3rmDoB4VU/3Zdh+9?=
- =?us-ascii?Q?dxVJE3f+tZCdJsgj6bPcWi7yozN7TxFA21os0/gRq8SgRwU0Xip9JNXABxd7?=
- =?us-ascii?Q?SERAQuDIGGCig6BrEHzdZcNn85zJTcU+RRdj7WKjulbVTLnDCStgMDIVotJe?=
- =?us-ascii?Q?TVx31UQBok6dlNXfPAO+HCseP+l+FLe6uv29Q8sCbfWBdFTjhZdzSfp/B+dT?=
- =?us-ascii?Q?2Sc7Jecn3utmZKWeufgOYYNEdQM6JjUphB1MOftw06dvKdQu3Sl4hb5Udxrj?=
- =?us-ascii?Q?9YaYspiIGijHWr9JV1ciWwmsrvK9fAiOMeFwAybP0k9OlFjfCL7eP4rkzUqd?=
- =?us-ascii?Q?j6ILjChjRj6VY31UPQ09m1DVzN1UO0MaYPBRqNrcF4Wh1vB+MEBq01Ni4JpL?=
- =?us-ascii?Q?JcPep7KkSFIeM0Lp2is4GVyi6N8JRn8WuPEwP4565wFx8Ic/v50SWh3g1/WL?=
- =?us-ascii?Q?sz5wKKu3G36hPOC6VOy49RvhBGlN3171fp6ZclwKPFN877/2Hjm0E/ITN1U1?=
- =?us-ascii?Q?EJF0tG9FzxOX62cffmoFgl91alFPoijYaVLYVJ0WhePOhU+8sVpXSdhtW5eZ?=
- =?us-ascii?Q?L4KTUIokeNUQLSN8/w+InMoVRFsyKL54HSGHGuR24RcBXDOaH9PliBANdDgr?=
- =?us-ascii?Q?9fzA7p8B+lKIX3xPOTIRVTbN4i+dCXOAR5mclwhC+hv0+m6LYun+44hc+Pp3?=
- =?us-ascii?Q?s+NI+RY63f4RMdyhHD7spmyvUd2FjR/fiyY85ytVzdmYvAvT5Cj+jATNhXxY?=
- =?us-ascii?Q?2PYDzspKHkKbSTOyIsDQ9oIrhfMiBYUTPcEE/mkmmGVHsCIZ/6matN8sVK6i?=
- =?us-ascii?Q?9gcj9TseKg0kdiPJqpR549u0UrHezJvZyA+8dDfkOC5sV7SIyLdLbIvQaRjw?=
- =?us-ascii?Q?8++0qhp+3u3AYFiNj0yYPt8wayBszrUwJ5zqwFmLGE1jQjh0NjkMJ9yYSyOs?=
- =?us-ascii?Q?47veIATRWPSmCMzRY/37eCfwVO1bf2kfkD3M1HDC+rRLBm0QssH2BBGJYabt?=
- =?us-ascii?Q?zMAtRPscS1m6gP9F56dWjLv5kt50oQAlmwKhPDG6SpDhFrWYvWC0L+6mSIUQ?=
- =?us-ascii?Q?GW3X5CSVcnIFS6C5qxh/E6D1GDnS5lObapIIFBhNI4CefRmHarPkYA=3D=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(376014)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?J51qToUTrpRzKNA1LE3PMctfjkmLPvn9oi29FSab31+Pk78vqU6MCTl73eiD?=
- =?us-ascii?Q?9U6mHwH2agRu4rjt1eHi1A3kXs0ICGnvKddTGscrKGN79ehC9jvfr+O6eL/R?=
- =?us-ascii?Q?gHLq0r+HPWXZfxGAuxQq6UVcB0tZDo7fzFmuR2ReXCpH+b+vNy3OFRXqhC6M?=
- =?us-ascii?Q?wA1nYhpK70A5UU3uNufF4/OIk4jXkQZdc4yvHJ+yzWgLeqjFnkN/ngFzgO7W?=
- =?us-ascii?Q?4GitUpM91CjuB5Wi1X21kkwumssQNbO28UkCt6CN/AQQxjnXALOJ/zW92DG2?=
- =?us-ascii?Q?gi7pYu7ArsDt4WOP5+s+gRG6esnYE81z5kzS5m2fDrX5LeWkUwD+xMZ64gQH?=
- =?us-ascii?Q?eORxWVEyRxB1awW1lIjEXc3r4NR1jeAxrIibBG/5TpXsmtujwHHXMtjqgvra?=
- =?us-ascii?Q?OUSap1uV7Y2aUH8ySJHl3n91CVrV4B/JLmkOp69upYVZyV5+u2Sc8Xcqf/q8?=
- =?us-ascii?Q?2XcG6hPcmAIJTNdJNS2z3qJ3vXjtpqg5TVaTV+ZO/cQDnRLDYDwFhSuB+top?=
- =?us-ascii?Q?Mr0FRxM7/z8CX9wl3cufa+5KRX2Y8VbdfrGQcsApawvmGXT/4KwmpX2n0W5+?=
- =?us-ascii?Q?jdhWkw4kpRxq3c8mkW0VgjEWq5ViSLih4SaTU+k0iCiRFVWTT7USzO+cct2D?=
- =?us-ascii?Q?HPsWrDIBLUZ/kX/SWX7/B9HOgME0Koj7e6Lvekk1n813vLF36apiuV6tM04E?=
- =?us-ascii?Q?kIaxNhhwwRr80SzNXCB4qdrlP/feGJ9rMtiUhvD0KmToCJk8Vzi41e/i7fYp?=
- =?us-ascii?Q?V+PqoOtDDyZ6j3BWRi1O0Vr2pV4vEAJ2f3m9IEcBQitS9HRRWVW9/ctYlYZq?=
- =?us-ascii?Q?+f4UMO+nDICXUhly925JDWvXrG674Of/wF44w0okaitg+Y2J2FD3F2P9G0bN?=
- =?us-ascii?Q?MW1Scg5GpRONL456pG74oYrCwAQXCox7cULAPkWmYzaHFoUlKfzCdGSk1Th9?=
- =?us-ascii?Q?2LTfhAG7dcyc2dELbBhHyT1o7z8HFPrng8VVmrJQbaJbj5QQWYz7cHKqGqON?=
- =?us-ascii?Q?VoLqPB3bSoZ8LUSEQ1ngsJYPOCo7IGdnzDx00w/Hg4iFqZrfOUijQVM7Yngf?=
- =?us-ascii?Q?HNvLQQoyMx0CJi/lMnrOvgE/upwfT/MxhB6iVy1k383w/4aEXr0IE3vL0k9l?=
- =?us-ascii?Q?yMnrtQ0uqbhFrBbo7WFe5C8j60q0LidBg2Kvk2sAOQpnxa/qZW9mLUhF47Kl?=
- =?us-ascii?Q?cpGewgUOus/6Wpuqy7zAIO4ilVzCUtTdAEYcEk7SGbrJbgnpZFzU5rjeWquC?=
- =?us-ascii?Q?hVRO8cgo5u/tpll00NvEPNNSZ8wbGf8qS1WVQjQHh1ifewVP5z+35pooW9co?=
- =?us-ascii?Q?nZisRJqHykDPg0NUbTCT6smdwnTz5dbhmkGRaRjnoEfLCUBlUKzkoSpIaOvO?=
- =?us-ascii?Q?cT3rNS9Nr9x9bfQh+EzmxKR8P1PTXYQS591fxG7RAdfZhvmiLIQ/0NiQfgBi?=
- =?us-ascii?Q?H1gGbLyrntqmfxB7UQLl/1zjOadgatHL30vbp5XrrKukGdF5v/+ATqRUtu5m?=
- =?us-ascii?Q?NvYKBBQKDdkKE+4halo23MGtjEKV98eym2JXclEaYrZExLJjIMI4XePvj9x8?=
- =?us-ascii?Q?OR9kjtHV7PPaC73wkN5+ToSWI4Pj4FvsnaGQye9J?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25a889ee-f005-4996-9e7c-08dd9e02362b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2025 16:10:49.3757
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 979voik9SjaASRd5osn7pqe602072bkaQTnwoWNv2LoXLXmcPuKvwEQSNrZA4aNnEQFe+l81ppF6eTn79tnBaA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7347
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521062403.742048-1-chao@kernel.org>
 
-On Wed, May 28, 2025 at 07:17:51PM +0800, Meng Li wrote:
-> When verifying watchdog feature on NXP ls1046ardb board,
-> it doesn't work. Because the big-endian is deleted by accident,
-> add it back.
->
-> Fixes: 7c8ffc5555cb ("arm64: dts: layerscape: remove big-endian for mmc nodes")
+Chao,
 
-fix tags should be wrong.
+Can we add the similar path that other filesystems have?
 
-I remember I tested without big-endian. If it is wrong, please revert original
-patch and provide enough reason.
-
-Frank
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Meng Li <Meng.Li@windriver.com>
+On 05/21, Chao Yu wrote:
+> fstest reports a f2fs bug:
+> 
+> generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/git/fstests/results//generic/363.out.bad)
+>     --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
+>     +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:58.000000000 +0800
+>     @@ -1,2 +1,78 @@
+>      QA output created by 363
+>      fsx -q -S 0 -e 1 -N 100000
+>     +READ BAD DATA: offset = 0xd6fb, size = 0xf044, fname = /mnt/f2fs/junk
+>     +OFFSET      GOOD    BAD     RANGE
+>     +0x1540d     0x0000  0x2a25  0x0
+>     +operation# (mod 256) for the bad data may be 37
+>     +0x1540e     0x0000  0x2527  0x1
+>     ...
+>     (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fstests/results//generic/363.out.bad'  to see the entire diff)
+> Ran: generic/363
+> Failures: generic/363
+> Failed 1 of 1 tests
+> 
+> The root cause is user can update post-eof page via mmap, however, f2fs missed
+> to zero post-eof page in below operations, so, once it expands i_size, then it
+> will include dummy data locates previous post-eof page, so during below
+> operations, we need to zero post-eof page.
+> 
+> Operations which can include dummy data after previous i_size after expanding
+> i_size:
+> - write
+> - mapwrite
+> - truncate
+> - fallocate
+>  * preallocate
+>  * zero_range
+>  * insert_range
+>  * collapse_range
+> - clone_range (doesn’t support in f2fs)
+> - copy_range (doesn’t support in f2fs)
+> 
+> Cc: stable@kernel.org
+> Signed-off-by: Chao Yu <chao@kernel.org>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 4d75bff0d548..e15ec2e1cb04 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -753,6 +753,7 @@ wdog0: watchdog@2ad0000 {
->  			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&clockgen QORIQ_CLK_PLATFORM_PLL
->  					    QORIQ_CLK_PLL_DIV(2)>;
-> +			big-endian;
->  		};
->
->  		edma0: dma-controller@2c00000 {
-> --
-> 2.34.1
->
+>  fs/f2fs/file.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f2a8..c7c66e591ebc 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -35,6 +35,17 @@
+>  #include <trace/events/f2fs.h>
+>  #include <uapi/linux/f2fs.h>
+>  
+> +static void f2fs_zero_post_eof_page(struct inode *inode, loff_t new_size)
+> +{
+> +	loff_t old_size = i_size_read(inode);
+> +
+> +	if (old_size > new_size)
+> +		return;
+> +
+> +	/* zero or drop pages only in range of [old_size, new_size] */
+> +	truncate_pagecache(inode, old_size);
+> +}
+> +
+>  static vm_fault_t f2fs_filemap_fault(struct vm_fault *vmf)
+>  {
+>  	struct inode *inode = file_inode(vmf->vma->vm_file);
+> @@ -105,6 +116,9 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
+>  
+>  	file_update_time(vmf->vma->vm_file);
+>  	filemap_invalidate_lock_shared(inode->i_mapping);
+> +
+> +	f2fs_zero_post_eof_page(inode, (folio->index + 1) << PAGE_SHIFT);
+> +
+>  	folio_lock(folio);
+>  	if (unlikely(folio->mapping != inode->i_mapping ||
+>  			folio_pos(folio) > i_size_read(inode) ||
+> @@ -1109,6 +1123,8 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		f2fs_down_write(&fi->i_gc_rwsem[WRITE]);
+>  		filemap_invalidate_lock(inode->i_mapping);
+>  
+> +		if (attr->ia_size > old_size)
+> +			f2fs_zero_post_eof_page(inode, old_size);
+>  		truncate_setsize(inode, attr->ia_size);
+>  
+>  		if (attr->ia_size <= old_size)
+> @@ -1227,6 +1243,8 @@ static int f2fs_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+>  	if (ret)
+>  		return ret;
+>  
+> +	f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>  	pg_start = ((unsigned long long) offset) >> PAGE_SHIFT;
+>  	pg_end = ((unsigned long long) offset + len) >> PAGE_SHIFT;
+>  
+> @@ -1542,6 +1560,8 @@ static int f2fs_collapse_range(struct inode *inode, loff_t offset, loff_t len)
+>  	if (ret)
+>  		return ret;
+>  
+> +	f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>  	ret = f2fs_do_collapse(inode, offset, len);
+>  	if (ret)
+>  		return ret;
+> @@ -1631,6 +1651,8 @@ static int f2fs_zero_range(struct inode *inode, loff_t offset, loff_t len,
+>  	if (ret)
+>  		return ret;
+>  
+> +	f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>  	pg_start = ((unsigned long long) offset) >> PAGE_SHIFT;
+>  	pg_end = ((unsigned long long) offset + len) >> PAGE_SHIFT;
+>  
+> @@ -1754,6 +1776,8 @@ static int f2fs_insert_range(struct inode *inode, loff_t offset, loff_t len)
+>  	if (ret)
+>  		return ret;
+>  
+> +	f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>  	pg_start = offset >> PAGE_SHIFT;
+>  	pg_end = (offset + len) >> PAGE_SHIFT;
+>  	delta = pg_end - pg_start;
+> @@ -1819,6 +1843,8 @@ static int f2fs_expand_inode_data(struct inode *inode, loff_t offset,
+>  	if (err)
+>  		return err;
+>  
+> +	f2fs_zero_post_eof_page(inode, offset + len);
+> +
+>  	f2fs_balance_fs(sbi, true);
+>  
+>  	pg_start = ((unsigned long long)offset) >> PAGE_SHIFT;
+> @@ -4860,6 +4886,8 @@ static ssize_t f2fs_write_checks(struct kiocb *iocb, struct iov_iter *from)
+>  	err = file_modified(file);
+>  	if (err)
+>  		return err;
+> +
+> +	f2fs_zero_post_eof_page(inode, iocb->ki_pos + iov_iter_count(from));
+>  	return count;
+>  }
+>  
+> -- 
+> 2.49.0
