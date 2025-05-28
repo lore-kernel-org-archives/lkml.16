@@ -1,109 +1,131 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C02C7263A;
-	Wed, 28 May 2025 11:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1F67263A
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 11:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748431714; cv=none; b=F0QHyXyYk1yJT4l5VWL4REIQy5Yr04ROW6QSeO1z5MnWNWCAgaVAsXpQT4a6pLswHZmw+h9yJmUY4VXYdyz2odwy+WUTF/9AWoQ5RwCxemEp3Wr+OfvSi0h1KVPM2fOx6tT5lTsZCCrE3ZHyECWtqFCJMshahzbHylEfCklQXjw=
+	t=1748431719; cv=none; b=bE0/z6J0VDUiKbe+MSzGm+HB/RsrKnAe6CwDK1vGuLMkjfBYNXJtmyIJOZACeChW4c7RG7h64l+ScfilKx59t20xlDpOBI9zU2sJWSA5YfHeA5fJMPzbYQo32cLgzHRwJ0izRWxk/EoE6zedyOnSpvKGr89Fo2Yc7hH3MY6KRM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748431714; c=relaxed/simple;
-	bh=Rdwj7CvGValpAUzeiMZcnSBQQBZYEhQiTrlWtf7ChJY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cu1Zt8yGaG9xnxfS8dm1nihP1Xvt9ylHMwTi7e45SqhmkseDZ4URpVJDm1txoPbqfFbD1VyJZ/DyMm3AASrdRaH4FI9MmP5zomk7KjbbYxMJQi8KQta1BEjY57I5erUN1svk6nwj0HfUTkm6fzmL3BEUo8Aw7OT4ZNfbFX+pAXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6nLd5W1Nz6M4sd;
-	Wed, 28 May 2025 19:28:25 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4B605140113;
-	Wed, 28 May 2025 19:28:28 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
- 2025 13:28:27 +0200
-Date: Wed, 28 May 2025 12:28:26 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Rob
- Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
- Dooley" <conor+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Sascha
- Bischoff" <sascha.bischoff@arm.com>, Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mark Rutland
-	<mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 14/26] arm64/sysreg: Add ICH_HFGITR_EL2
-Message-ID: <20250528122826.0000566c@huawei.com>
-In-Reply-To: <20250513-gicv5-host-v4-14-b36e9b15a6c3@kernel.org>
-References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
-	<20250513-gicv5-host-v4-14-b36e9b15a6c3@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1748431719; c=relaxed/simple;
+	bh=YA07hUe6QjKaeuIfZls1CxCPVDZDY4ehCtwH1wvQLx8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=aHq5xrb4RjKZQqtwajGtoyLWn85bW2f0jQmlVB0V75RgDmx1dva0Dl1P5ASibcrMHZrMUo8seJcTGLE1jgxFcClG+hqe5tqbk1XEj6pl7LCrxqSrXb5Fcm/vRbnXIPbu78DRdfvJ0pxRk4h+N7jML3uOuI/gMDe9P5TEMM5vzi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=WIu8D6o6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GMi2exFG; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="WIu8D6o6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GMi2exFG"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8369A11400D3;
+	Wed, 28 May 2025 07:28:35 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 28 May 2025 07:28:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1748431715;
+	 x=1748518115; bh=UK4SDTFoZN8a248ZSOnhk+uW54YPVwbFm6eiIbQcacc=; b=
+	WIu8D6o6E9C7LLNcCKy//BdY3/1fetFwaeQ4MG2CCr+hh51Hlhf4oC6a5rcY3uqF
+	xqDhC+9n5IfDU0z/k6zq0WNADft/V8SgOvANqzgWwnOyC3aiCWny1UTpAAR8lRzw
+	RbqEWlpvb70W2xAuh5oVtxiBGc7AVC9WJGFvOGl6HsTwCtAPYOhS5/UxZ4NCJBll
+	60xIZosN55MnqV7RPAXdxFAQ1FVfoILiHkYejTcqZDMH5pYjOsJUBfhKJFnvQd42
+	S4zZ1tgWSqdSOGgrVHPS7/G6ZirqUfWpsne4uAic84rXj3U+NIU8h3/mXT/Ul7X5
+	q1ACdT52xtrmT2UUvj1+xg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1748431715; x=
+	1748518115; bh=UK4SDTFoZN8a248ZSOnhk+uW54YPVwbFm6eiIbQcacc=; b=G
+	Mi2exFGhNKU2xnRprEiLAnbC/kJGsehU0ZuRLGt7bypFhK6m4AFnstJR6RkP6M2D
+	1s0lIsHY/M0RSkCOoMy/C7w8QHMdAqe2HTEAlSn5ec2RRfruiSG72pmO8waARVvF
+	SN03jeQNP4IlPv2nuWDJ2W93gaUxsEdLt9jZtRrS5EEEeagWrYmyip9YKcNMoxxr
+	LvrMXAq+WVtmNTLaCAnUk1ifCWJ8VTQWdVn30R3s7V1JNPVRT1682xhMiwo3DtnP
+	fFglGzUmXOQj+n9q6VDaVMjBWoGze1yNV/IAvIqkSF8PNs7ltiSOgt7GvnJuuxO0
+	40qWRHPNTSKdEJ0ou4rqw==
+X-ME-Sender: <xms:YvM2aGzmxBxh29eLSqbNbKqwcQMJkDa5QsNDOzHd__4xnygw1ukM3w>
+    <xme:YvM2aCRAYYKfE2x0wo7Tksxog6No-HA_1gQcKV8dii6r4QJWQsQGpjhQH2e1sLgSs
+    QWcBnepbT4jwGxfczs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvfedugeculddtuddrgeefvddrtd
+    dtmdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggft
+    fghnshhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftd
+    dtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefk
+    jghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfd
+    cuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeeh
+    udekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+    pdhnsggprhgtphhtthhopedujedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsh
+    himhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhl
+    rdgtohhmpdhrtghpthhtohephhhimhgrlhdrphhrrghsrggurdhghhhimhhirhgrhiesih
+    hnthgvlhdrtghomhdprhgtphhtthhopehimhhrvgdruggvrghksehinhhtvghlrdgtohhm
+    pdhrtghpthhtoheplhhutggrshdruggvmhgrrhgthhhisehinhhtvghlrdgtohhmpdhrtg
+    hpthhtohepmhgrthhthhgvfidrsghrohhsthesihhnthgvlhdrtghomhdprhgtphhtthho
+    pehmihgthhgrvghlrdhjrdhruhhhlhesihhnthgvlhdrtghomhdprhgtphhtthhopehroh
+    gurhhighhordhvihhvihesihhnthgvlhdrtghomhdprhgtphhtthhopegrrhhnugeskhgv
+    rhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:YvM2aIX_mDM44nwxcZ0hqH8Q1u48GBwR3x2YH85HjW5-rRmL4iJBtQ>
+    <xmx:YvM2aMi1NZfexU8rZOrzfBsFR_6g_WFOA9C1ONJxa6vMz2uHAwjsoA>
+    <xmx:YvM2aIDa0-O9_cx4ERpI8VxBPYh_HAj_IKsUAfARcG8540buYKOYdw>
+    <xmx:YvM2aNKkaUYvLDfano_-zCaUQ6_OgEa15Utmb80fseaYV_VU6mOsmw>
+    <xmx:Y_M2aGTAxX8xHCl048q7DmVW1-GFO_UVhj-T6s12Np-nuITOoVi0uXc0>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id DD8E7700060; Wed, 28 May 2025 07:28:34 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+X-ThreadId: Tea118988e335f97b
+Date: Wed, 28 May 2025 13:27:33 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Christopher Snowhill" <chris@kode54.net>
+Cc: "Lucas De Marchi" <lucas.demarchi@intel.com>,
+ "Arnd Bergmann" <arnd@kernel.org>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ "Rodrigo Vivi" <rodrigo.vivi@intel.com>, "Dave Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Matthew Brost" <matthew.brost@intel.com>,
+ "Himal Prasad Ghimiray" <himal.prasad.ghimiray@intel.com>,
+ "Imre Deak" <imre.deak@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Michael J. Ruhl" <michael.j.ruhl@intel.com>, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ dri-devel <dri-devel-bounces@lists.freedesktop.org>
+Message-Id: <dd8f913d-1d6a-435b-b9b6-30a3d950e4a8@app.fastmail.com>
+In-Reply-To: <aDbl5CIGulMng3de@smile.fi.intel.com>
+References: <20250523121106.2231003-1-arnd@kernel.org>
+ <j7yodlrk7wh3ylvb2z622ndlzm4guhahmakdb6l5d6qtv5sabo@w4bfiehtmaab>
+ <aDbYs7QZRfr2i80A@smile.fi.intel.com>
+ <704fd2b9-04da-4ec8-b854-22bc3ce9058e@app.fastmail.com>
+ <DA7PSM1WUKBI.3JA6THJTRF5B7@kode54.net> <aDbl5CIGulMng3de@smile.fi.intel.com>
+Subject: Re: [PATCH] drm/xe/vsec: fix CONFIG_INTEL_VSEC dependency
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 13 May 2025 19:48:07 +0200
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Wed, May 28, 2025, at 12:31, Andy Shevchenko wrote:
+> On Wed, May 28, 2025 at 03:17:03AM -0700, Christopher Snowhill wrote:
+>> On Wed May 28, 2025 at 3:03 AM PDT, Arnd Bergmann wrote:
+>> > On Wed, May 28, 2025, at 11:34, Andy Shevchenko wrote:
+>> >> On Tue, May 27, 2025 at 03:55:46PM -0500, Lucas De Marchi wrote:
+>> > I think ACPI_VIDEO is at the center here, and changing all the
+>> > 'select ACPI_VIDEO if ACPI' instances to
+>> > 'depends on ACPI_VIDEO || !ACPI_VIDEO' would solve a lot of
+>> 
+>> Maybe you meant 'depends on ACPI_VIDEO || !ACPI' ?
+>
+> I believe not. The depends on FOO || FOO=n is idiomatic in Kconfig.
 
-> Add ICH_HFGITR_EL2 register description to sysreg.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
+It depends on what we want here. 'ACPI_VIDEO || !ACPI' would
+be the direct equivalent of the existing 'select ACPI_VIDEO if ACPI',
+while 'ACPI_VIDEO || !ACPI_VIDEO' would allow building with
+ACPI=y and ACPI_VIDEO=n, which is not possible today. I'd probably
+start with the version that Christopher suggested to have a lower
+regression risk.
 
-Hi Lorenzo,
-
-> ---
->  arch/arm64/tools/sysreg | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-> index 0927754d9fe2c5addbd9693d83b7324f1af66d3e..d2f53fb7929c69895fe8a21ba625d058a844d447 100644
-> --- a/arch/arm64/tools/sysreg
-> +++ b/arch/arm64/tools/sysreg
-> @@ -3616,6 +3616,21 @@ Res0	1
->  Field	0	ICC_APR_EL1
->  EndSysreg
->  
-> +Sysreg	ICH_HFGITR_EL2	3	4	12	9	7
-> +Res0	63:11
-> +Field	10	GICRCDNMIA
-> +Field	9	GICRCDIA
-> +Field	8	GICCDDI
-> +Field	7	GICCDEOI
-> +Field	6	GICCDHM
-> +Field	5	GICCRDRCFG
-
-GICCDRCFG in the spec. (you have a bonus R)
-
-Of course the real question was what am I avoiding that made checking these
-against the spec feel like a good idea? :)
-
-FWIW with that fixed,
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-for patches 2 to 14.
-
-> +Field	4	GICCDPEND
-> +Field	3	GICCDAFF
-> +Field	2	GICCDPRI
-> +Field	1	GICCDDIS
-> +Field	0	GICCDEN
-> +EndSysreg
-> +
->  Sysreg	ICH_HCR_EL2	3	4	12	11	0
->  Res0	63:32
->  Field	31:27	EOIcount
-> 
-
+     Arnd
