@@ -1,125 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C793E266B56;
-	Wed, 28 May 2025 09:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1623C244697;
+	Wed, 28 May 2025 09:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748422862; cv=none; b=N80utUwraMgmnvKivlnwXSk5psZ18f6CbA6gsd2PyT798CZrZ1c91ZFYT1Rs+8TTHZyJLt//MGwLQ6o8d8MEOYaH7vfhgzt4L8hmpYF0IdJCvDAeCuiQHGTXbuzgzNlukERZQC6ybuxYkaKandpLFwekvGmkPe0han62W9N9vT4=
+	t=1748422915; cv=none; b=VN6mYsf+mDTFSZXfXai5oSNaVsSBkCgg4Pe5cIrRLELEL6bAK8jqTu1BWT5bR8VqkhYGcmY+eaJfy+J8uHjTQe6sFvi278JtqxD0IoYgXvOoRYkJKJI2kzFDZoDplRf6ELf99LTrfbSWiyhfvbzcbah3oSljRYhNWTwraeF/eHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748422862; c=relaxed/simple;
-	bh=J3/nOkg/8f8JrZ1t4/PcLLyxxxqdmeW2cz37Tm5RRlw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KYNaJl5u71PeiN47wFXIzvCQmtBECq785On0MRgy5RzgsiEWkXKp3HR1Ws77WuAvUemRhfq0HSuRYnqXMXBuKsbMMFwgH1yBUXqQfoeU3Gmd0XTFlkQu5bv036HtLeRQpU2xRhu6/4L45fIb8nQbwtO1IW3wa7AuM6n/bIY20l0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZSuuMhPm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZSuuMhPm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F008C4CEE7;
-	Wed, 28 May 2025 09:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748422862;
-	bh=J3/nOkg/8f8JrZ1t4/PcLLyxxxqdmeW2cz37Tm5RRlw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZSuuMhPmYMGsEOJrNG1sqCanRwH+qk9qBp9C42OYbb/TextqwbmaBZyIWU1dUKt1b
-	 pW4Rzife6LdGXtdGQT0gUfw0JqkAFPBDP1US0/L5wZUyl64rdEpLl3IufIV1+z6/sb
-	 iyethRYargVBNMQSN0d3Ynq4IK86CrLfWNj2ebbvb5MXiv94pMW5nTsAeBFpTQ+mOU
-	 udXP+z5cI83BbIk57vN56IMASghjkWIkQImx2LotJC+jMIJ8WkcNekhyqPkyXysDMv
-	 s7BIaZwCX2MKS8D2zt2CT3APjerxiQXOtqEcjvxHIlDZpEsUQZWDbNvwqoT16UJ4CP
-	 Lw2X7Ejcmkgdw==
-Message-ID: <1c21f915-e067-4801-925a-3d4882f358f2@kernel.org>
-Date: Wed, 28 May 2025 11:00:57 +0200
+	s=arc-20240116; t=1748422915; c=relaxed/simple;
+	bh=yIHKFd65EMK3B3TOZUx1mxqsgXd/2gqGnSBL7N8XwSk=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PmX3a8CeC5n/K6fIrRkPxG3IgV+OQz4CQytEvPj2RrDp8LmfqOLKI/rRkwlaRG0H90p+mnIEi4/9rymYHniNOWxopQyear6u1z9GFcyBULPPnkRPn52xCI/yjkD1PF0y4+vcPHDQjUndJUTJGb1pcbgcKnOD72xNIJXrWrMWJpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b6k4514v9z6HJZN;
+	Wed, 28 May 2025 17:00:37 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 64E7F1402EE;
+	Wed, 28 May 2025 17:01:49 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 May
+ 2025 11:01:48 +0200
+Date: Wed, 28 May 2025 10:01:47 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Vijay Balakrishna <vijayb@linux.microsoft.com>
+CC: Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>, "Rob
+ Herring" <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, James Morse <james.morse@arm.com>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, Robert Richter <rric@kernel.org>,
+	<linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Tyler Hicks
+	<code@tyhicks.com>, Marc Zyngier <maz@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	<devicetree@vger.kernel.org>
+Subject: Re: [v10 PATCH 1/2] EDAC: Add EDAC driver for ARM Cortex A72 cores
+Message-ID: <20250528100147.0000741b@huawei.com>
+In-Reply-To: <1748387790-20838-2-git-send-email-vijayb@linux.microsoft.com>
+References: <1748387790-20838-1-git-send-email-vijayb@linux.microsoft.com>
+	<1748387790-20838-2-git-send-email-vijayb@linux.microsoft.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp15
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250523-hdp-upstream-v3-0-bd6ca199466a@foss.st.com>
- <20250523-hdp-upstream-v3-6-bd6ca199466a@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250523-hdp-upstream-v3-6-bd6ca199466a@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 23/05/2025 14:38, Clément Le Goffic wrote:
-> Add the hdp devicetree node for stm32mp15 SoC family
+On Tue, 27 May 2025 16:16:29 -0700
+Vijay Balakrishna <vijayb@linux.microsoft.com> wrote:
+
+> From: Sascha Hauer <s.hauer@pengutronix.de>
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->  arch/arm/boot/dts/st/stm32mp151.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
+> The driver is designed to support error detection and reporting for
+> Cortex A72 cores, specifically within their L1 and L2 cache systems.
+> The errors are detected by reading CPU/L2 memory error syndrome
+> registers.
 > 
-> diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
-> index 0daa8ffe2ff5..b1b568dfd126 100644
-> --- a/arch/arm/boot/dts/st/stm32mp151.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
-> @@ -270,6 +270,13 @@ dts: thermal@50028000 {
->  			status = "disabled";
->  		};
->  
-> +		hdp: pinctrl@5002a000 {
-> +			compatible = "st,stm32mp151-hdp";
-> +			reg = <0x5002a000 0x400>;
-> +			clocks = <&rcc HDP>;
-> +			status = "disabled";
+> Unfortunately there is no robust way to inject errors into the caches,
+> so this driver doesn't contain any code to actually test it. It has
+> been tested though with code taken from an older version [1] of this
+> driver. For reasons stated in thread [1], the error injection code is
+> not suitable for mainline, so it is removed from the driver.
+> 
+> [1] https://lore.kernel.org/all/1521073067-24348-1-git-send-email-york.sun@nxp.com/#t
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Co-developed-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+I'm far from an expert on the EDAC side of things but generally this
+looks good to me.
 
-Same questions here and in further patches.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Best regards,
-Krzysztof
+Note one comment inline that maybe it's worth adding a line
+to the copyright notice given changes you've made?
+
+Jonathan
+
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index a8f2d8f6c894..136416f43b44 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
+>  obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
+>  obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
+>  obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
+> +obj-$(CONFIG_EDAC_CORTEX_A72)		+= edac_a72.o
+> diff --git a/drivers/edac/edac_a72.c b/drivers/edac/edac_a72.c
+> new file mode 100644
+> index 000000000000..f23c28fba354
+> --- /dev/null
+> +++ b/drivers/edac/edac_a72.c
+> @@ -0,0 +1,229 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cortex A72 EDAC L1 and L2 cache error detection
+> + *
+> + * Copyright (c) 2020 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
+
+I'd argue that you've made enough changes to add an additional
+copyright line.  Entirely up to you however!
+
+> + *
+> + * Based on Code from:
+> + * Copyright (c) 2018, NXP Semiconductor
+> + * Author: York Sun <york.sun@nxp.com>
+> + */
+
