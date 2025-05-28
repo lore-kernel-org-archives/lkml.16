@@ -1,63 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6F628D843;
-	Wed, 28 May 2025 15:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CCD28C5A6
+	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 15:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748446894; cv=none; b=lvc4c78yVZQFGV7i+0cbUIexP8UQC6LYBQIBrpOL9yCb9SWvNR7T7gFtXwGVzw4XqrpCC6ZrukrfiUqf+YrSsPmBRcwzsJ9qm01FF6X1jzkaN423LwTbncwE55Ee64AE31hE8Zkgfhbf9VE/Fg6Z1iT8AEpihA6iJuJtKIKnfM4=
+	t=1748446925; cv=none; b=esvVWtNh2WzFwUDjWIqeAWuq9inn0dhCtle1hv3jkkNkZoDT0sjuKqs0LqY5jndLejxJgcy/BPCwLnxF9Ru01GvAB1uxtDWEplpWgFAsv5c1o+uK6xLTswR81ubPOAz7cO77syEqrshdp88kf1VlbCdTXdBu5xWan4C+j9XpPYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748446894; c=relaxed/simple;
-	bh=Zf4Vz1X0gHcV9fxu1GsSCqVdmgjVwphYtInC9iPo02c=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oWM17bBPPybGXfpABWTII4IKBhQW4y24xmW/72hAlBVK2GUO1/evGs4GIOutA3qpdIGRL7ICWGwktHeMX6hIfhJzpv4Eu6OGzAK3mY+qPaiLOO8/AjMCTIzOU6Mdse0sgQQVJk1BQJYFY1SlrtqD7fiOyXwuAuvp1fMZxfoGPps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnpR+1bW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnpR+1bW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D4CC4CEF0;
-	Wed, 28 May 2025 15:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748446894;
-	bh=Zf4Vz1X0gHcV9fxu1GsSCqVdmgjVwphYtInC9iPo02c=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=mnpR+1bWcq530JySFnJNFdnDXkVAeATHkuCUyMWhLzje/AxGIdAxJLIXqX+odQaHY
-	 J1+1GURofeFA6unJFV08cZHMBY7RtZRodpn3eSx9lTnDT8jUB6sEy9SbyE2if/c98O
-	 g0C8TdPRkPegiVKtm5tS2YxUXz4niGJIYmFnA5uCtQWufsNOJk6o1kzwPgMVRA47Uv
-	 d0wyoVGq66B48hz9Xom2MFlCaoR267f7nb0XpJwUN0w8Uf8/lD29D/iRjpbYP2MAKK
-	 jKrNwWZ2fgU+TZDBPWgpdNz02Z+bp3Vh6eGUq6YnN/8vpABpOj87nrQnUICvxP2kca
-	 bEJs6FAHxoHYg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F333822D1A;
-	Wed, 28 May 2025 15:42:09 +0000 (UTC)
-Subject: Re: [GIT PULL] audit/audit-pr-20250527
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <2d7b064b34bcff7a6a8926cc29cae659@paul-moore.com>
-References: <2d7b064b34bcff7a6a8926cc29cae659@paul-moore.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <2d7b064b34bcff7a6a8926cc29cae659@paul-moore.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20250527
-X-PR-Tracked-Commit-Id: 654d61b8e0e2f8b9bdea28a9a51279ecdacafe3c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3d413f0cfd7ef0fe478e98fafcc084209520abd0
-Message-Id: <174844692807.2441113.15130489872839846062.pr-tracker-bot@kernel.org>
-Date: Wed, 28 May 2025 15:42:08 +0000
-To: Paul Moore <paul@paul-moore.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, audit@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1748446925; c=relaxed/simple;
+	bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=HVtL334liLgYaV5GXh+4OhdBOdfGCfEJZTxCULmihEgL2Q60ukFu7LgI4jYaKTo5DYgqcnEEWLwnnNYs6bp/5sj/c3UKgTT3zz1IqoQ1zSpRRmk5lBLRzt4JfxJKcK6K+YqGconJZ3+18GT70Nxlv6hhQ/bipSI88T517X0CvWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so841604839f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 08:42:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748446922; x=1749051722;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zBYGvX52BxLQ4GUMUxG0DeMTjGwYb+sctll/J9DgxZ0=;
+        b=acYX5HEXl8bMbuoIdZRioy+sFi2qssphoqVDJnhpAhTMsQopO5nlwmWodX1NIlVlma
+         dD+giJSAPXmYVhIaqXdKFMQn84A8hQ4AWzhnEANAhhsQ1Eo0hR5O6gs2VGaPNLDlmGgS
+         vnO29kFeGQwVZ2d8lfMAYY2BUQl9zE6NWywM0oIi4gAJhgXiD6zI9JsZPNQS4rzkGcrD
+         IKG/MS4NoeSe8iIO8QWrqFL5E9oR4RiTbJfbhYbI/iMhzYtD6O2OZNcrmu4Y9+J4kxBW
+         H3u26tnSbt2o48cBMQ3wDdsgqPos0twgAEtl3lZqBwple4Cw+rx5o/AZ/+zVEzNDkOj1
+         hPjQ==
+X-Gm-Message-State: AOJu0Yyxp3QGh3JHIfaluoGXhlHmmGy+6Zfo4i3Mrp3Lm/A+8hjFLdpL
+	5ue7ebpW911QWgzPWX+N6dddw/alqvv/HyR2d9Pf/SCtCUDS0xMpGhIGSr57ROb4jNxEEsokt7f
+	4jpyNyZSnh9efd2lAuYo4DFjhGYCLiG/sap+enKVMLeQfEbAd81Tg+7Ik0PY=
+X-Google-Smtp-Source: AGHT+IHZ3OjVKfm3zB8XBYo5hkX/jjwZzQvmrCfyO1UW1w2wwgTYfhH90D4MoF5/+pbgR77GGWO5JAo8Z/cfE6YOaTbosD0pYw2/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:750b:b0:85b:35b1:53b4 with SMTP id
+ ca18e2360f4ac-86cbb8bc455mr2222326039f.12.1748446922386; Wed, 28 May 2025
+ 08:42:02 -0700 (PDT)
+Date: Wed, 28 May 2025 08:42:02 -0700
+In-Reply-To: <681865d0.a70a0220.254cdc.0048.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68372eca.a70a0220.1765ec.016c.GAE@google.com>
+Subject: Re: [syzbot] #syz test
+From: syzbot <syzbot+0a36c1fec090c67a9885@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Tue, 27 May 2025 18:57:45 -0400:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit.git tags/audit-pr-20250527
+***
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3d413f0cfd7ef0fe478e98fafcc084209520abd0
+Subject: #syz test
+Author: abhinav.ogl@gmail.com
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
