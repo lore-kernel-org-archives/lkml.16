@@ -1,189 +1,101 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8952E7FD;
-	Wed, 28 May 2025 00:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8C5131E2D;
+	Wed, 28 May 2025 00:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748392468; cv=none; b=IhM0MfIYDT9oU/BtxeO+hGqtvKi7LwAzUGBBKWHRFr5hV7YLwgGyrQiyaYMm0+UJpfIAnHlF2pZf68wF0Pbq/TRNNjyrtB2nDIoPAfdSCR1YgwlXCwOJxkncogkPLeFARSNbptf88oi3r0emqt3YhvIJspoPdR72iNjQGHpK5HY=
+	t=1748392498; cv=none; b=eJSna/NbfMKKak3kemk0v2fX1aeKh9rSByFPq1XKhIVtcL3v8gJ1Up7OBDnkeh47Wk5jOPMMGtEg4PZ5DMSU7m2pqCghrcgsKG1eKe3FYo+FXh4CZawLYGO7ceTYN8l5/zJqdJ/33ALIDnO3PwYuAyftpE2UKfFXkgQaOq6HlUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748392468; c=relaxed/simple;
-	bh=5GFXSpEpeLWoYhHZ+j305dRuuPCeQzQJoy+Dw/dgqFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cz7v4gAfUBoPgmpML8xQaqOsGbz3kQfp9TxBGTJGQvjlkwapNr+yyAzqsHC6XScJfrsIaZnYjeStfFrNTatkcefswFzgB7vKNkOb0/GtOUdhSY77dor9dd27T/+P3joIZ/BgFICR92cWrN1qXtK7vxMBGXP/PjWxEA0CVfuMcEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PP0t7Rt/; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1748392498; c=relaxed/simple;
+	bh=7joA61mSXhPK4Gz+V3NOKCiVQxx33DUyoFse0xp5u5o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZmOkDLuys1gGwddYEFMegKsq+T7GxeaDKNgl9qMC6sy7QB2DfolHwXb6c5uMvpGrqehXZjxOUtzgi6U4b457ut98D9rNOin9RAXJU+YedCDq9RKigS5FwkQJZYXy1TuuRDm46Vq//Hgu97OMx+jH7Mg2DvXrIITMtkO/tCxQixg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4oagX55; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PP0t7Rt/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1748392461;
-	bh=s4UQYV+JONCHyeFoPV4H4ondPwl2BoLxFk9H8Jsm8Ls=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4oagX55"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB343C4CEE9;
+	Wed, 28 May 2025 00:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748392497;
+	bh=7joA61mSXhPK4Gz+V3NOKCiVQxx33DUyoFse0xp5u5o=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PP0t7Rt/rXrOtYPN+7/12ni6DAQbZ0weq3A+kXvD7fcUE6Kr3FK78wblwt+4AK8wX
-	 Y7ApxBXE3xW4U+EdaPtFco80NFhYhqwjmFXdEznvKCEaPkRKoUn+t7JTdoLTc++15b
-	 PBGD6d41F5bIXxq7fC0BjGlRnshjKCyGGoFBl0kYu3MOcg0jdLaid1PG0y4f77/cq9
-	 Oq9dOhmA2dEM7WZao7SPNfOE+fyiRiF1yyqr3D/yolQTKJmwVEQJe89RI9UEbzJkDa
-	 WKpd8gYhWsvljmbFml5IYUdP26+bl5SB5IsSp16MS4YHsmDzncLgOWUVPgq639Mq2g
-	 Rr8PULQeA9RBw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b6Vqv5C7yz4wbR;
-	Wed, 28 May 2025 10:34:19 +1000 (AEST)
-Date: Wed, 28 May 2025 10:34:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim
- <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, "Borislav Petkov (AMD)"
- <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>, "Xin Li (Intel)"
- <xin@zytor.com>
-Subject: Re: linux-next: manual merge of the tip tree with the perf tree
-Message-ID: <20250528103418.3da40a9f@canb.auug.org.au>
-In-Reply-To: <20250526145015.615882b0@canb.auug.org.au>
-References: <20250526145015.615882b0@canb.auug.org.au>
+	b=W4oagX55JNI1UKWpte8fkYtkEE/y3X7ph3czIZNvgsn5QcAUowp/TZwfr+Dxnd8T+
+	 RFjiut6IYyhiuOzmG7kOgkmh2S1+PLVcb24ofZN31AJcH5tkFV1VWEnOCHqpXGdKS7
+	 xLOcdKGpqvP6aeU1PCiAyI2kRgJy4mPHXfRCiS92E6nzFQ51BFd6Efoq657aOHcRne
+	 W4PdyqeF6p1rNgDmI6qGwY4NtQdekMn8C+KJvZAOZjE4PclBcImX6JRYEnt3ZlcZLm
+	 1iN6GtUPEVsrxDYLhqNCP8k4jd0mSsT4gNltgOuQ9LjEmlLjQQv4F2zdSpAR8Hq4j3
+	 cDg9Ug6M+9Rmg==
+Date: Wed, 28 May 2025 09:34:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ring-buffer: Removed unnecessary if() goto out where
+ out is the next line
+Message-Id: <20250528093455.e710b3783bbdc93f8be66625@kernel.org>
+In-Reply-To: <20250527155116.227f35be@gandalf.local.home>
+References: <20250527155116.227f35be@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Iz1AJZkvEwYVeSR_NVfxk08";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/Iz1AJZkvEwYVeSR_NVfxk08
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Tue, 27 May 2025 15:51:16 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Mon, 26 May 2025 14:50:15 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Today's linux-next merge of the tip tree got a conflict in:
->=20
->   tools/arch/x86/include/asm/cpufeatures.h
->=20
-> between commit:
->=20
->   444f03645f14 ("tools headers x86 cpufeatures: Sync with the kernel sour=
-ces to pick ZEN6 and Indirect Target Selection (ITS) bits")
->=20
-> from the perf tree and commits:
->=20
->   282cc5b67623 ("x86/cpufeatures: Clean up formatting")
->   13327fada7ff ("x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_V=
-MEXIT")
->   3aba0b40cacd ("x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_C=
-ORES")
->=20
-> from the tip tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
->=20
-> diff --cc tools/arch/x86/include/asm/cpufeatures.h
-> index 30144ef9ef02,bc81b9d1aeca..000000000000
-> --- a/tools/arch/x86/include/asm/cpufeatures.h
-> +++ b/tools/arch/x86/include/asm/cpufeatures.h
-> @@@ -476,12 -476,11 +476,12 @@@
->   #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history a=
-t syscall entry using SW loop */
->   #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control availa=
-ble */
->   #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control ena=
-bled */
-> - #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch=
- history at vmexit using SW loop */
-> - #define X86_FEATURE_AMD_FAST_CPPC	(21*32 + 5) /* Fast CPPC */
-> - #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogeneou=
-s Core Topology */
-> - #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Classifi=
-cation */
-> - #define X86_FEATURE_PREFER_YMM		(21*32 + 8) /* Avoid ZMM registers due =
-to downclocking */
-> - #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32 + 9) /* Use thunk for ind=
-irect branches in lower half of cacheline */
-> + #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history=
- at vmexit using SW loop */
-> + #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
-> + #define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topo=
-logy */
-> + #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classific=
-ation */
-> + #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due t=
-o downclocking */
-> ++#define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+ 9) /* Use thunk for indi=
-rect branches in lower half of cacheline */
->  =20
->   /*
->    * BUG word(s)
-> @@@ -528,12 -527,10 +528,12 @@@
->   #define X86_BUG_TDX_PW_MCE		X86_BUG(31) /* "tdx_pw_mce" CPU may incur #=
-MC if non-TD software does partial write to TDX private memory */
->  =20
->   /* BUG word 2 */
-> - #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* "srso" AMD SRSO bug */
-> - #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* "div0" AMD DIV0 speculation=
- bug */
-> - #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable to=
- Register File Data Sampling */
-> - #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Bra=
-nch History Injection */
-> - #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB=
- omits return target predictions */
-> - #define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user"=
- CPU is affected by Spectre variant 2 attack between user processes */
-> - #define X86_BUG_ITS			X86_BUG(1*32 + 6) /* "its" CPU is affected by Ind=
-irect Target Selection */
-> - #define X86_BUG_ITS_NATIVE_ONLY		X86_BUG(1*32 + 7) /* "its_native_only"=
- CPU is affected by ITS, VMX is not affected */
-> + #define X86_BUG_SRSO			X86_BUG( 1*32+ 0) /* "srso" AMD SRSO bug */
-> + #define X86_BUG_DIV0			X86_BUG( 1*32+ 1) /* "div0" AMD DIV0 speculation=
- bug */
-> + #define X86_BUG_RFDS			X86_BUG( 1*32+ 2) /* "rfds" CPU is vulnerable to=
- Register File Data Sampling */
-> + #define X86_BUG_BHI			X86_BUG( 1*32+ 3) /* "bhi" CPU is affected by Bra=
-nch History Injection */
-> + #define X86_BUG_IBPB_NO_RET		X86_BUG( 1*32+ 4) /* "ibpb_no_ret" IBPB om=
-its return target predictions */
-> + #define X86_BUG_SPECTRE_V2_USER		X86_BUG( 1*32+ 5) /* "spectre_v2_user"=
- CPU is affected by Spectre variant 2 attack between user processes */
-> ++#define X86_BUG_ITS			X86_BUG( 1*32+ 6) /* "its" CPU is affected by Ind=
-irect Target Selection */
-> ++#define X86_BUG_ITS_NATIVE_ONLY		X86_BUG( 1*32+ 7) /* "its_native_only"=
- CPU is affected by ITS, VMX is not affected */
->   #endif /* _ASM_X86_CPUFEATURES_H */
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> In the function ring_buffer_discard_commit() there's an if statement that
+> jumps to the next line:
+> 
+> 	if (rb_try_to_discard(cpu_buffer, event))
+> 		goto out;
+>  out:
+> 
+> This was caused by the change that modified the way timestamps were taken
+> in interrupt context, and removed the code between the if statement and
+> the goto, but failed to update the conditional logic.
+> 
 
-This is now a conflict between the perf tree and Linus' tree.
+OK, so this is a kind of cleanup.
 
---=20
-Cheers,
-Stephen Rothwell
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
---Sig_/Iz1AJZkvEwYVeSR_NVfxk08
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+> Fixes: a389d86f7fd0 ("ring-buffer: Have nested events still record running time stamp")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index e2aa90dc8d9e..0a3be3a01d14 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -4681,10 +4681,7 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
+>  	RB_WARN_ON(buffer, !local_read(&cpu_buffer->committing));
+>  
+>  	rb_decrement_entry(cpu_buffer, event);
+> -	if (rb_try_to_discard(cpu_buffer, event))
+> -		goto out;
+> -
+> - out:
+> +	rb_try_to_discard(cpu_buffer, event);
+>  	rb_end_commit(cpu_buffer);
+>  
+>  	trace_recursive_unlock(cpu_buffer);
+> -- 
+> 2.47.2
+> 
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmg2WgoACgkQAVBC80lX
-0GzjBAf/SIBivpLtckusWHRUg4dGzoNKRVutPTrpW+EyReZUiGZh+zIBkt2Uoycm
-nnmFHR7Bncbodne3sXyexnXiEHJqk5EMNtYldlM4CT/c6ZNWv13Cy8ZrmaV4azNu
-nXfz4EOHSLeIf4LCKf8JK0DcItL35Ew5ozVlyNp0nVyk55qdbZnb9gDYuIWfRXVd
-97fTbLW1XaQp+SPTHvL3kim6Ro0KDFu/QhzNJg2oMz8BujzxSm8jsoFu2dRn5VsB
-nxRVsXK+edxVRxmQdu1YM7XM/g1nrQW1uurcfRBVZ78CbBPyDOlUlcUljFy7rffH
-l1yB9gRCE0JoITylk+JuUnv+bIbs0w==
-=saWL
------END PGP SIGNATURE-----
 
---Sig_/Iz1AJZkvEwYVeSR_NVfxk08--
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
