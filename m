@@ -1,173 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507F1225A29
-	for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 23:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF39A221561;
+	Wed, 28 May 2025 23:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748474257; cv=none; b=WuC12UG8qJzPRgbyaF6FsEiJOPIMHEbgN3OKr6xVwXjPCtZPEZr7jb8N6N1tJVeElpcQ3s+g4IWUEt63DQmqK9KnYG8DILBrN3ZcrrylhcWznkAvOUbo7bVybfCInSkbMVNTliRbRslOkJ0IDjcv+hfZ/Kzexm7pQWyUalPmW+g=
+	t=1748474288; cv=none; b=C5jJ8mcPy9UBFNHViupgVEf1Tc9wV9gwLOBucK/nm3gOAWdf6s/BdhmtTHoq2/pg4KElKyanmYtmo5lk66+7fGDiSwcRK9pVwtxVahGHOdz6GhtOKm2pgSsVOjXc7Ng5BOx7TuT5IwWavCzSiETYL1hLTWkPBwNfj7S9JVDJu8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748474257; c=relaxed/simple;
-	bh=2UyuBFVBF7/NqDq+ovnhAtBjPjcIVQGpsNux7ISwlE4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JSb29huDVSkZW7aAdzbas29P1dTl51Q9ejKsKOhaespKFfDHuzYF7UpHFiaELkaR2mYCCc3MB2SSKw8COmvV5K1TAmrHfk4tD0OFPnfKyyDxL7ooW2MOOlddBvh9YD4MwvW/2YbwqmIXuJ9wIpE6EcmBNwzrgefP10BB87qed4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EF1Rlnbx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748474288; c=relaxed/simple;
+	bh=OlkQ5LDNFcAG4+B3fU48CyA1LXgDRJ2eUlh71NIIl0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=njslww3afXodhKL98Z4NmLimVbIm0USopLU3jbOtSzNNN+DQZWVrNKScwu/prld3gDcDAdbeSejmhB3u3E47+KK5Itstd9sEYjN1zR744P/ZZBE6rL2aQ03EawDduPTCULBfyYslRbL1CGbdrRrSZVi052oeSuVllgJtv3kh2Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0M2qj4w; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EF1Rlnbx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748474255;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=okyJbl6eCklKJGEFMxSh/0mMfugaWDJTFRqMQyNrXMU=;
-	b=EF1RlnbxNFBJi1FqRU1vh5ugpElGYwIWEJtCzg/3Ds7lj0vah2gFhK2HjJT4lZS6DO2h0f
-	MBqru9QZFS+FL0vQDf1N7lW/IaYKOotvFndd1onbg/8sVAVR3UfgPuMQJeB4IaauW09QMX
-	6xlIgdvPqiaY2NQFbQNJub/RIPaqkWk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-397-pFccm3apPMyYK0QErymYZw-1; Wed, 28 May 2025 19:17:34 -0400
-X-MC-Unique: pFccm3apPMyYK0QErymYZw-1
-X-Mimecast-MFC-AGG-ID: pFccm3apPMyYK0QErymYZw_1748474254
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5750ca8b2so36886785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 28 May 2025 16:17:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748474253; x=1749079053;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=okyJbl6eCklKJGEFMxSh/0mMfugaWDJTFRqMQyNrXMU=;
-        b=FMImwM6YYoIGNpj2um+mH42KuNcNM86ovV33YU15At0AZOF2y4w6c+uEAr1BQEcLBq
-         BKYrOYvQgEbbwZlHg2M8I5qpkG6UgHW/N1c8xc3HugaWXZdfnPV8dUXY5VqnD3DENKWg
-         a6hAc/bwWJhNg2oXXzbpnE/fmEPU39fNgC17IuXC99c/KaWEqAGgI17OGmPSl+tl0k9n
-         LNWH1wOkJ/upR9rBns1OLG0nz9Ea1sjMTm50IyC0TYFn5ZYZAW8CF9WXQHNC4Fkt8kH3
-         seK6Kyn6Vl6Yn9QCNrApBcM90Dwr1H2GCoAcIrCkVv5c7OrGKAoKsWoxxNPLWJHRoS/6
-         Yfug==
-X-Forwarded-Encrypted: i=1; AJvYcCUR4IQohnPSIMu2t8XI20GDbq+Ogv2kykRcPjAMGNXTG1RIV871PN9R+e1wkPbZuiJJTndqSLAoMWGgw1w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrIEQEWtGHcITWqcQ3Oc9Uo63DdBmA7eflg2jibK9RI9RJZTO3
-	tjj7dpTL86/tmCPDuD0QXaTwJWrxazbm4E6SFPuC1Ie99vtcV/G6DGO0L09r5FDbcg+83nW1wZx
-	piDR/bg4A2SeslYHuRS3p3WKfa3ipsre3VntILk8qYGGe3XobJsfxRtzv1ZjnZvHU3HP+o/io5W
-	+FzbHpq2ZkkXpLBcsDxXy0PkMqcuw9TaEX7ad/kCLmypPjUtcqFU0=
-X-Gm-Gg: ASbGncvKTec/BezDA8aDISqBmF9FbRMGTICmQdsMuahVwQ7zCd8GNRSM2w1NXzaxkyg
-	snFZNJKmaYSBh2rHA/7Hkh+EQ9MmehOhw3/WQhpg5FQGXNXwhWeMA+5eLA6pWcEDELrn+TzT/rG
-	ED0kq4oCXhzFSvElf4yHuSdyfL6/EfyjGEJHToAcndJ46HgzYngZgNvuDhSxITdaTUXuUoodYI7
-	+TFUrc6hpdIcDPVQ0f8mIsV9qf3ndDBtdTpO+bLR5ktTHA0Eu6hdPjVv0E4BMcw+8wB2Kn6n1qi
-	Taucdf68frdc1Vi+KlmmyHFv3fd+opAx3yZ4iVhMNeHNRpvISg==
-X-Received: by 2002:a05:620a:4899:b0:7ca:c63c:c59b with SMTP id af79cd13be357-7d09ab36c8amr24491085a.22.1748474253193;
-        Wed, 28 May 2025 16:17:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMv4olD6L+xEmV4YMpNnuWUk2AHunM4ENQ0bxRwPeD/SXi2QqhHhGJN0RkQf4JyV0HIRpzQA==
-X-Received: by 2002:a05:620a:4899:b0:7ca:c63c:c59b with SMTP id af79cd13be357-7d09ab36c8amr24486385a.22.1748474252630;
-        Wed, 28 May 2025 16:17:32 -0700 (PDT)
-Received: from [192.168.1.2] (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d09a0f984fsm13437985a.43.2025.05.28.16.17.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 May 2025 16:17:32 -0700 (PDT)
-From: Brian Masney <bmasney@redhat.com>
-Date: Wed, 28 May 2025 19:16:56 -0400
-Subject: [PATCH v2 10/10] clk: test: introduce test variation for sibling
- rate changes on a gate/mux
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0M2qj4w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748474287; x=1780010287;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OlkQ5LDNFcAG4+B3fU48CyA1LXgDRJ2eUlh71NIIl0g=;
+  b=O0M2qj4wvoys0A4I/YcBtIYJdrj2eZonR1Zcq4S5Cw0NwNkk8WLhcZjA
+   G20iNxU/tzR7I4h5MdFPhuk399k+hXKOLyiz/22ck0LzBH1K0wYOX/e9c
+   aWuJ+4lkbGDXXz+SUvQ05mB0tWZ2ni+W+OnsMOkgUyb+hb42TH29llMbU
+   Y/91kK0zHeioKqbdW01u1fEJR7BzX7j5Gg9e4TNrf+UjkDsqkntE5VEut
+   aWxtPtGGi56xdngWErDOwB3nd0W66Y/n0UrJANQw2Q99sPneGnxKrDG8K
+   zFE9CfI/UhZWku784YlxaMc8Knq3bNkOHcAzHATpsmbv4Z/PwvBbHf5go
+   w==;
+X-CSE-ConnectionGUID: QCceLrO7SuOUAo56GKGOzg==
+X-CSE-MsgGUID: izNXCJMtTkG9clhoDtB70Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11447"; a="68070664"
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="68070664"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2025 16:18:05 -0700
+X-CSE-ConnectionGUID: Ynjqfh96TUCxktsd33xPwA==
+X-CSE-MsgGUID: M+fn4Cj8S6uE04O0uNAhPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,322,1739865600"; 
+   d="scan'208";a="148524148"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 28 May 2025 16:18:01 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uKQ23-000W9G-1F;
+	Wed, 28 May 2025 23:17:59 +0000
+Date: Thu, 29 May 2025 07:17:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: Umer Uddin <umer.uddin@mentallysanemainliners.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-samsung-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] clk: samsung: exynos990: Add CMU_HSI1 block
+Message-ID: <202505290752.ccgBnlpc-lkp@intel.com>
+References: <20250528105252.157533-3-umer.uddin@mentallysanemainliners.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250528-clk-wip-v2-v2-10-0d2c2f220442@redhat.com>
-References: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
-In-Reply-To: <20250528-clk-wip-v2-v2-0-0d2c2f220442@redhat.com>
-To: Stephen Boyd <sboyd@kernel.org>, Maxime Ripard <mripard@kernel.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Alberto Ruiz <aruiz@redhat.com>, Brian Masney <bmasney@redhat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1748474226; l=2565;
- i=bmasney@redhat.com; s=20250528; h=from:subject:message-id;
- bh=2UyuBFVBF7/NqDq+ovnhAtBjPjcIVQGpsNux7ISwlE4=;
- b=5fozoClZaz3cF6k4P4348t7plBzvForrhLSMk0Pp0guJb4WPQJlBDPhK0JHbk/o6+gBWT/w/0
- ej3nCkgUHHFCW2CQldcwiDaZlKZM5RiBeuoM38YlJDqfNV3RHJuEBIh
-X-Developer-Key: i=bmasney@redhat.com; a=ed25519;
- pk=x20f2BQYftANnik+wvlm4HqLqAlNs/npfVcbhHPOK2U=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250528105252.157533-3-umer.uddin@mentallysanemainliners.org>
 
-Introduce a test variation that creates a parent with two children: a
-gate and a mux. Ensure that changing the rate of the gate does not
-affect the rate of the mux.
+Hi Umer,
 
-Signed-off-by: Brian Masney <bmasney@redhat.com>
----
- drivers/clk/clk_test.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+kernel test robot noticed the following build warnings:
 
-diff --git a/drivers/clk/clk_test.c b/drivers/clk/clk_test.c
-index b5cf0de16abd1e098368a67626fff9044f7a1a6a..c5b856e224f057b011b095d998ca3016b6a041a8 100644
---- a/drivers/clk/clk_test.c
-+++ b/drivers/clk/clk_test.c
-@@ -946,6 +946,48 @@ clk_rate_change_sibling_div_mux_test_init(struct kunit *test)
- 	return &ctx->clk_ctx;
- }
- 
-+struct clk_rate_change_sibling_gate_mux_sibling_context {
-+	struct clk_dummy_gate child1;
-+	struct clk_multiple_parent_ctx child2_mux;
-+	struct clk_test_rate_change_sibling_clk_ctx clk_ctx;
-+};
-+
-+static struct clk_test_rate_change_sibling_clk_ctx *
-+clk_rate_change_sibling_gate_mux_test_init(struct kunit *test)
-+{
-+	struct clk_rate_change_sibling_gate_mux_sibling_context *ctx;
-+	int ret;
-+
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return ERR_PTR(-ENOMEM);
-+	test->priv = ctx;
-+
-+	ret = clk_init_multiple_parent_ctx(test, &ctx->child2_mux,
-+					   "parent0", DUMMY_CLOCK_RATE_24_MHZ,
-+					   "parent1", DUMMY_CLOCK_RATE_48_MHZ,
-+					   "child2", CLK_SET_RATE_NO_REPARENT,
-+					   &clk_multiple_parents_mux_ops);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ctx->child1.hw.init = CLK_HW_INIT_HW("child1",
-+					     &ctx->child2_mux.parents_ctx[0].hw,
-+					     &clk_dummy_gate_ops,
-+					     CLK_SET_RATE_PARENT);
-+	ret = clk_hw_register_kunit(test, NULL, &ctx->child1.hw);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	ctx->clk_ctx.parent_clk = clk_hw_get_clk(&ctx->child2_mux.parents_ctx[0].hw, NULL);
-+	ctx->clk_ctx.child1_clk = clk_hw_get_clk(&ctx->child1.hw, NULL);
-+	ctx->clk_ctx.child2_clk = clk_hw_get_clk(&ctx->child2_mux.hw, NULL);
-+
-+	return &ctx->clk_ctx;
-+}
-+
- struct clk_test_rate_change_sibling_test_case {
- 	const char *desc;
- 	struct clk_test_rate_change_sibling_clk_ctx *(*init)(struct kunit *test);
-@@ -960,6 +1002,10 @@ static struct clk_test_rate_change_sibling_test_case clk_test_rate_change_siblin
- 		.desc = "div_mux",
- 		.init = clk_rate_change_sibling_div_mux_test_init,
- 	},
-+	{
-+		.desc = "gate_mux",
-+		.init = clk_rate_change_sibling_gate_mux_test_init,
-+	},
- };
- 
- KUNIT_ARRAY_PARAM_DESC(clk_test_rate_change_sibling_test_case,
+[auto build test WARNING on krzk/for-next]
+[also build test WARNING on krzk-dt/for-next clk/clk-next linus/master v6.15 next-20250528]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Umer-Uddin/dt-bindings-clock-exynos990-Add-CMU_HSI1-bindings/20250528-185847
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git for-next
+patch link:    https://lore.kernel.org/r/20250528105252.157533-3-umer.uddin%40mentallysanemainliners.org
+patch subject: [PATCH v1 2/2] clk: samsung: exynos990: Add CMU_HSI1 block
+config: arm-randconfig-002-20250529 (https://download.01.org/0day-ci/archive/20250529/202505290752.ccgBnlpc-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250529/202505290752.ccgBnlpc-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505290752.ccgBnlpc-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/clk/samsung/clk-exynos990.c:15:
+>> drivers/clk/samsung/clk-exynos990.c:1666:7: warning: 'mout_hsi1_mmc_card_p' defined but not used [-Wunused-const-variable=]
+    PNAME(mout_hsi1_mmc_card_p) =  { "oscclk",
+          ^~~~~~~~~~~~~~~~~~~~
+   drivers/clk/samsung/clk.h:237:44: note: in definition of macro 'PNAME'
+    #define PNAME(x) static const char * const x[] __initconst
+                                               ^
+>> drivers/clk/samsung/clk-exynos990.c:1658:7: warning: 'mout_hsi1_bus_p' defined but not used [-Wunused-const-variable=]
+    PNAME(mout_hsi1_bus_p) =  { "dout_cmu_shared0_div3",
+          ^~~~~~~~~~~~~~~
+   drivers/clk/samsung/clk.h:237:44: note: in definition of macro 'PNAME'
+    #define PNAME(x) static const char * const x[] __initconst
+                                               ^
+>> drivers/clk/samsung/clk-exynos990.c:1657:7: warning: 'mout_hsi1_pcie_p' defined but not used [-Wunused-const-variable=]
+    PNAME(mout_hsi1_pcie_p) =  { "oscclk", "fout_shared2_pll" };
+          ^~~~~~~~~~~~~~~~
+   drivers/clk/samsung/clk.h:237:44: note: in definition of macro 'PNAME'
+    #define PNAME(x) static const char * const x[] __initconst
+                                               ^
+>> drivers/clk/samsung/clk-exynos990.c:1653:7: warning: 'mout_hsi1_ufs_card_p' defined but not used [-Wunused-const-variable=]
+    PNAME(mout_hsi1_ufs_card_p) =  { "oscclk",
+          ^~~~~~~~~~~~~~~~~~~~
+   drivers/clk/samsung/clk.h:237:44: note: in definition of macro 'PNAME'
+    #define PNAME(x) static const char * const x[] __initconst
+                                               ^
+>> drivers/clk/samsung/clk-exynos990.c:1649:7: warning: 'mout_hsi1_ufs_embd_p' defined but not used [-Wunused-const-variable=]
+    PNAME(mout_hsi1_ufs_embd_p) =  { "oscclk",
+          ^~~~~~~~~~~~~~~~~~~~
+   drivers/clk/samsung/clk.h:237:44: note: in definition of macro 'PNAME'
+    #define PNAME(x) static const char * const x[] __initconst
+                                               ^
+
+
+vim +/mout_hsi1_mmc_card_p +1666 drivers/clk/samsung/clk-exynos990.c
+
+  1647	
+  1648	/* Parent clock list for CMU_HSI1 muxes */
+> 1649	PNAME(mout_hsi1_ufs_embd_p) =		{ "oscclk",
+  1650						  "dout_cmu_shared0_div4",
+  1651						  "dout_cmu_shared2_div2",
+  1652						  "oscclk" };
+> 1653	PNAME(mout_hsi1_ufs_card_p) =		{ "oscclk",
+  1654						  "dout_cmu_shared0_div4",
+  1655						  "dout_cmu_shared2_div2",
+  1656						  "oscclk" };
+> 1657	PNAME(mout_hsi1_pcie_p) =		{ "oscclk", "fout_shared2_pll" };
+> 1658	PNAME(mout_hsi1_bus_p) =		{ "dout_cmu_shared0_div3",
+  1659						  "dout_cmu_shared0_div4",
+  1660						  "dout_cmu_shared1_div4",
+  1661						  "dout_cmu_shared4_div3",
+  1662						  "dout_cmu_shared2_div2",
+  1663						  "fout_mmc_pll",
+  1664						  "oscclk",
+  1665						  "oscclk" };
+> 1666	PNAME(mout_hsi1_mmc_card_p) =		{ "oscclk",
+  1667						  "fout_shared2_pll",
+  1668						  "fout_mmc_pll",
+  1669						  "dout_cmu_shared0_div4" };
+  1670	PNAME(mout_hsi1_bus_user_p) =		{ "oscclk", "dout_cmu_hsi1_bus" };
+  1671	PNAME(mout_hsi1_mmc_card_user_p) =	{ "oscclk", "dout_cmu_hsi1_mmc_card" };
+  1672	PNAME(mout_hsi1_pcie_user_p) =		{ "oscclk", "dout_cmu_hsi1_pcie" };
+  1673	PNAME(mout_hsi1_ufs_card_user_p) =	{ "oscclk", "dout_cmu_hsi1_ufs_card" };
+  1674	PNAME(mout_hsi1_ufs_embd_user_p) =	{ "oscclk", "dout_cmu_hsi1_ufs_embd" };
+  1675	
 
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
